@@ -263,6 +263,9 @@ angular.module('ts5App', [
   }).when('/station-view/:id', {
     templateUrl: 'views/station-create.html',
     controller: 'StationCreateCtrl'
+  }).when('/employee-messages', {
+    templateUrl: 'views/employee-message-list.html',
+    controller: 'EmployeeMessageListCtrl'
   }).otherwise({
     redirectTo: '/'
   });
