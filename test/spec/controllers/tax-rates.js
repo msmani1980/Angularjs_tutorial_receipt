@@ -1,13 +1,14 @@
 'use strict';
 
-describe('Controller: TaxRatesCtrl', function() {
+fdescribe('Controller: TaxRatesCtrl', function() {
 
   beforeEach(module(
     'ts5App',
     'template-module',
     'served/tax-rate-types.json',
     'served/tax-types.json',
-    'served/country-list.json'
+    'served/country-list.json',
+    'served/stations.json'
   ));
 
   var TaxRatesCtrl;
@@ -19,16 +20,19 @@ describe('Controller: TaxRatesCtrl', function() {
   var taxTypesJSON;
   var taxRateTypesJSON;
   var countriesListJSON;
+  var stationsListJSON;
   var getTaxTypesListDeferred;
   var getTaxRateTypesDeferred;
   var getCountriesListDeferred;
+  var getStationsListDeferred;
 
   beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedTaxTypes_, _servedTaxRateTypes_,
-    _servedCountryList_) {
+    _servedCountryList_, _servedStations_) {
 
     taxTypesJSON = _servedTaxTypes_;
     taxRateTypesJSON = _servedTaxRateTypes_;
     countriesListJSON = _servedCountryList_;
+    stationsListJSON = _servedStations_;
 
     $scope = $rootScope.$new();
     controller = $controller;
@@ -45,12 +49,16 @@ describe('Controller: TaxRatesCtrl', function() {
 
     getCountriesListDeferred = $q.defer();
     spyOn(taxRatesFactory, 'getCountriesList').and.returnValue(getCountriesListDeferred.promise);
+
+    getStationsListDeferred = $q.defer();
+    spyOn(taxRatesFactory, 'getStationsList').and.returnValue(getStationsListDeferred.promise);
   }));
 
   function resolveAllDependencies() {
     getTaxTypesListDeferred.resolve(taxTypesJSON);
     getTaxRateTypesDeferred.resolve(taxRateTypesJSON);
     getCountriesListDeferred.resolve(countriesListJSON);
+    getStationsListDeferred.resolve(stationsListJSON);
     $scope.$digest();
   }
 
@@ -77,6 +85,12 @@ describe('Controller: TaxRatesCtrl', function() {
 
     it('should set the taxTypesList as a blank array', function() {
       expect($scope.taxTypesList).toEqual([]);
+    });
+    it('should set the countriesList as a blank array', function() {
+      expect($scope.countriesList).toEqual([]);
+    });
+    it('should set the stationsList as a blank array', function() {
+      expect($scope.stationsList).toEqual([]);
     });
 
     it('should set the taxTypesList as a blank array', function() {
@@ -128,7 +142,11 @@ describe('Controller: TaxRatesCtrl', function() {
       });
 
       it('should set the $scope.countriesList to the mock data', function() {
-        expect($scope.countriesList).toEqual(countriesListJSON);
+        expect($scope.countriesList).toEqual(countriesListJSON.countries);
+      });
+
+      it('should set the $scope.stationsList to the mock data', function() {
+        expect($scope.stationsList).toEqual(stationsListJSON);
       });
 
     });

@@ -18,6 +18,9 @@ angular.module('ts5App')
 
     $scope.taxRatesList = [];
     $scope.taxTypesList = [];
+    $scope.countriesList = [];
+    $scope.stationsList = [];
+
     $scope.dateRange = {
       startDate: '',
       endDate: ''
@@ -31,6 +34,8 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
+    // Set $scope data
+
     this.setTaxTypesList = function(dataFromAPI) {
       $scope.taxTypesList = angular.copy(dataFromAPI.response);
     };
@@ -40,8 +45,13 @@ angular.module('ts5App')
     };
 
     this.setCountriesList = function(dataFromAPI) {
-      $scope.countriesList = angular.copy(dataFromAPI);
+      $scope.countriesList = angular.copy(dataFromAPI.countries);
     };
+    this.setStationsList = function(dataFromAPI) {
+      $scope.stationsList = angular.copy(dataFromAPI);
+    };
+
+    // Get $scope data
 
     this.getTaxTypesList = function() {
       var params = {
@@ -58,11 +68,16 @@ angular.module('ts5App')
       return taxRatesFactory.getCountriesList().then($this.setCountriesList);
     };
 
+    this.getStationsList = function() {
+      return taxRatesFactory.getStationsList(companyId, 0).then($this.setStationsList);
+    };
+
     this.createPromises = function() {
       return [
         $this.getTaxTypesList(),
         $this.getTaxRateTypesList(),
-        $this.getCountriesList()
+        $this.getCountriesList(),
+        $this.getStationsList()
       ];
     };
 
