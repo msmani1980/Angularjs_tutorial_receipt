@@ -248,6 +248,9 @@ angular.module('ts5App', [
   }).when('/reconciliation-dashboard', {
     templateUrl: 'views/reconciliation-dashboard.html',
     controller: 'ReconciliationDashboardCtrl'
+  }).when('/store-instance-amend', {
+    templateUrl: 'views/store-instance-amend.html',
+    controller: 'StoreInstanceAmendCtrl'
   }).when('/station-list', {
     templateUrl: 'views/station-list.html',
     controller: 'StationListCtrl'

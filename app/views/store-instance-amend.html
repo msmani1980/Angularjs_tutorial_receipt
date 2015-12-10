@@ -1,0 +1,675 @@
+<div class="container-fluid">
+
+  <form-error-dialog></form-error-dialog>
+
+  <div class="modal fade" id="addScheduleModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4><strong>
+            <span ng-hide="scheduleToEdit">Add Schedule</span>
+            <span ng-show="scheduleToEdit">Replace Schedule {{scheduleToEdit.scheduleNumber }}</span>
+          </strong></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-5">
+              <label>Schedule Number *</label>
+              <input class="form-control" ng-model="scheduleSearch.scheduleNumber">
+            </div>
+            <div class="col-xs-5">
+              <label>Schedule Date *</label>
+              <date-picker-field
+                class="form-group"
+                element-class="col-xs-6"
+                is-search-field="true"
+                ng-model="scheduleSearch.scheduleDate">
+              </date-picker-field>
+            </div>
+            <div class="col-xs-2">
+              <br>
+              <button class="btn btn-primary" ng-click="searchForSchedule()"><i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-bordered" ng-show="searchScheduleResults">
+            <tr>
+              <th>Schedule Date</th>
+              <th>Schedule #</th>
+              <th>Departure Station</th>
+              <th>Arrival Station</th>
+              <th>Select</th>
+            </tr>
+            <tr ng-repeat="schedule in searchScheduleResults" ng-class="getClassesForSingleSelectedRow(schedule, 'background', 'schedule')">
+              <td>{{ schedule.scheduleDate }}</td>
+              <td>{{ schedule.scheduleNumber }}</td>
+              <td>{{ schedule.departureStation }}</td>
+              <td>{{ schedule.arrivalStation }}</td>
+              <td>
+                <button ng-class="getClassesForSingleSelectedRow(schedule, 'button', 'schedule')"
+                        ng-click="selectRecordForNewSchedule(schedule)">
+                  <span ng-class="getClassesForSingleSelectedRow(schedule, 'buttonIcon', 'schedule')"></span>
+                </button>
+              </td>
+            </tr>
+          </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="clearScheduleSelections()"
+                  ng-show="newScheduleSelection">
+            <i class="fa fa-check"></i> Confirm
+          </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearScheduleSelections()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="moveCashBagModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4><strong>Move Cash Bag</strong> {{ cashBagToMove.cashBagNumber }}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12">
+              <h4>1. Select an action</h4>
+              <select class="form-control" ng-model="moveCashBagAction" ng-change="clearMoveSearchResults()">
+                <option value="none"></option>
+                <option value="merge">Merge with a Cash Bag</option>
+                <option value="reallocate">Reallocate to a Store Instance</option>
+              </select>
+            </div>
+          </div>
+          <hr ng-hide="moveCashBagAction==='none'">
+          <div class="row" ng-hide="moveCashBagAction==='none'">
+            <div class="col-xs-12">
+              <h4>2. Search for a
+                <span ng-show="moveCashBagAction==='merge'">Cash Bag</span>
+                <span ng-show="moveCashBagAction==='reallocate'">Store Instance</span>
+              </h4>
+            </div>
+          </div>
+          <br>
+
+          <div class="row" ng-show="moveCashBagAction==='merge'">
+            <div class="col-xs-5">
+              <label>Cash Bag *</label>
+              <input class="form-control" ng-model="moveSearch.cashBag">
+            </div>
+            <div class="col-xs-5">
+              <label>Bank Ref # *</label>
+              <input class="form-control" ng-model="moveSearch.bankRefNumber">
+            </div>
+            <div class="col-xs-2">
+              <br>
+              <button class="btn btn-primary" ng-click="searchForMoveCashBag()"><i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="row" ng-show="moveCashBagAction==='reallocate'">
+            <div class="col-xs-5">
+              <label>Store Number *</label>
+              <input class="form-control" ng-model="moveSearch.storeNumber">
+            </div>
+            <div class="col-xs-5">
+              <label>Schedule Date *</label>
+              <date-picker-field
+                class="form-group"
+                element-class="col-xs-6"
+                is-search-field="true"
+                ng-model="moveSearch.scheduleDate">
+              </date-picker-field>
+            </div>
+            <div class="col-xs-2">
+              <br>
+              <button class="btn btn-primary" ng-click="searchForMoveCashBag()"><i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <hr ng-show="moveCashBagSearchResults">
+          <div class="row" ng-show="moveCashBagSearchResults">
+            <div class="col-xs-12">
+              <h4>
+                <span ng-show="moveCashBagAction==='merge'">3. Select a Cash Bag to Merge With</span>
+                <span ng-show="moveCashBagAction==='reallocate'">3. Select a Store Instance to Reallocate to</span></h4>
+            </div>
+          </div>
+
+          <table class="table table-bordered" ng-show="moveCashBagAction==='merge' && moveCashBagSearchResults">
+            <tr ng-show="moveCashBagAction==='merge'">
+              <th>Schedule Date</th>
+              <th>Store #</th>
+              <th>Cash Bag #</th>
+              <th>Store Instance #</th>
+              <th>Submitted Date/Time</th>
+              <th>Select</th>
+            </tr>
+            <tr ng-repeat="cashBag in moveCashBagSearchResults"
+                ng-class="getClassesForSingleSelectedRow(cashBag, 'background', 'cashBag')">
+              <td>{{ cashBag.scheduleDate }}</td>
+              <td>{{ cashBag.storeNumber }}</td>
+              <td>{{ cashBag.cashBag }}</td>
+              <td>{{ cashBag.storeInstanceNumber }}</td>
+              <td>{{ cashBag.submittedDate }} {{cashBag.submittedTime }}</td>
+              <td>
+                <button ng-class="getClassesForSingleSelectedRow(cashBag, 'button', 'cashBag')"
+                        ng-click="selectRecordForMoveCashBag(cashBag)">
+                  <span ng-class="getClassesForSingleSelectedRow(cashBag, 'buttonIcon', 'cashBag')"></span>
+                </button>
+              </td>
+            </tr>
+          </table>
+
+          <table class="table table-bordered" ng-show="moveCashBagAction==='reallocate' && moveCashBagSearchResults">
+            <tr>
+              <th>Schedule Date</th>
+              <th>Store Number</th>
+              <th>Store Instance Number</th>
+              <th>Status</th>
+              <th>Select</th>
+            </tr>
+            <tr ng-repeat="storeInstance in moveCashBagSearchResults"
+                ng-class="getClassesForSingleSelectedRow(storeInstance, 'background', 'storeInstance')">
+              <td>{{ storeInstance.storeInstance }}</td>
+              <td>{{ storeInstance.storeNumber }}</td>
+              <td>{{ storeInstance.scheduleDate }}</td>
+              <td>{{ storeInstance.status }}</td>
+              <td>
+                <button ng-class="getClassesForSingleSelectedRow(storeInstance, 'button', 'storeInstance')"
+                        ng-click="selectRecordForMoveCashBag(storeInstance)">
+                  <span ng-class="getClassesForSingleSelectedRow(storeInstance, 'buttonIcon', 'storeInstance')"></span>
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="closeMoveCashBagModal()"
+                  ng-show="targetRecordForMoveCashBag">
+            <i class="fa fa-check"></i> Confirm
+          </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeMoveCashBagModal()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="rearrangeSectorModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4><strong>Rearrange Sectors</strong></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="row">
+                <div class="col-xs-12">
+                  <h4>Origin Cash Bag</h4>
+                  <select class="form-control"
+                          ng-model="rearrangeOriginCashBag"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBagNumber'"
+                          ng-change="clearRearrangeSelections()">
+                    <option selected="selected" value>Select a Cash Bag</option>
+                  </select>
+                  <hr>
+                  <table class="table" ng-show="rearrangeOriginCashBag">
+                    <tr class="active">
+                      <td>Select</td>
+                      <th>Sch #</th>
+                      <th>Sch Date</th>
+                      <th>Route</th>
+                    </tr>
+                    <tr ng-repeat="sector in rearrangeOriginCashBag.flightSectors"
+                        ng-class="getClassesForRearrangeSectors(sector, 'background')">
+                      <td ng-click="toggleSelectSectorToRearrange(sector)">
+                        <button ng-class="getClassesForRearrangeSectors(sector, 'button')">
+                          <span ng-class="getClassesForRearrangeSectors(sector, 'buttonIcon')"></span>
+                        </button>
+                      </td>
+                      <td>{{ sector.scheduleNumber }}</td>
+                      <td>{{ sector.scheduleDate}}</td>
+                      <td>{{ sector.route}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="row">
+                <div class="col-xs-12">
+                  <h4>Target Cash Bag</h4>
+                  <select class="form-control"
+                          ng-model="rearrangeTargetCashBag"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBagNumber'"
+                          ng-change="clearRearrangeSelections()">
+                    <option selected="selected" value>Select a Cash Bag</option>
+                  </select>
+                  <hr>
+                  <table class="table" ng-show="rearrangeTargetCashBag">
+                    <tr class="active">
+                      <th>Sch #</th>
+                      <th>Sch Date</th>
+                      <th>Route</th>
+                    </tr>
+                    <tr ng-repeat="sector in rearrangeTargetCashBag.flightSectors">
+                      <td>{{ sector.scheduleNumber }}</td>
+                      <td>{{ sector.scheduleDate}}</td>
+                      <td>{{ sector.route}}</td>
+                    </tr>
+                    <tr ng-repeat="sector in sectorsToMove" class="bg-info">
+                      <td>{{ sector.scheduleNumber }}</td>
+                      <td>{{ sector.scheduleDate}}</td>
+                      <td>{{ sector.route}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" ng-show="canSaveRearrange()">
+            <i class="fa fa-check"></i> Save
+          </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeRearrangeSectorModal()">
+            Exit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-xs-12 main">
+      <header>
+        <div class="row item-list-row">
+          <div class="col-xs-8">
+            <h3 class="view-name">Store Instance Amend</h3>
+          </div>
+          <div class="col-xs-4 text-right">
+            <button class="btn btn-primary">
+              Go To Reconciliation
+            </button>
+            <button class="btn btn-info">
+              <i class="fa fa-file-text" aria-hidden="true"></i> Show Payment Reports
+            </button>
+          </div>
+        </div>
+        <br>
+
+        <div class="panel panel-default col-xs-12">
+          <div class="col-xs-4 text-left pull-left">
+            <h4>
+              <strong>Store # 123</strong><br>
+              <small>10/25/2015</small>
+            </h4>
+          </div>
+          <div class="col-xs-4 text-center">
+            <h4><br>
+              <small>Store Instance: 123</small>
+            </h4>
+          </div>
+
+          <div class="col-xs-4 text-right">
+            <h4><br>
+              <small>Warehouse: Melborne</small>
+            </h4>
+          </div>
+        </div>
+        <br>
+      </header>
+
+      <div class="accordion-wrapper">
+        <accordion class="store-instance-review-accordion">
+          <accordion-group ng-init="discrepancyDetailOpen=true" is-open="discrepancyDetailOpen">
+            <accordion-heading class="accordion-heading">
+              <i ng-class="getClassForAccordionArrows(discrepancyDetailOpen)"
+                 class="fa"></i>
+              Discrepancy Summary
+            </accordion-heading>
+            <div clas="row">
+              <div class="col-xs-4">
+                <table class="table table-bordered">
+                  <tr>
+                    <td colspan="2" class="active">LMP Station Stock [GBP]</td>
+                  </tr>
+                  <tr>
+                    <td>Net Value of LMP Stock</td>
+                    <td>10.3</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-xs-4">
+                <table class="table table-bordered">
+                  <tr class="active">
+                    <td colspan="2">ePOS Sales [GBP]</td>
+                  </tr>
+                  <tr>
+                    <td>Net Value of ePOS Sales</td>
+                    <td>10.3</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-xs-4">
+                <table class="table table-bordered">
+                  <tr>
+                    <td class="active" colspan="2">Total Revenue [GBP]</td>
+                  </tr>
+                  <tr>
+                    <td>@ Cash Handler Exchange Rate</td>
+                    <td>10.3</td>
+                  </tr>
+                  <tr>
+                    <td>@ ePOS Exchange Rate</td>
+                    <td>10.3</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <table class="table table-bordered">
+                <tr class="info">
+                  <th>Discrepancy</th>
+                  <th>Value</th>
+                  <th>%</th>
+                </tr>
+                <tr>
+                  <td>Net LMP vs Net ePOS</td>
+                  <td>10.3</td>
+                  <td>0.09</td>
+                </tr>
+                <tr>
+                  <td>Total Revenue @ Cash Handler Exchange Rate vs Net ePOS</td>
+                  <td>10.3</td>
+                  <td>0.09</td>
+                </tr>
+                <tr>
+                  <td>Foreign Exchange</td>
+                  <td>10.3</td>
+                  <td>0.09</td>
+                </tr>
+                <tr class="active">
+                  <th>Total</th>
+                  <th>10.3</th>
+                  <th>0.09</th>
+                </tr>
+              </table>
+            </div>
+          </accordion-group>
+        </accordion>
+
+        <hr>
+        <br>
+
+        <div class="well">
+          <div class="row">
+            <div class="col-xs-9">
+              <div class="col-xs-6">
+                <div class="input-group">
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default btn-sm" disabled="true">
+                    <i class="fa fa-filter"></i> Filter
+                  </button>
+                </span>
+                  <ui-select multiple ng-model="cashBagFilter.filterList" theme="bootstrap">
+                    <ui-select-match placeholder="Select Cash Bag">{{ $item.cashBag }}</ui-select-match>
+                    <ui-select-choices repeat="cashBag in cashBagList | filter: $select.search">
+                      <span ng-hide="cashBag.isDeleted">{{ cashBag.cashBag }}</span>
+                      <span ng-show="cashBag.isDeleted && showDeletedCashBags"><s>{{ cashBag.cashBag }}</s></span>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                Show Deleted Records &nbsp;
+                <input bs-switch ng-model="showDeletedCashBags" type="checkbox" switch-size="medium"
+                       switch-on-color="info" switch-on-text="Yes" switch-off-text="No">
+              </div>
+            </div>
+
+            <div class="col-xs-3 text-right">
+              <button class="btn btn-warning" ng-click="showRearrangeSectorModal()">
+                <i class="fa fa-tasks active"></i> Rearrange Flight Sectors
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <h4>
+              <small><i><i class="fa fa-flag"></i> Indicates a manually added record</i></small>
+            </h4>
+          </div>
+        </div>
+        <div class="accordion-wrapper" ng-repeat="cashBag in cashBagList" ng-show="shouldShowCashBag(cashBag)">
+          <accordion class="store-instance-review-accordion">
+            <accordion-group ng-init="cashBag.accordionOpen=true" is-open="cashBag.accordionOpen">
+              <accordion-heading class="accordion-heading">
+                <div class="row">
+                  <div class="col-xs-6">
+                    <i ng-class="getClassForAccordionArrows(cashBag.accordionOpen)"
+                       class="fa"></i>
+                    <s ng-show="cashBag.isDeleted">Cash Bag {{ cashBag.cashBag }}</s>
+                    <span ng-hide="cashBag.isDeleted">Cash Bag {{ cashBag.cashBag }}</span>
+                    <i class="fa fa-flag" ng-show="cashBag.isManual"></i>
+                  </div>
+                  <div class="col-xs-6 text-right">
+                    Bank Ref {{ cashBag.bankRefNumber }}
+                  </div>
+                </div>
+              </accordion-heading>
+              <br>
+
+              <div class="row" ng-show="cashBag.isVerified || cashBag.isDeleted">
+                <div class="col-xs-12">
+                  <div class="alert alert-success" role="alert" ng-show="cashBag.isVerified">
+                    <div class="row">
+                      <div class="col-xs-8 text-left">
+                        <i class="fa fa-check-circle" ng-show="cashBag.isVerified"></i>
+                        Verified by areyes on 11/27/2015 at 12:34
+                      </div>
+                      <div class="col-xs-4 text-right">
+                        <button class="btn btn-success btn-xs" ng-click="toggleVerifiedCashBag(cashBag)">
+                          <i class="fa fa-times active"></i> Unverify
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="alert alert-danger" role="alert" ng-show="cashBag.isDeleted">
+                    <i class="fa fa-trash"></i>
+                    Deleted by areyes on 11/27/2015 at 12:34
+                  </div>
+                  <br>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xs-6 text-left">
+                  <h4>Sales and Revenue Detail</h4>
+                </div>
+                <div class="col-xs-6 text-right">
+                  <button class="btn btn-default btn-sm" ng-click="toggleSalesAndRevenueDetails(cashBag, false)" ng-show="isSalesAndRevenueDetailsOpen(cashBag)">
+                    <i class="fa fa-minus-circle active"></i> Collapse All Table Details
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <table class="table table-bordered" ng-init="cashBag.salesTableOpen=false">
+                    <tr class="active">
+                      <td colspan="2" ng-click="cashBag.salesTableOpen=!cashBag.salesTableOpen">
+                        <i ng-class="getClassForTableAccordion(cashBag.salesTableOpen)"></i>
+                        <strong>ePOS Sales [GBP]</strong>
+                      </td>
+                    </tr>
+                    <tr ng-show="cashBag.salesTableOpen">
+                      <td><a href="">Regular Item Sales</a></td>
+                      <td>+ {{ cashBag.regularItemSales }}</td>
+                    </tr>
+                    <tr ng-show="cashBag.salesTableOpen">
+                      <td><a href="">Virtual Sales</a></td>
+                      <td>+ {{ cashBag.virtualItemSales }}</td>
+                    </tr>
+                    <tr ng-show="cashBag.salesTableOpen">
+                      <td><a href="">Voucher Sales</a></td>
+                      <td>+ {{ cashBag.voucherItemSales }}</td>
+                    </tr>
+                    <tr ng-show="cashBag.salesTableOpen">
+                      <td><a href="">Promotion Discounts</a></td>
+                      <td>- {{ cashBag.promotionDiscounts }}</td>
+                    </tr>
+                    <tr class="active">
+                      <td>Net Value of ePOS Sales</td>
+                      <td>40.00</td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="col-xs-6">
+                  <table class="table table-bordered" ng-init="cashBag.revenueTableOpen=false">
+                    <tr class="active">
+                      <td colspan="2" ng-click="cashBag.revenueTableOpen=!cashBag.revenueTableOpen">
+                        <i ng-class="getClassForTableAccordion(cashBag.revenueTableOpen)"></i>
+                        <strong>Total Revenue in Cash Handler Exchange Rate</strong>
+                      </td>
+                    </tr>
+                    <tr ng-show="cashBag.revenueTableOpen">
+                      <td>Cash</td>
+                      <td>{{ cashBag.cashRevenue }}</td>
+                    </tr>
+                    <tr ng-show="cashBag.revenueTableOpen">
+                      <td>Credit</td>
+                      <td>{{ cashBag.creditRevenue }}</td>
+                    </tr>
+                    <tr ng-show="cashBag.revenueTableOpen">
+                      <td><a href="">Discount</a></td>
+                      <td>{{ cashBag.discountRevenue }}</td>
+                    </tr>
+                    <tr class="active">
+                      <td>Total Amount</td>
+                      <td>26.50</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-xs-6 text-left">
+                  <h4>Flight Sectors</h4>
+                </div>
+                <div class="col-xs-6 text-right">
+                  <button class="btn btn-primary btn-sm" ng-click="showAddOrEditScheduleModal()" ng-hide="cashBag.isDeleted">
+                    <i class="fa fa-plus active"></i> Add Schedule
+                  </button>
+                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-hide="isCrewDataOpen(cashBag)">
+                    <i class="fa fa-plus-circle active"></i> Expand All Crew Data
+                  </button>
+                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, false)" ng-show="isCrewDataOpen(cashBag)">
+                    <i class="fa fa-minus-circle active"></i> Collapse All Crew Data
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <table class="table">
+                    <tbody>
+                    <tr class="active">
+                      <th></th>
+                      <th></th>
+                      <th>Schedule Date</th>
+                      <th>Schedule Number</th>
+                      <th>Departure Station</th>
+                      <th>Arrival Station</th>
+                      <th>Passenger Count</th>
+                      <th>Tail Number</th>
+                      <th>Number of Transactions</th>
+                      <th>Transactions Total [GBP]</th>
+                      <th ng-hide="cashBag.isDeleted">Actions</th>
+                    </tr>
+                    </tbody>
+                    <tbody ng-repeat="flightSector in cashBag.flightSectors" ng-init="flightSector.rowOpen=false">
+                    <tr>
+                      <td>
+                      <i ng-class="getClassForTableAccordion(flightSector.rowOpen)"
+                            ng-click="flightSector.rowOpen=!flightSector.rowOpen"
+                            ng-if="doesSectorHaveCrewData(flightSector)"></i>
+                      </td>
+                      <td><i class="fa fa-flag" ng-show="flightSector.isManual"></i></td>
+                      <td>{{ flightSector.scheduleDate }}</td>
+                      <td>{{ flightSector.scheduleNumber }}</td>
+                      <td>{{ flightSector.departureStation }}</td>
+                      <td>{{ flightSector.arrivalStation }}</td>
+                      <td>{{ flightSector.passengerCount }}</td>
+                      <td>{{ flightSector.tailNumber }}</td>
+                      <td>{{ flightSector.transactionCount }}</td>
+                      <td>{{ flightSector.transactionTotal }}</td>
+                      <td ng-hide="cashBag.isDeleted">
+                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(flightSector)"><i class="fa fa-pencil active"></i></button>
+                        <button class="btn btn-danger btn-xs"><i class="fa fa-trash active"></i></button>
+                      </td>
+                    </tr>
+                    <tr class="subversion-row" ng-show="flightSector.rowOpen">
+                      <td colspan="2"></td>
+                      <td colspan="5">
+                        <table class="table table-bordered">
+                          <tr>
+                            <th>Crew ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                          </tr>
+                          <tr ng-repeat="crew in flightSector.crewData">
+                            <td>{{ crew.crewId }}</td>
+                            <td>{{ crew.firstName }}</td>
+                            <td>{{ crew.lastName }}</td>
+                          </tr>
+                        </table>
+                      </td>
+                      <td colspan="4"></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <br ng-hide="cashBag.isDeleted">
+              <hr ng-hide="cashBag.isDeleted">
+              <div class="row" ng-hide="cashBag.isDeleted">
+                <div class="col-xs-12 text-left">
+                  <button class="btn btn-info" title="Show Payment Report">
+                    <i class="fa fa-file-text active"></i>
+                  </button>
+                  <button class="btn btn-primary" title="Edit Cash Bag">
+                    <i class="fa fa-pencil active"></i>
+                  </button>
+                  <button class="btn btn-danger" title="Delete Cash Bag">
+                    <i class="fa fa-trash active"></i>
+                  </button>
+                  <button class="btn btn-warning" title="Merge or Reallocate Cash Bag" ng-click="showMoveCashBagModal(cashBag)">
+                    <i class="fa fa-share active"></i>
+                  </button>
+                  <button class="btn btn-success" ng-hide="cashBag.isVerified" title="Verify Cash Bag" ng-click="toggleVerifiedCashBag(cashBag)">
+                    <i class="fa fa-check-circle-o active"></i>
+                  </button>
+                </div>
+              </div>
+            </accordion-group>
+          </accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -347,11 +347,7 @@ angular.module('ts5App')
         _prevViewName = null;
         return;
       }
-      if (!$scope.canReview) {
-        showFormErrors();
-        return;
-      }
-      if ($scope.form && !$scope.form.$valid) {
+      if ($scope.form && !$scope.form.$valid || !$scope.canReview) {
         showFormErrors();
         return;
       }
