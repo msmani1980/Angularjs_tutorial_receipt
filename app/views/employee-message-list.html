@@ -1,0 +1,184 @@
+<div class="fluid-container">
+
+  <div class="employee-message-list">
+
+    <div class="list-controls">
+      <div class="row item-list-row">
+
+        <div class="col-xs-6">
+          <h2 class="view-name">{{ viewName }}</h2>
+        </div>
+
+        <div class="col-xs-6 text-right">
+          <button class="btn btn-primary">
+            <span class="fa fa-plus" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs">Create Message</span>
+          </button>
+          <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                  aria-controls="search-collapse">
+            <span class="fa fa-filter" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs">Filter</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default no-transition" id="search-collapse" ng-class="{'collapse': true }">
+      <form class="form">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Dispatch LMP Station</label>
+                <select class="form-control" ng-model="search.dispatchLMPStation" name="dispatchLMPStation">
+                  <option ng-disabled="true" selected="selected" value>Select Dispatch Station</option>
+                  <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
+                    station.name }} - {{ station.code }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Inbound LMP Station</label>
+                <select class="form-control" ng-model="search.inboundLMPStation" name="inboundLMPStation">
+                  <option ng-disabled="true" selected="selected" value>Select Inbound Station</option>
+                  <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
+                    station.name }} - {{ station.code }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Store Number</label>
+                <input type="text" class="form-control" placeholder="1234" name="storeNumber"
+                       ng-model="search.storeNumber">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.scheduleStartDate"
+                end-date-model="search.scheduleEndDate"
+                label-from="Schedule Date From"
+                label-to="Schedule Date To"
+                is-search-field="true">
+              </date-picker>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Departure Station</label>
+                <ui-select multiple ng-model="search.departureStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{station.name}}
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Arrival Station</label>
+                <ui-select multiple ng-model="search.arrivalStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Arrival Station...">{{$item.name + ' - ' + $item.code}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{station.name}}
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Store Instance</label>
+                <input type="text" class="form-control" placeholder="1234567" name="storeInstance"
+                       ng-model="search.storeInstance">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Status</label>
+                <select class="form-control" ng-model="search.storeStatusId" name="status">
+                  <option selected="selected" value>Select Status</option>
+                  <option ng-repeat="status in storeStatusList | orderBy:'name'" value="{{ status.id }}">{{
+                    status.statusName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default btn-search-clear">
+            <span class="btn-label">Clear</span>
+          </button>
+          <button class="btn btn-primary btn-search">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs btn-label">Search</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <table class="table table-bordered table-responsive table-hover">
+      <thead>
+      <tr>
+        <th class="col-xs-5">Message</th>
+        <th>Effective From</th>
+        <th>Effective To</th>
+        <th>Employee ID</th>
+        <th>Number</th>
+        <th>Departure Station</th>
+        <th>Arrival Station</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="message in employeeMessagesList">
+        <td>{{ message.employeeMessageText }}</td>
+        <td>{{ message.startDate }}</td>
+        <td>{{ message.endDate }}</td>
+        <td>Employee ID</td>
+        <td>Number</td>
+        <td>Departure Station</td>
+        <td>Arrival Station</td>
+        <td>
+          <button class="btn btn-info btn-xs"><i class="fa fa-file"></i></button>
+          <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal fade" id="receive-confirm" data-backdrop="static" data-keyboard="false">
+
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h3 class="modal-title">Confirmation</h3>
+        </div>
+
+        <div class="modal-body">
+          <h3><span class='fa fa-exclamation-circle'></span> Are you sure you'd like to set the status to Received?</h3>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary btn-list" ng-click="storeStatusReceived(receiveStore)">Yes, I am sure.</button>
+          <button class="btn btn-default" data-dismiss="modal">Cancel</a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
