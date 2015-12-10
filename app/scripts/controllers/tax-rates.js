@@ -16,7 +16,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Tax Management';
 
-    $scope.taxRateList = [];
+    $scope.taxRatesList = [];
     $scope.taxTypesList = [];
     $scope.dateRange = {
       startDate: '',
@@ -35,6 +35,10 @@ angular.module('ts5App')
       $scope.taxTypesList = angular.copy(dataFromAPI.response);
     };
 
+    this.setTaxRateTypesList = function(dataFromAPI) {
+      $scope.taxRatesList = angular.copy(dataFromAPI);
+    };
+
     this.getTaxTypesList = function() {
       var params = {
         companyId: companyId
@@ -42,9 +46,14 @@ angular.module('ts5App')
       return taxRatesFactory.getTaxTypesList(params).then($this.setTaxTypesList);
     };
 
+    this.getTaxRateTypesList = function() {
+      return taxRatesFactory.getTaxRateTypes(companyId).then($this.setTaxRateTypesList);
+    };
+
     this.createPromises = function() {
       return [
-        $this.getTaxTypesList()
+        $this.getTaxTypesList(),
+        $this.getTaxRateTypesList()
       ];
     };
 
