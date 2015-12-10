@@ -264,14 +264,14 @@ angular.module('ts5App')
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Voucher'}).map(function (item) {
         reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
-          item.itemName = dataFromAPI.itemName;
+          item.itemName = dataFromAPI.retailItem.itemName;
         }, handleResponseError);
       });
     }
 
     function setNetTotals(stockData) {
       var stockTotals = angular.copy(stockData);
-      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedLMP + stockTotals.totalVoucher.parsedLMP - stockTotals.totalPromotion.parsedLMP;
+      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedLMP;
       var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
 
       var netTotals = {
@@ -279,7 +279,7 @@ angular.module('ts5App')
         netEPOS: formatAsCurrency(netEPOS)
       };
 
-      var stockItems = angular.copy($this.stockTotals).concat($this.promotionTotals);
+      var stockItems = $this.stockTotals.concat($this.promotionTotals);
       $scope.stockTotals = angular.extend(stockTotals, {totalNet: netTotals}, {stockItems: stockItems});
     }
 
