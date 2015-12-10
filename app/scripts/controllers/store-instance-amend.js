@@ -11,7 +11,10 @@ angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash) {
     var $this = this;
 
-    $scope.showAddScheduleModal = function () {
+    $scope.showAddOrEditScheduleModal = function (scheduleToEdit) {
+      if(scheduleToEdit) {
+        $scope.scheduleToEdit = scheduleToEdit;
+      }
       angular.element('#addScheduleModal').modal('show');
     };
 
@@ -28,6 +31,7 @@ angular.module('ts5App')
       $scope.scheduleSearch = {};
       $scope.newScheduleSelection = null;
       $scope.searchScheduleResults = null;
+      $scope.scheduleToEdit = null;
     };
 
     $scope.clearRearrangeSelections = function () {

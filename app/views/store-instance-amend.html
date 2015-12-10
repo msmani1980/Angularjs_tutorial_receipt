@@ -6,7 +6,10 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4><strong>Add Schedule</strong></h4>
+          <h4><strong>
+            <span ng-hide="scheduleToEdit">Add Schedule</span>
+            <span ng-show="scheduleToEdit">Replace Schedule {{scheduleToEdit.scheduleNumber }}</span>
+          </strong></h4>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -570,7 +573,7 @@
                   <h4>Flight Sectors</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-primary btn-sm" ng-click="showAddScheduleModal()" ng-hide="cashBag.isDeleted">
+                  <button class="btn btn-primary btn-sm" ng-click="showAddOrEditScheduleModal()" ng-hide="cashBag.isDeleted">
                     <i class="fa fa-plus active"></i> Add Schedule
                   </button>
                   <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-hide="isCrewDataOpen(cashBag)">
@@ -616,7 +619,7 @@
                       <td>{{ flightSector.transactionCount }}</td>
                       <td>{{ flightSector.transactionTotal }}</td>
                       <td ng-hide="cashBag.isDeleted">
-                        <button class="btn btn-primary btn-xs"><i class="fa fa-pencil active"></i></button>
+                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(flightSector)"><i class="fa fa-pencil active"></i></button>
                         <button class="btn btn-danger btn-xs"><i class="fa fa-trash active"></i></button>
                       </td>
                     </tr>
