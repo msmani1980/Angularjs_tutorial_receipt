@@ -88,6 +88,8 @@ module.exports = function(config) {
       'bower_components/aes/index.js',
       'bower_components/angular-scroll/angular-scroll.js',
       'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/sprintf/dist/sprintf.min.js',
+      'bower_components/sprintf/dist/angular-sprintf.min.js',
       // endbower
       'app/scripts/**/*.js',
       'test/mock/**/*.json',
