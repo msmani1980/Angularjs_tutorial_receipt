@@ -26,8 +26,8 @@ angular.module('ts5App')
       'regionId': 8,
       'regionName': 'All',
       'stationCode': 'CPH',
-      'stationId': 23,
-      'stationName': 'Copenhagen',
+      'stationId': 3,
+      'stationName': 'London',
       'timezone': 'Europe/Madrid',
       'timezoneId': '86',
       'utcDstOffset': '+02:00',
@@ -391,6 +391,33 @@ angular.module('ts5App')
       ]
     };
 
+    var catererStationListJSON = {
+      'response': [{
+        'id': 3,
+        'companyId': 403,
+        'code': 'LON3',
+        'name': 'London'
+      }, {
+        'id': 5,
+        'companyId': 403,
+        'code': 'DEL',
+        'name': 'Delhi'
+      }],
+      'meta': {
+        'count': 2,
+        'limit': 2,
+        'start': 0
+      }
+    };
+
+    this.setCatererStationList = function(dataFromAPI) {
+      $scope.catererStationList = angular.copy(dataFromAPI.response);
+    };
+
+    this.getCatererStationList = function() {
+      // add factory API call here
+      this.setCatererStationList(catererStationListJSON);
+    };
 
     this.setCityList = function(dataFromAPI) {
       $scope.cityList = angular.copy(dataFromAPI.cities);
@@ -419,6 +446,19 @@ angular.module('ts5App')
       this.setGlobalStationList(globalStationListJSON);
     };
 
+    this.setStationRelationships = function(station) {
+      $scope.formData.companyStationRelationships = [];
+      angular.forEach(station.companyStationRelationships, function(relationship) {
+        $scope.formData.companyStationRelationships.push({
+          id: relationship.id,
+          stationId: parseInt(station.stationId),
+          endDate: dateUtility.formatDateForApp(relationship.endDate),
+          startDate: dateUtility.formatDateForApp(relationship.startDate)
+        });
+      });
+      console.log($scope.formData.companyStationRelationships);
+    };
+
     this.setStation = function(dataFromAPI) {
       var station = angular.copy(dataFromAPI);
       $scope.formData = {
@@ -438,8 +478,8 @@ angular.module('ts5App')
         startDate: dateUtility.formatDateForApp(station.startDate),
         endDate: dateUtility.formatDateForApp(station.endDate),
         isCaterer: station.isCaterer,
-        companyStationRelationships: station.companyStationRelationships
       };
+      this.setStationRelationships(station);
       $scope.dataReady = true;
     };
 
@@ -486,7 +526,8 @@ angular.module('ts5App')
     this.checkIfViewOnly = function () {
       var path = $location.path();
       if (path.search('/station-view') !== -1) {
-        $scope.viewOnly = true;
+        $this.viewOnly = true;
+        $scope.viewLabel = 'Viewing ';
       }
     };
 
@@ -499,8 +540,9 @@ angular.module('ts5App')
     };
 
     this.setFormAsEdit = function () {
-      $scope.editingRelationship = true;
       $scope.buttonText = 'Save';
+      $scope.viewLabel = 'Editing';
+      this.checkIfViewOnly();
     };
 
     this.setUISelectValidationClass = function (inputName) {
@@ -520,21 +562,33 @@ angular.module('ts5App')
       return [
         this.getGlobalStationList(),
         this.getCountryList(),
-        this.getCityList()
+        this.getCityList(),
+        this.getCatererStationList()
       ];
     };
 
     this.initSuccessHandler = function() {
-      if ($routeParams.id && !$scope.viewOnly) {
+      if ($routeParams.id) {
+        $this.getStation();
         $this.setFormAsEdit();
-        return $this.getStation();
+        return false;
       }
       $scope.dataReady = true;
     };
 
     this.init = function() {
+      this.viewOnly = false;
+      $scope.formData = {
+        stationId: null,
+        endDate: dateUtility.nowFormatted(),
+        startDate: dateUtility.nowFormatted(),
+        companyStationRelationships: []
+      };
+
+      $scope.displayError = false;
+      $scope.buttonText = 'Add';
+      $scope.viewLabel = 'Add';
       // TODO: Add waiting
-      this.checkIfViewOnly();
       var promises = this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };
@@ -542,15 +596,6 @@ angular.module('ts5App')
     this.init();
 
     /* Scope */
-    $scope.formData = {
-      stationId: null,
-      endDate: dateUtility.nowFormatted(),
-      startDate: dateUtility.nowFormatted(),
-      companyStationRelationships: []
-    };
-    $scope.viewOnly = false;
-    $scope.displayError = false;
-    $scope.buttonText = 'Add';
 
     $scope.submitForm = function() {
       return $this.submitForm();
@@ -566,6 +611,11 @@ angular.module('ts5App')
 
     $scope.addRelationship = function() {
       return $this.addRelationship();
+    };
+
+    $scope.isViewOnly = function() {
+      console.log($this.viewOnly);
+      return $this.viewOnly;
     };
 
   });
