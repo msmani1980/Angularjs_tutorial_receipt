@@ -1,18 +1,46 @@
 'use strict';
 
-describe('Service: taxRatesService', function () {
+fdescribe('Service: taxRatesService', function() {
 
-  // load the service's module
-  beforeEach(module('ts5App'));
+  beforeEach(module('ts5App', 'served/company-tax-rates.json'));
 
-  // instantiate service
   var taxRatesService;
-  beforeEach(inject(function (_taxRatesService_) {
+  var companyTaxRatesJSON;
+  var $httpBackend;
+
+  beforeEach(inject(function(_taxRatesService_, $injector) {
+    taxRatesService = _taxRatesService_;
+    inject(function(_servedCompanyTaxRates_) {
+      companyTaxRatesJSON = _servedCompanyTaxRates_;
+    });
+
+    $httpBackend = $injector.get('$httpBackend');
+    $httpBackend.whenGET(/tax-rates/).respond(companyTaxRatesJSON);
     taxRatesService = _taxRatesService_;
   }));
 
-  it('should do something', function () {
-    expect(!!taxRatesService).toBe(true);
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  describe('getCompanyTaxRatesList', function() {
+    var fakeReponseData;
+    beforeEach(function() {
+      taxRatesService.getCompanyTaxRatesList().then(function(dataFromAPI) {
+        fakeReponseData = dataFromAPI;
+      });
+      $httpBackend.flush();
+    });
+
+    it('should be an Object', function() {
+      expect(angular.isObject(fakeReponseData)).toBe(true);
+    });
+
+    it('should have a an array of taxRates', function() {
+      expect(fakeReponseData.taxRates).toBeDefined();
+    });
+
   });
 
 });

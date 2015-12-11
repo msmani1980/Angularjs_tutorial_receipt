@@ -9,26 +9,38 @@
  */
 angular.module('ts5App')
   .factory('taxRatesFactory', function(taxRateTypesService, taxTypesService, countriesService, stationsService,
-    currenciesService) {
+    currenciesService, taxRatesService, GlobalMenuService) {
 
-    var getTaxTypesList = function(payload) {
-      return taxTypesService.getTaxTypesList(payload);
+    var companyId = GlobalMenuService.company.get();
+
+    var getTaxTypesList = function() {
+      return taxTypesService.getTaxTypesList({
+        companyId
+      });
     };
 
-    var getTaxRateTypes = function(payload) {
-      return taxRateTypesService.getTaxRateTypes(payload);
+    var getTaxRateTypes = function() {
+      return taxRateTypesService.getTaxRateTypes(companyId);
     };
 
-    var getCountriesList = function(payload) {
-      return countriesService.getCountriesList(payload);
+    var getCountriesList = function() {
+      return countriesService.getCountriesList(companyId);
     };
 
-    var getStationsList = function(companyId, offset) {
-      return stationsService.getStationList(companyId, offset);
+    var getStationsList = function() {
+      return stationsService.getStationList(companyId, 0);
     };
 
-    var getCompanyCurrencies = function(payload) {
-      return currenciesService.getCompanyCurrencies(payload);
+    var getCompanyCurrencies = function() {
+      return currenciesService.getCompanyCurrencies(companyId);
+    };
+
+    var getCompanyTaxRatesList = function(companyId) {
+      return taxRatesService.getCompanyTaxRatesList(companyId);
+    };
+
+    var getCompanyTaxRate = function(id) {
+      return taxRatesService.getCompanyTaxRate(id);
     };
 
     return {
@@ -36,7 +48,9 @@ angular.module('ts5App')
       getTaxRateTypes: getTaxRateTypes,
       getCountriesList: getCountriesList,
       getStationsList: getStationsList,
-      getCompanyCurrencies: getCompanyCurrencies
+      getCompanyCurrencies: getCompanyCurrencies,
+      getCompanyTaxRatesList: getCompanyTaxRatesList,
+      getCompanyTaxRate: getCompanyTaxRate
     };
 
   });
