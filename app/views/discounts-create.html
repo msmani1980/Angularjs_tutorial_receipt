@@ -8,7 +8,7 @@
           </div>
           <div class="col-xs-6 text-right">
             <fieldset ng-hide="viewOnly">
-              <button class="btn btn-default" ng-click="leaveView('discounts-list')">
+              <button class="btn btn-default" ng-click="leaveView('discounts')">
                 <span class="fa fa-remove" aria-hidden="true"></span>
                 <span class="hidden-xs">Cancel</span>
               </button>
@@ -46,35 +46,49 @@
             <div class="form-group">
               <label>Global Discount Type*</label>
               <select name="globalDiscountType" required ng-model="formData.globalDiscountType" class="form-control">
-                <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
-                        value="{{ category.id }}">{{ category.name }}
+                <option ng-selected="setSelected(formData.categoryId, discountType.id)" ng-repeat="discountType in discountTypesList"
+                        value="{{ discountType.id }}">{{ discountType.globalDiscountTypeName }}
                 </option>
               </select>
             </div>
-            <input-text label="Global Discount Description" name="globalDiscountDescription" pattern="regexp.word"></input-text>
-            <div class="form-group">
-              <input-text label="Bar Code*" name="barCode" pattern="regexp.word"></input-text>
+            <div class="form-group" ng-show="formData.globalDiscountType">
+              <label class="control-label">Global Discount Description</label>
+              <div>{{ getGlobalDiscountDescriptionById(formData.globalDiscountType) }}</div>
+            </div>
+            <div class="form-group" ng-show="formData.globalDiscountType === '1'">
+              <label class="control-label">Bar Code*</label>
+              <input class="form-control" ng-model="formData.barCode" pattern="regexp.word" required />
             </div>
           </fieldset>
         </div>
         <div class="col-xs-12 col-sm-6">
           <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
-            <input-text label="Discount Name" name="discountName" pattern="regexp.word"></input-text>
-            <input-textarea label="Description" name="description" pattern="regexp.word"></input-textarea>
+            <div class="form-group">
+              <label class="control-label">Discount Name*</label>
+              <input class="form-control" ng-model="formData.discountName" pattern="regexp.word" required />
+            </div>
+            <div class="form-group">
+              <label class="control-label">Discount Name*</label>
+              <textarea class="form-control" ng-model="formData.description" pattern="regexp.word" required />
+            </div>
             <div class="row">
-              <date-picker
-                class="col-xs-12 col-md-12 col-sm-12"
-                element-class="col-xs-6 col-sm-6"
-                start-date-model="search.startDate"
-                end-date-model="search.endDate"
-                label-from="Effective From *"
-                label-to="Effective To *">
-              </date-picker>
+              <div class="col-xs-12 col-sm-6">
+                <fieldset>
+                  <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate"
+                                     min-date="'+1d'" required="true"></date-picker-field>
+                </fieldset>
+              </div>
+              <div class="col-xs-12 col-sm-6">
+                <fieldset>
+                  <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate"
+                                     min-date="( editingDiscount ? '0d' : '+1d')" required="true"></date-picker-field>
+                </fieldset>
+              </div>
             </div>
           </fieldset>
         </div>
       </div>
-      <h3>Benefits</h3>
+      <h3 id="rates">Benefits</h3>
       <div class="row">
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
@@ -177,7 +191,7 @@
           </fieldset>
         </div>
       </div>
-      <h3>Limitation Per Seat</h3>
+      <h3 id="restrictions">Restrictions</h3>
       <div class="row">
         <div class="col-xs-12 col-sm-12">
           <label>Restrictions</label>
@@ -192,7 +206,7 @@
           <div class="form-group">
             <label for="denomination-{{$index}}">Item Categories</label>
             <ui-select id="denomination-{{$index}}" multiple ng-model="currency.selectedDenominations " ng-change="removeInvalidEasyPayDenominations(currency)" ng-disabled="isCurrencyReadOnly(currency)" theme="bootstrap" style="min-height: 30px;">
-              <ui-select-match placeholder="Select denomination...">{{$item.denomination}}</ui-select-match>
+              <ui-select-match placeholder="Select categories...">{{$item.denomination}}</ui-select-match>
               <ui-select-choices repeat="denomination in currencyDenominations[currency.currencyId] | filter:{denomination: $select.search}">
                 <div ng-bind-html="denomination.denomination | highlight: $select.search"></div>
               </ui-select-choices>
