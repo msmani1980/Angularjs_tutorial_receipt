@@ -188,7 +188,7 @@ angular.module('ts5App')
     };
 
     this.filterByGlobalReason = function(reason) {
-      if( angular.isUndefined($scope.reasonFilter) ) {
+      if( $scope.reasonFilter.selectedGlobalReasons.length === 0 ) {
         return true;
       }
       return $scope.reasonFilter.selectedGlobalReasons.filter(function(reasonType) {
@@ -242,14 +242,28 @@ angular.module('ts5App')
       $scope.buttonText = 'Save';
     };
 
+    this.setSubscribedGlobalReasons = function() {
+      // mock data, should be a real loop to set subscribed list
+      return [
+        globalReasonCodeTypesJSON.reasonTypes[0],
+        globalReasonCodeTypesJSON.reasonTypes[1],
+        globalReasonCodeTypesJSON.reasonTypes[2],
+        globalReasonCodeTypesJSON.reasonTypes[3],
+      ];
+    };
+
     this.setUpFormDataObject = function() {
       $scope.formData = {
-        globalReasons: []
+        globalReasons: [],
+        subscribedGlobalReasons: this.setSubscribedGlobalReasons()
       };
       angular.forEach($scope.globalReasonCodeTypesList, function(globalReason) {
         $scope.formData.globalReasons.push({
           id:globalReason.id,
-          companyReasons: []
+          companyReasons: [
+            {reasonCode: 'Example reason 1',isActive:true},
+            {reasonCode: 'Example reason 2',isActive:true}
+          ]
         });
       });
     };
@@ -278,7 +292,7 @@ angular.module('ts5App')
       if(globalReason) {
         globalReason.companyReasons.push({
           reasonCode:'',
-          isActive: true
+          isActive: null
         });
       }
     };
@@ -307,6 +321,12 @@ angular.module('ts5App')
 
     $scope.whenReasonIsNotFiltered = function(reason) {
       return $this.filterByGlobalReason(reason);
+    };
+
+    $scope.addReasonCodeWithEnter = function(keyEvent,globalReasonCodeId) {
+      if (keyEvent.which === 13) {
+        $this.addReasonCode(globalReasonCodeId);
+      }
     };
 
   });
