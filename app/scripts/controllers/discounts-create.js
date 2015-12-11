@@ -8,14 +8,16 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('DiscountsCreateCtrl', function ($scope, $q, $location, $routeParams, discountFactory) {
+  .controller('DiscountsCreateCtrl', function ($scope, $q, $location, $routeParams, dateUtility, discountFactory, recordsService, currencyFactory) {
     var $this = this;
 
     $scope.viewName = 'Create Discount';
     $scope.buttonText = 'Create';
     $scope.editingDiscount = false;
     $scope.uiSelectTemplateReady = false;
+    $scope.globalDiscountTypesList = [];
     $scope.discountTypesList = [];
+    $scope.companyCurrencyGlobalsList = [];
     $scope.formData = {};
 
     this.checkFormState = function() {
@@ -32,10 +34,6 @@ angular.module('ts5App')
       this.hideLoadingModal();
     };
 
-    this.setDiscountTypesList = function(data) {
-      $scope.discountTypesList = data.discounts;
-    };
-
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     };
@@ -44,20 +42,41 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    this.makeDependencyPromises = function() {
-      return [
-        discountFactory.getDiscountTypesList()
-      ];
+    this.setGlobalDiscountTypesList = function(data) {
+      $scope.globalDiscountTypesList = data.discounts;
+    };
+
+    this.setDiscountTypesList = function(data) {
+      $scope.discountTypesList = data;
+    };
+
+    this.setCompanyCurrencyGlobals = function(data) {
+      $scope.companyCurrencyGlobalsList = data.response;
     };
 
     this.setDependencies = function(response) {
-      $this.setDiscountTypesList(response[0]);
+      $this.setGlobalDiscountTypesList(response[0]);
+      $this.setDiscountTypesList(response[1]);
+      $this.setCompanyCurrencyGlobals(response[2]);
 
       if ($scope.editingDiscount) {
         this.getItem($routeParams.id);
       } else {
         $this.setUIReady();
       }
+    };
+
+    this.makeDependencyPromises = function() {
+      var companyCurrenciesPayload = {
+        isOperatedCurrency: true,
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      };
+
+      return [
+        discountFactory.getDiscountTypesList(),
+        recordsService.getDiscountTypes(),
+        currencyFactory.getCompanyCurrencies(companyCurrenciesPayload)
+      ];
     };
 
     this.getDependencies = function() {
@@ -69,7 +88,7 @@ angular.module('ts5App')
     };
 
     $scope.getGlobalDiscountDescriptionById = function(id) {
-      var discount = $scope.discountTypesList.filter(function(discount) {
+      var discount = $scope.globalDiscountTypesList.filter(function(discount) {
         return discount.id == id
       });
 
