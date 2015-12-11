@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: TaxRatesCtrl', function() {
+describe('Controller: TaxRatesCtrl', function() {
 
   beforeEach(module(
     'ts5App',
@@ -160,7 +160,7 @@ fdescribe('Controller: TaxRatesCtrl', function() {
       });
 
       it('should set the $scope.stationsList to the mock data', function() {
-        expect($scope.stationsList).toEqual(stationsListJSON);
+        expect($scope.stationsList).toEqual(stationsListJSON.response);
       });
 
       it('should set the $scope.currenciesList to the mock data', function() {
