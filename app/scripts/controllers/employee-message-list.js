@@ -14,6 +14,10 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     var $this = this;
     $scope.viewName = 'Employee Messages';
 
+    $scope.isActiveOrFutureRecord = function (record) {
+      return dateUtility.isAfterToday(record.endDate);
+    };
+
     this.getMessagesSuccess = function (dataFromAPI) {
       $scope.employeeMessagesList = angular.copy(dataFromAPI.employeeMessages);
       angular.forEach($scope.employeeMessagesList, function (message) {

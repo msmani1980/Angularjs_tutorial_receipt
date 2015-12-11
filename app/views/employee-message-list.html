@@ -130,13 +130,9 @@
     <table class="table table-bordered table-responsive table-hover">
       <thead>
       <tr>
-        <th class="col-xs-5">Message</th>
+        <th class="col-xs-8">Message</th>
         <th>Effective From</th>
         <th>Effective To</th>
-        <th>Employee ID</th>
-        <th>Number</th>
-        <th>Departure Station</th>
-        <th>Arrival Station</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -145,40 +141,14 @@
         <td>{{ message.employeeMessageText }}</td>
         <td>{{ message.startDate }}</td>
         <td>{{ message.endDate }}</td>
-        <td>Employee ID</td>
-        <td>Number</td>
-        <td>Departure Station</td>
-        <td>Arrival Station</td>
         <td>
           <button class="btn btn-info btn-xs"><i class="fa fa-file"></i></button>
-          <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
+          <button class="btn btn-primary btn-xs" ng-show="isActiveOrFutureRecord(message)"><i class="fa fa-pencil"></i></button>
         </td>
+      </tr>
+      <tr>
       </tr>
       </tbody>
     </table>
   </div>
-
-  <div class="modal fade" id="receive-confirm" data-backdrop="static" data-keyboard="false">
-
-    <div class="modal-dialog">
-
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <h3 class="modal-title">Confirmation</h3>
-        </div>
-
-        <div class="modal-body">
-          <h3><span class='fa fa-exclamation-circle'></span> Are you sure you'd like to set the status to Received?</h3>
-        </div>
-
-        <div class="modal-footer">
-          <button class="btn btn-primary btn-list" ng-click="storeStatusReceived(receiveStore)">Yes, I am sure.</button>
-          <button class="btn btn-default" data-dismiss="modal">Cancel</a>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
+</div>
