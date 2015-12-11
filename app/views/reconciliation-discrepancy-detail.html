@@ -8,14 +8,14 @@
           <div class="panel" ng-repeat="report in paymentReport">
             <h4>{{report.reportTitle}} Report</h4>
             <div class="panel-body">
-              <p>Flight Date: {{report.flightDate}}</p>
+              <p>Flight Date: {{report.scheduleDate}}</p>
 
-              <p>Flight Number: {{report.flightDate}} (Pax {{report.pax}})</p>
-
-              <p>Sector: {{report.departureStation}} - {{report.arrivalStation}}</p>
+              <div ng-repeat="sector in report.sectors">
+                <p>Flight Number: {{sector.flightNumber}} (Pax {{sector.pax}})</p>
+                <p>Sector: {{sector.departureStation}} - {{sector.arrivalStation}}</p>
+              </div>
 
               <p>Store #: {{storeInstance.storeDetails.storeNumber}}</p>
-
               <p>Aircraft Registration: {{report.carrierNumber}}</p>
 
               <p>Cash Bag #: {{report.flightDate}}</p>
@@ -41,11 +41,11 @@
                 </tr>
                 <tr>
                   <td>Voucher Total</td>
-                  <td>-</td>
+                  <td>{{report.voucherTotal}}</td>
                 </tr>
                 <tr>
                   <td>Complimentary Total</td>
-                  <td>-</td>
+                  <td>{{report.compTotal}}</td>
                 </tr>
                 <tr>
                   <td>Expected Total</td>
