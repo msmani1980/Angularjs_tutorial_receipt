@@ -119,6 +119,28 @@ angular.module('ts5App')
 
     this.init();
 
+    // Place private template controller logic here
+
+    this.isDateRangeSet = function() {
+      return ($scope.dateRange.startDate.length || $scope.dateRange.endDate.length);
+    };
+
+    this.isSearchFieldActive = function(searchField) {
+      return (angular.isObject(searchField) || angular.isNumber(searchField));
+    };
+
+    this.isSearchActive = function() {
+      var isActive = false;
+      for (var key in $scope.search) {
+        var searchField = $scope.search[key];
+        if (angular.isDefined(searchField) && $this.isSearchFieldActive(searchField)) {
+          isActive = true;
+          break;
+        }
+      }
+      return isActive;
+    };
+
     // Place $scope functions here
 
     $scope.clearSearchFilters = function() {
@@ -129,24 +151,8 @@ angular.module('ts5App')
       };
     };
 
-    $scope.isDateRangeSet = function() {
-      return ($scope.dateRange.startDate.length || $scope.dateRange.endDate.length);
-    };
-
-    $scope.isSearchActive = function() {
-      var isActive = false;
-      for (var key in $scope.search) {
-        var searchField = $scope.search[key];
-        if (angular.isDefined(searchField.length) || angular.isObject(searchField)) {
-          isActive = true;
-          break;
-        }
-      }
-      return isActive;
-    };
-
     $scope.showClearButton = function() {
-      return ($scope.isDateRangeSet() || $scope.isSearchActive());
+      return ($this.isDateRangeSet() || $this.isSearchActive());
     };
 
   });
