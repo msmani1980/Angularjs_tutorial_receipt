@@ -145,8 +145,28 @@
       </thead>
 
       <!--TODO: add in <tr> with ng-repeat-->
+      <tr ng-repeat="taxRate in companyTaxRatesList track by $index">
+        <td>{{taxRate.taxTypeCode}}</td>
+        <td>{{taxRate.countryName}}</td>
+        <td>
+          <span class="label label-primary" ng-repeat="station in taxRate.companyTaxRateStations | orderBy:'stationName'">
+            {{station.stationName}}
+          </span>
+        </td>
+        <td>{{taxRate.taxRateType}}</td>
+        <td>{{taxRate.taxRateValue}}</td>
+        <td>{{taxRate.startDate}}</td>
+        <td>{{taxRate.endDate}}</td>
 
-      <tr>
+        <!-- TODO: add action buttons for each tax rate -->
+        <td>
+          <a class="btn btn-primary btn-xs">
+            <span class="fa fa-pencil"></span>
+          </a>
+          <a class="btn btn-danger btn-xs">
+            <span class="fa fa-remove"></span>
+          </a>
+        </td>
 
       </tr>
 
