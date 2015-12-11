@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: TaxRatesCtrl', function() {
+describe('Controller: TaxRatesCtrl', function() {
 
   beforeEach(module(
     'ts5App',
@@ -66,6 +66,7 @@ fdescribe('Controller: TaxRatesCtrl', function() {
 
     getCompanyTaxRatesListDeferred = $q.defer();
     spyOn(taxRatesFactory, 'getCompanyTaxRatesList').and.returnValue(getCompanyTaxRatesListDeferred.promise);
+
   }));
 
   function resolveAllDependencies() {
@@ -181,6 +182,54 @@ fdescribe('Controller: TaxRatesCtrl', function() {
 
       it('should set the $scope.companyTaxRatesList to the mock data', function() {
         expect($scope.companyTaxRatesList).toEqual(companyTaxRatesJSON.taxRates);
+      });
+
+      describe('Search Template Logic', function() {
+
+        beforeEach(function() {
+          spyOn(TaxRatesCtrl, 'isDateRangeSet').and.callThrough();
+          spyOn(TaxRatesCtrl, 'isSearchFieldActive').and.callThrough();
+          spyOn(TaxRatesCtrl, 'isSearchActive').and.callThrough();
+        });
+
+        it('clearSearchFilters should clear the search and dates', function() {
+          $scope.search = {
+            taxRate: 1
+          };
+          $scope.clearSearchFilters();
+          expect($scope.search).toEqual({});
+        });
+
+        it('showClearButton should return true if search has data', function() {
+          $scope.search.taxRate = 1;
+          expect($scope.showClearButton()).toBeTruthy();
+        });
+
+        it('showClearButton should return true if dateRange is set', function() {
+          $scope.dateRange.startDate = '11202015';
+          expect($scope.showClearButton()).toBeTruthy();
+        });
+
+        it('showClearButton should return false if search data is set but undefined', function() {
+          $scope.search.taxType = undefined;
+          $scope.dateRange.startDate = '';
+          expect($scope.showClearButton()).toBeFalsy();
+        });
+
+        it('showClearButton should trigger isDateRangeSet', function() {
+          $scope.showClearButton();
+          $scope.$digest();
+          expect(TaxRatesCtrl.isDateRangeSet).toHaveBeenCalled();
+        });
+
+        it('showClearButton should trigger isSearchActive and isSearchFieldActive', function() {
+          $scope.search.taxRate = 1;
+          $scope.showClearButton();
+          $scope.$digest();
+          expect(TaxRatesCtrl.isSearchFieldActive).toHaveBeenCalled();
+          expect(TaxRatesCtrl.isSearchActive).toHaveBeenCalled();
+        });
+
       });
 
     });

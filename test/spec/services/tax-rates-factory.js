@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: taxRatesFactory', function() {
+describe('Service: taxRatesFactory', function() {
 
   beforeEach(module('ts5App'));
 
