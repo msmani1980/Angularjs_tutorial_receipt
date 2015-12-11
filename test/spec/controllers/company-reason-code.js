@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Company Reason Code Controller', function() {
+describe('Company Reason Code Controller', function() {
 
   beforeEach(module(
     'ts5App',
