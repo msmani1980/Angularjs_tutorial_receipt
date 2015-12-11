@@ -9,11 +9,12 @@
  */
 angular.module('ts5App')
   .service('dailyExchangeRatesService', function ($q, $http, $resource, ENV) {
-    var dailyExchangeRatesURL = ENV.apiUrl + '/api/daily-exchange-rates/:exchangeRateId';
+    var dailyExchangeRatesURL = ENV.apiUrl + '/api/daily-exchange-rates/:exchangeRateId/:id';
     var previousExchangeRatesURL = ENV.apiUrl + '/api/daily-exchange-rates/previous-exchange-rate';
 
     var dailyExchangeRatesParameters = {
-      exchangeRateId: '@dailyExchangeRate.id'
+      exchangeRateId: '@dailyExchangeRate.id',
+      id:'@id'
     };
 
     var previousExchangeRatesParameters = {};
@@ -59,6 +60,14 @@ angular.module('ts5App')
       return dailyExchangeRatesResource.getExchangeRates(payload).$promise;
     };
 
+    var getDailyExchangeById = function (companyId, dailyExchangeRateId) {
+      var payload = {
+        exchangeRateId: dailyExchangeRateId,
+        retailCompanyId: companyId
+      };
+      return dailyExchangeRatesResource.getExchangeRates(payload).$promise;
+    };
+
     var getPreviousExchangeRates = function (companyId, cashierDate) {
       var payload = {
         retailCompanyId: companyId,
@@ -69,6 +78,7 @@ angular.module('ts5App')
 
     return {
       getDailyExchangeRates: getDailyExchangeRates,
+      getDailyExchangeById: getDailyExchangeById,
       getPreviousExchangeRates: getPreviousExchangeRates,
       saveDailyExchangeRates: saveDailyExchangeRates
     };
