@@ -19,6 +19,12 @@ angular.module('ts5App')
       selectedCategory: {}
     };
     $scope.itemListSearchQuery = {};
+    $scope.commissionList = [];
+    var $this = this;
+    this.meta = {
+      limit: 100,
+      offset: 0
+    };
 
     $scope.$watchGroup(['search.startDate', 'search.endDate', 'search.selectedCategory'], function () {
       var payload = {};
@@ -47,7 +53,7 @@ angular.module('ts5App')
     }
 
     function hideLoadingModal() {
-      angular.element('#loading').modal('hide');
+      angular.element('.loading-more').hide();
       angular.element('.modal-backdrop').remove();
     }
 
@@ -160,9 +166,10 @@ angular.module('ts5App')
     }
 
     function getCommissionSuccessHandler(dataFromAPI) {
+      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       hideLoadingModal();
       if(dataFromAPI.employeeCommissions) {
-        $scope.commissionList = prepareDataForTable(dataFromAPI.employeeCommissions);
+        $scope.commissionList = $scope.commissionList.concat(prepareDataForTable(dataFromAPI.employeeCommissions));
       } else {
         $scope.commissionList = [];
       }
@@ -249,10 +256,16 @@ angular.module('ts5App')
     });
 
     function init () {
-      getCommissions({});
       getItemCategories();
     }
 
     init();
+
+    $scope.loadEmployeeCommissions = function() {
+      getCommissions({
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
+      });
+    };
 
   });

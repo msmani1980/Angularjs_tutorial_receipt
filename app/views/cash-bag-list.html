@@ -229,7 +229,7 @@
     </form>
   </div>
 
-  <table class="table table-bordered table-hover">
+  <table infinite-scroll="loadCahbagList()" class="table table-bordered table-hover">
     <thead>
     <tr>
       <th>Cash Bag</th>
@@ -268,5 +268,6 @@
     </tr>
     </tbody>
   </table>
+  <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>
 <dynamic-left-nav></dynamic-left-nav>

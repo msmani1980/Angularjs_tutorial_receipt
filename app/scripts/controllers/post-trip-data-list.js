@@ -10,12 +10,21 @@ angular.module('ts5App')
   .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast, dateUtility) {
     var companyId = '';
     var $this = this;
+    this.meta = {
+      limit: 100,
+      offset: 0
+    };
 
     $scope.viewName = 'Post Trip Data';
     $scope.search = {};
     $scope.multiSelectedValues = {};
     $scope.stationList = [];
     $scope.postTrips = [];
+
+    function hideLoadingModal() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
 
     this.getStationById = function (stationId) {
       var stationCode = '';
@@ -40,12 +49,11 @@ angular.module('ts5App')
     };
 
     this.getPostTripSuccess = function (response) {
+      $this.meta.count = $this.meta.count || response.meta.count;
       // TODO: move offset to service layer
       $scope.postTrips =  $scope.postTrips.concat(response.postTrips);
-      if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
-        postTripFactory.getPostTripDataList(companyId, {offset: response.meta.limit + 1}).then($this.getPostTripSuccess);
-      }
       $this.updateStationCodes();
+      hideLoadingModal();
     };
 
     this.searchPostTripSuccess = function (response) {
@@ -105,7 +113,6 @@ angular.module('ts5App')
       companyId = postTripFactory.getCompanyId();
       $scope.carrierNumbers = [];
       $scope.employees = [];
-      postTripFactory.getPostTripDataList(companyId, {}).then($this.getPostTripSuccess);
       postTripFactory.getStationList(companyId).then($this.getStationsSuccess);
       postTripFactory.getCarrierTypes(companyId).then($this.getCarrierSuccess);
       postTripFactory.getEmployees(companyId).then($this.getEmployeesSuccess);
@@ -113,6 +120,13 @@ angular.module('ts5App')
     };
 
     this.init();
+
+    $scope.loadPostTrip = function() {
+      postTripFactory.getPostTripDataList(companyId, {
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
+      }).then($this.getPostTripSuccess);
+    };
 
     this.addSearchValuesFromMultiSelectArray = function (searchKeyName, multiSelectArray, multiSelectElementKey) {
       if(multiSelectArray && multiSelectArray.length > 0) {

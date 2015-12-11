@@ -12,6 +12,12 @@ angular.module('ts5App')
 
     var _companyId = null;
     var _services = null;
+    $scope.cashBagList = [];
+    var $this = this;
+    this.meta = {
+      limit: 100,
+      offset: 0
+    };
 
     $scope.viewName = 'Manage Cash Bag';
     $scope.createCashBagError = 'temp error message';
@@ -30,13 +36,14 @@ angular.module('ts5App')
       $scope.formErrors = {};
     }
 
-    function showLoadingModal(text) {
+    function showLoadingModal() {
       $scope.displayError = false;
-      angular.element('#loading').modal('show').find('p').text(text);
+      angular.element('.loading-more').show();
     }
 
     function hideLoadingModal() {
-      angular.element('#loading').modal('hide');
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
     }
 
     function getSortedBankRefList(cashBagList) {
@@ -63,7 +70,10 @@ angular.module('ts5App')
     }
 
     function getCashBagResponseHandler(response) {
-      $scope.cashBagList = formatScheduleDateForApp(angular.copy(response.cashBags));
+      $this.meta.count = $this.meta.count || response.meta.count;
+      angular.forEach(formatScheduleDateForApp(angular.copy(response.cashBags)), function (cashBag) {
+        $scope.cashBagList.push(cashBag);
+      });
       angular.forEach($scope.cashBagList, function (cashBag) {
         if ($scope.isNew(cashBag.id)) {
           showSuccessMessage('successfully created');
@@ -91,7 +101,7 @@ angular.module('ts5App')
 
 
     (function constructor() {
-      showLoadingModal('Loading Cash Bag');
+      showLoadingModal();
       _companyId = cashBagFactory.getCompanyId();
       _services = {
         promises: [],
@@ -100,9 +110,6 @@ angular.module('ts5App')
             _services.promises.push(_services[_service]());
           });
         },
-        getCashBagList: function () {
-          return cashBagFactory.getCashBagList(_companyId, {isDelete: 'false', isSubmitted: 'false'}).then(getCashBagResponseHandler);
-        },
         getStationList: function () {
           return cashBagFactory.getStationList(_companyId).then(getStationListResponseHandler);
         },
@@ -110,9 +117,13 @@ angular.module('ts5App')
           return cashBagFactory.getSchedulesList(_companyId).then(getSchedulesListResponseHandler);
         }
       };
-      _services.call(['getCashBagList', 'getStationList', 'getSchedulesList']);
+      _services.call(['getStationList', 'getSchedulesList']);
       $q.all(_services.promises).then(hideLoadingModal);
     })();
+
+    $scope.loadCahbagList = function() {
+      cashBagFactory.getCashBagList(_companyId, {isDelete: 'false', isSubmitted: 'false'}).then(getCashBagResponseHandler);
+    };
 
     // helpers
     function showModalErrors(errorMessage) {
@@ -131,7 +142,7 @@ angular.module('ts5App')
 
     $scope.searchCashBag = function () {
       var payload = angular.copy($scope.search);
-      showLoadingModal('Searching Cash Bags');
+      showLoadingModal();
       if (payload.startDate) {
         payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
         payload.endDate = payload.startDate;

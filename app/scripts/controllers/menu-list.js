@@ -13,6 +13,13 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.modal = null;
     $scope.displayModalImportInfo = false;
+    $scope.menuList = [];
+
+    var $this = this;
+    this.meta = {
+      limit: 100,
+      offset: 0
+    };
 
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
@@ -45,7 +52,11 @@ angular.module('ts5App')
     };
 
     var attachMenuListToScope = function (menuListFromAPI) {
-      $scope.menuList = formatDates(menuListFromAPI.menus);
+      $this.meta.count = $this.meta.count || menuListFromAPI.meta.count;
+      var menuList = formatDates(menuListFromAPI.menus);
+      angular.forEach(menuList, function (menu) {
+        $scope.menuList.push(menu);
+      });
     };
 
     $scope.searchMenus = function () {
@@ -59,7 +70,7 @@ angular.module('ts5App')
         content: '<strong>' + type + '</strong>: ' + message
       });
     }
-    
+
     function showErrors(dataFromAPI) {
       $scope.errorResponse = dataFromAPI;
       $scope.displayError = true;
@@ -102,8 +113,20 @@ angular.module('ts5App')
       $scope.searchMenus();
     };
 
+
+    $scope.loadMenus = function () {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+      menuService.getMenuList({
+        startDate:dateUtility.nowFormatted('YYYYMMDD'),
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
+      }).then(attachMenuListToScope);
+      $this.meta.offset += $this.meta.limit;
+    };
+
     function initializeList() {
-      menuService.getMenuList({startDate:dateUtility.nowFormatted('YYYYMMDD')}).then(attachMenuListToScope);
       if ($location.search().newMenuName) {
         showToast('success', 'Create Menu', 'successfully created menu named ' + $location.search().newMenuName);
       }

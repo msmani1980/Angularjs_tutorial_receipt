@@ -14,9 +14,21 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.discountList = [];
     $scope.discountToDelete = {};
+    this.meta = {
+      limit: 100,
+      offset: 0
+    };
+
+    function hideLoadingModal() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
 
     this.getDiscountList = function () {
-      discountFactory.getDiscountList().then($this.attachDiscountListToScope);
+      discountFactory.getDiscountList({
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
+      }).then($this.attachDiscountListToScope);
     };
 
     this.getDiscountTypesList = function () {
@@ -40,7 +52,11 @@ angular.module('ts5App')
     };
 
     this.attachDiscountListToScope = function (discountListFromAPI) {
-      $scope.discountList = $this.formatDates(discountListFromAPI.companyDiscounts);
+      $this.meta.count = $this.meta.count || discountListFromAPI.meta.count;
+      angular.forEach($this.formatDates(discountListFromAPI.companyDiscounts), function (discount) {
+        $scope.discountList.push(discount);
+      });
+      hideLoadingModal();
     };
 
     this.formatDates = function(discountArray) {
@@ -84,8 +100,11 @@ angular.module('ts5App')
       $this.deleteDiscount($scope.discountToDelete.id);
     };
 
+    $scope.loadDiscounts = function() {
+
+    };
+
     this.init = function () {
-      $this.getDiscountList();
       $this.getDiscountTypesList();
     };
 
