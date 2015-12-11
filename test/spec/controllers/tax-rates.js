@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: TaxRatesCtrl', function() {
+fdescribe('Controller: TaxRatesCtrl', function() {
 
   beforeEach(module(
     'ts5App',
@@ -9,7 +9,8 @@ describe('Controller: TaxRatesCtrl', function() {
     'served/tax-types.json',
     'served/country-list.json',
     'served/stations.json',
-    'served/currencies.json'
+    'served/currencies.json',
+    'served/company-tax-rates.json'
   ));
 
   var TaxRatesCtrl;
@@ -23,20 +24,23 @@ describe('Controller: TaxRatesCtrl', function() {
   var countriesJSON;
   var stationsListJSON;
   var currenciesListJSON;
+  var companyTaxRatesJSON;
   var getTaxTypesListDeferred;
   var getTaxRateTypesDeferred;
   var getCountriesListDeferred;
   var getStationsListDeferred;
   var getCompanyCurrenciesDeferred;
+  var getCompanyTaxRatesListDeferred;
 
   beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedTaxTypes_, _servedTaxRateTypes_,
-    _servedCountryList_, _servedStations_, _servedCurrencies_) {
+    _servedCountryList_, _servedStations_, _servedCurrencies_, _servedCompanyTaxRates_) {
 
     taxTypesJSON = _servedTaxTypes_;
     taxRateTypesJSON = _servedTaxRateTypes_;
     countriesJSON = _servedCountryList_;
     stationsListJSON = _servedStations_;
     currenciesListJSON = _servedCurrencies_;
+    companyTaxRatesJSON = _servedCompanyTaxRates_;
 
     $scope = $rootScope.$new();
     controller = $controller;
@@ -59,6 +63,9 @@ describe('Controller: TaxRatesCtrl', function() {
 
     getCompanyCurrenciesDeferred = $q.defer();
     spyOn(taxRatesFactory, 'getCompanyCurrencies').and.returnValue(getCompanyCurrenciesDeferred.promise);
+
+    getCompanyTaxRatesListDeferred = $q.defer();
+    spyOn(taxRatesFactory, 'getCompanyTaxRatesList').and.returnValue(getCompanyTaxRatesListDeferred.promise);
   }));
 
   function resolveAllDependencies() {
@@ -67,6 +74,7 @@ describe('Controller: TaxRatesCtrl', function() {
     getCountriesListDeferred.resolve(countriesJSON);
     getStationsListDeferred.resolve(stationsListJSON);
     getCompanyCurrenciesDeferred.resolve(currenciesListJSON);
+    getCompanyTaxRatesListDeferred.resolve(companyTaxRatesJSON);
     $scope.$digest();
   }
 
@@ -105,6 +113,10 @@ describe('Controller: TaxRatesCtrl', function() {
 
     it('should set the currenciesList as a blank array', function() {
       expect($scope.currenciesList).toEqual([]);
+    });
+
+    it('should set the companyTaxRatesList as a blank array', function() {
+      expect($scope.companyTaxRatesList).toEqual([]);
     });
 
     it('should set the taxTypesList as a blank array', function() {
@@ -165,6 +177,10 @@ describe('Controller: TaxRatesCtrl', function() {
 
       it('should set the $scope.currenciesList to the mock data', function() {
         expect($scope.currenciesList).toEqual(currenciesListJSON.response);
+      });
+
+      it('should set the $scope.companyTaxRatesList to the mock data', function() {
+        expect($scope.companyTaxRatesList).toEqual(companyTaxRatesJSON.taxRates);
       });
 
     });

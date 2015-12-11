@@ -56,7 +56,6 @@ angular.module('ts5App')
     };
 
     this.setCompanyTaxRatesList = function(dataFromAPI) {
-      console.log(dataFromAPI.taxRates);
       $scope.companyTaxRatesList = angular.copy(dataFromAPI.taxRates);
     };
 
