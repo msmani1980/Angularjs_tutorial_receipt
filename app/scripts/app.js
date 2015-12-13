@@ -266,6 +266,9 @@ angular.module('ts5App', [
   }).when('/employee-messages', {
     templateUrl: 'views/employee-message-list.html',
     controller: 'EmployeeMessageListCtrl'
+  }).when('/employee-message/:id', {
+    templateUrl: 'views/employee-message.html',
+    controller: 'EmployeeMessageCtrl'
   }).otherwise({
     redirectTo: '/'
   });

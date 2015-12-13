@@ -1,224 +1,154 @@
-<div class="module-container">
+<div class="fluid-container">
 
-  <div class="edit-controls">
-    <div class="row">
-      <div class="col-xs-6">
-        <h2 class="view-name">Edit Employee Message</h2>
-      </div>
+  <div class="employee-message-list">
 
-      <div class="col-xs-6 text-right">
-        <a class="btn btn-default" ng-href="#/post-trip-data-list" class="btn" ng-show="readOnly">Back</a>
+    <div class="list-controls">
+      <div class="row item-list-row">
+
+        <div class="col-xs-6">
+          <h2 class="view-name">{{ viewName }}</h2>
+        </div>
+
+        <div class="col-xs-6 text-right">
+          <button class="btn btn-primary">
+            <span class="fa fa-plus" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs">Create Message</span>
+          </button>
+          <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                  aria-controls="search-collapse">
+            <span class="fa fa-filter" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs">Filter</span>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <error-dialog form-object="postTripDataForm" error-response="errorResponse" display="displayError">
-  </error-dialog>
+    <div class="panel panel-default no-transition" id="search-collapse" ng-class="{'collapse': true }">
+      <form class="form">
+        <div class="panel-body">
+          <div class="row">
 
-  <form name="postTripDataForm">
-    <!--/TopHeader -->
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <!-- form header-->
-        <div class="row">
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
-              <label>Schedule Number *</label>
-              <select class="form-control"
-                      name="scheduleNumber"
-                      ng-model="postTrip.scheduleNumber"
-                      ng-options="schedule.scheduleNumber as schedule.scheduleNumber for schedule in schedules"
-                      ng-disabled="readOnly"
-                      required="true">
-                <option selected="selected" value>Select a Schedule Number</option>
-              </select>
-
-
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Dispatch LMP Station</label>
+                <select class="form-control" ng-model="search.dispatchLMPStation" name="dispatchLMPStation">
+                  <option ng-disabled="true" selected="selected" value>Select Dispatch Station</option>
+                  <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
+                    station.name }} - {{ station.code }}
+                  </option>
+                </select>
+              </div>
             </div>
-          </div>
-
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Inbound LMP Station</label>
+                <select class="form-control" ng-model="search.inboundLMPStation" name="inboundLMPStation">
+                  <option ng-disabled="true" selected="selected" value>Select Inbound Station</option>
+                  <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
+                    station.name }} - {{ station.code }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Store Number</label>
+                <input type="text" class="form-control" placeholder="1234" name="storeNumber"
+                       ng-model="search.storeNumber">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
               <date-picker
-                disable-date-range="true"
-                start-date-model="postTrip.scheduleDate"
-                is-search-field="true"
-                label-from="Schedule Date *"
-                required="true"
-                disable-start-date="readOnly">
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.scheduleStartDate"
+                end-date-model="search.scheduleEndDate"
+                label-from="Schedule Date From"
+                label-to="Schedule Date To"
+                is-search-field="true">
               </date-picker>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
-              <label for="departureStation">Departure Station *</label>
-              <select class="form-control"
-                      name="departureStation"
-                      ng-change="updateDepartureTimeZone()"
-                      ng-model="postTrip.depStationId"
-                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
-                      ng-disabled="readOnly"
-                      required="true">
-                <option selected="selected" value>Select a Departure Station</option>
-              </select>
+          <div class="row">
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Departure Station</label>
+                <ui-select multiple ng-model="search.departureStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{station.name}}
+                  </ui-select-choices>
+                </ui-select>
+              </div>
             </div>
-          </div>
-
-          <div class="col-xs-12 col-sm-4">
-            <label for="departure-time">Departure Time *</label>
-            <input custom-validity
-                   custom-pattern="time"
-                   required
-                   ng-model="postTrip.depTime"
-                   type="text"
-                   class="form-control departure-time"
-                   name="departureTime"
-                   placeholder="21:34"
-                   ng-readonly="readOnly">
-          </div>
-
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
-              <label for="departure-time-zone">Departure Time Zone *</label>
-              <input type="text"
-                     class="form-control"
-                     name="departureTimeZone"
-                     placeholder=""
-                     ng-model="departureTimezone"
-                     disabled>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Arrival Station</label>
+                <ui-select multiple ng-model="search.arrivalStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Arrival Station...">{{$item.name + ' - ' + $item.code}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{station.name}}
+                  </ui-select-choices>
+                </ui-select>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
-              <label for="arrival-station">Arrival Station *</label>
-              <select class="form-control"
-                      name="arrivalStation"
-                      ng-change="updateArrivalTimeZone()"
-                      ng-model="postTrip.arrStationId"
-                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
-                      ng-disabled="readOnly"
-                      required="true">
-                <option selected="selected" value>Select an Arrival Station</option>
-              </select>
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Store Instance</label>
+                <input type="text" class="form-control" placeholder="1234567" name="storeInstance"
+                       ng-model="search.storeInstance">
+              </div>
             </div>
-          </div>
 
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
-              <label>Arrival Time *</label>
-              <input custom-validity
-                     custom-pattern="time"
-                     required
-                     ng-model="postTrip.arrTime"
-                     type="text"
-                     class="form-control departure-time"
-                     name="arrivalTime"
-                     placeholder="23:34"
-                     ng-readonly="readOnly">
-            </div>
-          </div>
-
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
-              <label>Arrival Time Zone *</label>
-              <input type="text" class="form-control"
-                     name="arrivalTimeZone"
-                     placeholder=""
-                     ng-model="arrivalTimezone"
-                     disabled>
-            </div>
-          </div>
-
-        </div>
-        <div class="row">
-
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
-              <label>Passenger Count *</label>
-              <input custom-validity
-                     custom-pattern="numberUpToFiveChars"
-                     required="true"
-                     ng-model="postTrip.passengerCount"
-                     type="text"
-                     class="form-control passenger-count"
-                     placeholder="123"
-                     ng-readonly="readOnly"
-                     name="passengerCount" />
-            </div>
-          </div>
-
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
-              <label for="tailNumber">Tail Number *</label>
-              <select class="form-control"
-                      name="tailNumber"
-                      ng-model="postTrip.tailNumber"
-                      ng-options="number.carrierNumber as number.carrierNumber for number in carrierNumbers"
-                      ng-disabled="readOnly"
-                      required="true">
-                <option selected="selected" value>Select a Tail Number</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-xs-12 col-sm-4 employee-id">
-            <div class="form-group">
-              <label>Employee ID's *</label>
-              <ui-select required name="employeeIds" multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap" ng-disabled="readOnly">
-                <ui-select-match placeholder="Select Employee IDs from list">{{ $item.employeeIdentifier }}</ui-select-match>
-                <ui-select-choices repeat="employee in employees | filter: $select.search">
-                  {{employee.employeeIdentifier}} ({{ employee.lastName }}, {{ employee.firstName }})
-                </ui-select-choices>
-              </ui-select>
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Status</label>
+                <select class="form-control" ng-model="search.storeStatusId" name="status">
+                  <option selected="selected" value>Select Status</option>
+                  <option ng-repeat="status in storeStatusList | orderBy:'name'" value="{{ status.id }}">{{
+                    status.statusName }}
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="panel-footer text-right">
-        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
-          <span class="fa fa-check-square-o" aria-hidden="true"></span>
-          <span class="hidden-xs">Save</span>
-        </button>
-        <a href="#/post-trip-data-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
-
-      </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default btn-search-clear">
+            <span class="btn-label">Clear</span>
+          </button>
+          <button class="btn btn-primary btn-search">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs btn-label">Search</span>
+          </button>
+        </div>
+      </form>
     </div>
-  </form>
 
-</div>
-<!-- /Container -->
-
-<div id="overwrite-modal" class="modal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Overwrite Post Trip?</h3>
-      </div>
-      <div class="modal-body">
-        A Post Trip already exists with schedule Number: <b>{{ postTrip.scheduleNumber }}</b> and scheduleDate: <b>{{ postTrip.scheduleDate }}</b>.
-        If you continue, your changes will overwrite the existing post trip. Would you still like to continue and save this post trip?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="overwritePostTrip()">Continue</button>
-      </div>
-    </div>
+    <table class="table table-bordered table-responsive table-hover">
+      <thead>
+      <tr>
+        <th class="col-xs-8">Message</th>
+        <th>Effective From</th>
+        <th>Effective To</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="message in employeeMessagesList">
+        <td>{{ message.employeeMessageText }}</td>
+        <td>{{ message.startDate }}</td>
+        <td>{{ message.endDate }}</td>
+        <td>
+          <button class="btn btn-info btn-xs"><i class="fa fa-file"></i></button>
+          <button class="btn btn-primary btn-xs" ng-show="isActiveOrFutureRecord(message)"><i class="fa fa-pencil"></i></button>
+        </td>
+      </tr>
+      <tr>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </div>
-
-<form-success-modal></form-success-modal>
-
-<form-update-modal></form-update-modal>
-
-<leave-view-modal></leave-view-modal>
-
-<dynamic-left-nav title="Post Trip Data"></dynamic-left-nav>
