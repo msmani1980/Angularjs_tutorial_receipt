@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Company Reason Code Controller', function() {
+describe('Company Reason Code Controller', function() {
 
   beforeEach(module(
     'ts5App',
@@ -190,6 +190,39 @@ fdescribe('Company Reason Code Controller', function() {
     it('should not add a  company reason when the id passed is incorrect', function() {
       CompanyReasonCodeCtrl.addReasonCode(4);
       expect(scope.formData.globalReasons[0].companyReasons.length).toEqual(0);
+    });
+
+  });
+
+  describe('removing company reason to a global reason', function() {
+
+    beforeEach(function() {
+      initController();
+      scope.formData = {
+        globalReasons:[
+          {
+            id:1,
+            companyReasons:[]
+          }
+        ]
+      };
+      CompanyReasonCodeCtrl.addReasonCode(1);
+      spyOn(CompanyReasonCodeCtrl,'removeReason').and.callThrough();
+    });
+
+    it('should remove a company reason', function() {
+      CompanyReasonCodeCtrl.removeReason(1,0);
+      expect(scope.formData.globalReasons[0].companyReasons.length).toEqual(0);
+    });
+
+    it('should not remove a company reason when the id passed is incorrect', function() {
+      CompanyReasonCodeCtrl.removeReason(99,0);
+      expect(scope.formData.globalReasons[0].companyReasons.length).toEqual(1);
+    });
+
+    it('should call the controller method when executing the scope method', function() {
+      scope.removeReason(1,0);
+      expect(CompanyReasonCodeCtrl.removeReason).toHaveBeenCalledWith(1,0);
     });
 
   });
