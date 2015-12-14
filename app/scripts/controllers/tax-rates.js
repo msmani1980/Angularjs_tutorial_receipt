@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TaxRatesCtrl', function($scope, $q, taxRatesFactory) {
+  .controller('TaxRatesCtrl', function($scope, $q, taxRatesFactory, dateUtility) {
 
     var $this = this;
 
@@ -79,8 +79,9 @@ angular.module('ts5App')
       return taxRatesFactory.getCompanyCurrencies().then($this.setCurrenciesList);
     };
 
-    this.getCompanyTaxRatesList = function() {
-      return taxRatesFactory.getCompanyTaxRatesList().then($this.setCompanyTaxRatesList);
+    this.getCompanyTaxRatesList = function(query) {
+      var q = query || {};
+      return taxRatesFactory.getCompanyTaxRatesList(q).then($this.setCompanyTaxRatesList);
     };
 
     this.createPromises = function() {
@@ -134,18 +135,85 @@ angular.module('ts5App')
       return isActive;
     };
 
+    this.generateCompanyStationIds = function() {
+      var companyStationIds = [];
+      for (var key in $scope.search.stations) {
+        var station = $scope.search.stations[key];
+        if (station.stationId) {
+          companyStationIds.push(station.stationId);
+        }
+      }
+      return encodeURI(companyStationIds);
+    };
+
+    this.createUiSelectSearchPayload = function() {
+      var query = {
+        limit: 100
+      };
+      if ($scope.search.taxType) {
+        query.taxTypeCode = $scope.search.taxType.taxTypeCode;
+      }
+      if ($scope.search.country) {
+        query.countryName = $scope.search.country.countryName;
+      }
+      if ($scope.search.currency) {
+        query.companyCurrencyId = $scope.search.currency.id;
+      }
+      if ($scope.search.taxRateType) {
+        query.taxRateType = $scope.search.taxRateType.taxRateType;
+      }
+      return query;
+    };
+
+    this.createSearchPayload = function() {
+      var query = $this.createUiSelectSearchPayload();
+      if (angular.isDefined($scope.search.stations) && $scope.search.stations.length) {
+        query.companyStationIds = $this.generateCompanyStationIds();
+      }
+      if ($scope.search.taxRate) {
+        query.taxRateValue = $scope.search.taxRate;
+      }
+      if ($scope.dateRange.startDate) {
+        query.startDate = dateUtility.formatDateForAPI($scope.dateRange.startDate);
+      }
+      if ($scope.dateRange.endDate) {
+        query.endDate = dateUtility.formatDateForAPI($scope.dateRange.endDate);
+      }
+      return query;
+    };
+
+    this.createSearchPromises = function() {
+      var query = $this.createSearchPayload();
+      return [
+        $this.getCompanyTaxRatesList(query)
+      ];
+    };
+
+    this.makeSearchPromises = function() {
+      $this.showLoadingModal();
+      var promises = $this.createSearchPromises();
+      $q.all(promises).then($this.initSuccess);
+    };
+
     // Place $scope functions here
 
     $scope.clearSearchFilters = function() {
-      $scope.search = {};
-      $scope.dateRange = {
-        startDate: '',
-        endDate: ''
-      };
+      if (angular.isDefined($scope.search)) {
+        $scope.search = {};
+        $scope.dateRange = {
+          startDate: '',
+          endDate: ''
+        };
+        $this.makeSearchPromises();
+      }
     };
 
     $scope.showClearButton = function() {
       return ($this.isDateRangeSet() || $this.isSearchActive());
+    };
+
+    $scope.searchRecords = function() {
+      $this.makeSearchPromises();
     };
 
   });

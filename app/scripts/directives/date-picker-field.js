@@ -7,7 +7,7 @@
  * # datePickerField
  */
 angular.module('ts5App')
-  .directive('datePickerField', function () {
+  .directive('datePickerField', function() {
     return {
       templateUrl: '/views/directives/date-picker-field.html',
       restrict: 'E',
@@ -15,6 +15,7 @@ angular.module('ts5App')
         ngModel: '=',
         name: '@',
         label: '@',
+        placeholder: '@',
         required: '=',
         form: '=',
         disable: '=',
@@ -22,21 +23,21 @@ angular.module('ts5App')
         minDate: '=',
         maxDate: '='
       },
-      controller: function ($scope, $element) {
+      controller: function($scope, $element) {
         var datePickerOptions = {
           orientation: 'auto top',
           autoclose: true,
           maxDate: $scope.maxDate
         };
-        if($scope.minDate) {
+        if ($scope.minDate) {
           datePickerOptions.startDate = $scope.minDate;
         }
-        this.init = function ($scope, $element) {
+        this.init = function($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
           var datePickerInput = $element.find('input[type="text"]');
           datePickerInput.datepicker(options);
-          $scope.$watch('ngModel', function (newData,oldData) {
-            if($scope.ngModel && newData !== oldData) {
+          $scope.$watch('ngModel', function(newData, oldData) {
+            if ($scope.ngModel && newData !== oldData) {
               datePickerInput.datepicker('setDate', $scope.ngModel);
             }
           });

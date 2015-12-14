@@ -35,6 +35,9 @@ describe('The Date Picker Field directive', function() {
     if (config.disablePast) {
       template += 'disable-past="' + config.disablePast + '" ';
     }
+    if (config.placeholder) {
+      template += 'placeholder="' + config.placeholder + '" ';
+    }
     template += '></date-picker-field>';
     return template;
   }
@@ -82,9 +85,15 @@ describe('The Date Picker Field directive', function() {
       expect(element.attr('disable-past')).toEqual(config.disablePast.toString());
     });
 
-    it('should set the required attribut on the directive', function() {
+    it('should set the required attribute on the directive', function() {
       if (config.required) {
         expect(element.attr('required')).toEqual('required');
+      }
+    });
+
+    it('should set the placeholder attribute on the directive', function() {
+      if (config.placeholder) {
+        expect(element.attr('placeholder')).toEqual('placeholder');
       }
     });
 
