@@ -188,8 +188,12 @@ angular.module('ts5App')
       ];
     };
 
-    this.makeSearchPromises = function() {
-      $this.showLoadingModal();
+    this.makeSearchPromises = function(clear) {
+      var message = 'Searching Tax Rates...';
+      if (clear) {
+        message = 'Clearing Search...';
+      }
+      $this.showLoadingModal(message);
       var promises = $this.createSearchPromises();
       $q.all(promises).then($this.initSuccess);
     };
@@ -202,7 +206,7 @@ angular.module('ts5App')
           startDate: '',
           endDate: ''
         };
-        $this.makeSearchPromises();
+        $this.makeSearchPromises(true);
       }
     };
 

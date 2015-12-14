@@ -93,7 +93,6 @@ describe('Controller: TaxRatesCtrl', function() {
     beforeEach(function() {
       initController();
     });
-
     it('should set the taxRateList as a blank array', function() {
       expect($scope.taxRatesList).toEqual([]);
     });
@@ -119,7 +118,6 @@ describe('Controller: TaxRatesCtrl', function() {
       };
       expect($scope.dateRange).toEqual(mockDates);
     });
-
   });
 
   describe('When the controller is Initialized, it', function() {
@@ -130,7 +128,6 @@ describe('Controller: TaxRatesCtrl', function() {
       spyOn(TaxRatesCtrl, 'hideLoadingModal');
       mockInitController();
     });
-
     it('should set the $scope.viewName to Tax Management', function() {
       expect($scope.viewName).toBe('Tax Management');
     });
@@ -206,7 +203,6 @@ describe('Controller: TaxRatesCtrl', function() {
             spyOn(TaxRatesCtrl, 'createSearchPayload').and.callThrough();
             spyOn(TaxRatesCtrl, 'createUiSelectSearchPayload').and.callThrough();
             spyOn(TaxRatesCtrl, 'generateCompanyStationIds').and.callThrough();
-
             $scope.search = {
               'taxType': {
                 'id': 20,
@@ -280,7 +276,6 @@ describe('Controller: TaxRatesCtrl', function() {
             };
             $scope.searchRecords();
           });
-
           it('should call makeSearchPromises', function() {
             expect(TaxRatesCtrl.makeSearchPromises).toHaveBeenCalled();
           });
@@ -296,17 +291,16 @@ describe('Controller: TaxRatesCtrl', function() {
           it('should call generateCompanyStationIds', function() {
             expect(TaxRatesCtrl.generateCompanyStationIds).toHaveBeenCalled();
           });
-          it('should error gracefully if generateCompanyStationIds when stations are undefined',
-            function() {
-              $scope.search = {
-                'stations': [{
-                  'id': 129
-                }, {
-                  'id': 131
-                }],
-              };
-              expect(TaxRatesCtrl.generateCompanyStationIds()).toBe('');
-            });
+          it('generateCompanyStationIds should return empty', function() {
+            $scope.search = {
+              'stations': [{
+                'id': 129
+              }, {
+                'id': 131
+              }],
+            };
+            expect(TaxRatesCtrl.generateCompanyStationIds()).toBe('');
+          });
 
         });
 
@@ -314,7 +308,6 @@ describe('Controller: TaxRatesCtrl', function() {
           beforeEach(function() {
             spyOn(TaxRatesCtrl, 'makeSearchPromises').and.callThrough();
           });
-
           it('should clear the search and dates', function() {
             $scope.search.taxRate = 1;
             $scope.clearSearchFilters();
