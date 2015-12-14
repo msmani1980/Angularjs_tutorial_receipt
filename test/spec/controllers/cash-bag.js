@@ -8,6 +8,7 @@ describe('Controller: CashBagCtrl', function () {
   beforeEach(module('served/company.json'));
   beforeEach(module('served/company-currency-globals.json'));
   beforeEach(module('served/daily-exchange-rates.json'));
+  beforeEach(module('served/daily-exchange-rate.json'));
   beforeEach(module('served/company-preferences.json'));
   beforeEach(module('served/store-instance.json'));
   beforeEach(module('served/store.json'));
@@ -21,6 +22,7 @@ describe('Controller: CashBagCtrl', function () {
   var getCompanyDeferred;
   var getCompanyCurrenciesDeferred;
   var getDailyExchangeRatesDeferred;
+  var getDailyExchangeRateByIdDeferred;
   var getCompanyPreferencesDeferred;
   var getStoreInstanceDeferred;
   var getStoreListDeferred;
@@ -29,6 +31,7 @@ describe('Controller: CashBagCtrl', function () {
   var companyResponseJSON;
   var currencyGlobalsResponseJSON;
   var dailyExchangeRatesResponseJSON;
+  var dailyExchangeRateByIdJSON;
   var getCompanyPreferencesJSON;
   var getStoreInstanceJSON;
   var getStoreListJSON;
@@ -37,12 +40,13 @@ describe('Controller: CashBagCtrl', function () {
   beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_) {
     scope = $rootScope.$new();
 
-    inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedCompanyPreferences_, _servedStoreInstance_,
+    inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedDailyExchangeRate_, _servedCompanyPreferences_, _servedStoreInstance_,
                      _servedStore_) {
       cashBagResponseJSON = _servedCashBag_;
       companyResponseJSON = _servedCompany_;
       currencyGlobalsResponseJSON = _servedCompanyCurrencyGlobals_;
       dailyExchangeRatesResponseJSON = _servedDailyExchangeRates_;
+      dailyExchangeRateByIdJSON = _servedDailyExchangeRate_;
       getCompanyPreferencesJSON = _servedCompanyPreferences_;
       getStoreInstanceJSON = _servedStoreInstance_;
       getStoreListJSON = _servedStore_;
@@ -69,6 +73,10 @@ describe('Controller: CashBagCtrl', function () {
     getDailyExchangeRatesDeferred.resolve(dailyExchangeRatesResponseJSON);
     spyOn(cashBagFactory, 'getDailyExchangeRates').and.returnValue(getDailyExchangeRatesDeferred.promise);
 
+    getDailyExchangeRateByIdDeferred = $q.defer();
+    getDailyExchangeRateByIdDeferred.resolve(dailyExchangeRateByIdJSON);
+    spyOn(cashBagFactory, 'getDailyExchangeById').and.returnValue(getDailyExchangeRateByIdDeferred.promise);
+
     getCompanyPreferencesDeferred = $q.defer();
     getCompanyPreferencesDeferred.resolve(getCompanyPreferencesJSON);
     spyOn(cashBagFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
@@ -83,14 +91,16 @@ describe('Controller: CashBagCtrl', function () {
 
     spyOn(cashBagFactory, 'deleteCashBag').and.returnValue(getCompanyDeferred.promise);
 
-    companyId = cashBagFactory.getCompanyId();
+    companyId = 403;
+    spyOn(cashBagFactory, 'getCompanyId').and.returnValue(companyId);
+
   }));
 
   // CREATE
   describe('CREATE controller action', function () {
     var routeParams = {
       state: 'create',
-      storeInstanceId: '5'
+      id: 95
     };
     beforeEach(inject(function ($controller) {
       CashBagEditCtrl = $controller('CashBagCtrl', {
@@ -161,7 +171,6 @@ describe('Controller: CashBagCtrl', function () {
       it('should have cashBagCurrencies that is an array', function () {
         expect(angular.isArray(scope.cashBag.cashBagCurrencies)).toBe(true);
       });
-      // TODO handle empty company currency globals result
       it('should be formatted like companyCurrencies', function () {
         expect(scope.cashBag.cashBagCurrencies[0].currencyId).toEqual(currencyGlobalsResponseJSON.response[0].id);
         expect(scope.cashBag.cashBagCurrencies.length).toEqual(currencyGlobalsResponseJSON.response.length);
@@ -179,7 +188,6 @@ describe('Controller: CashBagCtrl', function () {
         scope.formSave(scope.cashBag);
         expect(cashBagFactory.createCashBag).toHaveBeenCalled();
       });
-      // TODO - test for error?
     });
 
   });
@@ -317,7 +325,7 @@ describe('Controller: CashBagCtrl', function () {
         scope.formSave(scope.cashBag);
         expect(cashBagFactory.updateCashBag.calls.mostRecent().args[0]).toBe(95);
       });
-      // TODO - test for error?
+
     });
 
   });
@@ -449,6 +457,5 @@ describe('Controller: CashBagCtrl', function () {
       scope.$digest();
       expect(scope.isBankExchangePreferred()).toBe(false);
     });
-    // TODO - reactor and write test for $scope.companyPreferences.filter
   });
 });

@@ -15,6 +15,7 @@ angular.module('ts5App')
     // controller global properties
     var _companyId = null;
     var _promises = [];
+    var $this = this;
 
     // scope properties
     $scope.viewName = 'Cash Bag';
@@ -189,6 +190,7 @@ angular.module('ts5App')
         if (dailyCurrency) {
           cashBagCurrency.paperExchangeRate = dailyCurrency.paperExchangeRate;
           cashBagCurrency.coinExchangeRate = dailyCurrency.coinExchangeRate;
+          cashBagCurrency.bankExchangeRate = dailyCurrency.bankExchangeRate;
           cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) + parseFloat(cashBagCurrency.coinAmountEpos));
           dailyExchangeRateCurrencies.splice(dailyExchangeRateCurrencies.indexOf(dailyCurrency), 1);
         }
@@ -205,7 +207,8 @@ angular.module('ts5App')
             coinAmountEpos: 0,
             flightAmount: '-',
             paperExchangeRate: currency.paperExchangeRate,
-            coinExchangeRate: currency.coinExchangeRate
+            coinExchangeRate: currency.coinExchangeRate,
+            bankExchangeRate: currency.bankExchangeRate
           }
         );
       });
@@ -253,25 +256,23 @@ angular.module('ts5App')
     }
 
     function dailyExchangeResponseHandler(response) {
-      if ($routeParams.state === 'view') {
-        $scope.dailyExchangeRates = [angular.copy(response)];
-        promisesResponseHandler();
-        return;
-      }
       $scope.dailyExchangeRates = angular.copy(response.dailyExchangeRates);
+      if ($routeParams.state === 'view' || $routeParams.state === 'edit') {
+        promisesResponseHandler();
+      }
     }
 
-    function getDailyExchangeRates(cashBag) {
-      if (cashBag && cashBag.isSubmitted && cashBag.dailyExchangeRateId) {
+    function getExchangeRates(cashBag) {
+      if (cashBag && cashBag.dailyExchangeRateId) {
         _promises.push(
           cashBagFactory.getDailyExchangeById(_companyId, cashBag.dailyExchangeRateId).then(dailyExchangeResponseHandler)
         );
-        return;
+      } else {
+        var dailyExchangeDate = moment().format('YYYYMMDD');
+        _promises.push(
+          cashBagFactory.getDailyExchangeRates(_companyId, dailyExchangeDate).then(dailyExchangeResponseHandler)
+        );
       }
-      var dailyExchangeDate = moment().format('YYYYMMDD');
-      _promises.push(
-        cashBagFactory.getDailyExchangeRates(_companyId, dailyExchangeDate).then(dailyExchangeResponseHandler)
-      );
     }
 
     function getCompanyPreferences() {
@@ -286,15 +287,14 @@ angular.module('ts5App')
       getCompany();
       getCashHandlerCompany();
       getCompanyCurrencies();
-      getDailyExchangeRates();
+      getExchangeRates();
       getCompanyPreferences();
     }
 
     // CRUD - Create
-    function create() {
+    this.createCashBag = function () {
       setCreatePromises();
       cashBagFactory.getStoreInstance($routeParams.storeInstanceId).then(getStoreInstanceListResponseHandler);
-
 
       $scope.readOnly = false;
       $scope.cashBag = {
@@ -306,7 +306,7 @@ angular.module('ts5App')
       $scope.saveButtonName = 'Create';
 
       $q.all(_promises).then(promisesResponseHandler, showMessage);
-    }
+    };
 
     function setReadPromises() {
       getCashBag();
@@ -317,61 +317,52 @@ angular.module('ts5App')
     }
 
     // CRUD - Read
-    function read() {
+    this.viewCashBag = function () {
       setReadPromises();
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.displayedCashierDate = dateUtility.formatDateForApp($scope.cashBag.createdOn);
-        getDailyExchangeRates($scope.cashBag);
+        getExchangeRates($scope.cashBag);
         if ($scope.cashBag.storeInstanceId) {
           cashBagFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(getStoreInstanceListResponseHandler);
         } else {
           hideLoadingModal();
         }
       }, showMessage);
-    }
+    };
 
     function setUpdatePromises() {
       getCashBag();
       getCompany();
       getCashHandlerCompany();
       getCompanyCurrencies();
-      getDailyExchangeRates();
       getCompanyPreferences();
     }
 
     // CRUD - Update
-    function update() {
+    this.editCashBag = function () {
       setUpdatePromises();
       $scope.readOnly = false;
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.saveButtonName = 'Save';
-        promisesResponseHandler();
+        getExchangeRates($scope.cashBag);
         if ($scope.cashBag.storeInstanceId) {
           cashBagFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(getStoreInstanceListResponseHandler);
         } else {
           hideLoadingModal();
         }
       }, showMessage);
-    }
+    };
 
     // Constructor
     function init() {
       showLoadingModal('Loading Cash Bag');
-      // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
       $scope.state = $routeParams.state;
-      switch ($routeParams.state) {
-        case 'create':
-          create();
-          break;
-        case 'view':
-          read();
-          break;
-        case 'edit':
-          update();
-          break;
+      var crudOperation = $routeParams.state + 'CashBag';
+      if ($this[crudOperation]) {
+        $this[crudOperation]();
       }
     }
 
