@@ -297,6 +297,13 @@ angular.module('ts5App')
       }
     };
 
+    this.removeReason = function(globalReasonCodeId,$index) {
+      var globalReason = this.getGlobalReasonInFormData(globalReasonCodeId);
+      if(globalReason) {
+        globalReason.companyReasons.splice($index,1);
+      }
+    };
+
     this.init = function() {
       $scope.displayError = false;
       $scope.reasonFilter = {
@@ -317,6 +324,10 @@ angular.module('ts5App')
 
     $scope.addReasonCode = function(globalReasonCodeId) {
       return $this.addReasonCode(globalReasonCodeId);
+    };
+
+    $scope.removeReason = function(globalReasonCodeId,$index) {
+      return $this.removeReason(globalReasonCodeId,$index);
     };
 
     $scope.whenReasonIsNotFiltered = function(reason) {

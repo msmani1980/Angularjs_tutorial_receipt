@@ -6,6 +6,7 @@
 
       <div class="col-xs-8">
         <h2 class="view-name">Retail Reasons</h2>
+        <p>Here, you will see a list of your Reason's. You can filter the list by using the autocomplete field below.
       </div>
 
       <div class="col-xs-4 text-right">
@@ -20,40 +21,10 @@
   <error-dialog form-object="companyReasonCodeFrom" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <div class="panel panel-success">
-
-    <div class="panel-heading">
-      <strong>Subscribed Reason Types</strong>
-       - A list of the Reason Types your company has subscribed to.
-    </div>
-
-    <div class="panel-body">
-
-      <div class="form-group">
-
-        <ui-select multiple ng-model="formData.subscribedGlobalReasons" theme="bootstrap">
-          <ui-select-match placeholder="Starting typing to subscribe to a Reason">{{ $item.reasonTypeName }}
-          </ui-select-match>
-          <ui-select-choices repeat="globalReasonCodeType in globalReasonCodeTypesList | filter: $select.search | orderBy:'reasonTypeName'">
-            <div ng-bind-html="globalReasonCodeType.reasonTypeName | highlight: $select.search"></div>
-          </ui-select-choices>
-        </ui-select>
-      </div>
-
-      <button class="btn btn-success" type="button" ng-click="submitForm()">
-        <i class="fa fa-check-square-o"></i> Save Subscribed Reason Types
-      </button>
-
-    </div>
-
-  </div>
-
   <div class="form-group">
 
-    <label>Filter your list of Subscribed Reason Types</label>
-
     <ui-select multiple ng-model="reasonFilter.selectedGlobalReasons" theme="bootstrap">
-      <ui-select-match placeholder="Start typing here find a Reason Type">{{ $item.reasonTypeName }}
+      <ui-select-match placeholder="Start typing to filter your Subscribed Reasons Types ">{{ $item.reasonTypeName }}
       </ui-select-match>
       <ui-select-choices repeat="subscribed in formData.subscribedGlobalReasons | filter: $select.search | orderBy:'reasonTypeName'">
         <div ng-bind-html="subscribed.reasonTypeName | highlight: $select.search"></div>
@@ -100,7 +71,8 @@
 
                       <input ng-show="reasonCode.isActive" type="checkbox" name="isActive {{ $index+1}}" ng-model="reasonCode.isActive" tabindex="-1"  />
 
-                      <button ng-show="{{ reasonCode.isActive === null }}" class="btn btn-danger btn-xs" type="button" ng-click="removeReason()" tabindex="-1">
+                      <button ng-show="{{ reasonCode.isActive === null }}" class="btn btn-danger btn-xs" type="button"
+                       ng-click="removeReason(subscribed.id,$index)" tabindex="-1">
                         <i class="fa fa-trash"></i>
                       </button>
                     </td>

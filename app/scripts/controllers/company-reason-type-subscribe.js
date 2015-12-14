@@ -221,7 +221,13 @@ angular.module('ts5App')
 
     this.setUpFormDataObject = function() {
       $scope.formData = {
-        subscribedReasonTypes:[]
+        subscribedGlobalReasons:[
+          // TODO: getter / setter
+          globalReasonCodeTypesJSON.reasonTypes[0],
+          globalReasonCodeTypesJSON.reasonTypes[1],
+          globalReasonCodeTypesJSON.reasonTypes[2],
+          globalReasonCodeTypesJSON.reasonTypes[3]
+        ]
       };
     };
 
@@ -249,6 +255,7 @@ angular.module('ts5App')
       $scope.reasonFilter = {
         selectedGlobalReasons:[]
       };
+      // TODO: Add $q and init success
       this.getCompanyReasonCodeTypes();
       this.getGlobalReasonCodeTypes();
     };
@@ -260,5 +267,9 @@ angular.module('ts5App')
     $scope.submitForm = function() {
       return $this.submitForm();
     };
+
+    $scope.$watch('formData.subscribedGlobalReasons', function(current){
+      console.log(current);
+    });
 
   });
