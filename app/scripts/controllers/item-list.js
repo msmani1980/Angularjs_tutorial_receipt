@@ -33,6 +33,9 @@ angular.module('ts5App')
 
       angular.extend(query, $scope.search);
 
+      if ($scope.search === {} || !$scope.search) {
+        query.startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      }
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
         query.startDate = dateUtility.formatDateForAPI($scope.dateRange
           .startDate);
