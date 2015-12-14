@@ -113,8 +113,7 @@ angular.module('ts5App')
 
     this.init();
 
-    // Place private template controller logic here
-
+    // Place user facing / post-init controller functions here
     this.isDateRangeSet = function() {
       return ($scope.dateRange.startDate.length || $scope.dateRange.endDate.length);
     };
@@ -196,7 +195,6 @@ angular.module('ts5App')
     };
 
     // Place $scope functions here
-
     $scope.clearSearchFilters = function() {
       if (angular.isDefined($scope.search)) {
         $scope.search = {};

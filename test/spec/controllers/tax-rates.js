@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: TaxRatesCtrl', function() {
-
   beforeEach(module(
     'ts5App',
     'template-module',
@@ -32,8 +31,8 @@ describe('Controller: TaxRatesCtrl', function() {
   var getCompanyCurrenciesDeferred;
   var getCompanyTaxRatesListDeferred;
 
-  beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedTaxTypes_, _servedTaxRateTypes_,
-    _servedCountryList_, _servedStations_, _servedCurrencies_, _servedCompanyTaxRates_) {
+  beforeEach(inject(function($q, $controller, $rootScope, $injector, dateUtility, _servedTaxTypes_,
+    _servedTaxRateTypes_, _servedCountryList_, _servedStations_, _servedCurrencies_, _servedCompanyTaxRates_) {
 
     taxTypesJSON = _servedTaxTypes_;
     taxRateTypesJSON = _servedTaxRateTypes_;
@@ -91,7 +90,6 @@ describe('Controller: TaxRatesCtrl', function() {
   }
 
   describe('When the Controller is rendered, it', function() {
-
     beforeEach(function() {
       initController();
     });
@@ -99,27 +97,21 @@ describe('Controller: TaxRatesCtrl', function() {
     it('should set the taxRateList as a blank array', function() {
       expect($scope.taxRatesList).toEqual([]);
     });
-
     it('should set the taxTypesList as a blank array', function() {
       expect($scope.taxTypesList).toEqual([]);
     });
-
     it('should set the countriesList as a blank array', function() {
       expect($scope.countriesList).toEqual([]);
     });
-
     it('should set the stationsList as a blank array', function() {
       expect($scope.stationsList).toEqual([]);
     });
-
     it('should set the currenciesList as a blank array', function() {
       expect($scope.currenciesList).toEqual([]);
     });
-
     it('should set the companyTaxRatesList as a blank array', function() {
       expect($scope.companyTaxRatesList).toEqual([]);
     });
-
     it('should set the taxTypesList as a blank array', function() {
       var mockDates = {
         startDate: '',
@@ -131,109 +123,213 @@ describe('Controller: TaxRatesCtrl', function() {
   });
 
   describe('When the controller is Initialized, it', function() {
-
     beforeEach(function() {
       initController();
       resolveAllDependencies();
-
       spyOn(TaxRatesCtrl, 'showLoadingModal');
       spyOn(TaxRatesCtrl, 'hideLoadingModal');
-
       mockInitController();
     });
 
     it('should set the $scope.viewName to Tax Management', function() {
       expect($scope.viewName).toBe('Tax Management');
     });
-
     it('should display the loading modal, with specific text', function() {
       expect(TaxRatesCtrl.showLoadingModal).toHaveBeenCalledWith('Loading data for Tax Management...');
     });
-
     it('should hide the loading modal', function() {
       expect(TaxRatesCtrl.hideLoadingModal).toHaveBeenCalled();
     });
-
     it('should set the viewIsReady to true', function() {
       expect($scope.viewIsReady).toBeTruthy();
     });
 
     describe('After dependencies have been resolved, it', function() {
-
       it('should set the $scope.taxTypesList to the mock data', function() {
         expect($scope.taxTypesList).toEqual(taxTypesJSON.response);
       });
-
       it('should set the $scope.taxRatesList to the mock data', function() {
         expect($scope.taxRatesList).toEqual(taxRateTypesJSON);
       });
-
       it('should set the $scope.countriesList to the mock data', function() {
         expect($scope.countriesList).toEqual(countriesJSON.countries);
       });
-
       it('should set the $scope.stationsList to the mock data', function() {
         expect($scope.stationsList).toEqual(stationsListJSON.response);
       });
-
       it('should set the $scope.currenciesList to the mock data', function() {
         expect($scope.currenciesList).toEqual(currenciesListJSON.response);
       });
-
       it('should set the $scope.companyTaxRatesList to the mock data', function() {
         expect($scope.companyTaxRatesList).toEqual(companyTaxRatesJSON.taxRates);
       });
 
       describe('Search Template Logic', function() {
-
         beforeEach(function() {
           spyOn(TaxRatesCtrl, 'isDateRangeSet').and.callThrough();
           spyOn(TaxRatesCtrl, 'isSearchFieldActive').and.callThrough();
           spyOn(TaxRatesCtrl, 'isSearchActive').and.callThrough();
         });
 
-        it('clearSearchFilters should clear the search and dates', function() {
-          $scope.search = {
-            taxRate: 1
-          };
-          $scope.clearSearchFilters();
-          expect($scope.search).toEqual({});
+        describe('showClearButton method', function() {
+          it('should return true if search has data', function() {
+            $scope.search.taxRate = 1;
+            expect($scope.showClearButton()).toBeTruthy();
+          });
+          it('should return true if dateRange is set', function() {
+            $scope.dateRange.startDate = '11202015';
+            expect($scope.showClearButton()).toBeTruthy();
+          });
+          it('should return false if search data is set but undefined', function() {
+            $scope.search.taxType = undefined;
+            $scope.dateRange.startDate = '';
+            expect($scope.showClearButton()).toBeFalsy();
+          });
+          it('should trigger isDateRangeSet', function() {
+            $scope.showClearButton();
+            $scope.$digest();
+            expect(TaxRatesCtrl.isDateRangeSet).toHaveBeenCalled();
+          });
+          it('should trigger isSearchActive and isSearchFieldActive', function() {
+            $scope.search.taxRate = 1;
+            $scope.showClearButton();
+            $scope.$digest();
+            expect(TaxRatesCtrl.isSearchFieldActive).toHaveBeenCalled();
+            expect(TaxRatesCtrl.isSearchActive).toHaveBeenCalled();
+          });
         });
 
-        it('showClearButton should return true if search has data', function() {
-          $scope.search.taxRate = 1;
-          expect($scope.showClearButton()).toBeTruthy();
+        describe('searchRecords method', function() {
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'createSearchPromises').and.callThrough();
+            spyOn(TaxRatesCtrl, 'makeSearchPromises').and.callThrough();
+            spyOn(TaxRatesCtrl, 'createSearchPayload').and.callThrough();
+            spyOn(TaxRatesCtrl, 'createUiSelectSearchPayload').and.callThrough();
+            spyOn(TaxRatesCtrl, 'generateCompanyStationIds').and.callThrough();
+
+            $scope.search = {
+              'taxType': {
+                'id': 20,
+                'companyId': 403,
+                'taxTypeCode': 'Local',
+                'countTaxRate': '5',
+                'description': 'Local Tax'
+              },
+              'country': {
+                'id': 240,
+                'countryName': 'United States'
+              },
+              'stations': [{
+                'id': 129,
+                'cityId': 5,
+                'cityName': 'Chicago',
+                'companyId': 403,
+                'countryId': 240,
+                'countryName': 'United States',
+                'description': null,
+                'isCaterer': false,
+                'endDate': '2050-01-01',
+                'startDate': '2015-05-02',
+                'regionId': 4,
+                'regionName': 'Illinois',
+                'stationCode': 'LAX',
+                'stationId': 8,
+                'stationName': 'Los Angeles',
+                'timezone': 'America/Chicago',
+                'timezoneId': '459',
+                'utcDstOffset': '-05:00',
+                'utcOffset': '-06:00',
+                'companyStationRelationships': []
+              }, {
+                'id': 131,
+                'cityId': 5,
+                'cityName': 'Chicago',
+                'companyId': 403,
+                'countryId': 240,
+                'countryName': 'United States',
+                'description': null,
+                'isCaterer': false,
+                'endDate': '2050-01-01',
+                'startDate': '2015-05-02',
+                'regionId': 4,
+                'regionName': 'Illinois',
+                'stationCode': 'ORD',
+                'stationId': 1,
+                'stationName': 'Chicago O-hare',
+                'timezone': 'America/Chicago',
+                'timezoneId': '459',
+                'utcDstOffset': '-05:00',
+                'utcOffset': '-06:00',
+                'companyStationRelationships': []
+              }],
+              'taxRateType': {
+                'id': '1',
+                'taxRateType': 'Amount'
+              },
+              'taxRate': 9,
+              'currency': {
+                'id': 1,
+                'companyId': 403,
+                'code': 'USD',
+                'name': 'U.S. Dollar'
+              }
+            };
+            $scope.dateRange = {
+              startDate: '12302015',
+              endDate: '12302016'
+            };
+            $scope.searchRecords();
+          });
+
+          it('should call makeSearchPromises', function() {
+            expect(TaxRatesCtrl.makeSearchPromises).toHaveBeenCalled();
+          });
+          it('should call createSearchPromises', function() {
+            expect(TaxRatesCtrl.createSearchPromises).toHaveBeenCalled();
+          });
+          it('should call createSearchPayload', function() {
+            expect(TaxRatesCtrl.createSearchPayload).toHaveBeenCalled();
+          });
+          it('should call createUiSelectSearchPayload', function() {
+            expect(TaxRatesCtrl.createUiSelectSearchPayload).toHaveBeenCalled();
+          });
+          it('should call generateCompanyStationIds', function() {
+            expect(TaxRatesCtrl.generateCompanyStationIds).toHaveBeenCalled();
+          });
+          it('should error gracefully if generateCompanyStationIds when stations are undefined',
+            function() {
+              $scope.search = {
+                'stations': [{
+                  'id': 129
+                }, {
+                  'id': 131
+                }],
+              };
+              expect(TaxRatesCtrl.generateCompanyStationIds()).toBe('');
+            });
+
         });
 
-        it('showClearButton should return true if dateRange is set', function() {
-          $scope.dateRange.startDate = '11202015';
-          expect($scope.showClearButton()).toBeTruthy();
-        });
+        describe('clearSearchFilters method', function() {
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'makeSearchPromises').and.callThrough();
+          });
 
-        it('showClearButton should return false if search data is set but undefined', function() {
-          $scope.search.taxType = undefined;
-          $scope.dateRange.startDate = '';
-          expect($scope.showClearButton()).toBeFalsy();
-        });
-
-        it('showClearButton should trigger isDateRangeSet', function() {
-          $scope.showClearButton();
-          $scope.$digest();
-          expect(TaxRatesCtrl.isDateRangeSet).toHaveBeenCalled();
-        });
-
-        it('showClearButton should trigger isSearchActive and isSearchFieldActive', function() {
-          $scope.search.taxRate = 1;
-          $scope.showClearButton();
-          $scope.$digest();
-          expect(TaxRatesCtrl.isSearchFieldActive).toHaveBeenCalled();
-          expect(TaxRatesCtrl.isSearchActive).toHaveBeenCalled();
+          it('should clear the search and dates', function() {
+            $scope.search.taxRate = 1;
+            $scope.clearSearchFilters();
+            expect($scope.search).toEqual({});
+            expect(TaxRatesCtrl.makeSearchPromises).toHaveBeenCalledWith();
+          });
+          it('should break and not error if undefined', function() {
+            $scope.search = undefined;
+            $scope.clearSearchFilters();
+            expect($scope.search).toEqual(undefined);
+          });
         });
 
       });
 
     });
-
   });
-
 }); //Close for describe | Controller: TaxRatesCtrl
