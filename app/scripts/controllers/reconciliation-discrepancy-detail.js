@@ -346,7 +346,11 @@ angular.module('ts5App')
     }
 
     function setupPaymentReport(reportList) {
-      $scope.paymentReport = angular.copy(reportList.paymentReports);
+      var paymentReportList = angular.copy(reportList.paymentReports);
+      angular.forEach(paymentReportList, function (report) {
+        report.scheduleDate = dateUtility.formatDateForApp(report.scheduleDate, 'YYYY-MM-DDThh:mm');
+      });
+      $scope.paymentReport = paymentReportList;
     }
 
     function setupData(responseCollection) {
