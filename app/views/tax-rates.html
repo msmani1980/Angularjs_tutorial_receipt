@@ -59,9 +59,9 @@
                 <ui-select ng-if="viewIsReady" multiple ng-model="search.stations" theme="bootstrap" ng-disabled="disabled" sortable="true" close-on-select="true">
                   <ui-select-match placeholder="Search by Station">{{$item.stationCode}} - {{$item.stationName}}</ui-select-match>
                   <ui-select-choices repeat="station in stationsList | filter: $select.search | orderBy:'stationCode'">
-                    <div ng-bind-html="station.stationName | highlight: $select.search"></div>
+                    <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
                     <small>
-                      Station: <span ng-bind-html="station.stationCode+' - '+station.stationName | highlight: $select.search"></span>
+                      <span ng-bind-html="station.countryName | highlight: $select.search"></span>
                     </small>
                   </ui-select-choices>
                 </ui-select>
