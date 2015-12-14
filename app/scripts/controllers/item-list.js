@@ -1,4 +1,5 @@
 'use strict';
+// jshint maxcomplexity:6
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
@@ -916,14 +917,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return false;
     };
 
-    this.doesStationDataExist = function(newStationException, oldStationException) {
-      return (!oldStationException || !newStationException.startDate || !newStationException.endDate);
-    };
-
     this.stationExceptionDatesAreValid = function(newPrice, oldPrice, stationExceptionIndex) {
       var newStationException = newPrice.stationExceptions[stationExceptionIndex];
       var oldStationException = oldPrice.stationExceptions[stationExceptionIndex];
-      if ($this.doesStationDataExist(newStationException, oldStationException)) {
+      if (!oldStationException || !newStationException.startDate || !newStationException.endDate) {
         return false;
       }
       if (newStationException.startDate !== oldStationException.startDate || newStationException.endDate !==
