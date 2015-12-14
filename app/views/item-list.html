@@ -135,7 +135,7 @@
       </tr>
       </thead>
 
-      <tbody ng-repeat="item in itemsList" id="item-{{ item.itemMasterId }}" ng-show="doesActiveOrFutureVersionExist(item)">
+      <tbody ng-repeat="item in itemsList" id="item-{{ item.itemMasterId }}">
       <tr class="master-row">
         <td>
             <span class="fa fa-plus-square-o" ng-show="!isOpen(item) && hasSubVersions(item)"

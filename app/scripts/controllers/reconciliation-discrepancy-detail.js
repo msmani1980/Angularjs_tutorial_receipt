@@ -12,7 +12,7 @@ angular.module('ts5App')
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
-      return $filter('currency')(valueToFormat, '');
+      return sprintf ('%.2f', valueToFormat);
     }
 
     function initLMPStockRevisions() {
@@ -346,7 +346,11 @@ angular.module('ts5App')
     }
 
     function setupPaymentReport(reportList) {
-      $scope.paymentReport = angular.copy(reportList.paymentReports);
+      var paymentReportList = angular.copy(reportList.paymentReports);
+      angular.forEach(paymentReportList, function (report) {
+        report.scheduleDate = dateUtility.formatDateForApp(report.scheduleDate, 'YYYY-MM-DDThh:mm');
+      });
+      $scope.paymentReport = paymentReportList;
     }
 
     function setupData(responseCollection) {
