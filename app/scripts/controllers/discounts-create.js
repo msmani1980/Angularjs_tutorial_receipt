@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('DiscountsCreateCtrl', function ($scope, $q, $location, $routeParams, dateUtility, discountFactory, recordsService, currencyFactory) {
+  .controller('DiscountsCreateCtrl', function ($scope, $q, $location, $routeParams, dateUtility, discountFactory, recordsService, currencyFactory, companiesFactory, itemsFactory) {
     var $this = this;
 
     $scope.viewName = 'Create Discount';
@@ -18,7 +18,13 @@ angular.module('ts5App')
     $scope.globalDiscountTypesList = [];
     $scope.discountTypesList = [];
     $scope.companyCurrencyGlobalsList = [];
-    $scope.formData = {};
+    $scope.retailItemsList = [];
+    $scope.salesCategoriesList = [];
+    $scope.addRestrictedItemsNumber = 1;
+    $scope.formData = {
+      isRestriction: false,
+      restrictedItems: []
+    };
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -54,10 +60,20 @@ angular.module('ts5App')
       $scope.companyCurrencyGlobalsList = data.response;
     };
 
+    this.setSalesCategoriesList = function(data) {
+      $scope.salesCategoriesList = data.salesCategories;
+    };
+
+    this.setRetailItemsList = function(data) {
+      $scope.retailItemsList = data.masterItems;
+    };
+
     this.setDependencies = function(response) {
       $this.setGlobalDiscountTypesList(response[0]);
       $this.setDiscountTypesList(response[1]);
       $this.setCompanyCurrencyGlobals(response[2]);
+      $this.setSalesCategoriesList(response[3]);
+      $this.setRetailItemsList(response[4]);
 
       if ($scope.editingDiscount) {
         this.getItem($routeParams.id);
@@ -75,7 +91,9 @@ angular.module('ts5App')
       return [
         discountFactory.getDiscountTypesList(),
         recordsService.getDiscountTypes(),
-        currencyFactory.getCompanyCurrencies(companyCurrenciesPayload)
+        currencyFactory.getCompanyCurrencies(companyCurrenciesPayload),
+        companiesFactory.getSalesCategoriesList(),
+        itemsFactory.getItemsList({}, true)
       ];
     };
 
@@ -87,6 +105,25 @@ angular.module('ts5App')
       });
     };
 
+    $scope.showDeleteConfirmation = function (index, restrictedItem) {
+      $scope.restrictedItemToDelete = restrictedItem;
+      $scope.restrictedItemToDelete.rowIndex = index;
+
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.deleteRestrictedItem = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+      $scope.formData.restrictedItems.splice($scope.restrictedItemToDelete.rowIndex, 1);
+    };
+
+    $scope.addRestrictedItems = function() {
+      var totalRowsToAdd = $scope.addRestrictedItemsNumber || 1;
+      for (var i = 0; i < totalRowsToAdd; i++) {
+        $scope.formData.restrictedItems.push({restrictedItem: null});
+      }
+    };
+
     $scope.getGlobalDiscountDescriptionById = function(id) {
       var discount = $scope.globalDiscountTypesList.filter(function(discount) {
         return discount.id == id
@@ -95,12 +132,13 @@ angular.module('ts5App')
       return (discount.length > 0) ? discount[0].description : "";
     };
 
-    this.init = function() {
-      this.checkFormState();
-      this.getDependencies();
-    };
+    $scope.getRetailItemNameById = function(id) {
+      var retailItem = $scope.retailItemsList.filter(function(retailItem) {
+        return retailItem.id == id
+      });
 
-    this.init();
+      return (retailItem.length > 0) ? retailItem[0].itemName : "";
+    };
 
     $scope.isDisabled = function() {
       return false;
@@ -132,4 +170,11 @@ angular.module('ts5App')
         $this[action](payload);
       }
     };
+
+    this.init = function() {
+      this.checkFormState();
+      this.getDependencies();
+    };
+
+    this.init();
   });
