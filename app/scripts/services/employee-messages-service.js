@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('employeeMessagesService', function ($resource, ENV) {
 
-    var employeeMessagesRequestURL = ENV.apiUrl + '/api/employee-messages/';
+    var employeeMessagesRequestURL = ENV.apiUrl + '/api/employee-messages/:id';
 
     var employeeActions = {
       getEmployeeMessages: {
@@ -24,8 +24,14 @@ angular.module('ts5App')
       return employeeMessagesRequestResource.getEmployeeMessages(requestPayload).$promise;
     };
 
+    var getEmployeeMessage = function (id) {
+      var requestPayload = {id: id};
+      return employeeMessagesRequestResource.getEmployeeMessages(requestPayload).$promise;
+    };
+
     return {
-      getEmployeeMessages: getEmployeeMessages
+      getEmployeeMessages: getEmployeeMessages,
+      getEmployeeMessage: getEmployeeMessage
     };
 
   });
