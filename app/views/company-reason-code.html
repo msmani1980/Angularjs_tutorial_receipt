@@ -18,9 +18,6 @@
 
   </div>
 
-  <error-dialog form-object="companyReasonCodeFrom" error-response="errorResponse" display="displayError">
-  </error-dialog>
-
   <div class="form-group">
 
     <ui-select multiple ng-model="reasonFilter.selectedGlobalReasons" theme="bootstrap">
@@ -32,11 +29,16 @@
     </ui-select>
   </div>
 
-  <form name="companyReasonCodeFrom" class="form edit-form" ng-submit="submitForm()">
+  <div class="row">
 
-    <div class="row">
+    <div class="col-xs-12 col-sm-6" ng-show="whenReasonIsNotFiltered(subscribed)"
+    ng-repeat="(key,subscribed) in formData.subscribedGlobalReasons track by subscribed.id"
+    ng-init="reasonForm = 'reasonForm'+key">
 
-      <div class="col-xs-12 col-sm-6" ng-show="whenReasonIsNotFiltered(subscribed)" ng-repeat="(key,subscribed) in formData.subscribedGlobalReasons track by subscribed.id">
+      <error-dialog form-object="reasonForm" error-response="errorResponse" display="displayError">
+      </error-dialog>
+
+      <form name="{{reasonForm}}" class="form edit-form" ng-submit="submitForm(this[reasonForm])">
 
         <div class="panel panel-default">
 
@@ -45,45 +47,41 @@
             <br/>{{ subscribed.description}}
           </div>
 
-          <div class="">
+          <table class="table table-responsive table-hover" style="margin:0;">
 
-            <table class="table table-responsive table-hover" style="margin:0;">
+        	  <thead>
 
-          	    <thead>
+      	      <tr>
+      					<th>Reason</th>
+      	        <th style="width:60px;">Active</th>
+      	      </tr>
 
-          	      <tr>
-          					<th>Reason</th>
-          	        <th style="width:60px;">Active</th>
-          	      </tr>
+        	  </thead>
 
-          	    </thead>
+        	  <tbody>
 
-          	    <tbody>
+      	      <tr ng-repeat="reasonCode in formData.globalReasons[key].companyReasons track by $index">
 
-          	      <tr ng-repeat="reasonCode in formData.globalReasons[key].companyReasons track by $index">
+                <td>
+                  <input placeholder="Type a reason here" type="text" class="form-control" ng-keypress="addReasonCodeWithEnter($event,subscribed.id)"
+                  name="description {{ $index+1}}" ng-model="reasonCode.reasonCode" required/>
+                </td>
 
-                    <td>
-                      <input placeholder="Type a reason here" type="text" class="form-control" ng-keypress="addReasonCodeWithEnter($event,subscribed.id)"
-                      name="description {{ $index+1}}" ng-model="reasonCode.reasonCode" />
-                    </td>
+                <td class="text-center" style="width:60px;">
 
-                    <td class="text-center" style="width:60px;">
+                  <input ng-show="reasonCode.isActive" type="checkbox" name="isActive {{ $index+1}}" ng-model="reasonCode.isActive" tabindex="-1"  />
 
-                      <input ng-show="reasonCode.isActive" type="checkbox" name="isActive {{ $index+1}}" ng-model="reasonCode.isActive" tabindex="-1"  />
+                  <button ng-show="{{ reasonCode.isActive === null }}" class="btn btn-danger btn-xs" type="button"
+                   ng-click="removeReason(subscribed.id,$index)" tabindex="-1">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
 
-                      <button ng-show="{{ reasonCode.isActive === null }}" class="btn btn-danger btn-xs" type="button"
-                       ng-click="removeReason(subscribed.id,$index)" tabindex="-1">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
+              <tr>
 
-                  <tr>
+            </tbody>
 
-                </tbody>
-
-              </table>
-
-          </div>
+          </table>
 
           <div class="panel-footer text-right">
 
@@ -92,7 +90,7 @@
               <span class="hidden-xs"> Add Reason</span>
             </button>
 
-            <button class="btn btn-success" type="button" ng-click="submitForm()">
+            <button class="btn btn-success" type="submit">
               <i class="fa fa-check-square-o"></i> Save Reasons
             </button>
 
@@ -100,11 +98,11 @@
 
         </div>
 
-      </div>
+      </form>
 
     </div>
 
-  </form>
+  </div>
 
 </div>
 <!-- /Container -->

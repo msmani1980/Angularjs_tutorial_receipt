@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Company Reason Code Controller', function() {
+fdescribe('Company Reason Code Controller', function() {
 
   beforeEach(module(
     'ts5App',
@@ -21,29 +21,11 @@ describe('Company Reason Code Controller', function() {
   }));
 
   function createFormObject() {
-    scope.companyReasonCodeFrom = {
+    scope.reasonForm0 = {
       $valid: false,
       $invalid: false,
       $submitted: false,
-      $name:'companyReasonCodeFrom',
-      refundCodeType: {
-        $name: 'refundCodeType',
-        $invalid: false,
-        $valid: true,
-        $viewValue: '',
-        $setViewValue: function(value) {
-          this.$viewValue = value;
-        }
-      },
-      refundReason: {
-        $name: 'refundReason',
-        $invalid: false,
-        $valid: true,
-        $viewValue: '',
-        $setViewValue: function(value) {
-          this.$viewValue = value;
-        }
-      }
+      $name:'reasonForm0',
     };
   }
 
@@ -77,26 +59,26 @@ describe('Company Reason Code Controller', function() {
       spyOn(CompanyReasonCodeCtrl,'submitForm').and.callThrough();
       spyOn(CompanyReasonCodeCtrl,'validateForm').and.callThrough();
       spyOn(CompanyReasonCodeCtrl,'createCompanyReasonCode').and.callThrough();
-      scope.submitForm();
+      scope.submitForm(scope.reasonForm0);
     });
 
     it('should call the controller method ', function() {
-      expect(CompanyReasonCodeCtrl.submitForm).toHaveBeenCalled();
+      expect(CompanyReasonCodeCtrl.submitForm).toHaveBeenCalledWith(scope.reasonForm0);
     });
 
     describe('when the the form is validated', function() {
 
       it('should call the controller method', function() {
-        expect(CompanyReasonCodeCtrl.validateForm).toHaveBeenCalled();
+        expect(CompanyReasonCodeCtrl.validateForm).toHaveBeenCalledWith(scope.reasonForm0);
       });
 
       it('should set the displayError flag', function() {
-        expect(scope.displayError).toEqual(scope.companyReasonCodeFrom.$invalid);
+        expect(scope.displayError).toEqual(scope.reasonForm0.$invalid);
       });
 
       it('should return the form objects valid state', function() {
-        var control = CompanyReasonCodeCtrl.validateForm();
-        expect(control).toEqual(scope.companyReasonCodeFrom.$valid);
+        var control = CompanyReasonCodeCtrl.validateForm(scope.reasonForm0);
+        expect(control).toEqual(scope.reasonForm0.$valid);
       });
 
     });
@@ -104,10 +86,8 @@ describe('Company Reason Code Controller', function() {
     describe('when the the form is valid', function() {
 
       beforeEach(function() {
-        scope.companyReasonCodeFrom.refundCodeType.$setViewValue(1);
-        scope.companyReasonCodeFrom.refundReason.$setViewValue(1);
-        scope.companyReasonCodeFrom.$valid = true;
-        scope.submitForm();
+        scope.reasonForm0.$valid = true;
+        scope.submitForm(scope.reasonForm0);
       });
 
       it('should call the create method', function() {

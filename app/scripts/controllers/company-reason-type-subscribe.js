@@ -268,8 +268,4 @@ angular.module('ts5App')
       return $this.submitForm();
     };
 
-    $scope.$watch('formData.subscribedGlobalReasons', function(current){
-      console.log(current);
-    });
-
   });

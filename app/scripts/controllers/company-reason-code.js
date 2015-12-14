@@ -200,9 +200,9 @@ angular.module('ts5App')
       return actionState === $routeParams.action;
     };
 
-    this.validateForm = function() {
-      $scope.displayError = $scope.companyReasonCodeFrom.$invalid;
-      return $scope.companyReasonCodeFrom.$valid;
+    this.validateForm = function(formObject) {
+      $scope.displayError = formObject.$invalid;
+      return formObject.$valid;
     };
 
     this.showSuccessMessage = function(message) {
@@ -232,8 +232,8 @@ angular.module('ts5App')
       this.createCompanyReasonCodeSuccess(payload);
     };
 
-    this.submitForm = function() {
-      if( $this.validateForm() ) {
+    this.submitForm = function(formObject) {
+      if( $this.validateForm(formObject) ) {
         $this.createCompanyReasonCode();
       }
     };
@@ -318,8 +318,8 @@ angular.module('ts5App')
 
     /* Scope Declarations */
 
-    $scope.submitForm = function() {
-      return $this.submitForm();
+    $scope.submitForm = function(formObject) {
+      return $this.submitForm(formObject);
     };
 
     $scope.addReasonCode = function(globalReasonCodeId) {
