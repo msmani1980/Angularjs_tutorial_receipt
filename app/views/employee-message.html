@@ -1,6 +1,9 @@
 <div class="container-fluid">
 
-  <form name="employeeMessageForm" ng-submit="save()">
+  <error-dialog form-object="employeeMessageForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+  <form name="employeeMessageForm" class="edit-form" ng-submit="save()">
 
     <div class="edit-controls">
       <div class="row">
@@ -17,16 +20,16 @@
       </div>
     </div>
 
-    <!--<error-dialog form-object="employeeMessageForm" error-response="errorResponse" display="displayError">-->
-    <!--</error-dialog>-->
-
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
               <label>Message</label>
-              <input class="form-control" ng-model="employeeMessage.employeeMessageText" required="true" ng-disabled="readOnly">
+              <input class="form-control"
+                     name="message"
+                     ng-model="employeeMessage.employeeMessageText"
+                     required="true" ng-disabled="readOnly">
             </div>
           </div>
         </div>
@@ -37,7 +40,7 @@
           <div class="col-xs-6 col-sm-3">
             <div class="form-group">
               <date-picker-field
-                name="endDate"
+                name="startDate"
                 class="form-group"
                 form="employeeMessageForm"
                 ng-model="employeeMessage.startDate"
@@ -294,3 +297,9 @@
   </form>
 
 </div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
