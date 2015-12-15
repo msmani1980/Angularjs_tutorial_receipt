@@ -6,7 +6,7 @@
         <h2 class="view-name">Edit {{viewName}}</h2>
       </div>
       <div class="col-xs-6 text-right">
-        <a class="btn btn-default" ng-href="#/employee-message-list" class="btn">Back</a>
+        <a class="btn btn-default" ng-href="#/employee-messages" class="btn">Back</a>
       </div>
     </div>
   </div>
@@ -14,14 +14,14 @@
   <!--<error-dialog form-object="employeeMessageForm" error-response="errorResponse" display="displayError">-->
   <!--</error-dialog>-->
 
-  <form name="employeeMessageForm">
+  <form name="employeeMessageForm" ng-submit="save()">
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
               <label>Message</label>
-              <input class="form-control" ng-model="employeeMessage.employeeMessageText">
+              <input class="form-control" ng-model="employeeMessage.employeeMessageText" required="true">
             </div>
           </div>
         </div>
@@ -65,14 +65,21 @@
                 <label>Employees</label>
               </div>
               <div class="col-xs-4 text-right">
-                <button class="btn btn-xs btn-danger" title="delete selected schedules" ng-click="removeItems('employees')">
+                <button ng-class="getPropertiesForDeletedButton('employees', 'button')"
+                        title="delete selected employees"
+                        ng-disabled="getPropertiesForDeletedButton('employees', 'disabled')"
+                        ng-click="removeItems('employees')">
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
             </div>
             <table class="table table-bordered">
               <tr class="active">
-                <td><input type="checkbox" ng-model="employeesDeleteAll" ng-click="toggleSelectAll(employeesDeleteAll, 'employees')"></td>
+                <td><input type="checkbox"
+                           ng-show="employeeMessage.employees.length"
+                           ng-model="employeesDeleteAll"
+                           ng-click="toggleSelectAll(employeesDeleteAll, 'employees')">
+                </td>
                 <th>ID</th>
                 <th>Name</th>
               </tr>
@@ -111,14 +118,21 @@
                 <label>Schedules</label>
               </div>
               <div class="col-xs-4 text-right">
-                <button class="btn btn-xs btn-default" title="delete selected schedules" ng-click="removeItems('schedules')">
+                <button ng-class="getPropertiesForDeletedButton('schedules', 'button')"
+                        title="delete selected schedules"
+                        ng-disabled="getPropertiesForDeletedButton('schedules', 'disabled')"
+                        ng-click="removeItems('schedules')">
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
             </div>
             <table class="table table-bordered">
               <tr class="active">
-                <td><input type="checkbox" ng-model="schedulesDeleteAll" ng-click="toggleSelectAll(schedulesDeleteAll, 'schedules')"></td>
+                <td><input type="checkbox"
+                           ng-show="employeeMessage.schedules.length"
+                           ng-model="schedulesDeleteAll"
+                           ng-click="toggleSelectAll(schedulesDeleteAll, 'schedules')">
+                </td>
                 <th>Schedule Number</th>
               </tr>
               <tr ng-repeat="schedule in employeeMessage.schedules">
@@ -154,14 +168,20 @@
                 <label>Departure Station</label>
               </div>
               <div class="col-xs-4 text-right">
-                <button class="btn btn-xs btn-default" title="delete selected schedules" ng-click="removeItems('departureStations')">
+                <button ng-class="getPropertiesForDeletedButton('departureStations', 'button')"
+                        title="delete selected stations"
+                        ng-disabled="getPropertiesForDeletedButton('departureStations', 'disabled')"
+                        ng-click="removeItems('departureStations')">
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
             </div>
             <table class="table table-bordered">
               <tr class="active">
-                <td><input type="checkbox" ng-model="departureStationsDeleteAll" ng-click="toggleSelectAll(departureStationsDeleteAll, 'departureStations')"></td>
+                <td><input type="checkbox"
+                           ng-show="employeeMessage.departureStations.length"
+                           ng-model="departureStationsDeleteAll"
+                           ng-click="toggleSelectAll(departureStationsDeleteAll, 'departureStations')"></td>
                 <th>Code</th>
                 <th>Name</th>
               </tr>
@@ -199,14 +219,21 @@
                 <label>Arrival Station</label>
               </div>
               <div class="col-xs-4 text-right">
-                <button class="btn btn-xs btn-default" title="delete selected schedules" ng-click="removeItems('arrivalStations')">
+                <button ng-class="getPropertiesForDeletedButton('arrivalStations', 'button')"
+                        title="delete selected stations"
+                        ng-disabled="getPropertiesForDeletedButton('arrivalStations', 'disabled')"
+                        ng-click="removeItems('arrivalStations')">
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
             </div>
             <table class="table table-bordered">
               <tr class="active">
-                <td><input type="checkbox" ng-model="arrivalStationsDeleteAll" ng-click="toggleSelectAll(arrivalStationsDeleteAll, 'arrivalStations')"></td>
+                <td><input type="checkbox"
+                           ng-show="employeeMessage.arrivalStations.length"
+                           ng-model="arrivalStationsDeleteAll"
+                           ng-click="toggleSelectAll(arrivalStationsDeleteAll, 'arrivalStations')">
+                </td>
                 <th>Code</th>
                 <th>Name</th>
               </tr>
@@ -244,8 +271,6 @@
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>
-        <a href="#/post-trip-data-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
-
       </div>
     </div>
   </form>

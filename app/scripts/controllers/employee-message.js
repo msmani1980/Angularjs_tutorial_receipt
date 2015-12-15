@@ -57,6 +57,16 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       }
     };
 
+    $scope.getPropertiesForDeletedButton = function (listName, attribute) {
+      var canDelete = false;
+      angular.forEach($scope.employeeMessage[listName], function (record) {
+        canDelete = canDelete || record.selectedToDelete;
+      });
+
+      var properties = (canDelete) ? {disabled: false, button: 'btn btn-xs btn-danger'} : {disabled: true, button: 'btn btn-xs btn-default'};
+      return properties[attribute];
+    };
+
     $scope.selectAllToAdd = function (toggleFlag, listName) {
       var listNameToFilteredListMap = {
         schedules: $scope.filteredSchedules,
