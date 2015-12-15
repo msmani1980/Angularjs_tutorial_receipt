@@ -143,7 +143,7 @@ angular.module('ts5App')
         var varianceValue = (cashBag.paperAmountManual + cashBag.coinAmountManual) - crewAmount + (crewAmount - 0);
         var isDiscrepancy = varianceValue !== 0;
         var bankExchangeRate = cashBag.chBankExchangeRate || (cashBag.chPaperExchangeRate + '/' + cashBag.chCoinExchangeRate);
-        var totalBank = cashBag.bankAmountCh || (cashBag.coinAmountManualCh + cashBag.paperAmountManualCh);
+        var totalBank = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank);
         var cashBagItem = {
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
@@ -152,7 +152,7 @@ angular.module('ts5App')
           paperAmount: formatAsCurrency(cashBag.paperAmountManual),
           coinAmount: formatAsCurrency(cashBag.coinAmountManual),
           varianceValue: formatAsCurrency(varianceValue),
-          bankExchangeRate: bankExchangeRate,
+          bankExchangeRate: formatAsCurrency(bankExchangeRate),
           totalBank: formatAsCurrency(totalBank),
           isDiscrepancy: isDiscrepancy
         };
