@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: taxRatesService', function() {
+describe('Service: taxRatesService', function() {
 
   beforeEach(module('ts5App', 'served/company-tax-rates.json'));
 

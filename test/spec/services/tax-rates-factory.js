@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: taxRatesFactory', function() {
+describe('Service: taxRatesFactory', function() {
 
   beforeEach(module('ts5App'));
 
@@ -84,8 +84,8 @@ fdescribe('Service: taxRatesFactory', function() {
 
   describe('removeCompanyTaxRate API call', function() {
     it('should call removeCompanyTaxRate', function() {
-      taxRatesFactory.removeCompanyTaxRate(companyId,1);
-      expect(taxRatesService.removeCompanyTaxRate).toHaveBeenCalledWith(companyId,1);
+      taxRatesFactory.removeCompanyTaxRate(companyId, 1);
+      expect(taxRatesService.removeCompanyTaxRate).toHaveBeenCalledWith(companyId, 1);
     });
   });
 

@@ -115,7 +115,6 @@ angular.module('ts5App')
     this.init();
 
     // Place user facing / post-init controller functions here
-
     this.reloadRoute = function() {
       $route.reload();
     };
@@ -218,10 +217,10 @@ angular.module('ts5App')
     };
 
     this.deleteSuccess = function() {
-      var id = $scope.taxRateToRemove.id;
+      var id = angular.copy($scope.taxRateToRemove.id);
       ngToast.create('Successfully Removed Tax Rate ID:' + id);
       $scope.taxRateToRemove = [];
-      $this.reloadRoute();
+      return $this.reloadRoute();
     };
 
     this.isTaxRateActive = function(taxRate) {
@@ -245,7 +244,7 @@ angular.module('ts5App')
           startDate: '',
           endDate: ''
         };
-        $this.makeSearchPromises(true);
+        return $this.makeSearchPromises(true);
       }
     };
 
@@ -254,11 +253,11 @@ angular.module('ts5App')
     };
 
     $scope.searchRecords = function() {
-      $this.makeSearchPromises();
+      return $this.makeSearchPromises();
     };
 
     $scope.deleteCompanyTaxRate = function(id) {
-      $this.makeDeletePromises(id);
+      return $this.makeDeletePromises(id);
     };
 
     $scope.showDeleteButton = function(taxRate) {
@@ -270,7 +269,7 @@ angular.module('ts5App')
     };
 
     $scope.displayConfirmDialog = function(id) {
-      $this.displayConfirmDialog(id);
+      return $this.displayConfirmDialog(id);
     };
 
   });

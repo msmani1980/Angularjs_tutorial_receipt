@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: TaxRatesCtrl', function() {
+fdescribe('Controller: TaxRatesCtrl', function() {
   beforeEach(module(
     'ts5App',
     'template-module',
@@ -312,7 +312,7 @@ describe('Controller: TaxRatesCtrl', function() {
             $scope.search.taxRate = 1;
             $scope.clearSearchFilters();
             expect($scope.search).toEqual({});
-            expect(TaxRatesCtrl.makeSearchPromises).toHaveBeenCalledWith();
+            expect(TaxRatesCtrl.makeSearchPromises).toHaveBeenCalledWith(true);
           });
           it('should break and not error if undefined', function() {
             $scope.search = undefined;
