@@ -74,6 +74,10 @@ angular.module('ts5App')
         return itemsService.getItem(itemId);
       }
 
+      function getMasterItem(itemId) {
+        return itemsService.getMasterItem(itemId);
+      }
+
       function getPromotion(promotionId) {
         return promotionsService.getPromotion(promotionId);
       }
@@ -128,6 +132,7 @@ angular.module('ts5App')
         getPromotionTotals: getPromotionTotals,
         getItemTypesList: getItemTypesList,
         getItem: getItem,
+        getMasterItem: getMasterItem,
         getPromotion: getPromotion,
         getPaymentReport: getPaymentReport,
         getCHRevenue: getCHRevenue,
