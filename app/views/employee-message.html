@@ -7,6 +7,10 @@
       </div>
       <div class="col-xs-6 text-right">
         <a class="btn btn-default" ng-href="#/employee-messages" class="btn">Back</a>
+        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+          <span class="fa fa-check-square-o" aria-hidden="true"></span>
+          <span class="hidden-xs">Save</span>
+        </button>
       </div>
     </div>
   </div>
@@ -68,7 +72,8 @@
                 <button ng-class="getPropertiesForDeletedButton('employees', 'button')"
                         title="delete selected employees"
                         ng-disabled="getPropertiesForDeletedButton('employees', 'disabled')"
-                        ng-click="removeItems('employees')">
+                        ng-click="removeItems('employees')"
+                        type="button">
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
@@ -104,7 +109,7 @@
                       <input type="checkbox" ng-model="employeesAddAll" ng-click="selectAllToAdd(employeesAddAll, 'employees')"> Add all employees
                     </td>
                     <td class="col-xs-1">
-                      <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('employees')"><i class="fa fa-plus"></i></button>
+                      <button type="button" class="btn btn-success btn-sm text-right" ng-click="addNewItem('employees')"><i class="fa fa-plus"></i></button>
                     </td>
                   </tr>
                 </table>
@@ -121,7 +126,8 @@
                 <button ng-class="getPropertiesForDeletedButton('schedules', 'button')"
                         title="delete selected schedules"
                         ng-disabled="getPropertiesForDeletedButton('schedules', 'disabled')"
-                        ng-click="removeItems('schedules')">
+                        ng-click="removeItems('schedules')"
+                        type="button" >
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
@@ -154,7 +160,7 @@
                       <input type="checkbox" ng-model="schedulesAddAll" ng-click="selectAllToAdd(schedulesAddAll, 'schedules')"> Add all schedules
                     </td>
                     <td class="col-xs-1">
-                      <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('schedules')"><i class="fa fa-plus"></i></button>
+                      <button type="button" class="btn btn-success btn-sm text-right" ng-click="addNewItem('schedules')"><i class="fa fa-plus"></i></button>
                     </td>
                   </tr>
                 </table>
@@ -171,7 +177,8 @@
                 <button ng-class="getPropertiesForDeletedButton('departureStations', 'button')"
                         title="delete selected stations"
                         ng-disabled="getPropertiesForDeletedButton('departureStations', 'disabled')"
-                        ng-click="removeItems('departureStations')">
+                        ng-click="removeItems('departureStations')"
+                        type="button" >
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
@@ -205,7 +212,7 @@
                       <input type="checkbox" ng-model="departureStationsAddAll" ng-click="selectAllToAdd(departureStationsAddAll, 'departureStations')"> Add all stations
                     </td>
                     <td class="col-xs-1">
-                      <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('departureStations')"><i class="fa fa-plus"></i></button>
+                      <button type="button" class="btn btn-success btn-sm text-right" ng-click="addNewItem('departureStations')"><i class="fa fa-plus"></i></button>
                     </td>
                   </tr>
                 </table>
@@ -222,7 +229,8 @@
                 <button ng-class="getPropertiesForDeletedButton('arrivalStations', 'button')"
                         title="delete selected stations"
                         ng-disabled="getPropertiesForDeletedButton('arrivalStations', 'disabled')"
-                        ng-click="removeItems('arrivalStations')">
+                        ng-click="removeItems('arrivalStations')"
+                        type="button" >
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
@@ -257,7 +265,7 @@
                       <input type="checkbox" ng-model="arrivalStationsAddAll" ng-click="selectAllToAdd(arrivalStationsAddAll, 'arrivalStations')"> Add all stations
                     </td>
                     <td class="col-xs-1">
-                      <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('arrivalStations')"><i class="fa fa-plus"></i></button>
+                      <button type="button" class="btn btn-success btn-sm text-right" ng-click="addNewItem('arrivalStations')"><i class="fa fa-plus"></i></button>
                     </td>
                   </tr>
                 </table>
@@ -267,10 +275,7 @@
         </div>
       </div>
       <div class="panel-footer text-right">
-        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
-          <span class="fa fa-check-square-o" aria-hidden="true"></span>
-          <span class="hidden-xs">Save</span>
-        </button>
+        <br>
       </div>
     </div>
   </form>
