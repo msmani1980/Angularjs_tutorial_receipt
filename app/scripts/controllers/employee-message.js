@@ -24,17 +24,53 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       angular.element('#loading').modal('hide');
     };
 
+    this.getAttributeByIdFromArray = function (id, attribute, array) {
+      var objectMatch = lodash.findWhere(array, {id: id});
+      if(objectMatch) {
+        return objectMatch[attribute];
+      }
+      return '';
+    };
+
+    this.reformatEmployeeMessageStation = function (arrayToReformat) {
+      var stationArray = [];
+      angular.forEach(arrayToReformat, function (stationId) {
+        var stationCode = $this.getAttributeByIdFromArray(stationId, 'code', $scope.stationsList);
+        var stationName = $this.getAttributeByIdFromArray(stationId, 'name', $scope.stationsList);
+        stationArray.push({id: stationId, code: stationCode, name: stationName});
+      });
+      return stationArray;
+    };
+
+    this.formatEmployeeMessageForApp = function (dataFromAPI) {
+      var employeeMessage = angular.copy(dataFromAPI.employeeMessage);
+      employeeMessage.startDate = dateUtility.formatDateForApp(employeeMessage.startDate);
+      employeeMessage.endDate = dateUtility.formatDateForApp(employeeMessage.endDate);
+
+      employeeMessage.arrivalStations = $this.reformatEmployeeMessageStation(employeeMessage.employeeMessageArrivalStations);
+      employeeMessage.departureStations = $this.reformatEmployeeMessageStation(employeeMessage.employeeMessageDepartureStations);
+
+      employeeMessage.employees = [];
+      angular.forEach(employeeMessage.employeeMessageEmployeeIdentifiers, function (employee) {
+        var employeeMatch = lodash.findWhere($scope.employeesList, {employeeIdentifier: employee.employeeIdentifier});
+        employeeMessage.employees.push({id: employee.id, employeeId: employee.employeeIdentifier, firstName: employeeMatch.firstName, lastName: employeeMatch.lastName});
+      });
+
+      employeeMessage.schedules = employeeMessage.employeeMessageSchedules;
+      $scope.employeeMessage = employeeMessage;
+    };
+
     this.getEmployeeMessage = function () {
-      $this.showLoadingModal();
+      $this.showLoadingModal('Loading Employee Message');
       return employeeMessagesFactory.getEmployeeMessage($routeParams.id).then(function (dataFromAPI) {
-        $scope.employeeMessage = angular.copy(dataFromAPI.employeeMessage);
+        $this.formatEmployeeMessageForApp(dataFromAPI);
         $this.hideLoadingModal();
       });
     };
 
     this.getSchedules = function () {
       return employeeMessagesFactory.getSchedules(companyId).then(function (dataFromAPI) {
-        $scope.schedules = angular.copy(dataFromAPI.distinctSchedules);
+        $scope.schedulesList = angular.copy(dataFromAPI.distinctSchedules);
       });
     };
 
@@ -44,6 +80,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       });
     };
 
+
     this.getEmployees = function () {
       return employeeMessagesFactory.getEmployees(companyId).then(function (dataFromAPI) {
         $scope.employeesList = angular.copy(dataFromAPI.companyEmployees);
@@ -51,9 +88,11 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     this.initEmployeeMessage = function () {
-      $scope.employeeMessage = {};
       if($routeParams.id) {
         $this.getEmployeeMessage();
+      } else {
+        $scope.employeeMessage = {};
+        $this.hideLoadingModal();
       }
     };
 
@@ -66,11 +105,10 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     this.init = function () {
-      $this.showLoadingModal();
+      $this.showLoadingModal('Loading page dependencies');
       var initPromises = $this.initDependencies();
       $q.all(initPromises).then(function() {
         $this.initEmployeeMessage();
-        $this.hideLoadingModal();
       });
     };
     this.init();

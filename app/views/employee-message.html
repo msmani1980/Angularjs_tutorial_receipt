@@ -21,7 +21,7 @@
           <div class="col-xs-12">
             <div class="form-group">
               <label>Message</label>
-              <input class="form-control" ng-model="employeeMessage.message">
+              <input class="form-control" ng-model="employeeMessage.employeeMessageText">
             </div>
           </div>
         </div>
@@ -73,23 +73,20 @@
                 <td><input type="checkbox"></td>
                 <th>Employee ID - name</th>
               </tr>
-              <tr>
+              <tr  ng-repeat="employee in employeeMessage.employees">
                 <td><input type="checkbox"></td>
-                <td>123 - John Smith</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>456 - Mary Jane</td>
+                <td>{{employee.employeeId}} - {{employee.lastName}}, {{ employee.firstName }}</td>
               </tr>
             </table>
             <div class="row">
               <div class="col-xs-9">
-                <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
-                  <ui-select-match placeholder="Select Cash Bags...">{{ $item.cashBag }}</ui-select-match>
-                  <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
-                    {{ cashBag.cashBag }}
+                <ui-select multiple ng-model="newEmployees" theme="bootstrap">
+                  <ui-select-match placeholder="Select an Employee...">{{ $item.employeeIdentifier }}</ui-select-match>
+                  <ui-select-choices repeat="employee in employeesList | filter: $select.search">
+                    {{ employee.employeeIdentifier }} - {{ employee.lastName}}, {{ employee.firstName }}
                   </ui-select-choices>
                 </ui-select>
+                <input type="checkbox"> Select All
               </div>
               <div class="col-xs-2 text-left">
                 <button class="btn btn-success btn-sm text-right"><i class="fa fa-plus"></i></button>
@@ -110,23 +107,20 @@
                 <td><input type="checkbox"></td>
                 <th>Schedule Number</th>
               </tr>
-              <tr>
+              <tr ng-repeat="schedule in employeeMessage.schedules">
                 <td><input type="checkbox"></td>
-                <td>105</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>111</td>
+                <td>{{ schedule.scheduleNumber }}</td>
               </tr>
             </table>
             <div class="row">
               <div class="col-xs-9">
-                <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
-                  <ui-select-match placeholder="Select Cash Bags...">{{ $item.cashBag }}</ui-select-match>
-                  <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
-                    {{ cashBag.cashBag }}
+                <ui-select multiple ng-model="newSchedules" theme="bootstrap">
+                  <ui-select-match placeholder="Select a Schedule...">{{ $item.scheduleNumber }}</ui-select-match>
+                  <ui-select-choices repeat="schedule in schedulesList | filter: $select.search">
+                    {{ schedule.scheduleNumber }}
                   </ui-select-choices>
                 </ui-select>
+                <input type="checkbox"> Select All
               </div>
               <div class="col-xs-2 text-left">
                 <button class="btn btn-success btn-sm text-right"><i class="fa fa-plus"></i></button>
@@ -147,23 +141,20 @@
                 <td><input type="checkbox"></td>
                 <th>Station</th>
               </tr>
-              <tr>
+              <tr  ng-repeat="station in employeeMessage.departureStations">
                 <td><input type="checkbox"></td>
-                <td>ORD - Ohare</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>CPH - Copenhagen</td>
+                <td>{{station.code}} - {{station.name}}</td>
               </tr>
             </table>
             <div class="row">
               <div class="col-xs-9">
-                <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
-                  <ui-select-match placeholder="Select Cash Bags...">{{ $item.cashBag }}</ui-select-match>
-                  <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
-                    {{ cashBag.cashBag }}
+                <ui-select multiple ng-model="newDepStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationsList | filter: $select.search">
+                    {{ station.code }} - {{ station.name }}
                   </ui-select-choices>
                 </ui-select>
+                <input type="checkbox"> Select All
               </div>
               <div class="col-xs-2 text-left">
                 <button class="btn btn-success btn-sm text-right"><i class="fa fa-plus"></i></button>
@@ -184,23 +175,20 @@
                 <td><input type="checkbox"></td>
                 <th>Station</th>
               </tr>
-              <tr>
+              <tr  ng-repeat="station in employeeMessage.arrivalStations">
                 <td><input type="checkbox"></td>
-                <td>ORD - Ohare</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>CPH - Copenhagen</td>
+                <td>{{station.code}} - {{station.name}}</td>
               </tr>
             </table>
             <div class="row">
               <div class="col-xs-9">
-                <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
-                  <ui-select-match placeholder="Select Cash Bags...">{{ $item.cashBag }}</ui-select-match>
-                  <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
-                    {{ cashBag.cashBag }}
+                <ui-select multiple ng-model="newArrStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationsList | filter: $select.search">
+                    {{ station.code }} - {{ station.name }}
                   </ui-select-choices>
                 </ui-select>
+                <input type="checkbox"> Select All
               </div>
               <div class="col-xs-2 text-left">
                 <button class="btn btn-success btn-sm text-right"><i class="fa fa-plus"></i></button>
