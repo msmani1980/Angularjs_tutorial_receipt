@@ -12,7 +12,7 @@ angular.module('ts5App')
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
-      return $filter('currency')(valueToFormat, '');
+      return sprintf ('%.2f', valueToFormat);
     }
 
     function initLMPStockRevisions() {
@@ -257,13 +257,13 @@ angular.module('ts5App')
       });
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Virtual'}).map(function (item) {
-        reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
+        reconciliationFactory.getMasterItem(item.itemMasterId).then(function (dataFromAPI) {
           item.itemName = dataFromAPI.itemName;
         }, handleResponseError);
       });
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Voucher'}).map(function (item) {
-        reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
+        reconciliationFactory.getMasterItem(item.itemMasterId).then(function (dataFromAPI) {
           item.itemName = dataFromAPI.retailItem.itemName;
         }, handleResponseError);
       });
