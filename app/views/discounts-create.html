@@ -47,7 +47,7 @@
           <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
             <div class="form-group">
               <label>Global Discount Type *</label>
-              <select required ng-model="formData.globalDiscountTypeId" class="form-control">
+              <select required ng-model="formData.globalDiscountTypeId" name="globalDiscountTypeId" class="form-control">
                 <option ng-selected="setSelected(formData.globalDiscountTypeId, globalDiscountType.id)" ng-repeat="globalDiscountType in globalDiscountTypesList"
                         value="{{ globalDiscountType.id }}">{{ globalDiscountType.globalDiscountTypeName }}
                 </option>
@@ -59,7 +59,7 @@
             </div>
             <div class="form-group" ng-show="formData.globalDiscountTypeId === '1'">
               <label class="control-label">Bar Code *</label>
-              <input class="form-control" ng-model="formData.barCode" pattern="regexp.word" required />
+              <input class="form-control" ng-model="formData.barCode" name="barCode" ng-pattern="regexp.word" ng-required="formData.globalDiscountTypeId === '1'" />
             </div>
           </fieldset>
         </div>
@@ -67,22 +67,22 @@
           <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
             <div class="form-group">
               <label class="control-label">Discount Name *</label>
-              <input class="form-control" ng-model="formData.discountName" pattern="regexp.word" required />
+              <input class="form-control" ng-model="formData.discountName" name="discountName" ng-pattern="regexp.word" required />
             </div>
             <div class="form-group">
               <label class="control-label">Description *</label>
-              <textarea class="form-control" ng-model="formData.description" pattern="regexp.word" required />
+              <textarea class="form-control" ng-model="formData.description" name="description" ng-pattern="regexp.sentence" required />
             </div>
             <div class="row">
               <div class="col-xs-12 col-sm-6">
                 <fieldset>
-                  <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate"
+                  <date-picker-field form="form" label="Effective From" name="startDate" ng-model="formData.startDate"
                                      min-date="'+1d'" required="true"></date-picker-field>
                 </fieldset>
               </div>
               <div class="col-xs-12 col-sm-6">
                 <fieldset>
-                  <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate"
+                  <date-picker-field form="form" label="Effective To" name="endDate" ng-model="formData.endDate"
                                      min-date="( editingDiscount ? '0d' : '+1d')" required="true"></date-picker-field>
                 </fieldset>
               </div>
@@ -97,7 +97,7 @@
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label>Discount Type *</label>
-            <select required ng-model="formData.discountTypeId" class="form-control">
+            <select ng-model="formData.discountTypeId" name="discountTypeId" required class="form-control">
               <option ng-selected="setSelected(formData.discountTypeId, discountType.id)" ng-repeat="discountType in discountTypesList"
                       value="{{ discountType.id }}">{{ discountType.name }}
               </option>
@@ -108,9 +108,9 @@
           <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                <div class="form-group"  ng-show="formData.discountTypeId === '1'">
+                <div class="form-group" ng-show="formData.discountTypeId === '1'">
                   <label class="control-label">Percentage Discount Value *</label>
-                  <input class="form-control" ng-model="formData.percentageDiscountValue" placeholder="10%" pattern="regexp.word" required />
+                  <input class="form-control" ng-model="formData.percentageDiscountValue" name="percentageDiscountValue" placeholder="10%" ng-pattern="regexp.percentage" ng-required="formData.discountTypeId === '1'" />
                 </div>
                 <div class="form-group" ng-show="formData.discountTypeId === '2'">
                   <label>Fixed Discount Value</label>
@@ -119,7 +119,7 @@
                       <div class="input-group-addon">
                         {{ currency.code }} *
                       </div>
-                      <input ng-model="formData.amountDiscountValue[currency.code].amount" ng-disabled="$parent.isDisabled()" type="text" class="form-control" maxlength="8"/>
+                      <input ng-model="formData.amountDiscountValue[currency.code].amount" name="{{ currency.code }}AmountDiscountValue" ng-disabled="$parent.isDisabled()" type="text" class="form-control" ng-pattern="regexp.price" ng-required="formData.discountTypeId === '2'" />
                     </div>
                   </div>
                 </div>
@@ -135,10 +135,10 @@
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label class="control-label">Item Qty Limit Per Shop</label>
-            <input class="form-control" ng-model="formData.itemQtyLimitPerShop" pattern="regexp.word" />
+            <input class="form-control" ng-model="formData.itemQtyLimitPerShop" name="itemQtyLimitPerShop" ng-pattern="regexp.number" />
           </div>
           <div class="form-group">
-            <input id="isAmountLimitPerShopValue" ng-model="formData.isAmountLimitPerShopValue" type="checkbox"/>
+            <input id="isAmountLimitPerShopValue" ng-model="formData.isAmountLimitPerShopValue" name="isAmountLimitPerShopValue" type="checkbox"/>
             <label for="isAmountLimitPerShopValue">Amount Limit Per Shop Value</label>
           </div>
         </div>
@@ -152,7 +152,7 @@
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
-                    <input ng-model="formData.amountLimitPerShopValue[currency.code].amount" ng-disabled="$parent.isDisabled()" type="text" class="form-control" maxlength="8"/>
+                    <input ng-model="formData.amountLimitPerShopValue[currency.code].amount" name="{{ currency.code }}AmountLimitPerShopValue" ng-disabled="$parent.isDisabled()" ng-pattern="regexp.price" type="text" class="form-control" />
                   </div>
                 </div>
               </div>
@@ -167,10 +167,10 @@
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label class="control-label">Item Qty Limit Per Transaction</label>
-            <input class="form-control" ng-model="formData.itemQtyLimitPerTransaction" pattern="regexp.word" />
+            <input class="form-control" ng-model="formData.itemQtyLimitPerTransaction" name="itemQtyLimitPerTransaction" pattern="regexp.word" />
           </div>
           <div class="form-group">
-            <input id="isAmountLimitPerTransaction" ng-model="formData.isAmountLimitPerTransaction" type="checkbox"/>
+            <input id="isAmountLimitPerTransaction" ng-model="formData.isAmountLimitPerTransaction" name="isAmountLimitPerTransaction" type="checkbox"/>
             <label for="isAmountLimitPerTransaction">Amount Limit Per Transaction Value</label>
           </div>
         </div>
@@ -184,7 +184,7 @@
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
-                    <input ng-model="formData.amountLimitPerTransactionValue[currency.code].amount" ng-disabled="$parent.isDisabled()" type="text" class="form-control" maxlength="8"/>
+                    <input ng-model="formData.amountLimitPerTransactionValue[currency.code].amount" name="{{ currency.code }}AmountLimitPerTransactionValue" ng-disabled="$parent.isDisabled()" ng-pattern="regexp.price" type="text" class="form-control" />
                   </div>
                 </div>
               </div>
@@ -198,7 +198,7 @@
       <div class="row">
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
-            <input id="requireSeatEntry" ng-model="formData.requireSeatEntry" type="checkbox"/>
+            <input id="requireSeatEntry" ng-model="formData.requireSeatEntry" name="requireSeatEntry" type="checkbox"/>
             <label for="requireSeatEntry">Require Seat Entry</label>
           </div>
         </div>
@@ -208,7 +208,7 @@
               <div class="col-xs-12 col-sm-6">
                 <div class="form-group">
                   <label class="control-label">Item Qty Limit Per Seat</label>
-                  <input class="form-control" ng-model="formData.itemQtyLimitPerSeat" pattern="regexp.word" />
+                  <input class="form-control" ng-model="formData.itemQtyLimitPerSeat" name="itemQtyLimitPerSeat" pattern="regexp.number" />
                 </div>
               </div>
             </div>
@@ -230,8 +230,8 @@
       <div class="row" ng-show="formData.isRestriction === 'true'">
         <div class="col-xs-12 col-sm-12">
           <div class="form-group">
-            <label>Item Categories</label>
-            <ui-select multiple ng-model="formData.restrictedCategories" theme="bootstrap">
+            <label>Item Categories *</label>
+            <ui-select multiple ng-model="formData.restrictedCategories" name="restrictedItemCategories" ng-required="formData.isRestriction === 'true'" theme="bootstrap">
               <ui-select-match placeholder="Select categories...">{{$item.name}}</ui-select-match>
               <ui-select-choices repeat="category in salesCategoriesList | filter: $select.search">
                 <div ng-bind-html="category.name | highlight: $select.search"></div>
@@ -244,7 +244,7 @@
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label>Item Category</label>
-            <select class="form-control" ng-model="restrictedItem.itemCategory" ng-change="loadRestrictedItemsByCategory(restrictedItem.itemCategory)">
+            <select class="form-control" ng-model="restrictedItem.itemCategory" name="itemCategory" ng-change="loadRestrictedItemsByCategory(restrictedItem.itemCategory)">
               <option value="0">Select category</option>
               <option ng-repeat="category in salesCategoriesList" value="{{ category.id }}">{{ category.name }}</option>
             </select>
@@ -253,7 +253,7 @@
         <div class="col-xs-12 col-sm-5">
           <div class="form-group">
             <label>Retail Item *</label>
-            <select required ng-model="restrictedItem.id" class="form-control">
+            <select required ng-model="restrictedItem.id" name="restrictedItem-{{$index}}" class="form-control">
               <option ng-selected="setSelected(restrictedItem.retailItemId, retailItem.id)" ng-repeat="retailItem in filteredRetailItemsList[restrictedItem.itemCategory]"
                       value="{{ retailItem.id }}">{{ retailItem.itemName }}
               </option>
@@ -286,20 +286,16 @@
 <div class="modal fade delete-warning-modal">
   <div class="modal-dialog">
     <div class="modal-content">
-
       <div class="modal-header">
         <h4 class="modal-title">Are you sure?</h4>
       </div>
-
       <div class="modal-body">
         <p>You are about to permanently delete <strong>{{ getRetailItemNameById(restrictedItemToDelete.id) }}</strong></p>
       </div>
-
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" ng-click="deleteRestrictedItem()">Continue</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
-
     </div>
   </div>
 </div>
