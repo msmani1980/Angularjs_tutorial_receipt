@@ -84,8 +84,8 @@ describe('Service: taxRatesFactory', function() {
 
   describe('removeCompanyTaxRate API call', function() {
     it('should call removeCompanyTaxRate', function() {
-      taxRatesFactory.removeCompanyTaxRate(companyId, 1);
-      expect(taxRatesService.removeCompanyTaxRate).toHaveBeenCalledWith(companyId, 1);
+      taxRatesFactory.removeCompanyTaxRate(1);
+      expect(taxRatesService.removeCompanyTaxRate).toHaveBeenCalledWith(1);
     });
   });
 

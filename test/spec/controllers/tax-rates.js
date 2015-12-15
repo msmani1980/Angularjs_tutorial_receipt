@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: TaxRatesCtrl', function() {
+describe('Controller: TaxRatesCtrl', function() {
   beforeEach(module(
     'ts5App',
     'template-module',
@@ -30,8 +30,9 @@ fdescribe('Controller: TaxRatesCtrl', function() {
   var getStationsListDeferred;
   var getCompanyCurrenciesDeferred;
   var getCompanyTaxRatesListDeferred;
+  var removeCompanyTaxRateDeferred;
 
-  beforeEach(inject(function($q, $controller, $rootScope, $injector, dateUtility, _servedTaxTypes_,
+  beforeEach(inject(function($q, $controller, $rootScope, $injector, dateUtility, $route, ngToast, _servedTaxTypes_,
     _servedTaxRateTypes_, _servedCountryList_, _servedStations_, _servedCurrencies_, _servedCompanyTaxRates_) {
 
     taxTypesJSON = _servedTaxTypes_;
@@ -66,6 +67,9 @@ fdescribe('Controller: TaxRatesCtrl', function() {
     getCompanyTaxRatesListDeferred = $q.defer();
     spyOn(taxRatesFactory, 'getCompanyTaxRatesList').and.returnValue(getCompanyTaxRatesListDeferred.promise);
 
+    removeCompanyTaxRateDeferred = $q.defer();
+    spyOn(taxRatesFactory, 'removeCompanyTaxRate').and.returnValue(removeCompanyTaxRateDeferred.promise);
+
   }));
 
   function resolveAllDependencies() {
@@ -75,6 +79,10 @@ fdescribe('Controller: TaxRatesCtrl', function() {
     getStationsListDeferred.resolve(stationsListJSON);
     getCompanyCurrenciesDeferred.resolve(currenciesListJSON);
     getCompanyTaxRatesListDeferred.resolve(companyTaxRatesJSON);
+    removeCompanyTaxRateDeferred.resolve({
+      id: '123',
+      companyId: '403'
+    });
     $scope.$digest();
   }
 
@@ -345,8 +353,9 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             spyOn(TaxRatesCtrl, 'hasTaxRateStarted').and.callThrough();
             taxRate = {
               startDate: '12302015',
-              endDate: '12312016'
+              endDate: '12302016'
             };
+
           });
           it('should return falsy', function() {
             expect($scope.showDeleteButton(taxRate)).toBeFalsy();
@@ -355,6 +364,46 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             $scope.showDeleteButton(taxRate);
             expect(TaxRatesCtrl.hasTaxRateStarted).toHaveBeenCalledWith(taxRate);
           });
+        });
+
+        describe('routeReload method', function() {
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'reloadRoute').and.callThrough();
+            TaxRatesCtrl.reloadRoute();
+          });
+          it('should be defined, cannot test or it will cause tests to break.', function() {
+            expect(TaxRatesCtrl.reloadRoute).toHaveBeenCalled();
+          });
+        });
+
+        describe('deleteCompanyTaxRate method', function() {
+          var taxRate;
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'makeDeletePromises').and.callThrough();
+            spyOn(TaxRatesCtrl, 'createDeletePromises').and.callThrough();
+            spyOn(TaxRatesCtrl, 'displayConfirmDialog').and.callThrough();
+            spyOn(TaxRatesCtrl, 'deleteSuccess').and.callThrough();
+            taxRate = {
+              id: '123',
+              companyId: '403'
+            };
+            $scope.displayConfirmDialog(taxRate.id);
+            $scope.deleteCompanyTaxRate(taxRate);
+          });
+          it('should call makeDeletePromises with payload', function() {
+            expect(TaxRatesCtrl.makeDeletePromises).toHaveBeenCalledWith(taxRate);
+          });
+          it('should call createDeletePromises with payload', function() {
+            expect(TaxRatesCtrl.createDeletePromises).toHaveBeenCalledWith(taxRate);
+          });
+          it('should call displayConfirmDialog with payload', function() {
+            expect(TaxRatesCtrl.displayConfirmDialog).toHaveBeenCalledWith(taxRate.id);
+          });
+          it('should call deleteSuccess with payload', function() {
+            resolveAllDependencies();
+            expect(TaxRatesCtrl.deleteSuccess).toHaveBeenCalledWith([taxRate]);
+          });
+
         });
 
       });
