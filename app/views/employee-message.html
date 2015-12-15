@@ -75,14 +75,14 @@
               </tr>
               <tr  ng-repeat="employee in employeeMessage.employees">
                 <td><input type="checkbox"></td>
-                <td>{{employee.employeeId}} - {{employee.lastName}}, {{ employee.firstName }}</td>
+                <td>{{employee.employeeIdentifier}} - {{employee.lastName}}, {{ employee.firstName }}</td>
               </tr>
             </table>
             <div class="row">
               <div class="col-xs-9">
                 <ui-select multiple ng-model="newEmployees" theme="bootstrap">
                   <ui-select-match placeholder="Select an Employee...">{{ $item.employeeIdentifier }}</ui-select-match>
-                  <ui-select-choices repeat="employee in employeesList | filter: $select.search">
+                  <ui-select-choices repeat="employee in filteredEmployees | filter: $select.search">
                     {{ employee.employeeIdentifier }} - {{ employee.lastName}}, {{ employee.firstName }}
                   </ui-select-choices>
                 </ui-select>
@@ -116,7 +116,7 @@
               <div class="col-xs-9">
                 <ui-select multiple ng-model="newSchedules" theme="bootstrap">
                   <ui-select-match placeholder="Select a Schedule...">{{ $item.scheduleNumber }}</ui-select-match>
-                  <ui-select-choices repeat="schedule in schedulesList | filter: $select.search">
+                  <ui-select-choices repeat="schedule in filteredSchedules | filter: $select.search">
                     {{ schedule.scheduleNumber }}
                   </ui-select-choices>
                 </ui-select>
@@ -150,7 +150,7 @@
               <div class="col-xs-9">
                 <ui-select multiple ng-model="newDepStations" theme="bootstrap">
                   <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
-                  <ui-select-choices repeat="station in stationsList | filter: $select.search">
+                  <ui-select-choices repeat="station in filteredDepStations | filter: $select.search">
                     {{ station.code }} - {{ station.name }}
                   </ui-select-choices>
                 </ui-select>
@@ -184,7 +184,7 @@
               <div class="col-xs-9">
                 <ui-select multiple ng-model="newArrStations" theme="bootstrap">
                   <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
-                  <ui-select-choices repeat="station in stationsList | filter: $select.search">
+                  <ui-select-choices repeat="station in filteredArrStations | filter: $select.search">
                     {{ station.code }} - {{ station.name }}
                   </ui-select-choices>
                 </ui-select>
