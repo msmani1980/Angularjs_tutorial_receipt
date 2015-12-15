@@ -18,6 +18,10 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       return dateUtility.isAfterToday(record.endDate);
     };
 
+    $scope.goToDetailPage = function (action, id) {
+      $location.path('employee-message/' + action + '/' + id);
+    };
+
     this.getMessagesSuccess = function (dataFromAPI) {
       $scope.employeeMessagesList = angular.copy(dataFromAPI.employeeMessages);
       angular.forEach($scope.employeeMessagesList, function (message) {

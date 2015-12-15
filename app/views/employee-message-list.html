@@ -142,8 +142,8 @@
         <td>{{ message.startDate }}</td>
         <td>{{ message.endDate }}</td>
         <td>
-          <button class="btn btn-info btn-xs"><i class="fa fa-file"></i></button>
-          <button class="btn btn-primary btn-xs" ng-show="isActiveOrFutureRecord(message)"><i class="fa fa-pencil"></i></button>
+          <button class="btn btn-info btn-xs" ng-click="goToDetailPage('view', message.id)"><i class="fa fa-file"></i></button>
+          <button class="btn btn-primary btn-xs" ng-show="isActiveOrFutureRecord(message)" ng-click="goToDetailPage('edit', message.id)"><i class="fa fa-pencil"></i></button>
         </td>
       </tr>
       <tr>

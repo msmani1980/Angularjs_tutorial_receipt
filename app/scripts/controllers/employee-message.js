@@ -14,7 +14,6 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
     var $this = this;
     var companyId = GlobalMenuService.company.get();
-    $scope.viewName = 'Employee Message';
 
     this.showLoadingModal = function (text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -31,6 +30,10 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       }
       return '';
     };
+
+    $scope.shouldHide = function () {
+
+    }
 
     this.filterList = function (selectedList, masterList, optionalMatchCriteria) {
       var matchAttribute = optionalMatchCriteria || 'id';
@@ -210,6 +213,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
     this.formatEmployeeMessageForApp = function (dataFromAPI) {
       var employeeMessage = angular.copy(dataFromAPI.employeeMessage);
+      console.log(employeeMessage);
       employeeMessage.startDate = dateUtility.formatDateForApp(employeeMessage.startDate);
       employeeMessage.endDate = dateUtility.formatDateForApp(employeeMessage.endDate);
 
@@ -271,6 +275,13 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     this.initScopeDependencies = function () {
       $scope.readOnly = $routeParams.action === 'view';
       $scope.newRecords = {};
+
+      var actionToViewNameMap = {
+        view: 'View Employee Message ' + $routeParams.id,
+        edit: 'Edit Employee Message ' + $routeParams.id,
+        create: 'Create New Employee Message'
+      };
+      $scope.viewName = actionToViewNameMap[$routeParams.action];
     };
 
     this.init = function () {

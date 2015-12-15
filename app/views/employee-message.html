@@ -5,7 +5,7 @@
     <div class="edit-controls">
       <div class="row">
         <div class="col-xs-6">
-          <h2 class="view-name">Edit {{viewName}}</h2>
+          <h2 class="view-name">{{viewName}}</h2>
         </div>
         <div class="col-xs-6 text-right">
           <a class="btn btn-default" ng-href="#/employee-messages" class="btn">Back</a>
@@ -26,7 +26,7 @@
           <div class="col-xs-12">
             <div class="form-group">
               <label>Message</label>
-              <input class="form-control" ng-model="employeeMessage.employeeMessageText" required="true">
+              <input class="form-control" ng-model="employeeMessage.employeeMessageText" required="true" ng-disabled="readOnly">
             </div>
           </div>
         </div>
@@ -69,7 +69,7 @@
               <div class="col-xs-8">
                 <label>Employees</label>
               </div>
-              <div class="col-xs-4 text-right">
+              <div class="col-xs-4 text-right" ng-hide="readOnly || !employeeMessage.employees.length">
                 <button ng-class="getPropertiesForDeletedButton('employees', 'button')"
                         title="delete selected employees"
                         ng-disabled="getPropertiesForDeletedButton('employees', 'disabled')"
@@ -79,9 +79,10 @@
                 </button>
               </div>
             </div>
-            <table class="table table-bordered">
+            <table class="table table-bordered" ng-show="employeeMessage.employees.length">
               <tr class="active">
-                <td><input type="checkbox"
+                <td ng-hide="readOnly">
+                  <input type="checkbox"
                            ng-show="employeeMessage.employees.length"
                            ng-model="employeesDeleteAll"
                            ng-click="toggleSelectAll(employeesDeleteAll, 'employees')">
@@ -90,13 +91,13 @@
                 <th>Name</th>
               </tr>
               <tr ng-repeat="employee in employeeMessage.employees">
-                <td><input type="checkbox" ng-model="employee.selectedToDelete"></td>
+                <td ng-hide="readOnly"><input type="checkbox" ng-model="employee.selectedToDelete"></td>
                 <td>{{employee.employeeIdentifier}}</td>
                 <td>{{employee.lastName}}, {{ employee.firstName }}</td>
               </tr>
             </table>
 
-            <div class="row">
+            <div class="row" ng-hide="readOnly">
               <div class="col-xs-12">
                 <table class="table">
                   <tr>
@@ -126,7 +127,7 @@
               <div class="col-xs-8">
                 <label>Schedules</label>
               </div>
-              <div class="col-xs-4 text-right">
+              <div class="col-xs-4 text-right" ng-hide="readOnly || !employeeMessage.schedules.length">
                 <button ng-class="getPropertiesForDeletedButton('schedules', 'button')"
                         title="delete selected schedules"
                         ng-disabled="getPropertiesForDeletedButton('schedules', 'disabled')"
@@ -136,9 +137,10 @@
                 </button>
               </div>
             </div>
-            <table class="table table-bordered">
+            <table class="table table-bordered" ng-show="employeeMessage.schedules.length">
               <tr class="active">
-                <td><input type="checkbox"
+                <td ng-hide="readOnly">
+                  <input type="checkbox"
                            ng-show="employeeMessage.schedules.length"
                            ng-model="schedulesDeleteAll"
                            ng-click="toggleSelectAll(schedulesDeleteAll, 'schedules')">
@@ -146,11 +148,11 @@
                 <th>Schedule Number</th>
               </tr>
               <tr ng-repeat="schedule in employeeMessage.schedules">
-                <td><input type="checkbox" ng-model="schedule.selectedToDelete"></td>
+                <td ng-hide="readOnly"><input type="checkbox" ng-model="schedule.selectedToDelete"></td>
                 <td>{{ schedule.scheduleNumber }}</td>
               </tr>
             </table>
-            <div class="row">
+            <div class="row" ng-hide="readOnly">
               <div class="col-xs-12">
                 <table class="table">
                   <tr>
@@ -179,7 +181,7 @@
               <div class="col-xs-8">
                 <label>Departure Station</label>
               </div>
-              <div class="col-xs-4 text-right">
+              <div class="col-xs-4 text-right" ng-hide="readOnly || !employeeMessage.departureStations.length">
                 <button ng-class="getPropertiesForDeletedButton('departureStations', 'button')"
                         title="delete selected stations"
                         ng-disabled="getPropertiesForDeletedButton('departureStations', 'disabled')"
@@ -189,8 +191,8 @@
                 </button>
               </div>
             </div>
-            <table class="table table-bordered">
-              <tr class="active">
+            <table class="table table-bordered" ng-show="employeeMessage.departureStations.length">
+              <tr class="active" ng-hide="readOnly">
                 <td><input type="checkbox"
                            ng-show="employeeMessage.departureStations.length"
                            ng-model="departureStationsDeleteAll"
@@ -199,12 +201,12 @@
                 <th>Name</th>
               </tr>
               <tr ng-repeat="station in employeeMessage.departureStations">
-                <td><input type="checkbox" ng-model="station.selectedToDelete"></td>
+                <td ng-hide="readOnly"><input type="checkbox" ng-model="station.selectedToDelete"></td>
                 <td>{{station.code}}</td>
                 <td>{{station.name}}</td>
               </tr>
             </table>
-            <div class="row">
+            <div class="row" ng-hide="readOnly">
               <div class="col-xs-12">
                 <table class="table">
                   <tr>
@@ -233,7 +235,7 @@
               <div class="col-xs-8">
                 <label>Arrival Station</label>
               </div>
-              <div class="col-xs-4 text-right">
+              <div class="col-xs-4 text-right" ng-hide="readOnly || !employeeMessage.arrivalStations.length">
                 <button ng-class="getPropertiesForDeletedButton('arrivalStations', 'button')"
                         title="delete selected stations"
                         ng-disabled="getPropertiesForDeletedButton('arrivalStations', 'disabled')"
@@ -243,9 +245,10 @@
                 </button>
               </div>
             </div>
-            <table class="table table-bordered">
+            <table class="table table-bordered" ng-show="employeeMessage.arrivalStations.length">
               <tr class="active">
-                <td><input type="checkbox"
+                <td ng-hide="readOnly">
+                  <input type="checkbox"
                            ng-show="employeeMessage.arrivalStations.length"
                            ng-model="arrivalStationsDeleteAll"
                            ng-click="toggleSelectAll(arrivalStationsDeleteAll, 'arrivalStations')">
@@ -254,12 +257,12 @@
                 <th>Name</th>
               </tr>
               <tr ng-repeat="station in employeeMessage.arrivalStations">
-                <td><input type="checkbox" ng-model="station.selectedToDelete"></td>
+                <td ng-hide="readOnly"><input type="checkbox" ng-model="station.selectedToDelete"></td>
                 <td>{{station.code}}</td>
                 <td>{{station.name}}</td>
               </tr>
             </table>
-            <div class="row">
+            <div class="row" ng-hide="readOnly">
               <div class="col-xs-12">
                 <table class="table">
                   <tr>
