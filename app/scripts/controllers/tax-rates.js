@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TaxRatesCtrl', function($scope, $q, taxRatesFactory, dateUtility) {
+  .controller('TaxRatesCtrl', function($scope, $q, $route, taxRatesFactory, dateUtility, ngToast) {
 
     var $this = this;
 
@@ -20,6 +20,7 @@ angular.module('ts5App')
       $scope.stationsList = [];
       $scope.currenciesList = [];
       $scope.companyTaxRatesList = [];
+      $scope.taxRateToRemove = [];
       $scope.search = {};
       $scope.dateRange = {
         startDate: '',
@@ -114,6 +115,11 @@ angular.module('ts5App')
     this.init();
 
     // Place user facing / post-init controller functions here
+
+    this.reloadRoute = function() {
+      $route.reload();
+    };
+
     this.isDateRangeSet = function() {
       return ($scope.dateRange.startDate.length || $scope.dateRange.endDate.length);
     };
@@ -198,6 +204,39 @@ angular.module('ts5App')
       $q.all(promises).then($this.initSuccess);
     };
 
+    this.createDeletePromises = function(id) {
+      return [
+        taxRatesFactory.removeCompanyTaxRate(id)
+      ];
+    };
+
+    this.makeDeletePromises = function(id) {
+      var message = 'Deleting Tax Rate ID: ' + id + '...';
+      $this.showLoadingModal(message);
+      var promises = $this.createDeletePromises(id);
+      $q.all(promises).then($this.deleteSuccess);
+    };
+
+    this.deleteSuccess = function() {
+      var id = $scope.taxRateToRemove.id;
+      ngToast.create('Successfully Removed Tax Rate ID:' + id);
+      $scope.taxRateToRemove = [];
+      $this.reloadRoute();
+    };
+
+    this.isTaxRateActive = function(taxRate) {
+      return (dateUtility.isTodayOrEarlier(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
+    };
+
+    this.hasTaxRateStarted = function(taxRate) {
+      return (dateUtility.isAfterToday(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
+    };
+
+    this.displayConfirmDialog = function(id) {
+      angular.element('#confirmation-modal').modal('show');
+      $scope.taxRateToRemove.id = id;
+    };
+
     // Place $scope functions here
     $scope.clearSearchFilters = function() {
       if (angular.isDefined($scope.search)) {
@@ -216,6 +255,22 @@ angular.module('ts5App')
 
     $scope.searchRecords = function() {
       $this.makeSearchPromises();
+    };
+
+    $scope.deleteCompanyTaxRate = function(id) {
+      $this.makeDeletePromises(id);
+    };
+
+    $scope.showDeleteButton = function(taxRate) {
+      return ($this.hasTaxRateStarted(taxRate));
+    };
+
+    $scope.showEditButton = function(taxRate) {
+      return ($this.isTaxRateActive(taxRate));
+    };
+
+    $scope.displayConfirmDialog = function(id) {
+      $this.displayConfirmDialog(id);
     };
 
   });

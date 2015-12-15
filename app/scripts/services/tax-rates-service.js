@@ -23,6 +23,15 @@ angular.module('ts5App')
       },
       getCompanyTaxRate: {
         method: 'GET'
+      },
+      createCompanyTaxRate: {
+        method: 'POST'
+      },
+      updateCompanyTaxRate: {
+        method: 'PUT'
+      },
+      removeCompanyTaxRate: {
+        method: 'DELETE'
       }
     };
 
@@ -41,9 +50,17 @@ angular.module('ts5App')
       return requestResource.getCompanyTaxRate(payload).$promise;
     };
 
+    var removeCompanyTaxRate = function(id){
+      var payload = {};
+      payload.companyId = GlobalMenuService.company.get();
+      payload.id = id;
+      return requestResource.removeCompanyTaxRate(payload).$promise;
+    };
+
     return {
       getCompanyTaxRatesList: getCompanyTaxRatesList,
-      getCompanyTaxRate: getCompanyTaxRate
+      getCompanyTaxRate: getCompanyTaxRate,
+      removeCompanyTaxRate: removeCompanyTaxRate
     };
 
   });

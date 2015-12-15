@@ -43,6 +43,10 @@ angular.module('ts5App')
       return taxRatesService.getCompanyTaxRate(id);
     };
 
+    var removeCompanyTaxRate = function(id){
+      return taxRatesService.removeCompanyTaxRate(id);
+    };
+
     return {
       getTaxTypesList: getTaxTypesList,
       getTaxRateTypes: getTaxRateTypes,
@@ -50,7 +54,8 @@ angular.module('ts5App')
       getStationsList: getStationsList,
       getCompanyCurrencies: getCompanyCurrencies,
       getCompanyTaxRatesList: getCompanyTaxRatesList,
-      getCompanyTaxRate: getCompanyTaxRate
+      getCompanyTaxRate: getCompanyTaxRate,
+      removeCompanyTaxRate: removeCompanyTaxRate
     };
 
   });
