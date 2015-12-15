@@ -57,10 +57,34 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       }
     };
 
+    $scope.selectAllToAdd = function (toggleFlag, listName) {
+      var listNameToFilteredListMap = {
+        schedules: $scope.filteredSchedules,
+        employees: $scope.filteredEmployees,
+        arrivalStations: $scope.filteredArrStations,
+        departureStations: $scope.filteredDepStations
+      };
+
+      $scope.newRecords[listName] = [];
+      if(toggleFlag) {
+        angular.forEach(listNameToFilteredListMap[listName], function (record) {
+          $scope.newRecords[listName].push(record);
+        });
+      }
+    };
+
+    $scope.toggleSelectAll = function (toggleFlag, listName) {
+      angular.forEach($scope.employeeMessage[listName], function (record) {
+        record.selectedToDelete = toggleFlag;
+      });
+    };
+
     $scope.removeItems = function (listName) {
       $scope.employeeMessage[listName] = lodash.filter($scope.employeeMessage[listName], function (record) {
         return !record.selectedToDelete;
       });
+      $scope[listName + 'DeleteAll'] = false;
+      $this.filterListsByName(listName);
     };
 
 
@@ -82,9 +106,9 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         departureStations: ['code', 'name', 'id']
       };
 
-      console.log(categoryName);
       $this.addNewRecordsToArrayWithAttributes($scope.employeeMessage[categoryName], $scope.newRecords[categoryName], categoryToAttributesMap[categoryName]);
       $scope.newRecords[categoryName] = [];
+      $scope[categoryName + 'AddAll'] = false;
       $this.filterListsByName(categoryName);
     };
 

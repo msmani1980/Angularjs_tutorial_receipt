@@ -72,7 +72,7 @@
             </div>
             <table class="table table-bordered">
               <tr class="active">
-                <td><input type="checkbox"></td>
+                <td><input type="checkbox" ng-model="employeesDeleteAll" ng-click="toggleSelectAll(employeesDeleteAll, 'employees')"></td>
                 <th>ID</th>
                 <th>Name</th>
               </tr>
@@ -85,7 +85,7 @@
 
             <div class="row">
               <div class="col-xs-12">
-                <table class="table table-bordered">
+                <table class="table">
                   <tr>
                     <td>
                       <ui-select multiple ng-model="newRecords.employees" theme="bootstrap">
@@ -94,6 +94,7 @@
                           {{ employee.employeeIdentifier }} - {{ employee.lastName}}, {{ employee.firstName }}
                         </ui-select-choices>
                       </ui-select>
+                      <input type="checkbox" ng-model="employeesAddAll" ng-click="selectAllToAdd(employeesAddAll, 'employees')"> Add all employees
                     </td>
                     <td class="col-xs-1">
                       <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('employees')"><i class="fa fa-plus"></i></button>
@@ -117,7 +118,7 @@
             </div>
             <table class="table table-bordered">
               <tr class="active">
-                <td><input type="checkbox"></td>
+                <td><input type="checkbox" ng-model="schedulesDeleteAll" ng-click="toggleSelectAll(schedulesDeleteAll, 'schedules')"></td>
                 <th>Schedule Number</th>
               </tr>
               <tr ng-repeat="schedule in employeeMessage.schedules">
@@ -127,7 +128,7 @@
             </table>
             <div class="row">
               <div class="col-xs-12">
-                <table class="table table-bordered">
+                <table class="table">
                   <tr>
                     <td>
                       <ui-select multiple ng-model="newRecords.schedules" theme="bootstrap">
@@ -136,6 +137,7 @@
                           {{ schedule.scheduleNumber }}
                         </ui-select-choices>
                       </ui-select>
+                      <input type="checkbox" ng-model="schedulesAddAll" ng-click="selectAllToAdd(schedulesAddAll, 'schedules')"> Add all schedules
                     </td>
                     <td class="col-xs-1">
                       <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('schedules')"><i class="fa fa-plus"></i></button>
@@ -159,7 +161,7 @@
             </div>
             <table class="table table-bordered">
               <tr class="active">
-                <td><input type="checkbox"></td>
+                <td><input type="checkbox" ng-model="departureStationsDeleteAll" ng-click="toggleSelectAll(departureStationsDeleteAll, 'departureStations')"></td>
                 <th>Code</th>
                 <th>Name</th>
               </tr>
@@ -171,7 +173,7 @@
             </table>
             <div class="row">
               <div class="col-xs-12">
-                <table class="table table-bordered">
+                <table class="table">
                   <tr>
                     <td>
                       <ui-select multiple ng-model="newRecords.departureStations" theme="bootstrap">
@@ -180,6 +182,7 @@
                           {{ station.code }} - {{ station.name }}
                         </ui-select-choices>
                       </ui-select>
+                      <input type="checkbox" ng-model="departureStationsAddAll" ng-click="selectAllToAdd(departureStationsAddAll, 'departureStations')"> Add all stations
                     </td>
                     <td class="col-xs-1">
                       <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('departureStations')"><i class="fa fa-plus"></i></button>
@@ -203,7 +206,7 @@
             </div>
             <table class="table table-bordered">
               <tr class="active">
-                <td><input type="checkbox"></td>
+                <td><input type="checkbox" ng-model="arrivalStationsDeleteAll" ng-click="toggleSelectAll(arrivalStationsDeleteAll, 'arrivalStations')"></td>
                 <th>Code</th>
                 <th>Name</th>
               </tr>
@@ -215,7 +218,7 @@
             </table>
             <div class="row">
               <div class="col-xs-12">
-                <table class="table table-bordered">
+                <table class="table">
                   <tr>
                     <td>
                       <ui-select multiple ng-model="newRecords.arrivalStations" theme="bootstrap">
@@ -224,6 +227,7 @@
                           {{ station.code }} - {{ station.name }}
                         </ui-select-choices>
                       </ui-select>
+                      <input type="checkbox" ng-model="arrivalStationsAddAll" ng-click="selectAllToAdd(arrivalStationsAddAll, 'arrivalStations')"> Add all stations
                     </td>
                     <td class="col-xs-1">
                       <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('arrivalStations')"><i class="fa fa-plus"></i></button>
