@@ -67,7 +67,7 @@
         <br>
 
         <div class="row">
-          <div class="col-xs-3">
+          <div class="col-xs-3" ng-hide="readOnly && !employeeMessage.employees.length">
             <div class="row">
               <div class="col-xs-8">
                 <label>Employees</label>
@@ -125,7 +125,7 @@
             </div>
           </div>
 
-          <div class="col-xs-3">
+          <div class="col-xs-3" ng-hide="readOnly && !employeeMessage.schedules.length">
             <div class="row">
               <div class="col-xs-8">
                 <label>Schedules</label>
@@ -179,7 +179,7 @@
             </div>
           </div>
 
-          <div class="col-xs-3">
+          <div class="col-xs-3" ng-hide="readOnly && !employeeMessage.departureStations.length">
             <div class="row">
               <div class="col-xs-8">
                 <label>Departure Station</label>
@@ -195,8 +195,8 @@
               </div>
             </div>
             <table class="table table-bordered" ng-show="employeeMessage.departureStations.length">
-              <tr class="active" ng-hide="readOnly">
-                <td><input type="checkbox"
+              <tr class="active">
+                <td ng-hide="readOnly"><input type="checkbox"
                            ng-show="employeeMessage.departureStations.length"
                            ng-model="departureStationsDeleteAll"
                            ng-click="toggleSelectAll(departureStationsDeleteAll, 'departureStations')"></td>
@@ -233,7 +233,7 @@
             </div>
           </div>
 
-          <div class="col-xs-3">
+          <div class="col-xs-3" ng-hide="readOnly && !employeeMessage.arrivalStations.length">
             <div class="row">
               <div class="col-xs-8">
                 <label>Arrival Station</label>
