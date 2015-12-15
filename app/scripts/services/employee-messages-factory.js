@@ -16,7 +16,14 @@ angular.module('ts5App')
 
     var getEmployeeMessage = function (id) {
       return employeeMessagesService.getEmployeeMessage(id);
+    };
 
+    var createEmployeeMessage = function (payload) {
+      return employeeMessagesService.createEmployeeMessage(payload);
+    };
+
+    var editEmployeeMessage = function (id, payload) {
+      return employeeMessagesService.editEmployeeMessage(id, payload);
     };
 
     var getSchedules = function (companyId) {
@@ -34,6 +41,8 @@ angular.module('ts5App')
     return {
       getEmployeeMessages: getEmployeeMessages,
       getEmployeeMessage: getEmployeeMessage,
+      createEmployeeMessage: createEmployeeMessage,
+      editEmployeeMessage: editEmployeeMessage,
       getSchedules: getSchedules,
       getEmployees: getEmployees,
       getStations: getStations

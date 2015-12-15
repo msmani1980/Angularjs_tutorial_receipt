@@ -11,27 +11,47 @@ angular.module('ts5App')
   .service('employeeMessagesService', function ($resource, ENV) {
 
     var employeeMessagesRequestURL = ENV.apiUrl + '/api/employee-messages/:id';
-
+    var requestParameters = {
+      id: '@id'
+    };
     var employeeActions = {
       getEmployeeMessages: {
         method: 'GET'
+      },
+      createEmployeeMessage: {
+        method: 'POST'
+      },
+      editEmployeeMessage: {
+        method: 'PUT'
       }
     };
-    var employeeMessagesRequestResource = $resource(employeeMessagesRequestURL, null, employeeActions);
+    var employeeMessagesRequestResource = $resource(employeeMessagesRequestURL, requestParameters, employeeActions);
 
     var getEmployeeMessages = function (payload) {
       var requestPayload = payload || {};
-      return employeeMessagesRequestResource.getEmployeeMessages(requestPayload).$promise;
+      return employeeMessagesRequestResource.getEmployeeMessages().$promise;
     };
 
     var getEmployeeMessage = function (id) {
-      var requestPayload = {id: id};
-      return employeeMessagesRequestResource.getEmployeeMessages(requestPayload).$promise;
+      requestParameters.id = id;
+      return employeeMessagesRequestResource.getEmployeeMessages().$promise;
+    };
+
+    var createEmployeeMessage = function (payload) {
+      requestParameters = {};
+      return employeeMessagesRequestResource.createEmployeeMessage(payload).$promise;
+    };
+
+    var editEmployeeMessage = function (id, payload) {
+      requestParameters.id = id;
+      return employeeMessagesRequestResource.editEmployeeMessage(payload).$promise;
     };
 
     return {
       getEmployeeMessages: getEmployeeMessages,
-      getEmployeeMessage: getEmployeeMessage
+      getEmployeeMessage: getEmployeeMessage,
+      createEmployeeMessage: createEmployeeMessage,
+      editEmployeeMessage: editEmployeeMessage
     };
 
   });

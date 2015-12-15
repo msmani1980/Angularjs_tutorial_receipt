@@ -10,7 +10,7 @@
  */
 angular.module('ts5App').controller('EmployeeMessageCtrl',
   function ($scope, employeeMessagesFactory, GlobalMenuService,
-            lodash, dateUtility, $q, $routeParams) {
+            lodash, dateUtility, $q, $routeParams, $location) {
 
     var $this = this;
     var companyId = GlobalMenuService.company.get();
@@ -59,7 +59,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
     this.formatArrayForAPIWithAttributes = function (array, attributeToSave) {
       var newArray = [];
-      angular.forEach(newArray, function(record) {
+      angular.forEach(array, function(record) {
         var newRecord = {};
         newRecord[attributeToSave] = record[attributeToSave];
         if(record.recordId) {
@@ -75,25 +75,36 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       angular.forEach(stationsArray, function(station) {
         newStationsArray.push(station.id);
       });
+      return newStationsArray;
     };
 
     this.formatPayload = function () {
       var formData = angular.copy($scope.employeeMessage);
       var payload = {};
       payload.employeeMessageText = formData.employeeMessageText;
-      payload.startDate = formData.startDate;
-      payload.endDate = formData.endDate;
-      payload.id = $routeParams.id;
+      payload.startDate = dateUtility.formatDateForAPI(formData.startDate);
+      payload.endDate = dateUtility.formatDateForAPI(formData.endDate);
       payload.employeeMessageArrivalStations =  $this.formatStationsArrayForAPI(formData.arrivalStations);
       payload.employeeMessageDepartureStations = $this.formatStationsArrayForAPI(formData.departureStations);
       payload.employeeMessageSchedules = $this.formatArrayForAPIWithAttributes(formData.schedules, 'scheduleNumber');
       payload.employeeMessageEmployeeIdentifiers = $this.formatArrayForAPIWithAttributes(formData.employees, 'employeeIdentifier');
 
-      return payload;
+      return {employeeMessage: payload};
+    };
+
+    $this.saveSuccess = function () {
+      $this.hideLoadingModal();
+      $location.path('employee-messages').search();
     };
 
     $scope.save = function () {
       var payload = $this.formatPayload();
+      $this.showLoadingModal('Saving data...');
+      if($routeParams.action === 'edit') {
+        employeeMessagesFactory.editEmployeeMessage($routeParams.id, payload).then($this.saveSuccess);
+      } else {
+        employeeMessagesFactory.createEmployeeMessage(payload).then($this.saveSuccess);
+      }
     };
 
 
