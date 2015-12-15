@@ -23,6 +23,9 @@ angular.module('ts5App')
       },
       editEmployeeMessage: {
         method: 'PUT'
+      },
+      deleteEmployeeMessage: {
+        method: 'DELETE'
       }
     };
     var employeeMessagesRequestResource = $resource(employeeMessagesRequestURL, requestParameters, employeeActions);
@@ -48,11 +51,17 @@ angular.module('ts5App')
       return employeeMessagesRequestResource.editEmployeeMessage(payload).$promise;
     };
 
+    var deleteEmployeeMessage = function (id) {
+      requestParameters.id = id;
+      return employeeMessagesRequestResource.deleteEmployeeMessage().$promise;
+    };
+
     return {
       getEmployeeMessages: getEmployeeMessages,
       getEmployeeMessage: getEmployeeMessage,
       createEmployeeMessage: createEmployeeMessage,
-      editEmployeeMessage: editEmployeeMessage
+      editEmployeeMessage: editEmployeeMessage,
+      deleteEmployeeMessage: deleteEmployeeMessage
     };
 
   });
