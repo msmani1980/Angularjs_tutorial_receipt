@@ -1,24 +1,25 @@
 <div class="container-fluid">
 
-  <div class="edit-controls">
-    <div class="row">
-      <div class="col-xs-6">
-        <h2 class="view-name">Edit {{viewName}}</h2>
-      </div>
-      <div class="col-xs-6 text-right">
-        <a class="btn btn-default" ng-href="#/employee-messages" class="btn">Back</a>
-        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
-          <span class="fa fa-check-square-o" aria-hidden="true"></span>
-          <span class="hidden-xs">Save</span>
-        </button>
+  <form name="employeeMessageForm" ng-submit="save()">
+
+    <div class="edit-controls">
+      <div class="row">
+        <div class="col-xs-6">
+          <h2 class="view-name">Edit {{viewName}}</h2>
+        </div>
+        <div class="col-xs-6 text-right">
+          <a class="btn btn-default" ng-href="#/employee-messages" class="btn">Back</a>
+          <button class="btn btn-primary" type="submit" ng-hide="readOnly">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+            <span class="hidden-xs">Save</span>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!--<error-dialog form-object="employeeMessageForm" error-response="errorResponse" display="displayError">-->
-  <!--</error-dialog>-->
+    <!--<error-dialog form-object="employeeMessageForm" error-response="errorResponse" display="displayError">-->
+    <!--</error-dialog>-->
 
-  <form name="employeeMessageForm" ng-submit="save()">
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="row">
@@ -88,7 +89,7 @@
                 <th>ID</th>
                 <th>Name</th>
               </tr>
-              <tr  ng-repeat="employee in employeeMessage.employees">
+              <tr ng-repeat="employee in employeeMessage.employees">
                 <td><input type="checkbox" ng-model="employee.selectedToDelete"></td>
                 <td>{{employee.employeeIdentifier}}</td>
                 <td>{{employee.lastName}}, {{ employee.firstName }}</td>
@@ -101,15 +102,18 @@
                   <tr>
                     <td>
                       <ui-select multiple ng-model="newRecords.employees" theme="bootstrap">
-                        <ui-select-match placeholder="Select an Employee...">{{ $item.employeeIdentifier }}</ui-select-match>
+                        <ui-select-match placeholder="Select an Employee...">{{ $item.employeeIdentifier }}
+                        </ui-select-match>
                         <ui-select-choices repeat="employee in filteredEmployees | filter: $select.search">
                           {{ employee.employeeIdentifier }} - {{ employee.lastName}}, {{ employee.firstName }}
                         </ui-select-choices>
                       </ui-select>
-                      <input type="checkbox" ng-model="employeesAddAll" ng-click="selectAllToAdd(employeesAddAll, 'employees')"> Add all employees
+                      <input type="checkbox" ng-model="employeesAddAll"
+                             ng-click="selectAllToAdd(employeesAddAll, 'employees')"> Add all employees
                     </td>
                     <td class="col-xs-1">
-                      <button type="button" class="btn btn-success btn-sm text-right" ng-click="addNewItem('employees')"><i class="fa fa-plus"></i></button>
+                      <button type="button" class="btn btn-success btn-sm text-right"
+                              ng-click="addNewItem('employees')"><i class="fa fa-plus"></i></button>
                     </td>
                   </tr>
                 </table>
@@ -127,7 +131,7 @@
                         title="delete selected schedules"
                         ng-disabled="getPropertiesForDeletedButton('schedules', 'disabled')"
                         ng-click="removeItems('schedules')"
-                        type="button" >
+                        type="button">
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
@@ -157,10 +161,12 @@
                           {{ schedule.scheduleNumber }}
                         </ui-select-choices>
                       </ui-select>
-                      <input type="checkbox" ng-model="schedulesAddAll" ng-click="selectAllToAdd(schedulesAddAll, 'schedules')"> Add all schedules
+                      <input type="checkbox" ng-model="schedulesAddAll"
+                             ng-click="selectAllToAdd(schedulesAddAll, 'schedules')"> Add all schedules
                     </td>
                     <td class="col-xs-1">
-                      <button type="button" class="btn btn-success btn-sm text-right" ng-click="addNewItem('schedules')"><i class="fa fa-plus"></i></button>
+                      <button type="button" class="btn btn-success btn-sm text-right"
+                              ng-click="addNewItem('schedules')"><i class="fa fa-plus"></i></button>
                     </td>
                   </tr>
                 </table>
@@ -178,7 +184,7 @@
                         title="delete selected stations"
                         ng-disabled="getPropertiesForDeletedButton('departureStations', 'disabled')"
                         ng-click="removeItems('departureStations')"
-                        type="button" >
+                        type="button">
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
@@ -192,7 +198,7 @@
                 <th>Code</th>
                 <th>Name</th>
               </tr>
-              <tr  ng-repeat="station in employeeMessage.departureStations">
+              <tr ng-repeat="station in employeeMessage.departureStations">
                 <td><input type="checkbox" ng-model="station.selectedToDelete"></td>
                 <td>{{station.code}}</td>
                 <td>{{station.name}}</td>
@@ -209,10 +215,12 @@
                           {{ station.code }} - {{ station.name }}
                         </ui-select-choices>
                       </ui-select>
-                      <input type="checkbox" ng-model="departureStationsAddAll" ng-click="selectAllToAdd(departureStationsAddAll, 'departureStations')"> Add all stations
+                      <input type="checkbox" ng-model="departureStationsAddAll"
+                             ng-click="selectAllToAdd(departureStationsAddAll, 'departureStations')"> Add all stations
                     </td>
                     <td class="col-xs-1">
-                      <button type="button" class="btn btn-success btn-sm text-right" ng-click="addNewItem('departureStations')"><i class="fa fa-plus"></i></button>
+                      <button type="button" class="btn btn-success btn-sm text-right"
+                              ng-click="addNewItem('departureStations')"><i class="fa fa-plus"></i></button>
                     </td>
                   </tr>
                 </table>
@@ -230,7 +238,7 @@
                         title="delete selected stations"
                         ng-disabled="getPropertiesForDeletedButton('arrivalStations', 'disabled')"
                         ng-click="removeItems('arrivalStations')"
-                        type="button" >
+                        type="button">
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
@@ -245,7 +253,7 @@
                 <th>Code</th>
                 <th>Name</th>
               </tr>
-              <tr  ng-repeat="station in employeeMessage.arrivalStations">
+              <tr ng-repeat="station in employeeMessage.arrivalStations">
                 <td><input type="checkbox" ng-model="station.selectedToDelete"></td>
                 <td>{{station.code}}</td>
                 <td>{{station.name}}</td>
@@ -262,10 +270,12 @@
                           {{ station.code }} - {{ station.name }}
                         </ui-select-choices>
                       </ui-select>
-                      <input type="checkbox" ng-model="arrivalStationsAddAll" ng-click="selectAllToAdd(arrivalStationsAddAll, 'arrivalStations')"> Add all stations
+                      <input type="checkbox" ng-model="arrivalStationsAddAll"
+                             ng-click="selectAllToAdd(arrivalStationsAddAll, 'arrivalStations')"> Add all stations
                     </td>
                     <td class="col-xs-1">
-                      <button type="button" class="btn btn-success btn-sm text-right" ng-click="addNewItem('arrivalStations')"><i class="fa fa-plus"></i></button>
+                      <button type="button" class="btn btn-success btn-sm text-right"
+                              ng-click="addNewItem('arrivalStations')"><i class="fa fa-plus"></i></button>
                     </td>
                   </tr>
                 </table>
