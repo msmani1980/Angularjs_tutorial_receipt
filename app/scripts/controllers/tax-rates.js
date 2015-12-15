@@ -210,7 +210,7 @@ angular.module('ts5App')
     };
 
     this.makeDeletePromises = function(id) {
-      var message = 'Deleting Tax Rate ID: ' + id + '...';
+      var message = 'Deleting Tax Rate ID: ' + id;
       $this.showLoadingModal(message);
       var promises = $this.createDeletePromises(id);
       $q.all(promises).then($this.deleteSuccess);
@@ -218,7 +218,7 @@ angular.module('ts5App')
 
     this.deleteSuccess = function() {
       var id = angular.copy($scope.taxRateToRemove.id);
-      ngToast.create('Successfully Removed Tax Rate ID:' + id);
+      ngToast.create('Successfully Deleted <b>Tax Rate ID: </b>' + id);
       $scope.taxRateToRemove = [];
       return $this.reloadRoute();
     };

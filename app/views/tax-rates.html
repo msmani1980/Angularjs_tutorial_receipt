@@ -113,13 +113,13 @@
       </div>
 
       <div class="panel-footer text-right">
-      <button class="btn btn-default" ng-click="clearSearchFilters()" ng-show="showClearButton()">
-        <span>Clear</span>
-      </button>
-      <button ng-click="searchRecords()" class="btn btn-primary btn-search">
-        <span class="fa fa-search" aria-hidden="true"></span>
-        <span class="hidden-sm hidden-xs btn-label">Search</span>
-      </button>
+        <button class="btn btn-default" ng-click="clearSearchFilters()" ng-show="showClearButton()">
+          <span>Clear</span>
+        </button>
+        <button class="btn btn-primary btn-search" ng-click="searchRecords()" ng-disabled="!showClearButton()">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs btn-label">Search</span>
+        </button>
       </div>
 
     </form>
@@ -145,8 +145,9 @@
         </tr>
       </thead>
 
-      <!-- View/Read only Tax Rates -->
+      <!-- TODO: add Edit and Create functionality to the list -->
       <tr ng-repeat="taxRate in companyTaxRatesList track by $index">
+
         <td>{{taxRate.taxTypeCode}}</td>
         <td>{{taxRate.countryName}}</td>
         <td>
@@ -159,7 +160,7 @@
         <td>{{taxRate.startDate}}</td>
         <td>{{taxRate.endDate}}</td>
 
-        <!-- TODO: add actions to buttons for each tax rate -->
+        <!-- TODO: add Edit actions for each tax rate -->
         <td>
           <a class="btn btn-primary btn-xs" ng-show="showEditButton(taxRate)">
             <span class="fa fa-pencil"></span>
@@ -170,8 +171,6 @@
         </td>
 
       </tr>
-
-
     </table>
   </div>
 </div>
