@@ -70,7 +70,7 @@
               <input class="form-control" ng-model="formData.discountName" pattern="regexp.word" required />
             </div>
             <div class="form-group">
-              <label class="control-label">Discount Name *</label>
+              <label class="control-label">Description *</label>
               <textarea class="form-control" ng-model="formData.description" pattern="regexp.word" required />
             </div>
             <div class="row">
@@ -244,8 +244,8 @@
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label>Item Category</label>
-            <select class="form-control" ng-model="restrictedItem.itemCategory">
-              <option>Select category</option>
+            <select class="form-control" ng-model="restrictedItem.itemCategory" ng-change="loadRestrictedItemsByCategory(restrictedItem.itemCategory)">
+              <option value="0">Select category</option>
               <option ng-repeat="category in salesCategoriesList" value="{{ category.id }}">{{ category.name }}</option>
             </select>
           </div>
@@ -254,7 +254,7 @@
           <div class="form-group">
             <label>Retail Item *</label>
             <select required ng-model="restrictedItem.id" class="form-control">
-              <option ng-selected="setSelected(restrictedItem.retailItemId, retailItem.id)" ng-repeat="retailItem in retailItemsList"
+              <option ng-selected="setSelected(restrictedItem.retailItemId, retailItem.id)" ng-repeat="retailItem in filteredRetailItemsList[restrictedItem.itemCategory]"
                       value="{{ retailItem.id }}">{{ retailItem.itemName }}
               </option>
             </select>
@@ -292,7 +292,7 @@
       </div>
 
       <div class="modal-body">
-        <p>You are about to permanently delete <strong>{{getRetailItemNameById(restrictedItemToDelete.id)}}</strong></p>
+        <p>You are about to permanently delete <strong>{{ getRetailItemNameById(restrictedItemToDelete.id) }}</strong></p>
       </div>
 
       <div class="modal-footer">

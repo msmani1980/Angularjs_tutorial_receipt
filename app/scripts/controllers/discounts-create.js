@@ -19,10 +19,11 @@ angular.module('ts5App')
     $scope.discountTypesList = [];
     $scope.companyCurrencyGlobalsList = [];
     $scope.retailItemsList = [];
+    $scope.filteredRetailItemsList = {};
     $scope.salesCategoriesList = [];
     $scope.addRestrictedItemsNumber = 1;
     $scope.formData = {
-      isRestriction: false,
+      isRestriction: 'false',
       restrictedItems: []
     };
 
@@ -68,6 +69,10 @@ angular.module('ts5App')
       $scope.retailItemsList = data.masterItems;
     };
 
+    this.setDefaultRetailItems = function() {
+      $scope.filteredRetailItemsList[0] = $scope.retailItemsList;
+    };
+
     this.setDependencies = function(response) {
       $this.setGlobalDiscountTypesList(response[0]);
       $this.setDiscountTypesList(response[1]);
@@ -78,6 +83,7 @@ angular.module('ts5App')
       if ($scope.editingDiscount) {
         this.getItem($routeParams.id);
       } else {
+        $this.setDefaultRetailItems();
         $this.setUIReady();
       }
     };
@@ -120,7 +126,7 @@ angular.module('ts5App')
     $scope.addRestrictedItems = function() {
       var totalRowsToAdd = $scope.addRestrictedItemsNumber || 1;
       for (var i = 0; i < totalRowsToAdd; i++) {
-        $scope.formData.restrictedItems.push({restrictedItem: null});
+        $scope.formData.restrictedItems.push({itemCategory: 0});
       }
     };
 
@@ -138,6 +144,16 @@ angular.module('ts5App')
       });
 
       return (retailItem.length > 0) ? retailItem[0].itemName : "";
+    };
+
+    $scope.loadRestrictedItemsByCategory = function(categoryId) {
+      if(!categoryId || categoryId == '0') {
+        return;
+      }
+
+      itemsFactory.getItemsList({categoryId: categoryId}, true).then(function(response) {
+        $scope.filteredRetailItemsList[categoryId] = response.masterItems;
+      });
     };
 
     $scope.isDisabled = function() {
