@@ -28,7 +28,8 @@ angular.module('ts5App')
     var employeeMessagesRequestResource = $resource(employeeMessagesRequestURL, requestParameters, employeeActions);
 
     var getEmployeeMessages = function (payload) {
-      var requestPayload = payload || {};
+      requestParameters.id = '';
+      requestParameters = payload || requestParameters;
       return employeeMessagesRequestResource.getEmployeeMessages().$promise;
     };
 
@@ -38,7 +39,7 @@ angular.module('ts5App')
     };
 
     var createEmployeeMessage = function (payload) {
-      requestParameters = {};
+      requestParameters.id = '';
       return employeeMessagesRequestResource.createEmployeeMessage(payload).$promise;
     };
 
