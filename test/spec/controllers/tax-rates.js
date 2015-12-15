@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: TaxRatesCtrl', function() {
+fdescribe('Controller: TaxRatesCtrl', function() {
   beforeEach(module(
     'ts5App',
     'template-module',
@@ -119,6 +119,10 @@ describe('Controller: TaxRatesCtrl', function() {
     it('should set the companyTaxRatesList as a blank array', function() {
       expect($scope.companyTaxRatesList).toEqual([]);
     });
+    it('should set the taxRateToRemove as a blank array', function() {
+      expect($scope.taxRateToRemove).toEqual([]);
+    });
+
     it('should set the taxTypesList as a blank array', function() {
       var mockDates = {
         startDate: '',

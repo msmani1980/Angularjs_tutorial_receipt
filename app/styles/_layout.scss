@@ -97,3 +97,31 @@ html .navbar,
 .warning-row {
   background-color: #FFD4D4;
 }
+
+.animate-switch-container {
+   padding:20px;
+   background:white;
+   overflow:hidden;
+ }
+
+ .animate-switch{
+   position:relative;
+ }
+
+ .animate-switch.ng-move,
+ .animate-switch.ng-enter {
+   -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s;
+   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s;
+ }
+
+ .animate-switch.ng-leave.ng-leave-active,
+ .animate-switch.ng-move,
+ .animate-switch.ng-enter {
+   opacity:0;
+ }
+
+ .animate-switch.ng-leave,
+ .animate-switch.ng-move.ng-move-active,
+ .animate-switch.ng-enter.ng-enter-active {
+   opacity:1;
+ }
