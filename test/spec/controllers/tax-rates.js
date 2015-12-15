@@ -321,6 +321,42 @@ fdescribe('Controller: TaxRatesCtrl', function() {
           });
         });
 
+        describe('isTaxRateActive method', function() {
+          var taxRate;
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'isTaxRateActive').and.callThrough();
+            taxRate = {
+              startDate: '12302015',
+              endDate: '12312016'
+            };
+          });
+          it('should return falsy', function() {
+            expect($scope.showEditButton(taxRate)).toBeFalsy();
+          });
+          it('should call the controller function', function() {
+            $scope.showEditButton(taxRate);
+            expect(TaxRatesCtrl.isTaxRateActive).toHaveBeenCalledWith(taxRate);
+          });
+        });
+
+        describe('hasTaxRateStarted method', function() {
+          var taxRate;
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'hasTaxRateStarted').and.callThrough();
+            taxRate = {
+              startDate: '12302015',
+              endDate: '12312016'
+            };
+          });
+          it('should return falsy', function() {
+            expect($scope.showDeleteButton(taxRate)).toBeFalsy();
+          });
+          it('should call the controller function', function() {
+            $scope.showDeleteButton(taxRate);
+            expect(TaxRatesCtrl.hasTaxRateStarted).toHaveBeenCalledWith(taxRate);
+          });
+        });
+
       });
 
     });
