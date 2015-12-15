@@ -65,133 +65,171 @@
                 <label>Employees</label>
               </div>
               <div class="col-xs-4 text-right">
-                <button class="btn btn-xs btn-danger" title="delete selected schedules"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-xs btn-danger" title="delete selected schedules" ng-click="removeItems('employees')">
+                  <i class="fa fa-trash"></i>
+                </button>
               </div>
             </div>
-            <table class="table">
+            <table class="table table-bordered">
               <tr class="active">
                 <td><input type="checkbox"></td>
-                <th>Employee ID - name</th>
+                <th>ID</th>
+                <th>Name</th>
               </tr>
               <tr  ng-repeat="employee in employeeMessage.employees">
-                <td><input type="checkbox"></td>
-                <td>{{employee.employeeIdentifier}} - {{employee.lastName}}, {{ employee.firstName }}</td>
+                <td><input type="checkbox" ng-model="employee.selectedToDelete"></td>
+                <td>{{employee.employeeIdentifier}}</td>
+                <td>{{employee.lastName}}, {{ employee.firstName }}</td>
               </tr>
             </table>
+
             <div class="row">
-              <div class="col-xs-9">
-                <ui-select multiple ng-model="newRecords.employees" theme="bootstrap">
-                  <ui-select-match placeholder="Select an Employee...">{{ $item.employeeIdentifier }}</ui-select-match>
-                  <ui-select-choices repeat="employee in filteredEmployees | filter: $select.search">
-                    {{ employee.employeeIdentifier }} - {{ employee.lastName}}, {{ employee.firstName }}
-                  </ui-select-choices>
-                </ui-select>
-                <input type="checkbox"> Select All
-              </div>
-              <div class="col-xs-2 text-left">
-                <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('employees')"><i class="fa fa-plus"></i></button>
+              <div class="col-xs-12">
+                <table class="table table-bordered">
+                  <tr>
+                    <td>
+                      <ui-select multiple ng-model="newRecords.employees" theme="bootstrap">
+                        <ui-select-match placeholder="Select an Employee...">{{ $item.employeeIdentifier }}</ui-select-match>
+                        <ui-select-choices repeat="employee in filteredEmployees | filter: $select.search">
+                          {{ employee.employeeIdentifier }} - {{ employee.lastName}}, {{ employee.firstName }}
+                        </ui-select-choices>
+                      </ui-select>
+                    </td>
+                    <td class="col-xs-1">
+                      <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('employees')"><i class="fa fa-plus"></i></button>
+                    </td>
+                  </tr>
+                </table>
               </div>
             </div>
           </div>
+
           <div class="col-xs-3">
             <div class="row">
               <div class="col-xs-8">
                 <label>Schedules</label>
               </div>
               <div class="col-xs-4 text-right">
-                <button class="btn btn-xs btn-default" disabled><i class="fa fa-trash"></i></button>
+                <button class="btn btn-xs btn-default" title="delete selected schedules" ng-click="removeItems('schedules')">
+                  <i class="fa fa-trash"></i>
+                </button>
               </div>
             </div>
-            <table class="table">
+            <table class="table table-bordered">
               <tr class="active">
                 <td><input type="checkbox"></td>
                 <th>Schedule Number</th>
               </tr>
               <tr ng-repeat="schedule in employeeMessage.schedules">
-                <td><input type="checkbox"></td>
+                <td><input type="checkbox" ng-model="schedule.selectedToDelete"></td>
                 <td>{{ schedule.scheduleNumber }}</td>
               </tr>
             </table>
             <div class="row">
-              <div class="col-xs-9">
-                <ui-select multiple ng-model="newRecords.schedules" theme="bootstrap">
-                  <ui-select-match placeholder="Select a Schedule...">{{ $item.scheduleNumber }}</ui-select-match>
-                  <ui-select-choices repeat="schedule in filteredSchedules | filter: $select.search">
-                    {{ schedule.scheduleNumber }}
-                  </ui-select-choices>
-                </ui-select>
-                <input type="checkbox"> Select All
-              </div>
-              <div class="col-xs-2 text-left">
-                <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('schedules')"><i class="fa fa-plus"></i></button>
+              <div class="col-xs-12">
+                <table class="table table-bordered">
+                  <tr>
+                    <td>
+                      <ui-select multiple ng-model="newRecords.schedules" theme="bootstrap">
+                        <ui-select-match placeholder="Select a Schedule...">{{ $item.scheduleNumber }}</ui-select-match>
+                        <ui-select-choices repeat="schedule in filteredSchedules | filter: $select.search">
+                          {{ schedule.scheduleNumber }}
+                        </ui-select-choices>
+                      </ui-select>
+                    </td>
+                    <td class="col-xs-1">
+                      <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('schedules')"><i class="fa fa-plus"></i></button>
+                    </td>
+                  </tr>
+                </table>
               </div>
             </div>
           </div>
+
           <div class="col-xs-3">
             <div class="row">
               <div class="col-xs-8">
                 <label>Departure Station</label>
               </div>
               <div class="col-xs-4 text-right">
-                <button class="btn btn-xs btn-default" disabled><i class="fa fa-trash"></i></button>
+                <button class="btn btn-xs btn-default" title="delete selected schedules" ng-click="removeItems('departureStations')">
+                  <i class="fa fa-trash"></i>
+                </button>
               </div>
             </div>
-            <table class="table">
+            <table class="table table-bordered">
               <tr class="active">
                 <td><input type="checkbox"></td>
-                <th>Station</th>
+                <th>Code</th>
+                <th>Name</th>
               </tr>
               <tr  ng-repeat="station in employeeMessage.departureStations">
-                <td><input type="checkbox"></td>
-                <td>{{station.code}} - {{station.name}}</td>
+                <td><input type="checkbox" ng-model="station.selectedToDelete"></td>
+                <td>{{station.code}}</td>
+                <td>{{station.name}}</td>
               </tr>
             </table>
             <div class="row">
-              <div class="col-xs-9">
-                <ui-select multiple ng-model="newRecords.departureStations" theme="bootstrap">
-                  <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
-                  <ui-select-choices repeat="station in filteredDepStations | filter: $select.search">
-                    {{ station.code }} - {{ station.name }}
-                  </ui-select-choices>
-                </ui-select>
-                <input type="checkbox"> Select All
-              </div>
-              <div class="col-xs-2 text-left">
-                <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('departureStations')"><i class="fa fa-plus"></i></button>
+              <div class="col-xs-12">
+                <table class="table table-bordered">
+                  <tr>
+                    <td>
+                      <ui-select multiple ng-model="newRecords.departureStations" theme="bootstrap">
+                        <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
+                        <ui-select-choices repeat="station in filteredDepStations | filter: $select.search">
+                          {{ station.code }} - {{ station.name }}
+                        </ui-select-choices>
+                      </ui-select>
+                    </td>
+                    <td class="col-xs-1">
+                      <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('departureStations')"><i class="fa fa-plus"></i></button>
+                    </td>
+                  </tr>
+                </table>
               </div>
             </div>
           </div>
+
           <div class="col-xs-3">
             <div class="row">
               <div class="col-xs-8">
                 <label>Arrival Station</label>
               </div>
               <div class="col-xs-4 text-right">
-                <button class="btn btn-xs btn-default" disabled><i class="fa fa-trash"></i></button>
+                <button class="btn btn-xs btn-default" title="delete selected schedules" ng-click="removeItems('arrivalStations')">
+                  <i class="fa fa-trash"></i>
+                </button>
               </div>
             </div>
-            <table class="table">
+            <table class="table table-bordered">
               <tr class="active">
                 <td><input type="checkbox"></td>
-                <th>Station</th>
+                <th>Code</th>
+                <th>Name</th>
               </tr>
               <tr  ng-repeat="station in employeeMessage.arrivalStations">
-                <td><input type="checkbox"></td>
-                <td>{{station.code}} - {{station.name}}</td>
+                <td><input type="checkbox" ng-model="station.selectedToDelete"></td>
+                <td>{{station.code}}</td>
+                <td>{{station.name}}</td>
               </tr>
             </table>
             <div class="row">
-              <div class="col-xs-9">
-                <ui-select multiple ng-model="newRecords.arrivalStations" theme="bootstrap">
-                  <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
-                  <ui-select-choices repeat="station in filteredArrStations | filter: $select.search">
-                    {{ station.code }} - {{ station.name }}
-                  </ui-select-choices>
-                </ui-select>
-                <input type="checkbox"> Select All
-              </div>
-              <div class="col-xs-2 text-left">
-                <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('arrivalStations')"><i class="fa fa-plus"></i></button>
+              <div class="col-xs-12">
+                <table class="table table-bordered">
+                  <tr>
+                    <td>
+                      <ui-select multiple ng-model="newRecords.arrivalStations" theme="bootstrap">
+                        <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
+                        <ui-select-choices repeat="station in filteredArrStations | filter: $select.search">
+                          {{ station.code }} - {{ station.name }}
+                        </ui-select-choices>
+                      </ui-select>
+                    </td>
+                    <td class="col-xs-1">
+                      <button class="btn btn-success btn-sm text-right" ng-click="addNewItem('arrivalStations')"><i class="fa fa-plus"></i></button>
+                    </td>
+                  </tr>
+                </table>
               </div>
             </div>
           </div>

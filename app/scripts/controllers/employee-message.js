@@ -32,16 +32,6 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return '';
     };
 
-    this.addNewRecordsToArrayWithAttributes = function (existingArray, newArray, attributesToSave) {
-      angular.forEach(newArray, function (record) {
-        var newRecord = {};
-        angular.forEach(attributesToSave, function (attribute) {
-          newRecord[attribute] = record[attribute];
-        });
-        existingArray.push(newRecord);
-      });
-    };
-
     this.filterList = function (selectedList, masterList, optionalMatchCriteria) {
       var matchAttribute = optionalMatchCriteria || 'id';
       return lodash.filter(masterList, function (record) {
@@ -65,7 +55,23 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       if(listName === 'arrivalStations' || listName === 'all') {
         $scope.filteredArrStations = $this.filterList($scope.employeeMessage.arrivalStations, $scope.stationsList);
       }
+    };
 
+    $scope.removeItems = function (listName) {
+      $scope.employeeMessage[listName] = lodash.filter($scope.employeeMessage[listName], function (record) {
+        return !record.selectedToDelete;
+      });
+    };
+
+
+    this.addNewRecordsToArrayWithAttributes = function (existingArray, newArray, attributesToSave) {
+      angular.forEach(newArray, function (record) {
+        var newRecord = {};
+        angular.forEach(attributesToSave, function (attribute) {
+          newRecord[attribute] = record[attribute];
+        });
+        existingArray.push(newRecord);
+      });
     };
 
     $scope.addNewItem = function (categoryName) {
@@ -76,6 +82,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         departureStations: ['code', 'name', 'id']
       };
 
+      console.log(categoryName);
       $this.addNewRecordsToArrayWithAttributes($scope.employeeMessage[categoryName], $scope.newRecords[categoryName], categoryToAttributesMap[categoryName]);
       $scope.newRecords[categoryName] = [];
       $this.filterListsByName(categoryName);
