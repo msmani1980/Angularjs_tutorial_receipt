@@ -21,11 +21,15 @@ angular.module('ts5App')
     $scope.retailItemsList = [];
     $scope.filteredRetailItemsList = {};
     $scope.salesCategoriesList = [];
+    $scope.salesCategoriesMap = {};
     $scope.addRestrictedItemsNumber = 1;
     $scope.formData = {
-      isRestriction: 'false',
+      isRestriction: false,
+      restrictedCategories: [],
       restrictedItems: [],
-      amountDiscountValue: {}
+      amountDiscountValue: {},
+      amountLimitPerShopValue: {},
+      amountLimitPerTransactionValue: {}
     };
 
     this.checkFormState = function() {
@@ -62,8 +66,13 @@ angular.module('ts5App')
       $scope.companyCurrencyGlobalsList = data.response;
     };
 
-    this.setSalesCategoriesList = function(data) {
+    this.setSalesCategoriesListAndMap = function(data) {
       $scope.salesCategoriesList = data.salesCategories;
+      $scope.salesCategoriesList.unshift({id: 0, name:'All'});
+
+      angular.forEach(data.salesCategories, function(category) {
+        $scope.salesCategoriesMap[category.id] = category;
+      });
     };
 
     this.setRetailItemsList = function(data) {
@@ -88,13 +97,13 @@ angular.module('ts5App')
       $this.setGlobalDiscountTypesList(response[0]);
       $this.setDiscountTypesList(response[1]);
       $this.setCompanyCurrencyGlobals(response[2]);
-      $this.setSalesCategoriesList(response[3]);
+      $this.setSalesCategoriesListAndMap(response[3]);
       $this.setRetailItemsList(response[4]);
+      $this.setDefaultRetailItems();
 
       if ($scope.editingDiscount) {
         this.getItem($routeParams.id);
       } else {
-        $this.setDefaultRetailItems();
         $this.setUIReady();
       }
     };
@@ -122,24 +131,141 @@ angular.module('ts5App')
       });
     };
 
-    this.updateFormData = function(discountData) {
-      if (!discountData) {
-        return false;
-      }
-
+    this.deserializeDiscountInformation = function(discountData) {
       $scope.formData.discountName = discountData.name;
       $scope.formData.globalDiscountTypeId = discountData.discountTypeId;
       $scope.formData.barCode = discountData.barcode;
       $scope.formData.description = discountData.description;
       $scope.formData.startDate = dateUtility.formatDateForApp(discountData.startDate);
       $scope.formData.endDate = dateUtility.formatDateForApp(discountData.endDate);
+    };
 
+    this.deserializeBenefits = function(discountData) {
       $scope.formData.discountTypeId = discountData.rateTypeId;
+      $scope.formData.percentageDiscountValue = discountData.percentage;
 
       angular.forEach(discountData.rates, function(rate) {
-        $scope.formData.amountDiscountValue[rate.companyCurrencyId] = rate.amount;
+        $scope.formData.amountDiscountValue[rate.companyCurrencyId] = {
+          amount: rate.amount,
+          companyCurrencyId: rate.companyCurrencyId
+        };
+      });
+    };
+
+    this.deserializeLimitationPerShop = function(discountData) {
+      $scope.formData.itemQtyLimitPerShop = discountData.itemQuantityLimitByShop;
+
+      if(discountData.limitsByShop.length > 0) {
+        $scope.formData.isAmountLimitPerShop = true;
+      }
+
+      angular.forEach(discountData.limitsByShop, function(rate) {
+        $scope.formData.amountLimitPerShopValue[rate.companyCurrencyId] = {
+          amount: rate.amount,
+          companyCurrencyId: rate.companyCurrencyId
+        };
+      });
+    };
+
+    this.deserializeLimitationPerTransaction = function(discountData) {
+      $scope.formData.itemQtyLimitPerTransaction = discountData.itemQuantityLimitByTransaction;
+
+      if(discountData.limitsByTransaction.length > 0) {
+        $scope.formData.isAmountLimitPerTransaction = true;
+      }
+
+      angular.forEach(discountData.limitsByTransaction, function(rate) {
+        $scope.formData.amountLimitPerTransactionValue[rate.companyCurrencyId] = {
+          amount: rate.amount,
+          companyCurrencyId: rate.companyCurrencyId
+        };
+      });
+    };
+
+    this.deserializeLimitationPerSeat = function(discountData) {
+      $scope.formData.requireSeatEntry = discountData.seatNumberRequired;
+      $scope.formData.itemQtyLimitPerSeat = discountData.itemQuantityLimitBySeatNumber;
+    };
+
+    this.deserializeRestrictions = function(discountData) {
+      $scope.formData.isRestriction = discountData.companyDiscountRestrictions;
+
+      angular.forEach(discountData.restrictedCategories, function(category) {
+        $scope.formData.restrictedCategories.push($scope.salesCategoriesMap[category.salesCategoryId]);
       });
 
+      angular.forEach(discountData.restrictedItems, function(item) {
+        $scope.formData.restrictedItems.push({
+          itemCategory:0,
+          id: item.retailItemId
+        });
+      });
+    };
+
+    this.updateFormData = function(discountData) {
+      if (!discountData) {
+        return false;
+      }
+
+      $this.deserializeDiscountInformation(discountData);
+      $this.deserializeBenefits(discountData);
+      $this.deserializeLimitationPerShop(discountData);
+      $this.deserializeLimitationPerTransaction(discountData);
+      $this.deserializeLimitationPerSeat(discountData);
+      $this.deserializeRestrictions(discountData);
+    };
+
+    this.formatPayload = function(formData) {
+      var discount = {
+        rates: [],
+        limitsByShop: [],
+        limitsByTransaction: [],
+        restrictedCategories: [],
+        restrictedItems: []
+      };
+
+      discount.discountTypeId = formData.globalDiscountTypeId
+      discount.name = formData.discountName;
+      discount.description = formData.description;
+      discount.barcode = formData.barCode;
+      discount.startDate = formData.startDate;
+      discount.endDate = formData.endDate;
+
+      discount.rateTypeId = formData.discountTypeId;
+      discount.percentage = formData.percentageDiscountValue;
+      angular.forEach(formData.amountDiscountValue, function(amount) {
+        discount.rates.push(amount);
+      });
+
+      discount.itemQuantityLimitByShop = formData.itemQtyLimitPerShop;
+      angular.forEach(formData.amountLimitPerShopValue, function(amount) {
+        discount.limitsByShop.push(amount);
+      });
+
+      discount.itemQuantityLimitByTransaction = formData.itemQtyLimitPerTransaction;
+      angular.forEach(formData.amountLimitPerTransactionValue, function(amount) {
+        discount.limitsByTransaction.push(amount);
+      });
+
+      discount.seatNumberRequired = formData.requireSeatEntry;
+      discount.itemQuantityLimitBySeatNumber = formData.itemQtyLimitPerSeat;
+
+      discount.companyDiscountRestrictions = formData.isRestriction;
+      angular.forEach(formData.restrictedCategories, function(category) {
+        discount.restrictedCategories.push({
+          salesCategoryId: category.id
+        });
+      });
+      angular.forEach(formData.restrictedItems, function(item) {
+        discount.restrictedItems.push({
+          retailItemId: item.id
+        });
+      });
+
+
+      return {
+        companyDiscount: discount
+      };
     };
 
     $scope.showDeleteConfirmation = function (index, restrictedItem) {
@@ -206,6 +332,36 @@ angular.module('ts5App')
     this.validateForm = function() {
       $scope.displayError = !$scope.form.$valid;
       return $scope.form.$valid;
+    };
+
+    this.errorHandler = function(dataFromAPI) {
+      angular.element('#loading').modal('hide');
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
+    this.updateItem = function(itemData) {
+      angular.element('#loading').modal('show').find('p').text('We are updating your discount');
+      /*var updateItemPayload = {
+        retailItem: itemData
+      };
+      itemsFactory.updateItem($routeParams.id, updateItemPayload).then(function(response) {
+        $this.updateFormData(response.retailItem);
+        angular.element('#loading').modal('hide');
+        angular.element('#update-success').modal('show');
+      }, $this.errorHandler);*/
+    };
+
+    this.createItem = function(itemData) {
+      angular.element('#loading').modal('show').find('p').text('We are creating your discount');
+      /*var newItemPayload = {
+        retailItem: itemData
+      };
+      itemsFactory.createItem(newItemPayload).then(function() {
+        angular.element('#loading').modal('hide');
+        angular.element('#create-success').modal('show');
+        return true;
+      }, $this.errorHandler);*/
     };
 
     $scope.submitForm = function(formData) {
