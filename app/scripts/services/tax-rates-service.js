@@ -14,7 +14,7 @@ angular.module('ts5App')
 
     var requestParameters = {
       id: '@id',
-      companyId: '@companyId'
+      companyId: GlobalMenuService.company.get()
     };
 
     var actions = {
@@ -39,28 +39,30 @@ angular.module('ts5App')
 
     var getCompanyTaxRatesList = function(payload) {
       payload = payload || {};
-      payload.companyId = GlobalMenuService.company.get();
       return requestResource.getCompanyTaxRatesList(payload).$promise;
     };
 
     var getCompanyTaxRate = function(id) {
       var payload = {};
-      payload.companyId = GlobalMenuService.company.get();
       payload.id = id;
       return requestResource.getCompanyTaxRate(payload).$promise;
     };
 
-    var removeCompanyTaxRate = function(id){
+    var removeCompanyTaxRate = function(id) {
       var payload = {};
-      payload.companyId = GlobalMenuService.company.get();
       payload.id = id;
       return requestResource.removeCompanyTaxRate(payload).$promise;
+    };
+
+    var updateCompanyTaxRate = function(payload) {
+      return requestResource.updateCompanyTaxRate(payload).$promise;
     };
 
     return {
       getCompanyTaxRatesList: getCompanyTaxRatesList,
       getCompanyTaxRate: getCompanyTaxRate,
-      removeCompanyTaxRate: removeCompanyTaxRate
+      removeCompanyTaxRate: removeCompanyTaxRate,
+      updateCompanyTaxRate: updateCompanyTaxRate
     };
 
   });

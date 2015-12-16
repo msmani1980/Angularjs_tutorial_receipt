@@ -143,7 +143,7 @@
       </thead>
 
       <!-- TODO: add Edit and Create functionality to the list -->
-      <tr class="animate-switch-container" ng-repeat="taxRate in companyTaxRatesList track by $index" ng-switch on="taxRate.action" ng-class="{'bg-warning': taxRate.edited, 'bg-danger' : taxRate.deleted}">
+      <tr class="animate-switch-container" ng-repeat="taxRate in companyTaxRatesList track by $index" ng-switch on="taxRate.action" ng-class="{'bg-warning': taxRate.edited, 'bg-danger' : taxRate.deleted, 'bg-success' : taxRate.saved}">
 
         <!-- taxTypeCode Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxTypeCode}}</td>
@@ -229,12 +229,12 @@
           <a class="btn btn-danger btn-xs" ng-show="showDeleteButton(taxRate)" ng-click="displayConfirmDialog(taxRate)">
             <span class="fa fa-remove"></span>
           </a>
-          <a class="btn btn-success btn-xs" ng-show="taxRate.edited" alt="Save Edits">
+          <a class="btn btn-success btn-xs" ng-show="taxRate.edited" ng-click="saveTaxRateEdits(taxRate)">
             <span class="fa fa-save"></span>
           </a>
         </td>
         <td class="animate-switch tax-rates-action" ng-switch-when="edit">
-          <a class="btn btn-primary btn-xs" alt="Save Edits">
+          <a class="btn btn-primary btn-xs" ng-click="saveTaxRateEdits(taxRate)">
             <span class="fa fa-save"></span>
           </a>
           <a class="btn btn-default btn-xs" alt="Cancel Edits" ng-click="cancelTaxRateEdit(taxRate)">

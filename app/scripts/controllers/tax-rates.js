@@ -227,10 +227,13 @@ angular.module('ts5App')
       ];
     };
 
-    this.makeDeletePromises = function(id) {
-      var message = 'Deleting Tax Rate ID: ' + id;
+    this.makeDeletePromises = function(taxRate) {
+      if (angular.isDefined(taxRate)) {
+        taxRate.deleted = true;
+      }
+      var message = 'Deleting Tax Rate ID: ' + taxRate.id;
       $this.showLoadingModal(message);
-      var promises = $this.createDeletePromises(id);
+      var promises = $this.createDeletePromises(taxRate.id);
       $q.all(promises).then($this.deleteSuccess);
     };
 
@@ -257,6 +260,7 @@ angular.module('ts5App')
     this.addEditActionToTaxRate = function(taxRate) {
       if (angular.isDefined(taxRate)) {
         taxRate.action = 'edit';
+        taxRate.edited = true;
       }
     };
 
@@ -267,8 +271,55 @@ angular.module('ts5App')
     this.cancelTaxRateEdit = function(taxRate) {
       if (angular.isDefined(taxRate)) {
         taxRate.action = 'read';
-        taxRate.edited = true;
       }
+    };
+
+    this.createStationsPayload = function(taxRate) {
+      var companyTaxRateStations = [];
+      angular.forEach(taxRate.companyTaxRateStations, function(station) {
+        companyTaxRateStations.push({
+          companyStationId: parseInt(station.companyStationId)
+        });
+      });
+      return companyTaxRateStations;
+    };
+
+    this.editSuccess = function() {
+      var id = angular.copy($scope.taxRateSaved);
+      ngToast.create('Successfully Saved <b>Tax Rate ID: </b>' + id);
+      $scope.taxRateSaved = [];
+      $this.hideLoadingModal();
+    };
+
+    this.createEditPromises = function(taxRate) {
+      return [
+        taxRatesFactory.updateCompanyTaxRate(taxRate)
+      ];
+    };
+
+    this.makeEditPromises = function(taxRate) {
+      var message = 'Editing Tax Rate ID: ' + taxRate.id;
+      $this.showLoadingModal(message);
+      $scope.taxRateSaved = taxRate.id;
+      var promises = $this.createEditPromises(taxRate);
+      $q.all(promises).then($this.editSuccess);
+    };
+
+    this.saveTaxRateEdits = function(taxRate) {
+      delete taxRate.edited;
+      taxRate.action = 'read';
+      taxRate.saved = true;
+      var payload = {
+        id: taxRate.id,
+        taxRateValue: taxRate.taxRateValue,
+        taxRateType: taxRate.taxRateType,
+        startDate: dateUtility.formatDateForAPI(taxRate.startDate),
+        endDate: dateUtility.formatDateForAPI(taxRate.endDate),
+        companyTaxTypeId: taxRate.companyTaxTypeId,
+        companyTaxRateStations: $this.createStationsPayload(taxRate),
+        companyCurrencyId: taxRate.companyCurrencyId
+      };
+      $this.makeEditPromises(payload);
     };
 
     // Place $scope functions here
@@ -292,8 +343,7 @@ angular.module('ts5App')
     };
 
     $scope.deleteCompanyTaxRate = function(taxRate) {
-      taxRate.deleted = true;
-      return $this.makeDeletePromises(taxRate.id);
+      return $this.makeDeletePromises(taxRate);
     };
 
     $scope.showDeleteButton = function(taxRate) {
@@ -314,6 +364,10 @@ angular.module('ts5App')
 
     $scope.cancelTaxRateEdit = function(taxRate) {
       return $this.cancelTaxRateEdit(taxRate);
+    };
+
+    $scope.saveTaxRateEdits = function(taxRate) {
+      return $this.saveTaxRateEdits(taxRate);
     };
 
   });

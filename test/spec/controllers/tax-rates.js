@@ -414,7 +414,7 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             $scope.deleteCompanyTaxRate(taxRate);
           });
           it('should call makeDeletePromises with payload', function() {
-            expect(TaxRatesCtrl.makeDeletePromises).toHaveBeenCalledWith(taxRate.id);
+            expect(TaxRatesCtrl.makeDeletePromises).toHaveBeenCalledWith(taxRate);
           });
           it('should call createDeletePromises with payload', function() {
             expect(TaxRatesCtrl.createDeletePromises).toHaveBeenCalledWith(taxRate.id);
