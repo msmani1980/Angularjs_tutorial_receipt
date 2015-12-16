@@ -14,6 +14,7 @@ angular.module('ts5App')
 
     var $this = this;
     this.meta = {
+      count: undefined,
       limit: 100,
       offset: 0
     };
@@ -23,6 +24,15 @@ angular.module('ts5App')
       endDate: ''
     };
     $scope.openVersionId = -1;
+
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
 
     this.filterItems = function () {
       return $filter('filter')($scope.itemsList, $scope.search);
@@ -69,22 +79,26 @@ angular.module('ts5App')
       return newItemList;
     };
 
-    $this.appendItemsToList = function (itemListFromAPI) {
+    this.appendItemsToList = function (itemListFromAPI) {
       $this.meta.count = $this.meta.count || itemListFromAPI.meta.count;
       var itemList = angular.copy(itemListFromAPI.retailItems);
       var nestedItemList = $this.createNestedItemsList(itemList);
-      angular.forEach(nestedItemList, function (item) {
-        $scope.itemsList.push(item);
-      });
+      $scope.itemsList = $scope.itemsList.concat(nestedItemList);
+      hideLoadingBar();
     };
 
-    $scope.loadItems = function () {
+    function getItemsList() {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+      showLoadingBar();
       var query = $this.generateItemQuery();
       itemsFactory.getItemsList(query).then($this.appendItemsToList);
       $this.meta.offset += $this.meta.limit;
+    }
+
+    $scope.loadItems = function () {
+      getItemsList();
     };
 
 
@@ -150,7 +164,7 @@ angular.module('ts5App')
 
       itemsFactory.removeItem(itemId).then(function () {
         $this.hideLoadingModal();
-        $this.getItemsList();
+        getItemsList();
       });
     };
 
@@ -176,6 +190,16 @@ angular.module('ts5App')
       return validVersionExists;
     };
 
+    $scope.searchRecords = function () {
+      this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.itemsList = [];
+      getItemsList();
+    };
+
     $scope.clearSearchFilters = function () {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
@@ -183,8 +207,8 @@ angular.module('ts5App')
       for (var filterKey in filters) {
         delete $scope.search[filterKey];
       }
-      $this.displayLoadingModal();
-      $this.getItemsList();
+
+      $scope.searchRecords();
     };
 
     $scope.hasSubVersions = function (item) {
@@ -223,11 +247,6 @@ angular.module('ts5App')
 
     this.hideLoadingModal = function () {
       angular.element('#loading').modal('hide');
-    };
-
-    $scope.searchRecords = function () {
-      $this.displayLoadingModal();
-      $this.getItemsList();
     };
 
     this.getItemTypesList();

@@ -206,8 +206,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           departureStationCode: ['ORD', 'MDW'],
           arrivalStationCode: ['LON3', 'MDW'],
           storeInstanceId: '4',
-          statusId: '5'
-
+          statusId: '5',
+          limit: 100, offset: 0
         });
       });
     });
@@ -616,29 +616,30 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   describe('showClearButton', function() {
     it('should return true when search has input', function() {
       scope.search.scheduleStartDate = '2012-02-02';
+      scope.getStoreInstanceDashboardData();
       scope.$digest();
-      scope.showClearButton();
       expect(scope.showClearButton()).toBeTruthy();
     });
 
     it('should return false when search is clear', function() {
       scope.search.scheduleStartDate = '';
+      scope.getStoreInstanceDashboardData();
       scope.$digest();
-      scope.showClearButton();
       expect(scope.showClearButton()).toBeFalsy();
     });
 
     it('should return true when searchIsActive and search is clear', function() {
       scope.search.scheduleStartDate = '';
-      scope.searchIsActive = true;
+      scope.getStoreInstanceDashboardData();
       scope.$digest();
-      scope.showClearButton();
+      scope.searchIsActive = true;
       expect(scope.showClearButton()).toBeTruthy();
     });
   });
 
   describe('storeSelectionToggled', function() {
     it('should set hasSelectedStore to false and exportBulkURL to empty string', function() {
+      scope.getStoreInstanceDashboardData();
       scope.$digest();
       scope.storeSelectionToggled();
       expect(scope.hasSelectedStore).toBeFalsy();
@@ -646,8 +647,9 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     });
 
     it('should set hasSelectedStore to true and exportBulkURL to valid values', function() {
+      scope.getStoreInstanceDashboardData();
       scope.$digest();
-      var store = _lodash.findWhere(scope.storeInstanceList, function(s) { return s.id === 53; });
+      var store = _lodash.filter(scope.storeInstanceList, function(s) { return s.id === 53; })[0];
       expect(store.id).toEqual(53);
       store.selected = true;
       store.actionButtons = ['Get Flight Docs'];

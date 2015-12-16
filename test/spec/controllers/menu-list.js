@@ -48,7 +48,7 @@ describe('Controller: MenuListCtrl', function () {
     };
     scope.clearForm();
     expect(scope.search.startDate).toBe(undefined);
-    expect(menuService.getMenuList).toHaveBeenCalledWith({});
+    expect(menuService.getMenuList).toHaveBeenCalledWith({limit: 100, offset: 0});
   });
 
   it('should clear search model and make a API call', function () {
@@ -57,18 +57,25 @@ describe('Controller: MenuListCtrl', function () {
     };
     scope.searchMenus();
     expect(menuService.getMenuList).toHaveBeenCalledWith({
-      startDate: '19791005'
+      startDate: '19791005',
+      limit: 100, offset: 0
     });
   });
 
   it('should get the menu list from API', function () {
+    scope.loadMenus();
     expect(menuService.getMenuList).toHaveBeenCalled();
   });
 
   describe('menuList in scope', function () {
+      beforeEach(function() {
+        scope.loadMenus();
+        scope.$digest();
+      });
+
     it('should attach a menuList after a API call to getMenuList',
       function () {
-        expect(!!scope.menuList).toBe(true);
+        expect(scope.menuList.length).toBeGreaterThan(1);
       });
 
     it('should have a menu name property', function () {

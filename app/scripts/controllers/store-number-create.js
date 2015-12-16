@@ -8,7 +8,13 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreNumberCreateCtrl', function ($scope, $location, $filter, $anchorScroll, companyStoresService, GlobalMenuService, ngToast, dateUtility) {
+  .controller('StoreNumberCreateCtrl', function ($scope, $location, $filter, $anchorScroll, companyStoresService, GlobalMenuService, ngToast, dateUtility, lodash) {
+
+    var $this = this;
+    this.meta = {
+      limit: 100,
+      offset: 0
+    };
 
     // private controller vars
     var _companyId = null,
@@ -30,6 +36,15 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
+
     function showApiErrors(response){
       hideLoadingModal();
       $scope.displayError = true;
@@ -44,13 +59,13 @@ angular.module('ts5App')
 
     // private controller functions
     function getStoreNumbers(response){
-      hideLoadingModal();
-      if(!response.meta.count){
-        return;
-      }
-      angular.forEach(response.response, function(store){
-        this.push(formatForForm(store));
-      }, $scope.storeNumbersList);
+      $this.meta.count = $this.meta.count || response.meta.count;
+      hideLoadingBar();
+      $scope.storeNumbersList = $scope.storeNumbersList.concat(
+        lodash.map(response.response, function(store) {
+          return formatForForm(store);
+        })
+      );
     }
 
     function setCurrentStore(store){
@@ -85,15 +100,23 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.editing = false;
       $scope.storeNumbersList = [];
+    }
 
+    $scope.getStoreList = function() {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
       var payload = {
         companyId: GlobalMenuService.company.get(),
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
       };
 
-      displayLoadingModal();
+      showLoadingBar();
       companyStoresService.getStoreList(payload).then(getStoreNumbers,showApiErrors);
-    }
+      $this.meta.offset += $this.meta.limit;
+    };
 
     function submitFormSuccess(){
       init();

@@ -7,7 +7,8 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
   beforeEach(module(
     'served/store-status.json',
     'served/global-stations.json',
-    'served/store-instance.json'
+    'served/store-instance.json',
+    'served/reconciliation-dashboard.json'
   ));
 
   var ReconciliationDashboardCtrl;
@@ -25,7 +26,7 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
   var storeInstanceJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, $location, $injector, _servedStoreStatus_, _servedGlobalStations_, _servedStoreInstance_) {
+  beforeEach(inject(function ($controller, $rootScope, $q, $location, $injector, _servedStoreStatus_, _servedGlobalStations_, _servedStoreInstance_, _servedReconciliationDashboard_) {
     location = $location;
     scope = $rootScope.$new();
 
@@ -33,7 +34,7 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     stationsService = $injector.get('stationsService');
     controller = $controller;
 
-    reconciliationListResponseJSON = [{id: 1}]; // stub for now until API is complete
+    reconciliationListResponseJSON = _servedReconciliationDashboard_;
     reconciliationListDeferred = $q.defer();
     reconciliationListDeferred.resolve(reconciliationListResponseJSON);
 
@@ -49,7 +50,7 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
     spyOn(reconciliationFactory, 'getReconciliationDataList').and.returnValue(reconciliationListDeferred.promise);
     spyOn(reconciliationFactory, 'getStoreStatusList').and.returnValue(storeStatusDeferred.promise);
-    spyOn(stationsService, 'getGlobalStationList').and.returnValue(reconciliationListDeferred.promise);
+    spyOn(stationsService, 'getGlobalStationList').and.returnValue(globalStationsDeferred.promise);
 
     ReconciliationDashboardCtrl = $controller('ReconciliationDashboardCtrl', {
       $scope: scope
@@ -58,10 +59,6 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
 
   describe('init', function () {
-    it('should call get LMP stock data', function () {
-      expect(reconciliationFactory.getStoreStatusList).toHaveBeenCalled();
-      scope.$digest();
-    });
 
     it('should init displayColumns with receivedStation, storeInstanceId, updatedDate, updatedBy columns to be hidden', function () {
       expect(scope.displayColumns).toBeDefined();

@@ -76,8 +76,6 @@ describe('itemListCtrl', function () {
     });
     $scope.$digest();
 
-    spyOn($scope, 'searchRecords');
-    spyOn(ItemListCtrl, 'getItemsList');
     spyOn(ItemListCtrl, 'getItemTypesList');
     spyOn(ItemListCtrl, 'getSalesCategoriesList');
     spyOn(ItemListCtrl, 'generateItemQuery');
@@ -85,7 +83,6 @@ describe('itemListCtrl', function () {
     spyOn(itemsFactory, 'removeItem').and.returnValue(getItemsListDeferred.promise);
 
 
-    ItemListCtrl.getItemsList();
     ItemListCtrl.getItemTypesList();
     ItemListCtrl.getSalesCategoriesList();
     ItemListCtrl.generateItemQuery();
@@ -97,12 +94,8 @@ describe('itemListCtrl', function () {
     httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should have a getItemsList method', function () {
-    expect(ItemListCtrl.getItemsList).toBeDefined();
-  });
-
-  it('should call the getItemsList method', function () {
-    expect(ItemListCtrl.getItemsList).toHaveBeenCalled();
+  it('should have a loadItems method', function () {
+    expect($scope.loadItems).toBeDefined();
   });
 
   it('should have a getItemTypesList method', function () {
@@ -111,10 +104,6 @@ describe('itemListCtrl', function () {
 
   it('should call the getItemTypesList method', function () {
     expect(ItemListCtrl.getItemTypesList).toHaveBeenCalled();
-  });
-
-  it('should have a getItemsList method', function () {
-    expect(ItemListCtrl.getItemsList).toBeDefined();
   });
 
   it('should call the getSalesCategoriesList method', function () {
@@ -134,6 +123,14 @@ describe('itemListCtrl', function () {
   });
 
   describe('The itemsList array', function () {
+    beforeEach(function () {
+      $scope.searchRecords();
+      $scope.$digest();
+    });
+
+    it('should call the getItemsList method', function () {
+      expect(itemsService.getItemsList).toHaveBeenCalled();
+    });
 
     it('should be attached to the scope', function () {
       expect($scope.itemsList).toBeDefined();
@@ -184,36 +181,36 @@ describe('itemListCtrl', function () {
         ];
       });
       it('should have a versions sub array for master items', function () {
-        ItemListCtrl.createNestedItemsList();
+        $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
         expect($scope.itemsList[0].versions).toBeDefined();
         expect($scope.itemsList[1].versions).toBeDefined();
       });
       it('should add a master item object to each version array', function () {
-        ItemListCtrl.createNestedItemsList();
+        $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
         expect($scope.itemsList[0].versions.length).toBeGreaterThan(0);
         expect($scope.itemsList[1].versions.length).toBeGreaterThan(0);
       });
       it('should remove subversions from itemsList', function () {
         expect($scope.itemsList.length).toEqual(6);
-        ItemListCtrl.createNestedItemsList();
+        $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
         expect($scope.itemsList.length).toEqual(2);
       });
       it('should add removed subversions to sub array', function () {
         var subVersion = $scope.itemsList[0];
-        ItemListCtrl.createNestedItemsList();
+        $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
         expect($scope.itemsList[0].versions.indexOf(subVersion)).toBeGreaterThan(-1);
       });
 
       describe('nested versions sorting', function () {
         it('should always sort the active item at the top', function () {
           var activeItem = $scope.itemsList[1];
-          ItemListCtrl.createNestedItemsList();
+          $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
           expect($scope.itemsList[0].versions[0]).toEqual(activeItem);
         });
         it('should sort future items before past items', function () {
           var futureItem = $scope.itemsList[2];
           var pastItem = $scope.itemsList[0];
-          ItemListCtrl.createNestedItemsList();
+          $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
           var futureIndex = $scope.itemsList[0].versions.indexOf(futureItem);
           var pastIndex =  $scope.itemsList[0].versions.indexOf(pastItem);
           expect(futureIndex < pastIndex).toEqual(true);
@@ -221,7 +218,7 @@ describe('itemListCtrl', function () {
         it('should sort future items closest to today first', function () {
           var futureItemMostActive = $scope.itemsList[3];
           var futureItemLeastActive = $scope.itemsList[2];
-          ItemListCtrl.createNestedItemsList();
+          $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
           var moreActiveIndex = $scope.itemsList[0].versions.indexOf(futureItemMostActive);
           var lessActiveIndex =  $scope.itemsList[0].versions.indexOf(futureItemLeastActive);
           expect(moreActiveIndex < lessActiveIndex).toEqual(true);
@@ -229,7 +226,7 @@ describe('itemListCtrl', function () {
         it('should sort past items closest to today first', function () {
           var pastItemMostActive = $scope.itemsList[4];
           var pastItemLeastActive = $scope.itemsList[0];
-          ItemListCtrl.createNestedItemsList();
+          $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
           var moreActiveIndex = $scope.itemsList[0].versions.indexOf(pastItemMostActive);
           var lessActiveIndex =  $scope.itemsList[0].versions.indexOf(pastItemLeastActive);
           expect(moreActiveIndex < lessActiveIndex).toEqual(true);
@@ -287,18 +284,15 @@ describe('itemListCtrl', function () {
 
     beforeEach(function () {
       $scope.searchRecords();
+      $scope.$digest();
     });
 
     it('should be defined', function () {
       expect($scope.searchRecords).toBeDefined();
     });
 
-    it('should be called if initialized', function () {
-      expect($scope.searchRecords).toHaveBeenCalled();
-    });
-
     it('should call this.getItemsList', function () {
-      expect(ItemListCtrl.getItemsList).toHaveBeenCalled();
+      expect(itemsService.getItemsList).toHaveBeenCalled();
     });
 
     it('should call this.displayLoadingModal', function () {

@@ -82,6 +82,10 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
   });
 
   describe('API requests', function () {
+    beforeEach(function () {
+      scope.loadEmployeeCommissions();
+      scope.$digest();
+    });
 
     it('should fetch price type from factory', function () {
       expect(employeeCommissionFactory.getPriceTypesList).toHaveBeenCalled();
@@ -191,7 +195,8 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         priceTypeId: 2,
         isFixed: true,
         startDate: '20150720',
-        endDate: '20160830'
+        endDate: '20160830',
+        limit: 100, offset: 0
       };
       scope.searchCommissions();
       expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);
@@ -203,7 +208,8 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         itemList: [{itemMasterId: 1}, {itemMasterId: 2}, {itemMasterId: 3}]
       };
       var expectedPayload = {
-        itemId: [1,2,3]
+        itemId: [1,2,3],
+        limit: 100, offset: 0
       };
       scope.searchCommissions();
       expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);

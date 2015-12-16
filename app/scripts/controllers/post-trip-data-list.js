@@ -7,10 +7,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast, dateUtility) {
+  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast, dateUtility, lodash) {
     var companyId = '';
     var $this = this;
     this.meta = {
+      count: undefined,
       limit: 100,
       offset: 0
     };
@@ -21,10 +22,15 @@ angular.module('ts5App')
     $scope.stationList = [];
     $scope.postTrips = [];
 
-    function hideLoadingModal() {
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
       angular.element('.loading-more').hide();
       angular.element('.modal-backdrop').remove();
     }
+
 
     this.getStationById = function (stationId) {
       var stationCode = '';
@@ -53,12 +59,7 @@ angular.module('ts5App')
       // TODO: move offset to service layer
       $scope.postTrips =  $scope.postTrips.concat(response.postTrips);
       $this.updateStationCodes();
-      hideLoadingModal();
-    };
-
-    this.searchPostTripSuccess = function (response) {
-      $scope.postTrips = response.postTrips;
-      $this.updateStationCodes();
+      hideLoadingBar();
     };
 
     this.getStationsSuccess = function (response) {
@@ -96,7 +97,12 @@ angular.module('ts5App')
     this.deletePostTripSuccess = function () {
       $this.showToastMessage('success', 'Post Trip', 'Post Trip successfully deleted');
       $scope.postTrips = [];
-      postTripFactory.getPostTripDataList(companyId, {}).then($this.getPostTripSuccess);
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.loadPostTrip();
     };
 
     this.deletePostTripFailure = function () {
@@ -121,12 +127,41 @@ angular.module('ts5App')
 
     this.init();
 
-    $scope.loadPostTrip = function() {
-      postTripFactory.getPostTripDataList(companyId, {
+    function loadPostTrip() {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+      showLoadingBar();
+      $this.formatMultiSelectedValuesForSearch();
+      var payload = lodash.assign(angular.copy($scope.search), {
         limit: $this.meta.limit,
         offset: $this.meta.offset
-      }).then($this.getPostTripSuccess);
+      });
+
+      postTripFactory.getPostTripDataList(companyId, payload).then($this.getPostTripSuccess);
+      $this.meta.offset += $this.meta.limit;
+    }
+
+    $scope.loadPostTrip = function() {
+      loadPostTrip();
     };
+
+    $scope.searchPostTripData = function () {
+      $scope.postTrips = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.loadPostTrip();
+    };
+
+    $scope.clearSearchForm = function () {
+      $scope.search = {};
+      $scope.searchPostTripData();
+    };
+
+
 
     this.addSearchValuesFromMultiSelectArray = function (searchKeyName, multiSelectArray, multiSelectElementKey) {
       if(multiSelectArray && multiSelectArray.length > 0) {
@@ -142,18 +177,6 @@ angular.module('ts5App')
       $this.addSearchValuesFromMultiSelectArray('arrStationId', $scope.multiSelectedValues.arrStations, 'stationId');
       $this.addSearchValuesFromMultiSelectArray('tailNumber', $scope.multiSelectedValues.tailNumbers, 'carrierNumber');
       $this.addSearchValuesFromMultiSelectArray('employeeId', $scope.multiSelectedValues.employeeIds, 'id');
-    };
-
-    $scope.searchPostTripData = function () {
-      $this.formatMultiSelectedValuesForSearch();
-      var payload = angular.copy($scope.search);
-      postTripFactory.getPostTripDataList(companyId, payload).then($this.searchPostTripSuccess);
-    };
-
-    $scope.clearSearchForm = function () {
-      $scope.multiSelectedValues = {};
-      $scope.search = {};
-      postTripFactory.getPostTripDataList(companyId, $scope.search).then($this.getPostTripSuccess);
     };
 
     $scope.redirectToPostTrip = function (id, state) {

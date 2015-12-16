@@ -7,9 +7,14 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManageGoodsReceivedCtrl', function ($scope,$filter, dateUtility,deliveryNoteFactory,ngToast) {
+  .controller('ManageGoodsReceivedCtrl', function ($scope,$filter, dateUtility,deliveryNoteFactory,ngToast, lodash) {
 
     var $this = this;
+    this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
     $scope.stationsList = [];
     $scope.deliveryNotesList = [];
     $scope.dateRange = {
@@ -22,10 +27,25 @@ angular.module('ts5App')
       this.getCatererStationList();
       $scope.$watch('catererStationId', function(newData) {
         if(newData) {
-          $this.getDeliveryNotesList();
+          $scope.deliveryNotesList = [];
+          $this.meta = {
+            count: undefined,
+            limit: 100,
+            offset: 0
+          };
+          $scope.getDeliveryNotesList();
         }
       });
     };
+
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
 
     this.displayLoadingModal = function (loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
@@ -49,21 +69,32 @@ angular.module('ts5App')
       return query;
     };
 
-    this.getDeliveryNotesList = function () {
+    $scope.getDeliveryNotesList = function () {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+      showLoadingBar();
       $scope.userSelectedStation = false;
       var query = $this.generateDeliveryNoteQuery();
-      $this.displayLoadingModal('Getting a list of delivery notes');
-      deliveryNoteFactory.getDeliveryNotesList(query).then(function (data) {
-        $scope.userSelectedStation = true;
-        $scope.deliveryNotesList = data.response;
-        $this.formatDeliveryNotesDates();
-        $this.hideLoadingModal();
+      query = lodash.assign(query, {
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
       });
+      deliveryNoteFactory.getDeliveryNotesList(query).then(function (data) {
+        $this.meta.count = $this.meta.count || data.meta.count;
+        $scope.userSelectedStation = true;
+        $scope.deliveryNotesList = $scope.deliveryNotesList.concat(data.response);
+        $this.formatDeliveryNotesDates();
+        hideLoadingBar();
+      });
+      $this.meta.offset += $this.meta.limit;
     };
 
     this.formatDeliveryNotesDates = function() {
       angular.forEach($scope.deliveryNotesList,function(deliveryNote){
-        deliveryNote.updatedOn = dateUtility.removeMilliseconds(deliveryNote.updatedOn);
+        if (deliveryNote && deliveryNote.updatedOn) {
+          deliveryNote.updatedOn = dateUtility.removeMilliseconds(deliveryNote.updatedOn);
+        }
       });
     };
 
@@ -110,13 +141,17 @@ angular.module('ts5App')
       for (var filterKey in filters) {
         delete $scope.search[filterKey];
       }
-      $this.displayLoadingModal();
-      $this.getDeliveryNotesList();
+      $scope.searchRecords();
     };
 
     $scope.searchRecords = function () {
-      $this.displayLoadingModal();
-      $this.getDeliveryNotesList();
+      $scope.deliveryNotesList = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.getDeliveryNotesList();
     };
 
     this.init();

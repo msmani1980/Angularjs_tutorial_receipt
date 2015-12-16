@@ -139,7 +139,9 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
         scope.searchCommissionData();
         expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith({
-          crewBaseTypeId: 'fakeId'
+          crewBaseTypeId: 'fakeId',
+          startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
+          limit: 100, offset: 0
         });
       });
 
@@ -151,7 +153,8 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
         var expectedPayload = {
           startDate: dateUtility.formatDateForAPI(scope.search.startDate),
-          endDate: dateUtility.formatDateForAPI(scope.search.endDate)
+          endDate: dateUtility.formatDateForAPI(scope.search.endDate),
+          limit: 100, offset: 0
         };
 
         scope.searchCommissionData();

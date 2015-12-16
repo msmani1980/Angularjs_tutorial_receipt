@@ -26,12 +26,30 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.hasSelectedStore = false;
     $scope.exportBulkURL = '';
 
+    var initDone = false;
+
+    var $this = this;
+    this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
+
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     }
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+    }
+
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
     }
 
     function showErrors(dataFromAPI) {
@@ -247,13 +265,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function getStoreInstanceListSuccess(dataFromAPI) {
-      $scope.storeInstanceList = angular.copy(dataFromAPI.response);
-    }
-
-    function getStoreInstanceList() {
-      return storeInstanceDashboardFactory.getStoreInstanceList({
-        'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted())
-      }).then(getStoreInstanceListSuccess);
+      $scope.storeInstanceList = $scope.storeInstanceList.concat(dataFromAPI.response);
     }
 
     function getStationListSuccess(dataFromAPI) {
@@ -300,14 +312,30 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return storeInstanceDashboardFactory.getFeaturesList().then(getUndispatchFeatureIdSucccess);
     }
 
+    var loadingProgress = false;
     function searchStoreInstanceDashboardDataSuccess(apiData) {
+      $this.meta.count = $this.meta.count || apiData.meta.count;
       getStoreInstanceListSuccess(apiData);
       formatStoreInstanceList();
-      hideLoadingModal();
+      hideLoadingBar();
+      $scope.isReady = true;
+      loadingProgress = false;
     }
 
+    var lastStartDate = null;
     function searchStoreInstanceDashboardData(startDate) {
-      showLoadingModal('Loading Store Instance Dashboard');
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+      if (!initDone) {
+        return;
+      }
+      if (loadingProgress) {
+        return;
+      }
+      loadingProgress = true;
+
+      showLoadingBar();
       var payload = {};
       angular.forEach(SEARCH_TO_PAYLOAD_MAP, function (value, key) {
         if ($scope.search[key]) {
@@ -325,15 +353,39 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         payload.startDate = startDate;
         $scope.searchIsActive = false;
       }
+      lastStartDate = payload.startDate;
+      payload = lodash.assign(payload, {
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
+      });
       storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess);
+      $this.meta.offset += $this.meta.limit;
     }
 
-    $scope.searchStoreInstanceDashboardData = searchStoreInstanceDashboardData;
+    $scope.searchStoreInstanceDashboardData = function() {
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.storeInstanceList = [];
+      searchStoreInstanceDashboardData();
+    };
+
+    $scope.getStoreInstanceDashboardData = function() {
+      searchStoreInstanceDashboardData(lastStartDate);
+    };
 
     function clearSearchForm() {
       $scope.search = {};
       $scope.search.scheduleStartDate = '';
       $scope.search.scheduleEndDate = '';
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.storeInstanceList = [];
       var startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       searchStoreInstanceDashboardData(startDate);
     }
@@ -341,21 +393,20 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.clearSearchForm = clearSearchForm;
 
     function init() {
-      showLoadingModal('Loading Store Instance Dashboard');
+      showLoadingBar();
       $scope.allCheckboxesSelected = false;
       var dependenciesArray = [];
       dependenciesArray.push(getCatererStationList());
       dependenciesArray.push(getStationList());
-      dependenciesArray.push(getStoreInstanceList());
       dependenciesArray.push(getStoresList());
       dependenciesArray.push(getStatusList());
       dependenciesArray.push(getStoreInstanceTimeConfig());
       dependenciesArray.push(getUndispatchFeatureId());
 
       $q.all(dependenciesArray).then(function () {
-        formatStoreInstanceList();
-        hideLoadingModal();
-        $scope.isReady = true;
+        initDone = true;
+        var startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        searchStoreInstanceDashboardData(startDate);
       });
     }
 

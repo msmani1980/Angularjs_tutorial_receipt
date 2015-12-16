@@ -109,25 +109,6 @@ describe('Controller: CashBagListCtrl', function () {
   });
 
   describe('cash bag constructor calls', function () {
-    describe('get cashBag list', function () {
-      it('should call getCashBagList with companyId', function () {
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {isDelete: 'false', isSubmitted: 'false'});
-      });
-      describe('sorted bankRefList results', function () {
-        it('should have bankRefList attached to scope', function () {
-          expect(scope.bankRefList).toBeDefined();
-        });
-        it('should return no null values', function () {
-          expect(scope.bankRefList).not.toContain(null);
-        });
-        it('should have no duplicate values', function () {
-          for (var i = 0; i < scope.bankRefList.length - 1; i++) {
-            expect(scope.bankRefList[i + 1]).not.toBe(scope.bankRefList[i]);
-          }
-        });
-      });
-    });
-
     describe('get station list', function () {
       it('should call getStationList with companyId', function () {
         expect(cashBagFactory.getStationList).toHaveBeenCalledWith(companyId);
@@ -155,22 +136,26 @@ describe('Controller: CashBagListCtrl', function () {
       it('should have a search object attached to scope', function () {
         expect(scope.search).toBeDefined();
       });
+      it('should call get CashBagList with params', function () {
+        scope.loadCashbagList();
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
+      });
       it('should call get CashBagList with search params', function () {
         var testCashBagNumber = '123';
         scope.search          = {cashBagNumber: testCashBagNumber};
         scope.searchCashBag();
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {cashBagNumber: testCashBagNumber, isDelete: 'false', isSubmitted: 'false'});
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {cashBagNumber: testCashBagNumber, isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
       });
       it('should send searchDate with yyyymmdd format', function () {
         scope.search = {startDate: '06/20/2015'};
         scope.searchCashBag();
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {startDate: '20150620', endDate: '20150620', isDelete: 'false', isSubmitted: 'false'});
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {startDate: '20150620', endDate: '20150620', isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
       });
       it('should clear search model and make a API call', function () {
         scope.search = {cashBagNumber: 'fakeCashBagNumber'};
         scope.clearForm();
         expect(scope.search.cashBagNumber).toBe(undefined);
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {isDelete: 'false', isSubmitted: 'false'});
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
       });
     });
 

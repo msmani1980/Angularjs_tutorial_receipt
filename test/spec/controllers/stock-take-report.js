@@ -81,7 +81,7 @@ describe('Stock Take Report', function () {
     });
 
     it('should have a getStockTakeList method', function () {
-      expect(StockTakeReportCtrl.getStockTakeList).toBeDefined();
+      expect($scope.getStockTakeList).toBeDefined();
     });
 
     it('should have a getStockTakeListSuccessHandler method', function () {
@@ -295,7 +295,7 @@ describe('Stock Take Report', function () {
 
     beforeEach(function () {
       spyOn(StockTakeReportCtrl, 'displayLoadingModal');
-      spyOn(StockTakeReportCtrl, 'getStockTakeList');
+      spyOn($scope, 'getStockTakeList');
       $scope.$digest();
     });
 
@@ -305,12 +305,7 @@ describe('Stock Take Report', function () {
 
     it('should call getStockTakeList', function () {
       $scope.searchRecords();
-      expect(StockTakeReportCtrl.getStockTakeList).toHaveBeenCalled();
-    });
-
-    it('should call displayLoadingModal', function () {
-      $scope.searchRecords();
-      expect(StockTakeReportCtrl.displayLoadingModal).toHaveBeenCalled();
+      expect($scope.getStockTakeList).toHaveBeenCalled();
     });
 
     describe('setting the date filters', function() {

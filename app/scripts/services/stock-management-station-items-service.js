@@ -27,9 +27,11 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getStockManagementStationItems(catererStationId) {
+    function getStockManagementStationItems(catererStationId, limit, offset) {
       return requestResource.getStockManagementStationItems({
-        stationId: catererStationId
+        stationId: catererStationId,
+        limit: limit,
+        offset: offset
       }).$promise;
     }
 

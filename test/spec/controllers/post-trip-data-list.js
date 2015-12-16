@@ -76,15 +76,6 @@ describe('Controller: PostFlightDataListCtrl', function () {
   });
 
   describe('post trip data constructor calls', function(){
-    describe('getPostTripDataList', function(){
-      it('should call getPostTripDataList', function(){
-        expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
-      });
-      it('should attach an array to scope', function(){
-        expect(Object.prototype.toString.call(scope.postTrips)).toBe('[object Array]');
-      });
-    });
-
     describe('getStationList', function(){
       it('should call getStationList', function(){
         expect(postTripFactory.getStationList).toHaveBeenCalled();
@@ -116,6 +107,19 @@ describe('Controller: PostFlightDataListCtrl', function () {
         expect(scope.employees).toBeDefined();
         expect(Object.prototype.toString.call(scope.employees)).toBe('[object Array]');
       });
+    });
+  });
+
+  describe('loadPostTrip', function(){
+    beforeEach(function() {
+      scope.loadPostTrip();
+      scope.$digest();
+    });
+    it('should call getPostTripDataList', function(){
+      expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
+    });
+    it('should attach an array to scope', function(){
+      expect(Object.prototype.toString.call(scope.postTrips)).toBe('[object Array]');
     });
   });
 
@@ -186,6 +190,10 @@ describe('Controller: PostFlightDataListCtrl', function () {
     });
 
     describe('delete post trip', function() {
+      beforeEach(function() {
+        scope.loadPostTrip();
+        scope.$digest();
+      });
       it('should call delete post trip', function() {
         var postTripToDelete = [{id: 1}];
         scope.removeRecord(postTripToDelete);

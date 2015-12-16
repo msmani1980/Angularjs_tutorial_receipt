@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location, $filter) {
+  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location, $filter, lodash) {
     $scope.viewName = 'Employee Commission';
     $scope.search = {
       startDate: '',
@@ -22,6 +22,7 @@ angular.module('ts5App')
     $scope.commissionList = [];
     var $this = this;
     this.meta = {
+      count: undefined,
       limit: 100,
       offset: 0
     };
@@ -48,11 +49,11 @@ angular.module('ts5App')
       }
     });
 
-    function showLoadingModal(message) {
-      angular.element('#loading').modal('show').find('p').text(message);
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
     }
 
-    function hideLoadingModal() {
+    function hideLoadingBar() {
       angular.element('.loading-more').hide();
       angular.element('.modal-backdrop').remove();
     }
@@ -165,16 +166,6 @@ angular.module('ts5App')
       return setupTableData(formattedData);
     }
 
-    function getCommissionSuccessHandler(dataFromAPI) {
-      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
-      hideLoadingModal();
-      if(dataFromAPI.employeeCommissions) {
-        $scope.commissionList = $scope.commissionList.concat(prepareDataForTable(dataFromAPI.employeeCommissions));
-      } else {
-        $scope.commissionList = [];
-      }
-    }
-
     function addDatesToPayload(payload) {
       if($scope.search.startDate && $scope.search.endDate) {
         payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
@@ -212,32 +203,11 @@ angular.module('ts5App')
       return payload;
     }
 
-    function getCommissions (payload) {
-      showLoadingModal('Loading Employee Commission List');
-      employeeCommissionFactory.getCommissionList(payload).then(getCommissionSuccessHandler);
-    }
-
     function getItemCategories() {
       employeeCommissionFactory.getItemsCategoriesList({}).then(function (response) {
         $scope.itemCategories = response.salesCategories;
       });
     }
-
-    $scope.searchCommissions = function () {
-      var payload = createSearchPayload();
-      getCommissions(payload);
-    };
-
-    $scope.clearForm = function () {
-      delete $scope.search.selectedPriceType;
-      delete $scope.search.selectedRateType;
-      delete $scope.search.selectedItem;
-      delete $scope.search.itemList;
-      delete $scope.search.selectedCategory;
-      $scope.search.startDate = '';
-      $scope.search.endDate = '';
-      employeeCommissionFactory.getCommissionList({}).then(getCommissionSuccessHandler);
-    };
 
     $scope.checkItemListAndNotifyIfEmpty = function () {
       if($scope.search.endDate === '' || $scope.search.startDate === '') {
@@ -261,11 +231,49 @@ angular.module('ts5App')
 
     init();
 
-    $scope.loadEmployeeCommissions = function() {
-      getCommissions({
+    function getCommissionSuccessHandler(dataFromAPI) {
+      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+      hideLoadingBar();
+      $scope.commissionList = $scope.commissionList.concat(prepareDataForTable(dataFromAPI.employeeCommissions));
+    }
+
+    function loadEmployeeCommissions() {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+      showLoadingBar();
+      var payload = lodash.assign(createSearchPayload(), {
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
+      employeeCommissionFactory.getCommissionList(payload).then(getCommissionSuccessHandler);
+      $this.meta.offset += $this.meta.limit;
+    }
+
+    $scope.loadEmployeeCommissions = function() {
+      loadEmployeeCommissions();
     };
+
+    $scope.searchCommissions = function () {
+      $scope.commissionList = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.loadEmployeeCommissions();
+    };
+
+    $scope.clearForm = function () {
+      delete $scope.search.selectedPriceType;
+      delete $scope.search.selectedRateType;
+      delete $scope.search.selectedItem;
+      delete $scope.search.itemList;
+      delete $scope.search.selectedCategory;
+      $scope.search.startDate = '';
+      $scope.search.endDate = '';
+      $scope.searchCommissions();
+    };
+
 
   });

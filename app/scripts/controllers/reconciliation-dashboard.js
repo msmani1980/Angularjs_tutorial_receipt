@@ -12,16 +12,41 @@ angular.module('ts5App')
   .controller('ReconciliationDashboardCtrl', function ($q, $scope, dateUtility, stationsService, reconciliationFactory, payloadUtility, $location, storeInstanceFactory, lodash) {
 
     var $this = this;
+    this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
+
 
     $scope.viewName = 'Reconciliation Dashboard';
     $scope.search = {};
-    $scope.stationList = [];
+    $scope.stationList = null;
     $scope.allowedStoreStatusList = ['Inbounded', 'Confirmed', 'Discrepancies', 'Commission Paid'];
     $scope.allowedStoreStatusMap = {};
     $scope.reconciliationList = [];
     $scope.allCheckboxesSelected = false;
     $scope.actionToExecute = null;
     $scope.instancesForActionExecution = {};
+
+    this.showLoadingModal = function (message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    };
+
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
+    };
+
 
     $scope.toggleColumnView = function (columnName) {
       if (angular.isDefined($scope.displayColumns[columnName])) {
@@ -179,18 +204,10 @@ angular.module('ts5App')
     };
 
     this.attachReconciliationDataListToScope = function (dataFromAPI) {
-      $scope.reconciliationList = $this.normalizeReconciliationDataList(angular.copy(dataFromAPI.response));
+      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+      $scope.reconciliationList = $scope.reconciliationList.concat($this.normalizeReconciliationDataList(dataFromAPI.response));
       $this.populateLazyColumns();
-      $this.hideLoadingModal();
-    };
-
-    this.getReconciliationDataList = function () {
-      var payload = { 'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
-      reconciliationFactory.getReconciliationDataList(payload).then(function (dataFromAPI) {
-        $this.attachReconciliationDataListToScope(angular.copy(dataFromAPI));
-      }, function () {
-        $this.hideLoadingModal();
-      });
+      hideLoadingBar();
     };
 
     this.filterAvailableStoreStatus = function (item) {
@@ -199,7 +216,8 @@ angular.module('ts5App')
 
     this.setStationList = function (dataFromAPI) {
       $scope.stationList = angular.copy(dataFromAPI.response);
-      $this.getReconciliationDataList();
+      searchReconciliationDataList(dateUtility.formatDateForAPI(dateUtility.nowFormatted()));
+      $this.hideLoadingModal();
     };
 
     this.storeStatusListSuccess = function (responseFromAPI) {
@@ -229,14 +247,56 @@ angular.module('ts5App')
       }
     };
 
-    $scope.searchReconciliationDataList = function () {
-      $this.showLoadingModal('Loading Data');
+    var loadingProgress = false;
+
+    var lastStartDate = null;
+    var lastEndDate = null;
+    function searchReconciliationDataList (startDate, endDate) {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+      if ($scope.stationList === null) {
+        return;
+      }
+      if (loadingProgress) {
+        return;
+      }
+      loadingProgress = true;
+
+      showLoadingBar();
       $this.fixSearchDropdowns($scope.search);
 
-      $scope.reconciliationList = [];
-      reconciliationFactory.getReconciliationDataList(payloadUtility.serializeDates($scope.search)).then(function (dataFromAPI) {
-        $this.attachReconciliationDataListToScope(angular.copy(dataFromAPI));
+      var payload = lodash.assign(payloadUtility.serializeDates($scope.search), {
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
       });
+      if (startDate) {
+        payload.startDate = startDate;
+        payload.endDate = endDate;
+      }
+
+      lastStartDate = payload.startDate;
+      lastEndDate = payload.endDate;
+
+      reconciliationFactory.getReconciliationDataList(payload).then(function (dataFromAPI) {
+        $this.attachReconciliationDataListToScope(dataFromAPI);
+        loadingProgress = false;
+      });
+      $this.meta.offset += $this.meta.limit;
+    }
+
+    $scope.searchReconciliationDataList = function () {
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.reconciliationList = [];
+      searchReconciliationDataList();
+    };
+
+    $scope.getReconciliationDataList = function () {
+      searchReconciliationDataList(lastStartDate, lastEndDate);
     };
 
     $scope.clearSearchForm = function () {
@@ -313,7 +373,8 @@ angular.module('ts5App')
       });
 
       $q.all(promises).then(function () {
-        $this.getReconciliationDataList();
+        searchReconciliationDataList(dateUtility.formatDateForAPI(dateUtility.nowFormatted()));
+        $this.hideLoadingModal();
       }, function () {
         $this.hideLoadingModal();
       });
@@ -329,15 +390,6 @@ angular.module('ts5App')
       return $scope.reconciliationList.filter(function (instance) {
         return instance.selected === true;
       });
-    };
-
-    this.showLoadingModal = function (message) {
-      angular.element('#loading').modal('show').find('p').text(message);
-    };
-
-    this.hideLoadingModal = function () {
-      angular.element('#loading').modal('hide');
-      angular.element('.modal-backdrop').remove();
     };
 
     this.init = function () {
