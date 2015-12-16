@@ -86,15 +86,19 @@ angular.module('ts5App')
           var payload = {
             cashBag: saveCashBag
           };
+          showLoadingModal('Saving Cash Bag');
           cashBagFactory.updateCashBag($routeParams.id, payload).then(function (cashBagFromAPI) {
-            $location.search('newId', cashBagFromAPI.id).path('cash-bag-list');
+            hideLoadingModal();
+            $location.path('cash-bag-list');
             showMessage(null, false, 'successfully updated');
           }, showMessage);
           break;
         case 'create':
+          showLoadingModal('Saving Cash Bag');
           formData.isDelete = false;
           formData.totalCashBags = parseInt(formData.totalCashBags, 10);
           cashBagFactory.createCashBag({cashBag: formData}).then(function (newCashBag) {
+            hideLoadingModal();
             $location.search('newId', newCashBag.id)
               .search('scheduleDate', null)
               .search('scheduleNumber', null)
@@ -365,6 +369,7 @@ angular.module('ts5App')
 
     // Constructor
     function init() {
+      $location.url($location.path());
       showLoadingModal('Loading Cash Bag');
       _companyId = cashBagFactory.getCompanyId();
       $scope.state = $routeParams.state;
