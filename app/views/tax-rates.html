@@ -173,8 +173,8 @@
 
         <!-- stationName Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">
-          <span class="label label-primary" ng-repeat="station in taxRate.companyTaxRateStations | orderBy:'stationName'">
-            {{station.stationName}}
+          <span class="label label-primary tax-label" ng-repeat="station in taxRate.companyTaxRateStations | orderBy:'stationName'">
+            {{ station.stationName }}
           </span>
         </td>
         <td class="animate-switch tax-rates-multi-select" ng-switch-when="edit">
