@@ -187,11 +187,14 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       var matchCriteria = {};
       matchCriteria[attributeToMatch] = record[attributeToMatch];
       var recordMatch = lodash.findWhere(arrayToCheck, matchCriteria);
-      var newRecord = {recordId: record.id, id: recordMatch.id};
-      angular.forEach(attributesToSaveArray, function (attribute) {
-        newRecord[attribute] = recordMatch[attribute];
-      });
-      return newRecord;
+      if(recordMatch) {
+        var newRecord = {recordId: record.id, id: recordMatch.id};
+        angular.forEach(attributesToSaveArray, function (attribute) {
+          newRecord[attribute] = recordMatch[attribute];
+        });
+        return newRecord;
+      }
+      return {};
     };
 
     this.reformatEmployeeMessageArray = function (arrayToReformat, arrayToCheck, attributeToMatch, attributesToSaveArray) {
@@ -223,11 +226,11 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       employeeMessage.employees = $this.reformatEmployeeMessageArray(employeeMessage.employeeMessageEmployeeIdentifiers, $scope.employeesList, 'employeeIdentifier', ['employeeIdentifier', 'firstName', 'lastName']);
       employeeMessage.schedules = $this.reformatEmployeeMessageArray(employeeMessage.employeeMessageSchedules, $scope.schedulesList, 'scheduleNumber', ['scheduleNumber']);
 
-      $scope.employeeMessage = employeeMessage;
+      return employeeMessage;
     };
 
     this.getEmployeeMessageSuccess = function (dataFromAPI) {
-      $this.formatEmployeeMessageForApp(dataFromAPI);
+      $scope.employeeMessage = $this.formatEmployeeMessageForApp(dataFromAPI);
       $this.filterListsByName('all');
       $this.hideLoadingModal();
     };
