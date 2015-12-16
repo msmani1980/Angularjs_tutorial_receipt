@@ -229,12 +229,79 @@ fdescribe('Controller: EmployeeMessageCtrl', function () {
   });
 
   describe('edit arrays', function () {
-    describe('add items', function () {
+    beforeEach(function () {
+      initController('edit', 1);
+      scope.$digest();
+    });
+    describe('addNewItem', function () {
+      var oldLength;
+      beforeEach(function () {
+        oldLength = scope.employeeMessage.employees.length;
+        scope.newRecords = {'employees': []};
+        scope.newRecords.employees.push({
+          id: 63,
+          employeeIdentifier: '1003',
+          firstName: 'Jeff',
+          lastName: 'Wright'
+        });
+        scope.addNewItem('employees');
+        scope.$digest();
+      });
 
+      it('should add employee items from newRecords when employees category is passed in', function () {
+        expect(scope.employeeMessage.employees.length).toEqual(oldLength + 1);
+        expect(scope.employeeMessage.employees[oldLength].employeeIdentifier).toEqual('1003');
+        expect(scope.employeeMessage.employees[oldLength].firstName).toEqual('Jeff');
+        expect(scope.employeeMessage.employees[oldLength].lastName).toEqual('Wright');
+      });
+      it('should add employee items with employeeIdentifier, firstName, and lastName attributes', function () {
+        expect(scope.employeeMessage.employees[oldLength].employeeIdentifier).toEqual('1003');
+        expect(scope.employeeMessage.employees[oldLength].firstName).toEqual('Jeff');
+        expect(scope.employeeMessage.employees[oldLength].lastName).toEqual('Wright');
+      });
+
+      it('should clear previously selected records', function () {
+        expect(scope.newRecords.employees.length).toEqual(0);
+      });
     });
 
     describe('bulk delete items', function () {
+      it('should remove all filteredItems', function () {
+        var oldLength = scope.employeeMessage.employees.length;
+        scope.employeeMessage.employees[0].selectedToDelete = true;
+        scope.removeItems('employees');
+        scope.$digest();
+        expect(scope.employeeMessage.employees.length).toEqual(oldLength -1);
+      });
+      it('should clear select all toggle', function () {
+        scope.employeeMessage.employees[0].selectedToDelete = true;
+        scope.removeItems('employees');
+        scope.$digest();
+        expect(scope.employeesDeleteAll).toEqual(false);
+      });
+    });
+  });
 
+  describe('filter items list', function () {
+    beforeEach(function () {
+      initController('edit', 1);
+      scope.$digest();
+    });
+    it('should return items that are not in the employeeMessage', function () {
+      var masterEmployeesLength = employeesJSON.companyEmployees.length;
+      var masterSchedulesLength = schedulesJSON.distinctSchedules.length;
+      var masterStationsLength = stationsJSON.response.length;
+
+      var employeesLength = scope.employeeMessage.employees.length;
+      var schedulesLength = scope.employeeMessage.schedules.length;
+      var departureStationsLength = scope.employeeMessage.departureStations.length;
+      var arrivalStationsLength = scope.employeeMessage.arrivalStations.length;
+
+      EmployeeMessageCtrl.filterListsByName('all');
+      expect(scope.filteredEmployees.length).toEqual(masterEmployeesLength - employeesLength);
+      expect(scope.filteredSchedules.length).toEqual(masterSchedulesLength - schedulesLength);
+      expect(scope.filteredDepStations.length).toEqual(masterStationsLength - departureStationsLength);
+      expect(scope.filteredArrStations.length).toEqual(masterStationsLength - arrivalStationsLength);
     });
   });
 
@@ -249,83 +316,4 @@ fdescribe('Controller: EmployeeMessageCtrl', function () {
 
     });
   });
-
-
-  //describe('saveData', function () {
-  //  describe('payload', function () {
-  //    beforeEach(function () {
-  //      initController('view', 1);
-  //      scope.$digest();
-  //    });
-  //
-  //    it('should format date to YYYMMDD format', function () {
-  //      scope.commissionData = {
-  //        startDate: '10/20/2015',
-  //        endDate: '10/21/2015',
-  //      };
-  //      var expectedPayload = {
-  //        startDate: '20151020',
-  //        endDate: '20151021',
-  //        commissionPercentage: null
-  //
-  //      };
-  //      var payload = CommissionDataCtrl.createPayload();
-  //      expect(payload).toEqual(expectedPayload);
-  //    });
-  //  });
-  //
-  //  describe('create Data', function () {
-  //    beforeEach(function () {
-  //      initController('create');
-  //      scope.$digest();
-  //      scope.commissionData = {
-  //        startDate: '10/20/2015',
-  //        endDate: '10/21/2015'
-  //      };
-  //      scope.saveData();
-  //    });
-  //
-  //    it('should call createCommissionData with payload', function () {
-  //      commissionDataDeferred.resolve(commissionDataResponseJSON);
-  //      var payload = CommissionDataCtrl.createPayload();
-  //      expect(commissionFactory.createCommissionData).toHaveBeenCalledWith(payload);
-  //    });
-  //
-  //    it('should redirect to commission data table', function () {
-  //      commissionDataDeferred.resolve(commissionDataResponseJSON);
-  //      CommissionDataCtrl.createSuccess();
-  //      expect(location.path).toHaveBeenCalledWith('commission-data-table');
-  //    });
-  //
-  //    it('should show errors if there is a promise that fails', function () {
-  //      commissionDataDeferred.reject({status:400,statusText:'Bad Request'});
-  //      scope.$apply();
-  //      expect(scope.displayError).toBeTruthy();
-  //    });
-  //
-  //    it('should set the error response in controller', function () {
-  //      commissionDataDeferred.reject({status:400,statusText:'Bad Request'});
-  //      scope.$apply();
-  //      expect(scope.errorResponse).toEqual({status:400,statusText:'Bad Request'});
-  //    });
-  //  });
-  //
-  //  describe('edit data', function () {
-  //    beforeEach(function () {
-  //      initController('edit', 1);
-  //      scope.$digest();
-  //      scope.commissionData = {
-  //        startDate: '10/20/2015',
-  //        endDate: '10/21/2015'
-  //      };
-  //      scope.saveData();
-  //    });
-  //
-  //    it('should call createCommissionData with payload', function () {
-  //      var payload = CommissionDataCtrl.createPayload();
-  //      expect(commissionFactory.updateCommissionData).toHaveBeenCalledWith(1, payload);
-  //    });
-  //  });
-  //});
-
 });
