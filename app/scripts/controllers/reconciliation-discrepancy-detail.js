@@ -140,17 +140,17 @@ angular.module('ts5App')
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
 
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
-        var varianceValue = (cashBag.paperAmountManual + cashBag.coinAmountManual) - crewAmount + (crewAmount - 0);
-        var isDiscrepancy = varianceValue !== 0;
         var bankExchangeRate = cashBag.chBankExchangeRate || (cashBag.chPaperExchangeRate + '/' + cashBag.chCoinExchangeRate);
         var totalBank = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank);
+        var varianceValue = totalBank;
+        var isDiscrepancy = varianceValue !== 0;
         var cashBagItem = {
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
           eposCalculatedAmount: '-',
           crewAmount: formatAsCurrency(crewAmount),
-          paperAmount: formatAsCurrency(cashBag.paperAmountManual),
-          coinAmount: formatAsCurrency(cashBag.coinAmountManual),
+          paperAmount: formatAsCurrency(cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank),
+          coinAmount: formatAsCurrency(cashBag.coinAmountManualCh || cashBag.coinAmountManualCHBank),
           varianceValue: formatAsCurrency(varianceValue),
           bankExchangeRate: formatAsCurrency(bankExchangeRate),
           totalBank: formatAsCurrency(totalBank),
