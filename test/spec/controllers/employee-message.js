@@ -411,7 +411,7 @@ describe('Controller: EmployeeMessageCtrl', function () {
       });
     });
 
-    fdescribe('shouldDisableActiveFields', function () {
+    describe('shouldDisableActiveFields', function () {
       beforeEach(function () {
         initController('edit', 2);
         scope.$digest();
