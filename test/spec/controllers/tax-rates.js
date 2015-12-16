@@ -1,5 +1,5 @@
 'use strict';
-
+/* global moment */
 fdescribe('Controller: TaxRatesCtrl', function() {
   beforeEach(module(
     'ts5App',
@@ -32,7 +32,7 @@ fdescribe('Controller: TaxRatesCtrl', function() {
   var getCompanyTaxRatesListDeferred;
   var removeCompanyTaxRateDeferred;
 
-  beforeEach(inject(function($q, $controller, $rootScope, $injector, dateUtility, $route, ngToast, _servedTaxTypes_,
+  beforeEach(inject(function($q, $controller, $rootScope, $injector, $route, dateUtility, ngToast, _servedTaxTypes_,
     _servedTaxRateTypes_, _servedCountryList_, _servedStations_, _servedCurrencies_, _servedCompanyTaxRates_) {
 
     taxTypesJSON = _servedTaxTypes_;
@@ -170,7 +170,18 @@ fdescribe('Controller: TaxRatesCtrl', function() {
         expect($scope.currenciesList).toEqual(currenciesListJSON.response);
       });
       it('should set the $scope.companyTaxRatesList to the mock data', function() {
-        expect($scope.companyTaxRatesList).toEqual(companyTaxRatesJSON.taxRates);
+        var taxRates = [];
+        angular.forEach(companyTaxRatesJSON.taxRates, function(taxRate) {
+          if (angular.isDefined(taxRate)) {
+            taxRate.action = 'read';
+            taxRate.startDate = moment(taxRate.startDate, 'YYYYMMDD').format('MM/DD/YYYY').toString();
+            taxRate.endDate = moment(taxRate.endDate, 'YYYYMMDD').format('MM/DD/YYYY').toString();
+          }
+          if (angular.isDefined(taxRate.action)) {
+            taxRates.push(taxRate);
+          }
+        });
+        expect($scope.companyTaxRatesList).toEqual(taxRates);
       });
 
       describe('Search Template Logic', function() {

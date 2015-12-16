@@ -106,12 +106,14 @@ html .navbar,
    right:0;
  }
 
+
+/* tax-rates-management */
  .animate-switch{
   position:relative;
  }
 
  .animate-switch.ng-enter {
-   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s;
+   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.4s;
    animation: bounceInDown 0.5s;
  }
 
@@ -160,8 +162,7 @@ html .navbar,
  }
 
  .tax-rates-action{
-   top:7px;
-   top:10px;
+   top:12px;
    max-width:75px;
    min-width:50px;
    padding:5px;
