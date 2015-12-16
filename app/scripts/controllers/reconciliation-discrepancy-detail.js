@@ -321,11 +321,7 @@ angular.module('ts5App')
       var total = 0;
 
       angular.forEach($this.chCashBag, function (cashBag) {
-        if (cashBag.bankAmountCh) {
-          total += cashBag.bankAmountCh;
-        } else if (cashBag.coinAmountManualCh && cashBag.paperAmountManualCh) {
-          total += cashBag.coinAmountManualCh + cashBag.paperAmountManualCh;
-        }
+        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank);
       });
 
       angular.forEach(chCreditCard, function (creditCard) {
