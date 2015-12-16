@@ -88,7 +88,7 @@ describe('Controller: EmployeeMessageListCtrl', function () {
     describe('goToDetailPage', function () {
       it('should redirect to employee-message page', function () {
         scope.goToDetailPage('view', 1);
-        expect(location.path).toHaveBeenCalledWith('employee-message/view/1')
+        expect(location.path).toHaveBeenCalledWith('employee-message/view/1');
       });
     });
 
