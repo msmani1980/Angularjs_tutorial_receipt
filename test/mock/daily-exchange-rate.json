@@ -1,0 +1,58 @@
+{
+  "id": 137,
+  "exchangeRateDate": "2015-12-14",
+  "chCompanyId": 362,
+  "retailCompanyId": 403,
+  "chBaseCurrencyId": 8,
+  "retailBaseCurrencyId": 8,
+  "isSubmitted": false,
+  "createdBy": 3,
+  "updatedBy": null,
+  "createdOn": "2015-12-14 15:36:30.830868",
+  "updatedOn": null,
+  "dailyExchangeRateCurrencies": [
+    {
+      "id": 501,
+      "dailyExchangeRateId": 137,
+      "retailCompanyCurrencyId": 1,
+      "bankExchangeRate": null,
+      "coinExchangeRate": "2.1077",
+      "paperExchangeRate": "2.5977"
+    }, {
+      "id": 502,
+      "dailyExchangeRateId": 137,
+      "retailCompanyCurrencyId": 2,
+      "bankExchangeRate": null,
+      "coinExchangeRate": "1.3454",
+      "paperExchangeRate": "1.5453"
+    }, {
+      "id": 503,
+      "dailyExchangeRateId": 137,
+      "retailCompanyCurrencyId": 8,
+      "bankExchangeRate": null,
+      "coinExchangeRate": "1.0000",
+      "paperExchangeRate": "1.0000"
+    }, {
+      "id": 504,
+      "dailyExchangeRateId": 137,
+      "retailCompanyCurrencyId": 9,
+      "bankExchangeRate": null,
+      "coinExchangeRate": "1.5523",
+      "paperExchangeRate": "2.3545"
+    }, {
+      "id": 505,
+      "dailyExchangeRateId": 137,
+      "retailCompanyCurrencyId": 11,
+      "bankExchangeRate": null,
+      "coinExchangeRate": "1.5001",
+      "paperExchangeRate": "1.5000"
+    }, {
+      "id": 506,
+      "dailyExchangeRateId": 137,
+      "retailCompanyCurrencyId": 23,
+      "bankExchangeRate": null,
+      "coinExchangeRate": "2.4511",
+      "paperExchangeRate": "1.3411"
+    }
+  ]
+}
