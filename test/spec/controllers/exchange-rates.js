@@ -148,18 +148,6 @@ describe('Controller: ExchangeRatesCtrl', function () {
       expect(scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies[0]).toEqual(expectedCurrencyObject);
     });
 
-    it('should only have paper and coin Exchange Rate Currencies', function () {
-      scope.isBankExchangePreferred.and.returnValue(false);
-
-      var expectedCurrencyObject = {
-        retailCompanyCurrencyId: 58,
-        coinExchangeRate: '1.0000',
-        paperExchangeRate: '1.0000'
-      };
-      scope.checkVarianceAndSave(false);
-      expect(scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies[1]).toEqual(expectedCurrencyObject);
-    });
-
     it('should not alert of variance', function () {
       scope.checkVarianceAndSave(false);
       expect(scope.varianceObject).toEqual([]);
