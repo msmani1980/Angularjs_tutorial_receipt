@@ -411,18 +411,44 @@ describe('Controller: EmployeeMessageCtrl', function () {
       });
     });
 
-    describe('shouldDisableStartDate', function () {
+    fdescribe('shouldDisableActiveFields', function () {
       beforeEach(function () {
         initController('edit', 2);
         scope.$digest();
       });
       it('should return true for active records', function () {
-        var mockActiveDate = '10/20/2000';
-        expect(scope.shouldDisableStartDate(mockActiveDate)).toEqual(true);
+        scope.employeeMessage.startDate = '10/20/2000';
+        expect(scope.shouldDisableActiveFields()).toEqual(true);
       });
       it('should return false for future records', function () {
-        var mockFutureDate = '10/20/3000';
-        expect(scope.shouldDisableStartDate(mockFutureDate)).toEqual(false);
+        scope.employeeMessage.startDate = '10/20/3000';
+        expect(scope.shouldDisableActiveFields()).toEqual(false);
+      });
+    });
+
+    describe('shouldDisable', function () {
+      it('should return true when readOnly is true', function () {
+        initController('view', 2);
+        scope.$digest();
+        expect(scope.shouldDisable(true)).toEqual(true);
+
+      });
+      it('should return true when record is active', function () {
+        initController('edit', 2);
+        scope.$digest();
+        scope.employeeMessage.startDate = '10/20/2000';
+        expect(scope.shouldDisable(true)).toEqual(true);
+      });
+      it('should return false when record is active and field is allowed to be editable', function () {
+        initController('edit', 2);
+        scope.$digest();
+        scope.employeeMessage.startDate = '10/20/2000';
+        expect(scope.shouldDisable(false)).toEqual(false);
+      });
+      it('should return false when creating a new record', function () {
+        initController('create');
+        scope.$digest();
+        expect(scope.shouldDisable(true)).toEqual(false);
       });
     });
   });

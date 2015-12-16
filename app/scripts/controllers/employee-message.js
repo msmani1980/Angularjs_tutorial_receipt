@@ -107,8 +107,18 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       }
     };
 
-    $scope.shouldDisableStartDate = function (startDate) {
-      var isRecordActive = dateUtility.isTodayOrEarlier(startDate);
+    $scope.shouldDisable = function (isFieldDisabledInActiveRecord) {
+      if(isFieldDisabledInActiveRecord) {
+        return $scope.readOnly || $scope.shouldDisableActiveFields();
+      }
+      return $scope.readOnly;
+    };
+
+    $scope.shouldDisableActiveFields = function () {
+      if(!$scope.employeeMessage) {
+        return true;
+      }
+      var isRecordActive = dateUtility.isTodayOrEarlier($scope.employeeMessage.startDate);
       return ($routeParams.action === 'edit' && isRecordActive);
     };
 
