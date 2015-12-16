@@ -230,7 +230,12 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
     this.getEmployeeMessageSuccess = function (dataFromAPI) {
       $scope.employeeMessage = $this.formatEmployeeMessageForApp(dataFromAPI);
-      $this.filterListsByName('all');
+      var isRecordActiveOrFuture =  dateUtility.isAfterToday($scope.employeeMessage.endDate);
+      if(isRecordActiveOrFuture) {
+        $this.filterListsByName('all');
+      } else {
+        $scope.readOnly = true;
+      }
       $this.hideLoadingModal();
     };
 
