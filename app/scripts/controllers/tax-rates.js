@@ -249,9 +249,9 @@ angular.module('ts5App')
       return (dateUtility.isAfterToday(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
     };
 
-    this.displayConfirmDialog = function(id) {
+    this.displayConfirmDialog = function(taxRate) {
       angular.element('#confirmation-modal').modal('show');
-      $scope.taxRateToRemove.id = id;
+      $scope.taxRateToRemove = taxRate;
     };
 
     this.addEditActionToTaxRate = function(taxRate) {
@@ -291,8 +291,9 @@ angular.module('ts5App')
       return $this.makeSearchPromises();
     };
 
-    $scope.deleteCompanyTaxRate = function(id) {
-      return $this.makeDeletePromises(id);
+    $scope.deleteCompanyTaxRate = function(taxRate) {
+      taxRate.deleted = true;
+      return $this.makeDeletePromises(taxRate.id);
     };
 
     $scope.showDeleteButton = function(taxRate) {
@@ -303,8 +304,8 @@ angular.module('ts5App')
       return ($this.isTaxRateActive(taxRate) || angular.isDefined(taxRate.edited));
     };
 
-    $scope.displayConfirmDialog = function(id) {
-      return $this.displayConfirmDialog(id);
+    $scope.displayConfirmDialog = function(taxRate) {
+      return $this.displayConfirmDialog(taxRate);
     };
 
     $scope.editCompanyTaxRate = function(taxRate) {

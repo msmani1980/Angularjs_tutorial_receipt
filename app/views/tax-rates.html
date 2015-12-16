@@ -143,7 +143,7 @@
       </thead>
 
       <!-- TODO: add Edit and Create functionality to the list -->
-      <tr class="animate-switch-container" ng-repeat="taxRate in companyTaxRatesList track by $index" ng-switch on="taxRate.action" ng-class="{'bg-warning': taxRate.edited}">
+      <tr class="animate-switch-container" ng-repeat="taxRate in companyTaxRatesList track by $index" ng-switch on="taxRate.action" ng-class="{'bg-warning': taxRate.edited, 'bg-danger' : taxRate.deleted}">
 
         <!-- taxTypeCode Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxTypeCode}}</td>
@@ -226,7 +226,7 @@
           <a class="btn btn-primary btn-xs" ng-show="showEditButton(taxRate)" ng-click="editCompanyTaxRate(taxRate)">
             <span class="fa fa-pencil"></span>
           </a>
-          <a class="btn btn-danger btn-xs" ng-show="showDeleteButton(taxRate)" ng-click="displayConfirmDialog(taxRate.id)">
+          <a class="btn btn-danger btn-xs" ng-show="showDeleteButton(taxRate)" ng-click="displayConfirmDialog(taxRate)">
             <span class="fa fa-remove"></span>
           </a>
           <a class="btn btn-success btn-xs" ng-show="taxRate.edited" alt="Save Edits">
@@ -252,7 +252,7 @@
 <confirmation-modal
  title="You are about to remove a Company Tax Rate."
  body="Are you sure that you want to permenantly remove Tax Rate ID: {{taxRateToRemove.id}} ?"
- confirmation-callback="deleteCompanyTaxRate(taxRateToRemove.id)"
+ confirmation-callback="deleteCompanyTaxRate(taxRateToRemove)"
  confirmation-label="Yes, Delete."
  cancel-label="Cancel">
 </confirmation-modal>

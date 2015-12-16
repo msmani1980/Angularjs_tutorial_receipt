@@ -407,28 +407,33 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             spyOn(TaxRatesCtrl, 'deleteSuccess').and.callThrough();
             taxRate = {
               id: '123',
-              companyId: '403'
+              companyId: '403',
+              deleted: true
             };
-            $scope.displayConfirmDialog(taxRate.id);
+            $scope.displayConfirmDialog(taxRate);
             $scope.deleteCompanyTaxRate(taxRate);
           });
           it('should call makeDeletePromises with payload', function() {
-            expect(TaxRatesCtrl.makeDeletePromises).toHaveBeenCalledWith(taxRate);
+            expect(TaxRatesCtrl.makeDeletePromises).toHaveBeenCalledWith(taxRate.id);
           });
           it('should call createDeletePromises with payload', function() {
-            expect(TaxRatesCtrl.createDeletePromises).toHaveBeenCalledWith(taxRate);
+            expect(TaxRatesCtrl.createDeletePromises).toHaveBeenCalledWith(taxRate.id);
           });
           it('should call displayConfirmDialog with payload', function() {
-            expect(TaxRatesCtrl.displayConfirmDialog).toHaveBeenCalledWith(taxRate.id);
+            expect(TaxRatesCtrl.displayConfirmDialog).toHaveBeenCalledWith(taxRate);
           });
           it('should call deleteSuccess with payload', function() {
+            taxRate = {
+              id: '123',
+              companyId: '403'
+            };
             resolveAllDependencies();
             expect(TaxRatesCtrl.deleteSuccess).toHaveBeenCalledWith([taxRate]);
           });
 
         });
 
-        describe('deleteCompanyTaxRate method', function() {
+        describe('editCompanyTaxRate method', function() {
           var taxRate;
           beforeEach(function() {
             spyOn(TaxRatesCtrl, 'editCompanyTaxRate').and.callThrough();
