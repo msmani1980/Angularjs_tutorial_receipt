@@ -57,10 +57,13 @@ angular.module('ts5App')
     };
 
     this.setCompanyTaxRatesList = function(dataFromAPI) {
+      $scope.companyTaxRatesList = [];
       var taxRatesList = angular.copy(dataFromAPI.taxRates);
       angular.forEach(taxRatesList, function(taxRate) {
         if (angular.isDefined(taxRate)) {
           taxRate.action = 'read';
+          taxRate.startDate = dateUtility.formatDateForApp(taxRate.startDate);
+          taxRate.endDate = dateUtility.formatDateForApp(taxRate.endDate);
         }
         if (angular.isDefined(taxRate.action)) {
           $scope.companyTaxRatesList.push(taxRate);
@@ -257,6 +260,7 @@ angular.module('ts5App')
     this.cancelTaxRateEdit = function(taxRate) {
       if (angular.isDefined(taxRate)) {
         taxRate.action = 'read';
+        taxRate.edited = true;
       }
     };
 
@@ -285,11 +289,11 @@ angular.module('ts5App')
     };
 
     $scope.showDeleteButton = function(taxRate) {
-      return ($this.hasTaxRateStarted(taxRate));
+      return ($this.hasTaxRateStarted(taxRate) && angular.isUndefined(taxRate.edited));
     };
 
     $scope.showEditButton = function(taxRate) {
-      return ($this.isTaxRateActive(taxRate));
+      return ($this.isTaxRateActive(taxRate) || angular.isDefined(taxRate.edited));
     };
 
     $scope.displayConfirmDialog = function(id) {

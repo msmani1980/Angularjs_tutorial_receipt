@@ -99,19 +99,20 @@ html .navbar,
 }
 
 .animate-switch-container {
-   padding:20px;
-   background:white;
    overflow:hidden;
+   width:100%;
+   min-width:100%;
+   left:0;
+   right:0;
  }
 
  .animate-switch{
-   position:relative;
+  position:relative;
  }
 
- .animate-switch.ng-move,
  .animate-switch.ng-enter {
-   -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
-   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s;
+   animation: bounceInDown 0.5s;
  }
 
  .animate-switch.ng-leave.ng-leave-active,
@@ -127,17 +128,17 @@ html .navbar,
  }
 
  .tax-rates-dates{
-   max-width:155px;
-   min-width:155px;
+   top:7px;
+   max-width:125px;
+   min-width:100px;
    padding:5px;
-   margin: 0 auto;
  }
 
  .tax-rates-ui-select{
-   max-width:125px;
+   top:7px;
+   max-width:150px;
    min-width:125px;
    padding:5px;
-   margin: 0 auto;
  }
 
  .tax-rates-ui-select .ui-select-toggle{
@@ -145,22 +146,96 @@ html .navbar,
  }
 
  .tax-rates-multi-select{
+   top:7px;
    max-width:150px;
-   min-width:125px;
+   min-width:150px;
    padding:5px;
-   margin: 0 auto;
  }
 
  .tax-rates-input{
+   top:7px;
    max-width:100px;
    min-width:85px;
    padding:5px;
  }
 
  .tax-rates-action{
-   height:40px;
-   top:30px;
+   top:7px;
+   top:10px;
    max-width:75px;
    min-width:50px;
    padding:5px;
  }
+
+@-webkit-keyframes bounceInDown {
+  from, 60%, 75%, 90%, to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  }
+
+  0% {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -3000px, 0);
+    transform: translate3d(0, -3000px, 0);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 25px, 0);
+    transform: translate3d(0, 25px, 0);
+  }
+
+  75% {
+    -webkit-transform: translate3d(0, -10px, 0);
+    transform: translate3d(0, -10px, 0);
+  }
+
+  90% {
+    -webkit-transform: translate3d(0, 5px, 0);
+    transform: translate3d(0, 5px, 0);
+  }
+
+  to {
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+@keyframes bounceInDown {
+  from, 60%, 75%, 90%, to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  }
+
+  0% {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -3000px, 0);
+    transform: translate3d(0, -3000px, 0);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 25px, 0);
+    transform: translate3d(0, 25px, 0);
+  }
+
+  75% {
+    -webkit-transform: translate3d(0, -10px, 0);
+    transform: translate3d(0, -10px, 0);
+  }
+
+  90% {
+    -webkit-transform: translate3d(0, 5px, 0);
+    transform: translate3d(0, 5px, 0);
+  }
+
+  to {
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.bounceInDown {
+  -webkit-animation-name: bounceInDown;
+  animation-name: bounceInDown;
+}
