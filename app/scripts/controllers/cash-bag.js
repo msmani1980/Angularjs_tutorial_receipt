@@ -87,7 +87,7 @@ angular.module('ts5App')
             cashBag: saveCashBag
           };
           showLoadingModal('Saving Cash Bag');
-          cashBagFactory.updateCashBag($routeParams.id, payload).then(function (cashBagFromAPI) {
+          cashBagFactory.updateCashBag($routeParams.id, payload).then(function () {
             hideLoadingModal();
             $location.path('cash-bag-list');
             showMessage(null, false, 'successfully updated');
