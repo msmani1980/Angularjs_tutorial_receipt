@@ -99,7 +99,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
     $this.saveSuccess = function () {
       $this.hideLoadingModal();
-      $location.path('employee-messages').search();
+      $location.path('employee-messages');
     };
 
     $scope.save = function () {

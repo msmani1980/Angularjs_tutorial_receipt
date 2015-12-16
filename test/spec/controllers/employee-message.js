@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: EmployeeMessageCtrl', function () {
+describe('Controller: EmployeeMessageCtrl', function () {
 
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module('served/employee-message.json'));
@@ -271,7 +271,7 @@ fdescribe('Controller: EmployeeMessageCtrl', function () {
         scope.employeeMessage.employees[0].selectedToDelete = true;
         scope.removeItems('employees');
         scope.$digest();
-        expect(scope.employeeMessage.employees.length).toEqual(oldLength -1);
+        expect(scope.employeeMessage.employees.length).toEqual(oldLength - 1);
       });
       it('should clear select all toggle', function () {
         scope.employeeMessage.employees[0].selectedToDelete = true;
@@ -307,13 +307,107 @@ fdescribe('Controller: EmployeeMessageCtrl', function () {
 
   describe('save', function () {
     describe('format payload for app', function () {
-
+      var payload;
+      beforeEach(function () {
+        initController('edit');
+        scope.$digest();
+        payload = EmployeeMessageCtrl.formatPayload().employeeMessage;
+      });
+      it('should format payload with same employeeMessage', function () {
+        expect(payload.employeeMessageText).toEqual(scope.employeeMessage.employeeMessageText);
+      });
+      it('should format employees array to employeeMessageEmployeeIdentifiers', function () {
+        expect(payload.employeeMessageEmployeeIdentifiers.length).toEqual(scope.employeeMessage.employees.length);
+        expect(payload.employeeMessageEmployeeIdentifiers[0].employeeIdentifier).toEqual(scope.employeeMessage.employees[0].employeeIdentifier);
+      });
+      it('should format schedules array to employeeMessageSchedules', function () {
+        expect(payload.employeeMessageSchedules.length).toEqual(scope.employeeMessage.schedules.length);
+        expect(payload.employeeMessageSchedules[0].scheduleNumber).toEqual(scope.employeeMessage.schedules[0].scheduleNumber);
+      });
+      it('should format departureStations array to employeeMessageDepartureStations', function () {
+        expect(payload.employeeMessageDepartureStations.length).toEqual(scope.employeeMessage.departureStations.length);
+        expect(payload.employeeMessageDepartureStations[0]).toEqual(scope.employeeMessage.departureStations[0].id);
+      });
+      it('should format employeeMessageArrivalStations array to employeeMessageDepartureStations', function () {
+        expect(payload.employeeMessageArrivalStations.length).toEqual(scope.employeeMessage.arrivalStations.length);
+        expect(payload.employeeMessageArrivalStations[0]).toEqual(scope.employeeMessage.arrivalStations[0].id);
+      });
     });
-    describe('save new message', function () {
-
+    describe('API calls', function () {
+      it('should call create for a create action', function () {
+        initController('create');
+        scope.$digest();
+        scope.save();
+        expect(employeeMessagesFactory.createEmployeeMessage).toHaveBeenCalled();
+      });
+      it('should call edit for edit action', function () {
+        initController('edit', 1);
+        scope.$digest();
+        scope.save();
+        expect(employeeMessagesFactory.editEmployeeMessage).toHaveBeenCalled();
+      });
+      it('should go to list page on succes', function () {
+        initController('edit', 1);
+        scope.$digest();
+        EmployeeMessageCtrl.saveSuccess();
+        expect(location.path).toHaveBeenCalledWith('employee-messages');
+      });
     });
-    describe('update message', function () {
+  });
 
+  describe('scope function', function () {
+    describe('toggle selected to delete', function () {
+      beforeEach(function () {
+        initController('edit', 1);
+        scope.$digest();
+      });
+      it('should set all records to selected based on flag', function () {
+        scope.toggleSelectAll(true, 'employees');
+        scope.$digest();
+        expect(scope.employeeMessage.employees[0].selectedToDelete).toEqual(true);
+        scope.toggleSelectAll(false, 'employees');
+        scope.$digest();
+        expect(scope.employeeMessage.employees[0].selectedToDelete).toEqual(false);
+      });
+    });
+    describe('toggle selected to add', function () {
+      beforeEach(function () {
+        initController('edit', 1);
+        scope.$digest();
+      });
+      it('should add all items if flag is true', function () {
+        scope.selectAllToAdd(true, 'employees');
+        scope.$digest();
+        expect(scope.newRecords.employees.length > 0).toEqual(true);
+      });
+      it('should empty newRecords to add if flag is false', function () {
+        scope.selectAllToAdd(false, 'employees');
+        scope.$digest();
+        expect(scope.newRecords.employees.length).toEqual(0);
+      });
+    });
+
+    describe('show delete button', function () {
+      it('should not show delete if view is readOnly', function () {
+        initController('view', 1);
+        scope.$digest();
+        var isDeleteDisabled = scope.getPropertiesForDeletedButton('employees', 'disabled');
+        expect(isDeleteDisabled).toEqual(true);
+      });
+      it('should not show delete if array has no items', function () {
+        initController('view', 1);
+        scope.$digest();
+        scope.employeeMessage.employees = [];
+        var isDeleteDisabled = scope.getPropertiesForDeletedButton('employees', 'disabled');
+        expect(isDeleteDisabled).toEqual(true);
+      });
+      it('should show delete if an array has selected items', function () {
+        initController('view', 1);
+        scope.$digest();
+        scope.employeeMessage.employees[0].selectedToDelete = true;
+        var isDeleteDisabled = scope.getPropertiesForDeletedButton('employees', 'disabled');
+        expect(isDeleteDisabled).toEqual(false);
+      });
     });
   });
 });
