@@ -23,6 +23,12 @@ angular.module('ts5App')
       getDiscount: {
         method: 'GET'
       },
+      createDiscount: {
+        method: 'POST'
+      },
+      updateDiscount: {
+        method: 'PUT'
+      },
       deleteDiscount: {
         method: 'DELETE'
       }
@@ -34,8 +40,16 @@ angular.module('ts5App')
       return requestResource.getDiscountList(payload).$promise;
     };
 
-    var getDiscount = function (payload) {
-      return requestResource.getDiscount(payload).$promise;
+    var getDiscount = function (discountId) {
+      return requestResource.getDiscount({id: discountId}).$promise;
+    };
+
+    var createDiscount = function (payload) {
+      return requestResource.createDiscount(payload).$promise;
+    };
+
+    var updateDiscount = function (discountId, payload) {
+      return requestResource.updateDiscount({id: discountId}, payload).$promise;
     };
 
     var deleteDiscount = function (discountId) {
@@ -45,6 +59,8 @@ angular.module('ts5App')
     return {
       getDiscountList: getDiscountList,
       deleteDiscount: deleteDiscount,
-      getDiscount: getDiscount
+      getDiscount: getDiscount,
+      createDiscount: createDiscount,
+      updateDiscount: updateDiscount
     };
   });

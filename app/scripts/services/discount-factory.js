@@ -18,7 +18,15 @@ angular.module('ts5App')
     };
 
     var getDiscount = function (discountId) {
-      return discountService.getDiscount({id: discountId});
+      return discountService.getDiscount(discountId);
+    };
+
+    var createDiscount = function (payload) {
+      return discountService.createDiscount(payload);
+    };
+
+    var updateDiscount = function (discountId, payload) {
+      return discountService.updateDiscount(discountId, payload);
     };
 
     var deleteDiscount = function (discountId) {
@@ -29,6 +37,8 @@ angular.module('ts5App')
       getDiscountList: getDiscountList,
       getDiscountTypesList: getDiscountTypesList,
       deleteDiscount: deleteDiscount,
-      getDiscount: getDiscount
+      getDiscount: getDiscount,
+      createDiscount: createDiscount,
+      updateDiscount: updateDiscount
     };
   });
