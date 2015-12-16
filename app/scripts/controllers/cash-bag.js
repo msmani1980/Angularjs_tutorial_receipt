@@ -86,15 +86,19 @@ angular.module('ts5App')
           var payload = {
             cashBag: saveCashBag
           };
-          cashBagFactory.updateCashBag($routeParams.id, payload).then(
-            showMessage(null, false, 'successfully updated'),
-            showMessage
-          );
+          showLoadingModal('Saving Cash Bag');
+          cashBagFactory.updateCashBag($routeParams.id, payload).then(function () {
+            hideLoadingModal();
+            $location.path('cash-bag-list');
+            showMessage(null, false, 'successfully updated');
+          }, showMessage);
           break;
         case 'create':
+          showLoadingModal('Saving Cash Bag');
           formData.isDelete = false;
           formData.totalCashBags = parseInt(formData.totalCashBags, 10);
           cashBagFactory.createCashBag({cashBag: formData}).then(function (newCashBag) {
+            hideLoadingModal();
             $location.search('newId', newCashBag.id)
               .search('scheduleDate', null)
               .search('scheduleNumber', null)
@@ -256,8 +260,15 @@ angular.module('ts5App')
       );
     }
 
-    function dailyExchangeResponseHandler(response) {
-      $scope.dailyExchangeRates = angular.copy(response.dailyExchangeRates);
+    function dailyExchangeByIdResponseHandler(exchangeRate) {
+      $scope.dailyExchangeRates = [angular.copy(exchangeRate)];
+      if ($routeParams.state === 'view' || $routeParams.state === 'edit') {
+        promisesResponseHandler();
+      }
+    }
+
+    function dailyExchangeResponseHandler(responseFromAPI) {
+      $scope.dailyExchangeRates = angular.copy(responseFromAPI.dailyExchangeRates);
       if ($routeParams.state === 'view' || $routeParams.state === 'edit') {
         promisesResponseHandler();
       }
@@ -266,7 +277,7 @@ angular.module('ts5App')
     function getExchangeRates(cashBag) {
       if (cashBag && cashBag.dailyExchangeRateId) {
         _promises.push(
-          cashBagFactory.getDailyExchangeById(_companyId, cashBag.dailyExchangeRateId).then(dailyExchangeResponseHandler)
+          cashBagFactory.getDailyExchangeById(_companyId, cashBag.dailyExchangeRateId).then(dailyExchangeByIdResponseHandler)
         );
       } else {
         var dailyExchangeDate = moment().format('YYYYMMDD');
@@ -358,6 +369,7 @@ angular.module('ts5App')
 
     // Constructor
     function init() {
+      $location.url($location.path());
       showLoadingModal('Loading Cash Bag');
       _companyId = cashBagFactory.getCompanyId();
       $scope.state = $routeParams.state;

@@ -140,19 +140,19 @@ angular.module('ts5App')
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
 
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
-        var varianceValue = (cashBag.paperAmountManual + cashBag.coinAmountManual) - crewAmount + (crewAmount - 0);
-        var isDiscrepancy = varianceValue !== 0;
-        var bankExchangeRate = cashBag.chBankExchangeRate || (cashBag.chPaperExchangeRate + '/' + cashBag.chCoinExchangeRate);
+        var bankExchangeRate = cashBag.chBankExchangeRate ? formatAsCurrency(cashBag.chBankExchangeRate) : (formatAsCurrency(cashBag.chPaperExchangeRate) + '/' + formatAsCurrency(cashBag.chCoinExchangeRate));
         var totalBank = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank);
+        var varianceValue = totalBank;
+        var isDiscrepancy = varianceValue !== 0;
         var cashBagItem = {
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
           eposCalculatedAmount: '-',
           crewAmount: formatAsCurrency(crewAmount),
-          paperAmount: formatAsCurrency(cashBag.paperAmountManual),
-          coinAmount: formatAsCurrency(cashBag.coinAmountManual),
+          paperAmount: formatAsCurrency(cashBag.paperAmountManual || cashBag.paperAmountManualBank),
+          coinAmount: formatAsCurrency(cashBag.coinAmountManual || cashBag.coinAmountManualBank),
           varianceValue: formatAsCurrency(varianceValue),
-          bankExchangeRate: formatAsCurrency(bankExchangeRate),
+          bankExchangeRate: bankExchangeRate,
           totalBank: formatAsCurrency(totalBank),
           isDiscrepancy: isDiscrepancy
         };
@@ -264,7 +264,7 @@ angular.module('ts5App')
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Voucher'}).map(function (item) {
         reconciliationFactory.getMasterItem(item.itemMasterId).then(function (dataFromAPI) {
-          item.itemName = dataFromAPI.retailItem.itemName;
+          item.itemName = dataFromAPI.itemName;
         }, handleResponseError);
       });
     }
