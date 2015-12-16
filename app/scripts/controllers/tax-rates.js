@@ -261,6 +261,9 @@ angular.module('ts5App')
       if (angular.isDefined(taxRate)) {
         taxRate.action = 'edit';
         taxRate.edited = true;
+        if ($this.isTaxRateActive(taxRate) && !$this.hasTaxRateStarted(taxRate)) {
+          taxRate.readOnly = true;
+        }
       }
     };
 
@@ -271,6 +274,7 @@ angular.module('ts5App')
     this.cancelTaxRateEdit = function(taxRate) {
       if (angular.isDefined(taxRate)) {
         taxRate.action = 'read';
+        delete taxRate.readOnly;
       }
     };
 
@@ -307,6 +311,7 @@ angular.module('ts5App')
 
     this.saveTaxRateEdits = function(taxRate) {
       delete taxRate.edited;
+      delete taxRate.readOnly;
       taxRate.action = 'read';
       taxRate.saved = true;
       var payload = {
@@ -348,6 +353,10 @@ angular.module('ts5App')
 
     $scope.showDeleteButton = function(taxRate) {
       return ($this.hasTaxRateStarted(taxRate) && angular.isUndefined(taxRate.edited));
+    };
+
+    $scope.isFieldReadOnly = function(taxRate) {
+      return ($this.isTaxRateActive(taxRate) && !$this.hasTaxRateStarted(taxRate) || angular.isDefined(taxRate.readOnly));
     };
 
     $scope.showEditButton = function(taxRate) {

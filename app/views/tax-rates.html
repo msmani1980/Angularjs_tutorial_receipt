@@ -148,7 +148,7 @@
         <!-- taxTypeCode Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxTypeCode}}</td>
         <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
-            <ui-select ng-model="taxRate" theme="bootstrap" name="taxTypeCode">
+            <ui-select ng-model="taxRate" theme="bootstrap" name="taxTypeCode" ng-disabled="isFieldReadOnly(taxRate)">
               <ui-select-match placeholder="Select Tax Type">
                 {{ $select.selected.taxTypeCode }}
               </ui-select-match>
@@ -161,7 +161,7 @@
         <!-- countryName Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.countryName}}</td>
         <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
-          <ui-select ng-model="taxRate" theme="bootstrap" name="taxRateCountry">
+          <ui-select ng-model="taxRate" theme="bootstrap" name="taxRateCountry" ng-disabled="isFieldReadOnly(taxRate)">
             <ui-select-match placeholder="Select Country">
               {{ $select.selected.countryName }}
             </ui-select-match>
@@ -178,7 +178,7 @@
           </span>
         </td>
         <td class="animate-switch tax-rates-multi-select" ng-switch-when="edit">
-          <ui-select ng-if="viewIsReady" multiple ng-model="taxRate.companyTaxRateStations" theme="bootstrap" ng-disabled="disabled" sortable="true" close-on-select="false">
+          <ui-select ng-if="viewIsReady" multiple ng-model="taxRate.companyTaxRateStations" theme="bootstrap" ng-disabled="isFieldReadOnly(taxRate)" sortable="true" close-on-select="false">
             <ui-select-match placeholder="Select Stations">{{$item.stationCode}} - {{$item.stationName}}</ui-select-match>
             <ui-select-choices repeat="station in stationsList | filter: $select.search | orderBy:'stationCode'">
               <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
@@ -192,7 +192,7 @@
         <!-- taxRateCode Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxRateType}}</td>
         <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
-          <ui-select ng-model="taxRate" theme="bootstrap" name="searchRateType">
+          <ui-select ng-model="taxRate" theme="bootstrap" name="searchRateType" ng-disabled="isFieldReadOnly(taxRate)">
             <ui-select-match placeholder="Select Tax Rate Type">
               {{ $select.selected.taxRateType }}
             </ui-select-match>
@@ -205,13 +205,13 @@
         <!-- taxRateValue Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxRateValue}}</td>
         <td class="animate-switch tax-rates-input" ng-switch-when="edit">
-          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Select Tax Rate">
+          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Select Tax Rate" ng-disabled="isFieldReadOnly(taxRate)">
         </td>
 
         <!-- startDate Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.startDate}}</td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
-          <date-picker-field ng-model="taxRate.startDate" placeholder="mm/dd/yyyy"></date-picker-field>
+          <date-picker-field ng-model="taxRate.startDate" placeholder="mm/dd/yyyy" disable="isFieldReadOnly(taxRate)"></date-picker-field>
         </td>
 
         <!-- endDate Read/Edit switch-->
@@ -223,7 +223,7 @@
         <!-- Buttns/Actions Read/Edit switch-->
         <!-- TODO: add Edit actions for each tax rate -->
         <td class="animate-switch" ng-switch-when="read">
-          <a class="btn btn-primary btn-xs" ng-show="showEditButton(taxRate)" ng-click="editCompanyTaxRate(taxRate)">
+          <a class="btn btn-primary btn-xs" ng-show="showEditButton(taxRate) || showDeleteButton(taxRate)" ng-click="editCompanyTaxRate(taxRate)">
             <span class="fa fa-pencil"></span>
           </a>
           <a class="btn btn-danger btn-xs" ng-show="showDeleteButton(taxRate)" ng-click="displayConfirmDialog(taxRate)">
