@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-   .controller('CompanyReasonTypeSubscribeCtrl', function ($scope,$routeParams,ngToast) {
+   .controller('CompanyReasonTypeSubscribeCtrl', function ($scope,$routeParams,ngToast,$q,lodash) {
 
     /* MOCK DATA - TO BE REMOVED */
 
@@ -181,7 +181,31 @@ angular.module('ts5App')
 
     var $this = this;
 
+    this.displayUnsubscribeError = function(diff) {
+      $scope.errorCustom = [];
+      angular.forEach(diff, function(reasonType){
+        $scope.errorCustom.push({
+          field: reasonType.reasonTypeName,
+          value: 'You can\'t unsubscribe from this  Reason Type because there are Reasons associated with it'
+        });
+      });
+
+      $scope.subscribeReasonTypesForm.$valid = false;
+      $scope.subscribeReasonTypesForm.$invalid = true;
+    };
+
+    this.checkFormSubscribedTypes = function() {
+      var diff = lodash.difference(
+        $scope.companyReasonTypes,
+        $scope.formData.subscribedGlobalReasons
+      );
+      if(diff.length > 0) {
+        this.displayUnsubscribeError(diff);
+      }
+    };
+
     this.validateForm = function() {
+      this.checkFormSubscribedTypes();
       $scope.displayError = $scope.subscribeReasonTypesForm.$invalid;
       return $scope.subscribeReasonTypesForm.$valid;
     };
@@ -221,19 +245,15 @@ angular.module('ts5App')
 
     this.setUpFormDataObject = function() {
       $scope.formData = {
-        subscribedGlobalReasons:[
-          // TODO: getter / setter
-          globalReasonCodeTypesJSON.reasonTypes[0],
-          globalReasonCodeTypesJSON.reasonTypes[1],
-          globalReasonCodeTypesJSON.reasonTypes[2],
-          globalReasonCodeTypesJSON.reasonTypes[3]
-        ]
+        subscribedGlobalReasons:[]
       };
+      $scope.companyReasonTypes.forEach(function(reasonType){
+        $scope.formData.subscribedGlobalReasons.push(reasonType);
+      });
     };
 
     this.setGlobalReasonCodeTypes = function(dataFromAPI) {
       $scope.globalReasonCodeTypesList = dataFromAPI.reasonTypes;
-      this.setUpFormDataObject();
     };
 
     this.getGlobalReasonCodeTypes = function() {
@@ -241,13 +261,25 @@ angular.module('ts5App')
       return this.setGlobalReasonCodeTypes(globalReasonCodeTypesJSON);
     };
 
-    this.setCompanyReasonCodeTypes = function(dataFromAPI) {
-      $scope.companyReasonCodeTypesList = dataFromAPI.companyReasonTypes;
+    this.setCompanyReasonTypes = function(dataFromAPI) {
+      $scope.companyReasonTypes = dataFromAPI.companyReasonTypes;
+      this.setUpFormDataObject();
     };
 
-    this.getCompanyReasonCodeTypes = function() {
+    this.getCompanyReasonTypes = function() {
       // Factory call here
-      return this.setCompanyReasonCodeTypes(companyReasonCodeTypesJSON);
+      return this.setCompanyReasonTypes(companyReasonCodeTypesJSON);
+    };
+
+    this.makeInitPromises = function() {
+      return [
+        $this.getGlobalReasonCodeTypes(),
+        $this.getCompanyReasonTypes()
+      ];
+    };
+
+    this.initSuccess = function() {
+      $scope.viewReady = true;
     };
 
     this.init = function() {
@@ -255,9 +287,9 @@ angular.module('ts5App')
       $scope.reasonFilter = {
         selectedGlobalReasons:[]
       };
-      // TODO: Add $q and init success
-      this.getCompanyReasonCodeTypes();
-      this.getGlobalReasonCodeTypes();
+      $scope.errorCustom = [];
+      var promises = this.makeInitPromises();
+      $q.all(promises).then($this.initSuccess);
     };
 
     this.init();

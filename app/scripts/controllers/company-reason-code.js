@@ -12,116 +12,7 @@ angular.module('ts5App')
 
     /* MOCK DATA - TO BE REMOVED */
 
-    var globalReasonCodeTypesJSON = {
-      'reasonTypes': [
-        {
-          'id': 1,
-          'reasonTypeName': 'Aircraft Related',
-          'description': 'Any Aircraft Related Reasons ',
-          'createdBy': 2,
-          'createdOn': '2014-11-12 04:03:40.945451',
-          'updatedBy': 2,
-          'updatedOn': '2014-11-12 04:16:20.300704'
-        },
-        {
-          'id': 2,
-          'reasonTypeName': 'Passenger Related',
-          'description': 'Any Passenger Related Reasons ',
-          'createdBy': 2,
-          'createdOn': '2014-11-12 04:04:46.502925',
-          'updatedBy': 2,
-          'updatedOn': '2014-11-12 04:16:35.371034'
-        },
-        {
-          'id': 5,
-          'reasonTypeName': 'Weather Related',
-          'description': 'Any Weather Related Reasons ',
-          'createdBy': 2,
-          'createdOn': '2014-11-12 04:09:59.386483',
-          'updatedBy': 2,
-          'updatedOn': '2014-11-12 04:17:21.66572'
-        },
-        {
-          'id': 6,
-          'reasonTypeName': 'Crew Related',
-          'description': 'Any Crew Related Reasons ',
-          'createdBy': 2,
-          'createdOn': '2014-11-12 04:17:47.97459',
-          'updatedBy': null,
-          'updatedOn': null
-        },
-        {
-          'id': 9,
-          'reasonTypeName': 'Inventory',
-          'description': 'Inventory Management Reasons',
-          'createdBy': 2,
-          'createdOn': '2015-01-27 03:24:26.287074',
-          'updatedBy': null,
-          'updatedOn': null
-        },
-        {
-          'id': 10,
-          'reasonTypeName': 'Complimentary',
-          'description': 'Complimentary Management Reasons',
-          'createdBy': 2,
-          'createdOn': '2015-01-27 03:24:51.558555',
-          'updatedBy': null,
-          'updatedOn': null
-        },
-        {
-          'id': 11,
-          'reasonTypeName': 'Refund',
-          'description': 'Refund Related Reasons ',
-          'createdBy': 2,
-          'createdOn': '2015-02-19 19:40:39.821906',
-          'updatedBy': null,
-          'updatedOn': null
-        },
-        {
-          'id': 12,
-          'reasonTypeName': 'Opening Inventory',
-          'description': 'Opening Inventory',
-          'createdBy': 2,
-          'createdOn': '2015-05-04 04:19:23.693811',
-          'updatedBy': null,
-          'updatedOn': null
-        },
-        {
-          'id': 13,
-          'reasonTypeName': 'Closing Inventory',
-          'description': 'Closing Inventory',
-          'createdBy': 2,
-          'createdOn': '2015-05-04 04:19:58.230215',
-          'updatedBy': null,
-          'updatedOn': null
-        },
-        {
-          'id': 15,
-          'reasonTypeName': 'Ullage',
-          'description': 'Ullage',
-          'createdBy': 2,
-          'createdOn': '2015-05-04 04:20:41.347751',
-          'updatedBy': null,
-          'updatedOn': null
-        },
-        {
-          'id': 16,
-          'reasonTypeName': 'LMP Stock Adjustment',
-          'description': 'LMP Stock Adjustment',
-          'createdBy': 2,
-          'createdOn': '2015-08-20 16:43:46.277741',
-          'updatedBy': null,
-          'updatedOn': null
-        }
-      ],
-      'meta': {
-        'count': 11,
-        'limit': 11,
-        'start': 0
-      }
-    };
-
-   var companyReasonCodeTypesJSON =  {
+   var companyReasonTypesJSON =  {
       'companyReasonTypes': [
         {
           'id': 17,
@@ -179,19 +70,22 @@ angular.module('ts5App')
       }
     };
 
+    // TODO: Add mock company reason code data and add getter / setter
+
     var $this = this;
 
-    this.getGlobalReasonInFormData = function(globalReasonCodeId) {
-      return $scope.formData.globalReasons.filter(function(globalReason) {
-        return parseInt(globalReason.id) === parseInt(globalReasonCodeId);
+    this.getReasonTypeInFormData = function(reasonTypeId) {
+      return $scope.formData.companyReasonTypes.filter(function(reasonType) {
+        return parseInt(reasonType.id) === parseInt(reasonTypeId);
       })[0];
     };
 
-    this.filterByGlobalReason = function(reason) {
-      if( $scope.reasonFilter.selectedGlobalReasons.length === 0 ) {
+    this.filterByReasonType = function(reason) {
+      if( !Array.isArray($scope.reasonFilter.selectedReasonTypes) ||
+        $scope.reasonFilter.selectedReasonTypes.length === 0 ) {
         return true;
       }
-      return $scope.reasonFilter.selectedGlobalReasons.filter(function(reasonType) {
+      return $scope.reasonFilter.selectedReasonTypes.filter(function(reasonType) {
         return parseInt(reasonType.id) === parseInt(reason.id);
       })[0];
     };
@@ -222,19 +116,19 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
     };
 
-    this.createCompanyReasonCodeSuccess = function() {
+    this.createCompanyReasonSuccess = function() {
       this.showSuccessMessage('The selected Reasons were saved!');
     };
 
-    this.createCompanyReasonCode = function() {
+    this.createCompanyReason = function() {
       var payload = this.generatePayload();
       // make service call here
-      this.createCompanyReasonCodeSuccess(payload);
+      this.createCompanyReasonSuccess(payload);
     };
 
     this.submitForm = function(formObject) {
       if( $this.validateForm(formObject) ) {
-        $this.createCompanyReasonCode();
+        $this.createCompanyReason();
       }
     };
 
@@ -242,65 +136,50 @@ angular.module('ts5App')
       $scope.buttonText = 'Save';
     };
 
-    this.setSubscribedGlobalReasons = function() {
-      // mock data, should be a real loop to set subscribed list
-      return [
-        globalReasonCodeTypesJSON.reasonTypes[0],
-        globalReasonCodeTypesJSON.reasonTypes[1],
-        globalReasonCodeTypesJSON.reasonTypes[2],
-        globalReasonCodeTypesJSON.reasonTypes[3],
-      ];
+    this.setSubscribedReasonTypes = function() {
+      var reasons = [];
+      $scope.companyReasonTypes.forEach(function(reasonType){
+        reasons.push(reasonType);
+      });
+      return reasons;
     };
 
     this.setUpFormDataObject = function() {
       $scope.formData = {
-        globalReasons: [],
-        subscribedGlobalReasons: this.setSubscribedGlobalReasons()
+        companyReasonTypes: this.setSubscribedReasonTypes()
       };
-      angular.forEach($scope.globalReasonCodeTypesList, function(globalReason) {
-        $scope.formData.globalReasons.push({
-          id:globalReason.id,
-          companyReasons: [
-            {reasonCode: 'Example reason 1',isActive:true},
-            {reasonCode: 'Example reason 2',isActive:true}
-          ]
-        });
+      angular.forEach($scope.formData.companyReasonTypes, function(reasonType) {
+        reasonType.companyReasonCodes = [
+          {reasonCode: 'Example reason 1',isActive:true},
+          {reasonCode: 'Example reason 2',isActive:true}
+        ];
       });
     };
 
-    this.setGlobalReasonCodeTypes = function(dataFromAPI) {
-      $scope.globalReasonCodeTypesList = dataFromAPI.reasonTypes;
+    this.setCompanyReasonTypes = function(dataFromAPI) {
+      $scope.companyReasonTypes = dataFromAPI.companyReasonTypes;
       this.setUpFormDataObject();
     };
 
-    this.getGlobalReasonCodeTypes = function() {
+    this.getCompanyReasonTypes = function() {
       // Factory call here
-      return this.setGlobalReasonCodeTypes(globalReasonCodeTypesJSON);
+      return this.setCompanyReasonTypes(companyReasonTypesJSON);
     };
 
-    this.setCompanyReasonCodeTypes = function(dataFromAPI) {
-      $scope.companyReasonCodeTypesList = dataFromAPI.companyReasonTypes;
-    };
-
-    this.getCompanyReasonCodeTypes = function() {
-      // Factory call here
-      return this.setCompanyReasonCodeTypes(companyReasonCodeTypesJSON);
-    };
-
-    this.addReasonCode = function(globalReasonCodeId) {
-      var globalReason = this.getGlobalReasonInFormData(globalReasonCodeId);
-      if(globalReason) {
-        globalReason.companyReasons.push({
+    this.addReasonCode = function(reasonTypeId) {
+      var reasonType = this.getReasonTypeInFormData(reasonTypeId);
+      if(reasonType) {
+        reasonType.companyReasonCodes.push({
           reasonCode:'',
           isActive: null
         });
       }
     };
 
-    this.removeReason = function(globalReasonCodeId,$index) {
-      var globalReason = this.getGlobalReasonInFormData(globalReasonCodeId);
-      if(globalReason) {
-        globalReason.companyReasons.splice($index,1);
+    this.removeReason = function(reasonTypeId,$index) {
+      var reasonType = this.getReasonTypeInFormData(reasonTypeId);
+      if(reasonType) {
+        reasonType.companyReasonCodes.splice($index,1);
       }
     };
 
@@ -310,8 +189,8 @@ angular.module('ts5App')
         selectedGlobalReasons:[]
       };
       this.setViewLabels();
-      this.getCompanyReasonCodeTypes();
-      this.getGlobalReasonCodeTypes();
+      // TODO: add $q and init success
+      this.getCompanyReasonTypes();
     };
 
     this.init();
@@ -322,21 +201,21 @@ angular.module('ts5App')
       return $this.submitForm(formObject);
     };
 
-    $scope.addReasonCode = function(globalReasonCodeId) {
-      return $this.addReasonCode(globalReasonCodeId);
+    $scope.addReasonCode = function(reasonTypeId) {
+      return $this.addReasonCode(reasonTypeId);
     };
 
-    $scope.removeReason = function(globalReasonCodeId,$index) {
-      return $this.removeReason(globalReasonCodeId,$index);
+    $scope.removeReason = function(reasonTypeId,$index) {
+      return $this.removeReason(reasonTypeId,$index);
     };
 
     $scope.whenReasonIsNotFiltered = function(reason) {
-      return $this.filterByGlobalReason(reason);
+      return $this.filterByReasonType(reason);
     };
 
-    $scope.addReasonCodeWithEnter = function(keyEvent,globalReasonCodeId) {
+    $scope.addReasonCodeWithEnter = function(keyEvent,reasonTypeId) {
       if (keyEvent.which === 13) {
-        $this.addReasonCode(globalReasonCodeId);
+        $this.addReasonCode(reasonTypeId);
       }
     };
 

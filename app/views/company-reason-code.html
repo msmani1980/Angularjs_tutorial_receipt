@@ -20,10 +20,10 @@
 
   <div class="form-group">
 
-    <ui-select multiple ng-model="reasonFilter.selectedGlobalReasons" theme="bootstrap">
+    <ui-select multiple ng-model="reasonFilter.selectedReasonTypes" theme="bootstrap">
       <ui-select-match placeholder="Start typing to filter your Subscribed Reasons Types ">{{ $item.reasonTypeName }}
       </ui-select-match>
-      <ui-select-choices repeat="subscribed in formData.subscribedGlobalReasons | filter: $select.search | orderBy:'reasonTypeName'">
+      <ui-select-choices repeat="subscribed in formData.companyReasonTypes | filter: $select.search | orderBy:'reasonTypeName'">
         <div ng-bind-html="subscribed.reasonTypeName | highlight: $select.search"></div>
       </ui-select-choices>
     </ui-select>
@@ -31,9 +31,10 @@
 
   <div class="row">
 
-    <div class="col-xs-12 col-sm-6" ng-show="whenReasonIsNotFiltered(subscribed)"
-    ng-repeat="(key,subscribed) in formData.subscribedGlobalReasons track by subscribed.id"
-    ng-init="reasonForm = 'reasonForm'+key">
+    <div ng-repeat="(key,reasonType) in formData.companyReasonTypes | orderBy: 'reasonTypeName' track by reasonType.id"
+     ng-show="whenReasonIsNotFiltered(reasonType)"
+     ng-init="reasonForm = 'reasonForm'+key"
+     class="col-xs-12 col-sm-6">
 
       <error-dialog form-object="reasonForm" error-response="errorResponse" display="displayError">
       </error-dialog>
@@ -43,8 +44,8 @@
         <div class="panel panel-default">
 
           <div class="panel-heading">
-            <strong>{{ subscribed.reasonTypeName }}</strong>
-            <br/>{{ subscribed.description}}
+            <strong>{{ reasonType.reasonTypeName }}</strong>
+            <br/>{{ reasonType.description}}
           </div>
 
           <table class="table table-responsive table-hover" style="margin:0;">
@@ -60,10 +61,10 @@
 
         	  <tbody>
 
-      	      <tr ng-repeat="reasonCode in formData.globalReasons[key].companyReasons track by $index">
+      	      <tr ng-repeat="reasonCode in reasonType.companyReasonCodes track by $index">
 
                 <td>
-                  <input placeholder="Type a reason here" type="text" class="form-control" ng-keypress="addReasonCodeWithEnter($event,subscribed.id)"
+                  <input placeholder="Type a reason here" type="text" class="form-control" ng-keypress="addReasonCodeWithEnter($event,reasonType.id)"
                   name="description {{ $index+1}}" ng-model="reasonCode.reasonCode" required/>
                 </td>
 
@@ -72,7 +73,7 @@
                   <input ng-show="reasonCode.isActive" type="checkbox" name="isActive {{ $index+1}}" ng-model="reasonCode.isActive" tabindex="-1"  />
 
                   <button ng-show="{{ reasonCode.isActive === null }}" class="btn btn-danger btn-xs" type="button"
-                   ng-click="removeReason(subscribed.id,$index)" tabindex="-1">
+                   ng-click="removeReason(reasonType.id,$index)" tabindex="-1">
                     <i class="fa fa-trash"></i>
                   </button>
                 </td>
@@ -85,7 +86,7 @@
 
           <div class="panel-footer text-right">
 
-            <button type="button" class="btn btn-primary" ng-click="addReasonCode(subscribed.id)">
+            <button type="button" class="btn btn-primary" ng-click="addReasonCode(reasonType.id)">
               <span class="fa fa-plus" aria-hidden="true"></span>
               <span class="hidden-xs"> Add Reason</span>
             </button>
