@@ -130,8 +130,8 @@
     <span class="fa fa-flag"></span> Your search returned no results.
   </alert>
 
-  <div class="table table-responsive table-hover" ng-show="companyTaxRatesList.length">
-    <table class="table">
+  <div class="table table-responsive" ng-show="companyTaxRatesList.length">
+    <table class="table table-hover">
       <thead>
         <tr>
           <th>Tax Type</th>
@@ -150,7 +150,7 @@
 
         <!-- taxTypeCode Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxTypeCode}}</td>
-        <td class="animate-switch" ng-switch-when="edit">
+        <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
           <label for="tax-rates-type"><i>Tax Type</i></label>
             <ui-select ng-model="taxRate" theme="bootstrap" name="taxTypeCode">
               <ui-select-match placeholder="Select Tax Type">
@@ -164,7 +164,7 @@
 
         <!-- countryName Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.countryName}}</td>
-        <td class="animate-switch" ng-switch-when="edit">
+        <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
           <label for="tax-rates-country"><i>Country</i></label>
           <ui-select ng-model="taxRate" theme="bootstrap" name="taxRateCountry">
             <ui-select-match placeholder="Select Country">
@@ -182,7 +182,7 @@
             {{station.stationName}}
           </span>
         </td>
-        <td class="animate-switch" ng-switch-when="edit">
+        <td class="animate-switch tax-rates-multi-select" ng-switch-when="edit">
           <label for="tax-rates-station">Station</label>
           <ui-select ng-if="viewIsReady" multiple ng-model="taxRate.companyTaxRateStations" theme="bootstrap" ng-disabled="disabled" sortable="true" close-on-select="true">
             <ui-select-match placeholder="Select Stations">{{$item.stationCode}} - {{$item.stationName}}</ui-select-match>
@@ -197,7 +197,7 @@
 
         <!-- taxRateCode Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxRateType}}</td>
-        <td class="animate-switch" ng-switch-when="edit">
+        <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
           <label for="tax-rates-rate-type">Rate Type</label>
           <ui-select ng-model="taxRate" theme="bootstrap" name="searchRateType">
             <ui-select-match placeholder="Select Tax Rate Type">
@@ -211,21 +211,21 @@
 
         <!-- taxRateValue Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxRateValue}}</td>
-        <td class="animate-switch" ng-switch-when="edit">
+        <td class="animate-switch tax-rates-input" ng-switch-when="edit">
           <label for="tax-rates-rate">Rate</label>
           <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Select Tax Rate">
         </td>
 
         <!-- startDate Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.startDate}}</td>
-        <td class="animate-switch" ng-switch-when="edit" style="max-width:150px">
+        <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
           <date-picker-field ng-model="taxRate.startDate" label="Effective From" placeholder="mm/dd/yyyy"></date-picker-field>
         </td>
 
         <!-- endDate Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.endDate}}</td>
-        <td class="animate-switch" ng-switch-when="edit" style="max-width:150px">
-          <date-picker-field style="max-width:100px" ng-model="taxRate.endDate" label="Effective To" placeholder="mm/dd/yyyy"></date-picker-field>
+        <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
+          <date-picker-field ng-model="taxRate.endDate" label="Effective To" placeholder="mm/dd/yyyy"></date-picker-field>
         </td>
 
         <!-- TODO: add Edit actions for each tax rate -->
@@ -238,7 +238,7 @@
           </a>
         </td>
 
-        <td class="animate-switch" ng-switch-when="edit">
+        <td class="animate-switch tax-rates-action" ng-switch-when="edit">
           <a class="btn btn-primary btn-xs" alt="Save Edits">
             <span class="fa fa-save"></span>
           </a>

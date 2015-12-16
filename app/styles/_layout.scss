@@ -110,8 +110,8 @@ html .navbar,
 
  .animate-switch.ng-move,
  .animate-switch.ng-enter {
-   -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s;
-   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s;
+   -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
  }
 
  .animate-switch.ng-leave.ng-leave-active,
@@ -124,4 +124,43 @@ html .navbar,
  .animate-switch.ng-move.ng-move-active,
  .animate-switch.ng-enter.ng-enter-active {
    opacity:1;
+ }
+
+ .tax-rates-dates{
+   max-width:155px;
+   min-width:155px;
+   padding:5px;
+   margin: 0 auto;
+ }
+
+ .tax-rates-ui-select{
+   max-width:125px;
+   min-width:125px;
+   padding:5px;
+   margin: 0 auto;
+ }
+
+ .tax-rates-ui-select .ui-select-toggle{
+   overflow:hidden;
+ }
+
+ .tax-rates-multi-select{
+   max-width:150px;
+   min-width:125px;
+   padding:5px;
+   margin: 0 auto;
+ }
+
+ .tax-rates-input{
+   max-width:100px;
+   min-width:85px;
+   padding:5px;
+ }
+
+ .tax-rates-action{
+   height:40px;
+   top:30px;
+   max-width:75px;
+   min-width:50px;
+   padding:5px;
  }
