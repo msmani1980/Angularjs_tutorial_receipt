@@ -31,7 +31,7 @@ angular.module('ts5App')
     };
 
     var getEmployees = function (companyId) {
-      return employeesService.getEmployees(companyId)
+      return employeesService.getEmployees(companyId);
     };
 
     var getStations = function () {

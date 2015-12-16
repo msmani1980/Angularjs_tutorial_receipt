@@ -1,6 +1,5 @@
 'use strict';
 
-/* global moment */
 /**
  * @ngdoc function
  * @name ts5App.controller:EmployeeMessageCtrl
@@ -48,18 +47,10 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     this.filterListsByName = function (listName) {
-      if (listName === 'employees' || listName === 'all') {
-        $scope.filteredEmployees = $this.filterList($scope.employeeMessage.employees, $scope.employeesList);
-      }
-      if (listName === 'schedules' || listName === 'all') {
-        $scope.filteredSchedules = $this.filterList($scope.employeeMessage.schedules, $scope.schedulesList, 'scheduleNumber');
-      }
-      if (listName === 'departureStations' || listName === 'all') {
-        $scope.filteredDepStations = $this.filterList($scope.employeeMessage.departureStations, $scope.stationsList);
-      }
-      if (listName === 'arrivalStations' || listName === 'all') {
-        $scope.filteredArrStations = $this.filterList($scope.employeeMessage.arrivalStations, $scope.stationsList);
-      }
+      var listsToFilter = (listName === 'all') ? ['employees', 'schedules', 'departureStations', 'arrivalStations'] : [listName];
+      angular.forEach(listsToFilter, function (list) {
+        $scope.filteredEmployees = $this.filterList($scope.employeeMessage[list], $scope.employeesList);
+      });
     };
 
     this.formatArrayForAPIWithAttributes = function (array, attributeToSave) {

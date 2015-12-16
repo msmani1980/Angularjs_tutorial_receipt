@@ -1,6 +1,5 @@
 'use strict';
 
-/* global moment */
 /**
  * @ngdoc function
  * @name ts5App.controller:EmployeeMessageListCtrl
