@@ -12,101 +12,116 @@ angular.module('ts5App')
 
     /* MOCK DATA - TO BE REMOVED */
 
-    var companyReasonCodesJSON = {
-      'companyReasonCodes': [
+    var globalReasonCodeTypesJSON = {
+      'reasonTypes': [
         {
-          'id': 34,
-          'companyId': 403,
-          'companyReasonCodeName': 'Damaged',
-          'companyReasonTypeId': 16,
-          'description': 'Opening Inventory',
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-05',
-          'isActive': 'true',
-          'reasonTypeId': 12,
-          'reasonTypeName': 'Opening Inventory'
+          'id': 1,
+          'reasonTypeName': 'Aircraft Related',
+          'description': 'Any Aircraft Related Reasons ',
+          'createdBy': 2,
+          'createdOn': '2014-11-12 04:03:40.945451',
+          'updatedBy': 2,
+          'updatedOn': '2014-11-12 04:16:20.300704'
         },
         {
-          'id': 35,
-          'companyId': 403,
-          'companyReasonCodeName': 'Product Missing',
-          'companyReasonTypeId': 16,
-          'description': 'Opening Inventory',
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-05',
-          'isActive': 'true',
-          'reasonTypeId': 12,
-          'reasonTypeName': 'Opening Inventory'
+          'id': 2,
+          'reasonTypeName': 'Passenger Related',
+          'description': 'Any Passenger Related Reasons ',
+          'createdBy': 2,
+          'createdOn': '2014-11-12 04:04:46.502925',
+          'updatedBy': 2,
+          'updatedOn': '2014-11-12 04:16:35.371034'
         },
         {
-          'id': 36,
-          'companyId': 403,
-          'companyReasonCodeName': 'Extra Product',
-          'companyReasonTypeId': 16,
-          'description': 'Opening Inventory',
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-05',
-          'isActive': 'true',
-          'reasonTypeId': 12,
-          'reasonTypeName': 'Opening Inventory'
+          'id': 5,
+          'reasonTypeName': 'Weather Related',
+          'description': 'Any Weather Related Reasons ',
+          'createdBy': 2,
+          'createdOn': '2014-11-12 04:09:59.386483',
+          'updatedBy': 2,
+          'updatedOn': '2014-11-12 04:17:21.66572'
         },
         {
-          'id': 37,
-          'companyId': 403,
-          'companyReasonCodeName': 'Foreign Object',
-          'companyReasonTypeId': 16,
-          'description': 'Opening Inventory',
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-05',
-          'isActive': 'true',
-          'reasonTypeId': 12,
-          'reasonTypeName': 'Opening Inventory'
+          'id': 6,
+          'reasonTypeName': 'Crew Related',
+          'description': 'Any Crew Related Reasons ',
+          'createdBy': 2,
+          'createdOn': '2014-11-12 04:17:47.97459',
+          'updatedBy': null,
+          'updatedOn': null
         },
         {
-          'id': 38,
-          'companyId': 403,
-          'companyReasonCodeName': 'Damaged',
-          'companyReasonTypeId': 17,
+          'id': 9,
+          'reasonTypeName': 'Inventory',
+          'description': 'Inventory Management Reasons',
+          'createdBy': 2,
+          'createdOn': '2015-01-27 03:24:26.287074',
+          'updatedBy': null,
+          'updatedOn': null
+        },
+        {
+          'id': 10,
+          'reasonTypeName': 'Complimentary',
+          'description': 'Complimentary Management Reasons',
+          'createdBy': 2,
+          'createdOn': '2015-01-27 03:24:51.558555',
+          'updatedBy': null,
+          'updatedOn': null
+        },
+        {
+          'id': 11,
+          'reasonTypeName': 'Refund',
+          'description': 'Refund Related Reasons ',
+          'createdBy': 2,
+          'createdOn': '2015-02-19 19:40:39.821906',
+          'updatedBy': null,
+          'updatedOn': null
+        },
+        {
+          'id': 12,
+          'reasonTypeName': 'Opening Inventory',
+          'description': 'Opening Inventory',
+          'createdBy': 2,
+          'createdOn': '2015-05-04 04:19:23.693811',
+          'updatedBy': null,
+          'updatedOn': null
+        },
+        {
+          'id': 13,
+          'reasonTypeName': 'Closing Inventory',
           'description': 'Closing Inventory',
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-05',
-          'isActive': 'true',
-          'reasonTypeId': 13,
-          'reasonTypeName': 'Closing Inventory'
+          'createdBy': 2,
+          'createdOn': '2015-05-04 04:19:58.230215',
+          'updatedBy': null,
+          'updatedOn': null
         },
         {
-          'id': 39,
-          'companyId': 403,
-          'companyReasonCodeName': 'Product Missing',
-          'companyReasonTypeId': 17,
-          'description': 'Closing Inventory',
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-05',
-          'isActive': 'true',
-          'reasonTypeId': 13,
-          'reasonTypeName': 'Closing Inventory'
+          'id': 15,
+          'reasonTypeName': 'Ullage',
+          'description': 'Ullage',
+          'createdBy': 2,
+          'createdOn': '2015-05-04 04:20:41.347751',
+          'updatedBy': null,
+          'updatedOn': null
         },
         {
-          'id': 40,
-          'companyId': 403,
-          'companyReasonCodeName': 'Extra Product',
-          'companyReasonTypeId': 17,
-          'description': 'Closing Inventory',
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-05',
-          'isActive': 'true',
-          'reasonTypeId': 13,
-          'reasonTypeName': 'Closing Inventory'
-        },
+          'id': 16,
+          'reasonTypeName': 'LMP Stock Adjustment',
+          'description': 'LMP Stock Adjustment',
+          'createdBy': 2,
+          'createdOn': '2015-08-20 16:43:46.277741',
+          'updatedBy': null,
+          'updatedOn': null
+        }
       ],
       'meta': {
-        'count': 20,
-        'limit': 20,
+        'count': 11,
+        'limit': 11,
         'start': 0
       }
     };
 
-   var companyReasonTypesJSON =  {
+   var companyReasonCodeTypesJSON =  {
       'companyReasonTypes': [
         {
           'id': 17,
@@ -166,6 +181,21 @@ angular.module('ts5App')
 
     var $this = this;
 
+    this.getGlobalReasonInFormData = function(globalReasonCodeId) {
+      return $scope.formData.globalReasons.filter(function(globalReason) {
+        return parseInt(globalReason.id) === parseInt(globalReasonCodeId);
+      })[0];
+    };
+
+    this.filterByGlobalReason = function(reason) {
+      if( $scope.reasonFilter.selectedGlobalReasons.length === 0 ) {
+        return true;
+      }
+      return $scope.reasonFilter.selectedGlobalReasons.filter(function(reasonType) {
+        return parseInt(reasonType.id) === parseInt(reason.id);
+      })[0];
+    };
+
     this.isActionState = function(actionState) {
       return actionState === $routeParams.action;
     };
@@ -193,7 +223,7 @@ angular.module('ts5App')
     };
 
     this.createCompanyReasonCodeSuccess = function() {
-      this.showSuccessMessage('Company Reason Code was created!');
+      this.showSuccessMessage('The selected Reasons were saved!');
     };
 
     this.createCompanyReasonCode = function() {
@@ -209,33 +239,72 @@ angular.module('ts5App')
     };
 
     this.setViewLabels = function() {
-      $scope.buttonText = 'Create';
+      $scope.buttonText = 'Save';
     };
 
-    this.setCompanyReasonTypes = function(dataFromAPI) {
-      $scope.companyReasonTypes = dataFromAPI.companyReasonTypes;
+    this.setSubscribedGlobalReasons = function() {
+      // mock data, should be a real loop to set subscribed list
+      return [
+        globalReasonCodeTypesJSON.reasonTypes[0],
+        globalReasonCodeTypesJSON.reasonTypes[1],
+        globalReasonCodeTypesJSON.reasonTypes[2],
+        globalReasonCodeTypesJSON.reasonTypes[3],
+      ];
     };
 
-    this.getCompanyReasonTypes = function() {
+    this.setUpFormDataObject = function() {
+      $scope.formData = {
+        globalReasons: [],
+        subscribedGlobalReasons: this.setSubscribedGlobalReasons()
+      };
+      angular.forEach($scope.globalReasonCodeTypesList, function(globalReason) {
+        $scope.formData.globalReasons.push({
+          id:globalReason.id,
+          companyReasons: [
+            {reasonCode: 'Example reason 1',isActive:true},
+            {reasonCode: 'Example reason 2',isActive:true}
+          ]
+        });
+      });
+    };
+
+    this.setGlobalReasonCodeTypes = function(dataFromAPI) {
+      $scope.globalReasonCodeTypesList = dataFromAPI.reasonTypes;
+      this.setUpFormDataObject();
+    };
+
+    this.getGlobalReasonCodeTypes = function() {
       // Factory call here
-      return this.setCompanyReasonTypes(companyReasonTypesJSON);
+      return this.setGlobalReasonCodeTypes(globalReasonCodeTypesJSON);
     };
 
-    this.setCompanyReasonCodes = function(dataFromAPI) {
-      $scope.companyReasonCodes = dataFromAPI.companyReasonCodes;
+    this.setCompanyReasonCodeTypes = function(dataFromAPI) {
+      $scope.companyReasonCodeTypesList = dataFromAPI.companyReasonTypes;
     };
 
-    this.getCompanyReasonCodes = function() {
+    this.getCompanyReasonCodeTypes = function() {
       // Factory call here
-      return this.setCompanyReasonCodes(companyReasonCodesJSON);
+      return this.setCompanyReasonCodeTypes(companyReasonCodeTypesJSON);
     };
 
+    this.addReasonCode = function(globalReasonCodeId) {
+      var globalReason = this.getGlobalReasonInFormData(globalReasonCodeId);
+      if(globalReason) {
+        globalReason.companyReasons.push({
+          reasonCode:'',
+          isActive: null
+        });
+      }
+    };
 
     this.init = function() {
       $scope.displayError = false;
+      $scope.reasonFilter = {
+        selectedGlobalReasons:[]
+      };
       this.setViewLabels();
-      this.getCompanyReasonCodes();
-      this.getCompanyReasonTypes();
+      this.getCompanyReasonCodeTypes();
+      this.getGlobalReasonCodeTypes();
     };
 
     this.init();
@@ -244,6 +313,20 @@ angular.module('ts5App')
 
     $scope.submitForm = function() {
       return $this.submitForm();
+    };
+
+    $scope.addReasonCode = function(globalReasonCodeId) {
+      return $this.addReasonCode(globalReasonCodeId);
+    };
+
+    $scope.whenReasonIsNotFiltered = function(reason) {
+      return $this.filterByGlobalReason(reason);
+    };
+
+    $scope.addReasonCodeWithEnter = function(keyEvent,globalReasonCodeId) {
+      if (keyEvent.which === 13) {
+        $this.addReasonCode(globalReasonCodeId);
+      }
     };
 
   });

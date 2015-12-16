@@ -31,6 +31,10 @@ angular.module('ts5App')
       return storeInstanceService.getStoreInstancesList(payload);
     }
 
+    function getStoreInstance(storeInstanceId) {
+      return storeInstanceService.getStoreInstance(storeInstanceId);
+    }
+
     var getStationList = function (id) {
       return stationsService.getStationList(id);
     };
@@ -75,6 +79,10 @@ angular.module('ts5App')
       return dailyExchangeRatesService.getDailyExchangeRates(id, cashierDate);
     };
 
+    var getDailyExchangeById = function (companyId, dailyExchangeRateId) {
+      return dailyExchangeRatesService.getDailyExchangeById(companyId, dailyExchangeRateId);
+    };
+
     var getCompanyPreferences = function (payload) {
       return companyPreferencesService.getCompanyPreferences(payload);
     };
@@ -93,8 +101,10 @@ angular.module('ts5App')
       getSchedulesInDateRange: getSchedulesInDateRange,
       getDailySchedulesList: getDailySchedulesList,
       getDailyExchangeRates: getDailyExchangeRates,
+      getDailyExchangeById: getDailyExchangeById,
       getCompanyPreferences: getCompanyPreferences,
       getStoreList: getStoreList,
-      getStoreInstanceList: getStoreInstanceList
+      getStoreInstanceList: getStoreInstanceList,
+      getStoreInstance: getStoreInstance
     };
   });

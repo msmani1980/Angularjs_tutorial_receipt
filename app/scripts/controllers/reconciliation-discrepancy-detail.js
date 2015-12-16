@@ -12,7 +12,7 @@ angular.module('ts5App')
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
-      return $filter('currency')(valueToFormat, '');
+      return sprintf ('%.2f', valueToFormat);
     }
 
     function initLMPStockRevisions() {
@@ -42,7 +42,7 @@ angular.module('ts5App')
       var varianceQuantity = getVarianceQuantity(stockItem);
       var retailValue = stockItem.price || 0;
       var varianceValue = varianceQuantity * stockItem.price;
-      var isDiscrepancy = (varianceQuantity !== 0);
+      var isDiscrepancy = (formatAsCurrency(varianceQuantity) !== '0.00');
       var eposSales = stockItem.eposQuantity || 0;
       var inboundOffloadCount = stockItem.inboundQuantity || stockItem.offloadQuantity || 0;
 
@@ -140,17 +140,19 @@ angular.module('ts5App')
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
 
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
-        var varianceValue = (cashBag.paperAmountManual + cashBag.coinAmountManual) - crewAmount + (crewAmount - 0);
-        var isDiscrepancy = varianceValue !== 0;
-        var bankExchangeRate = cashBag.chBankExchangeRate || (cashBag.chPaperExchangeRate + '/' + cashBag.chCoinExchangeRate);
-        var totalBank = cashBag.bankAmountCh || (cashBag.coinAmountManualCh + cashBag.paperAmountManualCh);
-        var cashBagItem = {
+        var bankExchangeRate = cashBag.chBankExchangeRate ? formatAsCurrency(cashBag.chBankExchangeRate) : (formatAsCurrency(cashBag.chPaperExchangeRate) + '/' + formatAsCurrency(cashBag.chCoinExchangeRate));
+        var totalBank = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank);
+        var paperAmount = cashBag.paperAmountManual || cashBag.paperAmountManualBank;
+        var coinAmount = cashBag.coinAmountManual || cashBag.coinAmountManualBank;
+        var varianceValue = (paperAmount + coinAmount) - crewAmount;
+        var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
+          var cashBagItem = {
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
           eposCalculatedAmount: '-',
           crewAmount: formatAsCurrency(crewAmount),
-          paperAmount: formatAsCurrency(cashBag.paperAmountManual),
-          coinAmount: formatAsCurrency(cashBag.coinAmountManual),
+          paperAmount: formatAsCurrency(paperAmount),
+          coinAmount: formatAsCurrency(coinAmount),
           varianceValue: formatAsCurrency(varianceValue),
           bankExchangeRate: bankExchangeRate,
           totalBank: formatAsCurrency(totalBank),
@@ -257,14 +259,14 @@ angular.module('ts5App')
       });
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Virtual'}).map(function (item) {
-        reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
+        reconciliationFactory.getMasterItem(item.itemMasterId).then(function (dataFromAPI) {
           item.itemName = dataFromAPI.itemName;
         }, handleResponseError);
       });
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Voucher'}).map(function (item) {
-        reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
-          item.itemName = dataFromAPI.retailItem.itemName;
+        reconciliationFactory.getMasterItem(item.itemMasterId).then(function (dataFromAPI) {
+          item.itemName = dataFromAPI.itemName;
         }, handleResponseError);
       });
     }
@@ -319,11 +321,7 @@ angular.module('ts5App')
       var total = 0;
 
       angular.forEach($this.chCashBag, function (cashBag) {
-        if (cashBag.bankAmountCh) {
-          total += cashBag.bankAmountCh;
-        } else if (cashBag.coinAmountManualCh && cashBag.paperAmountManualCh) {
-          total += cashBag.coinAmountManualCh + cashBag.paperAmountManualCh;
-        }
+        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank);
       });
 
       angular.forEach(chCreditCard, function (creditCard) {
@@ -346,7 +344,11 @@ angular.module('ts5App')
     }
 
     function setupPaymentReport(reportList) {
-      $scope.paymentReport = angular.copy(reportList.paymentReports);
+      var paymentReportList = angular.copy(reportList.paymentReports);
+      angular.forEach(paymentReportList, function (report) {
+        report.scheduleDate = dateUtility.formatDateForApp(report.scheduleDate, 'YYYY-MM-DDThh:mm');
+      });
+      $scope.paymentReport = paymentReportList;
     }
 
     function setupData(responseCollection) {
