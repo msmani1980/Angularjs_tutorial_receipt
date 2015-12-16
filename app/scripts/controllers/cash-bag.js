@@ -86,10 +86,10 @@ angular.module('ts5App')
           var payload = {
             cashBag: saveCashBag
           };
-          cashBagFactory.updateCashBag($routeParams.id, payload).then(
-            showMessage(null, false, 'successfully updated'),
-            showMessage
-          );
+          cashBagFactory.updateCashBag($routeParams.id, payload).then(function (cashBagFromAPI) {
+            $location.search('newId', cashBagFromAPI.id).path('cash-bag-list');
+            showMessage(null, false, 'successfully updated');
+          }, showMessage);
           break;
         case 'create':
           formData.isDelete = false;
