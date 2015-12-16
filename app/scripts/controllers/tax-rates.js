@@ -56,9 +56,7 @@ angular.module('ts5App')
       $scope.currenciesList = angular.copy(dataFromAPI.response);
     };
 
-    this.setCompanyTaxRatesList = function(dataFromAPI) {
-      $scope.companyTaxRatesList = [];
-      var taxRatesList = angular.copy(dataFromAPI.taxRates);
+    this.createCompanyTaxRates = function(taxRatesList) {
       angular.forEach(taxRatesList, function(taxRate) {
         if (angular.isDefined(taxRate)) {
           taxRate.action = 'read';
@@ -69,6 +67,15 @@ angular.module('ts5App')
           $scope.companyTaxRatesList.push(taxRate);
         }
       });
+      return $scope.companyTaxRatesList;
+    };
+
+    this.setCompanyTaxRatesList = function(dataFromAPI) {
+      $scope.companyTaxRatesList = [];
+      var taxRatesList = angular.copy(dataFromAPI.taxRates);
+      if (angular.isDefined(taxRatesList)) {
+        $scope.companyTaxRatesList = $this.createCompanyTaxRates(taxRatesList);
+      }
     };
 
     this.getTaxTypesList = function() {

@@ -100,6 +100,8 @@ fdescribe('Controller: TaxRatesCtrl', function() {
   describe('When the Controller is rendered, it', function() {
     beforeEach(function() {
       initController();
+      spyOn(TaxRatesCtrl, 'setCompanyTaxRatesList').and.callThrough();
+      spyOn(TaxRatesCtrl, 'createCompanyTaxRates').and.callThrough();
     });
     it('should set the taxRateList as a blank array', function() {
       expect($scope.taxRatesList).toEqual([]);
@@ -121,6 +123,11 @@ fdescribe('Controller: TaxRatesCtrl', function() {
     });
     it('should set the taxRateToRemove as a blank array', function() {
       expect($scope.taxRateToRemove).toEqual([]);
+    });
+    it('should fail setting the companyTaxRatesList', function() {
+      var dataFromAPI = [];
+      TaxRatesCtrl.setCompanyTaxRatesList(dataFromAPI);
+      expect(TaxRatesCtrl.setCompanyTaxRatesList).toHaveBeenCalledWith([]);
     });
 
     it('should set the taxTypesList as a blank array', function() {
@@ -421,8 +428,42 @@ fdescribe('Controller: TaxRatesCtrl', function() {
 
         });
 
-      });
+        describe('deleteCompanyTaxRate method', function() {
+          var taxRate;
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'editCompanyTaxRate').and.callThrough();
+            spyOn(TaxRatesCtrl, 'cancelTaxRateEdit').and.callThrough();
+            spyOn(TaxRatesCtrl, 'addEditActionToTaxRate').and.callThrough();
+            taxRate = companyTaxRatesJSON.taxRates[0];
+          });
+          it('should call editCompanyTaxRate with payload', function() {
+            $scope.editCompanyTaxRate(taxRate);
+            expect(TaxRatesCtrl.editCompanyTaxRate).toHaveBeenCalledWith(taxRate);
+          });
+          it('should call cancelTaxRateEdit with payload', function() {
+            $scope.cancelTaxRateEdit(taxRate);
+            expect(TaxRatesCtrl.cancelTaxRateEdit).toHaveBeenCalledWith(taxRate);
+          });
+          it('should call addEditActionToTaxRate with payload', function() {
+            $scope.editCompanyTaxRate(taxRate);
+            expect(TaxRatesCtrl.addEditActionToTaxRate).toHaveBeenCalledWith(taxRate);
+          });
+          it('should call editCompanyTaxRateand error gracefully', function() {
+            $scope.editCompanyTaxRate();
+            expect(TaxRatesCtrl.editCompanyTaxRate).toHaveBeenCalled();
+          });
+          it('should call cancelTaxRateEdit and error gracefully', function() {
+            $scope.cancelTaxRateEdit();
+            expect(TaxRatesCtrl.cancelTaxRateEdit).toHaveBeenCalled();
+          });
+          it('should call addEditActionToTaxRate and error gracefully', function() {
+            $scope.editCompanyTaxRate();
+            expect(TaxRatesCtrl.addEditActionToTaxRate).toHaveBeenCalled();
+          });
 
+        });
+
+      });
     });
   });
 }); //Close for describe | Controller: TaxRatesCtrl
