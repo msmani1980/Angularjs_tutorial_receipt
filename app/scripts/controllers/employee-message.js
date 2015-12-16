@@ -49,7 +49,11 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     this.filterListsByName = function (listName) {
       var listsToFilter = (listName === 'all') ? ['employees', 'schedules', 'departureStations', 'arrivalStations'] : [listName];
       angular.forEach(listsToFilter, function (list) {
-        $scope.filteredEmployees = $this.filterList($scope.employeeMessage[list], $scope.employeesList);
+        var scopeArrayName = (list === 'departureStations' || list === 'arrivalStations') ? 'stationsList' : (list + 'List');
+        var optionalMatchCriteria = (list === 'schedules') ? 'scheduleNumber' : null;
+        var filteredArrayName = 'filtered' + lodash.capitalize(list);
+
+        $scope[filteredArrayName] = $this.filterList($scope.employeeMessage[list], $scope[scopeArrayName], optionalMatchCriteria);
       });
     };
 

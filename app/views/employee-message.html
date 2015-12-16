@@ -216,7 +216,7 @@
                     <td>
                       <ui-select multiple ng-model="newRecords.departureStations" theme="bootstrap">
                         <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
-                        <ui-select-choices repeat="station in filteredDepStations | filter: $select.search">
+                        <ui-select-choices repeat="station in filteredDepartureStations | filter: $select.search">
                           {{ station.code }} - {{ station.name }}
                         </ui-select-choices>
                       </ui-select>
@@ -272,7 +272,7 @@
                     <td>
                       <ui-select multiple ng-model="newRecords.arrivalStations" theme="bootstrap">
                         <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
-                        <ui-select-choices repeat="station in filteredArrStations | filter: $select.search">
+                        <ui-select-choices repeat="station in filteredArrivalStations | filter: $select.search">
                           {{ station.code }} - {{ station.name }}
                         </ui-select-choices>
                       </ui-select>

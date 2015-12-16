@@ -298,10 +298,11 @@ describe('Controller: EmployeeMessageCtrl', function () {
       var arrivalStationsLength = scope.employeeMessage.arrivalStations.length;
 
       EmployeeMessageCtrl.filterListsByName('all');
+      scope.$digest();
       expect(scope.filteredEmployees.length).toEqual(masterEmployeesLength - employeesLength);
       expect(scope.filteredSchedules.length).toEqual(masterSchedulesLength - schedulesLength);
-      expect(scope.filteredDepStations.length).toEqual(masterStationsLength - departureStationsLength);
-      expect(scope.filteredArrStations.length).toEqual(masterStationsLength - arrivalStationsLength);
+      expect(scope.filteredDepartureStations.length).toEqual(masterStationsLength - departureStationsLength);
+      expect(scope.filteredArrivalStations.length).toEqual(masterStationsLength - arrivalStationsLength);
     });
   });
 
