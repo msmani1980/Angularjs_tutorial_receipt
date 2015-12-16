@@ -410,5 +410,20 @@ describe('Controller: EmployeeMessageCtrl', function () {
         expect(isDeleteDisabled).toEqual(false);
       });
     });
+
+    describe('shouldDisableStartDate', function () {
+      beforeEach(function () {
+        initController('edit', 2);
+        scope.$digest();
+      });
+      it('should return true for active records', function () {
+        var mockActiveDate = '10/20/2000';
+        expect(scope.shouldDisableStartDate(mockActiveDate)).toEqual(true);
+      });
+      it('should return false for future records', function () {
+        var mockFutureDate = '10/20/3000';
+        expect(scope.shouldDisableStartDate(mockFutureDate)).toEqual(false);
+      });
+    });
   });
 });

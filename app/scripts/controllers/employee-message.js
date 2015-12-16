@@ -107,6 +107,10 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       }
     };
 
+    $scope.shouldDisableStartDate = function (startDate) {
+      var isRecordActive = dateUtility.isTodayOrEarlier(startDate);
+      return ($routeParams.action === 'edit' && isRecordActive);
+    };
 
     $scope.getPropertiesForDeletedButton = function (listName, attribute) {
       var canDelete = false;

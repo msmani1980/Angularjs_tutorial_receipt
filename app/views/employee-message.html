@@ -25,11 +25,13 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
-              <label>Message</label>
+              <label>Message *</label>
               <input class="form-control"
                      name="message"
                      ng-model="employeeMessage.employeeMessageText"
-                     required="true" ng-disabled="readOnly">
+                     required="true" ng-disabled="readOnly"
+                     maxlength="50"
+                     required="true">
             </div>
           </div>
         </div>
@@ -45,7 +47,7 @@
                 form="employeeMessageForm"
                 ng-model="employeeMessage.startDate"
                 label="Effective From"
-                disable="readOnly"
+                disable="readOnly || shouldDisableStartDate(employeeMessage.startDate)"
                 required="true">
               </date-picker-field>
             </div>
