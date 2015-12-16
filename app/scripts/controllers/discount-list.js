@@ -27,7 +27,7 @@ angular.module('ts5App')
 
     $scope.editDiscount = function (discount) {
       $location.search({});
-      window.location.href = '/ember/#/discounts/' + discount.id + '/edit';
+      $location.path('/discounts/edit/' + discount.id);
     };
 
     $scope.searchDiscounts = function () {

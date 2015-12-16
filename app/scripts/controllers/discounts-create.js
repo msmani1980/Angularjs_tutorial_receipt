@@ -24,7 +24,8 @@ angular.module('ts5App')
     $scope.addRestrictedItemsNumber = 1;
     $scope.formData = {
       isRestriction: 'false',
-      restrictedItems: []
+      restrictedItems: [],
+      amountDiscountValue: {}
     };
 
     this.checkFormState = function() {
@@ -73,6 +74,16 @@ angular.module('ts5App')
       $scope.filteredRetailItemsList[0] = $scope.retailItemsList;
     };
 
+    this.getItem = function(id) {
+      this.showLoadingModal('We are getting your Discount data!');
+      discountFactory.getDiscount(id).then(function(data) {
+        $this.updateFormData(data.companyDiscount);
+        $this.setUIReady();
+      }), function() {
+        $location.path('/');
+      };
+    };
+
     this.setDependencies = function(response) {
       $this.setGlobalDiscountTypesList(response[0]);
       $this.setDiscountTypesList(response[1]);
@@ -109,6 +120,26 @@ angular.module('ts5App')
       $q.all(dependencyPromises).then(function(response) {
         $this.setDependencies(response);
       });
+    };
+
+    this.updateFormData = function(discountData) {
+      if (!discountData) {
+        return false;
+      }
+
+      $scope.formData.discountName = discountData.name;
+      $scope.formData.globalDiscountTypeId = discountData.discountTypeId;
+      $scope.formData.barCode = discountData.barcode;
+      $scope.formData.description = discountData.description;
+      $scope.formData.startDate = dateUtility.formatDateForApp(discountData.startDate);
+      $scope.formData.endDate = dateUtility.formatDateForApp(discountData.endDate);
+
+      $scope.formData.discountTypeId = discountData.rateTypeId;
+
+      angular.forEach(discountData.rates, function(rate) {
+        $scope.formData.amountDiscountValue[rate.companyCurrencyId] = rate.amount;
+      });
+
     };
 
     $scope.showDeleteConfirmation = function (index, restrictedItem) {

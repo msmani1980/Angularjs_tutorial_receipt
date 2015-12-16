@@ -47,17 +47,16 @@
           <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
             <div class="form-group">
               <label>Global Discount Type *</label>
-              <select required ng-model="formData.globalDiscountTypeId" name="globalDiscountTypeId" class="form-control">
-                <option ng-selected="setSelected(formData.globalDiscountTypeId, globalDiscountType.id)" ng-repeat="globalDiscountType in globalDiscountTypesList"
-                        value="{{ globalDiscountType.id }}">{{ globalDiscountType.globalDiscountTypeName }}
-                </option>
+              <select required name="globalDiscountTypeId" class="form-control"
+                      ng-options="globalDiscountType.id as globalDiscountType.globalDiscountTypeName for globalDiscountType in globalDiscountTypesList"
+                      ng-model="formData.globalDiscountTypeId">
               </select>
             </div>
-            <div class="form-group" ng-show="formData.globalDiscountType">
+            <div class="form-group" ng-show="formData.globalDiscountTypeId">
               <label class="control-label">Global Discount Description</label>
-              <div>{{ getGlobalDiscountDescriptionById(formData.globalDiscountType) }}</div>
+              <div>{{ getGlobalDiscountDescriptionById(formData.globalDiscountTypeId) }}</div>
             </div>
-            <div class="form-group" ng-show="formData.globalDiscountTypeId === '1'">
+            <div class="form-group" ng-show="formData.globalDiscountTypeId === 1">
               <label class="control-label">Bar Code *</label>
               <input class="form-control" ng-model="formData.barCode" name="barCode" ng-pattern="regexp.word" ng-required="formData.globalDiscountTypeId === '1'" />
             </div>
@@ -97,10 +96,9 @@
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label>Discount Type *</label>
-            <select ng-model="formData.discountTypeId" name="discountTypeId" required class="form-control">
-              <option ng-selected="setSelected(formData.discountTypeId, discountType.id)" ng-repeat="discountType in discountTypesList"
-                      value="{{ discountType.id }}">{{ discountType.name }}
-              </option>
+            <select required name="discountTypeId" class="form-control"
+                    ng-options="discountType.id as discountType.name for discountType in discountTypesList"
+                    ng-model="formData.discountTypeId">
             </select>
           </div>
         </div>
@@ -108,18 +106,18 @@
           <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                <div class="form-group" ng-show="formData.discountTypeId === '1'">
+                <div class="form-group" ng-show="formData.discountTypeId === 1">
                   <label class="control-label">Percentage Discount Value *</label>
-                  <input class="form-control" ng-model="formData.percentageDiscountValue" name="percentageDiscountValue" placeholder="10%" ng-pattern="regexp.percentage" ng-required="formData.discountTypeId === '1'" />
+                  <input class="form-control" ng-model="formData.percentageDiscountValue" name="percentageDiscountValue" placeholder="10%" ng-pattern="regexp.percentage" ng-required="formData.discountTypeId === 1" />
                 </div>
-                <div class="form-group" ng-show="formData.discountTypeId === '2'">
+                <div class="form-group" ng-show="formData.discountTypeId === 2">
                   <label>Fixed Discount Value</label>
                   <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
                     <div class="input-group" >
                       <div class="input-group-addon">
                         {{ currency.code }} *
                       </div>
-                      <input ng-model="formData.amountDiscountValue[currency.code].amount" name="{{ currency.code }}AmountDiscountValue" ng-disabled="$parent.isDisabled()" type="text" class="form-control" ng-pattern="regexp.price" ng-required="formData.discountTypeId === '2'" />
+                      <input ng-model="formData.amountDiscountValue[currency.id]" name="{{ currency.code }}AmountDiscountValue" ng-disabled="$parent.isDisabled()" type="text" class="form-control" ng-pattern="regexp.price" ng-required="formData.discountTypeId === 2" />
                     </div>
                   </div>
                 </div>
@@ -152,7 +150,7 @@
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
-                    <input ng-model="formData.amountLimitPerShopValue[currency.code].amount" name="{{ currency.code }}AmountLimitPerShopValue" ng-disabled="$parent.isDisabled()" ng-pattern="regexp.price" type="text" class="form-control" />
+                    <input ng-model="formData.amountLimitPerShopValue[currency.code].amount" name="{{ currency.code }}AmountLimitPerShopValue" ng-disabled="$parent.isDisabled()" ng-required="formData.isAmountLimitPerShopValue" ng-pattern="regexp.price" type="text" class="form-control" />
                   </div>
                 </div>
               </div>
@@ -184,7 +182,7 @@
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
-                    <input ng-model="formData.amountLimitPerTransactionValue[currency.code].amount" name="{{ currency.code }}AmountLimitPerTransactionValue" ng-disabled="$parent.isDisabled()" ng-pattern="regexp.price" type="text" class="form-control" />
+                    <input ng-model="formData.amountLimitPerTransactionValue[currency.code].amount" name="{{ currency.code }}AmountLimitPerTransactionValue" ng-required="formData.isAmountLimitPerTransaction" ng-disabled="$parent.isDisabled()" ng-pattern="regexp.price" type="text" class="form-control" />
                   </div>
                 </div>
               </div>
@@ -253,7 +251,7 @@
         <div class="col-xs-12 col-sm-5">
           <div class="form-group">
             <label>Retail Item *</label>
-            <select required ng-model="restrictedItem.id" name="restrictedItem-{{$index}}" class="form-control">
+            <select required ng-model="restrictedItem.id" name="restrictedItem-{{$index + 1}}" class="form-control">
               <option ng-selected="setSelected(restrictedItem.retailItemId, retailItem.id)" ng-repeat="retailItem in filteredRetailItemsList[restrictedItem.itemCategory]"
                       value="{{ retailItem.id }}">{{ retailItem.itemName }}
               </option>
