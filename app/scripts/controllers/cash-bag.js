@@ -256,8 +256,15 @@ angular.module('ts5App')
       );
     }
 
-    function dailyExchangeResponseHandler(response) {
-      $scope.dailyExchangeRates = angular.copy(response.dailyExchangeRates);
+    function dailyExchangeByIdResponseHandler(exchangeRate) {
+      $scope.dailyExchangeRates = [angular.copy(exchangeRate)];
+      if ($routeParams.state === 'view' || $routeParams.state === 'edit') {
+        promisesResponseHandler();
+      }
+    }
+
+    function dailyExchangeResponseHandler(responseFromAPI) {
+      $scope.dailyExchangeRates = angular.copy(responseFromAPI.dailyExchangeRates);
       if ($routeParams.state === 'view' || $routeParams.state === 'edit') {
         promisesResponseHandler();
       }
@@ -266,7 +273,7 @@ angular.module('ts5App')
     function getExchangeRates(cashBag) {
       if (cashBag && cashBag.dailyExchangeRateId) {
         _promises.push(
-          cashBagFactory.getDailyExchangeById(_companyId, cashBag.dailyExchangeRateId).then(dailyExchangeResponseHandler)
+          cashBagFactory.getDailyExchangeById(_companyId, cashBag.dailyExchangeRateId).then(dailyExchangeByIdResponseHandler)
         );
       } else {
         var dailyExchangeDate = moment().format('YYYYMMDD');
