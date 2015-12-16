@@ -211,13 +211,13 @@
         <!-- startDate Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.startDate}}</td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
-          <date-picker-field ng-model="taxRate.startDate" placeholder="mm/dd/yyyy" disable="isFieldReadOnly(taxRate)"></date-picker-field>
+          <date-picker-field ng-model="taxRate.startDate" placeholder="mm/dd/yyyy" disable="isFieldReadOnly(taxRate)" min-date="determineMinDate(taxRate.startDate)"> </date-picker-field>
         </td>
 
         <!-- endDate Read/Edit switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.endDate}}</td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
-          <date-picker-field ng-model="taxRate.endDate" placeholder="mm/dd/yyyy"></date-picker-field>
+          <date-picker-field ng-model="taxRate.endDate" placeholder="mm/dd/yyyy" min-date="determineMinDate()"></date-picker-field>
         </td>
 
         <!-- Buttns/Actions Read/Edit switch-->

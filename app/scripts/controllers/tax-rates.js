@@ -103,6 +103,13 @@ angular.module('ts5App')
       return taxRatesFactory.getCompanyTaxRatesList(q).then($this.setCompanyTaxRatesList);
     };
 
+    this.errorHandler = function(dataFromAPI) {
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+      $this.makePromises();
+    };
+
     this.createPromises = function() {
       return [
         $this.getTaxTypesList(),
@@ -116,7 +123,7 @@ angular.module('ts5App')
 
     this.makePromises = function() {
       var promises = $this.createPromises();
-      $q.all(promises).then($this.initSuccess);
+      $q.all(promises).then($this.initSuccess, $this.errorHandler);
     };
 
     this.initSuccess = function() {
@@ -218,7 +225,7 @@ angular.module('ts5App')
       }
       $this.showLoadingModal(message);
       var promises = $this.createSearchPromises();
-      $q.all(promises).then($this.initSuccess);
+      $q.all(promises).then($this.initSuccess, $this.errorHandler);
     };
 
     this.createDeletePromises = function(id) {
@@ -234,7 +241,7 @@ angular.module('ts5App')
       var message = 'Deleting Tax Rate ID: ' + taxRate.id;
       $this.showLoadingModal(message);
       var promises = $this.createDeletePromises(taxRate.id);
-      $q.all(promises).then($this.deleteSuccess);
+      $q.all(promises).then($this.deleteSuccess, $this.errorHandler);
     };
 
     this.deleteSuccess = function() {
@@ -289,10 +296,10 @@ angular.module('ts5App')
     };
 
     this.editSuccess = function() {
+      $this.hideLoadingModal();
       var id = angular.copy($scope.taxRateSaved);
       ngToast.create('Successfully Saved <b>Tax Rate ID: </b>' + id);
       $scope.taxRateSaved = [];
-      $this.hideLoadingModal();
     };
 
     this.createEditPromises = function(taxRate) {
@@ -306,7 +313,7 @@ angular.module('ts5App')
       $this.showLoadingModal(message);
       $scope.taxRateSaved = taxRate.id;
       var promises = $this.createEditPromises(taxRate);
-      $q.all(promises).then($this.editSuccess);
+      $q.all(promises).then($this.editSuccess, $this.errorHandler);
     };
 
     this.saveTaxRateEdits = function(taxRate) {
@@ -325,6 +332,15 @@ angular.module('ts5App')
         companyCurrencyId: taxRate.companyCurrencyId
       };
       $this.makeEditPromises(payload);
+    };
+
+    this.determineMinDate = function(date) {
+      var diff = dateUtility.diff(dateUtility.nowFormatted(), date);
+      var dateString = diff.toString() + 'd';
+      if (diff >= 0) {
+        dateString = '+' + dateString;
+      }
+      return dateString;
     };
 
     // Place $scope functions here
@@ -377,6 +393,11 @@ angular.module('ts5App')
 
     $scope.saveTaxRateEdits = function(taxRate) {
       return $this.saveTaxRateEdits(taxRate);
+    };
+
+    $scope.determineMinDate = function(date) {
+      date = date || dateUtility.tomorrowFormatted();
+      return $this.determineMinDate(date);
     };
 
   });
