@@ -1,0 +1,307 @@
+<div class="container-fluid">
+
+  <error-dialog form-object="employeeMessageForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+  <form name="employeeMessageForm" class="edit-form" ng-submit="save()">
+
+    <div class="edit-controls">
+      <div class="row">
+        <div class="col-xs-6">
+          <h2 class="view-name">{{viewName}}</h2>
+        </div>
+        <div class="col-xs-6 text-right">
+          <a class="btn btn-default" ng-href="#/employee-messages" class="btn">Back</a>
+          <button class="btn btn-primary" type="submit" ng-hide="readOnly">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+            <span class="hidden-xs">Save</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label>Message *</label>
+              <input class="form-control"
+                     name="message"
+                     ng-model="employeeMessage.employeeMessageText"
+                     required="true" ng-disabled="readOnly"
+                     maxlength="50"
+                     required="true">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-6 col-sm-3">
+            <div class="form-group">
+              <date-picker-field
+                name="startDate"
+                class="form-group"
+                form="employeeMessageForm"
+                ng-model="employeeMessage.startDate"
+                label="Effective From"
+                disable="readOnly || shouldDisableStartDate(employeeMessage.startDate)"
+                required="true">
+              </date-picker-field>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <div class="form-group">
+              <date-picker-field
+                name="endDate"
+                class="form-group"
+                form="employeeMessageForm"
+                ng-model="employeeMessage.endDate"
+                label="Effective To"
+                disable="readOnly"
+                required="true">
+              </date-picker-field>
+            </div>
+          </div>
+        </div>
+        <br>
+
+        <div class="row">
+          <div class="col-xs-3" ng-hide="readOnly && !employeeMessage.employees.length">
+            <div class="row">
+              <div class="col-xs-8">
+                <label>Employees</label>
+              </div>
+              <div class="col-xs-4 text-right" ng-hide="readOnly || !employeeMessage.employees.length">
+                <button ng-class="getPropertiesForDeletedButton('employees', 'button')"
+                        title="delete selected employees"
+                        ng-disabled="getPropertiesForDeletedButton('employees', 'disabled')"
+                        ng-click="removeItems('employees')"
+                        type="button">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <table class="table table-bordered" ng-show="employeeMessage.employees.length">
+              <tr class="active">
+                <td ng-hide="readOnly">
+                  <input type="checkbox"
+                           ng-show="employeeMessage.employees.length"
+                           ng-model="employeesDeleteAll"
+                           ng-click="toggleSelectAll(employeesDeleteAll, 'employees')">
+                </td>
+                <th>ID</th>
+                <th>Name</th>
+              </tr>
+              <tr ng-repeat="employee in employeeMessage.employees">
+                <td ng-hide="readOnly"><input type="checkbox" ng-model="employee.selectedToDelete"></td>
+                <td>{{employee.employeeIdentifier}}</td>
+                <td>{{employee.lastName}}, {{ employee.firstName }}</td>
+              </tr>
+            </table>
+
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-12">
+                <table class="table">
+                  <tr>
+                    <td>
+                      <ui-select multiple ng-model="newRecords.employees" theme="bootstrap">
+                        <ui-select-match placeholder="Select an Employee...">{{ $item.employeeIdentifier }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="employee in filteredEmployees | filter: $select.search">
+                          {{ employee.employeeIdentifier }} - {{ employee.lastName}}, {{ employee.firstName }}
+                        </ui-select-choices>
+                      </ui-select>
+                      <input type="checkbox" ng-model="employeesAddAll"
+                             ng-click="selectAllToAdd(employeesAddAll, 'employees')"> Add all employees
+                    </td>
+                    <td class="col-xs-1">
+                      <button type="button" class="btn btn-success btn-sm text-right"
+                              ng-click="addNewItem('employees')"><i class="fa fa-plus"></i></button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-3" ng-hide="readOnly && !employeeMessage.schedules.length">
+            <div class="row">
+              <div class="col-xs-8">
+                <label>Schedules</label>
+              </div>
+              <div class="col-xs-4 text-right" ng-hide="readOnly || !employeeMessage.schedules.length">
+                <button ng-class="getPropertiesForDeletedButton('schedules', 'button')"
+                        title="delete selected schedules"
+                        ng-disabled="getPropertiesForDeletedButton('schedules', 'disabled')"
+                        ng-click="removeItems('schedules')"
+                        type="button">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <table class="table table-bordered" ng-show="employeeMessage.schedules.length">
+              <tr class="active">
+                <td ng-hide="readOnly">
+                  <input type="checkbox"
+                           ng-show="employeeMessage.schedules.length"
+                           ng-model="schedulesDeleteAll"
+                           ng-click="toggleSelectAll(schedulesDeleteAll, 'schedules')">
+                </td>
+                <th>Schedule Number</th>
+              </tr>
+              <tr ng-repeat="schedule in employeeMessage.schedules">
+                <td ng-hide="readOnly"><input type="checkbox" ng-model="schedule.selectedToDelete"></td>
+                <td>{{ schedule.scheduleNumber }}</td>
+              </tr>
+            </table>
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-12">
+                <table class="table">
+                  <tr>
+                    <td>
+                      <ui-select multiple ng-model="newRecords.schedules" theme="bootstrap">
+                        <ui-select-match placeholder="Select a Schedule...">{{ $item.scheduleNumber }}</ui-select-match>
+                        <ui-select-choices repeat="schedule in filteredSchedules | filter: $select.search">
+                          {{ schedule.scheduleNumber }}
+                        </ui-select-choices>
+                      </ui-select>
+                      <input type="checkbox" ng-model="schedulesAddAll"
+                             ng-click="selectAllToAdd(schedulesAddAll, 'schedules')"> Add all schedules
+                    </td>
+                    <td class="col-xs-1">
+                      <button type="button" class="btn btn-success btn-sm text-right"
+                              ng-click="addNewItem('schedules')"><i class="fa fa-plus"></i></button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-3" ng-hide="readOnly && !employeeMessage.departureStations.length">
+            <div class="row">
+              <div class="col-xs-8">
+                <label>Departure Station</label>
+              </div>
+              <div class="col-xs-4 text-right" ng-hide="readOnly || !employeeMessage.departureStations.length">
+                <button ng-class="getPropertiesForDeletedButton('departureStations', 'button')"
+                        title="delete selected stations"
+                        ng-disabled="getPropertiesForDeletedButton('departureStations', 'disabled')"
+                        ng-click="removeItems('departureStations')"
+                        type="button">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <table class="table table-bordered" ng-show="employeeMessage.departureStations.length">
+              <tr class="active">
+                <td ng-hide="readOnly"><input type="checkbox"
+                           ng-show="employeeMessage.departureStations.length"
+                           ng-model="departureStationsDeleteAll"
+                           ng-click="toggleSelectAll(departureStationsDeleteAll, 'departureStations')"></td>
+                <th>Code</th>
+                <th>Name</th>
+              </tr>
+              <tr ng-repeat="station in employeeMessage.departureStations">
+                <td ng-hide="readOnly"><input type="checkbox" ng-model="station.selectedToDelete"></td>
+                <td>{{station.code}}</td>
+                <td>{{station.name}}</td>
+              </tr>
+            </table>
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-12">
+                <table class="table">
+                  <tr>
+                    <td>
+                      <ui-select multiple ng-model="newRecords.departureStations" theme="bootstrap">
+                        <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
+                        <ui-select-choices repeat="station in filteredDepartureStations | filter: $select.search">
+                          {{ station.code }} - {{ station.name }}
+                        </ui-select-choices>
+                      </ui-select>
+                      <input type="checkbox" ng-model="departureStationsAddAll"
+                             ng-click="selectAllToAdd(departureStationsAddAll, 'departureStations')"> Add all stations
+                    </td>
+                    <td class="col-xs-1">
+                      <button type="button" class="btn btn-success btn-sm text-right"
+                              ng-click="addNewItem('departureStations')"><i class="fa fa-plus"></i></button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-3" ng-hide="readOnly && !employeeMessage.arrivalStations.length">
+            <div class="row">
+              <div class="col-xs-8">
+                <label>Arrival Station</label>
+              </div>
+              <div class="col-xs-4 text-right" ng-hide="readOnly || !employeeMessage.arrivalStations.length">
+                <button ng-class="getPropertiesForDeletedButton('arrivalStations', 'button')"
+                        title="delete selected stations"
+                        ng-disabled="getPropertiesForDeletedButton('arrivalStations', 'disabled')"
+                        ng-click="removeItems('arrivalStations')"
+                        type="button">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <table class="table table-bordered" ng-show="employeeMessage.arrivalStations.length">
+              <tr class="active">
+                <td ng-hide="readOnly">
+                  <input type="checkbox"
+                           ng-show="employeeMessage.arrivalStations.length"
+                           ng-model="arrivalStationsDeleteAll"
+                           ng-click="toggleSelectAll(arrivalStationsDeleteAll, 'arrivalStations')">
+                </td>
+                <th>Code</th>
+                <th>Name</th>
+              </tr>
+              <tr ng-repeat="station in employeeMessage.arrivalStations">
+                <td ng-hide="readOnly"><input type="checkbox" ng-model="station.selectedToDelete"></td>
+                <td>{{station.code}}</td>
+                <td>{{station.name}}</td>
+              </tr>
+            </table>
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-12">
+                <table class="table">
+                  <tr>
+                    <td>
+                      <ui-select multiple ng-model="newRecords.arrivalStations" theme="bootstrap">
+                        <ui-select-match placeholder="Select a Station...">{{ $item.code }}</ui-select-match>
+                        <ui-select-choices repeat="station in filteredArrivalStations | filter: $select.search">
+                          {{ station.code }} - {{ station.name }}
+                        </ui-select-choices>
+                      </ui-select>
+                      <input type="checkbox" ng-model="arrivalStationsAddAll"
+                             ng-click="selectAllToAdd(arrivalStationsAddAll, 'arrivalStations')"> Add all stations
+                    </td>
+                    <td class="col-xs-1">
+                      <button type="button" class="btn btn-success btn-sm text-right"
+                              ng-click="addNewItem('arrivalStations')"><i class="fa fa-plus"></i></button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer text-right">
+        <br>
+      </div>
+    </div>
+  </form>
+
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
