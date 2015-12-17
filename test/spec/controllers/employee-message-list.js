@@ -78,6 +78,22 @@ describe('Controller: EmployeeMessageListCtrl', function () {
       expect(scope.employeeMessagesList.length > 0).toEqual(true);
     });
 
+    it('should get a list of employees', function () {
+      expect(employeeMessagesFactory.getEmployees).toHaveBeenCalled();
+      scope.$digest();
+      expect(scope.employeesList).toEqual(employeesJSON.companyEmployees);
+    });
+    it('should get a list of schedules', function () {
+      expect(employeeMessagesFactory.getSchedules).toHaveBeenCalled();
+      scope.$digest();
+      expect(scope.schedulesList).toEqual(schedulesJSON.distinctSchedules);
+    });
+    it('should get a list of stations', function () {
+      expect(employeeMessagesFactory.getStations).toHaveBeenCalled();
+      scope.$digest();
+      expect(scope.stationsList).toEqual(stationsJSON.response);
+    });
+
     it('should format start and end dates', function () {
       expect(scope.employeeMessagesList[0].startDate).toEqual('06/01/2015');
       expect(scope.employeeMessagesList[0].endDate).toEqual('06/30/2015');
