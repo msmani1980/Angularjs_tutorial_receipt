@@ -253,7 +253,7 @@
               <div class="row">
                 <div class="col-xs-8">
                   <label>Filter by Item Name</label>
-                  <input type="text" class="form-control" ng-model="filterItemDetails.itemName" placeholder="Type an item name or category"/>
+                  <input type="text" class="form-control" ng-model="filterItemDetails.itemName" placeholder="Type an Item Name"/>
                 </div>
                 <div class="col-xs-4">
                   <label>Show Only Discrepancies</label>
@@ -377,12 +377,7 @@
               <div class="row">
                 <div class="col-xs-8">
                   <label>Filter by Cash Bag</label>
-                  <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
-                    <ui-select-match placeholder="Select Cash Bags...">{{ $item.cashBag }}</ui-select-match>
-                    <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
-                      {{ cashBag.cashBag }}
-                    </ui-select-choices>
-                  </ui-select>
+                  <input type="text" class="form-control" ng-model="filterCashBag.cashBagNumber" placeholder="Type a Cash Bag Number"/>
                 </div>
                 <div class="col-xs-4">
                   <label>Show Only Discrepancies</label>
@@ -452,7 +447,7 @@
                   </th>
                   <td></td>
                 </tr>
-                <tr ng-repeat="item in cashBags | orderBy: cashBagSortTitle" ng-show="showCashBagDiscrepancies ? item.isDiscrepancy : true">
+                <tr ng-repeat="item in cashBags | orderBy: cashBagSortTitle | filter:filterCashBag" ng-show="showCashBagDiscrepancies ? item.isDiscrepancy : true">
                   <td>
                     <span>{{ item.cashBagNumber }}</span>
                   </td>

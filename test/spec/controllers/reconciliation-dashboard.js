@@ -54,6 +54,9 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     ReconciliationDashboardCtrl = $controller('ReconciliationDashboardCtrl', {
       $scope: scope
     });
+
+    spyOn(ReconciliationDashboardCtrl, 'executeValidateAction');
+    spyOn(ReconciliationDashboardCtrl, 'executeOtherAction');
   }));
 
 
@@ -283,6 +286,27 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
     expect(ReconciliationDashboardCtrl.findInstancesWithStatus('Confirmed').length).toEqual(1);
     expect(ReconciliationDashboardCtrl.findInstancesWithStatus('Discrepancies').length).toEqual(0);
+  });
+
+  it('executeAction calls correct action executor', function () {
+    scope.instancesForActionExecution = [];
+    scope.actionToExecute = 'Validate';
+    scope.executeAction();
+
+    expect(ReconciliationDashboardCtrl.executeValidateAction).toHaveBeenCalled();
+
+    scope.actionToExecute = 'Pay Commission';
+    scope.executeAction();
+
+    expect(ReconciliationDashboardCtrl.executeOtherAction).toHaveBeenCalled();
+  });
+
+  it('handleResponseError handles error', function () {
+    var error = {error: true};
+    ReconciliationDashboardCtrl.handleResponseError(error);
+
+    expect(scope.errorResponse).toEqual(error);
+    expect(scope.displayError).toEqual(true);
   });
 
 });

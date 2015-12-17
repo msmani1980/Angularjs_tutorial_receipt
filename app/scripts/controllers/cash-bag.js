@@ -60,6 +60,7 @@ angular.module('ts5App')
     function cleanPayload(payload) {
       delete payload.storeNumber;
       angular.forEach(payload.cashBagCurrencies, function (currency) {
+        delete currency.bankExchangeRate;
         delete currency.paperExchangeRate;
         delete currency.coinExchangeRate;
         delete currency.flightAmount;
@@ -67,11 +68,11 @@ angular.module('ts5App')
       return payload;
     }
 
-    $scope.formSave = function (rawFormData) {
+    $scope.formSave = function () {
       if ($scope.cashBagCreateForm.$invalid) {
         return;
       }
-      var formData = cleanPayload(angular.copy(rawFormData));
+      var formData = cleanPayload(angular.copy($scope.cashBag));
       switch ($routeParams.state) {
         case 'edit':
           if (formData.isSubmitted === 'true') {
@@ -79,21 +80,23 @@ angular.module('ts5App')
             break;
           }
           var saveCashBag = angular.copy(formData);
-          saveCashBag.totalCashBags = parseInt(saveCashBag.totalCashBags, 10);
           saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
           $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
           var payload = {
             cashBag: saveCashBag
           };
-          cashBagFactory.updateCashBag($routeParams.id, payload).then(
-            showMessage(null, false, 'successfully updated'),
-            showMessage
-          );
+          showLoadingModal('Saving Cash Bag');
+          cashBagFactory.updateCashBag($routeParams.id, payload).then(function () {
+            hideLoadingModal();
+            $location.path('cash-bag-list');
+            showMessage(null, false, 'successfully updated');
+          }, showMessage);
           break;
         case 'create':
+          showLoadingModal('Saving Cash Bag');
           formData.isDelete = false;
-          formData.totalCashBags = parseInt(formData.totalCashBags, 10);
           cashBagFactory.createCashBag({cashBag: formData}).then(function (newCashBag) {
+            hideLoadingModal();
             $location.search('newId', newCashBag.id)
               .search('scheduleDate', null)
               .search('scheduleNumber', null)
@@ -218,9 +221,12 @@ angular.module('ts5App')
       _promises.push(
         cashBagFactory.getCashBag($routeParams.id).then(function (response) {
           $scope.cashBag = angular.copy(response);
+          if ($scope.cashBag.totalCashBags) {
+            $scope.cashBag.totalCashBags = $scope.cashBag.totalCashBags.toString();
+          }
           $scope.displayError = false;
           $scope.formErrors = {};
-          $scope.showDeleteButton = canDelete(response);
+          $scope.showDeleteButton = canDelete($scope.cashBag);
         })
       );
     }
@@ -255,8 +261,15 @@ angular.module('ts5App')
       );
     }
 
-    function dailyExchangeResponseHandler(response) {
-      $scope.dailyExchangeRates = angular.copy(response.dailyExchangeRates);
+    function dailyExchangeByIdResponseHandler(exchangeRate) {
+      $scope.dailyExchangeRates = [angular.copy(exchangeRate)];
+      if ($routeParams.state === 'view' || $routeParams.state === 'edit') {
+        promisesResponseHandler();
+      }
+    }
+
+    function dailyExchangeResponseHandler(responseFromAPI) {
+      $scope.dailyExchangeRates = angular.copy(responseFromAPI.dailyExchangeRates);
       if ($routeParams.state === 'view' || $routeParams.state === 'edit') {
         promisesResponseHandler();
       }
@@ -265,7 +278,7 @@ angular.module('ts5App')
     function getExchangeRates(cashBag) {
       if (cashBag && cashBag.dailyExchangeRateId) {
         _promises.push(
-          cashBagFactory.getDailyExchangeById(_companyId, cashBag.dailyExchangeRateId).then(dailyExchangeResponseHandler)
+          cashBagFactory.getDailyExchangeById(_companyId, cashBag.dailyExchangeRateId).then(dailyExchangeByIdResponseHandler)
         );
       } else {
         var dailyExchangeDate = moment().format('YYYYMMDD');
@@ -357,6 +370,7 @@ angular.module('ts5App')
 
     // Constructor
     function init() {
+      $location.url($location.path());
       showLoadingModal('Loading Cash Bag');
       _companyId = cashBagFactory.getCompanyId();
       $scope.state = $routeParams.state;

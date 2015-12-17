@@ -1,0 +1,259 @@
+{
+  "employeeMessages": [
+    {
+      "startDate": "2015-06-01",
+      "endDate": "2015-06-30",
+      "createdBy": 1,
+      "createdOn": "2015-05-08 19:47:58.822897",
+      "updatedBy": 1,
+      "updatedOn": "2015-05-18 19:28:53.115259",
+      "id": 62,
+      "companyId": 403,
+      "employeeMessageText": "My test message",
+      "employeeMessageEmployeeIdentifiers": [],
+      "employeeMessageSchedules": [],
+      "employeeMessageArrivalStations": [
+        19
+      ],
+      "employeeMessageDepartureStations": [
+        23
+      ]
+    },
+    {
+      "startDate": "2015-08-21",
+      "endDate": "2016-10-13",
+      "createdBy": 1,
+      "createdOn": "2015-05-11 18:19:36.669127",
+      "updatedBy": 1,
+      "updatedOn": "2015-12-15 20:13:20.945923",
+      "id": 63,
+      "companyId": 403,
+      "employeeMessageText": "Setup Test Message",
+      "employeeMessageEmployeeIdentifiers": [],
+      "employeeMessageSchedules": [],
+      "employeeMessageArrivalStations": [],
+      "employeeMessageDepartureStations": []
+    },
+    {
+      "startDate": "2015-05-13",
+      "endDate": "2015-06-09",
+      "createdBy": 1,
+      "createdOn": "2015-05-12 16:40:31.819677",
+      "updatedBy": 1,
+      "updatedOn": "2015-06-08 14:54:11.83082",
+      "id": 64,
+      "companyId": 403,
+      "employeeMessageText": "Welcome to British Airways",
+      "employeeMessageEmployeeIdentifiers": [],
+      "employeeMessageSchedules": [],
+      "employeeMessageArrivalStations": [],
+      "employeeMessageDepartureStations": []
+    },
+    {
+      "startDate": "2015-06-06",
+      "endDate": "2015-06-09",
+      "createdBy": 1,
+      "createdOn": "2015-06-05 20:02:31.331909",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 67,
+      "companyId": 403,
+      "employeeMessageText": "This is the test message for all flights",
+      "employeeMessageEmployeeIdentifiers": [],
+      "employeeMessageSchedules": [],
+      "employeeMessageArrivalStations": [],
+      "employeeMessageDepartureStations": []
+    },
+    {
+      "startDate": "2015-06-06",
+      "endDate": "2015-07-11",
+      "createdBy": 1,
+      "createdOn": "2015-06-05 20:19:38.533781",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 68,
+      "companyId": 403,
+      "employeeMessageText": "Happy Holidays crew members",
+      "employeeMessageEmployeeIdentifiers": [],
+      "employeeMessageSchedules": [],
+      "employeeMessageArrivalStations": [],
+      "employeeMessageDepartureStations": []
+    },
+    {
+      "startDate": "2015-08-05",
+      "endDate": "2015-09-21",
+      "createdBy": 1,
+      "createdOn": "2015-08-04 14:43:36.540769",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 72,
+      "companyId": 403,
+      "employeeMessageText": "Happy Summer",
+      "employeeMessageEmployeeIdentifiers": [],
+      "employeeMessageSchedules": [],
+      "employeeMessageArrivalStations": [],
+      "employeeMessageDepartureStations": []
+    },
+    {
+      "startDate": "2015-09-04",
+      "endDate": "2015-09-30",
+      "createdBy": 1,
+      "createdOn": "2015-09-03 18:47:41.406963",
+      "updatedBy": 1,
+      "updatedOn": "2015-09-03 19:47:55.904269",
+      "id": 73,
+      "companyId": 403,
+      "employeeMessageText": "Congratulations employee 1002",
+      "employeeMessageEmployeeIdentifiers": [
+        {
+          "id": 197,
+          "employeeIdentifier": "1002",
+          "employeeMessageId": 73
+        }
+      ],
+      "employeeMessageSchedules": [
+        {
+          "id": 170,
+          "scheduleNumber": "107",
+          "employeeMessageId": 73
+        }
+      ],
+      "employeeMessageArrivalStations": [],
+      "employeeMessageDepartureStations": []
+    },
+    {
+      "startDate": "2015-09-19",
+      "endDate": "2015-09-22",
+      "createdBy": 1,
+      "createdOn": "2015-09-18 18:10:00.582695",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 81,
+      "companyId": 403,
+      "employeeMessageText": "Message notification 1 @ Test to valid to",
+      "employeeMessageEmployeeIdentifiers": [],
+      "employeeMessageSchedules": [],
+      "employeeMessageArrivalStations": [],
+      "employeeMessageDepartureStations": []
+    },
+    {
+      "startDate": "2015-09-19",
+      "endDate": "2015-09-26",
+      "createdBy": 1,
+      "createdOn": "2015-09-18 19:30:17.808397",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 104,
+      "companyId": 403,
+      "employeeMessageText": "",
+      "employeeMessageEmployeeIdentifiers": [
+        {
+          "id": 202,
+          "employeeIdentifier": "1002",
+          "employeeMessageId": 104
+        }
+      ],
+      "employeeMessageSchedules": [
+        {
+          "id": 174,
+          "scheduleNumber": "UA9002",
+          "employeeMessageId": 104
+        }
+      ],
+      "employeeMessageArrivalStations": [
+        6
+      ],
+      "employeeMessageDepartureStations": [
+        8
+      ]
+    },
+    {
+      "startDate": "2015-12-15",
+      "endDate": "2016-01-28",
+      "createdBy": 1,
+      "createdOn": "2015-12-14 18:56:44.599166",
+      "updatedBy": 1,
+      "updatedOn": "2015-12-15 03:17:30.539407",
+      "id": 121,
+      "companyId": 403,
+      "employeeMessageText": "Test Message",
+      "employeeMessageEmployeeIdentifiers": [],
+      "employeeMessageSchedules": [],
+      "employeeMessageArrivalStations": [],
+      "employeeMessageDepartureStations": []
+    },
+    {
+      "startDate": "2015-12-31",
+      "endDate": "2016-01-31",
+      "createdBy": 1,
+      "createdOn": "2015-12-15 20:37:09.909141",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 125,
+      "companyId": 403,
+      "employeeMessageText": "test message 3",
+      "employeeMessageEmployeeIdentifiers": [],
+      "employeeMessageSchedules": [],
+      "employeeMessageArrivalStations": [],
+      "employeeMessageDepartureStations": []
+    },
+    {
+      "startDate": "2015-12-30",
+      "endDate": "2016-01-31",
+      "createdBy": 3,
+      "createdOn": "2015-12-15 20:38:19.09768",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 126,
+      "companyId": 403,
+      "employeeMessageText": "test message 4",
+      "employeeMessageEmployeeIdentifiers": [],
+      "employeeMessageSchedules": [],
+      "employeeMessageArrivalStations": [],
+      "employeeMessageDepartureStations": []
+    },
+    {
+      "startDate": "2015-12-22",
+      "endDate": "2016-02-29",
+      "createdBy": 3,
+      "createdOn": "2015-12-15 20:43:09.292863",
+      "updatedBy": 3,
+      "updatedOn": "2015-12-15 22:14:29.783199",
+      "id": 127,
+      "companyId": 403,
+      "employeeMessageText": "test Message 5",
+      "employeeMessageEmployeeIdentifiers": [
+        {
+          "id": 216,
+          "employeeIdentifier": "1005",
+          "employeeMessageId": 127
+        }
+      ],
+      "employeeMessageSchedules": [
+        {
+          "id": 188,
+          "scheduleNumber": "3454566",
+          "employeeMessageId": 127
+        },
+        {
+          "id": 189,
+          "scheduleNumber": "UA9002",
+          "employeeMessageId": 127
+        }
+      ],
+      "employeeMessageArrivalStations": [
+        4,
+        8
+      ],
+      "employeeMessageDepartureStations": [
+        6,
+        8
+      ]
+    }
+  ],
+  "meta": {
+    "count": 13,
+    "limit": 13,
+    "start": 0
+  }
+}
