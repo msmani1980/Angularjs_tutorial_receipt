@@ -307,8 +307,11 @@ angular.module('ts5App')
           changeToConfirmedPromises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, 10));
         });
 
-        $q.all(changeToConfirmedPromises).finally(function () {
+        $q.all(changeToConfirmedPromises).then(function () {
           $this.getReconciliationDataList();
+        }, function (responseFromAPI) {
+          $this.getReconciliationDataList();
+          $this.handleResponseError(responseFromAPI);
         });
       }, function(responseFromAPI) {
         $this.getReconciliationDataList();
