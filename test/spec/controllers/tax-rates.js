@@ -189,6 +189,15 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             taxRate.action = 'read';
             taxRate.startDate = moment(taxRate.startDate, 'YYYYMMDD').format('MM/DD/YYYY').toString();
             taxRate.endDate = moment(taxRate.endDate, 'YYYYMMDD').format('MM/DD/YYYY').toString();
+            taxRate.taxTypeCode = {
+              taxTypeCode: taxRate.taxTypeCode
+            };
+            taxRate.countryName = {
+              countryName: taxRate.countryName
+            };
+            taxRate.taxRateType = {
+              taxRateType: taxRate.taxRateType
+            };
           }
           if (angular.isDefined(taxRate.action)) {
             taxRates.push(taxRate);
