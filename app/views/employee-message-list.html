@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div class="panel panel-default no-transition" id="search-collapse" ng-class="{'collapse': true }">
+    <div class="panel panel-default no-transition" id="search-collapse" ng-class="{'collapse': false }">
       <form class="form">
         <div class="panel-body">
           <div class="row">
@@ -111,6 +111,9 @@
       </tr>
       </thead>
       <tbody>
+      <tr ng-hide="employeeMessagesList.length">
+        <td colspan="4" class="bg-warning text-center"><i class="fa fa-exclamation-triangle"></i> There are no records to show</td>
+      </tr>
       <tr ng-repeat="message in employeeMessagesList">
         <td>{{ message.employeeMessageText }}</td>
         <td>{{ message.startDate }}</td>

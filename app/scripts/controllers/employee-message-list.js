@@ -115,6 +115,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
         $this.getEmployees()
       ];
       $q.all(initPromises).then(function () {
+        angular.element('#search-collapse').addClass('collapse');
         $this.hideLoadingModal();
       });
     };
