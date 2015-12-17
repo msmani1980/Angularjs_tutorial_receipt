@@ -12,7 +12,9 @@ angular.module('ts5App')
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
-      return sprintf ('%.2f', valueToFormat);
+      if (angular.isDefined(valueToFormat)) {
+        return sprintf('%.2f', valueToFormat);
+      }
     }
 
     function initLMPStockRevisions() {
@@ -140,13 +142,14 @@ angular.module('ts5App')
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
 
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
-        var bankExchangeRate = cashBag.chBankExchangeRate ? formatAsCurrency(cashBag.chBankExchangeRate) : (formatAsCurrency(cashBag.chPaperExchangeRate) + '/' + formatAsCurrency(cashBag.chCoinExchangeRate));
+        var bankExchangeRate = cashBag.chBankExchangeRate ? formatAsCurrency(cashBag.chBankExchangeRate) : (formatAsCurrency(cashBag.chPaperExchangeRate) + '/' + formatAsCurrency(
+          cashBag.chCoinExchangeRate));
         var totalBank = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank);
-        var paperAmount = cashBag.paperAmountManual || cashBag.paperAmountManualBank;
-        var coinAmount = cashBag.coinAmountManual || cashBag.coinAmountManualBank;
+        var paperAmount = cashBag.paperAmountManual;
+        var coinAmount = cashBag.coinAmountManual;
         var varianceValue = (paperAmount + coinAmount) - crewAmount;
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
-          var cashBagItem = {
+        var cashBagItem = {
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
           eposCalculatedAmount: '-',
