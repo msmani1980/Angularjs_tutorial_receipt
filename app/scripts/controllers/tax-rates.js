@@ -57,24 +57,29 @@ angular.module('ts5App')
       $scope.currenciesList = angular.copy(dataFromAPI.response);
     };
 
+    this.formatTaxRateObject = function(taxRate, dates) {
+      if (angular.isDefined(dates) && dates === true) {
+        taxRate.startDate = dateUtility.formatDateForApp(taxRate.startDate);
+        taxRate.endDate = dateUtility.formatDateForApp(taxRate.endDate);
+      }
+      taxRate.action = 'read';
+      taxRate.taxTypeCode = {
+        taxTypeCode: taxRate.taxTypeCode
+      };
+      taxRate.countryName = {
+        countryName: taxRate.countryName
+      };
+      taxRate.taxRateType = {
+        taxRateType: taxRate.taxRateType
+      };
+      return taxRate;
+    };
+
     this.createCompanyTaxRates = function(taxRatesList) {
       var newTaxRatesList = [];
       angular.forEach(taxRatesList, function(taxRate) {
         if (angular.isDefined(taxRate)) {
-          taxRate.action = 'read';
-          taxRate.startDate = dateUtility.formatDateForApp(taxRate.startDate);
-          taxRate.endDate = dateUtility.formatDateForApp(taxRate.endDate);
-          taxRate.taxTypeCode = {
-            taxTypeCode: taxRate.taxTypeCode
-          };
-          taxRate.countryName = {
-            countryName: taxRate.countryName
-          };
-          taxRate.taxRateType = {
-            taxRateType: taxRate.taxRateType
-          };
-        }
-        if (angular.isDefined(taxRate.action)) {
+          taxRate = $this.formatTaxRateObject(taxRate, true);
           newTaxRatesList.push(taxRate);
         }
       });
@@ -85,18 +90,7 @@ angular.module('ts5App')
       var newTaxRatesList = [];
       angular.forEach(taxRatesList, function(taxRate) {
         if (angular.isDefined(taxRate)) {
-          taxRate.action = 'read';
-          taxRate.taxTypeCode = {
-            taxTypeCode: taxRate.taxTypeCode
-          };
-          taxRate.countryName = {
-            countryName: taxRate.countryName
-          };
-          taxRate.taxRateType = {
-            taxRateType: taxRate.taxRateType
-          };
-        }
-        if (angular.isDefined(taxRate.action)) {
+          taxRate = $this.formatTaxRateObject(taxRate);
           newTaxRatesList.push(taxRate);
         }
       });
