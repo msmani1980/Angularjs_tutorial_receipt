@@ -113,7 +113,8 @@ describe('Controller: StoreNumberCreateCtrl', function () {
     it('should call deleteStore API', function(){
       var store = {
         id: 123,
-        startDate:'01/05/2050'
+        startDate:'01/05/2050',
+        readyToUse: true
       };
       scope.removeRecord(store);
       expect(companyStoresService.deleteStore).toHaveBeenCalledWith(store.id);
