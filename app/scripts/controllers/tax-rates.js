@@ -430,6 +430,29 @@ angular.module('ts5App')
         }
       });
     };
+    this.createNewTaxRate = function() {
+      var length = parseInt($scope.companyTaxRatesList.length);
+      var payload = {
+        action: 'create',
+        key: length + 1,
+        startDate: dateUtility.nowFormatted(),
+        endDate: dateUtility.nowFormatted(),
+        companyTaxRateStations: [],
+        companyTaxTypeId: null,
+        countryId: null,
+        countryName: null,
+        currencyCode: null,
+        currencySymbol: null,
+        description: null,
+        id: null,
+        position: 'up',
+        taxRateType: null,
+        taxRateValue: null,
+        taxTypeCode: null,
+        created: true
+      };
+      $scope.companyTaxRatesList.push(payload);
+    };
 
     // Place $scope functions here
     $scope.clearSearchFilters = function() {
@@ -503,7 +526,7 @@ angular.module('ts5App')
         return 'bg-danger';
       }
       if (taxRate.created) {
-        return 'bg-primary';
+        return 'bg-info';
       }
     };
 
@@ -514,4 +537,9 @@ angular.module('ts5App')
         return 'auto';
       }
     };
+
+    $scope.createNewTaxRate = function() {
+      return $this.createNewTaxRate();
+    };
+
   });

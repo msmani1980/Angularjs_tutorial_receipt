@@ -516,10 +516,10 @@ describe('Controller: TaxRatesCtrl', function() {
             taxRate.edited = true;
             expect($scope.taxRateRowClass(taxRate)).toBe('bg-warning');
           });
-          it('should return bg-primary with created flag set', function() {
+          it('should return bg-info with created flag set', function() {
             var taxRate = [];
             taxRate.created = true;
-            expect($scope.taxRateRowClass(taxRate)).toBe('bg-primary');
+            expect($scope.taxRateRowClass(taxRate)).toBe('bg-info');
           });
           it('should return bg-danger with deleted flag set', function() {
             var taxRate = [];
@@ -562,6 +562,19 @@ describe('Controller: TaxRatesCtrl', function() {
           it('should have called controller function with nothing, and return today', function() {
             $scope.determineMinDate();
             expect(TaxRatesCtrl.determineMinDate).toHaveBeenCalled();
+          });
+        });
+
+        describe('createNewTaxRate', function() {
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'createNewTaxRate').and.callThrough();
+          });
+          it('should have called controller and added a new record', function() {
+            $scope.companyTaxRatesList = companyTaxRatesJSON.taxRates;
+            var length = parseInt($scope.companyTaxRatesList.length);
+            $scope.createNewTaxRate();
+            expect(TaxRatesCtrl.createNewTaxRate).toHaveBeenCalled();
+            expect($scope.companyTaxRatesList.length - 1).toBe(length);
           });
         });
 

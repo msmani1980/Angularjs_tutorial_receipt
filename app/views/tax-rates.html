@@ -5,7 +5,7 @@
         <h2 class="view-name">{{viewName}}</h2>
       </div>
       <div class="col-xs-8 text-right">
-        <button class="btn btn-primary"><span class="fa fa-plus"></span><span class="hidden-xs">  Create Tax Rate</span></button>
+        <button class="btn btn-primary" ng-click="createNewTaxRate()"><span class="fa fa-plus"></span><span class="hidden-xs">  Create Tax Rate</span></button>
         <button class="btn btn-default" data-toggle="collapse" data-target="#filter-controls" aria-expanded="false" aria-controls="search-collapse">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
@@ -230,7 +230,7 @@
         </td>
         <td class="animate-switch tax-rates-ui-select" ng-switch-when="create">
           <ui-select ng-model="taxRate.taxRateType" theme="bootstrap" name="searchRateType">
-            <ui-select-match placeholder="Select Tax Rate Type">
+            <ui-select-match placeholder="Select Rate Type">
               {{ $select.selected.taxRateType }}
             </ui-select-match>
             <ui-select-choices repeat="taxRate in taxRatesList | filter: $select.search | orderBy:'taxRateType'" position={{taxRate.position}}>
@@ -241,10 +241,10 @@
 
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxRateValue}}<span ng-show="taxRate.taxRateType.taxRateType === 'Percentage'"> %</span></td>
         <td class="animate-switch tax-rates-input" ng-switch-when="edit">
-          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Select Tax Rate" ng-disabled="isFieldReadOnly(taxRate)">
+          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isFieldReadOnly(taxRate)">
         </td>
         <td class="animate-switch tax-rates-input" ng-switch-when="create">
-          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Select Tax Rate">
+          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate">
         </td>
 
         <td class="animate-switch" ng-switch-when="read">{{taxRate.startDate}}</td>
@@ -289,7 +289,7 @@
           <a class="btn btn-primary btn-xs" ng-click="">
             <span class="fa fa-save"></span>
           </a>
-          <a class="btn btn-default btn-xs" ng-click="">
+          <a class="btn btn-danger btn-xs" ng-click="">
             <span class="fa fa-remove"></span>
           </a>
         </td>
