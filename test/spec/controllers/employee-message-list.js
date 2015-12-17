@@ -84,6 +84,47 @@ describe('Controller: EmployeeMessageListCtrl', function () {
     });
   });
 
+  describe('search', function () {
+    it('should call getEmployeeMessages', function () {
+      scope.submitSearch();
+      expect(employeeMessagesFactory.getEmployeeMessages).toHaveBeenCalled();
+    });
+
+    it('should format searchPayload', function () {
+      var mockData = {
+        startDate: '10/20/2015',
+        endDate: '10/30/2015',
+        employees: [{employeeIdentifier: '1001'}],
+        schedules: [{scheduleNumber: '123'}],
+        arrStations: [{id: 1, code: 'ORD'}],
+        depStations: [{id: 2, code: 'LAX'}]
+      };
+      var formattedPayload = EmployeeMessageListCtrl.formatSearchPayload(mockData);
+      expect(formattedPayload.startDate).toEqual('20151020');
+      expect(formattedPayload.endDate).toEqual('20151030');
+      expect(formattedPayload.employeeIdentifier.length).toEqual(1);
+      expect(formattedPayload.employeeIdentifier[0]).toEqual('1001');
+
+      expect(formattedPayload.employeeIdentifier.length).toEqual(1);
+      expect(formattedPayload.employeeIdentifier[0]).toEqual('1001');
+
+      expect(formattedPayload.scheduleNumber.length).toEqual(1);
+      expect(formattedPayload.scheduleNumber[0]).toEqual('123');
+
+      expect(formattedPayload.arrivalStationId.length).toEqual(1);
+      expect(formattedPayload.arrivalStationId[0]).toEqual(1);
+
+      expect(formattedPayload.departureStationId.length).toEqual(1);
+      expect(formattedPayload.departureStationId[0]).toEqual(2);
+    });
+
+    it('should clearSearchData', function () {
+      scope.clearSearch();
+      expect(employeeMessagesFactory.getEmployeeMessages).toHaveBeenCalledWith({});
+      expect(scope.search).toEqual({});
+    })
+  });
+
   describe('scope helpers', function () {
     describe('goToDetailPage', function () {
       it('should redirect to employee-message page', function () {
