@@ -31,6 +31,7 @@ fdescribe('Controller: TaxRatesCtrl', function() {
   var getCompanyCurrenciesDeferred;
   var getCompanyTaxRatesListDeferred;
   var removeCompanyTaxRateDeferred;
+  var updateCompanyTaxRateDeferred;
 
   beforeEach(inject(function($q, $controller, $rootScope, $injector, $route, dateUtility, ngToast, _servedTaxTypes_,
     _servedTaxRateTypes_, _servedCountryList_, _servedStations_, _servedCurrencies_, _servedCompanyTaxRates_) {
@@ -69,7 +70,8 @@ fdescribe('Controller: TaxRatesCtrl', function() {
 
     removeCompanyTaxRateDeferred = $q.defer();
     spyOn(taxRatesFactory, 'removeCompanyTaxRate').and.returnValue(removeCompanyTaxRateDeferred.promise);
-
+    updateCompanyTaxRateDeferred = $q.defer();
+    spyOn(taxRatesFactory, 'updateCompanyTaxRate').and.returnValue(updateCompanyTaxRateDeferred.promise);
   }));
 
   function resolveAllDependencies() {
@@ -80,6 +82,10 @@ fdescribe('Controller: TaxRatesCtrl', function() {
     getCompanyCurrenciesDeferred.resolve(currenciesListJSON);
     getCompanyTaxRatesListDeferred.resolve(companyTaxRatesJSON);
     removeCompanyTaxRateDeferred.resolve({
+      id: '123',
+      companyId: '403'
+    });
+    updateCompanyTaxRateDeferred.resolve({
       id: '123',
       companyId: '403'
     });
@@ -439,6 +445,12 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             spyOn(TaxRatesCtrl, 'editCompanyTaxRate').and.callThrough();
             spyOn(TaxRatesCtrl, 'cancelTaxRateEdit').and.callThrough();
             spyOn(TaxRatesCtrl, 'addEditActionToTaxRate').and.callThrough();
+            spyOn(TaxRatesCtrl, 'saveTaxRateEdits').and.callThrough();
+            spyOn(TaxRatesCtrl, 'makeEditPromises').and.callThrough();
+            spyOn(TaxRatesCtrl, 'createEditPromises').and.callThrough();
+            spyOn(TaxRatesCtrl, 'editSuccess').and.callThrough();
+            spyOn(TaxRatesCtrl, 'resetTaxRate').and.callThrough();
+            spyOn(TaxRatesCtrl, 'resetTaxRateEdit').and.callThrough();
             taxRate = companyTaxRatesJSON.taxRates[0];
           });
           it('should call editCompanyTaxRate with payload', function() {
@@ -465,7 +477,98 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             $scope.editCompanyTaxRate();
             expect(TaxRatesCtrl.addEditActionToTaxRate).toHaveBeenCalled();
           });
+          it('should call saveTaxRateEdits', function() {
+            $scope.saveTaxRateEdits(taxRate);
+            expect(TaxRatesCtrl.saveTaxRateEdits).toHaveBeenCalledWith(taxRate);
+          });
+          it('should call editSuccess', function() {
+            $scope.saveTaxRateEdits(taxRate);
+            resolveAllDependencies();
+            expect(TaxRatesCtrl.editSuccess).toHaveBeenCalled();
+          });
+          it('should call resetTaxRateEdit', function() {
+            $scope.resetTaxRateEdit(taxRate);
+            expect(TaxRatesCtrl.resetTaxRateEdit).toHaveBeenCalledWith(taxRate);
+          });
+          it('should call resetTaxRateEdit', function() {
+            $scope.resetTaxRateEdit(taxRate);
+            expect(TaxRatesCtrl.resetTaxRate).toHaveBeenCalled();
+          });
+        });
 
+        describe('$scope.isFieldReadOnly', function() {
+          var taxRate;
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'isTaxRateActive').and.callThrough();
+            spyOn(TaxRatesCtrl, 'hasTaxRateStarted').and.callThrough();
+            taxRate = companyTaxRatesJSON.taxRates[0];
+          });
+          it('should return true', function() {
+            expect($scope.isFieldReadOnly(taxRate)).toBeTruthy();
+          });
+        });
+
+        describe('$scope.taxRateRowClass', function() {
+          it('should return bg-warning with edited flag set', function() {
+            var taxRate = [];
+            taxRate.edited = true;
+            expect($scope.taxRateRowClass(taxRate)).toBe('bg-warning');
+          });
+          it('should return bg-primary with created flag set', function() {
+            var taxRate = [];
+            taxRate.created = true;
+            expect($scope.taxRateRowClass(taxRate)).toBe('bg-primary');
+          });
+          it('should return bg-danger with deleted flag set', function() {
+            var taxRate = [];
+            taxRate.deleted = true;
+            expect($scope.taxRateRowClass(taxRate)).toBe('bg-danger');
+          });
+          it('should return bg-success with deleted flag set', function() {
+            var taxRate = [];
+            taxRate.saved = true;
+            expect($scope.taxRateRowClass(taxRate)).toBe('bg-success');
+          });
+          it('should return empty', function() {
+            var taxRate = [];
+            expect($scope.taxRateRowClass(taxRate)).toBe();
+          });
+        });
+
+        describe('determineMinDate', function() {
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'determineMinDate').and.callThrough();
+          });
+          it('should have called controller function with the start date', function() {
+            var taxRate = companyTaxRatesJSON.taxRates[0];
+            $scope.determineMinDate(taxRate.startDate);
+            expect(TaxRatesCtrl.determineMinDate).toHaveBeenCalledWith(taxRate.startDate);
+          });
+          it('should have called controller function with nothing, and return today', function() {
+            $scope.determineMinDate();
+            expect(TaxRatesCtrl.determineMinDate).toHaveBeenCalled();
+          });
+        });
+
+        describe('the error handler', function() {
+          var mockError;
+          beforeEach(function() {
+            mockError = {
+              status: 400,
+              statusText: 'Bad Request',
+              response: {
+                field: 'bogan',
+                code: '000'
+              }
+            };
+            TaxRatesCtrl.errorHandler(mockError);
+          });
+          it('should set error data ', function() {
+            expect($scope.errorResponse).toEqual(mockError);
+          });
+          it('should return false', function() {
+            expect($scope.displayError).toBeTruthy();
+          });
         });
 
       });
