@@ -269,6 +269,12 @@ angular.module('ts5App', [
     templateUrl: 'views/tax-rates.html',
     controller: 'TaxRatesCtrl',
     controllerAs: 'taxRates'
+  }).when('/employee-messages', {
+    templateUrl: 'views/employee-message-list.html',
+    controller: 'EmployeeMessageListCtrl'
+  }).when('/employee-message/:action/:id?', {
+    templateUrl: 'views/employee-message.html',
+    controller: 'EmployeeMessageCtrl'
   }).otherwise({
     redirectTo: '/'
   });

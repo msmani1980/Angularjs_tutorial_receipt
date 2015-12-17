@@ -68,11 +68,11 @@ angular.module('ts5App')
       return payload;
     }
 
-    $scope.formSave = function (rawFormData) {
+    $scope.formSave = function () {
       if ($scope.cashBagCreateForm.$invalid) {
         return;
       }
-      var formData = cleanPayload(angular.copy(rawFormData));
+      var formData = cleanPayload(angular.copy($scope.cashBag));
       switch ($routeParams.state) {
         case 'edit':
           if (formData.isSubmitted === 'true') {
@@ -80,7 +80,6 @@ angular.module('ts5App')
             break;
           }
           var saveCashBag = angular.copy(formData);
-          saveCashBag.totalCashBags = parseInt(saveCashBag.totalCashBags, 10);
           saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
           $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
           var payload = {
@@ -96,7 +95,6 @@ angular.module('ts5App')
         case 'create':
           showLoadingModal('Saving Cash Bag');
           formData.isDelete = false;
-          formData.totalCashBags = parseInt(formData.totalCashBags, 10);
           cashBagFactory.createCashBag({cashBag: formData}).then(function (newCashBag) {
             hideLoadingModal();
             $location.search('newId', newCashBag.id)
@@ -223,9 +221,10 @@ angular.module('ts5App')
       _promises.push(
         cashBagFactory.getCashBag($routeParams.id).then(function (response) {
           $scope.cashBag = angular.copy(response);
+          $scope.cashBag.totalCashBags = $scope.cashBag.totalCashBags.toString();
           $scope.displayError = false;
           $scope.formErrors = {};
-          $scope.showDeleteButton = canDelete(response);
+          $scope.showDeleteButton = canDelete($scope.cashBag);
         })
       );
     }
