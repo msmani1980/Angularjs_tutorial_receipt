@@ -93,9 +93,9 @@ angular.module('ts5App')
       discountFactory.getDiscount(id).then(function(data) {
         $this.updateFormData(data.companyDiscount);
         $this.setUIReady();
-      }), function() {
+      }, function() {
         $location.path('/');
-      };
+      });
     };
 
     this.setDependencies = function(response) {
@@ -214,7 +214,7 @@ angular.module('ts5App')
     };
 
     this.serializeDiscountInformation = function(formData, discount) {
-      discount.discountTypeId = formData.globalDiscountTypeId
+      discount.discountTypeId = formData.globalDiscountTypeId;
       discount.name = formData.discountName;
       discount.description = formData.description;
       discount.barcode = formData.barCode;
@@ -316,22 +316,22 @@ angular.module('ts5App')
 
     $scope.getGlobalDiscountDescriptionById = function(id) {
       var discount = $scope.globalDiscountTypesList.filter(function(discount) {
-        return discount.id == id
+        return discount.id === id;
       });
 
-      return (discount.length > 0) ? discount[0].description : "";
+      return (discount.length > 0) ? discount[0].description : '';
     };
 
     $scope.getRetailItemNameById = function(id) {
       var retailItem = $scope.retailItemsList.filter(function(retailItem) {
-        return retailItem.id == id
+        return retailItem.id === id;
       });
 
-      return (retailItem.length > 0) ? retailItem[0].itemName : "";
+      return (retailItem.length > 0) ? retailItem[0].itemName : '';
     };
 
     $scope.loadRestrictedItemsByCategory = function(categoryId) {
-      if(!categoryId || categoryId == '0') {
+      if(!categoryId || categoryId === 0) {
         return;
       }
 
