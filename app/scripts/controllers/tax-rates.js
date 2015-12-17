@@ -57,25 +57,58 @@ angular.module('ts5App')
     };
 
     this.createCompanyTaxRates = function(taxRatesList) {
+      var newTaxRatesList = [];
       angular.forEach(taxRatesList, function(taxRate) {
         if (angular.isDefined(taxRate)) {
           taxRate.action = 'read';
           taxRate.startDate = dateUtility.formatDateForApp(taxRate.startDate);
           taxRate.endDate = dateUtility.formatDateForApp(taxRate.endDate);
+          taxRate.taxTypeCode = {
+            taxTypeCode: taxRate.taxTypeCode
+          };
+          taxRate.countryName = {
+            countryName: taxRate.countryName
+          };
+          taxRate.taxRateType = {
+            taxRateType: taxRate.taxRateType
+          };
         }
         if (angular.isDefined(taxRate.action)) {
-          $scope.companyTaxRatesList.push(taxRate);
+          newTaxRatesList.push(taxRate);
         }
       });
-      return $scope.companyTaxRatesList;
+      return newTaxRatesList;
+    };
+
+    this.createMasterCompanyTaxRates = function(taxRatesList) {
+      var newTaxRatesList = [];
+      angular.forEach(taxRatesList, function(taxRate) {
+        if (angular.isDefined(taxRate)) {
+          taxRate.action = 'read';
+          taxRate.taxTypeCode = {
+            taxTypeCode: taxRate.taxTypeCode
+          };
+          taxRate.countryName = {
+            countryName: taxRate.countryName
+          };
+          taxRate.taxRateType = {
+            taxRateType: taxRate.taxRateType
+          };
+        }
+        if (angular.isDefined(taxRate.action)) {
+          newTaxRatesList.push(taxRate);
+        }
+      });
+      return newTaxRatesList;
     };
 
     this.setCompanyTaxRatesList = function(dataFromAPI) {
       $scope.companyTaxRatesList = [];
-      $scope.masterTaxRates = angular.copy(dataFromAPI.taxRates);
       var taxRatesList = angular.copy(dataFromAPI.taxRates);
+      var masterRatesList = angular.copy(dataFromAPI.taxRates);
       if (angular.isDefined(taxRatesList)) {
         $scope.companyTaxRatesList = $this.createCompanyTaxRates(taxRatesList);
+        $scope.masterTaxRates = $this.createMasterCompanyTaxRates(masterRatesList);
       }
     };
 
@@ -336,7 +369,7 @@ angular.module('ts5App')
       var payload = {
         id: taxRate.id,
         taxRateValue: taxRate.taxRateValue,
-        taxRateType: taxRate.taxRateType,
+        taxRateType: taxRate.taxRateType.taxRateType,
         startDate: dateUtility.formatDateForAPI(taxRate.startDate),
         endDate: dateUtility.formatDateForAPI(taxRate.endDate),
         companyTaxTypeId: taxRate.companyTaxTypeId,
@@ -368,12 +401,16 @@ angular.module('ts5App')
 
     this.resetTaxRateEdit = function(taxRate) {
       angular.forEach($scope.masterTaxRates, function(originalRate) {
-        if (originalRate.id === taxRate.id) {
+        if (originalRate.id === taxRate.id && !taxRate.saved) {
           var rate = angular.copy(originalRate);
           rate.action = 'read';
           rate.startDate = dateUtility.formatDateForApp(rate.startDate);
           rate.endDate = dateUtility.formatDateForApp(rate.endDate);
           $this.resetTaxRate(rate);
+        }
+        if (taxRate.saved) {
+          delete taxRate.saved;
+          taxRate.action = 'read';
         }
       });
     };
