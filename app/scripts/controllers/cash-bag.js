@@ -221,7 +221,9 @@ angular.module('ts5App')
       _promises.push(
         cashBagFactory.getCashBag($routeParams.id).then(function (response) {
           $scope.cashBag = angular.copy(response);
-          $scope.cashBag.totalCashBags = $scope.cashBag.totalCashBags.toString();
+          if ($scope.cashBag.totalCashBags) {
+            $scope.cashBag.totalCashBags = $scope.cashBag.totalCashBags.toString();
+          }
           $scope.displayError = false;
           $scope.formErrors = {};
           $scope.showDeleteButton = canDelete($scope.cashBag);
