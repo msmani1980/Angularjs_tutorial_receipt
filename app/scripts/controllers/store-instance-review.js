@@ -381,8 +381,6 @@ angular.module('ts5App')
       var uniqueItemList = lodash.uniq(angular.copy(rawItemList), 'itemMasterId');
 
       var inboundItemList = rawItemList.filter(function (item) {
-        if (item.countTypeId === 14) {
-        }
         return item.countTypeId === lodash.findWhere($this.countTypes, {
             name: 'Offload'
           }).id;
