@@ -20,6 +20,7 @@ angular.module('ts5App')
       $scope.stationsList = [];
       $scope.currenciesList = [];
       $scope.companyTaxRatesList = [];
+      $scope.masterTaxRates = [];
       $scope.taxRateToRemove = [];
       $scope.search = {};
       $scope.dateRange = {
@@ -105,9 +106,15 @@ angular.module('ts5App')
     this.setCompanyTaxRatesList = function(dataFromAPI) {
       $scope.companyTaxRatesList = [];
       var taxRatesList = angular.copy(dataFromAPI.taxRates);
-      var masterRatesList = angular.copy(dataFromAPI.taxRates);
       if (angular.isDefined(taxRatesList)) {
         $scope.companyTaxRatesList = $this.createCompanyTaxRates(taxRatesList);
+      }
+    };
+
+    this.setMasterCompanyTaxRatesList = function(dataFromAPI) {
+      $scope.masterTaxRates = [];
+      var masterRatesList = angular.copy(dataFromAPI.taxRates);
+      if (angular.isDefined(masterRatesList)) {
         $scope.masterTaxRates = $this.createMasterCompanyTaxRates(masterRatesList);
       }
     };
@@ -137,6 +144,11 @@ angular.module('ts5App')
       return taxRatesFactory.getCompanyTaxRatesList(q).then($this.setCompanyTaxRatesList);
     };
 
+    this.getMasterCompanyTaxRatesList = function(query) {
+      var q = query || {};
+      return taxRatesFactory.getCompanyTaxRatesList(q).then($this.setMasterCompanyTaxRatesList);
+    };
+
     this.errorHandler = function(dataFromAPI) {
       $this.hideLoadingModal();
       $scope.displayError = true;
@@ -151,7 +163,8 @@ angular.module('ts5App')
         $this.getCountriesList(),
         $this.getStationsList(),
         $this.getCurrenciesList(),
-        $this.getCompanyTaxRatesList()
+        $this.getCompanyTaxRatesList(),
+        $this.getMasterCompanyTaxRatesList()
       ];
     };
 
@@ -345,6 +358,7 @@ angular.module('ts5App')
       var id = angular.copy($scope.taxRateSaved);
       ngToast.create('Successfully Saved <b>Tax Rate ID: </b>' + id);
       $scope.taxRateSaved = [];
+      $this.getMasterCompanyTaxRatesList();
     };
 
     this.createEditPromises = function(taxRate) {
@@ -401,16 +415,12 @@ angular.module('ts5App')
 
     this.resetTaxRateEdit = function(taxRate) {
       angular.forEach($scope.masterTaxRates, function(originalRate) {
-        if (originalRate.id === taxRate.id && !taxRate.saved) {
+        if (originalRate.id === taxRate.id) {
           var rate = angular.copy(originalRate);
           rate.action = 'read';
           rate.startDate = dateUtility.formatDateForApp(rate.startDate);
           rate.endDate = dateUtility.formatDateForApp(rate.endDate);
           $this.resetTaxRate(rate);
-        }
-        if (taxRate.saved) {
-          delete taxRate.saved;
-          taxRate.action = 'read';
         }
       });
     };

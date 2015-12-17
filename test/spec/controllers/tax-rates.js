@@ -70,6 +70,7 @@ fdescribe('Controller: TaxRatesCtrl', function() {
 
     removeCompanyTaxRateDeferred = $q.defer();
     spyOn(taxRatesFactory, 'removeCompanyTaxRate').and.returnValue(removeCompanyTaxRateDeferred.promise);
+
     updateCompanyTaxRateDeferred = $q.defer();
     spyOn(taxRatesFactory, 'updateCompanyTaxRate').and.returnValue(updateCompanyTaxRateDeferred.promise);
   }));
@@ -126,6 +127,9 @@ fdescribe('Controller: TaxRatesCtrl', function() {
     });
     it('should set the companyTaxRatesList as a blank array', function() {
       expect($scope.companyTaxRatesList).toEqual([]);
+    });
+    it('should set the masterTaxRates as a blank array', function() {
+      expect($scope.masterTaxRates).toEqual([]);
     });
     it('should set the taxRateToRemove as a blank array', function() {
       expect($scope.taxRateToRemove).toEqual([]);
@@ -204,6 +208,27 @@ fdescribe('Controller: TaxRatesCtrl', function() {
           }
         });
         expect($scope.companyTaxRatesList).toEqual(taxRates);
+      });
+      it('should set the $scope.masterTaxRates to the mock data', function() {
+        var taxRates = [];
+        angular.forEach(companyTaxRatesJSON.taxRates, function(taxRate) {
+          if (angular.isDefined(taxRate)) {
+            taxRate.action = 'read';
+            taxRate.taxTypeCode = {
+              taxTypeCode: taxRate.taxTypeCode
+            };
+            taxRate.countryName = {
+              countryName: taxRate.countryName
+            };
+            taxRate.taxRateType = {
+              taxRateType: taxRate.taxRateType
+            };
+          }
+          if (angular.isDefined(taxRate.action)) {
+            taxRates.push(taxRate);
+          }
+        });
+        expect($scope.masterTaxRates).toEqual(taxRates);
       });
 
       describe('Search Template Logic', function() {
@@ -346,7 +371,6 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             };
             expect(TaxRatesCtrl.generateCompanyStationIds()).toBe('');
           });
-
         });
 
         describe('clearSearchFilters method', function() {
@@ -445,7 +469,6 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             resolveAllDependencies();
             expect(TaxRatesCtrl.deleteSuccess).toHaveBeenCalledWith([taxRate]);
           });
-
         });
 
         describe('editCompanyTaxRate method', function() {
