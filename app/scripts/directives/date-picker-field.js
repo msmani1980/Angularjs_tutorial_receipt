@@ -16,6 +16,7 @@ angular.module('ts5App')
         name: '@',
         label: '@',
         placeholder: '@',
+        orientation: '=',
         required: '=',
         form: '=',
         disable: '=',
@@ -31,6 +32,9 @@ angular.module('ts5App')
         };
         if ($scope.minDate) {
           datePickerOptions.startDate = $scope.minDate;
+        }
+        if ($scope.orientation) {
+          datePickerOptions.orientation = $scope.orientation;
         }
         this.init = function($scope, $element) {
           var options = angular.extend({}, datePickerOptions);

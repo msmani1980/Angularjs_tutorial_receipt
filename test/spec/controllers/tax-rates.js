@@ -1,5 +1,5 @@
 'use strict';
-/* global moment */
+
 describe('Controller: TaxRatesCtrl', function() {
   beforeEach(module(
     'ts5App',
@@ -139,7 +139,6 @@ describe('Controller: TaxRatesCtrl', function() {
       TaxRatesCtrl.setCompanyTaxRatesList(dataFromAPI);
       expect(TaxRatesCtrl.setCompanyTaxRatesList).toHaveBeenCalledWith([]);
     });
-
     it('should set the taxTypesList as a blank array', function() {
       var mockDates = {
         startDate: '',
@@ -186,49 +185,20 @@ describe('Controller: TaxRatesCtrl', function() {
       it('should set the $scope.currenciesList to the mock data', function() {
         expect($scope.currenciesList).toEqual(currenciesListJSON.response);
       });
-      it('should set the $scope.companyTaxRatesList to the mock data', function() {
-        var taxRates = [];
-        angular.forEach(companyTaxRatesJSON.taxRates, function(taxRate) {
-          if (angular.isDefined(taxRate)) {
-            taxRate.action = 'read';
-            taxRate.startDate = moment(taxRate.startDate, 'YYYYMMDD').format('MM/DD/YYYY').toString();
-            taxRate.endDate = moment(taxRate.endDate, 'YYYYMMDD').format('MM/DD/YYYY').toString();
-            taxRate.taxTypeCode = {
-              taxTypeCode: taxRate.taxTypeCode
-            };
-            taxRate.countryName = {
-              countryName: taxRate.countryName
-            };
-            taxRate.taxRateType = {
-              taxRateType: taxRate.taxRateType
-            };
-          }
-          if (angular.isDefined(taxRate.action)) {
-            taxRates.push(taxRate);
-          }
+
+      describe('$scope.companyTaxRatesList and $scope.masterTaxRates', function() {
+        beforeEach(function() {
+          spyOn(TaxRatesCtrl, 'createCompanyTaxRates').and.callThrough();
+          spyOn(TaxRatesCtrl, 'createMasterCompanyTaxRates').and.callThrough();
+          spyOn(TaxRatesCtrl, 'formatTaxRateObject').and.callThrough();
+          spyOn(TaxRatesCtrl, 'uiSelectPosition').and.callThrough();
         });
-        expect($scope.companyTaxRatesList).toEqual(taxRates);
-      });
-      it('should set the $scope.masterTaxRates to the mock data', function() {
-        var taxRates = [];
-        angular.forEach(companyTaxRatesJSON.taxRates, function(taxRate) {
-          if (angular.isDefined(taxRate)) {
-            taxRate.action = 'read';
-            taxRate.taxTypeCode = {
-              taxTypeCode: taxRate.taxTypeCode
-            };
-            taxRate.countryName = {
-              countryName: taxRate.countryName
-            };
-            taxRate.taxRateType = {
-              taxRateType: taxRate.taxRateType
-            };
-          }
-          if (angular.isDefined(taxRate.action)) {
-            taxRates.push(taxRate);
-          }
+        it('should set $scope.companyTaxRatesList', function() {
+          expect($scope.companyTaxRatesList.length).toBe(14);
         });
-        expect($scope.masterTaxRates).toEqual(taxRates);
+        it('should set $scope.masterTaxRates', function() {
+          expect($scope.masterTaxRates.length).toBe(14);
+        });
       });
 
       describe('Search Template Logic', function() {
@@ -564,6 +534,19 @@ describe('Controller: TaxRatesCtrl', function() {
           it('should return empty', function() {
             var taxRate = [];
             expect($scope.taxRateRowClass(taxRate)).toBe();
+          });
+        });
+
+        describe('$scope.determineDatePickerOrientation', function() {
+          it('should return false with a number less than 7', function() {
+            var taxRate = [];
+            taxRate.key = 7;
+            expect($scope.determineDatePickerOrientation(taxRate)).toBe();
+          });
+          it('should return false with a number less than 7', function() {
+            var taxRate = [];
+            taxRate.key = 13;
+            expect($scope.determineDatePickerOrientation(taxRate)).toBe('auto');
           });
         });
 

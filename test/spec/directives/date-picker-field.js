@@ -38,6 +38,9 @@ describe('The Date Picker Field directive', function() {
     if (config.placeholder) {
       template += 'placeholder="' + config.placeholder + '" ';
     }
+    if (config.placeholder) {
+      template += 'orientation="' + config.orientation + '" ';
+    }
     template += '></date-picker-field>';
     return template;
   }
@@ -94,6 +97,12 @@ describe('The Date Picker Field directive', function() {
     it('should set the placeholder attribute on the directive', function() {
       if (config.placeholder) {
         expect(element.attr('placeholder')).toEqual('placeholder');
+      }
+    });
+
+    it('should set the placeholder attribute on the directive', function() {
+      if (config.placeholder) {
+        expect(element.attr('orientation')).toEqual('orientation');
       }
     });
 

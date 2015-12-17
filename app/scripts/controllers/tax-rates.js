@@ -57,6 +57,15 @@ angular.module('ts5App')
       $scope.currenciesList = angular.copy(dataFromAPI.response);
     };
 
+    this.uiSelectPosition = function(length, key) {
+      length = parseInt(length - (length / 2));
+      key = parseInt(key);
+      if (key > length) {
+        return 'up';
+      }
+      return 'auto';
+    };
+
     this.formatTaxRateObject = function(taxRate, dates) {
       if (angular.isDefined(dates) && dates === true) {
         taxRate.startDate = dateUtility.formatDateForApp(taxRate.startDate);
@@ -77,9 +86,11 @@ angular.module('ts5App')
 
     this.createCompanyTaxRates = function(taxRatesList) {
       var newTaxRatesList = [];
-      angular.forEach(taxRatesList, function(taxRate) {
+      angular.forEach(taxRatesList, function(taxRate, key) {
         if (angular.isDefined(taxRate)) {
           taxRate = $this.formatTaxRateObject(taxRate, true);
+          taxRate.key = key;
+          taxRate.position = $this.uiSelectPosition(taxRatesList.length, key);
           newTaxRatesList.push(taxRate);
         }
       });
@@ -88,9 +99,10 @@ angular.module('ts5App')
 
     this.createMasterCompanyTaxRates = function(taxRatesList) {
       var newTaxRatesList = [];
-      angular.forEach(taxRatesList, function(taxRate) {
+      angular.forEach(taxRatesList, function(taxRate, key) {
         if (angular.isDefined(taxRate)) {
           taxRate = $this.formatTaxRateObject(taxRate);
+          taxRate.key = key;
           newTaxRatesList.push(taxRate);
         }
       });
@@ -157,8 +169,7 @@ angular.module('ts5App')
         $this.getCountriesList(),
         $this.getStationsList(),
         $this.getCurrenciesList(),
-        $this.getCompanyTaxRatesList(),
-        $this.getMasterCompanyTaxRatesList()
+        $this.getCompanyTaxRatesList()
       ];
     };
 
@@ -169,6 +180,7 @@ angular.module('ts5App')
 
     this.initSuccess = function() {
       $this.hideLoadingModal();
+      $this.getMasterCompanyTaxRatesList();
       $scope.viewIsReady = true;
     };
 
@@ -495,4 +507,11 @@ angular.module('ts5App')
       }
     };
 
+    $scope.determineDatePickerOrientation = function(taxRate) {
+      var length = parseInt($scope.companyTaxRatesList.length - ($scope.companyTaxRatesList.length / 2));
+      var key = parseInt(taxRate.key);
+      if (key > length) {
+        return 'auto';
+      }
+    };
   });
