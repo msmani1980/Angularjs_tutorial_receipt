@@ -28,11 +28,11 @@
 
     <div class="form-group">
 
-      <ui-select multiple ng-model="formData.subscribedGlobalReasons" theme="bootstrap">
+      <ui-select multiple ng-model="formData.companyReasonTypes" theme="bootstrap" ng-if="viewReady">
         <ui-select-match placeholder="Starting typing to subscribe to a Reason">{{ $item.reasonTypeName }}
         </ui-select-match>
-        <ui-select-choices repeat="globalReasonCodeType in globalReasonCodeTypesList | filter: $select.search | orderBy:'reasonTypeName'">
-          <div ng-bind-html="globalReasonCodeType.reasonTypeName | highlight: $select.search"></div>
+        <ui-select-choices repeat="globalReasonType in globalReasonTypes | filter: $select.search | orderBy:'reasonTypeName' track by globalReasonType.reasonTypeName">
+          <div ng-bind-html="globalReasonType.reasonTypeName | highlight: $select.search"></div>
         </ui-select-choices>
       </ui-select>
     </div>

@@ -4,7 +4,8 @@ describe('Company Reason Code Controller', function() {
 
   beforeEach(module(
     'ts5App',
-    'template-module'
+    'template-module',
+    'served/company-reason-types.json'
   ));
 
   var scope;
@@ -12,12 +13,20 @@ describe('Company Reason Code Controller', function() {
   var CompanyReasonCodeCtrl;
   var templateCache;
   var compile;
+  var companyReasonTypesJSON;
+  var getCompanyReasonTypesDeferred;
 
-  beforeEach(inject(function($controller, $rootScope,$templateCache,$compile) {
+  beforeEach(inject(function($controller, $rootScope,$templateCache,$compile,$q,
+    _servedCompanyReasonTypes_) {
+
     scope = $rootScope.$new();
     controller = $controller;
     templateCache = $templateCache;
     compile = $compile;
+
+    companyReasonTypesJSON = _servedCompanyReasonTypes_;
+    getCompanyReasonTypesDeferred = $q.defer();
+
   }));
 
   function createFormObject() {
@@ -27,6 +36,16 @@ describe('Company Reason Code Controller', function() {
       $submitted: false,
       $name:'reasonForm0',
     };
+
+  }
+
+  function resolveInitDependencies() {
+    getCompanyReasonTypesDeferred.resolve(companyReasonTypesJSON);
+    scope.$apply();
+  }
+
+  function registerSpies() {
+    spyOn(CompanyReasonCodeCtrl, 'getCompanyReasonTypes').and.returnValue(getCompanyReasonTypesDeferred.promise);
   }
 
   function initController(action) {
@@ -38,12 +57,14 @@ describe('Company Reason Code Controller', function() {
       $routeParams: params
     });
     createFormObject();
+    registerSpies();
   }
 
   describe('when the controller loads', function() {
 
     beforeEach(function() {
       initController();
+      resolveInitDependencies();
     });
 
     it('should have displayError set to false', function() {
@@ -56,9 +77,10 @@ describe('Company Reason Code Controller', function() {
 
     beforeEach(function() {
       initController();
+      resolveInitDependencies();
       spyOn(CompanyReasonCodeCtrl,'submitForm').and.callThrough();
       spyOn(CompanyReasonCodeCtrl,'validateForm').and.callThrough();
-      spyOn(CompanyReasonCodeCtrl,'createCompanyReasonCode').and.callThrough();
+      spyOn(CompanyReasonCodeCtrl,'createCompanyReason').and.callThrough();
       scope.submitForm(scope.reasonForm0);
     });
 
@@ -91,7 +113,7 @@ describe('Company Reason Code Controller', function() {
       });
 
       it('should call the create method', function() {
-        expect(CompanyReasonCodeCtrl.createCompanyReasonCode).toHaveBeenCalled();
+        expect(CompanyReasonCodeCtrl.createCompanyReason).toHaveBeenCalled();
       });
 
     });
@@ -102,6 +124,7 @@ describe('Company Reason Code Controller', function() {
 
     beforeEach(function() {
       initController();
+      resolveInitDependencies();
     });
 
     it('return true if the action state is create', function() {
@@ -114,7 +137,7 @@ describe('Company Reason Code Controller', function() {
 
   });
 
-  describe('filtering by global reason', function() {
+  describe('filtering by reason type', function() {
 
     var reason;
     beforeEach(function() {
@@ -122,23 +145,24 @@ describe('Company Reason Code Controller', function() {
       reason = {
         id: 2
       };
+      resolveInitDependencies();
     });
 
-    it('return true if there are no selectedGlobalReasons', function() {
+    it('return true if there are no selectedReasonTypes', function() {
       scope.reasonFilter = {
-        selectedGlobalReasons: []
+        selectedReasonTypes: []
       };
-      var filter = CompanyReasonCodeCtrl.filterByGlobalReason(reason);
+      var filter = CompanyReasonCodeCtrl.filterByReasonType(reason);
       expect(filter).toBeTruthy();
     });
 
     it('return false if the id does not match up', function() {
       scope.reasonFilter = {
-        selectedGlobalReasons: [
+        selectedReasonTypes: [
           {id:1}
         ]
       };
-      var filter = CompanyReasonCodeCtrl.filterByGlobalReason(reason);
+      var filter = CompanyReasonCodeCtrl.filterByReasonType(reason);
       expect(filter).toBeFalsy();
     });
 
@@ -148,8 +172,9 @@ describe('Company Reason Code Controller', function() {
 
     beforeEach(function() {
       initController();
+      resolveInitDependencies();
       scope.formData = {
-        globalReasons:[
+        companyReasonTypes:[
           {id:1},
           {id:2}
         ]
@@ -157,12 +182,12 @@ describe('Company Reason Code Controller', function() {
     });
 
     it('return the global reason if the id is found', function() {
-      var reason = CompanyReasonCodeCtrl.getGlobalReasonInFormData(1);
+      var reason = CompanyReasonCodeCtrl.getReasonTypeInFormData(1);
       expect(reason).toEqual({id:1});
     });
 
     it('return false if the reason is not found', function() {
-      var reason = CompanyReasonCodeCtrl.getGlobalReasonInFormData(3);
+      var reason = CompanyReasonCodeCtrl.getReasonTypeInFormData(3);
       expect(reason).toBeUndefined();
     });
 
@@ -172,11 +197,12 @@ describe('Company Reason Code Controller', function() {
 
     beforeEach(function() {
       initController();
+      resolveInitDependencies();
       scope.formData = {
-        globalReasons:[
+        companyReasonTypes:[
           {
             id:1,
-            companyReasons:[]
+            companyReasonCodes:[]
           }
         ]
       };
@@ -184,12 +210,12 @@ describe('Company Reason Code Controller', function() {
 
     it('should add a new company reason to the correct global reasone', function() {
       CompanyReasonCodeCtrl.addReasonCode(1);
-      expect(scope.formData.globalReasons[0].companyReasons.length).toEqual(1);
+      expect(scope.formData.companyReasonTypes[0].companyReasonCodes.length).toEqual(1);
     });
 
     it('should not add a  company reason when the id passed is incorrect', function() {
       CompanyReasonCodeCtrl.addReasonCode(4);
-      expect(scope.formData.globalReasons[0].companyReasons.length).toEqual(0);
+      expect(scope.formData.companyReasonTypes[0].companyReasonCodes.length).toEqual(0);
     });
 
   });
@@ -198,11 +224,12 @@ describe('Company Reason Code Controller', function() {
 
     beforeEach(function() {
       initController();
+      resolveInitDependencies();
       scope.formData = {
-        globalReasons:[
+        companyReasonTypes:[
           {
             id:1,
-            companyReasons:[]
+            companyReasonCodes:[]
           }
         ]
       };
@@ -212,12 +239,12 @@ describe('Company Reason Code Controller', function() {
 
     it('should remove a company reason', function() {
       CompanyReasonCodeCtrl.removeReason(1,0);
-      expect(scope.formData.globalReasons[0].companyReasons.length).toEqual(0);
+      expect(scope.formData.companyReasonTypes[0].companyReasonCodes.length).toEqual(0);
     });
 
     it('should not remove a company reason when the id passed is incorrect', function() {
       CompanyReasonCodeCtrl.removeReason(99,0);
-      expect(scope.formData.globalReasons[0].companyReasons.length).toEqual(1);
+      expect(scope.formData.companyReasonTypes[0].companyReasonCodes.length).toEqual(1);
     });
 
     it('should call the controller method when executing the scope method', function() {
@@ -240,6 +267,7 @@ describe('Company Reason Code Controller', function() {
 
     beforeEach(function() {
       initController();
+      resolveInitDependencies();
       CompanyReasonCodeCtrl.errorHandler(mockError);
     });
 
@@ -257,19 +285,20 @@ describe('Company Reason Code Controller', function() {
 
     beforeEach(function() {
       initController();
+      resolveInitDependencies();
       scope.$digest();
       spyOn(CompanyReasonCodeCtrl,'addReasonCode');
-      spyOn(CompanyReasonCodeCtrl,'filterByGlobalReason');
+      spyOn(CompanyReasonCodeCtrl,'filterByReasonType');
+    });
+
+    it('should call the filterByReasonType method on the controller', function() {
+      scope.whenReasonIsNotFiltered(1);
+      expect(CompanyReasonCodeCtrl.filterByReasonType).toHaveBeenCalledWith(1);
     });
 
     it('should call the addReasonCode method on the controller', function() {
       scope.addReasonCode(1);
       expect(CompanyReasonCodeCtrl.addReasonCode).toHaveBeenCalledWith(1);
-    });
-
-    it('should call the filterByGlobalReason method on the controller', function() {
-      scope.whenReasonIsNotFiltered();
-      expect(CompanyReasonCodeCtrl.filterByGlobalReason).toHaveBeenCalled();
     });
 
     it('should call the addReasonCode method on the controller when the keypress is ENTER', function() {

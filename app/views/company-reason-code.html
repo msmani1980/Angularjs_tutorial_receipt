@@ -23,8 +23,8 @@
     <ui-select multiple ng-model="reasonFilter.selectedReasonTypes" theme="bootstrap">
       <ui-select-match placeholder="Start typing to filter your Subscribed Reasons Types ">{{ $item.reasonTypeName }}
       </ui-select-match>
-      <ui-select-choices repeat="subscribed in formData.companyReasonTypes | filter: $select.search | orderBy:'reasonTypeName'">
-        <div ng-bind-html="subscribed.reasonTypeName | highlight: $select.search"></div>
+      <ui-select-choices repeat="reasonType in formData.companyReasonTypes | filter: $select.search | orderBy:'reasonTypeName'">
+        <div ng-bind-html="reasonType.reasonTypeName | highlight: $select.search"></div>
       </ui-select-choices>
     </ui-select>
   </div>
