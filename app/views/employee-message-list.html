@@ -27,14 +27,73 @@
       <form class="form">
         <div class="panel-body">
           <div class="row">
+            <div class="col-xs-6 col-sm-4">
+              <date-picker-field
+                name="startDate"
+                class="form-group"
+                ng-model="search.startDate"
+                label="Effective From">
+              </date-picker-field>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+              <date-picker-field
+                name="endDate"
+                class="form-group"
+                ng-model="search.endDate"
+                label="Effective From">
+              </date-picker-field>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+              <label>Employee ID</label>
+              <ui-select multiple ng-model="search.employees" theme="bootstrap">
+                <ui-select-match placeholder="Select an Employee...">{{ $item.employeeIdentifier }}
+                </ui-select-match>
+                <ui-select-choices repeat="employee in employeesList | filter: $select.search">
+                  {{ employee.employeeIdentifier }} - {{ employee.lastName}}, {{ employee.firstName }}
+                </ui-select-choices>
+              </ui-select>
+            </div>
 
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-xs-6 col-sm-4">
+              <label>Departure Station</label>
+              <ui-select multiple ng-model="search.depStations" theme="bootstrap">
+                <ui-select-match placeholder="Select a Station...">{{ $item.code }}
+                </ui-select-match>
+                <ui-select-choices repeat="station in stationsList | filter: $select.search">
+                  {{ station.code }} - {{ station.name }}
+                </ui-select-choices>
+              </ui-select>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+              <label>Arrival Station Station</label>
+              <ui-select multiple ng-model="search.arrStations" theme="bootstrap">
+                <ui-select-match placeholder="Select a Station...">{{ $item.code }}
+                </ui-select-match>
+                <ui-select-choices repeat="station in stationsList | filter: $select.search">
+                  {{ station.code }} - {{ station.name }}
+                </ui-select-choices>
+              </ui-select>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+              <label>ScheduleNumber</label>
+              <ui-select multiple ng-model="search.schedules" theme="bootstrap">
+                <ui-select-match placeholder="Select a Schedule...">{{ $item.scheduleNumber }}
+                </ui-select-match>
+                <ui-select-choices repeat="schedule in schedulesList | filter: $select.search">
+                  {{ schedule.scheduleNumber }}
+                </ui-select-choices>
+              </ui-select>
+            </div>
           </div>
         </div>
         <div class="panel-footer text-right">
-          <button type="button" class="btn btn-default btn-search-clear">
+          <button type="button" class="btn btn-default btn-search-clear" ng-click="clearSearch()">
             <span class="btn-label">Clear</span>
           </button>
-          <button class="btn btn-primary btn-search">
+          <button class="btn btn-primary btn-search" ng-click="submitSearch()">
             <span class="fa fa-search" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs btn-label">Search</span>
           </button>
@@ -57,8 +116,10 @@
         <td>{{ message.startDate }}</td>
         <td>{{ message.endDate }}</td>
         <td>
-          <button class="btn btn-info btn-xs" ng-click="goToDetailPage('view', message.id)"><i class="fa fa-file"></i></button>
-          <button class="btn btn-primary btn-xs" ng-show="isActiveOrFutureRecord(message)" ng-click="goToDetailPage('edit', message.id)"><i class="fa fa-pencil"></i></button>
+          <button class="btn btn-info btn-xs" ng-click="goToDetailPage('view', message.id)"><i class="fa fa-file"></i>
+          </button>
+          <button class="btn btn-primary btn-xs" ng-show="isActiveOrFutureRecord(message)"
+                  ng-click="goToDetailPage('edit', message.id)"><i class="fa fa-pencil"></i></button>
         </td>
       </tr>
       <tr>
