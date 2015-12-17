@@ -72,6 +72,7 @@ angular.module('ts5App')
 
     this.setCompanyTaxRatesList = function(dataFromAPI) {
       $scope.companyTaxRatesList = [];
+      $scope.masterTaxRates = angular.copy(dataFromAPI.taxRates);
       var taxRatesList = angular.copy(dataFromAPI.taxRates);
       if (angular.isDefined(taxRatesList)) {
         $scope.companyTaxRatesList = $this.createCompanyTaxRates(taxRatesList);
@@ -107,7 +108,7 @@ angular.module('ts5App')
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
-      $this.makePromises();
+      $this.getCompanyTaxRatesList();
     };
 
     this.createPromises = function() {
@@ -244,11 +245,22 @@ angular.module('ts5App')
       $q.all(promises).then($this.deleteSuccess, $this.errorHandler);
     };
 
+    this.removeTaxRateFromList = function(id) {
+      var newList = [];
+      angular.forEach($scope.companyTaxRatesList, function(taxRate) {
+        if (taxRate.id !== id) {
+          newList.push(taxRate);
+        }
+      });
+      $scope.companyTaxRatesList = newList;
+    };
+
     this.deleteSuccess = function() {
       var id = angular.copy($scope.taxRateToRemove.id);
       ngToast.create('Successfully Deleted <b>Tax Rate ID: </b>' + id);
       $scope.taxRateToRemove = [];
-      return $this.reloadRoute();
+      $this.hideLoadingModal();
+      return $this.removeTaxRateFromList(id);
     };
 
     this.isTaxRateActive = function(taxRate) {
@@ -343,6 +355,29 @@ angular.module('ts5App')
       return dateString;
     };
 
+    this.resetTaxRate = function(newRate) {
+      var newList = [];
+      angular.forEach($scope.companyTaxRatesList, function(taxRate) {
+        if (newRate.id === taxRate.id) {
+          taxRate = newRate;
+        }
+        newList.push(taxRate);
+      });
+      $scope.companyTaxRatesList = newList;
+    };
+
+    this.resetTaxRateEdit = function(taxRate) {
+      angular.forEach($scope.masterTaxRates, function(originalRate) {
+        if (originalRate.id === taxRate.id) {
+          var rate = angular.copy(originalRate);
+          rate.action = 'read';
+          rate.startDate = dateUtility.formatDateForApp(rate.startDate);
+          rate.endDate = dateUtility.formatDateForApp(rate.endDate);
+          $this.resetTaxRate(rate);
+        }
+      });
+    };
+
     // Place $scope functions here
     $scope.clearSearchFilters = function() {
       if (angular.isDefined($scope.search)) {
@@ -398,6 +433,25 @@ angular.module('ts5App')
     $scope.determineMinDate = function(date) {
       date = date || dateUtility.tomorrowFormatted();
       return $this.determineMinDate(date);
+    };
+
+    $scope.resetTaxRateEdit = function(taxRate) {
+      return $this.resetTaxRateEdit(taxRate);
+    };
+
+    $scope.taxRateRowClass = function(taxRate) {
+      if (taxRate.edited) {
+        return 'bg-warning';
+      }
+      if (taxRate.saved) {
+        return 'bg-success';
+      }
+      if (taxRate.deleted) {
+        return 'bg-danger';
+      }
+      if (taxRate.created) {
+        return 'bg-primary';
+      }
     };
 
   });

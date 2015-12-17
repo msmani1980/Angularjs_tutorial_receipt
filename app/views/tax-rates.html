@@ -142,10 +142,9 @@
         </tr>
       </thead>
 
-      <!-- TODO: add Edit and Create functionality to the list -->
-      <tr class="animate-switch-container" ng-repeat="taxRate in companyTaxRatesList track by $index" ng-switch on="taxRate.action" ng-class="{'bg-warning': taxRate.edited, 'bg-danger' : taxRate.deleted, 'bg-success' : taxRate.saved}">
-
-        <!-- taxTypeCode Read/Edit switch-->
+      <!-- TODO: add Create functionality to the list -->
+      <tr class="animate-switch-container" ng-repeat="taxRate in companyTaxRatesList track by $index" ng-switch on="taxRate.action" ng-class="taxRateRowClass(taxRate)">
+        <!-- taxTypeCode Read/Edit/Create switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxTypeCode}}</td>
         <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
             <ui-select ng-model="taxRate" theme="bootstrap" name="taxTypeCode" ng-disabled="isFieldReadOnly(taxRate)">
@@ -157,8 +156,17 @@
               </ui-select-choices>
             </ui-select>
         </td>
-
-        <!-- countryName Read/Edit switch-->
+        <td class="animate-switch tax-rates-ui-select" ng-switch-when="create">
+            <ui-select ng-model="taxRate" theme="bootstrap" name="taxTypeCode">
+              <ui-select-match placeholder="Select Tax Type">
+                {{ $select.selected.taxTypeCode }}
+              </ui-select-match>
+              <ui-select-choices repeat="taxType in taxTypesList | filter: $select.search | orderBy:'taxTypeCode'">
+                <div ng-bind-html="taxType.taxTypeCode | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+        </td>
+        <!-- countryName Read/Edit/Create switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.countryName}}</td>
         <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
           <ui-select ng-model="taxRate" theme="bootstrap" name="taxRateCountry" ng-disabled="isFieldReadOnly(taxRate)">
@@ -170,8 +178,17 @@
             </ui-select-choices>
           </ui-select>
         </td>
-
-        <!-- stationName Read/Edit switch-->
+        <td class="animate-switch tax-rates-ui-select" ng-switch-when="create">
+          <ui-select ng-model="taxRate" theme="bootstrap" name="taxRateCountry">
+            <ui-select-match placeholder="Select Country">
+              {{ $select.selected.countryName }}
+            </ui-select-match>
+            <ui-select-choices repeat="country in countriesList | filter: $select.search | orderBy:'countryName'">
+              <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <!-- stationName Read/Edit/Create switch-->
         <td class="animate-switch" ng-switch-when="read">
           <span class="label label-primary tax-label" ng-repeat="station in taxRate.companyTaxRateStations | orderBy:'stationName'">
             {{ station.stationName }}
@@ -188,8 +205,18 @@
             </ui-select-choices>
           </ui-select>
         </td>
-
-        <!-- taxRateCode Read/Edit switch-->
+        <td class="animate-switch tax-rates-multi-select" ng-switch-when="create">
+          <ui-select ng-if="viewIsReady" multiple ng-model="taxRate.companyTaxRateStations" theme="bootstrap" sortable="true" close-on-select="false">
+            <ui-select-match placeholder="Select Stations">{{$item.stationCode}} - {{$item.stationName}}</ui-select-match>
+            <ui-select-choices repeat="station in stationsList | filter: $select.search | orderBy:'stationCode'">
+              <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
+              <small>
+                <span ng-bind-html="station.countryName | highlight: $select.search"></span>
+              </small>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <!-- taxRateCode Read/Edit/Create switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.taxRateType}}</td>
         <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
           <ui-select ng-model="taxRate" theme="bootstrap" name="searchRateType" ng-disabled="isFieldReadOnly(taxRate)">
@@ -201,27 +228,41 @@
             </ui-select-choices>
           </ui-select>
         </td>
-
-        <!-- taxRateValue Read/Edit switch-->
-        <td class="animate-switch" ng-switch-when="read">{{taxRate.taxRateValue}}</td>
+        <td class="animate-switch tax-rates-ui-select" ng-switch-when="create">
+          <ui-select ng-model="taxRate" theme="bootstrap" name="searchRateType">
+            <ui-select-match placeholder="Select Tax Rate Type">
+              {{ $select.selected.taxRateType }}
+            </ui-select-match>
+            <ui-select-choices repeat="taxRate in taxRatesList | filter: $select.search | orderBy:'taxRateType'">
+              <div ng-bind-html="taxRate.taxRateType | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <!-- taxRateValue Read/Edit/Create switch-->
+        <td class="animate-switch" ng-switch-when="read">{{taxRate.taxRateValue}}<span ng-show="taxRate.taxRateType === 'Percentage'"> %</span></td>
         <td class="animate-switch tax-rates-input" ng-switch-when="edit">
           <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Select Tax Rate" ng-disabled="isFieldReadOnly(taxRate)">
         </td>
-
-        <!-- startDate Read/Edit switch-->
+        <td class="animate-switch tax-rates-input" ng-switch-when="create">
+          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Select Tax Rate">
+        </td>
+        <!-- startDate Read/Edit/Create switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.startDate}}</td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
-          <date-picker-field ng-model="taxRate.startDate" placeholder="mm/dd/yyyy" disable="isFieldReadOnly(taxRate)" min-date="determineMinDate(taxRate.startDate)"> </date-picker-field>
+          <date-picker-field ng-model="taxRate.startDate" placeholder="mm/dd/yyyy" disable="isFieldReadOnly(taxRate)" min-date="determineMinDate(taxRate.startDate)"></date-picker-field>
         </td>
-
-        <!-- endDate Read/Edit switch-->
+        <td class="animate-switch tax-rates-dates" ng-switch-when="create">
+          <date-picker-field ng-model="taxRate.startDate" placeholder="mm/dd/yyyy" min-date="determineMinDate()"></date-picker-field>
+        </td>
+        <!-- endDate Read/Edit/Create switch-->
         <td class="animate-switch" ng-switch-when="read">{{taxRate.endDate}}</td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
           <date-picker-field ng-model="taxRate.endDate" placeholder="mm/dd/yyyy" min-date="determineMinDate()"></date-picker-field>
         </td>
-
-        <!-- Buttns/Actions Read/Edit switch-->
-        <!-- TODO: add Edit actions for each tax rate -->
+        <td class="animate-switch tax-rates-dates" ng-switch-when="create">
+          <date-picker-field ng-model="taxRate.endDate" placeholder="mm/dd/yyyy" min-date="determineMinDate()"></date-picker-field>
+        </td>
+        <!-- Buttons/Actions Read/Edit/Create switch-->
         <td class="animate-switch" ng-switch-when="read">
           <a class="btn btn-primary btn-xs" ng-show="showEditButton(taxRate) || showDeleteButton(taxRate)" ng-click="editCompanyTaxRate(taxRate)">
             <span class="fa fa-pencil"></span>
@@ -232,18 +273,27 @@
           <a class="btn btn-success btn-xs" ng-show="taxRate.edited" ng-click="saveTaxRateEdits(taxRate)">
             <span class="fa fa-save"></span>
           </a>
+          <a class="btn btn-default btn-xs"ng-show="taxRate.edited" ng-click="resetTaxRateEdit(taxRate)">
+            <span class="fa fa-remove"></span>
         </td>
         <td class="animate-switch tax-rates-action" ng-switch-when="edit">
           <a class="btn btn-primary btn-xs" ng-click="saveTaxRateEdits(taxRate)">
             <span class="fa fa-save"></span>
           </a>
-          <a class="btn btn-default btn-xs" alt="Cancel Edits" ng-click="cancelTaxRateEdit(taxRate)">
+          <a class="btn btn-default btn-xs" ng-click="cancelTaxRateEdit(taxRate)">
             <span class="fa fa-remove"></span>
           </a>
         </td>
-
+        <td class="animate-switch tax-rates-action" ng-switch-when="create">
+          <a class="btn btn-primary btn-xs" ng-click="">
+            <span class="fa fa-save"></span>
+          </a>
+          <a class="btn btn-default btn-xs" ng-click="">
+            <span class="fa fa-remove"></span>
+          </a>
+        </td>
+      <!-- End of Tax Rate Row-->
       </tr>
-
     </table>
   </div>
 

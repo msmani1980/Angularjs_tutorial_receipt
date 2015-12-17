@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: taxRatesFactory', function() {
+fdescribe('Service: taxRatesFactory', function() {
 
   beforeEach(module('ts5App'));
 
@@ -33,6 +33,7 @@ describe('Service: taxRatesFactory', function() {
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(taxRatesService, 'getCompanyTaxRatesList');
     spyOn(taxRatesService, 'removeCompanyTaxRate');
+    spyOn(taxRatesService, 'updateCompanyTaxRate');
 
     companyId = globalMenuService.company.get();
 
@@ -86,6 +87,13 @@ describe('Service: taxRatesFactory', function() {
     it('should call removeCompanyTaxRate', function() {
       taxRatesFactory.removeCompanyTaxRate(1);
       expect(taxRatesService.removeCompanyTaxRate).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('updateCompanyTaxRate API call', function() {
+    it('should call updateCompanyTaxRate', function() {
+      taxRatesFactory.updateCompanyTaxRate(1);
+      expect(taxRatesService.updateCompanyTaxRate).toHaveBeenCalledWith(1);
     });
   });
 

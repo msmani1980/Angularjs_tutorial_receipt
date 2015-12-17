@@ -106,15 +106,14 @@ html .navbar,
    right:0;
  }
 
-
 /* tax-rates-management */
  .animate-switch{
   position:relative;
  }
 
  .animate-switch.ng-enter{
-   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.4s;
-   animation: fadeIn 0.5s;
+   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+   animation: fadeIn 0.6s;
  }
 
  .animate-switch.ng-leave.ng-leave-active,
@@ -131,8 +130,8 @@ html .navbar,
 
  .tax-rates-dates{
    top:7px;
-   max-width:125px;
-   min-width:100px;
+   max-width:150px;
+   min-width:125px;
    padding:5px;
  }
 

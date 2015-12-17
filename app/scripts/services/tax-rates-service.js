@@ -21,9 +21,6 @@ angular.module('ts5App')
       getCompanyTaxRatesList: {
         method: 'GET'
       },
-      getCompanyTaxRate: {
-        method: 'GET'
-      },
       createCompanyTaxRate: {
         method: 'POST'
       },
@@ -42,12 +39,6 @@ angular.module('ts5App')
       return requestResource.getCompanyTaxRatesList(payload).$promise;
     };
 
-    var getCompanyTaxRate = function(id) {
-      var payload = {};
-      payload.id = id;
-      return requestResource.getCompanyTaxRate(payload).$promise;
-    };
-
     var removeCompanyTaxRate = function(id) {
       var payload = {};
       payload.id = id;
@@ -60,7 +51,6 @@ angular.module('ts5App')
 
     return {
       getCompanyTaxRatesList: getCompanyTaxRatesList,
-      getCompanyTaxRate: getCompanyTaxRate,
       removeCompanyTaxRate: removeCompanyTaxRate,
       updateCompanyTaxRate: updateCompanyTaxRate
     };
