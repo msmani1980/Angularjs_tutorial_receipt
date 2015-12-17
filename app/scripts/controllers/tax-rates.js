@@ -162,6 +162,11 @@ angular.module('ts5App')
       $this.getCompanyTaxRatesList();
     };
 
+    this.hideSearchPanel = function() {
+      var panel = angular.element('#filter-controls');
+      panel.removeClass('in').addClass('collapse');
+    };
+
     this.createPromises = function() {
       return [
         $this.getTaxTypesList(),
@@ -181,6 +186,7 @@ angular.module('ts5App')
     this.initSuccess = function() {
       $this.hideLoadingModal();
       $this.getMasterCompanyTaxRatesList();
+      $this.hideSearchPanel();
       $scope.viewIsReady = true;
     };
 
@@ -540,6 +546,12 @@ angular.module('ts5App')
 
     $scope.createNewTaxRate = function() {
       return $this.createNewTaxRate();
+    };
+
+    $scope.searchUiSelectReady = function() {
+      if (angular.isUndefined($scope.uiSelectReady)) {
+        $scope.uiSelectReady = true;
+      }
     };
 
   });

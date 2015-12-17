@@ -154,6 +154,7 @@ describe('Controller: TaxRatesCtrl', function() {
       resolveAllDependencies();
       spyOn(TaxRatesCtrl, 'showLoadingModal');
       spyOn(TaxRatesCtrl, 'hideLoadingModal');
+      spyOn(TaxRatesCtrl, 'hideSearchPanel');
       mockInitController();
     });
     it('should set the $scope.viewName to Tax Management', function() {
@@ -167,6 +168,9 @@ describe('Controller: TaxRatesCtrl', function() {
     });
     it('should set the viewIsReady to true', function() {
       expect($scope.viewIsReady).toBeTruthy();
+    });
+    it('should hide the search panel', function() {
+      expect(TaxRatesCtrl.hideSearchPanel).toHaveBeenCalled();
     });
 
     describe('After dependencies have been resolved, it', function() {
@@ -575,6 +579,22 @@ describe('Controller: TaxRatesCtrl', function() {
             $scope.createNewTaxRate();
             expect(TaxRatesCtrl.createNewTaxRate).toHaveBeenCalled();
             expect($scope.companyTaxRatesList.length - 1).toBe(length);
+          });
+        });
+
+        describe('searchUiSelectReady', function() {
+          beforeEach(function() {
+            spyOn($scope, 'searchUiSelectReady').and.callThrough();
+          });
+          it('should return undefined with nothing set', function() {
+            $scope.uiSelectReady = true;
+            $scope.searchUiSelectReady();
+            expect($scope.searchUiSelectReady()).toBe(undefined);
+          });
+          it('should return true if uiSelectReady is set', function() {
+            $scope.uiSelectReady = undefined;
+            $scope.searchUiSelectReady();
+            expect($scope.uiSelectReady).toBeTruthy();
           });
         });
 
