@@ -82,7 +82,7 @@ angular.module('ts5App')
 
     this.setCompanyCurrency = function(taxRate) {
       var payload;
-      if (angular.isDefined(taxRate.companyCurrencyId)) {
+      if (angular.isDefined(taxRate.companyCurrencyId) && angular.isDefined($scope.currenciesList)) {
         angular.forEach($scope.currenciesList, function(currency) {
           if (currency.id === taxRate.companyCurrencyId) {
             payload = {
@@ -95,8 +95,22 @@ angular.module('ts5App')
       }
     };
 
+    this.setTaxRateAvailableStations = function(taxRate) {
+      var stationsList = angular.copy($scope.stationsList);
+      var availableStations = [];
+      angular.forEach(stationsList, function(station) {
+        if (taxRate.countryName === station.countryName) {
+          availableStations.push(station);
+        }
+      });
+      return availableStations;
+    };
+
     this.formatTaxRateObject = function(taxRate, dates) {
       taxRate.currency = $this.setCompanyCurrency(taxRate);
+      if (angular.isDefined($scope.stationsList)) {
+        taxRate.availableStations = $this.setTaxRateAvailableStations(taxRate);
+      }
       if (angular.isDefined(dates) && dates === true) {
         taxRate.startDate = dateUtility.formatDateForApp(taxRate.startDate);
         taxRate.endDate = dateUtility.formatDateForApp(taxRate.endDate);
@@ -657,6 +671,32 @@ angular.module('ts5App')
         countryName: countryName
       }, true);
       $scope.search.stations = [];
+    };
+
+    $scope.isTaxRateCountryFieldDisabled = function(taxRate) {
+      return ($scope.isFieldReadOnly(taxRate) || (angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations
+        .length));
+    };
+
+    $scope.isTaxRateStationsDisabled = function(taxRate) {
+      return ($scope.isFieldReadOnly(taxRate) || !taxRate.countryName);
+    };
+
+    $scope.showCurrencyCode = function(taxRate) {
+      return (angular.isDefined(taxRate.currency) && taxRate.currency.code && !$scope.isTaxRateTypePercentage(
+        taxRate));
+    };
+
+    $scope.isTaxRateCurrencyCodeDisabled = function(taxRate) {
+      return ($scope.isTaxRateTypePercentage(taxRate) || $scope.isFieldReadOnly(taxRate));
+    };
+
+    $scope.filterTaxRateStations = function(taxRate) {
+      taxRate.availableStations = angular.copy($scope.masterStationsList);
+      taxRate.availableStations = $filter('filter')(taxRate.availableStations, {
+        countryName: taxRate.countryName.countryName
+      }, true);
+      taxRate.companyTaxRateStations = [];
     };
 
   });
