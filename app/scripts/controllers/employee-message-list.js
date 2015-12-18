@@ -48,22 +48,28 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       employeeMessagesFactory.getEmployeeMessages(payload).then($this.getMessagesSuccess);
     };
 
+    this.setSchedulesFromAPI = function (dataFromAPI) {
+      $scope.schedulesList = angular.copy(dataFromAPI.distinctSchedules);
+    };
+
     this.getSchedules = function () {
-      return employeeMessagesFactory.getSchedules(companyId).then(function (dataFromAPI) {
-        $scope.schedulesList = angular.copy(dataFromAPI.distinctSchedules);
-      }, $this.showErrors);
+      return employeeMessagesFactory.getSchedules(companyId).then($this.setSchedulesFromAPI, $this.showErrors);
+    };
+
+    this.setStationsFromAPI = function (dataFromAPI) {
+      $scope.stationsList = angular.copy(dataFromAPI.response);
     };
 
     this.getStations = function () {
-      return employeeMessagesFactory.getStations().then(function (dataFromAPI) {
-        $scope.stationsList = angular.copy(dataFromAPI.response);
-      }, $this.showErrors);
+      return employeeMessagesFactory.getStations().then($this.setStationsFromAPI, $this.showErrors);
+    };
+
+    this.setEmployeesFromAPI = function (dataFromAPI) {
+      $scope.employeesList = angular.copy(dataFromAPI.companyEmployees);
     };
 
     this.getEmployees = function () {
-      return employeeMessagesFactory.getEmployees(companyId).then(function (dataFromAPI) {
-        $scope.employeesList = angular.copy(dataFromAPI.companyEmployees);
-      }, $this.showErrors);
+      return employeeMessagesFactory.getEmployees(companyId).then($this.setEmployeesFromAPI, $this.showErrors);
     };
 
     this.formatSearchArray = function (arrayToFormat, attributeToSave) {
@@ -103,21 +109,27 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       $this.getEmployeeMessages({});
     };
 
-    this.init = function () {
-      $scope.viewName = 'Employee Messages';
-      $scope.search = {};
+    this.initSuccess = function () {
+      angular.element('#search-collapse').addClass('collapse');
+      $this.hideLoadingModal();
+    };
 
-      $this.showLoadingModal('Loading data...');
-      var initPromises = [
+    this.makeInitPromises = function () {
+     return [
         $this.getEmployeeMessages({}),
         $this.getSchedules(),
         $this.getStations(),
         $this.getEmployees()
       ];
-      $q.all(initPromises).then(function () {
-        angular.element('#search-collapse').addClass('collapse');
-        $this.hideLoadingModal();
-      });
+    };
+
+    this.init = function () {
+      $scope.viewName = 'Employee Messages';
+      $scope.search = {};
+
+      $this.showLoadingModal('Loading data...');
+      var initPromises = $this.makeInitPromises();
+      $q.all(initPromises).then($this.initSuccess);
     };
     this.init();
 
