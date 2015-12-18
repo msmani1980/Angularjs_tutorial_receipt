@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: TaxRatesCtrl', function() {
+fdescribe('Controller: TaxRatesCtrl', function() {
   beforeEach(module(
     'ts5App',
     'template-module',
@@ -597,6 +597,24 @@ describe('Controller: TaxRatesCtrl', function() {
             expect($scope.uiSelectReady).toBeTruthy();
           });
         });
+
+
+        describe('createNewTaxRate', function() {
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'createNewTaxRate').and.callThrough();
+          });
+          it('should call the controller method', function() {
+            $scope.createNewTaxRate();
+            expect(TaxRatesCtrl.createNewTaxRate).toHaveBeenCalled();
+          });
+
+          it('should add a new row to the list', function() {
+            var length = $scope.companyTaxRatesList.length;
+            $scope.createNewTaxRate();
+            expect($scope.companyTaxRatesList.length - 1).toBe(length);
+          });
+        });
+
 
         describe('the error handler', function() {
           var mockError;

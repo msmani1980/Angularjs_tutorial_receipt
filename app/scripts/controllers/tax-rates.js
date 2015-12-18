@@ -190,7 +190,8 @@ angular.module('ts5App')
         $this.getCountriesList(),
         $this.getStationsList(),
         $this.getCurrenciesList(),
-        $this.getCompanyTaxRatesList()
+        $this.getCompanyTaxRatesList(),
+        $this.getMasterCompanyTaxRatesList()
       ];
     };
 
@@ -201,13 +202,11 @@ angular.module('ts5App')
 
     this.searchSuccess = function() {
       $this.hideLoadingModal();
-      $this.getMasterCompanyTaxRatesList();
       $scope.viewIsReady = true;
     };
 
     this.initSuccess = function() {
       $this.hideLoadingModal();
-      $this.getMasterCompanyTaxRatesList();
       $this.hideSearchPanel();
       $scope.viewIsReady = true;
     };
@@ -634,6 +633,7 @@ angular.module('ts5App')
     };
 
     $scope.cancelNewTaxRate = function(taxRate) {
+      $this.clearCustomErrors();
       taxRate.deleted = true;
       taxRate.action = 'deleted';
     };
