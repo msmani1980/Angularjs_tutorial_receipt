@@ -34,6 +34,11 @@
   white-space: normal;
 }
 
+.show-white-space{
+  min-height:800px;
+  height:auto;
+}
+
 .tax-rates-dates{
  top:10px;
  max-width:150px;
@@ -76,6 +81,10 @@
  max-width:75px;
  min-width:50px;
  padding:5px;
+}
+
+.tax-rates-container{
+  padding-bottom:3em;
 }
 
 @-webkit-keyframes fadeIn {

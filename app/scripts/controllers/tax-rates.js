@@ -51,8 +51,8 @@ angular.module('ts5App')
       var countriesList = [];
       angular.forEach(stationsList, function(station) {
         var country = {
-          countryName: station.countryName,
-          countryCode: station.countryCode
+          id: station.countryId,
+          countryName: station.countryName
         };
         countriesList.push(country);
       });

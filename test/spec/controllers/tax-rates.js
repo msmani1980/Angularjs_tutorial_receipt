@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: TaxRatesCtrl', function() {
+fdescribe('Controller: TaxRatesCtrl', function() {
   beforeEach(module(
     'ts5App',
     'template-module',
@@ -181,7 +181,7 @@ describe('Controller: TaxRatesCtrl', function() {
         expect($scope.taxRatesList).toEqual(taxRateTypesJSON);
       });
       it('should set the $scope.countriesList to the mock data', function() {
-        expect($scope.countriesList).toEqual(countriesJSON.countries);
+        expect($scope.countriesList[0]).toEqual(countriesJSON.countries[0]);
       });
       it('should set the $scope.stationsList to the mock data', function() {
         expect($scope.stationsList).toEqual(stationsListJSON.response);
@@ -714,6 +714,24 @@ describe('Controller: TaxRatesCtrl', function() {
           it('should add deleted to the object, which will hide it indefinitely', function() {
             $scope.cancelNewTaxRate(taxRate);
             expect(taxRate.action).toBe('deleted');
+          });
+        });
+
+        describe('$scope.cancelNewTaxRate', function() {
+          beforeEach(function() {
+            spyOn($scope, 'filterSearchStationsByCountry').and.callThrough();
+          });
+          it('should set enableSearchStations to true', function() {
+            $scope.filterSearchStationsByCountry('United States');
+            expect($scope.enableSearchStations).toBe(true);
+          });
+          it('should set clear search.stations', function() {
+            $scope.filterSearchStationsByCountry('United States');
+            expect($scope.search.stations).toEqual([]);
+          });
+          it('should set stationsListSearch', function() {
+            $scope.filterSearchStationsByCountry('United States');
+            expect($scope.stationsListSearch.length).toEqual(5);
           });
         });
 
