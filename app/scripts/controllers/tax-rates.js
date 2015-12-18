@@ -66,6 +66,21 @@ angular.module('ts5App')
       return 'auto';
     };
 
+    this.setCompanyCurrency = function(taxRate) {
+      var payload;
+      if (angular.isDefined(taxRate.companyCurrencyId)) {
+        angular.forEach($scope.currenciesList, function(currency) {
+          if (currency.id === taxRate.companyCurrencyId) {
+            payload = {
+              id: taxRate.companyCurrencyId,
+              code: currency.code
+            };
+          }
+        });
+        return payload;
+      }
+    };
+
     this.formatTaxRateObject = function(taxRate, dates) {
       if (angular.isDefined(dates) && dates === true) {
         taxRate.startDate = dateUtility.formatDateForApp(taxRate.startDate);
@@ -81,6 +96,7 @@ angular.module('ts5App')
       taxRate.taxRateType = {
         taxRateType: taxRate.taxRateType
       };
+      taxRate.currency = $this.setCompanyCurrency(taxRate);
       return taxRate;
     };
 
@@ -181,6 +197,12 @@ angular.module('ts5App')
     this.makePromises = function() {
       var promises = $this.createPromises();
       $q.all(promises).then($this.initSuccess, $this.errorHandler);
+    };
+
+    this.searchSuccess = function() {
+      $this.hideLoadingModal();
+      $this.getMasterCompanyTaxRatesList();
+      $scope.viewIsReady = true;
     };
 
     this.initSuccess = function() {
@@ -284,7 +306,7 @@ angular.module('ts5App')
       }
       $this.showLoadingModal(message);
       var promises = $this.createSearchPromises();
-      $q.all(promises).then($this.initSuccess, $this.errorHandler);
+      $q.all(promises).then($this.searchSuccess, $this.errorHandler);
     };
 
     this.createDeletePromises = function(id) {
@@ -398,7 +420,7 @@ angular.module('ts5App')
         taxRateType: taxRate.taxRateType.taxRateType,
         startDate: dateUtility.formatDateForAPI(taxRate.startDate),
         endDate: dateUtility.formatDateForAPI(taxRate.endDate),
-        companyTaxTypeId: taxRate.companyTaxTypeId,
+        companyTaxTypeId: taxRate.taxTypeCode.id,
         companyTaxRateStations: $this.createStationsPayload(taxRate),
         companyCurrencyId: taxRate.companyCurrencyId
       };
@@ -436,28 +458,74 @@ angular.module('ts5App')
         }
       });
     };
+
+    this.showValidationError = function(field) {
+      var payload = {
+        field: field,
+        value: ' - is a required field. Please update and try again!'
+      };
+      $scope.errorCustom.push(payload);
+      $scope.displayError = true;
+    };
+
+    this.validateNewData = function(field, value, taxRate) {
+      if (value === undefined || value === null || value.length === 0 || value === 'Invalid date') {
+        taxRate.deleted = true;
+        $this.showValidationError(field);
+      }
+      return value;
+    };
+
+    this.clearCustomErrors = function() {
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+    };
+
     this.createNewTaxRate = function() {
       var length = parseInt($scope.companyTaxRatesList.length);
       var payload = {
         action: 'create',
+        position: 'up',
         key: length + 1,
+        taxRateValue: undefined,
+        taxRateType: undefined,
         startDate: dateUtility.nowFormatted(),
         endDate: dateUtility.nowFormatted(),
-        companyTaxRateStations: [],
-        companyTaxTypeId: null,
-        countryId: null,
-        countryName: null,
-        currencyCode: null,
-        currencySymbol: null,
-        description: null,
-        id: null,
-        position: 'up',
-        taxRateType: null,
-        taxRateValue: null,
-        taxTypeCode: null,
+        taxTypeCode: undefined,
+        companyTaxRateStations: undefined,
+        companyCurrencyId: undefined,
         created: true
       };
       $scope.companyTaxRatesList.push(payload);
+    };
+
+    this.parseNewTaxRatePayload = function(taxRate) {
+      var stations = $this.createStationsPayload(taxRate);
+      var taxTypeId = taxRate.taxTypeCode ? taxRate.taxTypeCode.id : null;
+      var taxRateType = taxRate.taxRateType ? taxRate.taxRateType.taxRateType : null;
+      var payload = {
+        taxRateValue: $this.validateNewData('taxRateValue', taxRate.taxRateValue, taxRate),
+        taxRateType: $this.validateNewData('taxRateType', taxRateType, taxRate),
+        startDate: $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate),
+        endDate: $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate),
+        companyTaxTypeId: $this.validateNewData('companyTaxTypeId', taxTypeId, taxRate),
+        companyTaxRateStations: $this.validateNewData('companyTaxRateStations', stations, taxRate)
+      };
+      if (taxRate.companyCurrencyId) {
+        $this.validateNewData('companyCurrencyId', taxRate.companyCurrencyId, taxRate);
+      }
+      return payload;
+    };
+
+    this.createNewTaxRatePayload = function(taxRate) {
+      $this.clearCustomErrors();
+      var payload = $this.parseNewTaxRatePayload(taxRate);
+      if ($scope.displayError === false) {
+        delete taxRate.deleted;
+        taxRate.saved = true;
+        taxRate.action = 'read';
+        console.log('Create Promises Here', payload);
+      }
     };
 
     // Place $scope functions here
@@ -544,14 +612,30 @@ angular.module('ts5App')
       }
     };
 
-    $scope.createNewTaxRate = function() {
-      return $this.createNewTaxRate();
-    };
-
     $scope.searchUiSelectReady = function() {
       if (angular.isUndefined($scope.uiSelectReady)) {
         $scope.uiSelectReady = true;
       }
+    };
+
+    $scope.createNewTaxRate = function() {
+      return $this.createNewTaxRate();
+    };
+
+    $scope.createNewTaxRatePayload = function(taxRate) {
+      return $this.createNewTaxRatePayload(taxRate);
+    };
+
+    $scope.isTaxRateTypePercentage = function(taxRate) {
+      if (angular.isDefined(taxRate.taxRateType)) {
+        return (taxRate.taxRateType.taxRateType === 'Percentage');
+      }
+      return true;
+    };
+
+    $scope.cancelNewTaxRate = function(taxRate) {
+      taxRate.deleted = true;
+      taxRate.action = 'deleted';
     };
 
   });
