@@ -517,7 +517,9 @@ angular.module('ts5App')
     };
 
     this.createNewTaxRatePayload = function(taxRate) {
-      $this.clearCustomErrors();
+      if ($scope.displayError === true) {
+        $this.clearCustomErrors();
+      }
       var payload = $this.parseNewTaxRatePayload(taxRate);
       if ($scope.displayError === false) {
         delete taxRate.deleted;

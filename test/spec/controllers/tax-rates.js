@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: TaxRatesCtrl', function() {
+describe('Controller: TaxRatesCtrl', function() {
   beforeEach(module(
     'ts5App',
     'template-module',
@@ -247,6 +247,7 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             spyOn(TaxRatesCtrl, 'createSearchPayload').and.callThrough();
             spyOn(TaxRatesCtrl, 'createUiSelectSearchPayload').and.callThrough();
             spyOn(TaxRatesCtrl, 'generateCompanyStationIds').and.callThrough();
+            spyOn(TaxRatesCtrl, 'searchSuccess').and.callThrough();
             $scope.search = {
               'taxType': {
                 'id': 20,
@@ -335,6 +336,10 @@ fdescribe('Controller: TaxRatesCtrl', function() {
           it('should call generateCompanyStationIds', function() {
             expect(TaxRatesCtrl.generateCompanyStationIds).toHaveBeenCalled();
           });
+          it('should call searchSuccess', function() {
+            resolveAllDependencies();
+            expect(TaxRatesCtrl.searchSuccess).toHaveBeenCalled();
+          });
           it('generateCompanyStationIds should return empty', function() {
             $scope.search = {
               'stations': [{
@@ -418,6 +423,7 @@ fdescribe('Controller: TaxRatesCtrl', function() {
             spyOn(TaxRatesCtrl, 'createDeletePromises').and.callThrough();
             spyOn(TaxRatesCtrl, 'displayConfirmDialog').and.callThrough();
             spyOn(TaxRatesCtrl, 'deleteSuccess').and.callThrough();
+            spyOn($scope, 'deleteCompanyTaxRate').and.callThrough();
             taxRate = {
               id: '123',
               companyId: '403',
@@ -598,7 +604,6 @@ fdescribe('Controller: TaxRatesCtrl', function() {
           });
         });
 
-
         describe('createNewTaxRate', function() {
           beforeEach(function() {
             spyOn(TaxRatesCtrl, 'createNewTaxRate').and.callThrough();
@@ -615,6 +620,102 @@ fdescribe('Controller: TaxRatesCtrl', function() {
           });
         });
 
+        describe('createNewTaxRatePayload', function() {
+          var taxRate;
+          var payload;
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'createNewTaxRatePayload').and.callThrough();
+            spyOn(TaxRatesCtrl, 'clearCustomErrors').and.callThrough();
+            spyOn(TaxRatesCtrl, 'validateNewData').and.callThrough();
+            spyOn(TaxRatesCtrl, 'parseNewTaxRatePayload').and.callThrough();
+            spyOn(TaxRatesCtrl, 'createStationsPayload').and.callThrough();
+            taxRate = companyTaxRatesJSON.taxRates[0];
+            payload = {
+              taxRateValue: '9.00',
+              taxRateType: {
+                taxRateType: 'Percentage'
+              },
+              startDate: '07/01/2015',
+              endDate: '07/01/2016',
+              taxTypeCode: {
+                id: 8
+              },
+              companyTaxRateStations: [{
+                id: 3
+              }]
+            };
+            $scope.displayError = true;
+          });
+          it('should call the controller method', function() {
+            $scope.createNewTaxRatePayload(taxRate);
+            expect(TaxRatesCtrl.createNewTaxRatePayload).toHaveBeenCalledWith(taxRate);
+          });
+          it('should call the controller method and not set companyCurrencyId', function() {
+            delete taxRate.companyCurrencyId;
+            $scope.createNewTaxRatePayload(taxRate);
+            expect(TaxRatesCtrl.createNewTaxRatePayload).toHaveBeenCalledWith(taxRate);
+          });
+          it('should call the controller method clearCustomErrors', function() {
+            $scope.createNewTaxRatePayload(taxRate);
+            expect(TaxRatesCtrl.clearCustomErrors).toHaveBeenCalled();
+          });
+          it('should call the controller method clearCustomErrors', function() {
+            $scope.displayError = false;
+            $scope.errorCustom = [];
+            $scope.createNewTaxRatePayload(payload);
+            expect(TaxRatesCtrl.createNewTaxRatePayload).toHaveBeenCalled();
+          });
+        });
+
+        describe('$scope.isTaxRateTypePercentage', function() {
+          beforeEach(function() {
+            spyOn($scope, 'isTaxRateTypePercentage').and.callThrough();
+          });
+          it('should return false without taxRateType defined ', function() {
+            var taxRate = {
+              id: 1,
+              taxRateType: {
+                id: 1
+              }
+            };
+            expect($scope.isTaxRateTypePercentage(taxRate)).toBeFalsy();
+          });
+          it('should return false without taxRateType defined ', function() {
+            var taxRate = {
+              id: 1,
+            };
+            expect($scope.isTaxRateTypePercentage(taxRate)).toBeTruthy();
+          });
+          it('should return true with taxRateType set to Percentage ', function() {
+            var taxRate = {
+              id: 1,
+              taxRateType: {
+                taxRateType: 'Percentage'
+              }
+            };
+            expect($scope.isTaxRateTypePercentage(taxRate)).toBeTruthy();
+          });
+        });
+
+        describe('$scope.cancelNewTaxRate', function() {
+          var taxRate;
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'clearCustomErrors').and.callThrough();
+            taxRate = companyTaxRatesJSON.taxRates[0];
+          });
+          it('should call the clearCustomErrors method', function() {
+            $scope.cancelNewTaxRate(taxRate);
+            expect(TaxRatesCtrl.clearCustomErrors).toHaveBeenCalled();
+          });
+          it('should add deleted to the object, which adds the red color to it', function() {
+            $scope.cancelNewTaxRate(taxRate);
+            expect(taxRate.deleted).toBe(true);
+          });
+          it('should add deleted to the object, which will hide it indefinitely', function() {
+            $scope.cancelNewTaxRate(taxRate);
+            expect(taxRate.action).toBe('deleted');
+          });
+        });
 
         describe('the error handler', function() {
           var mockError;
