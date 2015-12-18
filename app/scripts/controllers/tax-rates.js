@@ -95,11 +95,21 @@ angular.module('ts5App')
       }
     };
 
+    this.checkForExistingStations = function(taxRate, currentStation) {
+      var existingStation = [];
+      angular.forEach(taxRate.companyTaxRateStations, function(station) {
+        if (station.stationCode === currentStation.stationCode) {
+          existingStation.push(station);
+        }
+      });
+      return (!existingStation.length);
+    };
+
     this.setTaxRateAvailableStations = function(taxRate) {
       var stationsList = angular.copy($scope.stationsList);
       var availableStations = [];
       angular.forEach(stationsList, function(station) {
-        if (taxRate.countryName === station.countryName) {
+        if (taxRate.countryName === station.countryName && $this.checkForExistingStations(taxRate, station)) {
           availableStations.push(station);
         }
       });
@@ -209,11 +219,11 @@ angular.module('ts5App')
 
     this.createPromises = function() {
       return [
-        $this.getTaxTypesList(),
-        $this.getTaxRateTypesList(),
+        $this.getCompanyTaxRatesList(),
         $this.getStationsList(),
         $this.getCurrenciesList(),
-        $this.getCompanyTaxRatesList(),
+        $this.getTaxTypesList(),
+        $this.getTaxRateTypesList(),
         $this.getMasterCompanyTaxRatesList()
       ];
     };
@@ -674,12 +684,12 @@ angular.module('ts5App')
     };
 
     $scope.isTaxRateCountryFieldDisabled = function(taxRate) {
-      return ($scope.isFieldReadOnly(taxRate) || (angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations
-        .length));
+      return ((angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length) ||
+        $scope.isFieldReadOnly(taxRate));
     };
 
     $scope.isTaxRateStationsDisabled = function(taxRate) {
-      return ($scope.isFieldReadOnly(taxRate) || !taxRate.countryName);
+      return (!taxRate.countryName || $scope.isFieldReadOnly(taxRate));
     };
 
     $scope.showCurrencyCode = function(taxRate) {

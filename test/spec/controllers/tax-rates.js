@@ -735,6 +735,63 @@ fdescribe('Controller: TaxRatesCtrl', function() {
           });
         });
 
+        describe('$scope.isTaxRateCountryFieldDisabled', function() {
+          it('should set return true', function() {
+            var taxRate = companyTaxRatesJSON.taxRates[0];
+            expect($scope.isTaxRateCountryFieldDisabled(taxRate)).toBeTruthy();
+          });
+          it('should set return true', function() {
+            var taxRate = companyTaxRatesJSON.taxRates[0];
+            delete taxRate.companyTaxRateStations;
+            expect($scope.isTaxRateCountryFieldDisabled(taxRate)).toBeTruthy();
+          });
+        });
+
+        describe('$scope.showCurrencyCode', function() {
+          it('should set return true', function() {
+            var taxRate = companyTaxRatesJSON.taxRates[0];
+            taxRate.currency = {
+              code: 1
+            };
+            expect($scope.showCurrencyCode(taxRate)).toBeTruthy();
+          });
+        });
+
+        describe('$scope.isTaxRateStationsDisabled', function() {
+          it('should set return true', function() {
+            var taxRate = companyTaxRatesJSON.taxRates[0];
+            delete taxRate.countryName;
+            expect($scope.isTaxRateStationsDisabled(taxRate)).toBeTruthy();
+          });
+          it('should set return false', function() {
+            var taxRate = companyTaxRatesJSON.taxRates[0];
+            taxRate.countryName = 'United States';
+            expect($scope.isTaxRateStationsDisabled(taxRate)).toBeTruthy();
+          });
+        });
+
+        describe('$scope.isTaxRateCurrencyCodeDisabled', function() {
+          it('should set return true', function() {
+            var taxRate = companyTaxRatesJSON.taxRates[0];
+            expect($scope.isTaxRateCurrencyCodeDisabled(taxRate)).toBeTruthy();
+          });
+        });
+
+        describe('$scope.filterTaxRateStations', function() {
+          beforeEach(function() {
+            spyOn($scope, 'filterTaxRateStations').and.callThrough();
+          });
+          it('should set return true', function() {
+            var taxRate = {
+              countryName: {
+                countryName: 'United States'
+              }
+            };
+            $scope.filterTaxRateStations(taxRate);
+            expect(taxRate.availableStations.length).toBe(5);
+          });
+        });
+
         describe('the error handler', function() {
           var mockError;
           beforeEach(function() {
