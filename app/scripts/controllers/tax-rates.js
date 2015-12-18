@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TaxRatesCtrl', function($scope, $q, $route, taxRatesFactory, dateUtility, ngToast) {
+  .controller('TaxRatesCtrl', function($scope, $q, $route, $filter, taxRatesFactory, dateUtility, ngToast) {
 
     var $this = this;
 
@@ -18,6 +18,8 @@ angular.module('ts5App')
       $scope.taxTypesList = [];
       $scope.countriesList = [];
       $scope.stationsList = [];
+      $scope.masterStationsList = [];
+      $scope.stationsListSearch = [];
       $scope.currenciesList = [];
       $scope.companyTaxRatesList = [];
       $scope.masterTaxRates = [];
@@ -45,12 +47,24 @@ angular.module('ts5App')
       $scope.taxRatesList = angular.copy(dataFromAPI);
     };
 
-    this.setCountriesList = function(dataFromAPI) {
-      $scope.countriesList = angular.copy(dataFromAPI.countries);
+    this.setCountriesList = function(stationsList) {
+      var countriesList = [];
+      angular.forEach(stationsList, function(station) {
+        var country = {
+          countryName: station.countryName,
+          countryCode: station.countryCode
+        };
+        countriesList.push(country);
+      });
+      countriesList = $filter('unique')(countriesList, 'countryName');
+      $scope.countriesList = countriesList;
     };
 
     this.setStationsList = function(dataFromAPI) {
       $scope.stationsList = angular.copy(dataFromAPI.response);
+      $scope.masterStationsList = angular.copy(dataFromAPI.response);
+      $scope.stationsListSearch = angular.copy(dataFromAPI.response);
+      $this.setCountriesList($scope.stationsList);
     };
 
     this.setCurrenciesList = function(dataFromAPI) {
@@ -82,6 +96,7 @@ angular.module('ts5App')
     };
 
     this.formatTaxRateObject = function(taxRate, dates) {
+      taxRate.currency = $this.setCompanyCurrency(taxRate);
       if (angular.isDefined(dates) && dates === true) {
         taxRate.startDate = dateUtility.formatDateForApp(taxRate.startDate);
         taxRate.endDate = dateUtility.formatDateForApp(taxRate.endDate);
@@ -96,7 +111,6 @@ angular.module('ts5App')
       taxRate.taxRateType = {
         taxRateType: taxRate.taxRateType
       };
-      taxRate.currency = $this.setCompanyCurrency(taxRate);
       return taxRate;
     };
 
@@ -149,10 +163,6 @@ angular.module('ts5App')
       return taxRatesFactory.getTaxRateTypes().then($this.setTaxRateTypesList);
     };
 
-    this.getCountriesList = function() {
-      return taxRatesFactory.getCountriesList().then($this.setCountriesList);
-    };
-
     this.getStationsList = function() {
       return taxRatesFactory.getStationsList().then($this.setStationsList);
     };
@@ -187,7 +197,6 @@ angular.module('ts5App')
       return [
         $this.getTaxTypesList(),
         $this.getTaxRateTypesList(),
-        $this.getCountriesList(),
         $this.getStationsList(),
         $this.getCurrenciesList(),
         $this.getCompanyTaxRatesList(),
@@ -537,6 +546,7 @@ angular.module('ts5App')
           startDate: '',
           endDate: ''
         };
+        $scope.enableSearchStations = false;
         return $this.makeSearchPromises(true);
       }
     };
@@ -638,6 +648,15 @@ angular.module('ts5App')
       $this.clearCustomErrors();
       taxRate.deleted = true;
       taxRate.action = 'deleted';
+    };
+
+    $scope.filterSearchStationsByCountry = function(countryName) {
+      $scope.enableSearchStations = true;
+      $scope.stationsListSearch = angular.copy($scope.masterStationsList);
+      $scope.stationsListSearch = $filter('filter')($scope.stationsListSearch, {
+        countryName: countryName
+      }, true);
+      $scope.search.stations = [];
     };
 
   });
