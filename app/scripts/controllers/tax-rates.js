@@ -761,4 +761,10 @@ angular.module('ts5App')
       return ($scope.viewIsReady && taxRate.action === 'edit' && taxRate.availableStations);
     };
 
+    $scope.shouldTaxRateCurrencyBeClear = function(taxRate) {
+      if ($scope.isTaxRateTypePercentage(taxRate) && angular.isDefined(taxRate.currency)) {
+        taxRate.currency.code = '';
+      }
+    };
+
   });
