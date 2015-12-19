@@ -16,11 +16,11 @@ angular.module('ts5App')
       $scope.viewName = 'Tax Management';
       $scope.taxRatesList = [];
       $scope.taxTypesList = [];
-      $scope.countriesList = [];
       $scope.stationsList = [];
       $scope.masterStationsList = [];
       $scope.stationsListSearch = [];
       $scope.currenciesList = [];
+      $scope.countriesList = [];
       $scope.companyTaxRatesList = [];
       $scope.masterTaxRates = [];
       $scope.taxRateToRemove = [];
@@ -56,15 +56,15 @@ angular.module('ts5App')
         };
         countriesList.push(country);
       });
-      countriesList = $filter('unique')(countriesList, 'countryName');
-      $scope.countriesList = countriesList;
+      $scope.countriesList = $filter('unique')(countriesList, 'countryName');
     };
 
     this.setStationsList = function(dataFromAPI) {
-      $scope.stationsList = angular.copy(dataFromAPI.response);
-      $scope.masterStationsList = angular.copy(dataFromAPI.response);
-      $scope.stationsListSearch = angular.copy(dataFromAPI.response);
-      $this.setCountriesList($scope.stationsList);
+      var response = angular.copy(dataFromAPI.response);
+      $this.setCountriesList(response);
+      $scope.stationsList = response;
+      $scope.masterStationsList = response;
+      $scope.stationsListSearch = response;
     };
 
     this.setCurrenciesList = function(dataFromAPI) {
@@ -106,68 +106,94 @@ angular.module('ts5App')
     };
 
     this.setTaxRateAvailableStations = function(taxRate) {
-      if (angular.isDefined($scope.stationsList)) {
-        var stationsList = angular.copy($scope.stationsList);
-        var availableStations = [];
-        angular.forEach(stationsList, function(station) {
-          if (taxRate.countryName === station.countryName && $this.checkForExistingStations(taxRate, station)) {
-            var payload = {
-              companyStationId: station.stationId,
-              stationCode: station.stationCode,
-              stationName: station.stationName,
-              countryName: station.countryName
-            };
-            availableStations.push(payload);
+      var availableStations = [];
+      if ($scope.stationsList.length > 0) {
+        angular.forEach($scope.stationsList, function(station) {
+          if ($this.checkForExistingStations(taxRate, station)) {
+            if (taxRate.countryName === station.countryName) {
+              var payload = {
+                companyStationId: station.stationId,
+                stationCode: station.stationCode,
+                stationName: station.stationName,
+                countryName: station.countryName
+              };
+              availableStations.push(payload);
+            }
           }
         });
-        return availableStations;
       }
+      return availableStations;
     };
 
-    this.formatTaxRateObject = function(taxRate, dates) {
-      taxRate.availableStations = $this.setTaxRateAvailableStations(taxRate);
-      if (angular.isDefined(dates) && dates === true) {
-        taxRate.startDate = dateUtility.formatDateForApp(taxRate.startDate);
-        taxRate.endDate = dateUtility.formatDateForApp(taxRate.endDate);
-      }
-      taxRate.currency = $this.setCompanyCurrency(taxRate);
+    this.formatTaxTypeCode = function(taxRate) {
       if (angular.isDefined(taxRate.taxTypeCode)) {
         taxRate.taxTypeCode = {
           taxTypeCode: taxRate.taxTypeCode,
           id: taxRate.taxTypeCode.id
         };
+        return taxRate.taxTypeCode;
       }
+    };
+
+    this.formatTaxTypeCountryName = function(taxRate) {
       taxRate.countryName = {
         countryName: taxRate.countryName
       };
+      return taxRate.countryName;
+    };
+
+    this.formatTaxRateType = function(taxRate) {
       taxRate.taxRateType = {
         taxRateType: taxRate.taxRateType
       };
+      return taxRate.taxRateType;
+    };
+
+    this.formatTaxRateDate = function(date) {
+      return dateUtility.formatDateForApp(date);
+    };
+
+    this.formatTaxRateObject = function(taxRate, dates) {
       taxRate.action = 'read';
-      return taxRate;
+      taxRate.availableStations = $this.setTaxRateAvailableStations(taxRate);
+      taxRate.currency = $this.setCompanyCurrency(taxRate);
+      taxRate.countryName = $this.formatTaxTypeCountryName(taxRate);
+      taxRate.taxTypeCode = $this.formatTaxTypeCode(taxRate);
+      taxRate.taxRateType = $this.formatTaxRateType(taxRate);
+      if (angular.isDefined(dates) && dates === true) {
+        taxRate.startDate = $this.formatTaxRateDate(taxRate.startDate);
+        taxRate.endDate = $this.formatTaxRateDate(taxRate.endDate);
+      }
+      if (taxRate.availableStations) {
+        return taxRate;
+      }
+    };
+
+    this.formatTaxRatesAfterCreation = function(newTaxRatesList) {
+      var taxRatesList = [];
+      angular.forEach(newTaxRatesList, function(taxRate) {
+        taxRate = $this.formatTaxRateObject(taxRate, true);
+        taxRatesList.push(taxRate);
+      });
+      return taxRatesList;
     };
 
     this.createCompanyTaxRates = function(taxRatesList) {
       var newTaxRatesList = [];
       angular.forEach(taxRatesList, function(taxRate, key) {
-        if (angular.isDefined(taxRate)) {
-          taxRate = $this.formatTaxRateObject(taxRate, true);
-          taxRate.key = key;
-          taxRate.position = $this.uiSelectPosition(taxRatesList.length, key);
-          newTaxRatesList.push(taxRate);
-        }
+        taxRate.position = $this.uiSelectPosition(taxRatesList.length, key);
+        taxRate.key = key;
+        newTaxRatesList.push(taxRate);
       });
-      return newTaxRatesList;
+      return $this.formatTaxRatesAfterCreation(newTaxRatesList);
     };
 
     this.createMasterCompanyTaxRates = function(taxRatesList) {
       var newTaxRatesList = [];
       angular.forEach(taxRatesList, function(taxRate, key) {
-        if (angular.isDefined(taxRate)) {
-          taxRate = $this.formatTaxRateObject(taxRate);
-          taxRate.key = key;
-          newTaxRatesList.push(taxRate);
-        }
+        taxRate = $this.formatTaxRateObject(taxRate);
+        taxRate.key = key;
+        newTaxRatesList.push(taxRate);
       });
       return newTaxRatesList;
     };
@@ -226,20 +252,30 @@ angular.module('ts5App')
       panel.removeClass('in').addClass('collapse');
     };
 
-    this.createPromises = function() {
+    this.createTaxRatePromises = function() {
       return [
         $this.getCompanyTaxRatesList(),
-        $this.getStationsList(),
-        $this.getCurrenciesList(),
-        $this.getTaxTypesList(),
-        $this.getTaxRateTypesList(),
         $this.getMasterCompanyTaxRatesList()
       ];
     };
 
+    this.createPromises = function() {
+      return [
+        $this.getTaxTypesList(),
+        $this.getTaxRateTypesList(),
+        $this.getStationsList(),
+        $this.getCurrenciesList()
+      ];
+    };
+
+    this.initPromises = function() {
+      var promises = $this.createTaxRatePromises();
+      $q.all(promises).then($this.initSuccess, $this.errorHandler);
+    };
+
     this.makePromises = function() {
       var promises = $this.createPromises();
-      $q.all(promises).then($this.initSuccess, $this.errorHandler);
+      $q.all(promises).then($this.initPromises, $this.errorHandler);
     };
 
     this.searchSuccess = function() {
@@ -462,9 +498,9 @@ angular.module('ts5App')
         taxRateType: taxRate.taxRateType.taxRateType,
         startDate: dateUtility.formatDateForAPI(taxRate.startDate),
         endDate: dateUtility.formatDateForAPI(taxRate.endDate),
-        companyTaxTypeId: taxRate.taxTypeCode.id,
+        companyTaxTypeId: taxRate.taxTypeCode ? taxRate.taxTypeCode.id : null,
         companyTaxRateStations: $this.createStationsPayload(taxRate),
-        companyCurrencyId: taxRate.companyCurrencyId
+        companyCurrencyId: taxRate.companyCurrencyId ? taxRate.companyCurrencyId : null
       };
       $this.makeEditPromises(payload);
     };
@@ -540,16 +576,6 @@ angular.module('ts5App')
         created: true
       };
       $scope.companyTaxRatesList.push(payload);
-    };
-
-    this.setTaxTypeId = function(taxRate) {
-      var taxTypeId;
-      angular.forEach($scope.taxTypesList, function(taxType) {
-        if (taxType.taxTypeCode === taxRate.taxTypeCode.taxTypeCode) {
-          taxTypeId = taxType.id;
-        }
-      });
-      return taxTypeId;
     };
 
     this.parseNewTaxRatePayload = function(taxRate) {
