@@ -106,28 +106,34 @@ angular.module('ts5App')
     };
 
     this.setTaxRateAvailableStations = function(taxRate) {
-      var stationsList = angular.copy($scope.stationsList);
-      var availableStations = [];
-      angular.forEach(stationsList, function(station) {
-        if (taxRate.countryName === station.countryName && $this.checkForExistingStations(taxRate, station)) {
-          availableStations.push(station);
-        }
-      });
-      return availableStations;
+      if (angular.isDefined($scope.stationsList)) {
+        var stationsList = angular.copy($scope.stationsList);
+        var availableStations = [];
+        angular.forEach(stationsList, function(station) {
+          if (taxRate.countryName === station.countryName && $this.checkForExistingStations(taxRate, station)) {
+            var payload = {
+              companyStationId: station.stationId,
+              stationCode: station.stationCode,
+              stationName: station.stationName,
+              countryName: station.countryName
+            };
+            availableStations.push(payload);
+          }
+        });
+        return availableStations;
+      }
     };
 
     this.formatTaxRateObject = function(taxRate, dates) {
-      taxRate.currency = $this.setCompanyCurrency(taxRate);
-      if (angular.isDefined($scope.stationsList)) {
-        taxRate.availableStations = $this.setTaxRateAvailableStations(taxRate);
-      }
+      taxRate.availableStations = $this.setTaxRateAvailableStations(taxRate);
       if (angular.isDefined(dates) && dates === true) {
         taxRate.startDate = dateUtility.formatDateForApp(taxRate.startDate);
         taxRate.endDate = dateUtility.formatDateForApp(taxRate.endDate);
       }
-      taxRate.action = 'read';
+      taxRate.currency = $this.setCompanyCurrency(taxRate);
       taxRate.taxTypeCode = {
-        taxTypeCode: taxRate.taxTypeCode
+        taxTypeCode: taxRate.taxTypeCode,
+        id: taxRate.taxTypeCode.id
       };
       taxRate.countryName = {
         countryName: taxRate.countryName
@@ -135,6 +141,7 @@ angular.module('ts5App')
       taxRate.taxRateType = {
         taxRateType: taxRate.taxRateType
       };
+      taxRate.action = 'read';
       return taxRate;
     };
 
@@ -359,8 +366,9 @@ angular.module('ts5App')
 
     this.removeTaxRateFromList = function(id) {
       var newList = [];
-      angular.forEach($scope.companyTaxRatesList, function(taxRate) {
+      angular.forEach($scope.companyTaxRatesList, function(taxRate, key) {
         if (taxRate.id !== id) {
+          taxRate.position = $this.uiSelectPosition($scope.companyTaxRatesList.length, key);
           newList.push(taxRate);
         }
       });
@@ -413,7 +421,7 @@ angular.module('ts5App')
       var companyTaxRateStations = [];
       angular.forEach(taxRate.companyTaxRateStations, function(station) {
         companyTaxRateStations.push({
-          companyStationId: parseInt(station.companyStationId)
+          companyStationId: station.stationId ? station.stationId : station.companyStationId
         });
       });
       return companyTaxRateStations;
@@ -480,12 +488,13 @@ angular.module('ts5App')
     };
 
     this.resetTaxRateEdit = function(taxRate) {
-      angular.forEach($scope.masterTaxRates, function(originalRate) {
+      angular.forEach($scope.masterTaxRates, function(originalRate, key) {
         if (originalRate.id === taxRate.id) {
           var rate = angular.copy(originalRate);
           rate.action = 'read';
           rate.startDate = dateUtility.formatDateForApp(rate.startDate);
           rate.endDate = dateUtility.formatDateForApp(rate.endDate);
+          rate.position = $this.uiSelectPosition($scope.masterTaxRates.length, key);
           $this.resetTaxRate(rate);
         }
       });
@@ -531,6 +540,16 @@ angular.module('ts5App')
       $scope.companyTaxRatesList.push(payload);
     };
 
+    this.setTaxTypeId = function(taxRate) {
+      var taxTypeId;
+      angular.forEach($scope.taxTypesList, function(taxType) {
+        if (taxType.taxTypeCode === taxRate.taxTypeCode.taxTypeCode) {
+          taxTypeId = taxType.id;
+        }
+      });
+      return taxTypeId;
+    };
+
     this.parseNewTaxRatePayload = function(taxRate) {
       var stations = $this.createStationsPayload(taxRate);
       var taxTypeId = taxRate.taxTypeCode ? taxRate.taxTypeCode.id : null;
@@ -550,6 +569,7 @@ angular.module('ts5App')
     };
 
     this.createNewTaxRatePayload = function(taxRate) {
+      $scope.errorCustom = [];
       if ($scope.displayError === true) {
         $this.clearCustomErrors();
       }
@@ -707,6 +727,10 @@ angular.module('ts5App')
         countryName: taxRate.countryName.countryName
       }, true);
       taxRate.companyTaxRateStations = [];
+    };
+
+    $scope.taxRateSelectReady = function(taxRate) {
+      return ($scope.viewIsReady && taxRate.action === 'edit' && taxRate.availableStations);
     };
 
   });
