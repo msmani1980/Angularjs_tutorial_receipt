@@ -220,7 +220,7 @@
           </ui-select>
         </td>
         <td class="animate-switch tax-rates-ui-select" ng-switch-when="create">
-          <ui-select ng-model="taxRate.taxRateType" theme="bootstrap" name="taxRateType">
+          <ui-select ng-model="taxRate.taxRateType" theme="bootstrap" name="taxRateType" ng-change="shouldTaxRateCurrencyBeClear(taxRate)">
             <ui-select-match placeholder="Rate Type">
               {{ $select.selected.taxRateType }}
             </ui-select-match>
