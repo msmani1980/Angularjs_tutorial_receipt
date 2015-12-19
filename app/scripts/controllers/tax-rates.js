@@ -131,10 +131,12 @@ angular.module('ts5App')
         taxRate.endDate = dateUtility.formatDateForApp(taxRate.endDate);
       }
       taxRate.currency = $this.setCompanyCurrency(taxRate);
-      taxRate.taxTypeCode = {
-        taxTypeCode: taxRate.taxTypeCode,
-        id: taxRate.taxTypeCode.id
-      };
+      if (angular.isDefined(taxRate.taxTypeCode)) {
+        taxRate.taxTypeCode = {
+          taxTypeCode: taxRate.taxTypeCode,
+          id: taxRate.taxTypeCode.id
+        };
+      }
       taxRate.countryName = {
         countryName: taxRate.countryName
       };
