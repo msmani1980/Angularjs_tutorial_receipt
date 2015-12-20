@@ -609,7 +609,7 @@ angular.module('ts5App')
         delete taxRate.deleted;
         taxRate.saved = true;
         taxRate.action = 'read';
-        $scope.taxRateToCreate = taxRate;
+        taxRate.new = true;
         $this.makeCreatePromises(payload);
       }
     };
@@ -620,12 +620,24 @@ angular.module('ts5App')
       ];
     };
 
+    this.setIdOnTaxRateObjectOnSuccess = function(id) {
+      angular.forEach($scope.companyTaxRatesList, function(taxRate) {
+        if (taxRate.new) {
+          taxRate.id = id;
+          delete taxRate.new;
+          taxRate.created = true;
+          taxRate.position = 'auto';
+        }
+      });
+    };
+
     this.createNewTaxRateSuccess = function(response) {
-      $this.hideLoadingModal();
       var id = response[0].id;
+      $this.getCompanyMasterTaxRatesList();
+      $this.setIdOnTaxRateObjectOnSuccess(id);
+      $this.hideLoadingModal();
       ngToast.create('Successfully Created <b>Tax Rate ID: </b>' + id);
       $scope.taxRateToCreate = [];
-      $this.getCompanyTaxRatesList();
     };
 
     this.makeCreatePromises = function(payload) {
