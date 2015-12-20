@@ -17,6 +17,8 @@ describe('Service: taxRatesService', function() {
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/tax-rates/).respond(companyTaxRatesJSON);
     $httpBackend.when('DELETE').respond(response.$promise);
+    $httpBackend.when('PUT').respond(response.$promise);
+    $httpBackend.when('POST').respond(response.$promise);
     taxRatesService = _taxRatesService_;
   }));
 
@@ -64,6 +66,46 @@ describe('Service: taxRatesService', function() {
 
   });
 
+  describe('updateCompanyTaxRate', function() {
+    var fakeReponseData;
+    beforeEach(function() {
+      var payload = companyTaxRatesJSON.taxRates[0];
+      spyOn(taxRatesService, 'updateCompanyTaxRate').and.callThrough();
+      taxRatesService.updateCompanyTaxRate(payload).then(function(dataFromAPI) {
+        fakeReponseData = dataFromAPI;
+      });
+      $httpBackend.flush();
+    });
 
+    it('should be an Object', function() {
+      expect(angular.isObject(fakeReponseData)).toBe(true);
+    });
+
+    it('should have called update', function() {
+      expect(taxRatesService.updateCompanyTaxRate).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('createCompanyTaxRate', function() {
+    var fakeReponseData;
+    beforeEach(function() {
+      var payload = companyTaxRatesJSON.taxRates[0];
+      spyOn(taxRatesService, 'createCompanyTaxRate').and.callThrough();
+      taxRatesService.createCompanyTaxRate(payload).then(function(dataFromAPI) {
+        fakeReponseData = dataFromAPI;
+      });
+      $httpBackend.flush();
+    });
+
+    it('should be an Object', function() {
+      expect(angular.isObject(fakeReponseData)).toBe(true);
+    });
+
+    it('should have called create', function() {
+      expect(taxRatesService.createCompanyTaxRate).toHaveBeenCalled();
+    });
+
+  });
 
 });

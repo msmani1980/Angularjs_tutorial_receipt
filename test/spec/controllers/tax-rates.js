@@ -792,6 +792,66 @@ describe('Controller: TaxRatesCtrl', function() {
           });
         });
 
+        describe('$scope.taxRateSelectReady', function() {
+          it('should set return true', function() {
+            $scope.viewIsReady = true;
+            var taxRate = {
+              availableStations: {
+                countryName: 'United States'
+              },
+              action: 'edit'
+            };
+            expect($scope.taxRateSelectReady(taxRate)).toBeTruthy();
+          });
+        });
+
+        describe('$scope.shouldTaxRateCurrencyBeClear', function() {
+          beforeEach(function() {
+            spyOn($scope, 'shouldTaxRateCurrencyBeClear').and.callThrough();
+            spyOn($scope, 'isTaxRateTypePercentage').and.callThrough();
+          });
+          it('should fail', function() {
+            var taxRate = {
+              taxRateType: {
+                taxRateType: 'Amount'
+              },
+              currency: 'Test'
+            };
+            $scope.shouldTaxRateCurrencyBeClear(taxRate);
+            expect(taxRate.currency).toBe('Test');
+          });
+          it('should reset currency', function() {
+            var taxRate = {
+              taxRateType: {
+                taxRateType: 'Percentage'
+              },
+              currency: 'Test'
+            };
+            $scope.shouldTaxRateCurrencyBeClear(taxRate);
+            expect(taxRate.currency).toBe('');
+          });
+        });
+
+        describe('$scope.createNewTaxRateSuccess', function() {
+          var response;
+          beforeEach(function() {
+            spyOn(TaxRatesCtrl, 'createNewTaxRateSuccess').and.callThrough();
+            spyOn(TaxRatesCtrl, 'setIdOnTaxRateObjectOnSuccess').and.callThrough();
+            response = [{
+              id: 1
+            }];
+          });
+          it('should call setIdOnTaxRateObjectOnSuccess with 1', function() {
+            var taxRate = {
+              id: null,
+              new: true
+            };
+            $scope.companyTaxRatesList.push(taxRate);
+            TaxRatesCtrl.createNewTaxRateSuccess(response);
+            expect(TaxRatesCtrl.setIdOnTaxRateObjectOnSuccess).toHaveBeenCalledWith(1);
+          });
+        });
+
         describe('the error handler', function() {
           var mockError;
           beforeEach(function() {

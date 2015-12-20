@@ -34,6 +34,7 @@ describe('Service: taxRatesFactory', function() {
     spyOn(taxRatesService, 'getCompanyTaxRatesList');
     spyOn(taxRatesService, 'removeCompanyTaxRate');
     spyOn(taxRatesService, 'updateCompanyTaxRate');
+    spyOn(taxRatesService, 'createCompanyTaxRate');
 
     companyId = globalMenuService.company.get();
 
@@ -94,6 +95,13 @@ describe('Service: taxRatesFactory', function() {
     it('should call updateCompanyTaxRate', function() {
       taxRatesFactory.updateCompanyTaxRate(1);
       expect(taxRatesService.updateCompanyTaxRate).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('createCompanyTaxRate API call', function() {
+    it('should call createCompanyTaxRate', function() {
+      taxRatesFactory.createCompanyTaxRate(1);
+      expect(taxRatesService.createCompanyTaxRate).toHaveBeenCalledWith(1);
     });
   });
 
