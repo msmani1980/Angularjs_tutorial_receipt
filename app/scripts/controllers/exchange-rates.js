@@ -24,6 +24,16 @@ angular.module('ts5App')
     $scope.previousExchangeRates = {};
     $scope.payload = {};
 
+    $scope.isBankExchangePreferred = function () {
+      if (!$scope.companyPreferences) {
+        return false;
+      }
+
+      return $scope.companyPreferences.filter(function (feature) {
+          return (feature.featureCode === 'EXR' && feature.optionCode === 'ERT' && feature.choiceCode === 'BNK');
+        }).length > 0;
+    };
+
     function formatDateForAPI(cashiersDate) {
       return moment(cashiersDate, 'L').format('YYYYMMDD').toString();
     }
@@ -41,11 +51,13 @@ angular.module('ts5App')
     };
 
     function serializeExchangeRates(currencyCode, coinExchangeRate, paperExchangeRate, bankExchangeRate) {
-      $scope.currenciesFields[currencyCode] = {
-        coinExchangeRate: coinExchangeRate,
-        paperExchangeRate: paperExchangeRate,
-        bankExchangeRate: bankExchangeRate
-      };
+      $scope.currenciesFields[currencyCode] = {};
+      if ($scope.isBankExchangePreferred()) {
+        $scope.currenciesFields[currencyCode].bankExchangeRate = bankExchangeRate;
+      } else {
+        $scope.currenciesFields[currencyCode].coinExchangeRate = coinExchangeRate;
+        $scope.currenciesFields[currencyCode].paperExchangeRate = paperExchangeRate;
+      }
     }
 
     function setBaseExchangeRateModel() {
@@ -185,7 +197,7 @@ angular.module('ts5App')
 
     function createPayload(shouldSubmit) {
       $scope.payload = {
-        dailyExchangeRate: angular.extend($scope.dailyExchangeRates, {
+        dailyExchangeRate: angular.extend(angular.copy($scope.dailyExchangeRates), {
           isSubmitted: shouldSubmit || false,
           exchangeRateDate: formatDateForAPI($scope.cashiersDateField)
         })
@@ -238,7 +250,7 @@ angular.module('ts5App')
         if ($scope.previousCurrency[currencyCode]) {
           angular.forEach(currencyObject, function (rate, rateType) {
             var percentage = getPercentageForCurrency(currencyCode, rateType);
-            if (percentage > 10) {
+            if (percentage && percentage > 10) {
               rateVariance.push({
                 code: currencyCode,
                 percentage: percentage
@@ -269,16 +281,6 @@ angular.module('ts5App')
         return;
       }
       $scope.saveDailyExchangeRates(shouldSubmit);
-    };
-
-    $scope.isBankExchangePreferred = function () {
-      if (!$scope.companyPreferences) {
-        return false;
-      }
-
-      return $scope.companyPreferences.filter(function (feature) {
-          return (feature.featureCode === 'EXR' && feature.optionCode === 'ERT' && feature.choiceCode === 'BNK');
-        }).length > 0;
     };
 
     function getCompanyBaseCurrency(baseCurrencyId) {

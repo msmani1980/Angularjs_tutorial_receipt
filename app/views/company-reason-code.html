@@ -1,69 +1,130 @@
 <div class="container module-container">
 
-  <form name="companyReasonCodeFrom" class="form edit-form" ng-submit="submitForm()">
+  <div class="edit-controls">
 
-    <div class="edit-controls">
+    <div class="row">
 
-      <div class="row">
+      <div class="col-xs-8">
+        <h2 class="view-name">Retail Reasons</h2>
+      </div>
 
-        <div class="col-xs-6">
-          <h2 class="view-name">Company Reason Code </h2>
-        </div>
+      <div class="col-xs-4 text-right">
 
-        <div class="col-xs-6 text-right">
-
-          <fieldset ng-hide="viewOnly">
-
-            <a class="btn btn-default" ng-href="/">
-              <span class="fa fa-remove" aria-hidden="true"></span>
-              <span class="hidden-xs">Cancel</span>
-            </a>
-
-            <button class="btn btn-primary" type="submit">
-              <span class="fa fa-check-square-o" aria-hidden="true"></span>
-              <span class="hidden-xs"> {{ buttonText }} </span>
-            </button>
-
-          </fieldset>
-
-        </div>
 
       </div>
 
     </div>
 
-    <error-dialog form-object="companyReasonCodeFrom" error-response="errorResponse" display="displayError">
-    </error-dialog>
+  </div>
+
+  <error-dialog form-object="companyReasonCodeFrom" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+  <div class="panel panel-success">
+
+    <div class="panel-heading">
+      <strong>Subscribed Reason Types</strong>
+       - A list of the Reason Types your company has subscribed to.
+    </div>
+
+    <div class="panel-body">
+
+      <div class="form-group">
+
+        <ui-select multiple ng-model="formData.subscribedGlobalReasons" theme="bootstrap">
+          <ui-select-match placeholder="Starting typing to subscribe to a Reason">{{ $item.reasonTypeName }}
+          </ui-select-match>
+          <ui-select-choices repeat="globalReasonCodeType in globalReasonCodeTypesList | filter: $select.search | orderBy:'reasonTypeName'">
+            <div ng-bind-html="globalReasonCodeType.reasonTypeName | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+
+      <button class="btn btn-success" type="button" ng-click="submitForm()">
+        <i class="fa fa-check-square-o"></i> Save Subscribed Reason Types
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="form-group">
+
+    <label>Filter your list of Subscribed Reason Types</label>
+
+    <ui-select multiple ng-model="reasonFilter.selectedGlobalReasons" theme="bootstrap">
+      <ui-select-match placeholder="Start typing here find a Reason Type">{{ $item.reasonTypeName }}
+      </ui-select-match>
+      <ui-select-choices repeat="subscribed in formData.subscribedGlobalReasons | filter: $select.search | orderBy:'reasonTypeName'">
+        <div ng-bind-html="subscribed.reasonTypeName | highlight: $select.search"></div>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+
+  <form name="companyReasonCodeFrom" class="form edit-form" ng-submit="submitForm()">
 
     <div class="row">
 
-      <div class="col-xs-12 col-sm-6">
+      <div class="col-xs-12 col-sm-6" ng-show="whenReasonIsNotFiltered(subscribed)" ng-repeat="(key,subscribed) in formData.subscribedGlobalReasons track by subscribed.id">
 
-        <div class="form-group">
+        <div class="panel panel-default">
 
-          <label for="refundCodeType">Refund Type</label>
+          <div class="panel-heading">
+            <strong>{{ subscribed.reasonTypeName }}</strong>
+            <br/>{{ subscribed.description}}
+          </div>
 
-          <select class="form-control" name="refundCodeType" ng-model="formData.refundCodeType" required>
-            <option value="{{ companyReasonType.id }}" ng-repeat="companyReasonType in companyReasonTypes track by companyReasonType.id">
-              {{ companyReasonType.reasonTypeName }}
-            </option>
-          </select>
+          <div class="">
 
-        </div>
+            <table class="table table-responsive table-hover" style="margin:0;">
 
-      </div>
+          	    <thead>
 
-      <div class="col-xs-12 col-sm-6">
+          	      <tr>
+          					<th>Reason</th>
+          	        <th style="width:60px;">Active</th>
+          	      </tr>
 
-        <div class="form-group">
+          	    </thead>
 
-          <label for="refundReason">Refund Reason</label>
+          	    <tbody>
 
-          <select class="form-control" name="refundReason" ng-model="formData.refundReason" required>
-            <option value="{{ companyReasonCode.id }}" ng-repeat="companyReasonCode in companyReasonCodes track by companyReasonCode.id">
-              {{ companyReasonCode.companyReasonCodeName }}
-            </option>
-          </select>
+          	      <tr ng-repeat="reasonCode in formData.globalReasons[key].companyReasons track by $index">
+
+                    <td>
+                      <input placeholder="Type a reason here" type="text" class="form-control" ng-keypress="addReasonCodeWithEnter($event,subscribed.id)"
+                      name="description {{ $index+1}}" ng-model="reasonCode.reasonCode" />
+                    </td>
+
+                    <td class="text-center" style="width:60px;">
+
+                      <input ng-show="reasonCode.isActive" type="checkbox" name="isActive {{ $index+1}}" ng-model="reasonCode.isActive" tabindex="-1"  />
+
+                      <button ng-show="{{ reasonCode.isActive === null }}" class="btn btn-danger btn-xs" type="button" ng-click="removeReason()" tabindex="-1">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </td>
+
+                  <tr>
+
+                </tbody>
+
+              </table>
+
+          </div>
+
+          <div class="panel-footer text-right">
+
+            <button type="button" class="btn btn-primary" ng-click="addReasonCode(subscribed.id)">
+              <span class="fa fa-plus" aria-hidden="true"></span>
+              <span class="hidden-xs"> Add Reason</span>
+            </button>
+
+            <button class="btn btn-success" type="button" ng-click="submitForm()">
+              <i class="fa fa-check-square-o"></i> Save Reasons
+            </button>
+
+          </div>
 
         </div>
 

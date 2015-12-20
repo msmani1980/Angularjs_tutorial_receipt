@@ -27,7 +27,8 @@ angular.module('ts5App', [
   'ang-drag-drop',
   'infinite-scroll',
   'ngLodash',
-  'frapontillo.bootstrap-switch'
+  'frapontillo.bootstrap-switch',
+  'sprintf'
 ]).factory('defaultData', [
   function () {
     var defaultData = {
@@ -263,6 +264,12 @@ angular.module('ts5App', [
   }).when('/station-view/:id', {
     templateUrl: 'views/station-create.html',
     controller: 'StationCreateCtrl'
+  }).when('/employee-messages', {
+    templateUrl: 'views/employee-message-list.html',
+    controller: 'EmployeeMessageListCtrl'
+  }).when('/employee-message/:action/:id?', {
+    templateUrl: 'views/employee-message.html',
+    controller: 'EmployeeMessageCtrl'
   }).when('/discounts/create', {
     templateUrl: 'views/discounts-create.html',
     controller: 'DiscountsCreateCtrl',

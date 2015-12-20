@@ -10,17 +10,36 @@
 angular.module('ts5App')
   .factory('storeInstanceAmendFactory', function ($q) {
 
+    var getScheduleMockData = function (searchQuery) {
+      var getScheduleMockData = [{
+        scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/20/2015',
+        scheduleNumber: (searchQuery) ? searchQuery.scheduleNumber : '105',
+        departureStation: 'ORD',
+        arrivalStation: 'LAX'
+      }, {
+        scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/30/2015',
+        scheduleNumber: (searchQuery) ? searchQuery.scheduleNumber : '111',
+        departureStation: 'CPH',
+        arrivalStation: 'ORD'
+      }];
+      var scheduleMockResponseDeferred = $q.defer();
+      scheduleMockResponseDeferred.resolve(getScheduleMockData);
+      return scheduleMockResponseDeferred.promise;
+    };
+
     var getStoreInstancesMockData = function (searchQuery) {
       var getStoreInstancesMockData = [{
         storeInstance: 123,
         scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/20/2015',
         storeNumber: (searchQuery) ? searchQuery.storeNumber : 'str123',
-        warehouse: 'ORD'
+        warehouse: 'ORD',
+        status: 'Inbounded'
       }, {
         storeInstance: 145,
         scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/20/2015',
         storeNumber: (searchQuery) ? searchQuery.storeNumber : 'str123',
-        warehouse: 'LAX'
+        warehouse: 'LAX',
+        status: 'Dispatched'
       }];
       var storeInstanceMockResponseDeferred = $q.defer();
       storeInstanceMockResponseDeferred.resolve(getStoreInstancesMockData);
@@ -33,6 +52,9 @@ angular.module('ts5App')
         cashBag: (searchQuery) ? searchQuery.cashBag : '123',
         bankRefNumber: (searchQuery) ? searchQuery.bankRefNumber : 'AB45',
         storeNumber: '123',
+        storeInstanceNumber: 23,
+        submittedDate: '10/30/2015',
+        submittedTime: '11:34',
         isManual: true,
         isDeleted: false,
         isVerified: false,
@@ -204,6 +226,7 @@ angular.module('ts5App')
 
     return {
       getCashBagListMockData: getCashBagListMockData,
-      getStoreInstancesMockData: getStoreInstancesMockData
+      getStoreInstancesMockData: getStoreInstancesMockData,
+      getScheduleMockData: getScheduleMockData
     };
   });

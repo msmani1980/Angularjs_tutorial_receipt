@@ -22,6 +22,7 @@ describe('Factory: storeInstanceAmendFactory', function () {
     it('should be accessible in the service', function () {
       expect(!!storeInstanceAmendFactory.getCashBagListMockData).toBe(true);
       expect(!!storeInstanceAmendFactory.getStoreInstancesMockData).toBe(true);
+      expect(!!storeInstanceAmendFactory.getScheduleMockData).toBe(true);
     });
   });
 

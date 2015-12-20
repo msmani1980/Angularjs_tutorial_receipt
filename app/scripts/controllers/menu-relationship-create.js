@@ -226,7 +226,6 @@ angular.module('ts5App')
       $this.displayLoadingModal('We are creating your menu relationship');
       menuCatererStationsService.createRelationship(relationshipData).then(
         function () {
-          console.log('success');
           $this.showSuccessMessage('Relationship created!');
           $location.path('/menu-relationship-list');
         }, this.errorHandler );

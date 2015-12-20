@@ -45,28 +45,29 @@
   </div>
 
   <div class="panel panel-default">
+    <form name="cashBagCreateForm" class="form edit-form" ng-submit="formSave(cashBag)">
 
-    <div class="panel-heading">
-      <div class="row">
-        <div class="col-sm-6">
-          <div>Cash Handler Base Currency: {{ currencyCodes[cashHandlerCompany.baseCurrencyId] }}</div>
-          <div>Airline Base Currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
-        </div>
-        <div class="col-sm-6 text-right">
-          <div>Cashier's entry date:
-            <date>{{ displayedCashierDate }}</date>
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-sm-6">
+            <div>Cash Handler Base Currency: {{ currencyCodes[cashHandlerCompany.baseCurrencyId] }}</div>
+            <div>Airline Base Currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
+          </div>
+          <div class="col-sm-6 text-right">
+            <div>Cashier's entry date:
+              <date>{{ displayedCashierDate }}</date>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="panel-body">
-      <form name="cashBagCreateForm" class="form edit-form">
+      <div class="panel-body">
 
         <div class="row">
           <div class="col-sm-4">
-            <label for="cashBagNumber">Cash Bag #</label>
-            <input custom-pattern="regexp.alpha"
+            <label for="cashBagNumber">Cash Bag # *</label>
+            <input custom-pattern="alphanumeric"
+                   custom-validity
                    required
                    type="text"
                    maxlength="25"
@@ -78,8 +79,9 @@
           </div>
 
           <div class="col-sm-4">
-            <label for="totalCashBags">Total # of Bags</label>
-            <input custom-pattern="regexp.alpha"
+            <label for="totalCashBags">Total # of Bags *</label>
+            <input custom-pattern="number"
+                   custom-validity
                    required
                    type="text"
                    maxlength="25"
@@ -91,8 +93,9 @@
           </div>
 
           <div class="col-sm-4">
-            <label for="totalCashBags">Bank Reference #</label>
-            <input custom-pattern="regexp.alpha"
+            <label for="bankReferenceNumber">Bank Reference # *</label>
+            <input custom-pattern="number"
+                   custom-validity
                    required
                    type="text"
                    maxlength="25"
@@ -120,35 +123,42 @@
             <tbody>
             <tr ng-repeat="currency in cashBag.cashBagCurrencies">
               <td>{{ currencyCodes[currency.currencyId] }}</td>
-              <td>{{ flightAmount }}</td>
+              <td>{{ currency.flightAmount }}</td>
               <td><input type="text"
+                         custom-validity
+                         custom-pattern="currencyWithFourDecimalPlace"
+                         required
                          class="form-control"
                          ng-model="currency.paperAmountManual"
                          name="paperAmountManual[{{currency.currencyId}}]"
                          ng-readonly="readOnly"></td>
               <td><input type="text"
+                         custom-validity
+                         custom-pattern="currencyWithFourDecimalPlace"
+                         required
                          class="form-control"
                          ng-model="currency.coinAmountManual"
                          name="coinAmountManual[{{currency.currencyId}}]"
                          ng-readonly="readOnly"></td>
-              <td ng-if="isBankExchangePreferred()">{{ currency.bankAmount }}</td>
-              <td ng-if="!isBankExchangePreferred()">{{ currency.paperAmountEpos }}</td>
-              <td ng-if="!isBankExchangePreferred()">{{ currency.coinAmountEpos }}</td>
+              <td ng-if="isBankExchangePreferred()">{{ currency.bankExchangeRate }}</td>
+              <td ng-if="!isBankExchangePreferred()">{{ currency.paperExchangeRate }}</td>
+              <td ng-if="!isBankExchangePreferred()">{{ currency.coinExchangeRate }}</td>
             </tr>
             </tbody>
           </table>
         </div>
-      </form>
-    </div>
+      </div>
 
-    <div class="panel-footer text-center">
-      <button class="btn btn-default" ng-click="leaveView('cash-bag-list')" ng-hide="readOnly" type="button">Cancel</button>
-      <button class="btn btn-primary" ng-click="formSave(cashBag)" ng-hide="readOnly">
-        <span class="fa fa-check-square-o" aria-hidden="true"></span>
-        <span class="hidden-xs">{{ saveButtonName }}</span>
-      </button>
-      <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="showDeleteButton" ng-disabled="readOnly">Delete</button>
-    </div>
+      <div class="panel-footer text-center">
+        <button type="button" class="btn btn-default" ng-click="leaveView('cash-bag-list')" ng-hide="readOnly" type="button">Cancel</button>
+        <button type="submit" class="btn btn-primary" ng-hide="readOnly">
+          <span class="fa fa-check-square-o" aria-hidden="true"></span>
+          <span class="hidden-xs">{{ saveButtonName }}</span>
+        </button>
+        <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="showDeleteButton" ng-disabled="readOnly">Delete</button>
+      </div>
+    </form>
+
   </div>
   <leave-view-modal></leave-view-modal>
 </div>

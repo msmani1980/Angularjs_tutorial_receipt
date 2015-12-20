@@ -62,13 +62,15 @@ angular.module('ts5App')
     }
 
     function setSessionHeaders() {
-      var sessionObject = getSessionObject();
+      var sessionObject = angular.copy(getSessionObject());
       if (sessionObject.companyData) {
         $localStorage.companyObject = {
           companyId: sessionObject.companyId,
           companyTypeId: sessionObject.companyData.companyTypeId
         };
       }
+      delete sessionObject.username;
+      delete sessionObject.companyData;
       angular.extend($http.defaults.headers.common, sessionObject);
     }
 

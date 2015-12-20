@@ -1,0 +1,40 @@
+{
+  "employeeMessage": {
+    "startDate": "2015-12-22",
+    "endDate": "2016-02-29",
+    "createdBy": 3,
+    "createdOn": "2015-12-15 20:43:09.292863",
+    "updatedBy": 3,
+    "updatedOn": "2015-12-15 22:14:29.783199",
+    "id": 127,
+    "companyId": 403,
+    "employeeMessageText": "test Message 5",
+    "employeeMessageEmployeeIdentifiers": [
+      {
+        "id": 216,
+        "employeeIdentifier": "1001",
+        "employeeMessageId": 127
+      }
+    ],
+    "employeeMessageSchedules": [
+      {
+        "id": 188,
+        "scheduleNumber": "106",
+        "employeeMessageId": 127
+      },
+      {
+        "id": 189,
+        "scheduleNumber": "111",
+        "employeeMessageId": 127
+      }
+    ],
+    "employeeMessageArrivalStations": [
+      4,
+      8
+    ],
+    "employeeMessageDepartureStations": [
+      6,
+      8
+    ]
+  }
+}

@@ -13,7 +13,8 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var storeInstanceResponseJSON;
   var cashBagsDeferred;
   var cashBagsResponseJSON;
-
+  var schedulesDeferred;
+  var schedulesResponseJSON;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
     location = $location;
@@ -27,9 +28,13 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     cashBagsResponseJSON = [{id: 2}, {id: 3}]; // stub for now until API is complete
     cashBagsDeferred = $q.defer();
     cashBagsDeferred.resolve(cashBagsResponseJSON);
+    schedulesResponseJSON = [{id: 2}]; // stub for now until API is complete
+    schedulesDeferred = $q.defer();
+    schedulesDeferred.resolve(schedulesResponseJSON);
 
     spyOn(StoreInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
     spyOn(StoreInstanceAmendFactory, 'getCashBagListMockData').and.returnValue(cashBagsDeferred.promise);
+    spyOn(StoreInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
@@ -114,28 +119,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.cashBagList = [{isVerified: false}];
         scope.toggleVerifiedCashBag(scope.cashBagList[0]);
         expect(scope.cashBagList[0].isVerified).toEqual(true);
-      });
-    });
-
-    describe('expand/collapse all sales and revenue details', function () {
-      beforeEach(function () {
-        var mockCashBag = {
-          salesTableOpen: true,
-          revenueTableOpen: false
-        };
-        scope.cashBagList = [mockCashBag];
-      });
-      it('should expand all tables when shouldExpand is true', function () {
-        scope.toggleSalesAndRevenueDetails(scope.cashBagList[0], true);
-        expect(scope.cashBagList[0].salesTableOpen).toEqual(true);
-        expect(scope.cashBagList[0].revenueTableOpen).toEqual(true);
-      });
-      it('should return true if one or all of the tables are open', function () {
-        var isOpen = scope.isSalesAndRevenueDetailsOpen(scope.cashBagList[0]);
-        expect(isOpen).toEqual(true);
-        scope.cashBagList[0].salesTableOpen = false;
-        isOpen = scope.isSalesAndRevenueDetailsOpen(scope.cashBagList[0]);
-        expect(isOpen).toEqual(false);
       });
     });
 
@@ -327,15 +310,15 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
       it('should return colored and selected rows for the selected target', function () {
         var mockSelectedRecord = scope.targetRecordForMoveCashBag;
-        var background = scope.getClassesForMoveSelectedRow(mockSelectedRecord, 'background');
-        var buttonIcon = scope.getClassesForMoveSelectedRow(mockSelectedRecord, 'buttonIcon');
+        var background = scope.getClassesForSingleSelectedRow(mockSelectedRecord, 'background', 'cashBag');
+        var buttonIcon = scope.getClassesForSingleSelectedRow(mockSelectedRecord, 'buttonIcon', 'cashBag');
         expect(background).toEqual('bg-success');
         expect(buttonIcon).toEqual('fa fa-check-circle');
       });
       it('should return white deselected rows for non selected records', function () {
         var mockNonSelectedRecord = {id: 5};
-        var background = scope.getClassesForMoveSelectedRow(mockNonSelectedRecord, 'background');
-        var buttonIcon = scope.getClassesForMoveSelectedRow(mockNonSelectedRecord, 'buttonIcon');
+        var background = scope.getClassesForSingleSelectedRow(mockNonSelectedRecord, 'background', 'cashBag');
+        var buttonIcon = scope.getClassesForSingleSelectedRow(mockNonSelectedRecord, 'buttonIcon', 'cashBag');
         expect(background).toEqual('');
         expect(buttonIcon).toEqual('fa fa-circle-thin');
       });
@@ -350,5 +333,52 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
     });
   });
+
+  describe('Add schedules', function () {
+    describe('clear search data', function () {
+      it('should clear search query and results', function () {
+        scope.scheduleSearch = {scheduleNumber: 1};
+        scope.newScheduleSelection = {id: 1};
+        scope.searchScheduleResults = [{id: 1}];
+        scope.clearScheduleSelections();
+        expect(scope.scheduleSearch).toEqual({});
+        expect(scope.newScheduleSelection).toEqual(null);
+        expect(scope.searchScheduleResults).toEqual(null);
+      });
+    });
+
+    describe('select search record', function () {
+      it('should set targetRecordForMoveCashBag to given record', function () {
+        var mockRecord = {id: 1};
+        scope.newScheduleSelection = null;
+        scope.selectRecordForNewSchedule(mockRecord);
+        expect(scope.newScheduleSelection).toEqual(mockRecord);
+      });
+    });
+
+    describe('search for schedule', function () {
+      beforeEach(function () {
+        scope.newScheduleSelection = null;
+        scope.moveCashBagSearchResults = null;
+      });
+      it('should getSchedules', function () {
+        scope.scheduleSearch = {scheduleNumber: '123', scheduleDate: '10/20/2015'};
+        scope.searchForSchedule();
+        expect(StoreInstanceAmendFactory.getScheduleMockData).toHaveBeenCalledWith(scope.scheduleSearch);
+      });
+      it('should set schedule search results', function () {
+        scope.scheduleSearch = {scheduleNumber: '123', scheduleDate: '10/20/2015'};
+        scope.searchForSchedule();
+        expect(scope.searchScheduleResults).not.toEqual(null);
+      });
+      it('should automatically set selection if there is only one result', function () {
+        scope.scheduleSearch = {storeNumber: '123', scheduleDate: '10/20/2015'};
+        scope.searchForSchedule();
+        scope.$digest();
+        expect(scope.newScheduleSelection).not.toEqual(null);
+      });
+    });
+  });
+
 
 });
