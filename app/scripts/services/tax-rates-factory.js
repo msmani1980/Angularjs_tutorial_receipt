@@ -47,6 +47,10 @@ angular.module('ts5App')
       return taxRatesService.updateCompanyTaxRate(payload);
     };
 
+    var createCompanyTaxRate = function(payload) {
+      return taxRatesService.createCompanyTaxRate(payload);
+    };
+
     return {
       getTaxTypesList: getTaxTypesList,
       getTaxRateTypes: getTaxRateTypes,
@@ -55,7 +59,8 @@ angular.module('ts5App')
       getCompanyCurrencies: getCompanyCurrencies,
       getCompanyTaxRatesList: getCompanyTaxRatesList,
       removeCompanyTaxRate: removeCompanyTaxRate,
-      updateCompanyTaxRate: updateCompanyTaxRate
+      updateCompanyTaxRate: updateCompanyTaxRate,
+      createCompanyTaxRate: createCompanyTaxRate
     };
 
   });

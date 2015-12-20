@@ -49,10 +49,15 @@ angular.module('ts5App')
       return requestResource.updateCompanyTaxRate(payload).$promise;
     };
 
+    var createCompanyTaxRate = function(payload) {
+      return requestResource.createCompanyTaxRate(payload).$promise;
+    };
+
     return {
       getCompanyTaxRatesList: getCompanyTaxRatesList,
       removeCompanyTaxRate: removeCompanyTaxRate,
-      updateCompanyTaxRate: updateCompanyTaxRate
+      updateCompanyTaxRate: updateCompanyTaxRate,
+      createCompanyTaxRate: createCompanyTaxRate
     };
 
   });

@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: TaxRatesCtrl', function() {
+describe('Controller: TaxRatesCtrl', function() {
   beforeEach(module(
     'ts5App',
     'template-module',

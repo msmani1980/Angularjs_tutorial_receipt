@@ -24,6 +24,7 @@ angular.module('ts5App')
       $scope.companyTaxRatesList = [];
       $scope.masterTaxRates = [];
       $scope.taxRateToRemove = [];
+      $scope.taxRateToCreate = [];
       $scope.search = {};
       $scope.dateRange = {
         startDate: '',
@@ -481,7 +482,7 @@ angular.module('ts5App')
     };
 
     this.makeEditPromises = function(taxRate) {
-      var message = 'Editing Tax Rate ID: ' + taxRate.id;
+      var message = 'Saving Edits for Tax Rate ID: ' + taxRate.id;
       $this.showLoadingModal(message);
       $scope.taxRateSaved = taxRate.id;
       var promises = $this.createEditPromises(taxRate);
@@ -569,8 +570,8 @@ angular.module('ts5App')
         key: length + 1,
         taxRateValue: undefined,
         taxRateType: undefined,
-        startDate: dateUtility.nowFormatted(),
-        endDate: dateUtility.nowFormatted(),
+        startDate: undefined,
+        endDate: undefined,
         taxTypeCode: undefined,
         companyTaxRateStations: undefined,
         companyCurrencyId: undefined,
@@ -583,6 +584,7 @@ angular.module('ts5App')
       var stations = $this.createStationsPayload(taxRate);
       var taxTypeId = taxRate.taxTypeCode ? taxRate.taxTypeCode.id : null;
       var taxRateType = taxRate.taxRateType ? taxRate.taxRateType.taxRateType : null;
+      var companyCurrencyId = taxRate.currency ? taxRate.currency.id : null;
       var payload = {
         taxRateValue: $this.validateNewData('taxRateValue', taxRate.taxRateValue, taxRate),
         taxRateType: $this.validateNewData('taxRateType', taxRateType, taxRate),
@@ -591,8 +593,8 @@ angular.module('ts5App')
         companyTaxTypeId: $this.validateNewData('companyTaxTypeId', taxTypeId, taxRate),
         companyTaxRateStations: $this.validateNewData('companyTaxRateStations', stations, taxRate)
       };
-      if (taxRate.companyCurrencyId) {
-        $this.validateNewData('companyCurrencyId', taxRate.companyCurrencyId, taxRate);
+      if (!$scope.isTaxRateTypePercentage(taxRate)) {
+        payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', companyCurrencyId, taxRate);
       }
       return payload;
     };
@@ -603,12 +605,33 @@ angular.module('ts5App')
         $this.clearCustomErrors();
       }
       var payload = $this.parseNewTaxRatePayload(taxRate);
-      if ($scope.displayError === false) {
+      if ($scope.displayError !== true) {
         delete taxRate.deleted;
         taxRate.saved = true;
         taxRate.action = 'read';
-        console.log('Create Promises Here', payload);
+        $scope.taxRateToCreate = taxRate;
+        $this.makeCreatePromises(payload);
       }
+    };
+
+    this.createNewTaxRatePromises = function(payload) {
+      return [
+        taxRatesFactory.createCompanyTaxRate(payload)
+      ];
+    };
+
+    this.createNewTaxRateSuccess = function(response) {
+      $this.hideLoadingModal();
+      var id = response[0].id;
+      ngToast.create('Successfully Created <b>Tax Rate ID: </b>' + id);
+      $scope.taxRateToCreate = [];
+      $this.getCompanyTaxRatesList();
+    };
+
+    this.makeCreatePromises = function(payload) {
+      $this.showLoadingModal('Creating new Tax Rate...');
+      var promises = $this.createNewTaxRatePromises(payload);
+      $q.all(promises).then($this.createNewTaxRateSuccess, $this.errorHandler);
     };
 
     // Place $scope functions here
