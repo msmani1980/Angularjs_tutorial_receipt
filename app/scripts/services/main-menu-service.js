@@ -36,7 +36,7 @@ angular.module('ts5App')
           }]
         }, {
           name: 'Manage Categories',
-          route: emberURL + 'retail-items/categories',
+          route: '/#/category-list',
           icon: 'icon-manage-retail-category',
           className: 'dashboard-manageItemCategories',
           package: 'RETAIL',
