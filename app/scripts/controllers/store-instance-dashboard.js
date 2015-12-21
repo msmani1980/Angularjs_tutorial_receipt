@@ -236,7 +236,16 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.selected = false;
     }
 
+    function filterStoreInstanceList () {
+      var newList = lodash.filter(angular.copy($scope.storeInstanceList), function (storeInstance) {
+        var storeInstanceName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
+        return lodash.indexOf($scope.allAllowedStatuses, storeInstanceName) >= 0;
+      });
+      $scope.storeInstanceList = newList;
+    }
+
     function formatStoreInstanceList() {
+      filterStoreInstanceList();
       angular.forEach($scope.storeInstanceList, function (storeInstance) {
         formatStoreInstance(storeInstance);
         angular.forEach(storeInstance.replenishments, function (storeInstance) {
@@ -261,10 +270,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function getStoreInstanceListSuccess(dataFromAPI) {
-      $scope.storeInstanceList = lodash.filter(angular.copy(dataFromAPI.response), function (storeInstance) {
-        var storeInstanceName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
-        return lodash.indexOf($scope.allAllowedStatuses, storeInstanceName) >= 0;
-      });
+      $scope.storeInstanceList = angular.copy(dataFromAPI.response);
     }
 
     function getStoreInstanceList() {
