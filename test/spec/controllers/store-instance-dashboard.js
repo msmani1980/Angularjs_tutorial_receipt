@@ -207,7 +207,6 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           arrivalStationCode: ['LON3', 'MDW'],
           storeInstanceId: '4',
           statusId: '5'
-
         });
       });
     });
@@ -237,6 +236,12 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
       it('should attach all properties of JSON to scope', function() {
         expect(scope.storeStatusList).toEqual(statusListResponseJSON);
+      });
+
+      it('should filter status list', function () {
+        expect(scope.filteredStoreStatusList).toBeDefined();
+        expect(scope.filteredStoreStatusList.length > 0).toEqual(true);
+        expect(scope.filteredStoreStatusList.length < scope.storeStatusList.length).toEqual(true);
       });
     });
 

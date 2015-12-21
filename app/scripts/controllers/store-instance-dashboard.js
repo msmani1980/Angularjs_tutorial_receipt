@@ -18,6 +18,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.stationList = [];
     $scope.storeInstanceList = [];
     $scope.storeStatusList = [];
+    $scope.filteredStoreStatusList = [];
     $scope.timeConfigList = [];
     $scope.search = {};
     $scope.allCheckboxesSelected = false;
@@ -25,6 +26,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.openStoreInstanceId = -1;
     $scope.hasSelectedStore = false;
     $scope.exportBulkURL = '';
+    $scope.allowedStatusNamesForDisplay = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch', 'Dispatched', 'On Floor', 'Inbounded'];
+    $scope.allAllowedStatuses = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch', 'Dispatched', 'On Floor', 'Inbounded', 'Unpacking', 'Inbound Seals'];
+
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -47,6 +51,16 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
       if (matchedObject) {
         return matchedObject[valueKey];
+      }
+      return '';
+    }
+
+    function getIdByValueInArray(value, valueKey, array) {
+      var searchCriteria = {};
+      searchCriteria[valueKey] = value;
+      var matchedObject = lodash.findWhere(array, searchCriteria);
+      if (matchedObject) {
+        return matchedObject.id;
       }
       return '';
     }
@@ -247,7 +261,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function getStoreInstanceListSuccess(dataFromAPI) {
-      $scope.storeInstanceList = angular.copy(dataFromAPI.response);
+      $scope.storeInstanceList = lodash.filter(angular.copy(dataFromAPI.response), function (storeInstance) {
+        var storeInstanceName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
+        return lodash.indexOf($scope.allAllowedStatuses, storeInstanceName) >= 0;
+      });
     }
 
     function getStoreInstanceList() {
@@ -274,6 +291,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function getStatusListSuccess(dataFromAPI) {
       $scope.storeStatusList = angular.copy(dataFromAPI);
+      $scope.filteredStoreStatusList = lodash.filter($scope.storeStatusList, function (status) {
+        return lodash.indexOf($scope.allowedStatusNamesForDisplay, status.statusName) >= 0;
+      });
     }
 
     function getStatusList() {
@@ -306,6 +326,18 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       hideLoadingModal();
     }
 
+    function formatStatusPayload(payload) {
+      if (payload.statusId) {
+        var statusName = getValueByIdInArray(parseInt(payload.statusId), 'statusName', $scope.storeStatusList);
+        if (statusName === 'On Floor') {
+          var unpackingStatusId = getIdByValueInArray('Unpacking', 'statusName', $scope.storeStatusList);
+          var inboundSealsStatusId = getIdByValueInArray('Inbound Seals', 'statusName', $scope.storeStatusList);
+          payload.statusId = [payload.statusId, unpackingStatusId, inboundSealsStatusId];
+        }
+      }
+      return payload;
+    }
+
     function searchStoreInstanceDashboardData(startDate) {
       showLoadingModal('Loading Store Instance Dashboard');
       var payload = {};
@@ -320,6 +352,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           }
         }
       });
+      payload = formatStatusPayload(payload);
       $scope.searchIsActive = true;
       if (startDate) {
         payload.startDate = startDate;
