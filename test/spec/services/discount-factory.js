@@ -48,5 +48,18 @@ describe('Service: discountFactory', function () {
       expect(discountService.deleteDiscount).toHaveBeenCalledWith(1);
     });
 
+    it('should get discount', function() {
+
+    });
+
+
+    it('should create discount', function() {
+
+    });
+
+
+    it('should update discount', function() {
+
+    });
   });
 });

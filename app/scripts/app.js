@@ -271,13 +271,13 @@ angular.module('ts5App', [
     templateUrl: 'views/employee-message.html',
     controller: 'EmployeeMessageCtrl'
   }).when('/discounts/create', {
-    templateUrl: 'views/discounts-create.html',
-    controller: 'DiscountsCreateCtrl',
-    controllerAs: 'discountsCreate'
+    templateUrl: 'views/discount-create.html',
+    controller: 'DiscountCreateCtrl',
+    controllerAs: 'discountCreate'
   }).when('/discounts/edit/:id', {
-    templateUrl: 'views/discounts-create.html',
-    controller: 'DiscountsCreateCtrl',
-    controllerAs: 'discountsCreate'
+    templateUrl: 'views/discount-create.html',
+    controller: 'DiscountCreateCtrl',
+    controllerAs: 'discountCreate'
   }).otherwise({
     redirectTo: '/'
   });

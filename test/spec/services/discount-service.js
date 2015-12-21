@@ -86,5 +86,19 @@ describe('Service: discountService', function () {
       $httpBackend.flush();
     });
 
+    it('should get discount', function() {
+
+    });
+
+
+    it('should create discount', function() {
+
+    });
+
+
+    it('should update discount', function() {
+
+    });
+
   });
 });

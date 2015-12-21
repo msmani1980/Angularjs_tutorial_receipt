@@ -2,19 +2,22 @@
 
 /**
  * @ngdoc function
- * @name ts5App.controller:DiscountsCreateCtrl
+ * @name ts5App.controller:DiscountCreateCtrl
  * @description
- * # DiscountsCreateCtrl
+ * # DiscountCreateCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('DiscountsCreateCtrl', function ($scope, $q, $location, $routeParams, dateUtility, discountFactory, recordsService, currencyFactory, companiesFactory, itemsFactory) {
+  .controller('DiscountCreateCtrl', function ($scope, $q, $location, $routeParams, dateUtility, discountFactory, recordsService, currencyFactory, companiesFactory, itemsFactory) {
     var $this = this;
 
     $scope.viewName = 'Create Discount';
     $scope.buttonText = 'Create';
     $scope.editingDiscount = false;
     $scope.uiSelectTemplateReady = false;
+    $scope.discountIsInactive = false;
+    $scope.discountIsActive = false;
+    $scope.viewOnly = false;
     $scope.globalDiscountTypesList = [];
     $scope.discountTypesList = [];
     $scope.companyCurrencyGlobalsList = [];
@@ -46,7 +49,23 @@ angular.module('ts5App')
       }
     };
 
+    this.determineMinDate = function() {
+      var diff = 1;
+      if ($scope.editingItem) {
+        diff = dateUtility.diff(
+          dateUtility.nowFormatted(),
+          $scope.formData.startDate
+        );
+      }
+      var dateString = diff.toString() + 'd';
+      if (diff >= 0) {
+        dateString = '+' + dateString;
+      }
+      return dateString;
+    };
+
     this.setUIReady = function() {
+      $scope.minDate = $this.determineMinDate();
       $scope.uiSelectTemplateReady = true;
       this.hideLoadingModal();
     };
@@ -88,7 +107,7 @@ angular.module('ts5App')
       $scope.filteredRetailItemsList[0] = $scope.retailItemsList;
     };
 
-    this.getItem = function(id) {
+    this.getDiscount = function(id) {
       this.showLoadingModal('We are getting your Discount data!');
       discountFactory.getDiscount(id).then(function(data) {
         $this.updateFormData(data.companyDiscount);
@@ -107,7 +126,7 @@ angular.module('ts5App')
       $this.setDefaultRetailItems();
 
       if ($scope.editingDiscount) {
-        this.getItem($routeParams.id);
+        $this.getDiscount($routeParams.id);
       } else {
         $this.setUIReady();
       }
@@ -206,6 +225,10 @@ angular.module('ts5App')
       $scope.formData = $this.getCleanFormData();
 
       $this.deserializeDiscountInformation(discountData);
+      $this.checkIfDiscountIsInactive(discountData);
+      if (!$scope.discountIsInactive) {
+        $this.checkIfDiscountIsActive(discountData);
+      }
       $this.deserializeBenefits(discountData);
       $this.deserializeLimitationPerShop(discountData);
       $this.deserializeLimitationPerTransaction(discountData);
@@ -271,8 +294,6 @@ angular.module('ts5App')
         });
       });
     };
-
-
 
     this.formatPayload = function(formData) {
       var discount = {
@@ -340,8 +361,21 @@ angular.module('ts5App')
       });
     };
 
+    this.checkIfDiscountIsActive = function(discountData) {
+      var today = new Date();
+      var discountStartDate = new Date(discountData.startDate);
+      $scope.discountIsActive = discountStartDate <= today;
+    };
+
+    this.checkIfDiscountIsInactive = function(discountData) {
+      var today = new Date();
+      var discountEndDate = new Date(discountData.endDate);
+      $scope.discountIsInactive = discountEndDate <= today;
+      $scope.viewOnly = $scope.viewOnly || $scope.discountIsInactive;
+    };
+
     $scope.isDisabled = function() {
-      return false;
+      return ($scope.viewOnly || $scope.discountIsActive);
     };
 
     $scope.formScroll = function(id, activeBtn) {
