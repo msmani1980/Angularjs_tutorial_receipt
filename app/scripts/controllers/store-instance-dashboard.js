@@ -332,7 +332,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         if (statusName === 'On Floor') {
           var unpackingStatusId = getIdByValueInArray('Unpacking', 'statusName', $scope.storeStatusList);
           var inboundSealsStatusId = getIdByValueInArray('Inbound Seals', 'statusName', $scope.storeStatusList);
-          payload.statusId = [payload.statusId, unpackingStatusId, inboundSealsStatusId];
+          payload.statusId = [parseInt(payload.statusId), unpackingStatusId, inboundSealsStatusId];
         }
       }
       return payload;

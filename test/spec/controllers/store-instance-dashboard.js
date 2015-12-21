@@ -209,6 +209,22 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           statusId: '5'
         });
       });
+
+      it('should add Unpacking and Offload status Ids in search when On Floor is searched', function () {
+        scope.search.storeStatusId = '10';
+        scope.searchStoreInstanceDashboardData();
+        expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({
+          cateringStationId: '1',
+          inboundStationId: '2',
+          storeNumber: '3',
+          startDate: '10/06/2015',
+          endDate: '10/08/2015',
+          departureStationCode: ['ORD', 'MDW'],
+          arrivalStationCode: ['LON3', 'MDW'],
+          storeInstanceId: '4',
+          statusId: [10, 11, 12]
+        });
+      });
     });
 
     describe('getStoresList', function() {
