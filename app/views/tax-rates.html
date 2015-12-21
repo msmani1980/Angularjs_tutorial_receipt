@@ -5,8 +5,8 @@
         <h2 class="view-name">{{viewName}}</h2>
       </div>
       <div class="col-xs-8 text-right">
-        <button class="btn btn-primary" ng-click="createNewTaxRate()"><span class="fa fa-plus"></span><span class="hidden-xs">  Create Tax Rate</span></button>
-        <button class="btn btn-default" data-toggle="collapse" data-target="#filter-controls" aria-expanded="false" aria-controls="search-collapse" ng-click="searchUiSelectReady()">
+        <button class="btn btn-primary" tabindex="-1" ng-click="createNewTaxRate()"><span class="fa fa-plus"></span><span class="hidden-xs">  Create Tax Rate</span></button>
+        <button class="btn btn-default" tabindex="-1" data-toggle="collapse" data-target="#filter-controls" aria-expanded="false" aria-controls="search-collapse" ng-click="searchUiSelectReady()">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
@@ -108,7 +108,7 @@
           <button class="btn btn-default" ng-click="clearSearchFilters()" ng-show="showClearButton()" type="button">
             <span>Clear</span>
           </button>
-          <button class="btn btn-primary btn-search" ng-click="searchRecords()" ng-disabled="!showClearButton()" type="button">
+          <button class="btn btn-primary btn-search" ng-click="searchRecords()" ng-disabled="!showClearButton()">
             <span class="fa fa-search" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs btn-label">Search</span>
           </button>
@@ -140,7 +140,7 @@
         </tr>
       </thead>
       <!-- Switch ON taxRate.action - Table row -->
-      <tr class="animate-switch-container" ng-repeat="taxRate in companyTaxRatesList | orderBy: 'created' track by $index" ng-switch on="taxRate.action" ng-class="taxRateRowClass(taxRate)">
+      <tr tabindex="0" class="animate-switch-container" ng-repeat="taxRate in companyTaxRatesList | orderBy: 'created' track by $index" ng-switch on="taxRate.action" ng-class="taxRateRowClass(taxRate)">
         <!-- Switch for taxTypeCode -->
         <td class="animate-switch" ng-switch-when="read">{{ taxRate.taxTypeCode.taxTypeCode }}</td>
         <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
@@ -296,10 +296,10 @@
         </td>
         <!-- Buttons for Edit -->
         <td class="animate-switch tax-rates-action" ng-switch-when="edit">
-          <a class="btn btn-primary btn-xs" ng-click="saveTaxRateEdits(taxRate)">
+          <a tabindex="0" class="btn btn-primary btn-xs" ng-click="saveTaxRateEdits(taxRate)">
             <span class="fa fa-save"></span>
           </a>
-          <a class="btn btn-default btn-xs" ng-click="cancelTaxRateEdit(taxRate)">
+          <a tabindex="0" class="btn btn-default btn-xs" ng-click="cancelTaxRateEdit(taxRate)">
             <span class="fa fa-remove"></span>
           </a>
         </td>
