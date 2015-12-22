@@ -210,6 +210,16 @@ angular.module('ts5App')
       hideLoadingBar();
     };
 
+    this.getReconciliationDataList = function () {
+      $scope.displayError = false;
+      var payload = { 'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+      reconciliationFactory.getReconciliationDataList(payload).then(function (dataFromAPI) {
+        $this.attachReconciliationDataListToScope(angular.copy(dataFromAPI));
+      }, function () {
+        $this.hideLoadingModal();
+      });
+    };
+
     this.filterAvailableStoreStatus = function (item) {
       return $scope.allowedStoreStatusList.indexOf(item.statusName) > -1;
     };
@@ -344,15 +354,47 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    $scope.executeAction = function () {
-      angular.element('.delete-warning-modal').modal('hide');
+    this.handleResponseError = function (responseFromAPI) {
+      $this.hideLoadingModal();
+      $scope.errorResponse = responseFromAPI;
+      $scope.displayError = true;
+    };
 
+    this.executeValidateAction = function () {
+      var changeToDiscrepanciesPromises = [];
+      var changeToConfirmedPromises = [];
+      var instancesToExecuteOn = $this.findInstancesWithStatus('Inbounded');
+
+      $this.showLoadingModal('Executing Validate action');
+
+      angular.forEach(instancesToExecuteOn, function (instance) {
+        changeToDiscrepanciesPromises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, 9));
+      });
+
+      $q.all(changeToDiscrepanciesPromises).then(function () {
+        angular.forEach(instancesToExecuteOn, function (instance) {
+          changeToConfirmedPromises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, 10));
+        });
+
+        $q.all(changeToConfirmedPromises).then(function () {
+          $this.getReconciliationDataList();
+        }, function (responseFromAPI) {
+          $this.getReconciliationDataList();
+          $this.handleResponseError(responseFromAPI);
+        });
+      }, function(responseFromAPI) {
+        $this.getReconciliationDataList();
+        $this.handleResponseError(responseFromAPI);
+      });
+    };
+
+    this.executeOtherAction = function () {
       var status = null;
       var instancesToExecuteOn = [];
 
       switch ($scope.actionToExecute) {
-         case 'Unconfirm':
-           instancesToExecuteOn = $this.findInstancesWithStatus('Confirmed');
+        case 'Unconfirm':
+          instancesToExecuteOn = $this.findInstancesWithStatus('Confirmed');
           status = 9;
           break;
         case 'Confirm':
@@ -365,7 +407,7 @@ angular.module('ts5App')
           break;
       }
 
-      $this.showLoadingModal('Loading Data');
+      $this.showLoadingModal('Executing ' + $scope.actionToExecute + ' action');
 
       var promises = [];
       angular.forEach(instancesToExecuteOn, function (instance) {
@@ -378,6 +420,18 @@ angular.module('ts5App')
       }, function () {
         $this.hideLoadingModal();
       });
+    };
+
+    $scope.executeAction = function () {
+      $scope.displayError = false;
+      angular.element('.delete-warning-modal').modal('hide');
+
+      if ($scope.actionToExecute === 'Validate') {
+        $this.executeValidateAction();
+      }
+      else {
+        $this.executeOtherAction();
+      }
     };
 
     this.findInstancesWithStatus = function (status) {

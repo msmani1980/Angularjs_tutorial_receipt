@@ -1,0 +1,69 @@
+<div class="fluid-container">
+
+  <div class="employee-message-list">
+
+    <div class="list-controls">
+      <div class="row item-list-row">
+
+        <div class="col-xs-6">
+          <h2 class="view-name">{{ viewName }}</h2>
+        </div>
+
+        <div class="col-xs-6 text-right">
+          <button class="btn btn-primary">
+            <span class="fa fa-plus" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs">Create Message</span>
+          </button>
+          <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                  aria-controls="search-collapse">
+            <span class="fa fa-filter" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs">Filter</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default no-transition" id="search-collapse" ng-class="{'collapse': true }">
+      <form class="form">
+        <div class="panel-body">
+          <div class="row">
+
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default btn-search-clear">
+            <span class="btn-label">Clear</span>
+          </button>
+          <button class="btn btn-primary btn-search">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs btn-label">Search</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <table class="table table-bordered table-responsive table-hover">
+      <thead>
+      <tr>
+        <th class="col-xs-8">Message</th>
+        <th>Effective From</th>
+        <th>Effective To</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="message in employeeMessagesList">
+        <td>{{ message.employeeMessageText }}</td>
+        <td>{{ message.startDate }}</td>
+        <td>{{ message.endDate }}</td>
+        <td>
+          <button class="btn btn-info btn-xs" ng-click="goToDetailPage('view', message.id)"><i class="fa fa-file"></i></button>
+          <button class="btn btn-primary btn-xs" ng-show="isActiveOrFutureRecord(message)" ng-click="goToDetailPage('edit', message.id)"><i class="fa fa-pencil"></i></button>
+        </td>
+      </tr>
+      <tr>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
