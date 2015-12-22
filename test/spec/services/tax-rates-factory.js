@@ -49,10 +49,11 @@ describe('Service: taxRatesFactory', function() {
 
   describe('getTaxTypesList API call', function() {
     it('should call getTaxTypesList', function() {
-      taxRatesFactory.getTaxTypesList(companyId);
-      expect(taxTypesService.getTaxTypesList).toHaveBeenCalledWith({
-        companyId
-      });
+      var payload = {
+        companyId: 0
+      };
+      taxRatesFactory.getTaxTypesList(payload);
+      expect(taxTypesService.getTaxTypesList).toHaveBeenCalledWith(payload);
     });
   });
 
