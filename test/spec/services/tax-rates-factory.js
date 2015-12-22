@@ -51,7 +51,7 @@ describe('Service: taxRatesFactory', function() {
     it('should call getTaxTypesList', function() {
       taxRatesFactory.getTaxTypesList(companyId);
       expect(taxTypesService.getTaxTypesList).toHaveBeenCalledWith({
-        companyId
+        companyId: companyId
       });
     });
   });
