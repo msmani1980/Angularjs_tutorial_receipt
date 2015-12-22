@@ -12,14 +12,16 @@
 
           <div class="col-xs-6 text-right">
 
-            <a ng-href="{{exportBulkURL}}" class="btn btn-info" ng-disabled="!hasSelectedStore" >
+            <a ng-href="{{exportBulkURL}}" class="btn btn-info" ng-disabled="!hasSelectedStore">
               <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
               <span class="hidden-xs">Generate Docs</span>
             </a>
+            <!--
             <button class="btn btn-success" ng-click="bulkDispatch()">
               <span class="fa fa-files-o" aria-hidden="true"></span>
               <span class="hidden-sm hidden-xs">Bulk Dispatch</span>
             </button>
+            -->
             <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
               <span class="fa fa-filter" aria-hidden="true"></span>
     					<span class="hidden-sm hidden-xs">Filter</span>
@@ -195,11 +197,11 @@
           </div>
         </td>
         <td>
-          <span ng-show="store.tampered" class="label label-success">Yes</span>
-          <span ng-hide="store.tampered" class="label label-default">No</span>
+          <span ng-show="store.tampered">Yes</span>
+          <span ng-hide="store.tampered">No</span>
         </td>
         <td>{{ store.storeNumber }}</td>
-        <td><span class="label label-default">{{ store.statusName }}</span></td>
+        <td>{{ store.statusName }}</td>
         <td>{{ store.updatedOnDisplay }}</td>
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
@@ -286,11 +288,11 @@
           </div>
         </td>
         <td>
-          <span ng-show="replenishment.tampered" class="label label-success">Yes</span>
-          <span ng-hide="replenishment.tampered" class="label label-default">No</span>
+          <span ng-show="replenishment.tampered">Yes</span>
+          <span ng-hide="replenishment.tampered">No</span>
         </td>
         <td>{{ replenishment.storeNumber }}</td>
-        <td><span class="label label-default">{{ replenishment.statusName }}</span></td>
+        <td>{{ replenishment.statusName }}</td>
         <td>{{ replenishment.updatedOnDisplay }}</td>
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
