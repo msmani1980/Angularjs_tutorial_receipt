@@ -21,7 +21,7 @@
         <div class="row">
 
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field ng-if="minDate" min-date="$parent.minDate" 
+            <date-picker-field ng-if="minDate" min-date="$parent.minDate"
               disable="$parent.isDisabled()" form="form" label="Effective From"
               name="StationExceptionEffectiveFrom" ng-model="stationException.startDate" required="true">
             </date-picker-field>
@@ -45,9 +45,10 @@
 
 							<label>Station *</label>
 
-							<select name="Station" required ng-disabled="!stationException.startDate && !stationException.endDate || $parent.isDisabled()" ng-model="stationException.stationId" class="form-control">
-								<option ng-selected="stationException.stationId === station.id" ng-repeat="station in stationException.stations" value="{{ station.id }}">{{ station.code }}</option>
-							</select>
+							<select name="Station" required class="form-control" ng-model="stationException.stationId"
+                ng-disabled="!stationException.startDate && !stationException.endDate || $parent.isDisabled()"
+                ng-options="station.id as station.code for station in stationException.stations">
+              </select>
 
 						</div>
 
