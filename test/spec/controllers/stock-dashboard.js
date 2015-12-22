@@ -244,7 +244,7 @@ describe('Controller: StockDashboardCtrl', function() {
       beforeEach(function() {
         scope.selectedCateringStation = cateringStationsJSON.response[0];
         urlControl = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
-        urlControl += '/file/export?sessionToken=fakeSessionToken';
+        urlControl += '/file/export?sortOn=itemName&sessionToken=fakeSessionToken';
       });
 
       it('set the exportURL when the catering station is selected', function() {
@@ -263,7 +263,7 @@ describe('Controller: StockDashboardCtrl', function() {
         scope.$digest();
         expect(scope.exportURL).not.toEqual(urlControl);
         var newURL = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
-        newURL += '/file/export?sessionToken=fakeSessionToken';
+        newURL += '/file/export?sortOn=itemName&sessionToken=fakeSessionToken';
         expect(scope.exportURL).toEqual(newURL);
       });
 

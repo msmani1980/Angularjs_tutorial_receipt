@@ -395,10 +395,6 @@ describe('Controller: TaxRatesCtrl', function() {
               startDate: '12302015',
               endDate: '12302016'
             };
-
-          });
-          it('should return falsy', function() {
-            expect($scope.showDeleteButton(taxRate)).toBeFalsy();
           });
           it('should call the controller function', function() {
             $scope.showDeleteButton(taxRate);
