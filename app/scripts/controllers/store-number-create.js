@@ -124,7 +124,7 @@ angular.module('ts5App')
     };
 
     $scope.canDelete = function(store){
-      return dateUtility.isAfterToday(store.startDate);
+      return store.readyToUse && dateUtility.isAfterToday(store.startDate);
     };
 
     $scope.removeRecord = function(store) {
