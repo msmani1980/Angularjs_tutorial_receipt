@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: EmployeeMessageListCtrl', function () {
+describe('Controller: EmployeeMessageListCtrl', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -24,9 +24,9 @@ describe('Controller: EmployeeMessageListCtrl', function () {
   var stationsDeferred;
   var stationsJSON;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
+  beforeEach(inject(function($q, $controller, $rootScope, $location, $injector) {
 
-    inject(function (_servedEmployees_, _servedSchedules_, _servedGlobalStations_, _servedEmployeeMessages_) {
+    inject(function(_servedEmployees_, _servedSchedules_, _servedGlobalStations_, _servedEmployeeMessages_) {
       employeeMessagesJSON = _servedEmployeeMessages_;
       employeesJSON = _servedEmployees_;
       schedulesJSON = _servedSchedules_;
@@ -64,56 +64,66 @@ describe('Controller: EmployeeMessageListCtrl', function () {
   }));
 
 
-  describe('init', function () {
-    it('should set viewName', function () {
+  describe('init', function() {
+    it('should set viewName', function() {
       expect(scope.viewName).toBeDefined();
     });
 
-    it('should get employeeMessages with no payload', function () {
+    it('should get employeeMessages with no payload', function() {
       expect(employeeMessagesFactory.getEmployeeMessages).toHaveBeenCalledWith({});
     });
 
-    it('should attach employeeMessages to scope', function () {
+    it('should attach employeeMessages to scope', function() {
       expect(scope.employeeMessagesList).toBeDefined();
       expect(scope.employeeMessagesList.length > 0).toEqual(true);
     });
 
-    it('should get a list of employees', function () {
+    it('should get a list of employees', function() {
       expect(employeeMessagesFactory.getEmployees).toHaveBeenCalled();
       scope.$digest();
       expect(scope.employeesList).toEqual(employeesJSON.companyEmployees);
     });
-    it('should get a list of schedules', function () {
+    it('should get a list of schedules', function() {
       expect(employeeMessagesFactory.getSchedules).toHaveBeenCalled();
       scope.$digest();
       expect(scope.schedulesList).toEqual(schedulesJSON.distinctSchedules);
     });
-    it('should get a list of stations', function () {
+    it('should get a list of stations', function() {
       expect(employeeMessagesFactory.getStations).toHaveBeenCalled();
       scope.$digest();
       expect(scope.stationsList).toEqual(stationsJSON.response);
     });
 
-    it('should format start and end dates', function () {
+    it('should format start and end dates', function() {
       expect(scope.employeeMessagesList[0].startDate).toEqual('06/01/2015');
       expect(scope.employeeMessagesList[0].endDate).toEqual('06/30/2015');
     });
   });
 
-  describe('search', function () {
-    it('should call getEmployeeMessages', function () {
+  describe('search', function() {
+    it('should call getEmployeeMessages', function() {
       scope.submitSearch();
       expect(employeeMessagesFactory.getEmployeeMessages).toHaveBeenCalled();
     });
 
-    it('should format searchPayload', function () {
+    it('should format searchPayload', function() {
       var mockData = {
         startDate: '10/20/2015',
         endDate: '10/30/2015',
-        employees: [{employeeIdentifier: '1001'}],
-        schedules: [{scheduleNumber: '123'}],
-        arrStations: [{id: 1, code: 'ORD'}],
-        depStations: [{id: 2, code: 'LAX'}]
+        employees: [{
+          employeeIdentifier: '1001'
+        }],
+        schedules: [{
+          scheduleNumber: '123'
+        }],
+        arrStations: [{
+          id: 1,
+          code: 'ORD'
+        }],
+        depStations: [{
+          id: 2,
+          code: 'LAX'
+        }]
       };
       var formattedPayload = EmployeeMessageListCtrl.formatSearchPayload(mockData);
       expect(formattedPayload.startDate).toEqual('20151020');
@@ -134,32 +144,41 @@ describe('Controller: EmployeeMessageListCtrl', function () {
       expect(formattedPayload.departureStationId[0]).toEqual(2);
     });
 
-    it('should clearSearchData', function () {
+    it('should clearSearchData', function() {
       scope.clearSearch();
       expect(employeeMessagesFactory.getEmployeeMessages).toHaveBeenCalledWith({});
       expect(scope.search).toEqual({});
-    })
+    });
   });
 
-  describe('scope helpers', function () {
-    describe('goToDetailPage', function () {
-      it('should redirect to employee-message page', function () {
+  describe('scope helpers', function() {
+    describe('goToDetailPage', function() {
+      it('should redirect to employee-message page', function() {
         scope.goToDetailPage('view', 1);
         expect(location.path).toHaveBeenCalledWith('employee-message/view/1');
       });
     });
 
-    describe('isActiveOrFutureRecord', function () {
-      it('should return false for past records', function () {
-        var mockPastRecord = {startDate: '10/20/2000', endDate: '10/30/2000'};
+    describe('isActiveOrFutureRecord', function() {
+      it('should return false for past records', function() {
+        var mockPastRecord = {
+          startDate: '10/20/2000',
+          endDate: '10/30/2000'
+        };
         expect(scope.isActiveOrFutureRecord(mockPastRecord)).toEqual(false);
       });
-      it('should return true for active records', function () {
-        var mockActiveRecord = {startDate: '10/20/2010', endDate: '10/30/3000'};
+      it('should return true for active records', function() {
+        var mockActiveRecord = {
+          startDate: '10/20/2010',
+          endDate: '10/30/3000'
+        };
         expect(scope.isActiveOrFutureRecord(mockActiveRecord)).toEqual(true);
       });
-      it('should return true for future records', function () {
-        var mockFutureRecord = {startDate: '10/20/3000', endDate: '10/30/3000'};
+      it('should return true for future records', function() {
+        var mockFutureRecord = {
+          startDate: '10/20/3000',
+          endDate: '10/30/3000'
+        };
         expect(scope.isActiveOrFutureRecord(mockFutureRecord)).toEqual(true);
       });
     });
