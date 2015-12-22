@@ -138,7 +138,7 @@ describe('Controller: EmployeeMessageListCtrl', function () {
       scope.clearSearch();
       expect(employeeMessagesFactory.getEmployeeMessages).toHaveBeenCalledWith({});
       expect(scope.search).toEqual({});
-    })
+    });
   });
 
   describe('scope helpers', function () {
