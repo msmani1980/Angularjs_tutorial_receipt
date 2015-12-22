@@ -63,14 +63,6 @@ angular.module('ts5App')
         return false;
       };
 
-      $scope.$watch('showSequential',function(current,previous) {
-        if(current && angular.isUndefined(previous)){
-          angular.element(
-            angular.element.find('input[name="numberOfSeals"]')[0]
-          ).focus();
-        }
-      });
-
     };
     return {
       templateUrl: '/views/directives/seal-type.html',

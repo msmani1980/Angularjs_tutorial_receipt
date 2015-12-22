@@ -20,7 +20,7 @@
       <label for="seal-numbers-outbound">
         Seal Numbers <span ng-show="sealTypeObject.required">*</span>:
       </label>
-      <p ng-show="disabledAndNoSeals()">There are no seals assigned</p>
+      <p ng-show="disabledAndNoSeals()">There are no seals assigned</p>   
       <div class="form-group" ng-class="$parent.validateSeals(sealTypeObject)" ng-hide="disabledAndNoSeals()">
         <ui-select ng-disabled="isReadOnly()" name="{{sealTypeObject.name}}" multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true"  title="Add Seals...">
           <ui-select-match ui-locked-choice="true" placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
@@ -45,7 +45,7 @@
 
       <label>Add Sequential Seal Numbers</label>
       <div class="input-group">
-        <input autofocus name="numberOfSeals" type="number" class="form-control" ng-model="numberOfSeals"
+        <input custom-focus="isSequentialPossible()" name="numberOfSeals" type="number" class="form-control" ng-model="numberOfSeals"
           placeholder="0" ng-keypress="addSealsSequentiallyWithEnter($event)" />
         <span class="input-group-btn">
           <a class="btn btn-primary" ng-click="addSealsSequentially()" ng-disabled="isAddButtonDisabled()">
