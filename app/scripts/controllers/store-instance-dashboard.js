@@ -523,4 +523,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return false;
     };
 
+    $scope.displayUndispatchConfirmation = function(store) {
+      $scope.undispatchStoreDialog = {
+        title: 'Are you sure you want to undispatch Instance ' + store.id + '?',
+        confirmationCallback: function() {
+          $scope.undispatch(store.id);
+        }
+      };
+      angular.element('#confirmation-modal').modal('show');
+    };
+
   });

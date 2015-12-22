@@ -227,7 +227,7 @@
           </a>
           <a class="btn btn-warning btn-xs btn-block" tabindex="0"
              ng-show="isUndispatchPossible(store) && doesStoreInstanceContainAction(store, 'Un-dispatch')"
-             ng-click="undispatch(store.id)">
+             ng-click="displayUndispatchConfirmation(store)">
             Undispatch
           </a>
           <a class="btn btn-success btn-xs btn-block" tabindex="0"
@@ -345,3 +345,11 @@
 	</div>
 
 </div>
+
+<confirmation-modal
+ title="{{ undispatchStoreDialog.title }}"
+ body="You cannot revert back if you confirm this action. Press Yes to confirm or No to return to the dashboard."
+ confirmation-callback="undispatchStoreDialog.confirmationCallback()"
+ confirmation-label="Yes"
+ cancel-label="No">
+</confirmation-modal>

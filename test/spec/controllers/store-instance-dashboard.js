@@ -453,11 +453,31 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   });
 
   describe('undispatch', function() {
+
+    var store;
+    var mockDialogObject;
+
     beforeEach(function() {
-      scope.undispatch(2);
+      spyOn(scope,'undispatch').and.callThrough();
+      scope.$digest();
+      store = angular.copy(scope.storeInstanceList[0]);
+      scope.displayUndispatchConfirmation(store);
+      mockDialogObject = {
+        title: 'Are you sure you want to undispatch Instance ' + store.id + '?',
+        confirmationCallback: function() {
+          scope.undispatch(store.id);
+        }
+      };
     });
-    it('should update status to 1', function() {
-      expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(2, 1);
+
+    it('should set the undispatchStoreDialog',function() {
+      expect(scope.undispatchStoreDialog.title).toEqual(mockDialogObject.title);
+    });
+
+    it('should update status to 1 if confirmed', function() {
+      mockDialogObject.confirmationCallback();
+      expect(scope.undispatch).toHaveBeenCalledWith(store.id);
+      expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(53, 1);
     });
   });
 
