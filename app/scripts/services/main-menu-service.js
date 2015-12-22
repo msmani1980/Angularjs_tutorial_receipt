@@ -198,14 +198,14 @@ angular.module('ts5App')
         title: 'Discount Management',
         menuItems: [{
           name: 'Manage Discounts',
-          route: '/#/discount-list',
+          route: '/#/discounts',
           icon: 'icon-manage-discount',
           className: 'dashboard-manageDiscount',
           package: 'DISCOUNT',
           role: 'DISCOUNT'
         }, {
           name: 'Create Discount',
-          route: emberURL + 'discounts/create',
+          route: '/#/discounts/create',
           icon: 'icon-create-discount',
           className: 'dashboard-createDiscount',
           package: 'DISCOUNT',
@@ -336,17 +336,17 @@ angular.module('ts5App')
           role: 'EMLOYEECOMMISSION'
         }]
       }, {
-        title: 'Reason',
+        title: 'Manage Reasons',
         menuItems: [{
-          name: 'Global Reason',
-          route: '/#/global-reason-code',
+          name: 'Reason Codes',
+          route: '/#/company-reason-code',
           icon: 'icon-manage-schedule',
           className: 'dashboard-globalReasonCode',
           package: 'REASONGLOBAL',
           role: 'REASONGLOBAL'
         }, {
-          name: 'Company Reason',
-          route: '/#/company-reason-code',
+          name: 'Reason Types',
+          route: '/#/company-reason-type-subscribe',
           icon: 'icon-manage-schedule',
           className: 'dashboard-companyReasonCode',
           package: 'REASONCOMPANY',

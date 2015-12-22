@@ -17,6 +17,9 @@ describe('Service: discountFactory', function () {
     spyOn(discountService, 'getDiscountList').and.stub();
     spyOn(discountTypesService, 'getDiscountTypesList').and.stub();
     spyOn(discountService, 'deleteDiscount').and.stub();
+    spyOn(discountService, 'getDiscount').and.stub();
+    spyOn(discountService, 'createDiscount').and.stub();
+    spyOn(discountService, 'updateDiscount').and.stub();
 
     discountFactory = _discountFactory_;
   }));
@@ -48,5 +51,21 @@ describe('Service: discountFactory', function () {
       expect(discountService.deleteDiscount).toHaveBeenCalledWith(1);
     });
 
+    it('should get discount', function() {
+      discountFactory.getDiscount(1);
+      expect(discountService.getDiscount).toHaveBeenCalledWith(1);
+    });
+
+
+    it('should create discount', function() {
+      discountFactory.createDiscount({id:1});
+      expect(discountService.createDiscount).toHaveBeenCalledWith({id:1});
+    });
+
+
+    it('should update discount', function() {
+      discountFactory.updateDiscount(1, {name: 'discount'});
+      expect(discountService.updateDiscount).toHaveBeenCalledWith(1, {name: 'discount'});
+    });
   });
 });

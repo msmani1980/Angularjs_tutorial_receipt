@@ -14,9 +14,10 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.discountList = [];
     $scope.discountToDelete = {};
+    $scope.defaultLimit = 100;
 
     this.getDiscountList = function () {
-      discountFactory.getDiscountList().then($this.attachDiscountListToScope);
+      discountFactory.getDiscountList({limit: $scope.defaultLimit}).then($this.attachDiscountListToScope);
     };
 
     this.getDiscountTypesList = function () {
@@ -27,7 +28,7 @@ angular.module('ts5App')
 
     $scope.editDiscount = function (discount) {
       $location.search({});
-      window.location.href = '/ember/#/discounts/' + discount.id + '/edit';
+      $location.path('/discounts/edit/' + discount.id);
     };
 
     $scope.searchDiscounts = function () {

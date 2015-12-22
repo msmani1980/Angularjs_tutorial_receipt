@@ -59,7 +59,7 @@ angular.module('ts5App')
         content: '<strong>' + type + '</strong>: ' + message
       });
     }
-    
+
     function showErrors(dataFromAPI) {
       $scope.errorResponse = dataFromAPI;
       $scope.displayError = true;
@@ -105,7 +105,7 @@ angular.module('ts5App')
     function initializeList() {
       menuService.getMenuList({startDate:dateUtility.nowFormatted('YYYYMMDD')}).then(attachMenuListToScope);
       if ($location.search().newMenuName) {
-        showToast('success', 'Create Menu', 'successfully created menu named ' + $location.search().newMenuName);
+        showToast('success', 'Create Menu', 'successfully created menu');
       }
     }
 
