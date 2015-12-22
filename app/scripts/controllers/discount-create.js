@@ -107,22 +107,21 @@ angular.module('ts5App')
       $scope.filteredRetailItemsList[0] = $scope.retailItemsList;
     };
 
-    this.getDiscount = function(id) {
-      this.showLoadingModal('We are getting your Discount data!');
-      discountFactory.getDiscount(id).then(function(data) {
-        $this.updateFormData(data.companyDiscount);
-        $this.setUIReady();
-      }, function() {
-        $location.path('/');
-      });
+    this.redirectUser = function() {
+      $location.path('/');
     };
 
-    this.setDependencies = function(response) {
-      $this.setGlobalDiscountTypesList(response[0]);
-      $this.setDiscountTypesList(response[1]);
-      $this.setCompanyCurrencyGlobals(response[2]);
-      $this.setSalesCategoriesListAndMap(response[3]);
-      $this.setRetailItemsList(response[4]);
+    this.setDiscount = function(data) {
+      $this.updateFormData(data.companyDiscount);
+      $this.setUIReady();
+    };
+
+    this.getDiscount = function(id) {
+      this.showLoadingModal('We are getting your Discount data!');
+      discountFactory.getDiscount(id).then($this.setDiscount, $this.redirectUser);
+    };
+
+    this.dependenciesSuccess = function() {
       $this.setDefaultRetailItems();
 
       if ($scope.editingDiscount) {
@@ -132,18 +131,40 @@ angular.module('ts5App')
       }
     };
 
-    this.makeDependencyPromises = function() {
+    this.getGlobalDiscountTypesList = function() {
+      return discountFactory.getDiscountTypesList().then($this.setGlobalDiscountTypesList);
+    };
+
+    this.getDiscountTypesList = function() {
+      return recordsService.getDiscountTypes().then($this.setDiscountTypesList);
+    };
+
+    this.getCompanyCurrencyGlobals = function() {
       var companyCurrenciesPayload = {
         isOperatedCurrency: true,
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
       };
 
+      return currencyFactory.getCompanyCurrencies(companyCurrenciesPayload).then($this.setCompanyCurrencyGlobals);
+    };
+
+    this.getSalesCategoriesList = function() {
+      return companiesFactory.getSalesCategoriesList().then($this.setSalesCategoriesListAndMap);
+    };
+
+    this.getRetailItemsList = function() {
+      return itemsFactory.getItemsList({}, true).then($this.setRetailItemsList);
+    };
+
+
+    this.makeDependencyPromises = function() {
+
       return [
-        discountFactory.getDiscountTypesList(),
-        recordsService.getDiscountTypes(),
-        currencyFactory.getCompanyCurrencies(companyCurrenciesPayload),
-        companiesFactory.getSalesCategoriesList(),
-        itemsFactory.getItemsList({}, true)
+        $this.getGlobalDiscountTypesList(),
+        $this.getDiscountTypesList(),
+        $this.getCompanyCurrencyGlobals(),
+        $this.getSalesCategoriesList(),
+        $this.getRetailItemsList()
       ];
     };
 
@@ -151,7 +172,7 @@ angular.module('ts5App')
       $this.showLoadingModal('We are loading the Discount data!');
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(dependencyPromises).then(function(response) {
-        $this.setDependencies(response);
+        $this.dependenciesSuccess(response);
       });
     };
 
@@ -401,23 +422,27 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
+    this.updateDiscountSuccess = function(response) {
+      $this.updateFormData(response.companyDiscount);
+      angular.element('#loading').modal('hide');
+      angular.element('#update-success').modal('show');
+    };
+
     this.updateItem = function(payload) {
       angular.element('#loading').modal('show').find('p').text('We are updating your discount');
 
-      discountFactory.updateDiscount($routeParams.id, payload).then(function(response) {
-        $this.updateFormData(response.companyDiscount);
-        angular.element('#loading').modal('hide');
-        angular.element('#update-success').modal('show');
-      }, $this.errorHandler);
+      discountFactory.updateDiscount($routeParams.id, payload).then($this.updateDiscountSuccess, $this.errorHandler);
+    };
+
+    this.createDiscountSuccess = function() {
+      angular.element('#loading').modal('hide');
+      angular.element('#create-success').modal('show');
     };
 
     this.createItem = function(payload) {
       angular.element('#loading').modal('show').find('p').text('We are creating your discount');
 
-      discountFactory.createDiscount(payload).then(function() {
-        angular.element('#loading').modal('hide');
-        angular.element('#create-success').modal('show');
-      }, $this.errorHandler);
+      discountFactory.createDiscount(payload).then($this.createDiscountSuccess, $this.errorHandler);
     };
 
     $scope.submitForm = function(formData) {
