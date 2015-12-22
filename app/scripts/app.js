@@ -264,6 +264,9 @@ angular.module('ts5App', [
   }).when('/station-view/:id', {
     templateUrl: 'views/station-create.html',
     controller: 'StationCreateCtrl'
+  }).when('/company-reason-type-subscribe', {
+    templateUrl: 'views/company-reason-type-subscribe.html',
+    controller: 'CompanyReasonTypeSubscribeCtrl',
   }).when('/employee-messages', {
     templateUrl: 'views/employee-message-list.html',
     controller: 'EmployeeMessageListCtrl'
