@@ -1,0 +1,91 @@
+<div class="container module-container">
+
+  <div class="top-header">
+
+    <div class="container">
+
+      <div class="edit-controls">
+
+        <div class="row">
+
+          <div class="col-xs-6">
+
+            <h2 class="view-name"> {{ viewName }} </h2>
+
+          </div>
+
+          <div class="col-xs-6 text-right">
+
+            <fieldset ng-hide="viewOnly">
+
+              <button class="btn btn-default" ng-click="leaveView('category-list')">
+                <span class="fa fa-remove" aria-hidden="true"></span>
+                <span class="hidden-xs">Cancel</span>
+              </button>
+
+              <button class="btn btn-primary" ng-click="submitForm(formData)">
+                <span class="fa fa-check-square-o" aria-hidden="true"></span>
+                <span class="hidden-xs">{{ buttonText }}</span>
+              </button>
+
+            </fieldset>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <p>All required fields are marked with a *.</p>
+
+    </div>
+
+  </div>
+  <!--/TopHeader -->
+
+  <div class="create-form-container" ng-show="uiSelectTemplateReady">
+
+    <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+    </error-dialog>
+
+    <form name="form" class="form edit-form create-item-form">
+
+      <h3 id="item-information">Category Information</h3>
+
+      <div class="row">
+
+        <div class="col-xs-12 col-sm-6">
+
+          <fieldset >
+
+            <input-text label="Category Name" name="categoryName" required="true" pattern="regexp.alphanumeric"
+                        placeholder="Snacks" min-length="1" max-length="10" ng-model="formData.name"></input-text>
+
+            <input-text label="Description" name="categoryDescription" required="true" pattern="regexp.word"
+                        placeholder="Cool New Item" min-length="1" max-length="40" ng-model="formData.description"></input-text>
+
+            <label>Parent Category *</label>
+            <select name="categoryId" required ng-model="formData.parentId" class="form-control">
+              <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
+                      value="{{ category.id }}">{{ category.name }}
+              </option>
+            </select>
+          </fieldset>
+
+
+        </div>
+      </div>
+  </form>
+
+  </div>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal list-path="item-list" create-path="item-create"></form-success-modal>
+
+<form-update-modal list-path="item-list"></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Retail Item Management"></dynamic-left-nav>

@@ -87,6 +87,9 @@ angular.module('ts5App', [
   }).when('/category-list', {
     templateUrl: 'views/category-list.html',
     controller: 'CategoryListCtrl'
+  }).when('/category-edit/:id', {
+    templateUrl: 'views/category-create.html',
+    controller: 'CategoryCreateCtrl'
   }).when('/stock-owner-item-list', {
     templateUrl: 'views/stock-owner-item-list.html',
     controller: 'StockOwnerItemListCtrl'
