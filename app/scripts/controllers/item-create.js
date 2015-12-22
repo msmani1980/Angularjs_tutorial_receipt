@@ -815,6 +815,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     $scope.$watch('formData.itemTypeId', function(selectedItemType) {
       $scope.isVoucherSelected = (parseInt(selectedItemType) === 3);
+      $scope.isVirtualSelected = (parseInt(selectedItemType) === 2);
     }, true);
 
     $scope.addPriceGroup = function() {
