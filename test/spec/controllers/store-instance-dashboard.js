@@ -153,8 +153,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
         expect(scope.storeInstanceList).toBeDefined();
       });
 
-      it('should attach all objects of JSON to scope', function() {
-        expect(scope.storeInstanceList.length).toEqual(storeInstanceListResponseJSON.response.length);
+      it('should attach objects of JSON to scope', function() {
+        expect(scope.storeInstanceList.length > 0).toEqual(true);
       });
     });
 
@@ -207,7 +207,22 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           arrivalStationCode: ['LON3', 'MDW'],
           storeInstanceId: '4',
           statusId: '5'
+        });
+      });
 
+      it('should add Unpacking and Offload status Ids in search when On Floor is searched', function () {
+        scope.search.storeStatusId = '10';
+        scope.searchStoreInstanceDashboardData();
+        expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({
+          cateringStationId: '1',
+          inboundStationId: '2',
+          storeNumber: '3',
+          startDate: '10/06/2015',
+          endDate: '10/08/2015',
+          departureStationCode: ['ORD', 'MDW'],
+          arrivalStationCode: ['LON3', 'MDW'],
+          storeInstanceId: '4',
+          statusId: [10, 11, 12]
         });
       });
     });
@@ -235,8 +250,14 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
         expect(scope.storeStatusList).toBeDefined();
       });
 
-      it('should attach all properties of JSON to scope', function() {
-        expect(scope.storeStatusList).toEqual(statusListResponseJSON);
+      it('should attach properties of JSON to scope', function() {
+        expect(scope.storeStatusList.length > 0).toEqual(true);
+      });
+
+      it('should filter status list', function () {
+        expect(scope.filteredStoreStatusList).toBeDefined();
+        expect(scope.filteredStoreStatusList.length > 0).toEqual(true);
+        expect(scope.filteredStoreStatusList.length < scope.storeStatusList.length).toEqual(true);
       });
     });
 
