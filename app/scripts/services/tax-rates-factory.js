@@ -14,9 +14,9 @@ angular.module('ts5App')
     var companyId = GlobalMenuService.company.get();
 
     var getTaxTypesList = function() {
-      return taxTypesService.getTaxTypesList({
-        companyId
-      });
+      var payload = {};
+      payload.companyId = companyId;
+      return taxTypesService.getTaxTypesList(payload);
     };
 
     var getTaxRateTypes = function() {
