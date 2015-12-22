@@ -10,8 +10,6 @@ angular.module('ts5App')
   .directive('sealType', function() {
     var sealTypeController = function($scope) {
 
-      $scope.numberOfSeals = 0;
-
       $scope.isSequentialPossible = function() {
         if ($scope.$parent.readOnly) {
           return false;
@@ -21,11 +19,12 @@ angular.module('ts5App')
 
       $scope.addSealsSequentially = function() {
         var sealNumber = parseInt($scope.sealTypeObject.seals.numbers[0]);
-        var count = parseInt($scope.numberOfSeals + 1);
+        var count = parseInt($scope.numberOfSeals);
         for (var i = 1; i < count; i++) {
           var newSeal = Math.abs(sealNumber + i);
           $scope.sealTypeObject.seals.numbers.push(newSeal);
         }
+        $scope.numberOfSeals = null;
       };
 
       $scope.showClearButton = function() {
@@ -55,6 +54,13 @@ angular.module('ts5App')
 
       $scope.isReadOnly = function() {
         return $scope.$parent.readOnly;
+      };
+
+      $scope.addSealsSequentiallyWithEnter = function(keyEvent) {
+        if (keyEvent.which === 13) {
+          $scope.addSealsSequentially();
+        }
+        return false;
       };
 
     };
