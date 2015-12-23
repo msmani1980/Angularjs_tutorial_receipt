@@ -25,7 +25,7 @@ angular.module('ts5App')
 
     $scope.editCategory = function (category) {
       $location.search({});
-      window.location.href = '/#/category-edit/' + category.id;
+      window.location.href = '/#/category/' + category.id + '/edit';
     };
 
     $scope.searchCategories = function () {

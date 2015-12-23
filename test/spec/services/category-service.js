@@ -18,6 +18,8 @@ fdescribe('Service: categoryService', function () {
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/sales-categories/).respond(categoryResponseJSON);
     $httpBackend.whenDELETE(/sales-categories/).respond(201);
+    $httpBackend.whenPOST(/sales-categories/).respond(201);
+    $httpBackend.whenPUT(/sales-categories/).respond(201);
     categoryService = _categoryService_;
   }));
 
@@ -80,6 +82,30 @@ fdescribe('Service: categoryService', function () {
     it('should delete category by category id', function () {
       $httpBackend.expectDELETE(/sales-categories/);
       categoryService.deleteCategory(1);
+      $httpBackend.flush();
+    });
+
+    it('should create category by payload', function () {
+      $httpBackend.expectPOST(/sales-categories/);
+      var payload = {
+        name: 'fakeName',
+        description: 'fakeDescription',
+        parentCategoryId: '2',
+        nextCategoryId: '3'
+      };
+      categoryService.createCategory(0, payload);
+      $httpBackend.flush();
+    });
+
+    it('should update category by payload', function () {
+      $httpBackend.expectPUT(/sales-categories/);
+      var payload = {
+        name: 'fakeName',
+        description: 'fakeDescription',
+        parentCategoryId: '2',
+        nextCategoryId: '3'
+      };
+      categoryService.updateCategory(1, 0, payload);
       $httpBackend.flush();
     });
 

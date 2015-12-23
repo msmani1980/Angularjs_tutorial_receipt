@@ -15,8 +15,20 @@ angular.module('ts5App')
     };
 
     var getCategoryList = function (payload) {
-      payload = lodash.defaults({}, payload, {id: getCompanyId()})
+      payload = lodash.defaults({}, payload, {companyId: getCompanyId()})
       return categoryService.getCategoryList(payload);
+    };
+
+    var getCategory = function (id) {
+      return categoryService.getCategory({id: id, companyId: getCompanyId()});
+    };
+
+    var updateCategory = function (id, payload) {
+      return categoryService.updateCategory(id, getCompanyId(), payload);
+    };
+
+    var createCategory = function (payload) {
+      return categoryService.createCategory(getCompanyId(), payload);
     };
 
     var deleteCategory = function (categoryId) {
@@ -24,6 +36,9 @@ angular.module('ts5App')
     };
 
     return {
+      updateCategory: updateCategory,
+      createCategory: createCategory,
+      getCategory: getCategory,
       getCategoryList: getCategoryList,
       deleteCategory: deleteCategory
     };
