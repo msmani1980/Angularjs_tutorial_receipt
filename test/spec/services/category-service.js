@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: categoryService', function () {
+describe('Service: categoryService', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
