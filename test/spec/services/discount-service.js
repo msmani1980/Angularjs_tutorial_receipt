@@ -18,6 +18,8 @@ describe('Service: discountService', function () {
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/company-discounts/).respond(discountResponseJSON);
     $httpBackend.whenDELETE(/company-discounts/).respond(201);
+    $httpBackend.whenPOST(/company-discounts/).respond(200);
+    $httpBackend.whenPUT(/company-discounts/).respond(202);
     discountService = _discountService_;
   }));
 
@@ -83,6 +85,24 @@ describe('Service: discountService', function () {
     it('should delete discount by discount id', function () {
       $httpBackend.expectDELETE(/company-discounts/);
       discountService.deleteDiscount(1);
+      $httpBackend.flush();
+    });
+
+    it('should get discount', function() {
+      $httpBackend.expectGET(/company-discounts\/1/);
+      discountService.getDiscount(1);
+      $httpBackend.flush();
+    });
+
+    it('should create discount', function() {
+      $httpBackend.expectPOST(/company-discounts/);
+      discountService.createDiscount({name: 'test'});
+      $httpBackend.flush();
+    });
+
+    it('should update discount', function() {
+      $httpBackend.expectPUT(/company-discounts\/1/);
+      discountService.updateDiscount(1, {name: 'test'});
       $httpBackend.flush();
     });
 

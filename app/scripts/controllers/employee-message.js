@@ -13,6 +13,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
     var $this = this;
     var companyId = GlobalMenuService.company.get();
+    var dataInitialized = false;
 
     this.showLoadingModal = function (text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -115,6 +116,9 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     $scope.shouldDisableActiveFields = function () {
+      if(!dataInitialized) {
+        return false;
+      }
       if(!$scope.employeeMessage) {
         return true;
       }
@@ -308,6 +312,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       var initPromises = $this.initApiDependencies();
       $q.all(initPromises).then(function () {
         $this.initEmployeeMessage();
+        dataInitialized = true;
       });
     };
     this.init();

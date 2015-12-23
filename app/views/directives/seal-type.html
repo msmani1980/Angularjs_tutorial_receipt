@@ -20,7 +20,7 @@
       <label for="seal-numbers-outbound">
         Seal Numbers <span ng-show="sealTypeObject.required">*</span>:
       </label>
-      <p ng-show="disabledAndNoSeals()">There are no seals assigned</p>
+      <p ng-show="disabledAndNoSeals()">There are no seals assigned</p>   
       <div class="form-group" ng-class="$parent.validateSeals(sealTypeObject)" ng-hide="disabledAndNoSeals()">
         <ui-select ng-disabled="isReadOnly()" name="{{sealTypeObject.name}}" multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true"  title="Add Seals...">
           <ui-select-match ui-locked-choice="true" placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
@@ -40,23 +40,20 @@
   <button class="btn btn-primary" type="button" ng-show="showClearButton()" ng-click="clearSeals()">Clear</button>
 
   <div class="row" ng-show="isSequentialPossible()">
-    <div class="col-xs-12 col-sm-6">
-      <div class="row">
-        <div class="col-sm-4 col-md-2">
-          <label class="checkbox-inline">
-            <input type="checkbox" ng-model="showSequential" value="1">
-            <span class="checkbox-label">Sequential</span>
-          </label>
-        </div>
-        <div class="col-sm-8 col-md-6 col-md-offset-1">
-          <div class="input-group" ng-show="showSequential">
-            <input type="number" class="form-control" ng-model="numberOfSeals" placeholder="0">
-            <span class="input-group-btn">
-              <button class="btn btn-primary" type="button" ng-click="addSealsSequentially()" ng-disabled="isAddButtonDisabled()"><span class="fa fa-plus"></span> Add</button>
-            </span>
-          </div>
-        </div>
-    </div>
+
+    <div class="col-xs-12 col-sm-4">
+
+      <label>Add Sequential Seal Numbers</label>
+      <div class="input-group">
+        <input custom-focus="isSequentialPossible()" name="numberOfSeals" type="number" class="form-control" ng-model="numberOfSeals"
+          placeholder="0" ng-keypress="addSealsSequentiallyWithEnter($event)" />
+        <span class="input-group-btn">
+          <a class="btn btn-primary" ng-click="addSealsSequentially()" ng-disabled="isAddButtonDisabled()">
+            <span class="fa fa-plus"></span> Add
+          </a>
+        </span>
+      </div>
+
   </div>
 
 </div>

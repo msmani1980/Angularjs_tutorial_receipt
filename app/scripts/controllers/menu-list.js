@@ -165,7 +165,7 @@ angular.module('ts5App')
 
     function initializeList() {
       if ($location.search().newMenuName) {
-        showToast('success', 'Create Menu', 'successfully created menu named ' + $location.search().newMenuName);
+        showToast('success', 'Create Menu', 'successfully created menu');
       }
     }
 

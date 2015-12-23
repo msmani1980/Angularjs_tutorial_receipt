@@ -33,5 +33,15 @@
     "id": 10,
     "statusName": "On Floor",
     "name": "5"
+  },
+  {
+    "id": 11,
+    "statusName": "Unpacking",
+    "name": "6"
+  },
+  {
+    "id": 12,
+    "statusName": "Inbound Seals",
+    "name": "7"
   }
 ]
