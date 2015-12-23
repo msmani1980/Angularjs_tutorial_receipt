@@ -8,15 +8,34 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CategoryListCtrl', function ($scope, $location, categoryFactory, ngToast, dateUtility, payloadUtility) {
+  .controller('CategoryListCtrl', function ($scope, $location, categoryFactory, ngToast, dateUtility, payloadUtility, lodash) {
     var $this = this;
     $scope.viewName = 'Category';
     $scope.search = {};
     $scope.categoryList = [];
     $scope.categoryToDelete = {};
 
+    $scope.toggleAccordionView = function(category) {
+      category.expanded = !category.expanded;
+    };
+
     this.attachCategoryListToScope = function (categoryListFromAPI) {
-      $scope.categoryList = angular.copy(categoryListFromAPI.salesCategories);
+      var categoryMap = lodash.reduce(categoryListFromAPI.salesCategories, function(result, category) {
+        result[category.id] = category;
+        return result;
+      }, {});
+      lodash.forEach(categoryListFromAPI.salesCategories, function(category) {
+        category.expanded = false;
+        if (!lodash.isNull(category.parentId) && categoryMap[category.parentId]) {
+          if (lodash.isNull(categoryMap[category.parentId].children)) {
+            categoryMap[category.parentId].children = [];
+          }
+          categoryMap[category.parentId].children.push(category);
+        }
+      });
+      $scope.categoryList = lodash.filter(categoryListFromAPI.salesCategories, function(category) {
+          return category.parentId === null;
+      });
     };
 
     this.getCategoryList = function () {

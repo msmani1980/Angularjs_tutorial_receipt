@@ -71,33 +71,82 @@
         </ul>
     </div>
 
-    <table class="table table-responsive table-bordered table-hover">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Path</th>
-            <th>Item Count</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr id="category-{{$index}}" ng-repeat="category in categoryList | toArray:false |  filter:{categoryTypeId: search.categoryTypeId, name: search.name} | orderBy: 'startDate' track by $index">
-            <td>{{ category.name }}</td>
-            <td>{{ category.description }}</td>
-            <td>{{ category.salesCategoryPath }}</td>
-            <td>{{ category.itemCount }}</td>
+    <script type="text/ng-template" id="category_item_tree" >
+      <table class="table table-responsive table-hover" ng-show="category.expanded" >
+          <tbody id="category-{{$index}}" ng-repeat="category in categoryList | toArray:false |  filter:{categoryTypeId: search.categoryTypeId, name: search.name} | orderBy: 'startDate' track by $index">
+          <tr >
             <td>
-                <button class="btn btn-primary btn-xs" ng-click="editCategory(category)" ng-show="isCategoryEditable(category)">
-                    <i class="fa fa-pencil"></i>
-                </button>
-                <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, category)" ng-hide="isCategoryReadOnly(category)">
-                    <i class="fa fa-trash"></i>
-                </button>
+              <span class="fa fa-plus-square-o"
+                    ng-click="toggleAccordionView(category)"
+                    ng-show="category.children && !category.expanded"></span>
+              <span class="fa fa-minus-square" ng-show="category.children && category.expanded"
+                    ng-click="toggleAccordionView(category)"></span>
             </td>
-        </tr>
-        </tbody>
+
+              <td>{{ category.name }}</td>
+              <td>{{ category.description }}</td>
+              <td>{{ category.salesCategoryPath }}</td>
+              <td>{{ category.itemCount }}</td>
+              <td>
+                  <button class="btn btn-primary btn-xs" ng-click="editCategory(category)" ng-show="isCategoryEditable(category)">
+                      <i class="fa fa-pencil"></i>
+                  </button>
+                  <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, category)" ng-hide="isCategoryReadOnly(category)">
+                      <i class="fa fa-trash"></i>
+                  </button>
+              </td>
+          </tr>
+          <tr ng-if="category.children">
+            <td colspan="6" style="padding: 0px;">
+              <ng-include src="'category_item_tree'" ng-init="categoryList = category.children"/>
+            </td>
+          </tr>
+          </tbody>
+      </table>
+    </script>
+
+    <table class="table table-responsive table-bordered table-hover" >
+      <thead>
+      <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Path</th>
+          <th>Item Count</th>
+          <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody id="category-{{$index}}" ng-repeat="category in categoryList | toArray:false |  filter:{categoryTypeId: search.categoryTypeId, name: search.name} | orderBy: 'startDate' track by $index">
+      <tr >
+        <td>
+          <span class="fa fa-plus-square-o"
+                ng-click="toggleAccordionView(category)"
+                ng-show="category.children && !category.expanded"></span>
+          <span class="fa fa-minus-square" ng-show="category.children && category.expanded"
+                ng-click="toggleAccordionView(category)"></span>
+        </td>
+
+          <td>{{ category.name }}</td>
+          <td>{{ category.description }}</td>
+          <td>{{ category.salesCategoryPath }}</td>
+          <td>{{ category.itemCount }}</td>
+          <td>
+              <button class="btn btn-primary btn-xs" ng-click="editCategory(category)" ng-show="isCategoryEditable(category)">
+                  <i class="fa fa-pencil"></i>
+              </button>
+              <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, category)" ng-hide="isCategoryReadOnly(category)">
+                  <i class="fa fa-trash"></i>
+              </button>
+          </td>
+      </tr>
+      <tr ng-if="category.children">
+        <td colspan="6" style="padding: 0px;">
+          <ng-include src="'category_item_tree'" ng-init="categoryList = category.children"/>
+        </td>
+      </tr>
+      </tbody>
     </table>
+
 </div>
 <div class="modal fade delete-warning-modal">
     <div class="modal-dialog">
