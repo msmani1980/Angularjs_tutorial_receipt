@@ -188,6 +188,12 @@ angular.module('ts5App')
       });
     }
 
+    function initSuccess() {
+      hideLoadingModal();
+      initDone = true;
+      $scope.searchCommissionData();
+    }
+
     function init() {
       showLoadingModal('initializing data dependencies');
       var initPromises = [
@@ -197,9 +203,7 @@ angular.module('ts5App')
         getCompanyData()
       ];
       $q.all(initPromises).then(function () {
-        hideLoadingModal();
-        initDone = true;
-        $scope.searchCommissionData();
+        initSuccess();
       });
     }
 

@@ -223,7 +223,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           departureStationCode: ['ORD', 'MDW'],
           arrivalStationCode: ['LON3', 'MDW'],
           storeInstanceId: '4',
-          statusId: [10, 11, 12]
+          statusId: [10, 11, 12],
+          limit: 100, offset: 0
         });
       });
     });
