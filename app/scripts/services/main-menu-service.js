@@ -36,39 +36,32 @@ angular.module('ts5App')
             }]
           }, {
             name: 'Manage Categories',
-            route: emberURL + 'retail-items/categories',
+            route: '/#/category-list',
             icon: 'icon-manage-retail-category',
             className: 'dashboard-manageItemCategories',
             package: 'RETAIL',
             role: 'RETAILITEMCATEGORY'
           }]
-        }, {
-          name: 'Manage Categories',
-          route: '/#/category-list',
-          icon: 'icon-manage-retail-category',
-          className: 'dashboard-manageItemCategories',
-          package: 'RETAIL',
-          role: 'RETAILITEMCATEGORY'
-        }]
       }, {
         'title': 'Company Management',
         'menuItems': [{
-          name: 'Manage Companies',
-          route: '/#/company-list',
-          icon: 'icon-manage-company',
-          className: 'dashboard-manageCompanies',
-          package: 'COMPANY',
-          role: 'ORGANIZATION'
-        }, {
-          name: 'Create Company',
-          route: emberURL + 'companies/create',
-          icon: 'icon-create-company',
-          className: 'dashboard-createCompany',
-          package: 'COMPANY',
-          role: 'ORGANIZATION',
-          permissions: [{
-            apiName: '/api/companies',
-            permissionCodes: ['C']
+            name: 'Manage Companies',
+            route: '/#/company-list',
+            icon: 'icon-manage-company',
+            className: 'dashboard-manageCompanies',
+            package: 'COMPANY',
+            role: 'ORGANIZATION'
+          }, {
+            name: 'Create Company',
+            route: emberURL + 'companies/create',
+            icon: 'icon-create-company',
+            className: 'dashboard-createCompany',
+            package: 'COMPANY',
+            role: 'ORGANIZATION',
+            permissions: [{
+              apiName: '/api/companies',
+              permissionCodes: ['C']
+            }]
           }]
         }, {
           title: 'Schedule Management',

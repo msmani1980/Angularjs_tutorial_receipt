@@ -15,7 +15,7 @@ angular.module('ts5App')
     };
 
     var getCategoryList = function (payload) {
-      payload = lodash.defaults({}, payload, {companyId: getCompanyId()})
+      payload = lodash.defaults({}, payload, {companyId: getCompanyId()});
       return categoryService.getCategoryList(payload);
     };
 

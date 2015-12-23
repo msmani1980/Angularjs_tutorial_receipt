@@ -11,9 +11,6 @@ angular.module('ts5App').controller('CategoryCreateCtrl',
   function($scope, $compile, ENV, $resource, $anchorScroll, categoryFactory,
     $routeParams, GlobalMenuService, $q, dateUtility, $filter, lodash) {
 
-    // TODO: Refactor so the company object is returned, right now it's returning a number so that ember will play nice
-    var companyId = GlobalMenuService.company.get();
-
     // object resolution in for sub scopes
     var $this = this;
 
@@ -60,7 +57,7 @@ angular.module('ts5App').controller('CategoryCreateCtrl',
         categoryFactory.getCategoryList()
       ];
       if ($scope.editingCategory) {
-        promises.push(categoryFactory.getCategory($routeParams.id))
+        promises.push(categoryFactory.getCategory($routeParams.id));
       }
       $q.all(promises).then(function(response) {
         $scope.categoryList = response[0].salesCategories;
@@ -86,7 +83,7 @@ angular.module('ts5App').controller('CategoryCreateCtrl',
     this.updateCategory = function(payload) {
       var $this = this;
       angular.element('#loading').modal('show').find('p').text('We are updating your category');
-      categoryFactory.updateCategory($routeParams.id, payload).then(function(response) {
+      categoryFactory.updateCategory($routeParams.id, payload).then(function() {
         angular.element('#loading').modal('hide');
         angular.element('#update-success').modal('show');
       }, $this.errorHandler);
