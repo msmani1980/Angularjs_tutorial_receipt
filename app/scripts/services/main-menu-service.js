@@ -220,7 +220,7 @@ angular.module('ts5App')
           title: 'Employee Messages',
           menuItems: [{
             name: 'Manage Messages',
-            route: emberURL + 'employee-messages',
+            route: '/#/employee-messages',
             icon: 'icon-employee-messages',
             className: 'dashboard-manageEmployeeMessages',
             package: 'EMPLOYEEMSG',
