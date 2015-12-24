@@ -19,23 +19,39 @@ angular.module('ts5App')
       category.expanded = !category.expanded;
     };
 
-    this.attachCategoryListToScope = function (categoryListFromAPI) {
-      var categoryMap = lodash.reduce(categoryListFromAPI.salesCategories, function(result, category) {
+    function createCategoryIdMapFromCategoryList(categoryList) {
+      return lodash.reduce(categoryList, function(result, category) {
         result[category.id] = category;
         return result;
       }, {});
-      lodash.forEach(categoryListFromAPI.salesCategories, function(category) {
+    }
+
+    function categoryIsChildAndHasParentInMap(category, categoryMap) {
+      return !lodash.isNull(category.parentId) && categoryMap[category.parentId];
+    }
+
+    function addChildrenFromListToTheirRespectiveParentInMap(categoryList, categoryMap) {
+      lodash.forEach(categoryList, function(category) {
         category.expanded = false;
-        if (!lodash.isNull(category.parentId) && categoryMap[category.parentId]) {
+        if (categoryIsChildAndHasParentInMap(category, categoryMap)) {
           if (lodash.isNull(categoryMap[category.parentId].children)) {
             categoryMap[category.parentId].children = [];
           }
           categoryMap[category.parentId].children.push(category);
         }
       });
-      $scope.categoryList = lodash.filter(categoryListFromAPI.salesCategories, function(category) {
+    }
+
+    function filterParents(categoryList) {
+      return lodash.filter(categoryList, function(category) {
           return category.parentId === null;
       });
+    }
+
+    this.attachCategoryListToScope = function (categoryListFromAPI) {
+      var categoryMap = createCategoryIdMapFromCategoryList(categoryListFromAPI.salesCategories);
+      addChildrenFromListToTheirRespectiveParentInMap(categoryListFromAPI.salesCategories, categoryMap);
+      $scope.categoryList = filterParents(categoryListFromAPI.salesCategories);
     };
 
     this.getCategoryList = function () {

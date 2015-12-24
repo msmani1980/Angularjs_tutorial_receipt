@@ -51,6 +51,24 @@ angular.module('ts5App').controller('CategoryCreateCtrl',
       this.hideLoadingModal();
     };
 
+    this.errorHandler = function(dataFromAPI) {
+      angular.element('#loading').modal('hide');
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
+    this.getDependenciesSuccesHandler = function(response) {
+      $scope.categoryList = response[0].salesCategories;
+      if ($scope.editingCategory) {
+        $scope.category = response[1];
+        $scope.formData.name = $scope.category.name;
+        $scope.formData.description = $scope.category.description;
+        $scope.formData.parentCategoryId = lodash.isNull($scope.category.parentId) ? null : lodash($scope.category.parentId).toString();
+        $scope.formData.nextCategoryId = lodash.isNull($scope.category.nextCategoryId) ? null : lodash($scope.category.nextCategoryId).toString();
+      }
+      $this.setUIReady();
+    };
+
     this.getDependencies = function() {
       $this.showLoadingModal('We are loading Category data!');
       var promises = [
@@ -59,26 +77,10 @@ angular.module('ts5App').controller('CategoryCreateCtrl',
       if ($scope.editingCategory) {
         promises.push(categoryFactory.getCategory($routeParams.id));
       }
-      $q.all(promises).then(function(response) {
-        $scope.categoryList = response[0].salesCategories;
-        if ($scope.editingCategory) {
-          $scope.category = response[1];
-          $scope.formData.name = $scope.category.name;
-          $scope.formData.description = $scope.category.description;
-          $scope.formData.parentCategoryId = lodash.isNull($scope.category.parentId) ? null : lodash($scope.category.parentId).toString();
-          $scope.formData.nextCategoryId = lodash.isNull($scope.category.nextCategoryId) ? null : lodash($scope.category.nextCategoryId).toString();
-        }
-        $this.setUIReady();
-      });
+      $q.all(promises).then($this.getDependenciesSuccesHandler, $this.errorHandler);
     };
 
     this.init();
-
-    this.errorHandler = function(dataFromAPI) {
-      angular.element('#loading').modal('hide');
-      $scope.displayError = true;
-      $scope.errorResponse = angular.copy(dataFromAPI);
-    };
 
     this.updateCategory = function(payload) {
       var $this = this;
@@ -89,13 +91,15 @@ angular.module('ts5App').controller('CategoryCreateCtrl',
       }, $this.errorHandler);
     };
 
+    this.createCategorySuccessHandler = function() {
+      angular.element('#loading').modal('hide');
+      angular.element('#create-success').modal('show');
+      return true;
+    };
+
     this.createCategory = function(payload) {
       angular.element('#loading').modal('show').find('p').text('We are creating your category');
-      categoryFactory.createCategory(payload).then(function() {
-        angular.element('#loading').modal('hide');
-        angular.element('#create-success').modal('show');
-        return true;
-      }, $this.errorHandler);
+      categoryFactory.createCategory(payload).then($this.createCategorySuccessHandler, $this.errorHandler);
     };
 
     $scope.submitForm = function(formData) {
