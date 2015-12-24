@@ -202,9 +202,7 @@ angular.module('ts5App')
         getDiscountTypes(),
         getCompanyData()
       ];
-      $q.all(initPromises).then(function () {
-        initSuccess();
-      });
+      $q.all(initPromises).then(initSuccess);
     }
 
     init();
