@@ -11,6 +11,43 @@
       </div>
     </div>
   </div>
+  <div class="bg-gray panel-body" ng-show="prevStoreDetails && storeDetails.currentStatus.statusName === 'Ready for Packing'">
+    <table class="table">
+
+      <thead>
+      <tr>
+        <th>LMP Station</th>
+        <th>Store Number</th>
+        <th>Schedule Date</th>
+        <th>Schedule Number</th>
+        <th>Aircraft Tail Number</th>
+        <th>Store Instance Number</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <input type="text" class="form-control" ng-model="prevStoreDetails.displayLMPStation" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="prevStoreDetails.storeNumber" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="prevStoreDetails.scheduleDate" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="prevStoreDetails.scheduleNumber" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="prevStoreDetails.carrierNumber" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="prevStoreDetails.storeInstanceNumber" disabled/>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
   <div class="bg-gray panel-body">
     <table class="table">
 
