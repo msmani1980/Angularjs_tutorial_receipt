@@ -82,13 +82,16 @@ angular.module('ts5App').controller('CategoryCreateCtrl',
 
     this.init();
 
+    this.updateCategorySuccessHandler = function() {
+      angular.element('#loading').modal('hide');
+      angular.element('#create-success').modal('show');
+      return true;
+    };
+
     this.updateCategory = function(payload) {
       var $this = this;
       angular.element('#loading').modal('show').find('p').text('We are updating your category');
-      categoryFactory.updateCategory($routeParams.id, payload).then(function() {
-        angular.element('#loading').modal('hide');
-        angular.element('#update-success').modal('show');
-      }, $this.errorHandler);
+      categoryFactory.updateCategory($routeParams.id, payload).then($this.updateCategorySuccessHandler, $this.errorHandler);
     };
 
     this.createCategorySuccessHandler = function() {
