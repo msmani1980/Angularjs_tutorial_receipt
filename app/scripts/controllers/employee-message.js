@@ -145,8 +145,8 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       var listNameToFilteredListMap = {
         schedules: $scope.filteredSchedules,
         employees: $scope.filteredEmployees,
-        arrivalStations: $scope.filteredArrStations,
-        departureStations: $scope.filteredDepStations
+        arrivalStations: $scope.filteredArrivalStations,
+        departureStations: $scope.filteredDepartureStations
       };
 
       $scope.newRecords[listName] = [];
