@@ -116,7 +116,7 @@ angular.module('ts5App')
 
 
     this.addSearchValuesFromMultiSelectArray = function (searchKeyName, multiSelectArray, multiSelectElementKey) {
-      if(!multiSelectArray || !multiSelectArray.length > 0) {
+      if(!multiSelectArray || multiSelectArray.length <= 0) {
         return;
       }
       var searchArray = [];
