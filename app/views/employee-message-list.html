@@ -123,6 +123,8 @@
           </button>
           <button class="btn btn-primary btn-xs" ng-show="isActiveOrFutureRecord(message)"
                   ng-click="goToDetailPage('edit', message.id)"><i class="fa fa-pencil"></i></button>
+          <button class="btn btn-danger btn-xs" ng-show="isFutureRecord(message)"
+                  ng-click="deleteRecordDialog(message, ['employeeMessageText', 'startDate', 'endDate'])"><i class="fa fa-trash"></i></button>
         </td>
       </tr>
       <tr>
@@ -133,3 +135,6 @@
 </div>
 
 <dynamic-left-nav></dynamic-left-nav>
+
+<delete-record-dialog></delete-record-dialog>
+

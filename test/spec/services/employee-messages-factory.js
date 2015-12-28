@@ -23,6 +23,7 @@ describe('Factory: employeeMessagesFactory', function () {
     spyOn(employeeMessagesService, 'getEmployeeMessage');
     spyOn(employeeMessagesService, 'createEmployeeMessage');
     spyOn(employeeMessagesService, 'editEmployeeMessage');
+    spyOn(employeeMessagesService, 'deleteEmployeeMessage');
     spyOn(schedulesService, 'getSchedules');
     spyOn(employeesService, 'getEmployees');
     spyOn(stationsService, 'getGlobalStationList');
@@ -37,21 +38,26 @@ describe('Factory: employeeMessagesFactory', function () {
   });
 
   describe('employeeMessagesService API', function () {
-    it('should call employeeMessagesService on getCommissionPayableList', function () {
+    it('should call employeeMessagesService on getEmployeeMessages', function () {
       employeeMessagesFactory.getEmployeeMessages();
       expect(employeeMessagesService.getEmployeeMessages).toHaveBeenCalled();
     });
-    it('should call employeeMessagesService on getCommissionPayableData', function () {
+    it('should call employeeMessagesService on getEmployeeMessage', function () {
       employeeMessagesFactory.getEmployeeMessage(123);
       expect(employeeMessagesService.getEmployeeMessage).toHaveBeenCalledWith(123);
     });
-    it('should call employeeMessagesService on createCommissionData', function () {
+    it('should call employeeMessagesService on createEmployeeMessage', function () {
       employeeMessagesFactory.createEmployeeMessage({});
       expect(employeeMessagesService.createEmployeeMessage).toHaveBeenCalled();
     });
-    it('should call employeeMessagesService on updateCommissionData', function () {
+    it('should call employeeMessagesService on editEmployeeMessage', function () {
       employeeMessagesFactory.editEmployeeMessage(123, {});
       expect(employeeMessagesService.editEmployeeMessage).toHaveBeenCalled();
+    });
+
+    it('should call employeeMessagesService on deleteEmployeeMessage', function () {
+      employeeMessagesFactory.deleteEmployeeMessage(123);
+      expect(employeeMessagesService.deleteEmployeeMessage).toHaveBeenCalledWith(123);
     });
   });
 
