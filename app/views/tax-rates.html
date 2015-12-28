@@ -287,12 +287,6 @@
           <a class="btn btn-danger btn-xs" ng-show="showDeleteButton(taxRate)" ng-click="displayConfirmDialog(taxRate)">
             <span class="fa fa-remove"></span>
           </a>
-          <a class="btn btn-success btn-xs" ng-show="taxRate.edited" ng-click="saveTaxRateEdits(taxRate)">
-            <span class="fa fa-save"></span>
-          </a>
-          <a class="btn btn-default btn-xs"ng-show="taxRate.edited" ng-click="resetTaxRateEdit(taxRate)">
-            <span class="fa fa-remove"></span>
-          </a>
         </td>
         <!-- Buttons for Edit -->
         <td class="animate-switch tax-rates-action" ng-switch-when="edit">

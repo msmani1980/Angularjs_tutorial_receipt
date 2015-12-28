@@ -454,6 +454,7 @@ angular.module('ts5App')
       if (angular.isDefined(taxRate)) {
         taxRate.action = 'read';
         delete taxRate.readOnly;
+        $this.resetTaxRateEdit(taxRate);
       }
     };
 
