@@ -247,7 +247,6 @@ angular.module('ts5App')
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
-      //$this.getCompanyTaxRatesList();
     };
 
     this.hideSearchPanel = function() {
