@@ -351,7 +351,7 @@ angular.module('ts5App')
 
         if (inboundItem) {
           uniqueItem.quantity = inboundItem.quantity;
-          inboundItemList.splice(inboundItemList.indexOf(uniqueItem), 1);
+          inboundItemList.splice(lodash.findIndex(inboundItemList, inboundItem), 1);
         }
 
         var ullageItem = lodash.findWhere(ullageItemList, {
@@ -361,7 +361,7 @@ angular.module('ts5App')
         if (ullageItem) {
           uniqueItem.ullageQuantity = ullageItem.ullageQuantity;
           uniqueItem.ullageReasonCode = ullageItem.ullageReasonCode;
-          ullageItemList.splice(ullageItemList.indexOf(ullageItem), 1);
+          ullageItemList.splice(lodash.findIndex(ullageItemList, ullageItem), 1);
         }
 
         var pickedItem = lodash.findWhere(pickedInboundItemList, {
@@ -370,7 +370,7 @@ angular.module('ts5App')
 
         if (pickedItem) {
           uniqueItem.inboundQuantity = pickedItem.inboundQuantity;
-          pickedInboundItemList.splice(pickedInboundItemList.indexOf(pickedItem), 1);
+          pickedInboundItemList.splice(lodash.findIndex(pickedInboundItemList, pickedItem), 1);
         }
         mergedItemList.push(uniqueItem);
       });

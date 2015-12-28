@@ -12,14 +12,16 @@
 
           <div class="col-xs-6 text-right">
 
-            <a ng-href="{{exportBulkURL}}" class="btn btn-info" ng-disabled="!hasSelectedStore" >
+            <a ng-href="{{exportBulkURL}}" class="btn btn-info" ng-disabled="!hasSelectedStore">
               <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
               <span class="hidden-xs">Generate Docs</span>
             </a>
+            <!--
             <button class="btn btn-success" ng-click="bulkDispatch()">
               <span class="fa fa-files-o" aria-hidden="true"></span>
               <span class="hidden-sm hidden-xs">Bulk Dispatch</span>
             </button>
+            -->
             <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
               <span class="fa fa-filter" aria-hidden="true"></span>
     					<span class="hidden-sm hidden-xs">Filter</span>
@@ -115,7 +117,7 @@
                 <label>Status</label>
                 <select class="form-control" ng-model="search.storeStatusId" name="status">
                   <option selected="selected" value>Select Status</option>
-                  <option ng-repeat="status in storeStatusList | orderBy:'name'" value="{{ status.id }}">{{
+                  <option ng-repeat="status in filteredStoreStatusList | orderBy:'name'" value="{{ status.id }}">{{
                     status.statusName }}
                   </option>
                 </select>
@@ -195,11 +197,11 @@
           </div>
         </td>
         <td>
-          <span ng-show="store.tampered" class="label label-success">Yes</span>
-          <span ng-hide="store.tampered" class="label label-default">No</span>
+          <span ng-show="store.tampered">Yes</span>
+          <span ng-hide="store.tampered">No</span>
         </td>
         <td>{{ store.storeNumber }}</td>
-        <td><span class="label label-default">{{ store.statusName }}</span></td>
+        <td>{{ store.statusName }}</td>
         <td>{{ store.updatedOnDisplay }}</td>
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
@@ -225,7 +227,7 @@
           </a>
           <a class="btn btn-warning btn-xs btn-block" tabindex="0"
              ng-show="isUndispatchPossible(store) && doesStoreInstanceContainAction(store, 'Un-dispatch')"
-             ng-click="undispatch(store.id)">
+             ng-click="displayUndispatchConfirmation(store)">
             Undispatch
           </a>
           <a class="btn btn-success btn-xs btn-block" tabindex="0"
@@ -286,11 +288,11 @@
           </div>
         </td>
         <td>
-          <span ng-show="replenishment.tampered" class="label label-success">Yes</span>
-          <span ng-hide="replenishment.tampered" class="label label-default">No</span>
+          <span ng-show="replenishment.tampered">Yes</span>
+          <span ng-hide="replenishment.tampered">No</span>
         </td>
         <td>{{ replenishment.storeNumber }}</td>
-        <td><span class="label label-default">{{ replenishment.statusName }}</span></td>
+        <td>{{ replenishment.statusName }}</td>
         <td>{{ replenishment.updatedOnDisplay }}</td>
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
@@ -343,3 +345,11 @@
 	</div>
 
 </div>
+
+<confirmation-modal
+ title="{{ undispatchStoreDialog.title }}"
+ body="You cannot revert back if you confirm this action. Press Yes to confirm or No to return to the dashboard."
+ confirmation-callback="undispatchStoreDialog.confirmationCallback()"
+ confirmation-label="Yes"
+ cancel-label="No">
+</confirmation-modal>

@@ -37,8 +37,8 @@ angular.module('ts5App')
         menuItem.itemName = getMasterItemUsingId(menuItem.itemId).itemName;
       });
 
-      angular.forEach($scope.filteredItemsCollection, function(itemArray, index) {
-        if(angular.equals({}, $scope.selectedCategories[index])) {
+      angular.forEach($scope.filteredItemsCollection, function (itemArray, index) {
+        if (angular.equals({}, $scope.selectedCategories[index])) {
           $scope.filteredItemsCollection[index] = angular.copy($scope.masterItemsList);
         } else {
           $this.filterItems(index);
@@ -51,7 +51,7 @@ angular.module('ts5App')
         startDate: startDate,
         endDate: endDate
       };
-      if(category) {
+      if (category) {
         searchQuery.categoryId = category;
       }
       menuFactory.getItemsList(searchQuery, true).then(successHandler);
@@ -62,7 +62,7 @@ angular.module('ts5App')
     }
 
     function deserializeMenuItems(menuItems) {
-      angular.forEach(menuItems, function(item) {
+      angular.forEach(menuItems, function (item) {
         item.itemQty = item.itemQty.toString();
         $scope.menuItemList.push(item);
         $scope.filteredItemsCollection.push(angular.copy($scope.masterItemsList));
@@ -71,7 +71,7 @@ angular.module('ts5App')
 
     function setupMenuModelAndFetchItems(menuFromAPI) {
       $scope.menuFromAPI = angular.copy(menuFromAPI);
-      if( angular.isDefined($scope.menuFromAPI) ) {
+      if (angular.isDefined($scope.menuFromAPI)) {
         fetchMasterItemsList($scope.menuFromAPI.startDate, $scope.menuFromAPI.endDate);
         $scope.menu = angular.copy(menuFromAPI);
         deserializeMenuItems($scope.menu.menuItems);
@@ -89,15 +89,16 @@ angular.module('ts5App')
       });
     }
 
-    function redirectToListPageAfterSuccess(dataFromAPI) {
+    function redirectToListPageAfterSuccess() {
       hideLoadingModal();
-      $location.path('menu-list').search({newMenuName: dataFromAPI.id});
+      $location.path('menu-list');
     }
 
     function resetModelAndShowNotification(dataFromAPI) {
       $scope.menuItemList = [];
       setupMenuModelAndFetchItems(dataFromAPI);
       showToast('success', 'Menu', 'successfully updated!');
+      redirectToListPageAfterSuccess();
     }
 
     function showErrors(dataFromAPI) {
@@ -113,15 +114,15 @@ angular.module('ts5App')
 
       angular.forEach($scope.menuItemList, function (item) {
         var itemObject = {};
-        if(menuId && item.itemQty) {
-            itemObject.menuId = menuId;
+        if (menuId && item.itemQty) {
+          itemObject.menuId = menuId;
         }
         if (item.itemId && item.itemQty) {
           itemObject.id = item.id;
           itemObject.itemId = item.itemId;
           itemObject.itemQty = parseInt(item.itemQty);
           ItemsArray.push(itemObject);
-        } else if(item.id && item.itemQty) {
+        } else if (item.id && item.itemQty) {
           itemObject.itemId = item.id;
           itemObject.itemQty = parseInt(item.itemQty);
           ItemsArray.push(itemObject);
@@ -154,12 +155,13 @@ angular.module('ts5App')
       showLoadingModal('Saving Menu');
 
       var submitFunctionName = $routeParams.state + 'Menu';
-      if($this[submitFunctionName]) {
+      if ($this[submitFunctionName]) {
         $this[submitFunctionName]();
       }
     };
 
     $this.editMenu = function () {
+      showLoadingModal('Saving Menu');
       var payload = $this.createPayload();
       menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
     };
@@ -246,14 +248,14 @@ angular.module('ts5App')
       }
     };
 
-    $scope.updateItemsList = function(index) {
+    $scope.updateItemsList = function (index) {
       $scope.menuItemList[index] = null;
       $this.filterItems(index);
     };
 
-    this.filterItems = function(index) {
-      if($scope.selectedCategories[index]) {
-        fetchFilteredItemsList($scope.menu.startDate, $scope.menu.endDate, $scope.selectedCategories[index].id, function(response) {
+    this.filterItems = function (index) {
+      if ($scope.selectedCategories[index]) {
+        fetchFilteredItemsList($scope.menu.startDate, $scope.menu.endDate, $scope.selectedCategories[index].id, function (response) {
           $scope.filteredItemsCollection[index] = response.masterItems;
         });
       } else {
@@ -261,8 +263,8 @@ angular.module('ts5App')
       }
     };
 
-    $scope.shouldDisableItem = function(index) {
-      if(!$scope.isMenuEditable()) {
+    $scope.shouldDisableItem = function (index) {
+      if (!$scope.isMenuEditable()) {
         return true;
       }
       return $scope.filteredItemsCollection[index] === null;

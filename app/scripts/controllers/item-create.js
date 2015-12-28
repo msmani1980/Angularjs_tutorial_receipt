@@ -1,5 +1,4 @@
 'use strict';
-// jshint maxcomplexity:6
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
@@ -918,10 +917,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return false;
     };
 
+    this.stationsAreEmpty = function(newStationException, oldStationException) {
+      return (!oldStationException || !newStationException.startDate || !newStationException.endDate);
+    };
+
     this.stationExceptionDatesAreValid = function(newPrice, oldPrice, stationExceptionIndex) {
       var newStationException = newPrice.stationExceptions[stationExceptionIndex];
       var oldStationException = oldPrice.stationExceptions[stationExceptionIndex];
-      if (!oldStationException || !newStationException.startDate || !newStationException.endDate) {
+      if ($this.stationsAreEmpty(newStationException, oldStationException)) {
         return false;
       }
       if (newStationException.startDate !== oldStationException.startDate || newStationException.endDate !==
@@ -952,17 +955,30 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
+    this.updateSuccessHandler = function(response) {
+      $this.updateFormData(response.retailItem);
+      angular.element('#loading').modal('hide');
+      angular.element('#update-success').modal('show');
+    };
+
+    this.makeUpdatePromises = function(payload) {
+      return [
+        itemsFactory.updateItem($routeParams.id, payload)
+      ];
+    };
+
     this.updateItem = function(itemData) {
       var $this = this;
       angular.element('#loading').modal('show').find('p').text('We are updating your item');
-      var updateItemPayload = {
+      var payload = {
         retailItem: itemData
       };
-      itemsFactory.updateItem($routeParams.id, updateItemPayload).then(function(response) {
-        $this.updateFormData(response.retailItem);
-        angular.element('#loading').modal('hide');
-        angular.element('#update-success').modal('show');
-      }, $this.errorHandler);
+      var promises = $this.makeUpdatePromises(payload);
+      $q.all(promises).then(function(response) {
+        $this.updateSuccessHandler(response);
+      }, function(error) {
+        $this.errorHandler(error);
+      });
     };
 
     this.createItem = function(itemData) {
