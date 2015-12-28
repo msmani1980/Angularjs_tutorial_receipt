@@ -80,7 +80,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       angular.forEach(arrayToFormat, function (record) {
         newArray.push(record[attributeToSave]);
       });
-      return newArray;
+      return newArray.toString();
     };
 
     this.formatSearchPayload = function (searchData) {
