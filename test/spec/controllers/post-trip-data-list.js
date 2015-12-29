@@ -152,9 +152,9 @@ describe('Controller: PostFlightDataListCtrl', function () {
         arrStations: [{stationId: 1}, {stationId: 2}],
         employeeIds: [{id: 3}, {id: 4}]
       };
-      var expectedTailNumbersArray = ['ABC', 'DEF'];
-      var expectedStationsArray = [1, 2];
-      var expectedEmployeeArray = [3, 4];
+      var expectedTailNumbersArray = 'ABC,DEF';
+      var expectedStationsArray = '1,2';
+      var expectedEmployeeArray = '3,4';
       scope.searchPostTripData();
       expect(scope.search.tailNumber).toEqual(expectedTailNumbersArray);
       expect(scope.search.depStationId).toEqual(expectedStationsArray);
