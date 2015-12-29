@@ -16,7 +16,7 @@
 
   			<div class="col-xs-12 col-sm-6">
 
-  				<div class="form-group" ng-class="{ 'has-error' : !itemTax.companyTaxId , 'has-success' : itemTax.companyTaxId }">
+  				<div class="form-group" ng-class="{ 'has-error' : !itemTax.companyTaxId && displayError, 'has-success' : itemTax.companyTaxId }">
 
   					<label>Tax Type *</label>
 
@@ -30,7 +30,7 @@
 
   			<div class="col-xs-12 col-sm-6">
 
-  				<div class="form-group" ng-class="{ 'has-error' : !itemTax.itemTaxType , 'has-success' : itemTax.itemTaxType }">
+  				<div class="form-group" ng-class="{ 'has-error' : !itemTax.itemTaxType && displayError, 'has-success' : itemTax.itemTaxType }">
 
   					<label>Applied Tax Type *</label>
 

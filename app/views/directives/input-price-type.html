@@ -41,7 +41,7 @@
 
 					<div class="col-xs-12 col-sm-6">
 
-						<div class="form-group" ng-class="{ 'has-error' : !itemPrice.typeId , 'has-success' : itemPrice.typeId }">
+						<div class="form-group" ng-class="{ 'has-error' : !itemPrice.typeId && displayError , 'has-success' : itemPrice.typeId }">
 
 							<label>Price Type *</label>
 
@@ -55,7 +55,7 @@
 
 					<div class="col-xs-12 col-sm-6">
 
-						<div class="form-group"  ng-class="{ 'has-error' : !itemPrice.taxIs , 'has-success' : itemPrice.taxIs }">
+						<div class="form-group"  ng-class="{ 'has-error' : !itemPrice.taxIs && displayError , 'has-success' : itemPrice.taxIs }">
 
 							<label>Tax Is *</label>
 
