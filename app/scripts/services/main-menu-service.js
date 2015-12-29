@@ -36,15 +36,15 @@ angular.module('ts5App')
             }]
           }, {
             name: 'Manage Categories',
-            route: emberURL + 'retail-items/categories',
+            route: '/#/category-list',
             icon: 'icon-manage-retail-category',
             className: 'dashboard-manageItemCategories',
             package: 'RETAIL',
             role: 'RETAILITEMCATEGORY'
           }]
-        }, {
-          'title': 'Company Management',
-          'menuItems': [{
+      }, {
+        'title': 'Company Management',
+        'menuItems': [{
             name: 'Manage Companies',
             route: '/#/company-list',
             icon: 'icon-manage-company',
