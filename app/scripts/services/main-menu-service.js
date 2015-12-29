@@ -225,6 +225,13 @@ angular.module('ts5App')
             className: 'dashboard-manageEmployeeMessages',
             package: 'EMPLOYEEMSG',
             role: 'EMPLOYEEMESSAGE'
+          }, {
+            name: 'Create Message',
+            route: '/#/employee-message/create',
+            icon: 'icon-employee-messages',
+            className: 'dashboard-manageEmployeeMessages',
+            package: 'EMPLOYEEMSG',
+            role: 'EMPLOYEEMESSAGE'
           }]
         }, {
           title: 'Receipt Rule',

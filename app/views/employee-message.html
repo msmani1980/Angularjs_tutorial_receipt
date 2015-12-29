@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid module-container">
 
   <error-dialog form-object="employeeMessageForm" error-response="errorResponse" display="displayError">
   </error-dialog>
@@ -69,7 +69,7 @@
         <br>
 
         <div class="row">
-          <div class="col-xs-3" ng-hide="shouldDisable(true) && !employeeMessage.employees.length">
+          <div class="col-md-3 col-sm-6" ng-hide="shouldDisable(true) && !employeeMessage.employees.length">
             <div class="row">
               <div class="col-xs-8">
                 <label>Employees</label>
@@ -127,7 +127,7 @@
             </div>
           </div>
 
-          <div class="col-xs-3" ng-hide="shouldDisable(true) && !employeeMessage.schedules.length">
+          <div class="col-md-3 col-sm-6" ng-hide="shouldDisable(true) && !employeeMessage.schedules.length">
             <div class="row">
               <div class="col-xs-8">
                 <label>Schedules</label>
@@ -150,7 +150,7 @@
                            ng-model="schedulesDeleteAll"
                            ng-click="toggleSelectAll(schedulesDeleteAll, 'schedules')">
                 </td>
-                <th>Schedule Number</th>
+                <th>Schedule #</th>
               </tr>
               <tr ng-repeat="schedule in employeeMessage.schedules">
                 <td ng-hide="shouldDisable(true)"><input type="checkbox" ng-model="schedule.selectedToDelete"></td>
@@ -181,7 +181,7 @@
             </div>
           </div>
 
-          <div class="col-xs-3" ng-hide="shouldDisable(true) && !employeeMessage.departureStations.length">
+          <div class="col-md-3 col-sm-6" ng-hide="shouldDisable(true) && !employeeMessage.departureStations.length">
             <div class="row">
               <div class="col-xs-8">
                 <label>Departure Station</label>
@@ -235,7 +235,7 @@
             </div>
           </div>
 
-          <div class="col-xs-3" ng-hide="shouldDisable(true) && !employeeMessage.arrivalStations.length">
+          <div class="col-md-3 col-sm-6" ng-hide="shouldDisable(true) && !employeeMessage.arrivalStations.length">
             <div class="row">
               <div class="col-xs-8">
                 <label>Arrival Station</label>
@@ -299,6 +299,8 @@
   </form>
 
 </div>
+
+<dynamic-left-nav></dynamic-left-nav>
 
 <form-success-modal></form-success-modal>
 
