@@ -1,4 +1,4 @@
-<div class="fluid-container">
+<div class="fluid-container module-container">
 
   <div class="employee-message-list">
 
@@ -40,7 +40,7 @@
                 name="endDate"
                 class="form-group"
                 ng-model="search.endDate"
-                label="Effective From">
+                label="Effective To">
               </date-picker-field>
             </div>
             <div class="col-xs-12 col-sm-4">
@@ -68,7 +68,7 @@
               </ui-select>
             </div>
             <div class="col-xs-6 col-sm-4">
-              <label>Arrival Station Station</label>
+              <label>Arrival Station</label>
               <ui-select multiple ng-model="search.arrStations" theme="bootstrap">
                 <ui-select-match placeholder="Select a Station...">{{ $item.code }}
                 </ui-select-match>
@@ -78,7 +78,7 @@
               </ui-select>
             </div>
             <div class="col-xs-12 col-sm-4">
-              <label>ScheduleNumber</label>
+              <label>Schedule Number</label>
               <ui-select multiple ng-model="search.schedules" theme="bootstrap">
                 <ui-select-match placeholder="Select a Schedule...">{{ $item.scheduleNumber }}
                 </ui-select-match>
@@ -123,6 +123,8 @@
           </button>
           <button class="btn btn-primary btn-xs" ng-show="isActiveOrFutureRecord(message)"
                   ng-click="goToDetailPage('edit', message.id)"><i class="fa fa-pencil"></i></button>
+          <button class="btn btn-danger btn-xs" ng-show="isFutureRecord(message)"
+                  ng-click="deleteRecordDialog(message, ['employeeMessageText', 'startDate', 'endDate'])"><i class="fa fa-trash"></i></button>
         </td>
       </tr>
       <tr>
@@ -131,3 +133,8 @@
     </table>
   </div>
 </div>
+
+<dynamic-left-nav></dynamic-left-nav>
+
+<delete-record-dialog></delete-record-dialog>
+

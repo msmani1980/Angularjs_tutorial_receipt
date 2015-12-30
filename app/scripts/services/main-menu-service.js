@@ -36,15 +36,15 @@ angular.module('ts5App')
             }]
           }, {
             name: 'Manage Categories',
-            route: emberURL + 'retail-items/categories',
+            route: '/#/category-list',
             icon: 'icon-manage-retail-category',
             className: 'dashboard-manageItemCategories',
             package: 'RETAIL',
             role: 'RETAILITEMCATEGORY'
           }]
-        }, {
-          'title': 'Company Management',
-          'menuItems': [{
+      }, {
+        'title': 'Company Management',
+        'menuItems': [{
             name: 'Manage Companies',
             route: '/#/company-list',
             icon: 'icon-manage-company',
@@ -221,6 +221,13 @@ angular.module('ts5App')
           menuItems: [{
             name: 'Manage Messages',
             route: '/#/employee-messages',
+            icon: 'icon-employee-messages',
+            className: 'dashboard-manageEmployeeMessages',
+            package: 'EMPLOYEEMSG',
+            role: 'EMPLOYEEMESSAGE'
+          }, {
+            name: 'Create Message',
+            route: '/#/employee-message/create',
             icon: 'icon-employee-messages',
             className: 'dashboard-manageEmployeeMessages',
             package: 'EMPLOYEEMSG',

@@ -114,13 +114,16 @@ angular.module('ts5App')
 
     this.init();
 
+
     this.addSearchValuesFromMultiSelectArray = function (searchKeyName, multiSelectArray, multiSelectElementKey) {
-      if(multiSelectArray && multiSelectArray.length > 0) {
-        $scope.search[searchKeyName] = [];
+      if(!multiSelectArray || multiSelectArray.length <= 0) {
+        return;
       }
+      var searchArray = [];
       angular.forEach(multiSelectArray, function (element) {
-        $scope.search[searchKeyName].push(element[multiSelectElementKey]);
+        searchArray.push(element[multiSelectElementKey]);
       });
+      $scope.search[searchKeyName] = searchArray.toString();
     };
 
     this.formatMultiSelectedValuesForSearch = function () {

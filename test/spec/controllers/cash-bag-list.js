@@ -113,19 +113,6 @@ describe('Controller: CashBagListCtrl', function () {
       it('should call getCashBagList with companyId', function () {
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {isDelete: 'false'});
       });
-      describe('sorted bankRefList results', function () {
-        it('should have bankRefList attached to scope', function () {
-          expect(scope.bankRefList).toBeDefined();
-        });
-        it('should return no null values', function () {
-          expect(scope.bankRefList).not.toContain(null);
-        });
-        it('should have no duplicate values', function () {
-          for (var i = 0; i < scope.bankRefList.length - 1; i++) {
-            expect(scope.bankRefList[i + 1]).not.toBe(scope.bankRefList[i]);
-          }
-        });
-      });
     });
 
     describe('get station list', function () {

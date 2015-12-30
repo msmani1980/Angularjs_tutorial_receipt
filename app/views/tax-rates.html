@@ -128,14 +128,14 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Tax Type</th>
-          <th>Country</th>
-          <th>Station</th>
-          <th>Rate Type</th>
-          <th>Currency</th>
-          <th>Rate</th>
-          <th>Effective From</th>
-          <th>Effective To</th>
+          <th>Tax Type *</th>
+          <th>Country *</th>
+          <th>Station *</th>
+          <th>Rate Type *</th>
+          <th>Currency *</th>
+          <th>Rate *</th>
+          <th>Effective From *</th>
+          <th>Effective To *</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -285,13 +285,7 @@
             <span class="fa fa-pencil"></span>
           </a>
           <a class="btn btn-danger btn-xs" ng-show="showDeleteButton(taxRate)" ng-click="displayConfirmDialog(taxRate)">
-            <span class="fa fa-remove"></span>
-          </a>
-          <a class="btn btn-success btn-xs" ng-show="taxRate.edited" ng-click="saveTaxRateEdits(taxRate)">
-            <span class="fa fa-save"></span>
-          </a>
-          <a class="btn btn-default btn-xs"ng-show="taxRate.edited" ng-click="resetTaxRateEdit(taxRate)">
-            <span class="fa fa-remove"></span>
+            <span class="fa fa-trash"></span>
           </a>
         </td>
         <!-- Buttons for Edit -->
