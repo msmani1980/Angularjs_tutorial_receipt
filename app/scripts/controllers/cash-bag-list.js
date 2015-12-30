@@ -47,16 +47,6 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-    function getSortedBankRefList(cashBagList) {
-      var bankRefList = [];
-      cashBagList.forEach(function (element) {
-        if (element.bankReferenceNumber !== null && bankRefList.indexOf(element.bankReferenceNumber) < 0) {
-          bankRefList.push(element.bankReferenceNumber);
-        }
-      });
-      return bankRefList;
-    }
-
     function formatScheduleDateForApp(containingArray) {
       if (!angular.isArray(containingArray)) {
         return;
@@ -78,7 +68,6 @@ angular.module('ts5App')
           showSuccessMessage('successfully created');
         }
       });
-      $scope.bankRefList = getSortedBankRefList(response.cashBags);
       hideLoadingModal();
     }
 

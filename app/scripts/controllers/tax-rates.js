@@ -247,7 +247,6 @@ angular.module('ts5App')
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
-      $this.getCompanyTaxRatesList();
     };
 
     this.hideSearchPanel = function() {
@@ -454,6 +453,7 @@ angular.module('ts5App')
       if (angular.isDefined(taxRate)) {
         taxRate.action = 'read';
         delete taxRate.readOnly;
+        $this.resetTaxRateEdit(taxRate);
       }
     };
 
@@ -502,7 +502,7 @@ angular.module('ts5App')
         endDate: dateUtility.formatDateForAPI(taxRate.endDate),
         companyTaxTypeId: taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId,
         companyTaxRateStations: $this.createStationsPayload(taxRate),
-        companyCurrencyId: taxRate.currency ? taxRate.currency.id : taxRate.companyCurrencyId
+        companyCurrencyId: $scope.isTaxRateTypePercentage(taxRate) ? null : taxRate.companyCurrencyId
       };
       $this.makeEditPromises(payload);
     };
@@ -543,7 +543,7 @@ angular.module('ts5App')
     this.showValidationError = function(field) {
       var payload = {
         field: field,
-        value: ' - is a required field. Please update and try again!'
+        value: 'is a required field. Please update and try again!'
       };
       $scope.errorCustom.push(payload);
       $scope.displayError = true;
@@ -606,9 +606,6 @@ angular.module('ts5App')
       }
       var payload = $this.parseNewTaxRatePayload(taxRate);
       if ($scope.displayError !== true) {
-        delete taxRate.deleted;
-        taxRate.saved = true;
-        taxRate.action = 'read';
         taxRate.new = true;
         $this.makeCreatePromises(payload);
       }
@@ -625,6 +622,9 @@ angular.module('ts5App')
         if (taxRate.new) {
           taxRate.id = id;
           delete taxRate.new;
+          delete taxRate.deleted;
+          taxRate.saved = true;
+          taxRate.action = 'read';
           taxRate.created = true;
           taxRate.position = 'auto';
         }
@@ -640,10 +640,19 @@ angular.module('ts5App')
       $scope.taxRateToCreate = [];
     };
 
+    this.createNewTaxRateError = function(response) {
+      $this.errorHandler(response);
+      angular.forEach($scope.companyTaxRatesList, function(taxRate) {
+        if (taxRate.new) {
+          taxRate.deleted = true;
+        }
+      });
+    };
+
     this.makeCreatePromises = function(payload) {
       $this.showLoadingModal('Creating new Tax Rate...');
       var promises = $this.createNewTaxRatePromises(payload);
-      $q.all(promises).then($this.createNewTaxRateSuccess, $this.errorHandler);
+      $q.all(promises).then($this.createNewTaxRateSuccess, $this.createNewTaxRateError);
     };
 
     // Place $scope functions here
@@ -754,6 +763,7 @@ angular.module('ts5App')
 
     $scope.cancelNewTaxRate = function(taxRate) {
       $this.clearCustomErrors();
+      $scope.errorResponse = [];
       taxRate.deleted = true;
       taxRate.action = 'deleted';
     };

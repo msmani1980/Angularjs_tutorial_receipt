@@ -51,6 +51,7 @@ describe('Controller: EmployeeMessageListCtrl', function() {
     stationsDeferred.resolve(stationsJSON);
 
     spyOn(employeeMessagesFactory, 'getEmployeeMessages').and.returnValue(employeeMessageDeferred.promise);
+    spyOn(employeeMessagesFactory, 'deleteEmployeeMessage').and.returnValue(employeeMessageDeferred.promise);
     spyOn(employeeMessagesFactory, 'getSchedules').and.returnValue(schedulesDeferred.promise);
     spyOn(employeeMessagesFactory, 'getEmployees').and.returnValue(employeesDeferred.promise);
     spyOn(employeeMessagesFactory, 'getStations').and.returnValue(stationsDeferred.promise);
@@ -112,6 +113,8 @@ describe('Controller: EmployeeMessageListCtrl', function() {
         endDate: '10/30/2015',
         employees: [{
           employeeIdentifier: '1001'
+        }, {
+          employeeIdentifier: '1002'
         }],
         schedules: [{
           scheduleNumber: '123'
@@ -128,20 +131,10 @@ describe('Controller: EmployeeMessageListCtrl', function() {
       var formattedPayload = EmployeeMessageListCtrl.formatSearchPayload(mockData);
       expect(formattedPayload.startDate).toEqual('20151020');
       expect(formattedPayload.endDate).toEqual('20151030');
-      expect(formattedPayload.employeeIdentifier.length).toEqual(1);
-      expect(formattedPayload.employeeIdentifier[0]).toEqual('1001');
-
-      expect(formattedPayload.employeeIdentifier.length).toEqual(1);
-      expect(formattedPayload.employeeIdentifier[0]).toEqual('1001');
-
-      expect(formattedPayload.scheduleNumber.length).toEqual(1);
-      expect(formattedPayload.scheduleNumber[0]).toEqual('123');
-
-      expect(formattedPayload.arrivalStationId.length).toEqual(1);
-      expect(formattedPayload.arrivalStationId[0]).toEqual(1);
-
-      expect(formattedPayload.departureStationId.length).toEqual(1);
-      expect(formattedPayload.departureStationId[0]).toEqual(2);
+      expect(formattedPayload.employeeIdentifier).toEqual('1001,1002');
+      expect(formattedPayload.scheduleNumber).toEqual('123');
+      expect(formattedPayload.arrivalStationId).toEqual('1');
+      expect(formattedPayload.departureStationId).toEqual('2');
     });
 
     it('should clearSearchData', function() {
@@ -151,11 +144,48 @@ describe('Controller: EmployeeMessageListCtrl', function() {
     });
   });
 
+  describe('delete record', function () {
+    it('should call delete API with record id', function () {
+      var mockRecord = {id: 1};
+      scope.removeRecord(mockRecord);
+      expect(employeeMessagesFactory.deleteEmployeeMessage).toHaveBeenCalledWith(1);
+    });
+    it('should reinitialize employee message list', function () {
+      var mockRecord = {id: 1};
+      scope.removeRecord(mockRecord);
+      expect(employeeMessagesFactory.getEmployeeMessages).toHaveBeenCalledWith({});
+    });
+  });
+
   describe('scope helpers', function() {
     describe('goToDetailPage', function() {
       it('should redirect to employee-message page', function() {
         scope.goToDetailPage('view', 1);
         expect(location.path).toHaveBeenCalledWith('employee-message/view/1');
+      });
+    });
+
+    describe('isFutureRecord', function () {
+      it('should return false for active records', function () {
+        var mockActiveRecord = {
+          startDate: '10/20/2010',
+          endDate: '10/30/3000'
+        };
+        expect(scope.isFutureRecord(mockActiveRecord)).toEqual(false);
+      });
+      it('should return false for past records', function () {
+        var mockPastRecord = {
+          startDate: '10/20/2000',
+          endDate: '10/30/2000'
+        };
+        expect(scope.isFutureRecord(mockPastRecord)).toEqual(false);
+      });
+      it('should return true for future records', function () {
+        var mockFutureRecord = {
+          startDate: '10/20/3000',
+          endDate: '10/30/3000'
+        };
+        expect(scope.isFutureRecord(mockFutureRecord)).toEqual(true);
       });
     });
 

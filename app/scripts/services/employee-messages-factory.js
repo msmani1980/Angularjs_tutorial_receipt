@@ -26,6 +26,10 @@ angular.module('ts5App')
       return employeeMessagesService.editEmployeeMessage(id, payload);
     };
 
+    var deleteEmployeeMessage = function (id) {
+      return employeeMessagesService.deleteEmployeeMessage(id);
+    };
+
     var getSchedules = function (companyId) {
       return schedulesService.getSchedules(companyId);
     };
@@ -43,6 +47,7 @@ angular.module('ts5App')
       getEmployeeMessage: getEmployeeMessage,
       createEmployeeMessage: createEmployeeMessage,
       editEmployeeMessage: editEmployeeMessage,
+      deleteEmployeeMessage: deleteEmployeeMessage,
       getSchedules: getSchedules,
       getEmployees: getEmployees,
       getStations: getStations

@@ -32,6 +32,10 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       return dateUtility.isAfterToday(record.endDate);
     };
 
+    $scope.isFutureRecord = function (record) {
+      return dateUtility.isAfterToday(record.startDate);
+    };
+
     $scope.goToDetailPage = function (action, id) {
       $location.path('employee-message/' + action + '/' + id);
     };
@@ -46,6 +50,16 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
 
     this.getEmployeeMessages = function (payload) {
       employeeMessagesFactory.getEmployeeMessages(payload).then($this.getMessagesSuccess);
+    };
+
+    this.deleteEmployeeMessagesSuccess = function () {
+      $this.getEmployeeMessages({});
+      $this.hideLoadingModal();
+    };
+
+    $scope.removeRecord = function (record) {
+      $this.showLoadingModal();
+      employeeMessagesFactory.deleteEmployeeMessage(record.id).then($this.deleteEmployeeMessagesSuccess);
     };
 
     this.setSchedulesFromAPI = function (dataFromAPI) {
@@ -80,7 +94,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       angular.forEach(arrayToFormat, function (record) {
         newArray.push(record[attributeToSave]);
       });
-      return newArray;
+      return newArray.toString();
     };
 
     this.formatSearchPayload = function (searchData) {
