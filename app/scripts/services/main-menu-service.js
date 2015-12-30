@@ -53,7 +53,7 @@ angular.module('ts5App')
             role: 'ORGANIZATION'
           }, {
             name: 'Create Company',
-            route: emberURL + 'companies/create',
+            route: '/#/company-create',
             icon: 'icon-create-company',
             className: 'dashboard-createCompany',
             package: 'COMPANY',
