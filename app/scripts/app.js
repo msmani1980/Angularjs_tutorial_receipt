@@ -295,6 +295,10 @@ angular.module('ts5App', [
     templateUrl: 'views/discount-create.html',
     controller: 'DiscountCreateCtrl',
     controllerAs: 'discountCreate'
+  }).when('/promotions', {
+    templateUrl: 'views/promotion-list.html',
+    controller: 'PromotionListCtrl',
+    controllerAs: 'promotionList'
   }).otherwise({
     redirectTo: '/'
   });

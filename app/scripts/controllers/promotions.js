@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionsCtrl', function ($scope, $routeParams, $q, $filter, $timeout,
+  .controller('PromotionsCtrl', function ($scope, $location, $routeParams, $q, $filter, $timeout,
                                           promotionsFactory, dateUtility) {
 
     $scope.readOnly = true;
@@ -514,7 +514,7 @@ angular.module('ts5App')
     }
 
     function redirectToEmberListing(){
-      window.location.href = '/ember/#/promotions';
+      $location.path('/promotions');
     }
 
     function waitThenRedirectToEmberListing(promotionId){

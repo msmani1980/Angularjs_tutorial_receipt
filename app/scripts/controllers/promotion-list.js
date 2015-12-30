@@ -1,0 +1,143 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name ts5App.controller:PromotionListCtrl
+ * @description
+ * # PromotionListCtrl
+ * Controller of the ts5App
+ */
+angular.module('ts5App')
+  .controller('PromotionListCtrl', function ($scope, $q, $location, payloadUtility, dateUtility, promotionsFactory, recordsService) {
+    var $this = this;
+    $scope.viewName = 'Promotions';
+    $scope.search = {};
+    $scope.promotionList = [];
+    $scope.promotionTypeList = [];
+    $scope.benefitTypeList = [];
+    $scope.promotionToDelete = {};
+    $scope.defaultLimit = 100;
+
+    this.formatDates = function(data) {
+      var formattedData = angular.copy(data);
+      angular.forEach(formattedData, function (item) {
+        item.startDate = dateUtility.formatDateForApp(item.startDate);
+        item.endDate = dateUtility.formatDateForApp(item.endDate);
+      });
+
+      return formattedData;
+    };
+
+    $scope.searchPromotions = function () {
+      $this.showLoadingModal();
+      console.log($scope.search);
+      promotionsFactory.getPromotions(payloadUtility.serializeDates($scope.search)).then(function(dataFromAPI) {
+        $this.hideLoadingModal();
+        $this.setPromotionsList(dataFromAPI);
+      });
+    };
+
+    $scope.clearForm = function () {
+      $scope.search = {};
+      $scope.searchPromotions();
+    };
+
+    $scope.editPromotion = function (promotion) {
+      $location.path('/promotions/edit/' + promotion.id);
+    };
+
+    $scope.isPromotionEditable = function (promotion) {
+      if (angular.isUndefined(promotion)) {
+        return false;
+      }
+      return dateUtility.isAfterToday(promotion.endDate);
+    };
+
+    $scope.isPromotionReadOnly = function (promotion) {
+      if (!promotion.startDate) {
+        return false;
+      }
+      return !(dateUtility.isAfterToday(promotion.startDate));
+    };
+
+    this.deletePromotion = function (promotionId) {
+      promotionsFactory.deletePromotion(promotionId);
+    };
+
+    $scope.showDeleteConfirmation = function (index, promotion) {
+      $scope.promotionToDelete = promotion;
+      $scope.promotionToDelete.rowIndex = index;
+
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.deletePromotion = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+      angular.element('#discount-' + $scope.promotionToDelete.rowIndex).remove();
+
+      $this.deletePromotion($scope.promotionToDelete.id);
+    };
+
+    this.setPromotionsList = function (dataFromAPI) {
+      $scope.promotionList = $this.formatDates(dataFromAPI.promotions);
+    };
+
+    this.setBenefitTypeList = function (dataFromAPI) {
+      $scope.benefitTypeList = dataFromAPI;
+    };
+
+    this.setPromotionTypeList = function (dataFromAPI) {
+      $scope.promotionTypeList = dataFromAPI;
+    };
+
+    this.getPromotionList = function() {
+      return promotionsFactory.getPromotions({limit: $scope.defaultLimit}).then($this.setPromotionsList);
+    };
+
+    this.getBenefitTypeList = function() {
+      return recordsService.getBenefitTypes().then($this.setBenefitTypeList);
+    };
+
+    this.getPromotionTypeList = function() {
+      return recordsService.getPromotionTypes().then($this.setPromotionTypeList);
+    };
+
+    this.makeDependencyPromises = function() {
+      return [
+        $this.getBenefitTypeList(),
+        $this.getPromotionTypeList(),
+        $this.getPromotionList()
+      ];
+    };
+
+    this.showLoadingModal = function(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
+
+    this.setUIReady = function() {
+      $scope.uiSelectTemplateReady = true;
+      this.hideLoadingModal();
+    };
+
+    this.dependenciesSuccess = function() {
+      $this.setUIReady();
+    };
+
+    this.getDependencies = function() {
+      $this.showLoadingModal('We are loading the Promotions data!');
+      var dependencyPromises = this.makeDependencyPromises();
+      $q.all(dependencyPromises).then(function(response) {
+        $this.dependenciesSuccess(response);
+      });
+    };
+
+    this.init = function() {
+      this.getDependencies();
+    };
+
+    this.init();
+  });
