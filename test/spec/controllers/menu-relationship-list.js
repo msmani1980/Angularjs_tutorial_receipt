@@ -83,21 +83,17 @@ describe('Menu Relationship List Controller', function () {
   });
 
   it('should have a getRelationshipList method', function () {
-    expect(MenuRelationshipListCtrl.getRelationshipList).toBeDefined();
+    expect($scope.searchRelationshipList).toBeDefined();
   });
 
   it('should have a setMenuList method', function () {
     expect(MenuRelationshipListCtrl.setMenuList).toBeDefined();
   });
 
-  it('should have an empty menu list before the scope is digested',
-    function () {
-      expect($scope.menuList).toBeUndefined();
-    });
-
   describe('menus list', function () {
 
     beforeEach(function () {
+      $scope.searchRelationshipList();
       $scope.$digest();
     });
 
@@ -120,6 +116,8 @@ describe('Menu Relationship List Controller', function () {
       var menuObject;
 
       beforeEach(function () {
+        $scope.searchRelationshipList();
+        $scope.$digest();
         menuObject = $scope.menuList[0];
       });
 
@@ -160,11 +158,6 @@ describe('Menu Relationship List Controller', function () {
   it('should have a setCatererStationList method', function () {
     expect(MenuRelationshipListCtrl.setCatererStationList).toBeDefined();
   });
-
-  it('should not have a stationList attached to the scope yet',
-    function () {
-      expect($scope.stationList).toBeUndefined();
-    });
 
   describe('station list', function () {
 
@@ -226,24 +219,6 @@ describe('Menu Relationship List Controller', function () {
             String));
         });
 
-    });
-
-  });
-
-  describe('The Pagination', function () {
-
-    beforeEach(function () {
-      $scope.$digest();
-    });
-
-    it('should attach currentPage to the scope', function () {
-      expect($scope.currentPage).toBeDefined();
-      expect($scope.currentPage).toEqual(1);
-    });
-
-    it('should attach relationshipsPerPage to the scope', function () {
-      expect($scope.relationshipsPerPage).toBeDefined();
-      expect($scope.relationshipsPerPage).toEqual(10);
     });
 
   });
@@ -344,7 +319,7 @@ describe('Menu Relationship List Controller', function () {
   describe('clear filter functionality', function () {
 
     beforeEach(function () {
-      spyOn(MenuRelationshipListCtrl,'searchRelationshipList').and.callThrough();
+      spyOn($scope,'searchRelationshipList').and.callThrough();
       $scope.$digest();
     });
 
@@ -369,7 +344,7 @@ describe('Menu Relationship List Controller', function () {
 
     it('should call searchRelationshipList when the user clears the filters',  function () {
       $scope.clearSearchFilters();
-      expect(MenuRelationshipListCtrl.searchRelationshipList).toHaveBeenCalled();
+      expect($scope.searchRelationshipList).toHaveBeenCalled();
     });
 
   });
@@ -383,7 +358,7 @@ describe('Menu Relationship List Controller', function () {
     });
 
     it('should call generateRelationshipQuery when the user searches',  function () {
-      MenuRelationshipListCtrl.searchRelationshipList();
+      $scope.searchRelationshipList();
       expect(MenuRelationshipListCtrl.generateRelationshipQuery).toHaveBeenCalled();
     });
 
@@ -888,7 +863,7 @@ describe('Menu Relationship List Controller', function () {
           });
           it('should contain ng-repeat', function () {
             expect(testRow.attr('ng-repeat')).toContain(
-              '(key,relationship) in paginatedRelationships'
+              '(key,relationship) in relationshipList'
             );
           });
           it('should contain a Menu Code cell',

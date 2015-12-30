@@ -55,7 +55,8 @@ describe('Controller: DiscountListCtrl', function () {
     expect(scope.search.startDate).toBe(undefined);
     expect(discountFactory.getDiscountList).toHaveBeenCalledWith({
       startDate: null,
-      endDate: null
+      endDate: null,
+      limit: 100, offset: 0
     });
   });
 
@@ -66,39 +67,49 @@ describe('Controller: DiscountListCtrl', function () {
     scope.searchDiscounts();
     expect(discountFactory.getDiscountList).toHaveBeenCalledWith({
       startDate: '19791005',
-      endDate: null
+      endDate: null,
+      limit: 100, offset: 0
     });
   });
 
   it('should get the discount list from API', function () {
-    expect(discountFactory.getDiscountList).toHaveBeenCalled();
+    scope.loadDiscounts();
+    expect(discountFactory.getDiscountList).toHaveBeenCalledWith({
+      startDate: null,
+      endDate: null,
+      limit: 100, offset: 0
+    });
   });
 
   describe('discountList in scope', function () {
+    beforeEach(function () {
+      scope.loadDiscounts();
+      scope.$digest();
+    });
     it('should attach a discountList after a API call to getDiscountList',
       function () {
-        expect(!!scope.discountList).toBe(true);
+        expect(scope.discountList.length).toEqual(8);
       });
 
-    it('should have a discountTypeName name property', function () {
+    it('should have a companyId name property', function () {
       expect(scope.discountList[0].companyId).toBe(403);
     });
-    it('should have a discountTypeName name property', function () {
+    it('should have a discountTypeId name property', function () {
       expect(scope.discountList[0].discountTypeId).toBe(4);
     });
     it('should have a discountTypeName name property', function () {
       expect(scope.discountList[0].discountTypeName).toBe('Voucher');
     });
-    it('should have a discountTypeName name property', function () {
+    it('should have a name name property', function () {
       expect(scope.discountList[0].name).toBe('10 % ');
     });
-    it('should have a discountTypeName name property', function () {
+    it('should have a rateTypeId name property', function () {
       expect(scope.discountList[0].rateTypeId).toBe(1);
     });
-    it('should have a discountTypeName name property', function () {
+    it('should have a rateTypeName name property', function () {
       expect(scope.discountList[0].rateTypeName).toBe('Percentage');
     });
-    it('should have a discountTypeName name property', function () {
+    it('should have a companyDiscountRestrictions name property', function () {
       expect(scope.discountList[0].companyDiscountRestrictions).toBe(false);
     });
 

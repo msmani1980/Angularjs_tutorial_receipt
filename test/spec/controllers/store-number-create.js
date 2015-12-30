@@ -53,12 +53,17 @@ describe('Controller: StoreNumberCreateCtrl', function () {
       expect(scope.formData).toBeDefined();
       expect(Object.prototype.toString.call(scope.formData)).toBe('[object Object]');
     });
-    it('should call companyService.getStores', function(){
-      expect(companyStoresService.getStoreList).toHaveBeenCalled();
-    });
     it('should set storeNumbersList in scope', function(){
       expect(scope.storeNumbersList).toBeDefined();
       expect(Object.prototype.toString.call(scope.storeNumbersList)).toBe('[object Array]');
+    });
+  });
+
+  describe('scope.getStoreList', function(){
+    it('should call companyService.getStores', function(){
+      scope.getStoreList();
+      scope.$digest();
+      expect(companyStoresService.getStoreList).toHaveBeenCalled();
     });
   });
 

@@ -8,16 +8,55 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('DiscountListCtrl', function ($scope, $location, discountFactory, ngToast, dateUtility, payloadUtility) {
+  .controller('DiscountListCtrl', function ($scope, $location, discountFactory, ngToast, dateUtility, payloadUtility, lodash) {
     var $this = this;
     $scope.viewName = 'Discount';
     $scope.search = {};
     $scope.discountList = [];
     $scope.discountToDelete = {};
-    $scope.defaultLimit = 100;
+    this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
+
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
+
+    this.attachDiscountListToScope = function (discountListFromAPI) {
+      $this.meta.count = $this.meta.count || discountListFromAPI.meta.count;
+      $scope.discountList = $scope.discountList.concat($this.formatDates(discountListFromAPI.companyDiscounts));
+      hideLoadingBar();
+    };
 
     this.getDiscountList = function () {
-      discountFactory.getDiscountList({limit: $scope.defaultLimit}).then($this.attachDiscountListToScope);
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+
+      showLoadingBar();
+      var query = lodash.assign(payloadUtility.serializeDates($scope.search), {
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
+      });
+      discountFactory.getDiscountList(query).then($this.attachDiscountListToScope);
+      $this.meta.offset += $this.meta.limit;
+    };
+
+    $scope.searchDiscounts = function () {
+      $scope.discountList = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $this.getDiscountList();
     };
 
     this.getDiscountTypesList = function () {
@@ -31,17 +70,9 @@ angular.module('ts5App')
       $location.path('/discounts/edit/' + discount.id);
     };
 
-    $scope.searchDiscounts = function () {
-      discountFactory.getDiscountList(payloadUtility.serializeDates($scope.search)).then($this.attachDiscountListToScope);
-    };
-
     $scope.clearForm = function () {
       $scope.search = {};
       $scope.searchDiscounts();
-    };
-
-    this.attachDiscountListToScope = function (discountListFromAPI) {
-      $scope.discountList = $this.formatDates(discountListFromAPI.companyDiscounts);
     };
 
     this.formatDates = function(discountArray) {
@@ -85,8 +116,11 @@ angular.module('ts5App')
       $this.deleteDiscount($scope.discountToDelete.id);
     };
 
-    this.init = function () {
+    $scope.loadDiscounts = function() {
       $this.getDiscountList();
+    };
+
+    this.init = function () {
       $this.getDiscountTypesList();
     };
 

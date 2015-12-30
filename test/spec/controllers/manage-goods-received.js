@@ -72,7 +72,7 @@ describe('Managed Goods Received', function () {
     });
 
     it('should have a getDeliveryNotesList method', function () {
-      expect(ManageGoodsReceivedCtrl.getDeliveryNotesList).toBeDefined();
+      expect($scope.getDeliveryNotesList).toBeDefined();
     });
 
     it('should have a generateDeliveryNoteQuery method', function () {
@@ -261,8 +261,7 @@ describe('Managed Goods Received', function () {
   describe('searchRecords', function () {
 
     beforeEach(function () {
-      spyOn(ManageGoodsReceivedCtrl, 'displayLoadingModal');
-      spyOn(ManageGoodsReceivedCtrl, 'getDeliveryNotesList');
+      spyOn($scope, 'getDeliveryNotesList');
       $scope.$digest();
     });
 
@@ -272,12 +271,7 @@ describe('Managed Goods Received', function () {
 
     it('should call getDeliveryNotesList', function () {
       $scope.searchRecords();
-      expect(ManageGoodsReceivedCtrl.getDeliveryNotesList).toHaveBeenCalled();
-    });
-
-    it('should call displayLoadingModal', function () {
-      $scope.searchRecords();
-      expect(ManageGoodsReceivedCtrl.displayLoadingModal).toHaveBeenCalled();
+      expect($scope.getDeliveryNotesList).toHaveBeenCalled();
     });
 
     describe('setting the date filters', function() {

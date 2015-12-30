@@ -50,7 +50,7 @@ angular.module('ts5App').controller('CompanyListCtrl', function ($scope, company
     if ($this.meta.offset >= $this.meta.count) {
       return;
     }
-    showLoadingModal('Loading Company List');
+    showLoadingModal();
     companyFactory.getCompanyList({
       limit: $this.meta.limit,
       offset: $this.meta.offset

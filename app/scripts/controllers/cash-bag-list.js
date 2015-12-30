@@ -8,10 +8,17 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, ngToast, dateUtility) {
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, ngToast, dateUtility, lodash) {
 
     var _companyId = null;
     var _services = null;
+    $scope.cashBagList = [];
+    var $this = this;
+    this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
 
     $scope.viewName = 'Manage Cash Bag';
     $scope.createCashBagError = 'temp error message';
@@ -30,13 +37,14 @@ angular.module('ts5App')
       $scope.formErrors = {};
     }
 
-    function showLoadingModal(text) {
+    function showLoadingModal() {
       $scope.displayError = false;
-      angular.element('#loading').modal('show').find('p').text(text);
+      angular.element('.loading-more').show();
     }
 
     function hideLoadingModal() {
-      angular.element('#loading').modal('hide');
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
     }
 
     function formatScheduleDateForApp(containingArray) {
@@ -53,7 +61,8 @@ angular.module('ts5App')
     }
 
     function getCashBagResponseHandler(response) {
-      $scope.cashBagList = formatScheduleDateForApp(angular.copy(response.cashBags));
+      $this.meta.count = $this.meta.count || response.meta.count;
+      $scope.cashBagList = $scope.cashBagList.concat(formatScheduleDateForApp(angular.copy(response.cashBags)));
       angular.forEach($scope.cashBagList, function (cashBag) {
         if ($scope.isNew(cashBag.id)) {
           showSuccessMessage('successfully created');
@@ -80,7 +89,7 @@ angular.module('ts5App')
 
 
     (function constructor() {
-      showLoadingModal('Loading Cash Bag');
+      showLoadingModal();
       _companyId = cashBagFactory.getCompanyId();
       _services = {
         promises: [],
@@ -89,9 +98,6 @@ angular.module('ts5App')
             _services.promises.push(_services[_service]());
           });
         },
-        getCashBagList: function () {
-          return cashBagFactory.getCashBagList(_companyId, {isDelete: 'false'}).then(getCashBagResponseHandler);
-        },
         getStationList: function () {
           return cashBagFactory.getStationList(_companyId).then(getStationListResponseHandler);
         },
@@ -99,9 +105,51 @@ angular.module('ts5App')
           return cashBagFactory.getSchedulesList(_companyId).then(getSchedulesListResponseHandler);
         }
       };
-      _services.call(['getCashBagList', 'getStationList', 'getSchedulesList']);
+      _services.call(['getStationList', 'getSchedulesList']);
       $q.all(_services.promises).then(hideLoadingModal);
     })();
+
+    function loadCashbagList() {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+
+      var payload = angular.copy($scope.search);
+      showLoadingModal();
+      if (payload.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+        payload.endDate = payload.startDate;
+      }
+      payload = lodash.assign(payload, {
+        isDelete: 'false',
+        isSubmitted: 'false',
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
+      });
+      cashBagFactory.getCashBagList(_companyId, payload).then(getCashBagResponseHandler);
+      $this.meta.offset += $this.meta.limit;
+    }
+
+    $scope.loadCashbagList = function() {
+      loadCashbagList();
+    };
+
+    $scope.searchCashBag = function () {
+      $scope.cashBagList = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      loadCashbagList();
+    };
+
+    $scope.clearForm = function () {
+      $scope.search = {};
+      angular.element('.stations-multi-select').select2('data', null);
+      $scope.searchCashBag();
+    };
+
 
     // helpers
     function showModalErrors(errorMessage) {
@@ -116,23 +164,6 @@ angular.module('ts5App')
 
     $scope.editCashBag = function (cashBag) {
       $location.path('cash-bag/edit/' + cashBag.id);
-    };
-
-    $scope.searchCashBag = function () {
-      var payload = angular.copy($scope.search);
-      showLoadingModal('Searching Cash Bags');
-      if (payload.startDate) {
-        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
-        payload.endDate = payload.startDate;
-      }
-      payload.isDelete = 'false';
-      cashBagFactory.getCashBagList(_companyId, payload).then(getCashBagResponseHandler);
-    };
-
-    $scope.clearForm = function () {
-      $scope.search = {};
-      angular.element('.stations-multi-select').select2('data', null);
-      $scope.searchCashBag();
     };
 
     $scope.isNew = function (cashBagId) {

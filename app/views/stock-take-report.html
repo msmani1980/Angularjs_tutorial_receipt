@@ -98,7 +98,7 @@
     </div>
   </div>
 
-  <table ng-show="searchIsPossible()" class="table table-responsive table-bordered table-hover ng-scope">
+  <table infinite-scroll="getStockTakeList()" ng-show="searchIsPossible()" class="table table-responsive table-bordered table-hover ng-scope">
     <thead>
       <tr>
         <th>Stock Take Report Number</th>
@@ -135,6 +135,7 @@
     </tbody>
 
   </table>
+  <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 
 </div>
 

@@ -7,9 +7,14 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-    .controller('StockTakeReportCtrl', function ($scope,$filter, dateUtility,stockTakeFactory,ngToast) {
+    .controller('StockTakeReportCtrl', function ($scope,$filter, dateUtility,stockTakeFactory,ngToast, lodash) {
 
     var $this = this;
+    this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
     $scope.stationsList = [];
     $scope.stockTakeList = [];
     $scope.stationItems = [];
@@ -23,11 +28,26 @@ angular.module('ts5App')
       this.getCatererStationList();
       $scope.$watch('catererStationId', function(newData) {
         if(newData) {
-          $this.getStockTakeList();
+          $scope.stockTakeList = [];
+          $this.meta = {
+            count: undefined,
+            limit: 100,
+            offset: 0
+          };
+          $scope.getStockTakeList();
           $this.getStockDashboardItems();
         }
       });
     };
+
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
 
     this.displayLoadingModal = function (loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
@@ -52,18 +72,28 @@ angular.module('ts5App')
       return query;
     };
 
-    this.getStockTakeList = function () {
-      $scope.userSelectedStation = false;
-      var query = $this.generateStockTakeQuery();
-      $this.displayLoadingModal('Getting a list of stock takes');
-      stockTakeFactory.getStockTakeList(query).then($this.getStockTakeListSuccessHandler);
+    this.getStockTakeListSuccessHandler = function(data) {
+      $this.meta.count = $this.meta.count || data.meta.count;
+      $scope.userSelectedStation = true;
+      $scope.stockTakeList = $scope.stockTakeList.concat(data.response);
+      $this.formatStockTakeDates();
+      hideLoadingBar();
     };
 
-    this.getStockTakeListSuccessHandler = function(data) {
-      $scope.userSelectedStation = true;
-      $scope.stockTakeList = data.response;
-      $this.formatStockTakeDates();
-      $this.hideLoadingModal();
+    $scope.getStockTakeList = function () {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+      showLoadingBar();
+      $scope.userSelectedStation = false;
+      var query = $this.generateStockTakeQuery();
+      query = lodash.assign(query, {
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
+      });
+
+      stockTakeFactory.getStockTakeList(query).then($this.getStockTakeListSuccessHandler);
+      $this.meta.offset += $this.meta.limit;
     };
 
     this.getStockDashboardItems = function() {
@@ -114,13 +144,17 @@ angular.module('ts5App')
       for (var filterKey in filters) {
         delete $scope.search[filterKey];
       }
-      $this.displayLoadingModal();
-      $this.getStockTakeList();
+      $scope.searchRecords();
     };
 
     $scope.searchRecords = function () {
-      $this.displayLoadingModal();
-      $this.getStockTakeList();
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.stockTakeList = [];
+      $scope.getStockTakeList();
     };
 
     $scope.canCreateStockTake = function() {

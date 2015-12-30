@@ -13,6 +13,11 @@ angular.module('ts5App')
     companiesFactory, dateUtility, $filter) {
 
     var $this = this;
+    this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
     $scope.itemsList = [];
     $scope.dateRange = {
       startDate: '',
@@ -20,7 +25,16 @@ angular.module('ts5App')
     };
     $scope.openVersionId = -1;
 
-    this.filterItems = function() {
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
+
+    this.filterItems = function () {
       return $filter('filter')($scope.itemsList, $scope.search);
     };
 
@@ -28,7 +42,8 @@ angular.module('ts5App')
       var query = {
         sortBy: 'ASC',
         sortOn: 'itemName',
-        limit: 100
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
       };
 
       angular.extend(query, $scope.search);
@@ -45,18 +60,50 @@ angular.module('ts5App')
       return query;
     };
 
-    this.getItemsList = function() {
-      var query = this.generateItemQuery();
-      var $this = this;
-      itemsFactory.getItemsList(query).then(function(response) {
-        $scope.itemsList = response.retailItems;
-        $this.createNestedItemsList();
-        $this.hideLoadingModal();
+    this.createNestedItemsList = function (itemList) {
+      var newItemList = [];
+      var currentMasterId = -1;
+      angular.forEach(itemList, function (item) {
+        if (item.itemMasterId === currentMasterId) {
+          var lastIndex = newItemList.length - 1;
+          newItemList[lastIndex].versions.push(item);
+        } else {
+          var newItem = {versions: [item], itemMasterId: item.itemMasterId};
+          newItemList.push(newItem);
+          currentMasterId = item.itemMasterId;
+        }
       });
+      angular.forEach(newItemList, function (item) {
+        item.versions.sort($this.sortItemVersions);
+      });
+      return newItemList;
     };
 
-    this.getItemTypesList = function() {
-      itemsFactory.getItemTypesList().then(function(itemTypes) {
+    this.appendItemsToList = function (itemListFromAPI) {
+      $this.meta.count = $this.meta.count || itemListFromAPI.meta.count;
+      var itemList = angular.copy(itemListFromAPI.retailItems);
+      var nestedItemList = $this.createNestedItemsList(itemList);
+      $scope.itemsList = $scope.itemsList.concat(nestedItemList);
+      hideLoadingBar();
+    };
+
+    function getItemsList() {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+      showLoadingBar();
+      var query = $this.generateItemQuery();
+      itemsFactory.getItemsList(query).then($this.appendItemsToList);
+      $this.meta.offset += $this.meta.limit;
+    }
+
+    $scope.loadItems = function () {
+      getItemsList();
+    };
+
+
+    this.getItemTypesList = function () {
+      itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
       });
     };
@@ -79,29 +126,7 @@ angular.module('ts5App')
       return itemIndex;
     };
 
-    this.createNestedItemsList = function() {
-      var newItemList = [];
-      var currentMasterId = -1;
-      angular.forEach($scope.itemsList, function(item) {
-        if (item.itemMasterId === currentMasterId) {
-          var lastIndex = newItemList.length - 1;
-          newItemList[lastIndex].versions.push(item);
-        } else {
-          var newItem = {
-            versions: [item],
-            itemMasterId: item.itemMasterId
-          };
-          newItemList.push(newItem);
-          currentMasterId = item.itemMasterId;
-        }
-      });
-      $scope.itemsList = newItemList;
-      angular.forEach($scope.itemsList, function(item) {
-        item.versions.sort($this.sortItemVersions);
-      });
-    };
-
-    this.sortItemVersions = function(itemA, itemB) {
+    this.sortItemVersions = function (itemA, itemB) {
       if (itemA.startDate === itemB.startDate && itemA.endDate === itemB.endDate) {
         return 0;
       }
@@ -139,7 +164,7 @@ angular.module('ts5App')
 
       itemsFactory.removeItem(itemId).then(function() {
         $this.hideLoadingModal();
-        $this.getItemsList();
+        getItemsList();
       });
     };
 
@@ -165,15 +190,25 @@ angular.module('ts5App')
       return validVersionExists;
     };
 
-    $scope.clearSearchFilters = function() {
+    $scope.searchRecords = function () {
+      this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.itemsList = [];
+      getItemsList();
+    };
+
+    $scope.clearSearchFilters = function () {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       var filters = $scope.search;
       for (var filterKey in filters) {
         delete $scope.search[filterKey];
       }
-      $this.displayLoadingModal();
-      $this.getItemsList();
+
+      $scope.searchRecords();
     };
 
     $scope.hasSubVersions = function(item) {
@@ -214,13 +249,8 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    $scope.searchRecords = function() {
-      $this.displayLoadingModal();
-      $this.getItemsList();
-    };
-
-    this.getItemsList();
     this.getItemTypesList();
     this.getSalesCategoriesList();
+
 
   });
