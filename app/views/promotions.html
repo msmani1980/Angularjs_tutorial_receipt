@@ -35,6 +35,8 @@
                  id="promotion-code"
                  name="promotionCode"
                  ng-model="promotion.promotionCode"
+                 custom-validity
+                 custom-pattern="alphanumeric"
                  ng-disabled="readOnly"
                  required>
         </div>
@@ -112,7 +114,7 @@
                   <input type="text" class="form-control"
                          name="spendLimitAmount{{ spendLimitAmountData.code }}"
                          custom-validity
-                         custom-pattern="decimal"
+                         custom-pattern="numberOrDecimal"
                          ng-show="promotion.promotionType.name === 'Spend Limit'"
                          ng-model="spendLimitAmountData.amount"
                          ng-disabled="readOnly"
