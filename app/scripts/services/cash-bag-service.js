@@ -18,24 +18,16 @@ angular.module('ts5App')
 
     var actions = {
       getCashBag: {
-        method: 'GET',
-        headers: {companyId: 362} // TODO should this always be here?
-        // TODO - Whats up with this guys ^
+        method: 'GET'
       },
       updateCashBag: {
-        method: 'PUT',
-        headers: {companyId: 362} // TODO should this always be here?
-        // TODO - Whats up with this guys ^
+        method: 'PUT'
       },
       deleteCashBag: {
-        method: 'DELETE',
-        headers: {companyId: 362} // TODO should this always be here?
-        // TODO - Whats up with this guys ^
+        method: 'DELETE'
       },
       createCashBag: {
-        method: 'POST',
-        headers: {companyId: 362} // TODO should this always be here?
-        // TODO - Whats up with this guys ^
+        method: 'POST'
       }
     };
 
@@ -48,7 +40,9 @@ angular.module('ts5App')
       }
 
       payload.retailCompanyId = companyId;
-      payload.limit = 50;
+      if (!angular.isDefined(payload.limit)) {
+        payload.limit = 50;
+      }
       return requestResource.getCashBag(payload).$promise;
     }
 

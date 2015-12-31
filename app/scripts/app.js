@@ -134,6 +134,9 @@ angular.module('ts5App', [
   }).when('/cash-bag-list', {
     templateUrl: 'views/cash-bag-list.html',
     controller: 'CashBagListCtrl'
+  }).when('/cash-bag-submission', {
+    templateUrl: 'views/cash-bag-submission.html',
+    controller: 'CashBagSubmissionCtrl'
   }).when('/post-trip-data-list', {
     templateUrl: 'views/post-trip-data-list.html',
     controller: 'PostFlightDataListCtrl'
