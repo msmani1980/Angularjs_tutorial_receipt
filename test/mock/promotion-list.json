@@ -1,0 +1,89 @@
+{
+  "promotions": [
+    {
+      "benefitTypeId": 1,
+      "benefitTypeName": "Discount",
+      "catalogCount": 2,
+      "companyId": 403,
+      "id": 117,
+      "description": "Buy 4 drinks get 20% off",
+      "discountTypeId": 1,
+      "discountTypeName": "Percentage",
+      "endDate": "2015-09-19",
+      "startDate": "2015-01-01",
+      "promotionCode": "PM001",
+      "promotionName": "Buy 4 drinks get 20 percent off",
+      "promotionTypeId": 1,
+      "promotionTypeName": "Product Purchase"
+    },
+    {
+      "benefitTypeId": 1,
+      "benefitTypeName": "Discount",
+      "catalogCount": 7,
+      "companyId": 403,
+      "id": 118,
+      "description": "Buy 2 items get 10 percent off",
+      "discountTypeId": 1,
+      "discountTypeName": "Percentage",
+      "endDate": "2018-12-31",
+      "startDate": "2015-01-01",
+      "promotionCode": "PM002",
+      "promotionName": "Buy 2 items get 10 percent off",
+      "promotionTypeId": 1,
+      "promotionTypeName": "Product Purchase"
+    },
+    {
+      "benefitTypeId": 1,
+      "benefitTypeName": "Discount",
+      "catalogCount": 0,
+      "companyId": 403,
+      "id": 119,
+      "description": "randomdata",
+      "discountTypeId": 1,
+      "discountTypeName": "Percentage",
+      "endDate": "2015-05-29",
+      "startDate": "2015-01-01",
+      "promotionCode": "TEXT",
+      "promotionName": "randomdata",
+      "promotionTypeId": 1,
+      "promotionTypeName": "Product Purchase"
+    },
+    {
+      "benefitTypeId": 1,
+      "benefitTypeName": "Discount",
+      "catalogCount": 1,
+      "companyId": 403,
+      "id": 120,
+      "description": "Programmers Paradise - caffeine, technology and skittles.",
+      "discountTypeId": 1,
+      "discountTypeName": "Percentage",
+      "endDate": "2050-12-31",
+      "startDate": "2015-01-01",
+      "promotionCode": "0003",
+      "promotionName": "Technology and Drinks",
+      "promotionTypeId": 1,
+      "promotionTypeName": "Product Purchase"
+    },
+    {
+      "benefitTypeId": 1,
+      "benefitTypeName": "Discount",
+      "catalogCount": 2,
+      "companyId": 403,
+      "id": 154,
+      "description": "Gift 1",
+      "discountTypeId": 1,
+      "discountTypeName": "Percentage",
+      "endDate": "2050-01-01",
+      "startDate": "2015-05-19",
+      "promotionCode": "GIFT01",
+      "promotionName": "Gift 1",
+      "promotionTypeId": 1,
+      "promotionTypeName": "Product Purchase"
+    }
+  ],
+  "meta": {
+    "count": 5,
+    "limit": 5,
+    "start": 0
+  }
+}

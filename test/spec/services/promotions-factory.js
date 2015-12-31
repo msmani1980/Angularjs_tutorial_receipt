@@ -47,6 +47,8 @@ describe('Service: promotionsFactory', function () {
     spyOn(promotionsService, 'getPromotion');
     spyOn(promotionsService, 'createPromotion');
     spyOn(promotionsService, 'savePromotion');
+    spyOn(promotionsService, 'deletePromotion');
+    spyOn(promotionsService, 'getPromotions');
   }));
 
   //itemsService
@@ -158,6 +160,15 @@ describe('Service: promotionsFactory', function () {
       var mockObj = {id:321};
       promotionsFactory.savePromotion(mockId, mockObj);
       expect(promotionsService.savePromotion).toHaveBeenCalledWith(mockId, mockObj);
+    });
+    it('should call deletePromotion', function(){
+      var mockId = 234;
+      promotionsFactory.deletePromotion(mockId);
+      expect(promotionsService.deletePromotion).toHaveBeenCalledWith(mockId);
+    });
+    it('should call getPromotions', function(){
+      promotionsFactory.getPromotions({});
+      expect(promotionsService.getPromotions).toHaveBeenCalled();
     });
   });
 

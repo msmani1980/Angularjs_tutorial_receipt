@@ -30,7 +30,6 @@ angular.module('ts5App')
 
     $scope.searchPromotions = function () {
       $this.showLoadingModal();
-      console.log($scope.search);
       promotionsFactory.getPromotions(payloadUtility.serializeDates($scope.search)).then(function(dataFromAPI) {
         $this.hideLoadingModal();
         $this.setPromotionsList(dataFromAPI);
@@ -73,7 +72,7 @@ angular.module('ts5App')
 
     $scope.deletePromotion = function () {
       angular.element('.delete-warning-modal').modal('hide');
-      angular.element('#discount-' + $scope.promotionToDelete.rowIndex).remove();
+      angular.element('#promotion-' + $scope.promotionToDelete.rowIndex).remove();
 
       $this.deletePromotion($scope.promotionToDelete.id);
     };

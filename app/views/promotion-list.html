@@ -22,7 +22,7 @@
     </div>
 
     <div class="panel panel-default collapse no-transition" id="search-collapse">
-      <form name="discountSearchForm" ng-submit="searchPromotions()">
+      <form name="promotionSearchForm" ng-submit="searchPromotions()">
         <div class="panel-body">
           <div class="row">
             <div class="col-md-2 col-sm-6">
@@ -50,8 +50,8 @@
 
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
-                <label for="discount-type">Benefit Type</label>
-                <select ng-model="search.benefitTypeId" class="form-control" id="discount-type">
+                <label for="benefit-type">Benefit Type</label>
+                <select ng-model="search.benefitTypeId" class="form-control" id="benefit-type">
                   <option value="{{type.id}}" ng-repeat="type in benefitTypeList | unique: 'id'">{{ type.name }}</option>
                 </select>
               </div>
@@ -69,6 +69,7 @@
 
           </div>
         </div>
+        <div class="panel-footer text-right">
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
           <button type="submit" class="btn btn-primary">Search</button>
@@ -93,7 +94,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr id="discount-{{$index}}"
+    <tr id="promotion-{{$index}}"
         ng-repeat="promotion in promotionList | toArray:false | filter:{promotionCode: search.promotionCode, promotionName: search.promotionName, benefitTypeId: search.benefitTypeId, promotionTypeId: search.qualifierTypeId, name: search.name} | orderBy: 'startDate' track by $index">
       <td>{{ promotion.promotionCode }}</td>
       <td>{{ promotion.promotionName }}</td>
@@ -127,8 +128,8 @@
 
       <ul>
         <li><strong>Promotion Code: </strong>{{ promotionToDelete.promotionCode }}</li>
-        <li><strong>Start Date: </strong>{{ discountToDelete.startDate }}</li>
-        <li><strong>End Date: </strong>{{ discountToDelete.endDate }}</li>
+        <li><strong>Start Date: </strong>{{ promotionToDelete.startDate }}</li>
+        <li><strong>End Date: </strong>{{ promotionToDelete.endDate }}</li>
       </ul>
 
       <div class="modal-footer">
