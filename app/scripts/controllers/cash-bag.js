@@ -392,13 +392,10 @@ angular.module('ts5App')
     init();
 
     $scope.isFocusBankReferenceNumber = function() {
-      console.log($routeParams.fromEdit, $routeParams);
-      if ($routeParams.fromEdit !== true) {
-        return false;
-      }
-      if ($routeParams.fromEdit === true) {
+      if (localStorage.isEditFromList) {
         return true;
       }
+      return false;
     };
 
   });

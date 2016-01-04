@@ -28,6 +28,7 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.storeList = [];
     $scope.storeInstanceList = [];
+    delete localStorage.isEditFromList;
 
     function showSuccessMessage(error) {
       ngToast.create({
@@ -70,8 +71,8 @@ angular.module('ts5App')
         }
       });
       if ($this.meta.count === 1 && $scope.search.bankReferenceNumber) {
-        $routeParams.fromEdit = true;
-        $scope.editCashBag($scope.cashBagList[0], true);
+        localStorage.isEditFromList = true;
+        $scope.editCashBag($scope.cashBagList[0]);
       }
       hideLoadingModal();
     }
@@ -276,6 +277,13 @@ angular.module('ts5App')
 
     $scope.isCashBagEditable = function(cashBag) {
       return (cashBag && !cashBag.isSubmitted && cashBag.isDelete === 'false');
+    };
+
+    $scope.isListFromEdit = function() {
+      if (localStorage.isListFromEdit) {
+        return true;
+      }
+      return false;
     };
 
   });
