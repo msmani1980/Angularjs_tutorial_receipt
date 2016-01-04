@@ -72,12 +72,20 @@ angular.module('ts5App')
       return promotionsService.getPromotion(id);
     }
 
+    function getPromotions(payload) {
+      return promotionsService.getPromotions(payload);
+    }
+
     function createPromotion(payload){
       return promotionsService.createPromotion(payload);
     }
 
     function savePromotion(id, payload){
       return promotionsService.savePromotion(id, payload);
+    }
+
+    function deletePromotion(id){
+      return promotionsService.deletePromotion(id);
     }
 
     return {
@@ -94,8 +102,10 @@ angular.module('ts5App')
       getStationGlobals: getStationGlobals,
       getCurrencyGlobals: getCurrencyGlobals,
       getPromotion: getPromotion,
+      getPromotions: getPromotions,
       createPromotion: createPromotion,
-      savePromotion: savePromotion
+      savePromotion: savePromotion,
+      deletePromotion: deletePromotion
     };
 
   });
