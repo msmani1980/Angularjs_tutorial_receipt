@@ -25,6 +25,7 @@ angular.module('ts5App')
     $scope.displayedCashierDate = dateUtility.formatDateForApp(dateUtility.now(), 'x');
     $scope.saveButtonName = '';
     $scope.state = '';
+    delete localStorage.isListFromEdit;
 
     function formatAsCurrency(valueToFormat) {
       return sprintf('%.4f', valueToFormat);
