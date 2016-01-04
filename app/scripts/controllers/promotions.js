@@ -55,18 +55,17 @@ angular.module('ts5App')
     var companyId = promotionsFactory.getCompanyId();
     var initPromises = [];
     var payload = null;
-    var promotionFromAPI = null;
     var cachedRetailItemsByCatId = [];
 
     // private controller functions
 
     function getObjectByIdFromSelectOptions(arrayName, objectById) {
       var resultList = $scope.selectOptions[arrayName];
-      var object = $filter('filter')(resultList, objectById, true);
-      if (!object || !object.length) {
+      var objectToReturn = $filter('filter')(resultList, objectById, true);
+      if (!objectToReturn || !objectToReturn.length) {
         return {id: null};
       }
-      return object[0];
+      return objectToReturn[0];
     }
 
     function getRetailItemId(retailItemData) {
@@ -463,7 +462,7 @@ angular.module('ts5App')
       });
     }
 
-    function setScopePromotionForViewFromAPIdata() {
+    function setScopePromotionForViewFromAPIdata(promotionFromAPI) {
       $scope.promotion = promotionFromAPI;
       $scope.promotion.startDate = dateUtility.formatDateForApp(promotionFromAPI.startDate);
       $scope.promotion.endDate = dateUtility.formatDateForApp(promotionFromAPI.endDate);
@@ -485,19 +484,15 @@ angular.module('ts5App')
       $scope.benefitAmountsUi = addCurrencyCodeToArrayItems($scope.benefitAmountsUi, promotionFromAPI.benefitAmounts);
     }
 
-    function initPromisesResolved() {
+    function handlePromiseSuccessHandler(promotionDataFromAPI) {
       hideLoadingModal();
       $scope.readOnly = ($routeParams.state === 'view');
-      if (promotionFromAPI) {
-        setScopePromotionForViewFromAPIdata();
+      if (promotionDataFromAPI) {
+        setScopePromotionForViewFromAPIdata(angular.copy(promotionDataFromAPI));
       }
     }
 
-    function resolveInitPromises() {
-      $q.all(initPromises).then(initPromisesResolved, showResponseErrors);
-    }
-
-    function getPromotionMetaData() {
+    function getPromotionMetaData(promotionDataFromAPI) {
       displayLoadingModal();
       getBenefitTypes();
       getDiscountTypes();
@@ -510,7 +505,10 @@ angular.module('ts5App')
       getStationGlobals();
       getCurrencyGlobals();
       getMasterItems();
-      resolveInitPromises();
+
+      $q.all(initPromises).then(function () {
+        handlePromiseSuccessHandler(promotionDataFromAPI);
+      }, showResponseErrors);
     }
 
     function resolveCreatePromotion() {
@@ -555,14 +553,9 @@ angular.module('ts5App')
       promotionsFactory.savePromotion($routeParams.id, payload).then(resolveSavePromotion, showResponseErrors);
     }
 
-    function resolveGetPromotion(dataFromAPI) {
-      promotionFromAPI = angular.copy(dataFromAPI);
-      getPromotionMetaData();
-    }
-
     function getPromotion() {
       displayLoadingModal('Getting promotion');
-      promotionsFactory.getPromotion($routeParams.id).then(resolveGetPromotion, showResponseErrors);
+      promotionsFactory.getPromotion($routeParams.id).then(getPromotionMetaData, showResponseErrors);
     }
 
     function hasDepartureStationObject(index) {
