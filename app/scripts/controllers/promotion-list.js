@@ -18,7 +18,7 @@ angular.module('ts5App')
     $scope.promotionToDelete = {};
     $scope.defaultLimit = 100;
 
-    this.formatDates = function(data) {
+    this.formatDates = function (data) {
       var formattedData = angular.copy(data);
       angular.forEach(formattedData, function (item) {
         item.startDate = dateUtility.formatDateForApp(item.startDate);
@@ -28,9 +28,17 @@ angular.module('ts5App')
       return formattedData;
     };
 
+    this.showLoadingModal = function (text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    };
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+    };
+
     $scope.searchPromotions = function () {
       $this.showLoadingModal();
-      promotionsFactory.getPromotions(payloadUtility.serializeDates($scope.search)).then(function(dataFromAPI) {
+      promotionsFactory.getPromotions(payloadUtility.serializeDates($scope.search)).then(function (dataFromAPI) {
         $this.hideLoadingModal();
         $this.setPromotionsList(dataFromAPI);
       });
@@ -82,26 +90,26 @@ angular.module('ts5App')
     };
 
     this.setBenefitTypeList = function (dataFromAPI) {
-      $scope.benefitTypeList = dataFromAPI;
+      $scope.benefitTypeList = angular.copy(dataFromAPI);
     };
 
     this.setPromotionTypeList = function (dataFromAPI) {
-      $scope.promotionTypeList = dataFromAPI;
+      $scope.promotionTypeList = angular.copy(dataFromAPI);
     };
 
-    this.getPromotionList = function() {
+    this.getPromotionList = function () {
       return promotionsFactory.getPromotions({limit: $scope.defaultLimit}).then($this.setPromotionsList);
     };
 
-    this.getBenefitTypeList = function() {
+    this.getBenefitTypeList = function () {
       return recordsService.getBenefitTypes().then($this.setBenefitTypeList);
     };
 
-    this.getPromotionTypeList = function() {
+    this.getPromotionTypeList = function () {
       return recordsService.getPromotionTypes().then($this.setPromotionTypeList);
     };
 
-    this.makeDependencyPromises = function() {
+    this.makeDependencyPromises = function () {
       return [
         $this.getBenefitTypeList(),
         $this.getPromotionTypeList(),
@@ -109,34 +117,19 @@ angular.module('ts5App')
       ];
     };
 
-    this.showLoadingModal = function(text) {
-      angular.element('#loading').modal('show').find('p').text(text);
-    };
-
-    this.hideLoadingModal = function() {
-      angular.element('#loading').modal('hide');
-    };
-
-    this.setUIReady = function() {
+    this.dependenciesSuccess = function () {
       $scope.uiSelectTemplateReady = true;
       this.hideLoadingModal();
     };
 
-    this.dependenciesSuccess = function() {
-      $this.setUIReady();
-    };
-
-    this.getDependencies = function() {
-      $this.showLoadingModal('We are loading the Promotions data!');
+    this.init = function () {
+      $this.showLoadingModal('Loading Promotions.');
       var dependencyPromises = this.makeDependencyPromises();
-      $q.all(dependencyPromises).then(function(response) {
+      $q.all(dependencyPromises).then(function (response) {
         $this.dependenciesSuccess(response);
       });
     };
 
-    this.init = function() {
-      this.getDependencies();
-    };
 
     this.init();
   });
