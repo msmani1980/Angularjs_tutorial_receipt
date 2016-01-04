@@ -157,7 +157,7 @@ angular.module('ts5App')
           title: 'Promotion Management',
           menuItems: [{
             name: 'Manage Promotions',
-            route: emberURL + 'promotions',
+            route: '/#/promotions',
             icon: 'icon-manage-promotion',
             className: 'dashboard-managePromotions',
             package: 'PROMOTION',
