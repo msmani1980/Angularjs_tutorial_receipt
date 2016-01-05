@@ -70,6 +70,46 @@ angular.module('ts5App')
       return payload;
     }
 
+    function cashBagCreateSuccessHandler(newCashBag) {
+      hideLoadingModal();
+      $location.search('newId', newCashBag.id)
+        .search('scheduleDate', null)
+        .search('scheduleNumber', null)
+        .search('storeInstanceId', null)
+        .path('cash-bag-list');
+    }
+
+    function cashBagEditSuccessHandler() {
+      hideLoadingModal();
+      $location.path('cash-bag-list');
+      showMessage(null, false, 'successfully updated');
+    }
+
+    function errorHandler(response) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(response);
+    }
+
+    function editCashBag(formData) {
+      var saveCashBag = angular.copy(formData);
+      saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
+      $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
+      var payload = {
+        cashBag: saveCashBag
+      };
+      showLoadingModal('Saving Cash Bag');
+      cashBagFactory.updateCashBag($routeParams.id, payload).then(cashBagEditSuccessHandler, errorHandler);
+    }
+
+    function createCashBag(formData) {
+      showLoadingModal('Saving Cash Bag');
+      formData.isDelete = false;
+      cashBagFactory.createCashBag({
+        cashBag: formData
+      }).then(cashBagCreateSuccessHandler, errorHandler);
+    }
+
     $scope.formSave = function() {
       if ($scope.cashBagCreateForm.$invalid) {
         return;
@@ -81,32 +121,10 @@ angular.module('ts5App')
             showMessage(null, true, 'cannot edit cash bags that have been submitted!');
             break;
           }
-          var saveCashBag = angular.copy(formData);
-          saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
-          $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
-          var payload = {
-            cashBag: saveCashBag
-          };
-          showLoadingModal('Saving Cash Bag');
-          cashBagFactory.updateCashBag($routeParams.id, payload).then(function() {
-            hideLoadingModal();
-            $location.path('cash-bag-list');
-            showMessage(null, false, 'successfully updated');
-          }, showMessage);
+          editCashBag(formData);
           break;
         case 'create':
-          showLoadingModal('Saving Cash Bag');
-          formData.isDelete = false;
-          cashBagFactory.createCashBag({
-            cashBag: formData
-          }).then(function(newCashBag) {
-            hideLoadingModal();
-            $location.search('newId', newCashBag.id)
-              .search('scheduleDate', null)
-              .search('scheduleNumber', null)
-              .search('storeInstanceId', null)
-              .path('cash-bag-list');
-          }, showMessage);
+          createCashBag(formData);
           break;
       }
     };
