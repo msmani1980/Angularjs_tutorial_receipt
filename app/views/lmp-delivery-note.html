@@ -263,21 +263,15 @@
 
         <div class="well" ng-repeat="newItem in newItems track by $index">
           <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-2">
+            <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label>Item Code</label>
-                <select class="form-control" ng-change="addItem(masterItemSelected[masterItem.id], $index)"
-                        ng-model="masterItemSelected[masterItem.id]"
-                        ng-options="masterItem as masterItem.itemCode for masterItem in masterItemsAllowedInSelect"></select>
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-6 col-md-2">
-              <div class="form-group">
-                <label>Item Name*</label>
-                <select class="form-control" ng-change="addItem(masterItemSelected[masterItem.id], $index)"
-                        ng-model="masterItemSelected[masterItem.id]"
-                        ng-options="masterItem as masterItem.itemName for masterItem in masterItemsAllowedInSelect"></select>
+                <label>Item</label>
+                <ui-select name="item[{{item.masterItemId}}]" ng-model="masterItemSelected[masterItem.id]" theme="bootstrap" on-select="addItem($select.selected, $index)">
+                  <ui-select-match placeholder="Select an Item">{{ $select.selected.itemCode }} - {{ $select.selected.itemName}}</ui-select-match>
+                  <ui-select-choices repeat="masterItem in masterItemsAllowedInSelect | filter: $select.search">
+                    {{ masterItem.itemCode }} - {{ masterItem.itemName }}
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
 
