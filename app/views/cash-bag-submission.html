@@ -33,7 +33,7 @@
         </button>
 
         <button ng-click="showCreatePopup()" class="btn btn-primary">
-          <i class="fa fa-plus" aria-hidden="true"></i>
+          <i class="fa fa-send" aria-hidden="true"></i>
           <span class="hidden-xs">Submit</span>
         </button>
 
@@ -49,15 +49,7 @@
           <div class="col-xs-12 col-sm-6 col-md-3">
             <div class="form-group">
               <label>Bank Reference #</label>
-              <ui-select ng-model="search.bankReferenceNumber" theme="bootstrap">
-                <ui-select-match allow-clear placeholder="Select Bank Reference #">
-                  {{ $select.selected }}
-                </ui-select-match>
-                <ui-select-choices
-                  repeat="bankReference in bankReferenceNumbers | filter:$select.search track by $index">
-                  <div ng-bind-html="bankReference | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
+              <input type="text" ng-model="search.bankReferenceNumber" class="form-control"/>
             </div>
           </div>
 
@@ -79,12 +71,12 @@
 
       <div class="panel-footer text-right">
         <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-primary" ng-click="searchCashBags()">Search</button>
       </div>
     </form>
   </div>
 
-  <table infinite-scroll="updateCashBagList()" ng-show="searchResults.length" class="table table-bordered table-hover ng-scope">
+  <table infinite-scroll="updateCashBagList()" ng-show="cashBagList.length" class="table table-bordered table-hover ng-scope">
     <thead>
     <tr>
       <th width="5%"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
@@ -98,7 +90,7 @@
     </thead>
     <tbody>
 
-    <tr ng-repeat="cashBag in cashBagList | index | filter: search as searchResults">
+    <tr ng-repeat="cashBag in cashBagList | index">
       <td><input class="btn btn-default" type="checkbox" value="1" ng-model="cashBag.selected" ng-click="toggleCheckbox(cashBag)"></td>
       <td>{{cashBag.cashBagNumber}}</td>
       <td>{{cashBag.submittedBy}}</td>

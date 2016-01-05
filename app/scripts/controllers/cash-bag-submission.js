@@ -12,19 +12,23 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
   function ($scope, $http, GlobalMenuService, cashBagFactory, $filter, dateUtility, lodash) {
     $scope.viewName = 'Cash Bag Submission';
     $scope.search = {};
-    $scope.bankReferenceNumbers = [];
-    $scope.cashBagNumberList = [];
-    $scope.scheduleNumber = [];
-    $scope.cashBagList = [];
-    $scope.allCheckboxesSelected = false;
 
     var $this = this;
     this.loadingProgress = false;
-    this.meta = {
-      count: undefined,
-      limit: 100,
-      offset: 0
-    };
+    this.isSearching = false;
+
+    function initializeData() {
+      $scope.bankReferenceNumbers = [];
+      $scope.cashBagNumberList = [];
+      $scope.scheduleNumber = [];
+      $scope.cashBagList = [];
+      $scope.allCheckboxesSelected = false;
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+    }
 
     function showLoadingBar() {
       angular.element('.loading-more').show();
@@ -89,6 +93,21 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       $this.loadingProgress = false;
     };
 
+    function generatePayload() {
+      var companyId = GlobalMenuService.company.get();
+      var searchParams = angular.copy($scope.search);
+      if (angular.isDefined(searchParams.isSubmitted) && searchParams.isSubmitted.length === 0) {
+        delete searchParams.isSubmitted;
+      }
+      var payload = {
+        submission: 'submit',
+        limit: $this.meta.limit,
+        offset: $this.meta.offset,
+        companyId: companyId
+      };
+      return ($this.isSearching) ? angular.extend(payload, searchParams) : payload;
+    }
+
     $scope.updateCashBagList = function () {
       if ($this.meta.offset >= $this.meta.count) {
         return;
@@ -99,13 +118,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       showLoadingBar();
       $this.loadingProgress = true;
 
-      var companyId = GlobalMenuService.company.get();
-      var payload = {
-        submission: 'submit',
-        limit: $this.meta.limit,
-        offset: $this.meta.offset,
-        companyId: companyId
-      };
+      var payload = generatePayload();
       cashBagFactory.getCashBagList(null, payload).then($this.getCashBagListSuccessHandler);
       $this.meta.offset += $this.meta.limit;
     };
@@ -119,5 +132,19 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     $scope.toggleCheckbox = function () {
       $scope.allCheckboxesSelected = false;
     };
+
+    $scope.clearForm = function () {
+      $this.isSearching = false;
+      initializeData();
+      $scope.updateCashBagList();
+    };
+
+    $scope.searchCashBags = function () {
+      initializeData();
+      $this.isSearching = true;
+      $scope.updateCashBagList();
+    };
+
+    initializeData();
 
   });
