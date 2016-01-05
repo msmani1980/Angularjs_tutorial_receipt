@@ -112,6 +112,9 @@ angular.module('ts5App', [
   }).when('/company/:id', {
     templateUrl: 'views/company.html',
     controller: 'CompanyCtrl'
+  }).when('/company-create', {
+    templateUrl: 'views/company-create.html',
+    controller: 'CompanyCreateCtrl'
   }).when('/store-number', {
     templateUrl: 'views/store-number-create.html',
     controller: 'StoreNumberCreateCtrl'
@@ -298,6 +301,10 @@ angular.module('ts5App', [
     templateUrl: 'views/discount-create.html',
     controller: 'DiscountCreateCtrl',
     controllerAs: 'discountCreate'
+  }).when('/promotions', {
+    templateUrl: 'views/promotion-list.html',
+    controller: 'PromotionListCtrl',
+    controllerAs: 'promotionList'
   }).otherwise({
     redirectTo: '/'
   });

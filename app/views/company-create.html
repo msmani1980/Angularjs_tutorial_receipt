@@ -1,0 +1,359 @@
+<div class="container module-container">
+
+  <div class="top-header">
+
+    <div class="container">
+
+      <div class="edit-controls">
+
+        <div class="row">
+
+          <div class="col-xs-6">
+
+            <h2 class="view-name"> {{ viewName }} </h2>
+
+          </div>
+
+          <div class="col-xs-6 text-right">
+
+            <fieldset ng-hide="viewOnly">
+
+              <button class="btn btn-default" ng-click="leaveView('company-list')">
+                <span class="fa fa-remove" aria-hidden="true"></span>
+                <span class="hidden-xs">Cancel</span>
+              </button>
+
+              <button class="btn btn-primary" ng-click="submitForm(formData)">
+                <span class="fa fa-check-square-o" aria-hidden="true"></span>
+                <span class="hidden-xs">{{ buttonText }}</span>
+              </button>
+
+            </fieldset>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="form-nav btn-group-justified item-top" role="group" aria-label="..."
+           ng-init="activeBtn = 'item-information'">
+
+        <a ng-click="formScroll('company-information')" ng-class="{'active':activeBtn === 'company-information'}"
+           type="button" class="btn btn-default">
+          Company Information
+        </a>
+
+        <a ng-click="formScroll('company-type')" ng-class="{'active':activeBtn === 'company-type'}" type="button"
+           class="btn btn-default">
+          Company Type
+        </a>
+
+      </div>
+
+      <p>All required fields are marked with a *.</p>
+
+    </div>
+
+  </div>
+  <!--/TopHeader -->
+
+  <div class="create-form-container" ng-show="uiSelectTemplateReady">
+
+    <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+    </error-dialog>
+
+    <form name="form" class="form edit-form create-item-form">
+
+      <h3 id="company-information">Company Information</h3>
+
+      <div class="row">
+
+        <div class="col-xs-12 col-sm-6">
+
+          <fieldset ng-disabled="isDisabled()">
+
+            <input-text label="Company Name" name="companyName" required="true" pattern="regexp.sentence"
+                        placeholder="Company123" min-length="1" max-length="40"></input-text>
+
+            <input-text label="Legal Name" name="legalName" required="true" pattern="regexp.sentence"
+                        placeholder="Company 123, Ltd" min-length="1" max-length="40"></input-text>
+
+            <input-text label="Company Code" name="companyCode" required="true" pattern="regexp.alphanumeric"
+                        placeholder="New Cool Item" min-length="1" max-length="30"></input-text>
+
+            <label>Company Status</label>
+            <div class="form-group">
+              <label><input name="isRestriction" ng-model="formData.isActive" data-ng-value="true"  type="radio" ng-disabled="isDisabled()" /> Active</label>
+              <label><input name="isRestriction" ng-model="formData.isActive" data-ng-value="false" type="radio" ng-disabled="isDisabled()" /> Inactive</label>
+            </div>
+
+          </fieldset>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-6">
+
+          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
+
+            <div class="form-group">
+              <input-text label="DBA Name" name="dbaName" required="true" pattern="regexp.alphanumeric"
+                          placeholder="Doing Business As..." min-length="1" max-length="30"></input-text>
+
+              <input-text label="EDI Name" name="ediName" required="true" pattern="regexp.alphanumeric"
+                          placeholder="Electronic Data Interchange" min-length="1" max-length="30"></input-text>
+
+              <div class="row" >
+                <div class="col-xs-9 col-sm-9">
+                  <label>Tax IDs ({{formData.taxes.length}})</label>
+                </div>
+                <div class="col-xs-3 col-sm-3">
+                  <span class="btn btn-default" ng-click="addTax(tax)">
+                    <i class="fa"></i>
+                    <span class="hidden-xs">Add Tax ID</span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="row" ng-repeat="tax in formData.taxes" >
+                <div class="col-xs-10 col-sm-10">
+                  <input custom-pattern="alphanumeric"
+                         custom-validity
+                         required
+                         type="text"
+                         maxlength="25"
+                         name="taxId-{{$index}}"
+                         class="form-control"
+                         id="taxId-{{$index}}"
+                         ng-model="tax.taxIdNumber"/>
+                </div>
+                <div class="col-xs-2 col-sm-2">
+                  <span class="pull-left btn btn-danger btn-xs" ng-click="removeTax(tax)">
+                    <i class="fa fa-close"></i>
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+          </fieldset>
+
+        </div>
+      </div>
+
+      <fieldset >
+
+        <h3 id="company-type">Company Type</h3>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <label>Company Type*</label>
+
+            <select ng-model="formData.companyTypeId" class="form-control">
+              <option ng-selected="formData.companyTypeId === companyType.id" ng-repeat="companyType in companyTypes"
+                      value="{{ companyType.id }}">{{ companyType.name }}
+              </option>
+            </select>
+
+          </div>
+
+          <div class="col-xs-12 col-sm-6" ng-show="showBaseCurrency">
+            <label>Base Currency*</label>
+
+            <select ng-model="formData.baseCurrencyId" class="form-control">
+              <option ng-selected="formData.baseCurrencyId === currency.id" ng-repeat="currency in currencies"
+                      value="{{ currency.id }}">{{ currency.currencyCode }} - {{ currency.currencyName }}
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="row" ng-show="showAdditionalFields" >
+          <div class="col-xs-12 col-sm-6">
+            <label>Parent Company</label>
+            <select ng-model="formData.parentCompanyId" class="form-control">
+              <option ng-selected="formData.parentCompanyId === company.id" ng-repeat="company in companies"
+                      value="{{ company.id }}">{{ company.companyName }}
+              </option>
+            </select>
+
+          </div>
+
+          <div class="col-xs-12 col-sm-6">
+            <label>Portal Default Language</label>
+            <span>English</span>
+
+            <label>Portal Additional Languages</label>
+            <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.languages" theme="bootstrap">
+              <ui-select-match placeholder="Languages" >{{ $item.languageName }}
+              </ui-select-match>
+              <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
+                <div ng-bind-html="language.languageName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+
+            <label>ePOS Additional Languages</label>
+            <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.eposLanguages" theme="bootstrap">
+              <ui-select-match placeholder="Languages" >{{ $item.languageName }}
+              </ui-select-match>
+              <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
+                <div ng-bind-html="language.languageName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+
+          </div>
+
+        </div>
+
+      </fieldset>
+
+      <fieldset ng-show="showAdditionalFields" >
+
+        <div class="row" >
+          <div class="col-xs-12 col-sm-6">
+            <h3>VAT Number ({{ formData.countryVats.length }})</h3>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <span class="btn btn-default" ng-click="addCountryVat()">
+              <i class="fa"></i>
+              <span class="hidden-xs">Add Country</span>
+            </span>
+          </div>
+        </div>
+
+
+        <div class="row" ng-repeat="countryVat in formData.countryVats" ng-init="countryVat_index = $index">
+          <div class="col-xs-12 col-sm-6">
+            <label>Country*</label>
+
+            <select ng-model="countryVat.countryId" class="form-control">
+              <option ng-selected="countryVat.countryId === country.id" ng-repeat="country in countries"
+                      value="{{ country.id }}">{{ country.countryName }}
+              </option>
+            </select>
+
+          </div>
+
+          <div class="col-xs-12 col-sm-6" >
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <label>Vat Number ({{ countryVat.vatAmounts.length }})</label>
+              </div>
+              <div class="col-xs-12 col-sm-6">
+                <span class="btn btn-default" ng-click="addVatAmount(countryVat)">
+                  <i class="fa"></i>
+                  <span class="hidden-xs">Add VAT</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="row" ng-repeat="vatAmount in countryVat.vatAmounts" >
+              <div class="col-xs-10 col-sm-10">
+                <input custom-pattern="number"
+                       custom-validity
+                       required
+                       type="text"
+                       maxlength="25"
+                       name="countryVatAmount_{{countryVat_index}}_{{$index}}"
+                       class="form-control"
+                       id="countryVatAmount_{{countryVat_index}}_{{$index}}"
+                       ng-model="vatAmount.vatAmount"/>
+              </div>
+              <div class="col-xs-2 col-sm-2">
+                <span class="pull-left btn btn-danger btn-xs btn-remove-price-group" ng-click="removeVatAmount(countryVat, vatAmount)">
+                  <i class="fa fa-close"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </fieldset>
+
+      <fieldset ng-show="showAdditionalFields" >
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <h3>Cabin Classes ({{ formData.companyCabinClasses.length }})</h3>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <span class="btn btn-default" ng-click="addCabinClass(tax)">
+              <i class="fa"></i>
+              <span class="hidden-xs">Add Cabin Class</span>
+            </span>
+          </div>
+        </div>
+
+
+        <div class="row" ng-repeat="cabinClass in formData.companyCabinClasses track by $index">
+          <div class="col-xs-12 col-sm-12">
+            <div class="row">
+              <div class="col-xs-10 col-sm-10">
+              </div>
+              <div class="col-xs-2 col-sm-2">
+                <span class="pull-left btn btn-danger btn-xs btn-remove-price-group" ng-click="removeCabinClass(cabinClass)">
+                  <i class="fa fa-close"></i>
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <label>Cabin Name*</label>
+                <input custom-pattern="alphanumeric"
+                       custom-validity
+                       required
+                       type="text"
+                       maxlength="25"
+                       name="cabinClassName-{{$index}}"
+                       class="form-control"
+                       id="cabinClassName-{{$index}}"
+                       ng-model="cabinClass.cabinClass"/>
+              </div>
+              <div class="col-xs-12 col-sm-6">
+                <label>Cabin Code*</label>
+                <input custom-pattern="alphanumeric"
+                       custom-validity
+                       required
+                       type="text"
+                       maxlength="25"
+                       name="cabinClassCode-{{$index}}"
+                       class="form-control"
+                       id="cabinClassCode-{{$index}}"
+                       ng-model="cabinClass.code"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 col-sm-12">
+                <label>Cabin Description</label>
+                <input custom-pattern="word"
+                       custom-validity
+                       required
+                       type="text"
+                       maxlength="25"
+                       name="cabinClassDescription-{{$index}}"
+                       class="form-control"
+                       id="cabinClassDescription-{{$index}}"
+                       ng-model="cabinClass.cabinClassDescription" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </fieldset>
+
+    </form>
+
+  </div>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal list-path="company-list" create-path="company-create"></form-success-modal>
+
+<form-update-modal list-path="company-list"></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Company Management"></dynamic-left-nav>

@@ -19,11 +19,17 @@ angular.module('ts5App')
       getPromotion: {
         method: 'GET'
       },
+      getPromotions: {
+        method: 'GET'
+      },
       createPromotion: {
         method: 'POST'
       },
       savePromotion: {
         method: 'PUT'
+      },
+      deletePromotion: {
+        method: 'DELETE'
       }
     };
 
@@ -31,6 +37,10 @@ angular.module('ts5App')
 
     function getPromotion(id){
       return requestResource.getPromotion({id: id}).$promise;
+    }
+
+    function getPromotions(payload){
+      return requestResource.getPromotions(payload).$promise;
     }
 
     function createPromotion(payload){
@@ -41,10 +51,16 @@ angular.module('ts5App')
       return requestResource.savePromotion({id: id}, payload).$promise;
     }
 
+    function deletePromotion(id){
+      return requestResource.deletePromotion({id: id}).$promise;
+    }
+
     return{
       getPromotion: getPromotion,
+      getPromotions: getPromotions,
       createPromotion: createPromotion,
-      savePromotion: savePromotion
+      savePromotion: savePromotion,
+      deletePromotion: deletePromotion
     };
 
   });

@@ -46,21 +46,6 @@
       <div class="panel-body">
         <div class="row">
 
-          <div class="col-md-3 col-sm-6">
-            <div class="form-group">
-              <label>Cash Bag #</label>
-              <ui-select ng-model="search.cashBagNumber" theme="bootstrap">
-                <ui-select-match allow-clear placeholder="Select Cash Bag #">
-                  {{ $select.selected }}
-                </ui-select-match>
-                <ui-select-choices
-                  repeat="cashBagNumber in cashBagNumberList | filter:$select.search track by $index">
-                  <div ng-bind-html="cashBagNumber | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-          </div>
-
           <div class="col-xs-12 col-sm-6 col-md-3">
             <div class="form-group">
               <label>Bank Reference #</label>
@@ -71,21 +56,6 @@
                 <ui-select-choices
                   repeat="bankReference in bankReferenceNumbers | filter:$select.search track by $index">
                   <div ng-bind-html="bankReference | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-          </div>
-
-          <div class="col-md-3 col-sm-6">
-            <div class="form-group">
-              <label>Schedule #</label>
-              <ui-select ng-model="search.scheduleNumber" theme="bootstrap">
-                <ui-select-match allow-clear placeholder="Select Schedule #">
-                  {{ $select.selected }}
-                </ui-select-match>
-                <ui-select-choices
-                  repeat="scheduleNumber in scheduleNumberList | filter:$select.search track by $index">
-                  <div ng-bind-html="scheduleNumber | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
             </div>

@@ -86,7 +86,7 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
   }));
 
   it('should attach a viewName to the scope', function() {
-    expect(scope.viewName).toBe('Manage Retail Company Exchange Rate');
+    expect(scope.viewName).toBe('Manage Retail Company ePOS Exchange Rate');
   });
 
   it('should get the company global currencies called', function() {
