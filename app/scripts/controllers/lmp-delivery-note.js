@@ -173,7 +173,7 @@ angular.module('ts5App')
       var newMasterItems = $filter('orderBy')(filteredResponseMasterItems, 'itemName');
       removeNullDeliveredItems();
       $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
-      setAllowedMasterItems()
+      setAllowedMasterItems();
     }
 
     function getMasterRetailItemsByCatererStationId(catererStationId) {
