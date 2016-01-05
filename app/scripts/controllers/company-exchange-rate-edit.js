@@ -13,7 +13,7 @@ angular.module('ts5App')
     var $this = this;
 
     this.companyId = GlobalMenuService.company.get();
-    $scope.viewName = 'Manage Retail Company Exchange Rate';
+    $scope.viewName = 'Manage Retail Company ePOS Exchange Rate';
     $scope.search = {};
     $scope.globalCurrencies = [];
     $scope.currencyDenominations = {};
