@@ -55,4 +55,19 @@ describe('Service: promotionsService', function () {
     });
   });
 
+
+  it('should delete promotion', function() {
+    httpBackend.expectDELETE(/promotions\/1/).respond(200, {});
+    promotionsService.deletePromotion(1);
+    httpBackend.flush();
+  });
+
+  it('should get all promotions', function(){
+    var expectedUri = /promotions/;
+    httpBackend.expectGET(expectedUri).respond(200, {});
+    promotionsService.getPromotions().then(function (response) {
+      expect(response).toBeDefined();
+    });
+    httpBackend.flush();
+  });
 });

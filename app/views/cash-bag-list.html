@@ -141,7 +141,7 @@
     </div>
   </div>
 
-  <div class="panel panel-default collapse no-transition" id="search-collapse">
+  <div class="panel panel-default no-transition" id="search-collapse">
     <form name="cashBagSearchForm" ng-submit="searchCashBag()">
       <div class="panel-body">
         <div class="row">
@@ -149,14 +149,14 @@
           <div class="col-md-3 col-sm-6">
             <div class="form-group">
               <label for="cashBag-number">Cash Bag</label>
-              <input ng-model="search.cashBagNumber" type="text" class="form-control" id="cashBag-number">
+              <input ng-model="search.cashBagNumber" type="text" class="form-control" id="cashBag-number" custom-focus="isListFromEdit()">
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-6 col-md-3">
             <div class="form-group">
               <label for="cashBag-bankRef">Bank Ref #</label>
-              <input ng-model="search.bankReferenceNumber" type="text" class="form-control">
+              <input ng-model="search.bankReferenceNumber" type="text" class="form-control" custom-focus="!isListFromEdit()">
             </div>
           </div>
 

@@ -10,7 +10,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, dateUtility, lodash) {
+  .controller('CashBagCtrl', function($scope, $routeParams, $q, $location, $localStorage, ngToast, cashBagFactory,
+    dateUtility, lodash) {
 
     // controller global properties
     var _companyId = null;
@@ -25,6 +26,7 @@ angular.module('ts5App')
     $scope.displayedCashierDate = dateUtility.formatDateForApp(dateUtility.now(), 'x');
     $scope.saveButtonName = '';
     $scope.state = '';
+    delete $localStorage.isListFromEdit;
 
     function formatAsCurrency(valueToFormat) {
       return sprintf('%.4f', valueToFormat);
@@ -59,7 +61,7 @@ angular.module('ts5App')
     // scope methods
     function cleanPayload(payload) {
       delete payload.storeNumber;
-      angular.forEach(payload.cashBagCurrencies, function (currency) {
+      angular.forEach(payload.cashBagCurrencies, function(currency) {
         delete currency.bankExchangeRate;
         delete currency.paperExchangeRate;
         delete currency.coinExchangeRate;
@@ -68,7 +70,47 @@ angular.module('ts5App')
       return payload;
     }
 
-    $scope.formSave = function () {
+    function cashBagCreateSuccessHandler(newCashBag) {
+      hideLoadingModal();
+      $location.search('newId', newCashBag.id)
+        .search('scheduleDate', null)
+        .search('scheduleNumber', null)
+        .search('storeInstanceId', null)
+        .path('cash-bag-list');
+    }
+
+    function cashBagEditSuccessHandler() {
+      hideLoadingModal();
+      $location.path('cash-bag-list');
+      showMessage(null, false, 'successfully updated');
+    }
+
+    function errorHandler(response) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(response);
+    }
+
+    function editCashBag(formData) {
+      var saveCashBag = angular.copy(formData);
+      saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
+      $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
+      var payload = {
+        cashBag: saveCashBag
+      };
+      showLoadingModal('Saving Cash Bag');
+      cashBagFactory.updateCashBag($routeParams.id, payload).then(cashBagEditSuccessHandler, errorHandler);
+    }
+
+    function createCashBag(formData) {
+      showLoadingModal('Saving Cash Bag');
+      formData.isDelete = false;
+      cashBagFactory.createCashBag({
+        cashBag: formData
+      }).then(cashBagCreateSuccessHandler, errorHandler);
+    }
+
+    $scope.formSave = function() {
       if ($scope.cashBagCreateForm.$invalid) {
         return;
       }
@@ -79,37 +121,17 @@ angular.module('ts5App')
             showMessage(null, true, 'cannot edit cash bags that have been submitted!');
             break;
           }
-          var saveCashBag = angular.copy(formData);
-          saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
-          $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
-          var payload = {
-            cashBag: saveCashBag
-          };
-          showLoadingModal('Saving Cash Bag');
-          cashBagFactory.updateCashBag($routeParams.id, payload).then(function () {
-            hideLoadingModal();
-            $location.path('cash-bag-list');
-            showMessage(null, false, 'successfully updated');
-          }, showMessage);
+          editCashBag(formData);
           break;
         case 'create':
-          showLoadingModal('Saving Cash Bag');
-          formData.isDelete = false;
-          cashBagFactory.createCashBag({cashBag: formData}).then(function (newCashBag) {
-            hideLoadingModal();
-            $location.search('newId', newCashBag.id)
-              .search('scheduleDate', null)
-              .search('scheduleNumber', null)
-              .search('storeInstanceId', null)
-              .path('cash-bag-list');
-          }, showMessage);
+          createCashBag(formData);
           break;
       }
     };
 
     function cashBagCurrenciesIsSet(cashBagCurrencies) {
       var isSet = true;
-      angular.forEach(cashBagCurrencies, function (currency) {
+      angular.forEach(cashBagCurrencies, function(currency) {
         if (isSet) {
           if (currency.bankAmount !== '0.0000' && currency.bankAmount !== null) {
             isSet = false;
@@ -141,27 +163,27 @@ angular.module('ts5App')
       return cashBagCurrenciesIsSet(cashBag.cashBagCurrencies);
     }
 
-    $scope.removeRecord = function (cashBag) {
+    $scope.removeRecord = function(cashBag) {
       if (!canDelete(cashBag)) {
         return false;
       }
-      cashBagFactory.deleteCashBag(cashBag.id).then(function () {
+      cashBagFactory.deleteCashBag(cashBag.id).then(function() {
           showMessage(null, false, 'successfully deleted');
           $scope.readOnly = true;
         },
         showMessage);
     };
 
-    $scope.isBankExchangePreferred = function () {
+    $scope.isBankExchangePreferred = function() {
       if (!$scope.companyPreferences) {
         return false;
       }
-      return $scope.companyPreferences.filter(function (feature) {
-          return (feature.featureCode === 'EXR' && feature.optionCode === 'ERT' && feature.choiceCode === 'BNK');
-        }).length > 0;
+      return $scope.companyPreferences.filter(function(feature) {
+        return (feature.featureCode === 'EXR' && feature.optionCode === 'ERT' && feature.choiceCode === 'BNK');
+      }).length > 0;
     };
 
-    $scope.isCashBagDeleted = function () {
+    $scope.isCashBagDeleted = function() {
       return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === 'true');
     };
 
@@ -176,50 +198,54 @@ angular.module('ts5App')
       $scope.displayedScheduleDate = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
       $scope.cashBag.scheduleNumber = storeInstanceData.scheduleNumber;
       $scope.cashBag.scheduleDate = moment(storeInstanceData.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
-      cashBagFactory.getStoreList({id: storeInstanceData.storeId}).then(getStoreResponseHandler);
+      cashBagFactory.getStoreList({
+        id: storeInstanceData.storeId
+      }).then(getStoreResponseHandler);
     }
 
     function promisesResponseHandler() {
       if (angular.isUndefined($scope.dailyExchangeRates) || $scope.dailyExchangeRates.length === 0) {
-        showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
+        showMessage(null, true,
+          'no daily exchange rate created for this date! please create one on exchange rates page');
         hideLoadingModal();
         return;
       }
       var dailyExchangeRateCurrencies = $scope.dailyExchangeRates[0].dailyExchangeRateCurrencies;
       $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
 
-      angular.forEach($scope.cashBag.cashBagCurrencies, function (cashBagCurrency) {
-        var dailyCurrency = lodash.findWhere(dailyExchangeRateCurrencies, {retailCompanyCurrencyId: cashBagCurrency.currencyId});
+      angular.forEach($scope.cashBag.cashBagCurrencies, function(cashBagCurrency) {
+        var dailyCurrency = lodash.findWhere(dailyExchangeRateCurrencies, {
+          retailCompanyCurrencyId: cashBagCurrency.currencyId
+        });
         if (dailyCurrency) {
           cashBagCurrency.paperExchangeRate = dailyCurrency.paperExchangeRate;
           cashBagCurrency.coinExchangeRate = dailyCurrency.coinExchangeRate;
           cashBagCurrency.bankExchangeRate = dailyCurrency.bankExchangeRate;
-          cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) + parseFloat(cashBagCurrency.coinAmountEpos));
+          cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) +
+            parseFloat(cashBagCurrency.coinAmountEpos));
           dailyExchangeRateCurrencies.splice(dailyExchangeRateCurrencies.indexOf(dailyCurrency), 1);
         }
       });
 
-      angular.forEach(dailyExchangeRateCurrencies, function (currency) {
-        $scope.cashBag.cashBagCurrencies.push(
-          {
-            currencyId: currency.retailCompanyCurrencyId,
-            bankAmount: currency.bankExchangeRate,
-            paperAmountManual: formatAsCurrency(0),
-            coinAmountManual: formatAsCurrency(0),
-            paperAmountEpos: 0,
-            coinAmountEpos: 0,
-            flightAmount: '-',
-            paperExchangeRate: currency.paperExchangeRate,
-            coinExchangeRate: currency.coinExchangeRate,
-            bankExchangeRate: currency.bankExchangeRate
-          }
-        );
+      angular.forEach(dailyExchangeRateCurrencies, function(currency) {
+        $scope.cashBag.cashBagCurrencies.push({
+          currencyId: currency.retailCompanyCurrencyId,
+          bankAmount: currency.bankExchangeRate,
+          paperAmountManual: formatAsCurrency(0),
+          coinAmountManual: formatAsCurrency(0),
+          paperAmountEpos: 0,
+          coinAmountEpos: 0,
+          flightAmount: '-',
+          paperExchangeRate: currency.paperExchangeRate,
+          coinExchangeRate: currency.coinExchangeRate,
+          bankExchangeRate: currency.bankExchangeRate
+        });
       });
     }
 
     function getCashBag() {
       _promises.push(
-        cashBagFactory.getCashBag($routeParams.id).then(function (response) {
+        cashBagFactory.getCashBag($routeParams.id).then(function(response) {
           $scope.cashBag = angular.copy(response);
           if ($scope.cashBag.totalCashBags) {
             $scope.cashBag.totalCashBags = $scope.cashBag.totalCashBags.toString();
@@ -233,7 +259,7 @@ angular.module('ts5App')
 
     function getCompany() {
       _promises.push(
-        cashBagFactory.getCompany(_companyId).then(function (response) {
+        cashBagFactory.getCompany(_companyId).then(function(response) {
           $scope.company = response;
         })
       );
@@ -242,7 +268,7 @@ angular.module('ts5App')
     function getCashHandlerCompany() {
       // TODO: get correct cash handler company
       _promises.push(
-        cashBagFactory.getCompany(362).then(function (response) {
+        cashBagFactory.getCompany(362).then(function(response) {
           $scope.cashHandlerCompany = angular.copy(response);
         })
       );
@@ -251,10 +277,10 @@ angular.module('ts5App')
 
     function getCompanyCurrencies() {
       _promises.push(
-        cashBagFactory.getCompanyCurrencies().then(function (response) {
+        cashBagFactory.getCompanyCurrencies().then(function(response) {
           $scope.companyCurrencies = angular.copy(response.response);
           $scope.currencyCodes = [];
-          angular.forEach(response.response, function (currency) {
+          angular.forEach(response.response, function(currency) {
             $scope.currencyCodes[currency.id] = currency.code;
           });
         })
@@ -278,7 +304,8 @@ angular.module('ts5App')
     function getExchangeRates(cashBag) {
       if (cashBag && cashBag.dailyExchangeRateId) {
         _promises.push(
-          cashBagFactory.getDailyExchangeById(_companyId, cashBag.dailyExchangeRateId).then(dailyExchangeByIdResponseHandler)
+          cashBagFactory.getDailyExchangeById(_companyId, cashBag.dailyExchangeRateId).then(
+            dailyExchangeByIdResponseHandler)
         );
       } else {
         var dailyExchangeDate = moment().format('YYYYMMDD');
@@ -290,7 +317,7 @@ angular.module('ts5App')
 
     function getCompanyPreferences() {
       _promises.push(
-        cashBagFactory.getCompanyPreferences().then(function (response) {
+        cashBagFactory.getCompanyPreferences().then(function(response) {
           $scope.companyPreferences = angular.copy(response.preferences);
         })
       );
@@ -305,7 +332,7 @@ angular.module('ts5App')
     }
 
     // CRUD - Create
-    this.createCashBag = function () {
+    this.createCashBag = function() {
       setCreatePromises();
       cashBagFactory.getStoreInstance($routeParams.storeInstanceId).then(getStoreInstanceListResponseHandler);
 
@@ -330,14 +357,15 @@ angular.module('ts5App')
     }
 
     // CRUD - Read
-    this.viewCashBag = function () {
+    this.viewCashBag = function() {
       setReadPromises();
-      $q.all(_promises).then(function () {
+      $q.all(_promises).then(function() {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.displayedCashierDate = dateUtility.formatDateForApp($scope.cashBag.createdOn);
         getExchangeRates($scope.cashBag);
         if ($scope.cashBag.storeInstanceId) {
-          cashBagFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(getStoreInstanceListResponseHandler);
+          cashBagFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(
+            getStoreInstanceListResponseHandler);
         } else {
           hideLoadingModal();
         }
@@ -353,15 +381,16 @@ angular.module('ts5App')
     }
 
     // CRUD - Update
-    this.editCashBag = function () {
+    this.editCashBag = function() {
       setUpdatePromises();
       $scope.readOnly = false;
-      $q.all(_promises).then(function () {
+      $q.all(_promises).then(function() {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.saveButtonName = 'Save';
         getExchangeRates($scope.cashBag);
         if ($scope.cashBag.storeInstanceId) {
-          cashBagFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(getStoreInstanceListResponseHandler);
+          cashBagFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(
+            getStoreInstanceListResponseHandler);
         } else {
           hideLoadingModal();
         }
@@ -381,5 +410,9 @@ angular.module('ts5App')
     }
 
     init();
+
+    $scope.isFocusBankReferenceNumber = function() {
+      return !!$localStorage.isEditFromList;
+    };
 
   });

@@ -1,0 +1,141 @@
+<div class="container">
+
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-4">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-8 text-right">
+
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+
+        <a href="/#/promotions/create" class="btn btn-primary">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+          <span class="hidden-xs">Create Promotion</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form name="promotionSearchForm" ng-submit="searchPromotions()">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="promotion-code">Promotion Code</label>
+                <input ng-model="search.promotionCode" type="text" class="form-control" id="promotion-code" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="promotion-name">Promotion Name</label>
+                <input ng-model="search.promotionName" type="text" class="form-control" id="promotion-name" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="qualifiers-type">Qualifier Type</label>
+                <select ng-model="search.qualifierTypeId" class="form-control" id="qualifiers-type">
+                  <option value="{{type.id}}" ng-repeat="type in promotionTypeList | unique: 'id'">{{ type.name }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="benefit-type">Benefit Type</label>
+                <select ng-model="search.benefitTypeId" class="form-control" id="benefit-type">
+                  <option value="{{type.id}}" ng-repeat="type in benefitTypeList | unique: 'id'">{{ type.name }}</option>
+                </select>
+              </div>
+            </div>
+
+            <date-picker
+              class="col-xs-12 col-md-4 col-sm-12"
+              element-class="col-xs-6 col-sm-6"
+              start-date-model="search.startDate"
+              end-date-model="search.endDate"
+              label-from="Effective From *"
+              label-to="Effective To *"
+              is-search-field="true">
+            </date-picker>
+
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+  <table class="table table-responsive table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>Promotion Code</th>
+      <th>Promotion Name</th>
+      <th>Qualifier Type</th>
+      <th>Benefit Type</th>
+      <th>Effective From</th>
+      <th>Effective To</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr id="promotion-{{$index}}"
+        ng-repeat="promotion in promotionList | toArray:false | filter:{promotionCode: search.promotionCode, promotionName: search.promotionName, benefitTypeId: search.benefitTypeId, promotionTypeId: search.qualifierTypeId, name: search.name} | orderBy: 'startDate' track by $index">
+      <td>{{ promotion.promotionCode }}</td>
+      <td>{{ promotion.promotionName }}</td>
+      <td>{{ promotion.promotionTypeName }}</td>
+      <td>{{ promotion.benefitTypeName }}</td>
+      <td>{{ promotion.startDate }}</td>
+      <td>{{ promotion.endDate }}</td>
+      <td>
+        <button class="btn btn-primary btn-xs" ng-click="editPromotion(promotion)" ng-show="isPromotionEditable(promotion)">
+          <i class="fa fa-pencil"></i>
+        </button>
+        <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, promotion)" ng-hide="isPromotionReadOnly(promotion)">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="modal fade delete-warning-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure?</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>You are about to permanently delete <strong>{{promotionToDelete.promotionName}}</strong></p>
+      </div>
+
+      <ul>
+        <li><strong>Promotion Code: </strong>{{ promotionToDelete.promotionCode }}</li>
+        <li><strong>Start Date: </strong>{{ promotionToDelete.startDate }}</li>
+        <li><strong>End Date: </strong>{{ promotionToDelete.endDate }}</li>
+      </ul>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="deletePromotion()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
