@@ -10,28 +10,33 @@
 angular.module('ts5App')
   .service('cashBagService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/cash-bags';
+    var requestURL = ENV.apiUrl + '/api/cash-bags/:id/:submission';
 
     var requestParameters = {
-      id: '@id'
+      id: '@id',
+      submission: '@submission'
     };
 
     var actions = {
       getCashBag: {
-        method: 'GET'
+        method: 'GET',
+        headers: {companyId: 362}
       },
       updateCashBag: {
-        method: 'PUT'
+        method: 'PUT',
+        headers: {companyId: 362}
       },
       deleteCashBag: {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {companyId: 362}
       },
       createCashBag: {
-        method: 'POST'
+        method: 'POST',
+        headers: {companyId: 362}
       }
     };
 
-    var requestResource = $resource(requestURL+'/:id', requestParameters, actions);
+    var requestResource = $resource(requestURL, requestParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -47,15 +52,15 @@ angular.module('ts5App')
     }
 
     function getCashBag(cashBagId) {
-      return requestResource.getCashBag({id:cashBagId}).$promise;
+      return requestResource.getCashBag({id: cashBagId}).$promise;
     }
 
-    function updateCashBag(cashBagId, payload){
-      return requestResource.updateCashBag({id:cashBagId}, payload).$promise;
+    function updateCashBag(cashBagId, payload) {
+      return requestResource.updateCashBag({id: cashBagId}, payload).$promise;
     }
 
-    function deleteCashBag(cashBagId){
-      return requestResource.deleteCashBag({id:cashBagId}).$promise;
+    function deleteCashBag(cashBagId) {
+      return requestResource.deleteCashBag({id: cashBagId}).$promise;
     }
 
     function createCashBag(payload) {

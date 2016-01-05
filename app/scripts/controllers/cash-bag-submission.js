@@ -9,17 +9,17 @@
  */
 
 angular.module('ts5App').controller('CashBagSubmissionCtrl',
-  function($scope, $http, GlobalMenuService,
-    cashBagFactory, $filter, lodash
-  ) {
-
+  function ($scope, $http, GlobalMenuService, cashBagFactory, $filter, dateUtility, lodash) {
     $scope.viewName = 'Cash Bag Submission';
     $scope.search = {};
     $scope.bankReferenceNumbers = [];
+    $scope.cashBagNumberList = [];
+    $scope.scheduleNumber = [];
     $scope.cashBagList = [];
     $scope.allCheckboxesSelected = false;
 
     var $this = this;
+    this.loadingProgress = false;
     this.meta = {
       count: undefined,
       limit: 100,
@@ -35,59 +35,88 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       angular.element('.modal-backdrop').remove();
     }
 
-    this.displayLoadingModal = function(loadingText) {
+    this.displayLoadingModal = function (loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
     };
 
-    this.hideLoadingModal = function() {
+    this.hideLoadingModal = function () {
       angular.element('#loading').modal('hide');
     };
 
-    this.setReferenceNumberList = function() {
-      var bankReferenceNumbersList = lodash.map($scope.cashBagList, function(cashBag) { return cashBag.bankReferenceNumber; });
-      $this.bankReferenceNumbers = lodash.uniq(bankReferenceNumbersList, true);
+    function sortByNumber(a, b) {
+      return a - b;
+    }
+
+    this.setSearchFields = function () {
+      var bankReferenceNumbersList = lodash.map($scope.cashBagList, function (cashBag) {
+        if (!!cashBag.bankReferenceNumber) {
+          return cashBag.bankReferenceNumber;
+        }
+      });
+
+      var cashBagNumberList = lodash.map($scope.cashBagList, function (cashBag) {
+        if (!!cashBag.cashBagNumber) {
+          return cashBag.cashBagNumber;
+        }
+      });
+
+      var scheduleNumberList = lodash.map($scope.cashBagList, function (cashBag) {
+        if (!!cashBag.scheduleNumber) {
+          return cashBag.scheduleNumber;
+        }
+      });
+
+      $scope.bankReferenceNumbers = lodash.uniq(lodash.compact(bankReferenceNumbersList.sort(sortByNumber)), true);
+      $scope.cashBagNumberList = lodash.uniq(lodash.compact(cashBagNumberList.sort()), true);
+      $scope.scheduleNumberList = lodash.uniq(lodash.compact(scheduleNumberList.sort()), true);
     };
 
-    this.getCashBagListSuccessHandler = function(dataFromAPI) {
+    function formatCashBag(cashBag) {
+      cashBag.selected = false;
+      cashBag.submittedDate = (cashBag.isSubmitted === 'true') ? dateUtility.formatDateForApp(cashBag.updatedOn) : '-';
+      cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
+      cashBag.submittedBy = (cashBag.originationSource === 2) ? 'Auto' : (cashBag.cashbagSubmittedBy || '-');
+    }
+
+    this.getCashBagListSuccessHandler = function (dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
-      lodash.forEach(dataFromAPI.cashBags, function(cashBag) {
-        cashBag.selected = false;
+      lodash.forEach(dataFromAPI.cashBags, function (cashBag) {
+        formatCashBag(cashBag);
       });
       $scope.cashBagList = $scope.cashBagList.concat(dataFromAPI.cashBags);
-      $this.setReferenceNumberList();
+      $this.setSearchFields();
       hideLoadingBar();
-      loadingProgress = false;
+      $this.loadingProgress = false;
     };
 
-    var loadingProgress = false;
-    $scope.updateCashBagList = function() {
+    $scope.updateCashBagList = function () {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
-      if (loadingProgress) {
+      if ($this.loadingProgress) {
         return;
       }
-      loadingProgress = true;
-
       showLoadingBar();
-      cashBagFactory.getCashBagList(null, {limit: $this.meta.limit, offset: $this.meta.offset})
-        .then($this.getCashBagListSuccessHandler);
+      $this.loadingProgress = true;
+
+      var companyId = GlobalMenuService.company.get();
+      var payload = {
+        submission: 'submit',
+        limit: $this.meta.limit,
+        offset: $this.meta.offset,
+        companyId: companyId
+      };
+      cashBagFactory.getCashBagList(null, payload).then($this.getCashBagListSuccessHandler);
       $this.meta.offset += $this.meta.limit;
     };
 
-    this.init = function() {
-      hideLoadingBar();
-    };
-
-    this.init();
-
-    $scope.toggleAllCheckboxes = function() {
-      lodash.forEach($scope.cashBagList, function(cashBag) {
+    $scope.toggleAllCheckboxes = function () {
+      lodash.forEach($scope.cashBagList, function (cashBag) {
         cashBag.selected = $scope.allCheckboxesSelected;
       });
     };
 
-    $scope.toggleCheckbox = function() {
+    $scope.toggleCheckbox = function () {
       $scope.allCheckboxesSelected = false;
     };
 

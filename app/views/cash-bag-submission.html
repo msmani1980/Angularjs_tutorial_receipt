@@ -1,106 +1,145 @@
-<div class="module-container">
+<div class="container module-container">
 
-  <div class="top-header">
+  <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+    </button>
+    <ul>
+      <li ng-repeat="error in form.$error.required">
+        <strong>{{ error.$name }}</strong> is required
+      </li>
+      <li ng-repeat="error in form.$error.pattern">
+        <strong>{{ error.$name }}</strong> is invalid
+      </li>
+      <li ng-show="formErrors" ng-repeat="error in formErrors">
+        <strong>{{error.field}}</strong>
+        <span> {{ error.value }}</span>
+        <span> {{ error.code }}</span>
+      </li>
+    </ul>
+  </div>
 
-    <div class="container stock-dashboard">
-
-      <div class="edit-controls">
-        <div class="row">
-
-          <div class="col-xs-6">
-            <h2 class="view-name">{{ viewName }}</h2>
-          </div>
-
-          <div class="col-xs-6 text-right">
-            <fieldset ng-hide="viewOnly">
-
-              <a ng-show="canCreateStockTake()" ng-href="/#/stock-take/create/{{selectedCateringStation.id}}" class="btn btn-primary">
-                <span class="fa fa-plus" aria-hidden="true"></span>
-                <span class="hidden-xs">Create Stock Take</span>
-              </a>
-
-              <a ng-href="{{exportURL}}" class="btn btn-info" ng-show="selectedCateringStation.id && searchResults.length">
-                <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
-                <span class="hidden-xs">Export (CSV)</span>
-              </a>
-
-              <a ng-href="/#/" class="btn btn-default">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                <span class="hidden-xs">Close</span>
-              </a>
-
-            </fieldset>
-          </div>
-
-        </div>
-
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
       </div>
 
-      <div class="row">
-        <div class="col-xs-12 col-sm-6 col-md-4" ng-hide="readOnly">
-          <div class="form-group">
-            <label>Bank Reference*</label>
-            <select
-              class="form-control"
-              id="bankReferenceNumber"
-              ng-model="search.bankReferenceNumber"
-              ng-options="bankReference for bankReference in bankReferenceNumbers">
-              <option selected="selected" value disabled>Select Bank Reference #</option>
-            </select>
-          </div>
-        </div>
+      <div class="col-xs-6 text-right">
+
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+
+        <button ng-click="showCreatePopup()" class="btn btn-primary">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+          <span class="hidden-xs">Submit</span>
+        </button>
+
       </div>
     </div>
-
   </div>
-  <!--/TopHeader -->
 
-  <div class="container stock-dashboard-container">
+  <div class="panel panel-default collapse no-transition" id="search-collapse">
+    <form name="cashBagSearchForm" ng-submit="searchCashBag()">
+      <div class="panel-body">
+        <div class="row">
 
-    <table infinite-scroll="updateCashBagList()" ng-show="searchResults.length" class="table table-bordered table-hover ng-scope">
-      <thead>
-      <tr>
-        <th>
-          <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected"
-                         ng-click="toggleAllCheckboxes()">
-        </th>
-        <th>Cash Bag Number</th>
-        <th>Submitted By</th>
-        <th>Bank Reference Number</th>
-        <th>Cash Bag Submitted</th>
-        <th>Schedule</th>
-        <th>Schedule Date/th>
-      </tr>
-      </thead>
-      <tbody>
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label>Cash Bag #</label>
+              <ui-select ng-model="search.cashBagNumber" theme="bootstrap">
+                <ui-select-match allow-clear placeholder="Select Cash Bag #">
+                  {{ $select.selected }}
+                </ui-select-match>
+                <ui-select-choices
+                  repeat="cashBagNumber in cashBagNumberList | filter:$select.search track by $index">
+                  <div ng-bind-html="cashBagNumber | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
 
-      <tr
-        ng-repeat="cashBag in cashBagList | index | filter: search as searchResults" >
-        <td>
-          <input class="btn btn-default" type="checkbox" value="1" ng-model="cashBag.selected"
-                         ng-click="toggleCheckbox(cashBag)">
-        </td>
-        <td>{{cashBag.cashBagNumber}}</td>
-        <td>{{cashBag.cashbagSubmittedBy ? cashBag.cashbagSubmittedBy : '-'}}</td>
-        <td>{{cashBag.bankReferenceNumber}}</td>
-        <td>-</td>
-        <td>{{cashBag.scheduleNumber}}</td>
-        <td>{{cashBag.scheduleDate}}</td>
-      </tr>
+          <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="form-group">
+              <label>Bank Reference #</label>
+              <ui-select ng-model="search.bankReferenceNumber" theme="bootstrap">
+                <ui-select-match allow-clear placeholder="Select Bank Reference #">
+                  {{ $select.selected }}
+                </ui-select-match>
+                <ui-select-choices
+                  repeat="bankReference in bankReferenceNumbers | filter:$select.search track by $index">
+                  <div ng-bind-html="bankReference | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
 
-      </tbody>
-    </table>
-    <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label>Schedule #</label>
+              <ui-select ng-model="search.scheduleNumber" theme="bootstrap">
+                <ui-select-match allow-clear placeholder="Select Schedule #">
+                  {{ $select.selected }}
+                </ui-select-match>
+                <ui-select-choices
+                  repeat="scheduleNumber in scheduleNumberList | filter:$select.search track by $index">
+                  <div ng-bind-html="scheduleNumber | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
 
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="cashBagStatus">Status</label>
+              <select class="form-control"
+                      id="cashBagStatus"
+                      ng-model="search.isSubmitted">
+                <option selected="selected" value disabled>Select status</option>
+                <option value="true">Submitted</option>
+                <option value="false">Not Submitted</option>
+                <option value>All</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-footer text-right">
+        <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </form>
   </div>
+
+  <table infinite-scroll="updateCashBagList()" ng-show="searchResults.length" class="table table-bordered table-hover ng-scope">
+    <thead>
+    <tr>
+      <th width="5%"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
+      <th>Cash Bag #</th>
+      <th>Submitted By</th>
+      <th>Bank Reference #</th>
+      <th>Cash Bag Submitted</th>
+      <th>Schedule</th>
+      <th>Schedule Date</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr ng-repeat="cashBag in cashBagList | index | filter: search as searchResults">
+      <td><input class="btn btn-default" type="checkbox" value="1" ng-model="cashBag.selected" ng-click="toggleCheckbox(cashBag)"></td>
+      <td>{{cashBag.cashBagNumber}}</td>
+      <td>{{cashBag.submittedBy}}</td>
+      <td>{{cashBag.bankReferenceNumber}}</td>
+      <td>{{cashBag.submittedDate}}</td>
+      <td>{{cashBag.scheduleNumber}}</td>
+      <td>{{cashBag.scheduleDate}}</td>
+    </tr>
+
+    </tbody>
+  </table>
+  <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>
-
-<form-success-modal></form-success-modal>
-
-<form-update-modal></form-update-modal>
-
-<leave-view-modal></leave-view-modal>
-
 <dynamic-left-nav></dynamic-left-nav>
-
-<stock-take-reason></stock-take-reason>
