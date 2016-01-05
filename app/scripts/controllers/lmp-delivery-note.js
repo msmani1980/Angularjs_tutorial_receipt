@@ -161,14 +161,14 @@ angular.module('ts5App')
         return devlieryNoteItemIds.indexOf(item.itemMasterId) === -1;
       });
 
-      var newMasterItems = filteredResponseMasterItems.map(function(item) {
-        return {
-          masterItemId: item.itemMasterId,
-          itemName: item.itemName,
-          itemCode: item.itemCode
-        };
-      });
-      newMasterItems = $filter('orderBy')(newMasterItems, 'itemName');
+      //var newMasterItems = filteredResponseMasterItems.map(function(item) {
+      //  return {
+      //    masterItemId: item.itemMasterId,
+      //    itemName: item.itemName,
+      //    itemCode: item.itemCode
+      //  };
+      //});
+      var newMasterItems = $filter('orderBy')(filteredResponseMasterItems, 'itemName');
       removeNullDeliveredItems();
       $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
     }
@@ -442,20 +442,21 @@ angular.module('ts5App')
       });
     }
 
-    function setChangedItem(newItem, $index) {
-      var oldItem = angular.copy($scope.deliveryNote.items[$index]);
-      newItem.expectedQuantity = oldItem.expectedQuantity;
-      newItem.deliveredQuantity = oldItem.deliveredQuantity;
-      newItem.ullageQuantity = oldItem.ullageQuantity;
-      newItem.ullageReason = oldItem.ullageReason;
-      newItem.bookedQuantity = oldItem.bookedQuantity;
-      newItem.canEdit = true;
-      $scope.deliveryNote.items[$index] = newItem;
-    }
+    //function setChangedItem(newItem, $index) {
+    //  var oldItem = angular.copy($scope.deliveryNote.items[$index]);
+    //  newItem.expectedQuantity = oldItem.expectedQuantity;
+    //  newItem.deliveredQuantity = oldItem.deliveredQuantity;
+    //  newItem.ullageQuantity = oldItem.ullageQuantity;
+    //  newItem.ullageReason = oldItem.ullageReason;
+    //  newItem.bookedQuantity = oldItem.bookedQuantity;
+    //  newItem.canEdit = true;
+    //  $scope.deliveryNote.items[$index] = newItem;
+    //}
 
-    $scope.changeItem = function(selectedMasterItem, $index) {
+    $scope.changeItem = function(newItem, index) {
+      $scope.deliveryNote.items[index] = newItem;
       $scope.canReview = canReview();
-      setChangedItem(selectedMasterItem, $index);
+      //setChangedItem(selectedMasterItem, $index);
       setAllowedMasterItems();
     };
 
@@ -474,12 +475,7 @@ angular.module('ts5App')
       if (angular.isUndefined($scope.newItems)) {
         $scope.newItems = [];
       }
-      var masterItemsPromise = getAllMasterItems();
-      if (!masterItemsPromise) {
-        addRows();
-        return;
-      }
-      $q.all([masterItemsPromise]).then(addRows, showResponseErrors);
+      addRows();
     };
 
     $scope.addItem = function(selectedMasterItem, $index) {
@@ -540,7 +536,7 @@ angular.module('ts5App')
     };
 
     $scope.canEditItem = function(item) {
-      return item.canEdit && $scope.state !== 'review';
+      return !!item.canEdit && $scope.state !== 'review';
     };
 
     $scope.ullageReasonDisabled = function(item) {
@@ -568,6 +564,7 @@ angular.module('ts5App')
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
+      _initPromises.push(getAllMasterItems());
       resolveInitPromises();
     };
     stateActions.viewInitPromisesResolved = function() {
@@ -582,6 +579,7 @@ angular.module('ts5App')
       displayLoadingModal();
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
+      _initPromises.push(getAllMasterItems());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();
@@ -598,6 +596,7 @@ angular.module('ts5App')
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
+      _initPromises.push(getAllMasterItems());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();

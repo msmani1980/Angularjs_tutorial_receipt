@@ -177,41 +177,21 @@
         <div class="well" ng-repeat="item in deliveryNote.items | filter:filterInput track by $index">
           <div class="row">
 
-            <div class="col-xs-12 col-sm-6 col-md-2">
+            <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label>Item Code</label>
-                <input ng-model="item.itemCode"
+                <label>Item</label>
+                <input ng-value="item.itemCode + ' - ' + item.itemName"
                        type="text"
                        class="form-control"
                        ng-hide="canEditItem(item)"
                        name="itemCode[{{item.masterItemId}}]"
                        readonly>
-                <select class="form-control" ng-change="changeItem(masterItemSelected[masterItem.id], $index)"
-                        ng-model="masterItemSelected[masterItem.id]"
-                        placeholder="item.itemCode"
-                        ng-show="canEditItem(item)"
-                        ng-options="masterItem as masterItem.itemCode for masterItem in masterItemsAllowedInSelect">
-                  <option value=''>{{item.itemCode}}</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-6 col-md-2">
-              <div class="form-group">
-                <label>Item Name*</label>
-                <input ng-model="item.itemName"
-                       type="text"
-                       class="form-control"
-                       ng-hide="canEditItem(item)"
-                       name="itemName[{{item.masterItemId}}]"
-                       readonly>
-                <select class="form-control" ng-change="changeItem(masterItemSelected[masterItem.id], $index)"
-                        ng-model="masterItemSelected[masterItem.id]"
-                        placeholder="item.itemName"
-                        ng-show="canEditItem(item)"
-                        ng-options="masterItem as masterItem.itemName for masterItem in masterItemsAllowedInSelect">
-                  <option value=''>{{item.itemName}}</option>
-                </select>
+                <ui-select name="item[{{item.masterItemId}}]" ng-model="item" theme="bootstrap" on-select="changeItem($select.selected, $index)" ng-show="canEditItem(item)">
+                  <ui-select-match placeholder="Select an Item">{{ $select.selected.itemCode }} - {{ $select.selected.itemName}}</ui-select-match>
+                  <ui-select-choices repeat="masterItem in masterItemsAllowedInSelect | filter: $select.search">
+                    {{ masterItem.itemCode }} - {{ masterItem.itemName }}
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
 
@@ -259,7 +239,6 @@
                           {{ ullageReason.companyReasonCodeName }}
                         </option>
                 </select>
-
               </div>
             </div>
 
