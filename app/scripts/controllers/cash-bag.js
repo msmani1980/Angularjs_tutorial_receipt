@@ -10,7 +10,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCtrl', function($scope, $routeParams, $q, $location, ngToast, cashBagFactory, dateUtility, lodash) {
+  .controller('CashBagCtrl', function($scope, $routeParams, $q, $location, $localStorage, ngToast, cashBagFactory,
+    dateUtility, lodash) {
 
     // controller global properties
     var _companyId = null;
@@ -25,7 +26,7 @@ angular.module('ts5App')
     $scope.displayedCashierDate = dateUtility.formatDateForApp(dateUtility.now(), 'x');
     $scope.saveButtonName = '';
     $scope.state = '';
-    delete localStorage.isListFromEdit;
+    delete $localStorage.isListFromEdit;
 
     function formatAsCurrency(valueToFormat) {
       return sprintf('%.4f', valueToFormat);
@@ -393,10 +394,7 @@ angular.module('ts5App')
     init();
 
     $scope.isFocusBankReferenceNumber = function() {
-      if (localStorage.isEditFromList) {
-        return true;
-      }
-      return false;
+      return !!$localStorage.isEditFromList;
     };
 
   });

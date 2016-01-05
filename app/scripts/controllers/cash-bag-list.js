@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function($scope, cashBagFactory, $location, $routeParams, $q, ngToast, dateUtility,
+  .controller('CashBagListCtrl', function($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, ngToast,
+    dateUtility,
     lodash) {
 
     var _companyId = null;
@@ -28,7 +29,7 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.storeList = [];
     $scope.storeInstanceList = [];
-    delete localStorage.isEditFromList;
+    delete $localStorage.isEditFromList;
 
     function showSuccessMessage(error) {
       ngToast.create({
@@ -71,7 +72,7 @@ angular.module('ts5App')
         }
       });
       if ($this.meta.count === 1 && $scope.search.bankReferenceNumber) {
-        localStorage.isEditFromList = true;
+        $localStorage.isEditFromList = true;
         $scope.editCashBag($scope.cashBagList[0]);
       }
       hideLoadingModal();
@@ -280,10 +281,7 @@ angular.module('ts5App')
     };
 
     $scope.isListFromEdit = function() {
-      if (localStorage.isListFromEdit) {
-        return true;
-      }
-      return false;
+      return !!$localStorage.isListFromEdit;
     };
 
   });
