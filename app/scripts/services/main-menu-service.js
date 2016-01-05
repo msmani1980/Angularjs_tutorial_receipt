@@ -42,9 +42,9 @@ angular.module('ts5App')
             package: 'RETAIL',
             role: 'RETAILITEMCATEGORY'
           }]
-      }, {
-        'title': 'Company Management',
-        'menuItems': [{
+        }, {
+          'title': 'Company Management',
+          'menuItems': [{
             name: 'Manage Companies',
             route: '/#/company-list',
             icon: 'icon-manage-company',
@@ -288,7 +288,10 @@ angular.module('ts5App')
             className: 'dashboard-cashBagSubmission',
             package: 'CASH',
             role: 'CASHBAGSUBMIT'
-          }, {
+          }]
+        }, {
+          title: 'Currency & Exchange Rate Management',
+          menuItems: [{
             name: 'Currency Setup',
             route: '/#/currency-edit',
             icon: 'icon-manage-retail-category',
@@ -296,7 +299,7 @@ angular.module('ts5App')
             package: 'CASH',
             role: 'CASHBAGSUBMIT'
           }, {
-            name: 'Retail Company Exchange Rate',
+            name: 'ePOS Exchange Rate',
             route: '/#/company-exchange-rate-edit',
             icon: 'icon-manage-transactions',
             className: 'dashboard-companyExchangeRateEdit',
@@ -323,7 +326,6 @@ angular.module('ts5App')
               apiName: '/api/posttrips',
               permissionCodes: ['C']
             }]
-
           }]
         }, {
           title: 'Employee Commission',
