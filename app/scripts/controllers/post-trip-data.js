@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast, lodash) {
+  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast, lodash, $q) {
 
     var companyId;
     var $this = this;
@@ -153,17 +153,14 @@ angular.module('ts5App')
       $this.editPostTrip();
     };
 
-    this.init = function () {
+    this.initDependenciesSuccess = function (responseArray) {
+      $this.getStationsSuccess(responseArray[0]);
+      $this.getCarrierSuccess(responseArray[1]);
+      $this.getEmployeesSuccess(responseArray[2]);
+      $this.getSchedulesSuccess(responseArray[3]);
 
-      $scope.employees = [];
-      companyId = postTripFactory.getCompanyId();
-      postTripFactory.getStationList(companyId).then($this.getStationsSuccess);
-      postTripFactory.getCarrierTypes(companyId).then($this.getCarrierSuccess);
-      postTripFactory.getEmployees(companyId).then($this.getEmployeesSuccess);
-      postTripFactory.getSchedules(companyId).then($this.getSchedulesSuccess);
 
       if ($routeParams.id) {
-        $this.showLoadingModal('Loading Data');
         postTripFactory.getPostTrip(companyId, $routeParams.id).then($this.getPostTripSuccess);
       }
 
@@ -171,7 +168,24 @@ angular.module('ts5App')
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
+    };
 
+    this.makeInitPromises = function () {
+      companyId = postTripFactory.getCompanyId();
+      var promises = [
+        postTripFactory.getStationList(companyId),
+        postTripFactory.getCarrierTypes(companyId),
+        postTripFactory.getEmployees(companyId),
+        postTripFactory.getSchedules(companyId)
+      ];
+      return promises;
+    };
+
+    this.init = function () {
+      $this.showLoadingModal('Loading Data');
+      $scope.employees = [];
+      var initPromises = $this.makeInitPromises();
+      $q.all(initPromises).then($this.initDependenciesSuccess);
     };
 
     this.init();
