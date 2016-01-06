@@ -21,16 +21,16 @@ describe('Factory: cashBagFactory', function () {
   var storeInstanceService;
 
   beforeEach(inject(function ($rootScope, $injector) {
-    cashBagService            = $injector.get('cashBagService');
-    GlobalMenuService         = $injector.get('GlobalMenuService');
-    stationsService           = $injector.get('stationsService');
-    schedulesService          = $injector.get('schedulesService');
-    companyService            = $injector.get('companyService');
-    currenciesService         = $injector.get('currenciesService');
+    cashBagService = $injector.get('cashBagService');
+    GlobalMenuService = $injector.get('GlobalMenuService');
+    stationsService = $injector.get('stationsService');
+    schedulesService = $injector.get('schedulesService');
+    companyService = $injector.get('companyService');
+    currenciesService = $injector.get('currenciesService');
     dailyExchangeRatesService = $injector.get('dailyExchangeRatesService');
     companyPreferencesService = $injector.get('companyPreferencesService');
-    companyStoresService      = $injector.get('companyStoresService');
-    storeInstanceService      = $injector.get('storeInstanceService');
+    companyStoresService = $injector.get('companyStoresService');
+    storeInstanceService = $injector.get('storeInstanceService');
 
     spyOn(cashBagService, 'getCashBagList');
     spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
@@ -48,8 +48,8 @@ describe('Factory: cashBagFactory', function () {
     spyOn(companyStoresService, 'getStoreList');
     spyOn(storeInstanceService, 'getStoreInstancesList');
 
-    rootScope      = $rootScope;
-    scope          = $rootScope.$new();
+    rootScope = $rootScope;
+    scope = $rootScope.$new();
     cashBagFactory = $injector.get('cashBagFactory');
   }));
 
@@ -64,10 +64,10 @@ describe('Factory: cashBagFactory', function () {
       expect(cashBagService.getCashBagList).toHaveBeenCalledWith(companyId);
     });
     it('should call cashBagService updateCashBag', function () {
-      var id      = 1;
+      var id = 1;
       var payload = {t: 123, d: 323};
       cashBagFactory.updateCashBag(id, payload);
-      expect(cashBagService.updateCashBag).toHaveBeenCalledWith(id, payload);
+      expect(cashBagService.updateCashBag).toHaveBeenCalledWith(id, payload, undefined);
     });
     it('should call cashBagService getCashBag', function () {
       var id = 123;
@@ -153,7 +153,7 @@ describe('Factory: cashBagFactory', function () {
 
   describe('dailyExchangeRatesService API', function () {
     it('should call getDailyExchangeRates', function () {
-      var companyId   = '403';
+      var companyId = '403';
       var cashierDate = '20150617';
       cashBagFactory.getDailyExchangeRates(companyId, cashierDate);
       expect(dailyExchangeRatesService.getDailyExchangeRates).toHaveBeenCalledWith(companyId, cashierDate);

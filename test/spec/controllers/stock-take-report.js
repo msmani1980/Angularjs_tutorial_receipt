@@ -378,7 +378,7 @@ describe('Stock Take Report', function () {
 
   });
 
-  describe('canCreateStockTake functionality', function () {
+  describe('stock take report canCreateStockTake functionality', function () {
 
     it('should return false if no station id is set', function(){
       expect($scope.canCreateStockTake()).toBeFalsy();
