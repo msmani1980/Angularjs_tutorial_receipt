@@ -118,7 +118,10 @@ describe('Controller: PostTripDataCtrl', function () {
       it('should call getStationList', function () {
         expect(postTripFactory.getStationList).toHaveBeenCalled();
         expect(scope.stationList).toBeDefined();
-
+      });
+      it('should remove duplicatesFromStationList', function () {
+        var responseLength = stationsListResponseJSON.response.length;
+        expect(responseLength > scope.stationList.length).toEqual(true);
       });
       it('should call getCarrierNumbers', function () {
         expect(postTripFactory.getCarrierTypes).toHaveBeenCalled();
