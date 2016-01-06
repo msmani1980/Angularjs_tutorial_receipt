@@ -159,7 +159,6 @@ angular.module('ts5App')
       $this.getEmployeesSuccess(responseArray[2]);
       $this.getSchedulesSuccess(responseArray[3]);
 
-
       if ($routeParams.id) {
         postTripFactory.getPostTrip(companyId, $routeParams.id).then($this.getPostTripSuccess);
       }

@@ -64,7 +64,7 @@ angular.module('ts5App')
 
     this.getStationsSuccess = function (response) {
       // TODO: move offset to service layer
-      var newStationList = $scope.stationList.concat(response.response);
+      var newStationList = $scope.stationList.concat(angular.copy(response.response));
       $scope.stationList = lodash.uniq(newStationList, 'stationId');
 
       if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
