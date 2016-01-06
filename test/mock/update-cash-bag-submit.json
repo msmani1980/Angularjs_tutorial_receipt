@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "count": 1,
+    "limit": 0,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 18,
+      "bankReferenceNumber": "7248245",
+      "cashBagNumber": "5050",
+      "originationSource": null,
+      "chCompanyId": 362,
+      "dailyExchangeRateId": 29,
+      "eposCashBagsId": null,
+      "isSubmitted": "true",
+      "retailCompanyId": 326,
+      "scheduleDate": "20150324",
+      "scheduleNumber": "2001",
+      "totalCashBags": null,
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": 3,
+      "updatedOn": null,
+      "cashbagSubmittedBy": 3,
+      "isDelete": null,
+      "storeInstanceId": null,
+      "company-cashbag-currencies": null
+    }
+  ]
+}

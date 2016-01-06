@@ -204,7 +204,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     };
 
     function updateCashBagSuccessHandler() {
-      showToast('success', 'Cash Bag', sprintf('Successfully submitted %d cashbag(s)', cashBagListToSubmit.length));
+      showToast('success', 'Cash Bag', sprintf('Successfully submitted %d cashbag(s)', $scope.cashBagListToSubmit.length));
       $this.hideLoadingModal();
       if ($this.isSearching) {
         $scope.searchCashBags();
@@ -215,6 +215,9 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
 
     $scope.submitCashBag = function () {
       angular.element('.submit-cashBag-modal').modal('hide');
+      if ($scope.cashBagListToSubmit.length === 0) {
+        return;
+      }
       $this.displayLoadingModal('Submitting Cash Bags');
       var payload = {
         cashBags: $scope.cashBagListToSubmit
