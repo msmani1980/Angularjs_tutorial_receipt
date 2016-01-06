@@ -134,6 +134,15 @@ angular.module('ts5App')
       });
     }
 
+    function setAllowedMasterItems() {
+      var deliveryNoteItemIds = $scope.deliveryNote.items.map(function(item) {
+        return item.itemMasterId;
+      });
+      $scope.masterItemsAllowedInSelect = $scope.masterItems.filter(function(masterItem) {
+        return deliveryNoteItemIds.indexOf(masterItem.id) === -1;
+      });
+    }
+
     function addNewMasterItemsFromCatererStationMasterItemsResponse(response) {
       $scope.deliveryNote.items = [];
       hideLoadingModal();
@@ -154,23 +163,17 @@ angular.module('ts5App')
         return;
       }
       var items = $filter('unique')(response.response, 'itemMasterId');
-      var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item) {
-        return item.masterItemId;
+      var deliveryNoteItemIds = $scope.deliveryNote.items.map(function(item) {
+        return item.itemMasterId;
       });
       var filteredResponseMasterItems = items.filter(function(item) {
-        return devlieryNoteItemIds.indexOf(item.itemMasterId) === -1;
+        return deliveryNoteItemIds.indexOf(item.itemMasterId) === -1;
       });
 
-      var newMasterItems = filteredResponseMasterItems.map(function(item) {
-        return {
-          masterItemId: item.itemMasterId,
-          itemName: item.itemName,
-          itemCode: item.itemCode
-        };
-      });
-      newMasterItems = $filter('orderBy')(newMasterItems, 'itemName');
+      var newMasterItems = $filter('orderBy')(filteredResponseMasterItems, 'itemName');
       removeNullDeliveredItems();
       $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
+      setAllowedMasterItems();
     }
 
     function getMasterRetailItemsByCatererStationId(catererStationId) {
@@ -270,7 +273,7 @@ angular.module('ts5App')
     function createPayloadItems() {
       return $scope.deliveryNote.items.map(function(item) {
         return {
-          masterItemId: parseInt(item.masterItemId),
+          masterItemId: parseInt(item.itemMasterId),
           expectedQuantity: isNumberGreaterThanOrEqualTo0(item.expectedQuantity) ? parseInt(item.expectedQuantity) : null,
           deliveredQuantity: isNumberGreaterThanOrEqualTo0(item.deliveredQuantity) ? parseInt(item.deliveredQuantity) : null,
           ullageQuantity: isNumberGreaterThanOrEqualTo0(item.ullageQuantity) ? parseInt(item.ullageQuantity) : null,
@@ -433,29 +436,11 @@ angular.module('ts5App')
       return false;
     }
 
-    function setAllowedMasterItems() {
-      var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item) {
-        return item.masterItemId;
-      });
-      $scope.masterItemsAllowedInSelect = $scope.masterItems.filter(function(masterItem) {
-        return devlieryNoteItemIds.indexOf(masterItem.id) === -1;
-      });
-    }
-
-    function setChangedItem(newItem, $index) {
-      var oldItem = angular.copy($scope.deliveryNote.items[$index]);
-      newItem.expectedQuantity = oldItem.expectedQuantity;
-      newItem.deliveredQuantity = oldItem.deliveredQuantity;
-      newItem.ullageQuantity = oldItem.ullageQuantity;
-      newItem.ullageReason = oldItem.ullageReason;
-      newItem.bookedQuantity = oldItem.bookedQuantity;
-      newItem.canEdit = true;
-      $scope.deliveryNote.items[$index] = newItem;
-    }
-
-    $scope.changeItem = function(selectedMasterItem, $index) {
+    $scope.changeItem = function(newItem, index) {
+      newItem.canEdit = $scope.deliveryNote.items[index].canEdit;
+      newItem.itemMasterId = newItem.itemMasterId || newItem.id;
+      $scope.deliveryNote.items[index] = newItem;
       $scope.canReview = canReview();
-      setChangedItem(selectedMasterItem, $index);
       setAllowedMasterItems();
     };
 
@@ -474,34 +459,25 @@ angular.module('ts5App')
       if (angular.isUndefined($scope.newItems)) {
         $scope.newItems = [];
       }
-      var masterItemsPromise = getAllMasterItems();
-      if (!masterItemsPromise) {
-        addRows();
-        return;
-      }
-      $q.all([masterItemsPromise]).then(addRows, showResponseErrors);
+      addRows();
     };
 
-    $scope.addItem = function(selectedMasterItem, $index) {
-      if (!selectedMasterItem) {
+    $scope.addItem = function(newItem, index) {
+      if (!newItem) {
         return;
       }
       var inArray = $scope.deliveryNote.items.filter(function(item) {
-        return item.masterItemId === selectedMasterItem.id;
+        return (item.itemMasterId === newItem.id);
       });
       if (inArray.length) {
         return;
       }
       $scope.clearFilter();
-      var newItem = {
-        canEdit: true,
-        masterItemId: selectedMasterItem.id,
-        itemCode: selectedMasterItem.itemCode,
-        itemName: selectedMasterItem.itemName
-      };
+      newItem.canEdit = true;
+      newItem.itemMasterId = newItem.id;
       $scope.deliveryNote.items.push(newItem);
       setAllowedMasterItems();
-      $scope.removeNewItemRow($index, newItem);
+      $scope.removeNewItemRow(index, newItem);
     };
 
     $scope.removeNewItemRow = function($index) {
@@ -540,7 +516,7 @@ angular.module('ts5App')
     };
 
     $scope.canEditItem = function(item) {
-      return item.canEdit && $scope.state !== 'review';
+      return !!item.canEdit && $scope.state !== 'review';
     };
 
     $scope.ullageReasonDisabled = function(item) {
@@ -568,6 +544,7 @@ angular.module('ts5App')
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
+      _initPromises.push(getAllMasterItems());
       resolveInitPromises();
     };
     stateActions.viewInitPromisesResolved = function() {
@@ -582,6 +559,7 @@ angular.module('ts5App')
       displayLoadingModal();
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
+      _initPromises.push(getAllMasterItems());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();
@@ -598,6 +576,7 @@ angular.module('ts5App')
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
+      _initPromises.push(getAllMasterItems());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();
