@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast) {
+  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast, lodash) {
 
     var companyId;
     var $this = this;
@@ -49,11 +49,11 @@ angular.module('ts5App')
 
     this.getStationsSuccess = function (response) {
       // TODO: move offset to service layer
-      var newStationList = $scope.stationList.concat(response.response);
-      $scope.stationList = newStationList;
+      var newStationList = $scope.stationList.concat(angular.copy(response.response));
+      $scope.stationList = lodash.uniq(newStationList, 'stationId');
 
       if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
-        postTripFactory.getStationList(companyId, response.meta.limit + 1).then($this.getStationsSuccess);
+        postTripFactory.getStationList(companyId, response.meta.limit).then($this.getStationsSuccess);
       }
     };
 
