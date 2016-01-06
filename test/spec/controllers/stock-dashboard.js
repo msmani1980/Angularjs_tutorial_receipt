@@ -306,7 +306,7 @@ describe('Controller: StockDashboardCtrl', function() {
 
   });
 
-  describe('canCreateStockTake functionality', function() {
+  describe('stock dashboard canCreateStockTake functionality', function() {
 
     it('should return false by default', function() {
       expect(scope.canCreateStockTake()).toBeFalsy();

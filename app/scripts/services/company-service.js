@@ -22,7 +22,7 @@ angular.module('ts5App')
     var actions = {
       getCompanyList: {
         method: 'GET',
-        transformResponse: function (data/*, headers*/) {
+        transformResponse: function (data) {
           data = angular.fromJson(data);
           data.companies.forEach(function (company) {
             company.companyLanguages = normalizeLanguages(company.companyLanguages);

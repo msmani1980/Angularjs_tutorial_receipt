@@ -1,0 +1,122 @@
+<div class="container module-container">
+
+  <error-dialog error-response="errorResponse" display="displayError"></error-dialog>
+
+  <!-- submitCashBagModal -->
+  <div class="modal fade submit-cashBag-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Cash Bag Submission Confirmation</h4>
+        </div>
+
+        <div class="modal-body">
+          <p class="text-center">Are you sure you want to submit the following ?</p>
+
+          <ul>
+            <li>Cash Handler: <strong>{{ CHCompany.companyName }}</strong></li>
+            <li>Submission Date: <strong>{{ submissionDate }}</strong></li>
+            <li>Number of cash bags: <strong>{{ cashBagListToSubmit.length }}</strong></li>
+            <li ng-if="bankReferenceListToSubmit.length === 1">
+              Bank Reference Number: <strong>{{ bankReferenceListToSubmit[0] }}</strong>
+            </li>
+          </ul>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" ng-click="submitCashBag()">Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- submitCashBagModal -->
+
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+
+        <button ng-click="showSubmitPopup()" ng-disabled="shouldDisableSubmitButton()" class="btn btn-primary">
+          <i class="fa fa-send" aria-hidden="true"></i>
+          <span class="hidden-xs">Submit</span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default collapse no-transition" id="search-collapse">
+    <form name="cashBagSearchForm" ng-submit="searchCashBag()">
+      <div class="panel-body">
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="form-group">
+              <label>Bank Reference #</label>
+              <input type="text" ng-model="search.bankReferenceNumber" class="form-control"/>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="cashBagStatus">Status</label>
+              <select class="form-control"
+                      id="cashBagStatus"
+                      ng-model="search.isSubmitted">
+                <option selected="selected" value disabled>Select status</option>
+                <option value="true">Submitted</option>
+                <option value="false">Not Submitted</option>
+                <option value>All</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-footer text-right">
+        <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+        <button type="submit" class="btn btn-primary" ng-click="searchCashBags()">Search</button>
+      </div>
+    </form>
+  </div>
+
+  <table infinite-scroll="updateCashBagList()" ng-show="cashBagList.length" class="table table-bordered table-hover ng-scope">
+    <thead>
+    <tr>
+      <th width="5%"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
+      <th>Bank Reference #</th>
+      <th>Cash Bag #</th>
+      <th>Cash Bag Submitted</th>
+      <th>Submitted By</th>
+      <th>Schedule</th>
+      <th>Schedule Date</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr ng-repeat="cashBag in cashBagList | index">
+      <td><input ng-disabled="shouldDisableSubmission(cashBag)" class="btn btn-default" type="checkbox" value="1" ng-model="cashBag.selected" ng-click="toggleCheckbox(cashBag)">
+      </td>
+      <td>{{cashBag.bankReferenceNumber}}</td>
+      <td>{{cashBag.cashBagNumber}}</td>
+      <td>{{cashBag.submittedDate}}</td>
+      <td>{{cashBag.submittedBy}}</td>
+      <td>{{cashBag.scheduleNumber}}</td>
+      <td>{{cashBag.scheduleDate}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+</div>
+<dynamic-left-nav></dynamic-left-nav>

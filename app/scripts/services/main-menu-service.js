@@ -283,7 +283,7 @@ angular.module('ts5App')
             role: 'CASHBAG'
           }, {
             name: 'Cash Bag Submission',
-            route: emberURL + 'cash-bag-submission',
+            route: '/#/cash-bag-submission',
             icon: 'icon-manage-retail-category',
             className: 'dashboard-cashBagSubmission',
             package: 'CASH',
