@@ -55,8 +55,11 @@ angular.module('ts5App')
       return requestResource.getCashBag({id: cashBagId}).$promise;
     }
 
-    function updateCashBag(cashBagId, payload) {
-      return requestResource.updateCashBag({id: cashBagId}, payload).$promise;
+    function updateCashBag(cashBagId, payload, parameters) {
+      if (cashBagId) {
+        payload.id = cashBagId;
+      }
+      return requestResource.updateCashBag(parameters, payload).$promise;
     }
 
     function deleteCashBag(cashBagId) {

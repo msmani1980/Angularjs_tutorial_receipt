@@ -9,7 +9,7 @@
  */
 
 angular.module('ts5App').controller('CashBagSubmissionCtrl',
-  function ($scope, $http, GlobalMenuService, cashBagFactory, $filter, dateUtility, lodash) {
+  function ($scope, $http, GlobalMenuService, cashBagFactory, $filter, dateUtility, ngToast, lodash) {
     $scope.viewName = 'Cash Bag Submission';
     $scope.search = {};
 
@@ -18,6 +18,8 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     this.isSearching = false;
 
     function initializeData() {
+      $scope.submissionDate = dateUtility.nowFormatted();
+      $scope.cashBagListToSubmit = [];
       $scope.bankReferenceNumbers = [];
       $scope.cashBagNumberList = [];
       $scope.scheduleNumber = [];
@@ -28,6 +30,14 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
         limit: 100,
         offset: 0
       };
+    }
+
+    function showToast(className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
     }
 
     function showLoadingBar() {
@@ -46,6 +56,12 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     this.hideLoadingModal = function () {
       angular.element('#loading').modal('hide');
     };
+
+    function errorHandler(response) {
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(response);
+    }
 
     function sortByNumber(a, b) {
       return a - b;
@@ -87,7 +103,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       lodash.forEach(dataFromAPI.cashBags, function (cashBag) {
         formatCashBag(cashBag);
       });
-      $scope.cashBagList = $scope.cashBagList.concat(dataFromAPI.cashBags);
+      $scope.cashBagList = $scope.cashBagList.concat(angular.copy(dataFromAPI.cashBags));
       $this.setSearchFields();
       hideLoadingBar();
       $this.loadingProgress = false;
@@ -119,21 +135,63 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       $this.loadingProgress = true;
 
       var payload = generatePayload();
-      cashBagFactory.getCashBagList(null, payload).then($this.getCashBagListSuccessHandler);
+      cashBagFactory.getCashBagList(null, payload).then($this.getCashBagListSuccessHandler, errorHandler);
       $this.meta.offset += $this.meta.limit;
+    };
+
+    function getCompanySuccessHandler(companyDataFromAPI) {
+      $scope.CHCompany = angular.copy(companyDataFromAPI);
+    }
+
+    function setCashBagListToSubmit() {
+      $scope.cashBagListToSubmit = [];
+      var bankReferenceList = [];
+      var cashBagListToSubmit = lodash.filter($scope.cashBagList, function (cashBag) {
+        return cashBag.selected;
+      });
+
+      angular.forEach(cashBagListToSubmit, function (cashBag) {
+        $scope.cashBagListToSubmit.push({
+          bankReferenceNumber: cashBag.bankReferenceNumber,
+          cashBagNumber: cashBag.cashBagNumber,
+          dailyExchangeRateId: cashBag.dailyExchangeRateId,
+          isSubmitted: cashBag.isSubmitted,
+          scheduleDate: dateUtility.formatDateForAPI(cashBag.scheduleDate),
+          scheduleNumber: cashBag.scheduleNumber,
+          retailCompanyId: cashBag.retailCompanyId
+        });
+        bankReferenceList.push(cashBag.bankReferenceNumber);
+      });
+
+      $scope.bankReferenceListToSubmit = lodash.uniq(lodash.compact(bankReferenceList), true);
+    }
+
+    $scope.toggleCheckbox = setCashBagListToSubmit;
+
+    $scope.shouldDisableSubmitButton = function () {
+      return $scope.cashBagListToSubmit.length === 0;
+    };
+
+    $scope.shouldDisableSubmission = function (cashBag) {
+      return cashBag.isSubmitted === 'true' || !cashBag.bankReferenceNumber || cashBag.bankReferenceNumber.length === 0;
     };
 
     $scope.toggleAllCheckboxes = function () {
       lodash.forEach($scope.cashBagList, function (cashBag) {
-        cashBag.selected = $scope.allCheckboxesSelected;
+        if (!$scope.shouldDisableSubmission(cashBag)) {
+          cashBag.selected = $scope.allCheckboxesSelected;
+        }
       });
+      setCashBagListToSubmit();
     };
 
-    $scope.toggleCheckbox = function () {
-      $scope.allCheckboxesSelected = false;
+    $scope.showSubmitPopup = function () {
+      setCashBagListToSubmit();
+      angular.element('.submit-cashBag-modal').modal('show');
     };
 
     $scope.clearForm = function () {
+      $scope.search = {};
       $this.isSearching = false;
       initializeData();
       $scope.updateCashBagList();
@@ -145,6 +203,29 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       $scope.updateCashBagList();
     };
 
+    function updateCashBagSuccessHandler() {
+      showToast('success', 'Cash Bag', sprintf('Successfully submitted %d cashbag(s)', cashBagListToSubmit.length));
+      $this.hideLoadingModal();
+      if ($this.isSearching) {
+        $scope.searchCashBags();
+        return;
+      }
+      $scope.clearForm();
+    }
+
+    $scope.submitCashBag = function () {
+      angular.element('.submit-cashBag-modal').modal('hide');
+      $this.displayLoadingModal('Submitting Cash Bags');
+      var payload = {
+        cashBags: $scope.cashBagListToSubmit
+      };
+      var parameters = {
+        submission: 'submit'
+      };
+      cashBagFactory.updateCashBag(null, payload, parameters).then(updateCashBagSuccessHandler, errorHandler);
+    };
+
+    cashBagFactory.getCompany(362).then(getCompanySuccessHandler, errorHandler);
     initializeData();
 
   });

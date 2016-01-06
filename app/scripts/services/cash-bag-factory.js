@@ -55,8 +55,8 @@ angular.module('ts5App')
       return companyService.getCompany(id);
     };
 
-    var updateCashBag = function (id, payload) {
-      return cashBagService.updateCashBag(id, payload);
+    var updateCashBag = function (id, payload, parameters) {
+      return cashBagService.updateCashBag(id, payload, parameters);
     };
 
     var getCashBag = function (id) {

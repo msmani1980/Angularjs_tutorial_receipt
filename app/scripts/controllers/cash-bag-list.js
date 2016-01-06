@@ -8,9 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, ngToast,
-                                           dateUtility,
-                                           lodash) {
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, ngToast, dateUtility, lodash) {
 
     var _companyId = null;
     var _services = null;
@@ -284,6 +282,7 @@ angular.module('ts5App')
       return !!$localStorage.isListFromEdit;
     };
 
+    // http://v4-alpha.getbootstrap.com/components/collapse/#events
     angular.element('#searchCollapse').on('shown.bs.collapse', function () {
       angular.element('#cashBagNumber').focus();
     });
