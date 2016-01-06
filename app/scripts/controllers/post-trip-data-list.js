@@ -64,10 +64,11 @@ angular.module('ts5App')
 
     this.getStationsSuccess = function (response) {
       // TODO: move offset to service layer
-      $scope.stationList = $scope.stationList.concat(response.response);
+      var newStationList = $scope.stationList.concat(angular.copy(response.response));
+      $scope.stationList = lodash.uniq(newStationList, 'stationId');
 
       if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
-        postTripFactory.getStationList(companyId, response.meta.limit + 1).then($this.getStationsSuccess);
+        postTripFactory.getStationList(companyId, response.meta.limit).then($this.getStationsSuccess);
       }
       // TODO: fix this hack! currently ui-select doesn't populate correctly when collapsed or when multiple
       angular.element('#search-collapse').addClass('collapse');

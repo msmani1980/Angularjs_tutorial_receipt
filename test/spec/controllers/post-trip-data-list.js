@@ -84,6 +84,10 @@ describe('Controller: PostFlightDataListCtrl', function () {
         expect(scope.stationList).toBeDefined();
         expect(Object.prototype.toString.call(scope.stationList)).toBe('[object Array]');
       });
+      it('should remove duplicatesFromStationList', function () {
+        var responseLength = stationsListResponseJSON.response.length;
+        expect(responseLength > scope.stationList.length).toEqual(true);
+      });
     });
 
     describe('getAllCarrierNumbers', function(){
