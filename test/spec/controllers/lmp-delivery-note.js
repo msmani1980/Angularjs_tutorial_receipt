@@ -222,7 +222,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
                 expectedQuantity: 2,
                 itemCode: 'Sk001',
                 itemName: 'Skittles',
-                masterItemId: 1,
+                itemMasterId: 1,
                 ullageQuantity: 1
               },
               {
@@ -230,7 +230,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
                 expectedQuantity: 1,
                 itemCode: 'SD001',
                 itemName: 'Coke',
-                masterItemId: 2
+                itemMasterId: 2
               }
             ]
           };
@@ -406,9 +406,9 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         it('should return undefined if no select master item is passed', function(){
           expect(scope.addItem(0)).toBeUndefined();
         });
-        it('should return undefined if in the currecnt delivery note items array', function(){
+        it('should return undefined if in the current delivery note items array', function(){
           scope.deliveryNote = {
-            items: [{masterItemId:123}]
+            items: [{itemMasterId:123}]
           };
           expect(scope.addItem({id:123})).toBeUndefined();
         });
