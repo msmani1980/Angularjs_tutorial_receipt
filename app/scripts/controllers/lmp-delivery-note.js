@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('LmpDeliveryNoteCtrl', function($scope, $routeParams, $location, $q, $filter, deliveryNoteFactory,
-    dateUtility, ngToast) {
+    dateUtility, ngToast, lodash) {
 
     // static scope vars
     $scope.viewName = 'Delivery note';
@@ -428,10 +428,18 @@ angular.module('ts5App')
       $scope.masterItems = $filter('orderBy')(response.masterItems, 'itemName');
     }
 
-    function getAllMasterItems() {
+    function getRegularItems(itemTypesFromAPI) {
+      var regularItemType = lodash.findWhere(angular.copy(itemTypesFromAPI), {name: 'Regular'});
+      if(regularItemType) {
+        return deliveryNoteFactory.getMasterItems({itemTypeId: regularItemType.id}).then(setMasterItemsFromResponse, showResponseErrors);
+      }
+      return [];
+    }
+
+    function getMasterItems() {
       if (!$scope.masterItems) {
         displayLoadingModal();
-        return deliveryNoteFactory.getAllMasterItems().then(setMasterItemsFromResponse, showResponseErrors);
+        deliveryNoteFactory.getItemTypes().then(getRegularItems);
       }
       return false;
     }
@@ -544,7 +552,7 @@ angular.module('ts5App')
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
-      _initPromises.push(getAllMasterItems());
+      _initPromises.push(getMasterItems());
       resolveInitPromises();
     };
     stateActions.viewInitPromisesResolved = function() {
@@ -559,7 +567,7 @@ angular.module('ts5App')
       displayLoadingModal();
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
-      _initPromises.push(getAllMasterItems());
+      _initPromises.push(getMasterItems());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();
@@ -576,7 +584,7 @@ angular.module('ts5App')
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
-      _initPromises.push(getAllMasterItems());
+      _initPromises.push(getMasterItems());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();

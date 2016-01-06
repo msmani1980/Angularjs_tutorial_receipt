@@ -12,6 +12,7 @@ describe('Service: deliveryNoteFactory', function () {
   var itemsService;
   var companyReasonCodesService;
   var stockManagementStationItemsService;
+  var recordsService;
 
   beforeEach(inject(function (_deliveryNoteFactory_, $injector) {
     deliveryNoteFactory = _deliveryNoteFactory_;
@@ -20,6 +21,7 @@ describe('Service: deliveryNoteFactory', function () {
     stockManagementStationItemsService = $injector.get('stockManagementStationItemsService');
     itemsService = $injector.get('itemsService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
+    recordsService = $injector.get('recordsService');
 
     spyOn(deliveryNotesService, 'getDeliveryNote');
     spyOn(catererStationService, 'getCatererStationList');
@@ -29,6 +31,7 @@ describe('Service: deliveryNoteFactory', function () {
     spyOn(deliveryNotesService, 'createDeliveryNote');
     spyOn(deliveryNotesService, 'saveDeliveryNote');
     spyOn(catererStationService, 'getAllMenuItems');
+    spyOn(recordsService, 'getItemTypes');
 
   }));
 
@@ -68,8 +71,9 @@ describe('Service: deliveryNoteFactory', function () {
 
   describe('itemsService calls', function(){
     it('should call getItemsList to get all master items', function(){
-      deliveryNoteFactory.getAllMasterItems();
-      expect(itemsService.getItemsList).toHaveBeenCalledWith({}, true);
+      var mockPayload = {};
+      deliveryNoteFactory.getMasterItems(mockPayload);
+      expect(itemsService.getItemsList).toHaveBeenCalledWith(mockPayload, true);
     });
   });
 
@@ -77,6 +81,13 @@ describe('Service: deliveryNoteFactory', function () {
     it('should call getCompanyReasonCodes', function(){
       deliveryNoteFactory.getCompanyReasonCodes();
       expect(companyReasonCodesService.getAll).toHaveBeenCalled();
+    });
+  });
+
+  describe('recordsService calls', function(){
+    it('should call getItemTypes', function(){
+      deliveryNoteFactory.getItemTypes();
+      expect(recordsService.getItemTypes).toHaveBeenCalled();
     });
   });
 
