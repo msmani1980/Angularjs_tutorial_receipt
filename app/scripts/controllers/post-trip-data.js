@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast) {
+  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast, lodash, $q) {
 
     var companyId;
     var $this = this;
@@ -49,11 +49,11 @@ angular.module('ts5App')
 
     this.getStationsSuccess = function (response) {
       // TODO: move offset to service layer
-      var newStationList = $scope.stationList.concat(response.response);
-      $scope.stationList = newStationList;
+      var newStationList = $scope.stationList.concat(angular.copy(response.response));
+      $scope.stationList = lodash.uniq(newStationList, 'stationId');
 
       if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
-        postTripFactory.getStationList(companyId, response.meta.limit + 1).then($this.getStationsSuccess);
+        postTripFactory.getStationList(companyId, response.meta.limit).then($this.getStationsSuccess);
       }
     };
 
@@ -153,17 +153,13 @@ angular.module('ts5App')
       $this.editPostTrip();
     };
 
-    this.init = function () {
-
-      $scope.employees = [];
-      companyId = postTripFactory.getCompanyId();
-      postTripFactory.getStationList(companyId).then($this.getStationsSuccess);
-      postTripFactory.getCarrierTypes(companyId).then($this.getCarrierSuccess);
-      postTripFactory.getEmployees(companyId).then($this.getEmployeesSuccess);
-      postTripFactory.getSchedules(companyId).then($this.getSchedulesSuccess);
+    this.initDependenciesSuccess = function (responseArray) {
+      $this.getStationsSuccess(responseArray[0]);
+      $this.getCarrierSuccess(responseArray[1]);
+      $this.getEmployeesSuccess(responseArray[2]);
+      $this.getSchedulesSuccess(responseArray[3]);
 
       if ($routeParams.id) {
-        $this.showLoadingModal('Loading Data');
         postTripFactory.getPostTrip(companyId, $routeParams.id).then($this.getPostTripSuccess);
       }
 
@@ -171,7 +167,24 @@ angular.module('ts5App')
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
+    };
 
+    this.makeInitPromises = function () {
+      companyId = postTripFactory.getCompanyId();
+      var promises = [
+        postTripFactory.getStationList(companyId),
+        postTripFactory.getCarrierTypes(companyId),
+        postTripFactory.getEmployees(companyId),
+        postTripFactory.getSchedules(companyId)
+      ];
+      return promises;
+    };
+
+    this.init = function () {
+      $this.showLoadingModal('Loading Data');
+      $scope.employees = [];
+      var initPromises = $this.makeInitPromises();
+      $q.all(initPromises).then($this.initDependenciesSuccess);
     };
 
     this.init();
@@ -219,10 +232,10 @@ angular.module('ts5App')
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
       var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
       if(shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
-        $scope.postTripDataForm.employeeIds.$setValidity('pattern', false);
+        $scope.postTripDataForm.employeeIds.$setValidity('required', false);
         return;
       }
-      $scope.postTripDataForm.employeeIds.$setValidity('pattern', true);
+      $scope.postTripDataForm.employeeIds.$setValidity('required', true);
     };
 
     this.validateForm = function() {
@@ -237,6 +250,8 @@ angular.module('ts5App')
         if ($this[saveFunctionName]) {
           $this[saveFunctionName]();
         }
+      } else {
+        $scope.displayError = true;
       }
     };
 

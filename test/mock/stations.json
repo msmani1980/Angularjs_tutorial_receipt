@@ -483,6 +483,27 @@
       "utcDstOffset": "+02:00",
       "utcOffset": "+01:00",
       "companyStationRelationships": []
+    },{
+      "id": 137,
+      "cityId": 29,
+      "cityName": "Madrid Duplicate",
+      "companyId": 403,
+      "countryId": 84,
+      "countryName": "United Kingdom",
+      "description": "MAD Airport",
+      "isCaterer": false,
+      "endDate": "2050-01-01",
+      "startDate": "2015-05-02",
+      "regionId": 10,
+      "regionName": "UK-REGION",
+      "stationCode": "MAD",
+      "stationId": 45,
+      "stationName": "Madrid ",
+      "timezone": "Europe/Madrid",
+      "timezoneId": "86",
+      "utcDstOffset": "+02:00",
+      "utcOffset": "+01:00",
+      "companyStationRelationships": []
     }
   ],
   "meta": {
