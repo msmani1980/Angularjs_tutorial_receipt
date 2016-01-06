@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Stock Take Report', function () {
+describe('Stock Take Report', function() {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -25,8 +25,8 @@ describe('Stock Take Report', function () {
     httpBackend;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $controller, $rootScope,$injector,
-    _servedStockTakeList_, _servedCateringStations_,_servedStockManagementDashboard_) {
+  beforeEach(inject(function($q, $controller, $rootScope, $injector,
+    _servedStockTakeList_, _servedCateringStations_, _servedStockManagementDashboard_) {
 
     stockManagementDashboardJSON = _servedStockManagementDashboard_;
     stockTakeListJSON = _servedStockTakeList_;
@@ -54,7 +54,7 @@ describe('Stock Take Report', function () {
       getCatererStationListDeferred.promise);
 
     spyOn(stockTakeService, 'deleteStockTake').and.returnValue({
-      then: function (callBack) {
+      then: function(callBack) {
         return callBack();
       }
     });
@@ -65,30 +65,30 @@ describe('Stock Take Report', function () {
 
   }));
 
-  afterEach(function () {
+  afterEach(function() {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
   });
 
   describe('the controller methods', function() {
 
-    it('should have a init method', function () {
+    it('should have a init method', function() {
       expect(StockTakeReportCtrl.init).toBeDefined();
     });
 
-    it('should have a getCatererStationList method', function () {
+    it('should have a getCatererStationList method', function() {
       expect(StockTakeReportCtrl.getCatererStationList).toBeDefined();
     });
 
-    it('should have a getStockTakeList method', function () {
+    it('should have a getStockTakeList method', function() {
       expect($scope.getStockTakeList).toBeDefined();
     });
 
-    it('should have a getStockTakeListSuccessHandler method', function () {
+    it('should have a getStockTakeListSuccessHandler method', function() {
       expect(StockTakeReportCtrl.getStockTakeListSuccessHandler).toBeDefined();
     });
 
-    it('should have a generateStockTakeQuery method', function () {
+    it('should have a generateStockTakeQuery method', function() {
       expect(StockTakeReportCtrl.generateStockTakeQuery).toBeDefined();
     });
 
@@ -96,40 +96,40 @@ describe('Stock Take Report', function () {
 
   describe('when the controller loads', function() {
 
-    it('should have an empty stations list before the scope is digested', function () {
+    it('should have an empty stations list before the scope is digested', function() {
       expect($scope.stationsList).toEqual([]);
     });
 
-    describe('The stationsList array', function () {
+    describe('The stationsList array', function() {
 
       beforeEach(function() {
         $scope.$digest();
       });
 
-      it('should have (1) or more stations in the stationsList', function () {
+      it('should have (1) or more stations in the stationsList', function() {
         expect($scope.stationsList.length).toBeGreaterThan(0);
       });
 
-      it('should be match the stations list from the stations API Respone',function () {
+      it('should be match the stations list from the stations API Respone', function() {
         expect($scope.stationsList).toEqual(stationsListJSON.response);
       });
 
-      describe('contains an station object which', function () {
+      describe('contains an station object which', function() {
         var station;
-        beforeEach(function () {
+        beforeEach(function() {
           station = $scope.stationsList[0];
         });
 
-        it('should be defined', function () {
+        it('should be defined', function() {
           expect(station).toBeDefined();
         });
 
-        it('should have an id property and is a string', function () {
+        it('should have an id property and is a string', function() {
           expect(station.id).toBeDefined();
           expect(station.id).toEqual(jasmine.any(Number));
         });
 
-        it('should have an stationCode property and is a string', function () {
+        it('should have an stationCode property and is a string', function() {
           expect(station.code).toBeDefined();
           expect(station.code).toEqual(jasmine.any(String));
         });
@@ -143,59 +143,59 @@ describe('Stock Take Report', function () {
 
   describe('when a user selects a station', function() {
 
-    it('should have an empty deliveryt notes list before the scope is digested', function () {
+    it('should have an empty deliveryt notes list before the scope is digested', function() {
       expect($scope.stockTakeList).toEqual([]);
     });
 
-    describe('The stockTakeList array', function () {
+    describe('The stockTakeList array', function() {
 
       beforeEach(function() {
         spyOn(StockTakeReportCtrl, 'getStockTakeListSuccessHandler').and.callThrough();
-        spyOn(StockTakeReportCtrl,'formatStockTakeDates').and.callThrough();
+        spyOn(StockTakeReportCtrl, 'formatStockTakeDates').and.callThrough();
         $scope.catererStationId = 3;
         $scope.$digest();
       });
 
-      it('should call the getStockTakeListSuccessHandler method', function () {
+      it('should call the getStockTakeListSuccessHandler method', function() {
         expect(StockTakeReportCtrl.getStockTakeListSuccessHandler).toHaveBeenCalled();
       });
 
 
-      it('should have (1) or more stations in the stockTakeList', function () {
+      it('should have (1) or more stations in the stockTakeList', function() {
         expect($scope.stockTakeList.length).toBeGreaterThan(0);
       });
 
-      it('should be match the stock take list from the delivertNotes API Respone',function () {
+      it('should be match the stock take list from the delivertNotes API Respone', function() {
         expect($scope.stockTakeList).toEqual(stockTakeListJSON.response);
       });
 
-      describe('contains an stock take object which', function () {
+      describe('contains an stock take object which', function() {
         var stockTake;
-        beforeEach(function () {
+        beforeEach(function() {
           stockTake = $scope.stockTakeList[0];
         });
 
-        it('should be defined', function () {
+        it('should be defined', function() {
           expect(stockTake).toBeDefined();
         });
 
-        it('should have an id property and is a number', function () {
+        it('should have an id property and is a number', function() {
           expect(stockTake.id).toBeDefined();
           expect(stockTake.id).toEqual(jasmine.any(Number));
         });
 
-        it('should have an catererStationId property and is a number', function () {
+        it('should have an catererStationId property and is a number', function() {
           expect(stockTake.catererStationId).toBeDefined();
           expect(stockTake.catererStationId).toEqual(jasmine.any(Number));
         });
 
         describe('formatting the dates of the stock take', function() {
 
-          it('should have been called when the stock takes list is received', function () {
+          it('should have been called when the stock takes list is received', function() {
             expect(StockTakeReportCtrl.formatStockTakeDates).toHaveBeenCalled();
           });
 
-          it('should remove the decimal from the end of the updatedOn date', function () {
+          it('should remove the decimal from the end of the updatedOn date', function() {
             var control = '2015-08-24 19:41:01.026802';
             var formattedControl = '2015-08-24 19:41:01';
             expect(stockTake.updatedOn).not.toEqual(control);
@@ -208,11 +208,11 @@ describe('Stock Take Report', function () {
 
     });
 
-    it('should have an empty station items list before the scope is digested', function () {
+    it('should have an empty station items list before the scope is digested', function() {
       expect($scope.stationItems).toEqual([]);
     });
 
-    describe('The stations items API call', function () {
+    describe('The stations items API call', function() {
 
       beforeEach(function() {
         spyOn(StockTakeReportCtrl, 'getStockDashboardItems').and.callThrough();
@@ -221,19 +221,19 @@ describe('Stock Take Report', function () {
         $scope.$digest();
       });
 
-      it('should call the getStockDashboardItems', function () {
+      it('should call the getStockDashboardItems', function() {
         expect(StockTakeReportCtrl.getStockDashboardItems).toHaveBeenCalled();
       });
 
-      it('should call the getStockDashboardItemsSuccessHandler method', function () {
+      it('should call the getStockDashboardItemsSuccessHandler method', function() {
         expect(StockTakeReportCtrl.getStockDashboardItemsSuccessHandler).toHaveBeenCalled();
       });
 
-      it('should have (1) or more items in the stationItems', function () {
+      it('should have (1) or more items in the stationItems', function() {
         expect($scope.stationItems.length).toBeGreaterThan(0);
       });
 
-      it('should set the stationItems as the stationItems API respone',function () {
+      it('should set the stationItems as the stationItems API respone', function() {
         expect($scope.stationItems).toEqual(stockManagementDashboardJSON.response);
       });
 
@@ -241,7 +241,7 @@ describe('Stock Take Report', function () {
 
   });
 
-  describe('remove stock take functionality', function () {
+  describe('remove stock take functionality', function() {
 
     beforeEach(function() {
       $scope.catererStationId = 3;
@@ -249,11 +249,11 @@ describe('Stock Take Report', function () {
     });
 
     it('should have a removeRecord() method attached to the scope',
-      function () {
+      function() {
         expect($scope.removeRecord).toBeDefined();
       });
 
-    it('should remove the record from the stockTakeList', function () {
+    it('should remove the record from the stockTakeList', function() {
       var length = $scope.stockTakeList.length;
       $scope.removeRecord(47);
       expect($scope.stockTakeList.length).toEqual(length - 1);
@@ -261,17 +261,17 @@ describe('Stock Take Report', function () {
 
   });
 
-  describe('clear filter functionality', function () {
-    beforeEach(function () {
+  describe('clear filter functionality', function() {
+    beforeEach(function() {
       $scope.$digest();
     });
     it(
       'should have a clearSearchFilters() method attached to the scope',
-      function () {
+      function() {
         expect($scope.clearSearchFilters).toBeDefined();
       });
 
-    it('should clear the search ng-model when called', function () {
+    it('should clear the search ng-model when called', function() {
       $scope.search = {
         stockTakeNumber: 'VB001'
       };
@@ -279,7 +279,7 @@ describe('Stock Take Report', function () {
       expect($scope.search).toEqual({});
     });
 
-    it('should clear the dateRange ng-model when called', function () {
+    it('should clear the dateRange ng-model when called', function() {
       $scope.dateRange.startDate = '07-15-2015';
       $scope.dateRange.endDate = '08-15-2015';
       $scope.clearSearchFilters();
@@ -291,19 +291,19 @@ describe('Stock Take Report', function () {
 
   });
 
-  describe('searchRecords', function () {
+  describe('searchRecords', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
       spyOn(StockTakeReportCtrl, 'displayLoadingModal');
       spyOn($scope, 'getStockTakeList');
       $scope.$digest();
     });
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect($scope.searchRecords).toBeDefined();
     });
 
-    it('should call getStockTakeList', function () {
+    it('should call getStockTakeList', function() {
       $scope.searchRecords();
       expect($scope.getStockTakeList).toHaveBeenCalled();
     });
@@ -318,13 +318,13 @@ describe('Stock Take Report', function () {
         $scope.$digest();
       });
 
-      it('should set the start and end dates in the query', function(){
+      it('should set the start and end dates in the query', function() {
         var query = StockTakeReportCtrl.generateStockTakeQuery();
         expect(query.startDate).toBeDefined();
         expect(query.endDate).toBeDefined();
       });
 
-      it('should format the start and end dates in the query', function(){
+      it('should format the start and end dates in the query', function() {
         var query = StockTakeReportCtrl.generateStockTakeQuery();
         expect(query.startDate).toEqual('20150812');
         expect(query.endDate).toEqual('20150813');
@@ -334,13 +334,13 @@ describe('Stock Take Report', function () {
 
   });
 
-  describe('searchIsPossible functionality', function () {
+  describe('searchIsPossible functionality', function() {
 
-    it('should return false by default', function(){
+    it('should return false by default', function() {
       expect($scope.searchIsPossible()).toBeFalsy();
     });
 
-    it('should return false even if the catering station is selected but the station list is empty', function(){
+    it('should return false even if the catering station is selected but the station list is empty', function() {
       $scope.catererStationId = 3;
       $scope.$digest();
       $scope.stockTakeList = [];
@@ -348,7 +348,7 @@ describe('Stock Take Report', function () {
       expect($scope.searchIsPossible()).toBeFalsy();
     });
 
-    it('should return true if the catering station is selected and the station list is not empty', function(){
+    it('should return true if the catering station is selected and the station list is not empty', function() {
       $scope.catererStationId = 3;
       $scope.$digest();
       expect($scope.searchIsPossible()).toBeTruthy();
@@ -356,21 +356,22 @@ describe('Stock Take Report', function () {
 
   });
 
-  describe('importIsPossible functionality', function () {
+  describe('importIsPossible functionality', function() {
 
-    it('should return false by default', function(){
+    it('should return false by default', function() {
       expect($scope.importIsPossible()).toBeFalsy();
     });
 
-    it('should return false even if the catering station is selected but the station items list is empty', function(){
-      $scope.catererStationId = 3;
-      $scope.$digest();
-      $scope.stationItems = [];
-      $scope.$digest();
-      expect($scope.importIsPossible()).toBeFalsy();
-    });
+    it('should return false even if the catering station is selected but the station items list is empty',
+      function() {
+        $scope.catererStationId = 3;
+        $scope.$digest();
+        $scope.stationItems = [];
+        $scope.$digest();
+        expect($scope.importIsPossible()).toBeFalsy();
+      });
 
-    it('should return true if the catering station and the items lists is not empty', function(){
+    it('should return true if the catering station and the items lists is not empty', function() {
       $scope.catererStationId = 3;
       $scope.$digest();
       expect($scope.importIsPossible()).toBeTruthy();
@@ -378,13 +379,13 @@ describe('Stock Take Report', function () {
 
   });
 
-  describe('canCreateStockTake functionality', function () {
+  describe('canCreateStockTake functionality', function() {
 
-    it('should return false if no station id is set', function(){
+    it('should return false if no station id is set', function() {
       expect($scope.canCreateStockTake()).toBeFalsy();
     });
 
-    it('should return false even if the catering station is selected but there is an open stock take', function(){
+    it('should return false even if the catering station is selected but there is an open stock take', function() {
       $scope.catererStationId = 3;
       $scope.$digest();
       $scope.stockTakeList[0].isSubmitted = false;
@@ -392,7 +393,7 @@ describe('Stock Take Report', function () {
       expect($scope.canCreateStockTake()).toBeFalsy();
     });
 
-    it('should return true if the catering station is selected and there is not open stock take', function(){
+    it('should return true if the catering station is selected and there is not open stock take', function() {
       $scope.catererStationId = 3;
       $scope.$digest();
       $scope.stockTakeList[0].isSubmitted = true;
@@ -400,7 +401,7 @@ describe('Stock Take Report', function () {
       expect($scope.canCreateStockTake()).toBeTruthy();
     });
 
-    it('should return true if no stock takes were returned', function(){
+    it('should return true if no stock takes were returned', function() {
       $scope.catererStationId = 3;
       $scope.$digest();
       $scope.stockTakeList = [];
