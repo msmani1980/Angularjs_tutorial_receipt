@@ -439,7 +439,7 @@ angular.module('ts5App')
     function getMasterItems() {
       if (!$scope.masterItems) {
         displayLoadingModal();
-        deliveryNoteFactory.getItemTypes().then(getRegularItems);
+        deliveryNoteFactory.getItemTypes().then(getRegularItems, showResponseErrors);
       }
       return false;
     }
