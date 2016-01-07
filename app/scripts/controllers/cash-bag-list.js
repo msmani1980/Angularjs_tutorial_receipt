@@ -62,6 +62,7 @@ angular.module('ts5App')
     }
 
     function getCashBagResponseHandler(response) {
+      hideLoadingModal();
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.cashBagList = $scope.cashBagList.concat(formatScheduleDateForApp(angular.copy(response.cashBags)));
       angular.forEach($scope.cashBagList, function (cashBag) {
@@ -69,11 +70,11 @@ angular.module('ts5App')
           showSuccessMessage('successfully created');
         }
       });
+
       if ($this.meta.count === 1 && $scope.search.cashBagNumber) {
         $localStorage.isEditFromList = true;
         $scope.editCashBag($scope.cashBagList[0]);
       }
-      hideLoadingModal();
     }
 
     function setFilteredScheduleList(dataFromAPI) {
