@@ -27,7 +27,9 @@ angular.module('ts5App')
       controller: function($scope, $element) {
         var datePickerOptions = {
           orientation: 'auto top',
+          format: 'mm/dd/yyyy',
           autoclose: true,
+          todayHighlight: true,
           maxDate: $scope.maxDate
         };
         if ($scope.minDate) {
