@@ -364,8 +364,18 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         if (statusName === 'On Floor') {
           var unpackingStatusId = getIdByValueInArray('Unpacking', 'statusName', $scope.storeStatusList);
           var inboundSealsStatusId = getIdByValueInArray('Inbound Seals', 'statusName', $scope.storeStatusList);
-          payload.statusId = [parseInt(payload.statusId), unpackingStatusId, inboundSealsStatusId];
+          payload.statusId = [parseInt(payload.statusId), unpackingStatusId, inboundSealsStatusId].toString();
         }
+      }
+      return payload;
+    }
+
+    function formatStationPayloads(payload) {
+      if(payload.departureStationCode) {
+        payload.departureStationCode = payload.departureStationCode.toString();
+      }
+      if(payload.arrivalStationCode) {
+        payload.arrivalStationCode = payload.arrivalStationCode.toString();
       }
       return payload;
     }
@@ -396,6 +406,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         }
       });
       payload = formatStatusPayload(payload);
+      payload = formatStationPayloads(payload);
       $scope.searchIsActive = true;
       if (startDate) {
         payload.startDate = startDate;
