@@ -28,9 +28,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var getItemTypesDeferred;
   var getItemTypesResponseJSON;
   var httpBackend;
+  var dateUtility;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $httpBackend, $rootScope, $q, _deliveryNoteFactory_,
+  beforeEach(inject(function ($injector, $controller, $httpBackend, $rootScope, $q, _deliveryNoteFactory_,
                               _servedLmpDeliveryNote_, $location, _servedCateringStations_,
                               _servedMasterItemList_,
                               _servedCompanyReasonCodes_, _servedItemsByCatererStationId_, _servedItemTypes_) {
@@ -46,6 +47,9 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     getCompanyReasonCodesResponseJSON = _servedCompanyReasonCodes_;
     getAllMasterItemsResponseJSON = _servedMasterItemList_;
     getItemTypesResponseJSON = _servedItemTypes_;
+
+    dateUtility = $injector.get('dateUtility');
+
 
     getDeliveryNoteDeferred = $q.defer();
     getDeliveryNoteDeferred.resolve(lmpDeliveryNoteResponseJSON);
@@ -165,8 +169,9 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(deliveryNoteFactory.getItemTypes).toHaveBeenCalled();
       });
 
-      it('should call getMasterItems with regular item type filter', function () {
-        var expectedPayload = {itemTypeId: 1}; // regular item type id
+      it('should call getMasterItems with regular item type and start date filter', function () {
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var expectedPayload = {itemTypeId: 1, startDate: today}; // regular item type id
         expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
 
@@ -232,7 +237,8 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       });
 
       it('should call getMasterItems with regular item type filter', function () {
-        var expectedPayload = {itemTypeId: 1}; // regular item type id
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var expectedPayload = {itemTypeId: 1, startDate: today}; // regular item type id
         expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
 
@@ -337,7 +343,8 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       });
 
       it('should call getMasterItems with regular item type filter', function () {
-        var expectedPayload = {itemTypeId: 1}; // regular item type id
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var expectedPayload = {itemTypeId: 1, startDate: today}; // regular item type id
         expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
       describe('changing LMP station', function(){
