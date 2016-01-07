@@ -63,6 +63,7 @@ angular.module('ts5App')
       $scope.dashboardMenu = (companyTypeId === 1) ? mainMenuService.getMenu() : mainMenuService.getStockOwnerMenu();
     }
 
+    $scope.$on('company-fetched', updateNavigationPerUserFeatures);
     updateNavigationPerUserFeatures();
 
   });

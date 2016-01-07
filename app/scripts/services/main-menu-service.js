@@ -11,10 +11,8 @@ angular.module('ts5App')
   .service('mainMenuService', function() {
     var emberURL = '/ember/#/';
 
-    var retailMenu = null;
     this.getMenu = function() {
-      if (retailMenu === null) {
-        retailMenu = [{
+        return [{
           'title': 'Retail Item Management',
           menuItems: [{
             name: 'Manage Items',
@@ -436,12 +434,10 @@ angular.module('ts5App')
 
           }]
         }];
-      }
-      return angular.copy(retailMenu);
     };
 
     this.getStockOwnerMenu = function() {
-        return [{
+      return [{
           'title': 'StockOwner Item Management',
           menuItems: [{
             name: 'Manage Items',
