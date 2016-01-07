@@ -274,9 +274,9 @@ angular.module('ts5App')
       return $scope.deliveryNote.items.map(function(item) {
         return {
           masterItemId: parseInt(item.itemMasterId),
-          expectedQuantity: isNumberGreaterThanOrEqualTo0(item.expectedQuantity) ? parseInt(item.expectedQuantity) : null,
-          deliveredQuantity: isNumberGreaterThanOrEqualTo0(item.deliveredQuantity) ? parseInt(item.deliveredQuantity) : null,
-          ullageQuantity: isNumberGreaterThanOrEqualTo0(item.ullageQuantity) ? parseInt(item.ullageQuantity) : null,
+          expectedQuantity: isNumberGreaterThanOrEqualTo0(item.expectedQuantity) ? parseInt(item.expectedQuantity) : 0,
+          deliveredQuantity: isNumberGreaterThanOrEqualTo0(item.deliveredQuantity) ? parseInt(item.deliveredQuantity) : 0,
+          ullageQuantity: isNumberGreaterThanOrEqualTo0(item.ullageQuantity) ? parseInt(item.ullageQuantity) : 0,
           ullageReason: isNumberGreaterThanOrEqualTo0(item.ullageReason) ? parseInt(item.ullageReason) : null
         };
       });
