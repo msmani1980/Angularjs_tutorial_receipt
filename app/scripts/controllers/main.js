@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MainCtrl', function ($rootScope, $scope, companiesFactory, mainMenuService/*, identityAccessService, lodash*/) {
+  .controller('MainCtrl', function ($rootScope, $scope, companiesFactory, mainMenuService, GlobalMenuService/*, identityAccessService, lodash*/) {
 
     $scope.viewName = 'TS5 Dashboard';
 
@@ -59,7 +59,8 @@ angular.module('ts5App')
       //identityAccessService.featuresInRole().then(function(response) {
       //  $scope.dashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
       //});
-      $scope.dashboardMenu = mainMenuService.getMenu();
+      var companyTypeId = GlobalMenuService.getCompanyData().companyTypeId;
+      $scope.dashboardMenu = (companyTypeId === 1) ? mainMenuService.getMenu() : mainMenuService.getStockOwnerMenu();
     }
 
     updateNavigationPerUserFeatures();

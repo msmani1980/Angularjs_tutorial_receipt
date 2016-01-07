@@ -440,4 +440,36 @@ angular.module('ts5App')
       return angular.copy(retailMenu);
     };
 
+    this.getStockOwnerMenu = function() {
+        return [{
+          'title': 'StockOwner Item Management',
+          menuItems: [{
+            name: 'Manage Items',
+            route: '/#/stock-owner-item-list',
+            icon: 'icon-manage-retail-item',
+            className: 'dashboard-managemenuItems',
+            package: 'RETAIL',
+            role: 'RETAILITEM'
+          }, {
+            name: 'Create Item',
+            route: '/#/stock-owner-item-create',
+            icon: 'icon-create-retail-item',
+            className: 'dashboard-createItem',
+            package: 'RETAIL',
+            role: 'RETAILITEM',
+            permissions: [{
+              apiName: '/api/retail-items',
+              permissionCodes: ['C']
+            }]
+          }, {
+            name: 'Manage Categories',
+            route: '/#/category-list',
+            icon: 'icon-manage-retail-category',
+            className: 'dashboard-manageItemCategories',
+            package: 'RETAIL',
+            role: 'RETAILITEMCATEGORY'
+          }]
+        }];
+    };
+
   });
