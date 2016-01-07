@@ -6,7 +6,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   beforeEach(module('ts5App',
     'served/lmp-delivery-note.json', 'served/catering-stations.json',
     'served/master-item-list.json',
-    'served/company-reason-codes.json', 'served/items-by-caterer-station-id.json'));
+    'served/company-reason-codes.json', 'served/items-by-caterer-station-id.json', 'served/item-types.json'));
 
   var LmpDeliveryNoteCtrl;
   var scope;
@@ -25,13 +25,15 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var saveDeferred;
   var getAllMasterItemsDeferred;
   var getAllMasterItemsResponseJSON;
+  var getItemTypesDeferred;
+  var getItemTypesResponseJSON;
   var httpBackend;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $httpBackend, $rootScope, $q, _deliveryNoteFactory_,
                               _servedLmpDeliveryNote_, $location, _servedCateringStations_,
                               _servedMasterItemList_,
-                              _servedCompanyReasonCodes_, _servedItemsByCatererStationId_) {
+                              _servedCompanyReasonCodes_, _servedItemsByCatererStationId_, _servedItemTypes_) {
 
     companyId = 403;
     httpBackend = $httpBackend;
@@ -43,6 +45,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     getCatererStationMasterItemsResponseJSON = _servedItemsByCatererStationId_;
     getCompanyReasonCodesResponseJSON = _servedCompanyReasonCodes_;
     getAllMasterItemsResponseJSON = _servedMasterItemList_;
+    getItemTypesResponseJSON = _servedItemTypes_;
 
     getDeliveryNoteDeferred = $q.defer();
     getDeliveryNoteDeferred.resolve(lmpDeliveryNoteResponseJSON);
@@ -62,7 +65,11 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
 
     getAllMasterItemsDeferred = $q.defer();
     getAllMasterItemsDeferred.resolve(getAllMasterItemsResponseJSON);
-    spyOn(deliveryNoteFactory, 'getAllMasterItems').and.returnValue(getAllMasterItemsDeferred.promise);
+    spyOn(deliveryNoteFactory, 'getMasterItems').and.returnValue(getAllMasterItemsDeferred.promise);
+
+    getItemTypesDeferred = $q.defer();
+    getItemTypesDeferred.resolve(getItemTypesResponseJSON);
+    spyOn(deliveryNoteFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
 
   }));
 
@@ -153,6 +160,16 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(scope.ullageReasons).toBeDefined();
         expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
       });
+
+      it('should call getItemTypes in factory', function () {
+        expect(deliveryNoteFactory.getItemTypes).toHaveBeenCalled();
+      });
+
+      it('should call getMasterItems with regular item type filter', function () {
+        var expectedPayload = {itemTypeId: 1}; // regular item type id
+        expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
+      });
+
       // Scope globals
       describe('global scope functions and vars', function(){
         it('should have a cancel scope function', function(){
@@ -209,6 +226,16 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         scope.cancel();
         expect(location.path()).toBe('/');
       });
+
+      it('should call getItemTypes in factory', function () {
+        expect(deliveryNoteFactory.getItemTypes).toHaveBeenCalled();
+      });
+
+      it('should call getMasterItems with regular item type filter', function () {
+        var expectedPayload = {itemTypeId: 1}; // regular item type id
+        expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
+      });
+
       describe('save scope function, only save', function() {
         beforeEach(function(){
           scope.deliveryNote = {
@@ -255,7 +282,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
                 deliveredQuantity: 1,
                 expectedQuantity: 1,
                 masterItemId: 2,
-                ullageQuantity: null,
+                ullageQuantity: 0,
                 ullageReason: null
               }
             ]
@@ -303,6 +330,15 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       it('should set the ullageReasons scope var', function(){
         expect(scope.ullageReasons).toBeDefined();
         expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
+      });
+
+      it('should call getItemTypes in factory', function () {
+        expect(deliveryNoteFactory.getItemTypes).toHaveBeenCalled();
+      });
+
+      it('should call getMasterItems with regular item type filter', function () {
+        var expectedPayload = {itemTypeId: 1}; // regular item type id
+        expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
       describe('changing LMP station', function(){
 
@@ -378,10 +414,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       describe('addItems scope function', function(){
         it('should be defined as a scope', function(){
           expect(Object.prototype.toString.call(scope.addItems)).toBe('[object Function]');
-        });
-        it('should make a request to get all master items', function(){
-          scope.addItems();
-          expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
         });
         it('should return undefined because the API was already called', function(){
           scope.addItems();

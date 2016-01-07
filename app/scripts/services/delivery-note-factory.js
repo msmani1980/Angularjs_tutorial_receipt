@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('deliveryNoteFactory', function (deliveryNotesService, catererStationService,
-                                            companyReasonCodesService, itemsService, stockManagementStationItemsService) {
+                                            companyReasonCodesService, itemsService, stockManagementStationItemsService, recordsService) {
 
     function getDeliveryNote(deliveryNoteId) {
       return deliveryNotesService.getDeliveryNote(deliveryNoteId);
@@ -27,8 +27,8 @@ angular.module('ts5App')
       return companyReasonCodesService.getAll();
     }
 
-    function getAllMasterItems(){
-      return itemsService.getItemsList({}, true);
+    function getMasterItems(payload){
+      return itemsService.getItemsList(payload, true);
     }
 
     function createDeliveryNote(payload){
@@ -47,16 +47,21 @@ angular.module('ts5App')
       return deliveryNotesService.getDeliveryNotesList(query);
     }
 
+    function getItemTypes() {
+      return recordsService.getItemTypes();
+    }
+
     return {
       getDeliveryNotesList: getDeliveryNotesList,
       getDeliveryNote: getDeliveryNote,
       getCatererStationList: getCatererStationList,
       getItemsByCateringStationId: getItemsByCateringStationId,
       getCompanyReasonCodes: getCompanyReasonCodes,
-      getAllMasterItems: getAllMasterItems,
+      getMasterItems: getMasterItems,
       createDeliveryNote: createDeliveryNote,
       saveDeliveryNote: saveDeliveryNote,
-      deleteDeliveryNote: deleteDeliveryNote
+      deleteDeliveryNote: deleteDeliveryNote,
+      getItemTypes: getItemTypes
     };
 
   });
