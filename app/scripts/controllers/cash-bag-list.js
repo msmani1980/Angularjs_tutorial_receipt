@@ -114,9 +114,10 @@ angular.module('ts5App')
       };
       _services.call(['getStationList', 'getSchedulesList']);
       $q.all(_services.promises).then(hideLoadingModal);
+      angular.element('#cashBagNumber').focus();
     })();
 
-    function loadCashbagList() {
+    function loadCashBagList() {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
@@ -137,9 +138,7 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     }
 
-    $scope.loadCashbagList = function () {
-      loadCashbagList();
-    };
+    $scope.loadCashbagList = loadCashBagList;
 
     $scope.searchCashBag = function () {
       $scope.cashBagList = [];
@@ -148,7 +147,7 @@ angular.module('ts5App')
         limit: 100,
         offset: 0
       };
-      loadCashbagList();
+      loadCashBagList();
     };
 
     $scope.clearForm = function () {
