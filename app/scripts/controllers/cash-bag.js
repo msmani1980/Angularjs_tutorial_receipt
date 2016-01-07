@@ -399,7 +399,6 @@ angular.module('ts5App')
 
     // Constructor
     function init() {
-      $location.url($location.path());
       showLoadingModal('Loading Cash Bag');
       _companyId = cashBagFactory.getCompanyId();
       $scope.state = $routeParams.state;
