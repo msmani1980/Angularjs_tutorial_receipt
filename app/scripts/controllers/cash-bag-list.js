@@ -46,6 +46,7 @@ angular.module('ts5App')
     function hideLoadingModal() {
       angular.element('.loading-more').hide();
       angular.element('.modal-backdrop').remove();
+      angular.element('#cashBagNumber').focus();
     }
 
     function formatScheduleDateForApp(containingArray) {
@@ -115,7 +116,6 @@ angular.module('ts5App')
       };
       _services.call(['getStationList', 'getSchedulesList']);
       $q.all(_services.promises).then(hideLoadingModal);
-      angular.element('#cashBagNumber').focus();
     })();
 
     function loadCashBagList() {
