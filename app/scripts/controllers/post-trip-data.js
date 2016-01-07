@@ -162,6 +162,7 @@ angular.module('ts5App')
       if ($routeParams.id) {
         postTripFactory.getPostTrip(companyId, $routeParams.id).then($this.getPostTripSuccess);
       }
+      $this.hideLoadingModal();
 
       var initFunctionName = ($routeParams.state + 'Init');
       if ($this[initFunctionName]) {
