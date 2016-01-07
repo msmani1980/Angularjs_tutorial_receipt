@@ -431,7 +431,8 @@ angular.module('ts5App')
     function getRegularItems(itemTypesFromAPI) {
       var regularItemType = lodash.findWhere(angular.copy(itemTypesFromAPI), {name: 'Regular'});
       if(regularItemType) {
-        return deliveryNoteFactory.getMasterItems({itemTypeId: regularItemType.id}).then(setMasterItemsFromResponse, showResponseErrors);
+        var startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        return deliveryNoteFactory.getMasterItems({itemTypeId: regularItemType.id, startDate: startDate}).then(setMasterItemsFromResponse, showResponseErrors);
       }
       return [];
     }
