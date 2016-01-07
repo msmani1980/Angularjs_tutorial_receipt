@@ -260,11 +260,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function filterStoreInstanceList() {
-      var newList = lodash.filter(angular.copy($scope.storeInstanceList), function(storeInstance) {
+      $scope.storeInstanceList = lodash.filter(angular.copy($scope.storeInstanceList), function(storeInstance) {
+        if (!storeInstance) {
+          return false;
+        }
         var storeInstanceName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
         return lodash.indexOf($scope.allAllowedStatuses, storeInstanceName) >= 0;
       });
-      $scope.storeInstanceList = newList;
     }
 
     function formatStoreInstanceList() {
