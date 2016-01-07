@@ -69,7 +69,7 @@ angular.module('ts5App')
           showSuccessMessage('successfully created');
         }
       });
-      if ($this.meta.count === 1 && $scope.search.bankReferenceNumber) {
+      if ($this.meta.count === 1 && $scope.search.cashBagNumber) {
         $localStorage.isEditFromList = true;
         $scope.editCashBag($scope.cashBagList[0]);
       }
