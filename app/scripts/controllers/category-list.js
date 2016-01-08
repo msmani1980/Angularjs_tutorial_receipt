@@ -86,6 +86,10 @@ angular.module('ts5App')
       return false;
     };
 
+    $scope.canDeleteCategory = function (category) {
+      return category.childCategoryCount === null || parseInt(category.childCategoryCount) <= 0;
+    };
+
     this.deleteCategory = function (categoryId) {
       categoryFactory.deleteCategory(categoryId);
     };
