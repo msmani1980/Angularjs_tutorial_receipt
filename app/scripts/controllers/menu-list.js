@@ -64,6 +64,7 @@ angular.module('ts5App')
       $location.path('menu/edit/' + menu.id);
     };
 
+    var loadingProgress = false;
     var attachMenuListToScope = function (menuListFromAPI) {
       $this.meta.count = $this.meta.count || menuListFromAPI.meta.count;
       var menuList = formatDates(menuListFromAPI.menus);
@@ -73,7 +74,6 @@ angular.module('ts5App')
     };
 
     var lastStartDate = null;
-    var loadingProgress = false;
     function searchMenus(startDate) {
       if ($this.meta.offset >= $this.meta.count) {
         return;

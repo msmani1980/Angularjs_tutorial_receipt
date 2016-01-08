@@ -29,6 +29,15 @@ angular.module('ts5App')
       $this.cateringStationWatcher();
     };
 
+    function showLoadingBar() {
+      $scope.showLoadingBar = true;
+    }
+
+    function hideLoadingBar() {
+      $scope.showLoadingBar = false;
+      angular.element('.modal-backdrop').remove();
+    }
+
     this.cateringStationWatcher = function() {
       $scope.$watch('catererStationId', function(newData) {
         if (newData) {
@@ -44,15 +53,6 @@ angular.module('ts5App')
         }
       });
     };
-
-    function showLoadingBar() {
-      $scope.showLoadingBar = true;
-    }
-
-    function hideLoadingBar() {
-      $scope.showLoadingBar = false;
-      angular.element('.modal-backdrop').remove();
-    }
 
     this.displayLoadingModal = function(loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);

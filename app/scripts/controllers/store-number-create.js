@@ -102,6 +102,8 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.editing = false;
       $scope.storeNumbersList = [];
+      $this.meta.offset = -1;
+      $this.meta.count = 0;
     }
 
     $scope.getStoreList = function () {

@@ -43,6 +43,8 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       angular.element('#loading').modal('hide');
     };
 
+    var loadingProgress = false;
+
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       $scope.stockDashboardItemsList = $scope.stockDashboardItemsList.concat(dataFromAPI.response);
@@ -60,7 +62,6 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       }, true);
     };
 
-    var loadingProgress = false;
     $scope.updateStockItems = function() {
       if (!$scope.selectedCateringStation) {
         return false;

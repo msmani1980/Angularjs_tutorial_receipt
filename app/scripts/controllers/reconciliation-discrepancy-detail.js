@@ -122,6 +122,21 @@ angular.module('ts5App')
       initLMPStockRevisions();
     }
 
+    function showLoadingModal(text) {
+      $scope.displayError = false;
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
+    function handleResponseError(responseFromAPI) {
+      hideLoadingModal();
+      $scope.errorResponse = angular.copy(responseFromAPI);
+      $scope.displayError = true;
+    }
+
     function setStockData(stockData) {
       var rawLMPStockData = angular.copy(stockData);
 
@@ -170,21 +185,6 @@ angular.module('ts5App')
     function getCashBagData() {
       formatCashBags($this.chCashBag);
       initCashBagRevisions();
-    }
-
-    function showLoadingModal(text) {
-      $scope.displayError = false;
-      angular.element('#loading').modal('show').find('p').text(text);
-    }
-
-    function hideLoadingModal() {
-      angular.element('#loading').modal('hide');
-    }
-
-    function handleResponseError(responseFromAPI) {
-      hideLoadingModal();
-      $scope.errorResponse = angular.copy(responseFromAPI);
-      $scope.displayError = true;
     }
 
     function getTotalsFor(stockTotals, itemTypeName) {
