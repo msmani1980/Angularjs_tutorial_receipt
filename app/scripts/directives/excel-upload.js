@@ -49,7 +49,7 @@ angular.module('ts5App')
     };
 
     $scope.upload = function (files) {
-      if($scope.uploadParam) {
+      if ($scope.uploadParam) {
         $this.service.importFromExcel(GlobalMenuService.company.get(), files, $scope.uploadParam).then(successHandler, errorHandler);
       } else {
         $this.service.importFromExcel(GlobalMenuService.company.get(), files).then(successHandler, errorHandler);
@@ -64,6 +64,7 @@ angular.module('ts5App')
       for (var filesIndex in $scope.files) {
         $scope.clearFile(filesIndex);
       }
+
       $scope.files = undefined;
     };
 
@@ -74,7 +75,6 @@ angular.module('ts5App')
     $scope.hideModalImportInfo = function () {
       angular.element('.info-import-model').modal('hide');
     };
-
 
     function setTemplateName() {
       if ($scope.type === 'menu') {

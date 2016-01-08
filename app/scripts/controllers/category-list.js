@@ -37,6 +37,7 @@ angular.module('ts5App')
           if (lodash.isNull(categoryMap[category.parentId].children)) {
             categoryMap[category.parentId].children = [];
           }
+
           categoryMap[category.parentId].children.push(category);
         }
       });
@@ -44,7 +45,7 @@ angular.module('ts5App')
 
     function filterParents(categoryList) {
       return lodash.filter(categoryList, function(category) {
-          return category.parentId === null;
+        return category.parentId === null;
       });
     }
 
@@ -76,6 +77,7 @@ angular.module('ts5App')
       if (angular.isUndefined(category)) {
         return false;
       }
+
       return true;
     };
 
@@ -83,6 +85,7 @@ angular.module('ts5App')
       if (!exchangeRate.startDate) {
         return false;
       }
+
       return false;
     };
 

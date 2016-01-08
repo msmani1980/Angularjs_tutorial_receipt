@@ -66,6 +66,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $scope.formData.menus = storeDetailsJSON.parentStoreInstance.menus;
         return;
       }
+
       if (!$scope.isStepOneFromStepTwo) {
         delete $scope.formData.scheduleNumber;
       }
@@ -94,6 +95,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
             filteredStore = $filter('unique')(currentStoreArray, 'storeNumber');
           }
         });
+
         if (angular.isDefined(filteredStore)) {
           $scope.storesList.push(filteredStore[0]);
         }
@@ -105,9 +107,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('replenish')) {
         $this.setReplenishInstance(storeDetailsJSON);
       }
+
       if ($this.isActionState('redispatch')) {
         $this.getPrevStoreDetails();
       }
+
       if ($this.isEditingDispatch()) {
         $this.addCurrentStoreToStoreList();
       }
@@ -149,6 +153,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         var validMenu = $scope.filteredMenuList.filter(function(filteredMenu) {
           return filteredMenu.id === menu.id;
         });
+
         if (validMenu.length === 0) {
           var index = $scope.formData.menus.indexOf(menu);
           $scope.formData.menus.splice(index, 1);
@@ -175,9 +180,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var existingMenu = $scope.filteredMenuList.filter(function(menuMaster) {
         return menuMaster.id === menu.menuMasterId;
       })[0];
+
       if (angular.isDefined(existingMenu)) {
         newMenu.menuCode = existingMenu.menuCode;
       }
+
       return newMenu;
     };
 
@@ -187,6 +194,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         var newMenu = $this.generateNewMenu(menu);
         newMenus.push(newMenu);
       });
+
       $scope.formData.menus = newMenus;
     };
 
@@ -197,6 +205,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($routeParams.action === 'replenish') {
         payload.catererStationId = $scope.formData.dispatchedCateringStationId;
       }
+
       return menuCatererStationsService.getRelationshipList(payload).then($this.setMenuCatererList);
     };
 
@@ -262,6 +271,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           menuMasterId: menu.id
         });
       });
+
       return newMenus;
     };
 
@@ -305,6 +315,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           payload.tampered = false;
         }
       }
+
       if (angular.isUndefined($scope.prevStoreDetails)) {
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
@@ -315,6 +326,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           storeId: parseInt($scope.storeDetails.storeId)
         };
       }
+
       return payload;
     };
 
@@ -322,6 +334,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (!$scope.formData.replenishStoreInstanceId) {
         payload.replenishStoreInstanceId = $routeParams.storeId;
       }
+
       delete payload.menus;
       delete payload.dispatchedCateringStationId;
     };
@@ -379,6 +392,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (diff >= 0) {
         dateString = '+' + dateString;
       }
+
       return dateString;
     };
 
@@ -392,6 +406,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (apiData && apiData.cateringStationId) {
         return apiData.cateringStationId.toString();
       }
+
       return null;
     };
 
@@ -399,6 +414,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (apiData && apiData.scheduleDate) {
         return dateUtility.formatDate(apiData.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
       }
+
       return null;
     };
 
@@ -410,6 +426,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         };
         return scheduleNumber;
       }
+
       return undefined;
     };
 
@@ -417,6 +434,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (apiData && apiData.storeNumber) {
         return apiData.storeNumber.toString();
       }
+
       return null;
     };
 
@@ -424,6 +442,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (apiData && apiData.storeId) {
         return apiData.storeId.toString();
       }
+
       return null;
     };
 
@@ -431,6 +450,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (apiData && apiData.carrierId) {
         return apiData.carrierId.toString();
       }
+
       return null;
     };
 
@@ -438,6 +458,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (apiData && apiData.menus) {
         return apiData.menus;
       }
+
       return null;
     };
 
@@ -445,6 +466,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (apiData && apiData.prevStoreInstanceId) {
         return apiData.prevStoreInstanceId;
       }
+
       return null;
     };
 
@@ -466,6 +488,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
         }
       }
+
       var promises = $this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };
@@ -494,6 +517,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (storeInstanceId === $routeParams.storeId) {
         return storeInstanceAssignSealsFactory.getStoreInstanceSeals(storeInstanceId).then($this.setStoreInstanceSeals);
       }
+
       if (storeInstanceId === $scope.prevStoreInstanceId) {
         return storeInstanceAssignSealsFactory.getStoreInstanceSeals(storeInstanceId).then($this.setPrevStoreInstanceSeals);
       }
@@ -506,11 +530,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           existingSeals.push(seal);
         });
       }
+
       if ($scope.prevStoreExistingSeals) {
         angular.forEach($scope.prevStoreExistingSeals, function(seal) {
           existingSeals.push(seal);
         });
       }
+
       $scope.existingSeals = existingSeals;
     };
 
@@ -520,6 +546,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         var seal = sealsList[key];
         formattedSeals.push(seal.sealNumbers[0]);
       }
+
       return formattedSeals;
     };
 
@@ -527,9 +554,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (!$scope.existingSeals) {
         return [];
       }
+
       var sealsList = $scope.existingSeals.filter(function(sealType) {
         return sealType.type === typeId;
       });
+
       return this.formatExistingSeals(sealsList);
     };
 
@@ -555,13 +584,16 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (!$scope.existingSeals) {
         return;
       }
+
       var existingSealTypeObjects = $scope.existingSeals.filter(function(sealTypeObject) {
         return sealTypeObject.type === typeId && sealTypeObject.storeInstanceId === storeId;
       });
+
       var existingSeals = [];
       existingSealTypeObjects.forEach(function(sealTypeObject) {
         existingSeals.push(sealTypeObject.sealNumbers[0]);
       });
+
       return existingSeals;
     };
 
@@ -572,6 +604,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         var sealNumber = existingSeals[key];
         sealsToDelete.push(sealNumber);
       }
+
       return sealsToDelete;
     };
 
@@ -587,6 +620,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (sealsToDelete.length === 0) {
         return;
       }
+
       var deletePromises = [];
       for (var key in sealsToDelete) {
         var sealNumber = sealsToDelete[key];
@@ -596,6 +630,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           existingSeal.storeInstanceId
         ));
       }
+
       return deletePromises;
     };
 
@@ -607,6 +642,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           promises = promises.concat(deletePromises);
         }
       });
+
       return promises;
     };
 
@@ -617,6 +653,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId,
             item.id));
         });
+
         return deleteItemsPromiseArray;
       }
     };
@@ -626,6 +663,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       angular.forEach($scope.itemsToDelete, function(item) {
         deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId, item.id));
       });
+
       return deleteItemsPromiseArray;
     };
 
@@ -665,6 +703,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($routeParams.action !== 'dispatch') {
         uri = $this.nextStep.uri.replace(/[0-9]+/, response.id);
       }
+
       return uri;
     };
 
@@ -700,9 +739,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.showDataLossWarning) {
         return $this.showWarningModal();
       }
+
       if ($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
         return true;
       }
+
       $scope.displayError = true;
       return false;
     };
@@ -747,6 +788,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         var onFloorInstance = $scope.storeInstancesOnFloor.filter(function(instance) {
           return (instance.storeId === parseInt($scope.formData.storeId));
         });
+
         return onFloorInstance[0];
       }
     };
@@ -758,6 +800,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           storeId: $scope.onFloorInstance.id
         });
       }
+
       return;
     };
 
@@ -780,6 +823,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           return;
         }
       }
+
       this.showLoadingModal('Creating new Store Instance');
       var promises = $this.makeCreatePromises();
       $q.all(promises).then(
@@ -828,6 +872,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           args: [$scope.prevStoreInstanceId, $this.nextStep.storeOne.stepName]
         });
       }
+
       return promises;
     };
 
@@ -837,12 +882,15 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (!actionOne && !actionTwo) {
         payload = this.formatPayload();
       }
+
       if (actionOne) {
         payload = this.formatPayload(actionOne);
       }
+
       if (actionTwo) {
         prevPayload = this.formatPayload(actionTwo);
       }
+
       var actionPayloadObj = {
         actionOne: actionOne,
         actionTwo: actionTwo,
@@ -858,11 +906,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
         return;
       }
+
       var promises = $this.makeEditPromises('end-instance');
       $q.all($this.startPromise(promises.updateInstancePromises)).then(function() {
           $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises),
             saveAndExit);
         },
+
         $this.createStoreInstanceErrorHandler
       );
     };
@@ -873,12 +923,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
         return;
       }
+
       var promises = $this.makeCreatePromises();
       var redispatchPromises = $this.makeRedispatchPromises();
       $q.all($this.startPromise(redispatchPromises.updateInstancePromises)).then(function() {
           $this.invokeStoreInstanceStatusPromises(promises.concat($this.startPromise(redispatchPromises.updateInstanceStatusPromises)),
             saveAndExit);
         },
+
         $this.createStoreInstanceErrorHandler
       );
     };
@@ -894,6 +946,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
         return;
       }
+
       var promises = $this.makeEditPromises('end-instance', 'redispatch-initial');
       var deletePromises = [];
       if ($this.removeAllDataForInstances()) {
@@ -902,10 +955,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         deletePromises.push($this.createPromiseToDeleteItems());
         deletePromises.push($this.createPromiseToDeletePrevStoreItems());
       }
+
       $q.all(deletePromises.concat($this.startPromise(promises.updateInstancePromises))).then(function() {
           $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises),
             saveAndExit);
         },
+
         $this.createStoreInstanceErrorHandler
       );
     };
@@ -916,16 +971,19 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
         return;
       }
+
       var promises = $this.makeEditPromises('dispatch');
       var deletePromises = [];
       if ($this.removeAllDataForInstances()) {
         deletePromises.push($this.makeDeleteSealsPromises(parseInt($routeParams.storeId)));
         deletePromises.push($this.createPromiseToDeleteItems());
       }
+
       $q.all(deletePromises.concat($this.startPromise(promises.updateInstancePromises))).then(function() {
           $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises),
             saveAndExit);
         },
+
         $this.createStoreInstanceErrorHandler
       );
     };
@@ -935,6 +993,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.editRedispatchedStoreInstance(saveAndExit);
         return;
       }
+
       if (!$scope.stepOneFromStepTwo) {
         $this.redispatchStoreInstance(saveAndExit);
         return;
@@ -946,17 +1005,21 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.endStoreInstance(saveAndExit);
         return;
       }
+
       if ($this.isActionState('replenish') && $scope.formData.replenishStoreInstanceId) {
         $this.updateStoreInstance(saveAndExit);
         return;
       }
+
       if ($this.isActionState('redispatch')) {
         return $this.redispatchConditions(saveAndExit);
       }
+
       if ($this.isActionState('dispatch') && $routeParams.storeId) {
         $this.editDispatchedStoreInstance(saveAndExit);
         return;
       }
+
       $this.createStoreInstance(saveAndExit);
     };
 
@@ -965,6 +1028,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.validateForm()) {
         $this.submitFormConditions(saveAndExit);
       }
+
       return false;
     };
 
@@ -972,6 +1036,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var selectedMenu = $scope.formData.menus.filter(function(existingMenu) {
         return (existingMenu.id === menu.id);
       });
+
       return (selectedMenu.length === 0);
     };
 
@@ -979,11 +1044,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.createStoreInstance[fieldName].$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
       }
+
       if ($scope.createStoreInstance[fieldName].$invalid || angular.isDefined($scope.createStoreInstance[
             fieldName]
           .$error.required)) {
         return 'has-error';
       }
+
       return 'has-success';
     };
 
@@ -993,10 +1060,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         !$scope.createStoreInstance.$submitted) {
         return '';
       }
+
       if ($scope.formData.menus.length === 0) {
         $scope.createStoreInstance.menus.$setValidity('required', false);
         return 'has-error';
       }
+
       $scope.createStoreInstance.menus.$setValidity('required', true);
       return 'has-success';
     };
@@ -1017,10 +1086,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($routeParams.action !== 'dispatch') {
         return '';
       }
+
       var placeholder = 'Select one or more Menus';
       if ($scope.filteredMenuList.length === 0) {
         placeholder = 'No menus are available to select';
       }
+
       return placeholder;
     };
 
@@ -1063,9 +1134,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.getMenuCatererList()
         );
       }
+
       if ($this.isActionState('dispatch')) {
         updatePromises.push($this.getStoresList());
       }
+
       $q.all(updatePromises).then(function() {
         $this.updateInstanceDependenciesSuccess();
       });
@@ -1081,6 +1154,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         var menu = newMenus.filter(function(menu) {
           return menu.id === originalMenu.id;
         })[0];
+
         if (angular.isUndefined(menu)) {
           $scope.showDataLossWarning = true;
         } else {
@@ -1095,6 +1169,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.updateInstanceDependencies();
         }
       });
+
       if ($this.isActionState('dispatch')) {
         $scope.$watch('formData.cateringStationId', function(newId, oldId) {
           if (angular.isUndefined(oldId) || newId && newId !== oldId) {
@@ -1102,6 +1177,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           }
         });
       }
+
       if ($this.isActionState('redispatch')) {
         $scope.$watch('formData.cateringStationId', function(newId, oldId) {
           if (newId && newId !== oldId) {
@@ -1109,6 +1185,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           }
         });
       }
+
       if ($this.registerMenusScopeWatchers()) {
         $scope.$watch('formData.menus', function(newMenus, oldMenus) {
           if (newMenus && newMenus !== oldMenus) {
@@ -1164,6 +1241,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.getPrevStoreInstanceItems($scope.prevStoreInstanceId)
         );
       }
+
       return promises;
     };
 
@@ -1172,10 +1250,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('replenish')) {
         promises.push($this.getStoreDetails());
       }
+
       if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
         promises.push($this.getStoreDetails());
         promises.concat($this.createEditInitPromises());
       }
+
       return promises;
     };
 
@@ -1187,9 +1267,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
         $this.setStoreInstanceMenus();
       }
+
       if ($this.isActionState('redispatch')) {
         $this.setPrevInstanceWizardSteps();
       }
+
       if ($routeParams.storeId && ($this.isActionState('redispatch') || $this.isActionState('dispatch'))) {
         $this.setExistingSeals();
         $this.generateSealTypesList();
@@ -1207,6 +1289,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.showLoadingModal('We are loading Store Instance ' + $routeParams.storeId + '.');
         $this.getStoreInstance();
       }
+
       if (!$routeParams.storeId) {
         $this.showLoadingModal('Hang tight, we are loading some data for you.');
         var promises = this.makeInitPromises();

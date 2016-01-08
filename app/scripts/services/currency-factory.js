@@ -70,7 +70,6 @@ angular.module('ts5App')
       return companyExchangeRateService.updateCompanyExchangeRate(payload);
     };
 
-
     return {
       getCompany: getCompany,
       getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,

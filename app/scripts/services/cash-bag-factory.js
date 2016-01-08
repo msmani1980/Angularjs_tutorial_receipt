@@ -43,7 +43,7 @@ angular.module('ts5App')
       return schedulesService.getSchedules(id);
     };
 
-    var getSchedulesInDateRange = function(companyId, startDate, endDate){
+    var getSchedulesInDateRange = function(companyId, startDate, endDate) {
       return schedulesService.getSchedulesInDateRange(companyId, startDate, endDate);
     };
 

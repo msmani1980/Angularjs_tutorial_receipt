@@ -15,6 +15,7 @@ angular.module('ts5App')
           var file = files[fileKey];
           file.uploadProgress = 0;
         }
+
         $scope.files = files;
       });
 
@@ -49,6 +50,7 @@ angular.module('ts5App')
           $scope.addImage(fileIndex, data);
         }).error(function () {
           file.uploadFail = true;
+
           // TODO: Interpret this failure and tell the user
         });
       };

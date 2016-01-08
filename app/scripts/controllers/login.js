@@ -54,6 +54,7 @@ angular.module('ts5App')
       if ($scope.loginForm.$invalid) {
         return;
       }
+
       showLoadingModal('Authenticating');
       identityAccessFactory.login($scope.credentials).then(handleSuccessResponse, handleResponseError);
     };

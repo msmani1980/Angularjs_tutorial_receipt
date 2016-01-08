@@ -77,6 +77,7 @@ angular.module('ts5App')
       if (searchPayload.acceptedCurrencies) {
         delete searchPayload.acceptedCurrencies;
       }
+
       return searchPayload;
     };
 
@@ -94,6 +95,7 @@ angular.module('ts5App')
           var easyPayDenominations = companyCurrency.denominations.filter(function(denomination) {
             return denomination.isEasyPay === 'true';
           });
+
           companyCurrency.flatEasyPayDenominations = $this.makeFlatDenominations(easyPayDenominations);
 
           companyCurrencies[companyCurrency.currencyCode] = companyCurrency;
@@ -201,9 +203,11 @@ angular.module('ts5App')
       if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
         return true;
       }
+
       if ($scope.isExchangeRateReadOnly(exchangeRate)) {
         return true;
       }
+
       return false;
     };
 
@@ -211,6 +215,7 @@ angular.module('ts5App')
       if (!exchangeRate.startDate || $scope.isExchangeRateNewOne(exchangeRate) || exchangeRate.isCloned) {
         return false;
       }
+
       return !(dateUtility.isAfterToday(exchangeRate.startDate));
     };
 
@@ -218,6 +223,7 @@ angular.module('ts5App')
       if (!exchangeRate.endDate || $scope.isExchangeRateNewOne(exchangeRate) || exchangeRate.isCloned) {
         return false;
       }
+
       return !(dateUtility.isAfterToday(exchangeRate.endDate) || dateUtility.isToday(exchangeRate.endDate));
     };
 

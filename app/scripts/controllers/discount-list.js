@@ -41,9 +41,11 @@ angular.module('ts5App')
       if (!$scope.discountList.length) {
         $scope.discountList = angular.copy($this.formatDates(discountListFromAPI.companyDiscounts));
       }
+
       if ($scope.discountList.length !== discountListFromAPI.meta.count) {
         $scope.discountList = $scope.discountList.concat($this.formatDates(discountListFromAPI.companyDiscounts));
       }
+
       hideLoadingBar();
     };
 
@@ -51,6 +53,7 @@ angular.module('ts5App')
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       showLoadingBar();
       var query = lodash.assign(payloadUtility.serializeDates($scope.search), {
         limit: $this.meta.limit,
@@ -94,6 +97,7 @@ angular.module('ts5App')
         discount.startDate = dateUtility.formatDateForApp(discount.startDate);
         discount.endDate = dateUtility.formatDateForApp(discount.endDate);
       });
+
       return formattedDiscountArray;
     };
 
@@ -101,6 +105,7 @@ angular.module('ts5App')
       if (angular.isUndefined(discount)) {
         return false;
       }
+
       return dateUtility.isAfterToday(discount.endDate);
     };
 
@@ -108,6 +113,7 @@ angular.module('ts5App')
       if (!exchangeRate.startDate) {
         return false;
       }
+
       return !(dateUtility.isAfterToday(exchangeRate.startDate));
     };
 

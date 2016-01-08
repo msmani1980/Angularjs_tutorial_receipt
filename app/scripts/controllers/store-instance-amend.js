@@ -12,9 +12,10 @@ angular.module('ts5App')
     var $this = this;
 
     $scope.showAddOrEditScheduleModal = function (scheduleToEdit) {
-      if(scheduleToEdit) {
+      if (scheduleToEdit) {
         $scope.scheduleToEdit = scheduleToEdit;
       }
+
       angular.element('#addScheduleModal').modal('show');
     };
 
@@ -62,7 +63,7 @@ angular.module('ts5App')
 
     $scope.toggleSelectSectorToRearrange = function (sector) {
       var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
-      if(matchIndex < 0 ) {
+      if (matchIndex < 0) {
         $scope.sectorsToMove.push(sector);
       } else {
         $scope.sectorsToMove.splice(matchIndex, 1);
@@ -78,17 +79,17 @@ angular.module('ts5App')
     };
 
     $scope.getClassesForRearrangeSectors = function (sector, tagType) {
-      var selectedClasses = {background: 'bg-danger', buttonIcon: 'fa fa-check-circle', button: 'btn btn-danger btn-sm'};
-      var deselectedClasses = {background: '', buttonIcon: 'fa fa-circle-thin', button: 'btn btn-default btn-sm'};
+      var selectedClasses = { background: 'bg-danger', buttonIcon: 'fa fa-check-circle', button: 'btn btn-danger btn-sm' };
+      var deselectedClasses = { background: '', buttonIcon: 'fa fa-circle-thin', button: 'btn btn-default btn-sm' };
 
-      var objectMatch = lodash.findWhere($scope.sectorsToMove, {id: sector.id});
+      var objectMatch = lodash.findWhere($scope.sectorsToMove, { id: sector.id });
       var correctClassObj = (angular.isDefined(objectMatch)) ? selectedClasses : deselectedClasses;
       return correctClassObj[tagType];
     };
 
     $scope.getClassesForSingleSelectedRow = function (record, tagType, recordType) {
-      var selectedClasses = {background: 'bg-success', buttonIcon: 'fa fa-check-circle', button: 'btn btn-success'};
-      var deselectedClasses = {background: '', buttonIcon: 'fa fa-circle-thin', button: 'btn btn-default'};
+      var selectedClasses = { background: 'bg-success', buttonIcon: 'fa fa-check-circle', button: 'btn btn-success' };
+      var deselectedClasses = { background: '', buttonIcon: 'fa fa-circle-thin', button: 'btn btn-default' };
 
       var target = (recordType === 'schedule') ? $scope.newScheduleSelection : $scope.targetRecordForMoveCashBag;
 
@@ -118,6 +119,7 @@ angular.module('ts5App')
       if ($scope.moveCashBagAction === 'merge') {
         return storeInstanceAmendFactory.getCashBagListMockData($scope.moveSearch).then($this.searchForMoveCashBagSuccess);
       }
+
       if ($scope.moveCashBagAction === 'reallocate') {
         return storeInstanceAmendFactory.getStoreInstancesMockData($scope.moveSearch).then($this.searchForMoveCashBagSuccess);
       }
@@ -138,10 +140,11 @@ angular.module('ts5App')
     $scope.shouldShowCashBag = function (cashBag) {
       var canCashBagBeVisible = ($scope.showDeletedCashBags) ? true : !cashBag.isDeleted;
       var isCashBagInFilter = true;
-      if($scope.cashBagFilter.filterList && $scope.cashBagFilter.filterList.length > 0) {
-        var cashBagMatch = lodash.findWhere($scope.cashBagFilter.filterList, {id: cashBag.id});
+      if ($scope.cashBagFilter.filterList && $scope.cashBagFilter.filterList.length > 0) {
+        var cashBagMatch = lodash.findWhere($scope.cashBagFilter.filterList, { id: cashBag.id });
         isCashBagInFilter = angular.isDefined(cashBagMatch);
       }
+
       return canCashBagBeVisible && isCashBagInFilter;
     };
 
@@ -154,12 +157,13 @@ angular.module('ts5App')
       angular.forEach(cashBag.flightSectors, function (sector) {
         crewRecordOpen = sector.rowOpen || crewRecordOpen;
       });
+
       return crewRecordOpen;
     };
 
     $scope.toggleCrewDetails = function (cashBag, shouldExpand) {
       angular.forEach(cashBag.flightSectors, function (sector) {
-        if(sector.crewData.length) {
+        if (sector.crewData.length) {
           sector.rowOpen = shouldExpand;
         }
       });

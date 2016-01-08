@@ -27,6 +27,7 @@ angular.module('ts5App')
       if (angular.isDefined(dataFromAPI)) {
         $scope.sealColorsList = dataFromAPI.response;
       }
+
       if (angular.isUndefined(dataFromAPI)) {
         $scope.errorCustom = [{
           field: 'Seal Colors',
@@ -45,6 +46,7 @@ angular.module('ts5App')
       if (angular.isUndefined($scope.storeDetails)) {
         return false;
       }
+
       return parseInt($scope.storeDetails.currentStatus.name);
     };
 
@@ -74,6 +76,7 @@ angular.module('ts5App')
         $scope.displayError = true;
         return true;
       }
+
       return false;
     };
 
@@ -82,9 +85,11 @@ angular.module('ts5App')
         this.setAsEdit();
         return;
       }
+
       if (this.storeInstanceIsInvalid()) {
         return;
       }
+
       $scope.readOnly = false;
       $scope.saveButtonName = 'Save & Exit';
     };
@@ -120,6 +125,7 @@ angular.module('ts5App')
       if ($this.isInboundDuringRedispatch()) {
         controllerName = 'InboundSeals';
       }
+
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: controllerName
       });
@@ -161,6 +167,7 @@ angular.module('ts5App')
       if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
         promises.push(this.getPrevStoreDetails());
       }
+
       return promises;
     };
 
@@ -179,6 +186,7 @@ angular.module('ts5App')
       if ($this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch()) {
         return [];
       }
+
       var actions = [{
         label: 'Copy From Handover',
         trigger: function() {
@@ -193,6 +201,7 @@ angular.module('ts5App')
       if ($routeParams.action === 'replenish') {
         actions.splice(0, 1);
       }
+
       return actions;
     };
 
@@ -200,9 +209,11 @@ angular.module('ts5App')
       if ($scope.readOnly) {
         return;
       }
+
       if (sealTypeObject.name === HANDOVER) {
         return $this.createHandoverActions();
       }
+
       if (sealTypeObject.name === INBOUND) {
         return this.createInboundActions();
       }
@@ -212,6 +223,7 @@ angular.module('ts5App')
       if (sealTypeObject.name === OUTBOUND || sealTypeObject.name === INBOUND) {
         return true;
       }
+
       return false;
     };
 
@@ -237,6 +249,7 @@ angular.module('ts5App')
         var seal = sealsList[key];
         formattedSeals.push(seal.sealNumbers[0]);
       }
+
       return formattedSeals;
     };
 
@@ -244,9 +257,11 @@ angular.module('ts5App')
       if (!$scope.existingSeals) {
         return [];
       }
+
       var sealsList = $scope.existingSeals.filter(function(sealType) {
         return sealType.type === typeId;
       });
+
       return this.formatExistingSeals(sealsList);
     };
 
@@ -297,6 +312,7 @@ angular.module('ts5App')
         var handover = $scope.sealTypes.filter(function(sealType) {
           return sealType.name === HANDOVER;
         })[0];
+
         var index = $scope.sealTypes.indexOf(handover);
         delete $scope.sealTypes[index];
       }
@@ -307,10 +323,12 @@ angular.module('ts5App')
       if ($routeParams.action === 'replenish') {
         $this.removeHandoverSealType();
       }
+
       angular.forEach($scope.sealTypes, function(sealType) {
         var sealTypeObject = $this.generateSealTypeObject(sealType);
         $scope.sealTypesList.push(sealTypeObject);
       });
+
       $this.hideLoadingModal();
     };
 
@@ -338,6 +356,7 @@ angular.module('ts5App')
         var sealTypeObject = $scope.sealTypesList[key];
         $scope.validateSeals(sealTypeObject);
       }
+
       $scope.displayError = $scope.assignSealsForm.$invalid;
       return $scope.assignSealsForm.$valid;
     };
@@ -352,13 +371,16 @@ angular.module('ts5App')
       if (!$scope.existingSeals) {
         return;
       }
+
       var existingSealTypeObjects = $scope.existingSeals.filter(function(sealTypeObject) {
         return sealTypeObject.type === typeId;
       });
+
       var existingSeals = [];
       existingSealTypeObjects.forEach(function(sealTypeObject) {
         existingSeals.push(sealTypeObject.sealNumbers[0]);
       });
+
       return existingSeals;
     };
 
@@ -374,6 +396,7 @@ angular.module('ts5App')
         var newSealNumber = diff[key];
         newSeals.push(newSealNumber);
       }
+
       return newSeals;
     };
 
@@ -385,6 +408,7 @@ angular.module('ts5App')
         var sealNumber = diff[key];
         sealsToDelete.push(sealNumber);
       }
+
       return sealsToDelete;
     };
 
@@ -401,6 +425,7 @@ angular.module('ts5App')
       if ($this.isInboundDuringRedispatch()) {
         storeInstanceId = $scope.storeDetails.prevStoreInstanceId;
       }
+
       return storeInstanceId;
     };
 
@@ -409,6 +434,7 @@ angular.module('ts5App')
       if (sealsToCreate.length === 0) {
         return;
       }
+
       var storeInstanceId = $this.determineInstanceToUpdate();
       var payload = $this.formatPayload(sealTypeObject, sealsToCreate);
       return storeInstanceAssignSealsFactory.createStoreInstanceSeal(
@@ -422,6 +448,7 @@ angular.module('ts5App')
       if (sealsToDelete.length === 0) {
         return;
       }
+
       var storeInstanceId = $this.determineInstanceToUpdate();
       var deletePromises = [];
       for (var key in sealsToDelete) {
@@ -432,6 +459,7 @@ angular.module('ts5App')
           storeInstanceId
         ));
       }
+
       return deletePromises;
     };
 
@@ -443,6 +471,7 @@ angular.module('ts5App')
           promises = promises.concat(deletePromises);
         }
       });
+
       return promises;
     };
 
@@ -454,6 +483,7 @@ angular.module('ts5App')
           promises.push(createPromise);
         }
       });
+
       return promises;
     };
 
@@ -477,6 +507,7 @@ angular.module('ts5App')
           menuMasterId: menu.id
         });
       });
+
       return newMenus;
     };
 
@@ -484,6 +515,7 @@ angular.module('ts5App')
       if ($scope.storeDetails.prevStoreInstanceId && $routeParams.action === 'redispatch') {
         return $scope.storeDetails.prevStoreInstanceId;
       }
+
       return $routeParams.storeId;
     };
 
@@ -491,6 +523,7 @@ angular.module('ts5App')
       if ($scope.formData.tampered && $scope.formData.note) {
         return $scope.formData.note.replace(/'/g, '');
       }
+
       return '';
     };
 
@@ -515,6 +548,7 @@ angular.module('ts5App')
         promises.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId,
           prevInstanceStep));
       }
+
       promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
       $q.all(promises).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
@@ -526,6 +560,7 @@ angular.module('ts5App')
         $this.statusUpdateSuccessHandler(stepObject);
         return;
       }
+
       $this.makeSealsPromises(stepObject);
     };
 
@@ -534,6 +569,7 @@ angular.module('ts5App')
         $this.exitOnSave();
         return;
       }
+
       $this.updateStatusToStep($this.nextStep);
       $this.showMessage('success', 'Seals Assigned!');
     };
@@ -556,6 +592,7 @@ angular.module('ts5App')
         tamperedPromises.push(storeInstanceFactory.updateStoreInstance(this.storeInstanceIdForTamperedSeals(),
           payload));
       }
+
       $q.all(deletePromises).then(
         $q.all(tamperedPromises).then(
           $q.all(createPromises).then(
@@ -585,6 +622,7 @@ angular.module('ts5App')
       if ($this.validateForm()) {
         $this.assignSeals();
       }
+
       return false;
     };
 
@@ -602,10 +640,12 @@ angular.module('ts5App')
       if (angular.isUndefined(model) || model.$pristine && !$scope.assignSealsForm.$submitted) {
         return '';
       }
+
       if (sealTypeObject.required && sealTypeObject.seals.numbers.length === 0) {
         model.$setValidity('required', false);
         return 'has-error';
       }
+
       model.$setValidity('required', true);
       return 'has-success';
     };
@@ -615,6 +655,7 @@ angular.module('ts5App')
         $location.url('/store-instance-dashboard');
         return;
       }
+
       $this.exitAfterSave = true;
       return $scope.submitForm();
     };
@@ -627,6 +668,7 @@ angular.module('ts5App')
       if ($this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch()) {
         return (type === OUTBOUND || type === HANDOVER);
       }
+
       return false;
     };
 

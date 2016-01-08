@@ -15,13 +15,13 @@ angular.module('ts5App')
       	restrict: 'E',
       	scope: true, // isolate scope to directive only
 
-	  	controller: function ($scope, $element, $attrs) {
-	  	
-	  		// set attributes of directive to the scope to use in template
-	      	$scope.field = $attrs; 
+      controller: function ($scope, $element, $attrs) {
 
-	    }
+        // set attributes of directive to the scope to use in template
+        $scope.field = $attrs;
+
+      }
 
     };
-    
+
   });

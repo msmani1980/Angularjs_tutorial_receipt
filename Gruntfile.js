@@ -150,7 +150,7 @@ module.exports = function (grunt) {
       options: {
         config: '.jscsrc',
         verbose: true,
-        fix: false
+        fix: true
       }
     },
     // Make sure code styles are up to par and there are no obvious mistakes

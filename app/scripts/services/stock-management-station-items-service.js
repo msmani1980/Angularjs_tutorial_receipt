@@ -36,7 +36,7 @@ angular.module('ts5App')
     }
 
     function updateStockManagementStationItems(id, payload) {
-      return requestResource.updateStockManagementStationItems({id: id}, payload).$promise;
+      return requestResource.updateStockManagementStationItems({ id: id }, payload).$promise;
     }
 
     return {

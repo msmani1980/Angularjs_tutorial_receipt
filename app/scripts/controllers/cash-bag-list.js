@@ -68,6 +68,7 @@ angular.module('ts5App')
           obj.scheduleDate = dateUtility.formatDateForApp(obj.scheduleDate);
         }
       });
+
       return containingArray;
     }
 
@@ -97,14 +98,12 @@ angular.module('ts5App')
       setFilteredScheduleList(dataFromAPI);
     }
 
-
     function getStationListResponseHandler(dataFromAPI) {
       $scope.stationList = angular.copy(dataFromAPI.response);
       angular.element('.stations-multi-select').select2({
         width: '100%'
       });
     }
-
 
     (function constructor() {
       showLoadingModal();
@@ -116,9 +115,11 @@ angular.module('ts5App')
             services.promises.push(services[_service]());
           });
         },
+
         getStationList: function () {
           return cashBagFactory.getStationList(companyId).then(getStationListResponseHandler);
         },
+
         getSchedulesList: function () {
           return cashBagFactory.getSchedulesList(companyId).then(getSchedulesListResponseHandler);
         }
@@ -138,6 +139,7 @@ angular.module('ts5App')
         payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
         payload.endDate = payload.startDate;
       }
+
       payload = lodash.assign(payload, {
         isDelete: 'false',
         isSubmitted: 'false',
@@ -165,7 +167,6 @@ angular.module('ts5App')
       angular.element('.stations-multi-select').select2('data', null);
       $scope.searchCashBag();
     };
-
 
     // helpers
     function showModalErrors(errorMessage) {
@@ -210,6 +211,7 @@ angular.module('ts5App')
       if ($scope.search.selectedStoreNumber) {
         payload.storeId = $scope.search.selectedStoreNumber.id;
       }
+
       return payload;
     }
 
@@ -228,6 +230,7 @@ angular.module('ts5App')
         $scope.storeInstanceList = formatScheduleDateForApp(storeListFromAPI);
         return;
       }
+
       showModalErrors('No Store Instance found, please check search criteria');
     };
 
@@ -260,6 +263,7 @@ angular.module('ts5App')
       if (!$scope.scheduleDate) {
         return;
       }
+
       $scope.clearSelectedSchedule();
       $scope.clearStoreNumber();
       var searchDate = dateUtility.formatDateForAPI($scope.scheduleDate);
@@ -277,6 +281,7 @@ angular.module('ts5App')
         showModalErrors('Please select a store instance');
         return;
       }
+
       angular.element('#addCashBagModal').removeClass('fade').modal('hide');
       $location.path('cash-bag/create').search({
         storeInstanceId: storeInstance.id

@@ -51,6 +51,7 @@ angular.module('ts5App')
           if (angular.isUndefined(value)) {
             return true;
           }
+
           return (typeof value === 'string' && regexObj[0].test(value));
         };
 
@@ -71,6 +72,7 @@ angular.module('ts5App')
           if (errorArray.length > 0) {
             errorMessage = customValidityMessage[errorArray[0]];
           }
+
           element[0].setCustomValidity(errorMessage);
         };
 

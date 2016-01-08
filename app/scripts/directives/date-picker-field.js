@@ -35,9 +35,11 @@ angular.module('ts5App')
         if ($scope.minDate) {
           datePickerOptions.startDate = $scope.minDate;
         }
+
         if ($scope.orientation) {
           datePickerOptions.orientation = $scope.orientation;
         }
+
         this.init = function($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
           var datePickerInput = $element.find('input[type="text"]');
@@ -48,6 +50,7 @@ angular.module('ts5App')
             }
           });
         };
+
         this.init($scope, $element);
       }
     };

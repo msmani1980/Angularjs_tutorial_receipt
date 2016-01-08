@@ -9,108 +9,108 @@
 angular.module('ts5App')
   .directive('qrCreate', function () {
 
-  	var qrCreateController = function ($scope, Upload, ENV, $http) {
+    var qrCreateController = function ($scope, Upload, ENV, $http) {
 
-  		// set header param 'type' = item
-        $http.defaults.headers.common.type = 'item';
+      // set header param 'type' = item
+      $http.defaults.headers.common.type = 'item';
 
-        // progress
-        $scope.qrUploadProgress = [];
+      // progress
+      $scope.qrUploadProgress = [];
 
-        // watch for files
-        $scope.$watch('files', function (files) {
-           $scope.files = files;
-        });
+      // watch for files
+      $scope.$watch('files', function (files) {
+        $scope.files = files;
+      });
 
-        // clear current qr codes
-        $scope.clearQrCodes = function() {
-            $scope.files = [];
-            $scope.qrCreateUploadProgress = 0;
-            $scope.qrCreateUploadSuccess = false;
-            $scope.qrCreateUploadFail = false;
-        };
+      // clear current qr codes
+      $scope.clearQrCodes = function() {
+        $scope.files = [];
+        $scope.qrCreateUploadProgress = 0;
+        $scope.qrCreateUploadSuccess = false;
+        $scope.qrCreateUploadFail = false;
+      };
 
-        // Function to convert dataURI into a Blob
-        // After we pull the qrcode png out of the canvas, we need to pass it as a file/blob into the uploader.
-        // based off of http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
-        function dataURItoBlob(dataURI) {
+      // Function to convert dataURI into a Blob
+      // After we pull the qrcode png out of the canvas, we need to pass it as a file/blob into the uploader.
+      // based off of http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
+      function dataURItoBlob(dataURI) {
 
-            var byteString,
-                mimestring;
+        var byteString,
+            mimestring;
 
-            if(dataURI.split(',')[0].indexOf('base64') !== -1) {
-                byteString = atob(dataURI.split(',')[1]);
-            } else {
-                byteString = decodeURI(dataURI.split(',')[1]);
-            }
-
-            mimestring = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-            var content = [];
-            for (var i = 0; i < byteString.length; i++) {
-                content[i] = byteString.charCodeAt(i);
-            }
-
-            return new Blob([new Uint8Array(content)], {type: mimestring});
+        if (dataURI.split(',')[0].indexOf('base64') !== -1) {
+          byteString = atob(dataURI.split(',')[1]);
+        } else {
+          byteString = decodeURI(dataURI.split(',')[1]);
         }
 
-        // upload qr image function
-        $scope.qrCreate = function () {
+        mimestring = dataURI.split(',')[0].split(':')[1].split(';')[0];
 
-            // selector for qr-code canvas
-            var canvas = angular.element('.qr-code canvas')[0];
+        var content = [];
+        for (var i = 0; i < byteString.length; i++) {
+          content[i] = byteString.charCodeAt(i);
+        }
 
-            // convert canvas into img/png
-            var imageData = canvas.toDataURL('image/png');
+        return new Blob([new Uint8Array(content)], { type: mimestring });
+      }
 
-            // Use function dataURItoBlob, pass imageData
-            var imageBlob = dataURItoBlob(imageData);
+      // upload qr image function
+      $scope.qrCreate = function () {
 
-            // Set blob name, esentially the file name
-            imageBlob.name = $scope.formData.qrCodeValue + '.png';
+        // selector for qr-code canvas
+        var canvas = angular.element('.qr-code canvas')[0];
 
-            // pass the image blob object into files
-            var files = [imageBlob];
+        // convert canvas into img/png
+        var imageData = canvas.toDataURL('image/png');
 
-            //if a file exists and it is not null
-            if (files && files.length) {
+        // Use function dataURItoBlob, pass imageData
+        var imageBlob = dataURItoBlob(imageData);
 
-                // Upload image
-                Upload.upload({
-                    url: ENV.apiUrl + '/api/images',
-                    fileFormDataName: 'image',
-                    file: files[0]
-                }).progress(function (evt) {
+        // Set blob name, esentially the file name
+        imageBlob.name = $scope.formData.qrCodeValue + '.png';
 
-                    // Upload Progress
-                    $scope.qrCreateUploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+        // pass the image blob object into files
+        var files = [imageBlob];
 
-                // on a successful upload
-                }).success(function (data) {
+        //if a file exists and it is not null
+        if (files && files.length) {
 
-                    // set the UI flag
-                    $scope.qrCreateUploadSuccess = true;
+          // Upload image
+          Upload.upload({
+            url: ENV.apiUrl + '/api/images',
+            fileFormDataName: 'image',
+            file: files[0]
+          }).progress(function (evt) {
 
-                    // pass new image object into formData.qrCodeValue array
-                    $scope.formData.qrCodeImgUrl = data.url;
+            // Upload Progress
+            $scope.qrCreateUploadProgress = parseInt(100.0 * evt.loaded / evt.total);
 
-                    $scope.clearQrCodes();
+        // on a successful upload
+          }).success(function (data) {
 
-                // on a failed upload
-                }).error(function () {
-                    //set the UI flag
-                    $scope.qrCreateUploadFail = true;
+            // set the UI flag
+            $scope.qrCreateUploadSuccess = true;
 
-                    // TODO: Interpret this failure and tell the user
+            // pass new image object into formData.qrCodeValue array
+            $scope.formData.qrCodeImgUrl = data.url;
 
-                });
+            $scope.clearQrCodes();
 
-            // no files found, exit function
-            } else {
-                return false;
-            }
+        // on a failed upload
+          }).error(function () {
+            //set the UI flag
+            $scope.qrCreateUploadFail = true;
 
-        };
+            // TODO: Interpret this failure and tell the user
+
+          });
+
+      // no files found, exit function
+        } else {
+          return false;
+        }
+
+      };
 
     };
 

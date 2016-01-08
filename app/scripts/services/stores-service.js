@@ -28,7 +28,7 @@ angular.module('ts5App')
     }
 
     function getStore(id) {
-      return requestResource.getStoresList({id: id}).$promise;
+      return requestResource.getStoresList({ id: id }).$promise;
     }
 
     return {

@@ -1,4 +1,5 @@
 'use strict';
+
 // jshint maxcomplexity:6
 /**
  * @ngdoc function
@@ -66,6 +67,7 @@ angular.module('ts5App').controller('CategoryCreateCtrl',
         $scope.formData.parentCategoryId = lodash.isNull($scope.category.parentId) ? null : lodash($scope.category.parentId).toString();
         $scope.formData.nextCategoryId = lodash.isNull($scope.category.nextCategoryId) ? null : lodash($scope.category.nextCategoryId).toString();
       }
+
       $this.setUIReady();
     };
 
@@ -77,6 +79,7 @@ angular.module('ts5App').controller('CategoryCreateCtrl',
       if ($scope.editingCategory) {
         promises.push(categoryFactory.getCategory($routeParams.id));
       }
+
       $q.all(promises).then($this.getDependenciesSuccesHandler, $this.errorHandler);
     };
 

@@ -43,9 +43,10 @@ angular.module('ts5App')
       var _requestResource = requestResource;
       actions.getItemsList.headers = {};
       if (angular.isDefined(searchParameters.companyId)) {
-        actions.getItemsList.headers = {companyId: searchParameters.companyId};
+        actions.getItemsList.headers = { companyId: searchParameters.companyId };
         _requestResource = $resource(requestURL, requestParameters, actions);
       }
+
       searchParameters.fetchFromMaster = fetchFromMaster ? 'master' : null;
       var payload = {};
       angular.extend(payload, searchParameters);
@@ -53,7 +54,7 @@ angular.module('ts5App')
     };
 
     var getItem = function (id) {
-      return requestResource.getItem({id: id}).$promise;
+      return requestResource.getItem({ id: id }).$promise;
     };
 
     var getMasterItem = function (id) {
@@ -69,11 +70,11 @@ angular.module('ts5App')
     };
 
     var updateItem = function (id, payload) {
-      return requestResource.updateItem({id: id}, payload).$promise;
+      return requestResource.updateItem({ id: id }, payload).$promise;
     };
 
     var removeItem = function (id) {
-      return requestResource.removeItem({id: id}).$promise;
+      return requestResource.removeItem({ id: id }).$promise;
     };
 
     return {

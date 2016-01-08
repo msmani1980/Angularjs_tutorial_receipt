@@ -78,6 +78,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       } else if ($scope.cloningItem) {
         prefix = 'Cloning ';
       }
+
       $scope.viewName = prefix + item.itemName;
     };
 
@@ -112,6 +113,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           $location.path('/');
           return false;
         }
+
         $this.setUIReady();
       });
     };
@@ -133,6 +135,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           break;
         }
       }
+
       return tagIndex;
     };
 
@@ -160,6 +163,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           tagsPayload[tagKey].itemId = itemData.id;
         }
       }
+
       return tagsPayload;
     };
 
@@ -172,6 +176,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           break;
         }
       }
+
       return characteristicIndex;
     };
 
@@ -200,11 +205,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           newCharacteristic.id = characteristic.id;
           newCharacteristic.characteristicId = characteristic.characteristicId;
         }
+
         if (!$scope.cloningItem) {
           newCharacteristic.itemId = itemData.id;
         }
+
         characteristicsPayload[characteristicKey] = newCharacteristic;
       }
+
       return characteristicsPayload;
     };
 
@@ -217,6 +225,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           break;
         }
       }
+
       return allergenIndex;
     };
 
@@ -244,6 +253,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           allergenPayload[allergenKey].id = allergen.id;
         }
       }
+
       return allergenPayload;
     };
 
@@ -274,6 +284,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           delete price.itemId;
           delete price.id;
         }
+
         $this.formatStationExceptions(price);
       }
     };
@@ -309,6 +320,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           break;
         }
       }
+
       return substitutionIndex;
     };
 
@@ -316,6 +328,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if (angular.isUndefined(itemData.substitutions)) {
         return;
       }
+
       for (var substitutionKey in itemData.substitutions) {
         var substitutionId = itemData.substitutions[substitutionKey];
         var index = $this.findSubstitutionIndex(substitutionId);
@@ -332,6 +345,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var substitution = itemData.substitutions[substitutionKey];
         substitutionsPayload[substitutionKey] = substitution.id;
       }
+
       return substitutionsPayload;
     };
 
@@ -344,6 +358,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           break;
         }
       }
+
       return recommendationIndex;
     };
 
@@ -364,6 +379,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var recommendation = itemData.recommendations[recommendationKey];
         recommendationPayload[recommendationKey] = recommendation.id;
       }
+
       return recommendationPayload;
     };
 
@@ -411,12 +427,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if (!itemData) {
         return false;
       }
+
       itemData.startDate = dateUtility.formatDateForApp(itemData.startDate);
       itemData.endDate = dateUtility.formatDateForApp(itemData.endDate);
       this.checkIfItemIsInactive(itemData);
       if (!$scope.itemIsInactive) {
         this.checkIfItemIsActive(itemData);
       }
+
       this.deserializeTags(itemData);
       this.deserializeAllergens(itemData);
       this.deserializeCharacteristics(itemData);
@@ -468,10 +486,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           $scope.formData.startDate
         );
       }
+
       var dateString = diff.toString() + 'd';
       if (diff >= 0) {
         dateString = '+' + dateString;
       }
+
       return dateString;
     };
 
@@ -583,6 +603,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           }
         });
       }
+
       return itemList;
     };
 
@@ -599,6 +620,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var currency = data.response[key];
         masterCurrenciesList[currency.id] = currency.code;
       }
+
       $scope.masterCurrenciesList = masterCurrenciesList;
     };
 
@@ -646,6 +668,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           var currency = itemData.prices[priceIndex].priceCurrencies[currencyIndex];
           delete currency.code;
         }
+
         for (var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
           var stationException = itemData.prices[priceIndex].stationExceptions[stationExceptionIndex];
           delete stationException.stations;
@@ -660,6 +683,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           if (value.name === 'Downloadable' || value.name === 'Link') {
             $scope.filteredCharacteristics.push(value);
           }
+
           $scope.shouldDisplayURLField = true;
         });
       } else {
@@ -762,6 +786,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           companyCurrencyId: parseInt(currency.id)
         });
       }
+
       return listToReturn;
     };
 
@@ -772,6 +797,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.getGlobalStationList(stationException).then(function(data) {
         $this.setStationsList(stationException, data);
       });
+
       this.getStationsCurrenciesList(stationException).then(function(data) {
         $this.setStationsCurrenciesList(stationException, data);
       });
@@ -786,6 +812,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           var stationException = price.stationExceptions[stationExceptionIndex];
           stationPromises.push(this.getGlobalStationList(stationException));
         }
+
         this.handleStationPromises(stationPromises, price);
       }
     };
@@ -845,6 +872,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if (angular.isUndefined(priceIndex)) {
         return false;
       }
+
       var priceCurrencies = [];
       for (var key in currenciesList) {
         var newCurrency = this.generateCurrency(currenciesList[key]);
@@ -853,8 +881,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         if (existingCurrency) {
           newCurrency.price = existingCurrency.price;
         }
+
         priceCurrencies.push(newCurrency);
       }
+
       return priceCurrencies;
     };
 
@@ -876,6 +906,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if (startDate === 'Invalid date' || endDate === 'Invalid date') {
         return false;
       }
+
       var currencyFilters = {
         startDate: startDate,
         endDate: endDate,
@@ -888,6 +919,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if (!oldPrices) {
         return false;
       }
+
       for (var priceIndex in $scope.formData.prices) {
         this.checkPriceGroup(newPrices, oldPrices, priceIndex);
         for (var stationExceptionIndex in $scope.formData.prices[priceIndex].stationExceptions) {
@@ -902,6 +934,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if (!oldPriceGroup) {
         return false;
       }
+
       if (newPriceGroup.startDate !== oldPriceGroup.startDate || newPriceGroup.endDate !== oldPriceGroup.endDate) {
         $this.updatePriceGroup(priceIndex);
       }
@@ -911,9 +944,11 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if (!newPrice || !oldPrice) {
         return false;
       }
+
       if (newPrice.stationExceptions && oldPrice.stationExceptions) {
         return true;
       }
+
       return false;
     };
 
@@ -927,10 +962,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if ($this.stationsAreEmpty(newStationException, oldStationException)) {
         return false;
       }
+
       if (newStationException.startDate !== oldStationException.startDate || newStationException.endDate !==
         oldStationException.endDate) {
         return true;
       }
+
       return false;
     };
 
@@ -938,6 +975,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if (this.stationExceptionExist(newPrice, oldPrice)) {
         return this.stationExceptionDatesAreValid(newPrice, oldPrice, stationExceptionIndex);
       }
+
       return false;
     };
 
@@ -977,6 +1015,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $q.all(promises).then(function(response) {
         $this.updateSuccessHandler(response);
       }, function(error) {
+
         $this.errorHandler(error);
       });
     };
@@ -1017,6 +1056,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemData.companyDiscountId = itemData.voucher.id;
         delete itemData.voucher;
       }
+
       delete itemData.shouldUseDynamicBarcode;
     };
 
@@ -1036,6 +1076,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if ($scope.cloningItem) {
         delete itemData.id;
       }
+
       return itemData;
     };
 
@@ -1064,6 +1105,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if (form['GTIN' + key].$dirty && form['GTIN' + key].$invalid) {
         return 'has-error';
       }
+
       return 'has-success';
     };
 

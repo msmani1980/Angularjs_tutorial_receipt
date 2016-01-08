@@ -39,6 +39,7 @@ angular.module('ts5App', [
             requestTimestamp: new Date().getTime()
           };
         }
+
         return config;
       }
     };
@@ -222,8 +223,10 @@ angular.module('ts5App', [
       if (routeParameters.action === 'redispatch') {
         return 'views/store-instance-redispatch-review.html';
       }
+
       return 'views/store-instance-review.html';
     },
+
     controller: 'StoreInstanceReviewCtrl'
   }).when('/store-instance-dashboard', {
     templateUrl: 'views/store-instance-dashboard.html',

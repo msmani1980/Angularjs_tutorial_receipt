@@ -19,23 +19,23 @@ angular.module('ts5App')
 
     function setActions() {
       var actionToURLMap = {
-        'Dashboard': dashboardURL,
-        'Pack': packingURL + 'dispatch/',
+        Dashboard: dashboardURL,
+        Pack: packingURL + 'dispatch/',
         'Pack-Redispatch': packingURL + 'redispatch/',
         'Pack-Replenish': packingURL + 'replenish/',
-        'Seal': sealsURL + 'dispatch/',
+        Seal: sealsURL + 'dispatch/',
         'Seal-Redispatch': sealsURL + 'redispatch/',
         'Seal-Replenish': sealsURL + 'replenish/',
-        'Dispatch': reviewURL + 'dispatch/',
+        Dispatch: reviewURL + 'dispatch/',
         'Dispatch-Redispatch': reviewURL + 'redispatch/',
         'Dispatch-Replenish': reviewURL + 'replenish/',
-        'Replenish': createURL + 'replenish/',
-        'Redispatch': createURL + 'redispatch/',
+        Replenish: createURL + 'replenish/',
+        Redispatch: createURL + 'redispatch/',
         'End Instance': createURL + 'end-instance/',
         'Inbound Seals': inboundSealsURL + 'end-instance/',
         'Inbound Seals-Redispatch': inboundSealsURL + 'redispatch/',
         'Inbound Seals-Redispatch-Pack': inboundSealsURL + 'redispatch/',
-        'Offload': packingURL + 'end-instance/',
+        Offload: packingURL + 'end-instance/',
         'Offload-Redispatch-Pack': packingURL + 'redispatch/',
         'Offload-Redispatch-Seal': sealsURL + 'redispatch/',
         'Offload-Redispatch-Dispatch': reviewURL + 'redispatch/'
@@ -45,9 +45,10 @@ angular.module('ts5App')
 
     function getURL(actionName, id) {
       var actionToURLMap = setActions();
-      if(!actionName) {
+      if (!actionName) {
         return actionToURLMap.Dashboard;
       }
+
       return actionToURLMap[actionName] + id;
     }
 

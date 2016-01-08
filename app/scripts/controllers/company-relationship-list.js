@@ -59,6 +59,7 @@ angular.module('ts5App')
       if (!companyRelationship.id) {
         $route.reload();
       }
+
       companyRelationship.isEditing = false;
 
       showToast('success', 'Company Relationship', 'Successfully ' + messageAction);
@@ -100,6 +101,7 @@ angular.module('ts5App')
           $scope.companyRelationshipListData.splice(index, 1);
         }
       }, function (error) {
+
         errorHandler(error, $scope.companyRelationshipToDelete);
       });
     };
@@ -116,8 +118,10 @@ angular.module('ts5App')
         for (var prop in company.original) {
           company[prop] = company.original[prop];
         }
+
         return;
       }
+
       removeCompanyFromLocalList(company);
     };
 
@@ -132,6 +136,7 @@ angular.module('ts5App')
 
           successCompanyRelationship(response, companyRelationship, messageAction);
         }, function (error) {
+
           errorHandler(error, companyRelationship);
         });
       } else {
@@ -140,6 +145,7 @@ angular.module('ts5App')
 
           successCompanyRelationship(response, companyRelationship, messageAction);
         }, function (error) {
+
           errorHandler(error, companyRelationship);
         });
       }
@@ -147,8 +153,8 @@ angular.module('ts5App')
 
     function setupCompanyRelationshipTypeScope(companyRelationshipTypeListFromAPI) {
       var response = companyRelationshipTypeListFromAPI.response;
-      $scope.companyRelationshipTypeList = response.filter(function(relationshipType){
-        if(relationshipType.relativeCompanyTypeId !== $scope.company.companyTypeId){
+      $scope.companyRelationshipTypeList = response.filter(function(relationshipType) {
+        if (relationshipType.relativeCompanyTypeId !== $scope.company.companyTypeId) {
           return relationshipType;
         }
       });
@@ -175,7 +181,6 @@ angular.module('ts5App')
         }
       });
     }
-
 
     var filterCompanyListByTypesScope = function (companyTypeListFromAPI) {
       var typeIdList = [];

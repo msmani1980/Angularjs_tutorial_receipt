@@ -52,7 +52,7 @@ angular.module('ts5App')
       var newStationList = $scope.stationList.concat(angular.copy(response.response));
       $scope.stationList = lodash.uniq(newStationList, 'stationId');
 
-      if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
+      if (response.meta.start === 0 && response.meta.limit < response.meta.count) {
         postTripFactory.getStationList(companyId, response.meta.limit).then($this.getStationsSuccess);
       }
     };
@@ -77,7 +77,7 @@ angular.module('ts5App')
     this.saveFormSuccess = function (response) {
       $this.hideLoadingModal();
       if ($routeParams.state === 'create') {
-        $location.path('post-trip-data-list').search({newTripId: response.id});
+        $location.path('post-trip-data-list').search({ newTripId: response.id });
       } else {
         $this.showToastMessage('success', 'Edit Post Trip', 'success');
       }
@@ -95,6 +95,7 @@ angular.module('ts5App')
         var employeeMatch = $scope.employees.filter(function (employee) {
           return employee.id === value.employeeId;
         })[0];
+
         if (employeeMatch) {
           $scope.selectedEmployees.employeeIds.push(employeeMatch);
         }
@@ -138,6 +139,7 @@ angular.module('ts5App')
 
     this.editPostTrip = function () {
       $this.showLoadingModal('Saving Post Trip Data');
+
       // TODO: temporary -- remove once API is fixed and can accept depTImeZone and arrTimeZone
       delete $scope.postTrip.depTimeZone;
       delete $scope.postTrip.arrTimeZone;
@@ -162,6 +164,7 @@ angular.module('ts5App')
       if ($routeParams.id) {
         postTripFactory.getPostTrip(companyId, $routeParams.id).then($this.getPostTripSuccess);
       }
+
       $this.hideLoadingModal();
 
       var initFunctionName = ($routeParams.state + 'Init');
@@ -202,9 +205,11 @@ angular.module('ts5App')
       var matchingStation = $scope.stationList.filter(function (station) {
         return station.stationId.toString() === stationId.toString();
       })[0];
-      if(matchingStation) {
+
+      if (matchingStation) {
         return matchingStation.timezone + ' [UTC ' + matchingStation.utcOffset + ']';
       }
+
       return '';
     };
 
@@ -212,6 +217,7 @@ angular.module('ts5App')
       if ($scope.postTrip === undefined || $scope.postTrip.arrStationId === undefined) {
         return;
       }
+
       $scope.arrivalTimezone = $this.getTimeZoneForStationId($scope.postTrip.arrStationId);
     };
 
@@ -219,23 +225,25 @@ angular.module('ts5App')
       if ($scope.postTrip === undefined || $scope.postTrip.depStationId === undefined) {
         return;
       }
+
       $scope.departureTimezone = $this.getTimeZoneForStationId($scope.postTrip.depStationId);
     };
 
     this.formatEmployeeIdentifiersForAPI = function () {
       $scope.postTrip.postTripEmployeeIdentifiers = [];
       angular.forEach($scope.selectedEmployees.employeeIds, function (value) {
-        $scope.postTrip.postTripEmployeeIdentifiers.push({employeeId: value.id});
+        $scope.postTrip.postTripEmployeeIdentifiers.push({ employeeId: value.id });
       });
     };
 
     this.validateEmployees = function() {
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
       var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
-      if(shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
+      if (shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
         $scope.postTripDataForm.employeeIds.$setValidity('required', false);
         return;
       }
+
       $scope.postTripDataForm.employeeIds.$setValidity('required', true);
     };
 
@@ -245,7 +253,7 @@ angular.module('ts5App')
     };
 
     $scope.formSave = function () {
-      if( $this.validateForm() ) {
+      if ($this.validateForm()) {
         $this.formatEmployeeIdentifiersForAPI();
         var saveFunctionName = ($routeParams.state + 'PostTrip');
         if ($this[saveFunctionName]) {

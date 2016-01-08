@@ -66,7 +66,6 @@ angular.module('ts5App').service('storeInstancePackingFactory',
       return featureThresholdsService.getThresholdList(featureCode);
     }
 
-
     return {
       getStoreDetails: getStoreDetails,
       updateStoreInstanceStatus: updateStoreInstanceStatus,

@@ -12,12 +12,12 @@ angular.module('ts5App')
 
     var getScheduleMockData = function (searchQuery) {
       var getScheduleMockData = [{
-        scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/20/2015',
+        scheduleDate: (searchQuery) ? searchQuery.scheduleDate : '10/20/2015',
         scheduleNumber: (searchQuery) ? searchQuery.scheduleNumber : '105',
         departureStation: 'ORD',
         arrivalStation: 'LAX'
       }, {
-        scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/30/2015',
+        scheduleDate: (searchQuery) ? searchQuery.scheduleDate : '10/30/2015',
         scheduleNumber: (searchQuery) ? searchQuery.scheduleNumber : '111',
         departureStation: 'CPH',
         arrivalStation: 'ORD'
@@ -30,13 +30,13 @@ angular.module('ts5App')
     var getStoreInstancesMockData = function (searchQuery) {
       var getStoreInstancesMockData = [{
         storeInstance: 123,
-        scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/20/2015',
+        scheduleDate: (searchQuery) ? searchQuery.scheduleDate : '10/20/2015',
         storeNumber: (searchQuery) ? searchQuery.storeNumber : 'str123',
         warehouse: 'ORD',
         status: 'Inbounded'
       }, {
         storeInstance: 145,
-        scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/20/2015',
+        scheduleDate: (searchQuery) ? searchQuery.scheduleDate : '10/20/2015',
         storeNumber: (searchQuery) ? searchQuery.storeNumber : 'str123',
         warehouse: 'LAX',
         status: 'Dispatched'
@@ -195,7 +195,7 @@ angular.module('ts5App')
           isManual: true,
           crewData: []
         }, {
-          id :6,
+          id:6,
           scheduleDate: '11/30/2015',
           scheduleNumber: '146',
           route: '7834',
@@ -221,6 +221,7 @@ angular.module('ts5App')
       } else {
         cashBagMockResponseDeferred.resolve(mockCashBag);
       }
+
       return cashBagMockResponseDeferred.promise;
     };
 

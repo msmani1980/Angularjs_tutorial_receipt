@@ -8,65 +8,65 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyReasonCodeCtrl', function ($scope,$routeParams,ngToast) {
+  .controller('CompanyReasonCodeCtrl', function ($scope, $routeParams, ngToast) {
 
     /* MOCK DATA - TO BE REMOVED */
 
-   var companyReasonTypesJSON =  {
-      'companyReasonTypes': [
+    var companyReasonTypesJSON =  {
+      companyReasonTypes: [
         {
-          'id': 17,
-          'companyId': 403,
-          'reasonTypeId': 13,
-          'isActive': true,
-          'description': 'Closing Inventory',
-          'reasonTypeName': 'Closing Inventory'
+          id: 17,
+          companyId: 403,
+          reasonTypeId: 13,
+          isActive: true,
+          description: 'Closing Inventory',
+          reasonTypeName: 'Closing Inventory'
         },
         {
-          'id': 18,
-          'companyId': 403,
-          'reasonTypeId': 10,
-          'isActive': true,
-          'description': 'Complimentary Management Reasons',
-          'reasonTypeName': 'Complimentary'
+          id: 18,
+          companyId: 403,
+          reasonTypeId: 10,
+          isActive: true,
+          description: 'Complimentary Management Reasons',
+          reasonTypeName: 'Complimentary'
         },
         {
-          'id': 26,
-          'companyId': 403,
-          'reasonTypeId': 16,
-          'isActive': true,
-          'description': 'LMP Stock Adjustment',
-          'reasonTypeName': 'LMP Stock Adjustment'
+          id: 26,
+          companyId: 403,
+          reasonTypeId: 16,
+          isActive: true,
+          description: 'LMP Stock Adjustment',
+          reasonTypeName: 'LMP Stock Adjustment'
         },
         {
-          'id': 16,
-          'companyId': 403,
-          'reasonTypeId': 12,
-          'isActive': true,
-          'description': 'Opening Inventory',
-          'reasonTypeName': 'Opening Inventory'
+          id: 16,
+          companyId: 403,
+          reasonTypeId: 12,
+          isActive: true,
+          description: 'Opening Inventory',
+          reasonTypeName: 'Opening Inventory'
         },
         {
-          'id': 20,
-          'companyId': 403,
-          'reasonTypeId': 11,
-          'isActive': true,
-          'description': 'Refund Related Reasons ',
-          'reasonTypeName': 'Refund'
+          id: 20,
+          companyId: 403,
+          reasonTypeId: 11,
+          isActive: true,
+          description: 'Refund Related Reasons ',
+          reasonTypeName: 'Refund'
         },
         {
-          'id': 19,
-          'companyId': 403,
-          'reasonTypeId': 15,
-          'isActive': true,
-          'description': 'Ullage',
-          'reasonTypeName': 'Ullage'
+          id: 19,
+          companyId: 403,
+          reasonTypeId: 15,
+          isActive: true,
+          description: 'Ullage',
+          reasonTypeName: 'Ullage'
         }
       ],
-      'meta': {
-        'count': 6,
-        'limit': 6,
-        'start': 0
+      meta: {
+        count: 6,
+        limit: 6,
+        start: 0
       }
     };
 
@@ -81,10 +81,11 @@ angular.module('ts5App')
     };
 
     this.filterByReasonType = function(reason) {
-      if( !Array.isArray($scope.reasonFilter.selectedReasonTypes) ||
-        $scope.reasonFilter.selectedReasonTypes.length === 0 ) {
+      if (!Array.isArray($scope.reasonFilter.selectedReasonTypes) ||
+        $scope.reasonFilter.selectedReasonTypes.length === 0) {
         return true;
       }
+
       return $scope.reasonFilter.selectedReasonTypes.filter(function(reasonType) {
         return parseInt(reasonType.id) === parseInt(reason.id);
       })[0];
@@ -122,12 +123,13 @@ angular.module('ts5App')
 
     this.createCompanyReason = function() {
       var payload = this.generatePayload();
+
       // make service call here
       this.createCompanyReasonSuccess(payload);
     };
 
     this.submitForm = function(formObject) {
-      if( $this.validateForm(formObject) ) {
+      if ($this.validateForm(formObject)) {
         $this.createCompanyReason();
       }
     };
@@ -138,9 +140,10 @@ angular.module('ts5App')
 
     this.setSubscribedReasonTypes = function() {
       var reasons = [];
-      $scope.companyReasonTypes.forEach(function(reasonType){
+      $scope.companyReasonTypes.forEach(function(reasonType) {
         reasons.push(reasonType);
       });
+
       return reasons;
     };
 
@@ -150,8 +153,8 @@ angular.module('ts5App')
       };
       angular.forEach($scope.formData.companyReasonTypes, function(reasonType) {
         reasonType.companyReasonCodes = [
-          {reasonCode: 'Example reason 1',isActive:true},
-          {reasonCode: 'Example reason 2',isActive:true}
+          { reasonCode: 'Example reason 1', isActive:true },
+          { reasonCode: 'Example reason 2', isActive:true }
         ];
       });
     };
@@ -168,7 +171,7 @@ angular.module('ts5App')
 
     this.addReasonCode = function(reasonTypeId) {
       var reasonType = this.getReasonTypeInFormData(reasonTypeId);
-      if(reasonType) {
+      if (reasonType) {
         reasonType.companyReasonCodes.push({
           reasonCode:'',
           isActive: null
@@ -176,10 +179,10 @@ angular.module('ts5App')
       }
     };
 
-    this.removeReason = function(reasonTypeId,$index) {
+    this.removeReason = function(reasonTypeId, $index) {
       var reasonType = this.getReasonTypeInFormData(reasonTypeId);
-      if(reasonType) {
-        reasonType.companyReasonCodes.splice($index,1);
+      if (reasonType) {
+        reasonType.companyReasonCodes.splice($index, 1);
       }
     };
 
@@ -189,6 +192,7 @@ angular.module('ts5App')
         selectedGlobalReasons:[]
       };
       this.setViewLabels();
+
       // TODO: add $q and init success
       this.getCompanyReasonTypes();
     };
@@ -205,15 +209,15 @@ angular.module('ts5App')
       return $this.addReasonCode(reasonTypeId);
     };
 
-    $scope.removeReason = function(reasonTypeId,$index) {
-      return $this.removeReason(reasonTypeId,$index);
+    $scope.removeReason = function(reasonTypeId, $index) {
+      return $this.removeReason(reasonTypeId, $index);
     };
 
     $scope.whenReasonIsNotFiltered = function(reason) {
       return $this.filterByReasonType(reason);
     };
 
-    $scope.addReasonCodeWithEnter = function(keyEvent,reasonTypeId) {
+    $scope.addReasonCodeWithEnter = function(keyEvent, reasonTypeId) {
       if (keyEvent.which === 13) {
         $this.addReasonCode(reasonTypeId);
       }

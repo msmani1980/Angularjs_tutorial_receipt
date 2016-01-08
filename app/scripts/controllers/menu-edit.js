@@ -24,7 +24,6 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-
     function getMasterItemUsingId(masterItemId) {
       return $scope.masterItemsList.filter(function (masterItem) {
         return masterItem.id === masterItemId;
@@ -54,6 +53,7 @@ angular.module('ts5App')
       if (category) {
         searchQuery.categoryId = category;
       }
+
       menuFactory.getItemsList(searchQuery, true).then(successHandler);
     }
 
@@ -77,6 +77,7 @@ angular.module('ts5App')
         deserializeMenuItems($scope.menu.menuItems);
         $scope.menuEditForm.$setPristine();
       }
+
       hideLoadingModal();
     }
 
@@ -117,6 +118,7 @@ angular.module('ts5App')
         if (menuId && item.itemQty) {
           itemObject.menuId = menuId;
         }
+
         if (item.itemId && item.itemQty) {
           itemObject.id = item.id;
           itemObject.itemId = item.itemId;
@@ -128,6 +130,7 @@ angular.module('ts5App')
           ItemsArray.push(itemObject);
         }
       });
+
       return ItemsArray;
     };
 
@@ -145,6 +148,7 @@ angular.module('ts5App')
       if ($scope.menu.id) {
         payload.id = $scope.menu.id;
       }
+
       return payload;
     };
 
@@ -152,6 +156,7 @@ angular.module('ts5App')
       if (!$scope.menuEditForm.$valid) {
         return false;
       }
+
       showLoadingModal('Saving Menu');
 
       var submitFunctionName = $routeParams.state + 'Menu';
@@ -215,9 +220,11 @@ angular.module('ts5App')
       if ($routeParams.state === 'create' || (angular.isUndefined($scope.menu))) {
         return false;
       }
+
       if ($routeParams.state === 'view') {
         return true;
       }
+
       return !dateUtility.isAfterToday($scope.menu.startDate);
     };
 
@@ -225,12 +232,15 @@ angular.module('ts5App')
       if ($routeParams.state === 'create') {
         return true;
       }
+
       if ($routeParams.state === 'view') {
         return false;
       }
+
       if (angular.isUndefined($scope.menu)) {
         return false;
       }
+
       return dateUtility.isAfterToday($scope.menu.startDate);
     };
 
@@ -267,6 +277,7 @@ angular.module('ts5App')
       if (!$scope.isMenuEditable()) {
         return true;
       }
+
       return $scope.filteredItemsCollection[index] === null;
     };
 
@@ -293,6 +304,7 @@ angular.module('ts5App')
           companyId: companyId
         };
       }
+
       menuFactory.getSalesCategoriesList({}).then(function (response) {
         $scope.categories = response.salesCategories;
       });
@@ -301,4 +313,5 @@ angular.module('ts5App')
     initializeMenu();
 
   })
+
 ;

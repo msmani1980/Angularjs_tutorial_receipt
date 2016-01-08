@@ -57,6 +57,7 @@ angular.module('ts5App')
       if (angular.isUndefined(promotion)) {
         return false;
       }
+
       return dateUtility.isAfterToday(promotion.endDate);
     };
 
@@ -64,6 +65,7 @@ angular.module('ts5App')
       if (!promotion.startDate) {
         return false;
       }
+
       return !(dateUtility.isAfterToday(promotion.startDate));
     };
 
@@ -98,7 +100,7 @@ angular.module('ts5App')
     };
 
     this.getPromotionList = function () {
-      return promotionsFactory.getPromotions({limit: $scope.defaultLimit}).then($this.setPromotionsList);
+      return promotionsFactory.getPromotions({ limit: $scope.defaultLimit }).then($this.setPromotionsList);
     };
 
     this.getBenefitTypeList = function () {
@@ -129,7 +131,6 @@ angular.module('ts5App')
         $this.dependenciesSuccess(response);
       });
     };
-
 
     this.init();
   });

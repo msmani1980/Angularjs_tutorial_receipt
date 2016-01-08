@@ -11,7 +11,7 @@ angular.module('ts5App')
   .factory('commissionFactory', function (commissionDataService, recordsService, companyService, currenciesService) {
 
     var getCommissionPayableList = function (payload) {
-      if(arguments.length > 0) {
+      if (arguments.length > 0) {
         return commissionDataService.getCommissionPayableList(payload);
       } else {
         return commissionDataService.getCommissionPayableList();

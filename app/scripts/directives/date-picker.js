@@ -1,5 +1,6 @@
 'use strict';
 /*global moment*/
+
 // jshint maxcomplexity:8
 
 /**
@@ -26,9 +27,11 @@ angular.module('ts5App')
       } else if ($scope.minDate && !$scope.isSearchField) {
         options.startDate = moment($scope.minDate, 'L').format('L');
       }
+
       if ($scope.minDate) {
         options.startDate = $scope.minDate;
       }
+
       if ($scope.maxDate) {
         options.endDate = $scope.maxDate;
       }
@@ -55,6 +58,7 @@ angular.module('ts5App')
         if (!angular.isUndefined($scope.minDate)) {
           $element.find('.startDate').datepicker('setStartDate', $scope.minDate);
         }
+
         if (!angular.isUndefined($scope.maxDate)) {
           $element.find('.startDate').datepicker('setEndDate', $scope.maxDate);
         }
@@ -71,9 +75,11 @@ angular.module('ts5App')
           if ($scope.startDateModel) {
             $scope.shouldDisableStartDate = !dateUtility.isAfterToday($scope.startDateModel);
           }
+
           if ($scope.endDateModel) {
             $scope.shouldDisableEndDate = !dateUtility.isAfterToday($scope.endDateModel);
           }
+
           watchListener();
           initializeDatePicker($scope, $element);
         }

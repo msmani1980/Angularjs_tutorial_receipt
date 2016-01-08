@@ -126,6 +126,7 @@ angular.module('ts5App')
       if (!moment(cashiersDate, 'L', true).isValid()) {
         return;
       }
+
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       var companyCurrenciesPayload = {
         startDate: formattedDateForAPI,
@@ -259,6 +260,7 @@ angular.module('ts5App')
           });
         }
       });
+
       return rateVariance;
     }
 
@@ -272,6 +274,7 @@ angular.module('ts5App')
       if (!$scope.dailyExchangeRatesForm.$valid) {
         return false;
       }
+
       serializePreviousExchangeRates();
       createPayload(shouldSubmit);
 
@@ -280,6 +283,7 @@ angular.module('ts5App')
         angular.element('.variance-warning-modal').modal('show');
         return;
       }
+
       $scope.saveDailyExchangeRates(shouldSubmit);
     };
 

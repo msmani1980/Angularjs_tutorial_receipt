@@ -40,7 +40,7 @@ angular.module('ts5App')
     };
 
     var getStockTake = function (id) {
-      return requestResource.getStockTake({id: id}).$promise;
+      return requestResource.getStockTake({ id: id }).$promise;
     };
 
     var createStockTake = function (payload) {
@@ -48,11 +48,11 @@ angular.module('ts5App')
     };
 
     var updateStockTake = function (id, payload) {
-      return requestResource.updateStockTake({id: id}, payload).$promise;
+      return requestResource.updateStockTake({ id: id }, payload).$promise;
     };
 
     var deleteStockTake = function (id) {
-      return requestResource.deleteStockTake({id: id}).$promise;
+      return requestResource.deleteStockTake({ id: id }).$promise;
     };
 
     function importFromExcel(companyId, file, cateringStationId) {
@@ -71,6 +71,5 @@ angular.module('ts5App')
       deleteStockTake: deleteStockTake,
       importFromExcel: importFromExcel
     };
-
 
   });

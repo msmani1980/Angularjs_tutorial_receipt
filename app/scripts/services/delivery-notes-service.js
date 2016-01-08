@@ -41,7 +41,7 @@ angular.module('ts5App')
     }
 
     function getDeliveryNote(deliveryNoteId) {
-      return requestResource.getDeliveryNote({id:deliveryNoteId}).$promise;
+      return requestResource.getDeliveryNote({ id:deliveryNoteId }).$promise;
     }
 
     function createDeliveryNote(payload) {
@@ -53,9 +53,8 @@ angular.module('ts5App')
     }
 
     function deleteDeliveryNote(deliveryNoteId) {
-      return requestResource.deleteDeliveryNote({id:deliveryNoteId}).$promise;
+      return requestResource.deleteDeliveryNote({ id:deliveryNoteId }).$promise;
     }
-
 
     return {
       getDeliveryNotesList: getDeliveryNotesList,

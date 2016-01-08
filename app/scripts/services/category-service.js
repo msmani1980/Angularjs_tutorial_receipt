@@ -66,7 +66,7 @@ angular.module('ts5App')
 
     var deleteCategory = function (categoryId) {
       requestParameters.companyId = '';
-      return requestResource.deleteCategory({id: categoryId}).$promise;
+      return requestResource.deleteCategory({ id: categoryId }).$promise;
     };
 
     return {

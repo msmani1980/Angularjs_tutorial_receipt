@@ -52,9 +52,11 @@ angular.module('ts5App')
       if ($scope.dateRange.startDate) {
         query.startDate = dateUtility.formatDateForAPI($scope.dateRange.startDate);
       }
-      if($scope.dateRange.endDate) {
+
+      if ($scope.dateRange.endDate) {
         query.endDate = dateUtility.formatDateForAPI($scope.dateRange.endDate);
       }
+
       return query;
     };
 
@@ -81,9 +83,11 @@ angular.module('ts5App')
       if ($this.menuList === null || $this.stationList === null) {
         return;
       }
+
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       if (!_initDone) {
         return;
       }
@@ -101,6 +105,7 @@ angular.module('ts5App')
         $this.initSelectUI();
         $this.hideLoadingModal();
       });
+
       $this.meta.offset += $this.meta.limit;
     };
 
@@ -166,6 +171,7 @@ angular.module('ts5App')
           break;
         }
       }
+
       return parseInt(menuIndex);
     };
 
@@ -178,6 +184,7 @@ angular.module('ts5App')
           break;
         }
       }
+
       return parseInt(stationIndex);
     };
 
