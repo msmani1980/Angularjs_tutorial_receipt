@@ -102,14 +102,6 @@ describe('Controller: StoreNumberCreateCtrl', function () {
   });
 
   describe('canDelete scope function', function() {
-    it('should return true if the start date is in the future', function() {
-      expect(scope.canDelete({ startDate:'01/05/2050', readyToUse: true })).toBe(true);
-    });
-
-    it('should return false if the start date is in the past', function() {
-      expect(scope.canDelete({ startDate:'01/05/2015', readyToUse: true })).toBe(false);
-    });
-
     it('should return false if the store is used', function () {
       expect(scope.canDelete({ startDate:'01/05/2050', readyToUse: false })).toBe(false);
     });

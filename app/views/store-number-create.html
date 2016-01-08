@@ -34,7 +34,8 @@
          name="storeNumber"
          ng-model="formData.storeNumber"
          ng-disabled="fieldDisabled(formData)"
-         placeholder="store12345"/>
+         placeholder="store12345"
+         ng-required="isSubmitting"/>
     </div>
     <div class="col-xs-12 col-sm-6">
       <date-picker class="form-group"
@@ -47,7 +48,6 @@
         name-to="endDate"
         start-date-model="formData.startDate"
         end-date-model="formData.endDate"
-        required="required"
         >
       </date-picker>
     </div>

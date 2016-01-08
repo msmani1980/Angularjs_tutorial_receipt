@@ -46,6 +46,7 @@ angular.module('ts5App')
     }
 
     function showApiErrors(response) {
+      $scope.errorCustom = null;
       hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(response);
@@ -101,6 +102,8 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.editing = false;
       $scope.storeNumbersList = [];
+      $this.meta.offset = -1;
+      $this.meta.count = 0;
     }
 
     $scope.getStoreList = function () {
@@ -122,6 +125,7 @@ angular.module('ts5App')
 
     function submitFormSuccess() {
       init();
+      $scope.getStoreList();
       hideLoadingModal();
       showMessage('success', 'Store Number', 'saved!');
     }
@@ -130,6 +134,7 @@ angular.module('ts5App')
 
     // scope functions
     $scope.submitForm = function () {
+      $scope.isSubmitting = true;
       displayLoadingModal('Saving');
       var payload = angular.copy($scope.formData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
@@ -151,20 +156,33 @@ angular.module('ts5App')
     };
 
     $scope.canDelete = function (store) {
-      return store.readyToUse && dateUtility.isAfterToday(store.startDate);
+      return store.readyToUse;
     };
 
+    function removeRecordError() {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorCustom = [{
+        field: 'Delete Store Number',
+        value: 'An existing store instance is using this store number'
+      }];
+    }
+
+    function removeRecordSuccess() {
+      init();
+      $scope.getStoreList();
+      hideLoadingModal();
+      showMessage('success', 'Store Number', 'deleted!');
+    }
+
     $scope.removeRecord = function (store) {
+      $scope.isSubmitting = false;
       if (!$scope.canDelete(store)) {
         return false;
       }
 
       displayLoadingModal('Removing Item');
-      companyStoresService.deleteStore(store.id).then(function () {
-        init();
-        hideLoadingModal();
-        showMessage('success', 'Store Number', 'deleted!');
-      }, showApiErrors);
+      companyStoresService.deleteStore(store.id).then(removeRecordSuccess, removeRecordError);
     };
 
     $scope.canEdit = function (store) {

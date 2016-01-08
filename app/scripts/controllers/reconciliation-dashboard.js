@@ -226,45 +226,10 @@ angular.module('ts5App')
       return $scope.allowedStoreStatusList.indexOf(item.statusName) > -1;
     };
 
-    this.setStationList = function (dataFromAPI) {
-      $scope.stationList = angular.copy(dataFromAPI.response);
-      searchReconciliationDataList(dateUtility.formatDateForAPI(dateUtility.nowFormatted()));
-      $this.hideLoadingModal();
-    };
-
-    this.storeStatusListSuccess = function (responseFromAPI) {
-      var dataFromAPI = angular.copy(responseFromAPI);
-      dataFromAPI.filter($this.filterAvailableStoreStatus)
-        .forEach(function (item) {
-          $scope.allowedStoreStatusMap[item.id] = item;
-        });
-
-      stationsService.getGlobalStationList().then($this.setStationList);
-    };
-
-    this.getStoreStatusList = function () {
-      $this.showLoadingModal('Loading Data');
-      reconciliationFactory.getStoreStatusList().then($this.storeStatusListSuccess);
-    };
-
-    this.fixSearchDropdowns = function (search) {
-      if (search.cateringStationId === '') {
-        search.cateringStationId = null;
-      }
-
-      if (search.arrivalStationCode === '') {
-        search.arrivalStationCode = null;
-      }
-
-      if (search.statusId === '') {
-        search.statusId = null;
-      }
-    };
-
     var loadingProgress = false;
-
     var lastStartDate = null;
     var lastEndDate = null;
+
     function searchReconciliationDataList (startDate, endDate) {
       if ($this.meta.offset >= $this.meta.count) {
         return;
@@ -315,6 +280,41 @@ angular.module('ts5App')
 
     $scope.getReconciliationDataList = function () {
       searchReconciliationDataList(lastStartDate, lastEndDate);
+    };
+
+    this.setStationList = function (dataFromAPI) {
+      $scope.stationList = angular.copy(dataFromAPI.response);
+      searchReconciliationDataList(dateUtility.formatDateForAPI(dateUtility.nowFormatted()));
+      $this.hideLoadingModal();
+    };
+
+    this.storeStatusListSuccess = function (responseFromAPI) {
+      var dataFromAPI = angular.copy(responseFromAPI);
+      dataFromAPI.filter($this.filterAvailableStoreStatus)
+        .forEach(function (item) {
+          $scope.allowedStoreStatusMap[item.id] = item;
+        });
+
+      stationsService.getGlobalStationList().then($this.setStationList);
+    };
+
+    this.getStoreStatusList = function () {
+      $this.showLoadingModal('Loading Data');
+      reconciliationFactory.getStoreStatusList().then($this.storeStatusListSuccess);
+    };
+
+    this.fixSearchDropdowns = function (search) {
+      if (search.cateringStationId === '') {
+        search.cateringStationId = null;
+      }
+
+      if (search.arrivalStationCode === '') {
+        search.arrivalStationCode = null;
+      }
+
+      if (search.statusId === '') {
+        search.statusId = null;
+      }
     };
 
     $scope.clearSearchForm = function () {
