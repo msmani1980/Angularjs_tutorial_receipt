@@ -104,7 +104,7 @@ describe('Controller: CashBagSubmissionCtrl', function () {
       });
 
       it('should call getCashBagList searching', function () {
-        scope.search.isSubmitted = true;
+        scope.search.searchForSubmitted = true;
         scope.searchCashBags();
         var expectedParameter = jasmine.objectContaining({ isSubmitted: true });
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(null, expectedParameter);
@@ -113,7 +113,8 @@ describe('Controller: CashBagSubmissionCtrl', function () {
       it('should call getCashBagList searching', function () {
         scope.search = {
           bankReferenceNumber: 'fakeBankReferenceNumber',
-          isSubmitted: ''
+          searchForSubmitted: true,
+          searchForNotSubmitted: true
         };
         scope.searchCashBags();
         var expectedParameter = jasmine.objectContaining({ bankReferenceNumber: 'fakeBankReferenceNumber' });
