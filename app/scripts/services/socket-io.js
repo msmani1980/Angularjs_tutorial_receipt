@@ -1,7 +1,5 @@
 'use strict';
 
-/*global io*/
-
 /**
  * @ngdoc service
  * @name ts5App.socketIO
@@ -11,8 +9,13 @@
  */
 angular.module('ts5App')
   .factory('socketIO', function ($rootScope) {
+    var socket = {
+      on: function () {
+      },
 
-    var socket = io.connect('http://curiel.me:3000');
+      emit: function () {
+      }
+    };//io.connect('http://curiel.me:3000');
 
     return {
       on: function (eventName, callback) {
