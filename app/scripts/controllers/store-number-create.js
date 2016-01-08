@@ -17,12 +17,12 @@ angular.module('ts5App')
     };
 
     // private controller vars
-    var _companyId = null,
-      _companyDefault = {
-        storeNumber: null,
-        startDate: null,
-        endDate: null
-      };
+    var companyId = null;
+    var companyDefault = {
+      storeNumber: null,
+      startDate: null,
+      endDate: null
+    };
 
     function showMessage(className, type, message) {
       ngToast.create({ className: className, dismissButton: true, content: '<strong>' + type + '</strong>: ' + message });
@@ -62,7 +62,7 @@ angular.module('ts5App')
       $this.meta.count = $this.meta.count || response.meta.count;
       hideLoadingBar();
       $scope.storeNumbersList = $scope.storeNumbersList.concat(
-        lodash.map(response.response, function(store) {
+        lodash.map(response.response, function (store) {
           return formatForForm(store);
         })
       );
@@ -94,16 +94,16 @@ angular.module('ts5App')
     }
 
     function init() {
-      _companyId = GlobalMenuService.company.get();
+      companyId = GlobalMenuService.company.get();
       $scope.viewName = 'Create Store Number';
       $scope.submitText = 'Create';
-      $scope.formData = angular.copy(_companyDefault);
+      $scope.formData = angular.copy(companyDefault);
       $scope.displayError = false;
       $scope.editing = false;
       $scope.storeNumbersList = [];
     }
 
-    $scope.getStoreList = function() {
+    $scope.getStoreList = function () {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
@@ -129,7 +129,7 @@ angular.module('ts5App')
     init();
 
     // scope functions
-    $scope.submitForm = function() {
+    $scope.submitForm = function () {
       displayLoadingModal('Saving');
       var payload = angular.copy($scope.formData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
@@ -146,36 +146,36 @@ angular.module('ts5App')
       }
     };
 
-    $scope.formDefault = function() {
-      return angular.equals($scope.formData, _companyDefault);
+    $scope.formDefault = function () {
+      return angular.equals($scope.formData, companyDefault);
     };
 
-    $scope.canDelete = function(store) {
+    $scope.canDelete = function (store) {
       return store.readyToUse && dateUtility.isAfterToday(store.startDate);
     };
 
-    $scope.removeRecord = function(store) {
+    $scope.removeRecord = function (store) {
       if (!$scope.canDelete(store)) {
         return false;
       }
 
       displayLoadingModal('Removing Item');
-      companyStoresService.deleteStore(store.id).then(function() {
+      companyStoresService.deleteStore(store.id).then(function () {
         init();
         hideLoadingModal();
         showMessage('success', 'Store Number', 'deleted!');
       }, showApiErrors);
     };
 
-    $scope.canEdit = function(store) {
+    $scope.canEdit = function (store) {
       return dateUtility.isAfterToday(store.endDate);
     };
 
-    $scope.fieldDisabled = function(store) {
+    $scope.fieldDisabled = function (store) {
       return $scope.canEdit(store) && dateUtility.isTodayOrEarlier(store.startDate);
     };
 
-    $scope.editStoreNumber = function(store) {
+    $scope.editStoreNumber = function (store) {
       if (!$scope.canEdit(store)) {
         return false;
       }

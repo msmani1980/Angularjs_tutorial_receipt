@@ -9,11 +9,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q, ngToast) {
+  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q, ngToast, dateUtility) {
     var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Daily Exchange Rates';
-    $scope.cashiersDateField = new moment().format('L');
+    $scope.cashiersDateField = dateUtility.nowFormatted();
     $scope.cashHandlerBaseCurrency = {};
     $scope.showActionButtons = false;
     $scope.companyCurrencies = [];
@@ -168,9 +168,9 @@ angular.module('ts5App')
     }
 
     function serializeExchangeRateForAPI(currency) {
-      var coinExchangeRate = '1.0000',
-        paperExchangeRate = '1.0000',
-        bankExchangeRate = '1.0000';
+      var coinExchangeRate = '1.0000';
+      var paperExchangeRate = '1.0000';
+      var bankExchangeRate = '1.0000';
 
       if ($scope.currenciesFields[currency.code]) {
         coinExchangeRate = $scope.currenciesFields[currency.code].coinExchangeRate;

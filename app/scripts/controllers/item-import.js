@@ -11,26 +11,23 @@ angular.module('ts5App')
   .controller('ItemImportCtrl', function ($scope, $q, $filter, itemImportFactory, ngToast) {
 
     // private controller vars
-    var _companyId = null,
-      _companyRetailItems = null,
-      _initPromises = null,
-      _importedRetailList = null;
+    var companyId = null;
+    var companyRetailItems = null;
+    var initPromises = null;
+    var importedRetailList = null;
 
     // private controller functions
     function canBeAddedToCompanyRetailList(retailItem) {
-      if ($filter('filter')(_companyRetailItems, { itemCode: retailItem.itemCode }, true).length) {
+      if ($filter('filter')(companyRetailItems, { itemCode: retailItem.itemCode }, true).length) {
         return false;
       }
 
-      if ($filter('filter')(_companyRetailItems, { itemName: retailItem.itemName }, true).length) {
+      if ($filter('filter')(companyRetailItems, { itemName: retailItem.itemName }, true).length) {
         return false;
       }
 
-      if (retailItem.onBoardName !== null && $filter('filter')(_companyRetailItems, { onBoardName: retailItem.onBoardName }, true).length) {
-        return false;
-      }
+      return !(retailItem.onBoardName !== null && $filter('filter')(companyRetailItems, { onBoardName: retailItem.onBoardName }, true).length);
 
-      return true;
     }
 
     function addToImportedRetailItemList(retailItem) {
@@ -49,18 +46,18 @@ angular.module('ts5App')
       $scope.importedRetailItemList.push(retailItem);
     }
 
-    function removeRetailItemFromCompanyRetailItems(retailItem) {
+    function removeRetailItemFromCompanyItems(retailItem) {
       $scope.companyRetailItemList.splice($scope.companyRetailItemList.indexOf(retailItem), 1);
-      _companyRetailItems.splice(_companyRetailItems.indexOf(retailItem), 1);
+      companyRetailItems.splice(companyRetailItems.indexOf(retailItem), 1);
       addToImportedRetailItemList(retailItem);
     }
 
-    function addRetailItemToCompanyRetailItems(retailItem, onlyIndex, atIndex) {
+    function addRetailItemToCompanyItems(retailItem, onlyIndex, atIndex) {
       if (!canBeAddedToCompanyRetailList(retailItem)) {
         return;
       }
 
-      _companyRetailItems.push(retailItem);
+      companyRetailItems.push(retailItem);
       if (onlyIndex) {
         return;
       }
@@ -90,7 +87,7 @@ angular.module('ts5App')
 
     function showFormErrors(response) {
       if ('data' in response) {
-        angular.forEach(response.data, function(error) {
+        angular.forEach(response.data, function (error) {
           this.push(error);
         }, $scope.formErrors);
       }
@@ -100,9 +97,9 @@ angular.module('ts5App')
     }
 
     function setGetCompaniesListPromise() {
-      _initPromises.push(itemImportFactory.getCompanyList({ companyTypeId: 2, limit: null }).then(function (response) {
-        angular.forEach(response.companies, function(company) {
-          if (2 === company.companyTypeId) {
+      initPromises.push(itemImportFactory.getCompanyList({ companyTypeId: 2, limit: null }).then(function (response) {
+        angular.forEach(response.companies, function (company) {
+          if (company.companyTypeId === 2) {
             this.push(company);
           }
         }, $scope.importCompanyList);
@@ -110,8 +107,8 @@ angular.module('ts5App')
     }
 
     function setGetItemsListPromise() {
-      _initPromises.push(itemImportFactory.getItemsList({ companyId: _companyId }).then(function (response) {
-        _companyRetailItems = response.retailItems;
+      initPromises.push(itemImportFactory.getItemsList({ companyId: companyId }).then(function (response) {
+        companyRetailItems = response.retailItems;
       }));
     }
 
@@ -120,7 +117,7 @@ angular.module('ts5App')
       predefined: ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#FF1493', '#FFA500', '#FFD700', '#008080', '#9400D3'],
       storage: {
         items: [],
-        itemColor: [],
+        itemColor: []
       },
       get: function (itemId) {
         // if the company has a color saved, return it
@@ -165,9 +162,9 @@ angular.module('ts5App')
     };
 
     function setImportedRetailItemList(response) {
-      _importedRetailList = response.retailItems;
+      importedRetailList = response.retailItems;
       $scope.importedRetailItemList = [];
-      angular.forEach(_importedRetailList, function (retailItem) {
+      angular.forEach(importedRetailList, function (retailItem) {
         if (canBeAddedToCompanyRetailList(retailItem)) {
           retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
           retailItem.companyName = $scope.selectedImportCompany.companyName;
@@ -181,7 +178,7 @@ angular.module('ts5App')
     }
 
     function resolveInitPromises() {
-      $q.all(_initPromises).then(function() {
+      $q.all(initPromises).then(function () {
         angular.forEach($scope.importCompanyList, function (company) {
           company.hexColor = randomHexColorClass.get(company.id);
         });
@@ -194,10 +191,10 @@ angular.module('ts5App')
 
     // Controller constructor
     function init() {
-      _companyId = itemImportFactory.getCompanyId();
-      _companyRetailItems = [];
-      _initPromises = [];
-      _importedRetailList = [];
+      companyId = itemImportFactory.getCompanyId();
+      companyRetailItems = [];
+      initPromises = [];
+      importedRetailList = [];
       $scope.formErrors = [];
       $scope.importCompanyList = [];
       $scope.companyRetailItemList = [];
@@ -235,29 +232,29 @@ angular.module('ts5App')
 
     $scope.importAll = function () {
       $scope.searchCompanyRetailItemList = null;
-      angular.forEach($scope.importedRetailItemList, function(retailItem) {
+      angular.forEach($scope.importedRetailItemList, function (retailItem) {
         if (!canBeAddedToCompanyRetailList(retailItem)) {
           return;
         }
 
-        addRetailItemToCompanyRetailItems(retailItem);
+        addRetailItemToCompanyItems(retailItem);
       });
 
       $scope.importedRetailItemList = [];
     };
 
-    $scope.removeRetailItem = function(retailItem) {
-      removeRetailItemFromCompanyRetailItems(retailItem);
+    $scope.removeRetailItem = function (retailItem) {
+      removeRetailItemFromCompanyItems(retailItem);
     };
 
     $scope.removeAll = function () {
       var currentList = angular.copy($scope.companyRetailItemList);
-      angular.forEach(currentList, function(retailItem) {
-        removeRetailItemFromCompanyRetailItems(retailItem);
+      angular.forEach(currentList, function (retailItem) {
+        removeRetailItemFromCompanyItems(retailItem);
       });
     };
 
-    $scope.submitForm = function() {
+    $scope.submitForm = function () {
       if (!$scope.companyRetailItemList.length) {
         return;
       }
@@ -265,12 +262,12 @@ angular.module('ts5App')
       displayLoadingModal('Saving');
 
       var importIds = [];
-      angular.forEach($scope.companyRetailItemList, function(retailItem) {
+      angular.forEach($scope.companyRetailItemList, function (retailItem) {
         this.push(retailItem.itemMasterId);
       }, importIds);
 
       var payload = { ImportItems: { importItems: importIds } };
-      itemImportFactory.importItems(payload).then(function() {
+      itemImportFactory.importItems(payload).then(function () {
         $scope.displayError = false;
         showMessage('saved!', 'success');
         init();
@@ -296,19 +293,19 @@ angular.module('ts5App')
         index = $scope.companyRetailItemList.indexOf(targetRetailItem);
       }
 
-      addRetailItemToCompanyRetailItems($data, false, index);
+      addRetailItemToCompanyItems($data, false, index);
       if ($scope.showLeftDropZoneMessage) {
         $scope.showLeftDropZoneMessage = false;
       }
     };
 
-    $scope.dropSuccessCompanyRetailItemList = function($event, index) {
+    $scope.dropSuccessCompanyRetailItemList = function ($event, index) {
       $event.preventDefault();
       var retailItem = $scope.companyRetailItemList[index];
-      removeRetailItemFromCompanyRetailItems(retailItem);
+      removeRetailItemFromCompanyItems(retailItem);
     };
 
-    $scope.nullOperation = function($event) {
+    $scope.nullOperation = function ($event) {
       $event.preventDefault();
       return false;
     };
