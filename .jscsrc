@@ -1,17 +1,5 @@
 {
   "esnext": true,
-  "disallowSpacesInNamedFunctionExpression": {
-    "beforeOpeningRoundBrace": true
-  },
-  "disallowSpacesInFunctionExpression": {
-    "beforeOpeningRoundBrace": true
-  },
-  "disallowSpacesInAnonymousFunctionExpression": {
-    "beforeOpeningRoundBrace": true
-  },
-  "disallowSpacesInFunctionDeclaration": {
-    "beforeOpeningRoundBrace": true
-  },
   "disallowSpacesInsideBrackets": true,
   "disallowEmptyBlocks": true,
   "disallowSpacesInCallExpression": true,
@@ -74,7 +62,7 @@
   },
   "requirePaddingNewLinesAfterBlocks": true,
   "requireSemicolons": true,
-  "safeContextKeyword": "_this",
+  "safeContextKeyword": "$this",
   "validateLineBreaks": "LF",
   "validateQuoteMarks": {
     "mark": "'",
