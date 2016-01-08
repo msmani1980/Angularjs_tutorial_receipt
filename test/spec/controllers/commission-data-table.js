@@ -53,7 +53,6 @@ describe('Controller: CommissionDataTableCtrl', function () {
     commissionFactory = $injector.get('commissionFactory');
     employeesService = $injector.get('employeesService');
 
-
     commissionPayableListDeferred = $q.defer();
     commissionPayableListDeferred.resolve(commissionPayableListResponseJSON);
 
@@ -76,7 +75,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
     companyDeferred.resolve(companyResponseJSON);
 
     currencyDeferred = $q.defer();
-    currencyDeferred.resolve({id: 1, currencyCode: 'GBP'});
+    currencyDeferred.resolve({ id: 1, currencyCode: 'GBP' });
 
     spyOn(employeesService,  'getEmployees').and.returnValue(employeesDeferred.promise);
     spyOn(commissionFactory, 'getCommissionPayableList').and.returnValue(commissionPayableListDeferred.promise);
@@ -91,7 +90,6 @@ describe('Controller: CommissionDataTableCtrl', function () {
     });
     scope.$digest();
   }));
-
 
   describe('init', function () {
     it('should get crew base types', function () {
@@ -119,6 +117,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
     it('should have viewName defined', function () {
       expect(scope.viewName).toBeDefined();
     });
+
     it('should have commissionData defined', function () {
       expect(scope.commissionData).toBeDefined();
     });
@@ -187,7 +186,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
     describe('delete', function () {
       it('should call delete API with record id', function () {
-        var fakeData = {id: 1};
+        var fakeData = { id: 1 };
         scope.removeRecord(fakeData);
         expect(commissionFactory.deleteCommissionData).toHaveBeenCalledWith(1);
       });
@@ -201,7 +200,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
     describe('getCrewBaseName helper', function () {
       it('should match crew id to crew base name', function () {
-        scope.crewBaseTypes = [{id: 1, name: 'test1'}];
+        scope.crewBaseTypes = [{ id: 1, name: 'test1' }];
         scope.$digest();
         var crewName = scope.getCrewBaseName(1);  // 1 for BFS, from JSON mock
         expect(crewName).toEqual('test1');
@@ -210,7 +209,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
     describe('getCommissionTypeName helper', function () {
       it('should match commission type id to name', function () {
-        scope.commissionTypes = [{id: 1, name: 'test1'}, {id: 2, name: 'test2'}];
+        scope.commissionTypes = [{ id: 1, name: 'test1' }, { id: 2, name: 'test2' }];
         var crewName = scope.getCommissionTypeName(2);  // 2 for Epos sales, from JSON mock
         expect(crewName).toEqual('test2');
       });
@@ -219,7 +218,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
     describe('getUnitById helper', function () {
       it('should match percentage to % unit, and amount to company base unit', function () {
-        scope.discountTypes = [{id: 1, name: 'Percentage'}, {id: 2, name: 'Amount'}];
+        scope.discountTypes = [{ id: 1, name: 'Percentage' }, { id: 2, name: 'Amount' }];
         scope.$digest();
         var unit = scope.getUnitById(1);
         expect(unit).toEqual('%');
@@ -236,6 +235,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
         var shouldDisplay = scope.shouldShowCommissionPercent(mockRecord);
         expect(shouldDisplay).toEqual(false);
       });
+
       it('should return true if percentType is not retail item', function () {
         var mockRecord = {
           commissionPayableTypeId: 2

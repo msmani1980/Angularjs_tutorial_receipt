@@ -10,9 +10,9 @@ angular.module('ts5App')
   .directive('inputPriceType', function () {
 
     return {
-    	templateUrl: '/views/directives/input-price-type.html',
-    	restrict: 'E',
-    	scope: true
+      templateUrl: '/views/directives/input-price-type.html',
+      restrict: 'E',
+      scope: true
     };
 
   });

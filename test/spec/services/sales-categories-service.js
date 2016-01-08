@@ -86,7 +86,6 @@ describe('Sales Categories Service |', function () {
       expect(testObject.companyId).toBeDefined();
     });
 
-
     it('should expect the Sales Category object to have an parentId', function () {
       expect(testObject.parentId).toBeDefined();
     });

@@ -125,6 +125,7 @@ describe('the Store Instance Seals controller', function() {
     for (var i = 0; i < $scope.sealTypesList.length; i++) {
       httpBackend.expectPOST(url).respond(200, {});
     }
+
     $scope.$digest();
     StoreInstanceSealsCtrl.assignSeals();
   }
@@ -211,9 +212,9 @@ describe('the Store Instance Seals controller', function() {
 
         it('should keep readOnly flag set to true if instance is not Ready For Seals', function() {
           storeDetailsJSON.currentStatus = {
-            'id': 3,
-            'statusName': 'Ready for Dispatch',
-            'name': '3'
+            id: 3,
+            statusName: 'Ready for Dispatch',
+            name: '3'
           };
           getStoreDetailsDeferred.resolve(storeDetailsJSON);
           $scope.$digest();
@@ -222,9 +223,9 @@ describe('the Store Instance Seals controller', function() {
 
         it('should set the readOnly flag to false if instance is Ready For Seals', function() {
           storeDetailsJSON.currentStatus = {
-            'id': 2,
-            'statusName': 'Ready for Seals',
-            'name': '2'
+            id: 2,
+            statusName: 'Ready for Seals',
+            name: '2'
           };
           getStoreDetailsDeferred.resolve(storeDetailsJSON);
           $scope.$digest();
@@ -260,6 +261,7 @@ describe('the Store Instance Seals controller', function() {
         getSealColorsDeferred.resolve();
         $scope.$digest();
       });
+
       it('should add a custom error to the error-dialog', function() {
         StoreInstanceSealsCtrl.getSealColors();
         expect($scope.displayError).toBeTruthy();
@@ -619,7 +621,6 @@ describe('the Store Instance Seals controller', function() {
         expect(location.path()).toEqual(StoreInstanceSealsCtrl.nextStep.uri);
       });
 
-
     });
 
     describe('error handler', function() {
@@ -777,10 +778,12 @@ describe('the Store Instance Seals controller', function() {
       var existingSealTypeObjects = $scope.existingSeals.filter(function(sealTypeObject) {
         return sealTypeObject.type === 1;
       });
+
       var controlArray = [];
       existingSealTypeObjects.forEach(function(sealTypeObject) {
         controlArray.push(sealTypeObject.sealNumbers[0]);
       });
+
       expect(StoreInstanceSealsCtrl.getExistingSealsByType(1)).toEqual(controlArray);
     });
 
@@ -1005,9 +1008,9 @@ describe('the Store Instance Seals controller', function() {
 
     beforeEach(function() {
       storeDetailsJSON.currentStatus = {
-        'id': 6,
-        'statusName': 'Ready for Seals',
-        'name': '6'
+        id: 6,
+        statusName: 'Ready for Seals',
+        name: '6'
       };
       initController('end-instance');
       resolveAllDependencies();
@@ -1036,9 +1039,9 @@ describe('the Store Instance Seals controller', function() {
 
     beforeEach(function() {
       storeDetailsJSON.currentStatus = {
-        'id': 1,
-        'statusName': 'Ready for Seals',
-        'name': '1'
+        id: 1,
+        statusName: 'Ready for Seals',
+        name: '1'
       };
       initController('redispatch');
       resolveAllDependencies();
@@ -1178,6 +1181,7 @@ describe('the Store Instance Seals controller', function() {
       initController();
       StoreInstanceSealsCtrl.setAsEdit();
     });
+
     it('should set the readOnly flag to false', function() {
       expect($scope.readOnly).toBeFalsy();
     });

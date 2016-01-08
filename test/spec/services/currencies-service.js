@@ -36,9 +36,9 @@ describe('Service: currenciesService', function () {
     companyCurrenciesRequestHandler = $httpBackend.whenGET(/api\/company-currency-globals/).respond(masterCurrenciesJSON);
     detailedCurrenciesGetRequestHandler = $httpBackend.whenGET(/api\/companies\/403\/currencies/).respond(masterCurrenciesJSON);
     detailedCurrenciesDeleteRequestHandler = $httpBackend.whenDELETE(/api\/companies\/403\/currencies/).respond(202);
-    detailedCurrenciesCreateRequestHandler = $httpBackend.whenPOST(/api\/companies\/403\/currencies/).respond(201, {'id':1});
+    detailedCurrenciesCreateRequestHandler = $httpBackend.whenPOST(/api\/companies\/403\/currencies/).respond(201, { id:1 });
     detailedCurrenciesUpdateRequestHandler = $httpBackend.whenPUT(/api\/companies\/403\/currencies/).respond(201, currencyJSON);
-    currencyDetailRequestHandler = $httpBackend.whenGET(/api\/currencies\/1/).respond(202, {'id': 1});
+    currencyDetailRequestHandler = $httpBackend.whenGET(/api\/currencies\/1/).respond(202, { id: 1 });
 
     currenciesService = _currenciesService_;
   }));

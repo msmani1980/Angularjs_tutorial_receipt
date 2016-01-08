@@ -20,6 +20,7 @@ angular.module('ts5App')
         scope.setChoice = function(choiceId) {
           scope.viewModel.set(choiceId);
         };
+
         element.bind('click', function (event) {
           event.stopPropagation();
         });

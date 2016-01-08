@@ -58,6 +58,7 @@ angular.module('ts5App')
       if ($localStorage.sessionObject) {
         return JSON.parse(CryptoJS.AES.decrypt($localStorage.sessionObject, 'aes@56').toString(CryptoJS.enc.Utf8));
       }
+
       return {};
     }
 
@@ -69,6 +70,7 @@ angular.module('ts5App')
           companyTypeId: sessionObject.companyData.companyTypeId
         };
       }
+
       delete sessionObject.username;
       delete sessionObject.companyData;
       angular.extend($http.defaults.headers.common, sessionObject);
@@ -103,7 +105,7 @@ angular.module('ts5App')
     }
 
     function locationChangeHandler(event, next) {
-      if (!isAuthorized() && ( !next.contains('login') && !next.contains('forgot') )) {
+      if (!isAuthorized() && (!next.contains('login') && !next.contains('forgot'))) {
         event.preventDefault();
         logout();
       }

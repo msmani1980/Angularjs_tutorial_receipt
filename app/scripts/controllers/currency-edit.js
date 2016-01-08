@@ -22,8 +22,8 @@ angular.module('ts5App')
     $scope.addDetailedCompanyCurrenciesNumber = 1;
 
     this.getDenominations = function () {
-      angular.forEach($scope.globalCurrencyList, function (currency){
-        $scope.currencyDenominations[currency.id] = currency.currencyDenominations ;
+      angular.forEach($scope.globalCurrencyList, function (currency) {
+        $scope.currencyDenominations[currency.id] = currency.currencyDenominations;
       });
     };
 
@@ -44,14 +44,14 @@ angular.module('ts5App')
         currency.endDate = dateUtility.formatDateForApp(currency.endDate);
 
         // Populate select box with denominations
-        currency.selectedDenominations = currency.denominations.map(function (denomination){
+        currency.selectedDenominations = currency.denominations.map(function (denomination) {
           return $this.getDenominationById($scope.currencyDenominations[currency.currencyId], denomination.currencyDenominationId);
         }).sort($this.sortDenominationByValue);
 
         // Populate select box with easy pay denominations
         currency.selectedEasyPayDenominations = currency.denominations.filter(function (denomination) {
           return denomination.isEasyPay === 'true';
-        }).map(function (denomination){
+        }).map(function (denomination) {
           return $this.getDenominationById($scope.currencyDenominations[currency.currencyId], denomination.currencyDenominationId);
         }).sort($this.sortDenominationByValue);
       });
@@ -65,7 +65,7 @@ angular.module('ts5App')
     };
 
     this.getDetailedCompanyCurrencies = function () {
-      var payload = { 'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+      var payload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
       currencyFactory.getDetailedCompanyCurrencies(payload).then($this.attachDetailedCompanyCurrencyListToScope);
     };
 
@@ -170,8 +170,7 @@ angular.module('ts5App')
       var payload = $this.denormalizeDetailedCompanyCurrency(index, currency);
       if (currency.isNew) {
         currencyFactory.createDetailedCompanyCurrency(payload).then($this.showSaveSuccess, $this.showSaveErrors);
-      }
-      else {
+      } else {
         currencyFactory.updateDetailedCompanyCurrency(payload).then($this.showSaveSuccess, $this.showSaveErrors);
       }
     };
@@ -232,6 +231,7 @@ angular.module('ts5App')
       if (!currency.startDate || currency.isNew) {
         return false;
       }
+
       return !(dateUtility.isAfterToday(currency.startDate));
     };
 
@@ -239,15 +239,16 @@ angular.module('ts5App')
       if (!currency.endDate || currency.isNew) {
         return false;
       }
+
       return !(dateUtility.isToday(currency.endDate) || dateUtility.isAfterToday(currency.endDate));
     };
 
-    $scope.clearDenominations = function (currency){
+    $scope.clearDenominations = function (currency) {
       currency.selectedDenominations = [];
       currency.selectedEasyPayDenominations = [];
     };
 
-    $scope.removeInvalidEasyPayDenominations = function (currency){
+    $scope.removeInvalidEasyPayDenominations = function (currency) {
       currency.selectedEasyPayDenominations = currency.selectedEasyPayDenominations.filter(function (el) {
         return currency.selectedDenominations.indexOf(el) > 0;
       });

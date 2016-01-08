@@ -17,12 +17,12 @@ angular.module('ts5App')
     };
 
     // private controller vars
-    var _companyId = null,
-      _companyDefault = {
-        storeNumber: null,
-        startDate: null,
-        endDate: null
-      };
+    var companyId = null;
+    var companyDefault = {
+      storeNumber: null,
+      startDate: null,
+      endDate: null
+    };
 
     function showMessage(className, type, message) {
       ngToast.create({ className: className, dismissButton: true, content: '<strong>' + type + '</strong>: ' + message });
@@ -90,14 +90,15 @@ angular.module('ts5App')
         setCurrentStore(store[0]);
         return;
       }
+
       companyStoresService.getStore(_id).then(getStoreResolution, showApiErrors);
     }
 
     function init() {
-      _companyId = GlobalMenuService.company.get();
+      companyId = GlobalMenuService.company.get();
       $scope.viewName = 'Create Store Number';
       $scope.submitText = 'Create';
-      $scope.formData = angular.copy(_companyDefault);
+      $scope.formData = angular.copy(companyDefault);
       $scope.displayError = false;
       $scope.editing = false;
       $scope.storeNumbersList = [];
@@ -107,6 +108,7 @@ angular.module('ts5App')
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       var payload = {
         companyId: GlobalMenuService.company.get(),
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
@@ -135,10 +137,12 @@ angular.module('ts5App')
       var payload = angular.copy($scope.formData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
       payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
+
       // If store has an ID, is editing
       if (payload.id) {
         companyStoresService.saveStore(payload).then(submitFormSuccess, showApiErrors);
       }
+
       // Otherwise, creating
       else {
         companyStoresService.createStore(payload).then(submitFormSuccess, showApiErrors);
@@ -146,7 +150,7 @@ angular.module('ts5App')
     };
 
     $scope.formDefault = function () {
-      return angular.equals($scope.formData, _companyDefault);
+      return angular.equals($scope.formData, companyDefault);
     };
 
     $scope.canDelete = function (store) {
@@ -174,6 +178,7 @@ angular.module('ts5App')
       if (!$scope.canDelete(store)) {
         return false;
       }
+
       displayLoadingModal('Removing Item');
       companyStoresService.deleteStore(store.id).then(removeRecordSuccess, removeRecordError);
     };
@@ -190,6 +195,7 @@ angular.module('ts5App')
       if (!$scope.canEdit(store)) {
         return false;
       }
+
       displayLoadingModal();
       getCurrentStoreNumber(store.id);
     };

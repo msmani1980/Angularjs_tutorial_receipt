@@ -25,7 +25,7 @@ describe('Service: categoryFactory', function () {
     expect(!!categoryFactory).toBe(true);
   });
 
-  describe('API Calls', function(){
+  describe('API Calls', function() {
 
     it('should call categoryService.getCategoryList with a payload', function () {
       var payload = {
@@ -39,7 +39,7 @@ describe('Service: categoryFactory', function () {
 
     it('should call categoryService.getCategory with a payload', function () {
       categoryFactory.getCategory(1);
-      expect(categoryService.getCategory).toHaveBeenCalledWith({id: 1, companyId: 0});
+      expect(categoryService.getCategory).toHaveBeenCalledWith({ id: 1, companyId: 0 });
     });
 
     it('should call categoryService.deleteCategory with a category id', function () {

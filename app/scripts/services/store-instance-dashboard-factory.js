@@ -11,11 +11,11 @@ angular.module('ts5App').service('storeInstanceDashboardFactory',
   function (catererStationService, stationsService, storeInstanceService, storesService, recordsService) {
 
     function getCatererStationList() {
-      return catererStationService.getCatererStationList({limit: null});
+      return catererStationService.getCatererStationList({ limit: null });
     }
 
     function getStationList() {
-      return stationsService.getGlobalStationList({limit: null});
+      return stationsService.getGlobalStationList({ limit: null });
     }
 
     function getStoreInstanceList(payload) {

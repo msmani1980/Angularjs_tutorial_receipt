@@ -21,6 +21,7 @@ angular.module('ts5App')
         companyRelationship.startDate = dateUtility.formatDateForApp(companyRelationship.startDate, 'YYYY-MM-DD');
         companyRelationship.endDate = dateUtility.formatDateForApp(companyRelationship.endDate, 'YYYY-MM-DD');
       });
+
       return data;
     }
 
@@ -87,15 +88,15 @@ angular.module('ts5App')
     };
 
     var getCompanyRelationshipListByCompany = function (id) {
-      return companyRelationshipRequestResource.getCompanyRelationshipListByCompany({id: id}).$promise;
+      return companyRelationshipRequestResource.getCompanyRelationshipListByCompany({ id: id }).$promise;
     };
 
     var getCompanyRelationship = function (id) {
-      return companyRelationshipRequestResource.getCompanyRelationship({id: id}).$promise;
+      return companyRelationshipRequestResource.getCompanyRelationship({ id: id }).$promise;
     };
 
     var getCompanyRelationshipTypeList = function (id) {
-      return typeRequestResource.getCompanyRelationshipTypeList({id: id}).$promise;
+      return typeRequestResource.getCompanyRelationshipTypeList({ id: id }).$promise;
     };
 
     var createCompanyRelationship = function (payload) {

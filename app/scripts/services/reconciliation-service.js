@@ -84,7 +84,8 @@ angular.module('ts5App')
       if (!revenueURL[revenueType]) {
         return false;
       }
-      var payload = {storeInstanceId: storeInstanceId};
+
+      var payload = { storeInstanceId: storeInstanceId };
       var path = revenueURL.basePath + origin + revenueURL[revenueType];
       var revenueResource = $resource(path, requestParameters, actions);
       return revenueResource.getRevenue(payload).$promise;

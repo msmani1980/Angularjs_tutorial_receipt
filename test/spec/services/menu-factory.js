@@ -33,7 +33,7 @@ describe('Service: menuFactory', function () {
     expect(!!menuFactory).toBe(true);
   });
 
-  describe('API Calls', function(){
+  describe('API Calls', function() {
 
     it('should call menuService.getMenu with a menuId', function () {
       menuFactory.getMenu(2);

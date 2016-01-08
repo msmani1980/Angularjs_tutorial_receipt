@@ -31,7 +31,7 @@ angular.module('ts5App').service('carrierService', function ($resource, ENV) {
   var carrierNumberRequestResource = $resource(carrierNumberRequestURL, requestParameters, carrierActions);
 
   var getCarrierTypes = function (companyId) {
-    var payload = {id: companyId};
+    var payload = { id: companyId };
     return carrierTypeRequestResource.getCarrierTypes(payload).$promise;
   };
 

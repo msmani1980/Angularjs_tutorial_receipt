@@ -44,6 +44,7 @@ angular.module('ts5App')
     var createCompanyExchangeRate = function (payload) {
       return companyExchangeRatesResource.createCompanyExchangeRate(payload).$promise;
     };
+
     var updateCompanyExchangeRate = function (payload) {
       return companyExchangeRatesResource.updateCompanyExchangeRate(payload).$promise;
     };

@@ -25,8 +25,8 @@ describe('The Stock Owner Item Create Controller', function () {
     $scope = $rootScope.$new();
     $controller = $injector.get('$controller');
     StockOwnerItemCreateCtrl = $controller('StockOwnerItemCreateCtrl', {
-      '$rootScope': $rootScope,
-      '$scope': $scope
+      $rootScope: $rootScope,
+      $scope: $scope
     });
   }
 
@@ -99,6 +99,7 @@ describe('The Stock Owner Item Create Controller', function () {
       expect($scope.formData.recommendations).toBeDefined();
       expect($scope.formData.recommendations).toEqual([]);
     });
+
     it('should have an globalTradeNumbers property that is an empty array', function () {
       expect($scope.formData.globalTradeNumbers).toBeDefined();
       expect($scope.formData.globalTradeNumbers).toEqual([]);
@@ -619,6 +620,7 @@ describe('The Stock Owner Item Create Controller', function () {
         it('should be defined', function () {
           expect($scope.GTINClass).toBeDefined();
         });
+
         it('should have been called', function () {
           spyOn($scope, 'GTINClass');
           $scope.GTINClass(form, 0);

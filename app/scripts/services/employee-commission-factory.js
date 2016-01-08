@@ -33,15 +33,19 @@ angular.module('ts5App')
     var getCommissionList = function (payload) {
       return employeeCommissionService.getCommissionList(payload);
     };
+
     var getCommission = function (payload) {
       return employeeCommissionService.getCommission(payload);
     };
+
     var createCommission = function (payload) {
       return employeeCommissionService.createCommission(payload);
     };
+
     var updateCommission = function (payload) {
       return employeeCommissionService.updateCommission(payload);
     };
+
     var deleteCommission = function (payload) {
       return employeeCommissionService.deleteCommission(payload);
     };

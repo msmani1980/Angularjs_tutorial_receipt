@@ -54,6 +54,7 @@ angular.module('ts5App')
       if (match) {
         return match.name;
       }
+
       return '';
     };
 
@@ -100,6 +101,7 @@ angular.module('ts5App')
       if (!$scope.commissionPercentRequired) {
         payload.commissionPercentage = null;
       }
+
       return payload;
     };
 
@@ -226,6 +228,7 @@ angular.module('ts5App')
         if ($routeParams.id) {
           $this.getCommissionData();
         }
+
         $this.hideLoadingModal();
       });
     };

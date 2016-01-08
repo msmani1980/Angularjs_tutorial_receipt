@@ -21,7 +21,7 @@ describe('Service: menuMasterService', function () {
 
   describe('getMenuMasterList', function () {
     it('should make a GET request when calling getMenuMasterList', function () {
-      $httpBackend.whenGET(/menus\/menu-masters/).respond({done: true});
+      $httpBackend.whenGET(/menus\/menu-masters/).respond({ done: true });
       menuMasterService.getMenuMasterList();
       $httpBackend.expectGET(/menus\/menu-masters/);
       $httpBackend.flush();

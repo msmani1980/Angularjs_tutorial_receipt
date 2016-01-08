@@ -18,7 +18,6 @@ angular.module('ts5App')
       offset: 0
     };
 
-
     $scope.viewName = 'Reconciliation Dashboard';
     $scope.search = {};
     $scope.stationList = null;
@@ -47,7 +46,6 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     };
 
-
     $scope.toggleColumnView = function (columnName) {
       if (angular.isDefined($scope.displayColumns[columnName])) {
         $scope.displayColumns[columnName] = !$scope.displayColumns[columnName];
@@ -62,6 +60,7 @@ angular.module('ts5App')
       if (!instance.actions) {
         return false;
       }
+
       return instance.actions.indexOf(actionName) >= 0;
     };
 
@@ -71,6 +70,7 @@ angular.module('ts5App')
       } else if ($scope.tableSortTitle === '-' + orderName) {
         return 'descending';
       }
+
       return 'none';
     };
 
@@ -99,6 +99,7 @@ angular.module('ts5App')
       if (matchedObject) {
         return matchedObject[valueKey];
       }
+
       return '';
     };
 
@@ -172,7 +173,7 @@ angular.module('ts5App')
     };
 
     this.getReconciliationPrecheckDevices = function (item) {
-      reconciliationFactory.getReconciliationPrecheckDevices({storeInstanceId: item.id}).then(function (response) {
+      reconciliationFactory.getReconciliationPrecheckDevices({ storeInstanceId: item.id }).then(function (response) {
         var dataFromAPI = angular.copy(response);
         item.eposData = (dataFromAPI.devicesSynced || dataFromAPI.totalDevices) ? dataFromAPI.devicesSynced + '/' + dataFromAPI.totalDevices : 'No';
         $this.recalculateActionsColumn(item);
@@ -180,7 +181,7 @@ angular.module('ts5App')
     };
 
     this.getReconciliationPrecheckSchedules = function (item) {
-      reconciliationFactory.getReconciliationPrecheckSchedules({storeInstanceId: item.id}).then(function (response) {
+      reconciliationFactory.getReconciliationPrecheckSchedules({ storeInstanceId: item.id }).then(function (response) {
         var dataFromAPI = angular.copy(response);
         item.postTripData = (dataFromAPI.postTripScheduleCount || dataFromAPI.eposScheduleCount) ? dataFromAPI.postTripScheduleCount + '/' + dataFromAPI.eposScheduleCount : 'No';
         $this.recalculateActionsColumn(item);
@@ -188,7 +189,7 @@ angular.module('ts5App')
     };
 
     this.getReconciliationPrecheckCashbags = function (item) {
-      reconciliationFactory.getReconciliationPrecheckCashbags({storeInstanceId: item.id}).then(function (response) {
+      reconciliationFactory.getReconciliationPrecheckCashbags({ storeInstanceId: item.id }).then(function (response) {
         var dataFromAPI = angular.copy(response);
         item.cashHandlerData = (dataFromAPI.cashHandlerCashbagCount || dataFromAPI.totalCashbagCount) ? dataFromAPI.cashHandlerCashbagCount + '/' + dataFromAPI.totalCashbagCount : 'No';
         $this.recalculateActionsColumn(item);
@@ -212,10 +213,11 @@ angular.module('ts5App')
 
     this.getReconciliationDataList = function () {
       $scope.displayError = false;
-      var payload = { 'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+      var payload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
       reconciliationFactory.getReconciliationDataList(payload).then(function (dataFromAPI) {
         $this.attachReconciliationDataListToScope(angular.copy(dataFromAPI));
       }, function () {
+
         $this.hideLoadingModal();
       });
     };
@@ -249,9 +251,11 @@ angular.module('ts5App')
       if (search.cateringStationId === '') {
         search.cateringStationId = null;
       }
+
       if (search.arrivalStationCode === '') {
         search.arrivalStationCode = null;
       }
+
       if (search.statusId === '') {
         search.statusId = null;
       }
@@ -265,12 +269,15 @@ angular.module('ts5App')
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       if ($scope.stationList === null) {
         return;
       }
+
       if (loadingProgress) {
         return;
       }
+
       loadingProgress = true;
 
       showLoadingBar();
@@ -292,6 +299,7 @@ angular.module('ts5App')
         $this.attachReconciliationDataListToScope(dataFromAPI);
         loadingProgress = false;
       });
+
       $this.meta.offset += $this.meta.limit;
     }
 
@@ -379,10 +387,12 @@ angular.module('ts5App')
         $q.all(changeToConfirmedPromises).then(function () {
           $this.getReconciliationDataList();
         }, function (responseFromAPI) {
+
           $this.getReconciliationDataList();
           $this.handleResponseError(responseFromAPI);
         });
       }, function(responseFromAPI) {
+
         $this.getReconciliationDataList();
         $this.handleResponseError(responseFromAPI);
       });
@@ -418,6 +428,7 @@ angular.module('ts5App')
         searchReconciliationDataList(dateUtility.formatDateForAPI(dateUtility.nowFormatted()));
         $this.hideLoadingModal();
       }, function () {
+
         $this.hideLoadingModal();
       });
     };
@@ -428,8 +439,7 @@ angular.module('ts5App')
 
       if ($scope.actionToExecute === 'Validate') {
         $this.executeValidateAction();
-      }
-      else {
+      } else {
         $this.executeOtherAction();
       }
     };

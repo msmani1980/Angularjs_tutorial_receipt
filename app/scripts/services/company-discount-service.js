@@ -15,10 +15,12 @@ angular.module('ts5App').service('companyDiscountService', function ($resource, 
       if (discount && discount.startDate) {
         discount.startDate = dateUtility.formatDate(discount.startDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
       }
+
       if (discount && discount.endDate) {
         discount.endDate = dateUtility.formatDate(discount.endDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
       }
     });
+
     return data;
   }
 

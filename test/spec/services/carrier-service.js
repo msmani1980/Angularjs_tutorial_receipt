@@ -17,6 +17,7 @@ describe('Carrier Service', function () {
       carrierTypesJSON = _servedCarrierTypes_;
       carrierNumbersJSON = _servedCarrierNumbers_;
     });
+
     carrierService = _carrierService_;
     $httpBackend = $injector.get('$httpBackend');
   }));
@@ -44,6 +45,7 @@ describe('Carrier Service', function () {
         carrierService.getCarrierTypes().then(function (dataFromAPI) {
           carrierTypesData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -84,6 +86,7 @@ describe('Carrier Service', function () {
         carrierService.getCarrierNumbers().then(function (dataFromAPI) {
           carrierNumbersData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -121,10 +124,11 @@ describe('Carrier Service', function () {
         var fakeId = 1;
         var regex = new RegExp('/carrier-types/0/carrier-numbers/' + fakeId, 'g');
 
-        $httpBackend.expectGET(regex).respond({done: true, id: fakeId});
+        $httpBackend.expectGET(regex).respond({ done: true, id: fakeId });
         carrierService.getCarrierNumber(403, fakeId).then(function (response) {
           expect(response.id).toBe(fakeId);
         });
+
         $httpBackend.flush();
       });
     });

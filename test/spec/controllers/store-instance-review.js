@@ -14,7 +14,6 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
   beforeEach(module('served/count-types.json'));
   beforeEach(module('served/end-instance-review-store-details.json'));
 
-
   var StoreInstanceReviewCtrl;
   var scope;
   var storeInstanceFactory;
@@ -59,6 +58,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
 
     storeInstanceWizardConfig = $injector.get('storeInstanceWizardConfig');
     dateUtility = $injector.get('dateUtility');
+
     // storeInstanceFactory
     storeInstanceFactory = $injector.get('storeInstanceFactory');
     getStoreDetailsDeferred = $q.defer();
@@ -123,36 +123,35 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
         statusName: 'Ready for Dispatch'
       },
       statusList: [{
-        'id': 1,
-        'statusName': 'Ready for Packing',
-        'name': '1'
+        id: 1,
+        statusName: 'Ready for Packing',
+        name: '1'
       }, {
-        'id': 2,
-        'statusName': 'Ready for Seals',
-        'name': '2'
+        id: 2,
+        statusName: 'Ready for Seals',
+        name: '2'
       }, {
-        'id': 3,
-        'statusName': 'Ready for Dispatch',
-        'name': '3'
+        id: 3,
+        statusName: 'Ready for Dispatch',
+        name: '3'
       }, {
-        'id': 7,
-        'statusName': 'Dispatched',
-        'name': '4'
+        id: 7,
+        statusName: 'Dispatched',
+        name: '4'
       }, {
-        'id': 8,
-        'statusName': 'Un-dispatched',
-        'name': '7'
+        id: 8,
+        statusName: 'Un-dispatched',
+        name: '7'
       }, {
-        'id': 9,
-        'statusName': 'Inbounded',
-        'name': '6'
+        id: 9,
+        statusName: 'Inbounded',
+        name: '6'
       }, {
-        'id': 10,
-        'statusName': 'On Floor',
-        'name': '5'
+        id: 10,
+        statusName: 'On Floor',
+        name: '5'
       }]
     };
-
 
   }));
 
@@ -161,6 +160,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
       getStoreDetailsDeferred.resolve(storeDetailsJSON);
       scope.$digest();
     }));
+
     it('should get the store details', function() {
       expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(routeParams.storeId);
     });
@@ -351,6 +351,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
       getStoreDetailsDeferred.resolve(storeDetailsJSON);
       scope.$digest();
     }));
+
     it('should set actionNotAllowed to true if not on ready to dispatch status', function() {
       expect(scope.actionNotAllowed).toBe(true);
     });

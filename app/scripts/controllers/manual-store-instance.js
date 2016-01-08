@@ -9,11 +9,11 @@
  */
 angular.module('ts5App')
   .controller('ManualStoreInstanceCtrl', function ($scope) {
-	  
-	$scope.viewName = 'Create Manual Store Instance';
+
+    $scope.viewName = 'Create Manual Store Instance';
     $scope.search = {};
     $scope.multiSelectedValues = {};
-	    
+
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',

@@ -20,6 +20,7 @@ angular.module('ts5App')
       if (errorCodeMap[response.status]) {
         $rootScope.$broadcast(errorCodeMap[response.status]);
       }
+
       return $q.reject(response);
     }
 

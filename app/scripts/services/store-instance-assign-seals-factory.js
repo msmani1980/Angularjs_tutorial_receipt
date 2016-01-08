@@ -10,28 +10,28 @@
 angular.module('ts5App')
   .service('storeInstanceAssignSealsFactory', function (sealColorsService, sealTypesService,
                                                         storeInstanceSealService) {
-    function getStoreInstanceSeals(id){
+    function getStoreInstanceSeals(id) {
       return storeInstanceSealService.getStoreInstanceSeals(id);
     }
 
-    function getSealColors(){
+    function getSealColors() {
       return sealColorsService.getSealColors();
     }
 
-    function getSealTypes(){
+    function getSealTypes() {
       return sealTypesService.getSealTypes();
     }
 
-    function updateStoreInstanceSeal(sealId, storeInstanceId, payload){
+    function updateStoreInstanceSeal(sealId, storeInstanceId, payload) {
       return storeInstanceSealService.updateStoreInstanceSeal(sealId, storeInstanceId, payload);
     }
 
-    function createStoreInstanceSeal(storeInstanceId, payload){
+    function createStoreInstanceSeal(storeInstanceId, payload) {
       return storeInstanceSealService.createStoreInstanceSeal(storeInstanceId, payload);
     }
 
-    function deleteStoreInstanceSeal(sealId,storeInstanceId){
-      return storeInstanceSealService.deleteStoreInstanceSeal(sealId,storeInstanceId);
+    function deleteStoreInstanceSeal(sealId, storeInstanceId) {
+      return storeInstanceSealService.deleteStoreInstanceSeal(sealId, storeInstanceId);
     }
 
     return {

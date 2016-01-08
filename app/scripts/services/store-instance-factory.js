@@ -131,7 +131,7 @@ angular.module('ts5App').service('storeInstanceFactory',
         storeDetails.parentStoreInstance = parentStoreInstanceAPIResponse;
       }
 
-      if(storeInstanceAPIResponse.prevStoreInstanceId) {
+      if (storeInstanceAPIResponse.prevStoreInstanceId) {
         storeDetails.prevStoreInstanceId = storeInstanceAPIResponse.prevStoreInstanceId;
       }
 
@@ -153,6 +153,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       if (responseCollection.length > 4) {
         storeDetails.carrierNumber = responseCollection[4].carrierNumber;
       }
+
       return storeDetails;
     }
 
@@ -170,6 +171,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       if (responseData.carrierId) {
         dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
       }
+
       dependenciesArray.push(getStation(responseData.inboundStationId));
 
       return dependenciesArray;

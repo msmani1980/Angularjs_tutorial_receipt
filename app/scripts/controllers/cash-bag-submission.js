@@ -103,6 +103,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       lodash.forEach(dataFromAPI.cashBags, function (cashBag) {
         formatCashBag(cashBag);
       });
+
       $scope.cashBagList = $scope.cashBagList.concat(angular.copy(dataFromAPI.cashBags));
       $this.setSearchFields();
       hideLoadingBar();
@@ -115,6 +116,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       if (angular.isDefined(searchParams.isSubmitted) && searchParams.isSubmitted.length === 0) {
         delete searchParams.isSubmitted;
       }
+
       var payload = {
         submission: 'submit',
         limit: $this.meta.limit,
@@ -128,9 +130,11 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       if ($this.loadingProgress) {
         return;
       }
+
       showLoadingBar();
       $this.loadingProgress = true;
 
@@ -140,6 +144,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     };
 
     function getCompanySuccessHandler(companyDataFromAPI) {
+      angular.element('#bankReferenceNumber').focus();
       $scope.CHCompany = angular.copy(companyDataFromAPI);
     }
 
@@ -182,6 +187,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
           cashBag.selected = $scope.allCheckboxesSelected;
         }
       });
+
       setCashBagListToSubmit();
     };
 
@@ -210,6 +216,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
         $scope.searchCashBags();
         return;
       }
+
       $scope.clearForm();
     }
 
@@ -218,6 +225,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       if ($scope.cashBagListToSubmit.length === 0) {
         return;
       }
+
       $this.displayLoadingModal('Submitting Cash Bags');
       var payload = {
         cashBags: $scope.cashBagListToSubmit
@@ -230,5 +238,9 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
 
     cashBagFactory.getCompany(362).then(getCompanySuccessHandler, errorHandler);
     initializeData();
+
+    angular.element('#searchCollapse').on('shown.bs.collapse', function () {
+      angular.element('#bankReferenceNumber').focus();
+    });
 
   });

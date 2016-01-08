@@ -12,8 +12,8 @@ angular.module('ts5App')
     var emberURL = '/ember/#/';
 
     this.getMenu = function() {
-        return [{
-          'title': 'Retail Item Management',
+      return [{
+          title: 'Retail Item Management',
           menuItems: [{
             name: 'Manage Items',
             route: '/#/item-list',
@@ -41,8 +41,8 @@ angular.module('ts5App')
             role: 'RETAILITEMCATEGORY'
           }]
         }, {
-          'title': 'Company Management',
-          'menuItems': [{
+          title: 'Company Management',
+          menuItems: [{
             name: 'Manage Companies',
             route: '/#/company-list',
             icon: 'icon-manage-company',
@@ -438,7 +438,7 @@ angular.module('ts5App')
 
     this.getStockOwnerMenu = function() {
       return [{
-          'title': 'StockOwner Item Management',
+          title: 'StockOwner Item Management',
           menuItems: [{
             name: 'Manage Items',
             route: '/#/stock-owner-item-list',

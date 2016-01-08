@@ -88,7 +88,6 @@ describe('Factory: currencyFactory', function () {
     });
   });
 
-
   describe('dailyExchangeRatesService API', function () {
     it('should call dailyExchangeRatesService on getPreviousExchangeRates', function () {
       currencyFactory.getPreviousExchangeRates();
@@ -118,20 +117,22 @@ describe('Factory: currencyFactory', function () {
       currencyFactory.getCompanyExchangeRates();
       expect(companyExchangeRateService.getCompanyExchangeRates).toHaveBeenCalled();
     });
+
     it('should call companyExchangeRateService on deleteCompanyExchangeRate', function () {
       currencyFactory.deleteCompanyExchangeRate();
       expect(companyExchangeRateService.deleteCompanyExchangeRate).toHaveBeenCalled();
     });
+
     it('should call createCompanyExchangeRate on getCompanyExchangeRates', function () {
       currencyFactory.createCompanyExchangeRate();
       expect(companyExchangeRateService.createCompanyExchangeRate).toHaveBeenCalled();
     });
+
     it('should call companyExchangeRateService on updateCompanyExchangeRate', function () {
       currencyFactory.updateCompanyExchangeRate();
       expect(companyExchangeRateService.updateCompanyExchangeRate).toHaveBeenCalled();
     });
   });
-
 
 });
 

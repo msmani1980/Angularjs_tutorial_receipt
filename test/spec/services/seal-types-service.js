@@ -25,6 +25,7 @@ describe('Service: sealTypesService', function () {
       sealTypesService.getSealTypes().then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });

@@ -10,15 +10,16 @@
 angular.module('ts5App')
   .service('menuService', function ($resource, ENV, Upload, dateUtility, $http) {
 
-
     function transformRequest(data) {
       data = angular.fromJson(data);
       if (data && data.startDate) {
         data.startDate = dateUtility.formatDateForAPI(data.startDate);
       }
+
       if (data && data.endDate) {
         data.endDate = dateUtility.formatDateForAPI(data.endDate);
       }
+
       return angular.toJson(data);
     }
 
@@ -27,9 +28,11 @@ angular.module('ts5App')
       if (data && data.startDate) {
         data.startDate = dateUtility.formatDate(data.startDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
       }
+
       if (data && data.endDate) {
         data.endDate = dateUtility.formatDate(data.endDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
       }
+
       return data;
     }
 

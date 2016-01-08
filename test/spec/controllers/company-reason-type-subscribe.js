@@ -19,9 +19,8 @@ describe('The Company Reason Type Subscription controller', function () {
   var companyReasonTypesJSON;
   var getCompanyReasonTypesDeferred;
 
-
-  beforeEach(inject(function($controller, $rootScope,$templateCache,$compile, $q,
-    _servedGlobalReasonTypes_,_servedCompanyReasonTypes_) {
+  beforeEach(inject(function($controller, $rootScope, $templateCache, $compile, $q,
+    _servedGlobalReasonTypes_, _servedCompanyReasonTypes_) {
 
     scope = $rootScope.$new();
     controller = $controller;
@@ -34,7 +33,6 @@ describe('The Company Reason Type Subscription controller', function () {
     getGlobalReasonTypesDeferred = $q.defer();
     getCompanyReasonTypesDeferred = $q.defer();
   }));
-
 
   function createFormObject() {
     scope.subscribeReasonTypesForm = {
@@ -82,10 +80,10 @@ describe('The Company Reason Type Subscription controller', function () {
     beforeEach(function() {
       initController();
       resolveInitDependencies();
-      spyOn(CompanyReasonTypeSubscribeCtrl,'submitForm').and.callThrough();
-      spyOn(CompanyReasonTypeSubscribeCtrl,'validateForm').and.callThrough();
-      spyOn(CompanyReasonTypeSubscribeCtrl,'subscribeToReasonTypes').and.callThrough();
-      spyOn(CompanyReasonTypeSubscribeCtrl,'displayUnsubscribeError').and.callThrough();
+      spyOn(CompanyReasonTypeSubscribeCtrl, 'submitForm').and.callThrough();
+      spyOn(CompanyReasonTypeSubscribeCtrl, 'validateForm').and.callThrough();
+      spyOn(CompanyReasonTypeSubscribeCtrl, 'subscribeToReasonTypes').and.callThrough();
+      spyOn(CompanyReasonTypeSubscribeCtrl, 'displayUnsubscribeError').and.callThrough();
       scope.submitForm();
     });
 
@@ -97,7 +95,7 @@ describe('The Company Reason Type Subscription controller', function () {
 
       var mockDiff;
       beforeEach(function() {
-        scope.formData.companyReasonTypes.splice(0,1);
+        scope.formData.companyReasonTypes.splice(0, 1);
         mockDiff = [scope.companyReasonTypes[0]];
         scope.submitForm();
       });
@@ -123,7 +121,6 @@ describe('The Company Reason Type Subscription controller', function () {
       });
 
     });
-
 
     describe('when the the form is validated', function() {
 
@@ -190,14 +187,13 @@ describe('The Company Reason Type Subscription controller', function () {
       initController();
       resolveInitDependencies();
       scope.$digest();
-      spyOn(CompanyReasonTypeSubscribeCtrl,'submitForm');
+      spyOn(CompanyReasonTypeSubscribeCtrl, 'submitForm');
     });
 
     it('should call the submitForm method on the controller', function() {
       scope.submitForm();
       expect(CompanyReasonTypeSubscribeCtrl.submitForm).toHaveBeenCalled();
     });
-
 
   });
 

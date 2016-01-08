@@ -9,12 +9,13 @@ describe('Service: postTripService', function () {
     Upload,
     $httpBackend,
     postTripDataListResponseJSON;
-    //headers = {
-    //  companyId: 362,
-    //  'Accept': 'application/json, text/plain, */*',
-    //  'userId': 1,
-    //  sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
-    //};
+
+  //headers = {
+  //  companyId: 362,
+  //  'Accept': 'application/json, text/plain, */*',
+  //  'userId': 1,
+  //  sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
+  //};
 
   beforeEach(inject(function (_postTripService_, $injector) {
     inject(function (_servedPostTripDataList_) {
@@ -46,6 +47,7 @@ describe('Service: postTripService', function () {
         postTripService.getPostTrips().then(function (dataFromAPI) {
           postTripDataList = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -64,7 +66,7 @@ describe('Service: postTripService', function () {
 
         it('should take an optional payload parameter', function () {
           var scheduleNumber = '123';
-          var payload = {scheduleNumber: scheduleNumber};
+          var payload = { scheduleNumber: scheduleNumber };
           var regex = new RegExp('companies/403/posttrips\.\*scheduleNumber=' + scheduleNumber, 'g');
           $httpBackend.expectGET(regex);
           postTripService.getPostTrips('403', payload);
@@ -102,7 +104,7 @@ describe('Service: postTripService', function () {
 
       beforeEach(function () {
         var regex = new RegExp('companies/403/posttrips', 'g');
-        $httpBackend.whenPOST(regex).respond({id: 36});
+        $httpBackend.whenPOST(regex).respond({ id: 36 });
       });
 
       it('should POST data to posttrips API', function () {

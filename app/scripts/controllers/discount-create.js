@@ -57,10 +57,12 @@ angular.module('ts5App')
           $scope.formData.startDate
         );
       }
+
       var dateString = diff.toString() + 'd';
       if (diff >= 0) {
         dateString = '+' + dateString;
       }
+
       return dateString;
     };
 
@@ -92,7 +94,7 @@ angular.module('ts5App')
 
     this.setSalesCategoriesListAndMap = function(data) {
       $scope.salesCategoriesList = data.salesCategories;
-      $scope.salesCategoriesList.unshift({id: 0, name:'All'});
+      $scope.salesCategoriesList.unshift({ id: 0, name:'All' });
 
       angular.forEach(data.salesCategories, function(category) {
         $scope.salesCategoriesMap[category.id] = category;
@@ -156,7 +158,6 @@ angular.module('ts5App')
       return itemsFactory.getItemsList({}, true).then($this.setRetailItemsList);
     };
 
-
     this.makeDependencyPromises = function() {
 
       return [
@@ -197,7 +198,7 @@ angular.module('ts5App')
     this.deserializeLimitationPerShop = function(discountData) {
       $scope.formData.itemQtyLimitPerShop = discountData.itemQuantityLimitByShop;
 
-      if(discountData.limitsByShop.length > 0) {
+      if (discountData.limitsByShop.length > 0) {
         $scope.formData.isAmountLimitPerShop = true;
       }
 
@@ -209,7 +210,7 @@ angular.module('ts5App')
     this.deserializeLimitationPerTransaction = function(discountData) {
       $scope.formData.itemQtyLimitPerTransaction = discountData.itemQuantityLimitByTransaction;
 
-      if(discountData.limitsByTransaction.length > 0) {
+      if (discountData.limitsByTransaction.length > 0) {
         $scope.formData.isAmountLimitPerTransaction = true;
       }
 
@@ -250,6 +251,7 @@ angular.module('ts5App')
       if (!$scope.discountIsInactive) {
         $this.checkIfDiscountIsActive(discountData);
       }
+
       $this.deserializeBenefits(discountData);
       $this.deserializeLimitationPerShop(discountData);
       $this.deserializeLimitationPerTransaction(discountData);
@@ -309,6 +311,7 @@ angular.module('ts5App')
           salesCategoryId: category.id
         });
       });
+
       angular.forEach(formData.restrictedItems, function(item) {
         discount.restrictedItems.push({
           retailItemId: item.id
@@ -352,7 +355,7 @@ angular.module('ts5App')
     $scope.addRestrictedItems = function() {
       var totalRowsToAdd = $scope.addRestrictedItemsNumber || 1;
       for (var i = 0; i < totalRowsToAdd; i++) {
-        $scope.formData.restrictedItems.push({itemCategory: 0});
+        $scope.formData.restrictedItems.push({ itemCategory: 0 });
       }
     };
 
@@ -373,11 +376,11 @@ angular.module('ts5App')
     };
 
     $scope.loadRestrictedItemsByCategory = function(categoryId) {
-      if(!categoryId || categoryId === 0) {
+      if (!categoryId || categoryId === 0) {
         return;
       }
 
-      itemsFactory.getItemsList({categoryId: categoryId}, true).then(function(response) {
+      itemsFactory.getItemsList({ categoryId: categoryId }, true).then(function(response) {
         $scope.filteredRetailItemsList[categoryId] = response.masterItems;
       });
     };

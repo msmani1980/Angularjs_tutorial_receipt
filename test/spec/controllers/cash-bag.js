@@ -114,20 +114,25 @@ describe('Controller: CashBagCtrl', function () {
       it('should attach a viewName to the scope', function () {
         expect(scope.viewName).toBe('Cash Bag');
       });
+
       it('should set the readOnly to false in scope', function () {
         expect(scope.readOnly).toEqual(false);
       });
+
       it('should set the displayError boolean in scope', function () {
         expect(scope.displayError).toEqual(false);
       });
+
       it('should have a formSave function attached to the scope', function () {
         expect(scope.formSave).toBeDefined();
         expect(Object.prototype.toString.call(scope.formSave)).toBe('[object Function]');
       });
+
       it('should have a removeRecord function attached to the scope', function () {
         expect(scope.removeRecord).toBeDefined();
         expect(Object.prototype.toString.call(scope.removeRecord)).toBe('[object Function]');
       });
+
       it('should have a isBankExchangePreferred function attached to the scope', function () {
         expect(scope.isBankExchangePreferred).toBeDefined();
         expect(Object.prototype.toString.call(scope.isBankExchangePreferred)).toBe('[object Function]');
@@ -138,21 +143,27 @@ describe('Controller: CashBagCtrl', function () {
       it('should call getCompany with companyId', function () {
         expect(cashBagFactory.getCompany).toHaveBeenCalledWith(companyId);
       });
+
       it('should have company attached to scope after API call', function () {
         expect(scope.company).toBeDefined();
       });
+
       it('should call getCompanyCurrencies', function () {
         expect(cashBagFactory.getCompanyCurrencies).toHaveBeenCalled();
       });
+
       it('should have companyCurrencies attached to scope after API call', function () {
         expect(scope.companyCurrencies).toBeDefined();
       });
+
       it('should call getDailyExchangeRates', function () {
         expect(cashBagFactory.getDailyExchangeRates).toHaveBeenCalled();
       });
+
       it('should have dailyExchangeRates attached to scope after API call', function () {
         expect(scope.dailyExchangeRates).toBeDefined();
       });
+
       it('should call getCompanyPreferences', function () {
         expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalled();
       });
@@ -162,15 +173,19 @@ describe('Controller: CashBagCtrl', function () {
       it('should have scheduleDate defined in cashBag', function () {
         expect(scope.cashBag.scheduleDate).toBeDefined();
       });
+
       it('should have scheduleNumber defined in cashBag', function () {
         expect(scope.cashBag.scheduleNumber).toEqual(getStoreInstanceJSON.scheduleNumber);
       });
+
       it('should have cashBagCurrencies in cashBag', function () {
         expect(scope.cashBag.cashBagCurrencies).toBeDefined();
       });
+
       it('should have cashBagCurrencies that is an array', function () {
         expect(angular.isArray(scope.cashBag.cashBagCurrencies)).toBe(true);
       });
+
       it('should be formatted like companyCurrencies', function () {
         expect(scope.cashBag.cashBagCurrencies[0].currencyId).toEqual(currencyGlobalsResponseJSON.response[0].id);
         expect(scope.cashBag.cashBagCurrencies.length).toEqual(currencyGlobalsResponseJSON.response.length);
@@ -179,7 +194,7 @@ describe('Controller: CashBagCtrl', function () {
 
     describe('formSave form action', function () {
       beforeEach(function () {
-        scope.cashBagCreateForm = {$invalid: false};
+        scope.cashBagCreateForm = { $invalid: false };
       });
 
       it('should call cashBagFactory createCashBag', function () {
@@ -210,12 +225,15 @@ describe('Controller: CashBagCtrl', function () {
       it('should attach a viewName to the scope', function () {
         expect(scope.viewName).toBe('Cash Bag');
       });
+
       it('should set the readOnly to true in scope', function () {
         expect(scope.readOnly).toEqual(true);
       });
+
       it('should set the displayError boolean in scope', function () {
         expect(scope.displayError).toEqual(false);
       });
+
       it('should have a formSave function attached to the scope', function () {
         expect(scope.formSave).toBeDefined();
         expect(Object.prototype.toString.call(scope.formSave)).toBe('[object Function]');
@@ -226,18 +244,23 @@ describe('Controller: CashBagCtrl', function () {
       it('should call getCashBag', function () {
         expect(cashBagFactory.getCashBag).toHaveBeenCalled();
       });
+
       it('should have cashBag attached to scope after API call', function () {
         expect(scope.cashBag).toBeDefined();
       });
+
       it('should call getCompany with companyId', function () {
         expect(cashBagFactory.getCompany).toHaveBeenCalledWith(companyId);
       });
+
       it('should have company attached to scope after API call', function () {
         expect(scope.company).toBeDefined();
       });
+
       it('should call getCompanyCurrencies', function () {
         expect(cashBagFactory.getCompanyCurrencies).toHaveBeenCalled();
       });
+
       it('should have companyCurrencies attached to scope after API call', function () {
         expect(scope.companyCurrencies).toBeDefined();
       });
@@ -278,12 +301,15 @@ describe('Controller: CashBagCtrl', function () {
       it('should attach a viewName to the scope', function () {
         expect(scope.viewName).toBe('Cash Bag');
       });
+
       it('should set the readOnly to false in scope', function () {
         expect(scope.readOnly).toEqual(false);
       });
+
       it('should set the displayError boolean in scope', function () {
         expect(scope.displayError).toEqual(false);
       });
+
       it('should have a formSave function attached to the scope', function () {
         expect(scope.formSave).toBeDefined();
         expect(Object.prototype.toString.call(scope.formSave)).toBe('[object Function]');
@@ -294,18 +320,23 @@ describe('Controller: CashBagCtrl', function () {
       it('should call getCashBag', function () {
         expect(cashBagFactory.getCashBag).toHaveBeenCalled();
       });
+
       it('should have cashBag attached to scope after API call', function () {
         expect(scope.cashBag).toBeDefined();
       });
+
       it('should call getCompany with companyId', function () {
         expect(cashBagFactory.getCompany).toHaveBeenCalledWith(companyId);
       });
+
       it('should have company attached to scope after API call', function () {
         expect(scope.company).toBeDefined();
       });
+
       it('should call getCompanyCurrencies', function () {
         expect(cashBagFactory.getCompanyCurrencies).toHaveBeenCalled();
       });
+
       it('should have companyCurrencies attached to scope after API call', function () {
         expect(scope.companyCurrencies).toBeDefined();
       });
@@ -319,8 +350,9 @@ describe('Controller: CashBagCtrl', function () {
 
     describe('formSave', function () {
       beforeEach(function () {
-        scope.cashBagCreateForm = {$invalid: false};
+        scope.cashBagCreateForm = { $invalid: false };
       });
+
       it('should call cashBagFactory updateCashBag', function () {
         scope.formSave(scope.cashBag);
         expect(cashBagFactory.updateCashBag.calls.mostRecent().args[0]).toBe(95);
@@ -341,33 +373,38 @@ describe('Controller: CashBagCtrl', function () {
       });
       scope.$digest();
     }));
+
     it('should return false if state is not edit', function () {
       scope.state = 'view';
       scope.$digest();
       expect(scope.removeRecord({})).toBe(false);
     });
+
     it('should return false if readOnly is true', function () {
       scope.state = 'edit';
       scope.readOnly = true;
       scope.$digest();
       expect(scope.removeRecord({})).toBe(false);
     });
+
     it('should return false if cashBag has a property isSubmitted which is set to string value true', function () {
       scope.state = 'edit';
       scope.readOnly = false;
       scope.$digest();
-      expect(scope.removeRecord({isSubmitted: 'true'})).toBe(false);
+      expect(scope.removeRecord({ isSubmitted: 'true' })).toBe(false);
     });
+
     it('should return false if cashBag has a property isDelete which is set to string value true', function () {
       scope.state = 'edit';
       scope.readOnly = false;
       scope.$digest();
-      expect(scope.removeRecord({isDelete: 'true'})).toBe(false);
+      expect(scope.removeRecord({ isDelete: 'true' })).toBe(false);
     });
+
     it('should return false if a cashBag has a cashBagCurrencies.bankAmount value set to a value and not 0.0000', function () {
       var cashBag = {
         cashBagCurrencies: [
-          {bankAmount: '1.000'}
+          { bankAmount: '1.000' }
         ]
       };
       scope.state = 'edit';
@@ -375,6 +412,7 @@ describe('Controller: CashBagCtrl', function () {
       scope.$digest();
       expect(scope.removeRecord(cashBag)).toBe(false);
     });
+
     it('should return false if a cashBag has a cashBagCurrencies.coinAmountManual that is not null', function () {
       var cashBag = {
         cashBagCurrencies: [
@@ -389,6 +427,7 @@ describe('Controller: CashBagCtrl', function () {
       scope.$digest();
       expect(scope.removeRecord(cashBag)).toBe(false);
     });
+
     it('should return false if a cashBag has a cashBagCurrencies.paperAmountManual that is not null', function () {
       var cashBag = {
         cashBagCurrencies: [
@@ -452,6 +491,7 @@ describe('Controller: CashBagCtrl', function () {
       });
       scope.$digest();
     }));
+
     it('should return false if companyPreferences is set to false', function () {
       scope.companyPreferences = false;
       scope.$digest();

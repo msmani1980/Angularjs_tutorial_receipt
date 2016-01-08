@@ -83,16 +83,19 @@ angular.module('ts5App')
       if (angular.isUndefined(_cateringStationItems[$scope.stockTake.catererStationId])) {
         _cateringStationItems[$scope.stockTake.catererStationId] = items;
       }
+
       if (!items) {
         $scope.cateringStationItems = [];
         if (angular.isUndefined($scope.disabledCatererStationIds)) {
           $scope.disabledCatererStationIds = [];
         }
+
         $scope.disabledCatererStationIds[$scope.stockTake.catererStationId] = true;
         $scope.stockTake.catererStationId = null;
         showMessage('No items exist for that LMP Station, please try another.', 'info');
         return;
       }
+
       $scope.cateringStationItems = items;
       hideLoadingModal();
     }
@@ -103,9 +106,11 @@ angular.module('ts5App')
       angular.forEach(itemList, function(item) {
         items.push(item.id);
       });
+
       angular.forEach($scope.cateringStationItems, function(item) {
         existingItems.push(item.masterItemId);
       });
+
       return lodash.difference(items, existingItems);
     }
 
@@ -117,10 +122,12 @@ angular.module('ts5App')
         var match = filteredItemId.filter(function(id) {
           return id === item.id;
         });
+
         if (match[0]) {
           $scope.filteredItems.push(item);
         }
       });
+
       $scope.uiSelectReady = true;
     }
 
@@ -143,6 +150,7 @@ angular.module('ts5App')
           }
         });
       });
+
       return $filter('unique')(newItems, 'masterItemId');
     }
 
@@ -151,6 +159,7 @@ angular.module('ts5App')
       angular.forEach(newItems, function(newItem) {
         $scope.cateringStationItems.push(newItem);
       });
+
       $scope.cateringStationItems = $filter('unique')($scope.cateringStationItems, 'masterItemId');
       $scope.cateringStationItems = $filter('orderBy')($scope.cateringStationItems, 'itemName');
     }
@@ -174,6 +183,7 @@ angular.module('ts5App')
             if (response.masterItems) {
               setMasterItemsList(response);
             }
+
             hideLoadingModal();
           }
         });
@@ -190,14 +200,17 @@ angular.module('ts5App')
       if (!catererStationId) {
         return;
       }
+
       displayLoadingModal();
       $scope.stockTake.catererStationId = catererStationId;
+
       // used cached results instead of hitting API again
       if (angular.isDefined(_cateringStationItems[catererStationId])) {
         var response = _cateringStationItems[catererStationId];
         setCateringStationItems(response);
         return;
       }
+
       stockTakeFactory.getItemsByCateringStationId(catererStationId).then(
         setCateringStationItemsFromResponse, showResponseErrors);
     }
@@ -206,6 +219,7 @@ angular.module('ts5App')
       if (!newValue) {
         return newValue;
       }
+
       getItemsByCatererStationId(newValue);
       return newValue;
     }
@@ -214,6 +228,7 @@ angular.module('ts5App')
       if ($routeParams.state !== 'create') {
         return;
       }
+
       if ($routeParams.id) {
         $scope.stockTake.catererStationId = $routeParams.id;
       } else if ($scope.catererStationList.length === 1) {
@@ -230,9 +245,11 @@ angular.module('ts5App')
           item.itemName = item.itemObject.itemName;
         }
       });
+
       if (items.length) {
         return true;
       }
+
       return false;
     }
 
@@ -243,9 +260,11 @@ angular.module('ts5App')
           items.push(item);
         }
       });
+
       if (items.length) {
         return true;
       }
+
       return false;
     }
 
@@ -253,9 +272,11 @@ angular.module('ts5App')
       if (!checkItemQuantities() && !watchForAddItems()) {
         return false;
       }
+
       if (!$scope.displayError && $scope.stockTake.isSubmitted) {
         return false;
       }
+
       return true;
     }
 
@@ -286,6 +307,7 @@ angular.module('ts5App')
           });
         }
       });
+
       return items;
     }
 
@@ -294,6 +316,7 @@ angular.module('ts5App')
       if (angular.isDefined($scope.addedItems)) {
         items = generateAddedPayloadItems();
       }
+
       for (var masterItemId in $scope.itemQuantities) {
         if ($scope.itemQuantities[masterItemId]) {
           items.push({
@@ -302,6 +325,7 @@ angular.module('ts5App')
           });
         }
       }
+
       return items;
     }
 
@@ -323,6 +347,7 @@ angular.module('ts5App')
         $location.path('/stock-take-report');
         return;
       }
+
       init();
     }
 
@@ -331,6 +356,7 @@ angular.module('ts5App')
       if (_payload.isSubmitted) {
         loadingModalText = 'Submitting';
       }
+
       displayLoadingModal(loadingModalText);
       if ($routeParams.state === 'create') {
         _formSaveSuccessText = 'Created';
@@ -338,13 +364,16 @@ angular.module('ts5App')
           saveStockTakeResolution, saveStockTakeFailed);
         return;
       }
+
       if ($routeParams.state !== 'edit') {
         return;
       }
+
       _formSaveSuccessText = 'Saved';
       if (_payload.isSubmitted) {
         _formSaveSuccessText = 'Submitted';
       }
+
       stockTakeFactory.updateStockTake($scope.stockTake.id, _payload).then(
         saveStockTakeResolution, saveStockTakeFailed);
     }
@@ -354,6 +383,7 @@ angular.module('ts5App')
       if ($scope.stockTake.createdOn) {
         $scope.stockTake.createdOn = dateUtility.removeMilliseconds($scope.stockTake.createdOn);
       }
+
       if ($scope.stockTake.updatedOn) {
         $scope.stockTake.updatedOn = dateUtility.removeMilliseconds($scope.stockTake.updatedOn);
       }
@@ -375,9 +405,11 @@ angular.module('ts5App')
       if ($scope.state !== 'create' && $scope.state !== 'edit') {
         return true;
       }
+
       if ($scope.stockTake.isSubmitted) {
         return true;
       }
+
       return false;
     };
 
@@ -385,9 +417,11 @@ angular.module('ts5App')
       if (angular.isUndefined($scope.filterInput)) {
         return;
       }
+
       if (angular.isDefined($scope.filterInput.itemCode)) {
         delete $scope.filterInput.itemCode;
       }
+
       if (angular.isDefined($scope.filterInput.itemName)) {
         delete $scope.filterInput.itemName;
       }
@@ -398,6 +432,7 @@ angular.module('ts5App')
         $scope.toggleReview();
         return;
       }
+
       $location.path('/stock-take-report');
     };
 
@@ -424,6 +459,7 @@ angular.module('ts5App')
       if ($scope.stockTake.isSubmitted) {
         return;
       }
+
       $scope.displayError = false;
       $scope.stockTake.isSubmitted = _submit;
       generateSavePayload();
@@ -435,6 +471,7 @@ angular.module('ts5App')
         $scope.newItemId = 0;
         $scope.addedItems = [];
       }
+
       for (var i = 0; i < $scope.numberOfItems; i++) {
         $scope.newItemId++;
         var item = {
@@ -452,9 +489,11 @@ angular.module('ts5App')
       if (state !== 'review' && $scope.addedItems) {
         return true;
       }
+
       if (state === 'review' && (item.itemQuantity > 0) && item.itemObject.itemName) {
         return true;
       }
+
       return false;
     };
 
@@ -464,6 +503,7 @@ angular.module('ts5App')
           return (addedItem.itemObject.id === item.id);
         }
       });
+
       return (selectedItem.length === 0);
     };
 
@@ -507,6 +547,7 @@ angular.module('ts5App')
         $location.path(_path + 'view/' + $scope.stockTake.id);
         return;
       }
+
       setItemQuantitiesFromStockTake();
     };
 

@@ -14,7 +14,7 @@ angular.module('ts5App')
     };
 
     var getPostTripDataList = function (id, payload) {
-      if(arguments.length > 1) {
+      if (arguments.length > 1) {
         return postTripService.getPostTrips(id, payload);
       } else {
         return postTripService.getPostTrips(id);
@@ -42,9 +42,10 @@ angular.module('ts5App')
     };
 
     var getStationList = function (id, offset) {
-      if(offset) {
+      if (offset) {
         return stationsService.getStationList(id, offset);
       }
+
       return stationsService.getStationList(id);
     };
 
@@ -52,11 +53,11 @@ angular.module('ts5App')
       return carrierService.getCarrierNumbers(id, carrierType);
     };
 
-    var getCarrierTypes = function(id){
+    var getCarrierTypes = function(id) {
       return carrierService.getCarrierTypes(id);
     };
 
-    var getEmployees = function(id){
+    var getEmployees = function(id) {
       return employeesService.getEmployees(id);
     };
 

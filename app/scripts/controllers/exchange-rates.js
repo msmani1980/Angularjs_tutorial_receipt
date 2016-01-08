@@ -9,11 +9,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q, ngToast) {
+  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q, ngToast, dateUtility) {
     var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Daily Exchange Rates';
-    $scope.cashiersDateField = new moment().format('L');
+    $scope.cashiersDateField = dateUtility.nowFormatted();
     $scope.cashHandlerBaseCurrency = {};
     $scope.showActionButtons = false;
     $scope.companyCurrencies = [];
@@ -126,6 +126,7 @@ angular.module('ts5App')
       if (!moment(cashiersDate, 'L', true).isValid()) {
         return;
       }
+
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       var companyCurrenciesPayload = {
         startDate: formattedDateForAPI,
@@ -167,9 +168,9 @@ angular.module('ts5App')
     }
 
     function serializeExchangeRateForAPI(currency) {
-      var coinExchangeRate = '1.0000',
-        paperExchangeRate = '1.0000',
-        bankExchangeRate = '1.0000';
+      var coinExchangeRate = '1.0000';
+      var paperExchangeRate = '1.0000';
+      var bankExchangeRate = '1.0000';
 
       if ($scope.currenciesFields[currency.code]) {
         coinExchangeRate = $scope.currenciesFields[currency.code].coinExchangeRate;
@@ -259,6 +260,7 @@ angular.module('ts5App')
           });
         }
       });
+
       return rateVariance;
     }
 
@@ -272,6 +274,7 @@ angular.module('ts5App')
       if (!$scope.dailyExchangeRatesForm.$valid) {
         return false;
       }
+
       serializePreviousExchangeRates();
       createPayload(shouldSubmit);
 
@@ -280,6 +283,7 @@ angular.module('ts5App')
         angular.element('.variance-warning-modal').modal('show');
         return;
       }
+
       $scope.saveDailyExchangeRates(shouldSubmit);
     };
 

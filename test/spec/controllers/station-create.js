@@ -32,9 +32,9 @@ describe('The Stations Create/Edit Controller', function () {
   var getStationDeferred;
   var location;
 
-  beforeEach(inject(function($controller, $rootScope,$templateCache,$compile,$q, $injector,
-    _servedGlobalStations_,_servedCountryList_,_servedCityList_,_servedStations_,
-    _servedCateringStations_,_servedStation_) {
+  beforeEach(inject(function($controller, $rootScope, $templateCache, $compile, $q, $injector,
+    _servedGlobalStations_, _servedCountryList_, _servedCityList_, _servedStations_,
+    _servedCateringStations_, _servedStation_) {
 
     scope = $rootScope.$new();
     controller = $controller;
@@ -56,7 +56,6 @@ describe('The Stations Create/Edit Controller', function () {
     getCatererStationListDeferred = $q.defer();
     getStationDeferred = $q.defer();
 
-
   }));
 
   function registerSpies() {
@@ -65,7 +64,7 @@ describe('The Stations Create/Edit Controller', function () {
     spyOn(StationCreateCtrl, 'getCityList').and.returnValue(getCityListDefferred.promise);
     spyOn(StationCreateCtrl, 'getCatererStationList').and.returnValue(getCatererStationListDeferred.promise);
     spyOn(StationCreateCtrl, 'getStation').and.returnValue(getStationDeferred.promise);
-    spyOn(StationCreateCtrl,'initSuccessHandler').and.callThrough();
+    spyOn(StationCreateCtrl, 'initSuccessHandler').and.callThrough();
   }
 
   function createFormObject() {
@@ -79,9 +78,10 @@ describe('The Stations Create/Edit Controller', function () {
 
   function initController(id) {
     var params = {};
-    if(id){
+    if (id) {
       params.id = id;
     }
+
     StationCreateCtrl = controller('StationCreateCtrl', {
       $scope: scope,
       $routeParams: params
@@ -135,9 +135,9 @@ describe('The Stations Create/Edit Controller', function () {
       initController();
       resolveInitDependencies();
       StationCreateCtrl.setStation(stationJSON);
-      spyOn(StationCreateCtrl,'submitForm').and.callThrough();
-      spyOn(StationCreateCtrl,'validateForm').and.callThrough();
-      spyOn(StationCreateCtrl,'createStation').and.callThrough();
+      spyOn(StationCreateCtrl, 'submitForm').and.callThrough();
+      spyOn(StationCreateCtrl, 'validateForm').and.callThrough();
+      spyOn(StationCreateCtrl, 'createStation').and.callThrough();
       scope.submitForm();
     });
 
@@ -256,11 +256,11 @@ describe('The Stations Create/Edit Controller', function () {
       initController(114);
       resolveInitDependencies();
       getStationDeferred.resolve(stationJSON);
-      spyOn(StationCreateCtrl,'setStation');
+      spyOn(StationCreateCtrl, 'setStation');
       scope.$apply();
     });
 
-    it('should set the set the station data',function() {
+    it('should set the set the station data', function() {
       expect(StationCreateCtrl.getStation).toHaveBeenCalled();
     });
 
@@ -283,9 +283,9 @@ describe('The Stations Create/Edit Controller', function () {
     beforeEach(function() {
       initController();
       scope.$digest();
-      spyOn(StationCreateCtrl,'filterByCountry');
-      spyOn(StationCreateCtrl,'addRelationship');
-      spyOn(StationCreateCtrl,'setUISelectValidationClass');
+      spyOn(StationCreateCtrl, 'filterByCountry');
+      spyOn(StationCreateCtrl, 'addRelationship');
+      spyOn(StationCreateCtrl, 'setUISelectValidationClass');
     });
 
     it('should call the filterByCountry method on the controller', function() {

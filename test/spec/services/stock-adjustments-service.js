@@ -29,8 +29,9 @@ describe('Service: stockAdjustmentsService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenPUT(/stock-management\/stock-adjustments/).respond({done: true});
+        $httpBackend.whenPUT(/stock-management\/stock-adjustments/).respond({ done: true });
       });
+
       it('should POST data to item import API', function () {
         stockAdjustmentsService.adjustStock({});
         $httpBackend.expectPUT(/stock-management\/stock-adjustments/);

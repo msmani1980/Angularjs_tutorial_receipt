@@ -35,57 +35,59 @@ describe('Service: deliveryNoteFactory', function () {
 
   }));
 
-  describe('deliveryNotesService calls', function(){
-    it('should call getDeliveryNote', function(){
+  describe('deliveryNotesService calls', function() {
+    it('should call getDeliveryNote', function() {
       var id = 123;
       deliveryNoteFactory.getDeliveryNote(id);
       expect(deliveryNotesService.getDeliveryNote).toHaveBeenCalledWith(id);
     });
-    it('should call createDeliveryNote', function(){
-      var obj = {id: 123};
+
+    it('should call createDeliveryNote', function() {
+      var obj = { id: 123 };
       deliveryNoteFactory.createDeliveryNote(obj);
       obj.isAccepted = false;
       expect(deliveryNotesService.createDeliveryNote).toHaveBeenCalledWith(obj);
     });
-    it('should call saveDeliveryNote', function(){
-      var obj = {id: 123, isAccepted: true};
+
+    it('should call saveDeliveryNote', function() {
+      var obj = { id: 123, isAccepted: true };
       deliveryNoteFactory.saveDeliveryNote(obj);
       expect(deliveryNotesService.saveDeliveryNote).toHaveBeenCalledWith(obj);
     });
   });
 
-  describe('catererStationService calls', function(){
-    it('should call getCatererStation', function(){
+  describe('catererStationService calls', function() {
+    it('should call getCatererStation', function() {
       deliveryNoteFactory.getCatererStationList();
       expect(catererStationService.getCatererStationList).toHaveBeenCalled();
     });
   });
 
-  describe('stockManagementStationItemsService calls', function(){
-    it('should call getStockManagementStationItems', function(){
+  describe('stockManagementStationItemsService calls', function() {
+    it('should call getStockManagementStationItems', function() {
       var csid = 1;
       deliveryNoteFactory.getItemsByCateringStationId(csid);
       expect(stockManagementStationItemsService.getStockManagementStationItems).toHaveBeenCalledWith(csid);
     });
   });
 
-  describe('itemsService calls', function(){
-    it('should call getItemsList to get all master items', function(){
+  describe('itemsService calls', function() {
+    it('should call getItemsList to get all master items', function() {
       var mockPayload = {};
       deliveryNoteFactory.getMasterItems(mockPayload);
       expect(itemsService.getItemsList).toHaveBeenCalledWith(mockPayload, true);
     });
   });
 
-  describe('companyReasonCodesService calls', function(){
-    it('should call getCompanyReasonCodes', function(){
+  describe('companyReasonCodesService calls', function() {
+    it('should call getCompanyReasonCodes', function() {
       deliveryNoteFactory.getCompanyReasonCodes();
       expect(companyReasonCodesService.getAll).toHaveBeenCalled();
     });
   });
 
-  describe('recordsService calls', function(){
-    it('should call getItemTypes', function(){
+  describe('recordsService calls', function() {
+    it('should call getItemTypes', function() {
       deliveryNoteFactory.getItemTypes();
       expect(recordsService.getItemTypes).toHaveBeenCalled();
     });

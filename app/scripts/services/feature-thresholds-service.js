@@ -29,11 +29,11 @@ angular.module('ts5App')
     var requestResource = $resource(requestURL, requestParameters, actions);
 
     function getThresholdList(featureCode) {
-      return requestResource.getThresholdList({featureCode: featureCode, thresholdId: ''}).$promise;
+      return requestResource.getThresholdList({ featureCode: featureCode, thresholdId: '' }).$promise;
     }
 
     function getThreshold(featureCode, thresholdId) {
-      return requestResource.getThreshold({featureCode: featureCode, thresholdId: thresholdId}).$promise;
+      return requestResource.getThreshold({ featureCode: featureCode, thresholdId: thresholdId }).$promise;
     }
 
     return {

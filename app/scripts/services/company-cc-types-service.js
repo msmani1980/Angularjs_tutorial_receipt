@@ -21,7 +21,7 @@ angular.module('ts5App')
     var requestResource = $resource(requestURL, requestParameters, actions);
 
     function getCCtypes(companyId) {
-      return requestResource.getCCtypes({companyId:companyId}).$promise;
+      return requestResource.getCCtypes({ companyId:companyId }).$promise;
     }
 
     return {

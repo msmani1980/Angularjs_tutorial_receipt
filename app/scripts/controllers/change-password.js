@@ -65,13 +65,14 @@ angular.module('ts5App')
     }
 
     function handleAuthorizeUserSuccessResponse() {
-      callChangePassword() ;
+      callChangePassword();
     }
 
     $scope.changePassword = function () {
       if ($scope.changePasswordForm.$invalid) {
         return;
       }
+
       showLoadingModal('Changing password');
 
       if (!$scope.hasSessionToken) {
@@ -80,7 +81,7 @@ angular.module('ts5App')
           password: $scope.passwords.currentPassword
         }).then(handleAuthorizeUserSuccessResponse, handleAuthorizeUserResponseError);
       } else {
-        callChangePassword() ;
+        callChangePassword();
       }
     };
   });

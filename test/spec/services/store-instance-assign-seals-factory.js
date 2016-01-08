@@ -24,20 +24,22 @@ describe('Service: storeInstanceAssignSealsFactory', function () {
     spyOn(storeInstanceSealService, 'deleteStoreInstanceSeal');
   }));
 
-  describe('storeInstanceSealService API calls', function(){
-    it('should call getStoreInstanceSeals', function(){
+  describe('storeInstanceSealService API calls', function() {
+    it('should call getStoreInstanceSeals', function() {
       var id = 432;
       storeInstanceAssignSealsFactory.getStoreInstanceSeals(id);
       expect(storeInstanceSealService.getStoreInstanceSeals).toHaveBeenCalledWith(id);
     });
-    it('should call updateStoreInstanceSeal', function(){
+
+    it('should call updateStoreInstanceSeal', function() {
       var mockSealId = 17;
       var mockStoreInstanceId = 4;
-      var mockPayload = {foo: 'barts'};
+      var mockPayload = { foo: 'barts' };
       storeInstanceAssignSealsFactory.updateStoreInstanceSeal(mockSealId, mockStoreInstanceId, mockPayload);
       expect(storeInstanceSealService.updateStoreInstanceSeal).toHaveBeenCalledWith(mockSealId, mockStoreInstanceId, mockPayload);
     });
-    it('should call createStoreInstanceSeal', function(){
+
+    it('should call createStoreInstanceSeal', function() {
       var mockStoreInstanceId = 66;
       var mockPayload = {
         type: 4,
@@ -46,23 +48,24 @@ describe('Service: storeInstanceAssignSealsFactory', function () {
       storeInstanceAssignSealsFactory.createStoreInstanceSeal(mockStoreInstanceId, mockPayload);
       expect(storeInstanceSealService.createStoreInstanceSeal).toHaveBeenCalledWith(mockStoreInstanceId, mockPayload);
     });
-    it('should call deleteStoreInstanceSeal', function(){
+
+    it('should call deleteStoreInstanceSeal', function() {
       var storeInstanceId = 66;
       var sealId = 15;
       storeInstanceAssignSealsFactory.deleteStoreInstanceSeal(sealId, storeInstanceId);
       expect(storeInstanceSealService.deleteStoreInstanceSeal).toHaveBeenCalledWith(sealId, storeInstanceId);
     });
-  }); 
+  });
 
-  describe('sealColorsService API calls', function(){
-    it('should call getSealColors', function(){
+  describe('sealColorsService API calls', function() {
+    it('should call getSealColors', function() {
       storeInstanceAssignSealsFactory.getSealColors();
       expect(sealColorsService.getSealColors).toHaveBeenCalled();
     });
   });
 
-  describe('sealTypesService API calls', function(){
-    it('should call getSealTypes', function(){
+  describe('sealTypesService API calls', function() {
+    it('should call getSealTypes', function() {
       storeInstanceAssignSealsFactory.getSealTypes();
       expect(sealTypesService.getSealTypes).toHaveBeenCalled();
     });

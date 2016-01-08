@@ -34,6 +34,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
       $setSubmitted: function(submitted) {
         this.$submitted = submitted;
       },
+
       startDate: {
         $name: 'startDate',
         $invalid: false,
@@ -72,7 +73,6 @@ describe('The MenuRelationshipCreateCtrl', function () {
       }
     };
   }
-
 
   beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
     $location, $httpBackend, _catererStationService_,
@@ -134,6 +134,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
     it('should be defined', function () {
       expect(MenuRelationshipCreateCtrl).toBeDefined();
     });
+
     it('should have a the route /menu-relationship-create', function () {
       location.path('/menu-relationship-create');
       expect(location.path()).toBe('/menu-relationship-create');
@@ -314,7 +315,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
         spyOn(MenuRelationshipCreateCtrl, 'formatPayloadDates').and.callThrough();
       });
 
-      it('should be called during the submission',function () {
+      it('should be called during the submission', function () {
         $scope.submitForm($scope.formData);
         expect(MenuRelationshipCreateCtrl.validateForm).toHaveBeenCalled();
       });
@@ -326,7 +327,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
         expect($scope.displayError).toBeFalsy();
       });
 
-      it('should set the displayError to true if the form is invalid',function () {
+      it('should set the displayError to true if the form is invalid', function () {
         $scope.formData = {
           startDate: '20150717',
           menuId: '68'

@@ -34,6 +34,7 @@ describe('itemListCtrl', function () {
       itemTypesJSON = _servedItemTypes_;
       salesCategoriesJSON = _servedSalesCategories_;
     });
+
     itemsFactory = $injector.get('itemsFactory');
 
     // backend definition common for all tests
@@ -81,7 +82,6 @@ describe('itemListCtrl', function () {
     spyOn(ItemListCtrl, 'generateItemQuery');
     spyOn(ItemListCtrl, 'displayLoadingModal');
     spyOn(itemsFactory, 'removeItem').and.returnValue(getItemsListDeferred.promise);
-
 
     ItemListCtrl.getItemTypesList();
     ItemListCtrl.getSalesCategoriesList();
@@ -180,21 +180,25 @@ describe('itemListCtrl', function () {
           }
         ];
       });
+
       it('should have a versions sub array for master items', function () {
         $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
         expect($scope.itemsList[0].versions).toBeDefined();
         expect($scope.itemsList[1].versions).toBeDefined();
       });
+
       it('should add a master item object to each version array', function () {
         $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
         expect($scope.itemsList[0].versions.length).toBeGreaterThan(0);
         expect($scope.itemsList[1].versions.length).toBeGreaterThan(0);
       });
+
       it('should remove subversions from itemsList', function () {
         expect($scope.itemsList.length).toEqual(6);
         $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
         expect($scope.itemsList.length).toEqual(2);
       });
+
       it('should add removed subversions to sub array', function () {
         var subVersion = $scope.itemsList[0];
         $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
@@ -207,6 +211,7 @@ describe('itemListCtrl', function () {
           $scope.itemsList = ItemListCtrl.createNestedItemsList($scope.itemsList);
           expect($scope.itemsList[0].versions[0]).toEqual(activeItem);
         });
+
         it('should sort future items before past items', function () {
           var futureItem = $scope.itemsList[2];
           var pastItem = $scope.itemsList[0];
@@ -215,6 +220,7 @@ describe('itemListCtrl', function () {
           var pastIndex =  $scope.itemsList[0].versions.indexOf(pastItem);
           expect(futureIndex < pastIndex).toEqual(true);
         });
+
         it('should sort future items closest to today first', function () {
           var futureItemMostActive = $scope.itemsList[3];
           var futureItemLeastActive = $scope.itemsList[2];
@@ -223,6 +229,7 @@ describe('itemListCtrl', function () {
           var lessActiveIndex =  $scope.itemsList[0].versions.indexOf(futureItemLeastActive);
           expect(moreActiveIndex < lessActiveIndex).toEqual(true);
         });
+
         it('should sort past items closest to today first', function () {
           var pastItemMostActive = $scope.itemsList[4];
           var pastItemLeastActive = $scope.itemsList[0];
@@ -318,7 +325,7 @@ describe('itemListCtrl', function () {
   describe('versions accordion', function () {
     var itemWithVersions = {
       itemMasterId: 36,
-      versions: [{itemMasterId: 36}, {itemMasterId: 36}]
+      versions: [{ itemMasterId: 36 }, { itemMasterId: 36 }]
     };
 
     describe('isOpen', function () {
@@ -347,34 +354,36 @@ describe('itemListCtrl', function () {
       });
 
       it('should not open items with no versions', function () {
-        $scope.toggleVersionVisibility({itemMasterId: 1, versions:[]});
+        $scope.toggleVersionVisibility({ itemMasterId: 1, versions:[] });
         expect($scope.openVersionId).not.toEqual(1);
       });
     });
 
     describe('doesActiveOrFutureVersionExist', function () {
       it('should return true for items that contain a future version', function () {
-        var testItem = {versions: [
-          {startDate: '08/20/2000', endDate: '08/20/2000'},
-          {startDate: '08/20/2050', endDate: '10/10/2050'},
-          {startDate: '08/20/2000', endDate: '01/01/1991'}
-        ]};
+        var testItem = { versions: [
+          { startDate: '08/20/2000', endDate: '08/20/2000' },
+          { startDate: '08/20/2050', endDate: '10/10/2050' },
+          { startDate: '08/20/2000', endDate: '01/01/1991' }
+        ] };
         expect($scope.doesActiveOrFutureVersionExist(testItem)).toEqual(true);
       });
+
       it('should return true for items that contain an active version', function () {
-        var testItem = {versions: [
-          {startDate: '08/20/2010', endDate: '08/20/2030'},
-          {startDate: '08/20/2005', endDate: '08/10/2010'},
-          {startDate: '08/20/1980', endDate: '01/01/1991'}
-        ]};
+        var testItem = { versions: [
+          { startDate: '08/20/2010', endDate: '08/20/2030' },
+          { startDate: '08/20/2005', endDate: '08/10/2010' },
+          { startDate: '08/20/1980', endDate: '01/01/1991' }
+        ] };
         expect($scope.doesActiveOrFutureVersionExist(testItem)).toEqual(true);
       });
+
       it('should return false for items that contain only past items', function () {
-        var testItem = {versions: [
-          {startDate: '08/20/2000', endDate: '08/30/2000'},
-          {startDate: '08/10/2000', endDate: '08/20/2014'},
-          {startDate: '01/01/1991', endDate: '08/20/2000'}
-        ]};
+        var testItem = { versions: [
+          { startDate: '08/20/2000', endDate: '08/30/2000' },
+          { startDate: '08/10/2000', endDate: '08/20/2014' },
+          { startDate: '01/01/1991', endDate: '08/20/2000' }
+        ] };
         expect($scope.doesActiveOrFutureVersionExist(testItem)).toEqual(false);
       });
     });

@@ -20,7 +20,7 @@ angular.module('ts5App')
     var empoyeeRequestResource = $resource(employeeRequestURL, null, employeeActions);
 
     var getEmployees = function (companyId) {
-      var payload = {id:companyId};
+      var payload = { id:companyId };
       return empoyeeRequestResource.getEmployees(payload).$promise;
     };
 

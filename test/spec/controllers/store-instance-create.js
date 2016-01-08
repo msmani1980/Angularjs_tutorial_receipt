@@ -194,6 +194,7 @@ describe('Store Instance Create Controller', function() {
     if (params.action !== 'dispatch' || edit) {
       params.storeId = storeInstanceId;
     }
+
     StoreInstanceCreateCtrl = controller('StoreInstanceCreateCtrl', {
       $scope: $scope,
       $routeParams: params
@@ -287,6 +288,7 @@ describe('Store Instance Create Controller', function() {
           delete cateringStations[1].$$hashKey;
           response = cateringStations;
         };
+
         makeResponsePayload();
         expect($scope.cateringStationList).toEqual(response);
       });
@@ -365,6 +367,7 @@ describe('Store Instance Create Controller', function() {
         resolveAllDependencies();
         $scope.$digest();
       });
+
       it('should be set to same lenght as API response', function() {
         expect($scope.scheduleNumbers.length).toBe(schedulesDateRangeJSON.meta.count);
       });
@@ -909,6 +912,7 @@ describe('Store Instance Create Controller', function() {
     it('should call getRelationshipList from menuCatererStationsService', function() {
       expect(menuCatererStationsService.getRelationshipList).toHaveBeenCalled();
     });
+
     it('should update the filtered menu list', function() {
       expect($scope.filteredMenuList.length).toBeGreaterThan(0);
     });
@@ -1444,7 +1448,6 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'submitFormConditions');
       spyOn($scope, 'submitForm');
 
-
       $scope.formData = {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{
@@ -1535,28 +1538,28 @@ describe('Store Instance Create Controller', function() {
     it('should return text telling the user when there are menus to select', function() {
       initController();
       $scope.filteredMenuList = [{
-        'id': 184,
-        'menuCode': 'Replenish1234',
-        'companyId': 403,
-        'createdBy': 1,
-        'createdOn': '2015-10-05 20:04:23.738279',
-        'updatedBy': null,
-        'updatedOn': null,
-        'menuName': 'Replenish',
-        'companyMenus': [{
-          'startDate': '2015-10-06',
-          'endDate': '2018-10-06',
-          'createdBy': 1,
-          'createdOn': '2015-10-05 20:04:23.89218',
-          'updatedBy': null,
-          'updatedOn': null,
-          'id': 350,
-          'menuCode': null,
-          'menuName': null,
-          'description': null,
-          'companyId': null,
-          'menuId': 184,
-          'menuItems': null
+        id: 184,
+        menuCode: 'Replenish1234',
+        companyId: 403,
+        createdBy: 1,
+        createdOn: '2015-10-05 20:04:23.738279',
+        updatedBy: null,
+        updatedOn: null,
+        menuName: 'Replenish',
+        companyMenus: [{
+          startDate: '2015-10-06',
+          endDate: '2018-10-06',
+          createdBy: 1,
+          createdOn: '2015-10-05 20:04:23.89218',
+          updatedBy: null,
+          updatedOn: null,
+          id: 350,
+          menuCode: null,
+          menuName: null,
+          description: null,
+          companyId: null,
+          menuId: 184,
+          menuItems: null
         }]
       }];
       $scope.$digest();

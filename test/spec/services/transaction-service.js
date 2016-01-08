@@ -5,7 +5,6 @@ describe('Service: transactionService', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/transactions.json'));
 
-
   var transactionService,
     $httpBackend,
     transactionsJSON;
@@ -37,6 +36,7 @@ describe('Service: transactionService', function () {
         transactionService.getTransactionList().then(function (dataFromAPI) {
           dataToTestFromAPI = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -65,6 +65,7 @@ describe('Service: transactionService', function () {
         transactionService.getTransactionList().then(null, function (dataFromAPI) {
             errorDataFromAPI = dataFromAPI;
           });
+
         $httpBackend.flush();
       });
 

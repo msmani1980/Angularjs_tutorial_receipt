@@ -28,7 +28,7 @@ describe('Service: discountFactory', function () {
     expect(!!discountFactory).toBe(true);
   });
 
-  describe('API Calls', function(){
+  describe('API Calls', function() {
 
     it('should call discountService.getDiscountList with a payload', function () {
       var payload = {
@@ -56,16 +56,14 @@ describe('Service: discountFactory', function () {
       expect(discountService.getDiscount).toHaveBeenCalledWith(1);
     });
 
-
     it('should create discount', function() {
-      discountFactory.createDiscount({id:1});
-      expect(discountService.createDiscount).toHaveBeenCalledWith({id:1});
+      discountFactory.createDiscount({ id:1 });
+      expect(discountService.createDiscount).toHaveBeenCalledWith({ id:1 });
     });
 
-
     it('should update discount', function() {
-      discountFactory.updateDiscount(1, {name: 'discount'});
-      expect(discountService.updateDiscount).toHaveBeenCalledWith(1, {name: 'discount'});
+      discountFactory.updateDiscount(1, { name: 'discount' });
+      expect(discountService.updateDiscount).toHaveBeenCalledWith(1, { name: 'discount' });
     });
   });
 });

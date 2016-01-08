@@ -12,44 +12,50 @@ angular.module('ts5App')
   .service('postTripService', function ($resource, $http, ENV, dateUtility, Upload) {
 
     function formatDateRequest(date) {
-      if(date) {
+      if (date) {
         return dateUtility.formatDateForAPI(date);
       }
+
       return date;
     }
 
     function formatStationIdRequest(stationId) {
-      if(stationId) {
+      if (stationId) {
         return stationId.toString();
       }
+
       return stationId;
     }
 
     function formatStationIdResponse(stationId) {
-      if(stationId) {
+      if (stationId) {
         return parseInt(stationId, 10);
       }
+
       return stationId;
     }
 
     function formatTimeResponse(time) {
-      if(time) {
+      if (time) {
         return dateUtility.formatDate(time, 'HH:mm:ss', 'HH:mm');
       }
+
       return time;
     }
 
     function formatToUpperCase(number) {
-      if(number) {
+      if (number) {
         return number.toString().toUpperCase();
       }
+
       return number;
     }
 
     function transformRequest(data, shouldTransformForGETRequest) {
-      if(!data) {
+      if (!data) {
         return data;
       }
+
       data = angular.fromJson(data);
       data.scheduleDate = formatDateRequest(data.scheduleDate);
       data.scheduleStartDate = formatDateRequest(data.scheduleStartDate);
@@ -61,6 +67,7 @@ angular.module('ts5App')
       if (shouldTransformForGETRequest) {
         return data;
       }
+
       return angular.toJson(data);
     }
 
@@ -73,9 +80,11 @@ angular.module('ts5App')
       if (!data) {
         return data;
       }
+
       if (data.scheduleDate) {
         data.scheduleDate = dateUtility.formatDate(data.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
       }
+
       data.arrTime = formatTimeResponse(data.arrTime);
       data.depTime = formatTimeResponse(data.depTime);
       data.scheduleNumber = formatToUpperCase(data.scheduleNumber);
@@ -90,9 +99,11 @@ angular.module('ts5App')
       if (!data) {
         return;
       }
+
       angular.forEach(data.postTrips, function (trip) {
         trip = transformResponse(trip);
       });
+
       return data;
     }
 
@@ -110,26 +121,26 @@ angular.module('ts5App')
     var actions = {
       getPostTrips: {
         method: 'GET',
-        headers: {companyId: 362},
+        headers: { companyId: 362 },
         transformResponse: appendTransform($http.defaults.transformResponse, transformResponseArray)
       },
       getPostTrip: {
         method: 'GET',
-        headers: {companyId: 362},
+        headers: { companyId: 362 },
         transformResponse: appendTransform($http.defaults.transformResponse, transformResponse)
       },
       updatePostTrip: {
         method: 'PUT',
-        headers: {companyId: 362},
+        headers: { companyId: 362 },
         transformRequest: appendTransform($http.defaults.transformRequest, transformRequestForPostAndPut)
       },
       deletePostTrip: {
         method: 'DELETE',
-        headers: {companyId: 362}
+        headers: { companyId: 362 }
       },
       createPostTrips: {
         method: 'POST',
-        headers: {companyId: 362},
+        headers: { companyId: 362 },
         transformRequest: appendTransform($http.defaults.transformRequest, transformRequestForPostAndPut)
       }
     };
@@ -142,6 +153,7 @@ angular.module('ts5App')
       if (arguments.length === 2) {
         payload = transformRequest(optionalPayload, true);
       }
+
       requestParameters.id = companyId;
       return requestResource.getPostTrips(payload).$promise;
     }

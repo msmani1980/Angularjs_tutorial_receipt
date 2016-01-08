@@ -23,7 +23,7 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getTransactionList(){
+    function getTransactionList() {
       return requestResource.getTransactionList().$promise;
 
     }

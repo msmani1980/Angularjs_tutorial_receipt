@@ -51,13 +51,13 @@ describe('Service: storeInstanceDashboardFactory', function () {
 
   describe('storeInstanceService calls', function () {
     it('should call getStoreInstancesList', function () {
-      var fakePayload = {fakeKey: 'fakeValue'};
+      var fakePayload = { fakeKey: 'fakeValue' };
       storeInstanceDashboardFactory.getStoreInstanceList(fakePayload);
       expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(fakePayload);
     });
 
     it('should call getStoreInstance', function () {
-      var fakeId =1;
+      var fakeId = 1;
       storeInstanceDashboardFactory.getStoreInstance(fakeId);
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(fakeId);
     });
@@ -72,7 +72,7 @@ describe('Service: storeInstanceDashboardFactory', function () {
 
   describe('storesService calls', function () {
     it('should call getStoresList', function () {
-      var fakePayload = {fakeKey: 'fakeValue'};
+      var fakePayload = { fakeKey: 'fakeValue' };
       storeInstanceDashboardFactory.getStoresList(fakePayload);
       expect(storesService.getStoresList).toHaveBeenCalledWith(fakePayload);
     });
@@ -83,6 +83,7 @@ describe('Service: storeInstanceDashboardFactory', function () {
       storeInstanceDashboardFactory.getStatusList();
       expect(recordsService.getStoreStatusList).toHaveBeenCalled();
     });
+
     it('should call getFeatures', function () {
       storeInstanceDashboardFactory.getFeaturesList();
       expect(recordsService.getFeatures).toHaveBeenCalled();

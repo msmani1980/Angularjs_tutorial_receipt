@@ -13,6 +13,7 @@ describe('Controller: CompanyListCtrl', function () {
     inject(function (_servedCompanies_) {
       companyListJSON = _servedCompanies_;
     });
+
     location = $location;
     scope = $rootScope.$new();
     getCompanyListDeferred = $q.defer();
@@ -46,7 +47,7 @@ describe('Controller: CompanyListCtrl', function () {
 
   describe('action button', function () {
     it('manage company-relationship should change the URL based on the company object', function () {
-      scope.showCompanyRelationshipList({id: 1});
+      scope.showCompanyRelationshipList({ id: 1 });
       scope.$digest();
       expect(location.path()).toBe('/company-relationship-list/1');
     });
