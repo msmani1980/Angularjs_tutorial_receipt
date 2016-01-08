@@ -68,17 +68,22 @@
             </div>
           </div>
 
-          <div class="col-md-3 col-sm-6">
+          <div class="col-md-6 col-sm-6">
             <div class="form-group">
-              <label for="cashBagStatus">Status</label>
-              <select class="form-control"
-                      id="cashBagStatus"
-                      ng-model="search.isSubmitted">
-                <option selected="selected" value disabled>Select status</option>
-                <option value="true">Submitted</option>
-                <option value="false">Not Submitted</option>
-                <option value>All</option>
-              </select>
+              <label>Status</label>
+              <div class="form-group">
+                <div class="checkbox-inline">
+                  <label>
+                    <input type="checkbox" ng-model="search.searchForSubmitted">Submitted
+                  </label>
+                </div>
+                <div class="checkbox-inline">
+                  <label>
+                    <input type="checkbox" ng-model="search.searchForNotSubmitted">
+                    Not Submitted
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
