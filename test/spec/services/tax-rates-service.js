@@ -13,6 +13,7 @@ describe('Service: taxRatesService', function() {
     inject(function(_servedCompanyTaxRates_) {
       companyTaxRatesJSON = _servedCompanyTaxRates_;
     });
+
     var response = {};
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/tax-rates/).respond(companyTaxRatesJSON);
@@ -33,6 +34,7 @@ describe('Service: taxRatesService', function() {
       taxRatesService.getCompanyTaxRatesList().then(function(dataFromAPI) {
         fakeReponseData = dataFromAPI;
       });
+
       $httpBackend.flush();
     });
 
@@ -53,6 +55,7 @@ describe('Service: taxRatesService', function() {
       taxRatesService.removeCompanyTaxRate(403, 1).then(function(dataFromAPI) {
         fakeReponseData = dataFromAPI;
       });
+
       $httpBackend.flush();
     });
 
@@ -74,6 +77,7 @@ describe('Service: taxRatesService', function() {
       taxRatesService.updateCompanyTaxRate(payload).then(function(dataFromAPI) {
         fakeReponseData = dataFromAPI;
       });
+
       $httpBackend.flush();
     });
 
@@ -95,6 +99,7 @@ describe('Service: taxRatesService', function() {
       taxRatesService.createCompanyTaxRate(payload).then(function(dataFromAPI) {
         fakeReponseData = dataFromAPI;
       });
+
       $httpBackend.flush();
     });
 

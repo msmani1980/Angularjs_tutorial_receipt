@@ -35,7 +35,7 @@ module.exports = function (grunt) {
       },
       js: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
-        tasks: ['newer:jshint:all'],
+        tasks: ['newer:jscs:all', 'newer:jshint:all'],
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
@@ -62,6 +62,7 @@ module.exports = function (grunt) {
         ]
       }
     },
+
     // ng-constant, based on dev or production
     ngconstant: {
       // Options for all targets
@@ -70,6 +71,7 @@ module.exports = function (grunt) {
         wrap: '\'use strict\';\n\n {%= __ngModule %}',
         name: 'config'
       },
+
       // Environment targets
       development: {
         options: {
@@ -98,8 +100,7 @@ module.exports = function (grunt) {
     // The actual grunt server settings
     connect: {
       options: {
-        port: 9000,
-        // Change this to '0.0.0.0' to access the server from outside.
+        port: 9000, // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost',
         livereload: 35729
       },
@@ -145,8 +146,19 @@ module.exports = function (grunt) {
         }
       }
     },
-
-    // Make sure code styles are up to par and there are no obvious mistakes
+    jscs: {
+      options: {
+        config: '.jscsrc',
+        verbose: true,
+        fix: false
+      },
+      all: {
+        src: [
+          'Gruntfile.js',
+          '<%= yeoman.app %>/scripts/{,*/}*.js'
+        ]
+      }
+    },
     jshint: {
       options: {
         jshintrc: '.jshintrc',
@@ -185,7 +197,7 @@ module.exports = function (grunt) {
       options: {
         map: true,
         processors: [
-          require('autoprefixer-core')({browsers: 'last 1 version'}),
+          require('autoprefixer-core')({ browsers: 'last 1 version' }),
           require('csswring')
         ]
       },
@@ -456,7 +468,6 @@ module.exports = function (grunt) {
     }
   });
 
-
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
@@ -516,8 +527,13 @@ module.exports = function (grunt) {
     'htmlmin'
   ]);
 
+  grunt.registerTask('lint', [
+    'jshint',
+    'jscs'
+  ]);
   grunt.registerTask('default', [
     'newer:jshint',
+    'newer:jscs',
     'test',
     'build'
   ]);

@@ -1,13 +1,13 @@
   'use strict';
 
-  /**
-   * @ngdoc service
-   * @name ts5App.menuRelationshipsService
-   * @description
-   * # menuRelationshipsService
-   * Service in the ts5App.
-   */
-  angular.module('ts5App')
+/**
+ * @ngdoc service
+ * @name ts5App.menuRelationshipsService
+ * @description
+ * # menuRelationshipsService
+ * Service in the ts5App.
+ */
+angular.module('ts5App')
     .service('menuCatererStationsService', function ($resource, ENV) {
       var requestURL = ENV.apiUrl + '/api/menus/caterer-stations/:id';
       var requestParameters = {

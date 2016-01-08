@@ -60,6 +60,7 @@ angular.module('ts5App').factory('itemsFactory', function ($resource, ENV, items
   this.getDimensionList = function (payload) {
     return unitsService.getDimensionList(payload);
   };
+
   this.getVolumeList = function (payload) {
     return unitsService.getVolumeList(payload);
   };

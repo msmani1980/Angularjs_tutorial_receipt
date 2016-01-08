@@ -51,12 +51,14 @@ angular.module('ts5App')
       if ($scope.search === {} || !$scope.search) {
         query.startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       }
+
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
         query.startDate = dateUtility.formatDateForAPI($scope.dateRange
           .startDate);
         query.endDate = dateUtility.formatDateForAPI($scope.dateRange
           .endDate);
       }
+
       return query;
     };
 
@@ -68,14 +70,16 @@ angular.module('ts5App')
           var lastIndex = newItemList.length - 1;
           newItemList[lastIndex].versions.push(item);
         } else {
-          var newItem = {versions: [item], itemMasterId: item.itemMasterId};
+          var newItem = { versions: [item], itemMasterId: item.itemMasterId };
           newItemList.push(newItem);
           currentMasterId = item.itemMasterId;
         }
       });
+
       angular.forEach(newItemList, function (item) {
         item.versions.sort($this.sortItemVersions);
       });
+
       return newItemList;
     };
 
@@ -91,6 +95,7 @@ angular.module('ts5App')
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       showLoadingBar();
       var query = $this.generateItemQuery();
       itemsFactory.getItemsList(query).then($this.appendItemsToList);
@@ -100,7 +105,6 @@ angular.module('ts5App')
     $scope.loadItems = function () {
       getItemsList();
     };
-
 
     this.getItemTypesList = function () {
       itemsFactory.getItemTypesList().then(function (itemTypes) {
@@ -123,6 +127,7 @@ angular.module('ts5App')
           break;
         }
       }
+
       return itemIndex;
     };
 
@@ -130,11 +135,13 @@ angular.module('ts5App')
       if (itemA.startDate === itemB.startDate && itemA.endDate === itemB.endDate) {
         return 0;
       }
+
       if ($this.isItemActive(itemA)) {
         return -1;
       } else if ($this.isItemActive(itemB)) {
         return 1;
       }
+
       return $this.compareInactiveDates(itemA, itemB);
     };
 
@@ -187,6 +194,7 @@ angular.module('ts5App')
           validVersionExists = true;
         }
       });
+
       return validVersionExists;
     };
 
@@ -223,6 +231,7 @@ angular.module('ts5App')
       if (!$scope.hasSubVersions(item)) {
         return;
       }
+
       if ($scope.openVersionId === item.itemMasterId) {
         $this.closeAccordian();
       } else {
@@ -235,6 +244,7 @@ angular.module('ts5App')
     this.openAccordian = function(item) {
       angular.element('#item-' + item.itemMasterId).addClass('open-accordion');
     };
+
     this.closeAccordian = function() {
       angular.element('#item-' + $scope.openVersionId).removeClass('open-accordion');
       $scope.openVersionId = -1;
@@ -251,6 +261,5 @@ angular.module('ts5App')
 
     this.getItemTypesList();
     this.getSalesCategoriesList();
-
 
   });

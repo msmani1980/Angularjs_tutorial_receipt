@@ -62,6 +62,7 @@ describe('Service: storeInstanceFactory', function() {
       servedFeaturesListJSON = _servedFeatures_;
       servedThresholdListJSON = _servedThresholdList_;
     });
+
     scope = $rootScope.$new();
     storeInstanceFactory = _storeInstanceFactory_;
 
@@ -172,42 +173,52 @@ describe('Service: storeInstanceFactory', function() {
       storeInstanceFactory.getStoreInstancesList(mockPayload);
       expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(mockPayload);
     });
+
     it('should call getStoreInstance', function() {
       storeInstanceFactory.getStoreInstance(id);
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(id);
     });
+
     it('should call createStoreInstance', function() {
       storeInstanceFactory.createStoreInstance(mockPayload);
       expect(storeInstanceService.createStoreInstance).toHaveBeenCalledWith(mockPayload);
     });
+
     it('should call updateStoreInstance', function() {
       storeInstanceFactory.updateStoreInstance(id, mockPayload);
       expect(storeInstanceService.updateStoreInstance).toHaveBeenCalledWith(id, mockPayload);
     });
+
     it('should call deleteStoreInstance', function() {
       storeInstanceFactory.deleteStoreInstance(id);
       expect(storeInstanceService.deleteStoreInstance).toHaveBeenCalledWith(id);
     });
+
     it('should call getStoreInstanceMenuItems', function() {
       storeInstanceFactory.getStoreInstanceMenuItems(id, mockPayload);
       expect(storeInstanceService.getStoreInstanceMenuItems).toHaveBeenCalledWith(id, mockPayload);
     });
+
     it('should call getStoreInstanceItemList', function() {
       storeInstanceFactory.getStoreInstanceItemList(id, mockPayload);
       expect(storeInstanceService.getStoreInstanceItemList).toHaveBeenCalledWith(id, mockPayload);
     });
+
     it('should call getStoreInstanceItem', function() {
       storeInstanceFactory.getStoreInstanceItem(id, itemId);
       expect(storeInstanceService.getStoreInstanceItem).toHaveBeenCalledWith(id, itemId);
     });
+
     it('should call updateStoreInstanceItem', function() {
       storeInstanceFactory.updateStoreInstanceItem(id, itemId, mockPayload);
       expect(storeInstanceService.updateStoreInstanceItem).toHaveBeenCalledWith(id, itemId, mockPayload);
     });
+
     it('should call updateStoreInstanceItemsBulk', function() {
       storeInstanceFactory.updateStoreInstanceItemsBulk(id, mockPayload);
       expect(storeInstanceService.updateStoreInstanceItemsBulk).toHaveBeenCalledWith(id, mockPayload);
     });
+
     it('should call deleteStoreInstanceItem', function() {
       storeInstanceFactory.deleteStoreInstanceItem(id, itemId);
       expect(storeInstanceService.deleteStoreInstanceItem).toHaveBeenCalledWith(id, itemId);
@@ -247,6 +258,7 @@ describe('Service: storeInstanceFactory', function() {
       storeInstanceFactory.getCarrierNumbers(companyId, 1);
       expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId);
     });
+
     it('should call getAllCarrierNumbers', function() {
       var carrierTypeId = 0;
       storeInstanceFactory.getAllCarrierNumbers(companyId);
@@ -263,6 +275,7 @@ describe('Service: storeInstanceFactory', function() {
       storeInstanceFactory.getStoreDetails(storeId).then(function(dataFromAPI) {
         storeDetails = dataFromAPI;
       });
+
       scope.$digest();
     });
 
@@ -355,6 +368,7 @@ describe('Service: storeInstanceFactory', function() {
             delete dataFromAPI.replenishStoreInstanceId;
             storeDetails = dataFromAPI;
           });
+
           scope.$digest();
         });
 
@@ -377,15 +391,16 @@ describe('Service: storeInstanceFactory', function() {
       storeInstanceFactory.getStoreStatusList();
       expect(recordsService.getStoreStatusList).toHaveBeenCalled();
     });
+
     it('should call getCountTypes', function() {
       storeInstanceFactory.getCountTypes();
       expect(recordsService.getCountTypes).toHaveBeenCalled();
     });
   });
 
-  describe('companyReasonCodesService API calls', function(){
-    it('should call getAll', function(){
-      var payload = {id: 'fakeId'};
+  describe('companyReasonCodesService API calls', function() {
+    it('should call getAll', function() {
+      var payload = { id: 'fakeId' };
       storeInstanceFactory.getReasonCodeList(payload);
       expect(companyReasonCodesService.getAll).toHaveBeenCalledWith(payload);
     });

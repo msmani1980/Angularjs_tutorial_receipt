@@ -10,9 +10,9 @@ angular.module('ts5App')
   .directive('inputStationException', function () {
 
     return {
-      	templateUrl: '/views/directives/input-station-exception.html',
-      	restrict: 'E',
-      	scope: true
+      templateUrl: '/views/directives/input-station-exception.html',
+      restrict: 'E',
+      scope: true
     };
 
   });

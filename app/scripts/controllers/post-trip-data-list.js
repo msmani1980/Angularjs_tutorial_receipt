@@ -31,17 +31,18 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-
     this.getStationById = function (stationId) {
       var stationCode = '';
       if (!stationId || $scope.stationList.length <= 0) {
         return '';
       }
+
       angular.forEach($scope.stationList, function (value) {
         if (value.stationId === stationId) {
           stationCode = value.stationCode;
         }
       });
+
       return stationCode;
     };
 
@@ -56,6 +57,7 @@ angular.module('ts5App')
 
     this.getPostTripSuccess = function (response) {
       $this.meta.count = $this.meta.count || response.meta.count;
+
       // TODO: move offset to service layer
       $scope.postTrips =  $scope.postTrips.concat(response.postTrips);
       $this.updateStationCodes();
@@ -67,9 +69,10 @@ angular.module('ts5App')
       var newStationList = $scope.stationList.concat(angular.copy(response.response));
       $scope.stationList = lodash.uniq(newStationList, 'stationId');
 
-      if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
+      if (response.meta.start === 0 && response.meta.limit < response.meta.count) {
         postTripFactory.getStationList(companyId, response.meta.limit).then($this.getStationsSuccess);
       }
+
       // TODO: fix this hack! currently ui-select doesn't populate correctly when collapsed or when multiple
       angular.element('#search-collapse').addClass('collapse');
       $this.updateStationCodes();
@@ -132,6 +135,7 @@ angular.module('ts5App')
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       showLoadingBar();
       $this.formatMultiSelectedValuesForSearch();
       var payload = lodash.assign(angular.copy($scope.search), {
@@ -163,13 +167,15 @@ angular.module('ts5App')
     };
 
     this.addSearchValuesFromMultiSelectArray = function (searchKeyName, multiSelectArray, multiSelectElementKey) {
-      if(!multiSelectArray || multiSelectArray.length <= 0) {
+      if (!multiSelectArray || multiSelectArray.length <= 0) {
         return;
       }
+
       var searchArray = [];
       angular.forEach(multiSelectArray, function (element) {
         searchArray.push(element[multiSelectElementKey]);
       });
+
       $scope.search[searchKeyName] = searchArray.toString();
     };
 
@@ -190,6 +196,7 @@ angular.module('ts5App')
         $this.deletePostTripFailure();
         return;
       }
+
       postTripFactory.deletePostTrip(companyId, postTrip.id).then(
         $this.deletePostTripSuccess,
         $this.deletePostTripFailure

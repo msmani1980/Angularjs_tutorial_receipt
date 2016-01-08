@@ -49,7 +49,7 @@ angular.module('ts5App')
     };
 
     var getCompany = function (id) {
-      return requestResource.getCompany({id: id}).$promise;
+      return requestResource.getCompany({ id: id }).$promise;
     };
 
     var createCompany = function (payload) {

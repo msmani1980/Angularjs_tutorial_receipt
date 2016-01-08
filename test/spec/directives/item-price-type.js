@@ -10,7 +10,7 @@ describe('The Item Price Type directive', function () {
     $scope,
     priceTypesJSON;
 
-  beforeEach(inject(function ($rootScope,_servedPriceTypes_) {
+  beforeEach(inject(function ($rootScope, _servedPriceTypes_) {
     $scope = $rootScope.$new();
     priceTypesJSON = _servedPriceTypes_;
     $scope.priceTypes = _servedPriceTypes_;
@@ -114,7 +114,7 @@ describe('The Item Price Type directive', function () {
       });
 
       it('should have a two columns in the row', function () {
-        expect(panelBody.find( '> .row > .col-xs-12').length).toEqual(2);
+        expect(panelBody.find('> .row > .col-xs-12').length).toEqual(2);
       });
 
       describe('the price details columm', function () {
@@ -276,7 +276,7 @@ describe('The Item Price Type directive', function () {
               });
 
               it('should repeat options from the priceTypesJSON', function () {
-                expect(priceTypeSelect.find('option').length-1).toEqual(priceTypesJSON.length);
+                expect(priceTypeSelect.find('option').length - 1).toEqual(priceTypesJSON.length);
               });
 
               describe('repeat option', function () {

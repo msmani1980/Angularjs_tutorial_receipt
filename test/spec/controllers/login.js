@@ -62,12 +62,11 @@ describe('Controller: LoginCtrl', function () {
       });
 
       it('should set the session Object', function () {
-        var mockSessionJSON = {fakeSessionToken: 'someRandomTextHere'};
-        var mockCompanyJSON = {companyData: 'fakeCompany'};
+        var mockSessionJSON = { fakeSessionToken: 'someRandomTextHere' };
+        var mockCompanyJSON = { companyData: 'fakeCompany' };
 
         loginDeferred.resolve(mockSessionJSON);
         getCompanyDataDeferred.resolve(mockCompanyJSON);
-
 
         var expectedPayload = angular.copy(mockSessionJSON);
         expectedPayload.companyData = mockCompanyJSON;

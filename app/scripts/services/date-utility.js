@@ -127,18 +127,19 @@ angular.module('ts5App')
       return parsedDate > this.now();
     };
 
-    this.removeMilliseconds = function(date){
-      if(!date){
+    this.removeMilliseconds = function(date) {
+      if (!date) {
         return;
       }
+
       return date.replace(/\.[0-9]+/, '');
     };
 
-    this.diff = function(from,to,type) {
-     var diffType = (type ? type : 'days');
-     var fromDate = Date.parse(from);
-     var toDate = moment(Date.parse(to));
-     return toDate.diff(fromDate, diffType);
-    } ;
+    this.diff = function(from, to, type) {
+      var diffType = (type ? type : 'days');
+      var fromDate = Date.parse(from);
+      var toDate = moment(Date.parse(to));
+      return toDate.diff(fromDate, diffType);
+    };
 
   });

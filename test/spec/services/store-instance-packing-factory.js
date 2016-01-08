@@ -24,7 +24,6 @@ describe('Service: storeInstancePackingFactory', function () {
     companyReasonCodesService = $injector.get('companyReasonCodesService');
     featureThresholdsService = $injector.get('featureThresholdsService');
 
-
     spyOn(storeInstanceFactory, 'getStoreDetails');
     spyOn(recordsService, 'getItemTypes');
     spyOn(recordsService, 'getCharacteristics');
@@ -46,26 +45,32 @@ describe('Service: storeInstancePackingFactory', function () {
       storeInstancePackingFactory.updateStoreInstanceStatus();
       expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalled();
     });
+
     it('should call createStoreInstanceItem', function () {
       storeInstancePackingFactory.createStoreInstanceItem();
       expect(storeInstanceService.createStoreInstanceItem).toHaveBeenCalled();
     });
+
     it('should call updateStoreInstanceItem', function () {
       storeInstancePackingFactory.updateStoreInstanceItem();
       expect(storeInstanceService.updateStoreInstanceItem).toHaveBeenCalled();
     });
+
     it('should call updateStoreInstanceItemsBulk', function () {
       storeInstancePackingFactory.updateStoreInstanceItemsBulk();
       expect(storeInstanceService.updateStoreInstanceItemsBulk).toHaveBeenCalled();
     });
+
     it('should call deleteStoreInstanceItem', function () {
       storeInstancePackingFactory.deleteStoreInstanceItem();
       expect(storeInstanceService.deleteStoreInstanceItem).toHaveBeenCalled();
     });
+
     it('should call getStoreInstanceMenuItems', function () {
       storeInstancePackingFactory.getStoreInstanceMenuItems();
       expect(storeInstanceService.getStoreInstanceMenuItems).toHaveBeenCalled();
     });
+
     it('should call getStoreInstanceItemList', function () {
       storeInstancePackingFactory.getStoreInstanceItemList();
       expect(storeInstanceService.getStoreInstanceItemList).toHaveBeenCalled();

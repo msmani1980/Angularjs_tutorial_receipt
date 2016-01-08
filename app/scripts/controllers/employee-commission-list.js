@@ -59,13 +59,14 @@ angular.module('ts5App')
     }
 
     function getSelectedObjectFromArrayUsingId(fromArray, id) {
-      var filteredObject = $filter('filter')(fromArray, {id: id}, function (expected, actual) {
+      var filteredObject = $filter('filter')(fromArray, { id: id }, function (expected, actual) {
         return angular.equals(parseInt(expected), parseInt(actual));
       });
 
       if (filteredObject && filteredObject.length > 0) {
         return filteredObject[0];
       }
+
       return {};
     }
 
@@ -73,6 +74,7 @@ angular.module('ts5App')
       if (!commissionObject.types || commissionObject.types.length === 0) {
         return {};
       }
+
       var priceId = commissionObject.types[0].priceTypeId;
       return getSelectedObjectFromArrayUsingId($scope.search.priceTypeList, priceId);
     }
@@ -98,6 +100,7 @@ angular.module('ts5App')
       if (angular.isUndefined(commission)) {
         return false;
       }
+
       return !dateUtility.isAfterToday(commission.startDate);
     };
 
@@ -105,6 +108,7 @@ angular.module('ts5App')
       if (angular.isUndefined(commission)) {
         return false;
       }
+
       return dateUtility.isAfterToday(commission.endDate);
     };
 
@@ -120,6 +124,7 @@ angular.module('ts5App')
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
       }
+
       $scope.displayError = true;
       showToastMessage('warning', 'Employee Commission', 'error deleting commission!');
     }
@@ -149,6 +154,7 @@ angular.module('ts5App')
           commissionObject.endDate = dateUtility.formatDateForApp(commissionObject.endDate);
         }
       });
+
       return commissionListData;
     }
 
@@ -158,6 +164,7 @@ angular.module('ts5App')
         commissionObject.priceTypeName = getSelectedPriceTypeObject(commissionObject).name;
         commissionObject.taxRateTypeName = getSelectedRateTypeObject(commissionObject).taxRateType;
       });
+
       return dataToExtract;
     }
 
@@ -167,16 +174,16 @@ angular.module('ts5App')
     }
 
     function addDatesToPayload(payload) {
-      if($scope.search.startDate && $scope.search.endDate) {
+      if ($scope.search.startDate && $scope.search.endDate) {
         payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
         payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
       }
     }
 
     function addItemOrCategoryToPayload(payload) {
-      if($scope.search.selectedItem) {
+      if ($scope.search.selectedItem) {
         payload.itemId = $scope.search.selectedItem.itemMasterId;
-      } else if(!$scope.search.selectedItem && $scope.search.selectedCategory) {
+      } else if (!$scope.search.selectedItem && $scope.search.selectedCategory) {
         // currently FE needs to send list of all itemIds in a category due to complications with sending only a categoryName to BE
         // TODO: fix if BE API is simplified
         payload.itemId = [];
@@ -187,10 +194,11 @@ angular.module('ts5App')
     }
 
     function addPriceAndRateTypeToPayload(payload) {
-      if($scope.search.selectedPriceType) {
+      if ($scope.search.selectedPriceType) {
         payload.priceTypeId = $scope.search.selectedPriceType.id;
       }
-      if($scope.search.selectedRateType) {
+
+      if ($scope.search.selectedRateType) {
         payload.isFixed = ($scope.search.selectedRateType.taxRateType === 'Amount');
       }
     }
@@ -210,9 +218,9 @@ angular.module('ts5App')
     }
 
     $scope.checkItemListAndNotifyIfEmpty = function () {
-      if($scope.search.endDate === '' || $scope.search.startDate === '') {
+      if ($scope.search.endDate === '' || $scope.search.startDate === '') {
         showToastMessage('warning', 'Employee Commission', 'Effective To & Effective From Dates must be completed before an Item Name can be selected');
-      } else if($scope.search.selectedCategory && $scope.search.itemList.length <= 0) {
+      } else if ($scope.search.selectedCategory && $scope.search.itemList.length <= 0) {
         showToastMessage('warning', 'Employee Commission', 'There are no items in the Item Category you selected');
       }
     };
@@ -241,6 +249,7 @@ angular.module('ts5App')
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       showLoadingBar();
       var payload = lodash.assign(createSearchPayload(), {
         limit: $this.meta.limit,
@@ -274,6 +283,5 @@ angular.module('ts5App')
       $scope.search.endDate = '';
       $scope.searchCommissions();
     };
-
 
   });

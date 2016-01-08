@@ -31,6 +31,7 @@ angular.module('ts5App').controller('CompanyListCtrl', function ($scope, company
     angular.forEach(companyList, function (company) {
       $scope.companyList.push(company);
     });
+
     hideLoadingModal();
   };
 
@@ -50,6 +51,7 @@ angular.module('ts5App').controller('CompanyListCtrl', function ($scope, company
     if ($this.meta.offset >= $this.meta.count) {
       return;
     }
+
     showLoadingModal();
     companyFactory.getCompanyList({
       limit: $this.meta.limit,

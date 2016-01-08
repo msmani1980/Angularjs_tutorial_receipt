@@ -8,439 +8,437 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationListCtrl', function ($scope,dateUtility,ngToast,$q) {
+  .controller('StationListCtrl', function ($scope, dateUtility, ngToast, $q) {
 
     var $this = this;
 
     var stationListJSON = {
-      'response': [
+      response: [
         {
-          'id': 114,
-          'cityId': 18,
-          'cityName': 'Copenhagen',
-          'companyId': 403,
-          'countryId': 66,
-          'countryName': 'Denmark',
-          'description': 'Copenhagen',
-          'isCaterer': true,
-          'endDate': '2015-12-31',
-          'startDate': '2015-05-02',
-          'regionId': 8,
-          'regionName': 'All',
-          'stationCode': 'CPH',
-          'stationId': 23,
-          'stationName': 'Copenhagen',
-          'timezone': 'Europe/Madrid',
-          'timezoneId': '86',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00',
-          'companyStationRelationships': []
+          id: 114,
+          cityId: 18,
+          cityName: 'Copenhagen',
+          companyId: 403,
+          countryId: 66,
+          countryName: 'Denmark',
+          description: 'Copenhagen',
+          isCaterer: true,
+          endDate: '2015-12-31',
+          startDate: '2015-05-02',
+          regionId: 8,
+          regionName: 'All',
+          stationCode: 'CPH',
+          stationId: 23,
+          stationName: 'Copenhagen',
+          timezone: 'Europe/Madrid',
+          timezoneId: '86',
+          utcDstOffset: '+02:00',
+          utcOffset: '+01:00',
+          companyStationRelationships: []
         },
         {
-          'id': 115,
-          'cityId': 20,
-          'cityName': 'Herning',
-          'companyId': 403,
-          'countryId': 66,
-          'countryName': 'Denmark',
-          'description': 'Herning',
-          'isCaterer': false,
-          'endDate': '2015-05-30',
-          'startDate': '2015-05-02',
-          'regionId': 8,
-          'regionName': 'All',
-          'stationCode': 'EKHG',
-          'stationId': 25,
-          'stationName': 'Herning',
-          'timezone': 'Europe/Madrid',
-          'timezoneId': '86',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00',
-          'companyStationRelationships': []
+          id: 115,
+          cityId: 20,
+          cityName: 'Herning',
+          companyId: 403,
+          countryId: 66,
+          countryName: 'Denmark',
+          description: 'Herning',
+          isCaterer: false,
+          endDate: '2015-05-30',
+          startDate: '2015-05-02',
+          regionId: 8,
+          regionName: 'All',
+          stationCode: 'EKHG',
+          stationId: 25,
+          stationName: 'Herning',
+          timezone: 'Europe/Madrid',
+          timezoneId: '86',
+          utcDstOffset: '+02:00',
+          utcOffset: '+01:00',
+          companyStationRelationships: []
         },
         {
-          'id': 116,
-          'cityId': 19,
-          'cityName': 'Vojens',
-          'companyId': 403,
-          'countryId': 66,
-          'countryName': 'Denmark',
-          'description': 'Vojens',
-          'isCaterer': false,
-          'endDate': '2016-03-01',
-          'startDate': '2016-05-01',
-          'regionId': 8,
-          'regionName': 'All',
-          'stationCode': 'SKS',
-          'stationId': 24,
-          'stationName': 'Vojens',
-          'timezone': 'Europe/Madrid',
-          'timezoneId': '86',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00',
-          'companyStationRelationships': []
+          id: 116,
+          cityId: 19,
+          cityName: 'Vojens',
+          companyId: 403,
+          countryId: 66,
+          countryName: 'Denmark',
+          description: 'Vojens',
+          isCaterer: false,
+          endDate: '2016-03-01',
+          startDate: '2016-05-01',
+          regionId: 8,
+          regionName: 'All',
+          stationCode: 'SKS',
+          stationId: 24,
+          stationName: 'Vojens',
+          timezone: 'Europe/Madrid',
+          timezoneId: '86',
+          utcDstOffset: '+02:00',
+          utcOffset: '+01:00',
+          companyStationRelationships: []
         }
       ],
-      'meta': {
-        'count': 5,
-        'limit': 5,
-        'start': 0
+      meta: {
+        count: 5,
+        limit: 5,
+        start: 0
       }
     };
 
     var globalStationListJSON = {
-      'response': [
+      response: [
         {
-          'id': 1,
-          'companyId': 403,
-          'code': 'ORD',
-          'name': 'Chicago O-hare'
+          id: 1,
+          companyId: 403,
+          code: 'ORD',
+          name: 'Chicago O-hare'
         },
         {
-          'id': 2,
-          'companyId': 403,
-          'code': 'MDW',
-          'name': 'Chicago Midway'
+          id: 2,
+          companyId: 403,
+          code: 'MDW',
+          name: 'Chicago Midway'
         },
         {
-          'id': 3,
-          'companyId': 403,
-          'code': 'LON3',
-          'name': 'London'
+          id: 3,
+          companyId: 403,
+          code: 'LON3',
+          name: 'London'
         },
         {
-          'id': 4,
-          'companyId': 403,
-          'code': 'SAN',
-          'name': 'San Jose'
+          id: 4,
+          companyId: 403,
+          code: 'SAN',
+          name: 'San Jose'
         },
         {
-          'id': 5,
-          'companyId': 403,
-          'code': 'DEL',
-          'name': 'Delhi'
+          id: 5,
+          companyId: 403,
+          code: 'DEL',
+          name: 'Delhi'
         },
         {
-          'id': 6,
-          'companyId': 403,
-          'code': 'JFK',
-          'name': 'New York'
+          id: 6,
+          companyId: 403,
+          code: 'JFK',
+          name: 'New York'
         },
         {
-          'id': 7,
-          'companyId': 403,
-          'code': 'EWR',
-          'name': 'Newark'
+          id: 7,
+          companyId: 403,
+          code: 'EWR',
+          name: 'Newark'
         },
         {
-          'id': 8,
-          'companyId': 403,
-          'code': 'LAX',
-          'name': 'Los Angeles'
+          id: 8,
+          companyId: 403,
+          code: 'LAX',
+          name: 'Los Angeles'
         },
         {
-          'id': 9,
-          'companyId': 403,
-          'code': 'MIA',
-          'name': 'Miami'
+          id: 9,
+          companyId: 403,
+          code: 'MIA',
+          name: 'Miami'
         },
         {
-          'id': 10,
-          'companyId': 403,
-          'code': 'IAH',
-          'name': 'Houston'
+          id: 10,
+          companyId: 403,
+          code: 'IAH',
+          name: 'Houston'
         },
         {
-          'id': 11,
-          'companyId': 403,
-          'code': 'BOS',
-          'name': 'Boston'
+          id: 11,
+          companyId: 403,
+          code: 'BOS',
+          name: 'Boston'
         },
         {
-          'id': 13,
-          'companyId': 403,
-          'code': 'CD123',
-          'name': 'CHICAGO-NEW'
+          id: 13,
+          companyId: 403,
+          code: 'CD123',
+          name: 'CHICAGO-NEW'
         },
         {
-          'id': 19,
-          'companyId': 403,
-          'code': 'ALC',
-          'name': 'Alicante'
+          id: 19,
+          companyId: 403,
+          code: 'ALC',
+          name: 'Alicante'
         },
         {
-          'id': 20,
-          'companyId': 403,
-          'code': 'BCN',
-          'name': 'Barcelona'
+          id: 20,
+          companyId: 403,
+          code: 'BCN',
+          name: 'Barcelona'
         },
         {
-          'id': 21,
-          'companyId': 403,
-          'code': 'AGP',
-          'name': 'Malaga'
+          id: 21,
+          companyId: 403,
+          code: 'AGP',
+          name: 'Malaga'
         },
         {
-          'id': 22,
-          'companyId': 403,
-          'code': 'VLC',
-          'name': 'Valencia'
+          id: 22,
+          companyId: 403,
+          code: 'VLC',
+          name: 'Valencia'
         },
         {
-          'id': 23,
-          'companyId': 403,
-          'code': 'CPH',
-          'name': 'Copenhagen'
+          id: 23,
+          companyId: 403,
+          code: 'CPH',
+          name: 'Copenhagen'
         },
         {
-          'id': 24,
-          'companyId': 403,
-          'code': 'SKS',
-          'name': 'Vojens'
+          id: 24,
+          companyId: 403,
+          code: 'SKS',
+          name: 'Vojens'
         },
         {
-          'id': 25,
-          'companyId': 403,
-          'code': 'EKHG',
-          'name': 'Herning'
+          id: 25,
+          companyId: 403,
+          code: 'EKHG',
+          name: 'Herning'
         },
         {
-          'id': 26,
-          'companyId': 403,
-          'code': 'BSL',
-          'name': 'Basel'
+          id: 26,
+          companyId: 403,
+          code: 'BSL',
+          name: 'Basel'
         },
         {
-          'id': 27,
-          'companyId': 403,
-          'code': 'GVA',
-          'name': 'Geneva'
+          id: 27,
+          companyId: 403,
+          code: 'GVA',
+          name: 'Geneva'
         },
         {
-          'id': 28,
-          'companyId': 403,
-          'code': 'ZRH',
-          'name': 'Zurich'
+          id: 28,
+          companyId: 403,
+          code: 'ZRH',
+          name: 'Zurich'
         },
         {
-          'id': 29,
-          'companyId': 403,
-          'code': 'BRN',
-          'name': 'Bern'
+          id: 29,
+          companyId: 403,
+          code: 'BRN',
+          name: 'Bern'
         },
         {
-          'id': 30,
-          'companyId': 403,
-          'code': 'ZHI',
-          'name': 'Grenchen'
+          id: 30,
+          companyId: 403,
+          code: 'ZHI',
+          name: 'Grenchen'
         },
         {
-          'id': 39,
-          'companyId': 403,
-          'code': 'LON',
-          'name': 'Heathrow Intl'
+          id: 39,
+          companyId: 403,
+          code: 'LON',
+          name: 'Heathrow Intl'
         },
         {
-          'id': 41,
-          'companyId': 403,
-          'code': 'LGW',
-          'name': 'Gatwick '
+          id: 41,
+          companyId: 403,
+          code: 'LGW',
+          name: 'Gatwick '
         },
         {
-          'id': 43,
-          'companyId': 403,
-          'code': 'LPL',
-          'name': 'Liverpool '
+          id: 43,
+          companyId: 403,
+          code: 'LPL',
+          name: 'Liverpool '
         },
         {
-          'id': 44,
-          'companyId': 403,
-          'code': 'LTN',
-          'name': 'Luton '
+          id: 44,
+          companyId: 403,
+          code: 'LTN',
+          name: 'Luton '
         },
         {
-          'id': 45,
-          'companyId': 403,
-          'code': 'MAD',
-          'name': 'Madrid '
+          id: 45,
+          companyId: 403,
+          code: 'MAD',
+          name: 'Madrid '
         }
       ],
-      'meta': {
-        'count': 29,
-        'limit': 29,
-        'start': 0
+      meta: {
+        count: 29,
+        limit: 29,
+        start: 0
       }
     };
 
-
     var countryListJSON = {
-      'meta': {
-        'count': 249,
-        'limit': 249,
-        'start': 0
+      meta: {
+        count: 249,
+        limit: 249,
+        start: 0
       },
-      'countries': [
+      countries: [
         {
-          'id': 66,
-          'countryName': 'Denmark'
+          id: 66,
+          countryName: 'Denmark'
         },
         {
-          'id': 10,
-          'countryName': 'Afghanistan'
+          id: 10,
+          countryName: 'Afghanistan'
         },
         {
-          'id': 22,
-          'countryName': 'Åland Islands'
+          id: 22,
+          countryName: 'Åland Islands'
         },
         {
-          'id': 13,
-          'countryName': 'Albania'
+          id: 13,
+          countryName: 'Albania'
         },
         {
-          'id': 69,
-          'countryName': 'Algeria'
+          id: 69,
+          countryName: 'Algeria'
         },
         {
-          'id': 18,
-          'countryName': 'American Samoa'
+          id: 18,
+          countryName: 'American Samoa'
         },
         {
-          'id': 8,
-          'countryName': 'Andorra'
+          id: 8,
+          countryName: 'Andorra'
         }
       ]
     };
 
     var cityListJSON = {
-      'meta': {
-        'count': 270,
-        'limit': 270,
-        'start': 0
+      meta: {
+        count: 270,
+        limit: 270,
+        start: 0
       },
-      'cities': [
+      cities: [
         {
-          'cityId': 11,
-          'cityName': 'Albany',
-          'countryId': 240,
-          'countryName': 'United States',
-          'regionId': 2,
-          'regionName': 'New York',
-          'timeZoneId': 440,
-          'timeZone': 'America/New_York',
-          'utcDstOffset': '-04:00',
-          'utcOffset': '-05:00'
+          cityId: 11,
+          cityName: 'Albany',
+          countryId: 240,
+          countryName: 'United States',
+          regionId: 2,
+          regionName: 'New York',
+          timeZoneId: 440,
+          timeZone: 'America/New_York',
+          utcDstOffset: '-04:00',
+          utcOffset: '-05:00'
         },
         {
-          'cityId': 14,
-          'cityName': 'Alicante',
-          'countryId': 75,
-          'countryName': 'Spain',
-          'regionId': 9,
-          'regionName': 'All',
-          'timeZoneId': 86,
-          'timeZone': 'Europe/Madrid',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00'
+          cityId: 14,
+          cityName: 'Alicante',
+          countryId: 75,
+          countryName: 'Spain',
+          regionId: 9,
+          regionName: 'All',
+          timeZoneId: 86,
+          timeZone: 'Europe/Madrid',
+          utcDstOffset: '+02:00',
+          utcOffset: '+01:00'
         },
         {
-          'cityId': 15,
-          'cityName': 'Barcelona',
-          'countryId': 75,
-          'countryName': 'Spain',
-          'regionId': 9,
-          'regionName': 'All',
-          'timeZoneId': 86,
-          'timeZone': 'Europe/Madrid',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00'
+          cityId: 15,
+          cityName: 'Barcelona',
+          countryId: 75,
+          countryName: 'Spain',
+          regionId: 9,
+          regionName: 'All',
+          timeZoneId: 86,
+          timeZone: 'Europe/Madrid',
+          utcDstOffset: '+02:00',
+          utcOffset: '+01:00'
         },
         {
-          'cityId': 21,
-          'cityName': 'Basel',
-          'countryId': 50,
-          'countryName': 'Switzerland',
-          'regionId': 7,
-          'regionName': 'All',
-          'timeZoneId': 86,
-          'timeZone': 'Europe/Madrid',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00'
+          cityId: 21,
+          cityName: 'Basel',
+          countryId: 50,
+          countryName: 'Switzerland',
+          regionId: 7,
+          regionName: 'All',
+          timeZoneId: 86,
+          timeZone: 'Europe/Madrid',
+          utcDstOffset: '+02:00',
+          utcOffset: '+01:00'
         },
         {
-          'cityId': 24,
-          'cityName': 'Bern',
-          'countryId': 50,
-          'countryName': 'Switzerland',
-          'regionId': 7,
-          'regionName': 'All',
-          'timeZoneId': 86,
-          'timeZone': 'Europe/Madrid',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00'
+          cityId: 24,
+          cityName: 'Bern',
+          countryId: 50,
+          countryName: 'Switzerland',
+          regionId: 7,
+          regionName: 'All',
+          timeZoneId: 86,
+          timeZone: 'Europe/Madrid',
+          utcDstOffset: '+02:00',
+          utcOffset: '+01:00'
         },
         {
-          'cityId': 5,
-          'cityName': 'Chicago',
-          'countryId': 240,
-          'countryName': 'United States',
-          'regionId': 4,
-          'regionName': 'Illinois',
-          'timeZoneId': 459,
-          'timeZone': 'America/Chicago',
-          'utcDstOffset': '-05:00',
-          'utcOffset': '-06:00'
+          cityId: 5,
+          cityName: 'Chicago',
+          countryId: 240,
+          countryName: 'United States',
+          regionId: 4,
+          regionName: 'Illinois',
+          timeZoneId: 459,
+          timeZone: 'America/Chicago',
+          utcDstOffset: '-05:00',
+          utcOffset: '-06:00'
         },
         {
-          'cityId': 18,
-          'cityName': 'Copenhagen',
-          'countryId': 66,
-          'countryName': 'Denmark',
-          'regionId': 8,
-          'regionName': 'All',
-          'timeZoneId': 86,
-          'timeZone': 'Europe/Madrid',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00'
+          cityId: 18,
+          cityName: 'Copenhagen',
+          countryId: 66,
+          countryName: 'Denmark',
+          regionId: 8,
+          regionName: 'All',
+          timeZoneId: 86,
+          timeZone: 'Europe/Madrid',
+          utcDstOffset: '+02:00',
+          utcOffset: '+01:00'
         },
         {
-          'cityId': 13,
-          'cityName': 'Detroit',
-          'countryId': 240,
-          'countryName': 'United States',
-          'regionId': 5,
-          'regionName': 'Michigan',
-          'timeZoneId': 440,
-          'timeZone': 'America/New_York',
-          'utcDstOffset': '-04:00',
-          'utcOffset': '-05:00'
+          cityId: 13,
+          cityName: 'Detroit',
+          countryId: 240,
+          countryName: 'United States',
+          regionId: 5,
+          regionName: 'Michigan',
+          timeZoneId: 440,
+          timeZone: 'America/New_York',
+          utcDstOffset: '-04:00',
+          utcOffset: '-05:00'
         },
         {
-          'cityId': 26,
-          'cityName': 'Gatwick',
-          'countryId': 84,
-          'countryName': 'United Kingdom',
-          'regionId': 10,
-          'regionName': 'UK-REGION',
-          'timeZoneId': 86,
-          'timeZone': 'Europe/Madrid',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00'
+          cityId: 26,
+          cityName: 'Gatwick',
+          countryId: 84,
+          countryName: 'United Kingdom',
+          regionId: 10,
+          regionName: 'UK-REGION',
+          timeZoneId: 86,
+          timeZone: 'Europe/Madrid',
+          utcDstOffset: '+02:00',
+          utcOffset: '+01:00'
         },
         {
-          'cityId': 22,
-          'cityName': 'Geneva',
-          'countryId': 50,
-          'countryName': 'Switzerland',
-          'regionId': 7,
-          'regionName': 'All',
-          'timeZoneId': 86,
-          'timeZone': 'Europe/Madrid',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00'
+          cityId: 22,
+          cityName: 'Geneva',
+          countryId: 50,
+          countryName: 'Switzerland',
+          regionId: 7,
+          regionName: 'All',
+          timeZoneId: 86,
+          timeZone: 'Europe/Madrid',
+          utcDstOffset: '+02:00',
+          utcOffset: '+01:00'
         }
       ]
     };
-
 
     this.setCityList = function(dataFromAPI) {
       $scope.cityList = angular.copy(dataFromAPI.cities);
@@ -505,18 +503,19 @@ angular.module('ts5App')
     };
 
     this.getSelectedStations = function() {
-      return $scope.selectedStations.filter(function(selected,stationId){
-        if(selected === true)  {
+      return $scope.selectedStations.filter(function(selected, stationId) {
+        if (selected === true)  {
           return stationId;
         }
       });
     };
 
     this.canSave = function() {
-      if($scope.selectedStations.length > 0) {
+      if ($scope.selectedStations.length > 0) {
         var selected = this.getSelectedStations();
         return selected.length > 0;
       }
+
       return $scope.selectedStations.length > 0;
     };
 
@@ -529,19 +528,21 @@ angular.module('ts5App')
     };
 
     this.getStationObject = function(stationId) {
-      var selectedStation = $scope.stationList.filter(function(station){
+      var selectedStation = $scope.stationList.filter(function(station) {
         return station.id === stationId;
       })[0];
+
       return selectedStation;
     };
 
     this.generatePayload = function() {
       var payload = [];
-      angular.forEach($scope.selectedStations, function(selected,stationId){
-        if(selected){
-          payload.push( $this.getStationObject(stationId) );
+      angular.forEach($scope.selectedStations, function(selected, stationId) {
+        if (selected) {
+          payload.push($this.getStationObject(stationId));
         }
       });
+
       return payload;
     };
 
@@ -561,52 +562,53 @@ angular.module('ts5App')
 
     this.saveStations = function() {
       var payload = this.generatePayload();
+
       // make service call here
       this.saveStationsSuccess(payload);
     };
 
     this.submitForm = function() {
-      if( $this.validateForm() ) {
+      if ($this.validateForm()) {
         $this.saveStations();
       }
     };
 
     this.getStationInFormData = function(stationId) {
-      return $scope.formData.stations.filter(function(station){
+      return $scope.formData.stations.filter(function(station) {
         return stationId === station.id;
       })[0];
     };
 
-    this.updateStationStartDate = function(current,stationId) {
+    this.updateStationStartDate = function(current, stationId) {
       var station = this.getStationInFormData(stationId);
-      if(station && !this.dateActive(station.startDate)){
+      if (station && !this.dateActive(station.startDate)) {
         station.startDate = current.startDate;
       }
     };
 
-    this.updateStationEndDate = function(current,stationId) {
+    this.updateStationEndDate = function(current, stationId) {
       var station = this.getStationInFormData(stationId);
-      if( station && !dateUtility.isYesterdayOrEarlier(station.endDate) &&
-        !dateUtility.isYesterdayOrEarlier(current.endDate) ){
+      if (station && !dateUtility.isYesterdayOrEarlier(station.endDate) &&
+        !dateUtility.isYesterdayOrEarlier(current.endDate)) {
         station.endDate = current.endDate;
       }
     };
 
     this.updateSelectedStartDates = function(current) {
-      if(angular.isDefined(current) && current.startDate) {
-        angular.forEach($scope.selectedStations, function(selected,stationId){
-          if(selected){
-            $this.updateStationStartDate(current,stationId);
+      if (angular.isDefined(current) && current.startDate) {
+        angular.forEach($scope.selectedStations, function(selected, stationId) {
+          if (selected) {
+            $this.updateStationStartDate(current, stationId);
           }
         });
       }
     };
 
     this.updateSelectedEndDates = function(current) {
-      if(angular.isDefined(current) && current.endDate) {
-        angular.forEach($scope.selectedStations, function(selected,stationId){
-          if(selected){
-            $this.updateStationEndDate(current,stationId);
+      if (angular.isDefined(current) && current.endDate) {
+        angular.forEach($scope.selectedStations, function(selected, stationId) {
+          if (selected) {
+            $this.updateStationEndDate(current, stationId);
           }
         });
       }
@@ -625,17 +627,19 @@ angular.module('ts5App')
     };
 
     this.toggleAllStations = function(selectAll) {
-      if(selectAll) {
+      if (selectAll) {
         this.selectAllStations();
         return;
       }
+
       this.deselectAllStations();
     };
 
     this.filterByCountry = function(record) {
-      if(angular.isUndefined($scope.search) || angular.isUndefined($scope.search.countryId)) {
+      if (angular.isUndefined($scope.search) || angular.isUndefined($scope.search.countryId)) {
         return true;
       }
+
       return parseInt(record.countryId) === parseInt($scope.search.countryId);
     };
 
@@ -695,7 +699,7 @@ angular.module('ts5App')
     $scope.$watch('dateRange', function(current) {
       $this.updateSelectedStartDates(current);
       $this.updateSelectedEndDates(current);
-    },true);
+    }, true);
 
     $scope.$watch('allStationsSelected', function(selectAll) {
       $this.toggleAllStations(selectAll);

@@ -24,42 +24,45 @@ describe('Service: storeInstanceSealService', function () {
       var storeInstanceId = 66;
       var expectedURL = /store-instances\/\d+\/seals\/\d+$/;
       httpBackend.expectGET(expectedURL).respond(200, {});
-      storeInstanceSealService.getStoreInstanceSeals(storeInstanceId,sealTypeId).then(function (response) {
+      storeInstanceSealService.getStoreInstanceSeals(storeInstanceId, sealTypeId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
 
-  describe('updateStoreInstanceSeal', function(){
+  describe('updateStoreInstanceSeal', function() {
     it('should make PUT request to API', function() {
       var expectedURL = /store-instances\/\d+\/seals\/\d+$/;
       var mockSealId = 17;
       var mockStoreInstanceId = 4;
-      var mockPayload = {foo: 'barts'};
+      var mockPayload = { foo: 'barts' };
       httpBackend.expectPUT(expectedURL).respond(200, {});
       storeInstanceSealService.updateStoreInstanceSeal(mockSealId, mockStoreInstanceId, mockPayload).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
 
-  describe('createStoreInstanceSeal', function(){
+  describe('createStoreInstanceSeal', function() {
     it('should make POST request to API', function() {
       var expectedURL = /store-instances\/\d+\/seals\/\d+$/;
       var sealTypeId = 4;
       var storeInstanceId = 66;
-      var mockPayload = {foo: 'barts'};
+      var mockPayload = { foo: 'barts' };
       httpBackend.expectPUT(expectedURL).respond(200, {});
       storeInstanceSealService.updateStoreInstanceSeal(sealTypeId, storeInstanceId, mockPayload).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
-    }); 
+    });
   });
 
-  describe('deleteStoreInstanceSeal', function(){
+  describe('deleteStoreInstanceSeal', function() {
     it('should make DELETE request to API', function() {
       var expectedURL = /store-instances\/\d+\/seals\/\d+$/;
       var sealId = 45;
@@ -68,6 +71,7 @@ describe('Service: storeInstanceSealService', function () {
       storeInstanceSealService.deleteStoreInstanceSeal(sealId, storeInstanceId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });

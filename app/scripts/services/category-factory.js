@@ -15,12 +15,12 @@ angular.module('ts5App')
     };
 
     var getCategoryList = function (payload) {
-      payload = lodash.defaults({}, payload, {companyId: getCompanyId()});
+      payload = lodash.defaults({}, payload, { companyId: getCompanyId() });
       return categoryService.getCategoryList(payload);
     };
 
     var getCategory = function (id) {
-      return categoryService.getCategory({id: id, companyId: getCompanyId()});
+      return categoryService.getCategory({ id: id, companyId: getCompanyId() });
     };
 
     var updateCategory = function (id, payload) {

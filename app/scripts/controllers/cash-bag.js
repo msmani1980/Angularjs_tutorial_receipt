@@ -46,6 +46,7 @@ angular.module('ts5App')
         isError = true;
         message = 'error';
       }
+
       var className = isError ? 'warning' : 'success';
       ngToast.create({
         className: className,
@@ -67,6 +68,7 @@ angular.module('ts5App')
         delete currency.coinExchangeRate;
         delete currency.flightAmount;
       });
+
       return payload;
     }
 
@@ -114,6 +116,7 @@ angular.module('ts5App')
       if ($scope.cashBagCreateForm.$invalid) {
         return;
       }
+
       var formData = cleanPayload(angular.copy($scope.cashBag));
       switch ($routeParams.state) {
         case 'edit':
@@ -121,6 +124,7 @@ angular.module('ts5App')
             showMessage(null, true, 'cannot edit cash bags that have been submitted!');
             break;
           }
+
           editCashBag(formData);
           break;
         case 'create':
@@ -136,14 +140,17 @@ angular.module('ts5App')
           if (currency.bankAmount !== '0.0000' && currency.bankAmount !== null) {
             isSet = false;
           }
+
           if (currency.coinAmountManual !== null) {
             isSet = false;
           }
+
           if (currency.paperAmountManual !== null) {
             isSet = false;
           }
         }
       });
+
       return isSet;
     }
 
@@ -151,15 +158,19 @@ angular.module('ts5App')
       if ($scope.state !== 'edit') {
         return false;
       }
+
       if ($scope.readOnly) {
         return false;
       }
+
       if (cashBag.isSubmitted === 'true') {
         return false;
       }
+
       if (cashBag.isDelete === 'true') {
         return false;
       }
+
       return cashBagCurrenciesIsSet(cashBag.cashBagCurrencies);
     }
 
@@ -167,10 +178,12 @@ angular.module('ts5App')
       if (!canDelete(cashBag)) {
         return false;
       }
+
       cashBagFactory.deleteCashBag(cashBag.id).then(function() {
           showMessage(null, false, 'successfully deleted');
           $scope.readOnly = true;
         },
+
         showMessage);
     };
 
@@ -178,6 +191,7 @@ angular.module('ts5App')
       if (!$scope.companyPreferences) {
         return false;
       }
+
       return $scope.companyPreferences.filter(function(feature) {
         return (feature.featureCode === 'EXR' && feature.optionCode === 'ERT' && feature.choiceCode === 'BNK');
       }).length > 0;
@@ -210,6 +224,7 @@ angular.module('ts5App')
         hideLoadingModal();
         return;
       }
+
       var dailyExchangeRateCurrencies = $scope.dailyExchangeRates[0].dailyExchangeRateCurrencies;
       $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
 
@@ -250,6 +265,7 @@ angular.module('ts5App')
           if ($scope.cashBag.totalCashBags) {
             $scope.cashBag.totalCashBags = $scope.cashBag.totalCashBags.toString();
           }
+
           $scope.displayError = false;
           $scope.formErrors = {};
           $scope.showDeleteButton = canDelete($scope.cashBag);

@@ -16,7 +16,7 @@ describe('Company Reason Code Controller', function() {
   var companyReasonTypesJSON;
   var getCompanyReasonTypesDeferred;
 
-  beforeEach(inject(function($controller, $rootScope,$templateCache,$compile,$q,
+  beforeEach(inject(function($controller, $rootScope, $templateCache, $compile, $q,
     _servedCompanyReasonTypes_) {
 
     scope = $rootScope.$new();
@@ -78,9 +78,9 @@ describe('Company Reason Code Controller', function() {
     beforeEach(function() {
       initController();
       resolveInitDependencies();
-      spyOn(CompanyReasonCodeCtrl,'submitForm').and.callThrough();
-      spyOn(CompanyReasonCodeCtrl,'validateForm').and.callThrough();
-      spyOn(CompanyReasonCodeCtrl,'createCompanyReason').and.callThrough();
+      spyOn(CompanyReasonCodeCtrl, 'submitForm').and.callThrough();
+      spyOn(CompanyReasonCodeCtrl, 'validateForm').and.callThrough();
+      spyOn(CompanyReasonCodeCtrl, 'createCompanyReason').and.callThrough();
       scope.submitForm(scope.reasonForm0);
     });
 
@@ -159,7 +159,7 @@ describe('Company Reason Code Controller', function() {
     it('return false if the id does not match up', function() {
       scope.reasonFilter = {
         selectedReasonTypes: [
-          {id:1}
+          { id:1 }
         ]
       };
       var filter = CompanyReasonCodeCtrl.filterByReasonType(reason);
@@ -175,15 +175,15 @@ describe('Company Reason Code Controller', function() {
       resolveInitDependencies();
       scope.formData = {
         companyReasonTypes:[
-          {id:1},
-          {id:2}
+          { id:1 },
+          { id:2 }
         ]
       };
     });
 
     it('return the global reason if the id is found', function() {
       var reason = CompanyReasonCodeCtrl.getReasonTypeInFormData(1);
-      expect(reason).toEqual({id:1});
+      expect(reason).toEqual({ id:1 });
     });
 
     it('return false if the reason is not found', function() {
@@ -234,22 +234,22 @@ describe('Company Reason Code Controller', function() {
         ]
       };
       CompanyReasonCodeCtrl.addReasonCode(1);
-      spyOn(CompanyReasonCodeCtrl,'removeReason').and.callThrough();
+      spyOn(CompanyReasonCodeCtrl, 'removeReason').and.callThrough();
     });
 
     it('should remove a company reason', function() {
-      CompanyReasonCodeCtrl.removeReason(1,0);
+      CompanyReasonCodeCtrl.removeReason(1, 0);
       expect(scope.formData.companyReasonTypes[0].companyReasonCodes.length).toEqual(0);
     });
 
     it('should not remove a company reason when the id passed is incorrect', function() {
-      CompanyReasonCodeCtrl.removeReason(99,0);
+      CompanyReasonCodeCtrl.removeReason(99, 0);
       expect(scope.formData.companyReasonTypes[0].companyReasonCodes.length).toEqual(1);
     });
 
     it('should call the controller method when executing the scope method', function() {
-      scope.removeReason(1,0);
-      expect(CompanyReasonCodeCtrl.removeReason).toHaveBeenCalledWith(1,0);
+      scope.removeReason(1, 0);
+      expect(CompanyReasonCodeCtrl.removeReason).toHaveBeenCalledWith(1, 0);
     });
 
   });
@@ -287,8 +287,8 @@ describe('Company Reason Code Controller', function() {
       initController();
       resolveInitDependencies();
       scope.$digest();
-      spyOn(CompanyReasonCodeCtrl,'addReasonCode');
-      spyOn(CompanyReasonCodeCtrl,'filterByReasonType');
+      spyOn(CompanyReasonCodeCtrl, 'addReasonCode');
+      spyOn(CompanyReasonCodeCtrl, 'filterByReasonType');
     });
 
     it('should call the filterByReasonType method on the controller', function() {
@@ -302,16 +302,15 @@ describe('Company Reason Code Controller', function() {
     });
 
     it('should call the addReasonCode method on the controller when the keypress is ENTER', function() {
-      scope.addReasonCodeWithEnter({which:13},1);
+      scope.addReasonCodeWithEnter({ which:13 }, 1);
       expect(CompanyReasonCodeCtrl.addReasonCode).toHaveBeenCalledWith(1);
     });
 
     it('should not call the addReasonCode method on the controller when the keypress is anything else', function() {
-      scope.addReasonCodeWithEnter({which:9},1);
+      scope.addReasonCodeWithEnter({ which:9 }, 1);
       expect(CompanyReasonCodeCtrl.addReasonCode).not.toHaveBeenCalled();
     });
 
   });
-
 
 });

@@ -14,10 +14,12 @@ angular.module('ts5App')
       if (!array) {
         return;
       }
+
       index = 'index';
       for (var i = 0; i < array.length; ++i) {
         array[i][index] = i;
       }
+
       return array;
     };
   });

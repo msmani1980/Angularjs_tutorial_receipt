@@ -36,6 +36,7 @@ describe('Service: menuService', function () {
         menuService.getMenuList().then(function (menuListFromAPI) {
           menuData = menuListFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -70,6 +71,7 @@ describe('Service: menuService', function () {
           done: true
         });
       });
+
       it('it should POST data to menus API', function () {
         menuService.updateMenu({
           menuData: 'fakeMenuPayload'
@@ -85,6 +87,7 @@ describe('Service: menuService', function () {
           done: true
         });
       });
+
       it('it should DELETE data to menus API', function () {
         menuService.deleteMenu({
           menuData: 'fakeMenuPayload'
@@ -99,7 +102,7 @@ describe('Service: menuService', function () {
     describe('Import Menus from Excel', function () {
       beforeEach(inject(function (_Upload_) {
         Upload = _Upload_;
-        spyOn(Upload, 'upload').and.returnValue({mockData: 'mock'});
+        spyOn(Upload, 'upload').and.returnValue({ mockData: 'mock' });
 
         mockFile = {
           $$hashKey: 'object:277',

@@ -26,8 +26,8 @@ describe('The Stations List Controller', function () {
   var getStationListDeferred;
   var stationListJSON;
 
-  beforeEach(inject(function($controller, $rootScope,$templateCache,$compile,$q, $injector,
-    _servedGlobalStations_,_servedCountryList_,_servedCityList_,_servedStations_) {
+  beforeEach(inject(function($controller, $rootScope, $templateCache, $compile, $q, $injector,
+    _servedGlobalStations_, _servedCountryList_, _servedCityList_, _servedStations_) {
 
     scope = $rootScope.$new();
     controller = $controller;
@@ -118,7 +118,7 @@ describe('The Stations List Controller', function () {
     });
 
     it('should set the stations list', function() {
-      var stationListSubset = stationListJSON.response.slice(0,3);
+      var stationListSubset = stationListJSON.response.slice(0, 3);
       expect(scope.stationList).toEqual(stationListSubset);
     });
 
@@ -132,9 +132,9 @@ describe('The Stations List Controller', function () {
       mockGetStations();
       scope.selectedStations = [];
       scope.selectedStations[114] = true;
-      spyOn(StationListCtrl,'submitForm').and.callThrough();
-      spyOn(StationListCtrl,'validateForm').and.callThrough();
-      spyOn(StationListCtrl,'saveStations').and.callThrough();
+      spyOn(StationListCtrl, 'submitForm').and.callThrough();
+      spyOn(StationListCtrl, 'validateForm').and.callThrough();
+      spyOn(StationListCtrl, 'saveStations').and.callThrough();
       scope.submitForm();
     });
 
@@ -220,7 +220,7 @@ describe('The Stations List Controller', function () {
     beforeEach(function() {
       initController();
       resolveInitDependencies();
-      spyOn(dateUtility,'isTodayOrEarlier')();
+      spyOn(dateUtility, 'isTodayOrEarlier')();
       StationListCtrl.dateActive('11/25/2015');
     });
 
@@ -255,7 +255,7 @@ describe('The Stations List Controller', function () {
 
       it('should return an array of selected stations', function () {
         var selectedStations = StationListCtrl.getSelectedStations();
-        var selectedStationsControl = [ true,true ];
+        var selectedStationsControl = [true, true];
         expect(selectedStations).toEqual(selectedStationsControl);
       });
 
@@ -276,8 +276,8 @@ describe('The Stations List Controller', function () {
       describe('select / deselect all stations functionality', function() {
 
         beforeEach(function() {
-          spyOn(StationListCtrl,'selectAllStations').and.callThrough();
-          spyOn(StationListCtrl,'deselectAllStations').and.callThrough();
+          spyOn(StationListCtrl, 'selectAllStations').and.callThrough();
+          spyOn(StationListCtrl, 'deselectAllStations').and.callThrough();
         });
 
         it('should not allow users to save if there are 0 stations selected', function () {
@@ -370,7 +370,7 @@ describe('The Stations List Controller', function () {
       scope.selectedStations = [];
       scope.selectedStations[114] = true;
       scope.formData = {
-        stations: [ mockStation ]
+        stations: [mockStation]
       };
       scope.$digest();
       stationToTest = StationListCtrl.getStationInFormData(114);
@@ -454,9 +454,9 @@ describe('The Stations List Controller', function () {
     beforeEach(function() {
       initController();
       scope.$digest();
-      spyOn(StationListCtrl,'canSave');
-      spyOn(StationListCtrl,'filterByCountry');
-      spyOn(StationListCtrl,'dateActive');
+      spyOn(StationListCtrl, 'canSave');
+      spyOn(StationListCtrl, 'filterByCountry');
+      spyOn(StationListCtrl, 'dateActive');
     });
 
     it('should call the canSave method on the controller', function() {

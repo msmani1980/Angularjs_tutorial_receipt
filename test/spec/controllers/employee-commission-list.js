@@ -6,7 +6,6 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/items-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/employee-commission-list.json', 'served/sales-categories.json'));
 
-
   var EmployeeCommissionListCtrl,
     employeeCommissionFactory,
     dateUtility,
@@ -57,7 +56,6 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     spyOn(employeeCommissionFactory, 'deleteCommission').and.returnValue(getCommissionListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getItemsCategoriesList').and.returnValue(salesCategoriesDeferred.promise);
 
-
     scope = $rootScope.$new();
     EmployeeCommissionListCtrl = $controller('EmployeeCommissionListCtrl', {
       $scope: scope
@@ -95,11 +93,10 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
       expect(employeeCommissionFactory.getTaxRateTypes).toHaveBeenCalled();
     });
 
-
     it('should fetch items with startDate, endDate, and category from factory', function () {
       scope.search.startDate = '05/10/1979';
       scope.search.endDate = '05/10/1979';
-      scope.search.selectedCategory = {name: 'testCategory'};
+      scope.search.selectedCategory = { name: 'testCategory' };
       scope.$digest();
       expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({
         startDate: '19790510',
@@ -125,19 +122,18 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         expect(dateUtility.isDateValidForApp(scope.commissionList[0].endDate)).toBe(true);
       });
 
-      it('should have a rateTypeName property defined', function(){
+      it('should have a rateTypeName property defined', function() {
         scope.$digest();
         expect(!!scope.commissionList[4].priceTypeName).toBe(true);
       });
 
-      it('should have a taxRateTypeName property defined', function(){
+      it('should have a taxRateTypeName property defined', function() {
         scope.$digest();
         expect(!!scope.commissionList[4].taxRateTypeName).toBe(true);
       });
 
     });
   });
-
 
   describe('form reset', function () {
 
@@ -171,9 +167,9 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
 
     beforeEach(function () {
       scope.search = {
-        selectedItem: {itemMasterId: 1},
-        selectedPriceType: {id: 2},
-        selectedRateType: {taxRateType: 'Amount'},
+        selectedItem: { itemMasterId: 1 },
+        selectedPriceType: { id: 2 },
+        selectedRateType: { taxRateType: 'Amount' },
         startDate: '07/20/2015',
         endDate: '08/30/2016'
       };
@@ -183,7 +179,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
       expect(scope.searchCommissions).toBeDefined();
     });
 
-    it('should call getEmployeeCommissionList', function(){
+    it('should call getEmployeeCommissionList', function() {
       scope.search = {};
       scope.searchCommissions();
       expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalled();
@@ -204,11 +200,11 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
 
     it('should format category payload', function () {
       scope.search = {
-        selectedCategory: {id: 1},
-        itemList: [{itemMasterId: 1}, {itemMasterId: 2}, {itemMasterId: 3}]
+        selectedCategory: { id: 1 },
+        itemList: [{ itemMasterId: 1 }, { itemMasterId: 2 }, { itemMasterId: 3 }]
       };
       var expectedPayload = {
-        itemId: [1,2,3],
+        itemId: [1, 2, 3],
         limit: 100, offset: 0
       };
       scope.searchCommissions();
@@ -289,6 +285,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
           fakeCommissionObject.endDate = moment().add(2, 'month').format('L').toString();
           expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(false);
         });
+
       it('should return true if commission === null or undefined',
         function () {
           expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(true);

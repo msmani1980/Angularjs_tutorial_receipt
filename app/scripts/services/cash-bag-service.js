@@ -20,19 +20,19 @@ angular.module('ts5App')
     var actions = {
       getCashBag: {
         method: 'GET',
-        headers: {companyId: 362}
+        headers: { companyId: 362 }
       },
       updateCashBag: {
         method: 'PUT',
-        headers: {companyId: 362}
+        headers: { companyId: 362 }
       },
       deleteCashBag: {
         method: 'DELETE',
-        headers: {companyId: 362}
+        headers: { companyId: 362 }
       },
       createCashBag: {
         method: 'POST',
-        headers: {companyId: 362}
+        headers: { companyId: 362 }
       }
     };
 
@@ -48,22 +48,24 @@ angular.module('ts5App')
       if (!angular.isDefined(payload.limit)) {
         payload.limit = 50;
       }
+
       return requestResource.getCashBag(payload).$promise;
     }
 
     function getCashBag(cashBagId) {
-      return requestResource.getCashBag({id: cashBagId}).$promise;
+      return requestResource.getCashBag({ id: cashBagId }).$promise;
     }
 
     function updateCashBag(cashBagId, payload, parameters) {
       if (cashBagId && !parameters) {
-        parameters = {id: cashBagId};
+        parameters = { id: cashBagId };
       }
+
       return requestResource.updateCashBag(parameters, payload).$promise;
     }
 
     function deleteCashBag(cashBagId) {
-      return requestResource.deleteCashBag({id: cashBagId}).$promise;
+      return requestResource.deleteCashBag({ id: cashBagId }).$promise;
     }
 
     function createCashBag(payload) {

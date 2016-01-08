@@ -51,6 +51,7 @@ describe('Service: stockTakeFactory', function() {
       stockTakeFactory.getStockTake(id);
       expect(stockTakeService.getStockTake).toHaveBeenCalledWith(id);
     });
+
     it('should call createStockTake with payload', function() {
       var payload = {
         id: 123
@@ -58,6 +59,7 @@ describe('Service: stockTakeFactory', function() {
       stockTakeFactory.createStockTake(payload);
       expect(stockTakeService.createStockTake).toHaveBeenCalledWith(payload);
     });
+
     it('should call updateStockTake with id and payload', function() {
       var payload = {
         test: 123
@@ -66,6 +68,7 @@ describe('Service: stockTakeFactory', function() {
       stockTakeFactory.updateStockTake(id, payload);
       expect(stockTakeService.updateStockTake).toHaveBeenCalledWith(id, payload);
     });
+
     it('should call importFromExcel', function() {
       var id = 123;
       stockTakeService.importFromExcel(id, null);

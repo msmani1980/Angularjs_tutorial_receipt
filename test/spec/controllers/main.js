@@ -30,13 +30,13 @@ describe('Controller: MainCtrl', function () {
   }));
 
   describe('controller init', function () {
-//     it('should call featuresInRole', function () {
-//       expect(identityAccessService.featuresInRole).toHaveBeenCalled();
-//     });
+    //     it('should call featuresInRole', function () {
+    //       expect(identityAccessService.featuresInRole).toHaveBeenCalled();
+    //     });
     it('should define scope.dashboardMenu', function () {
       scope.$digest();
       expect(scope.dashboardMenu).toBeDefined();
-     });
+    });
   });
 
 });

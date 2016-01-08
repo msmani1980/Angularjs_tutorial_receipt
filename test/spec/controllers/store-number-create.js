@@ -48,27 +48,28 @@ describe('Controller: StoreNumberCreateCtrl', function () {
     });
   });
 
-  describe('controller init function', function(){
-    it('should set formData in scope', function(){
+  describe('controller init function', function() {
+    it('should set formData in scope', function() {
       expect(scope.formData).toBeDefined();
       expect(Object.prototype.toString.call(scope.formData)).toBe('[object Object]');
     });
-    it('should set storeNumbersList in scope', function(){
+
+    it('should set storeNumbersList in scope', function() {
       expect(scope.storeNumbersList).toBeDefined();
       expect(Object.prototype.toString.call(scope.storeNumbersList)).toBe('[object Array]');
     });
   });
 
-  describe('scope.getStoreList', function(){
-    it('should call companyService.getStores', function(){
+  describe('scope.getStoreList', function() {
+    it('should call companyService.getStores', function() {
       scope.getStoreList();
       scope.$digest();
       expect(companyStoresService.getStoreList).toHaveBeenCalled();
     });
   });
 
-  describe('submitForm scope function', function(){
-    it('should call companyStoresService.createStore when creating a new store', function(){
+  describe('submitForm scope function', function() {
+    it('should call companyStoresService.createStore when creating a new store', function() {
       scope.formData = {
         storeNumber: 'qwert12345',
         startDate: '07/09/2015',
@@ -82,7 +83,8 @@ describe('Controller: StoreNumberCreateCtrl', function () {
       scope.submitForm();
       expect(companyStoresService.createStore).toHaveBeenCalledWith(payload);
     });
-    it('should call companyStoresService.saveStore when editing a store that contains an id', function(){
+
+    it('should call companyStoresService.saveStore when editing a store that contains an id', function() {
       scope.formData = {
         id: 2,
         storeNumber: 'qwert12345',
@@ -99,23 +101,26 @@ describe('Controller: StoreNumberCreateCtrl', function () {
     });
   });
 
-  describe('canDelete scope function', function(){
-    it('should return true if the start date is in the future', function(){
-      expect(scope.canDelete({startDate:'01/05/2050', readyToUse: true})).toBe(true);
+  describe('canDelete scope function', function() {
+    it('should return true if the start date is in the future', function() {
+      expect(scope.canDelete({ startDate:'01/05/2050', readyToUse: true })).toBe(true);
     });
-    it('should return false if the start date is in the past', function(){
-      expect(scope.canDelete({startDate:'01/05/2015', readyToUse: true})).toBe(false);
+
+    it('should return false if the start date is in the past', function() {
+      expect(scope.canDelete({ startDate:'01/05/2015', readyToUse: true })).toBe(false);
     });
+
     it('should return false if the store is used', function () {
-      expect(scope.canDelete({startDate:'01/05/2050', readyToUse: false})).toBe(false);
+      expect(scope.canDelete({ startDate:'01/05/2050', readyToUse: false })).toBe(false);
     });
   });
 
-  describe('removeRecord scope function', function(){
-    it('should return false if the start date is in the past', function(){
-      expect(scope.removeRecord({startDate:'01/05/2015'})).toBe(false);
+  describe('removeRecord scope function', function() {
+    it('should return false if the start date is in the past', function() {
+      expect(scope.removeRecord({ startDate:'01/05/2015' })).toBe(false);
     });
-    it('should call deleteStore API', function(){
+
+    it('should call deleteStore API', function() {
       var store = {
         id: 123,
         startDate:'01/05/2050',
@@ -126,66 +131,70 @@ describe('Controller: StoreNumberCreateCtrl', function () {
     });
   });
 
-  describe('formDefault scope function', function(){
-    it('should return true', function(){
-      scope.formData = {storeNumber: null,startDate: null,endDate: null};
+  describe('formDefault scope function', function() {
+    it('should return true', function() {
+      scope.formData = { storeNumber: null, startDate: null, endDate: null };
       scope.$digest();
       expect(scope.formDefault()).toBe(true);
     });
-    it('should return false', function(){
-      scope.formData = {storeNumber: '1',startDate: null,endDate: null};
+
+    it('should return false', function() {
+      scope.formData = { storeNumber: '1', startDate: null, endDate: null };
       scope.$digest();
       expect(scope.formDefault()).toBe(false);
     });
   });
 
-  describe('canEdit scope function', function(){
-    it('should return true', function(){
-      expect(scope.canEdit({endDate: '12/30/2050'})).toBe(true);
+  describe('canEdit scope function', function() {
+    it('should return true', function() {
+      expect(scope.canEdit({ endDate: '12/30/2050' })).toBe(true);
     });
-    it('should return false', function(){
-      expect(scope.canEdit({endDate: '12/30/2000'})).toBe(false);
+
+    it('should return false', function() {
+      expect(scope.canEdit({ endDate: '12/30/2000' })).toBe(false);
     });
   });
 
-  describe('fieldDisabled scope function', function(){
-    it('should return true', function(){
-      expect(scope.fieldDisabled({startDate: '12/30/2000', endDate: '12/30/2050'})).toBe(true);
+  describe('fieldDisabled scope function', function() {
+    it('should return true', function() {
+      expect(scope.fieldDisabled({ startDate: '12/30/2000', endDate: '12/30/2050' })).toBe(true);
     });
-    it('should return false', function(){
-      expect(scope.fieldDisabled({startDate: '12/30/1999', endDate: '12/30/2000'})).toBe(false);
+
+    it('should return false', function() {
+      expect(scope.fieldDisabled({ startDate: '12/30/1999', endDate: '12/30/2000' })).toBe(false);
     });
   });
 
-  describe('editStoreNumber scope function', function(){
-    it('should return false if cannot delete', function(){
-      expect(scope.editStoreNumber({endDate: '12/30/2000'})).toBe(false);
+  describe('editStoreNumber scope function', function() {
+    it('should return false if cannot delete', function() {
+      expect(scope.editStoreNumber({ endDate: '12/30/2000' })).toBe(false);
     });
-    it('should get the store from the current storelist if cached', function(){
-      var store = {id:1,endDate: '12/30/2050'};
+
+    it('should get the store from the current storelist if cached', function() {
+      var store = { id:1, endDate: '12/30/2050' };
       scope.storeNumbersList = [store];
       scope.$digest();
       scope.editStoreNumber(store);
       expect(scope.formData.id).toBe(store.id);
     });
-    it('should call get store from service if not cached in storeNumbersList', function(){
-      var store = {id:1,endDate: '12/30/2050'};
+
+    it('should call get store from service if not cached in storeNumbersList', function() {
+      var store = { id:1, endDate: '12/30/2050' };
       scope.storeNumbersList = [];
       scope.$digest();
       scope.editStoreNumber(store);
       expect(companyStoresService.getStore).toHaveBeenCalledWith(store.id);
     });
 
-
-    describe('error handler', function(){
+    describe('error handler', function() {
 
       var mockError;
-      beforeEach(function(){
+      beforeEach(function() {
         mockError = {
           status:400,
           statusText:'Bad Request'
         };
-        var store = {id:1,endDate: '12/30/2050'};
+        var store = { id:1, endDate: '12/30/2050' };
         scope.storeNumbersList = [];
         scope.$digest();
         scope.editStoreNumber(store);
@@ -193,11 +202,11 @@ describe('Controller: StoreNumberCreateCtrl', function () {
         scope.$apply();
       });
 
-      it('should set the displayError flag to true', function(){
+      it('should set the displayError flag to true', function() {
         expect(scope.displayError).toBeTruthy();
       });
 
-      it('should set the error response as a copy the API response', function(){
+      it('should set the error response as a copy the API response', function() {
         expect(scope.errorResponse).toEqual(mockError);
       });
 

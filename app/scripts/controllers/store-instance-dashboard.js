@@ -1,6 +1,7 @@
 'use strict';
 
 /* global moment */
+
 // jshint maxcomplexity:6
 /**
  * @ngdoc function
@@ -32,7 +33,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.allAllowedStatuses = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch', 'Dispatched',
       'On Floor', 'Inbounded', 'Unpacking', 'Inbound Seals'
     ];
-
 
     var initDone = false;
 
@@ -74,6 +74,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (matchedObject) {
         return matchedObject[valueKey];
       }
+
       return '';
     }
 
@@ -84,6 +85,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (matchedObject) {
         return matchedObject.id;
       }
+
       return '';
     }
 
@@ -120,6 +122,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (!$scope.doesStoreInstanceHaveReplenishments(storeInstance)) {
         return;
       }
+
       if ($scope.openStoreInstanceId === storeInstance.id) {
         closeAccordion();
       } else {
@@ -138,6 +141,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if ((isParentOnFloor || isAfterDispatch) && (actionName !== 'Get Flight Docs')) {
         return false;
       }
+
       return $scope.doesStoreInstanceContainAction(storeInstance, actionName);
     };
 
@@ -145,6 +149,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (!storeInstance.actionButtons) {
         return false;
       }
+
       return storeInstance.actionButtons.indexOf(actionName) >= 0;
     };
 
@@ -154,10 +159,12 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         if (store.selected && $scope.doesStoreInstanceContainAction(store, 'Get Flight Docs')) {
           selectedStores.push(store);
         }
+
         selectedStores = selectedStores.concat(lodash.filter(store.replenishments, function(replenish) {
           return replenish.selected && $scope.doesStoreInstanceContainAction(replenish, 'Get Flight Docs');
         }));
       });
+
       $scope.hasSelectedStore = (selectedStores.length !== 0);
       if ($scope.hasSelectedStore) {
         var storeInstanceIds = lodash.map(selectedStores, function(item) {
@@ -177,10 +184,12 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         if ($scope.doesStoreInstanceContainAction(store, 'Checkbox')) {
           store.selected = $scope.allCheckboxesSelected;
         }
+
         lodash.forEach(store.replenishments, function(replenish) {
           replenish.selected = $scope.allCheckboxesSelected;
         });
       });
+
       $scope.storeSelectionToggled();
     };
 
@@ -223,13 +232,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     var STATUS_TO_BUTTONS_MAP = {
-      '1': ['Pack'],
-      '2': ['Seal'],
-      '3': ['Dispatch', 'Offload', 'Checkbox'],
-      '4': ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
-      '5': ['End Instance', 'Redispatch', 'Checkbox'],
-      '6': ['Start Inbound Seals'],
-      '7': ['Start Offload']
+      1: ['Pack'],
+      2: ['Seal'],
+      3: ['Dispatch', 'Offload', 'Checkbox'],
+      4: ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
+      5: ['End Instance', 'Redispatch', 'Checkbox'],
+      6: ['Start Inbound Seals'],
+      7: ['Start Offload']
     };
 
     function formatStoreInstance(storeInstance) {
@@ -243,6 +252,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
       storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) :
         '';
+
       // TODO: get timeConfig that has most recent startDate -- will be a new API
       var timeConfig = lodash.findWhere($scope.timeConfigList, {
         featureId: $scope.undispatchFeatureId
@@ -264,6 +274,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         if (!storeInstance) {
           return false;
         }
+
         var storeInstanceName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
         return lodash.indexOf($scope.allAllowedStatuses, storeInstanceName) >= 0;
       });
@@ -277,6 +288,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           formatStoreInstance(storeInstance);
         });
       });
+
       $scope.storeInstanceList = $filter('orderBy')($scope.storeInstanceList, ['scheduleDateApi', 'storeNumber',
         'scheduleNumber'
       ]);
@@ -367,16 +379,19 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           payload.statusId = [parseInt(payload.statusId), unpackingStatusId, inboundSealsStatusId].toString();
         }
       }
+
       return payload;
     }
 
     function formatStationPayloads(payload) {
-      if(payload.departureStationCode) {
+      if (payload.departureStationCode) {
         payload.departureStationCode = payload.departureStationCode.toString();
       }
-      if(payload.arrivalStationCode) {
+
+      if (payload.arrivalStationCode) {
         payload.arrivalStationCode = payload.arrivalStationCode.toString();
       }
+
       return payload;
     }
 
@@ -384,12 +399,15 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       if (!initDone) {
         return;
       }
+
       if (loadingProgress) {
         return;
       }
+
       loadingProgress = true;
 
       showLoadingBar();
@@ -405,6 +423,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           }
         }
       });
+
       payload = formatStatusPayload(payload);
       payload = formatStationPayloads(payload);
       $scope.searchIsActive = true;
@@ -412,6 +431,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         payload.startDate = startDate;
         $scope.searchIsActive = false;
       }
+
       lastStartDate = payload.startDate;
       payload = lodash.assign(payload, {
         limit: $this.meta.limit,
@@ -545,6 +565,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
             $scope.storeStatusList);
           actionName = actionName + actionModifierMap[nextStoreInstanceStepName];
         }
+
         completeNavigateToAction(actionName, storeInstanceForNavigation);
       });
     }
@@ -590,12 +611,15 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       angular.forEach($scope.search, function(search) {
         $scope.searchLength = search;
       });
+
       if ($scope.searchLength && !$scope.searchIsActive) {
         return true;
       }
+
       if ($scope.searchIsActive) {
         return true;
       }
+
       return false;
     };
 

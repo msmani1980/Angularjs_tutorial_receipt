@@ -27,7 +27,6 @@ describe('Controller: ExchangeRatesCtrl', function () {
     'served/company-preferences.json'
   ));
 
-
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     inject(function (_servedCompany_, _servedCurrencies_, _servedCompanyCurrencyGlobals_,
@@ -98,12 +97,12 @@ describe('Controller: ExchangeRatesCtrl', function () {
   describe('company Preferences', function () {
 
     var preferencesJSON = [{
-      'featureCode': 'EXR',
-      'featureName': 'Exchange Rate',
-      'optionCode': 'ERT',
-      'optionName': 'Exchange Rate Type',
-      'choiceCode': 'BNK',
-      'choiceName': 'Bank'
+      featureCode: 'EXR',
+      featureName: 'Exchange Rate',
+      optionCode: 'ERT',
+      optionName: 'Exchange Rate Type',
+      choiceCode: 'BNK',
+      choiceName: 'Bank'
     }];
 
     it('should attach the company preferences to scope', function () {

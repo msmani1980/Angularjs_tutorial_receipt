@@ -13,6 +13,7 @@ describe('Controller: ManualStoreInstanceCtrl', function () {
     scope = $rootScope.$new();
     ManualStoreInstanceCtrl = $controller('ManualStoreInstanceCtrl', {
       $scope: scope
+
       // place here mocked dependencies
     });
   }));

@@ -63,22 +63,26 @@ describe('Factory: cashBagFactory', function () {
       cashBagFactory.getCashBagList(companyId);
       expect(cashBagService.getCashBagList).toHaveBeenCalledWith(companyId);
     });
+
     it('should call cashBagService updateCashBag', function () {
       var id = 1;
-      var payload = {t: 123, d: 323};
+      var payload = { t: 123, d: 323 };
       cashBagFactory.updateCashBag(id, payload);
       expect(cashBagService.updateCashBag).toHaveBeenCalledWith(id, payload, undefined);
     });
+
     it('should call cashBagService getCashBag', function () {
       var id = 123;
       cashBagFactory.getCashBag(id);
       expect(cashBagService.getCashBag).toHaveBeenCalledWith(id);
     });
+
     it('should call cashBagService deleteCashBag', function () {
       var id = 123;
       cashBagFactory.deleteCashBag(id);
       expect(cashBagService.deleteCashBag).toHaveBeenCalledWith(id);
     });
+
     it('should call cashBagService createCashBag', function () {
       var cashBag = {
         scheduleDate: '20150611',
@@ -122,6 +126,7 @@ describe('Factory: cashBagFactory', function () {
       cashBagFactory.getSchedulesList(companyId);
       expect(schedulesService.getSchedules).toHaveBeenCalledWith(companyId);
     });
+
     it('should call schedulesService on getDailySchedules', function () {
       var dummyParams = '123';
       cashBagFactory.getDailySchedulesList(companyId, dummyParams, dummyParams);

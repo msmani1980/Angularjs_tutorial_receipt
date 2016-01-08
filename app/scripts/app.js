@@ -32,17 +32,17 @@ angular.module('ts5App', [
   'sprintf'
 ]).factory('defaultData', [
   function() {
-    var defaultData = {
+    return {
       request: function(config) {
         if (angular.isUndefined(config.data)) {
           config.data = {
             requestTimestamp: new Date().getTime()
           };
         }
+
         return config;
       }
     };
-    return defaultData;
   }
 ]).constant('regexp', {
   word: /^[\w\s]+$/,
@@ -223,8 +223,10 @@ angular.module('ts5App', [
       if (routeParameters.action === 'redispatch') {
         return 'views/store-instance-redispatch-review.html';
       }
+
       return 'views/store-instance-review.html';
     },
+
     controller: 'StoreInstanceReviewCtrl'
   }).when('/store-instance-dashboard', {
     templateUrl: 'views/store-instance-dashboard.html',
@@ -286,7 +288,7 @@ angular.module('ts5App', [
     controllerAs: 'taxRates'
   }).when('/company-reason-type-subscribe', {
     templateUrl: 'views/company-reason-type-subscribe.html',
-    controller: 'CompanyReasonTypeSubscribeCtrl',
+    controller: 'CompanyReasonTypeSubscribeCtrl'
   }).when('/employee-messages', {
     templateUrl: 'views/employee-message-list.html',
     controller: 'EmployeeMessageListCtrl'
@@ -313,6 +315,7 @@ angular.module('ts5App', [
   'regexp',
   'GlobalMenuService',
   'identityAccessFactory',
+  'socketIO',
   function($rootScope, regexp) {
     $rootScope.regexp = regexp;
   }

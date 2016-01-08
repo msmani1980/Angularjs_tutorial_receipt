@@ -35,20 +35,20 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getStoreInstanceSeals(storeInstanceId,sealId) {
-      return requestResource.getStoreInstanceSeals({storeInstanceId: storeInstanceId, id: sealId}).$promise;
+    function getStoreInstanceSeals(storeInstanceId, sealId) {
+      return requestResource.getStoreInstanceSeals({ storeInstanceId: storeInstanceId, id: sealId }).$promise;
     }
 
     function createStoreInstanceSeal(storeInstanceId, payload) {
-      return requestResource.createStoreInstanceSeal({storeInstanceId: storeInstanceId}, payload).$promise;
+      return requestResource.createStoreInstanceSeal({ storeInstanceId: storeInstanceId }, payload).$promise;
     }
 
     function updateStoreInstanceSeal(sealId, storeInstanceId, payload) {
-      return requestResource.updateStoreInstanceSeal({id: sealId, storeInstanceId: storeInstanceId}, payload).$promise;
+      return requestResource.updateStoreInstanceSeal({ id: sealId, storeInstanceId: storeInstanceId }, payload).$promise;
     }
 
     function deleteStoreInstanceSeal(sealId, storeInstanceId) {
-      return requestResource.deleteStoreInstanceSeal({id: sealId, storeInstanceId: storeInstanceId}).$promise;
+      return requestResource.deleteStoreInstanceSeal({ id: sealId, storeInstanceId: storeInstanceId }).$promise;
     }
 
     return {

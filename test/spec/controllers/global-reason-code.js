@@ -66,9 +66,9 @@ describe('Global Reason Code Controller', function() {
 
     beforeEach(function() {
       initController();
-      spyOn(GlobalReasonCodeCtrl,'submitForm').and.callThrough();
-      spyOn(GlobalReasonCodeCtrl,'validateForm').and.callThrough();
-      spyOn(GlobalReasonCodeCtrl,'createGlobalReasonCode').and.callThrough();
+      spyOn(GlobalReasonCodeCtrl, 'submitForm').and.callThrough();
+      spyOn(GlobalReasonCodeCtrl, 'validateForm').and.callThrough();
+      spyOn(GlobalReasonCodeCtrl, 'createGlobalReasonCode').and.callThrough();
       scope.submitForm();
     });
 
@@ -107,7 +107,6 @@ describe('Global Reason Code Controller', function() {
       });
 
     });
-
 
   });
 

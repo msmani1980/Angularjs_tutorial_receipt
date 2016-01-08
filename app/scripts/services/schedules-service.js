@@ -25,19 +25,19 @@ angular.module('ts5App')
     var schedulesRequestResource = $resource(schedulesRequestURL, null, schedulesActions);
 
     var getSchedules = function (companyId) {
-      var payload = {id:companyId};
+      var payload = { id:companyId };
       return distinctSchedulesRequestResource.getSchedules(payload).$promise;
     };
 
-    var getDailySchedules = function (companyId,scheduleNumber, scheduleDate) {
-      var payload = {id:companyId,
+    var getDailySchedules = function (companyId, scheduleNumber, scheduleDate) {
+      var payload = { id:companyId,
         scheduleNumber:scheduleNumber,
         scheduleDate:scheduleDate
       };
       return dailySchedulesRequestResource.getSchedules(payload).$promise;
     };
 
-    var getSchedulesInDateRange = function(companyId, startDate, endDate){
+    var getSchedulesInDateRange = function(companyId, startDate, endDate) {
       var payload = {
         id:companyId,
         startDate:startDate,

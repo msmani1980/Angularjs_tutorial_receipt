@@ -22,18 +22,19 @@ angular.module('ts5App')
       },
       controller: function($scope, $location, $anchorScroll) {
 
-        function hideAlert(){
+        function hideAlert() {
           $scope.showAlertDialog = false;
           $scope.showAlert = false;
         }
 
-        function showAlertDialog(newValue){
-          if(newValue) {
+        function showAlertDialog(newValue) {
+          if (newValue) {
             $scope.showAlert = false;
             $scope.showAlertDialog = true;
             $location.hash('lose-data-alert');
             $anchorScroll();
           }
+
           $location.hash('');
           return false;
         }
@@ -43,32 +44,39 @@ angular.module('ts5App')
           if (!$scope.title) {
             $scope.title = 'Hold on!';
           }
+
           if (!$scope.message) {
             $scope.message = 'By taking this action, you might lose saved data, are you sure?';
           }
+
           if (!$scope.confirmButtonText) {
             $scope.confirmButtonText = 'Confirm';
           }
+
           if (!$scope.cancelButtonText) {
             $scope.cancelButtonText = 'Cancel';
           }
+
           $scope.$watch('showAlert', showAlertDialog, true);
         }
+
         init();
 
-        $scope.hideAlert = function(){
+        $scope.hideAlert = function() {
           hideAlert();
         };
 
-        $scope.callTrigger = function(trigger){
+        $scope.callTrigger = function(trigger) {
           hideAlert();
-          if(angular.isUndefined($scope[trigger])) {
+          if (angular.isUndefined($scope[trigger])) {
             return false;
           }
+
           var triggerReturn = $scope[trigger]();
-          if(typeof triggerReturn !== 'boolean') {
+          if (typeof triggerReturn !== 'boolean') {
             return false;
           }
+
           return triggerReturn;
         };
 

@@ -65,12 +65,15 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       if (!$scope.selectedCateringStation) {
         return false;
       }
+
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       if (loadingProgress) {
         return;
       }
+
       loadingProgress = true;
 
       showLoadingBar();
@@ -142,6 +145,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       if (angular.isUndefined($scope.selectedCateringStation) || !$scope.selectedCateringStation.id) {
         return false;
       }
+
       if (Array.isArray($scope.stockTakeList)) {
         return $filter('filter')($scope.stockTakeList, {
           isSubmitted: false

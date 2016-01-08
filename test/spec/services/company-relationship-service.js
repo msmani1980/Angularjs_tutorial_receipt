@@ -45,6 +45,7 @@ describe('Service: companyRelationshipService', function () {
         companyRelationshipService.getCompanyRelationshipListByCompany(payload).then(function (companyRelationshipListFromAPI) {
           companyRelationshipListByCompanyData = companyRelationshipListFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -62,6 +63,7 @@ describe('Service: companyRelationshipService', function () {
         companyRelationshipService.getCompanyRelationshipTypeList().then(function (companyRelationshipTypeListFromAPI) {
           companyRelationshipTypeData = companyRelationshipTypeListFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -81,6 +83,7 @@ describe('Service: companyRelationshipService', function () {
         var regex = new RegExp('/companies/' + relativeCompanyId + '/relationships', 'g');
         $httpBackend.whenGET(regex).respond({});
       });
+
       it('should return GET data from company-relationship API', function () {
         companyRelationshipService.getCompanyRelationshipList();
         $httpBackend.expectGET(/relationships/);
@@ -93,7 +96,7 @@ describe('Service: companyRelationshipService', function () {
         var id = 1;
         var companyId = 413;
         var regex = new RegExp('/companies/' + companyId + '/relationships/' + id, 'g');
-        $httpBackend.whenGET(regex).respond({id: 1});
+        $httpBackend.whenGET(regex).respond({ id: 1 });
       });
 
       it('should GET data to company-relationship API', function () {
@@ -131,23 +134,24 @@ describe('Service: companyRelationshipService', function () {
         var relativeCompanyId = 420;
         var regex = new RegExp('/companies/' + companyId + '/relationships', 'g');
         var mockPayload = {
-          'companyId': companyId,
-          'relativeCompanyId': relativeCompanyId,
-          'startDate': '09/20/2015',
-          'endDate': '09/21/2015'
+          companyId: companyId,
+          relativeCompanyId: relativeCompanyId,
+          startDate: '09/20/2015',
+          endDate: '09/21/2015'
         };
 
         var mockDataFromService = {
-          'relativeCompanyId': relativeCompanyId,
-          'startDate': '20150920',
-          'endDate': '20150921'
+          relativeCompanyId: relativeCompanyId,
+          startDate: '20150920',
+          endDate: '20150921'
         };
 
-        $httpBackend.expectPOST(regex, mockDataFromService).respond(201, {'id': 77});
+        $httpBackend.expectPOST(regex, mockDataFromService).respond(201, { id: 77 });
 
         companyRelationshipService.createCompanyRelationship(mockPayload).then(function (dataFromAPI) {
           companyRelationshipData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 

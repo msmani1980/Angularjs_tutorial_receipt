@@ -96,9 +96,11 @@ describe('CatererStation Service |', function () {
     it('should be accessible in the service', function () {
       expect(catererStationService.getAllMenuItems).toBeDefined();
     });
+
     beforeEach(function () {
-      $httpBackend.whenGET(/caterer-stations/).respond({done: true});
+      $httpBackend.whenGET(/caterer-stations/).respond({ done: true });
     });
+
     it('should make GET request to API', function () {
       catererStationService.getAllMenuItems(38);
       $httpBackend.expectGET(/caterer-stations/);
@@ -110,9 +112,11 @@ describe('CatererStation Service |', function () {
     it('should be accessible in the service', function () {
       expect(catererStationService.getCatererStationList).toBeDefined();
     });
+
     beforeEach(function () {
-      $httpBackend.whenGET(/caterer-stations/).respond({done: true});
+      $httpBackend.whenGET(/caterer-stations/).respond({ done: true });
     });
+
     it('should make GET request to API', function () {
       catererStationService.getCatererStationList(38);
       $httpBackend.expectGET(/caterer-stations/);
@@ -124,9 +128,11 @@ describe('CatererStation Service |', function () {
     it('should be accessible in the service', function () {
       expect(catererStationService.createCatererStation).toBeDefined();
     });
+
     beforeEach(function () {
-      $httpBackend.whenPOST(/caterer-stations/).respond({done: true});
+      $httpBackend.whenPOST(/caterer-stations/).respond({ done: true });
     });
+
     it('should make POST request to API', function () {
       catererStationService.createCatererStation({});
       $httpBackend.expectPOST(/caterer-stations/);
@@ -134,14 +140,15 @@ describe('CatererStation Service |', function () {
     });
   });
 
-
   describe('deleteCatererStation', function () {
     it('should be accessible in the service', function () {
       expect(catererStationService.deleteCatererStation).toBeDefined();
     });
+
     beforeEach(function () {
-      $httpBackend.whenDELETE(/caterer-stations/).respond({done: true});
+      $httpBackend.whenDELETE(/caterer-stations/).respond({ done: true });
     });
+
     it('should make DELETE request to API', function () {
       catererStationService.deleteCatererStation(123);
       $httpBackend.expectDELETE(/caterer-stations/);

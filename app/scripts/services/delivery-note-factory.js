@@ -15,27 +15,27 @@ angular.module('ts5App')
       return deliveryNotesService.getDeliveryNote(deliveryNoteId);
     }
 
-    function getCatererStationList(){
-      return catererStationService.getCatererStationList({limit:null});
+    function getCatererStationList() {
+      return catererStationService.getCatererStationList({ limit:null });
     }
 
-    function getItemsByCateringStationId(_catererStationId){
+    function getItemsByCateringStationId(_catererStationId) {
       return stockManagementStationItemsService.getStockManagementStationItems(_catererStationId);
     }
 
-    function getCompanyReasonCodes(){
+    function getCompanyReasonCodes() {
       return companyReasonCodesService.getAll();
     }
 
-    function getMasterItems(payload){
+    function getMasterItems(payload) {
       return itemsService.getItemsList(payload, true);
     }
 
-    function createDeliveryNote(payload){
+    function createDeliveryNote(payload) {
       return deliveryNotesService.createDeliveryNote(payload);
     }
 
-    function saveDeliveryNote(payload){
+    function saveDeliveryNote(payload) {
       return deliveryNotesService.saveDeliveryNote(payload);
     }
 

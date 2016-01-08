@@ -13,6 +13,7 @@ describe('Employees Service', function () {
     inject(function (_servedEmployees_) {
       employeesJSON = _servedEmployees_;
     });
+
     employeesService = _employeesService_;
     $httpBackend = $injector.get('$httpBackend');
   }));
@@ -41,6 +42,7 @@ describe('Employees Service', function () {
         employeesService.getEmployees(companyId).then(function (dataFromAPI) {
           employeeData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 

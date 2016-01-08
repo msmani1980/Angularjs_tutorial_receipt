@@ -15,6 +15,7 @@ describe('Directive: dynamicLeftNav', function() {
     scope = _$rootScope_;
     location = _$location_;
   }));
+
   beforeEach(inject(function($compile) {
     element = angular.element('<dynamic-left-nav></dynamic-left-nav>');
     element = $compile(element)(scope);
@@ -27,14 +28,17 @@ describe('Directive: dynamicLeftNav', function() {
     beforeEach(inject(function() {
       isolatedScope = element.isolateScope();
     }));
+
     it('should have a leaveViewNav function defined', function() {
       expect(isolatedScope.leaveViewNav).toBeDefined();
     });
+
     it('should be able to call leaveViewNav()', function() {
       spyOn(isolatedScope, 'leaveViewNav').and.callThrough();
       isolatedScope.leaveViewNav('some-path');
       expect(isolatedScope.leaveViewNav).toHaveBeenCalled();
     });
+
     it('should end the user to ember using leaveViewNav() and call sendToEmber()', function() {
       spyOn(isolatedScope, 'leaveViewNav').and.callThrough();
       spyOn(isolatedScope, 'sendToEmber');
@@ -52,15 +56,19 @@ describe('Directive: dynamicLeftNav', function() {
       scope.$digest();
       isolatedScope = element.isolateScope();
     }));
+
     it('should have have a title attribute', function() {
       expect(element.attr('title')).toBeDefined();
     });
+
     it('should match the title variable passed to the directive', function() {
       expect(element.attr('title')).toEqual(isolatedScope.title);
     });
+
     it('should have a menuItems variable in scope', function() {
       expect(isolatedScope.menuItems).toBeDefined();
     });
+
     it('should have 5 items in the menuItems array scope variable', function() {
       expect(isolatedScope.menuItems.length).toEqual(3);
     });
@@ -75,9 +83,11 @@ describe('Directive: dynamicLeftNav', function() {
       scope.$digest();
       isolatedScope = element.isolateScope();
     }));
+
     it('should have a menuItems variable in scope', function() {
       expect(isolatedScope.menuItems).toBeDefined();
     });
+
     it('should have 5 items in the menuItems array scope variable', function() {
       expect(isolatedScope.menuItems.length).toEqual(3);
     });

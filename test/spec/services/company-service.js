@@ -38,6 +38,7 @@ describe('Service: companyService', function () {
       companyService.getCompanyList().then(function (companyListFromAPI) {
         companyData = companyListFromAPI;
       });
+
       $httpBackend.flush();
     });
 

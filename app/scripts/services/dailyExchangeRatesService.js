@@ -48,6 +48,7 @@ angular.module('ts5App')
       if (payload.dailyExchangeRate.id) {
         method = 'update';
       }
+
       return dailyExchangeRatesResource[method + 'ExchangeRate'](payload).$promise;
     };
 

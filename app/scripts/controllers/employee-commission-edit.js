@@ -59,6 +59,7 @@ angular.module('ts5App')
       if (commissionObject.endDate) {
         commissionObject.endDate = dateUtility.formatDateForApp(commissionObject.endDate);
       }
+
       return commissionObject;
     }
 
@@ -67,13 +68,14 @@ angular.module('ts5App')
     }
 
     function getSelectedObjectFromArrayUsingId(fromArray, id) {
-      var filteredObject = $filter('filter')(fromArray, {id: id}, function (expected, actual) {
+      var filteredObject = $filter('filter')(fromArray, { id: id }, function (expected, actual) {
         return angular.equals(parseInt(expected), parseInt(actual));
       });
 
       if (filteredObject && filteredObject.length > 0) {
         return filteredObject[0];
       }
+
       return {};
     }
 
@@ -104,7 +106,7 @@ angular.module('ts5App')
       $scope.commission.selectedRateType = getSelectedRateTypeObject();
 
       angular.forEach($scope.commission.fixeds, function (currencyValue) {
-        var currency = $filter('filter')($scope.companyCurrencies, {id: currencyValue.currencyId}, true)[0];
+        var currency = $filter('filter')($scope.companyCurrencies, { id: currencyValue.currencyId }, true)[0];
         $scope.commission.currenciesFields[currency.code] = currencyValue.fixedValue;
       });
     }
@@ -182,12 +184,13 @@ angular.module('ts5App')
           currencyId: currency.id
         });
       });
-      return {fixeds: currencies};
+
+      return { fixeds: currencies };
     }
 
     var getValuesFor = {
-      'Percentage': getRatePercentage,
-      'Amount': getRateAmount
+      Percentage: getRatePercentage,
+      Amount: getRateAmount
     };
 
     function createPayload() {
@@ -196,7 +199,7 @@ angular.module('ts5App')
         startDate: dateUtility.formatDateForAPI($scope.commission.startDate),
         endDate: dateUtility.formatDateForAPI($scope.commission.endDate),
         itemMasterId: $scope.commission.selectedItem.id,
-        types: [{priceTypeId: $scope.commission.selectedPriceType.id}]
+        types: [{ priceTypeId: $scope.commission.selectedPriceType.id }]
       };
 
       if ($scope.commission.id) {

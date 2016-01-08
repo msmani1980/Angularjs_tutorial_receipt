@@ -15,6 +15,7 @@ describe('Service: discountService', function () {
     inject(function (_servedCompanyDiscounts_) {
       discountResponseJSON = _servedCompanyDiscounts_;
     });
+
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/company-discounts/).respond(discountResponseJSON);
     $httpBackend.whenDELETE(/company-discounts/).respond(201);
@@ -40,6 +41,7 @@ describe('Service: discountService', function () {
         discountService.getDiscountList().then(function (discountListFromAPI) {
           discountData = discountListFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -50,21 +52,27 @@ describe('Service: discountService', function () {
       it('should have a discountTypeName name property', function () {
         expect(discountData.companyDiscounts[0].companyId).toBe(403);
       });
+
       it('should have a discountTypeName name property', function () {
         expect(discountData.companyDiscounts[0].discountTypeId).toBe(4);
       });
+
       it('should have a discountTypeName name property', function () {
         expect(discountData.companyDiscounts[0].discountTypeName).toBe('Voucher');
       });
+
       it('should have a discountTypeName name property', function () {
         expect(discountData.companyDiscounts[0].name).toBe('10 % ');
       });
+
       it('should have a discountTypeName name property', function () {
         expect(discountData.companyDiscounts[0].rateTypeId).toBe(1);
       });
+
       it('should have a discountTypeName name property', function () {
         expect(discountData.companyDiscounts[0].rateTypeName).toBe('Percentage');
       });
+
       it('should have a discountTypeName name property', function () {
         expect(discountData.companyDiscounts[0].companyDiscountRestrictions).toBe(false);
       });
@@ -96,13 +104,13 @@ describe('Service: discountService', function () {
 
     it('should create discount', function() {
       $httpBackend.expectPOST(/company-discounts/);
-      discountService.createDiscount({name: 'test'});
+      discountService.createDiscount({ name: 'test' });
       $httpBackend.flush();
     });
 
     it('should update discount', function() {
       $httpBackend.expectPUT(/company-discounts\/1/);
-      discountService.updateDiscount(1, {name: 'test'});
+      discountService.updateDiscount(1, { name: 'test' });
       $httpBackend.flush();
     });
 

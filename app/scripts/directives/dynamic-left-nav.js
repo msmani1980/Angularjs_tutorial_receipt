@@ -23,6 +23,7 @@ angular.module('ts5App')
           }
         });
       }
+
       if (menuItems.length) {
         $scope.menuItems = menuItems[0].menuItems;
       }
@@ -47,6 +48,7 @@ angular.module('ts5App')
         if ('/#' + $location.path() === path) {
           itemClass += ' active';
         }
+
         return itemClass;
       };
 

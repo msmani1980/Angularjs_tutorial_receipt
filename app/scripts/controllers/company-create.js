@@ -62,6 +62,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       if ($scope.editingCompany) {
         prefix = 'Editing ';
       }
+
       $scope.viewName = prefix + item.companyName;
     };
 
@@ -135,11 +136,11 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.addCountryVat = function () {
-      $scope.formData.countryVats.push({vatAmounts: []});
+      $scope.formData.countryVats.push({ vatAmounts: [] });
     };
 
     $scope.addVatAmount = function (countryVat) {
-      countryVat.vatAmounts.push({vatAmount: null});
+      countryVat.vatAmounts.push({ vatAmount: null });
     };
 
     $scope.removeVatAmount = function (countryVat, vatAmount) {
@@ -185,6 +186,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $q.all(promises).then(function (response) {
         $this.updateSuccessHandler(response);
       }, function (error) {
+
         $this.errorHandler(error);
       });
     };

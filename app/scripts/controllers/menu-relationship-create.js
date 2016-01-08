@@ -28,6 +28,7 @@ angular.module('ts5App')
       if ($routeParams.id && !$scope.viewOnly) {
         this.setFormAsEdit();
       }
+
       if ($scope.editingRelationship || $scope.viewOnly) {
         this.getRelationship($routeParams.id);
       } else {
@@ -64,6 +65,7 @@ angular.module('ts5App')
       if ($scope.editingRelationship) {
         prefix = 'Editing';
       }
+
       var menuIndex = this.findMenuIndex($scope.formData.menuId);
       $scope.viewName = prefix + ' Menu ' + $scope.menuList[menuIndex].menuCode +
         ' Catering Stations';
@@ -88,6 +90,7 @@ angular.module('ts5App')
       if (id) {
         promises.push(menuCatererStationsService.getRelationship(id));
       }
+
       return promises;
     };
 
@@ -122,6 +125,7 @@ angular.module('ts5App')
           break;
         }
       }
+
       return menuIndex;
     };
 
@@ -134,6 +138,7 @@ angular.module('ts5App')
           break;
         }
       }
+
       return stationIndex;
     };
 
@@ -147,14 +152,16 @@ angular.module('ts5App')
           text: stationCode
         });
       }
+
       return data;
     };
 
     this.generatePlaceholder = function() {
       var placeholder = 'Search by Station Code';
-      if($scope.viewOnly || $scope.isRelationshipActive() || $scope.isRelationshipInactive() ) {
+      if ($scope.viewOnly || $scope.isRelationshipActive() || $scope.isRelationshipInactive()) {
         placeholder = '';
       }
+
       return placeholder;
     };
 
@@ -163,6 +170,7 @@ angular.module('ts5App')
       if (angular.isArray($scope.formData.catererStationIds)) {
         data = this.generateSelectedOptions(data);
       }
+
       angular.element('select.multi-select').select2({
         width: '100%',
         placeholder: $this.generatePlaceholder(),
@@ -219,7 +227,7 @@ angular.module('ts5App')
           $this.initSelectUI();
           $this.hideLoadingModal();
           $this.showSuccessMessage('Relationship updated!');
-        }, this.errorHandler );
+        }, this.errorHandler);
     };
 
     this.createRelationship = function (relationshipData) {
@@ -228,7 +236,7 @@ angular.module('ts5App')
         function () {
           $this.showSuccessMessage('Relationship created!');
           $location.path('/menu-relationship-list');
-        }, this.errorHandler );
+        }, this.errorHandler);
     };
 
     $scope.submitForm = function (formData) {
@@ -254,6 +262,7 @@ angular.module('ts5App')
       if ($scope.editingRelationship) {
         return dateUtility.isTodayOrEarlier($scope.formData.startDate);
       }
+
       return false;
     };
 
@@ -261,6 +270,7 @@ angular.module('ts5App')
       if ($scope.editingRelationship) {
         return dateUtility.isYesterdayOrEarlier($scope.formData.endDate);
       }
+
       return false;
     };
 
@@ -269,26 +279,31 @@ angular.module('ts5App')
       if (!$scope.form.$valid) {
         $scope.displayError = true;
       }
+
       return $scope.form.$valid;
     };
 
     $scope.setInputValidClass = function (inputName) {
-      if($scope.form[inputName].$touched && $scope.form[inputName].$invalid || $scope.displayError && $scope.form[inputName].$invalid) {
+      if ($scope.form[inputName].$touched && $scope.form[inputName].$invalid || $scope.displayError && $scope.form[inputName].$invalid) {
         return 'has-error';
       }
-      if($scope.form[inputName].$touched && $scope.form[inputName].$valid) {
+
+      if ($scope.form[inputName].$touched && $scope.form[inputName].$valid) {
         return 'has-success';
       }
+
       return '';
     };
 
     $scope.setStationsValidClass = function (inputName) {
-      if($scope.form[inputName].$touched && $scope.form[inputName].length < 1 || $scope.displayError && $scope.form[inputName].length < 1) {
+      if ($scope.form[inputName].$touched && $scope.form[inputName].length < 1 || $scope.displayError && $scope.form[inputName].length < 1) {
         return 'has-error';
       }
-      if($scope.form[inputName].$touched && $scope.form[inputName].$valid) {
+
+      if ($scope.form[inputName].$touched && $scope.form[inputName].$valid) {
         return 'has-success';
       }
+
       return '';
     };
 
