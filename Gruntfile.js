@@ -145,7 +145,14 @@ module.exports = function (grunt) {
         }
       }
     },
-
+    jscs: {
+      src: '<%= yeoman.app %>/scripts/{,*/}*.js',
+      options: {
+        config: '.jscsrc',
+        verbose: true,
+        fix: false
+      }
+    },
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {

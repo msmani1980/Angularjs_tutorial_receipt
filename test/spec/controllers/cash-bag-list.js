@@ -137,7 +137,7 @@ describe('Controller: CashBagListCtrl', function () {
         expect(scope.search).toBeDefined();
       });
       it('should call get CashBagList with params', function () {
-        scope.loadCashbagList();
+        scope.loadCashBagList();
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
       });
       it('should call get CashBagList with search params', function () {

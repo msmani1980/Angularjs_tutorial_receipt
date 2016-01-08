@@ -8,17 +8,26 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, ngToast, dateUtility, lodash) {
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, ngToast, dateUtility, lodash, socketIO) {
 
-    var _companyId = null;
-    var _services = null;
-    $scope.cashBagList = [];
+    var companyId;
+    var services = [];
     var $this = this;
+    $scope.cashBagList = [];
     this.meta = {
       count: undefined,
       limit: 100,
       offset: 0
     };
+
+    socketIO.on('init', function (data) {
+      console.log('init', data);
+    });
+
+    socketIO.on('echo', function (message) {
+      $scope.search.cashBagNumber = message.message;
+      $scope.searchCashBag();
+    });
 
     $scope.viewName = 'Manage Cash Bag';
     $scope.createCashBagError = 'temp error message';
@@ -99,23 +108,23 @@ angular.module('ts5App')
 
     (function constructor() {
       showLoadingModal();
-      _companyId = cashBagFactory.getCompanyId();
-      _services = {
+      companyId = cashBagFactory.getCompanyId();
+      services = {
         promises: [],
         call: function (servicesArray) {
           angular.forEach(servicesArray, function (_service) {
-            _services.promises.push(_services[_service]());
+            services.promises.push(services[_service]());
           });
         },
         getStationList: function () {
-          return cashBagFactory.getStationList(_companyId).then(getStationListResponseHandler);
+          return cashBagFactory.getStationList(companyId).then(getStationListResponseHandler);
         },
         getSchedulesList: function () {
-          return cashBagFactory.getSchedulesList(_companyId).then(getSchedulesListResponseHandler);
+          return cashBagFactory.getSchedulesList(companyId).then(getSchedulesListResponseHandler);
         }
       };
-      _services.call(['getStationList', 'getSchedulesList']);
-      $q.all(_services.promises).then(hideLoadingModal);
+      services.call(['getStationList', 'getSchedulesList']);
+      $q.all(services.promises).then(hideLoadingModal);
     })();
 
     function loadCashBagList() {
@@ -135,11 +144,11 @@ angular.module('ts5App')
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
-      cashBagFactory.getCashBagList(_companyId, payload).then(getCashBagResponseHandler);
+      cashBagFactory.getCashBagList(companyId, payload).then(getCashBagResponseHandler);
       $this.meta.offset += $this.meta.limit;
     }
 
-    $scope.loadCashbagList = loadCashBagList;
+    $scope.loadCashBagList = loadCashBagList;
 
     $scope.searchCashBag = function () {
       $scope.cashBagList = [];
@@ -259,7 +268,7 @@ angular.module('ts5App')
         endDate: searchDate
       };
       cashBagFactory.getStoreList(payload).then(getStoreListResponseHandler);
-      cashBagFactory.getSchedulesInDateRange(_companyId, searchDate, searchDate).then(setFilteredScheduleList);
+      cashBagFactory.getSchedulesInDateRange(companyId, searchDate, searchDate).then(setFilteredScheduleList);
 
     });
 
