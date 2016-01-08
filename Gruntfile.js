@@ -527,6 +527,10 @@ module.exports = function (grunt) {
     'htmlmin'
   ]);
 
+  grunt.registerTask('lint', [
+    'jshint',
+    'jscs'
+  ]);
   grunt.registerTask('default', [
     'newer:jshint',
     'newer:jscs',
