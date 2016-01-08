@@ -150,7 +150,8 @@ module.exports = function (grunt) {
       options: {
         config: '.jscsrc',
         verbose: true,
-        fix: false
+        fix: false,
+        excludeFiles: ['<%= yeoman.app %>/scripts/config.js']
       },
       all: {
         src: [
