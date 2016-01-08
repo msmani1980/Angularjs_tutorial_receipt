@@ -289,6 +289,35 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
     };
 
+    this.formatInitialRedispatchPayload = function() {
+      var payload;
+      if (angular.isDefined($scope.prevStoreDetails)) {
+        payload = {
+          scheduleDate: dateUtility.formatDateForAPI($scope.prevStoreDetails.scheduleDate),
+          menus: $this.formatMenus($scope.prevStoreDetails.menuList),
+          inboundStationId: parseInt($scope.formData.cateringStationId),
+          cateringStationId: parseInt($scope.prevStoreDetails.cateringStationId),
+          scheduleNumber: $scope.prevStoreDetails.scheduleNumber,
+          storeId: parseInt($scope.prevStoreDetails.storeId)
+        };
+        if ($scope.existingSeals && $scope.userConfirmedDataLoss) {
+          payload.note = '';
+          payload.tampered = false;
+        }
+      }
+      if (angular.isUndefined($scope.prevStoreDetails)) {
+        payload = {
+          scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
+          menus: $this.formatMenus($scope.storeDetails.menuList),
+          inboundStationId: parseInt($scope.formData.cateringStationId),
+          cateringStationId: parseInt($scope.storeDetails.cateringStationId),
+          scheduleNumber: $scope.storeDetails.scheduleNumber,
+          storeId: parseInt($scope.storeDetails.storeId)
+        };
+      }
+      return payload;
+    };
+
     this.formatReplenishPayload = function(payload) {
       if (!$scope.formData.replenishStoreInstanceId) {
         payload.replenishStoreInstanceId = $routeParams.storeId;
@@ -313,11 +342,15 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.prevInstanceNextStep = angular.copy($scope.prevInstanceWizardSteps[currentStepIndex]);
     };
 
+    this.actionSwitch = function(action) {
+      return action ? action : $routeParams.action;
+    };
+
     this.formatPayload = function(action) {
       var payload = angular.copy($scope.formData);
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
       payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
-      var actionSwitch = (action ? action : $routeParams.action);
+      var actionSwitch = this.actionSwitch(action);
       switch (actionSwitch) {
         case 'replenish':
           $this.formatReplenishPayload(payload);
@@ -325,6 +358,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         case 'redispatch':
           $this.formatRedispatchPayload(payload);
           break;
+        case 'redispatch-initial':
+          return $this.formatInitialRedispatchPayload();
         case 'end-instance':
           $this.formatEndInstancePayload(payload);
           break;
@@ -692,7 +727,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.makeRedispatchPromises = function() {
       var prevInstanceStatus = this.parsePrevInstanceStatus();
-      var payload = this.formatPayload('end-instance');
+      var payload = this.formatPayload('redispatch-initial');
       return {
         updateInstancePromises: [{
           f: storeInstanceFactory.updateStoreInstance,
@@ -859,7 +894,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
         return;
       }
-      var promises = $this.makeEditPromises('end-instance', 'redispatch');
+      var promises = $this.makeEditPromises('end-instance', 'redispatch-initial');
       var deletePromises = [];
       if ($this.removeAllDataForInstances()) {
         deletePromises.push($this.makeDeleteSealsPromises(parseInt($routeParams.storeId)));
