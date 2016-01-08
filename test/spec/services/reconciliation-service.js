@@ -28,6 +28,7 @@ describe('Service: reconciliationService', function () {
     reconciliationService.getStockTotals(storeInstanceId).then(function (response) {
       expect(response).toBeDefined();
     });
+
     httpBackend.flush();
   });
 
@@ -38,6 +39,7 @@ describe('Service: reconciliationService', function () {
     reconciliationService.getPromotionTotals(storeInstanceId).then(function (response) {
       expect(response).toBeDefined();
     });
+
     httpBackend.flush();
   });
 
@@ -48,6 +50,7 @@ describe('Service: reconciliationService', function () {
     reconciliationService.getPaymentReport(storeInstanceId).then(function (response) {
       expect(response).toBeDefined();
     });
+
     httpBackend.flush();
   });
 
@@ -59,6 +62,7 @@ describe('Service: reconciliationService', function () {
       reconciliationService.getCHCashBagRevenue(storeInstanceId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
 
@@ -69,6 +73,7 @@ describe('Service: reconciliationService', function () {
       reconciliationService.getCHCreditCardRevenue(storeInstanceId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
 
@@ -79,6 +84,7 @@ describe('Service: reconciliationService', function () {
       reconciliationService.getCHDiscountRevenue(storeInstanceId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
 
@@ -89,6 +95,7 @@ describe('Service: reconciliationService', function () {
       reconciliationService.getEPOSCashBagRevenue(storeInstanceId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
 
@@ -99,6 +106,7 @@ describe('Service: reconciliationService', function () {
       reconciliationService.getEPOSCreditCardRevenue(storeInstanceId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
 
@@ -109,31 +117,35 @@ describe('Service: reconciliationService', function () {
       reconciliationService.getEPOSDiscountRevenue(storeInstanceId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
 
     it('should fetch reconciliation pre-check devices', function () {
       httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/devices/).respond(200, {});
-      reconciliationService.getReconciliationPrecheckDevices({storeInstanceId: 123}).then(function (dataFromAPI) {
+      reconciliationService.getReconciliationPrecheckDevices({ storeInstanceId: 123 }).then(function (dataFromAPI) {
         expect(dataFromAPI).toBeDefined();
       });
+
       httpBackend.flush();
 
     });
 
     it('should fetch reconciliation pre-check schedules', function () {
       httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/schedules/).respond(200, {});
-      reconciliationService.getReconciliationPrecheckSchedules({storeInstanceId: 123}).then(function (dataFromAPI) {
+      reconciliationService.getReconciliationPrecheckSchedules({ storeInstanceId: 123 }).then(function (dataFromAPI) {
         expect(dataFromAPI).toBeDefined();
       });
+
       httpBackend.flush();
     });
 
     it('should fetch reconciliation pre-check cashbags', function () {
       httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/cashbags/).respond(200, {});
-      reconciliationService.getReconciliationPrecheckCashbags({storeInstanceId: 123}).then(function (dataFromAPI) {
+      reconciliationService.getReconciliationPrecheckCashbags({ storeInstanceId: 123 }).then(function (dataFromAPI) {
         expect(dataFromAPI).toBeDefined();
       });
+
       httpBackend.flush();
     });
 

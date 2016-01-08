@@ -129,5 +129,4 @@ describe('Service: identityAccessFactory', function () {
 
   });
 
-
 });

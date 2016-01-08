@@ -33,6 +33,7 @@ describe('Service: featureThresholdsService', function() {
       featureThresholdsService.getThresholdList('STOREDISPATCH').then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -48,6 +49,7 @@ describe('Service: featureThresholdsService', function() {
       featureThresholdsService.getThreshold('FAKECODE', 1).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });

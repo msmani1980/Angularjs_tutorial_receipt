@@ -73,8 +73,8 @@ describe('Service: itemsFactory', function () {
     });
 
     it('should call itemsService when calling updateItem', function () {
-      itemsFactory.updateItem({id: 3}, payload);
-      expect(itemsService.updateItem).toHaveBeenCalledWith({id: 3}, payload);
+      itemsFactory.updateItem({ id: 3 }, payload);
+      expect(itemsService.updateItem).toHaveBeenCalledWith({ id: 3 }, payload);
     });
 
     it('should call itemsService when calling removeItem', function () {

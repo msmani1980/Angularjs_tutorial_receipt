@@ -26,12 +26,13 @@ describe('Service: versionService', function () {
     describe('getProjectInfo', function () {
       beforeEach(function () {
         $httpBackend.expectGET(/project/).respond({
-          'PROJECT_VERSION': '0.2.10',
-          'BUILD_NUMBER': '06'
+          PROJECT_VERSION: '0.2.10',
+          BUILD_NUMBER: '06'
         });
         versionService.getProjectInfo().then(function (dataFromAPI) {
           responseData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 

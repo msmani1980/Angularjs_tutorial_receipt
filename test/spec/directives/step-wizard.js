@@ -47,22 +47,28 @@ describe('The Step Wizard directive', function() {
         if (param1 === 2) {
           return;
         }
+
         return true;
       };
+
       scope.mockPrevTrigger1 = function(param2, param3) {
         if (param2 === 3) {
           return;
         }
+
         if (param3 === 4) {
           return;
         }
+
         return true;
       };
+
       scope.mockSaveTrigger1 = function(param4) {
         if (param4 === 5) {
           return;
         }
       };
+
       template = '<step-wizard steps="wizardSteps" ' +
         'prev-trigger="mockPrevTrigger1(param1)" ' +
         'next-trigger="mockNextTrigger1(param2, param3)" ' +
@@ -172,15 +178,19 @@ describe('The Step Wizard directive', function() {
         if (param5 === 6) {
           return true;
         }
+
         return false;
       };
+
       scope.mockNextTrigger2 = function(param6, param7) {
         if (param6 === 7) {
           return true;
         }
+
         if (param7 === 8) {
           return true;
         }
+
         return false;
       };
 
@@ -335,6 +345,7 @@ describe('The Step Wizard directive', function() {
       spyOn(directiveScope, 'nextTrigger').and.returnValue(undefined);
       spyOn(directiveScope, 'prevTrigger').and.returnValue(undefined);
     }));
+
     it('should not step forward', function() {
       expect(directiveScope.wizardNext()).toBe(false);
     });
@@ -364,6 +375,7 @@ describe('The Step Wizard directive', function() {
       compileDirective();
       expect(directiveScope.saveButtonText).toEqual('Save & Exit');
     });
+
     it('should be set to save-button-text attribute', function() {
       scope.mockButtonText = 'fakeButtonText';
       template = '<step-wizard steps="wizardSteps" save-button-text="mockButtonText"></step-wizard>';
@@ -371,6 +383,5 @@ describe('The Step Wizard directive', function() {
       expect(directiveScope.saveButtonText).toEqual(scope.mockButtonText);
     });
   });
-
 
 });

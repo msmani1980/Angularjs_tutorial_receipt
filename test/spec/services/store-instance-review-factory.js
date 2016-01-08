@@ -23,23 +23,23 @@ describe('Service: storeInstanceReviewFactory', function () {
 
   }));
 
-  describe('storeInstanceSealService API calls', function(){
-    it('should call getStoreInstanceSeals', function(){
+  describe('storeInstanceSealService API calls', function() {
+    it('should call getStoreInstanceSeals', function() {
       var id = 432;
       storeInstanceReviewFactory.getStoreInstanceSeals(id);
       expect(storeInstanceSealService.getStoreInstanceSeals).toHaveBeenCalledWith(id);
     });
   });
 
-  describe('sealColorsService API calls', function(){
-    it('should call getSealColors', function(){
+  describe('sealColorsService API calls', function() {
+    it('should call getSealColors', function() {
       storeInstanceReviewFactory.getSealColors();
       expect(sealColorsService.getSealColors).toHaveBeenCalled();
     });
   });
 
-  describe('sealTypesService API calls', function(){
-    it('should call getSealTypes', function(){
+  describe('sealTypesService API calls', function() {
+    it('should call getSealTypes', function() {
       storeInstanceReviewFactory.getSealTypes();
       expect(sealTypesService.getSealTypes).toHaveBeenCalled();
     });

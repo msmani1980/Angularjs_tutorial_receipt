@@ -20,16 +20,16 @@ describe('Units Service', function () {
     'served/units-volume.json'
   ));
 
-
   // Inject the service and responshandler
   beforeEach(inject(function (_unitsService_, $injector) {
 
     // Inject the JSON fixtures
-    inject(function (_servedUnitsDimension_,_servedUnitsWeight_,_servedUnitsVolume_) {
+    inject(function (_servedUnitsDimension_, _servedUnitsWeight_, _servedUnitsVolume_) {
       unitsDimensionJSON = _servedUnitsDimension_;
       unitsWeightJSON = _servedUnitsWeight_;
       unitsVolumeJSON = _servedUnitsVolume_;
     });
+
     unitsService = _unitsService_;
     $httpBackend = $injector.get('$httpBackend');
 
@@ -43,7 +43,6 @@ describe('Units Service', function () {
   it('The service should exist', function () {
     expect(unitsService).toBeDefined();
   });
-
 
   // Units/Dimensions API
   describe('When calling the Dimensions API it', function () {
@@ -63,7 +62,6 @@ describe('Units Service', function () {
       testObject = response.units[0];
 
     });
-
 
     it('should be able call the getDimensionList method', function () {
       expect(unitsService.getDimensionList).toHaveBeenCalled();
@@ -103,7 +101,7 @@ describe('Units Service', function () {
 
   }); // describe Units/Dimensions api
 
-   // Units/Volume API
+  // Units/Volume API
   describe('When calling the Volume API it', function () {
 
     // inject the http request mock to the API
@@ -121,7 +119,6 @@ describe('Units Service', function () {
       testObject = response.units[0];
 
     });
-
 
     it('should be able call the getVolumeList method', function () {
       expect(unitsService.getVolumeList).toHaveBeenCalled();
@@ -180,7 +177,6 @@ describe('Units Service', function () {
 
     });
 
-
     it('should be able call the getWeightList method', function () {
       expect(unitsService.getWeightList).toHaveBeenCalled();
     });
@@ -218,6 +214,5 @@ describe('Units Service', function () {
     });
 
   }); // describe Units/Weight api
-
 
 }); // describe item service

@@ -62,6 +62,7 @@ describe('Controller: StockTakeCtrl', function() {
       });
       scope.$digest();
     }));
+
     it('should redirect to /', function() {
       expect(location.path()).toBe('/');
     });
@@ -79,38 +80,47 @@ describe('Controller: StockTakeCtrl', function() {
       });
       scope.$digest();
     }));
+
     it('should have a state scope var set to view', function() {
       expect(scope.state).toBe('view');
     });
+
     // Api call #1
     it('should call stockTakeFactory.getCatererStationList', function() {
       expect(stockTakeFactory.getCatererStationList).toHaveBeenCalled();
     });
+
     it('should set catererStationList scope var', function() {
       expect(scope.catererStationList).toBeDefined();
       expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
     });
+
     // API call #2
     it('should call stockTakeFactory.getStockTake with routeParams.id', function() {
       expect(stockTakeFactory.getStockTake).toHaveBeenCalledWith(routeParams.id);
     });
+
     it('should set stockTake scope var', function() {
       expect(scope.stockTake).toBeDefined();
     });
+
     // Scope globals
     describe('global scope functions and vars', function() {
       it('should have a cancel scope function', function() {
         expect(scope.cancel).toBeDefined();
         expect(Object.prototype.toString.call(scope.cancel)).toBe('[object Function]');
       });
+
       it('should have a toggleReview scope function', function() {
         expect(scope.toggleReview).toBeDefined();
         expect(Object.prototype.toString.call(scope.toggleReview)).toBe('[object Function]');
       });
+
       it('should have a clearFilter scope function', function() {
         expect(scope.clearFilter).toBeDefined();
         expect(Object.prototype.toString.call(scope.clearFilter)).toBe('[object Function]');
       });
+
       it('should have a save scope function', function() {
         expect(scope.save).toBeDefined();
         expect(Object.prototype.toString.call(scope.save)).toBe('[object Function]');
@@ -130,26 +140,33 @@ describe('Controller: StockTakeCtrl', function() {
       });
       scope.$digest();
     }));
+
     it('shouldset stockTake.catererStationId scope var to routeParams.id', function() {
       expect(scope.stockTake.catererStationId).toBe(3);
     });
+
     it('should have a state scope var set to create', function() {
       expect(scope.state).toBe('create');
     });
+
     // Api call #1
     it('should call stockTakeFactory.getCatererStationList', function() {
       expect(stockTakeFactory.getCatererStationList).toHaveBeenCalled();
     });
+
     it('should call stockTakeFactory.getItemsMasterList', function() {
       expect(stockTakeFactory.getItemsMasterList).toHaveBeenCalled();
     });
+
     it('should call stockTakeCtrl.filterAvailableItems and set filteredItems in the scope', function() {
       expect(scope.filteredItems).toBeDefined();
     });
+
     it('should redirect to /stock-take-report when cancel button is clicked', function() {
       scope.cancel();
       expect(location.path()).toBe('/stock-take-report');
     });
+
     describe('change LMP station', function() {
       it('should call stockTakeFactory.getItemsByCateringStationId', function() {
         var csid = 5;
@@ -158,6 +175,7 @@ describe('Controller: StockTakeCtrl', function() {
         expect(stockTakeFactory.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
       });
     });
+
     describe('save scope function, only save', function() {
       beforeEach(function() {
         scope.stockTake = {
@@ -169,9 +187,11 @@ describe('Controller: StockTakeCtrl', function() {
         scope.itemQuantities[4] = 11;
         scope.save(false);
       });
+
       it('should set delivery note is accepted to whatever is passed in', function() {
         expect(scope.stockTake.isSubmitted).toBe(false);
       });
+
       it('should call createStockTake', function() {
         var mockedPayload = {
           catererStationId: 3,
@@ -202,32 +222,40 @@ describe('Controller: StockTakeCtrl', function() {
       });
       scope.$digest();
     }));
+
     it('should have a state scope var set to create', function() {
       expect(scope.state).toBe('edit');
     });
+
     // Api call #1
     it('should call stockTakeFactory.getCatererStationList', function() {
       expect(stockTakeFactory.getCatererStationList).toHaveBeenCalled();
     });
+
     it('should set catererStationList scope var', function() {
       expect(scope.catererStationList).toBeDefined();
       expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
     });
+
     // API call #2
     it('should call stockTakeFactory.getStockTake with routeParams.id', function() {
       expect(stockTakeFactory.getStockTake).toHaveBeenCalledWith(routeParams.id);
     });
+
     it('should set stockTake scope var', function() {
       expect(scope.stockTake).toBeDefined();
     });
+
     it('should switch the state to review when review button is clicked', function() {
       scope.toggleReview();
       expect(scope.state).toBe('review');
     });
+
     it('should switch the state back to edit when the cancel button is clicked', function() {
       scope.cancel();
       expect(scope.state).toBe('edit');
     });
+
     describe('clearFilter scope function', function() {
       it('should set all filters to empty string when called', function() {
         scope.filterInput = {};
@@ -239,6 +267,7 @@ describe('Controller: StockTakeCtrl', function() {
         expect(scope.filterInput.itemName).toBeUndefined();
       });
     });
+
     describe('save scope function submit stock take', function() {
       beforeEach(function() {
         scope.stockTake = {
@@ -251,29 +280,35 @@ describe('Controller: StockTakeCtrl', function() {
         scope.itemQuantities[4] = 11;
         scope.save(true);
       });
+
       it('should set delivery note is accepted to whatever is passed in', function() {
         expect(scope.stockTake.isSubmitted).toBe(true);
       });
+
       it('should call saveDeliveryNote', function() {
         expect(stockTakeFactory.updateStockTake).toHaveBeenCalled();
       });
     });
+
     describe('quantityDisabled scope function', function() {
       it('should return true if state is not create and edit', function() {
         scope.state = 'review';
         expect(scope.quantityDisabled()).toBe(true);
       });
+
       it('should return true if stock take is sbumitted', function() {
         scope.state = 'edit';
         scope.stockTake.isSubmitted = true;
         expect(scope.quantityDisabled()).toBe(true);
       });
+
       it('should return false otherwise...', function() {
         scope.state = 'edit';
         scope.stockTake.isSubmitted = false;
         expect(scope.quantityDisabled()).toBe(false);
       });
     });
+
     describe('toggleReview first click', function() {
       it('should set prev state to edit', function() {
         scope.state = 'edit';
@@ -281,6 +316,7 @@ describe('Controller: StockTakeCtrl', function() {
         expect(scope.state).toBe('review');
         expect(scope.prevState).toBe('edit');
       });
+
       it('should flip them back if toggled again', function() {
         scope.state = 'review';
         scope.prevState = 'edit';
@@ -289,12 +325,14 @@ describe('Controller: StockTakeCtrl', function() {
         expect(scope.prevState).toBeNull();
       });
     });
+
     describe('cancel in review state', function() {
       it('should return if prevState is set', function() {
         scope.prevState = 'edit';
         expect(scope.cancel()).toBeUndefined();
       });
     });
+
     describe('save scope function if stockTake is submitted', function() {
       it('should return', function() {
         scope.stockTake = {

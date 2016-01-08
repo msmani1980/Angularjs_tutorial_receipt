@@ -20,27 +20,35 @@ describe('The Date Picker Field directive', function() {
     if (config.form) {
       template += 'form="' + config.form + '" ';
     }
+
     if (config.label) {
       template += 'label="' + config.label + '" ';
     }
+
     if (config.name) {
       template += 'name="' + config.name + '" ';
     }
+
     if (config.ngModel) {
       template += 'ng-model="' + config.ngModel + '" ';
     }
+
     if (config.required) {
       template += 'required="' + config.required + '" ';
     }
+
     if (config.disablePast) {
       template += 'disable-past="' + config.disablePast + '" ';
     }
+
     if (config.placeholder) {
       template += 'placeholder="' + config.placeholder + '" ';
     }
+
     if (config.placeholder) {
       template += 'orientation="' + config.orientation + '" ';
     }
+
     template += '></date-picker-field>';
     return template;
   }

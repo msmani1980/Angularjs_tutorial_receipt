@@ -99,7 +99,6 @@ describe('Directive: leaveViewModal', function () {
         expect(scope.leavePath).toContain('test-path');
       });
 
-
     it('should contain the function leaveViewClose()', function () {
       scope.leaveViewClose();
       expect(scope.leaveViewClose).toBeDefined();

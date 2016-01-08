@@ -36,7 +36,7 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     httpBackend = $httpBackend;
     location = $location;
     scope = $rootScope.$new();
-    routeParams = {id: 765};
+    routeParams = { id: 765 };
 
     getCompanyListDeferred = $q.defer();
     getCompanyRelationshipListByCompanyDeferred = $q.defer();
@@ -159,9 +159,9 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     beforeEach(function () {
       resolveDependencies();
       companyRelationship = {
-        'relativeCompanyId': 366,
-        'startDate': '20150717',
-        'endDate': '20150724'
+        relativeCompanyId: 366,
+        startDate: '20150717',
+        endDate: '20150724'
       };
     });
 
@@ -211,6 +211,5 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     });
 
   });
-
 
 });

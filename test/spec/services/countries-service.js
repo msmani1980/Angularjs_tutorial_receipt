@@ -29,6 +29,7 @@ describe('Service: countriesService', function() {
       countriesService.getCountriesList().then(function(dataFromAPI) {
         fakeReponseData = dataFromAPI;
       });
+
       $httpBackend.flush();
     });
 

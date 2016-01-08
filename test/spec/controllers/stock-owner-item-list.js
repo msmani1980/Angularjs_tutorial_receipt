@@ -66,7 +66,6 @@ describe('The StockOwnerItemListCtrl controller', function() {
     });
     $scope.$digest();
 
-
     spyOn($scope, 'searchRecords');
     spyOn(StockOwnerItemListCtrl, 'getItemsList');
     spyOn(StockOwnerItemListCtrl, 'getItemTypesList');

@@ -13,32 +13,39 @@ describe('The confirmation modal directive', function () {
 
   function generateDirectiveTemplate(config) {
     var template = '<confirmation-modal ';
-    if(config.cancelLabel) {
-      template += 'cancel-label="'+config.cancelLabel+'" ';
+    if (config.cancelLabel) {
+      template += 'cancel-label="' + config.cancelLabel + '" ';
     }
-    if(config.title) {
-      template += 'title="'+config.title+'" ';
+
+    if (config.title) {
+      template += 'title="' + config.title + '" ';
     }
-    if(config.body) {
-      template += 'body="'+config.body+'" ';
+
+    if (config.body) {
+      template += 'body="' + config.body + '" ';
     }
-    if(config.confirmationCallback) {
-      template += 'confirmation-call-back="'+config.confirmationCallback+'" ';
+
+    if (config.confirmationCallback) {
+      template += 'confirmation-call-back="' + config.confirmationCallback + '" ';
     }
-    if(config.confirmationLabel) {
-      template += 'confirmation-label="'+config.confirmationLabel+'" ';
+
+    if (config.confirmationLabel) {
+      template += 'confirmation-label="' + config.confirmationLabel + '" ';
     }
-    if(config.alternativeCallback) {
-      template += 'alternative-call-back="'+config.alternativeCallback+'" ';
+
+    if (config.alternativeCallback) {
+      template += 'alternative-call-back="' + config.alternativeCallback + '" ';
     }
-    if(config.alternativeLabel) {
-      template += 'alternative-label="'+config.alternativeLabel+'" ';
+
+    if (config.alternativeLabel) {
+      template += 'alternative-label="' + config.alternativeLabel + '" ';
     }
+
     template += '></confirmation-modal>';
     return template;
   }
 
-  function renderDirective(config,$compile) {
+  function renderDirective(config, $compile) {
     var template = generateDirectiveTemplate(config);
     element = angular.element(template);
     element = $compile(element)(scope);
@@ -55,7 +62,7 @@ describe('The confirmation modal directive', function () {
         confirmationLabel: 'BEGIN BOGAN',
         cancelLabel: 'Give FE Team a Break from Bogans'
       };
-      renderDirective(config,$compile);
+      renderDirective(config, $compile);
     }));
 
     it('should have a modal element', function () {

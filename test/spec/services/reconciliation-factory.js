@@ -98,7 +98,6 @@ describe('Factory: reconciliationFactory', function () {
     getCHDiscountRevenueDeferred.resolve(200, {});
     spyOn(reconciliationService, 'getCHDiscountRevenue').and.returnValue(getCHDiscountRevenueDeferred.promise);
 
-
     getEPOSCashBagRevenueDeferred = $q.defer();
     getEPOSCashBagRevenueDeferred.resolve(200, {});
     spyOn(reconciliationService, 'getEPOSCashBagRevenue').and.returnValue(getEPOSCashBagRevenueDeferred.promise);
@@ -110,7 +109,6 @@ describe('Factory: reconciliationFactory', function () {
     getEPOSDiscountRevenueDeferred = $q.defer();
     getEPOSDiscountRevenueDeferred.resolve(200, {});
     spyOn(reconciliationService, 'getEPOSDiscountRevenue').and.returnValue(getEPOSDiscountRevenueDeferred.promise);
-
 
     scope = $rootScope.$new();
     reconciliationFactory = _reconciliationFactory_;
@@ -176,9 +174,11 @@ describe('Factory: reconciliationFactory', function () {
       it('should call getCHCashBagRevenue on getCHRevenue', function () {
         expect(reconciliationService.getCHCashBagRevenue).toHaveBeenCalledWith(storeInstanceId);
       });
+
       it('should call getCHCreditCardRevenue on getCHRevenue', function () {
         expect(reconciliationService.getCHCreditCardRevenue).toHaveBeenCalledWith(storeInstanceId);
       });
+
       it('should call getCHDiscountRevenue on getCHRevenue', function () {
         expect(reconciliationService.getCHDiscountRevenue).toHaveBeenCalledWith(storeInstanceId);
       });
@@ -194,9 +194,11 @@ describe('Factory: reconciliationFactory', function () {
       it('should call getEPOSCashBagRevenue on getEPOSRevenue', function () {
         expect(reconciliationService.getEPOSCashBagRevenue).toHaveBeenCalledWith(storeInstanceId);
       });
+
       it('should call getEPOSCreditCardRevenue on getEPOSRevenue', function () {
         expect(reconciliationService.getEPOSCreditCardRevenue).toHaveBeenCalledWith(storeInstanceId);
       });
+
       it('should call getEPOSDiscountRevenue on getEPOSRevenue', function () {
         expect(reconciliationService.getEPOSDiscountRevenue).toHaveBeenCalledWith(storeInstanceId);
       });

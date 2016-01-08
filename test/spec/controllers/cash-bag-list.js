@@ -47,6 +47,7 @@ describe('Controller: CashBagListCtrl', function () {
       schedulesDateRangeJSON     = _servedSchedulesDateRange_;
 
     });
+
     location       = $location;
     cashBagFactory = $injector.get('cashBagFactory');
     dateUtility    = $injector.get('dateUtility');
@@ -130,32 +131,35 @@ describe('Controller: CashBagListCtrl', function () {
     });
   });
 
-
   describe('cashBagList scope functions', function () {
     describe('search cash bag', function () {
       it('should have a search object attached to scope', function () {
         expect(scope.search).toBeDefined();
       });
+
       it('should call get CashBagList with params', function () {
         scope.loadCashBagList();
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, { isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
       });
+
       it('should call get CashBagList with search params', function () {
         var testCashBagNumber = '123';
-        scope.search          = {cashBagNumber: testCashBagNumber};
+        scope.search          = { cashBagNumber: testCashBagNumber };
         scope.searchCashBag();
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {cashBagNumber: testCashBagNumber, isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, { cashBagNumber: testCashBagNumber, isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
       });
+
       it('should send searchDate with yyyymmdd format', function () {
-        scope.search = {startDate: '06/20/2015'};
+        scope.search = { startDate: '06/20/2015' };
         scope.searchCashBag();
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {startDate: '20150620', endDate: '20150620', isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, { startDate: '20150620', endDate: '20150620', isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
       });
+
       it('should clear search model and make a API call', function () {
-        scope.search = {cashBagNumber: 'fakeCashBagNumber'};
+        scope.search = { cashBagNumber: 'fakeCashBagNumber' };
         scope.clearForm();
         expect(scope.search.cashBagNumber).toBe(undefined);
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, { isDelete: 'false', isSubmitted: 'false', limit: 100, offset: 0 });
       });
     });
 
@@ -175,7 +179,7 @@ describe('Controller: CashBagListCtrl', function () {
 
       it('should call getStoreInstanceList with date and schedule number', function () {
         scope.scheduleDate            = '06/15/2015';
-        scope.search.selectedSchedule = {scheduleNumber: '0008'};
+        scope.search.selectedSchedule = { scheduleNumber: '0008' };
         var expectedPayload           = {
           scheduleDate: dateUtility.formatDateForAPI(scope.scheduleDate),
           scheduleNumber: scope.search.selectedSchedule.scheduleNumber
@@ -214,7 +218,7 @@ describe('Controller: CashBagListCtrl', function () {
       });
 
       it('should call getStoreList when date changes', function () {
-        var expectedPayload = {startDate: expectedScheduleDate, endDate: expectedScheduleDate};
+        var expectedPayload = { startDate: expectedScheduleDate, endDate: expectedScheduleDate };
         expect(cashBagFactory.getStoreList).toHaveBeenCalledWith(expectedPayload);
       });
 
@@ -226,8 +230,8 @@ describe('Controller: CashBagListCtrl', function () {
 
     describe('submit new schedule form', function () {
       it('should call redirect to cash bag create with store instance as parameter', function () {
-        var storeInstance      = {id: 'fakeStoreInstanceId'};
-        var expectedParameters = {storeInstanceId: 'fakeStoreInstanceId'};
+        var storeInstance      = { id: 'fakeStoreInstanceId' };
+        var expectedParameters = { storeInstanceId: 'fakeStoreInstanceId' };
         scope.submitCreate(storeInstance);
 
         expect(location.path()).toBe('/cash-bag/create');
@@ -250,6 +254,7 @@ describe('Controller: CashBagListCtrl', function () {
         testCashBag.isSubmitted = true;
         expect(scope.isCashBagEditable(testCashBag)).toEqual(false);
       });
+
       it('should return true if cash bag has not been deleted', function () {
         testCashBag.isSubmitted = false;
         testCashBag.isDelete    = 'false';
@@ -270,19 +275,23 @@ describe('Controller: CashBagListCtrl', function () {
     it('should have a viewCashBag function in scope', function () {
       expect(scope.viewCashBag).toBeDefined();
     });
+
     it('should change the url based on the menu object to view a cash bag', function () {
-      scope.viewCashBag({id: 1});
+      scope.viewCashBag({ id: 1 });
       scope.$digest();
       expect(location.path()).toBe('/cash-bag/view/1');
     });
+
     it('should have an editCashBag function in scope', function () {
       expect(scope.editCashBag).toBeDefined();
     });
+
     it('should have a editCashBag callable function', function () {
       expect(Object.prototype.toString.call(scope.editCashBag)).toBe('[object Function]');
     });
+
     it('should change the url based on the menu object to edit a cash bag', function () {
-      scope.editCashBag({id: 1});
+      scope.editCashBag({ id: 1 });
       scope.$digest();
       expect(location.path()).toBe('/cash-bag/edit/1');
     });

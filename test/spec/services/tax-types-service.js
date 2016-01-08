@@ -92,7 +92,6 @@ describe('Tax Types Service |', function () {
       expect(testObject.taxTypeCode).toBeDefined();
     });
 
-
   }); // describe Tax Types api
 
 });

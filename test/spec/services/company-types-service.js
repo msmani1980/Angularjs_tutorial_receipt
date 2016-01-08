@@ -13,6 +13,7 @@ describe('Service: companyTypesService', function () {
     inject(function (_servedCompanyTypes_) {
       responseFromAPI = _servedCompanyTypes_;
     });
+
     $httpBackend = $injector.get('$httpBackend');
     companyTypesService = _companyTypesService_;
   }));
@@ -41,6 +42,7 @@ describe('Service: companyTypesService', function () {
       companyTypesService.getCompanyTypes().then(function (dataFromAPI) {
         expect(Object.prototype.toString.call(dataFromAPI)).toBe('[object Array]');
       });
+
       $httpBackend.flush();
     });
 

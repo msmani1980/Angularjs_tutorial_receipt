@@ -63,14 +63,14 @@ describe('Controller: ChangePasswordCtrl', function () {
 
       it('should call login API', function () {
         loginDeferred.resolve({});
-        expect(identityAccessFactory.login).toHaveBeenCalledWith({ username: 'user', password: 'fakePass'});
+        expect(identityAccessFactory.login).toHaveBeenCalledWith({ username: 'user', password: 'fakePass' });
       });
 
       it('should call changePassword API', function () {
         loginDeferred.resolve({});
         scope.$digest();
         changePasswordDeferred.resolve({});
-        expect(identityAccessFactory.changePassword).toHaveBeenCalledWith({ username: 'user', password: 'fakePass'});
+        expect(identityAccessFactory.changePassword).toHaveBeenCalledWith({ username: 'user', password: 'fakePass' });
       });
 
       it('should show errors in authUser bad request', function () {

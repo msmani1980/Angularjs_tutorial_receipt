@@ -20,7 +20,7 @@ describe('Service: storesService', function () {
 
   describe('getStoresList', function () {
     it('should make a GET request when calling getStoresList', function () {
-      httpBackend.expectGET(/companies\/stores/).respond({done: true});
+      httpBackend.expectGET(/companies\/stores/).respond({ done: true });
       storesService.getStoresList();
       httpBackend.flush();
     });
@@ -29,10 +29,11 @@ describe('Service: storesService', function () {
   describe('getStore', function () {
     it('should make a GET request when calling getStore', function () {
       var fakeId = 1;
-      httpBackend.expectGET(/companies\/stores\/\d+$/).respond({done: true, id: fakeId});
+      httpBackend.expectGET(/companies\/stores\/\d+$/).respond({ done: true, id: fakeId });
       storesService.getStore(fakeId).then(function (response) {
         expect(response.id).toBe(fakeId);
       });
+
       httpBackend.flush();
     });
   });

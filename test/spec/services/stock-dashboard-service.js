@@ -28,11 +28,13 @@ describe('Service: stockDashboardService', function() {
       it('should be accessible in the service', function() {
         expect(stockDashboardService.getStockDashboardItems).toBeDefined();
       });
+
       beforeEach(function() {
         httpBackend.whenGET(/stock-management\/dashboard/).respond({
           done: true
         });
       });
+
       it('should make GET request to API', function() {
         stockDashboardService.getStockDashboardItems();
         httpBackend.expectGET(/stock-management\/dashboard/);

@@ -5,17 +5,17 @@ describe('Service: cashBagService', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/cash-bag-list.json', 'served/cash-bag.json'));
 
-
   var cashBagService,
     $httpBackend,
     cashBagListResponseJSON,
     cashBagResponseJSON;
-    //headers = {
-    //  companyId: 362,
-    //  'Accept': 'application/json, text/plain, */*',
-    //  'userId': 1,
-    //  sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
-    //};
+
+  //headers = {
+  //  companyId: 362,
+  //  'Accept': 'application/json, text/plain, */*',
+  //  'userId': 1,
+  //  sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
+  //};
 
   beforeEach(inject(function (_cashBagService_, $injector) {
     inject(function (_servedCashBagList_, _servedCashBag_) {
@@ -52,6 +52,7 @@ describe('Service: cashBagService', function () {
         cashBagService.getCashBagList().then(function (dataFromAPI) {
           cashBagListData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -83,7 +84,7 @@ describe('Service: cashBagService', function () {
 
       it('should take an additional payload parameter', function() {
         var cashBagNumber = '123';
-        var payload = {cashBagNumber: cashBagNumber};
+        var payload = { cashBagNumber: cashBagNumber };
         var regex = new RegExp('cash-bags\\?\.\*cashBagNumber=' + cashBagNumber, 'g');
         $httpBackend.expectGET(regex).respond(200, '');
         cashBagService.getCashBagList('413', payload);
@@ -116,6 +117,7 @@ describe('Service: cashBagService', function () {
         cashBagService.getCashBag(cashBagId).then(function (dataFromAPI) {
           cashBagData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -135,25 +137,26 @@ describe('Service: cashBagService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenPUT(/cash-bags/).respond({done: true});
+        $httpBackend.whenPUT(/cash-bags/).respond({ done: true });
       });
+
       it('should PUT data to cash bag API', function () {
-        cashBagService.updateCashBag(95, {cashBag: 'fakeCashBagPayload'});
+        cashBagService.updateCashBag(95, { cashBag: 'fakeCashBagPayload' });
         $httpBackend.expectPUT(/cash-bags/);
         $httpBackend.flush();
       });
     });
 
-    describe('deleteCashBag', function(){
+    describe('deleteCashBag', function() {
       it('should be accessible in the service', function () {
         expect(!!cashBagService.deleteCashBag).toBe(true);
       });
 
       beforeEach(function () {
-        $httpBackend.whenDELETE(/cash-bags/).respond({done: true});
+        $httpBackend.whenDELETE(/cash-bags/).respond({ done: true });
       });
 
-      it('should DELETE a cash bag from API', function(){
+      it('should DELETE a cash bag from API', function() {
         cashBagService.deleteCashBag();
         $httpBackend.expectDELETE(/cash-bags/);
         $httpBackend.flush();
@@ -179,6 +182,7 @@ describe('Service: cashBagService', function () {
         cashBagService.createCashBag(cashBag).then(function (dataFromAPI) {
           cashBagData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -192,8 +196,6 @@ describe('Service: cashBagService', function () {
 
     });
 
-
   });
-
 
 });

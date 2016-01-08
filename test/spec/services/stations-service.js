@@ -55,6 +55,7 @@ describe('Stations Service |', function () {
         stationsService.getGlobalStationList().then(function (dataFromAPI) {
           globalStationData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -62,7 +63,7 @@ describe('Stations Service |', function () {
         expect(Object.prototype.toString.call(globalStationData.response)).toBe('[object Array]');
       });
 
-      it('should have id property', function(){
+      it('should have id property', function() {
         expect(globalStationData.response[0].id).not.toBe(undefined);
       });
 
@@ -85,6 +86,7 @@ describe('Stations Service |', function () {
         stationsService.getStationList(companyId).then(function (dataFromAPI) {
           stationData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -98,11 +100,12 @@ describe('Stations Service |', function () {
       it('should GET station by Id', function () {
         var fakeId = 123;
         var expectedURL = /stations\/\d+$/;
-        $httpBackend.expectGET(expectedURL).respond({id: fakeId});
+        $httpBackend.expectGET(expectedURL).respond({ id: fakeId });
 
         stationsService.getStation(fakeId).then(function (response) {
           expect(response.id).toBe(fakeId);
         });
+
         $httpBackend.flush();
       });
     });

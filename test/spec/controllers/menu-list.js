@@ -22,6 +22,7 @@ describe('Controller: MenuListCtrl', function () {
     inject(function (_servedMenus_) {
       menuListJSON = _servedMenus_;
     });
+
     httpBackend = $httpBackend;
     location = $location;
     scope = $rootScope.$new();
@@ -48,7 +49,7 @@ describe('Controller: MenuListCtrl', function () {
     };
     scope.clearForm();
     expect(scope.search.startDate).toBe(undefined);
-    expect(menuService.getMenuList).toHaveBeenCalledWith({limit: 100, offset: 0});
+    expect(menuService.getMenuList).toHaveBeenCalledWith({ limit: 100, offset: 0 });
   });
 
   it('should clear search model and make a API call', function () {
@@ -68,7 +69,7 @@ describe('Controller: MenuListCtrl', function () {
   });
 
   describe('menuList in scope', function () {
-      beforeEach(function() {
+    beforeEach(function() {
         scope.loadMenus();
         scope.$digest();
       });
@@ -108,6 +109,7 @@ describe('Controller: MenuListCtrl', function () {
       scope.$digest();
       expect(location.path()).toBe('/menu/view/1');
     });
+
     describe('can user edit / delete menu', function () {
       it('should have a isMenuEditable function', function () {
         expect(!!scope.isMenuEditable).toBe(true);
@@ -153,6 +155,7 @@ describe('Controller: MenuListCtrl', function () {
             'L').toString();
           expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(false);
         });
+
       it('should return true if menu === null or undefined',
         function () {
           expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(true);
@@ -177,7 +180,7 @@ describe('Controller: MenuListCtrl', function () {
         });
         scope.deleteMenu();
         expect(menuService.deleteMenu).toHaveBeenCalled();
-    });
+      });
 
     describe('the error handler', function () {
 

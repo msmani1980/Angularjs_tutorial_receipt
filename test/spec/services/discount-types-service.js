@@ -15,6 +15,7 @@ describe('Service: discountTypesService', function () {
     inject(function (_servedCompanyDiscountTypes_) {
       discountTypesResponseJSON = _servedCompanyDiscountTypes_;
     });
+
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/discounts/).respond(discountTypesResponseJSON);
     discountTypesService = _discountTypesService_;
@@ -37,6 +38,7 @@ describe('Service: discountTypesService', function () {
         discountTypesService.getDiscountTypesList().then(function (discountTypesListFromAPI) {
           discountTypesData = discountTypesListFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -47,9 +49,11 @@ describe('Service: discountTypesService', function () {
       it('should have a discountTypeName name property', function () {
         expect(discountTypesData.discounts[0].id).toBe(2);
       });
+
       it('should have a discountTypeName name property', function () {
         expect(discountTypesData.discounts[0].description).toBe('Comp');
       });
+
       it('should have a discountTypeName name property', function () {
         expect(discountTypesData.discounts[0].globalDiscountTypeName).toBe('Comp');
       });
@@ -68,5 +72,5 @@ describe('Service: discountTypesService', function () {
     });
 
   });
-  
+
 });

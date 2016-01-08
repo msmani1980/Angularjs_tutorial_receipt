@@ -42,14 +42,17 @@ describe('Factory: employeeMessagesFactory', function () {
       employeeMessagesFactory.getEmployeeMessages();
       expect(employeeMessagesService.getEmployeeMessages).toHaveBeenCalled();
     });
+
     it('should call employeeMessagesService on getEmployeeMessage', function () {
       employeeMessagesFactory.getEmployeeMessage(123);
       expect(employeeMessagesService.getEmployeeMessage).toHaveBeenCalledWith(123);
     });
+
     it('should call employeeMessagesService on createEmployeeMessage', function () {
       employeeMessagesFactory.createEmployeeMessage({});
       expect(employeeMessagesService.createEmployeeMessage).toHaveBeenCalled();
     });
+
     it('should call employeeMessagesService on editEmployeeMessage', function () {
       employeeMessagesFactory.editEmployeeMessage(123, {});
       expect(employeeMessagesService.editEmployeeMessage).toHaveBeenCalled();

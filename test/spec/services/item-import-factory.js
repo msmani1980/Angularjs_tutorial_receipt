@@ -41,15 +41,15 @@ describe('Factor: itemImportFactory', function () {
 
   describe('companyService API', function() {
     it('should call getCompanyList', function() {
-      var payload = {companyTypeId:413};
+      var payload = { companyTypeId:413 };
       itemImportFactory.getCompanyList(payload);
       expect(companyService.getCompanyList).toHaveBeenCalledWith(payload);
     });
   });
 
-  describe('itemsService API', function(){
-    it('should call getItemsList', function(){
-      var params = {companyId:413};
+  describe('itemsService API', function() {
+    it('should call getItemsList', function() {
+      var params = { companyId:413 };
       itemImportFactory.getItemsList(params);
       expect(itemsService.getItemsList).toHaveBeenCalledWith(params, undefined);
     });
@@ -57,7 +57,7 @@ describe('Factor: itemImportFactory', function () {
 
   describe('itemImportService API', function() {
     it('should call importItems', function() {
-      var payload = [2,3,4];
+      var payload = [2, 3, 4];
       itemImportFactory.importItems(payload);
       expect(itemImportService.importItems).toHaveBeenCalledWith(payload);
     });

@@ -18,7 +18,6 @@ describe('Items Service |', function () {
 
   beforeEach(module('served/items-list.json', 'served/master-item-list.json'));
 
-
   // Inject the service and responshandler
   beforeEach(inject(function (_itemsService_, $injector) {
 
@@ -100,7 +99,7 @@ describe('Items Service |', function () {
   }); // describe item api
 
   describe('Master retail items API', function () {
-    beforeEach(function(){
+    beforeEach(function() {
       $httpBackend.whenGET(/retail-items\/master/).respond(masterItemListJSON);
     });
 

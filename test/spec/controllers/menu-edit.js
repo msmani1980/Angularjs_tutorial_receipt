@@ -115,12 +115,14 @@ describe('Controller: MenuEditCtrl', function () {
           startDate: '08/20/2001',
           endDate: '09/25/2002'
         };
-        scope.newItemList = [{itemName: 'test'}, {itemName: 'test2'}];
-        scope.selectedCategories = [{id: 1}];
+        scope.newItemList = [{ itemName: 'test' }, { itemName: 'test2' }];
+        scope.selectedCategories = [{ id: 1 }];
       });
+
       it('should be defined', function () {
         expect(menuFactory.getItemsList).toBeDefined();
       });
+
       it('should call getItems with categoryId', function () {
         var expectedPayload = {
           startDate: scope.menu.startDate,
@@ -184,24 +186,27 @@ describe('Controller: MenuEditCtrl', function () {
       var futureString = '10/12/2050';
 
       it('should allow editing for dates in the future', function () {
-        scope.menu = {startDate: futureString};
+        scope.menu = { startDate: futureString };
         expect(scope.isMenuEditable()).toBe(true);
       });
+
       it('should not allow editing for dates in the future', function () {
-        scope.menu = {startDate: pastString};
+        scope.menu = { startDate: pastString };
         expect(scope.isMenuEditable()).toBe(false);
       });
+
       it('should allow deleting for editable menus with more than one item', function () {
         scope.menu = {
           startDate: futureString,
-          menuItems: [{itemCode: 1}, {itemCode: 2}]
+          menuItems: [{ itemCode: 1 }, { itemCode: 2 }]
         };
         expect(scope.canDeleteItems()).toBe(true);
       });
+
       it('should allow deleting for editable menus with less than two item', function () {
         scope.menu = {
           startDate: futureString,
-          menuItems: [{itemCode: 1}]
+          menuItems: [{ itemCode: 1 }]
         };
         expect(scope.canDeleteItems()).toBe(false);
       });
@@ -221,7 +226,7 @@ describe('Controller: MenuEditCtrl', function () {
       it('should push a new items array for each item', function () {
         var previousLength = scope.filteredItemsCollection.length;
         scope.addItem();
-        expect(scope.filteredItemsCollection.length).toBe(previousLength+1);
+        expect(scope.filteredItemsCollection.length).toBe(previousLength + 1);
       });
 
       it('should have a newItemList attached to scope', function () {
@@ -277,8 +282,8 @@ describe('Controller: MenuEditCtrl', function () {
         beforeEach(function () {
           scope.addItem();
           scope.menuItemList[0] = {
-            'itemQty': 1979,
-            'id': 1005
+            itemQty: 1979,
+            id: 1005
           };
         });
 
@@ -296,23 +301,23 @@ describe('Controller: MenuEditCtrl', function () {
         beforeEach(function () {
           scope.menu.id = 2;
           scope.menuItemList = [{
-            'itemQty': 1979,
-            'id': 1005,
-            'itemId': 123
+            itemQty: 1979,
+            id: 1005,
+            itemId: 123
           }, {
-            'itemQty': 1979,
-            'id': 1005
+            itemQty: 1979,
+            id: 1005
           }, {}];
         });
 
         it('should not add items that have not been set', function () {
-          scope.menuItemList[2] = {itemQty: 2};
+          scope.menuItemList[2] = { itemQty: 2 };
           var currentLength = scope.menuItemList.length;
           expect(MenuEditCtrl.createPayload().menuItems.length).toEqual(currentLength - 1);
         });
 
         it('should not add items that have no quantity', function () {
-          scope.menuItemList[2] = {id: 2};
+          scope.menuItemList[2] = { id: 2 };
           var currentLength = scope.menuItemList.length;
           expect(MenuEditCtrl.createPayload().menuItems.length).toEqual(currentLength - 1);
         });
@@ -337,7 +342,6 @@ describe('Controller: MenuEditCtrl', function () {
           expect(MenuEditCtrl.createPayload().menuItems[1]).toEqual(expectedItem);
         });
       });
-
 
     });
   });

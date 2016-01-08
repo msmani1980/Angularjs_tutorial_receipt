@@ -25,6 +25,7 @@ describe('Service: sealColorsService', function () {
       sealColorsService.getSealColors().then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });

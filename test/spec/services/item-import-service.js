@@ -14,7 +14,6 @@ describe('Service: itemImportService', function () {
     $httpBackend = $injector.get('$httpBackend');
   }));
 
-
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
@@ -31,10 +30,11 @@ describe('Service: itemImportService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenPOST(/retail-items\/import/).respond({done: true});
+        $httpBackend.whenPOST(/retail-items\/import/).respond({ done: true });
       });
+
       it('should POST data to item import API', function () {
-        itemImportService.importItems([2,3,4]);
+        itemImportService.importItems([2, 3, 4]);
         $httpBackend.expectPOST(/retail-items\/import/);
         $httpBackend.flush();
       });

@@ -75,7 +75,7 @@ describe('Directive: topNavigationBar', function () {
       expect(element.find('menu-dropdown').length).toBe(0);
     });
 
-    describe('logout', function(){
+    describe('logout', function() {
       it('should have logout button', function () {
         expect(element.find('.login-btn').length).toBe(1);
       });

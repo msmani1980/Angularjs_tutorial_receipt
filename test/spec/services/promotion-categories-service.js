@@ -18,13 +18,14 @@ describe('Service: promotionCategoriesService', function () {
     httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('getPromotionCategories', function(){
-    it('should make a GET request', function(){
+  describe('getPromotionCategories', function() {
+    it('should make a GET request', function() {
       var expectUri = /promotion-categories$/;
       httpBackend.expectGET(expectUri).respond(200, {});
       promotionCategoriesService.getPromotionCategories().then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });

@@ -12,33 +12,33 @@ describe('Directive: devFooter', function () {
 
   beforeEach(inject(function ($rootScope, _versionService_) {
     var fakeProjectInfo = {
-      'PROJECT_VERSION': 'fakeProjectVersion',
-      'BUILD_NUMBER': '06'
+      PROJECT_VERSION: 'fakeProjectVersion',
+      BUILD_NUMBER: '06'
     };
     versionService = _versionService_;
     scope = $rootScope.$new();
     spyOn(versionService, 'getProjectInfo').and.returnValue({
-      then: function(){
+      then: function() {
         return fakeProjectInfo;
       }
     });
   }));
 
-    beforeEach(inject(function ($compile) {
+  beforeEach(inject(function ($compile) {
       element = angular.element('<dev-footer></dev-footer>');
       element = $compile(element)(scope);
       scope.$digest();
     }));
 
-    it('should have a text element', inject(function () {
+  it('should have a text element', inject(function () {
       expect(element.find('p').length).toBe(1);
     }));
 
-    it('should have a getProjectInfo function', inject(function () {
+  it('should have a getProjectInfo function', inject(function () {
       expect(!!scope.getProjectInfo).toBe(true);
     }));
 
-    it('should have a getProjectInfo function', inject(function () {
+  it('should have a getProjectInfo function', inject(function () {
       scope.getProjectInfo();
       expect(versionService.getProjectInfo).toHaveBeenCalled();
     }));

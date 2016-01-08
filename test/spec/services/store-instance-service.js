@@ -25,6 +25,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.getStoreInstancesList().then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -37,6 +38,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.getStoreInstance(fakeId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -70,6 +72,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.updateStoreInstance(fakeId, fakePayload).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -82,6 +85,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.deleteStoreInstance(fakeId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -98,6 +102,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.getStoreInstanceMenuItems(fakeId, payload).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -114,6 +119,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.getStoreInstanceItemList(fakeId, payload).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -127,6 +133,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.getStoreInstanceItem(fakeStoreId, fakeItemId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -144,6 +151,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.updateStoreInstanceItem(fakeStoreId, fakeItemId, payload).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -160,6 +168,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.updateStoreInstanceItemsBulk(fakeStoreId, payload).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -174,6 +183,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.deleteStoreInstanceItem(fakeStoreId, fakeItemId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -189,6 +199,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.createStoreInstanceItem(fakeStoreId, payload).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -202,6 +213,7 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.updateStoreInstanceStatus(fakeStoreId, fakeStatusId).then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });

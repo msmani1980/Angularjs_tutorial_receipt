@@ -52,54 +52,57 @@ describe('Service: promotionsFactory', function () {
   }));
 
   //itemsService
-  describe('itemsService service calls', function(){
-    it('should call getItemsList', function(){
-      var mockSearch = {foo:'bars'};
+  describe('itemsService service calls', function() {
+    it('should call getItemsList', function() {
+      var mockSearch = { foo:'bars' };
       promotionsFactory.getMasterItems(mockSearch);
       expect(itemsService.getItemsList).toHaveBeenCalledWith(mockSearch, true);
     });
   });
 
   // recordsService
-  describe('recordsService service calls', function(){
-    it('should call getBenefitTypes', function(){
+  describe('recordsService service calls', function() {
+    it('should call getBenefitTypes', function() {
       promotionsFactory.getBenefitTypes();
       expect(recordsService.getBenefitTypes).toHaveBeenCalled();
     });
-    it('should call getDiscountTypes', function(){
+
+    it('should call getDiscountTypes', function() {
       promotionsFactory.getDiscountTypes();
       expect(recordsService.getDiscountTypes).toHaveBeenCalled();
     });
-    it('should call getPromotionTypes', function(){
+
+    it('should call getPromotionTypes', function() {
       promotionsFactory.getPromotionTypes();
       expect(recordsService.getPromotionTypes).toHaveBeenCalled();
     });
-    it('should call getDiscountApplyTypes', function(){
+
+    it('should call getDiscountApplyTypes', function() {
       promotionsFactory.getDiscountApplyTypes();
       expect(recordsService.getDiscountApplyTypes).toHaveBeenCalled();
     });
   });
 
   // GlobalMenuService
-  describe('GlobalMenuService service calls', function(){
-    it('should call get', function(){
+  describe('GlobalMenuService service calls', function() {
+    it('should call get', function() {
       promotionsFactory.getCompanyId();
       expect(GlobalMenuService.company.get).toHaveBeenCalled();
     });
   });
 
   // stationsService
-  describe('stationsService service calls', function(){
-    it('should call getGlobalStationList', function(){
-      var mockObj = {id:123};
+  describe('stationsService service calls', function() {
+    it('should call getGlobalStationList', function() {
+      var mockObj = { id:123 };
       promotionsFactory.getStationGlobals(mockObj);
       expect(stationsService.getGlobalStationList).toHaveBeenCalledWith(mockObj);
     });
   });
 
   // companyDiscountService
-  describe('companyDiscountService service calls', function(){
-    it('should call getDiscountList when calling getCompanyDiscountsCoupon', function(){
+  describe('companyDiscountService service calls', function() {
+    it('should call getDiscountList when calling getCompanyDiscountsCoupon', function() {
       promotionsFactory.getCompanyDiscountsCoupon();
       var mock = {
         discountTypeId: 1,
@@ -107,7 +110,8 @@ describe('Service: promotionsFactory', function () {
       };
       expect(companyDiscountService.getDiscountList).toHaveBeenCalledWith(mock);
     });
-    it('should call getDiscountList when calling getCompanyDiscountsVoucher', function(){
+
+    it('should call getDiscountList when calling getCompanyDiscountsVoucher', function() {
       promotionsFactory.getCompanyDiscountsVoucher();
       var mock = {
         discountTypeId: 4,
@@ -118,55 +122,59 @@ describe('Service: promotionsFactory', function () {
   });
 
   // salesCategoriesService
-  describe('salesCategoriesService service calls', function(){
-    it('should call getSalesCategoriesList', function(){
-      var mockObj = {foo:'bars'};
+  describe('salesCategoriesService service calls', function() {
+    it('should call getSalesCategoriesList', function() {
+      var mockObj = { foo:'bars' };
       promotionsFactory.getSalesCategories(mockObj);
       expect(salesCategoriesService.getSalesCategoriesList).toHaveBeenCalledWith(mockObj);
     });
   });
 
   // currenciesService
-  describe('currenciesService service calls', function(){
-    it('should call getCompanyCurrencies', function(){
-      var mockObj = {foo:'bars'};
+  describe('currenciesService service calls', function() {
+    it('should call getCompanyCurrencies', function() {
+      var mockObj = { foo:'bars' };
       promotionsFactory.getCurrencyGlobals(mockObj);
       expect(currenciesService.getCompanyCurrencies).toHaveBeenCalledWith(mockObj);
     });
   });
 
   // promotionCategoriesService
-  describe('promotionCategoriesService service calls', function(){
-    it('should call getPromotionCategories', function(){
+  describe('promotionCategoriesService service calls', function() {
+    it('should call getPromotionCategories', function() {
       promotionsFactory.getPromotionCategories();
       expect(promotionCategoriesService.getPromotionCategories).toHaveBeenCalled();
     });
   });
 
   // promotionsService
-  describe('promotionsService service calls', function(){
-    it('should call getPromotion', function(){
+  describe('promotionsService service calls', function() {
+    it('should call getPromotion', function() {
       var mockId = 321;
       promotionsFactory.getPromotion(mockId);
       expect(promotionsService.getPromotion).toHaveBeenCalledWith(mockId);
     });
-    it('should call createPromotion', function(){
-      var mockObj = {id:321};
+
+    it('should call createPromotion', function() {
+      var mockObj = { id:321 };
       promotionsFactory.createPromotion(mockObj);
       expect(promotionsService.createPromotion).toHaveBeenCalledWith(mockObj);
     });
-    it('should call savePromotion', function(){
+
+    it('should call savePromotion', function() {
       var mockId = 234;
-      var mockObj = {id:321};
+      var mockObj = { id:321 };
       promotionsFactory.savePromotion(mockId, mockObj);
       expect(promotionsService.savePromotion).toHaveBeenCalledWith(mockId, mockObj);
     });
-    it('should call deletePromotion', function(){
+
+    it('should call deletePromotion', function() {
       var mockId = 234;
       promotionsFactory.deletePromotion(mockId);
       expect(promotionsService.deletePromotion).toHaveBeenCalledWith(mockId);
     });
-    it('should call getPromotions', function(){
+
+    it('should call getPromotions', function() {
       promotionsFactory.getPromotions({});
       expect(promotionsService.getPromotions).toHaveBeenCalled();
     });

@@ -39,6 +39,7 @@ describe('Service: commissionDataService', function () {
         employeeMessagesService.getEmployeeMessages().then(function (dataFromAPI) {
           employeeMessagesList = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -49,7 +50,7 @@ describe('Service: commissionDataService', function () {
       describe('api call parameters', function () {
         it('should take an optional payload parameter', function () {
           var mockDate = '20151010';
-          var payload = {startDate: mockDate};
+          var payload = { startDate: mockDate };
           var regex = new RegExp('employee-messages\.\*startDate=' + 20151010, 'g');
           $httpBackend.expectGET(regex);
           employeeMessagesService.getEmployeeMessages(payload);
@@ -80,7 +81,7 @@ describe('Service: commissionDataService', function () {
 
       beforeEach(function () {
         var regex = new RegExp('employee-messages', 'g');
-        $httpBackend.whenPOST(regex).respond({id: 36});
+        $httpBackend.whenPOST(regex).respond({ id: 36 });
       });
 
       it('should POST data to employee-messages API', function () {
