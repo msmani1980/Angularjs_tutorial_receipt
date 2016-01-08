@@ -425,6 +425,7 @@ describe('Store Instance Create Controller', function() {
       expect(StoreInstanceCreateCtrl.setMenus()).toEqual(null);
       expect(StoreInstanceCreateCtrl.setStoreNumber()).toEqual(null);
       expect(StoreInstanceCreateCtrl.setPrevStoreInstanceId()).toEqual(null);
+      expect(StoreInstanceCreateCtrl.setScheduleNumber()).toEqual(undefined);
     });
 
     describe('determining the mininum date', function() {
