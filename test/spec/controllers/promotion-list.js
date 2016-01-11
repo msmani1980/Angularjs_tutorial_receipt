@@ -48,6 +48,7 @@ describe('Controller: PromotionListCtrl', function () {
 
     PromotionListCtrl = $controller('PromotionListCtrl', {
       $scope: scope
+
       // place here mocked dependencies
     });
     scope.$digest();
@@ -93,36 +94,47 @@ describe('Controller: PromotionListCtrl', function () {
     it('should have a benefitTypeId name property', function () {
       expect(scope.promotionList[0].benefitTypeId).toBe(1);
     });
+
     it('should have a benefitTypeName name property', function () {
       expect(scope.promotionList[0].benefitTypeName).toBe('Discount');
     });
+
     it('should have a catalogCount name property', function () {
       expect(scope.promotionList[0].catalogCount).toBe(2);
     });
+
     it('should have a companyId name property', function () {
       expect(scope.promotionList[0].companyId).toBe(403);
     });
+
     it('should have a id name property', function () {
       expect(scope.promotionList[0].id).toBe(117);
     });
+
     it('should have a description name property', function () {
       expect(scope.promotionList[0].description).toBe('Buy 4 drinks get 20% off');
     });
+
     it('should have a discountTypeId name property', function () {
       expect(scope.promotionList[0].discountTypeId).toBe(1);
     });
+
     it('should have a discountTypeName name property', function () {
       expect(scope.promotionList[0].discountTypeName).toBe('Percentage');
     });
+
     it('should have a promotionCode name property', function () {
       expect(scope.promotionList[0].promotionCode).toBe('PM001');
     });
+
     it('should have a promotionName name property', function () {
       expect(scope.promotionList[0].promotionName).toBe('Buy 4 drinks get 20 percent off');
     });
+
     it('should have a promotionTypeId name property', function () {
       expect(scope.promotionList[0].promotionTypeId).toBe(1);
     });
+
     it('should have a promotionTypeName name property', function () {
       expect(scope.promotionList[0].promotionTypeName).toBe('Product Purchase');
     });
@@ -167,16 +179,16 @@ describe('Controller: PromotionListCtrl', function () {
   });
 
   it('setBenefitTypeList should set retail item list', function() {
-    var payload = [{id: 1}];
+    var payload = [{ id: 1 }];
     PromotionListCtrl.setBenefitTypeList(payload);
 
-    expect(scope.benefitTypeList).toEqual([{id: 1}]);
+    expect(scope.benefitTypeList).toEqual([{ id: 1 }]);
   });
 
   it('setPromotionTypeList should set retail item list', function() {
-    var payload = [{id: 1}];
+    var payload = [{ id: 1 }];
     PromotionListCtrl.setPromotionTypeList(payload);
 
-    expect(scope.promotionTypeList).toEqual([{id: 1}]);
+    expect(scope.promotionTypeList).toEqual([{ id: 1 }]);
   });
 });

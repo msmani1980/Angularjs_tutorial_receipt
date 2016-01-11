@@ -25,10 +25,11 @@ angular.module('ts5App')
         if (!propertyNamesToDisplayArray) {
           return;
         }
+
         angular.forEach(propertyNamesToDisplayArray, function (name) {
           var value = $scope.itemToDelete[name];
           if (value) {
-            $scope.displayedItemProperties.push({key: name, value: value});
+            $scope.displayedItemProperties.push({ key: name, value: value });
           }
         });
       };

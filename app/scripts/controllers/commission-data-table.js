@@ -50,9 +50,11 @@ angular.module('ts5App')
       if (!initDone) {
         return;
       }
+
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       query = lodash.assign(query, {
         limit: $this.meta.limit,
         offset: $this.meta.offset
@@ -79,6 +81,7 @@ angular.module('ts5App')
       if ($scope.search.endDate) {
         payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
       }
+
       getDataList(payload);
     }
 
@@ -101,7 +104,6 @@ angular.module('ts5App')
       $scope.searchCommissionData();
     };
 
-
     function deleteCommissionDataSuccessHandler() {
       $scope.searchCommissionData();
     }
@@ -117,6 +119,7 @@ angular.module('ts5App')
           name = item.name;
         }
       });
+
       return name;
     }
 
@@ -133,6 +136,7 @@ angular.module('ts5App')
       if (type === 'Percentage') {
         return '%';
       }
+
       return $scope.baseCurrency;
     };
 

@@ -29,6 +29,15 @@ angular.module('ts5App')
       $this.cateringStationWatcher();
     };
 
+    function showLoadingBar() {
+      $scope.showLoadingBar = true;
+    }
+
+    function hideLoadingBar() {
+      $scope.showLoadingBar = false;
+      angular.element('.modal-backdrop').remove();
+    }
+
     this.cateringStationWatcher = function() {
       $scope.$watch('catererStationId', function(newData) {
         if (newData) {
@@ -44,15 +53,6 @@ angular.module('ts5App')
         }
       });
     };
-
-    function showLoadingBar() {
-      $scope.showLoadingBar = true;
-    }
-
-    function hideLoadingBar() {
-      $scope.showLoadingBar = false;
-      angular.element('.modal-backdrop').remove();
-    }
 
     this.displayLoadingModal = function(loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
@@ -71,9 +71,11 @@ angular.module('ts5App')
       if ($scope.dateRange.startDate) {
         query.startDate = dateUtility.formatDateForAPI($scope.dateRange.startDate);
       }
+
       if ($scope.dateRange.endDate) {
         query.endDate = dateUtility.formatDateForAPI($scope.dateRange.endDate);
       }
+
       return query;
     };
 
@@ -89,6 +91,7 @@ angular.module('ts5App')
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       $scope.userSelectedStation = false;
       var query = $this.generateStockTakeQuery();
       query = lodash.assign(query, {
@@ -111,6 +114,7 @@ angular.module('ts5App')
       if (!Array.isArray($scope.stockTakeList)) {
         return;
       }
+
       $scope.stockTakeList.map(function(stockTake) {
         stockTake.updatedOn = dateUtility.removeMilliseconds(stockTake.updatedOn);
         return stockTake;
@@ -131,7 +135,6 @@ angular.module('ts5App')
       });
     };
 
-
     $scope.removeRecord = function(stockTake) {
       var stockTakeIndex = $scope.stockTakeList.indexOf(stockTake);
       $this.displayLoadingModal('Removing Stock Take');
@@ -149,6 +152,7 @@ angular.module('ts5App')
       for (var filterKey in filters) {
         delete $scope.search[filterKey];
       }
+
       $scope.searchRecords();
     };
 
@@ -166,6 +170,7 @@ angular.module('ts5App')
       if (!$scope.catererStationId) {
         return false;
       }
+
       if (Array.isArray($scope.stockTakeList)) {
         return $filter('filter')($scope.stockTakeList, {
           isSubmitted: false
@@ -179,6 +184,7 @@ angular.module('ts5App')
       if (Array.isArray($scope.stockTakeList) && $scope.stockTakeList.length > 0 && $scope.catererStationId) {
         return true;
       }
+
       return false;
     };
 
@@ -186,6 +192,7 @@ angular.module('ts5App')
       if (Array.isArray($scope.stationItems) && $scope.stationItems.length > 0 && $scope.catererStationId) {
         return true;
       }
+
       return false;
     };
 

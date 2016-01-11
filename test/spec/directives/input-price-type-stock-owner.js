@@ -10,7 +10,7 @@ describe('The Stock Owner Item Price Type directive', function () {
     $scope,
     priceTypesJSON;
 
-  beforeEach(inject(function ($rootScope,_servedPriceTypes_) {
+  beforeEach(inject(function ($rootScope, _servedPriceTypes_) {
     $scope = $rootScope.$new();
     priceTypesJSON = _servedPriceTypes_;
     $scope.priceTypes = _servedPriceTypes_;
@@ -97,7 +97,7 @@ describe('The Stock Owner Item Price Type directive', function () {
 
       var panelBody,
       datePickerColumn,
-      costPricesColumn; 
+      costPricesColumn;
 
       beforeEach(function () {
         panelBody = angular.element(panel.find('.panel-body')[0]);
@@ -114,7 +114,7 @@ describe('The Stock Owner Item Price Type directive', function () {
       });
 
       it('should have a two columns in the row', function () {
-        expect(panelBody.find( '> .row > .col-xs-12').length).toEqual(2);
+        expect(panelBody.find('> .row > .col-xs-12').length).toEqual(2);
       });
 
       describe('the date picker columm', function () {
@@ -217,22 +217,22 @@ describe('The Stock Owner Item Price Type directive', function () {
 
         });
 
-    });
+      });
 
-    describe('the cost prices columm', function () {
+      describe('the cost prices columm', function () {
 
-      it('should be defined in the DOM', function () {
+        it('should be defined in the DOM', function () {
         expect(costPricesColumn).toBeDefined();
       });
 
-      it('should have a .col-sm-4 class', function () {
+        it('should have a .col-sm-4 class', function () {
         expect(costPricesColumn.hasClass('col-sm-4')).toBeTruthy();
+      });
+
       });
 
     });
 
   });
-
-});
 
 });

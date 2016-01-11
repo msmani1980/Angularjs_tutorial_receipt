@@ -5,7 +5,6 @@ describe('Service: taxRateTypesService', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/tax-rate-types.json'));
 
-
   var taxRateTypesService,
     $httpBackend,
     taxRateTypesJSON;
@@ -38,6 +37,7 @@ describe('Service: taxRateTypesService', function () {
       taxRateTypesService.getTaxRateTypes().then(function (dataFromAPI) {
         fakeReponseData = dataFromAPI;
       });
+
       $httpBackend.flush();
     });
 

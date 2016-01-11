@@ -60,7 +60,6 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     getCompanyExchangeRatesDeferred.resolve(companyExchangeRatesJSON);
     getDeleteCompanyExchangeRateDeferred = $q.defer();
 
-
     spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
     spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getDetailedCompanyCurrencies').and.returnValue(
@@ -71,6 +70,7 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     spyOn(currencyFactory, 'createCompanyExchangeRate').and.callFake(function() {
       return $.Deferred().resolve(companyExchangeRateJSON);
     });
+
     spyOn(currencyFactory, 'updateCompanyExchangeRate').and.callFake(function() {
       return $.Deferred().resolve(companyExchangeRateJSON);
     });
@@ -79,7 +79,8 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
 
     CompanyExchangeRateEditCtrl = $controller('CompanyExchangeRateEditCtrl', {
       $scope: scope
-        // place here mocked dependencies
+
+      // place here mocked dependencies
     });
     scope.$digest();
 
@@ -297,6 +298,5 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     });
 
   });
-
 
 });

@@ -43,6 +43,8 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       angular.element('#loading').modal('hide');
     };
 
+    var loadingProgress = false;
+
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       $scope.stockDashboardItemsList = $scope.stockDashboardItemsList.concat(dataFromAPI.response);
@@ -60,17 +62,19 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       }, true);
     };
 
-    var loadingProgress = false;
     $scope.updateStockItems = function() {
       if (!$scope.selectedCateringStation) {
         return false;
       }
+
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       if (loadingProgress) {
         return;
       }
+
       loadingProgress = true;
 
       showLoadingBar();
@@ -142,6 +146,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       if (angular.isUndefined($scope.selectedCateringStation) || !$scope.selectedCateringStation.id) {
         return false;
       }
+
       if (Array.isArray($scope.stockTakeList)) {
         return $filter('filter')($scope.stockTakeList, {
           isSubmitted: false

@@ -26,6 +26,7 @@ describe('Schedules Service', function () {
         schedulesService.getSchedules(mockCompanyId).then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
@@ -40,11 +41,12 @@ describe('Schedules Service', function () {
         schedulesService.getDailySchedules(mockCompanyId, mockScheduleNumber, mockScheduleDate).then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
 
-    describe('getSchedulesInDateRange', function(){
+    describe('getSchedulesInDateRange', function() {
       it('should make GET request to API', function () {
         var expectedURL = /companies\/\d+\/schedules/;
         var mockCompanyId = 4;
@@ -53,6 +55,7 @@ describe('Schedules Service', function () {
         schedulesService.getSchedulesInDateRange(mockCompanyId, mockDate, mockDate).then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });

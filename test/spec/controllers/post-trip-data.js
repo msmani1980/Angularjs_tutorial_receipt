@@ -25,7 +25,7 @@ describe('Controller: PostTripDataCtrl', function () {
     postTripFactory,
     companyId;
 
-    function createFormObject() {
+  function createFormObject() {
       scope.postTripDataForm = {
         $name:'postTripDataForm',
         $valid: false,
@@ -34,6 +34,7 @@ describe('Controller: PostTripDataCtrl', function () {
         $setSubmitted: function(submitted) {
           this.$submitted = submitted;
         },
+
         employeeIds: {
           $name: 'employeeIds',
           $invalid: false,
@@ -43,7 +44,8 @@ describe('Controller: PostTripDataCtrl', function () {
           $setViewValue: function(value) {
             this.$viewValue = value;
           },
-          $setValidity: function(key,value) {
+
+          $setValidity: function(key, value) {
             this.$error[key] = value;
           }
         }
@@ -73,11 +75,11 @@ describe('Controller: PostTripDataCtrl', function () {
     postTripDeferred = $q.defer();
     postTripDeferred.resolve(postTripResponseJSON);
     newPostTripDeferred = $q.defer();
-    newPostTripDeferred.resolve({id: 1});
+    newPostTripDeferred.resolve({ id: 1 });
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesResponseJSON);
     searchPostTripDeferred = $q.defer();
-    searchPostTripDeferred.resolve({postTrips:[]});
+    searchPostTripDeferred.resolve({ postTrips:[] });
     schedulesDeferred = $q.defer();
     schedulesDeferred.resolve(schedulesResponseJSON);
 
@@ -101,7 +103,6 @@ describe('Controller: PostTripDataCtrl', function () {
 
   }));
 
-
   describe('global functions and API calls', function () {
     var routeParams = {
       state: 'view'
@@ -119,18 +120,22 @@ describe('Controller: PostTripDataCtrl', function () {
         expect(postTripFactory.getStationList).toHaveBeenCalled();
         expect(scope.stationList).toBeDefined();
       });
+
       it('should remove duplicatesFromStationList', function () {
         var responseLength = stationsListResponseJSON.response.length;
         expect(responseLength > scope.stationList.length).toEqual(true);
       });
+
       it('should call getCarrierNumbers', function () {
         expect(postTripFactory.getCarrierTypes).toHaveBeenCalled();
       });
+
       it('should call getCarrierNumbers for each carrierType', function () {
         for (var i = 0; i < carrierTypesResponseJSON.response.length; i++) {
           expect(postTripFactory.getCarrierNumbers).toHaveBeenCalled();
         }
       });
+
       it('should call getEmployees', function () {
         expect(postTripFactory.getEmployees).toHaveBeenCalled();
       });
@@ -160,17 +165,20 @@ describe('Controller: PostTripDataCtrl', function () {
           depStationId: 2
         };
       });
+
       it('should populate and format departureTimezone', function () {
         scope.updateDepartureTimeZone();
         expect(scope.departureTimezone).toBeDefined();
         expect(scope.departureTimezone).toEqual('Europe/Madrid [UTC +2]');
       });
+
       it('should populate and format arrivalTimeZone', function () {
         scope.updateArrivalTimeZone();
         expect(scope.arrivalTimezone).toBeDefined();
         expect(scope.arrivalTimezone).toEqual('Europe/Madrid [UTC +1]');
       });
-      it('should return empty string if stationId is not valid', function(){
+
+      it('should return empty string if stationId is not valid', function() {
         scope.postTrip = {
           arrStationId: 3,
           depStationId: 4
@@ -181,18 +189,19 @@ describe('Controller: PostTripDataCtrl', function () {
         expect(scope.arrivalTimezone).toEqual('');
       });
     });
+
     describe('form save helper function', function () {
       it('should format employeeIdentifiers into array of employee objects', function () {
         scope.postTripDataForm.$valid = true;
         scope.selectedEmployees = {
           employeeIds: [
-            {id: 62, name: 'employee1'},
-            {id: 63, name: 'employee2'}
+            { id: 62, name: 'employee1' },
+            { id: 63, name: 'employee2' }
           ]
         };
         scope.postTrip = {};
         scope.formSave();
-        var expectedObject = [{employeeId: 62}, {employeeId: 63}];
+        var expectedObject = [{ employeeId: 62 }, { employeeId: 63 }];
         expect(Object.prototype.toString.call(scope.postTrip.postTripEmployeeIdentifiers)).toBe('[object Array]');
         expect(scope.postTrip.postTripEmployeeIdentifiers).toEqual(expectedObject);
       });

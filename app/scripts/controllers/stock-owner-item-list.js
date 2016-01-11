@@ -58,6 +58,7 @@ angular.module('ts5App')
         query.endDate = dateUtility.formatDateForAPI($scope.dateRange
           .endDate);
       }
+
       return query;
     };
 
@@ -93,6 +94,7 @@ angular.module('ts5App')
           break;
         }
       }
+
       return itemIndex;
     };
 
@@ -123,6 +125,7 @@ angular.module('ts5App')
       for (var filterKey in filters) {
         delete $scope.search[filterKey];
       }
+
       $this.displayLoadingModal();
       $this.getItemsList();
     };

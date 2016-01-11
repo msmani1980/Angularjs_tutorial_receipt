@@ -5,7 +5,7 @@ describe('Managed Goods Received', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/catering-stations.json','served/delivery-notes-list.json'));
+  beforeEach(module('served/catering-stations.json', 'served/delivery-notes-list.json'));
 
   var ManageGoodsReceivedCtrl,
     $scope,
@@ -20,7 +20,7 @@ describe('Managed Goods Received', function () {
     httpBackend;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $controller, $rootScope, _deliveryNoteFactory_,$injector) {
+  beforeEach(inject(function ($q, $controller, $rootScope, _deliveryNoteFactory_, $injector) {
     inject(function (_servedDeliveryNotesList_, _servedCateringStations_) {
       deliveryNotesJSON = _servedDeliveryNotesList_;
       stationsListJSON = _servedCateringStations_;
@@ -101,7 +101,7 @@ describe('Managed Goods Received', function () {
         expect($scope.stationsList.length).toBeGreaterThan(0);
       });
 
-      it('should be match the stations list from the stations API Respone',function () {
+      it('should be match the stations list from the stations API Respone', function () {
         expect($scope.stationsList).toEqual(stationsListJSON.response);
       });
 
@@ -144,7 +144,7 @@ describe('Managed Goods Received', function () {
     describe('The deliveryNotesList array', function () {
 
       beforeEach(function() {
-        spyOn(ManageGoodsReceivedCtrl,'formatDeliveryNotesDates').and.callThrough();
+        spyOn(ManageGoodsReceivedCtrl, 'formatDeliveryNotesDates').and.callThrough();
         $scope.catererStationId = 3;
         $scope.$digest();
       });
@@ -153,7 +153,7 @@ describe('Managed Goods Received', function () {
         expect($scope.deliveryNotesList.length).toBeGreaterThan(0);
       });
 
-      it('should be match the deliveryNotes list from the delivertNotes API Respone',function () {
+      it('should be match the deliveryNotes list from the delivertNotes API Respone', function () {
         expect($scope.deliveryNotesList).toEqual(deliveryNotesJSON.response);
       });
 
@@ -232,6 +232,7 @@ describe('Managed Goods Received', function () {
     beforeEach(function () {
       $scope.$digest();
     });
+
     it(
       'should have a clearSearchFilters() method attached to the scope',
       function () {
@@ -284,13 +285,13 @@ describe('Managed Goods Received', function () {
         $scope.$digest();
       });
 
-      it('should set the start and end dates in the query', function(){
+      it('should set the start and end dates in the query', function() {
         var query = ManageGoodsReceivedCtrl.generateDeliveryNoteQuery();
         expect(query.deliveryStartDate).toBeDefined();
         expect(query.deliveryEndDate).toBeDefined();
       });
 
-      it('should format the start and end dates in the query', function(){
+      it('should format the start and end dates in the query', function() {
         var query = ManageGoodsReceivedCtrl.generateDeliveryNoteQuery();
         expect(query.deliveryStartDate).toEqual('20150812');
         expect(query.deliveryEndDate).toEqual('20150813');

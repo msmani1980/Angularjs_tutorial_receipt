@@ -18,7 +18,6 @@ describe('Factory: commissionFactory', function () {
     companyService = _companyService_;
     currenciesService = _currenciesService_;
 
-
     spyOn(commissionDataService, 'getCommissionPayableData');
     spyOn(commissionDataService, 'getCommissionPayableList');
     spyOn(commissionDataService, 'createCommissionData');
@@ -29,7 +28,6 @@ describe('Factory: commissionFactory', function () {
     spyOn(recordsService, 'getDiscountTypes');
     spyOn(companyService, 'getCompany');
     spyOn(currenciesService, 'getMasterCurrency');
-
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -45,18 +43,22 @@ describe('Factory: commissionFactory', function () {
       commissionFactory.getCommissionPayableList({});
       expect(commissionDataService.getCommissionPayableList).toHaveBeenCalled();
     });
+
     it('should call commissionDataService on getCommissionPayableData', function () {
       commissionFactory.getCommissionPayableData(123);
       expect(commissionDataService.getCommissionPayableData).toHaveBeenCalledWith(123);
     });
+
     it('should call commissionDataService on createCommissionData', function () {
       commissionFactory.createCommissionData({});
       expect(commissionDataService.createCommissionData).toHaveBeenCalled();
     });
+
     it('should call commissionDataService on updateCommissionData', function () {
       commissionFactory.updateCommissionData(123, {});
       expect(commissionDataService.updateCommissionData).toHaveBeenCalled();
     });
+
     it('should call commissionDataService on deleteCommissionData', function () {
       commissionFactory.deleteCommissionData(123);
       expect(commissionDataService.deleteCommissionData).toHaveBeenCalledWith(123);
@@ -68,6 +70,7 @@ describe('Factory: commissionFactory', function () {
       commissionFactory.getCommissionPayableTypes();
       expect(recordsService.getCommissionPayableTypes).toHaveBeenCalled();
     });
+
     it('should call recordsService on getDiscountTypes', function () {
       commissionFactory.getDiscountTypes();
       expect(recordsService.getDiscountTypes).toHaveBeenCalled();

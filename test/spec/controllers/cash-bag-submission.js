@@ -4,8 +4,8 @@ describe('Controller: CashBagSubmissionCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
-
   beforeEach(module('served/company.json'));
+  beforeEach(module('served/currency-globals.json'));
   beforeEach(module('served/cash-bag-list-submit.json'));
   beforeEach(module('served/update-cash-bag-submit.json'));
 
@@ -19,6 +19,8 @@ describe('Controller: CashBagSubmissionCtrl', function () {
   var getCashBagListJSON;
   var updateCashBagJSON;
   var updateCashBagDeferred;
+  var getCompanyGlobalCurrenciesJSON;
+  var getCompanyGlobalCurrenciesDeferred;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
 
@@ -43,6 +45,11 @@ describe('Controller: CashBagSubmissionCtrl', function () {
     updateCashBagDeferred.resolve(updateCashBagJSON);
     spyOn(cashBagFactory, 'updateCashBag').and.returnValue(updateCashBagDeferred.promise);
 
+    getCompanyGlobalCurrenciesDeferred = $q.defer();
+    getCompanyGlobalCurrenciesJSON = $injector.get('servedCurrencyGlobals');
+    getCompanyGlobalCurrenciesDeferred.resolve(getCompanyGlobalCurrenciesJSON);
+    spyOn(cashBagFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
+
     CashBagSubmissionCtrl = $controller('CashBagSubmissionCtrl', {
       $scope: scope
     });
@@ -59,8 +66,17 @@ describe('Controller: CashBagSubmissionCtrl', function () {
         expect(cashBagFactory.getCompany).toHaveBeenCalledWith(362);
       });
 
-      it('should attach getCompany response to scope', function () {
+      it('should attach cashHandler response to scope', function () {
         expect(scope.CHCompany).toEqual(getCompanyJSON);
+      });
+
+      it('should attach airline company response to scope', function () {
+        expect(scope.companyData).toEqual(getCompanyJSON);
+      });
+
+      it('should attach BaseCurrency to scope', function () {
+        var expectedCurrency = jasmine.objectContaining({ code: 'GBP' });
+        expect(CashBagSubmissionCtrl.globalCurrencyList[0]).toEqual(expectedCurrency);
       });
 
     });
@@ -104,19 +120,20 @@ describe('Controller: CashBagSubmissionCtrl', function () {
       });
 
       it('should call getCashBagList searching', function () {
-        scope.search.isSubmitted = true;
+        scope.search.searchForSubmitted = true;
         scope.searchCashBags();
-        var expectedParameter = jasmine.objectContaining({isSubmitted: true});
+        var expectedParameter = jasmine.objectContaining({ isSubmitted: true });
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(null, expectedParameter);
       });
 
       it('should call getCashBagList searching', function () {
         scope.search = {
           bankReferenceNumber: 'fakeBankReferenceNumber',
-          isSubmitted: ''
+          searchForSubmitted: true,
+          searchForNotSubmitted: true
         };
         scope.searchCashBags();
-        var expectedParameter = jasmine.objectContaining({bankReferenceNumber: 'fakeBankReferenceNumber'});
+        var expectedParameter = jasmine.objectContaining({ bankReferenceNumber: 'fakeBankReferenceNumber' });
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(null, expectedParameter);
       });
     });
@@ -133,7 +150,7 @@ describe('Controller: CashBagSubmissionCtrl', function () {
       scope.toggleCheckbox();
       scope.submitCashBag();
       var expectedParameter = {
-        cashBags: [jasmine.objectContaining({bankReferenceNumber: '12345'})]
+        cashBags: [jasmine.objectContaining({ bankReferenceNumber: '12345' })]
       };
       expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(null, expectedParameter, { submission: 'submit' });
     });

@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManageGoodsReceivedCtrl', function ($scope,$filter, dateUtility,deliveryNoteFactory,ngToast, lodash) {
+  .controller('ManageGoodsReceivedCtrl', function ($scope, $filter, dateUtility, deliveryNoteFactory, ngToast, lodash) {
 
     var $this = this;
     this.meta = {
@@ -26,7 +26,7 @@ angular.module('ts5App')
     this.init = function() {
       this.getCatererStationList();
       $scope.$watch('catererStationId', function(newData) {
-        if(newData) {
+        if (newData) {
           $scope.deliveryNotesList = [];
           $this.meta = {
             count: undefined,
@@ -66,6 +66,7 @@ angular.module('ts5App')
         query.deliveryStartDate = dateUtility.formatDateForAPI($scope.dateRange.deliveryStartDate);
         query.deliveryEndDate = dateUtility.formatDateForAPI($scope.dateRange.deliveryEndDate);
       }
+
       return query;
     };
 
@@ -73,6 +74,7 @@ angular.module('ts5App')
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
+
       showLoadingBar();
       $scope.userSelectedStation = false;
       var query = $this.generateDeliveryNoteQuery();
@@ -87,11 +89,12 @@ angular.module('ts5App')
         $this.formatDeliveryNotesDates();
         hideLoadingBar();
       });
+
       $this.meta.offset += $this.meta.limit;
     };
 
     this.formatDeliveryNotesDates = function() {
-      angular.forEach($scope.deliveryNotesList,function(deliveryNote){
+      angular.forEach($scope.deliveryNotesList, function(deliveryNote) {
         if (deliveryNote && deliveryNote.updatedOn) {
           deliveryNote.updatedOn = dateUtility.removeMilliseconds(deliveryNote.updatedOn);
         }
@@ -113,6 +116,7 @@ angular.module('ts5App')
           break;
         }
       }
+
       return deliveryNoteIndex;
     };
 
@@ -141,6 +145,7 @@ angular.module('ts5App')
       for (var filterKey in filters) {
         delete $scope.search[filterKey];
       }
+
       $scope.searchRecords();
     };
 

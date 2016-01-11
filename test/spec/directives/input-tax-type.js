@@ -19,6 +19,7 @@ describe('The tax type input directive', function() {
       inject(function(_servedTaxTypes_) {
         scope.taxTypes = _servedTaxTypes_.response;
       });
+
       element = angular.element('<input-tax-type></input-tax-type>');
       element = $compile(element)(scope);
       scope.$digest();

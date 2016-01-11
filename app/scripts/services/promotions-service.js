@@ -35,27 +35,27 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getPromotion(id){
-      return requestResource.getPromotion({id: id}).$promise;
+    function getPromotion(id) {
+      return requestResource.getPromotion({ id: id }).$promise;
     }
 
-    function getPromotions(payload){
+    function getPromotions(payload) {
       return requestResource.getPromotions(payload).$promise;
     }
 
-    function createPromotion(payload){
+    function createPromotion(payload) {
       return requestResource.createPromotion(payload).$promise;
     }
 
-    function savePromotion(id, payload){
-      return requestResource.savePromotion({id: id}, payload).$promise;
+    function savePromotion(id, payload) {
+      return requestResource.savePromotion({ id: id }, payload).$promise;
     }
 
-    function deletePromotion(id){
-      return requestResource.deletePromotion({id: id}).$promise;
+    function deletePromotion(id) {
+      return requestResource.deletePromotion({ id: id }).$promise;
     }
 
-    return{
+    return {
       getPromotion: getPromotion,
       getPromotions: getPromotions,
       createPromotion: createPromotion,

@@ -48,7 +48,6 @@ describe('The form update modal', function () {
       expect(element.find('.modal-footer .btn-list').length).toEqual(1);
     });
 
-
   });
 
   describe('directive isolated scope', function () {

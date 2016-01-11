@@ -12,15 +12,19 @@ angular.module('ts5App')
     var getCompanyId = function () {
       return GlobalMenuService.company.get();
     };
+
     var getCompanyList = function(payload) {
       return companyService.getCompanyList(payload);
     };
-    var getItemsList = function(searchParameters, fetchFromMaster){
+
+    var getItemsList = function(searchParameters, fetchFromMaster) {
       return itemsService.getItemsList(searchParameters, fetchFromMaster);
     };
-    var importItems = function(payload){
+
+    var importItems = function(payload) {
       return itemImportService.importItems(payload);
     };
+
     return {
       getCompanyId: getCompanyId,
       getCompanyList: getCompanyList,

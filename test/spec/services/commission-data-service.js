@@ -39,6 +39,7 @@ describe('Service: commissionDataService', function () {
         commissionDataService.getCommissionPayableList().then(function (dataFromAPI) {
           commissionPayableList = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -49,7 +50,7 @@ describe('Service: commissionDataService', function () {
       describe('api call parameters', function () {
         it('should take an optional payload parameter', function () {
           var crewBaseId = 2;
-          var payload = {crewBaseTypeId: crewBaseId};
+          var payload = { crewBaseTypeId: crewBaseId };
           var regex = new RegExp('employee-commissions-payable\.\*crewBaseTypeId=' + crewBaseId, 'g');
           $httpBackend.expectGET(regex);
           commissionDataService.getCommissionPayableList(payload);
@@ -87,7 +88,7 @@ describe('Service: commissionDataService', function () {
 
       beforeEach(function () {
         var regex = new RegExp('employee-commissions-payable', 'g');
-        $httpBackend.whenPOST(regex).respond({id: 36});
+        $httpBackend.whenPOST(regex).respond({ id: 36 });
       });
 
       it('should POST data to employee-commissions-payable API', function () {

@@ -39,7 +39,7 @@ fdescribe('The Company Create Controller', function() {
     $scope = $rootScope.$new();
     $controller = $injector.get('$controller');
     ItemCreateCtrl = $controller('ItemCreateCtrl', {
-      '$scope': $scope
+      $scope: $scope
     });
   }
 
@@ -118,6 +118,7 @@ fdescribe('The Company Create Controller', function() {
       expect($scope.formData.recommendations).toBeDefined();
       expect($scope.formData.recommendations).toEqual([]);
     });
+
     it('should have an globalTradeNumbers property that is an empty array', function() {
       expect($scope.formData.globalTradeNumbers).toBeDefined();
       expect($scope.formData.globalTradeNumbers).toEqual([]);
@@ -285,7 +286,6 @@ fdescribe('The Company Create Controller', function() {
 
     });
 
-
     describe('getDependencies() method', function() {
       var responseArray;
       var companiesFactory;
@@ -406,7 +406,6 @@ fdescribe('The Company Create Controller', function() {
         });
 
       });
-
 
       describe('setTagsList method', function() {
 
@@ -900,6 +899,7 @@ fdescribe('The Company Create Controller', function() {
         it('should be defined', function() {
           expect($scope.GTINClass).toBeDefined();
         });
+
         it('should have been called', function() {
           spyOn($scope, 'GTINClass');
           $scope.GTINClass(form, 0);
@@ -1284,7 +1284,6 @@ fdescribe('The Company Create Controller', function() {
         expect(stationException.stations.length).toBeGreaterThan(0);
       });
 
-
       it('should contain a station object with a station code', function() {
         expect(station.code).toBeDefined();
         expect(station.code).toEqual(jasmine.any(String));
@@ -1434,7 +1433,6 @@ fdescribe('The Company Create Controller', function() {
         expect(stationExceptionCurrenciesList).toBeDefined();
         expect(stationExceptionCurrenciesList.length).toBeGreaterThan(0);
       });
-
 
       it('should contain a stationExceptionCurrency object with a currency code', function() {
         expect(stationExceptionCurrency.price).toBeDefined();

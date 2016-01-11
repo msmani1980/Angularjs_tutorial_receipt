@@ -26,11 +26,11 @@ angular.module('ts5App')
       deleteStore: {
         method: 'DELETE'
       },
-      getStore : {
+      getStore: {
         method: 'GET'
       },
-      saveStore : {
-        method : 'PUT'
+      saveStore: {
+        method: 'PUT'
       }
     };
     var storesRequestResource = $resource(storesRequestURL, requestParameters, storesActions);
@@ -38,18 +38,23 @@ angular.module('ts5App')
     var createStore = function (payload) {
       return storesRequestResource.createStore(payload).$promise;
     };
+
     var getStoreList = function (payload) {
       return storesRequestResource.getStoreList(payload).$promise;
     };
+
     var deleteStore = function (_id) {
-      return storesRequestResource.deleteStore({id:_id}).$promise;
+      return storesRequestResource.deleteStore({ id:_id }).$promise;
     };
+
     var getStore = function(_id) {
-      return storesRequestResource.getStore({id:_id}).$promise;
+      return storesRequestResource.getStore({ id:_id }).$promise;
     };
+
     var saveStore = function(payload) {
       return storesRequestResource.saveStore(payload).$promise;
     };
+
     return {
       getStore: getStore,
       createStore: createStore,

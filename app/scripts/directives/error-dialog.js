@@ -9,12 +9,12 @@
 angular.module('ts5App')
   .directive('errorDialog', function() {
 
-    var errorDialogController = function($scope,$document) {
+    var errorDialogController = function($scope, $document) {
 
       var $this = this;
 
       this.setFormObject = function() {
-        if($scope.formObject && $scope.formObject.$name) {
+        if ($scope.formObject && $scope.formObject.$name) {
           this.form = $scope.$parent[$scope.formObject.$name];
         }
       };
@@ -34,8 +34,8 @@ angular.module('ts5App')
       };
 
       this.setScrollWatch = function() {
-        $scope.$watch('display',function(currentFlag){
-          if(currentFlag === true) {
+        $scope.$watch('display', function(currentFlag) {
+          if (currentFlag === true) {
             $this.scrollToDialog();
           }
         });
@@ -52,7 +52,7 @@ angular.module('ts5App')
 
       this.validateRequiredFields = function() {
         $scope.errorRequired = [];
-        if($this.form) {
+        if ($this.form) {
           angular.forEach(this.form.$error.required, function(field) {
             if (field.$invalid) {
               var fieldName = $this.formatErrorText(field.$name);
@@ -64,7 +64,7 @@ angular.module('ts5App')
 
       this.validatePatternFields = function() {
         $scope.errorPattern = [];
-        if($this.form) {
+        if ($this.form) {
           angular.forEach(this.form.$error.pattern, function(field) {
             if (field.$invalid && field.$viewValue) {
               var fieldName = $this.formatErrorText(field.$name);
@@ -86,6 +86,7 @@ angular.module('ts5App')
           $scope.$parent.$watchCollection(watchGroup, function() {
             $this.checkForErrors();
           });
+
           $scope.$parent.$watchCollection(formName + '.$error', function() {
             var error = $this.form.$error;
             if (!error.pattern && !error.required) {
@@ -98,27 +99,28 @@ angular.module('ts5App')
       this.init();
 
       $scope.showCustomErrors = function() {
-        return ( Array.isArray($scope.$parent.errorCustom) && $scope.$parent.errorCustom.length > 0 );
+        return (Array.isArray($scope.$parent.errorCustom) && $scope.$parent.errorCustom.length > 0);
       };
 
       $scope.showInternalServerError = function() {
-        return ( $this.httpResponseError  && !$scope.showValidationErrors() );
+        return ($this.httpResponseError  && !$scope.showValidationErrors());
       };
 
       $scope.showValidationErrors = function() {
-        if(angular.isUndefined($this.form)) {
+        if (angular.isUndefined($this.form)) {
           return false;
         }
+
         return !$scope.showCustomErrors() &&
-           ( (Array.isArray($this.form.$error.pattern) || Array.isArray($this.form.$error.required) ));
+           ((Array.isArray($this.form.$error.pattern) || Array.isArray($this.form.$error.required)));
       };
 
       $scope.showFailedRequest = function() {
-        return ( $scope.errorResponse && !$scope.showValidationErrors() && !$scope.showInternalServerError() );
+        return ($scope.errorResponse && !$scope.showValidationErrors() && !$scope.showInternalServerError());
       };
 
-
     };
+
     return {
       templateUrl: '/views/directives/error-dialog.html',
       restrict: 'E',

@@ -44,7 +44,7 @@ describe('Controller: CurrencyEditCtrl', function () {
     getCompanyDeferred = $q.defer();
     getCompanyDeferred.resolve(companyJSON);
     createCompanyDeffered = $q.defer();
-    createCompanyDeffered.resolve({id:1});
+    createCompanyDeffered.resolve({ id:1 });
     deleteCompanyDeffered = $q.defer();
     deleteCompanyDeffered.resolve({});
 
@@ -53,6 +53,7 @@ describe('Controller: CurrencyEditCtrl', function () {
     spyOn(currencyFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
     spyOn(currencyFactory, 'deleteDetailedCompanyCurrency').and.returnValue(deleteCompanyDeffered.promise);
     spyOn(currencyFactory, 'createDetailedCompanyCurrency').and.callFake(function () { return $.Deferred().resolve(createCompanyDeffered);});
+
     spyOn(currencyFactory, 'updateDetailedCompanyCurrency').and.callFake(function () { return $.Deferred().resolve(currencyJSON);});
 
     $httpBackend.whenGET(/companies/).respond(companyJSON);
@@ -95,8 +96,8 @@ describe('Controller: CurrencyEditCtrl', function () {
   });
 
   it('should delete detailed currency be called', function () {
-    scope.currencyToDelete = {id: 1};
-    scope.companyCurrencyList = [{id: 1}];
+    scope.currencyToDelete = { id: 1 };
+    scope.companyCurrencyList = [{ id: 1 }];
 
     scope.deleteDetailedCompanyCurrency();
     expect(currencyFactory.deleteDetailedCompanyCurrency).toHaveBeenCalled();
@@ -162,6 +163,7 @@ describe('Controller: CurrencyEditCtrl', function () {
 
         expect(scope.isCurrencyReadOnly(currency)).toBe(true);
       });
+
       it('start date is today ', function () {
         var currency = angular.copy(currencyJSON);
         currency.startDate = dateUtility.nowFormatted();
@@ -169,6 +171,7 @@ describe('Controller: CurrencyEditCtrl', function () {
         expect(scope.isCurrencyReadOnly(currency)).toBe(true);
       });
     });
+
     describe('not be read only if', function () {
       it('start date is undefined ', function () {
         var currency = angular.copy(currencyJSON);
@@ -183,6 +186,7 @@ describe('Controller: CurrencyEditCtrl', function () {
 
         expect(scope.isCurrencyReadOnly(currency)).toBe(false);
       });
+
       it('is a new currency', function () {
         var currency = angular.copy(currencyJSON);
         currency.isNew = true;
@@ -202,6 +206,7 @@ describe('Controller: CurrencyEditCtrl', function () {
         expect(scope.isCurrencyPartialReadOnly(currency)).toBe(true);
       });
     });
+
     describe('not be partially read only if', function () {
       it('end date is undefined ', function () {
         var currency = angular.copy(currencyJSON);
@@ -209,18 +214,21 @@ describe('Controller: CurrencyEditCtrl', function () {
 
         expect(scope.isCurrencyPartialReadOnly(currency)).toBe(false);
       });
+
       it('end date is in the future ', function () {
         var currency = angular.copy(currencyJSON);
         currency.endDate = '01/01/2050';
 
         expect(scope.isCurrencyPartialReadOnly(currency)).toBe(false);
       });
+
       it('end date is today ', function () {
         var currency = angular.copy(currencyJSON);
         currency.endDate = dateUtility.nowFormatted();
 
         expect(scope.isCurrencyPartialReadOnly(currency)).toBe(false);
       });
+
       it('is a new currency', function () {
         var currency = angular.copy(currencyJSON);
         currency.isNew = true;

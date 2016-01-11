@@ -37,6 +37,7 @@ angular.module('ts5App')
         menu.startDate = dateUtility.formatDateForApp(menu.startDate);
         menu.endDate = dateUtility.formatDateForApp(menu.endDate);
       });
+
       return formattedMenuArray;
     }
 
@@ -45,9 +46,11 @@ angular.module('ts5App')
       if (formattedPayload.startDate) {
         formattedPayload.startDate = dateUtility.formatDateForAPI(formattedPayload.startDate);
       }
+
       if (formattedPayload.endDate) {
         formattedPayload.endDate = dateUtility.formatDateForAPI(formattedPayload.endDate);
       }
+
       return formattedPayload;
     }
 
@@ -61,6 +64,7 @@ angular.module('ts5App')
       $location.path('menu/edit/' + menu.id);
     };
 
+    var loadingProgress = false;
     var attachMenuListToScope = function (menuListFromAPI) {
       $this.meta.count = $this.meta.count || menuListFromAPI.meta.count;
       var menuList = formatDates(menuListFromAPI.menus);
@@ -70,7 +74,6 @@ angular.module('ts5App')
     };
 
     var lastStartDate = null;
-    var loadingProgress = false;
     function searchMenus(startDate) {
       if ($this.meta.offset >= $this.meta.count) {
         return;
@@ -82,9 +85,11 @@ angular.module('ts5App')
       } else if (!query.startDate && lastStartDate) {
         query.startDate = lastStartDate;
       }
+
       if (loadingProgress) {
         return;
       }
+
       query = lodash.assign(query, {
         limit: $this.meta.limit,
         offset: $this.meta.offset
@@ -117,7 +122,6 @@ angular.module('ts5App')
       searchMenus(lastStartDate === null ? dateUtility.nowFormatted('YYYYMMDD') : null);
     };
 
-
     function showToast(className, type, message) {
       ngToast.create({
         className: className,
@@ -140,10 +144,12 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('hide');
       menuService.deleteMenu($scope.menuToDelete.id).then(successDeleteHandler, showErrors);
     };
+
     $scope.showExcelDownload = function () {
       $scope.modal = $scope.modals[0];
       angular.element('#addCashBagModal').modal('show');
     };
+
     $scope.showDeleteConfirmation = function (menuToDelete) {
       $scope.menuToDelete = menuToDelete;
       angular.element('.delete-warning-modal').modal('show');
@@ -153,6 +159,7 @@ angular.module('ts5App')
       if (angular.isUndefined(menu)) {
         return false;
       }
+
       return dateUtility.isAfterToday(menu.endDate);
     };
 
@@ -160,6 +167,7 @@ angular.module('ts5App')
       if (angular.isUndefined(menu)) {
         return false;
       }
+
       return !dateUtility.isAfterToday(menu.startDate);
     };
 

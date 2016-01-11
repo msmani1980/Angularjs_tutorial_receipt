@@ -73,7 +73,8 @@ describe('Controller: StockDashboardCtrl', function() {
 
     StockDashboardCtrl = $controller('StockDashboardCtrl', {
       $scope: scope
-        // place here mocked dependencies
+
+      // place here mocked dependencies
     });
     scope.$digest();
   }));

@@ -41,7 +41,7 @@ angular.module('ts5App')
     };
 
     var getDiscount = function (discountId) {
-      return requestResource.getDiscount({id: discountId}).$promise;
+      return requestResource.getDiscount({ id: discountId }).$promise;
     };
 
     var createDiscount = function (payload) {
@@ -49,11 +49,11 @@ angular.module('ts5App')
     };
 
     var updateDiscount = function (discountId, payload) {
-      return requestResource.updateDiscount({id: discountId}, payload).$promise;
+      return requestResource.updateDiscount({ id: discountId }, payload).$promise;
     };
 
     var deleteDiscount = function (discountId) {
-      return requestResource.deleteDiscount({id: discountId}).$promise;
+      return requestResource.deleteDiscount({ id: discountId }).$promise;
     };
 
     return {

@@ -14,61 +14,61 @@ angular.module('ts5App')
 
     var today = dateUtility.nowFormatted('YYYYMMDD');
 
-    function getMasterItems(searchParams){
+    function getMasterItems(searchParams) {
       return itemsService.getItemsList(searchParams, true);
     }
 
-    function getBenefitTypes(){
+    function getBenefitTypes() {
       return recordsService.getBenefitTypes();
     }
 
-    function getDiscountTypes(){
+    function getDiscountTypes() {
       return recordsService.getDiscountTypes();
     }
 
-    function getCompanyId(){
+    function getCompanyId() {
       return GlobalMenuService.company.get();
     }
 
-    function getPromotionTypes(){
+    function getPromotionTypes() {
       return recordsService.getPromotionTypes();
     }
 
-    function getCompanyDiscountsCoupon(){
+    function getCompanyDiscountsCoupon() {
       return companyDiscountService.getDiscountList({
         discountTypeId: 1,
         startDate: today
       });
     }
 
-    function getCompanyDiscountsVoucher(){
+    function getCompanyDiscountsVoucher() {
       return companyDiscountService.getDiscountList({
         discountTypeId: 4,
         startDate: today
       });
     }
 
-    function getSalesCategories(payload){
+    function getSalesCategories(payload) {
       return salesCategoriesService.getSalesCategoriesList(payload);
     }
 
-    function getDiscountApplyTypes(){
+    function getDiscountApplyTypes() {
       return recordsService.getDiscountApplyTypes();
     }
 
-    function getPromotionCategories(){
+    function getPromotionCategories() {
       return promotionCategoriesService.getPromotionCategories();
     }
 
-    function getStationGlobals(payload){
+    function getStationGlobals(payload) {
       return stationsService.getGlobalStationList(payload);
     }
 
-    function getCurrencyGlobals(payload){
+    function getCurrencyGlobals(payload) {
       return currenciesService.getCompanyCurrencies(payload);
     }
 
-    function getPromotion(id){
+    function getPromotion(id) {
       return promotionsService.getPromotion(id);
     }
 
@@ -76,15 +76,15 @@ angular.module('ts5App')
       return promotionsService.getPromotions(payload);
     }
 
-    function createPromotion(payload){
+    function createPromotion(payload) {
       return promotionsService.createPromotion(payload);
     }
 
-    function savePromotion(id, payload){
+    function savePromotion(id, payload) {
       return promotionsService.savePromotion(id, payload);
     }
 
-    function deletePromotion(id){
+    function deletePromotion(id) {
       return promotionsService.deletePromotion(id);
     }
 

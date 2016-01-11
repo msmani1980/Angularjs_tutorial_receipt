@@ -13,7 +13,6 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     var $this = this;
     var companyId = GlobalMenuService.company.get();
 
-
     this.showLoadingModal = function (text) {
       angular.element('#loading').modal('show').find('p').text(text);
     };
@@ -90,10 +89,12 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       if (!arrayToFormat) {
         return [];
       }
+
       var newArray = [];
       angular.forEach(arrayToFormat, function (record) {
         newArray.push(record[attributeToSave]);
       });
+
       return newArray.toString();
     };
 
@@ -102,9 +103,11 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       if (searchData.startDate) {
         newPayload.startDate = dateUtility.formatDateForAPI(searchData.startDate);
       }
+
       if (searchData.endDate) {
         newPayload.endDate = dateUtility.formatDateForAPI(searchData.endDate);
       }
+
       newPayload.arrivalStationId = $this.formatSearchArray(searchData.arrStations, 'id');
       newPayload.departureStationId = $this.formatSearchArray(searchData.depStations, 'id');
       newPayload.employeeIdentifier = $this.formatSearchArray(searchData.employees, 'employeeIdentifier');
@@ -129,12 +132,12 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     };
 
     this.makeInitPromises = function () {
-     return [
-        $this.getEmployeeMessages({}),
-        $this.getSchedules(),
-        $this.getStations(),
-        $this.getEmployees()
-      ];
+      return [
+         $this.getEmployeeMessages({}),
+         $this.getSchedules(),
+         $this.getStations(),
+         $this.getEmployees()
+       ];
     };
 
     this.init = function () {
@@ -145,6 +148,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initSuccess);
     };
+
     this.init();
 
   });

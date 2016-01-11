@@ -37,12 +37,12 @@ angular.module('ts5App')
     };
 
     var getDimensionList = function (payload) {
-   	  var requestResource = $resource(requestURL, dimensionParameters, actions);
+      var requestResource = $resource(requestURL, dimensionParameters, actions);
       return requestResource.getDimensionList(payload).$promise;
     };
 
     var getVolumeList = function (payload) {
-   	  var requestResource = $resource(requestURL, volumeParameters, actions);
+      var requestResource = $resource(requestURL, volumeParameters, actions);
       return requestResource.getVolumeList(payload).$promise;
     };
 
@@ -57,4 +57,4 @@ angular.module('ts5App')
       getWeightList: getWeightList
     };
 
-});
+  });

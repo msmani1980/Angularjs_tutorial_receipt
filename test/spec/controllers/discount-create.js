@@ -73,7 +73,7 @@ describe('Controller: DiscountCreateCtrl', function () {
 
     DiscountCreateCtrl = $controller('DiscountCreateCtrl', {
       $scope: scope,
-      $routeParams: {id: 1}
+      $routeParams: { id: 1 }
     });
   }));
 
@@ -120,45 +120,45 @@ describe('Controller: DiscountCreateCtrl', function () {
   });
 
   it('setGlobalDiscountTypesList should set global discount types', function() {
-    var payload = { discounts: [{id: 1}] };
+    var payload = { discounts: [{ id: 1 }] };
     DiscountCreateCtrl.setGlobalDiscountTypesList(payload);
 
-    expect(scope.globalDiscountTypesList).toEqual([{id: 1}]);
+    expect(scope.globalDiscountTypesList).toEqual([{ id: 1 }]);
   });
 
   it('setDiscountTypesList should set discount types', function() {
-    var payload = [{id: 1}];
+    var payload = [{ id: 1 }];
     DiscountCreateCtrl.setDiscountTypesList(payload);
 
-    expect(scope.discountTypesList).toEqual([{id: 1}]);
+    expect(scope.discountTypesList).toEqual([{ id: 1 }]);
   });
 
   it('setCompanyCurrencyGlobals should set company currency globals', function() {
-    var payload = { response: [{id: 1}] };
+    var payload = { response: [{ id: 1 }] };
     DiscountCreateCtrl.setCompanyCurrencyGlobals(payload);
 
-    expect(scope.companyCurrencyGlobalsList).toEqual([{id: 1}]);
+    expect(scope.companyCurrencyGlobalsList).toEqual([{ id: 1 }]);
   });
 
   it('setSalesCategoriesListAndMap should set sales categories', function() {
-    var payload = { salesCategories: [{id: 1}] };
+    var payload = { salesCategories: [{ id: 1 }] };
     DiscountCreateCtrl.setSalesCategoriesListAndMap(payload);
 
-    expect(scope.salesCategoriesList).toEqual([{id: 0, name: 'All'}, {id: 1}]);
+    expect(scope.salesCategoriesList).toEqual([{ id: 0, name: 'All' }, { id: 1 }]);
   });
 
   it('setRetailItemsList should set retail item list', function() {
-    var payload = { masterItems: [{id: 1}] };
+    var payload = { masterItems: [{ id: 1 }] };
     DiscountCreateCtrl.setRetailItemsList(payload);
 
-    expect(scope.retailItemsList).toEqual([{id: 1}]);
+    expect(scope.retailItemsList).toEqual([{ id: 1 }]);
   });
 
   it('setDefaultRetailItems should set default retail item', function() {
-    scope.retailItemsList = {id: 1};
+    scope.retailItemsList = { id: 1 };
     DiscountCreateCtrl.setDefaultRetailItems();
 
-    expect(scope.filteredRetailItemsList[0]).toEqual({id: 1});
+    expect(scope.filteredRetailItemsList[0]).toEqual({ id: 1 });
   });
 
   describe('getDiscount should', function() {
@@ -205,6 +205,7 @@ describe('Controller: DiscountCreateCtrl', function () {
       expect(scope.formData.startDate).toEqual('01/01/2015');
       expect(scope.formData.endDate).toEqual('01/01/2016');
     });
+
     it('deserialize benefits', function() {
       DiscountCreateCtrl.deserializeBenefits(scope.discountData);
 
@@ -213,6 +214,7 @@ describe('Controller: DiscountCreateCtrl', function () {
       expect(scope.formData.amountDiscountValue[6]).toEqual(5);
 
     });
+
     it('deserialize limitation per shop', function() {
       DiscountCreateCtrl.deserializeLimitationPerShop(scope.discountData);
 
@@ -220,6 +222,7 @@ describe('Controller: DiscountCreateCtrl', function () {
       expect(scope.formData.isAmountLimitPerShop).toEqual(true);
       expect(scope.formData.amountLimitPerShopValue[9]).toEqual(8);
     });
+
     it('deserialize limitation per transaction', function() {
       DiscountCreateCtrl.deserializeLimitationPerTransaction(scope.discountData);
 
@@ -227,12 +230,14 @@ describe('Controller: DiscountCreateCtrl', function () {
       expect(scope.formData.isAmountLimitPerTransaction).toEqual(true);
       expect(scope.formData.amountLimitPerTransactionValue[12]).toEqual(11);
     });
+
     it('deserialize limitation per seat', function() {
       DiscountCreateCtrl.deserializeLimitationPerSeat(scope.discountData);
 
       expect(scope.formData.requireSeatEntry).toEqual(true);
       expect(scope.formData.itemQtyLimitPerSeat).toEqual(13);
     });
+
     it('deserialize restrictions', function() {
       DiscountCreateCtrl.deserializeRestrictions(scope.discountData);
 
@@ -251,11 +256,11 @@ describe('Controller: DiscountCreateCtrl', function () {
         endDate: '01/01/2016',
         discountTypeId: 3,
         percentageDiscountValue: 4,
-        amountDiscountValue: {6: 5},
+        amountDiscountValue: { 6: 5 },
         itemQtyLimitPerShop: 7,
-        amountLimitPerShopValue: {10: 9},
+        amountLimitPerShopValue: { 10: 9 },
         itemQtyLimitPerTransaction: 10,
-        amountLimitPerTransactionValue: {11: 12},
+        amountLimitPerTransactionValue: { 11: 12 },
         requireSeatEntry: true,
         itemQtyLimitPerSeat: 13,
         isRestriction: true
@@ -274,8 +279,9 @@ describe('Controller: DiscountCreateCtrl', function () {
       expect(discount.startDate).toEqual('20150101');
       expect(discount.endDate).toEqual('20160101');
     });
+
     it('serialize benefits', function() {
-      var discount = {rates: []};
+      var discount = { rates: [] };
 
       DiscountCreateCtrl.serializeBenefits(scope.formData, discount);
 
@@ -283,22 +289,25 @@ describe('Controller: DiscountCreateCtrl', function () {
       expect(discount.percentage).toEqual(4);
       expect(discount.rates).toEqual([{ amount: 5, companyCurrencyId: '6' }]);
     });
+
     it('serialize limitation per shop', function() {
-      var discount = {limitsByShop: []};
+      var discount = { limitsByShop: [] };
 
       DiscountCreateCtrl.serializeLimitationPerShop(scope.formData, discount);
 
       expect(discount.itemQuantityLimitByShop).toEqual(7);
       expect(discount.limitsByShop).toEqual([{ amount: 9, companyCurrencyId: '10' }]);
     });
+
     it('serialize limitation per transaction', function() {
-      var discount = {limitsByTransaction: []};
+      var discount = { limitsByTransaction: [] };
 
       DiscountCreateCtrl.serializeLimitationPerTransaction(scope.formData, discount);
 
       expect(discount.itemQuantityLimitByTransaction).toEqual(10);
       expect(discount.limitsByTransaction).toEqual([{ amount: 12, companyCurrencyId: '11' }]);
     });
+
     it('serialize limitation per seat', function() {
       var discount = {};
 
@@ -307,6 +316,7 @@ describe('Controller: DiscountCreateCtrl', function () {
       expect(discount.seatNumberRequired).toEqual(true);
       expect(discount.itemQuantityLimitBySeatNumber).toEqual(13);
     });
+
     it('serialize restrictions', function() {
       var discount = {};
 
@@ -317,22 +327,22 @@ describe('Controller: DiscountCreateCtrl', function () {
   });
 
   it('showDeleteConfirmation should set restrictedItemToDelete', function() {
-    scope.showDeleteConfirmation(0, {name: 'name'});
+    scope.showDeleteConfirmation(0, { name: 'name' });
 
-    expect(scope.restrictedItemToDelete).toEqual({rowIndex: 0, name: 'name'});
+    expect(scope.restrictedItemToDelete).toEqual({ rowIndex: 0, name: 'name' });
   });
 
   it('deleteRestrictedItem should delete restricted item', function() {
-    scope.restrictedItemToDelete = {rowIndex: 0};
-    scope.formData.restrictedItems = [{name: 'discount 1'}, {name: 'discount 2'}];
+    scope.restrictedItemToDelete = { rowIndex: 0 };
+    scope.formData.restrictedItems = [{ name: 'discount 1' }, { name: 'discount 2' }];
 
     scope.deleteRestrictedItem();
 
-    expect(scope.formData.restrictedItems).toEqual([{name: 'discount 2'}]);
+    expect(scope.formData.restrictedItems).toEqual([{ name: 'discount 2' }]);
   });
 
   it('addRestrictedItems should add restricted item', function() {
-    scope.formData.restrictedItems = [{name: 'discount 1'}, {name: 'discount 2'}];
+    scope.formData.restrictedItems = [{ name: 'discount 1' }, { name: 'discount 2' }];
 
     scope.addRestrictedItems();
 
@@ -340,13 +350,13 @@ describe('Controller: DiscountCreateCtrl', function () {
   });
 
   it('getGlobalDiscountDescriptionById should get global discount description by id', function() {
-    scope.globalDiscountTypesList = [{id: 1, description: 'description'}];
+    scope.globalDiscountTypesList = [{ id: 1, description: 'description' }];
 
     expect(scope.getGlobalDiscountDescriptionById(1)).toEqual('description');
   });
 
   it('getRetailItemNameById should get retail item name by id', function() {
-    scope.retailItemsList = [{id: 1, itemName: 'name'}];
+    scope.retailItemsList = [{ id: 1, itemName: 'name' }];
 
     expect(scope.getRetailItemNameById(1)).toEqual('name');
   });
@@ -354,19 +364,19 @@ describe('Controller: DiscountCreateCtrl', function () {
   it('loadRestrictedItemsByCategory should load restricted items by category', function() {
     scope.loadRestrictedItemsByCategory(1);
 
-    expect(itemsFactory.getItemsList).toHaveBeenCalledWith({categoryId: 1}, true);
+    expect(itemsFactory.getItemsList).toHaveBeenCalledWith({ categoryId: 1 }, true);
   });
 
   it('updateItem should update item', function() {
-    DiscountCreateCtrl.updateItem({name: 'name'});
+    DiscountCreateCtrl.updateItem({ name: 'name' });
 
-    expect(discountFactory.updateDiscount).toHaveBeenCalledWith(1, {name: 'name'});
+    expect(discountFactory.updateDiscount).toHaveBeenCalledWith(1, { name: 'name' });
   });
 
   it('createItem should update item', function() {
-    DiscountCreateCtrl.createItem({name: 'name'});
+    DiscountCreateCtrl.createItem({ name: 'name' });
 
-    expect(discountFactory.createDiscount).toHaveBeenCalledWith({name: 'name'});
+    expect(discountFactory.createDiscount).toHaveBeenCalledWith({ name: 'name' });
   });
 
 });

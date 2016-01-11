@@ -41,7 +41,7 @@ angular.module('ts5App')
     };
 
     var getSalesCategory = function (id) {
-      return requestResource.getSalesCategory({id: id}).$promise;
+      return requestResource.getSalesCategory({ id: id }).$promise;
     };
 
     var createSalesCategory = function (payload) {

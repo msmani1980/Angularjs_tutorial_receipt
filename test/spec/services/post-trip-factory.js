@@ -52,22 +52,27 @@ describe('Factory: postTripFactory', function () {
       postTripFactory.getPostTripDataList(companyId);
       expect(postTripService.getPostTrips).toHaveBeenCalledWith(companyId);
     });
+
     it('should call postTripService on getPostTrip', function () {
       postTripFactory.getPostTrip(companyId, '123');
       expect(postTripService.getPostTrip).toHaveBeenCalled();
     });
+
     it('should call postTripService on createPostTrip', function () {
       postTripFactory.createPostTrip(companyId, {});
       expect(postTripService.createPostTrip).toHaveBeenCalled();
     });
+
     it('should call postTripService on updatePostTrip', function () {
       postTripFactory.updatePostTrip('123', {});
       expect(postTripService.updatePostTrip).toHaveBeenCalled();
     });
+
     it('should call postTripService on deletePostTrip', function () {
       postTripFactory.deletePostTrip(companyId, '123');
       expect(postTripService.deletePostTrip).toHaveBeenCalled();
     });
+
     it('should call postTripService on uploadPostTrip', function () {
       postTripFactory.uploadPostTrip(companyId, null, null, null);
       expect(postTripService.importFromExcel).toHaveBeenCalled();
@@ -79,7 +84,8 @@ describe('Factory: postTripFactory', function () {
       postTripFactory.getStationList(companyId);
       expect(stationsService.getStationList).toHaveBeenCalledWith(companyId);
     });
-    it('should take optional offset', function (){
+
+    it('should take optional offset', function () {
       var offset = 20;
       postTripFactory.getStationList(companyId, offset);
       expect(stationsService.getStationList).toHaveBeenCalledWith(companyId, offset);
@@ -98,6 +104,7 @@ describe('Factory: postTripFactory', function () {
       postTripFactory.getCarrierTypes(companyId);
       expect(carrierService.getCarrierTypes).toHaveBeenCalledWith(companyId);
     });
+
     it('should call carrierService on getCarrierNumber', function () {
       var carrierType = 2;
       postTripFactory.getCarrierNumbers(companyId, carrierType);

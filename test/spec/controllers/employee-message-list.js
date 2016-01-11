@@ -57,13 +57,11 @@ describe('Controller: EmployeeMessageListCtrl', function() {
     spyOn(employeeMessagesFactory, 'getStations').and.returnValue(stationsDeferred.promise);
     spyOn(location, 'path').and.callThrough();
 
-
     EmployeeMessageListCtrl = $controller('EmployeeMessageListCtrl', {
       $scope: scope
     });
     scope.$digest();
   }));
-
 
   describe('init', function() {
     it('should set viewName', function() {
@@ -84,11 +82,13 @@ describe('Controller: EmployeeMessageListCtrl', function() {
       scope.$digest();
       expect(scope.employeesList).toEqual(employeesJSON.companyEmployees);
     });
+
     it('should get a list of schedules', function() {
       expect(employeeMessagesFactory.getSchedules).toHaveBeenCalled();
       scope.$digest();
       expect(scope.schedulesList).toEqual(schedulesJSON.distinctSchedules);
     });
+
     it('should get a list of stations', function() {
       expect(employeeMessagesFactory.getStations).toHaveBeenCalled();
       scope.$digest();
@@ -146,12 +146,13 @@ describe('Controller: EmployeeMessageListCtrl', function() {
 
   describe('delete record', function () {
     it('should call delete API with record id', function () {
-      var mockRecord = {id: 1};
+      var mockRecord = { id: 1 };
       scope.removeRecord(mockRecord);
       expect(employeeMessagesFactory.deleteEmployeeMessage).toHaveBeenCalledWith(1);
     });
+
     it('should reinitialize employee message list', function () {
-      var mockRecord = {id: 1};
+      var mockRecord = { id: 1 };
       scope.removeRecord(mockRecord);
       expect(employeeMessagesFactory.getEmployeeMessages).toHaveBeenCalledWith({});
     });
@@ -173,6 +174,7 @@ describe('Controller: EmployeeMessageListCtrl', function() {
         };
         expect(scope.isFutureRecord(mockActiveRecord)).toEqual(false);
       });
+
       it('should return false for past records', function () {
         var mockPastRecord = {
           startDate: '10/20/2000',
@@ -180,6 +182,7 @@ describe('Controller: EmployeeMessageListCtrl', function() {
         };
         expect(scope.isFutureRecord(mockPastRecord)).toEqual(false);
       });
+
       it('should return true for future records', function () {
         var mockFutureRecord = {
           startDate: '10/20/3000',
@@ -197,6 +200,7 @@ describe('Controller: EmployeeMessageListCtrl', function() {
         };
         expect(scope.isActiveOrFutureRecord(mockPastRecord)).toEqual(false);
       });
+
       it('should return true for active records', function() {
         var mockActiveRecord = {
           startDate: '10/20/2010',
@@ -204,6 +208,7 @@ describe('Controller: EmployeeMessageListCtrl', function() {
         };
         expect(scope.isActiveOrFutureRecord(mockActiveRecord)).toEqual(true);
       });
+
       it('should return true for future records', function() {
         var mockFutureRecord = {
           startDate: '10/20/3000',

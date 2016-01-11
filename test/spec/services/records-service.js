@@ -33,6 +33,7 @@ describe('Service: commissionDataService', function () {
         recordsService.getCrewBaseTypes().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
@@ -48,6 +49,7 @@ describe('Service: commissionDataService', function () {
         recordsService.getCommissionPayableTypes().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
@@ -63,6 +65,7 @@ describe('Service: commissionDataService', function () {
         recordsService.getDiscountTypes().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
@@ -78,87 +81,94 @@ describe('Service: commissionDataService', function () {
         recordsService.getStoreStatusList().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
 
-    describe('getBenefitTypes', function(){
-      it('should make GET request to API', function(){
+    describe('getBenefitTypes', function() {
+      it('should make GET request to API', function() {
         var expectUri = /records\/benefit-types$/;
         httpBackend.expectGET(expectUri).respond(200, []);
         recordsService.getBenefitTypes().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
 
-    describe('getPromotionTypes', function(){
-      it('should make GET request to API', function(){
+    describe('getPromotionTypes', function() {
+      it('should make GET request to API', function() {
         var expectUri = /records\/promotion-types$/;
         httpBackend.expectGET(expectUri).respond(200, []);
         recordsService.getPromotionTypes().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
 
-    describe('getDiscountApplyTypes', function(){
-      it('should make GET request to API', function(){
+    describe('getDiscountApplyTypes', function() {
+      it('should make GET request to API', function() {
         var expectUri = /records\/discount-apply-types$/;
         httpBackend.expectGET(expectUri).respond(200, []);
         recordsService.getDiscountApplyTypes().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
 
-    describe('getItemTypes', function(){
-      it('should make GET request to API', function(){
+    describe('getItemTypes', function() {
+      it('should make GET request to API', function() {
         var expectUri = /records\/item-types$/;
         httpBackend.expectGET(expectUri).respond(200, []);
         recordsService.getItemTypes().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
 
-    describe('getCharacteristics', function(){
-      it('should make GET request to API', function(){
+    describe('getCharacteristics', function() {
+      it('should make GET request to API', function() {
         var expectUri = /records\/characteristics$/;
         httpBackend.expectGET(expectUri).respond(200, []);
         recordsService.getCharacteristics().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
 
-    describe('getFeatures', function(){
-      it('should make GET request to API', function(){
+    describe('getFeatures', function() {
+      it('should make GET request to API', function() {
         var expectUri = /records\/features/;
         httpBackend.expectGET(expectUri).respond(200, []);
         recordsService.getFeatures().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
 
-    describe('getCountTypes', function(){
-      it('should make GET request to API', function(){
+    describe('getCountTypes', function() {
+      it('should make GET request to API', function() {
         var expectUri = /records\/count-types/;
         httpBackend.expectGET(expectUri).respond(200, []);
         recordsService.getCountTypes().then(function (response) {
           expect(response).toBeDefined();
         });
+
         httpBackend.flush();
       });
     });
-
 
   });
 });

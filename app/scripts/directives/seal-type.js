@@ -14,6 +14,7 @@ angular.module('ts5App')
         if ($scope.$parent.readOnly) {
           return false;
         }
+
         return ($scope.sealTypeObject.seals.numbers.length === 1 && $scope.sealTypeObject.seals.numbers[0] >= 0);
       };
 
@@ -24,6 +25,7 @@ angular.module('ts5App')
           var newSeal = Math.abs(sealNumber + i);
           $scope.sealTypeObject.seals.numbers.push(newSeal);
         }
+
         $scope.numberOfSeals = null;
       };
 
@@ -31,6 +33,7 @@ angular.module('ts5App')
         if ($scope.$parent.readOnly) {
           return false;
         }
+
         return ($scope.sealTypeObject.seals.numbers.length > 1);
       };
 
@@ -60,10 +63,12 @@ angular.module('ts5App')
         if (keyEvent.which === 13) {
           $scope.addSealsSequentially();
         }
+
         return false;
       };
 
     };
+
     return {
       templateUrl: '/views/directives/seal-type.html',
       controller: sealTypeController,

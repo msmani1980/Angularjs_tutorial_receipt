@@ -225,6 +225,7 @@ describe('Directive: stockTakeReason', function() {
 
     });
   });
+
   describe('When stockTakeReasonOpen is called for Ullage', function() {
     beforeEach(function() {
       scope.stockTakeReasonOpen(mockStockItem, 'Ullage');

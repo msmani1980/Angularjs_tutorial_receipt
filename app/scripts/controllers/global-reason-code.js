@@ -22,7 +22,7 @@ angular.module('ts5App')
     };
 
     this.submitForm = function() {
-      if( $this.validateForm() ) {
+      if ($this.validateForm()) {
         $this.createGlobalReasonCode();
       }
     };

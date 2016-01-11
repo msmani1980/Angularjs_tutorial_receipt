@@ -27,9 +27,11 @@ describe('Service: companyReasonTypeService', function () {
       it('should be accessible in the service', function () {
         expect(companyReasonTypeService.getAll).toBeDefined();
       });
+
       beforeEach(function () {
-        httpBackend.whenGET(/company-reason-types/).respond({done: true});
+        httpBackend.whenGET(/company-reason-types/).respond({ done: true });
       });
+
       it('should make GET request to API', function () {
         companyReasonTypeService.getAll();
         httpBackend.expectGET(/company-reason-types/);

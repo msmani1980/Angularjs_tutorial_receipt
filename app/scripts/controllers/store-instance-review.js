@@ -22,10 +22,10 @@ angular.module('ts5App')
     var STATUS_END_INSTANCE = 'Unpacking';
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
     var sealsToRemove = {
-      'dispatch': [],
-      'replenish': ['Hand Over'],
+      dispatch: [],
+      replenish: ['Hand Over'],
       'end-instance': ['Hand Over', 'Outbound'],
-      'redispatch': []
+      redispatch: []
     };
     var $this = this;
 
@@ -117,6 +117,7 @@ angular.module('ts5App')
           sealNumbers.push(sealNumber);
         }
       }
+
       return sealNumbers.sort(function(a, b) {
         return a - b;
       });
@@ -131,6 +132,7 @@ angular.module('ts5App')
           type: sealTypeId
         }, true);
       }
+
       return sealColor[0].color;
     }
 
@@ -141,6 +143,7 @@ angular.module('ts5App')
       if (!masterItem || !masterItem.length) {
         return 0;
       }
+
       return masterItem[0].menuQuantity;
     }
 
@@ -216,10 +219,12 @@ angular.module('ts5App')
           $scope.offloadItemList.push(item);
         }
       });
+
       if (angular.isArray($scope.storeTwoItemList)) {
         $scope.storeTwoItemList.map(function(item) {
           item.quantity = 0;
         });
+
         $scope.pickListItems = $scope.pickListItems.concat($scope.storeTwoItemList);
       }
 
@@ -251,6 +256,7 @@ angular.module('ts5App')
       if ($routeParams.action === 'replenish') {
         action = 'replenished';
       }
+
       var storeNumber = $scope.storeDetails.storeNumber;
       var scheduleDate = $scope.storeDetails.scheduleDate;
       showMessage('<b>Store Number:</b> ' + storeNumber + ' for <b>Schedule Date:</b> ' + scheduleDate +
@@ -287,6 +293,7 @@ angular.module('ts5App')
       if (!status || !status.length) {
         return false;
       }
+
       return status[0].name;
     }
 
@@ -294,6 +301,7 @@ angular.module('ts5App')
       if (!message) {
         message = MESSAGE_ACTION_NOT_ALLOWED;
       }
+
       var error = {
         data: [{
           field: field,
@@ -308,6 +316,7 @@ angular.module('ts5App')
       if (angular.isArray(response)) {
         response = response[0];
       }
+
       $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {
         id: response.statusId
       }, true)[0];
@@ -323,10 +332,10 @@ angular.module('ts5App')
 
     function checkOnValidStatus() {
       var validStatusList = {
-        'dispatch': 'Ready for Dispatch',
-        'replenish': 'Ready for Dispatch',
+        dispatch: 'Ready for Dispatch',
+        replenish: 'Ready for Dispatch',
         'end-instance': 'Unpacking',
-        'redispatch': 'Ready for Dispatch'
+        redispatch: 'Ready for Dispatch'
       };
 
       if ($scope.storeDetails.currentStatus.statusName !== validStatusList[$routeParams.action]) {
@@ -376,8 +385,10 @@ angular.module('ts5App')
           uniqueItem.inboundQuantity = pickedItem.inboundQuantity;
           pickedInboundItemList.splice(lodash.findIndex(pickedInboundItemList, pickedItem), 1);
         }
+
         mergedItemList.push(uniqueItem);
       });
+
       return mergedItemList;
     }
 
@@ -429,6 +440,7 @@ angular.module('ts5App')
           item.menuQuantity = getMenuQuantity(item.itemMasterId);
         }
       });
+
       return itemArray;
     }
 
@@ -444,7 +456,6 @@ angular.module('ts5App')
       var ullageCountTypeId = lodash.findWhere($this.countTypes, {
         name: 'Ullage'
       }).id;
-
 
       var cleanItemList = [];
       var uniqueStoreTwoItems = lodash.uniq(rawItemList, 'itemMasterId');
@@ -483,6 +494,7 @@ angular.module('ts5App')
 
         cleanItemList.push(newItem);
       });
+
       return cleanItemList;
     }
 
@@ -533,6 +545,7 @@ angular.module('ts5App')
 
         cleanItemList.push(newItem);
       });
+
       return cleanItemList;
     }
 
@@ -542,6 +555,7 @@ angular.module('ts5App')
       if (isRedispatch()) {
         $scope.storeTwoItemList = formatStoreTwoItems(rawItemList);
       }
+
       $scope.items = formatItems(mergedItems);
     }
 
@@ -568,6 +582,7 @@ angular.module('ts5App')
       if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId) {
         getPrevStoreDetails($scope.storeDetails.prevStoreInstanceId);
       }
+
       $q.all(_initPromises).then(initLoadComplete, showResponseErrors);
     }
 
@@ -603,11 +618,13 @@ angular.module('ts5App')
         saveStoreStatusIfRedispatch(status);
         return;
       }
+
       var statusNameInt = getStatusNameIntByName(status);
       if (!status) {
         throwError('statusId', 'Unable to find statusId by name: ' + name);
         return false;
       }
+
       storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(
         storeInstanceStatusDispatched, showResponseErrors);
     }
@@ -664,6 +681,7 @@ angular.module('ts5App')
       if (!controllerName) {
         return;
       }
+
       var step = lodash.findWhere($scope.wizardSteps, {
         controllerName: controllerName
       }, true);
@@ -677,10 +695,10 @@ angular.module('ts5App')
 
     $scope.submit = function() {
       var submitStatus = {
-        'dispatch': 'Dispatched',
-        'replenish': 'Dispatched',
+        dispatch: 'Dispatched',
+        replenish: 'Dispatched',
         'end-instance': 'Inbounded',
-        'redispatch': ['Inbounded', 'Dispatched']
+        redispatch: ['Inbounded', 'Dispatched']
       };
 
       if (submitStatus[$routeParams.action]) {
@@ -701,24 +719,25 @@ angular.module('ts5App')
       if ($routeParams.action === 'redispatch') {
         pickedQuantity = item.pickedQuantity;
       }
+
       return (item.menuQuantity !== pickedQuantity) ? 'danger' : '';
     };
 
     $scope.getTitleFor = function(section) {
       var titles = {
         seals: {
-          'dispatch': 'Seal Number Assignment',
-          'replenish': 'Seal Number Assignment',
+          dispatch: 'Seal Number Assignment',
+          replenish: 'Seal Number Assignment',
           'end-instance': 'Inbound Seals'
         },
         items: {
-          'dispatch': 'Pick List',
-          'replenish': 'Pick List',
+          dispatch: 'Pick List',
+          replenish: 'Pick List',
           'end-instance': 'Offload List'
         },
         dispatch: {
-          'dispatch': 'Dispatch',
-          'replenish': 'Dispatch',
+          dispatch: 'Dispatch',
+          replenish: 'Dispatch',
           'end-instance': 'End Instance'
         }
       };

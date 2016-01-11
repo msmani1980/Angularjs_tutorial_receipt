@@ -6,7 +6,6 @@ describe('Service: companyPreferencesService', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/company-preferences.json'));
 
-
   // instantiate service
   var companyPreferencesService,
     $httpBackend,
@@ -15,6 +14,7 @@ describe('Service: companyPreferencesService', function () {
     inject(function (_servedCompanyPreferences_) {
       preferencesJSON = _servedCompanyPreferences_;
     });
+
     $httpBackend = _$httpBackend_;
     companyPreferencesService = _companyPreferencesService_;
   }));
@@ -37,6 +37,7 @@ describe('Service: companyPreferencesService', function () {
         companyPreferencesService.getCompanyPreferences().then(function (menuListFromAPI) {
           apiData = menuListFromAPI;
         });
+
         $httpBackend.flush();
       });
 

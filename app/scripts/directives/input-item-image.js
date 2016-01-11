@@ -11,10 +11,10 @@ angular.module('ts5App')
 
     return {
 
-    	templateUrl: 'views/directives/input-item-image.html',
-    	restrict: 'E',
-    	scope: true
+      templateUrl: 'views/directives/input-item-image.html',
+      restrict: 'E',
+      scope: true
 
     };
 
-});
+  });

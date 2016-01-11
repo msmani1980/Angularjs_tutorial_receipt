@@ -15,6 +15,7 @@ describe('Service: categoryService', function () {
     inject(function (_servedCompanyCategories_) {
       categoryResponseJSON = _servedCompanyCategories_;
     });
+
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/sales-categories/).respond(categoryResponseJSON);
     $httpBackend.whenDELETE(/sales-categories/).respond(201);
@@ -40,6 +41,7 @@ describe('Service: categoryService', function () {
         categoryService.getCategoryList().then(function (categoryListFromAPI) {
           categoryData = categoryListFromAPI;
         });
+
         $httpBackend.flush();
       });
 
@@ -50,18 +52,23 @@ describe('Service: categoryService', function () {
       it('should have a companyId property', function () {
         expect(categoryData.salesCategories[0].companyId).toBe(403);
       });
+
       it('should have a name property', function () {
         expect(categoryData.salesCategories[0].name).toBe('Soft drink');
       });
+
       it('should have a description property', function () {
         expect(categoryData.salesCategories[0].description).toBe('Soft drinks');
       });
+
       it('should have a salesCategoryPath property', function () {
         expect(categoryData.salesCategories[0].salesCategoryPath).toBe('Snacks/Soft drink');
       });
+
       it('should have a itemCount property', function () {
         expect(categoryData.salesCategories[0].itemCount).toBe('57');
       });
+
       it('should have a parentId property', function () {
         expect(categoryData.salesCategories[0].parentId).toBe(207);
       });

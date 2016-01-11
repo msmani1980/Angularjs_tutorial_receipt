@@ -25,6 +25,7 @@ describe('Service: identityAccessService', function () {
       identityAccessService.authorizeUser().then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -36,6 +37,7 @@ describe('Service: identityAccessService', function () {
       identityAccessService.changePassword().then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -47,6 +49,7 @@ describe('Service: identityAccessService', function () {
       identityAccessService.sendEmail('').then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -58,6 +61,7 @@ describe('Service: identityAccessService', function () {
       identityAccessService.checkAuth().then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -69,6 +73,7 @@ describe('Service: identityAccessService', function () {
       identityAccessService.featuresInRole().then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });
@@ -80,6 +85,7 @@ describe('Service: identityAccessService', function () {
       identityAccessService.logout().then(function (response) {
         expect(response).toBeDefined();
       });
+
       httpBackend.flush();
     });
   });

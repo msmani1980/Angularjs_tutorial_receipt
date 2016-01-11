@@ -60,7 +60,6 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     spyOn(ReconciliationDashboardCtrl, 'executeOtherAction');
   }));
 
-
   describe('init', function () {
 
     it('should init displayColumns with receivedStation, storeInstanceId, updatedDate, updatedBy columns to be hidden', function () {
@@ -94,11 +93,13 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
         var arrowType = scope.getSortingType('sortName');
         expect(arrowType).toEqual('descending');
       });
+
       it('should return ascending if sort title is not negative', function () {
         scope.tableSortTitle = 'sortName';
         var arrowType = scope.getSortingType('sortName');
         expect(arrowType).toEqual('ascending');
       });
+
       it('should return none if sort title is not the given name', function () {
         scope.tableSortTitle = 'sortName';
         var arrowType = scope.getSortingType('otherName');
@@ -112,11 +113,13 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
         var arrowClass = scope.getArrowIconAndClassForSorting('sortName');
         expect(arrowClass).toEqual('fa fa-sort-asc active');
       });
+
       it('should return black descending arrow for descending sort type', function () {
         scope.tableSortTitle = '-sortName';
         var arrowClass = scope.getArrowIconAndClassForSorting('sortName');
         expect(arrowClass).toEqual('fa fa-sort-desc active');
       });
+
       it('should return muted arrows for no sort type', function () {
         scope.tableSortTitle = 'sortName';
         var arrowClass = scope.getArrowIconAndClassForSorting('otherName');
@@ -126,7 +129,7 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
     describe('toggleColumn', function () {
       it('should reverse column visibility', function () {
-        scope.displayColumns = {testColumn: false};
+        scope.displayColumns = { testColumn: false };
         scope.toggleColumnView('testColumn');
         expect(scope.displayColumns.testColumn).toEqual(true);
         scope.toggleColumnView('testColumn');
@@ -136,13 +139,15 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
     describe('doesInstanceContainAction', function () {
       it('should return true if instance contains an action', function () {
-        var testInstance = {actions: ['testAction']};
+        var testInstance = { actions: ['testAction'] };
         expect(scope.doesInstanceContainAction(testInstance, 'testAction')).toEqual(true);
       });
+
       it('should return false if instance contains an action', function () {
-        var testInstance = {actions: ['testAction']};
+        var testInstance = { actions: ['testAction'] };
         expect(scope.doesInstanceContainAction(testInstance, 'fakeAction')).toEqual(false);
       });
+
       it('should return false if instance does not contain actions', function () {
         var testInstance = {};
         expect(scope.doesInstanceContainAction(testInstance, 'testAction')).toEqual(false);
@@ -151,15 +156,15 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
   });
 
   it('filterReconciliationList should filter items in unsupported status', function () {
-    expect(scope.filterReconciliationList({statusName: 'Inbounded'})).toEqual(true);
-    expect(scope.filterReconciliationList({statusName: 'Confirmed'})).toEqual(true);
-    expect(scope.filterReconciliationList({statusName: 'Discrepancies'})).toEqual(true);
-    expect(scope.filterReconciliationList({statusName: 'Commission Paid'})).toEqual(true);
-    expect(scope.filterReconciliationList({statusName: 'Something else'})).toEqual(false);
+    expect(scope.filterReconciliationList({ statusName: 'Inbounded' })).toEqual(true);
+    expect(scope.filterReconciliationList({ statusName: 'Confirmed' })).toEqual(true);
+    expect(scope.filterReconciliationList({ statusName: 'Discrepancies' })).toEqual(true);
+    expect(scope.filterReconciliationList({ statusName: 'Commission Paid' })).toEqual(true);
+    expect(scope.filterReconciliationList({ statusName: 'Something else' })).toEqual(false);
   });
 
   it('getStoreStatusNameById should return status name from status id', function () {
-    scope.allowedStoreStatusMap[8] = {id: 8, statusName: 'Inbounded'};
+    scope.allowedStoreStatusMap[8] = { id: 8, statusName: 'Inbounded' };
 
     expect(ReconciliationDashboardCtrl.getStoreStatusNameById(8)).toEqual('Inbounded');
     expect(ReconciliationDashboardCtrl.getStoreStatusNameById(10)).toEqual(null);
@@ -181,11 +186,11 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports']);
 
-    item = {statusName: 'Inbounded'};
+    item = { statusName: 'Inbounded' };
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Validate']);
 
-    item = {statusName: 'Inbounded', eposData: '1/3', postTripData: '2/3', cashHandlerData: '3/3'};
+    item = { statusName: 'Inbounded', eposData: '1/3', postTripData: '2/3', cashHandlerData: '3/3' };
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Validate']);
 
@@ -202,11 +207,11 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Add Cash Handler Data']);*/
 
-    item = {statusName: 'Confirmed'};
+    item = { statusName: 'Confirmed' };
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Review', 'Pay Commission', 'Unconfirm']);
 
-    item = {statusName: 'Discrepancies'};
+    item = { statusName: 'Discrepancies' };
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Validate', 'Review', 'Confirm']);
   });
@@ -230,56 +235,56 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
   it('highlightSelected returns active in case instance is selected', function () {
     expect(scope.highlightSelected({})).toEqual('');
-    expect(scope.highlightSelected({selected: false})).toEqual('');
-    expect(scope.highlightSelected({selected: true})).toEqual('active');
+    expect(scope.highlightSelected({ selected: false })).toEqual('');
+    expect(scope.highlightSelected({ selected: true })).toEqual('active');
   });
 
   it('hasSelectedInstance returns true in case there are selected instances', function () {
     scope.reconciliationList = [{}];
     expect(scope.hasSelectedInstance()).toEqual(false);
 
-    scope.reconciliationList = [{selected: false}];
+    scope.reconciliationList = [{ selected: false }];
     expect(scope.hasSelectedInstance()).toEqual(false);
 
-    scope.reconciliationList = [{selected: true}];
+    scope.reconciliationList = [{ selected: true }];
     expect(scope.hasSelectedInstance()).toEqual(true);
   });
 
   it('canHaveInstanceCheckbox returns true for Validate and Pay Commission actions', function () {
-    expect(scope.canHaveInstanceCheckbox({actions: ['Validate']})).toEqual(true);
-    expect(scope.canHaveInstanceCheckbox({actions: ['Pay Commission']})).toEqual(true);
-    expect(scope.canHaveInstanceCheckbox({actions: ['Validate', 'Pay Commission']})).toEqual(true);
-    expect(scope.canHaveInstanceCheckbox({actions: ['Review']})).toEqual(false);
+    expect(scope.canHaveInstanceCheckbox({ actions: ['Validate'] })).toEqual(true);
+    expect(scope.canHaveInstanceCheckbox({ actions: ['Pay Commission'] })).toEqual(true);
+    expect(scope.canHaveInstanceCheckbox({ actions: ['Validate', 'Pay Commission'] })).toEqual(true);
+    expect(scope.canHaveInstanceCheckbox({ actions: ['Review'] })).toEqual(false);
   });
 
   it('toggleAllCheckboxes toggles select for eligible instances', function () {
     scope.allCheckboxesSelected = true;
 
-    scope.reconciliationList = [{actions: ['Validate']}];
+    scope.reconciliationList = [{ actions: ['Validate'] }];
     scope.toggleAllCheckboxes();
     expect(scope.reconciliationList[0].selected).toEqual(true);
 
-    scope.reconciliationList = [{actions: ['Pay Commission']}];
+    scope.reconciliationList = [{ actions: ['Pay Commission'] }];
     scope.toggleAllCheckboxes();
     expect(scope.reconciliationList[0].selected).toEqual(true);
 
-    scope.reconciliationList = [{actions: ['Review']}];
+    scope.reconciliationList = [{ actions: ['Review'] }];
     scope.toggleAllCheckboxes();
     expect(scope.reconciliationList[0].selected).toEqual(undefined);
   });
 
   it('findSelectedInstances finds selected instances with given status', function () {
 
-    scope.reconciliationList = [{selected: true}];
+    scope.reconciliationList = [{ selected: true }];
     expect(ReconciliationDashboardCtrl.findSelectedInstances().length).toEqual(1);
 
-    scope.reconciliationList = [{selected: false}];
+    scope.reconciliationList = [{ selected: false }];
     expect(ReconciliationDashboardCtrl.findSelectedInstances().length).toEqual(0);
   });
 
   it('findInstancesWithStatus finds selected instances with given status', function () {
 
-    scope.instancesForActionExecution = [{statusName: 'Confirmed'}];
+    scope.instancesForActionExecution = [{ statusName: 'Confirmed' }];
 
     expect(ReconciliationDashboardCtrl.findInstancesWithStatus('Confirmed').length).toEqual(1);
     expect(ReconciliationDashboardCtrl.findInstancesWithStatus('Discrepancies').length).toEqual(0);
@@ -299,7 +304,7 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
   });
 
   it('handleResponseError handles error', function () {
-    var error = {error: true};
+    var error = { error: true };
     ReconciliationDashboardCtrl.handleResponseError(error);
 
     expect(scope.errorResponse).toEqual(error);

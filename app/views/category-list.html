@@ -91,7 +91,7 @@
                   <button class="btn btn-primary btn-xs" ng-click="editCategory(category)" ng-show="isCategoryEditable(category)">
                       <i class="fa fa-pencil"></i>
                   </button>
-                  <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, category)" ng-hide="isCategoryReadOnly(category)">
+                  <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, category)" ng-show="canDeleteCategory(category)">
                       <i class="fa fa-trash"></i>
                   </button>
               </td>
@@ -134,7 +134,7 @@
               <button class="btn btn-primary btn-xs" ng-click="editCategory(category)" ng-show="isCategoryEditable(category)">
                   <i class="fa fa-pencil"></i>
               </button>
-              <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, category)" ng-hide="isCategoryReadOnly(category)">
+              <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, category)" ng-show="canDeleteCategory(category)">
                   <i class="fa fa-trash"></i>
               </button>
           </td>
@@ -174,3 +174,5 @@
         </div>
     </div>
 </div>
+
+<dynamic-left-nav></dynamic-left-nav>

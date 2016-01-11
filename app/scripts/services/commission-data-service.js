@@ -39,6 +39,7 @@ angular.module('ts5App')
       if (arguments.length === 1) {
         payload = optionalPayload;
       }
+
       requestParameters.id = '';
       return requestResource.getCommissionDataList(payload).$promise;
     }
@@ -62,7 +63,6 @@ angular.module('ts5App')
       requestParameters.id = '';
       return requestResource.createCommissionData(payload).$promise;
     }
-
 
     return {
       getCommissionPayableList: getCommissionPayableList,

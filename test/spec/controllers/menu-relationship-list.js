@@ -25,7 +25,7 @@ describe('Menu Relationship List Controller', function () {
 
   beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
     $location, $httpBackend, _catererStationService_,
-    _menuCatererStationsService_,$injector) {
+    _menuCatererStationsService_, $injector) {
     inject(function (_servedMenus_, _servedCateringStations_,
       _servedMenuCateringStations_) {
       menuListJSON = _servedMenus_;
@@ -319,7 +319,7 @@ describe('Menu Relationship List Controller', function () {
   describe('clear filter functionality', function () {
 
     beforeEach(function () {
-      spyOn($scope,'searchRelationshipList').and.callThrough();
+      spyOn($scope, 'searchRelationshipList').and.callThrough();
       $scope.$digest();
     });
 
@@ -353,7 +353,7 @@ describe('Menu Relationship List Controller', function () {
     var todaysDate;
     beforeEach(function () {
       todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
-      spyOn(MenuRelationshipListCtrl,'generateRelationshipQuery').and.callThrough();
+      spyOn(MenuRelationshipListCtrl, 'generateRelationshipQuery').and.callThrough();
       $scope.$digest();
     });
 
@@ -538,6 +538,7 @@ describe('Menu Relationship List Controller', function () {
         container = angular.element(view.find(
           '.fluid-container')[0]);
       });
+
       it('should be defined', function () {
         expect(container).toBeDefined();
       });
@@ -549,23 +550,29 @@ describe('Menu Relationship List Controller', function () {
         controls = angular.element(view.find(
           '.list-controls')[0]);
       });
+
       it('should be defined', function () {
         expect(controls).toBeDefined();
       });
+
       it('should have a row', function () {
         expect(controls.find('.row')[0]).toBeDefined();
       });
+
       it('should have (2) columns inside of the row', function () {
         expect(controls.find('.row .col-xs-6').length).toEqual(
           2);
       });
+
       it('should have a View Name', function () {
         expect(controls.find('.view-name')[0]).toBeDefined();
       });
+
       it('should have a View Name that contains text', function () {
         expect(controls.find('.view-name').text().trim()).toEqual(
           'Menu Relationship List');
       });
+
       it('should have (4) buttons inside the controls', function () {
         expect(controls.find('.btn').length).toEqual(4);
       });
@@ -576,12 +583,15 @@ describe('Menu Relationship List Controller', function () {
           createButton = angular.element(controls.find(
             '.btn-create')[0]);
         });
+
         it('should be defined', function () {
           expect(createButton[0]).toBeDefined();
         });
+
         it('should contain a plus icon', function () {
           expect(createButton.find('span.fa-plus')).toBeDefined();
         });
+
         it('should contain text', function () {
           expect(createButton.text().trim()).toEqual(
             'Create Menu Relationship');
@@ -594,12 +604,15 @@ describe('Menu Relationship List Controller', function () {
           searchButton = angular.element(controls.find(
             '.btn-search')[0]);
         });
+
         it('should be defined', function () {
           expect(searchButton[0]).toBeDefined();
         });
+
         it('should contain a search icon', function () {
           expect(searchButton.find('span.fa-search')).toBeDefined();
         });
+
         it('should contain text', function () {
           expect(searchButton.find('.btn-label').text().trim())
             .toEqual('Search');
@@ -612,18 +625,23 @@ describe('Menu Relationship List Controller', function () {
           searchContainer = angular.element(controls.find(
             '#search-collapse')[0]);
         });
+
         it('should be defined', function () {
           expect(searchContainer).toBeDefined();
         });
+
         it('should have the class .collapse', function () {
           expect(searchContainer.hasClass('collapse')).toBeTruthy();
         });
+
         it('should contain a form', function () {
           expect(searchContainer.find('form')[0]).toBeDefined();
         });
+
         it('should contain a form with a row', function () {
           expect(searchContainer.find('form .row')[0]).toBeDefined();
         });
+
         it('should contain (5) columns', function () {
           expect(searchContainer.find(
             'form .row > .col-xs-12').length).toEqual(5);
@@ -635,24 +653,30 @@ describe('Menu Relationship List Controller', function () {
             formGroup = angular.element(searchContainer
               .find('.form-group')[0]);
           });
+
           it('should be defined', function () {
             expect(formGroup[0]).toBeDefined();
           });
+
           it('should contain a label', function () {
             expect(formGroup.find('label')[0]).toBeDefined();
           });
+
           it('should contain a label with the correct text',
             function () {
               expect(formGroup.find('label').text().trim())
                 .toEqual('Menu Code');
             });
+
           it('should contain an select', function () {
             expect(formGroup.find('select')[0]).toBeDefined();
           });
+
           it('should contain .form-control class', function () {
             expect(formGroup.find('select').hasClass(
               'form-control')).toBeTruthy();
           });
+
           it(
             'should contain an select field with the correct ng-model',
             function () {
@@ -668,24 +692,30 @@ describe('Menu Relationship List Controller', function () {
             formGroup = angular.element(searchContainer
               .find('.form-group')[1]);
           });
+
           it('should be defined', function () {
             expect(formGroup[0]).toBeDefined();
           });
+
           it('should contain a label', function () {
             expect(formGroup.find('label')[0]).toBeDefined();
           });
+
           it('should contain a label with the correct text',
             function () {
               expect(formGroup.find('label').text().trim())
                 .toEqual('Menu Name');
             });
+
           it('should contain an select field', function () {
             expect(formGroup.find('select')[0]).toBeDefined();
           });
+
           it('should contain .form-control class', function () {
             expect(formGroup.find('select').hasClass(
               'form-control')).toBeTruthy();
           });
+
           it(
             'should contain an input field with the correct ng-model',
             function () {
@@ -701,20 +731,25 @@ describe('Menu Relationship List Controller', function () {
             formGroup = angular.element(searchContainer
               .find('.form-group')[2]);
           });
+
           it('should be defined', function () {
             expect(formGroup[0]).toBeDefined();
           });
+
           it('should contain a label', function () {
             expect(formGroup.find('label')[0]).toBeDefined();
           });
+
           it('should contain a label with the correct text',
             function () {
               expect(formGroup.find('label').text().trim())
                 .toEqual('Catering Stations');
             });
+
           it('should contain an select element', function () {
             expect(formGroup.find('select')[0]).toBeDefined();
           });
+
           it(
             'should contain an input field with the correct ng-model',
             function () {
@@ -722,6 +757,7 @@ describe('Menu Relationship List Controller', function () {
                   'ng-model'))
                 .toEqual('search.catererStationId');
             });
+
           it(
             'should contain all stations in apiResponse as options',
             function () {
@@ -735,6 +771,7 @@ describe('Menu Relationship List Controller', function () {
               option = angular.element(formGroup
                 .find('option')[1]);
             });
+
             it(
               'should have a value set from the stationList',
               function () {
@@ -750,9 +787,11 @@ describe('Menu Relationship List Controller', function () {
             datePicker = searchContainer.find(
               '.datepicker-container');
           });
+
           it('should be defined', function () {
             expect(datePicker[0]).toBeDefined();
           });
+
           // TODO: Test directive element injection, talk to Rodrigo about replace
         });
       });
@@ -763,13 +802,16 @@ describe('Menu Relationship List Controller', function () {
           clearButton = angular.element(controls.find(
             '.btn-search-clear')[0]);
         });
+
         it('should be defined', function () {
           expect(clearButton[0]).toBeDefined();
         });
+
         it('should contain text', function () {
           expect(clearButton.find('.btn-label').text().trim())
             .toEqual('Clear');
         });
+
         it('should contain an ng-click', function () {
           expect(clearButton.attr('ng-click')).toEqual(
             'clearSearchFilters()');
@@ -782,9 +824,11 @@ describe('Menu Relationship List Controller', function () {
       beforeEach(function () {
         table = angular.element(view.find('table')[0]);
       });
+
       it('should be defined', function () {
         expect(table).toBeDefined();
       });
+
       it('should have a thead element', function () {
         expect(table.find('thead')).toBeDefined();
       });
@@ -796,21 +840,25 @@ describe('Menu Relationship List Controller', function () {
           thead = angular.element(table.find('thead')[
             0]);
         });
+
         it('should contain 6 columns', function () {
           expect(thead.find('th').length).toEqual(6);
         });
+
         it('should contain a Menu Code column', function () {
           testHeader = angular.element(thead.find(
             'th')[0]);
           expect(testHeader.text().trim()).toEqual(
             'Menu Code');
         });
+
         it('should contain a Menu Name column', function () {
           testHeader = angular.element(thead.find(
             'th')[1]);
           expect(testHeader.text().trim()).toEqual(
             'Menu Name');
         });
+
         it('should contain a Catering Station column',
           function () {
             testHeader = angular.element(thead.find(
@@ -818,18 +866,21 @@ describe('Menu Relationship List Controller', function () {
             expect(testHeader.text().trim()).toEqual(
               'Catering Stations');
           });
+
         it('should contain a Start Date column', function () {
           testHeader = angular.element(thead.find(
             'th')[3]);
           expect(testHeader.text().trim()).toEqual(
             'Start Date');
         });
+
         it('should contain a End Date column', function () {
           testHeader = angular.element(thead.find(
             'th')[4]);
           expect(testHeader.text().trim()).toEqual(
             'End Date');
         });
+
         it('should contain an Actions column', function () {
           testHeader = angular.element(thead.find(
             'th')[5]);
@@ -844,6 +895,7 @@ describe('Menu Relationship List Controller', function () {
           tbody = angular.element(table.find('tbody')[
             0]);
         });
+
         it(
           'should contain a list tr element which is the same length as the relationship list ',
           function () {
@@ -861,17 +913,20 @@ describe('Menu Relationship List Controller', function () {
             testRow = angular.element(tbody.find('tr')[
               0]);
           });
+
           it('should contain ng-repeat', function () {
             expect(testRow.attr('ng-repeat')).toContain(
               '(key,relationship) in relationshipList'
             );
           });
+
           it('should contain a Menu Code cell',
             function () {
               testCell = angular.element(testRow.find(
                 'td')[0]);
               expect(testCell).toBeDefined();
             });
+
           it(
             'should have a Menu Code cell that matches the api data',
             function () {
@@ -880,12 +935,14 @@ describe('Menu Relationship List Controller', function () {
               expect(testCell.text().trim()).toEqual(
                 testRelationshipData.menu.menuCode);
             });
+
           it('should contain a Menu Name cell',
             function () {
               testCell = angular.element(testRow.find(
                 'td')[1]);
               expect(testCell).toBeDefined();
             });
+
           it(
             'should have a Menu Name cell that matches the api data',
             function () {
@@ -894,6 +951,7 @@ describe('Menu Relationship List Controller', function () {
               expect(testCell.text().trim()).toEqual(
                 testRelationshipData.menu.menuName);
             });
+
           it(
             'should contain a Catering Stations cell',
             function () {
@@ -901,12 +959,14 @@ describe('Menu Relationship List Controller', function () {
                 'td')[2]);
               expect(testCell).toBeDefined();
             });
+
           it('should contain a Start Date cell',
             function () {
               testCell = angular.element(testRow.find(
                 'td')[3]);
               expect(testCell).toBeDefined();
             });
+
           it(
             'should have a Start Date cell that matches the api data',
             function () {
@@ -921,12 +981,14 @@ describe('Menu Relationship List Controller', function () {
                 formattedDate).toEqual(
                 testRelationshipData.startDate);
             });
+
           it('should contain a End Date cell',
             function () {
               testCell = angular.element(testRow.find(
                 'td')[4]);
               expect(testCell).toBeDefined();
             });
+
           it(
             'should have a End Date cell that matches the api data',
             function () {
@@ -952,15 +1014,18 @@ describe('Menu Relationship List Controller', function () {
             it('should be defined', function () {
               expect(viewButton[0]).toBeDefined();
             });
+
             it('should have a file icon', function () {
               expect(viewButton.find('.fa-file')[0])
                 .toBeDefined();
             });
+
             it('should have the btn-info class',
               function () {
                 expect(viewButton.hasClass('btn-info'))
                   .toBeTruthy();
               });
+
             it(
               'should have an ng-href to view the relationship',
               function () {
@@ -987,18 +1052,22 @@ describe('Menu Relationship List Controller', function () {
               testObject = $scope.relationshipList[
                 0];
             });
+
             it('should be defined', function () {
               expect(editButton[0]).toBeDefined();
             });
+
             it('should have a pencil icon', function () {
               expect(editButton.find('.fa-pencil')[
                 0]).toBeDefined();
             });
+
             it('should have the btn-primary class',
               function () {
                 expect(editButton.hasClass(
                   'btn-primary')).toBeTruthy();
               });
+
             it(
               'should have an ng-href to edit the menu',
               function () {
@@ -1008,6 +1077,7 @@ describe('Menu Relationship List Controller', function () {
                 expect(editButton.attr('ng-href'))
                   .toEqual(testUrl);
               });
+
             it(
               'should be shown if the menu is  inactive',
               function () {
@@ -1028,18 +1098,22 @@ describe('Menu Relationship List Controller', function () {
                 testCell
                 .find('.btn-delete'));
             });
+
             it('should be defined', function () {
               expect(deleteButton[0]).toBeDefined();
             });
+
             it('should have a trash icon', function () {
               expect(deleteButton.find(
                 '.fa-trash')[0]).toBeDefined();
             });
+
             it('should have the btn-danger class',
               function () {
                 expect(deleteButton.hasClass(
                   'btn-danger')).toBeTruthy();
               });
+
             it(
               'should have ng-click with deleteRecordDialog function',
               function () {
@@ -1048,6 +1122,7 @@ describe('Menu Relationship List Controller', function () {
                   'deleteRecordDialog(relationship)'
                 );
               });
+
             it(
               'should be hidden if the menu is active',
               function () {
@@ -1057,6 +1132,7 @@ describe('Menu Relationship List Controller', function () {
                 expect(menuIsActive).toBeTruthy();
                 expect(deleteButton.attr('ng-hide')).toBeTruthy();
               });
+
             it(
               'should be hidden if the menu is inactive',
               function () {

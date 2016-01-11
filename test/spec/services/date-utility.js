@@ -276,7 +276,7 @@ describe('Date Utility service', function () {
       function () {
         var tomorrow = dateUtility.tomorrow();
         var formattedTimeStamp = dateUtility.tomorrowFormatted();
-        var formatControl = dateUtility.formatDate(tomorrow, 'x','MM/DD/YYYY');
+        var formatControl = dateUtility.formatDate(tomorrow, 'x', 'MM/DD/YYYY');
         expect(formattedTimeStamp).toEqual(formatControl);
       });
 
@@ -284,38 +284,37 @@ describe('Date Utility service', function () {
       function () {
         var tomorrow = dateUtility.tomorrow();
         var formattedTimeStamp = dateUtility.tomorrowFormatted('YYYYMMDD');
-        var formatControl = dateUtility.formatDate(tomorrow, 'x','YYYYMMDD');
+        var formatControl = dateUtility.formatDate(tomorrow, 'x', 'YYYYMMDD');
         expect(formattedTimeStamp).toEqual(formatControl);
       });
 
   });
 
-  describe('removeMilliseconds method', function(){
-    it('should remove a decimal and all numbers after', function(){
+  describe('removeMilliseconds method', function() {
+    it('should remove a decimal and all numbers after', function() {
       var expected = '2015-08-07 13:35:59';
       var result = dateUtility.removeMilliseconds('2015-08-07 13:35:59.924555');
       expect(result).toEqual(expected);
     });
   });
 
-  describe('the diff method', function(){
+  describe('the diff method', function() {
 
-    it('should return a difference in days by default', function(){
+    it('should return a difference in days by default', function() {
       var fromDate = '10/01/2015';
       var toDate = '10/11/2015';
-      var result = dateUtility.diff(fromDate,toDate);
+      var result = dateUtility.diff(fromDate, toDate);
       expect(result).toEqual(10);
     });
 
-    it('should return a difference in months if passed as a parameter', function(){
+    it('should return a difference in months if passed as a parameter', function() {
       var fromDate = '10/01/2015';
       var toDate = '11/01/2015';
-      var result = dateUtility.diff(fromDate,toDate,'months');
+      var result = dateUtility.diff(fromDate, toDate, 'months');
       expect(result).toEqual(1);
     });
 
   });
-
 
   describe('dateNumDaysBeforeToday', function () {
     it('should be defined', function () {
@@ -336,7 +335,7 @@ describe('Date Utility service', function () {
       function () {
         var newDate = dateUtility.dateNumDaysBeforeToday(3);
         var formattedTimeStamp = dateUtility.dateNumDaysBeforeTodayFormatted(3);
-        var formatControl = dateUtility.formatDate(newDate, 'x','MM/DD/YYYY');
+        var formatControl = dateUtility.formatDate(newDate, 'x', 'MM/DD/YYYY');
         expect(formattedTimeStamp).toEqual(formatControl);
       });
 
@@ -344,11 +343,10 @@ describe('Date Utility service', function () {
       function () {
         var newDate = dateUtility.dateNumDaysBeforeToday(3);
         var formattedTimeStamp = dateUtility.dateNumDaysBeforeTodayFormatted(3, 'YYYYMMDD');
-        var formatControl = dateUtility.formatDate(newDate, 'x','YYYYMMDD');
+        var formatControl = dateUtility.formatDate(newDate, 'x', 'YYYYMMDD');
         expect(formattedTimeStamp).toEqual(formatControl);
       });
 
   });
-
 
 });

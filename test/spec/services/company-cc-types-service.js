@@ -13,6 +13,7 @@ describe('Service: companyCcTypesService', function () {
     inject(function (_servedCompanyCcTypes_) {
       responseFromAPI = _servedCompanyCcTypes_;
     });
+
     $httpBackend = $injector.get('$httpBackend');
     companyCcTypesService = _companyCcTypesService_;
   }));
@@ -41,6 +42,7 @@ describe('Service: companyCcTypesService', function () {
       companyCcTypesService.getCCtypes().then(function (dataFromAPI) {
         expect(Object.prototype.toString.call(dataFromAPI.companyCCTypes)).toBe('[object Array]');
       });
+
       $httpBackend.flush();
     });
 

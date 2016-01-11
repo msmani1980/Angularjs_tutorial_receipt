@@ -69,9 +69,11 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     function updateViewName(company) {
       var prefix = 'Viewing ';
+
       if ($scope.editingCompany) {
         prefix = 'Editing ';
       }
+
       $scope.viewName = prefix + company.companyName;
     }
 
@@ -98,6 +100,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       if ($scope.editingCompany || $scope.cloningCompany || $scope.viewOnly) {
         getCompany($routeParams.id);
       }
+
       return setUIReady();
     }
 
@@ -175,6 +178,18 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.removeTax = function(tax) {
       $scope.formData.taxes = lodash.filter($scope.formData.taxes, function(t) {
         return t !== tax;
+      });
+    };
+
+    $scope.addCountryVat = function() {
+      $scope.formData.countryVats.push({
+        vatAmounts: []
+      });
+    };
+
+    $scope.addVatAmount = function(countryVat) {
+      countryVat.vatAmounts.push({
+        vatAmount: null
       });
     };
 

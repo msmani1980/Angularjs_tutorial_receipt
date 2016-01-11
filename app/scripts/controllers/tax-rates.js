@@ -57,6 +57,7 @@ angular.module('ts5App')
         };
         countriesList.push(country);
       });
+
       $scope.countriesList = $filter('unique')(countriesList, 'countryName');
     };
 
@@ -78,6 +79,7 @@ angular.module('ts5App')
       if (key > length) {
         return 'up';
       }
+
       return 'auto';
     };
 
@@ -92,6 +94,7 @@ angular.module('ts5App')
             };
           }
         });
+
         return payload;
       }
     };
@@ -103,6 +106,7 @@ angular.module('ts5App')
           existingStation.push(station);
         }
       });
+
       return (!existingStation.length);
     };
 
@@ -123,6 +127,7 @@ angular.module('ts5App')
           }
         });
       }
+
       return availableStations;
     };
 
@@ -165,6 +170,7 @@ angular.module('ts5App')
         taxRate.startDate = $this.formatTaxRateDate(taxRate.startDate);
         taxRate.endDate = $this.formatTaxRateDate(taxRate.endDate);
       }
+
       if (taxRate.availableStations) {
         return taxRate;
       }
@@ -176,6 +182,7 @@ angular.module('ts5App')
         taxRate = $this.formatTaxRateObject(taxRate, true);
         taxRatesList.push(taxRate);
       });
+
       return taxRatesList;
     };
 
@@ -186,6 +193,7 @@ angular.module('ts5App')
         taxRate.key = key;
         newTaxRatesList.push(taxRate);
       });
+
       return $this.formatTaxRatesAfterCreation(newTaxRatesList);
     };
 
@@ -196,6 +204,7 @@ angular.module('ts5App')
         taxRate.key = key;
         newTaxRatesList.push(taxRate);
       });
+
       return newTaxRatesList;
     };
 
@@ -320,6 +329,7 @@ angular.module('ts5App')
           break;
         }
       }
+
       return isActive;
     };
 
@@ -331,6 +341,7 @@ angular.module('ts5App')
           companyStationIds.push(station.stationId);
         }
       }
+
       return encodeURI(companyStationIds);
     };
 
@@ -341,15 +352,19 @@ angular.module('ts5App')
       if ($scope.search.taxType) {
         query.taxTypeCode = $scope.search.taxType.taxTypeCode;
       }
+
       if ($scope.search.country) {
         query.countryName = $scope.search.country.countryName;
       }
+
       if ($scope.search.currency) {
         query.companyCurrencyId = $scope.search.currency.id;
       }
+
       if ($scope.search.taxRateType) {
         query.taxRateType = $scope.search.taxRateType.taxRateType;
       }
+
       return query;
     };
 
@@ -358,15 +373,19 @@ angular.module('ts5App')
       if (angular.isDefined($scope.search.stations) && $scope.search.stations.length) {
         query.companyStationIds = $this.generateCompanyStationIds();
       }
+
       if ($scope.search.taxRate) {
         query.taxRateValue = $scope.search.taxRate;
       }
+
       if ($scope.dateRange.startDate) {
         query.startDate = dateUtility.formatDateForAPI($scope.dateRange.startDate);
       }
+
       if ($scope.dateRange.endDate) {
         query.endDate = dateUtility.formatDateForAPI($scope.dateRange.endDate);
       }
+
       return query;
     };
 
@@ -382,6 +401,7 @@ angular.module('ts5App')
       if (clear) {
         message = 'Clearing Search...';
       }
+
       $this.showLoadingModal(message);
       var promises = $this.createSearchPromises();
       $q.all(promises).then($this.searchSuccess, $this.errorHandler);
@@ -397,6 +417,7 @@ angular.module('ts5App')
       if (angular.isDefined(taxRate)) {
         taxRate.deleted = true;
       }
+
       var message = 'Deleting Tax Rate ID: ' + taxRate.id;
       $this.showLoadingModal(message);
       var promises = $this.createDeletePromises(taxRate.id);
@@ -411,6 +432,7 @@ angular.module('ts5App')
           newList.push(taxRate);
         }
       });
+
       $scope.companyTaxRatesList = newList;
     };
 
@@ -464,6 +486,7 @@ angular.module('ts5App')
           companyStationId: station.stationId ? station.stationId : station.companyStationId
         });
       });
+
       return companyTaxRateStations;
     };
 
@@ -513,6 +536,7 @@ angular.module('ts5App')
       if (diff >= 0) {
         dateString = '+' + dateString;
       }
+
       return dateString;
     };
 
@@ -522,8 +546,10 @@ angular.module('ts5App')
         if (newRate.id === taxRate.id) {
           taxRate = newRate;
         }
+
         newList.push(taxRate);
       });
+
       $scope.companyTaxRatesList = newList;
     };
 
@@ -554,6 +580,7 @@ angular.module('ts5App')
         taxRate.deleted = true;
         $this.showValidationError(field);
       }
+
       return value;
     };
 
@@ -596,6 +623,7 @@ angular.module('ts5App')
       if (!$scope.isTaxRateTypePercentage(taxRate)) {
         payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', companyCurrencyId, taxRate);
       }
+
       return payload;
     };
 
@@ -604,6 +632,7 @@ angular.module('ts5App')
       if ($scope.displayError === true) {
         $this.clearCustomErrors();
       }
+
       var payload = $this.parseNewTaxRatePayload(taxRate);
       if ($scope.displayError !== true) {
         taxRate.new = true;
@@ -721,12 +750,15 @@ angular.module('ts5App')
       if (taxRate.edited) {
         return 'bg-warning';
       }
+
       if (taxRate.saved) {
         return 'bg-success';
       }
+
       if (taxRate.deleted) {
         return 'bg-danger';
       }
+
       if (taxRate.created) {
         return 'bg-info';
       }
@@ -758,6 +790,7 @@ angular.module('ts5App')
       if (angular.isDefined(taxRate.taxRateType)) {
         return (taxRate.taxRateType.taxRateType === 'Percentage');
       }
+
       return true;
     };
 

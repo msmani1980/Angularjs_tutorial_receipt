@@ -12,6 +12,11 @@
   transition: height 0.001s;
 }
 
+.row.bottom-divider {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 1em;
+}
+
 .row-as-table {
   position: relative;
   .type-info {

@@ -34,15 +34,15 @@
   <!-- submitCashBagModal -->
 
   <div class="list-controls">
-    <div class="row item-list-row">
+    <div class="row">
       <div class="col-xs-6">
         <h2 class="view-name">{{viewName}}</h2>
       </div>
 
       <div class="col-xs-6 text-right">
 
-        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
-                aria-controls="search-collapse">
+        <button class="btn btn-default" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false"
+                aria-controls="searchCollapse">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
@@ -55,30 +55,34 @@
       </div>
     </div>
   </div>
-
-  <div class="panel panel-default collapse no-transition" id="search-collapse">
+  <div class="panel panel-default collapse in no-transition" id="searchCollapse" aria-expanded="true">
     <form name="cashBagSearchForm" ng-submit="searchCashBag()">
       <div class="panel-body">
         <div class="row">
 
           <div class="col-xs-12 col-sm-6 col-md-3">
             <div class="form-group">
-              <label>Bank Reference #</label>
-              <input type="text" ng-model="search.bankReferenceNumber" class="form-control"/>
+              <label for="bankReferenceNumber">Bank Reference #</label>
+              <input type="text" id="bankReferenceNumber" ng-model="search.bankReferenceNumber" class="form-control"/>
             </div>
           </div>
 
-          <div class="col-md-3 col-sm-6">
+          <div class="col-md-6 col-sm-6">
             <div class="form-group">
-              <label for="cashBagStatus">Status</label>
-              <select class="form-control"
-                      id="cashBagStatus"
-                      ng-model="search.isSubmitted">
-                <option selected="selected" value disabled>Select status</option>
-                <option value="true">Submitted</option>
-                <option value="false">Not Submitted</option>
-                <option value>All</option>
-              </select>
+              <label>Status</label>
+              <div class="form-group">
+                <div class="checkbox-inline">
+                  <label>
+                    <input type="checkbox" ng-model="search.searchForSubmitted">Submitted
+                  </label>
+                </div>
+                <div class="checkbox-inline">
+                  <label>
+                    <input type="checkbox" ng-model="search.searchForNotSubmitted">
+                    Not Submitted
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -91,7 +95,22 @@
     </form>
   </div>
 
-  <table infinite-scroll="updateCashBagList()" ng-show="cashBagList.length" class="table table-bordered table-hover ng-scope">
+  <div class="row bottom-divider">
+    <div class="col-xs-6">
+      <h3>{{companyData.companyName}}</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <p>Cash Handler: {{CHCompany.companyName}}</p>
+    </div>
+    <div class="col-xs-6 text-right">
+      <p>Cash Handler Base Currency: {{chBaseCurrency.currencyCode}}</p>
+      <p>Airline Base Currency: {{companyBaseCurrency.currencyCode}}</p>
+    </div>
+  </div>
+
+  <table infinite-scroll="updateCashBagList()" ng-show="cashBagList.length" infinite-scroll-immediate-check="false" class="table table-bordered table-hover ng-scope">
     <thead>
     <tr>
       <th width="5%"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
@@ -117,6 +136,6 @@
     </tr>
     </tbody>
   </table>
-  <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+  <p class="loading-more alert alert-info text-center hide"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>
 <dynamic-left-nav></dynamic-left-nav>

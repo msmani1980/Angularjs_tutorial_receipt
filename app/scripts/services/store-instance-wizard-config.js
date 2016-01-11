@@ -18,7 +18,7 @@ angular.module('ts5App')
 
     function setSteps(action, id) {
       var steps = {
-        'dispatch': [{
+        dispatch: [{
           label: 'Create Store Instance',
           uri: createURL + action + (id ? '/' + id : ''),
           controllerName: 'Create',
@@ -39,7 +39,7 @@ angular.module('ts5App')
           stepName: '3',
           controllerName: 'Review'
         }],
-        'replenish': [{
+        replenish: [{
           label: 'Create Store Replenish',
           uri: createURL + action + (id ? '/' + id : ''),
           controllerName: 'Create',
@@ -81,7 +81,7 @@ angular.module('ts5App')
           stepName: '7',
           controllerName: 'Review'
         }],
-        'redispatch': [{
+        redispatch: [{
           label: 'Create Store Instance',
           uri: createURL + action + (id ? '/' + id : ''),
           stepName: '1',
@@ -130,6 +130,7 @@ angular.module('ts5App')
       if (!action) {
         action = 'dispatch';
       }
+
       var steps = setSteps(action, id);
       return steps[action];
     }

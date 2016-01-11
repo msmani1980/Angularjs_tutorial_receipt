@@ -13,6 +13,7 @@ describe('Service: companyDiscountService', function () {
     inject(function (_servedCompanyDiscounts_) {
       companyDiscountResponseJSON = _servedCompanyDiscounts_;
     });
+
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/company-discounts/).respond(companyDiscountResponseJSON);
 
@@ -31,6 +32,7 @@ describe('Service: companyDiscountService', function () {
         companyDiscountService.getDiscountList().then(function (dataFromAPI) {
           discountData = dataFromAPI;
         });
+
         $httpBackend.flush();
       });
 

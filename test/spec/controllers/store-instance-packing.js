@@ -30,7 +30,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var reasonCodesDeferred;
   var saveItemDeferred;
 
-
   var storeDetailsResponseJSON;
   var itemTypesResponseJSON;
   var thresholdListResponseJSON;
@@ -40,6 +39,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var instanceItemsListResponseJSON;
   var characteristicsResponseJSON;
   var reasonCodesResponseJSON;
+
   //var dateUtility;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
@@ -112,7 +112,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       $scope: scope,
       $routeParams: {
         storeId: mockStoreInstanceId,
-        action: ( action ? action : 'dispatch')
+        action: (action ? action : 'dispatch')
       }
     });
   }
@@ -251,7 +251,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should add all unique menu items to pick list', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, {}];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, {}];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(2);
         expect(scope.pickListItems[0].itemMasterId).toEqual(1);
@@ -259,13 +259,13 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should sum duplicate menu items', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, {}];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, {}];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems[1].menuQuantity).toEqual(5);
       });
 
       it('should add all store instance items to pick list', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, {}, storeInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, {}, storeInstanceItems];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(2);
         expect(scope.pickListItems[0].pickedQuantity).toEqual('3');
@@ -273,7 +273,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should merge store instance items that are in common with menu items', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, storeInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(3);
         expect(scope.pickListItems[1].menuQuantity).toEqual(5);
@@ -330,21 +330,21 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should add items to offload list', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, {}];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, {}];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(0);
         expect(scope.offloadListItems.length).toEqual(2);
       });
 
       it('should merge offload quantities', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, storeInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.offloadListItems.length).toEqual(2);
         expect(scope.offloadListItems[0].inboundQuantity).toEqual('3');
       });
 
       it('should merge ullage quantities', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, storeInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.offloadListItems.length).toEqual(2);
         expect(scope.offloadListItems[0].ullageQuantity).toBeDefined();
@@ -424,27 +424,27 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should add all menu items to pick list', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, [], []];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, [], []];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(2);
         expect(scope.offloadListItems.length).toEqual(0);
       });
 
       it('should add all current store instance items to pick list', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, [], storeInstanceItems, []];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, [], storeInstanceItems, []];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(2);
         expect(scope.offloadListItems.length).toEqual(0);
       });
 
       it('should only add all offload items to offload list', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, [], prevInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, [], prevInstanceItems];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.offloadListItems.length).toEqual(1);
       });
 
       it('should add all warehouse close items to pick list', function () {
-        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, [], prevInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, [], prevInstanceItems];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(2);
         expect(scope.offloadListItems.length).toEqual(1);
@@ -482,7 +482,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         scope.save();
         expect(storeInstancePackingFactory.deleteStoreInstanceItem).toHaveBeenCalledWith(4, 3);
       });
-
 
       it('should call CREATE for new items', function () {
         scope.save();
@@ -529,7 +528,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           itemMasterId: 4,
           inboundQuantity: 2,
           ullageQuantity: 3,
-          ullageReason: {id:48},
+          ullageReason: { id:48 },
           inboundId: 2,
           ullageId: 3
         }];
@@ -579,6 +578,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           isNewItem: false
         }];
       });
+
       it('should save offload items to prev instance', function () {
         scope.save();
         var expectedPayload = {
@@ -647,9 +647,9 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
     });
 
-   describe('removing items', function () {
+    describe('removing items', function () {
       it('should remove new items from newPickListItems', function () {
-        scope.newPickListItems = [{id:1, isNewItem: true}, {id: 2, isNewItem: true}];
+        scope.newPickListItems = [{ id:1, isNewItem: true }, { id: 2, isNewItem: true }];
         scope.removeRecord(scope.newPickListItems[0]);
         expect(scope.newPickListItems.length).toEqual(1);
         expect(scope.newPickListItems[0].id).toEqual(2);
@@ -704,6 +704,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         isMenuItem: true
       };
     });
+
     it('should not mark items with pickedQuantity == menuQuantity', function () {
       StoreInstancePackingCtrl.calculateVariance(mockItem);
       expect(mockItem.exceedsVariance).toEqual(false);

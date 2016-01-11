@@ -19,7 +19,7 @@ describe('Service: companyExchangeRateService', function () {
     createCompanyExchangeRateResult,
     updateCompanyExchangeRateResult;
 
-  beforeEach(inject(function (_companyExchangeRateService_, $injector,$localStorage) {
+  beforeEach(inject(function (_companyExchangeRateService_, $injector, $localStorage) {
 
     inject(function (_servedCompanyExchangeRates_, _servedCompanyExchangeRate_) {
       companyExchangeRatesJSON = _servedCompanyExchangeRates_;
@@ -59,7 +59,7 @@ describe('Service: companyExchangeRateService', function () {
 
     it('should fetch exchange rates from services', function () {
       $httpBackend.expectGET(/api\/companies\/403\/exchange-rates/);
-      companyExchangeRateService.getCompanyExchangeRates({companyId:403}).then(function (companyExchangeRates) {
+      companyExchangeRateService.getCompanyExchangeRates({ companyId:403 }).then(function (companyExchangeRates) {
         expect(companyExchangeRates.response.length).toBeGreaterThan(0);
       });
     });

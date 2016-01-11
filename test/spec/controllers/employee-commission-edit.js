@@ -107,11 +107,11 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
         });
         scope.$digest();
       }));
+
       it('should call getCommission if state !== create', function () {
         expect(employeeCommissionFactory.getCommission).toHaveBeenCalledWith(49);
       });
     });
-
 
   });
 
@@ -137,7 +137,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
           startDate: '20200510',
           endDate: '20550510',
           itemMasterId: scope.commission.selectedItem.id,
-          types: [{priceTypeId: scope.commission.selectedPriceType.id}]
+          types: [{ priceTypeId: scope.commission.selectedPriceType.id }]
         }
       };
 
@@ -152,7 +152,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     });
 
     it('should add percentage to payload if percentage selected', function () {
-      scope.commission.selectedRateType = {taxRateType: 'Percentage'};
+      scope.commission.selectedRateType = { taxRateType: 'Percentage' };
       scope.commission.percentage = 1.66;
       expectedPayload.employeeCommission.percentage = scope.commission.percentage;
 
@@ -163,7 +163,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     });
 
     it('should call updateCommission if commission.id is defined', function () {
-      scope.commission.selectedRateType = {taxRateType: 'Percentage'};
+      scope.commission.selectedRateType = { taxRateType: 'Percentage' };
       scope.commission.percentage = 1.66;
       scope.commission.id = 27;
       expectedPayload.employeeCommission.id = scope.commission.id;
@@ -176,7 +176,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     });
 
     it('should add currencies to payload if Amount selected', function () {
-      scope.commission.selectedRateType = {taxRateType: 'Amount'};
+      scope.commission.selectedRateType = { taxRateType: 'Amount' };
       expectedPayload.employeeCommission.fixeds = [];
 
       angular.forEach(scope.companyCurrencies, function (currency) {
@@ -208,7 +208,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
             code: '000'
           }
         };
-        scope.commission.selectedRateType = {taxRateType: 'Amount'};
+        scope.commission.selectedRateType = { taxRateType: 'Amount' };
         expectedPayload.employeeCommission.fixeds = [];
 
         angular.forEach(scope.companyCurrencies, function (currency) {
@@ -264,19 +264,19 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
 
     it('should return true if editing and starDate in the past', function () {
       routeParams.state = 'edit';
-      scope.commission = {startDate: '05/10/1979'};
+      scope.commission = { startDate: '05/10/1979' };
       expect(scope.isCommissionReadOnly()).toBe(true);
     });
 
     it('should return false if editing and startDate in the future', function () {
       routeParams.state = 'edit';
-      scope.commission = {startDate: '05/10/2079'};
+      scope.commission = { startDate: '05/10/2079' };
       expect(scope.isCommissionReadOnly()).toBe(false);
     });
 
     it('should return true if viewing and startDate in the future', function () {
       routeParams.state = 'view';
-      scope.commission = {startDate: '05/10/2079'};
+      scope.commission = { startDate: '05/10/2079' };
       expect(scope.isCommissionReadOnly()).toBe(true);
     });
   });

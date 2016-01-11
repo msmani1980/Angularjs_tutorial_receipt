@@ -27,9 +27,11 @@ describe('Service: companyReasonCodesService', function () {
       it('should be accessible in the service', function () {
         expect(companyReasonCodesService.getAll).toBeDefined();
       });
+
       beforeEach(function () {
-        httpBackend.whenGET(/company-reason-codes/).respond({done: true});
+        httpBackend.whenGET(/company-reason-codes/).respond({ done: true });
       });
+
       it('should make GET request to API', function () {
         companyReasonCodesService.getAll();
         httpBackend.expectGET(/company-reason-codes/);

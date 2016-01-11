@@ -27,6 +27,7 @@ describe('The Error Dialog directive', function() {
     if (formObject) {
       template += 'form-object="' + formObject + '" ';
     }
+
     template += 'error-response="errorResponse" display="true"></error-dialog>';
     return template;
   }

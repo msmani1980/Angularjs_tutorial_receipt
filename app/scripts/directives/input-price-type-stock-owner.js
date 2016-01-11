@@ -11,9 +11,9 @@ angular.module('ts5App')
 
     return {
 
-    	templateUrl: '/views/directives/input-price-type-stock-owner.html',
-    	restrict: 'E',
-    	scope: true
+      templateUrl: '/views/directives/input-price-type-stock-owner.html',
+      restrict: 'E',
+      scope: true
 
     };
 
