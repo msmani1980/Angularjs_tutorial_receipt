@@ -14,6 +14,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     $scope.search = {};
 
     var $this = this;
+    this.companyId = null;
     this.loadingProgress = false;
     this.isSearching = false;
 
@@ -127,7 +128,6 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     }
 
     function generatePayload() {
-      var companyId = GlobalMenuService.company.get();
       var searchParams = generateStatusPayloadForSearch($scope.search);
 
       if (angular.isDefined(searchParams.isSubmitted) && searchParams.isSubmitted.length === 0) {
@@ -138,7 +138,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
         submission: 'submit',
         limit: $this.meta.limit,
         offset: $this.meta.offset,
-        companyId: companyId
+        companyId: $this.companyId
       };
       return ($this.isSearching) ? angular.extend(payload, searchParams) : payload;
     }
@@ -160,9 +160,28 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       $this.meta.offset += $this.meta.limit;
     };
 
+    var getCurrencyFromArrayUsingId = function (currenciesArray, baseCurrencyId) {
+      return currenciesArray.filter(function (currencyItem) {
+        return currencyItem.id === baseCurrencyId;
+      })[0];
+    };
+
+    function globalCurrenciesSuccessHandler(dataFromApi) {
+      $this.globalCurrencyList = angular.copy(dataFromApi.response);
+      $scope.companyBaseCurrency = getCurrencyFromArrayUsingId($this.globalCurrencyList, $scope.companyData.baseCurrencyId);
+      $scope.chBaseCurrency = getCurrencyFromArrayUsingId($this.globalCurrencyList, $scope.CHCompany.baseCurrencyId);
+    }
+
     function getCompanySuccessHandler(companyDataFromAPI) {
+      $scope.companyData = angular.copy(companyDataFromAPI);
+      cashBagFactory.getCompanyGlobalCurrencies().then(globalCurrenciesSuccessHandler, errorHandler);
+    }
+
+    function getCHCompanySuccessHandler(chCompanyDataFromAPI) {
+      $this.companyId = GlobalMenuService.company.get();
+      cashBagFactory.getCompany($this.companyId).then(getCompanySuccessHandler, errorHandler);
       angular.element('#bankReferenceNumber').focus();
-      $scope.CHCompany = angular.copy(companyDataFromAPI);
+      $scope.CHCompany = angular.copy(chCompanyDataFromAPI);
     }
 
     function setCashBagListToSubmit() {
@@ -253,7 +272,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       cashBagFactory.updateCashBag(null, payload, parameters).then(updateCashBagSuccessHandler, errorHandler);
     };
 
-    cashBagFactory.getCompany(362).then(getCompanySuccessHandler, errorHandler);
+    cashBagFactory.getCompany(362).then(getCHCompanySuccessHandler, errorHandler);
     initializeData();
 
     angular.element('#searchCollapse').on('shown.bs.collapse', function () {
