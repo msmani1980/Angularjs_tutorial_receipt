@@ -42,11 +42,11 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     }
 
     function showLoadingBar() {
-      angular.element('.loading-more').show();
+      angular.element('.loading-more').removeClass('hide');
     }
 
     function hideLoadingBar() {
-      angular.element('.loading-more').hide();
+      angular.element('.loading-more').addClass('hide');
       angular.element('.modal-backdrop').remove();
     }
 
