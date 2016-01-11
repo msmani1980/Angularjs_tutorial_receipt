@@ -43,7 +43,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     function errorHandler(dataFromAPI) {
       hideLoadingModal();
       $scope.displayError = true;
-      $scope.errorResponse = angular.copy(dataFromAPI);
+      $scope.errorResponse = $filter('unique')(dataFromAPI, 'data');
     }
 
     function checkFormState() {
@@ -203,6 +203,12 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.removeCabinClass = function(cabinClass) {
       $scope.formData.companyCabinClasses = lodash.filter($scope.formData.companyCabinClasses, function(cc) {
         return cc !== cabinClass;
+      });
+    };
+
+    $scope.removeCountryVat = function(index) {
+      $scope.formData.countryVats = lodash.filter($scope.formData.countryVats, function(cv, key) {
+        return key !== index;
       });
     };
 
