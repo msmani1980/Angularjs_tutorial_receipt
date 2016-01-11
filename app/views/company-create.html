@@ -157,12 +157,14 @@
 
           </div>
 
-          <div class="col-xs-12 col-sm-6" ng-show="showBaseCurrency">
+          <div class="col-xs-12 col-sm-6" ng-if="showBaseCurrency">
             <label>Base Currency*</label>
 
             <select ng-model="formData.baseCurrencyId" class="form-control">
-              <option ng-selected="formData.baseCurrencyId === currency.id" ng-repeat="currency in currencies"
-                      value="{{ currency.id }}">{{ currency.currencyCode }} - {{ currency.currencyName }}
+              <option ng-selected="isSelected(formData.baseCurrencyId, currency.id)"
+                      ng-repeat="currency in currencies"
+                      ng-value="currency.id">
+                      {{ currency.code }} - {{ currency.name }}
               </option>
             </select>
           </div>
@@ -185,7 +187,7 @@
             <span>English</span>
 
             <label>Portal Additional Languages</label>
-            <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.languages" theme="bootstrap">
+            <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.languages" theme="bootstrap">
               <ui-select-match placeholder="Languages" >{{ $item.languageName }}
               </ui-select-match>
               <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
@@ -194,7 +196,7 @@
             </ui-select>
 
             <label>ePOS Additional Languages</label>
-            <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.eposLanguages" theme="bootstrap">
+            <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.eposLanguages" theme="bootstrap">
               <ui-select-match placeholder="Languages" >{{ $item.languageName }}
               </ui-select-match>
               <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
@@ -208,7 +210,7 @@
 
       </fieldset>
 
-      <fieldset ng-show="showAdditionalFields" >
+      <fieldset ng-if="showAdditionalFields" >
 
         <div class="row" >
           <div class="col-xs-12 col-sm-6">

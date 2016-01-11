@@ -1,18 +1,14 @@
 'use strict';
 /**
  * @ngdoc function
- * @name ts5App.controller:ItemCreateCtrl
+ * @name ts5App.controller:CompanyCreateCtrl
  * @description
- * # ItemCreateCtrl
+ * # CompanyCreateCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('CompanyCreateCtrl',
-  function($scope, $compile, ENV, $resource, $location, $anchorScroll, companiesFactory,
-    currencyFactory, languagesService, countriesService, companyTypesService,
-    $routeParams, GlobalMenuService, $q, dateUtility, $filter, lodash) {
-
-    // object resolution in for sub scopes
-    var $this = this;
+  function($scope, $compile, ENV, $resource, $location, $anchorScroll, companiesFactory, currencyFactory, dateUtility,
+    languagesService, countriesService, companyTypesService, $routeParams, GlobalMenuService, $q, $filter, lodash) {
 
     $scope.formData = {
       taxes: [],
@@ -36,71 +32,76 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.countries = [];
     $scope.companyTypes = [];
 
-    this.checkFormState = function() {
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
+    function errorHandler(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    }
+
+    function checkFormState() {
       var path = $location.path();
       if (path.search('/company-edit') !== -1 && $routeParams.id) {
         $scope.editingCompany = true;
         $scope.buttonText = 'Save';
-      } else if (path.search('/item-view') !== -1) {
+      } else if (path.search('/company-edit') !== -1) {
         $scope.viewOnly = true;
       }
-    };
+    }
 
     function calculateFieldsVisibility() {
       $scope.showAdditionalFields = ($scope.formData.companyTypeId === '1');
       $scope.showBaseCurrency = lodash.includes(['1', '2', '5'], $scope.formData.companyTypeId);
     }
 
-    this.init = function() {
-      this.checkFormState();
-      this.getDependencies();
+    function init() {
+      checkFormState();
+      getDependencies();
       calculateFieldsVisibility();
-    };
+    }
 
-    this.updateViewName = function(item) {
+    function updateViewName(company) {
       var prefix = 'Viewing ';
       if ($scope.editingCompany) {
         prefix = 'Editing ';
       }
-      $scope.viewName = prefix + item.companyName;
-    };
+      $scope.viewName = prefix + company.companyName;
+    }
 
     // gets an company to $scope.editingCompany
-    this.getCompany = function(id) {
-      this.showLoadingModal('We are getting your Company data!');
+    function getCompany(id) {
+      showLoadingModal('We are getting your Company data!');
       companiesFactory.getCompany(id).then(function(data) {
-        $this.updateViewName(data.company); // TODO: ?
-        $this.setUIReady();
+        updateViewName(data.company); // TODO: ?
+        setUIReady();
       });
-    };
+    }
 
-    this.showLoadingModal = function(text) {
-      angular.element('#loading').modal('show').find('p').text(text);
-    };
-
-    this.hideLoadingModal = function() {
-      angular.element('#loading').modal('hide');
-    };
-
-    this.setUIReady = function() {
+    function setUIReady() {
       $scope.uiSelectTemplateReady = true;
-      this.hideLoadingModal();
-    };
+      hideLoadingModal();
+    }
 
-    this.setDependencies = function(response) {
+    function setDependencies(response) {
       $scope.companyTypes = response[0];
       $scope.currencies = response[1].response;
       $scope.companies = response[2].companies;
       $scope.languages = response[3].languages;
       $scope.countries = response[4].countries;
-      if ($scope.editingCompany || $scope.cloningItem || $scope.viewOnly) {
-        this.getCompany($routeParams.id);
-      } else {
-        $this.setUIReady();
+      if ($scope.editingCompany || $scope.cloningCompany || $scope.viewOnly) {
+        getCompany($routeParams.id);
       }
-    };
+      return setUIReady();
+    }
 
-    this.makeDependencyPromises = function() {
+    function makeDependencyPromises() {
       return [
         companyTypesService.getCompanyTypes(),
         currencyFactory.getCompanyCurrencies(),
@@ -108,17 +109,60 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         languagesService.getLanguagesList(),
         countriesService.getCountriesList()
       ];
-    };
+    }
 
-    this.getDependencies = function() {
-      $this.showLoadingModal('We are loading data!');
-      var dependencyPromises = this.makeDependencyPromises();
-      $q.all(dependencyPromises).then(function(response) {
-        $this.setDependencies(response);
-      });
-    };
+    function getDependencies() {
+      showLoadingModal('We are loading data!');
+      var dependencyPromises = makeDependencyPromises();
+      $q.all(dependencyPromises).then(setDependencies, errorHandler);
+    }
 
-    this.init();
+    init();
+
+    function createSuccessHandler() {
+      angular.element('#loading').modal('hide');
+      angular.element('#create-success').modal('show');
+    }
+
+    function updateSuccessHandler() {
+      angular.element('#loading').modal('hide');
+      angular.element('#update-success').modal('show');
+    }
+
+    function createCompanyUpdatePromises(payload) {
+      return [
+        companiesFactory.updateCompany($routeParams.id, payload)
+      ];
+    }
+
+    function createCompanyCreatePromises(payload) {
+      return [
+        companiesFactory.createCompany(payload)
+      ];
+    }
+
+    function updateCompany(payload) {
+      showLoadingModal('We are updating your Company');
+      var promises = createCompanyUpdatePromises(payload);
+      $q.all(promises).then(updateSuccessHandler, errorHandler);
+    }
+
+    function createCompany(payload) {
+      showLoadingModal('We are creating your Company');
+      var promises = createCompanyCreatePromises(payload);
+      $q.all(promises).then(createSuccessHandler, errorHandler);
+    }
+
+    function validateForm() {
+      $scope.displayError = !$scope.form.$valid;
+      return $scope.form.$valid;
+    }
+
+    function formatPayload(companyData) {
+      return companyData;
+    }
+
+    //$scope functions. these will become this.functionName() in v2
 
     $scope.$watch('formData.companyTypeId', function() {
       calculateFieldsVisibility();
@@ -162,76 +206,15 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       });
     };
 
-    this.errorHandler = function(dataFromAPI) {
-      angular.element('#loading').modal('hide');
-      $scope.displayError = true;
-      $scope.errorResponse = angular.copy(dataFromAPI);
-    };
-    this.createSuccessHandler = function() {
-      angular.element('#loading').modal('hide');
-      angular.element('#create-success').modal('show');
-    };
-    this.updateSuccessHandler = function(response) {
-      $this.updateFormData(response.company);
-      angular.element('#loading').modal('hide');
-      angular.element('#update-success').modal('show');
-    };
-
-    this.createCompanyUpdatePromises = function(payload) {
-      return [
-        companiesFactory.updateCompany($routeParams.id, payload)
-      ];
-    };
-
-    this.createCompanyCreatePromises = function(payload) {
-      return [
-        companiesFactory.createCompany(payload)
-      ];
-    };
-
-    this.updateItem = function(itemData) {
-      angular.element('#loading').modal('show').find('p').text('We are updating your item');
-      var payload = {
-        company: itemData
-      };
-      var promises = $this.createCompanyUpdatePromises(payload);
-      $q.all(promises).then(function(response) {
-        $this.updateSuccessHandler(response);
-      }, function(error) {
-        $this.errorHandler(error);
-      });
-    };
-
-    this.createCompany = function(payload) {
-      angular.element('#loading').modal('show').find('p').text('We are creating your item');
-      var promises = $this.createCompanyCreatePromises(payload);
-      $q.all(promises).then(function(response) {
-        $this.createSuccessHandler(response);
-      }, function(error) {
-        $this.errorHandler(error);
-      });
-    };
-
     $scope.submitForm = function(formData) {
       $scope.form.$setSubmitted(true);
-      if (formData && $this.validateForm()) {
+      if (formData && validateForm()) {
         var companyData = angular.copy(formData);
-        var payload = $this.formatPayload(companyData);
-        var action = $scope.editingCompany ? 'updateCompany' : 'createCompany';
-        $this[action](payload);
+        var payload = formatPayload(companyData);
+        return $scope.editingCompany ? updateCompany(payload) : createCompany(payload);
       }
     };
 
-    this.validateForm = function() {
-      $scope.displayError = !$scope.form.$valid;
-      return $scope.form.$valid;
-    };
-
-    this.formatPayload = function(companyData) {
-      return companyData;
-    };
-
-    // TODO: MOVE ME GLOBAL
     $scope.formScroll = function(id, activeBtn) {
       $scope.activeBtn = id;
       var elm = angular.element('#' + id);

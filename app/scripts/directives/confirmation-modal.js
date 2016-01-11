@@ -7,9 +7,9 @@
  * # confirmationModal
  */
 angular.module('ts5App')
-  .directive('confirmationModal', function () {
+  .directive('confirmationModal', function() {
 
-    var controller = function ($scope) {
+    var controller = function($scope) {
 
       var $this = this;
 
@@ -18,16 +18,15 @@ angular.module('ts5App')
         modal.modal('hide');
       };
 
-      $scope.confirmation = function () {
+      $scope.confirmation = function() {
         $this.hideModal();
         $scope.confirmationCallback();
       };
 
-      $scope.alternative = function () {
+      $scope.alternative = function() {
         $this.hideModal();
         $scope.alternativeCallback();
       };
-
     };
 
     return {
