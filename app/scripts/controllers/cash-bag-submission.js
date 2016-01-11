@@ -166,16 +166,15 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       })[0];
     };
 
-    function getBaseCurrencies() {
-      cashBagFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
-        $scope.companyBaseCurrency = getCurrencyFromArrayUsingId(companyBaseCurrencyData.response, $scope.companyData.baseCurrencyId);
-        $scope.chBaseCurrency = getCurrencyFromArrayUsingId(companyBaseCurrencyData.response, $scope.CHCompany.baseCurrencyId);
-      });
+    function globalCurrenciesSuccessHandler(dataFromApi) {
+      $this.globalCurrencyList = angular.copy(dataFromApi.response);
+      $scope.companyBaseCurrency = getCurrencyFromArrayUsingId($this.globalCurrencyList, $scope.companyData.baseCurrencyId);
+      $scope.chBaseCurrency = getCurrencyFromArrayUsingId($this.globalCurrencyList, $scope.CHCompany.baseCurrencyId);
     }
 
     function getCompanySuccessHandler(companyDataFromAPI) {
       $scope.companyData = angular.copy(companyDataFromAPI);
-      getBaseCurrencies();
+      cashBagFactory.getCompanyGlobalCurrencies().then(globalCurrenciesSuccessHandler, errorHandler);
     }
 
     function getCHCompanySuccessHandler(chCompanyDataFromAPI) {
