@@ -34,7 +34,7 @@
   <!-- submitCashBagModal -->
 
   <div class="list-controls">
-    <div class="row item-list-row">
+    <div class="row">
       <div class="col-xs-6">
         <h2 class="view-name">{{viewName}}</h2>
       </div>
@@ -55,7 +55,6 @@
       </div>
     </div>
   </div>
-
   <div class="panel panel-default collapse in no-transition" id="searchCollapse" aria-expanded="true">
     <form name="cashBagSearchForm" ng-submit="searchCashBag()">
       <div class="panel-body">
@@ -94,6 +93,21 @@
         <button type="submit" class="btn btn-primary" ng-click="searchCashBags()">Search</button>
       </div>
     </form>
+  </div>
+
+  <div class="row bottom-divider">
+    <div class="col-xs-6">
+      <h3>{{companyData.companyName}}</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <p>Cash Handler: {{CHCompany.companyName}}</p>
+    </div>
+    <div class="col-xs-6 text-right">
+      <p>Cash Handler Base Currency: {{chBaseCurrency.currencyCode}}</p>
+      <p>Airline Base Currency: {{companyBaseCurrency.currencyCode}}</p>
+    </div>
   </div>
 
   <table infinite-scroll="updateCashBagList()" ng-show="cashBagList.length" class="table table-bordered table-hover ng-scope">

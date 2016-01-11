@@ -39,6 +39,10 @@ angular.module('ts5App')
       return stationsService.getStationList(id);
     };
 
+    var getCompanyGlobalCurrencies = function (payload) {
+      return currenciesService.getCompanyGlobalCurrencies(payload);
+    };
+
     var getSchedulesList = function (id) {
       return schedulesService.getSchedules(id);
     };
@@ -97,6 +101,7 @@ angular.module('ts5App')
       deleteCashBag: deleteCashBag,
       createCashBag: createCashBag,
       getCompanyCurrencies: getCompanyCurrencies,
+      getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
       getSchedulesList: getSchedulesList,
       getSchedulesInDateRange: getSchedulesInDateRange,
       getDailySchedulesList: getDailySchedulesList,
