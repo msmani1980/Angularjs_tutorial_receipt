@@ -149,7 +149,7 @@
         </th>
         <th>Dispatch LMP Station</th>
         <th>Inbound LMP Station</th>
-        <th>Store Instance</th>
+        <th>Store Number</th>
         <th ng-click="toggleAllScheduleInfo(store.id)">
           <span class="btn">
             <span class="fa fa-plus-square-o" ng-hide="allScheduleDetailsExpanded"></span>
@@ -158,7 +158,7 @@
           </span>
         </th>
         <th>Inbound Seals Tampered</th>
-        <th>Store Number</th>
+        <th>Store Instance</th>
         <th>Status</th>
         <th>Updated Date/Time</th>
         <th>Updated User</th>
@@ -181,7 +181,7 @@
         </td>
         <td>{{ store.dispatchStationCode }}</td>
         <td>{{ store.inboundStationCode }}</td>
-        <td>{{ store.id }}</td>
+        <td>{{ store.storeNumber }}</td>
         <td id="schedule-{{store.id}}" ng-click="toggleScheduleDetails(store.id)">
           <span class="btn">
             <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(store.id)"></span>
@@ -200,7 +200,7 @@
           <span ng-show="store.tampered">Yes</span>
           <span ng-hide="store.tampered">No</span>
         </td>
-        <td>{{ store.storeNumber }}</td>
+        <td>{{ store.id }}</td>
         <td>{{ store.statusName }}</td>
         <td>{{ store.updatedOnDisplay }}</td>
         <td><!-- TODO: add user, which requires user accounts --></td>
