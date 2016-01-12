@@ -105,7 +105,7 @@
 
               <div class="row" >
                 <div class="col-xs-12 col-sm-12">
-                  <h3>Tax IDs ({{formData.taxes.length}})
+                  <h3>Tax IDs <span class="badge">{{formData.taxes.length}}</span>
                     <span class="btn btn-primary btn-sm pull-right add-btn" ng-class="{'disabled': isTaxIdButtonDisabled()}" ng-disabled="isTaxIdButtonActive()" ng-click="addTax(tax)">
                       <i class="fa fa-plus"></i>
                       <span class="hidden-xs">Add Tax ID</span>
@@ -173,7 +173,7 @@
 
         </div>
 
-        <div class="row" ng-show="showAdditionalFields" >
+        <div class="row" ng-show="showAdditionalFields">
 
           <div class="col-xs-12 col-sm-6">
             <label>Parent Company</label>
@@ -185,8 +185,8 @@
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <label>Portal Default Language</label>
-            <span>English</span>
+            <h4>Portal Default Language</h4>
+            <h4 class="text-muted">English</h4>
 
             <label>Portal Additional Languages</label>
             <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.languages" theme="bootstrap">
@@ -216,7 +216,7 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <h3>VAT Number ({{ formData.countryVats.length }})
+            <h3>VAT Number <span class="badge">{{ formData.countryVats.length }}</span>
               <span class="btn btn-primary btn-sm pull-right add-btn" ng-click="addCountryVat()">
                 <i class="fa fa-plus"></i>
                 <span class="hidden-xs">Add Country</span>
@@ -232,7 +232,7 @@
           </span>
 
           <div class="col-xs-12 col-sm-6">
-            <h3>Vat Number ({{ countryVat.vatAmounts.length }})
+            <h3>Vat Number <span class="badge">{{ countryVat.vatAmounts.length }}</span>
               <span class="pull-right btn btn-primary btn-sm add-btn" style="margin-bottom:10px;" ng-click="addVatAmount(countryVat)">
                 <i class="fa fa-plus"></i>
                 <span class="hidden-xs">Add VAT</span>
@@ -276,7 +276,7 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <h3>Cabin Classes ({{ formData.companyCabinClasses.length }})
+            <h3>Cabin Classes <span class="badge">{{ formData.companyCabinClasses.length }}</span>
               <span class="btn btn-primary btn-sm pull-right add-btn" ng-click="addCabinClass(tax)">
                 <i class="fa fa-plus"></i>
                 <span class="hidden-xs">Add Cabin Class</span>
