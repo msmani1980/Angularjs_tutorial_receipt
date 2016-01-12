@@ -3,7 +3,7 @@
   <error-dialog error-response="errorResponse" display="displayError"></error-dialog>
 
   <!-- submitCashBagModal -->
-  <div class="modal fade submit-cashBag-modal">
+  <div class="modal fade submit-cashBag-modal hide-from-print">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -26,6 +26,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" ng-click="submitCashBag()">Submit</button>
+          <button type="button" class="btn btn-default" ng-click="printListOfCashBag()">Print</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div>
@@ -55,7 +56,7 @@
       </div>
     </div>
   </div>
-  <div class="panel panel-default collapse in no-transition" id="searchCollapse" aria-expanded="true">
+  <div class="panel panel-default collapse in no-transition hide-from-print" id="searchCollapse" aria-expanded="true">
     <form name="cashBagSearchForm" ng-submit="searchCashBag()">
       <div class="panel-body">
         <div class="row">
@@ -113,24 +114,25 @@
   <table infinite-scroll="updateCashBagList()" ng-show="cashBagList.length" infinite-scroll-immediate-check="false" class="table table-bordered table-hover ng-scope">
     <thead>
     <tr>
-      <th width="5%"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
-      <th>Bank Reference #</th>
+      <th width="5%" class="hide-from-print"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
       <th>Cash Bag #</th>
-      <th>Cash Bag Submitted</th>
       <th>Submitted By</th>
+      <th>Bank Reference #</th>
+      <th>Cash Bag Submitted</th>
       <th>Schedule</th>
       <th>Schedule Date</th>
     </tr>
     </thead>
 
     <tbody>
-    <tr ng-repeat="cashBag in cashBagList | index">
-      <td><input ng-disabled="shouldDisableSubmission(cashBag)" class="btn btn-default" type="checkbox" value="1" ng-model="cashBag.selected" ng-click="toggleCheckbox(cashBag)">
+    <tr ng-class="{'hide-from-print':!cashBag.selected}" ng-repeat="cashBag in cashBagList | index">
+      <td class="hide-from-print">
+        <input ng-disabled="shouldDisableSubmission(cashBag)" class="btn btn-default" type="checkbox" value="1" ng-model="cashBag.selected" ng-click="toggleCheckbox(cashBag)">
       </td>
-      <td>{{cashBag.bankReferenceNumber}}</td>
       <td>{{cashBag.cashBagNumber}}</td>
-      <td>{{cashBag.submittedDate}}</td>
+      <td>{{cashBag.bankReferenceNumber}}</td>
       <td>{{cashBag.submittedBy}}</td>
+      <td>{{cashBag.submittedDate}}</td>
       <td>{{cashBag.scheduleNumber}}</td>
       <td>{{cashBag.scheduleDate}}</td>
     </tr>

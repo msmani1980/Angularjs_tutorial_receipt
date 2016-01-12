@@ -9,7 +9,7 @@
  */
 
 angular.module('ts5App').controller('CashBagSubmissionCtrl',
-  function ($scope, $http, GlobalMenuService, cashBagFactory, $filter, dateUtility, ngToast, lodash) {
+  function ($scope, $http, GlobalMenuService, cashBagFactory, $filter, $window, dateUtility, ngToast, lodash) {
     $scope.viewName = 'Cash Bag Submission';
     $scope.search = {};
 
@@ -255,6 +255,10 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
 
       $scope.clearForm();
     }
+
+    $scope.printListOfCashBag = function() {
+      $window.print();
+    };
 
     $scope.submitCashBag = function () {
       angular.element('.submit-cashBag-modal').modal('hide');
