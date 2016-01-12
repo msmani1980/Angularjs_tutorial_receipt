@@ -3,15 +3,26 @@
 describe('The Company Create Controller', function() {
 
   // load the controller's module
+  //TODO:remove all retail item junk
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/item.json', 'served/item-create.json', 'served/items-list.json',
+  beforeEach(module('served/item.json',
+    'served/item-create.json',
+    'served/items-list.json',
     'served/item-types.json',
-    'served/sales-categories.json', 'served/stations-date-filtered.json',
-    'served/station-exception-currencies.json',
-    'served/price-types.json', 'served/tags.json', 'served/tax-types.json', 'served/currencies.json',
-    'served/allergens.json', 'served/item-types.json', 'served/characteristics.json',
     'served/units-dimension.json',
-    'served/units-volume.json', 'served/units-weight.json', 'served/price-types.json',
+    'served/sales-categories.json',
+    'served/stations-date-filtered.json',
+    'served/station-exception-currencies.json',
+    'served/price-types.json',
+    'served/tags.json',
+    'served/tax-types.json',
+    'served/currencies.json',
+    'served/allergens.json',
+    'served/item-types.json',
+    'served/characteristics.json',
+    'served/units-volume.json',
+    'served/units-weight.json',
+    'served/price-types.json',
     'served/company-discounts.json'));
 
   var $rootScope, $scope, $controller, $location, ItemCreateCtrl, $httpBackend, $routeParams, dateUtility;
