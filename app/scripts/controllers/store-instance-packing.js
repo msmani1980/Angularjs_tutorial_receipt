@@ -72,15 +72,25 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return storeInstancePackingFactory.deleteStoreInstanceItem(storeInstanceId, itemId);
     };
 
+    // get active variance closest today
+    this.setVarianceFromAPI = function (dataFromAPI) {
+      var varianceList = angular.copy(dataFromAPI);
+      var defaultVariance = 99999999;
+      if (!dataFromAPI.response) {
+        $scope.variance = defaultVariance;
+        return;
+      }
+
+      var sortedVarianceList = lodash.sortByOrder(varianceList.responses, ['startDate', 'id'], ['desc', 'asc']);
+      var allowedVarianceList = lodash.filter(sortedVarianceList, function (variance) {
+        return dateUtility.isTodayOrEarlier(dateUtility.formatDateForApp(variance.startDate));
+      });
+
+      $scope.variance = (allowedVarianceList.length) ? allowedVarianceList[0].percentage : defaultVariance;
+    };
+
     this.getThresholdVariance = function () {
-      // TODO: getThreshold for current date only
-      storeInstancePackingFactory.getThresholdList('STOREDISPATCH').then(function (dataFromAPI) {
-        if (dataFromAPI.response) {
-          $scope.variance = angular.copy(dataFromAPI.response[0].percentage);
-        } else {
-          $scope.variance = 99999999;
-        }
-      }, handleResponseError);
+      storeInstancePackingFactory.getThresholdList('STOREDISPATCH').then($this.setVarianceFromAPI, handleResponseError);
     };
 
     this.getStoreInstanceMenuItems = function (storeInstanceId) {

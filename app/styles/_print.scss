@@ -1,18 +1,24 @@
 @media print {
-  html body .btn {
-    display:none;
-  }
+  html body {
+    .btn {
+      display: none;
+    }
 
-  body .main-container {
-    margin-top:1rem;
-  }
+    .main-container {
+      margin-top: 1rem;
+    }
 
-  body .module-container {
-    padding-left:1rem;
-  }
+    .module-container {
+      padding-left: 1rem;
+    }
 
-  body *.hide-from-print {
-    display:none;
+    *.hide-from-print {
+      border: none;
+      display: none;
+      * {
+        display: none;
+      }
+    }
   }
 
 }
