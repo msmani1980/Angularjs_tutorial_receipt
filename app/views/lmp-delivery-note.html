@@ -51,17 +51,14 @@
             <div class="form-group" ng-class="formErrorClass('lmp-station')">
               <label for="lmp-station">LMP Station*</label>
               <select class="form-control"
+                      name="LMP Station"
+                      id="lmp-station"
                       ng-model="deliveryNote.catererStationId"
                       ng-disabled="isLMPStationIsDisabled()"
                       ng-show="catererStationList.length"
-                      id="lmp-station"
-                      name="LMP Station"
-                      required>
+                      ng-options="station.id as (station.name + ' - ' + station.code) for station in catererStationList"
+                      required="true">
                 <option selected="selected" value disabled>Select Catering Station</option>
-                <option ng-selected="station.id==deliveryNote.catererStationId"
-                        ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">
-                  {{ station.name }} - {{ station.code }}
-                </option>
               </select>
             </div>
           </div>
@@ -174,7 +171,7 @@
           </div>
         </div>
 
-        <div class="well" ng-repeat="item in deliveryNote.items | filter:filterInput track by $index">
+        <div class="well" ng-repeat="item in deliveryNote.items | filter:filterInput track by $index" ng-show="shouldShowItemOnReview(item)">
           <div class="row">
 
             <div class="col-xs-12 col-sm-6 col-md-4">
