@@ -846,4 +846,8 @@ angular.module('ts5App')
       }
     };
 
+    $scope.canUserCreateTaxRate = function(count) {
+      return (count < 4);
+    };
+
   });

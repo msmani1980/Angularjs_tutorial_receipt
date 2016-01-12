@@ -106,7 +106,7 @@
               <div class="row" >
                 <div class="col-xs-12 col-sm-12">
                   <h3>Tax IDs ({{formData.taxes.length}})
-                    <span class="btn btn-primary btn-sm pull-right add-btn" ng-click="addTax(tax)">
+                    <span class="btn btn-primary btn-sm pull-right add-btn" ng-class="{'disabled': isTaxIdButtonDisabled()}" ng-disabled="isTaxIdButtonActive()" ng-click="addTax(tax)">
                       <i class="fa fa-plus"></i>
                       <span class="hidden-xs">Add Tax ID</span>
                     </span>
