@@ -61,12 +61,6 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $scope.showBaseCurrency = lodash.includes(['1', '2', '5'], $scope.formData.companyTypeId);
     }
 
-    function init() {
-      checkFormState();
-      getDependencies();
-      calculateFieldsVisibility();
-    }
-
     function updateViewName(company) {
       var prefix = 'Viewing ';
 
@@ -77,6 +71,11 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $scope.viewName = prefix + company.companyName;
     }
 
+    function setUIReady() {
+      $scope.uiSelectTemplateReady = true;
+      hideLoadingModal();
+    }
+
     // gets an company to $scope.editingCompany
     function getCompany(id) {
       showLoadingModal('We are getting your Company data!');
@@ -84,11 +83,6 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         updateViewName(data.company); // TODO: ?
         setUIReady();
       });
-    }
-
-    function setUIReady() {
-      $scope.uiSelectTemplateReady = true;
-      hideLoadingModal();
     }
 
     function setDependencies(response) {
@@ -118,6 +112,12 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       showLoadingModal('We are loading data!');
       var dependencyPromises = makeDependencyPromises();
       $q.all(dependencyPromises).then(setDependencies, errorHandler);
+    }
+
+    function init() {
+      checkFormState();
+      getDependencies();
+      calculateFieldsVisibility();
     }
 
     init();

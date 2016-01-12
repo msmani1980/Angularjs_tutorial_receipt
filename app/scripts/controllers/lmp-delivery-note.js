@@ -158,7 +158,8 @@ angular.module('ts5App')
       });
     }
 
-    function addNewMasterItemsFromCatererStationMasterItemsResponse(response) {
+    function addNewMasterItemsFromCatererStationMasterItemsResponse(responseFromAPI) {
+      var response = angular.copy(responseFromAPI);
       $scope.deliveryNote.items = [];
       hideLoadingModal();
 
@@ -187,6 +188,7 @@ angular.module('ts5App')
       });
 
       var filteredResponseMasterItems = items.filter(function(item) {
+        item.ullageQuantity = 0;
         return deliveryNoteItemIds.indexOf(item.itemMasterId) === -1;
       });
 
