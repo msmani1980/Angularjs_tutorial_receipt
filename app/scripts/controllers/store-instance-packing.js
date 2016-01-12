@@ -94,7 +94,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getStoreInstanceItems = function (storeInstanceId) {
-      return storeInstancePackingFactory.getStoreInstanceItemList(storeInstanceId);
+      return storeInstancePackingFactory.getStoreInstanceItemList(storeInstanceId, { showEpos: true });
     };
 
     this.getMasterItemsList = function () {
@@ -404,7 +404,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    $scope.submit = function() {
+    $scope.submit = function () {
       $this.validateUllageReasonFields();
       var isFormInvalid = $scope.storeInstancePackingForm.$invalid;
       $scope.displayError = isFormInvalid;
@@ -540,7 +540,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var itemMatch;
       if ($routeParams.action === 'redispatch') {
         // offloadList match should be returned before pickList match. match in pickList and offloadList should not be merged
-        itemMatch = lodash.findWhere($scope.offloadListItems, { itemMasterId: itemFromAPI.itemMasterId }) || lodash.findWhere($scope.pickListItems, { itemMasterId: itemFromAPI.itemMasterId });
+        itemMatch = lodash.findWhere($scope.offloadListItems, { itemMasterId: itemFromAPI.itemMasterId }) || lodash.findWhere($scope.pickListItems,
+            { itemMasterId: itemFromAPI.itemMasterId });
       } else if ($routeParams.action === 'end-instance') {
         itemMatch = lodash.findWhere($scope.offloadListItems, { itemMasterId: itemFromAPI.itemMasterId });
       } else {
@@ -566,8 +567,28 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
-    this.mergeStoreInstanceItems = function (items) {
+    function findItemOnEposList(items, item) {
+      return lodash.findWhere(items, {
+        itemMasterId: item.itemMasterId,
+        countTypeName: 'FAClose'
+      });
+    }
+
+    function setCountTypeNameAndCheckEpos(items) {
+      var ignoreEposData = false;
+
       angular.forEach(items, function (item) {
+        item.countTypeName = $this.getNameByIdFromArray(item.countTypeId, $scope.countTypes);
+        ignoreEposData = ignoreEposData || item.countTypeName === 'Offload' || item.countTypeName === 'Warehouse Close';
+      });
+
+      return ignoreEposData;
+    }
+
+    this.mergeStoreInstanceItems = function (items) {
+      var ignoreEposData = setCountTypeNameAndCheckEpos(items);
+      angular.forEach(items, function (item) {
+        var ePosItem = findItemOnEposList(items, item);
         var itemMatch = $this.findItemMatch(item);
         if (!itemMatch) {
           var newItem = $this.createFreshItem(item, false);
@@ -581,22 +602,23 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
 
         $this.setQuantityByType(item, itemMatch, false);
+        if (!ignoreEposData && ePosItem) {
+          itemMatch.oldInboundQuantity = ePosItem.quantity;
+          itemMatch.inboundQuantity = ePosItem.quantity;
+        }
       });
     };
 
-    // merge offload quantities fisrt to populate entire offload list, then fill in ullage and warehouse close values next.
     this.mergeRedispatchItems = function (items) {
-      // sort items so all offload count types are processed first
-      angular.forEach(items, function (item) {
-        item.countTypeName = $this.getNameByIdFromArray(item.countTypeId, $scope.countTypes);
-      });
-
+      var ignoreEposData = setCountTypeNameAndCheckEpos(items);
       items = lodash.sortBy(items, 'countTypeName');
 
       angular.forEach(items, function (item) {
         var pickListMatch = lodash.findWhere($scope.pickListItems, { itemMasterId: item.itemMasterId });
         var offloadListMatch = lodash.findWhere($scope.offloadListItems, { itemMasterId: item.itemMasterId });
+        var ePosItem = findItemOnEposList(items, item);
         var itemMatch;
+
         if ((!pickListMatch && !offloadListMatch) || (!offloadListMatch && item.countTypeName === 'Offload')) {
           var newItem = $this.createFreshItem(item, false);
           newItem.isInOffload = true;
@@ -610,6 +632,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
 
         $this.setQuantityByType(item, itemMatch, true);
+        if (!ignoreEposData && ePosItem) {
+          itemMatch.oldInboundQuantity = ePosItem.quantity;
+          itemMatch.inboundQuantity = ePosItem.quantity;
+        }
       });
     };
 
