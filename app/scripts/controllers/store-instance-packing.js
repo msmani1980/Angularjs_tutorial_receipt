@@ -74,14 +74,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     // get active variance closest today
     this.setVarianceFromAPI = function (dataFromAPI) {
-      var varianceList = angular.copy(dataFromAPI);
+      var varianceList = angular.copy(dataFromAPI.response);
       var defaultVariance = 99999999;
-      if (!dataFromAPI.response) {
+      if (!varianceList) {
         $scope.variance = defaultVariance;
         return;
       }
 
-      var sortedVarianceList = lodash.sortByOrder(varianceList.responses, ['startDate', 'id'], ['desc', 'asc']);
+      var sortedVarianceList = lodash.sortByOrder(varianceList, ['startDate', 'id'], ['desc', 'asc']);
       var allowedVarianceList = lodash.filter(sortedVarianceList, function (variance) {
         return dateUtility.isTodayOrEarlier(dateUtility.formatDateForApp(variance.startDate));
       });
