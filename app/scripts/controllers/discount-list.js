@@ -12,7 +12,9 @@ angular.module('ts5App')
     lodash) {
     var $this = this;
     $scope.viewName = 'Discount';
-    $scope.search = {};
+    $scope.search = {
+      startDate: dateUtility.nowFormatted()
+    };
     $scope.discountList = [];
     $scope.discountToDelete = {};
     this.meta = {
