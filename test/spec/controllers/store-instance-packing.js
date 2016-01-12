@@ -161,7 +161,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should get store instance items for current store instance', function () {
-        expect(storeInstancePackingFactory.getStoreInstanceItemList).toHaveBeenCalledWith(mockStoreInstanceId);
+        expect(storeInstancePackingFactory.getStoreInstanceItemList).toHaveBeenCalledWith(mockStoreInstanceId, { showEpos: true });
       });
 
     });
@@ -192,7 +192,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       it('should get store instance items for previous store instance', function () {
         var prevInstanceId = 18; // from mock JSON
-        expect(storeInstancePackingFactory.getStoreInstanceItemList).toHaveBeenCalledWith(prevInstanceId);
+        expect(storeInstancePackingFactory.getStoreInstanceItemList).toHaveBeenCalledWith(prevInstanceId, { showEpos: true });
       });
     });
   });

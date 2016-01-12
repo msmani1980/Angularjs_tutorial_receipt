@@ -13,7 +13,6 @@
     ","
   ],
   "disallowMixedSpacesAndTabs": true,
-  "disallowTrailingWhitespace": true,
   "requireSpaceAfterComma": true,
   "disallowYodaConditions": true,
   "disallowKeywords": [
