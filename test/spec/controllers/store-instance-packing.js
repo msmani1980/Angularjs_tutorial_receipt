@@ -141,9 +141,14 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(scope.characteristicFilterId).toEqual(1); // Inventory characteristic from mock JSON
       });
 
-      it('should get a threshold variance', function () {
-        expect(storeInstancePackingFactory.getThresholdList).toHaveBeenCalledWith('STOREDISPATCH');
-        expect(scope.variance).toBeDefined();
+      describe('initialize variance', function () {
+        it('should get a threshold variance', function () {
+          expect(storeInstancePackingFactory.getThresholdList).toHaveBeenCalledWith('STOREDISPATCH');
+          expect(scope.variance).toBeDefined();
+        });
+        it('should set variance closest to today', function () {
+          expect(scope.variance).toEqual(5.26); // closes variance to today on threshold-list.json
+        });
       });
 
       it('should get a list of count types', function () {
