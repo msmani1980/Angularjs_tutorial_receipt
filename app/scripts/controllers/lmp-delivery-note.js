@@ -138,6 +138,10 @@ angular.module('ts5App')
       }
     }
 
+    $scope.shouldShowItemOnReview = function (item) {
+      return ($scope.hideReview) ? isNumberGreaterThanOrEqualTo0(item.deliveredQuantity) : true;
+    };
+
     function removeNullDeliveredItems() {
       $scope.deliveryNote.items = $scope.deliveryNote.items.filter(function(item) {
         return isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
@@ -372,6 +376,7 @@ angular.module('ts5App')
     $scope.toggleReview = function() {
       $scope.canReview = canReview();
       $scope.hideReview = false;
+
       if ($scope.prevState) {
         $scope.state = $scope.prevState;
         $scope.prevState = null;
@@ -394,7 +399,6 @@ angular.module('ts5App')
       $scope.hideReview = true;
       _prevViewName = $scope.viewName;
       $scope.viewName = 'Review Delivery Note';
-      removeNullDeliveredItems();
     };
 
     $scope.clearFilter = function() {
@@ -619,6 +623,7 @@ angular.module('ts5App')
     // create state actions
     stateActions.createInit = function() {
       $scope.readOnly = false;
+      $scope.hideReview = false;
       $scope.viewName = 'Create Delivery Note';
       displayLoadingModal();
       _initPromises.push(getCatererStationList());
@@ -637,6 +642,7 @@ angular.module('ts5App')
     stateActions.editInit = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Delivery Note';
+      $scope.hideReview = false;
       displayLoadingModal();
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
