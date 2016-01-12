@@ -108,7 +108,7 @@
                   <label>Tax IDs ({{formData.taxes.length}})</label>
                 </div>
                 <div class="col-xs-3 col-sm-3">
-                  <span class="btn btn-primary" ng-click="addTax(tax)">
+                  <span class="btn btn-primary pull-right add-btn" ng-click="addTax(tax)">
                     <i class="fa fa-plus"></i>
                     <span class="hidden-xs">Add Tax ID</span>
                   </span>
@@ -117,7 +117,7 @@
 
               <br>
 
-              <div class="row well well-sm" ng-repeat="tax in formData.taxes track by $index">
+              <div class="col-xs-12 well well-sm" ng-repeat="tax in formData.taxes track by $index">
                 <div class="col-xs-10 col-sm-10">
                   <input custom-pattern="alphanumeric"
                          custom-validity
@@ -216,17 +216,18 @@
       <fieldset ng-if="showAdditionalFields" >
 
         <div class="row">
-          <div class="col-xs-12 col-sm-6">
+          <div class="col-xs-12 col-sm-10">
             <h3>VAT Number ({{ formData.countryVats.length }})</h3>
           </div>
-          <div class="col-xs-12 col-sm-6">
-            <span class="btn btn-primary pull-right" ng-click="addCountryVat()">
+          <div class="col-xs-12 col-sm-2">
+            <span class="btn btn-primary add-btn" ng-click="addCountryVat()">
               <i class="fa fa-plus"></i>
               <span class="hidden-xs">Add Country</span>
             </span>
           </div>
         </div>
-        <div class="row well well-sm" ng-repeat="countryVat in formData.countryVats track by $index" ng-init="countryVat_index = $index">
+
+        <div class="col-xs-12 well well-sm" ng-repeat="countryVat in formData.countryVats track by $index" ng-init="countryVat_index = $index">
 
           <div class="col-xs-12 col-sm-1">
             <span class="pull-left btn btn-danger btn-xs" ng-click="removeCountryVat($index)">
@@ -256,7 +257,7 @@
                 </div>
               </div>
 
-              <div class="row well well-sm" ng-repeat="vatAmount in countryVat.vatAmounts" >
+              <div class="col-xs-12 well well-sm" ng-repeat="vatAmount in countryVat.vatAmounts" >
                 <div class="col-xs-10 col-sm-10">
                   <input custom-pattern="number"
                          custom-validity
@@ -283,24 +284,24 @@
       <fieldset ng-show="showAdditionalFields" >
 
         <div class="row">
-          <div class="col-xs-12 col-sm-6">
+          <div class="col-xs-12 col-sm-10">
             <h3>Cabin Classes ({{ formData.companyCabinClasses.length }})</h3>
           </div>
-          <div class="col-xs-12 col-sm-6">
-            <span class="btn btn-primary pull-right" ng-click="addCabinClass(tax)">
+          <div class="col-xs-12 col-sm-2">
+            <span class="btn btn-primary add-btn" ng-click="addCabinClass(tax)">
               <i class="fa fa-plus"></i>
               <span class="hidden-xs">Add Cabin Class</span>
             </span>
           </div>
         </div>
 
-        <div class="row well well-sm" ng-repeat="cabinClass in formData.companyCabinClasses track by $index">
+        <div class="col-xs-12 well well-sm" ng-repeat="cabinClass in formData.companyCabinClasses track by $index">
           <div class="col-xs-12 col-sm-12">
             <div class="row">
               <div class="col-xs-10 col-sm-10">
               </div>
               <div class="col-xs-2 col-sm-2">
-                <span class="pull-left btn btn-danger btn-xs btn-remove-price-group" ng-click="removeCabinClass(cabinClass)">
+                <span class="pull-right btn btn-danger btn-xs btn-remove-price-group" ng-click="removeCabinClass(cabinClass)">
                   <i class="fa fa-close"></i>
                 </span>
               </div>
