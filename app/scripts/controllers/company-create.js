@@ -56,8 +56,23 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       }
     }
 
+    function addCommonClass() {
+      if ($scope.showAdditionalFields) {
+        var payload = {
+          cabinClass: 'Common',
+          code: 'CC',
+          cabinClassDescription: 'Common Class',
+          readOnly: true
+        };
+        if (!$scope.formData.companyCabinClasses.length) {
+          $scope.formData.companyCabinClasses.push(payload);
+        }
+      }
+    }
+
     function calculateFieldsVisibility() {
       $scope.showAdditionalFields = ($scope.formData.companyTypeId === '1');
+      addCommonClass();
       $scope.showBaseCurrency = lodash.includes(['1', '2', '5'], $scope.formData.companyTypeId);
     }
 
@@ -219,6 +234,10 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.removeCabinClass = function(cabinClass) {
+      if (cabinClass.readOnly) {
+        return;
+      }
+
       $scope.formData.companyCabinClasses = lodash.filter($scope.formData.companyCabinClasses, function(cc) {
         return cc !== cabinClass;
       });

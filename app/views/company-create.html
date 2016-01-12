@@ -105,7 +105,7 @@
 
               <div class="row" >
                 <div class="col-xs-12 col-sm-12">
-                  <h3>Tax IDs <span class="badge">{{formData.taxes.length}}</span>
+                  <h3>Tax IDs <span class="badge" ng-class="{'success': isTaxIdButtonDisabled()}">{{formData.taxes.length}}</span>
                     <span class="btn btn-primary btn-sm pull-right add-btn" ng-class="{'disabled': isTaxIdButtonDisabled()}" ng-disabled="isTaxIdButtonActive()" ng-click="addTax(tax)">
                       <i class="fa fa-plus"></i>
                       <span class="hidden-xs">Add Tax ID</span>
@@ -288,7 +288,7 @@
         <div class="col-xs-12 well well-sm" ng-repeat="cabinClass in formData.companyCabinClasses track by $index">
           <div class="row text-right">
             <div class="col-xs-12">
-              <span class="btn btn-danger btn-xs btn-remove-price-group" ng-click="removeCabinClass(cabinClass)">
+              <span class="btn btn-danger btn-xs btn-remove-price-group" ng-disabled="cabinClass.readOnly" ng-click="removeCabinClass(cabinClass)">
                 <i class="fa fa-close"></i>
               </span>
             </div>
@@ -299,6 +299,7 @@
               <input custom-pattern="alphanumeric"
                      custom-validity
                      required
+                     ng-disabled="cabinClass.readOnly"
                      type="text"
                      maxlength="25"
                      name="cabinClassName-{{$index}}"
@@ -311,6 +312,7 @@
               <input custom-pattern="alphanumeric"
                      custom-validity
                      required
+                     ng-disabled="cabinClass.readOnly"
                      type="text"
                      maxlength="25"
                      name="cabinClassCode-{{$index}}"
@@ -325,6 +327,7 @@
               <input custom-pattern="word"
                      custom-validity
                      required
+                     ng-disabled="cabinClass.readOnly"
                      type="text"
                      maxlength="25"
                      name="cabinClassDescription-{{$index}}"
