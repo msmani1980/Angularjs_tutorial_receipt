@@ -1,8 +1,9 @@
 'use strict';
 
-fdescribe('The Company Create Controller', function() {
+describe('The Company Create Controller', function() {
 
   // load the controller's module
+  //TODO:remove all retail item junk
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module('served/item.json',
     'served/item-create.json',
