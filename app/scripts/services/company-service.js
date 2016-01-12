@@ -9,22 +9,22 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companyService', function ($resource, ENV) {
+  .service('companyService', function($resource, ENV) {
     var requestURL = ENV.apiUrl + '/api/companies/:id';
     var requestParameters = {
       id: '@id'
     };
 
-    var normalizeLanguages = function (languages) {
+    var normalizeLanguages = function(languages) {
       return (languages.split(',')[0] !== '') ? languages.split(',').join(', ') : 'N/A';
     };
 
     var actions = {
       getCompanyList: {
         method: 'GET',
-        transformResponse: function (data) {
+        transformResponse: function(data) {
           data = angular.fromJson(data);
-          data.companies.forEach(function (company) {
+          data.companies.forEach(function(company) {
             company.companyLanguages = normalizeLanguages(company.companyLanguages);
           });
 
@@ -44,19 +44,21 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getCompanyList = function (payload) {
+    var getCompanyList = function(payload) {
       return requestResource.getCompanyList(payload).$promise;
     };
 
-    var getCompany = function (id) {
-      return requestResource.getCompany({ id: id }).$promise;
+    var getCompany = function(id) {
+      return requestResource.getCompany({
+        id: id
+      }).$promise;
     };
 
-    var createCompany = function (payload) {
+    var createCompany = function(payload) {
       return requestResource.createCompany(payload).$promise;
     };
 
-    var updateCompany = function (payload) {
+    var updateCompany = function(payload) {
       return requestResource.updateCompany(payload).$promise;
     };
 

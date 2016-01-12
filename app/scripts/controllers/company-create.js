@@ -41,9 +41,10 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     }
 
     function errorHandler(dataFromAPI) {
+      console.log(dataFromAPI);
       hideLoadingModal();
       $scope.displayError = true;
-      $scope.errorResponse = $filter('unique')(dataFromAPI, 'data');
+      $scope.errorResponse = dataFromAPI;
     }
 
     function checkFormState() {
@@ -123,12 +124,13 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     init();
 
     function createSuccessHandler() {
-      angular.element('#loading').modal('hide');
+      hideLoadingModal();
       angular.element('#create-success').modal('show');
     }
 
-    function updateSuccessHandler() {
-      angular.element('#loading').modal('hide');
+    function updateSuccessHandler(response) {
+      console.log(response);
+      hideLoadingModal();
       angular.element('#update-success').modal('show');
     }
 
@@ -138,7 +140,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       ];
     }
 
-    function createCompanyCreatePromises(payload) {
+    function createCompanyCreatePromises() {
+      var payload = angular.copy($scope.formData);
       return [
         companiesFactory.createCompany(payload)
       ];
@@ -150,9 +153,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $q.all(promises).then(updateSuccessHandler, errorHandler);
     }
 
-    function createCompany(payload) {
+    function createCompany() {
       showLoadingModal('We are creating your Company');
-      var promises = createCompanyCreatePromises(payload);
+      var promises = createCompanyCreatePromises();
       $q.all(promises).then(createSuccessHandler, errorHandler);
     }
 
@@ -232,7 +235,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       if (formData && validateForm()) {
         var companyData = angular.copy(formData);
         var payload = formatPayload(companyData);
-        return $scope.editingCompany ? updateCompany(payload) : createCompany(payload);
+        return $scope.editingCompany ? updateCompany(payload) : createCompany();
       }
     };
 
