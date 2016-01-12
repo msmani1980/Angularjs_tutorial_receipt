@@ -41,7 +41,6 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     }
 
     function errorHandler(dataFromAPI) {
-      console.log(dataFromAPI);
       hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = dataFromAPI;
@@ -128,8 +127,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       angular.element('#create-success').modal('show');
     }
 
-    function updateSuccessHandler(response) {
-      console.log(response);
+    function updateSuccessHandler() {
       hideLoadingModal();
       angular.element('#update-success').modal('show');
     }
