@@ -90,7 +90,9 @@ angular.module('ts5App')
     };
 
     $scope.canDeleteCategory = function (category) {
-      return category.childCategoryCount === null || parseInt(category.childCategoryCount) <= 0;
+      var containsNoChildren = category.childCategoryCount === null || parseInt(category.childCategoryCount) <= 0;
+      var containsNoItems = parseInt(category.itemCount) <= 0;
+      return containsNoChildren && containsNoItems;
     };
 
     this.deleteCategory = function (categoryId) {
