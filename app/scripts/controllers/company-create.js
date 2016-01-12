@@ -173,7 +173,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     });
 
     $scope.addTax = function() {
-      $scope.formData.taxes.push({});
+      if (!$scope.isTaxIdButtonDisabled()) {
+        $scope.formData.taxes.push({});
+      }
     };
 
     $scope.removeTax = function(tax) {
@@ -253,6 +255,11 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       model = parseInt(model);
       id = parseInt(id);
       return (model === id);
+    };
+
+    $scope.isTaxIdButtonDisabled = function() {
+      var count = $scope.formData.taxes.length;
+      return (count >= 3);
     };
 
   });

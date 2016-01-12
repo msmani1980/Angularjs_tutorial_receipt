@@ -97,16 +97,16 @@
           <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
 
             <div class="form-group">
-              <input-text label="DBA Name" name="dbaName" required="true" pattern="regexp.alphanumeric"
+              <input-text label="DBA Name" name="dbaName" pattern="regexp.alphanumeric"
                           placeholder="Doing Business As" min-length="1" max-length="30"></input-text>
 
-              <input-text label="EDI Name" name="ediName" required="true" pattern="regexp.alphanumeric"
+              <input-text label="EDI Name" name="ediName" pattern="regexp.alphanumeric"
                           placeholder="Electronic Data Interchange" min-length="1" max-length="30"></input-text>
 
               <div class="row" >
                 <div class="col-xs-12 col-sm-12">
                   <h3>Tax IDs ({{formData.taxes.length}})
-                    <span class="btn btn-primary btn-sm pull-right add-btn" ng-click="addTax(tax)">
+                    <span class="btn btn-primary btn-sm pull-right add-btn" ng-class="{'disabled': isTaxIdButtonDisabled()}" ng-disabled="isTaxIdButtonActive()" ng-click="addTax(tax)">
                       <i class="fa fa-plus"></i>
                       <span class="hidden-xs">Add Tax ID</span>
                     </span>
