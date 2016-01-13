@@ -1,0 +1,32 @@
+{
+  "companyName": "testCompanyName",
+  "dbaName": "testDBAName",
+  "legalName": "testLegalName",
+  "ediName": "TestEDI",
+  "companyCode": "code341",
+  "isActive": true,
+  "exchangeRateVariance": null,
+  "companyTypeId": "1",
+  "parentCompanyId": "521",
+  "baseCurrencyId": "1",
+  "taxes": [{
+    "taxIdNumber": "432434234"
+  }, {
+    "taxIdNumber": "23423432"
+  }, {
+    "taxIdNumber": "235235325"
+  }],
+  "languages": ["4", "3"],
+  "eposLanguages": ["3", "5"],
+  "companyCabinClasses": [{
+    "cabinClass": "Common",
+    "code": "CC",
+    "cabinClassDescription": "Common Class"
+  }],
+  "countryVats": [{
+    "countryId": "240",
+    "vatAmounts": [{
+      "vatAmount": "34524525235"
+    }]
+  }]
+}

@@ -32,18 +32,20 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.countries = [];
     $scope.companyTypes = [];
 
+    var $this = this;
+
+    this.errorHandler = function(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     }
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
-    }
-
-    function errorHandler(dataFromAPI) {
-      hideLoadingModal();
-      $scope.displayError = true;
-      $scope.errorResponse = dataFromAPI;
     }
 
     function checkFormState() {
@@ -126,7 +128,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     function getDependencies() {
       showLoadingModal('We are loading data!');
       var dependencyPromises = makeDependencyPromises();
-      $q.all(dependencyPromises).then(setDependencies, errorHandler);
+      $q.all(dependencyPromises).then(setDependencies, $this.errorHandler);
     }
 
     function init() {
@@ -153,8 +155,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       ];
     }
 
-    function createCompanyCreatePromises() {
-      var payload = angular.copy($scope.formData);
+    function createCompanyCreatePromises(payload) {
       return [
         companiesFactory.createCompany(payload)
       ];
@@ -163,13 +164,15 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     function updateCompany(payload) {
       showLoadingModal('We are updating your Company');
       var promises = createCompanyUpdatePromises(payload);
-      $q.all(promises).then(updateSuccessHandler, errorHandler);
+      $q.all(promises).then(updateSuccessHandler, $this.errorHandler);
     }
 
-    function createCompany() {
+    function createCompany(payload) {
+      console.log(payload);
       showLoadingModal('We are creating your Company');
-      var promises = createCompanyCreatePromises();
-      $q.all(promises).then(createSuccessHandler, errorHandler);
+      var promises = createCompanyCreatePromises(payload);
+      $q.all(promises).then(createSuccessHandler, $this.errorHandler);
+
     }
 
     function validateForm() {
@@ -177,9 +180,39 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       return $scope.form.$valid;
     }
 
-    function formatPayload(companyData) {
-      return companyData;
+    function formatCompanyCabinClasses(companyData) {
+      if (!$scope.showAdditionalFields) {
+        delete companyData.companyCabinClasses;
+      } else if ($scope.showAdditionalFields) {
+        delete companyData.companyCabinClasses[0].readOnly;
+      }
+
+      if ($scope.showAdditionalFields && companyData.companyCabinClasses.length) {
+        return companyData.companyCabinClasses;
+      }
+
+      return;
     }
+
+    function formatCompanyLanguages(languages) {
+      var languagesPayload = [];
+      angular.forEach(languages, function(language) {
+        if (angular.isDefined(language.id)) {
+          var id = language.id.toString();
+          languagesPayload.push(id);
+        }
+      });
+
+      return languagesPayload;
+    }
+
+    this.formatPayload = function(companyData) {
+      var company = angular.copy(companyData);
+      company.companyCabinClasses = formatCompanyCabinClasses(company);
+      company.languages = formatCompanyLanguages(company.languages);
+      company.eposLanguages = formatCompanyLanguages(company.eposLanguages);
+      return company;
+    };
 
     //$scope functions. these will become this.functionName() in v2
 
@@ -253,8 +286,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $scope.form.$setSubmitted(true);
       if (formData && validateForm()) {
         var companyData = angular.copy(formData);
-        var payload = formatPayload(companyData);
-        return $scope.editingCompany ? updateCompany(payload) : createCompany();
+        var payload = $this.formatPayload(companyData);
+        var action = $scope.editingCompany ? updateCompany(payload) : createCompany(payload);
+        return action;
       }
     };
 
