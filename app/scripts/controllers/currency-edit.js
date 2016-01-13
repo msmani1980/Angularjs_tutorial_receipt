@@ -99,7 +99,7 @@ angular.module('ts5App')
       }
 
       currencyFactory.getDetailedCompanyCurrencies(payloadUtility.serializeDates($scope.search))
-                     .then($this.attachDetailedCompanyCurrencyListToScope);
+        .then($this.attachDetailedCompanyCurrencyListToScope);
     };
 
     this.showLoadingModal = function (message) {
@@ -137,9 +137,9 @@ angular.module('ts5App')
 
     this.isDenominationEasyPay = function (selectedEasyPayDenominations, denominationId) {
       return selectedEasyPayDenominations.map(function (denomination) {
-        return denomination.id;
-      })
-      .indexOf(denominationId) > -1;
+            return denomination.id;
+          })
+          .indexOf(denominationId) > -1;
     };
 
     this.denormalizeDetailedCompanyCurrency = function (index, currency) {
@@ -188,24 +188,27 @@ angular.module('ts5App')
       }).indexOf(currencyId);
     };
 
-    this.errorHandler = function(dataFromAPI) {
-      angular.element('#loading').modal('hide');
+    this.errorHandler = function (dataFromAPI) {
+      $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
+    function deleteCurrencySuccessHandler() {
+      var index = $this.getCurrencyIndexById($scope.currencyToDelete.id);
+      $scope.companyCurrencyList.splice(index, 1);
+      $this.hideLoadingModal();
+    }
+
     $scope.deleteDetailedCompanyCurrency = function () {
       angular.element('.delete-warning-modal').modal('hide');
-      $this.showLoadingModal('Loading Data');
-
-      var index = $this.getCurrencyIndexById($scope.currencyToDelete.id);
-
       if ($scope.currencyToDelete.id) {
-        currencyFactory.deleteDetailedCompanyCurrency($scope.currencyToDelete.id).then(function () {
-          $scope.companyCurrencyList.splice(index, 1);
-          $this.hideLoadingModal();
-        }, $this.errorHandler);
+        $this.showLoadingModal('Loading Data');
+        currencyFactory.deleteDetailedCompanyCurrency($scope.currencyToDelete.id).then(deleteCurrencySuccessHandler, $this.errorHandler);
+        return;
       }
+
+      $scope.companyCurrencyList.splice($scope.currencyToDelete.rowIndex, 1);
     };
 
     $scope.clearForm = function () {
