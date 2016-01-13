@@ -51,44 +51,22 @@ fdescribe('The Company Create Controller', function() {
       var payload;
       var company;
       beforeEach(inject(function(_servedCompanyCreate_) {
-        $scope.showAdditionalFields = true;
         companyCreateJSON = _servedCompanyCreate_;
         payload = {
-          taxes: [{
-            taxIdNumber: '432434234'
-          }, {
-            taxIdNumber: '23423432'
-          }, {
-            taxIdNumber: '235235325'
-          }],
           languages: [{
             id: 4,
             languageCode: 'en-gb',
             languageName: 'English (United Kingdom)'
           }, {
             id: 3,
-            languageCode: 'de',
-            languageName: 'German (Standard)'
-          }],
-          countryVats: [{
-            vatAmounts: [{
-              vatAmount: '34524525235'
-            }],
-            'countryId': '240'
+            languageCode: 'en-gb',
+            languageName: 'English (United Kingdom)'
           }],
           companyCabinClasses: [{
             cabinClass: 'Common',
             code: 'CC',
-            cabinClassDescription: 'Common Class',
+            cabinClassDescription: 'Common Class'
           }],
-          companyName: 'testCompanyName',
-          legalName: 'testLegalName',
-          companyCode: 'code341',
-          dbaName: 'testDBAName',
-          ediName: 'testEDI',
-          companyTypeId: '1',
-          baseCurrencyId: '1',
-          parentCompanyId: '554',
           eposLanguages: [{
             id: 3,
             languageCode: 'en-gb',
@@ -97,9 +75,9 @@ fdescribe('The Company Create Controller', function() {
             id: 5,
             languageCode: 'de',
             languageName: 'German (Standard)'
-          }],
-          isActive: true
+          }]
         };
+        $scope.showAdditionalFields = true;
         company = CompanyCreateCtrl.formatPayload(payload);
       }));
       it('should format the languages', function() {
@@ -111,6 +89,76 @@ fdescribe('The Company Create Controller', function() {
       it('should return companyCabinClasses ', function() {
         expect(company.companyCabinClasses).toEqual(companyCreateJSON.companyCabinClasses);
       });
+    });
+
+    describe('The formatPayload method without additional fields', function() {
+      var payload;
+      var company;
+      beforeEach(inject(function(_servedCompanyCreate_) {
+        $scope.showAdditionalFields = false;
+        companyCreateJSON = _servedCompanyCreate_;
+        payload = {
+          languages: [{
+            id: 4,
+            languageCode: 'en-gb',
+            languageName: 'English (United Kingdom)'
+          }, {
+            id: 3,
+            languageCode: 'en-gb',
+            languageName: 'English (United Kingdom)'
+          }],
+          companyCabinClasses: [{
+            cabinClass: 'Common',
+            code: 'CC',
+            cabinClassDescription: 'Common Class'
+          }],
+          eposLanguages: [{
+            id: 3,
+            languageCode: 'en-gb',
+            languageName: 'English (United Kingdom)'
+          }, {
+            id: 5,
+            languageCode: 'de',
+            languageName: 'German (Standard)'
+          }]
+        };
+        company = CompanyCreateCtrl.formatPayload(payload);
+      }));
+      it('should format the languages', function() {
+        expect(company.languages).toEqual(companyCreateJSON.languages);
+      });
+      it('should format the eposLanguages', function() {
+        expect(company.eposLanguages).toEqual(companyCreateJSON.eposLanguages);
+      });
+      it('should return companyCabinClasses  as undefined', function() {
+        expect(company.companyCabinClasses).toEqual(undefined);
+      });
+    });
+  });
+
+  describe('Taxes', function() {
+    beforeEach(inject(function($injector) {
+      createController($injector);
+    }));
+    it('should return true if count is 3', function() {
+      $scope.formData.taxes = companyCreateJSON.taxes;
+      expect($scope.isTaxIdButtonDisabled()).toBeTruthy();
+    });
+    it('should return false if one is removed and if count is 0', function() {
+      $scope.formData.taxes = companyCreateJSON.taxes;
+      $scope.removeTax(companyCreateJSON.taxes[0]);
+      expect($scope.isTaxIdButtonDisabled()).toBeFalsy();
+    });
+    it('should add a new tax', function() {
+      $scope.formData.taxes = companyCreateJSON.taxes;
+      $scope.removeTax(companyCreateJSON.taxes[0]);
+      $scope.addTax();
+      expect($scope.formData.taxes.length).toEqual(3);
+    });
+    it('should not allow user to add a new tax', function() {
+      $scope.formData.taxes = companyCreateJSON.taxes;
+      $scope.addTax();
+      expect($scope.formData.taxes.length).toEqual(3);
     });
   });
 
