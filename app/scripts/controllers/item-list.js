@@ -199,7 +199,7 @@ angular.module('ts5App')
     };
 
     $scope.searchRecords = function () {
-      this.meta = {
+      $this.meta = {
         count: undefined,
         limit: 100,
         offset: 0
