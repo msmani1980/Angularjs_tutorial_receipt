@@ -33,7 +33,6 @@ angular.module('ts5App')
           maxDate: $scope.maxDate
         };
 
-        console.log($scope.minDate, $scope.disable);
         if ($scope.minDate && !$scope.disable) {
           datePickerOptions.startDate = $scope.minDate;
         }

@@ -382,9 +382,10 @@ angular.module('ts5App')
       $scope.selectOptions.companyDiscountsCoupon = dataFromAPI.companyDiscounts;
     }
 
-    function getCompanyDiscountsCoupon() {
+    function getCompanyDiscountsCoupon(payload) {
+      payload = payload || { startDate: dateUtility.nowFormatted('YYYYMMDD') };
       initPromises.push(
-        promotionsFactory.getCompanyDiscountsCoupon().then(setCompanyDiscountsCoupon)
+        promotionsFactory.getCompanyDiscountsCoupon(payload).then(setCompanyDiscountsCoupon)
       );
     }
 
@@ -392,9 +393,10 @@ angular.module('ts5App')
       $scope.selectOptions.companyDiscountsVoucher = dataFromAPI.companyDiscounts;
     }
 
-    function getCompanyDiscountsVoucher() {
+    function getCompanyDiscountsVoucher(payload) {
+      payload = payload || { startDate: dateUtility.nowFormatted('YYYYMMDD') };
       initPromises.push(
-        promotionsFactory.getCompanyDiscountsVoucher().then(setCompanyDiscountsVoucher)
+        promotionsFactory.getCompanyDiscountsVoucher(payload).then(setCompanyDiscountsVoucher)
       );
     }
 
@@ -513,6 +515,22 @@ angular.module('ts5App')
       $scope.shouldDisableStartDate = !(dateUtility.isAfterToday($scope.promotion.startDate));
     }
 
+    $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function(newData, oldData) {
+      if ($scope.promotion.startDate && $scope.promotion.endDate) {
+        var payload = {};
+        if (newData[0] !== oldData[0]) {
+          payload.startDate = dateUtility.formatDateForAPI(newData[0]);
+        }
+
+        if (newData[1] !== oldData[1]) {
+          payload.endDate = dateUtility.formatDateForAPI(newData[1]);
+        }
+
+        getCompanyDiscountsCoupon(payload);
+        getCompanyDiscountsVoucher(payload);
+      }
+    });
+
     function handlePromiseSuccessHandler(promotionDataFromAPI) {
       hideLoadingModal();
       $scope.readOnly = ($routeParams.state === 'view');
@@ -526,8 +544,6 @@ angular.module('ts5App')
       getBenefitTypes();
       getDiscountTypes();
       getPromotionTypes();
-      getCompanyDiscountsCoupon();
-      getCompanyDiscountsVoucher();
       getSalesCategories();
       getDiscountApplyTypes();
       getPromotionCategories();
