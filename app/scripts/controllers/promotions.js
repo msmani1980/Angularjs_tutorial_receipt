@@ -510,6 +510,7 @@ angular.module('ts5App')
       $scope.promotion.discountItem = getObjectByIdFromSelectOptions('masterItems', { id: promotionFromAPI.discountItemId });
       $scope.spendLimitAmountsUi = addCurrencyCodeToArrayItems($scope.spendLimitAmountsUi, promotionFromAPI.spendLimitAmounts);
       $scope.benefitAmountsUi = addCurrencyCodeToArrayItems($scope.benefitAmountsUi, promotionFromAPI.benefitAmounts);
+      $scope.shouldDisableStartDate = !(dateUtility.isAfterToday($scope.promotion.startDate));
     }
 
     function handlePromiseSuccessHandler(promotionDataFromAPI) {
