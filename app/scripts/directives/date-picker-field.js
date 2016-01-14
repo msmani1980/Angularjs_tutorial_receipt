@@ -32,7 +32,8 @@ angular.module('ts5App')
           todayHighlight: true,
           maxDate: $scope.maxDate
         };
-        if ($scope.minDate) {
+
+        if ($scope.minDate && !$scope.disable) {
           datePickerOptions.startDate = $scope.minDate;
         }
 

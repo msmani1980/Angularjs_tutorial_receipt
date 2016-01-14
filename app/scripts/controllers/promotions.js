@@ -382,9 +382,10 @@ angular.module('ts5App')
       $scope.selectOptions.companyDiscountsCoupon = dataFromAPI.companyDiscounts;
     }
 
-    function getCompanyDiscountsCoupon() {
+    function getCompanyDiscountsCoupon(payload) {
+      payload = payload || { startDate: dateUtility.nowFormatted('YYYYMMDD') };
       initPromises.push(
-        promotionsFactory.getCompanyDiscountsCoupon().then(setCompanyDiscountsCoupon)
+        promotionsFactory.getCompanyDiscountsCoupon(payload).then(setCompanyDiscountsCoupon)
       );
     }
 
@@ -392,9 +393,10 @@ angular.module('ts5App')
       $scope.selectOptions.companyDiscountsVoucher = dataFromAPI.companyDiscounts;
     }
 
-    function getCompanyDiscountsVoucher() {
+    function getCompanyDiscountsVoucher(payload) {
+      payload = payload || { startDate: dateUtility.nowFormatted('YYYYMMDD') };
       initPromises.push(
-        promotionsFactory.getCompanyDiscountsVoucher().then(setCompanyDiscountsVoucher)
+        promotionsFactory.getCompanyDiscountsVoucher(payload).then(setCompanyDiscountsVoucher)
       );
     }
 
@@ -510,7 +512,20 @@ angular.module('ts5App')
       $scope.promotion.discountItem = getObjectByIdFromSelectOptions('masterItems', { id: promotionFromAPI.discountItemId });
       $scope.spendLimitAmountsUi = addCurrencyCodeToArrayItems($scope.spendLimitAmountsUi, promotionFromAPI.spendLimitAmounts);
       $scope.benefitAmountsUi = addCurrencyCodeToArrayItems($scope.benefitAmountsUi, promotionFromAPI.benefitAmounts);
+      $scope.shouldDisableStartDate = !(dateUtility.isAfterToday($scope.promotion.startDate));
     }
+
+    $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function (newData) {
+      if ($scope.promotion.startDate && $scope.promotion.endDate) {
+        var payload = {
+          startDate: dateUtility.formatDateForAPI(newData[0]),
+          endDate: dateUtility.formatDateForAPI(newData[1])
+        };
+
+        getCompanyDiscountsCoupon(payload);
+        getCompanyDiscountsVoucher(payload);
+      }
+    });
 
     function handlePromiseSuccessHandler(promotionDataFromAPI) {
       hideLoadingModal();
@@ -525,8 +540,6 @@ angular.module('ts5App')
       getBenefitTypes();
       getDiscountTypes();
       getPromotionTypes();
-      getCompanyDiscountsCoupon();
-      getCompanyDiscountsVoucher();
       getSalesCategories();
       getDiscountApplyTypes();
       getPromotionCategories();

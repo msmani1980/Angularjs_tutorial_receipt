@@ -104,19 +104,17 @@ describe('Service: promotionsFactory', function () {
   describe('companyDiscountService service calls', function() {
     it('should call getDiscountList when calling getCompanyDiscountsCoupon', function() {
       promotionsFactory.getCompanyDiscountsCoupon();
-      var mock = {
-        discountTypeId: 1,
-        startDate: today
-      };
+      var mock = jasmine.objectContaining({
+        discountTypeId: 1
+      });
       expect(companyDiscountService.getDiscountList).toHaveBeenCalledWith(mock);
     });
 
     it('should call getDiscountList when calling getCompanyDiscountsVoucher', function() {
       promotionsFactory.getCompanyDiscountsVoucher();
-      var mock = {
-        discountTypeId: 4,
-        startDate: today
-      };
+      var mock = jasmine.objectContaining({
+        discountTypeId: 4
+      });
       expect(companyDiscountService.getDiscountList).toHaveBeenCalledWith(mock);
     });
   });

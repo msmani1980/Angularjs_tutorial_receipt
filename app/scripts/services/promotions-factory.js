@@ -10,9 +10,7 @@
 angular.module('ts5App')
   .service('promotionsFactory', function (itemsService, recordsService, GlobalMenuService, stationsService,
                                           companyDiscountService, salesCategoriesService, currenciesService,
-                                          promotionCategoriesService, promotionsService, dateUtility) {
-
-    var today = dateUtility.nowFormatted('YYYYMMDD');
+                                          promotionCategoriesService, promotionsService) {
 
     function getMasterItems(searchParams) {
       return itemsService.getItemsList(searchParams, true);
@@ -34,18 +32,18 @@ angular.module('ts5App')
       return recordsService.getPromotionTypes();
     }
 
-    function getCompanyDiscountsCoupon() {
-      return companyDiscountService.getDiscountList({
-        discountTypeId: 1,
-        startDate: today
-      });
+    function getCompanyDiscountsCoupon(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 1
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
     }
 
-    function getCompanyDiscountsVoucher() {
-      return companyDiscountService.getDiscountList({
-        discountTypeId: 4,
-        startDate: today
-      });
+    function getCompanyDiscountsVoucher(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 4
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
     }
 
     function getSalesCategories(payload) {
