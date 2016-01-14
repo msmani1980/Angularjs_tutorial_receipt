@@ -34,7 +34,6 @@ describe('The Company Create Controller', function() {
     var html = $templateCache.get('/views/company-create.html');
     var compiled = $compile(angular.element(html))($scope);
     var view = angular.element(compiled[0]);
-    $scope.$digest();
     return view;
   }
 
