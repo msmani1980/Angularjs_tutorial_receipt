@@ -41,7 +41,10 @@ angular.module('ts5App')
 
     function setDataList(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
-      $scope.commissionData = $scope.commissionData.concat(dataFromAPI.response);
+      if (dataFromAPI.response) {
+        $scope.commissionData = $scope.commissionData.concat(angular.copy(dataFromAPI.response));
+      }
+
       hideLoadingBar();
     }
 
@@ -145,8 +148,12 @@ angular.module('ts5App')
     };
 
     $scope.shouldShowCommissionPercent = function (record) {
-      var recordTypeName = getNameForId(record.commissionPayableTypeId, $scope.commissionTypes);
-      return (recordTypeName !== 'Retail item');
+      if (record) {
+        var recordTypeName = getNameForId(record.commissionPayableTypeId, $scope.commissionTypes);
+        return (recordTypeName !== 'Retail item');
+      }
+
+      return false;
     };
 
     function getCrewBaseTypes() {

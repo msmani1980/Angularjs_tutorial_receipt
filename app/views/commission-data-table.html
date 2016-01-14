@@ -72,7 +72,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr class="ng-scope" ng-repeat="data in commissionData">
+      <tr class="ng-scope" ng-repeat="data in commissionData track by $index">
         <td>{{ getCrewBaseName(data.crewBaseTypeId) }}</td>
         <td>{{ getCommissionTypeName(data.commissionPayableTypeId) }}</td>
         <td>

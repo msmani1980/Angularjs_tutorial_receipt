@@ -1,5 +1,4 @@
 // TODO:
-// Add CRUD methods for companies
 // Write tests for this factory
 
 'use strict';
@@ -25,11 +24,11 @@ angular.module('ts5App')
     };
 
     var createCompany = function(payload) {
-      companyService.createCompany(payload);
+      return companyService.createCompany(payload);
     };
 
     var updateCompany = function(payload) {
-      companyService.updateCompany(payload);
+      return companyService.updateCompany(payload);
     };
 
     // Tags

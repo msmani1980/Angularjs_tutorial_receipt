@@ -96,7 +96,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       cashBag.selected = false;
       cashBag.submittedDate = (cashBag.isSubmitted === 'true') ? dateUtility.formatDateForApp(cashBag.updatedOn) : '-';
       cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
-      cashBag.submittedBy = (cashBag.originationSource === 2) ? 'Auto' : (cashBag.cashbagSubmittedBy || '-');
+      cashBag.submittedBy = (cashBag.originationSource === 1 && cashBag.isSubmitted === 'true') ? 'Auto' : (cashBag.cashbagSubmittedBy || '-');
     }
 
     this.getCashBagListSuccessHandler = function (dataFromAPI) {
