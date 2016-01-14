@@ -22,13 +22,18 @@
 
           <div class="modal-body">
             <p>The Dispatch Quantity for the following items varies from the Required Quantity.
-              Are you sure you want to continue?</p>
+              <span ng-show="canProceedWithExceededVariance">Are you sure you want to continue?</span>
+              <span ng-hide="canProceedWithExceededVariance">Please adjust the highlighted rows.</span>
+            </p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default"
-                    ng-click="save()" data-dismiss="modal">Yes
+            <button type="button" class="btn btn-default" ng-click="save()" data-dismiss="modal" ng-show="canProceedWithExceededVariance">
+              Yes
             </button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">
+              <span ng-show="canProceedWithExceededVariance">No</span>
+              <span ng-hide="canProceedWithExceededVariance">Ok</span>
+            </button>
           </div>
         </div>
       </div>
