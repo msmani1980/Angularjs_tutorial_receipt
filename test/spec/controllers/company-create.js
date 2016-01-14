@@ -1,13 +1,20 @@
 'use strict';
 
 fdescribe('The Company Create Controller', function() {
-
-  // load the controller's module
-  //TODO:remove all retail item junk
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/company-create.json'));
+  beforeEach(module('served/company-create.json',
+    'served/company-types.json',
+    'served/company-currency-globals.json',
+    'served/company-list.json',
+    'served/country-list.json',
+    'served/languages.json'));
 
-  var $rootScope, $scope, $controller, $location, CompanyCreateCtrl, $httpBackend;
+  var CompanyCreateCtrl;
+  var $rootScope;
+  var $scope;
+  var $controller;
+  var $location;
+  var $httpBackend;
   var companyCreateJSON;
 
   function createController($injector) {
@@ -21,15 +28,7 @@ fdescribe('The Company Create Controller', function() {
       $scope: $scope
     });
   }
-  /*
-    function renderView($templateCache, $compile) {
-      var html = $templateCache.get('/views/company-create.html');
-      var compiled = $compile(angular.element(html))($scope);
-      var view = angular.element(compiled[0]);
-      $scope.$digest();
-      return view;
-    }
-  */
+
   describe('The CompanyCreateCtrl', function() {
     beforeEach(inject(function($injector) {
       createController($injector);
@@ -40,6 +39,87 @@ fdescribe('The Company Create Controller', function() {
     it('should have a the route /company-create', function() {
       expect($location.path()).toBe('/company-create');
     });
+  });
+
+  describe('getDependencies() method', function() {
+    var responseArray;
+    var companiesFactory;
+    var currencyFactory;
+    var companyTypesService;
+    var languagesService;
+    var countriesService;
+    var getCompanyTypesDeferred;
+    var getCompanyCurrenciesDeferred;
+    var getCompanyListDeferred;
+    var getLaunguagesListDeferred;
+    var getCountriesListDeferred;
+    var getDependenciesDeferred;
+
+    beforeEach(inject(function($injector, $q, $rootScope, _servedCompanyTypes_, _servedCompanyCurrencyGlobals_,
+      _servedCompanyList_, _servedLanguages_, _servedCountryList_) {
+
+      responseArray = [
+        _servedCompanyTypes_,
+        _servedCompanyCurrencyGlobals_,
+        _servedCompanyList_,
+        _servedLanguages_,
+        _servedCountryList_
+      ];
+
+      companiesFactory = $injector.get('companiesFactory');
+      currencyFactory = $injector.get('currencyFactory');
+      companyTypesService = $injector.get('companyTypesService');
+      languagesService = $injector.get('languagesService');
+      countriesService = $injector.get('countriesService');
+
+      getCompanyTypesDeferred = $q.defer();
+      getCompanyCurrenciesDeferred = $q.defer();
+      getCompanyListDeferred = $q.defer();
+      getLaunguagesListDeferred = $q.defer();
+      getCountriesListDeferred = $q.defer();
+      getDependenciesDeferred = $q.defer();
+
+      getCompanyTypesDeferred.resolve();
+      getCompanyCurrenciesDeferred.resolve();
+      getCompanyListDeferred.resolve();
+      getLaunguagesListDeferred.resolve();
+      getCountriesListDeferred.resolve();
+
+      spyOn(companyTypesService, 'getCompanyTypes').and.returnValue(responseArray[0]);
+      spyOn(currencyFactory, 'getCompanyCurrencies').and.returnValue(responseArray[1]);
+      spyOn(companiesFactory, 'getCompanyList').and.returnValue(responseArray[2]);
+      spyOn(languagesService, 'getLanguagesList').and.returnValue(responseArray[3]);
+      spyOn(countriesService, 'getCountriesList').and.returnValue(responseArray[4]);
+      createController($injector);
+      getDependenciesDeferred.resolve(responseArray);
+    }));
+
+    it('should expect dependencies to be empty', function() {
+      expect($scope.companyTypes).toBeUndefined();
+      expect($scope.currencies).toBeUndefined();
+      expect($scope.companies).toBeUndefined();
+      expect($scope.languages).toBeUndefined();
+      expect($scope.countries).toBeUndefined();
+    });
+
+    describe('setDependencies', function() {
+      beforeEach(function() {
+        spyOn(CompanyCreateCtrl, 'setDependencies').and.callThrough();
+        CompanyCreateCtrl.getDependencies();
+        $scope.$digest();
+      });
+      it('should have been called setDependencies after the promises are resolved', function() {
+        expect(CompanyCreateCtrl.setDependencies).toHaveBeenCalled();
+      });
+      it('should set all dependencies', function() {
+        expect($scope.companyTypes).toBeDefined();
+        expect($scope.currencies).toBeDefined();
+        expect($scope.companies).toBeDefined();
+        expect($scope.languages).toBeDefined();
+        expect($scope.countries).toBeDefined();
+      });
+    });
+
   });
 
   describe('The formData collection', function() {
@@ -159,6 +239,37 @@ fdescribe('The Company Create Controller', function() {
       $scope.formData.taxes = companyCreateJSON.taxes;
       $scope.addTax();
       expect($scope.formData.taxes.length).toEqual(3);
+    });
+  });
+
+
+  describe('Country VAT', function() {
+    beforeEach(inject(function($injector) {
+      createController($injector);
+    }));
+    it('should be empty', function() {
+      expect($scope.formData.countryVats.length).toBe(0);
+    });
+    it('should add a Country VAT', function() {
+      $scope.addCountryVat();
+      expect($scope.formData.countryVats.length).toBe(1);
+    });
+    it('should remove a Country VAT', function() {
+      $scope.addCountryVat();
+      $scope.removeCountryVat($scope.formData.countryVats[0]);
+      expect($scope.formData.countryVats.length).toBe(0);
+    });
+    it('should add a VAT Amount', function() {
+      $scope.addCountryVat();
+      $scope.addVatAmount($scope.formData.countryVats[0]);
+      expect($scope.formData.countryVats[0].vatAmounts.length).toBe(1);
+    });
+    it('should remove a VAT Amount', function() {
+      $scope.addCountryVat();
+      $scope.addVatAmount($scope.formData.countryVats[0]);
+      $scope.removeVatAmount($scope.formData.countryVats[0], $scope.formData.countryVats[0].vatAmounts[0]);
+      expect(
+        $scope.formData.countryVats[0].vatAmounts[0]).toBeUndefined();
     });
   });
 
