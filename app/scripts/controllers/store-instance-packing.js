@@ -89,7 +89,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $scope.variance = (allowedVarianceList.length) ? allowedVarianceList[0].percentage : defaultVariance;
       $scope.canProceedWithExceededVariance = $scope.variance > 0;
-      console.log($scope.variance, $scope.canProceedWithExceededVariance);
     };
 
     this.getThresholdVariance = function () {
