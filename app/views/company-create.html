@@ -80,7 +80,7 @@
                         placeholder="Company Legal Name" min-length="1" max-length="40"></input-text>
 
             <input-text label="Company Code" name="companyCode" required="true" pattern="regexp.alphanumeric"
-                        placeholder="Company Code" min-length="1" max-length="30"></input-text>
+                        placeholder="Company Code" min-length="1" max-length="10"></input-text>
 
             <label>Company Status</label>
             <div class="form-group">
@@ -122,7 +122,7 @@
                          custom-validity
                          required
                          type="text"
-                         maxlength="25"
+                         maxlength="15"
                          name="taxId-{{$index}}"
                          class="form-control"
                          id="taxId-{{$index}}"

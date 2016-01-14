@@ -273,6 +273,15 @@ fdescribe('The Company Create Controller', function() {
     });
   });
 
+  describe('addCommonClass', function() {
+    beforeEach(inject(function($injector) {
+      createController($injector);
+    }));
+    it('should be empty', function() {
+      expect($scope.formData.companyCabinClasses).toBe(0);
+    });
+  });
+
   describe('$scope.uiSelectTemplateReady variable', function() {
     it('should be defined', function() {
       expect($scope.uiSelectTemplateReady).toBeDefined();

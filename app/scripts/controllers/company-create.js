@@ -41,6 +41,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
+    //TODO: implement updateCompany/Edit functionality
     this.checkFormState = function() {
       var path = $location.path();
       if (path.search('/company-edit') !== -1 && $routeParams.id) {
@@ -49,6 +50,17 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       } else if (path.search('/company-edit') !== -1) {
         $scope.viewOnly = true;
       }
+    };
+
+    //TODO: implement updateCompany/Edit functionality
+    this.updateViewName = function(company) {
+      var prefix = 'Viewing ';
+
+      if ($scope.editingCompany) {
+        prefix = 'Editing ';
+      }
+
+      $scope.viewName = prefix + company.companyName;
     };
 
     this.addCommonClass = function() {
@@ -65,20 +77,26 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       }
     };
 
+    ///TODO: implement updateCompany/Edit functionality
+    // gets an company to $scope.editingCompany
+    this.getCompany = function(id) {
+      $this.showLoadingModal('We are getting your Company data!');
+      companiesFactory.getCompany(id).then(function(data) {
+        $this.updateViewName(data.company); // TODO: ?
+        $this.setUIReady();
+      });
+    };
+
     this.calculateFieldsVisibility = function() {
       $scope.showAdditionalFields = ($scope.formData.companyTypeId === '1');
       $this.addCommonClass();
       $scope.showBaseCurrency = lodash.includes(['1', '2', '5'], $scope.formData.companyTypeId);
     };
 
-    this.updateViewName = function(company) {
-      var prefix = 'Viewing ';
-
-      if ($scope.editingCompany) {
-        prefix = 'Editing ';
-      }
-
-      $scope.viewName = prefix + company.companyName;
+    this.initWatchers = function() {
+      $scope.$watch('formData.companyTypeId', function() {
+        $this.calculateFieldsVisibility();
+      });
     };
 
     this.setUIReady = function() {
@@ -91,15 +109,6 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $this.initWatchers();
       $this.calculateFieldsVisibility();
       return $this.setUIReady();
-    };
-
-    // gets an company to $scope.editingCompany
-    this.getCompany = function(id) {
-      $this.showLoadingModal('We are getting your Company data!');
-      companiesFactory.getCompany(id).then(function(data) {
-        $this.updateViewName(data.company); // TODO: ?
-        $this.setUIReady();
-      });
     };
 
     this.setDependencies = function(response) {
@@ -131,12 +140,6 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $q.all(dependencyPromises).then($this.setDependencies, $this.errorHandler);
     };
 
-    this.initWatchers = function() {
-      $scope.$watch('formData.companyTypeId', function() {
-        $this.calculateFieldsVisibility();
-      });
-    };
-
     this.init = function() {
       $this.getDependencies();
     };
@@ -152,33 +155,36 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $this.showSuccessModal('create');
     };
 
-    this.updateSuccessHandler = function() {
-      $this.hideLoadingModal();
-      $this.showSuccessModal('update');
-    };
-
-    this.createCompanyUpdatePromises = function(payload) {
-      return [
-        companiesFactory.updateCompany($routeParams.id, payload)
-      ];
-    };
-
     this.createCompanyCreatePromises = function(payload) {
       return [
         companiesFactory.createCompany(payload)
       ];
     };
 
+    this.createCompany = function(payload) {
+      $this.showLoadingModal('We are creating your Company');
+      var promises = $this.createCompanyCreatePromises(payload);
+      $q.all(promises).then($this.createSuccessHandler, $this.errorHandler);
+    };
+
+    //TODO: implement updateCompany/Edit functionality
     this.updateCompany = function(payload) {
       $this.showLoadingModal('We are updating your Company');
       var promises = $this.createCompanyUpdatePromises(payload);
       $q.all(promises).then($this.updateSuccessHandler, $this.errorHandler);
     };
 
-    this.createCompany = function(payload) {
-      $this.showLoadingModal('We are creating your Company');
-      var promises = $this.createCompanyCreatePromises(payload);
-      $q.all(promises).then($this.createSuccessHandler, $this.errorHandler);
+    //TODO: implement updateCompany/Edit functionality
+    this.updateSuccessHandler = function() {
+      $this.hideLoadingModal();
+      $this.showSuccessModal('update');
+    };
+
+    //TODO: implement updateCompany/Edit functionality
+    this.createCompanyUpdatePromises = function(payload) {
+      return [
+        companiesFactory.updateCompany($routeParams.id, payload)
+      ];
     };
 
     this.validateForm = function() {
@@ -220,7 +226,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       return company;
     };
 
-    //$scope functions. these will become this.functionName() in v2
+    //$scope functions
     $scope.addTax = function() {
       if (!$scope.isTaxIdButtonDisabled()) {
         $scope.formData.taxes.push({});
