@@ -55,6 +55,14 @@ angular.module('ts5App')
 
     function getItemsSuccessHandler(dataFromAPI) {
       _menuItems = angular.copy(dataFromAPI.response);
+      angular.forEach($scope.items, function(item) {
+        item.menuQuantity = getMenuQuantity(item.itemMasterId);
+      });
+
+      angular.forEach($scope.storeTwoItemList, function(item) {
+        item.menuQuantity = getMenuQuantity(item.itemMasterId);
+      });
+
     }
 
     function getStoreInstanceMenuItems() {
