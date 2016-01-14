@@ -1,6 +1,7 @@
 'use strict';
 
-fdescribe('The Company Create Controller', function() {
+describe('The Company Create Controller', function() {
+
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module('served/company-create.json',
     'served/company-types.json',
@@ -27,6 +28,14 @@ fdescribe('The Company Create Controller', function() {
     CompanyCreateCtrl = $controller('CompanyCreateCtrl', {
       $scope: $scope
     });
+  }
+
+  function renderView($templateCache, $compile) {
+    var html = $templateCache.get('/views/company-create.html');
+    var compiled = $compile(angular.element(html))($scope);
+    var view = angular.element(compiled[0]);
+    $scope.$digest();
+    return view;
   }
 
   describe('The CompanyCreateCtrl', function() {
@@ -79,19 +88,20 @@ fdescribe('The Company Create Controller', function() {
       getCountriesListDeferred = $q.defer();
       getDependenciesDeferred = $q.defer();
 
-      getCompanyTypesDeferred.resolve();
-      getCompanyCurrenciesDeferred.resolve();
-      getCompanyListDeferred.resolve();
-      getLaunguagesListDeferred.resolve();
-      getCountriesListDeferred.resolve();
-
       spyOn(companyTypesService, 'getCompanyTypes').and.returnValue(responseArray[0]);
       spyOn(currencyFactory, 'getCompanyCurrencies').and.returnValue(responseArray[1]);
       spyOn(companiesFactory, 'getCompanyList').and.returnValue(responseArray[2]);
       spyOn(languagesService, 'getLanguagesList').and.returnValue(responseArray[3]);
       spyOn(countriesService, 'getCountriesList').and.returnValue(responseArray[4]);
-      createController($injector);
+
+      getCompanyTypesDeferred.resolve();
+      getCompanyCurrenciesDeferred.resolve();
+      getCompanyListDeferred.resolve();
+      getLaunguagesListDeferred.resolve();
+      getCountriesListDeferred.resolve();
       getDependenciesDeferred.resolve(responseArray);
+      createController($injector);
+
     }));
 
     it('should expect dependencies to be empty', function() {
@@ -119,7 +129,6 @@ fdescribe('The Company Create Controller', function() {
         expect($scope.countries).toBeDefined();
       });
     });
-
   });
 
   describe('The formData collection', function() {
@@ -216,6 +225,29 @@ fdescribe('The Company Create Controller', function() {
     });
   });
 
+  describe('$scope.submitForm', function() {
+    var createCompanyDeferred;
+    var response = [];
+    beforeEach(inject(function($injector, $q, $templateCache, $compile) {
+      renderView($templateCache, $compile);
+      createCompanyDeferred = $q.defer();
+      spyOn(CompanyCreateCtrl, 'createCompany').and.callThrough();
+      spyOn(CompanyCreateCtrl, 'formatPayload').and.callThrough();
+      spyOn(CompanyCreateCtrl, 'validateForm').and.callThrough();
+      $scope.formData = angular.copy(companyCreateJSON);
+      $scope.submitForm($scope.formData);
+      $httpBackend.when('POST').respond(response.$promise);
+    }));
+    it('should call validateForm', function() {
+      expect(CompanyCreateCtrl.validateForm).toHaveBeenCalled();
+    });
+    it('should call createCompany', function() {
+      createCompanyDeferred.resolve();
+      var payload = CompanyCreateCtrl.formatPayload(companyCreateJSON);
+      expect(CompanyCreateCtrl.createCompany).toHaveBeenCalledWith(payload);
+    });
+  });
+
   describe('Taxes', function() {
     beforeEach(inject(function($injector) {
       createController($injector);
@@ -241,7 +273,6 @@ fdescribe('The Company Create Controller', function() {
       expect($scope.formData.taxes.length).toEqual(3);
     });
   });
-
 
   describe('Country VAT', function() {
     beforeEach(inject(function($injector) {
@@ -295,7 +326,6 @@ fdescribe('The Company Create Controller', function() {
       $scope.removeCabinClass($scope.formData.companyCabinClasses[0]);
       expect($scope.formData.companyCabinClasses.length).toBe(0);
     });
-
   });
 
   describe('$scope.uiSelectTemplateReady variable', function() {
