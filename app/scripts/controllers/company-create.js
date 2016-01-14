@@ -269,7 +269,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     $scope.removeCabinClass = function(cabinClass) {
       if (cabinClass.readOnly) {
-        return;
+        return false;
       }
 
       $scope.formData.companyCabinClasses = lodash.filter($scope.formData.companyCabinClasses, function(cc) {

@@ -255,9 +255,9 @@ fdescribe('The Company Create Controller', function() {
       expect($scope.formData.countryVats.length).toBe(1);
     });
     it('should remove a Country VAT', function() {
-      $scope.addCountryVat();
+      $scope.formData.countryVats = angular.copy(companyCreateJSON.countryVats);
       $scope.removeCountryVat($scope.formData.countryVats[0]);
-      expect($scope.formData.countryVats.length).toBe(0);
+      expect($scope.formData.countryVats.length).toBe(1);
     });
     it('should add a VAT Amount', function() {
       $scope.addCountryVat();
@@ -273,13 +273,29 @@ fdescribe('The Company Create Controller', function() {
     });
   });
 
-  describe('addCommonClass', function() {
+  describe('addCabinClass and add companyCabinClass', function() {
     beforeEach(inject(function($injector) {
       createController($injector);
     }));
     it('should be empty', function() {
-      expect($scope.formData.companyCabinClasses).toBe(0);
+      expect($scope.formData.companyCabinClasses).toEqual([]);
     });
+    it('$scope.addCabinClass should add a class', function() {
+      $scope.addCabinClass();
+      expect($scope.formData.companyCabinClasses.length).toBe(1);
+    });
+    it('$scope.removeCabinClass should return false if readOnly', function() {
+      $scope.addCabinClass();
+      var cabin = companyCreateJSON.companyCabinClasses[0];
+      cabin.readOnly = true;
+      expect($scope.removeCabinClass(cabin)).toBeFalsy();
+    });
+    it('$scope.removeCabinClass should remove a class', function() {
+      $scope.addCabinClass();
+      $scope.removeCabinClass($scope.formData.companyCabinClasses[0]);
+      expect($scope.formData.companyCabinClasses.length).toBe(0);
+    });
+
   });
 
   describe('$scope.uiSelectTemplateReady variable', function() {
