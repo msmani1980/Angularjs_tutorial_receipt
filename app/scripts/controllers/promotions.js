@@ -515,16 +515,12 @@ angular.module('ts5App')
       $scope.shouldDisableStartDate = !(dateUtility.isAfterToday($scope.promotion.startDate));
     }
 
-    $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function(newData, oldData) {
+    $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function (newData) {
       if ($scope.promotion.startDate && $scope.promotion.endDate) {
-        var payload = {};
-        if (newData[0] !== oldData[0]) {
-          payload.startDate = dateUtility.formatDateForAPI(newData[0]);
-        }
-
-        if (newData[1] !== oldData[1]) {
-          payload.endDate = dateUtility.formatDateForAPI(newData[1]);
-        }
+        var payload = {
+          startDate: dateUtility.formatDateForAPI(newData[0]),
+          endDate: dateUtility.formatDateForAPI(newData[1])
+        };
 
         getCompanyDiscountsCoupon(payload);
         getCompanyDiscountsVoucher(payload);
