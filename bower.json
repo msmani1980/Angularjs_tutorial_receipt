@@ -21,7 +21,6 @@
     "font-awesome": "~4.4.0",
     "ng-file-upload": "~4.0.4",
     "ng-lodash": "^0.3.0",
-    "ngInfiniteScroll": "1.0.0",
     "ngtoast": "~1.5.3",
     "select2": "3.4.8",
     "angular-bootstrap-switch": "~0.4.1",
@@ -31,7 +30,8 @@
     "aes": "http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js",
     "angular-scroll": "~0.7.3",
     "sprintf": "~1.0.3",
-    "angular-animate": "~1.4.8"
+    "angular-animate": "~1.4.8",
+    "ngInfiniteScroll": "https://raw.githubusercontent.com/rodrigocuriel/ngInfiniteScroll/master/build/ng-infinite-scroll.js"
   },
   "devDependencies": {
     "angular-mocks": "^1.3.0"
