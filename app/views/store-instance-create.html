@@ -129,10 +129,9 @@
     </footer>
 
   </form>
-
   <confirmation-modal
    title="The Store you selected is already associated to another Instance"
-   body="Currently Store Number ABC for Schedule Date {{formData.scheduleDate}} and Store Instance {{ onFloorInstance.id }} is in the 'On Floor' status. You can either Redispatch this, End this, or press Cancel to select a different Store."
+   body="Currently Store Number {{onFloorInstance.storeNumber}} for Schedule Date {{onFloorInstance.scheduleDateFormatted}} and Store Instance {{ onFloorInstance.id }} is in the 'On Floor' status. You can either Redispatch this, End this, or press Cancel to select a different Store."
    confirmation-callback="goToActionState('redispatch')"
    confirmation-label="Redispatch"
    alternative-callback="goToActionState('end-instance')"
