@@ -819,6 +819,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('dispatch')) {
         $scope.onFloorInstance = $this.checkForOnFloorInstance();
         if (angular.isDefined($scope.onFloorInstance) && $scope.onFloorInstance.id) {
+          $scope.onFloorInstance.scheduleDateFormatted = dateUtility.formatDateForApp($scope.onFloorInstance.scheduleDate);
           $this.displayConfirmDialog();
           return;
         }
