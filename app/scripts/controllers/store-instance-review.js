@@ -53,6 +53,14 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    function getMenuQuantity(itemMasterId) {
+      var masterItem = lodash.findWhere(_menuItems, {
+        itemMasterId: itemMasterId
+      }, true);
+
+      return masterItem ? masterItem.menuQuantity : 0;
+    }
+
     function getItemsSuccessHandler(dataFromAPI) {
       _menuItems = angular.copy(dataFromAPI.response);
       angular.forEach($scope.items, function(item) {
@@ -141,14 +149,6 @@ angular.module('ts5App')
       }
 
       return sealColor[0].color;
-    }
-
-    function getMenuQuantity(itemMasterId) {
-      var masterItem = lodash.findWhere(_menuItems, {
-        itemMasterId: itemMasterId
-      }, true);
-
-      return masterItem ? masterItem.menuQuantity : 0;
     }
 
     function sealTypeListOrder(sealType) {

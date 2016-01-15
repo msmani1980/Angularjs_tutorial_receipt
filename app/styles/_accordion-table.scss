@@ -7,8 +7,7 @@
 }
 
 .subversion-row {
-  background-color: #f0f0f0;
-
+  background-color: #f2f2f2;
 }
 
 .empty-col {
@@ -16,7 +15,32 @@
 }
 
 .open-accordion {
-  border-left: 4px solid #5e5e5e;
+  border-left: 4px solid #aaa;
+}
+
+.open-accordion2 {
+  border-left: 4px solid #888;
+}
+
+.open-accordion3 {
+  border-left: 4px solid #666;
+}
+
+.open-accordion4 {
+  border-left: 4px solid #444;
+}
+
+.open-row {
+  background-color: #f2f2f2;
+}
+.open-row2 {
+  background-color: #e2e2e2;
+}
+.open-row3 {
+  background-color: #d2d2d2;
+}
+.open-row4 {
+  background-color: #c2c2c2;
 }
 
 .slideUp.ng-hide {
