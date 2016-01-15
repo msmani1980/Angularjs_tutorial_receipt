@@ -466,6 +466,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       spyOn(scope, 'undispatch').and.callThrough();
       scope.$digest();
       store = angular.copy(scope.storeInstanceList[0]);
+      console.log(store.storeNumber, store.scheduleDate, store.id);
       scope.displayUndispatchConfirmation(store);
       mockDialogObject = {
         title: 'Are you sure you want to undispatch Instance ' + store.id + '?',

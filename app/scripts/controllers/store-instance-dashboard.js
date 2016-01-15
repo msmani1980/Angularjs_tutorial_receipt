@@ -625,7 +625,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     $scope.displayUndispatchConfirmation = function(store) {
       $scope.undispatchStoreDialog = {
-        title: sprintf('Are you sure you want to undispatch Store Number %d for Schedule Date %s and Store Instance %d?', store.storeNumber, store.scheduleDate, store.id),
+        title: sprintf('Are you sure you want to undispatch Store Number %s for Schedule Date %s and Store Instance %d?', store.storeNumber, store.scheduleDate, store.id),
         confirmationCallback: function() {
           $scope.undispatch(store.id);
         }
