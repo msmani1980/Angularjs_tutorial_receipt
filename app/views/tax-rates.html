@@ -188,7 +188,7 @@
         <!-- Switch for companyTaxRateStations -->
         <td class="animate-switch" ng-switch-when="read">
           <span class="label label-primary tax-label" ng-repeat="station in taxRate.companyTaxRateStations | orderBy:'stationCode'">
-            <span class="fa fa-building"></span>       {{ station.stationCode }}
+            {{ station.stationCode }}
           </span>
         </td>
         <td class="animate-switch tax-rates-multi-select" ng-switch-when="edit">
@@ -231,9 +231,7 @@
         </td>
         <!-- Switch for showCompanyCurrency -->
         <td class="animate-switch" ng-switch-when="read">
-          <span class="label label-success" ng-show="showCurrencyCode(taxRate)">
-            <span class="fa fa-money"></span>       {{ taxRate.currency.code }}
-          </span>
+           {{ taxRate.currency.code }}
         </td>
         <td class="animate-switch tax-rates-ui-select" ng-switch-when="edit">
           <ui-select ng-model="taxRate.currency" theme="bootstrap" name="currencyCode" ng-disabled="isTaxRateCurrencyCodeDisabled(taxRate)">
