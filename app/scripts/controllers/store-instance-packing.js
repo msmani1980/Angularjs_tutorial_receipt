@@ -348,7 +348,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.addInboundQuantityToPayload = function (item, isRedispatch) {
       var didInboundQuantityChange = (angular.isDefined(item.inboundQuantity)) ? parseInt(item.inboundQuantity) !== item.oldInboundQuantity : true;
-      if (parseInt(item.inboundQuantity) > 0 && didInboundQuantityChange) {
+      if (didInboundQuantityChange) {
         var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
         var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName);
         if (item.inboundId) {
@@ -615,7 +615,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
         $this.setQuantityByType(item, itemMatch, false);
         if (!ignoreEposData && ePosItem) {
-          itemMatch.oldInboundQuantity = ePosItem.quantity;
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
       });
@@ -645,7 +644,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
         $this.setQuantityByType(item, itemMatch, true);
         if (!ignoreEposData && ePosItem) {
-          itemMatch.oldInboundQuantity = ePosItem.quantity;
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
       });
