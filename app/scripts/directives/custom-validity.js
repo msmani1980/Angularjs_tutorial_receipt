@@ -51,8 +51,8 @@ angular.module('ts5App')
           if (angular.isUndefined(value)) {
             return true;
           }
-
-          return (typeof value === 'string' && regexObj[0].test(value));
+          
+          return regexObj[0].test(value);
         };
 
         if (attrs.customPattern.contains('currency')) {
