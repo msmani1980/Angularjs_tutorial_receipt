@@ -223,6 +223,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       company.companyCabinClasses = $this.formatCompanyCabinClasses(company);
       company.languages = $this.formatCompanyLanguages(company.languages);
       company.eposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
+      company.isActive = (company.isActive === true) ? company.isActive : false;
       return company;
     };
 
