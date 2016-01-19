@@ -38,11 +38,22 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     $scope.uiSelectTemplateReady = false;
     $scope.isVoucherSelected = false;
     $scope.isVirtualSelected = false;
+    $scope.isLinkCharacteristics = false;
 
     $scope.$watch('formData.itemTypeId', function(selectedItemType) {
       $scope.isVoucherSelected = (parseInt(selectedItemType) === 3);
       $scope.isVirtualSelected = (parseInt(selectedItemType) === 2);
       $scope.filterCharacteristics();
+    }, true);
+
+    $scope.$watch('formData.characteristics', function(characteristics) {
+      if (!characteristics) {
+        return;
+      }
+      
+      $scope.isLinkCharacteristics = characteristics.filter(function (characteristic) {
+        return characteristic.id === 9;
+      }).length > 0;
     }, true);
 
     this.checkIfViewOnly = function() {
