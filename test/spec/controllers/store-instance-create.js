@@ -1274,13 +1274,8 @@ describe('Store Instance Create Controller', function() {
         'Starting the End Instance process');
     });
 
-    it('should display the loading modal, when saveAndExit is passed', function() {
-      mockEndStoreInstance(true);
-      expect(StoreInstanceCreateCtrl.showLoadingModal).toHaveBeenCalledWith(
-        'Loading Store Instance Dashboard');
-    });
-
     it('should call the updateStoreInstance method on the factory', function() {
+      mockEndStoreInstance(true);
       expect(storeInstanceService.updateStoreInstance).toHaveBeenCalled();
     });
 
