@@ -136,6 +136,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       };
     };
 
+    this.getFormattedOperationalDaysPayload = function() {
+      var start = dateUtility.getOperationalDay($scope.formData.scheduleDate);
+      return encodeURI([start, 7]);
+    };
+
     this.setCatererStationList = function(dataFromAPI) {
       $scope.cateringStationList = angular.copy(dataFromAPI.response);
     };
@@ -819,7 +824,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('dispatch')) {
         $scope.onFloorInstance = $this.checkForOnFloorInstance();
         if (angular.isDefined($scope.onFloorInstance) && $scope.onFloorInstance.id) {
-          $scope.onFloorInstance.scheduleDateFormatted = dateUtility.formatDateForApp($scope.onFloorInstance.scheduleDate);
           $this.displayConfirmDialog();
           return;
         }
@@ -1114,7 +1118,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getScheduleNumbers = function() {
       var datesForApi = $this.getFormattedDatesPayload();
-      schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate)
+      var operationalDays = this.getFormattedOperationalDaysPayload();
+      schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate,
+          operationalDays)
         .then(this.setScheduleNumbers);
     };
 

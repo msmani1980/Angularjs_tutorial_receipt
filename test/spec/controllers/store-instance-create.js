@@ -955,6 +955,7 @@ describe('Store Instance Create Controller', function() {
       initController();
       resolveAllDependencies();
       spyOn(StoreInstanceCreateCtrl, 'getFormattedDatesPayload').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'getFormattedOperationalDaysPayload').and.callThrough();
       $scope.$digest();
     });
 
@@ -977,6 +978,24 @@ describe('Store Instance Create Controller', function() {
       };
       expect(StoreInstanceCreateCtrl.getFormattedDatesPayload()).toEqual(queryControl);
     });
+
+    it('should call the getFormattedOperationalDaysPayload function when getMenuMasterList is called', function() {
+      StoreInstanceCreateCtrl.getMenuMasterList();
+      expect(StoreInstanceCreateCtrl.getFormattedOperationalDaysPayload).toHaveBeenCalled();
+    });
+
+    it('should call the getFormattedOperationalDaysPayload function when getStoresList is called', function() {
+      StoreInstanceCreateCtrl.getStoresList();
+      expect(StoreInstanceCreateCtrl.getFormattedOperationalDaysPayload).toHaveBeenCalled();
+    });
+
+    it('should call return a query object and encodeURI', function() {
+      $scope.formData.scheduleDate = '10/01/2015';
+      $scope.$digest();
+      var queryControl = '4,7';
+      expect(StoreInstanceCreateCtrl.getFormattedOperationalDaysPayload()).toEqual(queryControl);
+    });
+
 
   });
 
