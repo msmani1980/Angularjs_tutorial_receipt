@@ -18,30 +18,50 @@
   border-left: 4px solid #aaa;
 }
 
-.open-accordion2 {
-  border-left: 4px solid #888;
+.categoryLevel1 {
+  background-color: #f5f5f5;
 }
 
-.open-accordion3 {
-  border-left: 4px solid #666;
+.categoryLevel2 {
+  background-color: #f0f0f0;
 }
 
-.open-accordion4 {
-  border-left: 4px solid #444;
+.categoryLevel3 {
+  background-color: #e5e5e5;
+}
+
+.categoryLevel4 {
+  background-color: #e0e0e0;
+}
+
+.categoryLevel5 {
+  background-color: #d5d5d5;
+}
+
+.categoryLevel6 {
+  background-color: #d0d0d0;
+}
+
+.categoryLevel7 {
+  background-color: #c5c5c5;
+}
+
+.categoryLevel8 {
+  background-color: #c0c0c0;
+}
+
+.categoryLevel9 {
+  background-color: #b5b5b5;
+}
+
+.categoryLevel10 {
+  background-color: #b0b0b0;
 }
 
 .open-row {
   background-color: #f2f2f2;
 }
-.open-row2 {
-  background-color: #e2e2e2;
-}
-.open-row3 {
-  background-color: #d2d2d2;
-}
-.open-row4 {
-  background-color: #c2c2c2;
-}
+
 
 .slideUp.ng-hide {
   opacity: 1;
