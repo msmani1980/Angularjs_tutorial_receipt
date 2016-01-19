@@ -402,7 +402,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.isStepOneFromStepTwo = function(apiData) {
-      if (apiData && apiData.id === parseInt($localStorage.stepTwoFromStepOne.storeId)) {
+      var stepTwoStoreId = (angular.isDefined($localStorage.stepTwoFromStepOne.storeId) ? parseInt($localStorage.stepTwoFromStepOne
+          .storeId) :
+        null);
+      if (apiData && apiData.id === stepTwoStoreId) {
         return (angular.isNumber(apiData.prevStoreInstanceId));
       }
     };
@@ -969,7 +972,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
         $this.createStoreInstanceErrorHandler
       );
-
+      $localStorage.stepTwoFromStepOne.storeId = null;
     };
 
     this.editDispatchedStoreInstance = function(saveAndExit) {
