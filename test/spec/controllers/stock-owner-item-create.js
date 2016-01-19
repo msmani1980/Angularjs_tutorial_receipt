@@ -127,7 +127,7 @@ describe('The Stock Owner Item Create Controller', function () {
     });
 
     describe('getDependencies() method', function () {
-      var responseArray, companiesFactory, currencyFactory, itemsFactory, salesCategoriesDeferred, tagsListDeferred, taxTypeDeferred, masterCurrenciesListDeferred, allergenListDeferred, itemTypesDeferred, characteristicsDeferred, dimensionListDeferred, volumeListDeferred, weightListDeferred, companyDeferred, itemsListDeferred;
+      var responseArray, companiesFactory, currencyFactory, itemsFactory, salesCategoriesDeferred, tagsListDeferred, taxTypeDeferred, masterCurrenciesListDeferred, allergenListDeferred, itemTypesDeferred, characteristicsDeferred, dimensionListDeferred, volumeListDeferred, weightListDeferred, companyDeferred, itemsListDeferred, characteristics;
 
       beforeEach(inject(function ($injector, $q, $rootScope, _servedSalesCategories_, _servedTags_, _servedTaxTypes_,
                                   _servedCurrencies_, _servedAllergens_, _servedItemTypes_, _servedCharacteristics_,
@@ -147,6 +147,8 @@ describe('The Stock Owner Item Create Controller', function () {
           _servedItemsList_,
           _servedCompany_
         ];
+
+        characteristics = _servedCharacteristics_;
 
         companiesFactory = $injector.get('companiesFactory');
         currencyFactory = $injector.get('currencyFactory');
@@ -553,6 +555,26 @@ describe('The Stock Owner Item Create Controller', function () {
           expect(StockOwnerItemCreateCtrl.baseCurrencyId).toEqual(baseCurrencyIdControl);
         });
 
+      });
+
+      describe('filterCharacteristics', function() {
+        it('should show only Downloadable and Characteristic in item characteristics if item is Virtual', function () {
+          var expectedCharacteristics = [{id:8, name:'Downloadable'}, {id:9, name:'Link'}];
+          $scope.formData.itemTypeId = 2;
+          $scope.characteristics = characteristics;
+
+          $scope.filterCharacteristics();
+
+          expect($scope.filteredCharacteristics).toEqual(expectedCharacteristics);
+        });
+        it('should show all item characteristics if item is not Virtual', function () {
+          $scope.formData.itemTypeId = 1;
+          $scope.characteristics = characteristics;
+
+          $scope.filterCharacteristics();
+
+          expect($scope.filteredCharacteristics).toEqual(characteristics);
+        });
       });
 
     });
