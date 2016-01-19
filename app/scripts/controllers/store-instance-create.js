@@ -10,7 +10,7 @@
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
   function($scope, $routeParams, $q, storeInstanceFactory, sealTypesService, storeInstanceAssignSealsFactory, ngToast,
     dateUtility, GlobalMenuService, storeInstanceWizardConfig, $location, schedulesService,
-    menuCatererStationsService, lodash, $route, $filter) {
+    menuCatererStationsService, lodash, $route, $filter, $localStorage) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -402,7 +402,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.isStepOneFromStepTwo = function(apiData) {
-      if (apiData && apiData.prevStoreInstanceId) {
+      if (apiData && apiData.id === parseInt($localStorage.stepTwoFromStepOne.storeId)) {
         return (angular.isNumber(apiData.prevStoreInstanceId));
       }
     };
@@ -666,7 +666,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.createPromiseToDeleteItems = function() {
       var deleteItemsPromiseArray = [];
       angular.forEach($scope.itemsToDelete, function(item) {
-        deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId, item.id));
+        deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId,
+          item.id));
       });
 
       return deleteItemsPromiseArray;
@@ -968,6 +969,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
         $this.createStoreInstanceErrorHandler
       );
+
     };
 
     this.editDispatchedStoreInstance = function(saveAndExit) {
@@ -1152,7 +1154,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.registerMenusScopeWatchers = function() {
-      return ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) || ($this.isActionState('dispatch') &&
+      return ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) || ($this.isActionState(
+          'dispatch') &&
         $routeParams.storeId);
     };
 
