@@ -1,39 +1,39 @@
 'use strict';
 /*global moment*/
 
-describe('Date Utility service', function () {
+describe('Date Utility service', function() {
 
   // load the service's module
   beforeEach(module('ts5App'));
 
   // instantiate service
   var dateUtility;
-  beforeEach(inject(function (_dateUtility_) {
+  beforeEach(inject(function(_dateUtility_) {
     dateUtility = _dateUtility_;
   }));
 
-  describe('now() method', function () {
+  describe('now() method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.now).toBeDefined();
     });
 
     it('should return a timestamp matching the current timestamp',
-      function () {
+      function() {
         var currentTimestamp = Date.parse(new Date());
         expect(dateUtility.now()).toEqual(currentTimestamp);
       });
 
   });
 
-  describe('formatDate() method', function () {
+  describe('formatDate() method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.formatDate).toBeDefined();
     });
 
     it('should format a date string from one format to another',
-      function () {
+      function() {
         var expectedDateString = '20150619';
         var formattedString = dateUtility.formatDate('06/19/2015',
           'L', 'YYYYMMDD');
@@ -42,14 +42,14 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('formatDateForAPI method', function () {
+  describe('formatDateForAPI method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.formatDateForAPI).toBeDefined();
     });
 
     it('should format a date string from one format to another',
-      function () {
+      function() {
         var expectedDateString = '20150619';
         var formattedString = dateUtility.formatDateForAPI(
           '06/19/2015');
@@ -58,14 +58,14 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('formatDateForApp method', function () {
+  describe('formatDateForApp method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.formatDateForApp).toBeDefined();
     });
 
     it('should format a date string from one format to another',
-      function () {
+      function() {
         var expectedDateString = '06/19/2015';
         var formattedString = dateUtility.formatDateForApp(
           '20150619');
@@ -74,14 +74,14 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('formatTimestampForAPI method', function () {
+  describe('formatTimestampForAPI method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.formatTimestampForAPI).toBeDefined();
     });
 
     it('should format a timestamp string from one format to another',
-      function () {
+      function() {
         var expectedString = '2015-10-01 18:25:00.000000';
         var formattedString = dateUtility.formatTimestampForAPI(
           '10/01/2015 18:25');
@@ -90,14 +90,14 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('formatTimestampForApp method', function () {
+  describe('formatTimestampForApp method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.formatTimestampForApp).toBeDefined();
     });
 
     it('should format a timestamp string from one format to another',
-      function () {
+      function() {
         var expectedString = '10/01/2015 18:25';
         var formattedString = dateUtility.formatTimestampForApp(
           '2015-10-01 18:25:12.123456');
@@ -106,62 +106,62 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('isValid() method', function () {
+  describe('isValid() method', function() {
 
-    it('should be defined for APP', function () {
+    it('should be defined for APP', function() {
       expect(dateUtility.isDateValidForApp).toBeDefined();
     });
 
-    it('should return true for app', function () {
+    it('should return true for app', function() {
       expect(dateUtility.isDateValidForApp('05/10/1979')).toBe(true);
     });
 
-    it('should return false for app', function () {
+    it('should return false for app', function() {
       expect(dateUtility.isDateValidForApp('19791005')).toBe(false);
     });
 
-    it('should be defined for API', function () {
+    it('should be defined for API', function() {
       expect(dateUtility.isDateValidForAPI).toBeDefined();
     });
 
-    it('should return true for API', function () {
+    it('should return true for API', function() {
       expect(dateUtility.isDateValidForAPI('19791005')).toBe(true);
     });
 
-    it('should return false for API', function () {
+    it('should return false for API', function() {
       expect(dateUtility.isDateValidForAPI('05/10/1979')).toBe(
         false);
     });
 
   });
 
-  describe('date comparison', function () {
-    it('should return true is date is today', function () {
+  describe('date comparison', function() {
+    it('should return true is date is today', function() {
       var currentTimestamp = moment().format('YYYY/MM/DD');
       expect(dateUtility.isToday(currentTimestamp)).toBe(true);
     });
 
-    it('should return false is date is not today', function () {
+    it('should return false is date is not today', function() {
       var currentTimestamp = '1979/05/10';
       expect(dateUtility.isToday(currentTimestamp)).toBe(false);
     });
 
-    it('should return true is date is after today', function () {
+    it('should return true is date is after today', function() {
       expect(dateUtility.isAfterToday('05/10/2080')).toBe(true);
     });
 
-    it('should return false is date is not after today', function () {
+    it('should return false is date is not after today', function() {
       expect(dateUtility.isAfterToday('05/10/2000')).toBe(false);
     });
   });
 
-  describe('tomorrow() method', function () {
+  describe('tomorrow() method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.tomorrow).toBeDefined();
     });
 
-    it('should be return tomorrow timestamp', function () {
+    it('should be return tomorrow timestamp', function() {
       var today = new Date();
       var tomorrowControl = today.setDate(today.getDate() + 1);
       var tomorrow = dateUtility.tomorrow();
@@ -170,13 +170,13 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('yesterday() method', function () {
+  describe('yesterday() method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.yesterday).toBeDefined();
     });
 
-    it('should be return yesterday timestamp', function () {
+    it('should be return yesterday timestamp', function() {
       var today = new Date();
       var yesterdayControl = today.setDate(today.getDate() - 1);
       var yesterday = dateUtility.yesterday();
@@ -185,20 +185,20 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('isTodayOrEarlier() method', function () {
+  describe('isTodayOrEarlier() method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.isTodayOrEarlier).toBeDefined();
     });
 
-    it('should return true if the date is today', function () {
+    it('should return true if the date is today', function() {
       var today = dateUtility.nowFormatted();
       var dateIsTodayOrEarlier = dateUtility.isTodayOrEarlier(
         today);
       expect(dateIsTodayOrEarlier).toBeTruthy();
     });
 
-    it('should return true if the date is earlier than today', function () {
+    it('should return true if the date is earlier than today', function() {
       var yesterday = dateUtility.formatDateForApp(dateUtility.yesterday(),
         'x');
       var dateIsTodayOrEarlier = dateUtility.isTodayOrEarlier(
@@ -206,7 +206,7 @@ describe('Date Utility service', function () {
       expect(dateIsTodayOrEarlier).toBeTruthy();
     });
 
-    it('should return false if the date is later than today', function () {
+    it('should return false if the date is later than today', function() {
       var tomorrow = dateUtility.formatDateForApp(dateUtility.tomorrow(),
         'x');
       var dateIsTodayOrEarlier = dateUtility.isTodayOrEarlier(
@@ -216,13 +216,13 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('isYesterdayOrEarlier() method', function () {
+  describe('isYesterdayOrEarlier() method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.isYesterdayOrEarlier).toBeDefined();
     });
 
-    it('should return false if the date is today', function () {
+    it('should return false if the date is today', function() {
       var today = dateUtility.nowFormatted();
       var dateIsBeforeYesterday = dateUtility.isYesterdayOrEarlier(
         today);
@@ -230,7 +230,7 @@ describe('Date Utility service', function () {
     });
 
     it('should return true if the date is earlier than yesterday',
-      function () {
+      function() {
         var today = new Date();
         var twoDaysAgo = today.setDate(today.getDate() - 2);
         var testDate = dateUtility.formatDateForApp(twoDaysAgo,
@@ -242,15 +242,15 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('nowFormatted method', function () {
+  describe('nowFormatted method', function() {
 
-    it('should be defined', function () {
+    it('should be defined', function() {
       expect(dateUtility.nowFormatted).toBeDefined();
     });
 
     it(
       'should return a formatted date in MM/DD/YYYY when no format is passed',
-      function () {
+      function() {
         var now = Date.parse(new Date());
         var formattedTimeStamp = dateUtility.nowFormatted();
         var formatControl = dateUtility.formatDate(now, 'x',
@@ -260,7 +260,7 @@ describe('Date Utility service', function () {
 
     it(
       'should return a formatted date in YYYYMMDD when YYYYMMDD format is passed',
-      function () {
+      function() {
         var now = Date.parse(new Date());
         var formattedTimeStamp = dateUtility.nowFormatted('YYYYMMDD');
         var formatControl = dateUtility.formatDate(now, 'x',
@@ -270,10 +270,10 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('tomorrowFormatted method', function () {
+  describe('tomorrowFormatted method', function() {
 
     it('should return a formatted date in MM/DD/YYYY when no format is passed',
-      function () {
+      function() {
         var tomorrow = dateUtility.tomorrow();
         var formattedTimeStamp = dateUtility.tomorrowFormatted();
         var formatControl = dateUtility.formatDate(tomorrow, 'x', 'MM/DD/YYYY');
@@ -281,7 +281,7 @@ describe('Date Utility service', function () {
       });
 
     it('should return a formatted date in YYYYMMDD when YYYYMMDD format is passed',
-      function () {
+      function() {
         var tomorrow = dateUtility.tomorrow();
         var formattedTimeStamp = dateUtility.tomorrowFormatted('YYYYMMDD');
         var formatControl = dateUtility.formatDate(tomorrow, 'x', 'YYYYMMDD');
@@ -316,12 +316,12 @@ describe('Date Utility service', function () {
 
   });
 
-  describe('dateNumDaysBeforeToday', function () {
-    it('should be defined', function () {
+  describe('dateNumDaysBeforeToday', function() {
+    it('should be defined', function() {
       expect(dateUtility.dateNumDaysBeforeToday).toBeDefined();
     });
 
-    it('should return three days from today timestamp when 3 is passed in', function () {
+    it('should return three days from today timestamp when 3 is passed in', function() {
       var today = new Date();
       var threeDaysAgoControl = today.setDate(today.getDate() - 3);
       var tomorrow = dateUtility.dateNumDaysBeforeToday(3);
@@ -329,10 +329,10 @@ describe('Date Utility service', function () {
     });
   });
 
-  describe('dateNumDaysBeforeTodayFormatted method', function () {
+  describe('dateNumDaysBeforeTodayFormatted method', function() {
 
     it('should return a formatted date in MM/DD/YYYY when no format is passed',
-      function () {
+      function() {
         var newDate = dateUtility.dateNumDaysBeforeToday(3);
         var formattedTimeStamp = dateUtility.dateNumDaysBeforeTodayFormatted(3);
         var formatControl = dateUtility.formatDate(newDate, 'x', 'MM/DD/YYYY');
@@ -340,11 +340,21 @@ describe('Date Utility service', function () {
       });
 
     it('should return a formatted date in YYYYMMDD when YYYYMMDD format is passed',
-      function () {
+      function() {
         var newDate = dateUtility.dateNumDaysBeforeToday(3);
         var formattedTimeStamp = dateUtility.dateNumDaysBeforeTodayFormatted(3, 'YYYYMMDD');
         var formatControl = dateUtility.formatDate(newDate, 'x', 'YYYYMMDD');
         expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+  });
+
+  describe('getOperationalDay method', function() {
+
+    it('should return a formatted number of the day',
+      function() {
+        var newDate = dateUtility.getOperationalDay('01/19/2016');
+        expect(newDate).toEqual(2);
       });
 
   });
