@@ -53,7 +53,8 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     };
 
     this.getCatererStationListSuccessHandler = function(dataFromAPI) {
-      $scope.cateringStationList = dataFromAPI.response;
+      $scope.cateringStationList = angular.copy(dataFromAPI.response);
+      $scope.viewIsReady = true;
     };
 
     this.getUllageReasonsFromResponse = function(dataFromAPI) {
@@ -78,7 +79,8 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       loadingProgress = true;
 
       showLoadingBar();
-      stockManagementStationItemsService.getStockManagementStationItems($scope.selectedCateringStation.id, $this.meta.limit, $this.meta.offset).then(
+      stockManagementStationItemsService.getStockManagementStationItems($scope.selectedCateringStation.id, $this.meta
+        .limit, $this.meta.offset).then(
         $this.getStockDashboardItemsSuccessHandler);
       $this.meta.offset += $this.meta.limit;
     };
@@ -111,7 +113,9 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     this.generateStockTakeQuery = function() {
       var query = {
         catererStationId: $scope.selectedCateringStation.id,
-        limit: 100
+        count: undefined,
+        limit: 100,
+        offset: 0
       };
       return query;
     };
