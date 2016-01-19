@@ -51,7 +51,7 @@ angular.module('ts5App')
           if (angular.isUndefined(value)) {
             return true;
           }
-          
+
           return regexObj[0].test(value);
         };
 
