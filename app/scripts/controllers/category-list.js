@@ -8,55 +8,62 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CategoryListCtrl', function ($scope, $location, categoryFactory, ngToast, dateUtility, payloadUtility, lodash) {
+  .controller('CategoryListCtrl', function ($scope, $location, categoryFactory, ngToast, dateUtility, payloadUtility) {
     var $this = this;
     $scope.viewName = 'Category';
     $scope.search = {};
     $scope.categoryList = [];
     $scope.categoryToDelete = {};
 
-    $scope.toggleAccordionView = function(category) {
+    $scope.toggleAccordionView = function (category) {
       category.expanded = !category.expanded;
     };
 
-    function createCategoryIdMapFromCategoryList(categoryList) {
-      return lodash.reduce(categoryList, function(result, category) {
-        result[category.id] = category;
-        return result;
-      }, {});
+    function createSimplifiedCategory(category) {
+      var newCategory = {
+        id: category.id,
+        name: category.name || category.categoryName,
+        childCategoryCount: category.childCategoryCount,
+        itemCount: category.itemCount,
+        description: category.description,
+        parentId: category.parentId,
+        nextCategoryId: category.nextCategoryId,
+        salesCategoryPath: category.salesCategoryPath,
+        countTotalSubcategories: category.countTotalSubcategories
+      };
+      return newCategory;
     }
 
-    function categoryIsChildAndHasParentInMap(category, categoryMap) {
-      return !lodash.isNull(category.parentId) && categoryMap[category.parentId];
-    }
-
-    function addChildrenFromListToTheirRespectiveParentInMap(categoryList, categoryMap) {
-      lodash.forEach(categoryList, function(category) {
-        category.expanded = false;
-        if (categoryIsChildAndHasParentInMap(category, categoryMap)) {
-          if (lodash.isNull(categoryMap[category.parentId].children)) {
-            categoryMap[category.parentId].children = [];
-          }
-
-          categoryMap[category.parentId].children.push(category);
+    function flattenCategoriesModel(categoryArray, workingArray) {
+      var numCategoryCount = 0;
+      angular.forEach(categoryArray, function (category) {
+        var workingCategoryCount = 0;
+        var newCategory = createSimplifiedCategory(category);
+        workingArray.push(newCategory);
+        if (category.children && category.children.length > 0) {
+          workingCategoryCount += (flattenCategoriesModel(category.children, workingArray) + 1);
         }
+
+        numCategoryCount = (workingCategoryCount > numCategoryCount) ? workingCategoryCount : numCategoryCount;
       });
+      
+      return numCategoryCount;
     }
 
-    function filterParents(categoryList) {
-      return lodash.filter(categoryList, function(category) {
-        return category.parentId === null;
-      });
-    }
+    $scope.doesCategoryHaveChildren = function (category) {
+      return parseInt(category.childCategoryCount);
+    };
 
     this.attachCategoryListToScope = function (categoryListFromAPI) {
-      var categoryMap = createCategoryIdMapFromCategoryList(categoryListFromAPI.salesCategories);
-      addChildrenFromListToTheirRespectiveParentInMap(categoryListFromAPI.salesCategories, categoryMap);
-      $scope.categoryList = filterParents(categoryListFromAPI.salesCategories);
+      var categoryList = angular.copy(categoryListFromAPI.salesCategories);
+      var flattenedCategoryList = [];
+      $scope.numCategoryLevels = flattenCategoriesModel(categoryList, flattenedCategoryList) + 1;
+      $scope.nestedCategoryList = categoryList;
+      $scope.categoryList = flattenedCategoryList;
     };
 
     this.getCategoryList = function () {
-      categoryFactory.getCategoryList().then($this.attachCategoryListToScope);
+      categoryFactory.getCategoryList({ expand: 'true', parentId: 0 }).then($this.attachCategoryListToScope);
     };
 
     $scope.editCategory = function (category) {
