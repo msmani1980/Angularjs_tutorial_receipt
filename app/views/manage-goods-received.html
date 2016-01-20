@@ -111,7 +111,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="deliveryNote in deliveryNotesList">
+      <tr ng-repeat="deliveryNote in deliveryNotesList track by $index">
         <td>{{ deliveryNote.purchaseOrderNumber }}</td>
         <td>{{ deliveryNote.deliveryNoteNumber }}</td>
         <td>{{ deliveryNote.deliveryDate }}</td>
