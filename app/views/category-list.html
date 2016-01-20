@@ -51,17 +51,30 @@
     <div class="panel panel-default" id="create-collapse">
       <form name="categorySearchForm" ng-submit="searchCategorys()">
         <div class="panel-body">
+          <h4>New Category</h4>
+          <hr>
           <div class="row">
             <div class="col-sm-6 col-xs-12">
             <div class="form-group">
-              <label for="category-name">Name</label>
-              <input ng-model="search.name" type="text" class="form-control" id="category-name" placeholder="10% Off">
+              <label for="category-name">Name *</label>
+              <input
+                ng-model="search.name"
+                type="text"
+                class="form-control"
+                id="category-name"
+                placeholder="Enter Category Name"
+                required="true">
             </div>
           </div>
             <div class="col-sm-6 col-xs-12">
               <div class="form-group">
-                <label for="category-description">Description</label>
-                <input ng-model="search.description" type="text" class="form-control" id="category-description" placeholder="10% Off">
+                <label for="category-description">Description *</label>
+                <input ng-model="search.description"
+                       type="text"
+                       class="form-control"
+                       id="category-description"
+                       placeholder="Enter Category Description"
+                       required="true">
               </div>
             </div>
           </div>
@@ -69,20 +82,30 @@
             <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label for="category-name">Parent Category</label>
-                <input ng-model="search.name" type="text" class="form-control" id="category-name" placeholder="10% Off">
+                <ui-select theme="bootstrap" ng-model="newCategory.parentCategoryId" ng-disabled="readOnly" required name="parentCategoryId">
+                  <ui-select-match placeholder="Select a Parent Category to group under">{{ $select.selected.id }}</ui-select-match>
+                  <ui-select-choices repeat="category in categoryList | filter: {name:$select.search}">
+                    <div ng-bind-html="category.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
             <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label for="category-description">Next Category</label>
-                <input ng-model="search.description" type="text" class="form-control" id="category-description" placeholder="10% Off">
+                <ui-select theme="bootstrap" ng-model="newCategory.nextCategoryId" ng-disabled="readOnly" required name="nextCategoryId">
+                  <ui-select-match placeholder="Select a Category that is next in order">{{ $select.selected.id }}</ui-select-match>
+                  <ui-select-choices repeat="category in categoryList | filter: {name:$select.search}">
+                    <div ng-bind-html="category.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
           </div>
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearForm()">Cancel</button>
-          <button type="submit" class="btn btn-success">Create</button>
+          <button type="submit" class="btn btn-success"><span class="fa fa-check"></span> Save</button>
         </div>
       </form>
     </div>
@@ -111,14 +134,7 @@
     </ul>
   </div>
 
-  <!--<table class="table table-responsive">-->
-  <!--<tr>-->
-  <!--<th>Test</th>-->
-  <!--</tr>-->
-  <!--<tr ng-repeat="n in [] | range: 10" class="{{ 'categoryLevel' + n}}">-->
-  <!--<td class="open-accordion">{{ n }}</td>-->
-  <!--</tr>-->
-  <!--</table>-->
+  <br>
 
   <table class="table table-responsive">
     <thead>
@@ -142,8 +158,11 @@
 
       <td>{{ category.name }}</td>
       <td>{{ category.description }}</td>
-      <td>{{ category.parentId }}, {{ category.id }}</td>
-      <td><!-- Actions --></td>
+      <td>{{ category.itemCount }}</td>
+      <td>
+        <button class="btn btn-xs btn-primary"><span class="fa fa-pencil"></span></button>
+        <button class="btn btn-xs btn-danger"><span class="fa fa-trash"></span></button>
+      </td>
     </tr>
     </tbody>
   </table>
