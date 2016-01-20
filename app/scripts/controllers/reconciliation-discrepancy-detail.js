@@ -299,8 +299,10 @@ angular.module('ts5App')
       angular.forEach($this.eposCashBag, function (cashBag) {
         if (cashBag.bankAmount) {
           total += cashBag.bankAmount;
-        } else if (cashBag.coinAmountManual && cashBag.paperAmountManual) {
-          total += cashBag.coinAmountManual + cashBag.paperAmountManual;
+        } else {
+          var coinAmount = cashBag.coinAmountManual || 0;
+          var paperAmount = cashBag.paperAmountManual || 0;
+          total += coinAmount + paperAmount;
         }
       });
 
