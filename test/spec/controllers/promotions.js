@@ -24,6 +24,7 @@ describe('Controller: PromotionsCtrl', function () {
   var scope;
   var routeParams;
   var promotionsFactory;
+  var dateUtility;
   var getBenefitTypesDeferred;
   var getDiscountTypesDeferred;
   var getPromotionTypesDeferred;
@@ -59,6 +60,7 @@ describe('Controller: PromotionsCtrl', function () {
     scope = $rootScope.$new();
 
     promotionsFactory = $injector.get('promotionsFactory');
+    dateUtility = $injector.get('dateUtility');
     companyId = 403;
 
     getBenefitTypesDeferred = $q.defer();
@@ -150,7 +152,12 @@ describe('Controller: PromotionsCtrl', function () {
       });
 
       it('should call promotionsFactory.getCurrencyGlobals', function () {
-        expect(promotionsFactory.getCurrencyGlobals).toHaveBeenCalled();
+        var payload = {
+          isOperatedCurrency: true,
+          startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        };
+
+        expect(promotionsFactory.getCurrencyGlobals).toHaveBeenCalledWith(payload);
       });
 
       it('should call promotionsFactory.getMasterItems', function () {

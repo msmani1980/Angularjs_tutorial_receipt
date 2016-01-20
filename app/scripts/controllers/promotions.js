@@ -457,8 +457,13 @@ angular.module('ts5App')
     }
 
     function getCurrencyGlobals() {
+      var payload = {
+        isOperatedCurrency: true,
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      };
+
       initPromises.push(
-        promotionsFactory.getCurrencyGlobals({ isOperatedCurrency: true }).then(setCurrencyGlobals)
+        promotionsFactory.getCurrencyGlobals(payload).then(setCurrencyGlobals)
       );
     }
 
