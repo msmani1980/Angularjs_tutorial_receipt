@@ -1018,7 +1018,6 @@ describe('Store Instance Create Controller', function() {
       $scope.formData.scheduleDate = '10/01/2015';
       var queryControl = {
         startDate: '20151001',
-        endDate: '20151001',
         readyToUse: true
       };
       StoreInstanceCreateCtrl.getStoresList();
@@ -1040,7 +1039,6 @@ describe('Store Instance Create Controller', function() {
       $scope.formData.scheduleDate = '10/01/2015';
       var queryControl = {
         startDate: '20151001',
-        endDate: '20151001',
         readyToUse: false
       };
       StoreInstanceCreateCtrl.getStoresList();
