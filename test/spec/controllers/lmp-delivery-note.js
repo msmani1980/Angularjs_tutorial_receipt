@@ -290,7 +290,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         });
 
         it('should call createDeliveryNote', function() {
-          var mockedPayload = {
+          var mockedPayload = jasmine.objectContaining({
             catererStationId: 3,
             purchaseOrderNumber: 'ksahd9a8sda8d',
             deliveryNoteNumber: 'askdjhas78day',
@@ -298,21 +298,21 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
             isAccepted: false,
             items: [
               {
-                deliveredQuantity: 2,
-                expectedQuantity: 2,
                 masterItemId: 1,
+                expectedQuantity: 2,
+                deliveredQuantity: 2,
                 ullageQuantity: 1,
                 ullageReason: null
               },
               {
-                deliveredQuantity: 1,
-                expectedQuantity: 1,
                 masterItemId: 2,
+                expectedQuantity: 1,
+                deliveredQuantity: 1,
                 ullageQuantity: 0,
                 ullageReason: null
               }
             ]
-          };
+          });
           expect(deliveryNoteFactory.createDeliveryNote).toHaveBeenCalledWith(mockedPayload);
         });
       });
