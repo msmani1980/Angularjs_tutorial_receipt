@@ -240,8 +240,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getStoresList = function() {
-      var query = this.getFormattedDatesPayload();
-      query.readyToUse = this.determineReadyToUse();
+      var date = this.getFormattedDatesPayload();
+      var query = {
+        readyToUse: this.determineReadyToUse(),
+        startDate: date.startDate
+      };
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
 
