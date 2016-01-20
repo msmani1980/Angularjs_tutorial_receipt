@@ -10,18 +10,20 @@
   background-color: #f2f2f2;
 }
 
-// dark - 0 1 2 3 4 6 7 8 9 a b c d e f - light
-
 .empty-col {
   border-bottom: 0 solid white;
 }
 
 .open-accordion {
-  border-left: 4px solid #777;
+  border-left: 4px solid #555;
+};
+
+.category-border {
+  border-left: 2px solid #777;
 }
 
-.parent-accordion {
-  border-left: 4px solid #a5a5a5;
+.category-indent {
+  background-color: white;
 }
 
 .categoryLevel1 {

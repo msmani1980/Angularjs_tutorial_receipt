@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CategoryListCtrl', function ($scope, $location, categoryFactory, ngToast, dateUtility, payloadUtility) {
+  .controller('CategoryListCtrl', function ($scope, $location, categoryFactory, ngToast, dateUtility, payloadUtility, lodash) {
     var $this = this;
     $scope.viewName = 'Category';
     $scope.search = {};
@@ -23,7 +23,38 @@ angular.module('ts5App')
       return parseInt(category.childCategoryCount);
     };
 
-    function createSimplifiedCategory(category) {
+    $scope.getClassForRow = function (category) {
+      return 'categoryLevel' + category.levelNum;
+    };
+
+    $scope.getToggleButtonClass = function (category) {
+      var btnDefaultClass = 'btn btn-xs ';
+      return (category.isOpen) ? btnDefaultClass + 'btn-info' : btnDefaultClass + 'btn-default';
+    };
+
+    $scope.getToggleIconClass = function (category) {
+      return (category.isOpen) ? 'fa fa-arrow-down' : 'fa fa-arrow-right';
+    };
+
+    $scope.toggleCategory = function (category) {
+      category.isOpen = !category.isOpen;
+    };
+
+    function isChildCategoryVisible(category) {
+      if (category.parentId === null) {
+        return category.isOpen;
+      }
+
+      var parentCategory = lodash.findWhere($scope.categoryList, { id: category.parentId });
+      return parentCategory.isOpen && isChildCategoryVisible(parentCategory);
+    }
+
+    $scope.shouldShowCategory = function (category) {
+      var shouldOpen = category.parentId === null || isChildCategoryVisible(category);
+      return shouldOpen;
+    };
+
+    function formatCategory(category) {
       var currentLevelNum = category.salesCategoryPath.split('/').length;
       var newCategory = {
         id: category.id,
@@ -35,9 +66,9 @@ angular.module('ts5App')
         nextCategoryId: category.nextCategoryId,
         salesCategoryPath: category.salesCategoryPath,
         countTotalSubcategories: category.countTotalSubcategories,
-        levelNum: currentLevelNum
+        levelNum: currentLevelNum,
+        isOpen: false
       };
-      console.log(newCategory, currentLevelNum);
       return newCategory;
     }
 
@@ -45,7 +76,7 @@ angular.module('ts5App')
       var maxLevelsCount = 0;
       angular.forEach(categoryArray, function (category) {
         var currentLevelCount = 0;
-        workingArray.push(createSimplifiedCategory(category));
+        workingArray.push(formatCategory(category));
         if (category.children && category.children.length > 0) {
           currentLevelCount += (getMaxLevelsAndFlattenCategoriesModel(category.children, workingArray) + 1);
         }

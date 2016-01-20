@@ -1,136 +1,179 @@
 <div class="container">
 
-    <div class="list-controls">
-        <div class="row item-list-row">
-            <div class="col-xs-4">
-                <h2 class="view-name">{{viewName}}</h2>
-            </div>
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-4">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
 
-            <div class="col-xs-8 text-right">
+      <div class="col-xs-8 text-right">
 
-                <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
-                        aria-controls="search-collapse">
-                    <span class="fa fa-filter" aria-hidden="true"></span>
-                    <span class="hidden-sm hidden-xs">Filter</span>
-                </button>
-
-                <a href="/#/category/create" class="btn btn-primary">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                    <span class="hidden-xs">Create Category</span>
-                </a>
-            </div>
-        </div>
-
-        <div class="panel panel-default collapse no-transition" id="search-collapse">
-            <form name="categorySearchForm" ng-submit="searchCategorys()">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6">
-                            <div class="form-group">
-                                <label for="category-name">Name</label>
-                                <input ng-model="search.name" type="text" class="form-control" id="category-name" placeholder="10% Off">
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-6">
-                            <div class="form-group">
-                                <label for="category-description">Description</label>
-                                <input ng-model="search.description" type="text" class="form-control" id="category-description" placeholder="10% Off">
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="panel-footer text-right">
-                    <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
         </button>
-        <h4>
-            We found errors :( !
-        </h4>
 
-        <ul>
-            <li ng-repeat="error in form.$error.required">
-                <strong>{{ error.$name }}</strong> is required
-            </li>
-            <li ng-repeat="error in form.$error.pattern">
-                <strong>{{ error.$name }}</strong> is invalid
-            </li>
-            <li ng-show="formErrors" ng-repeat="error in formErrors">
-                <strong>{{error.field}}</strong>
-                <span>{{ error.value }}</span>
-                <span>{{ error.code }}</span>
-            </li>
-        </ul>
+        <a href="/#/category/create" class="btn btn-primary">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+          <span class="hidden-xs">Create Category</span>
+        </a>
+      </div>
     </div>
 
-    <!--<table class="table table-responsive">-->
-      <!--<tr>-->
-        <!--<th>Test</th>-->
-      <!--</tr>-->
-      <!--<tr ng-repeat="n in [] | range: 10" class="{{ 'categoryLevel' + n}}">-->
-        <!--<td class="open-accordion">{{ n }}</td>-->
-      <!--</tr>-->
-    <!--</table>-->
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form name="categorySearchForm" ng-submit="searchCategorys()">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-3 col-sm-6">
+              <div class="form-group">
+                <label for="category-name">Name</label>
+                <input ng-model="search.name" type="text" class="form-control" id="category-name" placeholder="10% Off">
+              </div>
+            </div>
 
-    <table class="table table-responsive">
-      <thead>
-      <tr>
-        <th colspan="{{ numCategoryLevels }}"></th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Items</th>
-        <th>Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-        <!-- parent level = child level -->
-        <tr ng-repeat="category in categoryList" class="{{ 'categoryLevel' + category.levelNum }}">
-          <td ng-repeat="n in [] | range: category.levelNum-1" class="" style="background-color: #fff;"></td>
-          <td class="open-accordion"><span class="fa fa-toggle-down" ng-show="doesCategoryHaveChildren(category)"></span></td>
-          <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }}"></td>
+            <div class="col-md-3 col-sm-6">
+              <div class="form-group">
+                <label for="category-description">Description</label>
+                <input ng-model="search.description" type="text" class="form-control" id="category-description" placeholder="10% Off">
+              </div>
+            </div>
 
-          <td>{{ category.name }}</td>
-          <td>{{ category.description }}</td>
-          <td>{{ category.itemCount }}</td>
-          <td><!-- Actions --></td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="panel panel-default" id="create-collapse">
+      <form name="categorySearchForm" ng-submit="searchCategorys()">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="category-name">Name</label>
+              <input ng-model="search.name" type="text" class="form-control" id="category-name" placeholder="10% Off">
+            </div>
+          </div>
+            <div class="col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="category-description">Description</label>
+                <input ng-model="search.description" type="text" class="form-control" id="category-description" placeholder="10% Off">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="category-name">Parent Category</label>
+                <input ng-model="search.name" type="text" class="form-control" id="category-name" placeholder="10% Off">
+              </div>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="category-description">Next Category</label>
+                <input ng-model="search.description" type="text" class="form-control" id="category-description" placeholder="10% Off">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearForm()">Cancel</button>
+          <button type="submit" class="btn btn-success">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+    </button>
+    <h4>
+      We found errors :( !
+    </h4>
+
+    <ul>
+      <li ng-repeat="error in form.$error.required">
+        <strong>{{ error.$name }}</strong> is required
+      </li>
+      <li ng-repeat="error in form.$error.pattern">
+        <strong>{{ error.$name }}</strong> is invalid
+      </li>
+      <li ng-show="formErrors" ng-repeat="error in formErrors">
+        <strong>{{error.field}}</strong>
+        <span>{{ error.value }}</span>
+        <span>{{ error.code }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!--<table class="table table-responsive">-->
+  <!--<tr>-->
+  <!--<th>Test</th>-->
+  <!--</tr>-->
+  <!--<tr ng-repeat="n in [] | range: 10" class="{{ 'categoryLevel' + n}}">-->
+  <!--<td class="open-accordion">{{ n }}</td>-->
+  <!--</tr>-->
+  <!--</table>-->
+
+  <table class="table table-responsive">
+    <thead>
+    <tr>
+      <th colspan="{{ numCategoryLevels }}"></th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Items</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="category in categoryList" ng-class="getClassForRow(category)" ng-show="shouldShowCategory(category)">
+      <td ng-repeat="n in [] | range: category.levelNum-1" class="category-indent"></td>
+      <td class="category-border">
+        <button ng-class="getToggleButtonClass(category)" ng-show="doesCategoryHaveChildren(category)" ng-disabled="false" ng-click="toggleCategory(category)">
+          <span ng-class="getToggleIconClass(category)" ></span>
+        </button>
+      </td>
+      <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }}"></td>
+
+      <td>{{ category.name }}</td>
+      <td>{{ category.description }}</td>
+      <td>{{ category.parentId }}, {{ category.id }}</td>
+      <td><!-- Actions --></td>
+    </tr>
+    </tbody>
+  </table>
 
 </div>
 <div class="modal fade delete-warning-modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
+  <div class="modal-dialog">
+    <div class="modal-content">
 
-            <div class="modal-header">
-                <h4 class="modal-title">Are you sure?</h4>
-            </div>
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure?</h4>
+      </div>
 
-            <div class="modal-body">
-                <p>You are about to permanently delete <strong>{{categoryToDelete.name}}</strong></p>
-            </div>
+      <div class="modal-body">
+        <p>You are about to permanently delete <strong>{{categoryToDelete.name}}</strong></p>
+      </div>
 
-            <ul>
-                <li><strong>Name: </strong>{{ categoryToDelete.name }}</li>
-                <li><strong>Description: </strong>{{ categoryToDelete.description }}</li>
-                <li><strong>Path: </strong>{{ categoryToDelete.salesCategoryPath }}</li>
-                <li><strong>Item Count: </strong>{{ categoryToDelete.itemCount }}</li>
-            </ul>
+      <ul>
+        <li><strong>Name: </strong>{{ categoryToDelete.name }}</li>
+        <li><strong>Description: </strong>{{ categoryToDelete.description }}</li>
+        <li><strong>Path: </strong>{{ categoryToDelete.salesCategoryPath }}</li>
+        <li><strong>Item Count: </strong>{{ categoryToDelete.itemCount }}</li>
+      </ul>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" ng-click="deleteCategory()">Continue</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="deleteCategory()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
     </div>
+  </div>
 </div>
 
 <dynamic-left-nav></dynamic-left-nav>
