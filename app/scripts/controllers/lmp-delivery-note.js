@@ -315,7 +315,7 @@ angular.module('ts5App')
           expectedQuantity: getQuantity(item.expectedQuantity),
           deliveredQuantity: getQuantity(item.deliveredQuantity),
           ullageQuantity: getQuantity(item.ullageQuantity),
-          ullageReason: getQuantity(item.ullageReason)
+          ullageReason: isNumberGreaterThanOrEqualTo0(item.ullageReason) ? parseInt(item.ullageReason) : null
         };
       });
     }
