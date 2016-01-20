@@ -396,34 +396,6 @@ describe('Controller: PromotionsCtrl', function () {
         it('should return false if promotion.filters[$index] is undefined', function () {
           expect(scope.removeFromStationListByIndex(0)).toBe(false);
         });
-
-        it('should return false if promotion.filters[$index].arrivalStation is undefined', function () {
-          scope.promotion.filters = [
-            {}, {}
-          ];
-          expect(scope.removeFromStationListByIndex(0)).toBe(false);
-        });
-
-        it('should return false if promotion.filters[$index].arrivalStation.id is undefined', function () {
-          scope.promotion.filters = [
-            { arrivalStation: {} }, { arrivalStation: {} }
-          ];
-          expect(scope.removeFromStationListByIndex(0)).toBe(false);
-        });
-
-        it('should return false if promotion.filters[$index].departureStation is undefined', function () {
-          scope.promotion.filters = [
-            { arrivalStation: { id: 1 } }, { arrivalStation: { id: 2 } }
-          ];
-          expect(scope.removeFromStationListByIndex(0)).toBe(false);
-        });
-
-        it('should return false if promotion.filters[$index].departureStation.id is undefined', function () {
-          scope.promotion.filters = [
-            { arrivalStation: { id: 1 }, departureStation: {} }, { arrivalStation: { id: 2 }, departureStation: {} }
-          ];
-          expect(scope.removeFromStationListByIndex(0)).toBe(false);
-        });
       });
 
       it('should remove by index from promotion.filters, by id from repeatableStations.arrivalHas and by id from repeatableStations.departureHas', function () {

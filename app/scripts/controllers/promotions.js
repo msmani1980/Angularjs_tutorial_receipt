@@ -780,12 +780,21 @@ angular.module('ts5App')
     };
 
     $scope.removeFromStationListByIndex = function ($index) {
-      if (!hasCompleteStationObject($index)) {
+      var arrivalId = -1;
+      var departureId = -1;
+
+      if (!$scope.promotion.filters[$index]) {
         return false;
       }
 
-      var arrivalId = $scope.promotion.filters[$index].arrivalStation.id;
-      var departureId = $scope.promotion.filters[$index].departureStation.id;
+      if ($scope.promotion.filters[$index].arrivalStation) {
+        arrivalId = $scope.promotion.filters[$index].arrivalStation.id;
+      }
+
+      if ($scope.promotion.filters[$index].departureStation) {
+        departureId = $scope.promotion.filters[$index].departureStation.id;
+      }
+
       removeDepartureFromHasArrival(arrivalId, departureId);
       removeArrivalFromHasDeparture(arrivalId, departureId);
       $scope.promotion.filters.splice($index, 1);
