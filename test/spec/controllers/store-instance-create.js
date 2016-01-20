@@ -42,6 +42,7 @@ describe('Store Instance Create Controller', function() {
   var storeInstanceCreatedJSON;
   var createStoreInstanceDeferred;
   var templateCache;
+  var localStorage;
   var compile;
   var storeInstanceWizardConfig;
   var schedulesService;
@@ -69,7 +70,7 @@ describe('Store Instance Create Controller', function() {
   var storeInstanceSealsJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedCateringStations_,
+  beforeEach(inject(function($q, $controller, $rootScope, $injector, $localStorage, _servedCateringStations_,
     _servedMenuMasterList_, _servedCarrierNumbers_, _servedStoresList_, _servedStoreInstanceCreated_,
     _servedSchedulesDateRange_, _servedCompanyMenuCatererStations_, _servedStoreInstanceDetails_,
     _servedStoreInstancesListOnfloor_, _servedSealTypes_, _servedStoreInstanceItemList_,
@@ -91,6 +92,7 @@ describe('Store Instance Create Controller', function() {
     location = $injector.get('$location');
     $scope = $rootScope.$new();
     dateUtility = $injector.get('dateUtility');
+    localStorage = $injector.get('$localStorage');
     controller = $controller;
 
     storeInstanceFactory = $injector.get('storeInstanceFactory');
@@ -169,6 +171,10 @@ describe('Store Instance Create Controller', function() {
         scheduleNumber: 'SCH1241411'
       },
       storeId: storeInstanceId
+    };
+
+    localStorage.stepTwoFromStepOne = {
+      storeId: null
     };
 
   }));
