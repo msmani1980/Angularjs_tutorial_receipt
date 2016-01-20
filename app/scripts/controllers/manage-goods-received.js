@@ -24,6 +24,7 @@ angular.module('ts5App')
     $scope.userSelectedStation = false;
 
     this.init = function() {
+      hideLoadingBar();
       this.getCatererStationList();
       $scope.$watch('catererStationId', function(newData) {
         if (newData) {
