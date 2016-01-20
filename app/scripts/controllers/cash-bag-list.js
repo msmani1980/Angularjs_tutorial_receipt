@@ -14,10 +14,15 @@ angular.module('ts5App')
     var services = [];
     var $this = this;
     $scope.cashBagList = [];
+    this.shouldShowEmptyResult = false;
     this.meta = {
       count: undefined,
       limit: 100,
       offset: 0
+    };
+
+    $scope.isEmptyResultSet = function () {
+      return $this.shouldShowEmptyResult && $scope.cashBagList.length === 0;
     };
 
     socketIO.on('init', function (data) {
@@ -154,6 +159,7 @@ angular.module('ts5App')
 
     $scope.searchCashBag = function () {
       $scope.cashBagList = [];
+      $this.shouldShowEmptyResult = true;
       $this.meta = {
         count: undefined,
         limit: 100,
