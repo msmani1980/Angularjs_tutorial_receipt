@@ -19,7 +19,12 @@ angular.module('ts5App')
       category.expanded = !category.expanded;
     };
 
+    $scope.doesCategoryHaveChildren = function (category) {
+      return parseInt(category.childCategoryCount);
+    };
+
     function createSimplifiedCategory(category) {
+      var currentLevelNum = category.salesCategoryPath.split('/').length;
       var newCategory = {
         id: category.id,
         name: category.name || category.categoryName,
@@ -29,35 +34,32 @@ angular.module('ts5App')
         parentId: category.parentId,
         nextCategoryId: category.nextCategoryId,
         salesCategoryPath: category.salesCategoryPath,
-        countTotalSubcategories: category.countTotalSubcategories
+        countTotalSubcategories: category.countTotalSubcategories,
+        levelNum: currentLevelNum
       };
+      console.log(newCategory, currentLevelNum);
       return newCategory;
     }
 
-    function flattenCategoriesModel(categoryArray, workingArray) {
-      var numCategoryCount = 0;
+    function getMaxLevelsAndFlattenCategoriesModel(categoryArray, workingArray) {
+      var maxLevelsCount = 0;
       angular.forEach(categoryArray, function (category) {
-        var workingCategoryCount = 0;
-        var newCategory = createSimplifiedCategory(category);
-        workingArray.push(newCategory);
+        var currentLevelCount = 0;
+        workingArray.push(createSimplifiedCategory(category));
         if (category.children && category.children.length > 0) {
-          workingCategoryCount += (flattenCategoriesModel(category.children, workingArray) + 1);
+          currentLevelCount += (getMaxLevelsAndFlattenCategoriesModel(category.children, workingArray) + 1);
         }
 
-        numCategoryCount = (workingCategoryCount > numCategoryCount) ? workingCategoryCount : numCategoryCount;
+        maxLevelsCount = (currentLevelCount > maxLevelsCount) ? currentLevelCount : maxLevelsCount;
       });
-      
-      return numCategoryCount;
-    }
 
-    $scope.doesCategoryHaveChildren = function (category) {
-      return parseInt(category.childCategoryCount);
-    };
+      return maxLevelsCount;
+    }
 
     this.attachCategoryListToScope = function (categoryListFromAPI) {
       var categoryList = angular.copy(categoryListFromAPI.salesCategories);
       var flattenedCategoryList = [];
-      $scope.numCategoryLevels = flattenCategoriesModel(categoryList, flattenedCategoryList) + 1;
+      $scope.numCategoryLevels = getMaxLevelsAndFlattenCategoriesModel(categoryList, flattenedCategoryList) + 1;
       $scope.nestedCategoryList = categoryList;
       $scope.categoryList = flattenedCategoryList;
     };

@@ -71,139 +71,19 @@
         </ul>
     </div>
 
-    <table class="table table-responsive">
-      <tr>
-        <td colspan="4" class="col-xs-1"></td>
-        <th>Name</th>
-        <th>Description</th>
-        <th class="col-xs-1">Actions</th>
-      </tr>
-      <tr>
-        <!-- parent level 1-->
-        <td colspan="1"><span class="fa fa-toggle-down"></span></td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td>Category 1</td>
-        <td>Test test</td>
-        <td><button class="btn btn-xs btn-info"><span class="fa fa-file-o"></span></button></td>
-      </tr>
-      <tr class="categoryLevel1">
-        <!-- child level 1, parent level 2-->
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1"><span class="fa fa-toggle-down"></span></td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td>Category 1.1</td>
-        <td>Test test</td>
-        <td><button class="btn btn-xs btn-info"><span class="fa fa-file-o"></span></button></td>
-      </tr>
-      <tr class="categoryLevel2">
-        <!-- child level 2, parent level 3-->
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1"><span class="fa fa-toggle-down"></span></td>
-        <td colspan="1"></td>
-        <td>Category 1.1.1</td>
-        <td>Test test</td>
-        <td><button class="btn btn-xs btn-info"><span class="fa fa-file-o"></span></button></td>
-      </tr>
-      <tr class="categoryLevel3">
-        <!-- child level 3-->
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1"><span class="fa fa-toggle-down" ng-show="false"></td>
-        <td>Category 1.1.1.1</td>
-        <td>Test test</td>
-        <td><button class="btn btn-xs btn-info"><span class="fa fa-file-o"></span></button></td>
-      </tr>
-      <tr class="categoryLevel3">
-        <!-- child level 3-->
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1"><span class="fa fa-toggle-down" ng-show="false"></span></td>
-        <td>Category 1.1.1.2</td>
-        <td>Test test</td>
-        <td><button class="btn btn-xs btn-info"><span class="fa fa-file-o"></span></button></td>
-      </tr>
-      <tr class="categoryLevel2">
-        <!-- child level 1, parent level 2-->
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1"><span class="fa fa-toggle-right"></span></td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td>Category 1.2</td>
-        <td>Test test</td>
-        <td><button class="btn btn-xs btn-info"><span class="fa fa-file-o"></span></button></td>
-      </tr>
-      <tr class="categoryLevel1">
-        <!-- child level 1 -->
-        <td colspan="1" class="open-accordion"></td>
-        <td colspan="1"><span class="fa fa-toggle-right" ng-show="false"></span></td>
-        <td colspan="1"></td>
-        <td colspan="1"></td>
-        <td>Category 1.3</td>
-        <td>Test test</td>
-        <td><button class="btn btn-xs btn-info"><span class="fa fa-file-o"></span></button></td>
-      </tr>
+    <!--<table class="table table-responsive">-->
+      <!--<tr>-->
+        <!--<th>Test</th>-->
+      <!--</tr>-->
+      <!--<tr ng-repeat="n in [] | range: 10" class="{{ 'categoryLevel' + n}}">-->
+        <!--<td class="open-accordion">{{ n }}</td>-->
+      <!--</tr>-->
+    <!--</table>-->
 
-      <tr>
-        <td><span class="fa fa-toggle-right"></span></td>
-        <td colspan="3"></td>
-        <td>Category 2</td>
-        <td>Test test</td>
-        <td><button class="btn btn-xs btn-info"><span class="fa fa-file-o"></span></button></td>
-      </tr>
-      <tr>
-        <td><span class="fa fa-toggle-right"></span></td>
-        <td colspan="3"></td>
-        <td>Category 3</td>
-        <td>Test test</td>
-        <td><button class="btn btn-xs btn-info"><span class="fa fa-file-o"></span></button></td>
-      </tr>
-    </table>
-
-    <script type="text/ng-template" id="category_item_tree" >
-      <table class="table table-responsive table-hover" ng-show="category.expanded" >
-          <tbody id="category-{{$index}}" ng-repeat="category in categoryList | toArray:false |  filter:{categoryTypeId: search.categoryTypeId, name: search.name} | orderBy: 'startDate' track by $index">
-          <tr >
-            <td>
-              <span class="fa fa-plus-square-o"
-                    ng-click="toggleAccordionView(category)"
-                    ng-show="category.children && !category.expanded"></span>
-              <span class="fa fa-minus-square" ng-show="category.children && category.expanded"
-                    ng-click="toggleAccordionView(category)"></span>
-            </td>
-
-              <td>{{ category.name }}</td>
-              <td>{{ category.description }}</td>
-              <td>{{ category.salesCategoryPath }}</td>
-              <td>{{ category.itemCount }}</td>
-              <td>
-                  <button class="btn btn-primary btn-xs" ng-click="editCategory(category)" ng-show="isCategoryEditable(category)">
-                      <i class="fa fa-pencil"></i>
-                  </button>
-                  <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, category)" ng-show="canDeleteCategory(category)">
-                      <i class="fa fa-trash"></i>
-                  </button>
-              </td>
-          </tr>
-          <tr ng-if="category.children">
-            <td colspan="6" style="padding: 0px;">
-              <ng-include src="'category_item_tree'" ng-init="categoryList = category.children"/>
-            </td>
-          </tr>
-          </tbody>
-      </table>
-    </script>
-
-    {{ numCategoryLevels }}
     <table class="table table-responsive">
       <thead>
       <tr>
-        <th></th>
+        <th colspan="{{ numCategoryLevels }}"></th>
         <th>Name</th>
         <th>Description</th>
         <th>Items</th>
@@ -211,57 +91,19 @@
       </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="category in categoryList">
-          <td><span class="fa fa-toggle-right" ng-show="doesCategoryHaveChildren(category)"></span></td>
+        <!-- parent level = child level -->
+        <tr ng-repeat="category in categoryList" class="{{ 'categoryLevel' + category.levelNum }}">
+          <td ng-repeat="n in [] | range: category.levelNum-1" class="" style="background-color: #fff;"></td>
+          <td class="open-accordion"><span class="fa fa-toggle-down" ng-show="doesCategoryHaveChildren(category)"></span></td>
+          <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }}"></td>
+
           <td>{{ category.name }}</td>
-          <td>{{ category.salesCategoryPath }}</td>
-          <td>{{ category.childCategoryCount }}</td>
+          <td>{{ category.description }}</td>
+          <td>{{ category.itemCount }}</td>
           <td><!-- Actions --></td>
         </tr>
       </tbody>
     </table>
-
-    <!--<table class="table table-responsive table-bordered table-hover" >-->
-      <!--<thead>-->
-      <!--<tr>-->
-          <!--<th></th>-->
-          <!--<th>Name</th>-->
-          <!--<th>Description</th>-->
-          <!--<th>Path</th>-->
-          <!--<th>Item Count</th>-->
-          <!--<th>Actions</th>-->
-      <!--</tr>-->
-      <!--</thead>-->
-      <!--<tbody id="category-{{$index}}" ng-repeat="category in categoryList | toArray:false |  filter:{categoryTypeId: search.categoryTypeId, name: search.name} | orderBy: 'startDate' track by $index">-->
-      <!--<tr >-->
-        <!--<td>-->
-          <!--<span class="fa fa-plus-square-o"-->
-                <!--ng-click="toggleAccordionView(category)"-->
-                <!--ng-show="category.children && !category.expanded"></span>-->
-          <!--<span class="fa fa-minus-square" ng-show="category.children && category.expanded"-->
-                <!--ng-click="toggleAccordionView(category)"></span>-->
-        <!--</td>-->
-
-          <!--<td>{{ category.name }}</td>-->
-          <!--<td>{{ category.description }}</td>-->
-          <!--<td>{{ category.salesCategoryPath }}</td>-->
-          <!--<td>{{ category.itemCount }}</td>-->
-          <!--<td>-->
-              <!--<button class="btn btn-primary btn-xs" ng-click="editCategory(category)" ng-show="isCategoryEditable(category)">-->
-                  <!--<i class="fa fa-pencil"></i>-->
-              <!--</button>-->
-              <!--<button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, category)" ng-show="canDeleteCategory(category)">-->
-                  <!--<i class="fa fa-trash"></i>-->
-              <!--</button>-->
-          <!--</td>-->
-      <!--</tr>-->
-      <!--<tr ng-if="category.children">-->
-        <!--<td colspan="6" style="padding: 0px;">-->
-          <!--<ng-include src="'category_item_tree'" ng-init="categoryList = category.children"/>-->
-        <!--</td>-->
-      <!--</tr>-->
-      <!--</tbody>-->
-    <!--</table>-->
 
 </div>
 <div class="modal fade delete-warning-modal">
