@@ -8,9 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
-  function ($scope, $routeParams, $q, storeInstanceFactory, sealTypesService, storeInstanceAssignSealsFactory, ngToast,
-            dateUtility, GlobalMenuService, storeInstanceWizardConfig, $location, schedulesService,
-            menuCatererStationsService, lodash, $route, $filter) {
+  function($scope, $routeParams, $q, storeInstanceFactory, sealTypesService, storeInstanceAssignSealsFactory, ngToast,
+    dateUtility, GlobalMenuService, storeInstanceWizardConfig, $location, schedulesService,
+    menuCatererStationsService, lodash, $route, $filter, $localStorage) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -239,9 +239,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return !this.isActionState('replenish');
     };
 
-    this.getStoresList = function () {
-      var query = this.getFormattedDatesPayload();
-      query.readyToUse = this.determineReadyToUse();
+    this.getStoresList = function() {
+      var date = this.getFormattedDatesPayload();
+      var query = {
+        readyToUse: this.determineReadyToUse(),
+        startDate: date.startDate
+      };
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
 
@@ -401,8 +404,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return dateString;
     };
 
-    this.isStepOneFromStepTwo = function (apiData) {
-      if (apiData && apiData.prevStoreInstanceId) {
+    this.isStepOneFromStepTwo = function(apiData) {
+      var stepTwoStoreId = (angular.isDefined($localStorage.stepTwoFromStepOne.storeId) ? parseInt($localStorage.stepTwoFromStepOne
+          .storeId) :
+        null);
+      if (apiData && apiData.id === stepTwoStoreId) {
         return (angular.isNumber(apiData.prevStoreInstanceId));
       }
     };
@@ -665,8 +671,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.createPromiseToDeleteItems = function () {
       var deleteItemsPromiseArray = [];
-      angular.forEach($scope.itemsToDelete, function (item) {
-        deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId, item.id));
+      angular.forEach($scope.itemsToDelete, function(item) {
+        deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId,
+          item.id));
       });
 
       return deleteItemsPromiseArray;
@@ -967,6 +974,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
         $this.createStoreInstanceErrorHandler
       );
+      $localStorage.stepTwoFromStepOne.storeId = null;
     };
 
     this.editDispatchedStoreInstance = function (saveAndExit) {
@@ -1149,8 +1157,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       });
     };
 
-    this.registerMenusScopeWatchers = function () {
-      return ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) || ($this.isActionState('dispatch') &&
+    this.registerMenusScopeWatchers = function() {
+      return ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) || ($this.isActionState(
+          'dispatch') &&
         $routeParams.storeId);
     };
 
