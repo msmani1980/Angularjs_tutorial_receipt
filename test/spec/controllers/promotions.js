@@ -24,6 +24,7 @@ describe('Controller: PromotionsCtrl', function () {
   var scope;
   var routeParams;
   var promotionsFactory;
+  var dateUtility;
   var getBenefitTypesDeferred;
   var getDiscountTypesDeferred;
   var getPromotionTypesDeferred;
@@ -59,6 +60,7 @@ describe('Controller: PromotionsCtrl', function () {
     scope = $rootScope.$new();
 
     promotionsFactory = $injector.get('promotionsFactory');
+    dateUtility = $injector.get('dateUtility');
     companyId = 403;
 
     getBenefitTypesDeferred = $q.defer();
@@ -150,7 +152,12 @@ describe('Controller: PromotionsCtrl', function () {
       });
 
       it('should call promotionsFactory.getCurrencyGlobals', function () {
-        expect(promotionsFactory.getCurrencyGlobals).toHaveBeenCalled();
+        var payload = {
+          isOperatedCurrency: true,
+          startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        };
+
+        expect(promotionsFactory.getCurrencyGlobals).toHaveBeenCalledWith(payload);
       });
 
       it('should call promotionsFactory.getMasterItems', function () {
@@ -387,34 +394,6 @@ describe('Controller: PromotionsCtrl', function () {
     describe('removeFromStationListByIndex scope function', function () {
       describe('hasCompleteStationObject private function', function () {
         it('should return false if promotion.filters[$index] is undefined', function () {
-          expect(scope.removeFromStationListByIndex(0)).toBe(false);
-        });
-
-        it('should return false if promotion.filters[$index].arrivalStation is undefined', function () {
-          scope.promotion.filters = [
-            {}, {}
-          ];
-          expect(scope.removeFromStationListByIndex(0)).toBe(false);
-        });
-
-        it('should return false if promotion.filters[$index].arrivalStation.id is undefined', function () {
-          scope.promotion.filters = [
-            { arrivalStation: {} }, { arrivalStation: {} }
-          ];
-          expect(scope.removeFromStationListByIndex(0)).toBe(false);
-        });
-
-        it('should return false if promotion.filters[$index].departureStation is undefined', function () {
-          scope.promotion.filters = [
-            { arrivalStation: { id: 1 } }, { arrivalStation: { id: 2 } }
-          ];
-          expect(scope.removeFromStationListByIndex(0)).toBe(false);
-        });
-
-        it('should return false if promotion.filters[$index].departureStation.id is undefined', function () {
-          scope.promotion.filters = [
-            { arrivalStation: { id: 1 }, departureStation: {} }, { arrivalStation: { id: 2 }, departureStation: {} }
-          ];
           expect(scope.removeFromStationListByIndex(0)).toBe(false);
         });
       });
