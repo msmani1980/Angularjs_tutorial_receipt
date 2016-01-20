@@ -151,7 +151,6 @@
     <error-dialog form-object="form" error-response="errorResponse" display="displayError">
     </error-dialog>
 
-    <table class="table table-bordered table-hover ng-scope">
     <table infinite-scroll="getReconciliationDataList()" class="table table-bordered table-hover ng-scope">
       <thead>
       <tr>
@@ -209,6 +208,7 @@
         <th class="col-xs-2">Actions</th>
       </tr>
       </thead>
+      <tbody>
       <tr class="{{highlightSelected(instance)}}" ng-repeat="instance in reconciliationList | filter: filterReconciliationList | orderBy: tableSortTitle">
         <td>
           <input ng-show="canHaveInstanceCheckbox(instance)" ng-model="instance.selected"
@@ -251,8 +251,9 @@
           </button>
         </td>
       </tr>
-      <tbody>
+      </tbody>
     </table>
+    <p ng-if="reconciliationList.length > 0" class="record-count small text-center">Showing {{reconciliationList.length}} records</p>
     <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
   </div>
 
