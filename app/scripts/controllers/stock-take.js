@@ -12,6 +12,8 @@ angular.module('ts5App')
 
     $scope.viewName = 'Stock Take';
     $scope.itemQuantities = [];
+    $scope.cateringStationItems = [];
+    $scope.newMasterItems = [];
     $scope.numberOfItems = 1;
     $scope.stockTake = {
       catererStationId: null
@@ -131,43 +133,35 @@ angular.module('ts5App')
       $scope.uiSelectReady = true;
     }
 
-    function diffAndCreatePayloadForNewItems() {
-      var newItems = [];
-      angular.forEach($scope.stockTake.items, function(item) {
-        angular.forEach($scope.cateringStationItems, function(cateringItem) {
-          if (item.masterItemId !== cateringItem.masterItemId) {
-            angular.forEach($scope.masterItemsList, function(responseItem) {
-              var payload = {
-                id: item.id,
-                masterItemId: item.masterItemId,
-                quantity: item.quantity,
-                stockTakeId: item.stockTakeId,
-                itemName: responseItem.itemName,
-                itemCode: responseItem.itemCode
-              };
-              newItems.push(payload);
-            });
-          }
-        });
-      });
+    function addSelectedItemToMasterList(item, responseFromAPI) {
+      var masterItem = angular.copy(responseFromAPI);
 
-      return $filter('unique')(newItems, 'masterItemId');
-    }
+      var newItem = {
+        id: item.id,
+        masterItemId: item.masterItemId,
+        quantity: item.quantity,
+        stockTakeId: item.stockTakeId,
+        itemName: masterItem.itemName,
+        itemCode: masterItem.itemCode
+      };
 
-    function addSelectedItemToMasterList() {
-      var newItems = diffAndCreatePayloadForNewItems();
-      angular.forEach(newItems, function(newItem) {
-        $scope.cateringStationItems.push(newItem);
-      });
-
+      $scope.cateringStationItems.push(newItem);
       $scope.cateringStationItems = $filter('unique')($scope.cateringStationItems, 'masterItemId');
       $scope.cateringStationItems = $filter('orderBy')($scope.cateringStationItems, 'itemName');
+    }
+
+    function addSelectedItemsToMasterList() {
+      angular.forEach($scope.stockTake.items, function(item) {
+        stockTakeFactory.getMasterItem(item.masterItemId).then(function(responseFromAPI) {
+          addSelectedItemToMasterList(item, responseFromAPI);
+        });
+      });
     }
 
     function setMasterItemsList(response) {
       $scope.masterItemsList = angular.copy(response.masterItems);
       if ($scope.stockTake.items && $scope.stockTake.items.length) {
-        addSelectedItemToMasterList();
+        addSelectedItemsToMasterList();
       }
     }
 

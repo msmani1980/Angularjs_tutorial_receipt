@@ -1,13 +1,14 @@
 'use strict';
 
-describe('Controller: StockTakeCtrl', function() {
+fdescribe('Controller: StockTakeCtrl', function() {
 
   // load the controller's module
   beforeEach(module('ts5App',
     'served/catering-stations.json',
     'served/stock-take.json',
     'served/stock-management-dashboard.json',
-    'served/master-item-list.json'
+    'served/master-item-list.json',
+    'served/master-item.json'
   ));
 
   var StockTakeCtrl;
@@ -17,13 +18,14 @@ describe('Controller: StockTakeCtrl', function() {
   var getCatererStationListDeferred;
   var getStockTakeDeferred;
   var getItemsByCateringStationIdDeferred;
+  var getMasterItemDeferred;
   var getItemsMasterListDeferred;
   var saveDeferred;
   var routeParams;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, $filter, lodash,
-    _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedMasterItemList_) {
+    _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedMasterItemList_, _servedMasterItem_) {
     scope = $rootScope.$new();
     location = $location;
     stockTakeFactory = $injector.get('stockTakeFactory');
@@ -47,7 +49,12 @@ describe('Controller: StockTakeCtrl', function() {
 
     getItemsMasterListDeferred = $q.defer();
     getItemsMasterListDeferred.resolve(_servedMasterItemList_);
+
+    getMasterItemDeferred = $q.defer();
+    getMasterItemDeferred.resolve(_servedMasterItem_);
+
     spyOn(stockTakeFactory, 'getItemsMasterList').and.returnValue(getItemsMasterListDeferred.promise);
+    spyOn(stockTakeFactory, 'getMasterItem').and.returnValue(getMasterItemDeferred.promise);
     spyOn(stockTakeFactory, 'getCompanyId').and.returnValue(403);
   }));
 
