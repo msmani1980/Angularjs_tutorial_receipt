@@ -23,6 +23,15 @@ angular.module('ts5App')
     };
     $scope.userSelectedStation = false;
 
+    function showLoadingBar() {
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
+
     this.init = function() {
       hideLoadingBar();
       this.getCatererStationList();
@@ -38,15 +47,6 @@ angular.module('ts5App')
         }
       });
     };
-
-    function showLoadingBar() {
-      angular.element('.loading-more').show();
-    }
-
-    function hideLoadingBar() {
-      angular.element('.loading-more').hide();
-      angular.element('.modal-backdrop').remove();
-    }
 
     this.displayLoadingModal = function (loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
