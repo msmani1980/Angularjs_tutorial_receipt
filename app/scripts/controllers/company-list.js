@@ -7,7 +7,7 @@
  * # CompanyListCtrl
  * Controller of the ts5App
  */
-angular.module('ts5App').controller('CompanyListCtrl', function ($scope, companyFactory, $location) {
+angular.module('ts5App').controller('CompanyListCtrl', function($scope, companyFactory, $location) {
   var $this = this;
   this.meta = {
     limit: 100,
@@ -25,29 +25,29 @@ angular.module('ts5App').controller('CompanyListCtrl', function ($scope, company
     angular.element('.modal-backdrop').remove();
   }
 
-  $this.appendCompaniesToList = function (companyListFromAPI) {
+  $this.appendCompaniesToList = function(companyListFromAPI) {
     $this.meta.count = $this.meta.count || companyListFromAPI.meta.count;
     var companyList = angular.copy(companyListFromAPI.companies);
-    angular.forEach(companyList, function (company) {
+    angular.forEach(companyList, function(company) {
       $scope.companyList.push(company);
     });
 
     hideLoadingModal();
   };
 
-  $scope.showCompanyRelationshipList = function (company) {
+  $scope.showCompanyRelationshipList = function(company) {
     $location.path('/company-relationship-list/' + company.id);
   };
 
-  $scope.viewCompany = function (company) {
-    window.location = 'ember/#/companies/' + company.id + '/view';
+  $scope.viewCompany = function(company) {
+    $location.path('/company-view/' + company.id);
   };
 
-  $scope.editCompany = function (company) {
-    window.location = 'ember/#/companies/' + company.id + '/edit';
+  $scope.editCompany = function(company) {
+    $location.path('/company-edit/' + company.id);
   };
 
-  $scope.loadCompanies = function () {
+  $scope.loadCompanies = function() {
     if ($this.meta.offset >= $this.meta.count) {
       return;
     }
