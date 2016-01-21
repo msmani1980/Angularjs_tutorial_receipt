@@ -8,14 +8,12 @@
 
       <div class="col-xs-8 text-right">
 
-        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
-                aria-controls="search-collapse">
+        <button class="btn btn-default" ng-click="toggleFilterPanel()">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
 
-        <button class="btn btn-primary" data-toggle="collapse" data-target="#create-collapse" aria-expanded="false"
-                aria-controls="create-collapse">
+        <button class="btn btn-primary" ng-click="toggleCreatePanel()">
           <span class="fa fa-plus" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Create Category</span>
         </button>

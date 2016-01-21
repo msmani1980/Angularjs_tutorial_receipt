@@ -28,6 +28,40 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
     }
 
+    function hideFilterPanel() {
+      angular.element('#search-collapse').addClass('collapse');
+    }
+
+    function showFilterPanel() {
+      angular.element('#search-collapse').removeClass('collapse');
+    }
+
+    function hideCreatePanel() {
+      angular.element('#create-collapse').addClass('collapse');
+    }
+
+    function showCreatePanel() {
+      angular.element('#create-collapse').removeClass('collapse');
+    }
+
+    $scope.toggleFilterPanel = function () {
+      if (angular.element('#search-collapse').hasClass('collapse')) {
+        showFilterPanel();
+        hideCreatePanel();
+      } else {
+        hideFilterPanel();
+      }
+    };
+
+    $scope.toggleCreatePanel = function () {
+      if (angular.element('#create-collapse').hasClass('collapse')) {
+        showCreatePanel();
+        hideFilterPanel();
+      } else {
+        hideCreatePanel();
+      }
+    };
+
     $scope.toggleAccordionView = function (category) {
       category.expanded = !category.expanded;
     };
