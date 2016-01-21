@@ -9,11 +9,24 @@
  */
 angular.module('ts5App')
   .controller('CategoryListCtrl', function ($scope, $location, categoryFactory, ngToast, dateUtility, payloadUtility, lodash) {
-    var $this = this;
     $scope.viewName = 'Category';
     $scope.search = {};
     $scope.categoryList = [];
     $scope.categoryToDelete = {};
+
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
+    function showErrors(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
+    }
 
     $scope.toggleAccordionView = function (category) {
       category.expanded = !category.expanded;
@@ -54,6 +67,67 @@ angular.module('ts5App')
       return shouldOpen;
     };
 
+    //$scope.searchCategories = function () {
+    //  categoryFactory.getCategoryList(payloadUtility.serializeDates($scope.search)).then($this.attachCategoryListToScope);
+    //};
+    //
+    //$scope.clearForm = function () {
+    //  $scope.search = {};
+    //  $scope.searchCategories();
+    //};
+
+    $scope.isCategoryReadOnly = function (exchangeRate) {
+      if (!exchangeRate.startDate) {
+        return false;
+      }
+
+      return false;
+    };
+
+    $scope.canDeleteCategory = function (category) {
+      var containsNoChildren = category.childCategoryCount === null || parseInt(category.childCategoryCount) <= 0;
+      var containsNoItems = parseInt(category.itemCount) <= 0;
+      return containsNoChildren && containsNoItems;
+    };
+
+    //$scope.showDeleteConfirmation = function (index, category) {
+    //  $scope.categoryToDelete = category;
+    //  $scope.categoryToDelete.rowIndex = index;
+    //
+    //  angular.element('.delete-warning-modal').modal('show');
+    //};
+
+    $scope.enterEditMode = function (category) {
+      $scope.inEditMode = true;
+      $scope.categoryToEdit = angular.copy(category);
+    };
+
+    $scope.cancelEditMode = function () {
+      $scope.inEditMode = false;
+      $scope.categoryToEdit = null;
+    };
+
+    $scope.canEditCategory = function (category) {
+      return ($scope.inEditMode && category.id === $scope.categoryToEdit.id);
+    };
+
+    function formatNewCategoryPayload() {
+      var newCategory = {
+        name: $scope.newCategory.name,
+        description: $scope.newCategory.description
+      };
+      if ($scope.newCategory.nextCategory) {
+        newCategory.nextCategoryId = $scope.newCategory.nextCategory.id;
+      }
+
+      if ($scope.newCategory.parentCategory) {
+        newCategory.parentCategoryId = $scope.newCategory.parentCategory.id;
+      }
+
+      console.log(newCategory);
+      return newCategory;
+    }
+    
     function formatCategory(category) {
       var currentLevelNum = category.salesCategoryPath.split('/').length;
       var newCategory = {
@@ -87,75 +161,45 @@ angular.module('ts5App')
       return maxLevelsCount;
     }
 
-    this.attachCategoryListToScope = function (categoryListFromAPI) {
+    function attachCategoryListToScope(categoryListFromAPI) {
       var categoryList = angular.copy(categoryListFromAPI.salesCategories);
       var flattenedCategoryList = [];
       $scope.numCategoryLevels = getMaxLevelsAndFlattenCategoriesModel(categoryList, flattenedCategoryList) + 1;
       $scope.nestedCategoryList = categoryList;
       $scope.categoryList = flattenedCategoryList;
+      hideLoadingModal();
+    }
+
+    function init() {
+      showLoadingModal('Loading Data');
+      categoryFactory.getCategoryList({ expand: 'true', parentId: 0 }).then(attachCategoryListToScope);
+    }
+
+    $scope.removeRecord = function (category) {
+      showLoadingModal('Deleting Category ...');
+      categoryFactory.deleteCategory(category.id).then(init, showErrors);
     };
 
-    this.getCategoryList = function () {
-      categoryFactory.getCategoryList({ expand: 'true', parentId: 0 }).then($this.attachCategoryListToScope);
+    function createSuccess() {
+      hideLoadingModal();
+      $scope.newCateogry = {};
+      $scope.inEditMode = false;
+      $scope.displayError = false;
+      init();
+    }
+
+    $scope.saveEditChange = function () {
+
     };
 
-    $scope.editCategory = function (category) {
-      $location.search({});
-      window.location.href = '/#/category/' + category.id + '/edit';
-    };
-
-    $scope.searchCategories = function () {
-      categoryFactory.getCategoryList(payloadUtility.serializeDates($scope.search)).then($this.attachCategoryListToScope);
-    };
-
-    $scope.clearForm = function () {
-      $scope.search = {};
-      $scope.searchCategories();
-    };
-
-    $scope.isCategoryEditable = function (category) {
-      if (angular.isUndefined(category)) {
-        return false;
+    $scope.createCategory = function () {
+      if ($scope.newCategoryForm.$valid) {
+        var newCategory = formatNewCategoryPayload();
+        showLoadingModal('Creating Category');
+        categoryFactory.createCategory(newCategory).then(createSuccess, showErrors);
       }
 
-      return true;
     };
 
-    $scope.isCategoryReadOnly = function (exchangeRate) {
-      if (!exchangeRate.startDate) {
-        return false;
-      }
-
-      return false;
-    };
-
-    $scope.canDeleteCategory = function (category) {
-      var containsNoChildren = category.childCategoryCount === null || parseInt(category.childCategoryCount) <= 0;
-      var containsNoItems = parseInt(category.itemCount) <= 0;
-      return containsNoChildren && containsNoItems;
-    };
-
-    this.deleteCategory = function (categoryId) {
-      categoryFactory.deleteCategory(categoryId);
-    };
-
-    $scope.showDeleteConfirmation = function (index, category) {
-      $scope.categoryToDelete = category;
-      $scope.categoryToDelete.rowIndex = index;
-
-      angular.element('.delete-warning-modal').modal('show');
-    };
-
-    $scope.deleteCategory = function () {
-      angular.element('.delete-warning-modal').modal('hide');
-      angular.element('#category-' + $scope.categoryToDelete.rowIndex).remove();
-
-      $this.deleteCategory($scope.categoryToDelete.id);
-    };
-
-    this.init = function () {
-      $this.getCategoryList();
-    };
-
-    this.init();
+    init();
   });

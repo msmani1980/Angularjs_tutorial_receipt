@@ -14,10 +14,11 @@
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
 
-        <a href="/#/category/create" class="btn btn-primary">
-          <i class="fa fa-plus" aria-hidden="true"></i>
-          <span class="hidden-xs">Create Category</span>
-        </a>
+        <button class="btn btn-primary" data-toggle="collapse" data-target="#create-collapse" aria-expanded="false"
+                aria-controls="create-collapse">
+          <span class="fa fa-plus" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Create Category</span>
+        </button>
       </div>
     </div>
 
@@ -48,32 +49,34 @@
       </form>
     </div>
 
-    <div class="panel panel-default" id="create-collapse">
-      <form name="categorySearchForm" ng-submit="searchCategorys()">
+    <div class="panel panel-default collapse no-transition" id="create-collapse">
+      <form name="newCategoryForm" ng-submit="createCategory()">
         <div class="panel-body">
           <h4>New Category</h4>
           <hr>
           <div class="row">
             <div class="col-sm-6 col-xs-12">
-            <div class="form-group">
-              <label for="category-name">Name *</label>
-              <input
-                ng-model="search.name"
-                type="text"
-                class="form-control"
-                id="category-name"
-                placeholder="Enter Category Name"
-                required="true">
+              <div class="form-group">
+                <label for="category-name">Name *</label>
+                <input
+                  ng-model="newCategory.name"
+                  type="text"
+                  class="form-control"
+                  id="category-name"
+                  placeholder="Enter Category Name"
+                  maxlength="25"
+                  required="true">
+              </div>
             </div>
-          </div>
             <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label for="category-description">Description *</label>
-                <input ng-model="search.description"
+                <input ng-model="newCategory.description"
                        type="text"
                        class="form-control"
                        id="category-description"
                        placeholder="Enter Category Description"
+                       maxlength="25"
                        required="true">
               </div>
             </div>
@@ -82,8 +85,8 @@
             <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label for="category-name">Parent Category</label>
-                <ui-select theme="bootstrap" ng-model="newCategory.parentCategoryId" ng-disabled="readOnly" required name="parentCategoryId">
-                  <ui-select-match placeholder="Select a Parent Category to group under">{{ $select.selected.id }}</ui-select-match>
+                <ui-select theme="bootstrap" ng-model="newCategory.parentCategory" ng-disabled="readOnly" name="parentCategoryId">
+                  <ui-select-match placeholder="Select a Parent Category to group under">{{ $select.selected.name }}</ui-select-match>
                   <ui-select-choices repeat="category in categoryList | filter: {name:$select.search}">
                     <div ng-bind-html="category.name | highlight: $select.search"></div>
                   </ui-select-choices>
@@ -93,8 +96,8 @@
             <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label for="category-description">Next Category</label>
-                <ui-select theme="bootstrap" ng-model="newCategory.nextCategoryId" ng-disabled="readOnly" required name="nextCategoryId">
-                  <ui-select-match placeholder="Select a Category that is next in order">{{ $select.selected.id }}</ui-select-match>
+                <ui-select theme="bootstrap" ng-model="newCategory.nextCategory" ng-disabled="readOnly" name="nextCategoryId">
+                  <ui-select-match placeholder="Select a Category that is next in order">{{ $select.selected.name }}</ui-select-match>
                   <ui-select-choices repeat="category in categoryList | filter: {name:$select.search}">
                     <div ng-bind-html="category.name | highlight: $select.search"></div>
                   </ui-select-choices>
@@ -134,8 +137,6 @@
     </ul>
   </div>
 
-  <br>
-
   <table class="table table-responsive">
     <thead>
     <tr>
@@ -151,48 +152,58 @@
       <td ng-repeat="n in [] | range: category.levelNum-1" class="category-indent"></td>
       <td class="category-border">
         <button ng-class="getToggleButtonClass(category)" ng-show="doesCategoryHaveChildren(category)" ng-disabled="false" ng-click="toggleCategory(category)">
-          <span ng-class="getToggleIconClass(category)" ></span>
+          <span ng-class="getToggleIconClass(category)"></span>
         </button>
       </td>
       <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }}"></td>
 
-      <td>{{ category.name }}</td>
-      <td>{{ category.description }}</td>
+      <td>
+        <span ng-hide="canEditCategory(category)">{{ category.name }}</span>
+        <input
+          ng-model="categoryToEdit.name"
+          type="text"
+          class="form-control"
+          id="edit-category-name"
+          placeholder="Enter Category Name"
+          maxlength="25"
+          ng-show="canEditCategory(category)">
+      </td>
+      <td>
+        <span ng-hide="canEditCategory(category)">{{ category.description }}</span>
+        <input
+          ng-model="categoryToEdit.description"
+          type="text"
+          class="form-control"
+          id="edit-category-description"
+          placeholder="Enter Category description"
+          maxlength="25"
+          ng-show="canEditCategory(category)">
+      </td>
+      </td>
       <td>{{ category.itemCount }}</td>
       <td>
-        <button class="btn btn-xs btn-primary"><span class="fa fa-pencil"></span></button>
-        <button class="btn btn-xs btn-danger"><span class="fa fa-trash"></span></button>
+        <button class="btn btn-xs btn-primary" ng-hide="inEditMode" ng-click="enterEditMode(category)">
+          <span class="fa fa-pencil"></span>
+        </button>
+        <button class="btn btn-xs btn-danger"
+                ng-show="canDeleteCategory(category) && !inEditMode"
+                ng-click="deleteRecordDialog(category, ['name', 'description'])">
+          <span class="fa fa-trash"></span>
+        </button>
+        <button class="btn btn-xs btn-success" ng-show="canEditCategory(category)" ng-click="saveEditChange(category)">
+          <span class="fa fa-check"></span>
+        </button>
+        <button class="btn btn-xs btn-default" ng-show="canEditCategory(category)" ng-click="cancelEditMode(category)">
+          <span class="fa fa-times"></span>
+        </button>
       </td>
+
     </tr>
     </tbody>
   </table>
 
 </div>
-<div class="modal fade delete-warning-modal">
-  <div class="modal-dialog">
-    <div class="modal-content">
 
-      <div class="modal-header">
-        <h4 class="modal-title">Are you sure?</h4>
-      </div>
-
-      <div class="modal-body">
-        <p>You are about to permanently delete <strong>{{categoryToDelete.name}}</strong></p>
-      </div>
-
-      <ul>
-        <li><strong>Name: </strong>{{ categoryToDelete.name }}</li>
-        <li><strong>Description: </strong>{{ categoryToDelete.description }}</li>
-        <li><strong>Path: </strong>{{ categoryToDelete.salesCategoryPath }}</li>
-        <li><strong>Item Count: </strong>{{ categoryToDelete.itemCount }}</li>
-      </ul>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" ng-click="deleteCategory()">Continue</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
+<delete-record-dialog></delete-record-dialog>
 
 <dynamic-left-nav></dynamic-left-nav>
