@@ -41,7 +41,7 @@ angular.module('ts5App')
         var styleLevel = (parseInt(category.levelNum) > 10) ? '10' : category.levelNum;
         return 'categoryLevel' + styleLevel;
       }
-      
+
       return '';
     };
 
