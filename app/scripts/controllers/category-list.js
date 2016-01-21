@@ -103,32 +103,39 @@ angular.module('ts5App')
     };
 
     $scope.cancelEditMode = function () {
-      $scope.inEditMode = false;
       $scope.categoryToEdit = null;
+      $scope.inEditMode = false;
     };
 
     $scope.canEditCategory = function (category) {
       return ($scope.inEditMode && category.id === $scope.categoryToEdit.id);
     };
 
-    function formatNewCategoryPayload() {
+    $scope.clearCreateForm = function () {
+      $scope.newCategory = {};
+    };
+
+    function formatCategoryPayload(categoryToFormat) {
       var newCategory = {
-        name: $scope.newCategory.name,
-        description: $scope.newCategory.description
+        name: categoryToFormat.name || categoryToFormat.categoryName,
+        description: categoryToFormat.description
       };
-      if ($scope.newCategory.nextCategory) {
-        newCategory.nextCategoryId = $scope.newCategory.nextCategory.id;
+      if (categoryToFormat.id) {
+        newCategory.id = categoryToFormat.id;
       }
 
-      if ($scope.newCategory.parentCategory) {
-        newCategory.parentCategoryId = $scope.newCategory.parentCategory.id;
+      if (categoryToFormat.nextCategory) {
+        newCategory.nextCategoryId = categoryToFormat.nextCategory.id;
       }
 
-      console.log(newCategory);
+      if (categoryToFormat.parentCategory) {
+        newCategory.parentCategoryId = categoryToFormat.parentCategory.id;
+      }
+
       return newCategory;
     }
-    
-    function formatCategory(category) {
+
+    function formatCategoryForApp(category) {
       var currentLevelNum = category.salesCategoryPath.split('/').length;
       var newCategory = {
         id: category.id,
@@ -150,7 +157,7 @@ angular.module('ts5App')
       var maxLevelsCount = 0;
       angular.forEach(categoryArray, function (category) {
         var currentLevelCount = 0;
-        workingArray.push(formatCategory(category));
+        workingArray.push(formatCategoryForApp(category));
         if (category.children && category.children.length > 0) {
           currentLevelCount += (getMaxLevelsAndFlattenCategoriesModel(category.children, workingArray) + 1);
         }
@@ -170,7 +177,15 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    function initFreshData() {
+      $scope.newCategory = {};
+      $scope.categoryToEdit = false;
+      $scope.inEditMode = false;
+      $scope.displayError = false;
+    }
+
     function init() {
+      initFreshData();
       showLoadingModal('Loading Data');
       categoryFactory.getCategoryList({ expand: 'true', parentId: 0 }).then(attachCategoryListToScope);
     }
@@ -180,23 +195,17 @@ angular.module('ts5App')
       categoryFactory.deleteCategory(category.id).then(init, showErrors);
     };
 
-    function createSuccess() {
-      hideLoadingModal();
-      $scope.newCateogry = {};
-      $scope.inEditMode = false;
-      $scope.displayError = false;
-      init();
-    }
-
-    $scope.saveEditChange = function () {
-
+    $scope.saveEditChange = function (category) {
+      var newCategory = formatCategoryPayload($scope.categoryToEdit);
+      showLoadingModal('Editing Category');
+      categoryFactory.updateCategory(category.id, newCategory).then(init, showErrors);
     };
 
     $scope.createCategory = function () {
       if ($scope.newCategoryForm.$valid) {
-        var newCategory = formatNewCategoryPayload();
+        var newCategory = formatCategoryPayload($scope.newCategory);
         showLoadingModal('Creating Category');
-        categoryFactory.createCategory(newCategory).then(createSuccess, showErrors);
+        categoryFactory.createCategory(newCategory).then(init, showErrors);
       }
 
     };
