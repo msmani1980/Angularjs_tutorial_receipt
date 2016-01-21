@@ -22,34 +22,32 @@
       </div>
     </div>
 
-    <error-dialog form-object="newCategoryForm" error-response="errorResponse" display="displayError">
-    </error-dialog>
-
     <div class="panel panel-default collapse no-transition" id="search-collapse">
-      <form name="categorySearchForm" ng-submit="search()">
         <div class="panel-body">
+          <h4>Filter Categories
+            <br><small><i>Note: Results will not be shown with parent and child category structures</i></small>
+          </h4>
+          <hr>
           <div class="row">
-            <div class="col-md-3 col-sm-6">
+            <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label for="category-name">Name</label>
-                <input ng-model="search.name" type="text" class="form-control" id="category-name" placeholder="10% Off">
+                <input ng-model="filter.name" type="text" class="form-control" id="category-name" placeholder="Search Category Name">
               </div>
             </div>
 
-            <div class="col-md-3 col-sm-6">
+            <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label for="category-description">Description</label>
-                <input ng-model="search.description" type="text" class="form-control" id="category-description" placeholder="10% Off">
+                <input ng-model="filter.description" type="text" class="form-control" id="category-description" placeholder="Search Category Description">
               </div>
             </div>
 
           </div>
         </div>
         <div class="panel-footer text-right">
-          <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
-          <button type="submit" class="btn btn-primary">Search</button>
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
         </div>
-      </form>
     </div>
 
     <div class="panel panel-default collapse no-transition" id="create-collapse">
@@ -128,14 +126,21 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="category in categoryList" ng-class="getClassForRow(category)" ng-show="shouldShowCategory(category)">
-      <td ng-repeat="n in [] | range: category.levelNum-1" class="category-indent"></td>
-      <td class="category-border">
-        <button ng-class="getToggleButtonClass(category)" ng-show="doesCategoryHaveChildren(category)" ng-disabled="false" ng-click="toggleCategory(category)">
+    <tr ng-repeat="category in categoryList | filter:{ name: filter.name, description: filter.description }"
+        ng-class="getClassForRow(category)"
+        ng-show="shouldShowCategory(category)">
+
+
+      <td colspan="{{ numCategoryLevels }}" ng-show="isUserFiltering()" class="category-border">
+      <td ng-repeat="n in [] | range: category.levelNum-1" class="category-indent" ng-hide="isUserFiltering()"></td>
+      <td class="category-border" ng-hide="isUserFiltering()">
+        <button ng-class="getToggleButtonClass(category)"
+                ng-show="doesCategoryHaveChildren(category)"
+                ng-disabled="false" ng-click="toggleCategory(category)">
           <span ng-class="getToggleIconClass(category)"></span>
         </button>
       </td>
-      <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }}"></td>
+      <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }} && !isUserFiltering()"></td>
 
       <td>
         <span ng-hide="canEditCategory(category)">{{ category.name }}</span>
@@ -162,6 +167,9 @@
       </td>
       <td>{{ category.itemCount }}</td>
       <td>
+        <!--<button class="btn btn-xs btn-warning" ng-hide="inEditMode">-->
+          <!--<span class="fa fa-sort"></span>-->
+        <!--</button>-->
         <button class="btn btn-xs btn-primary" ng-hide="inEditMode" ng-click="enterEditMode(category)">
           <span class="fa fa-pencil"></span>
         </button>

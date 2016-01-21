@@ -37,7 +37,12 @@ angular.module('ts5App')
     };
 
     $scope.getClassForRow = function (category) {
-      return 'categoryLevel' + category.levelNum;
+      if (!$scope.isUserFiltering()) {
+        var styleLevel = (parseInt(category.levelNum) > 10) ? '10' : category.levelNum;
+        return 'categoryLevel' + styleLevel;
+      }
+      
+      return '';
     };
 
     $scope.getToggleButtonClass = function (category) {
@@ -63,18 +68,10 @@ angular.module('ts5App')
     }
 
     $scope.shouldShowCategory = function (category) {
-      var shouldOpen = category.parentId === null || isChildCategoryVisible(category);
+      var shouldStayOpen = category.parentId === null || $scope.filter.name || $scope.filter.description;
+      var shouldOpen = shouldStayOpen || isChildCategoryVisible(category);
       return shouldOpen;
     };
-
-    //$scope.searchCategories = function () {
-    //  categoryFactory.getCategoryList(payloadUtility.serializeDates($scope.search)).then($this.attachCategoryListToScope);
-    //};
-    //
-    //$scope.clearForm = function () {
-    //  $scope.search = {};
-    //  $scope.searchCategories();
-    //};
 
     $scope.isCategoryReadOnly = function (exchangeRate) {
       if (!exchangeRate.startDate) {
@@ -84,18 +81,18 @@ angular.module('ts5App')
       return false;
     };
 
+    $scope.isUserFiltering = function () {
+      var isNameFiltering = $scope.filter.name && $scope.filter.name.length;
+      var isDescriptionFiltering = $scope.filter.description && $scope.filter.description.length;
+
+      return isNameFiltering || isDescriptionFiltering;
+    };
+
     $scope.canDeleteCategory = function (category) {
       var containsNoChildren = category.childCategoryCount === null || parseInt(category.childCategoryCount) <= 0;
       var containsNoItems = parseInt(category.itemCount) <= 0;
       return containsNoChildren && containsNoItems;
     };
-
-    //$scope.showDeleteConfirmation = function (index, category) {
-    //  $scope.categoryToDelete = category;
-    //  $scope.categoryToDelete.rowIndex = index;
-    //
-    //  angular.element('.delete-warning-modal').modal('show');
-    //};
 
     $scope.enterEditMode = function (category) {
       $scope.inEditMode = true;
@@ -113,6 +110,10 @@ angular.module('ts5App')
 
     $scope.clearCreateForm = function () {
       $scope.newCategory = {};
+    };
+
+    $scope.clearSearchForm = function () {
+      $scope.filter = {};
     };
 
     function formatCategoryPayload(categoryToFormat) {
@@ -179,6 +180,7 @@ angular.module('ts5App')
 
     function initFreshData() {
       $scope.newCategory = {};
+      $scope.filter = {};
       $scope.categoryToEdit = false;
       $scope.inEditMode = false;
       $scope.displayError = false;
