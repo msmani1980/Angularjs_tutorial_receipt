@@ -33,7 +33,7 @@ angular.module('ts5App')
       price: [/^\$?\s?[0-9\,]+(\.\d{0,4})?$/, 'Error message for price'],
       url: [/(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/, 'Error for URL'],
       time: [/^([01]\d|2[0-3]):?([0-5]\d):?([0-5]\d)?$/, 'This field should use 24 hour time format (hh:mm) or (hh:mm:ss)'],
-      percentage: [/^[-+]?([0-9]\d?(\.\d{1,2})?|0\.(\d?[1-9]|[1-9]\d))$|^100$|^100.00$/, 'This field should use percentage format 0-100']
+      percentage: [/^[-+]?([0-9]\d?(\.\d{1,3})?|0\.(\d?[1-9]|[1-9]\d))$|^100$|^100.00$/, 'This field should use percentage format 0-100']
     };
     return {
       restrict: 'A',
@@ -52,7 +52,7 @@ angular.module('ts5App')
             return true;
           }
 
-          return (typeof value === 'string' && regexObj[0].test(value));
+          return regexObj[0].test(value);
         };
 
         if (attrs.customPattern.contains('currency')) {

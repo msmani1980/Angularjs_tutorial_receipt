@@ -36,6 +36,25 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     $scope.itemIsInactive = false;
     $scope.editingItem = false;
     $scope.uiSelectTemplateReady = false;
+    $scope.isVoucherSelected = false;
+    $scope.isVirtualSelected = false;
+    $scope.isLinkCharacteristics = false;
+
+    $scope.$watch('formData.itemTypeId', function(selectedItemType) {
+      $scope.isVoucherSelected = (parseInt(selectedItemType) === 3);
+      $scope.isVirtualSelected = (parseInt(selectedItemType) === 2);
+      $scope.filterCharacteristics();
+    }, true);
+
+    $scope.$watch('formData.characteristics', function(characteristics) {
+      if (!characteristics) {
+        return;
+      }
+      
+      $scope.isLinkCharacteristics = characteristics.filter(function (characteristic) {
+        return characteristic.id === 9;
+      }).length > 0;
+    }, true);
 
     this.checkIfViewOnly = function() {
       var path = $location.path();
@@ -129,6 +148,17 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       }
 
       return tagsPayload;
+    };
+
+    $scope.filterCharacteristics = function() {
+      $scope.filteredCharacteristics = [];
+      if (parseInt($scope.formData.itemTypeId) === 2) {
+        $scope.filteredCharacteristics = $scope.characteristics.filter(function(value) {
+          return value.id === 8 || value.id === 9;
+        });
+      } else {
+        $scope.filteredCharacteristics = $scope.characteristics;
+      }
     };
 
     this.findCharacteristicIndex = function(characteristicId) {
@@ -375,6 +405,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(dependencyPromises).then(function(response) {
         $this.setDependencies(response);
+        $scope.filterCharacteristics();
       });
     };
 

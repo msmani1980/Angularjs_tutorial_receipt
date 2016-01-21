@@ -84,8 +84,12 @@
 
             <label>Company Status</label>
             <div class="form-group">
-              <label><input name="isRestriction" ng-model="formData.isActive" data-ng-value="true"  type="radio" ng-disabled="isDisabled()" /> Active</label>
-              <label><input name="isRestriction" ng-model="formData.isActive" data-ng-value="false" type="radio" ng-disabled="isDisabled()" /> Inactive</label>
+              <input type="checkbox"
+                ng-model="formData.isActive"
+                name="isActive">
+
+              <label ng-if="formData.isActive"> Active</label>
+              <label ng-if="!formData.isActive"> Inactive</label>
             </div>
 
           </fieldset>

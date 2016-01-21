@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceWizardConfig,
     storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
-    dateUtility, lodash) {
+    dateUtility, lodash, $localStorage) {
 
     var HANDOVER = 'Hand Over';
     var OUTBOUND = 'Outbound';
@@ -22,6 +22,16 @@ angular.module('ts5App')
     $scope.formData = [];
     $scope.readOnly = true;
     $scope.saveButtonName = 'Exit';
+
+    this.setStepTwoFromStepOne = function() {
+      if ($routeParams.action === 'redispatch') {
+        $localStorage.stepTwoFromStepOne = {
+          storeId: $routeParams.storeId
+        };
+      }
+    };
+
+    this.setStepTwoFromStepOne();
 
     this.setSealColors = function(dataFromAPI) {
       if (angular.isDefined(dataFromAPI)) {

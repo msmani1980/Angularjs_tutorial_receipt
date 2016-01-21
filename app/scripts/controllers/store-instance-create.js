@@ -10,7 +10,7 @@
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
   function($scope, $routeParams, $q, storeInstanceFactory, sealTypesService, storeInstanceAssignSealsFactory, ngToast,
     dateUtility, GlobalMenuService, storeInstanceWizardConfig, $location, schedulesService,
-    menuCatererStationsService, lodash, $route, $filter) {
+    menuCatererStationsService, lodash, $route, $filter, $localStorage) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -136,6 +136,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       };
     };
 
+    this.getFormattedOperationalDaysPayload = function() {
+      var start = dateUtility.getOperationalDay($scope.formData.scheduleDate);
+      return encodeURI([start, 7]);
+    };
+
     this.setCatererStationList = function(dataFromAPI) {
       $scope.cateringStationList = angular.copy(dataFromAPI.response);
     };
@@ -235,8 +240,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getStoresList = function() {
-      var query = this.getFormattedDatesPayload();
-      query.readyToUse = this.determineReadyToUse();
+      var date = this.getFormattedDatesPayload();
+      var query = {
+        readyToUse: this.determineReadyToUse(),
+        startDate: date.startDate
+      };
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
 
@@ -396,8 +404,18 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return dateString;
     };
 
+    this.doesStoreIdFromStepTwoExist = function() {
+      if (angular.isDefined($localStorage.stepTwoFromStepOne) && angular.isDefined($localStorage.stepTwoFromStepOne
+          .storeId)) {
+        return $localStorage.stepTwoFromStepOne.storeId;
+      }
+
+      return null;
+    };
+
     this.isStepOneFromStepTwo = function(apiData) {
-      if (apiData && apiData.prevStoreInstanceId) {
+      var stepTwoStoreId = $this.doesStoreIdFromStepTwoExist();
+      if (apiData && apiData.id === stepTwoStoreId) {
         return (angular.isNumber(apiData.prevStoreInstanceId));
       }
     };
@@ -661,7 +679,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.createPromiseToDeleteItems = function() {
       var deleteItemsPromiseArray = [];
       angular.forEach($scope.itemsToDelete, function(item) {
-        deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId, item.id));
+        deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId,
+          item.id));
       });
 
       return deleteItemsPromiseArray;
@@ -749,7 +768,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.exitToDashboard = function() {
-      this.showLoadingModal('Loading Store Instance Dashboard');
       $location.url('/store-instance-dashboard/');
     };
 
@@ -819,7 +837,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('dispatch')) {
         $scope.onFloorInstance = $this.checkForOnFloorInstance();
         if (angular.isDefined($scope.onFloorInstance) && $scope.onFloorInstance.id) {
-          $scope.onFloorInstance.scheduleDateFormatted = dateUtility.formatDateForApp($scope.onFloorInstance.scheduleDate);
           $this.displayConfirmDialog();
           return;
         }
@@ -919,12 +936,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.redispatchStoreInstance = function(saveAndExit) {
-      this.showLoadingModal('Redispatching Store Instance ' + $routeParams.storeId);
       if (saveAndExit) {
         this.exitToDashboard();
         return;
       }
 
+      this.showLoadingModal('Redispatching Store Instance ' + $routeParams.storeId);
       var promises = $this.makeCreatePromises();
       var redispatchPromises = $this.makeRedispatchPromises();
       $q.all($this.startPromise(redispatchPromises.updateInstancePromises)).then(function() {
@@ -964,6 +981,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
         $this.createStoreInstanceErrorHandler
       );
+      $localStorage.stepTwoFromStepOne.storeId = null;
     };
 
     this.editDispatchedStoreInstance = function(saveAndExit) {
@@ -1057,8 +1075,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     $scope.validateMenus = function() {
       if (angular.isUndefined($scope.createStoreInstance.menus) || $scope.createStoreInstance.menus
-        .$pristine &&
-        !$scope.createStoreInstance.$submitted) {
+        .$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
       }
 
@@ -1114,7 +1131,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getScheduleNumbers = function() {
       var datesForApi = $this.getFormattedDatesPayload();
-      schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate)
+      var operationalDays = this.getFormattedOperationalDaysPayload();
+      schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate,
+          operationalDays)
         .then(this.setScheduleNumbers);
     };
 
@@ -1146,7 +1165,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.registerMenusScopeWatchers = function() {
-      return ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) || ($this.isActionState('dispatch') &&
+      return ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) || ($this.isActionState(
+          'dispatch') &&
         $routeParams.storeId);
     };
 

@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('schedulesService', function ($resource, ENV) {
+  .service('schedulesService', function($resource, ENV) {
 
     var schedulesRequestURL = ENV.apiUrl + '/api/companies/:id/schedules';
 
@@ -24,24 +24,28 @@ angular.module('ts5App')
     var dailySchedulesRequestResource = $resource(schedulesRequestURL + '/daily', null, schedulesActions);
     var schedulesRequestResource = $resource(schedulesRequestURL, null, schedulesActions);
 
-    var getSchedules = function (companyId) {
-      var payload = { id:companyId };
+    var getSchedules = function(companyId) {
+      var payload = {
+        id: companyId
+      };
       return distinctSchedulesRequestResource.getSchedules(payload).$promise;
     };
 
-    var getDailySchedules = function (companyId, scheduleNumber, scheduleDate) {
-      var payload = { id:companyId,
-        scheduleNumber:scheduleNumber,
-        scheduleDate:scheduleDate
+    var getDailySchedules = function(companyId, scheduleNumber, scheduleDate) {
+      var payload = {
+        id: companyId,
+        scheduleNumber: scheduleNumber,
+        scheduleDate: scheduleDate
       };
       return dailySchedulesRequestResource.getSchedules(payload).$promise;
     };
 
-    var getSchedulesInDateRange = function(companyId, startDate, endDate) {
+    var getSchedulesInDateRange = function(companyId, startDate, endDate, operationalDays) {
       var payload = {
-        id:companyId,
-        startDate:startDate,
-        endDate:endDate
+        id: companyId,
+        startDate: startDate,
+        endDate: endDate,
+        operationalDays: operationalDays
       };
       return schedulesRequestResource.getSchedules(payload).$promise;
     };
