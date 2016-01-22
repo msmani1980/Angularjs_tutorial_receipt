@@ -286,6 +286,63 @@ describe('Controller: EmployeeMessageListCtrl', function () {
         expect(shouldShow).toEqual(true);
       });
     });
+
+    describe('get row class', function () {
+      it('should return no class if user is filtering', function () {
+        var expectedClass = '';
+        var mockCategory = { levelNum: 1 };
+        scope.filter = { name: 'filter' };
+        expect(scope.getClassForRow(mockCategory)).toEqual(expectedClass);
+      });
+      it('should return a class matching the categorys nested level', function () {
+        var expectedClass = 'categoryLevel5';
+        var mockCategory = { levelNum: 5 };
+        scope.filter = {};
+        expect(scope.getClassForRow(mockCategory)).toEqual(expectedClass);
+      });
+      it('should return the highest level class for categories nested above 10', function () {
+        var expectedClass = 'categoryLevel10';
+        var mockCategory = { levelNum: 11 };
+        scope.filter = {};
+        expect(scope.getClassForRow(mockCategory)).toEqual(expectedClass);
+      });
+    });
+
+    describe('get toggle button class', function () {
+      it('should return highlighted button class if row is open', function () {
+        var expectedClass = 'btn btn-xs btn-info';
+        var mockCategory = { isOpen: true };
+        expect(scope.getToggleButtonClass(mockCategory)).toEqual(expectedClass);
+      });
+      it('should return plain button class if row is closed', function () {
+        var expectedClass = 'btn btn-xs btn-default';
+        var mockCategory = { isOpen: false };
+        expect(scope.getToggleButtonClass(mockCategory)).toEqual(expectedClass);
+      });
+    });
+
+    describe('get toggle icon class', function () {
+      it('should return down arrow if row is open', function () {
+        var expectedClass = 'fa fa-arrow-down';
+        var mockCategory = { isOpen: true };
+        expect(scope.getToggleIconClass(mockCategory)).toEqual(expectedClass);
+      });
+      it('should return right arrow if row is closed', function () {
+        var expectedClass = 'fa fa-arrow-right';
+        var mockCategory = { isOpen: false };
+        expect(scope.getToggleIconClass(mockCategory)).toEqual(expectedClass);
+      });
+    });
+
+    describe('toggle category', function () {
+      it('should reverse current category open status', function () {
+        var mockCategory = { isOpen: false };
+        scope.toggleCategory(mockCategory);
+        expect(mockCategory.isOpen).toEqual(true);
+        scope.toggleCategory(mockCategory);
+        expect(mockCategory.isOpen).toEqual(false);
+      });
+    });
   });
 
 });

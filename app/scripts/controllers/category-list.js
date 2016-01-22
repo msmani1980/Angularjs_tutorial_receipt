@@ -62,10 +62,6 @@ angular.module('ts5App')
       }
     };
 
-    $scope.toggleAccordionView = function (category) {
-      category.expanded = !category.expanded;
-    };
-
     $scope.doesCategoryHaveChildren = function (category) {
       return parseInt(category.childCategoryCount);
     };
@@ -226,7 +222,7 @@ angular.module('ts5App')
       if (!$scope.categoryToEdit.name || !$scope.categoryToEdit.name.length) {
         $scope.categoryToEdit.name = category.name;
       }
-      
+
       if (!$scope.categoryToEdit.description || !$scope.categoryToEdit.name.length) {
         $scope.categoryToEdit.description = category.description;
       }
