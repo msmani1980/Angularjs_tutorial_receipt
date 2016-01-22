@@ -57,7 +57,10 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     this.calculateFieldsVisibility = function() {
       $scope.showAdditionalFields = ($scope.formData.companyTypeId === '1');
-      $this.addCommonClass();
+      if ($scope.showAdditionalFields) {
+        $this.addCommonClass();
+      }
+
       $scope.showBaseCurrency = lodash.includes(['1', '2', '5'], $scope.formData.companyTypeId);
     };
 
@@ -71,32 +74,61 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       }
     };
 
+    this.findLanguagesIndex = function(languageId) {
+      var languagesIndex = null;
+      for (var key in $scope.languages) {
+        var language = $scope.languages[key];
+        if (parseInt(language.id) === parseInt(languageId)) {
+          languagesIndex = key;
+          break;
+        }
+      }
+
+      return languagesIndex;
+    };
+
+    this.formatLanguagesForApp = function(languages) {
+      var languagePayload = [];
+      for (var languageKey in languages) {
+        var language = languages[languageKey];
+        var index = $this.findLanguagesIndex(language);
+        var payload = {
+          id: language,
+          languageName: $scope.languages[index].languageName,
+          languageCode: $scope.languages[index].languageCode
+        };
+        languagePayload.push(payload);
+      }
+
+      return languagePayload;
+    };
+
     this.updateFormData = function(data) {
       if (!data) {
         return false;
       }
 
-      var companyData = angular.copy(data);
+      var company = angular.copy(data);
 
       $scope.formData = {
-        baseCurrencyId: companyData.baseCurrencyId.toString(),
-        companyTypeId: companyData.companyTypeId.toString(),
-        changeDueRoundingOptionId: companyData.changeDueRoundingOptionId,
-        companyCabinClasses: companyData.companyCabinClasses,
-        companyCode: companyData.companyCode,
-        companyName: companyData.companyName,
-        countryVats: companyData.countryVats,
-        dbaName: companyData.dbaName,
-        ediName: companyData.ediName,
-        eposLanguages: companyData.eposLanguages,
-        exchangeRateVariance: companyData.exchangeRateVariance,
-        id: companyData.id,
-        isActive: companyData.isActive,
-        languages: companyData.languages,
-        legalName: companyData.legalName,
-        parentCompanyId: companyData.parentCompanyId,
-        roundingOptionId: companyData.roundingOptionId,
-        taxes: companyData.taxes
+        baseCurrencyId: company.baseCurrencyId ? company.baseCurrencyId.toString() : null,
+        companyTypeId: company.companyTypeId ? company.companyTypeId.toString() : null,
+        changeDueRoundingOptionId: company.changeDueRoundingOptionId,
+        companyCabinClasses: company.companyCabinClasses,
+        companyCode: company.companyCode,
+        companyName: company.companyName,
+        countryVats: company.countryVats,
+        dbaName: company.dbaName,
+        ediName: company.ediName,
+        eposLanguages: $this.formatLanguagesForApp(company.eposLanguages),
+        exchangeRateVariance: company.exchangeRateVariance,
+        id: company.id,
+        isActive: company.isActive,
+        languages: $this.formatLanguagesForApp(company.languages),
+        legalName: company.legalName,
+        parentCompanyId: company.parentCompanyId,
+        roundingOptionId: company.roundingOptionId,
+        taxes: company.taxes
       };
 
     };
@@ -106,8 +138,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       companiesFactory.getCompany(id).then(function(data) {
         $this.updateViewName(data);
         $this.updateFormData(data);
-        $this.setUIReady();
-        $this.calculateFieldsVisibility();
+        $this.initUI();
       });
     };
 
@@ -134,7 +165,6 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     this.initUI = function() {
       $this.initWatchers();
-      $this.calculateFieldsVisibility();
       return $this.setUIReady();
     };
 
@@ -250,53 +280,79 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     this.formatPayload = function(companyData) {
       var company = angular.copy(companyData);
       company.companyCabinClasses = $this.formatCompanyCabinClasses(company);
-      company.languages = $this.formatCompanyLanguages(company.languages);
-      company.eposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
       company.isActive = (company.isActive === true) ? company.isActive : false;
-      company.baseCurrencyId = parseInt(company.baseCurrencyId);
-      company.companyTypeId = parseInt(company.companyTypeId);
+      company.baseCurrencyId = company.baseCurrencyId.toString();
+      company.companyTypeId = company.companyTypeId.toString();
+      company.taxes = company.taxes;
+
+      if ($scope.showAdditionalFields) {
+        company.languages = $this.formatCompanyLanguages(company.languages);
+        company.eposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
+      } else if (!$scope.showAdditionalFields) {
+        delete company.languages;
+        delete company.eposLanguages;
+      }
+
+      delete company.parentCompanyId;
+      delete company.changeDueRoundingOptionId;
+      delete company.exchangeRateVariance;
+      delete company.roundingOptionId;
       return company;
     };
 
     //$scope functions
     $scope.addTax = function() {
-      if (!$scope.isTaxIdButtonDisabled()) {
-        $scope.formData.taxes.push({});
+      if (!$scope.viewOnly) {
+        if (!$scope.isTaxIdButtonDisabled()) {
+          $scope.formData.taxes.push({});
+        }
       }
     };
 
     $scope.removeTax = function(tax) {
-      $scope.formData.taxes = lodash.filter($scope.formData.taxes, function(t) {
-        return t !== tax;
-      });
+      if (!$scope.viewOnly) {
+        $scope.formData.taxes = lodash.filter($scope.formData.taxes, function(t) {
+          return t !== tax;
+        });
+      }
     };
 
     $scope.addCountryVat = function() {
-      $scope.formData.countryVats.push({
-        vatAmounts: []
-      });
+      if (!$scope.viewOnly) {
+        $scope.formData.countryVats.push({
+          vatAmounts: []
+        });
+      }
     };
 
     $scope.removeCountryVat = function(index) {
-      $scope.formData.countryVats = lodash.filter($scope.formData.countryVats, function(cv, key) {
-        return key !== index;
-      });
+      if (!$scope.viewOnly) {
+        $scope.formData.countryVats = lodash.filter($scope.formData.countryVats, function(cv, key) {
+          return key !== index;
+        });
+      }
     };
 
     $scope.addVatAmount = function(countryVat) {
-      countryVat.vatAmounts.push({
-        vatAmount: null
-      });
+      if (!$scope.viewOnly) {
+        countryVat.vatAmounts.push({
+          vatAmount: null
+        });
+      }
     };
 
     $scope.removeVatAmount = function(countryVat, vatAmount) {
-      countryVat.vatAmounts = lodash.filter(countryVat.vatAmounts, function(va) {
-        return va !== vatAmount;
-      });
+      if (!$scope.viewOnly) {
+        countryVat.vatAmounts = lodash.filter(countryVat.vatAmounts, function(va) {
+          return va !== vatAmount;
+        });
+      }
     };
 
     $scope.addCabinClass = function() {
-      $scope.formData.companyCabinClasses.push({});
+      if (!$scope.viewOnly) {
+        $scope.formData.companyCabinClasses.push({});
+      }
     };
 
     $scope.removeCabinClass = function(cabinClass) {
@@ -304,9 +360,12 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         return false;
       }
 
-      $scope.formData.companyCabinClasses = lodash.filter($scope.formData.companyCabinClasses, function(cc) {
-        return cc !== cabinClass;
-      });
+      if (!$scope.viewOnly) {
+        $scope.formData.companyCabinClasses = lodash.filter($scope.formData.companyCabinClasses, function(cc) {
+          return cc !== cabinClass;
+        });
+      }
+
     };
 
     $scope.submitForm = function(formData) {
@@ -314,7 +373,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       if (formData && $this.validateForm()) {
         var companyData = angular.copy(formData);
         var payload = $this.formatPayload(companyData);
-        var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(payload);
+        var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(
+          payload);
         return action;
       }
     };
