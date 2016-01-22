@@ -102,23 +102,14 @@ angular.module('ts5App')
     }
 
     $scope.shouldShowCategory = function (category) {
-      var shouldStayOpen = category.parentId === null || $scope.filter.name || $scope.filter.description;
+      var shouldStayOpen = category.parentId === null || lodash.has($scope.filter, 'name') || lodash.has($scope.filter, 'description');
       var shouldOpen = shouldStayOpen || isChildCategoryVisible(category);
       return shouldOpen;
     };
 
-    $scope.isCategoryReadOnly = function (exchangeRate) {
-      if (!exchangeRate.startDate) {
-        return false;
-      }
-
-      return false;
-    };
-
     $scope.isUserFiltering = function () {
-      var isNameFiltering = $scope.filter.name && $scope.filter.name.length;
-      var isDescriptionFiltering = $scope.filter.description && $scope.filter.description.length;
-
+      var isNameFiltering = lodash.has($scope.filter, 'name') && ($scope.filter.name.length > 0);
+      var isDescriptionFiltering = lodash.has($scope.filter, 'description') && ($scope.filter.description.length > 0);
       return isNameFiltering || isDescriptionFiltering;
     };
 
@@ -223,7 +214,7 @@ angular.module('ts5App')
     function init() {
       initFreshData();
       showLoadingModal('Loading Data');
-      categoryFactory.getCategoryList({ expand: 'true', parentId: 0 }).then(attachCategoryListToScope);
+      categoryFactory.getCategoryList({ expand: true, parentId: 0 }).then(attachCategoryListToScope);
     }
 
     $scope.removeRecord = function (category) {
@@ -232,6 +223,14 @@ angular.module('ts5App')
     };
 
     $scope.saveEditChange = function (category) {
+      if (!$scope.categoryToEdit.name || !$scope.categoryToEdit.name.length) {
+        $scope.categoryToEdit.name = category.name;
+      }
+      
+      if (!$scope.categoryToEdit.description || !$scope.categoryToEdit.name.length) {
+        $scope.categoryToEdit.description = category.description;
+      }
+
       var newCategory = formatCategoryPayload($scope.categoryToEdit);
       showLoadingModal('Editing Category');
       categoryFactory.updateCategory(category.id, newCategory).then(init, showErrors);

@@ -1,0 +1,718 @@
+{
+  "salesCategories": [
+    {
+      "id": 207,
+      "childCategoryCount": "4",
+      "companyId": 403,
+      "itemCount": "26",
+      "description": "Snacks",
+      "parentId": null,
+      "nextCategoryId": 427,
+      "salesCategoryPath": "Snacks",
+      "countTotalSubcategories": "7",
+      "children": [
+        {
+          "id": 205,
+          "categoryName": "Soft drink",
+          "childCategoryCount": "2",
+          "companyId": 403,
+          "itemCount": "58",
+          "description": "Soft drinks",
+          "parentId": 207,
+          "nextCategoryId": null,
+          "salesCategoryPath": "Snacks/Soft drink",
+          "countTotalSubcategories": "3",
+          "children": [
+            {
+              "id": 346,
+              "categoryName": "A Test Category",
+              "childCategoryCount": null,
+              "companyId": 403,
+              "itemCount": "0",
+              "description": "Simply to test how this works",
+              "parentId": 205,
+              "nextCategoryId": 425,
+              "salesCategoryPath": "Snacks/Soft drink/A Test Category",
+              "countTotalSubcategories": null,
+              "children": null
+            }, {
+              "id": 425,
+              "categoryName": "Carbonated Drinks",
+              "childCategoryCount": "1",
+              "companyId": 403,
+              "itemCount": "0",
+              "description": "Carbonated Drinks",
+              "parentId": 205,
+              "nextCategoryId": null,
+              "salesCategoryPath": "Snacks/Soft drink/Carbonated Drinks",
+              "countTotalSubcategories": "1",
+              "children": [
+                {
+                  "id": 426,
+                  "categoryName": "Cola",
+                  "childCategoryCount": null,
+                  "companyId": 403,
+                  "itemCount": "0",
+                  "description": "Cola",
+                  "parentId": 425,
+                  "nextCategoryId": null,
+                  "salesCategoryPath": "Snacks/Soft drink/Carbonated Drinks/Cola",
+                  "countTotalSubcategories": null,
+                  "children": null
+                }
+              ]
+            }
+          ]
+        }, {
+          "id": 209,
+          "categoryName": "Hot Drinks",
+          "childCategoryCount": "1",
+          "companyId": 403,
+          "itemCount": "13",
+          "description": "Hot Drinks",
+          "parentId": 207,
+          "nextCategoryId": 211,
+          "salesCategoryPath": "Snacks/Hot Drinks",
+          "countTotalSubcategories": "1",
+          "children": [
+            {
+              "id": 400,
+              "categoryName": "story 2482 @@@@@",
+              "childCategoryCount": null,
+              "companyId": 403,
+              "itemCount": "0",
+              "description": "testing ",
+              "parentId": 209,
+              "nextCategoryId": null,
+              "salesCategoryPath": "Snacks/Hot Drinks/story 2482 @@@@@",
+              "countTotalSubcategories": null,
+              "children": null
+            }
+          ]
+        }, {
+          "id": 210,
+          "categoryName": "Chocolates",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "12",
+          "description": "Chocolates",
+          "parentId": 207,
+          "nextCategoryId": 209,
+          "salesCategoryPath": "Snacks/Chocolates",
+          "countTotalSubcategories": null,
+          "children": null
+        }, {
+          "id": 211,
+          "categoryName": "Chips",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "9",
+          "description": "Chips and Nuts",
+          "parentId": 207,
+          "nextCategoryId": null,
+          "salesCategoryPath": "Snacks/Chips",
+          "countTotalSubcategories": null,
+          "children": null
+        }
+      ],
+      "name": "Snacks"
+    }, {
+      "id": 212,
+      "childCategoryCount": "3",
+      "companyId": 403,
+      "itemCount": "12",
+      "description": "Lunch Sandwiches",
+      "parentId": null,
+      "nextCategoryId": 220,
+      "salesCategoryPath": "Lunch",
+      "countTotalSubcategories": "4",
+      "children": [
+        {
+          "id": 222,
+          "categoryName": "Lunch Test",
+          "childCategoryCount": "1",
+          "companyId": 403,
+          "itemCount": "1",
+          "description": "Lunch Test",
+          "parentId": 212,
+          "nextCategoryId": 421,
+          "salesCategoryPath": "Lunch/Lunch Test",
+          "countTotalSubcategories": "1",
+          "children": [
+            {
+              "id": 219,
+              "categoryName": "Fruits",
+              "childCategoryCount": null,
+              "companyId": 403,
+              "itemCount": "16",
+              "description": "Fruits",
+              "parentId": 222,
+              "nextCategoryId": null,
+              "salesCategoryPath": "Lunch/Lunch Test/Fruits",
+              "countTotalSubcategories": null,
+              "children": null
+            }
+          ]
+        }, {
+          "id": 421,
+          "categoryName": "Test Cat234",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "0",
+          "description": "This is my test cat$%.-,(fdsfsdfsfsfsdf",
+          "parentId": 212,
+          "nextCategoryId": 422,
+          "salesCategoryPath": "Lunch/Test Cat234",
+          "countTotalSubcategories": null,
+          "children": null
+        }, {
+          "id": 422,
+          "categoryName": "This is my-test!@#$%():",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "0",
+          "description": "Test Desc.",
+          "parentId": 212,
+          "nextCategoryId": null,
+          "salesCategoryPath": "Lunch/This is my-test!@#$%():",
+          "countTotalSubcategories": null,
+          "children": null
+        }
+      ],
+      "name": "Lunch"
+    }, {
+      "id": 213,
+      "childCategoryCount": "3",
+      "companyId": 403,
+      "itemCount": "1",
+      "description": "Update",
+      "parentId": null,
+      "nextCategoryId": 249,
+      "salesCategoryPath": "Parent Test",
+      "countTotalSubcategories": "4",
+      "children": [
+        {
+          "id": 214,
+          "categoryName": "Child1a",
+          "childCategoryCount": "1",
+          "companyId": 403,
+          "itemCount": "0",
+          "description": null,
+          "parentId": 213,
+          "nextCategoryId": 216,
+          "salesCategoryPath": "Parent Test/Child1a",
+          "countTotalSubcategories": "1",
+          "children": [
+            {
+              "id": 217,
+              "categoryName": "SubChild1",
+              "childCategoryCount": null,
+              "companyId": 403,
+              "itemCount": "2",
+              "description": null,
+              "parentId": 214,
+              "nextCategoryId": null,
+              "salesCategoryPath": "Parent Test/Child1a/SubChild1",
+              "countTotalSubcategories": null,
+              "children": null
+            }
+          ]
+        }, {
+          "id": 215,
+          "categoryName": "Child2",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "2",
+          "description": "Child 2 Desc",
+          "parentId": 213,
+          "nextCategoryId": null,
+          "salesCategoryPath": "Parent Test/Child2",
+          "countTotalSubcategories": null,
+          "children": null
+        }, {
+          "id": 216,
+          "categoryName": "Child3",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "2",
+          "description": null,
+          "parentId": 213,
+          "nextCategoryId": 215,
+          "salesCategoryPath": "Parent Test/Child3",
+          "countTotalSubcategories": null,
+          "children": null
+        }
+      ],
+      "name": "Parent Test"
+    }, {
+      "id": 220,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "14",
+      "description": "Gadgets",
+      "parentId": null,
+      "nextCategoryId": 250,
+      "salesCategoryPath": "Gadgets",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Gadgets"
+    }, {
+      "id": 221,
+      "childCategoryCount": "1",
+      "companyId": 403,
+      "itemCount": "9",
+      "description": "Frances",
+      "parentId": null,
+      "nextCategoryId": 277,
+      "salesCategoryPath": "Frarances",
+      "countTotalSubcategories": "1",
+      "children": [
+        {
+          "id": 397,
+          "categoryName": "Dee",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "0",
+          "description": "dee",
+          "parentId": 221,
+          "nextCategoryId": null,
+          "salesCategoryPath": "Frarances/Dee",
+          "countTotalSubcategories": null,
+          "children": null
+        }
+      ],
+      "name": "Frarances"
+    }, {
+      "id": 231,
+      "childCategoryCount": "2",
+      "companyId": 403,
+      "itemCount": "21",
+      "description": "Virtual Items",
+      "parentId": null,
+      "nextCategoryId": 213,
+      "salesCategoryPath": "Virtual Items",
+      "countTotalSubcategories": "3",
+      "children": [
+        {
+          "id": 206,
+          "categoryName": "Rentals",
+          "childCategoryCount": "1",
+          "companyId": 403,
+          "itemCount": "12",
+          "description": "Rental Items",
+          "parentId": 231,
+          "nextCategoryId": null,
+          "salesCategoryPath": "Virtual Items/Rentals",
+          "countTotalSubcategories": "1",
+          "children": [
+            {
+              "id": 315,
+              "categoryName": "abcdsfsddstsresdfgtsfdgrs",
+              "childCategoryCount": null,
+              "companyId": 403,
+              "itemCount": "0",
+              "description": "asdaaaa",
+              "parentId": 206,
+              "nextCategoryId": null,
+              "salesCategoryPath": "Virtual Items/Rentals/abcdsfsddstsresdfgtsfdgrs",
+              "countTotalSubcategories": null,
+              "children": null
+            }
+          ]
+        }, {
+          "id": 353,
+          "categoryName": "07091",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "0",
+          "description": "07091 descr",
+          "parentId": 231,
+          "nextCategoryId": 206,
+          "salesCategoryPath": "Virtual Items/07091",
+          "countTotalSubcategories": null,
+          "children": null
+        }
+      ],
+      "name": "Virtual Items"
+    }, {
+      "id": 249,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "3",
+      "description": "",
+      "parentId": null,
+      "nextCategoryId": 212,
+      "salesCategoryPath": "Spirits",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Spirits"
+    }, {
+      "id": 250,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": null,
+      "parentId": null,
+      "nextCategoryId": 221,
+      "salesCategoryPath": "Cat123!",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Cat123!"
+    }, {
+      "id": 253,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "2",
+      "description": null,
+      "parentId": null,
+      "nextCategoryId": 254,
+      "salesCategoryPath": "Beauty",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Beauty"
+    }, {
+      "id": 254,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "8",
+      "description": null,
+      "parentId": null,
+      "nextCategoryId": 255,
+      "salesCategoryPath": "Accessories",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Accessories"
+    }, {
+      "id": 255,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": null,
+      "parentId": null,
+      "nextCategoryId": 276,
+      "salesCategoryPath": "Collectables",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Collectables"
+    }, {
+      "id": 276,
+      "childCategoryCount": "1",
+      "companyId": 403,
+      "itemCount": "0",
+      "description": null,
+      "parentId": null,
+      "nextCategoryId": 401,
+      "salesCategoryPath": "test 123456",
+      "countTotalSubcategories": "1",
+      "children": [
+        {
+          "id": 395,
+          "categoryName": "TestingACB23444",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "0",
+          "description": null,
+          "parentId": 276,
+          "nextCategoryId": null,
+          "salesCategoryPath": "test 123456/TestingACB23444",
+          "countTotalSubcategories": null,
+          "children": null
+        }
+      ],
+      "name": "test 123456"
+    }, {
+      "id": 277,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "1",
+      "description": "Virtuals",
+      "parentId": null,
+      "nextCategoryId": 253,
+      "salesCategoryPath": "Virtuals",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Virtuals"
+    }, {
+      "id": 314,
+      "childCategoryCount": "2",
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "Droid pRoducts",
+      "parentId": null,
+      "nextCategoryId": 350,
+      "salesCategoryPath": "Droid Products and movile",
+      "countTotalSubcategories": "2",
+      "children": [
+        {
+          "id": 347,
+          "categoryName": "testA",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "0",
+          "description": null,
+          "parentId": 314,
+          "nextCategoryId": 348,
+          "salesCategoryPath": "Droid Products and movile/testA",
+          "countTotalSubcategories": null,
+          "children": null
+        }, {
+          "id": 348,
+          "categoryName": "testB",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "0",
+          "description": null,
+          "parentId": 314,
+          "nextCategoryId": null,
+          "salesCategoryPath": "Droid Products and movile/testB",
+          "countTotalSubcategories": null,
+          "children": null
+        }
+      ],
+      "name": "Droid Products and movile"
+    }, {
+      "id": 324,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "",
+      "parentId": null,
+      "nextCategoryId": 207,
+      "salesCategoryPath": "Test88888",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Test88888"
+    }, {
+      "id": 334,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "meenu1234567890123456789",
+      "parentId": null,
+      "nextCategoryId": 396,
+      "salesCategoryPath": "Coke Products",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Coke Products"
+    }, {
+      "id": 339,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "All Coke Products",
+      "parentId": null,
+      "nextCategoryId": null,
+      "salesCategoryPath": "CokeProducts12345678",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "CokeProducts12345678"
+    }, {
+      "id": 343,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "TEST",
+      "parentId": null,
+      "nextCategoryId": null,
+      "salesCategoryPath": "MEENU!()",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "MEENU!()"
+    }, {
+      "id": 350,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "1",
+      "description": "",
+      "parentId": null,
+      "nextCategoryId": null,
+      "salesCategoryPath": "Soft Drinks2",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Soft Drinks2"
+    }, {
+      "id": 382,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "1",
+      "description": null,
+      "parentId": null,
+      "nextCategoryId": 404,
+      "salesCategoryPath": "anything",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "anything"
+    }, {
+      "id": 388,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "test please ignore",
+      "parentId": null,
+      "nextCategoryId": 406,
+      "salesCategoryPath": "test \"-.\"-",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "test \"-.\"-"
+    }, {
+      "id": 392,
+      "childCategoryCount": "1",
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "TESTING",
+      "parentId": null,
+      "nextCategoryId": null,
+      "salesCategoryPath": "Test12345",
+      "countTotalSubcategories": "1",
+      "children": [
+        {
+          "id": 403,
+          "categoryName": "azAZ0145\\\"?().-_%@&#$!,;:",
+          "childCategoryCount": null,
+          "companyId": 403,
+          "itemCount": "0",
+          "description": "Testing ",
+          "parentId": 392,
+          "nextCategoryId": null,
+          "salesCategoryPath": "Test12345/azAZ0145\\\"?().-_%@&#$!,;:",
+          "countTotalSubcategories": null,
+          "children": null
+        }
+      ],
+      "name": "Test12345"
+    }, {
+      "id": 396,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "test",
+      "parentId": null,
+      "nextCategoryId": null,
+      "salesCategoryPath": "testingitems",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "testingitems"
+    }, {
+      "id": 401,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "zzzzzz",
+      "parentId": null,
+      "nextCategoryId": 392,
+      "salesCategoryPath": "retesting@@@@ %%%%",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "retesting@@@@ %%%%"
+    }, {
+      "id": 402,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "Testing SEN",
+      "parentId": null,
+      "nextCategoryId": null,
+      "salesCategoryPath": "azAZ0345\\\"?().-_%@&#$!,;:",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "azAZ0345\\\"?().-_%@&#$!,;:"
+    }, {
+      "id": 404,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": null,
+      "parentId": null,
+      "nextCategoryId": null,
+      "salesCategoryPath": "test644444444444",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "test644444444444"
+    }, {
+      "id": 406,
+      "childCategoryCount": null,
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "Test1234567890",
+      "parentId": null,
+      "nextCategoryId": null,
+      "salesCategoryPath": "Test1234567890",
+      "countTotalSubcategories": null,
+      "children": null,
+      "name": "Test1234567890"
+    }, {
+      "id": 427,
+      "childCategoryCount": "1",
+      "companyId": 403,
+      "itemCount": "0",
+      "description": "test cat 1",
+      "parentId": null,
+      "nextCategoryId": null,
+      "salesCategoryPath": "Category 1",
+      "countTotalSubcategories": "4",
+      "children": [
+        {
+          "id": 428,
+          "categoryName": "Category 2",
+          "childCategoryCount": "1",
+          "companyId": 403,
+          "itemCount": "0",
+          "description": "test cat 2",
+          "parentId": 427,
+          "nextCategoryId": null,
+          "salesCategoryPath": "Category 1/Category 2",
+          "countTotalSubcategories": "3",
+          "children": [
+            {
+              "id": 429,
+              "categoryName": "Category 3",
+              "childCategoryCount": "1",
+              "companyId": 403,
+              "itemCount": "0",
+              "description": "test cat 3",
+              "parentId": 428,
+              "nextCategoryId": null,
+              "salesCategoryPath": "Category 1/Category 2/Category 3",
+              "countTotalSubcategories": "2",
+              "children": [
+                {
+                  "id": 430,
+                  "categoryName": "Category 4",
+                  "childCategoryCount": "1",
+                  "companyId": 403,
+                  "itemCount": "0",
+                  "description": "test cat 4",
+                  "parentId": 429,
+                  "nextCategoryId": null,
+                  "salesCategoryPath": "Category 1/Category 2/Category 3/Category 4",
+                  "countTotalSubcategories": "1",
+                  "children": [
+                    {
+                      "id": 431,
+                      "categoryName": "Category 5",
+                      "childCategoryCount": null,
+                      "companyId": 403,
+                      "itemCount": "0",
+                      "description": "test cat 5",
+                      "parentId": 430,
+                      "nextCategoryId": null,
+                      "salesCategoryPath": "Category 1/Category 2/Category 3/Category 4/Category 5",
+                      "countTotalSubcategories": null,
+                      "children": null
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "name": "Category 1"
+    }
+  ],
+  "meta": {
+    "count": 28,
+    "limit": 28,
+    "start": 0
+  }
+}
