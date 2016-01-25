@@ -730,6 +730,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.successMessage(response[0]);
       var uri = $this.determineNextStepURI(response[0]);
       $this.hideLoadingModal();
+      $localStorage.resetMinDate = {
+        id: response[0].id
+      };
       $location.url(uri);
     };
 
@@ -1280,12 +1283,34 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return promises;
     };
 
+    this.isMinDateReset = function() {
+      if (angular.isDefined($localStorage.resetMinDate) && angular.isDefined($localStorage.resetMinDate.id)) {
+        var id = parseInt($localStorage.resetMinDate.id);
+        if (id === $routeParams.storeId) {
+          return true;
+        }
+
+        if (angular.isDefined($scope.storeDetails) && id === $scope.storeDetails.storeInstanceNumber) {
+          return true;
+        }
+
+        return false;
+      }
+    };
+
+    this.minDateConditional = function() {
+      if ($this.isMinDateReset()) {
+        return dateUtility.nowFormatted();
+      } else if (!$this.isMinDateReset()) {
+        return $this.determineMinDate();
+      }
+    };
+
     this.initSuccessHandlerMethods = function() {
-      $scope.minDate = $this.determineMinDate();
+      $scope.minDate = $this.minDateConditional();
       $this.filterMenusList();
       $this.setWizardSteps();
       if ($routeParams.storeId) {
-
         $this.setStoreInstanceMenus();
       }
 
