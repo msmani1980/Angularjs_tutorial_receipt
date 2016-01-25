@@ -103,6 +103,47 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       return languagePayload;
     };
 
+    this.setCompanyCabinClassReadOnly = function(companyCabinClasses) {
+      var payload = [];
+
+      angular.forEach(companyCabinClasses, function(companyCabinClass, key) {
+        if (key === 0) {
+          companyCabinClass.readOnly = true;
+        }
+
+        payload.push(companyCabinClass);
+      });
+
+      return payload;
+    };
+
+    this.setString = function(data) {
+      if (!data) {
+        return null;
+      } else if (angular.isDefined(data)) {
+        return data.toString();
+      }
+    };
+
+    this.setCountryVat = function(countryVats) {
+      if (!countryVats) {
+        return null;
+      } else if (angular.isDefined(countryVats)) {
+        var payload = [];
+        angular.forEach(countryVats, function(countryVat) {
+          var vat = {
+            companyId: countryVat.companyId,
+            countryId: $this.setString(countryVat.countryId),
+            id: countryVat.id,
+            vatAmounts: countryVat.vatAmounts
+          };
+          payload.push(vat);
+        });
+
+        return payload;
+      }
+    };
+
     this.updateFormData = function(data) {
       if (!data) {
         return false;
@@ -111,24 +152,24 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       var company = angular.copy(data);
 
       $scope.formData = {
-        baseCurrencyId: company.baseCurrencyId ? company.baseCurrencyId.toString() : null,
-        companyTypeId: company.companyTypeId ? company.companyTypeId.toString() : null,
-        changeDueRoundingOptionId: company.changeDueRoundingOptionId,
-        companyCabinClasses: company.companyCabinClasses,
-        companyCode: company.companyCode,
-        companyName: company.companyName,
-        countryVats: company.countryVats,
-        dbaName: company.dbaName,
-        ediName: company.ediName,
+        baseCurrencyId: $this.setString(company.baseCurrencyId),
+        companyTypeId: $this.setString(company.companyTypeId),
+        changeDueRoundingOptionId: $this.setString(company.changeDueRoundingOptionId),
+        companyCabinClasses: company.companyCabinClasses ? $this.setCompanyCabinClassReadOnly(company.companyCabinClasses) : null,
+        companyCode: $this.setString(company.companyCode),
+        companyName: $this.setString(company.companyName),
+        countryVats: $this.setCountryVat(company.countryVats),
+        dbaName: $this.setString(company.dbaName),
+        ediName: $this.setString(company.ediName),
         eposLanguages: $this.formatLanguagesForApp(company.eposLanguages),
-        exchangeRateVariance: company.exchangeRateVariance,
+        exchangeRateVariance: $this.setString(company.exchangeRateVariance),
         id: company.id,
         isActive: company.isActive,
         languages: $this.formatLanguagesForApp(company.languages),
-        legalName: company.legalName,
-        parentCompanyId: company.parentCompanyId,
-        roundingOptionId: company.roundingOptionId,
-        taxes: company.taxes
+        legalName: $this.setString(company.legalName),
+        parentCompanyId: $this.setString(company.parentCompanyId),
+        roundingOptionId: $this.setString(company.roundingOptionId),
+        taxes: company.taxes ? company.taxes : null
       };
 
     };
@@ -274,12 +315,46 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       return languagesPayload;
     };
 
+    this.formatCountryVats = function(countryVats) {
+      if (!countryVats) {
+        return null;
+      } else if (angular.isDefined(countryVats)) {
+        var payload = [];
+        angular.forEach(countryVats, function(countryVat) {
+          var vat = {
+            companyId: countryVat.companyId,
+            countryId: parseInt(countryVat.countryId),
+            id: countryVat.id,
+            vatAmounts: countryVat.vatAmounts
+          };
+          payload.push(vat);
+        });
+
+        return payload;
+      }
+    };
+
+    this.formatInt = function(data) {
+      if (!data) {
+        return null;
+      } else if (angular.isDefined(data)) {
+        return parseInt(data);
+      }
+    };
+
+    this.formatActive = function(data) {
+      return (data === true) ? data : false;
+    };
+
     this.formatPayload = function(companyData) {
       var company = angular.copy(companyData);
       company.companyCabinClasses = $this.formatCompanyCabinClasses(company);
-      company.isActive = (company.isActive === true) ? company.isActive : false;
-      company.baseCurrencyId = parseInt(company.baseCurrencyId);
-      company.companyTypeId = parseInt(company.companyTypeId);
+      company.isActive = $this.formatIsActive(company.isActive);
+      company.baseCurrencyId = $this.formatInt(company.baseCurrencyId);
+      company.companyTypeId = $this.formatInt(company.companyTypeId);
+      company.languages = $this.formatCompanyLanguages(company.languages);
+      company.eposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
+      company.countryVats = $this.formatCountryVats(company.countryVats);
       return company;
     };
 
@@ -356,8 +431,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       if (formData && $this.validateForm()) {
         var companyData = angular.copy(formData);
         var payload = $this.formatPayload(companyData);
-        var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(
-          payload);
+        var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(payload);
         return action;
       }
     };
