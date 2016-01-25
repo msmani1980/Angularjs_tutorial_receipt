@@ -81,7 +81,7 @@
   <error-dialog form-object="form" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <table class="table table-responsive table-bordered table-hover">
+  <table infinite-scroll="getPromotionList()" class="table table-responsive table-bordered table-hover">
     <thead>
     <tr>
       <th>Promotion Code</th>
@@ -113,6 +113,7 @@
     </tr>
     </tbody>
   </table>
+  <p ng-if="promotionList.length > 0" class="record-count small text-center">Showing {{promotionList.length}} records</p>
 </div>
 <div class="modal fade delete-warning-modal">
   <div class="modal-dialog">
