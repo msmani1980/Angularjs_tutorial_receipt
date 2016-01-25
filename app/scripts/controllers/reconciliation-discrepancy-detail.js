@@ -44,7 +44,7 @@ angular.module('ts5App')
       var varianceQuantity = getVarianceQuantity(stockItem);
       var retailValue = stockItem.price || 0;
       var varianceValue = varianceQuantity * stockItem.price;
-      var isDiscrepancy = (formatAsCurrency(varianceQuantity) !== '0.00');
+      var isDiscrepancy = (varianceQuantity !== '0');
       var eposSales = stockItem.eposQuantity || 0;
       var inboundOffloadCount = stockItem.inboundQuantity || stockItem.offloadQuantity || 0;
 
@@ -53,8 +53,8 @@ angular.module('ts5App')
         dispatchedCount: stockItem.dispatchedQuantity,
         replenishCount: 0,
         inboundOffloadCount: inboundOffloadCount,
-        ePOSSales: formatAsCurrency(eposSales),
-        varianceQuantity: formatAsCurrency(varianceQuantity),
+        ePOSSales: eposSales,
+        varianceQuantity: varianceQuantity,
         retailValue: formatAsCurrency(retailValue),
         varianceValue: formatAsCurrency(varianceValue),
         isDiscrepancy: isDiscrepancy
