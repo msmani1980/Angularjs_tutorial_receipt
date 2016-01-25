@@ -60,4 +60,6 @@ angular.module('ts5App').controller('CompanyListCtrl', function ($scope, company
     $this.meta.offset += $this.meta.limit;
   };
 
+  $scope.loadCompanies();
+
 });

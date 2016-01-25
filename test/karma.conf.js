@@ -87,7 +87,6 @@ module.exports = function(config) {
       'bower_components/aes/index.js',
       'bower_components/angular-scroll/angular-scroll.js',
       'bower_components/sprintf/src/sprintf.js',
-      'bower_components/ngInfiniteScroll/index.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'bower_components/sprintf/src/angular-sprintf.js',
