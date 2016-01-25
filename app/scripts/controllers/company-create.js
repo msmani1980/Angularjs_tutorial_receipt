@@ -225,24 +225,21 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $q.all(promises).then($this.createSuccessHandler, $this.errorHandler);
     };
 
-    //TODO: implement updateCompany/Edit functionality
     this.updateCompany = function(payload) {
       $this.showLoadingModal('We are updating your Company');
       var promises = $this.createCompanyUpdatePromises(payload);
       $q.all(promises).then($this.updateSuccessHandler, $this.errorHandler);
     };
 
-    //TODO: implement updateCompany/Edit functionality
     this.updateSuccessHandler = function() {
       $this.hideLoadingModal();
       $this.showSuccessModal('update');
     };
 
-    //TODO: implement updateCompany/Edit functionality
     this.createCompanyUpdatePromises = function(payload) {
-      console.log(payload);
+      var id = angular.copy(payload.id);
       return [
-        companiesFactory.updateCompany(payload)
+        companiesFactory.updateCompany(id, payload)
       ];
     };
 
@@ -281,22 +278,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       var company = angular.copy(companyData);
       company.companyCabinClasses = $this.formatCompanyCabinClasses(company);
       company.isActive = (company.isActive === true) ? company.isActive : false;
-      company.baseCurrencyId = company.baseCurrencyId.toString();
-      company.companyTypeId = company.companyTypeId.toString();
-      company.taxes = company.taxes;
-
-      if ($scope.showAdditionalFields) {
-        company.languages = $this.formatCompanyLanguages(company.languages);
-        company.eposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
-      } else if (!$scope.showAdditionalFields) {
-        delete company.languages;
-        delete company.eposLanguages;
-      }
-
-      delete company.parentCompanyId;
-      delete company.changeDueRoundingOptionId;
-      delete company.exchangeRateVariance;
-      delete company.roundingOptionId;
+      company.baseCurrencyId = parseInt(company.baseCurrencyId);
+      company.companyTypeId = parseInt(company.companyTypeId);
       return company;
     };
 

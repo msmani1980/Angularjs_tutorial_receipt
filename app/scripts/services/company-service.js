@@ -58,8 +58,10 @@ angular.module('ts5App')
       return requestResource.createCompany(payload).$promise;
     };
 
-    var updateCompany = function(payload) {
-      return requestResource.updateCompany(payload).$promise;
+    var updateCompany = function(id, payload) {
+      return requestResource.updateCompany({
+        id: id
+      }, payload).$promise;
     };
 
     return {
