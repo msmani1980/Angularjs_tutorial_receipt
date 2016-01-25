@@ -22,6 +22,7 @@ angular.module('ts5App')
 
     this.updateItemList = function() {
       $scope.itemsListCount = $scope.itemsList.length;
+      $scope.totalItems = $scope.itemsListCount;
       $this.setPaginatedItems($scope.itemsList);
     };
 

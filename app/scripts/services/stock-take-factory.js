@@ -29,6 +29,10 @@ angular.module('ts5App')
       return itemsService.getItemsList(payload, true);
     }
 
+    function getMasterItem(id) {
+      return itemsService.getMasterItem(id);
+    }
+
     function getStockTake(_id) {
       return stockTakeService.getStockTake(_id);
     }
@@ -68,7 +72,8 @@ angular.module('ts5App')
       importFromExcel: importFromExcel,
       getStockDashboardItems: getStockDashboardItems,
       getCompanyId: getCompanyId,
-      getItemsMasterList: getItemsMasterList
+      getItemsMasterList: getItemsMasterList,
+      getMasterItem: getMasterItem
     };
 
   });
