@@ -21,31 +21,32 @@
     </div>
 
     <div class="panel panel-default collapse no-transition" id="search-collapse">
-        <div class="panel-body">
-          <h4>Filter Categories
-            <br><small><i>Note: Results will not be shown with parent and child category structures</i></small>
-          </h4>
-          <hr>
-          <div class="row">
-            <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label for="category-name">Name</label>
-                <input ng-model="filter.name" type="text" class="form-control" id="category-name" placeholder="Search Category Name">
-              </div>
+      <div class="panel-body">
+        <h4>Filter Categories
+          <br>
+          <small><i>Note: Results will not be shown with parent and child category structures</i></small>
+        </h4>
+        <hr>
+        <div class="row">
+          <div class="col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="category-name">Name</label>
+              <input ng-model="filter.name" type="text" class="form-control" id="category-name" placeholder="Search Category Name">
             </div>
-
-            <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label for="category-description">Description</label>
-                <input ng-model="filter.description" type="text" class="form-control" id="category-description" placeholder="Search Category Description">
-              </div>
-            </div>
-
           </div>
+
+          <div class="col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="category-description">Description</label>
+              <input ng-model="filter.description" type="text" class="form-control" id="category-description" placeholder="Search Category Description">
+            </div>
+          </div>
+
         </div>
-        <div class="panel-footer text-right">
-          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-        </div>
+      </div>
+      <div class="panel-footer text-right">
+        <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+      </div>
     </div>
 
     <div class="panel panel-default collapse no-transition" id="create-collapse">
@@ -141,7 +142,7 @@
       <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }} && !isUserFiltering()"></td>
 
       <td>
-        <span ng-hide="canEditCategory(category)">{{ category.name }}</span>
+        <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.name }}</span>
         <input
           ng-model="categoryToEdit.name"
           type="text"
@@ -149,10 +150,10 @@
           id="edit-category-name"
           placeholder="Enter Category Name"
           maxlength="25"
-          ng-show="canEditCategory(category)">
+          ng-show="canEditOrRearrangeCategory(category) && inEditMode">
       </td>
       <td>
-        <span ng-hide="canEditCategory(category)">{{ category.description }}</span>
+        <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.description }}</span>
         <input
           ng-model="categoryToEdit.description"
           type="text"
@@ -160,26 +161,32 @@
           id="edit-category-description"
           placeholder="Enter Category description"
           maxlength="25"
-          ng-show="canEditCategory(category)">
+          ng-show="canEditOrRearrangeCategory(category) && inEditMode">
       </td>
       </td>
       <td>{{ category.itemCount }}</td>
       <td>
-        <!--<button class="btn btn-xs btn-warning" ng-hide="inEditMode">-->
-          <!--<span class="fa fa-sort"></span>-->
-        <!--</button>-->
-        <button class="btn btn-xs btn-primary" ng-hide="inEditMode" ng-click="enterEditMode(category)">
+        <button class="btn btn-xs btn-info" ng-show="canEditOrRearrangeCategory(category) && inRearrangeMode" ng-click="rearrangeUp(category, $index)">
+          <span class="fa fa-arrow-up"></span>
+        </button>
+        <button class="btn btn-xs btn-info" ng-show="canEditOrRearrangeCategory(category) && inRearrangeMode" ng-click="rearrangeDown(category, $index)">
+          <span class="fa fa-arrow-down"></span>
+        </button>
+        <button class="btn btn-xs btn-default" ng-hide="inEditMode || inRearrangeMode" ng-click="enterRearrangeMode(category)">
+        <span class="fa fa-sort"></span>
+        </button>
+        <button class="btn btn-xs btn-primary" ng-hide="inEditMode || inRearrangeMode" ng-click="enterEditMode(category)">
           <span class="fa fa-pencil"></span>
         </button>
         <button class="btn btn-xs btn-danger"
-                ng-show="canDeleteCategory(category) && !inEditMode"
+                ng-show="canDeleteCategory(category) && !inEditMode && !inRearrangeMode"
                 ng-click="deleteRecordDialog(category, ['name', 'description'])">
           <span class="fa fa-trash"></span>
         </button>
-        <button class="btn btn-xs btn-success" ng-show="canEditCategory(category)" ng-click="saveEditChange(category)">
+        <button class="btn btn-xs btn-success" ng-show="canEditOrRearrangeCategory(category)" ng-click="saveChange(category)">
           <span class="fa fa-check"></span>
         </button>
-        <button class="btn btn-xs btn-default" ng-show="canEditCategory(category)" ng-click="cancelEditMode()">
+        <button class="btn btn-xs btn-default" ng-show="canEditOrRearrangeCategory(category)" ng-click="cancelEditOrRearrangeMode()">
           <span class="fa fa-times"></span>
         </button>
       </td>

@@ -67,12 +67,17 @@ angular.module('ts5App')
     };
 
     $scope.getClassForRow = function (category) {
-      if (!$scope.isUserFiltering()) {
-        var styleLevel = (parseInt(category.levelNum) > 10) ? '10' : category.levelNum;
-        return 'categoryLevel' + styleLevel;
+      if ($scope.isUserFiltering()) {
+        return '';
       }
 
-      return '';
+      if ($scope.inRearrangeMode && category.id === $scope.categoryToMove.id) {
+        return 'bg-info';
+      }
+
+      var styleLevel = (parseInt(category.levelNum) > 10) ? '10' : category.levelNum;
+      return 'categoryLevel' + styleLevel;
+
     };
 
     $scope.getToggleButtonClass = function (category) {
@@ -81,7 +86,7 @@ angular.module('ts5App')
     };
 
     $scope.getToggleIconClass = function (category) {
-      return (category.isOpen) ? 'fa fa-arrow-down' : 'fa fa-arrow-right';
+      return (category.isOpen) ? 'fa fa-angle-down' : 'fa fa-angle-right';
     };
 
     $scope.toggleCategory = function (category) {
@@ -98,7 +103,7 @@ angular.module('ts5App')
     }
 
     $scope.shouldShowCategory = function (category) {
-      var shouldStayOpen = category.parentId === null || lodash.has($scope.filter, 'name') || lodash.has($scope.filter, 'description');
+      var shouldStayOpen = category.parentId === null || $scope.isUserFiltering();
       var shouldOpen = shouldStayOpen || isChildCategoryVisible(category);
       return shouldOpen;
     };
@@ -115,18 +120,44 @@ angular.module('ts5App')
       return containsNoChildren && containsNoItems;
     };
 
-    $scope.enterEditMode = function (category) {
-      $scope.inEditMode = true;
-      $scope.categoryToEdit = angular.copy(category);
-    };
-
     $scope.cancelEditMode = function () {
       $scope.categoryToEdit = null;
       $scope.inEditMode = false;
     };
 
-    $scope.canEditCategory = function (category) {
-      return ($scope.inEditMode && category.id === $scope.categoryToEdit.id);
+    $scope.cancelRearrangeMode = function () {
+      $scope.categoryToMove = {};
+      $scope.inRearrangeMode = false;
+    };
+
+    $scope.cancelEditOrRearrangeMode = function () {
+      if ($scope.inEditMode) {
+        $scope.cancelEditMode();
+      } else {
+        $scope.cancelRearrangeMode();
+      }
+    };
+
+    $scope.enterRearrangeMode = function (category) {
+      $scope.cancelEditMode();
+      $scope.inRearrangeMode = true;
+      $scope.categoryToMove = angular.copy(category);
+    };
+
+    $scope.enterEditMode = function (category) {
+      $scope.cancelRearrangeMode();
+      $scope.inEditMode = true;
+      $scope.categoryToEdit = angular.copy(category);
+    };
+
+    $scope.canEditOrRearrangeCategory = function (category) {
+      if ($scope.inEditMode) {
+        return category.id === $scope.categoryToEdit.id;
+      } else if ($scope.inRearrangeMode) {
+        return category.id === $scope.categoryToMove.id;
+      }
+
+      return false;
     };
 
     $scope.clearCreateForm = function () {
@@ -157,12 +188,22 @@ angular.module('ts5App')
       return newCategory;
     }
 
+    function getTotalChildCount(category) {
+      var totalChildCount = 0;
+      angular.forEach(category.children, function (childCategory) {
+        totalChildCount += getTotalChildCount(childCategory) + 1;
+      });
+
+      return totalChildCount;
+    }
+
     function formatCategoryForApp(category) {
       var currentLevelNum = category.salesCategoryPath.split('/').length;
       var newCategory = {
         id: category.id,
         name: category.name || category.categoryName,
         childCategoryCount: category.childCategoryCount,
+        totalChildCount: getTotalChildCount(category),
         itemCount: category.itemCount,
         description: category.description,
         parentId: category.parentId,
@@ -204,6 +245,8 @@ angular.module('ts5App')
       $scope.filter = {};
       $scope.categoryToEdit = false;
       $scope.inEditMode = false;
+      $scope.inRearrangeMode = false;
+      $scope.categoryToMove = {};
       $scope.displayError = false;
     }
 
@@ -239,6 +282,60 @@ angular.module('ts5App')
         categoryFactory.createCategory(newCategory).then(init, showErrors);
       }
 
+    };
+
+    function swapCategoryPositions(firstIndex, firstIndexNumChildren, secondIndex) {
+      var tempCategoryList = angular.copy($scope.categoryList);
+      $scope.categoryList.splice(firstIndex, firstIndexNumChildren + 1);
+      for (var i = 0; i <= firstIndexNumChildren; i++) {
+        var categoryToAdd = tempCategoryList[firstIndex + i];
+        $scope.categoryList.splice(secondIndex + i, 0, categoryToAdd);
+      }
+    }
+
+    function swapNextCategoryIds(firstCategory, secondCategory) {
+      firstCategory.nextCategoryId = secondCategory.nextCategoryId;
+      secondCategory.nextCategoryId = firstCategory.id;
+    }
+
+    function getPreviousCategoryIndex(categoryLevel, parentId, startIndex) {
+      for (var i = startIndex - 1; i >= 0; i--) {
+        var prevCategory = $scope.categoryList[i];
+        if (prevCategory.levelNum === categoryLevel && prevCategory.parentId === parentId) {
+          return i;
+        }
+      }
+
+      return -1;
+    }
+
+    function getNextCategoryIndex(categoryLevel, parentId, startIndex) {
+      for (var i = startIndex + 1; i < $scope.categoryList.length; i++) {
+        var nextCategory = $scope.categoryList[i];
+        if (nextCategory.levelNum === categoryLevel && nextCategory.parentId === parentId) {
+          return i;
+        }
+      }
+
+      return -1;
+    }
+
+    $scope.rearrangeUp = function (category, index) {
+      var prevIndex = getPreviousCategoryIndex(category.levelNum, category.parentId, index);
+      if (prevIndex > 0) {
+        var prevCategory = $scope.categoryList[prevIndex];
+        swapNextCategoryIds(prevCategory, category);
+        swapCategoryPositions(index, category.totalChildCount, prevIndex);
+      }
+    };
+
+    $scope.rearrangeDown = function (category, index) {
+      var nextIndex = getNextCategoryIndex(category.levelNum, category.parentId, index);
+      if (nextIndex > 0) {
+        var nextCategory = $scope.categoryList[nextIndex];
+        swapNextCategoryIds(category, nextCategory);
+        swapCategoryPositions(nextIndex, nextCategory.totalChildCount, index);
+      }
     };
 
     init();
