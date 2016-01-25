@@ -114,6 +114,12 @@ angular.module('ts5App', [
   }).when('/company-create', {
     templateUrl: 'views/company-create.html',
     controller: 'CompanyCreateCtrl'
+  }).when('/company-edit/:id', {
+    templateUrl: 'views/company-create.html',
+    controller: 'CompanyCreateCtrl'
+  }).when('/company-view/:id', {
+    templateUrl: 'views/company-create.html',
+    controller: 'CompanyCreateCtrl'
   }).when('/store-number', {
     templateUrl: 'views/store-number-create.html',
     controller: 'StoreNumberCreateCtrl'
