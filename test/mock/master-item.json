@@ -1,0 +1,14 @@
+{
+  "id": 131,
+  "companyId": 403,
+  "itemCode": "testcode",
+  "itemName": "test item",
+  "createdBy": null,
+  "createdOn": "2015-07-14 18:27:01.654094",
+  "updatedBy": null,
+  "updatedOn": null,
+  "characteristics": null,
+  "onboardName": "onboard name",
+  "items": [
+  ]
+}
