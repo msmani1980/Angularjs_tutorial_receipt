@@ -349,7 +349,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     this.formatPayload = function(companyData) {
       var company = angular.copy(companyData);
       company.companyCabinClasses = $this.formatCompanyCabinClasses(company);
-      company.isActive = $this.formatIsActive(company.isActive);
+      company.isActive = $this.formatActive(company.isActive);
       company.baseCurrencyId = $this.formatInt(company.baseCurrencyId);
       company.companyTypeId = $this.formatInt(company.companyTypeId);
       company.languages = $this.formatCompanyLanguages(company.languages);
