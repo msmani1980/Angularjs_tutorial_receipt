@@ -1,6 +1,6 @@
 'use strict';
 
-describe('The Company Create Controller', function() {
+fdescribe('The Company Create Controller', function() {
 
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module('served/company-create.json',
@@ -168,11 +168,15 @@ describe('The Company Create Controller', function() {
         $scope.showAdditionalFields = true;
         company = CompanyCreateCtrl.formatPayload(payload);
       }));
-      it('should format the languages', function() {
-        expect(company.languages).toEqual(companyCreateJSON.languages);
+      it('should format the languages and add the default language (1)', function() {
+        var control = companyCreateJSON.languages;
+        control.push('1');
+        expect(company.languages).toEqual(control);
       });
-      it('should format the eposLanguages', function() {
-        expect(company.eposLanguages).toEqual(companyCreateJSON.eposLanguages);
+      it('should format the eposLanguages and add the default language (1)', function() {
+        var control = companyCreateJSON.eposLanguages;
+        control.push('1');
+        expect(company.eposLanguages).toEqual(control);
       });
       it('should return companyCabinClasses ', function() {
         expect(company.companyCabinClasses).toEqual(companyCreateJSON.companyCabinClasses);
