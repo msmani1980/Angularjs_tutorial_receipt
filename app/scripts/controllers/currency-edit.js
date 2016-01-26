@@ -212,8 +212,8 @@ angular.module('ts5App')
     };
 
     $scope.clearForm = function () {
-      $scope.search = {};
-      $scope.searchDetailedCompanyCurrencies();
+      $scope.search = { };
+      $this.getDetailedCompanyCurrencies();
     };
 
     $scope.addDetailedCompanyCurrencies = function () {
