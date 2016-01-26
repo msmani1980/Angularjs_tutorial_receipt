@@ -346,10 +346,6 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         }
       });
 
-      if (!$this.checkForDefaultLanguage(languages)) {
-        languagesPayload.push('1');
-      }
-
       return languagesPayload;
     };
 

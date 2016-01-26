@@ -176,15 +176,11 @@ describe('The Company Create Controller', function() {
         company = CompanyCreateCtrl.formatPayload(payload);
         spyOn(CompanyCreateCtrl, 'formatCompanyCabinClasses').and.callThrough();
       }));
-      it('should format the languages and add the default language (1)', function() {
-        var control = companyCreateJSON.languages;
-        control.push('1');
-        expect(company.languages).toEqual(control);
+      it('should format the languages', function() {
+        expect(company.languages).toEqual(companyCreateJSON.languages);
       });
-      it('should format the eposLanguages and add the default language (1)', function() {
-        var control = companyCreateJSON.eposLanguages;
-        control.push('1');
-        expect(company.eposLanguages).toEqual(control);
+      it('should format the eposLanguages', function() {
+        expect(company.eposLanguages).toEqual(companyCreateJSON.eposLanguages);
       });
       it('should return companyCabinClasses ', function() {
         expect(company.companyCabinClasses).toEqual(companyCreateJSON.companyCabinClasses);
