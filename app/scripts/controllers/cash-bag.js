@@ -38,6 +38,7 @@ angular.module('ts5App')
     }
 
     function hideLoadingModal() {
+      angular.element('#bankReferenceNumber').focus();
       angular.element('#loading').modal('hide');
     }
 
