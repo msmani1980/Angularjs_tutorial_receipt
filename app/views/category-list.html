@@ -116,7 +116,7 @@
                 <label for="category-description">Place Before</label>
                 <ui-select theme="bootstrap" ng-model="newCategory.nextCategory" ng-disabled="readOnly" name="nextCategoryId">
                   <ui-select-match placeholder="Select a Category that placed after">{{ $select.selected.name }}</ui-select-match>
-                  <ui-select-choices repeat="category in categoryList | filter: {name:$select.search}">
+                  <ui-select-choices repeat="category in categoryList | filter: {name:$select.search, parentName: newCategory.parentCategory.name}">
                     <div ng-bind-html="category.name | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
