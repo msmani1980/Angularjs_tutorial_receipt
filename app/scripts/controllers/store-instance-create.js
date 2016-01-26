@@ -405,9 +405,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.doesStoreIdFromStepTwoExist = function() {
-      if (angular.isDefined($localStorage.stepTwoFromStepOne) && angular.isDefined($localStorage.stepTwoFromStepOne
-          .storeId)) {
-        return $localStorage.stepTwoFromStepOne.storeId;
+      var ls = $localStorage.stepTwoFromStepOne;
+      if (angular.isDefined(ls) && angular.isDefined(ls.storeId)) {
+        return ls.storeId;
       }
 
       return null;
@@ -415,7 +415,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.isStepOneFromStepTwo = function(apiData) {
       var stepTwoStoreId = $this.doesStoreIdFromStepTwoExist();
-      if (apiData && apiData.id === stepTwoStoreId) {
+
+      if (apiData && apiData.id === parseInt(stepTwoStoreId)) {
         return (angular.isNumber(apiData.prevStoreInstanceId));
       }
     };
