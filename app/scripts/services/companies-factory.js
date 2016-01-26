@@ -27,8 +27,8 @@ angular.module('ts5App')
       return companyService.createCompany(payload);
     };
 
-    var updateCompany = function(payload) {
-      return companyService.updateCompany(payload);
+    var updateCompany = function(id, payload) {
+      return companyService.updateCompany(id, payload);
     };
 
     // Tags

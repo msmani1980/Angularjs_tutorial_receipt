@@ -10,23 +10,23 @@ describe('Stock Take Report', function () {
     'served/stock-management-dashboard.json'
   ));
 
-  var StockTakeReportCtrl,
-    $scope,
-    catererStationService,
-    stockTakeService,
-    stockTakeListJSON,
-    getStockTakeListDeferred,
-    getCatererStationListDeferred,
-    getStockDashboardItemsDeferred,
-    stockManagementDashboardJSON,
-    stockDashboardService,
-    stationsListJSON,
-    location,
-    httpBackend;
+  var StockTakeReportCtrl;
+  var $scope;
+  var catererStationService;
+  var stockTakeService;
+  var stockTakeListJSON;
+  var getStockTakeListDeferred;
+  var getCatererStationListDeferred;
+  var getStockDashboardItemsDeferred;
+  var stockManagementDashboardJSON;
+  var stockDashboardService;
+  var stationsListJSON;
+  var location;
+  var httpBackend;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope, $injector,
-    _servedStockTakeList_, _servedCateringStations_, _servedStockManagementDashboard_) {
+                              _servedStockTakeList_, _servedCateringStations_, _servedStockManagementDashboard_) {
 
     stockManagementDashboardJSON = _servedStockManagementDashboard_;
     stockTakeListJSON = _servedStockTakeList_;
@@ -70,7 +70,7 @@ describe('Stock Take Report', function () {
     httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('the controller methods', function() {
+  describe('the controller methods', function () {
 
     it('should have a init method', function () {
       expect(StockTakeReportCtrl.init).toBeDefined();
@@ -94,7 +94,7 @@ describe('Stock Take Report', function () {
 
   });
 
-  describe('when the controller loads', function() {
+  describe('when the controller loads', function () {
 
     it('should have an empty stations list before the scope is digested', function () {
       expect($scope.stationsList).toEqual([]);
@@ -102,7 +102,7 @@ describe('Stock Take Report', function () {
 
     describe('The stationsList array', function () {
 
-      beforeEach(function() {
+      beforeEach(function () {
         $scope.$digest();
       });
 
@@ -140,7 +140,7 @@ describe('Stock Take Report', function () {
 
   });
 
-  describe('when a user selects a station', function() {
+  describe('when a user selects a station', function () {
 
     it('should have an empty deliveryt notes list before the scope is digested', function () {
       expect($scope.stockTakeList).toEqual([]);
@@ -148,7 +148,7 @@ describe('Stock Take Report', function () {
 
     describe('The stockTakeList array', function () {
 
-      beforeEach(function() {
+      beforeEach(function () {
         spyOn(StockTakeReportCtrl, 'getStockTakeListSuccessHandler').and.callThrough();
         spyOn(StockTakeReportCtrl, 'formatStockTakeDates').and.callThrough();
         $scope.catererStationId = 3;
@@ -187,7 +187,7 @@ describe('Stock Take Report', function () {
           expect(stockTake.catererStationId).toEqual(jasmine.any(Number));
         });
 
-        describe('formatting the dates of the stock take', function() {
+        describe('formatting the dates of the stock take', function () {
 
           it('should have been called when the stock takes list is received', function () {
             expect(StockTakeReportCtrl.formatStockTakeDates).toHaveBeenCalled();
@@ -212,7 +212,7 @@ describe('Stock Take Report', function () {
 
     describe('The stations items API call', function () {
 
-      beforeEach(function() {
+      beforeEach(function () {
         spyOn(StockTakeReportCtrl, 'getStockDashboardItems').and.callThrough();
         spyOn(StockTakeReportCtrl, 'getStockDashboardItemsSuccessHandler').and.callThrough();
         $scope.catererStationId = 3;
@@ -241,7 +241,7 @@ describe('Stock Take Report', function () {
 
   describe('remove stock take functionality', function () {
 
-    beforeEach(function() {
+    beforeEach(function () {
       $scope.catererStationId = 3;
       $scope.$digest();
     });
@@ -307,9 +307,9 @@ describe('Stock Take Report', function () {
       expect($scope.getStockTakeList).toHaveBeenCalled();
     });
 
-    describe('setting the date filters', function() {
+    describe('setting the date filters', function () {
 
-      beforeEach(function() {
+      beforeEach(function () {
         $scope.dateRange = {
           startDate: '08/12/2015',
           endDate: '08/13/2015'
@@ -317,13 +317,13 @@ describe('Stock Take Report', function () {
         $scope.$digest();
       });
 
-      it('should set the start and end dates in the query', function() {
+      it('should set the start and end dates in the query', function () {
         var query = StockTakeReportCtrl.generateStockTakeQuery();
         expect(query.startDate).toBeDefined();
         expect(query.endDate).toBeDefined();
       });
 
-      it('should format the start and end dates in the query', function() {
+      it('should format the start and end dates in the query', function () {
         var query = StockTakeReportCtrl.generateStockTakeQuery();
         expect(query.startDate).toEqual('20150812');
         expect(query.endDate).toEqual('20150813');
@@ -335,11 +335,11 @@ describe('Stock Take Report', function () {
 
   describe('searchIsPossible functionality', function () {
 
-    it('should return false by default', function() {
+    it('should return false by default', function () {
       expect($scope.searchIsPossible()).toBeFalsy();
     });
 
-    it('should return false even if the catering station is selected but the station list is empty', function() {
+    it('should return false even if the catering station is selected but the station list is empty', function () {
       $scope.catererStationId = 3;
       $scope.$digest();
       $scope.stockTakeList = [];
@@ -347,7 +347,7 @@ describe('Stock Take Report', function () {
       expect($scope.searchIsPossible()).toBeFalsy();
     });
 
-    it('should return true if the catering station is selected and the station list is not empty', function() {
+    it('should return true if the catering station is selected and the station list is not empty', function () {
       $scope.catererStationId = 3;
       $scope.$digest();
       expect($scope.searchIsPossible()).toBeTruthy();
@@ -357,11 +357,11 @@ describe('Stock Take Report', function () {
 
   describe('importIsPossible functionality', function () {
 
-    it('should return false by default', function() {
+    it('should return false by default', function () {
       expect($scope.importIsPossible()).toBeFalsy();
     });
 
-    it('should return false even if the catering station is selected but the station items list is empty', function() {
+    it('should return false even if the catering station is selected but the station items list is empty', function () {
       $scope.catererStationId = 3;
       $scope.$digest();
       $scope.stationItems = [];
@@ -369,7 +369,7 @@ describe('Stock Take Report', function () {
       expect($scope.importIsPossible()).toBeFalsy();
     });
 
-    it('should return true if the catering station and the items lists is not empty', function() {
+    it('should return true if the catering station and the items lists is not empty', function () {
       $scope.catererStationId = 3;
       $scope.$digest();
       expect($scope.importIsPossible()).toBeTruthy();
@@ -379,11 +379,11 @@ describe('Stock Take Report', function () {
 
   describe('stock take report canCreateStockTake functionality', function () {
 
-    it('should return false if no station id is set', function() {
+    it('should return false if no station id is set', function () {
       expect($scope.canCreateStockTake()).toBeFalsy();
     });
 
-    it('should return false even if the catering station is selected but there is an open stock take', function() {
+    it('should return false even if the catering station is selected but there is an open stock take', function () {
       $scope.catererStationId = 3;
       $scope.$digest();
       $scope.stockTakeList[0].isSubmitted = false;
@@ -391,7 +391,7 @@ describe('Stock Take Report', function () {
       expect($scope.canCreateStockTake()).toBeFalsy();
     });
 
-    it('should return true if the catering station is selected and there is not open stock take', function() {
+    it('should return true if the catering station is selected and there is not open stock take', function () {
       $scope.catererStationId = 3;
       $scope.$digest();
       $scope.stockTakeList[0].isSubmitted = true;
@@ -399,7 +399,7 @@ describe('Stock Take Report', function () {
       expect($scope.canCreateStockTake()).toBeTruthy();
     });
 
-    it('should return true if no stock takes were returned', function() {
+    it('should return true if no stock takes were returned', function () {
       $scope.catererStationId = 3;
       $scope.$digest();
       $scope.stockTakeList = [];

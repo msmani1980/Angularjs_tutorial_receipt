@@ -51,6 +51,7 @@ describe('Controller: PromotionListCtrl', function () {
 
       // place here mocked dependencies
     });
+    scope.getPromotionList();
     scope.$digest();
   }));
 

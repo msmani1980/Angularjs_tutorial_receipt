@@ -523,10 +523,10 @@ angular.module('ts5App')
 
     this.storeInstanceIdForTamperedSeals = function() {
       if ($scope.storeDetails.prevStoreInstanceId && $routeParams.action === 'redispatch') {
-        return $scope.storeDetails.prevStoreInstanceId;
+        return parseInt($scope.storeDetails.prevStoreInstanceId);
       }
 
-      return $routeParams.storeId;
+      return parseInt($routeParams.storeId);
     };
 
     this.makeNotePayload = function() {
@@ -592,20 +592,26 @@ angular.module('ts5App')
       return false;
     };
 
+    this.createTamperedPromises = function() {
+      var payload = $this.updateStoreInstanceTampered();
+      var id = $this.storeInstanceIdForTamperedSeals();
+      return [
+        storeInstanceFactory.updateStoreInstance(id, payload)
+      ];
+    };
+
     this.assignSeals = function() {
       this.displayLoadingModal('Assigning seals to Store Instance');
       var deletePromises = this.makeDeleteSealsPromises();
       var createPromises = this.makeCreateSealsPromises();
       var tamperedPromises = [];
       if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
-        var payload = $this.updateStoreInstanceTampered();
-        tamperedPromises.push(storeInstanceFactory.updateStoreInstance(this.storeInstanceIdForTamperedSeals(),
-          payload));
+        tamperedPromises = this.createTamperedPromises();
       }
 
       $q.all(deletePromises).then(
-        $q.all(tamperedPromises).then(
-          $q.all(createPromises).then(
+        $q.all(createPromises).then(
+          $q.all(tamperedPromises).then(
             $this.assignSealsSuccessHandler,
             $this.assignSealsErrorHandler
           ), $this.assignSealsErrorHandler

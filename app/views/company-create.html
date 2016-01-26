@@ -71,7 +71,7 @@
 
         <div class="col-xs-12 col-sm-6">
 
-          <fieldset ng-disabled="isDisabled()">
+          <fieldset ng-disabled="viewOnly">
 
             <input-text label="Company Name" name="companyName" required="true" pattern="regexp.sentence"
                         placeholder="Company Name" min-length="1" max-length="40"></input-text>
@@ -98,7 +98,7 @@
 
         <div class="col-xs-12 col-sm-6">
 
-          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
+          <fieldset ng-disabled="viewOnly" ng-show="uiSelectTemplateReady">
 
             <div class="form-group">
               <input-text label="DBA Name" name="dbaName" pattern="regexp.alphanumeric"
@@ -147,7 +147,7 @@
         </div>
       </div>
 
-      <fieldset >
+      <fieldset ng-disabled="viewOnly">
 
         <h3 id="company-type">Company Type</h3>
 
@@ -177,7 +177,7 @@
 
         </div>
 
-        <div class="row" ng-show="showAdditionalFields">
+        <div class="row" ng-show="showAdditionalFields" ng-if="uiSelectTemplateReady">
 
           <div class="col-xs-12 col-sm-6">
             <label>Parent Company</label>
@@ -216,7 +216,7 @@
 
       </fieldset>
 
-      <fieldset ng-if="showAdditionalFields">
+      <fieldset ng-if="showAdditionalFields" ng-disabled="viewOnly">
 
         <div class="row">
           <div class="col-xs-12">
@@ -276,7 +276,7 @@
 
       </fieldset>
 
-      <fieldset ng-show="showAdditionalFields">
+      <fieldset ng-show="showAdditionalFields" ng-disabled="viewOnly">
 
         <div class="row">
           <div class="col-xs-12">

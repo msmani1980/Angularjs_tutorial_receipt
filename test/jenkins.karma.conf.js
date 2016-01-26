@@ -3,7 +3,7 @@
 // Generated on 2015-04-14 using
 // generator-karma 0.9.0
 
-module.exports = function (config) {
+module.exports = function(config) {
   'use strict';
 
   config.set({
@@ -76,7 +76,6 @@ module.exports = function (config) {
       'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js',
       'bower_components/ng-file-upload/ng-file-upload.js',
       'bower_components/ng-lodash/build/ng-lodash.js',
-      'bower_components/ngInfiniteScroll/index.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/ngtoast/dist/ngToast.js',
       'bower_components/select2/select2.js',
@@ -87,10 +86,10 @@ module.exports = function (config) {
       'bower_components/enc-base64-min/index.js',
       'bower_components/aes/index.js',
       'bower_components/angular-scroll/angular-scroll.js',
+      'bower_components/sprintf/src/sprintf.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'bower_components/sprintf/dist/sprintf.min.js',
-      'bower_components/sprintf/dist/angular-sprintf.min.js',
       // endbower
+      'bower_components/sprintf/src/angular-sprintf.js',
       'app/scripts/**/*.js',
       'test/mock/**/*.json',
       'test/spec/**/*.js',
@@ -127,14 +126,13 @@ module.exports = function (config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: true,
+    singleRun: false,
 
     colors: true,
 
     // level of logging
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-    logLevel: config.LOG_ERROR
-
+    logLevel: config.LOG_INFO
     // Uncomment the following lines if you are using grunt's server to run the tests
     // proxies: {
     //   '/': 'http://localhost:9000/'

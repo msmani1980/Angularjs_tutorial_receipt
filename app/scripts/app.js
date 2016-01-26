@@ -26,7 +26,6 @@ angular.module('ts5App', [
   'ja.qr',
   'ngToast',
   'ang-drag-drop',
-  'infinite-scroll',
   'ngLodash',
   'frapontillo.bootstrap-switch',
   'sprintf'
@@ -113,6 +112,12 @@ angular.module('ts5App', [
     templateUrl: 'views/company.html',
     controller: 'CompanyCtrl'
   }).when('/company-create', {
+    templateUrl: 'views/company-create.html',
+    controller: 'CompanyCreateCtrl'
+  }).when('/company-edit/:id', {
+    templateUrl: 'views/company-create.html',
+    controller: 'CompanyCreateCtrl'
+  }).when('/company-view/:id', {
     templateUrl: 'views/company-create.html',
     controller: 'CompanyCreateCtrl'
   }).when('/store-number', {
@@ -297,16 +302,13 @@ angular.module('ts5App', [
     controller: 'EmployeeMessageCtrl'
   }).when('/discounts/create', {
     templateUrl: 'views/discount-create.html',
-    controller: 'DiscountCreateCtrl',
-    controllerAs: 'discountCreate'
+    controller: 'DiscountCreateCtrl'
   }).when('/discounts/edit/:id', {
     templateUrl: 'views/discount-create.html',
-    controller: 'DiscountCreateCtrl',
-    controllerAs: 'discountCreate'
+    controller: 'DiscountCreateCtrl'
   }).when('/promotions', {
     templateUrl: 'views/promotion-list.html',
-    controller: 'PromotionListCtrl',
-    controllerAs: 'promotionList'
+    controller: 'PromotionListCtrl'
   }).otherwise({
     redirectTo: '/'
   });

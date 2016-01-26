@@ -437,7 +437,7 @@ describe('Store Instance Create Controller', function() {
       expect(StoreInstanceCreateCtrl.setScheduleNumber()).toEqual(undefined);
     });
 
-    describe('determining the mininum date', function() {
+    describe('determining the minimum date', function() {
 
       it('should have been called the determineMinDate method when the store instance is loaded',
         function() {
@@ -466,6 +466,28 @@ describe('Store Instance Create Controller', function() {
         var dateStringControl = '+' + controlDiff.toString() + 'd';
         var dateStringTest = StoreInstanceCreateCtrl.determineMinDate();
         expect(dateStringTest).toEqual(dateStringControl);
+      });
+
+      describe('isMinDateReset', function() {
+
+        it('should return false if the localStorage.resetMinDate.id isnt the same id', function() {
+          var mockData = angular.copy(storeDetailsJSON);
+          localStorage.resetMinDate = {
+            id: 12
+          };
+          mockLoadStoreInstance(mockData);
+          expect(StoreInstanceCreateCtrl.isMinDateReset()).toBeFalsy();
+        });
+
+        it('should resetMinDate if the localStorage is set on response from API', function() {
+          var mockData = angular.copy(storeDetailsJSON);
+          localStorage.resetMinDate = {
+            id: mockData.storeInstanceNumber
+          };
+          mockLoadStoreInstance(mockData);
+          expect($scope.minDate).toBe(dateUtility.nowFormatted());
+        });
+
       });
 
     });
