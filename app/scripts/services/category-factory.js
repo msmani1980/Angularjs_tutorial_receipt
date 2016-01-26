@@ -31,8 +31,9 @@ angular.module('ts5App')
       return categoryService.createCategory(getCompanyId(), payload);
     };
 
-    var deleteCategory = function (categoryId) {
-      return categoryService.deleteCategory(categoryId);
+    var deleteCategory = function (id) {
+      var companyId = getCompanyId();
+      return categoryService.deleteCategory(id, companyId);
     };
 
     return {

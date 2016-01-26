@@ -7,8 +7,7 @@
 }
 
 .subversion-row {
-  background-color: #f0f0f0;
-
+  background-color: #f2f2f2;
 }
 
 .empty-col {
@@ -16,8 +15,61 @@
 }
 
 .open-accordion {
-  border-left: 4px solid #5e5e5e;
+  border-left: 4px solid #555;
+};
+
+.category-border {
+  border-left: 2px solid #777;
 }
+
+.category-indent {
+  background-color: white;
+}
+
+.categoryLevel1 {
+  background-color: #fff;
+}
+
+.categoryLevel2 {
+  background-color: #f8f8f8;
+}
+
+.categoryLevel3 {
+  background-color: #f0f0f0;
+}
+
+.categoryLevel4 {
+  background-color: #e9e9e9;
+}
+
+.categoryLevel5 {
+  background-color: #e1e1e1;
+}
+
+.categoryLevel6 {
+  background-color: #d9d9d9;
+}
+
+.categoryLevel7 {
+  background-color: #d0d0d0;
+}
+
+.categoryLevel8 {
+  background-color: #c5c5c5;
+}
+
+.categoryLevel9 {
+  background-color: #bababa;
+}
+
+.categoryLevel10 {
+  background-color: #aaa;
+}
+
+.open-row {
+  background-color: #f2f2f2;
+}
+
 
 .slideUp.ng-hide {
   opacity: 1;

@@ -2,7 +2,6 @@
 /* global moment */
 
 /**
- * @author Max Felker <max@bigroomstudios.com>
  * @ngdoc function
  * @name ts5App.controller:ItemListCtrl
  * @description

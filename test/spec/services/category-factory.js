@@ -44,7 +44,7 @@ describe('Service: categoryFactory', function () {
 
     it('should call categoryService.deleteCategory with a category id', function () {
       categoryFactory.deleteCategory(1);
-      expect(categoryService.deleteCategory).toHaveBeenCalledWith(1);
+      expect(categoryService.deleteCategory).toHaveBeenCalledWith(1, 0);
     });
 
     it('should call categoryService.updateCategory with a category id', function () {
