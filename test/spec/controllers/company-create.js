@@ -18,15 +18,22 @@ fdescribe('The Company Create Controller', function() {
   var $httpBackend;
   var companyCreateJSON;
 
-  function createController($injector) {
+  function createController($injector, state) {
+    var params = {
+      state: (state ? state : 'create')
+    };
+    if (params.state === 'edit') {
+      params.id = 1;
+    }
     $location = $injector.get('$location');
-    $location.path('/company-create');
+    $location.path('/company-' + params.state);
     $rootScope = $injector.get('$rootScope');
     $httpBackend = $injector.get('$httpBackend');
     $scope = $rootScope.$new();
     $controller = $injector.get('$controller');
     CompanyCreateCtrl = $controller('CompanyCreateCtrl', {
-      $scope: $scope
+      $scope: $scope,
+      $routeParams: params
     });
   }
 
@@ -167,6 +174,7 @@ fdescribe('The Company Create Controller', function() {
         };
         $scope.showAdditionalFields = true;
         company = CompanyCreateCtrl.formatPayload(payload);
+        spyOn(CompanyCreateCtrl, 'formatCompanyCabinClasses').and.callThrough();
       }));
       it('should format the languages and add the default language (1)', function() {
         var control = companyCreateJSON.languages;
@@ -228,7 +236,7 @@ fdescribe('The Company Create Controller', function() {
     });
   });
 
-  describe('$scope.submitForm', function() {
+  describe('$scope.submitForm - createCompany', function() {
     var createCompanyDeferred;
     var response = [];
     beforeEach(inject(function($injector, $q, $templateCache, $compile) {
@@ -248,6 +256,30 @@ fdescribe('The Company Create Controller', function() {
       createCompanyDeferred.resolve();
       var payload = CompanyCreateCtrl.formatPayload(companyCreateJSON);
       expect(CompanyCreateCtrl.createCompany).toHaveBeenCalledWith(payload);
+    });
+  });
+
+  describe('$scope.submitForm - updateCompany', function() {
+    var updateCompanyDeferred;
+    var response = [];
+    beforeEach(inject(function($injector, $q, $templateCache, $compile) {
+      renderView($templateCache, $compile);
+      updateCompanyDeferred = $q.defer();
+      $scope.editingCompany = true;
+      spyOn(CompanyCreateCtrl, 'updateCompany').and.callThrough();
+      spyOn(CompanyCreateCtrl, 'formatPayload').and.callThrough();
+      spyOn(CompanyCreateCtrl, 'validateForm').and.callThrough();
+      $scope.formData = angular.copy(companyCreateJSON);
+      $scope.submitForm($scope.formData);
+      $httpBackend.when('POST').respond(response.$promise);
+    }));
+    it('should call validateForm', function() {
+      expect(CompanyCreateCtrl.validateForm).toHaveBeenCalled();
+    });
+    it('should call updateCompany', function() {
+      updateCompanyDeferred.resolve();
+      var payload = CompanyCreateCtrl.formatPayload(companyCreateJSON);
+      expect(CompanyCreateCtrl.updateCompany).toHaveBeenCalledWith(payload);
     });
   });
 
@@ -340,6 +372,59 @@ fdescribe('The Company Create Controller', function() {
     });
   });
 
+  describe('calculateFieldsVisibility', function() {
+    beforeEach(function() {
+      $scope.formData.companyTypeId = '1';
+      spyOn(CompanyCreateCtrl, 'calculateFieldsVisibility').and.callThrough();
+      spyOn(CompanyCreateCtrl, 'addCommonClass').and.callThrough();
+      CompanyCreateCtrl.calculateFieldsVisibility();
+    });
+    it('should set showAdditionalFields to true', function() {
+      expect($scope.showAdditionalFields).toBeTruthy();
+    });
+    it('should call addCommonClass', function() {
+      expect(CompanyCreateCtrl.addCommonClass).toHaveBeenCalled();
+    });
+  });
+
+  describe('addCommonClass', function() {
+    var payload = {
+      cabinClass: 'Common',
+      code: 'CC',
+      cabinClassDescription: 'Common Class',
+      readOnly: true
+    };
+    beforeEach(function() {
+      spyOn(CompanyCreateCtrl, 'addCommonClass').and.callThrough();
+    });
+    it('should add the common class to companyCabinClasses', function() {
+      $scope.showAdditionalFields = true;
+      CompanyCreateCtrl.addCommonClass();
+      expect($scope.formData.companyCabinClasses[0]).toEqual(payload);
+    });
+    it('should add the common class to companyCabinClasses', function() {
+      $scope.formData.companyCabinClasses = [];
+      $scope.showAdditionalFields = false;
+      CompanyCreateCtrl.addCommonClass();
+      expect($scope.formData.companyCabinClasses.length).toBe(0);
+    });
+  });
+
+  describe('setSelected', function() {
+    beforeEach(inject(function($injector) {
+      createController($injector);
+    }));
+    it('should return false if model and id do not match', function() {
+      expect($scope.setSelected(3, 1)).toBeFalsy();
+    });
+    it('should return true if model and id match', function() {
+      expect($scope.setSelected(3, 3)).toBeTruthy();
+    });
+    it('should return true if model and id match, even if one is not an int', function() {
+      expect($scope.setSelected(3, '3')).toBeTruthy();
+    });
+  });
+
   describe('the error handler', function() {
     var mockError;
     beforeEach(function() {
@@ -361,18 +446,26 @@ fdescribe('The Company Create Controller', function() {
     });
   });
 
-  describe('setSelected', function() {
+  describe('checkFormState state as view', function() {
     beforeEach(inject(function($injector) {
-      createController($injector);
+      spyOn(CompanyCreateCtrl, 'checkFormState').and.callThrough();
+      createController($injector, 'view');
     }));
-    it('should return false if model and id do not match', function() {
-      expect($scope.setSelected(3, 1)).toBeFalsy();
+    it('should set viewOnly to true', function() {
+      expect($scope.viewOnly).toBeTruthy();
     });
-    it('should return true if model and id match', function() {
-      expect($scope.setSelected(3, 3)).toBeTruthy();
+  });
+
+  describe('checkFormState state as edit', function() {
+    beforeEach(inject(function($injector) {
+      spyOn(CompanyCreateCtrl, 'checkFormState').and.callThrough();
+      createController($injector, 'edit');
+    }));
+    it('should set editingCompany to true', function() {
+      expect($scope.editingCompany).toBeTruthy();
     });
-    it('should return true if model and id match, even if one is not an int', function() {
-      expect($scope.setSelected(3, '3')).toBeTruthy();
+    it('should set buttonText to Save ', function() {
+      expect($scope.buttonText).toBe('Save');
     });
   });
 
