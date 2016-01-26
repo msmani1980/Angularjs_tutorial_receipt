@@ -300,12 +300,12 @@
           <div class="row">
             <div class="col-xs-12 col-sm-6">
               <label>Cabin Name*</label>
-              <input custom-pattern="alphanumeric"
+              <input custom-pattern="alphanumericSpaces"
                      custom-validity
                      required
                      ng-disabled="cabinClass.readOnly"
                      type="text"
-                     maxlength="25"
+                     maxlength="10"
                      name="cabinClassName-{{$index}}"
                      class="form-control"
                      id="cabinClassName-{{$index}}"
@@ -318,7 +318,7 @@
                      required
                      ng-disabled="cabinClass.readOnly"
                      type="text"
-                     maxlength="25"
+                     maxlength="5"
                      name="cabinClassCode-{{$index}}"
                      class="form-control"
                      id="cabinClassCode-{{$index}}"
