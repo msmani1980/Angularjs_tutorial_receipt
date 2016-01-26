@@ -182,12 +182,53 @@ fdescribe('Controller: CategoryListCtrl', function () {
   });
 
   describe('rearrange categories', function () {
-    it('should swap category positions', function () {
-
+    beforeEach(function () {
+      scope.categoryList = [{
+        id: 1,
+        nextCategoryId: 2,
+        totalChildCount:0
+      }, {
+        id: 2,
+        nextCategoryId: 3,
+        totalChildCount:0
+      }, {
+        id: 3,
+        nextCategoryId: null,
+        totalChildCount:0
+      }];
+      scope.enterRearrangeMode(scope.categoryList[1]);
     });
 
-    it('should swap next ids', function () {
+    it('should swap category positions', function () {
+      scope.rearrangeCategory(scope.categoryList[0], 0, 'up');
+      expect(scope.categoryList[0].id).toEqual(2);
+      expect(scope.categoryList[1].id).toEqual(1);
 
+      scope.rearrangeCategory(scope.categoryList[2], 2, 'down');
+      expect(scope.categoryList[2].id).toEqual(2);
+      expect(scope.categoryList[1].id).toEqual(3);
+    });
+
+    it('should update next id', function () {
+      scope.rearrangeCategory(scope.categoryList[0], 0, 'up');
+      expect(scope.categoryList[0].nextCategoryId).toEqual(1);
+
+      scope.rearrangeCategory(scope.categoryList[2], 2, 'down');
+      expect(scope.categoryList[2].nextCategoryId).toEqual(null);
+    });
+
+    it('should reset list on cancel', function () {
+      scope.cancelChange();
+      expect(categoryFactory.getCategoryList).toHaveBeenCalled();
+      expect(scope.categoryToMove).toEqual({});
+      expect(scope.inRearrangeMode).toEqual(false);
+    });
+
+    it('should call update with new next id on save', function () {
+      scope.rearrangeCategory(scope.categoryList[0], 0, 'up');
+      scope.saveChange(scope.categoryList[0]);
+      var expectedPayload = jasmine.objectContaining({ nextCategoryId: 1 });
+      expect(categoryFactory.updateCategory).toHaveBeenCalledWith(scope.categoryToMove.id, expectedPayload);
     });
   });
 

@@ -303,7 +303,6 @@ angular.module('ts5App')
         showLoadingModal('Creating Category');
         categoryFactory.createCategory(newCategory).then(init, showErrors);
       }
-
     };
 
     $scope.saveEditChange = function (category) {
