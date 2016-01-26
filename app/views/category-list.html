@@ -34,17 +34,29 @@
         </h4>
         <hr>
         <div class="row">
-          <div class="col-sm-6 col-xs-12">
+          <div class="col-sm-4 col-xs-12">
             <div class="form-group">
               <label for="category-name">Name</label>
               <input ng-model="filter.name" type="text" class="form-control" id="category-name" placeholder="Search Category Name">
             </div>
           </div>
 
-          <div class="col-sm-6 col-xs-12">
+          <div class="col-sm-4 col-xs-12">
             <div class="form-group">
               <label for="category-description">Description</label>
               <input ng-model="filter.description" type="text" class="form-control" id="category-description" placeholder="Search Category Description">
+            </div>
+          </div>
+
+          <div class="col-sm-4 col-xs-12">
+            <div class="form-group">
+              <label for="parent-category">Parent Category</label>
+              <select class="form-control"
+                      id="parent-category"
+                      ng-model="filter.parentName"
+                      ng-options="category.name as category.name for category in categoryList">
+                <option selected value="">Select a Commission Type</option>
+              </select>
             </div>
           </div>
 
@@ -126,12 +138,13 @@
       <th colspan="{{ numCategoryLevels }}"></th>
       <th>Name</th>
       <th>Description</th>
+      <th ng-show="isUserFiltering()">Parent Category</th>
       <th>Items</th>
       <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="category in categoryList | filter:{ name: filter.name, description: filter.description }"
+    <tr ng-repeat="category in categoryList | filter:{ name: filter.name, description: filter.description, parentName: filter.parentName }"
         ng-class="getClassForRow(category)"
         ng-show="shouldShowCategory(category)">
 
@@ -169,7 +182,7 @@
           maxlength="25"
           ng-show="canEditOrRearrangeCategory(category) && inEditMode">
       </td>
-      </td>
+      <td ng-show="isUserFiltering()">{{ category.parentName }}</td>
       <td>{{ category.itemCount }}</td>
       <td>
         </button>

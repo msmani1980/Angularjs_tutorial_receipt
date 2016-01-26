@@ -111,7 +111,8 @@ angular.module('ts5App')
     $scope.isUserFiltering = function () {
       var isNameFiltering = lodash.has($scope.filter, 'name') && ($scope.filter.name.length > 0);
       var isDescriptionFiltering = lodash.has($scope.filter, 'description') && ($scope.filter.description.length > 0);
-      return isNameFiltering || isDescriptionFiltering;
+      var isParentFiltering = lodash.has($scope.filter, 'parentName') && ($scope.filter.parentName.length > 0);
+      return isNameFiltering || isDescriptionFiltering || isParentFiltering;
     };
 
     $scope.canDeleteCategory = function (category) {
@@ -222,6 +223,8 @@ angular.module('ts5App')
 
     function formatCategoryForApp(category) {
       var currentLevelNum = category.salesCategoryPath.split('/').length;
+      var parentCategoryName = category.salesCategoryPath.split('/')[currentLevelNum - 2] || '';
+
       var newCategory = {
         id: category.id,
         name: category.name || category.categoryName,
@@ -229,6 +232,7 @@ angular.module('ts5App')
         totalChildCount: getTotalChildCount(category),
         itemCount: category.itemCount,
         description: category.description,
+        parentName: parentCategoryName,
         parentId: category.parentId,
         nextCategoryId: category.nextCategoryId,
         salesCategoryPath: category.salesCategoryPath,
