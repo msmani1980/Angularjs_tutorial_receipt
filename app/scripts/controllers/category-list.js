@@ -168,6 +168,12 @@ angular.module('ts5App')
       $scope.filter = {};
     };
 
+    function swapNextCategoryIds(prevCategory, currCategory, newPrevCategory) {
+      prevCategory.nextCategoryId = $scope.categoryToMove.nextCategoryId;
+      currCategory.nextCategoryId = newPrevCategory.nextCategoryId;
+      newPrevCategory.nextCategoryId = $scope.categoryToMove.id;
+    }
+
     function swapCategoryPositions(firstIndex, firstIndexNumChildren, secondIndex) {
       var tempCategoryList = angular.copy($scope.categoryList);
       $scope.categoryList.splice(firstIndex, firstIndexNumChildren + 1);
@@ -177,18 +183,27 @@ angular.module('ts5App')
       }
     }
 
-    //function swapNextCategoryIds(firstCategory, secondCategory) {
-    //  firstCategory.nextCategoryId = secondCategory.nextCategoryId;
-    //  secondCategory.nextCategoryId = firstCategory.id;
-    //}
+    function getPreviousCategoryIndex(startIndex) {
+      var currCategory = $scope.categoryList[startIndex];
+      for (var i = startIndex - 1; i >= 0; i--) {
+        var prevCategory = $scope.categoryList[i];
+        if (prevCategory.levelNum === currCategory.levelNum && prevCategory.parentId === currCategory.parentId) {
+          return i;
+        }
+      }
+
+      return -1;
+    }
 
     $scope.rearrangeCategory = function (category, index, direction) {
       var destinationIndex = (direction === 'up') ? index : (index + category.totalChildCount + 1);
       var categoryToMoveIndex = lodash.findIndex($scope.categoryList, { id: $scope.categoryToMove.id });
       destinationIndex = (destinationIndex > categoryToMoveIndex) ? (destinationIndex - $scope.categoryToMove.totalChildCount - 1) : destinationIndex;
+      
+      var prevCategoryIndex = getPreviousCategoryIndex(categoryToMoveIndex);
+      var newPrevCategoryIndex = getPreviousCategoryIndex(destinationIndex);
+      swapNextCategoryIds($scope.categoryList[prevCategoryIndex], $scope.categoryList[categoryToMoveIndex], $scope.categoryList[newPrevCategoryIndex]);
       swapCategoryPositions(categoryToMoveIndex, $scope.categoryToMove.totalChildCount, destinationIndex);
-
-      // set nextIds
     };
 
     $scope.isCategorySelectedToRearrange = function (category) {
@@ -276,7 +291,7 @@ angular.module('ts5App')
           newCategoryList.push(nextCategory);
         }
       }
-      
+
       return newCategoryList.reverse();
     }
 
