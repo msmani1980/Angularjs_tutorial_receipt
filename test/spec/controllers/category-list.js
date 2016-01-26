@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CategoryListCtrl', function () {
+fdescribe('Controller: CategoryListCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -104,7 +104,7 @@ describe('Controller: CategoryListCtrl', function () {
       var expectedPayload = {
         name: 'New Name',
         description: 'New description',
-        parentId: 1,
+        parentCategoryId: 1,
         nextCategoryId: 2
       };
       scope.createCategory();
@@ -119,7 +119,7 @@ describe('Controller: CategoryListCtrl', function () {
       var expectedPayload = {
         name: scope.newCategory.name,
         description: scope.newCategory.description,
-        parentId: null,
+        parentCategoryId: null,
         nextCategoryId: null
       };
       scope.createCategory();
@@ -149,7 +149,7 @@ describe('Controller: CategoryListCtrl', function () {
         id: 1,
         name: 'newName',
         description: 'newDescription',
-        parentId: null,
+        parentCategoryId: null,
         nextCategoryId: null
       };
       scope.saveEditChange(oldPayload);
@@ -164,7 +164,7 @@ describe('Controller: CategoryListCtrl', function () {
         id: 1,
         name: 'newName',
         description: 'categoryDescription',
-        parentId: null,
+        parentCategoryId: null,
         nextCategoryId: null
       };
       scope.saveEditChange(oldPayload);
@@ -180,7 +180,7 @@ describe('Controller: CategoryListCtrl', function () {
         id: 1,
         name: 'categoryName',
         description: 'newDescription',
-        parentId: null,
+        parentCategoryId: null,
         nextCategoryId: null
       };
       scope.saveEditChange(oldPayload);

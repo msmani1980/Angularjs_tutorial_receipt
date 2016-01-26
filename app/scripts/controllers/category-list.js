@@ -159,7 +159,7 @@ angular.module('ts5App')
       }
     }
 
-    function getNextCategoryIndex (startIndex) {
+    function getNextCategoryIndex(startIndex) {
       var currCategory = $scope.categoryList[startIndex];
       for (var i = startIndex + 1; i < $scope.categoryList.length; i++) {
         var nextCategory = $scope.categoryList[i];
@@ -171,7 +171,7 @@ angular.module('ts5App')
       return -1;
     }
 
-    function setNewNextId (newIndex) {
+    function setNewNextId(newIndex) {
       var nextIndex = getNextCategoryIndex(newIndex);
       $scope.categoryList[newIndex].nextCategoryId = (nextIndex >= 0) ? $scope.categoryList[nextIndex].id : null;
     }
@@ -192,7 +192,7 @@ angular.module('ts5App')
       if ($scope.inRearrangeMode) {
         return category.levelNum === $scope.categoryToMove.levelNum && category.id !== $scope.categoryToMove.id && category.parentId === $scope.categoryToMove.parentId;
       }
-      
+
       return false;
     };
 
@@ -200,7 +200,7 @@ angular.module('ts5App')
       var newCategory = {
         name: categoryToFormat.name || categoryToFormat.categoryName,
         description: categoryToFormat.description,
-        parentId: categoryToFormat.parentId || null,
+        parentCategoryId: categoryToFormat.parentId || null,
         nextCategoryId: categoryToFormat.nextCategoryId || null
       };
 
@@ -339,9 +339,11 @@ angular.module('ts5App')
     };
 
     $scope.cancelRearrangeMode = function () {
-      $scope.categoryToMove = {};
-      $scope.inRearrangeMode = false;
-      init();
+      if ($scope.inRearrangeMode) {
+        $scope.categoryToMove = {};
+        $scope.inRearrangeMode = false;
+        init();
+      }
     };
 
     $scope.cancelChange = function () {
