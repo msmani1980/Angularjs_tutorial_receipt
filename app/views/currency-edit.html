@@ -23,7 +23,7 @@
                                 <label for="search-currency">Currency</label>
                                 <select class="form-control" id="search-currency" ng-model="search.currencyId">
                                     <option value="">Select Currency</option>
-                                    <option ng-repeat="globalCurrency in globalCurrencyList | unique: 'id'" value="{{globalCurrency.id}}">{{ globalCurrency.currencyCode }}</option>
+                                    <option ng-repeat="globalCurrency in globalCurrencyList | orderBy: 'currencyCode' | unique: 'id'" value="{{globalCurrency.id}} ">{{ globalCurrency.currencyCode }}</option>
                                 </select>
                             </div>
                         </div>
@@ -116,7 +116,8 @@
 
                     <div class="col-xs-12 col-sm-12 col-md-1 text-right">
                         <button type="button" class="btn btn-primary btn-xs" ng-click="saveDetailedCompanyCurrency($index, currency)" ng-hide="isCurrencyPartialReadOnly(currency)" >
-                          <i class="fa fa-pencil"></i>
+                          <i ng-hide="currency.isNew" class="fa fa-pencil"></i>
+                          <i ng-show="currency.isNew" class="fa fa-check-square-o"></i>
                         </button>
                         <button type="button" class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, currency)" ng-hide="isCurrencyReadOnly(currency)">
                             <i class="fa fa-trash"></i>
