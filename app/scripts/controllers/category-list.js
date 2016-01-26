@@ -192,15 +192,18 @@ angular.module('ts5App')
       if ($scope.inRearrangeMode) {
         return category.levelNum === $scope.categoryToMove.levelNum && category.id !== $scope.categoryToMove.id && category.parentId === $scope.categoryToMove.parentId;
       }
+      
+      return false;
     };
 
     function formatCategoryPayloadForAPI(categoryToFormat) {
       var newCategory = {
         name: categoryToFormat.name || categoryToFormat.categoryName,
-        description: categoryToFormat.description
+        description: categoryToFormat.description,
+        parentId: categoryToFormat.parentId || null,
+        nextCategoryId: categoryToFormat.nextCategoryId || null
       };
-      newCategory.nextCategoryId = (categoryToFormat.nextCategory) ? categoryToFormat.nextCategory.id : categoryToFormat.nextCategoryId;
-      newCategory.parentCategory = (categoryToFormat.parentCategory) ? categoryToFormat.parentCategory.id : categoryToFormat.parentCategoryId;
+
       if (categoryToFormat.id) {
         newCategory.id = categoryToFormat.id;
       }
@@ -299,6 +302,8 @@ angular.module('ts5App')
 
     $scope.createCategory = function () {
       if ($scope.newCategoryForm.$valid) {
+        $scope.newCategory.parentId = ($scope.newCategory.parentCategory) ? $scope.newCategory.parentCategory.id : null;
+        $scope.newCategory.nextCategoryId = ($scope.newCategory.nextCategory) ? $scope.newCategory.nextCategory.id : null;
         var newCategory = formatCategoryPayloadForAPI($scope.newCategory);
         showLoadingModal('Creating Category');
         categoryFactory.createCategory(newCategory).then(init, showErrors);

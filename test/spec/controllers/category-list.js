@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: CategoryListCtrl', function () {
+describe('Controller: CategoryListCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -104,7 +104,7 @@ fdescribe('Controller: CategoryListCtrl', function () {
       var expectedPayload = {
         name: 'New Name',
         description: 'New description',
-        parentCategoryId: 1,
+        parentId: 1,
         nextCategoryId: 2
       };
       scope.createCategory();
@@ -116,8 +116,14 @@ fdescribe('Controller: CategoryListCtrl', function () {
         name: 'New Name',
         description: 'New description'
       };
+      var expectedPayload = {
+        name: scope.newCategory.name,
+        description: scope.newCategory.description,
+        parentId: null,
+        nextCategoryId: null
+      };
       scope.createCategory();
-      expect(categoryFactory.createCategory).toHaveBeenCalledWith(scope.newCategory);
+      expect(categoryFactory.createCategory).toHaveBeenCalledWith(expectedPayload);
     });
   });
 
@@ -140,8 +146,11 @@ fdescribe('Controller: CategoryListCtrl', function () {
         description: 'newDescription'
       };
       var expectedPayload = {
+        id: 1,
         name: 'newName',
-        description: 'newDescription'
+        description: 'newDescription',
+        parentId: null,
+        nextCategoryId: null
       };
       scope.saveEditChange(oldPayload);
       expect(categoryFactory.updateCategory).toHaveBeenCalledWith(oldPayload.id, expectedPayload);
@@ -152,8 +161,11 @@ fdescribe('Controller: CategoryListCtrl', function () {
         name: 'newName'
       };
       var expectedPayload = {
+        id: 1,
         name: 'newName',
-        description: 'categoryDescription'
+        description: 'categoryDescription',
+        parentId: null,
+        nextCategoryId: null
       };
       scope.saveEditChange(oldPayload);
       expect(categoryFactory.updateCategory).toHaveBeenCalledWith(oldPayload.id, expectedPayload);
@@ -165,8 +177,11 @@ fdescribe('Controller: CategoryListCtrl', function () {
         name: ''
       };
       var expectedPayload = {
+        id: 1,
         name: 'categoryName',
-        description: 'newDescription'
+        description: 'newDescription',
+        parentId: null,
+        nextCategoryId: null
       };
       scope.saveEditChange(oldPayload);
       expect(categoryFactory.updateCategory).toHaveBeenCalledWith(oldPayload.id, expectedPayload);
@@ -272,6 +287,40 @@ fdescribe('Controller: CategoryListCtrl', function () {
         expect(canDelete).toEqual(true);
       });
 
+    });
+
+    describe('canEditOrRearrange', function () {
+      it('should return true if in edit mode and category is selected', function () {
+        scope.inEditMode = true;
+        scope.categoryToEdit = {id: 1};
+        expect(scope.canEditOrRearrangeCategory({id: 1})).toEqual(true);
+        expect(scope.canEditOrRearrangeCategory({id: 2})).toEqual(false);
+      });
+
+      it('should return true if in rearrange mode and category is selected', function () {
+        scope.inRearrangeMode = true;
+        scope.categoryToMove = {id: 1};
+        expect(scope.canEditOrRearrangeCategory({id: 1})).toEqual(true);
+        expect(scope.canEditOrRearrangeCategory({id: 2})).toEqual(false);
+      });
+    });
+
+    describe('canRearrange', function () {
+      beforeEach(function () {
+        scope.categoryToMove = {id: 1, parentId: 2, levelNum: 1};
+        scope.inRearrangeMode = true;
+      });
+      it('should return true for categories in the same level and parent', function () {
+        var mockCategory = {id: 3, parentId: 2, levelNum: 1};
+        expect(scope.canRearrange(mockCategory)).toEqual(true);
+        mockCategory.parentId = 4;
+        expect(scope.canRearrange(mockCategory)).toEqual(false);
+      });
+
+      it('should return false for the selected category to move', function () {
+        var mockCategory = {id: 1, parentId: 2, levelNum: 1};
+        expect(scope.canRearrange(mockCategory)).toEqual(false);
+      });
     });
 
     describe('isUserFiltering function', function () {
