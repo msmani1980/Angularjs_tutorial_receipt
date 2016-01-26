@@ -13,6 +13,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.formData = {
       taxes: [],
       languages: [],
+      eposLanguages: [],
       countryVats: [],
       companyCabinClasses: []
     };
@@ -55,6 +56,21 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       }
     };
 
+    this.checkForDefaultLanguage = function(languages) {
+      if (!languages.length) {
+        return false;
+      }
+
+      var containsDefault = false;
+      angular.forEach(languages, function(language) {
+        if (language.id === 1) {
+          containsDefault = true;
+        }
+      });
+
+      return containsDefault;
+    };
+
     this.calculateFieldsVisibility = function() {
       $scope.showAdditionalFields = ($scope.formData.companyTypeId === '1');
       if ($scope.showAdditionalFields) {
@@ -88,16 +104,23 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.formatLanguagesForApp = function(languages) {
+      if (!languages.length) {
+        return [];
+      }
+
       var languagePayload = [];
       for (var languageKey in languages) {
         var language = languages[languageKey];
-        var index = $this.findLanguagesIndex(language);
-        var payload = {
-          id: language,
-          languageName: $scope.languages[index].languageName,
-          languageCode: $scope.languages[index].languageCode
-        };
-        languagePayload.push(payload);
+        if (language !== 1) {
+
+          var index = $this.findLanguagesIndex(language);
+          var payload = {
+            id: language,
+            languageName: $scope.languages[index].languageName,
+            languageCode: $scope.languages[index].languageCode
+          };
+          languagePayload.push(payload);
+        }
       }
 
       return languagePayload;
@@ -209,11 +232,22 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       return $this.setUIReady();
     };
 
+    this.removeDefaultLanguage = function(languages) {
+      var payload = [];
+      angular.forEach(languages, function(language) {
+        if (parseInt(language.id) !== 1) {
+          payload.push(language);
+        }
+      });
+
+      return payload;
+    };
+
     this.setDependencies = function(response) {
       $scope.companyTypes = response[0];
       $scope.currencies = response[1].response;
       $scope.companies = response[2].companies;
-      $scope.languages = response[3].languages;
+      $scope.languages = $this.removeDefaultLanguage(response[3].languages);
       $scope.countries = response[4].countries;
       if ($scope.editingCompany || $scope.viewOnly) {
         return $this.getCompany($routeParams.id);

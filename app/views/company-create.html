@@ -194,7 +194,7 @@
 
             <label>Portal Additional Languages</label>
             <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.languages" theme="bootstrap">
-              <ui-select-match placeholder="Languages" >{{ $item.languageName }}
+              <ui-select-match placeholder="Languages">{{ $item.languageName }}
               </ui-select-match>
               <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
                 <div ng-bind-html="language.languageName | highlight: $select.search"></div>
@@ -203,7 +203,7 @@
 
             <label>ePOS Additional Languages</label>
             <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.eposLanguages" theme="bootstrap">
-              <ui-select-match placeholder="Languages" >{{ $item.languageName }}
+              <ui-select-match placeholder="Languages">{{ $item.languageName }}
               </ui-select-match>
               <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
                 <div ng-bind-html="language.languageName | highlight: $select.search"></div>
