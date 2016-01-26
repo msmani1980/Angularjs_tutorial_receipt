@@ -76,9 +76,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.setVarianceFromAPI = function (dataFromAPI) {
       var varianceList = angular.copy(dataFromAPI.response);
       var defaultVariance = 99999999;
+      $scope.variance = defaultVariance;
+      $scope.canProceedWithExceededVariance = true;
       if (!varianceList) {
-        $scope.variance = defaultVariance;
-        $scope.canProceedWithExceededVariance = true;
         return;
       }
 
@@ -87,8 +87,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return dateUtility.isTodayOrEarlier(dateUtility.formatDateForApp(variance.startDate));
       });
 
-      $scope.variance = (allowedVarianceList.length) ? allowedVarianceList[0].percentage : defaultVariance;
-      $scope.canProceedWithExceededVariance = $scope.variance > 0;
+      if (allowedVarianceList.length && allowedVarianceList[0].percentage !== null) {
+        $scope.variance = allowedVarianceList[0].percentage;
+        $scope.canProceedWithExceededVariance = $scope.variance > 0;
+      }
     };
 
     this.getThresholdVariance = function () {
