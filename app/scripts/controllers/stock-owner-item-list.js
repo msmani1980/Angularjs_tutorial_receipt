@@ -7,8 +7,7 @@
  * Controller for the Stock Owner Items List view
  */
 angular.module('ts5App')
-  .controller('StockOwnerItemListCtrl', function ($scope, $http, itemsFactory,
-                                                  companiesFactory, dateUtility, $filter) {
+  .controller('StockOwnerItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter) {
 
     var $this = this;
     this.meta = {
