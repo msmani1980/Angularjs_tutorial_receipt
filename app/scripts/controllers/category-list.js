@@ -169,7 +169,7 @@ angular.module('ts5App')
     };
 
     function swapNextCategoryIds(prevCategory, currCategory, newPrevCategory) {
-      prevCategory.nextCategoryId = $scope.categoryToMove.nextCategoryId;
+      prevCategory.nextCategoryId = currCategory.nextCategoryId;
       currCategory.nextCategoryId = newPrevCategory.nextCategoryId;
       newPrevCategory.nextCategoryId = $scope.categoryToMove.id;
     }
@@ -198,11 +198,11 @@ angular.module('ts5App')
     $scope.rearrangeCategory = function (category, index, direction) {
       var destinationIndex = (direction === 'up') ? index : (index + category.totalChildCount + 1);
       var categoryToMoveIndex = lodash.findIndex($scope.categoryList, { id: $scope.categoryToMove.id });
-      destinationIndex = (destinationIndex > categoryToMoveIndex) ? (destinationIndex - $scope.categoryToMove.totalChildCount - 1) : destinationIndex;
-      
       var prevCategoryIndex = getPreviousCategoryIndex(categoryToMoveIndex);
       var newPrevCategoryIndex = getPreviousCategoryIndex(destinationIndex);
       swapNextCategoryIds($scope.categoryList[prevCategoryIndex], $scope.categoryList[categoryToMoveIndex], $scope.categoryList[newPrevCategoryIndex]);
+
+      destinationIndex = (destinationIndex > categoryToMoveIndex) ? (destinationIndex - $scope.categoryToMove.totalChildCount - 1) : destinationIndex;
       swapCategoryPositions(categoryToMoveIndex, $scope.categoryToMove.totalChildCount, destinationIndex);
     };
 
