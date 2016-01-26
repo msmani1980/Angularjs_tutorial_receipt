@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: EmployeeMessageListCtrl', function () {
+fdescribe('Controller: CategoryListCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -181,6 +181,16 @@ describe('Controller: EmployeeMessageListCtrl', function () {
     });
   });
 
+  describe('rearrange categories', function () {
+    it('should swap category positions', function () {
+
+    });
+
+    it('should swap next ids', function () {
+
+    });
+  });
+
   describe('scope helper functions', function () {
     it('should clear newCategory model with clearCreateFrom function', function () {
       scope.newCategory = { test: 'test' };
@@ -323,12 +333,12 @@ describe('Controller: EmployeeMessageListCtrl', function () {
 
     describe('get toggle icon class', function () {
       it('should return down arrow if row is open', function () {
-        var expectedClass = 'fa fa-arrow-down';
+        var expectedClass = 'fa fa-angle-down';
         var mockCategory = { isOpen: true };
         expect(scope.getToggleIconClass(mockCategory)).toEqual(expectedClass);
       });
       it('should return right arrow if row is closed', function () {
-        var expectedClass = 'fa fa-arrow-right';
+        var expectedClass = 'fa fa-angle-right';
         var mockCategory = { isOpen: false };
         expect(scope.getToggleIconClass(mockCategory)).toEqual(expectedClass);
       });

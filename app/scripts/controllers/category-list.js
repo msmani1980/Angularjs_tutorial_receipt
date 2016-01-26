@@ -171,7 +171,7 @@ angular.module('ts5App')
     function swapNextCategoryIds(prevCategory, currCategory, newPrevCategory) {
       prevCategory.nextCategoryId = currCategory.nextCategoryId;
       currCategory.nextCategoryId = newPrevCategory.nextCategoryId;
-      newPrevCategory.nextCategoryId = $scope.categoryToMove.id;
+      newPrevCategory.nextCategoryId = currCategory.id;
     }
 
     function swapCategoryPositions(firstIndex, firstIndexNumChildren, secondIndex) {
@@ -337,6 +337,12 @@ angular.module('ts5App')
       var newCategory = formatCategoryPayload($scope.categoryToEdit);
       showLoadingModal('Editing Category');
       categoryFactory.updateCategory(category.id, newCategory).then(init, showErrors);
+    };
+
+    $scope.saveChange = function (category) {
+      if ($scope.inEditMode) {
+        $scope.saveEditChange(category);
+      }
     };
 
     $scope.createCategory = function () {
