@@ -20,6 +20,12 @@
       </div>
     </div>
 
+    <div class="alert alert-info" ng-show="inRearrangeMode">
+      <p><span class="fa fa-info-circle"></span> <small>In order
+        to move the highlighted row above or below another row, click
+        <span class="fa fa-angle-double-up"></span> or <span class="fa fa-angle-double-down"> </span> on that row.</small></p>
+    </div>
+
     <div class="panel panel-default collapse no-transition" id="search-collapse">
       <div class="panel-body">
         <h4>Filter Categories
@@ -164,16 +170,17 @@
           ng-show="canEditOrRearrangeCategory(category) && inEditMode">
       </td>
       </td>
-      <td>{{ category.itemCount }}</td>
+      <td>{{ category.id }}, {{$index}}</td>
       <td>
-        <button class="btn btn-xs btn-info" ng-show="canEditOrRearrangeCategory(category) && inRearrangeMode" ng-click="rearrangeUp(category, $index)">
-          <span class="fa fa-arrow-up"></span>
         </button>
-        <button class="btn btn-xs btn-info" ng-show="canEditOrRearrangeCategory(category) && inRearrangeMode" ng-click="rearrangeDown(category, $index)">
-          <span class="fa fa-arrow-down"></span>
+        <button class="btn btn-xs btn-default" ng-show="canRearrange(category)" ng-click="rearrangeCategory(category, $index, 'up')">
+          <span class="fa fa-angle-double-up"></span>
+        </button>
+        <button class="btn btn-xs btn-default" ng-show="canRearrange(category)" ng-click="rearrangeCategory(category, $index, 'down')">
+          <span class="fa fa-angle-double-down"></span>
         </button>
         <button class="btn btn-xs btn-default" ng-hide="inEditMode || inRearrangeMode" ng-click="enterRearrangeMode(category)">
-        <span class="fa fa-sort"></span>
+        <span class="fa fa-arrows"></span>
         </button>
         <button class="btn btn-xs btn-primary" ng-hide="inEditMode || inRearrangeMode" ng-click="enterEditMode(category)">
           <span class="fa fa-pencil"></span>

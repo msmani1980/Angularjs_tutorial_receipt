@@ -168,6 +168,39 @@ angular.module('ts5App')
       $scope.filter = {};
     };
 
+    function swapCategoryPositions(firstIndex, firstIndexNumChildren, secondIndex) {
+      var tempCategoryList = angular.copy($scope.categoryList);
+      $scope.categoryList.splice(firstIndex, firstIndexNumChildren + 1);
+      for (var i = 0; i <= firstIndexNumChildren; i++) {
+        var categoryToAdd = tempCategoryList[firstIndex + i];
+        $scope.categoryList.splice(secondIndex + i, 0, categoryToAdd);
+      }
+    }
+
+    //function swapNextCategoryIds(firstCategory, secondCategory) {
+    //  firstCategory.nextCategoryId = secondCategory.nextCategoryId;
+    //  secondCategory.nextCategoryId = firstCategory.id;
+    //}
+
+    $scope.rearrangeCategory = function (category, index, direction) {
+      var destinationIndex = (direction === 'up') ? index : (index + category.totalChildCount + 1);
+      var categoryToMoveIndex = lodash.findIndex($scope.categoryList, { id: $scope.categoryToMove.id });
+      destinationIndex = (destinationIndex > categoryToMoveIndex) ? (destinationIndex - $scope.categoryToMove.totalChildCount - 1) : destinationIndex;
+      swapCategoryPositions(categoryToMoveIndex, $scope.categoryToMove.totalChildCount, destinationIndex);
+
+      // set nextIds
+    };
+
+    $scope.isCategorySelectedToRearrange = function (category) {
+      return $scope.inRearrangeMode && category.id === $scope.categoryToMove.id;
+    };
+
+    $scope.canRearrange = function (category) {
+      if ($scope.inRearrangeMode) {
+        return category.levelNum === $scope.categoryToMove.levelNum && category.id !== $scope.categoryToMove.id;
+      }
+    };
+
     function formatCategoryPayload(categoryToFormat) {
       var newCategory = {
         name: categoryToFormat.name || categoryToFormat.categoryName,
@@ -282,60 +315,6 @@ angular.module('ts5App')
         categoryFactory.createCategory(newCategory).then(init, showErrors);
       }
 
-    };
-
-    function swapCategoryPositions(firstIndex, firstIndexNumChildren, secondIndex) {
-      var tempCategoryList = angular.copy($scope.categoryList);
-      $scope.categoryList.splice(firstIndex, firstIndexNumChildren + 1);
-      for (var i = 0; i <= firstIndexNumChildren; i++) {
-        var categoryToAdd = tempCategoryList[firstIndex + i];
-        $scope.categoryList.splice(secondIndex + i, 0, categoryToAdd);
-      }
-    }
-
-    function swapNextCategoryIds(firstCategory, secondCategory) {
-      firstCategory.nextCategoryId = secondCategory.nextCategoryId;
-      secondCategory.nextCategoryId = firstCategory.id;
-    }
-
-    function getPreviousCategoryIndex(categoryLevel, parentId, startIndex) {
-      for (var i = startIndex - 1; i >= 0; i--) {
-        var prevCategory = $scope.categoryList[i];
-        if (prevCategory.levelNum === categoryLevel && prevCategory.parentId === parentId) {
-          return i;
-        }
-      }
-
-      return -1;
-    }
-
-    function getNextCategoryIndex(categoryLevel, parentId, startIndex) {
-      for (var i = startIndex + 1; i < $scope.categoryList.length; i++) {
-        var nextCategory = $scope.categoryList[i];
-        if (nextCategory.levelNum === categoryLevel && nextCategory.parentId === parentId) {
-          return i;
-        }
-      }
-
-      return -1;
-    }
-
-    $scope.rearrangeUp = function (category, index) {
-      var prevIndex = getPreviousCategoryIndex(category.levelNum, category.parentId, index);
-      if (prevIndex > 0) {
-        var prevCategory = $scope.categoryList[prevIndex];
-        swapNextCategoryIds(prevCategory, category);
-        swapCategoryPositions(index, category.totalChildCount, prevIndex);
-      }
-    };
-
-    $scope.rearrangeDown = function (category, index) {
-      var nextIndex = getNextCategoryIndex(category.levelNum, category.parentId, index);
-      if (nextIndex > 0) {
-        var nextCategory = $scope.categoryList[nextIndex];
-        swapNextCategoryIds(category, nextCategory);
-        swapCategoryPositions(nextIndex, nextCategory.totalChildCount, index);
-      }
     };
 
     init();
