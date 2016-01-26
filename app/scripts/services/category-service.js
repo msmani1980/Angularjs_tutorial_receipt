@@ -30,7 +30,10 @@ angular.module('ts5App')
         method: 'GET'
       },
       deleteCategory: {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
     };
 

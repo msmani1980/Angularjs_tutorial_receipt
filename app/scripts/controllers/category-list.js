@@ -168,12 +168,6 @@ angular.module('ts5App')
       $scope.filter = {};
     };
 
-    function swapNextCategoryIds(prevCategory, currCategory, newPrevCategory) {
-      prevCategory.nextCategoryId = currCategory.nextCategoryId;
-      currCategory.nextCategoryId = newPrevCategory.nextCategoryId;
-      newPrevCategory.nextCategoryId = currCategory.id;
-    }
-
     function swapCategoryPositions(firstIndex, firstIndexNumChildren, secondIndex) {
       var tempCategoryList = angular.copy($scope.categoryList);
       $scope.categoryList.splice(firstIndex, firstIndexNumChildren + 1);
@@ -183,11 +177,11 @@ angular.module('ts5App')
       }
     }
 
-    function getPreviousCategoryIndex(startIndex) {
+    function getNextCategoryIndex (startIndex) {
       var currCategory = $scope.categoryList[startIndex];
-      for (var i = startIndex - 1; i >= 0; i--) {
-        var prevCategory = $scope.categoryList[i];
-        if (prevCategory.levelNum === currCategory.levelNum && prevCategory.parentId === currCategory.parentId) {
+      for (var i = startIndex + 1; i < $scope.categoryList.length; i++) {
+        var nextCategory = $scope.categoryList[i];
+        if (nextCategory.levelNum === currCategory.levelNum && nextCategory.parentId === currCategory.parentId) {
           return i;
         }
       }
@@ -195,15 +189,17 @@ angular.module('ts5App')
       return -1;
     }
 
+    function setNewNextId (newIndex) {
+      var nextIndex = getNextCategoryIndex(newIndex);
+      $scope.categoryList[newIndex].nextCategoryId = (nextIndex >= 0) ? $scope.categoryList[nextIndex].id : null;
+    }
+
     $scope.rearrangeCategory = function (category, index, direction) {
       var destinationIndex = (direction === 'up') ? index : (index + category.totalChildCount + 1);
       var categoryToMoveIndex = lodash.findIndex($scope.categoryList, { id: $scope.categoryToMove.id });
-      var prevCategoryIndex = getPreviousCategoryIndex(categoryToMoveIndex);
-      var newPrevCategoryIndex = getPreviousCategoryIndex(destinationIndex);
-      swapNextCategoryIds($scope.categoryList[prevCategoryIndex], $scope.categoryList[categoryToMoveIndex], $scope.categoryList[newPrevCategoryIndex]);
-
       destinationIndex = (destinationIndex > categoryToMoveIndex) ? (destinationIndex - $scope.categoryToMove.totalChildCount - 1) : destinationIndex;
       swapCategoryPositions(categoryToMoveIndex, $scope.categoryToMove.totalChildCount, destinationIndex);
+      setNewNextId(destinationIndex);
     };
 
     $scope.isCategorySelectedToRearrange = function (category) {
@@ -221,16 +217,10 @@ angular.module('ts5App')
         name: categoryToFormat.name || categoryToFormat.categoryName,
         description: categoryToFormat.description
       };
+      newCategory.nextCategoryId = (categoryToFormat.nextCategory) ? categoryToFormat.nextCategory.id : categoryToFormat.nextCategoryId;
+      newCategory.parentCategory = (categoryToFormat.parentCategory) ? categoryToFormat.parentCategory.id : categoryToFormat.parentCategoryId;
       if (categoryToFormat.id) {
         newCategory.id = categoryToFormat.id;
-      }
-
-      if (categoryToFormat.nextCategory) {
-        newCategory.nextCategoryId = categoryToFormat.nextCategory.id;
-      }
-
-      if (categoryToFormat.parentCategory) {
-        newCategory.parentCategoryId = categoryToFormat.parentCategory.id;
       }
 
       return newCategory;
@@ -326,15 +316,16 @@ angular.module('ts5App')
     };
 
     $scope.saveEditChange = function (category) {
-      if (!$scope.categoryToEdit.name || !$scope.categoryToEdit.name.length) {
-        $scope.categoryToEdit.name = category.name;
-      }
+      category.name = $scope.categoryToEdit.name || category.name;
+      category.description = $scope.categoryToEdit.description || category.description;
 
-      if (!$scope.categoryToEdit.description || !$scope.categoryToEdit.name.length) {
-        $scope.categoryToEdit.description = category.description;
-      }
+      var newCategory = formatCategoryPayload(category);
+      showLoadingModal('Editing Category');
+      categoryFactory.updateCategory(category.id, newCategory).then(init, showErrors);
+    };
 
-      var newCategory = formatCategoryPayload($scope.categoryToEdit);
+    $scope.saveRearrangeChange = function (category) {
+      var newCategory = formatCategoryPayload(category);
       showLoadingModal('Editing Category');
       categoryFactory.updateCategory(category.id, newCategory).then(init, showErrors);
     };
@@ -342,6 +333,8 @@ angular.module('ts5App')
     $scope.saveChange = function (category) {
       if ($scope.inEditMode) {
         $scope.saveEditChange(category);
+      } else {
+        $scope.saveRearrangeChange(category);
       }
     };
 
