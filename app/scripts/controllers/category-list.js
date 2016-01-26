@@ -120,24 +120,6 @@ angular.module('ts5App')
       return containsNoChildren && containsNoItems;
     };
 
-    $scope.cancelEditMode = function () {
-      $scope.categoryToEdit = null;
-      $scope.inEditMode = false;
-    };
-
-    $scope.cancelRearrangeMode = function () {
-      $scope.categoryToMove = {};
-      $scope.inRearrangeMode = false;
-    };
-
-    $scope.cancelEditOrRearrangeMode = function () {
-      if ($scope.inEditMode) {
-        $scope.cancelEditMode();
-      } else {
-        $scope.cancelRearrangeMode();
-      }
-    };
-
     $scope.enterRearrangeMode = function (category) {
       $scope.cancelEditMode();
       $scope.inRearrangeMode = true;
@@ -208,11 +190,11 @@ angular.module('ts5App')
 
     $scope.canRearrange = function (category) {
       if ($scope.inRearrangeMode) {
-        return category.levelNum === $scope.categoryToMove.levelNum && category.id !== $scope.categoryToMove.id;
+        return category.levelNum === $scope.categoryToMove.levelNum && category.id !== $scope.categoryToMove.id && category.parentId === $scope.categoryToMove.parentId;
       }
     };
 
-    function formatCategoryPayload(categoryToFormat) {
+    function formatCategoryPayloadForAPI(categoryToFormat) {
       var newCategory = {
         name: categoryToFormat.name || categoryToFormat.categoryName,
         description: categoryToFormat.description
@@ -315,17 +297,26 @@ angular.module('ts5App')
       categoryFactory.deleteCategory(category.id).then(init, showErrors);
     };
 
+    $scope.createCategory = function () {
+      if ($scope.newCategoryForm.$valid) {
+        var newCategory = formatCategoryPayloadForAPI($scope.newCategory);
+        showLoadingModal('Creating Category');
+        categoryFactory.createCategory(newCategory).then(init, showErrors);
+      }
+
+    };
+
     $scope.saveEditChange = function (category) {
       category.name = $scope.categoryToEdit.name || category.name;
       category.description = $scope.categoryToEdit.description || category.description;
 
-      var newCategory = formatCategoryPayload(category);
+      var newCategory = formatCategoryPayloadForAPI(category);
       showLoadingModal('Editing Category');
       categoryFactory.updateCategory(category.id, newCategory).then(init, showErrors);
     };
 
     $scope.saveRearrangeChange = function (category) {
-      var newCategory = formatCategoryPayload(category);
+      var newCategory = formatCategoryPayloadForAPI(category);
       showLoadingModal('Editing Category');
       categoryFactory.updateCategory(category.id, newCategory).then(init, showErrors);
     };
@@ -338,13 +329,23 @@ angular.module('ts5App')
       }
     };
 
-    $scope.createCategory = function () {
-      if ($scope.newCategoryForm.$valid) {
-        var newCategory = formatCategoryPayload($scope.newCategory);
-        showLoadingModal('Creating Category');
-        categoryFactory.createCategory(newCategory).then(init, showErrors);
-      }
+    $scope.cancelEditMode = function () {
+      $scope.categoryToEdit = null;
+      $scope.inEditMode = false;
+    };
 
+    $scope.cancelRearrangeMode = function () {
+      $scope.categoryToMove = {};
+      $scope.inRearrangeMode = false;
+      init();
+    };
+
+    $scope.cancelChange = function () {
+      if ($scope.inEditMode) {
+        $scope.cancelEditMode();
+      } else {
+        $scope.cancelRearrangeMode();
+      }
     };
 
     init();
