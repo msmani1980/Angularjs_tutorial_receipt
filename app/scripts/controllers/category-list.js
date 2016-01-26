@@ -264,8 +264,24 @@ angular.module('ts5App')
       return maxLevelsCount;
     }
 
+    function sortCategories(categoryList) {
+      var bottomCategory = lodash.findWhere(categoryList, { nextCategoryId: null });
+      var newCategoryList = (bottomCategory) ? [bottomCategory] : [];
+
+      for (var i = 0; i < newCategoryList.length; i++) {
+        var currCategory = newCategoryList[i];
+        currCategory.children = sortCategories(angular.copy(currCategory.children));
+        var nextCategory = lodash.findWhere(categoryList, { nextCategoryId: currCategory.id });
+        if (nextCategory) {
+          newCategoryList.push(nextCategory);
+        }
+      }
+      
+      return newCategoryList.reverse();
+    }
+
     function attachCategoryListToScope(categoryListFromAPI) {
-      var categoryList = angular.copy(categoryListFromAPI.salesCategories);
+      var categoryList = sortCategories(angular.copy(categoryListFromAPI.salesCategories));
       var flattenedCategoryList = [];
       $scope.numCategoryLevels = getMaxLevelsAndFlattenCategoriesModel(categoryList, flattenedCategoryList) + 1;
       $scope.nestedCategoryList = categoryList;
