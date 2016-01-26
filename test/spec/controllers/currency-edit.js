@@ -107,13 +107,12 @@ describe('Controller: CurrencyEditCtrl', function () {
     scope.search = {
       startDate: 'fakeDate'
     };
+
+    var expectedPayload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+
     scope.clearForm();
     expect(scope.search.startDate).toBe(undefined);
-    expect(currencyFactory.getDetailedCompanyCurrencies).toHaveBeenCalledWith({
-      currencyId: null,
-      startDate: null,
-      endDate: null
-    });
+    expect(currencyFactory.getDetailedCompanyCurrencies).toHaveBeenCalledWith(expectedPayload);
   });
 
   it('should clear search model and make get detailed company currencies', function () {

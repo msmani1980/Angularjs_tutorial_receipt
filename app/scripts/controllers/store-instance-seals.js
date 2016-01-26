@@ -26,12 +26,10 @@ angular.module('ts5App')
     this.setStepTwoFromStepOne = function() {
       if ($routeParams.action === 'redispatch') {
         $localStorage.stepTwoFromStepOne = {
-          storeId: $routeParams.storeId
+          storeId: $routeParams.storeId ? $routeParams.storeId : $scope.storeDetails.id
         };
       }
     };
-
-    this.setStepTwoFromStepOne();
 
     this.setSealColors = function(dataFromAPI) {
       if (angular.isDefined(dataFromAPI)) {
@@ -600,29 +598,43 @@ angular.module('ts5App')
       ];
     };
 
-    this.assignSeals = function() {
-      this.displayLoadingModal('Assigning seals to Store Instance');
-      var deletePromises = this.makeDeleteSealsPromises();
-      var createPromises = this.makeCreateSealsPromises();
+    this.deletePromises = function() {
+      var deletePromises = $this.makeDeleteSealsPromises();
+      $q.all(deletePromises).then($this.createPromises, $this.assignSealsErrorHandler);
+    };
+
+    this.createPromises = function() {
+      var createPromises = $this.makeCreateSealsPromises();
+      $q.all(createPromises).then($this.tamperedPromises, $this.assignSealsErrorHandler);
+    };
+
+    this.tamperedPromises = function() {
       var tamperedPromises = [];
       if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
-        tamperedPromises = this.createTamperedPromises();
+        tamperedPromises = $this.createTamperedPromises();
       }
 
-      $q.all(deletePromises).then(
-        $q.all(createPromises).then(
-          $q.all(tamperedPromises).then(
-            $this.assignSealsSuccessHandler,
-            $this.assignSealsErrorHandler
-          ), $this.assignSealsErrorHandler
-        ), $this.assignSealsErrorHandler
-      );
+      if (!tamperedPromises.length) {
+        return $this.assignSealsSuccessHandler();
+      }
+
+      $q.all(tamperedPromises).then($this.assignSealsSuccessHandler, $this.assignSealsErrorHandler);
+    };
+
+    this.startPromises = function() {
+      return this.deletePromises();
+    };
+
+    this.assignSeals = function() {
+      this.displayLoadingModal('Assigning seals to Store Instance');
+      this.startPromises();
     };
 
     this.init = function() {
       $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       this.displayLoadingModal('Loading Seals for Store Instance');
       this.getStoreDetails();
+      this.setStepTwoFromStepOne();
     };
 
     this.init();

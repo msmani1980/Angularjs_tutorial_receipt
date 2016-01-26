@@ -504,6 +504,10 @@ describe('the Store Instance Seals controller', function() {
       spyOn(StoreInstanceSealsCtrl, 'makeCreateSealsPromises').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'makeDeletePromise').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'makeCreatePromise').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'startPromises').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'deletePromises').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'createPromises').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'tamperedPromises').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'assignSealsSuccessHandler').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'assignSealsErrorHandler').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'showMessage');
@@ -521,12 +525,12 @@ describe('the Store Instance Seals controller', function() {
         'Assigning seals to Store Instance');
     });
 
-    it('should call the makeDeleteSealsPromises', function() {
-      expect(StoreInstanceSealsCtrl.makeDeleteSealsPromises).toHaveBeenCalled();
+    it('should call the startPromises', function() {
+      expect(StoreInstanceSealsCtrl.startPromises).toHaveBeenCalled();
     });
 
-    it('should call the makeCreateSealsPromises', function() {
-      expect(StoreInstanceSealsCtrl.makeCreateSealsPromises).toHaveBeenCalled();
+    it('should call the makeDeleteSealsPromises', function() {
+      expect(StoreInstanceSealsCtrl.makeDeleteSealsPromises).toHaveBeenCalled();
     });
 
     describe('success handler', function() {
