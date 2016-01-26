@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('The Company Create Controller', function() {
+describe('The Company Create Controller', function() {
 
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module('served/company-create.json',
