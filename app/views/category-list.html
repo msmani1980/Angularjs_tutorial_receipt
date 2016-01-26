@@ -170,7 +170,7 @@
           ng-show="canEditOrRearrangeCategory(category) && inEditMode">
       </td>
       </td>
-      <td>{{ category.id }}, {{ category.nextCategoryId }}</td>
+      <td>{{ category.itemCount }}</td>
       <td>
         </button>
         <button class="btn btn-xs btn-default" ng-show="canRearrange(category)" ng-click="rearrangeCategory(category, $index, 'up')">
