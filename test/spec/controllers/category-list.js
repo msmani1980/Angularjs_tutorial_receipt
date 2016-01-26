@@ -329,23 +329,28 @@ describe('Controller: CategoryListCtrl', function () {
         var isFiltering = scope.isUserFiltering();
         expect(isFiltering).toEqual(false);
       });
-      it('should return false if name and description are empty', function () {
+      it('should return false if name and description and parentName are empty', function () {
         scope.filter = { name: '' };
         var isFiltering = scope.isUserFiltering();
         expect(isFiltering).toEqual(false);
         scope.filter = { description: '' };
         isFiltering = scope.isUserFiltering();
         expect(isFiltering).toEqual(false);
-        scope.filter = { name: '', description: '' };
+        scope.filter = { parentName: '' };
         isFiltering = scope.isUserFiltering();
         expect(isFiltering).toEqual(false);
-
+        scope.filter = { name: '', description: '', parentName: ''};
+        isFiltering = scope.isUserFiltering();
+        expect(isFiltering).toEqual(false);
       });
       it('should return true if name or description is populated', function () {
         scope.filter = { name: 'test' };
         var isFiltering = scope.isUserFiltering();
         expect(isFiltering).toEqual(true);
         scope.filter = { description: 'test' };
+        isFiltering = scope.isUserFiltering();
+        expect(isFiltering).toEqual(true);
+        scope.filter = { parentName: 'test' };
         isFiltering = scope.isUserFiltering();
         expect(isFiltering).toEqual(true);
       });
