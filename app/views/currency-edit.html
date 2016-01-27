@@ -57,7 +57,7 @@
                         <div class="form-group">
                             <label for="currencyId-{{$index}}">Currency* </label>
                             <select name="mySelect" id="currencyId-{{$index}}" class="form-control" required="required"
-                                    ng-options="selectCurrency.id as selectCurrency.currencyCode for selectCurrency in globalCurrencyList"
+                                    ng-options="selectCurrency.id as selectCurrency.currencyCode for selectCurrency in globalCurrencyList | orderBy: 'currencyCode'"
                                     ng-model="currency.currencyId"
                                     ng-disabled="isCurrencyReadOnly(currency)"
                                     ng-change="clearDenominations(currency)">
