@@ -1,4 +1,4 @@
-<div class="container">
+<div class="module-container fluid-container">
 
   <div class="list-controls">
     <div class="row item-list-row">
@@ -104,7 +104,7 @@
               <div class="form-group">
                 <label for="category-name">Parent Category</label>
                 <ui-select theme="bootstrap" ng-model="newCategory.parentCategory" ng-disabled="readOnly" name="parentCategoryId">
-                  <ui-select-match placeholder="Select a Parent Category to group under">{{ $select.selected.name }}</ui-select-match>
+                  <ui-select-match placeholder="Select a Parent Category to group under" allow-clear="true">{{ $select.selected.name }}</ui-select-match>
                   <ui-select-choices repeat="category in categoryList | filter: {name:$select.search}">
                     <div ng-bind-html="category.name | highlight: $select.search"></div>
                   </ui-select-choices>
@@ -115,7 +115,7 @@
               <div class="form-group">
                 <label for="category-description">Place Before</label>
                 <ui-select theme="bootstrap" ng-model="newCategory.nextCategory" ng-disabled="readOnly" name="nextCategoryId">
-                  <ui-select-match placeholder="Select a Category that placed after">{{ $select.selected.name }}</ui-select-match>
+                  <ui-select-match placeholder="Select a Category that placed after" allow-clear="true">{{ $select.selected.name }}</ui-select-match>
                   <ui-select-choices repeat="category in categoryList | filter: {name:$select.search, parentName: newCategory.parentCategory.name}">
                     <div ng-bind-html="category.name | highlight: $select.search"></div>
                   </ui-select-choices>
@@ -138,7 +138,7 @@
       <th colspan="{{ numCategoryLevels }}"></th>
       <th>Name</th>
       <th>Description</th>
-      <th ng-show="isUserFiltering()">Parent Category</th>
+      <th ng-show="isUserFiltering() || inEditMode">Parent Category</th>
       <th>Items</th>
       <th>Actions</th>
     </tr>
@@ -182,7 +182,15 @@
           maxlength="25"
           ng-show="canEditOrRearrangeCategory(category) && inEditMode">
       </td>
-      <td ng-show="isUserFiltering()">{{ category.parentName }}</td>
+      <td ng-show="isUserFiltering() || inEditMode">
+        <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.parentName }}</span>
+        <ui-select theme="bootstrap" ng-model="categoryToEdit.parentCategory" ng-disabled="readOnly" name="parentCategoryId" ng-show="canEditOrRearrangeCategory(category) && inEditMode">
+          <ui-select-match placeholder="Select a Parent Category to group under" allow-clear>{{ $select.selected.name }}</ui-select-match>
+          <ui-select-choices repeat="category in filteredCategoryList | filter: {name:$select.search}">
+            <div ng-bind-html="category.name | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </td>
       <td>{{ category.itemCount }}</td>
       <td>
         </button>
