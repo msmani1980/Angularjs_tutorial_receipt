@@ -375,7 +375,11 @@ angular.module('ts5App')
             className: 'dashboard-storeInstanceDashboard',
             package: 'STATIONOPERATIONS',
             role: 'STOREINSTANCEDASHBOARD'
-          }, {
+          }]
+        },
+        {
+          title: 'Reconciliation',
+          menuItems: [{
             name: 'Reconciliation Dashboard',
             route: '/#/reconciliation-dashboard',
             icon: 'icon-manage-schedule',
