@@ -158,8 +158,9 @@
           <span ng-class="getToggleIconClass(category)"></span>
         </button>
       </td>
-      <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }} && !isUserFiltering()"></td>
-
+      <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }} && !isUserFiltering()">
+        <span class="badge" ng-show="category.childCategoryCount > 0">{{ category.childCategoryCount }}</span>
+      </td>
       <td>
         <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.name }}</span>
         <input

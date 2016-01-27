@@ -234,7 +234,7 @@ angular.module('ts5App')
       var newCategory = {
         id: category.id,
         name: category.name || category.categoryName,
-        childCategoryCount: category.childCategoryCount,
+        childCategoryCount: parseInt(category.childCategoryCount) || 0,
         totalChildCount: getTotalChildCount(category),
         itemCount: category.itemCount,
         description: category.description,
