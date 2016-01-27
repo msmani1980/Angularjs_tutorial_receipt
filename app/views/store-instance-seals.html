@@ -18,6 +18,50 @@
       <seal-type seal-type-object="sealType" ng-if="!hideSealType(sealType.name)"></seal-type>
     </div>
 
+    <!--carts, canister and c208 section-->
+    <div class="well seal-type" ng-if="isReplenish()">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="seal-label">Carts, Canisters &amp; C208 Serial Number</div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-xs-4">
+          <label>Cart Quantity:</label>
+          <input custom-pattern="number"
+                 custom-validity
+                 type="text"
+                 maxlength="3"
+                 class="form-control"
+                 ng-model="storeDetails.cartQty"
+                 placeholder="Enter Cart quantity"/>
+        </div>
+        <div class="col-xs-4">
+          <label>Canister Quantity:</label>
+          <input custom-pattern="number"
+                 custom-validity
+                 type="text"
+                 maxlength="3"
+                 class="form-control"
+                 ng-model="storeDetails.canisterQty"
+                 placeholder="Enter Canister quantity"/>
+        </div>
+        <div class="col-xs-4">
+          <label>C208 Serial Number:</label>
+          <input custom-pattern="number"
+                 custom-validity
+                 type="text"
+                 maxlength="9"
+                 class="form-control"
+                 ng-model="storeDetails.c208SerialNo"
+                 placeholder="Enter C208 Serial Number"/>
+        </div>
+      </div>
+    </div>
+    <!--carts, canister and c208 section-->
+
     <footer ng-hide="readOnly" class="text-right">
       <button type="button" ng-click="goToPacking()" class="btn btn-default">
         <i class="fa fa-arrow-left"></i>

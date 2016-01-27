@@ -79,7 +79,7 @@
 
         <tbody>
         <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
-            ng-class="showVarianceWarningClass(item)">
+            ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -133,7 +133,7 @@
                    name="pick-list-picked-{{$index}}"
                    custom-validity
                    custom-pattern="number"
-                   class="form-control"
+                   class="form-control pick-list-picked"
                    ng-model="item.pickedQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"

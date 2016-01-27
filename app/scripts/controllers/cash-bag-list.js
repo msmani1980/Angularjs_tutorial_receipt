@@ -25,11 +25,7 @@ angular.module('ts5App')
       return $this.shouldShowEmptyResult && $scope.cashBagList.length === 0;
     };
 
-    socketIO.on('init', function (data) {
-      console.log('init', data);
-    });
-
-    socketIO.on('echo', function (message) {
+    socketIO.on('cashBag', function (message) {
       $scope.search.cashBagNumber = message.message;
       $scope.searchCashBag();
     });
@@ -89,6 +85,7 @@ angular.module('ts5App')
 
       if ($this.meta.count === 1 && $scope.search.cashBagNumber) {
         $localStorage.isEditFromList = true;
+        socketIO.emit('echo-cashBag', { cashBag: $scope.cashBagList[0] });
         $scope.editCashBag($scope.cashBagList[0]);
       }
     }

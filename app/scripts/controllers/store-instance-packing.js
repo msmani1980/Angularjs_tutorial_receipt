@@ -8,8 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstancePackingFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q,
-            dateUtility) {
+  function ($scope, storeInstancePackingFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q, dateUtility, socketIO) {
 
     var $this = this;
 
@@ -293,6 +292,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.addItemsToArray($scope.newPickListItems, $scope.addPickListNum, false);
     };
 
+    socketIO.on('retailItem', function (dataFromSocket) {
+      var rowSelector = sprintf('.item-%s', dataFromSocket.message);
+      var inputElementSelector = sprintf('.item-%s .pick-list-picked', dataFromSocket.message);
+      if (angular.element(rowSelector).length) {
+        angular.element(rowSelector).addClass('alert-info');
+        angular.element(inputElementSelector).focus();
+      } else {
+        $scope.addItems();
+        angular.element('.pick-list-picked:last-child').focus();
+      }
+    });
+
     $scope.canDeleteItem = function (item) {
       return item.isNewItem || (!item.isMenuItem);
     };
@@ -491,7 +502,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.createFreshItem = function (itemFromAPI, isFromMenu) {
-      var newItem = {
+      return {
         itemDescription: itemFromAPI.itemCode + ' - ' + itemFromAPI.itemName,
         itemName: itemFromAPI.itemName,
         menuQuantity: (isFromMenu) ? itemFromAPI.menuQuantity : 0,
@@ -506,7 +517,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         isNewItem: false,
         isInOffload: ($routeParams.action === 'end-instance')
       };
-      return newItem;
     };
 
     this.getItemQuantityType = function (item) {
