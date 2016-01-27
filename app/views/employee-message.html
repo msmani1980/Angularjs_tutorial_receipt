@@ -69,7 +69,7 @@
         <br>
 
         <div class="row">
-          <div class="col-md-3 col-sm-6" ng-hide="shouldDisable(true) && !employeeMessage.employees.length">
+          <div class="col-md-3 col-sm-6">
             <div class="row">
               <div class="col-xs-8">
                 <label>Employees</label>
@@ -84,7 +84,7 @@
                 </button>
               </div>
             </div>
-            <table class="table table-bordered" ng-show="employeeMessage.employees.length">
+            <table class="table table-bordered">
               <tr class="active">
                 <td ng-hide="shouldDisable(true)">
                   <input type="checkbox"
@@ -99,6 +99,9 @@
                 <td ng-hide="shouldDisable(true)"><input type="checkbox" ng-model="employee.selectedToDelete"></td>
                 <td>{{employee.employeeIdentifier}}</td>
                 <td>{{employee.lastName}}, {{ employee.firstName }}</td>
+              </tr>
+              <tr ng-hide="employeeMessage.employees.length">
+                <td colspan="3" class="text-center"> <span class="fa fa-exclamation-circle"></span> No Employees Have Been Added</td>
               </tr>
             </table>
 
@@ -115,7 +118,7 @@
                         </ui-select-choices>
                       </ui-select>
                       <input type="checkbox" ng-model="employeesAddAll"
-                             ng-click="selectAllToAdd(employeesAddAll, 'employees')"> Add all employees
+                             ng-click="selectAllToAdd(employeesAddAll, 'employees')"> Select all employees
                     </td>
                     <td class="col-xs-1">
                       <button type="button" class="btn btn-success btn-sm text-right"
@@ -127,7 +130,7 @@
             </div>
           </div>
 
-          <div class="col-md-3 col-sm-6" ng-hide="shouldDisable(true) && !employeeMessage.schedules.length">
+          <div class="col-md-3 col-sm-6">
             <div class="row">
               <div class="col-xs-8">
                 <label>Schedules</label>
@@ -142,7 +145,7 @@
                 </button>
               </div>
             </div>
-            <table class="table table-bordered" ng-show="employeeMessage.schedules.length">
+            <table class="table table-bordered">
               <tr class="active">
                 <td ng-hide="shouldDisable(true)">
                   <input type="checkbox"
@@ -155,6 +158,9 @@
               <tr ng-repeat="schedule in employeeMessage.schedules">
                 <td ng-hide="shouldDisable(true)"><input type="checkbox" ng-model="schedule.selectedToDelete"></td>
                 <td>{{ schedule.scheduleNumber }}</td>
+              </tr>
+              <tr ng-hide="employeeMessage.schedules.length">
+                <td colspan="3" class="text-center"> <span class="fa fa-exclamation-circle"></span> No Schedules Have Been Added</td>
               </tr>
             </table>
             <div class="row" ng-hide="shouldDisable(true)">
@@ -169,7 +175,7 @@
                         </ui-select-choices>
                       </ui-select>
                       <input type="checkbox" ng-model="schedulesAddAll"
-                             ng-click="selectAllToAdd(schedulesAddAll, 'schedules')"> Add all schedules
+                             ng-click="selectAllToAdd(schedulesAddAll, 'schedules')"> Select all schedules
                     </td>
                     <td class="col-xs-1">
                       <button type="button" class="btn btn-success btn-sm text-right"
@@ -181,7 +187,7 @@
             </div>
           </div>
 
-          <div class="col-md-3 col-sm-6" ng-hide="shouldDisable(true) && !employeeMessage.departureStations.length">
+          <div class="col-md-3 col-sm-6">
             <div class="row">
               <div class="col-xs-8">
                 <label>Departure Station</label>
@@ -196,7 +202,7 @@
                 </button>
               </div>
             </div>
-            <table class="table table-bordered" ng-show="employeeMessage.departureStations.length">
+            <table class="table table-bordered">
               <tr class="active">
                 <td ng-hide="shouldDisable(true)"><input type="checkbox"
                            ng-show="employeeMessage.departureStations.length"
@@ -209,6 +215,9 @@
                 <td ng-hide="shouldDisable(true)"><input type="checkbox" ng-model="station.selectedToDelete"></td>
                 <td>{{station.code}}</td>
                 <td>{{station.name}}</td>
+              </tr>
+              <tr ng-hide="employeeMessage.departureStations.length">
+                <td colspan="3" class="text-center"> <span class="fa fa-exclamation-circle"></span> No Stations Have Been Added</td>
               </tr>
             </table>
             <div class="row" ng-hide="shouldDisable(true)">
@@ -223,7 +232,7 @@
                         </ui-select-choices>
                       </ui-select>
                       <input type="checkbox" ng-model="departureStationsAddAll"
-                             ng-click="selectAllToAdd(departureStationsAddAll, 'departureStations')"> Add all stations
+                             ng-click="selectAllToAdd(departureStationsAddAll, 'departureStations')"> Select all stations
                     </td>
                     <td class="col-xs-1">
                       <button type="button" class="btn btn-success btn-sm text-right"
@@ -235,7 +244,7 @@
             </div>
           </div>
 
-          <div class="col-md-3 col-sm-6" ng-hide="shouldDisable(true) && !employeeMessage.arrivalStations.length">
+          <div class="col-md-3 col-sm-6">
             <div class="row">
               <div class="col-xs-8">
                 <label>Arrival Station</label>
@@ -250,7 +259,7 @@
                 </button>
               </div>
             </div>
-            <table class="table table-bordered" ng-show="employeeMessage.arrivalStations.length">
+            <table class="table table-bordered">
               <tr class="active">
                 <td ng-hide="shouldDisable(true)">
                   <input type="checkbox"
@@ -266,6 +275,9 @@
                 <td>{{station.code}}</td>
                 <td>{{station.name}}</td>
               </tr>
+              <tr ng-hide="employeeMessage.arrivalStations.length">
+                <td colspan="3" class="text-center"> <span class="fa fa-exclamation-circle"></span> No Stations Have Been Added</td>
+              </tr>
             </table>
             <div class="row" ng-hide="shouldDisable(true)">
               <div class="col-xs-12">
@@ -279,7 +291,7 @@
                         </ui-select-choices>
                       </ui-select>
                       <input type="checkbox" ng-model="arrivalStationsAddAll"
-                             ng-click="selectAllToAdd(arrivalStationsAddAll, 'arrivalStations')"> Add all stations
+                             ng-click="selectAllToAdd(arrivalStationsAddAll, 'arrivalStations')"> Select all stations
                     </td>
                     <td class="col-xs-1">
                       <button type="button" class="btn btn-success btn-sm text-right"
