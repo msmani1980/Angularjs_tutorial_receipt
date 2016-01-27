@@ -272,7 +272,7 @@
         </td>
         <td>{{ replenishment.dispatchStationCode }}</td>
         <td>{{ replenishment.inboundStationCode }}</td>
-        <td>{{ replenishment.id }}</td>
+        <td>{{ replenishment.storeNumber }}</td>
         <td id="schedule-{{replenishment.id}}" ng-click="toggleScheduleDetails(replenishment.id)">
           <span class="btn">
             <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(replenishment.id)"></span>
@@ -291,7 +291,7 @@
           <span ng-show="replenishment.tampered">Yes</span>
           <span ng-hide="replenishment.tampered">No</span>
         </td>
-        <td>{{ replenishment.storeNumber }}</td>
+        <td>{{ replenishment.id }}</td>
         <td>{{ replenishment.statusName }}</td>
         <td>{{ replenishment.updatedOnDisplay }}</td>
         <td><!-- TODO: add user, which requires user accounts --></td>
