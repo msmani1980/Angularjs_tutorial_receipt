@@ -130,7 +130,13 @@ angular.module('ts5App')
     $scope.enterEditMode = function (category) {
       $scope.cancelRearrangeMode();
       $scope.inEditMode = true;
+
+      $scope.filteredCategoryList = lodash.filter($scope.categoryList, function (newCategory) {
+        return newCategory.id !== category.id;
+      });
+      
       $scope.categoryToEdit = angular.copy(category);
+      $scope.categoryToEdit.parentCategory = angular.copy(lodash.findWhere($scope.categoryList, { name: category.parentName }));
     };
 
     $scope.canEditOrRearrangeCategory = function (category) {
@@ -318,6 +324,12 @@ angular.module('ts5App')
       category.name = $scope.categoryToEdit.name || category.name;
       category.description = $scope.categoryToEdit.description || category.description;
 
+      var newParentId = (angular.isDefined($scope.categoryToEdit.parentCategory)) ? $scope.categoryToEdit.parentCategory.id : null;
+      if (newParentId !== category.parentId) {
+        category.nextCategoryId = null;
+      }
+
+      category.parentId = newParentId;
       var newCategory = formatCategoryPayloadForAPI(category);
       showLoadingModal('Editing Category');
       categoryFactory.updateCategory(category.id, newCategory).then(init, showErrors);
@@ -340,6 +352,7 @@ angular.module('ts5App')
     $scope.cancelEditMode = function () {
       $scope.categoryToEdit = null;
       $scope.inEditMode = false;
+      $scope.filteredCategoryList = null;
     };
 
     $scope.cancelRearrangeMode = function () {
