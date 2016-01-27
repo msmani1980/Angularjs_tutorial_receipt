@@ -212,6 +212,7 @@ angular.module('ts5App')
     };
 
     this.getReconciliationDataList = function () {
+      $scope.reconciliationList = [];
       $scope.displayError = false;
       var payload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
       reconciliationFactory.getReconciliationDataList(payload).then(function (dataFromAPI) {
@@ -368,6 +369,11 @@ angular.module('ts5App')
       $scope.displayError = true;
     };
 
+    this.handleValidationResponseError = function () {
+      $this.hideLoadingModal();
+      $scope.displayError = false;
+    };
+
     this.executeValidateAction = function () {
       var changeToDiscrepanciesPromises = [];
       var changeToConfirmedPromises = [];
@@ -389,12 +395,12 @@ angular.module('ts5App')
         }, function (responseFromAPI) {
 
           $this.getReconciliationDataList();
-          $this.handleResponseError(responseFromAPI);
+          $this.handleValidationResponseError(responseFromAPI);
         });
       }, function(responseFromAPI) {
 
         $this.getReconciliationDataList();
-        $this.handleResponseError(responseFromAPI);
+        $this.handleValidationResponseError(responseFromAPI);
       });
     };
 
