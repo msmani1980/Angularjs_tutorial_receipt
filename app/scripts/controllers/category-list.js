@@ -134,9 +134,9 @@ angular.module('ts5App')
       $scope.filteredCategoryList = lodash.filter($scope.categoryList, function (newCategory) {
         return newCategory.id !== category.id;
       });
-      
+
       $scope.categoryToEdit = angular.copy(category);
-      $scope.categoryToEdit.parentCategory = angular.copy(lodash.findWhere($scope.categoryList, { name: category.parentName }));
+      $scope.categoryToEdit.parentCategory = angular.copy(lodash.findWhere($scope.categoryList, { id: category.parentId }));
     };
 
     $scope.canEditOrRearrangeCategory = function (category) {
@@ -324,7 +324,7 @@ angular.module('ts5App')
       category.name = $scope.categoryToEdit.name || category.name;
       category.description = $scope.categoryToEdit.description || category.description;
 
-      var newParentId = (angular.isDefined($scope.categoryToEdit.parentCategory)) ? $scope.categoryToEdit.parentCategory.id : null;
+      var newParentId = (angular.isDefined($scope.categoryToEdit.parentCategory) && $scope. categoryToEdit.parentCategory !== null) ? $scope.categoryToEdit.parentCategory.id : null;
       if (newParentId !== category.parentId) {
         category.nextCategoryId = null;
       }

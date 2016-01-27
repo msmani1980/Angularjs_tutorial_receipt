@@ -133,7 +133,9 @@ describe('Controller: CategoryListCtrl', function () {
       oldPayload = {
         name: 'categoryName',
         description: 'categoryDescription',
-        id: 1
+        id: 1,
+        parentId: 207,
+        nextCategoryId: 2
       };
     });
     it('should call edit API', function () {
@@ -143,14 +145,15 @@ describe('Controller: CategoryListCtrl', function () {
     it('should format payload with new name and description', function () {
       scope.categoryToEdit = {
         name: 'newName',
-        description: 'newDescription'
+        description: 'newDescription',
+        parentCategory: { id: 207 }
       };
       var expectedPayload = {
         id: 1,
         name: 'newName',
         description: 'newDescription',
-        parentCategoryId: null,
-        nextCategoryId: null
+        parentCategoryId: 207,
+        nextCategoryId: 2
       };
       scope.saveEditChange(oldPayload);
       expect(categoryFactory.updateCategory).toHaveBeenCalledWith(oldPayload.id, expectedPayload);
@@ -158,12 +161,64 @@ describe('Controller: CategoryListCtrl', function () {
 
     it('should keep previous values if description is blank', function () {
       scope.categoryToEdit = {
-        name: 'newName'
+        name: 'newName',
+        parentCategory: { id: 207 }
       };
       var expectedPayload = {
         id: 1,
         name: 'newName',
         description: 'categoryDescription',
+        parentCategoryId: 207,
+        nextCategoryId: 2
+      };
+      scope.saveEditChange(oldPayload);
+      expect(categoryFactory.updateCategory).toHaveBeenCalledWith(oldPayload.id, expectedPayload);
+    });
+
+    it('should set nextCategory to null if parent category is changed', function () {
+      scope.categoryToEdit = {
+        name: 'newName',
+        description: 'newDescription',
+        parentCategory: { id: 123 }
+      };
+      var expectedPayload = {
+        id: 1,
+        name: 'newName',
+        description: 'newDescription',
+        parentCategoryId: 123,
+        nextCategoryId: null
+      };
+      scope.saveEditChange(oldPayload);
+      expect(categoryFactory.updateCategory).toHaveBeenCalledWith(oldPayload.id, expectedPayload);
+    });
+
+    it('should not change nextCategory if parent category is not changed', function () {
+      scope.categoryToEdit = {
+        name: 'newName',
+        description: 'newDescription',
+        parentCategory: { id: 207 }
+      };
+      var expectedPayload = {
+        id: 1,
+        name: 'newName',
+        description: 'newDescription',
+        parentCategoryId: 207,
+        nextCategoryId: 2
+      };
+      scope.saveEditChange(oldPayload);
+      expect(categoryFactory.updateCategory).toHaveBeenCalledWith(oldPayload.id, expectedPayload);
+    });
+
+    it('should set parentId to null if no parent is passed in', function () {
+      scope.categoryToEdit = {
+        name: 'newName',
+        description: 'newDescription',
+        parentCategory: null
+      };
+      var expectedPayload = {
+        id: 1,
+        name: 'newName',
+        description: 'newDescription',
         parentCategoryId: null,
         nextCategoryId: null
       };
@@ -201,15 +256,15 @@ describe('Controller: CategoryListCtrl', function () {
       scope.categoryList = [{
         id: 1,
         nextCategoryId: 2,
-        totalChildCount:0
+        totalChildCount: 0
       }, {
         id: 2,
         nextCategoryId: 3,
-        totalChildCount:0
+        totalChildCount: 0
       }, {
         id: 3,
         nextCategoryId: null,
-        totalChildCount:0
+        totalChildCount: 0
       }];
       scope.enterRearrangeMode(scope.categoryList[1]);
     });
@@ -292,33 +347,33 @@ describe('Controller: CategoryListCtrl', function () {
     describe('canEditOrRearrange', function () {
       it('should return true if in edit mode and category is selected', function () {
         scope.inEditMode = true;
-        scope.categoryToEdit = {id: 1};
-        expect(scope.canEditOrRearrangeCategory({id: 1})).toEqual(true);
-        expect(scope.canEditOrRearrangeCategory({id: 2})).toEqual(false);
+        scope.categoryToEdit = { id: 1 };
+        expect(scope.canEditOrRearrangeCategory({ id: 1 })).toEqual(true);
+        expect(scope.canEditOrRearrangeCategory({ id: 2 })).toEqual(false);
       });
 
       it('should return true if in rearrange mode and category is selected', function () {
         scope.inRearrangeMode = true;
-        scope.categoryToMove = {id: 1};
-        expect(scope.canEditOrRearrangeCategory({id: 1})).toEqual(true);
-        expect(scope.canEditOrRearrangeCategory({id: 2})).toEqual(false);
+        scope.categoryToMove = { id: 1 };
+        expect(scope.canEditOrRearrangeCategory({ id: 1 })).toEqual(true);
+        expect(scope.canEditOrRearrangeCategory({ id: 2 })).toEqual(false);
       });
     });
 
     describe('canRearrange', function () {
       beforeEach(function () {
-        scope.categoryToMove = {id: 1, parentId: 2, levelNum: 1};
+        scope.categoryToMove = { id: 1, parentId: 2, levelNum: 1 };
         scope.inRearrangeMode = true;
       });
       it('should return true for categories in the same level and parent', function () {
-        var mockCategory = {id: 3, parentId: 2, levelNum: 1};
+        var mockCategory = { id: 3, parentId: 2, levelNum: 1 };
         expect(scope.canRearrange(mockCategory)).toEqual(true);
         mockCategory.parentId = 4;
         expect(scope.canRearrange(mockCategory)).toEqual(false);
       });
 
       it('should return false for the selected category to move', function () {
-        var mockCategory = {id: 1, parentId: 2, levelNum: 1};
+        var mockCategory = { id: 1, parentId: 2, levelNum: 1 };
         expect(scope.canRearrange(mockCategory)).toEqual(false);
       });
     });
@@ -339,7 +394,7 @@ describe('Controller: CategoryListCtrl', function () {
         scope.filter = { parentName: '' };
         isFiltering = scope.isUserFiltering();
         expect(isFiltering).toEqual(false);
-        scope.filter = { name: '', description: '', parentName: ''};
+        scope.filter = { name: '', description: '', parentName: '' };
         isFiltering = scope.isUserFiltering();
         expect(isFiltering).toEqual(false);
       });
