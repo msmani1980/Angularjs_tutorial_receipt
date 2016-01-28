@@ -95,7 +95,7 @@ angular.module('ts5App')
       }
 
       var parentCategory = lodash.findWhere($scope.categoryList, { id: category.parentId, levelNum: category.levelNum - 1 });
-      
+
       return parentCategory.isOpen && isChildCategoryVisible(parentCategory);
     }
 
