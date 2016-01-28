@@ -312,10 +312,6 @@ angular.module('ts5App', [
   }).otherwise({
     redirectTo: '/'
   });
-}).run(function ($rootScope, regexp, $location, socketIO) {
+}).run(function ($rootScope, regexp) {
   $rootScope.regexp = regexp;
-
-  socketIO.on('redirectTo', function (route) {
-    $location.path(route);
-  });
 });

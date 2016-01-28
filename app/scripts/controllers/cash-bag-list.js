@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, ngToast, dateUtility, lodash, socketIO) {
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, ngToast, dateUtility, lodash) {
 
     var companyId;
     var services = [];
@@ -24,11 +24,6 @@ angular.module('ts5App')
     $scope.isEmptyResultSet = function () {
       return $this.shouldShowEmptyResult && $scope.cashBagList.length === 0;
     };
-
-    socketIO.on('cashBag', function (message) {
-      $scope.search.cashBagNumber = message.message;
-      $scope.searchCashBag();
-    });
 
     $scope.viewName = 'Manage Cash Bag';
     $scope.createCashBagError = 'temp error message';
@@ -85,7 +80,6 @@ angular.module('ts5App')
 
       if ($this.meta.count === 1 && $scope.search.cashBagNumber) {
         $localStorage.isEditFromList = true;
-        socketIO.emit('echo-cashBag', { cashBag: $scope.cashBagList[0] });
         $scope.editCashBag($scope.cashBagList[0]);
       }
     }
