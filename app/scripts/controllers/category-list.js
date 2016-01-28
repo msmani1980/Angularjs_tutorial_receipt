@@ -67,10 +67,6 @@ angular.module('ts5App')
     };
 
     $scope.getClassForRow = function (category) {
-      if ($scope.isUserFiltering()) {
-        return '';
-      }
-
       if ($scope.inRearrangeMode && category.id === $scope.categoryToMove.id) {
         return 'bg-info';
       }
@@ -94,25 +90,19 @@ angular.module('ts5App')
     };
 
     function isChildCategoryVisible(category) {
-      if (category.parentId === null) {
+      if (category.parentId === null || category.levelNum <= 1) {
         return category.isOpen;
       }
 
-      var parentCategory = lodash.findWhere($scope.categoryList, { id: category.parentId });
+      var parentCategory = lodash.findWhere($scope.categoryList, { id: category.parentId, levelNum: category.levelNum - 1 });
+
       return parentCategory.isOpen && isChildCategoryVisible(parentCategory);
     }
 
     $scope.shouldShowCategory = function (category) {
-      var shouldStayOpen = category.parentId === null || $scope.isUserFiltering();
+      var shouldStayOpen = category.parentId === null || category.levelNum <= 1;
       var shouldOpen = shouldStayOpen || isChildCategoryVisible(category);
       return shouldOpen;
-    };
-
-    $scope.isUserFiltering = function () {
-      var isNameFiltering = lodash.has($scope.filter, 'name') && ($scope.filter.name.length > 0);
-      var isDescriptionFiltering = lodash.has($scope.filter, 'description') && ($scope.filter.description.length > 0);
-      var isParentFiltering = lodash.has($scope.filter, 'parentName') && ($scope.filter.parentName.length > 0);
-      return isNameFiltering || isDescriptionFiltering || isParentFiltering;
     };
 
     $scope.canDeleteCategory = function (category) {
@@ -153,8 +143,8 @@ angular.module('ts5App')
       $scope.newCategory = {};
     };
 
-    $scope.clearSearchForm = function () {
-      $scope.filter = {};
+    $scope.clearNextCategoryOnParentCategorySelect = function () {
+      $scope.newCategory.nextCategory = null;
     };
 
     function swapCategoryPositions(firstIndex, firstIndexNumChildren, secondIndex) {
@@ -203,6 +193,23 @@ angular.module('ts5App')
       return false;
     };
 
+    function formatPayloadForSearch() {
+      var payloadForSearch = {};
+      if (lodash.has($scope.filter, 'name') && ($scope.filter.name.length > 0)) {
+        payloadForSearch.name = $scope.filter.name;
+      }
+
+      if (lodash.has($scope.filter, 'description') && ($scope.filter.description.length > 0)) {
+        payloadForSearch.description = $scope.filter.description;
+      }
+
+      if ($scope.filter.parentCategory) {
+        payloadForSearch.parentId = $scope.filter.parentCategory.id;
+      }
+
+      return payloadForSearch;
+    }
+
     function formatCategoryPayloadForAPI(categoryToFormat) {
       var newCategory = {
         name: categoryToFormat.name || categoryToFormat.categoryName,
@@ -227,35 +234,35 @@ angular.module('ts5App')
       return totalChildCount;
     }
 
-    function formatCategoryForApp(category) {
-      var currentLevelNum = category.salesCategoryPath.split('/').length;
-      var parentCategoryName = category.salesCategoryPath.split('/')[currentLevelNum - 2] || '';
+    function formatCategoryForApp(category, currentLevel) {
+      var globalLevel = category.salesCategoryPath.split('/').length;
+      var parentCategoryName = category.salesCategoryPath.split('/')[globalLevel - 2] || '';
 
       var newCategory = {
         id: category.id,
         name: category.name || category.categoryName,
-        childCategoryCount: category.childCategoryCount,
+        childCategoryCount: parseInt(category.childCategoryCount) || 0,
         totalChildCount: getTotalChildCount(category),
         itemCount: category.itemCount,
-        description: category.description,
+        description: category.description || '',
         parentName: parentCategoryName,
         parentId: category.parentId,
         nextCategoryId: category.nextCategoryId,
         salesCategoryPath: category.salesCategoryPath,
         countTotalSubcategories: category.countTotalSubcategories,
-        levelNum: currentLevelNum,
+        levelNum: currentLevel,
         isOpen: false
       };
       return newCategory;
     }
 
-    function getMaxLevelsAndFlattenCategoriesModel(categoryArray, workingArray) {
+    function getMaxLevelsAndFlattenCategoriesModel(categoryArray, workingArray, levelIterator) {
       var maxLevelsCount = 0;
       angular.forEach(categoryArray, function (category) {
         var currentLevelCount = 0;
-        workingArray.push(formatCategoryForApp(category));
+        workingArray.push(formatCategoryForApp(category, levelIterator));
         if (category.children && category.children.length > 0) {
-          currentLevelCount += (getMaxLevelsAndFlattenCategoriesModel(category.children, workingArray) + 1);
+          currentLevelCount += (getMaxLevelsAndFlattenCategoriesModel(category.children, workingArray, levelIterator + 1) + 1);
         }
 
         maxLevelsCount = (currentLevelCount > maxLevelsCount) ? currentLevelCount : maxLevelsCount;
@@ -283,9 +290,10 @@ angular.module('ts5App')
     function attachCategoryListToScope(categoryListFromAPI) {
       var categoryList = sortCategories(angular.copy(categoryListFromAPI.salesCategories));
       var flattenedCategoryList = [];
-      $scope.numCategoryLevels = getMaxLevelsAndFlattenCategoriesModel(categoryList, flattenedCategoryList) + 1;
+      $scope.numCategoryLevels = getMaxLevelsAndFlattenCategoriesModel(categoryList, flattenedCategoryList, 1) + 1;
       $scope.nestedCategoryList = categoryList;
-      $scope.categoryList = flattenedCategoryList;
+      $scope.flatCategoryList = flattenedCategoryList;
+      $scope.categoryList = angular.copy(flattenedCategoryList);
       hideLoadingModal();
     }
 
@@ -297,6 +305,7 @@ angular.module('ts5App')
       $scope.inRearrangeMode = false;
       $scope.categoryToMove = {};
       $scope.displayError = false;
+      $scope.isFiltering = false;
     }
 
     function init() {
@@ -324,7 +333,7 @@ angular.module('ts5App')
       category.name = $scope.categoryToEdit.name || category.name;
       category.description = $scope.categoryToEdit.description || category.description;
 
-      var newParentId = (angular.isDefined($scope.categoryToEdit.parentCategory) && $scope. categoryToEdit.parentCategory !== null) ? $scope.categoryToEdit.parentCategory.id : null;
+      var newParentId = (angular.isDefined($scope.categoryToEdit.parentCategory) && $scope.categoryToEdit.parentCategory !== null) ? $scope.categoryToEdit.parentCategory.id : null;
       if (newParentId !== category.parentId) {
         category.nextCategoryId = null;
       }
@@ -369,6 +378,50 @@ angular.module('ts5App')
       } else {
         $scope.cancelRearrangeMode();
       }
+    };
+
+    function getNestedCategory(categoryId, arrayToCheck) {
+      if (arrayToCheck === null) {
+        return null;
+      }
+
+      for (var i = 0; i < arrayToCheck.length; i++) {
+        if (arrayToCheck[i].id === categoryId) {
+          return arrayToCheck[i];
+        }
+
+        var childMatch = getNestedCategory(categoryId, arrayToCheck[i].children);
+        if (childMatch) {
+          return childMatch;
+        }
+      }
+    }
+
+    function attachFilteredCategoryListToScope(filteredCategoriesFromAPI) {
+      var filteredNestedCategoryList = [];
+      angular.forEach(angular.copy(filteredCategoriesFromAPI.salesCategories), function (category) {
+        var categoryMatch = getNestedCategory(category.id, $scope.nestedCategoryList);
+        if (categoryMatch) {
+          filteredNestedCategoryList.push(angular.copy(categoryMatch));
+        }
+      });
+
+      var flattenedFilteredList = [];
+      $scope.numCategoryLevels = getMaxLevelsAndFlattenCategoriesModel(filteredNestedCategoryList, flattenedFilteredList, 1) + 1;
+      $scope.categoryList = angular.copy(flattenedFilteredList);
+      hideLoadingModal();
+    }
+
+    $scope.search = function () {
+      showLoadingModal('Searching');
+
+      $scope.isFiltering = true;
+      var payload = formatPayloadForSearch();
+      categoryFactory.getCategoryList(payload).then(attachFilteredCategoryListToScope, showErrors);
+    };
+
+    $scope.clearSearch = function () {
+      init();
     };
 
     init();
