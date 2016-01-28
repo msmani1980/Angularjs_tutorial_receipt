@@ -159,7 +159,7 @@
         <span class="badge" ng-show="category.childCategoryCount > 0">{{ category.childCategoryCount }}</span>
       </td>
       <td>
-        <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.name }} {{ category.isOpen }}</span>
+        <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.name }}</span>
         <input
           ng-model="categoryToEdit.name"
           type="text"
