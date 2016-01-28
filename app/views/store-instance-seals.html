@@ -29,30 +29,28 @@
       <div class="row">
 
         <div class="col-xs-4">
-          <label>Cart Quantity:</label>
-          <input custom-pattern="number"
-                 custom-validity
-                 type="text"
+          <label>Cart Quantity <span ng-show="isCartCanisterQtyRequired">*</span>:</label>
+          <input type="text"
                  maxlength="3"
                  class="form-control"
                  ng-model="storeDetails.cartQty"
+                 ng-class="validateField('cartQty')"
+                 name="cartQty"
                  placeholder="Enter Cart quantity"/>
         </div>
         <div class="col-xs-4">
-          <label>Canister Quantity:</label>
-          <input custom-pattern="number"
-                 custom-validity
-                 type="text"
+          <label>Canister Quantity <span ng-show="isCartCanisterQtyRequired">*</span>:</label>
+          <input type="text"
                  maxlength="3"
                  class="form-control"
+                 ng-class="validateField('canisterQty')"
                  ng-model="storeDetails.canisterQty"
+                 name="canisterQty"
                  placeholder="Enter Canister quantity"/>
         </div>
         <div class="col-xs-4">
           <label>C208 Serial Number:</label>
-          <input custom-pattern="number"
-                 custom-validity
-                 type="text"
+          <input type="text"
                  maxlength="9"
                  class="form-control"
                  ng-model="storeDetails.c208SerialNo"

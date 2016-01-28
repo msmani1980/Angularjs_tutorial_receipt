@@ -21,6 +21,7 @@ angular.module('ts5App')
 
     $scope.formData = [];
     $scope.readOnly = true;
+    $scope.isCartCanisterQtyRequired = true;
     $scope.saveButtonName = 'Exit';
 
     this.setStepTwoFromStepOne = function () {
@@ -229,7 +230,7 @@ angular.module('ts5App')
     };
 
     this.isSealTypeRequired = function (sealTypeObject) {
-      if (sealTypeObject.name === OUTBOUND || sealTypeObject.name === INBOUND) {
+      if (!$scope.isReplenish() && (sealTypeObject.name === OUTBOUND || sealTypeObject.name === INBOUND)) {
         return true;
       }
 
@@ -327,9 +328,49 @@ angular.module('ts5App')
       }
     };
 
+    $scope.isReplenish = function () {
+      return $routeParams.action === 'replenish';
+    };
+
+    $scope.validateField = function (fieldName) {
+      return $scope.assignSealsForm[fieldName].$valid ? 'has-success' : 'has-error';
+    };
+
+    this.checkReplenishOptionalValues = function () {
+      var isRequired = true;
+      if (!$scope.storeDetails || !$scope.isReplenish()) {
+        isRequired = true;
+      }
+
+      $scope.errorCustom = [{
+        field: 'Required Fields',
+        value: 'Outbound Seal or Inbound Seal or Cart Quantity or Canister Quantity, any one of these are required'
+      }];
+
+      if ($scope.storeDetails.cartQty || $scope.storeDetails.canisterQty) {
+        isRequired = false;
+      }
+
+      $scope.sealTypesList.forEach(function (sealType) {
+        if (sealType.name === INBOUND || sealType.name === OUTBOUND) {
+          var hasSeals = (sealType.seals.numbers.length > 0);
+          if (hasSeals) {
+            isRequired = false;
+          }
+        }
+      });
+
+      $scope.assignSealsForm.Inbound.$setValidity('required', $scope.isCartCanisterQtyRequired);
+      $scope.assignSealsForm.Outbound.$setValidity('required', $scope.isCartCanisterQtyRequired);
+      $scope.assignSealsForm.cartQty.$setValidity('required', $scope.isCartCanisterQtyRequired);
+      $scope.assignSealsForm.canisterQty.$setValidity('required', $scope.isCartCanisterQtyRequired);
+
+      return isRequired;
+    };
+
     this.generateSealTypesList = function () {
       $scope.sealTypesList = [];
-      if ($routeParams.action === 'replenish') {
+      if ($scope.isReplenish()) {
         $this.removeHandoverSealType();
       }
 
@@ -361,6 +402,11 @@ angular.module('ts5App')
 
     this.validateForm = function () {
       this.resetErrors();
+      if (this.checkReplenishOptionalValues()) {
+        $scope.displayError = true;
+        return false;
+      }
+
       for (var key in $scope.sealTypesList) {
         var sealTypeObject = $scope.sealTypesList[key];
         $scope.validateSeals(sealTypeObject);
@@ -552,10 +598,6 @@ angular.module('ts5App')
       return payload;
     };
 
-    $scope.isReplenish = function () {
-      return $routeParams.action === 'replenish';
-    };
-
     function getReplenishPayload() {
       var cleanStoreDetails = angular.copy($scope.storeDetails);
 
@@ -694,6 +736,7 @@ angular.module('ts5App')
 
     $scope.validateSeals = function (sealTypeObject) {
       var model = $scope.assignSealsForm[sealTypeObject.name];
+
       if (angular.isUndefined(model) || model.$pristine && !$scope.assignSealsForm.$submitted) {
         return '';
       }
