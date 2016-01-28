@@ -13,9 +13,12 @@
   "storeId": 13,
   "scheduleDate": "08/13/2015",
   "scheduleNumber": "SCHED123",
+  "c208SerialNo": null,
+  "canisterQty": null,
   "carrierId": 3,
+  "cartQty": 4,
   "menus": [{
-    id: 1
+    "id": 1
   }],
   "statusList": [{
     "id": 9,

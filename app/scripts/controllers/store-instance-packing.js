@@ -8,8 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstancePackingFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q,
-            dateUtility) {
+  function ($scope, storeInstancePackingFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q, dateUtility) {
 
     var $this = this;
 
@@ -493,7 +492,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.createFreshItem = function (itemFromAPI, isFromMenu) {
-      var newItem = {
+      return {
         itemDescription: itemFromAPI.itemCode + ' - ' + itemFromAPI.itemName,
         itemName: itemFromAPI.itemName,
         menuQuantity: (isFromMenu) ? itemFromAPI.menuQuantity : 0,
@@ -508,7 +507,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         isNewItem: false,
         isInOffload: ($routeParams.action === 'end-instance')
       };
-      return newItem;
     };
 
     this.getItemQuantityType = function (item) {

@@ -119,6 +119,9 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.scheduleDate = dateUtility.formatDateForApp(storeInstanceAPIResponse.scheduleDate);
       storeDetails.scheduleNumber = storeInstanceAPIResponse.scheduleNumber;
       storeDetails.storeInstanceNumber = storeInstanceAPIResponse.id;
+      storeDetails.c208SerialNo = storeInstanceAPIResponse.c208SerialNo;
+      storeDetails.canisterQty = storeInstanceAPIResponse.canisterQty;
+      storeDetails.cartQty = storeInstanceAPIResponse.cartQty;
       storeDetails.statusList = responseCollection[2];
       storeDetails.menuList = [];
       storeDetails.tampered = storeInstanceAPIResponse.tampered;

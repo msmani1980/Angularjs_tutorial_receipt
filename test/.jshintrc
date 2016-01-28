@@ -21,6 +21,7 @@
   "jasmine": true,
   "globals": {
     "angular": false,
+    "io": false,
     "browser": false,
     "inject": false,
     "sprintf": false
