@@ -450,6 +450,13 @@ angular.module('ts5App')
       }
     };
 
+    $scope.validate = function () {
+      $scope.instancesForActionExecution = $this.findSelectedInstances();
+      $scope.displayError = false;
+
+      $this.executeValidateAction();
+    };
+
     this.findInstancesWithStatus = function (status) {
       return $scope.instancesForActionExecution.filter(function (instance) {
         return instance.statusName === status;
