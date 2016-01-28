@@ -360,10 +360,12 @@ angular.module('ts5App')
         }
       });
 
-      $scope.assignSealsForm.Inbound.$setValidity('required', $scope.isCartCanisterQtyRequired);
-      $scope.assignSealsForm.Outbound.$setValidity('required', $scope.isCartCanisterQtyRequired);
-      $scope.assignSealsForm.cartQty.$setValidity('required', $scope.isCartCanisterQtyRequired);
-      $scope.assignSealsForm.canisterQty.$setValidity('required', $scope.isCartCanisterQtyRequired);
+      var formItems = ['Inbound', 'Outbound', 'cartQty', 'canisterQty'];
+      formItems.forEach(function (item) {
+        if ($scope.assignSealsForm.hasOwnProperty(item)) {
+          $scope.assignSealsForm[item].$setValidity('required', $scope.isCartCanisterQtyRequired);
+        }
+      });
 
       return isRequired;
     };
