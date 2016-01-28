@@ -121,7 +121,7 @@ angular.module('ts5App')
       $scope.cancelRearrangeMode();
       $scope.inEditMode = true;
 
-      $scope.filteredCategoryList = lodash.filter($scope.categoryList, function (newCategory) {
+      $scope.filteredCategoryList = lodash.filter($scope.flatCategoryList, function (newCategory) {
         return newCategory.id !== category.id;
       });
 
