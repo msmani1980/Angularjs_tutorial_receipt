@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: CategoryListCtrl', function () {
+describe('Controller: CategoryListCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
