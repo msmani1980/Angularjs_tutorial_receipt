@@ -132,7 +132,6 @@ angular.module('ts5App')
               operatingCurrencyCode: $scope.search.operatingCurrencyCode,
               denominations: currency.flatDenominations,
               easyPayDenominations: currency.flatEasyPayDenominations,
-              exchangeRate: '1.0000',
               exchangeRateType: 1,
               startDate: dateUtility.tomorrowFormatted(),
               endDate: dateUtility.tomorrowFormatted()
