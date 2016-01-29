@@ -237,4 +237,11 @@ describe('Controller: CurrencyEditCtrl', function () {
     });
   });
 
+  it('getCurrencyCodeById should return currency code by id', function () {
+    scope.globalCurrencyList = currenciesJSON.response;
+
+    expect(CurrencyEditCtrl.getCurrencyCodeById(63)).toBe('NOK');
+    expect(CurrencyEditCtrl.getCurrencyCodeById(999)).toBe('');
+  });
+
 });
