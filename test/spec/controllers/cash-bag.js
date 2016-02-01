@@ -17,6 +17,7 @@ describe('Controller: CashBagCtrl', function () {
   var scope;
   var cashBagFactory;
   var companyId;
+  var dateUtility;
 
   var getCashBagDeferred;
   var getCompanyDeferred;
@@ -37,7 +38,7 @@ describe('Controller: CashBagCtrl', function () {
   var getStoreListJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_) {
+  beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_, $injector) {
     scope = $rootScope.$new();
 
     inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedDailyExchangeRate_, _servedCompanyPreferences_, _servedStoreInstance_,
@@ -53,6 +54,7 @@ describe('Controller: CashBagCtrl', function () {
     });
 
     cashBagFactory = _cashBagFactory_;
+    dateUtility = $injector.get('dateUtility');
 
     getCashBagDeferred = $q.defer();
     getCashBagDeferred.resolve(cashBagResponseJSON);
@@ -165,7 +167,8 @@ describe('Controller: CashBagCtrl', function () {
       });
 
       it('should call getCompanyPreferences', function () {
-        expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalled();
+        var expectedPayload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+        expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload);
       });
     });
 
