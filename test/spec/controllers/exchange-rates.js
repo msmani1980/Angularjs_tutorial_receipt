@@ -97,11 +97,6 @@ describe('Controller: ExchangeRatesCtrl', function () {
     expect(scope.dailyExchangeRates.dailyExchangeRateCurrencies.length).toBeGreaterThan(0);
   });
 
-  it('should get CompanyPreferences from API', function () {
-    var expectedPayload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
-    expect(currencyFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload);
-  });
-
   describe('company Preferences', function () {
 
     var preferencesJSON = [{
