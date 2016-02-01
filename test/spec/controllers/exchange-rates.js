@@ -16,6 +16,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
   var previousExchangeRatesJSON;
   var saveDailyExchangeRatesDefferred;
   var currencyFactory;
+  var dateUtility;
 
   beforeEach(module('ts5App'));
   beforeEach(module(
@@ -41,6 +42,8 @@ describe('Controller: ExchangeRatesCtrl', function () {
 
     $httpBackend = $injector.get('$httpBackend');
     currencyFactory = $injector.get('currencyFactory');
+    dateUtility = $injector.get('dateUtility');
+
 
     saveDailyExchangeRatesDefferred = $q.defer();
     spyOn(currencyFactory, 'saveDailyExchangeRates').and.returnValue(saveDailyExchangeRatesDefferred.promise);
@@ -92,6 +95,11 @@ describe('Controller: ExchangeRatesCtrl', function () {
 
   it('should fetch the daily exchange rate array from API', function () {
     expect(scope.dailyExchangeRates.dailyExchangeRateCurrencies.length).toBeGreaterThan(0);
+  });
+
+  it('should get CompanyPreferences from API', function () {
+    var expectedPayload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+    expect(currencyFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload);
   });
 
   describe('company Preferences', function () {
