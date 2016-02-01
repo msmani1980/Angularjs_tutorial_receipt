@@ -492,11 +492,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.createFreshItem = function (itemFromAPI, isFromMenu) {
+      var shoudlCopyPickedQuantityToMenu = isFromMenu && ($routeParams.action === 'dispatch' || $routeParams.action === 'redispatch');
       return {
         itemDescription: itemFromAPI.itemCode + ' - ' + itemFromAPI.itemName,
         itemName: itemFromAPI.itemName,
         menuQuantity: (isFromMenu) ? itemFromAPI.menuQuantity : 0,
-        pickedQuantity: '0',
+        pickedQuantity: (shoudlCopyPickedQuantityToMenu) ? itemFromAPI.menuQuantity : 0,
         oldPickedQuantity: -1,   // so that 0 quantities will be saved
         inboundQuantity: '0',
         oldInboundQuantity: -1,
