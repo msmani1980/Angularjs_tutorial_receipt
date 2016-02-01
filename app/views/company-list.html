@@ -5,7 +5,7 @@
 
     <div class="row">
       <div class="col-xs-6">
-        <a href="/#/company-create" class="btn btn-primary"><span class="fa fa-plus"><span> Create Company</a>
+        <a href="/#/company-create" class="btn btn-primary"><span class="fa fa-plus"></span> Create Company</a>
       </div>
 
       <div class="col-xs-6 text-right">
@@ -21,14 +21,19 @@
   </div>
 
   <div class="panel panel-default collapse no-transition" id="search-collapse">
-    <form name="menuSearchForm" ng-submit="searchMenus()">
+    <form name="menuSearchForm" ng-submit="searchCompanies()">
       <div class="panel-body">
         <div class="row">
           <div class="col-md-3 col-sm-6">
             <div class="form-group">
-              <label for="item-type">Company Type</label>
-              <input ng-model="search.companyTypeName" type="text" class="form-control" id="item-type"
-                     placeholder="Retail, Supplier, etc">
+              <label>Company Type</label>
+              <select class="form-control"
+                      id="crewBase"
+                      name="crewBase"
+                      ng-model="search.companyTypeId"
+                      ng-options="companyType.id as companyType.name for companyType in companyTypeList | orderBy: 'name'">
+                <option selected="selected" value>Select Company Type</option>
+              </select>
             </div>
 
           </div>
@@ -70,7 +75,7 @@
     </thead>
     <tbody>
     <tr
-      ng-repeat="company in companyList | filter:{companyTypeName: search.companyTypeName, companyName: search.companyName, companyCode: search.companyCode}">
+      ng-repeat="company in companyList">
       <td>{{ company.companyTypeName }}</td>
       <td>{{ company.companyCode }}</td>
       <td>{{ company.companyName }}</td>
