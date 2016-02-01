@@ -27,12 +27,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.openStoreInstanceId = -1;
     $scope.hasSelectedStore = false;
     $scope.exportBulkURL = '';
+    $scope.storeInstanceToDelete = {};
     $scope.allowedStatusNamesForDisplay = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch', 'Dispatched',
       'On Floor', 'Inbounded'
     ];
     $scope.allAllowedStatuses = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch', 'Dispatched',
       'On Floor', 'Inbounded', 'Unpacking', 'Inbound Seals'
     ];
+    $scope.allowedStatusNamesForDelete = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch'];
 
     var initDone = false;
 
@@ -151,6 +153,44 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
 
       return storeInstance.actionButtons.indexOf(actionName) >= 0;
+    };
+
+    function deleteSuccessHandler() {
+      var message = 'Store # ' + $scope.storeInstanceToDelete.storeNumber + ', Schedule Date ' + $scope.storeInstanceToDelete.scheduleDate + ', Store Instance ' + $scope.storeInstanceToDelete.id + ' is deleted';
+
+      angular.element('#store-' + $scope.storeInstanceToDelete.id).remove();
+
+      $scope.showMessage(
+        'success',
+        '<strong>Success</strong> - ' + message
+      );
+    }
+
+    function deleteErrorHandler() {
+      $scope.showMessage(
+        'danger',
+        '<strong>Error</strong> - Couldn\'t delete store instance'
+      );
+    }
+
+    function deleteStoreInstance (storeInstanceId) {
+      storeInstanceDashboardFactory.deleteStoreInstance(storeInstanceId).then(deleteSuccessHandler, deleteErrorHandler);
+    }
+
+    $scope.showDeleteConfirmation = function (storeInstance) {
+      $scope.storeInstanceToDelete = storeInstance;
+
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.deleteStoreInstance = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+
+      deleteStoreInstance($scope.storeInstanceToDelete.id);
+    };
+
+    $scope.canBeDeleted = function (storeInstance) {
+      return $scope.allowedStatusNamesForDelete.indexOf(storeInstance.statusName) > -1;
     };
 
     $scope.storeSelectionToggled = function () {
