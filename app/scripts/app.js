@@ -125,7 +125,6 @@ angular.module('ts5App', [
     controller: 'StoreNumberCreateCtrl'
   }).when('/company-relationship-list/:id', {
     templateUrl: 'views/company-relationship.html',
-    controllerAs: 'vm',
     controller: 'CompanyRelationshipListCtrl'
   }).when('/exchange-rates', {
     templateUrl: 'views/exchange-rates.html',
@@ -248,15 +247,12 @@ angular.module('ts5App', [
   }).when('/discounts', {
     templateUrl: 'views/discount-list.html',
     controller: 'DiscountListCtrl',
-    controllerAs: 'discountList'
   }).when('/currency-edit', {
     templateUrl: 'views/currency-edit.html',
     controller: 'CurrencyEditCtrl',
-    controllerAs: 'CurrencyEdit'
   }).when('/company-exchange-rate-edit', {
     templateUrl: 'views/company-exchange-rate-edit.html',
     controller: 'CompanyExchangeRateEditCtrl',
-    controllerAs: 'companyExchangeRateEdit'
   }).when('/reconciliation-discrepancy-detail/:storeInstanceId', {
     templateUrl: 'views/reconciliation-discrepancy-detail.html',
     controller: 'ReconciliationDiscrepancyDetail'
@@ -290,7 +286,6 @@ angular.module('ts5App', [
   }).when('/tax-rates', {
     templateUrl: 'views/tax-rates.html',
     controller: 'TaxRatesCtrl',
-    controllerAs: 'taxRates'
   }).when('/company-reason-type-subscribe', {
     templateUrl: 'views/company-reason-type-subscribe.html',
     controller: 'CompanyReasonTypeSubscribeCtrl'
