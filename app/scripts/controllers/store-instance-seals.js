@@ -332,26 +332,17 @@ angular.module('ts5App')
       return $routeParams.action === 'replenish';
     };
 
-    $scope.validateField = function (fieldName) {
-      return $scope.assignSealsForm[fieldName].$valid ? 'has-success' : 'has-error';
-    };
-
     this.checkReplenishOptionalValues = function () {
       var isRequired = true;
       if (!$scope.storeDetails || !$scope.isReplenish()) {
-        isRequired = true;
+        return false;
       }
-
-      $scope.errorCustom = [{
-        field: 'Required Fields',
-        value: 'Outbound Seal or Inbound Seal or Cart Quantity or Canister Quantity, any one of these are required'
-      }];
 
       if ($scope.storeDetails.cartQty || $scope.storeDetails.canisterQty) {
         isRequired = false;
       }
 
-      $scope.sealTypesList.forEach(function (sealType) {
+      lodash.forEach($scope.sealTypesList, function (sealType) {
         if (sealType.name === INBOUND || sealType.name === OUTBOUND) {
           var hasSeals = (sealType.seals.numbers.length > 0);
           if (hasSeals) {
@@ -368,6 +359,10 @@ angular.module('ts5App')
       });
 
       return isRequired;
+    };
+
+    $scope.validateField = function () {
+      return ($scope.assignSealsForm.$dirty && $this.checkReplenishOptionalValues()) ? 'has-error' : 'has-success';
     };
 
     this.generateSealTypesList = function () {
@@ -405,6 +400,10 @@ angular.module('ts5App')
     this.validateForm = function () {
       this.resetErrors();
       if (this.checkReplenishOptionalValues()) {
+        $scope.errorCustom = [{
+          field: 'Required Fields',
+          value: 'Outbound Seal or Inbound Seal or Cart Quantity or Canister Quantity, any one of these are required'
+        }];
         $scope.displayError = true;
         return false;
       }
@@ -749,6 +748,10 @@ angular.module('ts5App')
 
       if (sealTypeObject.required && sealTypeObject.seals.numbers.length === 0) {
         model.$setValidity('required', false);
+        return 'has-error';
+      }
+
+      if (sealTypeObject.name !== HIGH_SECURITY && $this.checkReplenishOptionalValues()) {
         return 'has-error';
       }
 
