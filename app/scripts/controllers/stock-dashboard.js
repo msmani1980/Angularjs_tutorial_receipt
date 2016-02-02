@@ -10,8 +10,7 @@
 
 angular.module('ts5App').controller('StockDashboardCtrl',
   function($scope, $http, GlobalMenuService, stockManagementStationItemsService, catererStationService,
-    companyReasonCodesService,
-    dateUtility, $filter, ENV, stockTakeFactory, identityAccessFactory) {
+    companyReasonCodesService, dateUtility, $filter, ENV, stockTakeFactory, identityAccessFactory) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
@@ -20,11 +19,6 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     $scope.stockDashboardItemsList = [];
 
     var $this = this;
-    this.meta = {
-      count: undefined,
-      limit: 100,
-      offset: 0
-    };
 
     function showLoadingBar() {
       angular.element('.loading-more').show();
@@ -46,7 +40,6 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     var loadingProgress = false;
 
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
-      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       $scope.stockDashboardItemsList = $scope.stockDashboardItemsList.concat(dataFromAPI.response);
       loadingProgress = false;
       hideLoadingBar();
@@ -68,10 +61,6 @@ angular.module('ts5App').controller('StockDashboardCtrl',
         return false;
       }
 
-      if ($this.meta.offset >= $this.meta.count) {
-        return;
-      }
-
       if (loadingProgress) {
         return;
       }
@@ -79,10 +68,8 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       loadingProgress = true;
 
       showLoadingBar();
-      stockManagementStationItemsService.getStockManagementStationItems($scope.selectedCateringStation.id, $this.meta
-        .limit, $this.meta.offset).then(
+      stockManagementStationItemsService.getStockManagementStationItems($scope.selectedCateringStation.id).then(
         $this.getStockDashboardItemsSuccessHandler);
-      $this.meta.offset += $this.meta.limit;
     };
 
     this.init = function() {
@@ -91,15 +78,10 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       companyReasonCodesService.getAll().then($this.getUllageReasonsFromResponse);
       $scope.$watch('selectedCateringStation', function(newData) {
         if (newData) {
-          $this.meta = {
-            count: undefined,
-            limit: 100,
-            offset: 0
-          };
           $scope.stockDashboardItemsList = [];
           $scope.updateStockItems();
           $this.setExportURL(newData);
-          $this.getStockTakeList(newData);
+          $this.getStockTakeList();
         }
       });
     };
@@ -113,9 +95,6 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     this.generateStockTakeQuery = function() {
       var query = {
         catererStationId: $scope.selectedCateringStation.id,
-        count: undefined,
-        limit: 100,
-        offset: 0
       };
       return query;
     };
