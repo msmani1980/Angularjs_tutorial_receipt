@@ -156,7 +156,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     function deleteSuccessHandler() {
-      var message = 'Store # ' + $scope.storeInstanceToDelete.storeNumber + ', Schedule Date ' + $scope.storeInstanceToDelete.scheduleDate + ', Store Instance ' + $scope.storeInstanceToDelete.id + ' is deleted';
+      var storeInstance = angular.copy($scope.storeInstanceToDelete);
+      var message = sprintf('Store #%s, with Schedule Date %s and Store Instance %s is deleted', storeInstance.storeNumber, storeInstance.scheduleDate, storeInstance.id);
 
       angular.element('#store-' + $scope.storeInstanceToDelete.id).remove();
 
