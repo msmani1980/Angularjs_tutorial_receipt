@@ -419,6 +419,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (apiData && apiData.id === parseInt(stepTwoStoreId)) {
         return (angular.isNumber(apiData.prevStoreInstanceId));
       }
+
+      return angular.isNumber(apiData.prevStoreInstanceId);
     };
 
     this.setCateringStationId = function(apiData) {
@@ -985,7 +987,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
         $this.createStoreInstanceErrorHandler
       );
-      $localStorage.stepTwoFromStepOne.storeId = null;
+      if (angular.isDefined($localStorage.stepTwoFromStepOne)) {
+        $localStorage.stepTwoFromStepOne.storeId = null;
+      }
     };
 
     this.editDispatchedStoreInstance = function(saveAndExit) {
@@ -1015,9 +1019,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.stepOneFromStepTwo) {
         $this.editRedispatchedStoreInstance(saveAndExit);
         return;
-      }
-
-      if (!$scope.stepOneFromStepTwo) {
+      } else {
         $this.redispatchStoreInstance(saveAndExit);
         return;
       }
