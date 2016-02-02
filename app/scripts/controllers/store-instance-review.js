@@ -31,6 +31,10 @@ angular.module('ts5App')
 
     $scope.saveButtonText = 'Exit';
 
+    $scope.isActionState = function (actionState) {
+      return $routeParams.action === actionState;
+    };
+
     function showMessage(message, messageType) {
       ngToast.create({
         className: messageType,

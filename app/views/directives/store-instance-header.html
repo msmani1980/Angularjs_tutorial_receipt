@@ -64,7 +64,8 @@
       <tbody>
       <tr>
         <td>
-          <input type="text" class="form-control" ng-model="storeDetails.displayLMPStation" disabled/>
+          <input type="text" class="form-control" ng-model="storeDetails.displayLMPStation" disabled ng-hide="isActionState('end-instance')"/>
+          <input type="text" class="form-control" ng-model="storeDetails.inboundLMPStation" disabled  ng-show="isActionState('end-instance')"/>
         </td>
         <td>
           <input type="text" class="form-control" ng-model="storeDetails.storeNumber" disabled/>
