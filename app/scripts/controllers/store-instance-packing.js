@@ -298,6 +298,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return item.isNewItem || (!item.isMenuItem);
     };
 
+    $scope.shouldDisableUllage = function (item) {
+      return (!item.ullageQuantity || parseInt(item.ullageQuantity) <= 0);
+    };
+
     this.addItemsToDeleteToPayload = function (promiseArray) {
       angular.forEach($this.itemsToDeleteArray, function (item) {
         promiseArray.push($this.deleteStoreInstanceItem(item.storeInstanceId, item.id));
@@ -311,8 +315,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         quantity: parseInt(angular.copy(quantity))
       };
       payloadItem.itemMasterId = (!item.isNewItem) ? item.itemMasterId : item.masterItem.id;
-      if (countTypeName === 'Ullage' && item.ullageReason) {
+
+      if (countTypeName === 'Ullage' && item.ullageReason && parseInt(item.ullageQuantity) > 0) {
         payloadItem.ullageReasonCode = item.ullageReason.id;
+      } else if (countTypeName === 'Ullage' && (!item.ullageReason || parseInt(item.ullageQuantity) <= 0)) {
+        payloadItem.ullageReasonCode = null;
       }
 
       return payloadItem;
