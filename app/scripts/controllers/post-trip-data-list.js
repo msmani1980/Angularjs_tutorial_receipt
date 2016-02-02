@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast, dateUtility, lodash) {
+  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast, dateUtility, lodash, $q) {
     var companyId = '';
     var $this = this;
     this.meta = {
@@ -59,7 +59,7 @@ angular.module('ts5App')
       $this.meta.count = $this.meta.count || response.meta.count;
 
       // TODO: move offset to service layer
-      $scope.postTrips =  $scope.postTrips.concat(response.postTrips);
+      $scope.postTrips = $scope.postTrips.concat(response.postTrips);
       $this.updateStationCodes();
       hideLoadingBar();
     };
@@ -73,8 +73,6 @@ angular.module('ts5App')
         postTripFactory.getStationList(companyId, response.meta.limit).then($this.getStationsSuccess);
       }
 
-      // TODO: fix this hack! currently ui-select doesn't populate correctly when collapsed or when multiple
-      angular.element('#search-collapse').addClass('collapse');
       $this.updateStationCodes();
     };
 
@@ -119,14 +117,26 @@ angular.module('ts5App')
       }
     };
 
+    this.makeInitPromises = function () {
+      var promises = [
+        postTripFactory.getStationList(companyId).then($this.getStationsSuccess),
+        postTripFactory.getCarrierTypes(companyId).then($this.getCarrierSuccess),
+        postTripFactory.getEmployees(companyId).then($this.getEmployeesSuccess)
+      ];
+
+      return promises;
+    };
+
     this.init = function () {
       companyId = postTripFactory.getCompanyId();
       $scope.carrierNumbers = [];
       $scope.employees = [];
-      postTripFactory.getStationList(companyId).then($this.getStationsSuccess);
-      postTripFactory.getCarrierTypes(companyId).then($this.getCarrierSuccess);
-      postTripFactory.getEmployees(companyId).then($this.getEmployeesSuccess);
-      $this.showNewPostTripSuccess();
+
+      var initDependencies = $this.makeInitPromises();
+      $q.all(initDependencies).then(function () {
+        $this.showNewPostTripSuccess();
+        angular.element('#search-collapse').addClass('collapse');
+      });
     };
 
     this.init();
@@ -147,7 +157,7 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     }
 
-    $scope.loadPostTrip = function() {
+    $scope.loadPostTrip = function () {
       loadPostTrip();
     };
 
@@ -163,6 +173,7 @@ angular.module('ts5App')
 
     $scope.clearSearchForm = function () {
       $scope.search = {};
+      $scope.multiSelectedValues = {};
       $scope.searchPostTripData();
     };
 

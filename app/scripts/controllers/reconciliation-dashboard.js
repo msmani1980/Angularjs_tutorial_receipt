@@ -275,6 +275,15 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     }
 
+    function resetReconciliationList() {
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.reconciliationList = [];
+    }
+
     $scope.searchReconciliationDataList = function () {
       $scope.isSearch = true;
       resetReconciliationList();
@@ -373,15 +382,6 @@ angular.module('ts5App')
       $scope.errorResponse = responseFromAPI;
       $scope.displayError = true;
     };
-
-    function resetReconciliationList() {
-      $this.meta = {
-        count: undefined,
-        limit: 100,
-        offset: 0
-      };
-      $scope.reconciliationList = [];
-    }
 
     this.handleValidationResult = function () {
       if ($scope.isSearch) {
