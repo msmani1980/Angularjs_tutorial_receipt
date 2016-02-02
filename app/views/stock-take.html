@@ -168,27 +168,35 @@
 
       <div class="well" ng-repeat="item in addedItems | index track by $index" ng-show="showAddedItem(item, state) && uiSelectReady">
         <div class="row">
+          <div class="col-xs-12 text-right" ng-hide="state === 'review'">
+            <span class="btn btn-sm btn-danger" ng-click="removeAddedItem(item.index)">
+              <i class="fa fa-close"></i>
+            </span>
+          </div>
+        </div>
 
-          <div class="col-xs-12 col-sm-6" ng-hide="state === 'review'">
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-4" ng-disabled="!item.itemObject.itemName">
             <div class="form-group">
-              <label for="item-name-{{ $index }}">Select Item</label>
+              <label for="item-code-{{ $index }}">Item Code</label>
+              <input ng-model="item.itemObject.itemCode" type="text" class="form-control" name="item-code-{{ $index }}" readonly disabled>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-5" ng-hide="state === 'review'">
+            <div class="form-group">
+              <label for="item-name-{{ $index }}">Item Name</label>
               <ui-select name="item-name-{{ $index }}"
                          ng-model="item.itemObject"
                          ng-disabled="readOnly || addedItems.length < 0 || state === 'view'"
                          reset-search-input="false">
 
-                <ui-select-match placeholder="Select New Item..." allow-clear>{{$select.selected.itemCode}} - {{$select.selected.itemName}}</ui-select-match>
+                <ui-select-match placeholder="Select New Item..." allow-clear>{{$select.selected.itemName}}</ui-select-match>
                 <ui-select-choices repeat="filteredItem in filteredItems | filter:omitSelectedItems | filter: $select.search | orderBy:'itemName' track by $index">
-                  <div ng-bind-html="filteredItem.itemCode  + ' - ' + filteredItem.itemName | highlight: $select.search"></div>
+                  <div ng-bind-html="filteredItem.itemName | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
-            </div>
-          </div>
-
-          <div class="col-xs-12 col-sm-4" ng-show="state === 'review'">
-            <div class="form-group">
-              <label for="item-code-{{ $index }}">Item Code</label>
-              <input ng-model="item.itemObject.itemCode" type="text" class="form-control" name="item-code-{{ $index }}" readonly disabled>
             </div>
           </div>
 
@@ -206,17 +214,11 @@
             </div>
           </div>
 
-          <div class="col-xs-12 col-sm-4" ng-hide="state === 'review'">
+          <div class="col-xs-12 col-sm-3" ng-hide="state === 'review'">
             <div class="form-group">
               <label for="item-quantity-{{ $index }}">Quantity</label>
               <input ng-model="item.itemQuantity" type="number" class="form-control" name="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
             </div>
-          </div>
-
-          <div class="col-xs-12 col-sm-2" ng-hide="state === 'review'">
-            <span class="pull-right btn btn-danger" ng-click="removeAddedItem(item.index)">
-              <i class="fa fa-close"></i>
-            </span>
           </div>
 
         </div>
