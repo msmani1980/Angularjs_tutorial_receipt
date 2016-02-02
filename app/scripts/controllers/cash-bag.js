@@ -189,13 +189,11 @@ angular.module('ts5App')
     };
 
     $scope.isBankExchangePreferred = function() {
-      if (!$scope.companyPreferences) {
+      if (!$scope.companyPreferences || !$scope.companyPreferences.length) {
         return false;
       }
 
-      return $scope.companyPreferences.filter(function(feature) {
-        return (feature.featureCode === 'EXR' && feature.optionCode === 'ERT' && feature.choiceCode === 'BNK');
-      }).length > 0;
+      return $scope.companyPreferences[0].choiceCode === 'BNK';
     };
 
     $scope.isCashBagDeleted = function() {
@@ -333,9 +331,11 @@ angular.module('ts5App')
     }
 
     function getCompanyPreferences() {
+      var payload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+
       _promises.push(
-        cashBagFactory.getCompanyPreferences().then(function(response) {
-          $scope.companyPreferences = angular.copy(response.preferences);
+        cashBagFactory.getCompanyPreferences(payload).then(function (companyPreferencesData) {
+          $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
         })
       );
     }

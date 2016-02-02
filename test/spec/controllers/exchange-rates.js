@@ -16,6 +16,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
   var previousExchangeRatesJSON;
   var saveDailyExchangeRatesDefferred;
   var currencyFactory;
+  var dateUtility;
 
   beforeEach(module('ts5App'));
   beforeEach(module(
@@ -41,6 +42,8 @@ describe('Controller: ExchangeRatesCtrl', function () {
 
     $httpBackend = $injector.get('$httpBackend');
     currencyFactory = $injector.get('currencyFactory');
+    dateUtility = $injector.get('dateUtility');
+
 
     saveDailyExchangeRatesDefferred = $q.defer();
     spyOn(currencyFactory, 'saveDailyExchangeRates').and.returnValue(saveDailyExchangeRatesDefferred.promise);

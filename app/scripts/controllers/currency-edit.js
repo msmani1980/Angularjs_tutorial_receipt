@@ -176,8 +176,10 @@ angular.module('ts5App')
     };
 
     $scope.showDeleteConfirmation = function (index, currency) {
-      $scope.currencyToDelete = currency;
+      $scope.currencyToDelete = angular.copy(currency);
       $scope.currencyToDelete.rowIndex = index;
+      $scope.currencyToDelete.currencyCode = $this.getCurrencyCodeById(currency.currencyId);
+      $scope.currencyToDelete.isOperatedCurrency = (currency.isOperatedCurrency === true) ? 'Yes' : 'No';
 
       angular.element('.delete-warning-modal').modal('show');
     };
@@ -186,6 +188,14 @@ angular.module('ts5App')
       return $scope.companyCurrencyList.map(function (currency) {
         return currency.id;
       }).indexOf(currencyId);
+    };
+
+    this.getCurrencyCodeById = function (currencyId) {
+      var currency = $scope.globalCurrencyList.filter(function (currency) {
+        return currency.id === currencyId;
+      });
+      
+      return (currency.length > 0) ? currency[0].currencyCode : '';
     };
 
     this.errorHandler = function (dataFromAPI) {
