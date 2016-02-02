@@ -29,21 +29,21 @@
       <div class="row">
 
         <div class="col-xs-4">
-          <label>Cart Quantity <span ng-show="isCartCanisterQtyRequired">*</span>:</label>
+          <label>Cart Quantity<span ng-hide="validateField()">*</span>:</label>
           <input type="number"
                  max="999"
                  class="form-control"
                  ng-model="storeDetails.cartQty"
-                 ng-class="validateField('cartQty')"
+                 ng-class="validateField()"
                  name="cartQty"
                  placeholder="Enter Cart quantity"/>
         </div>
         <div class="col-xs-4">
-          <label>Canister Quantity <span ng-show="isCartCanisterQtyRequired">*</span>:</label>
+          <label>Canister Quantity <span ng-hide="validateField()">*</span>:</label>
           <input type="number"
                  max="999"
                  class="form-control"
-                 ng-class="validateField('canisterQty')"
+                 ng-class="validateField()"
                  ng-model="storeDetails.canisterQty"
                  name="canisterQty"
                  placeholder="Enter Canister quantity"/>
@@ -52,6 +52,7 @@
           <label>C208 Serial Number:</label>
           <input type="number"
                  max="999999999"
+                 name="c208SerialNo"
                  class="form-control"
                  ng-model="storeDetails.c208SerialNo"
                  placeholder="Enter C208 Serial Number"/>
