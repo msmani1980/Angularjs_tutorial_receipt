@@ -719,7 +719,11 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function () {
-      $scope.assignSealsForm.$setSubmitted(true);
+      $this.checkReplenishOptionalValues();
+      if ($scope.assignSealsForm.$invalid) {
+        return;
+      }
+
       if ($this.validateForm()) {
         $this.assignSeals();
       }

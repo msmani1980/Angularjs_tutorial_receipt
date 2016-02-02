@@ -7,7 +7,7 @@
   <error-dialog form-object="assignSealsForm" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <form name="assignSealsForm">
+  <form name="assignSealsForm" ng-submit="submitForm()">
 
     <div class="well" ng-if="showTamperedSeals()">
       <input type="checkbox" ng-model="formData.tampered" ng-disabled="readOnly"/> <span>Inbound Seals Tampered</span>
@@ -30,8 +30,8 @@
 
         <div class="col-xs-4">
           <label>Cart Quantity <span ng-show="isCartCanisterQtyRequired">*</span>:</label>
-          <input type="text"
-                 maxlength="3"
+          <input type="number"
+                 max="999"
                  class="form-control"
                  ng-model="storeDetails.cartQty"
                  ng-class="validateField('cartQty')"
@@ -40,8 +40,8 @@
         </div>
         <div class="col-xs-4">
           <label>Canister Quantity <span ng-show="isCartCanisterQtyRequired">*</span>:</label>
-          <input type="text"
-                 maxlength="3"
+          <input type="number"
+                 max="999"
                  class="form-control"
                  ng-class="validateField('canisterQty')"
                  ng-model="storeDetails.canisterQty"
@@ -50,8 +50,8 @@
         </div>
         <div class="col-xs-4">
           <label>C208 Serial Number:</label>
-          <input type="text"
-                 maxlength="9"
+          <input type="number"
+                 max="999999999"
                  class="form-control"
                  ng-model="storeDetails.c208SerialNo"
                  placeholder="Enter C208 Serial Number"/>
@@ -65,7 +65,7 @@
         <i class="fa fa-arrow-left"></i>
         <span class="btn-label">Prev</span>
       </button>
-      <button type="button" ng-click="submitForm()" class="btn btn-success">
+      <button type="submit" class="btn btn-success">
         <span class="btn-label">Next</span>
         <i class="fa fa-arrow-right"></i>
       </button>
