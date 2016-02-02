@@ -260,6 +260,11 @@
              ng-click="navigateToAction(store, 'Offload')">
             Start Offload
           </a>
+          <a class="btn btn-danger btn-xs btn-block" tabindex="0"
+             ng-show="canBeDeleted(store)"
+             ng-click="showDeleteConfirmation(store)">
+            <i class="fa fa-trash"></i> Delete
+          </a>
         </td>
       </tr>
       <tr ng-repeat="replenishment in store.replenishments" class="subversion-row"
@@ -355,3 +360,27 @@
  confirmation-label="Yes"
  cancel-label="No">
 </confirmation-modal>
+<div class="modal fade delete-warning-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure?</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>You are about to permanently delete <strong>{{storeInstanceToDelete.storeNumber}}</strong></p>
+      </div>
+
+      <ul>
+        <li><strong>Store Instance: </strong>{{ storeInstanceToDelete.id }}</li>
+        <li><strong>Schedule Date: </strong>{{ storeInstanceToDelete.scheduleDate }}</li>
+      </ul>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="deleteStoreInstance()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
