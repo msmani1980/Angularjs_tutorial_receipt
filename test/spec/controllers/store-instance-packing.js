@@ -558,6 +558,26 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 3, expectedUllagePayload);
 
       });
+
+      it('should save ullage reason as null if ullageQuantity is 0', function () {
+        scope.offloadListItems = [{
+          itemMasterId: 4,
+          inboundQuantity: 2,
+          ullageQuantity: 0,
+          ullageReason: { id: 50 },
+          inboundId: 2,
+          ullageId: 3
+        }];
+        scope.save();
+        var expectedUllagePayload = {
+          itemMasterId: 4,
+          quantity: 0,
+          ullageReasonCode: null,
+          countTypeId: 7, // ullage
+          id: 3
+        };
+        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 3, expectedUllagePayload);
+      });
     });
 
     describe('save for redispatch', function () {
