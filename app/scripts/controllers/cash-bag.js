@@ -10,8 +10,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCtrl', function($scope, $routeParams, $q, $location, $localStorage, ngToast, cashBagFactory,
-    dateUtility, lodash) {
+  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, $localStorage, ngToast, cashBagFactory,
+                                       dateUtility, lodash) {
 
     // controller global properties
     var _companyId = null;
@@ -29,7 +29,7 @@ angular.module('ts5App')
     delete $localStorage.isListFromEdit;
 
     function formatAsCurrency(valueToFormat) {
-      return sprintf('%.4f', valueToFormat);
+      return sprintf('%.2f', valueToFormat);
     }
 
     function showLoadingModal(text) {
@@ -63,7 +63,7 @@ angular.module('ts5App')
     // scope methods
     function cleanPayload(payload) {
       delete payload.storeNumber;
-      angular.forEach(payload.cashBagCurrencies, function(currency) {
+      angular.forEach(payload.cashBagCurrencies, function (currency) {
         delete currency.bankExchangeRate;
         delete currency.paperExchangeRate;
         delete currency.coinExchangeRate;
@@ -113,7 +113,7 @@ angular.module('ts5App')
       }).then(cashBagCreateSuccessHandler, errorHandler);
     }
 
-    $scope.formSave = function() {
+    $scope.formSave = function () {
       if ($scope.cashBagCreateForm.$invalid) {
         return;
       }
@@ -136,9 +136,9 @@ angular.module('ts5App')
 
     function cashBagCurrenciesIsSet(cashBagCurrencies) {
       var isSet = true;
-      angular.forEach(cashBagCurrencies, function(currency) {
+      angular.forEach(cashBagCurrencies, function (currency) {
         if (isSet) {
-          if (currency.bankAmount !== '0.0000' && currency.bankAmount !== null) {
+          if (currency.bankAmount !== '0.00' && currency.bankAmount !== null) {
             isSet = false;
           }
 
@@ -175,12 +175,12 @@ angular.module('ts5App')
       return cashBagCurrenciesIsSet(cashBag.cashBagCurrencies);
     }
 
-    $scope.removeRecord = function(cashBag) {
+    $scope.removeRecord = function (cashBag) {
       if (!canDelete(cashBag)) {
         return false;
       }
 
-      cashBagFactory.deleteCashBag(cashBag.id).then(function() {
+      cashBagFactory.deleteCashBag(cashBag.id).then(function () {
           showMessage(null, false, 'successfully deleted');
           $scope.readOnly = true;
         },
@@ -188,7 +188,7 @@ angular.module('ts5App')
         showMessage);
     };
 
-    $scope.isBankExchangePreferred = function() {
+    $scope.isBankExchangePreferred = function () {
       if (!$scope.companyPreferences || !$scope.companyPreferences.length) {
         return false;
       }
@@ -196,7 +196,7 @@ angular.module('ts5App')
       return $scope.companyPreferences[0].choiceCode === 'BNK';
     };
 
-    $scope.isCashBagDeleted = function() {
+    $scope.isCashBagDeleted = function () {
       return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === 'true');
     };
 
@@ -227,7 +227,7 @@ angular.module('ts5App')
       var dailyExchangeRateCurrencies = $scope.dailyExchangeRates[0].dailyExchangeRateCurrencies;
       $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
 
-      angular.forEach($scope.cashBag.cashBagCurrencies, function(cashBagCurrency) {
+      angular.forEach($scope.cashBag.cashBagCurrencies, function (cashBagCurrency) {
         var dailyCurrency = lodash.findWhere(dailyExchangeRateCurrencies, {
           retailCompanyCurrencyId: cashBagCurrency.currencyId
         });
@@ -241,7 +241,7 @@ angular.module('ts5App')
         }
       });
 
-      angular.forEach(dailyExchangeRateCurrencies, function(currency) {
+      angular.forEach(dailyExchangeRateCurrencies, function (currency) {
         $scope.cashBag.cashBagCurrencies.push({
           currencyId: currency.retailCompanyCurrencyId,
           bankAmount: currency.bankExchangeRate,
@@ -259,7 +259,7 @@ angular.module('ts5App')
 
     function getCashBag() {
       _promises.push(
-        cashBagFactory.getCashBag($routeParams.id).then(function(response) {
+        cashBagFactory.getCashBag($routeParams.id).then(function (response) {
           $scope.cashBag = angular.copy(response);
           if ($scope.cashBag.totalCashBags) {
             $scope.cashBag.totalCashBags = $scope.cashBag.totalCashBags.toString();
@@ -274,7 +274,7 @@ angular.module('ts5App')
 
     function getCompany() {
       _promises.push(
-        cashBagFactory.getCompany(_companyId).then(function(response) {
+        cashBagFactory.getCompany(_companyId).then(function (response) {
           $scope.company = response;
         })
       );
@@ -283,7 +283,7 @@ angular.module('ts5App')
     function getCashHandlerCompany() {
       // TODO: get correct cash handler company
       _promises.push(
-        cashBagFactory.getCompany(362).then(function(response) {
+        cashBagFactory.getCompany(362).then(function (response) {
           $scope.cashHandlerCompany = angular.copy(response);
         })
       );
@@ -292,10 +292,10 @@ angular.module('ts5App')
 
     function getCompanyCurrencies() {
       _promises.push(
-        cashBagFactory.getCompanyCurrencies().then(function(response) {
+        cashBagFactory.getCompanyCurrencies().then(function (response) {
           $scope.companyCurrencies = angular.copy(response.response);
           $scope.currencyCodes = [];
-          angular.forEach(response.response, function(currency) {
+          angular.forEach(response.response, function (currency) {
             $scope.currencyCodes[currency.id] = currency.code;
           });
         })
@@ -349,7 +349,7 @@ angular.module('ts5App')
     }
 
     // CRUD - Create
-    this.createCashBag = function() {
+    this.createCashBag = function () {
       setCreatePromises();
       cashBagFactory.getStoreInstance($routeParams.storeInstanceId).then(getStoreInstanceListResponseHandler);
 
@@ -374,9 +374,9 @@ angular.module('ts5App')
     }
 
     // CRUD - Read
-    this.viewCashBag = function() {
+    this.viewCashBag = function () {
       setReadPromises();
-      $q.all(_promises).then(function() {
+      $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.displayedCashierDate = dateUtility.formatDateForApp($scope.cashBag.createdOn);
         getExchangeRates($scope.cashBag);
@@ -398,10 +398,10 @@ angular.module('ts5App')
     }
 
     // CRUD - Update
-    this.editCashBag = function() {
+    this.editCashBag = function () {
       setUpdatePromises();
       $scope.readOnly = false;
-      $q.all(_promises).then(function() {
+      $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.saveButtonName = 'Save';
         getExchangeRates($scope.cashBag);
@@ -427,7 +427,7 @@ angular.module('ts5App')
 
     init();
 
-    $scope.isFocusBankReferenceNumber = function() {
+    $scope.isFocusBankReferenceNumber = function () {
       return !!$localStorage.isEditFromList;
     };
 
