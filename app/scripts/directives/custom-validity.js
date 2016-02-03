@@ -7,7 +7,7 @@
  * # inputField
  */
 angular.module('ts5App')
-  .directive('customValidity', function($filter) {
+  .directive('customValidity', function () {
     var patternsJSON = {
       word: [/^[\w\s]+$/, 'Error message for word'],
       bit: [/^(0|1)$/, 'Error message for bit'],
@@ -36,9 +36,9 @@ angular.module('ts5App')
       decimalWithTwoDecimalPlaces: [/^\d+\.\d{0,2}$/,
         'This field should be a decimal with up to two decimal places'
       ],
-      currencyWithFourDecimalPlace: [/^\d+\.\d{4}$/, 'This field should use format 0.0000', 4],
-      currencyWithThreeDecimalPlace: [/^\d+\.?\d{0,3}$/, 'This field should use format 0.000', 3],
-      currencyWithTwoDecimalPlace: [/^\d+\.\d{2}$/, 'This field should use format 0.00', 2],
+      currencyWithFourDecimalPlace: [/^\d+\.\d{4}$/, 'This field should use format 0.0000', '%.4f'],
+      currencyWithThreeDecimalPlace: [/^\d+\.?\d{0,3}$/, 'This field should use format 0.000', '%.3f'],
+      currencyWithTwoDecimalPlace: [/^\d+\.\d{2}$/, 'This field should use format 0.00', '%.2f'],
       price: [/^\$?\s?[0-9\,]+(\.\d{0,4})?$/, 'Error message for price'],
       url: [/(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/,
         'Error for URL'
@@ -55,14 +55,14 @@ angular.module('ts5App')
       require: '^ngModel',
       scope: true,
       transclude: true,
-      link: function(scope, element, attrs, ngModel) {
+      link: function (scope, element, attrs, ngModel) {
         if (!ngModel) {
           return;
         }
 
         var regexObj = patternsJSON[attrs.customPattern];
 
-        ngModel.$validators.pattern = function(value) {
+        ngModel.$validators.pattern = function (value) {
           if (angular.isUndefined(value)) {
             return true;
           }
@@ -70,18 +70,12 @@ angular.module('ts5App')
           return regexObj[0].test(value);
         };
 
-        if (attrs.customPattern.contains('currency')) {
-          ngModel.$formatters.push(function(value) {
-            return $filter('number')(value, regexObj[2]);
-          });
-        }
-
         var customValidityMessage = {
           pattern: regexObj[1],
           required: 'Please fill out this field.'
         };
 
-        var validate = function() {
+        var validate = function () {
           var errorArray = Object.keys(ngModel.$error);
           var errorMessage = '';
           if (errorArray.length > 0) {
@@ -91,9 +85,17 @@ angular.module('ts5App')
           element[0].setCustomValidity(errorMessage);
         };
 
+        var formatField = function () {
+          if (ngModel.$viewValue && regexObj[2]) {
+            var formattedValue = sprintf(regexObj[2], element[0].value);
+            ngModel.$setViewValue(formattedValue);
+            ngModel.$render();
+          }
+        };
+
         scope.$watch(attrs.ngModel, validate);
         element[0].addEventListener('keyUp', validate);
-
+        element[0].addEventListener('blur', formatField);
       }
     };
   });
