@@ -600,7 +600,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           oldInboundQuantity: 3,
           pickedId: 1,
           inboundId: 2,
-          isNewItem: false
+          isNewItem: false,
+          shouldDisplayOffloadData: true
         }];
         scope.offloadListItems = [{
           itemMasterId: 3,
