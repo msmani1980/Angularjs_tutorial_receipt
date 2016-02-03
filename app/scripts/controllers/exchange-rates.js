@@ -10,7 +10,6 @@
  */
 angular.module('ts5App')
   .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q, ngToast, dateUtility, lodash) {
-    var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Daily Exchange Rates';
     $scope.cashiersDateField = dateUtility.nowFormatted();
@@ -121,6 +120,7 @@ angular.module('ts5App')
     }
 
     $scope.$watch('cashiersDateField', function (cashiersDate) {
+      var companyId = GlobalMenuService.company.get();
       if (!moment(cashiersDate, 'L', true).isValid()) {
         return;
       }
@@ -306,7 +306,7 @@ angular.module('ts5App')
       $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
     });
 
-    currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
+    currencyFactory.getCompany(GlobalMenuService.company.get()).then(function (companyDataFromAPI) {
       getCompanyBaseCurrency(angular.copy(companyDataFromAPI.baseCurrencyId));
       $scope.company = angular.copy(companyDataFromAPI);
     });

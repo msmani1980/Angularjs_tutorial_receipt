@@ -9,7 +9,6 @@
  */
 angular.module('ts5App')
   .controller('CommissionDataTableCtrl', function ($scope, dateUtility, commissionFactory, $location, GlobalMenuService, employeesService, $q, lodash) {
-    var companyId = GlobalMenuService.company.get();
     $scope.viewName = 'Commission Data Table';
     $scope.search = {};
     $scope.commissionData = [];
@@ -158,6 +157,7 @@ angular.module('ts5App')
 
     function getCrewBaseTypes() {
       var uniqueCrewBaseTypes = {};
+      var companyId = GlobalMenuService.company.get();
       employeesService.getEmployees(companyId).then(function (dataFromAPI) {
         angular.forEach(dataFromAPI.companyEmployees, function (employee) {
           if (!(employee.baseStationId in uniqueCrewBaseTypes)) {
@@ -192,6 +192,7 @@ angular.module('ts5App')
     }
 
     function getCompanyData() {
+      var companyId = GlobalMenuService.company.get();
       commissionFactory.getCompanyData(companyId).then(function (response) {
         if (response) {
           getCurrencyData(angular.copy(response.baseCurrencyId));

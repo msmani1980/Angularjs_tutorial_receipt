@@ -12,8 +12,6 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     currencyFactory,
     $routeParams, GlobalMenuService, $q, dateUtility) {
 
-    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
-    var companyId = GlobalMenuService.company.get();
     var $this = this;
     $scope.formData = {
       startDate: '',
@@ -50,7 +48,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       if (!characteristics) {
         return;
       }
-      
+
       $scope.isLinkCharacteristics = characteristics.filter(function (characteristic) {
         return characteristic.id === 9;
       }).length > 0;
@@ -87,6 +85,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     };
 
     this.validateItemCompany = function(data) {
+      var companyId = GlobalMenuService.company.get();
       return data.retailItem.companyId === companyId;
     };
 
@@ -379,6 +378,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     };
 
     this.makeDependencyPromises = function() {
+      var companyId = GlobalMenuService.company.get();
       return [
         companiesFactory.getSalesCategoriesList(),
         companiesFactory.getTagsList(),
