@@ -13,7 +13,6 @@ angular.module('ts5App')
                                               $location, employeesService, GlobalMenuService, $q) {
 
     var $this = this;
-    var companyId = GlobalMenuService.company.get();
     var percentTypeName = 'Percentage';
     var percentTypeUnit = '%';
 
@@ -174,6 +173,7 @@ angular.module('ts5App')
     };
 
     this.getCrewBaseList = function () {
+      var companyId = GlobalMenuService.company.get();
       return employeesService.getEmployees(companyId);
     };
 
@@ -224,7 +224,7 @@ angular.module('ts5App')
       if ($routeParams.id) {
         $this.getCommissionData();
       }
-      
+
       $this.hideLoadingModal();
 
     };
@@ -243,6 +243,7 @@ angular.module('ts5App')
     };
 
     this.init = function () {
+      var companyId = GlobalMenuService.company.get();
       $this.showLoadingModal();
       $this.setViewName();
       $scope.readOnly = ($routeParams.state === 'view');
