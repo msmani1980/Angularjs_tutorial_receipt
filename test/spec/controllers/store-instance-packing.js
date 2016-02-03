@@ -285,6 +285,13 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(scope.pickListItems[1].pickedQuantity).toEqual('4');
       });
 
+      it('should copy final menu quantities to dispatched quantities', function () {
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, {}];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.pickListItems[0].pickedQuantity).toEqual(1);
+        expect(scope.pickListItems[1].pickedQuantity).toEqual(5);
+      });
+
     });
 
     describe('merge items for end-instance', function () {

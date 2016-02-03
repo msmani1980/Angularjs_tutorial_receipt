@@ -576,6 +576,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         var itemMatch = $this.findItemMatch(item);
         if (itemMatch) {
           itemMatch.menuQuantity += item.menuQuantity;
+          itemMatch.pickedQuantity += item.menuQuantity;
         } else {
           var newItem = $this.createFreshItem(item, true);
           if ($routeParams.action === 'end-instance') {
