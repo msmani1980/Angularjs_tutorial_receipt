@@ -373,14 +373,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var storeInstanceToUse = ($routeParams.action === 'end-instance') ? $routeParams.storeId : $scope.storeDetails.prevStoreInstanceId;
       var itemsArray = (isRedispatch) ? $scope.pickListItems : ($scope.offloadListItems.concat($scope.newOffloadListItems));
       angular.forEach(itemsArray, function (item) {
-        var ullagePayloadItem = $this.addUllageQuantityToPayload(item);
-        if (ullagePayloadItem) {
-          promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
-        }
+        var shouldAddItem = !isRedispatch || (angular.isDefined(item.shouldDisplayOffloadData) && item.shouldDisplayOffloadData);
+        console.log(item, shouldAddItem);
+        if (shouldAddItem) {
+          var ullagePayloadItem = $this.addUllageQuantityToPayload(item);
+          if (ullagePayloadItem) {
+            promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
+          }
 
-        var offloadPayloadItem = $this.addInboundQuantityToPayload(item, isRedispatch);
-        if (offloadPayloadItem) {
-          promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, offloadPayloadItem));
+          var offloadPayloadItem = $this.addInboundQuantityToPayload(item, isRedispatch);
+          if (offloadPayloadItem) {
+            promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, offloadPayloadItem));
+          }
         }
       });
     };
