@@ -374,7 +374,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var itemsArray = (isRedispatch) ? $scope.pickListItems : ($scope.offloadListItems.concat($scope.newOffloadListItems));
       angular.forEach(itemsArray, function (item) {
         var shouldAddItem = !isRedispatch || (angular.isDefined(item.shouldDisplayOffloadData) && item.shouldDisplayOffloadData);
-        console.log(item, shouldAddItem);
         if (shouldAddItem) {
           var ullagePayloadItem = $this.addUllageQuantityToPayload(item);
           if (ullagePayloadItem) {
