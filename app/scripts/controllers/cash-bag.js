@@ -189,19 +189,19 @@ angular.module('ts5App')
     };
 
     $scope.isBankExchangePreferred = function () {
-      if (!$scope.companyPreferences || !$scope.companyPreferences.length) {
+      if (!$scope.companyPreferences || !$scope.companyPreferences.exchangeRateType) {
         return false;
       }
 
-      return $scope.companyPreferences[0].choiceCode === 'BNK';
+      return $scope.companyPreferences.exchangeRateType.choiceCode === 'BNK';
     };
 
     $scope.isTotalNumberOfCashBagsActivated = function () {
-      if (!$scope.companyPreferences || !$scope.companyPreferences.length) {
+      if (!$scope.companyPreferences || !$scope.companyPreferences.totalNumberOfCashBags) {
         return false;
       }
 
-      return $scope.companyPreferences[1].isSelected && $scope.companyPreferences[1].choiceCode === 'CSB';
+      return $scope.companyPreferences.totalNumberOfCashBags.isSelected && $scope.companyPreferences.totalNumberOfCashBags.choiceCode === 'CSB';
     };
 
     $scope.isCashBagDeleted = function () {
@@ -356,9 +356,10 @@ angular.module('ts5App')
         cashBagFactory.getCompanyPreferences(payload).then(function (companyPreferencesData) {
           var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
 
-          $scope.companyPreferences = [];
-          $scope.companyPreferences[0] = getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type');
-          $scope.companyPreferences[1] = getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Total Number of Cash Bags');
+          $scope.companyPreferences = {
+            exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type'),
+            totalNumberOfCashBags: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Total Number of Cash Bags')
+          };
         })
       );
     }

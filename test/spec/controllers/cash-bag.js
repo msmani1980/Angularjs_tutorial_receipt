@@ -521,52 +521,64 @@ describe('Controller: CashBagCtrl', function () {
     });
 
     it('should return true if total number of cash bags is activated', function () {
-      scope.companyPreferences = [{
-        isSelected: true,
-        choiceCode: 'BNK'
-      }, {
-        isSelected: true,
-        choiceCode: 'CSB'
-      }];
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: true,
+          choiceCode: 'CSB'
+        }
+      };
       scope.$digest();
 
       expect(scope.isTotalNumberOfCashBagsActivated()).toBe(true);
     });
 
     it('should return false if total number of cash bags is not activated', function () {
-      scope.companyPreferences = [{
-        isSelected: true,
-        choiceCode: 'BNK'
-      }, {
-        isSelected: false,
-        choiceCode: 'CSB'
-      }];
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: false,
+          choiceCode: 'CSB'
+        }
+      };
       scope.$digest();
 
       expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
     });
 
     it('should return false if total number of cash bags is not activated', function () {
-      scope.companyPreferences = [{
-        isSelected: true,
-        choiceCode: 'BNK'
-      }, {
-        isSelected: false,
-        choiceCode: 'CSB'
-      }];
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: false,
+          choiceCode: 'CSB'
+        }
+      };
       scope.$digest();
 
       expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
     });
 
     it('should return false if total number of cash bags is not activated', function () {
-      scope.companyPreferences = [{
-        isSelected: true,
-        choiceCode: 'BNK'
-      }, {
-        isSelected: true,
-        choiceCode: 'XYZ'
-      }];
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: true,
+          choiceCode: 'XYZ'
+        }
+      };
       scope.$digest();
 
       expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
