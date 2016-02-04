@@ -447,8 +447,15 @@ angular.module('ts5App')
     };
 
     $scope.determineLeftNavTitle = function() {
-      $scope.companyData = identityAccessFactory.getSessionObject().companyData;
-      return ($scope.companyData.companyName === 'Stock Owner') ? 'StockOwner Item Management' : '';
+      if (identityAccessFactory.getSessionObject().companyData.companyTypeName === 'Stockowner') {
+        return 'StockOwner Item Management';
+      }
+
+      if (identityAccessFactory.getSessionObject().companyData.companyTypeId === 2) {
+        return 'StockOwner Item Management';
+      }
+
+      return '';
     };
 
     init();
