@@ -268,7 +268,7 @@
         </td>
       </tr>
       <tr ng-repeat="replenishment in store.replenishments" class="subversion-row"
-          ng-show="isStoreViewExpanded(store)">
+          ng-show="isStoreViewExpanded(store)" id="store-{{ replenishment.id }}">
         <td></td>
         <td>
           <input ng-show="doesStoreInstanceContainAction(replenishment, 'Checkbox')" ng-model="replenishment.selected"
@@ -301,24 +301,29 @@
         <td>{{ replenishment.updatedOnDisplay }}</td>
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
-          <a class="btn btn-primary btn-xs" tabindex="0"
+          <a class="btn btn-primary btn-xs btn-block" tabindex="0"
              ng-show="shouldShowReplenishAction(replenishment, store, 'Pack')"
              ng-click="navigateToAction(replenishment, 'Pack')">
             Start Packing
           </a>
-          <a class="btn btn-warning btn-xs" tabindex="0"
+          <a class="btn btn-warning btn-xs btn-block" tabindex="0"
              ng-show="shouldShowReplenishAction(replenishment, store, 'Seal')"
              ng-click="navigateToAction(replenishment, 'Seal')">
             Start Seals
           </a>
-          <a class="btn btn-success btn-xs" tabindex="0"
+          <a class="btn btn-success btn-xs btn-block" tabindex="0"
              ng-show="shouldShowReplenishAction(replenishment, store, 'Dispatch')"
              ng-click="navigateToAction(replenishment, 'Dispatch')">Dispatch
           </a>
-          <a class="btn btn-info btn-xs" tabindex="0"
+          <a class="btn btn-info btn-xs btn-block" tabindex="0"
           ng-show="shouldShowReplenishAction(replenishment, store, 'Get Flight Docs')"
              ng-href="{{replenishment.exportURL}}">
             Generate Doc
+          </a>
+          <a class="btn btn-danger btn-xs btn-block" tabindex="0"
+             ng-show="canBeDeleted(replenishment)"
+             ng-click="showDeleteConfirmation(replenishment)">
+            <i class="fa fa-trash"></i> Delete
           </a>
         </td>
       </tr>
