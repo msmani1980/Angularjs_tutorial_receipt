@@ -9,4 +9,5 @@
 angular.module('ts5App')
   .controller('ExciseDutyListCtrl', function ($scope) {
     $scope.viewName = 'Excise Duty List';
+    $scope.companyGlobalCurrency = 'GBP';
   });
