@@ -107,7 +107,6 @@ angular.module('ts5App')
         var sessionObject = angular.copy(rawSessionObject);
         sessionObject.companyData = angular.copy(dataFromAPI[0]);
         sessionObject.companyData.companyTypeName = lodash.findWhere(dataFromAPI[1], { id: sessionObject.companyData.companyTypeId }).name;
-        console.log(sessionObject);
         setSessionData(sessionObject);
       }
 
