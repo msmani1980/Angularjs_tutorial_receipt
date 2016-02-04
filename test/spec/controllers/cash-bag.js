@@ -167,7 +167,7 @@ describe('Controller: CashBagCtrl', function () {
       });
 
       it('should call getCompanyPreferences', function () {
-        var expectedPayload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+        var expectedPayload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
         expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload);
       });
     });
@@ -499,6 +499,89 @@ describe('Controller: CashBagCtrl', function () {
       scope.companyPreferences = false;
       scope.$digest();
       expect(scope.isBankExchangePreferred()).toBe(false);
+    });
+  });
+
+  describe('isTotalNumberOfCashBagsActivated scope function', function () {
+    beforeEach(inject(function ($controller) {
+      CashBagEditCtrl = $controller('CashBagCtrl', {
+        $scope: scope,
+        $routeParams: {
+          state: 'edit',
+          id: 95
+        }
+      });
+      scope.$digest();
+    }));
+
+    it('should return false if companyPreferences is set to false', function () {
+      scope.companyPreferences = false;
+      scope.$digest();
+      expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
+    });
+
+    it('should return true if total number of cash bags is activated', function () {
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: true,
+          choiceCode: 'CSB'
+        }
+      };
+      scope.$digest();
+
+      expect(scope.isTotalNumberOfCashBagsActivated()).toBe(true);
+    });
+
+    it('should return false if total number of cash bags is not activated', function () {
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: false,
+          choiceCode: 'CSB'
+        }
+      };
+      scope.$digest();
+
+      expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
+    });
+
+    it('should return false if total number of cash bags is not activated', function () {
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: false,
+          choiceCode: 'CSB'
+        }
+      };
+      scope.$digest();
+
+      expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
+    });
+
+    it('should return false if total number of cash bags is not activated', function () {
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: true,
+          choiceCode: 'XYZ'
+        }
+      };
+      scope.$digest();
+
+      expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
     });
   });
 });

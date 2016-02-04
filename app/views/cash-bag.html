@@ -59,7 +59,7 @@
                    ng-readonly="readOnly"/>
           </div>
 
-          <div class="col-sm-4">
+          <div class="col-sm-4" ng-if="isTotalNumberOfCashBagsActivated()">
             <label for="totalCashBags">Total # of Bags *</label>
             <input custom-pattern="number"
                    custom-validity

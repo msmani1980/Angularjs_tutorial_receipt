@@ -189,11 +189,19 @@ angular.module('ts5App')
     };
 
     $scope.isBankExchangePreferred = function () {
-      if (!$scope.companyPreferences || !$scope.companyPreferences.length) {
+      if (!$scope.companyPreferences || !$scope.companyPreferences.exchangeRateType) {
         return false;
       }
 
-      return $scope.companyPreferences[0].choiceCode === 'BNK';
+      return $scope.companyPreferences.exchangeRateType.choiceCode === 'BNK';
+    };
+
+    $scope.isTotalNumberOfCashBagsActivated = function () {
+      if (!$scope.companyPreferences || !$scope.companyPreferences.totalNumberOfCashBags) {
+        return false;
+      }
+
+      return $scope.companyPreferences.totalNumberOfCashBags.isSelected && $scope.companyPreferences.totalNumberOfCashBags.choiceCode === 'CSB';
     };
 
     $scope.isCashBagDeleted = function () {
@@ -330,12 +338,28 @@ angular.module('ts5App')
       }
     }
 
+    function getCompanyPreferenceBy(preferences, featureName, optionName) {
+      var result = null;
+      angular.forEach(preferences, function (preference) {
+        if (result === null && preference.featureName === featureName && preference.optionName === optionName) {
+          result = preference;
+        }
+      });
+
+      return result;
+    }
+
     function getCompanyPreferences() {
-      var payload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+      var payload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
 
       _promises.push(
         cashBagFactory.getCompanyPreferences(payload).then(function (companyPreferencesData) {
-          $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+          var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+
+          $scope.companyPreferences = {
+            exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type'),
+            totalNumberOfCashBags: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Total Number of Cash Bags')
+          };
         })
       );
     }
