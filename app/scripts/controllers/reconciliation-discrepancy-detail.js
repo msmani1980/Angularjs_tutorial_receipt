@@ -15,6 +15,12 @@ angular.module('ts5App')
       if (angular.isDefined(valueToFormat)) {
         return sprintf('%.2f', valueToFormat);
       }
+
+      return valueToFormat;
+    }
+
+    function makeFinite(valueToCheck) {
+      return isFinite(valueToCheck) ? valueToCheck : 0;
     }
 
     function initLMPStockRevisions() {
@@ -43,7 +49,7 @@ angular.module('ts5App')
     function setStockItem(stockItem) {
       var varianceQuantity = getVarianceQuantity(stockItem);
       var retailValue = stockItem.price || 0;
-      var varianceValue = varianceQuantity * stockItem.price;
+      var varianceValue = makeFinite(varianceQuantity * stockItem.price);
       var isDiscrepancy = (varianceQuantity !== '0');
       var eposSales = stockItem.eposQuantity || 0;
       var inboundOffloadCount = stockItem.inboundQuantity || stockItem.offloadQuantity || 0;
@@ -220,13 +226,13 @@ angular.module('ts5App')
 
     function setDiscrepancy() {
       var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
-      var netPercentage = netValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
+      var netPercentage = makeFinite(netValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
 
       var revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.stockTotals.totalNet.netEPOS);
-      var revenuePercentage = revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
+      var revenuePercentage = makeFinite(revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
 
       var exchangeValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
-      var exchangePercentage = exchangeValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
+      var exchangePercentage = makeFinite(exchangeValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
 
       var totalValue = netValue + revenueValue + exchangeValue;
       var totalPercentage = netPercentage + revenuePercentage + exchangePercentage;
@@ -234,19 +240,19 @@ angular.module('ts5App')
       $scope.discrepancy = {
         net: {
           value: formatAsCurrency(netValue),
-          percentage: formatAsCurrency(netPercentage) || 0
+          percentage: formatAsCurrency(netPercentage)
         },
         revenue: {
           value: formatAsCurrency(revenueValue),
-          percentage: formatAsCurrency(revenuePercentage) || 0
+          percentage: formatAsCurrency(revenuePercentage)
         },
         exchange: {
           value: formatAsCurrency(exchangeValue),
-          percentage: formatAsCurrency(exchangePercentage) || 0
+          percentage: formatAsCurrency(exchangePercentage)
         },
         total: {
           value: formatAsCurrency(totalValue),
-          percentage: formatAsCurrency(totalPercentage) || 0
+          percentage: formatAsCurrency(totalPercentage)
         }
       };
     }

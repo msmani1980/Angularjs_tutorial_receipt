@@ -218,6 +218,21 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       });
     });
 
+    describe('filteredLMPStock', function () {
+      beforeEach(function () {
+        scope.$digest();
+      });
+
+      it('should have a LMP stock item list attached to scope', function () {
+        expect(scope.stockItemList.length).toBeGreaterThan(0);
+      });
+
+      it('should have a valid, finite variance value', function () {
+        var expectedVariance = jasmine.objectContaining({ varianceValue: '0.00' });
+        expect(scope.stockItemList[0]).toEqual(expectedVariance);
+      });
+    });
+
   });
 
   describe('edit table functions', function () {
@@ -455,20 +470,20 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   });
 
-  describe('show modal', function() {
-    it('should show the modal', function() {
+  describe('show modal', function () {
+    it('should show the modal', function () {
       scope.$digest();
       scope.showModal('Virtual');
       expect(scope.modalTotal).toBe('0.00');
     });
 
-    it('should not add modalMainTitle to scope', function() {
+    it('should not add modalMainTitle to scope', function () {
       scope.$digest();
       scope.showModal('nonExistingKey');
       expect(scope.modalMainTitle).toBeUndefined();
     });
 
-    it('should attach modalMainTitle to scope', function() {
+    it('should attach modalMainTitle to scope', function () {
       scope.$digest();
       scope.showModal('Virtual');
       expect(scope.modalMainTitle).toBeDefined();
