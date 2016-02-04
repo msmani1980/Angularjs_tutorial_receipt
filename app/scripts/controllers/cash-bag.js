@@ -196,6 +196,14 @@ angular.module('ts5App')
       return $scope.companyPreferences[0].choiceCode === 'BNK';
     };
 
+    $scope.isTotalNumberOfCashBagsActivated = function () {
+      if (!$scope.companyPreferences || !$scope.companyPreferences.length) {
+        return false;
+      }
+
+      return $scope.companyPreferences[1].isSelected && $scope.companyPreferences[1].choiceCode === 'CSB';
+    };
+
     $scope.isCashBagDeleted = function () {
       return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === 'true');
     };
@@ -330,12 +338,27 @@ angular.module('ts5App')
       }
     }
 
+    function getCompanyPreferenceBy(preferences, featureName, optionName) {
+      var result = null;
+      angular.forEach(preferences, function (preference) {
+        if (result === null && preference.featureName === featureName && preference.optionName === optionName) {
+          result = preference;
+        }
+      });
+
+      return result;
+    }
+
     function getCompanyPreferences() {
-      var payload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+      var payload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
 
       _promises.push(
         cashBagFactory.getCompanyPreferences(payload).then(function (companyPreferencesData) {
-          $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+          var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+
+          $scope.companyPreferences = [];
+          $scope.companyPreferences[0] = getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type');
+          $scope.companyPreferences[1] = getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Total Number of Cash Bags');
         })
       );
     }
