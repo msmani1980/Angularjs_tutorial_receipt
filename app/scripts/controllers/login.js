@@ -8,14 +8,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('LoginCtrl', function ($scope, $http, identityAccessFactory) {
+  .controller('LoginCtrl', function ($scope, $http, identityAccessFactory, $rootScope) {
 
     $scope.credentials = {
       username: '',
       password: ''
     };
-
-    var rawSessionData = {};
 
     function showLoadingModal(text) {
       $scope.displayError = false;
@@ -26,7 +24,7 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
-    function handleResponseError(responseFromAPI) {
+    function handleResponseError(event, responseFromAPI) {
       hideLoadingModal();
       responseFromAPI.data = [
         {
@@ -34,20 +32,8 @@ angular.module('ts5App')
           value: 'does not match our records.'
         }
       ];
-      $scope.errorResponse = angular.copy(responseFromAPI);
+      $scope.errorResponse = responseFromAPI;
       $scope.displayError = true;
-    }
-
-    function handleCompanyResponse(companyDataFromAPI) {
-      hideLoadingModal();
-      rawSessionData.companyData = angular.copy(companyDataFromAPI);
-      identityAccessFactory.setSessionData(rawSessionData);
-    }
-
-    function handleSuccessResponse(sessionDataFromAPI) {
-      rawSessionData = angular.copy(sessionDataFromAPI);
-      identityAccessFactory.setSessionData(rawSessionData);
-      identityAccessFactory.getCompanyData(rawSessionData.companyId).then(handleCompanyResponse, handleResponseError);
     }
 
     $scope.login = function () {
@@ -56,6 +42,9 @@ angular.module('ts5App')
       }
 
       showLoadingModal('Authenticating');
-      identityAccessFactory.login($scope.credentials).then(handleSuccessResponse, handleResponseError);
+      identityAccessFactory.login($scope.credentials);
     };
+
+    $rootScope.$on('authorized', hideLoadingModal);
+    $rootScope.$on('un-authorized', handleResponseError);
   });

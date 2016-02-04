@@ -3,36 +3,51 @@
 describe('Service: identityAccessFactory', function () {
 
   beforeEach(module('ts5App'));
+  beforeEach(module('served/authorize-user.json'));
   beforeEach(module('served/company.json'));
+  beforeEach(module('served/company-types.json'));
 
   var identityAccessFactory;
   var localStorage;
   var identityAccessService;
   var companiesFactory;
+  var companyFactory;
   var getCompanyDeferred;
+  var getCompanyTypesDeferred;
+  var authorizeUserDeferred;
+  var authorizeUserJSON;
   var companyResponseJSON;
+  var companyTypesJSON;
   var scope;
   var location;
   var timeout;
 
   beforeEach(inject(function (_identityAccessFactory_, $injector, $rootScope, $location, $timeout, $q) {
-    inject(function (_servedCompany_) {
+    inject(function (_servedCompany_, _servedCompanyTypes_, _servedAuthorizeUser_) {
       companyResponseJSON = _servedCompany_;
+      companyTypesJSON = _servedCompanyTypes_;
+      authorizeUserJSON = _servedAuthorizeUser_;
     });
 
     localStorage = $injector.get('$localStorage');
     identityAccessService = $injector.get('identityAccessService');
     companiesFactory = $injector.get('companiesFactory');
+    companyFactory = $injector.get('companyFactory');
 
     scope = $rootScope;
     location = $location;
     timeout = $timeout;
 
-    spyOn(identityAccessService, 'authorizeUser');
+    authorizeUserDeferred = $q.defer();
+    authorizeUserDeferred.resolve(authorizeUserJSON);
+    spyOn(identityAccessService, 'authorizeUser').and.returnValue(authorizeUserDeferred.promise);
 
     getCompanyDeferred = $q.defer();
-    getCompanyDeferred.resolve(companyResponseJSON);
     spyOn(companiesFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
+
+    getCompanyTypesDeferred = $q.defer();
+    getCompanyTypesDeferred.resolve(companyTypesJSON);
+    spyOn(companyFactory, 'getCompanyTypes').and.returnValue(getCompanyTypesDeferred.promise);
 
     spyOn(location, 'path');
 
