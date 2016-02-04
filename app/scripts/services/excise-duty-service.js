@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc service
- * @name ts5App.employeeMessagesService
+ * @name ts5App.exciseDutyService
  * @description
- * # employeeMessagesService
+ * # exciseDutyService
  * Service in the ts5App.
  */
 angular.module('ts5App')
