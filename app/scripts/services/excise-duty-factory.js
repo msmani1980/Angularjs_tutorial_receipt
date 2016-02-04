@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('exciseDutyFactory', function (exciseDutyService) {
+  .factory('exciseDutyFactory', function (exciseDutyService, countriesService, unitsService) {
 
     var getExciseDutyList = function (payload) {
       return exciseDutyService.getExciseDutyList(payload);
@@ -30,11 +30,21 @@ angular.module('ts5App')
       return exciseDutyService.deleteExciseDuty(id);
     };
 
+    var getCountriesList = function () {
+      return countriesService.getCountriesList();
+    };
+
+    var getVolumeUnits = function () {
+      return unitsService.getVolumeList();
+    };
+
     return {
       getExciseDutyList: getExciseDutyList,
       getExciseDuty: getExciseDuty,
       createExciseDuty: createExciseDuty,
       updateExciseDuty: updateExciseDuty,
-      deleteExciseDuty: deleteExciseDuty
+      deleteExciseDuty: deleteExciseDuty,
+      getCountriesList: getCountriesList,
+      getVolumeUnits: getVolumeUnits
     };
   });
