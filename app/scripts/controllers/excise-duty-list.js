@@ -25,6 +25,14 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
+    $scope.canEdit = function (exciseDuty) {
+      return dateUtility.isTodayOrEarlier(exciseDuty.startDate) && dateUtility.isAfterToday(exciseDuty.endDate);
+    };
+
+    $scope.canDelete = function (exciseDuty) {
+      return dateUtility.isAfterToday(exciseDuty.startDate);
+    };
+
     $scope.shouldShowSearchPrompt = function () {
       return $scope.exciseDutyList === null || !(angular.isDefined($scope.exciseDutyList));
     };
