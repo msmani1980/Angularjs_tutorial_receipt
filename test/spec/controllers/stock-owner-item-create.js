@@ -584,7 +584,7 @@ describe('The Stock Owner Item Create Controller', function () {
   describe('submitting the form', function () {
     var formData, view, form;
     beforeEach(inject(function (_$templateCache_, _$compile_, _servedItemCreate_) {
-      formData = _servedItemCreate_;
+      formData = angular.copy(_servedItemCreate_);
       view = renderView(_$templateCache_, _$compile_);
       form = angular.element(view.find('form')[0]);
       $httpBackend.expectPOST(/\/api\/retail-items/).respond(200, '');
