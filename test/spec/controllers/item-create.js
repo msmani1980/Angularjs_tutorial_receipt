@@ -838,7 +838,6 @@ describe('The Item Create Controller', function() {
     }));
 
     function mockFormSubmission(formData) {
-      form.triggerHandler('submit');
       $scope.submitForm(formData);
       $scope.$digest();
     }

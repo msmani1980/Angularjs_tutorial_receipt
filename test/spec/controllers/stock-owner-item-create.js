@@ -592,7 +592,6 @@ describe('The Stock Owner Item Create Controller', function () {
 
     function mockFormSubmission(formData) {
       $scope.formData = angular.copy(formData);
-      form.triggerHandler('submit');
       $scope.submitForm(formData);
       $scope.$digest();
     }
