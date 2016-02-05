@@ -74,10 +74,10 @@
       </thead>
       <tbody>
       <tr class="ng-scope" ng-repeat="exciseDuty in exciseDutyList track by $index">
-        <td>{{ exciseDuty.countryId }}</td>
+        <td>{{ exciseDuty.countryName }}</td>
         <td>{{ exciseDuty.commodityCode }}</td>
         <td>
-          {{ exciseDuty.volumeUnitId }}
+          {{ exciseDuty.volumeUnit }}
         </td>
         <td>{{ exciseDuty.alcoholic ? 'Yes' : 'No' }}</td>
         <td>{{ exciseDuty.dutyRate | number: 2}} %</td>
