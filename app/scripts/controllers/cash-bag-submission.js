@@ -19,7 +19,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     this.isSearching = false;
 
     function initializeData() {
-      $scope.submissionDate = dateUtility.nowFormatted();
+      $scope.submissionDate = dateUtility.nowFormatted('DD MMMM YYYY');
       $scope.cashBagListToSubmit = [];
       $scope.bankReferenceNumbers = [];
       $scope.cashBagNumberList = [];
@@ -184,6 +184,10 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       $scope.CHCompany = angular.copy(chCompanyDataFromAPI);
     }
 
+    function compareNumbers(a, b) {
+      return a - b;
+    }
+
     function setCashBagListToSubmit() {
       $scope.cashBagListToSubmit = [];
       var bankReferenceList = [];
@@ -201,10 +205,10 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
           scheduleNumber: cashBag.scheduleNumber,
           retailCompanyId: cashBag.retailCompanyId
         });
-        bankReferenceList.push(cashBag.bankReferenceNumber);
+        bankReferenceList.push(parseInt(cashBag.bankReferenceNumber));
       });
 
-      $scope.bankReferenceListToSubmit = lodash.uniq(lodash.compact(bankReferenceList), true);
+      $scope.bankReferenceListToSubmit = lodash.uniq(lodash.compact(bankReferenceList), true).sort(compareNumbers);
     }
 
     $scope.toggleCheckbox = setCashBagListToSubmit;
