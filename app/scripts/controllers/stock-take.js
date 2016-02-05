@@ -201,13 +201,6 @@ angular.module('ts5App')
       displayLoadingModal();
       getItemsListByCompanyId();
 
-      // used cached results instead of hitting API again
-      if (angular.isDefined(_cateringStationItems[catererStationId])) {
-        var response = _cateringStationItems[catererStationId];
-        setCateringStationItems(response);
-        return;
-      }
-
       stockTakeFactory.getItemsByCateringStationId(catererStationId).then(
         setCateringStationItemsFromResponse, showResponseErrors);
     }
