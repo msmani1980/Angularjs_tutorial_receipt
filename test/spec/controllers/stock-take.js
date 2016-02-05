@@ -443,6 +443,10 @@ describe('Controller: StockTakeCtrl', function() {
       expect(scope.showAddedItem()).toBeTruthy();
     });
 
+    it('with no addedItems, scope.showAddedItem should return false', function() {
+      expect(scope.showAddedItem()).toBeFalsy();
+    });
+
     it('if state is review, scope.showAddedItem should return true', function() {
       spyOn(scope, 'showAddedItem').and.callThrough();
       scope.$digest();

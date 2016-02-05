@@ -195,11 +195,22 @@ angular.module('ts5App')
         return;
       }
 
-      $scope.stockTake.catererStationId = catererStationId;
-      $scope.addedItems = [];
-
       displayLoadingModal();
+
+      $scope.stockTake.catererStationId = catererStationId;
+
+      if (angular.isDefined($scope.addedItems) && $scope.addedItems.length) {
+        $scope.addedItems = [];
+      }
+
       getItemsListByCompanyId();
+
+      // used cached results instead of hitting API again
+      if (angular.isDefined(_cateringStationItems[catererStationId])) {
+        var response = _cateringStationItems[catererStationId];
+        setCateringStationItems(response);
+        return;
+      }
 
       stockTakeFactory.getItemsByCateringStationId(catererStationId).then(
         setCateringStationItemsFromResponse, showResponseErrors);
