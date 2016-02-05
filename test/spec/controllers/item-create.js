@@ -875,14 +875,6 @@ describe('The Item Create Controller', function() {
         expect($scope.displayError).toBeFalsy();
       });
 
-      it('should set the displayError to true if the form is invalid', function() {
-        expect($scope.displayError).toBeFalsy();
-        $scope.form.itemTypeId.$setViewValue(null);
-        $scope.form.categoryId.$setViewValue(null);
-        mockFormSubmission(formData);
-        expect($scope.displayError).toBeTruthy();
-      });
-
       //TODO: move into GTIN directive and test GTIN completely with mock
       describe('GTINClass method', function() {
         it('should be defined', function() {
