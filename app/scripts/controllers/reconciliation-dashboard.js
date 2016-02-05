@@ -399,9 +399,11 @@ angular.module('ts5App')
       $this.showLoadingModal('Executing Validate action');
 
       angular.forEach(instancesToExecuteOn, function (instance) {
-        storeInstanceFactory.updateStoreInstanceStatus(instance.id, 9).then(function () {
-          changeToConfirmedPromises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, 10));
-        });
+        changeToConfirmedPromises.push(
+          $q.when()
+            .then(function () { storeInstanceFactory.updateStoreInstanceStatus(instance.id, 9); })
+            .then(function () { storeInstanceFactory.updateStoreInstanceStatus(instance.id, 10); })
+        );
       });
 
       $q.all(changeToConfirmedPromises).then($this.handleValidationResult, $this.handleValidationResult);
