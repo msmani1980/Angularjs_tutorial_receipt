@@ -1,4 +1,4 @@
-<div class="container">
+<div class="fluid-container module-container">
 
   <div class="list-controls">
     <div class="row item-list-row">
@@ -26,7 +26,7 @@
               <div class="form-group">
                 <label for="transaction-type">Transaction Type</label>
                 <select ng-model="search.transactionTypeId" class="form-control" id="transaction-type">
-                  <option value="{{type.id}}" ng-repeat="type in transactionTypeList | unique: 'id'">{{ type.name }}</option>
+                  <option value="{{transactionType.name}}" ng-repeat="transactionType in transactionTypes">{{ transactionType.name }}</option>
                 </select>
               </div>
             </div>
@@ -49,7 +49,7 @@
               <div class="form-group">
                 <label for="currency">Currency</label>
                 <select ng-model="search.currency" class="form-control" id="currency">
-                  <option value="{{currency.id}}" ng-repeat="currency in currencyList | unique: 'id'">{{ currency.code }}</option>
+                  <option value="{{currency.id}}" ng-repeat="currency in companyCurrencies">{{ currency.code }}</option>
                 </select>
               </div>
             </div>
@@ -82,7 +82,7 @@
               <div class="form-group">
                 <label for="departure-station">Departure Station</label>
                 <select ng-model="search.departureStation" class="form-control" id="departure-station">
-                  <option value="{{departureStation.id}}" ng-repeat="departureStation in departureStationList | unique: 'id'">{{ departureStation.name }}</option>
+                  <option value="{{departureStation.id}}" ng-repeat="departureStation in companyStations | orderBy: 'code'">{{ departureStation.code }}</option>
                 </select>
               </div>
             </div>
@@ -91,7 +91,7 @@
               <div class="form-group">
                 <label for="arrival-station">Arrival Station</label>
                 <select ng-model="search.arrivalStation" class="form-control" id="arrival-station">
-                  <option value="{{arrivalStation.id}}" ng-repeat="arrivalStation in arrivalStationList | unique: 'id'">{{ arrivalStation.name }}</option>
+                  <option value="{{arrivalStation.id}}" ng-repeat="arrivalStation in companyStations | orderBy: 'code'">{{ arrivalStation.code }}</option>
                 </select>
               </div>
             </div>
@@ -100,7 +100,7 @@
               <div class="form-group">
                 <label for="payment-method">Payment Method</label>
                 <select ng-model="search.paymentMethod" class="form-control" id="payment-method">
-                  <option value="{{paymentMethod.id}}" ng-repeat="paymentMethod in paymentMethodList | unique: 'id'">{{ paymentMethod.name }}</option>
+                  <option value="{{paymentMethod}}" ng-repeat="paymentMethod in paymentMethods | unique: 'id'">{{ paymentMethod }}</option>
                 </select>
               </div>
             </div>
@@ -116,6 +116,48 @@
               <div class="form-group">
                 <label for="store-instance-number">Store Instance Numb.</label>
                 <input ng-model="search.storeInstanceNumber" type="text" class="form-control" id="store-instance-number" />
+              </div>
+            </div>
+          </div>
+          <div class="row" ng-show="isCreditCardPaymentSelected()">
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="card-holder-name">Card Holder Name.</label>
+                <input ng-model="search.cardHolderName" type="text" class="form-control" id="card-holder-name" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="card-type">Card Type</label>
+                <select ng-model="search.cardType" class="form-control" id="card-type">
+                  <option value="{{cardType.id}}" ng-repeat="cardType in creditCardTypes">{{ cardType.ccTypeName }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="credit-card">Credit card (Last Four)</label>
+                <input ng-model="search.creditCard" type="text" class="form-control" id="credit-card" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="cc-trans-status">CC Trans. Status</label>
+                <select ng-model="search.ccTransStatus" class="form-control" id="cc-trans-status">
+                  <option value="{{creditCardTransactionStatus}}" ng-repeat="creditCardTransactionStatus in creditCardTransactionStatuses">{{ creditCardTransactionStatus }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="cc-auth-status">CC Auth. Status</label>
+                <select ng-model="search.ccAuthStatus" class="form-control" id="cc-auth-status">
+                  <option value="{{creditCardAuthStatus}}" ng-repeat="creditCardAuthStatus in creditCardAuthStatuses">{{ creditCardAuthStatus }}</option>
+                </select>
               </div>
             </div>
 
@@ -134,7 +176,7 @@
   <error-dialog form-object="form" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <table infinite-scroll="getPromotionList()" class="table table-responsive table-bordered table-hover">
+  <table infinite-scroll="getTransactionList()" class="table table-responsive table-bordered table-hover">
     <thead>
     <tr>
       <th>Transaction Date</th>
@@ -151,26 +193,27 @@
     </tr>
     </thead>
     <tbody>
-    <tr id="promotion-{{$index}}"
-        ng-repeat="transaction in transactionList">
+    <tr ng-repeat="transaction in transactions">
       <td>{{ transaction.transactionDate }}</td>
       <td>{{ transaction.transactionId }}</td>
       <td>{{ transaction.transactionTypeName }}</td>
-      <td>{{ transaction.benefitTypeName }}</td>
       <td>{{ transaction.paymentMethod }}</td>
       <td>{{ transaction.cardType }}</td>
-      <td>{{ transaction.carrierNumber }}</td>
+      <td>{{ transaction.lastFour }}</td>
       <td>{{ transaction.ccProcessedDate }}</td>
       <td>{{ transaction.ccTransactionStatus }}</td>
       <td>{{ transaction.ccAuthorizationStatus }}</td>
+      <td>{{ transaction.totalAmount }} {{ transaction.currencyCode }}</td>
       <td>
-        <button class="btn btn-danger btn-xs" ng-click="showTransactionDetails(promotion)">
-          <i class="fa fa-trash"></i>
+        <button class="btn btn-info btn-xs" ng-click="showTransactionDetails(promotion)">
+          <i class="fa fa-file"></i>
         </button>
       </td>
     </tr>
     </tbody>
   </table>
-  <p ng-if="transactionList.length > 0" class="record-count small text-center">Showing {{transactionList.length}} records</p>
+  <p ng-if="transactions.length > 0" class="record-count small text-center">Showing {{transactions.length}} records</p>
+  <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>
+<dynamic-left-nav></dynamic-left-nav>
 

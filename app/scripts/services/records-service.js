@@ -59,6 +59,10 @@ angular.module('ts5App')
       getCountTypes: {
         method: 'GET',
         isArray: true
+      },
+      getTransactionTypes: {
+        method: 'GET',
+        isArray: true
       }
     };
     var requestResource = $resource(requestURL, requestParameters, actions);
@@ -118,6 +122,11 @@ angular.module('ts5App')
       return requestResource.getCountTypes().$promise;
     }
 
+    function getTransactionTypes() {
+      requestParameters.api = 'transaction-types';
+      return requestResource.getTransactionTypes().$promise;
+    }
+
     return {
       getCrewBaseTypes: getCrewBaseTypes,
       getCommissionPayableTypes: getCommissionPayableTypes,
@@ -129,6 +138,7 @@ angular.module('ts5App')
       getItemTypes: getItemTypes,
       getCharacteristics: getCharacteristics,
       getFeatures: getFeatures,
-      getCountTypes: getCountTypes
+      getCountTypes: getCountTypes,
+      getTransactionTypes: getTransactionTypes
     };
   });
