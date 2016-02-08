@@ -20,7 +20,7 @@
 
               <p>Cash Bag #: {{report.flightDate}}</p>
 
-              <table class="table table-bordered col-xs-12">
+              <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
                   <td>Crew ID</td>
                   <td>Last Name</td>
@@ -30,28 +30,101 @@
                   <td>{{crewMember.LastName}}</td>
                 </tr>
               </table>
-              <table class="table col-xs-12">
-                <tr>
+
+              <h5>Expected Cash</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <td>Currency Type</td>
+                  <td>Currency Value</td>
+                  <td>GBP Value</td>
+                </tr>
+                <tr ng-repeat="cash in report.cash">
+                  <td>{{cash.currencyCode}}</td>
+                  <td>{{cash.total}}</td>
+                  <td>{{cash.baseTotal}}</td>
+                </tr>
+                <tr class="active">
                   <td>Expected Cash Total</td>
+                  <td></td>
                   <td>{{report.cashTotal}}</td>
                 </tr>
-                <tr>
-                  <td>Card Total</td>
+              </table>
+
+              <h5>Expected Credit</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <td>Card Type</td>
+                  <td>GBP Value</td>
+                </tr>
+                <tr ng-repeat="credit in report.credit">
+                  <td>{{credit.cardType}}</td>
+                  <td>{{cash.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.credit.length">
+                  <td>No expected credit available</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Expected Credit Total</td>
                   <td>{{report.creditTotal}}</td>
                 </tr>
-                <tr>
-                  <td>Voucher Total</td>
+              </table>
+
+              <h5>Voucher Total</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <td>Voucher Currency</td>
+                  <td>Currency Value</td>
+                  <td>GBP Value</td>
+                </tr>
+                <tr ng-repeat="voucher in report.voucher">
+                  <td>{{voucher.currencyCode}}</td>
+                  <td>{{voucher.total}}</td>
+                  <td>{{voucher.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.voucher.length">
+                  <td>No Voucher available</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Expected Voucher Total</td>
+                  <td>0.00</td>
                   <td>{{report.voucherTotal}}</td>
                 </tr>
-                <tr>
-                  <td>Complimentary Total</td>
-                  <td>{{report.compTotal}}</td>
+              </table>
+
+              <h5>Complimentary Total</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <td>Currency Type</td>
+                  <td>Complimentary Currency</td>
+                  <td>GBP Value</td>
                 </tr>
-                <tr>
+                <tr ng-repeat="complimentary in report.comp">
+                  <td>{{complimentary.currencyCode}}</td>
+                  <td>{{complimentary.total}}</td>
+                  <td>{{complimentary.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.complimentary.length">
+                  <td>No Complimentary available</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Complimentary Total</td>
+                  <td></td>
+                  <td>{{complimentary.compTotal}}</td>
+                </tr>
+                <tr class="active">
                   <td>Expected Total</td>
+                  <td></td>
                   <td>{{report.total}}</td>
                 </tr>
               </table>
+
+              <h4>{{report.companyName}}</h4>
+
             </div>
           </div>
         </div>
