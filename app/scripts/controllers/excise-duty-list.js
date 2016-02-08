@@ -41,6 +41,33 @@ angular.module('ts5App')
       return (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $scope.exciseDutyList.length <= 0);
     };
 
+    function hidePanel(panelName) {
+      angular.element(panelName).addClass('collapse');
+    }
+
+    function showPanel(panelName) {
+      angular.element(panelName).removeClass('collapse');
+    }
+
+    function togglePanel(panelName) {
+      var otherPanelName = (panelName === '#search-collapse') ? '#create-collapse' : '#search-collapse';
+
+      if (angular.element(panelName).hasClass('collapse')) {
+        showPanel(panelName);
+        hidePanel(otherPanelName);
+      } else {
+        hidePanel(panelName);
+      }
+    }
+
+    $scope.toggleSearchPanel = function () {
+      togglePanel('#search-collapse');
+    };
+
+    $scope.toggleCreatePanel = function () {
+      togglePanel('#create-collapse');
+    };
+
     $scope.clearSearchForm = function () {
       $scope.search = {};
       $this.meta = {
