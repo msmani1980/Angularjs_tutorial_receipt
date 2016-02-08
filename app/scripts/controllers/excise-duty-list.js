@@ -48,7 +48,9 @@ angular.module('ts5App')
         limit: 100,
         offset: 0
       };
-      $scope.getExciseDutyList();
+      if (!$scope.shouldShowSearchPrompt()) {
+        $scope.getExciseDutyList();
+      }
     };
 
     $scope.searchExciseData = function () {

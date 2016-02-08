@@ -6,56 +6,165 @@
       </div>
 
       <div class="col-xs-8 text-right">
-        <a href="#/commission-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Excise Duty</span></a>
         <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
                 aria-controls="search-collapse">
           <span class="fa fa-search" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Search</span>
         </button>
+        <button class="btn btn-primary" data-toggle="collapse" data-target="#create-collapse" aria-expanded="false"
+                aria-controls="create-collapse">
+          <span class="fa fa-plus" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Create Record</span>
+        </button>
       </div>
     </div>
 
-    <div class="panel panel-default no-transition" id="search-collapse">
-      <form name="commissionDataSearchForm">
+    <form name="exciseDutyCreateForm">
+
+      <div class="panel panel-default collapse no-transition" id="create-collapse">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-8">
+              <h3>Create New Excise Duty</h3>
+            </div>
+            <div class="col-xs-4">
+              <label>Country *</label>
+              <select class="form-control"
+                      name="country"
+                      ng-model="newRecord.country"
+                      ng-options="country.id as country.countryName for country in countryList"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Select a Country</option>
+              </select>
+            </div>
+          </div>
+        </div>
         <div class="panel-body">
           <div class="row">
-
             <div class="col-xs-12 col-sm-4">
               <div class="form-group">
-                <label>Commodity Code</label>
-                <ui-select
-                  required="true"
-                  ng-model="search.commodityCode"
-                  theme="bootstrap"
-                  placeholder="Select crew base">
-                  <ui-select-match
-                    placeholder="Select crew base">{{ $select.selected.name}}
-                  </ui-select-match>
-                  <ui-select-choices repeat="crewBase in crewBaseTypes | orderBy:'name'">
-                    <div ng-bind-html="crewBase.name | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
+                <label>Commodity Code *</label>
+                <input class="form-control"
+                       ng-model="newRecord.commodityCode"
+                       custom-validity
+                       custom-pattern="alphanumericSpaces"
+                       required="true">
               </div>
             </div>
-
-            <div class="col-xs-12 col-sm-8">
-              <date-picker
+            <div class="col-xs-6 col-sm-4">
+              <date-picker-field
+                name="startDate"
                 class="form-group"
-                element-class="col-xs-6"
-                start-date-model="search.startDate"
-                end-date-model="search.endDate"
-                label-from="Effective From"
-                label-to="Effective To"
-                is-search-field="true">
-              </date-picker>
+                form="exciseDutyCreateForm"
+                ng-model="newRecord.startDate"
+                label="Effective From"
+                required="true">
+              </date-picker-field>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+              <date-picker-field
+                name="endDate"
+                class="form-group"
+                form="exciseDutyCreateForm"
+                ng-model="newRecord.endDate"
+                label="Effective To"
+                required="true">
+              </date-picker-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="form-group">
+                <label>Duty Rate *</label>
+                <div class="input-group">
+                  <span class="input-group-addon">GBP</span>
+                  <input ng-model="newRecord.dutyRate"
+                         custom-validity
+                         custom-pattern="decimalWithTwoDecimalPlaces"
+                         maxlength="10"
+                         class="form-control"
+                         required="true"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="form-group">
+                <label>Volume *</label>
+                <select class="form-control"
+                        name="country"
+                        ng-model="newRecord.volume"
+                        ng-options="unit.id as unit.unitName for unit in volumeUnits"
+                        ng-disabled="readOnly"
+                        required="true">
+                  <option selected="selected" value>Select a Volumetric Unit</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="form-group">
+                <label>Alcohol % *</label>
+                <div class="input-group">
+                  <input bs-switch
+                         ng-model="true"
+                         type="checkbox"
+                         switch-size="small"
+                         switch-on-color="info"
+                         switch-on-text="Yes"
+                         switch-off-text="No"
+                         required="true">
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="panel-footer text-right">
-          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-          <button type="button" class="btn btn-primary" ng-click="searchExciseData()">Search</button>
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear All</button>
+          <button type="button" class="btn btn-success" ng-click="searchExciseData()"><span class="fa fa-check"></span> Save</button>
         </div>
-      </form>
+      </div>
+    </form>
+
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <div class="panel-body">
+        <h4>Search Excise Duty Records</h4>
+        <hr>
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label>Commodity Code</label>
+              <ui-select
+                required="true"
+                ng-model="search.commodityCode"
+                theme="bootstrap"
+                placeholder="Select crew base">
+                <ui-select-match
+                  placeholder="Select crew base">{{ $select.selected.name}}
+                </ui-select-match>
+                <ui-select-choices repeat="crewBase in crewBaseTypes | orderBy:'name'">
+                  <div ng-bind-html="crewBase.name | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-8">
+            <date-picker
+              class="form-group"
+              element-class="col-xs-6"
+              start-date-model="search.startDate"
+              end-date-model="search.endDate"
+              label-from="Effective From"
+              label-to="Effective To"
+              is-search-field="true">
+            </date-picker>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer text-right">
+        <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+        <button type="button" class="btn btn-primary" ng-click="searchExciseData()">Search</button>
+      </div>
     </div>
     <br>
 
@@ -84,10 +193,7 @@
         <td>{{ exciseDuty.startDate }}</td>
         <td>{{ exciseDuty.endDate }}</td>
         <td>
-          <button class="btn btn-info btn-xs" ng-click="redirectToDetailPage(data.id, 'view')" tabindex="0">
-            <i class="fa fa-file"></i>
-          </button>
-          <button class="btn btn-primary btn-xs" ng-click="redirectToDetailPage(data.id, 'edit')" tabindex="0" ng-show="canEdit(exciseDuty)">
+          <button class="btn btn-primary btn-xs" ng-click="" tabindex="0" ng-show="canEdit(exciseDuty)">
             <i class="fa fa-pencil"></i>
           </button>
           <button class="btn btn-danger btn-xs"
@@ -102,8 +208,10 @@
     </table>
     <p ng-if="exciseDutyList.length > 0" class="record-count small text-center">Showing {{commissionData.length}} records</p>
     <!--<p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>-->
-    <p ng-show="shouldShowSearchPrompt()" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i>  Perform a search to view records</p>
-    <p ng-show="shouldShowNoRecordsFoundPrompt()" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i>  No records matching the search criteria were found</p>
+    <p ng-show="shouldShowSearchPrompt()" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view records</p>
+
+    <p ng-show="shouldShowNoRecordsFoundPrompt()" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were
+      found</p>
   </div>
 
 </div>
