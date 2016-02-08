@@ -28,11 +28,11 @@ angular.module('ts5App', [
   'ang-drag-drop',
   'ngLodash',
   'frapontillo.bootstrap-switch',
-  'sprintf'
+  'sprintf',
 ]).factory('defaultData', [
-  function() {
+  function () {
     return {
-      request: function(config) {
+      request: function (config) {
         if (angular.isUndefined(config.data)) {
           config.data = {
             requestTimestamp: new Date().getTime()
@@ -61,9 +61,9 @@ angular.module('ts5App', [
   ],
   price: /^\$?\s?[0-9\,]+(\.\d{0,4})?$/,
   url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
-}).config(['$localStorageProvider', function($localStorageProvider) {
+}).config(['$localStorageProvider', function ($localStorageProvider) {
   $localStorageProvider.setKeyPrefix('TS5-');
-}]).config(function($routeProvider, $httpProvider) {
+}]).config(function ($routeProvider, $httpProvider) {
   $httpProvider.interceptors.push('defaultData');
   $httpProvider.interceptors.push('httpSessionInterceptor');
   $routeProvider.when('/', {
@@ -125,7 +125,6 @@ angular.module('ts5App', [
     controller: 'StoreNumberCreateCtrl'
   }).when('/company-relationship-list/:id', {
     templateUrl: 'views/company-relationship.html',
-    controllerAs: 'vm',
     controller: 'CompanyRelationshipListCtrl'
   }).when('/exchange-rates', {
     templateUrl: 'views/exchange-rates.html',
@@ -224,7 +223,7 @@ angular.module('ts5App', [
     templateUrl: 'views/retail-company-exchange-rate-setup.html',
     controller: 'RetailCompanyExchangeRateSetupCtrl'
   }).when('/store-instance-review/:action/:storeId?', {
-    templateUrl: function(routeParameters) {
+    templateUrl: function (routeParameters) {
       if (routeParameters.action === 'redispatch') {
         return 'views/store-instance-redispatch-review.html';
       }
@@ -248,15 +247,12 @@ angular.module('ts5App', [
   }).when('/discounts', {
     templateUrl: 'views/discount-list.html',
     controller: 'DiscountListCtrl',
-    controllerAs: 'discountList'
   }).when('/currency-edit', {
     templateUrl: 'views/currency-edit.html',
     controller: 'CurrencyEditCtrl',
-    controllerAs: 'CurrencyEdit'
   }).when('/company-exchange-rate-edit', {
     templateUrl: 'views/company-exchange-rate-edit.html',
     controller: 'CompanyExchangeRateEditCtrl',
-    controllerAs: 'companyExchangeRateEdit'
   }).when('/reconciliation-discrepancy-detail/:storeInstanceId', {
     templateUrl: 'views/reconciliation-discrepancy-detail.html',
     controller: 'ReconciliationDiscrepancyDetail'
@@ -290,7 +286,6 @@ angular.module('ts5App', [
   }).when('/tax-rates', {
     templateUrl: 'views/tax-rates.html',
     controller: 'TaxRatesCtrl',
-    controllerAs: 'taxRates'
   }).when('/company-reason-type-subscribe', {
     templateUrl: 'views/company-reason-type-subscribe.html',
     controller: 'CompanyReasonTypeSubscribeCtrl'
@@ -316,13 +311,6 @@ angular.module('ts5App', [
   }).otherwise({
     redirectTo: '/'
   });
-}).run([
-  '$rootScope',
-  'regexp',
-  'GlobalMenuService',
-  'identityAccessFactory',
-  'socketIO',
-  function($rootScope, regexp) {
-    $rootScope.regexp = regexp;
-  }
-]);
+}).run(function ($rootScope, regexp) {
+  $rootScope.regexp = regexp;
+});

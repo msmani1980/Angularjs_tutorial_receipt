@@ -25,7 +25,8 @@ describe('Controller: StockTakeCtrl', function() {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, $filter, lodash,
-    _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedMasterItemList_, _servedMasterItem_) {
+    _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedMasterItemList_,
+    _servedMasterItem_) {
     scope = $rootScope.$new();
     location = $location;
     stockTakeFactory = $injector.get('stockTakeFactory');
@@ -553,7 +554,7 @@ describe('Controller: StockTakeCtrl', function() {
     });
 
     it('should add an item to cateringStationItems', function() {
-      expect(scope.cateringStationItems.length).toBe(4);
+      expect(scope.cateringStationItems.length).toBe(5);
     });
   });
 

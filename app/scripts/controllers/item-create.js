@@ -11,12 +11,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     currencyFactory,
     $routeParams, GlobalMenuService, $q, dateUtility, $filter) {
 
-    // TODO: Refactor so the company object is returned, right now it's returning a number so that ember will play nice
-    var companyId = GlobalMenuService.company.get();
-
-    // object resolution in for sub scopes
     var $this = this;
-
     $scope.formData = {
       startDate: dateUtility.tomorrowFormatted(),
       endDate: dateUtility.tomorrowFormatted(),
@@ -83,6 +78,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.validateItemCompany = function(data) {
+      var companyId = GlobalMenuService.company.get();
       return data.retailItem.companyId === companyId;
     };
 

@@ -82,13 +82,13 @@ describe('Controller: CategoryListCtrl', function () {
     });
   });
 
-
   describe('create category', function () {
     beforeEach(function () {
       scope.newCategoryForm = {
         $valid: true
       };
     });
+
     it('should call create API', function () {
       scope.createCategory();
       expect(categoryFactory.createCategory).toHaveBeenCalled();
@@ -138,10 +138,12 @@ describe('Controller: CategoryListCtrl', function () {
         nextCategoryId: 2
       };
     });
+
     it('should call edit API', function () {
       scope.saveEditChange(oldPayload);
       expect(categoryFactory.updateCategory).toHaveBeenCalled();
     });
+
     it('should format payload with new name and description', function () {
       scope.categoryToEdit = {
         name: 'newName',
@@ -302,19 +304,34 @@ describe('Controller: CategoryListCtrl', function () {
     });
   });
 
-  describe('scope helper functions', function () {
-    it('should clear newCategory model with clearCreateFrom function', function () {
-      scope.newCategory = { test: 'test' };
-      scope.clearCreateForm();
-      expect(scope.newCategory).toEqual({});
+  describe('search', function () {
+    beforeEach(function () {
+      scope.filter = {
+        name: 'mockName',
+        description: 'mockDescription',
+        parentCategory: { id: 1 }
+      };
     });
 
-    it('should clear searchModel with clearSearchForm function', function () {
-      scope.filter = { test: 'test' };
-      scope.clearSearchForm();
+    it('should call GET API with filters', function () {
+      var expectedPayload = {
+        name: 'mockName',
+        description: 'mockDescription',
+        parentId: 1
+      };
+      scope.nestedCategoryList = salesCategoriesJSON.salesCategories;
+      scope.search();
+      expect(categoryFactory.getCategoryList).toHaveBeenCalledWith(expectedPayload);
+    });
+
+    it('should reinitialize page on clearSearch', function () {
+      scope.clearSearch();
+      expect(categoryFactory.getCategoryList).toHaveBeenCalled();
       expect(scope.filter).toEqual({});
     });
+  });
 
+  describe('scope helper functions', function () {
     describe('canDeleteCategory', function () {
       it('should return false if category has children', function () {
         var mockCategory = {
@@ -333,6 +350,7 @@ describe('Controller: CategoryListCtrl', function () {
         var canDelete = scope.canDeleteCategory(mockCategory);
         expect(canDelete).toEqual(false);
       });
+
       it('should return true if category has no items or children', function () {
         var mockCategory = {
           itemCount: 0,
@@ -365,6 +383,7 @@ describe('Controller: CategoryListCtrl', function () {
         scope.categoryToMove = { id: 1, parentId: 2, levelNum: 1 };
         scope.inRearrangeMode = true;
       });
+
       it('should return true for categories in the same level and parent', function () {
         var mockCategory = { id: 3, parentId: 2, levelNum: 1 };
         expect(scope.canRearrange(mockCategory)).toEqual(true);
@@ -378,39 +397,6 @@ describe('Controller: CategoryListCtrl', function () {
       });
     });
 
-    describe('isUserFiltering function', function () {
-      it('should return false if filter model is empty', function () {
-        scope.filter = {};
-        var isFiltering = scope.isUserFiltering();
-        expect(isFiltering).toEqual(false);
-      });
-      it('should return false if name and description and parentName are empty', function () {
-        scope.filter = { name: '' };
-        var isFiltering = scope.isUserFiltering();
-        expect(isFiltering).toEqual(false);
-        scope.filter = { description: '' };
-        isFiltering = scope.isUserFiltering();
-        expect(isFiltering).toEqual(false);
-        scope.filter = { parentName: '' };
-        isFiltering = scope.isUserFiltering();
-        expect(isFiltering).toEqual(false);
-        scope.filter = { name: '', description: '', parentName: '' };
-        isFiltering = scope.isUserFiltering();
-        expect(isFiltering).toEqual(false);
-      });
-      it('should return true if name or description is populated', function () {
-        scope.filter = { name: 'test' };
-        var isFiltering = scope.isUserFiltering();
-        expect(isFiltering).toEqual(true);
-        scope.filter = { description: 'test' };
-        isFiltering = scope.isUserFiltering();
-        expect(isFiltering).toEqual(true);
-        scope.filter = { parentName: 'test' };
-        isFiltering = scope.isUserFiltering();
-        expect(isFiltering).toEqual(true);
-      });
-    });
-
     describe('shouldShowCategory', function () {
       it('should be open if category has no parents', function () {
         var mockCategory = {
@@ -419,28 +405,34 @@ describe('Controller: CategoryListCtrl', function () {
         var shouldShow = scope.shouldShowCategory(mockCategory);
         expect(shouldShow).toEqual(true);
       });
+
       it('should be closed if category parent is closed', function () {
         scope.categoryList = [{
           name: 'parent',
           id: 1,
           isOpen: false,
-          parentId: null
+          parentId: null,
+          levelNum: 1
         }];
         var mockCategory = {
-          parentId: 1
+          parentId: 1,
+          levelNum: 2
         };
         var shouldShow = scope.shouldShowCategory(mockCategory);
         expect(shouldShow).toEqual(false);
       });
+
       it('should be open if all parents are open', function () {
         scope.categoryList = [{
           name: 'parent',
           id: 1,
           isOpen: true,
-          parentId: null
+          parentId: null,
+          levelNum: 1
         }];
         var mockCategory = {
-          parentId: 1
+          parentId: 1,
+          levelNum: 2
         };
         var shouldShow = scope.shouldShowCategory(mockCategory);
         expect(shouldShow).toEqual(true);
@@ -448,18 +440,13 @@ describe('Controller: CategoryListCtrl', function () {
     });
 
     describe('get row class', function () {
-      it('should return no class if user is filtering', function () {
-        var expectedClass = '';
-        var mockCategory = { levelNum: 1 };
-        scope.filter = { name: 'filter' };
-        expect(scope.getClassForRow(mockCategory)).toEqual(expectedClass);
-      });
       it('should return a class matching the categorys nested level', function () {
         var expectedClass = 'categoryLevel5';
         var mockCategory = { levelNum: 5 };
         scope.filter = {};
         expect(scope.getClassForRow(mockCategory)).toEqual(expectedClass);
       });
+
       it('should return the highest level class for categories nested above 10', function () {
         var expectedClass = 'categoryLevel10';
         var mockCategory = { levelNum: 11 };
@@ -474,6 +461,7 @@ describe('Controller: CategoryListCtrl', function () {
         var mockCategory = { isOpen: true };
         expect(scope.getToggleButtonClass(mockCategory)).toEqual(expectedClass);
       });
+
       it('should return plain button class if row is closed', function () {
         var expectedClass = 'btn btn-xs btn-default';
         var mockCategory = { isOpen: false };
@@ -487,6 +475,7 @@ describe('Controller: CategoryListCtrl', function () {
         var mockCategory = { isOpen: true };
         expect(scope.getToggleIconClass(mockCategory)).toEqual(expectedClass);
       });
+
       it('should return right arrow if row is closed', function () {
         var expectedClass = 'fa fa-angle-right';
         var mockCategory = { isOpen: false };

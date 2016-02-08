@@ -26,6 +26,10 @@ angular.module('ts5App').service('storeInstanceDashboardFactory',
       return storeInstanceService.getStoreInstance(id);
     }
 
+    function deleteStoreInstance(id) {
+      return storeInstanceService.deleteStoreInstance(id);
+    }
+
     function getStoresList(payload) {
       return storesService.getStoresList(payload);
     }
@@ -47,6 +51,7 @@ angular.module('ts5App').service('storeInstanceDashboardFactory',
       getStationList: getStationList,
       getStoreInstanceList: getStoreInstanceList,
       getStoreInstance: getStoreInstance,
+      deleteStoreInstance: deleteStoreInstance,
       getStoresList: getStoresList,
       getStatusList: getStatusList,
       updateStoreInstanceStatus: updateStoreInstanceStatus,

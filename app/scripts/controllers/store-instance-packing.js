@@ -8,8 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstancePackingFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q,
-            dateUtility) {
+  function ($scope, storeInstancePackingFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q, dateUtility) {
 
     var $this = this;
 
@@ -299,6 +298,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return item.isNewItem || (!item.isMenuItem);
     };
 
+    $scope.shouldDisableUllage = function (item) {
+      return (!item.ullageQuantity || parseInt(item.ullageQuantity) <= 0);
+    };
+
     this.addItemsToDeleteToPayload = function (promiseArray) {
       angular.forEach($this.itemsToDeleteArray, function (item) {
         promiseArray.push($this.deleteStoreInstanceItem(item.storeInstanceId, item.id));
@@ -312,8 +315,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         quantity: parseInt(angular.copy(quantity))
       };
       payloadItem.itemMasterId = (!item.isNewItem) ? item.itemMasterId : item.masterItem.id;
-      if (countTypeName === 'Ullage' && item.ullageReason) {
+
+      if (countTypeName === 'Ullage' && item.ullageReason && parseInt(item.ullageQuantity) > 0) {
         payloadItem.ullageReasonCode = item.ullageReason.id;
+      } else if (countTypeName === 'Ullage' && (!item.ullageReason || parseInt(item.ullageQuantity) <= 0)) {
+        payloadItem.ullageReasonCode = null;
       }
 
       return payloadItem;
@@ -367,14 +373,17 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var storeInstanceToUse = ($routeParams.action === 'end-instance') ? $routeParams.storeId : $scope.storeDetails.prevStoreInstanceId;
       var itemsArray = (isRedispatch) ? $scope.pickListItems : ($scope.offloadListItems.concat($scope.newOffloadListItems));
       angular.forEach(itemsArray, function (item) {
-        var ullagePayloadItem = $this.addUllageQuantityToPayload(item);
-        if (ullagePayloadItem) {
-          promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
-        }
+        var shouldAddItem = !isRedispatch || (angular.isDefined(item.shouldDisplayOffloadData) && item.shouldDisplayOffloadData);
+        if (shouldAddItem) {
+          var ullagePayloadItem = $this.addUllageQuantityToPayload(item);
+          if (ullagePayloadItem) {
+            promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
+          }
 
-        var offloadPayloadItem = $this.addInboundQuantityToPayload(item, isRedispatch);
-        if (offloadPayloadItem) {
-          promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, offloadPayloadItem));
+          var offloadPayloadItem = $this.addInboundQuantityToPayload(item, isRedispatch);
+          if (offloadPayloadItem) {
+            promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, offloadPayloadItem));
+          }
         }
       });
     };
@@ -493,11 +502,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.createFreshItem = function (itemFromAPI, isFromMenu) {
-      var newItem = {
+      var shoudlCopyPickedQuantityToMenu = isFromMenu && ($routeParams.action === 'dispatch' || $routeParams.action === 'redispatch');
+      return {
         itemDescription: itemFromAPI.itemCode + ' - ' + itemFromAPI.itemName,
         itemName: itemFromAPI.itemName,
         menuQuantity: (isFromMenu) ? itemFromAPI.menuQuantity : 0,
-        pickedQuantity: '0',
+        pickedQuantity: (shoudlCopyPickedQuantityToMenu) ? itemFromAPI.menuQuantity : 0,
         oldPickedQuantity: -1,   // so that 0 quantities will be saved
         inboundQuantity: '0',
         oldInboundQuantity: -1,
@@ -508,7 +518,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         isNewItem: false,
         isInOffload: ($routeParams.action === 'end-instance')
       };
-      return newItem;
     };
 
     this.getItemQuantityType = function (item) {
@@ -570,6 +579,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         var itemMatch = $this.findItemMatch(item);
         if (itemMatch) {
           itemMatch.menuQuantity += item.menuQuantity;
+          itemMatch.pickedQuantity += item.menuQuantity;
         } else {
           var newItem = $this.createFreshItem(item, true);
           if ($routeParams.action === 'end-instance') {

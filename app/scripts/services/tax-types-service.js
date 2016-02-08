@@ -22,12 +22,13 @@ angular.module('ts5App')
       }
     };
 
-    var requestResource = $resource(requestURL, requestParameters, actions);
+    var requestResource = function () {
+      requestParameters.companyId = GlobalMenuService.company.get();
+      return $resource(requestURL, requestParameters, actions);
+    };
 
     var getTaxTypesList = function (payload) {
-      payload = payload || {};
-      payload.companyId = GlobalMenuService.company.get();
-      return requestResource.getTaxTypesList(payload).$promise;
+      return requestResource().getTaxTypesList(payload).$promise;
     };
 
     return {

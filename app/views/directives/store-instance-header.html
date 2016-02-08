@@ -5,7 +5,10 @@
         <strong>{{storeDetails.currentStatus.statusName}}</strong>
       </div>
       <div class="col-xs-8 text-right">
-        <span ng-repeat="menu in storeDetails.menuList">
+        <span ng-repeat="menu in prevStoreDetails.menuList" ng-show="prevStoreDetails && storeDetails.currentStatus.statusName === 'Ready for Packing'">
+          {{menu.menuName}}<span ng-if="!$last">, </span>
+        </span>
+        <span ng-repeat="menu in storeDetails.menuList" ng-hide="prevStoreDetails && storeDetails.currentStatus.statusName === 'Ready for Packing'">
           {{menu.menuName}}<span ng-if="!$last">, </span>
         </span>
       </div>
@@ -48,7 +51,7 @@
       </tbody>
     </table>
   </div>
-  <div class="bg-gray panel-body">
+  <div class="bg-gray panel-body" ng-hide="prevStoreDetails && storeDetails.currentStatus.statusName === 'Ready for Packing'">
     <table class="table">
 
       <thead>
@@ -64,7 +67,8 @@
       <tbody>
       <tr>
         <td>
-          <input type="text" class="form-control" ng-model="storeDetails.displayLMPStation" disabled/>
+          <input type="text" class="form-control" ng-model="storeDetails.displayLMPStation" disabled ng-hide="isActionState('end-instance')"/>
+          <input type="text" class="form-control" ng-model="storeDetails.inboundLMPStation" disabled  ng-show="isActionState('end-instance')"/>
         </td>
         <td>
           <input type="text" class="form-control" ng-model="storeDetails.storeNumber" disabled/>

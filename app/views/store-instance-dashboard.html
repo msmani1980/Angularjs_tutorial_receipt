@@ -260,10 +260,15 @@
              ng-click="navigateToAction(store, 'Offload')">
             Start Offload
           </a>
+          <a class="btn btn-danger btn-xs btn-block" tabindex="0"
+             ng-show="canBeDeleted(store)"
+             ng-click="showDeleteConfirmation(store)">
+            <i class="fa fa-trash"></i> Delete
+          </a>
         </td>
       </tr>
       <tr ng-repeat="replenishment in store.replenishments" class="subversion-row"
-          ng-show="isStoreViewExpanded(store)">
+          ng-show="isStoreViewExpanded(store)" id="store-{{ replenishment.id }}">
         <td></td>
         <td>
           <input ng-show="doesStoreInstanceContainAction(replenishment, 'Checkbox')" ng-model="replenishment.selected"
@@ -296,24 +301,29 @@
         <td>{{ replenishment.updatedOnDisplay }}</td>
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
-          <a class="btn btn-primary btn-xs" tabindex="0"
+          <a class="btn btn-primary btn-xs btn-block" tabindex="0"
              ng-show="shouldShowReplenishAction(replenishment, store, 'Pack')"
              ng-click="navigateToAction(replenishment, 'Pack')">
             Start Packing
           </a>
-          <a class="btn btn-warning btn-xs" tabindex="0"
+          <a class="btn btn-warning btn-xs btn-block" tabindex="0"
              ng-show="shouldShowReplenishAction(replenishment, store, 'Seal')"
              ng-click="navigateToAction(replenishment, 'Seal')">
             Start Seals
           </a>
-          <a class="btn btn-success btn-xs" tabindex="0"
+          <a class="btn btn-success btn-xs btn-block" tabindex="0"
              ng-show="shouldShowReplenishAction(replenishment, store, 'Dispatch')"
              ng-click="navigateToAction(replenishment, 'Dispatch')">Dispatch
           </a>
-          <a class="btn btn-info btn-xs" tabindex="0"
+          <a class="btn btn-info btn-xs btn-block" tabindex="0"
           ng-show="shouldShowReplenishAction(replenishment, store, 'Get Flight Docs')"
              ng-href="{{replenishment.exportURL}}">
             Generate Doc
+          </a>
+          <a class="btn btn-danger btn-xs btn-block" tabindex="0"
+             ng-show="canBeDeleted(replenishment)"
+             ng-click="showDeleteConfirmation(replenishment)">
+            <i class="fa fa-trash"></i> Delete
           </a>
         </td>
       </tr>
@@ -355,3 +365,27 @@
  confirmation-label="Yes"
  cancel-label="No">
 </confirmation-modal>
+<div class="modal fade delete-warning-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure?</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>You are about to permanently delete <strong>{{storeInstanceToDelete.storeNumber}}</strong></p>
+      </div>
+
+      <ul>
+        <li><strong>Store Instance: </strong>{{ storeInstanceToDelete.id }}</li>
+        <li><strong>Schedule Date: </strong>{{ storeInstanceToDelete.scheduleDate }}</li>
+      </ul>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="deleteStoreInstance()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

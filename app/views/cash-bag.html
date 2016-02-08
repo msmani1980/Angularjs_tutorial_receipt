@@ -59,7 +59,7 @@
                    ng-readonly="readOnly"/>
           </div>
 
-          <div class="col-sm-4">
+          <div class="col-sm-4" ng-if="isTotalNumberOfCashBagsActivated()">
             <label for="totalCashBags">Total # of Bags *</label>
             <input custom-pattern="number"
                    custom-validity
@@ -108,7 +108,7 @@
               <td>{{ currency.flightAmount }}</td>
               <td><input type="text"
                          custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
+                         custom-pattern="currencyWithTwoDecimalPlace"
                          required
                          class="form-control"
                          ng-model="currency.paperAmountManual"
@@ -116,7 +116,7 @@
                          ng-readonly="readOnly"></td>
               <td><input type="text"
                          custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
+                         custom-pattern="currencyWithTwoDecimalPlace"
                          required
                          class="form-control"
                          ng-model="currency.coinAmountManual"

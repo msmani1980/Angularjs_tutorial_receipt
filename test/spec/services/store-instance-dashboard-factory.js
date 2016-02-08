@@ -29,6 +29,7 @@ describe('Service: storeInstanceDashboardFactory', function () {
     spyOn(storeInstanceService, 'getStoreInstancesList');
     spyOn(storeInstanceService, 'getStoreInstance');
     spyOn(storeInstanceService, 'updateStoreInstanceStatus');
+    spyOn(storeInstanceService, 'deleteStoreInstance');
     spyOn(storesService, 'getStoresList');
     spyOn(recordsService, 'getStoreStatusList');
     spyOn(recordsService, 'getFeatures');
@@ -88,6 +89,11 @@ describe('Service: storeInstanceDashboardFactory', function () {
       storeInstanceDashboardFactory.getFeaturesList();
       expect(recordsService.getFeatures).toHaveBeenCalled();
     });
+  });
+
+  it('should call deleteStoreInstance', function() {
+    storeInstanceDashboardFactory.deleteStoreInstance(1);
+    expect(storeInstanceService.deleteStoreInstance).toHaveBeenCalledWith(1);
   });
 
 });

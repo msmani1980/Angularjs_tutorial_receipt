@@ -8,18 +8,19 @@
       <div class="modal-content">
 
         <div class="modal-header">
-          <h4 class="modal-title">Cash Bag Submission Confirmation</h4>
+          <h4 class="modal-title">Cash Bag Submit Confirmation</h4>
         </div>
 
         <div class="modal-body">
           <p class="text-center">Are you sure you want to submit the following ?</p>
 
           <ul>
-            <li>Cash Handler: <strong>{{ CHCompany.companyName }}</strong></li>
+            <li>Company Name: <strong>{{ companyData.companyName }}</strong></li>
+            <li>Cash Handler Name: <strong>{{ CHCompany.companyName }}</strong></li>
             <li>Submission Date: <strong>{{ submissionDate }}</strong></li>
-            <li>Number of cash bags: <strong>{{ cashBagListToSubmit.length }}</strong></li>
-            <li ng-if="bankReferenceListToSubmit.length === 1">
-              Bank Reference Number: <strong>{{ bankReferenceListToSubmit[0] }}</strong>
+            <li>Number Of Cash Bags To Submit: <strong>{{ cashBagListToSubmit.length }}</strong></li>
+            <li>
+              Bank Reference Number: <strong>{{ bankReferenceListToSubmit.join(', ') }}</strong>
             </li>
           </ul>
         </div>

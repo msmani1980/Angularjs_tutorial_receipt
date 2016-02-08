@@ -17,6 +17,7 @@ describe('Controller: CashBagCtrl', function () {
   var scope;
   var cashBagFactory;
   var companyId;
+  var dateUtility;
 
   var getCashBagDeferred;
   var getCompanyDeferred;
@@ -37,7 +38,7 @@ describe('Controller: CashBagCtrl', function () {
   var getStoreListJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_) {
+  beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_, $injector) {
     scope = $rootScope.$new();
 
     inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedDailyExchangeRate_, _servedCompanyPreferences_, _servedStoreInstance_,
@@ -53,6 +54,7 @@ describe('Controller: CashBagCtrl', function () {
     });
 
     cashBagFactory = _cashBagFactory_;
+    dateUtility = $injector.get('dateUtility');
 
     getCashBagDeferred = $q.defer();
     getCashBagDeferred.resolve(cashBagResponseJSON);
@@ -165,7 +167,8 @@ describe('Controller: CashBagCtrl', function () {
       });
 
       it('should call getCompanyPreferences', function () {
-        expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalled();
+        var expectedPayload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+        expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload);
       });
     });
 
@@ -496,6 +499,89 @@ describe('Controller: CashBagCtrl', function () {
       scope.companyPreferences = false;
       scope.$digest();
       expect(scope.isBankExchangePreferred()).toBe(false);
+    });
+  });
+
+  describe('isTotalNumberOfCashBagsActivated scope function', function () {
+    beforeEach(inject(function ($controller) {
+      CashBagEditCtrl = $controller('CashBagCtrl', {
+        $scope: scope,
+        $routeParams: {
+          state: 'edit',
+          id: 95
+        }
+      });
+      scope.$digest();
+    }));
+
+    it('should return false if companyPreferences is set to false', function () {
+      scope.companyPreferences = false;
+      scope.$digest();
+      expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
+    });
+
+    it('should return true if total number of cash bags is activated', function () {
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: true,
+          choiceCode: 'CSB'
+        }
+      };
+      scope.$digest();
+
+      expect(scope.isTotalNumberOfCashBagsActivated()).toBe(true);
+    });
+
+    it('should return false if total number of cash bags is not activated', function () {
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: false,
+          choiceCode: 'CSB'
+        }
+      };
+      scope.$digest();
+
+      expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
+    });
+
+    it('should return false if total number of cash bags is not activated', function () {
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: false,
+          choiceCode: 'CSB'
+        }
+      };
+      scope.$digest();
+
+      expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
+    });
+
+    it('should return false if total number of cash bags is not activated', function () {
+      scope.companyPreferences = {
+        exchangeRateType: {
+          isSelected: true,
+          choiceCode: 'BNK'
+        },
+        totalNumberOfCashBags: {
+          isSelected: true,
+          choiceCode: 'XYZ'
+        }
+      };
+      scope.$digest();
+
+      expect(scope.isTotalNumberOfCashBagsActivated()).toBe(false);
     });
   });
 });

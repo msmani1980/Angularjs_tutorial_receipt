@@ -12,6 +12,10 @@ angular.module('ts5App')
     var dynamicLeftNavController = function($scope, $location, $window, $filter, mainMenuService) {
       var menu = mainMenuService.getMenu();
       var menuItems = [];
+      if ($scope.title === 'StockOwner Item Management') {
+        menu = mainMenuService.getStockOwnerMenu();
+      }
+
       if ($scope.title) {
         menuItems = $filter('filter')(menu, {
           title: $scope.title

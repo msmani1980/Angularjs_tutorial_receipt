@@ -9,8 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q, ngToast, dateUtility) {
-    var companyId = GlobalMenuService.company.get();
+  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q, ngToast, dateUtility, lodash) {
 
     $scope.viewName = 'Daily Exchange Rates';
     $scope.cashiersDateField = dateUtility.nowFormatted();
@@ -25,13 +24,11 @@ angular.module('ts5App')
     $scope.payload = {};
 
     $scope.isBankExchangePreferred = function () {
-      if (!$scope.companyPreferences) {
+      if (!$scope.companyPreferences || !$scope.companyPreferences.length) {
         return false;
       }
 
-      return $scope.companyPreferences.filter(function (feature) {
-          return (feature.featureCode === 'EXR' && feature.optionCode === 'ERT' && feature.choiceCode === 'BNK');
-        }).length > 0;
+      return $scope.companyPreferences[0].choiceCode === 'BNK';
     };
 
     function formatDateForAPI(cashiersDate) {
@@ -123,6 +120,7 @@ angular.module('ts5App')
     }
 
     $scope.$watch('cashiersDateField', function (cashiersDate) {
+      var companyId = GlobalMenuService.company.get();
       if (!moment(cashiersDate, 'L', true).isValid()) {
         return;
       }
@@ -302,11 +300,13 @@ angular.module('ts5App')
       });
     }
 
-    currencyFactory.getCompanyPreferences().then(function (companyPreferencesData) {
-      $scope.companyPreferences = angular.copy(companyPreferencesData.preferences);
+    var payload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+
+    currencyFactory.getCompanyPreferences(payload).then(function (companyPreferencesData) {
+      $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
     });
 
-    currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
+    currencyFactory.getCompany(GlobalMenuService.company.get()).then(function (companyDataFromAPI) {
       getCompanyBaseCurrency(angular.copy(companyDataFromAPI.baseCurrencyId));
       $scope.company = angular.copy(companyDataFromAPI);
     });

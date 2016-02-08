@@ -27,6 +27,7 @@ angular.module('ts5App')
     $scope.allCheckboxesSelected = false;
     $scope.actionToExecute = null;
     $scope.instancesForActionExecution = {};
+    $scope.isSearch = false;
 
     this.showLoadingModal = function (message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -207,8 +208,13 @@ angular.module('ts5App')
     this.attachReconciliationDataListToScope = function (dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       $scope.reconciliationList = $scope.reconciliationList.concat($this.normalizeReconciliationDataList(dataFromAPI.response));
+      $scope.reconciliationList = $scope.reconciliationList.filter(function (item) {
+        return $scope.filterReconciliationList(item);
+      });
+
       $this.populateLazyColumns();
       hideLoadingBar();
+      $this.hideLoadingModal();
     };
 
     this.getReconciliationDataList = function () {
@@ -269,13 +275,18 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     }
 
-    $scope.searchReconciliationDataList = function () {
+    function resetReconciliationList() {
       $this.meta = {
         count: undefined,
         limit: 100,
         offset: 0
       };
       $scope.reconciliationList = [];
+    }
+
+    $scope.searchReconciliationDataList = function () {
+      $scope.isSearch = true;
+      resetReconciliationList();
       searchReconciliationDataList();
     };
 
@@ -319,8 +330,11 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchForm = function () {
-      $scope.search = {};
-      $scope.companyExchangeRates = [];
+      $scope.search = {
+        startDate: dateUtility.dateNumDaysBeforeTodayFormatted(10),
+        endDate: dateUtility.dateNumDaysBeforeTodayFormatted(2)
+      };
+      $scope.searchReconciliationDataList();
     };
 
     $scope.highlightSelected = function (item) {
@@ -369,39 +383,30 @@ angular.module('ts5App')
       $scope.displayError = true;
     };
 
-    this.handleValidationResponseError = function () {
-      $this.hideLoadingModal();
-      $scope.displayError = false;
+    this.handleValidationResult = function () {
+      if ($scope.isSearch) {
+        $scope.searchReconciliationDataList();
+      } else {
+        resetReconciliationList();
+        $this.getStoreStatusList();
+      }
     };
 
     this.executeValidateAction = function () {
-      var changeToDiscrepanciesPromises = [];
       var changeToConfirmedPromises = [];
       var instancesToExecuteOn = $this.findInstancesWithStatus('Inbounded');
 
       $this.showLoadingModal('Executing Validate action');
 
       angular.forEach(instancesToExecuteOn, function (instance) {
-        changeToDiscrepanciesPromises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, 9));
+        changeToConfirmedPromises.push(
+          $q.when()
+            .then(function () { storeInstanceFactory.updateStoreInstanceStatus(instance.id, 9); })
+            .then(function () { storeInstanceFactory.updateStoreInstanceStatus(instance.id, 10); })
+        );
       });
 
-      $q.all(changeToDiscrepanciesPromises).then(function () {
-        angular.forEach(instancesToExecuteOn, function (instance) {
-          changeToConfirmedPromises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, 10));
-        });
-
-        $q.all(changeToConfirmedPromises).then(function () {
-          $this.getReconciliationDataList();
-        }, function (responseFromAPI) {
-
-          $this.getReconciliationDataList();
-          $this.handleValidationResponseError(responseFromAPI);
-        });
-      }, function(responseFromAPI) {
-
-        $this.getReconciliationDataList();
-        $this.handleValidationResponseError(responseFromAPI);
-      });
+      $q.all(changeToConfirmedPromises).then($this.handleValidationResult, $this.handleValidationResult);
     };
 
     this.executeOtherAction = function () {
@@ -448,6 +453,13 @@ angular.module('ts5App')
       } else {
         $this.executeOtherAction();
       }
+    };
+
+    $scope.validate = function () {
+      $scope.instancesForActionExecution = $this.findSelectedInstances();
+      $scope.displayError = false;
+
+      $this.executeValidateAction();
     };
 
     this.findInstancesWithStatus = function (status) {

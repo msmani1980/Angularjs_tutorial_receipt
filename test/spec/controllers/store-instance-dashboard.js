@@ -103,6 +103,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({
       sessionToken: 'fakeSessionToken'
     });
+    spyOn(storeInstanceDashboardFactory, 'deleteStoreInstance').and.callThrough();
 
     StoreInstanceDashboardCtrl = $controller('StoreInstanceDashboardCtrl', {
       $scope: scope
@@ -712,5 +713,13 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       expect(scope.exportBulkURL).toEqual(ENV.apiUrl + '/api/dispatch/store-instances/documents/C208.pdf?sessionToken=fakeSessionToken&storeInstanceIds=53+1038');
     });
   });
+
+  it('should delete store instance be called', function () {
+    scope.storeInstanceToDelete = {id: 1};
+    scope.deleteStoreInstance();
+
+    expect(storeInstanceDashboardFactory.deleteStoreInstance).toHaveBeenCalledWith(1);
+  });
+
 
 });

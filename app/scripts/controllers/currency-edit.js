@@ -10,8 +10,6 @@
 angular.module('ts5App')
   .controller('CurrencyEditCtrl', function ($scope, currencyFactory, GlobalMenuService, dateUtility, payloadUtility, ngToast) {
     var $this = this;
-    var companyId = GlobalMenuService.company.get();
-
     $scope.viewName = 'Retail Company Currency & Denomination Setup';
     $scope.search = {};
     $scope.companyBaseCurrency = {};
@@ -76,6 +74,7 @@ angular.module('ts5App')
     };
 
     this.getCompanyBaseCurrency = function () {
+      var companyId = GlobalMenuService.company.get();
       currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
         $scope.companyBaseCurrency = $this.getCurrencyByBaseCurrencyId($scope.globalCurrencyList, companyDataFromAPI.baseCurrencyId);
       });
@@ -176,8 +175,10 @@ angular.module('ts5App')
     };
 
     $scope.showDeleteConfirmation = function (index, currency) {
-      $scope.currencyToDelete = currency;
+      $scope.currencyToDelete = angular.copy(currency);
       $scope.currencyToDelete.rowIndex = index;
+      $scope.currencyToDelete.currencyCode = $this.getCurrencyCodeById(currency.currencyId);
+      $scope.currencyToDelete.isOperatedCurrency = (currency.isOperatedCurrency === true) ? 'Yes' : 'No';
 
       angular.element('.delete-warning-modal').modal('show');
     };
@@ -186,6 +187,14 @@ angular.module('ts5App')
       return $scope.companyCurrencyList.map(function (currency) {
         return currency.id;
       }).indexOf(currencyId);
+    };
+
+    this.getCurrencyCodeById = function (currencyId) {
+      var currency = $scope.globalCurrencyList.filter(function (currency) {
+        return currency.id === currencyId;
+      });
+
+      return (currency.length > 0) ? currency[0].currencyCode : '';
     };
 
     this.errorHandler = function (dataFromAPI) {
@@ -212,7 +221,7 @@ angular.module('ts5App')
     };
 
     $scope.clearForm = function () {
-      $scope.search = { };
+      $scope.search = {};
       $this.getDetailedCompanyCurrencies();
     };
 
@@ -221,7 +230,7 @@ angular.module('ts5App')
       for (var i = 0; i < totalRowsToAdd; i++) {
         $scope.companyCurrencyList.push({
           isNew: true,
-          companyId: $this.companyId,
+          companyId: GlobalMenuService.company.get(),
           startDate: dateUtility.tomorrowFormatted(),
           endDate: dateUtility.tomorrowFormatted(),
           selectedDenominations: [],

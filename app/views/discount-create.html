@@ -67,7 +67,7 @@
           <fieldset>
             <div class="form-group">
               <label class="control-label">Discount Name *</label>
-              <input class="form-control" ng-model="formData.discountName" name="discountName" ng-pattern="regexp.word" required ng-disabled="isDisabled()" />
+              <input class="form-control" ng-model="formData.discountName" name="discountName" maxlength="50" ng-disabled="isDisabled()" />
             </div>
             <div class="form-group">
               <label class="control-label">Description *</label>

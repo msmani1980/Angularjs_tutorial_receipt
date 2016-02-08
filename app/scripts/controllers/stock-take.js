@@ -196,7 +196,14 @@ angular.module('ts5App')
       }
 
       displayLoadingModal();
+
       $scope.stockTake.catererStationId = catererStationId;
+
+      if (angular.isDefined($scope.addedItems) && $scope.addedItems.length) {
+        $scope.addedItems = [];
+      }
+
+      getItemsListByCompanyId();
 
       // used cached results instead of hitting API again
       if (angular.isDefined(_cateringStationItems[catererStationId])) {

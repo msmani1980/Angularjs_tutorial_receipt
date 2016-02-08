@@ -23,8 +23,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       menus: []
     };
 
-    // TODO: Refactor so the company object is returned, right now it's returning a number so ember will play nice
-    var companyId = GlobalMenuService.company.get();
     var $this = this;
 
     this.isActionState = function(action) {
@@ -228,6 +226,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getCarrierNumbers = function() {
+      var companyId = GlobalMenuService.company.get();
       return storeInstanceFactory.getAllCarrierNumbers(companyId).then($this.setCarrierNumbers);
     };
 
@@ -309,7 +308,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.formatInitialRedispatchPayload = function() {
       var payload;
-      if (angular.isDefined($scope.prevStoreDetails)) {
+
+      if (angular.isDefined($scope.storeDetails.prevStoreInstanceId)) {
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.prevStoreDetails.scheduleDate),
           menus: $this.formatMenus($scope.prevStoreDetails.menuList),
@@ -324,7 +324,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         }
       }
 
-      if (angular.isUndefined($scope.prevStoreDetails)) {
+      if (angular.isUndefined($scope.storeDetails.prevStoreInstanceId)) {
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
           menus: $this.formatMenus($scope.storeDetails.menuList),
@@ -419,6 +419,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (apiData && apiData.id === parseInt(stepTwoStoreId)) {
         return (angular.isNumber(apiData.prevStoreInstanceId));
       }
+
+      return angular.isNumber(apiData.prevStoreInstanceId);
     };
 
     this.setCateringStationId = function(apiData) {
@@ -985,7 +987,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
         $this.createStoreInstanceErrorHandler
       );
-      $localStorage.stepTwoFromStepOne.storeId = null;
+      if (angular.isDefined($localStorage.stepTwoFromStepOne)) {
+        $localStorage.stepTwoFromStepOne.storeId = null;
+      }
     };
 
     this.editDispatchedStoreInstance = function(saveAndExit) {
@@ -1015,9 +1019,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.stepOneFromStepTwo) {
         $this.editRedispatchedStoreInstance(saveAndExit);
         return;
-      }
-
-      if (!$scope.stepOneFromStepTwo) {
+      } else {
         $this.redispatchStoreInstance(saveAndExit);
         return;
       }
@@ -1134,6 +1136,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getScheduleNumbers = function() {
+      var companyId = GlobalMenuService.company.get();
       var datesForApi = $this.getFormattedDatesPayload();
       var operationalDays = this.getFormattedOperationalDaysPayload();
       schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate,

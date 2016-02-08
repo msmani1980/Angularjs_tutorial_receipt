@@ -303,6 +303,13 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     expect(ReconciliationDashboardCtrl.executeOtherAction).toHaveBeenCalled();
   });
 
+  it('validate calls correct action executor', function () {
+    scope.instancesForActionExecution = [];
+    scope.validate();
+
+    expect(ReconciliationDashboardCtrl.executeValidateAction).toHaveBeenCalled();
+  });
+
   it('handleResponseError handles error', function () {
     var error = { error: true };
     ReconciliationDashboardCtrl.handleResponseError(error);

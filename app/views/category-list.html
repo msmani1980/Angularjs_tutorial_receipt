@@ -30,7 +30,6 @@
       <div class="panel-body">
         <h4>Filter Categories
           <br>
-          <small><i>Note: Results will not be shown with parent and child category structures</i></small>
         </h4>
         <hr>
         <div class="row">
@@ -51,19 +50,20 @@
           <div class="col-sm-4 col-xs-12">
             <div class="form-group">
               <label for="parent-category">Parent Category</label>
-              <select class="form-control"
-                      id="parent-category"
-                      ng-model="filter.parentName"
-                      ng-options="category.name as category.name for category in categoryList">
-                <option selected value="">Select a Commission Type</option>
-              </select>
+              <ui-select theme="bootstrap" ng-model="filter.parentCategory" ng-disabled="readOnly" id="parent-category">
+                <ui-select-match placeholder="Search parent category" allow-clear>{{ $select.selected.name }}</ui-select-match>
+                <ui-select-choices repeat="category in flatCategoryList | filter: {name:$select.search}">
+                  <div ng-bind-html="category.name | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
             </div>
           </div>
 
         </div>
       </div>
       <div class="panel-footer text-right">
-        <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+        <button type="button" class="btn btn-default" ng-click="clearSearch()">Clear</button>
+        <button type="button" class="btn btn-primary" ng-click="search()">Search</button>
       </div>
     </div>
 
@@ -88,14 +88,13 @@
             </div>
             <div class="col-sm-6 col-xs-12">
               <div class="form-group">
-                <label for="new-description">Description *</label>
+                <label for="new-description">Description</label>
                 <input ng-model="newCategory.description"
                        type="text"
                        class="form-control"
                        id="new-description"
                        placeholder="Enter Category Description"
-                       maxlength="25"
-                       required="true">
+                       maxlength="25">
               </div>
             </div>
           </div>
@@ -103,9 +102,9 @@
             <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label for="category-name">Parent Category</label>
-                <ui-select theme="bootstrap" ng-model="newCategory.parentCategory" ng-disabled="readOnly" name="parentCategoryId">
+                <ui-select theme="bootstrap" ng-model="newCategory.parentCategory" ng-disabled="readOnly" name="parentCategoryId" on-select="clearNextCategoryOnParentCategorySelect()">
                   <ui-select-match placeholder="Select a Parent Category to group under" allow-clear="true">{{ $select.selected.name }}</ui-select-match>
-                  <ui-select-choices repeat="category in categoryList | filter: {name:$select.search}">
+                  <ui-select-choices repeat="category in flatCategoryList | filter: {name:$select.search}">
                     <div ng-bind-html="category.name | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
@@ -116,7 +115,7 @@
                 <label for="category-description">Place Before</label>
                 <ui-select theme="bootstrap" ng-model="newCategory.nextCategory" ng-disabled="readOnly" name="nextCategoryId">
                   <ui-select-match placeholder="Select a Category that placed after" allow-clear="true">{{ $select.selected.name }}</ui-select-match>
-                  <ui-select-choices repeat="category in categoryList | filter: {name:$select.search, parentName: newCategory.parentCategory.name}">
+                  <ui-select-choices repeat="category in flatCategoryList | filter: {name:$select.search, parentId: newCategory.parentCategory.id}">
                     <div ng-bind-html="category.name | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
@@ -138,28 +137,27 @@
       <th colspan="{{ numCategoryLevels }}"></th>
       <th>Name</th>
       <th>Description</th>
-      <th ng-show="isUserFiltering() || inEditMode">Parent Category</th>
+      <th ng-show="inEditMode">Parent Category</th>
+      <th ng-show="isFiltering">Path</th>
       <th>Items</th>
       <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="category in categoryList | filter:{ name: filter.name, description: filter.description, parentName: filter.parentName }"
+    <tr ng-repeat="category in categoryList"
         ng-class="getClassForRow(category)"
         ng-show="shouldShowCategory(category)">
-
-
-      <td colspan="{{ numCategoryLevels }}" ng-show="isUserFiltering()" class="category-border">
-      <td ng-repeat="n in [] | range: category.levelNum-1" class="category-indent" ng-hide="isUserFiltering()"></td>
-      <td class="category-border" ng-hide="isUserFiltering()">
+      <td ng-repeat="n in [] | range: category.levelNum-1" class="category-indent"></td>
+      <td class="category-border">
         <button ng-class="getToggleButtonClass(category)"
                 ng-show="doesCategoryHaveChildren(category)"
                 ng-disabled="false" ng-click="toggleCategory(category)">
           <span ng-class="getToggleIconClass(category)"></span>
         </button>
       </td>
-      <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }} && !isUserFiltering()"></td>
-
+      <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }}">
+        <span class="badge" ng-show="category.childCategoryCount > 0">{{ category.childCategoryCount }}</span>
+      </td>
       <td>
         <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.name }}</span>
         <input
@@ -182,14 +180,17 @@
           maxlength="25"
           ng-show="canEditOrRearrangeCategory(category) && inEditMode">
       </td>
-      <td ng-show="isUserFiltering() || inEditMode">
-        <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.parentName }}</span>
+      <td ng-show="inEditMode">
+        <span ng-hide="(canEditOrRearrangeCategory(category) && inEditMode)">{{ category.parentName }}</span>
         <ui-select theme="bootstrap" ng-model="categoryToEdit.parentCategory" ng-disabled="readOnly" name="parentCategoryId" ng-show="canEditOrRearrangeCategory(category) && inEditMode">
           <ui-select-match placeholder="Select a Parent Category to group under" allow-clear>{{ $select.selected.name }}</ui-select-match>
           <ui-select-choices repeat="category in filteredCategoryList | filter: {name:$select.search}">
             <div ng-bind-html="category.name | highlight: $select.search"></div>
           </ui-select-choices>
         </ui-select>
+      </td>
+      <td ng-show="isFiltering">
+        {{ category.salesCategoryPath }}
       </td>
       <td>{{ category.itemCount }}</td>
       <td>
@@ -200,7 +201,7 @@
         <button class="btn btn-xs btn-default" ng-show="canRearrange(category)" ng-click="rearrangeCategory(category, $index, 'down')">
           <span class="fa fa-angle-double-down"></span>
         </button>
-        <button class="btn btn-xs btn-default" ng-hide="inEditMode || inRearrangeMode" ng-click="enterRearrangeMode(category)">
+        <button class="btn btn-xs btn-default" ng-hide="isFiltering || inEditMode || inRearrangeMode" ng-click="enterRearrangeMode(category)">
         <span class="fa fa-arrows"></span>
         </button>
         <button class="btn btn-xs btn-primary" ng-hide="inEditMode || inRearrangeMode" ng-click="enterEditMode(category)">
@@ -223,8 +224,12 @@
     </tbody>
   </table>
 
+  <div class="alert alert-info text-center" ng-show="isFiltering && categoryList.length <= 0">
+    <span class="fa fa-exclamation-circle"></span> No Matching Categories Were Found
+  </div>
+
 </div>
 
 <delete-record-dialog></delete-record-dialog>
 
-<dynamic-left-nav></dynamic-left-nav>
+<dynamic-left-nav title="{{determineLeftNavTitle()}}"></dynamic-left-nav>
