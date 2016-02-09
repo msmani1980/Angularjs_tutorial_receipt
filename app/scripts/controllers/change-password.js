@@ -8,16 +8,15 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ChangePasswordCtrl', function ($scope, $http, identityAccessFactory) {
+  .controller('ChangePasswordCtrl', function ($rootScope, $scope, $http, $routeParams, $location, identityAccessFactory) {
 
-    $scope.passwords = {
+    $scope.credentials = {
       currentPassword: '',
       newPassword: '',
       newPasswordConfirm: ''
     };
 
     var sessionObject = identityAccessFactory.getSessionObject();
-
     $scope.hasSessionToken = angular.isDefined(sessionObject.sessionToken);
 
     function showLoadingModal(text) {
@@ -41,31 +40,18 @@ angular.module('ts5App')
       $scope.displayError = true;
     }
 
+    function getCredentials() {
+      return {
+        username: $scope.credentials.username,
+        password: $scope.credentials.newPassword
+      };
+    }
+
     function handleSuccessResponse() {
+      $location.url($location.path());
+      var credentials = getCredentials();
       hideLoadingModal();
-    }
-
-    function handleAuthorizeUserResponseError(responseFromAPI) {
-      hideLoadingModal();
-      responseFromAPI.data = [
-        {
-          field: 'Password',
-          value: 'does not match our records.'
-        }
-      ];
-      $scope.errorResponse = responseFromAPI;
-      $scope.displayError = true;
-    }
-
-    function callChangePassword() {
-      identityAccessFactory.changePassword({
-        username: sessionObject.username,
-        password: $scope.passwords.newPassword
-      }).then(handleSuccessResponse, handleResponseError);
-    }
-
-    function handleAuthorizeUserSuccessResponse() {
-      callChangePassword();
+      identityAccessFactory.login(credentials);
     }
 
     $scope.changePassword = function () {
@@ -74,14 +60,11 @@ angular.module('ts5App')
       }
 
       showLoadingModal('Changing password');
-
-      if (!$scope.hasSessionToken) {
-        identityAccessFactory.login({
-          username: sessionObject.username,
-          password: $scope.passwords.currentPassword
-        }).then(handleAuthorizeUserSuccessResponse, handleAuthorizeUserResponseError);
-      } else {
-        callChangePassword();
-      }
+      var credentials = getCredentials();
+      var headers = {
+        sessionToken: $routeParams.sessionToken || sessionObject.sessionToken
+      };
+      identityAccessFactory.changePassword(credentials, headers).then(handleSuccessResponse, handleResponseError);
     };
+
   });
