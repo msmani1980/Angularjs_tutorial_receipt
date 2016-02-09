@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TransactionListCtrl', function ($scope, $q, transactionFactory, recordsService, currencyFactory, stationsService, companyCcTypesService, GlobalMenuService, dateUtility) {
+  .controller('TransactionListCtrl', function ($scope, $q, transactionFactory, recordsService, currencyFactory, stationsService, companyCcTypesService, GlobalMenuService, dateUtility, payloadUtility) {
     var $this = this;
 
     $scope.transactions = [];
@@ -20,34 +20,83 @@ angular.module('ts5App')
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
 
-    $scope.search = {
-      paymentMethod: []
-    };
+    $scope.search = {};
 
-    $this.meta = {
-      limit: 100,
-      offset: 0
-    };
+    $this.meta = {};
+    $this.isSearch = false;
 
-    $scope.getTransactionList = function () {
+    function resetCreditCardSearchInputs() {
+      $scope.search.cardHolderName = null;
+      $scope.search.cardTypes = null;
+      $scope.search.lastFour = null;
+      $scope.search.ccTransactionStatuses = null;
+      $scope.search.ccAuthorizationStatuses = null;
+    }
+
+    $scope.$watch('search.paymentMethods', function(paymentMethod) {
+      if (angular.copy(paymentMethod) !== 'Credit Card') {
+        resetCreditCardSearchInputs();
+      }
+    }, true);
+
+    $scope.getTransactions = function () {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
 
       showLoadingBar();
 
-      transactionFactory.getTransactionList(getMetaPayload()).then(appendTransactionList);
+      transactionFactory.getTransactionList(generateGetTransactionsPayload()).then(appendTransactions);
       $this.meta.offset += $this.meta.limit;
     };
 
     $scope.isCreditCardPaymentSelected = function () {
-      return $scope.search.paymentMethod.indexOf('Credit Card') > -1;
+      return $scope.search.paymentMethods === 'Credit Card';
     };
 
-    function getMetaPayload() {
-      return {
+    $scope.clearSearch = function () {
+      $scope.search = {};
+      $scope.searchTransactions();
+    };
+
+    $scope.searchTransactions = function () {
+      $this.isSearch = true;
+      clearTransactions();
+      setDefaultMetaPayload();
+
+      $scope.getTransactions();
+    };
+
+    $scope.showTransactionDetails = function (transaction) {
+      window.open('/ember/transactions/index.html?transactionId=' + transaction.transactionId);
+    };
+
+    function sanitizeSearchPayload (payload) {
+      payload.transactionStartDate = payloadUtility.serializeDate(payload.transactionStartDate);
+      payload.transactionEndDate = payloadUtility.serializeDate(payload.transactionEndDate);
+
+      payloadUtility.sanitize(payload);
+    }
+
+    function generateGetTransactionsPayload () {
+      var payload = {
         limit: $this.meta.limit,
         offset: $this.meta.offset
+      };
+
+      if ($this.isSearch) {
+        angular.extend(payload, $scope.search);
+      }
+
+      sanitizeSearchPayload(payload);
+
+      return payload;
+    }
+
+    function setDefaultMetaPayload () {
+      $this.meta = {
+        limit: 100,
+        offset: 0
       };
     }
 
@@ -70,7 +119,7 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
-    function normalizeTransactionList (transactions) {
+    function normalizeTransactions (transactions) {
       angular.forEach(transactions, function (transaction) {
         transaction.transactionDate = dateUtility.formatDateForApp(transaction.transactionDate);
       });
@@ -78,21 +127,18 @@ angular.module('ts5App')
       return transactions;
     }
 
-    function appendTransactionList (dataFromAPI) {
+    function appendTransactions (dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var transactions = angular.copy(dataFromAPI.transactions);
 
-      $scope.transactions = $scope.transactions.concat(normalizeTransactionList(transactions));
+      $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
 
       hideLoadingBar();
     }
 
-    /*function setTransactionList (dataFromAPI) {
-      var transactions = angular.copy(dataFromAPI.transactions);
-
-      $scope.transactions = normalizeTransactionList(transactions);
-      hideLoadingBar();
-    }*/
+    function clearTransactions () {
+      $scope.transactions = [];
+    }
 
     function setTransactionTypes (dataFromAPI) {
       var transactionTypes = angular.copy(dataFromAPI);
@@ -123,7 +169,9 @@ angular.module('ts5App')
     }
 
     function getCompanyCurrencies () {
-      currencyFactory.getCompanyCurrencies({ isOperatedCurrency: true }).then(setCompanyCurrencies);
+      var payload = { isOperatedCurrency: true };
+
+      currencyFactory.getCompanyCurrencies(payload).then(setCompanyCurrencies);
     }
 
     function getCompanyStations () {
@@ -150,6 +198,7 @@ angular.module('ts5App')
 
     function init () {
       showLoadingModal('Loading Transactions.');
+      setDefaultMetaPayload();
 
       $q.all(makeDependencyPromises()).then(dependenciesSuccess);
     }
