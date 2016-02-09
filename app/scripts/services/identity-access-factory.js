@@ -96,8 +96,17 @@ angular.module('ts5App')
         return !!(getSessionObject().sessionToken);
       }
 
+      function isLocationValid(locationURL) {
+        var allowedHashArray = ['login', 'change-password'];
+        var allowedURLsArray = allowedHashArray.filter(function (url) {
+          return locationURL.contains(url);
+        });
+
+        return allowedURLsArray.length > 0;
+      }
+
       function locationChangeHandler(event, next) {
-        if (!isAuthorized() && (!next.contains('login') && !next.contains('forgot'))) {
+        if (!isAuthorized() && (!isLocationValid(next) && !next.contains('forgot'))) {
           event.preventDefault();
           logout();
         }
