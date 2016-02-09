@@ -8,6 +8,43 @@
 
       <div class="col-xs-8 text-right">
 
+        <div class="btn-group" dropdown ng-hide="true">
+          <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
+                  data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-cog"></i>
+            Hide / Show Columns
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('scheduleNumber')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.scheduleNumber">
+                Schedule Number</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('scheduleDate')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.scheduleDate">
+                Schedule Date</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('storeNumber')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.storeNumber">
+                Store Number</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('storeDate')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.storeDate">
+                Store Date</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('storeInstance')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.storeInstance">
+                Store Instance</a>
+            </li>
+          </ul>
+        </div>
+
         <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
                 aria-controls="search-collapse">
           <span class="fa fa-filter" aria-hidden="true"></span>
@@ -27,7 +64,7 @@
                 <label for="transaction-type">Transaction Type</label>
                 <select ng-model="search.transactionType" class="form-control" id="transaction-type">
                   <option value="">Please select</option>
-                  <option value="{{transactionType.name}}" ng-repeat="transactionType in transactionTypes">{{ transactionType.name }}</option>
+                  <option value="{{transactionType.name}}" ng-repeat="transactionType in transactionTypes | orderBy: 'name'">{{ getOverriddenTransactionTypeName(transactionType.name) }}</option>
                 </select>
               </div>
             </div>
@@ -103,10 +140,13 @@
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="payment-method">Payment Method</label>
-                <select ng-model="search.paymentMethods" class="form-control" id="payment-method">
-                  <option value="">Please select</option>
-                  <option value="{{paymentMethod}}" ng-repeat="paymentMethod in paymentMethods">{{ paymentMethod }}</option>
-                </select>
+
+                <ui-select id="payment-method" multiple ng-model="search.paymentMethods" theme="bootstrap">
+                  <ui-select-match placeholder="Select Payment Methods..">{{ $item }}</ui-select-match>
+                  <ui-select-choices repeat="paymentMethod in paymentMethods | filter: $select.search">
+                    {{ paymentMethod }}
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
 
@@ -124,7 +164,7 @@
               </div>
             </div>
           </div>
-          <div class="row" ng-show="isCreditCardPaymentSelected()">
+          <div class="row" ng-show="isCreditCardPaymentSelected">
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="card-holder-name">Card Holder Name.</label>
@@ -194,11 +234,16 @@
       <th>CC Transaction Status</th>
       <th>CC Authorization Status</th>
       <th>Amount</th>
+      <th ng-show="displayColumns.scheduleNumber">Schedule Number</th>
+      <th ng-show="displayColumns.scheduleDate">Schedule Date</th>
+      <th ng-show="displayColumns.storeNumber">Store Number</th>
+      <th ng-show="displayColumns.storeDate">Store Date</th>
+      <th ng-show="displayColumns.storeInstance">Store Instance</th>
       <th>Action</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="transaction in transactions">
+    <tr ng-repeat="transaction in transactions | unique:'transactionId'">
       <td>{{ transaction.transactionDate }}</td>
       <td>{{ transaction.transactionId }}</td>
       <td>{{ transaction.transactionTypeName }}</td>
@@ -209,6 +254,11 @@
       <td>{{ transaction.ccTransactionStatus }}</td>
       <td>{{ transaction.ccAuthorizationStatus }}</td>
       <td>{{ transaction.totalAmount }} {{ transaction.currencyCode }}</td>
+      <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
+      <td ng-show="displayColumns.scheduleDate">{{ transaction.scheduleDate }}</td>
+      <td ng-show="displayColumns.storeNumber">{{ transaction.storeNumber }}</td>
+      <td ng-show="displayColumns.storeDate">{{ transaction.instanceDate }}</td>
+      <td ng-show="displayColumns.storeInstance">{{ transaction.storeInstanceId }}</td>
       <td>
         <button class="btn btn-info btn-xs" ng-click="showTransactionDetails(transaction)">
           <i class="fa fa-file"></i>
@@ -217,7 +267,6 @@
     </tr>
     </tbody>
   </table>
-  <p ng-if="transactions.length > 0" class="record-count small text-center">Showing {{transactions.length}} records</p>
   <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>
 <dynamic-left-nav></dynamic-left-nav>

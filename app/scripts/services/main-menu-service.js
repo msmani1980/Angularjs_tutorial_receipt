@@ -257,7 +257,7 @@ angular.module('ts5App')
           title: 'Transaction Retrieval',
           menuItems: [{
             name: 'Manage Transactions',
-            route: emberURL + 'transactions',
+            route: '/#/transactions',
             icon: 'icon-manage-transactions',
             className: 'dashboard-manageTransactions',
             package: 'TRANSACTION',

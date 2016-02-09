@@ -17,7 +17,5 @@ describe('Controller: TransactionListCtrl', function () {
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(TransactionListCtrl.awesomeThings.length).toBe(3);
-  });
+
 });

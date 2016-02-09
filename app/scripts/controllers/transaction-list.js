@@ -19,11 +19,45 @@ angular.module('ts5App')
     $scope.creditCardTypes = [];
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
+    $scope.overrideTransactionTypeNames = {
+      CLEARED: 'Cleared',
+      CREWMEAL: 'Crew Meal',
+      DAMAGED: 'Damaged',
+      DEFECTIVE: 'Defective',
+      EmployeePurchase: 'Employee Purchase',
+      PREPACK: 'Prepack',
+      REFUND: 'Refund',
+      REFUNDDAMAGED: 'Refund Damaged',
+      REFUNDDEFECTIVE: 'Refund Defective',
+      REFUNDNOCHANGE: 'Refund No Change',
+      REMOVE: 'Remove',
+      SALE: 'Sale',
+      STOCKOUT: 'Stockout',
+      TOPUP: 'Topup',
+      TRANSFER: 'Transfer',
+      VOIDED: 'Voided'
+    };
+    $scope.displayColumns = {
+      scheduleNumber: false,
+      scheduleDate: false,
+      storeNumber: false,
+      storeDate: false,
+      storeInstance: false
+    };
 
     $scope.search = {};
+    $scope.isCreditCardPaymentSelected = false;
 
     $this.meta = {};
     $this.isSearch = false;
+
+    function isCreditCardPaymentSelected(paymentMethods) {
+      if (!paymentMethods) {
+        return false;
+      }
+
+      return paymentMethods.indexOf('Credit Card') > -1;
+    }
 
     function resetCreditCardSearchInputs() {
       $scope.search.cardHolderName = null;
@@ -33,11 +67,28 @@ angular.module('ts5App')
       $scope.search.ccAuthorizationStatuses = null;
     }
 
-    $scope.$watch('search.paymentMethods', function(paymentMethod) {
-      if (angular.copy(paymentMethod) !== 'Credit Card') {
+    $scope.$watch('search.paymentMethods', function(paymentMethods) {
+      if (isCreditCardPaymentSelected(angular.copy(paymentMethods))) {
+        $scope.isCreditCardPaymentSelected = true;
+      } else {
+        $scope.isCreditCardPaymentSelected = false;
         resetCreditCardSearchInputs();
       }
     }, true);
+
+    $scope.toggleColumnView = function (columnName) {
+      if (angular.isDefined($scope.displayColumns[columnName])) {
+        $scope.displayColumns[columnName] = !$scope.displayColumns[columnName];
+      }
+    };
+
+    $scope.getOverriddenTransactionTypeName = function (transactionTypeName) {
+      if (transactionTypeName in $scope.overrideTransactionTypeNames) {
+        return $scope.overrideTransactionTypeNames[transactionTypeName];
+      }
+
+      return transactionTypeName;
+    };
 
     $scope.getTransactions = function () {
       if ($this.meta.offset >= $this.meta.count) {
@@ -48,10 +99,6 @@ angular.module('ts5App')
 
       transactionFactory.getTransactionList(generateGetTransactionsPayload()).then(appendTransactions);
       $this.meta.offset += $this.meta.limit;
-    };
-
-    $scope.isCreditCardPaymentSelected = function () {
-      return $scope.search.paymentMethods === 'Credit Card';
     };
 
     $scope.clearSearch = function () {
@@ -72,10 +119,13 @@ angular.module('ts5App')
     };
 
     function sanitizeSearchPayload (payload) {
+      payloadUtility.sanitize(payload);
       payload.transactionStartDate = payloadUtility.serializeDate(payload.transactionStartDate);
       payload.transactionEndDate = payloadUtility.serializeDate(payload.transactionEndDate);
 
-      payloadUtility.sanitize(payload);
+      if (payload.paymentMethods) {
+        payload.paymentMethods = payload.paymentMethods.join(',');
+      }
     }
 
     function generateGetTransactionsPayload () {
