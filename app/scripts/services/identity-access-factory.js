@@ -10,12 +10,12 @@
  */
 angular.module('ts5App')
   .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companiesFactory, companyFactory, $q, lodash) {
-      function changePassword(credentials) {
+      function changePassword(credentials, sessionToken) {
         var payload = {
           username: credentials.username,
           password: CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64)
         };
-        return identityAccessService.changePassword(payload);
+        return identityAccessService.changePassword(payload, sessionToken);
 
       }
 
