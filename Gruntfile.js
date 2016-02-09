@@ -461,10 +461,6 @@ module.exports = function (grunt) {
       unit: {
         configFile: 'test/karma.conf.js',
         singleRun: true
-      },
-      jenkins: {
-        configFile: 'test/jenkins.karma.conf.js',
-        singleRun: true
       }
     }
   });
