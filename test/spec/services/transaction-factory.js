@@ -6,13 +6,20 @@ describe('Service: transactionFactory', function () {
   beforeEach(module('ts5App'));
 
   // instantiate service
-  var transactionFactory;
-  beforeEach(inject(function (_transactionFactory_) {
+  var transactionFactory,
+    transactionService;
+
+  beforeEach(inject(function (_transactionFactory_, _transactionService_) {
     transactionFactory = _transactionFactory_;
+    transactionService = _transactionService_;
+
+    spyOn(transactionService, 'getTransactionList');
   }));
 
-  it('should do something', function () {
-    expect(!!transactionFactory).toBe(true);
-  });
+  it('should call getCatererStation', function() {
+    var payload = {id: 1};
+    transactionFactory.getTransactionList(payload);
 
+    expect(transactionService.getTransactionList).toHaveBeenCalledWith(payload);
+  });
 });
