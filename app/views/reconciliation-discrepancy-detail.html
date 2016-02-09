@@ -43,6 +43,10 @@
                   <td>{{cash.total}}</td>
                   <td>{{cash.baseTotal}}</td>
                 </tr>
+                <tr ng-if="!report.cash.length">
+                  <td>No expected cash added</td>
+                  <td>0.00</td>
+                </tr>
                 <tr class="active">
                   <td>Expected Cash Total</td>
                   <td></td>
@@ -58,10 +62,10 @@
                 </tr>
                 <tr ng-repeat="credit in report.credit">
                   <td>{{credit.cardType}}</td>
-                  <td>{{cash.baseTotal}}</td>
+                  <td>{{credit.baseTotal}}</td>
                 </tr>
                 <tr ng-if="!report.credit.length">
-                  <td>No expected credit available</td>
+                  <td>No expected credit added</td>
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
@@ -83,13 +87,13 @@
                   <td>{{voucher.baseTotal}}</td>
                 </tr>
                 <tr ng-if="!report.voucher.length">
-                  <td>No Voucher available</td>
+                  <td>No Voucher added</td>
                   <td>0.00</td>
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
                   <td>Expected Voucher Total</td>
-                  <td>0.00</td>
+                  <td></td>
                   <td>{{report.voucherTotal}}</td>
                 </tr>
               </table>
@@ -98,7 +102,7 @@
               <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
                   <td>Currency Type</td>
-                  <td>Complimentary Currency</td>
+                  <td>Comp. Currency</td>
                   <td>GBP Value</td>
                 </tr>
                 <tr ng-repeat="complimentary in report.comp">
@@ -107,18 +111,20 @@
                   <td>{{complimentary.baseTotal}}</td>
                 </tr>
                 <tr ng-if="!report.complimentary.length">
-                  <td>No Complimentary available</td>
+                  <td>No Complimentary added</td>
                   <td>0.00</td>
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
-                  <td>Complimentary Total</td>
+                  <td>Comp. Total</td>
                   <td></td>
-                  <td>{{complimentary.compTotal}}</td>
+                  <td>{{complimentary.compTotal ? complimentary.compTotal : '0.00'}}</td>
                 </tr>
+              </table>
+
+              <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
                   <td>Expected Total</td>
-                  <td></td>
                   <td>{{report.total}}</td>
                 </tr>
               </table>
