@@ -255,9 +255,9 @@
       <td>{{ transaction.ccAuthorizationStatus }}</td>
       <td>{{ transaction.totalAmount }} {{ transaction.currencyCode }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
-      <td ng-show="displayColumns.scheduleDate">{{ transaction.scheduleDate }}</td>
+      <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
       <td ng-show="displayColumns.storeNumber">{{ transaction.storeNumber }}</td>
-      <td ng-show="displayColumns.storeDate">{{ transaction.instanceDate }}</td>
+      <td ng-show="displayColumns.storeDate"></td>
       <td ng-show="displayColumns.storeInstance">{{ transaction.storeInstanceId }}</td>
       <td>
         <button class="btn btn-info btn-xs" ng-click="showTransactionDetails(transaction)">

@@ -11,6 +11,7 @@ angular.module('ts5App')
   .controller('TransactionListCtrl', function ($scope, $q, transactionFactory, recordsService, currencyFactory, stationsService, companyCcTypesService, GlobalMenuService, dateUtility, payloadUtility) {
     var $this = this;
 
+    $scope.viewName = 'Transactions';
     $scope.transactions = [];
     $scope.transactionTypes = [];
     $scope.companyCurrencies = [];
