@@ -12,12 +12,12 @@
         </button>
         <button class="btn btn-primary" aria-expanded="false" ng-click="toggleCreatePanel()">
           <span class="fa fa-plus" aria-hidden="true"></span>
-          <span class="hidden-sm hidden-xs">Create Record</span>
+          <span class="hidden-sm hidden-xs">Create Excise Duty</span>
         </button>
       </div>
     </div>
 
-    <form name="exciseDutyCreateForm">
+    <form name="exciseDutyCreateForm" ng-submit="createExciseDuty()">
 
       <div class="panel panel-default collapse no-transition" id="create-collapse">
         <div class="panel-heading">
@@ -27,14 +27,16 @@
             </div>
             <div class="col-xs-4">
               <label>Country *</label>
-              <select class="form-control"
-                      name="country"
-                      ng-model="newRecord.country"
-                      ng-options="country.id as country.countryName for country in countryList"
-                      ng-disabled="readOnly"
-                      required="true">
-                <option selected="selected" value>Select a Country</option>
-              </select>
+              <ui-select required="true"
+                ng-model="newRecord.country"
+                theme="bootstrap"
+                placeholder="Select Country"
+                ng-required="true">
+                <ui-select-match placeholder="Select a country">{{ $select.selected.countryName}}</ui-select-match>
+                <ui-select-choices repeat="country in countryList | filter: {countryName:$select.search}">
+                  <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
             </div>
           </div>
         </div>
@@ -72,7 +74,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-4">
+            <div class="col-xs-12 col-sm-4">
               <div class="form-group">
                 <label>Duty Rate *</label>
                 <div class="input-group">
@@ -86,7 +88,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-6 col-sm-4">
               <div class="form-group">
                 <label>Volume *</label>
                 <select class="form-control"
@@ -99,26 +101,25 @@
                 </select>
               </div>
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-6 col-sm-4">
               <div class="form-group">
                 <label>Alcohol % *</label>
                 <div class="input-group">
                   <input bs-switch
-                         ng-model="true"
+                         ng-model="newRecord.alcoholic"
                          type="checkbox"
                          switch-size="small"
                          switch-on-color="info"
                          switch-on-text="Yes"
-                         switch-off-text="No"
-                         required="true">
+                         switch-off-text="No">
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="panel-footer text-right">
-          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear All</button>
-          <button type="button" class="btn btn-success" ng-click="searchExciseData()"><span class="fa fa-check"></span> Save</button>
+          <button type="button" class="btn btn-default" ng-click="clearCreateForm(true)">Clear All</button>
+          <button type="submit" class="btn btn-success"><span class="fa fa-check"></span> Save</button>
         </div>
       </div>
     </form>
@@ -131,31 +132,29 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label>Commodity Code</label>
-              <ui-select
-                required="true"
-                ng-model="search.commodityCode"
-                theme="bootstrap"
-                placeholder="Select crew base">
-                <ui-select-match
-                  placeholder="Select crew base">{{ $select.selected.name}}
-                </ui-select-match>
-                <ui-select-choices repeat="crewBase in crewBaseTypes | orderBy:'name'">
-                  <div ng-bind-html="crewBase.name | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
+              <input class="form-control"
+                     ng-model="search.commodityCode"
+                     placeholder="Enter Commodity Code to search for">
             </div>
           </div>
 
-          <div class="col-xs-12 col-sm-8">
-            <date-picker
+          <div class="col-xs-6 col-sm-4">
+            <date-picker-field
+              name="startDate"
               class="form-group"
-              element-class="col-xs-6"
-              start-date-model="search.startDate"
-              end-date-model="search.endDate"
-              label-from="Effective From"
-              label-to="Effective To"
-              is-search-field="true">
-            </date-picker>
+              form="exciseDutyCreateForm"
+              ng-model="search.startDate"
+              label="Effective From">
+            </date-picker-field>
+          </div>
+          <div class="col-xs-6 col-sm-4">
+            <date-picker-field
+              name="endDate"
+              class="form-group"
+              form="exciseDutyCreateForm"
+              ng-model="search.endDate"
+              label="Effective To">
+            </date-picker-field>
           </div>
         </div>
       </div>

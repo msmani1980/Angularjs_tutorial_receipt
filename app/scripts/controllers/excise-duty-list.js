@@ -41,35 +41,17 @@ angular.module('ts5App')
       return (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $scope.exciseDutyList.length <= 0);
     };
 
-    function hidePanel(panelName) {
-      angular.element(panelName).addClass('collapse');
-    }
-
-    function showPanel(panelName) {
-      angular.element(panelName).removeClass('collapse');
-    }
-
-    function togglePanel(panelName) {
-      var otherPanelName = (panelName === '#search-collapse') ? '#create-collapse' : '#search-collapse';
-
-      if (angular.element(panelName).hasClass('collapse')) {
-        showPanel(panelName);
-        hidePanel(otherPanelName);
-      } else {
-        hidePanel(panelName);
-      }
-    }
-
-    $scope.toggleSearchPanel = function () {
-      togglePanel('#search-collapse');
-    };
-
-    $scope.toggleCreatePanel = function () {
-      togglePanel('#create-collapse');
+    $scope.clearCreateForm = function (shouldClearAll) {
+      var currentCountry = $scope.newRecord.country;
+      $scope.newRecord = {
+        alcoholic: false,
+        country: (shouldClearAll) ? null : currentCountry
+      };
     };
 
     $scope.clearSearchForm = function () {
-      $scope.search = {};
+      $scope.search = null;
+      $scope.exciseDutyList = null;
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -89,11 +71,82 @@ angular.module('ts5App')
       $scope.getExciseDutyList();
     };
 
+    function isPanelOpen(panelName) {
+      return !angular.element(panelName).hasClass('collapse');
+    }
+
+    function hidePanel(panelName) {
+      angular.element(panelName).addClass('collapse');
+    }
+
+    function showPanel(panelName) {
+      angular.element(panelName).removeClass('collapse');
+    }
+
+    function togglePanel(panelName) {
+      var otherPanelName = (panelName === '#search-collapse') ? '#create-collapse' : '#search-collapse';
+      if (isPanelOpen(panelName)) {
+        hidePanel(panelName);
+      } else {
+        showPanel(panelName);
+        hidePanel(otherPanelName);
+      }
+    }
+
+    $scope.toggleSearchPanel = function () {
+      $scope.clearSearchForm();
+      togglePanel('#search-collapse');
+    };
+
+    $scope.toggleCreatePanel = function () {
+      $scope.clearSearchForm();
+      togglePanel('#create-collapse');
+    };
+
+    function createSuccess() {
+      $scope.search = { commodityCode: $scope.newRecord.commodityCode };
+      $scope.clearCreateForm(false);
+      $scope.searchExciseData();
+    }
+
+    function formatNewRecordForAPI() {
+      var newRecord = {
+        commodityCode: $scope.newRecord.commodityCode,
+        dutyRate: parseFloat($scope.newRecord.dutyRate),
+        startDate: dateUtility.formatDateForAPI($scope.newRecord.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.newRecord.endDate),
+        volumeUnitId: $scope.newRecord.volume,
+        countryId: $scope.newRecord.country.id,
+        alcoholic: $scope.newRecord.alcoholic
+      };
+      return newRecord;
+    }
+
+    $scope.createExciseDuty = function () {
+      var payload = formatNewRecordForAPI();
+      exciseDutyFactory.createExciseDuty(payload).then(createSuccess);
+    };
+
     function formatSearchPayloadForAPI() {
-      return {};
+      var payload = {};
+      if ($scope.search && $scope.search.commodityCode) {
+        payload.commodityCode = $scope.search.commodityCode;
+      }
+
+      if ($scope.search && $scope.search.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
+      }
+
+      if ($scope.search && $scope.search.endDate) {
+        payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
+      }
+
+      return payload;
     }
 
     function formatExciseDutyResponseForApp(dataFromAPI) {
+      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+
       var newExciseDutyList = angular.copy(dataFromAPI.response);
       angular.forEach(newExciseDutyList, function (exciseDuty) {
         exciseDuty.startDate = dateUtility.formatDateForApp(exciseDuty.startDate);
@@ -136,6 +189,10 @@ angular.module('ts5App')
     }
 
     function init() {
+      $scope.newRecord = {
+        alcoholic: false
+      };
+      $scope.search = {};
       showLoadingModal('initializing');
       var promises = [
         exciseDutyFactory.getCountriesList(),
