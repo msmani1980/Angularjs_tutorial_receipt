@@ -34,11 +34,11 @@ angular.module('ts5App')
     };
 
     $scope.shouldShowSearchPrompt = function () {
-      return !isPanelOpen('#create-collapse') && ($scope.exciseDutyList === null || !(angular.isDefined($scope.exciseDutyList)));
+      return !isPanelOpen('#create-collapse') && (!$scope.exciseDutyList);
     };
 
     $scope.shouldShowCreatePrompt = function () {
-      return isPanelOpen('#create-collapse') && ($scope.exciseDutyList === null || !(angular.isDefined($scope.exciseDutyList)));
+      return isPanelOpen('#create-collapse') && (!$scope.exciseDutyList || $scope.exciseDutyList.length <= 0);
     };
 
     $scope.shouldShowNoRecordsFoundPrompt = function () {
@@ -72,6 +72,16 @@ angular.module('ts5App')
       $scope.getExciseDutyList();
     };
 
+    function deleteSuccess() {
+      hideLoadingModal();
+      $scope.searchExciseData();
+    }
+
+    $scope.removeRecord = function (record) {
+      showLoadingModal('Deleting Record');
+      exciseDutyFactory.deleteExciseDuty(record.id).then(deleteSuccess);
+    };
+    
     function isPanelOpen(panelName) {
       return !angular.element(panelName).hasClass('collapse');
     }
