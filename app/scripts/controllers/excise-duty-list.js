@@ -34,19 +34,15 @@ angular.module('ts5App')
     };
 
     $scope.shouldShowSearchPrompt = function () {
-      return $scope.exciseDutyList === null || !(angular.isDefined($scope.exciseDutyList));
+      return !isPanelOpen('#create-collapse') && ($scope.exciseDutyList === null || !(angular.isDefined($scope.exciseDutyList)));
+    };
+
+    $scope.shouldShowCreatePrompt = function () {
+      return isPanelOpen('#create-collapse') && ($scope.exciseDutyList === null || !(angular.isDefined($scope.exciseDutyList)));
     };
 
     $scope.shouldShowNoRecordsFoundPrompt = function () {
-      return (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $scope.exciseDutyList.length <= 0);
-    };
-
-    $scope.clearCreateForm = function (shouldClearAll) {
-      var currentCountry = $scope.newRecord.country;
-      $scope.newRecord = {
-        alcoholic: false,
-        country: (shouldClearAll) ? null : currentCountry
-      };
+      return !isPanelOpen('#create-collapse') && (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $scope.exciseDutyList.length <= 0);
     };
 
     $scope.clearSearchForm = function () {
@@ -57,9 +53,14 @@ angular.module('ts5App')
         limit: 100,
         offset: 0
       };
-      if (!$scope.shouldShowSearchPrompt()) {
-        $scope.getExciseDutyList();
-      }
+    };
+
+    $scope.clearCreateForm = function (shouldClearAll) {
+      var currentCountry = $scope.newRecord.country;
+      $scope.newRecord = {
+        alcoholic: false,
+        country: (shouldClearAll) ? null : currentCountry
+      };
     };
 
     $scope.searchExciseData = function () {
@@ -94,17 +95,22 @@ angular.module('ts5App')
     }
 
     $scope.toggleSearchPanel = function () {
-      $scope.clearSearchForm();
       togglePanel('#search-collapse');
     };
 
     $scope.toggleCreatePanel = function () {
       $scope.clearSearchForm();
+      $scope.clearCreateForm(true);
       togglePanel('#create-collapse');
     };
 
     function createSuccess() {
-      $scope.search = { commodityCode: $scope.newRecord.commodityCode };
+      if ($scope.search && $scope.search.commodityCode) {
+        $scope.search = { commodityCode: $scope.search.commodityCode + ',' + $scope.newRecord.commodityCode };
+      } else {
+        $scope.search = { commodityCode: $scope.newRecord.commodityCode };
+      }
+
       $scope.clearCreateForm(false);
       $scope.searchExciseData();
     }
