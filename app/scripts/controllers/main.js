@@ -59,8 +59,11 @@ angular.module('ts5App')
 
     function updateNavigationPerUserFeatures() {
       identityAccessService.featuresInRole().then(function (response) {
-        $scope.dashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
+        $scope.realDashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
       });
+
+      var companyTypeId = GlobalMenuService.getCompanyData().companyTypeId;
+      $scope.dashboardMenu = (companyTypeId === 1) ? mainMenuService.getMenu() : mainMenuService.getStockOwnerMenu();
     }
 
     $scope.$on('company-fetched', updateNavigationPerUserFeatures);

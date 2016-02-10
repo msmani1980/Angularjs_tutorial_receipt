@@ -19,10 +19,10 @@ angular.module('ts5App')
         $scope.isAuthorized = true;
       }
 
-      function callback() {
+      $scope.logout = function() {
         identityAccessFactory.logout();
         $scope.$emit('logout');
-      }
+      };
 
       function showCompanyInfo() {
         $scope.isAuthorized = identityAccessFactory.isAuthorized();
@@ -32,7 +32,7 @@ angular.module('ts5App')
       $scope.settingsModel = [];
       $scope.userModel = [{
         id: 1,
-        callback: callback,
+        callback: $scope.logout,
         class: 'login-btn',
         label: 'logout'
       }];

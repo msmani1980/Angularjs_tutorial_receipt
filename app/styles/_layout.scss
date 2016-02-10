@@ -64,6 +64,10 @@
   a.navbar-brand {
     span {
       font-size: 20px;
+      display: inline-block;
+      margin-left: 10px;
+      margin-top: -4px;
+      font-weight: 200;
     }
   }
 }
