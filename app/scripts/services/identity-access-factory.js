@@ -10,12 +10,12 @@
  */
 angular.module('ts5App')
   .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companiesFactory, companyFactory, $q, lodash) {
-      function changePassword(credentials) {
+      function changePassword(credentials, sessionToken) {
         var payload = {
           username: credentials.username,
           password: CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64)
         };
-        return identityAccessService.changePassword(payload);
+        return identityAccessService.changePassword(payload, sessionToken);
 
       }
 
@@ -96,8 +96,17 @@ angular.module('ts5App')
         return !!(getSessionObject().sessionToken);
       }
 
+      function isLocationValid(locationURL) {
+        var allowedHashArray = ['login', 'change-password'];
+        var allowedURLsArray = allowedHashArray.filter(function (url) {
+          return locationURL.contains(url);
+        });
+
+        return allowedURLsArray.length > 0;
+      }
+
       function locationChangeHandler(event, next) {
-        if (!isAuthorized() && (!next.contains('login') && !next.contains('forgot'))) {
+        if (!isAuthorized() && (!isLocationValid(next) && !next.contains('forgot'))) {
           event.preventDefault();
           logout();
         }
