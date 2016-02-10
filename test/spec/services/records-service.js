@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: commissionDataService', function () {
+describe('Service: recordsService', function () {
 
   beforeEach(module('ts5App'));
 
@@ -163,6 +163,18 @@ describe('Service: commissionDataService', function () {
         var expectUri = /records\/count-types/;
         httpBackend.expectGET(expectUri).respond(200, []);
         recordsService.getCountTypes().then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        httpBackend.flush();
+      });
+    });
+
+    describe('getTransactionTypes', function() {
+      it('should make GET request to API', function() {
+        var expectUri = /records\/transaction-types/;
+        httpBackend.expectGET(expectUri).respond(200, []);
+        recordsService.getTransactionTypes().then(function (response) {
           expect(response).toBeDefined();
         });
 

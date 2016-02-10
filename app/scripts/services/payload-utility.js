@@ -9,6 +9,7 @@
  */
 angular.module('ts5App')
   .service('payloadUtility', function (dateUtility) {
+    var $this = this;
 
     this.serializeDates = function(payload) {
       var formattedPayload = angular.copy(payload);
@@ -29,4 +30,18 @@ angular.module('ts5App')
       return formattedResponseFromAPI;
     };
 
+    this.serializeDate = function (value) {
+      return (value) ? dateUtility.formatDateForAPI(value) : null;
+    };
+
+    this.serializeInput = function (value) {
+      return (value === '') ? null : value;
+    };
+
+    this.sanitize = function (payload) {
+      for (var key in payload) {
+        var value = payload[key];
+        payload[key] = $this.serializeInput(value);
+      }
+    };
   });
