@@ -6,6 +6,7 @@ describe('Service: identityAccessFactory', function () {
   beforeEach(module('served/authorize-user.json'));
   beforeEach(module('served/company.json'));
   beforeEach(module('served/company-types.json'));
+  beforeEach(module('served/all-user-companies.json'));
 
   var identityAccessFactory;
   var localStorage;
@@ -15,6 +16,8 @@ describe('Service: identityAccessFactory', function () {
   var getCompanyDeferred;
   var getCompanyTypesDeferred;
   var authorizeUserDeferred;
+  var getUserCompaniesDeferred;
+  var getUserCompaniesJSON;
   var authorizeUserJSON;
   var companyResponseJSON;
   var companyTypesJSON;
@@ -22,12 +25,11 @@ describe('Service: identityAccessFactory', function () {
   var location;
   var timeout;
 
-  beforeEach(inject(function (_identityAccessFactory_, $injector, $rootScope, $location, $timeout, $q) {
-    inject(function (_servedCompany_, _servedCompanyTypes_, _servedAuthorizeUser_) {
-      companyResponseJSON = _servedCompany_;
-      companyTypesJSON = _servedCompanyTypes_;
-      authorizeUserJSON = _servedAuthorizeUser_;
-    });
+  beforeEach(inject(function ($injector, $rootScope, $location, $timeout, $q) {
+    companyResponseJSON = $injector.get('servedCompany');
+    companyTypesJSON = $injector.get('servedCompanyTypes');
+    authorizeUserJSON = $injector.get('servedAuthorizeUser');
+    getUserCompaniesJSON = $injector.get('servedAllUserCompanies');
 
     localStorage = $injector.get('$localStorage');
     identityAccessService = $injector.get('identityAccessService');
@@ -43,15 +45,20 @@ describe('Service: identityAccessFactory', function () {
     spyOn(identityAccessService, 'authorizeUser').and.returnValue(authorizeUserDeferred.promise);
 
     getCompanyDeferred = $q.defer();
-    spyOn(companiesFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
+    getCompanyDeferred.resolve(companyResponseJSON);
+    spyOn(companyFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
 
     getCompanyTypesDeferred = $q.defer();
     getCompanyTypesDeferred.resolve(companyTypesJSON);
     spyOn(companyFactory, 'getCompanyTypes').and.returnValue(getCompanyTypesDeferred.promise);
 
+    getUserCompaniesDeferred = $q.defer();
+    getUserCompaniesDeferred.resolve(getUserCompaniesJSON);
+    spyOn(identityAccessService, 'getUserCompanies').and.returnValue(getUserCompaniesDeferred.promise);
+
     spyOn(location, 'path');
 
-    identityAccessFactory = _identityAccessFactory_;
+    identityAccessFactory = $injector.get('identityAccessFactory');
   }));
 
   it('should exist', function () {
@@ -67,21 +74,55 @@ describe('Service: identityAccessFactory', function () {
       identityAccessFactory.login(credentials);
     });
 
-    it('should set session data in localStorage', function () {
+    it('should call authorize user API', function () {
       expect(identityAccessService.authorizeUser).toHaveBeenCalled();
+    });
+
+    it('should call authorize user API', function () {
+      scope.$digest();
+      expect(identityAccessFactory.getSessionObject().sessionToken).toBeDefined();
     });
 
   });
 
-  //describe('location change', function () {
-  //
-  //  it('should redirect to login when not authenticated and location changes', function () {
-  //    scope.$broadcast('$locationChangeStart', 'fakeRoute');
-  //    timeout.flush();
-  //    expect(location.path).toHaveBeenCalledWith('/login');
-  //  });
-  //
-  //});
+  describe('required API to get company data', function(){
+    beforeEach(function(){
+      var credentials = {
+        username: 'username',
+        password: 'password'
+      };
+      identityAccessFactory.login(credentials);
+      scope.$digest();
+    });
+
+    it('should call getCompany API', function () {
+      expect(companyFactory.getCompany).toHaveBeenCalled();
+    });
+
+    it('should call getCompanyTypes API', function () {
+      expect(companyFactory.getCompanyTypes).toHaveBeenCalled();
+    });
+
+    it('should call getUserCompanies API', function () {
+      expect(identityAccessService.getUserCompanies).toHaveBeenCalled();
+    });
+
+    it('should have user company list on the session object', function () {
+      scope.$digest();
+      expect(identityAccessFactory.getSessionObject().userCompanies.length).toBeGreaterThan(0);
+    });
+
+  });
+
+  describe('location change', function () {
+
+    it('should redirect to login when not authenticated and location changes', function () {
+      scope.$broadcast('$locationChangeStart', 'fakeRoute');
+      timeout.flush();
+      expect(location.path).toHaveBeenCalledWith('/login');
+    });
+
+  });
 
   describe('LocalStorage sessionObject', function () {
     beforeEach(function () {

@@ -14,7 +14,7 @@ angular.module('ts5App')
     var sendEmailURL = ENV.apiUrl + '/IdentityAccess/sendemail/email/';
     var logoutURL = ENV.apiUrl + '/IdentityAccess/logout';
     var featuresInRoleURL = ENV.apiUrl + '/IdentityAccess/featuresInRole';
-    var userCompaniesURL = ENV.apiUrl + 'IdentityAccess/company/alluserscompanies';
+    var userCompaniesURL = ENV.apiUrl + '/IdentityAccess/company/alluserscompanies';
 
     var authParameters = {};
     var chpwdParameters = {};
@@ -54,7 +54,7 @@ angular.module('ts5App')
           'Content-Type': 'application/json'
         }
       },
-      allusersCompanies: {
+      getUserCompanies: {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'

@@ -9,7 +9,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companiesFactory, companyFactory, $q, lodash) {
+  .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash) {
       function changePassword(credentials, sessionToken) {
         var payload = {
           username: credentials.username,
@@ -69,10 +69,12 @@ angular.module('ts5App')
           username: dataFromAPI.userName,
           companyId: dataFromAPI.companyId,
           companyData: dataFromAPI.companyData,
+          userCompanies: dataFromAPI.userCompanies,
           sessionToken: dataFromAPI.currentSession.sessionToken,
           timeout: 60000
         };
         $localStorage.sessionObject = CryptoJS.AES.encrypt(JSON.stringify(sessionObject), 'aes@56').toString();
+        setSessionHeaders();
       }
 
       function broadcastSuccess(companyData) {
@@ -87,7 +89,6 @@ angular.module('ts5App')
 
       function setSessionData(dataFromAPI) {
         encryptDataInLS(dataFromAPI);
-        setSessionHeaders();
         broadcastSuccess(dataFromAPI.companyData);
         $location.path('/');
       }
@@ -115,23 +116,27 @@ angular.module('ts5App')
       function getCompanyResponseHandler(dataFromAPI, rawSessionObject) {
         var sessionObject = angular.copy(rawSessionObject);
         sessionObject.companyData = angular.copy(dataFromAPI[0]);
-        sessionObject.companyData.companyTypeName = lodash.findWhere(dataFromAPI[1], { id: sessionObject.companyData.companyTypeId }).name;
+        sessionObject.userCompanies = angular.copy(dataFromAPI[2].companies);
+        sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(dataFromAPI[1], { id: sessionObject.companyData.companyTypeId }).name);
         setSessionData(sessionObject);
       }
 
       function getCompanyData(rawSessionData) {
         var companyDataPromiseArray = [
-          companiesFactory.getCompany(rawSessionData.companyId),
-          companyFactory.getCompanyTypes()
+          companyFactory.getCompany(rawSessionData.companyId),
+          companyFactory.getCompanyTypes(),
+          identityAccessService.getUserCompanies()
         ];
 
         $q.all(companyDataPromiseArray).then(function (dataFromApi) {
           getCompanyResponseHandler(dataFromApi, rawSessionData);
         }, logout);
+
       }
 
       function authorizeUserResponseHandler(sessionDataFromAPI) {
         var rawSessionData = angular.copy(sessionDataFromAPI);
+        encryptDataInLS(rawSessionData);
         getCompanyData(rawSessionData);
       }
 
