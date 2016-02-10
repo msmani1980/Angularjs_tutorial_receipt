@@ -498,11 +498,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
 
-      if ($this.isActionState('redispatch') && !$this.isStepOneFromStepTwo(data)) {
+      if ($this.isActionState('redispatch')) {
         $scope.formData.scheduleDate = dateUtility.nowFormatted();
         delete $scope.formData.scheduleNumber;
         delete $scope.formData.carrierId;
-        return;
       }
     };
 
