@@ -80,7 +80,7 @@ describe('Service: identityAccessService', function () {
 
   describe('userCompanies', function () {
     it('should make GET request to API', function () {
-      var expectedURL = /IdentityAccess\/alluserscompanies/;
+      var expectedURL = /IdentityAccess\/company\/alluserscompanies/;
       httpBackend.expectGET(expectedURL).respond(200, {});
       identityAccessService.getUserCompanies().then(function (response) {
         expect(response).toBeDefined();
