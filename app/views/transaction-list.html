@@ -1,0 +1,273 @@
+<div class="fluid-container module-container">
+
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-4">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-8 text-right">
+
+        <div class="btn-group" dropdown ng-hide="true">
+          <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
+                  data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-cog"></i>
+            Hide / Show Columns
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('scheduleNumber')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.scheduleNumber">
+                Schedule Number</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('scheduleDate')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.scheduleDate">
+                Schedule Date</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('storeNumber')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.storeNumber">
+                Store Number</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('storeDate')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.storeDate">
+                Store Date</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('storeInstance')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.storeInstance">
+                Store Instance</a>
+            </li>
+          </ul>
+        </div>
+
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form name="promotionSearchForm" ng-submit="searchTransactions()">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="transaction-type">Transaction Type</label>
+                <select ng-model="search.transactionType" class="form-control" id="transaction-type">
+                  <option value="">Please select</option>
+                  <option value="{{transactionType.name}}" ng-repeat="transactionType in transactionTypes | orderBy: 'name'">{{ getOverriddenTransactionTypeName(transactionType.name) }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="transaction-id">Transaction Id</label>
+                <input ng-model="search.transactionId" type="text" class="form-control" id="transaction-id" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="employee-id">Employee Id</label>
+                <input ng-model="search.employeeId" type="text" class="form-control" id="employee-id" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="currency">Currency</label>
+                <select ng-model="search.currencies" class="form-control" id="currency">
+                  <option value="">Please select</option>
+                  <option value="{{currency.id}}" ng-repeat="currency in companyCurrencies">{{ currency.code }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="amount">Amount</label>
+                <input ng-model="search.amount" type="text" class="form-control" id="amount" />
+              </div>
+            </div>
+
+            <date-picker
+              class="col-xs-12 col-md-4 col-sm-12"
+              element-class="col-xs-6 col-sm-6"
+              start-date-model="search.transactionStartDate"
+              end-date-model="search.transactionEndDate"
+              label-from="Effective From *"
+              label-to="Effective To *"
+              is-search-field="true">
+            </date-picker>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="schedule-number">Schedule Number</label>
+                <input ng-model="search.scheduleNumber" type="text" class="form-control" id="schedule-number" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="departure-station">Departure Station</label>
+                <select ng-model="search.departureStationCodes" class="form-control" id="departure-station">
+                  <option value="">Please select</option>
+                  <option value="{{departureStation.code}}" ng-repeat="departureStation in companyStations | orderBy: 'code'">{{ departureStation.code }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="arrival-station">Arrival Station</label>
+                <select ng-model="search.arrivalStationCodes" class="form-control" id="arrival-station">
+                  <option value="">Please select</option>
+                  <option value="{{arrivalStation.code}}" ng-repeat="arrivalStation in companyStations | orderBy: 'code'">{{ arrivalStation.code }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="payment-method">Payment Method</label>
+
+                <ui-select id="payment-method" multiple ng-model="search.paymentMethods" theme="bootstrap">
+                  <ui-select-match placeholder="Select Payment Methods..">{{ $item }}</ui-select-match>
+                  <ui-select-choices repeat="paymentMethod in paymentMethods | filter: $select.search">
+                    {{ paymentMethod }}
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="store-number">Store Number</label>
+                <input ng-model="search.storeNumber" type="text" class="form-control" id="store-number" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="store-instance-number">Store Instance Numb.</label>
+                <input ng-model="search.storeInstanceId" type="text" class="form-control" id="store-instance-number" />
+              </div>
+            </div>
+          </div>
+          <div class="row" ng-show="isCreditCardPaymentSelected">
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="card-holder-name">Card Holder Name.</label>
+                <input ng-model="search.cardHolderName" type="text" class="form-control" id="card-holder-name" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="card-type">Card Type</label>
+                <select ng-model="search.cardTypes" class="form-control" id="card-type">
+                  <option value="">Please select</option>
+                  <option value="{{cardType.ccTypeName}}" ng-repeat="cardType in creditCardTypes">{{ cardType.ccTypeName }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="credit-card">Credit card (Last Four)</label>
+                <input ng-model="search.lastFour" type="text" class="form-control" id="credit-card" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="cc-trans-status">CC Trans. Status</label>
+                <select ng-model="search.ccTransactionStatuses" class="form-control" id="cc-trans-status">
+                  <option value="">Please select</option>
+                  <option value="{{creditCardTransactionStatus}}" ng-repeat="creditCardTransactionStatus in creditCardTransactionStatuses">{{ creditCardTransactionStatus }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="cc-auth-status">CC Auth. Status</label>
+                <select ng-model="search.ccAuthorizationStatuses" class="form-control" id="cc-auth-status">
+                  <option value="">Please select</option>
+                  <option value="{{creditCardAuthStatus}}" ng-repeat="creditCardAuthStatus in creditCardAuthStatuses">{{ creditCardAuthStatus }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearch()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+  <table infinite-scroll="getTransactions()" class="table table-responsive table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>Transaction Date</th>
+      <th>Transaction ID</th>
+      <th>Transaction Type</th>
+      <th>Payment Method</th>
+      <th>Card Type</th>
+      <th>Card Number</th>
+      <th>CC Processed Date</th>
+      <th>CC Transaction Status</th>
+      <th>CC Authorization Status</th>
+      <th>Amount</th>
+      <th ng-show="displayColumns.scheduleNumber">Schedule Number</th>
+      <th ng-show="displayColumns.scheduleDate">Schedule Date</th>
+      <th ng-show="displayColumns.storeNumber">Store Number</th>
+      <th ng-show="displayColumns.storeDate">Store Date</th>
+      <th ng-show="displayColumns.storeInstance">Store Instance</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="transaction in transactions | unique:'transactionId'">
+      <td>{{ transaction.transactionDate }}</td>
+      <td>{{ transaction.transactionId }}</td>
+      <td>{{ transaction.transactionTypeName }}</td>
+      <td>{{ transaction.paymentMethod }}</td>
+      <td>{{ transaction.cardType }}</td>
+      <td>{{ transaction.lastFour }}</td>
+      <td>{{ transaction.ccProcessedDate }}</td>
+      <td>{{ transaction.ccTransactionStatus }}</td>
+      <td>{{ transaction.ccAuthorizationStatus }}</td>
+      <td>{{ transaction.totalAmount }} {{ transaction.currencyCode }}</td>
+      <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
+      <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
+      <td ng-show="displayColumns.storeNumber">{{ transaction.storeNumber }}</td>
+      <td ng-show="displayColumns.storeDate"></td>
+      <td ng-show="displayColumns.storeInstance">{{ transaction.storeInstanceId }}</td>
+      <td>
+        <button class="btn btn-info btn-xs" ng-click="showTransactionDetails(transaction)">
+          <i class="fa fa-file"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+</div>
+<dynamic-left-nav></dynamic-left-nav>
+

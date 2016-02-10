@@ -10,6 +10,7 @@ describe('Controller: ChangePasswordCtrl', function () {
   var identityAccessFactory;
   var loginDeferred;
   var changePasswordDeferred;
+  var routeParams;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
@@ -24,8 +25,12 @@ describe('Controller: ChangePasswordCtrl', function () {
 
     spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({ username: 'user' });
 
+    routeParams = {
+      sessionToken: 'fakeSessionToken'
+    };
     ChangePasswordCtrl = $controller('ChangePasswordCtrl', {
-      $scope: scope
+      $scope: scope,
+      $routeParams: routeParams
     });
   }));
 
@@ -48,7 +53,8 @@ describe('Controller: ChangePasswordCtrl', function () {
 
     describe('Authentication', function () {
       beforeEach(function () {
-        scope.passwords = {
+        scope.credentials = {
+          username: 'fakeUsername',
           currentPassword: 'fakePass',
           newPassword: 'fakePass',
           newPasswordConfirm: 'fakePass'
@@ -62,19 +68,27 @@ describe('Controller: ChangePasswordCtrl', function () {
       });
 
       it('should call login API', function () {
-        loginDeferred.resolve({});
-        expect(identityAccessFactory.login).toHaveBeenCalledWith({ username: 'user', password: 'fakePass' });
+        changePasswordDeferred.resolve({});
+        scope.$digest();
+        expect(identityAccessFactory.login).toHaveBeenCalledWith({ username: scope.credentials.username, password: scope.credentials.newPassword });
       });
 
       it('should call changePassword API', function () {
+        var expectedCredentials = jasmine.objectContaining({
+          username: scope.credentials.username,
+          password: scope.credentials.newPassword
+        });
+        var expectedHeaders = {
+          sessionToken: routeParams.sessionToken
+        };
+        changePasswordDeferred.resolve({});
         loginDeferred.resolve({});
         scope.$digest();
-        changePasswordDeferred.resolve({});
-        expect(identityAccessFactory.changePassword).toHaveBeenCalledWith({ username: 'user', password: 'fakePass' });
+        expect(identityAccessFactory.changePassword).toHaveBeenCalledWith(expectedCredentials, expectedHeaders);
       });
 
       it('should show errors in authUser bad request', function () {
-        loginDeferred.reject(400);
+        changePasswordDeferred.reject(400);
         scope.$digest();
         expect(scope.displayError).toBeTruthy();
       });
@@ -97,7 +111,7 @@ describe('Controller: ChangePasswordCtrl', function () {
             }
           ]
         };
-        loginDeferred.reject(errorMock);
+        changePasswordDeferred.reject(errorMock);
         scope.$digest();
         expect(scope.errorResponse).toEqual(errorMock);
       });

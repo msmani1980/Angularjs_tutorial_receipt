@@ -66,7 +66,12 @@ angular.module('ts5App')
       return authResource.authorizeUser(payload).$promise;
     };
 
-    var changePassword = function (payload) {
+    var changePassword = function (payload, headers) {
+      delete actions.changePassword.headers.sessionToken;
+      if (headers) {
+        actions.changePassword.headers.sessionToken = headers.sessionToken;
+      }
+
       return chpwdResource.changePassword(payload).$promise;
     };
 
