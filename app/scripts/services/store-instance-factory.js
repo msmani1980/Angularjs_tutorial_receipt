@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').service('storeInstanceFactory',
   function(storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService, menuMasterService,
-           storesService, stationsService, itemsService, companyReasonCodesService, recordsService,
+           storesService, stationsService, itemsService, companyReasonCodesService, recordsService, storeInstanceValidationService,
            featureThresholdsService, $q, lodash, dateUtility) {
 
     function getCompanyId() {
@@ -220,6 +220,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       return companyReasonCodesService.getAll(payload);
     }
 
+    function validateStoreInstance(payload) {
+      return storeInstanceValidationService.validateStoreInstance(payload);
+    }
+
     return {
       getCompanyId: getCompanyId,
       getItemsMasterList: getItemsMasterList,
@@ -247,7 +251,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreStatusList: getStoreStatusList,
       updateStoreInstanceStatus: updateStoreInstanceStatus,
       getReasonCodeList: getReasonCodeList,
-      getCountTypes: getCountTypes
+      getCountTypes: getCountTypes,
+      validateStoreInstance: validateStoreInstance
     };
 
   });
