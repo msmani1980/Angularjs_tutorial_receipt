@@ -437,7 +437,11 @@ angular.module('ts5App')
             }]
 
           }]
-        }, {
+        }];
+    };
+
+    this.getStockOwnerMenu = function() {
+      return [{
           title: 'StockOwner Item Management',
           menuItems: [{
             name: 'Manage Items',
