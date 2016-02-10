@@ -1,0 +1,52 @@
+{
+  "companies": [
+    {
+      "id": 254,
+      "type": {
+        "companyTypeName": "Retail"
+      },
+      "companyName": "asdsdaasd",
+      "companyCode": "wer"
+    },
+    {
+      "id": 403,
+      "type": {
+        "companyTypeName": "Retail"
+      },
+      "companyName": "British Airways",
+      "companyCode": "BA"
+    },
+    {
+      "id": 311,
+      "type": {
+        "companyTypeName": "Cash Handler"
+      },
+      "companyName": "risgpa",
+      "companyCode": "aiwqek"
+    },
+    {
+      "id": 266,
+      "type": {
+        "companyTypeName": "Warehouse"
+      },
+      "companyName": "rtyindw",
+      "companyCode": "uytry"
+    },
+    {
+      "id": 205,
+      "type": {
+        "companyTypeName": "Stockowner"
+      },
+      "companyName": "Stocktest",
+      "companyCode": "StockCo"
+    },
+    {
+      "id": 251,
+      "type": {
+        "companyTypeName": "Retail"
+      },
+      "companyName": "Test",
+      "companyCode": "Test"
+    }
+  ]
+}

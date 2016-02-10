@@ -78,6 +78,18 @@ describe('Service: identityAccessService', function () {
     });
   });
 
+  describe('userCompanies', function () {
+    it('should make GET request to API', function () {
+      var expectedURL = /IdentityAccess\/alluserscompanies/;
+      httpBackend.expectGET(expectedURL).respond(200, {});
+      identityAccessService.getUserCompanies().then(function (response) {
+        expect(response).toBeDefined();
+      });
+
+      httpBackend.flush();
+    });
+  });
+
   describe('logout', function () {
     it('should make PUT request to API', function () {
       var expectedURL = /IdentityAccess\/logout/;
