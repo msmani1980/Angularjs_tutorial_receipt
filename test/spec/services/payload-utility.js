@@ -25,4 +25,23 @@ describe('Service: payloadUtility', function () {
       expect(result.endDate).toBe('20160619');
     });
   });
+
+  it('serializeDate method should format dat for API', function () {
+    expect(payloadUtility.serializeDate(mockPayload.startDate)).toBe('20150619');
+  });
+
+  it('serializeInput method should assign null if value is empty string', function () {
+    expect(payloadUtility.serializeInput('')).toBe(null);
+  });
+
+  it('sanitize method should assign null to all empty string fields', function () {
+    var payload = {
+      description: '',
+      name: 'egate'
+    };
+    payloadUtility.sanitize(payload);
+
+    expect(payload.description).toBe(null);
+    expect(payload.name).toBe('egate');
+  });
 });
