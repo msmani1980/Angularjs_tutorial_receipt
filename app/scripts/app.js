@@ -306,8 +306,7 @@ angular.module('ts5App', [
     controller: 'PromotionListCtrl'
   }).when('/transactions', {
     templateUrl: 'views/transaction-list.html',
-    controller: 'TransactionListCtrl',
-    controllerAs: 'transactionList'
+    controller: 'TransactionListCtrl'
   }).otherwise({
     redirectTo: '/'
   });
