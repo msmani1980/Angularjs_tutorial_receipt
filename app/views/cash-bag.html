@@ -1,4 +1,4 @@
- <div class="fluid-container module-container">
+<div class="fluid-container module-container">
   <h1><span class="controller-state text-capitalize">{{ state }}</span> {{ ::viewName }}</h1>
 
   <div class="row row-as-table">
@@ -108,7 +108,7 @@
               <td>{{ currency.flightAmount }}</td>
               <td><input type="text"
                          custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
+                         custom-pattern="currencyWithTwoDecimalPlaceUnrounded"
                          required
                          class="form-control"
                          ng-model="currency.paperAmountManual"
@@ -116,7 +116,7 @@
                          ng-readonly="readOnly"></td>
               <td><input type="text"
                          custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
+                         custom-pattern="currencyWithTwoDecimalPlaceUnrounded"
                          required
                          class="form-control"
                          ng-model="currency.coinAmountManual"
