@@ -491,6 +491,20 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return null;
     };
 
+    this.setStoreInstanceConditionals = function(data) {
+      if ($this.isStepOneFromStepTwo(data)) {
+        $scope.stepOneFromStepTwo = true;
+        $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
+        return;
+      }
+
+      if ($this.isActionState('redispatch')) {
+        $scope.formData.scheduleDate = dateUtility.nowFormatted();
+        delete $scope.formData.scheduleNumber;
+        delete $scope.formData.carrierId;
+      }
+    };
+
     this.setStoreInstance = function(apiData) {
       if (angular.isObject(apiData)) {
         var data = angular.copy(apiData);
@@ -504,10 +518,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           cateringStationId: $this.setCateringStationId(data),
           storeNumber: $this.setStoreNumber(data)
         };
-        if ($this.isStepOneFromStepTwo(data)) {
-          $scope.stepOneFromStepTwo = true;
-          $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
-        }
+        $this.setStoreInstanceConditionals(data);
       }
 
       var promises = $this.makeInitPromises();

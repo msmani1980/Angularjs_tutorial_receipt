@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "SALE"
+  },
+  {
+    "id": 2,
+    "name": "VOIDED"
+  },
+  {
+    "id": 3,
+    "name": "CLEARED"
+  },
+  {
+    "id": 4,
+    "name": "TOPUP"
+  },
+  {
+    "id": 5,
+    "name": "TRANSFER"
+  },
+  {
+    "id": 6,
+    "name": "REMOVE"
+  },
+  {
+    "id": 7,
+    "name": "REFUND"
+  },
+  {
+    "id": 8,
+    "name": "REFUNDNOCHANGE"
+  },
+  {
+    "id": 9,
+    "name": "DAMAGED"
+  },
+  {
+    "id": 10,
+    "name": "STOCKOUT"
+  },
+  {
+    "id": 11,
+    "name": "CREWMEAL"
+  },
+  {
+    "id": 12,
+    "name": "DEFECTIVE"
+  },
+  {
+    "id": 13,
+    "name": "REFUNDDAMAGED"
+  },
+  {
+    "id": 14,
+    "name": "REFUNDDEFECTIVE"
+  },
+  {
+    "id": 15,
+    "name": "PREPACK"
+  },
+  {
+    "id": 16,
+    "name": "EmployeePurchase"
+  }
+]

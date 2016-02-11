@@ -4,7 +4,6 @@
 
 .menu-dropdown {
   padding: 10px 15px;
-  line-height: 20px;
   color: #FFF;
   display: inline-block;
 
@@ -31,5 +30,17 @@
 @media (min-width: 768px) {
   .menu-dropdown-title {
     display: none;
+  }
+}
+
+.navbar-ts5 .navbar-nav {
+  & > li > a {
+    padding-top: 17px;
+    color: #FFF;
+    background: transparent;
+    border: none;
+    &:hover {
+      color: #7CC143;
+    }
   }
 }

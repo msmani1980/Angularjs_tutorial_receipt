@@ -1725,4 +1725,33 @@ describe('Store Instance Create Controller', function() {
 
   });
 
+  describe('setStoreInstanceConditionals during redispatch', function() {
+
+    beforeEach(function() {
+      storeDetailsJSON.scheduleDate = '20150902';
+      initController('redispatch', true);
+      resolveAllDependencies();
+      spyOn(StoreInstanceCreateCtrl, 'setStoreInstanceConditionals').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
+      mockLoadStoreInstance();
+    });
+
+    it('should call setStoreInstanceConditionals', function() {
+      expect(StoreInstanceCreateCtrl.setStoreInstanceConditionals).toHaveBeenCalled();
+    });
+
+    it('should not have a scheduleNumber set', function() {
+      expect($scope.formData.scheduleNumber).toBeUndefined();
+    });
+
+    it('should not have a carrierId set', function() {
+      expect($scope.formData.carrierId).toBeUndefined();
+    });
+
+    it('should set the scheduleDate to todays date', function() {
+      expect($scope.formData.scheduleDate).toEqual(dateUtility.nowFormatted());
+    });
+
+  });
+
 });

@@ -7,7 +7,7 @@
  * # inputField
  */
 angular.module('ts5App')
-  .directive('customValidity', function () {
+  .directive('customValidity', function() {
     var patternsJSON = {
       word: [/^[\w\s]+$/, 'Error message for word'],
       bit: [/^(0|1)$/, 'Error message for bit'],
@@ -17,8 +17,8 @@ angular.module('ts5App')
       alpha: [/^[a-zA-z]+$/, 'Error message for alpha'],
       alphanumeric: [/^[a-zA-Z0-9]+$/, 'Error message for alphanumeric'],
       alphanumericSpaces: [/^[a-zA-Z0-9-\s]+$/, 'Error message for alphanumericSpaces'],
-      password: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,8}$/,
-        'Password requires one lower case, one upper case, one digit, 6-13 length, and no spaces'
+      password: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{6,15}$/,
+        'Password requires one lower case, one upper case, one digit, 6-15 length, and no spaces'
       ],
       alphanumericUpToTenChars: [/^[a-zA-Z0-9]{1,10}$/,
         'Must be 1 to 10 characters long, number and letters only. Spaces are not allowed.'
@@ -39,6 +39,7 @@ angular.module('ts5App')
       currencyWithFourDecimalPlace: [/^\d+\.\d{4}$/, 'This field should use format 0.0000', '%.4f'],
       currencyWithThreeDecimalPlace: [/^\d+\.?\d{0,3}$/, 'This field should use format 0.000', '%.3f'],
       currencyWithTwoDecimalPlace: [/^\d+\.\d{2}$/, 'This field should use format 0.00', '%.2f'],
+      currencyWithTwoDecimalPlaceUnrounded: [/^\d+\.\d{2}$/, 'This field should use format 0.00', '%.2f', '2'],
       price: [/^\$?\s?[0-9\,]+(\.\d{0,4})?$/, 'Error message for price'],
       url: [/(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/,
         'Error for URL'
@@ -55,14 +56,14 @@ angular.module('ts5App')
       require: '^ngModel',
       scope: true,
       transclude: true,
-      link: function (scope, element, attrs, ngModel) {
+      link: function(scope, element, attrs, ngModel) {
         if (!ngModel) {
           return;
         }
 
         var regexObj = patternsJSON[attrs.customPattern];
 
-        ngModel.$validators.pattern = function (value) {
+        ngModel.$validators.pattern = function(value) {
           if (angular.isUndefined(value)) {
             return true;
           }
@@ -75,7 +76,7 @@ angular.module('ts5App')
           required: 'Please fill out this field.'
         };
 
-        var validate = function () {
+        var validate = function() {
           var errorArray = Object.keys(ngModel.$error);
           var errorMessage = '';
           if (errorArray.length > 0) {
@@ -85,9 +86,24 @@ angular.module('ts5App')
           element[0].setCustomValidity(errorMessage);
         };
 
-        var formatField = function () {
+        var toFixed = function(number, decimals) {
+          decimals = decimals || 0;
+          decimals = Math.pow(10, decimals);
+          return Math.floor(number * decimals) / decimals;
+        };
+
+        var formatFieldConditional = function(regexObj) {
+          var value = element[0].value;
+          if (angular.isDefined(regexObj[3])) {
+            value = toFixed(value, regexObj[3]);
+          }
+
+          return sprintf(regexObj[2], value);
+        };
+
+        var formatField = function() {
           if (ngModel.$viewValue && regexObj[2]) {
-            var formattedValue = sprintf(regexObj[2], element[0].value);
+            var formattedValue = formatFieldConditional(regexObj);
             ngModel.$setViewValue(formattedValue);
             ngModel.$render();
           }
