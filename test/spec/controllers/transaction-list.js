@@ -120,15 +120,6 @@ describe('Controller: TransactionListCtrl', function () {
     expect(scope.displayColumns.storeInstance).toBe(true);
   });
 
-  describe('getOverriddenTransactionTypeName will', function () {
-    it('return overridden name if overridden name is defined', function () {
-      expect(scope.getOverriddenTransactionTypeName('CLEARED')).toBe('Cleared');
-    });
-    it('return default name if overridden name is not defined', function () {
-      expect(scope.getOverriddenTransactionTypeName('UNKNOWN')).toBe('UNKNOWN');
-    });
-  });
-
   describe('getTransactions will', function () {
     it('call getTransactionList if offset is not greater than count', function () {
       scope.getTransactions();
