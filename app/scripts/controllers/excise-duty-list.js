@@ -28,85 +28,12 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
-    $scope.canEdit = function (exciseDuty) {
-      return dateUtility.isAfterToday(exciseDuty.endDate);
-    };
-
-    $scope.canDelete = function (exciseDuty) {
-      return dateUtility.isAfterToday(exciseDuty.startDate);
-    };
-
-    $scope.shouldShowSearchPrompt = function () {
-      return !isPanelOpen('#create-collapse') && (!$scope.exciseDutyList);
-    };
-
-    $scope.shouldShowCreatePrompt = function () {
-      return isPanelOpen('#create-collapse') && (!$scope.exciseDutyList || $scope.exciseDutyList.length <= 0);
-    };
-
-    $scope.shouldShowNoRecordsFoundPrompt = function () {
-      return !isPanelOpen('#create-collapse') && (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $scope.exciseDutyList.length <= 0);
-    };
-
-    $scope.shouldShowLoadingAlert = function () {
-      return (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $this.meta.offset < $this.meta.count);
-
-    };
-
-    $scope.clearSearchForm = function () {
-      $scope.search = null;
-      $scope.exciseDutyList = null;
-      initLazyLoadingMeta();
-    };
-
-    $scope.clearCreateForm = function (shouldClearAll) {
-      var currentCountry = $scope.newRecord.country;
-      $scope.newRecord = {
-        alcoholic: false,
-        country: (shouldClearAll) ? null : currentCountry
-      };
-    };
-
-    $scope.searchExciseData = function () {
-      initLazyLoadingMeta();
-      $scope.exciseDutyList = null;
-      $scope.getExciseDutyList();
-    };
-
-    function reloadAfterAPISuccess() {
+    function showErrors(dataFromAPI) {
       hideLoadingModal();
-      $scope.searchExciseData();
+      console.log($scope.exciseDutyCreateForm);
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
     }
-
-    $scope.removeRecord = function (record) {
-      showLoadingModal('Deleting Record');
-      exciseDutyFactory.deleteExciseDuty(record.id).then(reloadAfterAPISuccess);
-    };
-
-    $scope.saveEdit = function () {
-      showLoadingModal('Editing Record');
-      var payload = formatRecordForAPI($scope.recordToEdit);
-      exciseDutyFactory.updateExciseDuty($scope.recordToEdit.id, payload).then(function () {
-        $scope.cancelEdit();
-        reloadAfterAPISuccess();
-      });
-    };
-
-    $scope.cancelEdit = function () {
-      $scope.inEditMode = false;
-      $scope.recordToEdit = null;
-    };
-
-    $scope.isSelectedToEdit = function (exciseDuty) {
-      return ($scope.inEditMode && exciseDuty.id === $scope.recordToEdit.id);
-    };
-
-    $scope.selectToEdit = function (exciseDuty) {
-      $scope.recordToEdit = angular.copy(exciseDuty);
-      var countryMatch = lodash.findWhere($scope.countryList, { id: exciseDuty.countryId });
-      $scope.recordToEdit.country = countryMatch;
-      $scope.inEditMode = true;
-    };
 
     function isPanelOpen(panelName) {
       return !angular.element(panelName).hasClass('collapse');
@@ -130,6 +57,21 @@ angular.module('ts5App')
       }
     }
 
+    $scope.clearSearchForm = function () {
+      $scope.search = null;
+      $scope.exciseDutyList = null;
+      initLazyLoadingMeta();
+    };
+
+    $scope.clearCreateForm = function (shouldClearAll) {
+      var currentCountry = $scope.newRecord.country;
+      $scope.displayError = false;
+      $scope.newRecord = {
+        alcoholic: false,
+        country: (shouldClearAll) ? null : currentCountry
+      };
+    };
+
     $scope.toggleSearchPanel = function () {
       togglePanel('#search-collapse');
     };
@@ -138,6 +80,98 @@ angular.module('ts5App')
       $scope.clearSearchForm();
       $scope.clearCreateForm(true);
       togglePanel('#create-collapse');
+    };
+
+    $scope.shouldShowSearchPrompt = function () {
+      return !isPanelOpen('#create-collapse') && (!$scope.exciseDutyList);
+    };
+
+    $scope.shouldShowCreatePrompt = function () {
+      return isPanelOpen('#create-collapse') && (!$scope.exciseDutyList || $scope.exciseDutyList.length <= 0);
+    };
+
+    $scope.shouldShowNoRecordsFoundPrompt = function () {
+      return !isPanelOpen('#create-collapse') && (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $scope.exciseDutyList.length <= 0);
+    };
+
+    $scope.shouldShowLoadingAlert = function () {
+      return (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $this.meta.offset < $this.meta.count);
+    };
+
+    $scope.canEdit = function (exciseDuty) {
+      return dateUtility.isAfterToday(exciseDuty.endDate);
+    };
+
+    $scope.canDelete = function (exciseDuty) {
+      return dateUtility.isAfterToday(exciseDuty.startDate);
+    };
+
+    $scope.shouldRequireCreateFields = function () {
+      return !$scope.inEditMode && isPanelOpen('#create-collapse');
+    };
+
+    $scope.searchExciseData = function () {
+      initLazyLoadingMeta();
+      $scope.exciseDutyList = null;
+      $scope.getExciseDutyList();
+    };
+
+    function reloadAfterAPISuccess() {
+      hideLoadingModal();
+      $scope.searchExciseData();
+    }
+
+    $scope.removeRecord = function (record) {
+      showLoadingModal('Deleting Record');
+      exciseDutyFactory.deleteExciseDuty(record.id).then(reloadAfterAPISuccess, showErrors);
+    };
+
+    function formatRecordForAPI(record) {
+      var oldRecordMatch = lodash.findWhere($scope.exciseDutyList, { id: record.id });
+      if ($scope.inEditMode && !record.startDate) {
+        record.startDate = oldRecordMatch.startDate;
+      }
+
+      if ($scope.inEditMode && !record.endDate) {
+        record.endDate = oldRecordMatch.endDate;
+      }
+
+      var payload = {
+        commodityCode: record.commodityCode,
+        dutyRate: parseFloat(record.dutyRate),
+        startDate: dateUtility.formatDateForAPI(record.startDate),
+        endDate: dateUtility.formatDateForAPI(record.endDate),
+        volumeUnitId: record.volumeUnitId,
+        countryId: record.country.id,
+        alcoholic: record.alcoholic
+      };
+
+      return payload;
+    }
+
+    $scope.saveEdit = function () {
+      showLoadingModal('Editing Record');
+      var payload = formatRecordForAPI($scope.recordToEdit);
+      exciseDutyFactory.updateExciseDuty($scope.recordToEdit.id, payload).then(function () {
+        $scope.cancelEdit();
+        reloadAfterAPISuccess();
+      }, showErrors);
+    };
+
+    $scope.cancelEdit = function () {
+      $scope.inEditMode = false;
+      $scope.recordToEdit = null;
+    };
+
+    $scope.isSelectedToEdit = function (exciseDuty) {
+      return ($scope.inEditMode && exciseDuty.id === $scope.recordToEdit.id);
+    };
+
+    $scope.selectToEdit = function (exciseDuty) {
+      $scope.recordToEdit = angular.copy(exciseDuty);
+      var countryMatch = lodash.findWhere($scope.countryList, { id: exciseDuty.countryId });
+      $scope.recordToEdit.country = countryMatch;
+      $scope.inEditMode = true;
     };
 
     $scope.enterEditMode = function (exciseDutyRecord) {
@@ -155,22 +189,18 @@ angular.module('ts5App')
       $scope.searchExciseData();
     }
 
-    function formatRecordForAPI(record) {
-      var payload = {
-        commodityCode: record.commodityCode,
-        dutyRate: parseFloat(record.dutyRate),
-        startDate: dateUtility.formatDateForAPI(record.startDate),
-        endDate: dateUtility.formatDateForAPI(record.endDate),
-        volumeUnitId: record.volumeUnitId,
-        countryId: record.country.id,
-        alcoholic: record.alcoholic
-      };
-      return payload;
+    function validateCreateForm() {
+      var isValid = !!$scope.newRecord.country;
+      $scope.exciseDutyCreateForm.country.$setValidity('required', isValid);
+      $scope.displayError = !isValid;
     }
 
     $scope.createExciseDuty = function () {
-      var payload = formatRecordForAPI($scope.newRecord);
-      exciseDutyFactory.createExciseDuty(payload).then(createSuccess);
+      validateCreateForm();
+      if ($scope.exciseDutyCreateForm.$valid) {
+        var payload = formatRecordForAPI($scope.newRecord);
+        exciseDutyFactory.createExciseDuty(payload).then(createSuccess, showErrors);
+      }
     };
 
     function formatSearchPayloadForAPI() {
@@ -222,7 +252,7 @@ angular.module('ts5App')
       payload.limit = $this.meta.limit;
       payload.offset = $this.meta.offset;
 
-      exciseDutyFactory.getExciseDutyList(payload).then(formatExciseDutyResponseForApp);
+      exciseDutyFactory.getExciseDutyList(payload).then(formatExciseDutyResponseForApp, showErrors);
 
       $this.meta.offset += $this.meta.limit;
     };
