@@ -8,7 +8,7 @@
 
       <div class="col-xs-8 text-right">
 
-        <div class="btn-group" dropdown ng-hide="true">
+        <div class="btn-group" dropdown>
           <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
                   data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
@@ -64,7 +64,7 @@
                 <label for="transaction-type">Transaction Type</label>
                 <select ng-model="search.transactionType" class="form-control" id="transaction-type">
                   <option value="">Please select</option>
-                  <option value="{{transactionType.name}}" ng-repeat="transactionType in transactionTypes | orderBy: 'name'">{{ getOverriddenTransactionTypeName(transactionType.name) }}</option>
+                  <option value="{{transactionType.id}}" ng-repeat="transactionType in transactionTypes">{{ transactionType.name }}</option>
                 </select>
               </div>
             </div>
@@ -142,7 +142,7 @@
                 <label for="payment-method">Payment Method</label>
 
                 <ui-select id="payment-method" multiple ng-model="search.paymentMethods" theme="bootstrap">
-                  <ui-select-match placeholder="Select Payment Methods..">{{ $item }}</ui-select-match>
+                  <ui-select-match>{{ $item }}</ui-select-match>
                   <ui-select-choices repeat="paymentMethod in paymentMethods | filter: $select.search">
                     {{ paymentMethod }}
                   </ui-select-choices>
@@ -159,7 +159,7 @@
 
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
-                <label for="store-instance-number">Store Instance Numb.</label>
+                <label for="store-instance-number">Store Instance Number</label>
                 <input ng-model="search.storeInstanceId" type="text" class="form-control" id="store-instance-number" />
               </div>
             </div>
@@ -185,7 +185,7 @@
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="credit-card">Credit card (Last Four)</label>
-                <input ng-model="search.lastFour" type="text" class="form-control" id="credit-card" />
+                <input ng-model="search.lastFour" type="text" class="form-control" id="credit-card" maxlength="4" />
               </div>
             </div>
 
@@ -257,7 +257,7 @@
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
       <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
       <td ng-show="displayColumns.storeNumber">{{ transaction.storeNumber }}</td>
-      <td ng-show="displayColumns.storeDate"></td>
+      <td ng-show="displayColumns.storeDate">{{ transaction.storeDate }}</td>
       <td ng-show="displayColumns.storeInstance">{{ transaction.storeInstanceId }}</td>
       <td>
         <button class="btn btn-info btn-xs" ng-click="showTransactionDetails(transaction)">
