@@ -61,6 +61,10 @@ angular.module('ts5App')
           return;
         }
 
+        if (!$scope.userSettingsForm.hasOwnProperty(selectedCompany.type.companyTypeName)) {
+          return;
+        }
+
         $scope.userSettingsForm[selectedCompany.type.companyTypeName].$setViewValue(selectedCompany);
         $scope.userSettingsForm[selectedCompany.type.companyTypeName].$render();
       }
