@@ -60,18 +60,21 @@ angular.module('ts5App')
 
         delete sessionObject.username;
         delete sessionObject.companyData;
+        delete sessionObject.userCompanies;
+        delete sessionObject.currentSession;
         angular.extend($http.defaults.headers.common, sessionObject);
       }
 
       function encryptDataInLS(dataFromAPI) {
         var sessionObject = {
+          timeout: 60000,
           userId: dataFromAPI.id,
           username: dataFromAPI.userName,
           companyId: dataFromAPI.companyId,
           companyData: dataFromAPI.companyData,
           userCompanies: dataFromAPI.userCompanies,
-          sessionToken: dataFromAPI.currentSession.sessionToken,
-          timeout: 60000
+          currentSession: dataFromAPI.currentSession,
+          sessionToken: dataFromAPI.currentSession.sessionToken
         };
         $localStorage.sessionObject = CryptoJS.AES.encrypt(JSON.stringify(sessionObject), 'aes@56').toString();
         setSessionHeaders();
@@ -113,8 +116,8 @@ angular.module('ts5App')
         }
       }
 
-      function getCompanyResponseHandler(dataFromAPI, rawSessionObject) {
-        var sessionObject = angular.copy(rawSessionObject);
+      function getCompanyResponseHandler(dataFromAPI, rawSessionData) {
+        var sessionObject = angular.copy(rawSessionData);
         sessionObject.companyData = angular.copy(dataFromAPI[0]);
         sessionObject.userCompanies = angular.copy(dataFromAPI[2].companies);
         sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(dataFromAPI[1], { id: sessionObject.companyData.companyTypeId }).name);
@@ -131,7 +134,13 @@ angular.module('ts5App')
         $q.all(companyDataPromiseArray).then(function (dataFromApi) {
           getCompanyResponseHandler(dataFromApi, rawSessionData);
         }, logout);
+      }
 
+      function setSelectedCompany(companyData) {
+        var rawSessionData = angular.copy(getSessionObject());
+        rawSessionData.companyId = companyData.id;
+        rawSessionData.id = rawSessionData.userId;
+        getCompanyData(rawSessionData);
       }
 
       function authorizeUserResponseHandler(sessionDataFromAPI) {
@@ -160,7 +169,8 @@ angular.module('ts5App')
         logout: logoutFromSystem,
         getSessionObject: getSessionObject,
         setSessionData: setSessionData,
-        isAuthorized: isAuthorized
+        isAuthorized: isAuthorized,
+        setSelectedCompany: setSelectedCompany
       };
     }
   );

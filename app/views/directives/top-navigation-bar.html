@@ -7,16 +7,18 @@
         <span class="fa fa-bars"></span>
       </button>
       <a class="navbar-brand" ng-href="/#/">
-        <i class="fa fa-home"></i><span class="hidden-xs"> {{companyData.companyName}}</span>
+        <i class="fa fa-home"></i><span class="hidden-xs"> {{selectedCompany.companyName}}</span>
       </a>
     </div>
-    <div ng-if="isAuthorized" id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
+    <div ng-if="isAuthorized" id="navbar-buttons" class="navbar-collapse collapse pull-right">
+      <ul class="nav navbar-nav">
         <li>
-          <menu-dropdown title="User Picker" ng-model="userModel" icon="fa fa-user"></menu-dropdown>
+          <a data-toggle="modal" data-target="#userSettingsModal" type="button" class="settings-btn btn btn-default btn-lg" aria-label="Left Align" title="User Settings">
+            <span class="fa fa-user" aria-hidden="true"></span>
+          </a>
         </li>
         <li>
-          <a ng-click="logout()" type="button" class="btn btn-default btn-lg" aria-label="Left Align" title="logout">
+          <a ng-click="logout()" type="button" class="logout-btn btn btn-default btn-lg" aria-label="Left Align" title="logout">
             <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
           </a>
         </li>
@@ -24,3 +26,39 @@
     </div>
   </div>
 </nav>
+
+<div class="modal fade" tabindex="-1" id="userSettingsModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3 class="modal-title">User Access Profile Settings</h3>
+      </div>
+      <div class="modal-body">
+        <form name="userSettingsForm">
+          <div class="form-group" ng-repeat="companyObject in userCompanies | orderBy: 'type'">
+            <label for="{{companyObject.type}}">{{companyObject.type}}</label>
+            <select class="form-control"
+                    id="{{companyObject.type}}"
+                    name="{{companyObject.type}}"
+                    ng-model="pickedCompany[companyObject.type]"
+                    ng-change="selectCompany(companyObject.type)"
+                    ng-options="company.companyName for company in companyObject.companies | orderBy: 'companyName'">
+              <option selected="selected" value>Select a {{companyObject.type}} Company</option>
+            </select>
+          </div>
+
+          <!--<div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="shouldPersistSettings"> Save these settings as my default
+            </label>
+          </div>-->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" ng-click="setSelectedCompany()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
