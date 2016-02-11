@@ -7,21 +7,18 @@ describe('Controller: LoginCtrl', function () {
 
   var LoginCtrl;
   var scope;
+  var rootScope;
   var identityAccessFactory;
   var loginDeferred;
-  var getCompanyDataDeferred;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
+    rootScope = $rootScope;
     scope = $rootScope.$new();
     identityAccessFactory = $injector.get('identityAccessFactory');
 
     loginDeferred = $q.defer();
     spyOn(identityAccessFactory, 'login').and.returnValue(loginDeferred.promise);
-
-    getCompanyDataDeferred = $q.defer();
-    spyOn(identityAccessFactory, 'getCompanyData').and.returnValue(getCompanyDataDeferred.promise);
-
     spyOn(identityAccessFactory, 'setSessionData');
 
     LoginCtrl = $controller('LoginCtrl', {
@@ -61,22 +58,8 @@ describe('Controller: LoginCtrl', function () {
         expect(identityAccessFactory.login).toHaveBeenCalledWith(scope.credentials);
       });
 
-      it('should set the session Object', function () {
-        var mockSessionJSON = { fakeSessionToken: 'someRandomTextHere' };
-        var mockCompanyJSON = { companyData: 'fakeCompany' };
-
-        loginDeferred.resolve(mockSessionJSON);
-        getCompanyDataDeferred.resolve(mockCompanyJSON);
-
-        var expectedPayload = angular.copy(mockSessionJSON);
-        expectedPayload.companyData = mockCompanyJSON;
-
-        scope.$digest();
-        expect(identityAccessFactory.setSessionData).toHaveBeenCalledWith(expectedPayload);
-      });
-
       it('should show errors in bad request', function () {
-        loginDeferred.reject(400);
+        rootScope.$broadcast('un-authorized', {});
         scope.$digest();
         expect(scope.displayError).toBeTruthy();
       });
@@ -91,7 +74,7 @@ describe('Controller: LoginCtrl', function () {
             }
           ]
         };
-        loginDeferred.reject(errorMock);
+        rootScope.$broadcast('un-authorized', { status: 400 });
         scope.$digest();
         expect(scope.errorResponse).toEqual(errorMock);
       });

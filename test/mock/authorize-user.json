@@ -1,0 +1,49 @@
+{
+  "createDate": "2015-07-17 20:12 PM GMT",
+  "createdBy": "admin",
+  "updateDate": "2015-10-27 20:38 PM GMT",
+  "updatedBy": "admin",
+  "id": 3,
+  "employeeId": 3,
+  "userName": "user",
+  "enabled": true,
+  "expired": null,
+  "email": "RCuriel@egate-solutions.com",
+  "allowStations": true,
+  "allowStoreStatus": true,
+  "preferredLanguage": null,
+  "preferredCountry": null,
+  "organizationId": 1,
+  "currentSession": {
+    "createDate": "2016-02-04 21:02 PM GMT",
+    "createdBy": "admin",
+    "updateDate": "2016-02-04 21:02 PM GMT",
+    "updatedBy": "admin",
+    "id": 2041,
+    "sessionToken": "c3f5921c68f6064ad5693116a8a8c102bfd9",
+    "ip": "207.140.219.162",
+    "validCode": 0,
+    "personId": 3
+  },
+  "stationsView": null,
+  "companiesView": [
+    {
+      "createDate": "2015-07-23 01:58 AM GMT",
+      "createdBy": "1",
+      "updateDate": "2015-12-11 21:05 PM GMT",
+      "updatedBy": null,
+      "id": 439,
+      "type": {
+        "companyTypeName": "Supplier"
+      },
+      "name": "testLOL",
+      "code": "testLOL",
+      "legalName": "testLOL",
+      "active": "t",
+      "dbaName": null,
+      "ediName": null
+    }
+  ],
+  "storeStatusesView": null,
+  "companyId": 403
+}

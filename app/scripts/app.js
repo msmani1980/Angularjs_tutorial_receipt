@@ -307,6 +307,9 @@ angular.module('ts5App', [
   }).when('/excise-duty-list', {
     templateUrl: 'views/excise-duty-list.html',
     controller: 'ExciseDutyListCtrl'
+  }).when('/transactions', {
+    templateUrl: 'views/transaction-list.html',
+    controller: 'TransactionListCtrl'
   }).otherwise({
     redirectTo: '/'
   });

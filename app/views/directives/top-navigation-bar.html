@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top ts5-logo">
+<nav class="navbar navbar-ts5 navbar-default navbar-fixed-top ts5-logo">
   <div class="container-fluid">
     <div ng-if="isAuthorized" class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
@@ -7,13 +7,18 @@
         <span class="fa fa-bars"></span>
       </button>
       <a class="navbar-brand" ng-href="/#/">
-        <i class="fa fa-home"></i><span class="hidden-xs">{{companyData.companyName}}</span>
+        <i class="fa fa-home"></i><span class="hidden-xs"> {{companyData.companyName}}</span>
       </a>
     </div>
     <div ng-if="isAuthorized" id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         <li>
           <menu-dropdown title="User Picker" ng-model="userModel" icon="fa fa-user"></menu-dropdown>
+        </li>
+        <li>
+          <a ng-click="logout()" type="button" class="btn btn-default btn-lg" aria-label="Left Align" title="logout">
+            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+          </a>
         </li>
       </ul>
     </div>

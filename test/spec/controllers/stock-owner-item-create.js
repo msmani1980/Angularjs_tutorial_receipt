@@ -584,7 +584,7 @@ describe('The Stock Owner Item Create Controller', function () {
   describe('submitting the form', function () {
     var formData, view, form;
     beforeEach(inject(function (_$templateCache_, _$compile_, _servedItemCreate_) {
-      formData = _servedItemCreate_;
+      formData = angular.copy(_servedItemCreate_);
       view = renderView(_$templateCache_, _$compile_);
       form = angular.element(view.find('form')[0]);
       $httpBackend.expectPOST(/\/api\/retail-items/).respond(200, '');
@@ -592,7 +592,6 @@ describe('The Stock Owner Item Create Controller', function () {
 
     function mockFormSubmission(formData) {
       $scope.formData = angular.copy(formData);
-      form.triggerHandler('submit');
       $scope.submitForm(formData);
       $scope.$digest();
     }
@@ -627,14 +626,6 @@ describe('The Stock Owner Item Create Controller', function () {
         $scope.form.categoryId.$setViewValue(109);
         mockFormSubmission(formData);
         expect($scope.displayError).toBeFalsy();
-      });
-
-      it('should set the displayError to true if the form is invalid', function () {
-        expect($scope.displayError).toBeFalsy();
-        $scope.form.itemTypeId.$setViewValue(null);
-        $scope.form.categoryId.$setViewValue(null);
-        mockFormSubmission(formData);
-        expect($scope.displayError).toBeTruthy();
       });
 
       //TODO: move into GTIN directive and test GTIN completely with mock
