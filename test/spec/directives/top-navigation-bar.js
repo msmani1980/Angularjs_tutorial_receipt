@@ -35,13 +35,13 @@ describe('Directive: topNavigationBar', function () {
     });
 
     it('should not have any buttons when not authorized', function () {
-      expect(element.find('button').length).toBe(0);
+      expect(element.find('.logout-btn').length).toBe(0);
     });
 
-    it('should have login menu if authorized event received', function () {
+    it('should have logout menu if authorized event received', function () {
       scope.$broadcast('authorized');
       scope.$digest();
-      expect(element.find('menu-dropdown').length).toBe(1);
+      expect(element.find('.logout-btn').length).toBe(1);
     });
 
   });
@@ -56,38 +56,38 @@ describe('Directive: topNavigationBar', function () {
     }));
 
     it('should have buttons', function () {
-      expect(element.find('button').length).toBe(1);
+      expect(element.find('.logout-btn').length).toBe(1);
     });
 
-    it('should have login menu', function () {
-      expect(element.find('menu-dropdown').length).toBe(1);
+    it('should have logout button', function () {
+      expect(element.find('.logout-btn').length).toBe(1);
     });
 
-    it('should not have login menu if isAuthorized changed', function () {
+    it('should not have logout button if isAuthorized changed', function () {
       element.scope().isAuthorized = false;
       scope.$digest();
-      expect(element.find('menu-dropdown').length).toBe(0);
+      expect(element.find('.logout-btn').length).toBe(0);
     });
 
-    it('should not have login menu if logout event received', function () {
+    it('should not have logout button if logout event received', function () {
       scope.$broadcast('logout');
       scope.$digest();
-      expect(element.find('menu-dropdown').length).toBe(0);
+      expect(element.find('.logout-btn').length).toBe(0);
     });
 
     describe('logout', function() {
       it('should have logout button', function () {
-        expect(element.find('.login-btn').length).toBe(1);
+        expect(element.find('.logout-btn').length).toBe(1);
       });
 
       it('should emit on click', function () {
         spyOn(scope, '$emit');
-        element.find('.login-btn').trigger('click');
+        element.find('.logout-btn').trigger('click');
         expect(scope.$emit).toHaveBeenCalledWith('logout');
       });
 
       it('should call logout API', function () {
-        element.find('.login-btn').trigger('click');
+        element.find('.logout-btn').trigger('click');
         expect(identityAccessFactory.logout).toHaveBeenCalled();
       });
     });
