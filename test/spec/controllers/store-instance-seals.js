@@ -506,7 +506,7 @@ describe('the Store Instance Seals controller', function () {
           canisterQty: fakeObject
         };
         StoreInstanceSealsCtrl.checkReplenishOptionalValues();
-        //expect(fakeObject.$setValidity).toHaveBeenCalledTimes(4);
+        expect(fakeObject.$setValidity).toHaveBeenCalledTimes(4);
       });
 
       it('should change validity to required', function () {
