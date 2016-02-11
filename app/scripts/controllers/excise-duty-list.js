@@ -11,11 +11,14 @@ angular.module('ts5App')
     $scope.viewName = 'Excise Duty List';
     $scope.companyGlobalCurrency = 'GBP';
     var $this = this;
-    this.meta = {
-      count: undefined,
-      limit: 100,
-      offset: 0
-    };
+
+    function initLazyLoadingMeta() {
+      $this.meta = {
+        count: undefined,
+        limit: 10,
+        offset: 0
+      };
+    }
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -26,7 +29,7 @@ angular.module('ts5App')
     }
 
     $scope.canEdit = function (exciseDuty) {
-      return dateUtility.isTodayOrEarlier(exciseDuty.startDate) && dateUtility.isAfterToday(exciseDuty.endDate);
+      return dateUtility.isAfterToday(exciseDuty.endDate);
     };
 
     $scope.canDelete = function (exciseDuty) {
@@ -45,14 +48,15 @@ angular.module('ts5App')
       return !isPanelOpen('#create-collapse') && (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $scope.exciseDutyList.length <= 0);
     };
 
+    $scope.shouldShowLoadingAlert = function () {
+      return (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $this.meta.offset < $this.meta.count);
+
+    };
+
     $scope.clearSearchForm = function () {
       $scope.search = null;
       $scope.exciseDutyList = null;
-      $this.meta = {
-        count: undefined,
-        limit: 100,
-        offset: 0
-      };
+      initLazyLoadingMeta();
     };
 
     $scope.clearCreateForm = function (shouldClearAll) {
@@ -64,24 +68,46 @@ angular.module('ts5App')
     };
 
     $scope.searchExciseData = function () {
-      $this.meta = {
-        count: undefined,
-        limit: 100,
-        offset: 0
-      };
+      initLazyLoadingMeta();
+      $scope.exciseDutyList = null;
       $scope.getExciseDutyList();
     };
 
-    function deleteSuccess() {
+    function reloadAfterAPISuccess() {
       hideLoadingModal();
       $scope.searchExciseData();
     }
 
     $scope.removeRecord = function (record) {
       showLoadingModal('Deleting Record');
-      exciseDutyFactory.deleteExciseDuty(record.id).then(deleteSuccess);
+      exciseDutyFactory.deleteExciseDuty(record.id).then(reloadAfterAPISuccess);
     };
-    
+
+    $scope.saveEdit = function () {
+      showLoadingModal('Editing Record');
+      var payload = formatRecordForAPI($scope.recordToEdit);
+      exciseDutyFactory.updateExciseDuty($scope.recordToEdit.id, payload).then(function () {
+        $scope.cancelEdit();
+        reloadAfterAPISuccess();
+      });
+    };
+
+    $scope.cancelEdit = function () {
+      $scope.inEditMode = false;
+      $scope.recordToEdit = null;
+    };
+
+    $scope.isSelectedToEdit = function (exciseDuty) {
+      return ($scope.inEditMode && exciseDuty.id === $scope.recordToEdit.id);
+    };
+
+    $scope.selectToEdit = function (exciseDuty) {
+      $scope.recordToEdit = angular.copy(exciseDuty);
+      var countryMatch = lodash.findWhere($scope.countryList, { id: exciseDuty.countryId });
+      $scope.recordToEdit.country = countryMatch;
+      $scope.inEditMode = true;
+    };
+
     function isPanelOpen(panelName) {
       return !angular.element(panelName).hasClass('collapse');
     }
@@ -114,6 +140,10 @@ angular.module('ts5App')
       togglePanel('#create-collapse');
     };
 
+    $scope.enterEditMode = function (exciseDutyRecord) {
+      $scope.recordToEdit = angular.copy(exciseDutyRecord);
+    };
+
     function createSuccess() {
       if ($scope.search && $scope.search.commodityCode) {
         $scope.search = { commodityCode: $scope.search.commodityCode + ',' + $scope.newRecord.commodityCode };
@@ -125,21 +155,21 @@ angular.module('ts5App')
       $scope.searchExciseData();
     }
 
-    function formatNewRecordForAPI() {
-      var newRecord = {
-        commodityCode: $scope.newRecord.commodityCode,
-        dutyRate: parseFloat($scope.newRecord.dutyRate),
-        startDate: dateUtility.formatDateForAPI($scope.newRecord.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.newRecord.endDate),
-        volumeUnitId: $scope.newRecord.volume,
-        countryId: $scope.newRecord.country.id,
-        alcoholic: $scope.newRecord.alcoholic
+    function formatRecordForAPI(record) {
+      var payload = {
+        commodityCode: record.commodityCode,
+        dutyRate: parseFloat(record.dutyRate),
+        startDate: dateUtility.formatDateForAPI(record.startDate),
+        endDate: dateUtility.formatDateForAPI(record.endDate),
+        volumeUnitId: record.volumeUnitId,
+        countryId: record.country.id,
+        alcoholic: record.alcoholic
       };
-      return newRecord;
+      return payload;
     }
 
     $scope.createExciseDuty = function () {
-      var payload = formatNewRecordForAPI();
+      var payload = formatRecordForAPI($scope.newRecord);
       exciseDutyFactory.createExciseDuty(payload).then(createSuccess);
     };
 
@@ -173,7 +203,7 @@ angular.module('ts5App')
         exciseDuty.volumeUnit = (angular.isDefined(volumeMatch)) ? volumeMatch.unitName : '';
       });
 
-      $scope.exciseDutyList = newExciseDutyList;
+      $scope.exciseDutyList = ($scope.exciseDutyList) ? $scope.exciseDutyList.concat(newExciseDutyList) : newExciseDutyList;
     }
 
     $scope.getExciseDutyList = function () {
@@ -184,11 +214,10 @@ angular.module('ts5App')
       var payload = formatSearchPayloadForAPI();
       lodash.assign(payload, {
         limit: $this.meta.limit,
-        offset: $this.meta.offset
+        offset: $this.meta.offset,
+        sortOn: 'countryId,commodityCode,startDate',
+        sortBy: 'ASC'
       });
-
-      //sortOn: 'countryId,commodityCode,startDate',
-      //sortBy: 'ASC'
 
       payload.limit = $this.meta.limit;
       payload.offset = $this.meta.offset;
@@ -205,11 +234,13 @@ angular.module('ts5App')
     }
 
     function init() {
-      $scope.newRecord = {
-        alcoholic: false
-      };
-      $scope.search = {};
       showLoadingModal('initializing');
+      initLazyLoadingMeta();
+      $scope.newRecord = { alcoholic: false };
+      $scope.search = null;
+      $scope.recordToEdit = null;
+      $scope.inEditMode = false;
+
       var promises = [
         exciseDutyFactory.getCountriesList(),
         exciseDutyFactory.getVolumeUnits()

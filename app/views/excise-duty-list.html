@@ -28,10 +28,10 @@
             <div class="col-xs-4">
               <label>Country *</label>
               <ui-select required="true"
-                ng-model="newRecord.country"
-                theme="bootstrap"
-                placeholder="Select Country"
-                ng-required="true">
+                         ng-model="newRecord.country"
+                         theme="bootstrap"
+                         placeholder="Select Country"
+                         ng-required="true">
                 <ui-select-match placeholder="Select a country">{{ $select.selected.countryName}}</ui-select-match>
                 <ui-select-choices repeat="country in countryList | filter: {countryName:$select.search}">
                   <div ng-bind-html="country.countryName | highlight: $select.search"></div>
@@ -93,7 +93,7 @@
                 <label>Volume *</label>
                 <select class="form-control"
                         name="country"
-                        ng-model="newRecord.volume"
+                        ng-model="newRecord.volumeUnitId"
                         ng-options="unit.id as unit.unitName for unit in volumeUnits"
                         ng-disabled="readOnly"
                         required="true">
@@ -165,7 +165,7 @@
     </div>
     <br>
 
-    <table ng-if="exciseDutyList.length > 0" infinite-scroll="getExciseDutyList()" infinite-scroll-immediate-check="false" class="table table-bordered table-hover">
+    <table ng-if="exciseDutyList.length > 0" infinite-scroll="getExciseDutyList()" infinite-scroll-immediate-check="false" class="table table-bordered table-hover table-responsive">
       <thead>
       <tr>
         <th>Country</th>
@@ -173,29 +173,108 @@
         <th>Volumetric Measure</th>
         <th>Alcoholic %</th>
         <th>Duty Rate ({{ companyGlobalCurrency }})</th>
-        <th>Start Date</th>
-        <th>End Date</th>
+        <th class="col-xs-2">Start Date</th>
+        <th class="col-xs-2">End Date</th>
         <th>Actions</th>
       </tr>
       </thead>
       <tbody>
       <tr class="ng-scope" ng-repeat="exciseDuty in exciseDutyList track by $index">
-        <td>{{ exciseDuty.countryName }}</td>
-        <td>{{ exciseDuty.commodityCode }}</td>
         <td>
-          {{ exciseDuty.volumeUnit }}
+          <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.countryName }}</span>
+          <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
+            <ui-select required="true"
+                       ng-model="recordToEdit.country"
+                       theme="bootstrap"
+                       placeholder="Select Country"
+                       ng-required="true"
+                       disabled="{{ !canDelete(exciseDuty)  }}">
+              <ui-select-match placeholder="Select a country">{{ $select.selected.countryName}}</ui-select-match>
+              <ui-select-choices repeat="country in countryList | filter: {countryName:$select.search}">
+                <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </span>
         </td>
-        <td>{{ exciseDuty.alcoholic ? 'Yes' : 'No' }}</td>
-        <td>{{ exciseDuty.dutyRate | number: 2}} %</td>
-        <td>{{ exciseDuty.startDate }}</td>
-        <td>{{ exciseDuty.endDate }}</td>
         <td>
-          <button class="btn btn-primary btn-xs" ng-click="" tabindex="0" ng-show="canEdit(exciseDuty)">
+          <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.commodityCode }}</span>
+          <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
+            <input class="form-control"
+                   ng-model="recordToEdit.commodityCode"
+                   ng-disabled="!canDelete(exciseDuty)">
+          </span>
+        </td>
+        <td>
+          <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.volumeUnit }}</span>
+          <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
+            <select class="form-control"
+                    ng-model="recordToEdit.volumeUnitId"
+                    ng-options="unit.id as unit.unitName for unit in volumeUnits"
+                    ng-disabled="!canDelete(exciseDuty)"
+                    required="true">
+              <option selected="selected" value>Select a Volumetric Unit</option>
+            </select>
+          </span>
+        </td>
+        <td>
+          <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.alcoholic ? 'Yes' : 'No' }}</span>
+          <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
+            <input ng-model="recordToEdit.alcoholic" type="checkbox">
+          </span>
+        </td>
+        <td>
+          <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.dutyRate | number: 2}}%</span>
+          <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
+            <input ng-model="recordToEdit.dutyRate"
+                   custom-validity
+                   custom-pattern="decimalWithTwoDecimalPlaces"
+                   maxlength="10"
+                   ng-disabled="!canDelete(exciseDuty)"
+                   class="form-control">
+          </span>
+        </td>
+        <td>
+          <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.startDate }}</span>
+            <date-picker-field
+              name="startDate"
+              class="form-group"
+              form="exciseDutyCreateForm"
+              ng-model="recordToEdit.startDate"
+              ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
+            </date-picker-field>
+        </td>
+        <td>
+          <span ng-hide="isSelectedToEdit(exciseDuty)">{{ exciseDuty.endDate }}</span>
+            <date-picker-field
+              name="startDate"
+              class="form-group"
+              form="exciseDutyCreateForm"
+              ng-model="recordToEdit.startDate"
+              ng-show="isSelectedToEdit(exciseDuty)">
+            </date-picker-field>
+        </td>
+        <td>
+          <button class="btn btn-success btn-xs"
+                  tabindex="0"
+                  ng-show="isSelectedToEdit(exciseDuty)"
+                  ng-click="saveEdit(exciseDuty)">
+            <i class="fa fa-check"></i>
+          </button>
+          <button class="btn btn-default btn-xs"
+                  tabindex="0"
+                  ng-show="isSelectedToEdit(exciseDuty)"
+                  ng-click="cancelEdit()">
+            <i class="fa fa-times"></i>
+          </button>
+          <button class="btn btn-primary btn-xs"
+                  tabindex="0"
+                  ng-show="canEdit(exciseDuty) && !inEditMode"
+                  ng-click="selectToEdit(exciseDuty)">
             <i class="fa fa-pencil"></i>
           </button>
           <button class="btn btn-danger btn-xs"
                   ng-click="deleteRecordDialog(exciseDuty, ['countryName', 'commodityCode', 'startDate', 'endDate'])"
-                  ng-show="canDelete(exciseDuty)"
+                  ng-show="canDelete(exciseDuty) && !inEditMode"
                   tabindex="0">
             <i class="fa fa-trash"></i>
           </button>
@@ -203,10 +282,12 @@
       </tr>
       </tbody>
     </table>
-    <p ng-if="exciseDutyList.length > 0" class="record-count small text-center">Showing {{commissionData.length}} records</p>
-    <!--<p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>-->
+
+    <p ng-if="exciseDutyList.length > 0" class="record-count small text-center">Showing {{exciseDutyList.length}} records</p>
+    <p ng-show="shouldShowLoadingAlert()" class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
     <p ng-show="shouldShowSearchPrompt()" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view records</p>
-    <p ng-show="shouldShowCreatePrompt()" class="alert alert-success text-center"><i class="fa fa-exclamation-circle"></i> New Records will appear here after they are successfully created</p>
+    <p ng-show="shouldShowCreatePrompt()" class="alert alert-success text-center"><i class="fa fa-exclamation-circle"></i> New Records will appear here after they are successfully
+      created</p>
 
     <p ng-show="shouldShowNoRecordsFoundPrompt()" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were
       found</p>
