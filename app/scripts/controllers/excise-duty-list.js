@@ -57,12 +57,6 @@ angular.module('ts5App')
       }
     }
 
-    $scope.clearSearchForm = function () {
-      $scope.search = null;
-      $scope.exciseDutyList = null;
-      initLazyLoadingMeta();
-    };
-
     $scope.clearCreateForm = function (shouldClearAll) {
       var currentCountry = $scope.newRecord.country;
       $scope.displayError = false;
@@ -70,6 +64,12 @@ angular.module('ts5App')
         alcoholic: false,
         country: (shouldClearAll) ? null : currentCountry
       };
+    };
+
+    $scope.clearSearchForm = function () {
+      $scope.search = null;
+      $scope.exciseDutyList = null;
+      initLazyLoadingMeta();
     };
 
     $scope.toggleSearchPanel = function () {
@@ -97,15 +97,7 @@ angular.module('ts5App')
     $scope.shouldShowLoadingAlert = function () {
       return (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $this.meta.offset < $this.meta.count);
     };
-
-    $scope.canEdit = function (exciseDuty) {
-      return dateUtility.isAfterToday(exciseDuty.endDate);
-    };
-
-    $scope.canDelete = function (exciseDuty) {
-      return dateUtility.isAfterToday(exciseDuty.startDate);
-    };
-
+    
     $scope.shouldRequireCreateFields = function () {
       return !$scope.inEditMode && isPanelOpen('#create-collapse');
     };
@@ -124,6 +116,10 @@ angular.module('ts5App')
     $scope.removeRecord = function (record) {
       showLoadingModal('Deleting Record');
       exciseDutyFactory.deleteExciseDuty(record.id).then(reloadAfterAPISuccess, showErrors);
+    };
+
+    $scope.canDelete = function (exciseDuty) {
+      return dateUtility.isAfterToday(exciseDuty.startDate);
     };
 
     function formatRecordForAPI(record) {
@@ -163,6 +159,10 @@ angular.module('ts5App')
       $scope.recordToEdit = null;
     };
 
+    $scope.canEdit = function (exciseDuty) {
+      return dateUtility.isAfterToday(exciseDuty.endDate);
+    };
+
     $scope.isSelectedToEdit = function (exciseDuty) {
       return ($scope.inEditMode && exciseDuty.id === $scope.recordToEdit.id);
     };
@@ -172,10 +172,6 @@ angular.module('ts5App')
       var countryMatch = lodash.findWhere($scope.countryList, { id: exciseDuty.countryId });
       $scope.recordToEdit.country = countryMatch;
       $scope.inEditMode = true;
-    };
-
-    $scope.enterEditMode = function (exciseDutyRecord) {
-      $scope.recordToEdit = angular.copy(exciseDutyRecord);
     };
 
     function createSuccess() {
