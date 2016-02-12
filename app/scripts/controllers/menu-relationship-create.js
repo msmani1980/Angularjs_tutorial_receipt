@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuRelationshipCreateCtrl', function ($scope, $location,
+  .controller('MenuRelationshipCreateCtrl', function($scope, $location,
     $routeParams, menuService, catererStationService,
     menuCatererStationsService, dateUtility, $q, ngToast) {
 
@@ -23,7 +23,7 @@ angular.module('ts5App')
     $scope.editingRelationship = false;
     $scope.displayError = false;
 
-    this.init = function () {
+    this.init = function() {
       this.checkIfViewOnly();
       if ($routeParams.id && !$scope.viewOnly) {
         this.setFormAsEdit();
@@ -36,11 +36,11 @@ angular.module('ts5App')
       }
     };
 
-    this.getRelationshipDependencies = function () {
+    this.getRelationshipDependencies = function() {
       angular.element('#loading').modal('show').find('p')
         .text('Getting catering stations...');
       var promises = this.makePromises();
-      $q.all(promises).then(function (response) {
+      $q.all(promises).then(function(response) {
         $this.setCatererStationList(response[0]);
         $this.setMenuList(response[1]);
         $this.initSelectUI();
@@ -48,19 +48,19 @@ angular.module('ts5App')
       });
     };
 
-    this.checkIfViewOnly = function () {
+    this.checkIfViewOnly = function() {
       var path = $location.path();
       if (path.search('/menu-relationship-view') !== -1) {
         $scope.viewOnly = true;
       }
     };
 
-    this.setFormAsEdit = function () {
+    this.setFormAsEdit = function() {
       $scope.editingRelationship = true;
       $scope.buttonText = 'Save';
     };
 
-    this.updateViewName = function () {
+    this.updateViewName = function() {
       var prefix = 'Viewing';
       if ($scope.editingRelationship) {
         prefix = 'Editing';
@@ -71,7 +71,7 @@ angular.module('ts5App')
         ' Catering Stations';
     };
 
-    this.generateItemQuery = function () {
+    this.generateItemQuery = function() {
       var todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
       var query = {
         startDate: todaysDate,
@@ -81,7 +81,7 @@ angular.module('ts5App')
       return query;
     };
 
-    this.makePromises = function (id) {
+    this.makePromises = function(id) {
       var query = this.generateItemQuery();
       var promises = [
         catererStationService.getCatererStationList(query),
@@ -94,11 +94,11 @@ angular.module('ts5App')
       return promises;
     };
 
-    this.getRelationship = function (id) {
+    this.getRelationship = function(id) {
       this.displayLoadingModal('We are getting Relationship ' +
         $routeParams.id);
       var promises = this.makePromises(id);
-      $q.all(promises).then(function (response) {
+      $q.all(promises).then(function(response) {
         $this.setCatererStationList(response[0]);
         $this.setMenuList(response[1]);
         $this.updateFormData(response[2]);
@@ -108,15 +108,15 @@ angular.module('ts5App')
       });
     };
 
-    this.setCatererStationList = function (apiResponse) {
+    this.setCatererStationList = function(apiResponse) {
       $scope.stationList = apiResponse.response;
     };
 
-    this.setMenuList = function (apiResponse) {
+    this.setMenuList = function(apiResponse) {
       $scope.menuList = apiResponse.menus;
     };
 
-    this.findMenuIndex = function (menuId) {
+    this.findMenuIndex = function(menuId) {
       var menuIndex = null;
       for (var key in $scope.menuList) {
         var menu = $scope.menuList[key];
@@ -129,7 +129,7 @@ angular.module('ts5App')
       return menuIndex;
     };
 
-    this.findStationIndex = function (stationId) {
+    this.findStationIndex = function(stationId) {
       var stationIndex = null;
       for (var key in $scope.stationList) {
         var station = $scope.stationList[key];
@@ -142,7 +142,7 @@ angular.module('ts5App')
       return stationIndex;
     };
 
-    this.generateSelectedOptions = function (data) {
+    this.generateSelectedOptions = function(data) {
       for (var key in $scope.formData.catererStationIds) {
         var stationId = $scope.formData.catererStationIds[key];
         var stationIndex = this.findStationIndex(stationId);
@@ -165,7 +165,7 @@ angular.module('ts5App')
       return placeholder;
     };
 
-    this.initSelectUI = function () {
+    this.initSelectUI = function() {
       var data = [];
       if (angular.isArray($scope.formData.catererStationIds)) {
         data = this.generateSelectedOptions(data);
@@ -178,14 +178,14 @@ angular.module('ts5App')
       }).select2('data', data);
     };
 
-    this.formatStationIds = function (data) {
+    this.formatStationIds = function(data) {
       for (var key in data.catererStationIds) {
         var stationId = data.catererStationIds[key];
         data.catererStationIds[key] = stationId.toString();
       }
     };
 
-    this.updateFormData = function (data) {
+    this.updateFormData = function(data) {
       data.startDate = dateUtility.formatDate(data.startDate,
         'YYYYMMDD',
         'L');
@@ -195,15 +195,15 @@ angular.module('ts5App')
       $scope.formData = data;
     };
 
-    this.displayLoadingModal = function (loadingText) {
+    this.displayLoadingModal = function(loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
     };
 
-    this.hideLoadingModal = function () {
+    this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
     };
 
-    this.showSuccessMessage = function (message) {
+    this.showSuccessMessage = function(message) {
       ngToast.create({
         className: 'success',
         dismissButton: true,
@@ -217,12 +217,12 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(apiResponse);
     };
 
-    this.updateRelationship = function (relationshipData) {
+    this.updateRelationship = function(relationshipData) {
       var $this = this;
       this.displayLoadingModal('We are updating menu relationship');
       menuCatererStationsService.updateRelationship($routeParams.id,
         relationshipData).then(
-        function (response) {
+        function(response) {
           $this.updateFormData(response);
           $this.initSelectUI();
           $this.hideLoadingModal();
@@ -230,16 +230,17 @@ angular.module('ts5App')
         }, this.errorHandler);
     };
 
-    this.createRelationship = function (relationshipData) {
+    this.createRelationship = function(relationshipData) {
       $this.displayLoadingModal('We are creating your menu relationship');
       menuCatererStationsService.createRelationship(relationshipData).then(
-        function () {
+        function() {
+          $this.hideLoadingModal();
           $this.showSuccessMessage('Relationship created!');
           $location.path('/menu-relationship-list');
         }, this.errorHandler);
     };
 
-    $scope.submitForm = function (formData) {
+    $scope.submitForm = function(formData) {
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm()) {
         var relationshipData = angular.copy(formData);
@@ -250,7 +251,7 @@ angular.module('ts5App')
       }
     };
 
-    this.formatPayloadDates = function (relationship) {
+    this.formatPayloadDates = function(relationship) {
       relationship.startDate = dateUtility.formatDate(relationship.startDate,
         'L',
         'YYYYMMDD');
@@ -258,7 +259,7 @@ angular.module('ts5App')
         'L', 'YYYYMMDD');
     };
 
-    $scope.isRelationshipActive = function () {
+    $scope.isRelationshipActive = function() {
       if ($scope.editingRelationship) {
         return dateUtility.isTodayOrEarlier($scope.formData.startDate);
       }
@@ -266,7 +267,7 @@ angular.module('ts5App')
       return false;
     };
 
-    $scope.isRelationshipInactive = function () {
+    $scope.isRelationshipInactive = function() {
       if ($scope.editingRelationship) {
         return dateUtility.isYesterdayOrEarlier($scope.formData.endDate);
       }
@@ -274,7 +275,7 @@ angular.module('ts5App')
       return false;
     };
 
-    this.validateForm = function () {
+    this.validateForm = function() {
       $scope.displayError = false;
       if (!$scope.form.$valid) {
         $scope.displayError = true;
@@ -283,7 +284,7 @@ angular.module('ts5App')
       return $scope.form.$valid;
     };
 
-    $scope.setInputValidClass = function (inputName) {
+    $scope.setInputValidClass = function(inputName) {
       if ($scope.form[inputName].$touched && $scope.form[inputName].$invalid || $scope.displayError && $scope.form[inputName].$invalid) {
         return 'has-error';
       }
@@ -295,7 +296,7 @@ angular.module('ts5App')
       return '';
     };
 
-    $scope.setStationsValidClass = function (inputName) {
+    $scope.setStationsValidClass = function(inputName) {
       if ($scope.form[inputName].$touched && $scope.form[inputName].length < 1 || $scope.displayError && $scope.form[inputName].length < 1) {
         return 'has-error';
       }
