@@ -357,15 +357,6 @@ describe('Controller: ExciseDutyListCtrl', function () {
         });
       });
     });
-
-    describe('toggle panel helpers', function () {
-
-    });
-
-    describe('show alert functions', function () {
-    });
-
-
   });
 
 });

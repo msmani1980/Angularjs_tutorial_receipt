@@ -423,6 +423,21 @@ angular.module('ts5App')
 
           }]
         }, {
+          title: 'Manage Store Number',
+          menuItems: [{
+            name: 'Store Number Create',
+            route: '/#/store-number',
+            icon: 'icon-create-company',
+            className: 'dashboard-storeNumberCreate',
+            package: 'STORENUMBER',
+            role: 'STORENUMBER',
+            permissions: [{
+              apiName: '/api/companies',
+              permissionCodes: ['C']
+            }]
+
+          }]
+        }, {
           title: 'Excise Duty',
           menuItems: [{
             name: 'Manage Excise Duty',
