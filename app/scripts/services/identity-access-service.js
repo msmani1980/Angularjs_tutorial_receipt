@@ -14,12 +14,14 @@ angular.module('ts5App')
     var sendEmailURL = ENV.apiUrl + '/IdentityAccess/sendemail/email/';
     var logoutURL = ENV.apiUrl + '/IdentityAccess/logout';
     var featuresInRoleURL = ENV.apiUrl + '/IdentityAccess/featuresInRole';
+    var userCompaniesURL = ENV.apiUrl + '/IdentityAccess/company/alluserscompanies';
 
     var authParameters = {};
     var chpwdParameters = {};
     var sendEmailParameters = {};
     var logoutParameters = {};
     var featuresInRoleParameters = {};
+    var userCompaniesParameters = {};
 
     var actions = {
       authorizeUser: {
@@ -52,6 +54,12 @@ angular.module('ts5App')
           'Content-Type': 'application/json'
         }
       },
+      getUserCompanies: {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
       logout: {
         method: 'PUT'
       }
@@ -61,6 +69,7 @@ angular.module('ts5App')
     var chpwdResource = $resource(chpwdURL, chpwdParameters, actions);
     var logoutResource = $resource(logoutURL, logoutParameters, actions);
     var featuresInRoleResource = $resource(featuresInRoleURL, featuresInRoleParameters, actions);
+    var userCompaniesResource = $resource(userCompaniesURL, userCompaniesParameters, actions);
 
     var authorizeUser = function (payload) {
       return authResource.authorizeUser(payload).$promise;
@@ -88,6 +97,10 @@ angular.module('ts5App')
       return featuresInRoleResource.featuresInRole(payload).$promise;
     };
 
+    var getUserCompanies = function (payload) {
+      return userCompaniesResource.getUserCompanies(payload).$promise;
+    };
+
     var logout = function (payload) {
       return logoutResource.logout(payload).$promise;
     };
@@ -98,6 +111,7 @@ angular.module('ts5App')
       changePassword: changePassword,
       sendEmail: sendEmail,
       featuresInRole: featuresInRole,
+      getUserCompanies: getUserCompanies,
       logout: logout
     };
   });

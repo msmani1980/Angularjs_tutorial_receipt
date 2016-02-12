@@ -6,52 +6,130 @@
       <div class="modal-content">
         <div class="modal-body">
           <div class="panel" ng-repeat="report in paymentReport">
-            <h4>{{report.reportTitle}} Report</h4>
+            <h3>{{report.reportTitle}} Report</h3>
             <div class="panel-body">
-              <p>Flight Date: {{report.scheduleDate}}</p>
+              <p><b>Flight Date:</b> {{report.scheduleDate}}</p>
 
               <div ng-repeat="sector in report.sectors">
-                <p>Flight Number: {{sector.flightNumber}} (Pax {{sector.pax}})</p>
-                <p>Sector: {{sector.departureStation}} - {{sector.arrivalStation}}</p>
+                <p><b>Flight Number:</b> {{sector.flightNumber}} (Pax {{sector.pax}})</p>
+                <p><b>Sector:</b> {{sector.departureStation}} - {{sector.arrivalStation}}</p>
               </div>
 
-              <p>Store #: {{storeInstance.storeDetails.storeNumber}}</p>
-              <p>Aircraft Registration: {{report.carrierNumber}}</p>
+              <p><b>Store:</b> {{storeInstance.storeDetails.storeNumber}}</p>
+              <p><b>Aircraft Registration:</b> {{report.carrierNumber}}</p>
+              <p><b>Cash Bag Number(s):</b> {{report.cashbagText}}</p>
 
-              <p>Cash Bag #: {{report.flightDate}}</p>
-
-              <table class="table table-bordered col-xs-12">
+              <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
-                  <td>Crew ID</td>
-                  <td>Last Name</td>
+                  <th>Crew ID</th>
+                  <th>Last Name</th>
                 </tr>
                 <tr ng-repeat="crewMember in report.crew">
                   <td>{{crewMember.CrewId}}</td>
                   <td>{{crewMember.LastName}}</td>
                 </tr>
               </table>
-              <table class="table col-xs-12">
-                <tr>
+
+              <h5>Expected Cash</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Currency Type</th>
+                  <th>Currency Value</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="cash in report.cash">
+                  <td>{{cash.currencyCode}}</td>
+                  <td>{{cash.total}}</td>
+                  <td>{{cash.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.cash.length">
+                  <td>No expected cash added</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
                   <td>Expected Cash Total</td>
+                  <td></td>
                   <td>{{report.cashTotal}}</td>
                 </tr>
-                <tr>
-                  <td>Card Total</td>
+              </table>
+
+              <h5>Expected Credit</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Card Type</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="credit in report.credit">
+                  <td>{{credit.cardType}}</td>
+                  <td>{{credit.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.credit.length">
+                  <td>No expected credit added</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Expected Credit Total</td>
                   <td>{{report.creditTotal}}</td>
                 </tr>
-                <tr>
-                  <td>Voucher Total</td>
+              </table>
+
+              <h5>Voucher Total</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Voucher Currency</th>
+                  <th>Currency Value</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="voucher in report.voucher">
+                  <td>{{voucher.currencyCode}}</td>
+                  <td>{{voucher.total}}</td>
+                  <td>{{voucher.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.voucher.length">
+                  <td>No Voucher added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Expected Voucher Total</td>
+                  <td></td>
                   <td>{{report.voucherTotal}}</td>
                 </tr>
-                <tr>
-                  <td>Complimentary Total</td>
-                  <td>{{report.compTotal}}</td>
+              </table>
+
+              <h5>Complimentary Total</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Currency Type</th>
+                  <th>Comp. Currency</th>
+                  <th>GBP Value</th>
                 </tr>
-                <tr>
+                <tr ng-repeat="complimentary in report.comp">
+                  <td>{{complimentary.currencyCode}}</td>
+                  <td>{{complimentary.total}}</td>
+                  <td>{{complimentary.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.complimentary.length">
+                  <td>No Complimentary added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Comp. Total</td>
+                  <td></td>
+                  <td>{{complimentary.compTotal ? complimentary.compTotal : '0.00'}}</td>
+                </tr>
+              </table>
+
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
                   <td>Expected Total</td>
                   <td>{{report.total}}</td>
                 </tr>
               </table>
+
+              <h4>{{report.companyName}}</h4>
+
             </div>
           </div>
         </div>
