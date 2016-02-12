@@ -97,7 +97,7 @@ angular.module('ts5App')
     $scope.shouldShowLoadingAlert = function () {
       return (angular.isDefined($scope.exciseDutyList) && $scope.exciseDutyList !== null && $this.meta.offset < $this.meta.count);
     };
-    
+
     $scope.shouldRequireCreateFields = function () {
       return !$scope.inEditMode && isPanelOpen('#create-collapse');
     };
