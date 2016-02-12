@@ -9,7 +9,8 @@ describe('Controller: StockTakeCtrl', function() {
     'served/stock-management-dashboard.json',
     'served/master-item-list.json',
     'served/master-item.json',
-    'served/item-types.json'
+    'served/item-types.json',
+    'served/characteristics.json'
   ));
 
   var StockTakeCtrl;
@@ -22,13 +23,14 @@ describe('Controller: StockTakeCtrl', function() {
   var getMasterItemDeferred;
   var getItemsMasterListDeferred;
   var getItemTypesDeferred;
+  var getCharacteristicsDeferred;
   var saveDeferred;
   var routeParams;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, $filter, lodash,
     _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedMasterItemList_,
-    _servedMasterItem_, _servedItemTypes_) {
+    _servedMasterItem_, _servedItemTypes_, _servedCharacteristics_) {
     scope = $rootScope.$new();
     location = $location;
     stockTakeFactory = $injector.get('stockTakeFactory');
@@ -58,7 +60,12 @@ describe('Controller: StockTakeCtrl', function() {
 
     getItemTypesDeferred = $q.defer();
     getItemTypesDeferred.resolve(_servedItemTypes_);
+
+    getCharacteristicsDeferred = $q.defer();
+    getCharacteristicsDeferred.resolve(_servedCharacteristics_);
+
     spyOn(stockTakeFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
+    spyOn(stockTakeFactory, 'getCharacteristics').and.returnValue(getCharacteristicsDeferred.promise);
     spyOn(stockTakeFactory, 'getItemsMasterList').and.returnValue(getItemsMasterListDeferred.promise);
     spyOn(stockTakeFactory, 'getMasterItem').and.returnValue(getMasterItemDeferred.promise);
     spyOn(stockTakeFactory, 'getCompanyId').and.returnValue(403);

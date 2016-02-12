@@ -170,7 +170,7 @@ angular.module('ts5App')
     }
 
     function getItemTypes() {
-      if (!$scope.masterItems) {
+      if (!$scope.itemTypes) {
         displayLoadingModal();
         stockTakeFactory.getItemTypes().then(setItemTypes);
       }
@@ -187,13 +187,37 @@ angular.module('ts5App')
       }
     }
 
+    function setCharacteristics(dataFromAPI) {
+      $scope.characteristics = dataFromAPI;
+    }
+
+    function getCharacteristics() {
+      if (!$scope.characteristics) {
+        displayLoadingModal();
+        stockTakeFactory.getCharacteristics().then(setCharacteristics);
+      }
+
+      return false;
+    }
+
+    function findInventoryInCharacteristics() {
+      getCharacteristics();
+      if (angular.isDefined($scope.characteristics)) {
+        return lodash.findWhere($scope.characteristics, {
+          name: 'Inventory'
+        });
+      }
+    }
+
     function getItemsListByCompanyId() {
       var companyId = stockTakeFactory.getCompanyId();
       var regularItemTypeObj = regularItemType();
+      var inventoryCharacteristicObj = findInventoryInCharacteristics();
       if (angular.isNumber(companyId) && angular.isDefined(regularItemTypeObj)) {
         var payload = {
           companyId: companyId,
-          itemTypeId: regularItemTypeObj.id
+          itemTypeId: regularItemTypeObj.id,
+          characteristicId: inventoryCharacteristicObj.id
         };
         stockTakeFactory.getItemsMasterList(payload).then(function(response) {
           if (angular.isObject(response)) {

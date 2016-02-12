@@ -65,6 +65,10 @@ angular.module('ts5App')
       return recordsService.getItemTypes();
     }
 
+    function getCharacteristics() {
+      return recordsService.getCharacteristics();
+    }
+
     return {
       getCatererStationList: getCatererStationList,
       getItemsByCateringStationId: getItemsByCateringStationId,
@@ -78,7 +82,8 @@ angular.module('ts5App')
       getCompanyId: getCompanyId,
       getItemsMasterList: getItemsMasterList,
       getMasterItem: getMasterItem,
-      getItemTypes: getItemTypes
+      getItemTypes: getItemTypes,
+      getCharacteristics: getCharacteristics
     };
 
   });
