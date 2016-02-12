@@ -31,12 +31,12 @@ describe('Directive: deleteRecordDialog', function () {
     });
 
     it('should tell the user the item was saved', function () {
-      expect(element.find('.modal-body h2').text()).toEqual(
+      expect(element.find('.modal-body h3').text()).toEqual(
         ' Are you sure you want to delete this record?');
     });
 
     it('should contain an icon', function () {
-      expect(element.find('.modal-body h2 span').hasClass(
+      expect(element.find('.modal-body h3 span').hasClass(
         'fa-exclamation-triangle')).toBeTruthy();
     });
 
