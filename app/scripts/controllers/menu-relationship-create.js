@@ -285,8 +285,7 @@ angular.module('ts5App')
     };
 
     $scope.setInputValidClass = function(inputName) {
-      if ($scope.form[inputName].$touched && $scope.form[inputName].$invalid || $scope.displayError && $scope.form[
-          inputName].$invalid) {
+      if ($scope.form[inputName].$touched && $scope.form[inputName].$invalid || $scope.displayError && $scope.form[inputName].$invalid) {
         return 'has-error';
       }
 
@@ -298,8 +297,7 @@ angular.module('ts5App')
     };
 
     $scope.setStationsValidClass = function(inputName) {
-      if ($scope.form[inputName].$touched && $scope.form[inputName].length < 1 || $scope.displayError && $scope.form[
-          inputName].length < 1) {
+      if ($scope.form[inputName].$touched && $scope.form[inputName].length < 1 || $scope.displayError && $scope.form[inputName].length < 1) {
         return 'has-error';
       }
 
