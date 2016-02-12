@@ -165,11 +165,35 @@ angular.module('ts5App')
       }
     }
 
+    function setItemTypes(dataFromAPI) {
+      $scope.itemTypes = dataFromAPI;
+    }
+
+    function getItemTypes() {
+      if (!$scope.masterItems) {
+        displayLoadingModal();
+        stockTakeFactory.getItemTypes().then(setItemTypes);
+      }
+
+      return false;
+    }
+
+    function regularItemType() {
+      getItemTypes();
+      if (angular.isDefined($scope.itemTypes)) {
+        return lodash.findWhere($scope.itemTypes, {
+          name: 'Regular'
+        });
+      }
+    }
+
     function getItemsListByCompanyId() {
       var companyId = stockTakeFactory.getCompanyId();
-      if (angular.isNumber(companyId)) {
+      var regularItemTypeObj = regularItemType();
+      if (angular.isNumber(companyId) && angular.isDefined(regularItemTypeObj)) {
         var payload = {
-          companyId: companyId
+          companyId: companyId,
+          itemTypeId: regularItemTypeObj.id
         };
         stockTakeFactory.getItemsMasterList(payload).then(function(response) {
           if (angular.isObject(response)) {
