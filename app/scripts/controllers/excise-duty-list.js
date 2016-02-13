@@ -40,10 +40,18 @@ angular.module('ts5App')
     }
 
     function hidePanel(panelName) {
+      if (panelName === '#create-collapse') {
+        $scope.clearSearchForm();
+      }
+      
       angular.element(panelName).addClass('collapse');
     }
 
     function showPanel(panelName) {
+      if (panelName === '#create-collapse') {
+        $scope.clearSearchForm();
+      }
+
       angular.element(panelName).removeClass('collapse');
     }
 
@@ -77,7 +85,6 @@ angular.module('ts5App')
     };
 
     $scope.toggleCreatePanel = function () {
-      $scope.clearSearchForm();
       $scope.clearCreateForm(true);
       togglePanel('#create-collapse');
     };
