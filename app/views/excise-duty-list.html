@@ -86,7 +86,7 @@
                 <label>Duty Rate *</label>
 
                 <div class="input-group">
-                  <span class="input-group-addon">GBP</span>
+                  <span class="input-group-addon">{{ baseCurrency }}</span>
                   <input ng-model="newRecord.dutyRate"
                          custom-validity
                          custom-pattern="decimalWithTwoDecimalPlaces"
@@ -187,7 +187,7 @@
           <th>Commodity Code</th>
           <th>Volumetric Measure</th>
           <th>Alcoholic %</th>
-          <th>Duty Rate ({{ companyGlobalCurrency }})</th>
+          <th>Duty Rate ({{ baseCurrency }})</th>
           <th class="col-xs-2">Start Date</th>
           <th class="col-xs-2">End Date</th>
           <th>Actions</th>

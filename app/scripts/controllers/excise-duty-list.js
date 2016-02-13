@@ -7,9 +7,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExciseDutyListCtrl', function ($scope, exciseDutyFactory, dateUtility, lodash, $q) {
+  .controller('ExciseDutyListCtrl', function ($scope, exciseDutyFactory, GlobalMenuService, dateUtility, lodash, $q) {
     $scope.viewName = 'Excise Duty List';
-    $scope.companyGlobalCurrency = 'GBP';
     var $this = this;
 
     function initLazyLoadingMeta() {
@@ -266,8 +265,20 @@ angular.module('ts5App')
       $scope.volumeUnits = lodash.filter(angular.copy(responseArray[1].units), function (record) {
         return (record.unitCode === 'l' || record.unitCode === 'hl');
       });
+      
+      $scope.baseCurrency = angular.copy(responseArray[2].currencyCode);
 
       hideLoadingModal();
+    }
+
+    function callInitAPIs(companyDataFromAPI) {
+      var promises = [
+        exciseDutyFactory.getCountriesList(),
+        exciseDutyFactory.getVolumeUnits(),
+        exciseDutyFactory.getCurrency(angular.copy(companyDataFromAPI.baseCurrencyId))
+      ];
+
+      $q.all(promises).then(completeInit, showErrors);
     }
 
     function init() {
@@ -278,11 +289,8 @@ angular.module('ts5App')
       $scope.recordToEdit = null;
       $scope.inEditMode = false;
 
-      var promises = [
-        exciseDutyFactory.getCountriesList(),
-        exciseDutyFactory.getVolumeUnits()
-      ];
-      $q.all(promises).then(completeInit);
+      var companyId = GlobalMenuService.company.get();
+      exciseDutyFactory.getCompanyData(companyId).then(callInitAPIs, showErrors);
     }
 
     init();
