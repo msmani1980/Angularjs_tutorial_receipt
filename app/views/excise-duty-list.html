@@ -100,7 +100,7 @@
                 <label>Volume *</label>
                 <select class="form-control"
                         ng-model="newRecord.volumeUnitId"
-                        ng-options="unit.id as unit.unitName for unit in volumeUnits"
+                        ng-options="unit.id as (unit.unitName + ' (' + unit.unitCode + ')') for unit in volumeUnits"
                         ng-disabled="readOnly"
                         name="volumetricUnit"
                         ng-required="shouldRequireCreateFields()">
@@ -225,7 +225,7 @@
           <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
             <select class="form-control"
                     ng-model="recordToEdit.volumeUnitId"
-                    ng-options="unit.id as unit.unitName for unit in volumeUnits"
+                    ng-options="unit.id as (unit.unitName + ' (' + unit.unitCode + ')') for unit in volumeUnits"
                     ng-disabled="!canDelete(exciseDuty)"
                     name="editVolumetricUnit"
                     required="true">

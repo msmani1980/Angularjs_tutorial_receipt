@@ -43,7 +43,7 @@ angular.module('ts5App')
       if (panelName === '#create-collapse') {
         $scope.clearSearchForm();
       }
-      
+
       angular.element(panelName).addClass('collapse');
     }
 
@@ -261,8 +261,11 @@ angular.module('ts5App')
     };
 
     function completeInit(responseArray) {
-      $scope.countryList = responseArray[0].countries;
-      $scope.volumeUnits = responseArray[1].units;
+      $scope.countryList = angular.copy(responseArray[0].countries);
+      $scope.volumeUnits = lodash.filter(angular.copy(responseArray[1].units), function (record) {
+        return (record.unitCode === 'l' || record.unitCode === 'hl');
+      });
+      
       hideLoadingModal();
     }
 

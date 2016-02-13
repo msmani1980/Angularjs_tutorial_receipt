@@ -55,7 +55,7 @@ describe('Controller: ExciseDutyListCtrl', function () {
     scope.$digest();
   }));
 
-  describe('initialize data', function () {
+  fdescribe('initialize data', function () {
     it('should get list of companies and attach to scope', function () {
       expect(exciseDutyFactory.getCountriesList).toHaveBeenCalled();
       expect(scope.countryList).toBeDefined();
@@ -64,6 +64,13 @@ describe('Controller: ExciseDutyListCtrl', function () {
     it('should get list of volume units and attach to scope', function () {
       expect(exciseDutyFactory.getVolumeUnits).toHaveBeenCalled();
       expect(scope.volumeUnits).toBeDefined();
+    });
+
+    it('should filter list of volume units to litre and hectoliter', function () {
+      expect(scope.volumeUnits.length).toEqual(2);
+      var isFirstRecordValid = scope.volumeUnits[0].unitCode === 'hl' || scope.volumeUnits[0].unitCode === 'l';
+      var isSecondRecordValid = scope.volumeUnits[1].unitCode === 'hl' || scope.volumeUnits[1].unitCode === 'l';
+      expect(isFirstRecordValid && isSecondRecordValid).toEqual(true);
     });
   });
 
