@@ -55,7 +55,7 @@ describe('Controller: ExciseDutyListCtrl', function () {
     scope.$digest();
   }));
 
-  fdescribe('initialize data', function () {
+  describe('initialize data', function () {
     it('should get list of companies and attach to scope', function () {
       expect(exciseDutyFactory.getCountriesList).toHaveBeenCalled();
       expect(scope.countryList).toBeDefined();
@@ -95,6 +95,10 @@ describe('Controller: ExciseDutyListCtrl', function () {
 
     it('should resolve volume unit name', function () {
       expect(dateUtility.isDateValidForApp(scope.exciseDutyList[0].volumeUnit)).toBeDefined();
+    });
+
+    it('should format dutyRate to float with 2 decimals', function () {
+      expect(scope.exciseDutyList[0].dutyRate).toEqual('2.00');
     });
   });
 

@@ -15,7 +15,7 @@
       "countryId": 109,
       "volumeUnitId": 11,
       "commodityCode": "API TEST 2",
-      "dutyRate": 342.45,
+      "dutyRate": 2,
       "alcoholic": false,
       "startDate": "20160131",
       "endDate": "20160229"

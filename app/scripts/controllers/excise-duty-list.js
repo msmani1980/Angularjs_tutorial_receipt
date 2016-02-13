@@ -234,6 +234,7 @@ angular.module('ts5App')
         var volumeMatch = lodash.findWhere($scope.volumeUnits, { id: exciseDuty.volumeUnitId });
         exciseDuty.countryName = (angular.isDefined(countryMatch)) ? countryMatch.countryName : '';
         exciseDuty.volumeUnit = (angular.isDefined(volumeMatch)) ? volumeMatch.unitName : '';
+        exciseDuty.dutyRate = parseFloat(exciseDuty.dutyRate).toFixed(2);
       });
 
       $scope.exciseDutyList = ($scope.exciseDutyList) ? $scope.exciseDutyList.concat(newExciseDutyList) : newExciseDutyList;
@@ -265,7 +266,7 @@ angular.module('ts5App')
       $scope.volumeUnits = lodash.filter(angular.copy(responseArray[1].units), function (record) {
         return (record.unitCode === 'l' || record.unitCode === 'hl');
       });
-      
+
       hideLoadingModal();
     }
 
