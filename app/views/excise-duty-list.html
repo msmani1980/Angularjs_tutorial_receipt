@@ -260,7 +260,7 @@
               name="editStartDate"
               class="form-group"
               form="exciseDutyCreateForm"
-              disable-past="true"
+              min-date="minDate"
               ng-model="recordToEdit.startDate"
               ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
             </date-picker-field>
@@ -270,7 +270,7 @@
             <date-picker-field
               name="editEndDate"
               class="form-group"
-              disable-past="true"
+              min-date="minDate"
               form="exciseDutyCreateForm"
               ng-model="recordToEdit.endDate"
               ng-show="isSelectedToEdit(exciseDuty)">

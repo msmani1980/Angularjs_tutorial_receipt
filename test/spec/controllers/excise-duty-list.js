@@ -184,8 +184,19 @@ describe('Controller: ExciseDutyListCtrl', function () {
           $setValidity: function () {
             return true;
           }
+        },
+        endDate: {
+          $setUntouched: function () {
+            return true;
+          }
+        },
+        startDate: {
+          $setUntouched: function () {
+            return true;
+          }
         }
       };
+
       scope.createExciseDuty();
       scope.$digest();
     });
@@ -339,6 +350,20 @@ describe('Controller: ExciseDutyListCtrl', function () {
           scope.newRecord = {
             alcoholic: false,
             country: {id: 1}
+          };
+
+          scope.exciseDutyCreateForm = {
+            $valid: true,
+            endDate: {
+              $setUntouched: function () {
+                return true;
+              }
+            },
+            startDate: {
+              $setUntouched: function () {
+                return true;
+              }
+            }
           };
         });
         it('should clear model with cleared country', function () {
