@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('stockTakeFactory', function(catererStationService, stockDashboardService, stockTakeService, itemsService,
-    GlobalMenuService) {
+    recordsService, GlobalMenuService) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
@@ -61,6 +61,14 @@ angular.module('ts5App')
       return stockDashboardService.getStockDashboardItems(catererStationId);
     }
 
+    function getItemTypes() {
+      return recordsService.getItemTypes();
+    }
+
+    function getCharacteristics() {
+      return recordsService.getCharacteristics();
+    }
+
     return {
       getCatererStationList: getCatererStationList,
       getItemsByCateringStationId: getItemsByCateringStationId,
@@ -73,7 +81,9 @@ angular.module('ts5App')
       getStockDashboardItems: getStockDashboardItems,
       getCompanyId: getCompanyId,
       getItemsMasterList: getItemsMasterList,
-      getMasterItem: getMasterItem
+      getMasterItem: getMasterItem,
+      getItemTypes: getItemTypes,
+      getCharacteristics: getCharacteristics
     };
 
   });
