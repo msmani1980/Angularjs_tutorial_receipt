@@ -71,6 +71,9 @@ angular.module('ts5App')
         alcoholic: false,
         country: (shouldClearAll) ? null : currentCountry
       };
+
+      $scope.exciseDutyCreateForm.endDate.$setUntouched();
+      $scope.exciseDutyCreateForm.startDate.$setUntouched();
     };
 
     $scope.clearSearchForm = function () {
@@ -289,7 +292,6 @@ angular.module('ts5App')
       $scope.recordToEdit = null;
       $scope.inEditMode = false;
       $scope.minDate = dateUtility.tomorrowFormatted();
-
       var companyId = GlobalMenuService.company.get();
       exciseDutyFactory.getCompanyData(companyId).then(callInitAPIs, showErrors);
     }
