@@ -393,20 +393,17 @@ angular.module('ts5App')
     };
 
     this.executeValidateAction = function () {
-      var changeToConfirmedPromises = [];
       var instancesToExecuteOn = $this.findInstancesWithStatus('Inbounded');
 
       $this.showLoadingModal('Executing Validate action');
 
-      angular.forEach(instancesToExecuteOn, function (instance) {
-        changeToConfirmedPromises.push(
-          $q.when()
-            .then(function () { storeInstanceFactory.updateStoreInstanceStatus(instance.id, 9); })
-            .then(function () { storeInstanceFactory.updateStoreInstanceStatus(instance.id, 10); })
-        );
+      var payload = { ids: [] };
+
+      payload.ids = instancesToExecuteOn.map(function(storeInstance) {
+        return storeInstance.id;
       });
 
-      $q.all(changeToConfirmedPromises).then($this.handleValidationResult, $this.handleValidationResult);
+      storeInstanceFactory.validateStoreInstance(payload).then($this.handleValidationResult, $this.handleValidationResult);
     };
 
     this.executeOtherAction = function () {
