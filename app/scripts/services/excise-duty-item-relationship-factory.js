@@ -11,7 +11,7 @@ angular.module('ts5App')
   .factory('exciseDutyRelationshipFactory', function (exciseDutyService, exciseDutyRelationshipService, recordsService, itemsService) {
 
     var getExciseDutyList = function (payload) {
-      return exciseDutyRelationshipService.getExciseDutyList(payload);
+      return exciseDutyService.getExciseDutyList(payload);
     };
 
     var getRelationshipList = function (payload) {
@@ -31,7 +31,7 @@ angular.module('ts5App')
     };
 
     var deleteRelationship = function (id) {
-      return exciseDutyRelationshipService.deleteRecord(id);
+      return exciseDutyRelationshipService.deleteRelationship(id);
     };
 
     var getItemTypes = function () {

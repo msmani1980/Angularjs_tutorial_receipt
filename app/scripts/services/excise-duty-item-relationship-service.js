@@ -24,7 +24,7 @@ angular.module('ts5App')
       updateRelationship: {
         method: 'PUT'
       },
-      deleteRecord: {
+      deleteRelationship: {
         method: 'DELETE'
       }
     };
@@ -53,7 +53,7 @@ angular.module('ts5App')
 
     var deleteRelationship = function (id) {
       requestParameters.id = id;
-      return itemExciseDutyRequestResources.deleteRecord().$promise;
+      return itemExciseDutyRequestResources.deleteRelationship(id).$promise;
     };
 
     return {
