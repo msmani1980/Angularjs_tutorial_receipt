@@ -4,12 +4,12 @@ describe('Service: exciseDutyRelationshipService', function () {
 
   beforeEach(module('ts5App'));
 
-  var exciseDutyService,
+  var exciseDutyRelationshipService,
     $httpBackend;
 
-  beforeEach(inject(function (_exciseDutyService_, $injector) {
+  beforeEach(inject(function (_exciseDutyRelationshipService_, $injector) {
     $httpBackend = $injector.get('$httpBackend');
-    exciseDutyService = _exciseDutyService_;
+    exciseDutyRelationshipService = _exciseDutyRelationshipService_;
   }));
 
   afterEach(function () {
@@ -18,59 +18,59 @@ describe('Service: exciseDutyRelationshipService', function () {
   });
 
   it('should exists', function () {
-    expect(!!exciseDutyService).toBe(true);
+    expect(!!exciseDutyRelationshipService).toBe(true);
   });
 
   describe('API requests', function () {
 
-    it('should GET excise duty list', function () {
-      $httpBackend.expectGET(/excise-duty/).respond(200, { fakeResponseKey: 'fakeResponseValue' });
+    it('should GET item excise duty relationship list', function () {
+      $httpBackend.expectGET(/item-excise-duty/).respond(200, { fakeResponseKey: 'fakeResponseValue' });
 
-      exciseDutyService.getExciseDutyList().then(function (response) {
+      exciseDutyRelationshipService.getRelationshipList().then(function (response) {
         expect(response.fakeResponseKey).toBe('fakeResponseValue');
       });
 
       $httpBackend.flush();
     });
 
-    it('should GET a single excise duty', function () {
-      var exciseDutyId = 123;
-      $httpBackend.expectGET(/excise-duty\/\d+/).respond(200, { fakeResponseKey: exciseDutyId });
+    it('should GET a single item excise duty relationship', function () {
+      var recordId = 123;
+      $httpBackend.expectGET(/item-excise-duty\/\d+/).respond(200, { fakeResponseKey: recordId });
 
-      exciseDutyService.getExciseDuty(exciseDutyId).then(function (response) {
-        expect(response.fakeResponseKey).toBe(exciseDutyId);
+      exciseDutyRelationshipService.getRelationship(recordId).then(function (response) {
+        expect(response.fakeResponseKey).toBe(recordId);
       });
 
       $httpBackend.flush();
     });
 
-    it('should POST an excise duty record', function () {
-      $httpBackend.expectPOST(/excise-duty/).respond(201, { fakeResponseKey: 'POST' });
+    it('should POST an item excise duty relationship record', function () {
+      $httpBackend.expectPOST(/item-excise-duty/).respond(201, { fakeResponseKey: 'POST' });
 
-      exciseDutyService.createExciseDuty().then(function (response) {
+      exciseDutyRelationshipService.createRelationship().then(function (response) {
         expect(response.fakeResponseKey).toBe('POST');
       });
 
       $httpBackend.flush();
     });
 
-    it('should PUT an excise duty record', function () {
-      var exciseDutyId = 123;
-      $httpBackend.expectPUT(/excise-duty\/\d+/).respond(200, { fakeResponseKey: exciseDutyId });
+    it('should PUT an item excise duty relationship record', function () {
+      var recordId = 123;
+      $httpBackend.expectPUT(/item-excise-duty\/\d+/).respond(200, { fakeResponseKey: recordId });
 
-      exciseDutyService.updateExciseDuty(exciseDutyId).then(function (response) {
-        expect(response.fakeResponseKey).toBe(exciseDutyId);
+      exciseDutyRelationshipService.updateRelationship(recordId).then(function (response) {
+        expect(response.fakeResponseKey).toBe(recordId);
       });
 
       $httpBackend.flush();
     });
 
-    it('should delete an excise duty record', function () {
-      var exciseDutyId = 123;
-      $httpBackend.expectDELETE(/excise-duty/).respond(200, { fakeResponseKey: exciseDutyId });
+    it('should delete an item excise duty relationship record', function () {
+      var recordId = 123;
+      $httpBackend.expectDELETE(/item-excise-duty/).respond(200, { fakeResponseKey: recordId });
 
-      exciseDutyService.deleteExciseDuty(exciseDutyId).then(function (response) {
-        expect(response.fakeResponseKey).toBe(exciseDutyId);
+      exciseDutyRelationshipService.deleteRelationship(recordId).then(function (response) {
+        expect(response.fakeResponseKey).toBe(recordId);
       });
 
       $httpBackend.flush();
