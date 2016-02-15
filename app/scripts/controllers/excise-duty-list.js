@@ -265,7 +265,7 @@ angular.module('ts5App')
       $scope.volumeUnits = lodash.filter(angular.copy(responseArray[1].units), function (record) {
         return (record.unitCode === 'l' || record.unitCode === 'hl');
       });
-      
+
       $scope.baseCurrency = angular.copy(responseArray[2].currencyCode);
 
       hideLoadingModal();
@@ -288,6 +288,7 @@ angular.module('ts5App')
       $scope.search = null;
       $scope.recordToEdit = null;
       $scope.inEditMode = false;
+      $scope.minDate = dateUtility.tomorrowFormatted();
 
       var companyId = GlobalMenuService.company.get();
       exciseDutyFactory.getCompanyData(companyId).then(callInitAPIs, showErrors);

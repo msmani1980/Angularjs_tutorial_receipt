@@ -62,7 +62,7 @@
                 name="startDate"
                 class="form-group"
                 form="exciseDutyCreateForm"
-                disable-past="true"
+                min-date="minDate"
                 ng-model="newRecord.startDate"
                 label="Effective From *"
                 ng-required="shouldRequireCreateFields()">
@@ -73,7 +73,7 @@
                 name="endDate"
                 class="form-group"
                 form="exciseDutyCreateForm"
-                disable-past="true"
+                min-date="minDate"
                 ng-model="newRecord.endDate"
                 label="Effective To *"
                 ng-required="shouldRequireCreateFields()">
@@ -99,7 +99,7 @@
             </div>
             <div class="col-xs-6 col-sm-4">
               <div class="form-group">
-                <label>Volume *</label>
+                <label>Volumetric Measure *</label>
                 <select class="form-control"
                         ng-model="newRecord.volumeUnitId"
                         ng-options="unit.id as (unit.unitName + ' (' + unit.unitCode + ')') for unit in volumeUnits"
