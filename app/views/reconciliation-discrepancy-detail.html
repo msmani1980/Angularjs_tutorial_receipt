@@ -109,7 +109,7 @@
                   <td>{{complimentary.total}}</td>
                   <td>{{complimentary.baseTotal}}</td>
                 </tr>
-                <tr ng-if="!report.complimentary.length">
+                <tr ng-if="!report.comp.length">
                   <td>No Complimentary added</td>
                   <td>0.00</td>
                   <td>0.00</td>
@@ -117,7 +117,7 @@
                 <tr class="active">
                   <td>Comp. Total</td>
                   <td></td>
-                  <td>{{complimentary.compTotal ? complimentary.compTotal : '0.00'}}</td>
+                  <td>{{report.compTotal ? report.compTotal : '0.00'}}</td>
                 </tr>
               </table>
 
