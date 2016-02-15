@@ -495,15 +495,15 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isStepOneFromStepTwo(data)) {
         $scope.stepOneFromStepTwo = true;
         $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
-        return;
       }
 
-      if ($this.isActionState('redispatch') && !$this.isStepOneFromStepTwo(data)) {
+      var stepTwoStoreId = $this.doesStoreIdFromStepTwoExist();
+      if ($this.isActionState('redispatch') && !(data && data.id === parseInt(stepTwoStoreId))) {
         $scope.formData.scheduleDate = dateUtility.nowFormatted();
         delete $scope.formData.scheduleNumber;
         delete $scope.formData.carrierId;
-        return;
       }
+
     };
 
     this.setStoreInstance = function(apiData) {

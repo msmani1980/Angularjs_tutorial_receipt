@@ -45,7 +45,7 @@ describe('Service: transactionService', function () {
       });
 
       it('should return a transactions array', function () {
-        expect(dataToTestFromAPI.transactions).toEqual([]);
+        expect(dataToTestFromAPI.transactions).toEqual(transactionsJSON.transactions);
       });
 
       it('should return a meta object', function () {

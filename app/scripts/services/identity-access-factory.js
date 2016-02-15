@@ -9,7 +9,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companiesFactory, companyFactory, $q, lodash) {
+  .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash) {
       function changePassword(credentials, sessionToken) {
         var payload = {
           username: credentials.username,
@@ -60,19 +60,24 @@ angular.module('ts5App')
 
         delete sessionObject.username;
         delete sessionObject.companyData;
+        delete sessionObject.userCompanies;
+        delete sessionObject.currentSession;
         angular.extend($http.defaults.headers.common, sessionObject);
       }
 
       function encryptDataInLS(dataFromAPI) {
         var sessionObject = {
+          timeout: 60000,
           userId: dataFromAPI.id,
           username: dataFromAPI.userName,
           companyId: dataFromAPI.companyId,
           companyData: dataFromAPI.companyData,
-          sessionToken: dataFromAPI.currentSession.sessionToken,
-          timeout: 60000
+          userCompanies: dataFromAPI.userCompanies,
+          currentSession: dataFromAPI.currentSession,
+          sessionToken: dataFromAPI.currentSession.sessionToken
         };
         $localStorage.sessionObject = CryptoJS.AES.encrypt(JSON.stringify(sessionObject), 'aes@56').toString();
+        setSessionHeaders();
       }
 
       function broadcastSuccess(companyData) {
@@ -87,7 +92,6 @@ angular.module('ts5App')
 
       function setSessionData(dataFromAPI) {
         encryptDataInLS(dataFromAPI);
-        setSessionHeaders();
         broadcastSuccess(dataFromAPI.companyData);
         $location.path('/');
       }
@@ -112,17 +116,19 @@ angular.module('ts5App')
         }
       }
 
-      function getCompanyResponseHandler(dataFromAPI, rawSessionObject) {
-        var sessionObject = angular.copy(rawSessionObject);
+      function getCompanyResponseHandler(dataFromAPI, rawSessionData) {
+        var sessionObject = angular.copy(rawSessionData);
         sessionObject.companyData = angular.copy(dataFromAPI[0]);
-        sessionObject.companyData.companyTypeName = lodash.findWhere(dataFromAPI[1], { id: sessionObject.companyData.companyTypeId }).name;
+        sessionObject.userCompanies = angular.copy(dataFromAPI[2].companies);
+        sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(dataFromAPI[1], { id: sessionObject.companyData.companyTypeId }).name);
         setSessionData(sessionObject);
       }
 
       function getCompanyData(rawSessionData) {
         var companyDataPromiseArray = [
-          companiesFactory.getCompany(rawSessionData.companyId),
-          companyFactory.getCompanyTypes()
+          companyFactory.getCompany(rawSessionData.companyId),
+          companyFactory.getCompanyTypes(),
+          identityAccessService.getUserCompanies()
         ];
 
         $q.all(companyDataPromiseArray).then(function (dataFromApi) {
@@ -130,8 +136,16 @@ angular.module('ts5App')
         }, logout);
       }
 
+      function setSelectedCompany(companyData) {
+        var rawSessionData = angular.copy(getSessionObject());
+        rawSessionData.companyId = companyData.id;
+        rawSessionData.id = rawSessionData.userId;
+        getCompanyData(rawSessionData);
+      }
+
       function authorizeUserResponseHandler(sessionDataFromAPI) {
         var rawSessionData = angular.copy(sessionDataFromAPI);
+        encryptDataInLS(rawSessionData);
         getCompanyData(rawSessionData);
       }
 
@@ -155,7 +169,8 @@ angular.module('ts5App')
         logout: logoutFromSystem,
         getSessionObject: getSessionObject,
         setSessionData: setSessionData,
-        isAuthorized: isAuthorized
+        isAuthorized: isAuthorized,
+        setSelectedCompany: setSelectedCompany
       };
     }
   );

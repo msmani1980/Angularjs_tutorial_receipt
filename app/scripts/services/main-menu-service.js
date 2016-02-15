@@ -257,7 +257,7 @@ angular.module('ts5App')
         title: 'Transaction Retrieval',
         menuItems: [{
           name: 'Manage Transactions',
-          route: emberURL + 'transactions',
+          route: '/#/transactions',
           icon: 'icon-manage-transactions',
           className: 'dashboard-manageTransactions',
           package: 'TRANSACTION',
@@ -438,6 +438,20 @@ angular.module('ts5App')
 
           }]
         }, {
+          title: 'Excise Duty',
+          menuItems: [{
+            name: 'Manage Excise Duty',
+            route: '/#/excise-duty-list',
+            icon: 'icon-manage-schedule',
+            className: 'dashboard-exciseDuty',
+            package: 'EXCISEDUTY',
+            role: 'EXCISEDUTY'
+          }]
+        }];
+    };
+
+    this.getStockOwnerMenu = function() {
+      return [{
           title: 'StockOwner Item Management',
           menuItems: [{
             name: 'Manage Items',
