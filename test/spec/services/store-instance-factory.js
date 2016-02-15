@@ -28,6 +28,7 @@ describe('Service: storeInstanceFactory', function() {
   var recordsService;
   var companyReasonCodesService;
   var featureThresholdsService;
+  var storeInstanceValidationService;
 
   var getStationDeferred;
   var getCarrierNumberDeferred;
@@ -102,6 +103,7 @@ describe('Service: storeInstanceFactory', function() {
     recordsService = $injector.get('recordsService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
     featureThresholdsService = $injector.get('featureThresholdsService');
+    storeInstanceValidationService = $injector.get('storeInstanceValidationService');
 
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(itemsService, 'getItemsList');
@@ -133,6 +135,7 @@ describe('Service: storeInstanceFactory', function() {
     spyOn(recordsService, 'getFeatures');
     spyOn(featureThresholdsService, 'getThresholdList');
     spyOn(companyReasonCodesService, 'getAll');
+    spyOn(storeInstanceValidationService, 'validateStoreInstance');
 
   }));
 
@@ -403,6 +406,14 @@ describe('Service: storeInstanceFactory', function() {
       var payload = { id: 'fakeId' };
       storeInstanceFactory.getReasonCodeList(payload);
       expect(companyReasonCodesService.getAll).toHaveBeenCalledWith(payload);
+    });
+  });
+
+  describe('validateStoreInstance API calls', function() {
+    it('should call validateStoreInstance', function() {
+      var payload = { ids: [1, 2] };
+      storeInstanceFactory.validateStoreInstance(payload);
+      expect(storeInstanceValidationService.validateStoreInstance).toHaveBeenCalledWith(payload);
     });
   });
 
