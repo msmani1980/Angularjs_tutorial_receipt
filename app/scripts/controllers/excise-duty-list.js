@@ -7,9 +7,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExciseDutyListCtrl', function ($scope, exciseDutyFactory, dateUtility, lodash, $q) {
+  .controller('ExciseDutyListCtrl', function ($scope, exciseDutyFactory, GlobalMenuService, dateUtility, lodash, $q) {
     $scope.viewName = 'Excise Duty List';
-    $scope.companyGlobalCurrency = 'GBP';
     var $this = this;
 
     function initLazyLoadingMeta() {
@@ -40,10 +39,18 @@ angular.module('ts5App')
     }
 
     function hidePanel(panelName) {
+      if (panelName === '#create-collapse') {
+        $scope.clearSearchForm();
+      }
+
       angular.element(panelName).addClass('collapse');
     }
 
     function showPanel(panelName) {
+      if (panelName === '#create-collapse') {
+        $scope.clearSearchForm();
+      }
+
       angular.element(panelName).removeClass('collapse');
     }
 
@@ -64,6 +71,9 @@ angular.module('ts5App')
         alcoholic: false,
         country: (shouldClearAll) ? null : currentCountry
       };
+
+      $scope.exciseDutyCreateForm.endDate.$setUntouched();
+      $scope.exciseDutyCreateForm.startDate.$setUntouched();
     };
 
     $scope.clearSearchForm = function () {
@@ -77,7 +87,6 @@ angular.module('ts5App')
     };
 
     $scope.toggleCreatePanel = function () {
-      $scope.clearSearchForm();
       $scope.clearCreateForm(true);
       togglePanel('#create-collapse');
     };
@@ -227,6 +236,7 @@ angular.module('ts5App')
         var volumeMatch = lodash.findWhere($scope.volumeUnits, { id: exciseDuty.volumeUnitId });
         exciseDuty.countryName = (angular.isDefined(countryMatch)) ? countryMatch.countryName : '';
         exciseDuty.volumeUnit = (angular.isDefined(volumeMatch)) ? volumeMatch.unitName : '';
+        exciseDuty.dutyRate = parseFloat(exciseDuty.dutyRate).toFixed(2);
       });
 
       $scope.exciseDutyList = ($scope.exciseDutyList) ? $scope.exciseDutyList.concat(newExciseDutyList) : newExciseDutyList;
@@ -254,9 +264,24 @@ angular.module('ts5App')
     };
 
     function completeInit(responseArray) {
-      $scope.countryList = responseArray[0].countries;
-      $scope.volumeUnits = responseArray[1].units;
+      $scope.countryList = angular.copy(responseArray[0].countries);
+      $scope.volumeUnits = lodash.filter(angular.copy(responseArray[1].units), function (record) {
+        return (record.unitCode === 'l' || record.unitCode === 'hl');
+      });
+
+      $scope.baseCurrency = angular.copy(responseArray[2].currencyCode);
+
       hideLoadingModal();
+    }
+
+    function callInitAPIs(companyDataFromAPI) {
+      var promises = [
+        exciseDutyFactory.getCountriesList(),
+        exciseDutyFactory.getVolumeUnits(),
+        exciseDutyFactory.getCurrency(angular.copy(companyDataFromAPI.baseCurrencyId))
+      ];
+
+      $q.all(promises).then(completeInit, showErrors);
     }
 
     function init() {
@@ -266,12 +291,9 @@ angular.module('ts5App')
       $scope.search = null;
       $scope.recordToEdit = null;
       $scope.inEditMode = false;
-
-      var promises = [
-        exciseDutyFactory.getCountriesList(),
-        exciseDutyFactory.getVolumeUnits()
-      ];
-      $q.all(promises).then(completeInit);
+      $scope.minDate = dateUtility.tomorrowFormatted();
+      var companyId = GlobalMenuService.company.get();
+      exciseDutyFactory.getCompanyData(companyId).then(callInitAPIs, showErrors);
     }
 
     init();

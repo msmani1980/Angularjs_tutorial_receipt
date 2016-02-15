@@ -8,13 +8,17 @@ describe('Factory: exciseDutyFactory', function () {
     exciseDutyService,
     countriesService,
     unitsService,
+    companyService,
+    currenciesService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _exciseDutyFactory_, _exciseDutyService_, _countriesService_, _unitsService_) {
+  beforeEach(inject(function ($rootScope, _exciseDutyFactory_, _exciseDutyService_, _countriesService_, _unitsService_, _companyService_, _currenciesService_) {
     exciseDutyService = _exciseDutyService_;
     countriesService = _countriesService_;
     unitsService = _unitsService_;
+    companyService = _companyService_;
+    currenciesService = _currenciesService_;
 
     spyOn(exciseDutyService, 'getExciseDutyList');
     spyOn(exciseDutyService, 'getExciseDuty');
@@ -22,6 +26,8 @@ describe('Factory: exciseDutyFactory', function () {
     spyOn(exciseDutyService, 'updateExciseDuty');
     spyOn(exciseDutyService, 'deleteExciseDuty');
     spyOn(countriesService, 'getCountriesList');
+    spyOn(companyService, 'getCompany');
+    spyOn(currenciesService, 'getMasterCurrency');
     spyOn(unitsService, 'getVolumeList');
 
     rootScope = $rootScope;
@@ -72,6 +78,20 @@ describe('Factory: exciseDutyFactory', function () {
     it('should call unitsService on getVolumeList', function () {
       exciseDutyFactory.getVolumeUnits();
       expect(unitsService.getVolumeList).toHaveBeenCalled();
+    });
+  });
+
+  describe('companyService API', function () {
+    it('should call companyService on getCompany', function () {
+      exciseDutyFactory.getCompanyData();
+      expect(companyService.getCompany).toHaveBeenCalled();
+    });
+  });
+
+  describe('currenciesService API', function () {
+    it('should call currenciesService on getMasterCurrency', function () {
+      exciseDutyFactory.getCurrency();
+      expect(currenciesService.getMasterCurrency).toHaveBeenCalled();
     });
   });
 });

@@ -7,6 +7,8 @@ describe('Controller: ExciseDutyListCtrl', function () {
   beforeEach(module('served/excise-duty-list.json'));
   beforeEach(module('served/country-list.json'));
   beforeEach(module('served/units-volume.json'));
+  beforeEach(module('served/currency.json'));
+  beforeEach(module('served/company.json'));
 
   var ExciseDutyListCtrl;
   var exciseDutyFactory;
@@ -16,16 +18,22 @@ describe('Controller: ExciseDutyListCtrl', function () {
   var countryListDeferred;
   var volumeListResponseJSON;
   var volumeListDeferred;
+  var companyDataDeferred;
+  var companyDataResponseJSON;
+  var currencyDeferred;
+  var currencyResponseJSON;
   var location;
   var dateUtility;
   var scope;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
 
-    inject(function (_servedExciseDutyList_, _servedCountryList_, _servedUnitsVolume_) {
+    inject(function (_servedExciseDutyList_, _servedCountryList_, _servedUnitsVolume_, _servedCurrency_, _servedCompany_) {
       exciseDutyResponseJSON = _servedExciseDutyList_;
       countryListResponseJSON = _servedCountryList_;
       volumeListResponseJSON = _servedUnitsVolume_;
+      companyDataResponseJSON = _servedCompany_;
+      currencyResponseJSON = _servedCurrency_;
     });
 
     location = $location;
@@ -39,10 +47,16 @@ describe('Controller: ExciseDutyListCtrl', function () {
     countryListDeferred.resolve(countryListResponseJSON);
     volumeListDeferred = $q.defer();
     volumeListDeferred.resolve(volumeListResponseJSON);
+    companyDataDeferred = $q.defer();
+    companyDataDeferred.resolve(companyDataResponseJSON);
+    currencyDeferred = $q.defer();
+    currencyDeferred.resolve(currencyResponseJSON);
 
     spyOn(exciseDutyFactory, 'getExciseDutyList').and.returnValue(exciseDutyDeferred.promise);
     spyOn(exciseDutyFactory, 'getCountriesList').and.returnValue(countryListDeferred.promise);
     spyOn(exciseDutyFactory, 'getVolumeUnits').and.returnValue(volumeListDeferred.promise);
+    spyOn(exciseDutyFactory, 'getCompanyData').and.returnValue(companyDataDeferred.promise);
+    spyOn(exciseDutyFactory, 'getCurrency').and.returnValue(currencyDeferred.promise);
     spyOn(exciseDutyFactory, 'deleteExciseDuty').and.returnValue(exciseDutyDeferred.promise);
     spyOn(exciseDutyFactory, 'createExciseDuty').and.returnValue(exciseDutyDeferred.promise);
     spyOn(exciseDutyFactory, 'updateExciseDuty').and.returnValue(exciseDutyDeferred.promise);
@@ -64,6 +78,19 @@ describe('Controller: ExciseDutyListCtrl', function () {
     it('should get list of volume units and attach to scope', function () {
       expect(exciseDutyFactory.getVolumeUnits).toHaveBeenCalled();
       expect(scope.volumeUnits).toBeDefined();
+    });
+
+    it('should filter list of volume units to litre and hectoliter', function () {
+      expect(scope.volumeUnits.length).toEqual(2);
+      var isFirstRecordValid = scope.volumeUnits[0].unitCode === 'hl' || scope.volumeUnits[0].unitCode === 'l';
+      var isSecondRecordValid = scope.volumeUnits[1].unitCode === 'hl' || scope.volumeUnits[1].unitCode === 'l';
+      expect(isFirstRecordValid && isSecondRecordValid).toEqual(true);
+    });
+
+    it('should get company base currency', function () {
+      expect(exciseDutyFactory.getCompanyData).toHaveBeenCalled();
+      expect(exciseDutyFactory.getCurrency).toHaveBeenCalledWith(58);
+      expect(scope.baseCurrency).toBeDefined();
     });
   });
 
@@ -88,6 +115,10 @@ describe('Controller: ExciseDutyListCtrl', function () {
 
     it('should resolve volume unit name', function () {
       expect(dateUtility.isDateValidForApp(scope.exciseDutyList[0].volumeUnit)).toBeDefined();
+    });
+
+    it('should format dutyRate to float with 2 decimals', function () {
+      expect(scope.exciseDutyList[0].dutyRate).toEqual('2.00');
     });
   });
 
@@ -153,8 +184,19 @@ describe('Controller: ExciseDutyListCtrl', function () {
           $setValidity: function () {
             return true;
           }
+        },
+        endDate: {
+          $setUntouched: function () {
+            return true;
+          }
+        },
+        startDate: {
+          $setUntouched: function () {
+            return true;
+          }
         }
       };
+
       scope.createExciseDuty();
       scope.$digest();
     });
@@ -308,6 +350,20 @@ describe('Controller: ExciseDutyListCtrl', function () {
           scope.newRecord = {
             alcoholic: false,
             country: {id: 1}
+          };
+
+          scope.exciseDutyCreateForm = {
+            $valid: true,
+            endDate: {
+              $setUntouched: function () {
+                return true;
+              }
+            },
+            startDate: {
+              $setUntouched: function () {
+                return true;
+              }
+            }
           };
         });
         it('should clear model with cleared country', function () {

@@ -62,8 +62,9 @@
                 name="startDate"
                 class="form-group"
                 form="exciseDutyCreateForm"
+                min-date="minDate"
                 ng-model="newRecord.startDate"
-                label="Effective From"
+                label="Effective From *"
                 ng-required="shouldRequireCreateFields()">
               </date-picker-field>
             </div>
@@ -72,8 +73,9 @@
                 name="endDate"
                 class="form-group"
                 form="exciseDutyCreateForm"
+                min-date="minDate"
                 ng-model="newRecord.endDate"
-                label="Effective To"
+                label="Effective To *"
                 ng-required="shouldRequireCreateFields()">
               </date-picker-field>
             </div>
@@ -84,7 +86,7 @@
                 <label>Duty Rate *</label>
 
                 <div class="input-group">
-                  <span class="input-group-addon">GBP</span>
+                  <span class="input-group-addon">{{ baseCurrency }}</span>
                   <input ng-model="newRecord.dutyRate"
                          custom-validity
                          custom-pattern="decimalWithTwoDecimalPlaces"
@@ -97,10 +99,10 @@
             </div>
             <div class="col-xs-6 col-sm-4">
               <div class="form-group">
-                <label>Volume *</label>
+                <label>Volumetric Measure *</label>
                 <select class="form-control"
                         ng-model="newRecord.volumeUnitId"
-                        ng-options="unit.id as unit.unitName for unit in volumeUnits"
+                        ng-options="unit.id as (unit.unitName + ' (' + unit.unitCode + ')') for unit in volumeUnits"
                         ng-disabled="readOnly"
                         name="volumetricUnit"
                         ng-required="shouldRequireCreateFields()">
@@ -185,7 +187,7 @@
           <th>Commodity Code</th>
           <th>Volumetric Measure</th>
           <th>Alcoholic %</th>
-          <th>Duty Rate ({{ companyGlobalCurrency }})</th>
+          <th>Duty Rate ({{ baseCurrency }})</th>
           <th class="col-xs-2">Start Date</th>
           <th class="col-xs-2">End Date</th>
           <th>Actions</th>
@@ -225,7 +227,7 @@
           <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
             <select class="form-control"
                     ng-model="recordToEdit.volumeUnitId"
-                    ng-options="unit.id as unit.unitName for unit in volumeUnits"
+                    ng-options="unit.id as (unit.unitName + ' (' + unit.unitCode + ')') for unit in volumeUnits"
                     ng-disabled="!canDelete(exciseDuty)"
                     name="editVolumetricUnit"
                     required="true">
@@ -241,7 +243,7 @@
           </span>
           </td>
           <td>
-            <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.dutyRate | number: 2}}%</span>
+            <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.dutyRate | number: 2}}</span>
           <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
             <input ng-model="recordToEdit.dutyRate"
                    name="editDutyRate"
@@ -258,6 +260,7 @@
               name="editStartDate"
               class="form-group"
               form="exciseDutyCreateForm"
+              min-date="minDate"
               ng-model="recordToEdit.startDate"
               ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
             </date-picker-field>
@@ -267,6 +270,7 @@
             <date-picker-field
               name="editEndDate"
               class="form-group"
+              min-date="minDate"
               form="exciseDutyCreateForm"
               ng-model="recordToEdit.endDate"
               ng-show="isSelectedToEdit(exciseDuty)">
