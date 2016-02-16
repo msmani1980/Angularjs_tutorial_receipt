@@ -121,6 +121,7 @@ angular.module('ts5App')
       function getCompanyResponseHandler(dataFromAPI, rawSessionData) {
         var sessionObject = angular.copy(rawSessionData);
         sessionObject.companyData = angular.copy(dataFromAPI[0]);
+        sessionObject.companyData.chCompany = angular.copy(rawSessionData.chCompany);
         sessionObject.companyTypes = angular.copy(dataFromAPI[1]);
         sessionObject.userCompanies = angular.copy(dataFromAPI[2].companies);
         sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, { id: sessionObject.companyData.companyTypeId }).name);
@@ -142,6 +143,7 @@ angular.module('ts5App')
       function setSelectedCompany(companyData) {
         var rawSessionData = angular.copy(getSessionObject());
         rawSessionData.companyId = companyData.id;
+        rawSessionData.chCompany = companyData.chCompany;
         rawSessionData.id = rawSessionData.userId;
         getCompanyData(rawSessionData);
       }

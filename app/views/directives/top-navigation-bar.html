@@ -7,7 +7,7 @@
         <span class="fa fa-bars"></span>
       </button>
       <a class="navbar-brand" ng-href="/#/">
-        <i class="fa fa-home"></i><span class="hidden-xs"> {{selectedCompany.companyName}}</span>
+        <i class="fa fa-home"></i><span class="hidden-xs"> {{selectedCompany.companyName}}<em ng-if="selectedCompany.chCompany"> | {{selectedCompany.chCompany.companyName}}</em></span>
       </a>
     </div>
     <div ng-if="isAuthorized" id="navbar-buttons" class="navbar-collapse collapse pull-right">
@@ -54,7 +54,8 @@
                       class="form-control"
                       id="cashHandlerRetail"
                       name="cashHandlerRetail"
-                      ng-model="cashHandlerRetailCompanyList"
+                      ng-change="selectCHRetailCompany(companyObject.type)"
+                      ng-model="pickedCompany[companyObject.type].chCompany"
                       ng-options="company.companyName for company in cashHandlerRetailCompanyList | orderBy: 'companyName'">
                 <option selected="selected" value>Select a Retail Company for {{companyObject.type}}</option>
               </select>
