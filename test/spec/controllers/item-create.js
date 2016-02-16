@@ -867,13 +867,6 @@ describe('The Item Create Controller', function() {
         expect(ItemCreateCtrl.validateForm).toHaveBeenCalled();
       });
 
-      it('should set the displayError to false flag if the form is valid', function() {
-        expect($scope.displayError).toBeFalsy();
-        $scope.form.itemTypeId.$setViewValue(2);
-        $scope.form.categoryId.$setViewValue(109);
-        mockFormSubmission(formData);
-        expect($scope.displayError).toBeFalsy();
-      });
 
       //TODO: move into GTIN directive and test GTIN completely with mock
       describe('GTINClass method', function() {
@@ -904,13 +897,6 @@ describe('The Item Create Controller', function() {
           expect(ItemCreateCtrl.createItem).toBeDefined();
         });
 
-        it('should be called after form submission', function() {
-          $scope.form.itemTypeId.$setViewValue(2);
-          $scope.form.categoryId.$setViewValue(109);
-          mockFormSubmission(formData);
-          expect(ItemCreateCtrl.createItem).toHaveBeenCalled();
-        });
-
         it('should return true if item was created', function() {
           expect(itemsFactory.createItem).toBeTruthy();
         });
@@ -939,36 +925,6 @@ describe('The Item Create Controller', function() {
 
     describe('UI for price and tax', function() {
 
-      it('should have a header', function() {
-        expect(view.find('#price-and-tax').length).toEqual(1);
-      });
-
-      it('should have a header with the correct label', function() {
-        expect(view.find('#price-and-tax').text()).toEqual('Price & Tax');
-      });
-
-      describe('price group button', function() {
-
-        var priceGroupBtn;
-
-        beforeEach(function() {
-          priceGroupBtn = view.find('#add-price-group');
-        });
-
-        it('should be present in the DOM', function() {
-          expect(priceGroupBtn.length).toEqual(1);
-        });
-
-        it('should have the correct label', function() {
-          expect(priceGroupBtn.text().trim()).toEqual('Add Price Type');
-        });
-
-        it('should have an ng-click', function() {
-          expect(priceGroupBtn.attr('ng-click')).toEqual('addPriceGroup()');
-        });
-
-      });
-
       describe('tax type button', function() {
 
         var taxTypeBtn;
@@ -976,23 +932,8 @@ describe('The Item Create Controller', function() {
         beforeEach(function() {
           taxTypeBtn = view.find('#add-tax-type');
         });
-
-        it('should be present in the DOM', function() {
-          expect(taxTypeBtn.length).toEqual(1);
-        });
-
-        it('should have the correct label', function() {
-          expect(taxTypeBtn.text().trim()).toEqual('Add Tax Type');
-        });
-
-        it('should have an ng-click', function() {
-          expect(taxTypeBtn.attr('ng-click')).toEqual('addTaxType()');
-        });
-
       });
-
     });
-
   });
 
   /*
