@@ -13,18 +13,32 @@ angular.module('ts5App')
 
     $scope.viewName = 'Transactions';
     $scope.transactions = [];
+    $scope.transactionTypes = [];
     $scope.companyCurrencies = [];
     $scope.companyStations = [];
     $scope.paymentMethods = ['Cash', 'Credit Card'];
     $scope.creditCardTypes = [];
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
-    $scope.transactionTypes = [
-      { id: 'SALE', name: 'Sale' },
-      { id: 'REFUND', name: 'Refund' },
-      { id: 'EmployeePurchase', name: 'Employee Purchase' }
-    ];
-
+    $scope.supportedTransactionTypes = ['SALE', 'REFUND', 'EmployeePurchase'];
+    $scope.overrideTransactionTypeNames = {
+      CLEARED: 'Cleared',
+      CREWMEAL: 'Crew Meal',
+      DAMAGED: 'Damaged',
+      DEFECTIVE: 'Defective',
+      EmployeePurchase: 'Employee Purchase',
+      PREPACK: 'Prepack',
+      REFUND: 'Refund',
+      REFUNDDAMAGED: 'Refund Damaged',
+      REFUNDDEFECTIVE: 'Refund Defective',
+      REFUNDNOCHANGE: 'Refund No Change',
+      REMOVE: 'Remove',
+      SALE: 'Sale',
+      STOCKOUT: 'Stockout',
+      TOPUP: 'Topup',
+      TRANSFER: 'Transfer',
+      VOIDED: 'Voided'
+    };
     $scope.displayColumns = {
       scheduleNumber: false,
       scheduleDate: false,
@@ -68,6 +82,18 @@ angular.module('ts5App')
       if (angular.isDefined($scope.displayColumns[columnName])) {
         $scope.displayColumns[columnName] = !$scope.displayColumns[columnName];
       }
+    };
+
+    $scope.filterTransactionTypes = function (transactionType) {
+      return $scope.supportedTransactionTypes.indexOf(transactionType.name) > -1;
+    };
+
+    $scope.getOverriddenTransactionTypeName = function (transactionTypeName) {
+      if (transactionTypeName in $scope.overrideTransactionTypeNames) {
+        return $scope.overrideTransactionTypeNames[transactionTypeName];
+      }
+
+      return transactionTypeName;
     };
 
     $scope.getTransactions = function () {
@@ -170,6 +196,12 @@ angular.module('ts5App')
       $scope.transactions = [];
     }
 
+    function setTransactionTypes (dataFromAPI) {
+      var transactionTypes = angular.copy(dataFromAPI);
+
+      $scope.transactionTypes = transactionTypes;
+    }
+
     function setCompanyCurrencies (dataFromAPI) {
       var companyCurrencies = angular.copy(dataFromAPI.response);
 
@@ -186,6 +218,10 @@ angular.module('ts5App')
       var creditCardTypes = angular.copy(dataFromAPI.companyCCTypes);
 
       $scope.creditCardTypes = creditCardTypes;
+    }
+
+    function getTransactionTypes () {
+      recordsService.getTransactionTypes().then(setTransactionTypes);
     }
 
     function getCompanyCurrencies () {
@@ -205,6 +241,7 @@ angular.module('ts5App')
 
     function makeDependencyPromises () {
       return [
+        getTransactionTypes(),
         getCompanyCurrencies(),
         getCompanyStations(),
         getCreditCardTypes()
