@@ -11,6 +11,7 @@ describe('Service: stockTakeFactory', function() {
   var stockDashboardService;
   var stockTakeService;
   var itemsService;
+  var recordsService;
   var GlobalMenuService;
 
   beforeEach(inject(function(_stockTakeFactory_, $injector) {
@@ -19,6 +20,7 @@ describe('Service: stockTakeFactory', function() {
     stockDashboardService = $injector.get('stockDashboardService');
     stockTakeService = $injector.get('stockTakeService');
     itemsService = $injector.get('itemsService');
+    recordsService = $injector.get('recordsService');
     GlobalMenuService = $injector.get('GlobalMenuService');
 
     spyOn(catererStationService, 'getCatererStationList');
@@ -28,6 +30,8 @@ describe('Service: stockTakeFactory', function() {
     spyOn(stockTakeService, 'updateStockTake');
     spyOn(stockTakeService, 'importFromExcel');
     spyOn(itemsService, 'getItemsList');
+    spyOn(recordsService, 'getItemTypes');
+    spyOn(recordsService, 'getCharacteristics');
   }));
 
   describe('catererStationService calls', function() {
@@ -81,6 +85,17 @@ describe('Service: stockTakeFactory', function() {
       var companyId = 403;
       stockTakeFactory.getItemsMasterList(companyId);
       expect(itemsService.getItemsList).toHaveBeenCalledWith(companyId, true);
+    });
+  });
+
+  describe('recordsService calls', function() {
+    it('should call getItemTypes', function() {
+      stockTakeFactory.getItemTypes();
+      expect(recordsService.getItemTypes).toHaveBeenCalled();
+    });
+    it('should call getCharacteristics', function() {
+      stockTakeFactory.getCharacteristics();
+      expect(recordsService.getCharacteristics).toHaveBeenCalled();
     });
   });
 

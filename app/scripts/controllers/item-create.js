@@ -8,8 +8,7 @@
  */
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory,
-    $routeParams, GlobalMenuService, $q, dateUtility, $filter) {
+    currencyFactory, $routeParams, GlobalMenuService, $q, dateUtility, $filter) {
 
     var $this = this;
     $scope.formData = {
@@ -98,20 +97,20 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     };
 
-    // gets an item to $scope.editingItem
+    this.getItemSuccess = function(data) {
+      if ($this.validateItemCompany(data)) {
+        $this.updateFormData(data.retailItem);
+        $this.updateViewName(data.retailItem);
+        $this.setUIReady();
+        return;
+      }
+
+      return $location.path('/');
+    };
+
     this.getItem = function(id) {
       this.showLoadingModal('We are getting your Items data!');
-      itemsFactory.getItem(id).then(function(data) {
-        if ($this.validateItemCompany(data)) {
-          $this.updateFormData(data.retailItem);
-          $this.updateViewName(data.retailItem);
-        } else {
-          $location.path('/');
-          return false;
-        }
-
-        $this.setUIReady();
-      });
+      itemsFactory.getItem(id).then($this.getItemSuccess, $this.errorHandler);
     };
 
     this.showLoadingModal = function(text) {
@@ -540,7 +539,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setItemPriceTypes(response[10]);
       $this.setItemList(response[11].retailItems);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
-        this.getItem($routeParams.id);
+        $this.getItem($routeParams.id);
       } else {
         $this.setUIReady();
       }
@@ -548,10 +547,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.getDependencies = function() {
       $this.showLoadingModal('We are loading the Items data!');
-      var dependencyPromises = this.makeDependencyPromises();
-      $q.all(dependencyPromises).then(function(response) {
-        $this.setDependencies(response);
-      });
+      var dependencyPromises = $this.makeDependencyPromises();
+      $q.all(dependencyPromises).then($this.setDependencies, $this.errorHandler);
     };
 
     this.setSalesCategories = function(data) {
@@ -1008,12 +1005,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         retailItem: itemData
       };
       var promises = $this.makeUpdatePromises(payload);
-      $q.all(promises).then(function(response) {
-        $this.updateSuccessHandler(response);
-      }, function(error) {
-
-        $this.errorHandler(error);
-      });
+      $q.all(promises).then($this.updateSuccessHandler, $this.errorHandler);
     };
 
     this.createItem = function(itemData) {

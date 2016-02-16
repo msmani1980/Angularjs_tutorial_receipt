@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "count": 2,
+    "limit": 2,
+    "start": 0
+  },
+  "response": [
+    {
+      "createdBy": 0,
+      "createdOn": "2016-02-01 23:13:23",
+      "updatedBy": 11,
+      "updatedOn": null,
+      "id": 11,
+      "companyId": 403,
+      "countryId": 109,
+      "volumeUnitId": 11,
+      "commodityCode": "API TEST 2",
+      "dutyRate": 2,
+      "alcoholic": false,
+      "startDate": "20160131",
+      "endDate": "20160229"
+    },
+    {
+      "createdBy": 0,
+      "createdOn": "2016-02-01 22:16:00",
+      "updatedBy": null,
+      "updatedOn": "2016-02-01 22:16:00",
+      "id": 1,
+      "companyId": 403,
+      "countryId": 109,
+      "volumeUnitId": 11,
+      "commodityCode": "API TEST",
+      "dutyRate": 342.45,
+      "alcoholic": false,
+      "startDate": "20160131",
+      "endDate": "20160229"
+    }
+  ]
+}
