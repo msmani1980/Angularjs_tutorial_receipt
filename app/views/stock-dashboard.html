@@ -107,7 +107,7 @@
 
       <tr
         ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults"
-        ng-class="{'bg-success':isRecordUpdatedToday(stockItem), 'bg-danger':isCurrentCountMismatched(stockItem) && !isRecordUpdatedToday(stockItem)}">
+        ng-class="{'bg-success':isRecordUpdatedToday(stockItem)}">
         <td>{{stockItem.itemCode}}</td>
         <td>{{stockItem.itemName}}</td>
         <td>
