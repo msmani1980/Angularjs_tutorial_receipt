@@ -24,13 +24,6 @@
 
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label for="item-name">S.O. Ref. #</label>
-                <input ng-model="search.stockOwnerCode" type="text" class="form-control" id="stock-owner-code">
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-6 col-md-4">
-              <div class="form-group">
                 <label for="item-code">Item Code</label>
                 <input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="Item012">
               </div>
@@ -115,9 +108,6 @@
 
       <tr>
 
-        <th>
-          <abbr title="Stock Owner Reference Number">S.O. Ref. #</abbr>
-        </th>
         <th>Code</th>
         <th>Name</th>
         <th>Type</th>
@@ -134,7 +124,6 @@
 
       <tr id="item-{{item.id}}" ng-repeat="item in itemsList">
 
-        <td>{{ item.stockOwnerCode }}</td>
         <td>{{ item.itemCode }}</td>
         <td>{{ item.itemName }}</td>
         <td>{{ item.itemTypeName }}</td>
