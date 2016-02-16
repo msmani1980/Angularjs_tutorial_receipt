@@ -32,7 +32,7 @@ angular.module('ts5App')
       $scope.displayError = true;
       $scope.errorResponse = dataFromAPI;
     }
-    
+
     //
     //function isPanelOpen(panelName) {
     //  return !angular.element(panelName).hasClass('collapse');
@@ -208,36 +208,52 @@ angular.module('ts5App')
     //  }
     //};
     //
-    //function formatSearchPayloadForAPI() {
-    //  var payload = {};
-    //  if ($scope.search && $scope.search.commodityCode) {
-    //    payload.commodityCode = $scope.search.commodityCode;
-    //  }
-    //
-    //  if ($scope.search && $scope.search.startDate) {
-    //    payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
-    //  }
-    //
-    //  if ($scope.search && $scope.search.endDate) {
-    //    payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
-    //  }
-    //
-    //  return payload;
-    //}
-    //
+
+    function formatMultiSelectValuesForSearchPayload(searchKey, valueKey, payloadKey, workngPayload) {
+      var newPayload = [];
+      angular.forEach($scope.search[searchKey], function (record) {
+        newPayload.push(record[valueKey]);
+      });
+
+      if (newPayload.length) {
+        workngPayload[payloadKey] = newPayload.toString();
+      }
+    }
+
+    function formatSearchPayloadForAPI() {
+      if (!$scope.search) {
+        return {};
+      }
+
+      var payload = {};
+      if ($scope.search.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
+      }
+
+      if ($scope.search.endDate) {
+        payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
+      }
+
+      if ($scope.search.itemType) {
+        payload.itemTypeId = $scope.search.itemType;
+      }
+
+      formatMultiSelectValuesForSearchPayload('commodityCodes', 'commodityCode', 'commodityCode', payload);
+      formatMultiSelectValuesForSearchPayload('retailItems', 'id', 'itemMasterId', payload);
+
+      return payload;
+    }
+
     function formatResponseForApp(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
 
       var newItemExciseDutyList = angular.copy(dataFromAPI.response);
-      angular.forEach(newItemExciseDutyList, function (exciseDuty) {
-        exciseDuty.startDate = dateUtility.formatDateForApp(exciseDuty.startDate);
-        exciseDuty.endDate = dateUtility.formatDateForApp(exciseDuty.endDate);
-
-        //var countryMatch = lodash.findWhere($scope.countryList, { id: exciseDuty.countryId });
-        //var volumeMatch = lodash.findWhere($scope.volumeUnits, { id: exciseDuty.volumeUnitId });
-        //exciseDuty.countryName = (angular.isDefined(countryMatch)) ? countryMatch.countryName : '';
-        //exciseDuty.volumeUnit = (angular.isDefined(volumeMatch)) ? volumeMatch.unitName : '';
-        //exciseDuty.dutyRate = parseFloat(exciseDuty.dutyRate).toFixed(2);
+      angular.forEach(newItemExciseDutyList, function (record) {
+        record.startDate = dateUtility.formatDateForApp(record.startDate);
+        record.endDate = dateUtility.formatDateForApp(record.endDate);
+        var itemTypeMatch = lodash.findWhere($scope.itemTypes, { id: parseInt(record.itemTypeId) });
+        record.itemTypeName = (angular.isDefined(itemTypeMatch)) ? itemTypeMatch.name : '';
+        record.dutyRate = parseFloat(record.alcoholVolume).toFixed(2);
       });
 
       $scope.itemExciseDutyList = ($scope.itemExciseDutyList) ? $scope.itemExciseDutyList.concat(newItemExciseDutyList) : newItemExciseDutyList;
@@ -248,8 +264,7 @@ angular.module('ts5App')
         return;
       }
 
-      //var payload = formatSearchPayloadForAPI();
-      var payload = {};
+      var payload = formatSearchPayloadForAPI();
       lodash.assign(payload, {
         limit: $this.meta.limit,
         offset: $this.meta.offset
@@ -284,10 +299,10 @@ angular.module('ts5App')
       $q.all(promises).then(completeInit, showErrors);
     }
 
-    function initVars () {
+    function initVars() {
       initLazyLoadingMeta();
       $scope.newRecord = {};
-      $scope.search = null;
+      $scope.search = {};
       $scope.recordToEdit = null;
       $scope.inEditMode = false;
       $scope.minDate = dateUtility.tomorrowFormatted();
