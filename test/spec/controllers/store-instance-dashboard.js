@@ -42,9 +42,10 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   var location;
   var _lodash;
   var identityAccessFactory;
+  var localStorage;
   var ENV;
 
-  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, lodash) {
+  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, $localStorage, lodash) {
     inject(function(_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_,
       _servedStoreStatus_, _servedStoreStatusResponse_, _servedStoreTimeConfig_, _servedFeatures_,
       _servedStoreInstance_) {
@@ -63,6 +64,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     scope = $rootScope.$new();
     location = $location;
     _lodash = lodash;
+    localStorage = $localStorage;
 
     storeInstanceDashboardFactory = $injector.get('storeInstanceDashboardFactory');
     storeTimeConfig = $injector.get('storeTimeConfig');
@@ -207,11 +209,12 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           arrivalStationCode: 'LON3,MDW',
           storeInstanceId: '4',
           statusId: '5',
-          limit: 100, offset: 0
+          limit: 100,
+          offset: 0
         });
       });
 
-      it('should add Unpacking and Offload status Ids in search when On Floor is searched', function () {
+      it('should add Unpacking and Offload status Ids in search when On Floor is searched', function() {
         scope.search.storeStatusId = '10';
         scope.searchStoreInstanceDashboardData();
         expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({
@@ -224,7 +227,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           arrivalStationCode: 'LON3,MDW',
           storeInstanceId: '4',
           statusId: '10,11,12',
-          limit: 100, offset: 0
+          limit: 100,
+          offset: 0
         });
       });
     });
@@ -256,7 +260,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
         expect(scope.storeStatusList.length > 0).toEqual(true);
       });
 
-      it('should filter status list', function () {
+      it('should filter status list', function() {
         expect(scope.filteredStoreStatusList).toBeDefined();
         expect(scope.filteredStoreStatusList.length > 0).toEqual(true);
         expect(scope.filteredStoreStatusList.length < scope.storeStatusList.length).toEqual(true);
@@ -469,7 +473,9 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       store = angular.copy(scope.storeInstanceList[0]);
       scope.displayUndispatchConfirmation(store);
       mockDialogObject = {
-        title: sprintf('Are you sure you want to undispatch Store Number %s for Schedule Date %s and Store Instance %d?', store.storeNumber, store.scheduleDate, store.id),
+        title: sprintf(
+          'Are you sure you want to undispatch Store Number %s for Schedule Date %s and Store Instance %d?',
+          store.storeNumber, store.scheduleDate, store.id),
         confirmationCallback: function() {
           scope.undispatch(store.id);
         }
@@ -701,7 +707,9 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     it('should set hasSelectedStore to true and exportBulkURL to valid values', function() {
       scope.getStoreInstanceDashboardData();
       scope.$digest();
-      var store = _lodash.filter(scope.storeInstanceList, function(s) { return s.id === 53; })[0];
+      var store = _lodash.filter(scope.storeInstanceList, function(s) {
+        return s.id === 53;
+      })[0];
 
       expect(store.id).toEqual(53);
       store.selected = true;
@@ -710,16 +718,29 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       store.replenishments[0].actionButtons = ['Get Flight Docs'];
       scope.storeSelectionToggled();
       expect(scope.hasSelectedStore).toBeTruthy();
-      expect(scope.exportBulkURL).toEqual(ENV.apiUrl + '/api/dispatch/store-instances/documents/C208.pdf?sessionToken=fakeSessionToken&storeInstanceIds=53+1038');
+      expect(scope.exportBulkURL).toEqual(ENV.apiUrl +
+        '/api/dispatch/store-instances/documents/C208.pdf?sessionToken=fakeSessionToken&storeInstanceIds=53+1038'
+      );
     });
   });
 
-  it('should delete store instance be called', function () {
-    scope.storeInstanceToDelete = {id: 1};
+  it('should delete store instance be called', function() {
+    scope.storeInstanceToDelete = {
+      id: 1
+    };
     scope.deleteStoreInstance();
 
     expect(storeInstanceDashboardFactory.deleteStoreInstance).toHaveBeenCalledWith(1);
   });
 
+  describe('checkForLocalStorage', function() {
+    it('should delete $localStorage.stepTwoFromStepOne if it exists', function() {
+      localStorage.stepTwoFromStepOne = {
+        storeId: '2042'
+      };
+      scope.checkForLocalStorage();
+      expect(localStorage.stepTwoFromStepOne).toEqual(undefined);
+    });
+  });
 
 });
