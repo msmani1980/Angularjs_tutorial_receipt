@@ -14,7 +14,7 @@ angular.module('ts5App')
     function initLazyLoadingMeta() {
       $this.meta = {
         count: undefined,
-        limit: 10,
+        limit: 100,
         offset: 0
       };
     }
@@ -29,7 +29,6 @@ angular.module('ts5App')
 
     function showErrors(dataFromAPI) {
       hideLoadingModal();
-      console.log($scope.exciseDutyCreateForm);
       $scope.displayError = true;
       $scope.errorResponse = dataFromAPI;
     }
@@ -251,7 +250,7 @@ angular.module('ts5App')
       lodash.assign(payload, {
         limit: $this.meta.limit,
         offset: $this.meta.offset,
-        sortOn: 'countryId,commodityCode,startDate',
+        sortOn: 'country.countryName,commodityCode,startDate',
         sortBy: 'ASC'
       });
 
