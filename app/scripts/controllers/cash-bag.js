@@ -230,7 +230,7 @@ angular.module('ts5App')
         return formatAsCurrency(0);
       }
 
-      if (!angular.isNumber(amount)) {
+      if (!angular.isNumber(parseInt(amount))) {
         return formatAsCurrency(0);
       }
 
