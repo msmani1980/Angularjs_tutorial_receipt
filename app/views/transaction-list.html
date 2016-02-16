@@ -64,7 +64,7 @@
                 <label for="transaction-type">Transaction Type</label>
                 <select ng-model="search.transactionType" class="form-control" id="transaction-type">
                   <option value="">Please select</option>
-                  <option value="{{transactionType.id}}" ng-repeat="transactionType in transactionTypes">{{ transactionType.name }}</option>
+                  <option value="{{transactionType.name}}" ng-repeat="transactionType in transactionTypes | filter: filterTransactionTypes | orderBy: 'name'">{{ getOverriddenTransactionTypeName(transactionType.name) }}</option>
                 </select>
               </div>
             </div>
