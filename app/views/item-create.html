@@ -63,383 +63,387 @@
   </div>
   <!--/TopHeader -->
 
-  <div class="create-form-container" ng-show="uiSelectTemplateReady">
+  <div class="create-form-container">
 
     <error-dialog form-object="form" error-response="errorResponse" display="displayError">
     </error-dialog>
 
     <form name="form" class="form edit-form create-item-form">
 
-      <div ng-show="displayCloneInfo" class="alert alert-info alert-dismissible fade in ng-hide" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span>×</span></button>
-        <h4 id="oh-snap!-you-got-an-error!">
-          <strong>Note</strong>: To create a new version of this record - the Item Code, Item Name AND POS Display Name fields should remain unchanged.
-          Changing these fields will create a new Item record if one that match these fields do not already exist.
-          <a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a>
-        </h4>
-      </div>
+      <div ng-if="uiSelectTemplateReady">
 
-      <h3 id="item-information">Item Information</h3>
-
-      <div class="row">
-
-        <div class="col-xs-12 col-sm-6">
-
-          <fieldset ng-disabled="isDisabled()">
-
-            <input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.alphanumeric"
-                        placeholder="Item123" min-length="1" max-length="10"></input-text>
-
-            <input-text label="Retail Item Name" name="itemName" required="true" pattern="regexp.sentence"
-                        placeholder="Cool New Item" min-length="1" max-length="40"></input-text>
-
-            <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word"
-                        placeholder="New Cool Item" min-length="1" max-length="30"></input-text>
-
-            <input-textarea label="Item Description" name="desc" required="true" pattern="regexp.sentence"
-                        placeholder="A simple description..." max-length="255"></input-textarea>
-
-            <input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="cool new item"
-                        max-length="500"></input-text>
-
-            <input-text label="Unique Selling Point" name="sellingPoint" pattern="regexp.word"
-                        placeholder="This item is really cool" max-length="100"></input-text>
-
-            <div class="form-group">
-
-              <input ng-model="formData.isPrintReceipt" type="checkbox"/>
-              <label>Print Receipt</label>
-
-            </div>
-
-          </fieldset>
-
-          <div class="row">
-            <div class="col-xs-12 col-sm-6">
-              <date-picker-field ng-if="minDate"
-                disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From"
-                min-date="minDate" required="true" ng-model="formData.startDate">
-              </date-picker-field>
-            </div>
-            <div class="col-xs-12 col-sm-6">
-              <date-picker-field ng-if="minDate" disable="viewOnly || itemIsInactive" form="form"
-                name="EffectiveTo" min-date="minDate" label="Effective To" required="true"
-                ng-model="formData.endDate">
-              </date-picker-field>
-            </div>
-          </div>
-
-          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
-
-            <div class="form-group">
-              <label>Sales Category *</label>
-              <select name="categoryId" required ng-model="formData.categoryId" class="form-control">
-                <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
-                        value="{{ category.id }}">{{ category.name }}
-                </option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Item Type *</label>
-              <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
-                <option ng-selected="setSelected(formData.itemTypeId, type.id)" ng-repeat="type in itemTypes"
-                        value="{{ type.id }}">{{ type.name }}
-                </option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Item Characteristics</label>
-              <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics">
-                <ui-select-match placeholder="Item Characteristics" ui-lock-choice="isDisabled()">{{ $item.name }}
-                </ui-select-match>
-                <ui-select-choices
-                  repeat="character in filteredCharacteristics | filter: $select.search | orderBy:'name'">
-                  <div ng-bind-html="character.name | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-
-            <div class="form-group">
-              <input-text label="URL" name="sellingPoint" pattern="regexp.word" ng-if="shouldDisplayURLField" placeholder="http://www.website.com"></input-text>
-            </div>
-
-            <input-textarea ng-if="isVirtualSelected" label="Notes" name="notes" placeholder="Notes for Virtual" max-length="255"></input-textarea>
-
-            <input-textarea ng-if="isVoucherSelected" label="Notes" name="notes" placeholder="Notes for Voucher" max-length="255"></input-textarea>
-
-            <div class="form-group">
-              <label>Item Substitutions</label>
-              <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.substitutions" theme="bootstrap">
-                <ui-select-match placeholder="Item Substitutions" ui-lock-choice="isDisabled()">{{ $item.itemName }}
-                </ui-select-match>
-                <ui-select-choices repeat="substitution in substitutions | filter: $select.search | orderBy:'itemName'">
-                  <div ng-bind-html="substitution.itemName | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-
-            <div class="form-group">
-              <label>Item Recommendations</label>
-              <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.recommendations" theme="bootstrap">
-                <ui-select-match placeholder="Item Recommendations" ui-lock-choice="isDisabled()">{{ $item.itemName }}
-                </ui-select-match>
-                <ui-select-choices
-                  repeat="recommendation in recommendations | filter: $select.search | orderBy:'itemName'">
-                  <div ng-bind-html="recommendation.itemName | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-
-          </fieldset>
-
+        <div ng-show="displayCloneInfo" class="alert alert-info alert-dismissible fade in ng-hide" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span>×</span></button>
+          <h4 id="oh-snap!-you-got-an-error!">
+            <strong>Note</strong>: To create a new version of this record - the Item Code, Item Name AND POS Display Name fields should remain unchanged.
+            Changing these fields will create a new Item record if one that match these fields do not already exist.
+            <a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a>
+          </h4>
         </div>
 
-        <div class="col-xs-12 col-sm-6">
+        <h3 id="item-information">Item Information</h3>
 
-          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
+        <div class="row">
 
-            <div class="form-group">
-              <label>Item Tags</label>
-              <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.tags" theme="bootstrap">
-                <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}
-                </ui-select-match>
-                <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
-                  <div ng-bind-html="tag.name | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
+          <div class="col-xs-12 col-sm-6">
 
-            <div class="form-group">
-              <label>Allergen</label>
-              <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.allergens" theme="bootstrap">
-                <ui-select-match placeholder="Allergens" ui-lock-choice="isDisabled()">{{ $item.name }}
-                </ui-select-match>
-                <ui-select-choices repeat="allergen in allergens | filter: $select.search | orderBy:'name'">
-                  <div ng-bind-html="allergen.name | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
+            <fieldset ng-disabled="isDisabled()">
 
-          </fieldset>
+              <input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.alphanumeric"
+                          placeholder="Item123" min-length="1" max-length="10"></input-text>
 
-          <fieldset>
+              <input-text label="Retail Item Name" name="itemName" required="true" pattern="regexp.sentence"
+                          placeholder="Cool New Item" min-length="1" max-length="40"></input-text>
 
-            <image-upload ng-hide="isDisabled()"></image-upload>
+              <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word"
+                          placeholder="New Cool Item" min-length="1" max-length="30"></input-text>
 
-            <div id="images-container">
+              <input-textarea label="Item Description" name="desc" required="true" pattern="regexp.sentence"
+                          placeholder="A simple description..." max-length="255"></input-textarea>
 
-              <div ng-repeat="(key,image) in formData.images track by $index">
-                <input-item-image></input-item-image>
+              <input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="cool new item"
+                          max-length="500"></input-text>
+
+              <input-text label="Unique Selling Point" name="sellingPoint" pattern="regexp.word"
+                          placeholder="This item is really cool" max-length="100"></input-text>
+
+              <div class="form-group">
+
+                <input ng-model="formData.isPrintReceipt" type="checkbox"/>
+                <label>Print Receipt</label>
+
               </div>
 
-            </div>
-
-          </fieldset>
-
-          <fieldset ng-disabled="isDisabled()">
-
-            <h3>Global Trade In Numbers (GTIN)</h3>
+            </fieldset>
 
             <div class="row">
-              <div class="form-group col-md-8"
-                   ng-if="isVoucherSelected">
-                <select class="form-control"
-                        ng-disabled="formData.globalTradeNumbers.length > 0"
-                        ng-model="formData.shouldUseDynamicBarcode"
-                        ng-options="option.label for option in dynamicStaticBarcodeOptions track by option.value"
-                        required>
+              <div class="col-xs-12 col-sm-6">
+                <date-picker-field ng-if="minDate"
+                  disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From"
+                  min-date="minDate" required="true" ng-model="formData.startDate">
+                </date-picker-field>
+              </div>
+              <div class="col-xs-12 col-sm-6">
+                <date-picker-field ng-if="minDate" disable="viewOnly || itemIsInactive" form="form"
+                  name="EffectiveTo" min-date="minDate" label="Effective To" required="true"
+                  ng-model="formData.endDate">
+                </date-picker-field>
+              </div>
+            </div>
+
+            <fieldset ng-disabled="isDisabled()">
+
+              <div class="form-group">
+                <label>Sales Category *</label>
+                <select name="categoryId" required ng-model="formData.categoryId" class="form-control">
+                  <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
+                          value="{{ category.id }}">{{ category.name }}
+                  </option>
                 </select>
               </div>
-              <div class="form-group col-md-4">
-                <button type="button" ng-disabled="isDisabled()" class="btn btn-primary" ng-click="addGTIN()"
-                        ng-hide="formData.shouldUseDynamicBarcode.value">
-                  <i class="fa fa-plus"></i> Add GTIN
-                </button>
-              </div>
-            </div>
 
-            <div id="gtin-container">
-              <div ng-repeat="(key,GTIN) in formData.globalTradeNumbers track by $index">
-                <input-gtin key="key"></input-gtin>
-              </div>
-            </div>
-
-            <input-text label="Mfg. Part Number" name="mfgPartNumber" pattern="regexp.word" placeholder="1234567890"
-                        max-length="25"></input-text>
-
-            <input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="0987654321"
-                        max-length="25"></input-text>
-
-            <tabset justified="true" ng-hide="isQrCreateHidden()">
-              <tab heading="QR Create">
-                <qr-create></qr-create>
-              </tab>
-
-              <tab heading="QR Upload">
-                <qr-upload></qr-upload>
-              </tab>
-            </tabset>
-
-            <div class="panel panel-default" ng-show="isQrCodeSet()">
-              <div class="panel-heading">
-                <p class="panel-title">
-                  <i class="fa fa-image"></i> QR Code
-						      <span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removeQRCode()">
-						        <i class="fa fa-close"></i>
-						      </span>
-                </p>
-              </div>
-
-              <div class="panel-body">
-                <img ng-src="{{ formData.qrCodeImgUrl }}"/>
-              </div>
-
-            </div>
-
-          </fieldset>
-
-        </div>
-      </div>
-
-      <fieldset ng-disabled="isDisabled()">
-
-        <h3 id="measurements">Measurements</h3>
-
-        <div class="row">
-          <div class="col-xs-12 col-sm-6">
-            <label>Item Weight</label>
-
-            <div class="row">
               <div class="form-group">
-                <div class="col-xs-7">
-                  <input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
-                </div>
-
-                <div class="col-xs-5">
-                  <select ng-model="formData.weightType" class="form-control col-xs-2">
-                    <option ng-selected="formData.weightType === weight.id" ng-repeat="weight in weightUnits"
-                            value="{{ weight.id }}">{{ weight.unitCode }}
-                    </option>
-                  </select>
-                </div>
+                <label>Item Type *</label>
+                <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
+                  <option ng-selected="setSelected(formData.itemTypeId, type.id)" ng-repeat="type in itemTypes"
+                          value="{{ type.id }}">{{ type.name }}
+                  </option>
+                </select>
               </div>
-            </div>
+
+              <div class="form-group">
+                <label>Item Characteristics</label>
+                <ui-select multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics">
+                  <ui-select-match placeholder="Item Characteristics" ui-lock-choice="isDisabled()">{{ $item.name }}
+                  </ui-select-match>
+                  <ui-select-choices
+                    repeat="character in filteredCharacteristics | filter: $select.search | orderBy:'name'">
+                    <div ng-bind-html="character.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+              <div class="form-group">
+                <input-text label="URL" name="sellingPoint" pattern="regexp.word" ng-if="shouldDisplayURLField" placeholder="http://www.website.com"></input-text>
+              </div>
+
+              <input-textarea ng-if="isVirtualSelected" label="Notes" name="notes" placeholder="Notes for Virtual" max-length="255"></input-textarea>
+
+              <input-textarea ng-if="isVoucherSelected" label="Notes" name="notes" placeholder="Notes for Voucher" max-length="255"></input-textarea>
+
+              <div class="form-group">
+                <label>Item Substitutions</label>
+                <ui-select multiple ng-model="formData.substitutions" theme="bootstrap">
+                  <ui-select-match placeholder="Item Substitutions" ui-lock-choice="isDisabled()">{{ $item.itemName }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="substitution in substitutions | filter: $select.search | orderBy:'itemName'">
+                    <div ng-bind-html="substitution.itemName | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+              <div class="form-group">
+                <label>Item Recommendations</label>
+                <ui-select multiple ng-model="formData.recommendations" theme="bootstrap">
+                  <ui-select-match placeholder="Item Recommendations" ui-lock-choice="isDisabled()">{{ $item.itemName }}
+                  </ui-select-match>
+                  <ui-select-choices
+                    repeat="recommendation in recommendations | filter: $select.search | orderBy:'itemName'">
+                    <div ng-bind-html="recommendation.itemName | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+            </fieldset>
+
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <label>Item Volume</label>
 
-            <div class="row">
+            <fieldset ng-disabled="isDisabled()">
+
               <div class="form-group">
-                <div class="col-xs-7">
-                  <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
+                <label>Item Tags</label>
+                <ui-select multiple ng-model="formData.tags" theme="bootstrap">
+                  <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
+                    <div ng-bind-html="tag.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+              <div class="form-group">
+                <label>Allergen</label>
+                <ui-select multiple ng-model="formData.allergens" theme="bootstrap">
+                  <ui-select-match placeholder="Allergens" ui-lock-choice="isDisabled()">{{ $item.name }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="allergen in allergens | filter: $select.search | orderBy:'name'">
+                    <div ng-bind-html="allergen.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+            </fieldset>
+
+            <fieldset>
+
+              <image-upload ng-hide="isDisabled()"></image-upload>
+
+              <div id="images-container">
+
+                <div ng-repeat="(key,image) in formData.images track by $index">
+                  <input-item-image></input-item-image>
                 </div>
 
-                <div class="col-xs-5">
-                  <select ng-model="formData.volumeType" class="form-control">
-                    <option ng-selected="formData.volumeType === volume.id" ng-repeat="volume in volumeUnits"
-                            value="{{ volume.id }}">{{ volume.unitCode }}
-                    </option>
+              </div>
+
+            </fieldset>
+
+            <fieldset ng-disabled="isDisabled()">
+
+              <h3>Global Trade In Numbers (GTIN)</h3>
+
+              <div class="row">
+                <div class="form-group col-md-8"
+                     ng-if="isVoucherSelected">
+                  <select class="form-control"
+                          ng-disabled="formData.globalTradeNumbers.length > 0"
+                          ng-model="formData.shouldUseDynamicBarcode"
+                          ng-options="option.label for option in dynamicStaticBarcodeOptions track by option.value"
+                          required>
                   </select>
                 </div>
+                <div class="form-group col-md-4">
+                  <button type="button" ng-disabled="isDisabled()" class="btn btn-primary" ng-click="addGTIN()"
+                          ng-hide="formData.shouldUseDynamicBarcode.value">
+                    <i class="fa fa-plus"></i> Add GTIN
+                  </button>
+                </div>
               </div>
-            </div>
+
+              <div id="gtin-container">
+                <div ng-repeat="(key, GTIN) in formData.globalTradeNumbers track by $index">
+                  <input-gtin key="key"></input-gtin>
+                </div>
+              </div>
+
+              <input-text label="Mfg. Part Number" name="mfgPartNumber" pattern="regexp.word" placeholder="1234567890"
+                          max-length="25"></input-text>
+
+              <input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="0987654321"
+                          max-length="25"></input-text>
+
+              <tabset justified="true" ng-hide="isQrCreateHidden()">
+                <tab heading="QR Create">
+                  <qr-create></qr-create>
+                </tab>
+
+                <tab heading="QR Upload">
+                  <qr-upload></qr-upload>
+                </tab>
+              </tabset>
+
+              <div class="panel panel-default" ng-show="isQrCodeSet()">
+                <div class="panel-heading">
+                  <p class="panel-title">
+                    <i class="fa fa-image"></i> QR Code
+  						      <span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removeQRCode()">
+  						        <i class="fa fa-close"></i>
+  						      </span>
+                  </p>
+                </div>
+
+                <div class="panel-body">
+                  <img ng-src="{{ formData.qrCodeImgUrl }}"/>
+                </div>
+
+              </div>
+
+            </fieldset>
+
           </div>
         </div>
-
-        <label>Measurements</label>
-        <span class="text-warning" ng-show="isMeasurementRequired() && !isMeasurementValid()"><p>* Length, Width and
-          Height fields are all required if one contains a value.</p></span>
-
-        <div class="row">
-
-          <div class="form-group"
-               ng-class="{ 'has-error' : isMeasurementRequired() && !isMeasurementValid() , 'has-success' : isMeasurementValid() }">
-            <div class="col-md-3 col-xs-3">
-              <input ng-model="formData.length" ng-required="isMeasurementRequired()" type="text" class="form-control"
-                     placeholder="Length" name="Length">
-            </div>
-
-            <div class="col-md-3 col-xs-3">
-              <input ng-model="formData.width" ng-required="isMeasurementRequired()" type="text" class="form-control"
-                     placeholder="Width" name="Width">
-            </div>
-
-            <div class="col-md-3 col-xs-3">
-              <input ng-model="formData.height" ng-required="isMeasurementRequired()" type="text" class="form-control"
-                     placeholder="Height" name="Height">
-            </div>
-
-            <div class="col-md-3 col-xs-3">
-              <select ng-model="formData.dimensionType" class="form-control" ng-required="isMeasurementRequired()"
-                      name="Unit of Measurement">
-                <option ng-selected="formData.dimensionType === dimension.id" ng-repeat="dimension in dimensionUnits"
-                        value="{{ dimension.id }}">{{ dimension.unitCode }}
-                </option>
-              </select>
-            </div>
-
-          </div>
-
-        </div>
-
-        </fieldset>
-
-        <h3 id="price-and-tax">Price & Tax</h3>
-
-        <div class="form-group">
-          <button id="add-price-group" ng-disabled="isDisabled()" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
-            <i class="fa fa-plus"></i> Add Price Type
-          </button>
-        </div>
-
-        <fieldset>
-
-          <div id="price-type-container">
-
-            <div ng-repeat="(key,itemPrice) in formData.prices track by $index">
-              <input-price-type></input-price-type>
-            </div>
-
-          </div>
-
-          <div class="form-group" ng-hide="isVoucherSelected">
-            <button id="add-tax-type" ng-disabled="isDisabled()" type="button" class="btn btn-primary"
-                    ng-click="addTaxType()">
-              <i class="fa fa-plus"></i> Add Tax Type
-            </button>
-          </div>
-
-        </fieldset>
 
         <fieldset ng-disabled="isDisabled()">
 
-        <div class="voucher-container" ng-if="isVoucherSelected">
+          <h3 id="measurements">Measurements</h3>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-6">
+              <label>Item Weight</label>
+
+              <div class="row">
+                <div class="form-group">
+                  <div class="col-xs-7">
+                    <input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
+                  </div>
+
+                  <div class="col-xs-5">
+                    <select ng-model="formData.weightType" class="form-control col-xs-2">
+                      <option ng-selected="formData.weightType === weight.id" ng-repeat="weight in weightUnits"
+                              value="{{ weight.id }}">{{ weight.unitCode }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6">
+              <label>Item Volume</label>
+
+              <div class="row">
+                <div class="form-group">
+                  <div class="col-xs-7">
+                    <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
+                  </div>
+
+                  <div class="col-xs-5">
+                    <select ng-model="formData.volumeType" class="form-control">
+                      <option ng-selected="formData.volumeType === volume.id" ng-repeat="volume in volumeUnits"
+                              value="{{ volume.id }}">{{ volume.unitCode }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <label>Measurements</label>
+          <span class="text-warning" ng-show="isMeasurementRequired() && !isMeasurementValid()"><p>* Length, Width and
+            Height fields are all required if one contains a value.</p></span>
+
+          <div class="row">
+
+            <div class="form-group"
+                 ng-class="{ 'has-error' : isMeasurementRequired() && !isMeasurementValid() , 'has-success' : isMeasurementValid() }">
+              <div class="col-md-3 col-xs-3">
+                <input ng-model="formData.length" ng-required="isMeasurementRequired()" type="text" class="form-control"
+                       placeholder="Length" name="Length">
+              </div>
+
+              <div class="col-md-3 col-xs-3">
+                <input ng-model="formData.width" ng-required="isMeasurementRequired()" type="text" class="form-control"
+                       placeholder="Width" name="Width">
+              </div>
+
+              <div class="col-md-3 col-xs-3">
+                <input ng-model="formData.height" ng-required="isMeasurementRequired()" type="text" class="form-control"
+                       placeholder="Height" name="Height">
+              </div>
+
+              <div class="col-md-3 col-xs-3">
+                <select ng-model="formData.dimensionType" class="form-control" ng-required="isMeasurementRequired()"
+                        name="Unit of Measurement">
+                  <option ng-selected="formData.dimensionType === dimension.id" ng-repeat="dimension in dimensionUnits"
+                          value="{{ dimension.id }}">{{ dimension.unitCode }}
+                  </option>
+                </select>
+              </div>
+
+            </div>
+
+          </div>
+
+          </fieldset>
+
+          <h3 id="price-and-tax">Price & Tax</h3>
+
           <div class="form-group">
-            <label>Voucher *</label>
-            <ui-select ng-if="uiSelectTemplateReady" required ng-model="formData.voucher" theme="bootstrap" name="Voucher">
-              <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()">{{ $select.selected.name}}
-              </ui-select-match>
-              <ui-select-choices
-                repeat="voucher in discountList | filter: $select.search | orderBy:'name'">
-                <div ng-bind-html="voucher.name | highlight: $select.search"></div>
-                <div>{{voucher.startDate}} - {{voucher.endDate}}</div>
-              </ui-select-choices>
-            </ui-select>
-          </div>
-        </div>
-
-        <div id="tax-type-container">
-
-          <div ng-repeat="(key,itemTax) in formData.taxes track by $index">
-            <input-tax-type></input-tax-type>
+            <button id="add-price-group" ng-disabled="isDisabled()" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
+              <i class="fa fa-plus"></i> Add Price Type
+            </button>
           </div>
 
-        </div>
+          <fieldset>
 
-      </fieldset>
+            <div id="price-type-container">
+
+              <div ng-repeat="(key, itemPrice) in formData.prices track by $index">
+                <input-price-type></input-price-type>
+              </div>
+
+            </div>
+
+            <div class="form-group" ng-hide="isVoucherSelected">
+              <button id="add-tax-type" ng-disabled="isDisabled()" type="button" class="btn btn-primary"
+                      ng-click="addTaxType()">
+                <i class="fa fa-plus"></i> Add Tax Type
+              </button>
+            </div>
+
+          </fieldset>
+
+          <fieldset ng-disabled="isDisabled()">
+
+          <div class="voucher-container" ng-if="isVoucherSelected">
+            <div class="form-group">
+              <label>Voucher *</label>
+              <ui-select required ng-model="formData.voucher" theme="bootstrap" name="Voucher">
+                <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()">{{ $select.selected.name}}
+                </ui-select-match>
+                <ui-select-choices
+                  repeat="voucher in discountList | filter: $select.search | orderBy:'name'">
+                  <div ng-bind-html="voucher.name | highlight: $select.search"></div>
+                  <div>{{voucher.startDate}} - {{voucher.endDate}}</div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+
+          <div id="tax-type-container">
+
+            <div ng-repeat="(key,itemTax) in formData.taxes track by $index">
+              <input-tax-type></input-tax-type>
+            </div>
+
+          </div>
+
+        </fieldset>
+
+      </div>
 
     </form>
 

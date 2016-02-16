@@ -9,7 +9,7 @@
 
 	<ul class="list-group">
 
-		<li class="list-group-item" ng-repeat="error in errorRequired" ng-show="showValidationErrors()">
+		<li class="list-group-item" ng-repeat="error in errorRequired track by $index" ng-show="showValidationErrors()">
 			<span class="label label-warning">
         <i class="fa fa-asterisk"></i>
       </span>
@@ -18,7 +18,7 @@
       </span>
 		</li>
 
-		<li class="list-group-item" ng-repeat="error in errorPattern"  ng-show="showValidationErrors()">
+		<li class="list-group-item" ng-repeat="error in errorPattern track by $index" ng-show="showValidationErrors()">
       <span class="label label-warning">
         <i class="fa fa-minus"></i>
       </span>
@@ -27,7 +27,7 @@
       </span>
 		</li>
 
-    <li class="list-group-item" ng-repeat="error in $parent.errorCustom">
+    <li class="list-group-item" ng-repeat="error in $parent.errorCustom track by $index">
       <span class="label label-warning">
         <i class="fa fa-minus"></i>
       </span>
@@ -45,7 +45,7 @@
       </span>
     </li>
 
-    <li class="list-group-item" ng-repeat="error in errorResponse.data" ng-switch on="error.code" ng-show="showFailedRequest()">
+    <li class="list-group-item" ng-repeat="error in errorResponse.data track by $index" ng-switch on="error.code" ng-show="showFailedRequest()">
 
       <span class="label label-danger">
         <i class="fa fa-ban"></i>
@@ -54,7 +54,7 @@
       <span class="error">
 
         The <strong>{{ error.field }}</strong>
-        <span ng-switch-default> {{ error.value }} </span>
+        <span ng-switch-default>{{ error.value }}</span>
         <span ng-switch-when="000">Field can't be empty.</span>
         <span ng-switch-when="001">Data format is invalid.</span>
         <span ng-switch-when="002">Minimum length not reached.</span>
