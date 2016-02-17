@@ -123,14 +123,15 @@ angular.module('ts5App')
     };
 
     function formatRecordForAPI(record) {
-      //var oldRecordMatch = lodash.findWhere($scope.exciseDutyList, { id: record.id });
-      //if ($scope.inEditMode && !record.startDate) {
-      //  record.startDate = oldRecordMatch.startDate;
-      //}
-      //
-      //if ($scope.inEditMode && !record.endDate) {
-      //  record.endDate = oldRecordMatch.endDate;
-      //}
+      // TODO: test payload for edit
+      var oldRecordMatch = lodash.findWhere($scope.itemExciseDutyList, { id: record.id });
+      if ($scope.inEditMode && !record.startDate) {
+        record.startDate = oldRecordMatch.startDate;
+      }
+
+      if ($scope.inEditMode && !record.endDate) {
+        record.endDate = oldRecordMatch.endDate;
+      }
 
       var payload = {
         startDate: dateUtility.formatDateForAPI(record.startDate),
@@ -276,6 +277,28 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     };
 
+    function watchDatesSuccess(responseFromAPI) {
+      console.log('set!');
+      $scope.exciseDutyListForCreate = angular.copy(responseFromAPI.response);
+    }
+
+    function watchNewRecordDates() {
+      $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function () {
+        console.log('watch!');
+        if (isPanelOpen('#create-panel') && $scope.newRecord.startDate && $scope.newRecord.endDate) {
+          console.log('get!');
+          var payload = {
+            startDate: dateUtility.formatDateForAPI($scope.newRecord.startDate),
+            endDate: dateUtility.formatDateForAPI($scope.newRecord.endDate)
+          };
+          
+          exciseDutyRelationshipFactory.getExciseDutyList(payload).then(watchDatesSuccess, showErrors);
+        } else {
+          $scope.exciseDutyListForCreate = null;
+        }
+      });
+    }
+
     function completeInit(responseArray) {
       $scope.exciseDutyList = angular.copy(responseArray[0].response);
       $scope.itemTypes = angular.copy(responseArray[1]);
@@ -307,6 +330,7 @@ angular.module('ts5App')
     function init() {
       showLoadingModal('initializing');
       initVars();
+      watchNewRecordDates();
       callInitAPIs();
     }
 
