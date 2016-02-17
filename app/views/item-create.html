@@ -70,7 +70,7 @@
 
     <form name="form" class="form edit-form create-item-form">
 
-      <div ng-if="uiSelectTemplateReady">
+      <div ng-show="uiSelectTemplateReady">
 
         <div ng-show="displayCloneInfo" class="alert alert-info alert-dismissible fade in ng-hide" role="alert">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span>×</span></button>
@@ -153,7 +153,7 @@
 
               <div class="form-group">
                 <label>Item Characteristics</label>
-                <ui-select multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics">
+                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics">
                   <ui-select-match placeholder="Item Characteristics" ui-lock-choice="isDisabled()">{{ $item.name }}
                   </ui-select-match>
                   <ui-select-choices
@@ -173,7 +173,7 @@
 
               <div class="form-group">
                 <label>Item Substitutions</label>
-                <ui-select multiple ng-model="formData.substitutions" theme="bootstrap">
+                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.substitutions" theme="bootstrap">
                   <ui-select-match placeholder="Item Substitutions" ui-lock-choice="isDisabled()">{{ $item.itemName }}
                   </ui-select-match>
                   <ui-select-choices repeat="substitution in substitutions | filter: $select.search | orderBy:'itemName'">
@@ -184,7 +184,7 @@
 
               <div class="form-group">
                 <label>Item Recommendations</label>
-                <ui-select multiple ng-model="formData.recommendations" theme="bootstrap">
+                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.recommendations" theme="bootstrap">
                   <ui-select-match placeholder="Item Recommendations" ui-lock-choice="isDisabled()">{{ $item.itemName }}
                   </ui-select-match>
                   <ui-select-choices
@@ -204,7 +204,7 @@
 
               <div class="form-group">
                 <label>Item Tags</label>
-                <ui-select multiple ng-model="formData.tags" theme="bootstrap">
+                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.tags" theme="bootstrap">
                   <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}
                   </ui-select-match>
                   <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
@@ -215,7 +215,7 @@
 
               <div class="form-group">
                 <label>Allergen</label>
-                <ui-select multiple ng-model="formData.allergens" theme="bootstrap">
+                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.allergens" theme="bootstrap">
                   <ui-select-match placeholder="Allergens" ui-lock-choice="isDisabled()">{{ $item.name }}
                   </ui-select-match>
                   <ui-select-choices repeat="allergen in allergens | filter: $select.search | orderBy:'name'">
@@ -421,7 +421,7 @@
           <div class="voucher-container" ng-if="isVoucherSelected">
             <div class="form-group">
               <label>Voucher *</label>
-              <ui-select required ng-model="formData.voucher" theme="bootstrap" name="Voucher">
+              <ui-select ng-if="uiSelectTemplateReady" required ng-model="formData.voucher" theme="bootstrap" name="Voucher">
                 <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()">{{ $select.selected.name}}
                 </ui-select-match>
                 <ui-select-choices
