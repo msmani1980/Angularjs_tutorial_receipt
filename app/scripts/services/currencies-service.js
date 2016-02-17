@@ -11,7 +11,12 @@ angular.module('ts5App')
   .service('currenciesService', function ($q, $resource, GlobalMenuService, ENV) {
 
     var getCompanyId = function () {
-      return GlobalMenuService.company.get();
+      var companyData = GlobalMenuService.getCompanyData();
+      if (companyData.chCompany && companyData.chCompany.companyId) {
+        return companyData.chCompany.companyId;
+      }
+
+      return companyData.companyId;
     };
 
     var masterCurrenciesURL = ENV.apiUrl + '/api/currencies/:id';
@@ -28,7 +33,8 @@ angular.module('ts5App')
         method: 'GET'
       },
       getCurrencies: {
-        method: 'GET'
+        method: 'GET',
+        headers: { companyId: getCompanyId() }
       },
       createDetailedCompanyCurrency: {
         method: 'POST'

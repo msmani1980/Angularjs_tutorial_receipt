@@ -5,21 +5,23 @@ describe('Service: currenciesService', function () {
   // load the service's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/currencies.json', 'served/currency.json', 'served/company-currency-globals.json'));
+  beforeEach(module('served/company-data.json'));
 
   // instantiate service
-  var currenciesService,
-    $httpBackend,
-    currenciesJSON,
-    currencyJSON,
-    masterCurrenciesJSON,
-    masterCurrenciesRequestHandler,
-    companyCurrenciesRequestHandler,
-    detailedCurrenciesGetRequestHandler,
-    detailedCurrenciesDeleteRequestHandler,
-    detailedCurrenciesCreateRequestHandler,
-    detailedCurrenciesUpdateRequestHandler,
-    currencyDetailRequestHandler,
-    GlobalMenuService;
+  var currenciesService;
+  var $httpBackend;
+  var currenciesJSON;
+  var currencyJSON;
+  var masterCurrenciesJSON;
+  var servedCompanyDataJSON;
+  var masterCurrenciesRequestHandler;
+  var companyCurrenciesRequestHandler;
+  var detailedCurrenciesGetRequestHandler;
+  var detailedCurrenciesDeleteRequestHandler;
+  var detailedCurrenciesCreateRequestHandler;
+  var detailedCurrenciesUpdateRequestHandler;
+  var currencyDetailRequestHandler;
+  var GlobalMenuService;
 
   beforeEach(inject(function (_currenciesService_, $injector) {
     inject(function (_servedCurrencies_, _servedCurrency_, _servedCompanyCurrencyGlobals_) {
@@ -28,15 +30,16 @@ describe('Service: currenciesService', function () {
       masterCurrenciesJSON = _servedCompanyCurrencyGlobals_;
     });
 
+    servedCompanyDataJSON = $injector.get('servedCompanyData');
     GlobalMenuService = $injector.get('GlobalMenuService');
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
+    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue(servedCompanyDataJSON);
 
     $httpBackend = $injector.get('$httpBackend');
     masterCurrenciesRequestHandler = $httpBackend.whenGET(/api\/currencies/).respond(currenciesJSON);
     companyCurrenciesRequestHandler = $httpBackend.whenGET(/api\/company-currency-globals/).respond(masterCurrenciesJSON);
     detailedCurrenciesGetRequestHandler = $httpBackend.whenGET(/api\/companies\/403\/currencies/).respond(masterCurrenciesJSON);
     detailedCurrenciesDeleteRequestHandler = $httpBackend.whenDELETE(/api\/companies\/403\/currencies/).respond(202);
-    detailedCurrenciesCreateRequestHandler = $httpBackend.whenPOST(/api\/companies\/403\/currencies/).respond(201, { id:1 });
+    detailedCurrenciesCreateRequestHandler = $httpBackend.whenPOST(/api\/companies\/403\/currencies/).respond(201, { id: 1 });
     detailedCurrenciesUpdateRequestHandler = $httpBackend.whenPUT(/api\/companies\/403\/currencies/).respond(201, currencyJSON);
     currencyDetailRequestHandler = $httpBackend.whenGET(/api\/currencies\/1/).respond(202, { id: 1 });
 
@@ -54,8 +57,8 @@ describe('Service: currenciesService', function () {
 
   describe('API calls', function () {
 
-    var createDetailedCompanyCurrencyResult,
-        updateDetailedCompanyCurrencyResult;
+    var createDetailedCompanyCurrencyResult;
+    var updateDetailedCompanyCurrencyResult;
 
     afterEach(function () {
       $httpBackend.flush();

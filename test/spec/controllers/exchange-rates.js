@@ -17,6 +17,8 @@ describe('Controller: ExchangeRatesCtrl', function () {
   var saveDailyExchangeRatesDefferred;
   var currencyFactory;
   var dateUtility;
+  var GlobalMenuService;
+  var servedCompanyDataJSON;
 
   beforeEach(module('ts5App'));
   beforeEach(module(
@@ -27,6 +29,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
     'served/previous-exchange-rate.json',
     'served/company-preferences.json'
   ));
+  beforeEach(module('served/company-data.json'));
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
@@ -44,6 +47,9 @@ describe('Controller: ExchangeRatesCtrl', function () {
     currencyFactory = $injector.get('currencyFactory');
     dateUtility = $injector.get('dateUtility');
 
+    servedCompanyDataJSON = $injector.get('servedCompanyData');
+    GlobalMenuService = $injector.get('GlobalMenuService');
+    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue(servedCompanyDataJSON);
 
     saveDailyExchangeRatesDefferred = $q.defer();
     spyOn(currencyFactory, 'saveDailyExchangeRates').and.returnValue(saveDailyExchangeRatesDefferred.promise);

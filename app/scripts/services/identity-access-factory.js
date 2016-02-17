@@ -52,10 +52,9 @@ angular.module('ts5App')
       function setSessionHeaders() {
         var sessionObject = angular.copy(getSessionObject());
         if (sessionObject.companyData) {
-          $localStorage.companyObject = {
-            companyId: sessionObject.companyId,
-            companyTypeId: sessionObject.companyData.companyTypeId
-          };
+          $localStorage.companyObject = sessionObject.companyData;
+          $localStorage.companyObject.companyId = sessionObject.companyId;
+          $localStorage.companyObject.companyTypeId = sessionObject.companyData.companyTypeId;
         }
 
         delete sessionObject.username;
@@ -178,4 +177,5 @@ angular.module('ts5App')
         setSelectedCompany: setSelectedCompany
       };
     }
-  );
+  )
+;
