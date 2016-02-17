@@ -38,6 +38,7 @@ angular.module('ts5App')
 
       $scope.selectCompany = function (companyType) {
         $scope.shouldDisableChangeCompany = false;
+        $scope.shouldDisableCHSelect = true;
         var companyTypeIndex = Object.keys($scope.pickedCompany);
         lodash.forEach(companyTypeIndex, function (company) {
           if (company !== companyType) {
@@ -46,6 +47,7 @@ angular.module('ts5App')
         });
 
         if (companyType === 'Cash Handler') {
+          $scope.shouldDisableCHSelect = false;
           $scope.shouldDisableChangeCompany = true;
           var pickedCompany = $scope.pickedCompany[companyType];
           companyRelationshipFactory.getCompanyRelationshipListByCompany(pickedCompany.id).then(setRetailForCHModel);
@@ -108,11 +110,15 @@ angular.module('ts5App')
         showCompanyInfo();
       };
 
+      $scope.closeModal = function () {
+        showCompanyInfo();
+        angular.element('#userSettingsModal').modal('hide');
+      };
+
       $scope.$on('unauthorized', hideNavBar);
       $scope.$on('logout', hideNavBar);
       $scope.$on('authorized', showNavBar);
       $scope.$on('company-fetched', showCompanyInfo);
-      angular.element('#userSettingsModal').on('shown.bs.modal', getSelectedCompany);
       showCompanyInfo();
     }
 
