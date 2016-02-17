@@ -19,20 +19,16 @@ angular.module('ts5App')
 
     var actions = {
       getCashBag: {
-        method: 'GET',
-        headers: { companyId: 362 }
+        method: 'GET'
       },
       updateCashBag: {
-        method: 'PUT',
-        headers: { companyId: 362 }
+        method: 'PUT'
       },
       deleteCashBag: {
-        method: 'DELETE',
-        headers: { companyId: 362 }
+        method: 'DELETE'
       },
       createCashBag: {
-        method: 'POST',
-        headers: { companyId: 362 }
+        method: 'POST'
       }
     };
 

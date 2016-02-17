@@ -21,22 +21,13 @@ angular.module('ts5App')
 
     var actions = {
       getExchangeRates: {
-        method: 'GET',
-        headers: {
-          companyId: 362
-        }
+        method: 'GET'
       },
       createExchangeRate: {
-        method: 'POST',
-        headers: {
-          companyId: 362
-        }
+        method: 'POST'
       },
       updateExchangeRate: {
-        method: 'PUT',
-        headers: {
-          companyId: 362
-        }
+        method: 'PUT'
       }
     };
 

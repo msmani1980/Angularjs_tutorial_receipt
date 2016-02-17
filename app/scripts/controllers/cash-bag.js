@@ -11,7 +11,7 @@
  */
 angular.module('ts5App')
   .controller('CashBagCtrl', function($scope, $routeParams, $q, $location, $localStorage, ngToast, cashBagFactory,
-    dateUtility, lodash) {
+    dateUtility, lodash, GlobalMenuService) {
 
     // controller global properties
     var _companyId = null;
@@ -304,9 +304,9 @@ angular.module('ts5App')
     }
 
     function getCashHandlerCompany() {
-      // TODO: get correct cash handler company
+      var chCompanyId = GlobalMenuService.getCompanyData().companyId;
       _promises.push(
-        cashBagFactory.getCompany(362).then(function(response) {
+        cashBagFactory.getCompany(chCompanyId).then(function(response) {
           $scope.cashHandlerCompany = angular.copy(response);
         })
       );

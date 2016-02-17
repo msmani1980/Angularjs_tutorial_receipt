@@ -4,26 +4,87 @@ describe('Directive: topNavigationBar', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
+  beforeEach(module('served/session-object.json'));
+  beforeEach(module('served/company-relationship-list.json'));
 
-  var element;
   var scope;
+  var directiveElement;
+  var compile;
+  var companyRelationshipFactory;
+  var getCompanyRelationshipListByCompanyDeferred;
   var identityAccessFactory;
+  var sessionObjectJSON;
+  var companyRelationshipListJSON;
+  var isolatedScope;
 
-  beforeEach(inject(function ($rootScope, $injector) {
+  function getCompiledElement() {
+    var element = angular.element('<top-navigation-bar></top-navigation-bar>');
+    var compiledElement = compile(element)(scope);
+    scope.$digest();
+    isolatedScope = compiledElement.children().scope();
+    return compiledElement;
+  }
+
+  beforeEach(inject(function ($rootScope, $injector, $q, $compile) {
     identityAccessFactory = $injector.get('identityAccessFactory');
+    companyRelationshipFactory = $injector.get('companyRelationshipFactory');
+
     spyOn(identityAccessFactory, 'isAuthorized').and.returnValue(false);
     spyOn(identityAccessFactory, 'logout').and.returnValue(202);
+    spyOn(identityAccessFactory, 'setSelectedCompany').and.returnValue(true);
 
+    sessionObjectJSON = $injector.get('servedSessionObject');
+    spyOn(identityAccessFactory, 'getSessionObject').and.returnValue(sessionObjectJSON);
+
+    getCompanyRelationshipListByCompanyDeferred = $q.defer();
+    companyRelationshipListJSON = $injector.get('servedCompanyRelationshipList');
+    getCompanyRelationshipListByCompanyDeferred.resolve(companyRelationshipListJSON);
+    spyOn(companyRelationshipFactory, 'getCompanyRelationshipListByCompany').and.returnValue(getCompanyRelationshipListByCompanyDeferred.promise);
+
+    compile = $compile;
     scope = $rootScope.$new();
   }));
 
-  describe('Not authorized behaviour', function () {
+  describe('Change User', function () {
+    beforeEach(inject(function () {
+      identityAccessFactory.isAuthorized.and.returnValue(true);
+      directiveElement = getCompiledElement();
+    }));
 
-    beforeEach(inject(function ($compile) {
+    it('should set the selected Company on identity access factory', function () {
+      isolatedScope.setSelectedCompany();
+      expect(identityAccessFactory.setSelectedCompany).toHaveBeenCalled();
+    });
+
+    it('should reload data on close modal', function () {
+      isolatedScope.closeModal();
+      expect(identityAccessFactory.getSessionObject).toHaveBeenCalled();
+    });
+
+    it('should only have one company selected', function () {
+      isolatedScope.pickedCompany.Retail = { id: 'fakeRetailId' };
+      isolatedScope.pickedCompany.fakeKey = { id: 'notUsed' };
+      isolatedScope.selectCompany('Retail');
+      expect(isolatedScope.pickedCompany.fakeKey).toBeUndefined();
+    });
+
+    it('should enable the save button', function () {
+      isolatedScope.pickedCompany.Retail = { id: 'fakeRetailId' };
+      isolatedScope.selectCompany('Retail');
+      expect(isolatedScope.shouldDisableChangeCompany).toBeFalsy();
+    });
+
+    it('should get company relationship if cash handler is selected', function () {
+      isolatedScope.pickedCompany['Cash Handler'] = { id: 'fakeRetailId' };
+      isolatedScope.selectCompany('Cash Handler');
+      expect(companyRelationshipFactory.getCompanyRelationshipListByCompany).toHaveBeenCalled();
+    });
+  });
+
+  describe('Not authorized behaviour', function () {
+    beforeEach(inject(function () {
       identityAccessFactory.isAuthorized.and.returnValue(false);
-      element = angular.element('<top-navigation-bar></top-navigation-bar>');
-      element = $compile(element)(scope);
-      scope.$digest();
+      directiveElement = getCompiledElement();
     }));
 
     it('should call isAuthorized on Link', function () {
@@ -31,63 +92,61 @@ describe('Directive: topNavigationBar', function () {
     });
 
     it('should load the template and attach it to scope', function () {
-      expect(element.find('.navbar-fixed-top.ts5-logo').length).toBe(1);
+      expect(directiveElement.find('.navbar-fixed-top.ts5-logo').length).toBe(1);
     });
 
     it('should not have any buttons when not authorized', function () {
-      expect(element.find('.logout-btn').length).toBe(0);
+      expect(directiveElement.find('.logout-btn').length).toBe(0);
     });
 
     it('should have logout menu if authorized event received', function () {
       scope.$broadcast('authorized');
       scope.$digest();
-      expect(element.find('.logout-btn').length).toBe(1);
+      expect(directiveElement.find('.logout-btn').length).toBe(1);
     });
 
   });
 
   describe('Authorized behaviour', function () {
 
-    beforeEach(inject(function ($compile) {
+    beforeEach(inject(function () {
       identityAccessFactory.isAuthorized.and.returnValue(true);
-      element = angular.element('<top-navigation-bar></top-navigation-bar>');
-      element = $compile(element)(scope);
-      scope.$digest();
+      directiveElement = getCompiledElement();
     }));
 
     it('should have buttons', function () {
-      expect(element.find('.logout-btn').length).toBe(1);
+      expect(directiveElement.find('.logout-btn').length).toBe(1);
     });
 
     it('should have logout button', function () {
-      expect(element.find('.logout-btn').length).toBe(1);
+      expect(directiveElement.find('.logout-btn').length).toBe(1);
     });
 
     it('should not have logout button if isAuthorized changed', function () {
-      element.scope().isAuthorized = false;
+      directiveElement.scope().isAuthorized = false;
       scope.$digest();
-      expect(element.find('.logout-btn').length).toBe(0);
+      expect(directiveElement.find('.logout-btn').length).toBe(0);
     });
 
     it('should not have logout button if logout event received', function () {
       scope.$broadcast('logout');
       scope.$digest();
-      expect(element.find('.logout-btn').length).toBe(0);
+      expect(directiveElement.find('.logout-btn').length).toBe(0);
     });
 
-    describe('logout', function() {
+    describe('logout', function () {
       it('should have logout button', function () {
-        expect(element.find('.logout-btn').length).toBe(1);
+        expect(directiveElement.find('.logout-btn').length).toBe(1);
       });
 
       it('should emit on click', function () {
         spyOn(scope, '$emit');
-        element.find('.logout-btn').trigger('click');
+        directiveElement.find('.logout-btn').trigger('click');
         expect(scope.$emit).toHaveBeenCalledWith('logout');
       });
 
       it('should call logout API', function () {
-        element.find('.logout-btn').trigger('click');
+        directiveElement.find('.logout-btn').trigger('click');
         expect(identityAccessFactory.logout).toHaveBeenCalled();
       });
     });

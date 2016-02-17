@@ -120,7 +120,7 @@ angular.module('ts5App')
     }
 
     $scope.$watch('cashiersDateField', function (cashiersDate) {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = GlobalMenuService.getCompanyData().chCompany.companyId;
       if (!moment(cashiersDate, 'L', true).isValid()) {
         return;
       }
@@ -306,12 +306,14 @@ angular.module('ts5App')
       $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
     });
 
-    currencyFactory.getCompany(GlobalMenuService.company.get()).then(function (companyDataFromAPI) {
+    var retailCompanyId = GlobalMenuService.getCompanyData().chCompany.companyId;
+    currencyFactory.getCompany(retailCompanyId).then(function (companyDataFromAPI) {
       getCompanyBaseCurrency(angular.copy(companyDataFromAPI.baseCurrencyId));
       $scope.company = angular.copy(companyDataFromAPI);
     });
 
-    currencyFactory.getCompany(362).then(function (companyDataFromAPI) {
+    var chCompanyId = GlobalMenuService.getCompanyData().id;
+    currencyFactory.getCompany(chCompanyId).then(function (companyDataFromAPI) {
       getCashHandlerBaseCurrency(angular.copy(companyDataFromAPI.baseCurrencyId));
       $scope.cashHandlerCompany = angular.copy(companyDataFromAPI);
     });

@@ -5,6 +5,7 @@ describe('Controller: CashBagSubmissionCtrl', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
   beforeEach(module('served/company.json'));
+  beforeEach(module('served/company-data.json'));
   beforeEach(module('served/currency-globals.json'));
   beforeEach(module('served/cash-bag-list-submit.json'));
   beforeEach(module('served/update-cash-bag-submit.json'));
@@ -13,6 +14,7 @@ describe('Controller: CashBagSubmissionCtrl', function () {
   var scope;
   var cashBagFactory;
   var GlobalMenuService;
+  var servedCompanyDataJSON;
   var getCompanyDeferred;
   var getCompanyJSON;
   var getCashBagListDeferred;
@@ -27,8 +29,9 @@ describe('Controller: CashBagSubmissionCtrl', function () {
     scope = $rootScope.$new();
     cashBagFactory = $injector.get('cashBagFactory');
 
+    servedCompanyDataJSON = $injector.get('servedCompanyData');
     GlobalMenuService = $injector.get('GlobalMenuService');
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
+    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue(servedCompanyDataJSON);
 
     getCompanyDeferred = $q.defer();
     getCompanyJSON = $injector.get('servedCompany');
