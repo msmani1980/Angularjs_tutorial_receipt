@@ -9,7 +9,15 @@
  */
 angular.module('ts5App')
   .factory('socketIO', function ($rootScope) {
-    var socket = io.connect('http://curiel.me:3000');
+    var socket = {
+      on: function () {
+        return true;
+      },
+      
+      emit: function () {
+        return true;
+      }
+    };//io.connect('http://curiel.me:3000');
 
     return {
       on: function (eventName, callback) {
