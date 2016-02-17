@@ -1,0 +1,113 @@
+{
+  "timeout": 60000,
+  "userId": 97,
+  "companyId": 362,
+  "companyData": {
+    "id": 362,
+    "companyName": "ICE Gatwick",
+    "companyCode": "ICELGW",
+    "companyTypeId": 5,
+    "parentCompanyId": null,
+    "isActive": true,
+    "legalName": "ICE Gatwick",
+    "ediName": "ICE",
+    "dbaName": "ICE",
+    "roundingOptionId": null,
+    "createdBy": 1,
+    "createdOn": "2015-02-27 18:07:03.414557",
+    "updatedBy": null,
+    "updatedOn": "2015-12-11 15:05:38.651974",
+    "baseCurrencyId": 8,
+    "exchangeRateVariance": null,
+    "changeDueRoundingOptionId": null,
+    "taxes": [],
+    "languages": [],
+    "eposLanguages": [],
+    "companyCabinClasses": [],
+    "countryVats": [],
+    "chCompany": {
+      "id": 16,
+      "companyId": 403,
+      "companyName": "British Airways",
+      "companyTypeName": "Retail",
+      "relativeCompanyId": 362,
+      "relativeCompany": "ICE Gatwick",
+      "relativeCompanyType": "Cash Handler",
+      "startDate": "05/09/2015",
+      "endDate": "01/01/2050"
+    },
+    "companyTypeName": "Cash Handler"
+  },
+  "userCompanies": [
+    {
+      "id": 403,
+      "type": {
+        "companyTypeName": "Retail"
+      },
+      "companyName": "British Airways",
+      "companyCode": "BA"
+    },
+    {
+      "id": 438,
+      "type": {
+        "companyTypeName": "Retail"
+      },
+      "companyName": "easyJet",
+      "companyCode": "EZY"
+    },
+    {
+      "id": 407,
+      "type": {
+        "companyTypeName": "Stockowner"
+      },
+      "companyName": "GRO 2",
+      "companyCode": "GRO-2"
+    },
+    {
+      "id": 362,
+      "type": {
+        "companyTypeName": "Cash Handler"
+      },
+      "companyName": "ICE Gatwick",
+      "companyCode": "ICELGW"
+    }
+  ],
+  "companyTypes": [
+    {
+      "id": 1,
+      "name": "Retail"
+    },
+    {
+      "id": 2,
+      "name": "Stockowner"
+    },
+    {
+      "id": 3,
+      "name": "Warehouse"
+    },
+    {
+      "id": 4,
+      "name": "Caterer"
+    },
+    {
+      "id": 5,
+      "name": "Cash Handler"
+    },
+    {
+      "id": 6,
+      "name": "Supplier"
+    }
+  ],
+  "currentSession": {
+    "createDate": "2016-02-16 20:54 PM GMT",
+    "createdBy": "admin",
+    "updateDate": "2016-02-16 20:54 PM GMT",
+    "updatedBy": "admin",
+    "id": 2209,
+    "sessionToken": "04b5c4746ac2d642ca6a0e868289d77b6a4b",
+    "ip": "207.140.219.162",
+    "validCode": 0,
+    "personId": 97
+  },
+  "sessionToken": "04b5c4746ac2d642ca6a0e868289d77b6a4b"
+}
