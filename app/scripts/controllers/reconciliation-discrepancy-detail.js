@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, reconciliationFactory, currencyFactory, GlobalMenuService, dateUtility, lodash) {
+  .controller('ReconciliationDiscrepancyDetail', function($q, $scope, $routeParams, $filter, reconciliationFactory,
+    currencyFactory, GlobalMenuService, dateUtility, lodash) {
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
@@ -24,14 +25,14 @@ angular.module('ts5App')
     }
 
     function initLMPStockRevisions() {
-      angular.forEach($scope.stockItemList, function (item) {
+      angular.forEach($scope.stockItemList, function(item) {
         item.revision = angular.copy(item);
         item.isEditing = false;
       });
     }
 
     function initCashBagRevisions() {
-      angular.forEach($scope.cashBags, function (item) {
+      angular.forEach($scope.cashBags, function(item) {
         item.revision = angular.copy(item);
         item.isEditing = false;
       });
@@ -50,7 +51,7 @@ angular.module('ts5App')
       var varianceQuantity = getVarianceQuantity(stockItem);
       var retailValue = stockItem.price || 0;
       var varianceValue = makeFinite(varianceQuantity * stockItem.price);
-      var isDiscrepancy = (varianceQuantity !== '0');
+      var isDiscrepancy = (parseInt(varianceQuantity) !== 0);
       var eposSales = stockItem.eposQuantity || 0;
       var inboundOffloadCount = stockItem.inboundQuantity || stockItem.offloadQuantity || 0;
 
@@ -71,45 +72,53 @@ angular.module('ts5App')
       var rawItemList = angular.copy(itemListFromAPI);
       var uniqueItemList = lodash.uniq(angular.copy(rawItemList), 'itemMasterId');
 
-      var inboundItemList = rawItemList.filter(function (item) {
+      var inboundItemList = rawItemList.filter(function(item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
-            name: 'Warehouse Close'
-          }).id;
+          name: 'Warehouse Close'
+        }).id;
       });
 
-      var dispatchedItemList = rawItemList.filter(function (item) {
+      var dispatchedItemList = rawItemList.filter(function(item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
-            name: 'Warehouse Open'
-          }).id;
+          name: 'Warehouse Open'
+        }).id;
       });
 
-      var offloadItemList = rawItemList.filter(function (item) {
+      var offloadItemList = rawItemList.filter(function(item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
-            name: 'Offload'
-          }).id;
+          name: 'Offload'
+        }).id;
       });
 
-      angular.forEach(uniqueItemList, function (item) {
+      angular.forEach(uniqueItemList, function(item) {
         item.inboundQuantity = 0;
         item.dispatchedQuantity = 0;
         item.offloadQuantity = 0;
 
-        var inboundItem = $filter('filter')(inboundItemList, { itemMasterId: item.itemMasterId }, true);
+        var inboundItem = $filter('filter')(inboundItemList, {
+          itemMasterId: item.itemMasterId
+        }, true);
         if (inboundItem.length) {
           item.inboundQuantity = inboundItem[0].quantity;
         }
 
-        var dispatchedItem = $filter('filter')(dispatchedItemList, { itemMasterId: item.itemMasterId }, true);
+        var dispatchedItem = $filter('filter')(dispatchedItemList, {
+          itemMasterId: item.itemMasterId
+        }, true);
         if (dispatchedItem.length) {
           item.dispatchedQuantity = dispatchedItem[0].quantity;
         }
 
-        var offloadItem = $filter('filter')(offloadItemList, { itemMasterId: item.itemMasterId }, true);
+        var offloadItem = $filter('filter')(offloadItemList, {
+          itemMasterId: item.itemMasterId
+        }, true);
         if (offloadItem.length) {
           item.offloadQuantity = offloadItem[0].quantity;
         }
 
-        var lmpStockItem = $filter('filter')(rawLMPStockData, { itemMasterId: item.itemMasterId }, true);
+        var lmpStockItem = $filter('filter')(rawLMPStockData, {
+          itemMasterId: item.itemMasterId
+        }, true);
         if (lmpStockItem.length) {
           item.eposQuantity = lmpStockItem[0].eposQuantity;
           item.eposTotal = lmpStockItem[0].eposTotal;
@@ -146,26 +155,29 @@ angular.module('ts5App')
     function setStockData(stockData) {
       var rawLMPStockData = angular.copy(stockData);
 
-      reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId).then(function (storeInstanceItemList) {
+      reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId).then(function(
+        storeInstanceItemList) {
         setStockItemList(storeInstanceItemList, rawLMPStockData);
       }, handleResponseError);
     }
 
     function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
-      return currenciesArray.filter(function (currencyItem) {
+      return currenciesArray.filter(function(currencyItem) {
         return currencyItem.id === baseCurrencyId;
       })[0];
     }
 
     function formatCashBags(cashHandlerCashBagList) {
       var formattedCashBagList = [];
-      angular.forEach(cashHandlerCashBagList, function (cashBag) {
+      angular.forEach(cashHandlerCashBagList, function(cashBag) {
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
 
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
-        var bankExchangeRate = cashBag.chBankExchangeRate ? formatAsCurrency(cashBag.chBankExchangeRate) : (formatAsCurrency(cashBag.chPaperExchangeRate) + '/' + formatAsCurrency(
-          cashBag.chCoinExchangeRate));
-        var totalBank = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank);
+        var bankExchangeRate = cashBag.chBankExchangeRate ? formatAsCurrency(cashBag.chBankExchangeRate) : (
+          formatAsCurrency(cashBag.chPaperExchangeRate) + '/' + formatAsCurrency(
+            cashBag.chCoinExchangeRate));
+        var totalBank = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank +
+          cashBag.coinAmountManualCHBank);
         var paperAmount = cashBag.paperAmountManual;
         var coinAmount = cashBag.coinAmountManual;
         var varianceValue = (paperAmount + coinAmount) - crewAmount;
@@ -194,10 +206,12 @@ angular.module('ts5App')
     }
 
     function getTotalsFor(stockTotals, itemTypeName) {
-      var stockItem = $filter('filter')(stockTotals, { itemTypeName: itemTypeName });
+      var stockItem = $filter('filter')(stockTotals, {
+        itemTypeName: itemTypeName
+      });
       var totalLMP = 0;
       var totalEPOS = 0;
-      angular.forEach(stockItem, function (item) {
+      angular.forEach(stockItem, function(item) {
         totalLMP += item.lmpTotal || 0;
         totalEPOS += item.eposTotal || 0;
       });
@@ -212,7 +226,7 @@ angular.module('ts5App')
 
     function getTotalsForPromotions(promotionTotals) {
       var total = 0;
-      angular.forEach(promotionTotals, function (promotionItem) {
+      angular.forEach(promotionTotals, function(promotionItem) {
         total += promotionItem.convertedAmount;
       });
 
@@ -259,24 +273,30 @@ angular.module('ts5App')
 
     function getStockItemData() {
 
-      $filter('filter')($this.promotionTotals, { exchangeRateTypeId: 1 }).map(function (promotion) {
+      $filter('filter')($this.promotionTotals, {
+        exchangeRateTypeId: 1
+      }).map(function(promotion) {
         promotion.eposQuantity = 1;
         promotion.eposTotal = promotion.convertedAmount;
-        reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
+        reconciliationFactory.getPromotion(promotion.promotionId).then(function(dataFromAPI) {
           promotion.itemName = dataFromAPI.promotionCode;
         }, handleResponseError);
 
         promotion.itemTypeName = 'Promotion';
       });
 
-      $filter('filter')($this.stockTotals, { itemTypeName: 'Virtual' }).map(function (item) {
-        reconciliationFactory.getMasterItem(item.itemMasterId).then(function (dataFromAPI) {
+      $filter('filter')($this.stockTotals, {
+        itemTypeName: 'Virtual'
+      }).map(function(item) {
+        reconciliationFactory.getMasterItem(item.itemMasterId).then(function(dataFromAPI) {
           item.itemName = dataFromAPI.itemName;
         }, handleResponseError);
       });
 
-      $filter('filter')($this.stockTotals, { itemTypeName: 'Voucher' }).map(function (item) {
-        reconciliationFactory.getMasterItem(item.itemMasterId).then(function (dataFromAPI) {
+      $filter('filter')($this.stockTotals, {
+        itemTypeName: 'Voucher'
+      }).map(function(item) {
+        reconciliationFactory.getMasterItem(item.itemMasterId).then(function(dataFromAPI) {
           item.itemName = dataFromAPI.itemName;
         }, handleResponseError);
       });
@@ -284,8 +304,10 @@ angular.module('ts5App')
 
     function setNetTotals(stockData) {
       var stockTotals = angular.copy(stockData);
-      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedLMP;
-      var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
+      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
+        .parsedEPOS - stockTotals.totalPromotion.parsedLMP;
+      var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
+        .parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
 
       var netTotals = {
         netLMP: formatAsCurrency(netLMP),
@@ -293,7 +315,11 @@ angular.module('ts5App')
       };
 
       var stockItems = $this.stockTotals.concat($this.promotionTotals);
-      $scope.stockTotals = angular.extend(stockTotals, { totalNet: netTotals }, { stockItems: stockItems });
+      $scope.stockTotals = angular.extend(stockTotals, {
+        totalNet: netTotals
+      }, {
+        stockItems: stockItems
+      });
     }
 
     function getEPOSRevenue(eposRevenue) {
@@ -302,7 +328,7 @@ angular.module('ts5App')
       var eposDiscount = angular.copy(eposRevenue[2].response);
       var total = 0;
 
-      angular.forEach($this.eposCashBag, function (cashBag) {
+      angular.forEach($this.eposCashBag, function(cashBag) {
         if (cashBag.bankAmount) {
           total += cashBag.bankAmount;
         } else {
@@ -312,13 +338,13 @@ angular.module('ts5App')
         }
       });
 
-      angular.forEach(eposCreditCard, function (creditCard) {
+      angular.forEach(eposCreditCard, function(creditCard) {
         if (creditCard.bankAmountFinal) {
           total += creditCard.bankAmountFinal;
         }
       });
 
-      angular.forEach(eposDiscount, function (discount) {
+      angular.forEach(eposDiscount, function(discount) {
         if (discount.bankAmountFinal) {
           total += discount.bankAmountFinal;
         }
@@ -333,11 +359,12 @@ angular.module('ts5App')
       var chDiscount = angular.copy(chRevenue[2].response);
       var total = 0;
 
-      angular.forEach($this.chCashBag, function (cashBag) {
-        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank);
+      angular.forEach($this.chCashBag, function(cashBag) {
+        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank +
+          cashBag.coinAmountManualCHBank);
       });
 
-      angular.forEach(chCreditCard, function (creditCard) {
+      angular.forEach(chCreditCard, function(creditCard) {
         if (creditCard.bankAmountFinal) {
           total += creditCard.bankAmountFinal;
         } else if (creditCard.coinAmountManualCc && creditCard.paperAmountManualCc) {
@@ -345,7 +372,7 @@ angular.module('ts5App')
         }
       });
 
-      angular.forEach(chDiscount, function (discount) {
+      angular.forEach(chDiscount, function(discount) {
         if (discount.bankAmountFinal) {
           total += discount.bankAmountFinal;
         } else if (discount.coinAmountManualCc && discount.paperAmountManualCc) {
@@ -358,7 +385,7 @@ angular.module('ts5App')
 
     function setupPaymentReport(reportList) {
       var paymentReportList = angular.copy(reportList.paymentReports);
-      angular.forEach(paymentReportList, function (report) {
+      angular.forEach(paymentReportList, function(report) {
         report.scheduleDate = dateUtility.formatDateForApp(report.scheduleDate, 'YYYY-MM-DDThh:mm');
       });
 
@@ -369,7 +396,9 @@ angular.module('ts5App')
       $this.itemTypes = angular.copy(responseCollection[0]);
       $this.countTypes = angular.copy(responseCollection[1]);
       $this.stockTotals = angular.copy(responseCollection[2].response);
-      $this.promotionTotals = $filter('filter')(angular.copy(responseCollection[3].response), { exchangeRateTypeId: 1 });
+      $this.promotionTotals = $filter('filter')(angular.copy(responseCollection[3].response), {
+        exchangeRateTypeId: 1
+      });
       $this.chRevenue = angular.copy(responseCollection[4]);
       $this.eposRevenue = angular.copy(responseCollection[5]);
       $this.globalCurrencyList = angular.copy(responseCollection[6].response);
@@ -381,8 +410,10 @@ angular.module('ts5App')
         epos: formatAsCurrency(getEPOSRevenue($this.eposRevenue))
       };
 
-      $this.stockTotals.map(function (stockItem) {
-        stockItem.itemTypeName = lodash.findWhere($this.itemTypes, { id: stockItem.itemTypeId }).name;
+      $this.stockTotals.map(function(stockItem) {
+        stockItem.itemTypeName = lodash.findWhere($this.itemTypes, {
+          id: stockItem.itemTypeId
+        }).name;
       });
 
       var totalItems = getTotalsFor($this.stockTotals, 'Regular');
@@ -445,12 +476,13 @@ angular.module('ts5App')
     function init() {
       $scope.actionOnPaymentReport = 'Show';
       showLoadingModal('Loading Reconciliation Discrepancy Details');
-      reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId).then(getStoreInstanceDetailsSuccessHandler, handleResponseError);
+      reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId).then(
+        getStoreInstanceDetailsSuccessHandler, handleResponseError);
       angular.element('#checkbox').bootstrapSwitch();
       initTableDefaults();
     }
 
-    $scope.showModal = function (modalName) {
+    $scope.showModal = function(modalName) {
       var modalNameToHeaderMap = {
         Virtual: 'Virtual Product Revenue',
         Voucher: 'Voucher Product Revenue',
@@ -475,7 +507,7 @@ angular.module('ts5App')
       angular.element('#t6Modal').modal('show');
     };
 
-    $scope.showEditViewForItem = function (item, isLMPStockItem) {
+    $scope.showEditViewForItem = function(item, isLMPStockItem) {
       if (isLMPStockItem) {
         return item.isEditing || $scope.editLMPStockTable;
       } else {
@@ -483,7 +515,7 @@ angular.module('ts5App')
       }
     };
 
-    $scope.editItem = function (item) {
+    $scope.editItem = function(item) {
       item.isEditing = true;
       var duplicateItem = angular.copy(item);
       delete duplicateItem.revision;
@@ -491,20 +523,20 @@ angular.module('ts5App')
       item.revision = duplicateItem;
     };
 
-    $scope.revertItem = function (item) {
+    $scope.revertItem = function(item) {
       var duplicateItem = angular.copy(item);
       delete duplicateItem.revision;
       delete duplicateItem.isEditing;
       item.revision = duplicateItem;
     };
 
-    $scope.cancelEditItem = function (item) {
+    $scope.cancelEditItem = function(item) {
       item.isEditing = false;
       item.revision = {};
     };
 
-    $scope.saveItem = function (item) {
-      angular.forEach(item, function (value, key) {
+    $scope.saveItem = function(item) {
+      angular.forEach(item, function(value, key) {
         if (key !== 'revision' && key !== 'isEditing') {
           item[key] = item.revision[key];
         }
@@ -514,7 +546,7 @@ angular.module('ts5App')
       item.isEditing = false;
     };
 
-    $scope.initEditTable = function (isLMPTable) {
+    $scope.initEditTable = function(isLMPTable) {
       if (isLMPTable) {
         $scope.editLMPStockTable = true;
         initLMPStockRevisions();
@@ -524,7 +556,7 @@ angular.module('ts5App')
       }
     };
 
-    $scope.saveTable = function (isLMPTable) {
+    $scope.saveTable = function(isLMPTable) {
       var dataList;
       if (isLMPTable) {
         $scope.editLMPStockTable = false;
@@ -534,12 +566,12 @@ angular.module('ts5App')
         dataList = $scope.cashBags;
       }
 
-      angular.forEach(dataList, function (item) {
+      angular.forEach(dataList, function(item) {
         $scope.saveItem(item);
       });
     };
 
-    $scope.cancelEditingTable = function (isLMPTable) {
+    $scope.cancelEditingTable = function(isLMPTable) {
       var dataList;
       if (isLMPTable) {
         $scope.editLMPStockTable = false;
@@ -549,13 +581,13 @@ angular.module('ts5App')
         dataList = $scope.cashBags;
       }
 
-      angular.forEach(dataList, function (item) {
+      angular.forEach(dataList, function(item) {
         item.revision = {};
         item.isEditing = false;
       });
     };
 
-    $scope.updateOrderBy = function (orderName, isLMPStock) {
+    $scope.updateOrderBy = function(orderName, isLMPStock) {
       var currentTitle = isLMPStock ? $scope.LMPSortTitle : $scope.cashBagSortTitle;
       var titleToSet = (currentTitle === orderName) ? ('-' + currentTitle) : (orderName);
 
@@ -566,7 +598,7 @@ angular.module('ts5App')
       }
     };
 
-    $scope.getArrowType = function (orderName, isLMPStock) {
+    $scope.getArrowType = function(orderName, isLMPStock) {
       var currentTitle = isLMPStock ? $scope.LMPSortTitle : $scope.cashBagSortTitle;
       if (currentTitle === orderName) {
         return 'ascending';
@@ -577,7 +609,7 @@ angular.module('ts5App')
       return 'none';
     };
 
-    $scope.showPaymentReportPanel = function () {
+    $scope.showPaymentReportPanel = function() {
       angular.element('#paymentReportModal').modal('show');
     };
 
