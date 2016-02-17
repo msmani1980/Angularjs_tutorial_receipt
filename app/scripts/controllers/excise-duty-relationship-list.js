@@ -38,10 +38,14 @@ angular.module('ts5App')
     }
 
     function hidePanel(panelName) {
+      if (!isPanelOpen(panelName)) {
+        return;
+      }
+
       if (panelName === '#create-collapse') {
         $scope.itemExciseDutyList = null;
       }
-      
+
       angular.element(panelName).addClass('collapse');
     }
 
@@ -83,6 +87,8 @@ angular.module('ts5App')
     $scope.toggleCreatePanel = function () {
       $scope.clearCreateForm(true);
       $scope.clearSearchForm();
+      $scope.cancelEdit();
+
       togglePanel('#create-collapse');
     };
 
