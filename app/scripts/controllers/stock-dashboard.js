@@ -40,7 +40,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     var loadingProgress = false;
 
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
-      $scope.stockDashboardItemsList = $scope.stockDashboardItemsList.concat(dataFromAPI.response);
+      $scope.stockDashboardItemsList = angular.copy(dataFromAPI.response);
       loadingProgress = false;
       hideLoadingBar();
     };
