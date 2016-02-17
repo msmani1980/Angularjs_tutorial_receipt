@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Directive: topNavigationBar', function () {
+describe('Directive: topNavigationBar', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
