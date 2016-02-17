@@ -222,26 +222,13 @@
                   <div ng-bind-html="item.itemName | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
-
-
-            <!--<ui-select required="true"-->
-            <!--name="editCountry"-->
-            <!--ng-model="recordToEdit.country"-->
-            <!--theme="bootstrap"-->
-            <!--placeholder="Select Country"-->
-            <!--ng-required="true">-->
-            <!--<ui-select-match placeholder="Select a country">{{ $select.selected.countryName}}</ui-select-match>-->
-            <!--<ui-select-choices repeat="country in countryList | filter: {countryName:$select.search}">-->
-            <!--<div ng-bind-html="country.countryName | highlight: $select.search"></div>-->
-            <!--</ui-select-choices>-->
-            <!--</ui-select>-->
             </span>
           </td>
           <td>
             <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.commodityCode }}</span>
             <span ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
               <ui-select required="true"
-                         ng-model="newRecord.commodityCode"
+                         ng-model="recordToEdit.commodityCode"
                          theme="bootstrap"
                          placeholder="Select an"
                          ng-required="true"
@@ -251,13 +238,6 @@
                   <div ng-bind-html="record.commodityCode | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
-
-            <!--<input class="form-control"-->
-            <!--name="editCommodityCode"-->
-            <!--custom-validity-->
-            <!--custom-pattern="alphanumericSpaces"-->
-            <!--ng-model="recordToEdit.commodityCode"-->
-            <!--ng-disabled="!canDelete(exciseDuty)">-->
             </span>
           </td>
           <td>
@@ -271,17 +251,6 @@
                    name="alcoholVolume"
                    ng-required="true"/>
               </span>
-
-
-            <!--<span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">-->
-            <!--<select class="form-control"-->
-            <!--ng-model="recordToEdit.volumeUnitId"-->
-            <!--ng-options="unit.id as (unit.unitName + ' (' + unit.unitCode + ')') for unit in volumeUnits"-->
-            <!--ng-disabled="!canDelete(exciseDuty)"-->
-            <!--name="editVolumetricUnit"-->
-            <!--required="true">-->
-            <!--</select>-->
-            <!--</span>-->
           </td>
           <td>
             <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.startDate }}</span>

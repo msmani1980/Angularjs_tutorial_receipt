@@ -120,7 +120,7 @@ angular.module('ts5App')
 
     function reloadAfterAPISuccess() {
       hideLoadingModal();
-      $scope.searchExciseData();
+      $scope.searchItemExciseData();
     }
 
     $scope.removeRecord = function (record) {
@@ -182,7 +182,8 @@ angular.module('ts5App')
     $scope.selectToEdit = function (record) {
       $scope.recordToEdit = angular.copy(record);
       var itemMatch = lodash.findWhere($scope.itemList, { id: record.itemMasterId });
-      var exciseDutyMatch = lodash.findWhere($scope.exciseDutyList, { id: record.exciseDutyId });
+      var exciseDutyMatch = lodash.findWhere($scope.exciseDutyList, { commodityCode: record.commodityCode });
+      console.log(exciseDutyMatch, record, exciseDutyMatch);
       $scope.recordToEdit.retailItem = itemMatch;
       $scope.recordToEdit.commodityCode = exciseDutyMatch;
       $scope.inEditMode = true;
