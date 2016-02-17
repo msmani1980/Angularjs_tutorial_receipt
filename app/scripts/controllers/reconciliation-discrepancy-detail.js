@@ -51,7 +51,7 @@ angular.module('ts5App')
       var varianceQuantity = getVarianceQuantity(stockItem);
       var retailValue = stockItem.price || 0;
       var varianceValue = makeFinite(varianceQuantity * stockItem.price);
-      var isDiscrepancy = (varianceQuantity.toString() !== '0');
+      var isDiscrepancy = (parseInt(varianceQuantity) !== 0);
       var eposSales = stockItem.eposQuantity || 0;
       var inboundOffloadCount = stockItem.inboundQuantity || stockItem.offloadQuantity || 0;
 
