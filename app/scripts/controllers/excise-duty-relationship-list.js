@@ -33,64 +33,62 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
     }
 
-    //
-    //function isPanelOpen(panelName) {
-    //  return !angular.element(panelName).hasClass('collapse');
-    //}
-    //
-    //function hidePanel(panelName) {
-    //  if (panelName === '#create-collapse') {
-    //    $scope.clearSearchForm();
-    //  }
-    //
-    //  angular.element(panelName).addClass('collapse');
-    //}
-    //
-    //function showPanel(panelName) {
-    //  if (panelName === '#create-collapse') {
-    //    $scope.clearSearchForm();
-    //  }
-    //
-    //  angular.element(panelName).removeClass('collapse');
-    //}
-    //
-    //function togglePanel(panelName) {
-    //  var otherPanelName = (panelName === '#search-collapse') ? '#create-collapse' : '#search-collapse';
-    //  if (isPanelOpen(panelName)) {
-    //    hidePanel(panelName);
-    //  } else {
-    //    showPanel(panelName);
-    //    hidePanel(otherPanelName);
-    //  }
-    //}
-    //
-    //$scope.clearCreateForm = function (shouldClearAll) {
-    //  var currentCountry = $scope.newRecord.country;
-    //  $scope.displayError = false;
-    //  $scope.newRecord = {
-    //    alcoholic: false,
-    //    country: (shouldClearAll) ? null : currentCountry
-    //  };
-    //
-    //  $scope.itemExciseDutyCreateForm.endDate.$setUntouched();
-    //  $scope.itemExciseDutyCreateForm.startDate.$setUntouched();
-    //};
-    //
-    //$scope.clearSearchForm = function () {
-    //  $scope.search = null;
-    //  $scope.exciseDutyList = null;
-    //  initLazyLoadingMeta();
-    //};
-    //
-    //$scope.toggleSearchPanel = function () {
-    //  togglePanel('#search-collapse');
-    //};
-    //
-    //$scope.toggleCreatePanel = function () {
-    //  $scope.clearCreateForm(true);
-    //  togglePanel('#create-collapse');
-    //};
-    //
+    function isPanelOpen(panelName) {
+      return !angular.element(panelName).hasClass('collapse');
+    }
+
+    function hidePanel(panelName) {
+      //if (panelName === '#create-collapse') {
+      //  $scope.clearSearchForm();
+      //}
+
+      angular.element(panelName).addClass('collapse');
+    }
+
+    function showPanel(panelName) {
+      //if (panelName === '#create-collapse') {
+      //  $scope.clearSearchForm();
+      //}
+
+      angular.element(panelName).removeClass('collapse');
+    }
+
+    function togglePanel(panelName) {
+      var otherPanelName = (panelName === '#search-collapse') ? '#create-collapse' : '#search-collapse';
+      if (isPanelOpen(panelName)) {
+        hidePanel(panelName);
+      } else {
+        showPanel(panelName);
+        hidePanel(otherPanelName);
+      }
+    }
+    
+    $scope.clearCreateForm = function (shouldClearAll) {
+      var currentItemType = $scope.newRecord.itemType;
+      $scope.displayError = false;
+      $scope.newRecord = {
+        itemType: (shouldClearAll) ? null : currentItemType
+      };
+
+      $scope.itemExciseDutyCreateForm.endDate.$setUntouched();
+      $scope.itemExciseDutyCreateForm.startDate.$setUntouched();
+    };
+
+    $scope.clearSearchForm = function () {
+      $scope.search = null;
+      $scope.itemExciseDutyList = null;
+      initLazyLoadingMeta();
+    };
+
+    $scope.toggleSearchPanel = function () {
+      togglePanel('#search-collapse');
+    };
+
+    $scope.toggleCreatePanel = function () {
+      //$scope.clearCreateForm(true);
+      togglePanel('#create-collapse');
+    };
+
     //$scope.shouldShowSearchPrompt = function () {
     //  return !isPanelOpen('#create-collapse') && (!$scope.itemExciseDutyList);
     //};
@@ -107,53 +105,55 @@ angular.module('ts5App')
     //  return (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !== null && $this.meta.offset < $this.meta.count);
     //};
     //
-    //$scope.shouldRequireCreateFields = function () {
-    //  return !$scope.inEditMode && isPanelOpen('#create-collapse');
-    //};
-    //
+    $scope.shouldRequireCreateFields = function () {
+      return !$scope.inEditMode && isPanelOpen('#create-collapse');
+    };
+
     $scope.searchItemExciseData = function () {
       initLazyLoadingMeta();
       $scope.itemExciseDutyList = null;
       $scope.getItemExciseDutyList();
     };
 
-    //function reloadAfterAPISuccess() {
-    //  hideLoadingModal();
-    //  $scope.searchExciseData();
-    //}
-    //
-    //$scope.removeRecord = function (record) {
-    //  showLoadingModal('Deleting Record');
-    //  exciseDutyFactory.deleteExciseDuty(record.id).then(reloadAfterAPISuccess, showErrors);
-    //};
-    //
-    //$scope.canDelete = function (exciseDuty) {
-    //  return dateUtility.isAfterToday(exciseDuty.startDate);
-    //};
-    //
-    //function formatRecordForAPI(record) {
-    //  var oldRecordMatch = lodash.findWhere($scope.exciseDutyList, { id: record.id });
-    //  if ($scope.inEditMode && !record.startDate) {
-    //    record.startDate = oldRecordMatch.startDate;
-    //  }
-    //
-    //  if ($scope.inEditMode && !record.endDate) {
-    //    record.endDate = oldRecordMatch.endDate;
-    //  }
-    //
-    //  var payload = {
-    //    commodityCode: record.commodityCode,
-    //    dutyRate: parseFloat(record.dutyRate),
-    //    startDate: dateUtility.formatDateForAPI(record.startDate),
-    //    endDate: dateUtility.formatDateForAPI(record.endDate),
-    //    volumeUnitId: record.volumeUnitId,
-    //    countryId: record.country.id,
-    //    alcoholic: record.alcoholic
-    //  };
-    //
-    //  return payload;
-    //}
-    //
+    function reloadAfterAPISuccess() {
+      hideLoadingModal();
+      $scope.searchExciseData();
+    }
+
+    $scope.removeRecord = function (record) {
+      showLoadingModal('Deleting Record');
+      exciseDutyRelationshipFactory.deleteRelationship(record.id).then(reloadAfterAPISuccess, showErrors);
+    };
+
+    $scope.canDelete = function (exciseDuty) {
+      return dateUtility.isAfterToday(exciseDuty.startDate);
+    };
+
+    function formatRecordForAPI(record) {
+      //var oldRecordMatch = lodash.findWhere($scope.exciseDutyList, { id: record.id });
+      //if ($scope.inEditMode && !record.startDate) {
+      //  record.startDate = oldRecordMatch.startDate;
+      //}
+      //
+      //if ($scope.inEditMode && !record.endDate) {
+      //  record.endDate = oldRecordMatch.endDate;
+      //}
+
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(record.startDate),
+        endDate: dateUtility.formatDateForAPI(record.endDate),
+        itemMasterId: record.retailItem.id,
+        exciseDutyId: record.commodityCode.id,
+        alcoholVolume: parseFloat(record.alcoholVolume)
+      };
+
+      if (record.itemType) {
+        payload.itemTypeId = record.itemType;
+      }
+
+      return payload;
+    }
+
     //$scope.saveEdit = function () {
     //  showLoadingModal('Editing Record');
     //  var payload = formatRecordForAPI($scope.recordToEdit);
@@ -162,52 +162,54 @@ angular.module('ts5App')
     //    reloadAfterAPISuccess();
     //  }, showErrors);
     //};
-    //
-    //$scope.cancelEdit = function () {
-    //  $scope.inEditMode = false;
-    //  $scope.recordToEdit = null;
-    //};
-    //
-    //$scope.canEdit = function (exciseDuty) {
-    //  return dateUtility.isAfterToday(exciseDuty.endDate);
-    //};
-    //
-    //$scope.isSelectedToEdit = function (exciseDuty) {
-    //  return ($scope.inEditMode && exciseDuty.id === $scope.recordToEdit.id);
-    //};
-    //
-    //$scope.selectToEdit = function (exciseDuty) {
-    //  $scope.recordToEdit = angular.copy(exciseDuty);
-    //  var countryMatch = lodash.findWhere($scope.countryList, { id: exciseDuty.countryId });
-    //  $scope.recordToEdit.country = countryMatch;
-    //  $scope.inEditMode = true;
-    //};
-    //
-    //function createSuccess() {
-    //  if ($scope.search && $scope.search.commodityCode) {
-    //    $scope.search = { commodityCode: $scope.search.commodityCode + ',' + $scope.newRecord.commodityCode };
-    //  } else {
-    //    $scope.search = { commodityCode: $scope.newRecord.commodityCode };
-    //  }
-    //
-    //  $scope.clearCreateForm(false);
-    //  $scope.searchExciseData();
-    //}
-    //
-    //function validateCreateForm() {
-    //  var isValid = !!$scope.newRecord.country;
-    //  $scope.exciseDutyCreateForm.country.$setValidity('required', isValid);
-    //  $scope.displayError = !isValid;
-    //}
-    //
-    //$scope.createExciseDuty = function () {
-    //  validateCreateForm();
-    //  if ($scope.exciseDutyCreateForm.$valid) {
-    //    var payload = formatRecordForAPI($scope.newRecord);
-    //    exciseDutyFactory.createExciseDuty(payload).then(createSuccess, showErrors);
-    //  }
-    //};
-    //
+
+    $scope.cancelEdit = function () {
+      $scope.inEditMode = false;
+      $scope.recordToEdit = null;
+    };
+
+    $scope.canEdit = function (record) {
+      return dateUtility.isAfterToday(record.endDate);
+    };
+
+    $scope.isSelectedToEdit = function (record) {
+      return ($scope.inEditMode && record.id === $scope.recordToEdit.id);
+    };
+
+    $scope.selectToEdit = function (record) {
+      $scope.recordToEdit = angular.copy(record);
+      var itemMatch = lodash.findWhere($scope.itemList, { id: record.itemMasterId });
+      var exciseDutyMatch = lodash.findWhere($scope.exciseDutyList, { id: record.exciseDutyId });
+      $scope.recordToEdit.retailItem = itemMatch;
+      $scope.recordToEdit.commodityCode = exciseDutyMatch;
+      $scope.inEditMode = true;
+    };
+
+    function createSuccess(newRecordFromAPI) {
+      hideLoadingModal();
+      $scope.clearCreateForm(false);
+      console.log(newRecordFromAPI);
+
+      // TODO: add new record to itemExciseDutyList array
+
+      //$scope.searchExciseData();
+    }
+
+    function validateCreateForm() {
+      var isValid = !!$scope.newRecord.retailItem && !!$scope.newRecord.commodityCode;
+      $scope.itemExciseDutyCreateForm.retailItem.$setValidity('required', !!$scope.newRecord.retailItem);
+      $scope.itemExciseDutyCreateForm.commodityCode.$setValidity('required', !!$scope.newRecord.commodityCode);
+      $scope.displayError = !isValid;
+    }
+
+    $scope.createRelationship = function () {
+      validateCreateForm();
+      if ($scope.itemExciseDutyCreateForm.$valid) {
+        showLoadingModal('Creating New Record');
+        var payload = formatRecordForAPI($scope.newRecord);
+        exciseDutyRelationshipFactory.createRelationship(payload).then(createSuccess, showErrors);
+      }
+    };
 
     function formatMultiSelectValuesForSearchPayload(searchKey, valueKey, payloadKey, workngPayload) {
       var newPayload = [];
@@ -290,10 +292,11 @@ angular.module('ts5App')
     }
 
     function callInitAPIs() {
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       var promises = [
-        exciseDutyRelationshipFactory.getExciseDutyList(),
+        exciseDutyRelationshipFactory.getExciseDutyList({ startDate: today }),
         exciseDutyRelationshipFactory.getItemTypes(),
-        exciseDutyRelationshipFactory.getMasterItemList({})
+        exciseDutyRelationshipFactory.getMasterItemList({ startDate: today })
       ];
 
       $q.all(promises).then(completeInit, showErrors);
