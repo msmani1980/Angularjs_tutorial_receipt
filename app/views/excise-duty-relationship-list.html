@@ -21,9 +21,7 @@
     </error-dialog>
 
     <form name="itemExciseDutyCreateForm" ng-submit="createRelationship()">
-
-      {{ shouldRequireCreateFields() }}
-
+      
       <div class="panel panel-default collapse no-transition" id="create-collapse">
         <div class="panel-heading">
           <div class="row">
@@ -342,17 +340,14 @@
       </table>
     </form>
 
-    <!--<p ng-if="exciseDutyList.length > 0" class="record-count small text-center">Showing {{exciseDutyList.length}} records</p>-->
+    <p ng-if="itemExciseDutyList.length > 0" class="record-count small text-center">Showing {{itemExciseDutyList.length}} records</p>
 
-    <!--<p ng-show="shouldShowLoadingAlert()" class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>-->
-
-    <!--<p ng-show="shouldShowSearchPrompt()" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view records</p>-->
-
-    <!--<p ng-show="shouldShowCreatePrompt()" class="alert alert-success text-center"><i class="fa fa-exclamation-circle"></i> New Records will appear here after they are successfully-->
-    <!--created</p>-->
-
-    <!--<p ng-show="shouldShowNoRecordsFoundPrompt()" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were-->
-    <!--found</p>-->
+    <p ng-show="shouldShowLoadingAlert()" class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+    <p ng-show="shouldShowSearchPrompt()" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view records</p>
+    <p ng-show="shouldShowCreatePrompt()" class="alert alert-success text-center"><i class="fa fa-exclamation-circle"></i> New Records will appear here after they are successfully
+    created</p>
+    <p ng-show="shouldShowNoRecordsFoundPrompt()" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were
+    found</p>
   </div>
 
 </div>

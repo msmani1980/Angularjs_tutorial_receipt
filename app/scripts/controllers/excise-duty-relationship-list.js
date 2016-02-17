@@ -38,18 +38,10 @@ angular.module('ts5App')
     }
 
     function hidePanel(panelName) {
-      //if (panelName === '#create-collapse') {
-      //  $scope.clearSearchForm();
-      //}
-
       angular.element(panelName).addClass('collapse');
     }
 
     function showPanel(panelName) {
-      //if (panelName === '#create-collapse') {
-      //  $scope.clearSearchForm();
-      //}
-
       angular.element(panelName).removeClass('collapse');
     }
 
@@ -62,7 +54,7 @@ angular.module('ts5App')
         hidePanel(otherPanelName);
       }
     }
-    
+
     $scope.clearCreateForm = function (shouldClearAll) {
       var currentItemType = $scope.newRecord.itemType;
       $scope.displayError = false;
@@ -85,26 +77,27 @@ angular.module('ts5App')
     };
 
     $scope.toggleCreatePanel = function () {
-      //$scope.clearCreateForm(true);
+      $scope.clearCreateForm(true);
+      $scope.clearSearchForm();
       togglePanel('#create-collapse');
     };
 
-    //$scope.shouldShowSearchPrompt = function () {
-    //  return !isPanelOpen('#create-collapse') && (!$scope.itemExciseDutyList);
-    //};
-    //
-    //$scope.shouldShowCreatePrompt = function () {
-    //  return isPanelOpen('#create-collapse') && (!$scope.itemExciseDutyList || $scope.itemExciseDutyList.length <= 0);
-    //};
-    //
-    //$scope.shouldShowNoRecordsFoundPrompt = function () {
-    //  return !isPanelOpen('#create-collapse') && (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !== null && $scope.itemExciseDutyList.length <= 0);
-    //};
-    //
-    //$scope.shouldShowLoadingAlert = function () {
-    //  return (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !== null && $this.meta.offset < $this.meta.count);
-    //};
-    //
+    $scope.shouldShowSearchPrompt = function () {
+      return !isPanelOpen('#create-collapse') && (!$scope.itemExciseDutyList);
+    };
+
+    $scope.shouldShowCreatePrompt = function () {
+      return isPanelOpen('#create-collapse') && (!$scope.itemExciseDutyList || $scope.itemExciseDutyList.length <= 0);
+    };
+
+    $scope.shouldShowNoRecordsFoundPrompt = function () {
+      return !isPanelOpen('#create-collapse') && (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !== null && $scope.itemExciseDutyList.length <= 0);
+    };
+
+    $scope.shouldShowLoadingAlert = function () {
+      return (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !== null && $this.meta.offset < $this.meta.count);
+    };
+
     $scope.shouldRequireCreateFields = function () {
       return !$scope.inEditMode && isPanelOpen('#create-collapse');
     };
