@@ -74,8 +74,10 @@ angular.module('ts5App')
         if (companyTypeName === 'Cash Handler') {
           companyRelationshipFactory.getCompanyRelationshipListByCompany(selectedCompany.id).then(function (companyList) {
             setRetailForCHModel(companyList);
-            $scope.pickedCompany[companyTypeName].chCompany = lodash.where($scope.cashHandlerRetailCompanyList,
-              { companyId: $scope.userObject.companyData.chCompany.companyId })[0];
+            if ($scope.userObject.companyData.chCompany) {
+              $scope.pickedCompany[companyTypeName].chCompany = lodash.where($scope.cashHandlerRetailCompanyList,
+                { companyId: $scope.userObject.companyData.chCompany.companyId })[0];
+            }
           });
         }
 
@@ -84,6 +86,7 @@ angular.module('ts5App')
       function getSelectedCompany() {
         var selectedCompany = {};
         $scope.shouldDisableChangeCompany = true;
+        $scope.shouldDisableCHSelect = true;
         $scope.pickedCompany = [];
         $scope.cashHandlerRetailCompanyList = [];
         lodash.forEach($scope.userCompanies, function (companyObject) {

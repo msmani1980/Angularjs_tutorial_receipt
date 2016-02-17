@@ -121,26 +121,21 @@ angular.module('ts5App')
     var actions = {
       getPostTrips: {
         method: 'GET',
-        headers: { companyId: 362 },
         transformResponse: appendTransform($http.defaults.transformResponse, transformResponseArray)
       },
       getPostTrip: {
         method: 'GET',
-        headers: { companyId: 362 },
         transformResponse: appendTransform($http.defaults.transformResponse, transformResponse)
       },
       updatePostTrip: {
         method: 'PUT',
-        headers: { companyId: 362 },
         transformRequest: appendTransform($http.defaults.transformRequest, transformRequestForPostAndPut)
       },
       deletePostTrip: {
         method: 'DELETE',
-        headers: { companyId: 362 }
       },
       createPostTrips: {
         method: 'POST',
-        headers: { companyId: 362 },
         transformRequest: appendTransform($http.defaults.transformRequest, transformRequestForPostAndPut)
       }
     };
