@@ -93,6 +93,7 @@ module.exports = function(config) {
       'app/scripts/**/*.js',
       'test/mock/**/*.json',
       'test/spec/**/*.js',
+      'test/globals/**/*.js',
       //location of templates
       'app/views/**/*.html'
     ],
