@@ -152,12 +152,7 @@ angular.module('ts5App')
     };
 
     function setupCompanyRelationshipTypeScope(companyRelationshipTypeListFromAPI) {
-      var response = companyRelationshipTypeListFromAPI.response;
-      $scope.companyRelationshipTypeList = response.filter(function(relationshipType) {
-        if (relationshipType.relativeCompanyTypeId !== $scope.company.companyTypeId) {
-          return relationshipType;
-        }
-      });
+      $scope.companyRelationshipTypeList = angular.copy(companyRelationshipTypeListFromAPI.response);
     }
 
     function setupCompanyRelationshipScope(companyRelationshipsFromAPI) {
@@ -165,9 +160,7 @@ angular.module('ts5App')
       if (!companyRelationshipsFromAPI.length) {
         $scope.addCompanyRelationship($scope.company);
       } else {
-        $scope.companyRelationshipListData = companyRelationshipsFromAPI.filter(function (companyRelationship) {
-          return (companyRelationship.companyId === $scope.company.id) ? companyRelationship : undefined;
-        });
+        $scope.companyRelationshipListData = companyRelationshipsFromAPI;
       }
     }
 
@@ -185,7 +178,7 @@ angular.module('ts5App')
     var filterCompanyListByTypesScope = function (companyTypeListFromAPI) {
       var typeIdList = [];
       companyTypeListFromAPI.response.forEach(function (companyType) {
-        typeIdList.push(companyType.relativeCompanyTypeId);
+        typeIdList.push(companyType.companyTypeId);
       });
 
       $scope.companyList = $scope.companyList.filter(function (company) {
