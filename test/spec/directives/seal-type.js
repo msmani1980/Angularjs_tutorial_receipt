@@ -116,8 +116,8 @@ describe('the Seal Type directive', function() {
       });
 
       it('should add seals sequentially', function() {
-        var mockArray = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
-        scope.sealTypesList[0].seals.numbers = [10];
+        var mockArray = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19'];
+        scope.sealTypesList[0].seals.numbers = ['10'];
         isolatedScope.numberOfSeals = 10;
         isolatedScope.addSealsSequentially();
         expect(scope.sealTypesList[0].seals.numbers).toEqual(mockArray);
