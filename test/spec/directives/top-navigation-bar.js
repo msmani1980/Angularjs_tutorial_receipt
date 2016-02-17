@@ -62,8 +62,22 @@ fdescribe('Directive: topNavigationBar', function () {
     });
 
     it('should only have one company selected', function () {
+      isolatedScope.pickedCompany.Retail = { id: 'fakeRetailId' };
+      isolatedScope.pickedCompany.fakeKey = { id: 'notUsed' };
       isolatedScope.selectCompany('Retail');
-      expect(identityAccessFactory.getSessionObject).toHaveBeenCalled();
+      expect(isolatedScope.pickedCompany.fakeKey).toBeUndefined();
+    });
+
+    it('should enable the save button', function () {
+      isolatedScope.pickedCompany.Retail = { id: 'fakeRetailId' };
+      isolatedScope.selectCompany('Retail');
+      expect(isolatedScope.shouldDisableChangeCompany).toBeFalsy();
+    });
+
+    it('should get company relationship if cash handler is selected', function () {
+      isolatedScope.pickedCompany['Cash Handler'] = { id: 'fakeRetailId' };
+      isolatedScope.selectCompany('Cash Handler');
+      expect(companyRelationshipFactory.getCompanyRelationshipListByCompany).toHaveBeenCalled();
     });
   });
 
