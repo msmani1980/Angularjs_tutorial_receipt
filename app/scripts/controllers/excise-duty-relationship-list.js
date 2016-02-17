@@ -38,6 +38,10 @@ angular.module('ts5App')
     }
 
     function hidePanel(panelName) {
+      if (panelName === '#create-collapse') {
+        $scope.itemExciseDutyList = null;
+      }
+      
       angular.element(panelName).addClass('collapse');
     }
 
@@ -123,7 +127,6 @@ angular.module('ts5App')
     };
 
     function formatRecordForAPI(record) {
-      // TODO: test payload for edit
       var oldRecordMatch = lodash.findWhere($scope.itemExciseDutyList, { id: record.id });
       if ($scope.inEditMode && !record.startDate) {
         record.startDate = oldRecordMatch.startDate;
@@ -182,11 +185,9 @@ angular.module('ts5App')
     function createSuccess(newRecordFromAPI) {
       hideLoadingModal();
       $scope.clearCreateForm(false);
-      console.log(newRecordFromAPI);
-
-      // TODO: add new record to itemExciseDutyList array
-
-      //$scope.searchExciseData();
+      var formattedNewRecord = formatRecordForApp(newRecordFromAPI);
+      $scope.itemExciseDutyList = $scope.itemExciseDutyList || [];
+      $scope.itemExciseDutyList.push(formattedNewRecord);
     }
 
     function validateCreateForm() {
@@ -240,34 +241,40 @@ angular.module('ts5App')
       return payload;
     }
 
+    function formatRecordForApp(recordFrmAPI) {
+      var newRecord = angular.copy(recordFrmAPI);
+      newRecord.startDate = dateUtility.formatDateForApp(newRecord.startDate);
+      newRecord.endDate = dateUtility.formatDateForApp(newRecord.endDate);
+      var itemTypeMatch = lodash.findWhere($scope.itemTypes, { id: parseInt(newRecord.itemTypeId) });
+      newRecord.itemTypeName = (angular.isDefined(itemTypeMatch)) ? itemTypeMatch.name : '';
+      newRecord.alcoholVolume = parseFloat(newRecord.alcoholVolume).toFixed(2);
+      return newRecord;
+    }
+
     function formatResponseForApp(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
 
-      var newItemExciseDutyList = angular.copy(dataFromAPI.response);
-      angular.forEach(newItemExciseDutyList, function (record) {
-        record.startDate = dateUtility.formatDateForApp(record.startDate);
-        record.endDate = dateUtility.formatDateForApp(record.endDate);
-        var itemTypeMatch = lodash.findWhere($scope.itemTypes, { id: parseInt(record.itemTypeId) });
-        record.itemTypeName = (angular.isDefined(itemTypeMatch)) ? itemTypeMatch.name : '';
-        record.dutyRate = parseFloat(record.alcoholVolume).toFixed(2);
+      var newItemExciseDutyList = [];
+      angular.forEach(dataFromAPI.response, function (record) {
+        var formattedRecord = formatRecordForApp(record);
+        newItemExciseDutyList.push(formattedRecord);
       });
 
       $scope.itemExciseDutyList = ($scope.itemExciseDutyList) ? $scope.itemExciseDutyList.concat(newItemExciseDutyList) : newItemExciseDutyList;
     }
 
     $scope.getItemExciseDutyList = function () {
-      if ($this.meta.offset >= $this.meta.count) {
+      if ($this.meta.offset >= $this.meta.count || isPanelOpen('#create-collapse')) {
         return;
       }
 
       var payload = formatSearchPayloadForAPI();
       lodash.assign(payload, {
         limit: $this.meta.limit,
-        offset: $this.meta.offset
+        offset: $this.meta.offset,
+        sortOn: 'itemMaster.itemName,startDate',
+        sortBy: 'ASC'
       });
-
-      //sortOn: 'countryId,commodityCode,startDate',
-      //sortBy: 'ASC'
 
       payload.limit = $this.meta.limit;
       payload.offset = $this.meta.offset;
@@ -278,23 +285,39 @@ angular.module('ts5App')
     };
 
     function watchDatesSuccess(responseFromAPI) {
-      console.log('set!');
+      $scope.newRecord.commodityCode = null;
       $scope.exciseDutyListForCreate = angular.copy(responseFromAPI.response);
     }
 
     function watchNewRecordDates() {
       $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function () {
-        console.log('watch!');
-        if (isPanelOpen('#create-panel') && $scope.newRecord.startDate && $scope.newRecord.endDate) {
-          console.log('get!');
+        if (isPanelOpen('#create-collapse') && $scope.newRecord.startDate && $scope.newRecord.endDate) {
           var payload = {
             startDate: dateUtility.formatDateForAPI($scope.newRecord.startDate),
             endDate: dateUtility.formatDateForAPI($scope.newRecord.endDate)
           };
-          
+
           exciseDutyRelationshipFactory.getExciseDutyList(payload).then(watchDatesSuccess, showErrors);
         } else {
           $scope.exciseDutyListForCreate = null;
+        }
+      });
+    }
+
+    function watchItemTypeSuccess(responseFromAPI) {
+      $scope.newRecord.retailItem = null;
+      $scope.itemListForCreate = angular.copy(responseFromAPI.masterItems);
+    }
+
+    function watchNewRecordItemType() {
+      $scope.$watch('newRecord.itemType', function () {
+        if (isPanelOpen('#create-collapse') && $scope.newRecord.itemType) {
+          var payload = {
+            itemTypeId: $scope.newRecord.itemType
+          };
+          exciseDutyRelationshipFactory.getMasterItemList(payload).then(watchItemTypeSuccess, showErrors);
+        } else {
+          $scope.itemListForCreate = $scope.itemList;
         }
       });
     }
@@ -331,6 +354,7 @@ angular.module('ts5App')
       showLoadingModal('initializing');
       initVars();
       watchNewRecordDates();
+      watchNewRecordItemType();
       callInitAPIs();
     }
 
