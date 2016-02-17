@@ -63,6 +63,21 @@ angular.module('ts5App')
         }).value();
       }
 
+      function setRelationForCH(companyList, companyTypeName) {
+        setRetailForCHModel(companyList);
+        if ($scope.userObject.companyData.chCompany) {
+          $scope.pickedCompany[companyTypeName].chCompany = lodash.where($scope.cashHandlerRetailCompanyList,
+            { companyId: $scope.userObject.companyData.chCompany.companyId })[0];
+        }
+      }
+
+      function setCHModelValues(selectedCompany) {
+        var companyTypeName = selectedCompany.type.companyTypeName;
+        companyRelationshipFactory.getCompanyRelationshipListByCompany(selectedCompany.id).then(function (companyList) {
+          setRelationForCH(companyList, companyTypeName);
+        });
+      }
+
       function setModalValues(selectedCompany) {
         if (!selectedCompany.type) {
           return;
@@ -72,13 +87,7 @@ angular.module('ts5App')
         $scope.pickedCompany[companyTypeName] = selectedCompany;
 
         if (companyTypeName === 'Cash Handler') {
-          companyRelationshipFactory.getCompanyRelationshipListByCompany(selectedCompany.id).then(function (companyList) {
-            setRetailForCHModel(companyList);
-            if ($scope.userObject.companyData.chCompany) {
-              $scope.pickedCompany[companyTypeName].chCompany = lodash.where($scope.cashHandlerRetailCompanyList,
-                { companyId: $scope.userObject.companyData.chCompany.companyId })[0];
-            }
-          });
+          setCHModelValues(selectedCompany);
         }
 
       }
