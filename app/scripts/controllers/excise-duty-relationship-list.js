@@ -183,7 +183,6 @@ angular.module('ts5App')
       $scope.recordToEdit = angular.copy(record);
       var itemMatch = lodash.findWhere($scope.itemList, { id: record.itemMasterId });
       var exciseDutyMatch = lodash.findWhere($scope.exciseDutyList, { commodityCode: record.commodityCode });
-      console.log(exciseDutyMatch, record, exciseDutyMatch);
       $scope.recordToEdit.retailItem = itemMatch;
       $scope.recordToEdit.commodityCode = exciseDutyMatch;
       $scope.inEditMode = true;
@@ -291,67 +290,94 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     };
 
-    function watchNewRecordSuccess(responseCollectionFromAPI) {
-      $scope.newRecord.commodityCode = null;
-      $scope.newRecord.retailItem = null;
-      $scope.exciseDutyListForCreate = angular.copy(responseCollectionFromAPI[0].response);
-      $scope.itemListForCreate = angular.copy(responseCollectionFromAPI[1].masterItems);
-    }
-
-    function createPayloadCollectionForWatchGroup() {
-      var retailItemPayload = {};
-      if ($scope.newRecord.itemType) {
-        retailItemPayload.itemTypeId = $scope.newRecord.itemType;
+    function createRetailItemPayload(modelToCheck) {
+      var retailItemPayload = {
+        startDate: dateUtility.formatDateForAPI(modelToCheck.startDate) || '',
+        endDate: dateUtility.formatDateForAPI(modelToCheck.endDate) || ''
+      };
+      if (modelToCheck.itemType) {
+        retailItemPayload.itemTypeId = modelToCheck.itemType;
       }
 
-      var exciseDutyPayload = {
-        startDate: dateUtility.formatDateForAPI($scope.newRecord.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.newRecord.endDate)
-      };
-      retailItemPayload = lodash.merge(retailItemPayload, (angular.copy(exciseDutyPayload)));
+      return retailItemPayload;
+    }
 
-      return [exciseDutyPayload, retailItemPayload];
+    function createExciseDutyPayload(modelToCheck) {
+      var exciseDutyPayload = {
+        startDate: dateUtility.formatDateForAPI(modelToCheck.startDate) || '',
+        endDate: dateUtility.formatDateForAPI(modelToCheck.endDate) || ''
+      };
+
+      return exciseDutyPayload;
+    }
+
+    function clearWatchGroupDependencies (modelToSet, shouldClearAll) {
+      if (!!modelToSet.itemType) {
+        modelToSet.retailItem = null;
+      }
+
+      if (shouldClearAll) {
+        modelToSet.retailItem = null;
+        modelToSet.commodityCode = null;
+      }
+    }
+
+    function watchGroupSuccess(responseCollectionFromAPI, shouldSetEditModel) {
+      if (shouldSetEditModel) {
+        $scope.itemListForEdit = responseCollectionFromAPI[0].masterItems;
+        $scope.exciseDutyListForEdit = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response : $scope.exciseDutyListForEdit;
+      } else {
+        $scope.itemListForCreate = responseCollectionFromAPI[0].masterItems;
+        $scope.exciseDutyListForCreate = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response : $scope.exciseDutyListForCreate;
+      }
+
+    }
+
+    function callWatchGroupAPI(shouldSetEditModel, shouldCallExciseDuty) {
+      var modelToCheck = (shouldSetEditModel) ? $scope.recordToEdit : $scope.newRecord;
+
+      var retailItemPayload = createRetailItemPayload(modelToCheck);
+      var promises = [exciseDutyRelationshipFactory.getMasterItemList(retailItemPayload)];
+
+      if (shouldCallExciseDuty) {
+        var exciseDutyPayload = createExciseDutyPayload(modelToCheck);
+        promises.push(exciseDutyRelationshipFactory.getExciseDutyList(exciseDutyPayload));
+      }
+
+      clearWatchGroupDependencies(modelToCheck, shouldCallExciseDuty);
+      $q.all(promises).then(function (responseCollectionFromAPI) {
+        watchGroupSuccess(responseCollectionFromAPI, shouldSetEditModel);
+      }, showErrors);
     }
 
     function watchNewRecordDates() {
       $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function () {
         if (isPanelOpen('#create-collapse') && $scope.newRecord.startDate && $scope.newRecord.endDate) {
-          var payloadCollection = createPayloadCollectionForWatchGroup();
-          var promises = [
-            exciseDutyRelationshipFactory.getExciseDutyList(payloadCollection[0]),
-            exciseDutyRelationshipFactory.getMasterItemList(payloadCollection[1])
-          ];
-          $q.all(promises).then(watchNewRecordSuccess, showErrors);
-        } else {
-          $scope.exciseDutyListForCreate = null;
-          $scope.itemListForCreate = null;
+          callWatchGroupAPI(false, true);
         }
       });
     }
 
-    function watchItemTypeSuccess(responseFromAPI) {
-      if ($scope.newRecord.itemType) {
-        $scope.newRecord.retailItem = null;
-      }
-      
-      $scope.itemListForCreate = angular.copy(responseFromAPI.masterItems);
-    }
-
     function watchNewRecordItemType() {
       $scope.$watch('newRecord.itemType', function () {
-        var payload = {};
-        if ($scope.newRecord.itemType) {
-          payload.itemTypeId = $scope.newRecord.itemType;
-        }
-
         if (isPanelOpen('#create-collapse') && $scope.newRecord.startDate && $scope.newRecord.endDate) {
-          var datePayload = {
-            startDate: dateUtility.formatDateForAPI($scope.newRecord.startDate),
-            endDate: dateUtility.formatDateForAPI($scope.newRecord.endDate)
-          };
-          payload = lodash.merge(payload, datePayload);
+          callWatchGroupAPI(false, false);
+        }
+      });
+    }
 
-          exciseDutyRelationshipFactory.getMasterItemList(payload).then(watchItemTypeSuccess, showErrors);
+    function watchEditRecordDates() {
+      $scope.$watchGroup(['recordToEdit.startDate', 'recordToEdit.endDate'], function () {
+        if ($scope.inEditMode && $scope.recordToEdit.startDate && $scope.recordToEdit.endDate) {
+          callWatchGroupAPI(true, true);
+        }
+      });
+    }
+
+    function watchEditRecordItemType() {
+      $scope.$watch('recordToEdit.itemType', function () {
+        if ($scope.inEditMode && $scope.recordToEdit.startDate && $scope.recordToEdit.endDate) {
+          callWatchGroupAPI(true, false);
         }
       });
     }
@@ -369,7 +395,7 @@ angular.module('ts5App')
       var promises = [
         exciseDutyRelationshipFactory.getExciseDutyList({ startDate: today }),
         exciseDutyRelationshipFactory.getItemTypes(),
-        exciseDutyRelationshipFactory.getMasterItemList({ startDate: today })
+        exciseDutyRelationshipFactory.getMasterItemList({})
       ];
 
       $q.all(promises).then(completeInit, showErrors);
@@ -379,16 +405,22 @@ angular.module('ts5App')
       initLazyLoadingMeta();
       $scope.newRecord = {};
       $scope.search = {};
-      $scope.recordToEdit = null;
+      $scope.recordToEdit = {};
       $scope.inEditMode = false;
       $scope.minDate = dateUtility.tomorrowFormatted();
+    }
+
+    function initWatchGroups() {
+      watchNewRecordDates();
+      watchNewRecordItemType();
+      watchEditRecordDates();
+      watchEditRecordItemType();
     }
 
     function init() {
       showLoadingModal('initializing');
       initVars();
-      watchNewRecordDates();
-      watchNewRecordItemType();
+      initWatchGroups();
       callInitAPIs();
     }
 
