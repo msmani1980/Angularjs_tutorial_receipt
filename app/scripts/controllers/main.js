@@ -66,13 +66,14 @@ angular.module('ts5App')
         var companyTypeId = GlobalMenuService.getCompanyData().companyTypeId;
         var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
         var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
-        $scope.dashboardMenu = mainMenuService[companyTypeName]();
+        $scope.realDashboardMenu = companyTypeName;
+
+        //$scope.realDashboardMenu = mainMenuService[companyTypeName]();
       }
 
       function updateNavigationPerUserFeatures() {
         identityAccessService.featuresInRole().then(function (response) {
-          //$scope.realDashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
-          $scope.realDashboardMenu = menuWithFeaturePermissions({}, response);
+          $scope.dashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
         });
 
         assignMenuToCompanyType();

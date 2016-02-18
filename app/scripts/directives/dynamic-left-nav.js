@@ -13,7 +13,9 @@ angular.module('ts5App')
       var companyTypeId = GlobalMenuService.getCompanyData().companyTypeId;
       var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
       var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
-      var menu = mainMenuService[companyTypeName]();
+
+      //var menu = mainMenuService[companyTypeName]();
+      var menu = mainMenuService.getMenu();
       var menuItems = [];
 
       if ($scope.title) {
