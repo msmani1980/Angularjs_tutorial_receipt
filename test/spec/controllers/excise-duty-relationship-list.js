@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ExciseDutyRelationshipListCtrl', function () {
+describe('Controller: ExciseDutyRelationshipListCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
