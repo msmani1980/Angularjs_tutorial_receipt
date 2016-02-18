@@ -395,7 +395,7 @@ angular.module('ts5App')
         findEditMatchAfterWatchSuccess();
         return;
       }
-      
+
       $scope.itemListForCreate = responseCollectionFromAPI[0].masterItems;
       $scope.exciseDutyListForCreate = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response : $scope.exciseDutyListForCreate;
     }
@@ -420,11 +420,12 @@ angular.module('ts5App')
       $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function () {
         if ($scope.inCreateMode && $scope.newRecord.startDate && $scope.newRecord.endDate) {
           callWatchGroupAPI(false, true);
-        } else {
-          clearWatchGroupModels($scope.newRecord, true);
-          $scope.exciseDutyListForCreate = null;
-          $scope.itemListForCreate = null;
+          return;
         }
+        
+        clearWatchGroupModels($scope.newRecord, true);
+        $scope.exciseDutyListForCreate = null;
+        $scope.itemListForCreate = null;
       });
     }
 
@@ -440,11 +441,12 @@ angular.module('ts5App')
       $scope.$watchGroup(['recordToEdit.startDate', 'recordToEdit.endDate'], function () {
         if ($scope.inEditMode && $scope.recordToEdit.startDate && $scope.recordToEdit.endDate) {
           callWatchGroupAPI(true, true);
-        } else {
-          clearWatchGroupModels($scope.recordToEdit, true);
-          $scope.exciseDutyListForEdit = null;
-          $scope.itemListForEdit = null;
+          return;
         }
+
+        clearWatchGroupModels($scope.recordToEdit, true);
+        $scope.exciseDutyListForEdit = null;
+        $scope.itemListForEdit = null;
       });
     }
 
