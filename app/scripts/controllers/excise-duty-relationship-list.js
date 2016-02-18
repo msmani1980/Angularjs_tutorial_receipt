@@ -116,11 +116,13 @@ angular.module('ts5App')
     $scope.searchItemExciseData = function () {
       initLazyLoadingMeta();
       $scope.itemExciseDutyList = null;
+      showLoadingModal('Fetching Data');
       $scope.getItemExciseDutyList();
     };
 
     function reloadAfterAPISuccess() {
       hideLoadingModal();
+      $scope.displayError = false;
       $scope.searchItemExciseData();
     }
 
@@ -133,21 +135,25 @@ angular.module('ts5App')
       return dateUtility.isAfterToday(exciseDuty.startDate);
     };
 
-    function formatRecordForAPI(record) {
-      var oldRecordMatch = lodash.findWhere($scope.itemExciseDutyList, { id: record.id });
+    function formatBadDates (record, oldRecord) {
       if ($scope.inEditMode && !record.startDate) {
-        record.startDate = oldRecordMatch.startDate;
+        record.startDate = oldRecord.startDate;
       }
 
       if ($scope.inEditMode && !record.endDate) {
-        record.endDate = oldRecordMatch.endDate;
+        record.endDate = oldRecord.endDate;
       }
+    }
+
+    function formatRecordForAPI(record) {
+      var oldRecordMatch = lodash.findWhere($scope.itemExciseDutyList, { id: record.id });
+      formatBadDates(record, oldRecordMatch);
 
       var payload = {
         startDate: dateUtility.formatDateForAPI(record.startDate),
         endDate: dateUtility.formatDateForAPI(record.endDate),
-        itemMasterId: record.retailItem.id,
-        exciseDutyId: record.commodityCode.id,
+        itemMasterId: (!record.retailItem && $scope.inEditMode) ? oldRecordMatch.itemMasterId : record.retailItem.id,
+        exciseDutyId: (!record.commodityCode && $scope.inEditMode) ? oldRecordMatch.exciseDutyId : record.commodityCode.id,
         alcoholVolume: parseFloat(record.alcoholVolume)
       };
 
@@ -158,16 +164,30 @@ angular.module('ts5App')
       return payload;
     }
 
+    function editInlineSuccess(responseFromAPI) {
+      hideLoadingModal();
+      var recordMatchIndex = lodash.findIndex($scope.itemExciseDutyList, { id: responseFromAPI.id });
+      if (recordMatchIndex) {
+        var formattedNewRecord = formatRecordForApp(angular.copy(responseFromAPI));
+        $scope.itemExciseDutyList[recordMatchIndex] = formattedNewRecord;
+      }
+    }
+
     $scope.saveEdit = function () {
       showLoadingModal('Editing Record');
       var payload = formatRecordForAPI($scope.recordToEdit);
-      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(function () {
+      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(function (responseFromAPI) {
         $scope.cancelEdit();
-        reloadAfterAPISuccess();
+        if (isPanelOpen('#create-collapse')) {
+          editInlineSuccess(responseFromAPI);
+        } else {
+          reloadAfterAPISuccess();
+        }
       }, showErrors);
     };
 
     $scope.cancelEdit = function () {
+      $scope.itemExciseDutyCreateForm.$setUntouched();
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
     };
@@ -260,6 +280,7 @@ angular.module('ts5App')
     }
 
     function formatResponseForApp(dataFromAPI) {
+      hideLoadingModal();
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
 
       var newItemExciseDutyList = [];
@@ -328,13 +349,13 @@ angular.module('ts5App')
       }
     }
 
-    function findEditMatchAfterWatchSuccess(shouldSetEditModel) {
-      if ($scope.inEditMode && $scope.recordToEdit.itemMasterId && shouldSetEditModel) {
+    function findEditMatchAfterWatchSuccess() {
+      if ($scope.inEditMode && $scope.recordToEdit.itemMasterId) {
         var itemMatch = lodash.findWhere($scope.itemListForEdit, { id: $scope.recordToEdit.itemMasterId });
         $scope.recordToEdit.retailItem = itemMatch;
       }
 
-      if ($scope.inEditMode && $scope.recordToEdit.exciseDutyId && shouldSetEditModel) {
+      if ($scope.inEditMode && $scope.recordToEdit.exciseDutyId) {
         var exciseDutyMatch = lodash.findWhere($scope.exciseDutyListForEdit, { id: $scope.recordToEdit.exciseDutyId });
         $scope.recordToEdit.commodityCode = exciseDutyMatch;
       }
