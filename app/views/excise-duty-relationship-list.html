@@ -132,8 +132,7 @@
               <label>Item Type</label>
               <select class="form-control"
                       ng-model="search.itemType"
-                      ng-options="itemType.id as itemType.name for itemType in itemTypes"
-                      required="true">
+                      ng-options="itemType.id as itemType.name for itemType in itemTypes">
                 <option value="">Select and Item Type to search by</option>
               </select>
             </div>
@@ -199,6 +198,7 @@
              class="table table-bordered table-hover table-responsive">
         <thead>
         <tr>
+          <td ng-show="inEditMode">Item Type</td>
           <th>Duty Free Retail Item</th>
           <th>Commodity Code</th>
           <th>Alchohol Volume</th>
@@ -209,6 +209,17 @@
         </thead>
         <tbody>
         <tr class="ng-scope" ng-repeat="relationship in itemExciseDutyList track by $index">
+          <td ng-show="inEditMode">
+            <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.itemTypeName }}</span>
+            <span ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
+              <select class="form-control"
+                      ng-model="recordToEdit.itemType"
+                      ng-options="itemType.id as itemType.name for itemType in itemTypes">
+                <option value="">Select and Item Type</option>
+              </select>
+            </span>
+
+          </td>
           <td>
             <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.itemName }}</span>
             <span ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
@@ -216,9 +227,10 @@
                          theme="bootstrap"
                          placeholder="Select an Item"
                          ng-required="true"
+                         ng-disabled="!itemListForEdit.length"
                          name="editRetailItem">
                 <ui-select-match placeholder="Select a retail Item">{{ $select.selected.itemName}}</ui-select-match>
-                <ui-select-choices repeat="item in itemList | filter: {itemName:$select.search}">
+                <ui-select-choices repeat="item in itemListForEdit | filter: {itemName:$select.search}">
                   <div ng-bind-html="item.itemName | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
@@ -232,6 +244,7 @@
                          theme="bootstrap"
                          placeholder="Select an"
                          ng-required="true"
+                         ng-disabled="!exciseDutyListForEdit.length"
                          name="editCommodityCode">
                 <ui-select-match placeholder="Select a Commodity Code">{{ $select.selected.commodityCode}}</ui-select-match>
                 <ui-select-choices repeat="record in exciseDutyList | filter: {commodityCode:$select.search}">

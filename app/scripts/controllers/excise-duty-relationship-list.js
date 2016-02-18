@@ -185,6 +185,7 @@ angular.module('ts5App')
       var exciseDutyMatch = lodash.findWhere($scope.exciseDutyList, { commodityCode: record.commodityCode });
       $scope.recordToEdit.retailItem = itemMatch;
       $scope.recordToEdit.commodityCode = exciseDutyMatch;
+      $scope.recordToEdit.itemType = parseInt($scope.recordToEdit.itemTypeId);
       $scope.inEditMode = true;
     };
 
@@ -311,7 +312,11 @@ angular.module('ts5App')
       return exciseDutyPayload;
     }
 
-    function clearWatchGroupDependencies (modelToSet, shouldClearAll) {
+    function clearWatchGroupModels(modelToSet, shouldClearAll) {
+      if (!modelToSet) {
+        return;
+      }
+
       if (!!modelToSet.itemType) {
         modelToSet.retailItem = null;
       }
@@ -322,15 +327,27 @@ angular.module('ts5App')
       }
     }
 
+    function findEditMatchAfterWatchSuccess(shouldSetEditModel) {
+      if ($scope.inEditMode && $scope.recordToEdit.itemMasterId && shouldSetEditModel) {
+        var itemMatch = lodash.findWhere($scope.itemListForEdit, { id: $scope.recordToEdit.itemMasterId });
+        $scope.recordToEdit.retailItem = itemMatch;
+      }
+
+      if ($scope.inEditMode && $scope.recordToEdit.exciseDutyId && shouldSetEditModel) {
+        var exciseDutyMatch = lodash.findWhere($scope.exciseDutyListForEdit, { id: $scope.recordToEdit.exciseDutyId });
+        $scope.recordToEdit.commodityCode = exciseDutyMatch;
+      }
+    }
+
     function watchGroupSuccess(responseCollectionFromAPI, shouldSetEditModel) {
       if (shouldSetEditModel) {
         $scope.itemListForEdit = responseCollectionFromAPI[0].masterItems;
         $scope.exciseDutyListForEdit = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response : $scope.exciseDutyListForEdit;
+        findEditMatchAfterWatchSuccess();
       } else {
         $scope.itemListForCreate = responseCollectionFromAPI[0].masterItems;
         $scope.exciseDutyListForCreate = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response : $scope.exciseDutyListForCreate;
       }
-
     }
 
     function callWatchGroupAPI(shouldSetEditModel, shouldCallExciseDuty) {
@@ -344,7 +361,7 @@ angular.module('ts5App')
         promises.push(exciseDutyRelationshipFactory.getExciseDutyList(exciseDutyPayload));
       }
 
-      clearWatchGroupDependencies(modelToCheck, shouldCallExciseDuty);
+      clearWatchGroupModels(modelToCheck, shouldCallExciseDuty);
       $q.all(promises).then(function (responseCollectionFromAPI) {
         watchGroupSuccess(responseCollectionFromAPI, shouldSetEditModel);
       }, showErrors);
@@ -354,6 +371,10 @@ angular.module('ts5App')
       $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function () {
         if (isPanelOpen('#create-collapse') && $scope.newRecord.startDate && $scope.newRecord.endDate) {
           callWatchGroupAPI(false, true);
+        } else {
+          clearWatchGroupModels($scope.newRecord, true);
+          $scope.exciseDutyListForCreate = null;
+          $scope.itemListForCreate = null;
         }
       });
     }
@@ -370,6 +391,10 @@ angular.module('ts5App')
       $scope.$watchGroup(['recordToEdit.startDate', 'recordToEdit.endDate'], function () {
         if ($scope.inEditMode && $scope.recordToEdit.startDate && $scope.recordToEdit.endDate) {
           callWatchGroupAPI(true, true);
+        } else {
+          clearWatchGroupModels($scope.recordToEdit, true);
+          $scope.exciseDutyListForEdit = null;
+          $scope.itemListForEdit = null;
         }
       });
     }
