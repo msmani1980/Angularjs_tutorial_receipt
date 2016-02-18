@@ -55,7 +55,7 @@ angular.module('ts5App')
       if (panelName === '#create-collapse') {
         $scope.inCreateMode = true;
       }
-      
+
       angular.element(panelName).removeClass('collapse');
     }
 
