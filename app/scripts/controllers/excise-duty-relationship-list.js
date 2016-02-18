@@ -157,14 +157,14 @@ angular.module('ts5App')
       return payload;
     }
 
-    //$scope.saveEdit = function () {
-    //  showLoadingModal('Editing Record');
-    //  var payload = formatRecordForAPI($scope.recordToEdit);
-    //  exciseDutyFactory.updateExciseDuty($scope.recordToEdit.id, payload).then(function () {
-    //    $scope.cancelEdit();
-    //    reloadAfterAPISuccess();
-    //  }, showErrors);
-    //};
+    $scope.saveEdit = function () {
+      showLoadingModal('Editing Record');
+      var payload = formatRecordForAPI($scope.recordToEdit);
+      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(function () {
+        $scope.cancelEdit();
+        reloadAfterAPISuccess();
+      }, showErrors);
+    };
 
     $scope.cancelEdit = function () {
       $scope.inEditMode = false;
@@ -291,40 +291,67 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     };
 
-    function watchDatesSuccess(responseFromAPI) {
+    function watchNewRecordSuccess(responseCollectionFromAPI) {
       $scope.newRecord.commodityCode = null;
-      $scope.exciseDutyListForCreate = angular.copy(responseFromAPI.response);
+      $scope.newRecord.retailItem = null;
+      $scope.exciseDutyListForCreate = angular.copy(responseCollectionFromAPI[0].response);
+      $scope.itemListForCreate = angular.copy(responseCollectionFromAPI[1].masterItems);
+    }
+
+    function createPayloadCollectionForWatchGroup() {
+      var retailItemPayload = {};
+      if ($scope.newRecord.itemType) {
+        retailItemPayload.itemTypeId = $scope.newRecord.itemType;
+      }
+
+      var exciseDutyPayload = {
+        startDate: dateUtility.formatDateForAPI($scope.newRecord.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.newRecord.endDate)
+      };
+      retailItemPayload = lodash.merge(retailItemPayload, (angular.copy(exciseDutyPayload)));
+
+      return [exciseDutyPayload, retailItemPayload];
     }
 
     function watchNewRecordDates() {
       $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function () {
         if (isPanelOpen('#create-collapse') && $scope.newRecord.startDate && $scope.newRecord.endDate) {
-          var payload = {
-            startDate: dateUtility.formatDateForAPI($scope.newRecord.startDate),
-            endDate: dateUtility.formatDateForAPI($scope.newRecord.endDate)
-          };
-
-          exciseDutyRelationshipFactory.getExciseDutyList(payload).then(watchDatesSuccess, showErrors);
+          var payloadCollection = createPayloadCollectionForWatchGroup();
+          var promises = [
+            exciseDutyRelationshipFactory.getExciseDutyList(payloadCollection[0]),
+            exciseDutyRelationshipFactory.getMasterItemList(payloadCollection[1])
+          ];
+          $q.all(promises).then(watchNewRecordSuccess, showErrors);
         } else {
           $scope.exciseDutyListForCreate = null;
+          $scope.itemListForCreate = null;
         }
       });
     }
 
     function watchItemTypeSuccess(responseFromAPI) {
-      $scope.newRecord.retailItem = null;
+      if ($scope.newRecord.itemType) {
+        $scope.newRecord.retailItem = null;
+      }
+      
       $scope.itemListForCreate = angular.copy(responseFromAPI.masterItems);
     }
 
     function watchNewRecordItemType() {
       $scope.$watch('newRecord.itemType', function () {
-        if (isPanelOpen('#create-collapse') && $scope.newRecord.itemType) {
-          var payload = {
-            itemTypeId: $scope.newRecord.itemType
+        var payload = {};
+        if ($scope.newRecord.itemType) {
+          payload.itemTypeId = $scope.newRecord.itemType;
+        }
+
+        if (isPanelOpen('#create-collapse') && $scope.newRecord.startDate && $scope.newRecord.endDate) {
+          var datePayload = {
+            startDate: dateUtility.formatDateForAPI($scope.newRecord.startDate),
+            endDate: dateUtility.formatDateForAPI($scope.newRecord.endDate)
           };
+          payload = lodash.merge(payload, datePayload);
+
           exciseDutyRelationshipFactory.getMasterItemList(payload).then(watchItemTypeSuccess, showErrors);
-        } else {
-          $scope.itemListForCreate = $scope.itemList;
         }
       });
     }
