@@ -63,10 +63,11 @@ angular.module('ts5App')
       var otherPanelName = (panelName === '#search-collapse') ? '#create-collapse' : '#search-collapse';
       if (isPanelOpen(panelName)) {
         hidePanel(panelName);
-      } else {
-        showPanel(panelName);
-        hidePanel(otherPanelName);
+        return;
       }
+
+      showPanel(panelName);
+      hidePanel(otherPanelName);
     }
 
     $scope.clearCreateForm = function (shouldClearAll) {
@@ -139,14 +140,19 @@ angular.module('ts5App')
       }
     }
 
+    function removeRecordSuccess(recordId) {
+      if ($scope.inCreateMode) {
+        localDeleteSuccess(recordId);
+        return;
+      }
+
+      reloadAfterAPISuccess();
+    }
+
     $scope.removeRecord = function (record) {
       showLoadingModal('Deleting Record');
       exciseDutyRelationshipFactory.deleteRelationship(record.id).then(function () {
-        if ($scope.inCreateMode) {
-          localDeleteSuccess(record.id);
-        } else {
-          reloadAfterAPISuccess();
-        }
+        removeRecordSuccess(record.id);
       }, showErrors);
     };
 
@@ -192,17 +198,20 @@ angular.module('ts5App')
       }
     }
 
+    function saveSuccess(responseFromAPI) {
+      $scope.cancelEdit();
+      if ($scope.inCreateMode) {
+        editInlineSuccess(responseFromAPI);
+        return;
+      }
+
+      reloadAfterAPISuccess();
+    }
+
     $scope.saveEdit = function () {
       showLoadingModal('Editing Record');
       var payload = formatRecordForAPI($scope.recordToEdit);
-      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(function (responseFromAPI) {
-        $scope.cancelEdit();
-        if ($scope.inCreateMode) {
-          editInlineSuccess(responseFromAPI);
-        } else {
-          reloadAfterAPISuccess();
-        }
-      }, showErrors);
+      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(saveSuccess, showErrors);
     };
 
     $scope.cancelEdit = function () {
@@ -384,10 +393,11 @@ angular.module('ts5App')
         $scope.itemListForEdit = responseCollectionFromAPI[0].masterItems;
         $scope.exciseDutyListForEdit = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response : $scope.exciseDutyListForEdit;
         findEditMatchAfterWatchSuccess();
-      } else {
-        $scope.itemListForCreate = responseCollectionFromAPI[0].masterItems;
-        $scope.exciseDutyListForCreate = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response : $scope.exciseDutyListForCreate;
+        return;
       }
+      
+      $scope.itemListForCreate = responseCollectionFromAPI[0].masterItems;
+      $scope.exciseDutyListForCreate = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response : $scope.exciseDutyListForCreate;
     }
 
     function callWatchGroupAPI(shouldSetEditModel, shouldCallExciseDuty) {
