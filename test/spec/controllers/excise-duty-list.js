@@ -114,7 +114,8 @@ describe('Controller: ExciseDutyListCtrl', function () {
     });
 
     it('should resolve volume unit name', function () {
-      expect(dateUtility.isDateValidForApp(scope.exciseDutyList[0].volumeUnit)).toBeDefined();
+      expect(scope.exciseDutyList[0].volumeUnit).toBeDefined();
+      expect(scope.exciseDutyList[0].volumeUnit).toEqual('Litre (l)');
     });
 
     it('should format dutyRate to float with 2 decimals', function () {

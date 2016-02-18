@@ -40,7 +40,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     var loadingProgress = false;
 
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
-      $scope.stockDashboardItemsList = $scope.stockDashboardItemsList.concat(dataFromAPI.response);
+      $scope.stockDashboardItemsList = angular.copy(dataFromAPI.response);
       loadingProgress = false;
       hideLoadingBar();
     };
@@ -114,11 +114,6 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       if (angular.isDefined($scope.cateringStationList) && $scope.cateringStationList !== null) {
         return ($scope.cateringStationList.length === 1);
       }
-    };
-
-    $scope.isCurrentCountMismatched = function(stockItem) {
-      var currentCountExpected = (stockItem.openingQuantity + stockItem.receivedQuantity - stockItem.dispatchQuantity);
-      return (stockItem.currentQuantity !== currentCountExpected);
     };
 
     $scope.isRecordUpdatedToday = function(stockItem) {

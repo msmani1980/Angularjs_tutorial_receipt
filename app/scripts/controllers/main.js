@@ -7,66 +7,78 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MainCtrl', function ($rootScope, $scope, companiesFactory, mainMenuService, GlobalMenuService, identityAccessService, lodash) {
+  .controller('MainCtrl',
+    function ($rootScope, $scope, companiesFactory, mainMenuService, GlobalMenuService, identityAccessService, identityAccessFactory, companyFactory, lodash) {
 
-    $scope.viewName = 'TS5 Dashboard';
+      $scope.viewName = 'TS5 Dashboard';
 
-    function checkMenuItemMatchesFeaturePermission(featurePermission, menuItemPermission) {
-      return featurePermission.resource.apiName === menuItemPermission.apiName &&
-        lodash.intersection(featurePermission.permissionCode, menuItemPermission.permissionCodes).length === menuItemPermission.permissionCodes.length;
-    }
+      function checkMenuItemMatchesFeaturePermission(featurePermission, menuItemPermission) {
+        if (!featurePermission.resource) {
+          return false;
+        }
 
-    function checkMenuItemHasFeaturePermissions(permissions, featurePermission) {
-      return lodash.find(permissions, function (menuItemPermission) {
-        return checkMenuItemMatchesFeaturePermission(featurePermission, menuItemPermission);
-      });
-    }
-
-    function findPackageWithMatchingMatchingMenuItem(menuItem, featurePermissions) {
-      return lodash.find(featurePermissions, function (featurePermission) {
-        return checkMenuItemHasFeaturePermissions(menuItem.permissions, featurePermission);
-      });
-    }
-
-    function hasMenuItemMatchingPackageWithPermissions(menuItem, featurePermissions) {
-      if (menuItem.permissions) {
-        return findPackageWithMatchingMatchingMenuItem(menuItem, featurePermissions);
+        return featurePermission.resource.apiName === menuItemPermission.apiName &&
+          lodash.intersection(featurePermission.permissionCode, menuItemPermission.permissionCodes).length === menuItemPermission.permissionCodes.length;
       }
 
-      return true;
-    }
-
-    function hasResponseMatchingMenuItemWithPermissions(menuItem, response) {
-      if (response[menuItem.package] && response[menuItem.package][menuItem.role]) {
-        return hasMenuItemMatchingPackageWithPermissions(menuItem, response[menuItem.package][menuItem.role]);
+      function checkMenuItemHasFeaturePermissions(permissions, featurePermission) {
+        return lodash.find(permissions, function (menuItemPermission) {
+          return checkMenuItemMatchesFeaturePermission(featurePermission, menuItemPermission);
+        });
       }
 
-      return false;
-    }
+      function findPackageWithMatchingMatchingMenuItem(menuItem, featurePermissions) {
+        return lodash.find(featurePermissions, function (featurePermission) {
+          return checkMenuItemHasFeaturePermissions(menuItem.permissions, featurePermission);
+        });
+      }
 
-    function menuItemsWithFeaturePermissions(menuItems, response) {
-      return lodash.filter(menuItems, function (menuItem) {
-        return hasResponseMatchingMenuItemWithPermissions(menuItem, response);
-      });
-    }
+      function hasMenuItemMatchingPackageWithPermissions(menuItem, featurePermissions) {
+        if (menuItem.permissions) {
+          return findPackageWithMatchingMatchingMenuItem(menuItem, featurePermissions);
+        }
 
-    function menuWithFeaturePermissions(menu, response) {
-      return lodash.filter(menu, function (item) {
-        item.menuItems = menuItemsWithFeaturePermissions(item.menuItems, response);
-        return item.menuItems.length !== 0;
-      });
-    }
+        return true;
+      }
 
-    function updateNavigationPerUserFeatures() {
-      identityAccessService.featuresInRole().then(function (response) {
-        $scope.realDashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
-      });
+      function hasResponseMatchingMenuItemWithPermissions(menuItem, response) {
+        if (response[menuItem.package] && response[menuItem.package][menuItem.role]) {
+          return hasMenuItemMatchingPackageWithPermissions(menuItem, response[menuItem.package][menuItem.role]);
+        }
 
-      var companyTypeId = GlobalMenuService.getCompanyData().companyTypeId;
-      $scope.dashboardMenu = (companyTypeId === 1) ? mainMenuService.getMenu() : mainMenuService.getStockOwnerMenu();
-    }
+        return false;
+      }
 
-    $scope.$on('company-fetched', updateNavigationPerUserFeatures);
-    updateNavigationPerUserFeatures();
+      function menuItemsWithFeaturePermissions(menuItems, response) {
+        return lodash.filter(menuItems, function (menuItem) {
+          return hasResponseMatchingMenuItemWithPermissions(menuItem, response);
+        });
+      }
 
-  });
+      function menuWithFeaturePermissions(menu, response) {
+        return lodash.filter(menu, function (item) {
+          item.menuItems = menuItemsWithFeaturePermissions(item.menuItems, response);
+          return item.menuItems.length !== 0;
+        });
+      }
+
+      function assignMenuToCompanyType() {
+        var companyTypeId = GlobalMenuService.getCompanyData().companyTypeId;
+        var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
+        var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
+        $scope.dashboardMenu = mainMenuService[companyTypeName]();
+      }
+
+      function updateNavigationPerUserFeatures() {
+        identityAccessService.featuresInRole().then(function (response) {
+          //$scope.realDashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
+          $scope.realDashboardMenu = menuWithFeaturePermissions({}, response);
+        });
+
+        assignMenuToCompanyType();
+      }
+
+      $scope.$on('company-fetched', updateNavigationPerUserFeatures);
+      updateNavigationPerUserFeatures();
+
+    });

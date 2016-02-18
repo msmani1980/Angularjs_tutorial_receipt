@@ -54,7 +54,7 @@ describe('Service: companyRelationshipService', function () {
       });
 
       it('should have a companyName property', function () {
-        expect(companyRelationshipListByCompanyData.companyRelationships[0].companyName).toBe('British Airways');
+        expect(companyRelationshipListByCompanyData.companyRelationships[0].companyName).toBe('StructureChangeTr');
       });
     });
 

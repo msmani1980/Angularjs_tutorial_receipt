@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstancePackingFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q, dateUtility) {
+  function ($scope, storeInstancePackingFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q, dateUtility, socketIO) {
 
     var $this = this;
 
@@ -293,6 +293,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.addItems = function () {
       $this.addItemsToArray($scope.newPickListItems, $scope.addPickListNum, false);
     };
+
+    socketIO.on('retailItem', function (dataFromSocket) {
+      var rowSelector = sprintf('.item-%s', dataFromSocket.message);
+      var inputElementSelector = sprintf('.item-%s .pick-list-picked', dataFromSocket.message);
+      if (angular.element(rowSelector).length) {
+        angular.element(rowSelector).addClass('alert-info');
+        angular.element(inputElementSelector).focus();
+      } else {
+        $scope.addItems();
+        angular.element('.pick-list-picked:last-child').focus();
+      }
+    });
 
     $scope.canDeleteItem = function (item) {
       return item.isNewItem || (!item.isMenuItem);

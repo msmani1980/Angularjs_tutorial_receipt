@@ -22,7 +22,7 @@ angular.module('ts5App')
         var sealNumber = parseInt($scope.sealTypeObject.seals.numbers[0]);
         var count = parseInt($scope.numberOfSeals);
         for (var i = 1; i < count; i++) {
-          var newSeal = Math.abs(sealNumber + i);
+          var newSeal = Math.abs(sealNumber + i).toString();
           $scope.sealTypeObject.seals.numbers.push(newSeal);
         }
 

@@ -52,15 +52,15 @@ angular.module('ts5App')
       function setSessionHeaders() {
         var sessionObject = angular.copy(getSessionObject());
         if (sessionObject.companyData) {
-          $localStorage.companyObject = {
-            companyId: sessionObject.companyId,
-            companyTypeId: sessionObject.companyData.companyTypeId
-          };
+          $localStorage.companyObject = sessionObject.companyData;
+          $localStorage.companyObject.companyId = sessionObject.companyId;
+          $localStorage.companyObject.companyTypeId = sessionObject.companyData.companyTypeId;
         }
 
         delete sessionObject.username;
         delete sessionObject.companyData;
         delete sessionObject.userCompanies;
+        delete sessionObject.companyTypes;
         delete sessionObject.currentSession;
         angular.extend($http.defaults.headers.common, sessionObject);
       }
@@ -73,6 +73,7 @@ angular.module('ts5App')
           companyId: dataFromAPI.companyId,
           companyData: dataFromAPI.companyData,
           userCompanies: dataFromAPI.userCompanies,
+          companyTypes: dataFromAPI.companyTypes,
           currentSession: dataFromAPI.currentSession,
           sessionToken: dataFromAPI.currentSession.sessionToken
         };
@@ -119,8 +120,10 @@ angular.module('ts5App')
       function getCompanyResponseHandler(dataFromAPI, rawSessionData) {
         var sessionObject = angular.copy(rawSessionData);
         sessionObject.companyData = angular.copy(dataFromAPI[0]);
+        sessionObject.companyData.chCompany = angular.copy(rawSessionData.chCompany);
+        sessionObject.companyTypes = angular.copy(dataFromAPI[1]);
         sessionObject.userCompanies = angular.copy(dataFromAPI[2].companies);
-        sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(dataFromAPI[1], { id: sessionObject.companyData.companyTypeId }).name);
+        sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, { id: sessionObject.companyData.companyTypeId }).name);
         setSessionData(sessionObject);
       }
 
@@ -139,6 +142,7 @@ angular.module('ts5App')
       function setSelectedCompany(companyData) {
         var rawSessionData = angular.copy(getSessionObject());
         rawSessionData.companyId = companyData.id;
+        rawSessionData.chCompany = companyData.chCompany;
         rawSessionData.id = rawSessionData.userId;
         getCompanyData(rawSessionData);
       }
@@ -173,4 +177,5 @@ angular.module('ts5App')
         setSelectedCompany: setSelectedCompany
       };
     }
-  );
+  )
+;

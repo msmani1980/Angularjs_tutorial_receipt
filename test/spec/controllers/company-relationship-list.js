@@ -118,12 +118,12 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     });
 
     it('should set companyRelationshipTypeList in scope', function () {
-      expect(scope.companyRelationshipTypeList.length).toBe(3);
+      expect(scope.companyRelationshipTypeList.length).toBe(4);
     });
 
     it('should add companyRelationship to companyRelationshipListData in scope', function () {
       scope.addCompanyRelationship(scope.company);
-      expect(scope.companyRelationshipListData.length).toBe(1);
+      expect(scope.companyRelationshipListData.length).toBe(2);
     });
   });
 

@@ -11,7 +11,7 @@ angular.module('ts5App')
   .service('mainMenuService', function () {
     var emberURL = '/ember/#/';
 
-    this.getMenu = function () {
+    this.Retail = function () {
       return [{
         title: 'Retail Item Management',
         menuItems: [{
@@ -264,47 +264,6 @@ angular.module('ts5App')
           role: 'TRANSACTION'
         }]
       }, {
-        title: 'Cash Management',
-        menuItems: [{
-          name: 'Daily Exchange Rate',
-          route: '/#/exchange-rates',
-          icon: 'icon-manage-transactions',
-          className: 'dashboard-manageDailyExchangeRates',
-          package: 'CASH',
-          role: 'EXCHANGERATE'
-        }, {
-          name: 'Manage Cash Bag',
-          route: '/#/cash-bag-list',
-          icon: 'icon-create-receipt-rules',
-          className: 'dashboard-manageCashBag',
-          package: 'CASH',
-          role: 'CASHBAG'
-        }, {
-          name: 'Cash Bag Submission',
-          route: '/#/cash-bag-submission',
-          icon: 'icon-manage-retail-category',
-          className: 'dashboard-cashBagSubmission',
-          package: 'CASH',
-          role: 'CASHBAGSUBMIT'
-        }]
-      }, {
-        title: 'Currency & Exchange Rate Management',
-        menuItems: [{
-          name: 'Currency Setup',
-          route: '/#/currency-edit',
-          icon: 'icon-manage-retail-category',
-          className: 'dashboard-currencySetup',
-          package: 'CASH',
-          role: 'CASHBAGSUBMIT'
-        }, {
-          name: 'ePOS Exchange Rate',
-          route: '/#/company-exchange-rate-edit',
-          icon: 'icon-manage-transactions',
-          className: 'dashboard-companyExchangeRateEdit',
-          package: 'CASH',
-          role: 'EXCHANGERATE'
-        }]
-      }, {
         title: 'Post Trip Data',
         menuItems: [{
           name: 'Manage Post Trip Data',
@@ -457,7 +416,52 @@ angular.module('ts5App')
         }];
     };
 
-    this.getStockOwnerMenu = function() {
+    this['Cash Handler'] = function() {
+      return [{
+        title: 'Cash Management',
+        menuItems: [{
+          name: 'Daily Exchange Rate',
+          route: '/#/exchange-rates',
+          icon: 'icon-manage-transactions',
+          className: 'dashboard-manageDailyExchangeRates',
+          package: 'CASH',
+          role: 'EXCHANGERATE'
+        }, {
+          name: 'Manage Cash Bag',
+          route: '/#/cash-bag-list',
+          icon: 'icon-create-receipt-rules',
+          className: 'dashboard-manageCashBag',
+          package: 'CASH',
+          role: 'CASHBAG'
+        }, {
+          name: 'Cash Bag Submission',
+          route: '/#/cash-bag-submission',
+          icon: 'icon-manage-retail-category',
+          className: 'dashboard-cashBagSubmission',
+          package: 'CASH',
+          role: 'CASHBAGSUBMIT'
+        }]
+      }, {
+        title: 'Currency & Exchange Rate Management',
+        menuItems: [{
+          name: 'Currency Setup',
+          route: '/#/currency-edit',
+          icon: 'icon-manage-retail-category',
+          className: 'dashboard-currencySetup',
+          package: 'CASH',
+          role: 'CASHBAGSUBMIT'
+        }, {
+          name: 'ePOS Exchange Rate',
+          route: '/#/company-exchange-rate-edit',
+          icon: 'icon-manage-transactions',
+          className: 'dashboard-companyExchangeRateEdit',
+          package: 'CASH',
+          role: 'EXCHANGERATE'
+        }]
+      }];
+    };
+
+    this.Stockowner = function() {
       return [{
           title: 'StockOwner Item Management',
           menuItems: [{

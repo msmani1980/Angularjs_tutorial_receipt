@@ -28,7 +28,7 @@ angular.module('ts5App', [
   'ang-drag-drop',
   'ngLodash',
   'frapontillo.bootstrap-switch',
-  'sprintf',
+  'sprintf'
 ]).factory('defaultData', [
   function () {
     return {
@@ -316,6 +316,10 @@ angular.module('ts5App', [
   }).otherwise({
     redirectTo: '/'
   });
-}).run(function ($rootScope, regexp) {
+}).run(function ($rootScope, regexp, $location, socketIO) {
   $rootScope.regexp = regexp;
+
+  socketIO.on('cashBag', function (route) {
+    $location.path('cash-bag-list', route);
+  });
 });

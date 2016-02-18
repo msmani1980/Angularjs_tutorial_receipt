@@ -364,7 +364,7 @@
                      required
                      ng-disabled="readOnly"
                      name="CompanyCoupon">
-            <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
+            <ui-select-match placeholder="Select Coupon Type">{{ $select.selected.name }}</ui-select-match>
             <ui-select-choices repeat="discountType in selectOptions.companyDiscountsCoupon | filter: {name:$select.search}">
               <div ng-bind-html="discountType.name | highlight: $select.search"></div>
             </ui-select-choices>
@@ -376,7 +376,7 @@
           <ui-select theme="bootstrap" ng-model="promotion.companyVoucher"
                      ng-required="promotion.benefitType.name === 'Voucher'"
                      ng-disabled="readOnly">
-            <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
+            <ui-select-match placeholder="Select Voucher Type">{{ $select.selected.name }}</ui-select-match>
             <ui-select-choices repeat="discountType in selectOptions.companyDiscountsVoucher | filter: {name:$select.search}">
               <div ng-bind-html="discountType.name | highlight: $select.search"></div>
             </ui-select-choices>

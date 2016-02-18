@@ -7,7 +7,7 @@
  * # topNavigationBar
  */
 angular.module('ts5App')
-  .directive('topNavigationBar', function (identityAccessFactory, lodash) {
+  .directive('topNavigationBar', function (identityAccessFactory, companyRelationshipFactory, lodash) {
 
     function topNavigationBarController($scope) {
 
@@ -26,20 +26,32 @@ angular.module('ts5App')
         $scope.$emit('logout');
       };
 
+      function setRetailForCHModel(companyListFromAPI) {
+        $scope.cashHandlerRetailCompanyList = angular.copy(companyListFromAPI.companyRelationships);
+      }
+
+      $scope.selectCHRetailCompany = function (companyType) {
+        if ($scope.pickedCompany[companyType].chCompany) {
+          $scope.shouldDisableChangeCompany = false;
+        }
+      };
+
       $scope.selectCompany = function (companyType) {
+        $scope.shouldDisableChangeCompany = false;
+        $scope.shouldDisableCHSelect = true;
         var companyTypeIndex = Object.keys($scope.pickedCompany);
         lodash.forEach(companyTypeIndex, function (company) {
           if (company !== companyType) {
             delete $scope.pickedCompany[company];
           }
         });
-      };
 
-      $scope.setSelectedCompany = function () {
-        var companyType = Object.keys($scope.pickedCompany);
-        $scope.selectedCompany = $scope.pickedCompany[companyType];
-        identityAccessFactory.setSelectedCompany(angular.copy($scope.selectedCompany));
-        angular.element('#userSettingsModal').modal('hide');
+        if (companyType === 'Cash Handler') {
+          $scope.shouldDisableCHSelect = false;
+          $scope.shouldDisableChangeCompany = true;
+          var pickedCompany = $scope.pickedCompany[companyType];
+          companyRelationshipFactory.getCompanyRelationshipListByCompany(pickedCompany.id).then(setRetailForCHModel);
+        }
       };
 
       function groupUserCompanies() {
@@ -51,34 +63,47 @@ angular.module('ts5App')
         }).value();
       }
 
+      function setRelationForCH(companyList, companyTypeName) {
+        setRetailForCHModel(companyList);
+        if ($scope.userObject.companyData.chCompany) {
+          $scope.pickedCompany[companyTypeName].chCompany = lodash.where($scope.cashHandlerRetailCompanyList,
+            { companyId: $scope.userObject.companyData.chCompany.companyId })[0];
+        }
+      }
+
+      function setCHModelValues(selectedCompany) {
+        var companyTypeName = selectedCompany.type.companyTypeName;
+        companyRelationshipFactory.getCompanyRelationshipListByCompany(selectedCompany.id).then(function (companyList) {
+          setRelationForCH(companyList, companyTypeName);
+        });
+      }
+
       function setModalValues(selectedCompany) {
         if (!selectedCompany.type) {
           return;
         }
 
-        $scope.pickedCompany[selectedCompany.type.companyTypeName] = selectedCompany;
-        if (!$scope.userSettingsForm) {
-          return;
+        var companyTypeName = selectedCompany.type.companyTypeName;
+        $scope.pickedCompany[companyTypeName] = selectedCompany;
+
+        if (companyTypeName === 'Cash Handler') {
+          setCHModelValues(selectedCompany);
         }
 
-        if (!$scope.userSettingsForm.hasOwnProperty(selectedCompany.type.companyTypeName)) {
-          return;
-        }
-
-        $scope.userSettingsForm[selectedCompany.type.companyTypeName].$setViewValue(selectedCompany);
-        $scope.userSettingsForm[selectedCompany.type.companyTypeName].$render();
       }
 
       function getSelectedCompany() {
-        $scope.pickedCompany = [];
         var selectedCompany = {};
+        $scope.shouldDisableChangeCompany = true;
+        $scope.shouldDisableCHSelect = true;
+        $scope.pickedCompany = [];
+        $scope.cashHandlerRetailCompanyList = [];
         lodash.forEach($scope.userCompanies, function (companyObject) {
           var company = lodash.where(companyObject.companies, { id: $scope.userObject.companyData.id })[0];
           selectedCompany = company || selectedCompany;
         });
 
         setModalValues(selectedCompany);
-
         return selectedCompany;
       }
 
@@ -89,11 +114,23 @@ angular.module('ts5App')
         $scope.selectedCompany = getSelectedCompany();
       }
 
+      $scope.setSelectedCompany = function () {
+        var companyType = Object.keys($scope.pickedCompany);
+        var selectedCompany = $scope.pickedCompany[companyType];
+        identityAccessFactory.setSelectedCompany(angular.copy(selectedCompany));
+        angular.element('#userSettingsModal').modal('hide');
+        showCompanyInfo();
+      };
+
+      $scope.closeModal = function () {
+        showCompanyInfo();
+        angular.element('#userSettingsModal').modal('hide');
+      };
+
       $scope.$on('unauthorized', hideNavBar);
       $scope.$on('logout', hideNavBar);
       $scope.$on('authorized', showNavBar);
       $scope.$on('company-fetched', showCompanyInfo);
-      angular.element('#userSettingsModal').on('shown.bs.modal', getSelectedCompany);
       showCompanyInfo();
     }
 

@@ -393,7 +393,10 @@ angular.module('ts5App')
     };
 
     this.executeValidateAction = function () {
-      var instancesToExecuteOn = $this.findInstancesWithStatus('Inbounded');
+      var inboundedInstances = $this.findInstancesWithStatus('Inbounded');
+      var discrepanciesInstances = $this.findInstancesWithStatus('Discrepancies');
+
+      var instancesToExecuteOn = inboundedInstances.concat(discrepanciesInstances);
 
       $this.showLoadingModal('Executing Validate action');
 

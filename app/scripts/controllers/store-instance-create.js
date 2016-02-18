@@ -226,7 +226,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getCarrierNumbers = function() {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = GlobalMenuService.getCompanyData().companyId;
       return storeInstanceFactory.getAllCarrierNumbers(companyId).then($this.setCarrierNumbers);
     };
 
@@ -1148,7 +1148,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getScheduleNumbers = function() {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = GlobalMenuService.getCompanyData().companyId;
       var datesForApi = $this.getFormattedDatesPayload();
       var operationalDays = this.getFormattedOperationalDaysPayload();
       schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate,

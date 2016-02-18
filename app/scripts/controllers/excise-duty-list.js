@@ -29,7 +29,6 @@ angular.module('ts5App')
 
     function showErrors(dataFromAPI) {
       hideLoadingModal();
-      console.log($scope.exciseDutyCreateForm);
       $scope.displayError = true;
       $scope.errorResponse = dataFromAPI;
     }
@@ -39,7 +38,12 @@ angular.module('ts5App')
     }
 
     function hidePanel(panelName) {
+      if (!isPanelOpen(panelName)) {
+        return;
+      }
+
       if (panelName === '#create-collapse') {
+        $scope.cancelEdit();
         $scope.clearSearchForm();
       }
 
@@ -88,6 +92,7 @@ angular.module('ts5App')
 
     $scope.toggleCreatePanel = function () {
       $scope.clearCreateForm(true);
+      $scope.cancelEdit();
       togglePanel('#create-collapse');
     };
 
@@ -114,6 +119,7 @@ angular.module('ts5App')
     $scope.searchExciseData = function () {
       initLazyLoadingMeta();
       $scope.exciseDutyList = null;
+      showLoadingModal('fetching records');
       $scope.getExciseDutyList();
     };
 
@@ -190,6 +196,7 @@ angular.module('ts5App')
         $scope.search = { commodityCode: $scope.newRecord.commodityCode };
       }
 
+      hideLoadingModal();
       $scope.clearCreateForm(false);
       $scope.searchExciseData();
     }
@@ -204,6 +211,7 @@ angular.module('ts5App')
       validateCreateForm();
       if ($scope.exciseDutyCreateForm.$valid) {
         var payload = formatRecordForAPI($scope.newRecord);
+        showLoadingModal('Creating New Record');
         exciseDutyFactory.createExciseDuty(payload).then(createSuccess, showErrors);
       }
     };
@@ -226,6 +234,7 @@ angular.module('ts5App')
     }
 
     function formatExciseDutyResponseForApp(dataFromAPI) {
+      hideLoadingModal();
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
 
       var newExciseDutyList = angular.copy(dataFromAPI.response);
@@ -235,7 +244,7 @@ angular.module('ts5App')
         var countryMatch = lodash.findWhere($scope.countryList, { id: exciseDuty.countryId });
         var volumeMatch = lodash.findWhere($scope.volumeUnits, { id: exciseDuty.volumeUnitId });
         exciseDuty.countryName = (angular.isDefined(countryMatch)) ? countryMatch.countryName : '';
-        exciseDuty.volumeUnit = (angular.isDefined(volumeMatch)) ? volumeMatch.unitName : '';
+        exciseDuty.volumeUnit = (angular.isDefined(volumeMatch)) ? (volumeMatch.unitName + ' (' + volumeMatch.unitCode + ')') : '';
         exciseDuty.dutyRate = parseFloat(exciseDuty.dutyRate).toFixed(2);
       });
 
@@ -251,7 +260,7 @@ angular.module('ts5App')
       lodash.assign(payload, {
         limit: $this.meta.limit,
         offset: $this.meta.offset,
-        sortOn: 'countryId,commodityCode,startDate',
+        sortOn: 'country.countryName,commodityCode,startDate',
         sortBy: 'ASC'
       });
 

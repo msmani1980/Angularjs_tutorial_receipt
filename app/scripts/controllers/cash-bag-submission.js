@@ -178,7 +178,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     }
 
     function getCHCompanySuccessHandler(chCompanyDataFromAPI) {
-      $this.companyId = GlobalMenuService.company.get();
+      $this.companyId = GlobalMenuService.getCompanyData().chCompany.companyId;
       cashBagFactory.getCompany($this.companyId).then(getCompanySuccessHandler, errorHandler);
       angular.element('#bankReferenceNumber').focus();
       $scope.CHCompany = angular.copy(chCompanyDataFromAPI);
@@ -280,7 +280,8 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       cashBagFactory.updateCashBag(null, payload, parameters).then(updateCashBagSuccessHandler, errorHandler);
     };
 
-    cashBagFactory.getCompany(362).then(getCHCompanySuccessHandler, errorHandler);
+    var chCompanyId = GlobalMenuService.getCompanyData().companyId;
+    cashBagFactory.getCompany(chCompanyId).then(getCHCompanySuccessHandler, errorHandler);
     initializeData();
 
     angular.element('#searchCollapse').on('shown.bs.collapse', function () {

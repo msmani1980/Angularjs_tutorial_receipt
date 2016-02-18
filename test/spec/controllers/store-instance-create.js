@@ -18,6 +18,7 @@ describe('Store Instance Create Controller', function() {
     'served/store-instance-seals.json',
     'served/store-instance-item-list.json'
   ));
+  beforeEach(module('served/company-data.json'));
 
   var StoreInstanceCreateCtrl;
   var $scope;
@@ -68,6 +69,8 @@ describe('Store Instance Create Controller', function() {
   var servedStoreInstanceItemsJSON;
   var getStoreInstanceItemsDeferred;
   var storeInstanceSealsJSON;
+  var servedCompanyDataJSON;
+  var GlobalMenuService;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($q, $controller, $rootScope, $injector, $localStorage, _servedCateringStations_,
@@ -88,6 +91,11 @@ describe('Store Instance Create Controller', function() {
     sealTypesJSON = _servedSealTypes_;
     storeInstanceSealsJSON = _servedStoreInstanceSeals_;
     servedStoreInstanceItemsJSON = _servedStoreInstanceItemList_;
+
+    servedCompanyDataJSON = $injector.get('servedCompanyData');
+    GlobalMenuService = $injector.get('GlobalMenuService');
+
+    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue(servedCompanyDataJSON);
 
     location = $injector.get('$location');
     $scope = $rootScope.$new();

@@ -15,8 +15,15 @@ describe('Service: mainMenuService', function () {
     expect(!!mainMenuService).toBe(true);
   });
 
-  it('should have a getMenu function defined', function() {
-    expect(mainMenuService.getMenu).toBeDefined();
-    expect(Object.prototype.toString.call(mainMenuService.getMenu)).toBe('[object Function]');
+  it('should have a get retail menu function defined', function() {
+    expect(mainMenuService.Retail).toBeDefined();
+  });
+
+  it('should have a get cash handler function defined', function() {
+    expect(mainMenuService['Cash Handler']).toBeDefined();
+  });
+
+  it('should have a get stockowner handler function defined', function() {
+    expect(mainMenuService.Stockowner).toBeDefined();
   });
 });
