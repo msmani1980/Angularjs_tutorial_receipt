@@ -343,7 +343,8 @@ angular.module('ts5App')
             route: '/#/reconciliation-dashboard',
             icon: 'icon-manage-schedule',
             className: 'dashboard-reconciliationDashboard',
-            role: 'RECONCILIATIONDASHBOARD'
+            package: 'RECONCILIATION',
+            role: 'RECONCILIATION'
           }]
         }, {
           title: 'Stock Manager',
