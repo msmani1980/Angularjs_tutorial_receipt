@@ -422,7 +422,7 @@ angular.module('ts5App')
           callWatchGroupAPI(false, true);
           return;
         }
-        
+
         clearWatchGroupModels($scope.newRecord, true);
         $scope.exciseDutyListForCreate = null;
         $scope.itemListForCreate = null;
