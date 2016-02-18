@@ -438,9 +438,9 @@ angular.module('ts5App')
     }
 
     function callInitAPIs() {
-      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      //var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       var promises = [
-        exciseDutyRelationshipFactory.getExciseDutyList({ startDate: today }),
+        exciseDutyRelationshipFactory.getExciseDutyList({}),
         exciseDutyRelationshipFactory.getItemTypes(),
         exciseDutyRelationshipFactory.getMasterItemList({})
       ];

@@ -1,124 +1,108 @@
 'use strict';
 
-describe('Controller: ExciseDutyRelationshipListCtrl', function () {
+fdescribe('Controller: ExciseDutyRelationshipListCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
+  beforeEach(module('served/item-excise-duty-list.json'));
   beforeEach(module('served/excise-duty-list.json'));
-  beforeEach(module('served/country-list.json'));
-  beforeEach(module('served/units-volume.json'));
-  beforeEach(module('served/currency.json'));
-  beforeEach(module('served/company.json'));
+  beforeEach(module('served/master-item-list.json'));
+  beforeEach(module('served/item-types.json'));
 
-  var ExciseDutyListCtrl;
-  var exciseDutyFactory;
+  var ExciseDutyRelationshipListCtrl;
+  var ExciseDutyRelationshipFactory;
+  var itemExciseDutyListResponseJSON;
+  var itemExciseDutyListDeferred;
+  var itemExciseDutyDeferred;
   var exciseDutyResponseJSON;
   var exciseDutyDeferred;
-  var countryListResponseJSON;
-  var countryListDeferred;
-  var volumeListResponseJSON;
-  var volumeListDeferred;
-  var companyDataDeferred;
-  var companyDataResponseJSON;
-  var currencyDeferred;
-  var currencyResponseJSON;
-  var location;
+  var masterItemListResponseJSON;
+  var masterItemListDeferred;
+  var itemTypeResponseJSON;
+  var itemTypesDeferred;
   var dateUtility;
   var scope;
 
+
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
 
-    inject(function (_servedExciseDutyList_, _servedCountryList_, _servedUnitsVolume_, _servedCurrency_, _servedCompany_) {
+    inject(function (_servedItemExciseDutyList_, _servedExciseDutyList_, _servedMasterItemList_, _servedItemTypes_) {
+      itemExciseDutyListResponseJSON = _servedItemExciseDutyList_;
       exciseDutyResponseJSON = _servedExciseDutyList_;
-      countryListResponseJSON = _servedCountryList_;
-      volumeListResponseJSON = _servedUnitsVolume_;
-      companyDataResponseJSON = _servedCompany_;
-      currencyResponseJSON = _servedCurrency_;
+      masterItemListResponseJSON = _servedMasterItemList_;
+      itemTypeResponseJSON = _servedItemTypes_;
     });
 
-    location = $location;
-    exciseDutyFactory = $injector.get('exciseDutyFactory');
+    ExciseDutyRelationshipFactory = $injector.get('exciseDutyRelationshipFactory');
     dateUtility = $injector.get('dateUtility');
     scope = $rootScope.$new();
 
+    itemExciseDutyListDeferred = $q.defer();
+    itemExciseDutyListDeferred.resolve(itemExciseDutyListResponseJSON);
+    itemExciseDutyDeferred = $q.defer();
+    itemExciseDutyDeferred.resolve(itemExciseDutyListResponseJSON.response[0]);
     exciseDutyDeferred = $q.defer();
     exciseDutyDeferred.resolve(exciseDutyResponseJSON);
-    countryListDeferred = $q.defer();
-    countryListDeferred.resolve(countryListResponseJSON);
-    volumeListDeferred = $q.defer();
-    volumeListDeferred.resolve(volumeListResponseJSON);
-    companyDataDeferred = $q.defer();
-    companyDataDeferred.resolve(companyDataResponseJSON);
-    currencyDeferred = $q.defer();
-    currencyDeferred.resolve(currencyResponseJSON);
+    masterItemListDeferred = $q.defer();
+    masterItemListDeferred.resolve(masterItemListResponseJSON);
+    itemTypesDeferred = $q.defer();
+    itemTypesDeferred.resolve(itemTypeResponseJSON);
 
-    spyOn(exciseDutyFactory, 'getExciseDutyList').and.returnValue(exciseDutyDeferred.promise);
-    spyOn(exciseDutyFactory, 'getCountriesList').and.returnValue(countryListDeferred.promise);
-    spyOn(exciseDutyFactory, 'getVolumeUnits').and.returnValue(volumeListDeferred.promise);
-    spyOn(exciseDutyFactory, 'getCompanyData').and.returnValue(companyDataDeferred.promise);
-    spyOn(exciseDutyFactory, 'getCurrency').and.returnValue(currencyDeferred.promise);
-    spyOn(exciseDutyFactory, 'deleteExciseDuty').and.returnValue(exciseDutyDeferred.promise);
-    spyOn(exciseDutyFactory, 'createExciseDuty').and.returnValue(exciseDutyDeferred.promise);
-    spyOn(exciseDutyFactory, 'updateExciseDuty').and.returnValue(exciseDutyDeferred.promise);
-    spyOn(location, 'path').and.callThrough();
+    spyOn(ExciseDutyRelationshipFactory, 'getRelationshipList').and.returnValue(itemExciseDutyListDeferred.promise);
+    spyOn(ExciseDutyRelationshipFactory, 'createRelationship').and.returnValue(itemExciseDutyDeferred.promise);
+    spyOn(ExciseDutyRelationshipFactory, 'updateRelationship').and.returnValue(itemExciseDutyDeferred.promise);
+    spyOn(ExciseDutyRelationshipFactory, 'deleteRelationship').and.returnValue(itemExciseDutyDeferred.promise);
+    spyOn(ExciseDutyRelationshipFactory, 'getExciseDutyList').and.returnValue(exciseDutyDeferred.promise);
+    spyOn(ExciseDutyRelationshipFactory, 'getItemTypes').and.returnValue(itemTypesDeferred.promise);
+    spyOn(ExciseDutyRelationshipFactory, 'getMasterItemList').and.returnValue(masterItemListDeferred.promise);
 
 
-    ExciseDutyListCtrl = $controller('ExciseDutyListCtrl', {
+    ExciseDutyRelationshipListCtrl = $controller('ExciseDutyRelationshipListCtrl', {
       $scope: scope
     });
     scope.$digest();
   }));
 
-  //describe('initialize data', function () {
-  //  it('should get list of companies and attach to scope', function () {
-  //    expect(exciseDutyFactory.getCountriesList).toHaveBeenCalled();
-  //    expect(scope.countryList).toBeDefined();
-  //  });
-  //
-  //  it('should get list of volume units and attach to scope', function () {
-  //    expect(exciseDutyFactory.getVolumeUnits).toHaveBeenCalled();
-  //    expect(scope.volumeUnits).toBeDefined();
-  //  });
-  //
-  //  it('should filter list of volume units to litre and hectoliter', function () {
-  //    expect(scope.volumeUnits.length).toEqual(2);
-  //    var isFirstRecordValid = scope.volumeUnits[0].unitCode === 'hl' || scope.volumeUnits[0].unitCode === 'l';
-  //    var isSecondRecordValid = scope.volumeUnits[1].unitCode === 'hl' || scope.volumeUnits[1].unitCode === 'l';
-  //    expect(isFirstRecordValid && isSecondRecordValid).toEqual(true);
-  //  });
-  //
-  //  it('should get company base currency', function () {
-  //    expect(exciseDutyFactory.getCompanyData).toHaveBeenCalled();
-  //    expect(exciseDutyFactory.getCurrency).toHaveBeenCalledWith(58);
-  //    expect(scope.baseCurrency).toBeDefined();
-  //  });
-  //});
-  //
-  //describe('get exciseDutyList', function () {
+  describe('initialize data', function () {
+    it('should get list of masterItems and attach to scope', function () {
+      scope.$digest();
+      expect(ExciseDutyRelationshipFactory.getMasterItemList).toHaveBeenCalled();
+      expect(scope.itemList).toBeDefined();
+    });
+
+    it('should get list of item types and attach to scope', function () {
+      expect(ExciseDutyRelationshipFactory.getItemTypes).toHaveBeenCalled();
+      expect(scope.itemTypes).toBeDefined();
+    });
+
+    it('should get list of excise duty records and attach to scope', function () {
+      expect(ExciseDutyRelationshipFactory.getExciseDutyList).toHaveBeenCalled();
+      expect(scope.exciseDutyList).toBeDefined();
+    });
+  });
+
+  //describe('get itemExciseDutyList', function () {
   //  beforeEach(function () {
-  //    scope.getExciseDutyList();
+  //    scope.getItemExciseDutyList();
   //    scope.$digest();
   //  });
   //  it('should get data from API and attach to scope', function () {
-  //    expect(exciseDutyFactory.getExciseDutyList).toHaveBeenCalled();
-  //    expect(scope.exciseDutyList).toBeDefined();
+  //    expect(ExciseDutyRelationshipFactory.getRelationshipList).toHaveBeenCalled();
+  //    expect(scope.itemExciseDutyList).toBeDefined();
   //  });
   //
   //  it('should format start and end date', function () {
-  //    expect(dateUtility.isDateValidForApp(scope.exciseDutyList[0].startDate)).toEqual(true);
-  //    expect(dateUtility.isDateValidForApp(scope.exciseDutyList[0].endDate)).toEqual(true);
+  //    expect(dateUtility.isDateValidForApp(scope.itemExciseDutyList[0].startDate)).toEqual(true);
+  //    expect(dateUtility.isDateValidForApp(scope.itemExciseDutyList[0].endDate)).toEqual(true);
   //  });
   //
-  //  it('should resolve countryName', function () {
-  //    expect(dateUtility.isDateValidForApp(scope.exciseDutyList[0].countryName)).toBeDefined();
+  //  it('should resolve itemTypeName', function () {
+  //    expect(scope.itemExciseDutyList[0].itemTypeName).toBeDefined();
+  //    expect(scope.itemExciseDutyList[0].itemTypeName).toEqual('Virtual');
   //  });
   //
-  //  it('should resolve volume unit name', function () {
-  //    expect(dateUtility.isDateValidForApp(scope.exciseDutyList[0].volumeUnit)).toBeDefined();
-  //  });
-  //
-  //  it('should format dutyRate to float with 2 decimals', function () {
-  //    expect(scope.exciseDutyList[0].dutyRate).toEqual('2.00');
+  //  it('should format alcoholVolume to float with 2 decimals', function () {
+  //    expect(scope.itemExciseDutyList[0].alcoholVolume).toEqual('123.00');
   //  });
   //});
   //
