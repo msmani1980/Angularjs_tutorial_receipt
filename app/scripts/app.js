@@ -307,6 +307,9 @@ angular.module('ts5App', [
   }).when('/excise-duty-list', {
     templateUrl: 'views/excise-duty-list.html',
     controller: 'ExciseDutyListCtrl'
+  }).when('/excise-duty-relationship-list', {
+    templateUrl: 'views/excise-duty-relationship-list.html',
+    controller: 'ExciseDutyRelationshipListCtrl'
   }).when('/transactions', {
     templateUrl: 'views/transaction-list.html',
     controller: 'TransactionListCtrl'

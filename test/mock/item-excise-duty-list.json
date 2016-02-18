@@ -1,0 +1,362 @@
+{
+  "meta": {
+    "count": 32,
+    "limit": 100,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 32,
+      "itemMasterId": 600,
+      "exciseDutyId": 23,
+      "alcoholVolume": 123,
+      "startDate": "2016-02-18",
+      "endDate": "2016-02-18",
+      "commodityCode": "API TEST 3",
+      "itemName": "ABCVirtual123",
+      "itemTypeId": "2",
+      "companyId": 403
+    }, {
+      "id": 2,
+      "itemMasterId": 104,
+      "exciseDutyId": 1,
+      "alcoholVolume": 10.0,
+      "startDate": "2015-12-31",
+      "endDate": "2015-12-31",
+      "commodityCode": "API TEST",
+      "itemName": "Acqua Di Gio",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 1,
+      "itemMasterId": 104,
+      "exciseDutyId": 1,
+      "alcoholVolume": 5.55,
+      "startDate": "2016-02-01",
+      "endDate": "2016-02-25",
+      "commodityCode": "API TEST",
+      "itemName": "Acqua Di Gio",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 34,
+      "itemMasterId": 103,
+      "exciseDutyId": 11,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-19",
+      "endDate": "2016-02-20",
+      "commodityCode": "API TEST 2",
+      "itemName": "Belgian Almond Thins",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 48,
+      "itemMasterId": 138,
+      "exciseDutyId": 24,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-24",
+      "endDate": "2016-02-26",
+      "commodityCode": "newRecordTest",
+      "itemName": "Belvita Yogurt Crunch",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 45,
+      "itemMasterId": 537,
+      "exciseDutyId": 24,
+      "alcoholVolume": 123.56,
+      "startDate": "2016-02-25",
+      "endDate": "2016-02-26",
+      "commodityCode": "newRecordTest",
+      "itemName": "Boutique",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 35,
+      "itemMasterId": 397,
+      "exciseDutyId": 24,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-25",
+      "endDate": "2016-02-26",
+      "commodityCode": "newRecordTest",
+      "itemName": "Breo Classic Watch",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 74,
+      "itemMasterId": 101,
+      "exciseDutyId": 65,
+      "alcoholVolume": 789.89,
+      "startDate": "2016-04-22",
+      "endDate": "2016-04-22",
+      "commodityCode": "1 2",
+      "itemName": "Brownie",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 47,
+      "itemMasterId": 488,
+      "exciseDutyId": 24,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-24",
+      "endDate": "2016-02-26",
+      "commodityCode": "newRecordTest",
+      "itemName": "Champagne2",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 72,
+      "itemMasterId": 410,
+      "exciseDutyId": 24,
+      "alcoholVolume": 234.12,
+      "startDate": "2016-02-27",
+      "endDate": "2016-02-28",
+      "commodityCode": "newRecordTest",
+      "itemName": "CheesecakeNoUplift",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 60,
+      "itemMasterId": 377,
+      "exciseDutyId": 97,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-20",
+      "endDate": "2016-02-22",
+      "commodityCode": "newRecord789",
+      "itemName": "Chocolate Icecream",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 70,
+      "itemMasterId": 377,
+      "exciseDutyId": 65,
+      "alcoholVolume": 7.98,
+      "startDate": "2016-04-22",
+      "endDate": "2016-04-23",
+      "commodityCode": "1 2",
+      "itemName": "Chocolate Icecream",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 53,
+      "itemMasterId": 257,
+      "exciseDutyId": 24,
+      "alcoholVolume": 3.0,
+      "startDate": "2016-02-24",
+      "endDate": "2016-02-24",
+      "commodityCode": "newRecordTest",
+      "itemName": "City Pass",
+      "itemTypeId": "2",
+      "companyId": 403
+    }, {
+      "id": 71,
+      "itemMasterId": 22,
+      "exciseDutyId": 65,
+      "alcoholVolume": 8.98,
+      "startDate": "2016-04-23",
+      "endDate": "2016-04-23",
+      "commodityCode": "1 2",
+      "itemName": "CK Mens",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 61,
+      "itemMasterId": 473,
+      "exciseDutyId": 65,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-20",
+      "endDate": "2016-02-24",
+      "commodityCode": "1 2",
+      "itemName": "CNOOS",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 73,
+      "itemMasterId": 372,
+      "exciseDutyId": 23,
+      "alcoholVolume": 0.0,
+      "startDate": "2016-02-27",
+      "endDate": "2016-02-28",
+      "commodityCode": "API TEST 3",
+      "itemName": "Coffee",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 12,
+      "itemMasterId": 58,
+      "exciseDutyId": 66,
+      "alcoholVolume": 5.0,
+      "startDate": "2016-02-16",
+      "endDate": "2016-02-16",
+      "commodityCode": "1 6662",
+      "itemName": "coolitem1",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 51,
+      "itemMasterId": 589,
+      "exciseDutyId": 23,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-18",
+      "endDate": "2016-02-19",
+      "commodityCode": "API TEST 3",
+      "itemName": "Damir Item",
+      "itemTypeId": "2",
+      "companyId": 403
+    }, {
+      "id": 68,
+      "itemMasterId": 450,
+      "exciseDutyId": 65,
+      "alcoholVolume": 9.0,
+      "startDate": "2016-04-22",
+      "endDate": "2016-04-23",
+      "commodityCode": "1 2",
+      "itemName": "Five Dollar voucher",
+      "itemTypeId": "3",
+      "companyId": 403
+    }, {
+      "id": 52,
+      "itemMasterId": 336,
+      "exciseDutyId": 97,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-23",
+      "endDate": "2016-02-26",
+      "commodityCode": "newRecord789",
+      "itemName": "icecream33",
+      "itemTypeId": "2",
+      "companyId": 403
+    }, {
+      "id": 63,
+      "itemMasterId": 633,
+      "exciseDutyId": 23,
+      "alcoholVolume": 345.23,
+      "startDate": "2016-02-25",
+      "endDate": "2016-02-25",
+      "commodityCode": "API TEST 3",
+      "itemName": "igor001",
+      "itemTypeId": "1",
+      "companyId": 403
+    }, {
+      "id": 69,
+      "itemMasterId": 407,
+      "exciseDutyId": 65,
+      "alcoholVolume": 8.0,
+      "startDate": "2016-04-23",
+      "endDate": "2016-04-23",
+      "commodityCode": "1 2",
+      "itemName": "Item Voucher 1",
+      "itemTypeId": "3",
+      "companyId": 403
+    }, {
+      "id": 64,
+      "itemMasterId": 260,
+      "exciseDutyId": 97,
+      "alcoholVolume": 456.34,
+      "startDate": "2016-02-20",
+      "endDate": "2016-02-26",
+      "commodityCode": "newRecord789",
+      "itemName": "Metra ticket",
+      "itemTypeId": "2",
+      "companyId": 403
+    }, {
+      "id": 56,
+      "itemMasterId": 335,
+      "exciseDutyId": 23,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-23",
+      "endDate": "2016-02-24",
+      "commodityCode": "API TEST 3",
+      "itemName": "Oreos33",
+      "itemTypeId": "2",
+      "companyId": 403
+    }, {
+      "id": 67,
+      "itemMasterId": 392,
+      "exciseDutyId": 55,
+      "alcoholVolume": 9.0,
+      "startDate": "2016-03-19",
+      "endDate": "2016-03-19",
+      "commodityCode": "testNewRecord32",
+      "itemName": "Redemption Voucher",
+      "itemTypeId": "3",
+      "companyId": 403
+    }, {
+      "id": 42,
+      "itemMasterId": 118,
+      "exciseDutyId": 23,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-19",
+      "endDate": "2016-02-20",
+      "commodityCode": "API TEST 3",
+      "itemName": "testname",
+      "itemTypeId": "2",
+      "companyId": 403
+    }, {
+      "id": 44,
+      "itemMasterId": 262,
+      "exciseDutyId": 23,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-18",
+      "endDate": "2016-02-29",
+      "commodityCode": "API TEST 3",
+      "itemName": "Travel Pass",
+      "itemTypeId": "2",
+      "companyId": 403
+    }, {
+      "id": 65,
+      "itemMasterId": 340,
+      "exciseDutyId": 23,
+      "alcoholVolume": 456.34,
+      "startDate": "2016-02-22",
+      "endDate": "2016-02-23",
+      "commodityCode": "API TEST 3",
+      "itemName": "Travel Ticket22",
+      "itemTypeId": "2",
+      "companyId": 403
+    }, {
+      "id": 58,
+      "itemMasterId": 480,
+      "exciseDutyId": 65,
+      "alcoholVolume": 3.0,
+      "startDate": "2016-03-25",
+      "endDate": "2016-03-26",
+      "commodityCode": "1 2",
+      "itemName": "VOOS",
+      "itemTypeId": "3",
+      "companyId": 403
+    }, {
+      "id": 54,
+      "itemMasterId": 560,
+      "exciseDutyId": 24,
+      "alcoholVolume": 123.45,
+      "startDate": "2016-02-24",
+      "endDate": "2016-02-24",
+      "commodityCode": "newRecordTest",
+      "itemName": "Voucher5GBP",
+      "itemTypeId": "3",
+      "companyId": 403
+    }, {
+      "id": 57,
+      "itemMasterId": 364,
+      "exciseDutyId": 65,
+      "alcoholVolume": 345.0,
+      "startDate": "2016-03-23",
+      "endDate": "2016-03-24",
+      "commodityCode": "1 2",
+      "itemName": "Voucher Dynamic Barcode",
+      "itemTypeId": "3",
+      "companyId": 403
+    }, {
+      "id": 66,
+      "itemMasterId": 363,
+      "exciseDutyId": 65,
+      "alcoholVolume": 34.0,
+      "startDate": "2016-03-19",
+      "endDate": "2016-03-19",
+      "commodityCode": "1 2",
+      "itemName": "Voucher GTIN",
+      "itemTypeId": "3",
+      "companyId": 403
+    }
+  ]
+}

@@ -405,6 +405,13 @@ angular.module('ts5App')
             className: 'dashboard-exciseDuty',
             package: 'EXCISEDUTY',
             role: 'EXCISEDUTY'
+          }, {
+            name: 'Retail Item Excise Duty Relationships',
+            route: '/#/excise-duty-relationship-list',
+            icon: 'icon-manage-schedule',
+            className: 'dashboard-exciseDuty',
+            package: 'EXCISEDUTY',
+            role: 'EXCISEDUTY'
           }]
         }];
     };
