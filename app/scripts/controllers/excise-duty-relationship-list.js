@@ -45,12 +45,17 @@ angular.module('ts5App')
       if (panelName === '#create-collapse') {
         $scope.itemExciseDutyList = null;
         $scope.cancelEdit();
+        $scope.inCreateMode = false;
       }
 
       angular.element(panelName).addClass('collapse');
     }
 
     function showPanel(panelName) {
+      if (panelName === '#create-collapse') {
+        $scope.inCreateMode = true;
+      }
+      
       angular.element(panelName).removeClass('collapse');
     }
 
@@ -94,15 +99,15 @@ angular.module('ts5App')
     };
 
     $scope.shouldShowSearchPrompt = function () {
-      return !isPanelOpen('#create-collapse') && (!$scope.itemExciseDutyList);
+      return !$scope.inCreateMode && (!$scope.itemExciseDutyList);
     };
 
     $scope.shouldShowCreatePrompt = function () {
-      return isPanelOpen('#create-collapse') && (!$scope.itemExciseDutyList || $scope.itemExciseDutyList.length <= 0);
+      return $scope.inCreateMode && (!$scope.itemExciseDutyList || $scope.itemExciseDutyList.length <= 0);
     };
 
     $scope.shouldShowNoRecordsFoundPrompt = function () {
-      return !isPanelOpen('#create-collapse') && (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !== null && $scope.itemExciseDutyList.length <= 0);
+      return !$scope.inCreateMode && (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !== null && $scope.itemExciseDutyList.length <= 0);
     };
 
     $scope.shouldShowLoadingAlert = function () {
@@ -110,7 +115,7 @@ angular.module('ts5App')
     };
 
     $scope.shouldRequireCreateFields = function () {
-      return !$scope.inEditMode && isPanelOpen('#create-collapse');
+      return !$scope.inEditMode && $scope.inCreateMode;
     };
 
     $scope.searchItemExciseData = function () {
@@ -126,16 +131,30 @@ angular.module('ts5App')
       $scope.searchItemExciseData();
     }
 
+    function localDeleteSuccess(recordId) {
+      hideLoadingModal();
+      var recordIndex = lodash.findIndex($scope.itemExciseDutyList, { id: recordId });
+      if (angular.isDefined(recordIndex)) {
+        $scope.itemExciseDutyList.splice(recordIndex, 1);
+      }
+    }
+
     $scope.removeRecord = function (record) {
       showLoadingModal('Deleting Record');
-      exciseDutyRelationshipFactory.deleteRelationship(record.id).then(reloadAfterAPISuccess, showErrors);
+      exciseDutyRelationshipFactory.deleteRelationship(record.id).then(function () {
+        if ($scope.inCreateMode) {
+          localDeleteSuccess(record.id);
+        } else {
+          reloadAfterAPISuccess();
+        }
+      }, showErrors);
     };
 
     $scope.canDelete = function (exciseDuty) {
       return dateUtility.isAfterToday(exciseDuty.startDate);
     };
 
-    function formatBadDates (record, oldRecord) {
+    function formatBadDates(record, oldRecord) {
       if ($scope.inEditMode && !record.startDate) {
         record.startDate = oldRecord.startDate;
       }
@@ -178,7 +197,7 @@ angular.module('ts5App')
       var payload = formatRecordForAPI($scope.recordToEdit);
       exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(function (responseFromAPI) {
         $scope.cancelEdit();
-        if (isPanelOpen('#create-collapse')) {
+        if ($scope.inCreateMode) {
           editInlineSuccess(responseFromAPI);
         } else {
           reloadAfterAPISuccess();
@@ -187,7 +206,6 @@ angular.module('ts5App')
     };
 
     $scope.cancelEdit = function () {
-      $scope.itemExciseDutyCreateForm.$setUntouched();
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
     };
@@ -293,7 +311,7 @@ angular.module('ts5App')
     }
 
     $scope.getItemExciseDutyList = function () {
-      if ($this.meta.offset >= $this.meta.count || isPanelOpen('#create-collapse')) {
+      if ($this.meta.offset >= $this.meta.count || $scope.inCreateMode) {
         return;
       }
 
@@ -374,7 +392,6 @@ angular.module('ts5App')
 
     function callWatchGroupAPI(shouldSetEditModel, shouldCallExciseDuty) {
       var modelToCheck = (shouldSetEditModel) ? $scope.recordToEdit : $scope.newRecord;
-
       var retailItemPayload = createRetailItemPayload(modelToCheck);
       var promises = [exciseDutyRelationshipFactory.getMasterItemList(retailItemPayload)];
 
@@ -391,7 +408,7 @@ angular.module('ts5App')
 
     function watchNewRecordDates() {
       $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function () {
-        if (isPanelOpen('#create-collapse') && $scope.newRecord.startDate && $scope.newRecord.endDate) {
+        if ($scope.inCreateMode && $scope.newRecord.startDate && $scope.newRecord.endDate) {
           callWatchGroupAPI(false, true);
         } else {
           clearWatchGroupModels($scope.newRecord, true);
@@ -403,7 +420,7 @@ angular.module('ts5App')
 
     function watchNewRecordItemType() {
       $scope.$watch('newRecord.itemType', function () {
-        if (isPanelOpen('#create-collapse') && $scope.newRecord.startDate && $scope.newRecord.endDate) {
+        if ($scope.inCreateMode && $scope.newRecord.startDate && $scope.newRecord.endDate) {
           callWatchGroupAPI(false, false);
         }
       });
@@ -438,7 +455,6 @@ angular.module('ts5App')
     }
 
     function callInitAPIs() {
-      //var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       var promises = [
         exciseDutyRelationshipFactory.getExciseDutyList({}),
         exciseDutyRelationshipFactory.getItemTypes(),
@@ -454,6 +470,7 @@ angular.module('ts5App')
       $scope.search = {};
       $scope.recordToEdit = {};
       $scope.inEditMode = false;
+      $scope.inCreateMode = false;
       $scope.minDate = dateUtility.tomorrowFormatted();
     }
 

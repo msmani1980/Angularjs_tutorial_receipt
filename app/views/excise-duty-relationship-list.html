@@ -247,7 +247,7 @@
                          ng-disabled="!exciseDutyListForEdit.length"
                          name="editCommodityCode">
                 <ui-select-match placeholder="Select a Commodity Code">{{ $select.selected.commodityCode}}</ui-select-match>
-                <ui-select-choices repeat="record in exciseDutyList | filter: {commodityCode:$select.search}">
+                <ui-select-choices repeat="record in exciseDutyListForEdit | filter: {commodityCode:$select.search}">
                   <div ng-bind-html="record.commodityCode | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
