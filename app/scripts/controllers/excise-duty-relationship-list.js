@@ -192,7 +192,7 @@ angular.module('ts5App')
     function editInlineSuccess(responseFromAPI) {
       hideLoadingModal();
       var recordMatchIndex = lodash.findIndex($scope.itemExciseDutyList, { id: responseFromAPI.id });
-      if (recordMatchIndex) {
+      if (angular.isDefined(recordMatchIndex) && recordMatchIndex !== null) {
         var formattedNewRecord = formatRecordForApp(angular.copy(responseFromAPI));
         $scope.itemExciseDutyList[recordMatchIndex] = formattedNewRecord;
       }
