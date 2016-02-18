@@ -82,7 +82,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchForm = function () {
-      $scope.search = null;
+      $scope.search = {};
       $scope.itemExciseDutyList = null;
       initLazyLoadingMeta();
     };
