@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: ExciseDutyRelationshipListCtrl', function () {
+fdescribe('Controller: ExciseDutyRelationshipListCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -402,7 +402,7 @@ describe('Controller: ExciseDutyRelationshipListCtrl', function () {
           scope.exciseDutyList = [{id: 1}];
           scope.clearSearchForm();
           scope.$digest();
-          expect(scope.search).toEqual(null);
+          expect(scope.search).toEqual({});
           expect(scope.itemExciseDutyList).toEqual(null);
         });
       });
