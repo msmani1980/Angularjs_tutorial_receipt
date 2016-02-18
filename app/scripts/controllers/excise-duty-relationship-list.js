@@ -44,6 +44,7 @@ angular.module('ts5App')
 
       if (panelName === '#create-collapse') {
         $scope.itemExciseDutyList = null;
+        $scope.cancelEdit();
       }
 
       angular.element(panelName).addClass('collapse');
