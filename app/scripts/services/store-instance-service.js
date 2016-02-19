@@ -7,7 +7,7 @@
  * # storeInstanceService
  * Service in the ts5App.
  */
-angular.module('ts5App').service('storeInstanceService', function($resource, ENV) {
+angular.module('ts5App').service('storeInstanceService', function ($resource, ENV) {
   var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/:api/:itemIdOrBulk';
   var requestParameters = {
     id: '@id',
@@ -61,7 +61,11 @@ angular.module('ts5App').service('storeInstanceService', function($resource, ENV
 
   var requestResource = $resource(requestURL, requestParameters, actions);
 
-  function getStoreInstancesList(payload) {
+  function getStoreInstancesList(payload, companyId) {
+    if (companyId) {
+      actions.getStoreInstancesList.headers = { companyId: companyId };
+    }
+
     return requestResource.getStoreInstancesList(payload).$promise;
   }
 

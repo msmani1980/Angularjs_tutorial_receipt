@@ -168,7 +168,7 @@ describe('Controller: CashBagCtrl', function () {
 
       it('should call getCompanyPreferences', function () {
         var expectedPayload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
-        expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload);
+        expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload, 403);
       });
     });
 
