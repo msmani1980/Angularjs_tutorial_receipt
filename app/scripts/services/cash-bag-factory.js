@@ -87,8 +87,8 @@ angular.module('ts5App')
       return dailyExchangeRatesService.getDailyExchangeById(companyId, dailyExchangeRateId);
     };
 
-    var getCompanyPreferences = function (payload) {
-      return companyPreferencesService.getCompanyPreferences(payload);
+    var getCompanyPreferences = function (payload, companyId) {
+      return companyPreferencesService.getCompanyPreferences(payload, companyId);
     };
 
     return {
