@@ -304,7 +304,7 @@ angular.module('ts5App')
     }
 
     function getCashHandlerCompany() {
-      var chCompanyId = GlobalMenuService.getCompanyData().companyId;
+      var chCompanyId = GlobalMenuService.getCompanyData().d;
       _promises.push(
         cashBagFactory.getCompany(chCompanyId).then(function(response) {
           $scope.cashHandlerCompany = angular.copy(response);

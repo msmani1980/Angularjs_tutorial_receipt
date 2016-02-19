@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: ReconciliationDiscrepancyDetail', function () {
+fdescribe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance.json'));
@@ -12,7 +12,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/currencies.json'));
   beforeEach(module('served/company.json'));
   beforeEach(module('served/payment-report.json'));
-
+  beforeEach(module('served/company-preferences.json'));
   beforeEach(module('served/promotion.json'));
   beforeEach(module('served/item.json'));
 
@@ -58,6 +58,9 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   var getItemDeferred;
   var getItemJSON;
+
+  var getCompanyPreferencesDeferred;
+  var getCompanyPreferencesJSON;
 
   var routeParams;
   var dateUtility;
@@ -139,6 +142,11 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     getItemDeferred = $q.defer();
     getItemDeferred.resolve(getItemJSON);
     spyOn(reconciliationFactory, 'getItem').and.returnValue(getItemDeferred.promise);
+
+    getCompanyPreferencesJSON = $injector.get('servedCompanyPreferences');
+    getCompanyPreferencesDeferred = $q.defer();
+    getCompanyPreferencesDeferred.resolve(getCompanyPreferencesJSON);
+    spyOn(reconciliationFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
 
     spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
 
