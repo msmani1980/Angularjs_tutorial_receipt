@@ -123,17 +123,8 @@ describe('Controller: CashBagSubmissionCtrl', function () {
       });
 
       it('should call getCashBagList searching', function () {
-        scope.search.searchForSubmitted = true;
-        scope.searchCashBags();
-        var expectedParameter = jasmine.objectContaining({ isSubmitted: true });
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(null, expectedParameter);
-      });
-
-      it('should call getCashBagList searching', function () {
         scope.search = {
-          bankReferenceNumber: 'fakeBankReferenceNumber',
-          searchForSubmitted: true,
-          searchForNotSubmitted: true
+          bankReferenceNumber: 'fakeBankReferenceNumber'
         };
         scope.searchCashBags();
         var expectedParameter = jasmine.objectContaining({ bankReferenceNumber: 'fakeBankReferenceNumber' });
