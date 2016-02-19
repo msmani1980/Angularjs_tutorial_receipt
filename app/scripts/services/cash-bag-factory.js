@@ -12,7 +12,7 @@ angular.module('ts5App')
   function (cashBagService, GlobalMenuService, stationsService, schedulesService, companyService, currenciesService, dailyExchangeRatesService, companyPreferencesService,
             companyStoresService, storeInstanceService) {
     var getCompanyId = function () {
-      return GlobalMenuService.company.get();
+      return GlobalMenuService.getCompanyData().chCompany.companyId;
     };
 
     var getCashBagList = function (id, optionalPayload) {
