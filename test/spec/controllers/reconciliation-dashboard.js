@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ReconciliationDashboardCtrl', function() {
+describe('Controller: ReconciliationDashboardCtrl', function() {
 
   // load the controller's module
   beforeEach(module('ts5App'));
