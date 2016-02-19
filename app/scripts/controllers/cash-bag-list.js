@@ -251,7 +251,7 @@ angular.module('ts5App')
       $scope.storeInstanceList = [];
       $scope.displayModalError = false;
       var payload = createPayloadForStoreInstance();
-      cashBagFactory.getStoreInstanceList(payload).then(getStoreInstanceListHandler);
+      cashBagFactory.getStoreInstanceList(payload, companyId).then(getStoreInstanceListHandler);
     };
 
     $scope.clearSelectedSchedule = function () {
@@ -274,7 +274,7 @@ angular.module('ts5App')
         startDate: searchDate,
         endDate: searchDate
       };
-      cashBagFactory.getStoreList(payload).then(getStoreListResponseHandler);
+      cashBagFactory.getStoreList(payload, companyId).then(getStoreListResponseHandler);
       cashBagFactory.getSchedulesInDateRange(companyId, searchDate, searchDate).then(setFilteredScheduleList);
 
     });

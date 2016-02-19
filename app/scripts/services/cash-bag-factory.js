@@ -23,12 +23,12 @@ angular.module('ts5App')
       }
     };
 
-    var getStoreList = function(payload) {
-      return companyStoresService.getStoreList(payload);
+    var getStoreList = function(payload, companyId) {
+      return companyStoresService.getStoreList(payload, companyId);
     };
 
-    function getStoreInstanceList(payload) {
-      return storeInstanceService.getStoreInstancesList(payload);
+    function getStoreInstanceList(payload, companyId) {
+      return storeInstanceService.getStoreInstancesList(payload, companyId);
     }
 
     function getStoreInstance(storeInstanceId) {

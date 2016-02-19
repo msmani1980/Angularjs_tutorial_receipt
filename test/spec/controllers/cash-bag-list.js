@@ -186,7 +186,7 @@ describe('Controller: CashBagListCtrl', function () {
         };
 
         scope.findStoreInstance();
-        expect(cashBagFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedPayload);
+        expect(cashBagFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedPayload, 'fakeCompanyId');
         expect(scope.displayModalError).toBe(false);
       });
 
@@ -202,7 +202,7 @@ describe('Controller: CashBagListCtrl', function () {
         };
 
         scope.findStoreInstance();
-        expect(cashBagFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedPayload);
+        expect(cashBagFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedPayload, 'fakeCompanyId');
         expect(scope.displayModalError).toBe(false);
       });
     });
@@ -219,7 +219,7 @@ describe('Controller: CashBagListCtrl', function () {
 
       it('should call getStoreList when date changes', function () {
         var expectedPayload = { startDate: expectedScheduleDate, endDate: expectedScheduleDate };
-        expect(cashBagFactory.getStoreList).toHaveBeenCalledWith(expectedPayload);
+        expect(cashBagFactory.getStoreList).toHaveBeenCalledWith(expectedPayload, 'fakeCompanyId');
       });
 
       it('should call getSchedulesInDateRange when date changes', function () {
