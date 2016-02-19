@@ -48,14 +48,14 @@ angular.module('ts5App')
           icon: 'icon-manage-company',
           className: 'dashboard-manageCompanies',
           package: 'COMPANY',
-          role: 'ORGANIZATION'
+          role: 'COMPANY'
         }, {
           name: 'Create Company',
           route: '/#/company-create',
           icon: 'icon-create-company',
           className: 'dashboard-createCompany',
           package: 'COMPANY',
-          role: 'ORGANIZATION',
+          role: 'COMPANY',
           permissions: [{
             apiName: '/api/companies',
             permissionCodes: ['C']
