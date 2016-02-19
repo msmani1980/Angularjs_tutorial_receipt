@@ -237,6 +237,21 @@ angular.module('ts5App')
       };
     }
 
+    this.checkIfCompanyUseCash = function () {
+      var cashPreference = lodash.where($this.companyPreferences, { choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless' })[0];
+      if (cashPreference) {
+        var yesterdayOrEarlier = dateUtility.isYesterdayOrEarlier(dateUtility.formatDateForApp(cashPreference.startDate, 'YYYY-MM-DD'));
+        return !(cashPreference.hasOwnProperty('startDate') && yesterdayOrEarlier);
+      }
+
+      return true;
+    };
+
+    function setCashPreference(companyPreferencesData) {
+      $this.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+      $scope.companyIsUsingCash = $this.checkIfCompanyUseCash();
+    }
+
     function setDiscrepancy() {
       var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
       var netPercentage = makeFinite(netValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
@@ -395,16 +410,6 @@ angular.module('ts5App')
       });
 
       $scope.paymentReport = paymentReportList;
-    }
-
-    function checkCashPreference() {
-      var cashPreference = lodash.where($this.companyPreferences, { choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless' })[0];
-      return !(cashPreference && cashPreference.hasOwnProperty('startDate') && dateUtility.isYesterdayOrEarlier(cashPreference.startDate));
-    }
-
-    function setCashPreference(companyPreferencesData) {
-      $this.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
-      $scope.companyIsUsingCash = checkCashPreference();
     }
 
     function setupData(responseCollection) {
