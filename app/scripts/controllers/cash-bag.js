@@ -253,6 +253,7 @@ angular.module('ts5App')
           retailCompanyCurrencyId: cashBagCurrency.currencyId
         });
         if (dailyCurrency) {
+          cashBagCurrency.currencyCode = $scope.currencyCodes[cashBagCurrency.currencyId];
           cashBagCurrency.paperExchangeRate = dailyCurrency.paperExchangeRate;
           cashBagCurrency.coinExchangeRate = dailyCurrency.coinExchangeRate;
           cashBagCurrency.bankExchangeRate = dailyCurrency.bankExchangeRate;
@@ -267,6 +268,7 @@ angular.module('ts5App')
       angular.forEach(dailyExchangeRateCurrencies, function (currency) {
         $scope.cashBag.cashBagCurrencies.push({
           currencyId: currency.retailCompanyCurrencyId,
+          currencyCode: $scope.currencyCodes[currency.retailCompanyCurrencyId],
           bankAmount: currency.bankExchangeRate,
           paperAmountManual: formatAsCurrency(0),
           coinAmountManual: formatAsCurrency(0),
