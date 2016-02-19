@@ -51,7 +51,7 @@
     <div class="panel panel-default">
         <div class="panel-heading text-right">Base currency: {{companyBaseCurrency.currencyCode}}</div>
         <div class="panel-body">
-            <div class="well" id="currency-{{$index}}" ng-repeat="currency in companyCurrencyList | orderBy: ['currencyCode', 'endDate'] track by $index">
+            <div class="well" id="currency-{{$index}}" ng-repeat="currency in companyCurrencyList | orderBy: ['currencyCode', 'endDate'] track by currency.id">
                 <div class="row">
                     <div class="col-xs-12 col-md-2 col-sm-12">
                         <div class="form-group">
@@ -115,7 +115,7 @@
                     </date-picker>
 
                     <div class="col-xs-12 col-sm-12 col-md-1 text-right">
-                        <button type="button" class="btn btn-primary btn-xs" ng-click="saveDetailedCompanyCurrency($index, currency)" ng-hide="isCurrencyPartialReadOnly(currency)" >
+                        <button type="button" class="btn btn-primary btn-xs" ng-click="saveDetailedCompanyCurrency($index, currency)" ng-hide="isCurrencyPartialReadOnly(currency)">
                           <i ng-hide="currency.isNew" class="fa fa-pencil"></i>
                           <i ng-show="currency.isNew" class="fa fa-check-square-o"></i>
                         </button>
