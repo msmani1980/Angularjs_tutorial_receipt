@@ -55,7 +55,7 @@
                       name="cashHandlerRetail"
                       ng-change="selectCHRetailCompany(companyObject.type)"
                       ng-model="pickedCompany[companyObject.type].chCompany"
-                      ng-options="company.companyName for company in cashHandlerRetailCompanyList | orderBy: 'companyName'">
+                      ng-options="company.companyName for company in cashHandlerRetailCompanyList | filter:{companyTypeName: 'Retail'} | orderBy: 'companyName'">
                 <option selected="selected" value>Select a Retail Company for {{companyObject.type}}</option>
               </select>
             </div>
