@@ -33,7 +33,7 @@ describe('Factory: cashBagFactory', function () {
     storeInstanceService = $injector.get('storeInstanceService');
 
     spyOn(cashBagService, 'getCashBagList');
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
+    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue(403);
     spyOn(stationsService, 'getStationList');
     spyOn(schedulesService, 'getSchedules');
     spyOn(schedulesService, 'getDailySchedules');
@@ -137,7 +137,7 @@ describe('Factory: cashBagFactory', function () {
   describe('GlobalMenuService API', function () {
     it('should call globalMenuService on company.get', function () {
       cashBagFactory.getCompanyId();
-      expect(GlobalMenuService.company.get).toHaveBeenCalled();
+      expect(GlobalMenuService.getCompanyData).toHaveBeenCalled();
     });
   });
 
