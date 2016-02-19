@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ReconciliationDiscrepancyDetail', function () {
+describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance.json'));
