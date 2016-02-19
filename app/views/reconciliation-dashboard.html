@@ -7,13 +7,13 @@
         <div class="col-xs-6">
           <h2 class="view-name">{{ viewName }}</h2>
         </div>
-
+        {{reconciliationList|json}}
         <div class="col-xs-6 text-right">
 
           <button class="btn btn-success" tabindex="0" ng-disabled="!hasSelectedInstance()" ng-click="validate()">Validate
           </button>
 
-          <button class="btn btn-primary" tabindex="0" ng-disabled="!hasSelectedInstance()" ng-click="showBulkExecuteActionModal('Pay Commission')">Pay Commission
+          <button class="btn btn-primary" tabindex="0" ng-disabled="!hasSelectedInstanceWithStatus('Confirmed')" ng-click="showBulkExecuteActionModal('Pay Commission')">Pay Commission
           </button>
 
           <div class="btn-group" dropdown>

@@ -361,6 +361,16 @@ angular.module('ts5App')
       }).length > 0;
     };
 
+    $scope.hasSelectedInstanceWithStatus = function(status) {
+      var hasSelectedInstance = $scope.reconciliationList.filter(function(item) {
+        return item.selected === true;
+      }).length;
+      var hasStatusSelected = $scope.reconciliationList.filter(function(item) {
+        return item.statusName === status && item.selected === true;
+      }).length;
+      return (hasStatusSelected === hasSelectedInstance && hasSelectedInstance > 0 && hasStatusSelected > 0);
+    };
+
     $scope.canHaveInstanceCheckbox = function(instance) {
       return $scope.doesInstanceContainAction(instance, 'Validate') || $scope.doesInstanceContainAction(instance,
         'Pay Commission');
