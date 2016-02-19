@@ -111,28 +111,8 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       $this.loadingProgress = false;
     };
 
-    function generateStatusPayloadForSearch(formSearchObject) {
-      var searchParams = angular.copy(formSearchObject);
-      if (searchParams.searchForSubmitted && !searchParams.searchForNotSubmitted) {
-        searchParams.isSubmitted = true;
-      }
-
-      if (!searchParams.searchForSubmitted && searchParams.searchForNotSubmitted) {
-        searchParams.isSubmitted = false;
-      }
-
-      delete searchParams.searchForSubmitted;
-      delete searchParams.searchForNotSubmitted;
-
-      return searchParams;
-    }
-
     function generatePayload() {
-      var searchParams = generateStatusPayloadForSearch($scope.search);
-
-      if (angular.isDefined(searchParams.isSubmitted) && searchParams.isSubmitted.length === 0) {
-        delete searchParams.isSubmitted;
-      }
+      var searchParams = angular.copy($scope.search);
 
       var payload = {
         submission: 'submit',
