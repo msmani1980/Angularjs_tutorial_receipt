@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .factory('reconciliationFactory',
     function ($q, storeInstanceService, storesService, stationsService, reconciliationService, itemTypesService, recordsService, currenciesService, companyService, itemsService,
-              promotionsService) {
+              promotionsService, companyPreferencesService) {
 
       function getStoreStatusList(payload) {
         return recordsService.getStoreStatusList(payload);
@@ -124,6 +124,10 @@ angular.module('ts5App')
         return getEPOSRevenueDeferred.promise;
       }
 
+      var getCompanyPreferences = function (payload) {
+        return companyPreferencesService.getCompanyPreferences(payload);
+      };
+
       return {
         getStoreInstanceDetails: getStoreInstanceDetails,
         getStoreInstanceItemList: getStoreInstanceItemList,
@@ -143,6 +147,7 @@ angular.module('ts5App')
         getReconciliationDataList: getReconciliationDataList,
         getReconciliationPrecheckDevices: getReconciliationPrecheckDevices,
         getReconciliationPrecheckSchedules: getReconciliationPrecheckSchedules,
-        getReconciliationPrecheckCashbags: getReconciliationPrecheckCashbags
+        getReconciliationPrecheckCashbags: getReconciliationPrecheckCashbags,
+        getCompanyPreferences: getCompanyPreferences
       };
     });

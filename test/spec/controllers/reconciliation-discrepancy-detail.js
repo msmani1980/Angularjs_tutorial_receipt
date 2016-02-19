@@ -12,7 +12,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/currencies.json'));
   beforeEach(module('served/company.json'));
   beforeEach(module('served/payment-report.json'));
-
+  beforeEach(module('served/company-preferences.json'));
   beforeEach(module('served/promotion.json'));
   beforeEach(module('served/item.json'));
 
@@ -58,6 +58,9 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   var getItemDeferred;
   var getItemJSON;
+
+  var getCompanyPreferencesDeferred;
+  var getCompanyPreferencesJSON;
 
   var routeParams;
   var dateUtility;
@@ -139,6 +142,11 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     getItemDeferred = $q.defer();
     getItemDeferred.resolve(getItemJSON);
     spyOn(reconciliationFactory, 'getItem').and.returnValue(getItemDeferred.promise);
+
+    getCompanyPreferencesJSON = $injector.get('servedCompanyPreferences');
+    getCompanyPreferencesDeferred = $q.defer();
+    getCompanyPreferencesDeferred.resolve(getCompanyPreferencesJSON);
+    spyOn(reconciliationFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
 
     spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
 
@@ -233,6 +241,29 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       });
     });
 
+  });
+
+  describe('company preferences', function () {
+    it('should set the cash preference to false if found and date < today', function () {
+      ReconciliationDiscrepancyDetail.companyPreferences = [
+        { choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2015-01-01' }
+      ];
+      expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeFalsy();
+    });
+
+    it('should set the cash preference to true if found and date > today', function () {
+      ReconciliationDiscrepancyDetail.companyPreferences = [
+        { choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2017-01-01' }
+      ];
+      expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeTruthy();
+    });
+
+    it('should set the cash preference to true if no preference is found', function () {
+      ReconciliationDiscrepancyDetail.companyPreferences = [
+        { choiceName: 'Active', optionCode: 'fakeCode', optionName: 'fakeOption' }
+      ];
+      expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeTruthy();
+    });
   });
 
   describe('edit table functions', function () {

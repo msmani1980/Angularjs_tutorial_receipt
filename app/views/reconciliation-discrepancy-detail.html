@@ -276,7 +276,7 @@
                 </tr>
                 <tr>
                   <td>@ Cash Handler Exchange Rate</td>
-                  <td>{{totalRevenue.cashHandler}}</td>
+                  <td>{{companyIsUsingCash ? totalRevenue.cashHandler: 'N/A'}}</td>
                 </tr>
                 <tr>
                   <td>@ ePOS Exchange Rate</td>
@@ -299,13 +299,13 @@
               </tr>
               <tr>
                 <td>Total Revenue @ Cash Handler Exchange Rate vs Net ePOS</td>
-                <td>{{discrepancy.revenue.value}}</td>
-                <td>{{discrepancy.revenue.percentage}}</td>
+                <td>{{companyIsUsingCash ? discrepancy.revenue.value: 'N/A'}}</td>
+                <td>{{companyIsUsingCash ? discrepancy.revenue.percentage: 'N/A'}}</td>
               </tr>
               <tr>
                 <td>Foreign Exchange</td>
-                <td>{{discrepancy.exchange.value}}</td>
-                <td>{{discrepancy.exchange.percentage}}</td>
+                <td>{{companyIsUsingCash ? discrepancy.exchange.value : 'N/A'}}</td>
+                <td>{{companyIsUsingCash ? discrepancy.exchange.percentage : 'N/A'}}</td>
               </tr>
               <tr class="active">
                 <th>Total</th>
@@ -445,7 +445,7 @@
             </accordion-group>
           </accordion>
 
-          <accordion class="store-instance-review-accordion">
+          <accordion class="store-instance-review-accordion" ng-if="companyIsUsingCash">
             <accordion-group ng-init="status.seals.open=false" is-open="status.seals.open">
               <accordion-heading class="accordion-heading">
                 <i ng-class="{'fa-chevron-down': status.seals.open, 'fa-chevron-right': !status.seals.open}"
