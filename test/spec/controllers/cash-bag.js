@@ -189,10 +189,16 @@ describe('Controller: CashBagCtrl', function () {
         expect(angular.isArray(scope.cashBag.cashBagCurrencies)).toBe(true);
       });
 
+      it('should format cashBagCurrencies with currency code', function () {
+        expect(scope.cashBag.cashBagCurrencies[0].currencyCode).toBeDefined();
+        expect(scope.cashBag.cashBagCurrencies[0]).not.toEqual(null);
+      });
+
       it('should be formatted like companyCurrencies', function () {
         expect(scope.cashBag.cashBagCurrencies[0].currencyId).toEqual(currencyGlobalsResponseJSON.response[0].id);
         expect(scope.cashBag.cashBagCurrencies.length).toEqual(currencyGlobalsResponseJSON.response.length);
       });
+
     });
 
     describe('formSave form action', function () {
@@ -273,6 +279,11 @@ describe('Controller: CashBagCtrl', function () {
       it('should have id defined cashBag', function () {
         expect(scope.cashBag.id).toBeDefined();
       });
+
+      it('should format cashBagCurrencies with currency code', function () {
+        expect(scope.cashBag.cashBagCurrencies[0].currencyCode).toBeDefined();
+        expect(scope.cashBag.cashBagCurrencies[0]).not.toEqual(null);
+      });
     });
 
     describe('isCashBagDeleted', function () {
@@ -348,6 +359,11 @@ describe('Controller: CashBagCtrl', function () {
     describe('cashBag definition', function () {
       it('should have id defined cashBag', function () {
         expect(scope.cashBag.id).toBeDefined();
+      });
+
+      it('should format cashBagCurrencies with currency code', function () {
+        expect(scope.cashBag.cashBagCurrencies[0].currencyCode).toBeDefined();
+        expect(scope.cashBag.cashBagCurrencies[0]).not.toEqual(null);
       });
     });
 

@@ -103,8 +103,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="currency in cashBag.cashBagCurrencies">
-              <td>{{ currencyCodes[currency.currencyId] }}</td>
+            <tr ng-repeat="currency in cashBag.cashBagCurrencies | orderBy: 'currencyCode'">
+              <td>{{ currency.currencyCode }}</td>
               <td>{{ currency.flightAmount }}</td>
               <td><input type="text"
                          custom-validity
