@@ -53,7 +53,7 @@
 
       <span class="error">
 
-        The <strong>{{ error.field }}</strong>
+        <strong>{{ error.field }} : </strong>
         <span ng-switch-default>{{ error.value }}</span>
         <span ng-switch-when="000">Field can't be empty.</span>
         <span ng-switch-when="001">Data format is invalid.</span>
