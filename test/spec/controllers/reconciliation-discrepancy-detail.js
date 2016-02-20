@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: ReconciliationDiscrepancyDetail', function() {
+fdescribe('Controller: ReconciliationDiscrepancyDetail', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance.json'));
@@ -221,6 +221,10 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
 
       it('should call getStoreInstanceItemList', function() {
         expect(reconciliationFactory.getStoreInstanceItemList).toHaveBeenCalled();
+      });
+
+      it('should call getStoreStatusList', function() {
+        expect(reconciliationFactory.getStoreStatusList).toHaveBeenCalled();
       });
 
       it('should init tables to only show discrepancies', function() {
@@ -630,6 +634,37 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
         mockItem.isEditing = false;
         var showEdit = scope.showEditViewForItem(mockItem, false);
         expect(showEdit).toEqual(true);
+      });
+    });
+
+    describe('$scope.isInStatus method', function() {
+      beforeEach(function() {
+        scope.statusList = getStoreStatusListJSON;
+      });
+
+      it('should return false if nothing passed as status', function() {
+        expect(scope.isInStatus()).toBeFalsy();
+      });
+
+      it('should return true if matching', function() {
+        scope.storeInstance = {
+          statusName: 'Discrepencies'
+        };
+        expect(scope.isInStatus('Discrepencies')).toBeTruthy();
+      });
+
+      it('should return true if matching', function() {
+        scope.storeInstance = {
+          statusName: 'Confirmed'
+        };
+        expect(scope.isInStatus('Confirmed')).toBeTruthy();
+      });
+
+      it('should return true if matching', function() {
+        scope.storeInstance = {
+          statusName: 'Discrepencies'
+        };
+        expect(scope.isInStatus('Confirmed')).toBeFalsy();
       });
     });
 
