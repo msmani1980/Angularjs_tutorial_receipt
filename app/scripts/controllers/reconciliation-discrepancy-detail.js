@@ -8,8 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDiscrepancyDetail', function($q, $scope, $routeParams, $filter, reconciliationFactory,
-    currencyFactory, GlobalMenuService, dateUtility, lodash) {
+  .controller('ReconciliationDiscrepancyDetail', function($q, $scope, $routeParams, $filter, $route, ngToast,
+    reconciliationFactory, currencyFactory, storeInstanceFactory, GlobalMenuService, dateUtility, lodash) {
+
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
@@ -514,6 +515,51 @@ angular.module('ts5App')
       initData();
     }
 
+    function confirmModal(state) {
+      angular.element('#action-confirm').modal(state);
+    }
+
+    function showMessage(type, message) {
+      ngToast.create({
+        className: type,
+        dismissButton: true,
+        content: message
+      });
+    }
+
+    function actionSuccess(response) {
+      var id = angular.copy(response[0].id);
+      var storeNumber = angular.copy($scope.storeInstance.storeDetails.storeNumber);
+      var message = '<b>Store Number:</b> ' + storeNumber + ' - <b>Store Instance:</b> ' + id + ' has been updated.';
+      hideLoadingModal();
+      $route.reload();
+      return showMessage('success', message);
+    }
+
+    function changeStatus(payload) {
+      return [
+        storeInstanceFactory.updateStoreInstanceStatus(payload.id, payload.status)
+      ];
+    }
+
+    function performAction() {
+      var id;
+      var action = $scope.actionToExecute;
+      angular.forEach($scope.statusList, function(status) {
+        if (status.statusName === action) {
+          id = status.name;
+        }
+      });
+
+      var payload = {
+        id: $scope.storeInstance.id,
+        status: id
+      };
+      var promises = changeStatus(payload);
+      showLoadingModal();
+      $q.all(promises).then(actionSuccess, handleResponseError);
+    }
+
     function initTableDefaults() {
       $scope.showLMPDiscrepancies = true;
       $scope.showCashBagDiscrepancies = true;
@@ -671,6 +717,24 @@ angular.module('ts5App')
         }
 
         return false;
+      }
+    };
+
+    $scope.confirmAction = function(action, actionName) {
+      if (angular.isDefined(action)) {
+        $scope.actionToExecute = action;
+        if (angular.isDefined(actionName)) {
+          $scope.actionName = actionName;
+        }
+
+        return confirmModal('show');
+      }
+    };
+
+    $scope.performAction = function() {
+      if (angular.isDefined($scope.actionToExecute)) {
+        confirmModal('hide');
+        return performAction();
       }
     };
 

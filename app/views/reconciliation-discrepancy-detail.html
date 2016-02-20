@@ -171,14 +171,14 @@
   <div class="main">
     <header>
       <div class="row item-list-row">
-        <div class="col-xs-8">
+        <div class="col-xs-12 col-sm-6">
           <h3 class="view-name">Discrepancy Detail</h3>
         </div>
-        <div class="col-xs-4 text-right">
-          <button class="btn btn-warning" ng-click="showPaymentReportPanel()">{{actionOnPaymentReport}} Payment Reports</button>
-          <button class="btn btn-danger" tabindex="0" ng-show="isInStatus('Confirmed')" ng-click="performAction('Unconfirm')">Unconfirm</button>
-          <button class="btn btn-success" tabindex="0" ng-show="isInStatus('Discrepancies')" ng-click="performAction('Confirm')">Confirm</button>
-          <button class="btn btn-primary" tabindex="0" ng-show="isInStatus('Confirmed')" ng-click="performAction('Pay Commission')">Pay Commission</button>
+        <div class="col-xs-12 col-sm-6 text-right">
+          <button class="btn btn-sm btn-warning" ng-click="showPaymentReportPanel()">{{actionOnPaymentReport}} Payment Reports</button>
+          <button class="btn btn-sm btn-danger" ng-show="isInStatus('Confirmed')" ng-click="confirmAction('Discrepancies', 'Unconfirm')">Unconfirm</button>
+          <button class="btn btn-sm btn-success" ng-show="isInStatus('Discrepancies')" ng-click="confirmAction('Confirmed', 'Confirm')">Confirm</button>
+          <button class="btn btn-sm btn-primary" ng-show="isInStatus('Confirmed')" ng-click="confirmAction('Commission Paid', 'Pay Commission')">Pay Commission</button>
         </div>
       </div>
       <br/>
@@ -578,6 +578,31 @@
           </accordion>
         </div>
       </form>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="action-confirm">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h3 class="modal-title">Are you sure?</h3>
+      </div>
+
+      <div class="modal-body">
+        <p>You are about perform the following action: <strong>{{actionName}}</strong></p>
+        <p>The following Store will be updated:<p>
+        <b>Store Number: </b>{{storeInstance.storeDetails.storeNumber}} -
+        <b>Schedule Date: </b>{{storeInstance.scheduleDate}} -
+        <b>Store Instance: </b>{{storeInstance.id}}
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="performAction()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
 
     </div>
   </div>
