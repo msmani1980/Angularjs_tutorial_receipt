@@ -175,9 +175,10 @@
           <h3 class="view-name">Discrepancy Detail</h3>
         </div>
         <div class="col-xs-4 text-right">
-          <button class="btn btn-warning" ng-click="showPaymentReportPanel()">
-            {{actionOnPaymentReport}} Payment Reports
-          </button>
+          <button class="btn btn-warning" ng-click="showPaymentReportPanel()">{{actionOnPaymentReport}} Payment Reports</button>
+          <button class="btn btn-danger" tabindex="0" ng-show="isInStatus('Confirmed')" ng-click="performAction('Unconfirm')">Unconfirm</button>
+          <button class="btn btn-success" tabindex="0" ng-show="isInStatus('Discrepancies')" ng-click="performAction('Confirm')">Confirm</button>
+          <button class="btn btn-primary" tabindex="0" ng-show="isInStatus('Confirmed')" ng-click="performAction('Pay Commission')">Pay Commission</button>
         </div>
       </div>
       <br/>
