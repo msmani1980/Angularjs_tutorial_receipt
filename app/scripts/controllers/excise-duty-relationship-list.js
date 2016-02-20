@@ -401,6 +401,7 @@ angular.module('ts5App')
     }
 
     function callWatchGroupAPI(shouldSetEditModel, shouldCallExciseDuty) {
+      console.log('hi!');
       var modelToCheck = (shouldSetEditModel) ? $scope.recordToEdit : $scope.newRecord;
       var retailItemPayload = createRetailItemPayload(modelToCheck);
       var promises = [exciseDutyRelationshipFactory.getMasterItemList(retailItemPayload)];
@@ -418,6 +419,7 @@ angular.module('ts5App')
 
     function watchNewRecordDates() {
       $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function () {
+        console.log('hi!!');
         if ($scope.inCreateMode && $scope.newRecord.startDate && $scope.newRecord.endDate) {
           callWatchGroupAPI(false, true);
           return;
