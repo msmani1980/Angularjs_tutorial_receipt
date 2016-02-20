@@ -383,7 +383,7 @@ angular.module('ts5App')
       $scope.displayError = true;
     };
 
-    this.handleValidationResult = function () {
+    this.handleActionExecutionSuccess = function () {
       if ($scope.isSearch) {
         $scope.searchReconciliationDataList();
       } else {
@@ -406,7 +406,7 @@ angular.module('ts5App')
         return storeInstance.id;
       });
 
-      storeInstanceFactory.validateStoreInstance(payload).then($this.handleValidationResult, $this.handleValidationResult);
+      storeInstanceFactory.validateStoreInstance(payload).then($this.handleActionExecutionSuccess, $this.handleActionExecutionSuccess);
     };
 
     this.executeOtherAction = function () {
@@ -435,13 +435,7 @@ angular.module('ts5App')
         promises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, status));
       });
 
-      $q.all(promises).then(function () {
-        searchReconciliationDataList(dateUtility.formatDateForAPI(dateUtility.nowFormatted()));
-        $this.hideLoadingModal();
-      }, function () {
-
-        $this.hideLoadingModal();
-      });
+      $q.all(promises).then($this.handleActionExecutionSuccess, $this.handleResponseError);
     };
 
     $scope.executeAction = function () {
