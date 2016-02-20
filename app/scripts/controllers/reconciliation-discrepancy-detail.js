@@ -542,7 +542,13 @@ angular.module('ts5App')
       ];
     }
 
-    function performAction() {
+    function performActionPromises(payload) {
+      var promises = changeStatus(payload);
+      showLoadingModal();
+      $q.all(promises).then(actionSuccess, handleResponseError);
+    }
+
+    function getActionStatusId() {
       var id;
       var action = $scope.actionToExecute;
       angular.forEach($scope.statusList, function(status) {
@@ -551,13 +557,15 @@ angular.module('ts5App')
         }
       });
 
+      return id;
+    }
+
+    function performAction() {
       var payload = {
         id: $scope.storeInstance.id,
-        status: id
+        status: getActionStatusId()
       };
-      var promises = changeStatus(payload);
-      showLoadingModal();
-      $q.all(promises).then(actionSuccess, handleResponseError);
+      return performActionPromises(payload);
     }
 
     function initTableDefaults() {

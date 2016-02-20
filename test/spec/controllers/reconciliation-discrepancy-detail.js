@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ReconciliationDiscrepancyDetail', function() {
+describe('Controller: ReconciliationDiscrepancyDetail', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance.json'));
@@ -22,6 +22,7 @@ fdescribe('Controller: ReconciliationDiscrepancyDetail', function() {
   var controller;
   var location;
   var reconciliationFactory;
+  var storeInstanceFactory;
   var GlobalMenuService;
 
   var getStoreInstanceDetailsDeferred;
@@ -94,6 +95,7 @@ fdescribe('Controller: ReconciliationDiscrepancyDetail', function() {
     location = $location;
     scope = $rootScope.$new();
     reconciliationFactory = $injector.get('reconciliationFactory');
+    storeInstanceFactory = $injector.get('storeInstanceFactory');
     GlobalMenuService = $injector.get('GlobalMenuService');
     dateUtility = $injector.get('dateUtility');
     controller = $controller;
@@ -668,6 +670,24 @@ fdescribe('Controller: ReconciliationDiscrepancyDetail', function() {
       });
     });
 
+    describe('$scope.performAction method', function() {
+      beforeEach(function() {
+        scope.statusList = getStoreStatusListJSON;
+        spyOn(storeInstanceFactory, 'updateStoreInstanceStatus');
+      });
+      it('should return false if nothing passed as status', function() {
+        scope.storeInstance = {
+          statusName: 'Confirmed',
+          id: '1'
+        };
+        scope.confirmAction('Discrepancies', 'Unconfirm');
+        scope.performAction('Discrepancies');
+        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith('1', '9');
+      });
+
+    });
+
   });
+
 
 });
