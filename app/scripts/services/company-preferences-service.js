@@ -16,13 +16,18 @@ angular.module('ts5App')
 
     var actions = {
       getCompanyPreferences: {
-        method: 'GET'
+        method: 'GET',
+        headers: {}
       }
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getCompanyPreferences = function (payload) {
+    var getCompanyPreferences = function (payload, companyId) {
+      if (companyId) {
+        actions.getCompanyPreferences.headers.companyId = companyId;
+      }
+
       return requestResource.getCompanyPreferences(payload).$promise;
     };
 

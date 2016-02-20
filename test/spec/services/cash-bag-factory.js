@@ -100,7 +100,7 @@ describe('Factory: cashBagFactory', function () {
         startDate: 'fakeDate'
       };
       cashBagFactory.getStoreList(fakePayload);
-      expect(companyStoresService.getStoreList).toHaveBeenCalledWith(fakePayload);
+      expect(companyStoresService.getStoreList).toHaveBeenCalledWith(fakePayload, undefined);
     });
   });
 
@@ -110,7 +110,7 @@ describe('Factory: cashBagFactory', function () {
         startDate: 'fakeDate'
       };
       cashBagFactory.getStoreInstanceList(fakePayload);
-      expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(fakePayload);
+      expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(fakePayload, undefined);
     });
   });
 

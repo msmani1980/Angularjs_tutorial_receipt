@@ -23,12 +23,23 @@ angular.module('ts5App')
     $scope.previousExchangeRates = {};
     $scope.payload = {};
 
+    function getCompanyPreferenceBy(preferences, featureName, optionName) {
+      var result = null;
+      angular.forEach(preferences, function (preference) {
+        if (result === null && preference.featureName === featureName && preference.optionName === optionName) {
+          result = preference;
+        }
+      });
+
+      return result;
+    }
+
     $scope.isBankExchangePreferred = function () {
-      if (!$scope.companyPreferences || !$scope.companyPreferences.length) {
+      if (!$scope.companyPreferences || !$scope.companyPreferences.exchangeRateType) {
         return false;
       }
 
-      return $scope.companyPreferences[0].choiceCode === 'BNK';
+      return $scope.companyPreferences.exchangeRateType.choiceCode === 'BNK';
     };
 
     function formatDateForAPI(cashiersDate) {
@@ -303,7 +314,11 @@ angular.module('ts5App')
     var payload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
 
     currencyFactory.getCompanyPreferences(payload).then(function (companyPreferencesData) {
-      $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+      var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+
+      $scope.companyPreferences = {
+        exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type')
+      };
     });
 
     var retailCompanyId = GlobalMenuService.getCompanyData().chCompany.companyId;

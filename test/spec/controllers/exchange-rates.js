@@ -105,14 +105,14 @@ describe('Controller: ExchangeRatesCtrl', function () {
 
   describe('company Preferences', function () {
 
-    var preferencesJSON = [{
-      featureCode: 'EXR',
-      featureName: 'Exchange Rate',
-      optionCode: 'ERT',
-      optionName: 'Exchange Rate Type',
-      choiceCode: 'BNK',
-      choiceName: 'Bank'
-    }];
+    var preferencesJSON = {
+      exchangeRateType: {
+        choiceCode: 'BNK',
+        featureName: 'Exchange Rate',
+        optionName: 'Exchange Rate Type',
+        startDate: '2016-02-01'
+      }
+    };
 
     it('should attach the company preferences to scope', function () {
       expect(!!scope.companyPreferences).toBe(true);
@@ -124,8 +124,8 @@ describe('Controller: ExchangeRatesCtrl', function () {
     });
 
     it('should return false if BNK is NOT found in Exchange Rate feature', function () {
-      scope.companyPreferences = angular.extend(preferencesJSON);
-      scope.companyPreferences[0].choiceCode = 'Not BNK';
+      scope.companyPreferences = angular.copy(preferencesJSON);
+      scope.companyPreferences.exchangeRateType.choiceCode = 'Not BNK';
       expect(scope.isBankExchangePreferred()).toBe(false);
     });
 
