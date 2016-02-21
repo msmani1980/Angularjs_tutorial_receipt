@@ -68,6 +68,7 @@ angular.module('ts5App')
         delete currency.paperExchangeRate;
         delete currency.coinExchangeRate;
         delete currency.flightAmount;
+        delete currency.currencyCode;
       });
 
       return payload;
