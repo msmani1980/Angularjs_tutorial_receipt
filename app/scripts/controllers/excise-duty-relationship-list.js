@@ -379,12 +379,12 @@ angular.module('ts5App')
     function findEditMatchAfterWatchSuccess() {
       if ($scope.inEditMode && $scope.recordToEdit.itemMasterId) {
         var itemMatch = lodash.findWhere($scope.itemListForEdit, { id: $scope.recordToEdit.itemMasterId });
-        $scope.recordToEdit.retailItem = itemMatch;
+        $scope.recordToEdit.retailItem = itemMatch || null;
       }
 
       if ($scope.inEditMode && $scope.recordToEdit.exciseDutyId) {
         var exciseDutyMatch = lodash.findWhere($scope.exciseDutyListForEdit, { id: $scope.recordToEdit.exciseDutyId });
-        $scope.recordToEdit.commodityCode = exciseDutyMatch;
+        $scope.recordToEdit.commodityCode = exciseDutyMatch || null;
       }
     }
 
@@ -401,7 +401,6 @@ angular.module('ts5App')
     }
 
     function callWatchGroupAPI(shouldSetEditModel, shouldCallExciseDuty) {
-      console.log('hi!');
       var modelToCheck = (shouldSetEditModel) ? $scope.recordToEdit : $scope.newRecord;
       var retailItemPayload = createRetailItemPayload(modelToCheck);
       var promises = [exciseDutyRelationshipFactory.getMasterItemList(retailItemPayload)];
@@ -419,7 +418,6 @@ angular.module('ts5App')
 
     function watchNewRecordDates() {
       $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function () {
-        console.log('hi!!');
         if ($scope.inCreateMode && $scope.newRecord.startDate && $scope.newRecord.endDate) {
           callWatchGroupAPI(false, true);
           return;
