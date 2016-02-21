@@ -570,7 +570,7 @@ angular.module('ts5App')
       $scope.editLMPStockTable = false;
       $scope.editCashBagTable = false;
       $scope.LMPSortTitle = 'itemName';
-      $scope.cashBagSortTitle = 'cashBag';
+      $scope.cashBagSortTitle = 'currency';
       $scope.cashBagFilter = {};
     }
 
