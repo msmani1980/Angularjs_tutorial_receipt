@@ -445,15 +445,15 @@ angular.module('ts5App')
             route: '/#/currency-edit',
             icon: 'icon-manage-retail-category',
             className: 'dashboard-currencySetup',
-            package: 'CASH',
-            role: 'CASHBAGSUBMIT'
+            package: 'CURRENCYEXCHNG',
+            role: 'COMPANYCURRENCY'
           }, {
             name: 'ePOS Exchange Rate',
             route: '/#/company-exchange-rate-edit',
             icon: 'icon-manage-transactions',
             className: 'dashboard-companyExchangeRateEdit',
-            package: 'CASH',
-            role: 'EXCHANGERATE'
+            package: 'CURRENCYEXCHNG',
+            role: 'EPOSEXCHNG'
           }]
         }, {
           title: 'StockOwner Item Management',
