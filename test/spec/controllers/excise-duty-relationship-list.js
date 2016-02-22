@@ -148,7 +148,7 @@ describe('Controller: ExciseDutyRelationshipListCtrl', function () {
 
     it('should perform a local delete if record is newly created', function () {
       var mockRecord = { id: 1 };
-      scope.itemExciseDutyList = [{id: 1}, {id: 2}];
+      scope.itemExciseDutyList = [{ id: 1 }, { id: 2 }];
       scope.inCreateMode = true;
       scope.removeRecord(mockRecord);
       scope.$digest();
@@ -161,8 +161,8 @@ describe('Controller: ExciseDutyRelationshipListCtrl', function () {
       scope.newRecord = {
         startDate: '10/20/2015',
         endDate: '10/21/2015',
-        commodityCode: {id: 1},
-        retailItem: {id: 2},
+        commodityCode: { id: 1 },
+        retailItem: { id: 2 },
         alcoholVolume: '123.45',
         itemType: 1
       };
@@ -220,7 +220,7 @@ describe('Controller: ExciseDutyRelationshipListCtrl', function () {
       scope.inEditMode = true;
       scope.recordToEdit = {
         id: 1,
-        commodityCode: {id: 1},
+        commodityCode: { id: 1 },
         alcoholVolume: '123.45',
         startDate: '10/20/2015',
         endDate: '10/21/2015',
@@ -241,7 +241,7 @@ describe('Controller: ExciseDutyRelationshipListCtrl', function () {
       };
     });
 
-   it('should call PUT API with formatted payload', function () {
+    it('should call PUT API with formatted payload', function () {
       var expectedPayload = {
         startDate: '20151020',
         endDate: '20151021',
@@ -392,14 +392,22 @@ describe('Controller: ExciseDutyRelationshipListCtrl', function () {
           };
           expect(scope.newRecord).toEqual(mockRecordWithItemType);
         });
+
+        it('should require fields only if create panel is open and not editing', function () {
+          scope.inEditMode = false;
+          scope.inCreateMode = true;
+          expect(scope.shouldRequireCreateFields()).toEqual(true);
+          scope.inEditMode = true;
+          expect(scope.shouldRequireCreateFields()).toEqual(false);
+        });
       });
     });
 
     describe('search helpers', function () {
       describe('clear search form', function () {
         it('should clear search and excise duty models', function () {
-          scope.search = {fakeKey: 'fakeValue'};
-          scope.exciseDutyList = [{id: 1}];
+          scope.search = { fakeKey: 'fakeValue' };
+          scope.exciseDutyList = [{ id: 1 }];
           scope.clearSearchForm();
           scope.$digest();
           expect(scope.search).toEqual({});
@@ -420,6 +428,127 @@ describe('Controller: ExciseDutyRelationshipListCtrl', function () {
         });
       });
     });
+
+    describe('alert helpers', function () {
+      it('should show search prompt when excsie duty list is null and create panel is not open', function () {
+        scope.inCreateMode = false;
+        scope.itemExciseDutyList = null;
+        expect(scope.shouldShowSearchPrompt()).toEqual(true);
+        scope.inCreateMode = true;
+        expect(scope.shouldShowSearchPrompt()).toEqual(false);
+      });
+
+      it('should show search prompt when excise duty list is empty and create panel is open', function () {
+        scope.inCreateMode = true;
+        scope.itemExciseDutyList = null;
+        expect(scope.shouldShowCreatePrompt()).toEqual(true);
+        scope.itemExciseDutyList = [];
+        expect(scope.shouldShowCreatePrompt()).toEqual(true);
+        scope.inCreateMode = false;
+        expect(scope.shouldShowCreatePrompt()).toEqual(false);
+      });
+
+      it('should show no records prompt when excise duty list is empty and create panel is not open', function () {
+        scope.inCreateMode = false;
+        scope.itemExciseDutyList = [];
+        expect(scope.shouldShowNoRecordsFoundPrompt()).toEqual(true);
+        scope.itemExciseDutyList = null;
+        expect(scope.shouldShowNoRecordsFoundPrompt()).toEqual(false);
+      });
+
+      it('should show lazy loading alert when excise duty list is not empty and all records are not loaded', function () {
+        ExciseDutyRelationshipListCtrl.meta = {
+          offset: 1,
+          count: 10,
+          limit:5
+        };
+        scope.itemExciseDutyList = [{id: 1}];
+        expect(scope.shouldShowLoadingAlert()).toEqual(true);
+      });
+    });
+  });
+
+  describe('form watchers', function () {
+    describe('create record watchers', function () {
+      beforeEach(function () {
+        scope.inCreateMode = true;
+        scope.newRecord = {
+          itemType: 1,
+          startDate: '10/20/2015',
+          endDate: '10/30/2015',
+          retailItem: { id: 1 },
+          commodityCode: { id: 2 }
+        };
+        scope.$digest();
+      });
+
+      it('should update retail item list and excise duty list on create form when dates change', function () {
+        scope.$apply('newRecord.startDate="10/25/2015"');
+        var expectedPayload = jasmine.objectContaining({startDate:'20151025'});
+        expect(ExciseDutyRelationshipFactory.getMasterItemList).toHaveBeenCalledWith(expectedPayload);
+        expect(ExciseDutyRelationshipFactory.getExciseDutyList).toHaveBeenCalledWith(expectedPayload);
+      });
+
+      it('should clear selected retail item and commodity code on create form when dates change', function () {
+        scope.$apply('newRecord.startDate="10/25/2015"');
+        expect(scope.newRecord.retailItem).toEqual(null);
+        expect(scope.newRecord.commodityCode).toEqual(null);
+      });
+
+      it('should update retail item list when item type changes on create form', function () {
+        scope.$apply('newRecord.itemType=2');
+        var expectedPayload = jasmine.objectContaining({itemTypeId: 2});
+        expect(ExciseDutyRelationshipFactory.getMasterItemList).toHaveBeenCalledWith(expectedPayload);
+      });
+    });
+
+    describe('edit record watchers', function () {
+      beforeEach(function () {
+        scope.inCreateMode = false;
+        scope.inEditMode = true;
+        scope.recordToEdit = {
+          itemType: 1,
+          startDate: '10/20/2015',
+          endDate: '10/30/2015',
+          retailItem: { id: 12 },
+          commodityCode: { id: 13 },
+          itemMasterId: 1,
+          exciseDutyId: 1
+        };
+        scope.$digest();
+      });
+
+      it('should update retail item list and excise duty list on edit form when dates change', function () {
+        scope.$apply('recordToEdit.startDate="10/25/2015"');
+        var expectedPayload = jasmine.objectContaining({startDate:'20151025'});
+        expect(ExciseDutyRelationshipFactory.getMasterItemList).toHaveBeenCalledWith(expectedPayload);
+        expect(ExciseDutyRelationshipFactory.getExciseDutyList).toHaveBeenCalledWith(expectedPayload);
+      });
+
+      it('should populate retail item and commodity code if the old value is still in list after a change', function () {
+        scope.$apply('recordToEdit.startDate="10/25/2015"');
+        scope.$digest();
+        expect(scope.recordToEdit.retailItem.id).toEqual(1);
+        expect(scope.recordToEdit.commodityCode.id).toEqual(1);
+      });
+
+      it('should clear retail item and commodity code if old value is not in list after change', function () {
+        scope.recordToEdit.itemMasterId = 500;
+        scope.recordToEdit.exciseDutyId = 500;
+        scope.$digest();
+        scope.$apply('recordToEdit.startDate="10/25/2015"');
+        scope.$digest();
+        expect(scope.recordToEdit.retailItem).toEqual(null);
+        expect(scope.recordToEdit.commodityCode).toEqual(null);
+      });
+
+      it('should update retail item list when item type changes on edit form', function () {
+        scope.$apply('recordToEdit.itemType=2');
+        var expectedPayload = jasmine.objectContaining({itemTypeId: 2});
+        expect(ExciseDutyRelationshipFactory.getMasterItemList).toHaveBeenCalledWith(expectedPayload);
+      });
+    });
+
   });
 
 });

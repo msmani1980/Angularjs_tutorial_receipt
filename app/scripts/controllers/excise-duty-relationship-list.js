@@ -379,12 +379,12 @@ angular.module('ts5App')
     function findEditMatchAfterWatchSuccess() {
       if ($scope.inEditMode && $scope.recordToEdit.itemMasterId) {
         var itemMatch = lodash.findWhere($scope.itemListForEdit, { id: $scope.recordToEdit.itemMasterId });
-        $scope.recordToEdit.retailItem = itemMatch;
+        $scope.recordToEdit.retailItem = itemMatch || null;
       }
 
       if ($scope.inEditMode && $scope.recordToEdit.exciseDutyId) {
         var exciseDutyMatch = lodash.findWhere($scope.exciseDutyListForEdit, { id: $scope.recordToEdit.exciseDutyId });
-        $scope.recordToEdit.commodityCode = exciseDutyMatch;
+        $scope.recordToEdit.commodityCode = exciseDutyMatch || null;
       }
     }
 
