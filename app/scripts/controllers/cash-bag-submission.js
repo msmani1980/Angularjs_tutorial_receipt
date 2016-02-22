@@ -112,7 +112,10 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     };
 
     function generatePayload() {
-      var searchParams = angular.copy($scope.search);
+      var searchParams = {};
+      if ($scope.search.bankReferenceNumber && $scope.search.bankReferenceNumber.length) {
+        searchParams.bankReferenceNumber = angular.copy($scope.search.bankReferenceNumber);
+      }
 
       var payload = {
         submission: 'submit',
@@ -240,7 +243,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       $scope.clearForm();
     }
 
-    $scope.printListOfCashBag = function() {
+    $scope.printListOfCashBag = function () {
       $window.print();
     };
 
