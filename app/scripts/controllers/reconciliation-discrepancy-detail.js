@@ -172,7 +172,7 @@ angular.module('ts5App')
       var formattedCashBagList = [];
       angular.forEach(cashHandlerCashBagList, function(cashBag) {
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
-        console.log(cashBag);
+
         var eposCalculatedAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
         var crewAmount = cashBag.paperAmountManual + cashBag.coinAmountManual;
         var bankExchangeRate = cashBag.chBankExchangeRate ? formatAsCurrency(cashBag.chBankExchangeRate) : (
