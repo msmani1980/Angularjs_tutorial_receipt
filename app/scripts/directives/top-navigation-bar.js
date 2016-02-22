@@ -73,6 +73,7 @@ angular.module('ts5App')
 
       function setCHModelValues(selectedCompany) {
         var companyTypeName = selectedCompany.type.companyTypeName;
+        $scope.shouldDisableCHSelect = false;
         companyRelationshipFactory.getCompanyRelationshipListByCompany(selectedCompany.id).then(function (companyList) {
           setRelationForCH(companyList, companyTypeName);
         });
@@ -131,6 +132,7 @@ angular.module('ts5App')
       $scope.$on('logout', hideNavBar);
       $scope.$on('authorized', showNavBar);
       $scope.$on('company-fetched', showCompanyInfo);
+      angular.element('#userSettingsModal').on('shown.bs.modal', getSelectedCompany);
       showCompanyInfo();
     }
 
