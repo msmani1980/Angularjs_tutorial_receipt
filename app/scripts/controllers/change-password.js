@@ -44,6 +44,16 @@ angular.module('ts5App')
       $scope.displayError = true;
     }
 
+    function handlePasswordMismatch() {
+      $scope.errorCustom = [
+        {
+          field: 'Password',
+          value: 'Passwords do not match.'
+        }
+      ];
+      $scope.displayError = true;
+    }
+
     function getCredentials() {
       return {
         username: $scope.credentials.username,
@@ -60,8 +70,7 @@ angular.module('ts5App')
 
     $scope.changePassword = function () {
       if ($scope.credentials.newPassword !== $scope.credentials.newPasswordConfirm) {
-        angular.element('#newPassword')[0].setCustomValidity('Passwords do not match');
-        angular.element('#newPasswordConfirm')[0].setCustomValidity('Passwords do not match');
+        handlePasswordMismatch();
         return;
       }
 

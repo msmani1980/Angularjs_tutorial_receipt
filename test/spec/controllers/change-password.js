@@ -4,12 +4,15 @@ describe('Controller: ChangePasswordCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
+  beforeEach(module('served/authorize-user.json'));
 
   var ChangePasswordCtrl;
   var scope;
   var identityAccessFactory;
   var loginDeferred;
   var changePasswordDeferred;
+  var checkAuthDeferred;
+  var checkAuthJSON;
   var routeParams;
 
   // Initialize the controller and a mock scope
@@ -24,6 +27,11 @@ describe('Controller: ChangePasswordCtrl', function () {
     spyOn(identityAccessFactory, 'changePassword').and.returnValue(changePasswordDeferred.promise);
 
     spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({ username: 'user' });
+
+    checkAuthJSON = $injector.get('servedAuthorizeUser');
+    checkAuthDeferred = $q.defer();
+    checkAuthDeferred.resolve(checkAuthJSON);
+    spyOn(identityAccessFactory, 'checkAuth').and.returnValue(checkAuthDeferred.promise);
 
     routeParams = {
       sessionToken: 'fakeSessionToken'
@@ -71,6 +79,16 @@ describe('Controller: ChangePasswordCtrl', function () {
         changePasswordDeferred.resolve({});
         scope.$digest();
         expect(identityAccessFactory.login).toHaveBeenCalledWith({ username: scope.credentials.username, password: scope.credentials.newPassword });
+      });
+
+      it('should not show password mismatch error', function () {
+        scope.credentials = {
+          newPassword: 's3creT!',
+          confirmNewPassword: 's4creT@'
+        };
+        scope.changePassword();
+        scope.$digest();
+        expect(scope.errorCustom).toBeDefined();
       });
 
       it('should call changePassword API', function () {
