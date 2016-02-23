@@ -241,10 +241,10 @@ angular.module('ts5App')
 
     this.checkIfCompanyUseCash = function () {
       var cashPreference = lodash.where($this.companyPreferences, { choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless' })[0];
-      if (cashPreference) {
+      if (cashPreference && cashPreference.hasOwnProperty('startDate')) {
         var yesterdayOrEarlier = dateUtility.isYesterdayOrEarlier(dateUtility.formatDateForApp(cashPreference.startDate,
           'YYYY-MM-DD'));
-        return !(cashPreference.isSelected === true && cashPreference.hasOwnProperty('startDate') && yesterdayOrEarlier);
+        return !(cashPreference.isSelected === true && yesterdayOrEarlier);
       }
 
       return true;
