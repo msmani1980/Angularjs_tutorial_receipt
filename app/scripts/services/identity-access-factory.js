@@ -16,12 +16,14 @@ angular.module('ts5App')
           password: CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64)
         };
         return identityAccessService.changePassword(payload, sessionToken);
+      }
 
+      function checkAuth(sessionToken) {
+        return identityAccessService.checkAuth(sessionToken);
       }
 
       function sendEmail(emailAddress, emailContent) {
         return identityAccessService.sendEmail(emailAddress, emailContent);
-
       }
 
       function logoutFromSystem() {
@@ -174,6 +176,7 @@ angular.module('ts5App')
         getSessionObject: getSessionObject,
         setSessionData: setSessionData,
         isAuthorized: isAuthorized,
+        checkAuth: checkAuth,
         setSelectedCompany: setSelectedCompany
       };
     }

@@ -89,8 +89,13 @@ angular.module('ts5App')
       return sendEmailResource.sendEmail(emailContent).$promise;
     };
 
-    var checkAuth = function (payload) {
-      return authResource.checkAuth(payload).$promise;
+    var checkAuth = function (headers) {
+      delete actions.checkAuth.headers.sessionToken;
+      if (headers) {
+        actions.checkAuth.headers.sessionToken = headers.sessionToken;
+      }
+
+      return authResource.checkAuth().$promise;
     };
 
     var featuresInRole = function (payload) {
