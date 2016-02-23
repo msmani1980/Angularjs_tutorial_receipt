@@ -8,15 +8,17 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('deliveryNoteFactory', function (deliveryNotesService, catererStationService,
-                                            companyReasonCodesService, itemsService, stockManagementStationItemsService, recordsService) {
+  .service('deliveryNoteFactory', function(deliveryNotesService, catererStationService,
+    companyReasonCodesService, itemsService, stockManagementStationItemsService, recordsService) {
 
     function getDeliveryNote(deliveryNoteId) {
       return deliveryNotesService.getDeliveryNote(deliveryNoteId);
     }
 
     function getCatererStationList() {
-      return catererStationService.getCatererStationList({ limit:null });
+      return catererStationService.getCatererStationList({
+        limit: null
+      });
     }
 
     function getItemsByCateringStationId(_catererStationId) {
@@ -51,6 +53,10 @@ angular.module('ts5App')
       return recordsService.getItemTypes();
     }
 
+    function getCharacteristics() {
+      return recordsService.getCharacteristics();
+    }
+
     return {
       getDeliveryNotesList: getDeliveryNotesList,
       getDeliveryNote: getDeliveryNote,
@@ -61,7 +67,8 @@ angular.module('ts5App')
       createDeliveryNote: createDeliveryNote,
       saveDeliveryNote: saveDeliveryNote,
       deleteDeliveryNote: deleteDeliveryNote,
-      getItemTypes: getItemTypes
+      getItemTypes: getItemTypes,
+      getCharacteristics: getCharacteristics
     };
 
   });
