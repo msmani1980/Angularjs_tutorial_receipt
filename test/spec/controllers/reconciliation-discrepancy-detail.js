@@ -272,6 +272,14 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
       expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeFalsy();
     });
 
+    it('should set the cash preference to false if most recent is turned off', function () {
+      ReconciliationDiscrepancyDetail.companyPreferences = [
+        { isSelected: false, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2015-10-10' },
+        { isSelected: true, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2015-01-01' }
+      ];
+      expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeFalsy();
+    });
+
     it('should set the cash preference to true if found and date > today', function () {
       ReconciliationDiscrepancyDetail.companyPreferences = [
         { isSelected: true, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2017-01-01' }
