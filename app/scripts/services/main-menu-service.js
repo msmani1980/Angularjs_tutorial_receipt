@@ -422,7 +422,7 @@ angular.module('ts5App')
             icon: 'icon-manage-transactions',
             className: 'dashboard-manageDailyExchangeRates',
             package: 'CASH',
-            role: 'EXCHANGERATE'
+            role: 'DAILYEXCHANGERATE'
           }, {
             name: 'Manage Cash Bag',
             route: '/#/cash-bag-list',
