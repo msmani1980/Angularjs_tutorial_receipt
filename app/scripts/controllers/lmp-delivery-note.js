@@ -484,16 +484,12 @@ angular.module('ts5App')
     }
 
     function getRegularItems() {
-      if ($scope.regularItemType && $scope.inventoryCharacteristicType) {
-        var startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-        return deliveryNoteFactory.getMasterItems({
-          itemTypeId: $scope.regularItemType.id,
-          characteristicId: $scope.inventoryCharacteristicType.id,
-          startDate: startDate
-        }).then(setMasterItemsFromResponse, showResponseErrors);
-      }
-
-      return [];
+      var payload = {
+        itemTypeId: $scope.regularItemType.id,
+        characteristicId: $scope.inventoryCharacteristicType.id,
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      };
+      return deliveryNoteFactory.getMasterItems(payload).then(setMasterItemsFromResponse, showResponseErrors);
     }
 
     function setItemType(dataFromAPI) {
