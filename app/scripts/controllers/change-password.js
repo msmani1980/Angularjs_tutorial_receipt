@@ -16,7 +16,11 @@ angular.module('ts5App')
       newPasswordConfirm: ''
     };
 
+    var $this = this;
     var sessionObject = identityAccessFactory.getSessionObject();
+    this.headers = {
+      sessionToken: $routeParams.sessionToken || sessionObject.sessionToken
+    };
     $scope.hasSessionToken = angular.isDefined(sessionObject.sessionToken);
 
     function showLoadingModal(text) {
@@ -55,16 +59,24 @@ angular.module('ts5App')
     }
 
     $scope.changePassword = function () {
+      if ($scope.credentials.newPassword !== $scope.credentials.newPasswordConfirm) {
+        angular.element('#newPassword')[0].setCustomValidity('Passwords do not match');
+        angular.element('#newPasswordConfirm')[0].setCustomValidity('Passwords do not match');
+        return;
+      }
+
       if ($scope.changePasswordForm.$invalid) {
         return;
       }
 
-      showLoadingModal('Changing password');
       var credentials = getCredentials();
-      var headers = {
-        sessionToken: $routeParams.sessionToken || sessionObject.sessionToken
-      };
-      identityAccessFactory.changePassword(credentials, headers).then(handleSuccessResponse, handleResponseError);
+      showLoadingModal('Changing password');
+      identityAccessFactory.changePassword(credentials, $this.headers).then(handleSuccessResponse, handleResponseError);
     };
 
+    identityAccessFactory.checkAuth($this.headers).then(function (dataFromAPI) {
+      var userInfo = angular.copy(dataFromAPI);
+      $scope.credentials.username = userInfo.userName;
+      $scope.credentials.email = userInfo.email;
+    }, handleResponseError);
   });
