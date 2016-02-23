@@ -57,6 +57,8 @@ angular.module('ts5App')
       var inboundOffloadCount = stockItem.inboundQuantity || stockItem.offloadQuantity || 0;
 
       return {
+        itemMasterId: stockItem.itemMasterId,
+        storeInstanceId: stockItem.storeInstanceId,
         itemName: stockItem.itemName,
         dispatchedCount: stockItem.dispatchedQuantity,
         replenishCount: 0,
@@ -647,6 +649,36 @@ angular.module('ts5App')
       item.revision = {};
       item.isEditing = false;
     };
+
+    $scope.saveStockItemCounts = function(item) {
+      saveStockItemsCounts([item]);
+    };
+
+    $scope.saveStockItemCountsTable = function() {
+      saveStockItemsCounts($scope.stockItemList);
+    };
+
+    function saveStockItemsCounts(items) {
+      var payload = items.map(function (item) {
+        var counts = (item.revision) ? item.revision : item;
+        return {
+          storeInstanceId: item.storeInstanceId, // TODO: do we need this since instance id is in url anyway
+          itemMasterId: item.itemMasterId,
+          dispatchedCount: parseInt(counts.dispatchedCount),
+          replenishCount: parseInt(counts.replenishCount),
+          inboundedCount: parseInt(counts.inboundOffloadCount)
+        };
+      });
+
+      reconciliationFactory.saveStockItemsCounts(payload).then(handleStockItemsCountsSaveSuccess, handleResponseError);
+    }
+
+    function handleStockItemsCountsSaveSuccess(items) {
+      angular.forEach(items, function (item) {
+        item.revision = {};
+        item.isEditing = false;
+      });
+    }
 
     $scope.initEditTable = function(isLMPTable) {
       if (isLMPTable) {

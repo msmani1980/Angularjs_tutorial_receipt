@@ -15,6 +15,7 @@ angular.module('ts5App')
     var reconciliationPrecheckDevicesURL = ENV.apiUrl + '/rsvr/api/reconciliation/pre-check/:storeInstanceId/devices';
     var reconciliationPrecheckSchedulesResourceURL = ENV.apiUrl + '/rsvr/api/reconciliation/pre-check/:storeInstanceId/schedules';
     var reconciliationPrecheckCashbagsResourceURL = ENV.apiUrl + '/rsvr/api/reconciliation/pre-check/:storeInstanceId/cashbags';
+    var reconciliationStoreInstanceStockCountsResourceURL = ENV.apiUrl + '/rsvr/api/reconciliation/storeinstanceitems/:storeInstanceId';
     var paymentReportURL = ENV.apiUrl + '/rsvr/api/paymentReport';
 
     var revenueURL = {
@@ -49,6 +50,9 @@ angular.module('ts5App')
       },
       getPaymentReport: {
         method: 'GET'
+      },
+      saveStockItemsCounts: {
+        method: 'PUT'
       }
     };
 
@@ -58,6 +62,7 @@ angular.module('ts5App')
     var reconciliationPrecheckDevicesResource = $resource(reconciliationPrecheckDevicesURL, requestParameters, actions);
     var getReconciliationPrecheckSchedulesResource = $resource(reconciliationPrecheckSchedulesResourceURL, requestParameters, actions);
     var getReconciliationPrecheckCashbagsResource = $resource(reconciliationPrecheckCashbagsResourceURL, requestParameters, actions);
+    var reconciliationStoreInstanceStockCountsResourceResource = $resource(reconciliationStoreInstanceStockCountsResourceURL, requestParameters, actions);
 
     function getStockTotals(storeInstanceId) {
       var payload = {
@@ -128,6 +133,10 @@ angular.module('ts5App')
       return getReconciliationPrecheckCashbagsResource.getReconciliationPrecheckCashbags(payload).$promise;
     };
 
+    var saveStockItemsCounts = function (payload) {
+      return reconciliationStoreInstanceStockCountsResourceResource.saveStockItemsCounts(payload).$promise;
+    };
+
     return {
       getStockTotals: getStockTotals,
       getPaymentReport: getPaymentReport,
@@ -140,6 +149,7 @@ angular.module('ts5App')
       getEPOSDiscountRevenue: getEPOSDiscountRevenue,
       getReconciliationPrecheckDevices: getReconciliationPrecheckDevices,
       getReconciliationPrecheckSchedules: getReconciliationPrecheckSchedules,
-      getReconciliationPrecheckCashbags: getReconciliationPrecheckCashbags
+      getReconciliationPrecheckCashbags: getReconciliationPrecheckCashbags,
+      saveStockItemsCounts: saveStockItemsCounts
     };
   });

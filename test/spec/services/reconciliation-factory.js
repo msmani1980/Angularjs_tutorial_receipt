@@ -42,6 +42,8 @@ describe('Factory: reconciliationFactory', function () {
   var getEPOSCreditCardRevenueDeferred;
   var getEPOSDiscountRevenueDeferred;
 
+  var putSaveStockItemsCountsDeferred;
+
   var scope;
 
   beforeEach(inject(function (_reconciliationFactory_, $injector, $q, $rootScope) {
@@ -110,6 +112,10 @@ describe('Factory: reconciliationFactory', function () {
     getEPOSDiscountRevenueDeferred.resolve(200, {});
     spyOn(reconciliationService, 'getEPOSDiscountRevenue').and.returnValue(getEPOSDiscountRevenueDeferred.promise);
 
+    putSaveStockItemsCountsDeferred = $q.defer();
+    putSaveStockItemsCountsDeferred.resolve(200, {});
+    spyOn(reconciliationService, 'saveStockItemsCounts').and.returnValue(putSaveStockItemsCountsDeferred.promise);
+
     scope = $rootScope.$new();
     reconciliationFactory = _reconciliationFactory_;
   }));
@@ -163,6 +169,12 @@ describe('Factory: reconciliationFactory', function () {
       reconciliationFactory.getStockTotals(storeInstanceId);
       scope.$digest();
       expect(reconciliationService.getStockTotals).toHaveBeenCalledWith(storeInstanceId);
+    });
+
+    it('should call reconciliatioNService saveStockItemsCounts on saveStockItemsCounts', function () {
+      var payload = {storeInstanceId: 1};
+      reconciliationFactory.saveStockItemsCounts(payload);
+      expect(reconciliationService.saveStockItemsCounts).toHaveBeenCalledWith(payload);
     });
 
     describe('getCHRevenue', function () {

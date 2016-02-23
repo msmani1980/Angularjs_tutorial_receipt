@@ -67,6 +67,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
   var getStoreStatusListDeferred;
   var getStoreStatusListJSON;
 
+  var putSaveStockItemsCountsDeferred;
+
   var routeParams;
   var dateUtility;
 
@@ -136,6 +138,10 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
     getStoreInstanceItemListDeferred.resolve(getStoreInstanceItemListJSON);
     spyOn(reconciliationFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemListDeferred
       .promise);
+
+    putSaveStockItemsCountsDeferred = $q.defer();
+    putSaveStockItemsCountsDeferred.resolve({});
+    spyOn(reconciliationFactory, 'saveStockItemsCounts').and.returnValue(putSaveStockItemsCountsDeferred.promise);
 
     getCompanyGlobalCurrenciesDeferred = $q.defer();
     getCompanyGlobalCurrenciesDeferred.resolve(getCompanyGlobalCurrenciesJSON);
@@ -340,6 +346,38 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
 
         it('should clear revision object', function() {
           expect(mockItem.revision).toEqual({});
+        });
+      });
+
+      describe('saveStockItemCounts', function() {
+        beforeEach(function() {
+          mockItem = {
+            storeInstanceId: 1,
+            itemMasterId: 2,
+            itemName: 'testItem',
+            dispatchedCount: 3,
+            replenishCount: 4,
+            inboundOffloadCount: 5,
+            revision: {
+              itemName: 'testItem',
+              dispatchedCount: 30,
+              replenishCount: 40,
+              inboundOffloadCount: 50
+            }
+          };
+          scope.saveStockItemCounts(mockItem);
+          scope.$digest();
+        });
+
+        it('should call saveStockItemsCounts with new item counts', function() {
+          var expectedPayload = [{
+            storeInstanceId: 1,
+            itemMasterId: 2,
+            dispatchedCount: 30,
+            replenishCount: 40,
+            inboundedCount: 50
+          }];
+          expect(reconciliationFactory.saveStockItemsCounts).toHaveBeenCalledWith(expectedPayload);
         });
       });
 
