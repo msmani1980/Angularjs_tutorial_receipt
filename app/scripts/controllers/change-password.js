@@ -54,6 +54,16 @@ angular.module('ts5App')
       $scope.displayError = true;
     }
 
+    function handlePasswordUsernameMatch() {
+      $scope.errorCustom = [
+        {
+          field: 'Password',
+          value: 'Username and password can not be equal'
+        }
+      ];
+      $scope.displayError = true;
+    }
+
     function getCredentials() {
       return {
         username: $scope.credentials.username,
@@ -71,6 +81,11 @@ angular.module('ts5App')
     $scope.changePassword = function () {
       if ($scope.credentials.newPassword !== $scope.credentials.newPasswordConfirm) {
         handlePasswordMismatch();
+        return;
+      }
+
+      if ($scope.credentials.newPassword === $scope.credentials.username) {
+        handlePasswordUsernameMatch();
         return;
       }
 

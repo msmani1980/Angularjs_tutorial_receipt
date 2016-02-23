@@ -17,8 +17,8 @@ angular.module('ts5App')
       alpha: [/^[a-zA-z]+$/, 'Error message for alpha'],
       alphanumeric: [/^[a-zA-Z0-9]+$/, 'Error message for alphanumeric'],
       alphanumericSpaces: [/^[a-zA-Z0-9-\s]+$/, 'Error message for alphanumericSpaces'],
-      password: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{6,15}$/,
-        'Password requires one lower case, one upper case, one digit, 6-15 length, and no spaces'
+      password: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@!%*?&]).{6,15}$/,
+        'Password requires one lower case, one upper case, one digit, one special character ($, @, !, %, *, ?, &), 6-15 length, and no spaces'
       ],
       alphanumericUpToTenChars: [/^[a-zA-Z0-9]{1,10}$/,
         'Must be 1 to 10 characters long, number and letters only. Spaces are not allowed.'
