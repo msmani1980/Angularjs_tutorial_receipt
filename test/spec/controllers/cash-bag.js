@@ -18,6 +18,7 @@ describe('Controller: CashBagCtrl', function () {
   var cashBagFactory;
   var companyId;
   var dateUtility;
+  var localStorage;
 
   var getCashBagDeferred;
   var getCompanyDeferred;
@@ -55,6 +56,8 @@ describe('Controller: CashBagCtrl', function () {
 
     cashBagFactory = _cashBagFactory_;
     dateUtility = $injector.get('dateUtility');
+    localStorage = $injector.get('$localStorage');
+
 
     getCashBagDeferred = $q.defer();
     getCashBagDeferred.resolve(cashBagResponseJSON);
@@ -95,6 +98,8 @@ describe('Controller: CashBagCtrl', function () {
 
     companyId = 403;
     spyOn(cashBagFactory, 'getCompanyId').and.returnValue(companyId);
+
+    localStorage.cashBagBankRefNumber = 12345;
 
   }));
 
@@ -169,6 +174,8 @@ describe('Controller: CashBagCtrl', function () {
       it('should call getCompanyPreferences', function () {
         var expectedPayload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
         expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload, 403);
+        scope.$digest();
+        expect(scope.companyPreferences.defaultBankRefNumber).toBeDefined();
       });
     });
 
@@ -199,6 +206,9 @@ describe('Controller: CashBagCtrl', function () {
         expect(scope.cashBag.cashBagCurrencies.length).toEqual(currencyGlobalsResponseJSON.response.length);
       });
 
+      it('should default bank ref number from localStorage', function () {
+        expect(scope.cashBag.bankReferenceNumber).toEqual(12345);
+      });
     });
 
     describe('formSave form action', function () {
@@ -211,6 +221,12 @@ describe('Controller: CashBagCtrl', function () {
         delete expectedPayload.storeNumber;
         scope.formSave(scope.cashBag);
         expect(cashBagFactory.createCashBag).toHaveBeenCalled();
+      });
+
+      it('should save bank ref number to localStorage', function () {
+        scope.cashBag.bankReferenceNumber = 4567;
+        scope.formSave(scope.cashBag);
+        expect(localStorage.cashBagBankRefNumber).toEqual(4567);
       });
     });
 

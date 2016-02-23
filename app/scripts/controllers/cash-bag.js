@@ -109,6 +109,8 @@ angular.module('ts5App')
     function createCashBag(formData) {
       showLoadingModal('Saving Cash Bag');
       formData.isDelete = false;
+      $localStorage.cashBagBankRefNumber = $scope.cashBag.bankReferenceNumber;
+
       cashBagFactory.createCashBag({
         cashBag: formData
       }).then(cashBagCreateSuccessHandler, errorHandler);
@@ -239,6 +241,10 @@ angular.module('ts5App')
     }
 
     function promisesResponseHandler() {
+      if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber()) {
+        $scope.cashBag.bankReferenceNumber = $localStorage.cashBagBankRefNumber;
+      }
+
       if (angular.isUndefined($scope.dailyExchangeRates) || $scope.dailyExchangeRates.length === 0) {
         showMessage(null, true,
           'no daily exchange rate created for this date! please create one on exchange rates page');
@@ -356,6 +362,10 @@ angular.module('ts5App')
       }
     }
 
+    function shouldSaveBankRefNumber() {
+      return ($scope.state === 'create' && $scope.companyPreferences.defaultBankRefNumber && $scope.companyPreferences.defaultBankRefNumber.isSelected);
+    }
+
     function getCompanyPreferenceBy(preferences, featureName, optionName) {
       var result = null;
       angular.forEach(preferences, function (preference) {
@@ -380,7 +390,8 @@ angular.module('ts5App')
           $scope.companyPreferences = {
             exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type'),
             totalNumberOfCashBags: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate',
-              'Total Number of Cash Bags')
+              'Total Number of Cash Bags'),
+            defaultBankRefNumber: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Default Bank Reference Number')
           };
         })
       );
@@ -406,6 +417,7 @@ angular.module('ts5App')
         storeInstanceId: $routeParams.storeInstanceId,
         cashBagCurrencies: []
       };
+
       $scope.saveButtonName = 'Create';
 
       $q.all(_promises).then(promisesResponseHandler, showMessage);
