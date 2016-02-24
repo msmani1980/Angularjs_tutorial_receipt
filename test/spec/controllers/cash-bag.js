@@ -370,6 +370,13 @@ describe('Controller: CashBagCtrl', function () {
       it('should have companyCurrencies attached to scope after API call', function () {
         expect(scope.companyCurrencies).toBeDefined();
       });
+
+      it('should call getCompanyPreferences', function () {
+        var expectedPayload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+        expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload, 403);
+        scope.$digest();
+        expect(scope.companyPreferences.defaultBankRefNumber).toBeDefined();
+      });
     });
 
     describe('cashBag definition', function () {
@@ -381,6 +388,10 @@ describe('Controller: CashBagCtrl', function () {
         expect(scope.cashBag.cashBagCurrencies[0].currencyCode).toBeDefined();
         expect(scope.cashBag.cashBagCurrencies[0]).not.toEqual(null);
       });
+
+      it('should default bank ref number from localStorage', function () {
+        expect(scope.cashBag.bankReferenceNumber).toEqual(12345);
+      });
     });
 
     describe('formSave', function () {
@@ -391,6 +402,12 @@ describe('Controller: CashBagCtrl', function () {
       it('should call cashBagFactory updateCashBag', function () {
         scope.formSave(scope.cashBag);
         expect(cashBagFactory.updateCashBag.calls.mostRecent().args[0]).toBe(95);
+      });
+
+      it('should save bank ref number to localStorage', function () {
+        scope.cashBag.bankReferenceNumber = 4567;
+        scope.formSave(scope.cashBag);
+        expect(localStorage.cashBagBankRefNumber).toEqual(4567);
       });
 
     });
