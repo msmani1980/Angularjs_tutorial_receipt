@@ -109,8 +109,6 @@ angular.module('ts5App')
     function createCashBag(formData) {
       showLoadingModal('Saving Cash Bag');
       formData.isDelete = false;
-      $localStorage.cashBagBankRefNumber = $scope.cashBag.bankReferenceNumber;
-
       cashBagFactory.createCashBag({
         cashBag: formData
       }).then(cashBagCreateSuccessHandler, errorHandler);
@@ -121,6 +119,7 @@ angular.module('ts5App')
         return;
       }
 
+      $localStorage.cashBagBankRefNumber = $scope.cashBag.bankReferenceNumber;
       var formData = cleanPayload(angular.copy($scope.cashBag));
       switch ($routeParams.state) {
         case 'edit':
@@ -240,11 +239,20 @@ angular.module('ts5App')
       return formatAsCurrency(amount);
     }
 
-    function promisesResponseHandler() {
-      if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber()) {
+    $scope.shouldShowBankRefNumberAlert = function () {
+      return ($scope.state === 'edit' && $localStorage.cashBagBankRefNumber && $scope.oldBankRefNumber && $localStorage.cashBagBankRefNumber !== $scope.oldBankRefNumber);
+    };
+
+    function setBankReferenceNumberFromLocalStorage () {
+      var shouldSaveBankRefNumber = ($scope.state !== 'view' && $scope.companyPreferences.defaultBankRefNumber && $scope.companyPreferences.defaultBankRefNumber.isSelected);
+      $scope.oldBankRefNumber = $scope.cashBag.bankReferenceNumber || '';
+      if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber) {
         $scope.cashBag.bankReferenceNumber = $localStorage.cashBagBankRefNumber;
       }
+    }
 
+    function promisesResponseHandler() {
+      setBankReferenceNumberFromLocalStorage();
       if (angular.isUndefined($scope.dailyExchangeRates) || $scope.dailyExchangeRates.length === 0) {
         showMessage(null, true,
           'no daily exchange rate created for this date! please create one on exchange rates page');
@@ -360,10 +368,6 @@ angular.module('ts5App')
           cashBagFactory.getDailyExchangeRates(_companyId, dailyExchangeDate).then(dailyExchangeResponseHandler)
         );
       }
-    }
-
-    function shouldSaveBankRefNumber() {
-      return ($scope.state === 'create' && $scope.companyPreferences.defaultBankRefNumber && $scope.companyPreferences.defaultBankRefNumber.isSelected);
     }
 
     function getCompanyPreferenceBy(preferences, featureName, optionName) {
