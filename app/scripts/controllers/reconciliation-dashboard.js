@@ -117,7 +117,7 @@ angular.module('ts5App')
         item.scheduleDate = dateUtility.formatDateForApp(item.scheduleDate);
         item.updatedOn = (item.updatedOn) ? dateUtility.formatTimestampForApp(item.updatedOn) : null;
         item.statusName = $this.getStoreStatusNameById(item.statusId);
-        item.isEcb = (item.isEcb === 'true') ? 'Yes' : 'No';
+        item.isEcb = (item.isEcb) ? 'Yes' : 'No';
         item.eposData = 'Loading...';
         item.postTripData = 'Loading...';
         item.cashHandlerData = 'Loading...';
