@@ -178,7 +178,7 @@ angular.module('ts5App')
     var filterCompanyListByTypesScope = function (companyTypeListFromAPI) {
       var typeIdList = [];
       companyTypeListFromAPI.response.forEach(function (companyType) {
-        typeIdList.push(companyType.companyTypeId);
+        typeIdList.push(companyType.relativeCompanyTypeId);
       });
 
       $scope.companyList = $scope.companyList.filter(function (company) {
