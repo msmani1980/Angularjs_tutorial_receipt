@@ -74,6 +74,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     this.init = function() {
       hideLoadingBar();
+      $scope.companyId = GlobalMenuService.company.get();
       catererStationService.getCatererStationList().then(this.getCatererStationListSuccessHandler);
       companyReasonCodesService.getAll().then($this.getUllageReasonsFromResponse);
       $scope.$watch('selectedCateringStation', function(newData) {
@@ -89,7 +90,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     this.setExportURL = function(cateringStation) {
       $scope.exportURL = ENV.apiUrl + '/api/stock-management/dashboard/' + cateringStation.id;
       var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
-      $scope.exportURL += '/file/export?sortOn=itemName&sessionToken=' + sessionToken;
+      $scope.exportURL += '/file/export?sortOn=itemName&companyId=' + $scope.companyId + '&sessionToken=' + sessionToken;
     };
 
     this.generateStockTakeQuery = function() {
