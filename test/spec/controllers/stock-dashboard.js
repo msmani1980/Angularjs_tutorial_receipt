@@ -16,6 +16,8 @@ describe('Controller: StockDashboardCtrl', function() {
     stockManagementStationItemsService,
     catererStationService,
     companyReasonCodesService,
+    globalMenuService,
+    mockCompanyId,
     getStockManagementStationItemsDeferred,
     getCatererStationListDeferred,
     getCompanyReasonCodesDeferred,
@@ -40,6 +42,7 @@ describe('Controller: StockDashboardCtrl', function() {
     companyReasonCodesService = $injector.get('companyReasonCodesService');
     stockTakeService = $injector.get('stockTakeService');
     identityAccessFactory = $injector.get('identityAccessFactory');
+    globalMenuService = $injector.get('GlobalMenuService');
 
     inject(function(_servedStockManagementDashboard_, _servedCateringStations_,
       _servedStockTakeList_, _servedCompanyReasonCodes_) {
@@ -70,6 +73,9 @@ describe('Controller: StockDashboardCtrl', function() {
     spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({
       sessionToken: 'fakeSessionToken'
     });
+
+    mockCompanyId = 123;
+    spyOn(globalMenuService.company, 'get').and.returnValue(mockCompanyId);
 
     StockDashboardCtrl = $controller('StockDashboardCtrl', {
       $scope: scope
@@ -221,7 +227,7 @@ describe('Controller: StockDashboardCtrl', function() {
       beforeEach(function() {
         scope.selectedCateringStation = cateringStationsJSON.response[0];
         urlControl = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
-        urlControl += '/file/export?sortOn=itemName&sessionToken=fakeSessionToken';
+        urlControl += '/file/export?sortOn=itemName&companyId=' + mockCompanyId + '&sessionToken=fakeSessionToken';
       });
 
       it('set the exportURL when the catering station is selected', function() {
@@ -240,7 +246,7 @@ describe('Controller: StockDashboardCtrl', function() {
         scope.$digest();
         expect(scope.exportURL).not.toEqual(urlControl);
         var newURL = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
-        newURL += '/file/export?sortOn=itemName&sessionToken=fakeSessionToken';
+        newURL += '/file/export?sortOn=itemName&companyId=' + mockCompanyId + '&sessionToken=fakeSessionToken';
         expect(scope.exportURL).toEqual(newURL);
       });
 
