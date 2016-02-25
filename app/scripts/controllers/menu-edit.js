@@ -13,6 +13,7 @@ angular.module('ts5App')
     $scope.menuItemList = [];
     $scope.selectedCategories = [];
     $scope.filteredItemsCollection = [];
+
     var $this = this;
 
     function showLoadingModal(message) {
@@ -43,6 +44,8 @@ angular.module('ts5App')
           $this.filterItems(index);
         }
       });
+
+      hideLoadingModal();
     }
 
     function fetchFilteredItemsList(startDate, endDate, category, successHandler) {
@@ -77,8 +80,6 @@ angular.module('ts5App')
         deserializeMenuItems($scope.menu.menuItems);
         $scope.menuEditForm.$setPristine();
       }
-
-      hideLoadingModal();
     }
 
     function showToast(className, type, message) {
@@ -108,6 +109,100 @@ angular.module('ts5App')
       $scope.menuItemList = [];
       setupMenuModelAndFetchItems($scope.menuFromAPI);
     }
+
+    function checkToOverwriteOrCreate(response) {
+      var duplicateExists = response.menus.length;
+      var dateIsInTheFuture = false;
+      if (duplicateExists) {
+        dateIsInTheFuture = dateUtility.isAfterToday(response.menus[0].startDate);
+      }
+
+      if (duplicateExists && !dateIsInTheFuture) {
+        hideLoadingModal();
+        $scope.errorCustom = [{
+          field: 'Menu Name Duplicate',
+          value: 'a menu with this name and code already exist and cannot be overwritten'
+        }];
+      } else if (duplicateExists && dateIsInTheFuture) {
+        hideLoadingModal();
+        $scope.overwriteMenuId = response.menus[0].id;
+        angular.element('#overwrite-modal').modal('show');
+      } else {
+        var payload = $this.createPayload();
+        menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
+      }
+    }
+
+    function checkForDuplicateRecord() {
+      menuFactory.getMenuList({
+        menuCode: $scope.menu.menuCode,
+        menuName: $scope.menu.menuName
+      }).then(checkToOverwriteOrCreate);
+    }
+
+    function filterAvailableItems() {
+      angular.forEach($scope.menuItemList, function(menuItem, key) {
+        if (angular.isDefined($scope.selectedCategories[key]) && $scope.selectedCategories[key].id) {
+          return $this.filterItems(key);
+        }
+
+        $scope.filteredItemsCollection[key] = lodash.filter($scope.masterItemsList, function(item) {
+          var menuItemsList = (lodash.find($scope.menuItemList, {
+            id: item.id
+          }));
+          return !menuItemsList;
+        });
+      });
+
+      $scope.filteredItemsCollectionMaster = lodash.filter($scope.masterItemsList, function(item) {
+        var menuItemsList = (lodash.find($scope.menuItemList, {
+          id: item.id
+        }));
+        return !menuItemsList;
+      });
+    }
+
+    function initializeMenu() {
+      if ($routeParams.id) {
+        showLoadingModal('Loading Data');
+        menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showErrors);
+      } else {
+        var companyId = menuFactory.getCompanyId();
+        $scope.menu = {
+          startDate: '',
+          endDate: '',
+          companyId: companyId
+        };
+      }
+
+      menuFactory.getSalesCategoriesList({}).then(function(response) {
+        $scope.categories = response.salesCategories;
+      });
+    }
+
+    initializeMenu();
+
+    this.filterItems = function(index) {
+      if ($scope.selectedCategories[index]) {
+        fetchFilteredItemsList($scope.menu.startDate, $scope.menu.endDate, $scope.selectedCategories[index].id,
+          function(response) {
+            $scope.filteredItemsCollection[index] = lodash.filter(response.masterItems, function(item) {
+              var menuItemsList = (lodash.find($scope.menuItemList, {
+                id: item.id
+              }));
+              return !menuItemsList;
+            });
+          });
+
+        if (!$scope.filteredItemsCollection[index]) {
+          $scope.filteredItemsCollection[index] = [];
+        }
+
+        return;
+      }
+
+      $scope.filteredItemsCollection[index] = $scope.masterItemsList;
+    };
 
     this.formatMenuItemsForAPI = function() {
       var ItemsArray = [];
@@ -152,6 +247,16 @@ angular.module('ts5App')
       return payload;
     };
 
+    this.editMenu = function() {
+      showLoadingModal('Saving Menu');
+      var payload = $this.createPayload();
+      menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
+    };
+
+    this.createMenu = function() {
+      checkForDuplicateRecord();
+    };
+
     $scope.submitForm = function() {
       if (!$scope.menuEditForm.$valid) {
         return false;
@@ -165,44 +270,8 @@ angular.module('ts5App')
       }
     };
 
-    this.editMenu = function() {
-      showLoadingModal('Saving Menu');
-      var payload = $this.createPayload();
-      menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
-    };
-
-    function checkToOverwriteOrCreate(response) {
-      var duplicateExists = response.menus.length;
-      var dateIsInTheFuture = false;
-      if (duplicateExists) {
-        dateIsInTheFuture = dateUtility.isAfterToday(response.menus[0].startDate);
-      }
-
-      if (duplicateExists && !dateIsInTheFuture) {
-        hideLoadingModal();
-        $scope.errorCustom = [{
-          field: 'Menu Name Duplicate',
-          value: 'a menu with this name and code already exist and cannot be overwritten'
-        }];
-      } else if (duplicateExists && dateIsInTheFuture) {
-        hideLoadingModal();
-        $scope.overwriteMenuId = response.menus[0].id;
-        angular.element('#overwrite-modal').modal('show');
-      } else {
-        var payload = $this.createPayload();
-        menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
-      }
-    }
-
-    function checkForDuplicateRecord() {
-      menuFactory.getMenuList({
-        menuCode: $scope.menu.menuCode,
-        menuName: $scope.menu.menuName
-      }).then(checkToOverwriteOrCreate);
-    }
-
-    this.createMenu = function() {
-      checkForDuplicateRecord();
+    $scope.setAvailableItems = function() {
+      return filterAvailableItems();
     };
 
     $scope.overwriteMenu = function() {
@@ -264,42 +333,24 @@ angular.module('ts5App')
       $this.filterItems(index);
     };
 
-    this.filterItems = function(index) {
-      if ($scope.selectedCategories[index]) {
-        fetchFilteredItemsList($scope.menu.startDate, $scope.menu.endDate, $scope.selectedCategories[index].id,
-          function(response) {
-            $scope.filteredItemsCollection[index] = lodash.filter(response.masterItems, function(item) {
-              var menuItemsList = (lodash.find($scope.menuItemList, {
-                id: item.id
-              }));
-              return !menuItemsList;
-            });
-          });
-
-        if (!$scope.filteredItemsCollection[index]) {
-          $scope.filteredItemsCollection[index] = [];
-        }
-
-        return;
-      }
-
-      $scope.filteredItemsCollection[index] = $scope.masterItemsList;
-    };
-
     $scope.shouldDisableItem = function(index) {
       if (!$scope.isMenuEditable()) {
         return true;
       }
 
-      if (!$scope.masterItemsList) {
-        return true;
+      if (angular.isObject($scope.menuItemList[index]) && angular.isNumber($scope.menuItemList[index].id)) {
+        return false;
       }
 
       if (angular.isObject($scope.filteredItemsCollection[index]) && !$scope.filteredItemsCollection[index].length) {
         return true;
       }
 
-      return $scope.filteredItemsCollection[index] === null;
+      if ($scope.filteredItemsCollection[index] === null) {
+        return true;
+      }
+
+      return false;
     };
 
     $scope.deleteNewItem = function(index) {
@@ -315,46 +366,4 @@ angular.module('ts5App')
       }
     });
 
-    function initializeMenu() {
-      if ($routeParams.id) {
-        showLoadingModal('Loading Data');
-        menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showErrors);
-      } else {
-        var companyId = menuFactory.getCompanyId();
-        $scope.menu = {
-          startDate: '',
-          endDate: '',
-          companyId: companyId
-        };
-      }
-
-      menuFactory.getSalesCategoriesList({}).then(function(response) {
-        $scope.categories = response.salesCategories;
-      });
-    }
-
-    initializeMenu();
-
-    $scope.setAvailableItems = function() {
-      angular.forEach($scope.menuItemList, function(menuItem, key) {
-        if (angular.isDefined($scope.selectedCategories[key]) && $scope.selectedCategories[key].id) {
-          return $this.filterItems(key);
-        }
-
-        $scope.filteredItemsCollection[key] = lodash.filter($scope.masterItemsList, function(item) {
-          var menuItemsList = (lodash.find($scope.menuItemList, {
-            id: item.id
-          }));
-          return !menuItemsList;
-        });
-      });
-
-      $scope.filteredItemsCollectionMaster = lodash.filter($scope.masterItemsList, function(item) {
-        var menuItemsList = (lodash.find($scope.menuItemList, {
-          id: item.id
-        }));
-        return !menuItemsList;
-      });
-
-    };
   });

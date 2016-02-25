@@ -2,7 +2,7 @@
 
 /*global moment*/
 
-describe('Controller: MenuEditCtrl', function() {
+fdescribe('Controller: MenuEditCtrl', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/menu.json', 'served/master-item-list.json', 'served/sales-categories.json'));
@@ -228,7 +228,33 @@ describe('Controller: MenuEditCtrl', function() {
       });
     });
 
+    describe('setAvailableItems', function() {
+      beforeEach(function() {
+        spyOn(scope, 'setAvailableItems');
+      });
+
+      it('should filter available items after one is set', function() {
+
+      });
+    });
+
     describe('Delete items from Menu', function() {
+      beforeEach(function() {
+        spyOn(scope, 'setAvailableItems');
+      });
+
+      it('should call setAvailableItems after deletion', function() {
+        scope.addItem();
+        scope.deleteNewItem();
+        expect(scope.setAvailableItems).toHaveBeenCalled();
+      });
+
+      it('should clear the item after deletion', function() {
+        scope.addItem();
+        scope.deleteNewItem();
+        expect(scope.menuItemList[0]).toBe(null);
+        expect(scope.selectedCategories[0]).toBe(undefined);
+      });
 
     });
 
