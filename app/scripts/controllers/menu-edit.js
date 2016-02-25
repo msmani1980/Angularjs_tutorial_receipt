@@ -182,16 +182,20 @@ angular.module('ts5App')
 
     initializeMenu();
 
+    function filterMasterAgainstCurrentItems(response) {
+      return lodash.filter(response.masterItems, function(item) {
+        var menuItemsList = (lodash.find($scope.menuItemList, {
+          id: item.id
+        }));
+        return !menuItemsList;
+      });
+    }
+
     this.filterItems = function(index) {
       if ($scope.selectedCategories[index]) {
         fetchFilteredItemsList($scope.menu.startDate, $scope.menu.endDate, $scope.selectedCategories[index].id,
           function(response) {
-            $scope.filteredItemsCollection[index] = lodash.filter(response.masterItems, function(item) {
-              var menuItemsList = (lodash.find($scope.menuItemList, {
-                id: item.id
-              }));
-              return !menuItemsList;
-            });
+            $scope.filteredItemsCollection[index] = filterMasterAgainstCurrentItems(response);
           });
 
         if (!$scope.filteredItemsCollection[index]) {
