@@ -230,12 +230,75 @@ fdescribe('Controller: MenuEditCtrl', function() {
 
     describe('setAvailableItems', function() {
       beforeEach(function() {
-        spyOn(scope, 'setAvailableItems');
+        spyOn(scope, 'setAvailableItems').and.callThrough();
       });
 
       it('should filter available items after one is set', function() {
-
+        scope.addItem();
+        scope.menuItemList[0].id = masterItemsResponseJSON.masterItems[0].id;
+        scope.setAvailableItems();
+        scope.menuItemList[1] = masterItemsResponseJSON.masterItems[1];
+        expect(scope.filteredItemsCollection[1].length).toBe(masterItemsResponseJSON.masterItems.length -
+          1);
       });
+
+      it('should filter available and revert to filterItems, return the same length', function() {
+        scope.addItem();
+        scope.menuItemList[0].id = masterItemsResponseJSON.masterItems[0].id;
+        scope.selectedCategories[0] = {
+          id: 1
+        };
+        scope.setAvailableItems();
+        expect(scope.filteredItemsCollection[0].length).toBe(masterItemsResponseJSON.masterItems.length);
+      });
+    });
+
+    describe('shouldDisableItem', function() {
+
+      it('should return true if scope.isMenuEditable is false', function() {
+        expect(scope.shouldDisableItem()).toBeTruthy();
+      });
+
+      it('should return true if isMenuEditable is true and there is no prefilter on category', function() {
+        spyOn(scope, 'isMenuEditable').and.callFake(function() {
+          return true;
+        });
+        scope.menuItemList[0].id = null;
+        scope.filteredItemsCollection[0] = masterItemsResponseJSON.masterItems[0];
+        scope.$digest();
+        expect(scope.shouldDisableItem(0)).toBeTruthy();
+      });
+
+      it('should return false if isMenuEditable is true and nothing is set', function() {
+        spyOn(scope, 'isMenuEditable').and.callFake(function() {
+          return true;
+        });
+        scope.menuItemList[0].id = null;
+        scope.filteredItemsCollection[0] = undefined;
+        expect(scope.shouldDisableItem(0)).toBeFalsy();
+      });
+
+      it('should return true if isMenuEditable is true and filteredItemsCollection[0] is null', function() {
+        spyOn(scope, 'isMenuEditable').and.callFake(function() {
+          return true;
+        });
+        scope.menuItemList[0].id = null;
+        scope.filteredItemsCollection[0] = null;
+        expect(scope.shouldDisableItem(0)).toBeTruthy();
+      });
+
+      it('should return true if scope.isMenuEditable is true and there is a selected category', function() {
+        spyOn(scope, 'isMenuEditable').and.callFake(function() {
+          return true;
+        });
+        scope.addItem();
+        scope.menuItemList[0].id = masterItemsResponseJSON.masterItems[0].id;
+        scope.selectedCategories[0] = {
+          id: 1
+        };
+        expect(scope.shouldDisableItem(0)).toBeFalsy();
+      });
+
     });
 
     describe('Delete items from Menu', function() {
