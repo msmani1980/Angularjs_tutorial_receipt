@@ -291,8 +291,11 @@ angular.module('ts5App')
         return true;
       }
 
-      if (angular.isObject($scope.filteredItemsCollection[index]) && !$scope.filteredItemsCollection[index].length &&
-        !$scope.menuItemList[index]) {
+      if (!$scope.masterItemsList) {
+        return true;
+      }
+
+      if (angular.isObject($scope.filteredItemsCollection[index]) && !$scope.filteredItemsCollection[index].length) {
         return true;
       }
 
