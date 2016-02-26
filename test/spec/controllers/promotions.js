@@ -41,9 +41,6 @@ describe('Controller: PromotionsCtrl', function () {
   var savePromotionDeferred;
   var getPromotionDeferred;
 
-  /**/
-
-  // Initialize the controller and a mock scope
   beforeEach(inject(function ($rootScope, $injector, $q,
                               _servedBenefitTypes_,
                               _servedDiscountTypes_,
@@ -163,10 +160,10 @@ describe('Controller: PromotionsCtrl', function () {
       it('should call promotionsFactory.getMasterItems', function () {
         expect(promotionsFactory.getMasterItems).toHaveBeenCalled();
       });
-      /**/
     });
 
     describe('scope selection options and data arrays', function () {
+
       it('should have companyCurrencyGlobals', function () {
         expect(scope.companyCurrencyGlobals).toBeDefined();
         expect(Object.prototype.toString.call(scope.companyCurrencyGlobals)).toBe('[object Array]');
@@ -178,6 +175,7 @@ describe('Controller: PromotionsCtrl', function () {
       });
 
       describe('selectOptions arrays', function () {
+
         it('should have a property promotionTypes', function () {
           expect(scope.selectOptions.promotionTypes).toBeDefined();
           expect(Object.prototype.toString.call(scope.selectOptions.promotionTypes)).toBe('[object Array]');
@@ -1005,8 +1003,8 @@ describe('Controller: PromotionsCtrl', function () {
         expect(scope.selectOptions.companyDiscountsVoucher).toEqual(jasmine.any(Array));
       });
 
-      it('should set isDisabled to true', function() {
-        expect(scope.isDisabled).toBeTruthy();
+      it('should set isDisabled to false', function() {
+        expect(scope.isDisabled).toBeFalsy();
       });
 
       it('should call save promotion API', function () {
@@ -1067,25 +1065,6 @@ describe('Controller: PromotionsCtrl', function () {
 
       it('should set scope.promotion.id', function () {
         expect(scope.promotion.id).toEqual(253);
-      });
-    });
-
-    describe('edit promition with start date in past', function () {
-      beforeEach(inject(function ($controller) {
-        routeParams = {
-          state: 'edit',
-          id: 343
-        };
-        PromotionsCtrl = $controller('PromotionsCtrl', {
-          $scope: scope,
-          $routeParams: routeParams
-        });
-        scope.promotion.startDate = dateUtility.tomorrowFormatted();
-        scope.$digest();
-      }));
-
-      it('should set isDisabled to true', function() {
-        expect(scope.isDisabled).toBeTruthy();
       });
     });
 
