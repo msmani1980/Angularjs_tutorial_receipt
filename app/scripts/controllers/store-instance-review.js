@@ -722,7 +722,7 @@ angular.module('ts5App')
       }
 
       if ($routeParams.action === 'redispatch') {
-        pickedQuantity = item.pickedQuantity;
+        pickedQuantity = item.dispatchedQuantity;
       }
 
       return (item.menuQuantity !== pickedQuantity) ? 'danger' : '';
