@@ -314,7 +314,7 @@
             </ui-select>
           </div>
           <div class="row" ng-if="promotion.discountType.name === 'Percentage'">
-            <div class="col-xs-12 col-sm-6" ng-if="promotion.benefitDiscountApply.name !== 'Retail Item'">
+            <div class="col-xs-12 col-sm-6" ng-if="showLowestPricedItem()">
               <label class="invisible">Checkbox</label>
                 <div class="form-group">
                   <input type="checkbox"
