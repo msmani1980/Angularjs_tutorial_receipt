@@ -1070,5 +1070,24 @@ describe('Controller: PromotionsCtrl', function () {
       });
     });
 
+    describe('edit promition with start date in past', function () {
+      beforeEach(inject(function ($controller) {
+        routeParams = {
+          state: 'edit',
+          id: 343
+        };
+        PromotionsCtrl = $controller('PromotionsCtrl', {
+          $scope: scope,
+          $routeParams: routeParams
+        });
+        scope.promotion.startDate = dateUtility.tomorrowFormatted();
+        scope.$digest();
+      }));
+
+      it('should set isDisabled to true', function() {
+        expect(scope.isDisabled).toBeTruthy();
+      });
+    });
+
   });
 });
