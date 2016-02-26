@@ -119,6 +119,7 @@ angular.module('ts5App')
         return;
       }
 
+      $localStorage.cashBagBankRefNumber = $scope.cashBag.bankReferenceNumber;
       var formData = cleanPayload(angular.copy($scope.cashBag));
       switch ($routeParams.state) {
         case 'edit':
@@ -238,7 +239,20 @@ angular.module('ts5App')
       return formatAsCurrency(amount);
     }
 
+    $scope.shouldShowBankRefNumberAlert = function () {
+      return ($scope.state === 'edit' && $localStorage.cashBagBankRefNumber && $scope.oldBankRefNumber && $localStorage.cashBagBankRefNumber !== $scope.oldBankRefNumber);
+    };
+
+    function setBankReferenceNumberFromLocalStorage () {
+      var shouldSaveBankRefNumber = ($scope.state !== 'view' && $scope.companyPreferences.defaultBankRefNumber && $scope.companyPreferences.defaultBankRefNumber.isSelected);
+      $scope.oldBankRefNumber = $scope.cashBag.bankReferenceNumber || '';
+      if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber) {
+        $scope.cashBag.bankReferenceNumber = $localStorage.cashBagBankRefNumber;
+      }
+    }
+
     function promisesResponseHandler() {
+      setBankReferenceNumberFromLocalStorage();
       if (angular.isUndefined($scope.dailyExchangeRates) || $scope.dailyExchangeRates.length === 0) {
         showMessage(null, true,
           'no daily exchange rate created for this date! please create one on exchange rates page');
@@ -380,7 +394,8 @@ angular.module('ts5App')
           $scope.companyPreferences = {
             exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type'),
             totalNumberOfCashBags: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate',
-              'Total Number of Cash Bags')
+              'Total Number of Cash Bags'),
+            defaultBankRefNumber: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Default Bank Reference Number')
           };
         })
       );
@@ -406,6 +421,7 @@ angular.module('ts5App')
         storeInstanceId: $routeParams.storeInstanceId,
         cashBagCurrencies: []
       };
+
       $scope.saveButtonName = 'Create';
 
       $q.all(_promises).then(promisesResponseHandler, showMessage);

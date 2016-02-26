@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: deliveryNoteFactory', function () {
+describe('Service: deliveryNoteFactory', function() {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -14,7 +14,7 @@ describe('Service: deliveryNoteFactory', function () {
   var stockManagementStationItemsService;
   var recordsService;
 
-  beforeEach(inject(function (_deliveryNoteFactory_, $injector) {
+  beforeEach(inject(function(_deliveryNoteFactory_, $injector) {
     deliveryNoteFactory = _deliveryNoteFactory_;
     deliveryNotesService = $injector.get('deliveryNotesService');
     catererStationService = $injector.get('catererStationService');
@@ -32,6 +32,7 @@ describe('Service: deliveryNoteFactory', function () {
     spyOn(deliveryNotesService, 'saveDeliveryNote');
     spyOn(catererStationService, 'getAllMenuItems');
     spyOn(recordsService, 'getItemTypes');
+    spyOn(recordsService, 'getCharacteristics');
 
   }));
 
@@ -43,14 +44,19 @@ describe('Service: deliveryNoteFactory', function () {
     });
 
     it('should call createDeliveryNote', function() {
-      var obj = { id: 123 };
+      var obj = {
+        id: 123
+      };
       deliveryNoteFactory.createDeliveryNote(obj);
       obj.isAccepted = false;
       expect(deliveryNotesService.createDeliveryNote).toHaveBeenCalledWith(obj);
     });
 
     it('should call saveDeliveryNote', function() {
-      var obj = { id: 123, isAccepted: true };
+      var obj = {
+        id: 123,
+        isAccepted: true
+      };
       deliveryNoteFactory.saveDeliveryNote(obj);
       expect(deliveryNotesService.saveDeliveryNote).toHaveBeenCalledWith(obj);
     });
@@ -90,6 +96,10 @@ describe('Service: deliveryNoteFactory', function () {
     it('should call getItemTypes', function() {
       deliveryNoteFactory.getItemTypes();
       expect(recordsService.getItemTypes).toHaveBeenCalled();
+    });
+    it('should call getCharacteristics', function() {
+      deliveryNoteFactory.getCharacteristics();
+      expect(recordsService.getCharacteristics).toHaveBeenCalled();
     });
   });
 

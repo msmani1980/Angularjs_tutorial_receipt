@@ -313,7 +313,8 @@ angular.module('ts5App')
 
     var payload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
 
-    currencyFactory.getCompanyPreferences(payload).then(function (companyPreferencesData) {
+    var retailCompanyId = GlobalMenuService.getCompanyData().chCompany.companyId;
+    currencyFactory.getCompanyPreferences(payload, retailCompanyId).then(function (companyPreferencesData) {
       var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
 
       $scope.companyPreferences = {
@@ -321,7 +322,6 @@ angular.module('ts5App')
       };
     });
 
-    var retailCompanyId = GlobalMenuService.getCompanyData().chCompany.companyId;
     currencyFactory.getCompany(retailCompanyId).then(function (companyDataFromAPI) {
       getCompanyBaseCurrency(angular.copy(companyDataFromAPI.baseCurrencyId));
       $scope.company = angular.copy(companyDataFromAPI);

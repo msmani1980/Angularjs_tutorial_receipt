@@ -1,12 +1,12 @@
 'use strict';
 
-describe('Controller: LmpDeliveryNoteCtrl', function () {
+describe('Controller: LmpDeliveryNoteCtrl', function() {
 
   // load the controller's module
   beforeEach(module('ts5App',
-    'served/lmp-delivery-note.json', 'served/catering-stations.json',
-    'served/master-item-list.json',
-    'served/company-reason-codes.json', 'served/items-by-caterer-station-id.json', 'served/item-types.json'));
+    'served/lmp-delivery-note.json', 'served/catering-stations.json', 'served/master-item-list.json',
+    'served/company-reason-codes.json', 'served/items-by-caterer-station-id.json', 'served/item-types.json',
+    'served/characteristics.json'));
 
   var LmpDeliveryNoteCtrl;
   var scope;
@@ -27,14 +27,15 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var getAllMasterItemsResponseJSON;
   var getItemTypesDeferred;
   var getItemTypesResponseJSON;
+  var getItemCharacteristicsDeferred;
+  var getItemCharacteristicsResponseJSON;
   var httpBackend;
   var dateUtility;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($injector, $controller, $httpBackend, $rootScope, $q, _deliveryNoteFactory_,
-                              _servedLmpDeliveryNote_, $location, _servedCateringStations_,
-                              _servedMasterItemList_,
-                              _servedCompanyReasonCodes_, _servedItemsByCatererStationId_, _servedItemTypes_) {
+  beforeEach(inject(function($injector, $controller, $httpBackend, $rootScope, $q, _deliveryNoteFactory_,
+    _servedLmpDeliveryNote_, $location, _servedCateringStations_, _servedMasterItemList_,
+    _servedCompanyReasonCodes_, _servedItemsByCatererStationId_, _servedItemTypes_, _servedCharacteristics_) {
 
     companyId = 403;
     httpBackend = $httpBackend;
@@ -47,6 +48,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     getCompanyReasonCodesResponseJSON = _servedCompanyReasonCodes_;
     getAllMasterItemsResponseJSON = _servedMasterItemList_;
     getItemTypesResponseJSON = _servedItemTypes_;
+    getItemCharacteristicsResponseJSON = _servedCharacteristics_;
 
     dateUtility = $injector.get('dateUtility');
 
@@ -55,14 +57,17 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     spyOn(deliveryNoteFactory, 'getDeliveryNote').and.returnValue(getDeliveryNoteDeferred.promise);
 
     getCatererStationMasterItemsDeferred = $q.defer();
-    spyOn(deliveryNoteFactory, 'getItemsByCateringStationId').and.returnValue(getCatererStationMasterItemsDeferred.promise);
+    spyOn(deliveryNoteFactory, 'getItemsByCateringStationId').and.returnValue(
+      getCatererStationMasterItemsDeferred.promise);
 
     getCompanyReasonCodesDeferred = $q.defer();
     getCompanyReasonCodesDeferred.resolve(getCompanyReasonCodesResponseJSON);
     spyOn(deliveryNoteFactory, 'getCompanyReasonCodes').and.returnValue(getCompanyReasonCodesDeferred.promise);
 
     saveDeferred = $q.defer();
-    saveDeferred.resolve({ id:3 });
+    saveDeferred.resolve({
+      id: 3
+    });
     spyOn(deliveryNoteFactory, 'createDeliveryNote').and.returnValue(saveDeferred.promise);
     spyOn(deliveryNoteFactory, 'saveDeliveryNote').and.returnValue(saveDeferred.promise);
 
@@ -74,16 +79,27 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     getItemTypesDeferred.resolve(getItemTypesResponseJSON);
     spyOn(deliveryNoteFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
 
+    getItemCharacteristicsDeferred = $q.defer();
+    getItemCharacteristicsDeferred.resolve(getItemCharacteristicsResponseJSON);
+    spyOn(deliveryNoteFactory, 'getCharacteristics').and.returnValue(getItemCharacteristicsDeferred.promise);
+
+
   }));
 
   describe('single caterer station on create', function() {
     beforeEach(inject(function($q, $controller) {
       getCateringStationsDeferred = $q.defer();
-      getCateringStationsDeferred.resolve({ response:[{ id:3 }] });
+      getCateringStationsDeferred.resolve({
+        response: [{
+          id: 3
+        }]
+      });
       spyOn(deliveryNoteFactory, 'getCatererStationList').and.returnValue(getCateringStationsDeferred.promise);
       LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
         $scope: scope,
-        $routeParams: { state: 'create' }
+        $routeParams: {
+          state: 'create'
+        }
       });
     }));
 
@@ -93,7 +109,9 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     });
 
     it('should set prevState when toggleReview is called', function() {
-      scope.deliveryNote.items = [{ deliveredQuantity:4 }];
+      scope.deliveryNote.items = [{
+        deliveredQuantity: 4
+      }];
       scope.toggleReview();
       scope.$digest();
       expect(scope.prevState).toBe('create');
@@ -175,13 +193,17 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
       });
 
-      it('should call getItemTypes in factory', function () {
+      it('should call getItemTypes in factory', function() {
         expect(deliveryNoteFactory.getItemTypes).toHaveBeenCalled();
       });
 
-      it('should call getMasterItems with regular item type and start date filter', function () {
+      it('should call getMasterItems with regular item type and start date filter', function() {
         var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-        var expectedPayload = { itemTypeId: 1, startDate: today }; // regular item type id
+        var expectedPayload = {
+          itemTypeId: 1,
+          characteristicId: 1,
+          startDate: today
+        }; // regular item type id
         expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
 
@@ -205,7 +227,9 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         it('should have a save scope function', function() {
           expect(scope.save).toBeDefined();
           expect(Object.prototype.toString.call(scope.save)).toBe('[object Function]');
-          scope.deliveryNote = { isAccepted:true };
+          scope.deliveryNote = {
+            isAccepted: true
+          };
           expect(scope.save()).toBeUndefined();
         });
       });
@@ -251,13 +275,21 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(location.path()).toBe('/');
       });
 
-      it('should call getItemTypes in factory', function () {
+      it('should call getItemTypes in factory', function() {
         expect(deliveryNoteFactory.getItemTypes).toHaveBeenCalled();
       });
 
-      it('should call getMasterItems with regular item type filter', function () {
+      it('should call getCharacteristics in factory', function() {
+        expect(deliveryNoteFactory.getCharacteristics).toHaveBeenCalled();
+      });
+
+      it('should call getMasterItems with regular item type filter', function() {
         var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-        var expectedPayload = { itemTypeId: 1, startDate: today }; // regular item type id
+        var expectedPayload = {
+          itemTypeId: 1,
+          characteristicId: 1,
+          startDate: today
+        }; // regular item type id
         expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
 
@@ -268,23 +300,20 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
             deliveryDate: '08/06/2015',
             deliveryNoteNumber: 'askdjhas78day',
             purchaseOrderNumber: 'ksahd9a8sda8d',
-            items: [
-              {
-                deliveredQuantity: 2,
-                expectedQuantity: 2,
-                itemCode: 'Sk001',
-                itemName: 'Skittles',
-                itemMasterId: 1,
-                ullageQuantity: 1
-              },
-              {
-                deliveredQuantity: 1,
-                expectedQuantity: 1,
-                itemCode: 'SD001',
-                itemName: 'Coke',
-                itemMasterId: 2
-              }
-            ]
+            items: [{
+              deliveredQuantity: 2,
+              expectedQuantity: 2,
+              itemCode: 'Sk001',
+              itemName: 'Skittles',
+              itemMasterId: 1,
+              ullageQuantity: 1
+            }, {
+              deliveredQuantity: 1,
+              expectedQuantity: 1,
+              itemCode: 'SD001',
+              itemName: 'Coke',
+              itemMasterId: 2
+            }]
           };
           scope.save(false);
         });
@@ -296,22 +325,19 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
             deliveryNoteNumber: 'askdjhas78day',
             deliveryDate: '20150806',
             isAccepted: false,
-            items: [
-              {
-                masterItemId: 1,
-                expectedQuantity: 2,
-                deliveredQuantity: 2,
-                ullageQuantity: 1,
-                ullageReason: null
-              },
-              {
-                masterItemId: 2,
-                expectedQuantity: 1,
-                deliveredQuantity: 1,
-                ullageQuantity: 0,
-                ullageReason: null
-              }
-            ]
+            items: [{
+              masterItemId: 1,
+              expectedQuantity: 2,
+              deliveredQuantity: 2,
+              ullageQuantity: 1,
+              ullageReason: null
+            }, {
+              masterItemId: 2,
+              expectedQuantity: 1,
+              deliveredQuantity: 1,
+              ullageQuantity: 0,
+              ullageReason: null
+            }]
           });
           expect(deliveryNoteFactory.createDeliveryNote).toHaveBeenCalledWith(mockedPayload);
         });
@@ -365,13 +391,17 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
       });
 
-      it('should call getItemTypes in factory', function () {
+      it('should call getItemTypes in factory', function() {
         expect(deliveryNoteFactory.getItemTypes).toHaveBeenCalled();
       });
 
-      it('should call getMasterItems with regular item type filter', function () {
+      it('should call getMasterItems with regular item type filter', function() {
         var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-        var expectedPayload = { itemTypeId: 1, startDate: today }; // regular item type id
+        var expectedPayload = {
+          itemTypeId: 1,
+          characteristicId: 1,
+          startDate: today
+        }; // regular item type id
         expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
 
@@ -422,7 +452,9 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       });
 
       it('should switch the state to review when review button is clicked', function() {
-        scope.deliveryNote.items = [{ deliveredQuantity:5 }];
+        scope.deliveryNote.items = [{
+          deliveredQuantity: 5
+        }];
         scope.toggleReview();
         expect(scope.state).toBe('review');
       });
@@ -488,29 +520,46 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
 
         it('should return undefined if in the current delivery note items array', function() {
           scope.deliveryNote = {
-            items: [{ itemMasterId:123 }]
+            items: [{
+              itemMasterId: 123
+            }]
           };
-          expect(scope.addItem({ id:123 })).toBeUndefined();
+          expect(scope.addItem({
+            id: 123
+          })).toBeUndefined();
         });
       });
 
       describe('canRemoveItem scope function', function() {
         it('should return false if item.canEdit is false', function() {
-          expect(scope.canRemoveItem({ canEdit:false })).toBe(false);
+          expect(scope.canRemoveItem({
+            canEdit: false
+          })).toBe(false);
         });
 
         it('should return false if readOnly', function() {
           scope.readOnly = true;
-          expect(scope.canRemoveItem({ canEdit:true })).toBe(false);
+          expect(scope.canRemoveItem({
+            canEdit: true
+          })).toBe(false);
         });
       });
 
       describe('formErrorClass scope function', function() {
         beforeEach(function() {
           scope.form = [];
-          scope.form['Mock Field'] = { $dirty:true, $valid:false };
-          scope.form['Mock Field 2'] = { $dirty:false, $valid:false };
-          scope.form['Mock Field 3'] = { $dirty:true, $valid:true };
+          scope.form['Mock Field'] = {
+            $dirty: true,
+            $valid: false
+          };
+          scope.form['Mock Field 2'] = {
+            $dirty: false,
+            $valid: false
+          };
+          scope.form['Mock Field 3'] = {
+            $dirty: true,
+            $valid: true
+          };
           scope.displayError = true;
           scope.$digest();
         });
@@ -534,7 +583,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
 
       describe('calculateBooked scope function', function() {
         it('should return 7', function() {
-          expect(scope.calculateBooked({ deliveredQuantity:10, ullageQuantity:3 })).toBe(7);
+          expect(scope.calculateBooked({
+            deliveredQuantity: 10,
+            ullageQuantity: 3
+          })).toBe(7);
         });
       });
 
@@ -549,11 +601,16 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
 
       describe('ullageQuantityChanged scope function', function() {
         it('should return undefined if there is a ullageQuantity set', function() {
-          expect(scope.ullageQuantityChanged({ ullageQuantity:2 })).toBeUndefined();
+          expect(scope.ullageQuantityChanged({
+            ullageQuantity: 2
+          })).toBeUndefined();
         });
 
         it('should set ullageReason to null if no ullageQuantity', function() {
-          var item = { ullageQuantity:null, ullageReason:3 };
+          var item = {
+            ullageQuantity: null,
+            ullageReason: 3
+          };
           scope.ullageQuantityChanged(item);
           expect(item.ullageReason).toBeNull();
         });
@@ -591,22 +648,28 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       describe('canEditItem scope function', function() {
         it('should return true if canEdit and state is not review', function() {
           scope.state = 'create';
-          expect(scope.canEditItem({ canEdit:true })).toBe(true);
+          expect(scope.canEditItem({
+            canEdit: true
+          })).toBe(true);
         });
 
         it('should return false if canEdit is false', function() {
           scope.state = 'create';
-          expect(scope.canEditItem({ canEdit:false })).toBe(false);
+          expect(scope.canEditItem({
+            canEdit: false
+          })).toBe(false);
         });
 
         it('should return false if state is review', function() {
           scope.state = 'review';
-          expect(scope.canEditItem({ canEdit:true })).toBe(false);
+          expect(scope.canEditItem({
+            canEdit: true
+          })).toBe(false);
         });
       });
 
       describe('showFilterByForm scope function', function() {
-        it('should return false if state is review', function () {
+        it('should return false if state is review', function() {
           scope.state = 'review';
           expect(scope.showFilterByForm()).toBe(false);
         });
@@ -625,13 +688,19 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
 
         it('should return false if no deliveryNote items array items', function() {
           scope.state = 'create';
-          scope.deliveryNote = { items:[] };
+          scope.deliveryNote = {
+            items: []
+          };
           expect(scope.showFilterByForm()).toBe(false);
         });
 
         it('should return true if deliveryNote has items', function() {
           scope.state = 'create';
-          scope.deliveryNote = { items:[{ id:1 }] };
+          scope.deliveryNote = {
+            items: [{
+              id: 1
+            }]
+          };
           expect(scope.showFilterByForm()).toBe(true);
         });
       });
@@ -649,7 +718,9 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
 
         it('should return false if not readyonly and ullageQuantity set', function() {
           scope.readOnly = false;
-          expect(scope.ullageReasonDisabled({ ullageQuantity:5 })).toBe(false);
+          expect(scope.ullageReasonDisabled({
+            ullageQuantity: 5
+          })).toBe(false);
         });
       });
 
@@ -669,15 +740,23 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         it('should return if form is not valid', function() {
           scope.state = 'edit';
           scope.displayError = false;
-          scope.form = { $valid:false };
-          scope.deliveryNote = { items:[{ deliveredQuantity:1 }] };
+          scope.form = {
+            $valid: false
+          };
+          scope.deliveryNote = {
+            items: [{
+              deliveredQuantity: 1
+            }]
+          };
           expect(scope.toggleReview()).toBeUndefined();
         });
 
         it('should return if deliveryNote is undefined', function() {
           scope.state = 'edit';
           scope.displayError = false;
-          scope.form = { $valid:true };
+          scope.form = {
+            $valid: true
+          };
           scope.deliveryNote = undefined;
           expect(scope.toggleReview()).toBeUndefined();
         });
@@ -685,15 +764,21 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         it('should return if deliveryNote is already accepted', function() {
           scope.state = 'edit';
           scope.displayError = false;
-          scope.form = { $valid:true };
-          scope.deliveryNote = { isAccepted:true };
+          scope.form = {
+            $valid: true
+          };
+          scope.deliveryNote = {
+            isAccepted: true
+          };
           expect(scope.toggleReview()).toBeUndefined();
         });
 
         it('should return if deliveryNote has not items', function() {
           scope.state = 'edit';
           scope.displayError = false;
-          scope.form = { $valid:true };
+          scope.form = {
+            $valid: true
+          };
           scope.deliveryNote = {};
           expect(scope.toggleReview()).toBeUndefined();
         });

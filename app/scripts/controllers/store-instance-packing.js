@@ -421,9 +421,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var isPickList = (itemList === $scope.pickListItems);
       var listToCheck = lodash.sortBy(angular.copy(itemList), 'itemName');
       angular.forEach(listToCheck, function (item, index) {
-        if (item.shouldDisplayOffloadData || !isPickList) {
+        var formField = $scope.storeInstancePackingForm[fieldName + index];
+        if (angular.isDefined(formField) && (item.shouldDisplayOffloadData || !isPickList)) {
           var isValid = (parseInt(item.ullageQuantity) > 0) ? (!!item.ullageReason) : true;
-          $scope.storeInstancePackingForm[fieldName + index].$setValidity('required', isValid);
+          formField.$setValidity('required', isValid);
         }
       });
     };

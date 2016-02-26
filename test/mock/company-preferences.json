@@ -17,6 +17,20 @@
       "choiceId": 2,
       "choiceCode": "BNK",
       "choiceName": "Bank"
+    }, {
+      "id": 31,
+      "companyId": 403,
+      "featureId": 2,
+      "featureCode": "CBG",
+      "featureName": "Cash Bag",
+      "optionId": 5,
+      "optionCode": "BRN",
+      "optionName": "Default Bank Reference Number",
+      "choiceId": 6,
+      "choiceCode": "BRN",
+      "choiceName": "Default Bank Reference Number",
+      "isSelected": true,
+      "startDate": "2016-02-23"
     }
   ]
 }
