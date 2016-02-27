@@ -152,7 +152,13 @@ angular.module('ts5App')
     };
 
     function setupCompanyRelationshipTypeScope(companyRelationshipTypeListFromAPI) {
-      $scope.companyRelationshipTypeList = angular.copy(companyRelationshipTypeListFromAPI.response);
+      $scope.companyRelationshipTypeList = [];
+      angular.forEach(angular.copy(companyRelationshipTypeListFromAPI.response), function (relationshipType) {
+        var newRelationshipType = {};
+        newRelationshipType.companyTypeName = (relationshipType.companyTypeId === $scope.company.companyTypeId) ? relationshipType.relativeCompanyType : relationshipType.companyTypeName;
+        newRelationshipType.companyTypeId = (relationshipType.companyTypeId === $scope.company.companyTypeId) ? relationshipType.relativeCompanyTypeId : relationshipType.companyTypeId;
+        $scope.companyRelationshipTypeList.push(newRelationshipType);
+      });
     }
 
     function setupCompanyRelationshipScope(companyRelationshipsFromAPI) {
@@ -178,7 +184,8 @@ angular.module('ts5App')
     var filterCompanyListByTypesScope = function (companyTypeListFromAPI) {
       var typeIdList = [];
       companyTypeListFromAPI.response.forEach(function (companyType) {
-        typeIdList.push(companyType.relativeCompanyTypeId);
+        var companyTypeToUse = (companyType.companyTypeId === $scope.company.companyTypeId) ? companyType.relativeCompanyTypeId : companyType.companyTypeId;
+        typeIdList.push(companyTypeToUse);
       });
 
       $scope.companyList = $scope.companyList.filter(function (company) {
