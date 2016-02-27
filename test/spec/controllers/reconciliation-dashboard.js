@@ -6,7 +6,7 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
   beforeEach(module('ts5App'));
   beforeEach(module(
     'served/store-status.json',
-    'served/global-stations.json',
+    'served/catering-stations.json',
     'served/store-instance.json',
     'served/reconciliation-dashboard.json'
   ));
@@ -27,12 +27,12 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $q, $location, $injector, _servedStoreStatus_,
-    _servedGlobalStations_, _servedStoreInstance_, _servedReconciliationDashboard_) {
+    _servedCateringStations_, _servedStoreInstance_, _servedReconciliationDashboard_) {
     location = $location;
     scope = $rootScope.$new();
 
     reconciliationFactory = $injector.get('reconciliationFactory');
-    stationsService = $injector.get('stationsService');
+    stationsService = $injector.get('catererStationService');
     controller = $controller;
 
     reconciliationListResponseJSON = _servedReconciliationDashboard_;
@@ -43,7 +43,7 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
     storeStatusDeferred = $q.defer();
     storeStatusDeferred.resolve(storeStatusResponseJSON);
 
-    globalStationsResponseJSON = _servedGlobalStations_;
+    globalStationsResponseJSON = _servedCateringStations_;
     globalStationsDeferred = $q.defer();
     globalStationsDeferred.resolve(globalStationsResponseJSON);
 
@@ -51,7 +51,7 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
 
     spyOn(reconciliationFactory, 'getReconciliationDataList').and.returnValue(reconciliationListDeferred.promise);
     spyOn(reconciliationFactory, 'getStoreStatusList').and.returnValue(storeStatusDeferred.promise);
-    spyOn(stationsService, 'getGlobalStationList').and.returnValue(globalStationsDeferred.promise);
+    spyOn(stationsService, 'getCatererStationList').and.returnValue(globalStationsDeferred.promise);
 
     ReconciliationDashboardCtrl = $controller('ReconciliationDashboardCtrl', {
       $scope: scope
