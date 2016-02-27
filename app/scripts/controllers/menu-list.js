@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuListCtrl', function ($scope, $location, menuService, ngToast, dateUtility, lodash) {
+  .controller('MenuListCtrl', function($scope, $location, menuService, ngToast, dateUtility, lodash) {
     $scope.viewName = 'Menu Management';
     $scope.search = {};
     $scope.modal = null;
@@ -33,7 +33,7 @@ angular.module('ts5App')
 
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
-      angular.forEach(formattedMenuArray, function (menu) {
+      angular.forEach(formattedMenuArray, function(menu) {
         menu.startDate = dateUtility.formatDateForApp(menu.startDate);
         menu.endDate = dateUtility.formatDateForApp(menu.endDate);
       });
@@ -54,18 +54,18 @@ angular.module('ts5App')
       return formattedPayload;
     }
 
-    $scope.showMenu = function (menu) {
+    $scope.showMenu = function(menu) {
       $location.search({});
       $location.path('menu/view/' + menu.id);
     };
 
-    $scope.editMenu = function (menu) {
+    $scope.editMenu = function(menu) {
       $location.search({});
       $location.path('menu/edit/' + menu.id);
     };
 
     var loadingProgress = false;
-    var attachMenuListToScope = function (menuListFromAPI) {
+    var attachMenuListToScope = function(menuListFromAPI) {
       $this.meta.count = $this.meta.count || menuListFromAPI.meta.count;
       var menuList = formatDates(menuListFromAPI.menus);
       $scope.menuList = $scope.menuList.concat(menuList);
@@ -74,6 +74,7 @@ angular.module('ts5App')
     };
 
     var lastStartDate = null;
+
     function searchMenus(startDate) {
       if ($this.meta.offset >= $this.meta.count) {
         return;
@@ -101,7 +102,7 @@ angular.module('ts5App')
       lastStartDate = query.startDate;
     }
 
-    $scope.searchMenus = function () {
+    $scope.searchMenus = function() {
       lastStartDate = null;
       $scope.menuList = [];
       $this.meta = {
@@ -112,13 +113,13 @@ angular.module('ts5App')
       searchMenus();
     };
 
-    $scope.clearForm = function () {
+    $scope.clearForm = function() {
       lastStartDate = dateUtility.nowFormatted('YYYYMMDD');
       $scope.search = {};
       $scope.searchMenus();
     };
 
-    $scope.loadMenus = function () {
+    $scope.loadMenus = function() {
       searchMenus(lastStartDate === null ? dateUtility.nowFormatted('YYYYMMDD') : null);
     };
 
@@ -140,30 +141,30 @@ angular.module('ts5App')
       showToast('success', 'Menu Management', 'successfully deleted menu!');
     }
 
-    $scope.deleteMenu = function () {
+    $scope.deleteMenu = function() {
       angular.element('.delete-warning-modal').modal('hide');
       menuService.deleteMenu($scope.menuToDelete.id).then(successDeleteHandler, showErrors);
     };
 
-    $scope.showExcelDownload = function () {
+    $scope.showExcelDownload = function() {
       $scope.modal = $scope.modals[0];
       angular.element('#addCashBagModal').modal('show');
     };
 
-    $scope.showDeleteConfirmation = function (menuToDelete) {
+    $scope.showDeleteConfirmation = function(menuToDelete) {
       $scope.menuToDelete = menuToDelete;
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    $scope.isMenuEditable = function (menu) {
+    $scope.isMenuEditable = function(menu) {
       if (angular.isUndefined(menu)) {
         return false;
       }
 
-      return dateUtility.isAfterToday(menu.endDate);
+      return dateUtility.isAfterToday(menu.endDate) || dateUtility.isToday(menu.endDate);
     };
 
-    $scope.isMenuReadOnly = function (menu) {
+    $scope.isMenuReadOnly = function(menu) {
       if (angular.isUndefined(menu)) {
         return false;
       }
