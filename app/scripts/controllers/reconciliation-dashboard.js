@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDashboardCtrl', function($q, $scope, dateUtility, stationsService, reconciliationFactory,
+  .controller('ReconciliationDashboardCtrl', function($q, $scope, dateUtility, catererStationService, reconciliationFactory,
     payloadUtility, $location, storeInstanceFactory, lodash) {
 
     var $this = this;
@@ -321,7 +321,7 @@ angular.module('ts5App')
           $scope.allowedStoreStatusMap[item.id] = item;
         });
 
-      stationsService.getGlobalStationList().then($this.setStationList);
+      catererStationService.getCatererStationList().then($this.setStationList);
     };
 
     this.getStoreStatusList = function() {
