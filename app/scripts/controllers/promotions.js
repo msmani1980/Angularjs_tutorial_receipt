@@ -928,4 +928,9 @@ angular.module('ts5App')
       states[initState]();
     };
 
+    $scope.showLowestPricedItem = function() {
+      var discountApply = $scope.promotion.benefitDiscountApply.name;
+      return (discountApply && discountApply !== 'Retail Item');
+    };
+
   });
