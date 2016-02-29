@@ -47,7 +47,6 @@
                 <option selected="selected" value>Select a {{companyObject.type}} Company</option>
               </select>
             </div>
-            {{ cashHandlerRetailCompanyList }}
             <div class="form-group" ng-if="companyObject.type == 'Cash Handler'">
               <label class="sr-only" for="cashHandlerRetail">Retail Company for {{companyObject.type}}</label>
               <select ng-disabled="shouldDisableCHSelect"
