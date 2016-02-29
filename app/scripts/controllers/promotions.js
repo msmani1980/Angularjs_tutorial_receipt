@@ -587,12 +587,21 @@ angular.module('ts5App')
       }
     });
 
-    function handlePromiseSuccessHandler(promotionDataFromAPI) {
-      hideLoadingModal();
+    function setCrudFlags(startDate) {
       $scope.readOnly = ($routeParams.state === 'view');
+      if (angular.isDefined(startDate)) {
+        $scope.isDisabled = ($routeParams.state === 'edit' && !dateUtility.isAfterToday(startDate));
+      }
+    }
+
+    function handlePromiseSuccessHandler(promotionDataFromAPI) {
+      setCrudFlags();
       if (promotionDataFromAPI) {
+        setCrudFlags(angular.copy(promotionDataFromAPI.startDate));
         setScopePromotionForViewFromAPIdata(angular.copy(promotionDataFromAPI));
       }
+
+      hideLoadingModal();
     }
 
     function getPromotionMetaData(promotionDataFromAPI) {
@@ -917,6 +926,11 @@ angular.module('ts5App')
 
       payloadGenerate();
       states[initState]();
+    };
+
+    $scope.showLowestPricedItem = function() {
+      var discountApply = $scope.promotion.benefitDiscountApply.name;
+      return (discountApply && discountApply !== 'Retail Item');
     };
 
   });

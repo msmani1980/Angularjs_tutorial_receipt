@@ -99,7 +99,6 @@
             <textarea class="form-control no-resize" disabled>{{storeDetails.note}}</textarea>
           </div>
 
-
           <table class="table store-instance-review-seals-table">
             <thead>
             <tr>
@@ -116,6 +115,50 @@
             </tr>
             </tbody>
           </table>
+
+          <!--carts, canister and c208 section-->
+          <div class="well seal-type" ng-if="isActionState('replenish')">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="seal-label">Carts, Canisters &amp; C208 Serial Number</div>
+              </div>
+            </div>
+            <div class="row" ng-if="isActionState('replenish')">
+              <div class="col-xs-4">
+                <label>Cart Quantity<span ng-hide="validateField()">*</span>:</label>
+                <input type="number"
+                       max="999"
+                       class="form-control"
+                       ng-model="storeDetails.cartQty"
+                       ng-class="validateField()"
+                       ng-disabled="true"
+                       name="cartQty"
+                       placeholder="Enter Cart quantity"/>
+              </div>
+              <div class="col-xs-4">
+                <label>Canister Quantity <span ng-hide="validateField()">*</span>:</label>
+                <input type="number"
+                       max="999"
+                       class="form-control"
+                       ng-class="validateField()"
+                       ng-model="storeDetails.canisterQty"
+                       ng-disabled="true"
+                       name="canisterQty"
+                       placeholder="Enter Canister quantity"/>
+              </div>
+              <div class="col-xs-4">
+                <label>C208 Serial Number:</label>
+                <input type="number"
+                       max="999999999"
+                       name="c208SerialNo"
+                       class="form-control"
+                      ng-disabled="true"
+                       ng-model="storeDetails.c208SerialNo"
+                       placeholder="Enter C208 Serial Number"/>
+              </div>
+            </div>
+          </div>
+          
         </accordion-group>
       </accordion>
     </div>

@@ -112,7 +112,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="blankItem in menuItemList track by $index">
+      <tr ng-repeat="(key, blankItem) in menuItemList track by $index">
         <td ng-show="isMenuEditable()">
           <ui-select
             name="selectedCategories[$index]"
@@ -122,7 +122,7 @@
             placeholder="Select a category to filter the items list...">
             <ui-select-match
               allow-clear="true"
-              placeholder="Select a category to filter the items list...">{{ $select.selected.name}}
+              placeholder="Select a category to filter the items list...">{{$select.selected.name}}
             </ui-select-match>
             <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
               <div ng-bind-html="category.name | highlight: $select.search"></div>
@@ -136,9 +136,10 @@
             ng-model="menuItemList[$index]"
             theme="bootstrap"
             placeholder="Select or search an item from the list..."
-            ng-disabled="shouldDisableItem($index)">
+            ng-disabled="shouldDisableItem($index)"
+            on-select="setAvailableItems()">
             <ui-select-match
-              placeholder="Select or search an item from the list...">{{ $select.selected.itemName}}
+              placeholder="Select or search an item from the list...">{{$select.selected.itemName}}
             </ui-select-match>
             <ui-select-choices repeat="menuItem in filteredItemsCollection[$index] | filter: $select.search | orderBy:'itemName'">
               <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
