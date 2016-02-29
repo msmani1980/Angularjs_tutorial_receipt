@@ -309,24 +309,10 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       }, $this.showErrors);
     };
 
-    this.cleanEmployees = function(dataFromAPI) {
-      var employeesList = [];
-      angular.forEach(dataFromAPI, function(employee) {
-        var payload = {
-          employeeIdentifier: employee.employeeIdentifier,
-          firstName: employee.firstName,
-          lastName: employee.lastName
-        };
-        employeesList.push(payload);
-      });
-
-      return employeesList;
-    };
-
     this.getEmployees = function() {
       var companyId = GlobalMenuService.company.get();
       return employeeMessagesFactory.getEmployees(companyId).then(function(dataFromAPI) {
-        $scope.employeesList = $this.cleanEmployees(dataFromAPI.companyEmployees);
+        $scope.employeesList = angular.copy(dataFromAPI.companyEmployees);
       }, $this.showErrors);
     };
 
