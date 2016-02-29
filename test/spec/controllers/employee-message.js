@@ -15,7 +15,7 @@ describe('Controller: EmployeeMessageCtrl', function() {
   var employeeMessagesFactory;
 
   var employeeMessageDeferred;
-  var employeeMesssageJSON;
+  var employeeMessageJSON;
   var employeesDeferred;
   var employeesJSON;
   var schedulesDeferred;
@@ -26,7 +26,7 @@ describe('Controller: EmployeeMessageCtrl', function() {
 
   beforeEach(inject(function($q, $controller, $rootScope, $location, $injector) {
     inject(function(_servedEmployees_, _servedSchedules_, _servedGlobalStations_, _servedEmployeeMessage_) {
-      employeeMesssageJSON = _servedEmployeeMessage_;
+      employeeMessageJSON = _servedEmployeeMessage_;
       employeesJSON = _servedEmployees_;
       schedulesJSON = _servedSchedules_;
       stationsJSON = _servedGlobalStations_;
@@ -39,7 +39,7 @@ describe('Controller: EmployeeMessageCtrl', function() {
     controller = $controller;
 
     employeeMessageDeferred = $q.defer();
-    employeeMessageDeferred.resolve(employeeMesssageJSON);
+    employeeMessageDeferred.resolve(employeeMessageJSON);
 
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesJSON);
@@ -146,7 +146,7 @@ describe('Controller: EmployeeMessageCtrl', function() {
       describe('edit init', function() {
         beforeEach(function() {
           initController('edit', 1);
-          var json = employeeMesssageJSON;
+          var json = employeeMessageJSON;
           json.employeeMessage.endDate = dateUtility.formatDateForAPI(dateUtility.tomorrowFormatted());
           employeeMessageDeferred.resolve(json);
           scope.$digest();
@@ -179,7 +179,7 @@ describe('Controller: EmployeeMessageCtrl', function() {
       describe('view init', function() {
         beforeEach(function() {
           initController('view', 1);
-          employeeMessageDeferred.resolve(employeeMesssageJSON);
+          employeeMessageDeferred.resolve(employeeMessageJSON);
           scope.$digest();
         });
 
