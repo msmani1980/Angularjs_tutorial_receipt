@@ -40,30 +40,50 @@ angular.module('ts5App')
     }
 
     function getVarianceQuantity(stockItem) {
-      var eposSales = stockItem.eposQuantity || 0;
-      var lmpDispatchedCount = stockItem.dispatchedQuantity || 0;
-      var lmpReplenishCount = 0;
-      var lmpIncomingCount = stockItem.inboundQuantity || 0;
-      var offloadCount = stockItem.offloadQuantity || 0;
+      var eposSales = getIntOrZero(stockItem.eposQuantity);
+      var lmpDispatchedCount = getIntOrZero(stockItem.dispatchedCount);
+      var lmpReplenishCount = getIntOrZero(stockItem.replenishCount);
+      var lmpIncomingCount = getIntOrZero(stockItem.inboundedCount);
+      var offloadCount = getIntOrZero(stockItem.offloadCount);
+
       return eposSales - ((lmpDispatchedCount + lmpReplenishCount) - (lmpIncomingCount + offloadCount));
+    }
+
+    function getVarianceValue(varianceQuantity, retailPrice) {
+      return makeFinite(varianceQuantity * retailPrice);
+    }
+
+    function getIntOrZero(value) {
+      var result = value || 0;
+
+      return parseInt(result);
     }
 
     function setStockItem(stockItem) {
       var varianceQuantity = getVarianceQuantity(stockItem);
-      var retailValue = stockItem.price || 0;
-      var varianceValue = makeFinite(varianceQuantity * stockItem.price);
+      var retailValue = getIntOrZero(stockItem.price);
+      var varianceValue = getVarianceValue(varianceQuantity, retailValue);
       var isDiscrepancy = (parseInt(varianceQuantity) !== 0);
-      var eposSales = stockItem.eposQuantity || 0;
-      var inboundOffloadCount = stockItem.inboundQuantity || stockItem.offloadQuantity || 0;
+      var dispatchedCount = getIntOrZero(stockItem.dispatchedCount);
+      var replenishCount = getIntOrZero(stockItem.replenishCount);
+      var eposQuantity = getIntOrZero(stockItem.eposQuantity);
+      var inboundOffloadCount = stockItem.inboundedCount || stockItem.offloadCount || 0;
 
       return {
         itemMasterId: stockItem.itemMasterId,
         storeInstanceId: stockItem.storeInstanceId,
+        replenishStoreInstanceId: stockItem.replenishStoreInstanceId,
+        itemId: stockItem.itemId,
         itemName: stockItem.itemName,
-        dispatchedCount: stockItem.dispatchedQuantity,
-        replenishCount: 0,
+        cateringStationId: stockItem.cateringStationId,
+        cciStagId: stockItem.cciStagId,
+        ullageReasonCode: stockItem.ullageReasonCode,
+        dispatchedCount: dispatchedCount,
+        replenishCount: replenishCount,
         inboundOffloadCount: inboundOffloadCount,
-        ePOSSales: eposSales,
+        inboundedCount: stockItem.inboundedCount,
+        offloadCount: stockItem.offloadCount,
+        eposQuantity: eposQuantity,
         varianceQuantity: varianceQuantity,
         retailValue: formatAsCurrency(retailValue),
         varianceValue: formatAsCurrency(varianceValue),
@@ -71,52 +91,18 @@ angular.module('ts5App')
       };
     }
 
-    function mergeItems(itemListFromAPI, rawLMPStockData) {
+    function mergeItems(itemListFromAPI, rawLMPStockData, stockCountsFromAPI) {
       var rawItemList = angular.copy(itemListFromAPI);
+      var rawStockCounts = angular.copy(stockCountsFromAPI);
       var uniqueItemList = lodash.uniq(angular.copy(rawItemList), 'itemMasterId');
 
-      var inboundItemList = rawItemList.filter(function (item) {
-        return item.countTypeId === lodash.findWhere($this.countTypes, {
-            name: 'Warehouse Close'
-          }).id;
-      });
-
-      var dispatchedItemList = rawItemList.filter(function (item) {
-        return item.countTypeId === lodash.findWhere($this.countTypes, {
-            name: 'Warehouse Open'
-          }).id;
-      });
-
-      var offloadItemList = rawItemList.filter(function (item) {
-        return item.countTypeId === lodash.findWhere($this.countTypes, {
-            name: 'Offload'
-          }).id;
-      });
-
       angular.forEach(uniqueItemList, function (item) {
-        item.inboundQuantity = 0;
-        item.dispatchedQuantity = 0;
-        item.offloadQuantity = 0;
-
-        var inboundItem = $filter('filter')(inboundItemList, {
+        var stockCount = $filter('filter')(rawStockCounts, {
           itemMasterId: item.itemMasterId
         }, true);
-        if (inboundItem.length) {
-          item.inboundQuantity = inboundItem[0].quantity;
-        }
 
-        var dispatchedItem = $filter('filter')(dispatchedItemList, {
-          itemMasterId: item.itemMasterId
-        }, true);
-        if (dispatchedItem.length) {
-          item.dispatchedQuantity = dispatchedItem[0].quantity;
-        }
-
-        var offloadItem = $filter('filter')(offloadItemList, {
-          itemMasterId: item.itemMasterId
-        }, true);
-        if (offloadItem.length) {
-          item.offloadQuantity = offloadItem[0].quantity;
+        if (stockCount.length) {
+          angular.merge(item, stockCount[0]);
         }
 
         var lmpStockItem = $filter('filter')(rawLMPStockData, {
@@ -135,9 +121,11 @@ angular.module('ts5App')
     }
 
     function setStockItemList(storeInstanceItemList, rawLMPStockData) {
-      var filteredItems = mergeItems(storeInstanceItemList.response, rawLMPStockData);
-      $scope.stockItemList = lodash.map(filteredItems, setStockItem);
-      initLMPStockRevisions();
+      reconciliationFactory.getStockItemCounts($routeParams.storeInstanceId).then(function (stockCountsFromAPI) {
+        var filteredItems = mergeItems(storeInstanceItemList.response, rawLMPStockData, stockCountsFromAPI.response);
+        $scope.stockItemList = lodash.map(filteredItems, setStockItem);
+        initLMPStockRevisions();
+      });
     }
 
     function showLoadingModal(text) {
@@ -649,6 +637,14 @@ angular.module('ts5App')
       item.isEditing = false;
     };
 
+    $scope.hasReplenishInstance = function(items) {
+      var replenishInstances = items.filter(function (item) {
+        return item.replenishStoreInstanceId !== null;
+      });
+
+      return replenishInstances.length > 0;
+    };
+
     $scope.saveStockItemCounts = function(item) {
       saveStockItemsCounts([item]);
     };
@@ -657,25 +653,61 @@ angular.module('ts5App')
       saveStockItemsCounts($scope.stockItemList);
     };
 
+    function isDefinedAndNotNull(val) {
+      return angular.isDefined(val) && val !== null;
+    }
+
+    function isInboundedDefined(item) {
+      return isDefinedAndNotNull(item.inboundedCount);
+    }
+
     function saveStockItemsCounts(items) {
       var payload = items.map(function (item) {
         var counts = (item.revision) ? item.revision : item;
+        var inboundedCount = 0;
+        var offloadCount = 0;
+
+        if (isInboundedDefined(item)) {
+          inboundedCount = parseInt(counts.inboundOffloadCount);
+        } else {
+          offloadCount = parseInt(counts.inboundOffloadCount);
+        }
+
         return {
-          storeInstanceId: item.storeInstanceId, // TODO: do we need this since instance id is in url anyway
+          storeInstanceId: item.storeInstanceId,
+          replenishStoreInstanceId: item.replenishStoreInstanceId,
           itemMasterId: item.itemMasterId,
           dispatchedCount: parseInt(counts.dispatchedCount),
           replenishCount: parseInt(counts.replenishCount),
-          inboundedCount: parseInt(counts.inboundOffloadCount)
+          inboundedCount: inboundedCount,
+          offloadCount: offloadCount,
+          companyId: item.companyId,
+          itemId: item.itemId,
+          cateringStationId: item.cateringStationId,
+          cciStagId: item.cciStagId,
+          ullageReasonCode: item.ullageReasonCode
         };
       });
 
-      reconciliationFactory.saveStockItemsCounts(payload).then(handleStockItemsCountsSaveSuccess, handleResponseError);
+      reconciliationFactory.saveStockItemsCounts(payload).then(handleStockItemsCountsSaveSuccess(items), handleResponseError);
     }
 
     function handleStockItemsCountsSaveSuccess(items) {
       angular.forEach(items, function (item) {
-        item.revision = {};
+        if (isInboundedDefined(item)) {
+          item.inboundedCount = item.revision.inboundOffloadCount;
+        } else {
+          item.offloadCount = item.revision.inboundOffloadCount;
+        }
+
+        item.dispatchedCount = item.revision.dispatchedCount;
+        item.replenishCount = item.revision.replenishCount;
+        item.inboundOffloadCount = item.revision.inboundOffloadCount;
+        item.varianceQuantity = getVarianceQuantity(item);
+        item.varianceValue = formatAsCurrency(getVarianceValue(item.varianceQuantity, item.retailValue));
         item.isEditing = false;
+        item.revision = {};
+        $scope.editLMPStockTable = false;
       });
     }
 

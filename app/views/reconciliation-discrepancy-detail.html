@@ -402,7 +402,7 @@
                     <span ng-hide="showEditViewForItem(item, true)" class="value stock-discrepancy item dispatchedCount">{{ item.dispatchedCount }}</span>
                   </td>
                   <td>
-                    <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.replenishCount">
+                    <input ng-show="showEditViewForItem(item, true)" ng-disabled="!hasReplenishInstance(stockItemList)" type="text" class="form-control" ng-model="item.revision.replenishCount">
                     <span ng-hide="showEditViewForItem(item, true)" class="value stock-discrepancy item replenishCount">{{ item.replenishCount }}</span>
                   </td>
                   <td>
@@ -410,7 +410,7 @@
                     <span ng-hide="showEditViewForItem(item, true)" class="value stock-discrepancy item inboundOffloadCount">{{ item.inboundOffloadCount }}</span>
                   </td>
                   <td>
-                    <span class="value stock-discrepancy item ePOSSales">{{ item.ePOSSales }}</span>
+                    <span class="value stock-discrepancy item ePOSSales">{{ item.eposQuantity }}</span>
                   </td>
                   <td>
                     <span class="value stock-discrepancy item varianceQuantity">{{ item.varianceQuantity }}</span>

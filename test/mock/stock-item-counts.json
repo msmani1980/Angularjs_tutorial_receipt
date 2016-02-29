@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "count": 4,
+    "limit": 4,
+    "start": 0
+  },
+  "response": [
+    {
+      "storeInstanceId": 431,
+      "replenishStoreInstanceId": 438,
+      "itemMasterId": 69,
+      "dispatchedCount": 2,
+      "replenishCount": 3,
+      "inboundedCount": 4,
+      "offloadCount": null,
+      "eposUpliftCount": null,
+      "companyId": 403,
+      "itemId": 433,
+      "cateringStationId": 3,
+      "cciStagId": null,
+      "ullageReasonCode": null
+    },
+    {
+      "storeInstanceId": 431,
+      "replenishStoreInstanceId": 438,
+      "itemMasterId": 397,
+      "dispatchedCount": null,
+      "replenishCount": 1,
+      "inboundedCount": null,
+      "offloadCount": null,
+      "eposUpliftCount": null,
+      "companyId": 403,
+      "itemId": 811,
+      "cateringStationId": 3,
+      "cciStagId": null,
+      "ullageReasonCode": null
+    },
+    {
+      "storeInstanceId": 431,
+      "replenishStoreInstanceId": 438,
+      "itemMasterId": 57,
+      "dispatchedCount": null,
+      "replenishCount": 2,
+      "inboundedCount": null,
+      "offloadCount": null,
+      "eposUpliftCount": null,
+      "companyId": 403,
+      "itemId": 422,
+      "cateringStationId": 3,
+      "cciStagId": null,
+      "ullageReasonCode": null
+    },
+    {
+      "storeInstanceId": 431,
+      "replenishStoreInstanceId": 438,
+      "itemMasterId": 164,
+      "dispatchedCount": 2,
+      "replenishCount": 3,
+      "inboundedCount": 4,
+      "offloadCount": null,
+      "eposUpliftCount": null,
+      "companyId": 403,
+      "itemId": 535,
+      "cateringStationId": 3,
+      "cciStagId": null,
+      "ullageReasonCode": null
+    }
+  ]
+}

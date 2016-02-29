@@ -128,6 +128,10 @@ angular.module('ts5App')
         return companyPreferencesService.getCompanyPreferences(payload);
       };
 
+      var getStockItemCounts = function (storeInstanceId) {
+        return reconciliationService.getStockItemCounts({ storeInstanceId: storeInstanceId });
+      };
+
       var saveStockItemsCounts = function (payload) {
         return reconciliationService.saveStockItemsCounts(payload);
       };
@@ -153,6 +157,7 @@ angular.module('ts5App')
         getReconciliationPrecheckSchedules: getReconciliationPrecheckSchedules,
         getReconciliationPrecheckCashbags: getReconciliationPrecheckCashbags,
         getCompanyPreferences: getCompanyPreferences,
+        getStockItemCounts: getStockItemCounts,
         saveStockItemsCounts: saveStockItemsCounts
       };
     });

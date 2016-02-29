@@ -51,6 +51,9 @@ angular.module('ts5App')
       getPaymentReport: {
         method: 'GET'
       },
+      getStockItemsCounts: {
+        method: 'GET'
+      },
       saveStockItemsCounts: {
         method: 'PUT'
       }
@@ -133,6 +136,10 @@ angular.module('ts5App')
       return getReconciliationPrecheckCashbagsResource.getReconciliationPrecheckCashbags(payload).$promise;
     };
 
+    var getStockItemCounts = function (payload) {
+      return reconciliationStoreInstanceStockCountsResourceResource.getStockItemsCounts(payload).$promise;
+    };
+
     var saveStockItemsCounts = function (payload) {
       return reconciliationStoreInstanceStockCountsResourceResource.saveStockItemsCounts(payload).$promise;
     };
@@ -150,6 +157,7 @@ angular.module('ts5App')
       getReconciliationPrecheckDevices: getReconciliationPrecheckDevices,
       getReconciliationPrecheckSchedules: getReconciliationPrecheckSchedules,
       getReconciliationPrecheckCashbags: getReconciliationPrecheckCashbags,
+      getStockItemCounts: getStockItemCounts,
       saveStockItemsCounts: saveStockItemsCounts
     };
   });

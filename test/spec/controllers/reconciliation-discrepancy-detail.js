@@ -16,6 +16,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
   beforeEach(module('served/promotion.json'));
   beforeEach(module('served/item.json'));
   beforeEach(module('served/store-status.json'));
+  beforeEach(module('served/stock-item-counts.json'));
 
   var scope;
   var ReconciliationDiscrepancyDetail;
@@ -69,13 +70,17 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
 
   var putSaveStockItemsCountsDeferred;
 
+  var stockItemCountsDeferred;
+  var stockItemCountsJSON;
+
+
   var routeParams;
   var dateUtility;
 
   beforeEach(inject(function($q, $controller, $rootScope, $location, $injector) {
     inject(function(_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
       _servedCountTypes_, _servedStoreInstanceItemList_, _servedPromotion_, _servedItem_,
-      _servedStoreStatus_) {
+      _servedStoreStatus_, _servedStockItemCounts_) {
       storeInstanceJSON = _servedStoreInstance_;
       getPromotionTotalsJSON = _servedPromotionTotals_;
       getStockTotalsJSON = _servedStockTotals_;
@@ -86,6 +91,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
       getItemJSON = _servedItem_;
       getItemJSON = _servedItem_;
       getStoreStatusListJSON = _servedStoreStatus_;
+      stockItemCountsJSON = _servedStockItemCounts_;
     });
 
     inject(function(_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
@@ -170,6 +176,11 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
     spyOn(reconciliationFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
 
     spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
+
+    stockItemCountsDeferred = $q.defer();
+    stockItemCountsDeferred.resolve(stockItemCountsJSON);
+
+    spyOn(reconciliationFactory, 'getStockItemCounts').and.returnValue(stockItemCountsDeferred.promise);
 
     routeParams = {
       storeInstanceId: 'fakeStoreInstanceId'
@@ -380,10 +391,17 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
         it('should call saveStockItemsCounts with new item counts', function() {
           var expectedPayload = [{
             storeInstanceId: 1,
+            replenishStoreInstanceId: undefined,
             itemMasterId: 2,
             dispatchedCount: 30,
             replenishCount: 40,
-            inboundedCount: 50
+            inboundedCount: 0,
+            offloadCount: 50,
+            companyId: undefined,
+            itemId: undefined,
+            cateringStationId: undefined,
+            cciStagId: undefined,
+            ullageReasonCode: undefined
           }];
           expect(reconciliationFactory.saveStockItemsCounts).toHaveBeenCalledWith(expectedPayload);
         });
