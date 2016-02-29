@@ -136,6 +136,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getFormattedOperationalDaysPayload = function() {
       var start = dateUtility.getOperationalDay($scope.formData.scheduleDate);
+      if (start === 0) {
+        start = 1;
+      }
+
       return encodeURI([start, 7]);
     };
 
