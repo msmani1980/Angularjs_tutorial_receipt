@@ -47,6 +47,7 @@
                 <option selected="selected" value>Select a {{companyObject.type}} Company</option>
               </select>
             </div>
+            {{ cashHandlerRetailCompanyList }}
             <div class="form-group" ng-if="companyObject.type == 'Cash Handler'">
               <label class="sr-only" for="cashHandlerRetail">Retail Company for {{companyObject.type}}</label>
               <select ng-disabled="shouldDisableCHSelect"
@@ -55,7 +56,7 @@
                       name="cashHandlerRetail"
                       ng-change="selectCHRetailCompany(companyObject.type)"
                       ng-model="pickedCompany[companyObject.type].chCompany"
-                      ng-options="company.companyName for company in cashHandlerRetailCompanyList | filter:{companyTypeName: 'Retail'} | orderBy: 'companyName'">
+                      ng-options="company.displayCompanyName for company in cashHandlerRetailCompanyList | orderBy: 'displayCompanyName'">
                 <option selected="selected" value>Select a Retail Company for {{companyObject.type}}</option>
               </select>
             </div>
