@@ -1025,13 +1025,19 @@ describe('Store Instance Create Controller', function() {
       expect(StoreInstanceCreateCtrl.getFormattedOperationalDaysPayload).toHaveBeenCalled();
     });
 
+    it('should call return a query object and encodeURI and change 0 to 1', function() {
+      $scope.formData.scheduleDate = '02/29/2016';
+      $scope.$digest();
+      var queryControl = '1,7';
+      expect(StoreInstanceCreateCtrl.getFormattedOperationalDaysPayload()).toEqual(queryControl);
+    });
+
     it('should call return a query object and encodeURI', function() {
       $scope.formData.scheduleDate = '10/01/2015';
       $scope.$digest();
       var queryControl = '4,7';
       expect(StoreInstanceCreateCtrl.getFormattedOperationalDaysPayload()).toEqual(queryControl);
     });
-
 
   });
 
