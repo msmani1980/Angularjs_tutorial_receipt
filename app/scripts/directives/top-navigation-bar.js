@@ -28,15 +28,16 @@ angular.module('ts5App')
 
       function setRetailForCHModel(companyListFromAPI) {
         var retailCompanyList = lodash.findWhere($scope.userCompanies, { type: 'Retail' });
-        if (!retailCompanyList) {
-          $scope.cashHandlerRetailCompanyList = angular.copy(companyListFromAPI.companyRelationships);
-          return;
+        var selectedCompanyName = $scope.pickedCompany['Cash Handler'].companyName;
+        if (!retailCompanyList || !selectedCompanyName) {
+          return [];
         }
 
         $scope.cashHandlerRetailCompanyList = lodash.filter(angular.copy(companyListFromAPI.companyRelationships), function (company) {
-          return lodash.findIndex(retailCompanyList.companies, { companyName: company.companyName }) >= 0;
+          company.displayCompanyName = (company.companyName === selectedCompanyName) ? company.relativeCompany : company.companyName;
+          company.displayCompanyType = (company.companyName === selectedCompanyName) ? company.relativeCompanyType : company.companyTypeName;
+          return lodash.findIndex(retailCompanyList.companies, { companyName: company.displayCompanyName }) >= 0 && company.displayCompanyType === 'Retail';
         });
-
       }
 
       $scope.selectCHRetailCompany = function (companyType) {
