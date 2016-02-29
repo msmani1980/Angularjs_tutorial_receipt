@@ -8,17 +8,17 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('EmployeeMessageCtrl',
-  function ($scope, employeeMessagesFactory, GlobalMenuService,
-            lodash, dateUtility, $q, $routeParams, $location) {
+  function($scope, employeeMessagesFactory, GlobalMenuService,
+    lodash, dateUtility, $q, $routeParams, $location) {
 
     var $this = this;
     var dataInitialized = false;
 
-    this.showLoadingModal = function (text) {
+    this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     };
 
-    this.hideLoadingModal = function () {
+    this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
     };
 
@@ -28,8 +28,10 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       $scope.errorResponse = dataFromAPI;
     };
 
-    this.getAttributeByIdFromArray = function (id, attribute, array) {
-      var objectMatch = lodash.findWhere(array, { id: id });
+    this.getAttributeByIdFromArray = function(id, attribute, array) {
+      var objectMatch = lodash.findWhere(array, {
+        id: id
+      });
       if (objectMatch) {
         return objectMatch[attribute];
       }
@@ -37,9 +39,9 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return '';
     };
 
-    this.filterList = function (selectedList, masterList, optionalMatchCriteria) {
+    this.filterList = function(selectedList, masterList, optionalMatchCriteria) {
       var matchAttribute = optionalMatchCriteria || 'id';
-      return lodash.filter(masterList, function (record) {
+      return lodash.filter(masterList, function(record) {
         var matchCriteria = {};
         matchCriteria[matchAttribute] = record[matchAttribute];
         var recordMatch = (lodash.findWhere(selectedList, matchCriteria));
@@ -47,18 +49,22 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       });
     };
 
-    this.filterListsByName = function (listName) {
-      var listsToFilter = (listName === 'all') ? ['employees', 'schedules', 'departureStations', 'arrivalStations'] : [listName];
-      angular.forEach(listsToFilter, function (list) {
-        var scopeArrayName = (list === 'departureStations' || list === 'arrivalStations') ? 'stationsList' : (list + 'List');
+    this.filterListsByName = function(listName) {
+      var listsToFilter = (listName === 'all') ? ['employees', 'schedules', 'departureStations', 'arrivalStations'] : [
+        listName
+      ];
+      angular.forEach(listsToFilter, function(list) {
+        var scopeArrayName = (list === 'departureStations' || list === 'arrivalStations') ? 'stationsList' : (
+          list + 'List');
         var optionalMatchCriteria = (list === 'schedules') ? 'scheduleNumber' : null;
         var filteredArrayName = 'filtered' + lodash.capitalize(list);
 
-        $scope[filteredArrayName] = $this.filterList($scope.employeeMessage[list], $scope[scopeArrayName], optionalMatchCriteria);
+        $scope[filteredArrayName] = $this.filterList($scope.employeeMessage[list], $scope[scopeArrayName],
+          optionalMatchCriteria);
       });
     };
 
-    this.formatArrayForAPIWithAttributes = function (array, attributeToSave) {
+    this.formatArrayForAPIWithAttributes = function(array, attributeToSave) {
       var newArray = [];
       angular.forEach(array, function(record) {
         var newRecord = {};
@@ -73,7 +79,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return newArray;
     };
 
-    this.formatStationsArrayForAPI = function (stationsArray) {
+    this.formatStationsArrayForAPI = function(stationsArray) {
       var newStationsArray = [];
       angular.forEach(stationsArray, function(station) {
         newStationsArray.push(station.id);
@@ -82,26 +88,29 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return newStationsArray;
     };
 
-    this.formatPayload = function () {
+    this.formatPayload = function() {
       var formData = angular.copy($scope.employeeMessage);
       var payload = {};
       payload.employeeMessageText = formData.employeeMessageText;
       payload.startDate = dateUtility.formatDateForAPI(formData.startDate);
       payload.endDate = dateUtility.formatDateForAPI(formData.endDate);
-      payload.employeeMessageArrivalStations =  $this.formatStationsArrayForAPI(formData.arrivalStations);
+      payload.employeeMessageArrivalStations = $this.formatStationsArrayForAPI(formData.arrivalStations);
       payload.employeeMessageDepartureStations = $this.formatStationsArrayForAPI(formData.departureStations);
       payload.employeeMessageSchedules = $this.formatArrayForAPIWithAttributes(formData.schedules, 'scheduleNumber');
-      payload.employeeMessageEmployeeIdentifiers = $this.formatArrayForAPIWithAttributes(formData.employees, 'employeeIdentifier');
+      payload.employeeMessageEmployeeIdentifiers = $this.formatArrayForAPIWithAttributes(formData.employees,
+        'employeeIdentifier');
 
-      return { employeeMessage: payload };
+      return {
+        employeeMessage: payload
+      };
     };
 
-    $this.saveSuccess = function () {
+    $this.saveSuccess = function() {
       $this.hideLoadingModal();
       $location.path('employee-messages');
     };
 
-    $scope.save = function () {
+    $scope.save = function() {
       var payload = $this.formatPayload();
       $this.showLoadingModal('Saving data...');
       if ($routeParams.action === 'edit') {
@@ -111,7 +120,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       }
     };
 
-    $scope.shouldDisable = function (isFieldDisabledInActiveRecord) {
+    $scope.shouldDisable = function(isFieldDisabledInActiveRecord) {
       if (isFieldDisabledInActiveRecord) {
         return $scope.readOnly || $scope.shouldDisableActiveFields();
       }
@@ -119,7 +128,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return $scope.readOnly;
     };
 
-    $scope.shouldDisableActiveFields = function () {
+    $scope.shouldDisableActiveFields = function() {
       if (!dataInitialized) {
         return false;
       }
@@ -132,22 +141,25 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return ($routeParams.action === 'edit' && isRecordActive);
     };
 
-    $scope.getPropertiesForDeletedButton = function (listName, attribute) {
+    $scope.getPropertiesForDeletedButton = function(listName, attribute) {
       var canDelete = false;
       if ($scope.employeeMessage) {
-        angular.forEach($scope.employeeMessage[listName], function (record) {
+        angular.forEach($scope.employeeMessage[listName], function(record) {
           canDelete = canDelete || record.selectedToDelete;
         });
       }
 
-      var properties = (canDelete) ? { disabled: false, button: 'btn btn-xs btn-danger' } : {
+      var properties = (canDelete) ? {
+        disabled: false,
+        button: 'btn btn-xs btn-danger'
+      } : {
         disabled: true,
         button: 'btn btn-xs btn-default'
       };
       return properties[attribute];
     };
 
-    $scope.selectAllToAdd = function (toggleFlag, listName) {
+    $scope.selectAllToAdd = function(toggleFlag, listName) {
       var listNameToFilteredListMap = {
         schedules: $scope.filteredSchedules,
         employees: $scope.filteredEmployees,
@@ -157,20 +169,20 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
       $scope.newRecords[listName] = [];
       if (toggleFlag) {
-        angular.forEach(listNameToFilteredListMap[listName], function (record) {
+        angular.forEach(listNameToFilteredListMap[listName], function(record) {
           $scope.newRecords[listName].push(record);
         });
       }
     };
 
-    $scope.toggleSelectAll = function (toggleFlag, listName) {
-      angular.forEach($scope.employeeMessage[listName], function (record) {
+    $scope.toggleSelectAll = function(toggleFlag, listName) {
+      angular.forEach($scope.employeeMessage[listName], function(record) {
         record.selectedToDelete = toggleFlag;
       });
     };
 
-    $scope.removeItems = function (listName) {
-      $scope.employeeMessage[listName] = lodash.filter($scope.employeeMessage[listName], function (record) {
+    $scope.removeItems = function(listName) {
+      $scope.employeeMessage[listName] = lodash.filter($scope.employeeMessage[listName], function(record) {
         return !record.selectedToDelete;
       });
 
@@ -178,10 +190,10 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       $this.filterListsByName(listName);
     };
 
-    this.addNewRecordsToArrayWithAttributes = function (existingArray, newArray, attributesToSave) {
-      angular.forEach(newArray, function (record) {
+    this.addNewRecordsToArrayWithAttributes = function(existingArray, newArray, attributesToSave) {
+      angular.forEach(newArray, function(record) {
         var newRecord = {};
-        angular.forEach(attributesToSave, function (attribute) {
+        angular.forEach(attributesToSave, function(attribute) {
           newRecord[attribute] = record[attribute];
         });
 
@@ -189,7 +201,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       });
     };
 
-    $scope.addNewItem = function (categoryName) {
+    $scope.addNewItem = function(categoryName) {
       var categoryToAttributesMap = {
         schedules: ['scheduleNumber'],
         employees: ['employeeIdentifier', 'firstName', 'lastName', 'id'],
@@ -197,19 +209,24 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         departureStations: ['code', 'name', 'id']
       };
 
-      $this.addNewRecordsToArrayWithAttributes($scope.employeeMessage[categoryName], $scope.newRecords[categoryName], categoryToAttributesMap[categoryName]);
+      $this.addNewRecordsToArrayWithAttributes($scope.employeeMessage[categoryName], $scope.newRecords[categoryName],
+        categoryToAttributesMap[categoryName]);
       $scope.newRecords[categoryName] = [];
       $scope[categoryName + 'AddAll'] = false;
       $this.filterListsByName(categoryName);
     };
 
-    this.createNewRecordWithMatchingAttributes = function (record, arrayToCheck, attributeToMatch, attributesToSaveArray) {
+    this.createNewRecordWithMatchingAttributes = function(record, arrayToCheck, attributeToMatch,
+      attributesToSaveArray) {
       var matchCriteria = {};
       matchCriteria[attributeToMatch] = record[attributeToMatch];
       var recordMatch = lodash.findWhere(arrayToCheck, matchCriteria);
       if (recordMatch) {
-        var newRecord = { recordId: record.id, id: recordMatch.id };
-        angular.forEach(attributesToSaveArray, function (attribute) {
+        var newRecord = {
+          recordId: record.id,
+          id: recordMatch.id
+        };
+        angular.forEach(attributesToSaveArray, function(attribute) {
           newRecord[attribute] = recordMatch[attribute];
         });
 
@@ -219,43 +236,51 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return {};
     };
 
-    this.reformatEmployeeMessageArray = function (arrayToReformat, arrayToCheck, attributeToMatch, attributesToSaveArray) {
+    this.reformatEmployeeMessageArray = function(arrayToReformat, arrayToCheck, attributeToMatch,
+      attributesToSaveArray) {
       var newArray = [];
-      angular.forEach(arrayToReformat, function (record) {
-        var newRecord = $this.createNewRecordWithMatchingAttributes(record, arrayToCheck, attributeToMatch, attributesToSaveArray);
+      angular.forEach(arrayToReformat, function(record) {
+        var newRecord = $this.createNewRecordWithMatchingAttributes(record, arrayToCheck, attributeToMatch,
+          attributesToSaveArray);
         newArray.push(newRecord);
       });
 
       return newArray;
     };
 
-    this.reformatEmployeeMessageStation = function (arrayToReformat) {
+    this.reformatEmployeeMessageStation = function(arrayToReformat) {
       var stationArray = [];
-      angular.forEach(arrayToReformat, function (stationId) {
+      angular.forEach(arrayToReformat, function(stationId) {
         var stationCode = $this.getAttributeByIdFromArray(stationId, 'code', $scope.stationsList);
         var stationName = $this.getAttributeByIdFromArray(stationId, 'name', $scope.stationsList);
-        stationArray.push({ id: stationId, code: stationCode, name: stationName });
+        stationArray.push({
+          id: stationId,
+          code: stationCode,
+          name: stationName
+        });
       });
 
       return stationArray;
     };
 
-    this.formatEmployeeMessageForApp = function (dataFromAPI) {
+    this.formatEmployeeMessageForApp = function(dataFromAPI) {
       var employeeMessage = angular.copy(dataFromAPI.employeeMessage);
       employeeMessage.startDate = dateUtility.formatDateForApp(employeeMessage.startDate);
       employeeMessage.endDate = dateUtility.formatDateForApp(employeeMessage.endDate);
 
       employeeMessage.arrivalStations = $this.reformatEmployeeMessageStation(employeeMessage.employeeMessageArrivalStations);
       employeeMessage.departureStations = $this.reformatEmployeeMessageStation(employeeMessage.employeeMessageDepartureStations);
-      employeeMessage.employees = $this.reformatEmployeeMessageArray(employeeMessage.employeeMessageEmployeeIdentifiers, $scope.employeesList, 'employeeIdentifier', ['employeeIdentifier', 'firstName', 'lastName']);
-      employeeMessage.schedules = $this.reformatEmployeeMessageArray(employeeMessage.employeeMessageSchedules, $scope.schedulesList, 'scheduleNumber', ['scheduleNumber']);
+      employeeMessage.employees = $this.reformatEmployeeMessageArray(employeeMessage.employeeMessageEmployeeIdentifiers,
+        $scope.employeesList, 'employeeIdentifier', ['employeeIdentifier', 'firstName', 'lastName']);
+      employeeMessage.schedules = $this.reformatEmployeeMessageArray(employeeMessage.employeeMessageSchedules,
+        $scope.schedulesList, 'scheduleNumber', ['scheduleNumber']);
 
       return employeeMessage;
     };
 
-    this.getEmployeeMessageSuccess = function (dataFromAPI) {
+    this.getEmployeeMessageSuccess = function(dataFromAPI) {
       $scope.employeeMessage = $this.formatEmployeeMessageForApp(dataFromAPI);
-      var isRecordActiveOrFuture =  dateUtility.isAfterToday($scope.employeeMessage.endDate);
+      var isRecordActiveOrFuture = dateUtility.isAfterToday($scope.employeeMessage.endDate);
       if (isRecordActiveOrFuture) {
         $this.filterListsByName('all');
       } else {
@@ -265,42 +290,62 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       $this.hideLoadingModal();
     };
 
-    this.getEmployeeMessage = function () {
+    this.getEmployeeMessage = function() {
       $this.showLoadingModal('Loading Employee Message');
-      return employeeMessagesFactory.getEmployeeMessage($routeParams.id).then($this.getEmployeeMessageSuccess, $this.showErrors);
+      return employeeMessagesFactory.getEmployeeMessage($routeParams.id).then($this.getEmployeeMessageSuccess,
+        $this.showErrors);
     };
 
-    this.getSchedules = function () {
+    this.getSchedules = function() {
       var companyId = GlobalMenuService.company.get();
-      return employeeMessagesFactory.getSchedules(companyId).then(function (dataFromAPI) {
+      return employeeMessagesFactory.getSchedules(companyId).then(function(dataFromAPI) {
         $scope.schedulesList = angular.copy(dataFromAPI.distinctSchedules);
       }, $this.showErrors);
     };
 
-    this.getStations = function () {
-      return employeeMessagesFactory.getStations().then(function (dataFromAPI) {
+    this.getStations = function() {
+      return employeeMessagesFactory.getStations().then(function(dataFromAPI) {
         $scope.stationsList = angular.copy(dataFromAPI.response);
       }, $this.showErrors);
     };
 
-    this.getEmployees = function () {
+    this.cleanEmployees = function(dataFromAPI) {
+      var employeesList = [];
+      angular.forEach(dataFromAPI, function(employee) {
+        var payload = {
+          employeeIdentifier: employee.employeeIdentifier,
+          firstName: employee.firstName,
+          lastName: employee.lastName
+        };
+        employeesList.push(payload);
+      });
+
+      return employeesList;
+    };
+
+    this.getEmployees = function() {
       var companyId = GlobalMenuService.company.get();
-      return employeeMessagesFactory.getEmployees(companyId).then(function (dataFromAPI) {
-        $scope.employeesList = angular.copy(dataFromAPI.companyEmployees);
+      return employeeMessagesFactory.getEmployees(companyId).then(function(dataFromAPI) {
+        $scope.employeesList = $this.cleanEmployees(dataFromAPI.companyEmployees);
       }, $this.showErrors);
     };
 
-    this.initEmployeeMessage = function () {
+    this.initEmployeeMessage = function() {
       if ($routeParams.action !== 'create') {
         $this.getEmployeeMessage();
       } else {
-        $scope.employeeMessage = { employees: [], schedules: [], arrivalStations: [], departureStations: [] };
+        $scope.employeeMessage = {
+          employees: [],
+          schedules: [],
+          arrivalStations: [],
+          departureStations: []
+        };
         $this.hideLoadingModal();
         $this.filterListsByName('all');
       }
     };
 
-    this.initApiDependencies = function () {
+    this.initApiDependencies = function() {
       return [
         $this.getSchedules(),
         $this.getStations(),
@@ -308,7 +353,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       ];
     };
 
-    this.initScopeDependencies = function () {
+    this.initScopeDependencies = function() {
       $scope.readOnly = $routeParams.action === 'view';
       $scope.newRecords = {};
 
@@ -320,11 +365,11 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       $scope.viewName = actionToViewNameMap[$routeParams.action];
     };
 
-    this.init = function () {
+    this.init = function() {
       $this.showLoadingModal('Loading page dependencies');
       $this.initScopeDependencies();
       var initPromises = $this.initApiDependencies();
-      $q.all(initPromises).then(function () {
+      $q.all(initPromises).then(function() {
         $this.initEmployeeMessage();
         dataInitialized = true;
       });
