@@ -10,6 +10,36 @@
       "relativeCompanyType": "Cash Handler",
       "startDate": "2015-05-09",
       "endDate": "2050-01-01"
+    }, {
+      "id": 17,
+      "companyId": 362,
+      "companyName": "ICE Gatwick",
+      "companyTypeName": "Cash Handler",
+      "relativeCompanyId": 438,
+      "relativeCompany": "easyJet",
+      "relativeCompanyType": "Retail",
+      "startDate": "2015-05-09",
+      "endDate": "2050-01-01"
+    }, {
+      "id": 18,
+      "companyId": 362,
+      "companyName": "ICE Gatwick",
+      "companyTypeName": "Cash Handler",
+      "relativeCompanyId": 306,
+      "relativeCompany": "EGS",
+      "relativeCompanyType": "Retail",
+      "startDate": "2015-05-09",
+      "endDate": "2050-01-01"
+    }, {
+      "id": 19,
+      "companyId": 362,
+      "companyName": "ICE Gatwick",
+      "companyTypeName": "Cash Handler",
+      "relativeCompanyId": 403,
+      "relativeCompany": "British Airways",
+      "relativeCompanyType": "Cash Handler",
+      "startDate": "2015-05-09",
+      "endDate": "2050-01-01"
     }
   ],
   "meta": {
