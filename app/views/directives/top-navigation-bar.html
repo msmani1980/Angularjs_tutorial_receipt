@@ -1,30 +1,23 @@
 <nav class="navbar navbar-ts5 navbar-default navbar-fixed-top ts5-logo">
   <div class="container-fluid">
-    <div ng-if="isAuthorized" class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-              aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="fa fa-bars"></span>
-      </button>
+    <div ng-if="isAuthorized">
       <a class="navbar-brand" ng-href="/#/">
-        <i class="fa fa-home"></i><span class="hidden-xs"> {{selectedCompany.companyName}}<em ng-if="selectedCompany.chCompany"> | {{selectedCompany.chCompany.companyName}}</em></span>
+        <i class="fa fa-home"></i><span class="hidden-xs"> {{selectedCompany.companyName}}<em ng-if="selectedCompany.chCompany"> |
+        {{selectedCompany.chCompany.companyName}}</em></span>
       </a>
+      <div class="pull-right settings-navbar">
+        <a data-toggle="modal" data-target="#userSettingsModal" type="button" class="settings-btn btn btn-default btn-lg" aria-label="Left Align" title="User Settings"
+           data-backdrop="static" data-keyboard="false">
+          <span class="fa fa-user" aria-hidden="true"></span>
+        </a>
+        <a ng-click="logout()" type="button" class="logout-btn btn btn-default btn-lg" aria-label="Left Align" title="logout">
+          <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+        </a>
+      </div>
     </div>
-    <div ng-if="isAuthorized" id="navbar-buttons" class="navbar-collapse collapse pull-right">
-      <ul class="nav navbar-nav">
-        <li>
-          <a data-toggle="modal" data-target="#userSettingsModal" type="button" class="settings-btn btn btn-default btn-lg" aria-label="Left Align" title="User Settings" data-backdrop="static" data-keyboard="false">
-            <span class="fa fa-user" aria-hidden="true"></span>
-          </a>
-        </li>
-        <li>
-          <a ng-click="logout()" type="button" class="logout-btn btn btn-default btn-lg" aria-label="Left Align" title="logout">
-            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-          </a>
-        </li>
-      </ul>
-    </div>
+
   </div>
+
 </nav>
 
 <div class="modal fade" tabindex="-1" id="userSettingsModal">
@@ -69,7 +62,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" ng-click="closeModal()" >Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
         <button type="button" class="btn btn-success" ng-click="setSelectedCompany()" ng-disabled="shouldDisableChangeCompany">Save</button>
       </div>
     </div>

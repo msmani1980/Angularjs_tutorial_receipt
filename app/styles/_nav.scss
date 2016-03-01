@@ -9,7 +9,7 @@ html .navbar, .navbar-fixed-top {
 
 .navbar {
   z-index: 1001;
-  border: 0px;
+  border: 0;
 }
 
 .nav-tabs a:focus, .nav-tabs a.focus, .nav-tabs a:active:focus, .nav-tabs a:active.focus, .nav-tabs.active a:focus, .nav-tabs a.active.focus, body a:focus {
@@ -42,19 +42,31 @@ a.navbar-brand {
   }
 }
 
+.settings-navbar {
+  a {
+    background: none;
+    border: none;
+    color: #fff;
+    &:hover {
+      background: none;
+      color: #7cc143;
+    }
+  }
+}
+
 #left-navigation {
 
   .navbar {
     position: fixed;
-    left: 0px;
+    left: 0;
     top: 56px;
-    bottom: 0px;
+    bottom: 0;
     width: 56px;
     height: 100%;
     z-index: 1000;
-    padding: 0px;
+    padding: 0;
     border-top: 3px solid #28A4DD;
-    border-radius: 0px;
+    border-radius: 0;
     box-shadow: none;
     background: #555B5C;
 
@@ -67,7 +79,7 @@ a.navbar-brand {
       width: 56px;
       height: 56px;
       list-style: none;
-      left: 0px;
+      left: 0;
       margin-top: 10px;
       margin-bottom: 20px;
       text-align: center;
@@ -84,7 +96,7 @@ a.navbar-brand {
       width: 56px;
       height: 56px;
       list-style: none;
-      left: 0px;
+      left: 0;
       margin-top: 10px;
       margin-bottom: 20px;
       text-align: center;
@@ -108,7 +120,7 @@ a.navbar-brand {
       position: relative;
       top: -48px;
       border-radius: 5px;
-      left: 0px;
+      left: 0;
       text-align: left;
       overflow: hidden;
       -webkit-transition: all .2s ease-in-out;
@@ -152,7 +164,7 @@ a.navbar-brand {
       font-size: 42px;
       color: #BBB;
       margin: 3px 6px;
-      padding: 0px;
+      padding: 0;
       opacity: 1;
     }
 
