@@ -441,25 +441,6 @@ describe('Controller: EmployeeMessageCtrl', function() {
       });
     });
 
-    describe('toggle selected to add', function() {
-      beforeEach(function() {
-        initController('edit', 1);
-        scope.$digest();
-      });
-
-      it('should add all items if flag is true', function() {
-        scope.selectAllToAdd(true, 'employees');
-        scope.$digest();
-        expect(scope.newRecords.employees.length > 0).toEqual(true);
-      });
-
-      it('should empty newRecords to add if flag is false', function() {
-        scope.selectAllToAdd(false, 'employees');
-        scope.$digest();
-        expect(scope.newRecords.employees.length).toEqual(0);
-      });
-    });
-
     describe('show delete button', function() {
       it('should not show delete if view is readOnly', function() {
         initController('view', 1);
