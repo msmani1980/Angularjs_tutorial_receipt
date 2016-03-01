@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CurrencyEditCtrl', function ($scope, currencyFactory, GlobalMenuService, dateUtility, payloadUtility, ngToast) {
+  .controller('CurrencyEditCtrl', function ($scope, currencyFactory, globalMenuService, dateUtility, payloadUtility, ngToast) {
     var $this = this;
     $scope.viewName = 'Retail Company Currency & Denomination Setup';
     $scope.search = {};
@@ -74,7 +74,7 @@ angular.module('ts5App')
     };
 
     this.getCompanyBaseCurrency = function () {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
         $scope.companyBaseCurrency = $this.getCurrencyByBaseCurrencyId($scope.globalCurrencyList, companyDataFromAPI.baseCurrencyId);
       });
@@ -230,7 +230,7 @@ angular.module('ts5App')
       for (var i = 0; i < totalRowsToAdd; i++) {
         $scope.companyCurrencyList.push({
           isNew: true,
-          companyId: GlobalMenuService.company.get(),
+          companyId: globalMenuService.company.get(),
           startDate: dateUtility.tomorrowFormatted(),
           endDate: dateUtility.tomorrowFormatted(),
           selectedDenominations: [],

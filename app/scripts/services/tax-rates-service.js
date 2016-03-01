@@ -8,13 +8,13 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('taxRatesService', function($resource, ENV, GlobalMenuService) {
+  .service('taxRatesService', function($resource, ENV, globalMenuService) {
 
     var requestURL = ENV.apiUrl + '/api/companies/:companyId/tax-rates/:id';
 
     var requestParameters = {
       id: '@id',
-      companyId: GlobalMenuService.company.get()
+      companyId: globalMenuService.company.get()
     };
 
     var actions = {

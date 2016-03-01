@@ -9,31 +9,31 @@
  */
 angular.module('ts5App')
   .factory('taxRatesFactory', function(taxRateTypesService, taxTypesService, countriesService, stationsService,
-    currenciesService, taxRatesService, GlobalMenuService) {
+    currenciesService, taxRatesService, globalMenuService) {
 
     var getTaxTypesList = function() {
       var payload = {};
-      payload.companyId = GlobalMenuService.company.get();
+      payload.companyId = globalMenuService.company.get();
       return taxTypesService.getTaxTypesList(payload);
     };
 
     var getTaxRateTypes = function() {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       return taxRateTypesService.getTaxRateTypes(companyId);
     };
 
     var getCountriesList = function() {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       return countriesService.getCountriesList(companyId);
     };
 
     var getStationsList = function() {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       return stationsService.getStationList(companyId, 0);
     };
 
     var getCompanyCurrencies = function() {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       return currenciesService.getCompanyCurrencies(companyId);
     };
 

@@ -24,7 +24,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
   var location;
   var reconciliationFactory;
   var storeInstanceFactory;
-  var GlobalMenuService;
+  var globalMenuService;
 
   var getStoreInstanceDetailsDeferred;
   var storeInstanceJSON;
@@ -104,7 +104,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
     scope = $rootScope.$new();
     reconciliationFactory = $injector.get('reconciliationFactory');
     storeInstanceFactory = $injector.get('storeInstanceFactory');
-    GlobalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
     dateUtility = $injector.get('dateUtility');
     controller = $controller;
 
@@ -175,7 +175,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
     getCompanyPreferencesDeferred.resolve(getCompanyPreferencesJSON);
     spyOn(reconciliationFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
 
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
+    spyOn(globalMenuService.company, 'get').and.returnValue(666);
 
     stockItemCountsDeferred = $q.defer();
     stockItemCountsDeferred.resolve(stockItemCountsJSON);

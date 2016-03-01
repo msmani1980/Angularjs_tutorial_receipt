@@ -9,10 +9,10 @@
  */
 angular.module('ts5App')
   .factory('cashBagFactory',
-  function (cashBagService, GlobalMenuService, stationsService, schedulesService, companyService, currenciesService, dailyExchangeRatesService, companyPreferencesService,
+  function (cashBagService, globalMenuService, stationsService, schedulesService, companyService, currenciesService, dailyExchangeRatesService, companyPreferencesService,
             companyStoresService, storeInstanceService) {
     var getCompanyId = function () {
-      return GlobalMenuService.getCompanyData().chCompany.companyId;
+      return globalMenuService.getCompanyData().chCompany.companyId;
     };
 
     var getCashBagList = function (id, optionalPayload) {

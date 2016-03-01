@@ -7,7 +7,7 @@
  * # missingDailyExchangeModal
  */
 angular.module('ts5App')
-  .directive('missingDailyExchangeModal', function (cashBagFactory, GlobalMenuService, dateUtility) {
+  .directive('missingDailyExchangeModal', function (cashBagFactory, globalMenuService, dateUtility) {
 
     function getExchangeRateHandler(dataFromAPI) {
       if (!dataFromAPI.dailyExchangeRates || dataFromAPI.dailyExchangeRates.length === 0) {
@@ -16,7 +16,7 @@ angular.module('ts5App')
     }
 
     function checkForDailyExchangeRate() {
-      var companyId = GlobalMenuService.getCompanyData().chCompany.companyId;
+      var companyId = globalMenuService.getCompanyData().chCompany.companyId;
       var dailyExchangeDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
 
       cashBagFactory.getDailyExchangeRates(companyId, dailyExchangeDate).then(getExchangeRateHandler, getExchangeRateHandler);

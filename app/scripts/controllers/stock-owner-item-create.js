@@ -10,7 +10,7 @@
 angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
     currencyFactory,
-    $routeParams, GlobalMenuService, $q, dateUtility) {
+    $routeParams, globalMenuService, $q, dateUtility) {
 
     var $this = this;
     $scope.formData = {
@@ -85,7 +85,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     };
 
     this.validateItemCompany = function(data) {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       return data.retailItem.companyId === companyId;
     };
 
@@ -378,7 +378,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     };
 
     this.makeDependencyPromises = function() {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       return [
         companiesFactory.getSalesCategoriesList(),
         companiesFactory.getTagsList(),

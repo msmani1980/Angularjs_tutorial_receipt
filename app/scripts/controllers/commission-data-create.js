@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash, ngToast,
-                                              $location, employeesService, GlobalMenuService, $q) {
+                                              $location, employeesService, globalMenuService, $q) {
 
     var $this = this;
     var percentTypeName = 'Percentage';
@@ -173,7 +173,7 @@ angular.module('ts5App')
     };
 
     this.getCrewBaseList = function () {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       return employeesService.getEmployees(companyId);
     };
 
@@ -243,7 +243,7 @@ angular.module('ts5App')
     };
 
     this.init = function () {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       $this.showLoadingModal();
       $this.setViewName();
       $scope.readOnly = ($routeParams.state === 'view');

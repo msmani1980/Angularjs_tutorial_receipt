@@ -12,7 +12,7 @@ describe('Controller: MainCtrl', function () {
   var identityAccessService;
   var featuresInRoleJSON;
   var featuresInRoleDeferred;
-  var GlobalMenuService;
+  var globalMenuService;
   var identityAccessFactory;
   var mainMenuService;
   var companyJSON;
@@ -26,14 +26,14 @@ describe('Controller: MainCtrl', function () {
       featuresInRoleJSON = _servedFeaturesInRole_;
     });
 
-    GlobalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
     identityAccessFactory = $injector.get('identityAccessFactory');
     mainMenuService = $injector.get('mainMenuService');
 
     companyJSON = $injector.get('servedCompany');
     companyTypesJSON = $injector.get('servedCompanyTypes');
 
-    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue(companyJSON);
+    spyOn(globalMenuService, 'getCompanyData').and.returnValue(companyJSON);
     spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({ companyTypes: companyTypesJSON });
 
     featuresInRoleDeferred = $q.defer();

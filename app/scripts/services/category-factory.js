@@ -8,10 +8,10 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('categoryFactory', function (GlobalMenuService, categoryService, lodash) {
+  .factory('categoryFactory', function (globalMenuService, categoryService, lodash) {
 
     var getCompanyId = function () {
-      return GlobalMenuService.company.get();
+      return globalMenuService.company.get();
     };
 
     var getCategoryList = function (payload) {

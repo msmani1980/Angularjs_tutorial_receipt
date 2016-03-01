@@ -9,8 +9,8 @@
 angular.module('ts5App')
   .directive('dynamicLeftNav', function () {
 
-    var dynamicLeftNavController = function ($scope, $location, $window, $filter, mainMenuService, GlobalMenuService, identityAccessFactory, lodash) {
-      var companyTypeId = GlobalMenuService.getCompanyData().companyTypeId;
+    var dynamicLeftNavController = function ($scope, $location, $window, $filter, mainMenuService, globalMenuService, identityAccessFactory, lodash) {
+      var companyTypeId = globalMenuService.getCompanyData().companyTypeId;
       var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
       var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
 

@@ -11,7 +11,7 @@ describe('Directive: dynamicLeftNav', function () {
   var scope;
   var controller;
   var location;
-  var GlobalMenuService;
+  var globalMenuService;
   var identityAccessFactory;
   var mainMenuService;
   var companyJSON;
@@ -20,14 +20,14 @@ describe('Directive: dynamicLeftNav', function () {
   beforeEach(inject(function (_$rootScope_, _$location_, $injector, $compile) {
     scope = _$rootScope_;
     location = _$location_;
-    GlobalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
     identityAccessFactory = $injector.get('identityAccessFactory');
     mainMenuService = $injector.get('mainMenuService');
 
     companyJSON = $injector.get('servedCompany');
     companyTypesJSON = $injector.get('servedCompanyTypes');
 
-    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue(companyJSON);
+    spyOn(globalMenuService, 'getCompanyData').and.returnValue(companyJSON);
     spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({ companyTypes: companyTypesJSON });
 
     element = angular.element('<dynamic-left-nav></dynamic-left-nav>');
@@ -67,7 +67,7 @@ describe('Directive: dynamicLeftNav', function () {
       var companyCHJSON = angular.copy(companyJSON);
       companyCHJSON.companyTypeId = 5;
 
-      GlobalMenuService.getCompanyData.and.returnValue(companyCHJSON);
+      globalMenuService.getCompanyData.and.returnValue(companyCHJSON);
       identityAccessFactory.getSessionObject.and.returnValue({ companyTypes: companyTypesJSON });
 
       element = angular.element('<dynamic-left-nav title="Cash Management"></dynamic-left-nav>');
@@ -98,7 +98,7 @@ describe('Directive: dynamicLeftNav', function () {
     beforeEach(inject(function ($compile) {
       var companyCHJSON = angular.copy(companyJSON);
       companyCHJSON.companyTypeId = 5;
-      GlobalMenuService.getCompanyData.and.returnValue(companyCHJSON);
+      globalMenuService.getCompanyData.and.returnValue(companyCHJSON);
       identityAccessFactory.getSessionObject.and.returnValue({ companyTypes: companyTypesJSON });
       element = angular.element('<dynamic-left-nav></dynamic-left-nav>');
       element = $compile(element)(scope);

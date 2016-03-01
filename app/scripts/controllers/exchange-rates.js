@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q, ngToast, dateUtility, lodash) {
+  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, globalMenuService, $q, ngToast, dateUtility, lodash) {
 
     $scope.viewName = 'Daily Exchange Rates';
     $scope.cashiersDateField = dateUtility.nowFormatted();
@@ -131,7 +131,7 @@ angular.module('ts5App')
     }
 
     $scope.$watch('cashiersDateField', function (cashiersDate) {
-      var companyId = GlobalMenuService.getCompanyData().chCompany.companyId;
+      var companyId = globalMenuService.getCompanyData().chCompany.companyId;
       if (!moment(cashiersDate, 'L', true).isValid()) {
         return;
       }
@@ -313,7 +313,7 @@ angular.module('ts5App')
 
     var payload = { featureName: 'Exchange Rate', optionName: 'Exchange Rate Type', startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
 
-    var retailCompanyId = GlobalMenuService.getCompanyData().chCompany.companyId;
+    var retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
     currencyFactory.getCompanyPreferences(payload, retailCompanyId).then(function (companyPreferencesData) {
       var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
 
@@ -327,7 +327,7 @@ angular.module('ts5App')
       $scope.company = angular.copy(companyDataFromAPI);
     });
 
-    var chCompanyId = GlobalMenuService.getCompanyData().id;
+    var chCompanyId = globalMenuService.getCompanyData().id;
     currencyFactory.getCompany(chCompanyId).then(function (companyDataFromAPI) {
       getCashHandlerBaseCurrency(angular.copy(companyDataFromAPI.baseCurrencyId));
       $scope.cashHandlerCompany = angular.copy(companyDataFromAPI);

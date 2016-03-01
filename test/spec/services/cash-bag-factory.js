@@ -8,7 +8,7 @@ describe('Factory: cashBagFactory', function () {
   // instantiate service
   var cashBagFactory;
   var cashBagService;
-  var GlobalMenuService;
+  var globalMenuService;
   var stationsService;
   var schedulesService;
   var rootScope;
@@ -22,7 +22,7 @@ describe('Factory: cashBagFactory', function () {
 
   beforeEach(inject(function ($rootScope, $injector) {
     cashBagService = $injector.get('cashBagService');
-    GlobalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
     stationsService = $injector.get('stationsService');
     schedulesService = $injector.get('schedulesService');
     companyService = $injector.get('companyService');
@@ -33,7 +33,7 @@ describe('Factory: cashBagFactory', function () {
     storeInstanceService = $injector.get('storeInstanceService');
 
     spyOn(cashBagService, 'getCashBagList');
-    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue({ chCompany: { companyId: 403 } });
+    spyOn(globalMenuService, 'getCompanyData').and.returnValue({ chCompany: { companyId: 403 } });
     spyOn(stationsService, 'getStationList');
     spyOn(schedulesService, 'getSchedules');
     spyOn(schedulesService, 'getDailySchedules');
@@ -134,10 +134,10 @@ describe('Factory: cashBagFactory', function () {
     });
   });
 
-  describe('GlobalMenuService API', function () {
+  describe('globalMenuService API', function () {
     it('should call globalMenuService on company.get', function () {
       cashBagFactory.getCompanyId();
-      expect(GlobalMenuService.getCompanyData).toHaveBeenCalled();
+      expect(globalMenuService.getCompanyData).toHaveBeenCalled();
     });
   });
 

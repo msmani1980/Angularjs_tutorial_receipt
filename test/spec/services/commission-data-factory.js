@@ -12,7 +12,7 @@ describe('Factory: commissionFactory', function () {
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _commissionFactory_, _commissionDataService_, _recordsService_, _GlobalMenuService_, _companyService_, _currenciesService_) {
+  beforeEach(inject(function ($rootScope, _commissionFactory_, _commissionDataService_, _recordsService_, _globalMenuService_, _companyService_, _currenciesService_) {
     commissionDataService = _commissionDataService_;
     recordsService = _recordsService_;
     companyService = _companyService_;

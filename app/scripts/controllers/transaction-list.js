@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TransactionListCtrl', function ($scope, $q, transactionFactory, recordsService, currencyFactory, stationsService, companyCcTypesService, GlobalMenuService, dateUtility, payloadUtility) {
+  .controller('TransactionListCtrl', function ($scope, $q, transactionFactory, recordsService, currencyFactory, stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility) {
     var $this = this;
 
     $scope.viewName = 'Transactions';
@@ -235,7 +235,7 @@ angular.module('ts5App')
     }
 
     function getCreditCardTypes() {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       companyCcTypesService.getCCtypes(companyId).then(setCreditCardTypes);
     }
 

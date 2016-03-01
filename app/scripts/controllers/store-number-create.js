@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreNumberCreateCtrl', function ($scope, $location, $filter, $anchorScroll, companyStoresService, GlobalMenuService, ngToast, dateUtility, lodash) {
+  .controller('StoreNumberCreateCtrl', function ($scope, $location, $filter, $anchorScroll, companyStoresService, globalMenuService, ngToast, dateUtility, lodash) {
 
     var $this = this;
     this.meta = {
@@ -95,7 +95,7 @@ angular.module('ts5App')
     }
 
     function init() {
-      companyId = GlobalMenuService.company.get();
+      companyId = globalMenuService.company.get();
       $scope.viewName = 'Create Store Number';
       $scope.submitText = 'Create';
       $scope.formData = angular.copy(companyDefault);
@@ -110,7 +110,7 @@ angular.module('ts5App')
       }
 
       var payload = {
-        companyId: GlobalMenuService.company.get(),
+        companyId: globalMenuService.company.get(),
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
         limit: $this.meta.limit,
         offset: $this.meta.offset

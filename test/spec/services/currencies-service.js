@@ -21,7 +21,7 @@ describe('Service: currenciesService', function () {
   var detailedCurrenciesCreateRequestHandler;
   var detailedCurrenciesUpdateRequestHandler;
   var currencyDetailRequestHandler;
-  var GlobalMenuService;
+  var globalMenuService;
 
   beforeEach(inject(function (_currenciesService_, $injector) {
     inject(function (_servedCurrencies_, _servedCurrency_, _servedCompanyCurrencyGlobals_) {
@@ -31,8 +31,8 @@ describe('Service: currenciesService', function () {
     });
 
     servedCompanyDataJSON = $injector.get('servedCompanyData');
-    GlobalMenuService = $injector.get('GlobalMenuService');
-    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue(servedCompanyDataJSON);
+    globalMenuService = $injector.get('globalMenuService');
+    spyOn(globalMenuService, 'getCompanyData').and.returnValue(servedCompanyDataJSON);
 
     $httpBackend = $injector.get('$httpBackend');
     masterCurrenciesRequestHandler = $httpBackend.whenGET(/api\/currencies/).respond(currenciesJSON);

@@ -8,7 +8,7 @@ describe('Factory: postTripFactory', function () {
   // instantiate service
   var postTripFactory,
     postTripService,
-    GlobalMenuService,
+    globalMenuService,
     stationsService,
     carrierService,
     employeesService,
@@ -16,8 +16,8 @@ describe('Factory: postTripFactory', function () {
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _postTripFactory_, _GlobalMenuService_, _stationsService_, _carrierService_, _postTripService_, _employeesService_, _schedulesService_) {
-    GlobalMenuService = _GlobalMenuService_;
+  beforeEach(inject(function ($rootScope, _postTripFactory_, _globalMenuService_, _stationsService_, _carrierService_, _postTripService_, _employeesService_, _schedulesService_) {
+    globalMenuService = _globalMenuService_;
     stationsService = _stationsService_;
     carrierService = _carrierService_;
     postTripService = _postTripService_;
@@ -30,7 +30,7 @@ describe('Factory: postTripFactory', function () {
     spyOn(postTripService, 'deletePostTrip');
     spyOn(postTripService, 'getPostTrip');
     spyOn(postTripService, 'importFromExcel');
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
+    spyOn(globalMenuService.company, 'get').and.returnValue(403);
     spyOn(stationsService, 'getStationList');
     spyOn(carrierService, 'getCarrierTypes');
     spyOn(carrierService, 'getCarrierNumbers');
@@ -92,10 +92,10 @@ describe('Factory: postTripFactory', function () {
     });
   });
 
-  describe('GlobalMenuService API', function () {
+  describe('globalMenuService API', function () {
     it('should call globalMenuService on company.get', function () {
       postTripFactory.getCompanyId();
-      expect(GlobalMenuService.company.get).toHaveBeenCalled();
+      expect(globalMenuService.company.get).toHaveBeenCalled();
     });
   });
 

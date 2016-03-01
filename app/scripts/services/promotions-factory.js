@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('promotionsFactory', function (itemsService, recordsService, GlobalMenuService, stationsService,
+  .service('promotionsFactory', function (itemsService, recordsService, globalMenuService, stationsService,
                                           companyDiscountService, salesCategoriesService, currenciesService,
                                           promotionCategoriesService, promotionsService) {
 
@@ -25,7 +25,7 @@ angular.module('ts5App')
     }
 
     function getCompanyId() {
-      return GlobalMenuService.company.get();
+      return globalMenuService.company.get();
     }
 
     function getPromotionTypes() {

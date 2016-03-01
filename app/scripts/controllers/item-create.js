@@ -8,7 +8,7 @@
  */
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, GlobalMenuService, $q, dateUtility, $filter) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter) {
 
     var $this = this;
     $scope.formData = {
@@ -77,7 +77,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.validateItemCompany = function(data) {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       return data.retailItem.companyId === companyId;
     };
 

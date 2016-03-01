@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('EmployeeMessageCtrl',
-  function ($scope, employeeMessagesFactory, GlobalMenuService,
+  function ($scope, employeeMessagesFactory, globalMenuService,
             lodash, dateUtility, $q, $routeParams, $location) {
 
     var $this = this;
@@ -255,7 +255,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     this.getSchedules = function () {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       return employeeMessagesFactory.getSchedules(companyId).then(function (dataFromAPI) {
         $scope.schedulesList = angular.copy(dataFromAPI.distinctSchedules);
       }, $this.showErrors);
@@ -268,7 +268,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     this.getEmployees = function () {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       return employeeMessagesFactory.getEmployees(companyId).then(function (dataFromAPI) {
         $scope.employeesList = angular.copy(dataFromAPI.companyEmployees);
       }, $this.showErrors);

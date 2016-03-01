@@ -18,7 +18,7 @@ describe('Service: taxRatesFactory', function() {
 
     taxRatesFactory = _taxRatesFactory_;
 
-    globalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
     taxRateTypesService = $injector.get('taxRateTypesService');
     taxTypesService = $injector.get('taxTypesService');
     countriesService = $injector.get('countriesService');

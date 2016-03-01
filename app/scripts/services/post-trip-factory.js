@@ -8,9 +8,9 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('postTripFactory', function (GlobalMenuService, stationsService, carrierService, postTripService, employeesService, schedulesService) {
+  .factory('postTripFactory', function (globalMenuService, stationsService, carrierService, postTripService, employeesService, schedulesService) {
     var getCompanyId = function () {
-      return GlobalMenuService.company.get();
+      return globalMenuService.company.get();
     };
 
     var getPostTripDataList = function (id, payload) {

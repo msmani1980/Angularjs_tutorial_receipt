@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, $route, ngToast,
-                                                           reconciliationFactory, currencyFactory, storeInstanceFactory, GlobalMenuService, dateUtility, lodash) {
+                                                           reconciliationFactory, currencyFactory, storeInstanceFactory, globalMenuService, dateUtility, lodash) {
 
     var $this = this;
 
@@ -459,7 +459,7 @@ angular.module('ts5App')
     }
 
     function initData() {
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       var promiseArray = [
         reconciliationFactory.getItemTypesList(),
         reconciliationFactory.getCountTypes(),

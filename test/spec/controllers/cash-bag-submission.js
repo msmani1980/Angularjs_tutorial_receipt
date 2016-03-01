@@ -13,7 +13,7 @@ describe('Controller: CashBagSubmissionCtrl', function () {
   var CashBagSubmissionCtrl;
   var scope;
   var cashBagFactory;
-  var GlobalMenuService;
+  var globalMenuService;
   var servedCompanyDataJSON;
   var getCompanyDeferred;
   var getCompanyJSON;
@@ -30,8 +30,8 @@ describe('Controller: CashBagSubmissionCtrl', function () {
     cashBagFactory = $injector.get('cashBagFactory');
 
     servedCompanyDataJSON = $injector.get('servedCompanyData');
-    GlobalMenuService = $injector.get('GlobalMenuService');
-    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue(servedCompanyDataJSON);
+    globalMenuService = $injector.get('globalMenuService');
+    spyOn(globalMenuService, 'getCompanyData').and.returnValue(servedCompanyDataJSON);
 
     getCompanyDeferred = $q.defer();
     getCompanyJSON = $injector.get('servedCompany');

@@ -8,10 +8,10 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('currenciesService', function ($q, $resource, GlobalMenuService, ENV) {
+  .service('currenciesService', function ($q, $resource, globalMenuService, ENV) {
 
     var getCompanyId = function () {
-      var companyData = GlobalMenuService.getCompanyData();
+      var companyData = globalMenuService.getCompanyData();
       if (companyData.chCompany && companyData.chCompany.companyId) {
         return companyData.chCompany.companyId;
       }

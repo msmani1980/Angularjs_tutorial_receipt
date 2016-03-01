@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
   function($scope, $routeParams, $q, storeInstanceFactory, sealTypesService, storeInstanceAssignSealsFactory, ngToast,
-    dateUtility, GlobalMenuService, storeInstanceWizardConfig, $location, schedulesService,
+    dateUtility, globalMenuService, storeInstanceWizardConfig, $location, schedulesService,
     menuCatererStationsService, lodash, $route, $filter, $localStorage) {
 
     $scope.cateringStationList = [];
@@ -230,7 +230,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getCarrierNumbers = function() {
-      var companyId = GlobalMenuService.getCompanyData().companyId;
+      var companyId = globalMenuService.getCompanyData().companyId;
       return storeInstanceFactory.getAllCarrierNumbers(companyId).then($this.setCarrierNumbers);
     };
 
@@ -1152,7 +1152,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getScheduleNumbers = function() {
-      var companyId = GlobalMenuService.getCompanyData().companyId;
+      var companyId = globalMenuService.getCompanyData().companyId;
       var datesForApi = $this.getFormattedDatesPayload();
       var operationalDays = this.getFormattedOperationalDaysPayload();
       schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate,

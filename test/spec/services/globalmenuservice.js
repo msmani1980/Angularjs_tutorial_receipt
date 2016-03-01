@@ -1,14 +1,14 @@
 'use strict';
 
-describe('Service: GlobalMenuService', function () {
+describe('Service: globalMenuService', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
 
   // instantiate service
-  var GlobalMenuService;
-  beforeEach(inject(function (_GlobalMenuService_) {
-    GlobalMenuService = _GlobalMenuService_;
+  var globalMenuService;
+  beforeEach(inject(function (_globalMenuService_) {
+    globalMenuService = _globalMenuService_;
   }));
 
 });

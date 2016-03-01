@@ -9,21 +9,21 @@ describe('Service: menuFactory', function () {
   var menuFactory,
     menuService,
     itemsService,
-    GlobalMenuService,
+    globalMenuService,
     salesCategoriesService;
 
   beforeEach(inject(function (_menuFactory_, $injector) {
 
     menuService = $injector.get('menuService');
     itemsService = $injector.get('itemsService');
-    GlobalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
     salesCategoriesService = $injector.get('salesCategoriesService');
 
     spyOn(menuService, 'getMenu').and.stub();
     spyOn(menuService, 'updateMenu').and.stub();
     spyOn(menuService, 'createMenu').and.stub();
     spyOn(itemsService, 'getItemsList').and.stub();
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
+    spyOn(globalMenuService.company, 'get').and.returnValue(403);
     spyOn(salesCategoriesService, 'getSalesCategoriesList').and.stub();
 
     menuFactory = _menuFactory_;
@@ -77,9 +77,9 @@ describe('Service: menuFactory', function () {
       expect(itemsService.getItemsList).toHaveBeenCalledWith(reformattedPayload, true);
     });
 
-    it('should call GlobalMenuService.company.get with a payload and a flag to get items from master list', function () {
+    it('should call globalMenuService.company.get with a payload and a flag to get items from master list', function () {
       menuFactory.getCompanyId();
-      expect(GlobalMenuService.company.get).toHaveBeenCalled();
+      expect(globalMenuService.company.get).toHaveBeenCalled();
     });
 
     it('should call salesCategoriesService.getSalesCategoriesList with a payload to get a categories list', function () {
