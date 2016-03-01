@@ -197,23 +197,23 @@ describe('Controller: CashBagListCtrl', function() {
       it('should not call getStoreInstanceList if no fields selected', function() {
         scope.findStoreInstance();
         expect(cashBagFactory.getStoreInstanceList).not.toHaveBeenCalled();
-        expect(scope.displayModalError).toBe(true);
+        expect(scope.displayModalError).toBe(false);
       });
 
       it('should not call getStoreInstanceList if only date is selected', function() {
-        scope.scheduleDate = '06/15/2015';
+        scope.search.scheduleDate = '06/15/2015';
         scope.findStoreInstance();
-        expect(cashBagFactory.getStoreInstanceList).not.toHaveBeenCalled();
-        expect(scope.displayModalError).toBe(true);
+        expect(cashBagFactory.getStoreInstanceList).toHaveBeenCalled();
+        expect(scope.displayModalError).toBe(false);
       });
 
       it('should call getStoreInstanceList with date and schedule number', function() {
-        scope.scheduleDate = '06/15/2015';
+        scope.search.scheduleDate = '06/15/2015';
         scope.search.selectedSchedule = {
           scheduleNumber: '0008'
         };
         var expectedPayload = {
-          scheduleDate: dateUtility.formatDateForAPI(scope.scheduleDate),
+          scheduleDate: dateUtility.formatDateForAPI(scope.search.scheduleDate),
           scheduleNumber: scope.search.selectedSchedule.scheduleNumber
         };
 
@@ -224,13 +224,13 @@ describe('Controller: CashBagListCtrl', function() {
       });
 
       it('should call getStoreInstanceList with date and store number', function() {
-        scope.scheduleDate = '06/15/2015';
+        scope.search.scheduleDate = '06/15/2015';
         scope.search.selectedStoreNumber = {
           id: 'store001'
         };
 
         var expectedPayload = {
-          scheduleDate: dateUtility.formatDateForAPI(scope.scheduleDate),
+          scheduleDate: dateUtility.formatDateForAPI(scope.search.scheduleDate),
           storeId: scope.search.selectedStoreNumber.id
         };
 
@@ -246,8 +246,8 @@ describe('Controller: CashBagListCtrl', function() {
       var expectedScheduleDate;
 
       beforeEach(function() {
-        scope.scheduleDate = '06/15/2015';
-        expectedScheduleDate = dateUtility.formatDateForAPI(scope.scheduleDate);
+        scope.search.scheduleDate = '06/15/2015';
+        expectedScheduleDate = dateUtility.formatDateForAPI(scope.search.scheduleDate);
         scope.$digest();
       });
 
@@ -348,12 +348,12 @@ describe('Controller: CashBagListCtrl', function() {
     beforeEach(function() {
       scope.search.selectedSchedule = ['test'];
       scope.search.selectedStoreNumber = ['test'];
-      scope.scheduleDate = '20150330';
+      scope.search.scheduleDate = '20150330';
       scope.hideCreatePopup();
     });
 
     it('should call the private function clearPopupSearch and clear the scheduleDate', function() {
-      expect(scope.scheduleDate).toBe(undefined);
+      expect(scope.search.scheduleDate).toBe(undefined);
     });
 
     it('should call the private function clearPopupSearch and clear the selectedStoreNumber', function() {
