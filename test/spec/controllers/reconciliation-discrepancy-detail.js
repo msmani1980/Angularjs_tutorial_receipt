@@ -16,6 +16,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
   beforeEach(module('served/promotion.json'));
   beforeEach(module('served/item.json'));
   beforeEach(module('served/store-status.json'));
+  beforeEach(module('served/stock-item-counts.json'));
 
   var scope;
   var ReconciliationDiscrepancyDetail;
@@ -67,13 +68,19 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
   var getStoreStatusListDeferred;
   var getStoreStatusListJSON;
 
+  var putSaveStockItemsCountsDeferred;
+
+  var stockItemCountsDeferred;
+  var stockItemCountsJSON;
+
+
   var routeParams;
   var dateUtility;
 
   beforeEach(inject(function($q, $controller, $rootScope, $location, $injector) {
     inject(function(_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
       _servedCountTypes_, _servedStoreInstanceItemList_, _servedPromotion_, _servedItem_,
-      _servedStoreStatus_) {
+      _servedStoreStatus_, _servedStockItemCounts_) {
       storeInstanceJSON = _servedStoreInstance_;
       getPromotionTotalsJSON = _servedPromotionTotals_;
       getStockTotalsJSON = _servedStockTotals_;
@@ -84,6 +91,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
       getItemJSON = _servedItem_;
       getItemJSON = _servedItem_;
       getStoreStatusListJSON = _servedStoreStatus_;
+      stockItemCountsJSON = _servedStockItemCounts_;
     });
 
     inject(function(_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
@@ -137,6 +145,10 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
     spyOn(reconciliationFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemListDeferred
       .promise);
 
+    putSaveStockItemsCountsDeferred = $q.defer();
+    putSaveStockItemsCountsDeferred.resolve({});
+    spyOn(reconciliationFactory, 'saveStockItemsCounts').and.returnValue(putSaveStockItemsCountsDeferred.promise);
+
     getCompanyGlobalCurrenciesDeferred = $q.defer();
     getCompanyGlobalCurrenciesDeferred.resolve(getCompanyGlobalCurrenciesJSON);
     spyOn(reconciliationFactory, 'getCompanyGlobalCurrencies').and.returnValue(
@@ -164,6 +176,11 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
     spyOn(reconciliationFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
 
     spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
+
+    stockItemCountsDeferred = $q.defer();
+    stockItemCountsDeferred.resolve(stockItemCountsJSON);
+
+    spyOn(reconciliationFactory, 'getStockItemCounts').and.returnValue(stockItemCountsDeferred.promise);
 
     routeParams = {
       storeInstanceId: 'fakeStoreInstanceId'
@@ -348,6 +365,45 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
 
         it('should clear revision object', function() {
           expect(mockItem.revision).toEqual({});
+        });
+      });
+
+      describe('saveStockItemCounts', function() {
+        beforeEach(function() {
+          mockItem = {
+            storeInstanceId: 1,
+            itemMasterId: 2,
+            itemName: 'testItem',
+            dispatchedCount: 3,
+            replenishCount: 4,
+            inboundOffloadCount: 5,
+            revision: {
+              itemName: 'testItem',
+              dispatchedCount: 30,
+              replenishCount: 40,
+              inboundOffloadCount: 50
+            }
+          };
+          scope.saveStockItemCounts(mockItem);
+          scope.$digest();
+        });
+
+        it('should call saveStockItemsCounts with new item counts', function() {
+          var expectedPayload = [{
+            storeInstanceId: 1,
+            replenishStoreInstanceId: undefined,
+            itemMasterId: 2,
+            dispatchedCount: 30,
+            replenishCount: 40,
+            inboundedCount: 0,
+            offloadCount: 50,
+            companyId: undefined,
+            itemId: undefined,
+            cateringStationId: undefined,
+            cciStagId: undefined,
+            ullageReasonCode: undefined
+          }];
+          expect(reconciliationFactory.saveStockItemsCounts).toHaveBeenCalledWith(expectedPayload);
         });
       });
 

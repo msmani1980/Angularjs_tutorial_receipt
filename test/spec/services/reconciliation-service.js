@@ -149,6 +149,15 @@ describe('Service: reconciliationService', function () {
       httpBackend.flush();
     });
 
+    it('should save stock items counts', function () {
+      httpBackend.expectPUT(/\/rsvr\/api\/reconciliation\/storeinstanceitems\/123/).respond(200, {});
+      reconciliationService.saveStockItemsCounts({ storeInstanceId: 123 }).then(function (dataFromAPI) {
+        expect(dataFromAPI).toBeDefined();
+      });
+
+      httpBackend.flush();
+    });
+
   });
 
 });
