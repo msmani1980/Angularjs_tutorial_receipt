@@ -79,6 +79,25 @@ describe('Directive: topNavigationBar', function () {
       isolatedScope.selectCompany('Cash Handler');
       expect(companyRelationshipFactory.getCompanyRelationshipListByCompany).toHaveBeenCalled();
     });
+
+    it('should set displayCompanyName from companyName or relativeCompanyName', function () {
+      isolatedScope.pickedCompany['Cash Handler'] = { id: 'fakeRetailId', companyName: 'ICE Gatwick' };
+      isolatedScope.selectCompany('Cash Handler');
+      scope.$digest();
+      expect(isolatedScope.cashHandlerRetailCompanyList[0].displayCompanyName).toBeDefined();
+      expect(isolatedScope.cashHandlerRetailCompanyList[0].displayCompanyName).toEqual('British Airways');
+      expect(isolatedScope.cashHandlerRetailCompanyList[1].displayCompanyName).toBeDefined();
+      expect(isolatedScope.cashHandlerRetailCompanyList[1].displayCompanyName).toEqual('easyJet');
+    });
+
+    it('should filter out companies that are not retail or are not available to the user', function () {
+      isolatedScope.pickedCompany['Cash Handler'] = { id: 'fakeRetailId', companyName: 'ICE Gatwick' };
+      isolatedScope.selectCompany('Cash Handler');
+      scope.$digest();
+      expect(isolatedScope.cashHandlerRetailCompanyList.length).toEqual(2);
+      expect(isolatedScope.cashHandlerRetailCompanyList[0].displayCompanyType).toEqual('Retail');
+      expect(isolatedScope.cashHandlerRetailCompanyList[1].displayCompanyType).toEqual('Retail');
+    });
   });
 
   describe('Not authorized behaviour', function () {

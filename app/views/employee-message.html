@@ -113,12 +113,10 @@
                       <ui-select multiple ng-model="newRecords.employees" theme="bootstrap">
                         <ui-select-match placeholder="Select an Employee...">{{ $item.employeeIdentifier }}
                         </ui-select-match>
-                        <ui-select-choices repeat="employee in filteredEmployees | filter: $select.search">
+                        <ui-select-choices repeat="employee in filteredEmployees | filter: $select.search | limitTo:100">
                           {{ employee.employeeIdentifier }} - {{ employee.lastName}}, {{ employee.firstName }}
                         </ui-select-choices>
                       </ui-select>
-                      <input type="checkbox" ng-model="employeesAddAll"
-                             ng-click="selectAllToAdd(employeesAddAll, 'employees')"> Select all employees
                     </td>
                     <td class="col-xs-1">
                       <button type="button" class="btn btn-success btn-sm text-right"
@@ -174,8 +172,6 @@
                           {{ schedule.scheduleNumber }}
                         </ui-select-choices>
                       </ui-select>
-                      <input type="checkbox" ng-model="schedulesAddAll"
-                             ng-click="selectAllToAdd(schedulesAddAll, 'schedules')"> Select all schedules
                     </td>
                     <td class="col-xs-1">
                       <button type="button" class="btn btn-success btn-sm text-right"
@@ -231,8 +227,6 @@
                           {{ station.code }} - {{ station.name }}
                         </ui-select-choices>
                       </ui-select>
-                      <input type="checkbox" ng-model="departureStationsAddAll"
-                             ng-click="selectAllToAdd(departureStationsAddAll, 'departureStations')"> Select all stations
                     </td>
                     <td class="col-xs-1">
                       <button type="button" class="btn btn-success btn-sm text-right"
@@ -289,9 +283,6 @@
                         <ui-select-choices repeat="station in filteredArrivalStations | filter: $select.search">
                           {{ station.code }} - {{ station.name }}
                         </ui-select-choices>
-                      </ui-select>
-                      <input type="checkbox" ng-model="arrivalStationsAddAll"
-                             ng-click="selectAllToAdd(arrivalStationsAddAll, 'arrivalStations')"> Select all stations
                     </td>
                     <td class="col-xs-1">
                       <button type="button" class="btn btn-success btn-sm text-right"

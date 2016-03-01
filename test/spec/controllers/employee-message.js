@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: EmployeeMessageCtrl', function () {
+describe('Controller: EmployeeMessageCtrl', function() {
 
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module('served/employee-message.json'));
@@ -15,17 +15,18 @@ describe('Controller: EmployeeMessageCtrl', function () {
   var employeeMessagesFactory;
 
   var employeeMessageDeferred;
-  var employeeMesssageJSON;
+  var employeeMessageJSON;
   var employeesDeferred;
   var employeesJSON;
   var schedulesDeferred;
   var schedulesJSON;
   var stationsDeferred;
   var stationsJSON;
+  var dateUtility;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
-    inject(function (_servedEmployees_, _servedSchedules_, _servedGlobalStations_, _servedEmployeeMessage_) {
-      employeeMesssageJSON = _servedEmployeeMessage_;
+  beforeEach(inject(function($q, $controller, $rootScope, $location, $injector) {
+    inject(function(_servedEmployees_, _servedSchedules_, _servedGlobalStations_, _servedEmployeeMessage_) {
+      employeeMessageJSON = _servedEmployeeMessage_;
       employeesJSON = _servedEmployees_;
       schedulesJSON = _servedSchedules_;
       stationsJSON = _servedGlobalStations_;
@@ -34,10 +35,11 @@ describe('Controller: EmployeeMessageCtrl', function () {
     location = $location;
     scope = $rootScope.$new();
     employeeMessagesFactory = $injector.get('employeeMessagesFactory');
+    dateUtility = $injector.get('dateUtility');
     controller = $controller;
 
     employeeMessageDeferred = $q.defer();
-    employeeMessageDeferred.resolve(employeeMesssageJSON);
+    employeeMessageDeferred.resolve(employeeMessageJSON);
 
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesJSON);
@@ -65,132 +67,151 @@ describe('Controller: EmployeeMessageCtrl', function () {
         action: (action ? action : 'create')
       }
     });
-    scope.employeeMessageForm = { $invalid: false };
+    scope.employeeMessageForm = {
+      $invalid: false
+    };
   }
 
-  describe('scope variables and functions', function () {
-    beforeEach(function () {
+  describe('scope variables and functions', function() {
+    beforeEach(function() {
       initController();
       scope.$digest();
     });
 
-    it('should have view name defined', function () {
+    it('should have view name defined', function() {
       expect(scope.viewName).toBeDefined();
     });
 
-    it('should have readOnly be defined', function () {
+    it('should have readOnly be defined', function() {
       expect(scope.readOnly).toBeDefined();
     });
 
-    it('should have newRecords be defined', function () {
+    it('should have newRecords be defined', function() {
       expect(scope.newRecords).toBeDefined();
     });
   });
 
-  describe('init', function () {
-    describe('API Calls', function () {
-      describe('common init calls', function () {
-        beforeEach(function () {
+  describe('init', function() {
+    describe('API Calls', function() {
+      describe('common init calls', function() {
+        beforeEach(function() {
           initController();
           scope.$digest();
         });
 
-        it('should get a list of employees', function () {
+        it('should get a list of employees', function() {
           expect(employeeMessagesFactory.getEmployees).toHaveBeenCalled();
           scope.$digest();
           expect(scope.employeesList).toEqual(employeesJSON.companyEmployees);
         });
 
-        it('should get a list of schedules', function () {
+        it('should get a list of schedules', function() {
           expect(employeeMessagesFactory.getSchedules).toHaveBeenCalled();
           scope.$digest();
           expect(scope.schedulesList).toEqual(schedulesJSON.distinctSchedules);
         });
 
-        it('should get a list of stations', function () {
+        it('should get a list of stations', function() {
           expect(employeeMessagesFactory.getStations).toHaveBeenCalled();
           scope.$digest();
           expect(scope.stationsList).toEqual(stationsJSON.response);
         });
       });
 
-      describe('create init', function () {
-        beforeEach(function () {
+      describe('create init', function() {
+        beforeEach(function() {
           initController('create');
           scope.$digest();
         });
 
-        it('should set readOnly to false', function () {
+        it('should set readOnly to false', function() {
           expect(scope.readOnly).toEqual(false);
         });
 
-        it('should init employeeMessage to empty', function () {
-          var emptyEmployeeMessage = { employees: [], schedules: [], arrivalStations: [], departureStations: [] };
+        it('should init employeeMessage to empty', function() {
+          var emptyEmployeeMessage = {
+            employees: [],
+            schedules: [],
+            arrivalStations: [],
+            departureStations: []
+          };
           expect(scope.employeeMessage).toEqual(emptyEmployeeMessage);
         });
 
-        it('should set viewName to Creating', function () {
+        it('should set viewName to Creating', function() {
           expect(scope.viewName).toEqual('Create New Employee Message');
         });
       });
 
-      describe('edit init', function () {
-        beforeEach(function () {
+      describe('edit init', function() {
+        beforeEach(function() {
           initController('edit', 1);
-          employeeMessageDeferred.resolve(employeeMesssageJSON);
+          var json = employeeMessageJSON;
+          json.employeeMessage.endDate = dateUtility.formatDateForAPI(dateUtility.tomorrowFormatted());
+          employeeMessageDeferred.resolve(json);
           scope.$digest();
         });
 
-        it('should set readOnly to false', function () {
+        it('should set readOnly to false', function() {
           expect(scope.readOnly).toEqual(false);
         });
 
-        it('should set viewName to Editing', function () {
+        it('should set viewName to Editing', function() {
           expect(scope.viewName).toEqual('Edit Employee Message 1');
         });
 
-        it('should call getEmployeeMessage with routeParams id', function () {
+        it('should call getEmployeeMessage with routeParams id', function() {
           expect(employeeMessagesFactory.getEmployeeMessage).toHaveBeenCalledWith(1);
         });
 
-        it('should attach employeeMessage to scope', function () {
-          var emptyEmployeeMessage = { employees: [], schedules: [], arrivalStations: [], departureStations: [] };
+        it('should attach employeeMessage to scope', function() {
+          var emptyEmployeeMessage = {
+            employees: [],
+            schedules: [],
+            arrivalStations: [],
+            departureStations: []
+          };
           expect(scope.employeeMessage).toBeDefined();
           expect(scope.employeeMessage).not.toEqual(emptyEmployeeMessage);
         });
       });
 
-      describe('view init', function () {
-        beforeEach(function () {
+      describe('view init', function() {
+        beforeEach(function() {
           initController('view', 1);
-          employeeMessageDeferred.resolve(employeeMesssageJSON);
+          employeeMessageDeferred.resolve(employeeMessageJSON);
           scope.$digest();
         });
 
-        it('should set readOnly to true', function () {
+        it('should set readOnly to true', function() {
           expect(scope.readOnly).toEqual(true);
         });
 
-        it('should set viewName to Editing', function () {
+        it('should set viewName to Editing', function() {
           expect(scope.viewName).toEqual('View Employee Message 1');
         });
 
-        it('should call getEmployeeMessage with routeParams id', function () {
+        it('should call getEmployeeMessage with routeParams id', function() {
           expect(employeeMessagesFactory.getEmployeeMessage).toHaveBeenCalledWith(1);
         });
 
-        it('should attach employeeMessage to scope', function () {
-          var emptyEmployeeMessage = { employees: [], schedules: [], arrivalStations: [], departureStations: [] };
+        it('should attach employeeMessage to scope', function() {
+          var emptyEmployeeMessage = {
+            employees: [],
+            schedules: [],
+            arrivalStations: [],
+            departureStations: []
+          };
           expect(scope.employeeMessage).toBeDefined();
           expect(scope.employeeMessage).not.toEqual(emptyEmployeeMessage);
         });
       });
     });
 
-    describe('reformat employeeMessage for app', function () {
+    describe('reformat employeeMessage for app', function() {
       var mockEmployeeMessage;
       var formattedEmployeeMessage;
-      beforeEach(function () {
+      beforeEach(function() {
         initController();
         mockEmployeeMessage = {
           employeeMessage: {
@@ -198,8 +219,14 @@ describe('Controller: EmployeeMessageCtrl', function () {
             startDate: '2015-10-20',
             endDate: '2015-10-25',
             employeeMessageText: 'mock message',
-            employeeMessageEmployeeIdentifiers: [{ id: 1, employeeIdentifier: '1001' }],
-            employeeMessageSchedules: [{ id: 2, scheduleNumber: '106' }],
+            employeeMessageEmployeeIdentifiers: [{
+              id: 1,
+              employeeIdentifier: '1001'
+            }],
+            employeeMessageSchedules: [{
+              id: 2,
+              scheduleNumber: '106'
+            }],
             employeeMessageArrivalStations: [1],
             employeeMessageDepartureStations: [2]
           }
@@ -208,7 +235,7 @@ describe('Controller: EmployeeMessageCtrl', function () {
         formattedEmployeeMessage = EmployeeMessageCtrl.formatEmployeeMessageForApp(mockEmployeeMessage);
       });
 
-      it('should maintain employeeMessage startDate, endDate, and messageText', function () {
+      it('should maintain employeeMessage startDate, endDate, and messageText', function() {
         expect(formattedEmployeeMessage).not.toEqual(mockEmployeeMessage);
         expect(formattedEmployeeMessage).toBeDefined();
         expect(formattedEmployeeMessage.startDate).toEqual('10/20/2015');
@@ -216,7 +243,7 @@ describe('Controller: EmployeeMessageCtrl', function () {
         expect(formattedEmployeeMessage.messageText).toEqual(mockEmployeeMessage.messageText);
       });
 
-      it('should store employees as an object with employeeIdentifier, firstName, lastName', function () {
+      it('should store employees as an object with employeeIdentifier, firstName, lastName', function() {
         expect(formattedEmployeeMessage.employees).toBeDefined();
         expect(formattedEmployeeMessage.employees.length).toEqual(1);
         expect(formattedEmployeeMessage.employees[0].employeeIdentifier).toEqual('1001');
@@ -224,13 +251,13 @@ describe('Controller: EmployeeMessageCtrl', function () {
         expect(formattedEmployeeMessage.employees[0].lastName).toEqual('Doe');
       });
 
-      it('should store schedules as an object with scheduleNumber', function () {
+      it('should store schedules as an object with scheduleNumber', function() {
         expect(formattedEmployeeMessage.schedules).toBeDefined();
         expect(formattedEmployeeMessage.schedules.length).toEqual(1);
         expect(formattedEmployeeMessage.schedules[0].scheduleNumber).toEqual('106');
       });
 
-      it('should store arrival stations as an object with stationId, code, and name', function () {
+      it('should store arrival stations as an object with stationId, code, and name', function() {
         expect(formattedEmployeeMessage.arrivalStations).toBeDefined();
         expect(formattedEmployeeMessage.arrivalStations.length).toEqual(1);
         expect(formattedEmployeeMessage.arrivalStations[0].id).toEqual(1);
@@ -238,7 +265,7 @@ describe('Controller: EmployeeMessageCtrl', function () {
         expect(formattedEmployeeMessage.arrivalStations[0].name).toEqual('Chicago O-hare');
       });
 
-      it('should store departure stations as an object with stationId, code, and name', function () {
+      it('should store departure stations as an object with stationId, code, and name', function() {
         expect(formattedEmployeeMessage.departureStations).toBeDefined();
         expect(formattedEmployeeMessage.departureStations.length).toEqual(1);
         expect(formattedEmployeeMessage.departureStations[0].id).toEqual(2);
@@ -248,17 +275,19 @@ describe('Controller: EmployeeMessageCtrl', function () {
     });
   });
 
-  describe('edit arrays', function () {
-    beforeEach(function () {
+  describe('edit arrays', function() {
+    beforeEach(function() {
       initController('edit', 1);
       scope.$digest();
     });
 
-    describe('addNewItem', function () {
+    describe('addNewItem', function() {
       var oldLength;
-      beforeEach(function () {
+      beforeEach(function() {
         oldLength = scope.employeeMessage.employees.length;
-        scope.newRecords = { employees: [] };
+        scope.newRecords = {
+          employees: []
+        };
         scope.newRecords.employees.push({
           id: 63,
           employeeIdentifier: '1003',
@@ -269,26 +298,26 @@ describe('Controller: EmployeeMessageCtrl', function () {
         scope.$digest();
       });
 
-      it('should add employee items from newRecords when employees category is passed in', function () {
+      it('should add employee items from newRecords when employees category is passed in', function() {
         expect(scope.employeeMessage.employees.length).toEqual(oldLength + 1);
         expect(scope.employeeMessage.employees[oldLength].employeeIdentifier).toEqual('1003');
         expect(scope.employeeMessage.employees[oldLength].firstName).toEqual('Jeff');
         expect(scope.employeeMessage.employees[oldLength].lastName).toEqual('Wright');
       });
 
-      it('should add employee items with employeeIdentifier, firstName, and lastName attributes', function () {
+      it('should add employee items with employeeIdentifier, firstName, and lastName attributes', function() {
         expect(scope.employeeMessage.employees[oldLength].employeeIdentifier).toEqual('1003');
         expect(scope.employeeMessage.employees[oldLength].firstName).toEqual('Jeff');
         expect(scope.employeeMessage.employees[oldLength].lastName).toEqual('Wright');
       });
 
-      it('should clear previously selected records', function () {
+      it('should clear previously selected records', function() {
         expect(scope.newRecords.employees.length).toEqual(0);
       });
     });
 
-    describe('bulk delete items', function () {
-      it('should remove all filteredItems', function () {
+    describe('bulk delete items', function() {
+      it('should remove all filteredItems', function() {
         var oldLength = scope.employeeMessage.employees.length;
         scope.employeeMessage.employees[0].selectedToDelete = true;
         scope.removeItems('employees');
@@ -296,7 +325,7 @@ describe('Controller: EmployeeMessageCtrl', function () {
         expect(scope.employeeMessage.employees.length).toEqual(oldLength - 1);
       });
 
-      it('should clear select all toggle', function () {
+      it('should clear select all toggle', function() {
         scope.employeeMessage.employees[0].selectedToDelete = true;
         scope.removeItems('employees');
         scope.$digest();
@@ -305,13 +334,13 @@ describe('Controller: EmployeeMessageCtrl', function () {
     });
   });
 
-  describe('filter items list', function () {
-    beforeEach(function () {
+  describe('filter items list', function() {
+    beforeEach(function() {
       initController('edit', 1);
       scope.$digest();
     });
 
-    it('should return items that are not in the employeeMessage', function () {
+    it('should return items that are not in the employeeMessage', function() {
       var masterEmployeesLength = employeesJSON.companyEmployees.length;
       var masterSchedulesLength = schedulesJSON.distinctSchedules.length;
       var masterStationsLength = stationsJSON.response.length;
@@ -330,56 +359,63 @@ describe('Controller: EmployeeMessageCtrl', function () {
     });
   });
 
-  describe('save', function () {
-    describe('format payload for app', function () {
+  describe('save', function() {
+    describe('format payload for app', function() {
       var payload;
-      beforeEach(function () {
+      beforeEach(function() {
         initController('edit');
         scope.$digest();
         payload = EmployeeMessageCtrl.formatPayload().employeeMessage;
       });
 
-      it('should format payload with same employeeMessage', function () {
+      it('should format payload with same employeeMessage', function() {
         expect(payload.employeeMessageText).toEqual(scope.employeeMessage.employeeMessageText);
       });
 
-      it('should format employees array to employeeMessageEmployeeIdentifiers', function () {
-        expect(payload.employeeMessageEmployeeIdentifiers.length).toEqual(scope.employeeMessage.employees.length);
-        expect(payload.employeeMessageEmployeeIdentifiers[0].employeeIdentifier).toEqual(scope.employeeMessage.employees[0].employeeIdentifier);
+      it('should format employees array to employeeMessageEmployeeIdentifiers', function() {
+        expect(payload.employeeMessageEmployeeIdentifiers.length).toEqual(scope.employeeMessage.employees
+          .length);
+        expect(payload.employeeMessageEmployeeIdentifiers[0].employeeIdentifier).toEqual(scope.employeeMessage
+          .employees[0].employeeIdentifier);
       });
 
-      it('should format schedules array to employeeMessageSchedules', function () {
+      it('should format schedules array to employeeMessageSchedules', function() {
         expect(payload.employeeMessageSchedules.length).toEqual(scope.employeeMessage.schedules.length);
-        expect(payload.employeeMessageSchedules[0].scheduleNumber).toEqual(scope.employeeMessage.schedules[0].scheduleNumber);
+        expect(payload.employeeMessageSchedules[0].scheduleNumber).toEqual(scope.employeeMessage.schedules[
+          0].scheduleNumber);
       });
 
-      it('should format departureStations array to employeeMessageDepartureStations', function () {
-        expect(payload.employeeMessageDepartureStations.length).toEqual(scope.employeeMessage.departureStations.length);
-        expect(payload.employeeMessageDepartureStations[0]).toEqual(scope.employeeMessage.departureStations[0].id);
+      it('should format departureStations array to employeeMessageDepartureStations', function() {
+        expect(payload.employeeMessageDepartureStations.length).toEqual(scope.employeeMessage.departureStations
+          .length);
+        expect(payload.employeeMessageDepartureStations[0]).toEqual(scope.employeeMessage.departureStations[
+          0].id);
       });
 
-      it('should format employeeMessageArrivalStations array to employeeMessageDepartureStations', function () {
-        expect(payload.employeeMessageArrivalStations.length).toEqual(scope.employeeMessage.arrivalStations.length);
-        expect(payload.employeeMessageArrivalStations[0]).toEqual(scope.employeeMessage.arrivalStations[0].id);
+      it('should format employeeMessageArrivalStations array to employeeMessageDepartureStations', function() {
+        expect(payload.employeeMessageArrivalStations.length).toEqual(scope.employeeMessage.arrivalStations
+          .length);
+        expect(payload.employeeMessageArrivalStations[0]).toEqual(scope.employeeMessage.arrivalStations[
+          0].id);
       });
     });
 
-    describe('API calls', function () {
-      it('should call create for a create action', function () {
+    describe('API calls', function() {
+      it('should call create for a create action', function() {
         initController('create');
         scope.$digest();
         scope.save();
         expect(employeeMessagesFactory.createEmployeeMessage).toHaveBeenCalled();
       });
 
-      it('should call edit for edit action', function () {
+      it('should call edit for edit action', function() {
         initController('edit', 1);
         scope.$digest();
         scope.save();
         expect(employeeMessagesFactory.editEmployeeMessage).toHaveBeenCalled();
       });
 
-      it('should go to list page on succes', function () {
+      it('should go to list page on succes', function() {
         initController('edit', 1);
         scope.$digest();
         EmployeeMessageCtrl.saveSuccess();
@@ -388,14 +424,14 @@ describe('Controller: EmployeeMessageCtrl', function () {
     });
   });
 
-  describe('scope function', function () {
-    describe('toggle selected to delete', function () {
-      beforeEach(function () {
+  describe('scope function', function() {
+    describe('toggle selected to delete', function() {
+      beforeEach(function() {
         initController('edit', 1);
         scope.$digest();
       });
 
-      it('should set all records to selected based on flag', function () {
+      it('should set all records to selected based on flag', function() {
         scope.toggleSelectAll(true, 'employees');
         scope.$digest();
         expect(scope.employeeMessage.employees[0].selectedToDelete).toEqual(true);
@@ -405,34 +441,15 @@ describe('Controller: EmployeeMessageCtrl', function () {
       });
     });
 
-    describe('toggle selected to add', function () {
-      beforeEach(function () {
-        initController('edit', 1);
-        scope.$digest();
-      });
-
-      it('should add all items if flag is true', function () {
-        scope.selectAllToAdd(true, 'employees');
-        scope.$digest();
-        expect(scope.newRecords.employees.length > 0).toEqual(true);
-      });
-
-      it('should empty newRecords to add if flag is false', function () {
-        scope.selectAllToAdd(false, 'employees');
-        scope.$digest();
-        expect(scope.newRecords.employees.length).toEqual(0);
-      });
-    });
-
-    describe('show delete button', function () {
-      it('should not show delete if view is readOnly', function () {
+    describe('show delete button', function() {
+      it('should not show delete if view is readOnly', function() {
         initController('view', 1);
         scope.$digest();
         var isDeleteDisabled = scope.getPropertiesForDeletedButton('employees', 'disabled');
         expect(isDeleteDisabled).toEqual(true);
       });
 
-      it('should not show delete if array has no items', function () {
+      it('should not show delete if array has no items', function() {
         initController('view', 1);
         scope.$digest();
         scope.employeeMessage.employees = [];
@@ -440,7 +457,7 @@ describe('Controller: EmployeeMessageCtrl', function () {
         expect(isDeleteDisabled).toEqual(true);
       });
 
-      it('should show delete if an array has selected items', function () {
+      it('should show delete if an array has selected items', function() {
         initController('view', 1);
         scope.$digest();
         scope.employeeMessage.employees[0].selectedToDelete = true;
@@ -449,46 +466,46 @@ describe('Controller: EmployeeMessageCtrl', function () {
       });
     });
 
-    describe('shouldDisableActiveFields', function () {
-      beforeEach(function () {
+    describe('shouldDisableActiveFields', function() {
+      beforeEach(function() {
         initController('edit', 2);
         scope.$digest();
       });
 
-      it('should return true for active records', function () {
+      it('should return true for active records', function() {
         scope.employeeMessage.startDate = '10/20/2000';
         expect(scope.shouldDisableActiveFields()).toEqual(true);
       });
 
-      it('should return false for future records', function () {
+      it('should return false for future records', function() {
         scope.employeeMessage.startDate = '10/20/3000';
         expect(scope.shouldDisableActiveFields()).toEqual(false);
       });
     });
 
-    describe('shouldDisable', function () {
-      it('should return true when readOnly is true', function () {
+    describe('shouldDisable', function() {
+      it('should return true when readOnly is true', function() {
         initController('view', 2);
         scope.$digest();
         expect(scope.shouldDisable(true)).toEqual(true);
 
       });
 
-      it('should return true when record is active', function () {
+      it('should return true when record is active', function() {
         initController('edit', 2);
         scope.$digest();
         scope.employeeMessage.startDate = '10/20/2000';
         expect(scope.shouldDisable(true)).toEqual(true);
       });
 
-      it('should return false when record is active and field is allowed to be editable', function () {
+      it('should return false when record is active and field is allowed to be editable', function() {
         initController('edit', 2);
         scope.$digest();
         scope.employeeMessage.startDate = '10/20/2000';
         expect(scope.shouldDisable(false)).toEqual(false);
       });
 
-      it('should return false when creating a new record', function () {
+      it('should return false when creating a new record', function() {
         initController('create');
         scope.$digest();
         expect(scope.shouldDisable(true)).toEqual(false);
