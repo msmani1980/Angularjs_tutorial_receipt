@@ -147,22 +147,6 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return properties[attribute];
     };
 
-    $scope.selectAllToAdd = function (toggleFlag, listName) {
-      var listNameToFilteredListMap = {
-        schedules: $scope.filteredSchedules,
-        employees: $scope.filteredEmployees,
-        arrivalStations: $scope.filteredArrivalStations,
-        departureStations: $scope.filteredDepartureStations
-      };
-
-      $scope.newRecords[listName] = [];
-      if (toggleFlag) {
-        angular.forEach(listNameToFilteredListMap[listName], function (record) {
-          $scope.newRecords[listName].push(record);
-        });
-      }
-    };
-
     $scope.toggleSelectAll = function (toggleFlag, listName) {
       angular.forEach($scope.employeeMessage[listName], function (record) {
         record.selectedToDelete = toggleFlag;
