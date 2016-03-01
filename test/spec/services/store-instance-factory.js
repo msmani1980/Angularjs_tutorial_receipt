@@ -16,7 +16,7 @@ describe('Service: storeInstanceFactory', function() {
   // instantiate service
   var storeInstanceFactory;
   var catererStationService;
-  var GlobalMenuService;
+  var globalMenuService;
   var companyId = 403;
   var schedulesService;
   var carrierService;
@@ -94,7 +94,7 @@ describe('Service: storeInstanceFactory', function() {
     itemsService = $injector.get('itemsService');
     catererStationService = $injector.get('catererStationService');
     stationsService = $injector.get('stationsService');
-    GlobalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
     schedulesService = $injector.get('schedulesService');
     carrierService = $injector.get('carrierService');
     storeInstanceService = $injector.get('storeInstanceService');
@@ -107,7 +107,7 @@ describe('Service: storeInstanceFactory', function() {
 
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(itemsService, 'getItemsList');
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(companyId);
+    spyOn(globalMenuService.company, 'get').and.returnValue(companyId);
     spyOn(schedulesService, 'getSchedules');
     spyOn(stationsService, 'getStation').and.returnValue(getStationDeferred.promise);
     spyOn(carrierService, 'getCarrierNumbers');
@@ -234,10 +234,10 @@ describe('Service: storeInstanceFactory', function() {
     });
   });
 
-  describe('GlobalMenuService calls', function() {
+  describe('globalMenuService calls', function() {
     it('should get company', function() {
       storeInstanceFactory.getCompanyId();
-      expect(GlobalMenuService.company.get).toHaveBeenCalled();
+      expect(globalMenuService.company.get).toHaveBeenCalled();
     });
   });
 

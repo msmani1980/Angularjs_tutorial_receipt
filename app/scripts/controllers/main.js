@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('MainCtrl',
-    function ($rootScope, $scope, companiesFactory, mainMenuService, GlobalMenuService, identityAccessService, identityAccessFactory, companyFactory, lodash) {
+    function ($rootScope, $scope, companiesFactory, mainMenuService, globalMenuService, identityAccessService, identityAccessFactory, companyFactory, lodash) {
 
       $scope.viewName = 'TS5 Dashboard';
 
@@ -63,7 +63,7 @@ angular.module('ts5App')
       }
 
       function assignMenuToCompanyType() {
-        var companyTypeId = GlobalMenuService.getCompanyData().companyTypeId;
+        var companyTypeId = globalMenuService.getCompanyData().companyTypeId;
         var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
         var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
         $scope.realDashboardMenu = companyTypeName;

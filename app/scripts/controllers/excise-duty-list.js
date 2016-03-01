@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExciseDutyListCtrl', function ($scope, exciseDutyFactory, GlobalMenuService, dateUtility, lodash, $q) {
+  .controller('ExciseDutyListCtrl', function ($scope, exciseDutyFactory, globalMenuService, dateUtility, lodash, $q) {
     $scope.viewName = 'Excise Duty List';
     var $this = this;
 
@@ -301,7 +301,7 @@ angular.module('ts5App')
       $scope.recordToEdit = null;
       $scope.inEditMode = false;
       $scope.minDate = dateUtility.tomorrowFormatted();
-      var companyId = GlobalMenuService.company.get();
+      var companyId = globalMenuService.company.get();
       exciseDutyFactory.getCompanyData(companyId).then(callInitAPIs, showErrors);
     }
 

@@ -6,7 +6,7 @@
  * # excelUpload
  */
 angular.module('ts5App')
-  .controller('ExcelUploadCtrl', function ($scope, $http, $q, $injector, Upload, ENV, GlobalMenuService, ngToast) {
+  .controller('ExcelUploadCtrl', function ($scope, $http, $q, $injector, Upload, ENV, globalMenuService, ngToast) {
     var $this = this;
     this.service = null;
 
@@ -50,9 +50,9 @@ angular.module('ts5App')
 
     $scope.upload = function (files) {
       if ($scope.uploadParam) {
-        $this.service.importFromExcel(GlobalMenuService.company.get(), files, $scope.uploadParam).then(successHandler, errorHandler);
+        $this.service.importFromExcel(globalMenuService.company.get(), files, $scope.uploadParam).then(successHandler, errorHandler);
       } else {
-        $this.service.importFromExcel(GlobalMenuService.company.get(), files).then(successHandler, errorHandler);
+        $this.service.importFromExcel(globalMenuService.company.get(), files).then(successHandler, errorHandler);
       }
     };
 

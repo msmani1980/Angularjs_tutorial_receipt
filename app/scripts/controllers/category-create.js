@@ -10,7 +10,7 @@
  */
 angular.module('ts5App').controller('CategoryCreateCtrl',
   function($scope, $compile, ENV, $resource, $anchorScroll, categoryFactory,
-    $routeParams, GlobalMenuService, $q, dateUtility, $filter, lodash) {
+    $routeParams, globalMenuService, $q, dateUtility, $filter, lodash) {
 
     // object resolution in for sub scopes
     var $this = this;

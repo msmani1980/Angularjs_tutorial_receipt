@@ -8,11 +8,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyExchangeRateEditCtrl', function($scope, GlobalMenuService, currencyFactory, dateUtility,
+  .controller('CompanyExchangeRateEditCtrl', function($scope, globalMenuService, currencyFactory, dateUtility,
     payloadUtility, ngToast, $filter) {
     var $this = this;
 
-    this.companyId = GlobalMenuService.company.get();
+    this.companyId = globalMenuService.company.get();
     $scope.viewName = 'Manage Retail Company ePOS Exchange Rate';
     $scope.search = {};
     $scope.globalCurrencies = [];

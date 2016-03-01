@@ -7,19 +7,19 @@ describe('Factor: itemImportFactory', function () {
 
   // instantiate service
   var itemImportFactory,
-    GlobalMenuService,
+    globalMenuService,
     companyService,
     itemsService,
     itemImportService,
     scope;
 
-  beforeEach(inject(function ($rootScope, _itemImportFactory_, _GlobalMenuService_, _companyService_, _itemsService_, _itemImportService_) {
-    GlobalMenuService = _GlobalMenuService_;
+  beforeEach(inject(function ($rootScope, _itemImportFactory_, _globalMenuService_, _companyService_, _itemsService_, _itemImportService_) {
+    globalMenuService = _globalMenuService_;
     companyService = _companyService_;
     itemsService = _itemsService_;
     itemImportService = _itemImportService_;
 
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
+    spyOn(globalMenuService.company, 'get').and.returnValue(403);
     spyOn(companyService, 'getCompanyList');
     spyOn(itemsService, 'getItemsList');
     spyOn(itemImportService, 'importItems');
@@ -32,10 +32,10 @@ describe('Factor: itemImportFactory', function () {
     expect(!!itemImportFactory).toBe(true);
   });
 
-  describe('GlobalMenuService API', function () {
+  describe('globalMenuService API', function () {
     it('should call globalMenuService on company.get', function () {
       itemImportFactory.getCompanyId();
-      expect(GlobalMenuService.company.get).toHaveBeenCalled();
+      expect(globalMenuService.company.get).toHaveBeenCalled();
     });
   });
 

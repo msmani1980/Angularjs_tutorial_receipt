@@ -8,7 +8,7 @@ describe('Service: companyExchangeRateService', function () {
 
   // instantiate service
   var companyExchangeRateService,
-    GlobalMenuService,
+    globalMenuService,
     $httpBackend,
     companyExchangeRateGetRequestHandler,
     companyExchangeRateDeleteRequestHandler,
@@ -26,7 +26,7 @@ describe('Service: companyExchangeRateService', function () {
       companyExchangeRateJSON = _servedCompanyExchangeRate_;
     });
 
-    GlobalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
     $httpBackend = $injector.get('$httpBackend');
 
     $localStorage.companyObject = {

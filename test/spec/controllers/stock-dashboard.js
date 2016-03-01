@@ -42,7 +42,7 @@ describe('Controller: StockDashboardCtrl', function() {
     companyReasonCodesService = $injector.get('companyReasonCodesService');
     stockTakeService = $injector.get('stockTakeService');
     identityAccessFactory = $injector.get('identityAccessFactory');
-    globalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
 
     inject(function(_servedStockManagementDashboard_, _servedCateringStations_,
       _servedStockTakeList_, _servedCompanyReasonCodes_) {

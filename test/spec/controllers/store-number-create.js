@@ -14,7 +14,7 @@ describe('Controller: StoreNumberCreateCtrl', function () {
   var companyStoresService;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, _GlobalMenuService_, _companyStoresService_, _servedCompanyStores_) {
+  beforeEach(inject(function ($controller, $rootScope, $q, _globalMenuService_, _companyStoresService_, _servedCompanyStores_) {
     scope = $rootScope.$new();
 
     companyStoresService = _companyStoresService_;
@@ -31,7 +31,7 @@ describe('Controller: StoreNumberCreateCtrl', function () {
 
     spyOn(companyStoresService, 'deleteStore').and.returnValue(getStoresDeferred.promise);
 
-    companyId = _GlobalMenuService_.company.get();
+    companyId = _globalMenuService_.company.get();
 
     StoreNumberCreateCtrl = $controller('StoreNumberCreateCtrl', {
       $scope: scope

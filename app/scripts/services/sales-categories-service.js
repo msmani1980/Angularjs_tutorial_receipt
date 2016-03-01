@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('salesCategoriesService', function ($resource, ENV, GlobalMenuService) {
+  .service('salesCategoriesService', function ($resource, ENV, globalMenuService) {
 
     var requestURL = ENV.apiUrl + '/api/companies/:companyId/sales-categories/:id';
     var requestParameters = {
@@ -32,7 +32,7 @@ angular.module('ts5App')
     };
 
     var requestResource = function () {
-      requestParameters.companyId = GlobalMenuService.company.get();
+      requestParameters.companyId = globalMenuService.company.get();
       return $resource(requestURL, requestParameters, actions);
     };
 

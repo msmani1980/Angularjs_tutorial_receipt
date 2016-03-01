@@ -9,7 +9,7 @@
  */
 
 angular.module('ts5App').controller('CashBagSubmissionCtrl',
-  function ($scope, $http, GlobalMenuService, cashBagFactory, $filter, $window, dateUtility, ngToast, lodash) {
+  function ($scope, $http, globalMenuService, cashBagFactory, $filter, $window, dateUtility, ngToast, lodash) {
     $scope.viewName = 'Cash Bag Submission';
     $scope.search = {};
 
@@ -161,7 +161,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     }
 
     function getCHCompanySuccessHandler(chCompanyDataFromAPI) {
-      $this.companyId = GlobalMenuService.getCompanyData().chCompany.companyId;
+      $this.companyId = globalMenuService.getCompanyData().chCompany.companyId;
       cashBagFactory.getCompany($this.companyId).then(getCompanySuccessHandler, errorHandler);
       angular.element('#bankReferenceNumber').focus();
       $scope.CHCompany = angular.copy(chCompanyDataFromAPI);
@@ -263,7 +263,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       cashBagFactory.updateCashBag(null, payload, parameters).then(updateCashBagSuccessHandler, errorHandler);
     };
 
-    var chCompanyId = GlobalMenuService.getCompanyData().companyId;
+    var chCompanyId = globalMenuService.getCompanyData().companyId;
     cashBagFactory.getCompany(chCompanyId).then(getCHCompanySuccessHandler, errorHandler);
     initializeData();
 

@@ -11,7 +11,7 @@
  */
 angular.module('ts5App')
   .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, $localStorage, ngToast, cashBagFactory,
-                                       dateUtility, lodash, GlobalMenuService) {
+                                       dateUtility, lodash, globalMenuService) {
 
     // controller global properties
     var _companyId = null;
@@ -254,8 +254,6 @@ angular.module('ts5App')
     function promisesResponseHandler() {
       setBankReferenceNumberFromLocalStorage();
       if (angular.isUndefined($scope.dailyExchangeRates) || $scope.dailyExchangeRates.length === 0) {
-        showMessage(null, true,
-          'no daily exchange rate created for this date! please create one on exchange rates page');
         hideLoadingModal();
         return;
       }
@@ -321,7 +319,7 @@ angular.module('ts5App')
     }
 
     function getCashHandlerCompany() {
-      var chCompanyId = GlobalMenuService.getCompanyData().companyId;
+      var chCompanyId = globalMenuService.getCompanyData().companyId;
       _promises.push(
         cashBagFactory.getCompany(chCompanyId).then(function (response) {
           $scope.cashHandlerCompany = angular.copy(response);

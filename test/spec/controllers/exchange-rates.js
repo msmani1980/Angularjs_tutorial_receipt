@@ -17,7 +17,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
   var saveDailyExchangeRatesDefferred;
   var currencyFactory;
   var dateUtility;
-  var GlobalMenuService;
+  var globalMenuService;
   var servedCompanyDataJSON;
 
   beforeEach(module('ts5App'));
@@ -48,8 +48,8 @@ describe('Controller: ExchangeRatesCtrl', function () {
     dateUtility = $injector.get('dateUtility');
 
     servedCompanyDataJSON = $injector.get('servedCompanyData');
-    GlobalMenuService = $injector.get('GlobalMenuService');
-    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue(servedCompanyDataJSON);
+    globalMenuService = $injector.get('globalMenuService');
+    spyOn(globalMenuService, 'getCompanyData').and.returnValue(servedCompanyDataJSON);
 
     saveDailyExchangeRatesDefferred = $q.defer();
     spyOn(currencyFactory, 'saveDailyExchangeRates').and.returnValue(saveDailyExchangeRatesDefferred.promise);

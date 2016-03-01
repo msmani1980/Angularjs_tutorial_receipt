@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('GlobalMenuService', function ($localStorage) {
+  .service('globalMenuService', function ($localStorage) {
 
     function getCompanyData() {
       return $localStorage.companyObject || {};

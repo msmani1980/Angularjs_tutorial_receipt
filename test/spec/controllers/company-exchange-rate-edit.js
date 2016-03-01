@@ -29,11 +29,11 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     masterCurrenciesJSON,
     companyExchangeRatesJSON,
     companyExchangeRateJSON,
-    GlobalMenuService,
+    globalMenuService,
     payloadUtility;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function($q, $httpBackend, $controller, $rootScope, _GlobalMenuService_, _dateUtility_,
+  beforeEach(inject(function($q, $httpBackend, $controller, $rootScope, _globalMenuService_, _dateUtility_,
     _currencyFactory_, _servedCompany_, _servedCurrencies_, _servedCurrency_,
     _servedCompanyCurrencyGlobals_, _servedCompanyExchangeRates_, _servedCompanyExchangeRate_,
     _payloadUtility_) {
@@ -48,7 +48,7 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     companyExchangeRatesJSON = _servedCompanyExchangeRates_;
     companyExchangeRateJSON = _servedCompanyExchangeRate_;
     payloadUtility = _payloadUtility_;
-    GlobalMenuService = _GlobalMenuService_;
+    globalMenuService = _globalMenuService_;
 
     getCompanyGlobalCurrenciesDeferred = $q.defer();
     getCompanyGlobalCurrenciesDeferred.resolve(masterCurrenciesJSON);
@@ -60,7 +60,7 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     getCompanyExchangeRatesDeferred.resolve(companyExchangeRatesJSON);
     getDeleteCompanyExchangeRateDeferred = $q.defer();
 
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
+    spyOn(globalMenuService.company, 'get').and.returnValue(403);
     spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getDetailedCompanyCurrencies').and.returnValue(
       getDetailedCompanyCurrenciesDeferred.promise);

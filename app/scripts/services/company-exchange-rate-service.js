@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companyExchangeRateService', function ($q, $resource, GlobalMenuService, ENV) {
+  .service('companyExchangeRateService', function ($q, $resource, globalMenuService, ENV) {
 
     var companyExchangeRatesURL = ENV.apiUrl + '/api/companies/:companyId/exchange-rates/:id';
 
@@ -37,7 +37,7 @@ angular.module('ts5App')
 
     var getCompanyExchangeRates = function (payload) {
       payload = payload || {};
-      payload.companyId = GlobalMenuService.company.get();
+      payload.companyId = globalMenuService.company.get();
       return companyExchangeRatesResource.getCompanyExchangeRates(payload).$promise;
     };
 

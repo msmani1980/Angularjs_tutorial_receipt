@@ -8,7 +8,7 @@
  */
 angular.module('ts5App').controller('CompanyCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, companiesFactory, currencyFactory, dateUtility,
-    languagesService, countriesService, companyTypesService, $routeParams, GlobalMenuService, $q, $filter, lodash) {
+    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash) {
 
     $scope.formData = {
       taxes: [],

@@ -8,12 +8,12 @@
  * Service in the ts5App.
  */
 angular.module('ts5App').service('storeInstanceFactory',
-  function(storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService, menuMasterService,
+  function(storeInstanceService, catererStationService, schedulesService, carrierService, globalMenuService, menuMasterService,
            storesService, stationsService, itemsService, companyReasonCodesService, recordsService, storeInstanceValidationService,
            featureThresholdsService, $q, lodash, dateUtility) {
 
     function getCompanyId() {
-      return GlobalMenuService.company.get();
+      return globalMenuService.company.get();
     }
 
     function getItemsMasterList(payload) {

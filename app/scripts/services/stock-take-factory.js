@@ -9,10 +9,10 @@
  */
 angular.module('ts5App')
   .service('stockTakeFactory', function(catererStationService, stockDashboardService, stockTakeService, itemsService,
-    recordsService, GlobalMenuService) {
+    recordsService, globalMenuService) {
 
     function getCompanyId() {
-      return GlobalMenuService.company.get();
+      return globalMenuService.company.get();
     }
 
     function getCatererStationList() {

@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('tagsService', function ($resource, ENV, GlobalMenuService) {
+  .service('tagsService', function ($resource, ENV, globalMenuService) {
 
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
 
@@ -28,7 +28,7 @@ angular.module('ts5App')
 
     var getTagsList = function (payload) {
       payload = payload || {};
-      payload.companyId = GlobalMenuService.company.get();
+      payload.companyId = globalMenuService.company.get();
       return requestResource.getTagsList(payload).$promise;
     };
 

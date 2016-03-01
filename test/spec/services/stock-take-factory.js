@@ -12,7 +12,7 @@ describe('Service: stockTakeFactory', function() {
   var stockTakeService;
   var itemsService;
   var recordsService;
-  var GlobalMenuService;
+  var globalMenuService;
 
   beforeEach(inject(function(_stockTakeFactory_, $injector) {
     stockTakeFactory = _stockTakeFactory_;
@@ -21,7 +21,7 @@ describe('Service: stockTakeFactory', function() {
     stockTakeService = $injector.get('stockTakeService');
     itemsService = $injector.get('itemsService');
     recordsService = $injector.get('recordsService');
-    GlobalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
 
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(stockDashboardService, 'getStockDashboardItems');

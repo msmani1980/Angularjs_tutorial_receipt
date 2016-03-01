@@ -9,7 +9,7 @@ describe('Service: promotionsFactory', function () {
   var promotionsFactory;
   var itemsService;
   var recordsService;
-  var GlobalMenuService;
+  var globalMenuService;
   var stationsService;
   var companyDiscountService;
   var salesCategoriesService;
@@ -22,7 +22,7 @@ describe('Service: promotionsFactory', function () {
     promotionsFactory = _promotionsFactory_;
     itemsService = $injector.get('itemsService');
     recordsService = $injector.get('recordsService');
-    GlobalMenuService = $injector.get('GlobalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
     stationsService = $injector.get('stationsService');
     companyDiscountService = $injector.get('companyDiscountService');
     salesCategoriesService = $injector.get('salesCategoriesService');
@@ -36,7 +36,7 @@ describe('Service: promotionsFactory', function () {
     spyOn(itemsService, 'getItemsList');
     spyOn(recordsService, 'getBenefitTypes');
     spyOn(recordsService, 'getDiscountTypes');
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
+    spyOn(globalMenuService.company, 'get').and.returnValue(403);
     spyOn(recordsService, 'getPromotionTypes');
     spyOn(companyDiscountService, 'getDiscountList');
     spyOn(salesCategoriesService, 'getSalesCategoriesList');
@@ -83,11 +83,11 @@ describe('Service: promotionsFactory', function () {
     });
   });
 
-  // GlobalMenuService
-  describe('GlobalMenuService service calls', function() {
+  // globalMenuService
+  describe('globalMenuService service calls', function() {
     it('should call get', function() {
       promotionsFactory.getCompanyId();
-      expect(GlobalMenuService.company.get).toHaveBeenCalled();
+      expect(globalMenuService.company.get).toHaveBeenCalled();
     });
   });
 
