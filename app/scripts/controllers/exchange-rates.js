@@ -206,6 +206,7 @@ angular.module('ts5App')
     }
 
     function createPayload(shouldSubmit) {
+      
       $scope.payload = {
         dailyExchangeRate: angular.extend(angular.copy($scope.dailyExchangeRates), {
           isSubmitted: shouldSubmit || false,
