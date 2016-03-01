@@ -668,17 +668,17 @@ angular.module('ts5App')
         var offloadCount = 0;
 
         if (isInboundedDefined(item)) {
-          inboundedCount = parseInt(counts.inboundOffloadCount);
+          inboundedCount = getIntOrZero(counts.inboundOffloadCount);
         } else {
-          offloadCount = parseInt(counts.inboundOffloadCount);
+          offloadCount = getIntOrZero(counts.inboundOffloadCount);
         }
 
         return {
           storeInstanceId: item.storeInstanceId,
           replenishStoreInstanceId: item.replenishStoreInstanceId,
           itemMasterId: item.itemMasterId,
-          dispatchedCount: parseInt(counts.dispatchedCount),
-          replenishCount: parseInt(counts.replenishCount),
+          dispatchedCount: getIntOrZero(counts.dispatchedCount),
+          replenishCount: getIntOrZero(counts.replenishCount),
           inboundedCount: inboundedCount,
           offloadCount: offloadCount,
           companyId: item.companyId,
@@ -695,14 +695,14 @@ angular.module('ts5App')
     function handleStockItemsCountsSaveSuccess(items) {
       angular.forEach(items, function (item) {
         if (isInboundedDefined(item)) {
-          item.inboundedCount = item.revision.inboundOffloadCount;
+          item.inboundedCount = getIntOrZero(item.revision.inboundOffloadCount);
         } else {
-          item.offloadCount = item.revision.inboundOffloadCount;
+          item.offloadCount = getIntOrZero(item.revision.inboundOffloadCount);
         }
 
-        item.dispatchedCount = item.revision.dispatchedCount;
-        item.replenishCount = item.revision.replenishCount;
-        item.inboundOffloadCount = item.revision.inboundOffloadCount;
+        item.dispatchedCount = getIntOrZero(item.revision.dispatchedCount);
+        item.replenishCount = getIntOrZero(item.revision.replenishCount);
+        item.inboundOffloadCount = getIntOrZero(item.revision.inboundOffloadCount);
         item.varianceQuantity = getVarianceQuantity(item);
         item.varianceValue = formatAsCurrency(getVarianceValue(item.varianceQuantity, item.retailValue));
         item.isEditing = false;

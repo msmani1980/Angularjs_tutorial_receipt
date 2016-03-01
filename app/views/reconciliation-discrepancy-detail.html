@@ -398,15 +398,15 @@
                     <span class="value stock-discrepancy item itemName">{{ item.itemName }}</span>
                   </td>
                   <td>
-                    <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.dispatchedCount">
+                    <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.dispatchedCount" ng-pattern="regexp.number">
                     <span ng-hide="showEditViewForItem(item, true)" class="value stock-discrepancy item dispatchedCount">{{ item.dispatchedCount }}</span>
                   </td>
                   <td>
-                    <input ng-show="showEditViewForItem(item, true)" ng-disabled="!hasReplenishInstance(stockItemList)" type="text" class="form-control" ng-model="item.revision.replenishCount">
+                    <input ng-show="showEditViewForItem(item, true)" ng-disabled="!hasReplenishInstance(stockItemList)" type="text" class="form-control" ng-model="item.revision.replenishCount" ng-pattern="regexp.number">
                     <span ng-hide="showEditViewForItem(item, true)" class="value stock-discrepancy item replenishCount">{{ item.replenishCount }}</span>
                   </td>
                   <td>
-                    <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.inboundOffloadCount">
+                    <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.inboundOffloadCount" ng-pattern="regexp.number">
                     <span ng-hide="showEditViewForItem(item, true)" class="value stock-discrepancy item inboundOffloadCount">{{ item.inboundOffloadCount }}</span>
                   </td>
                   <td>
