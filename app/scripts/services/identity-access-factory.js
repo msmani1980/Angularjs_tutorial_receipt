@@ -35,6 +35,7 @@ angular.module('ts5App')
         delete $localStorage.sessionObject;
         delete $localStorage.companyObject;
         delete $localStorage.company;
+        delete $localStorage.cashBagBankRefNumber;
         delete $http.defaults.headers.common.userId;
         delete $http.defaults.headers.common.companyId;
         delete $http.defaults.headers.common.sessionToken;
