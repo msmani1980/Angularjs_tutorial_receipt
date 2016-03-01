@@ -7,12 +7,35 @@
  * # missingDailyExchangeModal
  */
 angular.module('ts5App')
-  .directive('missingDailyExchangeModal', function () {
-    return {
-      template: '<div></div>',
-      restrict: 'E',
-      link: function postLink(scope, element, attrs) {
-        element.text('this is the missingDailyExchangeModal directive' + attrs);
+  .directive('missingDailyExchangeModal', function (cashBagFactory, GlobalMenuService, dateUtility) {
+
+    function getExchangeRateHandler(dataFromAPI) {
+      angular.element('.missing-daily-exchange-modal').modal('show');
+      if (!dataFromAPI.dailyExchangeRates || dataFromAPI.dailyExchangeRates.length === 0) {
+        angular.element('.missing-daily-exchange-modal').modal('show');
       }
+    }
+
+    function checkForDailyExchangeRate() {
+      var companyId = GlobalMenuService.getCompanyData().chCompany.companyId;
+      var dailyExchangeDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
+
+      cashBagFactory.getDailyExchangeRates(companyId, dailyExchangeDate).then(getExchangeRateHandler);
+    }
+
+    function missingDailyExchangeController($scope, $location) {
+      $scope.goToPage = function (pageUrl) {
+        angular.element('.missing-daily-exchange-modal').removeClass('fade').modal('hide');
+        $location.path(pageUrl);
+      };
+
+      checkForDailyExchangeRate();
+    }
+
+    return {
+      templateUrl: '/views/directives/missing-daily-exchange-modal.html',
+      restrict: 'E',
+      scope: true,
+      controller: missingDailyExchangeController
     };
   });

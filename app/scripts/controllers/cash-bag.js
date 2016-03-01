@@ -254,7 +254,6 @@ angular.module('ts5App')
     function promisesResponseHandler() {
       setBankReferenceNumberFromLocalStorage();
       if (angular.isUndefined($scope.dailyExchangeRates) || $scope.dailyExchangeRates.length === 0) {
-        showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
         hideLoadingModal();
         return;
       }
