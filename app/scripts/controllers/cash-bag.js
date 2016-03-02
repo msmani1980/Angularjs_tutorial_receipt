@@ -228,7 +228,7 @@ angular.module('ts5App')
     }
 
     function setManualAmount(amount) {
-      if (angular.isUndefined(amount)) {
+      if (angular.isUndefined(amount) || amount === null) {
         return formatAsCurrency(0);
       }
 
