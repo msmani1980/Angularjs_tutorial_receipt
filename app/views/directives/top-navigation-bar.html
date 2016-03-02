@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div ng-if="isAuthorized">
       <a class="navbar-brand" ng-href="/#/">
-        <i class="fa fa-home"></i><span class="hidden-xs"> {{selectedCompany.companyName}}<em ng-if="selectedCompany.chCompany"> |
+        <i class="fa fa-home"></i>a<span class="hidden-xs"> {{selectedCompany.companyName}}<em ng-if="selectedCompany.chCompany"> |
         {{selectedCompany.chCompany.companyName}}</em></span>
       </a>
       <div class="pull-right settings-navbar">
@@ -48,7 +48,7 @@
                       name="cashHandlerRetail"
                       ng-change="selectCHRetailCompany(companyObject.type)"
                       ng-model="pickedCompany[companyObject.type].chCompany"
-                      ng-options="company.displayCompanyName for company in cashHandlerRetailCompanyList | orderBy: 'displayCompanyName'">
+                      ng-options="company.companyName for company in cashHandlerRetailCompanyList | orderBy: 'companyName'">
                 <option selected="selected" value>Select a Retail Company for {{companyObject.type}}</option>
               </select>
             </div>

@@ -26,6 +26,20 @@ angular.module('ts5App')
         $scope.$emit('logout');
       };
 
+      function correctRelativeCompanyData(company) {
+        var selectedCompanyName = $scope.pickedCompany['Cash Handler'].companyName;
+        if (selectedCompanyName === company.companyName) {
+          var placeholderCompany = angular.copy(company);
+          company.companyName = company.relativeCompany;
+          company.companyTypeName = company.relativeCompanyType;
+          company.companyId = company.relativeCompanyId;
+
+          company.relativeCompany = placeholderCompany.companyName;
+          company.relativeCompanyType = placeholderCompany.companyTypeName;
+          company.relativeCompanyId = placeholderCompany.companyId;
+        }
+      }
+
       function setRetailForCHModel(companyListFromAPI) {
         var retailCompanyList = lodash.findWhere($scope.userCompanies, { type: 'Retail' });
         var selectedCompanyName = $scope.pickedCompany['Cash Handler'].companyName;
@@ -34,9 +48,8 @@ angular.module('ts5App')
         }
 
         $scope.cashHandlerRetailCompanyList = lodash.filter(angular.copy(companyListFromAPI.companyRelationships), function (company) {
-          company.displayCompanyName = (company.companyName === selectedCompanyName) ? company.relativeCompany : company.companyName;
-          company.displayCompanyType = (company.companyName === selectedCompanyName) ? company.relativeCompanyType : company.companyTypeName;
-          return lodash.findIndex(retailCompanyList.companies, { companyName: company.displayCompanyName }) >= 0 && company.displayCompanyType === 'Retail';
+          correctRelativeCompanyData(company);
+          return lodash.findIndex(retailCompanyList.companies, { companyName: company.companyName }) >= 0 && company.companyTypeName === 'Retail';
         });
       }
 
@@ -77,7 +90,7 @@ angular.module('ts5App')
         setRetailForCHModel(companyList);
         if ($scope.userObject.companyData.chCompany) {
           $scope.pickedCompany[companyTypeName].chCompany = lodash.where($scope.cashHandlerRetailCompanyList,
-            { companyId: $scope.userObject.companyData.chCompany.companyId })[0];
+            { id: $scope.userObject.companyData.chCompany.id })[0];
         }
       }
 
