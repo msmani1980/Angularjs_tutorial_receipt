@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: CashBagSubmissionCtrl', function () {
+describe('Controller: CashBagSubmissionCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
