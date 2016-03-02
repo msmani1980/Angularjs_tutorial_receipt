@@ -75,19 +75,19 @@ describe('Directive: topNavigationBar', function () {
     });
 
     it('should get company relationship if cash handler is selected', function () {
-      isolatedScope.pickedCompany['Cash Handler'] = { id: 'fakeRetailId' };
+      isolatedScope.pickedCompany['Cash Handler'] = { id: 18 };
       isolatedScope.selectCompany('Cash Handler');
       expect(companyRelationshipFactory.getCompanyRelationshipListByCompany).toHaveBeenCalled();
     });
 
-    it('should set displayCompanyName from companyName or relativeCompanyName', function () {
-      isolatedScope.pickedCompany['Cash Handler'] = { id: 'fakeRetailId', companyName: 'ICE Gatwick' };
+    it('should correct companyName from relativeCompanyName', function () {
+      isolatedScope.pickedCompany['Cash Handler'] = { id: 19, companyName: 'ICE Gatwick' };
       isolatedScope.selectCompany('Cash Handler');
       scope.$digest();
-      expect(isolatedScope.cashHandlerRetailCompanyList[0].displayCompanyName).toBeDefined();
-      expect(isolatedScope.cashHandlerRetailCompanyList[0].displayCompanyName).toEqual('British Airways');
-      expect(isolatedScope.cashHandlerRetailCompanyList[1].displayCompanyName).toBeDefined();
-      expect(isolatedScope.cashHandlerRetailCompanyList[1].displayCompanyName).toEqual('easyJet');
+      expect(isolatedScope.cashHandlerRetailCompanyList[0].companyName).toBeDefined();
+      expect(isolatedScope.cashHandlerRetailCompanyList[0].companyName).toEqual('British Airways');
+      expect(isolatedScope.cashHandlerRetailCompanyList[1].companyName).toBeDefined();
+      expect(isolatedScope.cashHandlerRetailCompanyList[1].companyName).toEqual('easyJet');
     });
 
     it('should filter out companies that are not retail or are not available to the user', function () {
@@ -95,8 +95,8 @@ describe('Directive: topNavigationBar', function () {
       isolatedScope.selectCompany('Cash Handler');
       scope.$digest();
       expect(isolatedScope.cashHandlerRetailCompanyList.length).toEqual(2);
-      expect(isolatedScope.cashHandlerRetailCompanyList[0].displayCompanyType).toEqual('Retail');
-      expect(isolatedScope.cashHandlerRetailCompanyList[1].displayCompanyType).toEqual('Retail');
+      expect(isolatedScope.cashHandlerRetailCompanyList[0].companyTypeName).toEqual('Retail');
+      expect(isolatedScope.cashHandlerRetailCompanyList[1].companyTypeName).toEqual('Retail');
     });
   });
 
