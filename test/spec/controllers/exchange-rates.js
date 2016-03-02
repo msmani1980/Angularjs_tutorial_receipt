@@ -147,6 +147,14 @@ describe('Controller: ExchangeRatesCtrl', function () {
       expect(scope.payload.dailyExchangeRate.exchangeRateDate).toBe(moment().format('YYYYMMDD').toString());
     });
 
+    it('should create payload with company data', function () {
+      scope.checkVarianceAndSave(false);
+      expect(scope.payload.dailyExchangeRate.chCompanyId).toBeTruthy();
+      expect(scope.payload.dailyExchangeRate.retailCompanyId).toBeTruthy();
+      expect(scope.payload.dailyExchangeRate.chBaseCurrencyId).toBeTruthy();
+      expect(scope.payload.dailyExchangeRate.retailBaseCurrencyId).toBeTruthy();
+    });
+
     it('should only have bank Exchange Rate Currencies', function () {
       var expectedCurrencyObject = {
         retailCompanyCurrencyId: 1,

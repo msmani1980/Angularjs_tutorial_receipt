@@ -206,12 +206,22 @@ angular.module('ts5App')
     }
 
     function createPayload(shouldSubmit) {
-      
+      var dailyExchangeRatePayload = {
+        exchangeRateDate: formatDateForAPI($scope.cashiersDateField),
+        isSubmitted: shouldSubmit || false,
+        chCompanyId: $scope.cashHandlerCompany.id,
+        retailCompanyId: $scope.company.id,
+        chBaseCurrencyId: $scope.cashHandlerCompany.baseCurrencyId,
+        retailBaseCurrencyId: $scope.company.baseCurrencyId,
+        dailyExchangeRateCurrencies: $scope.dailyExchangeRates.dailyExchangeRateCurrencies || []
+      };
+
+      if ($scope.dailyExchangeRates.id) {
+        dailyExchangeRatePayload.id = $scope.dailyExchangeRates.id;
+      }
+
       $scope.payload = {
-        dailyExchangeRate: angular.extend(angular.copy($scope.dailyExchangeRates), {
-          isSubmitted: shouldSubmit || false,
-          exchangeRateDate: formatDateForAPI($scope.cashiersDateField)
-        })
+        dailyExchangeRate: dailyExchangeRatePayload
       };
       resolvePayloadDependencies();
       cleanPayloadData();
