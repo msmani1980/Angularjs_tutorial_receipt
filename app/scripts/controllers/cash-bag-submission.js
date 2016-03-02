@@ -120,8 +120,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       var payload = {
         submission: 'submit',
         limit: $this.meta.limit,
-        offset: $this.meta.offset,
-        companyId: $this.companyId
+        offset: $this.meta.offset
       };
       return ($this.isSearching) ? angular.extend(payload, searchParams) : payload;
     }
@@ -139,7 +138,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       $this.loadingProgress = true;
 
       var payload = generatePayload();
-      cashBagFactory.getCashBagList(null, payload).then($this.getCashBagListSuccessHandler, errorHandler);
+      cashBagFactory.getCashBagList($this.companyId, payload).then($this.getCashBagListSuccessHandler, errorHandler);
       $this.meta.offset += $this.meta.limit;
     };
 
@@ -266,7 +265,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       var parameters = {
         submission: 'submit'
       };
-      cashBagFactory.updateCashBag(null, payload, parameters).then(updateCashBagSuccessHandler, errorHandler);
+      cashBagFactory.updateCashBag($this.companyId, payload, parameters).then(updateCashBagSuccessHandler, errorHandler);
     };
 
     var chCompanyId = globalMenuService.getCompanyData().companyId;

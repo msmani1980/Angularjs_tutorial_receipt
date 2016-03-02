@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CashBagSubmissionCtrl', function () {
+fdescribe('Controller: CashBagSubmissionCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -127,8 +127,9 @@ describe('Controller: CashBagSubmissionCtrl', function () {
           bankReferenceNumber: 'fakeBankReferenceNumber'
         };
         scope.searchCashBags();
+        var expectedCompanyId = servedCompanyDataJSON.chCompany.companyId;
         var expectedParameter = jasmine.objectContaining({ bankReferenceNumber: 'fakeBankReferenceNumber' });
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(null, expectedParameter);
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(expectedCompanyId, expectedParameter);
       });
     });
   });
@@ -146,7 +147,8 @@ describe('Controller: CashBagSubmissionCtrl', function () {
       var expectedParameter = {
         cashBags: [jasmine.objectContaining({ bankReferenceNumber: '12345' })]
       };
-      expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(null, expectedParameter, { submission: 'submit' });
+      var expectedCompanyId = servedCompanyDataJSON.chCompany.companyId;
+      expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(expectedCompanyId, expectedParameter, { submission: 'submit' });
     });
 
     it('should not call updateCashBag', function () {
@@ -169,10 +171,12 @@ describe('Controller: CashBagSubmissionCtrl', function () {
         bankReferenceNumber: 'fakeBankReferenceNumber'
       };
       var expectedParameter = jasmine.objectContaining(scope.search);
+      var expectedCompanyId = servedCompanyDataJSON.chCompany.companyId;
+
       scope.toggleCheckbox();
       scope.submitCashBag();
       scope.$digest();
-      expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(null, expectedParameter);
+      expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(expectedCompanyId, expectedParameter);
     });
   });
 
