@@ -45,8 +45,9 @@ angular.module('ts5App')
       var lmpReplenishCount = getIntOrZero(stockItem.replenishCount);
       var lmpIncomingCount = getIntOrZero(stockItem.inboundedCount);
       var offloadCount = getIntOrZero(stockItem.offloadCount);
+      var eposUpliftCount = getIntOrZero(stockItem.eposUpliftCount);
 
-      return eposSales - ((lmpDispatchedCount + lmpReplenishCount) - (lmpIncomingCount + offloadCount));
+      return eposSales - ((lmpDispatchedCount + lmpReplenishCount + eposUpliftCount) - (lmpIncomingCount + offloadCount));
     }
 
     function getVarianceValue(varianceQuantity, retailPrice) {
@@ -67,6 +68,7 @@ angular.module('ts5App')
       var dispatchedCount = getIntOrZero(stockItem.dispatchedCount);
       var replenishCount = getIntOrZero(stockItem.replenishCount);
       var eposQuantity = getIntOrZero(stockItem.eposQuantity);
+      var eposUpliftCount = getIntOrZero(stockItem.eposUpliftCount);
       var inboundOffloadCount = stockItem.inboundedCount || stockItem.offloadCount || 0;
 
       return {
@@ -87,7 +89,8 @@ angular.module('ts5App')
         varianceQuantity: varianceQuantity,
         retailValue: formatAsCurrency(retailValue),
         varianceValue: formatAsCurrency(varianceValue),
-        isDiscrepancy: isDiscrepancy
+        isDiscrepancy: isDiscrepancy,
+        eposUpliftCount: eposUpliftCount
       };
     }
 
