@@ -1,7 +1,7 @@
 <div class="container module-container">
 
   <error-dialog error-response="errorResponse" display="displayError"></error-dialog>
-  <missing-daily-exchange-modal></missing-daily-exchange-modal>
+  <missing-daily-exchange-modal check-on-load="false"></missing-daily-exchange-modal>
 
   <!-- submitCashBagModal -->
   <div class="modal fade submit-cashBag-modal hide-from-print">
@@ -50,7 +50,7 @@
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
 
-        <button ng-click="showSubmitPopup()" ng-disabled="shouldDisableSubmitButton()" class="btn btn-primary">
+        <button ng-click="showSubmitPopup()" ng-disabled="shouldDisableSubmitButton()" class="btn btn-primary submit-cash-bag-btn">
           <i class="fa fa-send" aria-hidden="true"></i>
           <span class="hidden-xs">Submit</span>
         </button>

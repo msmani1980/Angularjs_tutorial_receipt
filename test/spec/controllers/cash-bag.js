@@ -38,6 +38,8 @@ describe('Controller: CashBagCtrl', function () {
   var getStoreInstanceJSON;
   var getStoreListJSON;
 
+  var checkForDailyExchangeRate;
+
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_, $injector) {
     scope = $rootScope.$new();
@@ -101,6 +103,11 @@ describe('Controller: CashBagCtrl', function () {
 
     localStorage.cashBagBankRefNumber = 12345;
 
+    checkForDailyExchangeRate = $q.defer();
+    checkForDailyExchangeRate.resolve({});
+    scope.checkForDailyExchangeRate = function () {
+      return checkForDailyExchangeRate.promise;
+    };
   }));
 
   // CREATE
