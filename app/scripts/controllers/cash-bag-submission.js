@@ -215,8 +215,13 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     };
 
     $scope.showSubmitPopup = function () {
-      setCashBagListToSubmit();
-      angular.element('.submit-cashBag-modal').modal('show');
+      var buttonSelector = '.submit-cash-bag-btn';
+      angular.element(buttonSelector).button('loading');
+      $scope.checkForDailyExchangeRate().then(function () {
+        angular.element(buttonSelector).button('reset');
+        setCashBagListToSubmit();
+        angular.element('.submit-cashBag-modal').modal('show');
+      });
     };
 
     $scope.clearForm = function () {
@@ -248,6 +253,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     };
 
     $scope.submitCashBag = function () {
+      angular.element('#addCashBagModal').modal('show');
       angular.element('.submit-cashBag-modal').modal('hide');
       if ($scope.cashBagListToSubmit.length === 0) {
         return;

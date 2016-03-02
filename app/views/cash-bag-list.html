@@ -1,7 +1,7 @@
 <div class="container module-container">
 
-  <error-dialog form-object="cashBagSearchForm" error-response="errorResponse" display="displayError">
-  </error-dialog>
+  <error-dialog form-object="cashBagSearchForm" error-response="errorResponse" display="displayError"></error-dialog>
+  <missing-daily-exchange-modal check-on-load="false"></missing-daily-exchange-modal>
 
   <!-- Add cash bag modal-->
   <div class="modal fade" id="addCashBagModal" role="dialog">
@@ -118,7 +118,10 @@
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
 
-        <button ng-click="showCreatePopup()" class="btn btn-primary">
+        <button
+          ng-click="showCreatePopup()"
+          class="btn btn-primary add-cash-bag-btn"
+          data-loading-text="Loading...">
           <i class="fa fa-plus" aria-hidden="true"></i>
           <span class="hidden-xs">Add Cash Bag</span>
         </button>
@@ -207,7 +210,7 @@
 
       <div class="panel-footer text-right">
         <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
-        <button type="submit"  class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-primary">Search</button>
       </div>
     </form>
   </div>
@@ -241,7 +244,11 @@
         <button class="btn btn-info btn-xs" ng-click="viewCashBag(cashBag)">
           <i class="fa fa-file"></i>
         </button>
-        <button class="btn btn-primary btn-xs" ng-click="editCashBag(cashBag)" ng-show="isCashBagEditable(cashBag)">
+        <button
+          class="btn btn-primary btn-xs edit-cash-bag-{{cashBag.id}}-btn"
+          ng-click="editCashBag(cashBag)"
+          ng-show="isCashBagEditable(cashBag)"
+          data-loading-text="&#9716;">
           <i class="fa fa-pencil"></i>
         </button>
       </td>

@@ -21,7 +21,7 @@ describe('Directive: missingDailyExchangeModal', function () {
   var dateUtility;
 
   function getCompiledElement() {
-    var element = angular.element('<missing-daily-exchange-modal></missing-daily-exchange-modal>');
+    var element = angular.element('<missing-daily-exchange-modal check-on-load="true"></missing-daily-exchange-modal>');
     var compiledElement = compile(element)(scope);
     scope.$digest();
     isolatedScope = compiledElement.children().scope();
@@ -53,6 +53,7 @@ describe('Directive: missingDailyExchangeModal', function () {
   describe('API Calls', function () {
     beforeEach(function () {
       directiveElement = getCompiledElement();
+      scope.checkForDailyExchangeRate();
     });
 
     it('should get the companyId', function () {
