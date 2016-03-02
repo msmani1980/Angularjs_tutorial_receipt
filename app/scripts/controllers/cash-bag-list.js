@@ -181,11 +181,18 @@ angular.module('ts5App')
     }
 
     function clearPopupSearch() {
-      if (angular.isDefined($scope.search) && angular.isDefined($scope.scheduleDate)) {
+      if (angular.isDefined($scope.search)) {
         delete $scope.search.selectedSchedule;
         delete $scope.search.selectedStoreNumber;
-        delete $scope.scheduleDate;
+        delete $scope.search.scheduleDate;
       }
+
+      if (angular.isDefined($scope.storeInstanceList)) {
+        $scope.storeInstanceList = [];
+      }
+
+      $scope.displayModalError = false;
+
     }
 
     // scope methods
@@ -215,13 +222,14 @@ angular.module('ts5App')
     }
 
     $scope.isDateSelected = function() {
-      return !$scope.scheduleDate;
+      return !$scope.search.scheduleDate;
     };
 
     function createPayloadForStoreInstance() {
-      var payload = {
-        scheduleDate: dateUtility.formatDateForAPI($scope.scheduleDate)
-      };
+      var payload = {};
+      if ($scope.search.scheduleDate) {
+        payload.scheduleDate = dateUtility.formatDateForAPI($scope.search.scheduleDate);
+      }
 
       if ($scope.search.selectedSchedule) {
         payload.scheduleNumber = $scope.search.selectedSchedule.scheduleNumber;
@@ -247,27 +255,22 @@ angular.module('ts5App')
       if (isResponseValid) {
         var storeListFromAPI = angular.copy(dataFromAPI.response);
         $scope.storeInstanceList = formatScheduleDateForApp(storeListFromAPI);
+        $scope.listLoading = false;
         return;
       }
 
+      $scope.listLoading = false;
       showModalErrors('No Store Instance found, please check search criteria');
     };
 
     $scope.findStoreInstance = function() {
-      if (!$scope.scheduleDate) {
-        showModalErrors('Please select date and schedule number or store number');
-        return;
-      }
-
-      if (!($scope.search.selectedSchedule || $scope.search.selectedStoreNumber)) {
-        showModalErrors('Please select date and schedule number or store number');
-        return;
-      }
-
       $scope.storeInstanceList = [];
       $scope.displayModalError = false;
       var payload = createPayloadForStoreInstance();
-      cashBagFactory.getStoreInstanceList(payload, companyId).then(getStoreInstanceListHandler);
+      if (payload.scheduleDate || payload.scheduleNumber || payload.storeId) {
+        $scope.listLoading = true;
+        cashBagFactory.getStoreInstanceList(payload, companyId).then(getStoreInstanceListHandler);
+      }
     };
 
     $scope.clearSelectedSchedule = function() {
@@ -278,21 +281,21 @@ angular.module('ts5App')
       delete $scope.search.selectedStoreNumber;
     };
 
-    $scope.$watch('scheduleDate', function() {
-      if (!$scope.scheduleDate) {
+    $scope.$watch('search.scheduleDate', function() {
+      if (!$scope.search.scheduleDate) {
         return;
       }
-
+ 
       $scope.clearSelectedSchedule();
       $scope.clearStoreNumber();
-      var searchDate = dateUtility.formatDateForAPI($scope.scheduleDate);
+      var searchDate = dateUtility.formatDateForAPI($scope.search.scheduleDate);
       var payload = {
         startDate: searchDate,
         endDate: searchDate
       };
+
       cashBagFactory.getStoreList(payload, companyId).then(getStoreListResponseHandler);
       cashBagFactory.getSchedulesInDateRange(companyId, searchDate, searchDate).then(setFilteredScheduleList);
-
     });
 
     $scope.submitCreate = function(storeInstance) {
