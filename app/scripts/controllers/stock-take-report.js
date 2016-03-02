@@ -82,6 +82,11 @@ angular.module('ts5App')
     this.getStockTakeListSuccessHandler = function(data) {
       $this.meta.count = $this.meta.count || data.meta.count;
       $scope.userSelectedStation = true;
+      if (!data.response) {
+
+        return hideLoadingBar();
+      }
+
       $scope.stockTakeList = $scope.stockTakeList.concat(data.response);
       $this.formatStockTakeDates();
       hideLoadingBar();
