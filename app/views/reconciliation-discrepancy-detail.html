@@ -290,27 +290,27 @@
               <tr class="info">
                 <th>Discrepancy</th>
                 <th>Value</th>
-                <th>%</th>
+                <th>&#37;</th>
               </tr>
               <tr>
                 <td>Net LMP vs Net ePOS</td>
                 <td class="value discrepancy net value">{{discrepancy.net.value}}</td>
-                <td class="value discrepancy net percentage">{{discrepancy.net.percentage}}</td>
+                <td class="value discrepancy net percentage">{{discrepancy.net.percentage}} &#37;</td>
               </tr>
               <tr>
                 <td>Total Revenue @ Cash Handler Exchange Rate vs Net ePOS</td>
                 <td class="value discrepancy revenue value">{{companyIsUsingCash ? discrepancy.revenue.value: 'N/A'}}</td>
-                <td class="value discrepancy revenue percentage">{{companyIsUsingCash ? discrepancy.revenue.percentage: 'N/A'}}</td>
+                <td class="value discrepancy revenue percentage">{{companyIsUsingCash ? discrepancy.revenue.percentage + ' &#37;': 'N/A'}}</td>
               </tr>
               <tr>
                 <td>Foreign Exchange</td>
                 <td class="value discrepancy exchange value ">{{companyIsUsingCash ? discrepancy.exchange.value : 'N/A'}}</td>
-                <td class="value discrepancy exchange percentage ">{{companyIsUsingCash ? discrepancy.exchange.percentage : 'N/A'}}</td>
+                <td class="value discrepancy exchange percentage ">{{companyIsUsingCash ? discrepancy.exchange.percentage + ' &#37;': 'N/A'}}</td>
               </tr>
               <tr class="active">
                 <th>Total</th>
                 <th class="value discrepancy total value">{{discrepancy.total.value}}</th>
-                <th class="value discrepancy total percentage">{{discrepancy.total.percentage}}</th>
+                <th class="value discrepancy total percentage">{{discrepancy.total.percentage}} &#37;</th>
               </tr>
             </table>
           </div>
