@@ -702,6 +702,7 @@ describe('Controller: PromotionsCtrl', function() {
     });
 
     describe('save scope function', function() {
+
       beforeEach(function() {
         scope.promotionsForm = {
           $valid: true,
@@ -1299,10 +1300,6 @@ describe('Controller: PromotionsCtrl', function() {
         expect(scope.selectOptions.companyDiscountsVoucher).toEqual(jasmine.any(Array));
       });
 
-      it('should set isDisabled to false', function() {
-        expect(scope.isDisabled).toBeFalsy();
-      });
-
       it('should call save promotion API', function() {
         scope.save();
         expect(promotionsFactory.savePromotion).toHaveBeenCalled();
@@ -1328,6 +1325,84 @@ describe('Controller: PromotionsCtrl', function() {
         };
         expect(scope.save()).toBe(false);
       });
+    });
+
+    describe('save scope function as scope.isDisabled', function() {
+      var payload;
+      beforeEach(inject(function($controller){
+        routeParams = {
+          state: 'edit',
+          id: 253
+        };
+        PromotionsCtrl = $controller('PromotionsCtrl', {
+          $scope: scope,
+          $routeParams: routeParams
+        });
+        scope.$digest();
+        scope.isDisabled = true;
+        scope.promotion = {
+          promotionCode: 'test5',
+          promotionName: 'test5',
+          description: 'test5',
+          startDate: '09/30/2015',
+          endDate: dateUtility.tomorrowFormatted(),
+          promotionType: {
+            id: 2
+          },
+          promotionCategories: [],
+          items: [],
+          spendLimitCategory: {
+            id: 67
+          },
+          benefitType: {
+            id: 1
+          },
+          discountType: {
+            id: 1
+          },
+          benefitDiscountApply: {
+            id: 4
+          },
+          discountItem: {
+            id: 36,
+          },
+          giftWithPurchase: true,
+          discountCategory: {
+            id: null
+          },
+          companyCoupon: {
+            id: null
+          },
+          companyVoucher: {
+            id: null
+          },
+          discountPercentage: '1.234',
+          lowestPricedArticle: true,
+          filters: []
+        };
+        scope.promotionsForm = {
+          $valid: true,
+          QualifierType: {
+            $modelValue: {
+              id: 1
+            }
+          },
+          BenefitType: {
+            $modelValue: {
+              id: 1
+            }
+          }
+        };
+        payload = {
+          endDate: dateUtility.formatDateForAPI(dateUtility.tomorrowFormatted())
+        };
+      }));
+
+      it('should call edit with formatted endDate only', function() {
+        scope.save();
+        expect(promotionsFactory.savePromotion).toHaveBeenCalledWith(253, payload);
+      });
+
     });
 
     describe('view promotion', function() {
