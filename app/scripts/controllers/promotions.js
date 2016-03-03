@@ -666,6 +666,11 @@ angular.module('ts5App')
       promotionsFactory.savePromotion($routeParams.id, payload).then(resolveSavePromotion, showResponseErrors);
     }
 
+    function savePromotionEdit(payload) {
+      displayLoadingModal('Saving promotion');
+      promotionsFactory.savePromotion($routeParams.id, payload).then(resolveSavePromotion, showResponseErrors);
+    }
+
     function getPromotion() {
       displayLoadingModal('Getting promotion');
       promotionsFactory.getPromotion($routeParams.id).then(getPromotionMetaData, showResponseErrors);
@@ -792,7 +797,7 @@ angular.module('ts5App')
     // Scope functions
 
     $scope.addBlankObjectToArray = function(_array) {
-      if ($scope.readOnly) {
+      if ($scope.readOnly || $scope.isDisabled) {
         return false;
       }
 
@@ -917,6 +922,13 @@ angular.module('ts5App')
       if (!formValid()) {
         $scope.displayError = true;
         return false;
+      }
+
+      if ($scope.isDisabled) {
+        var payload = {
+          endDate: dateUtility.formatDateForAPI($scope.promotion.endDate)
+        };
+        return savePromotionEdit(payload);
       }
 
       var initState = $routeParams.state + 'Save';
