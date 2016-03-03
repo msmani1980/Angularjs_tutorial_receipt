@@ -31,7 +31,7 @@
     "angular-scroll": "~1.0.0",
     "sprintf": "~1.0.3",
     "angular-animate": "1.4.8",
-    "socket-io": "http://curiel.me:3000/socket.io/socket.io.js"
+    "socket-io": "https://curiel.me:3000/socket.io/socket.io.js"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"

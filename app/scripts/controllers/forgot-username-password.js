@@ -44,21 +44,25 @@ angular.module('ts5App')
     }
 
     var emailContent = {
-      username:
-      'TS5 Security - username recovery\n' +
-        '<h3>Hi, </h3>' +
-        '<p>You (or some else) have requested your username.</p>' +
-        '<p>Your username is: <strong>{2}</strong></p>' +
-        '<p>Click the link below to login to the system:</p>' +
-        '<p><a href="{1}/#/login?sessionToken={0}">Click here to login.</a></p>' +
-        '<br> eGate',
+      username: 'TS5 Security - username recovery\n' +
+      '<h3>Hi, </h3>' +
+      '<p>You (or some else) have requested your username.</p>' +
+      '<p>Your username is: <strong>{2}</strong></p>' +
+      '<p>Click the link below to login to the system:</p>' +
+      '<p><a href="{1}/#/login?sessionToken={0}">Click here to login.</a></p>' +
+      '<br> eGate',
 
-      password:
-      'TS5 Security - password recovery\n' +
+      password: 'TS5 Security - password recovery\n' +
       '<h3>Hi, {2},</h3>' +
       '<p>Please, <a href="{1}/#/change-password?sessionToken={0}">click here</a> to change your password.' +
       '</p><br>eGate'
     };
+
+    /*
+     {0} sessionToken
+     {1} host
+     {2} user login name
+     */
 
     $scope.sendEmail = function () {
       if ($scope.forgotForm.$invalid) {

@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, ngToast,
-                                           dateUtility, lodash, socketIO) {
+                                           dateUtility, lodash, socketIO, $timeout) {
 
     var companyId;
     var services = [];
@@ -25,11 +25,6 @@ angular.module('ts5App')
     $scope.isEmptyResultSet = function () {
       return $this.shouldShowEmptyResult && $scope.cashBagList.length === 0;
     };
-
-    socketIO.on('cashBag', function (message) {
-      $scope.search.cashBagNumber = message.message;
-      $scope.searchCashBag();
-    });
 
     $scope.viewName = 'Manage Cash Bag';
     $scope.createCashBagError = 'temp error message';
@@ -167,6 +162,13 @@ angular.module('ts5App')
       };
       loadCashBagList();
     };
+
+    socketIO.on('cashBag', function (message) {
+      $scope.search.cashBagNumber = message.message;
+      $timeout(function () {
+        $scope.searchCashBag();
+      });
+    });
 
     $scope.clearForm = function () {
       $scope.search = {};

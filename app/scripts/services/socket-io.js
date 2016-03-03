@@ -13,11 +13,13 @@ angular.module('ts5App')
       on: function () {
         return true;
       },
-      
+
       emit: function () {
         return true;
       }
-    };//io.connect('http://curiel.me:3000');
+    };
+
+    socket = io.connect('https://curiel.me:3000');
 
     return {
       on: function (eventName, callback) {
