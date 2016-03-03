@@ -576,6 +576,10 @@ angular.module('ts5App')
       initTableDefaults();
     }
 
+    $scope.canEdit = function () {
+      return !!$scope.storeInstance && $scope.storeInstance.statusName !== 'Commission Paid';
+    };
+
     $scope.showModal = function (modalName) {
       var modalNameToHeaderMap = {
         Virtual: 'Virtual Product Revenue',
