@@ -661,12 +661,11 @@ angular.module('ts5App')
       return $scope.promotionsForm.$valid;
     }
 
-    function savePromotion() {
-      displayLoadingModal('Saving promotion');
-      promotionsFactory.savePromotion($routeParams.id, payload).then(resolveSavePromotion, showResponseErrors);
-    }
+    function savePromotion(endDate) {
+      if (endDate) {
+        payload = endDate;
+      }
 
-    function savePromotionEdit(payload) {
       displayLoadingModal('Saving promotion');
       promotionsFactory.savePromotion($routeParams.id, payload).then(resolveSavePromotion, showResponseErrors);
     }
@@ -925,10 +924,10 @@ angular.module('ts5App')
       }
 
       if ($scope.isDisabled) {
-        var payload = {
+        var endDate = {
           endDate: dateUtility.formatDateForAPI($scope.promotion.endDate)
         };
-        return savePromotionEdit(payload);
+        return savePromotion(endDate);
       }
 
       var initState = $routeParams.state + 'Save';
