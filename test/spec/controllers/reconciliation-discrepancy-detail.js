@@ -613,6 +613,23 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
   });
 
   describe('scope helper functions', function() {
+    describe('canEdit', function () {
+      it('should return false when store instance is not defined', function () {
+        scope.storeInstance = null;
+        expect(scope.canEdit()).toEqual(false);
+      });
+      it('should return true when store instance status is not commission paid', function () {
+        scope.storeInstance = {
+          statusName: 'fakeStatusName'
+        };
+        expect(scope.canEdit()).toEqual(true);
+        scope.storeInstance = {
+          statusName: 'Commission Paid'
+        };
+        expect(scope.canEdit()).toEqual(false);
+      });
+    });
+
     describe('update orderBy', function() {
       it('should change sort title to given title', function() {
         scope.LMPSortTitle = 'oldSortName';
