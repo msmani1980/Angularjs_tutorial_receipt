@@ -19,7 +19,7 @@ angular.module('ts5App')
       }
     };
 
-    socket = io.connect('https://curiel.me:3000');
+    //socket = io.connect('https://curiel.me:3000');
 
     return {
       on: function (eventName, callback) {
