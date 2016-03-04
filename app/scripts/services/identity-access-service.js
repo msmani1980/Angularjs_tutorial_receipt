@@ -86,10 +86,11 @@ angular.module('ts5App')
 
     var sendEmail = function (shouldRecoverUser, emailContent, emailAddress, username) {
       var recoverPath = (shouldRecoverUser) ? 'recoveruser' : 'recoverpassword';
+      var usernameToSend = (shouldRecoverUser && !!username) ? username.toLowerCase() : '';
       sendEmailParameters = {
         recoverUserOrPassword: recoverPath,
         email: emailAddress.toLowerCase(),
-        username: username.toLowerCase() || ''
+        username: usernameToSend || ''
       };
 
       var sendEmailResource = $resource(sendEmailURL, sendEmailParameters, actions);

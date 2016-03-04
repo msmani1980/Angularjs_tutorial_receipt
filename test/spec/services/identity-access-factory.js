@@ -202,8 +202,11 @@ describe('Service: identityAccessFactory', function () {
     });
 
     it('should pass true if username is selected', function () {
-      identityAccessFactory.sendRecoveryEmail('username', 'fakeContent', 'fakeEmail', null);
-      expect(identityAccessService.sendEmail).toHaveBeenCalledWith(true, 'fakeContent', 'fakeEmail', '');
+      identityAccessFactory.sendRecoveryEmail('username', 'fakeContent', 'fakeEmail', 'fakeUser');
+      expect(identityAccessService.sendEmail).toHaveBeenCalledWith(true, 'fakeContent', 'fakeEmail', 'fakeUser');
+
+      identityAccessFactory.sendRecoveryEmail('password', 'fakeContent', 'fakeEmail', 'fakeUser');
+      expect(identityAccessService.sendEmail).toHaveBeenCalledWith(false, 'fakeContent', 'fakeEmail', 'fakeUser');
     });
   });
 
