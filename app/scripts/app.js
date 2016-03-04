@@ -319,7 +319,7 @@ angular.module('ts5App', [
 }).run(function ($rootScope, regexp, $location, socketIO) {
   $rootScope.regexp = regexp;
 
-  socketIO.on('cashBag', function (route) {
-    $location.path('cash-bag-list', route);
+  socketIO.on('redirectTo', function (route) {
+    $location.path(route);
   });
 });
