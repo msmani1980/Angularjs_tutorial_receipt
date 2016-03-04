@@ -11,9 +11,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
-  function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q,
-    $route, ngToast, $location, $filter, $localStorage, storeInstanceDashboardActionsConfig, ENV,
-    identityAccessFactory, messageService) {
+  function($scope, $q, $route, $location, $filter, $localStorage, storeInstanceDashboardFactory, storeTimeConfig,
+    lodash, dateUtility, storeInstanceDashboardActionsConfig, ENV, identityAccessFactory, messageService) {
 
     $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];
