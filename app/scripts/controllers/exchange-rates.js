@@ -69,8 +69,8 @@ angular.module('ts5App')
     }
 
     function setBaseExchangeRateModel() {
-      if ($scope.companyBaseCurrency.currencyCode && $scope.dailyExchangeRates) {
-        serializeExchangeRates($scope.companyBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000');
+      if ($scope.cashHandlerBaseCurrency.currencyCode && $scope.dailyExchangeRates) {
+        serializeExchangeRates($scope.cashHandlerBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000');
       }
     }
 

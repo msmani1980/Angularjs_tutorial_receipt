@@ -103,6 +103,11 @@ describe('Controller: ExchangeRatesCtrl', function () {
     expect(scope.dailyExchangeRates.dailyExchangeRateCurrencies.length).toBeGreaterThan(0);
   });
 
+  it('should default cash handler base currency to 1', function () {
+    var cashHandlerBaseCurrency = 'EUR';
+    expect(scope.currenciesFields[cashHandlerBaseCurrency].bankExchangeRate).toEqual('1.0000');
+  });
+
   describe('company Preferences', function () {
 
     var preferencesJSON = {

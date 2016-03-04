@@ -51,6 +51,7 @@
         </div>
       </div>
 
+
       <div class="panel-body">
 
         <div class="row">
@@ -71,7 +72,7 @@
               <span class="input-group-addon"><i class="fa fa-money"></i></span>
               <input custom-validity
                      custom-pattern="currencyWithFourDecimalPlace"
-                     ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
+                     ng-readonly="cashHandlerBaseCurrency.currencyCode == currency.code || !showActionButtons"
                      ng-model="currenciesFields[currency.code].bankExchangeRate"
                      ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
                      name="{{currency.code}}bankExchangeRate"
@@ -86,7 +87,7 @@
               <span class="input-group-addon"><i class="fa fa-money"></i></span>
               <input custom-validity
                      custom-pattern="currencyWithFourDecimalPlace"
-                     ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
+                     ng-readonly="cashHandlerBaseCurrency.currencyCode == currency.code || !showActionButtons"
                      ng-model="currenciesFields[currency.code].paperExchangeRate"
                      ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
                      name="{{currency.code}}paperExchangeRate"
@@ -101,7 +102,7 @@
               <span class="input-group-addon"><i class="fa fa-money"></i></span>
               <input custom-validity
                      custom-pattern="currencyWithFourDecimalPlace"
-                     ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
+                     ng-readonly="cashHandlerBaseCurrency.currencyCode == currency.code || !showActionButtons"
                      ng-model="currenciesFields[currency.code].coinExchangeRate"
                      ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
                      name="{{currency.code}}coinExchangeRate"
