@@ -59,12 +59,21 @@ angular.module('ts5App')
       password: passwordText
     };
 
+    $scope.getRecoveryRequirements = function () {
+      if ($scope.forgot.field === 'username') {
+        return 'email';
+      }
+      
+      return 'username and email';
+    };
+
     $scope.sendEmail = function () {
       if ($scope.forgotForm.$invalid) {
         return;
       }
 
-      identityAccessFactory.sendRecoveryEmail($scope.forgot.field, emailContent[$scope.forgot.field], $scope.forgot.email, $scope.forgot.username).then(handleSuccessResponse, handleResponseError);
+      identityAccessFactory.sendRecoveryEmail($scope.forgot.field, emailContent[$scope.forgot.field], $scope.forgot.email, $scope.forgot.username).then(handleSuccessResponse,
+        handleResponseError);
       showLoadingModal('Sending email');
     };
   });
