@@ -175,7 +175,7 @@
                 ng-click="toggleAccordionView(store)"></span>
         </td>
         <td>
-          <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" ng-model="store.selected"
+          <input ng-show="store.showGenerateDocsButton || doesStoreInstanceContainAction(store, 'Checkbox')" ng-model="store.selected"
                  type="checkbox" ng-click="storeSelectionToggled()">
           </input>
         </td>
@@ -236,7 +236,7 @@
             Redispatch
           </a>
           <a class="btn btn-info btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"
+             ng-show="store.showGenerateDocsButton || doesStoreInstanceContainAction(store, 'Get Flight Docs')"
              ng-href="{{store.exportURL}}">
             Generate Doc
           </a>

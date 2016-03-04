@@ -5,15 +5,9 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/catering-stations.json'));
-  beforeEach(module('served/stations.json'));
-  beforeEach(module('served/store-instance-list.json'));
-  beforeEach(module('served/store-instance.json'));
-  beforeEach(module('served/stores-list.json'));
-  beforeEach(module('served/store-status.json'));
-  beforeEach(module('served/store-status-response.json'));
-  beforeEach(module('served/store-time-config.json'));
-  beforeEach(module('served/features.json'));
+  beforeEach(module('served/catering-stations.json','served/stations.json','served/store-instance-list.json',
+  'served/store-instance.json','served/stores-list.json','served/store-status.json','served/store-status-response.json',
+  'served/store-status-response.json','served/store-time-config.json','served/features.json'));
 
   var StoreInstanceDashboardCtrl;
   var scope;
@@ -573,6 +567,15 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(doesContainAction).toEqual(true);
     });
 
+    it('should allow Get Flight Docs if the status is Inbounded', function () {
+      var testStoreInstance = {
+        actionButtons: ['Get Flight Docs'],
+        statusId: 8 // 8 to test with Inbounded status
+      };
+      var doesContainAction = scope.doesStoreInstanceContainAction(testStoreInstance, 'Get Flight Docs');
+      expect(doesContainAction).toEqual(true);
+    });
+
     it('should not allow actions after a replenishment has been dispatch', function () {
       var testStoreInstance = {
         actionButtons: ['End Instance'],
@@ -745,5 +748,4 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
   });
 
-})
-;
+});

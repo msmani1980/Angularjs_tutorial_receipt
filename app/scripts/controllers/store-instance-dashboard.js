@@ -11,9 +11,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
-  function ($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q,
-            $route, ngToast, $location, $filter, $localStorage, storeInstanceDashboardActionsConfig, ENV,
-            identityAccessFactory) {
+  function($scope, $q, $route, $location, $filter, $localStorage, storeInstanceDashboardFactory, storeTimeConfig,
+    lodash, dateUtility, storeInstanceDashboardActionsConfig, ENV, identityAccessFactory, messageService) {
 
     $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];
@@ -104,11 +103,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeStatusId: 'statusId'
     };
 
-    $scope.doesStoreInstanceHaveReplenishments = function (store) {
+    $scope.doesStoreInstanceHaveReplenishments = function(store) {
       return (store.replenishments && store.replenishments.length > 0);
     };
 
-    $scope.isStoreViewExpanded = function (store) {
+    $scope.isStoreViewExpanded = function(store) {
       return ($scope.openStoreInstanceId === store.id);
     };
 
@@ -121,7 +120,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       $scope.openStoreInstanceId = -1;
     }
 
-    $scope.toggleAccordionView = function (storeInstance) {
+    $scope.toggleAccordionView = function(storeInstance) {
       if (!$scope.doesStoreInstanceHaveReplenishments(storeInstance)) {
         return;
       }
@@ -135,7 +134,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     };
 
-    $scope.shouldShowReplenishAction = function (storeInstance, parentStoreInstance, actionName) {
+    $scope.shouldShowReplenishAction = function(storeInstance, parentStoreInstance, actionName) {
       var statusNumber = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
       var parentStatusNumber = getValueByIdInArray(parentStoreInstance.statusId, 'name', $scope.storeStatusList);
       var isAfterDispatch = parseInt(statusNumber) >= 4;
@@ -148,7 +147,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return $scope.doesStoreInstanceContainAction(storeInstance, actionName);
     };
 
-    $scope.doesStoreInstanceContainAction = function (storeInstance, actionName) {
+    $scope.doesStoreInstanceContainAction = function(storeInstance, actionName) {
       if (!storeInstance.actionButtons) {
         return false;
       }
@@ -163,14 +162,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
       angular.element('#store-' + $scope.storeInstanceToDelete.id).remove();
 
-      $scope.showMessage(
+      messageService.display(
         'success',
         '<strong>Success</strong> - ' + message
       );
     }
 
     function deleteErrorHandler() {
-      $scope.showMessage(
+      messageService.display(
         'danger',
         '<strong>Error</strong> - Couldn\'t delete store instance'
       );
@@ -181,37 +180,37 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         deleteErrorHandler);
     }
 
-    $scope.showDeleteConfirmation = function (storeInstance) {
+    $scope.showDeleteConfirmation = function(storeInstance) {
       $scope.storeInstanceToDelete = storeInstance;
 
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    $scope.deleteStoreInstance = function () {
+    $scope.deleteStoreInstance = function() {
       angular.element('.delete-warning-modal').modal('hide');
 
       deleteStoreInstance($scope.storeInstanceToDelete.id);
     };
 
-    $scope.canBeDeleted = function (storeInstance) {
+    $scope.canBeDeleted = function(storeInstance) {
       return $scope.allowedStatusNamesForDelete.indexOf(storeInstance.statusName) > -1;
     };
 
-    $scope.storeSelectionToggled = function () {
+    $scope.storeSelectionToggled = function() {
       var selectedStores = [];
-      lodash.forEach($scope.storeInstanceList, function (store) {
+      lodash.forEach($scope.storeInstanceList, function(store) {
         if (store.selected && $scope.doesStoreInstanceContainAction(store, 'Get Flight Docs')) {
           selectedStores.push(store);
         }
 
-        selectedStores = selectedStores.concat(lodash.filter(store.replenishments, function (replenish) {
+        selectedStores = selectedStores.concat(lodash.filter(store.replenishments, function(replenish) {
           return replenish.selected && $scope.doesStoreInstanceContainAction(replenish, 'Get Flight Docs');
         }));
       });
 
       $scope.hasSelectedStore = (selectedStores.length !== 0);
       if ($scope.hasSelectedStore) {
-        var storeInstanceIds = lodash.map(selectedStores, function (item) {
+        var storeInstanceIds = lodash.map(selectedStores, function(item) {
           return item.id;
         }).join('+');
         var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
@@ -223,13 +222,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     };
 
-    $scope.toggleAllCheckboxes = function () {
-      angular.forEach($scope.storeInstanceList, function (store) {
+    $scope.toggleAllCheckboxes = function() {
+      angular.forEach($scope.storeInstanceList, function(store) {
         if ($scope.doesStoreInstanceContainAction(store, 'Checkbox')) {
           store.selected = $scope.allCheckboxesSelected;
         }
 
-        lodash.forEach(store.replenishments, function (replenish) {
+        lodash.forEach(store.replenishments, function(replenish) {
           replenish.selected = $scope.allCheckboxesSelected;
         });
       });
@@ -237,17 +236,17 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       $scope.storeSelectionToggled();
     };
 
-    $scope.isScheduleDetailOpen = function (id) {
+    $scope.isScheduleDetailOpen = function(id) {
       return !(angular.element('.scheduleDetails-' + id).hasClass('accordion-cell-closed'));
     };
 
-    $scope.toggleScheduleDetails = function (id) {
+    $scope.toggleScheduleDetails = function(id) {
       angular.element('.scheduleDetails-' + id).toggleClass('accordion-cell-closed');
     };
 
-    $scope.toggleAllScheduleInfo = function () {
+    $scope.toggleAllScheduleInfo = function() {
       $scope.allScheduleDetailsExpanded = !$scope.allScheduleDetailsExpanded;
-      angular.forEach($scope.storeInstanceList, function (store) {
+      angular.forEach($scope.storeInstanceList, function(store) {
         var storeClass = '.scheduleDetails-' + store.id;
         var closedClass = 'accordion-cell-closed';
 
@@ -259,17 +258,17 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
     };
 
-    $scope.isUndispatchPossible = function (store) {
+    $scope.isUndispatchPossible = function(store) {
       var storeUpdatedDate = moment.utc(store.updatedOn, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
       var hoursSinceUpdatedDate = moment.duration(moment.utc().diff(storeUpdatedDate)).asHours();
       var isNowWithinAllowedHours = hoursSinceUpdatedDate > 0 && hoursSinceUpdatedDate < store.hours;
       return (store.hours === -1) || (isNowWithinAllowedHours && !$scope.doesStoreInstanceHaveReplenishments(store));
     };
 
-    $scope.undispatch = function (id) {
+    $scope.undispatch = function(id) {
       var undispatchStatusId = 1;
       showLoadingModal('Undispatching store instance ' + id + '...');
-      storeInstanceDashboardFactory.updateStoreInstanceStatus(id, undispatchStatusId).then(function () {
+      storeInstanceDashboardFactory.updateStoreInstanceStatus(id, undispatchStatusId).then(function() {
         hideLoadingModal();
         $location.path('store-instance-packing/dispatch/' + id);
       }, showErrors);
@@ -278,12 +277,39 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     var STATUS_TO_BUTTONS_MAP = {
       1: ['Pack'],
       2: ['Seal'],
-      3: ['Dispatch', 'Offload', 'Checkbox'],
+      3: ['Dispatch', 'Offload', 'Checkbox', 'Inbounded', 'On Floor'],
       4: ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
-      5: ['End Instance', 'Redispatch', 'Checkbox'],
-      6: ['Start Inbound Seals'],
-      7: ['Start Offload']
+      5: ['End Instance', 'Redispatch', 'Get Flight Docs', 'Checkbox'],
+      6: ['Start Inbound Seals', 'Get Flight Docs', 'Checkbox'],
+      7: ['Start Offload', 'Get Flight Docs', 'Checkbox'],
+      8: ['Get Flight Docs', 'Checkbox']
     };
+
+    function setFlightDocsConditions(storeInstance) {
+      if (lodash.find(storeInstance.actionButtons, lodash.matches('Get Flight Docs')) || storeInstance.statusName ===
+        'On Floor') {
+        storeInstance.showGenerateDocsButton = true;
+        storeInstance.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
+          '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'; //$http.defaults.headers.common.sessionToken;
+      }
+    }
+
+    function setStoreInstanceTime(storeInstance) {
+      // TODO: get timeConfig that has most recent startDate -- will be a new API
+      var timeConfig = lodash.findWhere($scope.timeConfigList, {
+        featureId: $scope.undispatchFeatureId
+      });
+      storeInstance.hours = (angular.isDefined(timeConfig)) ? timeConfig.hours : -1;
+    }
+
+    function setStoreInstanceStatusName(storeInstance) {
+      return getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
+    }
+
+    function setStoreInstanceActionButtons(storeInstance) {
+      var statusName = setStoreInstanceStatusName(storeInstance);
+      storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
+    }
 
     function formatStoreInstance(storeInstance) {
       storeInstance.dispatchStationCode = getValueByIdInArray(storeInstance.cateringStationId, 'code', $scope.stationList);
@@ -291,30 +317,21 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
       storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
       storeInstance.statusName = (storeInstance.statusName === 'Unpacking' || storeInstance.statusName ===
-      'Inbound Seals') ? 'On Floor' : storeInstance.statusName;
+        'Inbound Seals') ? 'On Floor' : storeInstance.statusName;
       storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
       storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) :
         '';
 
-      // TODO: get timeConfig that has most recent startDate -- will be a new API
-      var timeConfig = lodash.findWhere($scope.timeConfigList, {
-        featureId: $scope.undispatchFeatureId
-      });
-      storeInstance.hours = (angular.isDefined(timeConfig)) ? timeConfig.hours : -1;
-
-      var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
-      storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
-      if (lodash.find(storeInstance.actionButtons, lodash.matches('Get Flight Docs'))) {
-        storeInstance.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
-          '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'; //$http.defaults.headers.common.sessionToken;
-      }
+      setStoreInstanceTime(storeInstance);
+      setStoreInstanceActionButtons(storeInstance);
+      setFlightDocsConditions(storeInstance);
 
       storeInstance.selected = false;
     }
 
     function filterStoreInstanceList(storeInstanceList) {
-      return lodash.filter(angular.copy(storeInstanceList), function (storeInstance) {
+      return lodash.filter(angular.copy(storeInstanceList), function(storeInstance) {
         if (!storeInstance) {
           return false;
         }
@@ -326,9 +343,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function formatStoreInstanceList(rawStoreInstanceList) {
       var filteredStoreInstanceList = filterStoreInstanceList(rawStoreInstanceList);
-      angular.forEach(filteredStoreInstanceList, function (storeInstance) {
+      angular.forEach(filteredStoreInstanceList, function(storeInstance) {
         formatStoreInstance(storeInstance);
-        angular.forEach(storeInstance.replenishments, function (storeInstance) {
+        angular.forEach(storeInstance.replenishments, function(storeInstance) {
           formatStoreInstance(storeInstance);
         });
       });
@@ -375,7 +392,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function getStatusListSuccess(dataFromAPI) {
       $scope.storeStatusList = angular.copy(dataFromAPI);
-      $scope.filteredStoreStatusList = lodash.filter($scope.storeStatusList, function (status) {
+      $scope.filteredStoreStatusList = lodash.filter($scope.storeStatusList, function(status) {
         return lodash.indexOf($scope.allowedStatusNamesForDisplay, status.statusName) >= 0;
       });
     }
@@ -425,7 +442,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           payload.statusId = [parseInt(payload.statusId), unpackingStatusId, inboundSealsStatusId].toString();
         }
       }
-      
+
       return payload;
     }
 
@@ -458,10 +475,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
       showLoadingBar();
       var payload = {};
-      angular.forEach(SEARCH_TO_PAYLOAD_MAP, function (value, key) {
+      angular.forEach(SEARCH_TO_PAYLOAD_MAP, function(value, key) {
         if ($scope.search[key]) {
           if (key === 'departureStations' || key === 'arrivalStations') {
-            payload[value] = lodash.map($scope.search[key], function (station) {
+            payload[value] = lodash.map($scope.search[key], function(station) {
               return station.code;
             });
           } else {
@@ -487,7 +504,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       $this.meta.offset += $this.meta.limit;
     }
 
-    $scope.searchStoreInstanceDashboardData = function () {
+    $scope.searchStoreInstanceDashboardData = function() {
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -497,7 +514,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       searchStoreInstanceDashboardData();
     };
 
-    $scope.getStoreInstanceDashboardData = function () {
+    $scope.getStoreInstanceDashboardData = function() {
       searchStoreInstanceDashboardData(lastStartDate);
     };
 
@@ -529,17 +546,17 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       dependenciesArray.push(getStoreInstanceTimeConfig());
       dependenciesArray.push(getUndispatchFeatureId());
 
-      $q.all(dependenciesArray).then(function () {
+      $q.all(dependenciesArray).then(function() {
         initDone = true;
         var startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
         searchStoreInstanceDashboardData(startDate);
       });
     }
 
-    $scope.bulkDispatch = function () {
+    $scope.bulkDispatch = function() {
       showLoadingModal('Dispatching...');
       var bulkDispatchDependencies = [];
-      angular.forEach($scope.storeInstanceList, function (store) {
+      angular.forEach($scope.storeInstanceList, function(store) {
         if (store.selected && $scope.doesStoreInstanceContainAction(store, 'Dispatch')) {
           bulkDispatchDependencies.push(dispatchStoreInstance(store.id));
         }
@@ -548,19 +565,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       $q.all(bulkDispatchDependencies).then(init, showErrors);
     };
 
-    $scope.showMessage = function (type, message) {
-      ngToast.create({
-        className: type,
-        dismissButton: true,
-        content: message
-      });
-    };
-
-    $scope.reloadRoute = function () {
+    $scope.reloadRoute = function() {
       $route.reload();
     };
 
-    $scope.openReceiveConfirmation = function (store) {
+    $scope.openReceiveConfirmation = function(store) {
       var modalElement = angular.element('#receive-confirm');
       modalElement.modal('show');
       $scope.receiveStore = store;
@@ -568,11 +577,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function storeStatusSuccessHandler() {
       hideLoadingModal();
-      $scope.showMessage('success', 'Store has been logged as received.');
+      messageService.display('success', 'Store has been logged as received.');
       $scope.reloadRoute();
     }
 
-    $scope.storeStatusReceived = function (store) {
+    $scope.storeStatusReceived = function(store) {
       var modalElement = angular.element('#receive-confirm');
       modalElement.modal('hide');
       showLoadingModal('Changing Store Instance ' + store.id + ' Status');
@@ -588,7 +597,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (URL) {
         $location.path(URL);
       } else {
-        $scope.showMessage('danger', 'Error loading next page!');
+        messageService.display('danger', 'Error loading next page!');
       }
     }
 
@@ -604,7 +613,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         'Ready for Dispatch': '-Redispatch-Dispatch'
       };
 
-      storeInstanceDashboardFactory.getStoreInstanceList(searchPayload).then(function (dataFromAPI) {
+      storeInstanceDashboardFactory.getStoreInstanceList(searchPayload).then(function(dataFromAPI) {
         var nextStoreInstanceExists = dataFromAPI.response !== null && dataFromAPI.response[0];
         if (nextStoreInstanceExists) {
           storeInstanceForNavigation = angular.copy(dataFromAPI.response[0]);
@@ -618,7 +627,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function getPrevStoreInstanceAndCompleteAction(actionName, storeInstance) {
-      storeInstanceDashboardFactory.getStoreInstance(storeInstance.prevStoreInstanceId).then(function (dataFromAPI) {
+      storeInstanceDashboardFactory.getStoreInstance(storeInstance.prevStoreInstanceId).then(function(dataFromAPI) {
         var prevStoreInstance = angular.copy(dataFromAPI);
         var prevStoreInstanceStepName = getValueByIdInArray(prevStoreInstance.statusId, 'statusName', $scope.storeStatusList);
         actionName = (prevStoreInstanceStepName === 'Inbound Seals') ? 'Inbound Seals' : actionName;
@@ -639,14 +648,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     }
 
-    $scope.checkForLocalStorage = function () {
+    $scope.checkForLocalStorage = function() {
       var ls = $localStorage.stepTwoFromStepOne;
       if (angular.isDefined(ls) && angular.isDefined(ls.storeId)) {
         delete $localStorage.stepTwoFromStepOne;
       }
     };
 
-    $scope.navigateToAction = function (storeInstance, actionName) {
+    $scope.navigateToAction = function(storeInstance, actionName) {
       showLoadingModal('Redirecting ... ');
       var shouldCheckParentId = actionName === 'Pack' || actionName === 'Seal' || actionName === 'Dispatch';
       var shouldCheckChildId = actionName === 'Offload' || actionName === 'Inbound Seals';
@@ -661,8 +670,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     init();
 
-    $scope.showClearButton = function () {
-      angular.forEach($scope.search, function (search) {
+    $scope.showClearButton = function() {
+      angular.forEach($scope.search, function(search) {
         $scope.searchLength = search;
       });
 
@@ -677,12 +686,12 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return false;
     };
 
-    $scope.displayUndispatchConfirmation = function (store) {
+    $scope.displayUndispatchConfirmation = function(store) {
       $scope.undispatchStoreDialog = {
         title: sprintf(
           'Are you sure you want to undispatch Store Number %s for Schedule Date %s and Store Instance %d?',
           store.storeNumber, store.scheduleDate, store.id),
-        confirmationCallback: function () {
+        confirmationCallback: function() {
           $scope.undispatch(store.id);
         }
       };
