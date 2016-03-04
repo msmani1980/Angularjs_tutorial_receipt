@@ -313,6 +313,9 @@ angular.module('ts5App', [
   }).when('/transactions', {
     templateUrl: 'views/transaction-list.html',
     controller: 'TransactionListCtrl'
+  }).when('/manual-ecs', {
+    templateUrl: 'views/manual-ECS.html',
+    controller: 'ManualECSCtrl'
   }).otherwise({
     redirectTo: '/'
   });
