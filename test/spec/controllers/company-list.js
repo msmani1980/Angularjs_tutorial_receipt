@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: CompanyListCtrl', function() {
+describe('Controller: CompanyListCtrl', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/companies.json'));
