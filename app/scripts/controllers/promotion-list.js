@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionListCtrl', function ($scope, $q, $location, payloadUtility, dateUtility, promotionsFactory, recordsService) {
+  .controller('PromotionListCtrl', function($scope, $q, $location, payloadUtility, dateUtility, promotionsFactory,
+    recordsService) {
     var $this = this;
     this.meta = {
       limit: 100,
@@ -22,40 +23,40 @@ angular.module('ts5App')
     $scope.promotionToDelete = {};
     $scope.defaultLimit = 100;
 
-    this.formatDates = function (promotion) {
+    this.formatDates = function(promotion) {
       promotion.startDate = dateUtility.formatDateForApp(promotion.startDate);
       promotion.endDate = dateUtility.formatDateForApp(promotion.endDate);
       return promotion;
     };
 
-    this.showLoadingModal = function (text) {
+    this.showLoadingModal = function(text) {
       angular.element('.loading-more').show();
       angular.element('#loading').modal('show').find('p').text(text);
     };
 
-    this.hideLoadingModal = function () {
+    this.hideLoadingModal = function() {
       angular.element('.loading-more').hide();
       angular.element('#loading').modal('hide');
     };
 
-    $scope.searchPromotions = function () {
+    $scope.searchPromotions = function() {
       $this.showLoadingModal();
-      promotionsFactory.getPromotions(payloadUtility.serializeDates($scope.search)).then(function (dataFromAPI) {
+      promotionsFactory.getPromotions(payloadUtility.serializeDates($scope.search)).then(function(dataFromAPI) {
         $this.hideLoadingModal();
         $this.setPromotionsList(dataFromAPI);
       });
     };
 
-    $scope.clearForm = function () {
+    $scope.clearForm = function() {
       $scope.search = {};
-      $scope.searchPromotions();
+      $scope.promotionList = [];
     };
 
-    $scope.editPromotion = function (promotion) {
+    $scope.editPromotion = function(promotion) {
       $location.path('/promotions/edit/' + promotion.id);
     };
 
-    $scope.isPromotionEditable = function (promotion) {
+    $scope.isPromotionEditable = function(promotion) {
       if (angular.isUndefined(promotion)) {
         return false;
       }
@@ -63,7 +64,7 @@ angular.module('ts5App')
       return dateUtility.isAfterToday(promotion.endDate);
     };
 
-    $scope.isPromotionReadOnly = function (promotion) {
+    $scope.isPromotionReadOnly = function(promotion) {
       if (!promotion.startDate) {
         return false;
       }
@@ -71,41 +72,41 @@ angular.module('ts5App')
       return !(dateUtility.isAfterToday(promotion.startDate));
     };
 
-    this.deletePromotion = function (promotionId) {
+    this.deletePromotion = function(promotionId) {
       promotionsFactory.deletePromotion(promotionId);
     };
 
-    $scope.showDeleteConfirmation = function (index, promotion) {
+    $scope.showDeleteConfirmation = function(index, promotion) {
       $scope.promotionToDelete = promotion;
       $scope.promotionToDelete.rowIndex = index;
 
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    $scope.deletePromotion = function () {
+    $scope.deletePromotion = function() {
       angular.element('.delete-warning-modal').modal('hide');
       angular.element('#promotion-' + $scope.promotionToDelete.rowIndex).remove();
 
       $this.deletePromotion($scope.promotionToDelete.id);
     };
 
-    this.setPromotionsList = function (dataFromAPI) {
+    this.setPromotionsList = function(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var promotionList = angular.copy(dataFromAPI.promotions);
-      angular.forEach(promotionList, function (promotion) {
+      angular.forEach(promotionList, function(promotion) {
         $scope.promotionList.push($this.formatDates(promotion));
       });
     };
 
-    this.setBenefitTypeList = function (dataFromAPI) {
+    this.setBenefitTypeList = function(dataFromAPI) {
       $scope.benefitTypeList = angular.copy(dataFromAPI);
     };
 
-    this.setPromotionTypeList = function (dataFromAPI) {
+    this.setPromotionTypeList = function(dataFromAPI) {
       $scope.promotionTypeList = angular.copy(dataFromAPI);
     };
 
-    $scope.getPromotionList = function () {
+    $scope.getPromotionList = function() {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
@@ -117,27 +118,27 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     };
 
-    this.getBenefitTypeList = function () {
+    this.getBenefitTypeList = function() {
       return recordsService.getBenefitTypes().then($this.setBenefitTypeList);
     };
 
-    this.getPromotionTypeList = function () {
+    this.getPromotionTypeList = function() {
       return recordsService.getPromotionTypes().then($this.setPromotionTypeList);
     };
 
-    this.makeDependencyPromises = function () {
+    this.makeDependencyPromises = function() {
       return [
         $this.getBenefitTypeList(),
         $this.getPromotionTypeList()
       ];
     };
 
-    this.dependenciesSuccess = function () {
+    this.dependenciesSuccess = function() {
       $scope.uiSelectTemplateReady = true;
       $this.hideLoadingModal();
     };
 
-    this.init = function () {
+    this.init = function() {
       $this.showLoadingModal('Loading Promotions.');
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(dependencyPromises).then($this.dependenciesSuccess);

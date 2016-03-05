@@ -63,10 +63,7 @@ describe('Controller: PromotionListCtrl', function() {
     };
     scope.clearForm();
     expect(scope.search.startDate).toBe(undefined);
-    expect(promotionsFactory.getPromotions).toHaveBeenCalledWith({
-      startDate: null,
-      endDate: null
-    });
+    expect(scope.promotionList).toEqual([]);
   });
 
   it('searchPromotions should clear search model and make a API call', function() {
