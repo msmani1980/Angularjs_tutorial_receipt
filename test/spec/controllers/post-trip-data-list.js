@@ -163,7 +163,7 @@ describe('Controller: PostFlightDataListCtrl', function() {
         data: 'data'
       };
       scope.clearSearchForm();
-      expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
+      expect(scope.postTrips).toEqual([]);
       expect(scope.search).toEqual({});
     });
 
