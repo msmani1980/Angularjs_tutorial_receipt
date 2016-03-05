@@ -8,8 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CategoryListCtrl', function($scope, $location, categoryFactory, ngToast, dateUtility, payloadUtility,
+  .controller('CategoryListCtrl', function($scope, $location, categoryFactory, dateUtility, payloadUtility,
     identityAccessFactory, lodash) {
+      
     $scope.viewName = 'Category';
     $scope.search = {};
     $scope.categoryList = [];
@@ -443,7 +444,8 @@ angular.module('ts5App')
     };
 
     $scope.clearSearch = function() {
-      init();
+      $scope.search = {};
+      $scope.categoryList = [];
     };
 
     $scope.determineLeftNavTitle = function() {
@@ -459,4 +461,5 @@ angular.module('ts5App')
     };
 
     init();
+
   });

@@ -1,9 +1,8 @@
 'use strict';
 
-describe('Controller: CategoryListCtrl', function () {
+  describe('Controller: CategoryListCtrl', function () {
 
-  beforeEach(module('ts5App'));
-  beforeEach(module('template-module'));
+  beforeEach(module('ts5App', 'template-module'));
   beforeEach(module('served/expanded-sales-categories.json'));
 
   var CategoryListCtrl;
@@ -324,10 +323,10 @@ describe('Controller: CategoryListCtrl', function () {
       expect(categoryFactory.getCategoryList).toHaveBeenCalledWith(expectedPayload);
     });
 
-    it('should reinitialize page on clearSearch', function () {
+    it('should clear list and search on clearSearch', function () {
       scope.clearSearch();
-      expect(categoryFactory.getCategoryList).toHaveBeenCalled();
-      expect(scope.filter).toEqual({});
+      expect(scope.categoryList).toEqual([]);
+      expect(scope.search).toEqual({});
     });
   });
 
