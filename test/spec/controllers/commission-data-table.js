@@ -2,7 +2,8 @@
 
 describe('Controller: CommissionDataTableCtrl', function() {
 
-  beforeEach(module('ts5App', 'template-module'));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
   beforeEach(module('served/commission-payable-list.json'));
   beforeEach(module('served/crew-base-types.json'));
   beforeEach(module('served/discount-types.json'));

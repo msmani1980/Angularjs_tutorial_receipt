@@ -2,7 +2,8 @@
 
 describe('Controller: CashBagSubmissionCtrl', function() {
 
-  beforeEach(module('ts5App', 'template-module'));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
   beforeEach(module('served/company.json'));
   beforeEach(module('served/company-data.json'));
   beforeEach(module('served/currency-globals.json'));

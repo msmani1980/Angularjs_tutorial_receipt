@@ -1,14 +1,12 @@
 //TODO Complete test cases
 'use strict';
 
-describe('Controller: CompanyRelationshipListCtrl', function () {
+describe('Controller: CompanyRelationshipListCtrl', function() {
 
   beforeEach(module('ts5App'));
-  beforeEach(module(
-    'served/company-list.json',
-    'served/company-relationship-list.json',
-    'served/company-relationship-type-list.json'
-  ));
+  beforeEach(module('served/company-list.json'));
+  beforeEach(module('served/company-relationship-list.json'));
+  beforeEach(module('served/company-relationship-type-list.json'));
 
   var CompanyRelationshipListCtrl,
     scope,
@@ -26,8 +24,8 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     routeParams,
     httpBackend;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, _companyRelationshipFactory_, $location, $httpBackend) {
-    inject(function (_servedCompanyList_, _servedCompanyRelationshipList_, _servedCompanyRelationshipTypeList_) {
+  beforeEach(inject(function($q, $controller, $rootScope, _companyRelationshipFactory_, $location, $httpBackend) {
+    inject(function(_servedCompanyList_, _servedCompanyRelationshipList_, _servedCompanyRelationshipTypeList_) {
       companyListJSON = _servedCompanyList_;
       companyRelationshipListByCompanyJSON = _servedCompanyRelationshipList_;
       companyRelationshipTypeListJSON = _servedCompanyRelationshipTypeList_;
@@ -36,7 +34,9 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     httpBackend = $httpBackend;
     location = $location;
     scope = $rootScope.$new();
-    routeParams = { id: 765 };
+    routeParams = {
+      id: 765
+    };
 
     getCompanyListDeferred = $q.defer();
     getCompanyRelationshipListByCompanyDeferred = $q.defer();
@@ -52,8 +52,10 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     companyRelationshipFactory = _companyRelationshipFactory_;
 
     spyOn(companyRelationshipFactory, 'getCompanyList').and.returnValue(getCompanyListDeferred.promise);
-    spyOn(companyRelationshipFactory, 'getCompanyRelationshipListByCompany').and.returnValue(getCompanyRelationshipListByCompanyDeferred.promise);
-    spyOn(companyRelationshipFactory, 'getCompanyRelationshipTypeList').and.returnValue(getCompanyRelationshipTypeListDeferred.promise);
+    spyOn(companyRelationshipFactory, 'getCompanyRelationshipListByCompany').and.returnValue(
+      getCompanyRelationshipListByCompanyDeferred.promise);
+    spyOn(companyRelationshipFactory, 'getCompanyRelationshipTypeList').and.returnValue(
+      getCompanyRelationshipTypeListDeferred.promise);
     spyOn(companyRelationshipFactory, 'createCompanyRelationship').and.returnValue(createCompanyRelationship.promise);
     spyOn(companyRelationshipFactory, 'updateCompanyRelationship').and.returnValue(updateCompanyRelationship.promise);
     spyOn(companyRelationshipFactory, 'deleteCompanyRelationship').and.returnValue(deleteCompanyRelationship.promise);
@@ -81,82 +83,84 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     scope.$apply();
   }
 
-  it('should attach a viewName to the scope', function () {
+  it('should attach a viewName to the scope', function() {
     expect(scope.viewName).toBe('Company Relationships');
   });
 
-  describe('companyRelationshipListData object in scope', function () {
+  describe('companyRelationshipListData object in scope', function() {
 
     beforeEach(function() {
       resolveDependencies();
     });
 
-    it('should resolve getCompanyListPromise', function () {
+    it('should resolve getCompanyListPromise', function() {
       expect(companyRelationshipFactory.getCompanyList).toHaveBeenCalled();
     });
 
-    it('should resolve getCompanyRelationshipListByCompanyPromise', function () {
-      expect(companyRelationshipFactory.getCompanyRelationshipListByCompany).toHaveBeenCalledWith(routeParams.id);
+    it('should resolve getCompanyRelationshipListByCompanyPromise', function() {
+      expect(companyRelationshipFactory.getCompanyRelationshipListByCompany).toHaveBeenCalledWith(
+        routeParams.id);
     });
 
-    it('should resolve getCompanyRelationshipTypeListPromise', function () {
-      expect(companyRelationshipFactory.getCompanyRelationshipTypeList).toHaveBeenCalledWith(companyListJSON.companies[0].companyTypeId);
+    it('should resolve getCompanyRelationshipTypeListPromise', function() {
+      expect(companyRelationshipFactory.getCompanyRelationshipTypeList).toHaveBeenCalledWith(
+        companyListJSON.companies[0].companyTypeId);
     });
 
-    it('should set company in scope', function () {
+    it('should set company in scope', function() {
       expect(!!scope.company).toBe(true);
     });
 
-    describe('companyList', function () {
-      it('should be in scope', function () {
+    describe('companyList', function() {
+      it('should be in scope', function() {
         expect(scope.companyList).toBeDefined();
       });
 
-      it('should be an array', function () {
+      it('should be an array', function() {
         expect(angular.isArray(scope.companyList)).toBe(true);
       });
     });
 
-    it('should set companyRelationshipTypeList in scope', function () {
+    it('should set companyRelationshipTypeList in scope', function() {
       expect(scope.companyRelationshipTypeList.length).toBe(4);
     });
 
-    it('should add companyRelationship to companyRelationshipListData in scope', function () {
+    it('should add companyRelationship to companyRelationshipListData in scope', function() {
       scope.addCompanyRelationship(scope.company);
       expect(scope.companyRelationshipListData.length).toBe(5);
     });
   });
 
-  describe('Edit companyRelationship', function () {
+  describe('Edit companyRelationship', function() {
 
     beforeEach(function() {
       resolveDependencies();
     });
 
-    it('should have a edit function', function () {
+    it('should have a edit function', function() {
       expect(!!scope.editCompanyRelationship).toBe(true);
     });
   });
 
-  describe('Delete companyRelationship', function () {
+  describe('Delete companyRelationship', function() {
 
     beforeEach(function() {
       resolveDependencies();
     });
 
-    it('should have a confirmDelete function', function () {
+    it('should have a confirmDelete function', function() {
       expect(!!scope.showDeleteConfirmation).toBe(true);
     });
 
-    it('should attach companyRelationship from companyRelationshipListData in scope', function () {
+    it('should attach companyRelationship from companyRelationshipListData in scope', function() {
       scope.showDeleteConfirmation(scope.companyRelationshipListData[0]);
       expect(scope.companyRelationshipToDelete).toBe(scope.companyRelationshipListData[0]);
     });
   });
 
-  describe('Submit scope function', function () {
+  describe('Submit scope function', function() {
     var companyRelationship;
-    beforeEach(function () {
+    beforeEach(function() {
       resolveDependencies();
       companyRelationship = {
         relativeCompanyId: 366,
@@ -165,18 +169,18 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
       };
     });
 
-    it('should not submit if form is invalid', function () {
+    it('should not submit if form is invalid', function() {
       scope.companyRelationshipForm.$valid = false;
       scope.submit();
       expect(companyRelationshipFactory.createCompanyRelationship).not.toHaveBeenCalled();
     });
 
-    it('should submit and create if form is valid', function () {
+    it('should submit and create if form is valid', function() {
       scope.submit(true, companyRelationship);
       expect(companyRelationshipFactory.createCompanyRelationship).toHaveBeenCalled();
     });
 
-    it('should submit if update form is valid', function () {
+    it('should submit if update form is valid', function() {
       companyRelationship.id = 1;
       scope.submit(true, companyRelationship);
       expect(companyRelationshipFactory.updateCompanyRelationship).toHaveBeenCalled();
@@ -184,7 +188,7 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
 
   });
 
-  describe('the error handler', function () {
+  describe('the error handler', function() {
 
     var mockError;
 
@@ -202,11 +206,11 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
       scope.$apply();
     });
 
-    it('should set error data ', function () {
+    it('should set error data ', function() {
       expect(scope.errorResponse).toEqual(mockError);
     });
 
-    it('should set the display flag to true', function () {
+    it('should set the display flag to true', function() {
       expect(scope.displayError).toBeTruthy();
     });
 

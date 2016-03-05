@@ -2,8 +2,8 @@
 
 describe('Controller: CashBagListCtrl', function() {
 
-  // load the controller's module
-  beforeEach(module('ts5App', 'template-module'));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
   beforeEach(module('served/cash-bag-list.json'));
   beforeEach(module('served/stations.json'));
   beforeEach(module('served/schedules.json'));
@@ -43,7 +43,6 @@ describe('Controller: CashBagListCtrl', function() {
 
   var checkForDailyExchangeRate;
 
-  // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location) {
     inject(function(_servedCashBagList_, _servedStations_, _servedSchedules_, _servedSchedulesDaily_,
       _servedStoreInstanceList_, _servedStoresList_, _servedSchedulesDateRange_) {
@@ -54,7 +53,6 @@ describe('Controller: CashBagListCtrl', function() {
       storeInstanceListJSON = _servedStoreInstanceList_;
       storeListJSON = _servedStoresList_;
       schedulesDateRangeJSON = _servedSchedulesDateRange_;
-
     });
 
     location = $location;
@@ -371,7 +369,6 @@ describe('Controller: CashBagListCtrl', function() {
     it('should call the private function clearPopupSearch and clear the selectedSchedule', function() {
       expect(scope.search.selectedSchedule).toBe(undefined);
     });
-
   });
 
 

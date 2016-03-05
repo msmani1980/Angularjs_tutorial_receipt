@@ -2,7 +2,8 @@
 
 describe('The Company Create Controller', function() {
 
-  beforeEach(module('ts5App', 'template-module'));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
   beforeEach(module('served/company-create.json'));
   beforeEach(module('served/company-types.json'));
   beforeEach(module('served/company-currency-globals.json'));
