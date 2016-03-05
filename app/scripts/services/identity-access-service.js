@@ -11,7 +11,7 @@ angular.module('ts5App')
   .service('identityAccessService', function ($resource, ENV) {
     var authorizeURL = ENV.apiUrl + '/IdentityAccess/authorizeUser';
     var chpwdURL = ENV.apiUrl + '/IdentityAccess/chpwd';
-    var sendEmailURL = ENV.apiUrl + '/IdentityAccess/sendemail/email/';
+    var sendEmailURL = ENV.apiUrl + '/IdentityAccess/:recoverUserOrPassword/:email/:username';
     var logoutURL = ENV.apiUrl + '/IdentityAccess/logout';
     var featuresInRoleURL = ENV.apiUrl + '/IdentityAccess/featuresInRole';
     var userCompaniesURL = ENV.apiUrl + '/IdentityAccess/company/alluserscompanies';
@@ -84,8 +84,16 @@ angular.module('ts5App')
       return chpwdResource.changePassword(payload).$promise;
     };
 
-    var sendEmail = function (emailAddress, emailContent) {
-      var sendEmailResource = $resource(sendEmailURL + emailAddress.toLowerCase(), sendEmailParameters, actions);
+    var sendEmail = function (shouldRecoverUser, emailContent, emailAddress, username) {
+      var recoverPath = (shouldRecoverUser) ? 'recoveruser' : 'recoverpassword';
+      var usernameToSend = (!shouldRecoverUser && username) ? username.toLowerCase() : '';
+      sendEmailParameters = {
+        recoverUserOrPassword: recoverPath,
+        email: emailAddress.toLowerCase(),
+        username: usernameToSend || ''
+      };
+
+      var sendEmailResource = $resource(sendEmailURL, sendEmailParameters, actions);
       return sendEmailResource.sendEmail(emailContent).$promise;
     };
 

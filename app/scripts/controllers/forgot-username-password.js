@@ -43,18 +43,27 @@ angular.module('ts5App')
       $scope.responseMessage = 'Success: An email containing your ' + $scope.forgot.field + ' has been sent.';
     }
 
+    // Email body only. Subject is defined by BE
     var passwordText = '<p>A request has been received to reset your password.</p>';
     passwordText += '<p>Click the link below to personally reset your password.</p>';
     passwordText += '<p><a href="{1}/#/change-password?sessionToken={0}">Click here to change password.</a></p>';
 
     var usernameText = '<p>You (or some else) have requested your username.</p>';
-    usernameText += '<p>Your username is: <strong>{2}</strong></p>';
+    usernameText += '<p>Your username is: <strong>{0}</strong></p>';
     usernameText += '<p>Click the link below to login to the system:</p>';
-    usernameText += '<p><a href="{1}/#/login">Click here to login.</a></p>';
+    usernameText += '<p><a href="{0}/#/login">Click here to login.</a></p>';
 
     var emailContent = {
       username: usernameText,
       password: passwordText
+    };
+
+    $scope.getRecoveryRequirements = function () {
+      if ($scope.forgot.field === 'username') {
+        return 'email';
+      }
+
+      return 'username and email';
     };
 
     $scope.sendEmail = function () {
@@ -63,6 +72,7 @@ angular.module('ts5App')
       }
 
       showLoadingModal('Sending email');
-      identityAccessFactory.sendEmail($scope.forgot.email, emailContent[$scope.forgot.field]).then(handleSuccessResponse, handleResponseError);
+      identityAccessFactory.sendRecoveryEmail($scope.forgot.field, emailContent[$scope.forgot.field], $scope.forgot.email, $scope.forgot.username).then(handleSuccessResponse,
+        handleResponseError);
     };
   });
