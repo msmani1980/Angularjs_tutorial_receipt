@@ -3,10 +3,14 @@
 describe('Controller: LmpDeliveryNoteCtrl', function() {
 
   // load the controller's module
-  beforeEach(module('ts5App',
-    'served/lmp-delivery-note.json', 'served/catering-stations.json', 'served/master-item-list.json',
-    'served/company-reason-codes.json', 'served/items-by-caterer-station-id.json', 'served/item-types.json',
-    'served/characteristics.json'));
+  beforeEach(module('ts5App'));
+  beforeEach(module('served/lmp-delivery-note.json'));
+  beforeEach(module('served/catering-stations.json'));
+  beforeEach(module('served/master-item-list.json'));
+  beforeEach(module('served/company-reason-codes.json'));
+  beforeEach(module('served/items-by-caterer-station-id.json'));
+  beforeEach(module('served/item-types.json'));
+  beforeEach(module('served/characteristics.json'));
 
   var LmpDeliveryNoteCtrl;
   var scope;

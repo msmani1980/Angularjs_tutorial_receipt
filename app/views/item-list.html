@@ -83,7 +83,6 @@
 
             </div>
 
-
           </div>
 
           <date-picker element-class="col-xs-12 col-sm-6 col-md-4"
@@ -97,9 +96,7 @@
         </div>
 
         <div class="panel-footer text-right">
-          <button class="btn btn-default"
-                  ng-click="clearSearchFilters()"
-                  ng-show="search.itemCode.length || search.itemName.length || search.itemTypeName.length || search.onBoardName.length || search.categoryName.length || dateRange.startDate.length || dateRange.endDate.length || search.stockOwnerCode.length">
+          <button class="btn btn-default" ng-click="clearSearchFilters()" ng-show="showClearButton()">
             <span>Clear</span>
           </button>
           <button ng-click="searchRecords()" class="btn btn-primary btn-search">
@@ -116,7 +113,7 @@
     <span class="fa fa-flag"></span> Your search returned no results.
   </alert>
 
-  <div class="table table-responsive table-hover">
+  <div class="table table-responsive table-hover" ng-show="itemsList.length">
     <table infinite-scroll="loadItems()" class="table">
       <thead>
       <tr>

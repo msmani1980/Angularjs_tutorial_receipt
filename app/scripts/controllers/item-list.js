@@ -8,8 +8,7 @@
  * Contoller for the Retail Items List View
  */
 angular.module('ts5App')
-  .controller('ItemListCtrl', function($scope, $http, itemsFactory,
-    companiesFactory, dateUtility, $filter) {
+  .controller('ItemListCtrl', function($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter) {
 
     var $this = this;
     this.meta = {
@@ -33,7 +32,7 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-    this.filterItems = function () {
+    this.filterItems = function() {
       return $filter('filter')($scope.itemsList, $scope.search);
     };
 
@@ -61,28 +60,31 @@ angular.module('ts5App')
       return query;
     };
 
-    this.createNestedItemsList = function (itemList) {
+    this.createNestedItemsList = function(itemList) {
       var newItemList = [];
       var currentMasterId = -1;
-      angular.forEach(itemList, function (item) {
+      angular.forEach(itemList, function(item) {
         if (item.itemMasterId === currentMasterId) {
           var lastIndex = newItemList.length - 1;
           newItemList[lastIndex].versions.push(item);
         } else {
-          var newItem = { versions: [item], itemMasterId: item.itemMasterId };
+          var newItem = {
+            versions: [item],
+            itemMasterId: item.itemMasterId
+          };
           newItemList.push(newItem);
           currentMasterId = item.itemMasterId;
         }
       });
 
-      angular.forEach(newItemList, function (item) {
+      angular.forEach(newItemList, function(item) {
         item.versions.sort($this.sortItemVersions);
       });
 
       return newItemList;
     };
 
-    this.appendItemsToList = function (itemListFromAPI) {
+    this.appendItemsToList = function(itemListFromAPI) {
       $this.meta.count = $this.meta.count || itemListFromAPI.meta.count;
       var itemList = angular.copy(itemListFromAPI.retailItems);
       var nestedItemList = $this.createNestedItemsList(itemList);
@@ -101,12 +103,12 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     }
 
-    $scope.loadItems = function () {
+    $scope.loadItems = function() {
       getItemsList();
     };
 
-    this.getItemTypesList = function () {
-      itemsFactory.getItemTypesList().then(function (itemTypes) {
+    this.getItemTypesList = function() {
+      itemsFactory.getItemTypesList().then(function(itemTypes) {
         $scope.itemTypes = itemTypes;
       });
     };
@@ -130,7 +132,7 @@ angular.module('ts5App')
       return itemIndex;
     };
 
-    this.sortItemVersions = function (itemA, itemB) {
+    this.sortItemVersions = function(itemA, itemB) {
       if (itemA.startDate === itemB.startDate && itemA.endDate === itemB.endDate) {
         return 0;
       }
@@ -197,7 +199,7 @@ angular.module('ts5App')
       return validVersionExists;
     };
 
-    $scope.searchRecords = function () {
+    $scope.searchRecords = function() {
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -207,7 +209,7 @@ angular.module('ts5App')
       getItemsList();
     };
 
-    $scope.clearSearchFilters = function () {
+    $scope.clearSearchFilters = function() {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       var filters = $scope.search;
@@ -215,7 +217,7 @@ angular.module('ts5App')
         delete $scope.search[filterKey];
       }
 
-      $scope.searchRecords();
+      $scope.itemsList = [];
     };
 
     $scope.hasSubVersions = function(item) {
@@ -238,6 +240,31 @@ angular.module('ts5App')
         $this.closeAccordian();
         $scope.openVersionId = item.itemMasterId;
       }
+    };
+
+    function hasLength(data) {
+      if (angular.isDefined(data) && data.length) {
+        return true;
+      }
+
+      return false;
+    }
+
+    function searchIsDirty() {
+      var s = $scope.search;
+      var check = [];
+      for (var search in s) {
+        if (angular.isDefined(search) && hasLength(search)) {
+          check.push(search);
+        }
+      }
+
+      return (check.length);
+    }
+
+    $scope.showClearButton = function() {
+      var d = $scope.dateRange;
+      return (searchIsDirty() || hasLength(d.startDate) || hasLength(d.endDate) || hasLength($scope.itemsList));
     };
 
     this.openAccordian = function(item) {
