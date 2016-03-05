@@ -615,7 +615,6 @@ angular.module('ts5App')
     }
 
     function searchIsDirty() {
-      console.log($scope.search);
       var s = $scope.search;
       var check = [];
       for (var search in s) {
