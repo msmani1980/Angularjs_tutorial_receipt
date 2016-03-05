@@ -27,7 +27,6 @@ angular.module('ts5App')
     }
 
     function handleResponseError(responseFromAPI) {
-      console.log('error', responseFromAPI);
       hideLoadingModal();
       responseFromAPI.data = [
         {
@@ -40,7 +39,6 @@ angular.module('ts5App')
     }
 
     function handleSuccessResponse() {
-      console.log('success');
       hideLoadingModal();
       $scope.responseMessage = 'Success: An email containing your ' + $scope.forgot.field + ' has been sent.';
     }
