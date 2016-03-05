@@ -3,6 +3,15 @@
 
 describe('Controller: ExchangeRatesCtrl', function() {
 
+  beforeEach(module('ts5App'));
+  beforeEach(module('served/company.json'));
+  beforeEach(module('served/currencies.json'));
+  beforeEach(module('served/company-currency-globals.json'));
+  beforeEach(module('served/daily-exchange-rates.json'));
+  beforeEach(module('served/previous-exchange-rate.json'));
+  beforeEach(module('served/company-preferences.json'));
+  beforeEach(module('served/company-data.json'));
+
   var ExchangeRatesCtrl;
   var scope;
   var $httpBackend;
@@ -17,15 +26,6 @@ describe('Controller: ExchangeRatesCtrl', function() {
   var dateUtility;
   var globalMenuService;
   var servedCompanyDataJSON;
-
-  beforeEach(module('ts5App'));
-  beforeEach(module('served/company.json'));
-  beforeEach(module('served/currencies.json'));
-  beforeEach(module('served/company-currency-globals.json'));
-  beforeEach(module('served/daily-exchange-rates.json'));
-  beforeEach(module('served/previous-exchange-rate.json'));
-  beforeEach(module('served/company-preferences.json'));
-  beforeEach(module('served/company-data.json'));
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     inject(function(_servedCompany_, _servedCurrencies_, _servedCompanyCurrencyGlobals_,

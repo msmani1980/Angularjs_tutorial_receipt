@@ -1,30 +1,34 @@
 'use strict';
 
-describe('Controller: PostFlightDataListCtrl', function () {
+describe('Controller: PostFlightDataListCtrl', function() {
 
-  // load the controller's module
-  beforeEach(module('ts5App', 'served/stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trip-data-list.json', 'served/employees.json'));
+  beforeEach(module('ts5App'));
+  beforeEach(module('served/stations.json'));
+  beforeEach(module('served/carrier-types.json'));
+  beforeEach(module('served/carrier-numbers.json'));
+  beforeEach(module('served/post-trip-data-list.json'));
+  beforeEach(module('served/employees.json'));
 
-  var PostTripDataListCtrl,
-    scope,
-    postTripsResponseJSON,
-    postTripsDeferred,
-    stationsListResponseJSON,
-    stationsListDeferred,
-    carrierTypesResponseJSON,
-    carrierTypesDeferred,
-    carrierNumbersResponseJSON,
-    carrierNumbersDeferred,
-    deletedPostTripDeferred,
-    employeesDeferred,
-    employeesResponseJSON,
-    companyId,
-    postTripFactory,
-    location;
+  var PostTripDataListCtrl;
+  var scope;
+  var postTripsResponseJSON;
+  var postTripsDeferred;
+  var stationsListResponseJSON;
+  var stationsListDeferred;
+  var carrierTypesResponseJSON;
+  var carrierTypesDeferred;
+  var carrierNumbersResponseJSON;
+  var carrierNumbersDeferred;
+  var deletedPostTripDeferred;
+  var employeesDeferred;
+  var employeesResponseJSON;
+  var companyId;
+  var postTripFactory;
+  var location;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q, $location) {
-    inject(function (_servedPostTripDataList_, _servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_, _servedEmployees_) {
+  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location) {
+    inject(function(_servedPostTripDataList_, _servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_,
+      _servedEmployees_) {
       postTripsResponseJSON = _servedPostTripDataList_;
       stationsListResponseJSON = _servedStations_;
       carrierTypesResponseJSON = _servedCarrierTypes_;
@@ -45,7 +49,9 @@ describe('Controller: PostFlightDataListCtrl', function () {
     carrierNumbersDeferred = $q.defer();
     carrierNumbersDeferred.resolve(carrierNumbersResponseJSON);
     deletedPostTripDeferred = $q.defer();
-    deletedPostTripDeferred.resolve({ id: 1 });
+    deletedPostTripDeferred.resolve({
+      id: 1
+    });
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesResponseJSON);
 
@@ -65,12 +71,12 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
   companyId = '403';
 
-  describe('scope globals', function () {
-    it('should have postTripDataList attached to scope', function () {
+  describe('scope globals', function() {
+    it('should have postTripDataList attached to scope', function() {
       expect(scope.postTrips).toBeDefined();
     });
 
-    it('should have viewName attached to scope', function () {
+    it('should have viewName attached to scope', function() {
       expect(scope.viewName).toBeDefined();
     });
   });
@@ -86,7 +92,7 @@ describe('Controller: PostFlightDataListCtrl', function () {
         expect(Object.prototype.toString.call(scope.stationList)).toBe('[object Array]');
       });
 
-      it('should remove duplicatesFromStationList', function () {
+      it('should remove duplicatesFromStationList', function() {
         var responseLength = stationsListResponseJSON.response.length;
         expect(responseLength > scope.stationList.length).toEqual(true);
       });
@@ -153,19 +159,37 @@ describe('Controller: PostFlightDataListCtrl', function () {
     });
 
     it('should be able to clear search model and make an API call', function() {
-      scope.search = { data: 'data' };
+      scope.search = {
+        data: 'data'
+      };
       scope.clearSearchForm();
       expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
       expect(scope.search).toEqual({});
     });
 
-    it('should add and reformat multiselect values before search', function () {
+    it('should add and reformat multiselect values before search', function() {
       scope.search = {};
       scope.multiSelectedValues = {
-        tailNumbers: [{ carrierNumber: 'ABC' }, { carrierNumber: 'DEF' }],
-        depStations: [{ stationId: 1 }, { stationId: 2 }],
-        arrStations: [{ stationId: 1 }, { stationId: 2 }],
-        employeeIds: [{ id: 3 }, { id: 4 }]
+        tailNumbers: [{
+          carrierNumber: 'ABC'
+        }, {
+          carrierNumber: 'DEF'
+        }],
+        depStations: [{
+          stationId: 1
+        }, {
+          stationId: 2
+        }],
+        arrStations: [{
+          stationId: 1
+        }, {
+          stationId: 2
+        }],
+        employeeIds: [{
+          id: 3
+        }, {
+          id: 4
+        }]
       };
       var expectedTailNumbersArray = 'ABC,DEF';
       var expectedStationsArray = '1,2';
@@ -207,13 +231,17 @@ describe('Controller: PostFlightDataListCtrl', function () {
       });
 
       it('should call delete post trip', function() {
-        var postTripToDelete = [{ id: 1 }];
+        var postTripToDelete = [{
+          id: 1
+        }];
         scope.removeRecord(postTripToDelete);
         expect(postTripFactory.deletePostTrip).toHaveBeenCalled();
       });
 
       it('should reload post trip data', function() {
-        scope.postTrips = [{ id: 1 }];
+        scope.postTrips = [{
+          id: 1
+        }];
         scope.tempDeleteIndex = 0;
         scope.removeRecord();
         expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();

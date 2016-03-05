@@ -18,7 +18,6 @@ describe('Managed Goods Received', function() {
   var location;
   var httpBackend;
 
-  // Initialize the controller and a mock scope
   beforeEach(inject(function($q, $controller, $rootScope, _deliveryNoteFactory_, $injector) {
     inject(function(_servedDeliveryNotesList_, _servedCateringStations_) {
       deliveryNotesJSON = _servedDeliveryNotesList_;
