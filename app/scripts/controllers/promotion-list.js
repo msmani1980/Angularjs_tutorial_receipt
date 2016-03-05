@@ -10,6 +10,7 @@
 angular.module('ts5App')
   .controller('PromotionListCtrl', function($scope, $q, $location, payloadUtility, dateUtility, promotionsFactory,
     recordsService) {
+
     var $this = this;
     this.meta = {
       limit: 100,

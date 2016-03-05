@@ -9,7 +9,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDashboardCtrl', function($q, $scope, dateUtility, catererStationService, reconciliationFactory,
+  .controller('ReconciliationDashboardCtrl', function($q, $scope, dateUtility, catererStationService,
+    reconciliationFactory,
     payloadUtility, $location, storeInstanceFactory, lodash) {
 
     var $this = this;
@@ -348,7 +349,7 @@ angular.module('ts5App')
         startDate: dateUtility.dateNumDaysBeforeTodayFormatted(10),
         endDate: dateUtility.dateNumDaysBeforeTodayFormatted(2)
       };
-      $scope.searchReconciliationDataList();
+      $scope.reconciliationList = [];
     };
 
     $scope.highlightSelected = function(item) {

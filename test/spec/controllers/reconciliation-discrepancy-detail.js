@@ -25,55 +25,37 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
   var reconciliationFactory;
   var storeInstanceFactory;
   var globalMenuService;
-
   var getStoreInstanceDetailsDeferred;
   var storeInstanceJSON;
-
   var getStockTotalsDeferred;
   var getStockTotalsJSON;
-
   var getPromotionTotalsDeferred;
   var getPromotionTotalsJSON;
-
   var getItemTypesListDeferred;
   var getItemTypesListJSON;
-
   var getCountTypesDeferred;
   var getCountTypesJSON;
-
   var getCHRevenueDeferred;
   var getEPOSRevenueDeferred;
-
   var getStoreInstanceItemListDeferred;
   var getStoreInstanceItemListJSON;
-
   var getCompanyGlobalCurrenciesDeferred;
   var getCompanyGlobalCurrenciesJSON;
-
   var getCompanyDeferred;
   var getCompanyJSON;
-
   var getPaymentReportDeferred;
   var getPaymentReportJSON;
-
   var getPromotionDeferred;
   var getPromotionJSON;
-
   var getItemDeferred;
   var getItemJSON;
-
   var getCompanyPreferencesDeferred;
   var getCompanyPreferencesJSON;
-
   var getStoreStatusListDeferred;
   var getStoreStatusListJSON;
-
   var putSaveStockItemsCountsDeferred;
-
   var stockItemCountsDeferred;
   var stockItemCountsJSON;
-
-
   var routeParams;
   var dateUtility;
 
@@ -281,26 +263,43 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
 
   });
 
-  describe('company preferences', function () {
-    it('should set the cash preference to false if found and date < today', function () {
-      ReconciliationDiscrepancyDetail.companyPreferences = [
-        { isSelected: true, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2015-01-01' }
-      ];
+  describe('company preferences', function() {
+    it('should set the cash preference to false if found and date < today', function() {
+      ReconciliationDiscrepancyDetail.companyPreferences = [{
+        isSelected: true,
+        choiceName: 'Active',
+        optionCode: 'CSL',
+        optionName: 'Cashless',
+        startDate: '2015-01-01'
+      }];
       expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeFalsy();
     });
 
-    it('should set the cash preference to true if most recent is turned off', function () {
-      ReconciliationDiscrepancyDetail.companyPreferences = [
-        { isSelected: false, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2015-10-10' },
-        { isSelected: true, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2015-01-01' }
-      ];
+    it('should set the cash preference to true if most recent is turned off', function() {
+      ReconciliationDiscrepancyDetail.companyPreferences = [{
+        isSelected: false,
+        choiceName: 'Active',
+        optionCode: 'CSL',
+        optionName: 'Cashless',
+        startDate: '2015-10-10'
+      }, {
+        isSelected: true,
+        choiceName: 'Active',
+        optionCode: 'CSL',
+        optionName: 'Cashless',
+        startDate: '2015-01-01'
+      }];
       expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeTruthy();
     });
 
-    it('should set the cash preference to true if found and date > today', function () {
-      ReconciliationDiscrepancyDetail.companyPreferences = [
-        { isSelected: true, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2017-01-01' }
-      ];
+    it('should set the cash preference to true if found and date > today', function() {
+      ReconciliationDiscrepancyDetail.companyPreferences = [{
+        isSelected: true,
+        choiceName: 'Active',
+        optionCode: 'CSL',
+        optionName: 'Cashless',
+        startDate: '2017-01-01'
+      }];
       expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeTruthy();
     });
 
@@ -613,12 +612,12 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
   });
 
   describe('scope helper functions', function() {
-    describe('canEdit', function () {
-      it('should return false when store instance is not defined', function () {
+    describe('canEdit', function() {
+      it('should return false when store instance is not defined', function() {
         scope.storeInstance = null;
         expect(scope.canEdit()).toEqual(false);
       });
-      it('should return true when store instance status is not commission paid', function () {
+      it('should return true when store instance status is not commission paid', function() {
         scope.storeInstance = {
           statusName: 'fakeStatusName'
         };
