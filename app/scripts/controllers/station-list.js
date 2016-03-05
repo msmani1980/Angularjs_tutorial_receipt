@@ -615,6 +615,7 @@ angular.module('ts5App')
     }
 
     function searchIsDirty() {
+      console.log($scope.search);
       var s = $scope.search;
       var check = [];
       for (var search in s) {
@@ -651,11 +652,7 @@ angular.module('ts5App')
     };
 
     $scope.showClearButton = function() {
-      if ($scope.stationList) {
-        return ($scope.stationList.length);
-      }
-
-      return searchIsDirty();
+      return (searchIsDirty() || ($scope.stationList && $scope.stationList.length));
     };
 
     $scope.canSave = function() {
