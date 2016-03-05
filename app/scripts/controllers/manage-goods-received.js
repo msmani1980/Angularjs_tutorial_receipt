@@ -7,7 +7,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManageGoodsReceivedCtrl', function ($scope, $filter, dateUtility, deliveryNoteFactory, ngToast, lodash) {
+  .controller('ManageGoodsReceivedCtrl', function($scope, $filter, dateUtility, deliveryNoteFactory, messageService,
+    lodash) {
 
     var $this = this;
     this.meta = {
@@ -48,15 +49,15 @@ angular.module('ts5App')
       });
     };
 
-    this.displayLoadingModal = function (loadingText) {
+    this.displayLoadingModal = function(loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
     };
 
-    this.hideLoadingModal = function () {
+    this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
     };
 
-    this.generateDeliveryNoteQuery = function () {
+    this.generateDeliveryNoteQuery = function() {
       var query = {
         catererStationId: $scope.catererStationId,
         sortBy: 'ASC',
@@ -71,7 +72,7 @@ angular.module('ts5App')
       return query;
     };
 
-    $scope.getDeliveryNotesList = function () {
+    $scope.getDeliveryNotesList = function() {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
@@ -83,7 +84,7 @@ angular.module('ts5App')
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
-      deliveryNoteFactory.getDeliveryNotesList(query).then(function (data) {
+      deliveryNoteFactory.getDeliveryNotesList(query).then(function(data) {
         $this.meta.count = $this.meta.count || data.meta.count;
         $scope.userSelectedStation = true;
         $scope.deliveryNotesList = $scope.deliveryNotesList.concat(data.response);
@@ -102,13 +103,13 @@ angular.module('ts5App')
       });
     };
 
-    this.getCatererStationList = function () {
-      deliveryNoteFactory.getCatererStationList().then(function (data) {
+    this.getCatererStationList = function() {
+      deliveryNoteFactory.getCatererStationList().then(function(data) {
         $scope.stationsList = data.response;
       });
     };
 
-    this.findDeliveryNoteIndex = function (deliveryNoteId) {
+    this.findDeliveryNoteIndex = function(deliveryNoteId) {
       var deliveryNoteIndex = 0;
       for (var key in $scope.deliveryNotesList) {
         var deliveryNote = $scope.deliveryNotesList[key];
@@ -121,25 +122,21 @@ angular.module('ts5App')
       return deliveryNoteIndex;
     };
 
-    this.showSuccessMessage = function (message) {
-      ngToast.create({
-        className: 'success',
-        dismissButton: true,
-        content: message
-      });
+    this.showSuccessMessage = function(message) {
+      messageService.display('success', message);
     };
 
-    $scope.removeRecord = function (deliveryNoteId) {
+    $scope.removeRecord = function(deliveryNoteId) {
       var deliveryNoteIndex = $this.findDeliveryNoteIndex(deliveryNoteId);
       $this.displayLoadingModal('Removing Delivery Note');
-      deliveryNoteFactory.deleteDeliveryNote(deliveryNoteId).then(function () {
+      deliveryNoteFactory.deleteDeliveryNote(deliveryNoteId).then(function() {
         $this.hideLoadingModal();
         $this.showSuccessMessage('Delivery Note Removed!');
         $scope.deliveryNotesList.splice(deliveryNoteIndex, 1);
       });
     };
 
-    $scope.clearSearchFilters = function () {
+    $scope.clearSearchFilters = function() {
       $scope.dateRange.deliveryStartDate = '';
       $scope.dateRange.deliveryEndDate = '';
       var filters = $scope.search;
@@ -150,7 +147,7 @@ angular.module('ts5App')
       $scope.searchRecords();
     };
 
-    $scope.searchRecords = function () {
+    $scope.searchRecords = function() {
       $scope.deliveryNotesList = [];
       $this.meta = {
         count: undefined,

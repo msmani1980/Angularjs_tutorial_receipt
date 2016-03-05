@@ -2,7 +2,6 @@
 
 describe('Controller: LmpDeliveryNoteCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/lmp-delivery-note.json'));
   beforeEach(module('served/catering-stations.json'));
@@ -36,7 +35,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
   var httpBackend;
   var dateUtility;
 
-  // Initialize the controller and a mock scope
   beforeEach(inject(function($injector, $controller, $httpBackend, $rootScope, $q, _deliveryNoteFactory_,
     _servedLmpDeliveryNote_, $location, _servedCateringStations_, _servedMasterItemList_,
     _servedCompanyReasonCodes_, _servedItemsByCatererStationId_, _servedItemTypes_, _servedCharacteristics_) {
@@ -86,7 +84,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
     getItemCharacteristicsDeferred = $q.defer();
     getItemCharacteristicsDeferred.resolve(getItemCharacteristicsResponseJSON);
     spyOn(deliveryNoteFactory, 'getCharacteristics').and.returnValue(getItemCharacteristicsDeferred.promise);
-
 
   }));
 
