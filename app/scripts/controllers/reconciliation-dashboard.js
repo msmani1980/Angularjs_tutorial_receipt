@@ -10,8 +10,7 @@
  */
 angular.module('ts5App')
   .controller('ReconciliationDashboardCtrl', function($q, $scope, dateUtility, catererStationService,
-    reconciliationFactory,
-    payloadUtility, $location, storeInstanceFactory, lodash) {
+    reconciliationFactory, payloadUtility, $location, storeInstanceFactory, lodash) {
 
     var $this = this;
     this.meta = {
