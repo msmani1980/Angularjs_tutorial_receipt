@@ -7,7 +7,7 @@
  * Controller for the Stock Owner Items List view
  */
 angular.module('ts5App')
-  .controller('StockOwnerItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter) {
+  .controller('StockOwnerItemListCtrl', function($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter) {
 
     var $this = this;
     this.meta = {
@@ -23,29 +23,29 @@ angular.module('ts5App')
       endDate: ''
     };
 
-    this.updateItemList = function () {
+    this.updateItemList = function() {
       $scope.itemsListCount = $scope.itemsList.length;
       $scope.totalItems = $scope.itemsListCount;
       $this.setPaginatedItems($scope.itemsList);
     };
 
-    this.filterItems = function () {
+    this.filterItems = function() {
       return $filter('filter')($scope.itemsList, $scope.search);
     };
 
-    this.parsePaginationToInt = function () {
+    this.parsePaginationToInt = function() {
       $scope.currentPageInt = parseInt($scope.currentPage);
       $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
     };
 
-    this.setPaginatedItems = function (filteredItems) {
+    this.setPaginatedItems = function(filteredItems) {
       $this.parsePaginationToInt();
       var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
       var end = begin + $scope.itemsPerPageInt;
       $scope.paginatedItems = filteredItems.slice(begin, end);
     };
 
-    this.generateItemQuery = function () {
+    this.generateItemQuery = function() {
       var todaysDate = dateUtility.formatDate(dateUtility.now());
       var query = {
         startDate: todaysDate,
@@ -67,13 +67,13 @@ angular.module('ts5App')
       return query;
     };
 
-    this.getItemsList = function () {
+    this.getItemsList = function() {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
 
       var query = $this.generateItemQuery();
-      itemsFactory.getItemsList(query).then(function (response) {
+      itemsFactory.getItemsList(query).then(function(response) {
         $this.meta.count = $this.meta.count || response.meta.count;
 
         var itemListFromAPI = angular.copy(response.retailItems);
@@ -87,19 +87,19 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     };
 
-    this.getItemTypesList = function () {
-      itemsFactory.getItemTypesList().then(function (itemTypes) {
+    this.getItemTypesList = function() {
+      itemsFactory.getItemTypesList().then(function(itemTypes) {
         $scope.itemTypes = itemTypes;
       });
     };
 
-    this.getSalesCategoriesList = function () {
-      companiesFactory.getSalesCategoriesList(function (data) {
+    this.getSalesCategoriesList = function() {
+      companiesFactory.getSalesCategoriesList(function(data) {
         $scope.salesCategories = data.salesCategories;
       });
     };
 
-    this.findItemIndex = function (itemId) {
+    this.findItemIndex = function(itemId) {
       var itemIndex = 0;
       for (var key in $scope.itemsList) {
         var item = $scope.itemsList[key];
@@ -112,27 +112,27 @@ angular.module('ts5App')
       return itemIndex;
     };
 
-    $scope.removeRecord = function (itemId) {
+    $scope.removeRecord = function(itemId) {
       var itemIndex = $this.findItemIndex(itemId);
       $this.displayLoadingModal('Removing SO Item');
-      itemsFactory.removeItem(itemId).then(function () {
+      itemsFactory.removeItem(itemId).then(function() {
         $this.hideLoadingModal();
         $scope.itemsList.splice(itemIndex, 1);
         $this.updateItemList();
       });
     };
 
-    this.parseDate = function (date) {
+    this.parseDate = function(date) {
       return Date.parse(date);
     };
 
-    $scope.isItemActive = function (date) {
+    $scope.isItemActive = function(date) {
       var parsedDate = $this.parseDate(date);
       var today = dateUtility.now();
       return parsedDate <= today;
     };
 
-    $scope.clearSearchFilters = function () {
+    $scope.clearSearchFilters = function() {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       var filters = $scope.search;
@@ -140,21 +140,20 @@ angular.module('ts5App')
         delete $scope.search[filterKey];
       }
 
-      $this.displayLoadingModal();
-      $this.getItemsList();
+      $scope.itemsList = [];
     };
 
-    this.displayLoadingModal = function (loadingText) {
+    this.displayLoadingModal = function(loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
       angular.element('.loading-more').show();
     };
 
-    this.hideLoadingModal = function () {
+    this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
       angular.element('.loading-more').hide();
     };
 
-    $scope.searchRecords = function () {
+    $scope.searchRecords = function() {
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -165,7 +164,7 @@ angular.module('ts5App')
       $this.getItemsList();
     };
 
-    $scope.$watch('currentPage + itemsPerPage + search', function () {
+    $scope.$watch('currentPage + itemsPerPage + search', function() {
       $this.updateItemList();
     });
 

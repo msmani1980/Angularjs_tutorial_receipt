@@ -242,4 +242,37 @@ describe('The StockOwnerItemListCtrl controller', function() {
 
   });
 
+  describe('clearSearchFilters functionality', function() {
+
+    beforeEach(function() {
+      scope.dateRange = {};
+      scope.dateRange.startDate = 'testDate';
+      scope.dateRange.endDate = 'testDate';
+      scope.itemsList = ['test'];
+      scope.search = {
+        test: 'test'
+      };
+    });
+
+    it('should have cleared search', function() {
+      scope.clearSearchFilters();
+      expect(scope.search).toEqual({});
+    });
+
+    it('should have cleared startDate', function() {
+      scope.clearSearchFilters();
+      expect(scope.dateRange.startDate).toEqual('');
+    });
+
+    it('should have cleared endDate', function() {
+      scope.clearSearchFilters();
+      expect(scope.dateRange.endDate).toEqual('');
+    });
+
+    it('should have cleared itemsList', function() {
+      scope.clearSearchFilters();
+      expect(scope.itemsList).toEqual([]);
+    });
+  });
+
 });
