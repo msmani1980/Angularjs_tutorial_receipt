@@ -8,7 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('DiscountCreateCtrl', function ($scope, $q, $location, $routeParams, dateUtility, discountFactory, recordsService, currencyFactory, companiesFactory, itemsFactory) {
+  .controller('DiscountCreateCtrl', function($scope, $q, $location, $routeParams, dateUtility, discountFactory,
+    recordsService, currencyFactory, companiesFactory, itemsFactory) {
+
     var $this = this;
 
     $scope.viewName = 'Create Discount';
@@ -94,7 +96,10 @@ angular.module('ts5App')
 
     this.setSalesCategoriesListAndMap = function(data) {
       $scope.salesCategoriesList = data.salesCategories;
-      $scope.salesCategoriesList.unshift({ id: 0, name:'All' });
+      $scope.salesCategoriesList.unshift({
+        id: 0,
+        name: 'All'
+      });
 
       angular.forEach(data.salesCategories, function(category) {
         $scope.salesCategoriesMap[category.id] = category;
@@ -340,14 +345,14 @@ angular.module('ts5App')
       };
     };
 
-    $scope.showDeleteConfirmation = function (index, restrictedItem) {
+    $scope.showDeleteConfirmation = function(index, restrictedItem) {
       $scope.restrictedItemToDelete = restrictedItem;
       $scope.restrictedItemToDelete.rowIndex = index;
 
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    $scope.deleteRestrictedItem = function () {
+    $scope.deleteRestrictedItem = function() {
       angular.element('.delete-warning-modal').modal('hide');
       $scope.formData.restrictedItems.splice($scope.restrictedItemToDelete.rowIndex, 1);
     };
@@ -355,7 +360,9 @@ angular.module('ts5App')
     $scope.addRestrictedItems = function() {
       var totalRowsToAdd = $scope.addRestrictedItemsNumber || 1;
       for (var i = 0; i < totalRowsToAdd; i++) {
-        $scope.formData.restrictedItems.push({ itemCategory: 0 });
+        $scope.formData.restrictedItems.push({
+          itemCategory: 0
+        });
       }
     };
 
@@ -380,7 +387,9 @@ angular.module('ts5App')
         return;
       }
 
-      itemsFactory.getItemsList({ categoryId: categoryId }, true).then(function(response) {
+      itemsFactory.getItemsList({
+        categoryId: categoryId
+      }, true).then(function(response) {
         $scope.filteredRetailItemsList[categoryId] = response.masterItems;
       });
     };

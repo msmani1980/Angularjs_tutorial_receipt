@@ -8,21 +8,21 @@ describe('Controller: CompanyRelationshipListCtrl', function() {
   beforeEach(module('served/company-relationship-list.json'));
   beforeEach(module('served/company-relationship-type-list.json'));
 
-  var CompanyRelationshipListCtrl,
-    scope,
-    getCompanyListDeferred,
-    getCompanyRelationshipListByCompanyDeferred,
-    getCompanyRelationshipTypeListDeferred,
-    companyRelationshipFactory,
-    companyListJSON,
-    companyRelationshipListByCompanyJSON,
-    companyRelationshipTypeListJSON,
-    location,
-    createCompanyRelationship,
-    updateCompanyRelationship,
-    deleteCompanyRelationship,
-    routeParams,
-    httpBackend;
+  var CompanyRelationshipListCtrl;
+  var scope;
+  var getCompanyListDeferred;
+  var getCompanyRelationshipListByCompanyDeferred;
+  var getCompanyRelationshipTypeListDeferred;
+  var companyRelationshipFactory;
+  var companyListJSON;
+  var companyRelationshipListByCompanyJSON;
+  var companyRelationshipTypeListJSON;
+  var location;
+  var createCompanyRelationship;
+  var updateCompanyRelationship;
+  var deleteCompanyRelationship;
+  var routeParams;
+  var httpBackend;
 
   beforeEach(inject(function($q, $controller, $rootScope, _companyRelationshipFactory_, $location, $httpBackend) {
     inject(function(_servedCompanyList_, _servedCompanyRelationshipList_, _servedCompanyRelationshipTypeList_) {
