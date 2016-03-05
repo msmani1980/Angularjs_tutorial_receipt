@@ -1,16 +1,13 @@
 'use strict';
 
-describe('Controller: CashBagListCtrl', function () {
+  describe('Controller: CashBagListCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/cash-bag-list.json'));
-  beforeEach(module('served/stations.json'));
-  beforeEach(module('served/schedules.json'));
-  beforeEach(module('served/schedules-daily.json'));
-  beforeEach(module('served/store-instance-list.json'));
-  beforeEach(module('served/stores-list.json'));
-  beforeEach(module('served/schedules-date-range.json'));
+  beforeEach(module('served/cash-bag-list.json', 'served/stations.json','served/schedules.json','served/schedules.json',
+  'served/schedules.json', 'served/schedules.json', 'served/schedules-daily.json', 'served/store-instance-list.json',
+  'served/schedules.json', 'served/schedules-daily.json', 'served/store-instance-list.json','served/stores-list.json',
+  'served/schedules-date-range.json'));
 
   var CashBagListCtrl;
   var scope;
@@ -186,18 +183,13 @@ describe('Controller: CashBagListCtrl', function () {
         });
       });
 
-      it('should clear search model and make a API call', function () {
+      it('should clear search model should not make api call', function () {
         scope.search = {
           cashBagNumber: 'fakeCashBagNumber'
         };
         scope.clearForm();
         expect(scope.search.cashBagNumber).toBe(undefined);
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
-          isDelete: 'false',
-          isSubmitted: 'false',
-          limit: 100,
-          offset: 0
-        });
+        expect(scope.cashBagList).toEqual([]);
       });
     });
 
