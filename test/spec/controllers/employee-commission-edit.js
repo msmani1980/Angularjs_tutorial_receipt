@@ -1,16 +1,14 @@
 'use strict';
 
-describe('Controller: EmployeeCommissionEditCtrl', function () {
+describe('Controller: EmployeeCommissionEditCtrl', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
-  beforeEach(module(
-    'served/master-item-list.json',
-    'served/price-types.json',
-    'served/tax-rate-types.json',
-    'served/company-currency-globals.json',
-    'served/employee-commission.json'
-  ));
+  beforeEach(module('served/master-item-list.json'));
+  beforeEach(module('served/price-types.json'));
+  beforeEach(module('served/tax-rate-types.json'));
+  beforeEach(module('served/company-currency-globals.json'));
+  beforeEach(module('served/employee-commission.json'));
 
   var EmployeeCommissionEditCtrl;
   var employeeCommissionFactory;
@@ -29,9 +27,10 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
   var createEmployeeCommissionDeffered;
   var httpBackend;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
-    inject(function (_servedMasterItemList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedCompanyCurrencyGlobals_,
-                     _servedEmployeeCommission_) {
+  beforeEach(inject(function($q, $controller, $rootScope, $injector) {
+    inject(function(_servedMasterItemList_, _servedPriceTypes_, _servedTaxRateTypes_,
+      _servedCompanyCurrencyGlobals_,
+      _servedEmployeeCommission_) {
       masterItemsListJSON = _servedMasterItemList_;
       priceTypeListJSON = _servedPriceTypes_;
       taxRateTypesJSON = _servedTaxRateTypes_;
@@ -78,26 +77,26 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     scope.$digest();
   }));
 
-  describe('initialize', function () {
+  describe('initialize', function() {
 
-    it('should have a list of items attached to scope', function () {
+    it('should have a list of items attached to scope', function() {
       expect(scope.itemList).toBeDefined();
     });
 
-    it('should have a list of price types attached to scope', function () {
+    it('should have a list of price types attached to scope', function() {
       expect(scope.priceTypeList).toBeDefined();
     });
 
-    it('should have a list of price types attached to scope', function () {
+    it('should have a list of price types attached to scope', function() {
       expect(scope.taxRateTypes).toBeDefined();
     });
 
-    it('should have a list of currencies attached to scope', function () {
+    it('should have a list of currencies attached to scope', function() {
       expect(scope.companyCurrencies).toBeDefined();
     });
 
-    describe('READ controller action', function () {
-      beforeEach(inject(function ($controller) {
+    describe('READ controller action', function() {
+      beforeEach(inject(function($controller) {
         EmployeeCommissionEditCtrl = $controller('EmployeeCommissionEditCtrl', {
           $scope: scope,
           $routeParams: {
@@ -108,17 +107,17 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
         scope.$digest();
       }));
 
-      it('should call getCommission if state !== create', function () {
+      it('should call getCommission if state !== create', function() {
         expect(employeeCommissionFactory.getCommission).toHaveBeenCalledWith(49);
       });
     });
 
   });
 
-  describe('submit form', function () {
+  describe('submit form', function() {
     var expectedPayload;
 
-    beforeEach(function () {
+    beforeEach(function() {
 
       scope.commission = {
         startDate: '05/10/2020',
@@ -137,13 +136,15 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
           startDate: '20200510',
           endDate: '20550510',
           itemMasterId: scope.commission.selectedItem.id,
-          types: [{ priceTypeId: scope.commission.selectedPriceType.id }]
+          types: [{
+            priceTypeId: scope.commission.selectedPriceType.id
+          }]
         }
       };
 
     });
 
-    it('should not call API if form is not valid', function () {
+    it('should not call API if form is not valid', function() {
       scope.employeeCommissionForm.$valid = false;
       scope.submitForm();
       scope.$digest();
@@ -151,8 +152,10 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
       expect(employeeCommissionFactory.createCommission).not.toHaveBeenCalled();
     });
 
-    it('should add percentage to payload if percentage selected', function () {
-      scope.commission.selectedRateType = { taxRateType: 'Percentage' };
+    it('should add percentage to payload if percentage selected', function() {
+      scope.commission.selectedRateType = {
+        taxRateType: 'Percentage'
+      };
       scope.commission.percentage = 1.66;
       expectedPayload.employeeCommission.percentage = scope.commission.percentage;
 
@@ -162,8 +165,10 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
       expect(employeeCommissionFactory.createCommission).toHaveBeenCalledWith(expectedPayload);
     });
 
-    it('should call updateCommission if commission.id is defined', function () {
-      scope.commission.selectedRateType = { taxRateType: 'Percentage' };
+    it('should call updateCommission if commission.id is defined', function() {
+      scope.commission.selectedRateType = {
+        taxRateType: 'Percentage'
+      };
       scope.commission.percentage = 1.66;
       scope.commission.id = 27;
       expectedPayload.employeeCommission.id = scope.commission.id;
@@ -175,11 +180,13 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
       expect(employeeCommissionFactory.updateCommission).toHaveBeenCalledWith(expectedPayload);
     });
 
-    it('should add currencies to payload if Amount selected', function () {
-      scope.commission.selectedRateType = { taxRateType: 'Amount' };
+    it('should add currencies to payload if Amount selected', function() {
+      scope.commission.selectedRateType = {
+        taxRateType: 'Amount'
+      };
       expectedPayload.employeeCommission.fixeds = [];
 
-      angular.forEach(scope.companyCurrencies, function (currency) {
+      angular.forEach(scope.companyCurrencies, function(currency) {
         var currencyValue = 10.05;
         expectedPayload.employeeCommission.fixeds.push({
           fixedValue: currencyValue,
@@ -208,10 +215,12 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
             code: '000'
           }
         };
-        scope.commission.selectedRateType = { taxRateType: 'Amount' };
+        scope.commission.selectedRateType = {
+          taxRateType: 'Amount'
+        };
         expectedPayload.employeeCommission.fixeds = [];
 
-        angular.forEach(scope.companyCurrencies, function (currency) {
+        angular.forEach(scope.companyCurrencies, function(currency) {
           var currencyValue = 10.05;
           expectedPayload.employeeCommission.fixeds.push({
             fixedValue: currencyValue,
@@ -226,11 +235,11 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
         scope.$apply();
       });
 
-      it('should set error data ', function () {
+      it('should set error data ', function() {
         expect(scope.errorResponse).toEqual(mockError);
       });
 
-      it('should return false', function () {
+      it('should return false', function() {
         expect(scope.displayError).toBeTruthy();
       });
 
@@ -238,45 +247,51 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
 
   });
 
-  describe('view/edit commission', function () {
-    it('should have a function to determine if commission is readOnly', function () {
+  describe('view/edit commission', function() {
+    it('should have a function to determine if commission is readOnly', function() {
       expect(scope.isCommissionReadOnly).toBeDefined();
     });
 
-    it('should have a function to determine if page is viewOnly', function () {
+    it('should have a function to determine if page is viewOnly', function() {
       expect(scope.isViewOnly).toBeDefined();
     });
 
-    it('should return true if state === view', function () {
+    it('should return true if state === view', function() {
       routeParams.state = 'view';
       expect(scope.isViewOnly()).toBe(true);
     });
 
-    it('should return false if state !== view', function () {
+    it('should return false if state !== view', function() {
       routeParams.state = 'foo';
       expect(scope.isViewOnly()).toBe(false);
     });
 
-    it('should return false if creating new commission', function () {
+    it('should return false if creating new commission', function() {
       routeParams.state = 'create';
       expect(scope.isCommissionReadOnly()).toBe(false);
     });
 
-    it('should return true if editing and starDate in the past', function () {
+    it('should return true if editing and starDate in the past', function() {
       routeParams.state = 'edit';
-      scope.commission = { startDate: '05/10/1979' };
+      scope.commission = {
+        startDate: '05/10/1979'
+      };
       expect(scope.isCommissionReadOnly()).toBe(true);
     });
 
-    it('should return false if editing and startDate in the future', function () {
+    it('should return false if editing and startDate in the future', function() {
       routeParams.state = 'edit';
-      scope.commission = { startDate: '05/10/2079' };
+      scope.commission = {
+        startDate: '05/10/2079'
+      };
       expect(scope.isCommissionReadOnly()).toBe(false);
     });
 
-    it('should return true if viewing and startDate in the future', function () {
+    it('should return true if viewing and startDate in the future', function() {
       routeParams.state = 'view';
-      scope.commission = { startDate: '05/10/2079' };
+      scope.commission = {
+        startDate: '05/10/2079'
+      };
       expect(scope.isCommissionReadOnly()).toBe(true);
     });
   });

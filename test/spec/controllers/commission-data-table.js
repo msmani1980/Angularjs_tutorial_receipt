@@ -12,7 +12,6 @@ describe('Controller: CommissionDataTableCtrl', function() {
   beforeEach(module('served/company.json'));
 
   var CommissionDataTableCtrl;
-
   var commissionPayableListDeferred;
   var commissionPayableTypesDeferred;
   var discountTypesDeferred;
@@ -21,14 +20,12 @@ describe('Controller: CommissionDataTableCtrl', function() {
   var employeesDeferred;
   var companyDeferred;
   var currencyDeferred;
-
   var commissionPayableListResponseJSON;
   var commissionPayableTypesResponseJSON;
   var discountTypesResponseJSON;
   var crewBaseListJSON;
   var employeesResponseJSON;
   var companyResponseJSON;
-
   var commissionFactory;
   var employeesService;
   var location;
