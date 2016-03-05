@@ -3,8 +3,11 @@
 describe('Controller: CashBagSubmissionCtrl', function() {
 
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/company.json', 'served/company-data.json', 'served/currency-globals.json',
-    'served/cash-bag-list-submit.json', 'served/update-cash-bag-submit.json'));
+  beforeEach(module('served/company.json'));
+  beforeEach(module('served/company-data.json'));
+  beforeEach(module('served/currency-globals.json'));
+  beforeEach(module('served/cash-bag-list-submit.json'));
+  beforeEach(module('served/update-cash-bag-submit.json'));
 
   var CashBagSubmissionCtrl;
   var scope;
