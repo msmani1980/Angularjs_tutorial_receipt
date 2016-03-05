@@ -132,6 +132,26 @@ angular.module('ts5App')
       return parsedDate <= today;
     };
 
+    function hasLength(data) {
+      if (angular.isDefined(data) && data.length) {
+        return true;
+      }
+
+      return false;
+    }
+
+    function searchIsDirty() {
+      var s = $scope.search;
+      var check = [];
+      for (var search in s) {
+        if (angular.isDefined(search) && hasLength(search)) {
+          check.push(search);
+        }
+      }
+
+      return (check.length);
+    }
+
     $scope.clearSearchFilters = function() {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
@@ -141,6 +161,11 @@ angular.module('ts5App')
       }
 
       $scope.itemsList = [];
+    };
+
+    $scope.showClearButton = function() {
+      var d = $scope.dateRange;
+      return (searchIsDirty() || d.startDate.length || d.endDate.length || $scope.itemsList.length);
     };
 
     this.displayLoadingModal = function(loadingText) {
