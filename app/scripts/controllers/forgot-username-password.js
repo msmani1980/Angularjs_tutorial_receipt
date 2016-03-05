@@ -63,7 +63,7 @@ angular.module('ts5App')
       if ($scope.forgot.field === 'username') {
         return 'email';
       }
-      
+
       return 'username and email';
     };
 
@@ -71,9 +71,9 @@ angular.module('ts5App')
       if ($scope.forgotForm.$invalid) {
         return;
       }
-
+      
+      showLoadingModal('Sending email');
       identityAccessFactory.sendRecoveryEmail($scope.forgot.field, emailContent[$scope.forgot.field], $scope.forgot.email, $scope.forgot.username).then(handleSuccessResponse,
         handleResponseError);
-      showLoadingModal('Sending email');
     };
   });
