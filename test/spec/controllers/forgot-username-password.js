@@ -14,7 +14,7 @@ describe('Controller: ForgotUsernamePasswordCtrl', function() {
     identityAccessFactory = $injector.get('identityAccessFactory');
 
     sendEmailDeferred = $q.defer();
-    spyOn(identityAccessFactory, 'sendEmail').and.returnValue(sendEmailDeferred.promise);
+    spyOn(identityAccessFactory, 'sendRecoveryEmail').and.returnValue(sendEmailDeferred.promise);
 
     ForgotUsernamePasswordCtrl = $controller('ForgotUsernamePasswordCtrl', {
       $scope: scope
@@ -38,6 +38,7 @@ describe('Controller: ForgotUsernamePasswordCtrl', function() {
       beforeEach(function() {
         scope.forgot = {
           email: 'fakeEmail',
+          username: 'fakeUser',
           field: 'fakeField'
         };
 
@@ -50,7 +51,7 @@ describe('Controller: ForgotUsernamePasswordCtrl', function() {
 
       it('should call sendEmail API', function() {
         sendEmailDeferred.resolve({});
-        expect(identityAccessFactory.sendEmail).toHaveBeenCalledWith(scope.forgot.email, undefined);
+        expect(identityAccessFactory.sendRecoveryEmail).toHaveBeenCalledWith(scope.forgot.field, undefined, scope.forgot.email, scope.forgot.username);
       });
 
       it('should show errors in bad request', function() {

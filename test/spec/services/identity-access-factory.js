@@ -57,6 +57,8 @@ describe('Service: identityAccessFactory', function () {
     spyOn(identityAccessService, 'getUserCompanies').and.returnValue(getUserCompaniesDeferred.promise);
 
     spyOn(location, 'path');
+    spyOn(identityAccessService, 'sendEmail');
+
 
     identityAccessFactory = $injector.get('identityAccessFactory');
   }));
@@ -183,6 +185,29 @@ describe('Service: identityAccessFactory', function () {
       expect(localStorage.companyObject.companyId).toEqual(companyObject.companyId);
     });
 
+  });
+
+  describe('send recovery email API', function () {
+    it('should call sendEmail from identity access service', function () {
+      identityAccessFactory.sendRecoveryEmail('username', 'fakeContent', 'fakeEmail', 'fakeUsername');
+      expect(identityAccessService.sendEmail).toHaveBeenCalled();
+    });
+
+    it('should pass empty string username if username is not defined', function () {
+      identityAccessFactory.sendRecoveryEmail('username', 'fakeContent', 'fakeEmail');
+      expect(identityAccessService.sendEmail).toHaveBeenCalledWith(true, 'fakeContent', 'fakeEmail', '');
+
+      identityAccessFactory.sendRecoveryEmail('username', 'fakeContent', 'fakeEmail', null);
+      expect(identityAccessService.sendEmail).toHaveBeenCalledWith(true, 'fakeContent', 'fakeEmail', '');
+    });
+
+    it('should pass true if username is selected', function () {
+      identityAccessFactory.sendRecoveryEmail('username', 'fakeContent', 'fakeEmail', 'fakeUser');
+      expect(identityAccessService.sendEmail).toHaveBeenCalledWith(true, 'fakeContent', 'fakeEmail', 'fakeUser');
+
+      identityAccessFactory.sendRecoveryEmail('password', 'fakeContent', 'fakeEmail', 'fakeUser');
+      expect(identityAccessService.sendEmail).toHaveBeenCalledWith(false, 'fakeContent', 'fakeEmail', 'fakeUser');
+    });
   });
 
 });
