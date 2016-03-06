@@ -313,19 +313,19 @@
         <div class="panel panel-default col-xs-12">
           <div class="col-xs-4 text-left pull-left">
             <h4>
-              <strong>Store # 123</strong><br>
-              <small>10/25/2015</small>
+              <strong>Store # {{storeInstance.storeDetails.storeNumber}}</strong><br>
+              <small>{{storeInstance.scheduleDate}}</small>
             </h4>
           </div>
           <div class="col-xs-4 text-center">
             <h4><br>
-              <small>Store Instance: 123</small>
+              <small>Store Instance: {{storeInstance.id}}</small>
             </h4>
           </div>
 
           <div class="col-xs-4 text-right">
             <h4><br>
-              <small>Warehouse: Melborne</small>
+              <small>Warehouse: {{storeInstance.warehouseDetails.name}}</small>
             </h4>
           </div>
         </div>
@@ -344,29 +344,29 @@
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr>
-                    <td colspan="2" class="active">LMP Station Stock [GBP]</td>
+                    <td colspan="2" class="active">LMP Station Stock [{{companyBaseCurrency.currencyCode}}]</td>
                   </tr>
                   <tr>
                     <td>Net Value of LMP Stock</td>
-                    <td>10.3</td>
+                    <td>{{stockTotals.totalNet.netLMP}}</td>
                   </tr>
                 </table>
               </div>
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr class="active">
-                    <td colspan="2">ePOS Sales [GBP]</td>
+                    <td colspan="2">ePOS Sales [{{companyBaseCurrency.currencyCode}}]</td>
                   </tr>
                   <tr>
                     <td>Net Value of ePOS Sales</td>
-                    <td>10.3</td>
+                    <td>{{stockTotals.totalNet.netEPOS}}</td>
                   </tr>
                 </table>
               </div>
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr>
-                    <td class="active" colspan="2">Total Revenue [GBP]</td>
+                    <td class="active" colspan="2">Total Revenue [{{companyBaseCurrency.currencyCode}}]</td>
                   </tr>
                   <tr>
                     <td>@ Cash Handler Exchange Rate</td>
@@ -515,7 +515,7 @@
                     <tr class="active">
                       <td colspan="2" ng-click="cashBag.salesTableOpen=!cashBag.salesTableOpen">
                         <i ng-class="getClassForTableAccordion(cashBag.salesTableOpen)"></i>
-                        <strong>ePOS Sales [GBP]</strong>
+                        <strong>ePOS Sales [{{companyBaseCurrency.currencyCode}}]</strong>
                       </td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
@@ -598,7 +598,7 @@
                       <th>Passenger Count</th>
                       <th>Tail Number</th>
                       <th>Number of Transactions</th>
-                      <th>Transactions Total [GBP]</th>
+                      <th>Transactions Total [{{companyBaseCurrency.currencyCode}}]</th>
                       <th ng-hide="cashBag.isDeleted">Actions</th>
                     </tr>
                     </tbody>
