@@ -43,26 +43,29 @@ angular.module('ts5App')
       $scope.responseMessage = 'Success: An email containing your ' + $scope.forgot.field + ' has been sent.';
     }
 
-    var emailContent = {
-      username: 'TS5 Security - username recovery\n' +
-      '<h3>Hi, </h3>' +
-      '<p>You (or some else) have requested your username.</p>' +
-      '<p>Your username is: <strong>{2}</strong></p>' +
-      '<p>Click the link below to login to the system:</p>' +
-      '<p><a href="{1}/#/login?sessionToken={0}">Click here to login.</a></p>' +
-      '<br> eGate',
+    var passwordText = '<p>The TS Account Password You Requested</p>';
+    passwordText += '<p>A request has been received to reset your password.</p>';
+    passwordText += '<p>Click the link below to personally reset your password.</p>';
+    passwordText += '<p><a href="{1}/#/change-password?sessionToken={0}">Click here to change password.</a></p>';
 
-      password: 'TS5 Security - password recovery\n' +
-      '<h3>Hi, {2},</h3>' +
-      '<p>Please, <a href="{1}/#/change-password?sessionToken={0}">click here</a> to change your password.' +
-      '</p><br>eGate'
+    var usernameText = '<p>The TS5 Account Username You Requested</p>';
+    usernameText += '<p>You (or some else) have requested your username.</p>';
+    usernameText += '<p>Your username is: <strong>{0}</strong></p>';
+    usernameText += '<p>Click the link below to login to the system:</p>';
+    usernameText += '<p><a href="{0}/#/login">Click here to login.</a></p>';
+
+    var emailContent = {
+      username: usernameText,
+      password: passwordText
     };
 
-    /*
-     {0} sessionToken
-     {1} host
-     {2} user login name
-     */
+    $scope.getRecoveryRequirements = function () {
+      if ($scope.forgot.field === 'username') {
+        return 'email';
+      }
+
+      return 'username and email';
+    };
 
     $scope.sendEmail = function () {
       if ($scope.forgotForm.$invalid) {
@@ -70,6 +73,6 @@ angular.module('ts5App')
       }
 
       showLoadingModal('Sending email');
-      identityAccessFactory.sendEmail($scope.forgot.email, emailContent[$scope.forgot.field]).then(handleSuccessResponse, handleResponseError);
+      identityAccessFactory.sendRecoveryEmail($scope.forgot.field, emailContent[$scope.forgot.field], $scope.forgot.email, $scope.forgot.username).then(handleSuccessResponse, handleResponseError);
     };
   });
