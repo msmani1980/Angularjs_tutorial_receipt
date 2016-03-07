@@ -143,9 +143,9 @@ describe('Controller: TransactionListCtrl', function() {
       scope.clearSearch();
       expect(scope.search).toEqual({});
     });
-    it('call getTransactionList method', function() {
+    it('should clear transactions', function() {
       scope.clearSearch();
-      expect(transactionFactory.getTransactionList).toHaveBeenCalled();
+      expect(scope.transactions).toEqual([]);
     });
   });
 
