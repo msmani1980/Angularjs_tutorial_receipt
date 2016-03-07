@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TransactionListCtrl', function ($scope, $q, transactionFactory, recordsService, currencyFactory, stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility) {
+  .controller('TransactionListCtrl', function($scope, $q, transactionFactory, recordsService, currencyFactory,
+    stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility) {
     var $this = this;
 
     $scope.viewName = 'Transactions';
@@ -78,17 +79,17 @@ angular.module('ts5App')
       }
     }, true);
 
-    $scope.toggleColumnView = function (columnName) {
+    $scope.toggleColumnView = function(columnName) {
       if (angular.isDefined($scope.displayColumns[columnName])) {
         $scope.displayColumns[columnName] = !$scope.displayColumns[columnName];
       }
     };
 
-    $scope.filterTransactionTypes = function (transactionType) {
+    $scope.filterTransactionTypes = function(transactionType) {
       return $scope.supportedTransactionTypes.indexOf(transactionType.name) > -1;
     };
 
-    $scope.getOverriddenTransactionTypeName = function (transactionTypeName) {
+    $scope.getOverriddenTransactionTypeName = function(transactionTypeName) {
       if (transactionTypeName in $scope.overrideTransactionTypeNames) {
         return $scope.overrideTransactionTypeNames[transactionTypeName];
       }
@@ -96,7 +97,7 @@ angular.module('ts5App')
       return transactionTypeName;
     };
 
-    $scope.getTransactions = function () {
+    $scope.getTransactions = function() {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
@@ -107,12 +108,12 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     };
 
-    $scope.clearSearch = function () {
+    $scope.clearSearch = function() {
       $scope.search = {};
-      $scope.searchTransactions();
+      $scope.transactions = [];
     };
 
-    $scope.searchTransactions = function () {
+    $scope.searchTransactions = function() {
       $this.isSearch = true;
       clearTransactions();
       setDefaultMetaPayload();
@@ -120,11 +121,11 @@ angular.module('ts5App')
       $scope.getTransactions();
     };
 
-    $scope.showTransactionDetails = function (transaction) {
+    $scope.showTransactionDetails = function(transaction) {
       window.open('/ember/transactions/index.html?transactionId=' + transaction.transactionId);
     };
 
-    function sanitizeSearchPayload (payload) {
+    function sanitizeSearchPayload(payload) {
       payloadUtility.sanitize(payload);
       payload.transactionStartDate = payloadUtility.serializeDate(payload.transactionStartDate);
       payload.transactionEndDate = payloadUtility.serializeDate(payload.transactionEndDate);
@@ -134,7 +135,7 @@ angular.module('ts5App')
       }
     }
 
-    function generateGetTransactionsPayload () {
+    function generateGetTransactionsPayload() {
       var payload = {
         limit: $this.meta.limit,
         offset: $this.meta.offset
@@ -149,7 +150,7 @@ angular.module('ts5App')
       return payload;
     }
 
-    function setDefaultMetaPayload () {
+    function setDefaultMetaPayload() {
       $this.meta = {
         limit: 100,
         offset: 0
@@ -165,25 +166,25 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-    function showLoadingModal (text) {
+    function showLoadingModal(text) {
       angular.element('.loading-more').show();
       angular.element('#loading').modal('show').find('p').text(text);
     }
 
-    function hideLoadingModal () {
+    function hideLoadingModal() {
       angular.element('.loading-more').hide();
       angular.element('#loading').modal('hide');
     }
 
-    function normalizeTransactions (transactions) {
-      angular.forEach(transactions, function (transaction) {
+    function normalizeTransactions(transactions) {
+      angular.forEach(transactions, function(transaction) {
         transaction.transactionDate = dateUtility.formatDateForApp(transaction.transactionDate);
       });
 
       return transactions;
     }
 
-    function appendTransactions (dataFromAPI) {
+    function appendTransactions(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var transactions = angular.copy(dataFromAPI.transactions);
 
@@ -192,45 +193,47 @@ angular.module('ts5App')
       hideLoadingBar();
     }
 
-    function clearTransactions () {
+    function clearTransactions() {
       $scope.transactions = [];
     }
 
-    function setTransactionTypes (dataFromAPI) {
+    function setTransactionTypes(dataFromAPI) {
       var transactionTypes = angular.copy(dataFromAPI);
 
       $scope.transactionTypes = transactionTypes;
     }
 
-    function setCompanyCurrencies (dataFromAPI) {
+    function setCompanyCurrencies(dataFromAPI) {
       var companyCurrencies = angular.copy(dataFromAPI.response);
 
       $scope.companyCurrencies = companyCurrencies;
     }
 
-    function setCompanyStations (dataFromAPI) {
+    function setCompanyStations(dataFromAPI) {
       var companyStations = angular.copy(dataFromAPI.response);
 
       $scope.companyStations = companyStations;
     }
 
-    function setCreditCardTypes (dataFromAPI) {
+    function setCreditCardTypes(dataFromAPI) {
       var creditCardTypes = angular.copy(dataFromAPI.companyCCTypes);
 
       $scope.creditCardTypes = creditCardTypes;
     }
 
-    function getTransactionTypes () {
+    function getTransactionTypes() {
       recordsService.getTransactionTypes().then(setTransactionTypes);
     }
 
-    function getCompanyCurrencies () {
-      var payload = { isOperatedCurrency: true };
+    function getCompanyCurrencies() {
+      var payload = {
+        isOperatedCurrency: true
+      };
 
       currencyFactory.getCompanyCurrencies(payload).then(setCompanyCurrencies);
     }
 
-    function getCompanyStations () {
+    function getCompanyStations() {
       stationsService.getGlobalStationList().then(setCompanyStations);
     }
 
@@ -239,7 +242,7 @@ angular.module('ts5App')
       companyCcTypesService.getCCtypes(companyId).then(setCreditCardTypes);
     }
 
-    function makeDependencyPromises () {
+    function makeDependencyPromises() {
       return [
         getTransactionTypes(),
         getCompanyCurrencies(),
@@ -248,11 +251,11 @@ angular.module('ts5App')
       ];
     }
 
-    function dependenciesSuccess () {
+    function dependenciesSuccess() {
       hideLoadingModal();
     }
 
-    function init () {
+    function init() {
       showLoadingModal('Loading Transactions.');
       setDefaultMetaPayload();
 

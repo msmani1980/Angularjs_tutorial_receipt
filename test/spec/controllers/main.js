@@ -1,8 +1,7 @@
 'use strict';
 
-describe('Controller: MainCtrl', function () {
+describe('Controller: MainCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/features-in-role.json'));
   beforeEach(module('served/company.json'));
@@ -19,10 +18,9 @@ describe('Controller: MainCtrl', function () {
   var companyTypesJSON;
   var scope;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
+  beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
-    inject(function (_servedFeaturesInRole_) {
+    inject(function(_servedFeaturesInRole_) {
       featuresInRoleJSON = _servedFeaturesInRole_;
     });
 
@@ -34,7 +32,9 @@ describe('Controller: MainCtrl', function () {
     companyTypesJSON = $injector.get('servedCompanyTypes');
 
     spyOn(globalMenuService, 'getCompanyData').and.returnValue(companyJSON);
-    spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({ companyTypes: companyTypesJSON });
+    spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({
+      companyTypes: companyTypesJSON
+    });
 
     featuresInRoleDeferred = $q.defer();
     featuresInRoleDeferred.resolve(featuresInRoleJSON);
@@ -46,12 +46,12 @@ describe('Controller: MainCtrl', function () {
     });
   }));
 
-  describe('controller init', function () {
-    it('should call featuresInRole', function () {
+  describe('controller init', function() {
+    it('should call featuresInRole', function() {
       expect(identityAccessService.featuresInRole).toHaveBeenCalled();
     });
 
-    it('should define scope.dashboardMenu', function () {
+    it('should define scope.dashboardMenu', function() {
       scope.$digest();
       expect(scope.dashboardMenu).toBeDefined();
     });

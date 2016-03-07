@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StockTakeReportCtrl', function($scope, $filter, dateUtility, stockTakeFactory, ngToast, lodash) {
+  .controller('StockTakeReportCtrl', function($scope, $filter, dateUtility, stockTakeFactory, messageService, lodash) {
 
     var $this = this;
     this.meta = {
@@ -133,11 +133,7 @@ angular.module('ts5App')
     };
 
     this.showSuccessMessage = function(message) {
-      ngToast.create({
-        className: 'success',
-        dismissButton: true,
-        content: message
-      });
+      messageService.display('success', message);
     };
 
     $scope.removeRecord = function(stockTake) {

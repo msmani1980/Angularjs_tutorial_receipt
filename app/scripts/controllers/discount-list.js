@@ -8,8 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('DiscountListCtrl', function($scope, $location, discountFactory, ngToast, dateUtility, payloadUtility,
-    lodash) {
+  .controller('DiscountListCtrl', function($scope, $location, discountFactory, dateUtility, payloadUtility, lodash) {
+
     var $this = this;
     $scope.viewName = 'Discount';
     $scope.search = {
@@ -90,7 +90,7 @@ angular.module('ts5App')
 
     $scope.clearForm = function() {
       $scope.search = {};
-      $scope.searchDiscounts();
+      $scope.discountList = [];
     };
 
     this.formatDates = function(discountArray) {

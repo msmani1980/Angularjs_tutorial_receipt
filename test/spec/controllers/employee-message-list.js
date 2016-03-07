@@ -139,20 +139,24 @@ describe('Controller: EmployeeMessageListCtrl', function() {
 
     it('should clearSearchData', function() {
       scope.clearSearch();
-      expect(employeeMessagesFactory.getEmployeeMessages).toHaveBeenCalledWith({});
+      expect(scope.employeeMessagesList).toEqual([]);
       expect(scope.search).toEqual({});
     });
   });
 
-  describe('delete record', function () {
-    it('should call delete API with record id', function () {
-      var mockRecord = { id: 1 };
+  describe('delete record', function() {
+    it('should call delete API with record id', function() {
+      var mockRecord = {
+        id: 1
+      };
       scope.removeRecord(mockRecord);
       expect(employeeMessagesFactory.deleteEmployeeMessage).toHaveBeenCalledWith(1);
     });
 
-    it('should reinitialize employee message list', function () {
-      var mockRecord = { id: 1 };
+    it('should reinitialize employee message list', function() {
+      var mockRecord = {
+        id: 1
+      };
       scope.removeRecord(mockRecord);
       expect(employeeMessagesFactory.getEmployeeMessages).toHaveBeenCalledWith({});
     });
@@ -166,8 +170,8 @@ describe('Controller: EmployeeMessageListCtrl', function() {
       });
     });
 
-    describe('isFutureRecord', function () {
-      it('should return false for active records', function () {
+    describe('isFutureRecord', function() {
+      it('should return false for active records', function() {
         var mockActiveRecord = {
           startDate: '10/20/2010',
           endDate: '10/30/3000'
@@ -175,7 +179,7 @@ describe('Controller: EmployeeMessageListCtrl', function() {
         expect(scope.isFutureRecord(mockActiveRecord)).toEqual(false);
       });
 
-      it('should return false for past records', function () {
+      it('should return false for past records', function() {
         var mockPastRecord = {
           startDate: '10/20/2000',
           endDate: '10/30/2000'
@@ -183,7 +187,7 @@ describe('Controller: EmployeeMessageListCtrl', function() {
         expect(scope.isFutureRecord(mockPastRecord)).toEqual(false);
       });
 
-      it('should return true for future records', function () {
+      it('should return true for future records', function() {
         var mockFutureRecord = {
           startDate: '10/20/3000',
           endDate: '10/30/3000'

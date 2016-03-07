@@ -1,11 +1,12 @@
 'use strict';
-
 /*global moment*/
 
 describe('Controller: MenuEditCtrl', function() {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/menu.json', 'served/master-item-list.json', 'served/sales-categories.json'));
+  beforeEach(module('served/menu.json'));
+  beforeEach(module('served/master-item-list.json'));
+  beforeEach(module('served/sales-categories.json'));
 
   var MenuEditCtrl;
   var scope;

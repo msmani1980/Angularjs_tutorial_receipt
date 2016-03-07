@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast, lodash, $q) {
+  .controller('PostFlightDataCtrl', function($scope, postTripFactory, $location, $routeParams, messageService, lodash,
+    $q) {
 
     var companyId;
     var $this = this;
@@ -18,36 +19,36 @@ angular.module('ts5App')
     $scope.selectedEmployees = {};
     $scope.stationList = [];
 
-    this.showLoadingModal = function (message) {
+    this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
     };
 
-    this.hideLoadingModal = function () {
+    this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
     };
 
-    this.createInit = function () {
+    this.createInit = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Create Post Trip Data';
     };
 
-    this.viewInit = function () {
+    this.viewInit = function() {
       $scope.readOnly = true;
       $scope.viewName = 'View Post Trip Data';
     };
 
-    this.editInit = function () {
+    this.editInit = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Post Trip Data';
     };
 
-    this.getPostTripSuccess = function (response) {
+    this.getPostTripSuccess = function(response) {
       $scope.postTrip = response;
       $scope.postTrip.passengerCount = $scope.postTrip.passengerCount.toString();
       $this.populateSelectedEmployeesFromPostTrip();
     };
 
-    this.getStationsSuccess = function (response) {
+    this.getStationsSuccess = function(response) {
       // TODO: move offset to service layer
       var newStationList = $scope.stationList.concat(angular.copy(response.response));
       $scope.stationList = lodash.uniq(newStationList, 'stationId');
@@ -57,42 +58,44 @@ angular.module('ts5App')
       }
     };
 
-    this.getEmployeesSuccess = function (response) {
+    this.getEmployeesSuccess = function(response) {
       $scope.employees = response.companyEmployees;
     };
 
-    this.getSchedulesSuccess = function (response) {
+    this.getSchedulesSuccess = function(response) {
       $scope.schedules = response.distinctSchedules;
     };
 
-    this.getCarrierSuccess = function (response) {
+    this.getCarrierSuccess = function(response) {
       $scope.carrierNumbers = [];
-      angular.forEach(response.response, function (item) {
-        postTripFactory.getCarrierNumbers(companyId, item.id).then(function (response) {
+      angular.forEach(response.response, function(item) {
+        postTripFactory.getCarrierNumbers(companyId, item.id).then(function(response) {
           $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
         });
       });
     };
 
-    this.saveFormSuccess = function (response) {
+    this.saveFormSuccess = function(response) {
       $this.hideLoadingModal();
       if ($routeParams.state === 'create') {
-        $location.path('post-trip-data-list').search({ newTripId: response.id });
+        $location.path('post-trip-data-list').search({
+          newTripId: response.id
+        });
       } else {
         $this.showToastMessage('success', 'Edit Post Trip', 'success');
       }
     };
 
-    this.saveFormFailure = function (dataFromAPI) {
+    this.saveFormFailure = function(dataFromAPI) {
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
-    this.populateSelectedEmployeesFromPostTrip = function () {
+    this.populateSelectedEmployeesFromPostTrip = function() {
       $scope.selectedEmployees.employeeIds = [];
-      angular.forEach($scope.postTrip.postTripEmployeeIdentifiers, function (value) {
-        var employeeMatch = $scope.employees.filter(function (employee) {
+      angular.forEach($scope.postTrip.postTripEmployeeIdentifiers, function(value) {
+        var employeeMatch = $scope.employees.filter(function(employee) {
           return employee.id === value.employeeId;
         })[0];
 
@@ -102,29 +105,25 @@ angular.module('ts5App')
       });
     };
 
-    this.showToastMessage = function (className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
+    this.showToastMessage = function(className, type, message) {
+      messageService.display(className, message, type);
     };
 
-    this.createPostTrip = function () {
+    this.createPostTrip = function() {
       $this.checkForExistingPostTripThenCreateOrOverwrite();
     };
 
-    this.checkForExistingPostTripThenCreateOrOverwrite = function () {
+    this.checkForExistingPostTripThenCreateOrOverwrite = function() {
       $this.showLoadingModal('Saving Post Trip Data');
       postTripFactory.getPostTripDataList(companyId, {
-        scheduleNumber: $scope.postTrip.scheduleNumber,
-        scheduleStartDate: $scope.postTrip.scheduleDate,
-        scheduleEndDate: $scope.postTrip.scheduleDate
-      })
+          scheduleNumber: $scope.postTrip.scheduleNumber,
+          scheduleStartDate: $scope.postTrip.scheduleDate,
+          scheduleEndDate: $scope.postTrip.scheduleDate
+        })
         .then($this.callCreateOrEditIfPostTripExists);
     };
 
-    this.callCreateOrEditIfPostTripExists = function (response) {
+    this.callCreateOrEditIfPostTripExists = function(response) {
       if (response.postTrips.length > 0) {
         $this.hideLoadingModal();
         angular.element('#overwrite-modal').modal('show');
@@ -137,7 +136,7 @@ angular.module('ts5App')
       }
     };
 
-    this.editPostTrip = function () {
+    this.editPostTrip = function() {
       $this.showLoadingModal('Saving Post Trip Data');
 
       // TODO: temporary -- remove once API is fixed and can accept depTImeZone and arrTimeZone
@@ -150,12 +149,12 @@ angular.module('ts5App')
       );
     };
 
-    $scope.overwritePostTrip = function () {
+    $scope.overwritePostTrip = function() {
       $scope.postTrip.id = $scope.overwritePostTripId;
       $this.editPostTrip();
     };
 
-    this.initDependenciesSuccess = function (responseArray) {
+    this.initDependenciesSuccess = function(responseArray) {
       $this.getStationsSuccess(responseArray[0]);
       $this.getCarrierSuccess(responseArray[1]);
       $this.getEmployeesSuccess(responseArray[2]);
@@ -173,7 +172,7 @@ angular.module('ts5App')
       }
     };
 
-    this.makeInitPromises = function () {
+    this.makeInitPromises = function() {
       companyId = postTripFactory.getCompanyId();
       var promises = [
         postTripFactory.getStationList(companyId),
@@ -184,7 +183,7 @@ angular.module('ts5App')
       return promises;
     };
 
-    this.init = function () {
+    this.init = function() {
       $this.showLoadingModal('Loading Data');
       $scope.employees = [];
       var initPromises = $this.makeInitPromises();
@@ -193,7 +192,7 @@ angular.module('ts5App')
 
     this.init();
 
-    $scope.$watchGroup(['postTrip', 'stationList'], function () {
+    $scope.$watchGroup(['postTrip', 'stationList'], function() {
       if ($scope.postTrip && $scope.stationList) {
         $scope.updateArrivalTimeZone();
         $scope.updateDepartureTimeZone();
@@ -201,8 +200,8 @@ angular.module('ts5App')
       }
     });
 
-    this.getTimeZoneForStationId = function (stationId) {
-      var matchingStation = $scope.stationList.filter(function (station) {
+    this.getTimeZoneForStationId = function(stationId) {
+      var matchingStation = $scope.stationList.filter(function(station) {
         return station.stationId.toString() === stationId.toString();
       })[0];
 
@@ -213,7 +212,7 @@ angular.module('ts5App')
       return '';
     };
 
-    $scope.updateArrivalTimeZone = function () {
+    $scope.updateArrivalTimeZone = function() {
       if ($scope.postTrip === undefined || $scope.postTrip.arrStationId === undefined) {
         return;
       }
@@ -221,7 +220,7 @@ angular.module('ts5App')
       $scope.arrivalTimezone = $this.getTimeZoneForStationId($scope.postTrip.arrStationId);
     };
 
-    $scope.updateDepartureTimeZone = function () {
+    $scope.updateDepartureTimeZone = function() {
       if ($scope.postTrip === undefined || $scope.postTrip.depStationId === undefined) {
         return;
       }
@@ -229,16 +228,19 @@ angular.module('ts5App')
       $scope.departureTimezone = $this.getTimeZoneForStationId($scope.postTrip.depStationId);
     };
 
-    this.formatEmployeeIdentifiersForAPI = function () {
+    this.formatEmployeeIdentifiersForAPI = function() {
       $scope.postTrip.postTripEmployeeIdentifiers = [];
-      angular.forEach($scope.selectedEmployees.employeeIds, function (value) {
-        $scope.postTrip.postTripEmployeeIdentifiers.push({ employeeId: value.id });
+      angular.forEach($scope.selectedEmployees.employeeIds, function(value) {
+        $scope.postTrip.postTripEmployeeIdentifiers.push({
+          employeeId: value.id
+        });
       });
     };
 
     this.validateEmployees = function() {
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
-      var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
+      var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees
+        .employeeIds.length <= 0);
       if (shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
         $scope.postTripDataForm.employeeIds.$setValidity('required', false);
         return;
@@ -252,7 +254,7 @@ angular.module('ts5App')
       return $scope.postTripDataForm.$valid;
     };
 
-    $scope.formSave = function () {
+    $scope.formSave = function() {
       if ($this.validateForm()) {
         $this.formatEmployeeIdentifiersForAPI();
         var saveFunctionName = ($routeParams.state + 'PostTrip');

@@ -1,17 +1,15 @@
 'use strict';
 
-describe('The Stations Create/Edit Controller', function () {
+describe('The Stations Create/Edit Controller', function() {
 
-  beforeEach(module(
-    'ts5App',
-    'template-module',
-    'served/global-stations.json',
-    'served/country-list.json',
-    'served/city-list.json',
-    'served/station.json',
-    'served/stations.json',
-    'served/catering-stations.json'
-  ));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
+  beforeEach(module('served/global-stations.json'));
+  beforeEach(module('served/country-list.json'));
+  beforeEach(module('served/city-list.json'));
+  beforeEach(module('served/station.json'));
+  beforeEach(module('served/stations.json'));
+  beforeEach(module('served/catering-stations.json'));
 
   var scope;
   var controller;
@@ -72,7 +70,7 @@ describe('The Stations Create/Edit Controller', function () {
       $valid: false,
       $invalid: false,
       $submitted: false,
-      $name:'stationCreateForm'
+      $name: 'stationCreateForm'
     };
   }
 
@@ -187,7 +185,7 @@ describe('The Stations Create/Edit Controller', function () {
 
   });
 
-  describe('the error handler', function () {
+  describe('the error handler', function() {
 
     var mockError = {
       status: 400,
@@ -203,11 +201,11 @@ describe('The Stations Create/Edit Controller', function () {
       StationCreateCtrl.errorHandler(mockError);
     });
 
-    it('should set error response ', function () {
+    it('should set error response ', function() {
       expect(scope.errorResponse).toEqual(mockError);
     });
 
-    it('should return false', function () {
+    it('should return false', function() {
       expect(scope.displayError).toBeTruthy();
     });
 
@@ -221,7 +219,7 @@ describe('The Stations Create/Edit Controller', function () {
       initController();
       resolveInitDependencies();
       city = {
-        name:'Boganville',
+        name: 'Boganville',
         countryId: 66
       };
     });
