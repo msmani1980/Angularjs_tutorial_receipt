@@ -607,11 +607,7 @@ angular.module('ts5App')
     this.init();
 
     function hasLength(data) {
-      if (angular.isDefined(data) && data.length) {
-        return true;
-      }
-
-      return false;
+      return angular.isDefined(data) && data.length;
     }
 
     function searchIsDirty() {
