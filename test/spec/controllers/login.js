@@ -64,7 +64,8 @@ describe('Controller: LoginCtrl', function () {
         expect(scope.displayError).toBeTruthy();
       });
 
-      it('should set the error response', function () {
+
+      it('should set the error response to invalid username/password error if response does not contain enabled:false', function () {
         var errorMock = {
           status: 400,
           data: [
@@ -75,6 +76,21 @@ describe('Controller: LoginCtrl', function () {
           ]
         };
         rootScope.$broadcast('un-authorized', { status: 400 });
+        scope.$digest();
+        expect(scope.errorResponse).toEqual(errorMock);
+      });
+
+      it('should set the error response to show deactivated account error if response contains enabled:false', function () {
+        var errorMock = {
+          status: 400,
+          data: [
+            {
+              field: 'User Account',
+              value: 'Your account has been deactivated.'
+            }
+          ]
+        };
+        rootScope.$broadcast('un-authorized', { status: 400, data: {enabled: false} });
         scope.$digest();
         expect(scope.errorResponse).toEqual(errorMock);
       });
