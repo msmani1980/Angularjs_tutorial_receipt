@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService, reconciliationFactory) {
+  .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
+      reconciliationFactory, $location) {
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
@@ -17,6 +18,10 @@ angular.module('ts5App')
       }
 
       return valueToFormat;
+    }
+
+    function makeFinite(valueToCheck) {
+      return isFinite(valueToCheck) ? valueToCheck : 0;
     }
 
     $scope.showAddOrEditScheduleModal = function (scheduleToEdit) {
@@ -177,10 +182,205 @@ angular.module('ts5App')
       });
     };
 
+    $scope.goToReconciliation = function () {
+      $location.path('/reconciliation-discrepancy-detail/' + $routeParams.storeInstanceId);
+    };
+
     function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
       return currenciesArray.filter(function (currencyItem) {
         return currencyItem.id === baseCurrencyId;
       })[0];
+    }
+
+    function setupCompanyBaseCurrency () {
+      $scope.companyBaseCurrency = getCurrencyByBaseCurrencyId($scope.companyGlobalCurrencies, $scope.company.baseCurrencyId);
+    }
+
+    function getTotalsFor(stockTotals, itemTypeName) {
+      var stockItem = $filter('filter')(stockTotals, {
+        itemTypeName: itemTypeName
+      });
+      var totalLMP = 0;
+      var totalEPOS = 0;
+      angular.forEach(stockItem, function (item) {
+        totalLMP += item.lmpTotal || 0;
+        totalEPOS += item.eposTotal || 0;
+      });
+
+      return {
+        parsedLMP: totalLMP,
+        parsedEPOS: totalEPOS,
+        totalLMP: formatAsCurrency(totalLMP),
+        totalEPOS: formatAsCurrency(totalEPOS)
+      };
+    }
+
+    function getTotalsForPromotions(promotionTotals) {
+      var total = 0;
+      angular.forEach(promotionTotals, function (promotionItem) {
+        total += promotionItem.convertedAmount;
+      });
+
+      return {
+        parsedLMP: total,
+        parsedEPOS: total,
+        totalLMP: formatAsCurrency(total),
+        totalEPOS: formatAsCurrency(total)
+      };
+    }
+
+    function setupNetTotals () {
+      angular.forEach($scope.stockTotals, function (stockItem) {
+        stockItem.itemTypeName = lodash.findWhere($scope.itemTypes, {
+          id: stockItem.itemTypeId
+        }).name;
+      });
+
+      var totalItems = getTotalsFor($scope.stockTotals, 'Regular');
+      var totalVirtual = getTotalsFor($scope.stockTotals, 'Virtual');
+      var totalVoucher = getTotalsFor($scope.stockTotals, 'Voucher');
+      var totalPromotion = getTotalsForPromotions($scope.promotionTotals);
+
+      var stockTotals = {
+        totalRetail: totalItems,
+        totalVirtual: totalVirtual,
+        totalVoucher: totalVoucher,
+        totalPromotion: totalPromotion
+      };
+
+      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedLMP;
+      var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
+
+      var netTotals = {
+        netLMP: formatAsCurrency(netLMP),
+        netEPOS: formatAsCurrency(netEPOS)
+      };
+
+      $scope.stockTotals = angular.extend(stockTotals, {
+        totalNet: netTotals
+      });
+    }
+
+    function isCompanyUsingCash () {
+      var cashPreference = lodash.where($scope.companyPreferences, { choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless' })[0];
+      if (cashPreference && cashPreference.hasOwnProperty('startDate')) {
+        var yesterdayOrEarlier = dateUtility.isTodayOrEarlier(dateUtility.formatDateForApp(cashPreference.startDate, 'YYYY-MM-DD'));
+
+        return !(cashPreference.isSelected === true && yesterdayOrEarlier);
+      }
+
+      return true;
+    }
+
+    function setupCashPreference () {
+      $scope.companyIsUsingCash = isCompanyUsingCash();
+    }
+
+    function calculateEPOSRevenue(eposRevenue) {
+      $this.eposCashBag = angular.copy(eposRevenue[0].response);
+      var eposCreditCard = angular.copy(eposRevenue[1].response);
+      var eposDiscount = angular.copy(eposRevenue[2].response);
+      var total = 0;
+
+      angular.forEach($this.eposCashBag, function (cashBag) {
+        if (cashBag.bankAmount) {
+          total += cashBag.bankAmount;
+        } else {
+          var coinAmount = cashBag.coinAmountManual || 0;
+          var paperAmount = cashBag.paperAmountManual || 0;
+          total += coinAmount + paperAmount;
+        }
+      });
+
+      angular.forEach(eposCreditCard, function (creditCard) {
+        if (creditCard.bankAmountFinal) {
+          total += creditCard.bankAmountFinal;
+        }
+      });
+
+      angular.forEach(eposDiscount, function (discount) {
+        if (discount.bankAmountFinal) {
+          total += discount.bankAmountFinal;
+        }
+      });
+
+      return total;
+    }
+
+    function calculateCashRevenue(chRevenue) {
+      $this.chCashBag = angular.copy(chRevenue[0].response);
+      var chCreditCard = angular.copy(chRevenue[1].response);
+      var chDiscount = angular.copy(chRevenue[2].response);
+      var total = 0;
+
+      angular.forEach($this.chCashBag, function (cashBag) {
+        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank +
+          cashBag.coinAmountManualCHBank);
+      });
+
+      angular.forEach(chCreditCard, function (creditCard) {
+        if (creditCard.bankAmountFinal) {
+          total += creditCard.bankAmountFinal;
+        } else if (creditCard.coinAmountManualCc && creditCard.paperAmountManualCc) {
+          total += creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
+        }
+      });
+
+      angular.forEach(chDiscount, function (discount) {
+        if (discount.bankAmountFinal) {
+          total += discount.bankAmountFinal;
+        } else if (discount.coinAmountManualCc && discount.paperAmountManualCc) {
+          total += discount.coinAmountManualCc + discount.paperAmountManualCc;
+        }
+      });
+
+      return total;
+    }
+
+    function setupTotalRevenue () {
+      $scope.totalRevenue = {
+        cashHandler: $scope.companyIsUsingCash ? formatAsCurrency(calculateCashRevenue($scope.cashRevenue)) : 0,
+        epos: formatAsCurrency(calculateEPOSRevenue($scope.eposRevenue))
+      };
+    }
+
+    function setupDiscrepancy() {
+      var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
+      var netPercentage = makeFinite(netValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
+
+      var revenueValue = 0;
+      var revenuePercentage = 0;
+      var exchangeValue = 0;
+      var exchangePercentage = 0;
+
+      if ($scope.companyIsUsingCash) {
+        revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.stockTotals.totalNet.netEPOS);
+        revenuePercentage = makeFinite(revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
+        exchangeValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
+        exchangePercentage = makeFinite(exchangeValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
+      }
+
+      var totalValue = netValue + revenueValue + exchangeValue;
+      var totalPercentage = netPercentage + revenuePercentage + exchangePercentage;
+
+      $scope.discrepancy = {
+        net: {
+          value: formatAsCurrency(netValue),
+          percentage: formatAsCurrency(netPercentage)
+        },
+        revenue: {
+          value: formatAsCurrency(revenueValue),
+          percentage: formatAsCurrency(revenuePercentage)
+        },
+        exchange: {
+          value: formatAsCurrency(exchangeValue),
+          percentage: formatAsCurrency(exchangePercentage)
+        },
+        total: {
+          value: formatAsCurrency(totalValue),
+          percentage: formatAsCurrency(totalPercentage)
+        }
+      };
     }
 
     function getCashBagListSuccess (dataFromAPI) {
@@ -245,6 +445,30 @@ angular.module('ts5App')
       return reconciliationFactory.getPromotionTotals($routeParams.storeInstanceId).then(setPromotionTotals);
     }
 
+    function setCompanyPreferences(companyPreferencesFromAPI) {
+      $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesFromAPI.preferences), 'startDate', 'desc');
+    }
+
+    function getCompanyPreferences () {
+      return reconciliationFactory.getCompanyPreferences().then(setCompanyPreferences);
+    }
+
+    function setCashRevenue (cashRevenueFromAPI) {
+      $scope.cashRevenue = angular.copy(cashRevenueFromAPI);
+    }
+
+    function getCashRevenue () {
+      return reconciliationFactory.getCHRevenue($routeParams.storeInstanceId).then(setCashRevenue);
+    }
+
+    function setEPOSRevenue (EPOSRevenueFromAPI) {
+      $scope.eposRevenue = angular.copy(EPOSRevenueFromAPI);
+    }
+
+    function getEPOSRevenue () {
+      return reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId).then(setEPOSRevenue);
+    }
+
     function showLoadingModal(text) {
       $scope.displayError = false;
       angular.element('#loading').modal('show').find('p').text(text);
@@ -260,81 +484,12 @@ angular.module('ts5App')
       $scope.displayError = true;
     }
 
-    function setupCompanyBaseCurrency () {
-      $scope.companyBaseCurrency = getCurrencyByBaseCurrencyId($scope.companyGlobalCurrencies, $scope.company.baseCurrencyId);
-    }
-
-    function getTotalsFor(stockTotals, itemTypeName) {
-      var stockItem = $filter('filter')(stockTotals, {
-        itemTypeName: itemTypeName
-      });
-      var totalLMP = 0;
-      var totalEPOS = 0;
-      angular.forEach(stockItem, function (item) {
-        totalLMP += item.lmpTotal || 0;
-        totalEPOS += item.eposTotal || 0;
-      });
-
-      return {
-        parsedLMP: totalLMP,
-        parsedEPOS: totalEPOS,
-        totalLMP: formatAsCurrency(totalLMP),
-        totalEPOS: formatAsCurrency(totalEPOS)
-      };
-    }
-
-    function getTotalsForPromotions(promotionTotals) {
-      var total = 0;
-      angular.forEach(promotionTotals, function (promotionItem) {
-        total += promotionItem.convertedAmount;
-      });
-
-      return {
-        parsedLMP: total,
-        parsedEPOS: total,
-        totalLMP: formatAsCurrency(total),
-        totalEPOS: formatAsCurrency(total)
-      };
-    }
-
-    function setupNetTotals () {
-      angular.forEach($scope.stockTotals, function (stockItem) {
-        stockItem.itemTypeName = lodash.findWhere($scope.itemTypes, {
-          id: stockItem.itemTypeId
-        }).name;
-      });
-
-      var totalItems = getTotalsFor($scope.stockTotals, 'Regular');
-      var totalVirtual = getTotalsFor($scope.stockTotals, 'Virtual');
-      var totalVoucher = getTotalsFor($scope.stockTotals, 'Voucher');
-      var totalPromotion = getTotalsForPromotions($scope.promotionTotals);
-
-      var stockTotals = {
-        totalRetail: totalItems,
-        totalVirtual: totalVirtual,
-        totalVoucher: totalVoucher,
-        totalPromotion: totalPromotion
-      };
-
-      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
-          .parsedEPOS - stockTotals.totalPromotion.parsedLMP;
-      var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
-          .parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
-
-      var netTotals = {
-        netLMP: formatAsCurrency(netLMP),
-        netEPOS: formatAsCurrency(netEPOS)
-      };
-
-      //var stockItems = $this.stockTotals.concat($this.promotionTotals);
-      $scope.stockTotals = angular.extend(stockTotals, {
-        totalNet: netTotals
-      });
-    }
-
     function handleInitDataSuccess() {
       setupCompanyBaseCurrency();
       setupNetTotals();
+      setupCashPreference();
+      setupTotalRevenue();
+      setupDiscrepancy();
 
       hideLoadingModal();
     }
@@ -347,7 +502,10 @@ angular.module('ts5App')
         getCompanyGlobalCurrencies(),
         getItemTypes(),
         getStockTotals(),
-        getPromotionTotals()
+        getPromotionTotals(),
+        getCompanyPreferences(),
+        getCashRevenue(),
+        getEPOSRevenue()
       ];
 
       $q.all(promiseArray).then(handleInitDataSuccess, handleResponseError);
