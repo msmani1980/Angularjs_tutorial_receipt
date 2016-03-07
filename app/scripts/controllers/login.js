@@ -26,13 +26,25 @@ angular.module('ts5App')
 
     function handleResponseError(event, responseFromAPI) {
       hideLoadingModal();
-      responseFromAPI.data = [
-        {
-          field: 'Username or Password',
-          value: 'does not match our records.'
-        }
-      ];
-      $scope.errorResponse = responseFromAPI;
+
+      $scope.errorResponse = angular.copy(responseFromAPI);
+
+      if (responseFromAPI.data && !responseFromAPI.data.enabled) {
+        $scope.errorResponse.data = [
+          {
+            field: 'User Account',
+            value: 'Your account has been deactivated.'
+          }
+        ];
+      } else {
+        $scope.errorResponse.data = [
+          {
+            field: 'Username or Password',
+            value: 'does not match our records.'
+          }
+        ];
+      }
+
       $scope.displayError = true;
     }
 
