@@ -1,8 +1,7 @@
 'use strict';
 
-describe('Controller: LoginCtrl', function () {
+describe('Controller: LoginCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
 
   var LoginCtrl;
@@ -11,8 +10,7 @@ describe('Controller: LoginCtrl', function () {
   var identityAccessFactory;
   var loginDeferred;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
+  beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     rootScope = $rootScope;
     scope = $rootScope.$new();
     identityAccessFactory = $injector.get('identityAccessFactory');
@@ -26,21 +24,21 @@ describe('Controller: LoginCtrl', function () {
     });
   }));
 
-  it('should have a login function attached to scope', function () {
+  it('should have a login function attached to scope', function() {
     expect(scope.login).toBeDefined();
   });
 
-  describe('login process', function () {
+  describe('login process', function() {
 
-    it('should not do anything if form is invalid', function () {
+    it('should not do anything if form is invalid', function() {
       scope.loginForm = {
         $invalid: true
       };
       expect(scope.login()).toBeUndefined();
     });
 
-    describe('Authentication', function () {
-      beforeEach(function () {
+    describe('Authentication', function() {
+      beforeEach(function() {
         scope.credentials = {
           username: 'fakeUser',
           password: 'fakePass'
@@ -53,28 +51,28 @@ describe('Controller: LoginCtrl', function () {
         scope.login();
       });
 
-      it('should call login API', function () {
+      it('should call login API', function() {
         loginDeferred.resolve({});
         expect(identityAccessFactory.login).toHaveBeenCalledWith(scope.credentials);
       });
 
-      it('should show errors in bad request', function () {
+      it('should show errors in bad request', function() {
         rootScope.$broadcast('un-authorized', {});
         scope.$digest();
         expect(scope.displayError).toBeTruthy();
       });
 
-      it('should set the error response', function () {
+      it('should set the error response', function() {
         var errorMock = {
           status: 400,
-          data: [
-            {
-              field: 'Username or Password',
-              value: 'does not match our records.'
-            }
-          ]
+          data: [{
+            field: 'Username or Password',
+            value: 'does not match our records.'
+          }]
         };
-        rootScope.$broadcast('un-authorized', { status: 400 });
+        rootScope.$broadcast('un-authorized', {
+          status: 400
+        });
         scope.$digest();
         expect(scope.errorResponse).toEqual(errorMock);
       });

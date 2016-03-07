@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TaxRatesCtrl', function($scope, $q, $route, $filter, taxRatesFactory, dateUtility, ngToast) {
+  .controller('TaxRatesCtrl', function($scope, $q, $route, $filter, taxRatesFactory, dateUtility, messageService) {
 
     var $this = this;
 
@@ -438,7 +438,7 @@ angular.module('ts5App')
 
     this.deleteSuccess = function() {
       var id = angular.copy($scope.taxRateToRemove.id);
-      ngToast.create('Successfully Deleted <b>Tax Rate ID: </b>' + id);
+      messageService.display('success', 'Successfully Deleted <b>Tax Rate ID: </b>' + id);
       $scope.taxRateToRemove = [];
       $this.hideLoadingModal();
       return $this.removeTaxRateFromList(id);
@@ -493,7 +493,7 @@ angular.module('ts5App')
     this.editSuccess = function() {
       $this.hideLoadingModal();
       var id = angular.copy($scope.taxRateSaved);
-      ngToast.create('Successfully Saved <b>Tax Rate ID: </b>' + id);
+      messageService.display('success', 'Successfully Saved <b>Tax Rate ID: </b>' + id);
       $scope.taxRateSaved = [];
       $this.getCompanyMasterTaxRatesList();
     };
@@ -665,7 +665,7 @@ angular.module('ts5App')
       $this.getCompanyMasterTaxRatesList();
       $this.setIdOnTaxRateObjectOnSuccess(id);
       $this.hideLoadingModal();
-      ngToast.create('Successfully Created <b>Tax Rate ID: </b>' + id);
+      messageService.display('success', 'Successfully Created <b>Tax Rate ID: </b>' + id);
       $scope.taxRateToCreate = [];
     };
 
@@ -693,12 +693,13 @@ angular.module('ts5App')
           endDate: ''
         };
         $scope.enableSearchStations = false;
-        return $this.makeSearchPromises(true);
       }
+
+      $scope.companyTaxRatesList = [];
     };
 
     $scope.showClearButton = function() {
-      return ($this.isDateRangeSet() || $this.isSearchActive());
+      return ($this.isDateRangeSet() || $this.isSearchActive() || ($scope.companyTaxRatesList.length > 0));
     };
 
     $scope.searchRecords = function() {

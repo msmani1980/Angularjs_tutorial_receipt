@@ -9,7 +9,7 @@
  */
 
 angular.module('ts5App').controller('CashBagSubmissionCtrl',
-  function ($scope, $http, globalMenuService, cashBagFactory, $filter, $window, dateUtility, ngToast, lodash) {
+  function ($scope, $http, globalMenuService, cashBagFactory, $filter, $window, dateUtility, lodash, messageService) {
     $scope.viewName = 'Cash Bag Submission';
     $scope.search = {};
 
@@ -34,11 +34,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     }
 
     function showToast(className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
+      messageService.display(className, '<strong>' + type + '</strong>: ' + message);
     }
 
     function showLoadingBar() {
@@ -226,8 +222,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     $scope.clearForm = function () {
       $scope.search = {};
       $this.isSearching = false;
-      initializeData();
-      $scope.updateCashBagList();
+      $scope.cashBagList = [];
     };
 
     $scope.searchCashBags = function () {

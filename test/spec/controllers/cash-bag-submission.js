@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CashBagSubmissionCtrl', function () {
+describe('Controller: CashBagSubmissionCtrl', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -24,7 +24,7 @@ describe('Controller: CashBagSubmissionCtrl', function () {
   var getCompanyGlobalCurrenciesJSON;
   var getCompanyGlobalCurrenciesDeferred;
 
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
+  beforeEach(inject(function($controller, $rootScope, $injector, $q) {
 
     scope = $rootScope.$new();
     cashBagFactory = $injector.get('cashBagFactory');
@@ -59,55 +59,57 @@ describe('Controller: CashBagSubmissionCtrl', function () {
     scope.$digest();
   }));
 
-  describe('controller init', function () {
-    it('should exist', function () {
+  describe('controller init', function() {
+    it('should exist', function() {
       expect(CashBagSubmissionCtrl).toBeDefined();
     });
 
-    describe('API call to getCompany', function () {
-      it('should call getCompany', function () {
+    describe('API call to getCompany', function() {
+      it('should call getCompany', function() {
         expect(cashBagFactory.getCompany).toHaveBeenCalledWith(362);
       });
 
-      it('should attach cashHandler response to scope', function () {
+      it('should attach cashHandler response to scope', function() {
         expect(scope.CHCompany).toEqual(getCompanyJSON);
       });
 
-      it('should attach airline company response to scope', function () {
+      it('should attach airline company response to scope', function() {
         expect(scope.companyData).toEqual(getCompanyJSON);
       });
 
-      it('should attach BaseCurrency to scope', function () {
-        var expectedCurrency = jasmine.objectContaining({ code: 'GBP' });
+      it('should attach BaseCurrency to scope', function() {
+        var expectedCurrency = jasmine.objectContaining({
+          code: 'GBP'
+        });
         expect(CashBagSubmissionCtrl.globalCurrencyList[0]).toEqual(expectedCurrency);
       });
 
     });
   });
 
-  describe('getCashBagList', function () {
+  describe('getCashBagList', function() {
 
-    describe('success handler and formatting cash bag list', function () {
-      it('should call getCashBagList', function () {
+    describe('success handler and formatting cash bag list', function() {
+      it('should call getCashBagList', function() {
         scope.updateCashBagList();
         expect(cashBagFactory.getCashBagList).toHaveBeenCalled();
       });
 
-      it('should update meta to match response', function () {
+      it('should update meta to match response', function() {
         scope.updateCashBagList();
         scope.$digest();
         expect(CashBagSubmissionCtrl.meta.count).toBe(getCashBagListJSON.meta.count);
       });
     });
 
-    it('should not call getCashBagList if meta is not consistent', function () {
+    it('should not call getCashBagList if meta is not consistent', function() {
       CashBagSubmissionCtrl.meta.offset = 10;
       CashBagSubmissionCtrl.meta.count = 1;
       scope.updateCashBagList();
       expect(cashBagFactory.getCashBagList).not.toHaveBeenCalled();
     });
 
-    it('should not call getCashBagList if call in progress', function () {
+    it('should not call getCashBagList if call in progress', function() {
       CashBagSubmissionCtrl.meta.offset = 0;
       CashBagSubmissionCtrl.meta.count = 1;
       CashBagSubmissionCtrl.loadingProgress = true;
@@ -115,48 +117,54 @@ describe('Controller: CashBagSubmissionCtrl', function () {
       expect(cashBagFactory.getCashBagList).not.toHaveBeenCalled();
     });
 
-    describe('search functionality', function () {
+    describe('search functionality', function() {
 
-      it('should call getCashBagList when clearing search', function () {
+      it('should set cashBagList to empty when clearing search', function() {
         scope.clearForm();
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalled();
+        expect(scope.cashBagList).toEqual([]);
       });
 
-      it('should call getCashBagList searching', function () {
+      it('should call getCashBagList searching', function() {
         scope.search = {
           bankReferenceNumber: 'fakeBankReferenceNumber'
         };
         scope.searchCashBags();
         var expectedCompanyId = servedCompanyDataJSON.chCompany.companyId;
-        var expectedParameter = jasmine.objectContaining({ bankReferenceNumber: 'fakeBankReferenceNumber' });
+        var expectedParameter = jasmine.objectContaining({
+          bankReferenceNumber: 'fakeBankReferenceNumber'
+        });
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(expectedCompanyId, expectedParameter);
       });
     });
   });
 
-  describe('submitCashBag', function () {
-    beforeEach(function () {
+  describe('submitCashBag', function() {
+    beforeEach(function() {
       scope.updateCashBagList();
       scope.$digest();
     });
 
-    it('should call updateCashBag', function () {
+    it('should call updateCashBag', function() {
       scope.cashBagList[0].selected = true;
       scope.toggleCheckbox();
       scope.submitCashBag();
       var expectedParameter = {
-        cashBags: [jasmine.objectContaining({ bankReferenceNumber: '12345' })]
+        cashBags: [jasmine.objectContaining({
+          bankReferenceNumber: '12345'
+        })]
       };
       var expectedCompanyId = servedCompanyDataJSON.chCompany.companyId;
-      expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(expectedCompanyId, expectedParameter, { submission: 'submit' });
+      expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(expectedCompanyId, expectedParameter, {
+        submission: 'submit'
+      });
     });
 
-    it('should not call updateCashBag', function () {
+    it('should not call updateCashBag', function() {
       scope.submitCashBag();
       expect(cashBagFactory.updateCashBag).not.toHaveBeenCalled();
     });
 
-    it('should call getCashBagList after success', function () {
+    it('should call getCashBagList after success', function() {
       scope.cashBagList[0].selected = true;
       scope.toggleCheckbox();
       scope.submitCashBag();
@@ -164,7 +172,7 @@ describe('Controller: CashBagSubmissionCtrl', function () {
       expect(cashBagFactory.getCashBagList).toHaveBeenCalled();
     });
 
-    it('should call getCashBagList after success with search params', function () {
+    it('should call getCashBagList after success with search params', function() {
       scope.cashBagList[0].selected = true;
       CashBagSubmissionCtrl.isSearching = true;
       scope.search = {

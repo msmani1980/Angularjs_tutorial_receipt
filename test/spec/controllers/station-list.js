@@ -1,15 +1,13 @@
 'use strict';
 
-describe('The Stations List Controller', function () {
+describe('The Stations List Controller', function() {
 
-  beforeEach(module(
-    'ts5App',
-    'template-module',
-    'served/global-stations.json',
-    'served/country-list.json',
-    'served/city-list.json',
-    'served/stations.json'
-  ));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
+  beforeEach(module('served/global-stations.json'));
+  beforeEach(module('served/country-list.json'));
+  beforeEach(module('served/city-list.json'));
+  beforeEach(module('served/stations.json'));
 
   var scope;
   var controller;
@@ -58,7 +56,7 @@ describe('The Stations List Controller', function () {
       $valid: false,
       $invalid: false,
       $submitted: false,
-      $name:'stationListForm'
+      $name: 'stationListForm'
     };
   }
 
@@ -189,7 +187,7 @@ describe('The Stations List Controller', function () {
 
   });
 
-  describe('the error handler', function () {
+  describe('the error handler', function() {
 
     var mockError = {
       status: 400,
@@ -205,17 +203,17 @@ describe('The Stations List Controller', function () {
       StationListCtrl.errorHandler(mockError);
     });
 
-    it('should set error response ', function () {
+    it('should set error response ', function() {
       expect(scope.errorResponse).toEqual(mockError);
     });
 
-    it('should return false', function () {
+    it('should return false', function() {
       expect(scope.displayError).toBeTruthy();
     });
 
   });
 
-  describe('the date is active functionality', function () {
+  describe('the date is active functionality', function() {
 
     beforeEach(function() {
       initController();
@@ -224,13 +222,13 @@ describe('The Stations List Controller', function () {
       StationListCtrl.dateActive('11/25/2015');
     });
 
-    it('should set error response ', function () {
+    it('should set error response ', function() {
       expect(dateUtility.isTodayOrEarlier).toHaveBeenCalled();
     });
 
   });
 
-  describe('the get station object functionality', function () {
+  describe('the get station object functionality', function() {
 
     beforeEach(function() {
       initController();
@@ -238,12 +236,12 @@ describe('The Stations List Controller', function () {
       mockGetStations();
     });
 
-    it('should set error response ', function () {
+    it('should set error response ', function() {
       var station = StationListCtrl.getStationObject(114);
       expect(station).toEqual(stationListJSON.response[0]);
     });
 
-    describe('the selected stations functionality', function () {
+    describe('the selected stations functionality', function() {
 
       beforeEach(function() {
         scope.selectedStations = [];
@@ -253,22 +251,22 @@ describe('The Stations List Controller', function () {
         scope.$digest();
       });
 
-      it('should return an array of selected stations', function () {
+      it('should return an array of selected stations', function() {
         var selectedStations = StationListCtrl.getSelectedStations();
         var selectedStationsControl = [true, true];
         expect(selectedStations).toEqual(selectedStationsControl);
       });
 
-      it('should return a station object', function () {
+      it('should return a station object', function() {
         var station = StationListCtrl.getStationObject(114);
         expect(station).toBeTruthy();
       });
 
-      it('should allow users to save if there is one or more stations selected', function () {
+      it('should allow users to save if there is one or more stations selected', function() {
         expect(StationListCtrl.canSave()).toBeTruthy();
       });
 
-      it('should not allow users to save if there are 0 stations selected', function () {
+      it('should not allow users to save if there are 0 stations selected', function() {
         scope.selectedStations = [];
         expect(StationListCtrl.canSave()).toBeFalsy();
       });
@@ -280,37 +278,39 @@ describe('The Stations List Controller', function () {
           spyOn(StationListCtrl, 'deselectAllStations').and.callThrough();
         });
 
-        it('should not allow users to save if there are 0 stations selected', function () {
+        it('should not allow users to save if there are 0 stations selected', function() {
           scope.selectedStations[114] = false;
           scope.selectedStations[115] = false;
           scope.selectedStations[116] = false;
           expect(StationListCtrl.canSave()).toBeFalsy();
         });
 
-        it('should allow users to select all stations', function () {
+        it('should allow users to select all stations', function() {
           StationListCtrl.selectAllStations();
           expect(scope.selectedStations[114]).toBeTruthy();
           expect(scope.selectedStations[115]).toBeTruthy();
           expect(scope.selectedStations[116]).toBeTruthy();
         });
 
-        it('should allow users to deselect all stations', function () {
+        it('should allow users to deselect all stations', function() {
           StationListCtrl.deselectAllStations();
           expect(scope.selectedStations[114]).toBeFalsy();
           expect(scope.selectedStations[115]).toBeFalsy();
           expect(scope.selectedStations[116]).toBeFalsy();
         });
 
-        it('should deselect all stations when toggleStations is called and all stations are selected', function () {
-          StationListCtrl.selectAllStations();
-          StationListCtrl.toggleAllStations();
-          expect(StationListCtrl.deselectAllStations).toHaveBeenCalled();
-        });
+        it('should deselect all stations when toggleStations is called and all stations are selected',
+          function() {
+            StationListCtrl.selectAllStations();
+            StationListCtrl.toggleAllStations();
+            expect(StationListCtrl.deselectAllStations).toHaveBeenCalled();
+          });
 
-        it('should select all stations when toggleStations is called and no stations are selected', function () {
-          StationListCtrl.toggleAllStations(true);
-          expect(StationListCtrl.selectAllStations).toHaveBeenCalled();
-        });
+        it('should select all stations when toggleStations is called and no stations are selected',
+          function() {
+            StationListCtrl.toggleAllStations(true);
+            expect(StationListCtrl.selectAllStations).toHaveBeenCalled();
+          });
 
       });
 
@@ -326,7 +326,7 @@ describe('The Stations List Controller', function () {
       initController();
       resolveInitDependencies();
       city = {
-        name:'Boganville',
+        name: 'Boganville',
         countryId: 66
       };
     });
@@ -354,13 +354,13 @@ describe('The Stations List Controller', function () {
 
   });
 
-  describe('performing mass date updates', function () {
+  describe('performing mass date updates', function() {
 
     var mockStation;
     var stationToTest;
     beforeEach(function() {
       mockStation = {
-        id:114,
+        id: 114,
         startDate: '03/01/2016',
         endDate: '12/31/2016',
       };
@@ -377,7 +377,7 @@ describe('The Stations List Controller', function () {
 
     });
 
-    it('should get a station from the formData', function () {
+    it('should get a station from the formData', function() {
       expect(stationToTest).toEqual(mockStation);
     });
 

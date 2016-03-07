@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuListCtrl', function($scope, $location, menuService, ngToast, dateUtility, lodash) {
+  .controller('MenuListCtrl', function($scope, $location, menuService, messageService, dateUtility, lodash) {
     $scope.viewName = 'Menu Management';
     $scope.search = {};
     $scope.modal = null;
@@ -116,7 +116,7 @@ angular.module('ts5App')
     $scope.clearForm = function() {
       lastStartDate = dateUtility.nowFormatted('YYYYMMDD');
       $scope.search = {};
-      $scope.searchMenus();
+      $scope.menuList = [];
     };
 
     $scope.loadMenus = function() {
@@ -124,11 +124,7 @@ angular.module('ts5App')
     };
 
     function showToast(className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
+      messageService.display(className, '<strong>' + type + '</strong>: ' + message);
     }
 
     function showErrors(dataFromAPI) {

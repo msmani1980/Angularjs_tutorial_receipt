@@ -10,7 +10,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, $localStorage, ngToast, cashBagFactory,
+  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, $localStorage, messageService, cashBagFactory,
                                        dateUtility, lodash, globalMenuService) {
 
     // controller global properties
@@ -49,11 +49,9 @@ angular.module('ts5App')
       }
 
       var className = isError ? 'warning' : 'success';
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>Cash bag</strong>:' + message + '!'
-      });
+
+      messageService.display(className, '<strong>Cash bag</strong>:' + message + '!');
+
       if (error !== null && isError) {
         $scope.displayError = true;
         $scope.formErrors = error.data;

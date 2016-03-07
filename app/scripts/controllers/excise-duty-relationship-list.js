@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExciseDutyRelationshipListCtrl', function ($scope, exciseDutyRelationshipFactory, dateUtility, lodash, $q) {
+  .controller('ExciseDutyRelationshipListCtrl', function($scope, exciseDutyRelationshipFactory, dateUtility, lodash, $q) {
     $scope.viewName = 'Retail Item - Excise Duty Relationships';
     var $this = this;
 
@@ -70,7 +70,7 @@ angular.module('ts5App')
       hidePanel(otherPanelName);
     }
 
-    $scope.clearCreateForm = function (shouldClearAll) {
+    $scope.clearCreateForm = function(shouldClearAll) {
       var currentItemType = $scope.newRecord.itemType;
       $scope.displayError = false;
       $scope.newRecord = {
@@ -81,17 +81,17 @@ angular.module('ts5App')
       $scope.itemExciseDutyCreateForm.startDate.$setUntouched();
     };
 
-    $scope.clearSearchForm = function () {
+    $scope.clearSearchForm = function() {
       $scope.search = {};
       $scope.itemExciseDutyList = null;
       initLazyLoadingMeta();
     };
 
-    $scope.toggleSearchPanel = function () {
+    $scope.toggleSearchPanel = function() {
       togglePanel('#search-collapse');
     };
 
-    $scope.toggleCreatePanel = function () {
+    $scope.toggleCreatePanel = function() {
       $scope.clearCreateForm(true);
       $scope.clearSearchForm();
       $scope.cancelEdit();
@@ -99,27 +99,29 @@ angular.module('ts5App')
       togglePanel('#create-collapse');
     };
 
-    $scope.shouldShowSearchPrompt = function () {
+    $scope.shouldShowSearchPrompt = function() {
       return !$scope.inCreateMode && (!$scope.itemExciseDutyList);
     };
 
-    $scope.shouldShowCreatePrompt = function () {
+    $scope.shouldShowCreatePrompt = function() {
       return $scope.inCreateMode && (!$scope.itemExciseDutyList || $scope.itemExciseDutyList.length <= 0);
     };
 
-    $scope.shouldShowNoRecordsFoundPrompt = function () {
-      return !$scope.inCreateMode && (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !== null && $scope.itemExciseDutyList.length <= 0);
+    $scope.shouldShowNoRecordsFoundPrompt = function() {
+      return !$scope.inCreateMode && (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !==
+        null && $scope.itemExciseDutyList.length <= 0);
     };
 
-    $scope.shouldShowLoadingAlert = function () {
-      return (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !== null && $this.meta.offset < $this.meta.count);
+    $scope.shouldShowLoadingAlert = function() {
+      return (angular.isDefined($scope.itemExciseDutyList) && $scope.itemExciseDutyList !== null && $this.meta.offset <
+        $this.meta.count);
     };
 
-    $scope.shouldRequireCreateFields = function () {
+    $scope.shouldRequireCreateFields = function() {
       return !$scope.inEditMode && $scope.inCreateMode;
     };
 
-    $scope.searchItemExciseData = function () {
+    $scope.searchItemExciseData = function() {
       initLazyLoadingMeta();
       $scope.itemExciseDutyList = null;
       showLoadingModal('Fetching Data');
@@ -134,7 +136,9 @@ angular.module('ts5App')
 
     function localDeleteSuccess(recordId) {
       hideLoadingModal();
-      var recordIndex = lodash.findIndex($scope.itemExciseDutyList, { id: recordId });
+      var recordIndex = lodash.findIndex($scope.itemExciseDutyList, {
+        id: recordId
+      });
       if (angular.isDefined(recordIndex)) {
         $scope.itemExciseDutyList.splice(recordIndex, 1);
       }
@@ -149,14 +153,14 @@ angular.module('ts5App')
       reloadAfterAPISuccess();
     }
 
-    $scope.removeRecord = function (record) {
+    $scope.removeRecord = function(record) {
       showLoadingModal('Deleting Record');
-      exciseDutyRelationshipFactory.deleteRelationship(record.id).then(function () {
+      exciseDutyRelationshipFactory.deleteRelationship(record.id).then(function() {
         removeRecordSuccess(record.id);
       }, showErrors);
     };
 
-    $scope.canDelete = function (exciseDuty) {
+    $scope.canDelete = function(exciseDuty) {
       return dateUtility.isAfterToday(exciseDuty.startDate);
     };
 
@@ -171,14 +175,17 @@ angular.module('ts5App')
     }
 
     function formatRecordForAPI(record) {
-      var oldRecordMatch = lodash.findWhere($scope.itemExciseDutyList, { id: record.id });
+      var oldRecordMatch = lodash.findWhere($scope.itemExciseDutyList, {
+        id: record.id
+      });
       formatBadDates(record, oldRecordMatch);
 
       var payload = {
         startDate: dateUtility.formatDateForAPI(record.startDate),
         endDate: dateUtility.formatDateForAPI(record.endDate),
         itemMasterId: (!record.retailItem && $scope.inEditMode) ? oldRecordMatch.itemMasterId : record.retailItem.id,
-        exciseDutyId: (!record.commodityCode && $scope.inEditMode) ? oldRecordMatch.exciseDutyId : record.commodityCode.id,
+        exciseDutyId: (!record.commodityCode && $scope.inEditMode) ? oldRecordMatch.exciseDutyId : record.commodityCode
+          .id,
         alcoholVolume: parseFloat(record.alcoholVolume)
       };
 
@@ -191,7 +198,9 @@ angular.module('ts5App')
 
     function editInlineSuccess(responseFromAPI) {
       hideLoadingModal();
-      var recordMatchIndex = lodash.findIndex($scope.itemExciseDutyList, { id: responseFromAPI.id });
+      var recordMatchIndex = lodash.findIndex($scope.itemExciseDutyList, {
+        id: responseFromAPI.id
+      });
       if (angular.isDefined(recordMatchIndex) && recordMatchIndex !== null) {
         var formattedNewRecord = formatRecordForApp(angular.copy(responseFromAPI));
         $scope.itemExciseDutyList[recordMatchIndex] = formattedNewRecord;
@@ -208,29 +217,34 @@ angular.module('ts5App')
       reloadAfterAPISuccess();
     }
 
-    $scope.saveEdit = function () {
+    $scope.saveEdit = function() {
       showLoadingModal('Editing Record');
       var payload = formatRecordForAPI($scope.recordToEdit);
-      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(saveSuccess, showErrors);
+      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(saveSuccess,
+        showErrors);
     };
 
-    $scope.cancelEdit = function () {
+    $scope.cancelEdit = function() {
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
     };
 
-    $scope.canEdit = function (record) {
+    $scope.canEdit = function(record) {
       return dateUtility.isAfterToday(record.endDate);
     };
 
-    $scope.isSelectedToEdit = function (record) {
+    $scope.isSelectedToEdit = function(record) {
       return ($scope.inEditMode && record.id === $scope.recordToEdit.id);
     };
 
-    $scope.selectToEdit = function (record) {
+    $scope.selectToEdit = function(record) {
       $scope.recordToEdit = angular.copy(record);
-      var itemMatch = lodash.findWhere($scope.itemList, { id: record.itemMasterId });
-      var exciseDutyMatch = lodash.findWhere($scope.exciseDutyList, { commodityCode: record.commodityCode });
+      var itemMatch = lodash.findWhere($scope.itemList, {
+        id: record.itemMasterId
+      });
+      var exciseDutyMatch = lodash.findWhere($scope.exciseDutyList, {
+        commodityCode: record.commodityCode
+      });
       $scope.recordToEdit.retailItem = itemMatch;
       $scope.recordToEdit.commodityCode = exciseDutyMatch;
       $scope.recordToEdit.itemType = parseInt($scope.recordToEdit.itemTypeId);
@@ -252,7 +266,7 @@ angular.module('ts5App')
       $scope.displayError = !isValid;
     }
 
-    $scope.createRelationship = function () {
+    $scope.createRelationship = function() {
       validateCreateForm();
       if ($scope.itemExciseDutyCreateForm.$valid) {
         showLoadingModal('Creating New Record');
@@ -263,7 +277,7 @@ angular.module('ts5App')
 
     function formatMultiSelectValuesForSearchPayload(searchKey, valueKey, payloadKey, workngPayload) {
       var newPayload = [];
-      angular.forEach($scope.search[searchKey], function (record) {
+      angular.forEach($scope.search[searchKey], function(record) {
         newPayload.push(record[valueKey]);
       });
 
@@ -300,7 +314,9 @@ angular.module('ts5App')
       var newRecord = angular.copy(recordFrmAPI);
       newRecord.startDate = dateUtility.formatDateForApp(newRecord.startDate);
       newRecord.endDate = dateUtility.formatDateForApp(newRecord.endDate);
-      var itemTypeMatch = lodash.findWhere($scope.itemTypes, { id: parseInt(newRecord.itemTypeId) });
+      var itemTypeMatch = lodash.findWhere($scope.itemTypes, {
+        id: parseInt(newRecord.itemTypeId)
+      });
       newRecord.itemTypeName = (angular.isDefined(itemTypeMatch)) ? itemTypeMatch.name : '';
       newRecord.alcoholVolume = parseFloat(newRecord.alcoholVolume).toFixed(2);
       return newRecord;
@@ -311,15 +327,16 @@ angular.module('ts5App')
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
 
       var newItemExciseDutyList = [];
-      angular.forEach(dataFromAPI.response, function (record) {
+      angular.forEach(dataFromAPI.response, function(record) {
         var formattedRecord = formatRecordForApp(record);
         newItemExciseDutyList.push(formattedRecord);
       });
 
-      $scope.itemExciseDutyList = ($scope.itemExciseDutyList) ? $scope.itemExciseDutyList.concat(newItemExciseDutyList) : newItemExciseDutyList;
+      $scope.itemExciseDutyList = ($scope.itemExciseDutyList) ? $scope.itemExciseDutyList.concat(
+        newItemExciseDutyList) : newItemExciseDutyList;
     }
 
-    $scope.getItemExciseDutyList = function () {
+    $scope.getItemExciseDutyList = function() {
       if ($this.meta.offset >= $this.meta.count || $scope.inCreateMode) {
         return;
       }
@@ -378,12 +395,16 @@ angular.module('ts5App')
 
     function findEditMatchAfterWatchSuccess() {
       if ($scope.inEditMode && $scope.recordToEdit.itemMasterId) {
-        var itemMatch = lodash.findWhere($scope.itemListForEdit, { id: $scope.recordToEdit.itemMasterId });
+        var itemMatch = lodash.findWhere($scope.itemListForEdit, {
+          id: $scope.recordToEdit.itemMasterId
+        });
         $scope.recordToEdit.retailItem = itemMatch || null;
       }
 
       if ($scope.inEditMode && $scope.recordToEdit.exciseDutyId) {
-        var exciseDutyMatch = lodash.findWhere($scope.exciseDutyListForEdit, { id: $scope.recordToEdit.exciseDutyId });
+        var exciseDutyMatch = lodash.findWhere($scope.exciseDutyListForEdit, {
+          id: $scope.recordToEdit.exciseDutyId
+        });
         $scope.recordToEdit.commodityCode = exciseDutyMatch || null;
       }
     }
@@ -391,13 +412,15 @@ angular.module('ts5App')
     function watchGroupSuccess(responseCollectionFromAPI, shouldSetEditModel) {
       if (shouldSetEditModel) {
         $scope.itemListForEdit = responseCollectionFromAPI[0].masterItems;
-        $scope.exciseDutyListForEdit = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response : $scope.exciseDutyListForEdit;
+        $scope.exciseDutyListForEdit = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response :
+          $scope.exciseDutyListForEdit;
         findEditMatchAfterWatchSuccess();
         return;
       }
 
       $scope.itemListForCreate = responseCollectionFromAPI[0].masterItems;
-      $scope.exciseDutyListForCreate = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response : $scope.exciseDutyListForCreate;
+      $scope.exciseDutyListForCreate = (responseCollectionFromAPI[1]) ? responseCollectionFromAPI[1].response :
+        $scope.exciseDutyListForCreate;
     }
 
     function callWatchGroupAPI(shouldSetEditModel, shouldCallExciseDuty) {
@@ -411,13 +434,13 @@ angular.module('ts5App')
       }
 
       clearWatchGroupModels(modelToCheck, shouldCallExciseDuty);
-      $q.all(promises).then(function (responseCollectionFromAPI) {
+      $q.all(promises).then(function(responseCollectionFromAPI) {
         watchGroupSuccess(responseCollectionFromAPI, shouldSetEditModel);
       }, showErrors);
     }
 
     function watchNewRecordDates() {
-      $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function () {
+      $scope.$watchGroup(['newRecord.startDate', 'newRecord.endDate'], function() {
         if ($scope.inCreateMode && $scope.newRecord.startDate && $scope.newRecord.endDate) {
           callWatchGroupAPI(false, true);
           return;
@@ -430,7 +453,7 @@ angular.module('ts5App')
     }
 
     function watchNewRecordItemType() {
-      $scope.$watch('newRecord.itemType', function () {
+      $scope.$watch('newRecord.itemType', function() {
         if ($scope.inCreateMode && $scope.newRecord.startDate && $scope.newRecord.endDate) {
           callWatchGroupAPI(false, false);
         }
@@ -438,7 +461,7 @@ angular.module('ts5App')
     }
 
     function watchEditRecordDates() {
-      $scope.$watchGroup(['recordToEdit.startDate', 'recordToEdit.endDate'], function () {
+      $scope.$watchGroup(['recordToEdit.startDate', 'recordToEdit.endDate'], function() {
         if ($scope.inEditMode && $scope.recordToEdit.startDate && $scope.recordToEdit.endDate) {
           callWatchGroupAPI(true, true);
           return;
@@ -451,7 +474,7 @@ angular.module('ts5App')
     }
 
     function watchEditRecordItemType() {
-      $scope.$watch('recordToEdit.itemType', function () {
+      $scope.$watch('recordToEdit.itemType', function() {
         if ($scope.inEditMode && $scope.recordToEdit.startDate && $scope.recordToEdit.endDate) {
           callWatchGroupAPI(true, false);
         }

@@ -1,9 +1,8 @@
 'use strict';
-
 /*global moment*/
+
 describe('Controller: MenuListCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/menus.json'));
 
@@ -17,9 +16,7 @@ describe('Controller: MenuListCtrl', function() {
   var httpBackend;
   var dateUtility;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function($q, $controller, $rootScope, $injector, _menuService_, $httpBackend,
-    $location) {
+  beforeEach(inject(function($q, $controller, $rootScope, $injector, _menuService_, $httpBackend, $location) {
     inject(function(_servedMenus_) {
       menuListJSON = _servedMenus_;
     });
@@ -45,16 +42,13 @@ describe('Controller: MenuListCtrl', function() {
     expect(scope.viewName).toBe('Menu Management');
   });
 
-  it('should clear search model and make a API call', function() {
+  it('should clear search model and the list model', function() {
     scope.search = {
       startDate: 'fakeDate'
     };
     scope.clearForm();
     expect(scope.search.startDate).toBe(undefined);
-    expect(menuService.getMenuList).toHaveBeenCalledWith({
-      limit: 100,
-      offset: 0
-    });
+    expect(scope.menuList).toEqual([]);
   });
 
   it('should clear search model and make a API call', function() {

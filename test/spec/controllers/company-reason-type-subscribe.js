@@ -1,13 +1,11 @@
 'use strict';
 
-describe('The Company Reason Type Subscription controller', function () {
+describe('The Company Reason Type Subscription controller', function() {
 
-  beforeEach(module(
-    'ts5App',
-    'template-module',
-    'served/company-reason-types.json',
-    'served/global-reason-types.json'
-  ));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
+  beforeEach(module('served/company-reason-types.json'));
+  beforeEach(module('served/global-reason-types.json'));
 
   var scope;
   var controller;
@@ -39,7 +37,7 @@ describe('The Company Reason Type Subscription controller', function () {
       $valid: false,
       $invalid: false,
       $submitted: false,
-      $name:'subscribeReasonTypesForm'
+      $name: 'subscribeReasonTypesForm'
     };
   }
 
@@ -154,7 +152,7 @@ describe('The Company Reason Type Subscription controller', function () {
 
   });
 
-  describe('the error handler', function () {
+  describe('the error handler', function() {
 
     var mockError = {
       status: 400,
@@ -171,11 +169,11 @@ describe('The Company Reason Type Subscription controller', function () {
       CompanyReasonTypeSubscribeCtrl.errorHandler(mockError);
     });
 
-    it('should set error response ', function () {
+    it('should set error response ', function() {
       expect(scope.errorResponse).toEqual(mockError);
     });
 
-    it('should return false', function () {
+    it('should return false', function() {
       expect(scope.displayError).toBeTruthy();
     });
 
