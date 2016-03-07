@@ -11,7 +11,8 @@ angular.module('ts5App')
   .service('identityAccessService', function ($resource, ENV) {
     var authorizeURL = ENV.apiUrl + '/IdentityAccess/authorizeUser';
     var chpwdURL = ENV.apiUrl + '/IdentityAccess/chpwd';
-    var sendEmailURL = ENV.apiUrl + '/IdentityAccess/:recoverUserOrPassword/:email/:username';
+    var sendUsernameRecoveryEmail = ENV.apiUrl + '/IdentityAccess/recoveruser/:email/send';
+    var sendPasswordRecoveryEmail = ENV.apiUrl + '/IdentityAccess/recoverpassword/:email/:username/';
     var logoutURL = ENV.apiUrl + '/IdentityAccess/logout';
     var featuresInRoleURL = ENV.apiUrl + '/IdentityAccess/featuresInRole';
     var userCompaniesURL = ENV.apiUrl + '/IdentityAccess/company/alluserscompanies';
@@ -85,15 +86,16 @@ angular.module('ts5App')
     };
 
     var sendEmail = function (shouldRecoverUser, emailContent, emailAddress, username) {
-      var recoverPath = (shouldRecoverUser) ? 'recoveruser' : 'recoverpassword';
-      var usernameToSend = (!shouldRecoverUser && username) ? username.toLowerCase() : '';
+      var URLtoSend = (shouldRecoverUser) ? sendUsernameRecoveryEmail : sendPasswordRecoveryEmail;
       sendEmailParameters = {
-        recoverUserOrPassword: recoverPath,
-        email: emailAddress.toLowerCase(),
-        username: usernameToSend || ''
+        email: emailAddress.toLowerCase()
       };
 
-      var sendEmailResource = $resource(sendEmailURL, sendEmailParameters, actions);
+      if (!shouldRecoverUser) {
+        sendEmailParameters.username = (!!username) ? username.toLowerCase() : '';
+      }
+
+      var sendEmailResource = $resource(URLtoSend, sendEmailParameters, actions);
       return sendEmailResource.sendEmail(emailContent).$promise;
     };
 

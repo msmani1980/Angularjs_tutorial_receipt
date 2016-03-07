@@ -54,7 +54,7 @@ describe('Service: identityAccessService', function () {
     });
 
     it('should make POST request with just email to API for recovering username', function () {
-      var expectedURL = /IdentityAccess\/recoveruser\/fakeemail$/;
+      var expectedURL = /IdentityAccess\/recoveruser\/fakeemail\/send$/;
       httpBackend.expectPOST(expectedURL).respond(201, {});
       identityAccessService.sendEmail(true, 'fakeContent', 'fakeEmail', 'badUser').then(function (response) {
         expect(response).toBeDefined();
