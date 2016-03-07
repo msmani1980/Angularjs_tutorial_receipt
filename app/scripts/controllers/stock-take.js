@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('StockTakeCtrl', function($scope, $routeParams, $location, $q, $filter, stockTakeFactory, dateUtility,
-    ngToast, lodash) {
+    messageService, lodash) {
 
     $scope.viewName = 'Stock Take';
     $scope.itemQuantities = [];
@@ -29,11 +29,7 @@ angular.module('ts5App')
     var stateActions = {};
 
     function showMessage(message, messageType) {
-      ngToast.create({
-        className: messageType,
-        dismissButton: true,
-        content: '<strong>Stock Take</strong>: ' + message
-      });
+      messageService.display(messageType, '<strong>Stock Take</strong>: ' + message);
     }
 
     function displayLoadingModal(loadingText) {

@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreNumberCreateCtrl', function ($scope, $location, $filter, $anchorScroll, companyStoresService, globalMenuService, ngToast, dateUtility, lodash) {
+  .controller('StoreNumberCreateCtrl', function($scope, $location, $filter, $anchorScroll, companyStoresService,
+    globalMenuService, messageService, dateUtility, lodash) {
 
     var $this = this;
     this.meta = {
@@ -25,7 +26,7 @@ angular.module('ts5App')
     };
 
     function showMessage(className, type, message) {
-      ngToast.create({ className: className, dismissButton: true, content: '<strong>' + type + '</strong>: ' + message });
+      messageService.display(className, message, type);
     }
 
     function displayLoadingModal(loadingText) {
@@ -63,7 +64,7 @@ angular.module('ts5App')
       $this.meta.count = $this.meta.count || response.meta.count;
       hideLoadingBar();
       $scope.storeNumbersList = $scope.storeNumbersList.concat(
-        lodash.map(response.response, function (store) {
+        lodash.map(response.response, function(store) {
           return formatForForm(store);
         })
       );
@@ -85,7 +86,9 @@ angular.module('ts5App')
 
     function getCurrentStoreNumber(_id) {
       // Lets not hit the API again if it exists in our current list
-      var store = $filter('filter')($scope.storeNumbersList, { id: _id }, true);
+      var store = $filter('filter')($scope.storeNumbersList, {
+        id: _id
+      }, true);
       if (store.length) {
         setCurrentStore(store[0]);
         return;
@@ -104,7 +107,7 @@ angular.module('ts5App')
       $scope.storeNumbersList = [];
     }
 
-    $scope.getStoreList = function () {
+    $scope.getStoreList = function() {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
@@ -131,7 +134,7 @@ angular.module('ts5App')
     init();
 
     // scope functions
-    $scope.submitForm = function () {
+    $scope.submitForm = function() {
       $scope.isSubmitting = true;
       displayLoadingModal('Saving');
       var payload = angular.copy($scope.formData);
@@ -149,11 +152,11 @@ angular.module('ts5App')
       }
     };
 
-    $scope.formDefault = function () {
+    $scope.formDefault = function() {
       return angular.equals($scope.formData, companyDefault);
     };
 
-    $scope.canDelete = function (store) {
+    $scope.canDelete = function(store) {
       return store.readyToUse;
     };
 
@@ -173,7 +176,7 @@ angular.module('ts5App')
       showMessage('success', 'Store Number', 'deleted!');
     }
 
-    $scope.removeRecord = function (store) {
+    $scope.removeRecord = function(store) {
       $scope.isSubmitting = false;
       if (!$scope.canDelete(store)) {
         return false;
@@ -183,15 +186,15 @@ angular.module('ts5App')
       companyStoresService.deleteStore(store.id).then(removeRecordSuccess, removeRecordError);
     };
 
-    $scope.canEdit = function (store) {
+    $scope.canEdit = function(store) {
       return dateUtility.isAfterToday(store.endDate);
     };
 
-    $scope.fieldDisabled = function (store) {
+    $scope.fieldDisabled = function(store) {
       return $scope.canEdit(store) && dateUtility.isTodayOrEarlier(store.startDate);
     };
 
-    $scope.editStoreNumber = function (store) {
+    $scope.editStoreNumber = function(store) {
       if (!$scope.canEdit(store)) {
         return false;
       }

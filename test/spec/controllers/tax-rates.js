@@ -246,7 +246,13 @@ describe('Controller: TaxRatesCtrl', function() {
           it('should return false if search data is set but undefined', function() {
             scope.search.taxType = undefined;
             scope.dateRange.startDate = '';
+            scope.companyTaxRatesList = [];
             expect(scope.showClearButton()).toBeFalsy();
+          });
+
+          it('should return true if the companyTaxRatesList is populated', function() {
+            scope.companyTaxRatesList = ['test'];
+            expect(scope.showClearButton()).toBeTruthy();
           });
 
           it('should trigger isDateRangeSet', function() {
@@ -392,7 +398,7 @@ describe('Controller: TaxRatesCtrl', function() {
             scope.search.taxRate = 1;
             scope.clearSearchFilters();
             expect(scope.search).toEqual({});
-            expect(TaxRatesCtrl.makeSearchPromises).toHaveBeenCalledWith(true);
+            expect(scope.companyTaxRatesList).toEqual([]);
           });
 
           it('should break and not error if undefined', function() {
