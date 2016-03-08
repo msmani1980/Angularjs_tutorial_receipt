@@ -346,10 +346,19 @@ describe('Controller: CategoryListCtrl', function() {
       expect(categoryFactory.getCategoryList).toHaveBeenCalledWith(expectedPayload);
     });
 
-    it('should clear list and search on clearSearch', function() {
+    it('should show clear button', function() {
+      expect(scope.showClearButton()).toBeTruthy();
+    });
+
+    it('should show clear button', function() {
+      scope.clearSearch();
+      expect(scope.showClearButton()).toBeFalsy();
+    });
+
+    it('should clear list and filter on clearSearch', function() {
       scope.clearSearch();
       expect(scope.categoryList).toEqual([]);
-      expect(scope.search).toEqual({});
+      expect(scope.filter).toEqual({});
     });
   });
 
