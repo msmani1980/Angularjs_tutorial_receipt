@@ -576,16 +576,31 @@ angular.module('ts5App')
       return '';
     };
 
+    this.tamperedPayloadConditional = function(data) {
+      if (!data) {
+        return null;
+      }
+
+      var store;
+      if ($scope.storeDetails.prevStoreInstanceId && $routeParams.action === 'redispatch') {
+        store = angular.copy($scope.prevStoreDetails);
+      } else if ($routeParams.action === 'end-instance') {
+        store = angular.copy($scope.storeDetails);
+      }
+
+      return store[data];
+    };
+
     this.updateStoreInstanceTampered = function() {
       var payload = {
-        c208SerialNo: $scope.storeDetails.c208SerialNo,
-        canisterQty: $scope.storeDetails.canisterQty,
-        cartQty: $scope.storeDetails.cartQty,
-        cateringStationId: $scope.storeDetails.cateringStationId,
-        scheduleNumber: $scope.storeDetails.scheduleNumber,
-        scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
-        storeId: $scope.storeDetails.storeId,
-        menus: $this.formatMenus($scope.storeDetails.menuList),
+        c208SerialNo: $this.tamperedPayloadConditional('c208SerialNo'),
+        canisterQty: $this.tamperedPayloadConditional('canisterQty'),
+        cartQty: $this.tamperedPayloadConditional('cartQty'),
+        cateringStationId: $this.tamperedPayloadConditional('cateringStationId'),
+        scheduleNumber: $this.tamperedPayloadConditional('scheduleNumber'),
+        scheduleDate: dateUtility.formatDateForAPI($this.tamperedPayloadConditional('scheduleDate')),
+        storeId: $this.tamperedPayloadConditional('storeId'),
+        menus: $this.formatMenus($this.tamperedPayloadConditional('menuList')),
         tampered: $scope.formData.tampered,
         note: $this.makeNotePayload()
       };
