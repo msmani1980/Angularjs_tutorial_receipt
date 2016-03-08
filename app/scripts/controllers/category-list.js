@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('CategoryListCtrl', function($scope, $location, categoryFactory, dateUtility, payloadUtility,
     identityAccessFactory, lodash) {
-      
+
     $scope.viewName = 'Category';
     $scope.search = {};
     $scope.categoryList = [];
@@ -435,6 +435,22 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    function hasLength(data) {
+      return angular.isDefined(data) && data.length;
+    }
+
+    function searchIsDirty() {
+      var s = $scope.filter;
+      var check = [];
+      for (var search in s) {
+        if (angular.isDefined(search) && hasLength(search)) {
+          check.push(search);
+        }
+      }
+
+      return (check.length);
+    }
+
     $scope.search = function() {
       showLoadingModal('Searching');
 
@@ -444,8 +460,12 @@ angular.module('ts5App')
     };
 
     $scope.clearSearch = function() {
-      $scope.search = {};
+      $scope.filter = {};
       $scope.categoryList = [];
+    };
+
+    $scope.showClearButton = function() {
+      return searchIsDirty() || hasLength($scope.categoryList);
     };
 
     $scope.determineLeftNavTitle = function() {
