@@ -8,6 +8,15 @@
  */
 angular.module('ts5App')
   .controller('ManualECSCtrl', function ($scope) {
-    $scope.viewName = 'Excise Duty List';
+    
+    $scope.toggleActiveView = function (showCreateView) {
+      $scope.isCreateViewActive = showCreateView;
+    };
+
+    function init() {
+      $scope.isCreateViewActive = true;
+    }
+
+    init();
 
   });
