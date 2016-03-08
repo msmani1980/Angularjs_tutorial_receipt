@@ -8,18 +8,21 @@ describe('Factory: manualECSFactory', function () {
     catererStationService,
     storeInstanceService,
     carrierInstancesService,
+    stationsService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _catererStationService_, _storeInstanceService_, _carrierInstancesService_, _manualECSFactory_) {
+  beforeEach(inject(function ($rootScope, _catererStationService_, _storeInstanceService_, _carrierInstancesService_, _manualECSFactory_, _stationsService_) {
     catererStationService = _catererStationService_;
     storeInstanceService = _storeInstanceService_;
     carrierInstancesService = _carrierInstancesService_;
+    stationsService = _stationsService_;
 
     spyOn(carrierInstancesService, 'getCarrierInstances');
     spyOn(carrierInstancesService, 'updateCarrierInstance');
     spyOn(storeInstanceService, 'getStoreInstancesList');
     spyOn(catererStationService, 'getCatererStationList');
+    spyOn(stationsService, 'getStationList');
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -58,6 +61,14 @@ describe('Factory: manualECSFactory', function () {
       var mockPayload = { fakeKey: 'fakeValue' };
       manualECSFactory.getCatererStationList(mockPayload);
       expect(catererStationService.getCatererStationList).toHaveBeenCalledWith(mockPayload);
+    });
+  });
+
+  describe('catererStationService API', function () {
+    it('should call stationsService on getCatererStationList', function () {
+      var mockPayload = { fakeKey: 'fakeValue' };
+      manualECSFactory.getCompanyStationList(mockPayload);
+      expect(stationsService.getStationList).toHaveBeenCalledWith(mockPayload);
     });
   });
 
