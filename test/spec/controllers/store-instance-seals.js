@@ -703,6 +703,53 @@ describe('the Store Instance Seals controller', function() {
 
       });
 
+      describe('updateStoreInstanceTampered conditional', function() {
+        var nextStep;
+        var mockTampered;
+        beforeEach(function() {
+          initController('redispatch');
+          scope.storeDetails.tampered = true;
+          scope.storeDetails.note = 'test note';
+          scope.storeDetails.cateringStationId = 120;
+          scope.prevStoreDetails = {
+            cateringStationId: 121
+          };
+          nextStep = {
+            label: 'Review & Dispatch',
+            uri: '/store-instance-packing/redispatch/' + storeId,
+            stepName: '2',
+            controllerName: 'Packing',
+            storeOne: {
+              cateringStationId: 121
+            }
+          };
+
+          mockTampered = {
+            cateringStationId: 120,
+            scheduleNumber: 'SCHED123',
+            scheduleDate: '20150813',
+            storeId: 13,
+            menus: [],
+            tampered: true,
+            note: 'test note'
+          };
+
+          updateStoreInstanceStatusDeferred.resolve({});
+
+          spyOn(StoreInstanceSealsCtrl, 'updateStoreInstanceTampered').and.callThrough();
+          spyOn(StoreInstanceSealsCtrl, 'tamperedPayloadConditional').and.callThrough();
+          StoreInstanceSealsCtrl.updateStatusToStep(nextStep);
+
+          scope.$digest();
+        });
+
+        it('should return the previousStore data', function() {
+          expect(StoreInstanceSealsCtrl.updateStoreInstanceTampered().cateringStationId).toBe(121);
+        });
+
+      });
+
+
     });
 
     describe('statusUpdateSuccessHandler', function() {
