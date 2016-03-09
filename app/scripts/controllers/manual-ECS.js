@@ -67,7 +67,7 @@ angular.module('ts5App')
 
     function getStoreInstancesSuccess(dataFromAPI) {
       hideLoadingModal();
-      $scope.storeInstances = angular.copy(dataFromAPI.response);
+      $scope.storeInstances = angular.copy(dataFromAPI.response) || [];
       angular.forEach($scope.storeInstances, function (storeInstance) {
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
         var stationMatch = lodash.findWhere($scope.companyStationList, { stationId: storeInstance.cateringStationId });
@@ -124,7 +124,7 @@ angular.module('ts5App')
 
     $scope.saveRelationship = function () {
       if (!$scope.canSaveRelationship()) {
-        messageService.display('danger', 'Create ECS Relationship', 'Please select two valid records');
+        messageService.display('danger', 'Please select two valid records', 'Create ECS Relationship');
         return;
       }
 
@@ -135,8 +135,26 @@ angular.module('ts5App')
       manualECSFactory.updateCarrierInstance($scope.selectedEposRecord.id, payload).then(saveSuccess, showErrors);
     };
 
+    $scope.shouldShowNoRecordAlert = function (portalOrEposOrAll) {
+      var arrayToCheck = (portalOrEposOrAll === 'portal') ? $scope.storeInstances : $scope.carrierInstances;
+      if (portalOrEposOrAll === 'all') {
+        arrayToCheck = $scope.allECSInstances;
+      }
+
+      return angular.isDefined(arrayToCheck) && arrayToCheck !== null && arrayToCheck.length <= 0;
+    };
+
+    $scope.shouldShowSearchPromptAlert = function (portalOrEposOrAll) {
+      var arrayToCheck = (portalOrEposOrAll === 'portal') ? $scope.storeInstances : $scope.carrierInstances;
+      if (portalOrEposOrAll === 'all') {
+        arrayToCheck = $scope.allECSInstances;
+      }
+
+      return arrayToCheck === null || !angular.isDefined(arrayToCheck);
+    };
+
     $scope.clearEposSearch = function () {
-      $scope.portalSearch = {};
+      $scope.eposSearch = {};
       $scope.carrierInstances = null;
     };
 
