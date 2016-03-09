@@ -139,13 +139,16 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="storeInstance in storeInstances" class="bg-success">
+          <tr ng-repeat="storeInstance in storeInstances" ng-class="getClassForAttribute('portal', 'row', storeInstance)">
             <td>{{ storeInstance.storeNumber }}</td>
             <td>{{ storeInstance.scheduleDate }}</td>
             <td>{{ storeInstance.stationDescription }}</td>
             <td>{{ storeInstance.id }}</td>
             <td class="text-center">
-              <button class="btn btn-sm btn-success"><span class="fa fa-check-circle"></span></button>
+              <button ng-click="selectRecord('portal', storeInstance)"
+                      ng-class="getClassForAttribute('portal', 'button', storeInstance)">
+                <span ng-class="getClassForAttribute('portal', 'icon', storeInstance)"></span>
+              </button>
             </td>
           </tr>
           </tbody>
@@ -163,12 +166,15 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="eposInstance in carrierInstances">
+          <tr ng-repeat="eposInstance in carrierInstances" ng-class="getClassForAttribute('epos', 'row', eposInstance)">
             <td>{{ eposInstance.storeNumber }}</td>
             <td>{{ eposInstance.instanceDate }}</td>
             <td>{{ eposInstance.departureStation }}</td>
             <td class="text-center">
-              <button class="btn btn-sm btn-default"><span class="fa fa-circle-thin"></span></button>
+              <button ng-click="selectRecord('epos', eposInstance)"
+                      ng-class="getClassForAttribute('epos', 'button', eposInstance)">
+                <span ng-class="getClassForAttribute('epos', 'icon', eposInstance)"></span>
+              </button>
             </td>
           </tr>
           </tbody>
@@ -187,8 +193,8 @@
       <div class="container">
         <div class="row">
           <div class="col-xs-12 text-right">
-            <button type="button" class="btn btn-default" ng-click="reset()">Reset All</button>
-            <button type="button" class="btn btn-success" ng-click="save()" ng-disabled="true"><span class="fa fa-check"></span> Save Relationship</button>
+            <button type="button" class="btn btn-default" ng-click="resetAll()">Reset All</button>
+            <button type="button" class="btn btn-success" ng-click="saveRelationship()" ng-disabled="!canSaveRelationship()"><span class="fa fa-check"></span> Save Relationship</button>
 
           </div>
         </div>
