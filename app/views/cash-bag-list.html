@@ -186,9 +186,8 @@
           <div class="col-md-3 col-sm-6">
             <div class="form-group">
               <label for="cashBag-origin">Origin</label>
-              <select ng-model="search.arrivalStationCode" class="stations-multi-select" multiple="multiple" id="cashBag-origin">
-                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }} ({{
-                  station.stationName}})
+              <select ng-model="search.departureStationCode" class="stations-multi-select" multiple="multiple" id="cashBag-origin">
+                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }} ({{station.stationName}})
                 </option>
               </select>
             </div>
@@ -197,7 +196,7 @@
           <div class="col-md-3 col-sm-6">
             <div class="form-group">
               <label for="cashBag-destination">Destination</label>
-              <select ng-model="search.departureStationCode" class="stations-multi-select" multiple="multiple" id="cashBag-destination">
+              <select ng-model="search.arrivalStationCode" class="stations-multi-select" multiple="multiple" id="cashBag-destination">
                 <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }}
                   ({{ station.stationName}})
                 </option>
@@ -230,8 +229,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr
-      ng-repeat="cashBag in cashBagList" ng-class="{'new':isNew(cashBag.id)}">
+    <tr ng-repeat="cashBag in cashBagList" ng-class="{'new':isNew(cashBag.id)}">
       <td>{{ cashBag.cashBagNumber }}</td>
       <td>{{ cashBag.bankReferenceNumber }}</td>
       <td>{{ cashBag.scheduleNumber }}</td>
