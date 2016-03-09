@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('storeInstanceAmendFactory', function ($q) {
+  .factory('storeInstanceAmendFactory', function ($q, cashBagService) {
 
     var getScheduleMockData = function (searchQuery) {
       var getScheduleMockData = [{
@@ -47,8 +47,8 @@ angular.module('ts5App')
     };
 
     var getCashBagListMockData = function (searchQuery) {
-      var mockCashBag = [{
-        id: 10,
+      return [{
+        id: 99999999999,
         cashBag: (searchQuery) ? searchQuery.cashBag : '123',
         bankRefNumber: (searchQuery) ? searchQuery.bankRefNumber : 'AB45',
         storeNumber: '123',
@@ -213,21 +213,21 @@ angular.module('ts5App')
           }]
         }]
       }];
+    };
 
-      var cashBagMockResponseDeferred = $q.defer();
+    var getCashBags = function (payload) {
+      return cashBagService.getCashBagList(payload.companyId, payload);
+    };
 
-      if (searchQuery) {
-        cashBagMockResponseDeferred.resolve([mockCashBag[0]]);
-      } else {
-        cashBagMockResponseDeferred.resolve(mockCashBag);
-      }
-
-      return cashBagMockResponseDeferred.promise;
+    var deleteCashBag = function (id) {
+      return cashBagService.deleteCashBag(id);
     };
 
     return {
       getCashBagListMockData: getCashBagListMockData,
       getStoreInstancesMockData: getStoreInstancesMockData,
-      getScheduleMockData: getScheduleMockData
+      getScheduleMockData: getScheduleMockData,
+      getCashBags: getCashBags,
+      deleteCashBag: deleteCashBag
     };
   });

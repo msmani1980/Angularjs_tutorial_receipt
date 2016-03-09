@@ -186,6 +186,24 @@ angular.module('ts5App')
       $location.path('/reconciliation-discrepancy-detail/' + $routeParams.storeInstanceId);
     };
 
+    $scope.showPaymentReportPanel = function () {
+      angular.element('#paymentReportModal').modal('show');
+    };
+
+    $scope.showDeleteCashBagModal = function (cashBag) {
+      angular.element('.delete-cashbag-warning-modal').modal('show');
+
+      $scope.cashBagToDelete = cashBag;
+    };
+
+    $scope.deleteCashBag = function () {
+      angular.element('.delete-cashbag-warning-modal').modal('hide');
+
+      storeInstanceAmendFactory.deleteCashBag($scope.cashBagToDelete.id).then(function () {
+        $scope.cashBagToDelete.isDeleted = true;
+      });
+    };
+
     function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
       return currenciesArray.filter(function (currencyItem) {
         return currencyItem.id === baseCurrencyId;
@@ -383,12 +401,16 @@ angular.module('ts5App')
       };
     }
 
-    function getCashBagListSuccess (dataFromAPI) {
-      $scope.cashBagList = angular.copy(dataFromAPI);
-    }
-
-    function getCashBagList () {
-      return storeInstanceAmendFactory.getCashBagListMockData().then(getCashBagListSuccess);
+    function setupCashBags () {
+      $scope.normalizedCashBags = storeInstanceAmendFactory.getCashBagListMockData();
+      /*$scope.normalizedCashBags = $scope.cashBags.map(function (cashBag) {
+        return {
+          id: cashBag.id,
+          cashBag: cashBag.cashBagNumber,
+          bankRefNumber: cashBag.bankReferenceNumber,
+          isDeleted: cashBag.isDelete
+        };
+      });*/
     }
 
     function setStoreInstance (storeInstanceDataFromAPI) {
@@ -469,6 +491,33 @@ angular.module('ts5App')
       return reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId).then(setEPOSRevenue);
     }
 
+    function setPaymentReport (paymentReportFromAPI) {
+      var paymentReport = angular.copy(paymentReportFromAPI.paymentReports);
+      angular.forEach(paymentReport, function (report) {
+        report.scheduleDate = dateUtility.formatDateForApp(report.scheduleDate, 'YYYY-MM-DDThh:mm');
+      });
+
+      $scope.paymentReport = paymentReport;
+    }
+
+    function getPaymentReport () {
+      return reconciliationFactory.getPaymentReport($routeParams.storeInstanceId).then(setPaymentReport);
+    }
+
+    function setCashBags (cashBagsFromAPI) {
+      $scope.cashBags = angular.copy(cashBagsFromAPI.cashBags);
+    }
+
+    function getCashBags () {
+      var companyId = globalMenuService.company.get();
+      var payload = {
+        companyId: companyId,
+        isReconciliation: true
+      };
+
+      return storeInstanceAmendFactory.getCashBags(payload).then(setCashBags);
+    }
+
     function showLoadingModal(text) {
       $scope.displayError = false;
       angular.element('#loading').modal('show').find('p').text(text);
@@ -490,13 +539,13 @@ angular.module('ts5App')
       setupCashPreference();
       setupTotalRevenue();
       setupDiscrepancy();
+      setupCashBags();
 
       hideLoadingModal();
     }
 
     function initData() {
       var promiseArray = [
-        getCashBagList(),
         getStoreInstance(),
         getCompany(),
         getCompanyGlobalCurrencies(),
@@ -505,7 +554,9 @@ angular.module('ts5App')
         getPromotionTotals(),
         getCompanyPreferences(),
         getCashRevenue(),
-        getEPOSRevenue()
+        getEPOSRevenue(),
+        getPaymentReport(),
+        getCashBags()
       ];
 
       $q.all(promiseArray).then(handleInitDataSuccess, handleResponseError);

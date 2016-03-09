@@ -291,6 +291,30 @@
     </div>
   </div>
 
+  <div class="modal fade delete-cashbag-warning-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Are you sure?</h4>
+        </div>
+
+        <div class="modal-body">
+          <p>You are about to permanently delete <strong>{{cashBagToDelete.cashBag}} cashbag</strong></p>
+        </div>
+
+        <ul>
+          <li><strong>Bank Ref: </strong>{{ cashBagToDelete.bankRefNumber }}</li>
+        </ul>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" ng-click="deleteCashBag()">Continue</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div class="row">
     <div class="col-xs-12 main">
@@ -303,7 +327,7 @@
             <button class="btn btn-primary" ng-click="goToReconciliation()">
               Go To Reconciliation
             </button>
-            <button class="btn btn-info">
+            <button class="btn btn-info" ng-click="showPaymentReportPanel()">
               <i class="fa fa-file-text" aria-hidden="true"></i> Show Payment Reports
             </button>
           </div>
@@ -457,7 +481,7 @@
             </h4>
           </div>
         </div>
-        <div class="accordion-wrapper" ng-repeat="cashBag in cashBagList" ng-show="shouldShowCashBag(cashBag)">
+        <div class="accordion-wrapper" ng-repeat="cashBag in normalizedCashBags" ng-show="shouldShowCashBag(cashBag)">
           <accordion class="store-instance-review-accordion">
             <accordion-group ng-init="cashBag.accordionOpen=true" is-open="cashBag.accordionOpen">
               <accordion-heading class="accordion-heading">
@@ -655,7 +679,7 @@
                   <button class="btn btn-primary" title="Edit Cash Bag">
                     <i class="fa fa-pencil active"></i>
                   </button>
-                  <button class="btn btn-danger" title="Delete Cash Bag">
+                  <button class="btn btn-danger" title="Delete Cash Bag" ng-click="showDeleteCashBagModal(cashBag)">
                     <i class="fa fa-trash active"></i>
                   </button>
                   <button class="btn btn-warning" title="Merge or Reallocate Cash Bag" ng-click="showMoveCashBagModal(cashBag)">
@@ -672,4 +696,146 @@
       </div>
     </div>
   </div>
+
+  <!--payment report panel-->
+  <div class="modal right fade" id="paymentReportModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div ng-hide="paymentReport.length">Payment Report is empty</div>
+          <div class="panel" ng-repeat="report in paymentReport">
+            <h3>{{report.reportTitle}} Report</h3>
+            <div class="panel-body">
+              <p><h4>{{report.companyName}}</h4></p>
+              <p><strong>Flight Date:</strong> {{report.scheduleDate}}</p>
+
+              <div ng-repeat="sector in report.sectors">
+                <p><strong>Flight Number:</strong> {{sector.flightNumber}} (Pax {{sector.pax}})</p>
+                <p><strong>Sector:</strong> {{sector.departureStation}} - {{sector.arrivalStation}}</p>
+              </div>
+
+              <p><strong>Store:</strong> {{storeInstance.storeDetails.storeNumber}}</p>
+              <p><strong>Aircraft Registration:</strong> {{report.carrierNumber}}</p>
+              <p><strong>Cash Bag Number(s):</strong> {{report.cashbagText}}</p>
+
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Crew ID</th>
+                  <th>Last Name</th>
+                </tr>
+                <tr ng-repeat="crewMember in report.crew">
+                  <td>{{crewMember.CrewId}}</td>
+                  <td>{{crewMember.LastName}}</td>
+                </tr>
+              </table>
+
+              <h5>Expected Cash</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Currency Type</th>
+                  <th>Currency Value</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="cash in report.cash">
+                  <td>{{cash.currencyCode}}</td>
+                  <td>{{cash.total}}</td>
+                  <td>{{cash.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.cash.length">
+                  <td>No expected cash added</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Expected Cash Total</td>
+                  <td></td>
+                  <td>{{report.cashTotal}}</td>
+                </tr>
+              </table>
+
+              <h5>Expected Credit</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Card Type</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="credit in report.credit">
+                  <td>{{credit.cardType}}</td>
+                  <td>{{credit.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.credit.length">
+                  <td>No expected credit added</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Expected Credit Total</td>
+                  <td>{{report.creditTotal}}</td>
+                </tr>
+              </table>
+
+              <h5>Voucher Total</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Voucher Currency</th>
+                  <th>Currency Value</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="voucher in report.voucher">
+                  <td>{{voucher.currencyCode}}</td>
+                  <td>{{voucher.total}}</td>
+                  <td>{{voucher.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.voucher.length">
+                  <td>No Voucher added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Expected Voucher Total</td>
+                  <td></td>
+                  <td>{{report.voucherTotal}}</td>
+                </tr>
+              </table>
+
+              <h5>Complimentary Total</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Currency Type</th>
+                  <th>Comp. Currency</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="complimentary in report.comp">
+                  <td>{{complimentary.currencyCode}}</td>
+                  <td>{{complimentary.total}}</td>
+                  <td>{{complimentary.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.comp.length">
+                  <td>No Complimentary added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Comp. Total</td>
+                  <td></td>
+                  <td>{{report.compTotal ? report.compTotal : '0.00'}}</td>
+                </tr>
+              </table>
+
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <td>Expected Total</td>
+                  <td>{{report.total}}</td>
+                </tr>
+              </table>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--payment report panel-->
 </div>

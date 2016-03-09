@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstanceAmendCtrl', function () {
+fdescribe('Controller: StoreInstanceAmendCtrl', function () {
 
   beforeEach(module('ts5App'));
 
@@ -33,7 +33,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     schedulesDeferred.resolve(schedulesResponseJSON);
 
     spyOn(StoreInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
-    spyOn(StoreInstanceAmendFactory, 'getCashBagListMockData').and.returnValue(cashBagsDeferred.promise);
+    spyOn(StoreInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
     spyOn(StoreInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
@@ -46,7 +46,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
   describe('init', function () {
     it('should call get cash bag data', function () {
-      expect(StoreInstanceAmendFactory.getCashBagListMockData).toHaveBeenCalled();
+      expect(StoreInstanceAmendFactory.getCashBags).toHaveBeenCalled();
       scope.$digest();
       expect(scope.cashBagList).toBeDefined();
     });
