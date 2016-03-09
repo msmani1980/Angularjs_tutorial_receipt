@@ -209,35 +209,35 @@
         <div class="panel panel-default" id="relationships-search-collapse">
           <div class="panel-body">
             <div class="row">
-              <div class="col-xs-12 col-sm-3">
-                <div class="form-group">
-                  <label>Portal Store Number</label>
-                  <input class="form-control"
-                         ng-model="allInstancesSearch.portalStoreNumber"
-                         placeholder="Enter Store Number">
-                </div>
-              </div>
-              <div class="col-xs-6 col-sm-3">
-                <date-picker-field
-                  name="startDate"
-                  class="form-group"
-                  ng-model="portalSearch.scheduleDate"
-                  label="Portal Schedule Date">
-                </date-picker-field>
-              </div>
-              <div class="col-xs-12 col-sm-3">
-                <div class="form-group">
-                  <label>Portal Catering Station</label>
-                  <ui-select ng-model="allInstancesSearch.portalStation"
-                             theme="bootstrap"
-                             name="cateringStation">
-                    <ui-select-match placeholder="Select a station" allow-clear>{{ $select.selected.stationDescription}}</ui-select-match>
-                    <ui-select-choices repeat="station in cateringStationList | filter: {stationDescription:$select.search}">
-                      <div ng-bind-html="station.stationDescription | highlight: $select.search"></div>
-                    </ui-select-choices>
-                  </ui-select>
-                </div>
-              </div>
+              <!--<div class="col-xs-12 col-sm-3">-->
+                <!--<div class="form-group">-->
+                  <!--<label>Portal Store Number</label>-->
+                  <!--<input class="form-control"-->
+                         <!--ng-model="allInstancesSearch.portalStoreNumber"-->
+                         <!--placeholder="Enter Store Number">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="col-xs-6 col-sm-3">-->
+                <!--<date-picker-field-->
+                  <!--name="startDate"-->
+                  <!--class="form-group"-->
+                  <!--ng-model="portalSearch.scheduleDate"-->
+                  <!--label="Portal Schedule Date">-->
+                <!--</date-picker-field>-->
+              <!--</div>-->
+              <!--<div class="col-xs-12 col-sm-3">-->
+                <!--<div class="form-group">-->
+                  <!--<label>Portal Catering Station</label>-->
+                  <!--<ui-select ng-model="allInstancesSearch.portalStation"-->
+                             <!--theme="bootstrap"-->
+                             <!--name="cateringStation">-->
+                    <!--<ui-select-match placeholder="Select a station" allow-clear>{{ $select.selected.stationDescription}}</ui-select-match>-->
+                    <!--<ui-select-choices repeat="station in cateringStationList | filter: {stationDescription:$select.search}">-->
+                      <!--<div ng-bind-html="station.stationDescription | highlight: $select.search"></div>-->
+                    <!--</ui-select-choices>-->
+                  <!--</ui-select>-->
+                <!--</div>-->
+              <!--</div>-->
               <div class="col-xs-12 col-sm-3">
                 <div class="form-group">
                   <label>Portal Store Instance</label>
@@ -294,22 +294,22 @@
         <table class="table table-bordered table-hover table-responsive" ng-show="allECSInstances.length">
           <thead>
           <tr>
-            <th>Portal Store Number</th>
+            <!--<th>Portal Store Number</th>-->
             <th>ePOS Store Number</th>
-            <th>Portal Schedule Date</th>
+            <!--<th>Portal Schedule Date</th>-->
             <th>ePOS Schedule Date</th>
-            <th>Portal Catering Station</th>
+            <!--<th>Portal Catering Station</th>-->
             <th>ePOS Departure Station</th>
             <th>Store Instance</th>
           </tr>
           </thead>
           <tbody>
           <tr ng-repeat="ECSInstance in allECSInstances">
+            <!--<td>{{ ECSInstance.portalStoreNumber }}</td>-->
             <td>{{ ECSInstance.storeNumber }}</td>
-            <td>{{ ECSInstance.storeNumber }}</td>
+            <!--<td>{{ ECSInstance.scheduleDate }}</td>-->
             <td>{{ ECSInstance.instanceDate }}</td>
-            <td>{{ ECSInstance.instanceDate }}</td>
-            <td>{{ ECSInstance.departureStation }}</td>
+            <!--<td>{{ ECSInstance.catererStation }}</td>-->
             <td>{{ ECSInstance.departureStation }}</td>
             <td>{{ ECSInstance.storeInstanceId }}</td>
           </tr>
