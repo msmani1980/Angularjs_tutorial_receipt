@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManualECSCtrl', function ($scope, $q, manualECSFactory, globalMenuService, dateUtility, lodash) {
+  .controller('ManualECSCtrl', function ($scope, $q, manualECSFactory, globalMenuService, dateUtility, lodash, messageService) {
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -44,7 +44,7 @@ angular.module('ts5App')
         $scope.selectedPortalRecord = record;
         return;
       }
-      
+
       $scope.selectedEposRecord = record;
     };
 
@@ -80,7 +80,7 @@ angular.module('ts5App')
       manualECSFactory.getStoreInstanceList(payload).then(getStoreInstancesSuccess, showErrors);
     }
 
-    function getCarrierInstancesSuccess(dataFromAPI) {
+    function getUnTiedCarrierInstancesSuccess(dataFromAPI) {
       hideLoadingModal();
       $scope.carrierInstances = angular.copy(dataFromAPI.response);
       angular.forEach($scope.carrierInstances, function (carrierInstance) {
@@ -88,9 +88,23 @@ angular.module('ts5App')
       });
     }
 
-    function getCarrierInstance(payload) {
+    function getUnTiedCarrierInstances(payload) {
+      payload.storeInstanceId = 0;
       showLoadingModal('Retrieving ePOS Instances');
-      manualECSFactory.getCarrierInstanceList(payload).then(getCarrierInstancesSuccess, showErrors);
+      manualECSFactory.getCarrierInstanceList(payload).then(getUnTiedCarrierInstancesSuccess, showErrors);
+    }
+
+    function getTiedCarrierInstancesSuccess(dataFromAPI) {
+      hideLoadingModal();
+      $scope.allECSInstances = angular.copy(dataFromAPI.response);
+      angular.forEach($scope.allECSInstances, function (carrierInstance) {
+        carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
+      });
+    }
+
+    function getTiedCarrierInstances(payload) {
+      showLoadingModal('Retrieving ePOS Instances');
+      manualECSFactory.getCarrierInstanceList(payload).then(getTiedCarrierInstancesSuccess, showErrors);
     }
 
     $scope.resetAll = function () {
@@ -105,11 +119,12 @@ angular.module('ts5App')
     function saveSuccess() {
       hideLoadingModal();
       $scope.resetAl();
-      console.log('success!');
+      messageService.display('success', 'Relationship Successfully Created', 'Create ECS Relationship');
     }
 
     $scope.saveRelationship = function () {
       if (!$scope.canSaveRelationship()) {
+        messageService.display('danger', 'Create ECS Relationship', 'Please select two valid records');
         return;
       }
 
@@ -120,19 +135,44 @@ angular.module('ts5App')
       manualECSFactory.updateCarrierInstance($scope.selectedEposRecord.id, payload).then(saveSuccess, showErrors);
     };
 
-    $scope.clearSearch = function (portalOrEpos) {
-      if (portalOrEpos === 'portal') {
-        $scope.portalSearch = {};
-        return;
-      }
-
-      $scope.eposSearch = {};
+    $scope.clearEposSearch = function () {
+      $scope.portalSearch = {};
+      $scope.carrierInstances = null;
     };
 
+    $scope.clearPortalSearch = function () {
+      $scope.portalSearch = {};
+      $scope.storeInstances = null;
+    };
+
+    $scope.clearAllInstancesSearch = function () {
+      $scope.allInstancesSearch = {};
+      $scope.allECSInstances = null;
+    };
+
+    function formatAllECSSearchPayload() {
+      var searchPayload = {};
+      if ($scope.allInstancesSearch.eposScheduleDate) {
+        searchPayload.scheduleDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.eposScheduleDate);
+      }
+
+      if ($scope.allInstancesSearch.eposStation) {
+        searchPayload.departureStation = $scope.allInstancesSearch.eposStation.stationCode;
+      }
+
+      if ($scope.allInstancesSearch.eposStoreNumber) {
+        searchPayload.storeNumber = $scope.allInstancesSearch.eposStoreNumber;
+      }
+
+      if ($scope.allInstancesSearch.storeInstance) {
+        searchPayload.storeInstanceId = $scope.allInstancesSearch.storeInstance;
+      }
+
+      return searchPayload;
+    }
+
     function formatEposSearchPayload() {
-      var searchPayload = {
-        storeInstanceId: 0
-      };
+      var searchPayload = {};
 
       if ($scope.eposSearch.scheduleDate) {
         searchPayload.scheduleDate = dateUtility.formatDateForAPI($scope.eposSearch.scheduleDate);
@@ -171,10 +211,15 @@ angular.module('ts5App')
       return searchPayload;
     }
 
+    $scope.searchAllECSInstances = function () {
+      var searchPayload = formatAllECSSearchPayload();
+      getTiedCarrierInstances(searchPayload);
+    };
+
     $scope.searchEposInstances = function () {
       $scope.selectedEposRecord = null;
       var searchPayload = formatEposSearchPayload();
-      getCarrierInstance(searchPayload);
+      getUnTiedCarrierInstances(searchPayload);
     };
 
     $scope.searchPortalInstances = function () {
@@ -214,6 +259,7 @@ angular.module('ts5App')
       $scope.isCreateViewActive = true;
       $scope.portalSearch = {};
       $scope.eposSearch = {};
+      $scope.allInstancesSearch = {};
       $scope.selectedEposRecord = null;
       $scope.selectedPortalRecord = null;
       makeInitPromises();
