@@ -528,8 +528,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         offset: 0
       };
       $scope.storeInstanceList = [];
-      var startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-      searchStoreInstanceDashboardData(startDate);
     }
 
     $scope.clearSearchForm = clearSearchForm;

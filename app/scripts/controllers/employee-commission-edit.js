@@ -9,7 +9,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionEditCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location, $routeParams, $filter) {
+  .controller('EmployeeCommissionEditCtrl', function($scope, employeeCommissionFactory, dateUtility, messageService,
+    $location, $routeParams, $filter) {
 
     $scope.viewName = 'Employee Commission';
 
@@ -31,11 +32,11 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-    $scope.isViewOnly = function () {
+    $scope.isViewOnly = function() {
       return ($routeParams.state === 'view');
     };
 
-    $scope.isCommissionReadOnly = function () {
+    $scope.isCommissionReadOnly = function() {
       if (angular.isUndefined($scope.commission)) {
         return false;
       }
@@ -68,7 +69,9 @@ angular.module('ts5App')
     }
 
     function getSelectedObjectFromArrayUsingId(fromArray, id) {
-      var filteredObject = $filter('filter')(fromArray, { id: id }, function (expected, actual) {
+      var filteredObject = $filter('filter')(fromArray, {
+        id: id
+      }, function(expected, actual) {
         return angular.equals(parseInt(expected), parseInt(actual));
       });
 
@@ -105,8 +108,10 @@ angular.module('ts5App')
       $scope.commission.selectedPriceType = getSelectedPriceTypeObject();
       $scope.commission.selectedRateType = getSelectedRateTypeObject();
 
-      angular.forEach($scope.commission.fixeds, function (currencyValue) {
-        var currency = $filter('filter')($scope.companyCurrencies, { id: currencyValue.currencyId }, true)[0];
+      angular.forEach($scope.commission.fixeds, function(currencyValue) {
+        var currency = $filter('filter')($scope.companyCurrencies, {
+          id: currencyValue.currencyId
+        }, true)[0];
         $scope.commission.currenciesFields[currency.code] = currencyValue.fixedValue;
       });
     }
@@ -114,7 +119,7 @@ angular.module('ts5App')
     function fetchEmployeeCommissionFromAPI() {
       if (shouldFetchCommission()) {
         showLoadingModal('Loading Employee Commission');
-        employeeCommissionFactory.getCommission($routeParams.id).then(function (dataFromAPI) {
+        employeeCommissionFactory.getCommission($routeParams.id).then(function(dataFromAPI) {
           $scope.commission = formatDatesForApp(angular.copy(dataFromAPI.employeeCommission));
 
           populateValuesFromAPI();
@@ -122,7 +127,7 @@ angular.module('ts5App')
       }
     }
 
-    var datesWatcher = $scope.$watchGroup(['commission.startDate', 'commission.endDate'], function () {
+    var datesWatcher = $scope.$watchGroup(['commission.startDate', 'commission.endDate'], function() {
       var payload = {};
 
       if (!angular.isUndefined($scope.commission.startDate)) {
@@ -133,7 +138,7 @@ angular.module('ts5App')
         payload.endDate = dateUtility.formatDateForAPI($scope.commission.endDate);
       }
 
-      employeeCommissionFactory.getItemsList(payload, true).then(function (dataFromAPI) {
+      employeeCommissionFactory.getItemsList(payload, true).then(function(dataFromAPI) {
         $scope.itemList = dataFromAPI.masterItems;
         fetchEmployeeCommissionFromAPI();
       });
@@ -142,7 +147,7 @@ angular.module('ts5App')
         isOperatedCurrency: true
       });
 
-      employeeCommissionFactory.getCompanyCurrencies(currencyFilters).then(function (dataFromAPI) {
+      employeeCommissionFactory.getCompanyCurrencies(currencyFilters).then(function(dataFromAPI) {
         $scope.companyCurrencies = dataFromAPI.response;
       });
 
@@ -152,21 +157,17 @@ angular.module('ts5App')
 
     });
 
-    employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
+    employeeCommissionFactory.getPriceTypesList().then(function(dataFromAPI) {
       $scope.priceTypeList = angular.copy(dataFromAPI);
     });
 
-    employeeCommissionFactory.getTaxRateTypes().then(function (dataFromAPI) {
+    employeeCommissionFactory.getTaxRateTypes().then(function(dataFromAPI) {
       $scope.taxRateTypes = angular.copy(dataFromAPI);
     });
 
     function showToastMessage(className, type, message) {
       hideLoadingModal();
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
+      messageService.display(className, '<strong>' + type + '</strong>: ' + message);
     }
 
     function getRatePercentage() {
@@ -177,7 +178,7 @@ angular.module('ts5App')
 
     function getRateAmount() {
       var currencies = [];
-      angular.forEach($scope.companyCurrencies, function (currency) {
+      angular.forEach($scope.companyCurrencies, function(currency) {
         var currencyValue = $scope.commission.currenciesFields[currency.code];
         currencies.push({
           fixedValue: currencyValue,
@@ -185,7 +186,9 @@ angular.module('ts5App')
         });
       });
 
-      return { fixeds: currencies };
+      return {
+        fixeds: currencies
+      };
     }
 
     var getValuesFor = {
@@ -199,7 +202,9 @@ angular.module('ts5App')
         startDate: dateUtility.formatDateForAPI($scope.commission.startDate),
         endDate: dateUtility.formatDateForAPI($scope.commission.endDate),
         itemMasterId: $scope.commission.selectedItem.id,
-        types: [{ priceTypeId: $scope.commission.selectedPriceType.id }]
+        types: [{
+          priceTypeId: $scope.commission.selectedPriceType.id
+        }]
       };
 
       if ($scope.commission.id) {
@@ -222,7 +227,7 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
     }
 
-    $scope.submitForm = function () {
+    $scope.submitForm = function() {
       if (!$scope.employeeCommissionForm.$valid && !$scope.isCommissionReadOnly()) {
         return false;
       }

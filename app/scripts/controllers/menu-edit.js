@@ -7,7 +7,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function($scope, $routeParams, ngToast, menuFactory, dateUtility, $location, lodash) {
+  .controller('MenuEditCtrl', function($scope, $routeParams, messageService, menuFactory, dateUtility, $location,
+    lodash) {
+
     $scope.viewName = 'Menu';
     $scope.masterItemsList = [];
     $scope.menuItemList = [];
@@ -84,11 +86,7 @@ angular.module('ts5App')
 
     function showToast(className, type, message) {
       hideLoadingModal();
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
+      messageService.create(className, message, type);
     }
 
     function redirectToListPageAfterSuccess() {

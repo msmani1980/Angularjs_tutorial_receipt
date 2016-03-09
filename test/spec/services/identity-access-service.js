@@ -44,7 +44,7 @@ describe('Service: identityAccessService', function () {
 
   describe('sendEmail', function () {
     it('should make POST request with lowercase parameters to API for recovering password', function () {
-      var expectedURL = /IdentityAccess\/recoverpassword\/fakeemail\/fakeuser$/;
+      var expectedURL = /IdentityAccess\/recoverpassword\/fakeEmail\/fakeUser$/;
       httpBackend.expectPOST(expectedURL).respond(201, {});
       identityAccessService.sendEmail(false, 'fakeContent', 'fakeEmail', 'fakeUser').then(function (response) {
         expect(response).toBeDefined();
@@ -54,7 +54,7 @@ describe('Service: identityAccessService', function () {
     });
 
     it('should make POST request with just email to API for recovering username', function () {
-      var expectedURL = /IdentityAccess\/recoveruser\/fakeemail\/send$/;
+      var expectedURL = /IdentityAccess\/recoveruser\/fakeEmail\/send$/;
       httpBackend.expectPOST(expectedURL).respond(201, {});
       identityAccessService.sendEmail(true, 'fakeContent', 'fakeEmail', 'badUser').then(function (response) {
         expect(response).toBeDefined();

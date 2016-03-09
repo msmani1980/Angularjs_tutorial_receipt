@@ -9,8 +9,7 @@
  */
 angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory,
-    $routeParams, globalMenuService, $q, dateUtility) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility) {
 
     var $this = this;
     $scope.formData = {
@@ -49,7 +48,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
         return;
       }
 
-      $scope.isLinkCharacteristics = characteristics.filter(function (characteristic) {
+      $scope.isLinkCharacteristics = characteristics.filter(function(characteristic) {
         return characteristic.id === 9;
       }).length > 0;
     }, true);

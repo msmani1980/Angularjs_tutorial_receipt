@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, ngToast,
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, messageService,
                                            dateUtility, lodash, socketIO, $timeout) {
 
     var companyId;
@@ -36,11 +36,7 @@ angular.module('ts5App')
     delete $localStorage.isEditFromList;
 
     function showSuccessMessage(error) {
-      ngToast.create({
-        className: 'success',
-        dismissButton: true,
-        content: '<strong>Cash bag</strong>: ' + error
-      });
+      messageService.display('success', '<strong>Cash bag</strong>:' + error);
       $scope.formErrors = {};
     }
 
@@ -173,7 +169,7 @@ angular.module('ts5App')
     $scope.clearForm = function () {
       $scope.search = {};
       angular.element('.stations-multi-select').select2('data', null);
-      $scope.searchCashBag();
+      $scope.cashBagList = [];
     };
 
     // helpers

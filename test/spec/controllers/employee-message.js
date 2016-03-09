@@ -2,7 +2,8 @@
 
 describe('Controller: EmployeeMessageCtrl', function() {
 
-  beforeEach(module('ts5App', 'template-module'));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
   beforeEach(module('served/employee-message.json'));
   beforeEach(module('served/employees.json'));
   beforeEach(module('served/schedules.json'));

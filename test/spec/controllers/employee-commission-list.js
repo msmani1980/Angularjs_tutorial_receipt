@@ -1,30 +1,35 @@
 'use strict';
 /*global moment*/
 
-describe('Controller: EmployeeCommissionListCtrl', function () {
+describe('Controller: EmployeeCommissionListCtrl', function() {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/items-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/employee-commission-list.json', 'served/sales-categories.json'));
+  beforeEach(module('served/items-list.json'));
+  beforeEach(module('served/price-types.json'));
+  beforeEach(module('served/tax-rate-types.json'));
+  beforeEach(module('served/employee-commission-list.json'));
+  beforeEach(module('served/sales-categories.json'));
 
-  var EmployeeCommissionListCtrl,
-    employeeCommissionFactory,
-    dateUtility,
-    getItemsListDeferred,
-    getPriceTypesListDeferred,
-    getTaxRateTypesDeferred,
-    getCommissionListDeferred,
-    salesCategoriesDeferred,
-    salesCategoriesJSON,
-    itemListJSON,
-    priceTypeListJSON,
-    taxRateTypesJSON,
-    employeeCommissionListJSON,
-    location,
-    scope;
+  var EmployeeCommissionListCtrl;
+  var employeeCommissionFactory;
+  var dateUtility;
+  var getItemsListDeferred;
+  var getPriceTypesListDeferred;
+  var getTaxRateTypesDeferred;
+  var getCommissionListDeferred;
+  var salesCategoriesDeferred;
+  var salesCategoriesJSON;
+  var itemListJSON;
+  var priceTypeListJSON;
+  var taxRateTypesJSON;
+  var employeeCommissionListJSON;
+  var location;
+  var scope;
 
-  beforeEach(inject(function ($controller, $rootScope, $q, $injector, $location) {
+  beforeEach(inject(function($controller, $rootScope, $q, $injector, $location) {
     location = $location;
-    inject(function (_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedEmployeeCommissionList_, _servedSalesCategories_) {
+    inject(function(_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_,
+      _servedEmployeeCommissionList_, _servedSalesCategories_) {
       itemListJSON = _servedItemsList_;
       priceTypeListJSON = _servedPriceTypes_;
       taxRateTypesJSON = _servedTaxRateTypes_;
@@ -62,41 +67,44 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
   }));
 
-  it('should attach a viewName to the scope', function () {
+  it('should attach a viewName to the scope', function() {
     expect(scope.viewName).toBeDefined();
   });
 
-  describe('search object', function () {
+  describe('search object', function() {
 
-    it('should exists in scope', function () {
+    it('should exists in scope', function() {
       expect(scope.search).toBeDefined();
     });
 
-    it('should have required properties', function () {
+    it('should have required properties', function() {
       expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemList', 'priceTypeList',
-        'taxRateTypesList', 'selectedCategory']);
+        'taxRateTypesList', 'selectedCategory'
+      ]);
     });
 
   });
 
-  describe('API requests', function () {
-    beforeEach(function () {
+  describe('API requests', function() {
+    beforeEach(function() {
       scope.loadEmployeeCommissions();
       scope.$digest();
     });
 
-    it('should fetch price type from factory', function () {
+    it('should fetch price type from factory', function() {
       expect(employeeCommissionFactory.getPriceTypesList).toHaveBeenCalled();
     });
 
-    it('should fetch tax rate type from factory', function () {
+    it('should fetch tax rate type from factory', function() {
       expect(employeeCommissionFactory.getTaxRateTypes).toHaveBeenCalled();
     });
 
-    it('should fetch items with startDate, endDate, and category from factory', function () {
+    it('should fetch items with startDate, endDate, and category from factory', function() {
       scope.search.startDate = '05/10/1979';
       scope.search.endDate = '05/10/1979';
-      scope.search.selectedCategory = { name: 'testCategory' };
+      scope.search.selectedCategory = {
+        name: 'testCategory'
+      };
       scope.$digest();
       expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({
         startDate: '19790510',
@@ -105,18 +113,18 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
       });
     });
 
-    describe('getCommissionList', function () {
+    describe('getCommissionList', function() {
 
-      it('should fetch commissions from factory', function () {
+      it('should fetch commissions from factory', function() {
         expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalled();
       });
 
-      it('should attach commissionList to scope', function () {
+      it('should attach commissionList to scope', function() {
         scope.$digest();
         expect(scope.commissionList).toBeDefined();
       });
 
-      it('should change the dates to valid App Format', function () {
+      it('should change the dates to valid App Format', function() {
         scope.$digest();
         expect(dateUtility.isDateValidForApp(scope.commissionList[0].startDate)).toBe(true);
         expect(dateUtility.isDateValidForApp(scope.commissionList[0].endDate)).toBe(true);
@@ -135,47 +143,62 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
   });
 
-  describe('form reset', function () {
+  describe('form reset', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
       scope.search.selectedPriceType = 'fakeData';
       scope.search.selectedRateType = 'fakeData';
       scope.search.startDate = 'fakeData';
       scope.search.endDate = 'fakeData';
+      scope.commissionList = ['fakeData'];
       scope.clearForm();
     });
 
-    it('should reset the selected price type', function () {
+    it('should reset the selected price type', function() {
       expect(scope.search.selectedPriceType).toBeUndefined();
     });
 
-    it('should reset the selected rate type', function () {
+    it('should reset the selected rate type', function() {
       expect(scope.search.selectedRateType).toBeUndefined();
     });
 
-    it('should reset the startDate', function () {
+    it('should reset the startDate', function() {
       expect(scope.search.startDate).toBe('');
     });
 
-    it('should reset the endDate', function () {
+    it('should reset the endDate', function() {
       expect(scope.search.endDate).toBe('');
+    });
+
+    it('should reset the endDate', function() {
+      expect(scope.search.endDate).toBe('');
+    });
+
+    it('should reset the discountList', function() {
+      expect(scope.commissionList).toEqual([]);
     });
 
   });
 
-  describe('Search', function () {
+  describe('Search', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
       scope.search = {
-        selectedItem: { itemMasterId: 1 },
-        selectedPriceType: { id: 2 },
-        selectedRateType: { taxRateType: 'Amount' },
+        selectedItem: {
+          itemMasterId: 1
+        },
+        selectedPriceType: {
+          id: 2
+        },
+        selectedRateType: {
+          taxRateType: 'Amount'
+        },
         startDate: '07/20/2015',
         endDate: '08/30/2016'
       };
     });
 
-    it('should have a searchCommissions function', function () {
+    it('should have a searchCommissions function', function() {
       expect(scope.searchCommissions).toBeDefined();
     });
 
@@ -185,33 +208,43 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
       expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalled();
     });
 
-    it('should format search payload', function () {
+    it('should format search payload', function() {
       var expectedPayload = {
         itemId: 1,
         priceTypeId: 2,
         isFixed: true,
         startDate: '20150720',
         endDate: '20160830',
-        limit: 100, offset: 0
+        limit: 100,
+        offset: 0
       };
       scope.searchCommissions();
       expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);
     });
 
-    it('should format category payload', function () {
+    it('should format category payload', function() {
       scope.search = {
-        selectedCategory: { id: 1 },
-        itemList: [{ itemMasterId: 1 }, { itemMasterId: 2 }, { itemMasterId: 3 }]
+        selectedCategory: {
+          id: 1
+        },
+        itemList: [{
+          itemMasterId: 1
+        }, {
+          itemMasterId: 2
+        }, {
+          itemMasterId: 3
+        }]
       };
       var expectedPayload = {
         itemId: [1, 2, 3],
-        limit: 100, offset: 0
+        limit: 100,
+        offset: 0
       };
       scope.searchCommissions();
       expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);
     });
 
-    it('should clear search payload with clearForm', function () {
+    it('should clear search payload with clearForm', function() {
       scope.clearForm();
       var clearedSearch = {
         startDate: '',
@@ -221,17 +254,17 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
   });
 
-  describe('Action buttons', function () {
+  describe('Action buttons', function() {
     var fakeCommissionObject;
 
-    beforeEach(function () {
+    beforeEach(function() {
       fakeCommissionObject = {
         endDate: moment().add(1, 'month').format('L').toString(),
         startDate: moment().format('L').toString()
       };
     });
 
-    it('should change the url based on the commission object for view', function () {
+    it('should change the url based on the commission object for view', function() {
       scope.showCommission({
         id: 1
       });
@@ -239,7 +272,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
       expect(location.path()).toBe('/employee-commission/view/1');
     });
 
-    it('should change the url based on the commission object for edit', function () {
+    it('should change the url based on the commission object for edit', function() {
       scope.editCommission({
         id: 2
       });
@@ -247,56 +280,56 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
       expect(location.path()).toBe('/employee-commission/edit/2');
     });
 
-    describe('can user edit / delete commission', function () {
-      it('should have a isCommissionEditable function', function () {
+    describe('can user edit / delete commission', function() {
+      it('should have a isCommissionEditable function', function() {
         expect(!!scope.isCommissionEditable).toBe(true);
       });
 
-      it('should return true if commission is editable', function () {
+      it('should return true if commission is editable', function() {
         expect(scope.isCommissionEditable(fakeCommissionObject)).toBe(true);
       });
 
-      it('should return false if commission is not editable', function () {
+      it('should return false if commission is not editable', function() {
         fakeCommissionObject.endDate = moment().subtract(1, 'month').format('L').toString();
         expect(scope.isCommissionEditable(fakeCommissionObject)).toBe(false);
       });
 
-      it('should have a isCommissionReadOnly function', function () {
+      it('should have a isCommissionReadOnly function', function() {
         expect(!!scope.isCommissionReadOnly).toBe(true);
       });
 
       it('should return true if startDate < today > endDate',
-        function () {
+        function() {
           fakeCommissionObject.startDate = moment().subtract(1, 'month').format('L').toString();
           fakeCommissionObject.endDate = moment().subtract(2, 'month').format('L').toString();
           expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(true);
         });
 
       it('should return true if startDate < today < endDate',
-        function () {
+        function() {
           fakeCommissionObject.startDate = moment().subtract(1, 'month').format('L').toString();
           fakeCommissionObject.endDate = moment().add(2, 'month').format('L').toString();
           expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(true);
         });
 
       it('should return false if startDate > today > endDate',
-        function () {
+        function() {
           fakeCommissionObject.startDate = moment().add(1, 'month').format('L').toString();
           fakeCommissionObject.endDate = moment().add(2, 'month').format('L').toString();
           expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(false);
         });
 
       it('should return true if commission === null or undefined',
-        function () {
+        function() {
           expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(true);
         });
     });
 
-    it('should have a confirmDelete function', function () {
+    it('should have a confirmDelete function', function() {
       expect(!!scope.showDeleteConfirmation).toBe(true);
     });
 
-    it('should attach commissionToDelete to scope', function () {
+    it('should attach commissionToDelete to scope', function() {
       scope.showDeleteConfirmation({
         name: 'commissionToDelete'
       });
@@ -304,7 +337,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
 
     it('should do a DELETE request to commissionService with commissionToDelete',
-      function () {
+      function() {
         scope.showDeleteConfirmation({
           id: '1'
         });

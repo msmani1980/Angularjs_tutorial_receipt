@@ -2,23 +2,19 @@
 
 describe('Controller: PromotionsCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
-
-  beforeEach(module(
-    'served/benefit-types.json',
-    'served/discount-types.json',
-    'served/promotion-types.json',
-    'served/company-discounts-vouchers.json',
-    'served/company-discounts-coupons.json',
-    'served/sales-categories.json',
-    'served/discount-apply-types.json',
-    'served/promotion-categories.json',
-    'served/company-station-globals.json',
-    'served/currency-globals.json',
-    'served/master-item-list.json',
-    'served/promotion.json'
-  ));
+  beforeEach(module('served/benefit-types.json'));
+  beforeEach(module('served/discount-types.json'));
+  beforeEach(module('served/promotion-types.json'));
+  beforeEach(module('served/company-discounts-vouchers.json'));
+  beforeEach(module('served/company-discounts-coupons.json'));
+  beforeEach(module('served/sales-categories.json'));
+  beforeEach(module('served/discount-apply-types.json'));
+  beforeEach(module('served/promotion-categories.json'));
+  beforeEach(module('served/company-station-globals.json'));
+  beforeEach(module('served/currency-globals.json'));
+  beforeEach(module('served/master-item-list.json'));
+  beforeEach(module('served/promotion.json'));
 
   var PromotionsCtrl;
   var scope;
@@ -1329,7 +1325,7 @@ describe('Controller: PromotionsCtrl', function() {
 
     describe('save scope function as scope.isDisabled', function() {
       var payload;
-      beforeEach(inject(function($controller){
+      beforeEach(inject(function($controller) {
         routeParams = {
           state: 'edit',
           id: 253

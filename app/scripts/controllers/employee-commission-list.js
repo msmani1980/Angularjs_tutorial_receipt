@@ -8,7 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location, $filter, lodash) {
+  .controller('EmployeeCommissionListCtrl', function($scope, employeeCommissionFactory, dateUtility, messageService,
+    $location, $filter, lodash) {
+
     $scope.viewName = 'Employee Commission';
     $scope.search = {
       startDate: '',
@@ -27,7 +29,7 @@ angular.module('ts5App')
       offset: 0
     };
 
-    $scope.$watchGroup(['search.startDate', 'search.endDate', 'search.selectedCategory'], function () {
+    $scope.$watchGroup(['search.startDate', 'search.endDate', 'search.selectedCategory'], function() {
       var payload = {};
 
       if (angular.isDefined($scope.search.startDate) && dateUtility.isDateValidForApp($scope.search.startDate)) {
@@ -43,7 +45,7 @@ angular.module('ts5App')
       }
 
       if (payload.startDate && payload.endDate) {
-        employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
+        employeeCommissionFactory.getItemsList(payload).then(function(dataFromAPI) {
           $scope.search.itemList = dataFromAPI.retailItems;
         });
       }
@@ -59,7 +61,9 @@ angular.module('ts5App')
     }
 
     function getSelectedObjectFromArrayUsingId(fromArray, id) {
-      var filteredObject = $filter('filter')(fromArray, { id: id }, function (expected, actual) {
+      var filteredObject = $filter('filter')(fromArray, {
+        id: id
+      }, function(expected, actual) {
         return angular.equals(parseInt(expected), parseInt(actual));
       });
 
@@ -88,15 +92,15 @@ angular.module('ts5App')
       return getSelectedObjectFromArrayUsingId($scope.search.taxRateTypesList, rateTypeId);
     }
 
-    $scope.showCommission = function (commission) {
+    $scope.showCommission = function(commission) {
       $location.path('employee-commission/view/' + commission.id);
     };
 
-    $scope.editCommission = function (commission) {
+    $scope.editCommission = function(commission) {
       $location.path('employee-commission/edit/' + commission.id);
     };
 
-    $scope.isCommissionReadOnly = function (commission) {
+    $scope.isCommissionReadOnly = function(commission) {
       if (angular.isUndefined(commission)) {
         return false;
       }
@@ -104,7 +108,7 @@ angular.module('ts5App')
       return !dateUtility.isAfterToday(commission.startDate);
     };
 
-    $scope.isCommissionEditable = function (commission) {
+    $scope.isCommissionEditable = function(commission) {
       if (angular.isUndefined(commission)) {
         return false;
       }
@@ -113,11 +117,7 @@ angular.module('ts5App')
     };
 
     function showToastMessage(className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
+      messageService.display(className, '<strong>' + type + '</strong>: ' + message);
     }
 
     function showErrors(dataFromAPI) {
@@ -134,18 +134,19 @@ angular.module('ts5App')
       $scope.searchCommissions();
     }
 
-    $scope.deleteCommission = function () {
+    $scope.deleteCommission = function() {
       angular.element('.delete-warning-modal').modal('hide');
-      employeeCommissionFactory.deleteCommission($scope.commissionToDelete.id).then(successDeleteHandler, showErrors);
+      employeeCommissionFactory.deleteCommission($scope.commissionToDelete.id).then(successDeleteHandler,
+        showErrors);
     };
 
-    $scope.showDeleteConfirmation = function (commissionToDelete) {
+    $scope.showDeleteConfirmation = function(commissionToDelete) {
       $scope.commissionToDelete = commissionToDelete;
       angular.element('.delete-warning-modal').modal('show');
     };
 
     function formatDatesForApp(commissionListData) {
-      commissionListData.forEach(function (commissionObject) {
+      commissionListData.forEach(function(commissionObject) {
         if (commissionObject.startDate) {
           commissionObject.startDate = dateUtility.formatDateForApp(commissionObject.startDate);
         }
@@ -159,7 +160,7 @@ angular.module('ts5App')
     }
 
     function setupTableData(dataToExtract) {
-      dataToExtract.forEach(function (commissionObject) {
+      dataToExtract.forEach(function(commissionObject) {
         commissionObject.itemName = commissionObject.item[0].itemName;
         commissionObject.priceTypeName = getSelectedPriceTypeObject(commissionObject).name;
         commissionObject.taxRateTypeName = getSelectedRateTypeObject(commissionObject).taxRateType;
@@ -187,7 +188,7 @@ angular.module('ts5App')
         // currently FE needs to send list of all itemIds in a category due to complications with sending only a categoryName to BE
         // TODO: fix if BE API is simplified
         payload.itemId = [];
-        angular.forEach($scope.search.itemList, function (item) {
+        angular.forEach($scope.search.itemList, function(item) {
           payload.itemId.push(item.itemMasterId);
         });
       }
@@ -212,28 +213,29 @@ angular.module('ts5App')
     }
 
     function getItemCategories() {
-      employeeCommissionFactory.getItemsCategoriesList({}).then(function (response) {
+      employeeCommissionFactory.getItemsCategoriesList({}).then(function(response) {
         $scope.itemCategories = response.salesCategories;
       });
     }
 
-    $scope.checkItemListAndNotifyIfEmpty = function () {
+    $scope.checkItemListAndNotifyIfEmpty = function() {
       if ($scope.search.endDate === '' || $scope.search.startDate === '') {
-        showToastMessage('warning', 'Employee Commission', 'Effective To & Effective From Dates must be completed before an Item Name can be selected');
+        showToastMessage('warning', 'Employee Commission',
+          'Effective To & Effective From Dates must be completed before an Item Name can be selected');
       } else if ($scope.search.selectedCategory && $scope.search.itemList.length <= 0) {
         showToastMessage('warning', 'Employee Commission', 'There are no items in the Item Category you selected');
       }
     };
 
-    employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
+    employeeCommissionFactory.getPriceTypesList().then(function(dataFromAPI) {
       $scope.search.priceTypeList = dataFromAPI;
     });
 
-    employeeCommissionFactory.getTaxRateTypes().then(function (dataFromAPI) {
+    employeeCommissionFactory.getTaxRateTypes().then(function(dataFromAPI) {
       $scope.search.taxRateTypesList = dataFromAPI;
     });
 
-    function init () {
+    function init() {
       getItemCategories();
     }
 
@@ -263,7 +265,7 @@ angular.module('ts5App')
       loadEmployeeCommissions();
     };
 
-    $scope.searchCommissions = function () {
+    $scope.searchCommissions = function() {
       $scope.commissionList = [];
       $this.meta = {
         count: undefined,
@@ -273,7 +275,7 @@ angular.module('ts5App')
       $scope.loadEmployeeCommissions();
     };
 
-    $scope.clearForm = function () {
+    $scope.clearForm = function() {
       delete $scope.search.selectedPriceType;
       delete $scope.search.selectedRateType;
       delete $scope.search.selectedItem;
@@ -281,7 +283,7 @@ angular.module('ts5App')
       delete $scope.search.selectedCategory;
       $scope.search.startDate = '';
       $scope.search.endDate = '';
-      $scope.searchCommissions();
+      $scope.commissionList = [];
     };
 
   });

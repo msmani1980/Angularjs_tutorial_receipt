@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemImportCtrl', function ($scope, $q, $filter, itemImportFactory, ngToast) {
+  .controller('ItemImportCtrl', function($scope, $q, $filter, itemImportFactory, messageService) {
 
     // private controller vars
     var companyId = null;
@@ -18,15 +18,21 @@ angular.module('ts5App')
 
     // private controller functions
     function canBeAddedToCompanyRetailList(retailItem) {
-      if ($filter('filter')(companyRetailItems, { itemCode: retailItem.itemCode }, true).length) {
+      if ($filter('filter')(companyRetailItems, {
+          itemCode: retailItem.itemCode
+        }, true).length) {
         return false;
       }
 
-      if ($filter('filter')(companyRetailItems, { itemName: retailItem.itemName }, true).length) {
+      if ($filter('filter')(companyRetailItems, {
+          itemName: retailItem.itemName
+        }, true).length) {
         return false;
       }
 
-      return !(retailItem.onBoardName !== null && $filter('filter')(companyRetailItems, { onBoardName: retailItem.onBoardName }, true).length);
+      return !(retailItem.onBoardName !== null && $filter('filter')(companyRetailItems, {
+        onBoardName: retailItem.onBoardName
+      }, true).length);
 
     }
 
@@ -74,7 +80,7 @@ angular.module('ts5App')
     }
 
     function showMessage(message, messageType) {
-      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Item import</strong>: ' + message });
+      messageService.display(messageType, '<strong>Item import</strong>: ' + message);
     }
 
     function displayLoadingModal(loadingText) {
@@ -87,7 +93,7 @@ angular.module('ts5App')
 
     function showFormErrors(response) {
       if ('data' in response) {
-        angular.forEach(response.data, function (error) {
+        angular.forEach(response.data, function(error) {
           this.push(error);
         }, $scope.formErrors);
       }
@@ -97,8 +103,11 @@ angular.module('ts5App')
     }
 
     function setGetCompaniesListPromise() {
-      initPromises.push(itemImportFactory.getCompanyList({ companyTypeId: 2, limit: null }).then(function (response) {
-        angular.forEach(response.companies, function (company) {
+      initPromises.push(itemImportFactory.getCompanyList({
+        companyTypeId: 2,
+        limit: null
+      }).then(function(response) {
+        angular.forEach(response.companies, function(company) {
           if (company.companyTypeId === 2) {
             this.push(company);
           }
@@ -107,19 +116,23 @@ angular.module('ts5App')
     }
 
     function setGetItemsListPromise() {
-      initPromises.push(itemImportFactory.getItemsList({ companyId: companyId }).then(function (response) {
+      initPromises.push(itemImportFactory.getItemsList({
+        companyId: companyId
+      }).then(function(response) {
         companyRetailItems = response.retailItems;
       }));
     }
 
     // private controller classes
     var randomHexColorClass = {
-      predefined: ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#FF1493', '#FFA500', '#FFD700', '#008080', '#9400D3'],
+      predefined: ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#FF1493', '#FFA500',
+        '#FFD700', '#008080', '#9400D3'
+      ],
       storage: {
         items: [],
         itemColor: []
       },
-      get: function (itemId) {
+      get: function(itemId) {
         // if the company has a color saved, return it
         if (-1 !== this.storage.items.indexOf(itemId)) {
           // get com
@@ -146,11 +159,11 @@ angular.module('ts5App')
         return this.getFromStorage(itemId);
       },
 
-      getFromStorage: function (itemId) {
+      getFromStorage: function(itemId) {
         return this.storage.itemColor[this.storage.items.indexOf(itemId)];
       },
 
-      generate: function () {
+      generate: function() {
         var hexPieces = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
         var colorString = '#';
         for (var i = 0; i < 6; i++) {
@@ -164,7 +177,7 @@ angular.module('ts5App')
     function setImportedRetailItemList(response) {
       importedRetailList = response.retailItems;
       $scope.importedRetailItemList = [];
-      angular.forEach(importedRetailList, function (retailItem) {
+      angular.forEach(importedRetailList, function(retailItem) {
         if (canBeAddedToCompanyRetailList(retailItem)) {
           retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
           retailItem.companyName = $scope.selectedImportCompany.companyName;
@@ -178,8 +191,8 @@ angular.module('ts5App')
     }
 
     function resolveInitPromises() {
-      $q.all(initPromises).then(function () {
-        angular.forEach($scope.importCompanyList, function (company) {
+      $q.all(initPromises).then(function() {
+        angular.forEach($scope.importCompanyList, function(company) {
           company.hexColor = randomHexColorClass.get(company.id);
         });
 
@@ -217,7 +230,7 @@ angular.module('ts5App')
     $scope.viewName = 'Import Stock Owner Items';
 
     // scope functions
-    $scope.changeSelectedImportCompany = function () {
+    $scope.changeSelectedImportCompany = function() {
       if (!$scope.selectedImportCompany) {
         return false;
       }
@@ -227,12 +240,14 @@ angular.module('ts5App')
       }
 
       displayLoadingModal('Loading');
-      itemImportFactory.getItemsList({ companyId: $scope.selectedImportCompany.id }).then(setImportedRetailItemList);
+      itemImportFactory.getItemsList({
+        companyId: $scope.selectedImportCompany.id
+      }).then(setImportedRetailItemList);
     };
 
-    $scope.importAll = function () {
+    $scope.importAll = function() {
       $scope.searchCompanyRetailItemList = null;
-      angular.forEach($scope.importedRetailItemList, function (retailItem) {
+      angular.forEach($scope.importedRetailItemList, function(retailItem) {
         if (!canBeAddedToCompanyRetailList(retailItem)) {
           return;
         }
@@ -243,18 +258,18 @@ angular.module('ts5App')
       $scope.importedRetailItemList = [];
     };
 
-    $scope.removeRetailItem = function (retailItem) {
+    $scope.removeRetailItem = function(retailItem) {
       removeRetailItemFromCompanyItems(retailItem);
     };
 
-    $scope.removeAll = function () {
+    $scope.removeAll = function() {
       var currentList = angular.copy($scope.companyRetailItemList);
-      angular.forEach(currentList, function (retailItem) {
+      angular.forEach(currentList, function(retailItem) {
         removeRetailItemFromCompanyItems(retailItem);
       });
     };
 
-    $scope.submitForm = function () {
+    $scope.submitForm = function() {
       if (!$scope.companyRetailItemList.length) {
         return;
       }
@@ -262,12 +277,16 @@ angular.module('ts5App')
       displayLoadingModal('Saving');
 
       var importIds = [];
-      angular.forEach($scope.companyRetailItemList, function (retailItem) {
+      angular.forEach($scope.companyRetailItemList, function(retailItem) {
         this.push(retailItem.itemMasterId);
       }, importIds);
 
-      var payload = { ImportItems: { importItems: importIds } };
-      itemImportFactory.importItems(payload).then(function () {
+      var payload = {
+        ImportItems: {
+          importItems: importIds
+        }
+      };
+      itemImportFactory.importItems(payload).then(function() {
         $scope.displayError = false;
         showMessage('saved!', 'success');
         init();
@@ -278,12 +297,12 @@ angular.module('ts5App')
 
     // scope event handlers
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
-    $scope.dropSuccessImportedRetailItemList = function ($event, index, array) {
+    $scope.dropSuccessImportedRetailItemList = function($event, index, array) {
       $event.preventDefault();
       array.splice(index, 1);
     };
 
-    $scope.onDropCompanyRetailItemList = function ($event, $data) {
+    $scope.onDropCompanyRetailItemList = function($event, $data) {
       var index = $scope.companyRetailItemList.length;
       $scope.companyRetailItemList = $filter('orderBy')($scope.companyRetailItemList, $scope.retailItemsSortOrder);
       $scope.retailItemsSortOrder = null;
@@ -299,13 +318,13 @@ angular.module('ts5App')
       }
     };
 
-    $scope.dropSuccessCompanyRetailItemList = function ($event, index) {
+    $scope.dropSuccessCompanyRetailItemList = function($event, index) {
       $event.preventDefault();
       var retailItem = $scope.companyRetailItemList[index];
       removeRetailItemFromCompanyItems(retailItem);
     };
 
-    $scope.nullOperation = function ($event) {
+    $scope.nullOperation = function($event) {
       $event.preventDefault();
       return false;
     };

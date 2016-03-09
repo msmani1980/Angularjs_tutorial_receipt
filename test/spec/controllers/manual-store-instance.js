@@ -1,24 +1,20 @@
 'use strict';
 
-describe('Controller: ManualStoreInstanceCtrl', function () {
+describe('Controller: ManualStoreInstanceCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
 
-  var ManualStoreInstanceCtrl,
-    scope;
+  var ManualStoreInstanceCtrl;
+  var scope;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+  beforeEach(inject(function($controller, $rootScope) {
     scope = $rootScope.$new();
     ManualStoreInstanceCtrl = $controller('ManualStoreInstanceCtrl', {
       $scope: scope
-
-      // place here mocked dependencies
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
+  it('should attach a list of awesomeThings to the scope', function() {
     expect(ManualStoreInstanceCtrl.awesomeThings.length).toBe(3);
   });
 });

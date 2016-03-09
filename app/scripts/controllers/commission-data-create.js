@@ -9,8 +9,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash, ngToast,
-                                              $location, employeesService, globalMenuService, $q) {
+  .controller('CommissionDataCtrl', function($scope, $routeParams, commissionFactory, dateUtility, lodash,
+    messageService, $location, employeesService, globalMenuService, $q) {
 
     var $this = this;
     var percentTypeName = 'Percentage';
@@ -24,29 +24,25 @@ angular.module('ts5App')
     $scope.commissionValueCharLimit = 10;
     $scope.crewBaseList = [];
 
-    this.showToast = function (className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
+    this.showToast = function(className, type, message) {
+      messageService.display(className, message, type);
     };
 
-    this.showErrors = function (dataFromAPI) {
+    this.showErrors = function(dataFromAPI) {
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = dataFromAPI;
     };
 
-    this.showLoadingModal = function (text) {
+    this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     };
 
-    this.hideLoadingModal = function () {
+    this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
     };
 
-    this.getNameByIdInArray = function (id, array) {
+    this.getNameByIdInArray = function(id, array) {
       var match = lodash.findWhere(array, {
         id: id
       });
@@ -57,7 +53,7 @@ angular.module('ts5App')
       return '';
     };
 
-    $scope.updateCommissionPercent = function () {
+    $scope.updateCommissionPercent = function() {
       var commissionPayableType = $this.getNameByIdInArray($scope.commissionData.commissionPayableTypeId, $scope.commissionPayableTypes);
       if (commissionPayableType === 'Retail item') {
         $scope.commissionPercentDisabled = true;
@@ -71,7 +67,7 @@ angular.module('ts5App')
       }
     };
 
-    $scope.updateManualBars = function () {
+    $scope.updateManualBars = function() {
       var manualBarsType = $this.getNameByIdInArray($scope.commissionData.manualBarsCommissionValueTypeId, $scope.discountTypes);
       if (manualBarsType === percentTypeName) {
         $scope.manualBarsCommissionUnit = percentTypeUnit;
@@ -82,7 +78,7 @@ angular.module('ts5App')
       }
     };
 
-    $scope.updateIncentiveIncrement = function () {
+    $scope.updateIncentiveIncrement = function() {
       var commissionType = $this.getNameByIdInArray($scope.commissionData.commissionValueTypeId, $scope.discountTypes);
       if (commissionType === percentTypeName) {
         $scope.commissionValueUnit = percentTypeUnit;
@@ -93,7 +89,7 @@ angular.module('ts5App')
       }
     };
 
-    this.createPayload = function () {
+    this.createPayload = function() {
       var payload = angular.copy($scope.commissionData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
       payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
@@ -104,29 +100,29 @@ angular.module('ts5App')
       return payload;
     };
 
-    this.createSuccess = function () {
+    this.createSuccess = function() {
       $this.showToast('success', 'Create Commission Data', 'data successfully created');
       $this.hideLoadingModal();
       $location.path('commission-data-table');
     };
 
-    this.createCommissionData = function (payload) {
+    this.createCommissionData = function(payload) {
       $this.showLoadingModal('creating commission data');
       commissionFactory.createCommissionData(payload).then($this.createSuccess, $this.showErrors);
     };
 
-    this.editCommissionDataSuccess = function () {
+    this.editCommissionDataSuccess = function() {
       $this.showToast('success', 'Edit Commission Data', 'data successfully saved');
       $this.hideLoadingModal();
       $location.path('commission-data-table');
     };
 
-    this.editCommissionData = function (payload) {
+    this.editCommissionData = function(payload) {
       $this.showLoadingModal('updating commission data');
       commissionFactory.updateCommissionData($routeParams.id, payload).then($this.editCommissionDataSuccess, $this.showErrors);
     };
 
-    this.getCommissionDataSuccess = function (dataFromAPI) {
+    this.getCommissionDataSuccess = function(dataFromAPI) {
       var newData = angular.copy(dataFromAPI);
       newData.startDate = dateUtility.formatDateForApp(newData.startDate);
       newData.endDate = dateUtility.formatDateForApp(newData.endDate);
@@ -146,12 +142,12 @@ angular.module('ts5App')
       $this.hideLoadingModal();
     };
 
-    this.getCommissionData = function () {
+    this.getCommissionData = function() {
       $this.showLoadingModal('retrieving data');
       commissionFactory.getCommissionPayableData($routeParams.id).then($this.getCommissionDataSuccess, $this.showErrors);
     };
 
-    $scope.saveData = function () {
+    $scope.saveData = function() {
       var payload = $this.createPayload();
       var initFunctionName = ($routeParams.state + 'CommissionData');
       if ($this[initFunctionName]) {
@@ -159,9 +155,9 @@ angular.module('ts5App')
       }
     };
 
-    this.getCrewBaseListSuccess = function (dataFromAPI) {
+    this.getCrewBaseListSuccess = function(dataFromAPI) {
       var uniqueCrewBaseTypes = {};
-      angular.forEach(dataFromAPI.companyEmployees, function (employee) {
+      angular.forEach(dataFromAPI.companyEmployees, function(employee) {
         if (!(employee.baseStationId in uniqueCrewBaseTypes)) {
           uniqueCrewBaseTypes[employee.baseStationId] = {};
           $scope.crewBaseList.push({
@@ -172,36 +168,36 @@ angular.module('ts5App')
       });
     };
 
-    this.getCrewBaseList = function () {
+    this.getCrewBaseList = function() {
       var companyId = globalMenuService.company.get();
       return employeesService.getEmployees(companyId);
     };
 
-    this.getCommissionPayableTypesSuccess = function (dataFromAPI) {
+    this.getCommissionPayableTypesSuccess = function(dataFromAPI) {
       $scope.commissionPayableTypes = angular.copy(dataFromAPI);
     };
 
-    this.getCommissionPayableTypes = function () {
+    this.getCommissionPayableTypes = function() {
       return commissionFactory.getCommissionPayableTypes();
     };
 
-    this.getDiscountTypesSuccess = function (dataFromAPI) {
+    this.getDiscountTypesSuccess = function(dataFromAPI) {
       $scope.discountTypes = angular.copy(dataFromAPI);
     };
 
-    this.getDiscountTypes = function () {
+    this.getDiscountTypes = function() {
       return commissionFactory.getDiscountTypes();
     };
 
-    this.getCurrencyDataSuccess = function (dataFromAPI) {
+    this.getCurrencyDataSuccess = function(dataFromAPI) {
       $scope.baseCurrency = angular.copy(dataFromAPI.currencyCode);
     };
 
-    this.getCurrencyData = function (currencyId) {
+    this.getCurrencyData = function(currencyId) {
       return commissionFactory.getCurrency(currencyId);
     };
 
-    this.setViewName = function () {
+    this.setViewName = function() {
       var nameObject = {
         view: 'Viewing Commission Data',
         edit: 'Editing Commission Data',
@@ -213,7 +209,7 @@ angular.module('ts5App')
 
     };
 
-    this.completeInitializeAfterDependencies = function (responseCollection) {
+    this.completeInitializeAfterDependencies = function(responseCollection) {
       $this.getCrewBaseListSuccess(responseCollection[0]);
       $this.getCommissionPayableTypesSuccess(responseCollection[1]);
       $this.getDiscountTypesSuccess(responseCollection[2]);
@@ -229,7 +225,7 @@ angular.module('ts5App')
 
     };
 
-    this.initializeDataFromAPI = function (companyDataFromAPI) {
+    this.initializeDataFromAPI = function(companyDataFromAPI) {
       var initPromises = [
         $this.getCrewBaseList(),
         $this.getCommissionPayableTypes(),
@@ -242,7 +238,7 @@ angular.module('ts5App')
       $q.all(initPromises).then($this.completeInitializeAfterDependencies);
     };
 
-    this.init = function () {
+    this.init = function() {
       var companyId = globalMenuService.company.get();
       $this.showLoadingModal();
       $this.setViewName();

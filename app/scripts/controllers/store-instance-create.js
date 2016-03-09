@@ -8,8 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
-  function($scope, $routeParams, $q, storeInstanceFactory, sealTypesService, storeInstanceAssignSealsFactory, ngToast,
-    dateUtility, globalMenuService, storeInstanceWizardConfig, $location, schedulesService,
+  function($scope, $routeParams, $q, storeInstanceFactory, sealTypesService, storeInstanceAssignSealsFactory,
+    messageService, dateUtility, globalMenuService, storeInstanceWizardConfig, $location, schedulesService,
     menuCatererStationsService, lodash, $route, $filter, $localStorage) {
 
     $scope.cateringStationList = [];
@@ -768,11 +768,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.showMessage = function(type, message) {
-      ngToast.create({
-        className: type,
-        dismissButton: true,
-        content: message
-      });
+      messageService.display(type, message);
     };
 
     this.validateForm = function() {

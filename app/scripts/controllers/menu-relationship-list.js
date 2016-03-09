@@ -8,9 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuRelationshipListCtrl', function ($scope, dateUtility,
-    $filter, menuService, catererStationService, menuCatererStationsService,
-    $q, ngToast, lodash) {
+  .controller('MenuRelationshipListCtrl', function($scope, dateUtility, $filter, menuService, catererStationService,
+    menuCatererStationsService, $q, messageService, lodash) {
 
     var $this = this;
     this.meta = {
@@ -28,20 +27,16 @@ angular.module('ts5App')
 
     var _initDone = false;
 
-    this.showSuccessMessage = function (message) {
-      ngToast.create({
-        className: 'success',
-        dismissButton: true,
-        content: message
-      });
+    this.showSuccessMessage = function(message) {
+      messageService.display('success', message);
     };
 
-    this.updateRelationshipList = function () {
+    this.updateRelationshipList = function() {
       $this.associateMenuData();
       $this.associateStationData();
     };
 
-    this.generateRelationshipQuery = function () {
+    this.generateRelationshipQuery = function() {
       var todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
       var query = {
         startDate: todaysDate,
@@ -60,7 +55,7 @@ angular.module('ts5App')
       return query;
     };
 
-    this.makePromises = function () {
+    this.makePromises = function() {
       var query = this.generateRelationshipQuery();
       return [
         catererStationService.getCatererStationList(query),
@@ -68,10 +63,10 @@ angular.module('ts5App')
       ];
     };
 
-    this.getStationAndMenuList = function () {
+    this.getStationAndMenuList = function() {
       $this.displayLoadingModal();
       var promises = $this.makePromises();
-      $q.all(promises).then(function (response) {
+      $q.all(promises).then(function(response) {
         $this.setCatererStationList(response[0]);
         $this.setMenuList(response[1]);
         _initDone = true;
@@ -79,7 +74,7 @@ angular.module('ts5App')
       });
     };
 
-    $scope.searchRelationshipList = function () {
+    $scope.searchRelationshipList = function() {
       if ($this.menuList === null || $this.stationList === null) {
         return;
       }
@@ -97,7 +92,7 @@ angular.module('ts5App')
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
-      menuCatererStationsService.getRelationshipList(query).then(function (
+      menuCatererStationsService.getRelationshipList(query).then(function(
         response) {
         $this.meta.count = $this.meta.count || response.meta.count;
         $this.appendRelationshipList(response);
@@ -120,19 +115,19 @@ angular.module('ts5App')
       $scope.searchRelationshipList();
     };
 
-    this.appendRelationshipList = function (apiResponse) {
+    this.appendRelationshipList = function(apiResponse) {
       $scope.relationshipList = $scope.relationshipList.concat(apiResponse.companyMenuCatererStations);
     };
 
-    this.setCatererStationList = function (apiResponse) {
+    this.setCatererStationList = function(apiResponse) {
       $scope.stationList = apiResponse.response;
     };
 
-    this.setMenuList = function (apiResponse) {
+    this.setMenuList = function(apiResponse) {
       $scope.menuList = apiResponse.menus;
     };
 
-    this.associateMenuData = function () {
+    this.associateMenuData = function() {
       for (var key in $scope.relationshipList) {
         var relationship = $scope.relationshipList[key];
         var menuIndex = this.findMenuIndex(relationship.menuId);
@@ -142,7 +137,7 @@ angular.module('ts5App')
       }
     };
 
-    this.associateStationData = function () {
+    this.associateStationData = function() {
       for (var key in $scope.relationshipList) {
         var relationship = $scope.relationshipList[key];
         relationship.stations = [];
@@ -157,12 +152,12 @@ angular.module('ts5App')
       }
     };
 
-    this.findRelationshipIndex = function (relationship) {
+    this.findRelationshipIndex = function(relationship) {
       var index = $scope.relationshipList.indexOf(relationship);
       return parseInt(index);
     };
 
-    this.findMenuIndex = function (menuId) {
+    this.findMenuIndex = function(menuId) {
       var menuIndex = null;
       for (var key in $scope.menuList) {
         var menu = $scope.menuList[key];
@@ -175,7 +170,7 @@ angular.module('ts5App')
       return parseInt(menuIndex);
     };
 
-    this.findStationIndex = function (stationId) {
+    this.findStationIndex = function(stationId) {
       var stationIndex = null;
       for (var key in $scope.stationList) {
         var station = $scope.stationList[key];
@@ -188,13 +183,13 @@ angular.module('ts5App')
       return parseInt(stationIndex);
     };
 
-    this.initSelectUI = function () {
+    this.initSelectUI = function() {
       angular.element('select.multi-select').select2({
         width: '100%'
       });
     };
 
-    this.removeRecordFromList = function (relationshipIndex) {
+    this.removeRecordFromList = function(relationshipIndex) {
       $this.hideLoadingModal();
       $this.showSuccessMessage(
         'Menu to Caterer Station Relationship Removed');
@@ -202,37 +197,37 @@ angular.module('ts5App')
       $this.updateRelationshipList();
     };
 
-    $scope.removeRecord = function (relationship) {
+    $scope.removeRecord = function(relationship) {
       var relationshipIndex = $this.findRelationshipIndex(relationship);
       $this.displayLoadingModal();
       menuCatererStationsService.deleteRelationship(relationship.id).then(
         $this.removeRecordFromList(relationshipIndex));
     };
 
-    this.displayLoadingModal = function () {
+    this.displayLoadingModal = function() {
       angular.element('.loading-more').show();
     };
 
-    this.hideLoadingModal = function () {
+    this.hideLoadingModal = function() {
       angular.element('.loading-more').hide();
       angular.element('.modal-backdrop').remove();
     };
 
-    $scope.isRelationshipActive = function (date) {
+    $scope.isRelationshipActive = function(date) {
       return dateUtility.isTodayOrEarlier(date);
     };
 
-    $scope.isRelationshipInactive = function (date) {
+    $scope.isRelationshipInactive = function(date) {
       return dateUtility.isYesterdayOrEarlier(date);
     };
 
-    $scope.clearSearchFilters = function () {
+    $scope.clearSearchFilters = function() {
       $scope.dateRange = {};
       $scope.search = {};
-      $scope.searchRecords();
+      $scope.relationshipList = [];
     };
 
-    this.init = function () {
+    this.init = function() {
       $this.getStationAndMenuList();
     };
 

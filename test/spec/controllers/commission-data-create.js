@@ -1,8 +1,9 @@
 'use strict';
 
-describe('Controller: CommissionDataCtrl', function () {
+describe('Controller: CommissionDataCtrl', function() {
 
-  beforeEach(module('ts5App', 'template-module'));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
   beforeEach(module('served/crew-base-types.json'));
   beforeEach(module('served/commission-payable-types.json'));
   beforeEach(module('served/discount-types.json'));
@@ -30,8 +31,9 @@ describe('Controller: CommissionDataCtrl', function () {
   var companyResponseJSON;
   var currencyDeferred;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
-    inject(function (_servedCrewBaseTypes_, _servedCommissionPayableTypes_, _servedDiscountTypes_, _servedCommissionPayable_, _servedEmployees_, _servedCompany_) {
+  beforeEach(inject(function($q, $controller, $rootScope, $location, $injector) {
+    inject(function(_servedCrewBaseTypes_, _servedCommissionPayableTypes_, _servedDiscountTypes_,
+      _servedCommissionPayable_, _servedEmployees_, _servedCompany_) {
       crewBaseResponseJSON = _servedCrewBaseTypes_;
       commissionPayableResponseJSON = _servedCommissionPayableTypes_;
       discountTypesResponseJSON = _servedDiscountTypes_;
@@ -56,12 +58,15 @@ describe('Controller: CommissionDataCtrl', function () {
     companyDeferred = $q.defer();
     companyDeferred.resolve(companyResponseJSON);
     currencyDeferred = $q.defer();
-    currencyDeferred.resolve({ id: 1, currencyCode: 'GBP' });
+    currencyDeferred.resolve({
+      id: 1,
+      currencyCode: 'GBP'
+    });
 
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesResponseJSON);
 
-    spyOn(employeesService,  'getEmployees').and.returnValue(employeesDeferred.promise);
+    spyOn(employeesService, 'getEmployees').and.returnValue(employeesDeferred.promise);
     spyOn(commissionFactory, 'getCommissionPayableTypes').and.returnValue(commissionPayableDeferred.promise);
     spyOn(commissionFactory, 'getDiscountTypes').and.returnValue(discountTypesDeferred.promise);
     spyOn(commissionFactory, 'getCommissionPayableData').and.returnValue(commissionDataDeferred.promise);
@@ -81,34 +86,36 @@ describe('Controller: CommissionDataCtrl', function () {
         state: (action ? action : 'create')
       }
     });
-    scope.commissionDataForm = { $invalid: false };
+    scope.commissionDataForm = {
+      $invalid: false
+    };
   }
 
-  describe('scope variables and functions', function () {
-    beforeEach(function () {
+  describe('scope variables and functions', function() {
+    beforeEach(function() {
       initController();
       scope.$digest();
     });
 
-    it('should have view name defined', function () {
+    it('should have view name defined', function() {
       expect(scope.viewName).toBeDefined();
     });
 
-    it('should have readOnly be defined', function () {
+    it('should have readOnly be defined', function() {
       expect(scope.readOnly).toBeDefined();
     });
 
-    it('should have commission data be defined', function () {
+    it('should have commission data be defined', function() {
       expect(scope.commissionData).toBeDefined();
     });
 
-    describe('commission percent behavior', function () {
-      beforeEach(function () {
+    describe('commission percent behavior', function() {
+      beforeEach(function() {
         initController();
         scope.$digest();
       });
 
-      it('should be disabled when commission payable type is Retail', function () {
+      it('should be disabled when commission payable type is Retail', function() {
         scope.commissionData = {
           commissionPayableTypeId: 1, // 1 for Retail item
           commissionPercentage: 100
@@ -117,7 +124,7 @@ describe('Controller: CommissionDataCtrl', function () {
         expect(scope.commissionPercentDisabled).toEqual(true);
       });
 
-      it('should default commission percent to 0 when type is Retail', function () {
+      it('should default commission percent to 0 when type is Retail', function() {
         scope.commissionData = {
           commissionPayableTypeId: 1, // 1 for Retail item
           commissionPercentage: 100
@@ -126,7 +133,7 @@ describe('Controller: CommissionDataCtrl', function () {
         expect(scope.commissionData.commissionPercentage).toEqual(null);
       });
 
-      it('should not be disabled when commission payable is ePos sales', function () {
+      it('should not be disabled when commission payable is ePos sales', function() {
         scope.commissionData = {
           commissionPayableTypeId: 2, // 2 for epos sales
           commissionPercentage: 100
@@ -135,7 +142,7 @@ describe('Controller: CommissionDataCtrl', function () {
         expect(scope.commissionPercentDisabled).toEqual(false);
       });
 
-      it('should not change commission percent when commission payable is epos sales', function () {
+      it('should not change commission percent when commission payable is epos sales', function() {
         scope.commissionData = {
           commissionPayableTypeId: 2, // 2 for epos sales
           commissionPercentage: 100
@@ -144,7 +151,7 @@ describe('Controller: CommissionDataCtrl', function () {
         expect(scope.commissionData.commissionPercentage).toEqual(100);
       });
 
-      it('should not be disabled when commission payable is cash banked', function () {
+      it('should not be disabled when commission payable is cash banked', function() {
         scope.commissionData = {
           commissionPayableTypeId: 3, // 3 for cash banked
           commissionPercentage: 100
@@ -153,7 +160,7 @@ describe('Controller: CommissionDataCtrl', function () {
         expect(scope.commissionPercentDisabled).toEqual(false);
       });
 
-      it('should not change commission percent when commission payable is cash banked', function () {
+      it('should not change commission percent when commission payable is cash banked', function() {
         scope.commissionData = {
           commissionPayableTypeId: 3, // 3 for cash banked
           commissionPercentage: 100
@@ -163,66 +170,82 @@ describe('Controller: CommissionDataCtrl', function () {
       });
     });
 
-    describe('manual bars behavior', function () {
-      beforeEach(function () {
+    describe('manual bars behavior', function() {
+      beforeEach(function() {
         initController();
         scope.$digest();
       });
 
-      it('should set unit to % when type is Percent', function () {
-        scope.commissionData = { manualBarsCommissionValueTypeId: 1 }; // 1 for percentage
+      it('should set unit to % when type is Percent', function() {
+        scope.commissionData = {
+          manualBarsCommissionValueTypeId: 1
+        }; // 1 for percentage
         scope.updateManualBars();
         expect(scope.manualBarsCommissionUnit).toEqual('%');
       });
 
-      it('should set char limit to 5 when type is percent', function () {
-        scope.commissionData = { manualBarsCommissionValueTypeId: 1 }; // 1 for percentage
+      it('should set char limit to 5 when type is percent', function() {
+        scope.commissionData = {
+          manualBarsCommissionValueTypeId: 1
+        }; // 1 for percentage
         scope.updateManualBars();
         expect(scope.manualBarsCharLimit).toEqual(6);
       });
 
-      it('should set unit to company base currency when type is amount', function () {
-        scope.commissionData = { manualBarsCommissionValueTypeId: 2 }; // 1 for amount
+      it('should set unit to company base currency when type is amount', function() {
+        scope.commissionData = {
+          manualBarsCommissionValueTypeId: 2
+        }; // 1 for amount
         scope.baseCurrency = 'GBP';
         scope.updateManualBars();
         expect(scope.manualBarsCommissionUnit).toEqual('GBP');
       });
 
-      it('should set char limit to 10 when type is amount', function () {
-        scope.commissionData = { manualBarsCommissionValueTypeId: 2 }; // 1 for amount
+      it('should set char limit to 10 when type is amount', function() {
+        scope.commissionData = {
+          manualBarsCommissionValueTypeId: 2
+        }; // 1 for amount
         scope.baseCurrency = 'GBP';
         scope.updateManualBars();
         expect(scope.manualBarsCharLimit).toEqual(11);
       });
     });
 
-    describe('incentive increment behavior', function () {
-      beforeEach(function () {
+    describe('incentive increment behavior', function() {
+      beforeEach(function() {
         initController();
         scope.$digest();
       });
 
-      it('should set unit to % when type is Percent', function () {
-        scope.commissionData = { commissionValueTypeId: 1 };  // 1 for percentage
+      it('should set unit to % when type is Percent', function() {
+        scope.commissionData = {
+          commissionValueTypeId: 1
+        }; // 1 for percentage
         scope.updateIncentiveIncrement();
         expect(scope.commissionValueUnit).toEqual('%');
       });
 
-      it('should set char limit to 5 when type is percent', function () {
-        scope.commissionData = { commissionValueTypeId: 1 };  // 1 for percentage
+      it('should set char limit to 5 when type is percent', function() {
+        scope.commissionData = {
+          commissionValueTypeId: 1
+        }; // 1 for percentage
         scope.updateIncentiveIncrement();
         expect(scope.commissionValueCharLimit).toEqual(6);
       });
 
-      it('should set unit to company base currency when type is amount', function () {
-        scope.commissionData = { commissionValueTypeId: 2 };  // 1 for amount
+      it('should set unit to company base currency when type is amount', function() {
+        scope.commissionData = {
+          commissionValueTypeId: 2
+        }; // 1 for amount
         scope.baseCurrency = 'GBP';
         scope.updateIncentiveIncrement();
         expect(scope.commissionValueUnit).toEqual('GBP');
       });
 
-      it('should set char limit to 10 when type is amount', function () {
-        scope.commissionData = { commissionValueTypeId: 2 };  // 1 for amount
+      it('should set char limit to 10 when type is amount', function() {
+        scope.commissionData = {
+          commissionValueTypeId: 2
+        }; // 1 for amount
         scope.baseCurrency = 'GBP';
         scope.updateIncentiveIncrement();
         expect(scope.commissionValueCharLimit).toEqual(11);
@@ -230,85 +253,85 @@ describe('Controller: CommissionDataCtrl', function () {
     });
   });
 
-  describe('init', function () {
-    describe('API Calls', function () {
+  describe('init', function() {
+    describe('API Calls', function() {
 
-      describe('common init calls', function () {
-        beforeEach(function () {
+      describe('common init calls', function() {
+        beforeEach(function() {
           initController();
           scope.$digest();
         });
 
-        it('should get crew base', function () {
+        it('should get crew base', function() {
           expect(employeesService.getEmployees).toHaveBeenCalled();
         });
 
-        it('should get commission payable types', function () {
+        it('should get commission payable types', function() {
           expect(commissionFactory.getCommissionPayableTypes).toHaveBeenCalled();
           scope.$digest();
           expect(scope.commissionPayableTypes).toEqual(commissionPayableResponseJSON);
         });
 
-        it('should get discount types', function () {
+        it('should get discount types', function() {
           expect(commissionFactory.getDiscountTypes).toHaveBeenCalled();
           scope.$digest();
           expect(scope.discountTypes).toEqual(discountTypesResponseJSON);
         });
 
-        it('should get company data', function () {
+        it('should get company data', function() {
           expect(commissionFactory.getCompanyData).toHaveBeenCalled();
         });
 
-        it('should get base currency', function () {
+        it('should get base currency', function() {
           expect(commissionFactory.getCurrency).toHaveBeenCalled();
         });
       });
 
-      describe('create init', function () {
-        beforeEach(function () {
+      describe('create init', function() {
+        beforeEach(function() {
           initController();
           scope.$digest();
         });
 
-        it('should set readOnly to false', function () {
+        it('should set readOnly to false', function() {
           expect(scope.readOnly).toEqual(false);
         });
 
-        it('should init commissionData to empty', function () {
+        it('should init commissionData to empty', function() {
           expect(scope.commissionData).toEqual({});
         });
 
-        it('should set viewName to Creating', function () {
+        it('should set viewName to Creating', function() {
           expect(scope.viewName).toEqual('Creating Commission Data');
 
         });
       });
 
-      describe('edit init', function () {
-        beforeEach(function () {
+      describe('edit init', function() {
+        beforeEach(function() {
           initController('edit', 1);
           commissionDataDeferred.resolve(commissionDataResponseJSON);
           scope.$digest();
         });
 
-        it('should set readOnly to false', function () {
+        it('should set readOnly to false', function() {
           expect(scope.readOnly).toEqual(false);
         });
 
-        it('should set viewName to Editing', function () {
+        it('should set viewName to Editing', function() {
           expect(scope.viewName).toEqual('Editing Commission Data');
         });
 
-        it('should call getCommissionData with routeParams id', function () {
+        it('should call getCommissionData with routeParams id', function() {
           expect(commissionFactory.getCommissionPayableData).toHaveBeenCalledWith(1);
         });
 
-        it('should attach commission data to scope', function () {
+        it('should attach commission data to scope', function() {
           expect(scope.commissionData).toBeDefined();
           expect(scope.commissionData).not.toEqual({});
         });
 
-        it('should format decimal numbers', function () {
+        it('should format decimal numbers', function() {
           expect(scope.commissionData.commissionValue).toEqual('16.60');
           expect(scope.commissionData.discrepancyDeductionsCashPercentage).toEqual('14.40');
           expect(scope.commissionData.discrepancyDeductionsStockPercentage).toEqual('15.50');
@@ -316,26 +339,26 @@ describe('Controller: CommissionDataCtrl', function () {
         });
       });
 
-      describe('view init', function () {
-        beforeEach(function () {
+      describe('view init', function() {
+        beforeEach(function() {
           initController('view', 1);
           commissionDataDeferred.resolve(commissionDataResponseJSON);
           scope.$digest();
         });
 
-        it('should set readOnly to true', function () {
+        it('should set readOnly to true', function() {
           expect(scope.readOnly).toEqual(true);
         });
 
-        it('should set viewName to Editing', function () {
+        it('should set viewName to Editing', function() {
           expect(scope.viewName).toEqual('Viewing Commission Data');
         });
 
-        it('should call getCommissionData with routeParams id', function () {
+        it('should call getCommissionData with routeParams id', function() {
           expect(commissionFactory.getCommissionPayableData).toHaveBeenCalledWith(1);
         });
 
-        it('should attach commission data to scope', function () {
+        it('should attach commission data to scope', function() {
           expect(scope.commissionData).toBeDefined();
           expect(scope.commissionData).not.toEqual({});
         });
@@ -343,14 +366,14 @@ describe('Controller: CommissionDataCtrl', function () {
     });
   });
 
-  describe('saveData', function () {
-    describe('payload', function () {
-      beforeEach(function () {
+  describe('saveData', function() {
+    describe('payload', function() {
+      beforeEach(function() {
         initController('view', 1);
         scope.$digest();
       });
 
-      it('should format date to YYYMMDD format', function () {
+      it('should format date to YYYMMDD format', function() {
         scope.commissionData = {
           startDate: '10/20/2015',
           endDate: '10/21/2015',
@@ -366,8 +389,8 @@ describe('Controller: CommissionDataCtrl', function () {
       });
     });
 
-    describe('create Data', function () {
-      beforeEach(function () {
+    describe('create Data', function() {
+      beforeEach(function() {
         initController('create');
         scope.$digest();
         scope.commissionData = {
@@ -377,34 +400,43 @@ describe('Controller: CommissionDataCtrl', function () {
         scope.saveData();
       });
 
-      it('should call createCommissionData with payload', function () {
+      it('should call createCommissionData with payload', function() {
         commissionDataDeferred.resolve(commissionDataResponseJSON);
         var payload = CommissionDataCtrl.createPayload();
         expect(commissionFactory.createCommissionData).toHaveBeenCalledWith(payload);
       });
 
-      it('should redirect to commission data table', function () {
+      it('should redirect to commission data table', function() {
         commissionDataDeferred.resolve(commissionDataResponseJSON);
         CommissionDataCtrl.createSuccess();
         expect(location.path).toHaveBeenCalledWith('commission-data-table');
       });
 
-      it('should show errors if there is a promise that fails', function () {
-        commissionDataDeferred.reject({ status:400, statusText:'Bad Request' });
+      it('should show errors if there is a promise that fails', function() {
+        commissionDataDeferred.reject({
+          status: 400,
+          statusText: 'Bad Request'
+        });
         scope.$apply();
         expect(scope.displayError).toBeTruthy();
       });
 
-      it('should set the error response in controller', function () {
-        commissionDataDeferred.reject({ status:400, statusText:'Bad Request' });
+      it('should set the error response in controller', function() {
+        commissionDataDeferred.reject({
+          status: 400,
+          statusText: 'Bad Request'
+        });
         scope.$apply();
-        expect(scope.errorResponse).toEqual({ status:400, statusText:'Bad Request' });
+        expect(scope.errorResponse).toEqual({
+          status: 400,
+          statusText: 'Bad Request'
+        });
       });
 
     });
 
-    describe('edit data', function () {
-      beforeEach(function () {
+    describe('edit data', function() {
+      beforeEach(function() {
         initController('edit', 1);
         scope.$digest();
         scope.commissionData = {
@@ -414,7 +446,7 @@ describe('Controller: CommissionDataCtrl', function () {
         scope.saveData();
       });
 
-      it('should call createCommissionData with payload', function () {
+      it('should call createCommissionData with payload', function() {
         var payload = CommissionDataCtrl.createPayload();
         expect(commissionFactory.updateCommissionData).toHaveBeenCalledWith(1, payload);
       });

@@ -1,8 +1,7 @@
 'use strict';
 
-describe('Controller: TransactionListCtrl', function () {
+describe('Controller: TransactionListCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/transactions.json'));
   beforeEach(module('served/transaction-types.json'));
@@ -10,23 +9,24 @@ describe('Controller: TransactionListCtrl', function () {
   beforeEach(module('served/company-station-globals.json'));
   beforeEach(module('served/company-cc-types.json'));
 
-  var TransactionListCtrl,
-    scope,
-    transactionFactory,
-    transactionsJSON,
-    transactionTypesJSON,
-    companyCurrenciesJSON,
-    companyStationsJSON,
-    companyCreditCardTypesJSON,
-    getTransactionListDeferred,
-    getTransactionTypesDeferred,
-    getCompanyCurrenciesDeferred,
-    getCompanyStationsDeferred,
-    getCreditCardTypesDeferred;
+  var TransactionListCtrl;
+  var scope;
+  var transactionFactory;
+  var transactionsJSON;
+  var transactionTypesJSON;
+  var companyCurrenciesJSON;
+  var companyStationsJSON;
+  var companyCreditCardTypesJSON;
+  var getTransactionListDeferred;
+  var getTransactionTypesDeferred;
+  var getCompanyCurrenciesDeferred;
+  var getCompanyStationsDeferred;
+  var getCreditCardTypesDeferred;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, _transactionFactory_, recordsService, currencyFactory, stationsService, companyCcTypesService) {
-    inject(function (_servedTransactions_, _servedTransactionTypes_, _servedCompanyCurrencyGlobals_, _servedCompanyStationGlobals_, _servedCompanyCcTypes_) {
+  beforeEach(inject(function($controller, $rootScope, $q, _transactionFactory_, recordsService, currencyFactory,
+    stationsService, companyCcTypesService) {
+    inject(function(_servedTransactions_, _servedTransactionTypes_, _servedCompanyCurrencyGlobals_,
+      _servedCompanyStationGlobals_, _servedCompanyCcTypes_) {
       transactionsJSON = _servedTransactions_;
       transactionTypesJSON = _servedTransactionTypes_;
       companyCurrenciesJSON = _servedCompanyCurrencyGlobals_;
@@ -56,18 +56,18 @@ describe('Controller: TransactionListCtrl', function () {
 
     TransactionListCtrl = $controller('TransactionListCtrl', {
       $scope: scope
-      // place here mocked dependencies
+        // place here mocked dependencies
     });
     scope.getTransactions();
     scope.$digest();
   }));
 
-  it('should attach a viewName to the scope', function () {
+  it('should attach a viewName to the scope', function() {
     expect(scope.viewName).toBe('Transactions');
   });
 
   describe('search.paymentMethods change will ', function() {
-    it('set isCreditCardPaymentSelected to false in case credit card is not selected', function () {
+    it('set isCreditCardPaymentSelected to false in case credit card is not selected', function() {
       scope.search = {
         paymentMethods: ['Cash']
       };
@@ -76,7 +76,7 @@ describe('Controller: TransactionListCtrl', function () {
       expect(scope.isCreditCardPaymentSelected).toBe(false);
     });
 
-    it('set isCreditCardPaymentSelected to true in case credit card is selected', function () {
+    it('set isCreditCardPaymentSelected to true in case credit card is selected', function() {
       scope.search = {
         paymentMethods: ['Cash']
       };
@@ -87,7 +87,7 @@ describe('Controller: TransactionListCtrl', function () {
       expect(scope.isCreditCardPaymentSelected).toBe(true);
     });
 
-    it('reset credit card search fields in case credit card is deselected', function () {
+    it('reset credit card search fields in case credit card is deselected', function() {
       scope.search = {
         paymentMethods: ['Cash', 'Credit Card'],
         cardHolderName: 'Card Holder',
@@ -114,19 +114,19 @@ describe('Controller: TransactionListCtrl', function () {
     });
   });
 
-  it('toggleColumnView will set field view value to true', function () {
+  it('toggleColumnView will set field view value to true', function() {
     scope.toggleColumnView('storeInstance');
 
     expect(scope.displayColumns.storeInstance).toBe(true);
   });
 
-  describe('getTransactions will', function () {
-    it('call getTransactionList if offset is not greater than count', function () {
+  describe('getTransactions will', function() {
+    it('call getTransactionList if offset is not greater than count', function() {
       scope.getTransactions();
 
       expect(transactionFactory.getTransactionList).toHaveBeenCalled();
     });
-    it('update meta offset', function () {
+    it('update meta offset', function() {
       var offset = TransactionListCtrl.meta.offset;
       scope.getTransactions();
 
@@ -134,8 +134,8 @@ describe('Controller: TransactionListCtrl', function () {
     });
   });
 
-  describe('clearSearch will', function () {
-    it('clear search object', function () {
+  describe('clearSearch will', function() {
+    it('clear search object', function() {
       scope.search = {
         storeInstanceId: 1
       };
@@ -143,18 +143,18 @@ describe('Controller: TransactionListCtrl', function () {
       scope.clearSearch();
       expect(scope.search).toEqual({});
     });
-    it('call getTransactionList method', function () {
+    it('should clear transactions', function() {
       scope.clearSearch();
-      expect(transactionFactory.getTransactionList).toHaveBeenCalled();
+      expect(scope.transactions).toEqual([]);
     });
   });
 
-  describe('searchTransactions will', function () {
-    it('set isSearch to true', function () {
+  describe('searchTransactions will', function() {
+    it('set isSearch to true', function() {
       scope.searchTransactions();
       expect(TransactionListCtrl.isSearch).toBe(true);
     });
-    it('call getTransactionList method', function () {
+    it('call getTransactionList method', function() {
       scope.clearSearch();
       expect(transactionFactory.getTransactionList).toHaveBeenCalled();
     });

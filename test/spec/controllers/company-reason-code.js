@@ -2,11 +2,9 @@
 
 describe('Company Reason Code Controller', function() {
 
-  beforeEach(module(
-    'ts5App',
-    'template-module',
-    'served/company-reason-types.json'
-  ));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
+  beforeEach(module('served/company-reason-types.json'));
 
   var scope;
   var controller;
@@ -34,7 +32,7 @@ describe('Company Reason Code Controller', function() {
       $valid: false,
       $invalid: false,
       $submitted: false,
-      $name:'reasonForm0',
+      $name: 'reasonForm0',
     };
 
   }
@@ -158,9 +156,9 @@ describe('Company Reason Code Controller', function() {
 
     it('return false if the id does not match up', function() {
       scope.reasonFilter = {
-        selectedReasonTypes: [
-          { id:1 }
-        ]
+        selectedReasonTypes: [{
+          id: 1
+        }]
       };
       var filter = CompanyReasonCodeCtrl.filterByReasonType(reason);
       expect(filter).toBeFalsy();
@@ -174,16 +172,19 @@ describe('Company Reason Code Controller', function() {
       initController();
       resolveInitDependencies();
       scope.formData = {
-        companyReasonTypes:[
-          { id:1 },
-          { id:2 }
-        ]
+        companyReasonTypes: [{
+          id: 1
+        }, {
+          id: 2
+        }]
       };
     });
 
     it('return the global reason if the id is found', function() {
       var reason = CompanyReasonCodeCtrl.getReasonTypeInFormData(1);
-      expect(reason).toEqual({ id:1 });
+      expect(reason).toEqual({
+        id: 1
+      });
     });
 
     it('return false if the reason is not found', function() {
@@ -199,12 +200,10 @@ describe('Company Reason Code Controller', function() {
       initController();
       resolveInitDependencies();
       scope.formData = {
-        companyReasonTypes:[
-          {
-            id:1,
-            companyReasonCodes:[]
-          }
-        ]
+        companyReasonTypes: [{
+          id: 1,
+          companyReasonCodes: []
+        }]
       };
     });
 
@@ -226,12 +225,10 @@ describe('Company Reason Code Controller', function() {
       initController();
       resolveInitDependencies();
       scope.formData = {
-        companyReasonTypes:[
-          {
-            id:1,
-            companyReasonCodes:[]
-          }
-        ]
+        companyReasonTypes: [{
+          id: 1,
+          companyReasonCodes: []
+        }]
       };
       CompanyReasonCodeCtrl.addReasonCode(1);
       spyOn(CompanyReasonCodeCtrl, 'removeReason').and.callThrough();
@@ -254,7 +251,7 @@ describe('Company Reason Code Controller', function() {
 
   });
 
-  describe('the error handler', function () {
+  describe('the error handler', function() {
 
     var mockError = {
       status: 400,
@@ -271,11 +268,11 @@ describe('Company Reason Code Controller', function() {
       CompanyReasonCodeCtrl.errorHandler(mockError);
     });
 
-    it('should set error response ', function () {
+    it('should set error response ', function() {
       expect(scope.errorResponse).toEqual(mockError);
     });
 
-    it('should return false', function () {
+    it('should return false', function() {
       expect(scope.displayError).toBeTruthy();
     });
 
@@ -302,14 +299,19 @@ describe('Company Reason Code Controller', function() {
     });
 
     it('should call the addReasonCode method on the controller when the keypress is ENTER', function() {
-      scope.addReasonCodeWithEnter({ which:13 }, 1);
+      scope.addReasonCodeWithEnter({
+        which: 13
+      }, 1);
       expect(CompanyReasonCodeCtrl.addReasonCode).toHaveBeenCalledWith(1);
     });
 
-    it('should not call the addReasonCode method on the controller when the keypress is anything else', function() {
-      scope.addReasonCodeWithEnter({ which:9 }, 1);
-      expect(CompanyReasonCodeCtrl.addReasonCode).not.toHaveBeenCalled();
-    });
+    it('should not call the addReasonCode method on the controller when the keypress is anything else',
+      function() {
+        scope.addReasonCodeWithEnter({
+          which: 9
+        }, 1);
+        expect(CompanyReasonCodeCtrl.addReasonCode).not.toHaveBeenCalled();
+      });
 
   });
 

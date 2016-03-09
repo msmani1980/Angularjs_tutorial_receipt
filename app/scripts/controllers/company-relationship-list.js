@@ -8,7 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyRelationshipListCtrl', function ($q, $scope, $route, $location, $routeParams, $filter, ngToast, dateUtility, companyRelationshipFactory) {
+  .controller('CompanyRelationshipListCtrl', function($q, $scope, $route, $location, $routeParams, $filter,
+    messageService, dateUtility, companyRelationshipFactory) {
+
     var $this = this;
     $scope.viewName = 'Company Relationships';
     $scope.isLoading = true;
@@ -18,27 +20,23 @@ angular.module('ts5App')
     $scope.companyList = [];
     $scope.companyRelationshipTypeList = [];
 
-    $scope.back = function () {
+    $scope.back = function() {
       $location.path('/company-list/');
     };
 
-    $scope.isPending = function () {
+    $scope.isPending = function() {
       return $scope.isLoading;
     };
 
-    $scope.isFulfilled = function () {
+    $scope.isFulfilled = function() {
       return !$scope.isLoading;
     };
 
     function showToast(className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
+      messageService.display(className, message, type);
     }
 
-    this.parseDate = function (date) {
+    this.parseDate = function(date) {
       return Date.parse(date);
     };
 
@@ -65,14 +63,14 @@ angular.module('ts5App')
       showToast('success', 'Company Relationship', 'Successfully ' + messageAction);
     }
 
-    $scope.isActive = function (date) {
+    $scope.isActive = function(date) {
       var parsedDate = $this.parseDate(date);
       return parsedDate <= dateUtility.now();
     };
 
     $scope.isInactive = $scope.isActive;
 
-    $scope.addCompanyRelationship = function (company) {
+    $scope.addCompanyRelationship = function(company) {
       $scope.companyRelationshipListData.unshift({
         companyId: company.id,
         companyName: company.companyName,
@@ -83,15 +81,16 @@ angular.module('ts5App')
       });
     };
 
-    $scope.showDeleteConfirmation = function (companyRelationship) {
+    $scope.showDeleteConfirmation = function(companyRelationship) {
       $scope.companyRelationshipToDelete = companyRelationship;
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    $scope.deleteCompanyRelationship = function () {
+    $scope.deleteCompanyRelationship = function() {
       angular.element('.delete-warning-modal').modal('hide');
 
-      companyRelationshipFactory.deleteCompanyRelationship($scope.companyRelationshipToDelete).then(function (response) {
+      companyRelationshipFactory.deleteCompanyRelationship($scope.companyRelationshipToDelete).then(function(
+        response) {
         var index = $scope.companyRelationshipListData.indexOf($scope.companyRelationshipToDelete);
         var messageAction = 'deleted';
 
@@ -100,18 +99,18 @@ angular.module('ts5App')
         if (index > -1) {
           $scope.companyRelationshipListData.splice(index, 1);
         }
-      }, function (error) {
+      }, function(error) {
 
         errorHandler(error, $scope.companyRelationshipToDelete);
       });
     };
 
-    $scope.editCompanyRelationship = function (company) {
+    $scope.editCompanyRelationship = function(company) {
       company.original = angular.copy(company);
       company.isEditing = true;
     };
 
-    $scope.cancelCompanyRelationship = function (company) {
+    $scope.cancelCompanyRelationship = function(company) {
       if (company.id) {
         company.isEditing = false;
 
@@ -125,26 +124,26 @@ angular.module('ts5App')
       removeCompanyFromLocalList(company);
     };
 
-    $scope.submit = function (isValid, companyRelationship) {
+    $scope.submit = function(isValid, companyRelationship) {
       if (!isValid) {
         return;
       }
 
       if (!!companyRelationship.id) {
-        companyRelationshipFactory.updateCompanyRelationship(companyRelationship).then(function (response) {
+        companyRelationshipFactory.updateCompanyRelationship(companyRelationship).then(function(response) {
           var messageAction = companyRelationship.id ? 'updated' : 'created';
 
           successCompanyRelationship(response, companyRelationship, messageAction);
-        }, function (error) {
+        }, function(error) {
 
           errorHandler(error, companyRelationship);
         });
       } else {
-        companyRelationshipFactory.createCompanyRelationship(companyRelationship).then(function (response) {
+        companyRelationshipFactory.createCompanyRelationship(companyRelationship).then(function(response) {
           var messageAction = companyRelationship.id ? 'updated' : 'created';
 
           successCompanyRelationship(response, companyRelationship, messageAction);
-        }, function (error) {
+        }, function(error) {
 
           errorHandler(error, companyRelationship);
         });
@@ -153,10 +152,12 @@ angular.module('ts5App')
 
     function setupCompanyRelationshipTypeScope(companyRelationshipTypeListFromAPI) {
       $scope.companyRelationshipTypeList = [];
-      angular.forEach(angular.copy(companyRelationshipTypeListFromAPI.response), function (relationshipType) {
+      angular.forEach(angular.copy(companyRelationshipTypeListFromAPI.response), function(relationshipType) {
         var newRelationshipType = {};
-        newRelationshipType.companyTypeName = (relationshipType.companyTypeId === $scope.company.companyTypeId) ? relationshipType.relativeCompanyType : relationshipType.companyTypeName;
-        newRelationshipType.companyTypeId = (relationshipType.companyTypeId === $scope.company.companyTypeId) ? relationshipType.relativeCompanyTypeId : relationshipType.companyTypeId;
+        newRelationshipType.companyTypeName = (relationshipType.companyTypeId === $scope.company.companyTypeId) ?
+          relationshipType.relativeCompanyType : relationshipType.companyTypeName;
+        newRelationshipType.companyTypeId = (relationshipType.companyTypeId === $scope.company.companyTypeId) ?
+          relationshipType.relativeCompanyTypeId : relationshipType.companyTypeId;
         $scope.companyRelationshipTypeList.push(newRelationshipType);
       });
     }
@@ -171,7 +172,7 @@ angular.module('ts5App')
     }
 
     function setupCompanyAndCompanyListScope(companyListFromAPI) {
-      $scope.companyList = companyListFromAPI.companies.filter(function (company) {
+      $scope.companyList = companyListFromAPI.companies.filter(function(company) {
         if (company.id === parseInt($routeParams.id)) {
           $scope.company = company;
           return undefined;
@@ -181,42 +182,44 @@ angular.module('ts5App')
       });
     }
 
-    var filterCompanyListByTypesScope = function (companyTypeListFromAPI) {
+    var filterCompanyListByTypesScope = function(companyTypeListFromAPI) {
       var typeIdList = [];
-      companyTypeListFromAPI.response.forEach(function (companyType) {
-        var companyTypeToUse = (companyType.companyTypeId === $scope.company.companyTypeId) ? companyType.relativeCompanyTypeId : companyType.companyTypeId;
+      companyTypeListFromAPI.response.forEach(function(companyType) {
+        var companyTypeToUse = (companyType.companyTypeId === $scope.company.companyTypeId) ? companyType.relativeCompanyTypeId :
+          companyType.companyTypeId;
         typeIdList.push(companyTypeToUse);
       });
 
-      $scope.companyList = $scope.companyList.filter(function (company) {
+      $scope.companyList = $scope.companyList.filter(function(company) {
         company.isEditing = false;
         return typeIdList.indexOf(company.companyTypeId) !== -1;
       });
     };
 
-    var getCompanyRelationshipListByCompanyPromise = function (companyId) {
+    var getCompanyRelationshipListByCompanyPromise = function(companyId) {
       return companyRelationshipFactory.getCompanyRelationshipListByCompany(companyId);
     };
 
-    var getCompanyListPromise = function () {
+    var getCompanyListPromise = function() {
       return companyRelationshipFactory.getCompanyList();
     };
 
-    var getCompanyRelationshipTypeListPromise = function (companyTypeId) {
+    var getCompanyRelationshipTypeListPromise = function(companyTypeId) {
       return companyRelationshipFactory.getCompanyRelationshipTypeList(companyTypeId);
     };
 
-    var generateCompanyRelationshipPromises = function () {
-      return [getCompanyRelationshipListByCompanyPromise($routeParams.id), getCompanyRelationshipTypeListPromise($scope.company.companyTypeId)];
+    var generateCompanyRelationshipPromises = function() {
+      return [getCompanyRelationshipListByCompanyPromise($routeParams.id), getCompanyRelationshipTypeListPromise(
+        $scope.company.companyTypeId)];
     };
 
-    var getCompanyListSuccessHandler = function (response) {
+    var getCompanyListSuccessHandler = function(response) {
       setupCompanyAndCompanyListScope(response);
       var promises = generateCompanyRelationshipPromises();
       return $q.all(promises);
     };
 
-    var getCompanyRelationshipListByCompanyAndTypeSuccessHandler = function (response) {
+    var getCompanyRelationshipListByCompanyAndTypeSuccessHandler = function(response) {
       if (!response) {
         return;
       }
@@ -227,7 +230,7 @@ angular.module('ts5App')
       $scope.isLoading = false;
     };
 
-    var setupController = function () {
+    var setupController = function() {
       getCompanyListPromise()
         .then(getCompanyListSuccessHandler, errorHandler)
         .then(getCompanyRelationshipListByCompanyAndTypeSuccessHandler, errorHandler);

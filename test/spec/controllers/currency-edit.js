@@ -1,33 +1,30 @@
 'use strict';
 /*global $:false */
 
-describe('Controller: CurrencyEditCtrl', function () {
+describe('Controller: CurrencyEditCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module(
-    'served/company.json',
-    'served/currencies.json',
-    'served/currency.json',
-    'served/company-currency-globals.json'
-  ));
+  beforeEach(module('served/company.json'));
+  beforeEach(module('served/currencies.json'));
+  beforeEach(module('served/currency.json'));
+  beforeEach(module('served/company-currency-globals.json'));
 
-  var CurrencyEditCtrl,
-    scope,
-    dateUtility,
-    currencyFactory,
-    companyJSON,
-    currenciesJSON,
-    currencyJSON,
-    masterCurrenciesJSON,
-    getCompanyGlobalCurrenciesDeferred,
-    getDetailedCompanyCurrenciesDeferred,
-    getCompanyDeferred,
-    createCompanyDeffered,
-    deleteCompanyDeffered;
+  var CurrencyEditCtrl;
+  var scope;
+  var dateUtility;
+  var currencyFactory;
+  var companyJSON;
+  var currenciesJSON;
+  var currencyJSON;
+  var masterCurrenciesJSON;
+  var getCompanyGlobalCurrenciesDeferred;
+  var getDetailedCompanyCurrenciesDeferred;
+  var getCompanyDeferred;
+  var createCompanyDeffered;
+  var deleteCompanyDeffered;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $httpBackend, $controller, $rootScope, _dateUtility_, _currencyFactory_, _servedCompany_, _servedCurrencies_, _servedCurrency_, _servedCompanyCurrencyGlobals_) {
+  beforeEach(inject(function($q, $httpBackend, $controller, $rootScope, _dateUtility_, _currencyFactory_,
+    _servedCompany_, _servedCurrencies_, _servedCurrency_, _servedCompanyCurrencyGlobals_) {
     scope = $rootScope.$new();
 
     dateUtility = _dateUtility_;
@@ -44,17 +41,24 @@ describe('Controller: CurrencyEditCtrl', function () {
     getCompanyDeferred = $q.defer();
     getCompanyDeferred.resolve(companyJSON);
     createCompanyDeffered = $q.defer();
-    createCompanyDeffered.resolve({ id:1 });
+    createCompanyDeffered.resolve({
+      id: 1
+    });
     deleteCompanyDeffered = $q.defer();
     deleteCompanyDeffered.resolve({});
 
     spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
-    spyOn(currencyFactory, 'getDetailedCompanyCurrencies').and.returnValue(getDetailedCompanyCurrenciesDeferred.promise);
+    spyOn(currencyFactory, 'getDetailedCompanyCurrencies').and.returnValue(
+      getDetailedCompanyCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
     spyOn(currencyFactory, 'deleteDetailedCompanyCurrency').and.returnValue(deleteCompanyDeffered.promise);
-    spyOn(currencyFactory, 'createDetailedCompanyCurrency').and.callFake(function () { return $.Deferred().resolve(createCompanyDeffered);});
+    spyOn(currencyFactory, 'createDetailedCompanyCurrency').and.callFake(function() {
+      return $.Deferred().resolve(createCompanyDeffered);
+    });
 
-    spyOn(currencyFactory, 'updateDetailedCompanyCurrency').and.callFake(function () { return $.Deferred().resolve(currencyJSON);});
+    spyOn(currencyFactory, 'updateDetailedCompanyCurrency').and.callFake(function() {
+      return $.Deferred().resolve(currencyJSON);
+    });
 
     $httpBackend.whenGET(/companies/).respond(companyJSON);
 
@@ -64,58 +68,59 @@ describe('Controller: CurrencyEditCtrl', function () {
     scope.$digest();
   }));
 
-  it('should attach a viewName to the scope', function () {
+  it('should attach a viewName to the scope', function() {
     expect(scope.viewName).toBe('Retail Company Currency & Denomination Setup');
   });
 
-  it('should get the company global currencies called', function () {
+  it('should get the company global currencies called', function() {
     expect(currencyFactory.getCompanyGlobalCurrencies).toHaveBeenCalled();
   });
 
-  it('should get company global currencies', function () {
+  it('should get company global currencies', function() {
     CurrencyEditCtrl.getCompanyGlobalCurrencies();
-    expect(currencyFactory.getCompanyGlobalCurrencies().then(function (globalCurrencies) {
+    expect(currencyFactory.getCompanyGlobalCurrencies().then(function(globalCurrencies) {
       expect(globalCurrencies.response.length).toBeGreaterThan(0);
     }));
   });
 
-  it('should create denomination map', function () {
+  it('should create denomination map', function() {
     scope.globalCurrencyList = currenciesJSON;
     CurrencyEditCtrl.getDenominations();
     expect(1 in scope.currencyDenominations).toBe(true);
   });
 
-  it('should get the detailed company currencies called', function () {
+  it('should get the detailed company currencies called', function() {
     expect(currencyFactory.getDetailedCompanyCurrencies).toHaveBeenCalled();
   });
 
-  it('should get company base currency', function () {
+  it('should get company base currency', function() {
     scope.globalCurrencyList = currenciesJSON;
     CurrencyEditCtrl.getCompanyBaseCurrency();
     expect(scope.companyBaseCurrency.code).toBe('EUR');
   });
 
-  it('should delete detailed currency be called', function () {
-    scope.currencyToDelete = { id: 1 };
-    scope.companyCurrencyList = [{ id: 1 }];
+  it('should delete detailed currency be called', function() {
+    scope.currencyToDelete = {
+      id: 1
+    };
+    scope.companyCurrencyList = [{
+      id: 1
+    }];
 
     scope.deleteDetailedCompanyCurrency();
     expect(currencyFactory.deleteDetailedCompanyCurrency).toHaveBeenCalled();
   });
 
-  it('should clear search model and make get detailed company currencies', function () {
+  it('should clear search model and make get detailed company currencies', function() {
     scope.search = {
       startDate: 'fakeDate'
     };
-
-    var expectedPayload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
-
     scope.clearForm();
     expect(scope.search.startDate).toBe(undefined);
-    expect(currencyFactory.getDetailedCompanyCurrencies).toHaveBeenCalledWith(expectedPayload);
+    expect(scope.companyCurrencyList).toEqual([]);
   });
 
-  it('should clear search model and make get detailed company currencies', function () {
+  it('should clear search model and make get detailed company currencies', function() {
     scope.search = {
       startDate: '10/05/1979'
     };
@@ -127,7 +132,7 @@ describe('Controller: CurrencyEditCtrl', function () {
     });
   });
 
-  it('should call create currency in case currency is a new one', function () {
+  it('should call create currency in case currency is a new one', function() {
     var currency = angular.copy(currencyJSON);
     currency.isNew = true;
     currency.selectedDenominations = [];
@@ -136,7 +141,7 @@ describe('Controller: CurrencyEditCtrl', function () {
     expect(currencyFactory.createDetailedCompanyCurrency).toHaveBeenCalled();
   });
 
-  it('should call update currency in case currency is not a new one', function () {
+  it('should call update currency in case currency is not a new one', function() {
     var currency = angular.copy(currencyJSON);
     currency.isNew = false;
     currency.selectedDenominations = [];
@@ -145,7 +150,7 @@ describe('Controller: CurrencyEditCtrl', function () {
     expect(currencyFactory.updateDetailedCompanyCurrency).toHaveBeenCalled();
   });
 
-  it('should add new currency to detailed company currency list', function () {
+  it('should add new currency to detailed company currency list', function() {
     scope.companyCurrencyList = [];
     var items = scope.companyCurrencyList.length;
 
@@ -154,16 +159,16 @@ describe('Controller: CurrencyEditCtrl', function () {
     expect(scope.companyCurrencyList.length).toBe(items + 1);
   });
 
-  describe('currency should be', function () {
-    describe('read only if', function () {
-      it('start date is in the past ', function () {
+  describe('currency should be', function() {
+    describe('read only if', function() {
+      it('start date is in the past ', function() {
         var currency = angular.copy(currencyJSON);
         currency.startDate = '01/01/2014';
 
         expect(scope.isCurrencyReadOnly(currency)).toBe(true);
       });
 
-      it('start date is today ', function () {
+      it('start date is today ', function() {
         var currency = angular.copy(currencyJSON);
         currency.startDate = dateUtility.nowFormatted();
 
@@ -171,22 +176,22 @@ describe('Controller: CurrencyEditCtrl', function () {
       });
     });
 
-    describe('not be read only if', function () {
-      it('start date is undefined ', function () {
+    describe('not be read only if', function() {
+      it('start date is undefined ', function() {
         var currency = angular.copy(currencyJSON);
         currency.startDate = '';
 
         expect(scope.isCurrencyReadOnly(currency)).toBe(false);
       });
 
-      it('start date is in the future', function () {
+      it('start date is in the future', function() {
         var currency = angular.copy(currencyJSON);
         currency.startDate = '01/01/2050';
 
         expect(scope.isCurrencyReadOnly(currency)).toBe(false);
       });
 
-      it('is a new currency', function () {
+      it('is a new currency', function() {
         var currency = angular.copy(currencyJSON);
         currency.isNew = true;
 
@@ -195,10 +200,10 @@ describe('Controller: CurrencyEditCtrl', function () {
     });
   });
 
-  describe('currency should be', function () {
-    describe('partially read only if', function () {
+  describe('currency should be', function() {
+    describe('partially read only if', function() {
 
-      it('end date is in the past', function () {
+      it('end date is in the past', function() {
         var currency = angular.copy(currencyJSON);
         currency.endDate = '01/01/2014';
 
@@ -206,29 +211,29 @@ describe('Controller: CurrencyEditCtrl', function () {
       });
     });
 
-    describe('not be partially read only if', function () {
-      it('end date is undefined ', function () {
+    describe('not be partially read only if', function() {
+      it('end date is undefined ', function() {
         var currency = angular.copy(currencyJSON);
         currency.endDate = '';
 
         expect(scope.isCurrencyPartialReadOnly(currency)).toBe(false);
       });
 
-      it('end date is in the future ', function () {
+      it('end date is in the future ', function() {
         var currency = angular.copy(currencyJSON);
         currency.endDate = '01/01/2050';
 
         expect(scope.isCurrencyPartialReadOnly(currency)).toBe(false);
       });
 
-      it('end date is today ', function () {
+      it('end date is today ', function() {
         var currency = angular.copy(currencyJSON);
         currency.endDate = dateUtility.nowFormatted();
 
         expect(scope.isCurrencyPartialReadOnly(currency)).toBe(false);
       });
 
-      it('is a new currency', function () {
+      it('is a new currency', function() {
         var currency = angular.copy(currencyJSON);
         currency.isNew = true;
 
@@ -237,7 +242,7 @@ describe('Controller: CurrencyEditCtrl', function () {
     });
   });
 
-  it('getCurrencyCodeById should return currency code by id', function () {
+  it('getCurrencyCodeById should return currency code by id', function() {
     scope.globalCurrencyList = currenciesJSON.response;
 
     expect(CurrencyEditCtrl.getCurrencyCodeById(63)).toBe('NOK');

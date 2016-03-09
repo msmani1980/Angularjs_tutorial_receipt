@@ -2,14 +2,11 @@
 
 describe('Controller: ReconciliationDashboardCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module(
-    'served/store-status.json',
-    'served/catering-stations.json',
-    'served/store-instance.json',
-    'served/reconciliation-dashboard.json'
-  ));
+  beforeEach(module('served/store-status.json'));
+  beforeEach(module('served/catering-stations.json'));
+  beforeEach(module('served/store-instance.json'));
+  beforeEach(module('served/reconciliation-dashboard.json'));
 
   var ReconciliationDashboardCtrl;
   var scope;
@@ -25,7 +22,6 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
   var globalStationsResponseJSON;
   var storeInstanceJSON;
 
-  // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $q, $location, $injector, _servedStoreStatus_,
     _servedCateringStations_, _servedStoreInstance_, _servedReconciliationDashboard_) {
     location = $location;
