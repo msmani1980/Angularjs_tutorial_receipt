@@ -66,9 +66,10 @@ describe('Factory: manualECSFactory', function () {
 
   describe('catererStationService API', function () {
     it('should call stationsService on getCatererStationList', function () {
-      var mockPayload = { fakeKey: 'fakeValue' };
-      manualECSFactory.getCompanyStationList(mockPayload);
-      expect(stationsService.getStationList).toHaveBeenCalledWith(mockPayload);
+      var mockCompanyId = 123;
+      var offset = 0;
+      manualECSFactory.getCompanyStationList(mockCompanyId, offset);
+      expect(stationsService.getStationList).toHaveBeenCalledWith(mockCompanyId, offset);
     });
   });
 
