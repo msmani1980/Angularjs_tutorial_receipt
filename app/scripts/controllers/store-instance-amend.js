@@ -402,15 +402,15 @@ angular.module('ts5App')
     }
 
     function setupCashBags () {
-      $scope.normalizedCashBags = storeInstanceAmendFactory.getCashBagListMockData();
-      /*$scope.normalizedCashBags = $scope.cashBags.map(function (cashBag) {
+      $scope.normalizedCashBags = $scope.cashBags.map(function (cashBag) {
         return {
           id: cashBag.id,
           cashBag: cashBag.cashBagNumber,
           bankRefNumber: cashBag.bankReferenceNumber,
-          isDeleted: cashBag.isDelete
+          isDeleted: cashBag.isDelete === 'true',
+          isManual: cashBag.originationSource === 2
         };
-      });*/
+      });
     }
 
     function setStoreInstance (storeInstanceDataFromAPI) {
@@ -512,7 +512,8 @@ angular.module('ts5App')
       var companyId = globalMenuService.company.get();
       var payload = {
         companyId: companyId,
-        isReconciliation: true
+        isReconciliation: true,
+        storeInstanceId: $routeParams.storeInstanceId
       };
 
       return storeInstanceAmendFactory.getCashBags(payload).then(setCashBags);
