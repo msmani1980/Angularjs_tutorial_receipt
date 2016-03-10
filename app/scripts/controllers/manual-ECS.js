@@ -71,7 +71,7 @@ angular.module('ts5App')
       angular.forEach($scope.storeInstances, function (storeInstance) {
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
         var stationMatch = lodash.findWhere($scope.companyStationList, { stationId: storeInstance.cateringStationId });
-        storeInstance.stationDescription = (!!stationMatch) ? stationMatch.stationCode : '';
+        storeInstance.stationCode = (!!stationMatch) ? stationMatch.stationCode : '';
       });
     }
 
@@ -171,7 +171,7 @@ angular.module('ts5App')
     function formatAllECSSearchPayload() {
       var searchPayload = {};
       if ($scope.allInstancesSearch.eposScheduleDate) {
-        searchPayload.scheduleDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.eposScheduleDate);
+        searchPayload.instanceDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.eposScheduleDate);
       }
 
       if ($scope.allInstancesSearch.eposStation) {
@@ -183,7 +183,7 @@ angular.module('ts5App')
       }
 
       if ($scope.allInstancesSearch.storeInstance) {
-        searchPayload.storeInstanceId = $scope.allInstancesSearch.storeInstance;
+        searchPayload.storeInstanceId = parseInt($scope.allInstancesSearch.storeInstance);
       }
 
       return searchPayload;
@@ -193,7 +193,7 @@ angular.module('ts5App')
       var searchPayload = {};
 
       if ($scope.eposSearch.scheduleDate) {
-        searchPayload.scheduleDate = dateUtility.formatDateForAPI($scope.eposSearch.scheduleDate);
+        searchPayload.instanceDate = dateUtility.formatDateForAPI($scope.eposSearch.scheduleDate);
       }
 
       if ($scope.eposSearch.station) {
@@ -223,7 +223,7 @@ angular.module('ts5App')
       }
 
       if ($scope.portalSearch.storeInstance) {
-        searchPayload.storeInstanceId = $scope.portalSearch.storeInstance;
+        searchPayload.storeInstanceId = parseInt($scope.portalSearch.storeInstance);
       }
 
       return searchPayload;

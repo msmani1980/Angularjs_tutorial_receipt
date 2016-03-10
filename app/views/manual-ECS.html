@@ -140,7 +140,7 @@
           <tr ng-repeat="storeInstance in storeInstances" ng-class="getClassForAttribute('portal', 'row', storeInstance)">
             <td>{{ storeInstance.storeNumber }}</td>
             <td>{{ storeInstance.scheduleDate }}</td>
-            <td>{{ storeInstance.stationDescription }}</td>
+            <td>{{ storeInstance.stationCode }}</td>
             <td>{{ storeInstance.id }}</td>
             <td class="text-center">
               <button ng-click="selectRecord('portal', storeInstance)"
