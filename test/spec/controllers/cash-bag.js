@@ -151,6 +151,10 @@ describe('Controller: CashBagCtrl', function() {
         expect(scope.isBankExchangePreferred).toBeDefined();
         expect(Object.prototype.toString.call(scope.isBankExchangePreferred)).toBe('[object Function]');
       });
+
+      it('should have a cashBagNumberMaxLength variable attached to scope', function () {
+        expect(scope.cashBagNumberMaxLength).toBeTruthy();
+      });
     });
 
     describe('cashBagFactory API calls', function() {
@@ -185,6 +189,7 @@ describe('Controller: CashBagCtrl', function() {
         expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload, 403);
         scope.$digest();
         expect(scope.companyPreferences.defaultBankRefNumber).toBeDefined();
+        expect(scope.companyPreferences.cashbagNumberLength).toBeDefined();
       });
     });
 
@@ -356,6 +361,10 @@ describe('Controller: CashBagCtrl', function() {
         expect(scope.formSave).toBeDefined();
         expect(Object.prototype.toString.call(scope.formSave)).toBe('[object Function]');
       });
+
+      it('should have a cashBagNumberMaxLength variable attached to scope', function () {
+        expect(scope.cashBagNumberMaxLength).toBeTruthy();
+      });
     });
 
     describe('cashBagFactory API calls', function() {
@@ -390,6 +399,7 @@ describe('Controller: CashBagCtrl', function() {
         expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalledWith(expectedPayload, 403);
         scope.$digest();
         expect(scope.companyPreferences.defaultBankRefNumber).toBeDefined();
+        expect(scope.companyPreferences.cashbagNumberLength).toBeDefined();
       });
     });
 
