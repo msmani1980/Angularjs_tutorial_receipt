@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('identityAccessService', function ($resource, ENV) {
+  .service('identityAccessService', function($resource, ENV) {
     var authorizeURL = ENV.apiUrl + '/IdentityAccess/authorizeUser';
     var chpwdURL = ENV.apiUrl + '/IdentityAccess/chpwd';
     var sendUsernameRecoveryEmail = ENV.apiUrl + '/IdentityAccess/recoveruser/:email/send';
@@ -16,6 +16,8 @@ angular.module('ts5App')
     var logoutURL = ENV.apiUrl + '/IdentityAccess/logout';
     var featuresInRoleURL = ENV.apiUrl + '/IdentityAccess/featuresInRole';
     var userCompaniesURL = ENV.apiUrl + '/IdentityAccess/company/alluserscompanies';
+
+    // var eulaUrl = ENV.apiUrl + '/IdentityAccess/eula';
 
     var authParameters = {};
     var chpwdParameters = {};
@@ -72,11 +74,11 @@ angular.module('ts5App')
     var featuresInRoleResource = $resource(featuresInRoleURL, featuresInRoleParameters, actions);
     var userCompaniesResource = $resource(userCompaniesURL, userCompaniesParameters, actions);
 
-    var authorizeUser = function (payload) {
+    var authorizeUser = function(payload) {
       return authResource.authorizeUser(payload).$promise;
     };
 
-    var changePassword = function (payload, headers) {
+    var changePassword = function(payload, headers) {
       delete actions.changePassword.headers.sessionToken;
       if (headers) {
         actions.changePassword.headers.sessionToken = headers.sessionToken;
@@ -85,7 +87,7 @@ angular.module('ts5App')
       return chpwdResource.changePassword(payload).$promise;
     };
 
-    var sendEmail = function (shouldRecoverUser, emailContent, emailAddress, username) {
+    var sendEmail = function(shouldRecoverUser, emailContent, emailAddress, username) {
       var URLtoSend = (shouldRecoverUser) ? sendUsernameRecoveryEmail : sendPasswordRecoveryEmail;
       sendEmailParameters = {
         email: emailAddress
@@ -99,7 +101,7 @@ angular.module('ts5App')
       return sendEmailResource.sendEmail(emailContent).$promise;
     };
 
-    var checkAuth = function (headers) {
+    var checkAuth = function(headers) {
       delete actions.checkAuth.headers.sessionToken;
       if (headers) {
         actions.checkAuth.headers.sessionToken = headers.sessionToken;
@@ -108,15 +110,15 @@ angular.module('ts5App')
       return authResource.checkAuth().$promise;
     };
 
-    var featuresInRole = function (payload) {
+    var featuresInRole = function(payload) {
       return featuresInRoleResource.featuresInRole(payload).$promise;
     };
 
-    var getUserCompanies = function (payload) {
+    var getUserCompanies = function(payload) {
       return userCompaniesResource.getUserCompanies(payload).$promise;
     };
 
-    var logout = function (payload) {
+    var logout = function(payload) {
       return logoutResource.logout(payload).$promise;
     };
 

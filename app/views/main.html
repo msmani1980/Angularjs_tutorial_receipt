@@ -1,13 +1,23 @@
-<div class="menu-container col-sm-6 col-lg-4" ng-repeat="item in dashboardMenu" >
-    <div class="add-shadow">
-        <h3>{{item.title}}</h3>
-
-        <div class="menu-items-container col-sm-6" ng-repeat="menu in item.menuItems" >
-            <a class="" ng-href="{{menu.route}}">
-                <i class="menu-icon {{menu.icon}}"></i>
-
-                <div class="menu-title">{{menu.name}}</div>
-            </a>
-        </div>
+<div class="menu-container col-sm-6 col-lg-4" ng-repeat="item in dashboardMenu">
+  <div class="add-shadow">
+  <h3>{{item.title}}</h3>
+    <div class="menu-items-container col-sm-6" ng-repeat="menu in item.menuItems">
+      <a class="" ng-href="{{menu.route}}">
+        <i class="menu-icon {{menu.icon}}"></i>
+        <div class="menu-title">{{menu.name}}</div>
+      </a>
     </div>
+  </div>
+</div>
+
+<div ng-hide="dashboardMenu.length" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body text-center">
+	      <i class="fa fa-spin fa-circle-o-notch fa-2x"></i>
+        <h3>One Moment Please</h3>
+        <p>Loading the Dashboard Items...</p>
+			</div>
+		</div>
+	</div>
 </div>
