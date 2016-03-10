@@ -118,7 +118,7 @@ angular.module('ts5App')
 
     function saveSuccess() {
       hideLoadingModal();
-      $scope.resetAl();
+      $scope.resetAll();
       messageService.display('success', 'Relationship Successfully Created', 'Create ECS Relationship');
     }
 

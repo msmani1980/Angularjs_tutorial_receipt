@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ManualECSCtrl', function () {
+describe('Controller: ManualECSCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -229,47 +229,87 @@ fdescribe('Controller: ManualECSCtrl', function () {
 
   describe('Create Relationship', function () {
     it('should call API with epos instance id and store instance id', function () {
-
+      scope.selectedPortalRecord = { id: 1 };
+      scope.selectedEposRecord = { id: 2 };
+      var expectedPayload = { storeInstanceId: 1 };
+      scope.saveRelationship();
+      expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(2, expectedPayload);
     });
 
     it('should clear models after successful create', function () {
-
+      scope.selectedPortalRecord = { id: 1 };
+      scope.selectedEposRecord = { id: 2 };
+      scope.storeInstances = [{id: 3}];
+      scope.carrierInstances = [{id: 4}];
+      scope.saveRelationship();
+      scope.$digest();
+      expect(scope.selectedPortalRecord).toEqual(null);
+      expect(scope.selectedEposRecord).toEqual(null);
+      expect(scope.storeInstances).toEqual(null);
+      expect(scope.carrierInstances).toEqual(null);
     });
 
     it('should not allow saving if a portal and epos record are not selected', function () {
-
+      scope.selectedEposRecord = { id: 2 };
+      scope.selectedPortalRecord = null;
+      expect(scope.canSaveRelationship()).toBeFalsy();
     });
 
     describe('select record helpers', function () {
       it('should attach selected records to scope', function () {
+        var mockPortalInstance = {id: 1};
+        scope.selectRecord('portal', mockPortalInstance);
+        expect(scope.selectedPortalRecord).toEqual(mockPortalInstance);
 
+        var mockCarrierInstance = {id: 2};
+        scope.selectRecord('epos', mockCarrierInstance);
+        expect(scope.selectedEposRecord).toEqual(mockCarrierInstance);
       });
 
       it('isRecordSelected should return true for records matching selected record on scope', function () {
-
+        var mockPortalInstance = {id: 1};
+        var mockUnselectedPortalInstance = {id: 2};
+        scope.selectRecord('portal', mockPortalInstance);
+        expect(scope.isRecordSelected('portal', mockPortalInstance)).toEqual(true);
+        expect(scope.isRecordSelected('portal', mockUnselectedPortalInstance)).toEqual(false);
+        expect(scope.isRecordSelected('epos', mockPortalInstance)).toEqual(false);
       });
     });
   });
 
   describe('View Helpers', function () {
     describe('toggle views', function () {
-
-    });
-
-    describe('get class for attribute', function () {
-
-    });
-
-    describe('reset all', function () {
-
+      it('should set active view to create view if true is passed', function () {
+        scope.isCreateViewActive = false;
+        scope.toggleActiveView(true);
+        expect(scope.isCreateViewActive).toEqual(true);
+      });
+      it('should set active view to list view if false is passed', function () {
+        scope.isCreateViewActive = true;
+        scope.toggleActiveView(false);
+        expect(scope.isCreateViewActive).toEqual(false);
+      });
     });
   });
 
   describe('No Records / Search prompts', function () {
     describe('should show no record alert', function () {
+      it('should return true if list model is defined and empty', function () {
+        scope.storeInstances = [];
+        expect(scope.shouldShowNoRecordAlert('portal')).toEqual(true);
+        scope.carrierInstances = null;
+        expect(scope.shouldShowNoRecordAlert('epos')).toEqual(false);
+      });
+    });
 
+    describe('should show search prompt alert', function () {
+      it('should return true if list model is null', function () {
+        scope.storeInstances = null;
+        expect(scope.shouldShowSearchPromptAlert('portal')).toEqual(true);
+        scope.allECSInstances = [];
+        expect(scope.shouldShowSearchPromptAlert('all')).toEqual(false);
+      });
     });
   });
-
 
 });
