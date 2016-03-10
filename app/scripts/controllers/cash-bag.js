@@ -380,7 +380,7 @@ angular.module('ts5App')
     function setCashBagMaxLength() {
       var defaultLength = 25;
       $scope.cashBagNumberMaxLength = defaultLength;
-      if ($scope.companyPreferences.cashbagNumberLength && $scope.companyPreferences.cashbagNumberLength.isSelected) {
+      if ($scope.state !== 'view' && $scope.companyPreferences.cashbagNumberLength && $scope.companyPreferences.cashbagNumberLength.isSelected) {
         $scope.cashBagNumberMaxLength = $scope.companyPreferences.cashbagNumberLength.numericValue || defaultLength;
       }
     }
