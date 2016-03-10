@@ -1,0 +1,327 @@
+<div class="container container-fluid module-container">
+
+  <div class="top-header">
+    <div class="container">
+      <br>
+
+      <div class="row">
+        <div class="form-nav btn-group-justified item-top" role="group" aria-label="..."
+             ng-init="activeBtn = 'item-information'">
+
+          <a ng-click="toggleActiveView(true)" ng-class="{'active': isCreateViewActive }"
+             type="button" class="btn btn-default">
+            Create New ECS Relationship
+          </a>
+          <a ng-hide="true" class="btn btn-default"></a>
+          <a ng-click="toggleActiveView(false)" ng-class="{'active': !isCreateViewActive }" type="button"
+             class="btn btn-default btn-remove-left-border">
+            View Existing ECS Relationships
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="manualECS-container" id="createView" ng-show="isCreateViewActive">
+
+    <div class="row">
+      <div class="col-xs-6">
+        <h3>Portal Store Instances</h3>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <div class="form-group">
+                  <label>Store Number</label>
+                  <input class="form-control"
+                         ng-model="portalSearch.storeNumber"
+                         placeholder="Enter Store Number">
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-6">
+                <date-picker-field
+                  name="startDate"
+                  class="form-group"
+                  ng-model="portalSearch.scheduleDate"
+                  label="Schedule Date">
+                </date-picker-field>
+              </div>
+              <div class="col-xs-12 col-sm-6">
+                <div class="form-group">
+                  <label>Catering Station</label>
+                  <ui-select ng-model="portalSearch.station"
+                             theme="bootstrap"
+                             name="cateringStation">
+                    <ui-select-match placeholder="Select a station" allow-clear>{{ $select.selected.stationDescription}}</ui-select-match>
+                    <ui-select-choices repeat="station in cateringStationList | filter: {stationDescription:$select.search}">
+                      <div ng-bind-html="station.stationDescription | highlight: $select.search"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-6">
+                <div class="form-group">
+                  <label>Store Instance</label>
+                  <input class="form-control"
+                         ng-model="portalSearch.storeInstance"
+                         placeholder="Enter Store Instance Number">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer text-right">
+            <button type="button" class="btn btn-default" ng-click="clearPortalSearch()">Clear</button>
+            <button type="button" class="btn btn-primary" ng-click="searchPortalInstances()">Search</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-xs-6">
+        <h3>ePOS Carrier Instances</h3>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <div class="form-group">
+                  <label>Store Number</label>
+                  <input class="form-control"
+                         ng-model="eposSearch.storeNumber"
+                         placeholder="Enter Store Number">
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-6">
+                <date-picker-field
+                  name="startDate"
+                  class="form-group"
+                  ng-model="eposSearch.scheduleDate"
+                  label="Schedule Date">
+                </date-picker-field>
+              </div>
+              <div class="col-xs-12 col-sm-6">
+                <div class="form-group">
+                  <label>Departure Station</label>
+                  <ui-select ng-model="eposSearch.station"
+                             theme="bootstrap"
+                             name="cateringStation">
+                    <ui-select-match placeholder="Select a station" allow-clear>{{ $select.selected.stationDescription}}</ui-select-match>
+                    <ui-select-choices repeat="station in companyStationList | filter: {stationDescription:$select.search}">
+                      <div ng-bind-html="station.stationDescription | highlight: $select.search"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer text-right">
+            <button type="button" class="btn btn-default" ng-click="clearEposSearch()">Clear</button>
+            <button type="button" class="btn btn-primary" ng-click="searchEposInstances()">Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col-xs-6">
+        <table class="table table-bordered table-hover table-responsive" ng-show="storeInstances.length">
+          <thead>
+          <tr>
+            <th>Store Number</th>
+            <th>Schedule Date</th>
+            <th>Catering Station</th>
+            <th>Store Instance</th>
+            <td class="col-xs-1">Select</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="storeInstance in storeInstances" ng-class="getClassForAttribute('portal', 'row', storeInstance)">
+            <td>{{ storeInstance.storeNumber }}</td>
+            <td>{{ storeInstance.scheduleDate }}</td>
+            <td>{{ storeInstance.stationCode }}</td>
+            <td>{{ storeInstance.id }}</td>
+            <td class="text-center">
+              <button ng-click="selectRecord('portal', storeInstance)"
+                      ng-class="getClassForAttribute('portal', 'button', storeInstance)">
+                <span ng-class="getClassForAttribute('portal', 'icon', storeInstance)"></span>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <p ng-show="shouldShowSearchPromptAlert('portal')" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view portal store instances</p>
+        <p ng-show="shouldShowNoRecordAlert('portal')" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were found</p>
+
+      </div>
+
+      <div class="col-xs-6">
+        <table class="table table-bordered table-hover table-responsive"  ng-show="carrierInstances.length">
+          <thead>
+          <tr>
+            <th>Store Number</th>
+            <th>Schedule Date</th>
+            <th>Departure Station</th>
+            <td class="col-xs-1">Select</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="eposInstance in carrierInstances" ng-class="getClassForAttribute('epos', 'row', eposInstance)">
+            <td>{{ eposInstance.storeNumber }}</td>
+            <td>{{ eposInstance.instanceDate }}</td>
+            <td>{{ eposInstance.departureStation }}</td>
+            <td class="text-center">
+              <button ng-click="selectRecord('epos', eposInstance)"
+                      ng-class="getClassForAttribute('epos', 'button', eposInstance)">
+                <span ng-class="getClassForAttribute('epos', 'icon', eposInstance)"></span>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <p ng-show="shouldShowSearchPromptAlert('epos')" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view ePOS carrier instances</p>
+        <p ng-show="shouldShowNoRecordAlert('epos')" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were found</p>
+      </div>
+
+    </div>
+
+    <div class="bottom-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12 text-right">
+            <button type="button" class="btn btn-default" ng-click="resetAll()">Reset All</button>
+            <button type="button" class="btn btn-success" ng-click="saveRelationship()" ng-disabled="!canSaveRelationship()"><span class="fa fa-check"></span> Save Relationship</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="manualECS-container" id="listView" ng-hide="isCreateViewActive">
+
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Existing ECS Relationships</h3>
+        <div class="panel panel-default" id="relationships-search-collapse">
+          <div class="panel-body">
+            <div class="row">
+              <!--<div class="col-xs-12 col-sm-3">-->
+                <!--<div class="form-group">-->
+                  <!--<label>Portal Store Number</label>-->
+                  <!--<input class="form-control"-->
+                         <!--ng-model="allInstancesSearch.portalStoreNumber"-->
+                         <!--placeholder="Enter Store Number">-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="col-xs-6 col-sm-3">-->
+                <!--<date-picker-field-->
+                  <!--name="startDate"-->
+                  <!--class="form-group"-->
+                  <!--ng-model="portalSearch.scheduleDate"-->
+                  <!--label="Portal Schedule Date">-->
+                <!--</date-picker-field>-->
+              <!--</div>-->
+              <!--<div class="col-xs-12 col-sm-3">-->
+                <!--<div class="form-group">-->
+                  <!--<label>Portal Catering Station</label>-->
+                  <!--<ui-select ng-model="allInstancesSearch.portalStation"-->
+                             <!--theme="bootstrap"-->
+                             <!--name="cateringStation">-->
+                    <!--<ui-select-match placeholder="Select a station" allow-clear>{{ $select.selected.stationDescription}}</ui-select-match>-->
+                    <!--<ui-select-choices repeat="station in cateringStationList | filter: {stationDescription:$select.search}">-->
+                      <!--<div ng-bind-html="station.stationDescription | highlight: $select.search"></div>-->
+                    <!--</ui-select-choices>-->
+                  <!--</ui-select>-->
+                <!--</div>-->
+              <!--</div>-->
+              <div class="col-xs-12 col-sm-3">
+                <div class="form-group">
+                  <label>Portal Store Instance</label>
+                  <input class="form-control"
+                         ng-model="allInstancesSearch.storeInstance"
+                         placeholder="Enter Store Instance Number">
+                </div>
+              </div>
+
+              <div class="col-xs-12 col-sm-3">
+                <div class="form-group">
+                  <label>ePOS Store Number</label>
+                  <input class="form-control"
+                         ng-model="allInstancesSearch.eposStoreNumber"
+                         placeholder="Enter Store Number">
+                </div>
+              </div>
+              <div class="col-xs-6 col-sm-3">
+                <date-picker-field
+                  name="startDate"
+                  class="form-group"
+                  ng-model="allInstancesSearch.eposScheduleDate"
+                  label="ePOS Schedule Date">
+                </date-picker-field>
+              </div>
+              <div class="col-xs-12 col-sm-3">
+                <div class="form-group">
+                  <label>ePOS Departure Station</label>
+                  <ui-select ng-model="allInstancesSearch.eposStation"
+                             theme="bootstrap"
+                             name="cateringStation">
+                    <ui-select-match placeholder="Select a station" allow-clear>{{ $select.selected.stationDescription}}</ui-select-match>
+                    <ui-select-choices repeat="station in companyStationList | filter: {stationDescription:$select.search}">
+                      <div ng-bind-html="station.stationDescription | highlight: $select.search"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer text-right">
+            <button type="button" class="btn btn-default" ng-click="clearAllInstancesSearch()">Clear</button>
+            <button type="button" class="btn btn-primary" ng-click="searchAllECSInstances()">Search</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <table class="table table-bordered table-hover table-responsive" ng-show="allECSInstances.length">
+          <thead>
+          <tr>
+            <!--<th>Portal Store Number</th>-->
+            <th>ePOS Store Number</th>
+            <!--<th>Portal Schedule Date</th>-->
+            <th>ePOS Schedule Date</th>
+            <!--<th>Portal Catering Station</th>-->
+            <th>ePOS Departure Station</th>
+            <th>Store Instance</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="ECSInstance in allECSInstances">
+            <!--<td>{{ ECSInstance.portalStoreNumber }}</td>-->
+            <td>{{ ECSInstance.storeNumber }}</td>
+            <!--<td>{{ ECSInstance.scheduleDate }}</td>-->
+            <td>{{ ECSInstance.instanceDate }}</td>
+            <!--<td>{{ ECSInstance.catererStation }}</td>-->
+            <td>{{ ECSInstance.departureStation }}</td>
+            <td>{{ ECSInstance.storeInstanceId }}</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <p ng-show="shouldShowSearchPromptAlert('all')" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view records</p>
+        <p ng-show="shouldShowNoRecordAlert('all')" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were found</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<dynamic-left-nav></dynamic-left-nav>
