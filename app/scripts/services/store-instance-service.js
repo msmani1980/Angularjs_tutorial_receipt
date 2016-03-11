@@ -152,12 +152,13 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.getStoreInstanceMenuItems(requestPayload).$promise;
   }
 
-  function updateStoreInstanceStatus(id, statusId, inboundId) {
+  function updateStoreInstanceStatus(id, statusId, inboundId, isManual) {
     var requestPayload = angular.extend({}, {
       id: id,
       inboundStationId: inboundId,
       api: 'status',
-      itemIdOrBulk: statusId
+      itemIdOrBulk: statusId,
+      isManual: isManual
     });
     return requestResource.updateStoreInstanceStatus(requestPayload).$promise;
   }

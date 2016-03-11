@@ -459,7 +459,7 @@ angular.module('ts5App')
 
       var promises = [];
       angular.forEach(instancesToExecuteOn, function(instance) {
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, status));
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, status, true));
       });
 
       $q.all(promises).then($this.handleActionExecutionSuccess, $this.handleResponseError);
