@@ -11,6 +11,9 @@
 angular.module('ts5App')
   .factory('identityAccessFactory', function(identityAccessService, $rootScope, $http, $localStorage, $location,
     $timeout, $window, companyFactory, $q, lodash, eulaService) {
+
+    var tempToken;
+
     function changePassword(credentials, sessionToken) {
       var payload = {
         username: credentials.username,
@@ -156,34 +159,32 @@ angular.module('ts5App')
       getCompanyData(rawSessionData);
     }
 
-    function setEULA(eulaList) {
-      $rootScope.eula = eulaList.response[0].eula;
-    }
-
-    function getEULAList() {
-      return eulaService.getEULAList().then(setEULA);
-    }
-
-    function showEULAConfirmation() {
-      getEULAList();
-      var modal = angular.element('#confirmation-modal');
-      var loading = angular.element('#loading');
-      modal.modal('show');
-      loading.modal('hide');
-    }
-
     function authorizeUserResponseHandler(sessionDataFromAPI) {
       var rawSessionData = angular.copy(sessionDataFromAPI);
       encryptDataInLS(rawSessionData);
       getCompanyData(rawSessionData);
     }
 
+    function userAgreesToEULA(creds) {
+      angular.element('#loading').modal('show');
+      identityAccessService.userAgreesToEULA(tempToken).then(
+        $timeout(function() {
+          login(creds);
+        }, 500)
+      );
+
+      tempToken = undefined;
+    }
+
     function checkForEULA(rawSessionData) {
-      if (rawSessionData.eulaRecent === false) {
-        showEULAConfirmation();
-        return false;
-      } else if (rawSessionData.eulaRecent === true) {
+      if (rawSessionData.eulaRecent === true) {
         return authorizeUserResponseHandler(rawSessionData);
+      }
+
+      if (rawSessionData.eulaRecent === false) {
+        tempToken = angular.copy(rawSessionData.currentSession.sessionToken);
+        eulaService.showEULAConfirmation();
+        $rootScope.userAgreesToEULA = userAgreesToEULA;
       }
     }
 
@@ -197,8 +198,7 @@ angular.module('ts5App')
 
     $rootScope.$on('logout', logout);
     $rootScope.$on('unauthorized', logout);
-    $rootScope.$on('$locationChangeStart',
-      locationChangeHandler);
+    $rootScope.$on('$locationChangeStart', locationChangeHandler);
     setSessionHeaders();
 
     return {
@@ -210,6 +210,7 @@ angular.module('ts5App')
       setSessionData: setSessionData,
       isAuthorized: isAuthorized,
       checkAuth: checkAuth,
+      checkForEULA: checkForEULA,
       setSelectedCompany: setSelectedCompany
     };
   });

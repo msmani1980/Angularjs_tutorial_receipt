@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('eulaService', function($resource, ENV) {
+  .service('eulaService', function($resource, ENV, $rootScope) {
 
     var requestURL = ENV.apiUrl + '/rsvr/api/eula/:version';
 
@@ -43,9 +43,24 @@ angular.module('ts5App')
       }).$promise;
     };
 
+    function setEULA(eulaList) {
+      $rootScope.eula = decodeURI(eulaList.response[0].eula);
+    }
+
+    function getCurrentEULA() {
+      return getEULAList().then(setEULA);
+    }
+
+    function showEULAConfirmation() {
+      getCurrentEULA();
+      angular.element('#eula-modal').modal('show');
+      angular.element('#loading').modal('hide');
+    }
+
     return {
       getEULAList: getEULAList,
-      getEULA: getEULA
+      getEULA: getEULA,
+      showEULAConfirmation: showEULAConfirmation
     };
 
   });

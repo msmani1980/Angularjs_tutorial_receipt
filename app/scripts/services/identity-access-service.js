@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('identityAccessService', function($resource, ENV) {
+  .service('identityAccessService', function($resource, $rootScope, ENV) {
     var authorizeURL = ENV.apiUrl + '/IdentityAccess/authorizeUser';
     var chpwdURL = ENV.apiUrl + '/IdentityAccess/chpwd';
     var sendUsernameRecoveryEmail = ENV.apiUrl + '/IdentityAccess/recoveruser/:email/send';
@@ -16,8 +16,7 @@ angular.module('ts5App')
     var logoutURL = ENV.apiUrl + '/IdentityAccess/logout';
     var featuresInRoleURL = ENV.apiUrl + '/IdentityAccess/featuresInRole';
     var userCompaniesURL = ENV.apiUrl + '/IdentityAccess/company/alluserscompanies';
-
-    // var eulaUrl = ENV.apiUrl + '/IdentityAccess/eula';
+    var eulaAgreementURL = ENV.apiUrl + '/IdentityAccess/eula/';
 
     var authParameters = {};
     var chpwdParameters = {};
@@ -59,6 +58,12 @@ angular.module('ts5App')
       },
       getUserCompanies: {
         method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
+      userAgreesToEULA: {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         }
@@ -122,6 +127,11 @@ angular.module('ts5App')
       return logoutResource.logout(payload).$promise;
     };
 
+    var userAgreesToEULA = function(token) {
+      var eulaResource = $resource(eulaAgreementURL + token, {}, actions);
+      return eulaResource.userAgreesToEULA().$promise;
+    };
+
     return {
       authorizeUser: authorizeUser,
       checkAuth: checkAuth,
@@ -129,6 +139,7 @@ angular.module('ts5App')
       sendEmail: sendEmail,
       featuresInRole: featuresInRole,
       getUserCompanies: getUserCompanies,
+      userAgreesToEULA: userAgreesToEULA,
       logout: logout
     };
   });

@@ -51,9 +51,10 @@
   </form>
 </div>
 
-<confirmation-modal
+<eula-modal
   title="End User License Agreement"
   body="{{eula}}"
   confirmation-label="I Agree"
-  cancel-label="I Disagree">
-</confirmation-modal>
+  cancel-label="Cancel"
+  confirmation-callback="userAgreesToEULA(credentials)">
+</eula-modal>
