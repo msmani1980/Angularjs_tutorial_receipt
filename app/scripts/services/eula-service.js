@@ -53,14 +53,15 @@ angular.module('ts5App')
 
     function showEULAConfirmation() {
       getCurrentEULA();
-      angular.element('#eula-modal').modal('show');
+      angular.element('#eula-confirmation-modal').modal('show');
       angular.element('#loading').modal('hide');
     }
 
     return {
       getEULAList: getEULAList,
       getEULA: getEULA,
-      showEULAConfirmation: showEULAConfirmation
+      showEULAConfirmation: showEULAConfirmation,
+      getCurrentEULA: getCurrentEULA
     };
 
   });

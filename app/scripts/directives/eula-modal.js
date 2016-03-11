@@ -7,41 +7,20 @@
  * # eulaModal
  */
 angular.module('ts5App')
-  .directive('eulaModal', function() {
+  .directive('eulaModal', ['eulaService', function(eulaService) {
 
-    var controller = function($scope) {
+    function link(scope) {
 
-      var $this = this;
-
-      this.hideModal = function() {
-        var modal = angular.element('#eula-modal');
-        modal.modal('hide');
+      scope.showEULA = function() {
+        console.log('here');
+        eulaService.getCurrentEULA();
+        angular.element('#eula-modal').modal('show');
       };
-
-      $scope.confirmation = function() {
-        $this.hideModal();
-        $scope.confirmationCallback();
-      };
-
-      $scope.alternative = function() {
-        $this.hideModal();
-        $scope.alternativeCallback();
-      };
-    };
+    }
 
     return {
-      templateUrl: '/views/directives/eula-modal.html',
       restrict: 'E',
-      scope: {
-        title: '@',
-        body: '@',
-        confirmationLabel: '@',
-        confirmationCallback: '&',
-        alternativeLabel: '@',
-        alternativeCallback: '&',
-        cancelLabel: '@'
-      },
-      controller: controller
+      templateUrl: '/views/directives/eula-modal.html',
+      link: link
     };
-
-  });
+  }]);
