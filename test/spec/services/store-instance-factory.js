@@ -230,7 +230,7 @@ describe('Service: storeInstanceFactory', function() {
     it('should call updateStoreInstanceStatus', function() {
       var statusId = 1;
       storeInstanceFactory.updateStoreInstanceStatus(id, statusId);
-      expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalledWith(id, statusId);
+      expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalledWith(id, statusId, false);
     });
   });
 
