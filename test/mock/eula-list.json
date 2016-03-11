@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "count": 4,
+    "limit": 4,
+    "start": 0
+  },
+  "response": [{
+    "eula": "Testing",
+    "version": 3
+  }, {
+    "eula": "Test",
+    "version": 2
+  }, {
+    "eula": "END USER LICENSE AGREEMENT",
+    "version": 1
+  }, {
+    "eula": "nothing",
+    "version": 0
+  }]
+}

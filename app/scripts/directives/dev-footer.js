@@ -7,12 +7,12 @@
  * # devFooter
  */
 angular.module('ts5App')
-  .directive('devFooter', ['versionService', function (versionService) {
+  .directive('devFooter', ['versionService', function(versionService) {
 
     function link(scope) {
-      scope.getProjectInfo = function () {
+      scope.getProjectInfo = function() {
         if (!scope.appInformation) {
-          versionService.getProjectInfo().then(function (dataFromAPI) {
+          versionService.getProjectInfo().then(function(dataFromAPI) {
             scope.appInformation = dataFromAPI;
           });
         } else {

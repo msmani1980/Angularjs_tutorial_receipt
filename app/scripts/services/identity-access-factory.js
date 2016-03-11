@@ -9,7 +9,11 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash) {
+  .factory('identityAccessFactory', function(identityAccessService, $rootScope, $http, $localStorage, $location,
+    $timeout, $window, companyFactory, $q, lodash, eulaService) {
+
+    var tempToken;
+
     function changePassword(credentials, sessionToken) {
       var payload = {
         username: credentials.username,
@@ -22,7 +26,7 @@ angular.module('ts5App')
       return identityAccessService.checkAuth(sessionToken);
     }
 
-    function sendRecoveryEmail (usernameOrPassword, emailContent, emailAddress, username) {
+    function sendRecoveryEmail(usernameOrPassword, emailContent, emailAddress, username) {
       var shouldRecoverUsername = usernameOrPassword === 'username';
       var usernameToSend = (!username) ? '' : username;
 
@@ -42,7 +46,7 @@ angular.module('ts5App')
       delete $http.defaults.headers.common.userId;
       delete $http.defaults.headers.common.companyId;
       delete $http.defaults.headers.common.sessionToken;
-      $timeout(function () {
+      $timeout(function() {
         $location.path('/login');
       });
     }
@@ -109,7 +113,7 @@ angular.module('ts5App')
 
     function isLocationValid(locationURL) {
       var allowedHashArray = ['login', 'change-password'];
-      var allowedURLsArray = allowedHashArray.filter(function (url) {
+      var allowedURLsArray = allowedHashArray.filter(function(url) {
         return locationURL.contains(url);
       });
 
@@ -129,7 +133,9 @@ angular.module('ts5App')
       sessionObject.companyData.chCompany = angular.copy(rawSessionData.chCompany);
       sessionObject.companyTypes = angular.copy(dataFromAPI[1]);
       sessionObject.userCompanies = angular.copy(dataFromAPI[2].companies);
-      sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, { id: sessionObject.companyData.companyTypeId }).name);
+      sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, {
+        id: sessionObject.companyData.companyTypeId
+      }).name);
       setSessionData(sessionObject);
     }
 
@@ -140,7 +146,7 @@ angular.module('ts5App')
         identityAccessService.getUserCompanies()
       ];
 
-      $q.all(companyDataPromiseArray).then(function (dataFromApi) {
+      $q.all(companyDataPromiseArray).then(function(dataFromApi) {
         getCompanyResponseHandler(dataFromApi, rawSessionData);
       }, logout);
     }
@@ -159,12 +165,33 @@ angular.module('ts5App')
       getCompanyData(rawSessionData);
     }
 
+    function userAgreesToEULA(creds) {
+      angular.element('#loading').modal('show');
+      identityAccessService.userAgreesToEULA(tempToken).then(function() {
+        login(creds);
+      });
+
+      tempToken = undefined;
+    }
+
+    function checkForEULA(rawSessionData) {
+      if (rawSessionData.eulaRecent === true) {
+        return authorizeUserResponseHandler(rawSessionData);
+      }
+
+      if (rawSessionData.eulaRecent === false) {
+        tempToken = angular.copy(rawSessionData.currentSession.sessionToken);
+        eulaService.showEULAConfirmation();
+        $rootScope.userAgreesToEULA = userAgreesToEULA;
+      }
+    }
+
     function login(credentials) {
       var payload = {
         username: credentials.username,
         password: CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64)
       };
-      identityAccessService.authorizeUser(payload).then(authorizeUserResponseHandler, broadcastError);
+      identityAccessService.authorizeUser(payload).then(checkForEULA, broadcastError);
     }
 
     $rootScope.$on('logout', logout);
@@ -181,8 +208,7 @@ angular.module('ts5App')
       setSessionData: setSessionData,
       isAuthorized: isAuthorized,
       checkAuth: checkAuth,
+      checkForEULA: checkForEULA,
       setSelectedCompany: setSelectedCompany
     };
-  }
-)
-;
+  });

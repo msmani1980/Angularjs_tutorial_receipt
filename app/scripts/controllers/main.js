@@ -8,7 +8,8 @@
  */
 angular.module('ts5App')
   .controller('MainCtrl',
-    function ($rootScope, $scope, companiesFactory, mainMenuService, globalMenuService, identityAccessService, identityAccessFactory, companyFactory, lodash) {
+    function($rootScope, $scope, companiesFactory, mainMenuService, globalMenuService, identityAccessService,
+      identityAccessFactory, companyFactory, lodash) {
 
       $scope.viewName = 'TS5 Dashboard';
 
@@ -18,17 +19,18 @@ angular.module('ts5App')
         }
 
         return featurePermission.resource.apiName === menuItemPermission.apiName &&
-          lodash.intersection(featurePermission.permissionCode, menuItemPermission.permissionCodes).length === menuItemPermission.permissionCodes.length;
+          lodash.intersection(featurePermission.permissionCode, menuItemPermission.permissionCodes).length ===
+          menuItemPermission.permissionCodes.length;
       }
 
       function checkMenuItemHasFeaturePermissions(permissions, featurePermission) {
-        return lodash.find(permissions, function (menuItemPermission) {
+        return lodash.find(permissions, function(menuItemPermission) {
           return checkMenuItemMatchesFeaturePermission(featurePermission, menuItemPermission);
         });
       }
 
       function findPackageWithMatchingMatchingMenuItem(menuItem, featurePermissions) {
-        return lodash.find(featurePermissions, function (featurePermission) {
+        return lodash.find(featurePermissions, function(featurePermission) {
           return checkMenuItemHasFeaturePermissions(menuItem.permissions, featurePermission);
         });
       }
@@ -50,13 +52,13 @@ angular.module('ts5App')
       }
 
       function menuItemsWithFeaturePermissions(menuItems, response) {
-        return lodash.filter(menuItems, function (menuItem) {
+        return lodash.filter(menuItems, function(menuItem) {
           return hasResponseMatchingMenuItemWithPermissions(menuItem, response);
         });
       }
 
       function menuWithFeaturePermissions(menu, response) {
-        return lodash.filter(menu, function (item) {
+        return lodash.filter(menu, function(item) {
           item.menuItems = menuItemsWithFeaturePermissions(item.menuItems, response);
           return item.menuItems.length !== 0;
         });
@@ -65,14 +67,16 @@ angular.module('ts5App')
       function assignMenuToCompanyType() {
         var companyTypeId = globalMenuService.getCompanyData().companyTypeId;
         var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
-        var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
+        var companyTypeName = angular.copy(lodash.findWhere(companyTypes, {
+          id: companyTypeId
+        }).name);
         $scope.realDashboardMenu = companyTypeName;
 
         //$scope.realDashboardMenu = mainMenuService[companyTypeName]();
       }
 
       function updateNavigationPerUserFeatures() {
-        identityAccessService.featuresInRole().then(function (response) {
+        identityAccessService.featuresInRole().then(function(response) {
           $scope.dashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
         });
 
