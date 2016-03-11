@@ -12,15 +12,19 @@ angular.module('ts5App')
     function link(scope) {
 
       scope.showEULA = function() {
-        console.log('here');
-        eulaService.getCurrentEULA();
         angular.element('#eula-modal').modal('show');
+        if (!scope.eulaLoaded) {
+          eulaService.getCurrentEULA().then(function() {
+            scope.eulaLoaded = true;
+          });
+        }
       };
     }
 
     return {
       restrict: 'E',
       templateUrl: '/views/directives/eula-modal.html',
-      link: link
+      link: link,
+      replace: true
     };
   }]);

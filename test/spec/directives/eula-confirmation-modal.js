@@ -13,7 +13,7 @@ describe('The eulaModal directive', function() {
   }));
 
   function generateDirectiveTemplate(config) {
-    var template = '<eula-modal ';
+    var template = '<eula-confirmation-modal ';
     if (config.cancelLabel) {
       template += 'cancel-label="' + config.cancelLabel + '" ';
     }
@@ -42,7 +42,7 @@ describe('The eulaModal directive', function() {
       template += 'alternative-label="' + config.alternativeLabel + '" ';
     }
 
-    template += '></eula-modal>';
+    template += '></eula-confirmation-modal>';
     return template;
   }
 

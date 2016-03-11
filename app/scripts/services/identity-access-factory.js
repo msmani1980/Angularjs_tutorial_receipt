@@ -167,11 +167,9 @@ angular.module('ts5App')
 
     function userAgreesToEULA(creds) {
       angular.element('#loading').modal('show');
-      identityAccessService.userAgreesToEULA(tempToken).then(
-        $timeout(function() {
-          login(creds);
-        }, 500)
-      );
+      identityAccessService.userAgreesToEULA(tempToken).then(function() {
+        login(creds);
+      });
 
       tempToken = undefined;
     }
