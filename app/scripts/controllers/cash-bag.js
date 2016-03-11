@@ -241,7 +241,7 @@ angular.module('ts5App')
       return ($scope.state === 'edit' && $localStorage.cashBagBankRefNumber && $scope.oldBankRefNumber && $localStorage.cashBagBankRefNumber !== $scope.oldBankRefNumber);
     };
 
-    function setBankReferenceNumberFromLocalStorage () {
+    function setBankReferenceNumberFromLocalStorage() {
       var shouldSaveBankRefNumber = ($scope.state !== 'view' && $scope.companyPreferences.defaultBankRefNumber && $scope.companyPreferences.defaultBankRefNumber.isSelected);
       $scope.oldBankRefNumber = $scope.cashBag.bankReferenceNumber || '';
       if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber) {
@@ -377,6 +377,14 @@ angular.module('ts5App')
       return result;
     }
 
+    function setCashBagMaxLength() {
+      var defaultLength = 25;
+      $scope.cashBagNumberMaxLength = defaultLength;
+      if ($scope.state !== 'view' && $scope.companyPreferences.cashbagNumberLength && $scope.companyPreferences.cashbagNumberLength.isSelected) {
+        $scope.cashBagNumberMaxLength = $scope.companyPreferences.cashbagNumberLength.numericValue || defaultLength;
+      }
+    }
+
     function getCompanyPreferences() {
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
@@ -391,8 +399,10 @@ angular.module('ts5App')
             exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type'),
             totalNumberOfCashBags: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate',
               'Total Number of Cash Bags'),
-            defaultBankRefNumber: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Default Bank Reference Number')
+            defaultBankRefNumber: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Default Bank Reference Number'),
+            cashbagNumberLength: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Cashbag Validation')
           };
+          setCashBagMaxLength();
         })
       );
     }

@@ -483,6 +483,16 @@ angular.module('ts5App')
             package: 'STOCKOWNER',
             role: 'STOCKOWNERCATEGORY'
           }]
+        }, {
+          title: 'Manual ECS',
+          menuItems: [{
+            name: 'Create Manual ECS Relationship',
+            route: '/#/manual-ECS',
+            icon: 'icon-manage-schedule',
+            className: 'dashboard-manualECS',
+            package: 'ECB',
+            role: 'ECB'
+          }]
         }];
     };
 

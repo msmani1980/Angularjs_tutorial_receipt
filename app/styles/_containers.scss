@@ -10,6 +10,32 @@ body {
   margin-bottom: 20px;
 }
 
+.manualECS-container {
+  margin-top:7rem;
+}
+
+.bottom-footer{
+  width:100%;
+  position: fixed;
+  left:30px;
+  right:0px;
+  bottom: 0px;
+  padding: .8em;
+  z-index: 10;
+  background:$form-header-bg-color;
+  border-top:1px solid lightgray;
+
+  p{
+    font-size:13px;
+    margin-top:15px;
+    color:gray;
+    font-weight:100;
+  }
+
+}
+
+
+
 @keyframes newfadeoutgreen
 {
   0%   { background-color: rgba(223, 240, 216, 1) }
