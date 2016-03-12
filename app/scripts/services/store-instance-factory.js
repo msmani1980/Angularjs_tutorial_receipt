@@ -214,7 +214,7 @@ angular.module('ts5App').service('storeInstanceFactory',
 
     function updateStoreInstanceStatus(storeId, statusId, isManual) {
       isManual = isManual || false;
-      return storeInstanceService.updateStoreInstanceStatus(storeId, statusId, isManual);
+      return storeInstanceService.updateStoreInstanceStatus(storeId, statusId, undefined, isManual);
     }
 
     function getReasonCodeList(payload) {
