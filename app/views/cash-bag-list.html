@@ -186,21 +186,24 @@
           <div class="col-md-3 col-sm-6">
             <div class="form-group">
               <label for="cashBag-origin">Origin</label>
-              <select ng-model="search.departureStationCode" class="stations-multi-select" multiple="multiple" id="cashBag-origin">
-                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }} ({{station.stationName}})
-                </option>
-              </select>
+              <ui-select multiple ng-model="search.departureStationCode" theme="bootstrap" sortable="true" style="min-height:35px">
+                <ui-select-match placeholder="Select Departure Station">{{ $item.stationCode }} - {{ $item.stationName }}</ui-select-match>
+                <ui-select-choices repeat="station in stationList | filter: $select.search | orderBy:'stationCode'">
+                  <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
             </div>
           </div>
 
           <div class="col-md-3 col-sm-6">
             <div class="form-group">
               <label for="cashBag-destination">Destination</label>
-              <select ng-model="search.arrivalStationCode" class="stations-multi-select" multiple="multiple" id="cashBag-destination">
-                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }}
-                  ({{ station.stationName}})
-                </option>
-              </select>
+              <ui-select multiple ng-model="search.arrivalStationCode" theme="bootstrap" sortable="true" style="min-height:35px">
+                <ui-select-match placeholder="Select Arrival Station">{{ $item.stationCode }} - {{ $item.stationName }}</ui-select-match>
+                <ui-select-choices repeat="station in stationList | filter: $select.search | orderBy:'stationCode'">
+                  <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
             </div>
           </div>
 
