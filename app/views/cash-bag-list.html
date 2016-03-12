@@ -186,7 +186,7 @@
           <div class="col-md-3 col-sm-6">
             <div class="form-group">
               <label for="cashBag-origin">Origin</label>
-              <ui-select multiple ng-model="search.departureStationCode" theme="bootstrap" sortable="true" close-on-select="false" style="min-height:35px">
+              <ui-select multiple ng-model="search.departureStationCode" theme="bootstrap" sortable="true" style="min-height:35px">
                 <ui-select-match placeholder="Select Departure Station">{{ $item.stationCode }} - {{ $item.stationName }}</ui-select-match>
                 <ui-select-choices repeat="station in stationList | filter: $select.search | orderBy:'stationCode'">
                   <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
@@ -198,8 +198,8 @@
           <div class="col-md-3 col-sm-6">
             <div class="form-group">
               <label for="cashBag-destination">Destination</label>
-              <ui-select multiple ng-model="search.arrivalStationCode" theme="bootstrap" sortable="true" close-on-select="false" style="min-height:35px">
-                <ui-select-match placeholder="Select Departure Station">{{ $item.stationCode }} - {{ $item.stationName }}</ui-select-match>
+              <ui-select multiple ng-model="search.arrivalStationCode" theme="bootstrap" sortable="true" style="min-height:35px">
+                <ui-select-match placeholder="Select Arrival Station">{{ $item.stationCode }} - {{ $item.stationName }}</ui-select-match>
                 <ui-select-choices repeat="station in stationList | filter: $select.search | orderBy:'stationCode'">
                   <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
                 </ui-select-choices>
