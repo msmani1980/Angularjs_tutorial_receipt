@@ -134,13 +134,8 @@ angular.module('ts5App')
       return payload;
     }
 
-    function loadCashBagList() {
-      if ($this.meta.offset >= $this.meta.count) {
-        return;
-      }
-
+    function createPayload() {
       var payload = angular.copy($scope.search);
-      showLoadingModal();
       if (payload.startDate) {
         payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
         payload.endDate = payload.startDate;
@@ -153,6 +148,18 @@ angular.module('ts5App')
       if (payload.departureStationCode) {
         payload.departureStationCode = formatUiSelectPayload(payload.departureStationCode);
       }
+
+      return payload;
+    }
+
+    function loadCashBagList() {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+
+      showLoadingModal();
+
+      var payload = createPayload();
 
       payload = lodash.assign(payload, {
         isDelete: 'false',
