@@ -324,7 +324,7 @@ angular.module('ts5App')
     var payload = {
       featureName: 'Exchange Rate',
       optionName: 'Exchange Rate Type',
-      startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      date: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
     };
 
     var retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
