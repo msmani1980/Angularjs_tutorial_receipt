@@ -152,9 +152,11 @@ angular.module('ts5App')
     }
 
     function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
-      return currenciesArray.filter(function (currencyItem) {
+      var currencyMatchObject = currenciesArray.filter(function (currencyItem) {
         return currencyItem.id === baseCurrencyId;
       })[0];
+
+      return currencyMatchObject || { currencyCode: '' };
     }
 
     function formatCashBags(cashHandlerCashBagList) {
@@ -164,12 +166,12 @@ angular.module('ts5App')
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
         var eposCalculatedAmount = cashBag.eposCalculatedAmount || 0;
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
-        $scope.isPaperExchangeRatePreferred = (cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
+        $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
         var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
         var coinExchangeRate = cashBag.chCoinExchangeRate || 0;
-        var totalBank = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) / bankOrPaperExchangeRate;
         var paperAmount = cashBag.paperAmountManualCh;
         var coinAmount = cashBag.coinAmountManualCh;
+        var totalBank = (paperAmount + coinAmount) / bankOrPaperExchangeRate;
         var varianceValue = (paperAmount + coinAmount) - crewAmount;
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
 
