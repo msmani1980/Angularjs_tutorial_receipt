@@ -179,24 +179,42 @@ angular.module('ts5App')
       $scope.allECSInstances = null;
     };
 
-    function formatAllECSSearchPayload() {
-      var searchPayload = {};
+    function formatAllECSEposSearchPayload (workingPayload) {
       if ($scope.allInstancesSearch.eposScheduleDate) {
-        searchPayload.instanceDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.eposScheduleDate);
+        workingPayload.instanceDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.eposScheduleDate);
       }
 
       if ($scope.allInstancesSearch.eposStation) {
-        searchPayload.departureStation = $scope.allInstancesSearch.eposStation.stationCode;
+        workingPayload.departureStation = $scope.allInstancesSearch.eposStation.stationCode;
       }
 
       if ($scope.allInstancesSearch.eposStoreNumber) {
-        searchPayload.storeNumber = $scope.allInstancesSearch.eposStoreNumber;
+        workingPayload.storeNumber = $scope.allInstancesSearch.eposStoreNumber;
+      }
+    }
+
+    function formatAllECSPortalSearchPayload (workingPayload) {
+      if ($scope.allInstancesSearch.portalScheduleDate) {
+        workingPayload.siScheduleDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.portalScheduleDate);
+      }
+
+      if ($scope.allInstancesSearch.portalStation) {
+        workingPayload.siCatererStation = $scope.allInstancesSearch.portalStation.code;
+      }
+
+      if ($scope.allInstancesSearch.portalStoreNumber) {
+        workingPayload.siStoreNumber = $scope.allInstancesSearch.portalStoreNumber;
       }
 
       if ($scope.allInstancesSearch.storeInstance) {
-        searchPayload.storeInstanceId = parseInt($scope.allInstancesSearch.storeInstance);
+        workingPayload.storeInstanceId = parseInt($scope.allInstancesSearch.storeInstance);
       }
+    }
 
+    function formatAllECSSearchPayload() {
+      var searchPayload = {};
+      formatAllECSEposSearchPayload(searchPayload);
+      formatAllECSPortalSearchPayload(searchPayload);
       return searchPayload;
     }
 
