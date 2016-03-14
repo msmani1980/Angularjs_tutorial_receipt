@@ -213,7 +213,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="eposInstance in carrierInstances" ng-class="getClassForAttribute('epos', 'row', eposInstance)">
+          <tr ng-repeat="eposInstance in carrierInstances | orderBy: 'storeNumber'" ng-class="getClassForAttribute('epos', 'row', eposInstance)">
             <td>{{ eposInstance.storeNumber }}</td>
             <td>{{ eposInstance.instanceDate }}</td>
             <td>{{ eposInstance.departureStation }}</td>
@@ -339,22 +339,22 @@
         <table class="table table-bordered table-hover table-responsive" ng-show="allECSInstances.length">
           <thead>
           <tr>
-            <!--<th>Portal Store Number</th>-->
+            <th>Portal Store Number</th>
             <th>ePOS Store Number</th>
-            <!--<th>Portal Schedule Date</th>-->
+            <th>Portal Schedule Date</th>
             <th>ePOS Schedule Date</th>
-            <!--<th>Portal Catering Station</th>-->
+            <th>Portal Catering Station</th>
             <th>ePOS Departure Station</th>
             <th>Store Instance</th>
           </tr>
           </thead>
           <tbody>
           <tr ng-repeat="ECSInstance in allECSInstances">
-            <!--<td>{{ ECSInstance.portalStoreNumber }}</td>-->
+            <td>{{ ECSInstance.siStoreNumber }}</td>
             <td>{{ ECSInstance.storeNumber }}</td>
-            <!--<td>{{ ECSInstance.scheduleDate }}</td>-->
+            <td>{{ ECSInstance.siScheduleDate }}</td>
             <td>{{ ECSInstance.instanceDate }}</td>
-            <!--<td>{{ ECSInstance.catererStation }}</td>-->
+            <td>{{ ECSInstance.siCatererStationCode }}</td>
             <td>{{ ECSInstance.departureStation }}</td>
             <td>{{ ECSInstance.storeInstanceId }}</td>
           </tr>

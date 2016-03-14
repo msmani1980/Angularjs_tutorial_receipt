@@ -85,6 +85,7 @@ angular.module('ts5App')
       $scope.carrierInstances = angular.copy(dataFromAPI.response);
       angular.forEach($scope.carrierInstances, function (carrierInstance) {
         carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
+        carrierInstance.storeNumber = carrierInstance.storeNumber || '';
       });
     }
 
@@ -99,6 +100,7 @@ angular.module('ts5App')
       $scope.allECSInstances = angular.copy(dataFromAPI.response);
       angular.forEach($scope.allECSInstances, function (carrierInstance) {
         carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
+        carrierInstance.siScheduleDate = dateUtility.formatDateForApp(carrierInstance.siScheduleDate);
       });
     }
 
