@@ -322,7 +322,6 @@ angular.module('ts5App')
     }
 
     var payload = {
-      featureName: 'Exchange Rate',
       optionName: 'Exchange Rate Type',
       date: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
     };
@@ -333,7 +332,7 @@ angular.module('ts5App')
         'desc');
 
       $scope.companyPreferences = {
-        exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type')
+        exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Exchange Rate Type')
       };
     });
 
