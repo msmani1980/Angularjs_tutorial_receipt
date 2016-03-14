@@ -263,8 +263,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         });
 
         it('should set bank or paper exchange rate from bank or paper exchange rate', function () {
-          var expectedPaperExchangeRate = (cashHandlerCashBagJSON.response[0].chPaperExchangeRate);
-          var expectedBankExchangeRate = (cashHandlerCashBagJSON.response[1].chBankExchangeRate);
+          var expectedPaperExchangeRate = (cashHandlerCashBagJSON.response[0].chPaperExchangeRate).toString();
+          var expectedBankExchangeRate = (cashHandlerCashBagJSON.response[1].chBankExchangeRate).toString();
           expect(scope.cashBags[0].bankOrPaperExchangeRate).toEqual(expectedPaperExchangeRate);
           expect(scope.cashBags[1].bankOrPaperExchangeRate).toEqual(expectedBankExchangeRate);
         });
