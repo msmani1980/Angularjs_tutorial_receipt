@@ -209,7 +209,7 @@ describe('Controller: ManualECSCtrl', function () {
           storeInstanceId: 12,
           siScheduleDate: '20151125',
           siStoreNumber: '456',
-          siCatererStation: 'LON3'
+          siCatererStationCode: 'LON3'
         };
         scope.searchAllECSInstances();
         scope.$digest();
