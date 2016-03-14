@@ -108,7 +108,8 @@ describe('Controller: ManualECSCtrl', function () {
         };
 
         var expectedPayload = {
-          scheduleDate: '20161020',
+          startDate: '20161020',
+          endDate: '20161020',
           storeNumber: '123',
           cateringStationId: 1,
           storeInstanceId: 2
@@ -195,14 +196,20 @@ describe('Controller: ManualECSCtrl', function () {
           eposScheduleDate: '10/20/2016',
           eposStoreNumber: '123',
           eposStation: { id: 1, stationCode: 'ORD' },
-          storeInstance: '12'
+          storeInstance: '12',
+          portalScheduleDate: '11/25/2015',
+          portalStoreNumber: '456',
+          portalStation: {id: 3, code: 'LON3'}
         };
 
         var expectedPayload = {
           instanceDate: '20161020',
           storeNumber: '123',
           departureStation: 'ORD',
-          storeInstanceId: 12
+          storeInstanceId: 12,
+          siScheduleDate: '20151125',
+          siStoreNumber: '456',
+          siCatererStation: 'LON3'
         };
         scope.searchAllECSInstances();
         scope.$digest();

@@ -85,6 +85,7 @@ angular.module('ts5App')
       $scope.carrierInstances = angular.copy(dataFromAPI.response);
       angular.forEach($scope.carrierInstances, function (carrierInstance) {
         carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
+        carrierInstance.storeNumber = carrierInstance.storeNumber || '';
       });
     }
 
@@ -99,6 +100,7 @@ angular.module('ts5App')
       $scope.allECSInstances = angular.copy(dataFromAPI.response);
       angular.forEach($scope.allECSInstances, function (carrierInstance) {
         carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
+        carrierInstance.siScheduleDate = dateUtility.formatDateForApp(carrierInstance.siScheduleDate);
       });
     }
 
@@ -122,7 +124,16 @@ angular.module('ts5App')
       messageService.display('success', 'Relationship Successfully Created', 'Create ECS Relationship');
     }
 
+    $scope.showSaveConfirmation = function () {
+      angular.element('#confirmRelationshipModal').modal('show');
+    };
+
+    $scope.dismissSaveConfirmation = function () {
+      angular.element('#confirmRelationshipModal').modal('hide');
+    };
+
     $scope.saveRelationship = function () {
+      $scope.dismissSaveConfirmation();
       if (!$scope.canSaveRelationship()) {
         messageService.display('danger', 'Please select two valid records', 'Create ECS Relationship');
         return;
@@ -168,24 +179,42 @@ angular.module('ts5App')
       $scope.allECSInstances = null;
     };
 
-    function formatAllECSSearchPayload() {
-      var searchPayload = {};
+    function formatAllECSEposSearchPayload (workingPayload) {
       if ($scope.allInstancesSearch.eposScheduleDate) {
-        searchPayload.instanceDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.eposScheduleDate);
+        workingPayload.instanceDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.eposScheduleDate);
       }
 
       if ($scope.allInstancesSearch.eposStation) {
-        searchPayload.departureStation = $scope.allInstancesSearch.eposStation.stationCode;
+        workingPayload.departureStation = $scope.allInstancesSearch.eposStation.stationCode;
       }
 
       if ($scope.allInstancesSearch.eposStoreNumber) {
-        searchPayload.storeNumber = $scope.allInstancesSearch.eposStoreNumber;
+        workingPayload.storeNumber = $scope.allInstancesSearch.eposStoreNumber;
+      }
+    }
+
+    function formatAllECSPortalSearchPayload (workingPayload) {
+      if ($scope.allInstancesSearch.portalScheduleDate) {
+        workingPayload.siScheduleDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.portalScheduleDate);
+      }
+
+      if ($scope.allInstancesSearch.portalStation) {
+        workingPayload.siCatererStation = $scope.allInstancesSearch.portalStation.code;
+      }
+
+      if ($scope.allInstancesSearch.portalStoreNumber) {
+        workingPayload.siStoreNumber = $scope.allInstancesSearch.portalStoreNumber;
       }
 
       if ($scope.allInstancesSearch.storeInstance) {
-        searchPayload.storeInstanceId = parseInt($scope.allInstancesSearch.storeInstance);
+        workingPayload.storeInstanceId = parseInt($scope.allInstancesSearch.storeInstance);
       }
+    }
 
+    function formatAllECSSearchPayload() {
+      var searchPayload = {};
+      formatAllECSEposSearchPayload(searchPayload);
+      formatAllECSPortalSearchPayload(searchPayload);
       return searchPayload;
     }
 
@@ -211,7 +240,8 @@ angular.module('ts5App')
       var searchPayload = {};
 
       if ($scope.portalSearch.scheduleDate) {
-        searchPayload.scheduleDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
+        searchPayload.startDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
+        searchPayload.endDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
       }
 
       if ($scope.portalSearch.station) {
