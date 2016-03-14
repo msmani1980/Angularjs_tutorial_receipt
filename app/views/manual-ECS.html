@@ -24,6 +24,43 @@
 
   <div class="manualECS-container" id="createView" ng-show="isCreateViewActive">
 
+    <div class="modal fade" id="confirmRelationshipModal" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Confirm ECS Relationship</h4>
+          </div>
+          <div class="modal-body">
+              <table class="table table-bordered table-hover">
+                <tr>
+                  <td></td>
+                  <th>Store Number</th>
+                  <th>Schedule Date</th>
+                  <th>Station</th>
+                  <th>Store Instance</th>
+                </tr>
+                <tr>
+                  <th>Portal Store</th>
+                  <td>{{ selectedPortalRecord.storeNumber }}</td>
+                  <td>{{ selectedPortalRecord.scheduleDate }}</td>
+                  <td>{{ selectedPortalRecord.stationCode }}</td>
+                  <td>{{ selectedPortalRecord.id }}</td>
+                </tr>
+                <tr>
+                  <th>ECS</th>
+                  <td>{{ selectedEposRecord.storeNumber }}</td>
+                  <td>{{ selectedEposRecord.instanceDate }}</td>
+                  <td>{{ selectedEposRecord.departureStation }}</td>
+                  <td class="active"></td>
+                </tr>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
     <div class="row">
       <div class="col-xs-6">
         <h3>Portal Store Instances</h3>
