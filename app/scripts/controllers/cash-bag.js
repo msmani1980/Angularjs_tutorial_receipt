@@ -396,7 +396,7 @@ angular.module('ts5App')
             'date', 'desc');
 
           $scope.companyPreferences = {
-            exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type'),
+            exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Exchange Rate Type'),
             totalNumberOfCashBags: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate',
               'Total Number of Cash Bags'),
             defaultBankRefNumber: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Default Bank Reference Number'),
