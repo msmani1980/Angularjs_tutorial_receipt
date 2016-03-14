@@ -332,7 +332,7 @@ angular.module('ts5App')
         'desc');
 
       $scope.companyPreferences = {
-        exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type')
+        exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Exchange Rate Type')
       };
     });
 
