@@ -222,7 +222,8 @@ angular.module('ts5App')
       var searchPayload = {};
 
       if ($scope.portalSearch.scheduleDate) {
-        searchPayload.scheduleDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
+        searchPayload.startDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
+        searchPayload.endDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
       }
 
       if ($scope.portalSearch.station) {
