@@ -122,7 +122,16 @@ angular.module('ts5App')
       messageService.display('success', 'Relationship Successfully Created', 'Create ECS Relationship');
     }
 
+    $scope.showSaveConfirmation = function () {
+      angular.element('#confirmRelationshipModal').modal('show');
+    };
+
+    $scope.dismissSaveConfirmation = function () {
+      angular.element('#confirmRelationshipModal').modal('hide');
+    };
+
     $scope.saveRelationship = function () {
+      $scope.dismissSaveConfirmation();
       if (!$scope.canSaveRelationship()) {
         messageService.display('danger', 'Please select two valid records', 'Create ECS Relationship');
         return;

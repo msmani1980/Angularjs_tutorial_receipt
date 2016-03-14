@@ -28,9 +28,13 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Confirm ECS Relationship</h4>
+            <h3 class="modal-title">Confirm ECS Relationship</h3>
           </div>
           <div class="modal-body">
+              <p>You are creating a relationship between a Portal dispatched
+                Store and ECS (ePOS Created Store).
+                This will tie all transactions from the ECS to the Portal instance.</p>
+              <br>
               <table class="table table-bordered table-hover">
                 <tr>
                   <td></td>
@@ -51,9 +55,13 @@
                   <td>{{ selectedEposRecord.storeNumber }}</td>
                   <td>{{ selectedEposRecord.instanceDate }}</td>
                   <td>{{ selectedEposRecord.departureStation }}</td>
-                  <td class="active"></td>
+                  <td></td>
                 </tr>
               </table>
+          </div>
+          <div class="modal-footer text-right">
+            <button type="button" class="btn btn-default" ng-click="dismissSaveConfirmation()">Cancel</button>
+            <button type="button" class="btn btn-success" ng-click="saveRelationship()"><span class="fa fa-check"></span> Confirm</button>
           </div>
         </div>
       </div>
@@ -230,7 +238,7 @@
         <div class="row">
           <div class="col-xs-12 text-right">
             <button type="button" class="btn btn-default" ng-click="resetAll()">Reset All</button>
-            <button type="button" class="btn btn-success" ng-click="saveRelationship()" ng-disabled="!canSaveRelationship()"><span class="fa fa-check"></span> Save Relationship</button>
+            <button type="button" class="btn btn-success" ng-click="showSaveConfirmation()" ng-disabled="!canSaveRelationship()"><span class="fa fa-check"></span> Save Relationship</button>
           </div>
         </div>
       </div>
