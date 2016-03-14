@@ -322,7 +322,6 @@ angular.module('ts5App')
     }
 
     var payload = {
-      featureName: 'Exchange Rate',
       optionName: 'Exchange Rate Type',
       date: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
     };
