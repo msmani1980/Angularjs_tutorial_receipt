@@ -199,7 +199,7 @@ angular.module('ts5App')
       }
 
       if ($scope.allInstancesSearch.portalStation) {
-        workingPayload.siCatererStation = $scope.allInstancesSearch.portalStation.code;
+        workingPayload.siCatererStationCode = $scope.allInstancesSearch.portalStation.code;
       }
 
       if ($scope.allInstancesSearch.portalStoreNumber) {
