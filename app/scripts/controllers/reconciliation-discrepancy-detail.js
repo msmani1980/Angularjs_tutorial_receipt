@@ -183,8 +183,8 @@ angular.module('ts5App')
           paperAmount: formatAsCurrency(paperAmount),
           coinAmount: formatAsCurrency(coinAmount),
           varianceValue: formatAsCurrency(varianceValue),
-          bankOrPaperExchangeRate: bankOrPaperExchangeRate,
-          coinExchangeRate: coinExchangeRate,
+          bankOrPaperExchangeRate: formatAsCurrency(bankOrPaperExchangeRate),
+          coinExchangeRate: formatAsCurrency(coinExchangeRate),
           totalBank: formatAsCurrency(totalBank),
           isDiscrepancy: isDiscrepancy
         };
@@ -350,25 +350,15 @@ angular.module('ts5App')
       var total = 0;
 
       angular.forEach($this.eposCashBag, function (cashBag) {
-        if (cashBag.bankAmount) {
-          total += cashBag.bankAmount;
-        } else {
-          var coinAmount = cashBag.coinAmountManual || 0;
-          var paperAmount = cashBag.paperAmountManual || 0;
-          total += coinAmount + paperAmount;
-        }
+        total += cashBag.bankAmount + cashBag.coinAmountManual + cashBag.paperAmountManual;
       });
 
       angular.forEach(eposCreditCard, function (creditCard) {
-        if (creditCard.bankAmountFinal) {
-          total += creditCard.bankAmountFinal;
-        }
+        total += creditCard.bankAmountFinal;
       });
 
       angular.forEach(eposDiscount, function (discount) {
-        if (discount.bankAmountFinal) {
-          total += discount.bankAmountFinal;
-        }
+        total += discount.bankAmountFinal;
       });
 
       return total;
@@ -381,24 +371,16 @@ angular.module('ts5App')
       var total = 0;
 
       angular.forEach($this.chCashBag, function (cashBag) {
-        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank +
-          cashBag.coinAmountManualCHBank);
+        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) + (cashBag.paperAmountManualCHBank +
+          cashBag.coinAmountManualCHBank) + (cashBag.bankAmountCh);
       });
 
       angular.forEach(chCreditCard, function (creditCard) {
-        if (creditCard.bankAmountFinal) {
-          total += creditCard.bankAmountFinal;
-        } else if (creditCard.coinAmountManualCc && creditCard.paperAmountManualCc) {
-          total += creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
-        }
+        total += creditCard.bankAmountFinal + creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
       });
 
       angular.forEach(chDiscount, function (discount) {
-        if (discount.bankAmountFinal) {
-          total += discount.bankAmountFinal;
-        } else if (discount.coinAmountManualCc && discount.paperAmountManualCc) {
-          total += discount.coinAmountManualCc + discount.paperAmountManualCc;
-        }
+        total += discount.bankAmountFinal + discount.coinAmountManualCc + discount.paperAmountManualCc;
       });
 
       return total;
