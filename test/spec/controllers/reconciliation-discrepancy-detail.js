@@ -60,6 +60,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var cashHandlerCashBagJSON;
   var routeParams;
   var dateUtility;
+  var lodash;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
     inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
@@ -90,6 +91,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     storeInstanceFactory = $injector.get('storeInstanceFactory');
     globalMenuService = $injector.get('globalMenuService');
     dateUtility = $injector.get('dateUtility');
+    lodash = $injector.get('lodash');
     controller = $controller;
 
     getStoreStatusListDeferred = $q.defer();
@@ -204,6 +206,14 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       it('should call getPromotionTotals', function () {
         expect(reconciliationFactory.getPromotionTotals).toHaveBeenCalled();
+      });
+
+      it('should format promotionTotals to consolidate duplicates', function () {
+        var promotions = lodash.filter(scope.stockTotals.stockItems, {itemTypeName: 'Promotion'});
+        expect(promotions.length).toEqual(2);
+        expect(promotions[0].eposQuantity).toEqual(1);
+        expect(promotions[1].eposQuantity).toEqual(2);
+        expect(promotions[1].eposTotal).toEqual('0.76');
       });
 
       it('should call getCHRevenue', function () {
