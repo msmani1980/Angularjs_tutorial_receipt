@@ -164,12 +164,12 @@ angular.module('ts5App')
       $scope.isPaperAndCoinExchangeRatePreferred = false;
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
-        var eposCalculatedAmount = cashBag.eposCalculatedAmount || 0;
+        var eposCalculatedAmount = cashBag.eposCalculatedAmount;
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
         $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
         var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
-        var coinExchangeRate = cashBag.chCoinExchangeRate || 0;
-        var paperAmount = cashBag.paperAmountManualCh;
+        var coinExchangeRate = cashBag.chCoinExchangeRate;
+        var paperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
         var coinAmount = cashBag.coinAmountManualCh;
         var totalBank = (paperAmount + coinAmount) / bankOrPaperExchangeRate;
         var varianceValue = (paperAmount + coinAmount) - crewAmount;
