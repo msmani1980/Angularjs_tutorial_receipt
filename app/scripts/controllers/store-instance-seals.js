@@ -625,20 +625,28 @@ angular.module('ts5App')
 
     }
 
-    this.makeSealsPromises = function(stepObject) {
-      this.displayLoadingModal('Updating Status');
+    this.createSealPromises = function(stepObject) {
       var promises = [];
-      if ($scope.isReplenish()) {
-        storeInstanceFactory.updateStoreInstance($routeParams.storeId, getReplenishPayload());
-      }
 
       if ($routeParams.action === 'redispatch') {
         var prevInstanceStep = stepObject.storeOne.stepName;
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId,
-          prevInstanceStep));
+        var prevInstanceId = $scope.storeDetails.prevStoreInstanceId;
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstanceId, prevInstanceStep));
       }
 
+      if ($scope.isReplenish()) {
+        promises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, getReplenishPayload()));
+      }
+
+      // status needs to be the last argument in this promise chain
       promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
+
+      return promises;
+    };
+
+    this.makeSealsPromises = function(stepObject) {
+      this.displayLoadingModal('Updating Status');
+      var promises = this.createSealPromises(stepObject);
       $q.all(promises).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
       }, $this.assignSealsErrorHandler);
