@@ -9,7 +9,8 @@
  */
 angular.module('ts5App')
   .controller('CompanyExchangeRateEditCtrl', function($scope, globalMenuService, currencyFactory, dateUtility,
-    payloadUtility, ngToast, $filter) {
+    payloadUtility, messageService, $filter) {
+
     var $this = this;
 
     this.companyId = globalMenuService.company.get();
@@ -169,11 +170,7 @@ angular.module('ts5App')
     };
 
     this.showToast = function(className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
+      messageService.display(className, message, type);
     };
 
     this.showSaveSuccess = function() {

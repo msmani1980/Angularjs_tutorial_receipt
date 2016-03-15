@@ -8,17 +8,13 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, $route, ngToast,
+  .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, $route, messageService,
                                                            reconciliationFactory, currencyFactory, storeInstanceFactory, globalMenuService, dateUtility, lodash) {
 
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
-      if (angular.isDefined(valueToFormat)) {
-        return sprintf('%.2f', valueToFormat);
-      }
-
-      return valueToFormat;
+      return (valueToFormat) ? sprintf('%.2f', valueToFormat) : sprintf('%.2f', 0);
     }
 
     function makeFinite(valueToCheck) {
@@ -47,7 +43,8 @@ angular.module('ts5App')
       var offloadCount = getIntOrZero(stockItem.offloadCount);
       var eposUpliftCount = getIntOrZero(stockItem.eposUpliftCount);
 
-      return eposSales - ((lmpDispatchedCount + lmpReplenishCount + eposUpliftCount) - (lmpIncomingCount + offloadCount));
+      return eposSales - ((lmpDispatchedCount + lmpReplenishCount + eposUpliftCount) - (lmpIncomingCount +
+        offloadCount));
     }
 
     function getVarianceValue(varianceQuantity, retailPrice) {
@@ -155,27 +152,29 @@ angular.module('ts5App')
     }
 
     function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
-      return currenciesArray.filter(function (currencyItem) {
+      var currencyMatchObject = currenciesArray.filter(function (currencyItem) {
         return currencyItem.id === baseCurrencyId;
       })[0];
+
+      return currencyMatchObject || { currencyCode: '' };
     }
 
     function formatCashBags(cashHandlerCashBagList) {
       var formattedCashBagList = [];
+      $scope.isPaperAndCoinExchangeRatePreferred = false;
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
-
-        var eposCalculatedAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
-        var crewAmount = cashBag.paperAmountManual + cashBag.coinAmountManual;
-        var bankExchangeRate = cashBag.chBankExchangeRate ? formatAsCurrency(cashBag.chBankExchangeRate) : (
-        formatAsCurrency(cashBag.chPaperExchangeRate) + '/' + formatAsCurrency(
-          cashBag.chCoinExchangeRate));
-        var totalBank = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank +
-          cashBag.coinAmountManualCHBank);
-        var paperAmount = cashBag.paperAmountManual;
-        var coinAmount = cashBag.coinAmountManual;
-        var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
+        var eposCalculatedAmount = cashBag.eposCalculatedAmount || 0;
+        var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
+        $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
+        var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
+        var coinExchangeRate = cashBag.chCoinExchangeRate || 0;
+        var paperAmount = cashBag.paperAmountManualCh;
+        var coinAmount = cashBag.coinAmountManualCh;
+        var totalBank = (paperAmount + coinAmount) / bankOrPaperExchangeRate;
+        var varianceValue = (paperAmount + coinAmount) - crewAmount;
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
+
         var cashBagItem = {
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
@@ -184,7 +183,8 @@ angular.module('ts5App')
           paperAmount: formatAsCurrency(paperAmount),
           coinAmount: formatAsCurrency(coinAmount),
           varianceValue: formatAsCurrency(varianceValue),
-          bankExchangeRate: bankExchangeRate,
+          bankOrPaperExchangeRate: formatAsCurrency(bankOrPaperExchangeRate),
+          coinExchangeRate: formatAsCurrency(coinExchangeRate),
           totalBank: formatAsCurrency(totalBank),
           isDiscrepancy: isDiscrepancy
         };
@@ -233,7 +233,11 @@ angular.module('ts5App')
     }
 
     this.checkIfCompanyUseCash = function () {
-      var cashPreference = lodash.where($this.companyPreferences, { choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless' })[0];
+      var cashPreference = lodash.where($this.companyPreferences, {
+        choiceName: 'Active',
+        optionCode: 'CSL',
+        optionName: 'Cashless'
+      })[0];
       if (cashPreference && cashPreference.hasOwnProperty('startDate')) {
         var yesterdayOrEarlier = dateUtility.isTodayOrEarlier(dateUtility.formatDateForApp(cashPreference.startDate,
           'YYYY-MM-DD'));
@@ -346,25 +350,15 @@ angular.module('ts5App')
       var total = 0;
 
       angular.forEach($this.eposCashBag, function (cashBag) {
-        if (cashBag.bankAmount) {
-          total += cashBag.bankAmount;
-        } else {
-          var coinAmount = cashBag.coinAmountManual || 0;
-          var paperAmount = cashBag.paperAmountManual || 0;
-          total += coinAmount + paperAmount;
-        }
+        total += cashBag.bankAmount + cashBag.coinAmountManual + cashBag.paperAmountManual;
       });
 
       angular.forEach(eposCreditCard, function (creditCard) {
-        if (creditCard.bankAmountFinal) {
-          total += creditCard.bankAmountFinal;
-        }
+        total += creditCard.bankAmountFinal;
       });
 
       angular.forEach(eposDiscount, function (discount) {
-        if (discount.bankAmountFinal) {
-          total += discount.bankAmountFinal;
-        }
+        total += discount.bankAmountFinal;
       });
 
       return total;
@@ -377,24 +371,16 @@ angular.module('ts5App')
       var total = 0;
 
       angular.forEach($this.chCashBag, function (cashBag) {
-        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank +
-          cashBag.coinAmountManualCHBank);
+        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) + (cashBag.paperAmountManualCHBank +
+          cashBag.coinAmountManualCHBank) + (cashBag.bankAmountCh);
       });
 
       angular.forEach(chCreditCard, function (creditCard) {
-        if (creditCard.bankAmountFinal) {
-          total += creditCard.bankAmountFinal;
-        } else if (creditCard.coinAmountManualCc && creditCard.paperAmountManualCc) {
-          total += creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
-        }
+        total += creditCard.bankAmountFinal + creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
       });
 
       angular.forEach(chDiscount, function (discount) {
-        if (discount.bankAmountFinal) {
-          total += discount.bankAmountFinal;
-        } else if (discount.coinAmountManualCc && discount.paperAmountManualCc) {
-          total += discount.coinAmountManualCc + discount.paperAmountManualCc;
-        }
+        total += discount.bankAmountFinal + discount.coinAmountManualCc + discount.paperAmountManualCc;
       });
 
       return total;
@@ -509,11 +495,7 @@ angular.module('ts5App')
     }
 
     function showMessage(type, message) {
-      ngToast.create({
-        className: type,
-        dismissButton: true,
-        content: message
-      });
+      messageService.display(type, message);
     }
 
     function actionSuccess(response) {
@@ -575,6 +557,10 @@ angular.module('ts5App')
       angular.element('#checkbox').bootstrapSwitch();
       initTableDefaults();
     }
+
+    $scope.canEdit = function () {
+      return !!$scope.storeInstance && $scope.storeInstance.statusName !== 'Commission Paid';
+    };
 
     $scope.showModal = function (modalName) {
       var modalNameToHeaderMap = {
@@ -640,7 +626,7 @@ angular.module('ts5App')
       item.isEditing = false;
     };
 
-    $scope.hasReplenishInstance = function(items) {
+    $scope.hasReplenishInstance = function (items) {
       var replenishInstances = items.filter(function (item) {
         return item.replenishStoreInstanceId !== null;
       });
@@ -648,11 +634,11 @@ angular.module('ts5App')
       return replenishInstances.length > 0;
     };
 
-    $scope.saveStockItemCounts = function(item) {
+    $scope.saveStockItemCounts = function (item) {
       saveStockItemsCounts([item]);
     };
 
-    $scope.saveStockItemCountsTable = function() {
+    $scope.saveStockItemCountsTable = function () {
       saveStockItemsCounts($scope.stockItemList);
     };
 
@@ -692,7 +678,8 @@ angular.module('ts5App')
         };
       });
 
-      reconciliationFactory.saveStockItemsCounts(payload).then(handleStockItemsCountsSaveSuccess(items), handleResponseError);
+      reconciliationFactory.saveStockItemsCounts(payload).then(handleStockItemsCountsSaveSuccess(items),
+        handleResponseError);
     }
 
     function handleStockItemsCountsSaveSuccess(items) {

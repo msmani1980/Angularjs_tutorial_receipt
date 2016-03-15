@@ -8,61 +8,54 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyReasonCodeCtrl', function ($scope, $routeParams, ngToast) {
+  .controller('CompanyReasonCodeCtrl', function($scope, $routeParams, messageService) {
 
     /* MOCK DATA - TO BE REMOVED */
 
-    var companyReasonTypesJSON =  {
-      companyReasonTypes: [
-        {
-          id: 17,
-          companyId: 403,
-          reasonTypeId: 13,
-          isActive: true,
-          description: 'Closing Inventory',
-          reasonTypeName: 'Closing Inventory'
-        },
-        {
-          id: 18,
-          companyId: 403,
-          reasonTypeId: 10,
-          isActive: true,
-          description: 'Complimentary Management Reasons',
-          reasonTypeName: 'Complimentary'
-        },
-        {
-          id: 26,
-          companyId: 403,
-          reasonTypeId: 16,
-          isActive: true,
-          description: 'LMP Stock Adjustment',
-          reasonTypeName: 'LMP Stock Adjustment'
-        },
-        {
-          id: 16,
-          companyId: 403,
-          reasonTypeId: 12,
-          isActive: true,
-          description: 'Opening Inventory',
-          reasonTypeName: 'Opening Inventory'
-        },
-        {
-          id: 20,
-          companyId: 403,
-          reasonTypeId: 11,
-          isActive: true,
-          description: 'Refund Related Reasons ',
-          reasonTypeName: 'Refund'
-        },
-        {
-          id: 19,
-          companyId: 403,
-          reasonTypeId: 15,
-          isActive: true,
-          description: 'Ullage',
-          reasonTypeName: 'Ullage'
-        }
-      ],
+    var companyReasonTypesJSON = {
+      companyReasonTypes: [{
+        id: 17,
+        companyId: 403,
+        reasonTypeId: 13,
+        isActive: true,
+        description: 'Closing Inventory',
+        reasonTypeName: 'Closing Inventory'
+      }, {
+        id: 18,
+        companyId: 403,
+        reasonTypeId: 10,
+        isActive: true,
+        description: 'Complimentary Management Reasons',
+        reasonTypeName: 'Complimentary'
+      }, {
+        id: 26,
+        companyId: 403,
+        reasonTypeId: 16,
+        isActive: true,
+        description: 'LMP Stock Adjustment',
+        reasonTypeName: 'LMP Stock Adjustment'
+      }, {
+        id: 16,
+        companyId: 403,
+        reasonTypeId: 12,
+        isActive: true,
+        description: 'Opening Inventory',
+        reasonTypeName: 'Opening Inventory'
+      }, {
+        id: 20,
+        companyId: 403,
+        reasonTypeId: 11,
+        isActive: true,
+        description: 'Refund Related Reasons ',
+        reasonTypeName: 'Refund'
+      }, {
+        id: 19,
+        companyId: 403,
+        reasonTypeId: 15,
+        isActive: true,
+        description: 'Ullage',
+        reasonTypeName: 'Ullage'
+      }],
       meta: {
         count: 6,
         limit: 6,
@@ -101,11 +94,7 @@ angular.module('ts5App')
     };
 
     this.showSuccessMessage = function(message) {
-      ngToast.create({
-        className: 'success',
-        dismissButton: true,
-        content: '<strong>Success</strong> - ' + message
-      });
+      messageService.display('success', '<strong>Success</strong> - ' + message);
     };
 
     this.generatePayload = function() {
@@ -152,10 +141,13 @@ angular.module('ts5App')
         companyReasonTypes: this.setSubscribedReasonTypes()
       };
       angular.forEach($scope.formData.companyReasonTypes, function(reasonType) {
-        reasonType.companyReasonCodes = [
-          { reasonCode: 'Example reason 1', isActive:true },
-          { reasonCode: 'Example reason 2', isActive:true }
-        ];
+        reasonType.companyReasonCodes = [{
+          reasonCode: 'Example reason 1',
+          isActive: true
+        }, {
+          reasonCode: 'Example reason 2',
+          isActive: true
+        }];
       });
     };
 
@@ -173,7 +165,7 @@ angular.module('ts5App')
       var reasonType = this.getReasonTypeInFormData(reasonTypeId);
       if (reasonType) {
         reasonType.companyReasonCodes.push({
-          reasonCode:'',
+          reasonCode: '',
           isActive: null
         });
       }
@@ -189,7 +181,7 @@ angular.module('ts5App')
     this.init = function() {
       $scope.displayError = false;
       $scope.reasonFilter = {
-        selectedGlobalReasons:[]
+        selectedGlobalReasons: []
       };
       this.setViewLabels();
 

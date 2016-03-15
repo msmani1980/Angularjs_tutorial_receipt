@@ -3,36 +3,33 @@
 
 describe('Controller: StockDashboardCtrl', function() {
 
-  // load the controller's module
-  beforeEach(module('ts5App', 'config'));
-  beforeEach(module(
-    'served/stock-management-dashboard.json',
-    'served/catering-stations.json',
-    'served/company-reason-codes.json',
-    'served/stock-take-list.json'
-  ));
+  beforeEach(module('ts5App'));
+  beforeEach(module('config'));
+  beforeEach(module('served/stock-management-dashboard.json'));
+  beforeEach(module('served/catering-stations.json'));
+  beforeEach(module('served/company-reason-codes.json'));
+  beforeEach(module('served/stock-take-list.json'));
 
-  var StockDashboardCtrl,
-    stockManagementStationItemsService,
-    catererStationService,
-    companyReasonCodesService,
-    globalMenuService,
-    mockCompanyId,
-    getStockManagementStationItemsDeferred,
-    getCatererStationListDeferred,
-    getCompanyReasonCodesDeferred,
-    stockManagementDashboardJSON,
-    cateringStationsJSON,
-    companyReasonCodesJSON,
-    stockTakeService,
-    stockTakeListJOSN,
-    getStockTakeListDeferred,
-    scope,
-    http,
-    ENV,
-    identityAccessFactory;
+  var StockDashboardCtrl;
+  var stockManagementStationItemsService;
+  var catererStationService;
+  var companyReasonCodesService;
+  var globalMenuService;
+  var mockCompanyId;
+  var getStockManagementStationItemsDeferred;
+  var getCatererStationListDeferred;
+  var getCompanyReasonCodesDeferred;
+  var stockManagementDashboardJSON;
+  var cateringStationsJSON;
+  var companyReasonCodesJSON;
+  var stockTakeService;
+  var stockTakeListJOSN;
+  var getStockTakeListDeferred;
+  var scope;
+  var http;
+  var ENV;
+  var identityAccessFactory;
 
-  // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
     http = $injector.get('$http');
@@ -227,7 +224,8 @@ describe('Controller: StockDashboardCtrl', function() {
       beforeEach(function() {
         scope.selectedCateringStation = cateringStationsJSON.response[0];
         urlControl = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
-        urlControl += '/file/export?sortOn=itemName&companyId=' + mockCompanyId + '&sessionToken=fakeSessionToken';
+        urlControl += '/file/export?sortOn=itemName&companyId=' + mockCompanyId +
+          '&sessionToken=fakeSessionToken';
       });
 
       it('set the exportURL when the catering station is selected', function() {
@@ -246,7 +244,8 @@ describe('Controller: StockDashboardCtrl', function() {
         scope.$digest();
         expect(scope.exportURL).not.toEqual(urlControl);
         var newURL = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
-        newURL += '/file/export?sortOn=itemName&companyId=' + mockCompanyId + '&sessionToken=fakeSessionToken';
+        newURL += '/file/export?sortOn=itemName&companyId=' + mockCompanyId +
+          '&sessionToken=fakeSessionToken';
         expect(scope.exportURL).toEqual(newURL);
       });
 

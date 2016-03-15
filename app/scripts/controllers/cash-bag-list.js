@@ -8,8 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, $localStorage, ngToast,
-                                           dateUtility, lodash, socketIO, $timeout) {
+  .controller('CashBagListCtrl', function($scope, cashBagFactory, $location, $routeParams, $q, $localStorage,
+    messageService,
+    dateUtility, lodash, socketIO, $timeout) {
 
     var companyId;
     var services = [];
@@ -22,7 +23,7 @@ angular.module('ts5App')
       offset: 0
     };
 
-    $scope.isEmptyResultSet = function () {
+    $scope.isEmptyResultSet = function() {
       return $this.shouldShowEmptyResult && $scope.cashBagList.length === 0;
     };
 
@@ -36,11 +37,7 @@ angular.module('ts5App')
     delete $localStorage.isEditFromList;
 
     function showSuccessMessage(error) {
-      ngToast.create({
-        className: 'success',
-        dismissButton: true,
-        content: '<strong>Cash bag</strong>: ' + error
-      });
+      messageService.display('success', '<strong>Cash bag</strong>:' + error);
       $scope.formErrors = {};
     }
 
@@ -60,7 +57,7 @@ angular.module('ts5App')
         return;
       }
 
-      containingArray.map(function (obj) {
+      containingArray.map(function(obj) {
         if (obj.scheduleDate) {
           obj.scheduleDate = dateUtility.formatDateForApp(obj.scheduleDate);
         }
@@ -73,7 +70,7 @@ angular.module('ts5App')
       hideLoadingModal();
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.cashBagList = $scope.cashBagList.concat(formatScheduleDateForApp(angular.copy(response.cashBags)));
-      angular.forEach($scope.cashBagList, function (cashBag) {
+      angular.forEach($scope.cashBagList, function(cashBag) {
         if ($scope.isNew(cashBag.id)) {
           showSuccessMessage('successfully created');
         }
@@ -110,17 +107,17 @@ angular.module('ts5App')
       companyId = cashBagFactory.getCompanyId();
       services = {
         promises: [],
-        call: function (servicesArray) {
-          angular.forEach(servicesArray, function (_service) {
+        call: function(servicesArray) {
+          angular.forEach(servicesArray, function(_service) {
             services.promises.push(services[_service]());
           });
         },
 
-        getStationList: function () {
+        getStationList: function() {
           return cashBagFactory.getStationList(companyId).then(getStationListResponseHandler);
         },
 
-        getSchedulesList: function () {
+        getSchedulesList: function() {
           return cashBagFactory.getSchedulesList(companyId).then(getSchedulesListResponseHandler);
         }
       };
@@ -128,17 +125,41 @@ angular.module('ts5App')
       $q.all(services.promises).then(hideLoadingModal);
     })();
 
+    function formatUiSelectPayload(data) {
+      var payload = [];
+      angular.forEach(data, function(station) {
+        payload.push(station.stationCode);
+      });
+
+      return payload;
+    }
+
+    function createPayload() {
+      var payload = angular.copy($scope.search);
+      if (payload.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+        payload.endDate = payload.startDate;
+      }
+
+      if (payload.arrivalStationCode) {
+        payload.arrivalStationCode = formatUiSelectPayload(payload.arrivalStationCode);
+      }
+
+      if (payload.departureStationCode) {
+        payload.departureStationCode = formatUiSelectPayload(payload.departureStationCode);
+      }
+
+      return payload;
+    }
+
     function loadCashBagList() {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
 
-      var payload = angular.copy($scope.search);
       showLoadingModal();
-      if (payload.startDate) {
-        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
-        payload.endDate = payload.startDate;
-      }
+
+      var payload = createPayload();
 
       payload = lodash.assign(payload, {
         isDelete: 'false',
@@ -152,7 +173,7 @@ angular.module('ts5App')
 
     $scope.loadCashBagList = loadCashBagList;
 
-    $scope.searchCashBag = function () {
+    $scope.searchCashBag = function() {
       $scope.cashBagList = [];
       $this.shouldShowEmptyResult = true;
       $this.meta = {
@@ -163,17 +184,17 @@ angular.module('ts5App')
       loadCashBagList();
     };
 
-    socketIO.on('cashBag', function (message) {
+    socketIO.on('cashBag', function(message) {
       $scope.search.cashBagNumber = message.message;
-      $timeout(function () {
+      $timeout(function() {
         $scope.searchCashBag();
       });
     });
 
-    $scope.clearForm = function () {
+    $scope.clearForm = function() {
       $scope.search = {};
       angular.element('.stations-multi-select').select2('data', null);
-      $scope.searchCashBag();
+      $scope.cashBagList = [];
     };
 
     // helpers
@@ -198,33 +219,33 @@ angular.module('ts5App')
     }
 
     // scope methods
-    $scope.viewCashBag = function (cashBag) {
+    $scope.viewCashBag = function(cashBag) {
       $location.path('cash-bag/view/' + cashBag.id);
     };
 
-    $scope.editCashBag = function (cashBag) {
+    $scope.editCashBag = function(cashBag) {
       var buttonSelector = sprintf('.edit-cash-bag-%s-btn', cashBag.id);
       angular.element(buttonSelector).button('loading');
-      $scope.checkForDailyExchangeRate().then(function () {
+      $scope.checkForDailyExchangeRate().then(function() {
         angular.element(buttonSelector).button('reset');
         $location.path('cash-bag/edit/' + cashBag.id);
       });
     };
 
-    $scope.isNew = function (cashBagId) {
+    $scope.isNew = function(cashBagId) {
       return ($routeParams.newId === cashBagId);
     };
 
-    $scope.showCreatePopup = function () {
+    $scope.showCreatePopup = function() {
       var buttonSelector = '.add-cash-bag-btn';
       angular.element(buttonSelector).button('loading');
-      $scope.checkForDailyExchangeRate().then(function () {
+      $scope.checkForDailyExchangeRate().then(function() {
         angular.element(buttonSelector).button('reset');
         angular.element('#addCashBagModal').modal('show');
       });
     };
 
-    $scope.hideCreatePopup = function () {
+    $scope.hideCreatePopup = function() {
       angular.element('#addCashBagModal').modal('hide');
       clearPopupSearch();
     };
@@ -233,7 +254,7 @@ angular.module('ts5App')
       $scope.storeList = angular.copy(storeListFromAPI.response);
     }
 
-    $scope.isDateSelected = function () {
+    $scope.isDateSelected = function() {
       return !$scope.search.scheduleDate;
     };
 
@@ -254,7 +275,7 @@ angular.module('ts5App')
       return payload;
     }
 
-    $scope.shouldShowInstanceTable = function () {
+    $scope.shouldShowInstanceTable = function() {
       return ($scope.storeInstanceList.length > 0);
     };
 
@@ -262,7 +283,7 @@ angular.module('ts5App')
       return (response && response.length > 0);
     }
 
-    var getStoreInstanceListHandler = function (dataFromAPI) {
+    var getStoreInstanceListHandler = function(dataFromAPI) {
       var isResponseValid = validateStoreInstanceResponse(dataFromAPI.response);
       if (isResponseValid) {
         var storeListFromAPI = angular.copy(dataFromAPI.response);
@@ -275,7 +296,7 @@ angular.module('ts5App')
       showModalErrors('No Store Instance found, please check search criteria');
     };
 
-    $scope.findStoreInstance = function () {
+    $scope.findStoreInstance = function() {
       $scope.storeInstanceList = [];
       $scope.displayModalError = false;
       var payload = createPayloadForStoreInstance();
@@ -285,15 +306,15 @@ angular.module('ts5App')
       }
     };
 
-    $scope.clearSelectedSchedule = function () {
+    $scope.clearSelectedSchedule = function() {
       delete $scope.search.selectedSchedule;
     };
 
-    $scope.clearStoreNumber = function () {
+    $scope.clearStoreNumber = function() {
       delete $scope.search.selectedStoreNumber;
     };
 
-    $scope.$watch('search.scheduleDate', function () {
+    $scope.$watch('search.scheduleDate', function() {
       if (!$scope.search.scheduleDate) {
         return;
       }
@@ -310,7 +331,7 @@ angular.module('ts5App')
       cashBagFactory.getSchedulesInDateRange(companyId, searchDate, searchDate).then(setFilteredScheduleList);
     });
 
-    $scope.submitCreate = function (storeInstance) {
+    $scope.submitCreate = function(storeInstance) {
       if (!storeInstance) {
         showModalErrors('Please select a store instance');
         return;
@@ -322,16 +343,16 @@ angular.module('ts5App')
       });
     };
 
-    $scope.isCashBagEditable = function (cashBag) {
+    $scope.isCashBagEditable = function(cashBag) {
       return (cashBag && !cashBag.isSubmitted && cashBag.isDelete === 'false');
     };
 
-    $scope.isListFromEdit = function () {
+    $scope.isListFromEdit = function() {
       return !!$localStorage.isListFromEdit;
     };
 
     // http://v4-alpha.getbootstrap.com/components/collapse/#events
-    angular.element('#searchCollapse').on('shown.bs.collapse', function () {
+    angular.element('#searchCollapse').on('shown.bs.collapse', function() {
       angular.element('#cashBagNumber').focus();
     });
 

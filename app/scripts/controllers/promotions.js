@@ -8,8 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionsCtrl', function($scope, $location, $routeParams, $q, $filter,
-    promotionsFactory, dateUtility) {
+  .controller('PromotionsCtrl', function($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility) {
 
     $scope.readOnly = true;
     $scope.editing = false;

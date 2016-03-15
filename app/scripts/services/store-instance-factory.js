@@ -212,8 +212,9 @@ angular.module('ts5App').service('storeInstanceFactory',
       return getStoreDetailsDeferred.promise;
     }
 
-    function updateStoreInstanceStatus(storeId, statusId) {
-      return storeInstanceService.updateStoreInstanceStatus(storeId, statusId);
+    function updateStoreInstanceStatus(storeId, statusId, isManual) {
+      isManual = isManual || false;
+      return storeInstanceService.updateStoreInstanceStatus(storeId, statusId, undefined, isManual);
     }
 
     function getReasonCodeList(payload) {

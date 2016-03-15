@@ -1,33 +1,32 @@
 'use strict';
 
-describe('The MenuRelationshipCreateCtrl', function () {
+describe('The MenuRelationshipCreateCtrl', function() {
 
-  var $scope,
-    MenuRelationshipCreateCtrl,
-    getMenuListDeffered,
-    menuService,
-    menuListJSON,
-    stationListJSON,
-    catererStationService,
-    getCatererStationListDeffered,
-    getRelationshipDeffered,
-    menuCatererStationListJSON,
-    menuCatererStationsService,
-    location,
-    httpBackend,
-    authRequestHandler,
-    createMenuRelationshipDeffered;
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
+  beforeEach(module('served/menus.json'));
+  beforeEach(module('served/catering-stations.json'));
+  beforeEach(module('served/menu-catering-stations.json'));
 
-  beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module(
-    'served/menus.json',
-    'served/catering-stations.json',
-    'served/menu-catering-stations.json'
-  ));
+  var scope;
+  var MenuRelationshipCreateCtrl;
+  var getMenuListDeffered;
+  var menuService;
+  var menuListJSON;
+  var stationListJSON;
+  var catererStationService;
+  var getCatererStationListDeffered;
+  var getRelationshipDeffered;
+  var menuCatererStationListJSON;
+  var menuCatererStationsService;
+  var location;
+  var httpBackend;
+  var authRequestHandler;
+  var createMenuRelationshipDeffered;
 
   function createFormObject() {
-    $scope.form = {
-      $name:'form',
+    scope.form = {
+      $name: 'form',
       $valid: false,
       $invalid: false,
       $submitted: false,
@@ -74,10 +73,10 @@ describe('The MenuRelationshipCreateCtrl', function () {
     };
   }
 
-  beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
+  beforeEach(inject(function($q, $controller, $rootScope, _menuService_,
     $location, $httpBackend, _catererStationService_,
     _menuCatererStationsService_) {
-    inject(function (_servedMenus_, _servedCateringStations_,
+    inject(function(_servedMenus_, _servedCateringStations_,
       _servedMenuCateringStations_) {
       menuListJSON = _servedMenus_;
       stationListJSON = _servedCateringStations_;
@@ -93,7 +92,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
 
     httpBackend = $httpBackend;
     location = $location;
-    $scope = $rootScope.$new();
+    scope = $rootScope.$new();
     getMenuListDeffered = $q.defer();
     getMenuListDeffered.resolve(menuListJSON);
     menuService = _menuService_;
@@ -118,7 +117,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
 
     MenuRelationshipCreateCtrl = $controller(
       'MenuRelationshipCreateCtrl', {
-        $scope: $scope
+        $scope: scope
       });
 
     createFormObject();
@@ -130,79 +129,79 @@ describe('The MenuRelationshipCreateCtrl', function () {
     httpBackend.verifyNoOutstandingRequest();
   });*/
 
-  describe('The MenuRelationshipCreateCtrl', function () {
-    it('should be defined', function () {
+  describe('The MenuRelationshipCreateCtrl', function() {
+    it('should be defined', function() {
       expect(MenuRelationshipCreateCtrl).toBeDefined();
     });
 
-    it('should have a the route /menu-relationship-create', function () {
+    it('should have a the route /menu-relationship-create', function() {
       location.path('/menu-relationship-create');
       expect(location.path()).toBe('/menu-relationship-create');
     });
   });
 
-  it('should have a setMenuList method', function () {
+  it('should have a setMenuList method', function() {
     expect(MenuRelationshipCreateCtrl.setMenuList).toBeDefined();
   });
 
   it('should have an empty menu list before the scope is digested',
-    function () {
-      expect($scope.menuList).toBeUndefined();
+    function() {
+      expect(scope.menuList).toBeUndefined();
     });
 
-  describe('menus list', function () {
+  describe('menus list', function() {
 
-    beforeEach(function () {
-      $scope.$digest();
+    beforeEach(function() {
+      scope.$digest();
     });
 
-    it('should be defined', function () {
-      expect($scope.menuList).toBeDefined();
+    it('should be defined', function() {
+      expect(scope.menuList).toBeDefined();
     });
 
     it('should be contain at least one object in the menus array',
-      function () {
-        expect($scope.menuList.length).toBeGreaterThan(0);
+      function() {
+        expect(scope.menuList.length).toBeGreaterThan(0);
       });
 
     it('should be match the menus from the menu API Respone',
-      function () {
-        expect($scope.menuList).toEqual(menuListJSON.menus);
+      function() {
+        expect(scope.menuList).toEqual(menuListJSON.menus);
       });
 
-    describe('menu object', function () {
+    describe('menu object', function() {
 
       var menuObject;
 
-      beforeEach(function () {
-        menuObject = $scope.menuList[0];
+      beforeEach(function() {
+        menuObject = scope.menuList[0];
       });
 
-      it('should be defined', function () {
+      it('should be defined', function() {
         expect(menuObject).toBeDefined();
       });
 
-      it('should have an id and it is a number', function () {
+      it('should have an id and it is a number', function() {
         expect(menuObject.id).toBeDefined();
         expect(menuObject.id).toEqual(jasmine.any(Number));
       });
 
       it('should have a companyId and it is a number',
-        function () {
+        function() {
           expect(menuObject.companyId).toBeDefined();
           expect(menuObject.companyId).toEqual(jasmine.any(
             Number));
         });
 
       it('should have a menuCode and it is a number',
-        function () {
+        function() {
           expect(menuObject.menuCode).toBeDefined();
           expect(menuObject.menuCode).toEqual(jasmine.any(
             String));
         });
 
       it('should have a menuName and it is a string',
-        function () {
+        function() {
           expect(menuObject.menuName).toBeDefined();
           expect(menuObject.menuName).toEqual(jasmine.any(
             String));
@@ -212,70 +211,70 @@ describe('The MenuRelationshipCreateCtrl', function () {
 
   });
 
-  it('should have a setCatererStationList method', function () {
+  it('should have a setCatererStationList method', function() {
     expect(MenuRelationshipCreateCtrl.setCatererStationList).toBeDefined();
   });
 
   it('should not have a stationList attached to the scope yet',
-    function () {
-      expect($scope.stationList).toBeUndefined();
+    function() {
+      expect(scope.stationList).toBeUndefined();
     });
 
-  describe('station list', function () {
+  describe('station list', function() {
 
-    beforeEach(function () {
-      $scope.$digest();
+    beforeEach(function() {
+      scope.$digest();
     });
 
-    it('should be defined', function () {
-      expect($scope.stationList).toBeDefined();
+    it('should be defined', function() {
+      expect(scope.stationList).toBeDefined();
     });
 
     it('should be contain at least one object in the menus array',
-      function () {
-        expect($scope.stationList.length).toBeGreaterThan(0);
+      function() {
+        expect(scope.stationList.length).toBeGreaterThan(0);
       });
 
     it(
       'should be match the stations from the station API Response',
-      function () {
-        expect($scope.stationList).toEqual(stationListJSON.response);
+      function() {
+        expect(scope.stationList).toEqual(stationListJSON.response);
       });
 
-    describe('station object', function () {
+    describe('station object', function() {
 
       var stationObject;
 
-      beforeEach(function () {
-        stationObject = $scope.stationList[0];
+      beforeEach(function() {
+        stationObject = scope.stationList[0];
       });
 
-      it('should be defined', function () {
+      it('should be defined', function() {
         expect(stationObject).toBeDefined();
       });
 
-      it('should have an id and it is a number', function () {
+      it('should have an id and it is a number', function() {
         expect(stationObject.id).toBeDefined();
         expect(stationObject.id).toEqual(jasmine.any(
           Number));
       });
 
       it('should have a companyId and it is a number',
-        function () {
+        function() {
           expect(stationObject.companyId).toBeDefined();
           expect(stationObject.companyId).toEqual(jasmine.any(
             Number));
         });
 
       it('should have a station Code and it is a number',
-        function () {
+        function() {
           expect(stationObject.code).toBeDefined();
           expect(stationObject.code).toEqual(jasmine.any(
             String));
         });
 
       it('should have a station Name and it is a string',
-        function () {
+        function() {
           expect(stationObject.name).toBeDefined();
           expect(stationObject.name).toEqual(jasmine.any(
             String));
@@ -285,72 +284,72 @@ describe('The MenuRelationshipCreateCtrl', function () {
 
   });
 
-  describe('submitting the form', function () {
+  describe('submitting the form', function() {
 
-    beforeEach(inject(function () {
-      $scope.formData = {
+    beforeEach(inject(function() {
+      scope.formData = {
         startDate: '07/21/2015',
         endDate: '07/25/2015',
         menuId: '68',
         catererStationIds: ['3']
       };
-      $scope.$digest();
+      scope.$digest();
     }));
 
-    it('should return false if formData is not passed to it', function () {
-      var result = $scope.submitForm();
+    it('should return false if formData is not passed to it', function() {
+      var result = scope.submitForm();
       expect(result).toBeFalsy();
     });
 
-    it('should set the form submitted flag when called', function () {
-      expect($scope.form.$submitted).toBeFalsy();
-      $scope.submitForm($scope.formData);
-      expect($scope.form.$submitted).toBeTruthy();
+    it('should set the form submitted flag when called', function() {
+      expect(scope.form.$submitted).toBeFalsy();
+      scope.submitForm(scope.formData);
+      expect(scope.form.$submitted).toBeTruthy();
     });
 
-    describe('validating the form', function () {
+    describe('validating the form', function() {
 
-      beforeEach(function () {
+      beforeEach(function() {
         spyOn(MenuRelationshipCreateCtrl, 'validateForm').and.callThrough();
         spyOn(MenuRelationshipCreateCtrl, 'formatPayloadDates').and.callThrough();
       });
 
-      it('should be called during the submission', function () {
-        $scope.submitForm($scope.formData);
+      it('should be called during the submission', function() {
+        scope.submitForm(scope.formData);
         expect(MenuRelationshipCreateCtrl.validateForm).toHaveBeenCalled();
       });
 
-      it('should set the displayError to false flag if the form is valid', function () {
-        $scope.form.$valid = true;
-        expect($scope.displayError).toBeFalsy();
-        $scope.submitForm($scope.formData);
-        expect($scope.displayError).toBeFalsy();
+      it('should set the displayError to false flag if the form is valid', function() {
+        scope.form.$valid = true;
+        expect(scope.displayError).toBeFalsy();
+        scope.submitForm(scope.formData);
+        expect(scope.displayError).toBeFalsy();
       });
 
-      it('should set the displayError to true if the form is invalid', function () {
-        $scope.formData = {
+      it('should set the displayError to true if the form is invalid', function() {
+        scope.formData = {
           startDate: '20150717',
           menuId: '68'
         };
-        $scope.$digest();
-        expect($scope.displayError).toBeFalsy();
-        $scope.submitForm($scope.formData);
-        expect($scope.displayError).toBeTruthy();
+        scope.$digest();
+        expect(scope.displayError).toBeFalsy();
+        scope.submitForm(scope.formData);
+        expect(scope.displayError).toBeTruthy();
       });
 
     });
 
-    it('should call the service method createRelationship ', function () {
-      $scope.form.$valid = true;
-      $scope.submitForm($scope.formData);
+    it('should call the service method createRelationship ', function() {
+      scope.form.$valid = true;
+      scope.submitForm(scope.formData);
       expect(menuCatererStationsService.createRelationship).toHaveBeenCalled();
     });
 
-    describe('error handling when creating a relationship', function () {
+    describe('error handling when creating a relationship', function() {
 
       var mockError;
 
-      beforeEach(function () {
+      beforeEach(function() {
         mockError = {
           status: 400,
           statusText: 'Bad Request',
@@ -359,12 +358,12 @@ describe('The MenuRelationshipCreateCtrl', function () {
             code: '000'
           }
         };
-        $scope.form.$valid = true;
+        scope.form.$valid = true;
         spyOn(MenuRelationshipCreateCtrl, 'errorHandler').and.callThrough();
-        $scope.$digest();
-        $scope.submitForm($scope.formData);
+        scope.$digest();
+        scope.submitForm(scope.formData);
         createMenuRelationshipDeffered.reject(mockError);
-        $scope.$apply();
+        scope.$apply();
       });
 
       it('should call the error handler', function() {
@@ -372,11 +371,11 @@ describe('The MenuRelationshipCreateCtrl', function () {
       });
 
       it('should set the displayError flag to true', function() {
-        expect($scope.displayError).toBeTruthy();
+        expect(scope.displayError).toBeTruthy();
       });
 
       it('should set the errorResponse as the API ', function() {
-        expect($scope.errorResponse).toEqual(mockError);
+        expect(scope.errorResponse).toEqual(mockError);
       });
 
     });

@@ -2,16 +2,14 @@
 
 describe('Controller: StockTakeCtrl', function() {
 
-  // load the controller's module
-  beforeEach(module('ts5App',
-    'served/catering-stations.json',
-    'served/stock-take.json',
-    'served/stock-management-dashboard.json',
-    'served/master-item-list.json',
-    'served/master-item.json',
-    'served/item-types.json',
-    'served/characteristics.json'
-  ));
+  beforeEach(module('ts5App'));
+  beforeEach(module('served/catering-stations.json'));
+  beforeEach(module('served/stock-take.json'));
+  beforeEach(module('served/stock-management-dashboard.json'));
+  beforeEach(module('served/master-item-list.json'));
+  beforeEach(module('served/master-item.json'));
+  beforeEach(module('served/item-types.json'));
+  beforeEach(module('served/characteristics.json'));
 
   var StockTakeCtrl;
   var scope;
@@ -27,7 +25,6 @@ describe('Controller: StockTakeCtrl', function() {
   var saveDeferred;
   var routeParams;
 
-  // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, $filter, lodash,
     _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedMasterItemList_,
     _servedMasterItem_, _servedItemTypes_, _servedCharacteristics_) {

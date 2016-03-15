@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataTableCtrl', function ($scope, dateUtility, commissionFactory, $location, globalMenuService, employeesService, $q, lodash) {
+  .controller('CommissionDataTableCtrl', function($scope, dateUtility, commissionFactory, $location, globalMenuService,
+    employeesService, $q, lodash) {
     $scope.viewName = 'Commission Data Table';
     $scope.search = {};
     $scope.commissionData = [];
@@ -48,6 +49,7 @@ angular.module('ts5App')
     }
 
     var initDone = false;
+
     function getDataList(query) {
       if (!initDone) {
         return;
@@ -87,11 +89,11 @@ angular.module('ts5App')
       getDataList(payload);
     }
 
-    $scope.getCommissionData = function () {
+    $scope.getCommissionData = function() {
       searchCommissionData();
     };
 
-    $scope.searchCommissionData = function () {
+    $scope.searchCommissionData = function() {
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -101,22 +103,22 @@ angular.module('ts5App')
       searchCommissionData();
     };
 
-    $scope.clearSearchForm = function () {
+    $scope.clearSearchForm = function() {
       $scope.search = {};
-      $scope.searchCommissionData();
+      $scope.commissionData = [];
     };
 
     function deleteCommissionDataSuccessHandler() {
       $scope.searchCommissionData();
     }
 
-    $scope.removeRecord = function (data) {
+    $scope.removeRecord = function(data) {
       commissionFactory.deleteCommissionData(data.id).then(deleteCommissionDataSuccessHandler);
     };
 
     function getNameForId(id, array) {
       var name = '';
-      angular.forEach(array, function (item) {
+      angular.forEach(array, function(item) {
         if (item.id === id) {
           name = item.name;
         }
@@ -125,15 +127,15 @@ angular.module('ts5App')
       return name;
     }
 
-    $scope.getCrewBaseName = function (id) {
+    $scope.getCrewBaseName = function(id) {
       return getNameForId(id, $scope.crewBaseTypes);
     };
 
-    $scope.getCommissionTypeName = function (id) {
+    $scope.getCommissionTypeName = function(id) {
       return getNameForId(id, $scope.commissionTypes);
     };
 
-    $scope.getUnitById = function (id) {
+    $scope.getUnitById = function(id) {
       var type = getNameForId(id, $scope.discountTypes);
       if (type === 'Percentage') {
         return '%';
@@ -142,11 +144,11 @@ angular.module('ts5App')
       return $scope.baseCurrency;
     };
 
-    $scope.redirectToDetailPage = function (id, state) {
+    $scope.redirectToDetailPage = function(id, state) {
       $location.path('commission-data/' + state + '/' + id).search();
     };
 
-    $scope.shouldShowCommissionPercent = function (record) {
+    $scope.shouldShowCommissionPercent = function(record) {
       if (record) {
         var recordTypeName = getNameForId(record.commissionPayableTypeId, $scope.commissionTypes);
         return (recordTypeName !== 'Retail item');
@@ -158,8 +160,8 @@ angular.module('ts5App')
     function getCrewBaseTypes() {
       var uniqueCrewBaseTypes = {};
       var companyId = globalMenuService.company.get();
-      employeesService.getEmployees(companyId).then(function (dataFromAPI) {
-        angular.forEach(dataFromAPI.companyEmployees, function (employee) {
+      employeesService.getEmployees(companyId).then(function(dataFromAPI) {
+        angular.forEach(dataFromAPI.companyEmployees, function(employee) {
           if (!(employee.baseStationId in uniqueCrewBaseTypes)) {
             uniqueCrewBaseTypes[employee.baseStationId] = {};
             $scope.crewBaseTypes.push({
@@ -172,19 +174,19 @@ angular.module('ts5App')
     }
 
     function getCommissionPayableTypes() {
-      commissionFactory.getCommissionPayableTypes().then(function (response) {
+      commissionFactory.getCommissionPayableTypes().then(function(response) {
         $scope.commissionTypes = angular.copy(response);
       });
     }
 
     function getDiscountTypes() {
-      commissionFactory.getDiscountTypes().then(function (response) {
+      commissionFactory.getDiscountTypes().then(function(response) {
         $scope.discountTypes = angular.copy(response);
       });
     }
 
     function getCurrencyData(currencyId) {
-      commissionFactory.getCurrency(currencyId).then(function (response) {
+      commissionFactory.getCurrency(currencyId).then(function(response) {
         if (response) {
           $scope.baseCurrency = angular.copy(response.currencyCode);
         }
@@ -193,7 +195,7 @@ angular.module('ts5App')
 
     function getCompanyData() {
       var companyId = globalMenuService.company.get();
-      commissionFactory.getCompanyData(companyId).then(function (response) {
+      commissionFactory.getCompanyData(companyId).then(function(response) {
         if (response) {
           getCurrencyData(angular.copy(response.baseCurrencyId));
         }

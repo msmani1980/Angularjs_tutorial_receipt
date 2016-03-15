@@ -3,6 +3,7 @@
     <p class="text-muted text-center">
       <i ng-if="!appInformation" class="fa fa-cogs" ng-click="getProjectInfo()"></i>
       <span ng-if="appInformation" ng-click="getProjectInfo()">TS5 v{{appInformation.PROJECT_VERSION}} - {{appInformation.BUILD_NUMBER}}</span>
+      <span ng-if="!appInformation" ng-click="showEULA()"> - EULA</span>
     </p>
   </div>
 </footer>

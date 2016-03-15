@@ -3,36 +3,32 @@
 
 describe('Controller: CompanyExchangeRateEditCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module(
-    'served/company.json',
-    'served/currencies.json',
-    'served/currency.json',
-    'served/company-currency-globals.json',
-    'served/company-exchange-rates.json',
-    'served/company-exchange-rate.json'
-  ));
+  beforeEach(module('served/company.json'));
+  beforeEach(module('served/currencies.json'));
+  beforeEach(module('served/currency.json'));
+  beforeEach(module('served/company-currency-globals.json'));
+  beforeEach(module('served/company-exchange-rates.json'));
+  beforeEach(module('served/company-exchange-rate.json'));
 
-  var CompanyExchangeRateEditCtrl,
-    scope,
-    dateUtility,
-    currencyFactory,
-    getCompanyGlobalCurrenciesDeferred,
-    getDetailedCompanyCurrenciesDeferred,
-    getCompanyExchangeRatesDeferred,
-    getCompanyDeferred,
-    getDeleteCompanyExchangeRateDeferred,
-    companyJSON,
-    currenciesJSON,
-    currencyJSON,
-    masterCurrenciesJSON,
-    companyExchangeRatesJSON,
-    companyExchangeRateJSON,
-    globalMenuService,
-    payloadUtility;
+  var CompanyExchangeRateEditCtrl;
+  var scope;
+  var dateUtility;
+  var currencyFactory;
+  var getCompanyGlobalCurrenciesDeferred;
+  var getDetailedCompanyCurrenciesDeferred;
+  var getCompanyExchangeRatesDeferred;
+  var getCompanyDeferred;
+  var getDeleteCompanyExchangeRateDeferred;
+  var companyJSON;
+  var currenciesJSON;
+  var currencyJSON;
+  var masterCurrenciesJSON;
+  var companyExchangeRatesJSON;
+  var companyExchangeRateJSON;
+  var globalMenuService;
+  var payloadUtility;
 
-  // Initialize the controller and a mock scope
   beforeEach(inject(function($q, $httpBackend, $controller, $rootScope, _globalMenuService_, _dateUtility_,
     _currencyFactory_, _servedCompany_, _servedCurrencies_, _servedCurrency_,
     _servedCompanyCurrencyGlobals_, _servedCompanyExchangeRates_, _servedCompanyExchangeRate_,

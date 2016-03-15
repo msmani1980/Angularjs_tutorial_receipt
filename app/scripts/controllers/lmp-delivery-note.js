@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('LmpDeliveryNoteCtrl', function($scope, $routeParams, $location, $q, $filter, deliveryNoteFactory,
-    dateUtility, ngToast, lodash) {
+    dateUtility, messageService, lodash) {
 
     // static scope vars
     $scope.viewName = 'Delivery note';
@@ -36,11 +36,7 @@ angular.module('ts5App')
     }
 
     function showMessage(message, messageType) {
-      ngToast.create({
-        className: messageType,
-        dismissButton: true,
-        content: '<strong>Delivery Note</strong>: ' + message
-      });
+      messageService.display(messageType, '<strong>Delivery Note</strong>: ' + message);
     }
 
     function displayLoadingModal(loadingText) {
@@ -423,6 +419,7 @@ angular.module('ts5App')
       if (angular.isDefined($scope.filterInput.itemName)) {
         delete $scope.filterInput.itemName;
       }
+
     };
 
     $scope.calculateBooked = function(item) {

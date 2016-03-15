@@ -9,8 +9,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDashboardCtrl', function($q, $scope, dateUtility, catererStationService, reconciliationFactory,
-    payloadUtility, $location, storeInstanceFactory, lodash) {
+  .controller('ReconciliationDashboardCtrl', function($q, $scope, dateUtility, catererStationService,
+    reconciliationFactory, payloadUtility, $location, storeInstanceFactory, lodash) {
 
     var $this = this;
     this.meta = {
@@ -348,7 +348,7 @@ angular.module('ts5App')
         startDate: dateUtility.dateNumDaysBeforeTodayFormatted(10),
         endDate: dateUtility.dateNumDaysBeforeTodayFormatted(2)
       };
-      $scope.searchReconciliationDataList();
+      $scope.reconciliationList = [];
     };
 
     $scope.highlightSelected = function(item) {
@@ -459,7 +459,7 @@ angular.module('ts5App')
 
       var promises = [];
       angular.forEach(instancesToExecuteOn, function(instance) {
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, status));
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, status, true));
       });
 
       $q.all(promises).then($this.handleActionExecutionSuccess, $this.handleResponseError);

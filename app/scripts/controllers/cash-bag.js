@@ -10,7 +10,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, $localStorage, ngToast, cashBagFactory,
+  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, $localStorage, messageService, cashBagFactory,
                                        dateUtility, lodash, globalMenuService) {
 
     // controller global properties
@@ -49,11 +49,9 @@ angular.module('ts5App')
       }
 
       var className = isError ? 'warning' : 'success';
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>Cash bag</strong>:' + message + '!'
-      });
+
+      messageService.display(className, '<strong>Cash bag</strong>:' + message + '!');
+
       if (error !== null && isError) {
         $scope.displayError = true;
         $scope.formErrors = error.data;
@@ -243,7 +241,7 @@ angular.module('ts5App')
       return ($scope.state === 'edit' && $localStorage.cashBagBankRefNumber && $scope.oldBankRefNumber && $localStorage.cashBagBankRefNumber !== $scope.oldBankRefNumber);
     };
 
-    function setBankReferenceNumberFromLocalStorage () {
+    function setBankReferenceNumberFromLocalStorage() {
       var shouldSaveBankRefNumber = ($scope.state !== 'view' && $scope.companyPreferences.defaultBankRefNumber && $scope.companyPreferences.defaultBankRefNumber.isSelected);
       $scope.oldBankRefNumber = $scope.cashBag.bankReferenceNumber || '';
       if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber) {
@@ -379,6 +377,14 @@ angular.module('ts5App')
       return result;
     }
 
+    function setCashBagMaxLength() {
+      var defaultLength = 25;
+      $scope.cashBagNumberMaxLength = defaultLength;
+      if ($scope.state !== 'view' && $scope.companyPreferences.cashbagNumberLength && $scope.companyPreferences.cashbagNumberLength.isSelected) {
+        $scope.cashBagNumberMaxLength = $scope.companyPreferences.cashbagNumberLength.numericValue || defaultLength;
+      }
+    }
+
     function getCompanyPreferences() {
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
@@ -387,14 +393,16 @@ angular.module('ts5App')
       _promises.push(
         cashBagFactory.getCompanyPreferences(payload, _companyId).then(function (companyPreferencesData) {
           var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences),
-            'startDate', 'desc');
+            'date', 'desc');
 
           $scope.companyPreferences = {
-            exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate', 'Exchange Rate Type'),
+            exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Exchange Rate Type'),
             totalNumberOfCashBags: getCompanyPreferenceBy(orderedPreferences, 'Exchange Rate',
               'Total Number of Cash Bags'),
-            defaultBankRefNumber: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Default Bank Reference Number')
+            defaultBankRefNumber: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Default Bank Reference Number'),
+            cashbagNumberLength: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Cashbag Validation')
           };
+          setCashBagMaxLength();
         })
       );
     }

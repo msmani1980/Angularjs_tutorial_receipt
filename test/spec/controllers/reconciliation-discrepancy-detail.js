@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: ReconciliationDiscrepancyDetail', function() {
+describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance.json'));
@@ -17,6 +17,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
   beforeEach(module('served/item.json'));
   beforeEach(module('served/store-status.json'));
   beforeEach(module('served/stock-item-counts.json'));
+  beforeEach(module('served/ch-cash-bag.json'));
 
   var scope;
   var ReconciliationDiscrepancyDetail;
@@ -25,62 +26,45 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
   var reconciliationFactory;
   var storeInstanceFactory;
   var globalMenuService;
-
   var getStoreInstanceDetailsDeferred;
   var storeInstanceJSON;
-
   var getStockTotalsDeferred;
   var getStockTotalsJSON;
-
   var getPromotionTotalsDeferred;
   var getPromotionTotalsJSON;
-
   var getItemTypesListDeferred;
   var getItemTypesListJSON;
-
   var getCountTypesDeferred;
   var getCountTypesJSON;
-
   var getCHRevenueDeferred;
   var getEPOSRevenueDeferred;
-
   var getStoreInstanceItemListDeferred;
   var getStoreInstanceItemListJSON;
-
   var getCompanyGlobalCurrenciesDeferred;
   var getCompanyGlobalCurrenciesJSON;
-
   var getCompanyDeferred;
   var getCompanyJSON;
-
   var getPaymentReportDeferred;
   var getPaymentReportJSON;
-
   var getPromotionDeferred;
   var getPromotionJSON;
-
   var getItemDeferred;
   var getItemJSON;
-
   var getCompanyPreferencesDeferred;
   var getCompanyPreferencesJSON;
-
   var getStoreStatusListDeferred;
   var getStoreStatusListJSON;
-
   var putSaveStockItemsCountsDeferred;
-
   var stockItemCountsDeferred;
   var stockItemCountsJSON;
-
-
+  var cashHandlerCashBagJSON;
   var routeParams;
   var dateUtility;
 
-  beforeEach(inject(function($q, $controller, $rootScope, $location, $injector) {
-    inject(function(_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
-      _servedCountTypes_, _servedStoreInstanceItemList_, _servedPromotion_, _servedItem_,
-      _servedStoreStatus_, _servedStockItemCounts_) {
+  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
+    inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
+                     _servedCountTypes_, _servedStoreInstanceItemList_, _servedPromotion_, _servedItem_,
+                     _servedStoreStatus_, _servedStockItemCounts_, _servedChCashBag_) {
       storeInstanceJSON = _servedStoreInstance_;
       getPromotionTotalsJSON = _servedPromotionTotals_;
       getStockTotalsJSON = _servedStockTotals_;
@@ -89,12 +73,12 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
       getStoreInstanceItemListJSON = _servedStoreInstanceItemList_;
       getPromotionJSON = _servedPromotion_;
       getItemJSON = _servedItem_;
-      getItemJSON = _servedItem_;
       getStoreStatusListJSON = _servedStoreStatus_;
       stockItemCountsJSON = _servedStockItemCounts_;
+      cashHandlerCashBagJSON = _servedChCashBag_;
     });
 
-    inject(function(_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
+    inject(function (_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
       getCompanyGlobalCurrenciesJSON = _servedCurrencies_;
       getCompanyJSON = _servedCompany_;
       getPaymentReportJSON = _servedPaymentReport_;
@@ -133,7 +117,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
     spyOn(reconciliationFactory, 'getCountTypes').and.returnValue(getCountTypesDeferred.promise);
 
     getCHRevenueDeferred = $q.defer();
-    getCHRevenueDeferred.resolve([{}, {}, {}]);
+    getCHRevenueDeferred.resolve([cashHandlerCashBagJSON, {}, {}]);
     spyOn(reconciliationFactory, 'getCHRevenue').and.returnValue(getCHRevenueDeferred.promise);
 
     getEPOSRevenueDeferred = $q.defer();
@@ -191,87 +175,117 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
     });
   }));
 
-  describe('init', function() {
+  describe('init', function () {
 
-    it('should call getStoreInstanceDetails', function() {
+    it('should call getStoreInstanceDetails', function () {
       expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalledWith(routeParams.storeInstanceId);
     });
 
-    describe('dependencies', function() {
-      beforeEach(function() {
+    describe('dependencies', function () {
+      beforeEach(function () {
         scope.$digest();
       });
 
-      it('should localize date to mm/dd/yyy', function() {
+      it('should localize date to mm/dd/yyy', function () {
         expect(scope.storeInstance.scheduleDate).toBe(dateUtility.formatDateForApp(storeInstanceJSON.scheduleDate));
       });
 
-      it('should call getItemTypesList', function() {
+      it('should call getItemTypesList', function () {
         expect(reconciliationFactory.getItemTypesList).toHaveBeenCalled();
       });
 
-      it('should call getCountTypes', function() {
+      it('should call getCountTypes', function () {
         expect(reconciliationFactory.getCountTypes).toHaveBeenCalled();
       });
 
-      it('should call getStockTotals', function() {
+      it('should call getStockTotals', function () {
         expect(reconciliationFactory.getStockTotals).toHaveBeenCalled();
       });
 
-      it('should call getPromotionTotals', function() {
+      it('should call getPromotionTotals', function () {
         expect(reconciliationFactory.getPromotionTotals).toHaveBeenCalled();
       });
 
-      it('should call getCHRevenue', function() {
+      it('should call getCHRevenue', function () {
         expect(reconciliationFactory.getCHRevenue).toHaveBeenCalled();
       });
 
-      it('should call getEPOSRevenue', function() {
+      it('should call getEPOSRevenue', function () {
         expect(reconciliationFactory.getEPOSRevenue).toHaveBeenCalled();
       });
 
-      it('should call getCompanyGlobalCurrencies', function() {
+      it('should call getCompanyGlobalCurrencies', function () {
         expect(reconciliationFactory.getCompanyGlobalCurrencies).toHaveBeenCalled();
       });
 
-      it('should call getCompany', function() {
+      it('should call getCompany', function () {
         expect(reconciliationFactory.getCompany).toHaveBeenCalled();
       });
 
-      it('should call getStoreInstanceItemList', function() {
+      it('should call getStoreInstanceItemList', function () {
         expect(reconciliationFactory.getStoreInstanceItemList).toHaveBeenCalled();
       });
 
-      it('should call getStoreStatusList', function() {
+      it('should call getStoreStatusList', function () {
         expect(reconciliationFactory.getStoreStatusList).toHaveBeenCalled();
       });
 
-      it('should init tables to only show discrepancies', function() {
+      it('should init tables to only show discrepancies', function () {
         expect(scope.showLMPDiscrepancies).toEqual(true);
         expect(scope.showCashBagDiscrepancies).toEqual(true);
       });
 
-      it('should init tables to not be in edit mode', function() {
+      it('should init tables to not be in edit mode', function () {
         expect(scope.editLMPStockTable).toEqual(false);
         expect(scope.editCashBagTable).toEqual(false);
       });
 
-      it('should init each object with a revision object for editing', function() {
+      it('should init each object with a revision object for editing', function () {
         expect(scope.stockItemList).toBeDefined();
         expect(scope.stockItemList[0].revision.itemName).toEqual(scope.stockItemList[0].itemName);
       });
+
+      describe('cash bag init', function () {
+        it('should contain cash bag number, epos calculated amount, paper and coin amounts directly from response', function () {
+          scope.$digest();
+          var expectedCashBag = jasmine.objectContaining({
+            cashBagNumber: cashHandlerCashBagJSON.response[0].cashbagNumber,
+            eposCalculatedAmount: cashHandlerCashBagJSON.response[0].eposCalculatedAmount.toString(),
+            paperAmount: cashHandlerCashBagJSON.response[0].paperAmountManualCh.toString(),
+            coinAmount: cashHandlerCashBagJSON.response[0].coinAmountManualCh.toString()
+          });
+          expect(scope.cashBags[0]).toEqual(expectedCashBag);
+        });
+
+        it('should calculate crew amount by summing epos paper and coin amounts', function () {
+          var expectedCrewAmount = (cashHandlerCashBagJSON.response[0].paperAmountEpos + cashHandlerCashBagJSON.response[0].coinAmountEpos).toString();
+          expect(scope.cashBags[0].crewAmount).toEqual(expectedCrewAmount);
+        });
+
+        it('should set bank or paper exchange rate from bank or paper exchange rate', function () {
+          var expectedPaperExchangeRate = (cashHandlerCashBagJSON.response[0].chPaperExchangeRate).toString();
+          var expectedBankExchangeRate = (cashHandlerCashBagJSON.response[1].chBankExchangeRate).toString();
+          expect(scope.cashBags[0].bankOrPaperExchangeRate).toEqual(expectedPaperExchangeRate);
+          expect(scope.cashBags[1].bankOrPaperExchangeRate).toEqual(expectedBankExchangeRate);
+        });
+
+        it('should set isPaperAndCoinExchangeRatePreferred to true if any record prefers paper & coin over bank', function () {
+          scope.$digest();
+          expect(scope.isPaperAndCoinExchangeRatePreferred).toEqual(true);
+        });
+      });
     });
 
-    describe('filteredLMPStock', function() {
-      beforeEach(function() {
+    describe('filteredLMPStock', function () {
+      beforeEach(function () {
         scope.$digest();
       });
 
-      it('should have a LMP stock item list attached to scope', function() {
+      it('should have a LMP stock item list attached to scope', function () {
         expect(scope.stockItemList.length).toBeGreaterThan(0);
       });
 
-      it('should have a valid, finite variance value', function() {
+      it('should have a valid, finite variance value', function () {
         var expectedVariance = jasmine.objectContaining({
           varianceValue: '0.00'
         });
@@ -283,28 +297,45 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
 
   describe('company preferences', function () {
     it('should set the cash preference to false if found and date < today', function () {
-      ReconciliationDiscrepancyDetail.companyPreferences = [
-        { isSelected: true, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2015-01-01' }
-      ];
+      ReconciliationDiscrepancyDetail.companyPreferences = [{
+        isSelected: true,
+        choiceName: 'Active',
+        optionCode: 'CSL',
+        optionName: 'Cashless',
+        startDate: '2015-01-01'
+      }];
       expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeFalsy();
     });
 
     it('should set the cash preference to true if most recent is turned off', function () {
-      ReconciliationDiscrepancyDetail.companyPreferences = [
-        { isSelected: false, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2015-10-10' },
-        { isSelected: true, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2015-01-01' }
-      ];
+      ReconciliationDiscrepancyDetail.companyPreferences = [{
+        isSelected: false,
+        choiceName: 'Active',
+        optionCode: 'CSL',
+        optionName: 'Cashless',
+        startDate: '2015-10-10'
+      }, {
+        isSelected: true,
+        choiceName: 'Active',
+        optionCode: 'CSL',
+        optionName: 'Cashless',
+        startDate: '2015-01-01'
+      }];
       expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeTruthy();
     });
 
     it('should set the cash preference to true if found and date > today', function () {
-      ReconciliationDiscrepancyDetail.companyPreferences = [
-        { isSelected: true, choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless', startDate:'2017-01-01' }
-      ];
+      ReconciliationDiscrepancyDetail.companyPreferences = [{
+        isSelected: true,
+        choiceName: 'Active',
+        optionCode: 'CSL',
+        optionName: 'Cashless',
+        startDate: '2017-01-01'
+      }];
       expect(ReconciliationDiscrepancyDetail.checkIfCompanyUseCash()).toBeTruthy();
     });
 
-    it('should set the cash preference to true if no preference is found', function() {
+    it('should set the cash preference to true if no preference is found', function () {
       ReconciliationDiscrepancyDetail.companyPreferences = [{
         choiceName: 'Active',
         optionCode: 'fakeCode',
@@ -314,12 +345,12 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
     });
   });
 
-  describe('edit table functions', function() {
-    describe('row editing', function() {
+  describe('edit table functions', function () {
+    describe('row editing', function () {
       var mockItem;
 
-      describe('edit init', function() {
-        beforeEach(function() {
+      describe('edit init', function () {
+        beforeEach(function () {
           mockItem = {
             itemName: 'testItem',
             quantity: 2
@@ -327,20 +358,20 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
           scope.$digest();
         });
 
-        it('should set item.isEditing to true', function() {
+        it('should set item.isEditing to true', function () {
           scope.editItem(mockItem);
           expect(mockItem.isEditing).toEqual(true);
         });
 
-        it('should init item revision to equal current item properties', function() {
+        it('should init item revision to equal current item properties', function () {
           var expectedRevisionObject = angular.copy(mockItem);
           scope.editItem(mockItem);
           expect(mockItem.revision).toEqual(expectedRevisionObject);
         });
       });
 
-      describe('saveItem', function() {
-        beforeEach(function() {
+      describe('saveItem', function () {
+        beforeEach(function () {
           mockItem = {
             itemName: 'testItem',
             quantity: 2
@@ -354,22 +385,22 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
           scope.$digest();
         });
 
-        it('should set item properties to revision properties', function() {
+        it('should set item properties to revision properties', function () {
           expect(mockItem.itemName).toEqual('newName');
           expect(mockItem.quantity).toEqual(3);
         });
 
-        it('should item.isEditing to false', function() {
+        it('should item.isEditing to false', function () {
           expect(mockItem.isEditing).toEqual(false);
         });
 
-        it('should clear revision object', function() {
+        it('should clear revision object', function () {
           expect(mockItem.revision).toEqual({});
         });
       });
 
-      describe('saveStockItemCounts', function() {
-        beforeEach(function() {
+      describe('saveStockItemCounts', function () {
+        beforeEach(function () {
           mockItem = {
             storeInstanceId: 1,
             itemMasterId: 2,
@@ -388,7 +419,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
           scope.$digest();
         });
 
-        it('should call saveStockItemsCounts with new item counts', function() {
+        it('should call saveStockItemsCounts with new item counts', function () {
           var expectedPayload = [{
             storeInstanceId: 1,
             replenishStoreInstanceId: undefined,
@@ -407,8 +438,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
         });
       });
 
-      describe('revertItem', function() {
-        beforeEach(function() {
+      describe('revertItem', function () {
+        beforeEach(function () {
           mockItem = {
             itemName: 'testItem',
             quantity: 2,
@@ -422,18 +453,18 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
           scope.$digest();
         });
 
-        it('should revert revision properties to original properties', function() {
+        it('should revert revision properties to original properties', function () {
           expect(mockItem.revision.itemName).toEqual('testItem');
           expect(mockItem.revision.quantity).toEqual(2);
         });
 
-        it('should not change item.isEditing property', function() {
+        it('should not change item.isEditing property', function () {
           expect(mockItem.isEditing).toEqual(true);
         });
       });
 
-      describe('cancelEditItem', function() {
-        beforeEach(function() {
+      describe('cancelEditItem', function () {
+        beforeEach(function () {
           mockItem = {
             itemName: 'testItem',
             quantity: 2,
@@ -447,19 +478,19 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
           scope.$digest();
         });
 
-        it('should set item.isEditing to false', function() {
+        it('should set item.isEditing to false', function () {
           expect(mockItem.isEditing).toEqual(false);
         });
 
-        it('should not save item.revision properties', function() {
+        it('should not save item.revision properties', function () {
           expect(mockItem.revision).toEqual({});
         });
       });
     });
 
-    describe('table editing', function() {
-      describe('edit init', function() {
-        beforeEach(function() {
+    describe('table editing', function () {
+      describe('edit init', function () {
+        beforeEach(function () {
           scope.stockItemList = [{
             itemName: 'item1',
             quantity: 1
@@ -470,18 +501,18 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
           scope.cashBags = angular.copy(scope.stockItemList);
         });
 
-        it('should put table in edit mode', function() {
+        it('should put table in edit mode', function () {
           scope.initEditTable(true);
           expect(scope.editLMPStockTable).toEqual(true);
         });
 
-        it('should init revisions to equal current data', function() {
+        it('should init revisions to equal current data', function () {
           var expectedRevisionObject = angular.copy(scope.stockItemList[0]);
           scope.initEditTable(true);
           expect(scope.stockItemList[0].revision).toEqual(expectedRevisionObject);
         });
 
-        it('should make changes to cash bag table if isLMPTable is false', function() {
+        it('should make changes to cash bag table if isLMPTable is false', function () {
           var expectedRevisionObject = angular.copy(scope.cashBags[0]);
           scope.initEditTable(false);
           expect(scope.editCashBagTable).toEqual(true);
@@ -489,8 +520,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
         });
       });
 
-      describe('save', function() {
-        beforeEach(function() {
+      describe('save', function () {
+        beforeEach(function () {
           scope.stockItemList = [{
             itemName: 'item1',
             quantity: 1,
@@ -516,7 +547,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
           }];
         });
 
-        it('should set all data to revision data', function() {
+        it('should set all data to revision data', function () {
           scope.saveTable(true);
           expect(scope.stockItemList[0].itemName).toEqual('item1');
           expect(scope.stockItemList[0].quantity).toEqual(1);
@@ -524,12 +555,12 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
           expect(scope.stockItemList[1].quantity).toEqual(2);
         });
 
-        it('should revert table to not be in edit mode', function() {
+        it('should revert table to not be in edit mode', function () {
           scope.saveTable(true);
           expect(scope.editLMPStockTable).toEqual(false);
         });
 
-        it('should make expected changes to cashBags object if isLMPTable is false', function() {
+        it('should make expected changes to cashBags object if isLMPTable is false', function () {
           scope.saveTable(false);
           expect(scope.editCashBagTable).toEqual(false);
           expect(scope.cashBags[0].itemName).toEqual('newItem1');
@@ -537,8 +568,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
         });
       });
 
-      describe('cancel editing table', function() {
-        beforeEach(function() {
+      describe('cancel editing table', function () {
+        beforeEach(function () {
           scope.stockItemList = [{
             itemName: 'item1',
             quantity: 1,
@@ -564,7 +595,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
           }];
         });
 
-        it('should clear revision data', function() {
+        it('should clear revision data', function () {
           scope.cancelEditingTable(true);
           expect(scope.stockItemList[0].itemName).toEqual('item1');
           expect(scope.stockItemList[0].quantity).toEqual(1);
@@ -574,12 +605,12 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
           });
         });
 
-        it('should revert table to not be in edit mode', function() {
+        it('should revert table to not be in edit mode', function () {
           scope.cancelEditingTable(true);
           expect(scope.editLMPStockTable).toEqual(false);
         });
 
-        it('should make expected changes to cashBags object if isLMPTable is false', function() {
+        it('should make expected changes to cashBags object if isLMPTable is false', function () {
           scope.cancelEditingTable(false);
           expect(scope.editCashBagTable).toEqual(false);
           expect(scope.cashBags[0].itemName).toEqual('item1');
@@ -591,20 +622,20 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
 
   });
 
-  describe('show modal', function() {
-    it('should show the modal', function() {
+  describe('show modal', function () {
+    it('should show the modal', function () {
       scope.$digest();
       scope.showModal('Virtual');
       expect(scope.modalTotal).toBe('0.00');
     });
 
-    it('should not add modalMainTitle to scope', function() {
+    it('should not add modalMainTitle to scope', function () {
       scope.$digest();
       scope.showModal('nonExistingKey');
       expect(scope.modalMainTitle).toBeUndefined();
     });
 
-    it('should attach modalMainTitle to scope', function() {
+    it('should attach modalMainTitle to scope', function () {
       scope.$digest();
       scope.showModal('Virtual');
       expect(scope.modalMainTitle).toBeDefined();
@@ -612,15 +643,32 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
 
   });
 
-  describe('scope helper functions', function() {
-    describe('update orderBy', function() {
-      it('should change sort title to given title', function() {
+  describe('scope helper functions', function () {
+    describe('canEdit', function () {
+      it('should return false when store instance is not defined', function () {
+        scope.storeInstance = null;
+        expect(scope.canEdit()).toEqual(false);
+      });
+      it('should return true when store instance status is not commission paid', function () {
+        scope.storeInstance = {
+          statusName: 'fakeStatusName'
+        };
+        expect(scope.canEdit()).toEqual(true);
+        scope.storeInstance = {
+          statusName: 'Commission Paid'
+        };
+        expect(scope.canEdit()).toEqual(false);
+      });
+    });
+
+    describe('update orderBy', function () {
+      it('should change sort title to given title', function () {
         scope.LMPSortTitle = 'oldSortName';
         scope.updateOrderBy('newSortName', true);
         expect(scope.LMPSortTitle).toEqual('newSortName');
       });
 
-      it('should not update LMPSortTitle if isLMP is false', function() {
+      it('should not update LMPSortTitle if isLMP is false', function () {
         scope.cashBagSortTitle = 'oldCashSortName';
         scope.LMPSortTitle = 'lmpSortName';
         scope.updateOrderBy('newSortName', false);
@@ -628,7 +676,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
         expect(scope.cashBagSortTitle).toEqual('newSortName');
       });
 
-      it('should reverse sort direction if already sorting on given name', function() {
+      it('should reverse sort direction if already sorting on given name', function () {
         scope.LMPSortTitle = 'sortName';
         scope.updateOrderBy('sortName', true);
         expect(scope.LMPSortTitle).toEqual('-sortName');
@@ -636,26 +684,26 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
 
     });
 
-    describe('getArrowType', function() {
-      it('should return descending if sort title is negative', function() {
+    describe('getArrowType', function () {
+      it('should return descending if sort title is negative', function () {
         scope.LMPSortTitle = '-sortName';
         var arrowType = scope.getArrowType('sortName', true);
         expect(arrowType).toEqual('descending');
       });
 
-      it('should return ascending if sort title is not negative', function() {
+      it('should return ascending if sort title is not negative', function () {
         scope.LMPSortTitle = 'sortName';
         var arrowType = scope.getArrowType('sortName', true);
         expect(arrowType).toEqual('ascending');
       });
 
-      it('should return none if sort title is not the given name', function() {
+      it('should return none if sort title is not the given name', function () {
         scope.LMPSortTitle = 'sortName';
         var arrowType = scope.getArrowType('otherName', true);
         expect(arrowType).toEqual('none');
       });
 
-      it('should check against cashBagSortTitle if isLMP is false', function() {
+      it('should check against cashBagSortTitle if isLMP is false', function () {
         scope.LMPSortTitle = 'sortName';
         scope.cashBagSortTitle = 'cashSortName';
         var arrowType = scope.getArrowType('sortName', false);
@@ -663,9 +711,9 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
       });
     });
 
-    describe('showEditViewForItem', function() {
+    describe('showEditViewForItem', function () {
       var mockItem;
-      beforeEach(function() {
+      beforeEach(function () {
         scope.editLMPStockTable = false;
         scope.editCashBagTable = false;
         mockItem = {
@@ -673,7 +721,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
         };
       });
 
-      it('should return true if item is editing', function() {
+      it('should return true if item is editing', function () {
         var showEdit = scope.showEditViewForItem(mockItem, true);
         expect(showEdit).toEqual(true);
         mockItem.isEditing = false;
@@ -681,14 +729,14 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
         expect(showEdit).toEqual(false);
       });
 
-      it('should return true if table is editing', function() {
+      it('should return true if table is editing', function () {
         scope.editLMPStockTable = true;
         mockItem.isEditing = false;
         var showEdit = scope.showEditViewForItem(mockItem, true);
         expect(showEdit).toEqual(true);
       });
 
-      it('should check against cash bag table if isLMP is false', function() {
+      it('should check against cash bag table if isLMP is false', function () {
         scope.editLMPStockTable = false;
         scope.editCashBagTable = true;
         mockItem.isEditing = false;
@@ -697,30 +745,30 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
       });
     });
 
-    describe('$scope.isInStatus method', function() {
-      beforeEach(function() {
+    describe('$scope.isInStatus method', function () {
+      beforeEach(function () {
         scope.statusList = getStoreStatusListJSON;
       });
 
-      it('should return false if nothing passed as status', function() {
+      it('should return false if nothing passed as status', function () {
         expect(scope.isInStatus()).toBeFalsy();
       });
 
-      it('should return true if matching', function() {
+      it('should return true if matching', function () {
         scope.storeInstance = {
           statusName: 'Discrepencies'
         };
         expect(scope.isInStatus('Discrepencies')).toBeTruthy();
       });
 
-      it('should return true if matching', function() {
+      it('should return true if matching', function () {
         scope.storeInstance = {
           statusName: 'Confirmed'
         };
         expect(scope.isInStatus('Confirmed')).toBeTruthy();
       });
 
-      it('should return true if matching', function() {
+      it('should return true if matching', function () {
         scope.storeInstance = {
           statusName: 'Discrepencies'
         };
@@ -728,12 +776,12 @@ describe('Controller: ReconciliationDiscrepancyDetail', function() {
       });
     });
 
-    describe('$scope.performAction method', function() {
-      beforeEach(function() {
+    describe('$scope.performAction method', function () {
+      beforeEach(function () {
         scope.statusList = getStoreStatusListJSON;
         spyOn(storeInstanceFactory, 'updateStoreInstanceStatus');
       });
-      it('should return false if nothing passed as status', function() {
+      it('should return false if nothing passed as status', function () {
         scope.storeInstance = {
           statusName: 'Confirmed',
           id: '1'

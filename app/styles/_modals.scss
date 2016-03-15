@@ -20,6 +20,14 @@
   }
 }
 
+#eula-confirmation-modal, #eula-modal{
+  .modal-body{
+    max-height:300px;
+    overflow:auto;
+    color:#757575;
+  }
+}
+
 /*******************************
 * MODAL AS LEFT/RIGHT SIDEBAR
 * Add "left" or "right" in modal parent div, after class="modal".
@@ -83,4 +91,3 @@
   border-bottom-color: #EEEEEE;
   background-color: #FAFAFA;
 }
-

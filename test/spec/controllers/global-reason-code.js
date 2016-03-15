@@ -2,10 +2,8 @@
 
 describe('Global Reason Code Controller', function() {
 
-  beforeEach(module(
-    'ts5App',
-    'template-module'
-  ));
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
 
   var scope;
   var controller;
@@ -21,7 +19,7 @@ describe('Global Reason Code Controller', function() {
       $valid: false,
       $invalid: false,
       $submitted: false,
-      $name:'globalReasonCodeForm',
+      $name: 'globalReasonCodeForm',
       refundCodeType: {
         $name: 'refundCodeType',
         $invalid: false,

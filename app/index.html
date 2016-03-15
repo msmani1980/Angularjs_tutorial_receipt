@@ -34,6 +34,7 @@
 </div>
 
 <dev-footer class="hide-from-print"></dev-footer>
+<eula-modal></eula-modal>
 <loading-modal></loading-modal>
 <toast></toast>
 
@@ -84,6 +85,7 @@
 <script src="bower_components/aes/index.js"></script>
 <script src="bower_components/angular-scroll/angular-scroll.js"></script>
 <script src="bower_components/sprintf/src/sprintf.js"></script>
+<script src="bower_components/socket-io/index.js"></script>
 <!-- endbower -->
 <script src="bower_components/sprintf/src/angular-sprintf.js"></script>
 <!-- endbuild -->
@@ -297,6 +299,14 @@
 <script src="scripts/services/store-instance-validation-service.js"></script>
 <script src="scripts/services/socket-io.js"></script>
 <script src="scripts/directives/missing-daily-exchange-modal.js"></script>
+<script src="scripts/services/message-service.js"></script>
+<script src="scripts/services/eula-service.js"></script>
+<script src="scripts/directives/eula-confirmation-modal.js"></script>
+<script src="scripts/directives/eula-modal.js"></script>
+<script src="scripts/controllers/manual-ECS.js"></script>
+<script src="scripts/services/carrier-instances-service.js"></script>
+<script src="scripts/services/manual-ECS-factory.js"></script>
+
 <!-- endbuild -->
 </body>
 </html>

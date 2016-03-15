@@ -174,7 +174,7 @@
           <h3 class="view-name">Discrepancy Detail</h3>
         </div>
         <div class="col-xs-12 col-sm-6 text-right">
-          <button class="btn btn-sm btn-warning" ng-click="showPaymentReportPanel()">{{actionOnPaymentReport}} Payment Reports</button>
+          <button class="btn btn-sm btn-info" ng-click="showPaymentReportPanel()"><span class="fa fa-file-text"></span> {{actionOnPaymentReport}} Payment Reports</button>
           <button class="btn btn-sm btn-danger" ng-show="isInStatus('Confirmed')" ng-click="confirmAction('Discrepancies', 'Unconfirm')">Unconfirm</button>
           <button class="btn btn-sm btn-success" ng-show="isInStatus('Discrepancies')" ng-click="confirmAction('Confirmed', 'Confirm')">Confirm</button>
           <button class="btn btn-sm btn-primary" ng-show="isInStatus('Confirmed')" ng-click="confirmAction('Commission Paid', 'Pay Commission')">Pay Commission</button>
@@ -431,11 +431,11 @@
                     <span class="value stock-discrepancy item varianceValue">{{ item.varianceValue }}</span>
                   </td>
                   <td>
-                    <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="showEditViewForItem(item, true)"><span
+                    <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="!canEdit() || showEditViewForItem(item, true)"><span
                       class="fa fa-pencil"></span></a>
-                    <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveStockItemCounts(item)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
-                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
-                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="editLMPStockTable"><span class="fa fa-undo"></span></a>
+                    <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveStockItemCounts(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-check"></span></a>
+                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-times"></span></a>
+                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="canEdit() && editLMPStockTable"><span class="fa fa-undo"></span></a>
                   </td>
                 </tr>
                 <tr ng-show="filteredLMPStock.length === 0">
@@ -444,7 +444,7 @@
                 </tr>
               </table>
 
-              <div class="row">
+              <div class="row" ng-show="canEdit()">
                 <div class="col-xs-12 text-right">
                   <button ng-hide="editLMPStockTable" class="btn btn-primary" ng-click="initEditTable(true)"><span class="fa fa-pencil active"></span> Edit Table</button>
                   <button ng-show="editLMPStockTable" class="btn btn-success" ng-click="saveStockItemCountsTable()"><span class="fa fa-check active"></span> Save All</button>
@@ -523,8 +523,14 @@
                     <span class="fa fa-sort-asc active" ng-show="getArrowType('bankExchangeRate', false) === 'ascending'"></span>
                     <span class="fa fa-sort-desc active" ng-show="getArrowType('bankExchangeRate', false) === 'descending'"></span>
                     <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('bankExchangeRate', false) === 'none'"></span>
-                    Bank Exchange Rate
-                    <!-- Paper & Coin Exchange Rate, as per Retail Company-->
+                    <span ng-hide="isPaperAndCoinExchangeRatePreferred">Bank Exchange Rate</span>
+                    <span ng-show="isPaperAndCoinExchangeRatePreferred">Paper Exchange Rate</span>
+                  </th>
+                  <th ng-click="updateOrderBy('bankExchangeRate', false)" ng-show="isPaperAndCoinExchangeRatePreferred">
+                    <span class="fa fa-sort-asc active" ng-show="getArrowType('bankExchangeRate', false) === 'ascending'"></span>
+                    <span class="fa fa-sort-desc active" ng-show="getArrowType('bankExchangeRate', false) === 'descending'"></span>
+                    <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('bankExchangeRate', false) === 'none'"></span>
+                    Coin Exchange Rate
                   </th>
                   <th ng-click="updateOrderBy('totalBank', false)">
                     <span class="fa fa-sort-asc active" ng-show="getArrowType('totalBank', false) === 'ascending'"></span>
@@ -559,24 +565,27 @@
                     <span class="value cash-discrepancy item varianceValue">{{ item.varianceValue }}</span>
                   </td>
                   <td>
-                    <span class="value cash-discrepancy item bankExchangeRate">{{ item.bankExchangeRate }}</span>
+                    <span class="value cash-discrepancy item bankExchangeRate">{{ item.bankOrPaperExchangeRate }}</span>
+                  </td>
+                  <td ng-show="isPaperAndCoinExchangeRatePreferred">
+                    <span class="value cash-discrepancy item coinExchangeRate">{{ item.coinExchangeRate }}</span>
                   </td>
                   <td>
                     <span class="value cash-discrepancy item totalBank">{{ item.totalBank }}</span>
                   </td>
                   <td>
                     <a class="btn btn-info btn-xs btn-block" tabindex="0"><span class="fa fa-file-text"></span></a>
-                    <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="showEditViewForItem(item, false)"><span
+                    <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="!canEdit() || showEditViewForItem(item, false)"><span
                       class="fa fa-pencil"></span></a>
-                    <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveItem(item)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
-                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
-                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="editCashBagTable"><span class="fa fa-undo"></span></a>
+                    <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveItem(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-check"></span></a>
+                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-times"></span></a>
+                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="canEdit() && editCashBagTable"><span class="fa fa-undo"></span></a>
                   </td>
                 </tr>
               </table>
 
               <div class="row">
-                <div class="col-xs-12 text-right">
+                <div class="col-xs-12 text-right" ng-show="canEdit()">
                   <button ng-hide="editCashBagTable" class="btn btn-primary" ng-click="initEditTable(false)"><span class="fa fa-pencil active"></span> Edit Table</button>
                   <button ng-show="editCashBagTable" class="btn btn-success" ng-click="saveTable(false)"><span class="fa fa-check active"></span> Save All</button>
                   <button ng-show="editCashBagTable" class="btn btn-default" ng-click="cancelEditingTable(false)">Cancel</button>

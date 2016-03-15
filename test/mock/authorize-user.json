@@ -8,6 +8,7 @@
   "userName": "user",
   "enabled": true,
   "expired": null,
+  "eulaRecent": true,
   "email": "RCuriel@egate-solutions.com",
   "allowStations": true,
   "allowStoreStatus": true,
@@ -26,24 +27,22 @@
     "personId": 3
   },
   "stationsView": null,
-  "companiesView": [
-    {
-      "createDate": "2015-07-23 01:58 AM GMT",
-      "createdBy": "1",
-      "updateDate": "2015-12-11 21:05 PM GMT",
-      "updatedBy": null,
-      "id": 439,
-      "type": {
-        "companyTypeName": "Supplier"
-      },
-      "name": "testLOL",
-      "code": "testLOL",
-      "legalName": "testLOL",
-      "active": "t",
-      "dbaName": null,
-      "ediName": null
-    }
-  ],
+  "companiesView": [{
+    "createDate": "2015-07-23 01:58 AM GMT",
+    "createdBy": "1",
+    "updateDate": "2015-12-11 21:05 PM GMT",
+    "updatedBy": null,
+    "id": 439,
+    "type": {
+      "companyTypeName": "Supplier"
+    },
+    "name": "testLOL",
+    "code": "testLOL",
+    "legalName": "testLOL",
+    "active": "t",
+    "dbaName": null,
+    "ediName": null
+  }],
   "storeStatusesView": null,
   "companyId": 403
 }

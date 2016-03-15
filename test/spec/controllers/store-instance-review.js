@@ -2,7 +2,6 @@
 
 describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance-menu-items.json'));
   beforeEach(module('served/store-instance-seals.json'));

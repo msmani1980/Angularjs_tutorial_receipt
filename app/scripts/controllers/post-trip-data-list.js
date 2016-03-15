@@ -7,7 +7,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast, dateUtility, lodash, $q) {
+  .controller('PostFlightDataListCtrl', function($scope, postTripFactory, $location, messageService, dateUtility,
+    lodash, $q) {
+
     var companyId = '';
     var $this = this;
     this.meta = {
@@ -31,13 +33,13 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-    this.getStationById = function (stationId) {
+    this.getStationById = function(stationId) {
       var stationCode = '';
       if (!stationId || $scope.stationList.length <= 0) {
         return '';
       }
 
-      angular.forEach($scope.stationList, function (value) {
+      angular.forEach($scope.stationList, function(value) {
         if (value.stationId === stationId) {
           stationCode = value.stationCode;
         }
@@ -46,16 +48,16 @@ angular.module('ts5App')
       return stationCode;
     };
 
-    this.updateStationCodes = function () {
+    this.updateStationCodes = function() {
       if ($scope.postTrips.length > 0 && $scope.stationList.length > 0) {
-        angular.forEach($scope.postTrips, function (trip) {
+        angular.forEach($scope.postTrips, function(trip) {
           trip.depStationCode = $this.getStationById(trip.depStationId);
           trip.arrStationCode = $this.getStationById(trip.arrStationId);
         });
       }
     };
 
-    this.getPostTripSuccess = function (response) {
+    this.getPostTripSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
 
       // TODO: move offset to service layer
@@ -64,7 +66,7 @@ angular.module('ts5App')
       hideLoadingBar();
     };
 
-    this.getStationsSuccess = function (response) {
+    this.getStationsSuccess = function(response) {
       // TODO: move offset to service layer
       var newStationList = $scope.stationList.concat(angular.copy(response.response));
       $scope.stationList = lodash.uniq(newStationList, 'stationId');
@@ -76,27 +78,23 @@ angular.module('ts5App')
       $this.updateStationCodes();
     };
 
-    this.getCarrierSuccess = function (response) {
-      angular.forEach(response.response, function (item) {
-        postTripFactory.getCarrierNumbers(companyId, item.id).then(function (response) {
+    this.getCarrierSuccess = function(response) {
+      angular.forEach(response.response, function(item) {
+        postTripFactory.getCarrierNumbers(companyId, item.id).then(function(response) {
           $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
         });
       });
     };
 
-    this.getEmployeesSuccess = function (response) {
+    this.getEmployeesSuccess = function(response) {
       $scope.employees = response.companyEmployees;
     };
 
-    this.showToastMessage = function (className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
+    this.showToastMessage = function(className, type, message) {
+      messageService.display(className, message, type);
     };
 
-    this.deletePostTripSuccess = function () {
+    this.deletePostTripSuccess = function() {
       $this.showToastMessage('success', 'Post Trip', 'Post Trip successfully deleted');
       $scope.postTrips = [];
       $this.meta = {
@@ -107,17 +105,18 @@ angular.module('ts5App')
       $scope.loadPostTrip();
     };
 
-    this.deletePostTripFailure = function () {
+    this.deletePostTripFailure = function() {
       $this.showToastMessage('danger', 'Post Trip', 'Post Trip could not be deleted');
     };
 
-    this.showNewPostTripSuccess = function () {
+    this.showNewPostTripSuccess = function() {
       if ($location.search().newTripId) {
-        $this.showToastMessage('success', 'Create Post Trip', 'successfully added post trip id:' + $location.search().newTripId);
+        $this.showToastMessage('success', 'Create Post Trip', 'successfully added post trip id:' + $location.search()
+          .newTripId);
       }
     };
 
-    this.makeInitPromises = function () {
+    this.makeInitPromises = function() {
       var promises = [
         postTripFactory.getStationList(companyId).then($this.getStationsSuccess),
         postTripFactory.getCarrierTypes(companyId).then($this.getCarrierSuccess),
@@ -127,13 +126,13 @@ angular.module('ts5App')
       return promises;
     };
 
-    this.init = function () {
+    this.init = function() {
       companyId = postTripFactory.getCompanyId();
       $scope.carrierNumbers = [];
       $scope.employees = [];
 
       var initDependencies = $this.makeInitPromises();
-      $q.all(initDependencies).then(function () {
+      $q.all(initDependencies).then(function() {
         $this.showNewPostTripSuccess();
         angular.element('#search-collapse').addClass('collapse');
       });
@@ -157,11 +156,11 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     }
 
-    $scope.loadPostTrip = function () {
+    $scope.loadPostTrip = function() {
       loadPostTrip();
     };
 
-    $scope.searchPostTripData = function () {
+    $scope.searchPostTripData = function() {
       $scope.postTrips = [];
       $this.meta = {
         count: undefined,
@@ -171,38 +170,39 @@ angular.module('ts5App')
       $scope.loadPostTrip();
     };
 
-    $scope.clearSearchForm = function () {
+    $scope.clearSearchForm = function() {
       $scope.search = {};
       $scope.multiSelectedValues = {};
-      $scope.searchPostTripData();
+      $scope.postTrips = [];
     };
 
-    this.addSearchValuesFromMultiSelectArray = function (searchKeyName, multiSelectArray, multiSelectElementKey) {
+    this.addSearchValuesFromMultiSelectArray = function(searchKeyName, multiSelectArray, multiSelectElementKey) {
       if (!multiSelectArray || multiSelectArray.length <= 0) {
         return;
       }
 
       var searchArray = [];
-      angular.forEach(multiSelectArray, function (element) {
+      angular.forEach(multiSelectArray, function(element) {
         searchArray.push(element[multiSelectElementKey]);
       });
 
       $scope.search[searchKeyName] = searchArray.toString();
     };
 
-    this.formatMultiSelectedValuesForSearch = function () {
+    this.formatMultiSelectedValuesForSearch = function() {
       $this.addSearchValuesFromMultiSelectArray('depStationId', $scope.multiSelectedValues.depStations, 'stationId');
       $this.addSearchValuesFromMultiSelectArray('arrStationId', $scope.multiSelectedValues.arrStations, 'stationId');
-      $this.addSearchValuesFromMultiSelectArray('tailNumber', $scope.multiSelectedValues.tailNumbers, 'carrierNumber');
+      $this.addSearchValuesFromMultiSelectArray('tailNumber', $scope.multiSelectedValues.tailNumbers,
+        'carrierNumber');
       $this.addSearchValuesFromMultiSelectArray('employeeId', $scope.multiSelectedValues.employeeIds, 'id');
     };
 
-    $scope.redirectToPostTrip = function (id, state) {
+    $scope.redirectToPostTrip = function(id, state) {
       $location.search({});
       $location.path('post-trip-data/' + state + '/' + id).search();
     };
 
-    $scope.removeRecord = function (postTrip) {
+    $scope.removeRecord = function(postTrip) {
       if (!postTrip || $scope.postTrips.length <= 0) {
         $this.deletePostTripFailure();
         return;
@@ -214,7 +214,7 @@ angular.module('ts5App')
       );
     };
 
-    $scope.showDeleteButton = function (dateString) {
+    $scope.showDeleteButton = function(dateString) {
       return dateUtility.isAfterToday(dateString);
     };
   });

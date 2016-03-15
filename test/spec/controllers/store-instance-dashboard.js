@@ -1,9 +1,8 @@
 'use strict';
 /*global moment*/
 
-describe('Controller: StoreInstanceDashboardCtrl', function () {
+describe('Controller: StoreInstanceDashboardCtrl', function() {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/catering-stations.json'));
   beforeEach(module('served/stations.json'));
@@ -11,6 +10,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
   beforeEach(module('served/store-instance.json'));
   beforeEach(module('served/stores-list.json'));
   beforeEach(module('served/store-status.json'));
+  beforeEach(module('served/store-status-response.json'));
   beforeEach(module('served/store-status-response.json'));
   beforeEach(module('served/store-time-config.json'));
   beforeEach(module('served/features.json'));
@@ -45,10 +45,10 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
   var localStorage;
   var ENV;
 
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q, $location, $localStorage, lodash) {
-    inject(function (_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_,
-                     _servedStoreStatus_, _servedStoreStatusResponse_, _servedStoreTimeConfig_, _servedFeatures_,
-                     _servedStoreInstance_) {
+  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, $localStorage, lodash) {
+    inject(function(_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_,
+      _servedStoreStatus_, _servedStoreStatusResponse_, _servedStoreTimeConfig_, _servedFeatures_,
+      _servedStoreInstance_) {
       cateringStationResponseJSON = angular.copy(_servedCateringStations_);
       stationResponseJSON = angular.copy(_servedStations_);
       storeInstanceListResponseJSON = angular.copy(_servedStoreInstanceList_);
@@ -110,59 +110,58 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     StoreInstanceDashboardCtrl = $controller('StoreInstanceDashboardCtrl', {
       $scope: scope
 
-      // place here mocked dependencies
     });
   }));
 
-  describe('init', function () {
-    beforeEach(function () {
+  describe('init', function() {
+    beforeEach(function() {
       scope.$digest();
     });
 
-    describe('getCatererStation', function () {
-      it('should get catererStation from storeInstanceDashboardFactory', function () {
+    describe('getCatererStation', function() {
+      it('should get catererStation from storeInstanceDashboardFactory', function() {
         expect(storeInstanceDashboardFactory.getCatererStationList).toHaveBeenCalled();
       });
 
-      it('should attach caterStationList to Scope', function () {
+      it('should attach caterStationList to Scope', function() {
         expect(scope.catererStationList).toBeDefined();
       });
 
-      it('should attach all properties of JSON to scope', function () {
+      it('should attach all properties of JSON to scope', function() {
         expect(scope.catererStationList.length).toEqual(cateringStationResponseJSON.response.length);
       });
     });
 
-    describe('getStation', function () {
-      it('should get station from storeInstanceDashboardFactory', function () {
+    describe('getStation', function() {
+      it('should get station from storeInstanceDashboardFactory', function() {
         expect(storeInstanceDashboardFactory.getStationList).toHaveBeenCalled();
       });
 
-      it('should attach stationList to Scope', function () {
+      it('should attach stationList to Scope', function() {
         expect(scope.stationList).toBeDefined();
       });
 
-      it('should attach all properties of JSON to scope', function () {
+      it('should attach all properties of JSON to scope', function() {
         expect(scope.stationList).toEqual(stationResponseJSON.response);
       });
     });
 
-    describe('getStoreInstanceList', function () {
-      it('should get getStoreInstanceList from storeInstanceDashboardFactory', function () {
+    describe('getStoreInstanceList', function() {
+      it('should get getStoreInstanceList from storeInstanceDashboardFactory', function() {
         expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalled();
       });
 
-      it('should attach storeInstanceList to Scope', function () {
+      it('should attach storeInstanceList to Scope', function() {
         expect(scope.storeInstanceList).toBeDefined();
       });
 
-      it('should attach objects of JSON to scope', function () {
+      it('should attach objects of JSON to scope', function() {
         expect(scope.storeInstanceList.length > 0).toEqual(true);
       });
     });
 
-    describe('searchStoreInstanceDashboardData', function () {
-      beforeEach(function () {
+    describe('searchStoreInstanceDashboardData', function() {
+      beforeEach(function() {
         scope.search = {
           dispatchLMPStation: '1',
           inboundLMPStation: '2',
@@ -197,7 +196,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
         scope.$digest();
       });
 
-      it('should get getStoresList from storeInstanceDashboardFactory', function () {
+      it('should get getStoresList from storeInstanceDashboardFactory', function() {
         scope.searchStoreInstanceDashboardData();
         expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({
           cateringStationId: '1',
@@ -214,7 +213,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
         });
       });
 
-      it('should add Unpacking and Offload status Ids in search when On Floor is searched', function () {
+      it('should add Unpacking and Offload status Ids in search when On Floor is searched', function() {
         scope.searchstoreStatusId = '10';
         scope.searchStoreInstanceDashboardData();
         var expectedJSON = {
@@ -235,86 +234,86 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       });
     });
 
-    describe('getStoresList', function () {
-      it('should get getStoresList from storeInstanceDashboardFactory', function () {
+    describe('getStoresList', function() {
+      it('should get getStoresList from storeInstanceDashboardFactory', function() {
         expect(storeInstanceDashboardFactory.getStoresList).toHaveBeenCalled();
       });
 
-      it('should attach storesList to Scope', function () {
+      it('should attach storesList to Scope', function() {
         expect(scope.storesList).toBeDefined();
       });
 
-      it('should attach all properties of JSON to scope', function () {
+      it('should attach all properties of JSON to scope', function() {
         expect(scope.storesList).toEqual(storesListResponseJSON.response);
       });
     });
 
-    describe('getStatusList', function () {
-      it('should get getStatusList from storeInstanceDashboardFactory', function () {
+    describe('getStatusList', function() {
+      it('should get getStatusList from storeInstanceDashboardFactory', function() {
         expect(storeInstanceDashboardFactory.getStatusList).toHaveBeenCalled();
       });
 
-      it('should attach storeStatusList to Scope', function () {
+      it('should attach storeStatusList to Scope', function() {
         expect(scope.storeStatusList).toBeDefined();
       });
 
-      it('should attach properties of JSON to scope', function () {
+      it('should attach properties of JSON to scope', function() {
         expect(scope.storeStatusList.length > 0).toEqual(true);
       });
 
-      it('should filter status list', function () {
+      it('should filter status list', function() {
         expect(scope.filteredStoreStatusList).toBeDefined();
         expect(scope.filteredStoreStatusList.length > 0).toEqual(true);
         expect(scope.filteredStoreStatusList.length < scope.storeStatusList.length).toEqual(true);
       });
     });
 
-    describe('getUndispatchFeatureid', function () {
-      it('should get featureList', function () {
+    describe('getUndispatchFeatureid', function() {
+      it('should get featureList', function() {
         expect(storeInstanceDashboardFactory.getFeaturesList).toHaveBeenCalled();
       });
 
-      it('should set undispatchFeatureid', function () {
+      it('should set undispatchFeatureid', function() {
         expect(scope.undispatchFeatureId).toBeDefined();
       });
     });
 
-    describe('getTimeConfig', function () {
-      it('should get getTimeConfig from storeTimeConfig', function () {
+    describe('getTimeConfig', function() {
+      it('should get getTimeConfig from storeTimeConfig', function() {
         expect(storeTimeConfig.getTimeConfig).toHaveBeenCalled();
       });
 
-      it('should attach timeConfigList to Scope', function () {
+      it('should attach timeConfigList to Scope', function() {
         expect(scope.timeConfigList).toBeDefined();
       });
 
-      it('should attach all properties of JSON to scope', function () {
+      it('should attach all properties of JSON to scope', function() {
         expect(scope.timeConfigList).toEqual(storeTimeConfigResponseJSON.response);
       });
     });
 
-    describe('format store instance response', function () {
-      beforeEach(function () {
+    describe('format store instance response', function() {
+      beforeEach(function() {
         scope.$digest();
       });
 
-      it('should add store number', function () {
+      it('should add store number', function() {
         expect(scope.storeInstanceList[0].storeNumber).toBeDefined();
       });
 
-      it('should add status name', function () {
+      it('should add status name', function() {
         expect(scope.storeInstanceList[0].storeNumber).toBeDefined();
       });
 
-      it('should add actionButtons name', function () {
+      it('should add actionButtons name', function() {
         expect(scope.storeInstanceList[0].actionButtons).toBeDefined();
       });
     });
   });
 
-  describe('Table Accordion functions', function () {
+  describe('Table Accordion functions', function() {
 
-    describe('toggleAccordion', function () {
+    describe('toggleAccordion', function() {
       var testStore = {
         id: 2,
         replenishments: [{
@@ -322,14 +321,14 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
         }]
       };
 
-      it('should only close if toggling current open accordion', function () {
+      it('should only close if toggling current open accordion', function() {
         scope.openStoreInstanceId = 2;
         scope.toggleAccordionView(testStore);
         scope.$digest();
         expect(scope.openStoreInstanceId).toEqual(-1);
       });
 
-      it('should set new openRowId if toggling a closed accordion', function () {
+      it('should set new openRowId if toggling a closed accordion', function() {
         scope.openStoreInstanceId = 5;
         scope.$digest();
         scope.toggleAccordionView(testStore);
@@ -337,21 +336,21 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       });
     });
 
-    describe('scope check functions', function () {
+    describe('scope check functions', function() {
       var testStore = {
         id: 2,
         replenishments: [{
           id: 3
         }]
       };
-      it('should check store replenishments array for doesStoreInstanceHaveReplenishments', function () {
+      it('should check store replenishments array for doesStoreInstanceHaveReplenishments', function() {
         expect(scope.doesStoreInstanceHaveReplenishments(testStore)).toEqual(true);
         testStore.replenishments = [];
         expect(scope.doesStoreInstanceHaveReplenishments(testStore)).toEqual(false);
 
       });
 
-      it('should return false for isStoreViewExpanded when given store is expanded', function () {
+      it('should return false for isStoreViewExpanded when given store is expanded', function() {
         scope.openStoreInstanceId = 2;
         expect(scope.isStoreViewExpanded(testStore)).toEqual(true);
         testStore.id = 3;
@@ -360,8 +359,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
   });
 
-  describe('toggle checkboxes', function () {
-    it('should set all stores with a Checkbox to be selected', function () {
+  describe('toggle checkboxes', function() {
+    it('should set all stores with a Checkbox to be selected', function() {
       scope.storeInstanceList = [{
         id: 1,
         selected: false,
@@ -378,9 +377,9 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
   });
 
-  describe('bulk actions', function () {
-    describe('bulk dispatch', function () {
-      it('should not update items that are not ready for dispatch', function () {
+  describe('bulk actions', function() {
+    describe('bulk dispatch', function() {
+      it('should not update items that are not ready for dispatch', function() {
         scope.storeInstanceList = [{
           id: 1,
           actionButtons: ['Pack'],
@@ -399,7 +398,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
 
       });
 
-      it('should call update status for each selected item', function () {
+      it('should call update status for each selected item', function() {
         scope.storeInstanceList = [{
           id: 1,
           actionButtons: ['Dispatch'],
@@ -422,32 +421,32 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
 
   });
 
-  describe('isUndispatchPossible', function () {
-    beforeEach(function () {
+  describe('isUndispatchPossible', function() {
+    beforeEach(function() {
       scope.storeInstanceList = [{
         id: 1,
         hours: 3
       }];
     });
 
-    it('should return true if current time is within set hours of updatedTime', function () {
+    it('should return true if current time is within set hours of updatedTime', function() {
       scope.storeInstanceList[0].updatedOn = moment.utc().subtract(1, 'hour').format(
         'YYYY-MM-DD HH:mm:ss.SSSSSS');
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(true);
     });
 
-    it('should return false if current time is within set hours of updatedTime', function () {
+    it('should return false if current time is within set hours of updatedTime', function() {
       scope.storeInstanceList[0].updatedOn = moment.utc().subtract(50, 'hour').format(
         'YYYY-MM-DD HH:mm:ss.SSSSSS');
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(false);
     });
 
-    it('should return false if updatedOn is null', function () {
+    it('should return false if updatedOn is null', function() {
       scope.storeInstanceList[0].updatedOn = null;
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(false);
     });
 
-    it('should return false if the store instance has replenishments', function () {
+    it('should return false if the store instance has replenishments', function() {
       scope.storeInstanceList[0].updatedOn = moment.utc().subtract(1, 'hour').format(
         'YYYY-MM-DD HH:mm:ss.SSSSSS');
       scope.storeInstanceList[0].replenishments = [{
@@ -456,7 +455,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(false);
     });
 
-    it('should return true if hours equal -1 (the default hours)', function () {
+    it('should return true if hours equal -1 (the default hours)', function() {
       scope.storeInstanceList[0].updatedOn = moment.utc().subtract(50, 'hour').format(
         'YYYY-MM-DD HH:mm:ss.SSSSSS');
       scope.storeInstanceList[0].hours = -1;
@@ -464,12 +463,12 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
   });
 
-  describe('undispatch', function () {
+  describe('undispatch', function() {
 
     var store;
     var mockDialogObject;
 
-    beforeEach(function () {
+    beforeEach(function() {
       spyOn(scope, 'undispatch').and.callThrough();
       scope.$digest();
       store = angular.copy(scope.storeInstanceList[0]);
@@ -478,47 +477,47 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
         title: sprintf(
           'Are you sure you want to undispatch Store Number %s for Schedule Date %s and Store Instance %d?',
           store.storeNumber, store.scheduleDate, store.id),
-        confirmationCallback: function () {
+        confirmationCallback: function() {
           scope.undispatch(store.id);
         }
       };
     });
 
-    it('should set the undispatchStoreDialog', function () {
+    it('should set the undispatchStoreDialog', function() {
       expect(scope.undispatchStoreDialog.title).toEqual(mockDialogObject.title);
     });
 
-    it('should update status to 1 if confirmed', function () {
+    it('should update status to 1 if confirmed', function() {
       mockDialogObject.confirmationCallback();
       expect(scope.undispatch).toHaveBeenCalledWith(store.id);
       expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(53, 1);
     });
   });
 
-  describe('storeStatusReceived', function () {
-    beforeEach(function () {
+  describe('storeStatusReceived', function() {
+    beforeEach(function() {
       spyOn(scope, 'storeStatusReceived').and.callThrough();
       updateStoreInstanceStatusDeferred.resolve();
       scope.$digest();
     });
 
-    it('updateStoreInstance should have been called', function () {
+    it('updateStoreInstance should have been called', function() {
       scope.storeStatusReceived(33);
       expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalled();
     });
   });
 
-  describe('doesStoreInstanceContainAction', function () {
+  describe('doesStoreInstanceContainAction', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
       scope.storeStatusList = statusListResponseJSON;
     });
 
-    it('should exist on scope', function () {
+    it('should exist on scope', function() {
       expect(scope.doesStoreInstanceContainAction).toBeDefined();
     });
 
-    it('should return direct mapping of actionButtons', function () {
+    it('should return direct mapping of actionButtons', function() {
       var testStoreInstance = {
         actionButtons: ['Pack', 'Seal', 'Dispatch'],
         statusId: 7
@@ -529,7 +528,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(doesContainAllActions).toEqual(true);
     });
 
-    it('should return false if store instance has no actionButtons', function () {
+    it('should return false if store instance has no actionButtons', function() {
       var testStoreInstance = {
         statusId: 7
       };
@@ -538,20 +537,20 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
   });
 
-  describe('shouldShowReplenishAction', function () {
+  describe('shouldShowReplenishAction', function() {
     var parentStoreInstance;
-    beforeEach(function () {
+    beforeEach(function() {
       scope.storeStatusList = statusListResponseJSON;
       parentStoreInstance = {
         statusId: 7
       };
     });
 
-    it('should exist on scope', function () {
+    it('should exist on scope', function() {
       expect(scope.shouldShowReplenishAction).toBeDefined();
     });
 
-    it('should return direct mapping for non dispatched replenishments', function () {
+    it('should return direct mapping for non dispatched replenishments', function() {
       var testStoreInstance = {
         actionButtons: ['Pack', 'Seal', 'Dispatch'],
         statusId: 1
@@ -563,7 +562,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(doesContainAllActions).toEqual(true);
     });
 
-    it('should allow get docs for replenishments after dispatch', function () {
+    it('should allow get docs for replenishments after dispatch', function() {
       var testStoreInstance = {
         actionButtons: ['Get Flight Docs'],
         statusId: 7 // 7 to test with Dispatched status
@@ -573,7 +572,16 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(doesContainAction).toEqual(true);
     });
 
-    it('should not allow actions after a replenishment has been dispatch', function () {
+    it('should allow Get Flight Docs if the status is Inbounded', function() {
+      var testStoreInstance = {
+        actionButtons: ['Get Flight Docs'],
+        statusId: 8 // 8 to test with Inbounded status
+      };
+      var doesContainAction = scope.doesStoreInstanceContainAction(testStoreInstance, 'Get Flight Docs');
+      expect(doesContainAction).toEqual(true);
+    });
+
+    it('should not allow actions after a replenishment has been dispatch', function() {
       var testStoreInstance = {
         actionButtons: ['End Instance'],
         statusId: 7 // 7 to test with Dispatched status
@@ -583,7 +591,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(doesContainAction).toEqual(false);
     });
 
-    it('should allow get docs for replenishments with parents that are onfloor', function () {
+    it('should allow get docs for replenishments with parents that are onfloor', function() {
       parentStoreInstance.statusId = 10; // 10 to test with onfloor status
       var testStoreInstance = {
         actionButtons: ['Get Flight Docs'],
@@ -594,7 +602,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(doesContainAction).toEqual(true);
     });
 
-    it('should not allow other actions after a replenishment with parents that are onfloor', function () {
+    it('should not allow other actions after a replenishment with parents that are onfloor', function() {
       parentStoreInstance.statusId = 10; // 10 to test with onfloor status
       var testStoreInstance = {
         actionButtons: ['End Instance'],
@@ -606,9 +614,9 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
   });
 
-  describe('navigateToAction', function () {
+  describe('navigateToAction', function() {
     var testStoreInstance;
-    beforeEach(function () {
+    beforeEach(function() {
       scope.$digest();
       testStoreInstance = {
         id: 1,
@@ -618,7 +626,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
 
     it('should navigate to dispatch wizard if replenishId and prevId is null for packing/seals/dispatch',
-      function () {
+      function() {
         scope.navigateToAction(testStoreInstance, 'Seal');
         expect(location.path).toHaveBeenCalledWith('store-instance-seals/dispatch/1');
         scope.navigateToAction(testStoreInstance, 'Pack');
@@ -627,7 +635,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
         expect(location.path).toHaveBeenCalledWith('store-instance-review/dispatch/1');
       });
 
-    it('should navigate to replenish wizard if replenishID is not null for packing/seals', function () {
+    it('should navigate to replenish wizard if replenishID is not null for packing/seals', function() {
       testStoreInstance.replenishStoreInstanceId = 2;
       scope.navigateToAction(testStoreInstance, 'Seal');
       expect(location.path).toHaveBeenCalledWith('store-instance-seals/replenish/1');
@@ -635,7 +643,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(location.path).toHaveBeenCalledWith('store-instance-packing/replenish/1');
     });
 
-    it('should navigate to redispatch wizard if prevId is not null for seals/dispatch', function () {
+    it('should navigate to redispatch wizard if prevId is not null for seals/dispatch', function() {
       testStoreInstance.prevStoreInstanceId = 5;
       scope.navigateToAction(testStoreInstance, 'Seal');
       expect(location.path).toHaveBeenCalledWith('store-instance-seals/redispatch/1');
@@ -643,14 +651,14 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(location.path).toHaveBeenCalledWith('store-instance-review/redispatch/1');
     });
 
-    it('should call get store instance to find parent instance for pack', function () {
+    it('should call get store instance to find parent instance for pack', function() {
       testStoreInstance.prevStoreInstanceId = 5;
       scope.navigateToAction(testStoreInstance, 'Pack');
       expect(storeInstanceDashboardFactory.getStoreInstance).toHaveBeenCalledWith(5);
     });
 
     it('should call get store instances to find a redispatched child store instance for offload/inbound seals',
-      function () {
+      function() {
         scope.navigateToAction(testStoreInstance, 'Offload');
         expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({
           prevStoreInstanceId: 1,
@@ -663,7 +671,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
         });
       });
 
-    it('should navigate to create for replenish/redispatch/end-instance actions', function () {
+    it('should navigate to create for replenish/redispatch/end-instance actions', function() {
       scope.navigateToAction(testStoreInstance, 'Replenish');
       expect(location.path).toHaveBeenCalledWith('store-instance-create/replenish/1');
       scope.navigateToAction(testStoreInstance, 'Redispatch');
@@ -673,22 +681,22 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
   });
 
-  describe('showClearButton', function () {
-    it('should return true when search has input', function () {
+  describe('showClearButton', function() {
+    it('should return true when search has input', function() {
       scope.search.scheduleStartDate = '2012-02-02';
       scope.getStoreInstanceDashboardData();
       scope.$digest();
       expect(scope.showClearButton()).toBeTruthy();
     });
 
-    it('should return false when search is clear', function () {
+    it('should return false when search is clear', function() {
       scope.search.scheduleStartDate = '';
       scope.getStoreInstanceDashboardData();
       scope.$digest();
       expect(scope.showClearButton()).toBeFalsy();
     });
 
-    it('should return true when searchIsActive and search is clear', function () {
+    it('should return true when searchIsActive and search is clear', function() {
       scope.search.scheduleStartDate = '';
       scope.getStoreInstanceDashboardData();
       scope.$digest();
@@ -697,8 +705,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
   });
 
-  describe('storeSelectionToggled', function () {
-    it('should set hasSelectedStore to false and exportBulkURL to empty string', function () {
+  describe('storeSelectionToggled', function() {
+    it('should set hasSelectedStore to false and exportBulkURL to empty string', function() {
       scope.getStoreInstanceDashboardData();
       scope.$digest();
       scope.storeSelectionToggled();
@@ -706,10 +714,10 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(scope.exportBulkURL).toEqual('');
     });
 
-    it('should set hasSelectedStore to true and exportBulkURL to valid values', function () {
+    it('should set hasSelectedStore to true and exportBulkURL to valid values', function() {
       scope.getStoreInstanceDashboardData();
       scope.$digest();
-      var store = _lodash.filter(scope.storeInstanceList, function (s) {
+      var store = _lodash.filter(scope.storeInstanceList, function(s) {
         return s.id === 53;
       })[0];
 
@@ -726,7 +734,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
   });
 
-  it('should delete store instance be called', function () {
+  it('should delete store instance be called', function() {
     scope.storeInstanceToDelete = {
       id: 1
     };
@@ -735,8 +743,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     expect(storeInstanceDashboardFactory.deleteStoreInstance).toHaveBeenCalledWith(1);
   });
 
-  describe('checkForLocalStorage', function () {
-    it('should delete $localStorage.stepTwoFromStepOne if it exists', function () {
+  describe('checkForLocalStorage', function() {
+    it('should delete $localStorage.stepTwoFromStepOne if it exists', function() {
       localStorage.stepTwoFromStepOne = {
         storeId: '2042'
       };
@@ -745,5 +753,4 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     });
   });
 
-})
-;
+});

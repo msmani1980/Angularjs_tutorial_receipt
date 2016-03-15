@@ -106,7 +106,7 @@
 
 						<button class="btn btn-default btn-search-clear"
 							ng-click="clearSearchFilters()"
-							ng-show="search.countryId || search.cityId.length || search.startDate || search.endDate">
+							ng-show="showClearButton()">
 							<span class="btn-label">Clear</span>
 						</button>
 
@@ -122,7 +122,7 @@
 			</div>
 
 			<!-- Station Edit Controls Panel -->
-			<div class="panel panel-default"  ng-show="canSave()">
+			<div class="panel panel-default" ng-show="canSave()">
 
 					<div class="panel-body">
 
