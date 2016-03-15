@@ -290,6 +290,26 @@ describe('Date Utility service', function() {
 
   });
 
+  describe('yesterdayFormatted method', function() {
+
+    it('should return a formatted date in MM/DD/YYYY when no format is passed',
+      function() {
+        var yesterday = dateUtility.yesterday();
+        var formattedTimeStamp = dateUtility.yesterdayFormatted();
+        var formatControl = dateUtility.formatDate(yesterday, 'x', 'MM/DD/YYYY');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+    it('should return a formatted date in YYYYMMDD when YYYYMMDD format is passed',
+      function() {
+        var yesterday = dateUtility.yesterday();
+        var formattedTimeStamp = dateUtility.yesterdayFormatted('YYYYMMDD');
+        var formatControl = dateUtility.formatDate(yesterday, 'x', 'YYYYMMDD');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+  });
+
   describe('removeMilliseconds method', function() {
     it('should remove a decimal and all numbers after', function() {
       var expected = '2015-08-07 13:35:59';
