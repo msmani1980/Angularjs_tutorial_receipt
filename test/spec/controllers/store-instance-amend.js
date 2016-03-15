@@ -1,40 +1,162 @@
 'use strict';
 
-fdescribe('Controller: StoreInstanceAmendCtrl', function () {
+describe('Controller: StoreInstanceAmendCtrl', function () {
 
   beforeEach(module('ts5App'));
+  beforeEach(module('served/cash-bag-list.json'));
+  beforeEach(module('served/store-instance.json'));
+  beforeEach(module('served/company.json'));
+  beforeEach(module('served/currencies.json'));
+  beforeEach(module('served/item-types.json'));
+  beforeEach(module('served/stock-totals.json'));
+  beforeEach(module('served/promotion-totals.json'));
+  beforeEach(module('served/company-preferences.json'));
+  beforeEach(module('served/ch-cash-bag.json'));
+  beforeEach(module('served/payment-report.json'));
+  beforeEach(module('served/employees.json'));
+  beforeEach(module('served/cash-bag.json'));
+  beforeEach(module('served/cash-bag-carrier-instances.json'));
+  beforeEach(module('served/post-trip-data.json'));
 
   var scope;
   var StoreInstanceAmendCtrl;
   var controller;
   var location;
-  var StoreInstanceAmendFactory;
+  var storeInstanceAmendFactory;
+  var reconciliationFactory;
+  var employeesService;
+  var cashBagFactory;
+  var postTripFactory;
   var storeInstanceDeferred;
   var storeInstanceResponseJSON;
   var cashBagsDeferred;
   var cashBagsResponseJSON;
   var schedulesDeferred;
   var schedulesResponseJSON;
+  var storeInstanceJSON;
+  var getStoreInstanceDetailsDeferred;
+  var getCompanyDeferred;
+  var getCompanyJSON;
+  var getCompanyGlobalCurrenciesDeferred;
+  var getCompanyGlobalCurrenciesJSON;
+  var getItemTypesListDeferred;
+  var getItemTypesListJSON;
+  var getStockTotalsDeferred;
+  var getStockTotalsJSON;
+  var getPromotionTotalsDeferred;
+  var getPromotionTotalsJSON;
+  var getCompanyPreferencesDeferred;
+  var getCompanyPreferencesJSON;
+  var getCHRevenueDeferred;
+  var getEPOSRevenueDeferred;
+  var cashHandlerCashBagJSON;
+  var getPaymentReportDeferred;
+  var getPaymentReportJSON;
+  var getEmployeesDeferred;
+  var employeesJSON;
+  var getCashBagDeferred;
+  var cashBagJSON;
+  var flightSectorsJSON;
+  var getFlightSectorsDeferred;
+  var postTripDataJSON;
+  var getPostTripDeferred;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
+  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagList_, _servedStoreInstance_, _servedCompany_,
+                              _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
+                              _servedChCashBag_, _servedPaymentReport_, _servedEmployees_, _servedCashBag_, _servedCashBagCarrierInstances_,
+                              _servedPostTripData_) {
     location = $location;
     scope = $rootScope.$new();
-    StoreInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
+    storeInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
+    reconciliationFactory = $injector.get('reconciliationFactory');
+    employeesService = $injector.get('employeesService');
+    cashBagFactory = $injector.get('cashBagFactory');
+    postTripFactory = $injector.get('postTripFactory');
     controller = $controller;
 
     storeInstanceResponseJSON = [{ id: 1 }]; // stub for now until API is complete
     storeInstanceDeferred = $q.defer();
     storeInstanceDeferred.resolve(storeInstanceResponseJSON);
-    cashBagsResponseJSON = [{ id: 2 }, { id: 3 }]; // stub for now until API is complete
-    cashBagsDeferred = $q.defer();
-    cashBagsDeferred.resolve(cashBagsResponseJSON);
     schedulesResponseJSON = [{ id: 2 }]; // stub for now until API is complete
     schedulesDeferred = $q.defer();
     schedulesDeferred.resolve(schedulesResponseJSON);
 
-    spyOn(StoreInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
-    spyOn(StoreInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
-    spyOn(StoreInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
+    cashBagsResponseJSON = _servedCashBagList_;
+    cashBagsDeferred = $q.defer();
+    cashBagsDeferred.resolve(cashBagsResponseJSON);
+
+    storeInstanceJSON = _servedStoreInstance_;
+    getStoreInstanceDetailsDeferred = $q.defer();
+    getStoreInstanceDetailsDeferred.resolve(storeInstanceJSON);
+
+    getCompanyJSON = _servedCompany_;
+    getCompanyDeferred = $q.defer();
+    getCompanyDeferred.resolve(getCompanyJSON);
+
+    getCompanyGlobalCurrenciesJSON = _servedCurrencies_;
+    getCompanyGlobalCurrenciesDeferred = $q.defer();
+    getCompanyGlobalCurrenciesDeferred.resolve(getCompanyGlobalCurrenciesJSON);
+
+    getItemTypesListJSON = _servedItemTypes_;
+    getItemTypesListDeferred = $q.defer();
+    getItemTypesListDeferred.resolve(getItemTypesListJSON);
+
+    getStockTotalsJSON = _servedStockTotals_;
+    getStockTotalsDeferred = $q.defer();
+    getStockTotalsDeferred.resolve(getStockTotalsJSON);
+
+    getPromotionTotalsJSON = _servedPromotionTotals_;
+    getPromotionTotalsDeferred = $q.defer();
+    getPromotionTotalsDeferred.resolve(getPromotionTotalsJSON);
+
+    getCompanyPreferencesJSON = _servedCompanyPreferences_;
+    getCompanyPreferencesDeferred = $q.defer();
+    getCompanyPreferencesDeferred.resolve(getCompanyPreferencesJSON);
+
+    cashHandlerCashBagJSON = _servedChCashBag_;
+    getCHRevenueDeferred = $q.defer();
+    getCHRevenueDeferred.resolve([cashHandlerCashBagJSON, {}, {}]);
+
+    getEPOSRevenueDeferred = $q.defer();
+    getEPOSRevenueDeferred.resolve([{}, {}, {}]);
+
+    getPaymentReportJSON = _servedPaymentReport_;
+    getPaymentReportDeferred = $q.defer();
+    getPaymentReportDeferred.resolve(getPaymentReportJSON);
+
+    employeesJSON = _servedEmployees_;
+    getEmployeesDeferred = $q.defer();
+    getEmployeesDeferred.resolve(employeesJSON);
+
+    cashBagJSON = _servedCashBag_;
+    getCashBagDeferred = $q.defer();
+    getCashBagDeferred.resolve(cashBagJSON);
+
+    flightSectorsJSON = _servedCashBagCarrierInstances_;
+    getFlightSectorsDeferred = $q.defer();
+    getFlightSectorsDeferred.resolve(flightSectorsJSON);
+
+    postTripDataJSON = _servedPostTripData_;
+    getPostTripDeferred = $q.defer();
+    getPostTripDeferred.resolve(postTripDataJSON);
+
+    spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
+    spyOn(reconciliationFactory, 'getStoreInstanceDetails').and.returnValue(getStoreInstanceDetailsDeferred.promise);
+    spyOn(reconciliationFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
+    spyOn(reconciliationFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
+    spyOn(reconciliationFactory, 'getItemTypesList').and.returnValue(getItemTypesListDeferred.promise);
+    spyOn(reconciliationFactory, 'getStockTotals').and.returnValue(getStockTotalsDeferred.promise);
+    spyOn(reconciliationFactory, 'getPromotionTotals').and.returnValue(getPromotionTotalsDeferred.promise);
+    spyOn(reconciliationFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
+    spyOn(reconciliationFactory, 'getCHRevenue').and.returnValue(getCHRevenueDeferred.promise);
+    spyOn(reconciliationFactory, 'getEPOSRevenue').and.returnValue(getEPOSRevenueDeferred.promise);
+    spyOn(reconciliationFactory, 'getPaymentReport').and.returnValue(getPaymentReportDeferred.promise);
+    spyOn(employeesService, 'getEmployees').and.returnValue(getEmployeesDeferred.promise);
+    spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'getFlightSectors').and.returnValue(getFlightSectorsDeferred.promise);
+    spyOn(postTripFactory, 'getPostTrip').and.returnValue(getPostTripDeferred.promise);
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
@@ -46,9 +168,9 @@ fdescribe('Controller: StoreInstanceAmendCtrl', function () {
 
   describe('init', function () {
     it('should call get cash bag data', function () {
-      expect(StoreInstanceAmendFactory.getCashBags).toHaveBeenCalled();
+      expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
       scope.$digest();
-      expect(scope.cashBagList).toBeDefined();
+      expect(scope.normalizedCashBags).toBeDefined();
     });
 
     it('should init no moveCashBag actions', function () {
@@ -295,14 +417,14 @@ fdescribe('Controller: StoreInstanceAmendCtrl', function () {
         scope.moveCashBagAction = 'reallocate';
         scope.moveSearch = { storeNumber: '123', scheduleDate: '10/20/2015' };
         scope.searchForMoveCashBag();
-        expect(StoreInstanceAmendFactory.getStoreInstancesMockData).toHaveBeenCalledWith(scope.moveSearch);
+        expect(storeInstanceAmendFactory.getStoreInstancesMockData).toHaveBeenCalledWith(scope.moveSearch);
       });
 
-      it('should getCashBag if action is merge', function () {
+      /*it('should getCashBag if action is merge', function () {
         scope.moveCashBagAction = 'merge';
         scope.moveSearch = { cashBag: '123', bankRefNumber: 'ABC' };
         scope.searchForMoveCashBag();
-        expect(StoreInstanceAmendFactory.getCashBagListMockData).toHaveBeenCalledWith(scope.moveSearch);
+        expect(storeInstanceAmendFactory.getCashBagListMockData).toHaveBeenCalledWith(scope.moveSearch);
       });
 
       it('should automatically set targetRecordForMoveCashBag if there is only one result', function () {
@@ -311,7 +433,7 @@ fdescribe('Controller: StoreInstanceAmendCtrl', function () {
         scope.searchForMoveCashBag();
         scope.$digest();
         expect(scope.targetRecordForMoveCashBag).toEqual(null);
-      });
+      });*/
 
       it('should not set targetRecordForMoveCashBag if there is more than one record', function () {
         scope.moveCashBagAction = 'reallocate';  // storeInstance API stubbed to return one record above
@@ -385,7 +507,7 @@ fdescribe('Controller: StoreInstanceAmendCtrl', function () {
       it('should getSchedules', function () {
         scope.scheduleSearch = { scheduleNumber: '123', scheduleDate: '10/20/2015' };
         scope.searchForSchedule();
-        expect(StoreInstanceAmendFactory.getScheduleMockData).toHaveBeenCalledWith(scope.scheduleSearch);
+        expect(storeInstanceAmendFactory.getScheduleMockData).toHaveBeenCalledWith(scope.scheduleSearch);
       });
 
       it('should set schedule search results', function () {

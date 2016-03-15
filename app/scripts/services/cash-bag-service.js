@@ -11,6 +11,7 @@ angular.module('ts5App')
   .service('cashBagService', function ($resource, ENV) {
 
     var requestURL = ENV.apiUrl + '/api/cash-bags/:id/:submission';
+    var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/carrier-instances';
 
     var requestParameters = {
       id: '@id',
@@ -29,10 +30,14 @@ angular.module('ts5App')
       },
       createCashBag: {
         method: 'POST'
+      },
+      getCashBagCarrierInstances: {
+        method: 'GET'
       }
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
+    var carrierInstancesRequestResource = $resource(carrierInstancesRequestURL, requestParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -68,11 +73,16 @@ angular.module('ts5App')
       return requestResource.createCashBag(payload).$promise;
     }
 
+    function getCashBagCarrierInstances(cashBagId) {
+      return carrierInstancesRequestResource.getCashBagCarrierInstances({ id: cashBagId }).$promise;
+    }
+
     return {
       getCashBagList: getCashBagList,
       getCashBag: getCashBag,
       updateCashBag: updateCashBag,
       deleteCashBag: deleteCashBag,
-      createCashBag: createCashBag
+      createCashBag: createCashBag,
+      getCashBagCarrierInstances: getCashBagCarrierInstances
     };
   });

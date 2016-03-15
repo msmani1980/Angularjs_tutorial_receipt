@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
-      reconciliationFactory, $location) {
+      reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory) {
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
@@ -147,7 +147,7 @@ angular.module('ts5App')
     };
 
     $scope.doesSectorHaveCrewData = function (flightSector) {
-      return flightSector.crewData.length > 0;
+      return flightSector.crewData && flightSector.crewData.length > 0;
     };
 
     $scope.shouldShowCashBag = function (cashBag) {
@@ -176,7 +176,7 @@ angular.module('ts5App')
 
     $scope.toggleCrewDetails = function (cashBag, shouldExpand) {
       angular.forEach(cashBag.flightSectors, function (sector) {
-        if (sector.crewData.length) {
+        if (sector.crewData && sector.crewData.length) {
           sector.rowOpen = shouldExpand;
         }
       });
@@ -196,12 +196,22 @@ angular.module('ts5App')
       $scope.cashBagToDelete = cashBag;
     };
 
+    $scope.canCashBagBeDeleted = function (cashBag) {
+      return cashBag.canBeDeleted;
+    };
+
+    function markCashBagAsDeleted() {
+      $scope.cashBagToDelete.isDeleted = true;
+    }
+
     $scope.deleteCashBag = function () {
       angular.element('.delete-cashbag-warning-modal').modal('hide');
 
-      storeInstanceAmendFactory.deleteCashBag($scope.cashBagToDelete.id).then(function () {
-        $scope.cashBagToDelete.isDeleted = true;
-      });
+      storeInstanceAmendFactory.deleteCashBag($scope.cashBagToDelete.id).then(markCashBagAsDeleted, handleResponseError);
+    };
+
+    $scope.getOrNA = function (value) {
+      return value || 'N/A';
     };
 
     function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
@@ -301,25 +311,15 @@ angular.module('ts5App')
       var total = 0;
 
       angular.forEach($this.eposCashBag, function (cashBag) {
-        if (cashBag.bankAmount) {
-          total += cashBag.bankAmount;
-        } else {
-          var coinAmount = cashBag.coinAmountManual || 0;
-          var paperAmount = cashBag.paperAmountManual || 0;
-          total += coinAmount + paperAmount;
-        }
+        total += cashBag.bankAmount + cashBag.coinAmountManual + cashBag.paperAmountManual;
       });
 
       angular.forEach(eposCreditCard, function (creditCard) {
-        if (creditCard.bankAmountFinal) {
-          total += creditCard.bankAmountFinal;
-        }
+        total += creditCard.bankAmountFinal;
       });
 
       angular.forEach(eposDiscount, function (discount) {
-        if (discount.bankAmountFinal) {
-          total += discount.bankAmountFinal;
-        }
+        total += discount.bankAmountFinal;
       });
 
       return total;
@@ -332,24 +332,16 @@ angular.module('ts5App')
       var total = 0;
 
       angular.forEach($this.chCashBag, function (cashBag) {
-        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) || (cashBag.paperAmountManualCHBank +
-          cashBag.coinAmountManualCHBank);
+        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) + (cashBag.paperAmountManualCHBank +
+          cashBag.coinAmountManualCHBank) + (cashBag.bankAmountCh);
       });
 
       angular.forEach(chCreditCard, function (creditCard) {
-        if (creditCard.bankAmountFinal) {
-          total += creditCard.bankAmountFinal;
-        } else if (creditCard.coinAmountManualCc && creditCard.paperAmountManualCc) {
-          total += creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
-        }
+        total += creditCard.bankAmountFinal + creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
       });
 
       angular.forEach(chDiscount, function (discount) {
-        if (discount.bankAmountFinal) {
-          total += discount.bankAmountFinal;
-        } else if (discount.coinAmountManualCc && discount.paperAmountManualCc) {
-          total += discount.coinAmountManualCc + discount.paperAmountManualCc;
-        }
+        total += discount.bankAmountFinal + discount.coinAmountManualCc + discount.paperAmountManualCc;
       });
 
       return total;
@@ -408,7 +400,8 @@ angular.module('ts5App')
           cashBag: cashBag.cashBagNumber,
           bankRefNumber: cashBag.bankReferenceNumber,
           isDeleted: cashBag.isDelete === 'true',
-          isManual: cashBag.originationSource === 2
+          isManual: cashBag.originationSource === 2,
+          flightSectors: []
         };
       });
     }
@@ -504,8 +497,97 @@ angular.module('ts5App')
       return reconciliationFactory.getPaymentReport($routeParams.storeInstanceId).then(setPaymentReport);
     }
 
+    function setEmployees (employeesFromAPI) {
+      $scope.employees = angular.copy(employeesFromAPI.companyEmployees);
+    }
+
+    function getEmployees () {
+      var companyId = globalMenuService.company.get();
+      return employeesService.getEmployees(companyId).then(setEmployees);
+    }
+
     function setCashBags (cashBagsFromAPI) {
       $scope.cashBags = angular.copy(cashBagsFromAPI.cashBags);
+      setupCashBags();
+    }
+
+    function getEmployeeDetailsById(employeeId) {
+      return lodash.find($scope.employees, 'id', employeeId);
+    }
+
+    function extractCrewData(postTripEmployees) {
+      return postTripEmployees.map(function (postTripEmployee) {
+        var employeeDetails = getEmployeeDetailsById(postTripEmployee.employeeId);
+        return {
+          crewId: employeeDetails.id,
+          firstName: employeeDetails.firstName,
+          lastName: employeeDetails.lastName
+        };
+      });
+    }
+
+    function setPostTrip(normalizedFlightSector, postTripFromAPI) {
+      var postTrip = angular.copy(postTripFromAPI);
+
+      normalizedFlightSector.scheduleDate = postTrip.scheduleDate;
+      normalizedFlightSector.scheduleNumber = postTrip.scheduleNumber;
+      normalizedFlightSector.tailNumber = postTrip.tailNumber;
+      normalizedFlightSector.crewData = extractCrewData(postTrip.postTripEmployeeIdentifiers);
+    }
+
+    function setFlightSectors(normalizedCashBag, flightSectorsFromAPI) {
+      var flightSectors = angular.copy(flightSectorsFromAPI.response);
+
+      angular.forEach(flightSectors, function (flightSector) {
+        var companyCarrierInstance = flightSector.companyCarrierInstance;
+
+        var normalizedFlightSector = {
+          arrivalStation: companyCarrierInstance.arrivalStation,
+          departureStation: companyCarrierInstance.departureStation,
+          passengerCount: companyCarrierInstance.paxCount
+        };
+
+        normalizedCashBag.flightSectors.push(normalizedFlightSector);
+
+        if (companyCarrierInstance.posttripId) {
+          var companyId = globalMenuService.company.get();
+          postTripFactory.getPostTrip(companyId, companyCarrierInstance.posttripId).then(function (postTripFromAPI) {
+            setPostTrip(normalizedFlightSector, postTripFromAPI);
+          });
+        }
+      });
+    }
+
+    function getFlightSectors(normalizedCashBag) {
+      return storeInstanceAmendFactory.getFlightSectors(normalizedCashBag.id).then(function (flightSectorsFromAPI) {
+          setFlightSectors(normalizedCashBag, flightSectorsFromAPI);
+        });
+    }
+
+    function isCashBagDeleteAllowed(cashBag) {
+      return !(cashBag.bankReferenceNumber || cashBag.isSubmitted === 'true' || (cashBag.cashBagCurrencies && cashBag.cashBagCurrencies.length > 0));
+    }
+
+    function setCashBagDeletionFlag(normalizedCashBag, cashBagFromAPI) {
+      var cashBag = angular.copy(cashBagFromAPI);
+      normalizedCashBag.canBeDeleted = isCashBagDeleteAllowed(cashBag);
+    }
+
+    function getCashBagDeletionFlag(normalizedCashBag) {
+      return cashBagFactory.getCashBag(normalizedCashBag.id).then(function (cashBagFromAPI) {
+        setCashBagDeletionFlag(normalizedCashBag, cashBagFromAPI);
+      });
+    }
+
+    function getCashBagDetails () {
+      var promiseArray = [];
+
+      angular.forEach($scope.normalizedCashBags, function (normalizedCashBag) {
+        promiseArray.push(getCashBagDeletionFlag(normalizedCashBag));
+        promiseArray.push(getFlightSectors(normalizedCashBag));
+      });
+
+      $q.all(promiseArray).then();
     }
 
     function getCashBags () {
@@ -516,7 +598,9 @@ angular.module('ts5App')
         storeInstanceId: $routeParams.storeInstanceId
       };
 
-      return storeInstanceAmendFactory.getCashBags(payload).then(setCashBags);
+      return storeInstanceAmendFactory.getCashBags(payload)
+                                      .then(setCashBags)
+                                      .then(getCashBagDetails);
     }
 
     function showLoadingModal(text) {
@@ -540,7 +624,6 @@ angular.module('ts5App')
       setupCashPreference();
       setupTotalRevenue();
       setupDiscrepancy();
-      setupCashBags();
 
       hideLoadingModal();
     }
@@ -557,6 +640,7 @@ angular.module('ts5App')
         getCashRevenue(),
         getEPOSRevenue(),
         getPaymentReport(),
+        getEmployees(),
         getCashBags()
       ];
 

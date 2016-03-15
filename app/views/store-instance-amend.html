@@ -303,10 +303,6 @@
           <p>You are about to permanently delete <strong>{{cashBagToDelete.cashBag}} cashbag</strong></p>
         </div>
 
-        <ul>
-          <li><strong>Bank Ref: </strong>{{ cashBagToDelete.bankRefNumber }}</li>
-        </ul>
-
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" ng-click="deleteCashBag()">Continue</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -450,7 +446,7 @@
                 </span>
                   <ui-select multiple ng-model="cashBagFilter.filterList" theme="bootstrap">
                     <ui-select-match placeholder="Select Cash Bag">{{ $item.cashBag }}</ui-select-match>
-                    <ui-select-choices repeat="cashBag in cashBagList | filter: $select.search">
+                    <ui-select-choices repeat="cashBag in normalizedCashBags | filter: $select.search">
                       <span ng-hide="cashBag.isDeleted">{{ cashBag.cashBag }}</span>
                       <span ng-show="cashBag.isDeleted && showDeletedCashBags"><s>{{ cashBag.cashBag }}</s></span>
                     </ui-select-choices>
@@ -494,7 +490,7 @@
                     <i class="fa fa-flag" ng-show="cashBag.isManual"></i>
                   </div>
                   <div class="col-xs-6 text-right">
-                    Bank Ref {{ cashBag.bankRefNumber }}
+                    Bank Ref: {{ getOrNA(cashBag.bankRefNumber) }}
                   </div>
                 </div>
               </accordion-heading>
@@ -634,14 +630,14 @@
                             ng-if="doesSectorHaveCrewData(flightSector)"></i>
                       </td>
                       <td><i class="fa fa-flag" ng-show="flightSector.isManual"></i></td>
-                      <td>{{ flightSector.scheduleDate }}</td>
-                      <td>{{ flightSector.scheduleNumber }}</td>
-                      <td>{{ flightSector.departureStation }}</td>
-                      <td>{{ flightSector.arrivalStation }}</td>
-                      <td>{{ flightSector.passengerCount }}</td>
-                      <td>{{ flightSector.tailNumber }}</td>
-                      <td>{{ flightSector.transactionCount }}</td>
-                      <td>{{ flightSector.transactionTotal }}</td>
+                      <td>{{ getOrNA(flightSector.scheduleDate) }}</td>
+                      <td>{{ getOrNA(flightSector.scheduleNumber) }}</td>
+                      <td>{{ getOrNA(flightSector.departureStation) }}</td>
+                      <td>{{ getOrNA(flightSector.arrivalStation) }}</td>
+                      <td>{{ getOrNA(flightSector.passengerCount) }}</td>
+                      <td>{{ getOrNA(flightSector.tailNumber) }}</td>
+                      <td>{{ getOrNA(flightSector.transactionCount) }}</td>
+                      <td>{{ getOrNA(flightSector.transactionTotal) }}</td>
                       <td ng-hide="cashBag.isDeleted">
                         <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(flightSector)"><i class="fa fa-pencil active"></i></button>
                         <button class="btn btn-danger btn-xs"><i class="fa fa-trash active"></i></button>
@@ -679,7 +675,7 @@
                   <button class="btn btn-primary" title="Edit Cash Bag">
                     <i class="fa fa-pencil active"></i>
                   </button>
-                  <button class="btn btn-danger" title="Delete Cash Bag" ng-click="showDeleteCashBagModal(cashBag)">
+                  <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
                     <i class="fa fa-trash active"></i>
                   </button>
                   <button class="btn btn-warning" title="Merge or Reallocate Cash Bag" ng-click="showMoveCashBagModal(cashBag)">

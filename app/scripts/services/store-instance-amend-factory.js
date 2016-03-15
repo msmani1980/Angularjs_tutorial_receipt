@@ -47,8 +47,8 @@ angular.module('ts5App')
     };
 
     var getCashBagListMockData = function (searchQuery) {
-      return [{
-        id: 99999999999,
+      var mockCashBag = [{
+        id: 10,
         cashBag: (searchQuery) ? searchQuery.cashBag : '123',
         bankRefNumber: (searchQuery) ? searchQuery.bankRefNumber : 'AB45',
         storeNumber: '123',
@@ -195,7 +195,7 @@ angular.module('ts5App')
           isManual: true,
           crewData: []
         }, {
-          id:6,
+          id: 6,
           scheduleDate: '11/30/2015',
           scheduleNumber: '146',
           route: '7834',
@@ -213,10 +213,24 @@ angular.module('ts5App')
           }]
         }]
       }];
+
+      var cashBagMockResponseDeferred = $q.defer();
+
+      if (searchQuery) {
+        cashBagMockResponseDeferred.resolve([mockCashBag[0]]);
+      } else {
+        cashBagMockResponseDeferred.resolve(mockCashBag);
+      }
+
+      return cashBagMockResponseDeferred.promise;
     };
 
     var getCashBags = function (payload) {
       return cashBagService.getCashBagList(payload.companyId, payload);
+    };
+
+    var getFlightSectors = function (cashBagId) {
+      return cashBagService.getCashBagCarrierInstances(cashBagId);
     };
 
     var deleteCashBag = function (id) {
@@ -228,6 +242,7 @@ angular.module('ts5App')
       getStoreInstancesMockData: getStoreInstancesMockData,
       getScheduleMockData: getScheduleMockData,
       getCashBags: getCashBags,
-      deleteCashBag: deleteCashBag
+      deleteCashBag: deleteCashBag,
+      getFlightSectors: getFlightSectors
     };
   });
