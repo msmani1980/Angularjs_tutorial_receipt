@@ -13,8 +13,9 @@ angular.module('ts5App')
 
     var $this = this;
 
-    function formatAsCurrency(valueToFormat) {
-      return (valueToFormat) ? sprintf('%.2f', valueToFormat) : sprintf('%.2f', 0);
+    function formatAsCurrency(valueToFormat, optionalNumDigits) {
+      var precision = (optionalNumDigits) ? '%.' + optionalNumDigits + 'f' : '%.2f';
+      return (valueToFormat) ? sprintf(precision, valueToFormat) : sprintf(precision, 0);
     }
 
     function makeFinite(valueToCheck) {
@@ -183,8 +184,8 @@ angular.module('ts5App')
           paperAmount: formatAsCurrency(paperAmount),
           coinAmount: formatAsCurrency(coinAmount),
           varianceValue: formatAsCurrency(varianceValue),
-          bankOrPaperExchangeRate: formatAsCurrency(bankOrPaperExchangeRate),
-          coinExchangeRate: formatAsCurrency(coinExchangeRate),
+          bankOrPaperExchangeRate: formatAsCurrency(bankOrPaperExchangeRate, 4),
+          coinExchangeRate: formatAsCurrency(coinExchangeRate, 4),
           totalBank: formatAsCurrency(totalBank),
           isDiscrepancy: isDiscrepancy
         };
