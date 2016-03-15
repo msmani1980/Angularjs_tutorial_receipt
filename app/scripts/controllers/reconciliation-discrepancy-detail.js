@@ -298,10 +298,10 @@ angular.module('ts5App')
       $filter('filter')($this.promotionTotals, {
         exchangeRateTypeId: 1
       }).map(function (promotion) {
-        promotion.eposQuantity = 1;
-        promotion.eposTotal = promotion.convertedAmount;
+        promotion.eposQuantity = promotion.quantity;
+        promotion.eposTotal = formatAsCurrency(promotion.convertedAmount);
         reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
-          promotion.itemName = dataFromAPI.promotionCode;
+          promotion.itemName = dataFromAPI.promotionName;
         }, handleResponseError);
 
         promotion.itemTypeName = 'Promotion';
@@ -401,6 +401,22 @@ angular.module('ts5App')
       $scope.storeInstance.statusName = findStatusName($scope.storeInstance.statusId);
     }
 
+    function consolidateDuplicatePromotions() {
+      var consolidatedPromotions = [];
+      angular.forEach($this.promotionTotals, function (promotion) {
+        var promotionMatch = lodash.findWhere(consolidatedPromotions, { promotionId: promotion.promotionId });
+        if (promotionMatch) {
+          promotionMatch.convertedAmount = promotionMatch.convertedAmount + promotion.convertedAmount;
+          promotionMatch.quantity += (promotion.quantity || 1);
+        } else {
+          promotion.quantity = 1;
+          consolidatedPromotions.push(promotion);
+        }
+      });
+
+      $this.promotionTotals = consolidatedPromotions;
+    }
+
     function setupData(responseCollection) {
       $this.itemTypes = angular.copy(responseCollection[0]);
       $this.countTypes = angular.copy(responseCollection[1]);
@@ -408,6 +424,8 @@ angular.module('ts5App')
       $this.promotionTotals = $filter('filter')(angular.copy(responseCollection[3].response), {
         exchangeRateTypeId: 1
       });
+      consolidateDuplicatePromotions();
+
       $this.chRevenue = angular.copy(responseCollection[4]);
       $this.eposRevenue = angular.copy(responseCollection[5]);
       $this.globalCurrencyList = angular.copy(responseCollection[6].response);
