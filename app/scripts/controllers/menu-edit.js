@@ -368,4 +368,13 @@ angular.module('ts5App')
       }
     });
 
+    $scope.isEndDateDisabled = function() {
+      if ($scope.menu && $scope.menu.endDate) {
+        var date = $scope.menu.endDate;
+        return $scope.isViewOnly() || dateUtility.isYesterdayOrEarlier(date);
+      }
+
+      return $scope.isViewOnly();
+    };
+
   });
