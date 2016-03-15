@@ -93,9 +93,9 @@ angular.module('ts5App')
       return yesterday;
     };
 
-    this.yesterdayFormatted = function() {
+    this.yesterdayFormatted = function(formatTo) {
       var formatFrom = 'x';
-      var formatTo = _dateFormatForApp;
+      formatTo = formatTo || _dateFormatForApp;
       var today = new Date();
       var yesterday = today.setDate(today.getDate() - 1);
       return this.formatDate(yesterday, formatFrom, formatTo);
