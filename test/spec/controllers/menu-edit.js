@@ -19,6 +19,7 @@ describe('Controller: MenuEditCtrl', function() {
   var salesCategoriesDeferred;
   var createMenuDeffered;
   var httpBackend;
+  var dateUtility;
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
@@ -30,6 +31,7 @@ describe('Controller: MenuEditCtrl', function() {
 
     httpBackend = $injector.get('$httpBackend');
     menuFactory = $injector.get('menuFactory');
+    dateUtility = $injector.get('dateUtility');
 
     getMenuDeferred = $q.defer();
     getItemsListDeferred = $q.defer();
@@ -497,6 +499,27 @@ describe('Controller: MenuEditCtrl', function() {
         scope.overwriteMenu();
         expect(menuFactory.updateMenu).toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('scope.isEndDateDisabled ', function() {
+    it('should return false if date is tomorrow', function() {
+      scope.menu = {
+        endDate: dateUtility.tomorrowFormatted()
+      };
+      expect(scope.isEndDateDisabled()).toBeFalsy();
+    });
+    it('should return false if date is today', function() {
+      scope.menu = {
+        endDate: dateUtility.nowFormatted()
+      };
+      expect(scope.isEndDateDisabled()).toBeFalsy();
+    });
+    it('should return true if date is yesterday', function() {
+      scope.menu = {
+        endDate: dateUtility.yesterdayFormatted()
+      };
+      expect(scope.isEndDateDisabled()).toBeTruthy();
     });
   });
 
