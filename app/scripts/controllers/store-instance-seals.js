@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceWizardConfig, dateUtility,
     storeInstanceFactory, sealTypesService, sealColorsService, messageService, $location, lodash, $localStorage,
-    $timeout, storeInstanceAssignSealsFactory) {
+    storeInstanceAssignSealsFactory) {
 
     var HANDOVER = 'Hand Over';
     var OUTBOUND = 'Outbound';
