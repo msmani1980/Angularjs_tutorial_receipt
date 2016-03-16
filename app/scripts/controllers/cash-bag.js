@@ -62,6 +62,7 @@ angular.module('ts5App')
     function cleanPayload(payload) {
       delete payload.storeNumber;
       angular.forEach(payload.cashBagCurrencies, function (currency) {
+        delete currency.bankAmount;
         delete currency.bankExchangeRate;
         delete currency.paperExchangeRate;
         delete currency.coinExchangeRate;
