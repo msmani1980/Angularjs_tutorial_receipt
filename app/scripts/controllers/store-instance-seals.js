@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceWizardConfig, dateUtility,
     storeInstanceFactory, sealTypesService, sealColorsService, messageService, $location, lodash, $localStorage,
-    storeInstanceAssignSealsFactory) {
+    $timeout, storeInstanceAssignSealsFactory) {
 
     var HANDOVER = 'Hand Over';
     var OUTBOUND = 'Outbound';
@@ -625,6 +625,14 @@ angular.module('ts5App')
 
     }
 
+    this.replenishStorePromises = function(stepObject) {
+      var payload = getReplenishPayload();
+      return [
+        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName),
+        storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload)
+      ];
+    };
+
     this.createSealPromises = function(stepObject) {
       var promises = [];
 
@@ -632,14 +640,13 @@ angular.module('ts5App')
         var prevInstanceStep = stepObject.storeOne.stepName;
         var prevInstanceId = $scope.storeDetails.prevStoreInstanceId;
         promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstanceId, prevInstanceStep));
+      } else if ($scope.isReplenish()) {
+        promises = $this.replenishStorePromises(stepObject);
       }
 
-      if ($scope.isReplenish()) {
-        promises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, getReplenishPayload()));
+      if (!$scope.isReplenish()) {
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
       }
-
-      // status needs to be the last argument in this promise chain
-      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
 
       return promises;
     };
