@@ -625,23 +625,31 @@ angular.module('ts5App')
 
     }
 
-    this.replenishStorePromises = function(stepObject) {
+    this.replenishStorePromise = function() {
       var payload = getReplenishPayload();
       return [
-        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName),
         storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload)
       ];
     };
 
-    this.createSealPromises = function(stepObject) {
+    this.replenishUpdateStoreStatus = function(stepObject) {
+      var statusPromises = [
+        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName)
+      ];
+      $q.all(statusPromises).then(function(response) {
+        if (angular.isDefined(response)) {
+          $this.statusUpdateSuccessHandler(stepObject);
+        }
+      }, $this.assignSealsErrorHandler);
+    };
+
+    this.createSealStatusPromises = function(stepObject) {
       var promises = [];
 
       if ($routeParams.action === 'redispatch') {
         var prevInstanceStep = stepObject.storeOne.stepName;
         var prevInstanceId = $scope.storeDetails.prevStoreInstanceId;
         promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstanceId, prevInstanceStep));
-      } else if ($scope.isReplenish()) {
-        promises = $this.replenishStorePromises(stepObject);
       }
 
       if (!$scope.isReplenish()) {
@@ -653,10 +661,18 @@ angular.module('ts5App')
 
     this.makeSealsPromises = function(stepObject) {
       this.displayLoadingModal('Updating Status');
-      var promises = this.createSealPromises(stepObject);
-      $q.all(promises).then(function() {
-        $this.statusUpdateSuccessHandler(stepObject);
-      }, $this.assignSealsErrorHandler);
+      var promises = $this.createSealStatusPromises(stepObject);
+      if ($scope.isReplenish()) {
+        var replenishPromises = $this.replenishStorePromise();
+        $q.all(replenishPromises).then(function() {
+          $this.replenishUpdateStoreStatus(stepObject);
+        }, $this.assignSealsErrorHandler);
+      }
+
+      if (!$scope.isReplenish()) {
+        $q.all(promises).then($this.statusUpdateSuccessHandler(stepObject), $this.assignSealsErrorHandler);
+      }
+
     };
 
     this.updateStatusToStep = function(stepObject) {
