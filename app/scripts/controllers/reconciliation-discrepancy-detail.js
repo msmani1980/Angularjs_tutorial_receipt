@@ -379,7 +379,7 @@ angular.module('ts5App')
       });
 
       angular.forEach(chDiscount, function (discount) {
-        total += discount.bankAmountFinal + discount.coinAmountManualCc + discount.paperAmountManualCc;
+        total += discount.bankAmountFinal + discount.coinAmountCc + discount.paperAmountCc;
       });
 
       return total;
