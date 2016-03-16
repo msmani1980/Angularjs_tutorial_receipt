@@ -80,13 +80,14 @@ angular.module('ts5App')
         fetchMasterItemsList($scope.menuFromAPI.startDate, $scope.menuFromAPI.endDate);
         $scope.menu = angular.copy(menuFromAPI);
         deserializeMenuItems($scope.menu.menuItems);
-        $scope.menuEditForm.$setPristine();
+
+        //$scope.menuEditForm.$setPristine();
       }
     }
 
     function showToast(className, type, message) {
       hideLoadingModal();
-      messageService.create(className, message, type);
+      messageService.display(className, message, type);
     }
 
     function redirectToListPageAfterSuccess() {
@@ -173,8 +174,11 @@ angular.module('ts5App')
         };
       }
 
+      $scope.minDate = dateUtility.nowFormatted();
+
       menuFactory.getSalesCategoriesList({}).then(function(response) {
         $scope.categories = response.salesCategories;
+        $scope.menuEditForm.$setPristine();
       });
     }
 
