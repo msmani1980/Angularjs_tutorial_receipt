@@ -272,6 +272,11 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
           expect(scope.cashBags[0].crewAmount).toEqual(expectedCrewAmount);
         });
 
+        it('should calculate variance by summing paper and coin amounts and subtracting epos calculated amount', function () {
+          var expectedVariance = ((cashHandlerCashBagJSON.response[0].paperAmountManualCh + cashHandlerCashBagJSON.response[0].coinAmountManualCh) - cashHandlerCashBagJSON.response[0].eposCalculatedAmount).toString();
+          expect(scope.cashBags[0].varianceValue).toEqual(expectedVariance);
+        });
+
         it('should set bank or paper exchange rate from bank or paper exchange rate', function () {
           var expectedPaperExchangeRate = sprintf('%.4f', cashHandlerCashBagJSON.response[0].chPaperExchangeRate);
           var expectedBankExchangeRate = sprintf('%.4f', cashHandlerCashBagJSON.response[1].chBankExchangeRate);

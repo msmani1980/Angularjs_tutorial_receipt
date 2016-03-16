@@ -42,10 +42,8 @@ angular.module('ts5App')
       var lmpReplenishCount = getIntOrZero(stockItem.replenishCount);
       var lmpIncomingCount = getIntOrZero(stockItem.inboundedCount);
       var offloadCount = getIntOrZero(stockItem.offloadCount);
-      var eposUpliftCount = getIntOrZero(stockItem.eposUpliftCount);
 
-      return eposSales - ((lmpDispatchedCount + lmpReplenishCount + eposUpliftCount) - (lmpIncomingCount +
-        offloadCount));
+      return eposSales - ((lmpDispatchedCount + lmpReplenishCount) - (lmpIncomingCount + offloadCount));
     }
 
     function getVarianceValue(varianceQuantity, retailPrice) {
@@ -60,7 +58,7 @@ angular.module('ts5App')
 
     function setStockItem(stockItem) {
       var varianceQuantity = getVarianceQuantity(stockItem);
-      var retailValue = getIntOrZero(stockItem.price);
+      var retailValue = parseFloat(stockItem.price);
       var varianceValue = getVarianceValue(varianceQuantity, retailValue);
       var isDiscrepancy = (parseInt(varianceQuantity) !== 0);
       var dispatchedCount = getIntOrZero(stockItem.dispatchedCount);
@@ -173,7 +171,7 @@ angular.module('ts5App')
         var paperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
         var coinAmount = cashBag.coinAmountManualCh;
         var totalBank = (paperAmount + coinAmount) / bankOrPaperExchangeRate;
-        var varianceValue = (paperAmount + coinAmount) - crewAmount;
+        var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
 
         var cashBagItem = {
