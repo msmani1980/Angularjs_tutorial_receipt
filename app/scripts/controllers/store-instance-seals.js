@@ -670,7 +670,11 @@ angular.module('ts5App')
       }
 
       if (!$scope.isReplenish()) {
-        $q.all(promises).then($this.statusUpdateSuccessHandler(stepObject), $this.assignSealsErrorHandler);
+        $q.all(promises).then(function(response) {
+          if (angular.isDefined(response)) {
+            $this.statusUpdateSuccessHandler(stepObject);
+          }
+        }, $this.assignSealsErrorHandler);
       }
 
     };
