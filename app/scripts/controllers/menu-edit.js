@@ -174,7 +174,8 @@ angular.module('ts5App')
         };
       }
 
-      $scope.minDate = dateUtility.nowFormatted();
+      $scope.startMinDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
+      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(0);
 
       menuFactory.getSalesCategoriesList({}).then(function(response) {
         $scope.categories = response.salesCategories;
