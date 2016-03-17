@@ -118,6 +118,19 @@ angular.module('ts5App')
       return this.formatDate(newDate, formatFrom, formatTo);
     };
 
+    this.dateNumDaysAfterToday = function(numDays) {
+      var today = new Date();
+      var newDate = today.setDate(today.getDate() + numDays);
+      return newDate;
+    };
+
+    this.dateNumDaysAfterTodayFormatted = function(numDays, formatTo) {
+      var formatFrom = 'x';
+      formatTo = formatTo || _dateFormatForApp;
+      var newDate = this.dateNumDaysAfterToday(numDays);
+      return this.formatDate(newDate, formatFrom, formatTo);
+    };
+
     this.isTodayOrEarlier = function(date) {
       return this.now() >= Date.parse(date);
     };

@@ -369,6 +369,39 @@ describe('Date Utility service', function() {
 
   });
 
+  describe('dateNumDaysAfterToday', function() {
+    it('should be defined', function() {
+      expect(dateUtility.dateNumDaysAfterToday).toBeDefined();
+    });
+
+    it('should return three days from today timestamp when 3 is passed in', function() {
+      var today = new Date();
+      var threeDaysAgoControl = today.setDate(today.getDate() + 3);
+      var tomorrow = dateUtility.dateNumDaysAfterToday(3);
+      expect(tomorrow).toEqual(threeDaysAgoControl);
+    });
+  });
+
+  describe('dateNumDaysAfterTodayFormatted method', function() {
+
+    it('should return a formatted date in MM/DD/YYYY when no format is passed',
+      function() {
+        var newDate = dateUtility.dateNumDaysAfterToday(3);
+        var formattedTimeStamp = dateUtility.dateNumDaysAfterTodayFormatted(3);
+        var formatControl = dateUtility.formatDate(newDate, 'x', 'MM/DD/YYYY');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+    it('should return a formatted date in YYYYMMDD when YYYYMMDD format is passed',
+      function() {
+        var newDate = dateUtility.dateNumDaysAfterToday(3);
+        var formattedTimeStamp = dateUtility.dateNumDaysAfterTodayFormatted(3, 'YYYYMMDD');
+        var formatControl = dateUtility.formatDate(newDate, 'x', 'YYYYMMDD');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+  });
+
   describe('getOperationalDay method', function() {
 
     it('should return a formatted number of the day',

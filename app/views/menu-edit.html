@@ -72,11 +72,22 @@
 
       <div class="col-xs-12 col-sm-3 col-md-3">
         <date-picker-field
+          ng-if="!isMenuReadOnly()"
           name="startDate"
           ng-model="menu.startDate"
           label="Effective From"
           placeholder="mm/dd/yyyy"
-          disable="isMenuReadOnly()"
+          min-date="minDate"
+          required="true">
+        </date-picker-field>
+
+        <date-picker-field
+          ng-if="isMenuReadOnly()"
+          name="startDate"
+          ng-model="menu.startDate"
+          label="Effective From"
+          placeholder="mm/dd/yyyy"
+          disable="true"
           required="true">
         </date-picker-field>
       </div>
