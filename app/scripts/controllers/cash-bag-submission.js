@@ -223,6 +223,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
       $scope.search = {};
       $this.isSearching = false;
       $scope.cashBagList = [];
+      angular.element('#bankReferenceNumber').focus();
     };
 
     $scope.searchCashBags = function () {
