@@ -70,18 +70,28 @@
              ng-readonly="isMenuReadOnly()"/>
     </div>
 
-    <date-picker
-      class="form-group col-sm-6 col-xs-12"
-      element-class="col-xs-6 col-sm-6"
-      start-date-model="menu.startDate"
-      end-date-model="menu.endDate"
-      disable-past="true"
-      label-from="Effective From"
-      label-to="Effective To"
-      disable-start-date="isMenuReadOnly()"
-      disable-end-date="isEndDateDisabled()"
-      required="true">
-    </date-picker>
+      <div class="col-xs-12 col-sm-3 col-md-3">
+        <date-picker-field
+          name="startDate"
+          ng-model="menu.startDate"
+          label="Effective From"
+          placeholder="mm/dd/yyyy"
+          disable="isMenuReadOnly()"
+          required="true">
+        </date-picker-field>
+      </div>
+
+      <div class="col-xs-12 col-sm-3 col-md-3">
+        <date-picker-field
+          name="endDate"
+          ng-model="menu.endDate"
+          label="Effective To"
+          placeholder="mm/dd/yyyy"
+          min-date="minDate"
+          disable="isEndDateDisabled()"
+          required="true">
+        </date-picker-field>
+      </div>
 
     <div class="form-group col-sm-12">
       <label>Description</label>
