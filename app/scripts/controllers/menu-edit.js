@@ -80,8 +80,7 @@ angular.module('ts5App')
         fetchMasterItemsList($scope.menuFromAPI.startDate, $scope.menuFromAPI.endDate);
         $scope.menu = angular.copy(menuFromAPI);
         deserializeMenuItems($scope.menu.menuItems);
-
-        //$scope.menuEditForm.$setPristine();
+        $scope.menuEditForm.$setPristine();
       }
     }
 
@@ -174,8 +173,7 @@ angular.module('ts5App')
         };
       }
 
-      $scope.startMinDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
-      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(0);
+      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
 
       menuFactory.getSalesCategoriesList({}).then(function(response) {
         $scope.categories = response.salesCategories;
