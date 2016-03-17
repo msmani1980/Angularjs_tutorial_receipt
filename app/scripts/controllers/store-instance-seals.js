@@ -636,10 +636,8 @@ angular.module('ts5App')
       var statusPromises = [
         storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName)
       ];
-      $q.all(statusPromises).then(function(response) {
-        if (angular.isDefined(response)) {
-          $this.statusUpdateSuccessHandler(stepObject);
-        }
+      $q.all(statusPromises).then(function() {
+        $this.statusUpdateSuccessHandler(stepObject);
       }, $this.assignSealsErrorHandler);
     };
 
@@ -670,10 +668,8 @@ angular.module('ts5App')
       }
 
       if (!$scope.isReplenish()) {
-        $q.all(promises).then(function(response) {
-          if (angular.isDefined(response)) {
-            $this.statusUpdateSuccessHandler(stepObject);
-          }
+        $q.all(promises).then(function() {
+          $this.statusUpdateSuccessHandler(stepObject);
         }, $this.assignSealsErrorHandler);
       }
 
