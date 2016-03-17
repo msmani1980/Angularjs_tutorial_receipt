@@ -33,8 +33,9 @@ angular.module('ts5App')
         method: 'GET'
       },
       getCurrencies: {
-        method: 'GET',
-        headers: { companyId: getCompanyId() }
+        method: 'GET'
+        
+        // companyId is required as a header here.  header is defined at function call
       },
       createDetailedCompanyCurrency: {
         method: 'POST'
@@ -60,10 +61,18 @@ angular.module('ts5App')
     };
 
     var getCompanyGlobalCurrencies = function (payload) {
+      actions.getCurrencies.headers = {
+        companyId: getCompanyId()
+      };
+      masterCurrenciesResource = $resource(masterCurrenciesURL, requestParameters, actions);
       return masterCurrenciesResource.getCurrencies(payload).$promise;
     };
 
     var getCompanyCurrencies = function (payload) {
+      actions.getCurrencies.headers = {
+        companyId: getCompanyId()
+      };
+      companyCurrenciesResource = $resource(companyCurrenciesURL, requestParameters, actions);
       return companyCurrenciesResource.getCurrencies(payload).$promise;
     };
 
