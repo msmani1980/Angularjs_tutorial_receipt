@@ -47,7 +47,7 @@ When testing your local build against the API, there are issues with SSL due to 
 
 When testing your local build against the API, there are issues with CORS. Close chrome and use the command below in you CLI:
 
-     open -a Google\ Chrome --args --enable-extensions --disable-web-security --allow-file-access-from-files --ignore-certificate-errors
+     open -a Google\ Chrome --args --enable-extensions --disable-web-security --allow-file-access-from-files --ignore-certificate-errors  --user-data-dir /tmp
 
 ## Yeoman Recipes
 Below are a few helpful things when using yeoman to generate Angular code

@@ -60,6 +60,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var cashHandlerCashBagJSON;
   var routeParams;
   var dateUtility;
+  var lodash;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
     inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
@@ -90,6 +91,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     storeInstanceFactory = $injector.get('storeInstanceFactory');
     globalMenuService = $injector.get('globalMenuService');
     dateUtility = $injector.get('dateUtility');
+    lodash = $injector.get('lodash');
     controller = $controller;
 
     getStoreStatusListDeferred = $q.defer();
@@ -206,6 +208,14 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(reconciliationFactory.getPromotionTotals).toHaveBeenCalled();
       });
 
+      it('should format promotionTotals to consolidate duplicates', function () {
+        var promotions = lodash.filter(scope.stockTotals.stockItems, {itemTypeName: 'Promotion'});
+        expect(promotions.length).toEqual(2);
+        expect(promotions[0].eposQuantity).toEqual(1);
+        expect(promotions[1].eposQuantity).toEqual(2);
+        expect(promotions[1].eposTotal).toEqual('0.76');
+      });
+
       it('should call getCHRevenue', function () {
         expect(reconciliationFactory.getCHRevenue).toHaveBeenCalled();
       });
@@ -262,9 +272,14 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
           expect(scope.cashBags[0].crewAmount).toEqual(expectedCrewAmount);
         });
 
+        it('should calculate variance by summing paper and coin amounts and subtracting epos calculated amount', function () {
+          var expectedVariance = ((cashHandlerCashBagJSON.response[0].paperAmountManualCh + cashHandlerCashBagJSON.response[0].coinAmountManualCh) - cashHandlerCashBagJSON.response[0].eposCalculatedAmount).toString();
+          expect(scope.cashBags[0].varianceValue).toEqual(expectedVariance);
+        });
+
         it('should set bank or paper exchange rate from bank or paper exchange rate', function () {
-          var expectedPaperExchangeRate = (cashHandlerCashBagJSON.response[0].chPaperExchangeRate).toString();
-          var expectedBankExchangeRate = (cashHandlerCashBagJSON.response[1].chBankExchangeRate).toString();
+          var expectedPaperExchangeRate = sprintf('%.4f', cashHandlerCashBagJSON.response[0].chPaperExchangeRate);
+          var expectedBankExchangeRate = sprintf('%.4f', cashHandlerCashBagJSON.response[1].chBankExchangeRate);
           expect(scope.cashBags[0].bankOrPaperExchangeRate).toEqual(expectedPaperExchangeRate);
           expect(scope.cashBags[1].bankOrPaperExchangeRate).toEqual(expectedBankExchangeRate);
         });

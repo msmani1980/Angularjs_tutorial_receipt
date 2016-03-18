@@ -93,6 +93,14 @@ angular.module('ts5App')
       return yesterday;
     };
 
+    this.yesterdayFormatted = function(formatTo) {
+      var formatFrom = 'x';
+      formatTo = formatTo || _dateFormatForApp;
+      var today = new Date();
+      var yesterday = today.setDate(today.getDate() - 1);
+      return this.formatDate(yesterday, formatFrom, formatTo);
+    };
+
     this.isToday = function(date) {
       return Date.parse(moment().format('MM/DD/YYYY')) === Date.parse(date);
     };
@@ -107,6 +115,19 @@ angular.module('ts5App')
       var formatFrom = 'x';
       formatTo = formatTo || _dateFormatForApp;
       var newDate = this.dateNumDaysBeforeToday(numDays);
+      return this.formatDate(newDate, formatFrom, formatTo);
+    };
+
+    this.dateNumDaysAfterToday = function(numDays) {
+      var today = new Date();
+      var newDate = today.setDate(today.getDate() + numDays);
+      return newDate;
+    };
+
+    this.dateNumDaysAfterTodayFormatted = function(numDays, formatTo) {
+      var formatFrom = 'x';
+      formatTo = formatTo || _dateFormatForApp;
+      var newDate = this.dateNumDaysAfterToday(numDays);
       return this.formatDate(newDate, formatFrom, formatTo);
     };
 

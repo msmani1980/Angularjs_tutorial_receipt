@@ -290,6 +290,26 @@ describe('Date Utility service', function() {
 
   });
 
+  describe('yesterdayFormatted method', function() {
+
+    it('should return a formatted date in MM/DD/YYYY when no format is passed',
+      function() {
+        var yesterday = dateUtility.yesterday();
+        var formattedTimeStamp = dateUtility.yesterdayFormatted();
+        var formatControl = dateUtility.formatDate(yesterday, 'x', 'MM/DD/YYYY');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+    it('should return a formatted date in YYYYMMDD when YYYYMMDD format is passed',
+      function() {
+        var yesterday = dateUtility.yesterday();
+        var formattedTimeStamp = dateUtility.yesterdayFormatted('YYYYMMDD');
+        var formatControl = dateUtility.formatDate(yesterday, 'x', 'YYYYMMDD');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+  });
+
   describe('removeMilliseconds method', function() {
     it('should remove a decimal and all numbers after', function() {
       var expected = '2015-08-07 13:35:59';
@@ -343,6 +363,39 @@ describe('Date Utility service', function() {
       function() {
         var newDate = dateUtility.dateNumDaysBeforeToday(3);
         var formattedTimeStamp = dateUtility.dateNumDaysBeforeTodayFormatted(3, 'YYYYMMDD');
+        var formatControl = dateUtility.formatDate(newDate, 'x', 'YYYYMMDD');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+  });
+
+  describe('dateNumDaysAfterToday', function() {
+    it('should be defined', function() {
+      expect(dateUtility.dateNumDaysAfterToday).toBeDefined();
+    });
+
+    it('should return three days from today timestamp when 3 is passed in', function() {
+      var today = new Date();
+      var threeDaysAgoControl = today.setDate(today.getDate() + 3);
+      var tomorrow = dateUtility.dateNumDaysAfterToday(3);
+      expect(tomorrow).toEqual(threeDaysAgoControl);
+    });
+  });
+
+  describe('dateNumDaysAfterTodayFormatted method', function() {
+
+    it('should return a formatted date in MM/DD/YYYY when no format is passed',
+      function() {
+        var newDate = dateUtility.dateNumDaysAfterToday(3);
+        var formattedTimeStamp = dateUtility.dateNumDaysAfterTodayFormatted(3);
+        var formatControl = dateUtility.formatDate(newDate, 'x', 'MM/DD/YYYY');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+    it('should return a formatted date in YYYYMMDD when YYYYMMDD format is passed',
+      function() {
+        var newDate = dateUtility.dateNumDaysAfterToday(3);
+        var formattedTimeStamp = dateUtility.dateNumDaysAfterTodayFormatted(3, 'YYYYMMDD');
         var formatControl = dateUtility.formatDate(newDate, 'x', 'YYYYMMDD');
         expect(formattedTimeStamp).toEqual(formatControl);
       });

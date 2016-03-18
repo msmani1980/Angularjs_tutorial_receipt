@@ -86,7 +86,7 @@ angular.module('ts5App')
 
     function showToast(className, type, message) {
       hideLoadingModal();
-      messageService.create(className, message, type);
+      messageService.display(className, message, type);
     }
 
     function redirectToListPageAfterSuccess() {
@@ -173,8 +173,11 @@ angular.module('ts5App')
         };
       }
 
+      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
+
       menuFactory.getSalesCategoriesList({}).then(function(response) {
         $scope.categories = response.salesCategories;
+        $scope.menuEditForm.$setPristine();
       });
     }
 
@@ -367,5 +370,14 @@ angular.module('ts5App')
         fetchMasterItemsList($scope.menu.startDate, $scope.menu.endDate);
       }
     });
+
+    $scope.isEndDateDisabled = function() {
+      if ($scope.menu && $scope.menu.endDate) {
+        var date = $scope.menu.endDate;
+        return $scope.isViewOnly() || dateUtility.isYesterdayOrEarlier(date);
+      }
+
+      return $scope.isViewOnly();
+    };
 
   });

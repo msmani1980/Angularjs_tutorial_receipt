@@ -13,8 +13,9 @@ angular.module('ts5App')
 
     var $this = this;
 
-    function formatAsCurrency(valueToFormat) {
-      return (valueToFormat) ? sprintf('%.2f', valueToFormat) : sprintf('%.2f', 0);
+    function formatAsCurrency(valueToFormat, optionalNumDigits) {
+      var precision = (optionalNumDigits) ? '%.' + optionalNumDigits + 'f' : '%.2f';
+      return (valueToFormat) ? sprintf(precision, valueToFormat) : sprintf(precision, 0);
     }
 
     function makeFinite(valueToCheck) {
@@ -41,10 +42,8 @@ angular.module('ts5App')
       var lmpReplenishCount = getIntOrZero(stockItem.replenishCount);
       var lmpIncomingCount = getIntOrZero(stockItem.inboundedCount);
       var offloadCount = getIntOrZero(stockItem.offloadCount);
-      var eposUpliftCount = getIntOrZero(stockItem.eposUpliftCount);
 
-      return eposSales - ((lmpDispatchedCount + lmpReplenishCount + eposUpliftCount) - (lmpIncomingCount +
-        offloadCount));
+      return eposSales - ((lmpDispatchedCount + lmpReplenishCount) - (lmpIncomingCount + offloadCount));
     }
 
     function getVarianceValue(varianceQuantity, retailPrice) {
@@ -59,7 +58,7 @@ angular.module('ts5App')
 
     function setStockItem(stockItem) {
       var varianceQuantity = getVarianceQuantity(stockItem);
-      var retailValue = getIntOrZero(stockItem.price);
+      var retailValue = parseFloat(stockItem.price);
       var varianceValue = getVarianceValue(varianceQuantity, retailValue);
       var isDiscrepancy = (parseInt(varianceQuantity) !== 0);
       var dispatchedCount = getIntOrZero(stockItem.dispatchedCount);
@@ -164,15 +163,15 @@ angular.module('ts5App')
       $scope.isPaperAndCoinExchangeRatePreferred = false;
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
-        var eposCalculatedAmount = cashBag.eposCalculatedAmount || 0;
+        var eposCalculatedAmount = cashBag.eposCalculatedAmount;
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
         $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
         var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
-        var coinExchangeRate = cashBag.chCoinExchangeRate || 0;
-        var paperAmount = cashBag.paperAmountManualCh;
+        var coinExchangeRate = cashBag.chCoinExchangeRate;
+        var paperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
         var coinAmount = cashBag.coinAmountManualCh;
         var totalBank = (paperAmount + coinAmount) / bankOrPaperExchangeRate;
-        var varianceValue = (paperAmount + coinAmount) - crewAmount;
+        var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
 
         var cashBagItem = {
@@ -183,8 +182,8 @@ angular.module('ts5App')
           paperAmount: formatAsCurrency(paperAmount),
           coinAmount: formatAsCurrency(coinAmount),
           varianceValue: formatAsCurrency(varianceValue),
-          bankOrPaperExchangeRate: formatAsCurrency(bankOrPaperExchangeRate),
-          coinExchangeRate: formatAsCurrency(coinExchangeRate),
+          bankOrPaperExchangeRate: formatAsCurrency(bankOrPaperExchangeRate, 4),
+          coinExchangeRate: formatAsCurrency(coinExchangeRate, 4),
           totalBank: formatAsCurrency(totalBank),
           isDiscrepancy: isDiscrepancy
         };
@@ -297,10 +296,10 @@ angular.module('ts5App')
       $filter('filter')($this.promotionTotals, {
         exchangeRateTypeId: 1
       }).map(function (promotion) {
-        promotion.eposQuantity = 1;
-        promotion.eposTotal = promotion.convertedAmount;
+        promotion.eposQuantity = promotion.quantity;
+        promotion.eposTotal = formatAsCurrency(promotion.convertedAmount);
         reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
-          promotion.itemName = dataFromAPI.promotionCode;
+          promotion.itemName = dataFromAPI.promotionName;
         }, handleResponseError);
 
         promotion.itemTypeName = 'Promotion';
@@ -380,7 +379,7 @@ angular.module('ts5App')
       });
 
       angular.forEach(chDiscount, function (discount) {
-        total += discount.bankAmountFinal + discount.coinAmountManualCc + discount.paperAmountManualCc;
+        total += discount.bankAmountFinal + discount.coinAmountCc + discount.paperAmountCc;
       });
 
       return total;
@@ -400,6 +399,22 @@ angular.module('ts5App')
       $scope.storeInstance.statusName = findStatusName($scope.storeInstance.statusId);
     }
 
+    function consolidateDuplicatePromotions() {
+      var consolidatedPromotions = [];
+      angular.forEach($this.promotionTotals, function (promotion) {
+        var promotionMatch = lodash.findWhere(consolidatedPromotions, { promotionId: promotion.promotionId });
+        if (promotionMatch) {
+          promotionMatch.convertedAmount = promotionMatch.convertedAmount + promotion.convertedAmount;
+          promotionMatch.quantity += (promotion.quantity || 1);
+        } else {
+          promotion.quantity = 1;
+          consolidatedPromotions.push(promotion);
+        }
+      });
+
+      $this.promotionTotals = consolidatedPromotions;
+    }
+
     function setupData(responseCollection) {
       $this.itemTypes = angular.copy(responseCollection[0]);
       $this.countTypes = angular.copy(responseCollection[1]);
@@ -407,6 +422,8 @@ angular.module('ts5App')
       $this.promotionTotals = $filter('filter')(angular.copy(responseCollection[3].response), {
         exchangeRateTypeId: 1
       });
+      consolidateDuplicatePromotions();
+
       $this.chRevenue = angular.copy(responseCollection[4]);
       $this.eposRevenue = angular.copy(responseCollection[5]);
       $this.globalCurrencyList = angular.copy(responseCollection[6].response);
