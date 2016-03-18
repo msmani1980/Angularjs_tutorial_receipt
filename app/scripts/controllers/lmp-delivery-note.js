@@ -436,9 +436,21 @@ angular.module('ts5App')
       return deliveredQuantity - ullageQuantity;
     };
 
-    function saveDeliveryNoteFailed(response) {
+    function saveDeliveryNoteFailedReset(response) {
       $scope.toggleReview();
       showResponseErrors(response);
+    }
+
+    function saveDeliveryNoteFailed(failureResponse) {
+      var promises = [
+        deliveryNoteFactory.getItemsByCateringStationId($scope.deliveryNote.catererStationId).then(
+          addNewMasterItemsFromCatererStationMasterItemsResponse, showResponseErrors)
+      ];
+
+      $q.all(promises).then(function() {
+        saveDeliveryNoteFailedReset(failureResponse);
+      });
+
     }
 
     function saveDeliveryNote() {
