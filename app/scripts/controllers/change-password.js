@@ -72,7 +72,6 @@ angular.module('ts5App')
     }
 
     function handleSuccessResponse() {
-      $location.url($location.path());
       var credentials = getCredentials();
       hideLoadingModal();
       identityAccessFactory.login(credentials);
@@ -103,4 +102,5 @@ angular.module('ts5App')
       $scope.credentials.username = userInfo.userName;
       $scope.credentials.email = userInfo.email;
     }, handleResponseError);
+
   });
