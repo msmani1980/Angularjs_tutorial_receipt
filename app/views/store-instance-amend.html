@@ -323,7 +323,7 @@
             <button class="btn btn-primary" ng-click="goToReconciliation()">
               Go To Reconciliation
             </button>
-            <button class="btn btn-info" ng-click="showPaymentReportPanel()">
+            <button class="btn btn-info" ng-click="showStoreInstancePaymentReport()">
               <i class="fa fa-file-text" aria-hidden="true"></i> Show Payment Reports
             </button>
           </div>
@@ -669,10 +669,10 @@
               <hr ng-hide="cashBag.isDeleted">
               <div class="row" ng-hide="cashBag.isDeleted">
                 <div class="col-xs-12 text-left">
-                  <button class="btn btn-info" title="Show Payment Report">
+                  <button class="btn btn-info" title="Show Payment Report" ng-click="showCashBagPaymentReport(cashBag)">
                     <i class="fa fa-file-text active"></i>
                   </button>
-                  <button class="btn btn-primary" title="Edit Cash Bag">
+                  <button class="btn btn-primary" title="Edit Cash Bag" ng-click="goToCashBagEdit(cashBag)">
                     <i class="fa fa-pencil active"></i>
                   </button>
                   <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">

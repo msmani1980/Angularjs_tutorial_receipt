@@ -186,8 +186,20 @@ angular.module('ts5App')
       $location.path('/reconciliation-discrepancy-detail/' + $routeParams.storeInstanceId);
     };
 
+    $scope.goToCashBagEdit = function (cashBag) {
+      $location.path('/cash-bag/edit/' + cashBag.id);
+    };
+
     $scope.showPaymentReportPanel = function () {
       angular.element('#paymentReportModal').modal('show');
+    };
+
+    $scope.showStoreInstancePaymentReport = function () {
+      getStoreInstancePaymentReport().then($scope.showPaymentReportPanel);
+    };
+
+    $scope.showCashBagPaymentReport = function (cashBag) {
+      getCashBagPaymentReport(cashBag.cashBag).then($scope.showPaymentReportPanel);
     };
 
     $scope.showDeleteCashBagModal = function (cashBag) {
@@ -346,7 +358,7 @@ angular.module('ts5App')
       });
 
       angular.forEach(chDiscount, function (discount) {
-        total += discount.bankAmountFinal + discount.coinAmountManualCc + discount.paperAmountManualCc;
+        total += discount.bankAmountFinal + discount.coinAmountCc + discount.paperAmountCc;
       });
 
       return total;
@@ -498,8 +510,12 @@ angular.module('ts5App')
       $scope.paymentReport = paymentReport;
     }
 
-    function getPaymentReport () {
+    function getStoreInstancePaymentReport () {
       return reconciliationFactory.getPaymentReport($routeParams.storeInstanceId).then(setPaymentReport);
+    }
+
+    function getCashBagPaymentReport (cashBagNumber) {
+      return reconciliationFactory.getPaymentReport($routeParams.storeInstanceId, cashBagNumber).then(setPaymentReport);
     }
 
     function setEmployees (employeesFromAPI) {
@@ -661,7 +677,6 @@ angular.module('ts5App')
         getCompanyPreferences(),
         getCashRevenue(),
         getEPOSRevenue(),
-        getPaymentReport(),
         getEmployees(),
         getCashBags()
       ];

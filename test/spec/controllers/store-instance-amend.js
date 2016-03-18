@@ -17,6 +17,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   beforeEach(module('served/cash-bag.json'));
   beforeEach(module('served/cash-bag-carrier-instances.json'));
   beforeEach(module('served/post-trip-data.json'));
+  beforeEach(module('served/transactions.json'));
 
   var scope;
   var StoreInstanceAmendCtrl;
@@ -27,6 +28,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var employeesService;
   var cashBagFactory;
   var postTripFactory;
+  var transactionFactory;
   var storeInstanceDeferred;
   var storeInstanceResponseJSON;
   var cashBagsDeferred;
@@ -60,11 +62,13 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var getFlightSectorsDeferred;
   var postTripDataJSON;
   var getPostTripDeferred;
+  var transactionsJSON;
+  var getTransactionListDeferred;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagList_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
                               _servedChCashBag_, _servedPaymentReport_, _servedEmployees_, _servedCashBag_, _servedCashBagCarrierInstances_,
-                              _servedPostTripData_) {
+                              _servedPostTripData_, _servedTransactions_) {
     location = $location;
     scope = $rootScope.$new();
     storeInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
@@ -72,6 +76,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     employeesService = $injector.get('employeesService');
     cashBagFactory = $injector.get('cashBagFactory');
     postTripFactory = $injector.get('postTripFactory');
+    transactionFactory = $injector.get('transactionFactory');
     controller = $controller;
 
     storeInstanceResponseJSON = [{ id: 1 }]; // stub for now until API is complete
@@ -140,6 +145,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     getPostTripDeferred = $q.defer();
     getPostTripDeferred.resolve(postTripDataJSON);
 
+    transactionsJSON = _servedTransactions_;
+    getTransactionListDeferred = $q.defer();
+    getTransactionListDeferred.resolve(transactionsJSON);
+
     spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
@@ -157,6 +166,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getFlightSectors').and.returnValue(getFlightSectorsDeferred.promise);
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(getPostTripDeferred.promise);
+    spyOn(transactionFactory, 'getTransactionList').and.returnValue(getTransactionListDeferred.promise);
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
