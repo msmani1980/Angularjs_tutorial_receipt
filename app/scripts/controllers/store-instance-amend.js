@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
-      reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory) {
+      reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory) {
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
@@ -211,7 +211,12 @@ angular.module('ts5App')
     };
 
     $scope.getOrNA = function (value) {
-      return value || 'N/A';
+      if (value === null || value === undefined)
+      {
+        return 'N/A';
+      }
+
+      return value;
     };
 
     function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
@@ -511,6 +516,18 @@ angular.module('ts5App')
       setupCashBags();
     }
 
+    function setTransactionsForFlightSector (normalizedFlightSector, transactionsFromAPI) {
+      var transactions = angular.copy(transactionsFromAPI.transactions);
+
+      var totalAmount = 0;
+      angular.forEach(transactions, function (transaction) {
+        totalAmount = totalAmount + (parseFloat(transaction.totalAmount));
+      });
+
+      normalizedFlightSector.transactionCount = transactions.length;
+      normalizedFlightSector.transactionTotal = formatAsCurrency(totalAmount);
+    }
+
     function getEmployeeDetailsById(employeeId) {
       return lodash.find($scope.employees, 'id', employeeId);
     }
@@ -542,6 +559,7 @@ angular.module('ts5App')
         var companyCarrierInstance = flightSector.companyCarrierInstance;
 
         var normalizedFlightSector = {
+          companyCarrierInstanceId: companyCarrierInstance.id,
           arrivalStation: companyCarrierInstance.arrivalStation,
           departureStation: companyCarrierInstance.departureStation,
           passengerCount: companyCarrierInstance.paxCount
@@ -555,6 +573,10 @@ angular.module('ts5App')
             setPostTrip(normalizedFlightSector, postTripFromAPI);
           });
         }
+
+        transactionFactory.getTransactionList({ companyCarrierInstanceId: companyCarrierInstance.id }).then(function (transactionsFromAPI) {
+          setTransactionsForFlightSector(normalizedFlightSector, transactionsFromAPI);
+        });
       });
     }
 
