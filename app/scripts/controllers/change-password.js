@@ -97,10 +97,12 @@ angular.module('ts5App')
       identityAccessFactory.changePassword(credentials, $this.headers).then(handleSuccessResponse, handleResponseError);
     };
 
-    identityAccessFactory.checkAuth($this.headers).then(function (dataFromAPI) {
+    function checkAuthSuccess(dataFromAPI) {
       var userInfo = angular.copy(dataFromAPI);
       $scope.credentials.username = userInfo.userName;
       $scope.credentials.email = userInfo.email;
-    }, handleResponseError);
+    }
+
+    identityAccessFactory.checkAuth($this.headers).then(checkAuthSuccess, handleResponseError);
 
   });
