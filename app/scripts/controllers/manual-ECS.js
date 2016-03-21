@@ -48,10 +48,14 @@ angular.module('ts5App')
       $scope.selectedEposRecord = record;
     };
 
+    $scope.canSelectStoreInstance = function (storeInstance) {
+      return storeInstance.statusName === 'Inbounded';
+    };
+
     $scope.getClassForAttribute = function (portalOrEpos, attribute, record) {
       var attributeToClassMap = {
         button: 'btn btn-sm btn-default',
-        icon: 'fa fa-circle-thin',
+        icon: 'fa fa-circle-o',
         row: ''
       };
       if ($scope.isRecordSelected(portalOrEpos, record)) {
