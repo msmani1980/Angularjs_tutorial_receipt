@@ -168,9 +168,11 @@ angular.module('ts5App')
         $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
         var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
         var coinExchangeRate = cashBag.chCoinExchangeRate;
-        var paperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
-        var coinAmount = cashBag.coinAmountManualCh;
-        var totalBank = (paperAmount + coinAmount) / bankOrPaperExchangeRate;
+        var paperAmount = cashBag.paperAmountManual;
+        var coinAmount = cashBag.coinAmountManual;
+        var convertedPaperAmount =  cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
+        var convertdCoinAmount = cashBag.coinAmountManualCh;
+        var totalBank = convertedPaperAmount + convertdCoinAmount;
         var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
 

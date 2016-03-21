@@ -261,8 +261,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
           var expectedCashBag = jasmine.objectContaining({
             cashBagNumber: cashHandlerCashBagJSON.response[0].cashbagNumber,
             eposCalculatedAmount: cashHandlerCashBagJSON.response[0].eposCalculatedAmount.toString(),
-            paperAmount: cashHandlerCashBagJSON.response[0].paperAmountManualCh.toString(),
-            coinAmount: cashHandlerCashBagJSON.response[0].coinAmountManualCh.toString()
+            paperAmount: cashHandlerCashBagJSON.response[0].paperAmountManual.toString(),
+            coinAmount: cashHandlerCashBagJSON.response[0].coinAmountManual.toString()
           });
           expect(scope.cashBags[0]).toEqual(expectedCashBag);
         });
@@ -273,8 +273,13 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         });
 
         it('should calculate variance by summing paper and coin amounts and subtracting epos calculated amount', function () {
-          var expectedVariance = ((cashHandlerCashBagJSON.response[0].paperAmountManualCh + cashHandlerCashBagJSON.response[0].coinAmountManualCh) - cashHandlerCashBagJSON.response[0].eposCalculatedAmount).toString();
+          var expectedVariance = ((cashHandlerCashBagJSON.response[0].paperAmountManual + cashHandlerCashBagJSON.response[0].coinAmountManual) - cashHandlerCashBagJSON.response[0].eposCalculatedAmount).toString();
           expect(scope.cashBags[0].varianceValue).toEqual(expectedVariance);
+        });
+
+        it('should calculate total bank by summing converted paper and coin amounts', function () {
+          var expectedTotalBank = (cashHandlerCashBagJSON.response[0].paperAmountManualCh + cashHandlerCashBagJSON.response[0].coinAmountManualCh).toString();
+          expect(scope.cashBags[0].totalBank).toEqual(expectedTotalBank);
         });
 
         it('should set bank or paper exchange rate from bank or paper exchange rate', function () {
