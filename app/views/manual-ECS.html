@@ -178,6 +178,7 @@
             <th>Schedule Date</th>
             <th>Catering Station</th>
             <th>Store Instance</th>
+            <th>Status</th>
             <td class="col-xs-1">Select</td>
           </tr>
           </thead>
@@ -187,6 +188,7 @@
             <td>{{ storeInstance.scheduleDate }}</td>
             <td>{{ storeInstance.stationCode }}</td>
             <td>{{ storeInstance.id }}</td>
+            <td>{{ storeInstance.statusName }}</td>
             <td class="text-center">
               <button ng-click="selectRecord('portal', storeInstance)"
                       ng-class="getClassForAttribute('portal', 'button', storeInstance)">

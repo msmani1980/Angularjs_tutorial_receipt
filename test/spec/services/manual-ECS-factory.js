@@ -9,20 +9,23 @@ describe('Factory: manualECSFactory', function () {
     storeInstanceService,
     carrierInstancesService,
     stationsService,
+    recordsService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _catererStationService_, _storeInstanceService_, _carrierInstancesService_, _manualECSFactory_, _stationsService_) {
+  beforeEach(inject(function ($rootScope, _catererStationService_, _storeInstanceService_, _carrierInstancesService_, _manualECSFactory_, _stationsService_, _recordsService_) {
     catererStationService = _catererStationService_;
     storeInstanceService = _storeInstanceService_;
     carrierInstancesService = _carrierInstancesService_;
     stationsService = _stationsService_;
+    recordsService = _recordsService_;
 
     spyOn(carrierInstancesService, 'getCarrierInstances');
     spyOn(carrierInstancesService, 'updateCarrierInstance');
     spyOn(storeInstanceService, 'getStoreInstancesList');
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(stationsService, 'getStationList');
+    spyOn(recordsService, 'getStoreStatusList');
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -70,6 +73,13 @@ describe('Factory: manualECSFactory', function () {
       var offset = 0;
       manualECSFactory.getCompanyStationList(mockCompanyId, offset);
       expect(stationsService.getStationList).toHaveBeenCalledWith(mockCompanyId, offset);
+    });
+  });
+
+  describe('recordsService API', function () {
+    it('should call recordsService on getStoreStatusList', function () {
+      manualECSFactory.getStoreStatusList();
+      expect(recordsService.getStoreStatusList).toHaveBeenCalled();
     });
   });
 
