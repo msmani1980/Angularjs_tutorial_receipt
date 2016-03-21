@@ -177,6 +177,7 @@ angular.module('ts5App')
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
 
         var cashBagItem = {
+          id: cashBag.id,
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
           eposCalculatedAmount: formatAsCurrency(eposCalculatedAmount),
@@ -651,6 +652,44 @@ angular.module('ts5App')
       });
 
       return replenishInstances.length > 0;
+    };
+
+    function saveCurrenciesSuccess(dataFromAPI, editedItems) {
+      hideLoadingModal();
+
+      angular.forEach(editedItems, function (item) {
+        item.isEditing = false;
+        item.revision = {};
+
+        //TODO: update other cash bag calculations
+      });
+
+      $scope.editCashBagTable = false;
+    }
+
+    function saveCashBagCurrencies(currencyArray) {
+      showLoadingModal('Saving Cash Bag Currencies...');
+      var promiseArray = [];
+      console.log(currencyArray);
+      angular.forEach(currencyArray, function (currency) {
+        var payload = {
+          paperAmountManual:  parseFloat(currency.revision.paperAmount) || currency.paperAmount,
+          coinAmountManual:  parseFloat(currency.revision.coinAmount) || currency.coinAmount
+        };
+        promiseArray.push(reconciliationFactory.saveCashBagCurrency(currency.id, payload));
+      });
+
+      $q.all(promiseArray).then(function (dataFromAPI) {
+        saveCurrenciesSuccess(dataFromAPI, currencyArray);
+      }, handleResponseError);
+    }
+
+    $scope.saveCashBagCurrency = function (currency) {
+      saveCashBagCurrencies([currency]);
+    };
+
+    $scope.saveCashBagTable = function () {
+      saveCashBagCurrencies($scope.cashBags);
     };
 
     $scope.saveStockItemCounts = function (item) {
