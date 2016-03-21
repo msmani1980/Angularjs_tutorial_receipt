@@ -196,6 +196,23 @@ describe('Service: cashBagService', function () {
 
     });
 
+    describe('update cash bag currency', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.updateCashBagCurrency).toBe(true);
+      });
+
+      it('should PUT cash bag currency', function () {
+        var cashBagCurrencyId = 'fakeId';
+        $httpBackend.expectPUT(/cashbag-currencies\/fakeId/).respond(200, {});
+
+        cashBagService.updateCashBagCurrency(cashBagCurrencyId).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
   });
 
 });

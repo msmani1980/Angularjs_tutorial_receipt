@@ -44,6 +44,9 @@ describe('Factory: reconciliationFactory', function () {
 
   var putSaveStockItemsCountsDeferred;
 
+  var cashBagService;
+  var putSaveCashBagCurrencyDeferred;
+
   var scope;
 
   beforeEach(inject(function (_reconciliationFactory_, $injector, $q, $rootScope) {
@@ -61,6 +64,7 @@ describe('Factory: reconciliationFactory', function () {
     stationsService = $injector.get('stationsService');
     reconciliationService = $injector.get('reconciliationService');
     itemTypesService = $injector.get('itemTypesService');
+    cashBagService = $injector.get('cashBagService');
 
     getStoreInstanceDeferred = $q.defer();
     getStoreInstanceDeferred.resolve(storeInstanceJSON);
@@ -115,6 +119,10 @@ describe('Factory: reconciliationFactory', function () {
     putSaveStockItemsCountsDeferred = $q.defer();
     putSaveStockItemsCountsDeferred.resolve(200, {});
     spyOn(reconciliationService, 'saveStockItemsCounts').and.returnValue(putSaveStockItemsCountsDeferred.promise);
+
+    putSaveCashBagCurrencyDeferred = $q.defer();
+    putSaveCashBagCurrencyDeferred.resolve(200, {});
+    spyOn(cashBagService, 'updateCashBagCurrency').and.returnValue(putSaveCashBagCurrencyDeferred.promise);
 
     scope = $rootScope.$new();
     reconciliationFactory = _reconciliationFactory_;
@@ -175,6 +183,13 @@ describe('Factory: reconciliationFactory', function () {
       var payload = {storeInstanceId: 1};
       reconciliationFactory.saveStockItemsCounts(payload);
       expect(reconciliationService.saveStockItemsCounts).toHaveBeenCalledWith(payload);
+    });
+
+    it('should call cashBagService updateCashBagCurrency on saveCashBagCurrency', function () {
+      var cashBagId = 1;
+      var payload = {fakeKey: 'fakeValue'};
+      reconciliationFactory.saveCashBagCurrency(cashBagId, payload);
+      expect(cashBagService.updateCashBagCurrency).toHaveBeenCalledWith(cashBagId, payload);
     });
 
     describe('getCHRevenue', function () {
