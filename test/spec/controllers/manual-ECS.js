@@ -8,6 +8,7 @@ describe('Controller: ManualECSCtrl', function () {
   beforeEach(module('served/stations.json'));
   beforeEach(module('served/store-instance-list.json'));
   beforeEach(module('served/carrier-instance-list.json'));
+  beforeEach(module('served/store-status.json'));
 
   var ManualECSCtrl;
   var manualECSFactory;
@@ -19,15 +20,18 @@ describe('Controller: ManualECSCtrl', function () {
   var storeInstancesDeferred;
   var carrierInstancesResponseJSON;
   var carrierInstancesDeferred;
+  var statusListResponseJSON;
+  var statusListDeferred;
   var scope;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
 
-    inject(function (_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedCarrierInstanceList_) {
+    inject(function (_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedCarrierInstanceList_, _servedStoreStatus_) {
       cateringStationsResponseJSON = _servedCateringStations_;
       companyStationsResponseJSON = _servedStations_;
       storeInstancesResponseJSON = _servedStoreInstanceList_;
       carrierInstancesResponseJSON = _servedCarrierInstanceList_;
+      statusListResponseJSON = _servedStoreStatus_;
     });
 
     manualECSFactory = $injector.get('manualECSFactory');
@@ -41,12 +45,15 @@ describe('Controller: ManualECSCtrl', function () {
     storeInstancesDeferred.resolve(storeInstancesResponseJSON);
     carrierInstancesDeferred = $q.defer();
     carrierInstancesDeferred.resolve(carrierInstancesResponseJSON);
+    statusListDeferred = $q.defer();
+    statusListDeferred.resolve(statusListResponseJSON);
 
     spyOn(manualECSFactory, 'getCatererStationList').and.returnValue(cateringStationsDeferred.promise);
     spyOn(manualECSFactory, 'getCompanyStationList').and.returnValue(companyStationsDeferred.promise);
     spyOn(manualECSFactory, 'getStoreInstanceList').and.returnValue(storeInstancesDeferred.promise);
     spyOn(manualECSFactory, 'getCarrierInstanceList').and.returnValue(carrierInstancesDeferred.promise);
     spyOn(manualECSFactory, 'updateCarrierInstance').and.returnValue(carrierInstancesDeferred.promise);
+    spyOn(manualECSFactory, 'getStoreStatusList').and.returnValue(statusListDeferred.promise);
 
     ManualECSCtrl = $controller('ManualECSCtrl', {
       $scope: scope
@@ -62,6 +69,10 @@ describe('Controller: ManualECSCtrl', function () {
 
     it('should get company stations', function () {
       expect(manualECSFactory.getCompanyStationList).toHaveBeenCalled();
+    });
+
+    it('should get store status list', function () {
+      expect(manualECSFactory.getStoreStatusList).toHaveBeenCalled();
     });
 
     it('should attach caterer stations to scope and format dates', function () {
@@ -112,22 +123,30 @@ describe('Controller: ManualECSCtrl', function () {
           endDate: '20161020',
           storeNumber: '123',
           cateringStationId: 1,
-          storeInstanceId: 2
+          storeInstanceId: 2,
+          carrierInstanceCount: 0
         };
         scope.searchPortalInstances();
         scope.$digest();
         expect(manualECSFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedPayload);
       });
 
-      it('should format result dates and station description and attach to scope', function () {
+      it('should format result dates, status, and station description and attach to scope', function () {
         scope.companyStationList = [{
           stationId: 1,
           stationCode: 'mockStationCode'
         }];
         scope.searchPortalInstances();
         scope.$digest();
-        expect(scope.storeInstances[0].scheduleDate).toEqual('08/13/2015');
+        expect(scope.storeInstances[0].scheduleDate).toEqual('08/15/2015');
         expect(scope.storeInstances[0].stationCode).toEqual('mockStationCode');
+        expect(scope.storeInstances[0].statusName).toEqual('Dispatched');
+      });
+
+      it('should filter out store instances that are after Inbounded status', function () {
+        scope.searchPortalInstances();
+        scope.$digest();
+        expect(scope.storeInstances.length < storeInstancesResponseJSON.response.length).toEqual(true);
       });
 
       describe('clear search', function () {
@@ -315,6 +334,15 @@ describe('Controller: ManualECSCtrl', function () {
         expect(scope.shouldShowSearchPromptAlert('portal')).toEqual(true);
         scope.allECSInstances = [];
         expect(scope.shouldShowSearchPromptAlert('all')).toEqual(false);
+      });
+    });
+
+    describe('canEditRecord', function () {
+      it('should return true if store instance has status Inbounded', function () {
+        var mockStoreInstance = {statusName: 'Dispatched'};
+        expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(false);
+        mockStoreInstance = {statusName: 'Inbounded'};
+        expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(true);
       });
     });
   });

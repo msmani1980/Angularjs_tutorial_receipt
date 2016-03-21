@@ -146,7 +146,7 @@
               </div>
               <div class="col-xs-12 col-sm-6">
                 <div class="form-group">
-                  <label>Departure Station</label>
+                  <label>First Departure Station</label>
                   <ui-select ng-model="eposSearch.station"
                              theme="bootstrap"
                              name="cateringStation">
@@ -178,6 +178,7 @@
             <th>Schedule Date</th>
             <th>Catering Station</th>
             <th>Store Instance</th>
+            <th>Status</th>
             <td class="col-xs-1">Select</td>
           </tr>
           </thead>
@@ -187,8 +188,10 @@
             <td>{{ storeInstance.scheduleDate }}</td>
             <td>{{ storeInstance.stationCode }}</td>
             <td>{{ storeInstance.id }}</td>
+            <td>{{ storeInstance.statusName }}</td>
             <td class="text-center">
               <button ng-click="selectRecord('portal', storeInstance)"
+                      ng-show="canSelectStoreInstance(storeInstance)"
                       ng-class="getClassForAttribute('portal', 'button', storeInstance)">
                 <span ng-class="getClassForAttribute('portal', 'icon', storeInstance)"></span>
               </button>
@@ -208,7 +211,7 @@
           <tr>
             <th>Store Number</th>
             <th>Schedule Date</th>
-            <th>Departure Station</th>
+            <th>First Departure Station</th>
             <td class="col-xs-1">Select</td>
           </tr>
           </thead>

@@ -48,10 +48,14 @@ angular.module('ts5App')
       $scope.selectedEposRecord = record;
     };
 
+    $scope.canSelectStoreInstance = function (storeInstance) {
+      return storeInstance.statusName === 'Inbounded';
+    };
+
     $scope.getClassForAttribute = function (portalOrEpos, attribute, record) {
       var attributeToClassMap = {
         button: 'btn btn-sm btn-default',
-        icon: 'fa fa-circle-thin',
+        icon: 'fa fa-circle-o',
         row: ''
       };
       if ($scope.isRecordSelected(portalOrEpos, record)) {
@@ -67,11 +71,26 @@ angular.module('ts5App')
 
     function getStoreInstancesSuccess(dataFromAPI) {
       hideLoadingModal();
-      $scope.storeInstances = angular.copy(dataFromAPI.response) || [];
-      angular.forEach($scope.storeInstances, function (storeInstance) {
-        storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
+
+      var storeInstancesResponse = angular.copy(dataFromAPI.response) || [];
+      var allowedStatuses = [
+        'Ready For Packing',
+        'Ready For Seals',
+        'Ready for Dispatch',
+        'Dispatched',
+        'On Floor',
+        'Inbound Seals',
+        'Unpacking',
+        'Inbounded'
+      ];
+
+      $scope.storeInstances = lodash.filter(storeInstancesResponse, function (storeInstance) {
+        storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate, 'YYYY-MM-DD') || '';
         var stationMatch = lodash.findWhere($scope.companyStationList, { stationId: storeInstance.cateringStationId });
+        var statusMatch = lodash.findWhere($scope.statusList, { id: storeInstance.statusId });
         storeInstance.stationCode = (!!stationMatch) ? stationMatch.stationCode : '';
+        storeInstance.statusName = (!!statusMatch) ? statusMatch.statusName : '';
+        return allowedStatuses.indexOf(storeInstance.statusName) >= 0;
       });
     }
 
@@ -237,7 +256,11 @@ angular.module('ts5App')
     }
 
     function formatPortalSearchPayload() {
-      var searchPayload = {};
+      var searchPayload = {
+        carrierInstanceCount: 0
+
+        // add after BE work is complete sectorIndex: 1
+      };
 
       if ($scope.portalSearch.scheduleDate) {
         searchPayload.startDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
@@ -289,6 +312,7 @@ angular.module('ts5App')
     function completeInit(responseCollectionFromAPI) {
       $scope.cateringStationList = angular.copy(responseCollectionFromAPI[0].response);
       $scope.companyStationList = angular.copy(responseCollectionFromAPI[1].response);
+      $scope.statusList = angular.copy(responseCollectionFromAPI[2]);
       formatStationDescription();
       hideLoadingModal();
     }
@@ -297,7 +321,8 @@ angular.module('ts5App')
       var companyId = globalMenuService.company.get();
       var promises = [
         manualECSFactory.getCatererStationList({}),
-        manualECSFactory.getCompanyStationList(companyId, 0)
+        manualECSFactory.getCompanyStationList(companyId, 0),
+        manualECSFactory.getStoreStatusList()
       ];
       $q.all(promises).then(completeInit, showErrors);
     }

@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('manualECSFactory', function (catererStationService, storeInstanceService, carrierInstancesService, stationsService) {
+  .factory('manualECSFactory', function (catererStationService, storeInstanceService, carrierInstancesService, stationsService, recordsService) {
 
     var getCarrierInstanceList = function (payload) {
       return carrierInstancesService.getCarrierInstances(payload);
@@ -30,11 +30,16 @@ angular.module('ts5App')
       return storeInstanceService.getStoreInstancesList(payload);
     };
 
+    var getStoreStatusList = function () {
+      return recordsService.getStoreStatusList();
+    };
+
     return {
       getCarrierInstanceList: getCarrierInstanceList,
       updateCarrierInstance: updateCarrierInstance,
       getCatererStationList: getCatererStationList,
       getCompanyStationList: getCompanyStationList,
-      getStoreInstanceList: getStoreInstanceList
+      getStoreInstanceList: getStoreInstanceList,
+      getStoreStatusList: getStoreStatusList
     };
   });
