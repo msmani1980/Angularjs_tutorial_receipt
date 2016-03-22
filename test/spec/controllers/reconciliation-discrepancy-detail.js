@@ -167,6 +167,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     stockItemCountsDeferred.resolve(stockItemCountsJSON);
 
     spyOn(reconciliationFactory, 'getStockItemCounts').and.returnValue(stockItemCountsDeferred.promise);
+    spyOn(reconciliationFactory, 'saveCashBagCurrency').and.returnValue(cashHandlerCashBagJSON.promise);
 
     routeParams = {
       storeInstanceId: 'fakeStoreInstanceId'
@@ -390,35 +391,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         });
       });
 
-      describe('saveItem', function () {
-        beforeEach(function () {
-          mockItem = {
-            itemName: 'testItem',
-            quantity: 2
-          };
-          scope.editItem(mockItem);
-          mockItem.revision = {
-            itemName: 'newName',
-            quantity: 3
-          };
-          scope.saveItem(mockItem);
-          scope.$digest();
-        });
-
-        it('should set item properties to revision properties', function () {
-          expect(mockItem.itemName).toEqual('newName');
-          expect(mockItem.quantity).toEqual(3);
-        });
-
-        it('should item.isEditing to false', function () {
-          expect(mockItem.isEditing).toEqual(false);
-        });
-
-        it('should clear revision object', function () {
-          expect(mockItem.revision).toEqual({});
-        });
-      });
-
       describe('saveStockItemCounts', function () {
         beforeEach(function () {
           mockItem = {
@@ -455,6 +427,48 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
             ullageReasonCode: undefined
           }];
           expect(reconciliationFactory.saveStockItemsCounts).toHaveBeenCalledWith(expectedPayload);
+        });
+      });
+
+      describe('save cash bag currency amounts', function () {
+        it('should call saveCashBagCurrencies with formatted paper and coin amounts', function () {
+          var mockRecord = {
+            id: 123,
+            paperAmount: '12.34',
+            coinAmount: '34.45',
+            revision: {
+              paperAmount: '67.89012',
+              coinAmount: '7'
+            }
+          };
+
+          var expectedPayload = {
+            paperAmountManual: '67.89',
+            coinAmountManual: '7.00'
+          };
+
+          scope.saveCashBagCurrency(mockRecord);
+          expect(reconciliationFactory.saveCashBagCurrency).toHaveBeenCalledWith(123, expectedPayload);
+        });
+
+        it('should send old values if new values are invalid', function () {
+          var mockRecord = {
+            id: 123,
+            paperAmount: '12.34',
+            coinAmount: '34.45',
+            revision: {
+              paperAmount: 'abc',
+              coinAmount: '0'
+            }
+          };
+
+          var expectedPayload = {
+            paperAmountManual: '12.34',
+            coinAmountManual: '0.00'
+          };
+
+          scope.saveCashBagCurrency(mockRecord);
+          expect(reconciliationFactory.saveCashBagCurrency).toHaveBeenCalledWith(123, expectedPayload);
         });
       });
 
@@ -537,54 +551,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
           scope.initEditTable(false);
           expect(scope.editCashBagTable).toEqual(true);
           expect(scope.cashBags[0].revision).toEqual(expectedRevisionObject);
-        });
-      });
-
-      describe('save', function () {
-        beforeEach(function () {
-          scope.stockItemList = [{
-            itemName: 'item1',
-            quantity: 1,
-            revision: {
-              itemName: 'newItem1',
-              quantity: 3
-            }
-          }, {
-            itemName: 'item2',
-            quantity: 2,
-            revision: {
-              itemName: 'newItem2',
-              quantity: 4
-            }
-          }];
-          scope.cashBags = [{
-            itemName: 'item1',
-            quantity: 1,
-            revision: {
-              itemName: 'newItem1',
-              quantity: 3
-            }
-          }];
-        });
-
-        it('should set all data to revision data', function () {
-          scope.saveTable(true);
-          expect(scope.stockItemList[0].itemName).toEqual('item1');
-          expect(scope.stockItemList[0].quantity).toEqual(1);
-          expect(scope.stockItemList[1].itemName).toEqual('item2');
-          expect(scope.stockItemList[1].quantity).toEqual(2);
-        });
-
-        it('should revert table to not be in edit mode', function () {
-          scope.saveTable(true);
-          expect(scope.editLMPStockTable).toEqual(false);
-        });
-
-        it('should make expected changes to cashBags object if isLMPTable is false', function () {
-          scope.saveTable(false);
-          expect(scope.editCashBagTable).toEqual(false);
-          expect(scope.cashBags[0].itemName).toEqual('newItem1');
-          expect(scope.cashBags[0].quantity).toEqual(3);
         });
       });
 

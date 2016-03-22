@@ -635,17 +635,6 @@ angular.module('ts5App')
       item.revision = {};
     };
 
-    $scope.saveItem = function (item) {
-      angular.forEach(item, function (value, key) {
-        if (key !== 'revision' && key !== 'isEditing') {
-          item[key] = item.revision[key];
-        }
-      });
-
-      item.revision = {};
-      item.isEditing = false;
-    };
-
     $scope.hasReplenishInstance = function (items) {
       var replenishInstances = items.filter(function (item) {
         return item.replenishStoreInstanceId !== null;
@@ -756,21 +745,6 @@ angular.module('ts5App')
         $scope.editCashBagTable = true;
         initCashBagRevisions();
       }
-    };
-
-    $scope.saveTable = function (isLMPTable) {
-      var dataList;
-      if (isLMPTable) {
-        $scope.editLMPStockTable = false;
-        dataList = $scope.LMPStock;
-      } else {
-        $scope.editCashBagTable = false;
-        dataList = $scope.cashBags;
-      }
-
-      angular.forEach(dataList, function (item) {
-        $scope.saveItem(item);
-      });
     };
 
     $scope.cancelEditingTable = function (isLMPTable) {
