@@ -170,7 +170,7 @@ angular.module('ts5App')
         var coinExchangeRate = cashBag.chCoinExchangeRate;
         var paperAmount = cashBag.paperAmountManual;
         var coinAmount = cashBag.coinAmountManual;
-        var convertedPaperAmount =  cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
+        var convertedPaperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
         var convertdCoinAmount = cashBag.coinAmountManualCh;
         var totalBank = convertedPaperAmount + convertdCoinAmount;
         var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
@@ -673,8 +673,8 @@ angular.module('ts5App')
       console.log(currencyArray);
       angular.forEach(currencyArray, function (currency) {
         var payload = {
-          paperAmountManual:  parseFloat(currency.revision.paperAmount) || currency.paperAmount,
-          coinAmountManual:  parseFloat(currency.revision.coinAmount) || currency.coinAmount
+          paperAmountManual: (isNaN(parseFloat(currency.revision.paperAmount))) ? parseFloat(currency.paperAmount).toFixed(2) : parseFloat(currency.revision.paperAmount).toFixed(2),
+          coinAmountManual: (isNaN(parseFloat(currency.revision.coinAmount))) ? parseFloat(currency.coinAmount).toFixed(2) : parseFloat(currency.revision.coinAmount).toFixed(2)
         };
         promiseArray.push(reconciliationFactory.saveCashBagCurrency(currency.id, payload));
       });
