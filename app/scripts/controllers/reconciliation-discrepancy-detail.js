@@ -168,13 +168,16 @@ angular.module('ts5App')
         $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
         var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
         var coinExchangeRate = cashBag.chCoinExchangeRate;
-        var paperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
-        var coinAmount = cashBag.coinAmountManualCh;
-        var totalBank = (paperAmount + coinAmount) / bankOrPaperExchangeRate;
+        var paperAmount = cashBag.paperAmountManual;
+        var coinAmount = cashBag.coinAmountManual;
+        var convertedPaperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
+        var convertdCoinAmount = cashBag.coinAmountManualCh;
+        var totalBank = convertedPaperAmount + convertdCoinAmount;
         var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
 
         var cashBagItem = {
+          id: cashBag.id,
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
           eposCalculatedAmount: formatAsCurrency(eposCalculatedAmount),
@@ -632,23 +635,39 @@ angular.module('ts5App')
       item.revision = {};
     };
 
-    $scope.saveItem = function (item) {
-      angular.forEach(item, function (value, key) {
-        if (key !== 'revision' && key !== 'isEditing') {
-          item[key] = item.revision[key];
-        }
-      });
-
-      item.revision = {};
-      item.isEditing = false;
-    };
-
     $scope.hasReplenishInstance = function (items) {
       var replenishInstances = items.filter(function (item) {
         return item.replenishStoreInstanceId !== null;
       });
 
       return replenishInstances.length > 0;
+    };
+
+    function saveCurrenciesSuccess() {
+      initData();
+      $scope.editCashBagTable = false;
+    }
+
+    function saveCashBagCurrencies(currencyArray) {
+      showLoadingModal('Saving Cash Bag Currencies...');
+      var promiseArray = [];
+      angular.forEach(currencyArray, function (currency) {
+        var payload = {
+          paperAmountManual: (isNaN(parseFloat(currency.revision.paperAmount))) ? parseFloat(currency.paperAmount).toFixed(2) : parseFloat(currency.revision.paperAmount).toFixed(2),
+          coinAmountManual: (isNaN(parseFloat(currency.revision.coinAmount))) ? parseFloat(currency.coinAmount).toFixed(2) : parseFloat(currency.revision.coinAmount).toFixed(2)
+        };
+        promiseArray.push(reconciliationFactory.saveCashBagCurrency(currency.id, payload));
+      });
+
+      $q.all(promiseArray).then(saveCurrenciesSuccess, handleResponseError);
+    }
+
+    $scope.saveCashBagCurrency = function (currency) {
+      saveCashBagCurrencies([currency]);
+    };
+
+    $scope.saveCashBagTable = function () {
+      saveCashBagCurrencies($scope.cashBags);
     };
 
     $scope.saveStockItemCounts = function (item) {
@@ -726,21 +745,6 @@ angular.module('ts5App')
         $scope.editCashBagTable = true;
         initCashBagRevisions();
       }
-    };
-
-    $scope.saveTable = function (isLMPTable) {
-      var dataList;
-      if (isLMPTable) {
-        $scope.editLMPStockTable = false;
-        dataList = $scope.LMPStock;
-      } else {
-        $scope.editCashBagTable = false;
-        dataList = $scope.cashBags;
-      }
-
-      angular.forEach(dataList, function (item) {
-        $scope.saveItem(item);
-      });
     };
 
     $scope.cancelEditingTable = function (isLMPTable) {
