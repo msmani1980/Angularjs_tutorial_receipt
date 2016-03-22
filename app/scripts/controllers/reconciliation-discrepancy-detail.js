@@ -654,23 +654,14 @@ angular.module('ts5App')
       return replenishInstances.length > 0;
     };
 
-    function saveCurrenciesSuccess(dataFromAPI, editedItems) {
-      hideLoadingModal();
-
-      angular.forEach(editedItems, function (item) {
-        item.isEditing = false;
-        item.revision = {};
-
-        //TODO: update other cash bag calculations
-      });
-
+    function saveCurrenciesSuccess() {
+      initData();
       $scope.editCashBagTable = false;
     }
 
     function saveCashBagCurrencies(currencyArray) {
       showLoadingModal('Saving Cash Bag Currencies...');
       var promiseArray = [];
-      console.log(currencyArray);
       angular.forEach(currencyArray, function (currency) {
         var payload = {
           paperAmountManual: (isNaN(parseFloat(currency.revision.paperAmount))) ? parseFloat(currency.paperAmount).toFixed(2) : parseFloat(currency.revision.paperAmount).toFixed(2),
@@ -679,9 +670,7 @@ angular.module('ts5App')
         promiseArray.push(reconciliationFactory.saveCashBagCurrency(currency.id, payload));
       });
 
-      $q.all(promiseArray).then(function (dataFromAPI) {
-        saveCurrenciesSuccess(dataFromAPI, currencyArray);
-      }, handleResponseError);
+      $q.all(promiseArray).then(saveCurrenciesSuccess, handleResponseError);
     }
 
     $scope.saveCashBagCurrency = function (currency) {
