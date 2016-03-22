@@ -25,7 +25,11 @@ angular.module('ts5App')
         promotionCode: 'PM001',
         promotionName: 'Buy 4 drinks get 20 percent off',
         promotionTypeId: 1,
-        promotionTypeName: ' Product Purchase'
+        promotionTypeName: ' Product Purchase',
+        quantity: 2,
+        price: 10.11,
+        currencyValue: 20.00,
+        audValue: 23.75
       }, {
         benefitTypeId: 1,
         benefitTypeName: ' Discount',
@@ -40,7 +44,11 @@ angular.module('ts5App')
         promotionCode: 'PM002',
         promotionName: 'Buy 2 items get 10 percent off',
         promotionTypeId: 1,
-        promotionTypeName: 'Product Purchase'
+        promotionTypeName: 'Product Purchase',
+        quantity: 2,
+        price: 10.11,
+        currencyValue: 20.00,
+        audValue: 23.75
       }, {
         benefitTypeId: 1,
         benefitTypeName: ' Discount',
@@ -55,7 +63,11 @@ angular.module('ts5App')
         promotionCode: ' TEXT',
         promotionName: 'randomdata',
         promotionTypeId: 1,
-        promotionTypeName: 'Product Purchase'
+        promotionTypeName: 'Product Purchase',
+        quantity: 2,
+        price: 10.11,
+        currencyValue: 20.00,
+        audValue: 23.75
       }],
       meta: {
         count: 5,
@@ -93,8 +105,14 @@ angular.module('ts5App')
       }
     };
 
+    $scope.viewName = 'Manual ePOS Data Entry';
+
+    //set dependencies
     $scope.currencyList = currencyList.response;
     $scope.promotionsList = promotionsList.promotions;
     $scope.companyPromotionsList = promotionsList.promotions;
+
+    //set data
+    $scope.currency = $scope.currencyList[1];
 
   });

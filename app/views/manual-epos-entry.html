@@ -1,95 +1,168 @@
-<div class="panel panel-default">
-  <div class="panel-heading">Promotions</div>
-  <div class="panel-body">
 
-    <div class="row">
-      <div class="col-xs-4 col-sm-2">
-        <b>Operating Currency</b>
-      </div>
-      <div class="form-group">
-        <div class="col-xs-4 col-sm-2">
-          <ui-select ng-model="currency"
-             theme="bootstrap"
-             ng-disabled="disabled"
-             reset-search-input="false"
-             style="width: 200px;">
-            <ui-select-match placeholder="Select Currency ...">
-              {{$select.selected.code}}
-            </ui-select-match>
-            <ui-select-choices repeat="currency in currencyList">
-              <div ng-bind-html="currency.code | highlight: $select.search"></div>
-            </ui-select-choices>
-          </ui-select>
+<!-- Manual Epos Angular Mockup -->
+
+<div class="top-header manual-epos">
+  <div class="container">
+    <div class="edit-controls">
+
+      <div class="row">
+        <div class="col-xs-6 col-sm-4">
+          <h2 class="view-name"> {{ viewName }} </h2>
         </div>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="input-group">
-          <span class="input-group-addon" id="promotions-filter">Filter</span>
-          <ui-select multiple ng-model="filter"
-             theme="bootstrap"
-             ng-disabled="disabled"
-             reset-search-input="false"
-             aria-describedby="promotions-filter">
-            <ui-select-match placeholder="Select promotions to filter by ...">
-              {{$item.promotionName}}
-            </ui-select-match>
-            <ui-select-choices repeat="promotion in promotionsList">
-              <div ng-bind-html="promotion.promotionName | highlight: $select.search"></div>
-            </ui-select-choices>
-          </ui-select>
+        <div class="col-xs-6 col-sm-8 text-right">
+
+        test
+
         </div>
+
       </div>
+
     </div>
 
-    <table class="table table-bordered">
-
-      <tr class="active">
-        <th>Promotion</th>
-        <th>Price</th>
-        <th>Qty</th>
-        <th>Promotion Value (CUR)</th>
-        <th>Promotion Value (AUD)</th>
-      </tr>
-
-      <tr ng-repeat="promotion in companyPromotionsList track by $index">
-        <td>
-          <ui-select ng-model="promotion"
-             theme="bootstrap"
-             ng-disabled="disabled"
-             reset-search-input="false"
-             style="width: 300px;">
-            <ui-select-match placeholder="Select promotions to filter by ...">
-              {{$select.selected.promotionName}}
-            </ui-select-match>
-            <ui-select-choices repeat="promotion in promotionsList">
-              <div ng-bind-html="promotion.promotionName | highlight: $select.search"></div>
-            </ui-select-choices>
-          </ui-select>
-        </td>
-      </tr>
-
-      <tr ng-show="promotions.length === 0">
-        <td colspan="8" class="text-center"><span class="fa fa-exclamation-circle text-danger"></span>
-          We're sorry, there are no items that match the given criteria
-        </td>
-      </tr>
-
-    </table>
-
-    <div class="row">
-      <div class="col-xs-12 text-right">
-      Sub Total <input type="number" value="81.00"/>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-12 text-right">
-        <button class="btn btn-success" ng-click="">Verify</button>
-      </div>
-    </div>
-
+    <i>Select form areas to hide / show</i>
+    <br>
+    <i><i class="fa fa-check-circle"></i> Indicates a verified section</i>
   </div>
+</div>
+
+<div class="manual-epos-container container">
+
+  <!-- Promotions Panel -->
+  <div class="panel panel-default">
+    <div class="panel-heading header-blue"><b>Promotions</b> <i class="fa fa-check-circle"></i></div>
+    <div class="panel-body">
+
+      <div class="row">
+        <div class="col-xs-4 col-sm-2">
+          <b>Operating Currency</b>
+        </div>
+        <div class="form-group">
+          <div class="col-xs-4 col-sm-2">
+            <ui-select ng-model="currency"
+               theme="bootstrap"
+               ng-disabled="disabled"
+               reset-search-input="false"
+               style="min-width: 200px;">
+              <ui-select-match placeholder="Select Currency ...">
+                {{$select.selected.code}}
+              </ui-select-match>
+              <ui-select-choices repeat="currency in currencyList">
+                <div ng-bind-html="currency.code | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-divider"></div>
+
+      <div class="row">
+        <div class="col-xs-12 col-sm-12">
+          <div class="input-group">
+            <span class="input-group-addon" id="promotions-filter">Filter</span>
+            <input type="text"
+              class="form-control"
+              ng-model="filter.promotions"
+              placeholder="Select promotions to filter by ..."
+              aria-describedby="promotions-filter"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover">
+
+          <tr class="active">
+            <th>Promotion</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Promotion Value (CUR)</th>
+            <th>Promotion Value (AUD)</th>
+          </tr>
+
+          <!-- Start Promotion loop -->
+          <tr ng-repeat="promotion in companyPromotionsList track by $index">
+
+            <td>
+              <ui-select ng-model="promotion"
+                 theme="bootstrap"
+                 ng-disabled="true"
+                 reset-search-input="false">
+                <ui-select-match placeholder="Select promotions to filter by ...">
+                  {{$select.selected.promotionName}}
+                </ui-select-match>
+                <ui-select-choices repeat="promotion in promotionsList">
+                  <div ng-bind-html="promotion.promotionName | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </td>
+
+            <td>
+              <div class="input-group" style="max-width:300px">
+                <span class="input-group-addon" id="currency">{{currency.code}}</span>
+                <input type="number"
+                  class="form-control"
+                  ng-model="promotion.price"
+                  placeholder="12345678.91"
+                  aria-describedby="currency"
+                  style="min-width:100px"/>
+              </div>
+            </td>
+
+            <td>
+              <input type="number"
+                class="form-control"
+                ng-model="promotion.quantity"
+                placeholder="12345"
+                style="width: 100px"/>
+            </td>
+
+            <td>
+              <input type="number"
+                class="form-control"
+                ng-model="promotion.currencyValue"
+                disabled="true"/>
+            </td>
+
+            <td>
+              <input type="number"
+                class="form-control"
+                ng-model="promotion.audValue"
+                disabled="true"/>
+            </td>
+
+          </tr>
+
+          <tr ng-show="companyPromotionsList.length === 0">
+            <td colspan="8" class="text-center">
+              <span class="fa fa-exclamation-circle text-danger"></span>
+              We're sorry, there are no items that match the given criteria
+            </td>
+          </tr>
+
+        </table>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-offset-9"></div>
+          <div class="col-xs-12 col-sm-1 text-right"><b>Sub Total</b></div>
+          <div class="col-xs-12 col-sm-2">
+            <input class="form-control" type="number" value="{{23.75*3}}" disabled="true"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-footer">
+        <div class="row">
+          <div class="col-xs-12 text-right">
+            <button class="btn btn-success" ng-click="">Verify</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- End Promotions Panel -->
+
 </div>
