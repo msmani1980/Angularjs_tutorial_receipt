@@ -7,71 +7,41 @@
     <div class="edit-controls">
 
       <div class="row">
+
         <div class="col-xs-6 col-sm-3">
           <h4 class="view-name"> {{ viewName }} </h4>
         </div>
 
         <div class="col-xs-6 col-sm-9 text-left">
-          <div class="manual-epos-panel-option">
-            <input bs-switch
-             ng-model="model"
-             type="checkbox"
-             switch-size="small"
-             switch-on-color="info"
-             switch-on-text="Yes"
-             switch-off-text="No"/> Cash
-           </div>
-          <div class="manual-epos-panel-option">
-            <input bs-switch
-             ng-model="model"
-             type="checkbox"
-             switch-size="small"
-             switch-on-color="info"
-             switch-on-text="Yes"
-             switch-off-text="No"/> Credit Card </div>
-          <div class="manual-epos-panel-option">
-            <input bs-switch
-             ng-model="model"
-             type="checkbox"
-             switch-size="small"
-             switch-on-color="info"
-             switch-on-text="Yes"
-             switch-off-text="No"/> Discounts </div>
-          <div class="manual-epos-panel-option">
-            <input bs-switch
-             ng-model="model"
-             type="checkbox"
-             switch-size="small"
-             switch-on-color="info"
-             switch-on-text="Yes"
-             switch-off-text="No"/> Promotions </div>
-          <div class="manual-epos-panel-option">
-            <input bs-switch
-             ng-model="model"
-             type="checkbox"
-             switch-size="small"
-             switch-on-color="info"
-             switch-on-text="Yes"
-             switch-off-text="No"/> Virtual Items </div>
-          <div class="manual-epos-panel-option">
-            <input bs-switch
-             ng-model="model"
-             type="checkbox"
-             switch-size="small"
-             switch-on-color="info"
-             switch-on-text="Yes"
-             switch-off-text="No"/> Voucher Items </div>
-          <div class="manual-epos-panel-option">
-            <input bs-switch
-             ng-model="model"
-             type="checkbox"
-             switch-size="small"
-             switch-on-color="info"
-             switch-on-text="Yes"
-             switch-off-text="No"/> <b>Show All Forms</b>
+        <div class="manual-epos-panel-option" ng-repeat="(key, panel) in panelNames track by $index">
+          <div class="row">
+            <div class="col-xs-4">
+              <input bs-switch
+               ng-model="panel.show"
+               type="checkbox"
+               switch-size="small"
+               switch-on-color="info"
+               switch-on-text="Yes"
+               switch-off-text="No"/>
+             </div>
+             <div class="col-xs-8 epos-panel-option-text">{{panel.name}}</div>
           </div>
         </div>
 
+        <div class="manual-epos-panel-option">
+          <div class="row">
+            <div class="col-xs-4">
+              <input bs-switch
+               ng-model="showAll"
+               type="checkbox"
+               switch-size="small"
+               switch-on-color="info"
+               switch-on-text="Yes"
+               switch-off-text="No"/>
+            </div>
+            <div class="col-xs-8 epos-panel-option-text"><i><b>Show All Forms</b></i></div>
+          </div>
+       </div>
       </div>
 
     </div>
@@ -79,6 +49,8 @@
     <i>Select form areas to hide / show</i>
     <br>
     <i><i class="fa fa-check-circle"></i> Indicates a verified section</i>
+
+    </div>
   </div>
 </div>
 <!-- End - Manual Epos - Top Header -->
@@ -87,7 +59,7 @@
 <div class="manual-epos-container container">
 
   <!-- Promotions Panel -->
-  <div class="panel panel-default">
+  <div class="panel panel-default" ng-show="shouldShowPanel('Promotions') || showAll">
     <div class="panel-heading header-blue"><b>Promotions</b> <i class="fa fa-check-circle"></i></div>
     <div class="panel-body">
 
@@ -140,7 +112,7 @@
           </tr>
 
           <!-- Start Promotion loop -->
-          <tr ng-repeat="promotion in companyPromotionsList track by $index">
+          <tr ng-repeat="promotion in companyPromotionsList | filter:{promotionName: filter.promotions} track by $index">
 
             <td>
               <ui-select ng-model="promotion"
@@ -195,7 +167,7 @@
           <tr ng-show="companyPromotionsList.length === 0">
             <td colspan="8" class="text-center">
               <span class="fa fa-exclamation-circle text-danger"></span>
-              We're sorry, there are no items that match the given criteria
+              We're sorry, there are no {{promotion.name}} that match the given criteria
             </td>
           </tr>
 

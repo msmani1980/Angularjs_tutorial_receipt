@@ -105,6 +105,26 @@ angular.module('ts5App')
       }
     };
 
+    var panelNames = [{
+      name: 'Cash',
+      show: false
+    }, {
+      name: 'Credit Card',
+      show: false
+    }, {
+      name: 'Discount',
+      show: false
+    }, {
+      name: 'Promotions',
+      show: false
+    }, {
+      name: 'Virtual Items',
+      show: false
+    }, {
+      name: 'Voucher Items',
+      show: false
+    }];
+
     function setScopeVariables() {
       $scope.viewName = 'Manual ePOS Data Entry';
 
@@ -118,8 +138,23 @@ angular.module('ts5App')
         currency: angular.copy($scope.currencyList[1])
       };
 
+      //set panel data
+      $scope.panelNames = panelNames;
+      $scope.showAll = false;
     }
 
     setScopeVariables();
+
+    // Always place $scope vars at the end of the controller
+    $scope.shouldShowPanel = function(name) {
+      var payload = [];
+      angular.forEach($scope.panelNames, function(panel) {
+        if (panel.name === name && panel.show === true) {
+          payload.push(panel.name);
+        }
+      });
+
+      return (payload.length > 0);
+    };
 
   });
