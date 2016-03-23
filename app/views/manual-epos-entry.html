@@ -1,19 +1,75 @@
 
 <!-- Manual Epos Angular Mockup -->
 
+<!-- Manual Epos - Top Header -->
 <div class="top-header manual-epos">
   <div class="container">
     <div class="edit-controls">
 
       <div class="row">
-        <div class="col-xs-6 col-sm-4">
-          <h2 class="view-name"> {{ viewName }} </h2>
+        <div class="col-xs-6 col-sm-3">
+          <h4 class="view-name"> {{ viewName }} </h4>
         </div>
 
-        <div class="col-xs-6 col-sm-8 text-right">
-
-        test
-
+        <div class="col-xs-6 col-sm-9 text-left">
+          <div class="manual-epos-panel-option">
+            <input bs-switch
+             ng-model="model"
+             type="checkbox"
+             switch-size="small"
+             switch-on-color="info"
+             switch-on-text="Yes"
+             switch-off-text="No"/> Cash
+           </div>
+          <div class="manual-epos-panel-option">
+            <input bs-switch
+             ng-model="model"
+             type="checkbox"
+             switch-size="small"
+             switch-on-color="info"
+             switch-on-text="Yes"
+             switch-off-text="No"/> Credit Card </div>
+          <div class="manual-epos-panel-option">
+            <input bs-switch
+             ng-model="model"
+             type="checkbox"
+             switch-size="small"
+             switch-on-color="info"
+             switch-on-text="Yes"
+             switch-off-text="No"/> Discounts </div>
+          <div class="manual-epos-panel-option">
+            <input bs-switch
+             ng-model="model"
+             type="checkbox"
+             switch-size="small"
+             switch-on-color="info"
+             switch-on-text="Yes"
+             switch-off-text="No"/> Promotions </div>
+          <div class="manual-epos-panel-option">
+            <input bs-switch
+             ng-model="model"
+             type="checkbox"
+             switch-size="small"
+             switch-on-color="info"
+             switch-on-text="Yes"
+             switch-off-text="No"/> Virtual Items </div>
+          <div class="manual-epos-panel-option">
+            <input bs-switch
+             ng-model="model"
+             type="checkbox"
+             switch-size="small"
+             switch-on-color="info"
+             switch-on-text="Yes"
+             switch-off-text="No"/> Voucher Items </div>
+          <div class="manual-epos-panel-option">
+            <input bs-switch
+             ng-model="model"
+             type="checkbox"
+             switch-size="small"
+             switch-on-color="info"
+             switch-on-text="Yes"
+             switch-off-text="No"/> <b>Show All Forms</b>
+          </div>
         </div>
 
       </div>
@@ -25,7 +81,9 @@
     <i><i class="fa fa-check-circle"></i> Indicates a verified section</i>
   </div>
 </div>
+<!-- End - Manual Epos - Top Header -->
 
+<!-- Container -->
 <div class="manual-epos-container container">
 
   <!-- Promotions Panel -->
@@ -39,7 +97,7 @@
         </div>
         <div class="form-group">
           <div class="col-xs-4 col-sm-2">
-            <ui-select ng-model="currency"
+            <ui-select ng-model="currencyObj.currency"
                theme="bootstrap"
                ng-disabled="disabled"
                reset-search-input="false"
@@ -100,7 +158,7 @@
 
             <td>
               <div class="input-group" style="max-width:300px">
-                <span class="input-group-addon" id="currency">{{currency.code}}</span>
+                <span class="input-group-addon" id="currency">{{currencyObj.currency.code}}</span>
                 <input type="number"
                   class="form-control"
                   ng-model="promotion.price"
@@ -162,7 +220,5 @@
       </div>
 
     </div>
-  </div>
-  <!-- End Promotions Panel -->
-
 </div>
+<!-- End Promotions Panel -->

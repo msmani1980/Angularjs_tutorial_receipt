@@ -105,14 +105,21 @@ angular.module('ts5App')
       }
     };
 
-    $scope.viewName = 'Manual ePOS Data Entry';
+    function setScopeVariables() {
+      $scope.viewName = 'Manual ePOS Data Entry';
 
-    //set dependencies
-    $scope.currencyList = currencyList.response;
-    $scope.promotionsList = promotionsList.promotions;
-    $scope.companyPromotionsList = promotionsList.promotions;
+      //set dependencies
+      $scope.currencyList = currencyList.response;
+      $scope.promotionsList = promotionsList.promotions;
+      $scope.companyPromotionsList = promotionsList.promotions;
 
-    //set data
-    $scope.currency = $scope.currencyList[1];
+      //set data
+      $scope.currencyObj = {
+        currency: angular.copy($scope.currencyList[1])
+      };
+
+    }
+
+    setScopeVariables();
 
   });
