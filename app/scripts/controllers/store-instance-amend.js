@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
-      reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory) {
+      reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory, storeInstanceFactory) {
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
@@ -110,6 +110,32 @@ angular.module('ts5App')
       return correctClassObj[tagType];
     };
 
+    function reallocateCashBagSuccess () {
+      $scope.closeMoveCashBagModal();
+    }
+
+    function reallocateCashBagError () {
+      $scope.closeMoveCashBagModal();
+      handleResponseError();
+    }
+
+    $scope.reallocateCashBag = function () {
+      var payload = {
+        cashBag: {
+          storeInstanceId: $scope.targetRecordForMoveCashBag.id,
+          bankReferenceNumber: $scope.cashBagToMove.bankRefNumber,
+          dailyExchangeRateId: $scope.cashBagToMove.dailyExchangeRateId,
+          cashBagNumber: $scope.cashBagToMove.cashBag,
+          scheduleDate: $scope.cashBagToMove.scheduleDate,
+          retailCompanyId: $scope.cashBagToMove.retailCompanyId,
+          scheduleNumber: $scope.cashBagToMove.scheduleNumber,
+          isSubmitted: $scope.cashBagToMove.isSubmitted
+        }
+      };
+
+      cashBagFactory.updateCashBag($scope.cashBagToMove.id, payload).then(reallocateCashBagSuccess, reallocateCashBagError);
+    };
+
     this.searchForScheduleSuccess = function (dataFromAPI) {
       $scope.searchScheduleResults = angular.copy(dataFromAPI);
       if ($scope.searchScheduleResults.length === 1) {
@@ -121,8 +147,24 @@ angular.module('ts5App')
       return storeInstanceAmendFactory.getScheduleMockData($scope.scheduleSearch).then($this.searchForScheduleSuccess);
     };
 
+    $scope.getStatusNameById = function (statusId) {
+      switch (statusId) {
+        case 8:
+          return 'Inbounded';
+        case 9:
+          return 'Discrepancies';
+        default:
+          return 'Unknown';
+      }
+    };
+
     this.searchForMoveCashBagSuccess = function (dataFromAPI) {
-      $scope.moveCashBagSearchResults = angular.copy(dataFromAPI);
+      var normalizedDataFromAPI = angular.copy(dataFromAPI.response) || [];
+
+      $scope.moveCashBagSearchResults = normalizedDataFromAPI.filter(function (storeInstance) {
+        return (storeInstance.statusId === 8 || storeInstance.statusId === 9) && storeInstance.id !== parseInt($routeParams.storeInstanceId);
+      });
+
       if ($scope.moveCashBagSearchResults.length === 1) {
         $scope.targetRecordForMoveCashBag = $scope.moveCashBagSearchResults[0];
       }
@@ -134,7 +176,17 @@ angular.module('ts5App')
       }
 
       if ($scope.moveCashBagAction === 'reallocate') {
-        return storeInstanceAmendFactory.getStoreInstancesMockData($scope.moveSearch).then($this.searchForMoveCashBagSuccess);
+        if (!($scope.moveSearch.storeNumber && $scope.moveSearch.scheduleDate)) {
+          return;
+        }
+
+        var payload = {
+          storeNumber: $scope.moveSearch.storeNumber,
+          startDate: dateUtility.formatDateForAPI($scope.moveSearch.scheduleDate),
+          endDate: dateUtility.formatDateForAPI($scope.moveSearch.scheduleDate)
+        };
+
+        return storeInstanceFactory.getStoreInstancesList(payload).then($this.searchForMoveCashBagSuccess);
       }
     };
 

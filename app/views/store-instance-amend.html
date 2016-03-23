@@ -73,7 +73,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4><strong>Move Cash Bag</strong> {{ cashBagToMove.cashBagNumber }}</h4>
+          <h4><strong>Move Cash Bag</strong> {{ cashBagToMove.cashBag }}</h4>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -178,10 +178,10 @@
             </tr>
             <tr ng-repeat="storeInstance in moveCashBagSearchResults"
                 ng-class="getClassesForSingleSelectedRow(storeInstance, 'background', 'storeInstance')">
-              <td>{{ storeInstance.storeInstance }}</td>
-              <td>{{ storeInstance.storeNumber }}</td>
               <td>{{ storeInstance.scheduleDate }}</td>
-              <td>{{ storeInstance.status }}</td>
+              <td>{{ storeInstance.storeNumber }}</td>
+              <td>{{ storeInstance.storeId }}</td>
+              <td>{{ getStatusNameById(storeInstance.statusId) }}</td>
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(storeInstance, 'button', 'storeInstance')"
                         ng-click="selectRecordForMoveCashBag(storeInstance)">
@@ -189,11 +189,13 @@
                 </button>
               </td>
             </tr>
+            <tr ng-hide="moveCashBagSearchResults.length">
+              <td colspan="5">No Store Instances found</td>
+            </tr>
           </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="closeMoveCashBagModal()"
-                  ng-show="targetRecordForMoveCashBag">
+          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="reallocateCashBag()" ng-show="targetRecordForMoveCashBag">
             <i class="fa fa-check"></i> Confirm
           </button>
           <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeMoveCashBagModal()">
@@ -219,7 +221,7 @@
                   <h4>Origin Cash Bag</h4>
                   <select class="form-control"
                           ng-model="rearrangeOriginCashBag"
-                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBagNumber'"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBag'"
                           ng-change="clearRearrangeSelections()">
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
@@ -252,7 +254,7 @@
                   <h4>Target Cash Bag</h4>
                   <select class="form-control"
                           ng-model="rearrangeTargetCashBag"
-                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBagNumber'"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBag'"
                           ng-change="clearRearrangeSelections()">
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
