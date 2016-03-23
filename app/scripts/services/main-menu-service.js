@@ -345,6 +345,13 @@ angular.module('ts5App')
             className: 'dashboard-reconciliationDashboard',
             package: 'RECONCILIATION',
             role: 'RECONCILIATION'
+          }, {
+            name: 'Manual ECS Relationships',
+            route: '/#/manual-ecs',
+            icon: 'icon-manage-schedule',
+            className: 'dashboard-manualECS',
+            package: 'RECONCILIATION',
+            role: 'RELATEESC'
           }]
         }, {
           title: 'Stock Manager',
