@@ -60,7 +60,7 @@
 
   <!-- Promotions Panel -->
   <div class="panel panel-default" ng-show="shouldShowPanel('Promotions') || showAll">
-    <div class="panel-heading header-blue"><b>Promotions</b> <i class="fa fa-check-circle"></i></div>
+    <div class="panel-heading header-blue"><b>Promotions</b> <i ng-if="panelIsVerified('Promotions')" class="fa fa-check-circle"></i></div>
     <div class="panel-body">
 
       <div class="row">
@@ -69,7 +69,7 @@
         </div>
         <div class="form-group">
           <div class="col-xs-4 col-sm-2">
-            <ui-select ng-model="currencyObj.currency"
+            <ui-select ng-model="currencyObj.promotions.currency"
                theme="bootstrap"
                ng-disabled="disabled"
                reset-search-input="false"
@@ -130,7 +130,7 @@
 
             <td>
               <div class="input-group" style="max-width:300px">
-                <span class="input-group-addon" id="currency">{{currencyObj.currency.code}}</span>
+                <span class="input-group-addon" id="currency">{{currencyObj.promotions.currency.code}}</span>
                 <input type="number"
                   class="form-control"
                   ng-model="promotion.price"
@@ -192,5 +192,143 @@
       </div>
 
     </div>
+    <!-- End Promotions Panel -->
+
+<!-- Voucher Items Panel -->
+<div class="panel panel-default" ng-show="shouldShowPanel('Voucher Items') || showAll">
+  <div class="panel-heading header-blue"><b>Voucher Items</b> <i ng-if="panelIsVerified('Voucher Items')" class="fa fa-check-circle"></i></div>
+  <div class="panel-body">
+
+    <div class="row">
+      <div class="col-xs-4 col-sm-2">
+        <b>Operating Currency</b>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-4 col-sm-2">
+          <ui-select ng-model="currencyObj.voucherItems.currency"
+             theme="bootstrap"
+             ng-disabled="disabled"
+             reset-search-input="false"
+             style="min-width: 200px;">
+            <ui-select-match placeholder="Select Currency ...">
+              {{$select.selected.code}}
+            </ui-select-match>
+            <ui-select-choices repeat="currency in currencyList">
+              <div ng-bind-html="currency.code | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-divider"></div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12">
+        <div class="input-group">
+          <span class="input-group-addon" id="promotions-filter">Filter</span>
+          <input type="text"
+            class="form-control"
+            ng-model="filter.promotions"
+            placeholder="Select promotions to filter by ..."
+            aria-describedby="promotions-filter"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover">
+
+        <tr class="active">
+          <th>Promotion</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th>Promotion Value (CUR)</th>
+          <th>Promotion Value (AUD)</th>
+        </tr>
+
+        <!-- Start Promotion loop -->
+        <tr ng-repeat="promotion in companyPromotionsList | filter:{promotionName: filter.promotions} track by $index">
+
+          <td>
+            <ui-select ng-model="promotion"
+               theme="bootstrap"
+               ng-disabled="true"
+               reset-search-input="false">
+              <ui-select-match placeholder="Select promotions to filter by ...">
+                {{$select.selected.promotionName}}
+              </ui-select-match>
+              <ui-select-choices repeat="promotion in promotionsList">
+                <div ng-bind-html="promotion.promotionName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </td>
+
+          <td>
+            <div class="input-group" style="max-width:300px">
+              <span class="input-group-addon" id="currency">{{currencyObj.voucherItems.currency.code}}</span>
+              <input type="number"
+                class="form-control"
+                ng-model="promotion.price"
+                placeholder="12345678.91"
+                aria-describedby="currency"
+                style="min-width:100px"/>
+            </div>
+          </td>
+
+          <td>
+            <input type="number"
+              class="form-control"
+              ng-model="promotion.quantity"
+              placeholder="12345"
+              style="width: 100px"/>
+          </td>
+
+          <td>
+            <input type="number"
+              class="form-control"
+              ng-model="promotion.currencyValue"
+              disabled="true"/>
+          </td>
+
+          <td>
+            <input type="number"
+              class="form-control"
+              ng-model="promotion.audValue"
+              disabled="true"/>
+          </td>
+
+        </tr>
+
+        <tr ng-show="companyPromotionsList.length === 0">
+          <td colspan="8" class="text-center">
+            <span class="fa fa-exclamation-circle text-danger"></span>
+            We're sorry, there are no {{promotion.name}} that match the given criteria
+          </td>
+        </tr>
+
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-offset-9"></div>
+        <div class="col-xs-12 col-sm-1 text-right"><b>Sub Total</b></div>
+        <div class="col-xs-12 col-sm-2">
+          <input class="form-control" type="number" value="{{23.75*3}}" disabled="true"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      <div class="row">
+        <div class="col-xs-12 text-right">
+          <button class="btn btn-success" ng-click="">Verify</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
-<!-- End Promotions Panel -->
+<!-- End Voucher Items Panel -->
+
+</div>

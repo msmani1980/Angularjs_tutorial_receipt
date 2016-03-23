@@ -141,7 +141,12 @@ angular.module('ts5App')
 
       //set data
       $scope.currencyObj = {
-        currency: angular.copy($scope.currencyList[1])
+        promotions: {
+          currency: angular.copy($scope.currencyList[1])
+        },
+        voucherItems: {
+          currency: angular.copy($scope.currencyList[1])
+        }
       };
 
       //set panel data
@@ -149,18 +154,26 @@ angular.module('ts5App')
       $scope.showAll = false;
     }
 
-    setScopeVariables();
-
-    // Always place $scope vars at the end of the controller
-    $scope.shouldShowPanel = function(name) {
+    function checkPanelForAttr(name, attr) {
       var payload = [];
       angular.forEach($scope.panelNames, function(panel) {
-        if (panel.name === name && panel.show === true) {
+        if (panel.name === name && panel[attr] === true) {
           payload.push(panel.name);
         }
       });
 
       return (payload.length > 0);
+    }
+
+    setScopeVariables();
+
+    // Always place $scope vars at the end of the controller
+    $scope.shouldShowPanel = function(name) {
+      return checkPanelForAttr(name, 'show');
+    };
+
+    $scope.panelIsVerified = function(name) {
+      return checkPanelForAttr(name, 'verified');
     };
 
   });
