@@ -107,22 +107,28 @@ angular.module('ts5App')
 
     var panelNames = [{
       name: 'Cash',
-      show: false
+      show: false,
+      verified: false
     }, {
       name: 'Credit Card',
-      show: false
+      show: false,
+      verified: false
     }, {
       name: 'Discount',
-      show: false
+      show: false,
+      verified: false
     }, {
       name: 'Promotions',
-      show: false
+      show: false,
+      verified: true
     }, {
       name: 'Virtual Items',
-      show: false
+      show: false,
+      verified: false
     }, {
       name: 'Voucher Items',
-      show: false
+      show: false,
+      verified: false
     }];
 
     function setScopeVariables() {
