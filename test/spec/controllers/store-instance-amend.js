@@ -163,6 +163,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'getCashBagListMockData').and.returnValue(getCashBagDeferred.promise);
     spyOn(reconciliationFactory, 'getStoreInstanceDetails').and.returnValue(getStoreInstanceDetailsDeferred.promise);
     spyOn(reconciliationFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
     spyOn(reconciliationFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
@@ -179,6 +180,8 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(getPostTripDeferred.promise);
     spyOn(transactionFactory, 'getTransactionList').and.returnValue(getTransactionListDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getStoreInstancesListDeferred.promise);
+    spyOn(cashBagFactory, 'updateCashBag').and.callThrough();
+    spyOn(storeInstanceAmendFactory, 'deleteCashBag').and.callThrough();
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
@@ -191,6 +194,17 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   describe('init', function () {
     it('should call get cash bag data', function () {
       expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
+      expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalled();
+      expect(reconciliationFactory.getCompany).toHaveBeenCalled();
+      expect(reconciliationFactory.getCompanyGlobalCurrencies).toHaveBeenCalled();
+      expect(reconciliationFactory.getItemTypesList).toHaveBeenCalled();
+      expect(reconciliationFactory.getStockTotals).toHaveBeenCalled();
+      expect(reconciliationFactory.getPromotionTotals).toHaveBeenCalled();
+      expect(reconciliationFactory.getCompanyPreferences).toHaveBeenCalled();
+      expect(reconciliationFactory.getCHRevenue).toHaveBeenCalled();
+      expect(reconciliationFactory.getEPOSRevenue).toHaveBeenCalled();
+      expect(employeesService.getEmployees).toHaveBeenCalled();
+
       scope.$digest();
       expect(scope.normalizedCashBags).toBeDefined();
     });
@@ -296,6 +310,20 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         isOpen = scope.isCrewDataOpen(mockCashBag);
         expect(isOpen).toEqual(false);
       });
+    });
+
+    it('getStatusNameById should return status name for given status id', function () {
+      expect(scope.getStatusNameById(8)).toBe('Inbounded');
+      expect(scope.getStatusNameById(9)).toBe('Discrepancies');
+      expect(scope.getStatusNameById(10)).toBe('Unknown');
+    });
+
+    it('getOrNA should return value or N/A if value is not defined or null', function () {
+      expect(scope.getOrNA(null)).toEqual('N/A');
+      expect(scope.getOrNA(undefined)).toEqual('N/A');
+      expect(scope.getOrNA(0)).toEqual(0);
+      expect(scope.getOrNA(1)).toEqual(1);
+      expect(scope.getOrNA('ABC')).toEqual('ABC');
     });
   });
 
@@ -448,12 +476,12 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         expect(storeInstanceFactory.getStoreInstancesList).toHaveBeenCalledWith(payload);
       });
 
-      /*it('should getCashBag if action is merge', function () {
+      it('should getCashBag if action is merge', function () {
         scope.moveCashBagAction = 'merge';
         scope.moveSearch = { cashBag: '123', bankRefNumber: 'ABC' };
         scope.searchForMoveCashBag();
         expect(storeInstanceAmendFactory.getCashBagListMockData).toHaveBeenCalledWith(scope.moveSearch);
-      });*/
+      });
 
       it('should automatically set targetRecordForMoveCashBag if there is only one result', function () {
         scope.moveCashBagAction = 'merge';  // cash bag API stubbed to return two records
@@ -470,6 +498,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.$digest();
         expect(scope.targetRecordForMoveCashBag).not.toEqual(null);
       });
+
     });
 
     describe('classes for selected records', function () {
@@ -500,6 +529,40 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.targetRecordForMoveCashBag = null;
         scope.selectRecordForMoveCashBag(mockRecord);
         expect(scope.targetRecordForMoveCashBag).toEqual(mockRecord);
+      });
+    });
+
+    describe('reallocate cash bag', function () {
+      it('should reallocate target cash bag to new store instance', function () {
+        scope.targetRecordForMoveCashBag = { id: 1 };
+        scope.cashBagToMove = {
+          id: 1,
+          bankRefNumber: '2',
+          dailyExchangeRateId: 3,
+          cashBag: '4',
+          scheduleDate: '2016/03/13',
+          retailCompanyId: 5,
+          scheduleNumber: '6',
+          isSubmitted: true
+        };
+        scope.$digest();
+
+        var payload = {
+          cashBag: {
+            storeInstanceId: 1,
+            bankReferenceNumber: '2',
+            dailyExchangeRateId: 3,
+            cashBagNumber: '4',
+            scheduleDate: '2016/03/13',
+            retailCompanyId: 5,
+            scheduleNumber: '6',
+            isSubmitted: true
+          }
+        };
+
+        scope.reallocateCashBag();
+
+        expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(scope.cashBagToMove.id, payload);
       });
     });
   });
@@ -550,6 +613,46 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.$digest();
         expect(scope.newScheduleSelection).not.toEqual(null);
       });
+    });
+  });
+
+  describe('Payment reports', function () {
+    it('showStoreInstancePaymentReport should fetch and show store instance payment report', function () {
+      scope.showStoreInstancePaymentReport();
+
+      expect(reconciliationFactory.getPaymentReport).toHaveBeenCalled();
+    });
+
+    it('showCashBagPaymentReport should fetch and show cash bag payment report', function () {
+      scope.showCashBagPaymentReport({ cashBag: 1 });
+
+      expect(reconciliationFactory.getPaymentReport).toHaveBeenCalled();
+    });
+  });
+
+  describe('Delete cash bag functions', function () {
+    it ('showDeleteCashBagModal should show modal and mark cash bag for deletion', function () {
+      var cashBag = { id: 1 };
+
+      scope.showDeleteCashBagModal(cashBag);
+
+      expect(scope.cashBagToDelete).toBe(cashBag);
+    });
+
+    it('canCashBagBeDeleted returns true if cash bag can be deleted', function () {
+      expect(scope.canCashBagBeDeleted({ id: 1, canBeDeleted: true })).toBeTruthy();
+      expect(scope.canCashBagBeDeleted({ id: 1, canBeDeleted: false })).toBeFalsy();
+    });
+
+    it('deleteCashBag calls storeInstanceAmendFactory.deleteCashBag', function () {
+      scope.cashBagToDelete = {
+        id: 1
+      };
+      scope.$digest();
+
+      scope.deleteCashBag();
+
+      expect(storeInstanceAmendFactory.deleteCashBag).toHaveBeenCalledWith(1);
     });
   });
 
