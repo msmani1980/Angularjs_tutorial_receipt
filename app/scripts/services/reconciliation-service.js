@@ -81,10 +81,12 @@ angular.module('ts5App')
       return promotionResource.getPromotionTotals(payload).$promise;
     }
 
-    function getPaymentReport(storeInstanceId) {
+    function getPaymentReport(storeInstanceId, cashBagNumber) {
       var payload = {
-        storeInstanceId: storeInstanceId
+        storeInstanceId: storeInstanceId,
+        cashBagNumber: cashBagNumber
       };
+
       return paymentReportResource.getPaymentReport(payload).$promise;
     }
 

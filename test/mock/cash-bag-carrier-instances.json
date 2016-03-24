@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "count": 1,
+    "limit": 1,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 2859,
+      "companyCashBagId": 2910,
+      "companyCarrierInstance": {
+        "id": 8385,
+        "companyId": 403,
+        "storeInstanceId": 3250,
+        "departureStation": "BSL",
+        "arrivalStation": "ZRH",
+        "paxCount": 111,
+        "posttripId": 361
+      }
+    }
+  ]
+}

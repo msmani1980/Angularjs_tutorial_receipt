@@ -3,12 +3,13 @@
 describe('Service: cashBagService', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag-list.json', 'served/cash-bag.json'));
+  beforeEach(module('served/cash-bag-list.json', 'served/cash-bag.json', 'served/cash-bag-carrier-instances.json'));
 
   var cashBagService,
     $httpBackend,
     cashBagListResponseJSON,
-    cashBagResponseJSON;
+    cashBagResponseJSON,
+    cashBagCarrierInstancesJSON;
 
   //headers = {
   //  companyId: 362,
@@ -18,9 +19,10 @@ describe('Service: cashBagService', function () {
   //};
 
   beforeEach(inject(function (_cashBagService_, $injector) {
-    inject(function (_servedCashBagList_, _servedCashBag_) {
+    inject(function (_servedCashBagList_, _servedCashBag_, _servedCashBagCarrierInstances_) {
       cashBagListResponseJSON = _servedCashBagList_;
       cashBagResponseJSON = _servedCashBag_;
+      cashBagCarrierInstancesJSON = _servedCashBagCarrierInstances_;
     });
 
     $httpBackend = $injector.get('$httpBackend');
@@ -70,6 +72,23 @@ describe('Service: cashBagService', function () {
 
       it('should have cashbagSubmittedBy property', function () {
         expect(cashBagListData.cashBags[0].cashbagSubmittedBy).not.toBe(undefined);
+      });
+
+      describe('getCashBagCarrierInstances', function () {
+        var cashBagCarrierInstancesData;
+        beforeEach(function () {
+          $httpBackend.whenGET(/cash-bags\/1\/carrier-instances/).respond(cashBagCarrierInstancesJSON);
+
+          cashBagService.getCashBagList().then(function (dataFromAPI) {
+            cashBagCarrierInstancesData = dataFromAPI;
+          });
+
+          $httpBackend.flush();
+        });
+
+        it('should GET carrier instances from API', function () {
+          expect(cashBagCarrierInstancesData).not.toBe(null);
+        });
       });
     });
 
@@ -194,6 +213,23 @@ describe('Service: cashBagService', function () {
         expect(cashBagData.id).not.toBe(null);
       });
 
+    });
+
+    describe('update cash bag currency', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.updateCashBagCurrency).toBe(true);
+      });
+
+      it('should PUT cash bag currency', function () {
+        var cashBagCurrencyId = 'fakeId';
+        $httpBackend.expectPUT(/cashbag-currencies\/fakeId/).respond(200, {});
+
+        cashBagService.updateCashBagCurrency(cashBagCurrencyId).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
     });
 
   });
