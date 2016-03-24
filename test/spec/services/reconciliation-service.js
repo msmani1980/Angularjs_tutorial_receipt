@@ -45,9 +45,10 @@ describe('Service: reconciliationService', function () {
 
   it('should GET the Payment Report', function () {
     var storeInstanceId = 'fakeStoreInstance';
-    httpBackend.expectGET(/api\/paymentReport\?storeInstanceId/).respond(200, {});
+    var cashBagNumber = 'fakeCashBagNumber';
+    httpBackend.expectGET(/api\/paymentReport\?cashBagNumber=(.+)&storeInstanceId=(.+)/, undefined, undefined, ['storeInstanceId', 'cashBagNumber']).respond(200, {});
 
-    reconciliationService.getPaymentReport(storeInstanceId).then(function (response) {
+    reconciliationService.getPaymentReport(storeInstanceId, cashBagNumber).then(function (response) {
       expect(response).toBeDefined();
     });
 

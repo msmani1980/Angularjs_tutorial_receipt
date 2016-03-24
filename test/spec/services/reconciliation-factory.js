@@ -179,6 +179,14 @@ describe('Factory: reconciliationFactory', function () {
       expect(reconciliationService.getStockTotals).toHaveBeenCalledWith(storeInstanceId);
     });
 
+    it('should call paymentReport on getPaymentReport', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      var cashBagNumber = 'fakeCashBagNumber';
+      reconciliationFactory.getPaymentReport(storeInstanceId, cashBagNumber);
+      scope.$digest();
+      expect(reconciliationService.getPaymentReport).toHaveBeenCalledWith(storeInstanceId, cashBagNumber);
+    });
+
     it('should call reconciliatioNService saveStockItemsCounts on saveStockItemsCounts', function () {
       var payload = {storeInstanceId: 1};
       reconciliationFactory.saveStockItemsCounts(payload);
