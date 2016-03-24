@@ -105,6 +105,43 @@ angular.module('ts5App')
       }
     };
 
+    var companyCashList = {
+      response: [{
+        id: 1,
+        companyId: 2,
+        code: 'USD',
+        name: 'dollar',
+        amount: 2.00,
+        audValue: 3.50
+      }, {
+        id: 57,
+        companyId: 2,
+        code: 'GBP',
+        name: 'GreatBritishPound',
+        amount: 2.00,
+        audValue: 3.50
+      }, {
+        id: 58,
+        companyId: 2,
+        code: 'EUR',
+        name: 'EURO',
+        amount: 2.00,
+        audValue: 3.50
+      }, {
+        id: 63,
+        companyId: 2,
+        code: 'NOK',
+        name: 'NOK',
+        amount: 2.00,
+        audValue: 3.50
+      }],
+      meta: {
+        count: 4,
+        limit: 4,
+        start: 0
+      }
+    };
+
     var voucherItemsList = {
       vouchers: [{
         endDate: '2015-05-29',
@@ -334,6 +371,7 @@ angular.module('ts5App')
       $scope.companyVoucherItemsList = voucherItemsList.vouchers;
       $scope.companyVirtualItemsList = virtualItemsList.items;
       $scope.companyDiscountsList = discountsList;
+      $scope.companyCashList = companyCashList.response;
 
       //set data
       $scope.currencyObj = {

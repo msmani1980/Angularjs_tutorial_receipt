@@ -8,14 +8,14 @@
 
       <div class="row">
 
-        <div class="col-xs-6 col-sm-3">
+        <div class="col-xs-12 col-sm-3">
           <h4 class="view-name"> {{ viewName }} </h4>
         </div>
 
-        <div class="col-xs-6 col-sm-9 text-left">
+        <div class="col-xs-12 col-sm-9 text-left">
         <div class="manual-epos-panel-option" ng-repeat="(key, panel) in panelNames track by $index">
           <div class="row">
-            <div class="col-xs-4">
+            <div class="col-xs-12 col-sm-4">
               <input bs-switch
                ng-model="panel.show"
                type="checkbox"
@@ -24,13 +24,13 @@
                switch-on-text="Yes"
                switch-off-text="No"/>
              </div>
-             <div class="col-xs-8 epos-panel-option-text">{{panel.name}} <i ng-if="panel.verified" class="fa fa-check-circle"></i></div>
+             <div class="col-xs-12 col-sm-8 epos-panel-option-text">{{panel.name}} <i ng-if="panel.verified" class="fa fa-check-circle"></i></div>
           </div>
         </div>
 
         <div class="manual-epos-panel-option">
           <div class="row">
-            <div class="col-xs-4">
+            <div class="col-xs-12 col-sm-4">
               <input bs-switch
                ng-model="showAll"
                type="checkbox"
@@ -39,7 +39,7 @@
                switch-on-text="Yes"
                switch-off-text="No"/>
             </div>
-            <div class="col-xs-8 epos-panel-option-text"><i><b>Show All Forms</b></i></div>
+            <div class="col-xs-12 col-sm-8 epos-panel-option-text"><i><b>Show All Forms</b></i></div>
           </div>
        </div>
       </div>
@@ -230,7 +230,7 @@
           <input type="text"
             class="form-control"
             ng-model="filter.voucherItems"
-            placeholder="Select promotions to filter by ..."
+            placeholder="Select Voucher to filter by ..."
             aria-describedby="promotions-filter"/>
         </div>
       </div>
@@ -686,5 +686,82 @@
 
   </div>
   <!-- End Discounts Panel -->
+
+  <!-- Cash Panel -->
+  <div class="panel panel-default" ng-show="shouldShowPanel('Cash') || showAll">
+    <div class="panel-heading header-blue"><b>Cash</b> <i ng-if="panelIsVerified('Cash')" class="fa fa-check-circle"></i></div>
+    <div class="panel-body">
+
+      <div class="row">
+        <div class="col-xs-12 col-sm-12">
+          <div class="input-group">
+            <span class="input-group-addon" id="cash-filter">Filter</span>
+            <input type="text"
+              class="form-control"
+              ng-model="filter.cash"
+              placeholder="Select Currency Codes to filter by ..."
+              aria-describedby="cash-filter"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover">
+
+          <tr class="active">
+            <th>Amount</th>
+            <th>Promotion Value (AUD)</th>
+          </tr>
+
+          <!-- Start Promotion loop -->
+          <tr ng-repeat="cash in companyCashList | filter:{name: filter.cash} track by $index">
+
+            <td>
+              <div class="input-group" style="max-width:300px">
+              <span class="input-group-addon" id="cash">{{cash.code}}</span>
+              <input type="number"
+                class="form-control"
+                ng-model="cash.amount"
+                placeholder="12345678.91"
+                aria-describedby="cash"
+                style="min-width:100px"/>
+                </div>
+            </td>
+
+            <td>
+              <input type="number"
+                class="form-control"
+                ng-model="cash.audValue"
+                placeholder="12345678.91"
+                aria-describedby="currency"
+                style="min-width:100px"/>
+            </td>
+
+          </tr>
+
+        </table>
+      </div>
+
+      <div class="panel-divider"></div>
+
+      <div class="row">
+        <div class="col-sm-offset-9"></div>
+          <div class="col-xs-12 col-sm-1 text-right"><b>Grand Total</b></div>
+          <div class="col-xs-12 col-sm-2">
+            <input class="form-control" type="number" value="14.00" disabled="true"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-footer">
+        <div class="row">
+          <div class="col-xs-12 text-right">
+            <button class="btn btn-success" ng-click="verifyPanel('Cash')">Verify</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- End Cash Panel -->
 
 </div>
