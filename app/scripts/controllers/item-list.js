@@ -167,10 +167,13 @@ angular.module('ts5App')
     };
 
     $scope.removeRecord = function(itemId) {
+    
       $this.displayLoadingModal('Removing Retail Item');
       $this.closeAccordian();
 
       itemsFactory.removeItem(itemId).then(function() {
+    	   $this.offSet=0;
+       	   $scope.itemsList = [];
         $this.hideLoadingModal();
         getItemsList();
       });
