@@ -173,7 +173,7 @@ angular.module('ts5App')
       }, {
         companyId: 403,
         itemCode: 'Mov230',
-        itemName: 'Movie Ticket',
+        itemName: 'Video',
         itemTypeName: 'Virtual',
         itemTypeId: 2,
         categoryName: 'Virtual Items',
@@ -198,7 +198,7 @@ angular.module('ts5App')
       }, {
         companyId: 403,
         itemCode: 'Mov230',
-        itemName: 'Movie Ticket',
+        itemName: 'Video Game',
         itemTypeName: 'Virtual',
         itemTypeId: 2,
         categoryName: 'Virtual Items',
@@ -228,6 +228,76 @@ angular.module('ts5App')
       }
     };
 
+    var discountsList = {
+      voucher: [{
+        endDate: '2015-05-29',
+        startDate: '2015-01-01',
+        discountCode: ' V10',
+        discountName: '10 Off Vocucher',
+        discountTypeId: 1,
+        quantity: 2,
+        price: 10.00,
+        currencyValue: 20.00,
+        audValue: 23.75
+      }, {
+        endDate: '2015-05-29',
+        startDate: '2015-01-01',
+        discountCode: ' V30',
+        discountName: '30 Off Vocucher',
+        discountTypeId: 1,
+        quantity: 2,
+        price: 5.00,
+        currencyValue: 50.00,
+        audValue: 57.25
+      }, {
+        endDate: '2015-05-29',
+        startDate: '2015-01-01',
+        discountCode: 'IV1',
+        discountName: 'Item Voucher 1',
+        discountTypeId: 1,
+        quantity: null,
+        price: null,
+        currencyValue: null,
+        audValue: null
+      }],
+      coupon: [{
+        endDate: '2015-05-29',
+        startDate: '2015-01-01',
+        discountCode: ' V10',
+        discountName: '10 Off Coupon',
+        discountTypeId: 1,
+        quantity: 2,
+        price: 10.00,
+        currencyValue: 20.00,
+        audValue: 23.75
+      }, {
+        endDate: '2015-05-29',
+        startDate: '2015-01-01',
+        discountCode: ' V30',
+        discountName: '30 Off Coupon',
+        discountTypeId: 1,
+        quantity: 2,
+        price: 5.00,
+        currencyValue: 50.00,
+        audValue: 57.25
+      }, {
+        endDate: '2015-05-29',
+        startDate: '2015-01-01',
+        discountCode: 'IV1',
+        discountName: 'Item Coupon 1',
+        discountTypeId: 1,
+        quantity: null,
+        price: null,
+        currencyValue: null,
+        audValue: null
+      }],
+      meta: {
+        count: 3,
+        limit: 3,
+        start: 0
+      }
+    };
+
     var panelNames = [{
       name: 'Cash',
       show: false,
@@ -237,7 +307,7 @@ angular.module('ts5App')
       show: false,
       verified: false
     }, {
-      name: 'Discount',
+      name: 'Discounts',
       show: false,
       verified: false
     }, {
@@ -263,6 +333,7 @@ angular.module('ts5App')
       $scope.companyPromotionsList = promotionsList.promotions;
       $scope.companyVoucherItemsList = voucherItemsList.vouchers;
       $scope.companyVirtualItemsList = virtualItemsList.items;
+      $scope.companyDiscountsList = discountsList;
 
       //set data
       $scope.currencyObj = {
@@ -273,6 +344,9 @@ angular.module('ts5App')
           currency: angular.copy($scope.currencyList[1])
         },
         virtualItems: {
+          currency: angular.copy($scope.currencyList[1])
+        },
+        discounts: {
           currency: angular.copy($scope.currencyList[1])
         }
       };
