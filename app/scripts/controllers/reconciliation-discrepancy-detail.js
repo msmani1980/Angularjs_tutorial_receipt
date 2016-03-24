@@ -119,12 +119,35 @@ angular.module('ts5App')
       return uniqueItemList;
     }
 
+    function setEposItemList(eposItemList) {
+      $scope.eposItemOutliers = eposItemList;
+
+    }
+
     function setStockItemList(storeInstanceItemList, rawLMPStockData) {
       reconciliationFactory.getStockItemCounts($routeParams.storeInstanceId).then(function (stockCountsFromAPI) {
-        var filteredItems = mergeItems(storeInstanceItemList.response, rawLMPStockData, stockCountsFromAPI.response);
+        var filteredItems = mergeItems(storeInstanceItemList, rawLMPStockData, stockCountsFromAPI.response);
         $scope.stockItemList = lodash.map(filteredItems, setStockItem);
         initLMPStockRevisions();
       });
+    }
+
+    function filterStockAndEposItems(storeInstanceItemListFromAPI, rawLMPStockData) {
+      var stockItemList = [];
+      var eposItemList = [];
+
+      angular.forEach(angular.copy(storeInstanceItemListFromAPI.response), function (item) {
+        var countTypeMatch = lodash.findWhere($this.countTypes, { id: item.countTypeId });
+        var countTypeName = (countTypeMatch) ? countTypeMatch.name : '';
+        if (countTypeName === 'FAClose') {
+          eposItemList.push(item);
+        } else {
+          stockItemList.push(item);
+        }
+      });
+
+      setStockItemList(stockItemList, rawLMPStockData);
+      setEposItemList(eposItemList);
     }
 
     function showLoadingModal(text) {
@@ -145,8 +168,8 @@ angular.module('ts5App')
     function setStockData(stockData) {
       var rawLMPStockData = angular.copy(stockData);
 
-      reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId).then(function (storeInstanceItemList) {
-        setStockItemList(storeInstanceItemList, rawLMPStockData);
+      reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId, { showEpos: true }).then(function (storeInstanceItemList) {
+        filterStockAndEposItems(storeInstanceItemList, rawLMPStockData);
       }, handleResponseError);
     }
 

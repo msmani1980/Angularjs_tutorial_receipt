@@ -451,6 +451,24 @@
                   <button ng-show="editLMPStockTable" class="btn btn-default" ng-click="cancelEditingTable(true)">Cancel</button>
                 </div>
               </div>
+
+              <hr>
+
+              <h4>Outlier Items</h4>
+              <table class="table table-bordered">
+                <tr class="active">
+                  <th>Retail Item Details</th>
+                  <th>Quantity Sold</th>
+                  <th>Store Number</th>
+                  <th>Date Opened</th>
+                </tr>
+                <tr ng-repeat="item in eposItemList">
+                  <td>{{ item.itemCode }} - {{ item.itemName }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td>{{ item.storeInstanceId }}</td>
+                  <td>{{ item.storeInstanceId }}</td>
+                </tr>
+              </table>
             </accordion-group>
           </accordion>
 

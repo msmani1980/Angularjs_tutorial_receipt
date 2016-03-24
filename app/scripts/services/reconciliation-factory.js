@@ -24,8 +24,8 @@ angular.module('ts5App')
         return reconciliationService.getPaymentReport(payload);
       }
 
-      function getStoreInstanceItemList(storeInstanceId) {
-        return storeInstanceService.getStoreInstanceItemList(storeInstanceId);
+      function getStoreInstanceItemList(storeInstanceId, payload) {
+        return storeInstanceService.getStoreInstanceItemList(storeInstanceId, payload);
       }
 
       function getCountTypes() {
