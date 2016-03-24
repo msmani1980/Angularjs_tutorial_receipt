@@ -70,8 +70,8 @@ angular.module('ts5App')
         audValue: 23.75
       }],
       meta: {
-        count: 5,
-        limit: 5,
+        count: 3,
+        limit: 3,
         start: 0
       }
     };
@@ -101,6 +101,129 @@ angular.module('ts5App')
       meta: {
         count: 4,
         limit: 4,
+        start: 0
+      }
+    };
+
+    var voucherItemsList = {
+      vouchers: [{
+        endDate: '2015-05-29',
+        startDate: '2015-01-01',
+        voucherCode: ' V10',
+        voucherName: '10 Off Vocucher',
+        voucherTypeId: 1,
+        quantity: 2,
+        price: 10.00,
+        currencyValue: 20.00,
+        audValue: 23.75
+      }, {
+        endDate: '2015-05-29',
+        startDate: '2015-01-01',
+        voucherCode: ' V30',
+        voucherName: '30 Off Vocucher',
+        voucherTypeId: 1,
+        quantity: 2,
+        price: 5.00,
+        currencyValue: 50.00,
+        audValue: 57.25
+      }, {
+        endDate: '2015-05-29',
+        startDate: '2015-01-01',
+        voucherCode: 'IV1',
+        voucherName: 'Item Voucher 1',
+        voucherTypeId: 1,
+        quantity: null,
+        price: null,
+        currencyValue: null,
+        audValue: null
+      }],
+      meta: {
+        count: 3,
+        limit: 3,
+        start: 0
+      }
+    };
+
+    var virtualItemsList = {
+      items: [{
+        companyId: 403,
+        itemCode: 'Mov230',
+        itemName: 'Movie Ticket',
+        itemTypeName: 'Virtual',
+        itemTypeId: 2,
+        categoryName: 'Virtual Items',
+        salesCategoryId: 231,
+        sellingPoint: 'Virtual',
+        stockOwnerCode: null,
+        onBoardName: ' Movie Ticket',
+        currentPrice: null,
+        description: 'Movie Ticket',
+        imageUrl: ' https://s3.amazonaws.com/ts5-qa-portal-images/item-511b8541-418d-4600-9339-de993d1a82e4.png',
+        startDate: '2015-06-01',
+        endDate: '2018-12-31',
+        keywords: 'Movie',
+        isPrintReceipt: true,
+        id: 405,
+        itemMasterId: 38,
+        subViewItems: null,
+        quantity: 2,
+        price: 5.00,
+        currencyValue: 50.00,
+        audValue: 57.25
+      }, {
+        companyId: 403,
+        itemCode: 'Mov230',
+        itemName: 'Movie Ticket',
+        itemTypeName: 'Virtual',
+        itemTypeId: 2,
+        categoryName: 'Virtual Items',
+        salesCategoryId: 231,
+        sellingPoint: 'Virtual',
+        stockOwnerCode: null,
+        onBoardName: ' Movie Ticket',
+        currentPrice: null,
+        description: 'Movie Ticket',
+        imageUrl: ' https://s3.amazonaws.com/ts5-qa-portal-images/item-511b8541-418d-4600-9339-de993d1a82e4.png',
+        startDate: '2015-06-01',
+        endDate: '2018-12-31',
+        keywords: 'Movie',
+        isPrintReceipt: true,
+        id: 405,
+        itemMasterId: 38,
+        subViewItems: null,
+        quantity: 2,
+        price: 5.00,
+        currencyValue: 50.00,
+        audValue: 57.25
+      }, {
+        companyId: 403,
+        itemCode: 'Mov230',
+        itemName: 'Movie Ticket',
+        itemTypeName: 'Virtual',
+        itemTypeId: 2,
+        categoryName: 'Virtual Items',
+        salesCategoryId: 231,
+        sellingPoint: 'Virtual',
+        stockOwnerCode: null,
+        onBoardName: ' Movie Ticket',
+        currentPrice: null,
+        description: 'Movie Ticket',
+        imageUrl: ' https://s3.amazonaws.com/ts5-qa-portal-images/item-511b8541-418d-4600-9339-de993d1a82e4.png',
+        startDate: '2015-06-01',
+        endDate: '2018-12-31',
+        keywords: 'Movie',
+        isPrintReceipt: true,
+        id: 405,
+        itemMasterId: 38,
+        subViewItems: null,
+        quantity: null,
+        price: null,
+        currencyValue: null,
+        audValue: null
+      }],
+      meta: {
+        count: 3,
+        limit: 3,
         start: 0
       }
     };
@@ -138,6 +261,8 @@ angular.module('ts5App')
       $scope.currencyList = currencyList.response;
       $scope.promotionsList = promotionsList.promotions;
       $scope.companyPromotionsList = promotionsList.promotions;
+      $scope.companyVoucherItemsList = voucherItemsList.vouchers;
+      $scope.companyVirtualItemsList = virtualItemsList.items;
 
       //set data
       $scope.currencyObj = {
@@ -145,6 +270,9 @@ angular.module('ts5App')
           currency: angular.copy($scope.currencyList[1])
         },
         voucherItems: {
+          currency: angular.copy($scope.currencyList[1])
+        },
+        virtualItems: {
           currency: angular.copy($scope.currencyList[1])
         }
       };
@@ -174,6 +302,18 @@ angular.module('ts5App')
 
     $scope.panelIsVerified = function(name) {
       return checkPanelForAttr(name, 'verified');
+    };
+
+    $scope.verifyPanel = function(name) {
+      angular.forEach($scope.panelNames, function(panel) {
+        if (panel.name === name) {
+          if (panel.verified === true) {
+            panel.verified = false;
+          } else {
+            panel.verified = true;
+          }
+        }
+      });
     };
 
   });
