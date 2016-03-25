@@ -457,6 +457,7 @@ angular.module('ts5App')
       setupPaymentReport(angular.copy(responseCollection[8]));
       setCashPreference(responseCollection[9]);
       setStatusList(responseCollection[10]);
+      $this.carrierInstanceList = angular.copy(responseCollection[11]);
 
       $scope.totalRevenue = {
         cashHandler: $scope.companyIsUsingCash ? formatAsCurrency(getCHRevenue($this.chRevenue)) : 0,

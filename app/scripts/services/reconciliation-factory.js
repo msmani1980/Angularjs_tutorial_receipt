@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .factory('reconciliationFactory',
     function ($q, storeInstanceService, storesService, stationsService, reconciliationService, itemTypesService, recordsService, currenciesService, companyService, itemsService,
-              promotionsService, companyPreferencesService, cashBagService) {
+              promotionsService, companyPreferencesService, cashBagService, carrierInstancesService) {
 
       function getStoreStatusList(payload) {
         return recordsService.getStoreStatusList(payload);
@@ -140,6 +140,11 @@ angular.module('ts5App')
         return cashBagService.updateCashBagCurrency(currencyId, payload);
       };
 
+      var getCarrierInstanceList = function (storeInstanceId) {
+        var payload = { storeInstanceId: storeInstanceId };
+        carrierInstancesService.getCarrierInstances(payload);
+      };
+
       return {
         getStoreInstanceDetails: getStoreInstanceDetails,
         getStoreInstanceItemList: getStoreInstanceItemList,
@@ -163,6 +168,7 @@ angular.module('ts5App')
         getCompanyPreferences: getCompanyPreferences,
         getStockItemCounts: getStockItemCounts,
         saveStockItemsCounts: saveStockItemsCounts,
-        saveCashBagCurrency: saveCashBagCurrency
+        saveCashBagCurrency: saveCashBagCurrency,
+        getCarrierInstanceList: getCarrierInstanceList
       };
     });
