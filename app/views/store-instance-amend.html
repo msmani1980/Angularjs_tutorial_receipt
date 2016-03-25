@@ -73,7 +73,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4><strong>Move Cash Bag</strong> {{ cashBagToMove.cashBagNumber }}</h4>
+          <h4><strong>Move Cash Bag</strong> {{ cashBagToMove.cashBag }}</h4>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -178,10 +178,10 @@
             </tr>
             <tr ng-repeat="storeInstance in moveCashBagSearchResults"
                 ng-class="getClassesForSingleSelectedRow(storeInstance, 'background', 'storeInstance')">
-              <td>{{ storeInstance.storeInstance }}</td>
-              <td>{{ storeInstance.storeNumber }}</td>
               <td>{{ storeInstance.scheduleDate }}</td>
-              <td>{{ storeInstance.status }}</td>
+              <td>{{ storeInstance.storeNumber }}</td>
+              <td>{{ storeInstance.storeId }}</td>
+              <td>{{ getStatusNameById(storeInstance.statusId) }}</td>
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(storeInstance, 'button', 'storeInstance')"
                         ng-click="selectRecordForMoveCashBag(storeInstance)">
@@ -189,11 +189,13 @@
                 </button>
               </td>
             </tr>
+            <tr ng-hide="moveCashBagSearchResults.length">
+              <td colspan="5">No Store Instances found</td>
+            </tr>
           </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="closeMoveCashBagModal()"
-                  ng-show="targetRecordForMoveCashBag">
+          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="reallocateCashBag()" ng-show="targetRecordForMoveCashBag">
             <i class="fa fa-check"></i> Confirm
           </button>
           <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeMoveCashBagModal()">
@@ -219,7 +221,7 @@
                   <h4>Origin Cash Bag</h4>
                   <select class="form-control"
                           ng-model="rearrangeOriginCashBag"
-                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBagNumber'"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBag'"
                           ng-change="clearRearrangeSelections()">
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
@@ -252,7 +254,7 @@
                   <h4>Target Cash Bag</h4>
                   <select class="form-control"
                           ng-model="rearrangeTargetCashBag"
-                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBagNumber'"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBag'"
                           ng-change="clearRearrangeSelections()">
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
@@ -291,6 +293,26 @@
     </div>
   </div>
 
+  <div class="modal fade delete-cashbag-warning-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Are you sure?</h4>
+        </div>
+
+        <div class="modal-body">
+          <p>You are about to permanently delete <strong>{{cashBagToDelete.cashBag}} cashbag</strong></p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" ng-click="deleteCashBag()">Continue</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div class="row">
     <div class="col-xs-12 main">
@@ -300,10 +322,10 @@
             <h3 class="view-name">Store Instance Amend</h3>
           </div>
           <div class="col-xs-4 text-right">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" ng-click="goToReconciliation()">
               Go To Reconciliation
             </button>
-            <button class="btn btn-info">
+            <button class="btn btn-info" ng-click="showStoreInstancePaymentReport()">
               <i class="fa fa-file-text" aria-hidden="true"></i> Show Payment Reports
             </button>
           </div>
@@ -313,19 +335,19 @@
         <div class="panel panel-default col-xs-12">
           <div class="col-xs-4 text-left pull-left">
             <h4>
-              <strong>Store # 123</strong><br>
-              <small>10/25/2015</small>
+              <strong>Store # {{storeInstance.storeDetails.storeNumber}}</strong><br>
+              <small>{{storeInstance.scheduleDate}}</small>
             </h4>
           </div>
           <div class="col-xs-4 text-center">
             <h4><br>
-              <small>Store Instance: 123</small>
+              <small>Store Instance: {{storeInstance.id}}</small>
             </h4>
           </div>
 
           <div class="col-xs-4 text-right">
             <h4><br>
-              <small>Warehouse: Melborne</small>
+              <small>Warehouse: {{storeInstance.warehouseDetails.name}}</small>
             </h4>
           </div>
         </div>
@@ -344,37 +366,37 @@
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr>
-                    <td colspan="2" class="active">LMP Station Stock [GBP]</td>
+                    <td colspan="2" class="active">LMP Station Stock [{{companyBaseCurrency.currencyCode}}]</td>
                   </tr>
                   <tr>
                     <td>Net Value of LMP Stock</td>
-                    <td>10.3</td>
+                    <td>{{stockTotals.totalNet.netLMP}}</td>
                   </tr>
                 </table>
               </div>
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr class="active">
-                    <td colspan="2">ePOS Sales [GBP]</td>
+                    <td colspan="2">ePOS Sales [{{companyBaseCurrency.currencyCode}}]</td>
                   </tr>
                   <tr>
                     <td>Net Value of ePOS Sales</td>
-                    <td>10.3</td>
+                    <td>{{stockTotals.totalNet.netEPOS}}</td>
                   </tr>
                 </table>
               </div>
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr>
-                    <td class="active" colspan="2">Total Revenue [GBP]</td>
+                    <td class="active" colspan="2">Total Revenue [{{companyBaseCurrency.currencyCode}}]</td>
                   </tr>
                   <tr>
                     <td>@ Cash Handler Exchange Rate</td>
-                    <td>10.3</td>
+                    <td>{{companyIsUsingCash ? totalRevenue.cashHandler: 'N/A'}}</td>
                   </tr>
                   <tr>
                     <td>@ ePOS Exchange Rate</td>
-                    <td>10.3</td>
+                    <td>{{totalRevenue.epos}}</td>
                   </tr>
                 </table>
               </div>
@@ -388,23 +410,23 @@
                 </tr>
                 <tr>
                   <td>Net LMP vs Net ePOS</td>
-                  <td>10.3</td>
-                  <td>0.09</td>
+                  <td class="value discrepancy net value">{{discrepancy.net.value}}</td>
+                  <td class="value discrepancy net percentage">{{discrepancy.net.percentage}} &#37;</td>
                 </tr>
                 <tr>
                   <td>Total Revenue @ Cash Handler Exchange Rate vs Net ePOS</td>
-                  <td>10.3</td>
-                  <td>0.09</td>
+                  <td class="value discrepancy revenue value">{{companyIsUsingCash ? discrepancy.revenue.value: 'N/A'}}</td>
+                  <td class="value discrepancy revenue percentage">{{companyIsUsingCash ? discrepancy.revenue.percentage + ' &#37;': 'N/A'}}</td>
                 </tr>
                 <tr>
                   <td>Foreign Exchange</td>
-                  <td>10.3</td>
-                  <td>0.09</td>
+                  <td class="value discrepancy exchange value ">{{companyIsUsingCash ? discrepancy.exchange.value : 'N/A'}}</td>
+                  <td class="value discrepancy exchange percentage ">{{companyIsUsingCash ? discrepancy.exchange.percentage + ' &#37;': 'N/A'}}</td>
                 </tr>
                 <tr class="active">
                   <th>Total</th>
-                  <th>10.3</th>
-                  <th>0.09</th>
+                  <th class="value discrepancy total value">{{discrepancy.total.value}}</th>
+                  <th class="value discrepancy total percentage">{{discrepancy.total.percentage}} &#37;</th>
                 </tr>
               </table>
             </div>
@@ -426,7 +448,7 @@
                 </span>
                   <ui-select multiple ng-model="cashBagFilter.filterList" theme="bootstrap">
                     <ui-select-match placeholder="Select Cash Bag">{{ $item.cashBag }}</ui-select-match>
-                    <ui-select-choices repeat="cashBag in cashBagList | filter: $select.search">
+                    <ui-select-choices repeat="cashBag in normalizedCashBags | filter: $select.search">
                       <span ng-hide="cashBag.isDeleted">{{ cashBag.cashBag }}</span>
                       <span ng-show="cashBag.isDeleted && showDeletedCashBags"><s>{{ cashBag.cashBag }}</s></span>
                     </ui-select-choices>
@@ -457,7 +479,7 @@
             </h4>
           </div>
         </div>
-        <div class="accordion-wrapper" ng-repeat="cashBag in cashBagList" ng-show="shouldShowCashBag(cashBag)">
+        <div class="accordion-wrapper" ng-repeat="cashBag in normalizedCashBags" ng-show="shouldShowCashBag(cashBag)">
           <accordion class="store-instance-review-accordion">
             <accordion-group ng-init="cashBag.accordionOpen=true" is-open="cashBag.accordionOpen">
               <accordion-heading class="accordion-heading">
@@ -470,7 +492,7 @@
                     <i class="fa fa-flag" ng-show="cashBag.isManual"></i>
                   </div>
                   <div class="col-xs-6 text-right">
-                    Bank Ref {{ cashBag.bankRefNumber }}
+                    Bank Ref: {{ getOrNA(cashBag.bankRefNumber) }}
                   </div>
                 </div>
               </accordion-heading>
@@ -515,7 +537,7 @@
                     <tr class="active">
                       <td colspan="2" ng-click="cashBag.salesTableOpen=!cashBag.salesTableOpen">
                         <i ng-class="getClassForTableAccordion(cashBag.salesTableOpen)"></i>
-                        <strong>ePOS Sales [GBP]</strong>
+                        <strong>ePOS Sales [{{companyBaseCurrency.currencyCode}}]</strong>
                       </td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
@@ -598,7 +620,7 @@
                       <th>Passenger Count</th>
                       <th>Tail Number</th>
                       <th>Number of Transactions</th>
-                      <th>Transactions Total [GBP]</th>
+                      <th>Transactions Total [{{companyBaseCurrency.currencyCode}}]</th>
                       <th ng-hide="cashBag.isDeleted">Actions</th>
                     </tr>
                     </tbody>
@@ -610,14 +632,14 @@
                             ng-if="doesSectorHaveCrewData(flightSector)"></i>
                       </td>
                       <td><i class="fa fa-flag" ng-show="flightSector.isManual"></i></td>
-                      <td>{{ flightSector.scheduleDate }}</td>
-                      <td>{{ flightSector.scheduleNumber }}</td>
-                      <td>{{ flightSector.departureStation }}</td>
-                      <td>{{ flightSector.arrivalStation }}</td>
-                      <td>{{ flightSector.passengerCount }}</td>
-                      <td>{{ flightSector.tailNumber }}</td>
-                      <td>{{ flightSector.transactionCount }}</td>
-                      <td>{{ flightSector.transactionTotal }}</td>
+                      <td>{{ getOrNA(flightSector.scheduleDate) }}</td>
+                      <td>{{ getOrNA(flightSector.scheduleNumber) }}</td>
+                      <td>{{ getOrNA(flightSector.departureStation) }}</td>
+                      <td>{{ getOrNA(flightSector.arrivalStation) }}</td>
+                      <td>{{ getOrNA(flightSector.passengerCount) }}</td>
+                      <td>{{ getOrNA(flightSector.tailNumber) }}</td>
+                      <td>{{ getOrNA(flightSector.transactionCount) }}</td>
+                      <td>{{ getOrNA(flightSector.transactionTotal) }}</td>
                       <td ng-hide="cashBag.isDeleted">
                         <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(flightSector)"><i class="fa fa-pencil active"></i></button>
                         <button class="btn btn-danger btn-xs"><i class="fa fa-trash active"></i></button>
@@ -649,13 +671,13 @@
               <hr ng-hide="cashBag.isDeleted">
               <div class="row" ng-hide="cashBag.isDeleted">
                 <div class="col-xs-12 text-left">
-                  <button class="btn btn-info" title="Show Payment Report">
+                  <button class="btn btn-info" title="Show Payment Report" ng-click="showCashBagPaymentReport(cashBag)">
                     <i class="fa fa-file-text active"></i>
                   </button>
-                  <button class="btn btn-primary" title="Edit Cash Bag">
+                  <button class="btn btn-primary" title="Edit Cash Bag" ng-click="goToCashBagEdit(cashBag)">
                     <i class="fa fa-pencil active"></i>
                   </button>
-                  <button class="btn btn-danger" title="Delete Cash Bag">
+                  <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
                     <i class="fa fa-trash active"></i>
                   </button>
                   <button class="btn btn-warning" title="Merge or Reallocate Cash Bag" ng-click="showMoveCashBagModal(cashBag)">
@@ -672,4 +694,146 @@
       </div>
     </div>
   </div>
+
+  <!--payment report panel-->
+  <div class="modal right fade" id="paymentReportModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div ng-hide="paymentReport.length">Payment Report is empty</div>
+          <div class="panel" ng-repeat="report in paymentReport">
+            <h3>{{report.reportTitle}} Report</h3>
+            <div class="panel-body">
+              <p><h4>{{report.companyName}}</h4></p>
+              <p><strong>Flight Date:</strong> {{report.scheduleDate}}</p>
+
+              <div ng-repeat="sector in report.sectors">
+                <p><strong>Flight Number:</strong> {{sector.flightNumber}} (Pax {{sector.pax}})</p>
+                <p><strong>Sector:</strong> {{sector.departureStation}} - {{sector.arrivalStation}}</p>
+              </div>
+
+              <p><strong>Store:</strong> {{storeInstance.storeDetails.storeNumber}}</p>
+              <p><strong>Aircraft Registration:</strong> {{report.carrierNumber}}</p>
+              <p><strong>Cash Bag Number(s):</strong> {{report.cashbagText}}</p>
+
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Crew ID</th>
+                  <th>Last Name</th>
+                </tr>
+                <tr ng-repeat="crewMember in report.crew">
+                  <td>{{crewMember.CrewId}}</td>
+                  <td>{{crewMember.LastName}}</td>
+                </tr>
+              </table>
+
+              <h5>Expected Cash</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Currency Type</th>
+                  <th>Currency Value</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="cash in report.cash">
+                  <td>{{cash.currencyCode}}</td>
+                  <td>{{cash.total}}</td>
+                  <td>{{cash.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.cash.length">
+                  <td>No expected cash added</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Expected Cash Total</td>
+                  <td></td>
+                  <td>{{report.cashTotal}}</td>
+                </tr>
+              </table>
+
+              <h5>Expected Credit</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Card Type</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="credit in report.credit">
+                  <td>{{credit.cardType}}</td>
+                  <td>{{credit.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.credit.length">
+                  <td>No expected credit added</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Expected Credit Total</td>
+                  <td>{{report.creditTotal}}</td>
+                </tr>
+              </table>
+
+              <h5>Voucher Total</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Voucher Currency</th>
+                  <th>Currency Value</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="voucher in report.voucher">
+                  <td>{{voucher.currencyCode}}</td>
+                  <td>{{voucher.total}}</td>
+                  <td>{{voucher.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.voucher.length">
+                  <td>No Voucher added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Expected Voucher Total</td>
+                  <td></td>
+                  <td>{{report.voucherTotal}}</td>
+                </tr>
+              </table>
+
+              <h5>Complimentary Total</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Currency Type</th>
+                  <th>Comp. Currency</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="complimentary in report.comp">
+                  <td>{{complimentary.currencyCode}}</td>
+                  <td>{{complimentary.total}}</td>
+                  <td>{{complimentary.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.comp.length">
+                  <td>No Complimentary added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td>Comp. Total</td>
+                  <td></td>
+                  <td>{{report.compTotal ? report.compTotal : '0.00'}}</td>
+                </tr>
+              </table>
+
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <td>Expected Total</td>
+                  <td>{{report.total}}</td>
+                </tr>
+              </table>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--payment report panel-->
 </div>

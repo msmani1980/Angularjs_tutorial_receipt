@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('storeInstanceAmendFactory', function ($q) {
+  .factory('storeInstanceAmendFactory', function ($q, cashBagService) {
 
     var getScheduleMockData = function (searchQuery) {
       var getScheduleMockData = [{
@@ -195,7 +195,7 @@ angular.module('ts5App')
           isManual: true,
           crewData: []
         }, {
-          id:6,
+          id: 6,
           scheduleDate: '11/30/2015',
           scheduleNumber: '146',
           route: '7834',
@@ -225,9 +225,24 @@ angular.module('ts5App')
       return cashBagMockResponseDeferred.promise;
     };
 
+    var getCashBags = function (payload) {
+      return cashBagService.getCashBagList(payload.companyId, payload);
+    };
+
+    var getFlightSectors = function (cashBagId) {
+      return cashBagService.getCashBagCarrierInstances(cashBagId);
+    };
+
+    var deleteCashBag = function (id) {
+      return cashBagService.deleteCashBag(id);
+    };
+
     return {
       getCashBagListMockData: getCashBagListMockData,
       getStoreInstancesMockData: getStoreInstancesMockData,
-      getScheduleMockData: getScheduleMockData
+      getScheduleMockData: getScheduleMockData,
+      getCashBags: getCashBags,
+      deleteCashBag: deleteCashBag,
+      getFlightSectors: getFlightSectors
     };
   });

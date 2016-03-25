@@ -3,38 +3,185 @@
 describe('Controller: StoreInstanceAmendCtrl', function () {
 
   beforeEach(module('ts5App'));
+  beforeEach(module('served/cash-bag-list.json'));
+  beforeEach(module('served/store-instance.json'));
+  beforeEach(module('served/company.json'));
+  beforeEach(module('served/currencies.json'));
+  beforeEach(module('served/item-types.json'));
+  beforeEach(module('served/stock-totals.json'));
+  beforeEach(module('served/promotion-totals.json'));
+  beforeEach(module('served/company-preferences.json'));
+  beforeEach(module('served/ch-cash-bag.json'));
+  beforeEach(module('served/payment-report.json'));
+  beforeEach(module('served/employees.json'));
+  beforeEach(module('served/cash-bag.json'));
+  beforeEach(module('served/cash-bag-carrier-instances.json'));
+  beforeEach(module('served/post-trip-data.json'));
+  beforeEach(module('served/transactions.json'));
+  beforeEach(module('served/store-instance-list.json'));
 
   var scope;
   var StoreInstanceAmendCtrl;
   var controller;
   var location;
-  var StoreInstanceAmendFactory;
+  var storeInstanceAmendFactory;
+  var reconciliationFactory;
+  var storeInstanceFactory;
+  var employeesService;
+  var cashBagFactory;
+  var postTripFactory;
+  var transactionFactory;
+  var dateUtility;
   var storeInstanceDeferred;
   var storeInstanceResponseJSON;
   var cashBagsDeferred;
   var cashBagsResponseJSON;
   var schedulesDeferred;
   var schedulesResponseJSON;
+  var storeInstanceJSON;
+  var getStoreInstanceDetailsDeferred;
+  var getCompanyDeferred;
+  var getCompanyJSON;
+  var getCompanyGlobalCurrenciesDeferred;
+  var getCompanyGlobalCurrenciesJSON;
+  var getItemTypesListDeferred;
+  var getItemTypesListJSON;
+  var getStockTotalsDeferred;
+  var getStockTotalsJSON;
+  var getPromotionTotalsDeferred;
+  var getPromotionTotalsJSON;
+  var getCompanyPreferencesDeferred;
+  var getCompanyPreferencesJSON;
+  var getCHRevenueDeferred;
+  var getEPOSRevenueDeferred;
+  var cashHandlerCashBagJSON;
+  var getPaymentReportDeferred;
+  var getPaymentReportJSON;
+  var getEmployeesDeferred;
+  var employeesJSON;
+  var getCashBagDeferred;
+  var cashBagJSON;
+  var flightSectorsJSON;
+  var getFlightSectorsDeferred;
+  var postTripDataJSON;
+  var getPostTripDeferred;
+  var transactionsJSON;
+  var getTransactionListDeferred;
+  var storeInstancesJSON;
+  var getStoreInstancesListDeferred;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
+  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagList_, _servedStoreInstance_, _servedCompany_,
+                              _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
+                              _servedChCashBag_, _servedPaymentReport_, _servedEmployees_, _servedCashBag_, _servedCashBagCarrierInstances_,
+                              _servedPostTripData_, _servedTransactions_, _servedStoreInstanceList_) {
     location = $location;
     scope = $rootScope.$new();
-    StoreInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
+    storeInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
+    reconciliationFactory = $injector.get('reconciliationFactory');
+    employeesService = $injector.get('employeesService');
+    cashBagFactory = $injector.get('cashBagFactory');
+    postTripFactory = $injector.get('postTripFactory');
+    transactionFactory = $injector.get('transactionFactory');
+    storeInstanceFactory = $injector.get('storeInstanceFactory');
+    dateUtility = $injector.get('dateUtility');
     controller = $controller;
 
     storeInstanceResponseJSON = [{ id: 1 }]; // stub for now until API is complete
     storeInstanceDeferred = $q.defer();
     storeInstanceDeferred.resolve(storeInstanceResponseJSON);
-    cashBagsResponseJSON = [{ id: 2 }, { id: 3 }]; // stub for now until API is complete
-    cashBagsDeferred = $q.defer();
-    cashBagsDeferred.resolve(cashBagsResponseJSON);
     schedulesResponseJSON = [{ id: 2 }]; // stub for now until API is complete
     schedulesDeferred = $q.defer();
     schedulesDeferred.resolve(schedulesResponseJSON);
 
-    spyOn(StoreInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
-    spyOn(StoreInstanceAmendFactory, 'getCashBagListMockData').and.returnValue(cashBagsDeferred.promise);
-    spyOn(StoreInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
+    cashBagsResponseJSON = _servedCashBagList_;
+    cashBagsDeferred = $q.defer();
+    cashBagsDeferred.resolve(cashBagsResponseJSON);
+
+    storeInstanceJSON = _servedStoreInstance_;
+    getStoreInstanceDetailsDeferred = $q.defer();
+    getStoreInstanceDetailsDeferred.resolve(storeInstanceJSON);
+
+    getCompanyJSON = _servedCompany_;
+    getCompanyDeferred = $q.defer();
+    getCompanyDeferred.resolve(getCompanyJSON);
+
+    getCompanyGlobalCurrenciesJSON = _servedCurrencies_;
+    getCompanyGlobalCurrenciesDeferred = $q.defer();
+    getCompanyGlobalCurrenciesDeferred.resolve(getCompanyGlobalCurrenciesJSON);
+
+    getItemTypesListJSON = _servedItemTypes_;
+    getItemTypesListDeferred = $q.defer();
+    getItemTypesListDeferred.resolve(getItemTypesListJSON);
+
+    getStockTotalsJSON = _servedStockTotals_;
+    getStockTotalsDeferred = $q.defer();
+    getStockTotalsDeferred.resolve(getStockTotalsJSON);
+
+    getPromotionTotalsJSON = _servedPromotionTotals_;
+    getPromotionTotalsDeferred = $q.defer();
+    getPromotionTotalsDeferred.resolve(getPromotionTotalsJSON);
+
+    getCompanyPreferencesJSON = _servedCompanyPreferences_;
+    getCompanyPreferencesDeferred = $q.defer();
+    getCompanyPreferencesDeferred.resolve(getCompanyPreferencesJSON);
+
+    cashHandlerCashBagJSON = _servedChCashBag_;
+    getCHRevenueDeferred = $q.defer();
+    getCHRevenueDeferred.resolve([cashHandlerCashBagJSON, {}, {}]);
+
+    getEPOSRevenueDeferred = $q.defer();
+    getEPOSRevenueDeferred.resolve([{}, {}, {}]);
+
+    getPaymentReportJSON = _servedPaymentReport_;
+    getPaymentReportDeferred = $q.defer();
+    getPaymentReportDeferred.resolve(getPaymentReportJSON);
+
+    employeesJSON = _servedEmployees_;
+    getEmployeesDeferred = $q.defer();
+    getEmployeesDeferred.resolve(employeesJSON);
+
+    cashBagJSON = _servedCashBag_;
+    getCashBagDeferred = $q.defer();
+    getCashBagDeferred.resolve(cashBagJSON);
+
+    flightSectorsJSON = _servedCashBagCarrierInstances_;
+    getFlightSectorsDeferred = $q.defer();
+    getFlightSectorsDeferred.resolve(flightSectorsJSON);
+
+    postTripDataJSON = _servedPostTripData_;
+    getPostTripDeferred = $q.defer();
+    getPostTripDeferred.resolve(postTripDataJSON);
+
+    transactionsJSON = _servedTransactions_;
+    getTransactionListDeferred = $q.defer();
+    getTransactionListDeferred.resolve(transactionsJSON);
+
+    storeInstancesJSON = _servedStoreInstanceList_;
+    getStoreInstancesListDeferred = $q.defer();
+    getStoreInstancesListDeferred.resolve(storeInstancesJSON);
+
+    spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'getCashBagListMockData').and.returnValue(getCashBagDeferred.promise);
+    spyOn(reconciliationFactory, 'getStoreInstanceDetails').and.returnValue(getStoreInstanceDetailsDeferred.promise);
+    spyOn(reconciliationFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
+    spyOn(reconciliationFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
+    spyOn(reconciliationFactory, 'getItemTypesList').and.returnValue(getItemTypesListDeferred.promise);
+    spyOn(reconciliationFactory, 'getStockTotals').and.returnValue(getStockTotalsDeferred.promise);
+    spyOn(reconciliationFactory, 'getPromotionTotals').and.returnValue(getPromotionTotalsDeferred.promise);
+    spyOn(reconciliationFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
+    spyOn(reconciliationFactory, 'getCHRevenue').and.returnValue(getCHRevenueDeferred.promise);
+    spyOn(reconciliationFactory, 'getEPOSRevenue').and.returnValue(getEPOSRevenueDeferred.promise);
+    spyOn(reconciliationFactory, 'getPaymentReport').and.returnValue(getPaymentReportDeferred.promise);
+    spyOn(employeesService, 'getEmployees').and.returnValue(getEmployeesDeferred.promise);
+    spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'getFlightSectors').and.returnValue(getFlightSectorsDeferred.promise);
+    spyOn(postTripFactory, 'getPostTrip').and.returnValue(getPostTripDeferred.promise);
+    spyOn(transactionFactory, 'getTransactionList').and.returnValue(getTransactionListDeferred.promise);
+    spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getStoreInstancesListDeferred.promise);
+    spyOn(cashBagFactory, 'updateCashBag').and.callThrough();
+    spyOn(storeInstanceAmendFactory, 'deleteCashBag').and.callThrough();
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
@@ -46,9 +193,20 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
   describe('init', function () {
     it('should call get cash bag data', function () {
-      expect(StoreInstanceAmendFactory.getCashBagListMockData).toHaveBeenCalled();
+      expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
+      expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalled();
+      expect(reconciliationFactory.getCompany).toHaveBeenCalled();
+      expect(reconciliationFactory.getCompanyGlobalCurrencies).toHaveBeenCalled();
+      expect(reconciliationFactory.getItemTypesList).toHaveBeenCalled();
+      expect(reconciliationFactory.getStockTotals).toHaveBeenCalled();
+      expect(reconciliationFactory.getPromotionTotals).toHaveBeenCalled();
+      expect(reconciliationFactory.getCompanyPreferences).toHaveBeenCalled();
+      expect(reconciliationFactory.getCHRevenue).toHaveBeenCalled();
+      expect(reconciliationFactory.getEPOSRevenue).toHaveBeenCalled();
+      expect(employeesService.getEmployees).toHaveBeenCalled();
+
       scope.$digest();
-      expect(scope.cashBagList).toBeDefined();
+      expect(scope.normalizedCashBags).toBeDefined();
     });
 
     it('should init no moveCashBag actions', function () {
@@ -152,6 +310,20 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         isOpen = scope.isCrewDataOpen(mockCashBag);
         expect(isOpen).toEqual(false);
       });
+    });
+
+    it('getStatusNameById should return status name for given status id', function () {
+      expect(scope.getStatusNameById(8)).toBe('Inbounded');
+      expect(scope.getStatusNameById(9)).toBe('Discrepancies');
+      expect(scope.getStatusNameById(10)).toBe('Unknown');
+    });
+
+    it('getOrNA should return value or N/A if value is not defined or null', function () {
+      expect(scope.getOrNA(null)).toEqual('N/A');
+      expect(scope.getOrNA(undefined)).toEqual('N/A');
+      expect(scope.getOrNA(0)).toEqual(0);
+      expect(scope.getOrNA(1)).toEqual(1);
+      expect(scope.getOrNA('ABC')).toEqual('ABC');
     });
   });
 
@@ -294,15 +466,21 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       it('should getStoreInstances if action is reallocate', function () {
         scope.moveCashBagAction = 'reallocate';
         scope.moveSearch = { storeNumber: '123', scheduleDate: '10/20/2015' };
+        var payload = {
+          storeNumber: scope.moveSearch.storeNumber,
+          startDate: dateUtility.formatDateForAPI(scope.moveSearch.scheduleDate),
+          endDate: dateUtility.formatDateForAPI(scope.moveSearch.scheduleDate)
+        };
+
         scope.searchForMoveCashBag();
-        expect(StoreInstanceAmendFactory.getStoreInstancesMockData).toHaveBeenCalledWith(scope.moveSearch);
+        expect(storeInstanceFactory.getStoreInstancesList).toHaveBeenCalledWith(payload);
       });
 
       it('should getCashBag if action is merge', function () {
         scope.moveCashBagAction = 'merge';
         scope.moveSearch = { cashBag: '123', bankRefNumber: 'ABC' };
         scope.searchForMoveCashBag();
-        expect(StoreInstanceAmendFactory.getCashBagListMockData).toHaveBeenCalledWith(scope.moveSearch);
+        expect(storeInstanceAmendFactory.getCashBagListMockData).toHaveBeenCalledWith(scope.moveSearch);
       });
 
       it('should automatically set targetRecordForMoveCashBag if there is only one result', function () {
@@ -320,6 +498,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.$digest();
         expect(scope.targetRecordForMoveCashBag).not.toEqual(null);
       });
+
     });
 
     describe('classes for selected records', function () {
@@ -350,6 +529,40 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.targetRecordForMoveCashBag = null;
         scope.selectRecordForMoveCashBag(mockRecord);
         expect(scope.targetRecordForMoveCashBag).toEqual(mockRecord);
+      });
+    });
+
+    describe('reallocate cash bag', function () {
+      it('should reallocate target cash bag to new store instance', function () {
+        scope.targetRecordForMoveCashBag = { id: 1 };
+        scope.cashBagToMove = {
+          id: 1,
+          bankRefNumber: '2',
+          dailyExchangeRateId: 3,
+          cashBag: '4',
+          scheduleDate: '2016/03/13',
+          retailCompanyId: 5,
+          scheduleNumber: '6',
+          isSubmitted: true
+        };
+        scope.$digest();
+
+        var payload = {
+          cashBag: {
+            storeInstanceId: 1,
+            bankReferenceNumber: '2',
+            dailyExchangeRateId: 3,
+            cashBagNumber: '4',
+            scheduleDate: '2016/03/13',
+            retailCompanyId: 5,
+            scheduleNumber: '6',
+            isSubmitted: true
+          }
+        };
+
+        scope.reallocateCashBag();
+
+        expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(scope.cashBagToMove.id, payload);
       });
     });
   });
@@ -385,7 +598,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       it('should getSchedules', function () {
         scope.scheduleSearch = { scheduleNumber: '123', scheduleDate: '10/20/2015' };
         scope.searchForSchedule();
-        expect(StoreInstanceAmendFactory.getScheduleMockData).toHaveBeenCalledWith(scope.scheduleSearch);
+        expect(storeInstanceAmendFactory.getScheduleMockData).toHaveBeenCalledWith(scope.scheduleSearch);
       });
 
       it('should set schedule search results', function () {
@@ -400,6 +613,46 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.$digest();
         expect(scope.newScheduleSelection).not.toEqual(null);
       });
+    });
+  });
+
+  describe('Payment reports', function () {
+    it('showStoreInstancePaymentReport should fetch and show store instance payment report', function () {
+      scope.showStoreInstancePaymentReport();
+
+      expect(reconciliationFactory.getPaymentReport).toHaveBeenCalled();
+    });
+
+    it('showCashBagPaymentReport should fetch and show cash bag payment report', function () {
+      scope.showCashBagPaymentReport({ cashBag: 1 });
+
+      expect(reconciliationFactory.getPaymentReport).toHaveBeenCalled();
+    });
+  });
+
+  describe('Delete cash bag functions', function () {
+    it ('showDeleteCashBagModal should show modal and mark cash bag for deletion', function () {
+      var cashBag = { id: 1 };
+
+      scope.showDeleteCashBagModal(cashBag);
+
+      expect(scope.cashBagToDelete).toBe(cashBag);
+    });
+
+    it('canCashBagBeDeleted returns true if cash bag can be deleted', function () {
+      expect(scope.canCashBagBeDeleted({ id: 1, canBeDeleted: true })).toBeTruthy();
+      expect(scope.canCashBagBeDeleted({ id: 1, canBeDeleted: false })).toBeFalsy();
+    });
+
+    it('deleteCashBag calls storeInstanceAmendFactory.deleteCashBag', function () {
+      scope.cashBagToDelete = {
+        id: 1
+      };
+      scope.$digest();
+
+      scope.deleteCashBag();
+
+      expect(storeInstanceAmendFactory.deleteCashBag).toHaveBeenCalledWith(1);
     });
   });
 

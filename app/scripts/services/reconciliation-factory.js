@@ -20,8 +20,8 @@ angular.module('ts5App')
         return storeInstanceService.getStoreInstancesList(payload);
       }
 
-      function getPaymentReport(payload) {
-        return reconciliationService.getPaymentReport(payload);
+      function getPaymentReport(storeInstanceId, cashBagNumber) {
+        return reconciliationService.getPaymentReport(storeInstanceId, cashBagNumber);
       }
 
       function getStoreInstanceItemList(storeInstanceId, payload) {
