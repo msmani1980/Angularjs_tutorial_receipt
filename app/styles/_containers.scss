@@ -24,6 +24,12 @@ body {
   }
 }
 
+@media (min-width: $screen-sm-min) and (max-width: $screen-md-min) {
+  .manual-epos-container {
+  	margin-top:35rem;
+  }
+}
+
 .bottom-footer{
   width:100%;
   position: fixed;
