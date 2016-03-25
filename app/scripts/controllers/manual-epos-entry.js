@@ -431,7 +431,7 @@ angular.module('ts5App')
 
     setScopeVariables();
 
-    // Always place $scope vars at the end of the controller
+    // Always place $scope functions at the end of the controller
     $scope.shouldShowPanel = function(name) {
       return checkPanelForAttr(name, 'show');
     };
