@@ -97,10 +97,6 @@ angular.module('ts5App')
           setScopeData(response, 'companyVirtualItemsList');
         }),
 
-        manualEposFactory.getVirtualItemsList().then(function(response) {
-          setScopeData(response, 'companyVirtualItemsList');
-        }),
-
         manualEposFactory.getDiscountsList().then(function(response) {
           setScopeData(response, 'companyDiscountsList');
         }),
