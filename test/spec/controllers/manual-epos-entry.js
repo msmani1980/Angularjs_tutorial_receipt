@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ManualEposEntryCtrl', function() {
+describe('Controller: ManualEposEntryCtrl', function() {
 
   beforeEach(module('ts5App'));
 
