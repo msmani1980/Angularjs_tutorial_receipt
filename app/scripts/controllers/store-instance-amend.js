@@ -111,6 +111,7 @@ angular.module('ts5App')
     };
 
     function reallocateCashBagSuccess () {
+      getCashBags();
       $scope.closeMoveCashBagModal();
     }
 
@@ -120,20 +121,10 @@ angular.module('ts5App')
     }
 
     $scope.reallocateCashBag = function () {
-      var payload = {
-        cashBag: {
-          storeInstanceId: $scope.targetRecordForMoveCashBag.id,
-          bankReferenceNumber: $scope.cashBagToMove.bankRefNumber,
-          dailyExchangeRateId: $scope.cashBagToMove.dailyExchangeRateId,
-          cashBagNumber: $scope.cashBagToMove.cashBag,
-          scheduleDate: $scope.cashBagToMove.scheduleDate,
-          retailCompanyId: $scope.cashBagToMove.retailCompanyId,
-          scheduleNumber: $scope.cashBagToMove.scheduleNumber,
-          isSubmitted: $scope.cashBagToMove.isSubmitted
-        }
-      };
+      var cashBagId = $scope.cashBagToMove.id;
+      var storeInstanceId = $scope.targetRecordForMoveCashBag.id;
 
-      cashBagFactory.updateCashBag($scope.cashBagToMove.id, payload).then(reallocateCashBagSuccess, reallocateCashBagError);
+      cashBagFactory.reallocateCashBag(cashBagId, storeInstanceId).then(reallocateCashBagSuccess, reallocateCashBagError);
     };
 
     this.searchForScheduleSuccess = function (dataFromAPI) {
@@ -470,6 +461,9 @@ angular.module('ts5App')
           bankRefNumber: cashBag.bankReferenceNumber,
           isDeleted: cashBag.isDelete === 'true',
           isManual: cashBag.originationSource === 2,
+          scheduleNumber: cashBag.scheduleNumber,
+          scheduleDate: dateUtility.formatDateForApp(cashBag.scheduleDate),
+          isSubmitted: cashBag.isSubmitted,
           flightSectors: []
         };
       });
@@ -655,7 +649,7 @@ angular.module('ts5App')
     }
 
     function isCashBagDeleteAllowed(cashBag) {
-      return !(cashBag.bankReferenceNumber || cashBag.isSubmitted === 'true' || (cashBag.cashBagCurrencies && cashBag.cashBagCurrencies.length > 0));
+      return !(cashBag.bankReferenceNumber || cashBag.isSubmitted === true || (cashBag.cashBagCurrencies && cashBag.cashBagCurrencies.length > 0));
     }
 
     function setCashBagDeletionFlag(normalizedCashBag, cashBagFromAPI) {

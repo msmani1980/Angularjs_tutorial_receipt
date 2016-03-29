@@ -180,7 +180,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(getPostTripDeferred.promise);
     spyOn(transactionFactory, 'getTransactionList').and.returnValue(getTransactionListDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getStoreInstancesListDeferred.promise);
-    spyOn(cashBagFactory, 'updateCashBag').and.callThrough();
+    spyOn(cashBagFactory, 'reallocateCashBag').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'deleteCashBag').and.callThrough();
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
@@ -534,7 +534,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
     describe('reallocate cash bag', function () {
       it('should reallocate target cash bag to new store instance', function () {
-        scope.targetRecordForMoveCashBag = { id: 1 };
+        scope.targetRecordForMoveCashBag = { id: 2 };
         scope.cashBagToMove = {
           id: 1,
           bankRefNumber: '2',
@@ -547,22 +547,9 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         };
         scope.$digest();
 
-        var payload = {
-          cashBag: {
-            storeInstanceId: 1,
-            bankReferenceNumber: '2',
-            dailyExchangeRateId: 3,
-            cashBagNumber: '4',
-            scheduleDate: '2016/03/13',
-            retailCompanyId: 5,
-            scheduleNumber: '6',
-            isSubmitted: true
-          }
-        };
-
         scope.reallocateCashBag();
 
-        expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(scope.cashBagToMove.id, payload);
+        expect(cashBagFactory.reallocateCashBag).toHaveBeenCalledWith(1, 2);
       });
     });
   });
