@@ -135,19 +135,17 @@ angular.module('ts5App')
         var menuDescription = (menuMatch) ? menuMatch.menuName : '';
         item.menuList = (item.menuList.length) ? item.menuList + ', ' + menuDescription : menuDescription;
       });
+      
+      return item;
     }
 
     function setOutlierItemsList(eposItemsFromAPI) {
-      //var filteredItems = lodash.filter(eposItemsFromAPI, function (eposItem) {
-      //  var stockItemMatch = lodash.findWhere($scope.stockItemList, {itemMasterId: eposItem.itemMasterId});
-      //  return !stockItemMatch;
-      //});
-
-      angular.forEach(eposItemsFromAPI, function (eposItem) {
-        formatEposItem(eposItem);
+      var filteredEposItems = lodash.filter(eposItemsFromAPI, function (eposItem) {
+        var stockItemMatch = lodash.findWhere($scope.stockItemList, { itemMasterId: eposItem.itemMasterId });
+        return !stockItemMatch;
       });
 
-      $scope.outlierItemList = eposItemsFromAPI;
+      $scope.outlierItemList = filteredEposItems.map(formatEposItem);
     }
 
     function filterOutEposItemsFromStockItems(storeInstanceItems) {
