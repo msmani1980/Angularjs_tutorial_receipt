@@ -461,12 +461,14 @@
                   <th>Quantity Sold</th>
                   <th>Store Number</th>
                   <th>Date Opened</th>
+                  <th>Menus</th>
                 </tr>
-                <tr ng-repeat="item in eposItemList">
+                <tr ng-repeat="item in outlierItemList">
                   <td>{{ item.itemCode }} - {{ item.itemName }}</td>
                   <td>{{ item.quantity }}</td>
-                  <td>{{ item.storeInstanceId }}</td>
-                  <td>{{ item.storeInstanceId }}</td>
+                  <td>{{ item.storeNumber }}</td>
+                  <td>{{ item.scheduleDate }}</td>
+                  <td>{{ item.menuList }}</td>
                 </tr>
               </table>
             </accordion-group>

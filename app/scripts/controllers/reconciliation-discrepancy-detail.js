@@ -119,35 +119,64 @@ angular.module('ts5App')
       return uniqueItemList;
     }
 
-    function setEposItemList(eposItemList) {
-      $scope.eposItemOutliers = eposItemList;
+    function formatEposItem(item) {
+      var carrierInstanceMatch = lodash.findWhere($this.carrierInstanceList, { id: item.companyCarrierInstanceId });
+      if (!carrierInstanceMatch) {
+        return;
+      }
 
-    }
+      item.storeNumber = carrierInstanceMatch.storeNumber;
+      item.scheduleDate = dateUtility.formatDateForApp(carrierInstanceMatch.instanceDate);
+      item.menuList = '';
 
-    function setStockItemList(storeInstanceItemList, rawLMPStockData) {
-      reconciliationFactory.getStockItemCounts($routeParams.storeInstanceId).then(function (stockCountsFromAPI) {
-        var filteredItems = mergeItems(storeInstanceItemList, rawLMPStockData, stockCountsFromAPI.response);
-        $scope.stockItemList = lodash.map(filteredItems, setStockItem);
-        initLMPStockRevisions();
+      var menuArray = carrierInstanceMatch.menuIds.split(',');
+      angular.forEach(menuArray, function (menuId) {
+        var menuMatch = lodash.findWhere($this.menuList, { menuId: parseInt(menuId) });
+        var menuDescription = (menuMatch) ? menuMatch.menuName : '';
+        item.menuList = (item.menuList.length) ? item.menuList + ', ' + menuDescription : menuDescription;
       });
     }
 
-    function filterStockAndEposItems(storeInstanceItemListFromAPI, rawLMPStockData) {
+    function setOutlierItemsList(eposItemsFromAPI) {
+      //var filteredItems = lodash.filter(eposItemsFromAPI, function (eposItem) {
+      //  var stockItemMatch = lodash.findWhere($scope.stockItemList, {itemMasterId: eposItem.itemMasterId});
+      //  return !stockItemMatch;
+      //});
+
+      angular.forEach(eposItemsFromAPI, function (eposItem) {
+        formatEposItem(eposItem);
+      });
+
+      $scope.outlierItemList = eposItemsFromAPI;
+    }
+
+    function filterOutEposItemsFromStockItems(storeInstanceItems) {
       var stockItemList = [];
       var eposItemList = [];
-
-      angular.forEach(angular.copy(storeInstanceItemListFromAPI.response), function (item) {
-        var countTypeMatch = lodash.findWhere($this.countTypes, { id: item.countTypeId });
-        var countTypeName = (countTypeMatch) ? countTypeMatch.name : '';
-        if (countTypeName === 'FAClose') {
+      var faCloseId = lodash.findWhere($this.countTypes, { name: 'FAClose' }).id;
+      angular.forEach(storeInstanceItems, function (item) {
+        if (item.countTypeId === faCloseId) {
           eposItemList.push(item);
         } else {
           stockItemList.push(item);
         }
       });
 
-      setStockItemList(stockItemList, rawLMPStockData);
-      setEposItemList(eposItemList);
+      return {
+        stockItems: stockItemList,
+        eposItems: eposItemList
+      };
+    }
+
+    function setStockAndStockOutlierItemLists(storeInstanceListFromAPI, rawLMPStockData) {
+      var filteredStockAndEposItems = filterOutEposItemsFromStockItems(angular.copy(storeInstanceListFromAPI.response));
+
+      reconciliationFactory.getStockItemCounts($routeParams.storeInstanceId).then(function (stockCountsFromAPI) {
+        var filteredItems = mergeItems(filteredStockAndEposItems.stockItems, rawLMPStockData, stockCountsFromAPI.response);
+        $scope.stockItemList = lodash.map(filteredItems, setStockItem);
+        setOutlierItemsList(filteredStockAndEposItems.eposItems);
+        initLMPStockRevisions();
+      });
     }
 
     function showLoadingModal(text) {
@@ -169,7 +198,7 @@ angular.module('ts5App')
       var rawLMPStockData = angular.copy(stockData);
 
       reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId, { showEpos: true }).then(function (storeInstanceItemList) {
-        filterStockAndEposItems(storeInstanceItemList, rawLMPStockData);
+        setStockAndStockOutlierItemLists(storeInstanceItemList, rawLMPStockData);
       }, handleResponseError);
     }
 
@@ -457,7 +486,8 @@ angular.module('ts5App')
       setupPaymentReport(angular.copy(responseCollection[8]));
       setCashPreference(responseCollection[9]);
       setStatusList(responseCollection[10]);
-      $this.carrierInstanceList = angular.copy(responseCollection[11]);
+      $this.carrierInstanceList = angular.copy(responseCollection[11].response);
+      $this.menuList = angular.copy(responseCollection[12].menus);
 
       $scope.totalRevenue = {
         cashHandler: $scope.companyIsUsingCash ? formatAsCurrency(getCHRevenue($this.chRevenue)) : 0,
@@ -504,7 +534,9 @@ angular.module('ts5App')
         reconciliationFactory.getCompany(companyId),
         reconciliationFactory.getPaymentReport($routeParams.storeInstanceId),
         reconciliationFactory.getCompanyPreferences(),
-        reconciliationFactory.getStoreStatusList()
+        reconciliationFactory.getStoreStatusList(),
+        reconciliationFactory.getCarrierInstanceList($routeParams.storeInstanceId),
+        reconciliationFactory.getMenuList()
       ];
 
       $q.all(promiseArray).then(setupData, handleResponseError);

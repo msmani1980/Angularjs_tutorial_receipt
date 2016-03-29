@@ -142,11 +142,12 @@ angular.module('ts5App')
 
       var getCarrierInstanceList = function (storeInstanceId) {
         var payload = { storeInstanceId: storeInstanceId };
-        carrierInstancesService.getCarrierInstances(payload);
+        return carrierInstancesService.getCarrierInstances(payload);
       };
 
       var getMenuList = function (payload) {
-        return menuService.getMenuList(payload);
+        var payloadToSend = payload || {};
+        return menuService.getMenuList(payloadToSend, false);
       };
 
       return {
