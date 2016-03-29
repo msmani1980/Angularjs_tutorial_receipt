@@ -166,6 +166,22 @@ describe('Service: cashBagService', function () {
       });
     });
 
+    describe('reallocateCashBag', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.reallocateCashBag).toBe(true);
+      });
+
+      beforeEach(function () {
+        $httpBackend.whenPUT(/cash-bags\/95\/reallocate/).respond({ done: true });
+      });
+
+      it('should PUT data to cash bag API', function () {
+        cashBagService.reallocateCashBag(95, 2);
+        $httpBackend.expectPUT(/cash-bags\/95\/reallocate/);
+        $httpBackend.flush();
+      });
+    });
+
     describe('deleteCashBag', function() {
       it('should be accessible in the service', function () {
         expect(!!cashBagService.deleteCashBag).toBe(true);
