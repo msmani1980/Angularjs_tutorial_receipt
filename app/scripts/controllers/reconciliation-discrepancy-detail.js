@@ -636,6 +636,10 @@ angular.module('ts5App')
       return !!$scope.storeInstance && $scope.storeInstance.statusName !== 'Commission Paid';
     };
 
+    $scope.showOutlierItems = function () {
+      angular.element('#outlier-items').modal('show');
+    };
+
     $scope.showModal = function (modalName) {
       var modalNameToHeaderMap = {
         Virtual: 'Virtual Product Revenue',

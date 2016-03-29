@@ -444,33 +444,18 @@
                 </tr>
               </table>
 
-              <div class="row" ng-show="canEdit()">
+              <div class="row">
                 <div class="col-xs-12 text-right">
-                  <button ng-hide="editLMPStockTable" class="btn btn-primary" ng-click="initEditTable(true)"><span class="fa fa-pencil active"></span> Edit Table</button>
-                  <button ng-show="editLMPStockTable" class="btn btn-success" ng-click="saveStockItemCountsTable()"><span class="fa fa-check active"></span> Save All</button>
-                  <button ng-show="editLMPStockTable" class="btn btn-default" ng-click="cancelEditingTable(true)">Cancel</button>
+                  <button class="btn btn-info" ng-click="showOutlierItems()" ng-show="outlierItems.length">
+                    <span class="fa fa-th-list"></span> View Outlier Items
+                  </button>
+                  <span ng-show="canEdit()">
+                    <button ng-hide="editLMPStockTable" class="btn btn-primary" ng-click="initEditTable(true)"><span class="fa fa-pencil active"></span> Edit Table</button>
+                    <button ng-show="editLMPStockTable" class="btn btn-success" ng-click="saveStockItemCountsTable()"><span class="fa fa-check active"></span> Save All</button>
+                    <button ng-show="editLMPStockTable" class="btn btn-default" ng-click="cancelEditingTable(true)">Cancel</button>
+                  </span>
                 </div>
               </div>
-
-              <hr>
-
-              <h4>Outlier Items</h4>
-              <table class="table table-bordered">
-                <tr class="active">
-                  <th>Retail Item Details</th>
-                  <th>Quantity Sold</th>
-                  <th>Store Number</th>
-                  <th>Date Opened</th>
-                  <th>Menus</th>
-                </tr>
-                <tr ng-repeat="item in outlierItemList">
-                  <td>{{ item.itemCode }} - {{ item.itemName }}</td>
-                  <td>{{ item.quantity }}</td>
-                  <td>{{ item.storeNumber }}</td>
-                  <td>{{ item.scheduleDate }}</td>
-                  <td>{{ item.menuList }}</td>
-                </tr>
-              </table>
             </accordion-group>
           </accordion>
 
@@ -618,6 +603,37 @@
 
     </div>
   </div>
+</div>
+
+<div class="modal fade" id="outlier-items">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Outlier Items</h3>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <tr class="active">
+            <th>Retail Item Details</th>
+            <th>Quantity Sold</th>
+            <th>Store Number</th>
+            <th>Date Opened</th>
+            <th>Menus</th>
+          </tr>
+          <tr ng-repeat="item in outlierItemList">
+            <td>{{ item.itemCode }} - {{ item.itemName }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.storeNumber }}</td>
+            <td>{{ item.scheduleDate }}</td>
+            <td>{{ item.menuList }}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>xw
 </div>
 
 <div class="modal fade" id="action-confirm">
