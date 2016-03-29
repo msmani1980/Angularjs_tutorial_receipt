@@ -231,9 +231,8 @@ describe('Factory: reconciliationFactory', function () {
     });
 
     it('should call menuService getMenuList on getMenuList', function () {
-      var payload = { fakeKey: 'fakeValue' };
-      reconciliationFactory.getMenuList(payload);
-      expect(menuService.getMenuList).toHaveBeenCalledWith(payload);
+      reconciliationFactory.getMenuList({});
+      expect(menuService.getMenuList).toHaveBeenCalled();
     });
 
     describe('getCHRevenue', function () {

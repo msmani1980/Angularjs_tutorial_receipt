@@ -135,7 +135,7 @@ angular.module('ts5App')
         var menuDescription = (menuMatch) ? menuMatch.menuName : '';
         item.menuList = (item.menuList.length) ? item.menuList + ', ' + menuDescription : menuDescription;
       });
-      
+
       return item;
     }
 
