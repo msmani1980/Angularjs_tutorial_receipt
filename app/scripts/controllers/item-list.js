@@ -8,7 +8,7 @@
  * Contoller for the Retail Items List View
  */
 angular.module('ts5App')
-  .controller('ItemListCtrl', function($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter) {
+  .controller('ItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter) {
 
     var $this = this;
     this.meta = {
@@ -32,11 +32,11 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-    this.filterItems = function() {
+    this.filterItems = function () {
       return $filter('filter')($scope.itemsList, $scope.search);
     };
 
-    this.generateItemQuery = function() {
+    this.generateItemQuery = function () {
       var query = {
         sortBy: 'ASC',
         sortOn: 'itemName',
@@ -60,10 +60,10 @@ angular.module('ts5App')
       return query;
     };
 
-    this.createNestedItemsList = function(itemList) {
+    this.createNestedItemsList = function (itemList) {
       var newItemList = [];
       var currentMasterId = -1;
-      angular.forEach(itemList, function(item) {
+      angular.forEach(itemList, function (item) {
         if (item.itemMasterId === currentMasterId) {
           var lastIndex = newItemList.length - 1;
           newItemList[lastIndex].versions.push(item);
@@ -77,14 +77,14 @@ angular.module('ts5App')
         }
       });
 
-      angular.forEach(newItemList, function(item) {
+      angular.forEach(newItemList, function (item) {
         item.versions.sort($this.sortItemVersions);
       });
 
       return newItemList;
     };
 
-    this.appendItemsToList = function(itemListFromAPI) {
+    this.appendItemsToList = function (itemListFromAPI) {
       $this.meta.count = $this.meta.count || itemListFromAPI.meta.count;
       var itemList = angular.copy(itemListFromAPI.retailItems);
       var nestedItemList = $this.createNestedItemsList(itemList);
@@ -103,23 +103,23 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     }
 
-    $scope.loadItems = function() {
+    $scope.loadItems = function () {
       getItemsList();
     };
 
-    this.getItemTypesList = function() {
-      itemsFactory.getItemTypesList().then(function(itemTypes) {
+    this.getItemTypesList = function () {
+      itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
       });
     };
 
-    this.getSalesCategoriesList = function() {
-      companiesFactory.getSalesCategoriesList(function(data) {
+    this.getSalesCategoriesList = function () {
+      companiesFactory.getSalesCategoriesList(function (data) {
         $scope.salesCategories = data.salesCategories;
       });
     };
 
-    this.findItemIndex = function(itemId) {
+    this.findItemIndex = function (itemId) {
       var itemIndex = 0;
       for (var key in $scope.itemsList) {
         var item = $scope.itemsList[key];
@@ -132,7 +132,7 @@ angular.module('ts5App')
       return itemIndex;
     };
 
-    this.sortItemVersions = function(itemA, itemB) {
+    this.sortItemVersions = function (itemA, itemB) {
       if (itemA.startDate === itemB.startDate && itemA.endDate === itemB.endDate) {
         return 0;
       }
@@ -146,7 +146,7 @@ angular.module('ts5App')
       return $this.compareInactiveDates(itemA, itemB);
     };
 
-    this.compareInactiveDates = function(itemA, itemB) {
+    this.compareInactiveDates = function (itemA, itemB) {
       if ((dateUtility.isAfterToday(itemA.startDate) && dateUtility.isAfterToday(itemB.startDate)) ||
         (dateUtility.isYesterdayOrEarlier(itemA.endDate) && dateUtility.isYesterdayOrEarlier(itemB.endDate))) {
         return $this.sortByDateCloserToToday(itemA.startDate, itemB.startDate);
@@ -155,42 +155,45 @@ angular.module('ts5App')
       }
     };
 
-    this.sortByDateCloserToToday = function(dateA, dateB) {
+    this.sortByDateCloserToToday = function (dateA, dateB) {
       var today = moment();
       var diffA = moment(dateA, 'YYYY-MM-DD').diff(today, 'days');
       var diffB = moment(dateB, 'YYYY-MM-DD').diff(today, 'days');
       return (Math.abs(diffA) < Math.abs(diffB)) ? -1 : 1;
     };
 
-    this.sortByDateFarthestInFuture = function(dateA, dateB) {
+    this.sortByDateFarthestInFuture = function (dateA, dateB) {
       return moment(dateB, 'YYYY-MM-DD').diff(moment(dateA, 'YYYY-MM-DD'), 'days');
     };
 
-    $scope.removeRecord = function(itemId) {
+    $scope.removeRecord = function (itemId) {
+
       $this.displayLoadingModal('Removing Retail Item');
       $this.closeAccordian();
 
-      itemsFactory.removeItem(itemId).then(function() {
+      itemsFactory.removeItem(itemId).then(function () {
+        $this.offSet = 0;
+        $scope.itemsList = [];
         $this.hideLoadingModal();
         getItemsList();
       });
     };
 
-    this.parseDate = function(date) {
+    this.parseDate = function (date) {
       return Date.parse(date);
     };
 
-    this.isItemActive = function(item) {
+    this.isItemActive = function (item) {
       return (dateUtility.isTodayOrEarlier(item.startDate) && dateUtility.isAfterToday(item.endDate));
     };
 
-    $scope.isDateActive = function(date) {
+    $scope.isDateActive = function (date) {
       return dateUtility.isTodayOrEarlier(date);
     };
 
-    $scope.doesActiveOrFutureVersionExist = function(item) {
+    $scope.doesActiveOrFutureVersionExist = function (item) {
       var validVersionExists = false;
-      angular.forEach(item.versions, function(version) {
+      angular.forEach(item.versions, function (version) {
         if (!dateUtility.isYesterdayOrEarlier(version.endDate)) {
           validVersionExists = true;
         }
@@ -199,7 +202,7 @@ angular.module('ts5App')
       return validVersionExists;
     };
 
-    $scope.searchRecords = function() {
+    $scope.searchRecords = function () {
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -209,7 +212,7 @@ angular.module('ts5App')
       getItemsList();
     };
 
-    $scope.clearSearchFilters = function() {
+    $scope.clearSearchFilters = function () {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       var filters = $scope.search;
@@ -220,15 +223,15 @@ angular.module('ts5App')
       $scope.itemsList = [];
     };
 
-    $scope.hasSubVersions = function(item) {
+    $scope.hasSubVersions = function (item) {
       return (item.versions.length > 1);
     };
 
-    $scope.isOpen = function(item) {
+    $scope.isOpen = function (item) {
       return (item.itemMasterId === $scope.openVersionId);
     };
 
-    $scope.toggleVersionVisibility = function(item) {
+    $scope.toggleVersionVisibility = function (item) {
       if (!$scope.hasSubVersions(item)) {
         return;
       }
@@ -258,26 +261,26 @@ angular.module('ts5App')
       return (check.length);
     }
 
-    $scope.showClearButton = function() {
+    $scope.showClearButton = function () {
       var d = $scope.dateRange;
       return (searchIsDirty() || hasLength(d.startDate) || hasLength(d.endDate) || hasLength($scope.itemsList));
     };
 
-    this.openAccordian = function(item) {
+    this.openAccordian = function (item) {
       angular.element('#item-' + item.itemMasterId).addClass('open-accordion');
     };
 
-    this.closeAccordian = function() {
+    this.closeAccordian = function () {
       angular.element('#item-' + $scope.openVersionId).removeClass('open-accordion');
       $scope.openVersionId = -1;
 
     };
 
-    this.displayLoadingModal = function(loadingText) {
+    this.displayLoadingModal = function (loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
     };
 
-    this.hideLoadingModal = function() {
+    this.hideLoadingModal = function () {
       angular.element('#loading').modal('hide');
     };
 
