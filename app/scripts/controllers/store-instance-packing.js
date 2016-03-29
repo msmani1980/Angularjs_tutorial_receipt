@@ -661,7 +661,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       angular.forEach(items, function(item) {
         var ePosItem = findItemOnEposList(items, item);
         var itemMatch = $this.findItemMatch(item);
-        if (!itemMatch) {
+        if (!itemMatch && item.countTypeName !== 'FAClose') {
           var newItem = $this.createFreshItem(item, false);
           if ($routeParams.action === 'end-instance') {
             $scope.offloadListItems.push(newItem);
@@ -693,7 +693,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         var ePosItem = findItemOnEposList(items, item);
         var itemMatch;
 
-        if ((!pickListMatch && !offloadListMatch) || (!offloadListMatch && item.countTypeName === 'Offload')) {
+        if ((!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') || (!offloadListMatch && item.countTypeName === 'Offload')) {
           var newItem = $this.createFreshItem(item, false);
           newItem.isInOffload = true;
           $scope.offloadListItems.push(newItem);
