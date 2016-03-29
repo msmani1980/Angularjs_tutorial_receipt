@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:6 */
 
 /**
  * @ngdoc function
@@ -574,6 +575,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.setQuantityByType = function(itemFromAPI, itemToSet, isFromRedispatchInstance) {
+      if (!itemToSet) {
+        return;
+      }
+
       var quantityType = $this.getItemQuantityType(itemFromAPI);
 
       if (quantityType === 'picked' && !isFromRedispatchInstance) {
@@ -673,7 +678,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
 
         $this.setQuantityByType(item, itemMatch, false);
-        if (!ignoreEposData && ePosItem) {
+        if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
       });
@@ -700,13 +705,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           itemMatch = newItem;
         } else if (offloadListMatch) {
           itemMatch = offloadListMatch;
-        } else {
+        } else if (pickListMatch) {
           pickListMatch.shouldDisplayOffloadData = true;
           itemMatch = pickListMatch;
         }
 
         $this.setQuantityByType(item, itemMatch, true);
-        if (!ignoreEposData && ePosItem) {
+        if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
       });
