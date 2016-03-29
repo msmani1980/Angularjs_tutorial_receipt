@@ -177,7 +177,7 @@
               <label>Employee ID's *</label>
               <ui-select required name="employeeIds" multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap" ng-disabled="readOnly">
                 <ui-select-match placeholder="Select Employee IDs from list">{{ $item.employeeIdentifier }}</ui-select-match>
-                <ui-select-choices repeat="employee in employees | filter: $select.search">
+                <ui-select-choices repeat="employee in employees | filter: $select.search | limitTo:50">
                   {{employee.employeeIdentifier}} ({{ employee.lastName }}, {{ employee.firstName }})
                 </ui-select-choices>
               </ui-select>

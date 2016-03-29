@@ -30,9 +30,9 @@ angular.module('ts5App', [
   'frapontillo.bootstrap-switch',
   'sprintf'
 ]).factory('defaultData', [
-  function () {
+  function() {
     return {
-      request: function (config) {
+      request: function(config) {
         if (angular.isUndefined(config.data)) {
           config.data = {
             requestTimestamp: new Date().getTime()
@@ -61,9 +61,9 @@ angular.module('ts5App', [
   ],
   price: /^\$?\s?[0-9\,]+(\.\d{0,4})?$/,
   url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
-}).config(['$localStorageProvider', function ($localStorageProvider) {
+}).config(['$localStorageProvider', function($localStorageProvider) {
   $localStorageProvider.setKeyPrefix('TS5-');
-}]).config(function ($routeProvider, $httpProvider) {
+}]).config(function($routeProvider, $httpProvider) {
   $httpProvider.interceptors.push('defaultData');
   $httpProvider.interceptors.push('httpSessionInterceptor');
   $routeProvider.when('/', {
@@ -223,7 +223,7 @@ angular.module('ts5App', [
     templateUrl: 'views/retail-company-exchange-rate-setup.html',
     controller: 'RetailCompanyExchangeRateSetupCtrl'
   }).when('/store-instance-review/:action/:storeId?', {
-    templateUrl: function (routeParameters) {
+    templateUrl: function(routeParameters) {
       if (routeParameters.action === 'redispatch') {
         return 'views/store-instance-redispatch-review.html';
       }
@@ -316,13 +316,16 @@ angular.module('ts5App', [
   }).when('/manual-ecs', {
     templateUrl: 'views/manual-ECS.html',
     controller: 'ManualECSCtrl'
+  }).when('/manual-epos-entry', {
+    templateUrl: 'views/manual-epos-entry.html',
+    controller: 'ManualEposEntryCtrl'
   }).otherwise({
     redirectTo: '/'
   });
-}).run(function ($rootScope, regexp, $location, socketIO) {
+}).run(function($rootScope, regexp, $location, socketIO) {
   $rootScope.regexp = regexp;
 
-  socketIO.on('redirectTo', function (route) {
+  socketIO.on('redirectTo', function(route) {
     $location.path(route);
   });
 });

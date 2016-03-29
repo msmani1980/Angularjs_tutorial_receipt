@@ -1,0 +1,37 @@
+<accordion class="accordion">
+  <accordion-group ng-init="status.items.open=false" is-open="status.items.open">
+    <accordion-heading class="accordion-heading">
+      <i ng-class="{'fa-chevron-down': status.items.open, 'fa-chevron-right': !status.items.open}" class="fa"></i>
+      Promotions
+    </accordion-heading>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <label>Filter by Item Name</label>
+        <input type="text" class="form-control" ng-model="filter" placeholder="Type an Item Name"/>
+      </div>
+    </div>
+
+    <table class="table table-bordered">
+      <tr class="active">
+        <th>Header</th>
+      </tr>
+      <tr>
+        <td>
+        </td>
+      </tr>
+      <tr ng-show="filteredLMPStock.length === 0">
+        <td colspan="8" class="text-center"><span class="fa fa-exclamation-circle text-danger"></span>
+          We're sorry, there are no items that match the given criteria
+        </td>
+      </tr>
+    </table>
+
+    <div class="row" ng-show="">
+      <div class="col-xs-12 text-right">
+        <button class="btn btn-success" ng-click="">Verify</button>
+      </div>
+    </div>
+
+  </accordion-group>
+</accordion>

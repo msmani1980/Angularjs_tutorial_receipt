@@ -75,6 +75,10 @@ angular.module('ts5App')
       return cashBagService.createCashBag(payload);
     };
 
+    var reallocateCashBag = function (cashBagId, storeInstanceId) {
+      return cashBagService.reallocateCashBag(cashBagId, storeInstanceId);
+    };
+
     var getCompanyCurrencies = function () {
       return currenciesService.getCompanyCurrencies();
     };
@@ -100,6 +104,7 @@ angular.module('ts5App')
       updateCashBag: updateCashBag,
       deleteCashBag: deleteCashBag,
       createCashBag: createCashBag,
+      reallocateCashBag: reallocateCashBag,
       getCompanyCurrencies: getCompanyCurrencies,
       getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
       getSchedulesList: getSchedulesList,
