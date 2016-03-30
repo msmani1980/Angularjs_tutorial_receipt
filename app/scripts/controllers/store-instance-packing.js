@@ -573,9 +573,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return '';
     };
 
-    this.setQuantityByType = function(itemFromAPI, itemToSet, isFromRedispatchInstance) {
+    this.setQuantityByTypeConditionals = function(itemFromAPI, itemToSet, isFromRedispatchInstance) {
       var quantityType = $this.getItemQuantityType(itemFromAPI);
-
       if (quantityType === 'picked' && !isFromRedispatchInstance) {
         itemToSet.pickedQuantity = itemFromAPI.quantity.toString();
         itemToSet.oldPickedQuantity = itemFromAPI.quantity;
@@ -594,6 +593,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemToSet.oldUllageReason = itemFromAPI.ullageReasonCode;
         itemToSet.ullageId = itemFromAPI.id;
       }
+    };
+
+    this.setQuantityByType = function(itemFromAPI, itemToSet, isFromRedispatchInstance) {
+      if (!itemToSet) {
+        return;
+      }
+
+      $this.setQuantityByTypeConditionals(itemFromAPI, itemToSet, isFromRedispatchInstance);
 
       itemToSet.countTypeId = itemFromAPI.countTypeId;
     };
@@ -661,7 +668,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       angular.forEach(items, function(item) {
         var ePosItem = findItemOnEposList(items, item);
         var itemMatch = $this.findItemMatch(item);
-        if (!itemMatch) {
+        if (!itemMatch && item.countTypeName !== 'FAClose') {
           var newItem = $this.createFreshItem(item, false);
           if ($routeParams.action === 'end-instance') {
             $scope.offloadListItems.push(newItem);
@@ -673,16 +680,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
 
         $this.setQuantityByType(item, itemMatch, false);
-        if (!ignoreEposData && ePosItem) {
+        if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
       });
     };
 
-    this.mergeRedispatchItems = function(items) {
-      var ignoreEposData = setCountTypeNameAndCheckEpos(items);
-      items = lodash.sortBy(items, 'countTypeName');
+    this.mergeRedispatchItemsLoopConditional = function(item, pickListMatch, offloadListMatch) {
+      return (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') || (!offloadListMatch &&
+        item.countTypeName === 'Offload');
+    };
 
+    this.mergeRedispatchItemsLoop = function(items, ignoreEposData) {
       angular.forEach(items, function(item) {
         var pickListMatch = lodash.findWhere($scope.pickListItems, {
           itemMasterId: item.itemMasterId
@@ -693,23 +702,29 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         var ePosItem = findItemOnEposList(items, item);
         var itemMatch;
 
-        if ((!pickListMatch && !offloadListMatch) || (!offloadListMatch && item.countTypeName === 'Offload')) {
+        if ($this.mergeRedispatchItemsLoopConditional(item, pickListMatch, offloadListMatch)) {
           var newItem = $this.createFreshItem(item, false);
           newItem.isInOffload = true;
           $scope.offloadListItems.push(newItem);
           itemMatch = newItem;
         } else if (offloadListMatch) {
           itemMatch = offloadListMatch;
-        } else {
+        } else if (pickListMatch) {
           pickListMatch.shouldDisplayOffloadData = true;
           itemMatch = pickListMatch;
         }
 
         $this.setQuantityByType(item, itemMatch, true);
-        if (!ignoreEposData && ePosItem) {
+        if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
       });
+    };
+
+    this.mergeRedispatchItems = function(items) {
+      var ignoreEposData = setCountTypeNameAndCheckEpos(items);
+      items = lodash.sortBy(items, 'countTypeName');
+      $this.mergeRedispatchItemsLoop(items, ignoreEposData);
     };
 
     this.mergeAllItems = function(responseCollection) {

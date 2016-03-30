@@ -72,7 +72,9 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getMenuList = function (payload) {
+    var getMenuList = function (payload, shouldLimit) {
+      shouldLimit = angular.isDefined(shouldLimit) ? shouldLimit : true;
+      requestParameters.limit = (shouldLimit) ? 50 : 0;
       return requestResource.getMenuList(payload).$promise;
     };
 

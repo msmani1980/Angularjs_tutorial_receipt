@@ -119,10 +119,60 @@ angular.module('ts5App')
       return uniqueItemList;
     }
 
-    function setStockItemList(storeInstanceItemList, rawLMPStockData) {
+    function formatEposItem(item) {
+      var carrierInstanceMatch = lodash.findWhere($this.carrierInstanceList, { id: item.companyCarrierInstanceId });
+      if (!carrierInstanceMatch) {
+        return;
+      }
+
+      item.storeNumber = carrierInstanceMatch.storeNumber;
+      item.scheduleDate = dateUtility.formatDateForApp(carrierInstanceMatch.instanceDate);
+      item.menuList = '';
+
+      var menuArray = carrierInstanceMatch.menuIds.split(',');
+      angular.forEach(menuArray, function (menuId) {
+        var menuMatch = lodash.findWhere($this.menuList, { menuId: parseInt(menuId) });
+        var menuDescription = (menuMatch) ? menuMatch.menuName : '';
+        item.menuList = (item.menuList.length) ? item.menuList + ', ' + menuDescription : menuDescription;
+      });
+
+      return item;
+    }
+
+    function setOutlierItemsList(eposItemsFromAPI) {
+      var filteredEposItems = lodash.filter(eposItemsFromAPI, function (eposItem) {
+        var stockItemMatch = lodash.findWhere($scope.stockItemList, { itemMasterId: eposItem.itemMasterId });
+        return !stockItemMatch;
+      });
+
+      $scope.outlierItemList = filteredEposItems.map(formatEposItem);
+    }
+
+    function filterOutEposItemsFromStockItems(storeInstanceItems) {
+      var stockItemList = [];
+      var eposItemList = [];
+      var faCloseId = lodash.findWhere($this.countTypes, { name: 'FAClose' }).id;
+      angular.forEach(storeInstanceItems, function (item) {
+        if (item.countTypeId === faCloseId) {
+          eposItemList.push(item);
+        } else {
+          stockItemList.push(item);
+        }
+      });
+
+      return {
+        stockItems: stockItemList,
+        eposItems: eposItemList
+      };
+    }
+
+    function setStockAndStockOutlierItemLists(storeInstanceListFromAPI, rawLMPStockData) {
+      var filteredStockAndEposItems = filterOutEposItemsFromStockItems(angular.copy(storeInstanceListFromAPI.response));
+
       reconciliationFactory.getStockItemCounts($routeParams.storeInstanceId).then(function (stockCountsFromAPI) {
-        var filteredItems = mergeItems(storeInstanceItemList.response, rawLMPStockData, stockCountsFromAPI.response);
+        var filteredItems = mergeItems(filteredStockAndEposItems.stockItems, rawLMPStockData, stockCountsFromAPI.response);
         $scope.stockItemList = lodash.map(filteredItems, setStockItem);
+        setOutlierItemsList(filteredStockAndEposItems.eposItems);
         initLMPStockRevisions();
       });
     }
@@ -145,8 +195,8 @@ angular.module('ts5App')
     function setStockData(stockData) {
       var rawLMPStockData = angular.copy(stockData);
 
-      reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId).then(function (storeInstanceItemList) {
-        setStockItemList(storeInstanceItemList, rawLMPStockData);
+      reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId, { showEpos: true }).then(function (storeInstanceItemList) {
+        setStockAndStockOutlierItemLists(storeInstanceItemList, rawLMPStockData);
       }, handleResponseError);
     }
 
@@ -434,6 +484,8 @@ angular.module('ts5App')
       setupPaymentReport(angular.copy(responseCollection[8]));
       setCashPreference(responseCollection[9]);
       setStatusList(responseCollection[10]);
+      $this.carrierInstanceList = angular.copy(responseCollection[11].response);
+      $this.menuList = angular.copy(responseCollection[12].menus);
 
       $scope.totalRevenue = {
         cashHandler: $scope.companyIsUsingCash ? formatAsCurrency(getCHRevenue($this.chRevenue)) : 0,
@@ -480,7 +532,9 @@ angular.module('ts5App')
         reconciliationFactory.getCompany(companyId),
         reconciliationFactory.getPaymentReport($routeParams.storeInstanceId),
         reconciliationFactory.getCompanyPreferences(),
-        reconciliationFactory.getStoreStatusList()
+        reconciliationFactory.getStoreStatusList(),
+        reconciliationFactory.getCarrierInstanceList($routeParams.storeInstanceId),
+        reconciliationFactory.getMenuList()
       ];
 
       $q.all(promiseArray).then(setupData, handleResponseError);
@@ -580,6 +634,10 @@ angular.module('ts5App')
 
     $scope.canEdit = function () {
       return !!$scope.storeInstance && $scope.storeInstance.statusName !== 'Commission Paid';
+    };
+
+    $scope.showOutlierItems = function () {
+      angular.element('#outlier-items').modal('show');
     };
 
     $scope.showModal = function (modalName) {

@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .factory('reconciliationFactory',
     function ($q, storeInstanceService, storesService, stationsService, reconciliationService, itemTypesService, recordsService, currenciesService, companyService, itemsService,
-              promotionsService, companyPreferencesService, cashBagService) {
+              promotionsService, companyPreferencesService, cashBagService, carrierInstancesService, menuService) {
 
       function getStoreStatusList(payload) {
         return recordsService.getStoreStatusList(payload);
@@ -24,8 +24,8 @@ angular.module('ts5App')
         return reconciliationService.getPaymentReport(storeInstanceId, cashBagNumber);
       }
 
-      function getStoreInstanceItemList(storeInstanceId) {
-        return storeInstanceService.getStoreInstanceItemList(storeInstanceId);
+      function getStoreInstanceItemList(storeInstanceId, payload) {
+        return storeInstanceService.getStoreInstanceItemList(storeInstanceId, payload);
       }
 
       function getCountTypes() {
@@ -140,6 +140,16 @@ angular.module('ts5App')
         return cashBagService.updateCashBagCurrency(currencyId, payload);
       };
 
+      var getCarrierInstanceList = function (storeInstanceId) {
+        var payload = { storeInstanceId: storeInstanceId };
+        return carrierInstancesService.getCarrierInstances(payload);
+      };
+
+      var getMenuList = function (payload) {
+        var payloadToSend = payload || {};
+        return menuService.getMenuList(payloadToSend, false);
+      };
+
       return {
         getStoreInstanceDetails: getStoreInstanceDetails,
         getStoreInstanceItemList: getStoreInstanceItemList,
@@ -163,6 +173,8 @@ angular.module('ts5App')
         getCompanyPreferences: getCompanyPreferences,
         getStockItemCounts: getStockItemCounts,
         saveStockItemsCounts: saveStockItemsCounts,
-        saveCashBagCurrency: saveCashBagCurrency
+        saveCashBagCurrency: saveCashBagCurrency,
+        getCarrierInstanceList: getCarrierInstanceList,
+        getMenuList: getMenuList
       };
     });

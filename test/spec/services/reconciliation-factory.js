@@ -8,6 +8,8 @@ describe('Factory: reconciliationFactory', function () {
   beforeEach(module('served/station.json'));
   beforeEach(module('served/item-types.json'));
   beforeEach(module('served/payment-report.json'));
+  beforeEach(module('served/carrier-instance-list.json'));
+  beforeEach(module('served/menus.json'));
 
   var reconciliationFactory;
 
@@ -42,6 +44,14 @@ describe('Factory: reconciliationFactory', function () {
   var getEPOSCreditCardRevenueDeferred;
   var getEPOSDiscountRevenueDeferred;
 
+  var carrierInstancesService;
+  var getCarrierInstancesDeferred;
+  var getCarrierInstancesResponseJSON;
+
+  var menuService;
+  var getMenuListDeferred;
+  var getMenuListResponseJSON;
+
   var putSaveStockItemsCountsDeferred;
 
   var cashBagService;
@@ -50,13 +60,16 @@ describe('Factory: reconciliationFactory', function () {
   var scope;
 
   beforeEach(inject(function (_reconciliationFactory_, $injector, $q, $rootScope) {
-    inject(function (_servedStoreInstance_, _servedStore_, _servedStation_, _servedItemTypes_, _servedPaymentReport_) {
+    inject(function (_servedStoreInstance_, _servedStore_, _servedStation_, _servedItemTypes_,
+                     _servedPaymentReport_, _servedCarrierInstanceList_, _servedMenus_) {
       storeInstanceJSON = _servedStoreInstance_;
       getStoreJSON = _servedStore_;
       getStationJSON = _servedStation_;
       getStockTotalsJSON = {};
       getItemTypesListJSON = _servedItemTypes_;
       getPaymentReportJSON = _servedPaymentReport_;
+      getCarrierInstancesResponseJSON = _servedCarrierInstanceList_;
+      getMenuListResponseJSON = _servedMenus_;
     });
 
     storeInstanceService = $injector.get('storeInstanceService');
@@ -65,6 +78,8 @@ describe('Factory: reconciliationFactory', function () {
     reconciliationService = $injector.get('reconciliationService');
     itemTypesService = $injector.get('itemTypesService');
     cashBagService = $injector.get('cashBagService');
+    carrierInstancesService = $injector.get('carrierInstancesService');
+    menuService = $injector.get('menuService');
 
     getStoreInstanceDeferred = $q.defer();
     getStoreInstanceDeferred.resolve(storeInstanceJSON);
@@ -123,6 +138,14 @@ describe('Factory: reconciliationFactory', function () {
     putSaveCashBagCurrencyDeferred = $q.defer();
     putSaveCashBagCurrencyDeferred.resolve(200, {});
     spyOn(cashBagService, 'updateCashBagCurrency').and.returnValue(putSaveCashBagCurrencyDeferred.promise);
+
+    getCarrierInstancesDeferred = $q.defer();
+    getCarrierInstancesDeferred.resolve(200, {});
+    spyOn(carrierInstancesService, 'getCarrierInstances').and.returnValue(getCarrierInstancesResponseJSON.promise);
+
+    getMenuListDeferred = $q.defer();
+    getMenuListDeferred.resolve(200, {});
+    spyOn(menuService, 'getMenuList').and.returnValue(getMenuListResponseJSON.promise);
 
     scope = $rootScope.$new();
     reconciliationFactory = _reconciliationFactory_;
@@ -188,16 +211,28 @@ describe('Factory: reconciliationFactory', function () {
     });
 
     it('should call reconciliatioNService saveStockItemsCounts on saveStockItemsCounts', function () {
-      var payload = {storeInstanceId: 1};
+      var payload = { storeInstanceId: 1 };
       reconciliationFactory.saveStockItemsCounts(payload);
       expect(reconciliationService.saveStockItemsCounts).toHaveBeenCalledWith(payload);
     });
 
     it('should call cashBagService updateCashBagCurrency on saveCashBagCurrency', function () {
       var cashBagId = 1;
-      var payload = {fakeKey: 'fakeValue'};
+      var payload = { fakeKey: 'fakeValue' };
       reconciliationFactory.saveCashBagCurrency(cashBagId, payload);
       expect(cashBagService.updateCashBagCurrency).toHaveBeenCalledWith(cashBagId, payload);
+    });
+
+    it('should call carrierInstancesService getCarrierInstanceList on getCarrierInstances', function () {
+      var storeInstanceId = 1;
+      var expectedPayload = { storeInstanceId: storeInstanceId };
+      reconciliationFactory.getCarrierInstanceList(storeInstanceId);
+      expect(carrierInstancesService.getCarrierInstances).toHaveBeenCalledWith(expectedPayload);
+    });
+
+    it('should call menuService getMenuList on getMenuList', function () {
+      reconciliationFactory.getMenuList({});
+      expect(menuService.getMenuList).toHaveBeenCalled();
     });
 
     describe('getCHRevenue', function () {
