@@ -183,7 +183,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="storeInstance in storeInstances" ng-class="getClassForAttribute('portal', 'row', storeInstance)">
+          <tr ng-repeat="storeInstance in storeInstances | orderBy: ['storeNumber', '-scheduleDate']" ng-class="getClassForAttribute('portal', 'row', storeInstance)">
             <td>{{ storeInstance.storeNumber }}</td>
             <td>{{ storeInstance.scheduleDate }}</td>
             <td>{{ storeInstance.stationCode }}</td>
@@ -216,7 +216,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="eposInstance in carrierInstances | orderBy: 'storeNumber'" ng-class="getClassForAttribute('epos', 'row', eposInstance)">
+          <tr ng-repeat="eposInstance in carrierInstances | orderBy: ['storeNumber', '-instanceDate']" ng-class="getClassForAttribute('epos', 'row', eposInstance)">
             <td>{{ eposInstance.storeNumber }}</td>
             <td>{{ eposInstance.instanceDate }}</td>
             <td>{{ eposInstance.departureStation }}</td>

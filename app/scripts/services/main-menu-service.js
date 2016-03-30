@@ -346,7 +346,7 @@ angular.module('ts5App')
             package: 'RECONCILIATION',
             role: 'RECONCILIATION'
           }, {
-            name: 'Manual ECS Relationships',
+            name: 'Relate ePOS Created Store',
             route: '/#/manual-ecs',
             icon: 'icon-manage-schedule',
             className: 'dashboard-manualECS',
