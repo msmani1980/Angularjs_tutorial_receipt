@@ -221,7 +221,7 @@ angular.module('ts5App')
         var paperAmount = cashBag.paperAmountManual;
         var coinAmount = cashBag.coinAmountManual;
         var convertedPaperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
-        var convertdCoinAmount = cashBag.coinAmountManualCh;
+        var convertdCoinAmount = cashBag.coinAmountManualCh || cashBag.coinAmountManualCHBank;
         var totalBank = convertedPaperAmount + convertdCoinAmount;
         var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
