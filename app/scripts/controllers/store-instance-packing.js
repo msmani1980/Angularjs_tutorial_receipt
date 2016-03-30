@@ -1,5 +1,4 @@
 'use strict';
-/*jshint maxcomplexity:6 */
 
 /**
  * @ngdoc function
@@ -574,13 +573,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return '';
     };
 
-    this.setQuantityByType = function(itemFromAPI, itemToSet, isFromRedispatchInstance) {
-      if (!itemToSet) {
-        return;
-      }
-
+    this.setQuantityByTypeConditionals = function(itemFromAPI, itemToSet, isFromRedispatchInstance) {
       var quantityType = $this.getItemQuantityType(itemFromAPI);
-
       if (quantityType === 'picked' && !isFromRedispatchInstance) {
         itemToSet.pickedQuantity = itemFromAPI.quantity.toString();
         itemToSet.oldPickedQuantity = itemFromAPI.quantity;
@@ -599,6 +593,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemToSet.oldUllageReason = itemFromAPI.ullageReasonCode;
         itemToSet.ullageId = itemFromAPI.id;
       }
+    };
+
+    this.setQuantityByType = function(itemFromAPI, itemToSet, isFromRedispatchInstance) {
+      if (!itemToSet) {
+        return;
+      }
+
+      $this.setQuantityByTypeConditionals(itemFromAPI, itemToSet, isFromRedispatchInstance);
 
       itemToSet.countTypeId = itemFromAPI.countTypeId;
     };
@@ -684,10 +686,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
-    this.mergeRedispatchItems = function(items) {
-      var ignoreEposData = setCountTypeNameAndCheckEpos(items);
-      items = lodash.sortBy(items, 'countTypeName');
+    this.mergeRedispatchItemsLoopConditional = function(item, pickListMatch, offloadListMatch) {
+      return (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') || (!offloadListMatch &&
+        item.countTypeName === 'Offload');
+    };
 
+    this.mergeRedispatchItemsLoop = function(items, ignoreEposData) {
       angular.forEach(items, function(item) {
         var pickListMatch = lodash.findWhere($scope.pickListItems, {
           itemMasterId: item.itemMasterId
@@ -698,7 +702,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         var ePosItem = findItemOnEposList(items, item);
         var itemMatch;
 
-        if ((!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') || (!offloadListMatch && item.countTypeName === 'Offload')) {
+        if ($this.mergeRedispatchItemsLoopConditional(item, pickListMatch, offloadListMatch)) {
           var newItem = $this.createFreshItem(item, false);
           newItem.isInOffload = true;
           $scope.offloadListItems.push(newItem);
@@ -715,6 +719,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
       });
+    };
+
+    this.mergeRedispatchItems = function(items) {
+      var ignoreEposData = setCountTypeNameAndCheckEpos(items);
+      items = lodash.sortBy(items, 'countTypeName');
+      $this.mergeRedispatchItemsLoop(items, ignoreEposData);
     };
 
     this.mergeAllItems = function(responseCollection) {
