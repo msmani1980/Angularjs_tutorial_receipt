@@ -85,12 +85,14 @@ angular.module('ts5App')
         offset: $this.meta.offset
       });
       deliveryNoteFactory.getDeliveryNotesList(query).then(function(data) {
-        $this.meta.count = $this.meta.count || data.meta.count;
-        $scope.userSelectedStation = true;
-        $scope.deliveryNotesList = $scope.deliveryNotesList.concat(data.response);
-        $this.formatDeliveryNotesDates();
-        hideLoadingBar();
-      });
+        if (data && data.meta.count > 0) {
+          $this.meta.count = $this.meta.count || data.meta.count;
+          $scope.userSelectedStation = true;
+          $scope.deliveryNotesList = $scope.deliveryNotesList.concat(data.response);
+          $this.formatDeliveryNotesDates();
+          hideLoadingBar();
+        }
+      }, hideLoadingBar());
 
       $this.meta.offset += $this.meta.limit;
     };
