@@ -273,7 +273,7 @@ angular.module('ts5App')
     function getTotalsForPromotions(promotionTotals) {
       var total = 0;
       angular.forEach(promotionTotals, function (promotionItem) {
-        total += promotionItem.convertedAmount;
+        total += promotionItem.discountApplied;
       });
 
       return {
@@ -350,7 +350,7 @@ angular.module('ts5App')
         exchangeRateTypeId: 1
       }).map(function (promotion) {
         promotion.eposQuantity = promotion.quantity;
-        promotion.eposTotal = formatAsCurrency(promotion.convertedAmount);
+        promotion.eposTotal = formatAsCurrency(promotion.discountApplied);
         reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
           promotion.itemName = dataFromAPI.promotionName;
         }, handleResponseError);
@@ -457,7 +457,7 @@ angular.module('ts5App')
       angular.forEach($this.promotionTotals, function (promotion) {
         var promotionMatch = lodash.findWhere(consolidatedPromotions, { promotionId: promotion.promotionId });
         if (promotionMatch) {
-          promotionMatch.convertedAmount = promotionMatch.convertedAmount + promotion.convertedAmount;
+          promotionMatch.discountApplied = promotionMatch.discountApplied + promotion.discountApplied;
           promotionMatch.quantity += (promotion.quantity || 1);
         } else {
           promotion.quantity = 1;
