@@ -99,19 +99,35 @@ angular.module('ts5App')
       manualECSFactory.getStoreInstanceList(payload).then(getStoreInstancesSuccess, showErrors);
     }
 
-    function getUnTiedCarrierInstancesSuccess(dataFromAPI) {
-      hideLoadingModal();
-      $scope.carrierInstances = angular.copy(dataFromAPI.response);
-      angular.forEach($scope.carrierInstances, function (carrierInstance) {
+    function setCarrierInstancesList(carrierInstanceListFromAPI) {
+      var carrierInstanceList = angular.copy(carrierInstanceListFromAPI.response);
+      angular.forEach(carrierInstanceList, function (carrierInstance) {
         carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
         carrierInstance.storeNumber = carrierInstance.storeNumber || '';
       });
+
+      var groupedList = lodash.groupBy(carrierInstanceList, 'ecbGroup');
+      $scope.carrierInstances = groupedList;
+      hideLoadingModal();
+    }
+
+    function getCarrierInstanceGroups(dataFromAPI) {
+      var ecbGroupPayload = [];
+      angular.forEach(dataFromAPI.response, function (carrierInstance) {
+        ecbGroupPayload.push(carrierInstance.ecbGroup);
+      });
+
+      var payloadForAPI = {
+        ecbGroup: (lodash.uniq(ecbGroupPayload)).toString()
+      };
+
+      manualECSFactory.getCarrierInstanceList(payloadForAPI).then(setCarrierInstancesList, showErrors);
     }
 
     function getUnTiedCarrierInstances(payload) {
       payload.storeInstanceId = 0;
       showLoadingModal('Retrieving ePOS Instances');
-      manualECSFactory.getCarrierInstanceList(payload).then(getUnTiedCarrierInstancesSuccess, showErrors);
+      manualECSFactory.getCarrierInstanceList(payload).then(getCarrierInstanceGroups, showErrors);
     }
 
     function getTiedCarrierInstancesSuccess(dataFromAPI) {
@@ -198,7 +214,7 @@ angular.module('ts5App')
       $scope.allECSInstances = null;
     };
 
-    function formatAllECSEposSearchPayload (workingPayload) {
+    function formatAllECSEposSearchPayload(workingPayload) {
       if ($scope.allInstancesSearch.eposScheduleDate) {
         workingPayload.instanceDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.eposScheduleDate);
       }
@@ -212,7 +228,7 @@ angular.module('ts5App')
       }
     }
 
-    function formatAllECSPortalSearchPayload (workingPayload) {
+    function formatAllECSPortalSearchPayload(workingPayload) {
       if ($scope.allInstancesSearch.portalScheduleDate) {
         workingPayload.siScheduleDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.portalScheduleDate);
       }
@@ -258,8 +274,6 @@ angular.module('ts5App')
     function formatPortalSearchPayload() {
       var searchPayload = {
         carrierInstanceCount: 0
-
-        // add after BE work is complete sectorIndex: 1
       };
 
       if ($scope.portalSearch.scheduleDate) {
