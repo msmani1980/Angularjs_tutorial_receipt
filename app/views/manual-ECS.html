@@ -171,7 +171,7 @@
 
     <div class="row">
       <div class="col-xs-6">
-        <table class="table table-bordered table-hover table-responsive" ng-show="storeInstances.length">
+        <table class="table table-hover table-responsive" ng-show="storeInstances.length">
           <thead>
           <tr>
             <th>Store Number</th>
@@ -179,7 +179,7 @@
             <th>Catering Station</th>
             <th>Store Instance</th>
             <th>Status</th>
-            <td class="col-xs-1">Select</td>
+            <th class="col-xs-1">Select</th>
           </tr>
           </thead>
           <tbody>
@@ -213,24 +213,27 @@
             <th>Store Number</th>
             <th>Schedule Date</th>
             <th>First Departure Station</th>
-            <th class="col-xs-1">Select</th>
+            <th class="col-xs-1">Select/ Deselect</th>
           </tr>
           </thead>
           <tbody ng-repeat="(groupId, ecbGroup) in carrierInstances">
-            <tr ng-repeat="eposInstance in ecbGroup track by $index" ng-class="getClassForEposRow(eposInstance, $index)">
-              <td ng-class="($index === 0) ? 'category-border' : 'category-indent'">
+            <tr ng-repeat="eposInstance in ecbGroup track by $index"
+                ng-class="getAttributeForEposRow('row', eposInstance, $index)"
+                ng-show="shouldShowRow(groupId, $index)">
+              <td ng-class="getAttributeForEposRow('indent', eposInstance, $index)">
                 <button class="btn btn-xs btn-default"
-                        ng-show="$index === 0 && ecbGroup.length > 1">
-                  <span class="fa fa-angle-right"></span>
+                        ng-click="toggleOpenGroup(groupId, ecbGroup)"
+                        ng-show="canOpenEposRow($index, ecbGroup)">
+                  <span ng-class="getClassForAccordionButton(groupId)"></span>
                 </button>
               </td>
-              <td ng-class="($index !== 0) ? 'category-border' : ''"></td>
+              <td ng-class="getAttributeForEposRow('nestedIndent', eposInstance, $index)"></td>
               <td>{{ eposInstance.storeNumber }}</td>
               <td>{{ eposInstance.instanceDate }}</td>
               <td>{{ eposInstance.departureStation }}</td>
               <td class="text-center">
                 <button ng-show="$index === 0"
-                        ng-click="selectEposRecord(ecbGroup)"
+                        ng-click="toggleSelectEposRecord(groupId)"
                         ng-class="getClassForAttribute('epos', 'button', eposInstance)">
                   <span ng-class="getClassForAttribute('epos', 'icon', eposInstance)"></span>
                 </button>

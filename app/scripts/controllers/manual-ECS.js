@@ -31,15 +31,15 @@ angular.module('ts5App')
       return ($scope.selectedPortalRecord && $scope.selectedEposRecord);
     };
 
-    $scope.isECBGroupSelected = function (ecbGroupId) {
-      var groupMatches = lodash.filter($scope.selectedEposRecord, { ecbGroup: ecbGroupId });
-      return groupMatches.length > 0;
-    };
+    $scope.toggleSelectEposRecord = function (ecbGroupId) {
+      var groupIndex = $scope.selectedEposRecords.indexOf(ecbGroupId);
+      console.log($scope.selectedEposRecords, ecbGroupId, groupIndex);
+      if (groupIndex >= 0) {
+        $scope.selectedEposRecords.splice(groupIndex, 1);
+        return;
+      }
 
-    $scope.selectEposRecord = function (ecbGroup) {
-      angular.forEach(ecbGroup, function (carrierInstance) {
-        $scope.selectedEposRecords.push(carrierInstance);
-      });
+      $scope.selectedEposRecords.push(ecbGroupId);
     };
 
     $scope.selectPortalRecord = function (record) {
@@ -55,36 +55,78 @@ angular.module('ts5App')
         return (!!$scope.selectedPortalRecord) ? (record.id === $scope.selectedPortalRecord.id) : false;
       }
 
-      return lodash.findIndex($scope.selectedEposRecords, { id: record.id }) >= 0;
+      return $scope.selectedEposRecords.indexOf(record.ecbGroup.toString()) >= 0;
     }
 
     $scope.getClassForAttribute = function (portalOrEpos, attribute, record) {
       var attributeToClassMap = {
         button: 'btn btn-sm btn-default',
         icon: 'fa fa-circle-o',
-        row: ''
+        row: portalOrEpos === 'portal' ? 'category-border' : ''
       };
       if (isRecordSelected(portalOrEpos, record)) {
         attributeToClassMap = {
           button: 'btn btn-sm btn-success',
           icon: 'fa fa-check-circle',
-          row: 'bg-success'
+          row: portalOrEpos === 'portal' ? 'category-border bg-success' : 'bg-success'
         };
       }
 
       return attributeToClassMap[attribute] || '';
     };
 
-    $scope.getClassForEposRow = function (record, index) {
-      if (isRecordSelected('epos', record)) {
-        return $scope.getClassForAttribute('epos', 'row', record);
+    $scope.canOpenEposRow = function (index, ecbGroup) {
+      return index === 0 && ecbGroup.length > 1;
+    };
+
+    $scope.getAttributeForEposRow = function (attribute, record, index) {
+      var attributeToClassMap = {
+        indent: 'category-indent',
+        nestedIndent: 'category-border',
+        row: $scope.getClassForAttribute('epos', 'row', record) || 'categoryLevel2',
+      };
+
+      if (index === 0) {
+        attributeToClassMap = {
+          indent: 'category-border',
+          nestedIndent: '',
+          row: $scope.getClassForAttribute('epos', 'row', record)
+        };
       }
 
-      return (index !== 0) ? 'categoryLevel2' : '';
+      return attributeToClassMap[attribute] || '';
     };
 
     $scope.shouldShowCarrierInstanceTable = function () {
       return $scope.carrierInstances && $scope.carrierInstances !== {};
+    };
+
+    function getIndexOfOpenGroup(groupId) {
+      return $scope.openEposGroups.indexOf(groupId);
+    }
+
+    $scope.shouldShowRow = function (groupId, index) {
+      var isRowOpen = getIndexOfOpenGroup(groupId) >= 0;
+      return index === 0 || isRowOpen;
+    };
+
+    $scope.toggleOpenGroup = function (groupId, ecbGroup) {
+      if (ecbGroup.length <= 1) {
+        return;
+      }
+
+      var openIndex = getIndexOfOpenGroup(groupId);
+      if (openIndex >= 0) {
+        $scope.openEposGroups.splice(openIndex, 1);
+        return;
+      }
+
+      $scope.openEposGroups.push(groupId);
+    };
+
+    $scope.getClassForAccordionButton = function (groupId) {
+      var isOpen = getIndexOfOpenGroup(groupId) >= 0;
+      return isOpen ? 'fa fa-angle-down' : 'fa fa-angle-right';
     };
 
     function getStoreInstancesSuccess(dataFromAPI) {
@@ -165,7 +207,8 @@ angular.module('ts5App')
     $scope.resetAll = function () {
       $scope.portalSearch = {};
       $scope.eposSearch = {};
-      $scope.selectedEposRecords = null;
+      $scope.selectedEposRecords = [];
+      $scope.openEposGroups = [];
       $scope.selectedPortalRecord = null;
       $scope.carrierInstances = null;
       $scope.storeInstances = null;
@@ -321,6 +364,7 @@ angular.module('ts5App')
 
     $scope.searchEposInstances = function () {
       $scope.selectedEposRecords = [];
+      $scope.openEposGroups = [];
       var searchPayload = formatEposSearchPayload();
       getUnTiedCarrierInstances(searchPayload);
     };
@@ -367,6 +411,7 @@ angular.module('ts5App')
       $scope.allInstancesSearch = {};
       $scope.selectedEposRecords = [];
       $scope.selectedPortalRecord = null;
+      $scope.openEposGroups = [];
       makeInitPromises();
     }
 
