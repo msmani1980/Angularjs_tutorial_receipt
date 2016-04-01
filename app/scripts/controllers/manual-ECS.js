@@ -227,29 +227,34 @@ angular.module('ts5App')
       angular.element('#confirmRelationshipModal').modal('hide');
     };
 
-    function getArrayOfAllIdsInGroup(groupId) {
+    function getArrayOfAllCarrierInstancesInGroup(groupId) {
       var ecbGroup = $scope.carrierInstances[groupId];
       var idArray = [];
       angular.forEach(ecbGroup, function (carrierInstance) {
-        idArray.push(carrierInstance.id);
+        idArray.push(carrierInstance);
       });
 
       return idArray;
     }
 
-    function createSaveRelationshipPromise() {
-      var allCarrierInstanceIds = [];
+    $scope.getAllCarrierInstancesToSave = function () {
+      var allCarrierInstances = [];
       angular.forEach($scope.selectedEposRecords, function (groupId) {
-        allCarrierInstanceIds = allCarrierInstanceIds.concat(getArrayOfAllIdsInGroup(groupId));
+        allCarrierInstances = allCarrierInstances.concat(getArrayOfAllCarrierInstancesInGroup(groupId));
       });
+      
+      return allCarrierInstances;
+    };
 
+    function createSaveRelationshipPromise() {
       var promises = [];
       var payload = {
         storeInstanceId: $scope.selectedPortalRecord.id
       };
 
-      angular.forEach(allCarrierInstanceIds, function (carrierInstanceId) {
-        promises.push(manualECSFactory.updateCarrierInstance(carrierInstanceId, payload));
+      var allCarrierInstances = $scope.getAllCarrierInstancesToSave();
+      angular.forEach(allCarrierInstances, function (carrierInstance) {
+        promises.push(manualECSFactory.updateCarrierInstance(carrierInstance.id, payload));
       });
     }
 

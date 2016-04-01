@@ -37,21 +37,21 @@
               <br>
               <table class="table table-bordered table-hover">
                 <tr>
-                  <td></td>
+                  <td>Store Type</td>
                   <th>Store Number</th>
                   <th>Schedule Date</th>
                   <th>Station</th>
                   <th>Store Instance</th>
                 </tr>
                 <tr>
-                  <th>Portal Store</th>
+                  <td>Portal Store</td>
                   <td>{{ selectedPortalRecord.storeNumber }}</td>
                   <td>{{ selectedPortalRecord.scheduleDate }}</td>
                   <td>{{ selectedPortalRecord.stationCode }}</td>
                   <td>{{ selectedPortalRecord.id }}</td>
                 </tr>
-                <tr>
-                  <th>ECS</th>
+                <tr ng-repeat="selectedEposRecord in getAllCarrierInstancesToSave()">
+                  <td>ECS</td>
                   <td>{{ selectedEposRecord.storeNumber }}</td>
                   <td>{{ selectedEposRecord.instanceDate }}</td>
                   <td>{{ selectedEposRecord.departureStation }}</td>
