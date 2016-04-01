@@ -190,7 +190,7 @@
             <td>{{ storeInstance.id }}</td>
             <td>{{ storeInstance.statusName }}</td>
             <td class="text-center">
-              <button ng-click="selectRecord('portal', storeInstance)"
+              <button ng-click="selectPortalRecord(storeInstance)"
                       ng-show="canSelectStoreInstance(storeInstance)"
                       ng-class="getClassForAttribute('portal', 'button', storeInstance)">
                 <span ng-class="getClassForAttribute('portal', 'icon', storeInstance)"></span>
@@ -206,27 +206,36 @@
       </div>
 
       <div class="col-xs-6">
-        <table class="table table-bordered table-hover table-responsive"  ng-show="carrierInstances.length">
+        <table class="table table-hover table-responsive" ng-show="shouldShowCarrierInstanceTable()">
           <thead>
           <tr>
+            <th colspan="2"></th>
             <th>Store Number</th>
             <th>Schedule Date</th>
             <th>First Departure Station</th>
-            <td class="col-xs-1">Select</td>
+            <th class="col-xs-1">Select</th>
           </tr>
           </thead>
-          <tbody>
-          <tr ng-repeat="eposInstance in carrierInstances | orderBy: ['storeNumber', '-instanceDate']" ng-class="getClassForAttribute('epos', 'row', eposInstance)">
-            <td>{{ eposInstance.storeNumber }}</td>
-            <td>{{ eposInstance.instanceDate }}</td>
-            <td>{{ eposInstance.departureStation }}</td>
-            <td class="text-center">
-              <button ng-click="selectRecord('epos', eposInstance)"
-                      ng-class="getClassForAttribute('epos', 'button', eposInstance)">
-                <span ng-class="getClassForAttribute('epos', 'icon', eposInstance)"></span>
-              </button>
-            </td>
-          </tr>
+          <tbody ng-repeat="(groupId, ecbGroup) in carrierInstances">
+            <tr ng-repeat="eposInstance in ecbGroup track by $index" ng-class="getClassForEposRow(eposInstance, $index)">
+              <td ng-class="($index === 0) ? 'category-border' : 'category-indent'">
+                <button class="btn btn-xs btn-default"
+                        ng-show="$index === 0 && ecbGroup.length > 1">
+                  <span class="fa fa-angle-right"></span>
+                </button>
+              </td>
+              <td ng-class="($index !== 0) ? 'category-border' : ''"></td>
+              <td>{{ eposInstance.storeNumber }}</td>
+              <td>{{ eposInstance.instanceDate }}</td>
+              <td>{{ eposInstance.departureStation }}</td>
+              <td class="text-center">
+                <button ng-show="$index === 0"
+                        ng-click="selectEposRecord(ecbGroup)"
+                        ng-class="getClassForAttribute('epos', 'button', eposInstance)">
+                  <span ng-class="getClassForAttribute('epos', 'icon', eposInstance)"></span>
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
 

@@ -31,26 +31,32 @@ angular.module('ts5App')
       return ($scope.selectedPortalRecord && $scope.selectedEposRecord);
     };
 
-    $scope.isRecordSelected = function (portalOrEpos, record) {
-      if (portalOrEpos === 'portal') {
-        return (!!$scope.selectedPortalRecord) ? (record.id === $scope.selectedPortalRecord.id) : false;
-      }
-
-      return (!!$scope.selectedEposRecord) ? (record.id === $scope.selectedEposRecord.id) : false;
+    $scope.isECBGroupSelected = function (ecbGroupId) {
+      var groupMatches = lodash.filter($scope.selectedEposRecord, { ecbGroup: ecbGroupId });
+      return groupMatches.length > 0;
     };
 
-    $scope.selectRecord = function (portalOrEpos, record) {
-      if (portalOrEpos === 'portal') {
-        $scope.selectedPortalRecord = record;
-        return;
-      }
+    $scope.selectEposRecord = function (ecbGroup) {
+      angular.forEach(ecbGroup, function (carrierInstance) {
+        $scope.selectedEposRecords.push(carrierInstance);
+      });
+    };
 
-      $scope.selectedEposRecord = record;
+    $scope.selectPortalRecord = function (record) {
+      $scope.selectedPortalRecord = record;
     };
 
     $scope.canSelectStoreInstance = function (storeInstance) {
       return storeInstance.statusName === 'Inbounded';
     };
+
+    function isRecordSelected(portalOrEpos, record) {
+      if (portalOrEpos === 'portal') {
+        return (!!$scope.selectedPortalRecord) ? (record.id === $scope.selectedPortalRecord.id) : false;
+      }
+
+      return lodash.findIndex($scope.selectedEposRecords, { id: record.id }) >= 0;
+    }
 
     $scope.getClassForAttribute = function (portalOrEpos, attribute, record) {
       var attributeToClassMap = {
@@ -58,7 +64,7 @@ angular.module('ts5App')
         icon: 'fa fa-circle-o',
         row: ''
       };
-      if ($scope.isRecordSelected(portalOrEpos, record)) {
+      if (isRecordSelected(portalOrEpos, record)) {
         attributeToClassMap = {
           button: 'btn btn-sm btn-success',
           icon: 'fa fa-check-circle',
@@ -67,6 +73,18 @@ angular.module('ts5App')
       }
 
       return attributeToClassMap[attribute] || '';
+    };
+
+    $scope.getClassForEposRow = function (record, index) {
+      if (isRecordSelected('epos', record)) {
+        return $scope.getClassForAttribute('epos', 'row', record);
+      }
+
+      return (index !== 0) ? 'categoryLevel2' : '';
+    };
+
+    $scope.shouldShowCarrierInstanceTable = function () {
+      return $scope.carrierInstances && $scope.carrierInstances !== {};
     };
 
     function getStoreInstancesSuccess(dataFromAPI) {
@@ -147,7 +165,7 @@ angular.module('ts5App')
     $scope.resetAll = function () {
       $scope.portalSearch = {};
       $scope.eposSearch = {};
-      $scope.selectedEposRecord = null;
+      $scope.selectedEposRecords = null;
       $scope.selectedPortalRecord = null;
       $scope.carrierInstances = null;
       $scope.storeInstances = null;
@@ -302,7 +320,7 @@ angular.module('ts5App')
     };
 
     $scope.searchEposInstances = function () {
-      $scope.selectedEposRecord = null;
+      $scope.selectedEposRecords = [];
       var searchPayload = formatEposSearchPayload();
       getUnTiedCarrierInstances(searchPayload);
     };
@@ -347,7 +365,7 @@ angular.module('ts5App')
       $scope.portalSearch = {};
       $scope.eposSearch = {};
       $scope.allInstancesSearch = {};
-      $scope.selectedEposRecord = null;
+      $scope.selectedEposRecords = [];
       $scope.selectedPortalRecord = null;
       makeInitPromises();
     }
