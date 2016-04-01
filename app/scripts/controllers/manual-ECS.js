@@ -28,12 +28,11 @@ angular.module('ts5App')
     };
 
     $scope.canSaveRelationship = function () {
-      return ($scope.selectedPortalRecord && $scope.selectedEposRecord);
+      return ($scope.selectedPortalRecord && $scope.selectedEposRecords.length);
     };
 
     $scope.toggleSelectEposRecord = function (ecbGroupId) {
       var groupIndex = $scope.selectedEposRecords.indexOf(ecbGroupId);
-      console.log($scope.selectedEposRecords, ecbGroupId, groupIndex);
       if (groupIndex >= 0) {
         $scope.selectedEposRecords.splice(groupIndex, 1);
         return;
@@ -228,18 +227,42 @@ angular.module('ts5App')
       angular.element('#confirmRelationshipModal').modal('hide');
     };
 
+    function getArrayOfAllIdsInGroup(groupId) {
+      var ecbGroup = $scope.carrierInstances[groupId];
+      var idArray = [];
+      angular.forEach(ecbGroup, function (carrierInstance) {
+        idArray.push(carrierInstance.id);
+      });
+
+      return idArray;
+    }
+
+    function createSaveRelationshipPromise() {
+      var allCarrierInstanceIds = [];
+      angular.forEach($scope.selectedEposRecords, function (groupId) {
+        allCarrierInstanceIds = allCarrierInstanceIds.concat(getArrayOfAllIdsInGroup(groupId));
+      });
+
+      var promises = [];
+      var payload = {
+        storeInstanceId: $scope.selectedPortalRecord.id
+      };
+
+      angular.forEach(allCarrierInstanceIds, function (carrierInstanceId) {
+        promises.push(manualECSFactory.updateCarrierInstance(carrierInstanceId, payload));
+      });
+    }
+
     $scope.saveRelationship = function () {
       $scope.dismissSaveConfirmation();
       if (!$scope.canSaveRelationship()) {
-        messageService.display('danger', 'Please select two valid records', 'Create ECS Relationship');
+        messageService.display('danger', 'Please select at least two valid records', 'Create ECS Relationship');
         return;
       }
 
       showLoadingModal('Saving Relationship');
-      var payload = {
-        storeInstanceId: $scope.selectedPortalRecord.id
-      };
-      manualECSFactory.updateCarrierInstance($scope.selectedEposRecord.id, payload).then(saveSuccess, showErrors);
+      var promises = createSaveRelationshipPromise();
+      $q.all(promises).then(saveSuccess, showErrors);
     };
 
     $scope.shouldShowNoRecordAlert = function (portalOrEposOrAll) {
