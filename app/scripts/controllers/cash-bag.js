@@ -11,8 +11,7 @@
  */
 angular.module('ts5App')
   .controller('CashBagCtrl', function($scope, $routeParams, $q, $location, $localStorage, messageService,
-    cashBagFactory,
-    dateUtility, lodash, globalMenuService) {
+    cashBagFactory, dateUtility, lodash, globalMenuService) {
 
     // controller global properties
     var _companyId = null;
