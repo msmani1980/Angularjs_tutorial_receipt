@@ -23,6 +23,7 @@
   </div>
 
   <div class="manualECS-container" id="createView" ng-show="isCreateViewActive">
+    <error-dialog form-object="manualECSForm" error-response="errorResponse" display="displayError"></error-dialog>
 
     <div class="modal fade" id="confirmRelationshipModal" role="dialog">
       <div class="modal-dialog">
@@ -68,6 +69,7 @@
     </div>
 
 
+    <form name="manualECSForm" class="form">
 
     <div class="row">
       <div class="col-xs-6">
@@ -218,16 +220,16 @@
           </thead>
           <tbody ng-repeat="(groupId, ecbGroup) in carrierInstances">
             <tr ng-repeat="eposInstance in ecbGroup track by $index"
-                ng-class="getAttributeForEposRow('row', eposInstance, $index)"
+                ng-class="getClassForEposRowAttribute('row', eposInstance, $index)"
                 ng-show="shouldShowRow(groupId, $index)">
-              <td ng-class="getAttributeForEposRow('indent', eposInstance, $index)">
+              <td ng-class="getClassForEposRowAttribute('indent', eposInstance, $index)">
                 <button class="btn btn-xs btn-default"
                         ng-click="toggleOpenGroup(groupId, ecbGroup)"
                         ng-show="canOpenEposRow($index, ecbGroup)">
                   <span ng-class="getClassForAccordionButton(groupId)"></span>
                 </button>
               </td>
-              <td ng-class="getAttributeForEposRow('nestedIndent', eposInstance, $index)"></td>
+              <td ng-class="getClassForEposRowAttribute('nestedIndent', eposInstance, $index)"></td>
               <td>{{ eposInstance.storeNumber }}</td>
               <td>{{ eposInstance.instanceDate }}</td>
               <td>{{ eposInstance.departureStation }}</td>
@@ -247,6 +249,7 @@
       </div>
 
     </div>
+      </form>
 
     <div class="bottom-footer">
       <div class="container">

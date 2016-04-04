@@ -78,13 +78,12 @@ angular.module('ts5App')
       return index === 0 && ecbGroup.length > 1;
     };
 
-    $scope.getAttributeForEposRow = function (attribute, record, index) {
+    $scope.getClassForEposRowAttribute = function (attribute, record, index) {
       var attributeToClassMap = {
         indent: 'category-indent',
         nestedIndent: 'category-border',
-        row: $scope.getClassForAttribute('epos', 'row', record) || 'categoryLevel2',
+        row: $scope.getClassForAttribute('epos', 'row', record) || 'categoryLevel2'
       };
-
       if (index === 0) {
         attributeToClassMap = {
           indent: 'category-border',
@@ -97,7 +96,7 @@ angular.module('ts5App')
     };
 
     $scope.shouldShowCarrierInstanceTable = function () {
-      return $scope.carrierInstances && $scope.carrierInstances !== {};
+      return angular.isDefined($scope.carrierInstances) && lodash.keys($scope.carrierInstances).length > 0;
     };
 
     $scope.shouldShowRow = function (groupId, index) {
@@ -167,6 +166,12 @@ angular.module('ts5App')
     }
 
     function getCarrierInstanceGroups(dataFromAPI) {
+      if (!dataFromAPI.response.length) {
+        hideLoadingModal();
+        $scope.carrierInstances = {};
+        return;
+      }
+
       var ecbGroupPayload = [];
       angular.forEach(dataFromAPI.response, function (carrierInstance) {
         ecbGroupPayload.push(carrierInstance.ecbGroup);
@@ -272,7 +277,8 @@ angular.module('ts5App')
         arrayToCheck = $scope.allECSInstances;
       }
 
-      return angular.isDefined(arrayToCheck) && arrayToCheck !== null && arrayToCheck.length <= 0;
+      var isArrayEmpty = (Array.isArray(arrayToCheck)) ? arrayToCheck.length <= 0 : lodash.keys(arrayToCheck).length <= 0;
+      return angular.isDefined(arrayToCheck) && arrayToCheck !== null && isArrayEmpty;
     };
 
     $scope.shouldShowSearchPromptAlert = function (portalOrEposOrAll) {

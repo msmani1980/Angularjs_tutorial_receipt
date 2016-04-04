@@ -255,7 +255,7 @@ describe('Controller: ManualECSCtrl', function () {
       it('should format result dates and attach to scope', function () {
         scope.searchAllECSInstances();
         scope.$digest();
-        expect(scope.allECSInstances[0].instanceDate).toEqual('02/24/2016');
+        expect(scope.allECSInstances[0].instanceDate).toEqual('04/02/2016');
       });
 
       describe('clear search', function () {
@@ -273,8 +273,8 @@ describe('Controller: ManualECSCtrl', function () {
   describe('Create Relationship', function () {
     beforeEach(function () {
       scope.carrierInstances = {
-        '123': [{id: 1}, {id: 2}],
-        '234': [{id: 3}]
+        '123': [{ id: 1 }, { id: 2 }],
+        '234': [{ id: 3 }]
       };
     });
     it('should call API with all selected epos instance ids and selected store instance id', function () {
@@ -305,7 +305,7 @@ describe('Controller: ManualECSCtrl', function () {
       scope.selectedPortalRecord = null;
       expect(scope.canSaveRelationship()).toBeFalsy();
       scope.selectedEposRecords = [];
-      scope.selectedPortalRecord = {id: 2};
+      scope.selectedPortalRecord = { id: 2 };
       expect(scope.canSaveRelationship()).toBeFalsy();
     });
 
@@ -317,11 +317,11 @@ describe('Controller: ManualECSCtrl', function () {
       });
 
       it('should remove or add selected ecbGroups', function () {
-        scope.selectedEposRecords = [1];
-        scope.toggleSelectEposRecord(2);
-        expect(scope.selectedEposRecords.indexOf(2) >= 0).toEqual(true);
-        scope.toggleSelectEposRecord(1);
-        expect(scope.selectedEposRecords.indexOf(1) >= 0).toEqual(false);
+        scope.selectedEposRecords = ['1'];
+        scope.toggleSelectEposRecord('2');
+        expect(scope.selectedEposRecords.indexOf('2') >= 0).toEqual(true);
+        scope.toggleSelectEposRecord('1');
+        expect(scope.selectedEposRecords.indexOf('1') >= 0).toEqual(false);
       });
     });
   });
@@ -366,6 +366,63 @@ describe('Controller: ManualECSCtrl', function () {
         expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(false);
         mockStoreInstance = { statusName: 'Inbounded' };
         expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(true);
+      });
+    });
+
+    describe('epos nested table functions', function () {
+      it('should only show rows that are open first rows in group', function () {
+        scope.openEposGroups = [1];
+        var mockClosedGroup = 2;
+        expect(scope.shouldShowRow(mockClosedGroup, 3)).toEqual(false);
+        expect(scope.shouldShowRow(mockClosedGroup, 0)).toEqual(true);
+      });
+
+      it('should close open groups and open closed groups', function () {
+        scope.openEposGroups = [];
+        var mockGroupIdToOpen = 2;
+        var mockGroup = [{ id: 1 }, { id: 2 }];
+        scope.toggleOpenGroup(mockGroupIdToOpen, mockGroup);
+        expect(scope.openEposGroups.indexOf(mockGroupIdToOpen)).toEqual(0);
+
+        scope.toggleOpenGroup(mockGroupIdToOpen, mockGroup);
+        expect(scope.openEposGroups.indexOf(mockGroupIdToOpen) >= 0).toEqual(false);
+      });
+
+      it('should only be able to open rows with multiple instances in a group', function () {
+        scope.openEposGroups = [];
+        var mockGroupIdToOpen = 2;
+        var mockGroup = [{ id: 1 }];
+        scope.toggleOpenGroup(mockGroupIdToOpen, mockGroup);
+        expect(scope.openEposGroups.length).toEqual(0);
+
+        expect(scope.canOpenEposRow(0, mockGroup)).toEqual(false);
+      });
+
+      it('should toggle open/close icon if a group is open or closed', function () {
+        var openGroupId = 2;
+        scope.openEposGroups = [openGroupId];
+        expect(scope.getClassForAccordionButton(openGroupId)).toEqual('fa fa-angle-down');
+
+        var closedGroupId = 3;
+        expect(scope.getClassForAccordionButton(closedGroupId)).toEqual('fa fa-angle-right');
+      });
+
+      it('should display child row as gray if unselected, and green otherwise', function () {
+        var childRow = {ecbGroup: 2};
+        scope.selectedEposRecords = ['2'];
+        scope.$digest();
+        expect(scope.getClassForEposRowAttribute('row', childRow, 2)).toEqual('bg-success');
+        scope.selectedEposRecords = [];
+        expect(scope.getClassForEposRowAttribute('row', childRow, 2)).toEqual('categoryLevel2');
+      });
+
+      it('should only show table when carrier instances exist', function () {
+        scope.carrierInstances = {};
+        expect(scope.shouldShowCarrierInstanceTable()).toEqual(false);
+        scope.carrierInstances = null;
+        expect(scope.shouldShowCarrierInstanceTable()).toEqual(false);
+        scope.carrierInstances = { 1: [{ id: 2 }] };
+        expect(scope.shouldShowCarrierInstanceTable()).toEqual(true);
       });
     });
   });
