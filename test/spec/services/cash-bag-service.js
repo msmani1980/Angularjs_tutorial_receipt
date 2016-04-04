@@ -182,6 +182,22 @@ describe('Service: cashBagService', function () {
       });
     });
 
+    describe('mergeCashBag', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.mergeCashBag).toBe(true);
+      });
+
+      beforeEach(function () {
+        $httpBackend.whenPUT(/cash-bags\/95\/merge/).respond({ done: true });
+      });
+
+      it('should PUT data to cash bag API', function () {
+        cashBagService.mergeCashBag(95, 2);
+        $httpBackend.expectPUT(/cash-bags\/95\/merge/);
+        $httpBackend.flush();
+      });
+    });
+
     describe('deleteCashBag', function() {
       it('should be accessible in the service', function () {
         expect(!!cashBagService.deleteCashBag).toBe(true);

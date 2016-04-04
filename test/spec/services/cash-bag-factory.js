@@ -43,6 +43,7 @@ describe('Factory: cashBagFactory', function () {
     spyOn(cashBagService, 'deleteCashBag');
     spyOn(cashBagService, 'createCashBag');
     spyOn(cashBagService, 'reallocateCashBag');
+    spyOn(cashBagService, 'mergeCashBag');
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates');
     spyOn(companyPreferencesService, 'getCompanyPreferences');
@@ -77,6 +78,13 @@ describe('Factory: cashBagFactory', function () {
       var storeInstanceId = 2;
       cashBagFactory.reallocateCashBag(id, storeInstanceId);
       expect(cashBagService.reallocateCashBag).toHaveBeenCalledWith(id, storeInstanceId);
+    });
+
+    it('should call cashBagService mergeCashBag', function () {
+      var eposCashBag = 1;
+      var manualCashBag = 2;
+      cashBagFactory.mergeCashBag(eposCashBag, manualCashBag);
+      expect(cashBagService.mergeCashBag).toHaveBeenCalledWith(eposCashBag, manualCashBag);
     });
 
     it('should call cashBagService getCashBag', function () {
