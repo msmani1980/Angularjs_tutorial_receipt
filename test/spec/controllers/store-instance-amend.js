@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstanceAmendCtrl', function () {
+fdescribe('Controller: StoreInstanceAmendCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/cash-bag-list.json'));
@@ -473,6 +473,8 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         };
 
         scope.searchForMoveCashBag();
+        scope.$digest();
+
         expect(storeInstanceFactory.getStoreInstancesList).toHaveBeenCalledWith(payload);
       });
 
@@ -480,7 +482,9 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.moveCashBagAction = 'merge';
         scope.moveSearch = { cashBag: '123', bankRefNumber: 'ABC' };
         scope.searchForMoveCashBag();
-        expect(storeInstanceAmendFactory.getCashBagListMockData).toHaveBeenCalledWith(scope.moveSearch);
+        scope.$digest();
+
+        expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
       });
 
       it('should automatically set targetRecordForMoveCashBag if there is only one result', function () {

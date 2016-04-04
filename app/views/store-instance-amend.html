@@ -81,7 +81,7 @@
               <h4>1. Select an action</h4>
               <select class="form-control" ng-model="moveCashBagAction" ng-change="clearMoveSearchResults()">
                 <option value="none"></option>
-                <option value="merge">Merge with a Cash Bag</option>
+                <option value="merge" ng-if="canMerge(cashBagToMove)">Merge with a Cash Bag</option>
                 <option value="reallocate">Reallocate to a Store Instance</option>
               </select>
             </div>
@@ -156,15 +156,18 @@
                 ng-class="getClassesForSingleSelectedRow(cashBag, 'background', 'cashBag')">
               <td>{{ cashBag.scheduleDate }}</td>
               <td>{{ cashBag.storeNumber }}</td>
-              <td>{{ cashBag.cashBag }}</td>
-              <td>{{ cashBag.storeInstanceNumber }}</td>
-              <td>{{ cashBag.submittedDate }} {{cashBag.submittedTime }}</td>
+              <td>{{ cashBag.cashBagNumber }}</td>
+              <td>{{ cashBag.storeInstanceId }}</td>
+              <td><span ng-if="cashBag.isSubmitted">{{ cashBag.updatedOn }}</span></td>
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(cashBag, 'button', 'cashBag')"
                         ng-click="selectRecordForMoveCashBag(cashBag)">
                   <span ng-class="getClassesForSingleSelectedRow(cashBag, 'buttonIcon', 'cashBag')"></span>
                 </button>
               </td>
+            </tr>
+            <tr ng-hide="moveCashBagSearchResults.length">
+              <td colspan="5">No Cash bags found</td>
             </tr>
           </table>
 
@@ -195,7 +198,10 @@
           </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="reallocateCashBag()" ng-show="targetRecordForMoveCashBag">
+          <button ng-if="moveCashBagAction==='reallocate'" type="button" class="btn btn-success" data-dismiss="modal" ng-click="reallocateCashBag()" ng-show="targetRecordForMoveCashBag">
+            <i class="fa fa-check"></i> Confirm
+          </button>
+          <button ng-if="moveCashBagAction==='merge'" type="button" class="btn btn-success" data-dismiss="modal" ng-click="mergeCashBag()" ng-show="targetRecordForMoveCashBag">
             <i class="fa fa-check"></i> Confirm
           </button>
           <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeMoveCashBagModal()">
