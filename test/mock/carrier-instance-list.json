@@ -24,7 +24,7 @@
       "arrivalStation": "LAX",
       "paxCount": 111,
       "posttripId": 491,
-      "menuIds": "32"
+      "menuIds": "1,4"
     },
     {
       "createdBy": null,
