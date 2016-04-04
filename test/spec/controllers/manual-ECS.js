@@ -160,11 +160,20 @@ describe('Controller: ManualECSCtrl', function () {
       });
     });
 
-    describe('epos carrier instances search', function () {
-      it('should get list of store instances from API', function () {
+    fdescribe('epos carrier instances search', function () {
+      it('should get list of carrier instances from API', function () {
+        scope.eposSearch = {};
+        scope.searchEposInstances();
+        var expectedPayload = { storeInstanceId: 0 };
+        scope.$digest();
+        expect(manualECSFactory.getCarrierInstanceList).toHaveBeenCalledWith(expectedPayload);
+      });
+
+      it('should get remaining list of carrier instances with matching ecbGroups', function () {
         scope.searchEposInstances();
         scope.$digest();
-        expect(manualECSFactory.getCarrierInstanceList).toHaveBeenCalled();
+        var expectedPayload = { ecbGroup: jasmine.stringMatching('1845') };
+        expect(manualECSFactory.getCarrierInstanceList).toHaveBeenCalledWith(expectedPayload);
       });
 
       it('should format search payload to resolve station and format date', function () {
@@ -185,10 +194,18 @@ describe('Controller: ManualECSCtrl', function () {
         expect(manualECSFactory.getCarrierInstanceList).toHaveBeenCalledWith(expectedPayload);
       });
 
+      it('should format results into ecbGroups', function () {
+        scope.searchEposInstances();
+        scope.$digest();
+        expect(typeof scope.carrierInstances).toBeDefined();
+        expect(Array.isArray(scope.carrierInstances['1845'])).toEqual(true);
+      });
+
       it('should format result dates and attach to scope', function () {
         scope.searchEposInstances();
         scope.$digest();
-        expect(scope.carrierInstances[0].instanceDate).toEqual('02/24/2016');
+        var ecbGroup = scope.carrierInstances['1845'];
+        expect(ecbGroup[0].instanceDate).toEqual('04/02/2016');
       });
 
       describe('clear search', function () {
@@ -218,7 +235,7 @@ describe('Controller: ManualECSCtrl', function () {
           storeInstance: '12',
           portalScheduleDate: '11/25/2015',
           portalStoreNumber: '456',
-          portalStation: {id: 3, code: 'LON3'}
+          portalStation: { id: 3, code: 'LON3' }
         };
 
         var expectedPayload = {
@@ -265,8 +282,8 @@ describe('Controller: ManualECSCtrl', function () {
     it('should clear models after successful create', function () {
       scope.selectedPortalRecord = { id: 1 };
       scope.selectedEposRecord = { id: 2 };
-      scope.storeInstances = [{id: 3}];
-      scope.carrierInstances = [{id: 4}];
+      scope.storeInstances = [{ id: 3 }];
+      scope.carrierInstances = [{ id: 4 }];
       scope.saveRelationship();
       scope.$digest();
       expect(scope.selectedPortalRecord).toEqual(null);
@@ -283,18 +300,18 @@ describe('Controller: ManualECSCtrl', function () {
 
     describe('select record helpers', function () {
       it('should attach selected records to scope', function () {
-        var mockPortalInstance = {id: 1};
+        var mockPortalInstance = { id: 1 };
         scope.selectRecord('portal', mockPortalInstance);
         expect(scope.selectedPortalRecord).toEqual(mockPortalInstance);
 
-        var mockCarrierInstance = {id: 2};
+        var mockCarrierInstance = { id: 2 };
         scope.selectRecord('epos', mockCarrierInstance);
         expect(scope.selectedEposRecord).toEqual(mockCarrierInstance);
       });
 
       it('isRecordSelected should return true for records matching selected record on scope', function () {
-        var mockPortalInstance = {id: 1};
-        var mockUnselectedPortalInstance = {id: 2};
+        var mockPortalInstance = { id: 1 };
+        var mockUnselectedPortalInstance = { id: 2 };
         scope.selectRecord('portal', mockPortalInstance);
         expect(scope.isRecordSelected('portal', mockPortalInstance)).toEqual(true);
         expect(scope.isRecordSelected('portal', mockUnselectedPortalInstance)).toEqual(false);
@@ -339,9 +356,9 @@ describe('Controller: ManualECSCtrl', function () {
 
     describe('canEditRecord', function () {
       it('should return true if store instance has status Inbounded', function () {
-        var mockStoreInstance = {statusName: 'Dispatched'};
+        var mockStoreInstance = { statusName: 'Dispatched' };
         expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(false);
-        mockStoreInstance = {statusName: 'Inbounded'};
+        mockStoreInstance = { statusName: 'Inbounded' };
         expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(true);
       });
     });

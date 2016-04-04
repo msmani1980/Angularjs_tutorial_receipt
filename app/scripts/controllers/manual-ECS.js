@@ -242,7 +242,7 @@ angular.module('ts5App')
       angular.forEach($scope.selectedEposRecords, function (groupId) {
         allCarrierInstances = allCarrierInstances.concat(getArrayOfAllCarrierInstancesInGroup(groupId));
       });
-      
+
       return allCarrierInstances;
     };
 
