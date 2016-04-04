@@ -100,12 +100,8 @@ angular.module('ts5App')
       return $scope.carrierInstances && $scope.carrierInstances !== {};
     };
 
-    function getIndexOfOpenGroup(groupId) {
-      return $scope.openEposGroups.indexOf(groupId);
-    }
-
     $scope.shouldShowRow = function (groupId, index) {
-      var isRowOpen = getIndexOfOpenGroup(groupId) >= 0;
+      var isRowOpen = $scope.openEposGroups.indexOf(groupId) >= 0;
       return index === 0 || isRowOpen;
     };
 
@@ -114,7 +110,7 @@ angular.module('ts5App')
         return;
       }
 
-      var openIndex = getIndexOfOpenGroup(groupId);
+      var openIndex = $scope.openEposGroups.indexOf(groupId);
       if (openIndex >= 0) {
         $scope.openEposGroups.splice(openIndex, 1);
         return;
@@ -124,7 +120,7 @@ angular.module('ts5App')
     };
 
     $scope.getClassForAccordionButton = function (groupId) {
-      var isOpen = getIndexOfOpenGroup(groupId) >= 0;
+      var isOpen = $scope.openEposGroups.indexOf(groupId) >= 0;
       return isOpen ? 'fa fa-angle-down' : 'fa fa-angle-right';
     };
 

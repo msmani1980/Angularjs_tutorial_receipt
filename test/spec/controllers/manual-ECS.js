@@ -160,7 +160,7 @@ describe('Controller: ManualECSCtrl', function () {
       });
     });
 
-    fdescribe('epos carrier instances search', function () {
+    describe('epos carrier instances search', function () {
       it('should get list of carrier instances from API', function () {
         scope.eposSearch = {};
         scope.searchEposInstances();
@@ -271,51 +271,57 @@ describe('Controller: ManualECSCtrl', function () {
   });
 
   describe('Create Relationship', function () {
-    it('should call API with epos instance id and store instance id', function () {
+    beforeEach(function () {
+      scope.carrierInstances = {
+        '123': [{id: 1}, {id: 2}],
+        '234': [{id: 3}]
+      };
+    });
+    it('should call API with all selected epos instance ids and selected store instance id', function () {
       scope.selectedPortalRecord = { id: 1 };
-      scope.selectedEposRecord = { id: 2 };
+      scope.selectedEposRecords = ['123', '234'];
       var expectedPayload = { storeInstanceId: 1 };
       scope.saveRelationship();
+      expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(1, expectedPayload);
       expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(2, expectedPayload);
+      expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(3, expectedPayload);
     });
 
     it('should clear models after successful create', function () {
       scope.selectedPortalRecord = { id: 1 };
-      scope.selectedEposRecord = { id: 2 };
+      scope.selectedEposRecords = ['123', '234'];
       scope.storeInstances = [{ id: 3 }];
       scope.carrierInstances = [{ id: 4 }];
       scope.saveRelationship();
       scope.$digest();
       expect(scope.selectedPortalRecord).toEqual(null);
-      expect(scope.selectedEposRecord).toEqual(null);
+      expect(scope.selectedEposRecords).toEqual([]);
       expect(scope.storeInstances).toEqual(null);
       expect(scope.carrierInstances).toEqual(null);
     });
 
-    it('should not allow saving if a portal and epos record are not selected', function () {
-      scope.selectedEposRecord = { id: 2 };
+    it('should not allow saving if a portal and at least one epos record are not selected', function () {
+      scope.selectedEposRecords = ['123'];
       scope.selectedPortalRecord = null;
+      expect(scope.canSaveRelationship()).toBeFalsy();
+      scope.selectedEposRecords = [];
+      scope.selectedPortalRecord = {id: 2};
       expect(scope.canSaveRelationship()).toBeFalsy();
     });
 
     describe('select record helpers', function () {
-      it('should attach selected records to scope', function () {
+      it('should attach selected portal records to scope', function () {
         var mockPortalInstance = { id: 1 };
-        scope.selectRecord('portal', mockPortalInstance);
+        scope.selectPortalRecord(mockPortalInstance);
         expect(scope.selectedPortalRecord).toEqual(mockPortalInstance);
-
-        var mockCarrierInstance = { id: 2 };
-        scope.selectRecord('epos', mockCarrierInstance);
-        expect(scope.selectedEposRecord).toEqual(mockCarrierInstance);
       });
 
-      it('isRecordSelected should return true for records matching selected record on scope', function () {
-        var mockPortalInstance = { id: 1 };
-        var mockUnselectedPortalInstance = { id: 2 };
-        scope.selectRecord('portal', mockPortalInstance);
-        expect(scope.isRecordSelected('portal', mockPortalInstance)).toEqual(true);
-        expect(scope.isRecordSelected('portal', mockUnselectedPortalInstance)).toEqual(false);
-        expect(scope.isRecordSelected('epos', mockPortalInstance)).toEqual(false);
+      it('should remove or add selected ecbGroups', function () {
+        scope.selectedEposRecords = [1];
+        scope.toggleSelectEposRecord(2);
+        expect(scope.selectedEposRecords.indexOf(2) >= 0).toEqual(true);
+        scope.toggleSelectEposRecord(1);
+        expect(scope.selectedEposRecords.indexOf(1) >= 0).toEqual(false);
       });
     });
   });
