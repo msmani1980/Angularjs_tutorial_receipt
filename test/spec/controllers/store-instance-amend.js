@@ -181,6 +181,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(transactionFactory, 'getTransactionList').and.returnValue(getTransactionListDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getStoreInstancesListDeferred.promise);
     spyOn(cashBagFactory, 'reallocateCashBag').and.callThrough();
+    spyOn(cashBagFactory, 'mergeCashBag').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'deleteCashBag').and.callThrough();
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
@@ -473,6 +474,8 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         };
 
         scope.searchForMoveCashBag();
+        scope.$digest();
+
         expect(storeInstanceFactory.getStoreInstancesList).toHaveBeenCalledWith(payload);
       });
 
@@ -480,7 +483,9 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.moveCashBagAction = 'merge';
         scope.moveSearch = { cashBag: '123', bankRefNumber: 'ABC' };
         scope.searchForMoveCashBag();
-        expect(storeInstanceAmendFactory.getCashBagListMockData).toHaveBeenCalledWith(scope.moveSearch);
+        scope.$digest();
+
+        expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
       });
 
       it('should automatically set targetRecordForMoveCashBag if there is only one result', function () {
@@ -550,6 +555,35 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.reallocateCashBag();
 
         expect(cashBagFactory.reallocateCashBag).toHaveBeenCalledWith(1, 2);
+      });
+    });
+
+    describe('merge cash bag', function () {
+      it('should merge target cash bag to new store instance', function () {
+        scope.targetRecordForMoveCashBag = { id: 2 };
+        scope.cashBagToMove = {
+          id: 1,
+          bankRefNumber: '2',
+          dailyExchangeRateId: 3,
+          cashBag: '4',
+          scheduleDate: '2016/03/13',
+          retailCompanyId: 5,
+          scheduleNumber: '6',
+          isSubmitted: true
+        };
+        scope.$digest();
+
+        scope.mergeCashBag();
+
+        expect(cashBagFactory.mergeCashBag).toHaveBeenCalledWith(1, 2);
+      });
+
+      it('should decide if can be merged or not', function () {
+        expect(scope.canMerge()).toBeFalsy();
+        expect(scope.canMerge({ isManual: true })).toBeFalsy();
+        expect(scope.canMerge({ bankRefNumber: '123' })).toBeFalsy();
+        expect(scope.canMerge({ bankRefNumber: '123' })).toBeFalsy();
+        expect(scope.canMerge({ })).toBeTruthy();
       });
     });
   });

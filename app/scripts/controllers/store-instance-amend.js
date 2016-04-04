@@ -110,12 +110,12 @@ angular.module('ts5App')
       return correctClassObj[tagType];
     };
 
-    function reallocateCashBagSuccess () {
+    function moveCashBagSuccess () {
       getCashBags();
       $scope.closeMoveCashBagModal();
     }
 
-    function reallocateCashBagError () {
+    function moveCashBagError () {
       $scope.closeMoveCashBagModal();
       handleResponseError();
     }
@@ -124,7 +124,18 @@ angular.module('ts5App')
       var cashBagId = $scope.cashBagToMove.id;
       var storeInstanceId = $scope.targetRecordForMoveCashBag.id;
 
-      cashBagFactory.reallocateCashBag(cashBagId, storeInstanceId).then(reallocateCashBagSuccess, reallocateCashBagError);
+      cashBagFactory.reallocateCashBag(cashBagId, storeInstanceId).then(moveCashBagSuccess, moveCashBagError);
+    };
+
+    $scope.mergeCashBag = function () {
+      var eposCashBagId = $scope.cashBagToMove.id;
+      var manualCashBagId = $scope.targetRecordForMoveCashBag.id;
+
+      cashBagFactory.mergeCashBag(eposCashBagId, manualCashBagId).then(moveCashBagSuccess, moveCashBagError);
+    };
+
+    $scope.canMerge = function (cashBag) {
+      return cashBag && !(cashBag.isManual || cashBag.bankRefNumber);
     };
 
     this.searchForScheduleSuccess = function (dataFromAPI) {
@@ -149,35 +160,78 @@ angular.module('ts5App')
       }
     };
 
-    this.searchForMoveCashBagSuccess = function (dataFromAPI) {
-      var normalizedDataFromAPI = angular.copy(dataFromAPI.response) || [];
+    function normalizeMergeSearchResults (dataFromAPI) {
+      var cashBags = angular.copy(dataFromAPI.cashBags) || [];
 
-      $scope.moveCashBagSearchResults = normalizedDataFromAPI.filter(function (storeInstance) {
-        return (storeInstance.statusId === 8 || storeInstance.statusId === 9) && storeInstance.id !== parseInt($routeParams.storeInstanceId);
+      return angular.forEach(cashBags, function (cashBag) {
+        cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
+        cashBag.updatedOn = dateUtility.formatTimestampForApp(cashBag.updatedOn);
       });
+    }
+
+    function isStoreInstanceEligibleForReallocation(storeInstance) {
+      return (storeInstance.statusId === 8 || storeInstance.statusId === 9) && storeInstance.id !== parseInt($routeParams.storeInstanceId);
+    }
+
+    function normalizeReallocateSearchResults (dataFromAPI) {
+      var storeInstances = angular.copy(dataFromAPI.response) || [];
+
+      return storeInstances.filter(function (storeInstance) {
+        return isStoreInstanceEligibleForReallocation(storeInstance);
+      });
+    }
+
+    this.searchForMoveCashBagSuccess = function (dataFromAPI) {
+      if ($scope.moveCashBagAction === 'merge') {
+        $scope.moveCashBagSearchResults = normalizeMergeSearchResults(dataFromAPI);
+      }
+
+      if ($scope.moveCashBagAction === 'reallocate') {
+        $scope.moveCashBagSearchResults = normalizeReallocateSearchResults(dataFromAPI);
+      }
 
       if ($scope.moveCashBagSearchResults.length === 1) {
         $scope.targetRecordForMoveCashBag = $scope.moveCashBagSearchResults[0];
       }
     };
 
+    function searchForMergeCashBag () {
+      if (!($scope.moveSearch.cashBag && $scope.moveSearch.bankRefNumber)) {
+        return;
+      }
+
+      var payload = {
+        companyId: globalMenuService.company.get(),
+        cashBagNumber: $scope.moveSearch.cashBag,
+        bankReferenceNumber: $scope.moveSearch.bankRefNumber,
+        originationSource: 2,
+        isReconciliation: true
+      };
+
+      return storeInstanceAmendFactory.getCashBags(payload).then($this.searchForMoveCashBagSuccess);
+    }
+
+    function searchForReallocateCashBag () {
+      if (!($scope.moveSearch.storeNumber && $scope.moveSearch.scheduleDate)) {
+        return;
+      }
+
+      var payload = {
+        storeNumber: $scope.moveSearch.storeNumber,
+        startDate: dateUtility.formatDateForAPI($scope.moveSearch.scheduleDate),
+        endDate: dateUtility.formatDateForAPI($scope.moveSearch.scheduleDate)
+      };
+
+      return storeInstanceFactory.getStoreInstancesList(payload).then($this.searchForMoveCashBagSuccess);
+    }
+
     $scope.searchForMoveCashBag = function () {
       if ($scope.moveCashBagAction === 'merge') {
-        return storeInstanceAmendFactory.getCashBagListMockData($scope.moveSearch).then($this.searchForMoveCashBagSuccess);
+        return searchForMergeCashBag();
       }
 
       if ($scope.moveCashBagAction === 'reallocate') {
-        if (!($scope.moveSearch.storeNumber && $scope.moveSearch.scheduleDate)) {
-          return;
-        }
-
-        var payload = {
-          storeNumber: $scope.moveSearch.storeNumber,
-          startDate: dateUtility.formatDateForAPI($scope.moveSearch.scheduleDate),
-          endDate: dateUtility.formatDateForAPI($scope.moveSearch.scheduleDate)
-        };
-
-        return storeInstanceFactory.getStoreInstancesList(payload).then($this.searchForMoveCashBagSuccess);
+        return searchForReallocateCashBag();
       }
     };
 
