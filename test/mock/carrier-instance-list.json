@@ -15,7 +15,8 @@
       "instanceDate": "2016-02-24",
       "storeNumber": "731",
       "storeInstanceId": 1843,
-      "departureStation": "ORD"
+      "departureStation": "ORD",
+      "menuIds": "1,4"
     },
     {
       "createdBy": null,

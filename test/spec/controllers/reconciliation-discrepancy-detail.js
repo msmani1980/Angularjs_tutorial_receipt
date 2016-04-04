@@ -18,6 +18,9 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/store-status.json'));
   beforeEach(module('served/stock-item-counts.json'));
   beforeEach(module('served/ch-cash-bag.json'));
+  beforeEach(module('served/carrier-instance-list.json'));
+  beforeEach(module('served/menus.json'));
+
 
   var scope;
   var ReconciliationDiscrepancyDetail;
@@ -58,6 +61,13 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var stockItemCountsDeferred;
   var stockItemCountsJSON;
   var cashHandlerCashBagJSON;
+
+  var carrierInstancesDeferred;
+  var carrierInstancesJSON;
+
+  var menuListDeferred;
+  var menuListJSON;
+
   var routeParams;
   var dateUtility;
   var lodash;
@@ -65,7 +75,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
     inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
                      _servedCountTypes_, _servedStoreInstanceItemList_, _servedPromotion_, _servedItem_,
-                     _servedStoreStatus_, _servedStockItemCounts_, _servedChCashBag_) {
+                     _servedStoreStatus_, _servedStockItemCounts_, _servedChCashBag_, _servedCarrierInstanceList_, _servedMenus_) {
       storeInstanceJSON = _servedStoreInstance_;
       getPromotionTotalsJSON = _servedPromotionTotals_;
       getStockTotalsJSON = _servedStockTotals_;
@@ -77,6 +87,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       getStoreStatusListJSON = _servedStoreStatus_;
       stockItemCountsJSON = _servedStockItemCounts_;
       cashHandlerCashBagJSON = _servedChCashBag_;
+      carrierInstancesJSON = _servedCarrierInstanceList_;
+      menuListJSON = _servedMenus_;
     });
 
     inject(function (_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
@@ -156,6 +168,14 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     getItemDeferred.resolve(getItemJSON);
     spyOn(reconciliationFactory, 'getItem').and.returnValue(getItemDeferred.promise);
 
+    carrierInstancesDeferred = $q.defer();
+    carrierInstancesDeferred.resolve(carrierInstancesJSON);
+    spyOn(reconciliationFactory, 'getCarrierInstanceList').and.returnValue(carrierInstancesDeferred.promise);
+
+    menuListDeferred = $q.defer();
+    menuListDeferred.resolve(menuListJSON);
+    spyOn(reconciliationFactory, 'getMenuList').and.returnValue(menuListDeferred.promise);
+
     getCompanyPreferencesJSON = $injector.get('servedCompanyPreferences');
     getCompanyPreferencesDeferred = $q.defer();
     getCompanyPreferencesDeferred.resolve(getCompanyPreferencesJSON);
@@ -210,7 +230,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       });
 
       it('should format promotionTotals to consolidate duplicates', function () {
-        var promotions = lodash.filter(scope.stockTotals.stockItems, {itemTypeName: 'Promotion'});
+        var promotions = lodash.filter(scope.stockTotals.stockItems, { itemTypeName: 'Promotion' });
         expect(promotions.length).toEqual(2);
         expect(promotions[0].eposQuantity).toEqual(1);
         expect(promotions[1].eposQuantity).toEqual(2);
@@ -239,6 +259,14 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       it('should call getStoreStatusList', function () {
         expect(reconciliationFactory.getStoreStatusList).toHaveBeenCalled();
+      });
+
+      it('should call getCarrierInstances', function () {
+        expect(reconciliationFactory.getCarrierInstanceList).toHaveBeenCalled();
+      });
+
+      it('should get all menus', function () {
+        expect(reconciliationFactory.getMenuList).toHaveBeenCalled();
       });
 
       it('should init tables to only show discrepancies', function () {
@@ -311,6 +339,34 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
           varianceValue: '0.00'
         });
         expect(scope.stockItemList[0]).toEqual(expectedVariance);
+      });
+    });
+
+    describe('filtered outlier items', function () {
+      beforeEach(function () {
+        scope.$digest();
+      });
+
+      it('should attach stock items from epos to outlier item list', function () {
+        expect(scope.outlierItemList).toBeDefined();
+        expect(scope.outlierItemList.length).toEqual(1);
+      });
+
+      it('should not contain overlapping items in stock and outlier lists', function () {
+        var overlapItem = lodash.findWhere(scope.stockItemList, { itemMasterId: scope.outlierItemList[0].itemMasterId });
+        expect(overlapItem).not.toBeDefined();
+      });
+
+      it('should resolve schedule date and storeNumber from carrier instances', function () {
+        expect(scope.outlierItemList[0].scheduleDate).toBeDefined();
+        expect(scope.outlierItemList[0].scheduleDate).toEqual('02/24/2016');
+        expect(scope.outlierItemList[0].storeNumber).toBeDefined();
+        expect(scope.outlierItemList[0].storeNumber).toEqual('731');
+      });
+
+      it('should resolve menus from menu list', function () {
+        expect(scope.outlierItemList[0].menuList).toBeDefined();
+        expect(scope.outlierItemList[0].menuList).toEqual('Test, A320 Menu');
       });
     });
 
