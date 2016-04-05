@@ -702,8 +702,33 @@ angular.module('ts5App')
         });
     }
 
+    function hasEposTransactions(cashBag) {
+      if (!cashBag.cashBagCurrencies) {
+        return false;
+      }
+
+      var eposTransactions = cashBag.cashBagCurrencies.filter(function (currency) {
+        var coins = 0;
+        var papers = 0;
+
+        if (currency.coinAmountEpos) {
+          coins = parseFloat(currency.coinAmountEpos);
+        }
+
+        if (currency.paperAmountEpos) {
+          papers = parseFloat(currency.paperAmountEpos);
+        }
+
+        if (coins > 0 || papers > 0) {
+          return true;
+        }
+      });
+
+      return eposTransactions.length > 0;
+    }
+
     function isCashBagDeleteAllowed(cashBag) {
-      return !(cashBag.bankReferenceNumber || cashBag.isSubmitted === true || (cashBag.cashBagCurrencies && cashBag.cashBagCurrencies.length > 0));
+      return !(cashBag.bankReferenceNumber || cashBag.isSubmitted === true || hasEposTransactions(cashBag));
     }
 
     function setCashBagDeletionFlag(normalizedCashBag, cashBagFromAPI) {
