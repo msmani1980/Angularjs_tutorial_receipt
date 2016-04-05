@@ -129,7 +129,7 @@ angular.module('ts5App')
         parent.children = lodash.drop(sortedGroup);
         formattedCarrierInstanceList.push(parent);
       });
-      
+
       return formattedCarrierInstanceList;
     }
 

@@ -252,32 +252,6 @@
               <td></td>
             </tr>
             </tbody>
-
-
-            <!--<tbody ng-repeat="(groupId, ecbGroup) in carrierInstances | orderBy: 'groupId'">-->
-            <!--<tr ng-repeat="eposInstance in ecbGroup track by $index"-->
-            <!--ng-class="getClassForEposRowAttribute('row', eposInstance, $index)"-->
-            <!--ng-show="shouldShowRow(groupId, $index)">-->
-            <!--<td ng-class="getClassForEposRowAttribute('indent', eposInstance, $index)">-->
-            <!--<button class="btn btn-xs btn-default"-->
-            <!--ng-click="toggleOpenGroup(groupId, ecbGroup)"-->
-            <!--ng-show="canOpenEposRow($index, ecbGroup)">-->
-            <!--<span ng-class="getClassForAccordionButton(groupId)"></span>-->
-            <!--</button>-->
-            <!--</td>-->
-            <!--<td ng-class="getClassForEposRowAttribute('nestedIndent', eposInstance, $index)"></td>-->
-            <!--<td>{{ eposInstance.storeNumber }}</td>-->
-            <!--<td>{{ eposInstance.instanceDate }}</td>-->
-            <!--<td>{{ eposInstance.ecbGroup }}</td>-->
-            <!--<td class="text-center">-->
-            <!--<button ng-show="$index === 0"-->
-            <!--ng-click="toggleSelectEposRecord(groupId)"-->
-            <!--ng-class="getClassForAttribute('epos', 'button', eposInstance)">-->
-            <!--<span ng-class="getClassForAttribute('epos', 'icon', eposInstance)"></span>-->
-            <!--</button>-->
-            <!--</td>-->
-            <!--</tr>-->
-            <!--</tbody>-->
           </table>
 
           <p ng-show="shouldShowSearchPromptAlert('epos')" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view ePOS carrier
