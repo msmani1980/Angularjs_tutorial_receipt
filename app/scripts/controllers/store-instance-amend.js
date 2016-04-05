@@ -115,9 +115,31 @@ angular.module('ts5App')
       $scope.closeMoveCashBagModal();
     }
 
-    function moveCashBagError () {
+    function handleReallocationErrors(errorsFromAPI) {
+      var errors = angular.copy(errorsFromAPI.data);
+      $scope.errorCustom = $scope.errorCustom || [];
+
+      var isDuplicateCashBagNumber = errors.filter(function (error) {
+        return error.field === 'cashBagNumber' && error.code === '004';
+      }).length > 0;
+
+      if (isDuplicateCashBagNumber) {
+        $scope.errorCustom.push({ field: 'Cash Bag number', value: 'Can not reallocate to a Store Instance that contains the same Cash Bag Number.' });
+      } else {
+        handleResponseError(errorsFromAPI);
+      }
+
+      $scope.displayError = true;
+    }
+
+    function moveCashBagError (errorsFromAPI) {
+      if ($scope.moveCashBagAction === 'reallocate') {
+        handleReallocationErrors(errorsFromAPI);
+      } else {
+        handleResponseError(errorsFromAPI);
+      }
+
       $scope.closeMoveCashBagModal();
-      handleResponseError();
     }
 
     $scope.reallocateCashBag = function () {
