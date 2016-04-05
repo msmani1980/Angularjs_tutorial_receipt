@@ -134,6 +134,16 @@ angular.module('ts5App')
       return payload;
     }
 
+    function clearEmptyValues(payload) {
+      angular.forEach(payload, function (value, key) {
+        if (!value) {
+          delete payload[key];
+        }
+      });
+
+      return payload;
+    }
+
     function createPayload() {
       var payload = angular.copy($scope.search);
       if (payload.startDate) {
@@ -149,7 +159,7 @@ angular.module('ts5App')
         payload.departureStationCode = formatUiSelectPayload(payload.departureStationCode);
       }
 
-      return payload;
+      return clearEmptyValues(payload);
     }
 
     function loadCashBagList() {
@@ -261,7 +271,8 @@ angular.module('ts5App')
     function createPayloadForStoreInstance() {
       var payload = {};
       if ($scope.search.scheduleDate) {
-        payload.scheduleDate = dateUtility.formatDateForAPI($scope.search.scheduleDate);
+        payload.startDate = dateUtility.formatDateForAPI($scope.search.scheduleDate);
+        payload.endDate = dateUtility.formatDateForAPI($scope.search.scheduleDate);
       }
 
       if ($scope.search.selectedSchedule) {
@@ -300,7 +311,7 @@ angular.module('ts5App')
       $scope.storeInstanceList = [];
       $scope.displayModalError = false;
       var payload = createPayloadForStoreInstance();
-      if (payload.scheduleDate || payload.scheduleNumber || payload.storeId) {
+      if (payload.startDate || payload.scheduleNumber || payload.storeId) {
         $scope.listLoading = true;
         cashBagFactory.getStoreInstanceList(payload, companyId).then(getStoreInstanceListHandler);
       }
