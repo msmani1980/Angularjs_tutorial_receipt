@@ -235,7 +235,8 @@ describe('Controller: CashBagListCtrl', function() {
           scheduleNumber: '0008'
         };
         var expectedPayload = {
-          scheduleDate: dateUtility.formatDateForAPI(scope.search.scheduleDate),
+          startDate: dateUtility.formatDateForAPI(scope.search.scheduleDate),
+          endDate: dateUtility.formatDateForAPI(scope.search.scheduleDate),
           scheduleNumber: scope.search.selectedSchedule.scheduleNumber
         };
 
@@ -252,7 +253,8 @@ describe('Controller: CashBagListCtrl', function() {
         };
 
         var expectedPayload = {
-          scheduleDate: dateUtility.formatDateForAPI(scope.search.scheduleDate),
+          startDate: dateUtility.formatDateForAPI(scope.search.scheduleDate),
+          endDate: dateUtility.formatDateForAPI(scope.search.scheduleDate),
           storeId: scope.search.selectedStoreNumber.id
         };
 
