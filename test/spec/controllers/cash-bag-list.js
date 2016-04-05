@@ -190,6 +190,21 @@ describe('Controller: CashBagListCtrl', function() {
         });
       });
 
+      it('should not send empty search parameters', function () {
+        scope.search = {
+          storeInstanceId: '',
+          cashBagNumber: '234'
+        };
+        scope.searchCashBag();
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
+          cashBagNumber: '234',
+          isDelete: 'false',
+          isSubmitted: 'false',
+          limit: 100,
+          offset: 0
+        });
+      });
+
       it('should clear search model should not make api call', function() {
         scope.search = {
           cashBagNumber: 'fakeCashBagNumber'

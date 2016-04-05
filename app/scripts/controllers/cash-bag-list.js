@@ -134,6 +134,16 @@ angular.module('ts5App')
       return payload;
     }
 
+    function clearEmptyValues(payload) {
+      angular.forEach(payload, function (value, key) {
+        if (!value) {
+          delete payload[key];
+        }
+      });
+      
+      return payload;
+    }
+
     function createPayload() {
       var payload = angular.copy($scope.search);
       if (payload.startDate) {
@@ -149,7 +159,7 @@ angular.module('ts5App')
         payload.departureStationCode = formatUiSelectPayload(payload.departureStationCode);
       }
 
-      return payload;
+      return clearEmptyValues(payload);
     }
 
     function loadCashBagList() {
