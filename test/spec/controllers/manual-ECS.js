@@ -161,10 +161,19 @@ describe('Controller: ManualECSCtrl', function () {
     });
 
     describe('epos carrier instances search', function () {
-      it('should get list of store instances from API', function () {
+      it('should get list of carrier instances from API', function () {
+        scope.eposSearch = {};
+        scope.searchEposInstances();
+        var expectedPayload = { storeInstanceId: 0 };
+        scope.$digest();
+        expect(manualECSFactory.getCarrierInstanceList).toHaveBeenCalledWith(expectedPayload);
+      });
+
+      it('should get remaining list of carrier instances with matching ecbGroups', function () {
         scope.searchEposInstances();
         scope.$digest();
-        expect(manualECSFactory.getCarrierInstanceList).toHaveBeenCalled();
+        var expectedPayload = { ecbGroup: jasmine.stringMatching('1845') };
+        expect(manualECSFactory.getCarrierInstanceList).toHaveBeenCalledWith(expectedPayload);
       });
 
       it('should format search payload to resolve station and format date', function () {
@@ -185,10 +194,17 @@ describe('Controller: ManualECSCtrl', function () {
         expect(manualECSFactory.getCarrierInstanceList).toHaveBeenCalledWith(expectedPayload);
       });
 
+      it('should format results into ecbGroups', function () {
+        scope.searchEposInstances();
+        scope.$digest();
+        expect(scope.carrierInstances[0].children).toBeDefined();
+        expect(Array.isArray(scope.carrierInstances[0].children)).toEqual(true);
+      });
+
       it('should format result dates and attach to scope', function () {
         scope.searchEposInstances();
         scope.$digest();
-        expect(scope.carrierInstances[0].instanceDate).toEqual('02/24/2016');
+        expect(scope.carrierInstances[0].instanceDate).toEqual('04/14/2016');
       });
 
       describe('clear search', function () {
@@ -218,7 +234,7 @@ describe('Controller: ManualECSCtrl', function () {
           storeInstance: '12',
           portalScheduleDate: '11/25/2015',
           portalStoreNumber: '456',
-          portalStation: {id: 3, code: 'LON3'}
+          portalStation: { id: 3, code: 'LON3' }
         };
 
         var expectedPayload = {
@@ -238,7 +254,7 @@ describe('Controller: ManualECSCtrl', function () {
       it('should format result dates and attach to scope', function () {
         scope.searchAllECSInstances();
         scope.$digest();
-        expect(scope.allECSInstances[0].instanceDate).toEqual('02/24/2016');
+        expect(scope.allECSInstances[0].instanceDate).toEqual('04/02/2016');
       });
 
       describe('clear search', function () {
@@ -254,51 +270,56 @@ describe('Controller: ManualECSCtrl', function () {
   });
 
   describe('Create Relationship', function () {
-    it('should call API with epos instance id and store instance id', function () {
+    beforeEach(function () {
+      scope.carrierInstances = [
+        {id: 1, children: [{id: 2}]},
+        {id: 3, children: [{id: 4}]}
+      ];
+    });
+    it('should call API with all selected epos instance ids and selected store instance id', function () {
       scope.selectedPortalRecord = { id: 1 };
-      scope.selectedEposRecord = { id: 2 };
+      scope.selectedEposRecords = [scope.carrierInstances[0]];
       var expectedPayload = { storeInstanceId: 1 };
       scope.saveRelationship();
+      expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(1, expectedPayload);
       expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(2, expectedPayload);
     });
 
     it('should clear models after successful create', function () {
       scope.selectedPortalRecord = { id: 1 };
-      scope.selectedEposRecord = { id: 2 };
-      scope.storeInstances = [{id: 3}];
-      scope.carrierInstances = [{id: 4}];
+      scope.selectedEposRecords = [scope.carrierInstances[0]];
+      scope.storeInstances = [{ id: 3 }];
+      scope.carrierInstances = [{ id: 4 }];
       scope.saveRelationship();
       scope.$digest();
       expect(scope.selectedPortalRecord).toEqual(null);
-      expect(scope.selectedEposRecord).toEqual(null);
+      expect(scope.selectedEposRecords).toEqual([]);
       expect(scope.storeInstances).toEqual(null);
       expect(scope.carrierInstances).toEqual(null);
     });
 
-    it('should not allow saving if a portal and epos record are not selected', function () {
-      scope.selectedEposRecord = { id: 2 };
+    it('should not allow saving if a portal and at least one epos record are not selected', function () {
+      scope.selectedEposRecords = [scope.carrierInstances[0]];
       scope.selectedPortalRecord = null;
+      expect(scope.canSaveRelationship()).toBeFalsy();
+      scope.selectedEposRecords = [];
+      scope.selectedPortalRecord = { id: 2 };
       expect(scope.canSaveRelationship()).toBeFalsy();
     });
 
     describe('select record helpers', function () {
-      it('should attach selected records to scope', function () {
-        var mockPortalInstance = {id: 1};
-        scope.selectRecord('portal', mockPortalInstance);
+      it('should attach selected portal records to scope', function () {
+        var mockPortalInstance = { id: 1 };
+        scope.selectPortalRecord(mockPortalInstance);
         expect(scope.selectedPortalRecord).toEqual(mockPortalInstance);
-
-        var mockCarrierInstance = {id: 2};
-        scope.selectRecord('epos', mockCarrierInstance);
-        expect(scope.selectedEposRecord).toEqual(mockCarrierInstance);
       });
 
-      it('isRecordSelected should return true for records matching selected record on scope', function () {
-        var mockPortalInstance = {id: 1};
-        var mockUnselectedPortalInstance = {id: 2};
-        scope.selectRecord('portal', mockPortalInstance);
-        expect(scope.isRecordSelected('portal', mockPortalInstance)).toEqual(true);
-        expect(scope.isRecordSelected('portal', mockUnselectedPortalInstance)).toEqual(false);
-        expect(scope.isRecordSelected('epos', mockPortalInstance)).toEqual(false);
+      it('should remove or add selected ecbGroups', function () {
+        scope.selectedEposRecords = [];
+        scope.toggleSelectEposRecord(scope.carrierInstances[0]);
+        expect(scope.selectedEposRecords.indexOf(scope.carrierInstances[0]) >= 0).toEqual(true);
+        scope.toggleSelectEposRecord(scope.carrierInstances[0]);
+        expect(scope.selectedEposRecords.indexOf(scope.carrierInstances[0]) >= 0).toEqual(false);
       });
     });
   });
@@ -339,10 +360,47 @@ describe('Controller: ManualECSCtrl', function () {
 
     describe('canEditRecord', function () {
       it('should return true if store instance has status Inbounded', function () {
-        var mockStoreInstance = {statusName: 'Dispatched'};
+        var mockStoreInstance = { statusName: 'Dispatched' };
         expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(false);
-        mockStoreInstance = {statusName: 'Inbounded'};
+        mockStoreInstance = { statusName: 'Inbounded' };
         expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(true);
+      });
+    });
+
+    describe('epos nested table functions', function () {
+      it('should close open groups and open closed groups', function () {
+        var mockParentGroup = {id: 1};
+        scope.toggleOpenGroup(mockParentGroup);
+        expect(mockParentGroup.isOpen).toEqual(true);
+        scope.toggleOpenGroup(mockParentGroup);
+        expect(mockParentGroup.isOpen).toEqual(false);
+      });
+
+      it('should toggle open/close icon if a group is open or closed', function () {
+        var mockOpenParentGroup = {id: 1, isOpen: true};
+        expect(scope.getClassForAccordionButton(mockOpenParentGroup)).toEqual('fa fa-angle-down');
+        var mockClosedParentGroup = {id: 1, isOpen: false};
+        expect(scope.getClassForAccordionButton(mockClosedParentGroup)).toEqual('fa fa-angle-right');
+      });
+
+      it('should display child row as gray if unselected, and green otherwise', function () {
+        var mockParentGroup = {id: 1, children: [{id: 2}]};
+        scope.selectedEposRecords = [];
+        expect(scope.getClassForEposInstanceRow(mockParentGroup, false)).toEqual('');
+        expect(scope.getClassForEposInstanceRow(mockParentGroup, true)).toEqual('categoryLevel2');
+
+        scope.selectedEposRecords = [mockParentGroup];
+        expect(scope.getClassForEposInstanceRow(mockParentGroup, false)).toEqual('bg-success');
+        expect(scope.getClassForEposInstanceRow(mockParentGroup, true)).toEqual('bg-success');
+      });
+
+      it('should only show table when carrier instances exist', function () {
+        scope.carrierInstances = {};
+        expect(scope.shouldShowCarrierInstanceTable()).toEqual(false);
+        scope.carrierInstances = null;
+        expect(scope.shouldShowCarrierInstanceTable()).toEqual(false);
+        scope.carrierInstances = { 1: [{ id: 2 }] };
+        expect(scope.shouldShowCarrierInstanceTable()).toEqual(true);
       });
     });
   });

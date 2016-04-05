@@ -359,9 +359,9 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       it('should resolve schedule date and storeNumber from carrier instances', function () {
         expect(scope.outlierItemList[0].scheduleDate).toBeDefined();
-        expect(scope.outlierItemList[0].scheduleDate).toEqual('02/24/2016');
+        expect(scope.outlierItemList[0].scheduleDate).toEqual('04/02/2016');
         expect(scope.outlierItemList[0].storeNumber).toBeDefined();
-        expect(scope.outlierItemList[0].storeNumber).toEqual('731');
+        expect(scope.outlierItemList[0].storeNumber).toEqual('933199Stre');
       });
 
       it('should resolve menus from menu list', function () {

@@ -28,45 +28,67 @@ angular.module('ts5App')
     };
 
     $scope.canSaveRelationship = function () {
-      return ($scope.selectedPortalRecord && $scope.selectedEposRecord);
+      return ($scope.selectedPortalRecord && $scope.selectedEposRecords.length);
     };
 
-    $scope.isRecordSelected = function (portalOrEpos, record) {
-      if (portalOrEpos === 'portal') {
-        return (!!$scope.selectedPortalRecord) ? (record.id === $scope.selectedPortalRecord.id) : false;
-      }
-
-      return (!!$scope.selectedEposRecord) ? (record.id === $scope.selectedEposRecord.id) : false;
-    };
-
-    $scope.selectRecord = function (portalOrEpos, record) {
-      if (portalOrEpos === 'portal') {
-        $scope.selectedPortalRecord = record;
+    $scope.toggleSelectEposRecord = function (parentRecord) {
+      var groupIndex = $scope.selectedEposRecords.indexOf(parentRecord);
+      if (groupIndex >= 0) {
+        $scope.selectedEposRecords.splice(groupIndex, 1);
         return;
       }
 
-      $scope.selectedEposRecord = record;
+      $scope.selectedEposRecords.push(parentRecord);
+    };
+
+    $scope.selectPortalRecord = function (record) {
+      $scope.selectedPortalRecord = record;
     };
 
     $scope.canSelectStoreInstance = function (storeInstance) {
       return storeInstance.statusName === 'Inbounded';
     };
 
+    function isRecordSelected(portalOrEpos, record) {
+      if (portalOrEpos === 'portal') {
+        return (!!$scope.selectedPortalRecord) ? (record.id === $scope.selectedPortalRecord.id) : false;
+      }
+
+      return $scope.selectedEposRecords.indexOf(record) >= 0;
+    }
+
     $scope.getClassForAttribute = function (portalOrEpos, attribute, record) {
       var attributeToClassMap = {
         button: 'btn btn-sm btn-default',
         icon: 'fa fa-circle-o',
-        row: ''
+        row: portalOrEpos === 'portal' ? 'category-border' : ''
       };
-      if ($scope.isRecordSelected(portalOrEpos, record)) {
+      if (isRecordSelected(portalOrEpos, record)) {
         attributeToClassMap = {
           button: 'btn btn-sm btn-success',
           icon: 'fa fa-check-circle',
-          row: 'bg-success'
+          row: portalOrEpos === 'portal' ? 'category-border bg-success' : 'bg-success'
         };
       }
 
       return attributeToClassMap[attribute] || '';
+    };
+
+    $scope.getClassForEposInstanceRow = function (parentInstance, isChild) {
+      var defaultClass = isChild ? 'categoryLevel2' : '';
+      return $scope.getClassForAttribute('epos', 'row', parentInstance) || defaultClass;
+    };
+
+    $scope.getClassForAccordionButton = function (parentInstance) {
+      return parentInstance.isOpen ? 'fa fa-angle-down' : 'fa fa-angle-right';
+    };
+
+    $scope.shouldShowCarrierInstanceTable = function () {
+      return angular.isDefined($scope.carrierInstances) && lodash.keys($scope.carrierInstances).length > 0;
+    };
+
+    $scope.toggleOpenGroup = function (parentInstance) {
+      parentInstance.isOpen = angular.isDefined(parentInstance.isOpen) ? !parentInstance.isOpen : true;
     };
 
     function getStoreInstancesSuccess(dataFromAPI) {
@@ -99,19 +121,53 @@ angular.module('ts5App')
       manualECSFactory.getStoreInstanceList(payload).then(getStoreInstancesSuccess, showErrors);
     }
 
-    function getUnTiedCarrierInstancesSuccess(dataFromAPI) {
-      hideLoadingModal();
-      $scope.carrierInstances = angular.copy(dataFromAPI.response);
-      angular.forEach($scope.carrierInstances, function (carrierInstance) {
+    function formatGrouping(groupedCarrierInstanceObject) {
+      var formattedCarrierInstanceList = [];
+      angular.forEach(groupedCarrierInstanceObject, function (ecbGroup) {
+        var sortedGroup = lodash.sortByOrder(ecbGroup, ['storeNumber', 'instanceDate'], ['asc', 'asc']);
+        var parent = sortedGroup[0];
+        parent.children = lodash.drop(sortedGroup);
+        formattedCarrierInstanceList.push(parent);
+      });
+
+      return formattedCarrierInstanceList;
+    }
+
+    function setCarrierInstancesList(carrierInstanceListFromAPI) {
+      var carrierInstanceList = angular.copy(carrierInstanceListFromAPI.response);
+      angular.forEach(carrierInstanceList, function (carrierInstance) {
         carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
         carrierInstance.storeNumber = carrierInstance.storeNumber || '';
       });
+
+      var groupedList = lodash.groupBy(carrierInstanceList, 'ecbGroup');
+      $scope.carrierInstances = formatGrouping(groupedList);
+      hideLoadingModal();
+    }
+
+    function getCarrierInstanceGroups(dataFromAPI) {
+      if (!dataFromAPI.response.length) {
+        hideLoadingModal();
+        $scope.carrierInstances = {};
+        return;
+      }
+
+      var ecbGroupPayload = [];
+      angular.forEach(dataFromAPI.response, function (carrierInstance) {
+        ecbGroupPayload.push(carrierInstance.ecbGroup);
+      });
+
+      var payloadForAPI = {
+        ecbGroup: (lodash.uniq(ecbGroupPayload)).toString()
+      };
+
+      manualECSFactory.getCarrierInstanceList(payloadForAPI).then(setCarrierInstancesList, showErrors);
     }
 
     function getUnTiedCarrierInstances(payload) {
       payload.storeInstanceId = 0;
       showLoadingModal('Retrieving ePOS Instances');
-      manualECSFactory.getCarrierInstanceList(payload).then(getUnTiedCarrierInstancesSuccess, showErrors);
+      manualECSFactory.getCarrierInstanceList(payload).then(getCarrierInstanceGroups, showErrors);
     }
 
     function getTiedCarrierInstancesSuccess(dataFromAPI) {
@@ -131,7 +187,7 @@ angular.module('ts5App')
     $scope.resetAll = function () {
       $scope.portalSearch = {};
       $scope.eposSearch = {};
-      $scope.selectedEposRecord = null;
+      $scope.selectedEposRecords = [];
       $scope.selectedPortalRecord = null;
       $scope.carrierInstances = null;
       $scope.storeInstances = null;
@@ -151,18 +207,47 @@ angular.module('ts5App')
       angular.element('#confirmRelationshipModal').modal('hide');
     };
 
+    function getArrayOfAllCarrierInstancesInGroup(groupParent) {
+      var idArray = [];
+      idArray.push(groupParent);
+      angular.forEach(groupParent.children, function (childInstance) {
+        idArray.push(childInstance);
+      });
+
+      return idArray;
+    }
+
+    $scope.getAllCarrierInstancesToSave = function () {
+      var allCarrierInstances = [];
+      angular.forEach($scope.selectedEposRecords, function (groupParent) {
+        allCarrierInstances = allCarrierInstances.concat(getArrayOfAllCarrierInstancesInGroup(groupParent));
+      });
+
+      return allCarrierInstances;
+    };
+
+    function createSaveRelationshipPromise() {
+      var promises = [];
+      var payload = {
+        storeInstanceId: $scope.selectedPortalRecord.id
+      };
+
+      var allCarrierInstances = $scope.getAllCarrierInstancesToSave();
+      angular.forEach(allCarrierInstances, function (carrierInstance) {
+        promises.push(manualECSFactory.updateCarrierInstance(carrierInstance.id, payload));
+      });
+    }
+
     $scope.saveRelationship = function () {
       $scope.dismissSaveConfirmation();
       if (!$scope.canSaveRelationship()) {
-        messageService.display('danger', 'Please select two valid records', 'Create ECS Relationship');
+        messageService.display('danger', 'Please select at least two valid records', 'Create ECS Relationship');
         return;
       }
 
       showLoadingModal('Saving Relationship');
-      var payload = {
-        storeInstanceId: $scope.selectedPortalRecord.id
-      };
-      manualECSFactory.updateCarrierInstance($scope.selectedEposRecord.id, payload).then(saveSuccess, showErrors);
+      var promises = createSaveRelationshipPromise();
+      $q.all(promises).then(saveSuccess, showErrors);
     };
 
     $scope.shouldShowNoRecordAlert = function (portalOrEposOrAll) {
@@ -171,7 +256,8 @@ angular.module('ts5App')
         arrayToCheck = $scope.allECSInstances;
       }
 
-      return angular.isDefined(arrayToCheck) && arrayToCheck !== null && arrayToCheck.length <= 0;
+      var isArrayEmpty = (Array.isArray(arrayToCheck)) ? arrayToCheck.length <= 0 : lodash.keys(arrayToCheck).length <= 0;
+      return angular.isDefined(arrayToCheck) && arrayToCheck !== null && isArrayEmpty;
     };
 
     $scope.shouldShowSearchPromptAlert = function (portalOrEposOrAll) {
@@ -198,7 +284,7 @@ angular.module('ts5App')
       $scope.allECSInstances = null;
     };
 
-    function formatAllECSEposSearchPayload (workingPayload) {
+    function formatAllECSEposSearchPayload(workingPayload) {
       if ($scope.allInstancesSearch.eposScheduleDate) {
         workingPayload.instanceDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.eposScheduleDate);
       }
@@ -212,7 +298,7 @@ angular.module('ts5App')
       }
     }
 
-    function formatAllECSPortalSearchPayload (workingPayload) {
+    function formatAllECSPortalSearchPayload(workingPayload) {
       if ($scope.allInstancesSearch.portalScheduleDate) {
         workingPayload.siScheduleDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.portalScheduleDate);
       }
@@ -258,8 +344,6 @@ angular.module('ts5App')
     function formatPortalSearchPayload() {
       var searchPayload = {
         carrierInstanceCount: 0
-
-        // add after BE work is complete sectorIndex: 1
       };
 
       if ($scope.portalSearch.scheduleDate) {
@@ -288,7 +372,7 @@ angular.module('ts5App')
     };
 
     $scope.searchEposInstances = function () {
-      $scope.selectedEposRecord = null;
+      $scope.selectedEposRecords = [];
       var searchPayload = formatEposSearchPayload();
       getUnTiedCarrierInstances(searchPayload);
     };
@@ -333,7 +417,7 @@ angular.module('ts5App')
       $scope.portalSearch = {};
       $scope.eposSearch = {};
       $scope.allInstancesSearch = {};
-      $scope.selectedEposRecord = null;
+      $scope.selectedEposRecords = [];
       $scope.selectedPortalRecord = null;
       makeInitPromises();
     }
