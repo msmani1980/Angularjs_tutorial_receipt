@@ -481,8 +481,9 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     this.setItemList = function(itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;
-      $scope.substitutions = $this.getUniqueSubstitutions(itemList);
-      $scope.recommendations = $this.getUniqueSubstitutions(itemList);
+      var itemListWithNoDuplicates = $this.getUniqueSubstitutions(itemList);
+      $scope.substitutions = itemListWithNoDuplicates;
+      $scope.recommendations = itemListWithNoDuplicates;
     };
 
     this.setMasterCurrenciesList = function(data) {
