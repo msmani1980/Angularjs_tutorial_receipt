@@ -668,7 +668,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       angular.forEach(items, function(item) {
         var ePosItem = findItemOnEposList(items, item);
         var itemMatch = $this.findItemMatch(item);
-        if (!itemMatch && item.countTypeName !== 'FAClose') {
+        var isEposItem = item.countTypeName === 'FAClose' || item.countTypeName === 'FAOpen';
+        if (!itemMatch && !isEposItem) {
           var newItem = $this.createFreshItem(item, false);
           if ($routeParams.action === 'end-instance') {
             $scope.offloadListItems.push(newItem);
