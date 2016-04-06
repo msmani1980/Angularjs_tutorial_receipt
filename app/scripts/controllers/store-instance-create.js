@@ -135,12 +135,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getFormattedOperationalDaysPayload = function() {
-      var start = dateUtility.getOperationalDay($scope.formData.scheduleDate);
-      if (start === 0) {
-        start = 1;
-      }
-
-      return encodeURI([start, 7]);
+      // Monday -> Sunday = 1 -> 7
+      return dateUtility.getOperationalDay($scope.formData.scheduleDate) || 7;
     };
 
     this.setCatererStationList = function(dataFromAPI) {
@@ -312,16 +308,20 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.formatInitialRedispatchPayload = function() {
       var payload;
+      var scheduleMatch;
 
       if (angular.isDefined($scope.storeDetails.prevStoreInstanceId)) {
+        scheduleMatch = lodash.findWhere($scope.scheduleNumbers, { scheduleNumber:  $scope.prevStoreDetails.scheduleNumber });
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.prevStoreDetails.scheduleDate),
           menus: $this.formatMenus($scope.prevStoreDetails.menuList),
           inboundStationId: parseInt($scope.formData.cateringStationId),
           cateringStationId: parseInt($scope.prevStoreDetails.cateringStationId),
           scheduleNumber: $scope.prevStoreDetails.scheduleNumber,
+          scheduleId: scheduleMatch.id,
           storeId: parseInt($scope.prevStoreDetails.storeId)
         };
+
         if ($scope.existingSeals && $scope.userConfirmedDataLoss) {
           payload.note = '';
           payload.tampered = false;
@@ -329,12 +329,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
 
       if (angular.isUndefined($scope.storeDetails.prevStoreInstanceId)) {
+        scheduleMatch = lodash.findWhere($scope.scheduleNumbers, { scheduleNumber:  $scope.storeDetails.scheduleNumber });
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
           menus: $this.formatMenus($scope.storeDetails.menuList),
           inboundStationId: parseInt($scope.formData.cateringStationId),
           cateringStationId: parseInt($scope.storeDetails.cateringStationId),
           scheduleNumber: $scope.storeDetails.scheduleNumber,
+          scheduleId: scheduleMatch.id,
           storeId: parseInt($scope.storeDetails.storeId)
         };
       }
@@ -374,6 +376,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.formatPayload = function(action) {
       var payload = angular.copy($scope.formData);
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
+      payload.scheduleId = payload.scheduleNumber.id;
       payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
       var actionSwitch = this.actionSwitch(action);
       switch (actionSwitch) {
@@ -1143,8 +1146,16 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $route.reload();
     };
 
+    this.setFormScheduleNumber = function () {
+      if ($scope.formData.scheduleNumber) {
+        $scope.formData.scheduleNumber = lodash.findWhere($scope.scheduleNumbers,
+          { scheduleNumber: $scope.formData.scheduleNumber.scheduleNumber });
+      }
+    };
+
     this.setScheduleNumbers = function(apiData) {
       $scope.scheduleNumbers = angular.copy(apiData.schedules);
+      $this.setFormScheduleNumber();
     };
 
     this.getScheduleNumbers = function() {

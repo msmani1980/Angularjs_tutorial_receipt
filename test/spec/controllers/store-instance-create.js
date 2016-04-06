@@ -173,7 +173,8 @@ describe('Store Instance Create Controller', function() {
       }],
       cateringStationId: 13,
       scheduleNumber: {
-        scheduleNumber: 'SCH1241411'
+        id: 2,
+        scheduleNumber: '107'
       },
       storeId: storeInstanceId
     };
@@ -444,6 +445,12 @@ describe('Store Instance Create Controller', function() {
 
     describe('determining the minimum date', function() {
 
+      beforeEach(function () {
+        localStorage.resetMinDate = {
+          id: 23
+        };
+      });
+
       it('should have been called the determineMinDate method when the store instance is loaded',
         function() {
           mockLoadStoreInstance();
@@ -515,7 +522,8 @@ describe('Store Instance Create Controller', function() {
         }],
         cateringStationId: 13,
         scheduleNumber: {
-          scheduleNumber: 'SCH1241411'
+          id: 2,
+          scheduleNumber: '107'
         },
         storeId: storeInstanceId
       };
@@ -539,8 +547,9 @@ describe('Store Instance Create Controller', function() {
           menuMasterId: 100
         }],
         cateringStationId: 13,
-        scheduleNumber: 'SCH1241411',
-        storeId: 13
+        scheduleNumber: '107',
+        storeId: 13,
+        scheduleId: 2
       };
       expect(mockPayload).toEqual(payloadControl);
     });
@@ -564,7 +573,7 @@ describe('Store Instance Create Controller', function() {
         dispatchedCateringStationId: 3,
         cateringStationId: 13,
         scheduleNumber: {
-          scheduleNumber: 'SCH1241411'
+          scheduleNumber: '107'
         },
         storeId: storeInstanceId
       };
@@ -588,7 +597,8 @@ describe('Store Instance Create Controller', function() {
         scheduleDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
         cateringStationId: 13,
         storeId: 13,
-        scheduleNumber: 'SCH1241411',
+        scheduleNumber: '107',
+        scheduleId: 350,
         replenishStoreInstanceId: storeInstanceId
       };
       expect(mockPayload).toEqual(payloadControl);
@@ -614,7 +624,7 @@ describe('Store Instance Create Controller', function() {
         }],
         cateringStationId: 13,
         scheduleNumber: {
-          scheduleNumber: 'SCH1241411'
+          scheduleNumber: '107'
         },
         storeId: storeInstanceId
       };
@@ -651,7 +661,8 @@ describe('Store Instance Create Controller', function() {
         }],
         cateringStationId: 13,
         scheduleNumber: {
-          scheduleNumber: 'SCH1241411'
+          id: 350,
+          scheduleNumber: '107'
         },
         storeId: storeInstanceId
       };
@@ -761,7 +772,7 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'showMessage');
       scope.$digest();
       scope.formData.scheduleNumber = {
-        scheduleNumber: '194231'
+        scheduleNumber: '107'
       };
       mockStoreInstanceCreate();
     });
@@ -801,7 +812,8 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'showMessage');
       scope.$digest();
       scope.formData.scheduleNumber = {
-        scheduleNumber: '194231'
+        id: 350,
+        scheduleNumber: '107'
       };
       mockStoreInstanceUpdate();
     });
@@ -913,7 +925,8 @@ describe('Store Instance Create Controller', function() {
         }],
         cateringStationId: 13,
         scheduleNumber: {
-          scheduleNumber: 'SCH1241411'
+          id: 350,
+          scheduleNumber: '107'
         },
         storeId: storeInstanceId
       };
@@ -1025,14 +1038,14 @@ describe('Store Instance Create Controller', function() {
     it('should call return a query object and encodeURI and change 0 to 1', function() {
       scope.formData.scheduleDate = '02/29/2016';
       scope.$digest();
-      var queryControl = '1,7';
+      var queryControl = 1;
       expect(StoreInstanceCreateCtrl.getFormattedOperationalDaysPayload()).toEqual(queryControl);
     });
 
     it('should call return a query object and encodeURI', function() {
       scope.formData.scheduleDate = '10/01/2015';
       scope.$digest();
-      var queryControl = '4,7';
+      var queryControl = 4;
       expect(StoreInstanceCreateCtrl.getFormattedOperationalDaysPayload()).toEqual(queryControl);
     });
 
@@ -1303,6 +1316,19 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage').and.callThrough();
+      scope.formData = {
+        scheduleDate: dateUtility.nowFormatted(),
+        menus: [{
+          id: 100,
+          name: 'ABC43124'
+        }],
+        cateringStationId: 13,
+        scheduleNumber: {
+          id: 350,
+          scheduleNumber: '107'
+        },
+        storeId: storeInstanceId
+      };
       mockEndStoreInstance();
     });
 
@@ -1399,7 +1425,8 @@ describe('Store Instance Create Controller', function() {
         }],
         cateringStationId: 13,
         scheduleNumber: {
-          scheduleNumber: 'SCH1241411'
+          id: 350,
+          scheduleNumber: '107'
         },
         storeId: storeInstanceId
       };
@@ -1448,7 +1475,8 @@ describe('Store Instance Create Controller', function() {
         }],
         cateringStationId: 13,
         scheduleNumber: {
-          scheduleNumber: 'SCH1241411'
+          id: 350,
+          scheduleNumber: '107'
         },
         storeId: storeInstanceId
       };
@@ -1507,10 +1535,11 @@ describe('Store Instance Create Controller', function() {
         }],
         cateringStationId: 13,
         scheduleNumber: {
-          scheduleNumber: 'SCH1241411'
+          scheduleNumber: '107'
         },
         storeId: storeInstanceId
       };
+      scope.prevStoreDetails.scheduleNumber = '107';
       scope.prevStoreInstanceId = 12;
       scope.$digest();
       mockEditRedispatchedStoreInstance();
