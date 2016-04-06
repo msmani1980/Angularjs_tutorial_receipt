@@ -123,8 +123,7 @@ describe('Controller: ManualECSCtrl', function () {
           endDate: '20161020',
           storeNumber: '123',
           cateringStationId: 1,
-          storeInstanceId: 2,
-          carrierInstanceCount: 0
+          storeInstanceId: 2
         };
         scope.searchPortalInstances();
         scope.$digest();
