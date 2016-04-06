@@ -8,7 +8,7 @@
  */
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash) {
 
     var $this = this;
     $scope.formData = {
@@ -600,11 +600,17 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return itemList;
     };
 
+    this.getUniqueSubstitutions = function (itemList) {
+        return lodash.filter(itemList, function (item) {
+          return dateUtility.isTodayOrEarlier(item.startDate) && dateUtility.isAfterToday(item.endDate);
+        });
+      };
+      
     this.setItemList = function(itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;
-      $scope.substitutions = itemList;
-      $scope.recommendations = itemList;
+      $scope.substitutions = $this.getUniqueSubstitutions(itemList);
+      $scope.recommendations = $this.getUniqueSubstitutions(itemList);
     };
 
     this.setMasterCurrenciesList = function(data) {
