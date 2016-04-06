@@ -152,10 +152,11 @@ angular.module('ts5App')
       var stockItemList = [];
       var eposItemList = [];
       var faCloseId = lodash.findWhere($this.countTypes, { name: 'FAClose' }).id;
+      var faOpenId = lodash.findWhere($this.countTypes, { name: 'FAOpen' }).id;
       angular.forEach(storeInstanceItems, function (item) {
         if (item.countTypeId === faCloseId) {
           eposItemList.push(item);
-        } else {
+        } else if (item.countTypeId !== faOpenId) {
           stockItemList.push(item);
         }
       });
