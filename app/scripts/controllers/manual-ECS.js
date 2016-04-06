@@ -342,9 +342,7 @@ angular.module('ts5App')
     }
 
     function formatPortalSearchPayload() {
-      var searchPayload = {
-        carrierInstanceCount: 0
-      };
+      var searchPayload = {};
 
       if ($scope.portalSearch.scheduleDate) {
         searchPayload.startDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
