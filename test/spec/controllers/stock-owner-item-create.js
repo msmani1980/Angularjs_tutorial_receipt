@@ -31,11 +31,14 @@ describe('The Stock Owner Item Create Controller', function() {
   var $httpBackend;
   var $routeParams;
   var dateUtility;
+  var lodash;
 
-  beforeEach(inject(function(_dateUtility_) {
+  beforeEach(inject(function(_dateUtility_, _lodash_) {
     dateUtility = _dateUtility_;
+    lodash = _lodash_;
   }));
-
+  
+ 
   function createController($injector) {
     $location = $injector.get('$location');
     $location.path('/stock-owner-item-create');
@@ -449,7 +452,7 @@ describe('The Stock Owner Item Create Controller', function() {
 
       describe('setItemList method', function() {
 
-        var idOfItemInEditMode = 403;
+        var idOfItemInEditMode = '383';
 
         beforeEach(function() {
           spyOn(StockOwnerItemCreateCtrl, 'setItemList').and.callThrough();
@@ -478,22 +481,20 @@ describe('The Stock Owner Item Create Controller', function() {
         });
 
         it('should not delete any item from scope.substitutions if not in edit mode', function() {
-          var substitutionsLength = 40;
-          scope.$digest();
-          itemsListDeferred.resolve();
-          expect(scope.substitutions.length).toBe(substitutionsLength);
-          var itemIdFromList = parseInt(scope.substitutions[0].id);
-          expect(itemIdFromList).toEqual(idOfItemInEditMode);
+            scope.$digest();
+            itemsListDeferred.resolve();
+            var currentItemMatch = lodash.findWhere(scope.substitutions, { id: idOfItemInEditMode });
+            expect(currentItemMatch).toBeDefined();
+            
         });
 
         it('should remove the item from scope.substitutions with id === 332 from the list', function() {
-          var substitutionsLenth = 40;
           $routeParams.id = idOfItemInEditMode;
           scope.$digest();
           itemsListDeferred.resolve();
-          expect(scope.substitutions.length).toBe(substitutionsLenth - 1);
-          var itemIdFromList = parseInt(scope.substitutions[0].id);
-          expect(itemIdFromList).not.toEqual(idOfItemInEditMode);
+          var currentItemMatch = lodash.findWhere(scope.substitutions, { id: idOfItemInEditMode });
+          expect(currentItemMatch).not.toBeDefined();
+
         });
 
         it('should set the scope.items after the promise is resolved', function() {
@@ -781,7 +782,34 @@ describe('The Stock Owner Item Create Controller', function() {
     it('should return false', function() {
       expect(scope.displayError).toBeTruthy();
     });
-
+    
   });
+
+  describe('getUniqueSubstitutions function', function () {
+      it('should be able to remove non active records', function () {
+        var mockStockOwnerItemListResponse = [{
+          itemCode: '7up123',
+          itemName: '7up',
+          startDate: '1999-05-10',
+          endDate: '2050-05-12'
+        }, {
+          itemCode: '7up123',
+          itemName: '7up',
+          startDate: '1999-04-15',
+          endDate: '2000-12-15'
+        }, {
+          itemCode: '7up123',
+          itemName: '7up',
+          startDate: '2060-12-10',
+          endDate: '2061-10-15'
+        }];
+
+        
+        var filteredList = StockOwnerItemCreateCtrl.getUniqueSubstitutions(mockStockOwnerItemListResponse);
+        expect(filteredList.length).toEqual(1);
+        expect(filteredList[0].startDate).toEqual('1999-05-10');
+      });
+    });
+  
 
 });
