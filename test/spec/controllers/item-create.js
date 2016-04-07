@@ -32,9 +32,11 @@ describe('The Item Create Controller', function() {
   var $httpBackend;
   var $routeParams;
   var dateUtility;
+  var lodash;
 
-  beforeEach(inject(function(_dateUtility_) {
+  beforeEach(inject(function(_dateUtility_, _lodash_) {
     dateUtility = _dateUtility_;
+    lodash = _lodash_;
   }));
 
   function createController($injector) {
@@ -710,9 +712,8 @@ describe('The Item Create Controller', function() {
           $routeParams.id = idOfItemInEditMode;
           scope.$digest();
           itemsListDeferred.resolve();
-          expect(scope.substitutions.length).toBe(substitutionsLength - 1);
-          var itemIdFromList = parseInt(scope.substitutions[0].id);
-          expect(itemIdFromList).not.toEqual(idOfItemInEditMode);
+          var currentItemMatch = lodash.findWhere(scope.substitutions, { id: idOfItemInEditMode });
+          expect(currentItemMatch).not.toBeDefined();
         });
 
         it('should set the scope.recommendations after the promise is resolved', function() {
@@ -1496,5 +1497,32 @@ describe('The Item Create Controller', function() {
     });
 
   });
+  
+  describe('getUniqueSubstitutions function', function () {
+      it('should be able to remove non active records', function () {
+        var mockItemListResponse = [{
+          itemCode: '7up123',
+          itemName: '7up',
+          startDate: '1999-05-10',
+          endDate: '2050-05-12'
+        }, {
+          itemCode: '7up123',
+          itemName: '7up',
+          startDate: '1999-04-15',
+          endDate: '2000-12-15'
+        }, {
+          itemCode: '7up123',
+          itemName: '7up',
+          startDate: '2060-12-10',
+          endDate: '2061-10-15'
+        }];
+
+        
+        var filteredList = ItemCreateCtrl.getUniqueSubstitutions(mockItemListResponse);
+        expect(filteredList.length).toEqual(1);
+        expect(filteredList[0].startDate).toEqual('1999-05-10');
+      });
+    });
+  
 
 });
