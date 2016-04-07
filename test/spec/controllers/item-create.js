@@ -708,7 +708,6 @@ describe('The Item Create Controller', function() {
         });
 
         it('should remove the item from scope.substitutions with id === 332 from the list', function() {
-          var substitutionsLength = 40;
           $routeParams.id = idOfItemInEditMode;
           scope.$digest();
           itemsListDeferred.resolve();
@@ -1497,7 +1496,7 @@ describe('The Item Create Controller', function() {
     });
 
   });
-  
+
   describe('getUniqueSubstitutions function', function () {
       it('should be able to remove non active records', function () {
         var mockItemListResponse = [{
@@ -1517,12 +1516,12 @@ describe('The Item Create Controller', function() {
           endDate: '2061-10-15'
         }];
 
-        
+
         var filteredList = ItemCreateCtrl.getUniqueSubstitutions(mockItemListResponse);
         expect(filteredList.length).toEqual(1);
         expect(filteredList[0].startDate).toEqual('1999-05-10');
       });
     });
-  
+
 
 });
