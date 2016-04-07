@@ -3,6 +3,7 @@
   "companyId": 403,
   "storeId": 64,
   "cateringStationId": 1,
+  "scheduleId": 1,
   "scheduleDate": "2015-09-30",
   "scheduleNumber": "SCHED123",
   "carrierId": 33,
