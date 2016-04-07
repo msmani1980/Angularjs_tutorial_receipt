@@ -357,6 +357,11 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(overlapItem).not.toBeDefined();
       });
 
+      it('should contain a quantitySold attribute from FAClose count types', function () {
+        expect(scope.outlierItemList[0].quantitySold).toBeDefined();
+        expect(scope.outlierItemList[0].quantitySold).toEqual(30);
+      });
+
       it('should resolve schedule date and storeNumber from carrier instances', function () {
         expect(scope.outlierItemList[0].scheduleDate).toBeDefined();
         expect(scope.outlierItemList[0].scheduleDate).toEqual('04/02/2016');

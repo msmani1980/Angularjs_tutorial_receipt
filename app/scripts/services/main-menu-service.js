@@ -116,8 +116,8 @@ angular.module('ts5App')
           route: emberURL + 'menu-rules',
           icon: 'icon-manage-rules',
           className: 'dashboard-manageRules',
-          package: 'MENU',
-          role: 'RULE'
+          package: 'MENUASSG',
+          role: 'MENURULE'
         }, {
           name: 'Create Rule',
           route: emberURL + 'menu-rules/create',
