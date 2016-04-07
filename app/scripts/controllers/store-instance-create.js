@@ -308,17 +308,15 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.formatInitialRedispatchPayload = function() {
       var payload;
-      var scheduleMatch;
 
       if (angular.isDefined($scope.storeDetails.prevStoreInstanceId)) {
-        scheduleMatch = lodash.findWhere($scope.scheduleNumbers, { scheduleNumber:  $scope.prevStoreDetails.scheduleNumber });
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.prevStoreDetails.scheduleDate),
           menus: $this.formatMenus($scope.prevStoreDetails.menuList),
           inboundStationId: parseInt($scope.formData.cateringStationId),
           cateringStationId: parseInt($scope.prevStoreDetails.cateringStationId),
           scheduleNumber: $scope.prevStoreDetails.scheduleNumber,
-          scheduleId: scheduleMatch.id,
+          scheduleId: $scope.prevStoreDetails.scheduleId,
           storeId: parseInt($scope.prevStoreDetails.storeId)
         };
 
@@ -329,14 +327,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
 
       if (angular.isUndefined($scope.storeDetails.prevStoreInstanceId)) {
-        scheduleMatch = lodash.findWhere($scope.scheduleNumbers, { scheduleNumber:  $scope.storeDetails.scheduleNumber });
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
           menus: $this.formatMenus($scope.storeDetails.menuList),
           inboundStationId: parseInt($scope.formData.cateringStationId),
           cateringStationId: parseInt($scope.storeDetails.cateringStationId),
           scheduleNumber: $scope.storeDetails.scheduleNumber,
-          scheduleId: scheduleMatch.id,
+          scheduleId: $scope.storeDetails.scheduleId,
           storeId: parseInt($scope.storeDetails.storeId)
         };
       }
