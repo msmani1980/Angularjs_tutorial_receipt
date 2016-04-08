@@ -91,6 +91,23 @@ angular.module('ts5App')
       parentInstance.isOpen = angular.isDefined(parentInstance.isOpen) ? !parentInstance.isOpen : true;
     };
 
+    function getStatusName(statusId) {
+      var statusMatch = lodash.findWhere($scope.statusList, { id: statusId });
+      var statusName = (!!statusMatch) ? statusMatch.statusName : '';
+      if (statusName === 'Unpacking' || statusName === 'Inbound Seals') {
+        statusName = 'On Floor';
+      }
+
+      return statusName;
+    }
+
+    function formatStoreInstanceForApp(storeInstance) {
+      storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate, 'YYYY-MM-DD') || '';
+      var stationMatch = lodash.findWhere($scope.companyStationList, { stationId: storeInstance.cateringStationId });
+      storeInstance.stationCode = (!!stationMatch) ? stationMatch.stationCode : '';
+      storeInstance.statusName = getStatusName(storeInstance.statusId);
+    }
+
     function getStoreInstancesSuccess(dataFromAPI) {
       hideLoadingModal();
 
@@ -101,17 +118,11 @@ angular.module('ts5App')
         'Ready for Dispatch',
         'Dispatched',
         'On Floor',
-        'Inbound Seals',
-        'Unpacking',
         'Inbounded'
       ];
 
       $scope.storeInstances = lodash.filter(storeInstancesResponse, function (storeInstance) {
-        storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate, 'YYYY-MM-DD') || '';
-        var stationMatch = lodash.findWhere($scope.companyStationList, { stationId: storeInstance.cateringStationId });
-        var statusMatch = lodash.findWhere($scope.statusList, { id: storeInstance.statusId });
-        storeInstance.stationCode = (!!stationMatch) ? stationMatch.stationCode : '';
-        storeInstance.statusName = (!!statusMatch) ? statusMatch.statusName : '';
+        formatStoreInstanceForApp(storeInstance);
         return allowedStatuses.indexOf(storeInstance.statusName) >= 0;
       });
     }

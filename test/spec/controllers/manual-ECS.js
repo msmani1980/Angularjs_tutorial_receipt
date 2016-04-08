@@ -142,6 +142,22 @@ describe('Controller: ManualECSCtrl', function () {
         expect(scope.storeInstances[0].statusName).toEqual('Dispatched');
       });
 
+      it('should convert Unpacking and Inbound Seals status to Onfloor', function () {
+        scope.statusList = [
+          {id: 1, statusName: 'Unpacking'}
+        ];
+        scope.searchPortalInstances();
+        scope.$digest();
+        expect(scope.storeInstances[0].statusName).toEqual('On Floor');
+
+        scope.statusList = [
+          {id: 1, statusName: 'Inbound Seals'}
+        ];
+        scope.searchPortalInstances();
+        scope.$digest();
+        expect(scope.storeInstances[0].statusName).toEqual('On Floor');
+      });
+
       it('should filter out store instances that are after Inbounded status', function () {
         scope.searchPortalInstances();
         scope.$digest();
