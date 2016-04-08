@@ -91,14 +91,21 @@ angular.module('ts5App')
       parentInstance.isOpen = angular.isDefined(parentInstance.isOpen) ? !parentInstance.isOpen : true;
     };
 
-    function formatStoreInstanceForApp (storeInstance) {
-      storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate, 'YYYY-MM-DD');
+    function getStatusName(statusId) {
+      var statusMatch = lodash.findWhere($scope.statusList, { id: statusId });
+      var statusName = (!!statusMatch) ? statusMatch.statusName : '';
+      if (statusName === 'Unpacking' || statusName === 'Inbound Seals') {
+        statusName = 'On Floor';
+      }
+
+      return statusName;
+    }
+
+    function formatStoreInstanceForApp(storeInstance) {
+      storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate, 'YYYY-MM-DD') || '';
       var stationMatch = lodash.findWhere($scope.companyStationList, { stationId: storeInstance.cateringStationId });
-      var statusMatch = lodash.findWhere($scope.statusList, { id: storeInstance.statusId });
       storeInstance.stationCode = (!!stationMatch) ? stationMatch.stationCode : '';
-      storeInstance.statusName = (!!statusMatch) ? statusMatch.statusName : '';
-      storeInstance.statusName = (storeInstance.statusName === 'Unpacking' || storeInstance.statusName ===
-      'Inbound Seals') ? 'On Floor' : storeInstance.statusName;
+      storeInstance.statusName = getStatusName(storeInstance.statusId);
     }
 
     function getStoreInstancesSuccess(dataFromAPI) {
