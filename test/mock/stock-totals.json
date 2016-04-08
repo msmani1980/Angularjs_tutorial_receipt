@@ -148,11 +148,11 @@
       "id": 45,
       "companyId": 403,
       "storeInstanceId": 1138,
-      "itemMasterId": 110,
+      "itemMasterId": 100,
       "itemTypeId": 1,
       "price": 20.0,
       "lmpQuantity": 0,
-      "eposQuantity": null,
+      "eposQuantity": 5,
       "lmpTotal": 0.0,
       "eposTotal": null
     }
