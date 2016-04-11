@@ -114,7 +114,7 @@ angular.module('ts5App')
     };
 
     this.getSalesCategoriesList = function () {
-      companiesFactory.getSalesCategoriesList({}, false).then(function (data) {
+      companiesFactory.getSalesCategoriesList(function (data) {
         $scope.salesCategories = data.salesCategories;
       });
     };

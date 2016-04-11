@@ -452,7 +452,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.makeDependencyPromises = function() {
       return [
-        companiesFactory.getSalesCategoriesList({}, false),
+        companiesFactory.getSalesCategoriesList(),
         companiesFactory.getTagsList(),
         companiesFactory.getTaxTypesList(),
         currencyFactory.getCompanyCurrencies(),

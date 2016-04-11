@@ -379,7 +379,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     this.makeDependencyPromises = function() {
       var companyId = globalMenuService.company.get();
       return [
-        companiesFactory.getSalesCategoriesList({}, false),
+        companiesFactory.getSalesCategoriesList(),
         companiesFactory.getTagsList(),
         companiesFactory.getTaxTypesList(),
         currencyFactory.getCompanyCurrencies(),
