@@ -477,7 +477,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
           return dateUtility.isTodayOrEarlier(item.startDate) && dateUtility.isAfterToday(item.endDate);
         });
       };
-      
+
     this.setItemList = function(itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;
