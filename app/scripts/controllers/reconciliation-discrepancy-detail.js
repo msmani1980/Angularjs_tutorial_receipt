@@ -119,12 +119,14 @@ angular.module('ts5App')
       return uniqueItemList;
     }
 
-    function formatEposItem(item) {
+    function formatEposItem(item, rawLMPStockData) {
       var carrierInstanceMatch = lodash.findWhere($this.carrierInstanceList, { id: item.companyCarrierInstanceId });
       if (!carrierInstanceMatch) {
         return;
       }
 
+      var stockItemMatch = lodash.findWhere(rawLMPStockData, { itemMasterId: item.itemMasterId });
+      item.eposQuantity = (!!stockItemMatch) ? stockItemMatch.eposQuantity : 0;
       item.storeNumber = carrierInstanceMatch.storeNumber;
       item.scheduleDate = dateUtility.formatDateForApp(carrierInstanceMatch.instanceDate);
       item.menuList = '';
@@ -139,13 +141,17 @@ angular.module('ts5App')
       return item;
     }
 
-    function setOutlierItemsList(eposItemsFromAPI) {
+    function setOutlierItemsList(eposItemsFromAPI, rawLMPStockData) {
       var filteredEposItems = lodash.filter(eposItemsFromAPI, function (eposItem) {
         var stockItemMatch = lodash.findWhere($scope.stockItemList, { itemMasterId: eposItem.itemMasterId });
         return !stockItemMatch;
       });
 
-      $scope.outlierItemList = filteredEposItems.map(formatEposItem);
+      angular.forEach(filteredEposItems, function (item) {
+        formatEposItem(item, rawLMPStockData);
+      });
+
+      $scope.outlierItemList = filteredEposItems;
     }
 
     function filterOutEposItemsFromStockItems(storeInstanceItems) {
@@ -162,11 +168,6 @@ angular.module('ts5App')
         }
       });
 
-      angular.forEach(eposItemList, function (item) {
-        var faOpenItemMatch = lodash.findWhere(storeInstanceItems, { itemMasterId: item.itemMasterId, countTypeId: faOpenId });
-        item.quantitySold = (!!faOpenItemMatch) ? faOpenItemMatch.quantity : 0;
-      });
-
       return {
         stockItems: stockItemList,
         eposItems: eposItemList
@@ -179,7 +180,7 @@ angular.module('ts5App')
       reconciliationFactory.getStockItemCounts($routeParams.storeInstanceId).then(function (stockCountsFromAPI) {
         var filteredItems = mergeItems(filteredStockAndEposItems.stockItems, rawLMPStockData, stockCountsFromAPI.response);
         $scope.stockItemList = lodash.map(filteredItems, setStockItem);
-        setOutlierItemsList(filteredStockAndEposItems.eposItems);
+        setOutlierItemsList(filteredStockAndEposItems.eposItems, rawLMPStockData);
         initLMPStockRevisions();
       });
     }
