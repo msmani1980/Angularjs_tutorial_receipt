@@ -379,7 +379,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     this.makeDependencyPromises = function() {
       var companyId = globalMenuService.company.get();
       return [
-        companiesFactory.getSalesCategoriesList(),
+        companiesFactory.getSalesCategoriesList({}, false),
         companiesFactory.getTagsList(),
         companiesFactory.getTaxTypesList(),
         currencyFactory.getCompanyCurrencies(),
@@ -477,7 +477,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
           return dateUtility.isTodayOrEarlier(item.startDate) && dateUtility.isAfterToday(item.endDate);
         });
       };
-      
+
     this.setItemList = function(itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;

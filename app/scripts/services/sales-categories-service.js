@@ -36,7 +36,9 @@ angular.module('ts5App')
       return $resource(requestURL, requestParameters, actions);
     };
 
-    var getSalesCategoriesList = function (payload) {
+    var getSalesCategoriesList = function (payload, shouldLimitResponse) {
+      shouldLimitResponse = angular.isDefined(shouldLimitResponse) ? shouldLimitResponse : true;
+      requestParameters.limit = (shouldLimitResponse) ? 50 : 0;
       return requestResource().getSalesCategoriesList(payload).$promise;
     };
 
