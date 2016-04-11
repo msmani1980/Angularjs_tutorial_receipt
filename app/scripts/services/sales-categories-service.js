@@ -12,8 +12,7 @@ angular.module('ts5App')
 
     var requestURL = ENV.apiUrl + '/api/companies/:companyId/sales-categories/:id';
     var requestParameters = {
-      id: '@id',
-      limit: 50
+      id: '@id'
     };
 
     var actions = {
@@ -36,8 +35,7 @@ angular.module('ts5App')
       return $resource(requestURL, requestParameters, actions);
     };
 
-    var getSalesCategoriesList = function (payload, shouldLimitResponse) {
-      requestParameters.limit = (shouldLimitResponse) ? 50 : 0;
+    var getSalesCategoriesList = function (payload) {
       return requestResource().getSalesCategoriesList(payload).$promise;
     };
 
