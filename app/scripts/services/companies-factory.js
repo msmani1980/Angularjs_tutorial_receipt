@@ -37,8 +37,8 @@ angular.module('ts5App')
     };
 
     // Sales Categories
-    var getSalesCategoriesList = function(payload, shouldLimitRequest) {
-      return salesCategoriesService.getSalesCategoriesList(payload, shouldLimitRequest);
+    var getSalesCategoriesList = function(payload) {
+      return salesCategoriesService.getSalesCategoriesList(payload);
     };
 
     var getSalesCategory = function(id) {
