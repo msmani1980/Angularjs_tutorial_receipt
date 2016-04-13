@@ -610,22 +610,22 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Outlier Items</h3>
+        <br>
+        <p>
+          <b>Store Number: </b> {{ outlierItemData.storeNumber }}<br>
+          <b>Schedule Date: </b> {{ outlierItemData.scheduleDate }}<br>
+          <b>Menu(s): </b> {{ outlierItemData.menuList }}
+        </p>
       </div>
       <div class="modal-body">
         <table class="table table-bordered">
           <tr class="active">
             <th>Retail Item Details</th>
             <th>Quantity Sold</th>
-            <th>Store Number</th>
-            <th>Date Opened</th>
-            <th>Menus</th>
           </tr>
           <tr ng-repeat="item in outlierItemList">
             <td>{{ item.itemCode }} - {{ item.itemName }}</td>
             <td>{{ item.eposQuantity }}</td>
-            <td>{{ item.storeNumber }}</td>
-            <td>{{ item.scheduleDate }}</td>
-            <td>{{ item.menuList }}</td>
           </tr>
         </table>
       </div>

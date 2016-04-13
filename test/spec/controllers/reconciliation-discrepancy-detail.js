@@ -362,16 +362,17 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(scope.outlierItemList[0].eposQuantity).toEqual(5);
       });
 
-      it('should resolve schedule date and storeNumber from carrier instances', function () {
-        expect(scope.outlierItemList[0].scheduleDate).toBeDefined();
-        expect(scope.outlierItemList[0].scheduleDate).toEqual('04/02/2016');
-        expect(scope.outlierItemList[0].storeNumber).toBeDefined();
-        expect(scope.outlierItemList[0].storeNumber).toEqual('933199Stre');
+      it('should attach schedule date and store number from carrier instsance to scope', function () {
+        expect(scope.outlierItemData).toBeDefined();
+        expect(scope.outlierItemData.scheduleDate).toBeDefined();
+        expect(scope.outlierItemData.scheduleDate).toEqual('04/02/2016');
+        expect(scope.outlierItemData.storeNumber).toBeDefined();
+        expect(scope.outlierItemData.storeNumber).toEqual('933199Stre');
       });
 
-      it('should resolve menus from menu list', function () {
-        expect(scope.outlierItemList[0].menuList).toBeDefined();
-        expect(scope.outlierItemList[0].menuList).toEqual('Test, A320 Menu');
+      it('should resolve menus from menu list with no duplicates', function () {
+        expect(scope.outlierItemData.menuList).toBeDefined();
+        expect(scope.outlierItemData.menuList).toEqual('Test,A320 Menu');
       });
     });
 
