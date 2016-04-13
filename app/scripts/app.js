@@ -316,7 +316,7 @@ angular.module('ts5App', [
   }).when('/manual-ecs', {
     templateUrl: 'views/manual-ECS.html',
     controller: 'ManualECSCtrl'
-  }).when('/manual-epos-entry', {
+  }).when('/manual-epos-dashboard', {
     templateUrl: 'views/manual-epos-entry.html',
     controller: 'ManualEposEntryCtrl'
   }).otherwise({

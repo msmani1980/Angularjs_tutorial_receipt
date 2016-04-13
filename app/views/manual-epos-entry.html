@@ -1,61 +1,100 @@
 <!-- Manual Epos Angular Mockup -->
 
 <!-- Manual Epos - Top Header -->
-<div class="top-header manual-epos">
-  <div class="container">
-    <div class="edit-controls">
+<!--<div class="top-header manual-epos">-->
+  <!--<div class="container">-->
+    <!--<div class="edit-controls">-->
 
-      <div class="row">
-        <div class="col-xs-12 col-sm-3">
-          <h4 class="view-name"> {{ viewName }} </h4>
-        </div>
+      <!--<div class="row">-->
+        <!--<div class="col-xs-12 col-sm-3">-->
+          <!--<h4 class="view-name"> {{ viewName }} </h4>-->
+        <!--</div>-->
 
-        <div class="col-xs-12 col-sm-9 text-left">
+        <!--<div class="col-xs-12 col-sm-9 text-left">-->
 
-          <div class="manual-epos-panel-option" ng-repeat="(key, panel) in panelNames track by $index">
-            <div class="row">
-              <div class="col-xs-12 col-sm-3 col-md-5">
-                <input bs-switch
-                 ng-model="panel.show"
-                 type="checkbox"
-                 switch-size="small"
-                 switch-on-color="info"
-                 switch-on-text="Yes"
-                 switch-off-text="No"/>
-               </div>
-               <div class="col-xs-12 col-sm-12 col-md-7 epos-panel-option-text">{{panel.name}} <i ng-if="panel.verified" class="fa fa-check-circle"></i></div>
-            </div>
-          </div>
+          <!--<div class="manual-epos-panel-option" ng-repeat="(key, panel) in panelNames track by $index">-->
+            <!--<div class="row">-->
+              <!--<div class="col-xs-12 col-sm-3 col-md-5">-->
+                <!--<input bs-switch-->
+                 <!--ng-model="panel.show"-->
+                 <!--type="checkbox"-->
+                 <!--switch-size="small"-->
+                 <!--switch-on-color="info"-->
+                 <!--switch-on-text="Yes"-->
+                 <!--switch-off-text="No"/>-->
+               <!--</div>-->
+               <!--<div class="col-xs-12 col-sm-12 col-md-7 epos-panel-option-text">{{panel.name}} <i ng-if="panel.verified" class="fa fa-check-circle"></i></div>-->
+            <!--</div>-->
+          <!--</div>-->
 
-          <div class="manual-epos-panel-option">
-            <div class="row">
-              <div class="col-xs-12 col-sm-3 col-md-5">
-                <input bs-switch
-                 ng-model="showAll"
-                 type="checkbox"
-                 switch-size="small"
-                 switch-on-color="info"
-                 switch-on-text="Yes"
-                 switch-off-text="No"/>
-              </div>
-              <div class="col-xs-12 col-sm-12 col-md-7 epos-panel-option-text"><i><b>Show All Forms</b></i></div>
-            </div>
-          </div>
+          <!--<div class="manual-epos-panel-option">-->
+            <!--<div class="row">-->
+              <!--<div class="col-xs-12 col-sm-3 col-md-5">-->
+                <!--<input bs-switch-->
+                 <!--ng-model="showAll"-->
+                 <!--type="checkbox"-->
+                 <!--switch-size="small"-->
+                 <!--switch-on-color="info"-->
+                 <!--switch-on-text="Yes"-->
+                 <!--switch-off-text="No"/>-->
+              <!--</div>-->
+              <!--<div class="col-xs-12 col-sm-12 col-md-7 epos-panel-option-text"><i><b>Show All Forms</b></i></div>-->
+            <!--</div>-->
+          <!--</div>-->
 
-        </div>
-      </div>
+        <!--</div>-->
+      <!--</div>-->
 
-      <i>Select form areas to hide / show</i>
-      <br>
-      <i><i class="fa fa-check-circle"></i> Indicates a verified section</i>
+      <!--<i>Select form areas to hide / show</i>-->
+      <!--<br>-->
+      <!--<i><i class="fa fa-check-circle"></i> Indicates a verified section</i>-->
 
-    </div>
-  </div>
-</div>
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
 <!-- End - Manual Epos - Top Header -->
 
 <!-- Container -->
-<div class="manual-epos-container container">
+<div class=" container">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2>Manual Epos Entry</h2>
+      <p><span class="fa fa-check-circle"></span> <i>Indicates a verified section</i></p>
+      </div>
+    <div class="panel-body">
+      <br>
+      <div class="row">
+        <div class="col-xs-4">
+          <button class="btn btn-primary col-xs-12"><span class="fa fa-check-circle"></span> Cash</button>
+        </div>
+        <div class="col-xs-4">
+          <button class="btn btn-primary col-xs-12"><span class="fa fa-check-circle"></span> Credit Card</button>
+        </div>
+        <div class="col-xs-4">
+          <button class="btn btn-primary col-xs-12"><span class="fa fa-check-circle"></span> Discounts</button>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-xs-4">
+          <button class="btn btn-primary col-xs-12"><span class="fa fa-check-circle"></span> Promotions</button>
+        </div>
+        <div class="col-xs-4">
+          <button class="btn btn-primary col-xs-12"><span class="fa fa-check-circle"></span> Virtual Items</button>
+        </div>
+        <div class="col-xs-4">
+          <button class="btn btn-primary col-xs-12"><span class="fa fa-check-circle"></span> Voucher Items</button>
+        </div>
+      </div>
+      <br>
+      </div>
+    <div class="panel-footer">
+
+      </div>
+    </div>
+  <br>
+
+
 
   <!--Split Columns for Cash/Credit-->
   <div class="row">
