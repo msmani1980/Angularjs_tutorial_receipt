@@ -319,6 +319,9 @@ angular.module('ts5App', [
   }).when('/manual-epos-dashboard', {
     templateUrl: 'views/manual-epos-entry.html',
     controller: 'ManualEposEntryCtrl'
+  }).when('/manual-epos-cash', {
+    templateUrl: 'views/manual-epos-cash.html',
+    controller: 'ManualEposCashCtrl'
   }).otherwise({
     redirectTo: '/'
   });

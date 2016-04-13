@@ -101,10 +101,6 @@ angular.module('ts5App')
           setScopeData(response, 'companyDiscountsList');
         }),
 
-        manualEposFactory.getCashList().then(function(response) {
-          setScopeData(response, 'companyCashList');
-        }),
-
         manualEposFactory.getCreditList().then(function(response) {
           setScopeData(response, 'companyCreditCardList');
         })

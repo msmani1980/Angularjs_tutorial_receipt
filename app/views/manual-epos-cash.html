@@ -1,0 +1,92 @@
+<div class="container module-container">
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-8">
+        <h2 class="view-name">Manual Epos Entry: <b>Add Cash</b></h2>
+      </div>
+
+      <div class="col-xs-4 text-right">
+        <a class="btn btn-default" href="/manual-epos-dashboard">
+          <span class="fa fa-times"></span> Cancel
+        </a>
+        <a class="btn btn-primary" href="/manual-epos-dashboard">
+          <span class="fa fa-check-square-o"></span> Save & Exit
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="alert alert-success"><span class="fa fa-check-circle"></span> Verified by areyes on 11/20/2015 at 12:34pm</div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="input-group">
+            <span class="input-group-addon" id="cash-filter">Filter</span>
+            <input type="text"
+                   class="form-control"
+                   ng-model="filter.cash"
+                   placeholder="Select Currency Codes to filter by ..."
+                   aria-describedby="cash-filter"/>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <div class="col-xs-6">
+          <p><b>Amount</b></p>
+        </div>
+        <div class="col-xs-6">
+          <p><b>Converted Amount (AUD)</b></p>
+        </div>
+      </div>
+      <div ng-repeat="cash in companyCashList | filter: {code: filter.cash} track by $index">
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="input-group">
+              <span class="input-group-addon">{{cash.code}}</span>
+              <input type="number"
+                     class="form-control"
+                     ng-model="cash.amount"
+                     placeholder="12345678.91"
+                     aria-describedby="cash"/>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <input type="number"
+                   class="form-control"
+                   ng-model="cash.audValue"
+                   placeholder="12345678.91"
+                   aria-describedby="currency"
+                   disabled="true"/>
+          </div>
+        </div>
+        <br>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-xs-6 text-right">
+          <p><b>Grand Total</b></p>
+        </div>
+        <div class="col-xs-6">
+          <input class="form-control" type="number" value="14.00" disabled="true"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      <div class="row">
+        <div class="col-xs-12 text-right">
+          <button class="btn btn-primary" ng-click="verifyPanel('Cash')"><span class="fa fa-check-square-o"></span> Save</button>
+          <button class="btn btn-success" ng-click="verifyPanel('Cash')"><span class="fa fa-check-circle"></span> Verify</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<dynamic-left-nav></dynamic-left-nav>
