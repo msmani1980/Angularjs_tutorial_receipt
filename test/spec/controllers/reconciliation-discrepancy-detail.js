@@ -370,7 +370,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(scope.outlierItemData.storeNumber).toEqual('933199Stre');
       });
 
-      it('should resolve menus from menu list with no duplicates', function () {
+      it('should resolve menus from menu list', function () {
         expect(scope.outlierItemData.menuList).toBeDefined();
         expect(scope.outlierItemData.menuList).toEqual('Test,A320 Menu');
       });

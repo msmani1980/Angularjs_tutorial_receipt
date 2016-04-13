@@ -138,7 +138,6 @@ angular.module('ts5App')
           $scope.outlierItemData.menuList.push(menuMatch.menuName);
         }
       });
-
     }
 
     function formatEposItem(item, rawLMPStockData) {
