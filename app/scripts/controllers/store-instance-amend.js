@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
-      reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory, storeInstanceFactory) {
+      reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory, storeInstanceFactory, recordsService) {
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
@@ -171,15 +171,29 @@ angular.module('ts5App')
       return storeInstanceAmendFactory.getScheduleMockData($scope.scheduleSearch).then($this.searchForScheduleSuccess);
     };
 
-    $scope.getStatusNameById = function (statusId) {
-      switch (statusId) {
-        case 8:
-          return 'Inbounded';
-        case 9:
-          return 'Discrepancies';
-        default:
-          return 'Unknown';
+    function getStoreStatusByStatusStep (step) {
+      var storeStatus = lodash.find($scope.storeStatusList, 'name', step);
+
+      return storeStatus;
+    }
+
+    $scope.canExecuteActions = function () {
+      var inboundedStatus = getStoreStatusByStatusStep('8');
+      var discrepanciesStatus = getStoreStatusByStatusStep('9');
+
+      if (!($scope.storeInstance && inboundedStatus && discrepanciesStatus)) {
+        return false;
       }
+
+      var statusId = $scope.storeInstance.statusId;
+
+      return statusId === inboundedStatus.id || statusId === discrepanciesStatus.id;
+    };
+
+    $scope.getStatusNameById = function (statusId) {
+      var status = lodash.find($scope.storeStatusList, 'id', statusId);
+
+      return status.statusName;
     };
 
     function normalizeMergeSearchResults (dataFromAPI) {
@@ -192,7 +206,10 @@ angular.module('ts5App')
     }
 
     function isStoreInstanceEligibleForReallocation(storeInstance) {
-      return (storeInstance.statusId === 8 || storeInstance.statusId === 9) && storeInstance.id !== parseInt($routeParams.storeInstanceId);
+      var inboundedStatus = getStoreStatusByStatusStep('8');
+      var discrepanciesStatus = getStoreStatusByStatusStep('9');
+
+      return (storeInstance.statusId === inboundedStatus.id || storeInstance.statusId === discrepanciesStatus.id) && storeInstance.id !== parseInt($routeParams.storeInstanceId);
     }
 
     function normalizeReallocateSearchResults (dataFromAPI) {
@@ -788,6 +805,14 @@ angular.module('ts5App')
                                       .then(getCashBagDetails);
     }
 
+    function setStoreStatusList(dataFromAPI) {
+      $scope.storeStatusList = angular.copy(dataFromAPI);
+    }
+
+    function getStoreStatusList () {
+      recordsService.getStoreStatusList().then(setStoreStatusList);
+    }
+
     function showLoadingModal(text) {
       $scope.displayError = false;
       angular.element('#loading').modal('show').find('p').text(text);
@@ -815,6 +840,7 @@ angular.module('ts5App')
 
     function initData() {
       var promiseArray = [
+        getStoreStatusList(),
         getStoreInstance(),
         getCompany(),
         getCompanyGlobalCurrencies(),
