@@ -264,6 +264,94 @@ describe('Service: cashBagService', function () {
       });
     });
 
+    describe('get cash bag cash list', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.getCashBagCashList).toBe(true);
+      });
+
+      it('should make GET call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        $httpBackend.expectGET(/cash-bags\/fakeId\/cash/).respond(200, {});
+
+        cashBagService.getCashBagCashList(cashBagId, {}).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
+    describe('get cash bag cash currency', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.getCashBagCash).toBe(true);
+      });
+
+      it('should make GET call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        var currencyId = 'fakeCurrencyId';
+        $httpBackend.expectGET(/cash-bags\/fakeId\/cash\/fakeCurrencyId/).respond(200, {});
+
+        cashBagService.getCashBagCash(cashBagId, currencyId).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
+    describe('create cash bag cash currency', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.createCashBagCash).toBe(true);
+      });
+
+      it('should make GET call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        $httpBackend.expectPOST(/cash-bags\/fakeId\/cash/).respond(200, {});
+
+        cashBagService.createCashBagCash(cashBagId, {}).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
+    describe('update cash bag cash currency', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.updateCashBagCash).toBe(true);
+      });
+
+      it('should make GET call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        var currencyId = 'fakeCurrencyId';
+        $httpBackend.expectPUT(/cash-bags\/fakeId\/cash\/fakeCurrencyId/).respond(200, {});
+
+        cashBagService.updateCashBagCash(cashBagId, currencyId, {}).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
+    describe('delete cash bag cash currency', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.deleteCashBagCash).toBe(true);
+      });
+
+      it('should make DELETE call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        var currencyId = 'fakeCurrencyId';
+        $httpBackend.expectDELETE(/cash-bags\/fakeId\/cash\/fakeCurrencyId/).respond(200, {});
+
+        cashBagService.deleteCashBagCash(cashBagId, currencyId).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
   });
 
 });

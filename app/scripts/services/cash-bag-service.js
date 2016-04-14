@@ -15,8 +15,7 @@ angular.module('ts5App')
     var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/carrier-instances';
     var reallocationRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/reallocate';
     var mergeRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/merge';
-
-    //var cashBagCashRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/cash/:currencyId';
+    var cashBagCashRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/cash/:currencyId';
 
     var requestParameters = {
       id: '@id',
@@ -27,10 +26,10 @@ angular.module('ts5App')
       currencyId: '@currencyId'
     };
 
-    //var cashBagCashRequestParams = {
-    //  id: '@id',
-    //  currencyId: '@currencyId'
-    //};
+    var cashBagCashRequestParams = {
+      id: '@id',
+      currencyId: '@currencyId'
+    };
 
     var actions = {
       getCashBag: {
@@ -59,6 +58,18 @@ angular.module('ts5App')
       },
       getCashBagCashList: {
         method: 'GET'
+      },
+      getCashBagCash: {
+        method: 'GET'
+      },
+      createCashBagCash: {
+        method: 'POST'
+      },
+      updateCashBagCash: {
+        method: 'PUT'
+      },
+      deleteCashBagCash: {
+        method: 'DELETE'
       }
     };
 
@@ -67,8 +78,7 @@ angular.module('ts5App')
     var carrierInstancesRequestResource = $resource(carrierInstancesRequestURL, requestParameters, actions);
     var reallocateRequestResource = $resource(reallocationRequestURL, requestParameters, actions);
     var mergeRequestResource = $resource(mergeRequestURL, requestParameters, actions);
-    
-    //var cashBagCashRequestResource = $resource(cashBagCashRequestURL, cashBagCashRequestParams, actions);
+    var cashBagCashRequestResource = $resource(cashBagCashRequestURL, cashBagCashRequestParams, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -131,6 +141,36 @@ angular.module('ts5App')
       return carrierInstancesRequestResource.getCashBagCarrierInstances({ id: cashBagId }).$promise;
     }
 
+    function getCashBagCashList(cashBagId, payload) {
+      cashBagCashRequestParams.id = cashBagId;
+      cashBagCashRequestParams.currencyId = '';
+      return cashBagCashRequestResource.getCashBagCashList(payload).$promise;
+    }
+
+    function getCashBagCash(cashBagId, currencyId) {
+      cashBagCashRequestParams.id = cashBagId;
+      cashBagCashRequestParams.currencyId = currencyId;
+      return cashBagCashRequestResource.getCashBagCash().$promise;
+    }
+
+    function createCashBagCash(cashBagId, payload) {
+      cashBagCashRequestParams.id = cashBagId;
+      cashBagCashRequestParams.currencyId = '';
+      return cashBagCashRequestResource.createCashBagCash(payload).$promise;
+    }
+
+    function updateCashBagCash(cashBagId, currencyId, payload) {
+      cashBagCashRequestParams.id = cashBagId;
+      cashBagCashRequestParams.currencyId = currencyId;
+      return cashBagCashRequestResource.updateCashBagCash(payload).$promise;
+    }
+
+    function deleteCashBagCash(cashBagId, currencyId) {
+      cashBagCashRequestParams.id = cashBagId;
+      cashBagCashRequestParams.currencyId = currencyId;
+      return cashBagCashRequestResource.deleteCashBagCash().$promise;
+    }
+
     return {
       getCashBagList: getCashBagList,
       getCashBag: getCashBag,
@@ -140,6 +180,11 @@ angular.module('ts5App')
       updateCashBagCurrency: updateCashBagCurrency,
       getCashBagCarrierInstances: getCashBagCarrierInstances,
       reallocateCashBag: reallocateCashBag,
-      mergeCashBag: mergeCashBag
+      mergeCashBag: mergeCashBag,
+      getCashBagCashList: getCashBagCashList,
+      getCashBagCash: getCashBagCash,
+      createCashBagCash: createCashBagCash,
+      updateCashBagCash: updateCashBagCash,
+      deleteCashBagCash: deleteCashBagCash
     };
   });
