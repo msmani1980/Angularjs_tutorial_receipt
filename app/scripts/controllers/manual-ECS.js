@@ -113,17 +113,17 @@ angular.module('ts5App')
 
       var storeInstancesResponse = angular.copy(dataFromAPI.response) || [];
       var allowedStatuses = [
-        'Ready For Packing',
-        'Ready For Seals',
-        'Ready for Dispatch',
-        'Dispatched',
-        'On Floor',
-        'Inbounded'
+        'ready for packing',
+        'ready for seals',
+        'ready for dispatch',
+        'dispatched',
+        'on floor',
+        'inbounded'
       ];
 
       $scope.storeInstances = lodash.filter(storeInstancesResponse, function (storeInstance) {
         formatStoreInstanceForApp(storeInstance);
-        return allowedStatuses.indexOf(storeInstance.statusName) >= 0;
+        return allowedStatuses.indexOf(storeInstance.statusName.toLowerCase()) >= 0;
       });
     }
 
