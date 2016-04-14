@@ -16,6 +16,8 @@ angular.module('ts5App')
     var reallocationRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/reallocate';
     var mergeRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/merge';
 
+    //var cashBagCashRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/cash/:currencyId';
+
     var requestParameters = {
       id: '@id',
       submission: '@submission'
@@ -24,6 +26,11 @@ angular.module('ts5App')
     var cashBagCurrencyRequestParams = {
       currencyId: '@currencyId'
     };
+
+    //var cashBagCashRequestParams = {
+    //  id: '@id',
+    //  currencyId: '@currencyId'
+    //};
 
     var actions = {
       getCashBag: {
@@ -49,6 +56,9 @@ angular.module('ts5App')
       },
       mergeCashBag: {
         method: 'PUT'
+      },
+      getCashBagCashList: {
+        method: 'GET'
       }
     };
 
@@ -57,6 +67,8 @@ angular.module('ts5App')
     var carrierInstancesRequestResource = $resource(carrierInstancesRequestURL, requestParameters, actions);
     var reallocateRequestResource = $resource(reallocationRequestURL, requestParameters, actions);
     var mergeRequestResource = $resource(mergeRequestURL, requestParameters, actions);
+    
+    //var cashBagCashRequestResource = $resource(cashBagCashRequestURL, cashBagCashRequestParams, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
