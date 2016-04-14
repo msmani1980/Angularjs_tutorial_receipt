@@ -184,7 +184,7 @@
                 ng-class="getClassesForSingleSelectedRow(storeInstance, 'background', 'storeInstance')">
               <td>{{ storeInstance.scheduleDate }}</td>
               <td>{{ storeInstance.storeNumber }}</td>
-              <td>{{ storeInstance.storeId }}</td>
+              <td>{{ storeInstance.id }}</td>
               <td>{{ getStatusNameById(storeInstance.statusId) }}</td>
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(storeInstance, 'button', 'storeInstance')"
@@ -470,7 +470,7 @@
             </div>
 
             <div class="col-xs-3 text-right">
-              <button class="btn btn-warning" ng-click="showRearrangeSectorModal()">
+              <button class="btn btn-warning" ng-click="showRearrangeSectorModal()" ng-show="canExecuteActions()">
                 <i class="fa fa-tasks active"></i> Rearrange Flight Sectors
               </button>
             </div>
@@ -514,7 +514,7 @@
                         Verified by areyes on 11/27/2015 at 12:34
                       </div>
                       <div class="col-xs-4 text-right">
-                        <button class="btn btn-success btn-xs" ng-click="toggleVerifiedCashBag(cashBag)">
+                        <button class="btn btn-success btn-xs" ng-click="toggleVerifiedCashBag(cashBag)" ng-show="canExecuteActions()">
                           <i class="fa fa-times active"></i> Unverify
                         </button>
                       </div>
@@ -602,13 +602,13 @@
                   <h4>Flight Sectors</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-primary btn-sm" ng-click="showAddOrEditScheduleModal()" ng-hide="cashBag.isDeleted">
+                  <button class="btn btn-primary btn-sm" ng-click="showAddOrEditScheduleModal()" ng-show="!cashBag.isDeleted && canExecuteActions()">
                     <i class="fa fa-plus active"></i> Add Schedule
                   </button>
-                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-hide="isCrewDataOpen(cashBag)">
+                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-show="!isCrewDataOpen(cashBag) && canExecuteActions()">
                     <i class="fa fa-plus-circle active"></i> Expand All Crew Data
                   </button>
-                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, false)" ng-show="isCrewDataOpen(cashBag)">
+                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, false)" ng-show="isCrewDataOpen(cashBag) && canExecuteActions()">
                     <i class="fa fa-minus-circle active"></i> Collapse All Crew Data
                   </button>
                 </div>
@@ -648,8 +648,8 @@
                       <td>{{ getOrNA(flightSector.transactionCount) }}</td>
                       <td>{{ getOrNA(flightSector.transactionTotal) }}</td>
                       <td ng-hide="cashBag.isDeleted">
-                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(flightSector)"><i class="fa fa-pencil active"></i></button>
-                        <button class="btn btn-danger btn-xs"><i class="fa fa-trash active"></i></button>
+                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(flightSector)" ng-show="canExecuteActions()"><i class="fa fa-pencil active"></i></button>
+                        <button class="btn btn-danger btn-xs" ng-show="canExecuteActions()"><i class="fa fa-trash active"></i></button>
                       </td>
                     </tr>
                     <tr class="subversion-row" ng-show="flightSector.rowOpen">
@@ -681,16 +681,16 @@
                   <button class="btn btn-info" title="Show Payment Report" ng-click="showCashBagPaymentReport(cashBag)">
                     <i class="fa fa-file-text active"></i>
                   </button>
-                  <button class="btn btn-primary" title="Edit Cash Bag" ng-click="goToCashBagEdit(cashBag)">
+                  <button class="btn btn-primary" title="Edit Cash Bag" ng-click="goToCashBagEdit(cashBag)" ng-show="canExecuteActions()">
                     <i class="fa fa-pencil active"></i>
                   </button>
-                  <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
+                  <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag) && canExecuteActions()" ng-click="showDeleteCashBagModal(cashBag)">
                     <i class="fa fa-trash active"></i>
                   </button>
-                  <button class="btn btn-warning" title="Merge or Reallocate Cash Bag" ng-click="showMoveCashBagModal(cashBag)">
+                  <button class="btn btn-warning" title="Merge or Reallocate Cash Bag" ng-click="showMoveCashBagModal(cashBag)" ng-show="canExecuteActions()">
                     <i class="fa fa-share active"></i>
                   </button>
-                  <button class="btn btn-success" ng-hide="cashBag.isVerified" title="Verify Cash Bag" ng-click="toggleVerifiedCashBag(cashBag)">
+                  <button class="btn btn-success" ng-show="!cashBag.isVerified && canExecuteActions()" title="Verify Cash Bag" ng-click="toggleVerifiedCashBag(cashBag)">
                     <i class="fa fa-check-circle-o active"></i>
                   </button>
                 </div>

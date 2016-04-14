@@ -119,25 +119,36 @@ angular.module('ts5App')
       return uniqueItemList;
     }
 
+    function getOutlierItemsDetails(carrierInstanceData) {
+      $scope.outlierItemData = $scope.outlierItemData || {};
+
+      if (!$scope.outlierItemData.storeNumber) {
+        $scope.outlierItemData.storeNumber = carrierInstanceData.storeNumber;
+      }
+
+      if (!$scope.outlierItemData.scheduleDate) {
+        $scope.outlierItemData.scheduleDate = dateUtility.formatDateForApp(carrierInstanceData.instanceDate);
+      }
+
+      var menuArray = carrierInstanceData.menuIds.split(',');
+      angular.forEach(menuArray, function (menuId) {
+        var menuMatch = lodash.findWhere($this.menuList, { menuId: parseInt(menuId) });
+        $scope.outlierItemData.menuList = $scope.outlierItemData.menuList || [];
+        if (menuMatch && $scope.outlierItemData.menuList.indexOf(menuMatch.menuName) < 0) {
+          $scope.outlierItemData.menuList.push(menuMatch.menuName);
+        }
+      });
+    }
+
     function formatEposItem(item, rawLMPStockData) {
       var carrierInstanceMatch = lodash.findWhere($this.carrierInstanceList, { id: item.companyCarrierInstanceId });
       if (!carrierInstanceMatch) {
         return;
       }
 
+      getOutlierItemsDetails(carrierInstanceMatch);
       var stockItemMatch = lodash.findWhere(rawLMPStockData, { itemMasterId: item.itemMasterId });
       item.eposQuantity = (!!stockItemMatch) ? stockItemMatch.eposQuantity : 0;
-      item.storeNumber = carrierInstanceMatch.storeNumber;
-      item.scheduleDate = dateUtility.formatDateForApp(carrierInstanceMatch.instanceDate);
-      item.menuList = '';
-
-      var menuArray = carrierInstanceMatch.menuIds.split(',');
-      angular.forEach(menuArray, function (menuId) {
-        var menuMatch = lodash.findWhere($this.menuList, { menuId: parseInt(menuId) });
-        var menuDescription = (menuMatch) ? menuMatch.menuName : '';
-        item.menuList = (item.menuList.length) ? item.menuList + ', ' + menuDescription : menuDescription;
-      });
-
       return item;
     }
 
@@ -152,6 +163,7 @@ angular.module('ts5App')
       });
 
       $scope.outlierItemList = filteredEposItems;
+      $scope.outlierItemData.menuList = $scope.outlierItemData.menuList.toString();
     }
 
     function filterOutEposItemsFromStockItems(storeInstanceItems) {

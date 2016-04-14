@@ -19,6 +19,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   beforeEach(module('served/post-trip-data.json'));
   beforeEach(module('served/transactions.json'));
   beforeEach(module('served/store-instance-list.json'));
+  beforeEach(module('served/store-status.json'));
 
   var scope;
   var StoreInstanceAmendCtrl;
@@ -31,6 +32,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var cashBagFactory;
   var postTripFactory;
   var transactionFactory;
+  var recordsService;
   var dateUtility;
   var storeInstanceDeferred;
   var storeInstanceResponseJSON;
@@ -69,11 +71,13 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var getTransactionListDeferred;
   var storeInstancesJSON;
   var getStoreInstancesListDeferred;
+  var storeStatusJSON;
+  var getStoreStatusListDeferred;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagList_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
                               _servedChCashBag_, _servedPaymentReport_, _servedEmployees_, _servedCashBag_, _servedCashBagCarrierInstances_,
-                              _servedPostTripData_, _servedTransactions_, _servedStoreInstanceList_) {
+                              _servedPostTripData_, _servedTransactions_, _servedStoreInstanceList_, _servedStoreStatus_) {
     location = $location;
     scope = $rootScope.$new();
     storeInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
@@ -83,6 +87,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     postTripFactory = $injector.get('postTripFactory');
     transactionFactory = $injector.get('transactionFactory');
     storeInstanceFactory = $injector.get('storeInstanceFactory');
+    recordsService = $injector.get('recordsService');
     dateUtility = $injector.get('dateUtility');
     controller = $controller;
 
@@ -160,6 +165,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     getStoreInstancesListDeferred = $q.defer();
     getStoreInstancesListDeferred.resolve(storeInstancesJSON);
 
+    storeStatusJSON = _servedStoreStatus_;
+    getStoreStatusListDeferred = $q.defer();
+    getStoreStatusListDeferred.resolve(storeStatusJSON);
+
     spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
@@ -180,6 +189,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(getPostTripDeferred.promise);
     spyOn(transactionFactory, 'getTransactionList').and.returnValue(getTransactionListDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getStoreInstancesListDeferred.promise);
+    spyOn(recordsService, 'getStoreStatusList').and.returnValue(getStoreStatusListDeferred.promise);
     spyOn(cashBagFactory, 'reallocateCashBag').and.callThrough();
     spyOn(cashBagFactory, 'mergeCashBag').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'deleteCashBag').and.callThrough();
@@ -313,10 +323,29 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
     });
 
+    it('canExecuteActions should decide if actions can be executed for given store instance', function () {
+      scope.storeInstance = { statusId: 1 };
+      scope.$digest();
+      expect(scope.canExecuteActions()).toBeFalsy();
+
+      scope.storeInstance = { statusId: 8 };
+      scope.$digest();
+      expect(scope.canExecuteActions()).toBeTruthy();
+
+      scope.storeInstance = { statusId: 4 };
+      scope.$digest();
+      expect(scope.canExecuteActions()).toBeTruthy();
+
+      scope.storeInstance = null;
+      scope.$digest();
+      expect(scope.canExecuteActions()).toBeFalsy();
+    });
+
     it('getStatusNameById should return status name for given status id', function () {
+      scope.storeStatusList = storeStatusJSON;
+
       expect(scope.getStatusNameById(8)).toBe('Inbounded');
-      expect(scope.getStatusNameById(9)).toBe('Discrepancies');
-      expect(scope.getStatusNameById(10)).toBe('Unknown');
+      expect(scope.getStatusNameById(4)).toBe('Discrepancies');
     });
 
     it('getOrNA should return value or N/A if value is not defined or null', function () {
@@ -488,7 +517,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
       });
 
-      it('should automatically set targetRecordForMoveCashBag if there is only one result', function () {
+      it('should automatically set targetRecordForMoveCashBag if there is more than one record', function () {
         scope.moveCashBagAction = 'merge';  // cash bag API stubbed to return two records
         scope.moveSearch = { storeNumber: '123', scheduleDate: '10/20/2015' };
         scope.searchForMoveCashBag();
@@ -496,7 +525,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         expect(scope.targetRecordForMoveCashBag).toEqual(null);
       });
 
-      it('should not set targetRecordForMoveCashBag if there is more than one record', function () {
+      it('should not set targetRecordForMoveCashBag if there is only one result', function () {
         scope.moveCashBagAction = 'reallocate';  // storeInstance API stubbed to return one record above
         scope.moveSearch = { storeNumber: '123', scheduleDate: '10/20/2015' };
         scope.searchForMoveCashBag();
