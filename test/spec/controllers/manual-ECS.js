@@ -137,9 +137,9 @@ describe('Controller: ManualECSCtrl', function () {
         }];
         scope.searchPortalInstances();
         scope.$digest();
-        expect(scope.storeInstances[0].scheduleDate).toEqual('08/15/2015');
+        expect(scope.storeInstances[0].scheduleDate).toEqual('08/13/2015');
         expect(scope.storeInstances[0].stationCode).toEqual('mockStationCode');
-        expect(scope.storeInstances[0].statusName).toEqual('Dispatched');
+        expect(scope.storeInstances[0].statusName).toEqual('Ready for Packing');
       });
 
       it('should convert Unpacking and Inbound Seals status to Onfloor', function () {
