@@ -228,7 +228,7 @@
                   <h4>Origin Cash Bag</h4>
                   <select class="form-control"
                           ng-model="rearrangeOriginCashBag"
-                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBag'"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in normalizedCashBags | filter:{isDeleted:false} | orderBy: 'cashBag'"
                           ng-change="clearRearrangeSelections()">
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
@@ -249,7 +249,7 @@
                       </td>
                       <td>{{ sector.scheduleNumber }}</td>
                       <td>{{ sector.scheduleDate}}</td>
-                      <td>{{ sector.route}}</td>
+                      <td>{{ sector.arrivalStation}} - {{ sector.departureStation}}</td>
                     </tr>
                   </table>
                 </div>
@@ -261,7 +261,7 @@
                   <h4>Target Cash Bag</h4>
                   <select class="form-control"
                           ng-model="rearrangeTargetCashBag"
-                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBag'"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in normalizedCashBags | filter:{isDeleted:false} | orderBy: 'cashBag'"
                           ng-change="clearRearrangeSelections()">
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
@@ -275,12 +275,12 @@
                     <tr ng-repeat="sector in rearrangeTargetCashBag.flightSectors">
                       <td>{{ sector.scheduleNumber }}</td>
                       <td>{{ sector.scheduleDate}}</td>
-                      <td>{{ sector.route}}</td>
+                      <td>{{ sector.arrivalStation}} - {{ sector.departureStation}}</td>
                     </tr>
                     <tr ng-repeat="sector in sectorsToMove" class="bg-info">
                       <td>{{ sector.scheduleNumber }}</td>
                       <td>{{ sector.scheduleDate}}</td>
-                      <td>{{ sector.route}}</td>
+                      <td>{{ sector.arrivalStation}} - {{ sector.departureStation}}</td>
                     </tr>
                   </table>
                 </div>
@@ -289,7 +289,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" ng-show="canSaveRearrange()">
+          <button type="button" class="btn btn-success" ng-show="canSaveRearrange()" data-dismiss="modal" ng-click="rearrangeSector()">
             <i class="fa fa-check"></i> Save
           </button>
           <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeRearrangeSectorModal()">

@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "count": 1,
+    "limit": 1,
+    "start": 0
+  },
+  "postTrips": [
+    {
+      "id": 18,
+      "number": null,
+      "scheduleDate": "2015-07-05",
+      "carrierTypeId": null,
+      "carrierId": null,
+      "carrierNumber": null,
+      "passengerCount": 123,
+      "tailNumber": "G-EZTB",
+      "postTripEmployeeIdentifiers": [
+        {
+          "id": 23,
+          "employeeIdentifier": "1",
+          "postTripId": 18
+        }
+      ],
+      "departure": null,
+      "depStationId": "10",
+      "arrival": null,
+      "arrivalStationId": null,
+      "depTime": "12:34:00",
+      "arrivalTime": null,
+      "depTimeZone": null,
+      "arrTimeZone": null,
+      "createdBy": 1,
+      "createdOn": "2015-07-01 16:56:16.061989",
+      "updatedBy": null,
+      "updatedOn": null,
+      "companyId": 403,
+      "startDate": "2015-07-03",
+      "endDate": "2015-07-04"
+    }
+  ]
+}

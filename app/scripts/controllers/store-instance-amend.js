@@ -32,6 +32,28 @@ angular.module('ts5App')
       angular.element('#addScheduleModal').modal('show');
     };
 
+    function rearrangeSectorSuccess () {
+      getCashBags();
+      $scope.closeRearrangeSectorModal();
+    }
+
+    $scope.rearrangeSector = function () {
+      var originCashBag = $scope.rearrangeOriginCashBag;
+      var targetCashBag = $scope.rearrangeTargetCashBag;
+      var sectorsToMove = $scope.sectorsToMove;
+
+      var promises = [];
+      angular.forEach(sectorsToMove, function (sector) {
+        if (originCashBag.isManual) {
+          promises.push(storeInstanceAmendFactory.rearrangeFlightSectorFromManualCashBag(originCashBag.id, targetCashBag.id, sector.postTripId));
+        } else {
+          promises.push(storeInstanceAmendFactory.rearrangeFlightSectorFromEposCashBag(originCashBag.id, targetCashBag.id, sector.postTripId));
+        }
+      });
+
+      $q.all(promises).then(rearrangeSectorSuccess, handleResponseError);
+    };
+
     $scope.showRearrangeSectorModal = function () {
       angular.element('#rearrangeSectorModal').modal('show');
     };
@@ -71,10 +93,14 @@ angular.module('ts5App')
     };
 
     $scope.canSaveRearrange = function () {
-      return ($scope.sectorsToMove.length > 0 && !!$scope.rearrangeTargetCashBag);
+      return ($scope.sectorsToMove.length > 0 && !!$scope.rearrangeOriginCashBag && !!$scope.rearrangeTargetCashBag && $scope.rearrangeOriginCashBag.id !== $scope.rearrangeTargetCashBag.id);
     };
 
     $scope.toggleSelectSectorToRearrange = function (sector) {
+      if (!!$scope.rearrangeOriginCashBag && !!$scope.rearrangeTargetCashBag && $scope.rearrangeOriginCashBag.id === $scope.rearrangeTargetCashBag.id) {
+        return;
+      }
+
       var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
       if (matchIndex < 0) {
         $scope.sectorsToMove.push(sector);
@@ -161,14 +187,21 @@ angular.module('ts5App')
     };
 
     this.searchForScheduleSuccess = function (dataFromAPI) {
-      $scope.searchScheduleResults = angular.copy(dataFromAPI);
+      $scope.searchScheduleResults = angular.copy(dataFromAPI.postTrips);
       if ($scope.searchScheduleResults.length === 1) {
         $scope.newScheduleSelection = $scope.searchScheduleResults[0];
       }
     };
 
     $scope.searchForSchedule = function () {
-      return storeInstanceAmendFactory.getScheduleMockData($scope.scheduleSearch).then($this.searchForScheduleSuccess);
+      var companyId = globalMenuService.company.get();
+
+      var payload = {
+        scheduleNumber: $scope.scheduleSearch.scheduleNumber,
+        scheduleDate: $scope.scheduleSearch.scheduleDate
+      };
+
+      return postTripFactory.getPostTripDataList(companyId, payload).then($this.searchForScheduleSuccess);
     };
 
     function getStoreStatusByStatusStep (step) {
@@ -717,7 +750,8 @@ angular.module('ts5App')
           companyCarrierInstanceId: companyCarrierInstance.id,
           arrivalStation: companyCarrierInstance.arrivalStation,
           departureStation: companyCarrierInstance.departureStation,
-          passengerCount: companyCarrierInstance.paxCount
+          passengerCount: companyCarrierInstance.paxCount,
+          postTripId: companyCarrierInstance.posttripId
         };
 
         normalizedCashBag.flightSectors.push(normalizedFlightSector);

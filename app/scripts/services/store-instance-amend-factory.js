@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('storeInstanceAmendFactory', function ($q, cashBagService) {
+  .factory('storeInstanceAmendFactory', function ($q, cashBagService, storeInstanceAmendService) {
 
     var getScheduleMockData = function (searchQuery) {
       var getScheduleMockData = [{
@@ -237,12 +237,22 @@ angular.module('ts5App')
       return cashBagService.deleteCashBag(id);
     };
 
+    var rearrangeFlightSectorFromManualCashBag = function (originCashBagId, targetCashBagId, postTripId) {
+      return storeInstanceAmendService.movePostTripFromManualCashBag(originCashBagId, targetCashBagId, postTripId);
+    };
+
+    var rearrangeFlightSectorFromEposCashBag = function (originCashBagId, targetCashBagId, postTripId) {
+      return storeInstanceAmendService.movePostTripFromEposCashBag(originCashBagId, targetCashBagId, postTripId);
+    };
+
     return {
       getCashBagListMockData: getCashBagListMockData,
       getStoreInstancesMockData: getStoreInstancesMockData,
       getScheduleMockData: getScheduleMockData,
       getCashBags: getCashBags,
       deleteCashBag: deleteCashBag,
-      getFlightSectors: getFlightSectors
+      getFlightSectors: getFlightSectors,
+      rearrangeFlightSectorFromManualCashBag: rearrangeFlightSectorFromManualCashBag,
+      rearrangeFlightSectorFromEposCashBag: rearrangeFlightSectorFromEposCashBag
     };
   });
