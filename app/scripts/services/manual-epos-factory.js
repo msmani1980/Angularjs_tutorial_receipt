@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('manualEposFactory', function($q) {
+  .factory('manualEposFactory', function($q, cashBagService, currenciesService, globalMenuService) {
 
     var getPromotionsList = function() {
       var mockPromotionsList = [{
@@ -73,34 +73,6 @@ angular.module('ts5App')
       var getPromotionsListDeferred = $q.defer();
       getPromotionsListDeferred.resolve(mockPromotionsList);
       return getPromotionsListDeferred.promise;
-    };
-
-    var getCurrencyList = function() {
-      var mockCurrencyList = [{
-        id: 1,
-        companyId: 2,
-        code: 'USD',
-        name: 'dollar'
-      }, {
-        id: 57,
-        companyId: 2,
-        code: 'GBP',
-        name: 'GreatBritishPound'
-      }, {
-        id: 58,
-        companyId: 2,
-        code: 'EUR',
-        name: 'EURO'
-      }, {
-        id: 63,
-        companyId: 2,
-        code: 'NOK',
-        name: 'NOK'
-      }];
-
-      var getCurrencyListDeferred = $q.defer();
-      getCurrencyListDeferred.resolve(mockCurrencyList);
-      return getCurrencyListDeferred.promise;
     };
 
     var getVoucherItemsList = function() {
@@ -353,6 +325,28 @@ angular.module('ts5App')
       return getCreditListDeferred.promise;
     };
 
+    function getCurrencyList() {
+      return currenciesService.getCompanyCurrencies();
+    }
+
+    function getCashBagCashList(cashBagId, searchPayload) {
+      return cashBagService(cashBagId, searchPayload);
+    }
+
+    function getCashBagForStoreInstance(storeInstanceId) {
+      var payload = {
+        storeInstanceId: storeInstanceId
+      };
+
+      var companyId = globalMenuService.getCompanyData().companyId;
+      return cashBagService.getCashBagList(companyId, payload);
+    }
+
+    function getCashBag(cashBagId) {
+      var companyId = globalMenuService.getCompanyData().companyId;
+      return cashBagService.getCashBag(companyId, cashBagId);
+    }
+
     return {
       getPromotionsList: getPromotionsList,
       getCurrencyList: getCurrencyList,
@@ -360,7 +354,10 @@ angular.module('ts5App')
       getVirtualItemsList: getVirtualItemsList,
       getDiscountsList: getDiscountsList,
       getCashList: getCashList,
-      getCreditList: getCreditList
+      getCreditList: getCreditList,
+      getCashBag: getCashBag,
+      getCashBagCashList: getCashBagCashList,
+      getCashBagForStoreInstance: getCashBagForStoreInstance,
     };
 
   });
