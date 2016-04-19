@@ -516,6 +516,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           return dateUtility.isAfterOrEqual(item.endDate, $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, item.startDate);
         });
         $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
+        $scope.recommendations = $scope.substitutions;
       }
     });
 
@@ -612,7 +613,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.setItemList = function(itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;
-      // var itemListWithNoDuplicates = $this.getUniqueSubstitutions(itemList);
       $scope.substitutions = [];
       $scope.recommendations = [];
     };

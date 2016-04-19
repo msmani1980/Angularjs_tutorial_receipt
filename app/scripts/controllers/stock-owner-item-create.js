@@ -243,6 +243,16 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       return allergenPayload;
     };
 
+    $scope.$watchGroup(['formData.startDate', 'items', 'formData.endDate'], function() {
+      if ($scope.formData.startDate && $scope.formData.endDate && $scope.items) {
+        $scope.substitutions = lodash.filter($scope.items, function(item) {
+          return dateUtility.isAfterOrEqual(item.endDate, $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, item.startDate);
+        });
+        $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
+        $scope.recommendations = $scope.substitutions;
+      }
+    });
+
     this.findSubstitutionIndex = function(substitutionId) {
       var substitutionIndex = null;
       for (var key in $scope.substitutions) {
@@ -472,18 +482,12 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       return itemList;
     };
 
-    this.getUniqueSubstitutions = function (itemList) {
-        return lodash.filter(itemList, function (item) {
-          return dateUtility.isTodayOrEarlier(item.startDate) && dateUtility.isAfterToday(item.endDate);
-        });
-      };
-
-    this.setItemList = function(itemListFromAPI) {
+  this.setItemList = function(itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;
-      var itemListWithNoDuplicates = $this.getUniqueSubstitutions(itemList);
-      $scope.substitutions = itemListWithNoDuplicates;
-      $scope.recommendations = itemListWithNoDuplicates;
+      $scope.substitutions = [];
+      $scope.recommendations = [];
+
     };
 
     this.setMasterCurrenciesList = function(data) {
