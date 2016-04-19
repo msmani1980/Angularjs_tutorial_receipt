@@ -148,6 +148,11 @@ angular.module('ts5App')
       return parsedDate > this.now();
     };
 
+
+    this.isAfterOrEqual = function(baseDate, dateToCompare) {
+      return Date.parse(baseDate) >= Date.parse(dateToCompare);
+    };
+
     this.removeMilliseconds = function(date) {
       if (!date) {
         return;
