@@ -354,6 +354,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           break;
         }
       }
+
       return recommendationIndex;
     };
 
@@ -500,13 +501,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
     };
 
-    this.filterItemsByFormDates = function () {
+    this.filterItemsByFormDates = function() {
       $scope.substitutions = lodash.filter($scope.items, function(item) {
         return dateUtility.isAfterOrEqual(item.endDate, $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, item.startDate);
       });
+      
       $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
       $scope.recommendations = $scope.substitutions;
-    }
+    };
 
     $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
       if ($scope.formData.startDate && $scope.formData.endDate) {
