@@ -28,13 +28,6 @@ describe('Service: manualEposFactory', function() {
     spyOn(cashBagService, 'getCashBagCashList');
   }));
 
-  describe('getCurrencyList API call', function() {
-    it('should call getCurrencyList', function() {
-      manualEposFactory.getCurrencyList();
-      expect(manualEposFactory.getCurrencyList).toHaveBeenCalled();
-    });
-  });
-
   describe('getPromotionsList API call', function() {
     it('should call getPromotionsList', function() {
       manualEposFactory.getPromotionsList();
