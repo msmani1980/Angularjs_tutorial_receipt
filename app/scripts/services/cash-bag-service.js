@@ -15,7 +15,7 @@ angular.module('ts5App')
     var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/carrier-instances';
     var reallocationRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/reallocate';
     var mergeRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/merge';
-    var cashBagCashRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/cash/:currencyId';
+    var cashBagCashRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:id/cash/:currencyId';
 
     var requestParameters = {
       id: '@id',

@@ -8,9 +8,9 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('manualEposFactory', function($q, cashBagService, currenciesService, globalMenuService) {
+  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, dailyExchangeRatesService) {
 
-    var getPromotionsList = function() {
+    var getPromotionsList = function () {
       var mockPromotionsList = [{
         benefitTypeId: 1,
         benefitTypeName: 'Discount',
@@ -75,7 +75,7 @@ angular.module('ts5App')
       return getPromotionsListDeferred.promise;
     };
 
-    var getVoucherItemsList = function() {
+    var getVoucherItemsList = function () {
       var mockVoucherItemsList = [{
         endDate: '2015-05-29',
         startDate: '2015-01-01',
@@ -113,7 +113,7 @@ angular.module('ts5App')
       return getVoucherItemsListDeferred.promise;
     };
 
-    var getVirtualItemsList = function() {
+    var getVirtualItemsList = function () {
       var mockVirtualItemsList = [{
         companyId: 403,
         itemCode: 'Mov230',
@@ -196,7 +196,7 @@ angular.module('ts5App')
       return getVirtualItemsListDeferred.promise;
     };
 
-    var getDiscountsList = function() {
+    var getDiscountsList = function () {
       var mockDiscountsList = {
         voucher: [{
           endDate: '2015-05-29',
@@ -267,7 +267,7 @@ angular.module('ts5App')
       return getDiscountsListDeferred.promise;
     };
 
-    var getCashList = function() {
+    var getCashList = function () {
       var mockCashList = [{
         id: 1,
         companyId: 2,
@@ -303,7 +303,7 @@ angular.module('ts5App')
       return getCashListDeferred.promise;
     };
 
-    var getCreditList = function() {
+    var getCreditList = function () {
       var mockCreditList = [{
         id: 1,
         companyId: 2,
@@ -329,22 +329,17 @@ angular.module('ts5App')
       return currenciesService.getCompanyCurrencies();
     }
 
-    function getCashBagCashList(cashBagId, searchPayload) {
-      return cashBagService(cashBagId, searchPayload);
-    }
-
-    function getCashBagForStoreInstance(storeInstanceId) {
-      var payload = {
-        storeInstanceId: storeInstanceId
-      };
-
+    function getDailyExchangeRate(exchangeRateId) {
       var companyId = globalMenuService.getCompanyData().companyId;
-      return cashBagService.getCashBagList(companyId, payload);
+      return dailyExchangeRatesService.getDailyExchangeById(companyId, exchangeRateId);
     }
 
     function getCashBag(cashBagId) {
-      var companyId = globalMenuService.getCompanyData().companyId;
-      return cashBagService.getCashBag(companyId, cashBagId);
+      return cashBagService.getCashBag(cashBagId);
+    }
+
+    function getCashBagCashList(cashBagId, payload) {
+      return cashBagService.getCashBagCashList(cashBagId, payload);
     }
 
     return {
@@ -357,7 +352,7 @@ angular.module('ts5App')
       getCreditList: getCreditList,
       getCashBag: getCashBag,
       getCashBagCashList: getCashBagCashList,
-      getCashBagForStoreInstance: getCashBagForStoreInstance,
+      getDailyExchangeRate: getDailyExchangeRate
     };
 
   });

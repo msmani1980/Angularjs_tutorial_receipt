@@ -319,7 +319,7 @@ angular.module('ts5App', [
   }).when('/manual-epos-dashboard', {
     templateUrl: 'views/manual-epos-entry.html',
     controller: 'ManualEposEntryCtrl'
-  }).when('/manual-epos-cash/:storeInstanceId', {
+  }).when('/manual-epos-cash/:cashBagId', {
     templateUrl: 'views/manual-epos-cash.html',
     controller: 'ManualEposCashCtrl'
   }).otherwise({
