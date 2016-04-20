@@ -325,8 +325,9 @@ angular.module('ts5App')
       return getCreditListDeferred.promise;
     };
 
-    function getCurrencyList() {
-      return currenciesService.getCompanyCurrencies();
+    function getCurrencyList(payload) {
+      payload = payload || {};
+      return currenciesService.getCompanyCurrencies(payload);
     }
 
     function getDailyExchangeRate(exchangeRateId) {
