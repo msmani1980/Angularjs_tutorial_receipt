@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: StoreInstanceAmendCtrl', function () {
+describe('Controller: StoreInstanceAmendCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/cash-bag-list.json'));
@@ -209,6 +209,7 @@ fdescribe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(cashBagFactory, 'reallocateCashBag').and.callThrough();
     spyOn(cashBagFactory, 'mergeCashBag').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'deleteCashBag').and.callThrough();
+    spyOn(storeInstanceAmendFactory, 'rearrangeFlightSector').and.callThrough();
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
@@ -440,6 +441,17 @@ fdescribe('Controller: StoreInstanceAmendCtrl', function () {
         var buttonIcon = scope.getClassesForRearrangeSectors(mockNonSelectedSector, 'buttonIcon');
         expect(background).toEqual('');
         expect(buttonIcon).toEqual('fa fa-circle-thin');
+      });
+    });
+
+    describe('rearrangeSector', function () {
+      it('should rearrange selected sectors', function () {
+        scope.sectorsToMove = [{ id: 1 }, { id: 2 }];
+        scope.rearrangeOriginCashBag = { id: 1, cashBag: '123', isManual: true };
+        scope.rearrangeTargetCashBag = { id: 2, cashBag: '345'};
+
+        scope.rearrangeSector();
+        expect(storeInstanceAmendFactory.rearrangeFlightSector).toHaveBeenCalled();
       });
     });
 

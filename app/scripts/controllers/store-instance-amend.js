@@ -44,11 +44,7 @@ angular.module('ts5App')
 
       var promises = [];
       angular.forEach(sectorsToMove, function (sector) {
-        if (originCashBag.isManual) {
-          promises.push(storeInstanceAmendFactory.rearrangeFlightSectorFromManualCashBag(originCashBag.id, targetCashBag.id, sector.postTripId));
-        } else {
-          promises.push(storeInstanceAmendFactory.rearrangeFlightSectorFromEposCashBag(originCashBag.id, targetCashBag.id, sector.postTripId));
-        }
+        promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.postTripId));
       });
 
       $q.all(promises).then(rearrangeSectorSuccess, handleResponseError);

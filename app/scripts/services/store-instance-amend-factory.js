@@ -237,12 +237,8 @@ angular.module('ts5App')
       return cashBagService.deleteCashBag(id);
     };
 
-    var rearrangeFlightSectorFromManualCashBag = function (originCashBagId, targetCashBagId, postTripId) {
-      return storeInstanceAmendService.movePostTripFromManualCashBag(originCashBagId, targetCashBagId, postTripId);
-    };
-
-    var rearrangeFlightSectorFromEposCashBag = function (originCashBagId, targetCashBagId, postTripId) {
-      return storeInstanceAmendService.movePostTripFromEposCashBag(originCashBagId, targetCashBagId, postTripId);
+    var rearrangeFlightSector = function (originCashBagId, targetCashBagId, postTripId) {
+      return storeInstanceAmendService.movePostTrip(originCashBagId, targetCashBagId, postTripId);
     };
 
     return {
@@ -252,7 +248,6 @@ angular.module('ts5App')
       getCashBags: getCashBags,
       deleteCashBag: deleteCashBag,
       getFlightSectors: getFlightSectors,
-      rearrangeFlightSectorFromManualCashBag: rearrangeFlightSectorFromManualCashBag,
-      rearrangeFlightSectorFromEposCashBag: rearrangeFlightSectorFromEposCashBag
+      rearrangeFlightSector: rearrangeFlightSector
     };
   });
