@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('The Item Create Controller', function() {
+describe('The Item Create Controller', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -1515,7 +1515,20 @@ fdescribe('The Item Create Controller', function() {
     });
 
     it('should be able to remove duplicate records', function () {
-
+      scope.items = [{
+        startDate: '04/10/1980',
+        endDate: '02/20/2050',
+        itemMasterId: 2
+      }, {
+        startDate: '04/15/1980',
+        endDate: '02/30/2050',
+        itemMasterId: 2
+      }];
+      scope.formData.startDate = '04/15/2000';
+      scope.formData.endDate = '05/20/2030';
+      ItemCreateCtrl.filterItemsByFormDates(scope.item);
+      scope.$digest();
+      expect(scope.substitutions.length).toEqual(1);
     });
   });
 
