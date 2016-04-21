@@ -34,7 +34,7 @@
               <h5>Expected Cash</h5>
               <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
-                  <th>Currency Type</th>
+                  <th>Currency</th>
                   <th>Currency Value</th>
                   <th>GBP Value</th>
                 </tr>
@@ -48,8 +48,7 @@
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
-                  <td>Expected Cash Total</td>
-                  <td></td>
+                  <td colspan="2">Expected Cash Total</td>
                   <td>{{report.cashTotal}}</td>
                 </tr>
               </table>
@@ -74,6 +73,52 @@
                 </tr>
               </table>
 
+              <h5>Expected Coupon</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Currency</th>
+                  <th>Value</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="coupon in report.coupon">
+                  <td>{{coupon.currencyCode}}</td>
+                  <td>{{coupon.total}}</td>
+                  <td>{{coupon.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.coupon.length">
+                  <td>No expected coupon added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td colspan="2">Expected Coupon Total</td>
+                  <td>{{report.couponTotal}}</td>
+                </tr>
+              </table>
+
+              <h5>Expected Frequent Flyer</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Currency</th>
+                  <th>Value</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="frequentFlyer in report.ffCard">
+                  <td>{{frequentFlyer.currency}}</td>
+                  <td>{{frequentFlyer.total}}</td>
+                  <td>{{frequentFlyer.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.coupon.ffCard">
+                  <td>No expected frequent flyer added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td colspan="2">Expected Frequent Flyer Total</td>
+                  <td>{{report.couponTotal}}</td>
+                </tr>
+              </table>
+
               <h5>Voucher Total</h5>
               <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
@@ -92,8 +137,7 @@
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
-                  <td>Expected Voucher Total</td>
-                  <td></td>
+                  <td colspan="2">Expected Voucher Total</td>
                   <td>{{report.voucherTotal}}</td>
                 </tr>
               </table>
@@ -116,8 +160,7 @@
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
-                  <td>Comp. Total</td>
-                  <td></td>
+                  <td colspan="2">Comp. Total</td>
                   <td>{{report.compTotal ? report.compTotal : '0.00'}}</td>
                 </tr>
               </table>
