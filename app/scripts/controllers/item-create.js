@@ -3,7 +3,7 @@
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
  * @description
-  * # ItemCreateCtrl
+ * # ItemCreateCtrl
  * Controller of the ts5App
  */
 
@@ -501,6 +501,15 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
     };
 
+    this.filterItemsByFormDates = function() {
+      $scope.substitutions = lodash.filter($scope.items, function(item) {
+        return dateUtility.isAfterOrEqual(item.endDate, $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, item.startDate);
+      });
+
+      $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
+      $scope.recommendations = angular.copy($scope.substitutions);
+    };
+
     $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
       if ($scope.formData.startDate && $scope.formData.endDate) {
         itemsFactory.getDiscountList({
@@ -508,6 +517,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
           endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
         }).then($this.setDiscountList);
+      }
+    });
+
+    $scope.$watchGroup(['formData.startDate', 'items', 'formData.endDate'], function() {
+      if ($scope.formData.startDate && $scope.formData.endDate && $scope.items) {
+        $this.filterItemsByFormDates();
       }
     });
 
@@ -601,18 +616,11 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return itemList;
     };
 
-    this.getUniqueSubstitutions = function (itemList) {
-      return lodash.filter(itemList, function (item) {
-        return dateUtility.isTodayOrEarlier(item.startDate) && dateUtility.isAfterToday(item.endDate);
-      });
-    };
-
     this.setItemList = function(itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;
-      var itemListWithNoDuplicates = $this.getUniqueSubstitutions(itemList);
-      $scope.substitutions = itemListWithNoDuplicates;
-      $scope.recommendations = itemListWithNoDuplicates;
+      $scope.substitutions = [];
+      $scope.recommendations = [];
     };
 
     this.setMasterCurrenciesList = function(data) {
