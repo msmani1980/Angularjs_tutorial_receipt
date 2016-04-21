@@ -506,8 +506,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         return dateUtility.isAfterOrEqual(item.endDate, $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, item.startDate);
       });
       
-      $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
-      $scope.recommendations = $scope.substitutions;
+      $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');;
+      $scope.recommendations = angular.copy($scope.substitutions);
     };
 
     $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
