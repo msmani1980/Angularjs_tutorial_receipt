@@ -21,6 +21,7 @@ describe('Factory: storeInstanceAmendFactory', function () {
     spyOn(cashBagService, 'getCashBagCarrierInstances').and.stub();
     spyOn(cashBagService, 'deleteCashBag').and.stub();
     spyOn(storeInstanceAmendService, 'movePostTrip').and.stub();
+    spyOn(storeInstanceAmendService, 'getPostTrips').and.stub();
   }));
 
   it('should be defined', function () {
@@ -52,7 +53,7 @@ describe('Factory: storeInstanceAmendFactory', function () {
       var cashBagId = 1;
 
       storeInstanceAmendFactory.getFlightSectors(cashBagId);
-      expect(cashBagService.getCashBagCarrierInstances).toHaveBeenCalledWith(cashBagId);
+      expect(storeInstanceAmendService.getPostTrips).toHaveBeenCalledWith(cashBagId);
     });
 
     it('deleteCashBag should call cashBagService', function () {

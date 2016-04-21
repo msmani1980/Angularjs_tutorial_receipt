@@ -22,6 +22,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   beforeEach(module('served/transactions.json'));
   beforeEach(module('served/store-instance-list.json'));
   beforeEach(module('served/store-status.json'));
+  beforeEach(module('served/stations.json'));
 
   var scope;
   var StoreInstanceAmendCtrl;
@@ -79,12 +80,15 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var getStoreInstancesListDeferred;
   var storeStatusJSON;
   var getStoreStatusListDeferred;
+  var stationsJSON;
+  var getStationsDeferred;
+  var stationsService;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagList_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
                               _servedChCashBag_, _servedPaymentReport_, _servedEmployees_, _servedCashBag_, _servedCashBagCarrierInstances_,
                               _servedPostTripData_, _servedTransactions_, _servedStoreInstanceList_, _servedStoreStatus_, _servedPostTripDataList_,
-                              _servedPostTripSingleDataList_) {
+                              _servedPostTripSingleDataList_, _servedStations_) {
     location = $location;
     scope = $rootScope.$new();
     storeInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
@@ -96,6 +100,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     storeInstanceFactory = $injector.get('storeInstanceFactory');
     recordsService = $injector.get('recordsService');
     dateUtility = $injector.get('dateUtility');
+    stationsService = $injector.get('stationsService');
     controller = $controller;
 
     storeInstanceResponseJSON = [{ id: 1 }]; // stub for now until API is complete
@@ -184,6 +189,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     getStoreStatusListDeferred = $q.defer();
     getStoreStatusListDeferred.resolve(storeStatusJSON);
 
+    stationsJSON = _servedStations_;
+    getStationsDeferred = $q.defer();
+    getStationsDeferred.resolve(stationsJSON);
+
     spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
@@ -210,6 +219,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(cashBagFactory, 'mergeCashBag').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'deleteCashBag').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'rearrangeFlightSector').and.callThrough();
+    spyOn(stationsService, 'getStationList').and.returnValue(getStationsDeferred.promise);
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
