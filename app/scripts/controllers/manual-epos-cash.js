@@ -24,6 +24,38 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
     }
 
+    $scope.sumConvertedAmounts = function () {
+      var runningSum = 0;
+      angular.forEach($scope.currencyList, function (currency) {
+        var convertedAmount = currency.convertedAmount || 0;
+        runningSum += parseFloat(convertedAmount);
+      });
+
+      return parseFloat(runningSum).toFixed(2);
+    };
+
+    $scope.convertAmount = function (currencyObject) {
+      var convertedAmount = 0;
+      if (!currencyObject.amount) {
+        return null;
+      }
+
+      if (currencyObject.exchangeRate.bankExchangeRate === null) {
+        var paperExchangeRate = currencyObject.exchangeRate.paperExchangeRate;
+        var coinExchangeRate = currencyObject.exchangeRate.coinExchangeRate;
+        var splitAmounts = (currencyObject.amount.toString()).split('.');
+        var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
+        var convertedCoinAmount = parseFloat(splitAmounts[1]) / coinExchangeRate;
+        convertedAmount = convertedPaperAmount + (convertedCoinAmount / 100);
+      } else {
+        var exchangeRate = currencyObject.exchangeRate.bankExchangeRate;
+        convertedAmount = parseFloat(currencyObject.amount) / exchangeRate;
+      }
+
+      currencyObject.convertedAmount = convertedAmount.toFixed(2);
+      return convertedAmount.toFixed(2);
+    };
+
     function setBaseCurrency(currencyList) {
       $scope.baseCurrency = {};
       $scope.baseCurrency.currencyId = globalMenuService.getCompanyData().baseCurrencyId;
@@ -45,7 +77,7 @@ angular.module('ts5App')
       angular.forEach(cashBagCurrencyList, function (currency) {
         var newCurrencyObject = {};
         newCurrencyObject.currencyId = currency.currencyId;
-        newCurrencyObject.currencyCode = lodash.findWhere(currencyList, { id: currency.currencyId }).currencyCode || '';
+        newCurrencyObject.currencyCode = lodash.findWhere(currencyList, { id: currency.currencyId }).code || '';
         newCurrencyObject.exchangeRate = lodash.findWhere(dailyExchangeRates, { retailCompanyCurrencyId: currency.currencyId }) || {};
         $scope.currencyList.push(newCurrencyObject);
       });

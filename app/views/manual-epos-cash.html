@@ -2,7 +2,7 @@
   <div class="list-controls">
     <div class="row item-list-row">
       <div class="col-xs-8">
-        <h2 class="view-name">Manual Epos Entry: <b>Add Cash</b></h2>
+        <h2 class="view-name">Manual Epos Entry: <b>Add Cash</b><br><small>Cash Bag 123</small></h2>
       </div>
 
       <div class="col-xs-4 text-right">
@@ -43,22 +43,22 @@
           <p><b>Converted Amount (AUD)</b></p>
         </div>
       </div>
-      <div ng-repeat="cash in companyCashList | filter: {code: filter.cash} track by $index">
+      <div ng-repeat="cash in currencyList | filter: {code: filter.cash} track by $index">
         <div class="row">
           <div class="col-xs-6">
             <div class="input-group">
-              <span class="input-group-addon">{{cash.code}}</span>
+              <span class="input-group-addon">{{cash.currencyCode}}</span>
               <input type="number"
                      class="form-control"
                      ng-model="cash.amount"
-                     placeholder="12345678.91"
+                     maxlength="10"
                      aria-describedby="cash"/>
             </div>
           </div>
           <div class="col-xs-6">
             <input type="number"
                    class="form-control"
-                   ng-model="cash.audValue"
+                   ng-value="convertAmount(cash)"
                    placeholder="12345678.91"
                    aria-describedby="currency"
                    disabled="true"/>
@@ -72,7 +72,7 @@
           <p><b>Grand Total</b></p>
         </div>
         <div class="col-xs-6">
-          <input class="form-control" type="number" value="14.00" disabled="true"/>
+          <input class="form-control" type="number" ng-value="sumConvertedAmounts()" disabled="true"/>
         </div>
       </div>
     </div>
