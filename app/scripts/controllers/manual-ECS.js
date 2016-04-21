@@ -165,7 +165,9 @@ angular.module('ts5App')
 
       var ecbGroupPayload = [];
       angular.forEach(dataFromAPI.response, function (carrierInstance) {
-        ecbGroupPayload.push(carrierInstance.ecbGroup);
+        if (carrierInstance.ecbGroup !== null) {
+          ecbGroupPayload.push(carrierInstance.ecbGroup);
+        }
       });
 
       var payloadForAPI = {
