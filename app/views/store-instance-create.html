@@ -27,7 +27,7 @@
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('StoreNumber')">
-          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber" ng-disabled="!stepOneFromStepTwo">
+          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber" ng-disabled="!stepOneFromStepTwo || isActionState('end-instance')">
             <option ng-disabled="true" selected="selected" value>Select Store</option>
             <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>
