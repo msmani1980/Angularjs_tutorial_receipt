@@ -100,6 +100,30 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         handleResponseError);
     };
 
+    this.setCompanyPreferenceForInboundQuantity = function (dataFromAPI) {
+      var preferencesArray = angular.copy(dataFromAPI.preferences);
+
+      var defaultInboundToEposPreference = null;
+      angular.forEach(preferencesArray, function (preference) {
+        if (defaultInboundToEposPreference === null && preference.featureName === 'Inbound' && preference.optionName === 'Default LMP Inbound counts to ePOS') {
+          defaultInboundToEposPreference = preference.isSelected;
+        }
+      });
+
+      $scope.shouldDefaultInboundToEpos = defaultInboundToEposPreference || false;
+    };
+
+    this.getActiveCompanyPreferences = function () {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      };
+      storeInstancePackingFactory.getCompanyPreferences(payload).then($this.setCompanyPreferenceForInboundQuantity, handleResponseError);
+    };
+
+    this.getEposInboundQuantities = function (storeInstanceId) {
+      return storeInstancePackingFactory.getCalculatedInboundQuantities(storeInstanceId, {});
+    };
+
     this.getStoreInstanceMenuItems = function(storeInstanceId) {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var payload = {
@@ -681,6 +705,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
 
         $this.setQuantityByType(item, itemMatch, false);
+        itemMatch.isEposDataOverwritten = ignoreEposData;
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
@@ -716,6 +741,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
 
         $this.setQuantityByType(item, itemMatch, true);
+        itemMatch.isEposDataOverwritten = ignoreEposData;
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
@@ -728,12 +754,27 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.mergeRedispatchItemsLoop(items, ignoreEposData);
     };
 
+    this.mergeEposInboundQuantities = function(inboundQuantities) {
+      angular.forEach(inboundQuantities, function (eposInboundQuantity) {
+        var offloadItemMatch = lodash.findWhere($scope.offloadListItems, { itemMasterId: eposInboundQuantity.id });
+
+        if (offloadItemMatch && !offloadItemMatch.isEposDataOverwritten) {
+          offloadItemMatch.inboundQuantity = eposInboundQuantity.quantity;
+        }
+      });
+
+    };
+
     this.mergeAllItems = function(responseCollection) {
       $scope.masterItemsList = angular.copy(responseCollection[0].masterItems);
       $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[1].response));
       $this.mergeStoreInstanceItems(angular.copy(responseCollection[2].response));
-      if (responseCollection[3]) {
-        $this.mergeRedispatchItems(angular.copy(responseCollection[3].response));
+      if (responseCollection[4]) {
+        $this.mergeRedispatchItems(angular.copy(responseCollection[4].response));
+      }
+
+      if ($scope.shouldDefaultInboundToEpos && ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance')) {
+        $this.mergeEposInboundQuantities(angular.copy(responseCollection[3].response));
       }
 
       $scope.filterOffloadListItems();
@@ -752,7 +793,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var getItemsPromises = [
         $this.getMasterItemsList(),
         $this.getStoreInstanceMenuItems(storeInstanceForMenuItems),
-        $this.getStoreInstanceItems($routeParams.storeId)
+        $this.getStoreInstanceItems($routeParams.storeId),
+        $this.getEposInboundQuantities($routeParams.storeId)
       ];
       if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
         getItemsPromises.push($this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId));
@@ -772,6 +814,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       ];
       if ($routeParams.action === 'end-instance' || $routeParams.action === 'redispatch') {
         promises.push($this.getUllageReasonCodes());
+        promises.push($this.getActiveCompanyPreferences());
       }
 
       return promises;

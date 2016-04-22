@@ -67,12 +67,12 @@ angular.module('ts5App').service('storeInstancePackingFactory',
     }
 
     function getCompanyPreferences(payload, companyId) {
-      companyPreferencesService.getCompanyPreferences(payload, companyId);
+      return companyPreferencesService.getCompanyPreferences(payload, companyId);
     }
 
-    function getCalculatedInboundQuantities(payload) {
+    function getCalculatedInboundQuantities(id, payload) {
       payload = payload || {};
-      storeInstanceService.getStoreInstanceCalculatedInbounds(payload);
+      return storeInstanceService.getStoreInstanceCalculatedInbounds(id, payload);
     }
 
     return {
