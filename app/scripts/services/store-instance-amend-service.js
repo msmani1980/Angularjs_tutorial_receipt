@@ -11,6 +11,7 @@ angular.module('ts5App')
   .service('storeInstanceAmendService', function (ENV, $resource) {
     var movePostTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/to/:toCashBagId/posttrip/:postTripId';
     var postTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/posttrip/:postTripId';
+    var editPostTripScheduleRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/edit/:postTripId/schedule/:scheduleNumber';
 
     var movePostTripRequestParameters = {
       cashBagId: '@cashBagId',
@@ -22,9 +23,15 @@ angular.module('ts5App')
       cashBagId: '@cashBagId'
     };
 
-    var addPostTripRequestParameters = {
+    var postTripRequestParameters = {
       cashBagId: '@cashBagId',
       postTripId: '@postTripId'
+    };
+
+    var editPostTripScheduleRequestParameters = {
+      cashBagId: '@cashBagId',
+      postTripId: '@postTripId',
+      scheduleNumber: '@scheduleNumber'
     };
 
     var actions = {
@@ -37,7 +44,7 @@ angular.module('ts5App')
       addPostTrip: {
         method: 'POST'
       },
-      editPostTrip: {
+      editPostTripSchedule: {
         method: 'PUT'
       },
       deletePostTrip: {
@@ -47,7 +54,8 @@ angular.module('ts5App')
 
     var movePostTripRequestResource = $resource(movePostTripRequestURL, movePostTripRequestParameters, actions);
     var getPostTripRequestResource = $resource(postTripRequestURL, getPostTripRequestParameters, actions);
-    var postTripRequestResource = $resource(postTripRequestURL, addPostTripRequestParameters, actions);
+    var postTripRequestResource = $resource(postTripRequestURL, postTripRequestParameters, actions);
+    var editPostTripScheduleRequestResource = $resource(editPostTripScheduleRequestURL, editPostTripScheduleRequestParameters, actions);
 
     var getPostTrips = function (cashBagId) {
       var payload = {
@@ -83,7 +91,7 @@ angular.module('ts5App')
         scheduleNumber: scheduleNumber
       };
 
-      return postTripRequestResource.editPostTrip(payload).$promise;
+      return editPostTripScheduleRequestResource.editPostTripSchedule(payload).$promise;
     };
 
     var deletePostTrip = function (cashBagId, postTripId) {

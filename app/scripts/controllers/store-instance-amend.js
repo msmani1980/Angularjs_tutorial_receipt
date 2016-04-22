@@ -31,8 +31,7 @@ angular.module('ts5App')
 
     $scope.deleteSchedule = function () {
       angular.element('.delete-schedule-warning-modal').modal('hide');
-
-      storeInstanceAmendFactory.deleteFlightSector($scope.scheduleToDelete.cashBagId, $scope.scheduleToDelete.id).then(deleteScheduleSuccess, handleResponseError);
+      storeInstanceAmendFactory.deleteFlightSector($scope.scheduleToDelete.cashbagId, $scope.scheduleToDelete.id).then(deleteScheduleSuccess, handleResponseError);
     };
 
     $scope.showDeleteScheduleModal = function (scheduleToDelete) {
@@ -233,8 +232,11 @@ angular.module('ts5App')
       $scope.searchScheduleResults = angular.copy(dataFromAPI.postTrips);
 
       angular.forEach($scope.searchScheduleResults, function (schedule) {
-        schedule.arrivalStation = getStationById(schedule.arrStationId).stationCode;
-        schedule.departureStation = getStationById(schedule.depStationId).stationCode;
+        var arrivalStation = getStationById(schedule.arrStationId);
+        var departureStation = getStationById(schedule.depStationId);
+
+        schedule.arrivalStation = arrivalStation ? arrivalStation.stationCode : 'N/A';
+        schedule.departureStation = departureStation ? departureStation.stationCode : 'N/A';
       });
 
       if ($scope.searchScheduleResults.length === 1) {
@@ -767,16 +769,12 @@ angular.module('ts5App')
           arrivalStation: flightSector.arrivalStation,
           departureStation: flightSector.departureStation,
           passengerCount: flightSector.passengerCount,
-          scheduleDate: flightSector.scheduleDate,
+          scheduleDate: dateUtility.formatDateForApp(flightSector.scheduleDate),
           scheduleNumber: flightSector.scheduleNumber,
           tailNumber: flightSector.tailNumber,
-          transactionCount: 0,
-          transactionTotal: formatAsCurrency(0),
-          crewData: [{
-            crewId: 1,
-            firstName: 'A',
-            lastName: 'B'
-          }]
+          transactionCount: flightSector.transactionsNumber,
+          transactionTotal: formatAsCurrency(flightSector.eposSales),
+          crewData: flightSector.crew
         };
 
         normalizedCashBag.flightSectors.push(normalizedFlightSector);

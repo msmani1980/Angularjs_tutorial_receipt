@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstanceAmendCtrl', function () {
+fdescribe('Controller: StoreInstanceAmendCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/cash-bag-list.json'));
@@ -697,7 +697,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
 
       it('should automatically set selection if there is only one result', function () {
-        scope.scheduleSearch = { storeNumber: '123', scheduleDate: '10/20/2015' };
+        scope.scheduleSearch = { scheduleNumber: '123', scheduleDate: '10/20/2015' };
         scope.searchForSchedule();
         scope.$digest();
         expect(scope.newScheduleSelection).not.toEqual(null);
