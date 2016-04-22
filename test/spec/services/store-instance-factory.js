@@ -315,6 +315,10 @@ describe('Service: storeInstanceFactory', function() {
         expect(storeDetails.LMPStation).toBeDefined();
       });
 
+      it('should contain scheduleId', function() {
+        expect(storeDetails.scheduleId).toBeDefined();
+      });
+
       it('should contain scheduleDate', function() {
         expect(storeDetails.scheduleDate).toBeDefined();
       });

@@ -42,6 +42,7 @@ angular.module('ts5App')
 
     $scope.searchPromotions = function() {
       $this.showLoadingModal();
+      $scope.promotionList = [];
       promotionsFactory.getPromotions(payloadUtility.serializeDates($scope.search)).then(function(dataFromAPI) {
         $this.hideLoadingModal();
         $this.setPromotionsList(dataFromAPI);

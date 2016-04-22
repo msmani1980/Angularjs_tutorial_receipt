@@ -412,4 +412,59 @@ describe('Date Utility service', function() {
 
   });
 
+  describe('isYesterdayOrEarlier() method', function() {
+    it('should be defined', function() {
+      expect(dateUtility.isYesterdayOrEarlier).toBeDefined();
+    });
+    it('should return false if the date is today', function() {
+      var today = dateUtility.nowFormatted();
+      var dateIsBeforeYesterday = dateUtility.isYesterdayOrEarlier(
+        today);
+      expect(dateIsBeforeYesterday).toBeFalsy();
+    });
+    it('should return true if the date is earlier than yesterday',
+      function() {
+        var today = new Date();
+        var twoDaysAgo = today.setDate(today.getDate() - 2);
+        var testDate = dateUtility.formatDateForApp(twoDaysAgo,
+          'x');
+        var dateIsBeforeYesterday = dateUtility.isYesterdayOrEarlier(
+          testDate);
+        expect(dateIsBeforeYesterday).toBeTruthy();
+      });
+  });
+
+  describe('isAfterOrEqual() method', function() {
+    it('should be defined', function() {
+      expect(dateUtility.isAfterOrEqual).toBeDefined();
+    });
+
+   it('should return true if the first date after the second date', function() {
+      var dateToCompare = '04/10/1980';
+      var  baseDate = '02/20/2050';
+      var dateIsAfterOrEqual = dateUtility.isAfterOrEqual(
+        baseDate, dateToCompare);
+      expect(dateIsAfterOrEqual).toBeTruthy();
+    });
+
+  it('should return false if the first date is less than second date', function() {
+
+    var baseDate = '04/10/1980';
+    var   dateToCompare= '02/20/2050';
+      var dateIsAfterOrEqual = dateUtility.isAfterOrEqual(
+        baseDate, dateToCompare);
+      expect(dateIsAfterOrEqual).toBeFalsy();
+    });
+
+    it('should return true if the first date is equal second today', function() {
+
+      var dateToCompare = '05/20/2030';
+      var  baseDate= '05/20/2030';
+        var dateIsAfterOrEqual = dateUtility.isAfterOrEqual(
+          baseDate, dateToCompare);
+        expect(dateIsAfterOrEqual).toBeTruthy();
+      });
+
+  });
+
 });

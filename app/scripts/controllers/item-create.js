@@ -6,9 +6,10 @@
  * # ItemCreateCtrl
  * Controller of the ts5App
  */
+
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash) {
 
     var $this = this;
     $scope.formData = {
@@ -500,6 +501,15 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
     };
 
+    this.filterItemsByFormDates = function() {
+      $scope.substitutions = lodash.filter($scope.items, function(item) {
+        return dateUtility.isAfterOrEqual(item.endDate, $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, item.startDate);
+      });
+
+      $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
+      $scope.recommendations = angular.copy($scope.substitutions);
+    };
+
     $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
       if ($scope.formData.startDate && $scope.formData.endDate) {
         itemsFactory.getDiscountList({
@@ -507,6 +517,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
           endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
         }).then($this.setDiscountList);
+      }
+    });
+
+    $scope.$watchGroup(['formData.startDate', 'items', 'formData.endDate'], function() {
+      if ($scope.formData.startDate && $scope.formData.endDate && $scope.items) {
+        $this.filterItemsByFormDates();
       }
     });
 
@@ -603,8 +619,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.setItemList = function(itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;
-      $scope.substitutions = itemList;
-      $scope.recommendations = itemList;
+      $scope.substitutions = [];
+      $scope.recommendations = [];
     };
 
     this.setMasterCurrenciesList = function(data) {
@@ -1115,5 +1131,4 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       id = parseInt(id);
       return (model === id);
     };
-
   });

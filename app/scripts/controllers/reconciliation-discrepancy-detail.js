@@ -119,43 +119,65 @@ angular.module('ts5App')
       return uniqueItemList;
     }
 
-    function formatEposItem(item) {
+    function getOutlierItemsDetails(carrierInstanceData) {
+      $scope.outlierItemData = $scope.outlierItemData || {};
+
+      if (!$scope.outlierItemData.storeNumber) {
+        $scope.outlierItemData.storeNumber = carrierInstanceData.storeNumber;
+      }
+
+      if (!$scope.outlierItemData.scheduleDate) {
+        $scope.outlierItemData.scheduleDate = dateUtility.formatDateForApp(carrierInstanceData.instanceDate);
+      }
+
+      var menuArray = carrierInstanceData.menuIds.split(',');
+      angular.forEach(menuArray, function (menuId) {
+        var menuMatch = lodash.findWhere($this.menuList, { menuId: parseInt(menuId) });
+        $scope.outlierItemData.menuList = $scope.outlierItemData.menuList || [];
+        if (menuMatch && $scope.outlierItemData.menuList.indexOf(menuMatch.menuName) < 0) {
+          $scope.outlierItemData.menuList.push(menuMatch.menuName);
+        }
+      });
+    }
+
+    function formatEposItem(item, rawLMPStockData) {
       var carrierInstanceMatch = lodash.findWhere($this.carrierInstanceList, { id: item.companyCarrierInstanceId });
       if (!carrierInstanceMatch) {
         return;
       }
 
-      item.storeNumber = carrierInstanceMatch.storeNumber;
-      item.scheduleDate = dateUtility.formatDateForApp(carrierInstanceMatch.instanceDate);
-      item.menuList = '';
-
-      var menuArray = carrierInstanceMatch.menuIds.split(',');
-      angular.forEach(menuArray, function (menuId) {
-        var menuMatch = lodash.findWhere($this.menuList, { menuId: parseInt(menuId) });
-        var menuDescription = (menuMatch) ? menuMatch.menuName : '';
-        item.menuList = (item.menuList.length) ? item.menuList + ', ' + menuDescription : menuDescription;
-      });
-
+      getOutlierItemsDetails(carrierInstanceMatch);
+      var stockItemMatch = lodash.findWhere(rawLMPStockData, { itemMasterId: item.itemMasterId });
+      item.eposQuantity = (!!stockItemMatch) ? stockItemMatch.eposQuantity : 0;
       return item;
     }
 
-    function setOutlierItemsList(eposItemsFromAPI) {
+    function setOutlierItemsList(eposItemsFromAPI, rawLMPStockData) {
       var filteredEposItems = lodash.filter(eposItemsFromAPI, function (eposItem) {
         var stockItemMatch = lodash.findWhere($scope.stockItemList, { itemMasterId: eposItem.itemMasterId });
         return !stockItemMatch;
       });
 
-      $scope.outlierItemList = filteredEposItems.map(formatEposItem);
+      angular.forEach(filteredEposItems, function (item) {
+        formatEposItem(item, rawLMPStockData);
+      });
+
+      $scope.outlierItemList = filteredEposItems;
+      if ($scope.outlierItemList.length) {
+        $scope.outlierItemData.menuList = $scope.outlierItemData.menuList.toString();
+      }
     }
 
     function filterOutEposItemsFromStockItems(storeInstanceItems) {
       var stockItemList = [];
       var eposItemList = [];
       var faCloseId = lodash.findWhere($this.countTypes, { name: 'FAClose' }).id;
+      var faOpenId = lodash.findWhere($this.countTypes, { name: 'FAOpen' }).id;
+
       angular.forEach(storeInstanceItems, function (item) {
         if (item.countTypeId === faCloseId) {
           eposItemList.push(item);
-        } else {
+        } else if (item.countTypeId !== faOpenId) {
           stockItemList.push(item);
         }
       });
@@ -172,7 +194,7 @@ angular.module('ts5App')
       reconciliationFactory.getStockItemCounts($routeParams.storeInstanceId).then(function (stockCountsFromAPI) {
         var filteredItems = mergeItems(filteredStockAndEposItems.stockItems, rawLMPStockData, stockCountsFromAPI.response);
         $scope.stockItemList = lodash.map(filteredItems, setStockItem);
-        setOutlierItemsList(filteredStockAndEposItems.eposItems);
+        setOutlierItemsList(filteredStockAndEposItems.eposItems, rawLMPStockData);
         initLMPStockRevisions();
       });
     }
@@ -273,7 +295,7 @@ angular.module('ts5App')
     function getTotalsForPromotions(promotionTotals) {
       var total = 0;
       angular.forEach(promotionTotals, function (promotionItem) {
-        total += promotionItem.discountApplied;
+        total += promotionItem.convertedAmount;
       });
 
       return {
@@ -350,7 +372,7 @@ angular.module('ts5App')
         exchangeRateTypeId: 1
       }).map(function (promotion) {
         promotion.eposQuantity = promotion.quantity;
-        promotion.eposTotal = formatAsCurrency(promotion.discountApplied);
+        promotion.eposTotal = formatAsCurrency(promotion.convertedAmount);
         reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
           promotion.itemName = dataFromAPI.promotionName;
         }, handleResponseError);
@@ -457,7 +479,7 @@ angular.module('ts5App')
       angular.forEach($this.promotionTotals, function (promotion) {
         var promotionMatch = lodash.findWhere(consolidatedPromotions, { promotionId: promotion.promotionId });
         if (promotionMatch) {
-          promotionMatch.discountApplied = promotionMatch.discountApplied + promotion.discountApplied;
+          promotionMatch.convertedAmount = promotionMatch.convertedAmount + promotion.convertedAmount;
           promotionMatch.quantity += (promotion.quantity || 1);
         } else {
           promotion.quantity = 1;

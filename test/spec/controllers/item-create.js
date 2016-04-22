@@ -32,9 +32,11 @@ describe('The Item Create Controller', function() {
   var $httpBackend;
   var $routeParams;
   var dateUtility;
+  var lodash;
 
-  beforeEach(inject(function(_dateUtility_) {
+  beforeEach(inject(function(_dateUtility_, _lodash_) {
     dateUtility = _dateUtility_;
+    lodash = _lodash_;
   }));
 
   function createController($injector) {
@@ -706,13 +708,11 @@ describe('The Item Create Controller', function() {
         });
 
         it('should remove the item from scope.substitutions with id === 332 from the list', function() {
-          var substitutionsLength = 40;
           $routeParams.id = idOfItemInEditMode;
           scope.$digest();
           itemsListDeferred.resolve();
-          expect(scope.substitutions.length).toBe(substitutionsLength - 1);
-          var itemIdFromList = parseInt(scope.substitutions[0].id);
-          expect(itemIdFromList).not.toEqual(idOfItemInEditMode);
+          var currentItemMatch = lodash.findWhere(scope.substitutions, { id: idOfItemInEditMode });
+          expect(currentItemMatch).not.toBeDefined();
         });
 
         it('should set the scope.recommendations after the promise is resolved', function() {
@@ -1495,6 +1495,41 @@ describe('The Item Create Controller', function() {
       expect(scope.setSelected(3, '3')).toBeTruthy();
     });
 
+  });
+
+  describe('scope.substitutions variable', function() {
+    it('should be able to remove non active records between start and end date', function() {
+      scope.items = [{
+        startDate: '04/10/1980',
+        endDate: '02/20/2050'
+      }, {
+        startDate: '04/15/1980',
+        endDate: '05/20/1999'
+      }];
+      scope.formData.startDate = '04/15/2000';
+      scope.formData.endDate = '05/20/2030';
+      ItemCreateCtrl.filterItemsByFormDates(scope.item);
+      scope.$digest();
+      expect(scope.substitutions.length).toEqual(1);
+      expect(scope.substitutions[0].startDate).toEqual('04/10/1980');
+    });
+
+    it('should be able to remove duplicate records', function () {
+      scope.items = [{
+        startDate: '04/10/1980',
+        endDate: '02/20/2050',
+        itemMasterId: 2
+      }, {
+        startDate: '04/15/1980',
+        endDate: '02/30/2050',
+        itemMasterId: 2
+      }];
+      scope.formData.startDate = '04/15/2000';
+      scope.formData.endDate = '05/20/2030';
+      ItemCreateCtrl.filterItemsByFormDates(scope.item);
+      scope.$digest();
+      expect(scope.substitutions.length).toEqual(1);
+    });
   });
 
 });

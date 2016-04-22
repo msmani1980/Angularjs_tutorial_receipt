@@ -375,6 +375,20 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.offloadListItems.length).toEqual(2);
       });
+
+      it('should not add FAOpen items that do not overlap with existing items', function () {
+        var faOpenItem = {
+          itemName: 'item3',
+          itemCode: 'ITM3',
+          quantity: 4,
+          itemMasterId: 3,
+          countTypeId: 12  // FAOpen count type
+        };
+        storeInstanceItems.response.push(faOpenItem);
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.offloadListItems.length).toEqual(2);
+      });
     });
 
     describe('merge items for redispatch', function () {

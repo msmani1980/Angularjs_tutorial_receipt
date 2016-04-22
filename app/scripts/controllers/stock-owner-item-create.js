@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, lodash) {
 
     var $this = this;
     $scope.formData = {
@@ -243,6 +243,21 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       return allergenPayload;
     };
 
+    this.filterItemsByFormDates = function() {
+      $scope.substitutions = lodash.filter($scope.items, function(item) {
+        return dateUtility.isAfterOrEqual(item.endDate, $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, item.startDate);
+      });
+
+      $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
+      $scope.recommendations = angular.copy($scope.substitutions);
+    };
+
+    $scope.$watchGroup(['formData.startDate', 'items', 'formData.endDate'], function() {
+      if ($scope.formData.startDate && $scope.formData.endDate && $scope.items) {
+        $this.filterItemsByFormDates();
+      }
+    });
+
     this.findSubstitutionIndex = function(substitutionId) {
       var substitutionIndex = null;
       for (var key in $scope.substitutions) {
@@ -475,8 +490,9 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     this.setItemList = function(itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;
-      $scope.substitutions = itemList;
-      $scope.recommendations = itemList;
+      $scope.substitutions = [];
+      $scope.recommendations = [];
+
     };
 
     this.setMasterCurrenciesList = function(data) {

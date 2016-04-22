@@ -20,6 +20,8 @@
               <p><strong>Aircraft Registration:</strong> {{report.carrierNumber}}</p>
               <p><strong>Cash Bag Number(s):</strong> {{report.cashbagText}}</p>
 
+              <br>
+              <h5>Crew IDs and Names:</h5>
               <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
                   <th>Crew ID</th>
@@ -31,10 +33,10 @@
                 </tr>
               </table>
 
-              <h5>Expected Cash</h5>
+              <h5>Expected Cash:</h5>
               <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
-                  <th>Currency Type</th>
+                  <th>Currency</th>
                   <th>Currency Value</th>
                   <th>GBP Value</th>
                 </tr>
@@ -48,13 +50,12 @@
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
-                  <td>Expected Cash Total</td>
-                  <td></td>
+                  <td colspan="2">Expected Cash Total</td>
                   <td>{{report.cashTotal}}</td>
                 </tr>
               </table>
 
-              <h5>Expected Credit</h5>
+              <h5>Expected Credit:</h5>
               <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
                   <th>Card Type</th>
@@ -74,10 +75,56 @@
                 </tr>
               </table>
 
-              <h5>Voucher Total</h5>
+              <h5>Expected Coupon:</h5>
               <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
-                  <th>Voucher Currency</th>
+                  <th>Currency</th>
+                  <th>Value</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="coupon in report.coupon">
+                  <td>{{coupon.currencyCode}}</td>
+                  <td>{{coupon.total}}</td>
+                  <td>{{coupon.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.coupon.length">
+                  <td>No expected coupon added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td colspan="2">Expected Coupon Total</td>
+                  <td>{{report.couponTotal}}</td>
+                </tr>
+              </table>
+
+              <h5>Expected Frequent Flyer:</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Currency</th>
+                  <th>Value</th>
+                  <th>GBP Value</th>
+                </tr>
+                <tr ng-repeat="frequentFlyer in report.ffCard">
+                  <td>{{frequentFlyer.currencyCode}}</td>
+                  <td>{{frequentFlyer.total}}</td>
+                  <td>{{frequentFlyer.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.coupon.ffCard">
+                  <td>No expected frequent flyer added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td colspan="2">Expected Frequent Flyer Total</td>
+                  <td>{{report.couponTotal}}</td>
+                </tr>
+              </table>
+
+              <h5>Voucher Total:</h5>
+              <table class="table table-bordered table-condensed col-xs-12">
+                <tr class="active">
+                  <th>Currency</th>
                   <th>Currency Value</th>
                   <th>GBP Value</th>
                 </tr>
@@ -92,16 +139,15 @@
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
-                  <td>Expected Voucher Total</td>
-                  <td></td>
+                  <td colspan="2">Expected Voucher Total</td>
                   <td>{{report.voucherTotal}}</td>
                 </tr>
               </table>
 
-              <h5>Complimentary Total</h5>
+              <h5>Complimentary Total:</h5>
               <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
-                  <th>Currency Type</th>
+                  <th>Currency</th>
                   <th>Comp. Currency</th>
                   <th>GBP Value</th>
                 </tr>
@@ -116,16 +162,15 @@
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
-                  <td>Comp. Total</td>
-                  <td></td>
+                  <td colspan="2">Comp. Total</td>
                   <td>{{report.compTotal ? report.compTotal : '0.00'}}</td>
                 </tr>
               </table>
 
               <table class="table table-bordered table-condensed col-xs-12">
                 <tr class="active">
-                  <td>Expected Total</td>
-                  <td>{{report.total}}</td>
+                  <th colspan="2">Expected Total</th>
+                  <th>{{report.total}}</th>
                 </tr>
               </table>
 
@@ -446,7 +491,7 @@
 
               <div class="row">
                 <div class="col-xs-12 text-right">
-                  <button class="btn btn-info" ng-click="showOutlierItems()" ng-show="outlierItems.length">
+                  <button class="btn btn-info" ng-click="showOutlierItems()" ng-show="outlierItemList.length">
                     <span class="fa fa-th-list"></span> View Outlier Items
                   </button>
                   <span ng-show="canEdit()">
@@ -610,22 +655,22 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Outlier Items</h3>
+        <br>
+        <p>
+          <b>Store Number: </b> {{ outlierItemData.storeNumber }}<br>
+          <b>Schedule Date: </b> {{ outlierItemData.scheduleDate }}<br>
+          <b>Menu(s): </b> {{ outlierItemData.menuList }}
+        </p>
       </div>
       <div class="modal-body">
         <table class="table table-bordered">
           <tr class="active">
             <th>Retail Item Details</th>
             <th>Quantity Sold</th>
-            <th>Store Number</th>
-            <th>Date Opened</th>
-            <th>Menus</th>
           </tr>
           <tr ng-repeat="item in outlierItemList">
             <td>{{ item.itemCode }} - {{ item.itemName }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.storeNumber }}</td>
-            <td>{{ item.scheduleDate }}</td>
-            <td>{{ item.menuList }}</td>
+            <td>{{ item.eposQuantity }}</td>
           </tr>
         </table>
       </div>

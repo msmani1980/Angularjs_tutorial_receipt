@@ -118,6 +118,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.storeNumber = responseCollection[0].storeNumber;
       storeDetails.scheduleDate = dateUtility.formatDateForApp(storeInstanceAPIResponse.scheduleDate);
       storeDetails.scheduleNumber = storeInstanceAPIResponse.scheduleNumber;
+      storeDetails.scheduleId = storeInstanceAPIResponse.scheduleId;
       storeDetails.storeInstanceNumber = storeInstanceAPIResponse.id;
       storeDetails.c208SerialNo = storeInstanceAPIResponse.c208SerialNo;
       storeDetails.canisterQty = storeInstanceAPIResponse.canisterQty;

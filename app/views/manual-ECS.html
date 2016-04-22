@@ -23,6 +23,7 @@
   </div>
 
   <div class="manualECS-container" id="createView" ng-show="isCreateViewActive">
+    <error-dialog form-object="manualECSForm" error-response="errorResponse" display="displayError"></error-dialog>
 
     <div class="modal fade" id="confirmRelationshipModal" role="dialog">
       <div class="modal-dialog">
@@ -31,33 +32,33 @@
             <h3 class="modal-title">Confirm ECS Relationship</h3>
           </div>
           <div class="modal-body">
-              <p>You are creating a relationship between a Portal dispatched
-                Store and ECS (ePOS Created Store).
-                This will tie all transactions from the ECS to the Portal instance.</p>
-              <br>
-              <table class="table table-bordered table-hover">
-                <tr>
-                  <td></td>
-                  <th>Store Number</th>
-                  <th>Schedule Date</th>
-                  <th>Station</th>
-                  <th>Store Instance</th>
-                </tr>
-                <tr>
-                  <th>Portal Store</th>
-                  <td>{{ selectedPortalRecord.storeNumber }}</td>
-                  <td>{{ selectedPortalRecord.scheduleDate }}</td>
-                  <td>{{ selectedPortalRecord.stationCode }}</td>
-                  <td>{{ selectedPortalRecord.id }}</td>
-                </tr>
-                <tr>
-                  <th>ECS</th>
-                  <td>{{ selectedEposRecord.storeNumber }}</td>
-                  <td>{{ selectedEposRecord.instanceDate }}</td>
-                  <td>{{ selectedEposRecord.departureStation }}</td>
-                  <td></td>
-                </tr>
-              </table>
+            <p>You are creating a relationship between a Portal dispatched
+              Store and ECS (ePOS Created Store).
+              This will tie all transactions from the ECS to the Portal instance.</p>
+            <br>
+            <table class="table table-bordered table-hover">
+              <tr>
+                <td>Store Type</td>
+                <th>Store Number</th>
+                <th>Schedule Date</th>
+                <th>Station</th>
+                <th>Store Instance</th>
+              </tr>
+              <tr>
+                <td>Portal Store</td>
+                <td>{{ selectedPortalRecord.storeNumber }}</td>
+                <td>{{ selectedPortalRecord.scheduleDate }}</td>
+                <td>{{ selectedPortalRecord.stationCode }}</td>
+                <td>{{ selectedPortalRecord.id }}</td>
+              </tr>
+              <tr ng-repeat="selectedEposRecord in getAllCarrierInstancesToSave()">
+                <td>ECS</td>
+                <td>{{ selectedEposRecord.storeNumber }}</td>
+                <td>{{ selectedEposRecord.instanceDate }}</td>
+                <td>{{ selectedEposRecord.departureStation }}</td>
+                <td></td>
+              </tr>
+            </table>
           </div>
           <div class="modal-footer text-right">
             <button type="button" class="btn btn-default" ng-click="dismissSaveConfirmation()">Cancel</button>
@@ -68,180 +69,208 @@
     </div>
 
 
+    <form name="manualECSForm" class="form">
 
-    <div class="row">
-      <div class="col-xs-6">
-        <h3>Portal Store Instances</h3>
+      <div class="row">
+        <div class="col-xs-6">
+          <h3>Portal Store Instances</h3>
 
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-xs-12 col-sm-6">
-                <div class="form-group">
-                  <label>Store Number</label>
-                  <input class="form-control"
-                         ng-model="portalSearch.storeNumber"
-                         placeholder="Enter Store Number">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group">
+                    <label>Store Number</label>
+                    <input class="form-control"
+                           ng-model="portalSearch.storeNumber"
+                           placeholder="Enter Store Number">
+                  </div>
                 </div>
-              </div>
-              <div class="col-xs-6 col-sm-6">
-                <date-picker-field
-                  name="startDate"
-                  class="form-group"
-                  ng-model="portalSearch.scheduleDate"
-                  label="Schedule Date">
-                </date-picker-field>
-              </div>
-              <div class="col-xs-12 col-sm-6">
-                <div class="form-group">
-                  <label>Catering Station</label>
-                  <ui-select ng-model="portalSearch.station"
-                             theme="bootstrap"
-                             name="cateringStation">
-                    <ui-select-match placeholder="Select a station" allow-clear>{{ $select.selected.stationDescription}}</ui-select-match>
-                    <ui-select-choices repeat="station in cateringStationList | filter: {stationDescription:$select.search}">
-                      <div ng-bind-html="station.stationDescription | highlight: $select.search"></div>
-                    </ui-select-choices>
-                  </ui-select>
+                <div class="col-xs-6 col-sm-6">
+                  <date-picker-field
+                    name="startDate"
+                    class="form-group"
+                    ng-model="portalSearch.scheduleDate"
+                    label="Schedule Date">
+                  </date-picker-field>
                 </div>
-              </div>
-              <div class="col-xs-12 col-sm-6">
-                <div class="form-group">
-                  <label>Store Instance</label>
-                  <input class="form-control"
-                         ng-model="portalSearch.storeInstance"
-                         placeholder="Enter Store Instance Number">
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group">
+                    <label>Catering Station</label>
+                    <ui-select ng-model="portalSearch.station"
+                               theme="bootstrap"
+                               name="cateringStation">
+                      <ui-select-match placeholder="Select a station" allow-clear>{{ $select.selected.stationDescription}}</ui-select-match>
+                      <ui-select-choices repeat="station in cateringStationList | filter: {stationDescription:$select.search}">
+                        <div ng-bind-html="station.stationDescription | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="panel-footer text-right">
-            <button type="button" class="btn btn-default" ng-click="clearPortalSearch()">Clear</button>
-            <button type="button" class="btn btn-primary" ng-click="searchPortalInstances()">Search</button>
-          </div>
-        </div>
-
-      </div>
-      <div class="col-xs-6">
-        <h3>ePOS Carrier Instances</h3>
-
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-xs-12 col-sm-6">
-                <div class="form-group">
-                  <label>Store Number</label>
-                  <input class="form-control"
-                         ng-model="eposSearch.storeNumber"
-                         placeholder="Enter Store Number">
-                </div>
-              </div>
-              <div class="col-xs-6 col-sm-6">
-                <date-picker-field
-                  name="startDate"
-                  class="form-group"
-                  ng-model="eposSearch.scheduleDate"
-                  label="Schedule Date">
-                </date-picker-field>
-              </div>
-              <div class="col-xs-12 col-sm-6">
-                <div class="form-group">
-                  <label>First Departure Station</label>
-                  <ui-select ng-model="eposSearch.station"
-                             theme="bootstrap"
-                             name="cateringStation">
-                    <ui-select-match placeholder="Select a station" allow-clear>{{ $select.selected.stationDescription}}</ui-select-match>
-                    <ui-select-choices repeat="station in companyStationList | filter: {stationDescription:$select.search}">
-                      <div ng-bind-html="station.stationDescription | highlight: $select.search"></div>
-                    </ui-select-choices>
-                  </ui-select>
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group">
+                    <label>Store Instance</label>
+                    <input class="form-control"
+                           ng-model="portalSearch.storeInstance"
+                           placeholder="Enter Store Instance Number">
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="panel-footer text-right">
+              <button type="button" class="btn btn-default" ng-click="clearPortalSearch()">Clear</button>
+              <button type="button" class="btn btn-primary" ng-click="searchPortalInstances()">Search</button>
+            </div>
           </div>
-          <div class="panel-footer text-right">
-            <button type="button" class="btn btn-default" ng-click="clearEposSearch()">Clear</button>
-            <button type="button" class="btn btn-primary" ng-click="searchEposInstances()">Search</button>
+
+        </div>
+        <div class="col-xs-6">
+          <h3>ePOS Carrier Instances</h3>
+
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group">
+                    <label>Store Number</label>
+                    <input class="form-control"
+                           ng-model="eposSearch.storeNumber"
+                           placeholder="Enter Store Number">
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6">
+                  <date-picker-field
+                    name="startDate"
+                    class="form-group"
+                    ng-model="eposSearch.scheduleDate"
+                    label="Schedule Date">
+                  </date-picker-field>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group">
+                    <label>First Departure Station</label>
+                    <ui-select ng-model="eposSearch.station"
+                               theme="bootstrap"
+                               name="cateringStation">
+                      <ui-select-match placeholder="Select a station" allow-clear>{{ $select.selected.stationDescription}}</ui-select-match>
+                      <ui-select-choices repeat="station in companyStationList | filter: {stationDescription:$select.search}">
+                        <div ng-bind-html="station.stationDescription | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-footer text-right">
+              <button type="button" class="btn btn-default" ng-click="clearEposSearch()">Clear</button>
+              <button type="button" class="btn btn-primary" ng-click="searchEposInstances()">Search</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <br>
+      <br>
 
-    <div class="row">
-      <div class="col-xs-6">
-        <table class="table table-bordered table-hover table-responsive" ng-show="storeInstances.length">
-          <thead>
-          <tr>
-            <th>Store Number</th>
-            <th>Schedule Date</th>
-            <th>Catering Station</th>
-            <th>Store Instance</th>
-            <th>Status</th>
-            <td class="col-xs-1">Select</td>
-          </tr>
-          </thead>
-          <tbody>
-          <tr ng-repeat="storeInstance in storeInstances" ng-class="getClassForAttribute('portal', 'row', storeInstance)">
-            <td>{{ storeInstance.storeNumber }}</td>
-            <td>{{ storeInstance.scheduleDate }}</td>
-            <td>{{ storeInstance.stationCode }}</td>
-            <td>{{ storeInstance.id }}</td>
-            <td>{{ storeInstance.statusName }}</td>
-            <td class="text-center">
-              <button ng-click="selectRecord('portal', storeInstance)"
-                      ng-show="canSelectStoreInstance(storeInstance)"
-                      ng-class="getClassForAttribute('portal', 'button', storeInstance)">
-                <span ng-class="getClassForAttribute('portal', 'icon', storeInstance)"></span>
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+      <div class="row">
+        <div class="col-xs-6">
+          <table class="table table-hover table-responsive" ng-show="storeInstances.length">
+            <thead>
+            <tr>
+              <th>Store Number</th>
+              <th>Schedule Date</th>
+              <th>Catering Station</th>
+              <th>Store Instance</th>
+              <th>Status</th>
+              <th class="col-xs-1">Select</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="storeInstance in storeInstances | orderBy: ['storeNumber', '-scheduleDate']" ng-class="getClassForAttribute('portal', 'row', storeInstance)">
+              <td>{{ storeInstance.storeNumber }}</td>
+              <td>{{ storeInstance.scheduleDate }}</td>
+              <td>{{ storeInstance.stationCode }}</td>
+              <td>{{ storeInstance.id }}</td>
+              <td>{{ storeInstance.statusName }}</td>
+              <td class="text-center">
+                <button ng-click="selectPortalRecord(storeInstance)"
+                        ng-show="canSelectStoreInstance(storeInstance)"
+                        ng-class="getClassForAttribute('portal', 'button', storeInstance)">
+                  <span ng-class="getClassForAttribute('portal', 'icon', storeInstance)"></span>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
 
-        <p ng-show="shouldShowSearchPromptAlert('portal')" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view portal store instances</p>
-        <p ng-show="shouldShowNoRecordAlert('portal')" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were found</p>
+          <p ng-show="shouldShowSearchPromptAlert('portal')" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view portal store
+            instances</p>
+
+          <p ng-show="shouldShowNoRecordAlert('portal')" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria
+            were found</p>
+
+        </div>
+
+        <div class="col-xs-6">
+          <table class="table table-hover table-responsive" ng-show="shouldShowCarrierInstanceTable()">
+            <thead>
+            <tr>
+              <th colspan="2"></th>
+              <th>Store Number</th>
+              <th>Schedule Date</th>
+              <th>First Departure Station</th>
+              <th class="col-xs-1">Select/ Deselect</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="groupParent in carrierInstances | orderBy: ['storeNumber', '-startDate']">
+            <tr ng-class="getClassForEposInstanceRow(groupParent, false)">
+              <td class="category-border">
+                <button class="btn btn-xs btn-default"
+                        ng-click="toggleOpenGroup(groupParent)"
+                        ng-show="groupParent.children.length">
+                  <span ng-class="getClassForAccordionButton(groupParent)"></span>
+                </button>
+              </td>
+              <td></td>
+              <td>{{ groupParent.storeNumber }}</td>
+              <td>{{ groupParent.instanceDate }}</td>
+              <td>{{ groupParent.departureStation }}</td>
+              <td class="text-center">
+                <button ng-click="toggleSelectEposRecord(groupParent)"
+                        ng-class="getClassForAttribute('epos', 'button', groupParent)">
+                  <span ng-class="getClassForAttribute('epos', 'icon', groupParent)"></span>
+                </button>
+              </td>
+            </tr>
+            <tr ng-repeat="childInstance in groupParent.children | orderBy: ['-startDate']"
+                ng-show="groupParent.isOpen"
+                ng-class="getClassForEposInstanceRow(groupParent, true)">
+              <td class="category-indent"></td>
+              <td class="category-border"></td>
+              <td>{{ childInstance.storeNumber }}</td>
+              <td>{{ childInstance.instanceDate }}</td>
+              <td>{{ childInstance.departureStation }}</td>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+
+          <p ng-show="shouldShowSearchPromptAlert('epos')" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view ePOS carrier
+            instances</p>
+
+          <p ng-show="shouldShowNoRecordAlert('epos')" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria
+            were found</p>
+        </div>
 
       </div>
-
-      <div class="col-xs-6">
-        <table class="table table-bordered table-hover table-responsive"  ng-show="carrierInstances.length">
-          <thead>
-          <tr>
-            <th>Store Number</th>
-            <th>Schedule Date</th>
-            <th>First Departure Station</th>
-            <td class="col-xs-1">Select</td>
-          </tr>
-          </thead>
-          <tbody>
-          <tr ng-repeat="eposInstance in carrierInstances | orderBy: 'storeNumber'" ng-class="getClassForAttribute('epos', 'row', eposInstance)">
-            <td>{{ eposInstance.storeNumber }}</td>
-            <td>{{ eposInstance.instanceDate }}</td>
-            <td>{{ eposInstance.departureStation }}</td>
-            <td class="text-center">
-              <button ng-click="selectRecord('epos', eposInstance)"
-                      ng-class="getClassForAttribute('epos', 'button', eposInstance)">
-                <span ng-class="getClassForAttribute('epos', 'icon', eposInstance)"></span>
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-
-        <p ng-show="shouldShowSearchPromptAlert('epos')" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view ePOS carrier instances</p>
-        <p ng-show="shouldShowNoRecordAlert('epos')" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were found</p>
-      </div>
-
-    </div>
+    </form>
 
     <div class="bottom-footer">
       <div class="container">
         <div class="row">
           <div class="col-xs-12 text-right">
             <button type="button" class="btn btn-default" ng-click="resetAll()">Reset All</button>
-            <button type="button" class="btn btn-success" ng-click="showSaveConfirmation()" ng-disabled="!canSaveRelationship()"><span class="fa fa-check"></span> Save Relationship</button>
+            <button type="button" class="btn btn-success" ng-click="showSaveConfirmation()" ng-disabled="!canSaveRelationship()"><span class="fa fa-check"></span> Save Relationship
+            </button>
           </div>
         </div>
       </div>
@@ -254,6 +283,7 @@
     <div class="row">
       <div class="col-xs-12">
         <h3>Existing ECS Relationships</h3>
+
         <div class="panel panel-default" id="relationships-search-collapse">
           <div class="panel-body">
             <div class="row">
@@ -365,7 +395,9 @@
         </table>
 
         <p ng-show="shouldShowSearchPromptAlert('all')" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view records</p>
-        <p ng-show="shouldShowNoRecordAlert('all')" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were found</p>
+
+        <p ng-show="shouldShowNoRecordAlert('all')" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were
+          found</p>
       </div>
     </div>
   </div>

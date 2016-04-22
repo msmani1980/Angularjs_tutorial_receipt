@@ -31,10 +31,13 @@ describe('The Stock Owner Item Create Controller', function() {
   var $httpBackend;
   var $routeParams;
   var dateUtility;
+  var lodash;
 
-  beforeEach(inject(function(_dateUtility_) {
+  beforeEach(inject(function(_dateUtility_, _lodash_) {
     dateUtility = _dateUtility_;
+    lodash = _lodash_;
   }));
+
 
   function createController($injector) {
     $location = $injector.get('$location');
@@ -449,7 +452,7 @@ describe('The Stock Owner Item Create Controller', function() {
 
       describe('setItemList method', function() {
 
-        var idOfItemInEditMode = 403;
+        var idOfItemInEditMode = '383';
 
         beforeEach(function() {
           spyOn(StockOwnerItemCreateCtrl, 'setItemList').and.callThrough();
@@ -478,22 +481,23 @@ describe('The Stock Owner Item Create Controller', function() {
         });
 
         it('should not delete any item from scope.substitutions if not in edit mode', function() {
-          var substitutionsLength = 40;
-          scope.$digest();
-          itemsListDeferred.resolve();
-          expect(scope.substitutions.length).toBe(substitutionsLength);
-          var itemIdFromList = parseInt(scope.substitutions[0].id);
-          expect(itemIdFromList).toEqual(idOfItemInEditMode);
+            scope.formData.startDate = '10/20/2000';
+            scope.formData.endDate = '10/20/2050';
+            scope.$digest();
+            itemsListDeferred.resolve();
+            StockOwnerItemCreateCtrl.filterItemsByFormDates();
+            var currentItemMatch = lodash.findWhere(scope.substitutions, { id: idOfItemInEditMode });
+            expect(currentItemMatch).toBeDefined();
+
         });
 
         it('should remove the item from scope.substitutions with id === 332 from the list', function() {
-          var substitutionsLenth = 40;
           $routeParams.id = idOfItemInEditMode;
           scope.$digest();
           itemsListDeferred.resolve();
-          expect(scope.substitutions.length).toBe(substitutionsLenth - 1);
-          var itemIdFromList = parseInt(scope.substitutions[0].id);
-          expect(itemIdFromList).not.toEqual(idOfItemInEditMode);
+          var currentItemMatch = lodash.findWhere(scope.substitutions, { id: idOfItemInEditMode });
+          expect(currentItemMatch).not.toBeDefined();
+
         });
 
         it('should set the scope.items after the promise is resolved', function() {
@@ -783,5 +787,42 @@ describe('The Stock Owner Item Create Controller', function() {
     });
 
   });
+
+
+    describe('scope.substitutions variable', function() {
+      it('should be able to remove non active records between start and end date', function() {
+        scope.items = [{
+          startDate: '04/10/1980',
+          endDate: '02/20/2050'
+        }, {
+          startDate: '04/15/1980',
+          endDate: '05/20/1999'
+        }];
+        scope.formData.startDate = '04/15/2000';
+        scope.formData.endDate = '05/20/2030';
+        StockOwnerItemCreateCtrl.filterItemsByFormDates(scope.item);
+        scope.$digest();
+        expect(scope.substitutions.length).toEqual(1);
+        expect(scope.substitutions[0].startDate).toEqual('04/10/1980');
+      });
+
+      it('should be able to remove duplicate records', function () {
+        scope.items = [{
+          startDate: '04/10/1980',
+          endDate: '02/20/2050',
+          itemMasterId: 2
+        }, {
+          startDate: '04/15/1980',
+          endDate: '02/30/2050',
+          itemMasterId: 2
+        }];
+        scope.formData.startDate = '04/15/2000';
+        scope.formData.endDate = '05/20/2030';
+        StockOwnerItemCreateCtrl.filterItemsByFormDates(scope.item);
+        scope.$digest();
+        expect(scope.substitutions.length).toEqual(1);
+      });
+
+    });
 
 });
