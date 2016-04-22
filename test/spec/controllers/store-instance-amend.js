@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: StoreInstanceAmendCtrl', function () {
+describe('Controller: StoreInstanceAmendCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/cash-bag-list.json'));
@@ -210,6 +210,8 @@ fdescribe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(employeesService, 'getEmployees').and.returnValue(getEmployeesDeferred.promise);
     spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getFlightSectors').and.returnValue(getFlightSectorsDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'addFlightSector').and.callThrough();
+    spyOn(storeInstanceAmendFactory, 'editFlightSector').and.callThrough();
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(getPostTripDeferred.promise);
     spyOn(postTripFactory, 'getPostTripDataList').and.returnValues(getSinglePostTripsDeferred.promise, getPostTripsDeferred.promise);
     spyOn(transactionFactory, 'getTransactionList').and.returnValue(getTransactionListDeferred.promise);
@@ -703,6 +705,26 @@ fdescribe('Controller: StoreInstanceAmendCtrl', function () {
         expect(scope.newScheduleSelection).not.toEqual(null);
       });
     });
+
+    describe('addOrEditSchedule schedule', function () {
+      beforeEach(function () {
+        scope.newScheduleSelection = null;
+        scope.moveCashBagSearchResults = null;
+        scope.cashBagToEdit = { id: 1 };
+        scope.newScheduleSelection = { id: 2, scheduleNumber: '3'};
+      });
+
+      it('should add schedule if add action is requested', function () {
+        scope.addOrEditSchedule();
+        expect(storeInstanceAmendFactory.addFlightSector).toHaveBeenCalledWith(1, 2);
+      });
+
+      it('should edit schedule if edit schedule is requested', function () {
+        scope.scheduleToEdit = { id: 2 };
+        scope.addOrEditSchedule();
+        expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 2, '3');
+      });
+    });
   });
 
   describe('Payment reports', function () {
@@ -746,3 +768,4 @@ fdescribe('Controller: StoreInstanceAmendCtrl', function () {
   });
 
 });
+
