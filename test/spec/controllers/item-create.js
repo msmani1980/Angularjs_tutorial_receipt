@@ -1509,7 +1509,6 @@ describe('The Item Create Controller', function() {
       scope.formData.startDate = '04/15/2000';
       scope.formData.endDate = '05/20/2030';
       ItemCreateCtrl.filterItemsByFormDates(scope.item);
-      scope.$digest();
       expect(scope.substitutions.length).toEqual(1);
       expect(scope.substitutions[0].startDate).toEqual('04/10/1980');
     });
@@ -1527,7 +1526,6 @@ describe('The Item Create Controller', function() {
       scope.formData.startDate = '04/15/2000';
       scope.formData.endDate = '05/20/2030';
       ItemCreateCtrl.filterItemsByFormDates(scope.item);
-      scope.$digest();
       expect(scope.substitutions.length).toEqual(1);
     });
   });
