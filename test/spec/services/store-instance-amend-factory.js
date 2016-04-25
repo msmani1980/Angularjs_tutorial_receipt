@@ -8,16 +8,23 @@ describe('Factory: storeInstanceAmendFactory', function () {
   var rootScope;
   var scope;
   var cashBagService;
+  var storeInstanceAmendService;
 
-  beforeEach(inject(function ($rootScope, _storeInstanceAmendFactory_, _cashBagService_) {
+  beforeEach(inject(function ($rootScope, _storeInstanceAmendFactory_, _cashBagService_, _storeInstanceAmendService_) {
     rootScope = $rootScope;
     scope = $rootScope.$new();
     storeInstanceAmendFactory = _storeInstanceAmendFactory_;
     cashBagService = _cashBagService_;
+    storeInstanceAmendService = _storeInstanceAmendService_;
 
     spyOn(cashBagService, 'getCashBagList').and.stub();
     spyOn(cashBagService, 'getCashBagCarrierInstances').and.stub();
     spyOn(cashBagService, 'deleteCashBag').and.stub();
+    spyOn(storeInstanceAmendService, 'movePostTrip').and.stub();
+    spyOn(storeInstanceAmendService, 'getPostTrips').and.stub();
+    spyOn(storeInstanceAmendService, 'addPostTrip').and.stub();
+    spyOn(storeInstanceAmendService, 'editPostTrip').and.stub();
+    spyOn(storeInstanceAmendService, 'deletePostTrip').and.stub();
   }));
 
   it('should be defined', function () {
@@ -49,7 +56,7 @@ describe('Factory: storeInstanceAmendFactory', function () {
       var cashBagId = 1;
 
       storeInstanceAmendFactory.getFlightSectors(cashBagId);
-      expect(cashBagService.getCashBagCarrierInstances).toHaveBeenCalledWith(cashBagId);
+      expect(storeInstanceAmendService.getPostTrips).toHaveBeenCalledWith(cashBagId);
     });
 
     it('deleteCashBag should call cashBagService', function () {
@@ -57,6 +64,36 @@ describe('Factory: storeInstanceAmendFactory', function () {
 
       storeInstanceAmendFactory.deleteCashBag(cashBagId);
       expect(cashBagService.deleteCashBag).toHaveBeenCalledWith(cashBagId);
+    });
+
+    it('rearrangeFlightSector should call storeInstanceAmendService', function () {
+      var originCashBagId = 1;
+      var targetCashBagId = 2;
+      var postTripId = 3;
+
+      storeInstanceAmendFactory.rearrangeFlightSector(originCashBagId, targetCashBagId, postTripId);
+      expect(storeInstanceAmendService.movePostTrip).toHaveBeenCalledWith(originCashBagId, targetCashBagId, postTripId);
+    });
+    it('addFlightSector should call storeInstanceAmendService', function () {
+      var cashBagId = 1;
+      var postTripId = 2;
+
+      storeInstanceAmendFactory.addFlightSector(cashBagId, postTripId);
+      expect(storeInstanceAmendService.addPostTrip).toHaveBeenCalledWith(cashBagId, postTripId);
+    });
+    it('editFlightSector should call storeInstanceAmendService', function () {
+      var cashBagId = 1;
+      var postTripId = 2;
+      var scheduleNumber = '3';
+
+      storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber);
+      expect(storeInstanceAmendService.editPostTrip).toHaveBeenCalledWith(cashBagId, postTripId, scheduleNumber);
+    });
+    it('getFlightSector should call storeInstanceAmendService', function () {
+      var cashBagId = 1;
+
+      storeInstanceAmendFactory.getFlightSectors(cashBagId);
+      expect(storeInstanceAmendService.getPostTrips).toHaveBeenCalledWith(cashBagId);
     });
   });
 
