@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('transactionService', function ($http, $resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/transactions';
+    var requestURL = ENV.apiUrl + '/rsvr/api/transactions';
     var requestParameters = {
       limit: 50
     };
