@@ -17,9 +17,12 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   beforeEach(module('served/cash-bag.json'));
   beforeEach(module('served/cash-bag-carrier-instances.json'));
   beforeEach(module('served/post-trip-data.json'));
+  beforeEach(module('served/post-trip-data-list.json'));
+  beforeEach(module('served/post-trip-single-data-list.json'));
   beforeEach(module('served/transactions.json'));
   beforeEach(module('served/store-instance-list.json'));
   beforeEach(module('served/store-status.json'));
+  beforeEach(module('served/stations.json'));
 
   var scope;
   var StoreInstanceAmendCtrl;
@@ -66,18 +69,26 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var flightSectorsJSON;
   var getFlightSectorsDeferred;
   var postTripDataJSON;
+  var postTripsDataJSON;
+  var singlePostTripsDataJSON;
   var getPostTripDeferred;
+  var getPostTripsDeferred;
+  var getSinglePostTripsDeferred;
   var transactionsJSON;
   var getTransactionListDeferred;
   var storeInstancesJSON;
   var getStoreInstancesListDeferred;
   var storeStatusJSON;
   var getStoreStatusListDeferred;
+  var stationsJSON;
+  var getStationsDeferred;
+  var stationsService;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagList_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
                               _servedChCashBag_, _servedPaymentReport_, _servedEmployees_, _servedCashBag_, _servedCashBagCarrierInstances_,
-                              _servedPostTripData_, _servedTransactions_, _servedStoreInstanceList_, _servedStoreStatus_) {
+                              _servedPostTripData_, _servedTransactions_, _servedStoreInstanceList_, _servedStoreStatus_, _servedPostTripDataList_,
+                              _servedPostTripSingleDataList_, _servedStations_) {
     location = $location;
     scope = $rootScope.$new();
     storeInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
@@ -89,6 +100,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     storeInstanceFactory = $injector.get('storeInstanceFactory');
     recordsService = $injector.get('recordsService');
     dateUtility = $injector.get('dateUtility');
+    stationsService = $injector.get('stationsService');
     controller = $controller;
 
     storeInstanceResponseJSON = [{ id: 1 }]; // stub for now until API is complete
@@ -157,6 +169,14 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     getPostTripDeferred = $q.defer();
     getPostTripDeferred.resolve(postTripDataJSON);
 
+    postTripsDataJSON = _servedPostTripDataList_;
+    getPostTripsDeferred = $q.defer();
+    getPostTripsDeferred.resolve(postTripsDataJSON);
+
+    singlePostTripsDataJSON = _servedPostTripSingleDataList_;
+    getSinglePostTripsDeferred = $q.defer();
+    getSinglePostTripsDeferred.resolve(singlePostTripsDataJSON);
+
     transactionsJSON = _servedTransactions_;
     getTransactionListDeferred = $q.defer();
     getTransactionListDeferred.resolve(transactionsJSON);
@@ -168,6 +188,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     storeStatusJSON = _servedStoreStatus_;
     getStoreStatusListDeferred = $q.defer();
     getStoreStatusListDeferred.resolve(storeStatusJSON);
+
+    stationsJSON = _servedStations_;
+    getStationsDeferred = $q.defer();
+    getStationsDeferred.resolve(stationsJSON);
 
     spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
@@ -186,13 +210,18 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(employeesService, 'getEmployees').and.returnValue(getEmployeesDeferred.promise);
     spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getFlightSectors').and.returnValue(getFlightSectorsDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'addFlightSector').and.callThrough();
+    spyOn(storeInstanceAmendFactory, 'editFlightSector').and.callThrough();
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(getPostTripDeferred.promise);
+    spyOn(postTripFactory, 'getPostTripDataList').and.returnValues(getSinglePostTripsDeferred.promise, getPostTripsDeferred.promise);
     spyOn(transactionFactory, 'getTransactionList').and.returnValue(getTransactionListDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getStoreInstancesListDeferred.promise);
     spyOn(recordsService, 'getStoreStatusList').and.returnValue(getStoreStatusListDeferred.promise);
     spyOn(cashBagFactory, 'reallocateCashBag').and.callThrough();
     spyOn(cashBagFactory, 'mergeCashBag').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'deleteCashBag').and.callThrough();
+    spyOn(storeInstanceAmendFactory, 'rearrangeFlightSector').and.callThrough();
+    spyOn(stationsService, 'getStationList').and.returnValue(getStationsDeferred.promise);
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
@@ -369,7 +398,8 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     describe('canSaveRearrange', function () {
       it('should only allow saving if a record is selected and a target is set', function () {
         scope.sectorsToMove = [{ id: 1 }];
-        scope.rearrangeTargetCashBag = { cashBag: '123' };
+        scope.rearrangeOriginCashBag = { id: 1, cashBag: '123' };
+        scope.rearrangeTargetCashBag = { id: 2, cashBag: '123' };
         expect(scope.canSaveRearrange()).toEqual(true);
       });
 
@@ -423,6 +453,17 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         var buttonIcon = scope.getClassesForRearrangeSectors(mockNonSelectedSector, 'buttonIcon');
         expect(background).toEqual('');
         expect(buttonIcon).toEqual('fa fa-circle-thin');
+      });
+    });
+
+    describe('rearrangeSector', function () {
+      it('should rearrange selected sectors', function () {
+        scope.sectorsToMove = [{ id: 1 }, { id: 2 }];
+        scope.rearrangeOriginCashBag = { id: 1, cashBag: '123', isManual: true };
+        scope.rearrangeTargetCashBag = { id: 2, cashBag: '345'};
+
+        scope.rearrangeSector();
+        expect(storeInstanceAmendFactory.rearrangeFlightSector).toHaveBeenCalled();
       });
     });
 
@@ -648,7 +689,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       it('should getSchedules', function () {
         scope.scheduleSearch = { scheduleNumber: '123', scheduleDate: '10/20/2015' };
         scope.searchForSchedule();
-        expect(storeInstanceAmendFactory.getScheduleMockData).toHaveBeenCalledWith(scope.scheduleSearch);
+        expect(postTripFactory.getPostTripDataList).toHaveBeenCalledWith(0, scope.scheduleSearch);
       });
 
       it('should set schedule search results', function () {
@@ -658,10 +699,30 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
 
       it('should automatically set selection if there is only one result', function () {
-        scope.scheduleSearch = { storeNumber: '123', scheduleDate: '10/20/2015' };
+        scope.scheduleSearch = { scheduleNumber: '123', scheduleDate: '10/20/2015' };
         scope.searchForSchedule();
         scope.$digest();
         expect(scope.newScheduleSelection).not.toEqual(null);
+      });
+    });
+
+    describe('addOrEditSchedule schedule', function () {
+      beforeEach(function () {
+        scope.newScheduleSelection = null;
+        scope.moveCashBagSearchResults = null;
+        scope.cashBagToEdit = { id: 1 };
+        scope.newScheduleSelection = { id: 2, scheduleNumber: '3'};
+      });
+
+      it('should add schedule if add action is requested', function () {
+        scope.addOrEditSchedule();
+        expect(storeInstanceAmendFactory.addFlightSector).toHaveBeenCalledWith(1, 2);
+      });
+
+      it('should edit schedule if edit schedule is requested', function () {
+        scope.scheduleToEdit = { id: 2 };
+        scope.addOrEditSchedule();
+        expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 2, '3');
       });
     });
   });
@@ -707,3 +768,4 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   });
 
 });
+

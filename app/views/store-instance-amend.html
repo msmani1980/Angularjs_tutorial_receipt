@@ -54,11 +54,14 @@
                 </button>
               </td>
             </tr>
+            <tr ng-hide="searchScheduleResults.length">
+              <td colspan="5">No Schedules found</td>
+            </tr>
           </table>
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="clearScheduleSelections()"
+          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="addOrEditSchedule()"
                   ng-show="newScheduleSelection">
             <i class="fa fa-check"></i> Confirm
           </button>
@@ -228,7 +231,7 @@
                   <h4>Origin Cash Bag</h4>
                   <select class="form-control"
                           ng-model="rearrangeOriginCashBag"
-                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBag'"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in normalizedCashBags | filter:{isDeleted:false} | orderBy: 'cashBag'"
                           ng-change="clearRearrangeSelections()">
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
@@ -249,7 +252,7 @@
                       </td>
                       <td>{{ sector.scheduleNumber }}</td>
                       <td>{{ sector.scheduleDate}}</td>
-                      <td>{{ sector.route}}</td>
+                      <td>{{ sector.arrivalStation}} - {{ sector.departureStation}}</td>
                     </tr>
                   </table>
                 </div>
@@ -261,7 +264,7 @@
                   <h4>Target Cash Bag</h4>
                   <select class="form-control"
                           ng-model="rearrangeTargetCashBag"
-                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBag'"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in normalizedCashBags | filter:{isDeleted:false} | orderBy: 'cashBag'"
                           ng-change="clearRearrangeSelections()">
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
@@ -275,12 +278,12 @@
                     <tr ng-repeat="sector in rearrangeTargetCashBag.flightSectors">
                       <td>{{ sector.scheduleNumber }}</td>
                       <td>{{ sector.scheduleDate}}</td>
-                      <td>{{ sector.route}}</td>
+                      <td>{{ sector.arrivalStation}} - {{ sector.departureStation}}</td>
                     </tr>
                     <tr ng-repeat="sector in sectorsToMove" class="bg-info">
                       <td>{{ sector.scheduleNumber }}</td>
                       <td>{{ sector.scheduleDate}}</td>
-                      <td>{{ sector.route}}</td>
+                      <td>{{ sector.arrivalStation}} - {{ sector.departureStation}}</td>
                     </tr>
                   </table>
                 </div>
@@ -289,7 +292,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" ng-show="canSaveRearrange()">
+          <button type="button" class="btn btn-success" ng-show="canSaveRearrange()" data-dismiss="modal" ng-click="rearrangeSector()">
             <i class="fa fa-check"></i> Save
           </button>
           <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeRearrangeSectorModal()">
@@ -309,11 +312,31 @@
         </div>
 
         <div class="modal-body">
-          <p>You are about to permanently delete <strong>{{cashBagToDelete.cashBag}} cashbag</strong></p>
+          <p>You are about to permanently delete <strong>{{cashBagToDelete.cashBag}}</strong> cashbag</p>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" ng-click="deleteCashBag()">Continue</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade delete-schedule-warning-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Are you sure?</h4>
+        </div>
+
+        <div class="modal-body">
+          <p>You are about to permanently delete <strong>{{scheduleToDelete.scheduleNumber}}</strong> schedule</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" ng-click="deleteSchedule()">Continue</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div>
@@ -565,7 +588,7 @@
                     </tr>
                     <tr class="active">
                       <td>Net Value of ePOS Sales</td>
-                      <td>40.00</td>
+                      <td>-</td>
                     </tr>
                   </table>
                 </div>
@@ -591,7 +614,7 @@
                     </tr>
                     <tr class="active">
                       <td>Total Amount</td>
-                      <td>26.50</td>
+                      <td>-</td>
                     </tr>
                   </table>
                 </div>
@@ -602,7 +625,7 @@
                   <h4>Flight Sectors</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-primary btn-sm" ng-click="showAddOrEditScheduleModal()" ng-show="!cashBag.isDeleted && canExecuteActions()">
+                  <button class="btn btn-primary btn-sm" ng-click="showAddOrEditScheduleModal(cashBag)" ng-show="!cashBag.isDeleted && canExecuteActions()">
                     <i class="fa fa-plus active"></i> Add Schedule
                   </button>
                   <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-show="!isCrewDataOpen(cashBag) && canExecuteActions()">
@@ -648,8 +671,8 @@
                       <td>{{ getOrNA(flightSector.transactionCount) }}</td>
                       <td>{{ getOrNA(flightSector.transactionTotal) }}</td>
                       <td ng-hide="cashBag.isDeleted">
-                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(flightSector)" ng-show="canExecuteActions()"><i class="fa fa-pencil active"></i></button>
-                        <button class="btn btn-danger btn-xs" ng-show="canExecuteActions()"><i class="fa fa-trash active"></i></button>
+                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(cashBag, flightSector)" ng-show="canExecuteActions()"><i class="fa fa-pencil active"></i></button>
+                        <button class="btn btn-danger btn-xs" ng-show="canExecuteActions()" ng-click="showDeleteScheduleModal(flightSector)"><i class="fa fa-trash active"></i></button>
                       </td>
                     </tr>
                     <tr class="subversion-row" ng-show="flightSector.rowOpen">
