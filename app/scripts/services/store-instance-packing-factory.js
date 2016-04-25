@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App').service('storeInstancePackingFactory',
-  function(storeInstanceFactory, storeInstanceService, recordsService, companyReasonCodesService, itemsService, featureThresholdsService) {
+  function(storeInstanceFactory, storeInstanceService, recordsService, companyReasonCodesService, itemsService, featureThresholdsService, companyPreferencesService) {
 
     function getStoreDetails (storeInstanceId) {
       return storeInstanceFactory.getStoreDetails(storeInstanceId);
@@ -66,6 +66,15 @@ angular.module('ts5App').service('storeInstancePackingFactory',
       return featureThresholdsService.getThresholdList(featureCode);
     }
 
+    function getCompanyPreferences(payload, companyId) {
+      return companyPreferencesService.getCompanyPreferences(payload, companyId);
+    }
+
+    function getCalculatedInboundQuantities(id, payload) {
+      payload = payload || {};
+      return storeInstanceService.getStoreInstanceCalculatedInbounds(id, payload);
+    }
+
     return {
       getStoreDetails: getStoreDetails,
       updateStoreInstanceStatus: updateStoreInstanceStatus,
@@ -80,7 +89,9 @@ angular.module('ts5App').service('storeInstancePackingFactory',
       getStoreInstanceMenuItems: getStoreInstanceMenuItems,
       getStoreInstanceItemList: getStoreInstanceItemList,
       getItemsMasterList: getItemsMasterList,
-      getThresholdList: getThresholdList
+      getThresholdList: getThresholdList,
+      getCompanyPreferences: getCompanyPreferences,
+      getCalculatedInboundQuantities: getCalculatedInboundQuantities
     };
 
   });

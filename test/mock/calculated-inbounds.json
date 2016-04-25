@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "count": 14,
+    "limit": 14,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 560,
+      "storeInstanceId": 4403,
+      "quantity": 3,
+      "companyId": 403
+    },
+    {
+      "id": 410,
+      "storeInstanceId": 4403,
+      "quantity": 15,
+      "companyId": 403
+    },
+    {
+      "id": 407,
+      "storeInstanceId": 4403,
+      "quantity": 2,
+      "companyId": 403
+    },
+    {
+      "id": 260,
+      "storeInstanceId": 4403,
+      "quantity": 1,
+      "companyId": 403
+    },
+    {
+      "id": 259,
+      "storeInstanceId": 4403,
+      "quantity": 1,
+      "companyId": 403
+    },
+    {
+      "id": 114,
+      "storeInstanceId": 4403,
+      "quantity": 11,
+      "companyId": 403
+    },
+    {
+      "id": 101,
+      "storeInstanceId": 4403,
+      "quantity": 21,
+      "companyId": 403
+    },
+    {
+      "id": 71,
+      "storeInstanceId": 4403,
+      "quantity": 30,
+      "companyId": 403
+    },
+    {
+      "id": 69,
+      "storeInstanceId": 4403,
+      "quantity": 101,
+      "companyId": 403
+    },
+    {
+      "id": 63,
+      "storeInstanceId": 4403,
+      "quantity": 150,
+      "companyId": 403
+    },
+    {
+      "id": 59,
+      "storeInstanceId": 4403,
+      "quantity": 51,
+      "companyId": 403
+    },
+    {
+      "id": 34,
+      "storeInstanceId": 4403,
+      "quantity": 35,
+      "companyId": 403
+    },
+    {
+      "id": 14,
+      "storeInstanceId": 4403,
+      "quantity": 100,
+      "companyId": 403
+    },
+    {
+      "id": 13,
+      "storeInstanceId": 4403,
+      "quantity": 101,
+      "companyId": 403
+    }
+  ]
+}

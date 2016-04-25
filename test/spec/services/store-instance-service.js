@@ -218,4 +218,17 @@ describe('Service: storeInstanceService', function () {
     });
   });
 
+  describe('getStoreInstanceCalculatedInbounds', function() {
+    it('should make GET request to API', function() {
+      var expectedURL = /store-instances\/\d+\/calculated-inbounds$/;
+      var storeInstanceId = 66;
+      httpBackend.expectGET(expectedURL).respond(200, {});
+      storeInstanceService.getStoreInstanceCalculatedInbounds(storeInstanceId, {}).then(function (response) {
+        expect(response).toBeDefined();
+      });
+
+      httpBackend.flush();
+    });
+  });
+
 });
