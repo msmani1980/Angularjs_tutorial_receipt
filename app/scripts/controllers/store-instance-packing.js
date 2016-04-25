@@ -619,7 +619,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    this.setQuantityByType = function(itemFromAPI, itemToSet, isFromRedispatchInstance) {
+    this.setQuantityByType = function(itemFromAPI, itemToSet, isFromRedispatchInstance, isInboundQuantityOverwritten) {
       if (!itemToSet) {
         return;
       }
@@ -627,6 +627,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.setQuantityByTypeConditionals(itemFromAPI, itemToSet, isFromRedispatchInstance);
 
       itemToSet.countTypeId = itemFromAPI.countTypeId;
+      itemToSet.isEposDataOverwritten = isInboundQuantityOverwritten;
     };
 
     this.findItemMatch = function(itemFromAPI) {
@@ -704,8 +705,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           itemMatch = newItem;
         }
 
-        $this.setQuantityByType(item, itemMatch, false);
-        itemMatch.isEposDataOverwritten = ignoreEposData;
+        $this.setQuantityByType(item, itemMatch, false, ignoreEposData);
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
@@ -740,8 +740,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           itemMatch = pickListMatch;
         }
 
-        $this.setQuantityByType(item, itemMatch, true);
-        itemMatch.isEposDataOverwritten = ignoreEposData;
+        $this.setQuantityByType(item, itemMatch, true, ignoreEposData);
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
@@ -757,7 +756,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.mergeEposInboundQuantities = function(inboundQuantities) {
       angular.forEach(inboundQuantities, function (eposInboundQuantity) {
         var offloadItemMatch = lodash.findWhere($scope.offloadListItems, { itemMasterId: eposInboundQuantity.id });
-
         if (offloadItemMatch && !offloadItemMatch.isEposDataOverwritten) {
           offloadItemMatch.inboundQuantity = eposInboundQuantity.quantity;
         }
