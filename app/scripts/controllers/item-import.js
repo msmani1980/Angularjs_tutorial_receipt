@@ -91,15 +91,10 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
-    function showFormErrors(response) {
-      if ('data' in response) {
-        angular.forEach(response.data, function(error) {
-          this.push(error);
-        }, $scope.formErrors);
-      }
-
-      $scope.displayError = true;
+    function showFormErrors(dataFromAPI) {
       hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
     }
 
     function setGetCompaniesListPromise() {
