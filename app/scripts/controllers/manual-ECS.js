@@ -156,6 +156,19 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    function getCompleteCarrierInstanceList(ecbGroupPayloadArray) {
+      if (ecbGroupPayloadArray.length) {
+        var payloadForAPI = {
+          ecbGroup: (ecbGroupPayloadArray).toString()
+        };
+        manualECSFactory.getCarrierInstanceList(payloadForAPI).then(setCarrierInstancesList, showErrors);
+        return;
+      }
+
+      $scope.carrierInstances = [];
+      hideLoadingModal();
+    }
+
     function getCarrierInstanceGroups(dataFromAPI) {
       if (!dataFromAPI.response.length) {
         hideLoadingModal();
@@ -170,11 +183,7 @@ angular.module('ts5App')
         }
       });
 
-      var payloadForAPI = {
-        ecbGroup: (lodash.uniq(ecbGroupPayload)).toString()
-      };
-
-      manualECSFactory.getCarrierInstanceList(payloadForAPI).then(setCarrierInstancesList, showErrors);
+      getCompleteCarrierInstanceList(lodash.uniq(ecbGroupPayload));
     }
 
     function getUnTiedCarrierInstances(payload) {
