@@ -13,6 +13,7 @@ describe('Service: storeInstancePackingFactory', function () {
   var recordsService;
   var companyReasonCodesService;
   var featureThresholdsService;
+  var companyPreferencesService;
 
   beforeEach(inject(function (_storeInstancePackingFactory_, $injector) {
     storeInstancePackingFactory = _storeInstancePackingFactory_;
@@ -23,6 +24,7 @@ describe('Service: storeInstancePackingFactory', function () {
     recordsService = $injector.get('recordsService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
     featureThresholdsService = $injector.get('featureThresholdsService');
+    companyPreferencesService = $injector.get('companyPreferencesService');
 
     spyOn(storeInstanceFactory, 'getStoreDetails');
     spyOn(recordsService, 'getItemTypes');
@@ -35,9 +37,11 @@ describe('Service: storeInstancePackingFactory', function () {
     spyOn(storeInstanceService, 'deleteStoreInstanceItem');
     spyOn(storeInstanceService, 'getStoreInstanceMenuItems');
     spyOn(storeInstanceService, 'getStoreInstanceItemList');
+    spyOn(storeInstanceService, 'getStoreInstanceCalculatedInbounds');
     spyOn(companyReasonCodesService, 'getAll');
     spyOn(itemsService, 'getItemsList');
     spyOn(featureThresholdsService, 'getThresholdList');
+    spyOn(companyPreferencesService, 'getCompanyPreferences');
   }));
 
   describe('storeInstanceService calls', function () {
@@ -75,6 +79,11 @@ describe('Service: storeInstancePackingFactory', function () {
       storeInstancePackingFactory.getStoreInstanceItemList();
       expect(storeInstanceService.getStoreInstanceItemList).toHaveBeenCalled();
     });
+
+    it('should call getStoreInstanceCalculatedInbounds', function () {
+      storeInstancePackingFactory.getCalculatedInboundQuantities();
+      expect(storeInstanceService.getStoreInstanceCalculatedInbounds).toHaveBeenCalled();
+    });
   });
 
   describe('companyReasonCodesService calls', function () {
@@ -102,6 +111,13 @@ describe('Service: storeInstancePackingFactory', function () {
     it('should call getStoreDetails', function () {
       storeInstancePackingFactory.getThresholdList();
       expect(featureThresholdsService.getThresholdList).toHaveBeenCalled();
+    });
+  });
+
+  describe('companyPreferencesService calls', function () {
+    it('should call getCompanyPreferences', function () {
+      storeInstancePackingFactory.getCompanyPreferences({}, 123);
+      expect(companyPreferencesService.getCompanyPreferences).toHaveBeenCalled();
     });
   });
 

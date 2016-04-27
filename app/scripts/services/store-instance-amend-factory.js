@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('storeInstanceAmendFactory', function ($q, cashBagService) {
+  .factory('storeInstanceAmendFactory', function ($q, cashBagService, storeInstanceAmendService) {
 
     var getScheduleMockData = function (searchQuery) {
       var getScheduleMockData = [{
@@ -229,12 +229,28 @@ angular.module('ts5App')
       return cashBagService.getCashBagList(payload.companyId, payload);
     };
 
-    var getFlightSectors = function (cashBagId) {
-      return cashBagService.getCashBagCarrierInstances(cashBagId);
-    };
-
     var deleteCashBag = function (id) {
       return cashBagService.deleteCashBag(id);
+    };
+
+    var getFlightSectors = function (cashBagId) {
+      return storeInstanceAmendService.getPostTrips(cashBagId);
+    };
+
+    var rearrangeFlightSector = function (originCashBagId, targetCashBagId, postTripId) {
+      return storeInstanceAmendService.movePostTrip(originCashBagId, targetCashBagId, postTripId);
+    };
+
+    var addFlightSector = function (cashBagId, postTripId) {
+      return storeInstanceAmendService.addPostTrip(cashBagId, postTripId);
+    };
+
+    var editFlightSector = function (cashBagId, postTripId, scheduleNumber) {
+      return storeInstanceAmendService.editPostTrip(cashBagId, postTripId, scheduleNumber);
+    };
+
+    var deleteFlightSector = function (cashBagId, postTripId) {
+      return storeInstanceAmendService.deletePostTrip(cashBagId, postTripId);
     };
 
     return {
@@ -243,6 +259,10 @@ angular.module('ts5App')
       getScheduleMockData: getScheduleMockData,
       getCashBags: getCashBags,
       deleteCashBag: deleteCashBag,
-      getFlightSectors: getFlightSectors
+      getFlightSectors: getFlightSectors,
+      rearrangeFlightSector: rearrangeFlightSector,
+      addFlightSector: addFlightSector,
+      editFlightSector: editFlightSector,
+      deleteFlightSector: deleteFlightSector
     };
   });

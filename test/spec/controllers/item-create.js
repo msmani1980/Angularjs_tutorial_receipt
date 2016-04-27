@@ -1497,31 +1497,37 @@ describe('The Item Create Controller', function() {
 
   });
 
-  describe('getUniqueSubstitutions function', function () {
-      it('should be able to remove non active records', function () {
-        var mockItemListResponse = [{
-          itemCode: '7up123',
-          itemName: '7up',
-          startDate: '1999-05-10',
-          endDate: '2050-05-12'
-        }, {
-          itemCode: '7up123',
-          itemName: '7up',
-          startDate: '1999-04-15',
-          endDate: '2000-12-15'
-        }, {
-          itemCode: '7up123',
-          itemName: '7up',
-          startDate: '2060-12-10',
-          endDate: '2061-10-15'
-        }];
-
-
-        var filteredList = ItemCreateCtrl.getUniqueSubstitutions(mockItemListResponse);
-        expect(filteredList.length).toEqual(1);
-        expect(filteredList[0].startDate).toEqual('1999-05-10');
-      });
+  describe('scope.substitutions variable', function() {
+    it('should be able to remove non active records between start and end date', function() {
+      scope.items = [{
+        startDate: '04/10/1980',
+        endDate: '02/20/2050'
+      }, {
+        startDate: '04/15/1980',
+        endDate: '05/20/1999'
+      }];
+      scope.formData.startDate = '04/15/2000';
+      scope.formData.endDate = '05/20/2030';
+      ItemCreateCtrl.filterItemsByFormDates(scope.item);
+      expect(scope.substitutions.length).toEqual(1);
+      expect(scope.substitutions[0].startDate).toEqual('04/10/1980');
     });
 
+    it('should be able to remove duplicate records', function () {
+      scope.items = [{
+        startDate: '04/10/1980',
+        endDate: '02/20/2050',
+        itemMasterId: 2
+      }, {
+        startDate: '04/15/1980',
+        endDate: '02/30/2050',
+        itemMasterId: 2
+      }];
+      scope.formData.startDate = '04/15/2000';
+      scope.formData.endDate = '05/20/2030';
+      ItemCreateCtrl.filterItemsByFormDates(scope.item);
+      expect(scope.substitutions.length).toEqual(1);
+    });
+  });
 
 });

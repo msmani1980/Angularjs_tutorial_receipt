@@ -9,7 +9,8 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
-      reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory, storeInstanceFactory, recordsService) {
+      reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory, storeInstanceFactory, recordsService,
+      stationsService) {
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
@@ -24,12 +25,71 @@ angular.module('ts5App')
       return isFinite(valueToCheck) ? valueToCheck : 0;
     }
 
-    $scope.showAddOrEditScheduleModal = function (scheduleToEdit) {
+    function deleteScheduleSuccess () {
+      getCashBags();
+    }
+
+    $scope.deleteSchedule = function () {
+      angular.element('.delete-schedule-warning-modal').modal('hide');
+      storeInstanceAmendFactory.deleteFlightSector($scope.scheduleToDelete.cashbagId, $scope.scheduleToDelete.id).then(deleteScheduleSuccess, handleResponseError);
+    };
+
+    $scope.showDeleteScheduleModal = function (scheduleToDelete) {
+      angular.element('.delete-schedule-warning-modal').modal('show');
+
+      $scope.scheduleToDelete = scheduleToDelete;
+    };
+
+    function addOrEditScheduleSuccess () {
+      $scope.clearScheduleSelections();
+      getCashBags();
+    }
+
+    $scope.addOrEditSchedule = function () {
+      if (!$scope.cashBagToEdit) {
+        return;
+      }
+
+      var postTripId;
+      var cashBagId = $scope.cashBagToEdit.id;
+
+      if ($scope.scheduleToEdit) {
+        postTripId = $scope.scheduleToEdit.id;
+        var scheduleNumber = $scope.newScheduleSelection.scheduleNumber;
+
+        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber).then(addOrEditScheduleSuccess, handleResponseError);
+      } else {
+        postTripId = $scope.newScheduleSelection.id;
+
+        storeInstanceAmendFactory.addFlightSector(cashBagId, postTripId).then(addOrEditScheduleSuccess, handleResponseError);
+      }
+    };
+
+    $scope.showAddOrEditScheduleModal = function (cashBagToEdit, scheduleToEdit) {
+      $scope.cashBagToEdit = cashBagToEdit;
       if (scheduleToEdit) {
         $scope.scheduleToEdit = scheduleToEdit;
       }
 
       angular.element('#addScheduleModal').modal('show');
+    };
+
+    function rearrangeSectorSuccess () {
+      getCashBags();
+      $scope.closeRearrangeSectorModal();
+    }
+
+    $scope.rearrangeSector = function () {
+      var originCashBag = $scope.rearrangeOriginCashBag;
+      var targetCashBag = $scope.rearrangeTargetCashBag;
+      var sectorsToMove = $scope.sectorsToMove;
+
+      var promises = [];
+      angular.forEach(sectorsToMove, function (sector) {
+        promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
+      });
+
+      $q.all(promises).then(rearrangeSectorSuccess, handleResponseError);
     };
 
     $scope.showRearrangeSectorModal = function () {
@@ -71,10 +131,14 @@ angular.module('ts5App')
     };
 
     $scope.canSaveRearrange = function () {
-      return ($scope.sectorsToMove.length > 0 && !!$scope.rearrangeTargetCashBag);
+      return ($scope.sectorsToMove.length > 0 && !!$scope.rearrangeOriginCashBag && !!$scope.rearrangeTargetCashBag && $scope.rearrangeOriginCashBag.id !== $scope.rearrangeTargetCashBag.id);
     };
 
     $scope.toggleSelectSectorToRearrange = function (sector) {
+      if (!!$scope.rearrangeOriginCashBag && !!$scope.rearrangeTargetCashBag && $scope.rearrangeOriginCashBag.id === $scope.rearrangeTargetCashBag.id) {
+        return;
+      }
+
       var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
       if (matchIndex < 0) {
         $scope.sectorsToMove.push(sector);
@@ -111,7 +175,7 @@ angular.module('ts5App')
     };
 
     function moveCashBagSuccess () {
-      getCashBags();
+      initData();
       $scope.closeMoveCashBagModal();
     }
 
@@ -160,15 +224,39 @@ angular.module('ts5App')
       return cashBag && !(cashBag.isManual || cashBag.bankRefNumber);
     };
 
+    function getStationById (stationId) {
+      return lodash.find($scope.stations, 'stationId', stationId);
+    }
+
     this.searchForScheduleSuccess = function (dataFromAPI) {
-      $scope.searchScheduleResults = angular.copy(dataFromAPI);
+      $scope.searchScheduleResults = angular.copy(dataFromAPI.postTrips);
+
+      angular.forEach($scope.searchScheduleResults, function (schedule) {
+        var arrivalStation = getStationById(schedule.arrStationId);
+        var departureStation = getStationById(schedule.depStationId);
+
+        schedule.arrivalStation = arrivalStation ? arrivalStation.stationCode : 'N/A';
+        schedule.departureStation = departureStation ? departureStation.stationCode : 'N/A';
+      });
+
       if ($scope.searchScheduleResults.length === 1) {
         $scope.newScheduleSelection = $scope.searchScheduleResults[0];
       }
     };
 
     $scope.searchForSchedule = function () {
-      return storeInstanceAmendFactory.getScheduleMockData($scope.scheduleSearch).then($this.searchForScheduleSuccess);
+      if (!($scope.scheduleSearch.scheduleNumber && $scope.scheduleSearch.scheduleDate)) {
+        return;
+      }
+
+      var companyId = globalMenuService.company.get();
+
+      var payload = {
+        scheduleNumber: $scope.scheduleSearch.scheduleNumber,
+        scheduleDate: $scope.scheduleSearch.scheduleDate
+      };
+
+      return postTripFactory.getPostTripDataList(companyId, payload).then($this.searchForScheduleSuccess);
     };
 
     function getStoreStatusByStatusStep (step) {
@@ -671,67 +759,25 @@ angular.module('ts5App')
       setupCashBags();
     }
 
-    function setTransactionsForFlightSector (normalizedFlightSector, transactionsFromAPI) {
-      var transactions = angular.copy(transactionsFromAPI.transactions);
-
-      var totalAmount = 0;
-      angular.forEach(transactions, function (transaction) {
-        totalAmount = totalAmount + (parseFloat(transaction.totalAmount));
-      });
-
-      normalizedFlightSector.transactionCount = transactions.length;
-      normalizedFlightSector.transactionTotal = formatAsCurrency(totalAmount);
-    }
-
-    function getEmployeeDetailsById(employeeId) {
-      return lodash.find($scope.employees, 'id', employeeId);
-    }
-
-    function extractCrewData(postTripEmployees) {
-      return postTripEmployees.map(function (postTripEmployee) {
-        var employeeDetails = getEmployeeDetailsById(postTripEmployee.employeeId);
-        return {
-          crewId: employeeDetails.id,
-          firstName: employeeDetails.firstName,
-          lastName: employeeDetails.lastName
-        };
-      });
-    }
-
-    function setPostTrip(normalizedFlightSector, postTripFromAPI) {
-      var postTrip = angular.copy(postTripFromAPI);
-
-      normalizedFlightSector.scheduleDate = postTrip.scheduleDate;
-      normalizedFlightSector.scheduleNumber = postTrip.scheduleNumber;
-      normalizedFlightSector.tailNumber = postTrip.tailNumber;
-      normalizedFlightSector.crewData = extractCrewData(postTrip.postTripEmployeeIdentifiers);
-    }
-
     function setFlightSectors(normalizedCashBag, flightSectorsFromAPI) {
       var flightSectors = angular.copy(flightSectorsFromAPI.response);
 
       angular.forEach(flightSectors, function (flightSector) {
-        var companyCarrierInstance = flightSector.companyCarrierInstance;
-
         var normalizedFlightSector = {
-          companyCarrierInstanceId: companyCarrierInstance.id,
-          arrivalStation: companyCarrierInstance.arrivalStation,
-          departureStation: companyCarrierInstance.departureStation,
-          passengerCount: companyCarrierInstance.paxCount
+          id: flightSector.id,
+          cashbagId: flightSector.cashbagId,
+          arrivalStation: flightSector.arrivalStation,
+          departureStation: flightSector.departureStation,
+          passengerCount: flightSector.passengerCount,
+          scheduleDate: dateUtility.formatDateForApp(flightSector.scheduleDate),
+          scheduleNumber: flightSector.scheduleNumber,
+          tailNumber: flightSector.tailNumber,
+          transactionCount: flightSector.transactionsNumber,
+          transactionTotal: formatAsCurrency(flightSector.eposSales),
+          crewData: flightSector.crew
         };
 
         normalizedCashBag.flightSectors.push(normalizedFlightSector);
-
-        if (companyCarrierInstance.posttripId) {
-          var companyId = globalMenuService.company.get();
-          postTripFactory.getPostTrip(companyId, companyCarrierInstance.posttripId).then(function (postTripFromAPI) {
-            setPostTrip(normalizedFlightSector, postTripFromAPI);
-          });
-        }
-
-        transactionFactory.getTransactionList({ companyCarrierInstanceId: companyCarrierInstance.id }).then(function (transactionsFromAPI) {
-          setTransactionsForFlightSector(normalizedFlightSector, transactionsFromAPI);
-        });
       });
     }
 
@@ -813,6 +859,16 @@ angular.module('ts5App')
       recordsService.getStoreStatusList().then(setStoreStatusList);
     }
 
+    function setStations (dataFromAPI) {
+      $scope.stations = angular.copy(dataFromAPI.response);
+    }
+
+    function getStations () {
+      var companyId = globalMenuService.company.get();
+
+      stationsService.getStationList(companyId).then(setStations);
+    }
+
     function showLoadingModal(text) {
       $scope.displayError = false;
       angular.element('#loading').modal('show').find('p').text(text);
@@ -839,6 +895,8 @@ angular.module('ts5App')
     }
 
     function initData() {
+      showLoadingModal('Loading Store Instance Amend Details');
+
       var promiseArray = [
         getStoreStatusList(),
         getStoreInstance(),
@@ -851,7 +909,8 @@ angular.module('ts5App')
         getCashRevenue(),
         getEPOSRevenue(),
         getEmployees(),
-        getCashBags()
+        getCashBags(),
+        getStations()
       ];
 
       $q.all(promiseArray).then(handleInitDataSuccess, handleResponseError);
@@ -867,7 +926,6 @@ angular.module('ts5App')
     }
 
     function init () {
-      showLoadingModal('Loading Store Instance Amend Details');
       initViewDefaults();
       initData();
     }

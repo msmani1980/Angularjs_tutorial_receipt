@@ -163,7 +163,9 @@ angular.module('ts5App')
       });
 
       $scope.outlierItemList = filteredEposItems;
-      $scope.outlierItemData.menuList = $scope.outlierItemData.menuList.toString();
+      if ($scope.outlierItemList.length) {
+        $scope.outlierItemData.menuList = $scope.outlierItemData.menuList.toString();
+      }
     }
 
     function filterOutEposItemsFromStockItems(storeInstanceItems) {
@@ -293,7 +295,7 @@ angular.module('ts5App')
     function getTotalsForPromotions(promotionTotals) {
       var total = 0;
       angular.forEach(promotionTotals, function (promotionItem) {
-        total += promotionItem.discountApplied;
+        total += promotionItem.convertedAmount;
       });
 
       return {
@@ -370,7 +372,7 @@ angular.module('ts5App')
         exchangeRateTypeId: 1
       }).map(function (promotion) {
         promotion.eposQuantity = promotion.quantity;
-        promotion.eposTotal = formatAsCurrency(promotion.discountApplied);
+        promotion.eposTotal = formatAsCurrency(promotion.convertedAmount);
         reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
           promotion.itemName = dataFromAPI.promotionName;
         }, handleResponseError);
@@ -477,7 +479,7 @@ angular.module('ts5App')
       angular.forEach($this.promotionTotals, function (promotion) {
         var promotionMatch = lodash.findWhere(consolidatedPromotions, { promotionId: promotion.promotionId });
         if (promotionMatch) {
-          promotionMatch.discountApplied = promotionMatch.discountApplied + promotion.discountApplied;
+          promotionMatch.convertedAmount = promotionMatch.convertedAmount + promotion.convertedAmount;
           promotionMatch.quantity += (promotion.quantity || 1);
         } else {
           promotion.quantity = 1;
@@ -792,27 +794,12 @@ angular.module('ts5App')
         };
       });
 
-      reconciliationFactory.saveStockItemsCounts(payload).then(handleStockItemsCountsSaveSuccess(items),
+      reconciliationFactory.saveStockItemsCounts(payload).then(handleStockItemsCountsSaveSuccess,
         handleResponseError);
     }
 
-    function handleStockItemsCountsSaveSuccess(items) {
-      angular.forEach(items, function (item) {
-        if (isInboundedDefined(item)) {
-          item.inboundedCount = getIntOrZero(item.revision.inboundOffloadCount);
-        } else {
-          item.offloadCount = getIntOrZero(item.revision.inboundOffloadCount);
-        }
-
-        item.dispatchedCount = getIntOrZero(item.revision.dispatchedCount);
-        item.replenishCount = getIntOrZero(item.revision.replenishCount);
-        item.inboundOffloadCount = getIntOrZero(item.revision.inboundOffloadCount);
-        item.varianceQuantity = getVarianceQuantity(item);
-        item.varianceValue = formatAsCurrency(getVarianceValue(item.varianceQuantity, item.retailValue));
-        item.isEditing = false;
-        item.revision = {};
-        $scope.editLMPStockTable = false;
-      });
+    function handleStockItemsCountsSaveSuccess() {
+      init();
     }
 
     $scope.initEditTable = function (isLMPTable) {

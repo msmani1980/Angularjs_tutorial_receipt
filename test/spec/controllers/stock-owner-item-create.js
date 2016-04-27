@@ -37,8 +37,8 @@ describe('The Stock Owner Item Create Controller', function() {
     dateUtility = _dateUtility_;
     lodash = _lodash_;
   }));
-  
- 
+
+
   function createController($injector) {
     $location = $injector.get('$location');
     $location.path('/stock-owner-item-create');
@@ -481,11 +481,14 @@ describe('The Stock Owner Item Create Controller', function() {
         });
 
         it('should not delete any item from scope.substitutions if not in edit mode', function() {
+            scope.formData.startDate = '10/20/2000';
+            scope.formData.endDate = '10/20/2050';
             scope.$digest();
             itemsListDeferred.resolve();
+            StockOwnerItemCreateCtrl.filterItemsByFormDates();
             var currentItemMatch = lodash.findWhere(scope.substitutions, { id: idOfItemInEditMode });
             expect(currentItemMatch).toBeDefined();
-            
+
         });
 
         it('should remove the item from scope.substitutions with id === 332 from the list', function() {
@@ -782,34 +785,42 @@ describe('The Stock Owner Item Create Controller', function() {
     it('should return false', function() {
       expect(scope.displayError).toBeTruthy();
     });
-    
+
   });
 
-  describe('getUniqueSubstitutions function', function () {
-      it('should be able to remove non active records', function () {
-        var mockStockOwnerItemListResponse = [{
-          itemCode: '7up123',
-          itemName: '7up',
-          startDate: '1999-05-10',
-          endDate: '2050-05-12'
-        }, {
-          itemCode: '7up123',
-          itemName: '7up',
-          startDate: '1999-04-15',
-          endDate: '2000-12-15'
-        }, {
-          itemCode: '7up123',
-          itemName: '7up',
-          startDate: '2060-12-10',
-          endDate: '2061-10-15'
-        }];
 
-        
-        var filteredList = StockOwnerItemCreateCtrl.getUniqueSubstitutions(mockStockOwnerItemListResponse);
-        expect(filteredList.length).toEqual(1);
-        expect(filteredList[0].startDate).toEqual('1999-05-10');
+    describe('scope.substitutions variable', function() {
+      it('should be able to remove non active records between start and end date', function() {
+        scope.items = [{
+          startDate: '04/10/1980',
+          endDate: '02/20/2050'
+        }, {
+          startDate: '04/15/1980',
+          endDate: '05/20/1999'
+        }];
+        scope.formData.startDate = '04/15/2000';
+        scope.formData.endDate = '05/20/2030';
+        StockOwnerItemCreateCtrl.filterItemsByFormDates(scope.item);
+        expect(scope.substitutions.length).toEqual(1);
+        expect(scope.substitutions[0].startDate).toEqual('04/10/1980');
       });
+
+      it('should be able to remove duplicate records', function () {
+        scope.items = [{
+          startDate: '04/10/1980',
+          endDate: '02/20/2050',
+          itemMasterId: 2
+        }, {
+          startDate: '04/15/1980',
+          endDate: '02/30/2050',
+          itemMasterId: 2
+        }];
+        scope.formData.startDate = '04/15/2000';
+        scope.formData.endDate = '05/20/2030';
+        StockOwnerItemCreateCtrl.filterItemsByFormDates(scope.item);
+        expect(scope.substitutions.length).toEqual(1);
+      });
+
     });
-  
 
 });

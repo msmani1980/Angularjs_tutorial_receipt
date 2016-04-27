@@ -31,6 +31,21 @@
       "choiceName": "Default Bank Reference Number",
       "isSelected": true,
       "startDate": "2016-02-23"
+    }, {
+      "id": 50,
+      "companyId": 403,
+      "featureId": 10,
+      "featureCode": "INB",
+      "featureName": "Inbound",
+      "optionId": 9,
+      "optionCode": "INC",
+      "optionName": "Default LMP Inbound counts to ePOS",
+      "choiceId": 11,
+      "choiceCode": "ACT",
+      "choiceName": "Active",
+      "isSelected": true,
+      "startDate": "2016-04-22",
+      "numericValue": null
     }
   ]
 }
