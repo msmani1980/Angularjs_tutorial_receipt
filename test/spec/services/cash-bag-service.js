@@ -352,6 +352,41 @@ describe('Service: cashBagService', function () {
       });
     });
 
+    describe('verify cash bag', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.verifyCashBag).toBe(true);
+      });
+
+      it('should make PUT call with cash bag id and verify type', function () {
+        var cashBagId = 'fakeId';
+        var verifyType = 'CASH';
+        $httpBackend.expectPUT(/cashbags\/fakeId\/verify\/CASH/).respond(200, {});
+
+        cashBagService.verifyCashBag(cashBagId, verifyType).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
+    describe('checkCashBagVerification', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.checkCashBagVerification).toBe(true);
+      });
+
+      it('should make GET call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        $httpBackend.expectGET(/cashbags\/fakeId/).respond(200, {});
+
+        cashBagService.checkCashBagVerification(cashBagId).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
   });
 
 });
