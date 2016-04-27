@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, dailyExchangeRatesService) {
+  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, dailyExchangeRatesService, storeInstanceService) {
 
     var getPromotionsList = function () {
       var mockPromotionsList = [{
@@ -343,6 +343,18 @@ angular.module('ts5App')
       return cashBagService.getCashBagCashList(cashBagId, payload);
     }
 
+    function getStoreInstance(storeInstanceId) {
+      return storeInstanceService.getStoreInstance(storeInstanceId);
+    }
+
+    function verifyCashBag(cashBagId, verifyType) {
+      return cashBagService.verifyCashBag(cashBagId, verifyType);
+    }
+
+    function checkCashBagVerification(cashBagId) {
+      return cashBagService.checkCashBagVerification(cashBagId);
+    }
+
     return {
       getPromotionsList: getPromotionsList,
       getCurrencyList: getCurrencyList,
@@ -353,7 +365,10 @@ angular.module('ts5App')
       getCreditList: getCreditList,
       getCashBag: getCashBag,
       getCashBagCashList: getCashBagCashList,
-      getDailyExchangeRate: getDailyExchangeRate
+      getDailyExchangeRate: getDailyExchangeRate,
+      getStoreInstance: getStoreInstance,
+      verifyCashBag: verifyCashBag,
+      checkCashBagVerification: checkCashBagVerification
     };
 
   });

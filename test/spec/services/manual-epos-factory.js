@@ -8,12 +8,14 @@ describe('Service: manualEposFactory', function() {
   var currenciesService;
   var dailyExchangeRatesService;
   var cashBagService;
+  var storeInstanceService;
 
-  beforeEach(inject(function(_manualEposFactory_, _currenciesService_, _dailyExchangeRatesService_, _cashBagService_) {
+  beforeEach(inject(function(_manualEposFactory_, _currenciesService_, _dailyExchangeRatesService_, _cashBagService_, _storeInstanceService_) {
     manualEposFactory = _manualEposFactory_;
     currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
     cashBagService = _cashBagService_;
+    storeInstanceService = _storeInstanceService_;
 
     spyOn(manualEposFactory, 'getPromotionsList');
     spyOn(manualEposFactory, 'getVoucherItemsList');
@@ -26,6 +28,9 @@ describe('Service: manualEposFactory', function() {
     spyOn(dailyExchangeRatesService, 'getDailyExchangeById');
     spyOn(cashBagService, 'getCashBag');
     spyOn(cashBagService, 'getCashBagCashList');
+    spyOn(cashBagService, 'verifyCashBag');
+    spyOn(cashBagService, 'checkCashBagVerification');
+    spyOn(storeInstanceService, 'getStoreInstance');
   }));
 
   describe('getPromotionsList API call', function() {
@@ -93,6 +98,23 @@ describe('Service: manualEposFactory', function() {
     it('should call getCashBag from cashBagService', function () {
       manualEposFactory.getCashBagCashList();
       expect(cashBagService.getCashBagCashList).toHaveBeenCalled();
+    });
+
+    it('should call verifyCashBag from cashBagService', function () {
+      manualEposFactory.verifyCashBag();
+      expect(cashBagService.verifyCashBag).toHaveBeenCalled();
+    });
+
+    it('should call checkCashBagVerification from cashBagService', function () {
+      manualEposFactory.checkCashBagVerification();
+      expect(cashBagService.checkCashBagVerification).toHaveBeenCalled();
+    });
+  });
+
+  describe('storeInstanceService API call', function () {
+    it('should call getStoreInstance from storeInstanceService', function () {
+      manualEposFactory.getStoreInstance();
+      expect(storeInstanceService.getStoreInstance).toHaveBeenCalled();
     });
   });
 
