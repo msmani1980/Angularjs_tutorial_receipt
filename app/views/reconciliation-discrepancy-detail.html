@@ -31,6 +31,10 @@
                   <td>{{crewMember.CrewId}}</td>
                   <td>{{crewMember.LastName}}</td>
                 </tr>
+
+                <tr ng-if="!report.crew.length">
+                  <td colspan="2">No Crew Memebers</td>
+                </tr>
               </table>
 
               <h5>Expected Cash:</h5>
@@ -47,6 +51,7 @@
                 </tr>
                 <tr ng-if="!report.cash.length">
                   <td>No expected cash added</td>
+                  <td>0.00</td>
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
@@ -70,7 +75,8 @@
                   <td>{{credit.baseTotal}}</td>
                 </tr>
                 <tr ng-if="!report.credit.length">
-                  <td>No expected credit added</td>
+                  <td colspan="2">No expected credit added</td>
+                  <td>0.00</td>
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
