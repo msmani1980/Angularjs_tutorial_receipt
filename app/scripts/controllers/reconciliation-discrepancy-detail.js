@@ -794,27 +794,12 @@ angular.module('ts5App')
         };
       });
 
-      reconciliationFactory.saveStockItemsCounts(payload).then(handleStockItemsCountsSaveSuccess(items),
+      reconciliationFactory.saveStockItemsCounts(payload).then(handleStockItemsCountsSaveSuccess,
         handleResponseError);
     }
 
-    function handleStockItemsCountsSaveSuccess(items) {
-      angular.forEach(items, function (item) {
-        if (isInboundedDefined(item)) {
-          item.inboundedCount = getIntOrZero(item.revision.inboundOffloadCount);
-        } else {
-          item.offloadCount = getIntOrZero(item.revision.inboundOffloadCount);
-        }
-
-        item.dispatchedCount = getIntOrZero(item.revision.dispatchedCount);
-        item.replenishCount = getIntOrZero(item.revision.replenishCount);
-        item.inboundOffloadCount = getIntOrZero(item.revision.inboundOffloadCount);
-        item.varianceQuantity = getVarianceQuantity(item);
-        item.varianceValue = formatAsCurrency(getVarianceValue(item.varianceQuantity, item.retailValue));
-        item.isEditing = false;
-        item.revision = {};
-        $scope.editLMPStockTable = false;
-      });
+    function handleStockItemsCountsSaveSuccess() {
+      init();
     }
 
     $scope.initEditTable = function (isLMPTable) {
