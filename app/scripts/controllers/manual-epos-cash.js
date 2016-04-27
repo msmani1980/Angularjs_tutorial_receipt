@@ -37,7 +37,7 @@ angular.module('ts5App')
     $scope.convertAmount = function (currencyObject) {
       var convertedAmount = 0;
       if (!currencyObject.amount) {
-        return null;
+        return '0.00';
       }
 
       if (currencyObject.exchangeRate.bankExchangeRate === null) {
@@ -93,6 +93,9 @@ angular.module('ts5App')
 
     function getInitDependencies(cashBagDataFromAPI) {
       $scope.cashBag = angular.copy(cashBagDataFromAPI);
+
+      // TOOD: get store instance, then filter currency list by store instance's schedule date
+
       var promises = [
         manualEposFactory.getCurrencyList(),
         manualEposFactory.getCashBagCashList($routeParams.cashBagId, {}),
