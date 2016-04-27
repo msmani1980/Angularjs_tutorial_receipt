@@ -503,7 +503,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.filterItemsByFormDates = function() {
       $scope.substitutions = lodash.filter($scope.items, function(item) {
-        return dateUtility.isAfterOrEqual(item.endDate, $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, item.startDate);
+        return dateUtility.isAfterOrEqual(dateUtility.formatDateForApp(item.endDate), $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, dateUtility.formatDateForApp(item.startDate));
       });
 
       $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
