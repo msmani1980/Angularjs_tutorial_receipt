@@ -187,8 +187,8 @@ angular.module('ts5App')
       hideLoadingModal();
       $scope.allECSInstances = angular.copy(dataFromAPI.response);
       angular.forEach($scope.allECSInstances, function (carrierInstance) {
-        carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
-        carrierInstance.siScheduleDate = dateUtility.formatDateForApp(carrierInstance.siScheduleDate);
+        carrierInstance.instanceDate = (!!carrierInstance.instanceDate) ? dateUtility.formatDateForApp(carrierInstance.instanceDate) : '';
+        carrierInstance.siScheduleDate = (!!carrierInstance.siScheduleDate) ? dateUtility.formatDateForApp(carrierInstance.siScheduleDate) : '';
       });
     }
 
