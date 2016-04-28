@@ -20,7 +20,7 @@ angular.module('ts5App')
         method: 'GET'
       }
     };
-    var distinctSchedulesRequestResource = $resource(ENV.apiUrl + '/rsvr/api/companies/:id/schedules' + '/distinct', null, schedulesActions);
+    var distinctSchedulesRequestResource = $resource(ENV.apiUrl + '/rsvr/api/companies/:id/schedules/distinct', null, schedulesActions);
     var dailySchedulesRequestResource = $resource(schedulesRequestURL + '/daily', null, schedulesActions);
     var schedulesRequestResource = $resource(schedulesRequestURL, null, schedulesActions);
 
