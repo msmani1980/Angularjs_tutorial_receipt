@@ -409,7 +409,7 @@ angular.module('ts5App')
     };
 
     $scope.hasFlightSectors = function (cashBag) {
-      return cashBag.flightSectors.length > 0;
+      return cashBag.flightSectors && cashBag.flightSectors.length > 0;
     };
 
     function toggleVrifiedCashBagSuccess () {
