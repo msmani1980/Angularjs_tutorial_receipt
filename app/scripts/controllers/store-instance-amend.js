@@ -265,11 +265,15 @@ angular.module('ts5App')
       return storeStatus;
     }
 
-    $scope.canExecuteActions = function () {
+    $scope.canExecuteActions = function (cashBag) {
       var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');
 
       if (!($scope.storeInstance && inboundedStatus && discrepanciesStatus)) {
+        return false;
+      }
+
+      if (cashBag && cashBag.isVerified) {
         return false;
       }
 
@@ -385,8 +389,33 @@ angular.module('ts5App')
       return canCashBagBeVisible && isCashBagInFilter;
     };
 
+    $scope.hasMoreThanOneUnverifiedCashBags = function () {
+      var unverifiedCashBags = 0;
+      angular.forEach($scope.normalizedCashBags, function (cashBag) {
+        if (!cashBag.isVerified) {
+          unverifiedCashBags++;
+        }
+      });
+
+      return unverifiedCashBags > 1;
+    };
+
+    $scope.hasFlightSectors = function (cashBag) {
+      return cashBag.flightSectors.length > 0;
+    };
+
+    function toggleVrifiedCashBagSuccess () {
+      getCashBags();
+      hideLoadingModal();
+    }
+
     $scope.toggleVerifiedCashBag = function (cashBag) {
-      cashBag.isVerified = !cashBag.isVerified;
+      showLoadingModal('Loading Cash Bag Details');
+      if (cashBag.isVerified) {
+        cashBagFactory.unverifyCashBag(cashBag.id, 'AMEND').then(toggleVrifiedCashBagSuccess, handleResponseError);
+      } else {
+        cashBagFactory.verifyCashBag(cashBag.id, 'AMEND').then(toggleVrifiedCashBagSuccess, handleResponseError);
+      }
     };
 
     $scope.isCrewDataOpen = function (cashBag) {
@@ -634,6 +663,10 @@ angular.module('ts5App')
       };
     }
 
+    function getUsernameById (userId) {
+      return 'Unknown ' + userId;
+    }
+
     function setupCashBags () {
       $scope.normalizedCashBags = $scope.cashBags.map(function (cashBag) {
         return {
@@ -641,10 +674,15 @@ angular.module('ts5App')
           cashBag: cashBag.cashBagNumber,
           bankRefNumber: cashBag.bankReferenceNumber,
           isDeleted: cashBag.isDelete === 'true',
+          deletedByUser: getUsernameById(cashBag.updatedBy),
+          deletedOn: dateUtility.formatDateForApp(cashBag.updatedOn),
           isManual: cashBag.originationSource === 2,
           scheduleNumber: cashBag.scheduleNumber,
-          scheduleDate: dateUtility.formatDateForApp(cashBag.scheduleDate),
+          scheduleDate: dateUtility.formatTimestampForApp(cashBag.scheduleDate),
           isSubmitted: cashBag.isSubmitted,
+          isVerified: (cashBag.amendVerifiedOn) ? true : false,
+          verifiedByUser: getUsernameById(cashBag.amendVerifiedBy),
+          verifiedOn: dateUtility.formatTimestampForApp(cashBag.amendVerifiedOn),
           flightSectors: []
         };
       });
