@@ -101,6 +101,7 @@ describe('Controller: PostFlightDataListCtrl', function() {
     describe('getAllCarrierNumbers', function() {
       it('should call getCarrierTypes', function() {
         expect(postTripFactory.getCarrierTypes).toHaveBeenCalled();
+        expect(carrierTypesResponseJSON.response[0].companyCarrierTypeId).toBeGreaterThan(0);
       });
 
       it('should call getCarrierNumbers for each carrierType', function() {
