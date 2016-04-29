@@ -82,6 +82,11 @@ describe('Controller: PostFlightDataListCtrl', function() {
   });
 
   describe('post trip data constructor calls', function() {
+
+    beforeEach(inject(function($injector, $q, $templateCache, $compile) {
+      spyOn(PostTripDataListCtrl, 'getCarrierSuccess').and.callThrough();
+    }));
+
     describe('getStationList', function() {
       it('should call getStationList', function() {
         expect(postTripFactory.getStationList).toHaveBeenCalled();
@@ -101,7 +106,11 @@ describe('Controller: PostFlightDataListCtrl', function() {
     describe('getAllCarrierNumbers', function() {
       it('should call getCarrierTypes', function() {
         expect(postTripFactory.getCarrierTypes).toHaveBeenCalled();
-        expect(carrierTypesResponseJSON.response[0].companyCarrierTypeId).toBeGreaterThan(0);
+      });    
+
+      it('should call getCarrierSuccess', function() {
+        PostTripDataListCtrl.getCarrierSuccess(carrierTypesResponseJSON);
+        expect(PostTripDataListCtrl.getCarrierSuccess).toHaveBeenCalledWith(carrierTypesResponseJSON);
       });
 
       it('should call getCarrierNumbers for each carrierType', function() {
@@ -112,6 +121,7 @@ describe('Controller: PostFlightDataListCtrl', function() {
         expect(scope.carrierNumbers).toBeDefined();
         expect(Object.prototype.toString.call(scope.carrierNumbers)).toBe('[object Array]');
       });
+  
     });
 
     describe('getEmployees', function() {
