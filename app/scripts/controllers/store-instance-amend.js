@@ -101,6 +101,14 @@ angular.module('ts5App')
       angular.element('#moveCashBagModal').modal('show');
     };
 
+    function resetAllModals () {
+      $scope.clearScheduleSelections();
+      $scope.clearRearrangeSelections();
+      $scope.clearMoveSearchResults();
+      $scope.closeRearrangeSectorModal();
+      $scope.closeMoveCashBagModal();
+    }
+
     $scope.clearScheduleSelections = function () {
       $scope.scheduleSearch = {};
       $scope.newScheduleSelection = null;
@@ -917,6 +925,7 @@ angular.module('ts5App')
     }
 
     function handleResponseError(responseFromAPI) {
+      resetAllModals();
       hideLoadingModal();
       $scope.errorResponse = angular.copy(responseFromAPI);
       $scope.displayError = true;
