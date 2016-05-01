@@ -12,6 +12,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   beforeEach(module('served/store-instance-item-list.json'));
   beforeEach(module('served/characteristics.json'));
   beforeEach(module('served/company-reason-codes.json'));
+  beforeEach(module('served/company-preferences.json'));
+  beforeEach(module('served/calculated-inbounds.json'));
 
   var StoreInstancePackingCtrl;
   var scope;
@@ -29,6 +31,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var characteristicsDeferred;
   var reasonCodesDeferred;
   var saveItemDeferred;
+  var companyPreferencesDeferred;
+  var calculatedInboundsDeferred;
 
   var storeDetailsResponseJSON;
   var itemTypesResponseJSON;
@@ -39,12 +43,15 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var instanceItemsListResponseJSON;
   var characteristicsResponseJSON;
   var reasonCodesResponseJSON;
+  var companyPreferencesResponseJSON;
+  var calculatedInboundsResponseJSON;
 
   //var dateUtility;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     inject(function (_servedStoreInstanceDetails_, _servedItemTypes_, _servedThresholdList_, _servedCountTypes_,
-                     _servedMasterItemList_, _servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedCharacteristics_, _servedCompanyReasonCodes_) {
+                     _servedMasterItemList_, _servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedCharacteristics_,
+                     _servedCompanyReasonCodes_, _servedCompanyPreferences_, _servedCalculatedInbounds_) {
       storeDetailsResponseJSON = _servedStoreInstanceDetails_;
       itemTypesResponseJSON = _servedItemTypes_;
       thresholdListResponseJSON = _servedThresholdList_;
@@ -54,6 +61,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       instanceItemsListResponseJSON = _servedStoreInstanceItemList_;
       characteristicsResponseJSON = _servedCharacteristics_;
       reasonCodesResponseJSON = _servedCompanyReasonCodes_;
+      companyPreferencesResponseJSON = _servedCompanyPreferences_;
+      calculatedInboundsResponseJSON = _servedCalculatedInbounds_;
     });
 
     scope = $rootScope.$new();
@@ -91,6 +100,12 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     saveItemDeferred = $q.defer();
     saveItemDeferred.resolve({});
 
+    companyPreferencesDeferred = $q.defer();
+    companyPreferencesDeferred.resolve(companyPreferencesResponseJSON);
+
+    calculatedInboundsDeferred = $q.defer();
+    calculatedInboundsDeferred.resolve(calculatedInboundsResponseJSON);
+
     //  dateUtility = $injector.get('dateUtility');
     spyOn(storeInstancePackingFactory, 'getStoreDetails').and.returnValue(storeDetailsDeferred.promise);
     spyOn(storeInstancePackingFactory, 'getItemTypes').and.returnValue(itemTypesDeferred.promise);
@@ -105,6 +120,9 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     spyOn(storeInstancePackingFactory, 'createStoreInstanceItem').and.returnValue(saveItemDeferred);
     spyOn(storeInstancePackingFactory, 'deleteStoreInstanceItem').and.returnValue(saveItemDeferred);
     spyOn(storeInstancePackingFactory, 'updateStoreInstanceStatus');
+    spyOn(storeInstancePackingFactory, 'getCompanyPreferences').and.returnValue(companyPreferencesDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'getCalculatedInboundQuantities').and.returnValue(companyPreferencesDeferred.promise);
+
   }));
 
   function initController(action) {
@@ -198,6 +216,15 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       it('should get store instance items for previous store instance', function () {
         var prevInstanceId = 18; // from mock JSON
         expect(storeInstancePackingFactory.getStoreInstanceItemList).toHaveBeenCalledWith(prevInstanceId, { showEpos: true });
+      });
+
+      it('should get company preferences', function () {
+        expect(storeInstancePackingFactory.getCompanyPreferences).toHaveBeenCalled();
+        expect(scope.shouldDefaultInboundToEpos).toBeDefined();
+      });
+
+      it('should get calculated Inbound Quantities', function () {
+        expect(storeInstancePackingFactory.getCalculatedInboundQuantities).toHaveBeenCalled();
       });
     });
   });
@@ -298,6 +325,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       var mockItemsResponseFromAPI;
       var menuItems;
       var storeInstanceItems;
+      var calculatedEposInboundQuantities;
       beforeEach(function () {
         initController('end-instance');
         scope.$digest();
@@ -337,26 +365,35 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           ]
         };
 
+        calculatedEposInboundQuantities = {
+          response: [
+            {
+              id: 1,
+              quantity: 100
+            }
+          ]
+        };
+
         scope.pickListItems = [];
         scope.offloadListItems = [];
       });
 
       it('should add items to offload list', function () {
-        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, {}];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, {}, {}];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(0);
         expect(scope.offloadListItems.length).toEqual(2);
       });
 
       it('should merge offload quantities', function () {
-        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems, {}];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.offloadListItems.length).toEqual(2);
         expect(scope.offloadListItems[0].inboundQuantity).toEqual('3');
       });
 
       it('should merge ullage quantities', function () {
-        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems, {}];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.offloadListItems.length).toEqual(2);
         expect(scope.offloadListItems[0].ullageQuantity).toBeDefined();
@@ -371,7 +408,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           countTypeId: 2  // FAClose count type
         };
         storeInstanceItems.response.push(faCloseItem);
-        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems, {}];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.offloadListItems.length).toEqual(2);
       });
@@ -385,9 +422,45 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           countTypeId: 12  // FAOpen count type
         };
         storeInstanceItems.response.push(faOpenItem);
-        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems, {}];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.offloadListItems.length).toEqual(2);
+      });
+
+      it('should merge calculated epos inbound counts in company preference is set to true and data exists', function () {
+        scope.shouldDefaultInboundToEpos = true;
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, {}, calculatedEposInboundQuantities];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.offloadListItems[0].inboundQuantity).toEqual(100);
+      });
+
+      it('should merge epos FAClose counts if inbound company preference is set to false', function () {
+        scope.shouldDefaultInboundToEpos = false;
+        var faOpenItem = {
+          itemName: 'item3',
+          itemCode: 'ITM3',
+          quantity: 300,
+          itemMasterId: 1,
+          countTypeId: 2  // FAClose count type
+        };
+        storeInstanceItems.response[0] = faOpenItem;
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems, calculatedEposInboundQuantities];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.offloadListItems[0].inboundQuantity).toEqual(300);
+      });
+
+      it('should default inbound quantity to 0 if there is no data', function () {
+        scope.shouldDefaultInboundToEpos = true;
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, {}, {}];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(parseInt(scope.offloadListItems[0].inboundQuantity)).toEqual(0);
+      });
+
+      it('should not merge inbound quantities if new values have been saved to storeInstanceItems', function () {
+        scope.shouldDefaultInboundToEpos = true;
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems, calculatedEposInboundQuantities];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(parseInt(scope.offloadListItems[0].inboundQuantity)).toEqual(3);
       });
     });
 
@@ -396,6 +469,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       var menuItems;
       var storeInstanceItems;
       var prevInstanceItems;
+      var calculatedEposInboundQuantities;
       beforeEach(function () {
         initController('redispatch');
         scope.$digest();
@@ -459,36 +533,62 @@ describe('Controller: StoreInstancePackingCtrl', function () {
             }
           ]
         };
+        calculatedEposInboundQuantities = {
+          response: [
+            {
+              id: 3,
+              quantity: 100
+            }
+          ]
+        };
+
         scope.pickListItems = [];
         scope.offloadListItems = [];
       });
 
       it('should add all menu items to pick list', function () {
-        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, [], []];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, [], {}, []];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(2);
         expect(scope.offloadListItems.length).toEqual(0);
       });
 
       it('should add all current store instance items to pick list', function () {
-        mockItemsResponseFromAPI = [{ masterItems: [] }, [], storeInstanceItems, []];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, [], storeInstanceItems, {}, []];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(2);
         expect(scope.offloadListItems.length).toEqual(0);
       });
 
       it('should only add all offload items to offload list', function () {
-        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, [], prevInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, [], {}, prevInstanceItems];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.offloadListItems.length).toEqual(1);
       });
 
       it('should add all warehouse close items to pick list', function () {
-        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, [], prevInstanceItems];
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, [], {}, prevInstanceItems];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.pickListItems.length).toEqual(2);
         expect(scope.offloadListItems.length).toEqual(1);
         expect(scope.pickListItems[1].inboundQuantity).toEqual('7');
+      });
+
+      it('should merge calculated epos inbound counts in company preference is set to true and data exists', function () {
+        scope.shouldDefaultInboundToEpos = true;
+        var noInboundQuantityPrevInstanceItems = {
+          response: [{
+            itemName: 'item1',
+            itemCode: 'ITM1',
+            quantity: 6,
+            ullageReasonCode: 48,
+            itemMasterId: 3,
+            countTypeId: 7 // ullage
+          }]
+        };
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, {}, calculatedEposInboundQuantities, noInboundQuantityPrevInstanceItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.offloadListItems[0].inboundQuantity).toEqual(100);
       });
     });
   });

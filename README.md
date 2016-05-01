@@ -22,6 +22,8 @@ Run `grunt` for building and `grunt serve` for preview.
 
 Running `grunt test` will run the unit tests with karma.
 
+To run a single test use the [Focused specs](http://jasmine.github.io/2.4/focused_specs.html)
+
 ## TS5 Practices
 
 - Commit early and often

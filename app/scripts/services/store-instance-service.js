@@ -9,6 +9,8 @@
  */
 angular.module('ts5App').service('storeInstanceService', function ($resource, ENV) {
   var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/:api/:itemIdOrBulk';
+  var calculatedInboundsRequestURL = ENV.apiUrl + '/rsvr/api/store-instances/:id/calculated-inbounds';
+
   var requestParameters = {
     id: '@id',
     api: '@api',
@@ -56,10 +58,14 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     },
     updateStoreInstanceStatus: {
       method: 'PUT'
+    },
+    getStoreInstanceCalculatedInbounds: {
+      method: 'GET'
     }
   };
 
   var requestResource = $resource(requestURL, requestParameters, actions);
+  var calculatedInboundsRequestResources = $resource(calculatedInboundsRequestURL, requestParameters, actions);
 
   function getStoreInstancesList(payload, companyId) {
     if (companyId) {
@@ -163,6 +169,13 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.updateStoreInstanceStatus(requestPayload).$promise;
   }
 
+  function getStoreInstanceCalculatedInbounds(id, payload) {
+    var requestPayload = angular.extend({}, {
+      id: id
+    }, payload);
+    return calculatedInboundsRequestResources.getStoreInstanceCalculatedInbounds(requestPayload).$promise;
+  }
+
   return {
     getStoreInstancesList: getStoreInstancesList,
     getStoreInstance: getStoreInstance,
@@ -176,6 +189,7 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     updateStoreInstanceItemsBulk: updateStoreInstanceItemsBulk,
     updateStoreInstanceStatus: updateStoreInstanceStatus,
     createStoreInstanceItem: createStoreInstanceItem,
-    deleteStoreInstanceItem: deleteStoreInstanceItem
+    deleteStoreInstanceItem: deleteStoreInstanceItem,
+    getStoreInstanceCalculatedInbounds: getStoreInstanceCalculatedInbounds
   };
 });

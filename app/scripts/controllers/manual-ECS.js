@@ -156,6 +156,19 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    function getCompleteCarrierInstanceList(ecbGroupPayloadArray) {
+      if (ecbGroupPayloadArray.length) {
+        var payloadForAPI = {
+          ecbGroup: (ecbGroupPayloadArray).toString()
+        };
+        manualECSFactory.getCarrierInstanceList(payloadForAPI).then(setCarrierInstancesList, showErrors);
+        return;
+      }
+
+      $scope.carrierInstances = [];
+      hideLoadingModal();
+    }
+
     function getCarrierInstanceGroups(dataFromAPI) {
       if (!dataFromAPI.response.length) {
         hideLoadingModal();
@@ -170,11 +183,7 @@ angular.module('ts5App')
         }
       });
 
-      var payloadForAPI = {
-        ecbGroup: (lodash.uniq(ecbGroupPayload)).toString()
-      };
-
-      manualECSFactory.getCarrierInstanceList(payloadForAPI).then(setCarrierInstancesList, showErrors);
+      getCompleteCarrierInstanceList(lodash.uniq(ecbGroupPayload));
     }
 
     function getUnTiedCarrierInstances(payload) {
@@ -187,8 +196,8 @@ angular.module('ts5App')
       hideLoadingModal();
       $scope.allECSInstances = angular.copy(dataFromAPI.response);
       angular.forEach($scope.allECSInstances, function (carrierInstance) {
-        carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
-        carrierInstance.siScheduleDate = dateUtility.formatDateForApp(carrierInstance.siScheduleDate);
+        carrierInstance.instanceDate = (!!carrierInstance.instanceDate) ? dateUtility.formatDateForApp(carrierInstance.instanceDate) : '';
+        carrierInstance.siScheduleDate = (!!carrierInstance.siScheduleDate) ? dateUtility.formatDateForApp(carrierInstance.siScheduleDate) : '';
       });
     }
 

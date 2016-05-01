@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemImportCtrl', function($scope, $q, $filter, itemImportFactory, messageService) {
+  .controller('ItemImportCtrl', function($scope, $q, $filter, itemImportFactory, messageService, dateUtility) {
 
     // private controller vars
     var companyId = null;
@@ -18,6 +18,10 @@ angular.module('ts5App')
 
     // private controller functions
     function canBeAddedToCompanyRetailList(retailItem) {
+      if (dateUtility.isYesterdayOrEarlier(retailItem.endDate)) {
+        return false;
+      }
+
       if ($filter('filter')(companyRetailItems, {
           itemCode: retailItem.itemCode
         }, true).length) {
@@ -91,15 +95,10 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
-    function showFormErrors(response) {
-      if ('data' in response) {
-        angular.forEach(response.data, function(error) {
-          this.push(error);
-        }, $scope.formErrors);
-      }
-
-      $scope.displayError = true;
+    function showFormErrors(dataFromAPI) {
       hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
     }
 
     function setGetCompaniesListPromise() {

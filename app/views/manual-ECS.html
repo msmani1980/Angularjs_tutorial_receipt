@@ -177,20 +177,23 @@
             <thead>
             <tr>
               <th>Store Number</th>
+              <th>Schedule Number</th>
               <th>Schedule Date</th>
               <th>Catering Station</th>
-              <th>Store Instance</th>
-              <th>Status</th>
+              <!-- TODO: add 'show/hide column' option with these fields-->
+              <!--<th>Store Instance</th>-->
+              <!--<th>Status</th>-->
               <th class="col-xs-1">Select</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="storeInstance in storeInstances | orderBy: ['storeNumber', '-scheduleDate']" ng-class="getClassForAttribute('portal', 'row', storeInstance)">
               <td>{{ storeInstance.storeNumber }}</td>
+              <td>{{ storeInstance.scheduleNumber }}</td>
               <td>{{ storeInstance.scheduleDate }}</td>
               <td>{{ storeInstance.stationCode }}</td>
-              <td>{{ storeInstance.id }}</td>
-              <td>{{ storeInstance.statusName }}</td>
+              <!--<td>{{ storeInstance.id }}</td>-->
+              <!--<td>{{ storeInstance.statusName }}</td>-->
               <td class="text-center">
                 <button ng-click="selectPortalRecord(storeInstance)"
                         ng-show="canSelectStoreInstance(storeInstance)"
@@ -216,6 +219,7 @@
             <tr>
               <th colspan="2"></th>
               <th>Store Number</th>
+              <th>Schedule Number</th>
               <th>Schedule Date</th>
               <th>First Departure Station</th>
               <th class="col-xs-1">Select/ Deselect</th>
@@ -232,6 +236,7 @@
               </td>
               <td></td>
               <td>{{ groupParent.storeNumber }}</td>
+              <td>{{ groupParent.scheduleNumber }}</td>
               <td>{{ groupParent.instanceDate }}</td>
               <td>{{ groupParent.departureStation }}</td>
               <td class="text-center">
@@ -247,6 +252,7 @@
               <td class="category-indent"></td>
               <td class="category-border"></td>
               <td>{{ childInstance.storeNumber }}</td>
+              <td>{{ childInstance.scheduleNumber }}</td>
               <td>{{ childInstance.instanceDate }}</td>
               <td>{{ childInstance.departureStation }}</td>
               <td></td>
@@ -374,6 +380,8 @@
           <tr>
             <th>Portal Store Number</th>
             <th>ePOS Store Number</th>
+            <th>Portal Schedule Number</th>
+            <th>ePOS Schedule Number</th>
             <th>Portal Schedule Date</th>
             <th>ePOS Schedule Date</th>
             <th>Portal Catering Station</th>
@@ -385,6 +393,8 @@
           <tr ng-repeat="ECSInstance in allECSInstances">
             <td>{{ ECSInstance.siStoreNumber }}</td>
             <td>{{ ECSInstance.storeNumber }}</td>
+            <td>{{ ECSInstance.siScheduleNumber }}</td>
+            <td>{{ ECSInstance.scheduleNumber }}</td>
             <td>{{ ECSInstance.siScheduleDate }}</td>
             <td>{{ ECSInstance.instanceDate }}</td>
             <td>{{ ECSInstance.siCatererStationCode }}</td>
