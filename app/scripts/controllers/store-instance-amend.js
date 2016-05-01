@@ -277,11 +277,10 @@ angular.module('ts5App')
       var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');
 
-      if (!($scope.storeInstance && inboundedStatus && discrepanciesStatus)) {
-        return false;
-      }
+      var isStoreInstanceStatusValid = $scope.storeInstance && inboundedStatus && discrepanciesStatus;
+      var isCashBagVerified = cashBag && cashBag.isVerified;
 
-      if (cashBag && cashBag.isVerified) {
+      if (!isStoreInstanceStatusValid || isCashBagVerified) {
         return false;
       }
 
