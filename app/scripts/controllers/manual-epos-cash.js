@@ -76,10 +76,13 @@ angular.module('ts5App')
 
       angular.forEach(cashBagCurrencyList, function (currency) {
         var newCurrencyObject = {};
-        newCurrencyObject.currencyId = currency.currencyId;
-        newCurrencyObject.currencyCode = lodash.findWhere(currencyList, { id: currency.currencyId }).code || '';
-        newCurrencyObject.exchangeRate = lodash.findWhere(dailyExchangeRates, { retailCompanyCurrencyId: currency.currencyId }) || {};
-        $scope.currencyList.push(newCurrencyObject);
+        var currencyListMatch = lodash.findWhere(currencyList, { id: currency.currencyId });
+        if (currencyListMatch) {
+          newCurrencyObject.currencyId = currency.currencyId;
+          newCurrencyObject.currencyCode = currencyListMatch.code || '';
+          newCurrencyObject.exchangeRate = lodash.findWhere(dailyExchangeRates, { retailCompanyCurrencyId: currency.currencyId }) || {};
+          $scope.currencyList.push(newCurrencyObject);
+        }
       });
 
       mergeCashBagCash(cashBagCashList);
@@ -89,24 +92,35 @@ angular.module('ts5App')
       var currencyList = angular.copy(responseCollection[0].response);
       setBaseCurrency(currencyList);
       setCashBagCurrencyList(angular.copy(responseCollection[1].response), currencyList, angular.copy(responseCollection[2].dailyExchangeRateCurrencies));
+      $scope.isVerified = angular.copy(responseCollection[3].cashVerifiedOn) || false;
     }
 
-    function getInitDependencies(cashBagDataFromAPI) {
-      $scope.cashBag = angular.copy(cashBagDataFromAPI);
-
-      // TOOD: get store instance, then filter currency list by store instance's schedule date
+    function getInitDependencies(storeInstanceDataFromAPI) {
+      $scope.storeInstance = angular.copy(storeInstanceDataFromAPI);
+      var dateForFilter = dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.storeInstance.scheduleDate));
 
       var promises = [
-        manualEposFactory.getCurrencyList(),
+        manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter }),
         manualEposFactory.getCashBagCashList($routeParams.cashBagId, {}),
-        manualEposFactory.getDailyExchangeRate($scope.cashBag.dailyExchangeRateId)
+        manualEposFactory.getDailyExchangeRate($scope.cashBag.dailyExchangeRateId),
+        manualEposFactory.checkCashBagVerification($routeParams.cashBagId)
       ];
 
       $q.all(promises).then(completeInit, showErrors);
     }
 
+    function getStoreInstanceThenContinueInit(cashBagDataFromAPI) {
+      $scope.cashBag = angular.copy(cashBagDataFromAPI);
+
+      if ($scope.cashBag.storeInstanceId) {
+        manualEposFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(getInitDependencies, showErrors);
+      } else {
+        getInitDependencies(null);
+      }
+    }
+
     function init() {
-      manualEposFactory.getCashBag($routeParams.cashBagId).then(getInitDependencies, showErrors);
+      manualEposFactory.getCashBag($routeParams.cashBagId).then(getStoreInstanceThenContinueInit, showErrors);
     }
 
     init();
