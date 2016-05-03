@@ -209,6 +209,8 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(reconciliationFactory, 'getPaymentReport').and.returnValue(getPaymentReportDeferred.promise);
     spyOn(employeesService, 'getEmployees').and.returnValue(getEmployeesDeferred.promise);
     spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
+    spyOn(cashBagFactory, 'verifyCashBag').and.callThrough();
+    spyOn(cashBagFactory, 'unverifyCashBag').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'getFlightSectors').and.returnValue(getFlightSectorsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'addFlightSector').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'editFlightSector').and.callThrough();
@@ -318,10 +320,52 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     });
 
     describe('toggle verified cashBag', function () {
-      it('should reverse cash bag flags', function () {
+      it('should refresh cash bag list on success', function () {
+          scope.cashBagList = [{ isVerified: false }];
+          scope.toggleVerifiedCashBag(scope.cashBagList[0]);
+
+          expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
+      });
+      it('should call verifyCashBag in case cash bag is not verified yet', function () {
         scope.cashBagList = [{ isVerified: false }];
         scope.toggleVerifiedCashBag(scope.cashBagList[0]);
-        expect(scope.cashBagList[0].isVerified).toEqual(true);
+
+        expect(cashBagFactory.verifyCashBag).toHaveBeenCalled();
+      });
+      it('should call unverifyCashBag in case cash bag is verified already', function () {
+        scope.cashBagList = [{ isVerified: true }];
+        scope.toggleVerifiedCashBag(scope.cashBagList[0]);
+
+        expect(cashBagFactory.unverifyCashBag).toHaveBeenCalled();
+      });
+    });
+
+    describe('hasMoreThanOneUnverifiedCashBags', function () {
+      it('should return correct data', function () {
+
+        scope.normalizedCashBags = [{ isVerified: false }, { isVerified: false}];
+        expect(scope.hasMoreThanOneUnverifiedCashBags()).toBeTruthy();
+
+        scope.normalizedCashBags = [{ isVerified: true }, { isVerified: false}];
+        expect(scope.hasMoreThanOneUnverifiedCashBags()).toBeFalsy();
+
+        scope.normalizedCashBags = [{ isVerified: true }, { isVerified: true}];
+        expect(scope.hasMoreThanOneUnverifiedCashBags()).toBeFalsy();
+      });
+    });
+
+    describe('hasFlightSectors', function () {
+      it('should return correct data', function () {
+        var cashBag;
+
+        cashBag = { };
+        expect(scope.hasFlightSectors(cashBag)).toBeFalsy();
+
+        cashBag = { flightSectors: [] };
+        expect(scope.hasFlightSectors(cashBag)).toBeFalsy();
+
+        cashBag = { flightSectors: [ { id: 1 }] };
+        expect(scope.hasFlightSectors(cashBag)).toBeTruthy();
       });
     });
 
@@ -368,6 +412,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       scope.storeInstance = null;
       scope.$digest();
       expect(scope.canExecuteActions()).toBeFalsy();
+
+      scope.storeInstance = null;
+      scope.$digest();
+      expect(scope.canExecuteActions({ isVerified: true })).toBeFalsy();
     });
 
     it('getStatusNameById should return status name for given status id', function () {

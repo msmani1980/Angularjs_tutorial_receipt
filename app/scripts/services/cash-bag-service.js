@@ -15,10 +15,13 @@ angular.module('ts5App')
     var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/carrier-instances';
     var reallocationRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/reallocate';
     var mergeRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/merge';
+    var verifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/verify/:type';
+    var unverifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/unverify/:type';
 
     var requestParameters = {
       id: '@id',
-      submission: '@submission'
+      submission: '@submission',
+      type: '@type'
     };
 
     var cashBagCurrencyRequestParams = {
@@ -49,6 +52,12 @@ angular.module('ts5App')
       },
       mergeCashBag: {
         method: 'PUT'
+      },
+      verifyCashBag: {
+        method: 'PUT'
+      },
+      unverifyCashBag: {
+        method: 'PUT'
       }
     };
 
@@ -57,6 +66,8 @@ angular.module('ts5App')
     var carrierInstancesRequestResource = $resource(carrierInstancesRequestURL, requestParameters, actions);
     var reallocateRequestResource = $resource(reallocationRequestURL, requestParameters, actions);
     var mergeRequestResource = $resource(mergeRequestURL, requestParameters, actions);
+    var verifyRequestResource = $resource(verifyRequestURL, requestParameters, actions);
+    var unverifyRequestResource = $resource(unverifyRequestURL, requestParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -119,6 +130,24 @@ angular.module('ts5App')
       return carrierInstancesRequestResource.getCashBagCarrierInstances({ id: cashBagId }).$promise;
     }
 
+    var verifyCashBag = function (cashBagId, type) {
+      var payload = {
+        id: cashBagId,
+        type: type
+      };
+
+      return verifyRequestResource.verifyCashBag(payload).$promise;
+    };
+
+    var unverifyCashBag = function (cashBagId, type) {
+      var payload = {
+        id: cashBagId,
+        type: type
+      };
+
+      return unverifyRequestResource.unverifyCashBag(payload).$promise;
+    };
+
     return {
       getCashBagList: getCashBagList,
       getCashBag: getCashBag,
@@ -128,6 +157,8 @@ angular.module('ts5App')
       updateCashBagCurrency: updateCashBagCurrency,
       getCashBagCarrierInstances: getCashBagCarrierInstances,
       reallocateCashBag: reallocateCashBag,
-      mergeCashBag: mergeCashBag
+      mergeCashBag: mergeCashBag,
+      verifyCashBag: verifyCashBag,
+      unverifyCashBag: unverifyCashBag
     };
   });

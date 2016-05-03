@@ -1500,27 +1500,29 @@ describe('The Item Create Controller', function() {
   describe('scope.substitutions variable', function() {
     it('should be able to remove non active records between start and end date', function() {
       scope.items = [{
-        startDate: '04/10/1980',
-        endDate: '02/20/2050'
+        startDate: '1980-04-10',
+        endDate: '2050-02-20',
+        itemMasterId: 1
       }, {
-        startDate: '04/15/1980',
-        endDate: '05/20/1999'
+        startDate: '1980-04-10',
+        endDate: '1998-04-10',
+        itemMasterId: 2
       }];
       scope.formData.startDate = '04/15/2000';
       scope.formData.endDate = '05/20/2030';
       ItemCreateCtrl.filterItemsByFormDates(scope.item);
       expect(scope.substitutions.length).toEqual(1);
-      expect(scope.substitutions[0].startDate).toEqual('04/10/1980');
+      expect(scope.substitutions[0].itemMasterId).toEqual(1);
     });
 
     it('should be able to remove duplicate records', function () {
       scope.items = [{
-        startDate: '04/10/1980',
-        endDate: '02/20/2050',
+        startDate: '1980-04-10',
+        endDate: '2050-02-20',
         itemMasterId: 2
       }, {
-        startDate: '04/15/1980',
-        endDate: '02/30/2050',
+        startDate: '1980-04-10',
+        endDate: '2030-05-20',
         itemMasterId: 2
       }];
       scope.formData.startDate = '04/15/2000';

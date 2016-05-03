@@ -99,6 +99,14 @@ angular.module('ts5App')
       return companyPreferencesService.getCompanyPreferences(payload, companyId);
     };
 
+    var verifyCashBag = function (cashBagId, type) {
+      return cashBagService.verifyCashBag(cashBagId, type);
+    };
+
+    var unverifyCashBag = function (cashBagId, type) {
+      return cashBagService.unverifyCashBag(cashBagId, type);
+    };
+
     return {
       getCompanyId: getCompanyId,
       getCashBagList: getCashBagList,
@@ -120,6 +128,8 @@ angular.module('ts5App')
       getCompanyPreferences: getCompanyPreferences,
       getStoreList: getStoreList,
       getStoreInstanceList: getStoreInstanceList,
-      getStoreInstance: getStoreInstance
+      getStoreInstance: getStoreInstance,
+      verifyCashBag: verifyCashBag,
+      unverifyCashBag: unverifyCashBag
     };
   });

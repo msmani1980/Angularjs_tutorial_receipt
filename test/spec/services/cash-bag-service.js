@@ -214,6 +214,38 @@ describe('Service: cashBagService', function () {
       });
     });
 
+    describe('verifyCashBag', function() {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.verifyCashBag).toBe(true);
+      });
+
+      beforeEach(function () {
+        $httpBackend.whenPUT(/cashbags\/1\/verify\/AMEND/).respond({ done: true });
+      });
+
+      it('should verify a cash bag from API', function() {
+        cashBagService.verifyCashBag(1, 'AMEND');
+        $httpBackend.expectPUT(/cashbags\/1\/verify\/AMEND/);
+        $httpBackend.flush();
+      });
+    });
+
+    describe('unverifyCashBag', function() {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.unverifyCashBag).toBe(true);
+      });
+
+      beforeEach(function () {
+        $httpBackend.whenPUT(/cashbags\/1\/unverify\/AMEND/).respond({ done: true });
+      });
+
+      it('should verify a cash bag from API', function() {
+        cashBagService.unverifyCashBag(1, 'AMEND');
+        $httpBackend.expectPUT(/cashbags\/1\/unverify\/AMEND/);
+        $httpBackend.flush();
+      });
+    });
+
     describe('createCashBag', function () {
 
       it('should be accessible in the service', function () {
