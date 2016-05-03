@@ -897,6 +897,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.updatePriceGroup = function(priceIndex) {
       var priceGroup = $scope.formData.prices[priceIndex];
+      if (!priceGroup) {
+        return false;
+      }
+
       var startDate = dateUtility.formatDateForAPI(priceGroup.startDate);
       var endDate = dateUtility.formatDateForAPI(priceGroup.endDate);
       if (startDate === 'Invalid date' || endDate === 'Invalid date') {
