@@ -236,13 +236,19 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
       statusName: 'Confirmed'
     };
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
-    expect(item.actions).toEqual(['Reports', 'Review', 'Pay Commission', 'Unconfirm']);
+    expect(item.actions).toEqual(['Reports', 'Review', 'Pay Commission', 'Unconfirm', 'Amend Data']);
 
     item = {
       statusName: 'Discrepancies'
     };
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
-    expect(item.actions).toEqual(['Reports', 'Validate', 'Review', 'Confirm']);
+    expect(item.actions).toEqual(['Reports', 'Validate', 'Review', 'Confirm', 'Amend Data']);
+
+    item = {
+      statusName: 'Commission Paid'
+    };
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Amend Data']);
   });
 
   it('fixSearchDropdowns should reset dropdown value if empty value is selected', function() {
@@ -405,4 +411,18 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
     });
   });
 
+  describe('$scope.hasSelectedInstancesWithRequiresAmendVerification', function() {
+    it('should return false with no items', function() {
+      expect(scope.hasSelectedInstancesWithRequiresAmendVerification()).toBeFalsy();
+    });
+
+    it('should return true if 1 item is selected with the requires amend verification', function() {
+      scope.reconciliationList = [{
+        id: 2746,
+        requiresAmendVerification: true,
+        selected: true
+      }];
+      expect(scope.hasSelectedInstancesWithRequiresAmendVerification()).toBeTruthy();
+    });
+  });
 });

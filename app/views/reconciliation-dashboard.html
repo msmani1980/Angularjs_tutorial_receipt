@@ -13,7 +13,7 @@
           <button class="btn btn-success" tabindex="0" ng-disabled="!hasSelectedInstance()" ng-click="validate()">Validate
           </button>
 
-          <button class="btn btn-primary" tabindex="0" ng-disabled="!hasSelectedInstanceWithStatus('Confirmed')" ng-click="showBulkExecuteActionModal('Pay Commission')">Pay Commission
+          <button class="btn btn-primary" tabindex="0" ng-disabled="!(hasSelectedInstanceWithStatus('Confirmed') && !hasSelectedInstancesWithRequiresAmendVerification())" ng-click="showBulkExecuteActionModal('Pay Commission')">Pay Commission
           </button>
 
           <div class="btn-group" dropdown>
@@ -239,8 +239,11 @@
           <button class="btn btn-warning btn-xs btn-block" tabindex="0"
                   ng-show="doesInstanceContainAction(instance, 'Review')" ng-click="viewReview(instance)">Review
           </button>
+          <button class="btn btn-warning btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Amend Data')" ng-click="viewAmendData(instance)">Amend Data
+          </button>
           <button class="btn btn-primary btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Confirm')" ng-click="showExecuteActionModal(instance, 'Confirm')">Confirm
+                  ng-show="doesInstanceContainAction(instance, 'Confirm') && !instance.requiresAmendVerification" ng-click="showExecuteActionModal(instance, 'Confirm')">Confirm
           </button>
           <button class="btn btn-danger btn-xs btn-block" tabindex="0"
                   ng-show="doesInstanceContainAction(instance, 'Unconfirm')" ng-click="showExecuteActionModal(instance, 'Unconfirm')">Unconfirm
