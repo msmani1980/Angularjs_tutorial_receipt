@@ -106,7 +106,7 @@ describe('Controller: PostFlightDataListCtrl', function() {
       });
 
       it('should call getCarrierNumbers for each carrierType', function() {
-        expect(postTripFactory.getCarrierNumbers).toHaveBeenCalledWith(postTripFactory.getCompanyId(), carrierTypesResponseJSON.response[0].companyCarrierTypeId);
+        expect(postTripFactory.getCarrierNumbers).toHaveBeenCalled();
       });
 
       it('should attach carrierNumbers array to scope', function() {

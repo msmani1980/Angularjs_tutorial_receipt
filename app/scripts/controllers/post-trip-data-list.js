@@ -80,7 +80,7 @@ angular.module('ts5App')
 
     this.getCarrierSuccess = function(response) {
       angular.forEach(response.response, function(item) {
-        postTripFactory.getCarrierNumbers(companyId, item.companyCarrierTypeId).then(function(response) {
+        postTripFactory.getCarrierNumbers(companyId, item.id).then(function(response) {
           $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
         });
       });
