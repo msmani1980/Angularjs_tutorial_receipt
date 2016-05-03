@@ -8,7 +8,11 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('menuService', function ($resource, ENV, Upload, dateUtility, $http) {
+  .service('menuService', function ($rootScope, $resource, ENV, Upload, dateUtility, $http, globalMenuService, currencyFactory, lodash) {
+
+	  $rootScope.cashbagRestrictUse = true;
+      $rootScope.showManageCashBag = false;
+      $rootScope.showCashBagSubmission = false;
 
     function transformRequest(data) {
       data = angular.fromJson(data);
@@ -105,13 +109,77 @@ angular.module('ts5App')
         file: file
       });
     };
+    
+    function getCompanyPreferenceBy(preferences, choiceName, optionName) {
+        var result = null;
+        angular.forEach(preferences, function(preference) {
+      	  if (result === null && preference.choiceName === choiceName && preference.optionName === optionName) {
+      		  result = preference;
+      	  }
+        });
 
+        return result;
+      }
+
+    function isMenuCashbagRestrictUse() {
+        var payload = {
+          startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        };
+		var companyId = globalMenuService.getCompanyData().companyId;  
+		
+        return currencyFactory.getCompanyPreferences(payload, companyId).then(function(companyPreferencesData) {
+            var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+            var cmpCashbagRestrictUse = getCompanyPreferenceBy(orderedPreferences, 'Restrict Cash Bag', 'Restrict Cash Bag Use');
+	        if (cmpCashbagRestrictUse && cmpCashbagRestrictUse.isSelected) {
+	      		$rootScope.cashbagRestrictUse = cmpCashbagRestrictUse.isSelected;
+	        }
+	        else {
+	      		$rootScope.cashbagRestrictUse = true;
+	        }
+	          
+          });
+    }
+    
+
+    function isShowManageCashBag() {
+        var todayDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var companyId = globalMenuService.getCompanyData().companyId;
+		var retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
+
+        return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(function(dailyExchangeRatesData) {
+      	  if (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted != null) {
+      		  	$rootScope.showManageCashBag = true;
+          }
+      	  else {
+    		  	$rootScope.showManageCashBag = false;
+      	  }
+        });
+    }
+    
+    function isShowCashBagSubmission() {
+        var todayDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var companyId = globalMenuService.getCompanyData().companyId;
+		var retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
+
+        return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(function(dailyExchangeRatesData) {
+      	  if (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted != null && dailyExchangeRatesData.isSubmitted) {
+      		  $rootScope.showCashBagSubmission = true;
+      	  }
+      	  else {
+      		  $rootScope.showCashBagSubmission = false;
+      	  }
+        });
+    }
+    
     return {
       getMenuList: getMenuList,
       deleteMenu: deleteMenu,
       getMenu: getMenu,
       updateMenu: updateMenu,
       createMenu: createMenu,
-      importFromExcel: importFromExcel
+      importFromExcel: importFromExcel,
+      isMenuCashbagRestrictUse:isMenuCashbagRestrictUse,
+      isShowManageCashBag:isShowManageCashBag,
+      isShowCashBagSubmission:isShowCashBagSubmission
     };
   });

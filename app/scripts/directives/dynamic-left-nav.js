@@ -9,30 +9,59 @@
 angular.module('ts5App')
   .directive('dynamicLeftNav', function () {
 
-    var dynamicLeftNavController = function ($scope, $location, $window, $filter, mainMenuService, globalMenuService, identityAccessFactory, lodash) {
-      var companyTypeId = globalMenuService.getCompanyData().companyTypeId;
-      var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
-      var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
+  var dynamicLeftNavController = function ($q, $rootScope, $scope, $location, $window, $filter, mainMenuService, globalMenuService, identityAccessFactory, lodash, menuService) {
 
-      //var menu = mainMenuService[companyTypeName]();
-      var menu = mainMenuService.getMenu();
-      var menuItems = [];
+	  function deleteMenuCashBag(menuName) {
+		  var indx=-1;
+		  var i=0;
+		  angular.forEach($scope.menuItems, function(obj){
+			  if (obj.name === menuName) {
+				  indx=i;
+			  }
+			  i=i+1;
+		  });
+		  if (indx!==-1) {
+			  $scope.menuItems.splice(indx, 1);
+		  }
+    }
 
-      if ($scope.title) {
-        menuItems = $filter('filter')(menu, {
-          title: $scope.title
-        }, true);
-      } else {
-        menuItems = $filter('filter')(menu, {
-          menuItems: {
-            route: $location.path()
-          }
-        });
-      }
+	  var promises = [
+	    menuService.isMenuCashbagRestrictUse(),
+        menuService.isShowManageCashBag(),
+        menuService.isShowCashBagSubmission()
+      ];
+      $q.all(promises).then(function () {
+    	  var companyTypeId = globalMenuService.getCompanyData().companyTypeId;
+    	  var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
+    	  var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
+    	  var menu = mainMenuService.getMenu();
+    	  var menuItems = [];
 
-      if (companyTypeName, menuItems.length) {
-        $scope.menuItems = menuItems[0].menuItems;
-      }
+    	  if ($scope.title) {
+    		  menuItems = $filter('filter')(menu, {
+    			  title: $scope.title
+    		  }, true);
+    	  } else {
+    		  menuItems = $filter('filter')(menu, {
+    			  menuItems: {
+    				  route: $location.path()
+    			  }
+    		  });
+    	  }
+    	  if (companyTypeName, menuItems.length) {
+    		  $scope.menuItems = menuItems[0].menuItems;
+    	  }
+    	  if (companyTypeName === 'Cash Handler') {
+    		  if ($rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag) {
+    			  // delete 'Manage Cash Bag' menu
+    			  deleteMenuCashBag('Manage Cash Bag');
+    		  }
+    		  if ($rootScope.cashbagRestrictUse && !$rootScope.showCashBagSubmission) {
+    			  // delete 'Cash Bag Submission' menu
+    			  deleteMenuCashBag('Cash Bag Submission');
+    		  }
+    	  }
+      });
 
       $scope.sendToEmber = function (path) {
         path = '/ember/#/' + path.substring(9);
@@ -57,6 +86,7 @@ angular.module('ts5App')
 
         return itemClass;
       };
+      // end promises
 
     };
 

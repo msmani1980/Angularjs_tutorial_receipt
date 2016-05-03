@@ -9,9 +9,21 @@
 angular.module('ts5App')
   .controller('MainCtrl',
     function($rootScope, $scope, companiesFactory, mainMenuService, globalMenuService, identityAccessService,
-      identityAccessFactory, companyFactory, lodash) {
+      identityAccessFactory, companyFactory, currencyFactory, lodash, dateUtility, $q, menuService) {
 
       $scope.viewName = 'TS5 Dashboard';
+
+      function getCompanyPreferenceBy(preferences, choiceName, optionName) {
+          var result = null;
+          angular.forEach(preferences, function(preference) {
+        	  if (result === null && preference.choiceName === choiceName && preference.optionName === optionName) {
+        		  result = preference;
+        	  }
+          });
+
+          return result;
+        }
+
 
       function checkMenuItemMatchesFeaturePermission(featurePermission, menuItemPermission) {
         if (!featurePermission.resource) {
@@ -36,7 +48,15 @@ angular.module('ts5App')
       }
 
       function hasMenuItemMatchingPackageWithPermissions(menuItem, featurePermissions) {
-        if (menuItem.permissions) {
+
+    	  if (menuItem.name==='Manage Cash Bag' && $rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag) {
+		      return false;
+          }
+          if (menuItem.name=='Cash Bag Submission' && $rootScope.cashbagRestrictUse && !$rootScope.showCashBagSubmission) {
+		      return false;
+          }
+
+          if (menuItem.permissions) {
           return findPackageWithMatchingMatchingMenuItem(menuItem, featurePermissions);
         }
 
@@ -58,10 +78,10 @@ angular.module('ts5App')
       }
 
       function menuWithFeaturePermissions(menu, response) {
-        return lodash.filter(menu, function(item) {
-          item.menuItems = menuItemsWithFeaturePermissions(item.menuItems, response);
-          return item.menuItems.length !== 0;
-        });
+    	  return lodash.filter(menu, function(item) {
+    		  item.menuItems = menuItemsWithFeaturePermissions(item.menuItems, response);
+            return item.menuItems.length !== 0;
+          });
       }
 
       function assignMenuToCompanyType() {
@@ -75,13 +95,25 @@ angular.module('ts5App')
         //$scope.realDashboardMenu = mainMenuService[companyTypeName]();
       }
 
-      function updateNavigationPerUserFeatures() {
+      function getDashboardDependencies () {
         identityAccessService.featuresInRole().then(function(response) {
-          $scope.dashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
+        	$scope.dashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
         });
 
         assignMenuToCompanyType();
       }
+
+      function updateNavigationPerUserFeatures () {
+          var promises = [
+		          menuService.isMenuCashbagRestrictUse(),
+		          menuService.isShowManageCashBag(),
+		          menuService.isShowCashBagSubmission()
+          ];
+          $q.all(promises).then(function () {
+        	  getDashboardDependencies ();
+    	});
+      }
+
 
       $scope.$on('company-fetched', updateNavigationPerUserFeatures);
       updateNavigationPerUserFeatures();
