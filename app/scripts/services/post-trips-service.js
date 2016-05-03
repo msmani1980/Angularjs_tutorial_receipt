@@ -113,7 +113,7 @@ angular.module('ts5App')
       return defaults.concat(transform);
     };
 
-    var requestURL = ENV.apiUrl + '/rsvr/api/companies/:id/posttrips/:tripid';
+    var requestURL = ENV.apiUrl + '/api/companies/:id/posttrips/:tripid';
     var requestParameters = {
       id: '@id',
       tripid: '@tripid'
