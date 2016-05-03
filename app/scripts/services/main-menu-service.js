@@ -374,8 +374,8 @@ angular.module('ts5App')
             route: '/#/manage-goods-received',
             icon: 'icon-manage-schedule',
             className: 'dashboard-manageGoodsReceived',
-            package: 'STATIONOPERATIONS',
-            role: 'RECEIVE'
+            package: 'STOCKMANAGER',
+            role: 'GOODSRECEIVEDDASHBOARD'
           }, {
             name: 'Create Delivery Note',
             route: '/#/lmp-delivery-note/create',
