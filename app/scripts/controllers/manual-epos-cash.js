@@ -10,9 +10,9 @@
 angular.module('ts5App')
   .controller('ManualEposCashCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService, lodash) {
 
-    //function showLoadingModal(text) {
-    //  angular.element('#loading').modal('show').find('p').text(text);
-    //}
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
@@ -56,6 +56,15 @@ angular.module('ts5App')
       return convertedAmount.toFixed(2);
     };
 
+    $scope.verify = function () {
+      showLoadingModal('Verifying');
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CASH').then(init, showErrors);
+    };
+
+    //$scope.unverify = function () {
+    //  manualEposFactory.unverify()
+    //};
+
     function setBaseCurrency(currencyList) {
       $scope.baseCurrency = {};
       $scope.baseCurrency.currencyId = globalMenuService.getCompanyData().baseCurrencyId;
@@ -89,6 +98,7 @@ angular.module('ts5App')
     }
 
     function completeInit(responseCollection) {
+      hideLoadingModal();
       var currencyList = angular.copy(responseCollection[0].response);
       setBaseCurrency(currencyList);
       setCashBagCurrencyList(angular.copy(responseCollection[1].response), currencyList, angular.copy(responseCollection[2].dailyExchangeRateCurrencies));
@@ -120,6 +130,7 @@ angular.module('ts5App')
     }
 
     function init() {
+      showLoadingModal('Loading data');
       manualEposFactory.getCashBag($routeParams.cashBagId).then(getStoreInstanceThenContinueInit, showErrors);
     }
 
