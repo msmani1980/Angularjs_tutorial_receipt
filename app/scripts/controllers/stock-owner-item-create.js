@@ -245,7 +245,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
 
     this.filterItemsByFormDates = function() {
       $scope.substitutions = lodash.filter($scope.items, function(item) {
-        return dateUtility.isAfterOrEqual(item.endDate, $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, item.startDate);
+        return dateUtility.isAfterOrEqual(dateUtility.formatDateForApp(item.endDate), $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, dateUtility.formatDateForApp(item.startDate));
       });
 
       $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
@@ -258,26 +258,26 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       }
     });
 
-    this.findSubstitutionIndex = function(substitutionId) {
-      var substitutionIndex = null;
-      for (var key in $scope.substitutions) {
-        var substitution = $scope.substitutions[key];
-        if (parseInt(substitution.id) === parseInt(substitutionId)) {
-          substitutionIndex = key;
+    this.findItemIndexById = function(itemId) {
+      var itemIndex = null;
+      for (var key in $scope.items) {
+        var itemMatch = $scope.items[key];
+        if (parseInt(itemMatch.id) === parseInt(itemId)) {
+          itemIndex = key;
           break;
         }
       }
 
-      return substitutionIndex;
+      return itemIndex;
     };
 
     this.deserializeSubstitutions = function(itemData) {
       for (var substitutionKey in itemData.substitutions) {
         var substitutionId = itemData.substitutions[substitutionKey];
-        var index = $this.findSubstitutionIndex(substitutionId);
+        var index = $this.findItemIndexById(substitutionId);
         itemData.substitutions[substitutionKey] = {
           id: substitutionId,
-          itemName: $scope.substitutions[index].itemName
+          itemName: $scope.items[index].itemName
         };
       }
     };
@@ -292,26 +292,13 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       return substitutionsPayload;
     };
 
-    this.findRecommendationIndex = function(recommendationId) {
-      var recommendationIndex = null;
-      for (var key in $scope.recommendations) {
-        var recommendation = $scope.recommendations[key];
-        if (parseInt(recommendation.id) === parseInt(recommendationId)) {
-          recommendationIndex = key;
-          break;
-        }
-      }
-
-      return recommendationIndex;
-    };
-
     this.deserializeRecommendations = function(itemData) {
       for (var recommendationKey in itemData.recommendations) {
         var recommendationId = itemData.recommendations[recommendationKey];
-        var index = $this.findRecommendationIndex(recommendationId);
+        var index = $this.findItemIndexById(recommendationId);
         itemData.recommendations[recommendationKey] = {
           id: recommendationId,
-          itemName: $scope.recommendations[index].itemName
+          itemName: $scope.items[index].itemName
         };
       }
     };
