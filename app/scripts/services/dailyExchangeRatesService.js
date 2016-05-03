@@ -11,7 +11,8 @@ angular.module('ts5App')
   .service('dailyExchangeRatesService', function ($q, $http, $resource, ENV) {
     var dailyExchangeRatesURL = ENV.apiUrl + '/api/daily-exchange-rates/:exchangeRateId/:id';
     var previousExchangeRatesURL = ENV.apiUrl + '/api/daily-exchange-rates/previous-exchange-rate';
-    var dailyExchangeRatesForCmpURL = ENV.apiUrl + '/rsvr/api/dailyexchangerate?chCompanyId=:chCompanyId&retailCompanyId=:retailCompanyId&exchangeRateDate=:exchangeRateDate';
+    var dailyExchangeRatesForCmpURL = ENV.apiUrl + '/rsvr/api/dailyexchangerate';
+
 
 
     var dailyExchangeRatesParameters = {
@@ -23,7 +24,7 @@ angular.module('ts5App')
     		chCompanyId: '@chCompanyId',
     		retailCompanyId: '@retailCompanyId',
     		exchangeRateDate: '@exchangeRateDate'
-    }    
+    }
     var previousExchangeRatesParameters = {};
 
     var actions = {

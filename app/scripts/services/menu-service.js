@@ -109,7 +109,7 @@ angular.module('ts5App')
         file: file
       });
     };
-    
+
     function getCompanyPreferenceBy(preferences, choiceName, optionName) {
         var result = null;
         angular.forEach(preferences, function(preference) {
@@ -125,8 +125,8 @@ angular.module('ts5App')
         var payload = {
           startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
         };
-		var companyId = globalMenuService.getCompanyData().companyId;  
-		
+		var companyId = globalMenuService.getCompanyData().companyId;
+
         return currencyFactory.getCompanyPreferences(payload, companyId).then(function(companyPreferencesData) {
             var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
             var cmpCashbagRestrictUse = getCompanyPreferenceBy(orderedPreferences, 'Restrict Cash Bag', 'Restrict Cash Bag Use');
@@ -136,41 +136,51 @@ angular.module('ts5App')
 	        else {
 	      		$rootScope.cashbagRestrictUse = true;
 	        }
-	          
+
           });
     }
-    
+
 
     function isShowManageCashBag() {
         var todayDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
         var companyId = globalMenuService.getCompanyData().companyId;
-		var retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
-
-        return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(function(dailyExchangeRatesData) {
-      	  if (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted != null) {
-      		  	$rootScope.showManageCashBag = true;
-          }
-      	  else {
-    		  	$rootScope.showManageCashBag = false;
-      	  }
-        });
+		var retailCompanyId = -1;
+		if (globalMenuService.getCompanyData() && globalMenuService.getCompanyData().chCompany) {
+ 			retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
+		}
+		if (retailCompanyId===-1)
+			return false;
+		else
+			return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(function(dailyExchangeRatesData) {
+				if (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted != null) {
+      		  		$rootScope.showManageCashBag = true;
+				}
+				else {
+					$rootScope.showManageCashBag = false;
+				}
+			});
     }
-    
+
     function isShowCashBagSubmission() {
         var todayDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
         var companyId = globalMenuService.getCompanyData().companyId;
-		var retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
-
-        return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(function(dailyExchangeRatesData) {
-      	  if (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted != null && dailyExchangeRatesData.isSubmitted) {
-      		  $rootScope.showCashBagSubmission = true;
-      	  }
-      	  else {
-      		  $rootScope.showCashBagSubmission = false;
-      	  }
-        });
+		var retailCompanyId = -1;
+		if (globalMenuService.getCompanyData() && globalMenuService.getCompanyData().chCompany) {
+ 			retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
+		}
+		if (retailCompanyId===-1)
+			return false;
+		else
+			return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(function(dailyExchangeRatesData) {
+				if (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted != null && dailyExchangeRatesData.isSubmitted) {
+					$rootScope.showCashBagSubmission = true;
+				}
+				else {
+					$rootScope.showCashBagSubmission = false;
+				}
+			});
     }
-    
+
     return {
       getMenuList: getMenuList,
       deleteMenu: deleteMenu,

@@ -8,8 +8,8 @@
  */
 angular.module('ts5App')
   .controller('MainCtrl',
-    function($rootScope, $scope, companiesFactory, mainMenuService, globalMenuService, identityAccessService,
-      identityAccessFactory, companyFactory, currencyFactory, lodash, dateUtility, $q, menuService) {
+    function($rootScope, $scope, mainMenuService, globalMenuService, identityAccessService,
+      identityAccessFactory, lodash, $q, menuService) {
 
       $scope.viewName = 'TS5 Dashboard';
 

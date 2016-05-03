@@ -25,12 +25,7 @@ angular.module('ts5App')
 		  }
     }
 
-	  var promises = [
-	    menuService.isMenuCashbagRestrictUse(),
-        menuService.isShowManageCashBag(),
-        menuService.isShowCashBagSubmission()
-      ];
-      $q.all(promises).then(function () {
+	  function promiseResponseHandler() {
     	  var companyTypeId = globalMenuService.getCompanyData().companyTypeId;
     	  var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
     	  var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
@@ -61,7 +56,18 @@ angular.module('ts5App')
     			  deleteMenuCashBag('Cash Bag Submission');
     		  }
     	  }
-      });
+      }
+
+	  function checkForData() {
+		  var promises = [
+		          	    menuService.isMenuCashbagRestrictUse(),
+		                  menuService.isShowManageCashBag(),
+		                  menuService.isShowCashBagSubmission()
+		                ];
+		                $q.all(promises).then(promiseResponseHandler);
+	  }
+
+      $rootScope.$on('DEXsaved', checkForData);
 
       $scope.sendToEmber = function (path) {
         path = '/ember/#/' + path.substring(9);
@@ -87,7 +93,7 @@ angular.module('ts5App')
         return itemClass;
       };
       // end promises
-
+      checkForData();
     };
 
     return {
