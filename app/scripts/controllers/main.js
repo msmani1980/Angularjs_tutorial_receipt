@@ -13,18 +13,6 @@ angular.module('ts5App')
 
       $scope.viewName = 'TS5 Dashboard';
 
-      function getCompanyPreferenceBy(preferences, choiceName, optionName) {
-          var result = null;
-          angular.forEach(preferences, function(preference) {
-        	  if (result === null && preference.choiceName === choiceName && preference.optionName === optionName) {
-        		  result = preference;
-        	  }
-          });
-
-          return result;
-        }
-
-
       function checkMenuItemMatchesFeaturePermission(featurePermission, menuItemPermission) {
         if (!featurePermission.resource) {
           return false;
