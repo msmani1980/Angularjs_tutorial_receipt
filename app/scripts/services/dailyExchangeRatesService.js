@@ -24,7 +24,7 @@ angular.module('ts5App')
     		chCompanyId: '@chCompanyId',
     		retailCompanyId: '@retailCompanyId',
     		exchangeRateDate: '@exchangeRateDate'
-    }
+    };
     var previousExchangeRatesParameters = {};
 
     var actions = {

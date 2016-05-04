@@ -97,9 +97,7 @@ angular.module('ts5App')
 		          menuService.isShowManageCashBag(),
 		          menuService.isShowCashBagSubmission()
           ];
-          $q.all(promises).then(function () {
-        	  getDashboardDependencies ();
-    	});
+          $q.all(promises).then($q.all(promises).then(getDashboardDependencies));
       }
 
 
