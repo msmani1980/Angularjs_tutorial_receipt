@@ -13,15 +13,17 @@ angular.module('ts5App')
 
 	  function deleteMenuCashBag(menuName) {
 		  var indexToDelete = -1;
-		  
-		  angular.forEach($scope.menuItems, function (obj, index) {		  
-			  if(obj.name === menuName) {
-		        indexToDelete = index;
-		      }
-		  });  
-		  
-		  if(indxToDelete !== -1) {
-		       $scope.menuItems.splice(indexToDelete, 1)
+		  var itemsLength = $scope.menuItems.length;
+
+		  for (var i=0; i<itemsLength; i++) {
+			  if($scope.menuItems[i].name === menuName) {
+				  indexToDelete = i;
+			      break;
+			  }
+		  }
+
+		  if(indexToDelete !== -1) {
+		       $scope.menuItems.splice(indexToDelete, 1);
 		  }
 	   }
 

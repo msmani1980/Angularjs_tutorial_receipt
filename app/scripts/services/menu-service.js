@@ -142,21 +142,27 @@ angular.module('ts5App')
     	$rootScope.showManageCashBag = (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted !== null) ? true : false;
     	
 	}
+    
+    function isShowManageCashBagOrCashBagSubmission (isManageCashBag) {
+    	var todayDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+    	var companyId = globalMenuService.getCompanyData().companyId;
+    	var companyData = globalMenuService.getCompanyData();
+    	var retailCompanyId = (companyData && companyData.chCompany) ? companyData.chCompany.companyId : -1;
+    			
+    	if (retailCompanyId===-1) {
+    		return false;
+    	}
 
-    function isShowManageCashBag() {
-        var todayDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-        var companyId = globalMenuService.getCompanyData().companyId;
-		var retailCompanyId = -1;
-		var companyData = globalMenuService.getCompanyData();
-		
-		if ( companyData && companyData.chCompany) {
- 			retailCompanyId = companyData.chCompany.companyId;
-		}
-		if (retailCompanyId===-1) {
-			return false;
-		}		
-			
-		return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(setShowManageCashBag);
+    	if(isManageCashBag) {
+    		return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(setShowManageCashBag);
+    	}
+    	
+    	return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(setShowCashBagSubmission);
+    }
+    
+    function isShowManageCashBag() {		
+    	
+		return isShowManageCashBagOrCashBagSubmission (true);
     }
 
     function setShowCashBagSubmission (dailyExchangeRatesData) {
@@ -168,20 +174,8 @@ angular.module('ts5App')
 	}
     
     function isShowCashBagSubmission () {
-        var todayDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-        var companyId = globalMenuService.getCompanyData().companyId;
-		var retailCompanyId = -1;
-		var companyData = globalMenuService.getCompanyData();
-		
-		if (companyData && companyData.chCompany) {
- 			retailCompanyId = companyData.chCompany.companyId;
-		}
-		if (retailCompanyId===-1) {
-			return false;
-		}
-		
-		return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(setShowCashBagSubmission);
-		
+    	
+		return isShowManageCashBagOrCashBagSubmission (false);		
     }
 
     return {
