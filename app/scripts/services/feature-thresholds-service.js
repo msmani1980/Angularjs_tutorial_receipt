@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('featureThresholdsService', function($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/feature/:featureCode/thresholds/:thresholdId';
+    var requestURL = ENV.apiUrl + '/rsvr/api/feature/:featureCode/thresholds/:thresholdId';
 
     var requestParameters = {
       featureId: '@featureId',
