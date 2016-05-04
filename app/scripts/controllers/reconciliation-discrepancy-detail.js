@@ -9,7 +9,8 @@
  */
 angular.module('ts5App')
   .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, $route, messageService,
-                                                           reconciliationFactory, currencyFactory, storeInstanceFactory, globalMenuService, dateUtility, lodash) {
+                                                           reconciliationFactory, currencyFactory, storeInstanceFactory, globalMenuService, dateUtility, lodash,
+                                                           $location) {
 
     var $this = this;
 
@@ -873,6 +874,10 @@ angular.module('ts5App')
 
         return confirmModal('show');
       }
+    };
+
+    $scope.goToStoreInstanceAmend = function () {
+      $location.path('/store-instance-amend/' + $scope.storeInstance.id);
     };
 
     $scope.performAction = function () {

@@ -401,7 +401,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       scope.$digest();
       expect(scope.canExecuteActions()).toBeFalsy();
 
-      scope.storeInstance = { statusId: 8 };
+      scope.storeInstance = { statusId: 5 };
       scope.$digest();
       expect(scope.canExecuteActions()).toBeTruthy();
 
