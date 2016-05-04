@@ -168,7 +168,7 @@ angular.module('ts5App')
 
     function setShowCashBagSubmission (dailyExchangeRatesData) {
     	
-		if (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted != null && dailyExchangeRatesData.isSubmitted) {
+		if (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted !== null && dailyExchangeRatesData.isSubmitted) {
 			$rootScope.showCashBagSubmission = true;
 		}
 		else {

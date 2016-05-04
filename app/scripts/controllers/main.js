@@ -37,10 +37,10 @@ angular.module('ts5App')
 
       function hasMenuItemMatchingPackageWithPermissions(menuItem, featurePermissions) {
 
-    	  if (menuItem.name==='Manage Cash Bag' && $rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag) {
+    	  if (menuItem.name === 'Manage Cash Bag' && $rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag) {
 		      return false;
           }
-          if (menuItem.name=='Cash Bag Submission' && $rootScope.cashbagRestrictUse && !$rootScope.showCashBagSubmission) {
+          if (menuItem.name === 'Cash Bag Submission' && $rootScope.cashbagRestrictUse && !$rootScope.showCashBagSubmission) {
 		      return false;
           }
 
