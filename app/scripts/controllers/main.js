@@ -36,17 +36,16 @@ angular.module('ts5App')
       }
 
       function hasMenuItemMatchingPackageWithPermissions(menuItem, featurePermissions) {
+    	  var isManageCashBagAndShouldHide = (menuItem.name === 'Manage Cash Bag' && $rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag);
+    	  var isCashBagSubmissionAndShouldHide = (menuItem.name === 'Cash Bag Submission' && $rootScope.cashbagRestrictUse && !$rootScope.showCashBagSubmission);
 
-    	  if (menuItem.name === 'Manage Cash Bag' && $rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag) {
-		      return false;
-          }
-          if (menuItem.name === 'Cash Bag Submission' && $rootScope.cashbagRestrictUse && !$rootScope.showCashBagSubmission) {
-		      return false;
-          }
+    	  if(isManageCashBagAndShouldHide || isCashBagSubmissionAndShouldHide) {
+    		  return false;
+    	  }
 
           if (menuItem.permissions) {
-          return findPackageWithMatchingMatchingMenuItem(menuItem, featurePermissions);
-        }
+        	  return findPackageWithMatchingMatchingMenuItem(menuItem, featurePermissions);
+          }
 
         return true;
       }
