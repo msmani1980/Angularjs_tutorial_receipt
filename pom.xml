@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.egate</groupId>
 	<artifactId>portal-frontend</artifactId>
-	<version>HEAD-SNAPSHOT</version> <!-- will be replaced by /portal-release/apps.properties:frontend.version 
-		during the release build -->
+	<version>HEAD-SNAPSHOT</version> 
+	<!-- will be replaced by /portal-release/apps.properties:frontend.version 	during the release build -->
 	<name>angular</name>
 	<url>http://ts5.egatesoln.com</url>
 	<organization>
