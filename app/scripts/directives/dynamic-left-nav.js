@@ -12,18 +12,18 @@ angular.module('ts5App')
   var dynamicLeftNavController = function ($q, $rootScope, $scope, $location, $window, $filter, mainMenuService, globalMenuService, identityAccessFactory, lodash, menuService) {
 
 	  function deleteMenuCashBag(menuName) {
-		  var indx=-1;
-		  var i=0;
-		  angular.forEach($scope.menuItems, function(obj){
-			  if (obj.name === menuName) {
-				  indx=i;
-			  }
-			  i=i+1;
-		  });
-		  if (indx!==-1) {
-			  $scope.menuItems.splice(indx, 1);
+		  var indexToDelete = -1;
+		  
+		  angular.forEach($scope.menuItems, function (obj, index) {		  
+			  if(obj.name === menuName) {
+		        indexToDelete = index;
+		      }
+		  });  
+		  
+		  if(indxToDelete !== -1) {
+		       $scope.menuItems.splice(indexToDelete, 1)
 		  }
-    }
+	   }
 
 	  function promiseResponseHandler() {
     	  var companyTypeId = globalMenuService.getCompanyData().companyTypeId;
@@ -58,11 +58,11 @@ angular.module('ts5App')
 
 	  function checkForData() {
 		  var promises = [
-		          	    menuService.isMenuCashbagRestrictUse(),
-		                  menuService.isShowManageCashBag(),
-		                  menuService.isShowCashBagSubmission()
+		          	    	menuService.isMenuCashbagRestrictUse(),
+		          	    	menuService.isShowManageCashBag(),
+		          	    	menuService.isShowCashBagSubmission()
 		                ];
-		                $q.all(promises).then(promiseResponseHandler);
+		  $q.all(promises).then(promiseResponseHandler);
 	  }
 
       $rootScope.$on('DEXsaved', checkForData);

@@ -121,32 +121,26 @@ angular.module('ts5App')
         return result;
       }
 
+    function setCashbagRestrictUse (companyPreferencesData) {
+        var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+        var cmpCashbagRestrictUse = getCompanyPreferenceBy(orderedPreferences, 'Restrict Cash Bag', 'Restrict Cash Bag Use');
+       
+        $rootScope.cashbagRestrictUse = (cmpCashbagRestrictUse && cmpCashbagRestrictUse.isSelected) ? cmpCashbagRestrictUse.isSelected : true;
+    }  
+    
     function isMenuCashbagRestrictUse() {
         var payload = {
           startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
         };
 		var companyId = globalMenuService.getCompanyData().companyId;
 
-        return currencyFactory.getCompanyPreferences(payload, companyId).then(function(companyPreferencesData) {
-            var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
-            var cmpCashbagRestrictUse = getCompanyPreferenceBy(orderedPreferences, 'Restrict Cash Bag', 'Restrict Cash Bag Use');
-	        
-            if (cmpCashbagRestrictUse && cmpCashbagRestrictUse.isSelected) {
-	      		$rootScope.cashbagRestrictUse = cmpCashbagRestrictUse.isSelected;
-	        }
-	        else {
-	      		$rootScope.cashbagRestrictUse = true;
-	        }
-
-          });
+        return currencyFactory.getCompanyPreferences(payload, companyId).then(setCashbagRestrictUse);
     }
+    
     function setShowManageCashBag (dailyExchangeRatesData) {
-		if (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted !== null) {
-		  		$rootScope.showManageCashBag = true;
-		}
-		else {
-			$rootScope.showManageCashBag = false;
-		}
+    	
+    	$rootScope.showManageCashBag = (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted !== null) ? true : false;
+    	
 	}
 
     function isShowManageCashBag() {
@@ -160,20 +154,17 @@ angular.module('ts5App')
 		}
 		if (retailCompanyId===-1) {
 			return false;
-		}
-		else {
-			return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(setShowManageCashBag);
-		}
+		}		
+			
+		return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(setShowManageCashBag);
     }
 
     function setShowCashBagSubmission (dailyExchangeRatesData) {
     	
-		if (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted !== null && dailyExchangeRatesData.isSubmitted) {
-			$rootScope.showCashBagSubmission = true;
-		}
-		else {
-			$rootScope.showCashBagSubmission = false;
-		}
+    	$rootScope.showCashBagSubmission = (dailyExchangeRatesData && 
+    										dailyExchangeRatesData.isSubmitted != null && 
+    										dailyExchangeRatesData.isSubmitted) ? true : false;
+		
 	}
     
     function isShowCashBagSubmission () {
@@ -188,9 +179,9 @@ angular.module('ts5App')
 		if (retailCompanyId===-1) {
 			return false;
 		}
-		else {
-			return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(setShowCashBagSubmission);
-		}
+		
+		return currencyFactory.getDailyExchangeRatesForCmp(companyId, retailCompanyId, todayDate).then(setShowCashBagSubmission);
+		
     }
 
     return {
