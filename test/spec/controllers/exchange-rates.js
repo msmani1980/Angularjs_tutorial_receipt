@@ -26,7 +26,7 @@ describe('Controller: ExchangeRatesCtrl', function() {
   var dateUtility;
   var globalMenuService;
   var servedCompanyDataJSON;
-  var $rootScope;
+  
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     inject(function(_servedCompany_, _servedCurrencies_, _servedCompanyCurrencyGlobals_,
@@ -39,7 +39,7 @@ describe('Controller: ExchangeRatesCtrl', function() {
       companyPreferencesJSON = _servedCompanyPreferences_;
     });
 
-    $rootScope = $injector.get('$rootScope');
+    var rootScope = $injector.get('$rootScope');
     $httpBackend = $injector.get('$httpBackend');
     currencyFactory = $injector.get('currencyFactory');
     dateUtility = $injector.get('dateUtility');
@@ -51,7 +51,7 @@ describe('Controller: ExchangeRatesCtrl', function() {
     saveDailyExchangeRatesDefferred = $q.defer();
     spyOn(currencyFactory, 'saveDailyExchangeRates').and.returnValue(saveDailyExchangeRatesDefferred.promise);
 
-    spyOn($rootScope, '$broadcast').and.returnValue({});
+    spyOn(rootScope, '$broadcast').and.returnValue({});
 
     $httpBackend.whenGET(/company-preferences/).respond(companyPreferencesJSON);
     $httpBackend.whenGET(/companies/).respond(companyJSON);

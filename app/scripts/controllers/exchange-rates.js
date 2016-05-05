@@ -237,8 +237,8 @@ angular.module('ts5App')
 
     function showSuccessMessage(savedOrSubmitted) {
       var message = '<strong>Daily Exchange Rates</strong>: successfully ' + savedOrSubmitted + '!';
-      messageService.display('success', message);
       $rootScope.$broadcast('DEXsaved');
+      messageService.display('success', message);
     }
 
     function disableActionButtons(shouldDisable, saveOrSubmit) {
