@@ -82,6 +82,7 @@ describe('Controller: PostFlightDataListCtrl', function() {
   });
 
   describe('post trip data constructor calls', function() {
+
     describe('getStationList', function() {
       it('should call getStationList', function() {
         expect(postTripFactory.getStationList).toHaveBeenCalled();
@@ -99,6 +100,7 @@ describe('Controller: PostFlightDataListCtrl', function() {
     });
 
     describe('getAllCarrierNumbers', function() {
+
       it('should call getCarrierTypes', function() {
         expect(postTripFactory.getCarrierTypes).toHaveBeenCalled();
       });

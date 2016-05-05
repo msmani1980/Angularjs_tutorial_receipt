@@ -17,6 +17,10 @@ describe('Controller: MainCtrl', function() {
   var companyJSON;
   var companyTypesJSON;
   var scope;
+  var menuService;
+  var isMenuCashbagRestrictUseDeferred;
+  var isShowManageCashBagDeferred;
+  var isShowCashBagSubmissionDeferred;
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
@@ -27,6 +31,7 @@ describe('Controller: MainCtrl', function() {
     globalMenuService = $injector.get('globalMenuService');
     identityAccessFactory = $injector.get('identityAccessFactory');
     mainMenuService = $injector.get('mainMenuService');
+    menuService = $injector.get('menuService');
 
     companyJSON = $injector.get('servedCompany');
     companyTypesJSON = $injector.get('servedCompanyTypes');
@@ -36,6 +41,16 @@ describe('Controller: MainCtrl', function() {
       companyTypes: companyTypesJSON
     });
 
+    isMenuCashbagRestrictUseDeferred = $q.defer();
+    isMenuCashbagRestrictUseDeferred.resolve(true);
+  	isShowManageCashBagDeferred = $q.defer();
+  	isShowManageCashBagDeferred.resolve(true);
+  	isShowCashBagSubmissionDeferred = $q.defer();
+  	isShowCashBagSubmissionDeferred.resolve(true);
+    spyOn(menuService, 'isMenuCashbagRestrictUse').and.returnValue(isMenuCashbagRestrictUseDeferred.promise);
+    spyOn(menuService, 'isShowManageCashBag').and.returnValue(isShowManageCashBagDeferred.promise);
+    spyOn(menuService, 'isShowCashBagSubmission').and.returnValue(isShowCashBagSubmissionDeferred.promise);
+
     featuresInRoleDeferred = $q.defer();
     featuresInRoleDeferred.resolve(featuresInRoleJSON);
 
@@ -44,10 +59,13 @@ describe('Controller: MainCtrl', function() {
     MainCtrl = $controller('MainCtrl', {
       $scope: scope
     });
+  scope.$digest();
   }));
 
   describe('controller init', function() {
+
     it('should call featuresInRole', function() {
+	  scope.$digest();
       expect(identityAccessService.featuresInRole).toHaveBeenCalled();
     });
 

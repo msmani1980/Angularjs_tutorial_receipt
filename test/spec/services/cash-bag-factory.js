@@ -41,6 +41,8 @@ describe('Factory: cashBagFactory', function () {
     spyOn(cashBagService, 'updateCashBag');
     spyOn(cashBagService, 'getCashBag');
     spyOn(cashBagService, 'deleteCashBag');
+    spyOn(cashBagService, 'verifyCashBag');
+    spyOn(cashBagService, 'unverifyCashBag');
     spyOn(cashBagService, 'createCashBag');
     spyOn(cashBagService, 'reallocateCashBag');
     spyOn(cashBagService, 'mergeCashBag');
@@ -107,6 +109,16 @@ describe('Factory: cashBagFactory', function () {
       };
       cashBagFactory.createCashBag(cashBag);
       expect(cashBagService.createCashBag).toHaveBeenCalledWith(cashBag);
+    });
+
+    it('should call cashBagService verifyCashBag', function () {
+      cashBagFactory.verifyCashBag(1, 'AMEND');
+      expect(cashBagService.verifyCashBag).toHaveBeenCalledWith(1, 'AMEND');
+    });
+
+    it('should call cashBagService verifyCashBag', function () {
+      cashBagFactory.unverifyCashBag(1, 'AMEND');
+      expect(cashBagService.unverifyCashBag).toHaveBeenCalledWith(1, 'AMEND');
     });
   });
 

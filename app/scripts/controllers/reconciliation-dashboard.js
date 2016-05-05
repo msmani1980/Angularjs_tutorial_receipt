@@ -134,6 +134,7 @@ angular.module('ts5App')
       $this.recalculateActionsForInboundStatus(item, actions);
       $this.recalculateActionsForConfirmedStatus(item, actions);
       $this.recalculateActionsForDiscrepanciesStatus(item, actions);
+      $this.recalculateActionsForCommissionPaidStatus(item, actions);
 
       item.actions = actions;
     };
@@ -160,7 +161,8 @@ angular.module('ts5App')
         actions.push(
           'Review',
           'Pay Commission',
-          'Unconfirm'
+          'Unconfirm',
+          'Amend Data'
         );
       }
     };
@@ -170,9 +172,22 @@ angular.module('ts5App')
         actions.push(
           'Validate',
           'Review',
-          'Confirm'
+          'Confirm',
+          'Amend Data'
         );
       }
+    };
+
+    this.recalculateActionsForCommissionPaidStatus = function(item, actions) {
+      if (item.statusName === 'Commission Paid') {
+        actions.push(
+          'Amend Data'
+        );
+      }
+    };
+
+    $scope.requiresAmendVerification = function (storeInstance) {
+      return storeInstance.requiresAmendVerification;
     };
 
     this.getReconciliationPrecheckDevices = function(item) {
@@ -361,6 +376,12 @@ angular.module('ts5App')
       }).length > 0;
     };
 
+    $scope.hasSelectedInstancesWithRequiresAmendVerification = function () {
+      return $scope.reconciliationList.filter(function(item) {
+        return item.requiresAmendVerification === true;
+      }).length > 0;
+    };
+
     $scope.hasSelectedInstanceWithStatus = function(status) {
       var hasSelectedInstance = $scope.reconciliationList.filter(function(item) {
         return item.selected === true;
@@ -386,6 +407,10 @@ angular.module('ts5App')
 
     $scope.viewReview = function(instance) {
       $location.path('/reconciliation-discrepancy-detail/' + instance.id);
+    };
+
+    $scope.viewAmendData = function(instance) {
+      $location.path('/store-instance-amend/' + instance.id);
     };
 
     $scope.showExecuteActionModal = function(instance, action) {

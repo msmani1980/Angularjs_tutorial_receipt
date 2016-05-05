@@ -15,31 +15,17 @@ angular.module('ts5App')
     var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/carrier-instances';
     var reallocationRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/reallocate';
     var mergeRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/merge';
-    var cashBagCashRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:id/cash/:currencyId';
-    var verifyCashBagRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/verify/:verifyType';
-    var cashBagVerificationInfoRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/';
+    var verifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/verify/:type';
+    var unverifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/unverify/:type';
 
     var requestParameters = {
       id: '@id',
-      submission: '@submission'
+      submission: '@submission',
+      type: '@type'
     };
 
     var cashBagCurrencyRequestParams = {
       currencyId: '@currencyId'
-    };
-
-    var cashBagCashRequestParams = {
-      id: '@id',
-      currencyId: '@currencyId'
-    };
-
-    var verifyCashBagRequestParams = {
-      id: '@id',
-      verifyType: '@verifyType'
-    };
-
-    var cashBagVerifyInfoRequestParams = {
-      id: '@id'
     };
 
     var actions = {
@@ -67,26 +53,11 @@ angular.module('ts5App')
       mergeCashBag: {
         method: 'PUT'
       },
-      getCashBagCashList: {
-        method: 'GET'
-      },
-      getCashBagCash: {
-        method: 'GET'
-      },
-      createCashBagCash: {
-        method: 'POST'
-      },
-      updateCashBagCash: {
-        method: 'PUT'
-      },
-      deleteCashBagCash: {
-        method: 'DELETE'
-      },
       verifyCashBag: {
         method: 'PUT'
       },
-      checkCashBagVerify: {
-        method: 'GET'
+      unverifyCashBag: {
+        method: 'PUT'
       }
     };
 
@@ -95,9 +66,8 @@ angular.module('ts5App')
     var carrierInstancesRequestResource = $resource(carrierInstancesRequestURL, requestParameters, actions);
     var reallocateRequestResource = $resource(reallocationRequestURL, requestParameters, actions);
     var mergeRequestResource = $resource(mergeRequestURL, requestParameters, actions);
-    var cashBagCashRequestResource = $resource(cashBagCashRequestURL, cashBagCashRequestParams, actions);
-    var verifyCashBagRequestResource = $resource(verifyCashBagRequestURL, verifyCashBagRequestParams, actions);
-    var checkCashBagVerificationResource = $resource(cashBagVerificationInfoRequestURL, cashBagVerifyInfoRequestParams, actions);
+    var verifyRequestResource = $resource(verifyRequestURL, requestParameters, actions);
+    var unverifyRequestResource = $resource(unverifyRequestURL, requestParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -160,46 +130,23 @@ angular.module('ts5App')
       return carrierInstancesRequestResource.getCashBagCarrierInstances({ id: cashBagId }).$promise;
     }
 
-    function getCashBagCashList(cashBagId, payload) {
-      cashBagCashRequestParams.id = cashBagId;
-      cashBagCashRequestParams.currencyId = '';
-      return cashBagCashRequestResource.getCashBagCashList(payload).$promise;
-    }
+    var verifyCashBag = function (cashBagId, type) {
+      var payload = {
+        id: cashBagId,
+        type: type
+      };
 
-    function getCashBagCash(cashBagId, currencyId) {
-      cashBagCashRequestParams.id = cashBagId;
-      cashBagCashRequestParams.currencyId = currencyId;
-      return cashBagCashRequestResource.getCashBagCash().$promise;
-    }
+      return verifyRequestResource.verifyCashBag(payload).$promise;
+    };
 
-    function createCashBagCash(cashBagId, payload) {
-      cashBagCashRequestParams.id = cashBagId;
-      cashBagCashRequestParams.currencyId = '';
-      return cashBagCashRequestResource.createCashBagCash(payload).$promise;
-    }
+    var unverifyCashBag = function (cashBagId, type) {
+      var payload = {
+        id: cashBagId,
+        type: type
+      };
 
-    function updateCashBagCash(cashBagId, currencyId, payload) {
-      cashBagCashRequestParams.id = cashBagId;
-      cashBagCashRequestParams.currencyId = currencyId;
-      return cashBagCashRequestResource.updateCashBagCash(payload).$promise;
-    }
-
-    function deleteCashBagCash(cashBagId, currencyId) {
-      cashBagCashRequestParams.id = cashBagId;
-      cashBagCashRequestParams.currencyId = currencyId;
-      return cashBagCashRequestResource.deleteCashBagCash().$promise;
-    }
-
-    function verifyCashBag(cashBagId, type) {
-      verifyCashBagRequestParams.id = cashBagId;
-      verifyCashBagRequestParams.verifyType = type;
-      return verifyCashBagRequestResource.verifyCashBag().$promise;
-    }
-
-    function checkCashBagVerification(cashBagId) {
-      cashBagVerifyInfoRequestParams.id = cashBagId;
-      return checkCashBagVerificationResource.checkCashBagVerify().$promise;
-    }
+      return unverifyRequestResource.unverifyCashBag(payload).$promise;
+    };
 
     return {
       getCashBagList: getCashBagList,
@@ -211,12 +158,7 @@ angular.module('ts5App')
       getCashBagCarrierInstances: getCashBagCarrierInstances,
       reallocateCashBag: reallocateCashBag,
       mergeCashBag: mergeCashBag,
-      getCashBagCashList: getCashBagCashList,
-      getCashBagCash: getCashBagCash,
-      createCashBagCash: createCashBagCash,
-      updateCashBagCash: updateCashBagCash,
-      deleteCashBagCash: deleteCashBagCash,
       verifyCashBag: verifyCashBag,
-      checkCashBagVerification: checkCashBagVerification
+      unverifyCashBag: unverifyCashBag
     };
   });

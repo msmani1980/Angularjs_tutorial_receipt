@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemImportCtrl', function($scope, $q, $filter, itemImportFactory, messageService) {
+  .controller('ItemImportCtrl', function($scope, $q, $filter, itemImportFactory, messageService, dateUtility) {
 
     // private controller vars
     var companyId = null;
@@ -18,6 +18,10 @@ angular.module('ts5App')
 
     // private controller functions
     function canBeAddedToCompanyRetailList(retailItem) {
+      if (dateUtility.isYesterdayOrEarlier(retailItem.endDate)) {
+        return false;
+      }
+
       if ($filter('filter')(companyRetailItems, {
           itemCode: retailItem.itemCode
         }, true).length) {

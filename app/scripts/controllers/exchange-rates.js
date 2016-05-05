@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function($scope, $http, currencyFactory, globalMenuService, $q, messageService,
+  .controller('ExchangeRatesCtrl', function($rootScope, $scope, $http, currencyFactory, globalMenuService, $q, messageService,
     dateUtility, lodash) {
 
     $scope.viewName = 'Daily Exchange Rates';
@@ -237,6 +237,7 @@ angular.module('ts5App')
 
     function showSuccessMessage(savedOrSubmitted) {
       var message = '<strong>Daily Exchange Rates</strong>: successfully ' + savedOrSubmitted + '!';
+      $rootScope.$broadcast('DEXsaved');
       messageService.display('success', message);
     }
 
