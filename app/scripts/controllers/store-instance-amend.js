@@ -670,25 +670,21 @@ angular.module('ts5App')
       };
     }
 
-    function getUsernameById (userId) {
-      return 'Unknown ' + userId;
-    }
-
     function setupCashBags () {
       $scope.normalizedCashBags = $scope.cashBags.map(function (cashBag) {
         return {
           id: cashBag.id,
           cashBag: cashBag.cashBagNumber,
           bankRefNumber: cashBag.bankReferenceNumber,
-          isDeleted: cashBag.isDelete === 'true',
-          deletedByUser: getUsernameById(cashBag.updatedBy),
+          isDeleted: cashBag.delete === true,
+          deletedByUser: (cashBag.updatedByPerson) ? cashBag.updatedByPerson.userName : 'Unknown',
           deletedOn: dateUtility.formatDateForApp(cashBag.updatedOn),
           isManual: cashBag.originationSource === 2,
           scheduleNumber: cashBag.scheduleNumber,
           scheduleDate: dateUtility.formatTimestampForApp(cashBag.scheduleDate),
           isSubmitted: cashBag.isSubmitted,
           isVerified: (cashBag.amendVerifiedOn) ? true : false,
-          verifiedByUser: getUsernameById(cashBag.amendVerifiedBy),
+          verifiedByUser: (cashBag.amendVerifiedBy) ? cashBag.amendVerifiedBy.userName : 'Unknown',
           verifiedOn: dateUtility.formatTimestampForApp(cashBag.amendVerifiedOn),
           flightSectors: []
         };
@@ -800,7 +796,7 @@ angular.module('ts5App')
     }
 
     function setCashBags (cashBagsFromAPI) {
-      $scope.cashBags = angular.copy(cashBagsFromAPI.cashBags);
+      $scope.cashBags = angular.copy(cashBagsFromAPI.response);
       setupCashBags();
     }
 
@@ -887,7 +883,6 @@ angular.module('ts5App')
       var companyId = globalMenuService.company.get();
       var payload = {
         companyId: companyId,
-        isReconciliation: true,
         storeInstanceId: $routeParams.storeInstanceId
       };
 

@@ -226,7 +226,7 @@ angular.module('ts5App')
     };
 
     var getCashBags = function (payload) {
-      return cashBagService.getCashBagList(payload.companyId, payload);
+      return cashBagService.getCashBagVerifications(payload);
     };
 
     var deleteCashBag = function (id) {
