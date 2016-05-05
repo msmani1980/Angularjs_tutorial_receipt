@@ -356,7 +356,7 @@ angular.module('ts5App')
     }
 
     function checkCashBagVerification(cashBagId) {
-      return cashBagService.checkCashBagVerification(cashBagId);
+      return cashBagService.getCashBagVerifications(cashBagId);
     }
 
     return {
