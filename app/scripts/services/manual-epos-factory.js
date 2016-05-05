@@ -343,6 +343,14 @@ angular.module('ts5App')
       return cashBagService.getCashBagCashList(cashBagId, payload);
     }
 
+    function createCashBagCash(cashBagId, payload) {
+      cashBagService.createCashBagCash(cashBagId, payload);
+    }
+
+    function updateCashBagCash(cashBagId, cashId, payload) {
+      cashBagService.updateCashBagCash(cashBagId, cashId, payload);
+    }
+
     function getStoreInstance(storeInstanceId) {
       return storeInstanceService.getStoreInstance(storeInstanceId);
     }
@@ -356,7 +364,8 @@ angular.module('ts5App')
     }
 
     function checkCashBagVerification(cashBagId) {
-      return cashBagService.getCashBagVerifications(cashBagId);
+      var payload = { id: cashBagId };
+      return cashBagService.getCashBagVerifications(payload);
     }
 
     return {
@@ -373,7 +382,9 @@ angular.module('ts5App')
       getStoreInstance: getStoreInstance,
       verifyCashBag: verifyCashBag,
       unverifyCashBag: unverifyCashBag,
-      checkCashBagVerification: checkCashBagVerification
+      checkCashBagVerification: checkCashBagVerification,
+      createCashBagCash: createCashBagCash,
+      updateCashBagCash: updateCashBagCash
     };
 
   });

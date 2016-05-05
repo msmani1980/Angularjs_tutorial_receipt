@@ -56,14 +56,55 @@ angular.module('ts5App')
       return convertedAmount.toFixed(2);
     };
 
+    function verifyToggleSuccess() {
+      hideLoadingModal();
+      $scope.isVerified = !$scope.isVerified;
+    }
+
     $scope.verify = function () {
       showLoadingModal('Verifying');
-      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CASH').then(init, showErrors);
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CASH').then(verifyToggleSuccess, showErrors);
     };
 
-    //$scope.unverify = function () {
-    //  manualEposFactory.unverify()
-    //};
+    $scope.unverify = function () {
+      showLoadingModal('Verifying');
+      manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CASH').then(verifyToggleSuccess, showErrors);
+    };
+
+    function updateCashBagCash(cash) {
+      var convertedAmount = $scope.convertAmount(cash);
+      var payload = {
+        currencyId: cash.currencyId,
+        amount: cash.amount || 0,
+        convertedAmount: parseFloat(convertedAmount) || 0
+      };
+
+      return manualEposFactory.updateCashBagCash($routeParams.cashBagId, cash.id, payload);
+    }
+
+    function createCashBagCash(cash) {
+      var convertedAmount = $scope.convertAmount(cash);
+      var payload = {
+        currencyId: cash.currencyId,
+        amount: cash.amount || 0,
+        convertedAmount: parseFloat(convertedAmount) || 0
+      };
+
+      return manualEposFactory.createCashBagCash($routeParams.cashBagId, payload);
+    }
+
+    $scope.save = function () {
+      var promises = [];
+      angular.forEach($scope.currencyList, function (cash) {
+        if (cash.id) {
+          promises.push(updateCashBagCash(cash));
+        } else {
+          promises.push(createCashBagCash(cash));
+        }
+      });
+
+      $q.all(promises).then(init, showErrors);
+    };
 
     function setBaseCurrency(currencyList) {
       $scope.baseCurrency = {};
@@ -74,8 +115,12 @@ angular.module('ts5App')
     function mergeCashBagCash(cashBagCashList) {
       angular.forEach(cashBagCashList, function (cashBagCash) {
         var currencyIndex = lodash.findIndex($scope.currencyList, { currencyId: cashBagCash.currencyId });
-        $scope.currencyList[currencyIndex].amount = cashBagCash.amount;
-        $scope.currencyList[currencyIndex].convertedAmount = cashBagCash.convertedAmount;
+
+        if (currencyIndex >= 0) {
+          $scope.currencyList[currencyIndex].amount = cashBagCash.amount;
+          $scope.currencyList[currencyIndex].convertedAmount = cashBagCash.convertedAmount;
+          $scope.currencyList[currencyIndex].id = cashBagCash.id;
+        }
       });
     }
 
