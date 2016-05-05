@@ -17,6 +17,7 @@ angular.module('ts5App')
     var mergeRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/merge';
     var verifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/verify/:type';
     var unverifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/unverify/:type';
+    var cashBagVerificationsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id';
 
     var requestParameters = {
       id: '@id',
@@ -58,6 +59,9 @@ angular.module('ts5App')
       },
       unverifyCashBag: {
         method: 'PUT'
+      },
+      getCashBagVerifications: {
+        method: 'GET'
       }
     };
 
@@ -68,6 +72,7 @@ angular.module('ts5App')
     var mergeRequestResource = $resource(mergeRequestURL, requestParameters, actions);
     var verifyRequestResource = $resource(verifyRequestURL, requestParameters, actions);
     var unverifyRequestResource = $resource(unverifyRequestURL, requestParameters, actions);
+    var cashBagVerificationsRequestResource = $resource(cashBagVerificationsRequestURL, requestParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -81,6 +86,10 @@ angular.module('ts5App')
       }
 
       return requestResource.getCashBag(payload).$promise;
+    }
+
+    function getCashBagVerifications(payload) {
+      return cashBagVerificationsRequestResource.getCashBagVerifications(payload).$promise;
     }
 
     function getCashBag(cashBagId) {
@@ -159,6 +168,7 @@ angular.module('ts5App')
       reallocateCashBag: reallocateCashBag,
       mergeCashBag: mergeCashBag,
       verifyCashBag: verifyCashBag,
-      unverifyCashBag: unverifyCashBag
+      unverifyCashBag: unverifyCashBag,
+      getCashBagVerifications: getCashBagVerifications
     };
   });

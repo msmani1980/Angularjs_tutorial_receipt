@@ -509,7 +509,7 @@
             </h4>
           </div>
         </div>
-        <div class="accordion-wrapper" ng-repeat="cashBag in normalizedCashBags" ng-show="shouldShowCashBag(cashBag)">
+        <div class="accordion-wrapper" ng-repeat="cashBag in normalizedCashBags | orderBy: 'cashBag'" ng-show="shouldShowCashBag(cashBag)">
           <accordion class="store-instance-review-accordion">
             <accordion-group ng-init="cashBag.accordionOpen=true" is-open="cashBag.accordionOpen">
               <accordion-heading class="accordion-heading">

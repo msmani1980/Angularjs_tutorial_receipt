@@ -3,7 +3,7 @@
 describe('Controller: StoreInstanceAmendCtrl', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag-list.json'));
+  beforeEach(module('served/cash-bag-verifications.json'));
   beforeEach(module('served/store-instance.json'));
   beforeEach(module('served/company.json'));
   beforeEach(module('served/currencies.json'));
@@ -84,7 +84,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var getStationsDeferred;
   var stationsService;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagList_, _servedStoreInstance_, _servedCompany_,
+  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagVerifications_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
                               _servedChCashBag_, _servedPaymentReport_, _servedEmployees_, _servedCashBag_, _servedCashBagCarrierInstances_,
                               _servedPostTripData_, _servedTransactions_, _servedStoreInstanceList_, _servedStoreStatus_, _servedPostTripDataList_,
@@ -110,7 +110,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     schedulesDeferred = $q.defer();
     schedulesDeferred.resolve(schedulesResponseJSON);
 
-    cashBagsResponseJSON = _servedCashBagList_;
+    cashBagsResponseJSON = _servedCashBagVerifications_;
     cashBagsDeferred = $q.defer();
     cashBagsDeferred.resolve(cashBagsResponseJSON);
 
