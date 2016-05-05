@@ -351,6 +351,10 @@ angular.module('ts5App')
       return cashBagService.verifyCashBag(cashBagId, verifyType);
     }
 
+    function unverifyCashBag(cashBagId, verifyType) {
+      return cashBagService.unverifyCashBag(cashBagId, verifyType);
+    }
+
     function checkCashBagVerification(cashBagId) {
       return cashBagService.checkCashBagVerification(cashBagId);
     }
@@ -368,6 +372,7 @@ angular.module('ts5App')
       getDailyExchangeRate: getDailyExchangeRate,
       getStoreInstance: getStoreInstance,
       verifyCashBag: verifyCashBag,
+      unverifyCashBag: unverifyCashBag,
       checkCashBagVerification: checkCashBagVerification
     };
 

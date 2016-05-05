@@ -29,6 +29,7 @@ describe('Service: manualEposFactory', function() {
     spyOn(cashBagService, 'getCashBag');
     spyOn(cashBagService, 'getCashBagCashList');
     spyOn(cashBagService, 'verifyCashBag');
+    spyOn(cashBagService, 'unverifyCashBag');
     spyOn(cashBagService, 'checkCashBagVerification');
     spyOn(storeInstanceService, 'getStoreInstance');
   }));
@@ -103,6 +104,11 @@ describe('Service: manualEposFactory', function() {
     it('should call verifyCashBag from cashBagService', function () {
       manualEposFactory.verifyCashBag();
       expect(cashBagService.verifyCashBag).toHaveBeenCalled();
+    });
+
+    it('should call unverifyCashBag from cashBagService', function () {
+      manualEposFactory.unverifyCashBag();
+      expect(cashBagService.unverifyCashBag).toHaveBeenCalled();
     });
 
     it('should call checkCashBagVerification from cashBagService', function () {
