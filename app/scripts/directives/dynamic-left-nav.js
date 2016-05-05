@@ -9,63 +9,66 @@
 angular.module('ts5App')
   .directive('dynamicLeftNav', function () {
 
-  var dynamicLeftNavController = function ($q, $rootScope, $scope, $location, $window, $filter, mainMenuService, globalMenuService, identityAccessFactory, lodash, menuService) {
+    var dynamicLeftNavController = function ($q, $rootScope, $scope, $location, $window, $filter, mainMenuService, globalMenuService, identityAccessFactory, lodash, menuService) {
 
-	  function deleteMenuCashBag(menuName) {
-		  var indexToDelete = -1;
-		  var itemsLength = $scope.menuItems.length;
+      function deleteMenuCashBag(menuName) {
+        var indexToDelete = -1;
+        var itemsLength = $scope.menuItems.length;
 
-		  for (var i=0; i<itemsLength; i++) {
-			  if($scope.menuItems[i].name === menuName) {
-				  indexToDelete = i;
-			      break;
-			  }
-		  }
+        for (var i = 0; i < itemsLength; i++) {
+          if ($scope.menuItems[i].name === menuName) {
+            indexToDelete = i;
+            break;
+          }
+        }
 
-		  if(indexToDelete !== -1) {
-		       $scope.menuItems.splice(indexToDelete, 1);
-		  }
-	   }
-
-	  function promiseResponseHandler() {
-    	  var companyTypeId = globalMenuService.getCompanyData().companyTypeId;
-    	  var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
-    	  var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
-    	  var menu = mainMenuService.getMenu();
-    	  var menuItems = [];
-
-    	  if ($scope.title) {
-    		  menuItems = $filter('filter')(menu, {
-    			  title: $scope.title
-    		  }, true);
-    	  } else {
-    		  menuItems = $filter('filter')(menu, {
-    			  menuItems: {
-    				  route: $location.path()
-    			  }
-    		  });
-    	  }
-    	  if (companyTypeName, menuItems.length) {
-    		  $scope.menuItems = menuItems[0].menuItems;
-    	  }
-    	  if (companyTypeName === 'Cash Handler' && !$rootScope.showManageCashBag) {
-    		  // delete 'Manage Cash Bag' menu
-    		  deleteMenuCashBag('Manage Cash Bag');
-    	  }
-    	  if (companyTypeName === 'Cash Handler' && !$rootScope.showCashBagSubmission) {
-    		  // delete 'Cash Bag Submission' menu
-    		  deleteMenuCashBag('Cash Bag Submission');   		  
-    	  }
+        if (indexToDelete !== -1) {
+          $scope.menuItems.splice(indexToDelete, 1);
+        }
       }
 
-	  function checkForData() {
-		  var promises = [
-		          	    	menuService.isMenuCashbagRestrictUse(),
-		          	    	menuService.isShowManageCashBag(),
-		          	    	menuService.isShowCashBagSubmission()
-		                ];
-		  $q.all(promises).then(promiseResponseHandler);
-	  }
+      function promiseResponseHandler() {
+        var companyTypeId = globalMenuService.getCompanyData().companyTypeId;
+        var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
+        var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
+        var menu = mainMenuService.getMenu();
+        var menuItems = [];
+
+        if ($scope.title) {
+          menuItems = $filter('filter')(menu, {
+            title: $scope.title
+          }, true);
+        } else {
+          menuItems = $filter('filter')(menu, {
+            menuItems: {
+              route: $location.path()
+            }
+          });
+        }
+
+        if (companyTypeName, menuItems.length) {
+          $scope.menuItems = menuItems[0].menuItems;
+        }
+
+        if (companyTypeName === 'Cash Handler' && !$rootScope.showManageCashBag) {
+          // delete 'Manage Cash Bag' menu
+          deleteMenuCashBag('Manage Cash Bag');
+        }
+
+        if (companyTypeName === 'Cash Handler' && !$rootScope.showCashBagSubmission) {
+          // delete 'Cash Bag Submission' menu
+          deleteMenuCashBag('Cash Bag Submission');
+        }
+      }
+
+      function checkForData() {
+        var promises = [
+          menuService.isMenuCashbagRestrictUse(),
+          menuService.isShowManageCashBag(),
+          menuService.isShowCashBagSubmission()
+        ];
+        $q.all(promises).then(promiseResponseHandler);
+      }
 
       $rootScope.$on('DEXsaved', checkForData);
 
@@ -92,6 +95,7 @@ angular.module('ts5App')
 
         return itemClass;
       };
+
       // end promises
       checkForData();
     };

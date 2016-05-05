@@ -69,9 +69,10 @@ angular.module('ts5App')
     var updateCompanyExchangeRate = function (payload) {
       return companyExchangeRateService.updateCompanyExchangeRate(payload);
     };
+
     var getDailyExchangeRatesForCmp = function (companyId, retailCompanyId, exchangeRateDate) {
-        return dailyExchangeRatesService.getDailyExchangeRatesForCmp(companyId, retailCompanyId, exchangeRateDate);
-      };
+      return dailyExchangeRatesService.getDailyExchangeRatesForCmp(companyId, retailCompanyId, exchangeRateDate);
+    };
 
     return {
       getCompany: getCompany,
