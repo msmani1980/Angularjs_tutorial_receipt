@@ -9,6 +9,7 @@ describe('Service: dailyExchangeRatesService', function () {
   var dailyExchangeRatesService,
     $httpBackend,
     responseHandler,
+    responseRestHandler,
     dailyExchangeJSON,
     previousExchangeJSON;
   beforeEach(inject(function (_dailyExchangeRatesService_, $injector) {
@@ -96,7 +97,7 @@ describe('Service: dailyExchangeRatesService', function () {
 
     $httpBackend = $injector.get('$httpBackend');
     responseHandler = $httpBackend.whenGET(/daily-exchange-rates/);
-
+    responseRestHandler = $httpBackend.whenGET(/dailyexchangerate/);
   }));
 
   afterEach(function () {
@@ -131,6 +132,15 @@ describe('Service: dailyExchangeRatesService', function () {
         expect(previousExchangeRatesArray.dailyExchangeRateCurrencies[0].coinExchangeRate).toBe('1.0000');
       });
     });
+
+    it('should fetch today daily exchange rates array', function () {
+    	responseRestHandler.respond(dailyExchangeJSON);
+        $httpBackend.expectGET(/rsvr\/api\/dailyexchangerate/);
+        dailyExchangeRatesService.getDailyExchangeRatesForCmp(362, 326, '04132015').then(function (dailyExchangeRatesArray) {
+          expect(dailyExchangeRatesArray.dailyExchangeRates[0].exchangeRateDate).toBe('2015-04-13');
+        });
+      });
+
 
   });
 });
