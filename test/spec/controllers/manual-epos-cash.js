@@ -1,32 +1,96 @@
 'use strict';
 
-describe('Controller: ManualEposCashCtrl', function () {
+fdescribe('Controller: ManualEposCashCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
+  beforeEach(module('served/cash-bag.json'));
+  beforeEach(module('served/store-instance.json'));
+  beforeEach(module('served/currency-globals.json'));
+  beforeEach(module('served/daily-exchange-rate.json'));
+  beforeEach(module('served/cash-bag-verifications.json'));
+  beforeEach(module('served/cash-bag-cash.json'));
 
 
-  var ManualEposCashCtrl,
-    manualEposFactory,
-    controller,
-    scope;
+  var ManualEposCashCtrl;
+  var manualEposFactory;
+  var globalMenuService;
+  var dateUtility;
+  var controller;
+  var scope;
+  var cashBagId;
+
+  var cashBagDeferred;
+  var cashBagJSON;
+  var storeInstanceDeferred;
+  var storeInstanceJSON;
+
+  var currencyListDeferred;
+  var currencyListJSON;
+
+  var cashBagCashListDeferred;
+  var cashBagCashListJSON;
+
+  var dailyExchangeRatesDeferred;
+  var dailyExchangeRatesJSON;
+
+  var cashBagVerificationDeferred;
+  var cashBagVerificationJSON;
+
+  var mockBaseCurrency;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
 
-    //inject(function(_servedExpandedSalesCategories_) {
-    //  salesCategoriesJSON = _servedExpandedSalesCategories_;
-    //});
+    inject(function(_servedCashBag_, _servedStoreInstance_, _servedCurrencyGlobals_, _servedDailyExchangeRate_,
+                    _servedCashBagVerifications_, _servedCashBagCash_) {
+      cashBagJSON = _servedCashBag_;
+      storeInstanceJSON = _servedStoreInstance_;
+      currencyListJSON = _servedCurrencyGlobals_;
+      dailyExchangeRatesJSON = _servedDailyExchangeRate_;
+      cashBagVerificationJSON = _servedCashBagVerifications_;
+      cashBagCashListJSON = _servedCashBagCash_;
+    });
 
     manualEposFactory = $injector.get('manualEposFactory');
+    globalMenuService = $injector.get('globalMenuService');
+    dateUtility = $injector.get('dateUtility');
     controller = $controller;
 
-    //salesCategoriesDeferred = $q.defer();
-    //salesCategoriesDeferred.resolve(salesCategoriesJSON);
-    //spyOn(categoryFactory, 'getCategoryList').and.returnValue(salesCategoriesDeferred.promise);
+    cashBagDeferred = $q.defer();
+    cashBagDeferred.resolve(cashBagJSON);
+    spyOn(manualEposFactory, 'getCashBag').and.returnValue(cashBagDeferred.promise);
+
+    storeInstanceDeferred = $q.defer();
+    storeInstanceDeferred.resolve(storeInstanceJSON);
+    spyOn(manualEposFactory, 'getStoreInstance').and.returnValue(storeInstanceDeferred.promise);
+
+    currencyListDeferred = $q.defer();
+    currencyListDeferred.resolve(currencyListJSON);
+    spyOn(manualEposFactory, 'getCurrencyList').and.returnValue(currencyListDeferred.promise);
+
+    dailyExchangeRatesDeferred = $q.defer();
+    dailyExchangeRatesDeferred.resolve(dailyExchangeRatesJSON);
+    spyOn(manualEposFactory, 'getDailyExchangeRate').and.returnValue(dailyExchangeRatesDeferred.promise);
+
+    cashBagVerificationDeferred = $q.defer();
+    cashBagVerificationDeferred.resolve(cashBagVerificationJSON.response[0]);
+    spyOn(manualEposFactory, 'checkCashBagVerification').and.returnValue(cashBagVerificationDeferred.promise);
+
+    cashBagCashListDeferred = $q.defer();
+    cashBagCashListDeferred.resolve(cashBagCashListJSON);
+    spyOn(manualEposFactory, 'getCashBagCashList').and.returnValue(cashBagCashListDeferred.promise);
+
+    cashBagId = 123;
+    mockBaseCurrency = 23;
+    spyOn(globalMenuService, 'getCompanyData').and.returnValue({baseCurrencyId: mockBaseCurrency});
+
 
     scope = $rootScope.$new();
     ManualEposCashCtrl = $controller('ManualEposCashCtrl', {
-      $scope: scope
+      $scope: scope,
+      $routeParams: {
+        cashBagId: cashBagId
+      }
     });
     scope.$digest();
 
@@ -34,35 +98,51 @@ describe('Controller: ManualEposCashCtrl', function () {
 
   describe('init', function () {
     it('should get cash bag', function () {
-
+      expect(manualEposFactory.getCashBag).toHaveBeenCalledWith(cashBagId);
+      scope.$digest();
+      expect(scope.cashBag).toBeDefined();
     });
 
     it('should get the store instance tied to the cash bag' , function () {
-
+      expect(manualEposFactory.getStoreInstance).toHaveBeenCalled();
+      expect(scope.storeInstance).toBeDefined();
     });
 
     it('should get a list of currencies', function () {
-
+      var formattedScheduleDate = dateUtility.formatDate(scope.storeInstance.scheduleDate, 'YYYY-MM-DD','YYYYMMDD');
+      var expectedPayload = {startDate: formattedScheduleDate, endDate: formattedScheduleDate};
+      expect(manualEposFactory.getCurrencyList).toHaveBeenCalledWith(expectedPayload);
     });
 
     it('should get cash bag cash', function () {
-
+      expect(manualEposFactory.getCashBagCashList).toHaveBeenCalledWith(cashBagId, {});
     });
 
-    it('should get daily exchange rates', function () {
-
+    it('should get daily exchange rate', function () {
+      var dailyExchangeRateId = scope.cashBag.dailyExchangeRateId;
+      expect(manualEposFactory.getDailyExchangeRate).toHaveBeenCalledWith(dailyExchangeRateId);
     });
 
     it('should check the cash bag verification', function () {
-
+      expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
+      expect(scope.isVerified).toBeDefined();
     });
 
     it('should set the base currency', function () {
-
+      scope.$digest();
+      expect(scope.baseCurrency).toBeDefined();
+      expect(scope.baseCurrency.currencyId).toEqual(mockBaseCurrency);
     });
 
-    it('should attach a list of active currencies to scope', function () {
-
+    it('should attach a list of cash bag currencies to scope', function () {
+      expect(scope.currencyList).toBeDefined();
+      var expectedCurrencyObject = jasmine.objectContaining({
+        currencyId: 8,
+        currencyCode: 'GBP',
+        amount: 12,
+        convertedAmount: 12
+      });
+      expect(scope.currencyList[0]).toEqual(expectedCurrencyObject);
     });
   });
 
