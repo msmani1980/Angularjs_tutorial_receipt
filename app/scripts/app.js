@@ -316,7 +316,7 @@ angular.module('ts5App', [
   }).when('/manual-ecs', {
     templateUrl: 'views/manual-ECS.html',
     controller: 'ManualECSCtrl'
-  }).when('/manual-epos-dashboard', {
+  }).when('/manual-epos-dashboard/:cashBagId', {
     templateUrl: 'views/manual-epos-entry.html',
     controller: 'ManualEposEntryCtrl'
   }).when('/manual-epos-cash/:cashBagId', {

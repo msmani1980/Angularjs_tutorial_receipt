@@ -3,17 +3,17 @@
     <div class="row item-list-row">
       <div class="col-xs-8">
         <h2 class="view-name">Manual Epos Entry: <b>Add Cash</b><br>
-          <small>Cash Bag 123</small>
+          <small>Cash Bag {{ cashBag.cashBagNumber }}</small>
         </h2>
       </div>
 
       <div class="col-xs-4 text-right">
-        <a class="btn btn-default" href="/manual-epos-dashboard">
-          <span class="fa fa-times"></span> Cancel
+        <a class="btn btn-default" href="/#/manual-epos-dashboard/{{ cashBag.id }}">
+          <span class="fa fa-arrow-left"></span> Back
         </a>
-        <a class="btn btn-primary" href="/manual-epos-dashboard">
+        <button class="btn btn-primary" ng-click="save(true)">
           <span class="fa fa-check-square-o"></span> Save & Exit
-        </a>
+        </button>
       </div>
     </div>
   </div>
@@ -21,7 +21,7 @@
   <error-dialog form-object="manualCashForm" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <form name="manualCashForm" ng-submit="save()">
+  <form name="manualCashForm" ng-submit="save(false)">
 
     <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by areyes on 11/20/2015 at 12:34pm</div>
     <div class="panel panel-default">
