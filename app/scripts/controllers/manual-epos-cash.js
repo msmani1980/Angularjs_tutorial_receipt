@@ -37,6 +37,7 @@ angular.module('ts5App')
     $scope.convertAmount = function (currencyObject) {
       var convertedAmount = 0;
       if (!currencyObject.amount) {
+        currencyObject.convertedAmount = '0.00';
         return '0.00';
       }
 

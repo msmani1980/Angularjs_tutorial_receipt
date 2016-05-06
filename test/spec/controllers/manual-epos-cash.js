@@ -41,8 +41,8 @@ fdescribe('Controller: ManualEposCashCtrl', function () {
 
   beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
 
-    inject(function(_servedCashBag_, _servedStoreInstance_, _servedCurrencyGlobals_, _servedDailyExchangeRate_,
-                    _servedCashBagVerifications_, _servedCashBagCash_) {
+    inject(function (_servedCashBag_, _servedStoreInstance_, _servedCurrencyGlobals_, _servedDailyExchangeRate_,
+                     _servedCashBagVerifications_, _servedCashBagCash_) {
       cashBagJSON = _servedCashBag_;
       storeInstanceJSON = _servedStoreInstance_;
       currencyListJSON = _servedCurrencyGlobals_;
@@ -82,7 +82,7 @@ fdescribe('Controller: ManualEposCashCtrl', function () {
 
     cashBagId = 123;
     mockBaseCurrency = 23;
-    spyOn(globalMenuService, 'getCompanyData').and.returnValue({baseCurrencyId: mockBaseCurrency});
+    spyOn(globalMenuService, 'getCompanyData').and.returnValue({ baseCurrencyId: mockBaseCurrency });
 
 
     scope = $rootScope.$new();
@@ -103,14 +103,14 @@ fdescribe('Controller: ManualEposCashCtrl', function () {
       expect(scope.cashBag).toBeDefined();
     });
 
-    it('should get the store instance tied to the cash bag' , function () {
+    it('should get the store instance tied to the cash bag', function () {
       expect(manualEposFactory.getStoreInstance).toHaveBeenCalled();
       expect(scope.storeInstance).toBeDefined();
     });
 
     it('should get a list of currencies', function () {
-      var formattedScheduleDate = dateUtility.formatDate(scope.storeInstance.scheduleDate, 'YYYY-MM-DD','YYYYMMDD');
-      var expectedPayload = {startDate: formattedScheduleDate, endDate: formattedScheduleDate};
+      var formattedScheduleDate = dateUtility.formatDate(scope.storeInstance.scheduleDate, 'YYYY-MM-DD', 'YYYYMMDD');
+      var expectedPayload = { startDate: formattedScheduleDate, endDate: formattedScheduleDate };
       expect(manualEposFactory.getCurrencyList).toHaveBeenCalledWith(expectedPayload);
     });
 
@@ -147,10 +147,31 @@ fdescribe('Controller: ManualEposCashCtrl', function () {
   });
 
   describe('convert cash amount', function () {
+    it('should use bank exchange rate for bank amounts', function () {
 
+    });
+
+    it('should use paper and coin exchange rate for paper/coin amounts', function () {
+
+    });
   });
 
   describe('sum converted amounts', function () {
+    it('should return the sum of all converted amounts', function () {
+      scope.currencyList = [{
+        convertedAmount: '1.00'
+      }, {
+        convertedAmount: '2.50'
+      }, {
+        convertedAmount: '5.00001'
+      }];
+
+      var sum = scope.sumConvertedAmounts();
+      expect(sum).toEqual('8.50');
+    });
+  });
+
+  describe('verify and unverify', function () {
 
   });
 
