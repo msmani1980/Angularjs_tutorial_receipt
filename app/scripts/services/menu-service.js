@@ -11,8 +11,8 @@ angular.module('ts5App')
   .service('menuService', function ($rootScope, $resource, ENV, Upload, dateUtility, $http, globalMenuService, currencyFactory, lodash) {
 
     $rootScope.cashbagRestrictUse = true;
-    $rootScope.showManageCashBag = false;
-    $rootScope.showCashBagSubmission = false;
+    $rootScope.showManageCashBag = true;
+    $rootScope.showCashBagSubmission = true;
 
     function transformRequest(data) {
       data = angular.fromJson(data);
@@ -125,7 +125,7 @@ angular.module('ts5App')
       var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
       var cmpCashbagRestrictUse = getCompanyPreferenceBy(orderedPreferences, 'Restrict Cash Bag', 'Restrict Cash Bag Use');
 
-      $rootScope.cashbagRestrictUse = (cmpCashbagRestrictUse && cmpCashbagRestrictUse.isSelected) ? cmpCashbagRestrictUse.isSelected : true;
+      $rootScope.cashbagRestrictUse = (cmpCashbagRestrictUse && cmpCashbagRestrictUse.isSelected !== null) ? cmpCashbagRestrictUse.isSelected : true;
     }
 
     function isMenuCashbagRestrictUse() {
@@ -139,7 +139,7 @@ angular.module('ts5App')
 
     function setShowManageCashBag(dailyExchangeRatesData) {
 
-      $rootScope.showManageCashBag = (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted !== null) ? true : false;
+      $rootScope.showManageCashBag = (!$rootScope.cashbagRestrictUse || (dailyExchangeRatesData && dailyExchangeRatesData.isSubmitted !== null)) ? true : false;
 
     }
 
@@ -167,9 +167,9 @@ angular.module('ts5App')
 
     function setShowCashBagSubmission(dailyExchangeRatesData) {
 
-      $rootScope.showCashBagSubmission = (dailyExchangeRatesData &&
+      $rootScope.showCashBagSubmission = (!$rootScope.cashbagRestrictUse || (dailyExchangeRatesData &&
       dailyExchangeRatesData.isSubmitted !== null &&
-      dailyExchangeRatesData.isSubmitted) ? true : false;
+      dailyExchangeRatesData.isSubmitted)) ? true : false;
 
     }
 

@@ -50,12 +50,12 @@ angular.module('ts5App')
           $scope.menuItems = menuItems[0].menuItems;
         }
 
-        if (companyTypeName === 'Cash Handler' && !$rootScope.showManageCashBag) {
+        if (companyTypeName === 'Cash Handler' && $rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag) {
           // delete 'Manage Cash Bag' menu
           deleteMenuCashBag('Manage Cash Bag');
         }
 
-        if (companyTypeName === 'Cash Handler' && !$rootScope.showCashBagSubmission) {
+        if (companyTypeName === 'Cash Handler' && $rootScope.cashbagRestrictUse && !$rootScope.showCashBagSubmission) {
           // delete 'Cash Bag Submission' menu
           deleteMenuCashBag('Cash Bag Submission');
         }
