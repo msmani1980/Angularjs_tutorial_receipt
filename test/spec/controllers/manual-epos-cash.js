@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ManualEposCashCtrl', function () {
+describe('Controller: ManualEposCashCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -36,6 +36,12 @@ fdescribe('Controller: ManualEposCashCtrl', function () {
 
   var cashBagVerificationDeferred;
   var cashBagVerificationJSON;
+
+  var verifyDeferred;
+  var unverifyDeferred;
+
+  var createDeferred;
+  var updateDeferred;
 
   var mockBaseCurrency;
 
@@ -79,6 +85,22 @@ fdescribe('Controller: ManualEposCashCtrl', function () {
     cashBagCashListDeferred = $q.defer();
     cashBagCashListDeferred.resolve(cashBagCashListJSON);
     spyOn(manualEposFactory, 'getCashBagCashList').and.returnValue(cashBagCashListDeferred.promise);
+
+    verifyDeferred = $q.defer();
+    verifyDeferred.resolve({});
+    spyOn(manualEposFactory, 'verifyCashBag').and.returnValue(verifyDeferred.promise);
+
+    unverifyDeferred = $q.defer();
+    unverifyDeferred.resolve({});
+    spyOn(manualEposFactory, 'unverifyCashBag').and.returnValue(unverifyDeferred.promise);
+
+    createDeferred = $q.defer();
+    createDeferred.resolve({});
+    spyOn(manualEposFactory, 'createCashBagCash').and.returnValue(createDeferred.promise);
+
+    updateDeferred = $q.defer();
+    updateDeferred.resolve({});
+    spyOn(manualEposFactory, 'updateCashBagCash').and.returnValue(updateDeferred.promise);
 
     cashBagId = 123;
     mockBaseCurrency = 23;
@@ -148,11 +170,40 @@ fdescribe('Controller: ManualEposCashCtrl', function () {
 
   describe('convert cash amount', function () {
     it('should use bank exchange rate for bank amounts', function () {
-
+      var mockCurrencyObject = {
+        amount: '1.00',
+        exchangeRate: {
+          bankExchangeRate: 0.50,
+          paperExchangeRate: null,
+          coinExchangeRate: null
+        }
+      };
+      var convertedAmount = scope.convertAmount(mockCurrencyObject);
+      expect(convertedAmount).toEqual('2.00');
     });
 
     it('should use paper and coin exchange rate for paper/coin amounts', function () {
+      var mockCurrencyObject = {
+        amount: '1.50',
+        exchangeRate: {
+          bankExchangeRate: null,
+          paperExchangeRate: 0.25,
+          coinExchangeRate: 0.5
+        }
+      };
+      var convertedAmount = scope.convertAmount(mockCurrencyObject);
+      expect(convertedAmount).toEqual('5.00');
+    });
 
+    it('should default to 0 if amount is empty', function () {
+      var mockCurrencyObject = {
+        amount: '',
+        exchangeRate: {
+          bankExchangeRate: 1.00
+        }
+      };
+      var convertedAmount = scope.convertAmount(mockCurrencyObject);
+      expect(convertedAmount).toEqual('0.00');
     });
   });
 
@@ -172,19 +223,51 @@ fdescribe('Controller: ManualEposCashCtrl', function () {
   });
 
   describe('verify and unverify', function () {
+    it('should call verify function and update scope var', function () {
+      scope.isVerified = false;
+      scope.verify();
+      expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
+      scope.$digest();
+      expect(scope.isVerified).toEqual(true);
+    });
 
+    it('should call unverify function and update scope var', function () {
+      scope.isVerified = true;
+      scope.unverify();
+      expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
+      scope.$digest();
+      expect(scope.isVerified).toEqual(false);
+    });
   });
 
   describe('saving cash bag cash', function () {
-    it('should call create for new entries', function () {
+    var expectedPayload;
+    beforeEach(function () {
+      scope.currencyList = [{
+        amount: '1.00',
+        convertedAmount: '2.50',
+        currencyId: 3
+      }];
 
+      expectedPayload = {
+        amount: 1,
+        convertedAmount: 2.5,
+        currencyId: 3
+      };
+    });
+
+    it('should call create for new entries', function () {
+      scope.save();
+      expect(manualEposFactory.createCashBagCash).toHaveBeenCalledWith(cashBagId, expectedPayload);
     });
 
     it('should call update for existing entries', function () {
-
+      var cashId = 4;
+      scope.currencyList[0].id = cashId;
+      scope.save();
+      expect(manualEposFactory.updateCashBagCash).toHaveBeenCalledWith(cashBagId, cashId, expectedPayload);
     });
 
   });
-
 
 });

@@ -73,22 +73,20 @@ angular.module('ts5App')
     };
 
     function updateCashBagCash(cash) {
-      var convertedAmount = $scope.convertAmount(cash);
       var payload = {
         currencyId: cash.currencyId,
-        amount: cash.amount || 0,
-        convertedAmount: parseFloat(convertedAmount) || 0
+        amount: parseFloat(cash.amount) || 0,
+        convertedAmount: parseFloat(cash.convertedAmount) || 0
       };
 
       return manualEposFactory.updateCashBagCash($routeParams.cashBagId, cash.id, payload);
     }
 
     function createCashBagCash(cash) {
-      var convertedAmount = $scope.convertAmount(cash);
       var payload = {
         currencyId: cash.currencyId,
-        amount: cash.amount || 0,
-        convertedAmount: parseFloat(convertedAmount) || 0
+        amount: parseFloat(cash.amount) || 0,
+        convertedAmount: parseFloat(cash.convertedAmount) || 0
       };
 
       return manualEposFactory.createCashBagCash($routeParams.cashBagId, payload);
