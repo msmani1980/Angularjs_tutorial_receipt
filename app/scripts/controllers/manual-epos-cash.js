@@ -98,7 +98,7 @@ angular.module('ts5App')
       if (shouldExit) {
         $location.path('manual-epos-dashboard/' + $routeParams.cashBagId);
       }
-      
+
       messageService.success('Manual cash data successfully saved!');
     }
 

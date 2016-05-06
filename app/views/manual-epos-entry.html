@@ -4,12 +4,12 @@
     <div class="row item-list-row">
       <div class="col-xs-8">
         <h2 class="view-name">Manual Epos Entry<br>
-          <small>Cash Bag 123</small>
+          <small>Cash Bag {{ cashBag.cashBagNumber }}</small>
         </h2>
       </div>
 
       <div class="col-xs-4 text-right">
-        <a class="btn btn-default" href="/manual-epos-dashboard">
+        <a class="btn btn-default" href="/#/store-instance-amend/{{ cashBag.storeInstanceId }}">
           <span class="fa fa-arrow-left"></span> Back
         </a>
     </div>
@@ -36,7 +36,7 @@
           </div>
           <div class="col-xs-4">
             <button class="btn btn-primary col-xs-12" disabled="true">
-              <span class="fa fa-check-circle" ng-show="isFormVerified('discounts')"></span> Discounts
+              <span class="fa fa-check-circle" ng-show="isFormVerified('discount')"></span> Discounts
             </button>
           </div>
         </div>
@@ -45,7 +45,7 @@
         <div class="row">
           <div class="col-xs-4">
             <button class="btn btn-primary col-xs-12" disabled="true">
-              <span class="fa fa-check-circle" ng-show="isFormVerified('promotions')"></span> Promotions
+              <span class="fa fa-check-circle" ng-show="isFormVerified('promotion')"></span> Promotions
             </button>
           </div>
           <div class="col-xs-4">
