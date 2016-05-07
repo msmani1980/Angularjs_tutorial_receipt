@@ -22,6 +22,7 @@ describe('Controller: ManualEposCashCtrl', function () {
 
   var cashBagDeferred;
   var cashBagJSON;
+
   var storeInstanceDeferred;
   var storeInstanceJSON;
 
