@@ -59,16 +59,16 @@ angular.module('ts5App')
       return convertedAmount.toFixed(2);
     };
 
-    function setVerifiedData (verifiedDataFromAPI) {
+    function setVerifiedData(verifiedDataFromAPI) {
       $scope.isVerified = (!!verifiedDataFromAPI.creditCardVerifiedOn) || false;
-      if(!$scope.isVerified) {
+      if (!$scope.isVerified) {
         $scope.verifiedInfo = {};
         return;
       }
 
       var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI.cashVerifiedOn);
       $scope.verifiedInfo = {
-        verifiedBy: (verifiedDataFromAPI.cashVerifiedBy) ? verifiedDataFromAPI.cashVerifiedBy.firstName + ' ' + verifiedDataFromAPI.cashVerifiedBy.lastName :  'Unknown User',
+        verifiedBy: (verifiedDataFromAPI.cashVerifiedBy) ? verifiedDataFromAPI.cashVerifiedBy.firstName + ' ' + verifiedDataFromAPI.cashVerifiedBy.lastName : 'Unknown User',
         verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
       };
     }
