@@ -1,856 +1,789 @@
-<!-- Manual Epos Angular Mockup -->
+<div class="container module-container">
 
-<!-- Manual Epos - Top Header -->
-<div class="top-header manual-epos">
-  <div class="container">
-    <div class="edit-controls">
-
-      <div class="row">
-        <div class="col-xs-12 col-sm-3">
-          <h4 class="view-name"> {{ viewName }} </h4>
-        </div>
-
-        <div class="col-xs-12 col-sm-9 text-left">
-
-          <div class="manual-epos-panel-option" ng-repeat="(key, panel) in panelNames track by $index">
-            <div class="row">
-              <div class="col-xs-12 col-sm-3 col-md-5">
-                <input bs-switch
-                 ng-model="panel.show"
-                 type="checkbox"
-                 switch-size="small"
-                 switch-on-color="info"
-                 switch-on-text="Yes"
-                 switch-off-text="No"/>
-               </div>
-               <div class="col-xs-12 col-sm-12 col-md-7 epos-panel-option-text">{{panel.name}} <i ng-if="panel.verified" class="fa fa-check-circle"></i></div>
-            </div>
-          </div>
-
-          <div class="manual-epos-panel-option">
-            <div class="row">
-              <div class="col-xs-12 col-sm-3 col-md-5">
-                <input bs-switch
-                 ng-model="showAll"
-                 type="checkbox"
-                 switch-size="small"
-                 switch-on-color="info"
-                 switch-on-text="Yes"
-                 switch-off-text="No"/>
-              </div>
-              <div class="col-xs-12 col-sm-12 col-md-7 epos-panel-option-text"><i><b>Show All Forms</b></i></div>
-            </div>
-          </div>
-
-        </div>
+<div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-8">
+        <h2 class="view-name">Manual Epos Entry<br>
+          <small>Cash Bag {{ cashBag.cashBagNumber }}</small>
+        </h2>
       </div>
 
-      <i>Select form areas to hide / show</i>
-      <br>
-      <i><i class="fa fa-check-circle"></i> Indicates a verified section</i>
-
+      <div class="col-xs-4 text-right">
+        <a class="btn btn-default" href="/#/store-instance-amend/{{ cashBag.storeInstanceId }}">
+          <span class="fa fa-arrow-left"></span> Back
+        </a>
     </div>
   </div>
-</div>
-<!-- End - Manual Epos - Top Header -->
 
-<!-- Container -->
-<div class="manual-epos-container container">
-
-  <!--Split Columns for Cash/Credit-->
-  <div class="row">
-    <div class="col-xs-12 col-sm-6">
-
-      <!-- Cash Panel -->
-      <div class="panel panel-default" ng-show="shouldShowPanel('Cash') || showAll">
-        <div class="panel-heading header-blue"><b>Cash</b> <i ng-if="panelIsVerified('Cash')" class="fa fa-check-circle"></i></div>
-        <div class="panel-body">
-
-          <div class="row">
-            <div class="col-xs-12 col-sm-12">
-              <div class="input-group">
-                <span class="input-group-addon" id="cash-filter">Filter</span>
-                <input type="text"
-                  class="form-control"
-                  ng-model="filter.cash"
-                  placeholder="Select Currency Codes to filter by ..."
-                  aria-describedby="cash-filter"/>
-              </div>
-            </div>
-          </div>
-
-          <div class="table-responsive">
-            <table class="table table-hover">
-
-              <tr class="active">
-                <th>Amount</th>
-                <th>Promotion Value (AUD)</th>
-              </tr>
-
-              <!-- Start Cash/Currency loop -->
-              <tr ng-repeat="cash in companyCashList | filter:{code: filter.cash} track by $index">
-
-                <td>
-                  <div class="input-group" style="max-width:300px">
-                  <span class="input-group-addon" id="cash">{{cash.code}}</span>
-                  <input type="number"
-                    class="form-control"
-                    ng-model="cash.amount"
-                    placeholder="12345678.91"
-                    aria-describedby="cash"
-                    style="min-width:100px"/>
-                    </div>
-                </td>
-
-                <td>
-                  <input type="number"
-                    class="form-control"
-                    ng-model="cash.audValue"
-                    placeholder="12345678.91"
-                    aria-describedby="currency"
-                    style="min-width:100px"/>
-                </td>
-
-              </tr>
-
-            </table>
-          </div>
-
-          <div class="panel-divider"></div>
-
-          <div class="row">
-            <div class="col-sm-offset-4"></div>
-              <div class="col-xs-12 col-sm-4 text-right"><b>Grand Total</b></div>
-              <div class="col-xs-12 col-sm-4">
-                <input class="form-control" type="number" value="14.00" disabled="true"/>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel-footer">
-            <div class="row">
-              <div class="col-xs-12 text-right">
-                <button class="btn btn-success" ng-click="verifyPanel('Cash')">Verify</button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <!-- End Cash Panel -->
-
-    <div class="col-xs-12 col-sm-6">
-    <!-- Credit Panel -->
-    <div class="panel panel-default" ng-show="shouldShowPanel('Credit Card') || showAll">
-      <div class="panel-heading header-blue"><b>Credit Card</b> <i ng-if="panelIsVerified('Credit Card')" class="fa fa-check-circle"></i></div>
+    <br>
+    <div class="panel panel-default">
       <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <p><span class="fa fa-check-circle"></span> <i>Indicates a verified section</i></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4">
+            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('cash')">
+              <span class="fa fa-check-circle" ng-show="isFormVerified('cash')"></span> Cash
+            </button>
+          </div>
+          <div class="col-xs-4">
+            <button class="btn btn-primary col-xs-12" disabled="true">
+              <span class="fa fa-check-circle" ng-show="isFormVerified('credit')"></span> Credit Card
+            </button>
+          </div>
+          <div class="col-xs-4">
+            <button class="btn btn-primary col-xs-12" disabled="true">
+              <span class="fa fa-check-circle" ng-show="isFormVerified('discount')"></span> Discounts
+            </button>
+          </div>
+        </div>
+        <br>
 
         <div class="row">
-          <div class="col-xs-12 col-sm-12">
-            <div class="input-group">
-              <span class="input-group-addon" id="credit-filter">Filter</span>
-              <input type="text"
-                class="form-control"
-                ng-model="filter.creditCard"
-                placeholder="Select Currency Codes to filter by ..."
-                aria-describedby="credit-filter"/>
-            </div>
+          <div class="col-xs-4">
+            <button class="btn btn-primary col-xs-12" disabled="true">
+              <span class="fa fa-check-circle" ng-show="isFormVerified('promotion')"></span> Promotions
+            </button>
+          </div>
+          <div class="col-xs-4">
+            <button class="btn btn-primary col-xs-12" disabled="true">
+              <span class="fa fa-check-circle" ng-show="isFormVerified('virtual')"></span> Virtual Items
+            </button>
+          </div>
+          <div class="col-xs-4">
+            <button class="btn btn-primary col-xs-12" disabled="true">
+              <span class="fa fa-check-circle" ng-show="isFormVerified('voucher')"></span> Voucher Items
+            </button>
           </div>
         </div>
+        <br>
+      </div>
 
-        <div class="table-responsive">
-          <table class="table table-hover">
-
-            <tr class="active">
-              <th>Amount</th>
-              <th>Promotion Value (AUD)</th>
-            </tr>
-
-            <!-- Start Promotion loop -->
-            <tr ng-repeat="credit in companyCreditCardList | filter:{code: filter.creditCard} track by $index">
-
-              <td>
-                <div class="input-group" style="max-width:300px">
-                <span class="input-group-addon" id="cash">{{credit.code}}</span>
-                <input type="number"
-                  class="form-control"
-                  ng-model="credit.amount"
-                  placeholder="12345678.91"
-                  aria-describedby="credit"
-                  style="min-width:100px"/>
-                  </div>
-              </td>
-
-              <td>
-                <input type="number"
-                  class="form-control"
-                  ng-model="credit.audValue"
-                  placeholder="12345678.91"
-                  aria-describedby="currency"
-                  style="min-width:100px"/>
-              </td>
-
-            </tr>
-
-          </table>
-        </div>
-
-        <div class="panel-divider"></div>
-
-        <div class="row">
-          <div class="col-sm-offset-4"></div>
-            <div class="col-xs-12 col-sm-4 text-right"><b>Grand Total</b></div>
-            <div class="col-xs-12 col-sm-4">
-              <input class="form-control" type="number" value="7.00" disabled="true"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel-footer">
-          <div class="row">
-            <div class="col-xs-12 text-right">
-              <button class="btn btn-success" ng-click="verifyPanel('Credit Card')">Verify</button>
-            </div>
-          </div>
-        </div>
 
       </div>
     </div>
-    <!-- End Credit Panel -->
-  </div>
-  <!-- End Credit / Cash Panel -->
-
-  <!-- Promotions Panel -->
-  <div class="panel panel-default" ng-show="shouldShowPanel('Promotions') || showAll">
-    <div class="panel-heading header-blue"><b>Promotions</b> <i ng-if="panelIsVerified('Promotions')" class="fa fa-check-circle"></i></div>
-    <div class="panel-body">
-
-      <div class="row">
-        <div class="col-xs-4 col-sm-2">
-          <b>Operating Currency</b>
-        </div>
-        <div class="form-group">
-          <div class="col-xs-4 col-sm-2">
-            <ui-select ng-model="currencyObj.promotions.currency"
-               theme="bootstrap"
-               ng-disabled="disabled"
-               reset-search-input="false"
-               style="min-width: 200px;">
-              <ui-select-match placeholder="Select Currency ...">
-                {{$select.selected.code}}
-              </ui-select-match>
-              <ui-select-choices repeat="currency in currencyList">
-                <div ng-bind-html="currency.code | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel-divider"></div>
-
-      <div class="row">
-        <div class="col-xs-12 col-sm-12">
-          <div class="input-group">
-            <span class="input-group-addon" id="promotions-filter">Filter</span>
-            <input type="text"
-              class="form-control"
-              ng-model="filter.promotions"
-              placeholder="Select promotions to filter by ..."
-              aria-describedby="promotions-filter"/>
-          </div>
-        </div>
-      </div>
-
-      <div class="table-responsive">
-        <table class="table table-hover">
-
-          <tr class="active">
-            <th>Promotion</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th>Promotion Value (CUR)</th>
-            <th>Promotion Value (AUD)</th>
-          </tr>
-
-          <!-- Start Promotion loop -->
-          <tr ng-repeat="promotion in companyPromotionsList | filter:{promotionName: filter.promotions} track by $index">
-
-            <td>
-              <ui-select ng-model="promotion"
-                 theme="bootstrap"
-                 ng-disabled="true"
-                 reset-search-input="false">
-                <ui-select-match placeholder="Select promotions to filter by ...">
-                  {{$select.selected.promotionName}}
-                </ui-select-match>
-                <ui-select-choices repeat="promotion in promotionsList">
-                  <div ng-bind-html="promotion.promotionName | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </td>
-
-            <td>
-              <div class="input-group" style="max-width:300px">
-                <span class="input-group-addon" id="currency">{{currencyObj.promotions.currency.code}}</span>
-                <input type="number"
-                  class="form-control"
-                  ng-model="promotion.price"
-                  placeholder="12345678.91"
-                  aria-describedby="currency"
-                  style="min-width:100px"/>
-              </div>
-            </td>
-
-            <td>
-              <input type="number"
-                class="form-control"
-                ng-model="promotion.quantity"
-                placeholder="12345"
-                style="width: 100px"/>
-            </td>
-
-            <td>
-              <input type="number"
-                class="form-control"
-                ng-model="promotion.currencyValue"
-                disabled="true"/>
-            </td>
-
-            <td>
-              <input type="number"
-                class="form-control"
-                ng-model="promotion.audValue"
-                disabled="true"/>
-            </td>
-
-          </tr>
-
-          <tr ng-show="companyPromotionsList.length === 0">
-            <td colspan="8" class="text-center">
-              <span class="fa fa-exclamation-circle text-danger"></span>
-              We're sorry, there are no {{promotion.name}} that match the given criteria
-            </td>
-          </tr>
-
-        </table>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-offset-8"></div>
-          <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-          <div class="col-xs-12 col-sm-2">
-            <input class="form-control" type="number" value="71.25" disabled="true"/>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel-footer">
-        <div class="row">
-          <div class="col-xs-12 text-right">
-            <button class="btn btn-success" ng-click="verifyPanel('Promotions')">Verify</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <!-- End Promotions Panel -->
-
-    <!-- Voucher Items Panel -->
-    <div class="panel panel-default" ng-show="shouldShowPanel('Voucher Items') || showAll">
-      <div class="panel-heading header-blue"><b>Voucher Items</b> <i ng-if="panelIsVerified('Voucher Items')" class="fa fa-check-circle"></i></div>
-      <div class="panel-body">
-
-        <div class="row">
-          <div class="col-xs-4 col-sm-2">
-            <b>Operating Currency</b>
-          </div>
-          <div class="form-group">
-            <div class="col-xs-4 col-sm-2">
-              <ui-select ng-model="currencyObj.voucherItems.currency"
-                 theme="bootstrap"
-                 ng-disabled="disabled"
-                 reset-search-input="false"
-                 style="min-width: 200px;">
-                <ui-select-match placeholder="Select Currency ...">
-                  {{$select.selected.code}}
-                </ui-select-match>
-                <ui-select-choices repeat="currency in currencyList">
-                  <div ng-bind-html="currency.code | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel-divider"></div>
-
-        <div class="row">
-          <div class="col-xs-12 col-sm-12">
-            <div class="input-group">
-              <span class="input-group-addon" id="promotions-filter">Filter</span>
-              <input type="text"
-                class="form-control"
-                ng-model="filter.voucherItems"
-                placeholder="Select Voucher to filter by ..."
-                aria-describedby="promotions-filter"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="table table-hover">
-
-            <tr class="active">
-              <th>Voucher Item</th>
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Total Voucher Item Value (CUR)</th>
-              <th>Total Voucher Item Value  (AUD)</th>
-            </tr>
-
-            <!-- Start Voucher Items loop -->
-            <tr ng-repeat="voucher in companyVoucherItemsList | filter:{voucherName: filter.voucherItems} track by $index">
-
-              <td>
-                <ui-select ng-model="voucher"
-                   theme="bootstrap"
-                   ng-disabled="true"
-                   reset-search-input="false">
-                  <ui-select-match placeholder="Select Voucher to filter by ...">
-                    {{$select.selected.voucherName}}
-                  </ui-select-match>
-                  <ui-select-choices repeat="voucher in companyVoucherItemsList">
-                    <div ng-bind-html="voucher.voucherName | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
-              </td>
-
-              <td>
-                <div class="input-group" style="max-width:300px">
-                  <span class="input-group-addon" id="currency">{{currencyObj.voucherItems.currency.code}}</span>
-                  <input type="number"
-                    class="form-control"
-                    ng-model="voucher.price"
-                    placeholder="12345678.91"
-                    aria-describedby="currency"
-                    style="min-width:100px"/>
-                </div>
-              </td>
-
-              <td>
-                <input type="number"
-                  class="form-control"
-                  ng-model="voucher.quantity"
-                  placeholder="12345"
-                  style="width: 100px"/>
-              </td>
-
-              <td>
-                <input type="number"
-                  class="form-control"
-                  ng-model="voucher.currencyValue"
-                  disabled="true"/>
-              </td>
-
-              <td>
-                <input type="number"
-                  class="form-control"
-                  ng-model="voucher.audValue"
-                  disabled="true"/>
-              </td>
-
-            </tr>
-
-            <tr ng-show="companyVoucherItemsList.length === 0">
-              <td colspan="8" class="text-center">
-                <span class="fa fa-exclamation-circle text-danger"></span>
-                We're sorry, there are no {{voucher.name}} that match the given criteria
-              </td>
-            </tr>
-
-          </table>
-        </div>
-
-        <div class="row">
-        <div class="col-sm-offset-8"></div>
-          <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-          <div class="col-xs-12 col-sm-2">
-            <input class="form-control" type="number" value="81.99" disabled="true"/>
-          </div>
-        </div>
-
-      </div>
-
-    <div class="panel-footer">
-      <div class="row">
-        <div class="col-xs-12 text-right">
-          <button class="btn btn-success" ng-click="verifyPanel('Voucher Items')">Verify</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <!-- End Voucher Items Panel -->
-
-  <!-- Virtual Items Panel -->
-  <div class="panel panel-default" ng-show="shouldShowPanel('Virtual Items') || showAll">
-    <div class="panel-heading header-blue"><b>Virtual Items</b> <i ng-if="panelIsVerified('Virtual Items')" class="fa fa-check-circle"></i></div>
-    <div class="panel-body">
-
-      <div class="row">
-        <div class="col-xs-4 col-sm-2">
-          <b>Operating Currency</b>
-        </div>
-        <div class="form-group">
-          <div class="col-xs-4 col-sm-2">
-            <ui-select ng-model="currencyObj.virtualItems.currency"
-               theme="bootstrap"
-               ng-disabled="disabled"
-               reset-search-input="false"
-               style="min-width: 200px;">
-              <ui-select-match placeholder="Select Currency ...">
-                {{$select.selected.code}}
-              </ui-select-match>
-              <ui-select-choices repeat="currency in currencyList">
-                <div ng-bind-html="currency.code | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel-divider"></div>
-
-      <div class="row">
-        <div class="col-xs-12 col-sm-12">
-          <div class="input-group">
-            <span class="input-group-addon" id="virtual-filter">Filter</span>
-            <input type="text"
-              class="form-control"
-              ng-model="filter.virtualItems"
-              placeholder="Select Virtual Items to filter by ..."
-              aria-describedby="virtual-filter"/>
-          </div>
-        </div>
-      </div>
-
-      <div class="table-responsive">
-        <table class="table table-hover">
-
-          <tr class="active">
-            <th>Virtual Item</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th>Total Virtual Item Value (CUR)</th>
-            <th>Total Virtual Item Value  (AUD)</th>
-          </tr>
-
-        <!-- Start Virtual Items loop -->
-        <tr ng-repeat="virtual in companyVirtualItemsList | filter:{itemName: filter.virtualItems} track by $index">
-
-          <td>
-            <ui-select ng-model="virtual"
-               theme="bootstrap"
-               ng-disabled="true"
-               reset-search-input="false">
-              <ui-select-match placeholder="Select Virtual Items to filter by ...">
-                    {{$select.selected.itemCode}} - {{$select.selected.itemName}}
-              </ui-select-match>
-              <ui-select-choices repeat="virtual in companyVirtualItemsList">
-                <div ng-bind-html="virtual.itemName | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-          </td>
-
-          <td>
-            <div class="input-group" style="max-width:300px">
-              <span class="input-group-addon" id="currency">{{currencyObj.virtualItems.currency.code}}</span>
-              <input type="number"
-                class="form-control"
-                ng-model="virtual.price"
-                placeholder="12345678.91"
-                aria-describedby="currency"
-                style="min-width:100px"/>
-            </div>
-          </td>
-
-          <td>
-            <input type="number"
-              class="form-control"
-              ng-model="virtual.quantity"
-              placeholder="12345"
-              style="width: 100px"/>
-          </td>
-
-          <td>
-            <input type="number"
-              class="form-control"
-              ng-model="virtual.currencyValue"
-              disabled="true"/>
-          </td>
-
-          <td>
-            <input type="number"
-              class="form-control"
-              ng-model="virtual.audValue"
-              disabled="true"/>
-          </td>
-
-        </tr>
-
-        <tr ng-show="companyVirtualItemsList.length === 0">
-          <td colspan="8" class="text-center">
-            <span class="fa fa-exclamation-circle text-danger"></span>
-            We're sorry, there are no {{virtual.name}} that match the given criteria
-          </td>
-        </tr>
-
-      </table>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-offset-8"></div>
-        <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-        <div class="col-xs-12 col-sm-2">
-          <input class="form-control" type="number" value="105.50" disabled="true"/>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel-footer">
-      <div class="row">
-        <div class="col-xs-12 text-right">
-          <button class="btn btn-success" ng-click="verifyPanel('Virtual Items')">Verify</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <!-- End Virtual Items Panel -->
-
-    <!-- Discounts Panel -->
-    <div class="panel panel-default" ng-show="shouldShowPanel('Discounts') || showAll">
-      <div class="panel-heading header-blue"><b>Discounts</b> <i ng-if="panelIsVerified('Discounts')" class="fa fa-check-circle"></i></div>
-      <div class="panel-body">
-
-        <div class="row">
-          <div class="col-xs-4 col-sm-2">
-            <b>Operating Currency</b>
-          </div>
-          <div class="form-group">
-            <div class="col-xs-4 col-sm-2">
-              <ui-select ng-model="currencyObj.discounts.currency"
-                 theme="bootstrap"
-                 ng-disabled="disabled"
-                 reset-search-input="false"
-                 style="min-width: 200px;">
-                <ui-select-match placeholder="Select Currency ...">
-                  {{$select.selected.code}}
-                </ui-select-match>
-                <ui-select-choices repeat="currency in currencyList">
-                  <div ng-bind-html="currency.code | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel-divider"></div>
-
-        <div class="row">
-          <div class="col-xs-12 col-sm-12">
-            <div class="input-group">
-              <span class="input-group-addon" id="discounts-filter">Filter</span>
-              <input type="text"
-                class="form-control"
-                ng-model="filter.discounts"
-                placeholder="Select Discount Type to filter by ..."
-                aria-describedby="discounts-filter"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="table table-hover">
-
-            <tr>
-              <th>Discount</th>
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Total Discount Value (CUR)</th>
-              <th>Total Discount Value  (AUD)</th>
-            </tr>
-
-          <!-- Start Discount Voucher loop -->
-          <h3 class="gray-header"> Voucher </h3>
-          <tr ng-repeat="discount in companyDiscountsList.voucher | filter:{discountName: filter.discounts} track by $index">
-
-            <td>
-              <ui-select ng-model="discount"
-                 theme="bootstrap"
-                 ng-disabled="true"
-                 reset-search-input="false">
-                <ui-select-match placeholder="Select Voucher Discounts ...">
-                  {{$select.selected.discountCode}} - {{$select.selected.discountName}}
-                </ui-select-match>
-                <ui-select-choices repeat="discount in companyDiscountsList.voucher">
-                  <div ng-bind-html="discount.discountName | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </td>
-
-            <td>
-              <div class="input-group" style="max-width:300px">
-                <span class="input-group-addon" id="currency">{{currencyObj.discounts.currency.code}}</span>
-                <input type="number"
-                  class="form-control"
-                  ng-model="discount.price"
-                  placeholder="12345678.91"
-                  aria-describedby="currency"
-                  style="min-width:100px"/>
-              </div>
-            </td>
-
-            <td>
-              <input type="number"
-                class="form-control"
-                ng-model="discount.quantity"
-                placeholder="12345"
-                style="width: 100px"/>
-            </td>
-
-            <td>
-              <input type="number"
-                class="form-control"
-                ng-model="discount.currencyValue"
-                disabled="true"/>
-            </td>
-
-            <td>
-              <input type="number"
-                class="form-control"
-                ng-model="discount.audValue"
-                disabled="true"/>
-            </td>
-
-          </tr>
-
-          <tr ng-show="companyDiscountsList.voucher.length === 0">
-            <td colspan="8" class="text-center">
-              <span class="fa fa-exclamation-circle text-danger"></span>
-              We're sorry, there are no {{discount.name}} that match the given criteria
-            </td>
-          </tr>
-
-        </table>
-
-        <div class="row">
-        <div class="col-sm-offset-8"></div>
-          <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-          <div class="col-xs-12 col-sm-2">
-            <input class="form-control" type="number" value="105.50" disabled="true"/>
-          </div>
-        </div>
-
-        </div>
-
-        <div class="table-responsive">
-          <table class="table table-hover">
-
-            <tr>
-              <th>Discount</th>
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Total Discount Value (CUR)</th>
-              <th>Total Discount Value  (AUD)</th>
-            </tr>
-
-        <!-- Start Discount Coupon loop -->
-        <h3 class="gray-header"> Coupon </h3>
-        <tr ng-repeat="discount in companyDiscountsList.coupon | filter:{discountName: filter.discounts} track by $index">
-
-          <td>
-            <ui-select ng-model="discount"
-               theme="bootstrap"
-               ng-disabled="true"
-               reset-search-input="false">
-              <ui-select-match placeholder="Select Coupon Discounts ...">
-                {{$select.selected.discountCode}} - {{$select.selected.discountName}}
-              </ui-select-match>
-              <ui-select-choices repeat="discount in companyDiscountList.vouchers">
-                <div ng-bind-html="discount.discountName | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-          </td>
-
-          <td>
-            <div class="input-group" style="max-width:300px">
-              <span class="input-group-addon" id="currency">{{currencyObj.discounts.currency.code}}</span>
-              <input type="number"
-                class="form-control"
-                ng-model="discount.price"
-                placeholder="12345678.91"
-                aria-describedby="currency"
-                style="min-width:100px"/>
-            </div>
-          </td>
-
-          <td>
-            <input type="number"
-              class="form-control"
-              ng-model="discount.quantity"
-              placeholder="12345"
-              style="width: 100px"/>
-          </td>
-
-          <td>
-            <input type="number"
-              class="form-control"
-              ng-model="discount.currencyValue"
-              disabled="true"/>
-          </td>
-
-          <td>
-            <input type="number"
-              class="form-control"
-              ng-model="discount.audValue"
-              disabled="true"/>
-          </td>
-
-        </tr>
-
-        <tr ng-show="companyDiscountsList.coupon.length === 0">
-          <td colspan="8" class="text-center">
-            <span class="fa fa-exclamation-circle text-danger"></span>
-            We're sorry, there are no {{discount.name}} that match the given criteria
-          </td>
-        </tr>
-
-      </table>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-offset-8"></div>
-          <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-          <div class="col-xs-12 col-sm-2">
-            <input class="form-control" type="number" value="105.50" disabled="true"/>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel-footer">
-        <div class="row">
-          <div class="col-xs-12 text-right">
-            <button class="btn btn-success" ng-click="verifyPanel('Discounts')">Verify</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <!-- End Discounts Panel -->
-
-  </div>
+
+
+<!--&lt;!&ndash;Split Columns for Cash/Credit&ndash;&gt;-->
+<!--<div class="row">-->
+<!--<div class="col-xs-12 col-sm-6">-->
+
+<!--<div class="col-xs-12 col-sm-6">-->
+<!--&lt;!&ndash; Credit Panel &ndash;&gt;-->
+<!--<div class="panel panel-default" ng-show="shouldShowPanel('Credit Card') || showAll">-->
+<!--<div class="panel-heading header-blue"><b>Credit Card</b> <i ng-if="panelIsVerified('Credit Card')" class="fa fa-check-circle"></i></div>-->
+<!--<div class="panel-body">-->
+
+<!--<div class="row">-->
+<!--<div class="col-xs-12 col-sm-12">-->
+<!--<div class="input-group">-->
+<!--<span class="input-group-addon" id="credit-filter">Filter</span>-->
+<!--<input type="text"-->
+<!--class="form-control"-->
+<!--ng-model="filter.creditCard"-->
+<!--placeholder="Select Currency Codes to filter by ..."-->
+<!--aria-describedby="credit-filter"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="table-responsive">-->
+<!--<table class="table table-hover">-->
+
+<!--<tr class="active">-->
+<!--<th>Amount</th>-->
+<!--<th>Promotion Value (AUD)</th>-->
+<!--</tr>-->
+
+<!--&lt;!&ndash; Start Promotion loop &ndash;&gt;-->
+<!--<tr ng-repeat="credit in companyCreditCardList | filter:{code: filter.creditCard} track by $index">-->
+
+<!--<td>-->
+<!--<div class="input-group" style="max-width:300px">-->
+<!--<span class="input-group-addon" id="cash">{{credit.code}}</span>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="credit.amount"-->
+<!--placeholder="12345678.91"-->
+<!--aria-describedby="credit"-->
+<!--style="min-width:100px"/>-->
+<!--</div>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="credit.audValue"-->
+<!--placeholder="12345678.91"-->
+<!--aria-describedby="currency"-->
+<!--style="min-width:100px"/>-->
+<!--</td>-->
+
+<!--</tr>-->
+
+<!--</table>-->
+<!--</div>-->
+
+<!--<div class="panel-divider"></div>-->
+
+<!--<div class="row">-->
+<!--<div class="col-sm-offset-4"></div>-->
+<!--<div class="col-xs-12 col-sm-4 text-right"><b>Grand Total</b></div>-->
+<!--<div class="col-xs-12 col-sm-4">-->
+<!--<input class="form-control" type="number" value="7.00" disabled="true"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="panel-footer">-->
+<!--<div class="row">-->
+<!--<div class="col-xs-12 text-right">-->
+<!--<button class="btn btn-success" ng-click="verifyPanel('Credit Card')">Verify</button>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; End Credit Panel &ndash;&gt;-->
+<!--</div>-->
+<!--&lt;!&ndash; End Credit / Cash Panel &ndash;&gt;-->
+
+<!--&lt;!&ndash; Promotions Panel &ndash;&gt;-->
+<!--<div class="panel panel-default" ng-show="shouldShowPanel('Promotions') || showAll">-->
+<!--<div class="panel-heading header-blue"><b>Promotions</b> <i ng-if="panelIsVerified('Promotions')" class="fa fa-check-circle"></i></div>-->
+<!--<div class="panel-body">-->
+
+<!--<div class="row">-->
+<!--<div class="col-xs-4 col-sm-2">-->
+<!--<b>Operating Currency</b>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<div class="col-xs-4 col-sm-2">-->
+<!--<ui-select ng-model="currencyObj.promotions.currency"-->
+<!--theme="bootstrap"-->
+<!--ng-disabled="disabled"-->
+<!--reset-search-input="false"-->
+<!--style="min-width: 200px;">-->
+<!--<ui-select-match placeholder="Select Currency ...">-->
+<!--{{$select.selected.code}}-->
+<!--</ui-select-match>-->
+<!--<ui-select-choices repeat="currency in currencyList">-->
+<!--<div ng-bind-html="currency.code | highlight: $select.search"></div>-->
+<!--</ui-select-choices>-->
+<!--</ui-select>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="panel-divider"></div>-->
+
+<!--<div class="row">-->
+<!--<div class="col-xs-12 col-sm-12">-->
+<!--<div class="input-group">-->
+<!--<span class="input-group-addon" id="promotions-filter">Filter</span>-->
+<!--<input type="text"-->
+<!--class="form-control"-->
+<!--ng-model="filter.promotions"-->
+<!--placeholder="Select promotions to filter by ..."-->
+<!--aria-describedby="promotions-filter"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="table-responsive">-->
+<!--<table class="table table-hover">-->
+
+<!--<tr class="active">-->
+<!--<th>Promotion</th>-->
+<!--<th>Price</th>-->
+<!--<th>Qty</th>-->
+<!--<th>Promotion Value (CUR)</th>-->
+<!--<th>Promotion Value (AUD)</th>-->
+<!--</tr>-->
+
+<!--&lt;!&ndash; Start Promotion loop &ndash;&gt;-->
+<!--<tr ng-repeat="promotion in companyPromotionsList | filter:{promotionName: filter.promotions} track by $index">-->
+
+<!--<td>-->
+<!--<ui-select ng-model="promotion"-->
+<!--theme="bootstrap"-->
+<!--ng-disabled="true"-->
+<!--reset-search-input="false">-->
+<!--<ui-select-match placeholder="Select promotions to filter by ...">-->
+<!--{{$select.selected.promotionName}}-->
+<!--</ui-select-match>-->
+<!--<ui-select-choices repeat="promotion in promotionsList">-->
+<!--<div ng-bind-html="promotion.promotionName | highlight: $select.search"></div>-->
+<!--</ui-select-choices>-->
+<!--</ui-select>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<div class="input-group" style="max-width:300px">-->
+<!--<span class="input-group-addon" id="currency">{{currencyObj.promotions.currency.code}}</span>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="promotion.price"-->
+<!--placeholder="12345678.91"-->
+<!--aria-describedby="currency"-->
+<!--style="min-width:100px"/>-->
+<!--</div>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="promotion.quantity"-->
+<!--placeholder="12345"-->
+<!--style="width: 100px"/>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="promotion.currencyValue"-->
+<!--disabled="true"/>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="promotion.audValue"-->
+<!--disabled="true"/>-->
+<!--</td>-->
+
+<!--</tr>-->
+
+<!--<tr ng-show="companyPromotionsList.length === 0">-->
+<!--<td colspan="8" class="text-center">-->
+<!--<span class="fa fa-exclamation-circle text-danger"></span>-->
+<!--We're sorry, there are no {{promotion.name}} that match the given criteria-->
+<!--</td>-->
+<!--</tr>-->
+
+<!--</table>-->
+<!--</div>-->
+
+<!--<div class="row">-->
+<!--<div class="col-sm-offset-8"></div>-->
+<!--<div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>-->
+<!--<div class="col-xs-12 col-sm-2">-->
+<!--<input class="form-control" type="number" value="71.25" disabled="true"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="panel-footer">-->
+<!--<div class="row">-->
+<!--<div class="col-xs-12 text-right">-->
+<!--<button class="btn btn-success" ng-click="verifyPanel('Promotions')">Verify</button>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+<!--&lt;!&ndash; End Promotions Panel &ndash;&gt;-->
+
+<!--&lt;!&ndash; Voucher Items Panel &ndash;&gt;-->
+<!--<div class="panel panel-default" ng-show="shouldShowPanel('Voucher Items') || showAll">-->
+<!--<div class="panel-heading header-blue"><b>Voucher Items</b> <i ng-if="panelIsVerified('Voucher Items')" class="fa fa-check-circle"></i></div>-->
+<!--<div class="panel-body">-->
+
+<!--<div class="row">-->
+<!--<div class="col-xs-4 col-sm-2">-->
+<!--<b>Operating Currency</b>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<div class="col-xs-4 col-sm-2">-->
+<!--<ui-select ng-model="currencyObj.voucherItems.currency"-->
+<!--theme="bootstrap"-->
+<!--ng-disabled="disabled"-->
+<!--reset-search-input="false"-->
+<!--style="min-width: 200px;">-->
+<!--<ui-select-match placeholder="Select Currency ...">-->
+<!--{{$select.selected.code}}-->
+<!--</ui-select-match>-->
+<!--<ui-select-choices repeat="currency in currencyList">-->
+<!--<div ng-bind-html="currency.code | highlight: $select.search"></div>-->
+<!--</ui-select-choices>-->
+<!--</ui-select>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="panel-divider"></div>-->
+
+<!--<div class="row">-->
+<!--<div class="col-xs-12 col-sm-12">-->
+<!--<div class="input-group">-->
+<!--<span class="input-group-addon" id="promotions-filter">Filter</span>-->
+<!--<input type="text"-->
+<!--class="form-control"-->
+<!--ng-model="filter.voucherItems"-->
+<!--placeholder="Select Voucher to filter by ..."-->
+<!--aria-describedby="promotions-filter"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="table-responsive">-->
+<!--<table class="table table-hover">-->
+
+<!--<tr class="active">-->
+<!--<th>Voucher Item</th>-->
+<!--<th>Price</th>-->
+<!--<th>Qty</th>-->
+<!--<th>Total Voucher Item Value (CUR)</th>-->
+<!--<th>Total Voucher Item Value  (AUD)</th>-->
+<!--</tr>-->
+
+<!--&lt;!&ndash; Start Voucher Items loop &ndash;&gt;-->
+<!--<tr ng-repeat="voucher in companyVoucherItemsList | filter:{voucherName: filter.voucherItems} track by $index">-->
+
+<!--<td>-->
+<!--<ui-select ng-model="voucher"-->
+<!--theme="bootstrap"-->
+<!--ng-disabled="true"-->
+<!--reset-search-input="false">-->
+<!--<ui-select-match placeholder="Select Voucher to filter by ...">-->
+<!--{{$select.selected.voucherName}}-->
+<!--</ui-select-match>-->
+<!--<ui-select-choices repeat="voucher in companyVoucherItemsList">-->
+<!--<div ng-bind-html="voucher.voucherName | highlight: $select.search"></div>-->
+<!--</ui-select-choices>-->
+<!--</ui-select>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<div class="input-group" style="max-width:300px">-->
+<!--<span class="input-group-addon" id="currency">{{currencyObj.voucherItems.currency.code}}</span>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="voucher.price"-->
+<!--placeholder="12345678.91"-->
+<!--aria-describedby="currency"-->
+<!--style="min-width:100px"/>-->
+<!--</div>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="voucher.quantity"-->
+<!--placeholder="12345"-->
+<!--style="width: 100px"/>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="voucher.currencyValue"-->
+<!--disabled="true"/>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="voucher.audValue"-->
+<!--disabled="true"/>-->
+<!--</td>-->
+
+<!--</tr>-->
+
+<!--<tr ng-show="companyVoucherItemsList.length === 0">-->
+<!--<td colspan="8" class="text-center">-->
+<!--<span class="fa fa-exclamation-circle text-danger"></span>-->
+<!--We're sorry, there are no {{voucher.name}} that match the given criteria-->
+<!--</td>-->
+<!--</tr>-->
+
+<!--</table>-->
+<!--</div>-->
+
+<!--<div class="row">-->
+<!--<div class="col-sm-offset-8"></div>-->
+<!--<div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>-->
+<!--<div class="col-xs-12 col-sm-2">-->
+<!--<input class="form-control" type="number" value="81.99" disabled="true"/>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+
+<!--<div class="panel-footer">-->
+<!--<div class="row">-->
+<!--<div class="col-xs-12 text-right">-->
+<!--<button class="btn btn-success" ng-click="verifyPanel('Voucher Items')">Verify</button>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+<!--&lt;!&ndash; End Voucher Items Panel &ndash;&gt;-->
+
+<!--&lt;!&ndash; Virtual Items Panel &ndash;&gt;-->
+<!--<div class="panel panel-default" ng-show="shouldShowPanel('Virtual Items') || showAll">-->
+<!--<div class="panel-heading header-blue"><b>Virtual Items</b> <i ng-if="panelIsVerified('Virtual Items')" class="fa fa-check-circle"></i></div>-->
+<!--<div class="panel-body">-->
+
+<!--<div class="row">-->
+<!--<div class="col-xs-4 col-sm-2">-->
+<!--<b>Operating Currency</b>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<div class="col-xs-4 col-sm-2">-->
+<!--<ui-select ng-model="currencyObj.virtualItems.currency"-->
+<!--theme="bootstrap"-->
+<!--ng-disabled="disabled"-->
+<!--reset-search-input="false"-->
+<!--style="min-width: 200px;">-->
+<!--<ui-select-match placeholder="Select Currency ...">-->
+<!--{{$select.selected.code}}-->
+<!--</ui-select-match>-->
+<!--<ui-select-choices repeat="currency in currencyList">-->
+<!--<div ng-bind-html="currency.code | highlight: $select.search"></div>-->
+<!--</ui-select-choices>-->
+<!--</ui-select>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="panel-divider"></div>-->
+
+<!--<div class="row">-->
+<!--<div class="col-xs-12 col-sm-12">-->
+<!--<div class="input-group">-->
+<!--<span class="input-group-addon" id="virtual-filter">Filter</span>-->
+<!--<input type="text"-->
+<!--class="form-control"-->
+<!--ng-model="filter.virtualItems"-->
+<!--placeholder="Select Virtual Items to filter by ..."-->
+<!--aria-describedby="virtual-filter"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="table-responsive">-->
+<!--<table class="table table-hover">-->
+
+<!--<tr class="active">-->
+<!--<th>Virtual Item</th>-->
+<!--<th>Price</th>-->
+<!--<th>Qty</th>-->
+<!--<th>Total Virtual Item Value (CUR)</th>-->
+<!--<th>Total Virtual Item Value  (AUD)</th>-->
+<!--</tr>-->
+
+<!--&lt;!&ndash; Start Virtual Items loop &ndash;&gt;-->
+<!--<tr ng-repeat="virtual in companyVirtualItemsList | filter:{itemName: filter.virtualItems} track by $index">-->
+
+<!--<td>-->
+<!--<ui-select ng-model="virtual"-->
+<!--theme="bootstrap"-->
+<!--ng-disabled="true"-->
+<!--reset-search-input="false">-->
+<!--<ui-select-match placeholder="Select Virtual Items to filter by ...">-->
+<!--{{$select.selected.itemCode}} - {{$select.selected.itemName}}-->
+<!--</ui-select-match>-->
+<!--<ui-select-choices repeat="virtual in companyVirtualItemsList">-->
+<!--<div ng-bind-html="virtual.itemName | highlight: $select.search"></div>-->
+<!--</ui-select-choices>-->
+<!--</ui-select>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<div class="input-group" style="max-width:300px">-->
+<!--<span class="input-group-addon" id="currency">{{currencyObj.virtualItems.currency.code}}</span>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="virtual.price"-->
+<!--placeholder="12345678.91"-->
+<!--aria-describedby="currency"-->
+<!--style="min-width:100px"/>-->
+<!--</div>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="virtual.quantity"-->
+<!--placeholder="12345"-->
+<!--style="width: 100px"/>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="virtual.currencyValue"-->
+<!--disabled="true"/>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="virtual.audValue"-->
+<!--disabled="true"/>-->
+<!--</td>-->
+
+<!--</tr>-->
+
+<!--<tr ng-show="companyVirtualItemsList.length === 0">-->
+<!--<td colspan="8" class="text-center">-->
+<!--<span class="fa fa-exclamation-circle text-danger"></span>-->
+<!--We're sorry, there are no {{virtual.name}} that match the given criteria-->
+<!--</td>-->
+<!--</tr>-->
+
+<!--</table>-->
+<!--</div>-->
+
+<!--<div class="row">-->
+<!--<div class="col-sm-offset-8"></div>-->
+<!--<div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>-->
+<!--<div class="col-xs-12 col-sm-2">-->
+<!--<input class="form-control" type="number" value="105.50" disabled="true"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="panel-footer">-->
+<!--<div class="row">-->
+<!--<div class="col-xs-12 text-right">-->
+<!--<button class="btn btn-success" ng-click="verifyPanel('Virtual Items')">Verify</button>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+<!--&lt;!&ndash; End Virtual Items Panel &ndash;&gt;-->
+
+<!--&lt;!&ndash; Discounts Panel &ndash;&gt;-->
+<!--<div class="panel panel-default" ng-show="shouldShowPanel('Discounts') || showAll">-->
+<!--<div class="panel-heading header-blue"><b>Discounts</b> <i ng-if="panelIsVerified('Discounts')" class="fa fa-check-circle"></i></div>-->
+<!--<div class="panel-body">-->
+
+<!--<div class="row">-->
+<!--<div class="col-xs-4 col-sm-2">-->
+<!--<b>Operating Currency</b>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<div class="col-xs-4 col-sm-2">-->
+<!--<ui-select ng-model="currencyObj.discounts.currency"-->
+<!--theme="bootstrap"-->
+<!--ng-disabled="disabled"-->
+<!--reset-search-input="false"-->
+<!--style="min-width: 200px;">-->
+<!--<ui-select-match placeholder="Select Currency ...">-->
+<!--{{$select.selected.code}}-->
+<!--</ui-select-match>-->
+<!--<ui-select-choices repeat="currency in currencyList">-->
+<!--<div ng-bind-html="currency.code | highlight: $select.search"></div>-->
+<!--</ui-select-choices>-->
+<!--</ui-select>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="panel-divider"></div>-->
+
+<!--<div class="row">-->
+<!--<div class="col-xs-12 col-sm-12">-->
+<!--<div class="input-group">-->
+<!--<span class="input-group-addon" id="discounts-filter">Filter</span>-->
+<!--<input type="text"-->
+<!--class="form-control"-->
+<!--ng-model="filter.discounts"-->
+<!--placeholder="Select Discount Type to filter by ..."-->
+<!--aria-describedby="discounts-filter"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="table-responsive">-->
+<!--<table class="table table-hover">-->
+
+<!--<tr>-->
+<!--<th>Discount</th>-->
+<!--<th>Price</th>-->
+<!--<th>Qty</th>-->
+<!--<th>Total Discount Value (CUR)</th>-->
+<!--<th>Total Discount Value  (AUD)</th>-->
+<!--</tr>-->
+
+<!--&lt;!&ndash; Start Discount Voucher loop &ndash;&gt;-->
+<!--<h3 class="gray-header"> Voucher </h3>-->
+<!--<tr ng-repeat="discount in companyDiscountsList.voucher | filter:{discountName: filter.discounts} track by $index">-->
+
+<!--<td>-->
+<!--<ui-select ng-model="discount"-->
+<!--theme="bootstrap"-->
+<!--ng-disabled="true"-->
+<!--reset-search-input="false">-->
+<!--<ui-select-match placeholder="Select Voucher Discounts ...">-->
+<!--{{$select.selected.discountCode}} - {{$select.selected.discountName}}-->
+<!--</ui-select-match>-->
+<!--<ui-select-choices repeat="discount in companyDiscountsList.voucher">-->
+<!--<div ng-bind-html="discount.discountName | highlight: $select.search"></div>-->
+<!--</ui-select-choices>-->
+<!--</ui-select>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<div class="input-group" style="max-width:300px">-->
+<!--<span class="input-group-addon" id="currency">{{currencyObj.discounts.currency.code}}</span>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="discount.price"-->
+<!--placeholder="12345678.91"-->
+<!--aria-describedby="currency"-->
+<!--style="min-width:100px"/>-->
+<!--</div>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="discount.quantity"-->
+<!--placeholder="12345"-->
+<!--style="width: 100px"/>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="discount.currencyValue"-->
+<!--disabled="true"/>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="discount.audValue"-->
+<!--disabled="true"/>-->
+<!--</td>-->
+
+<!--</tr>-->
+
+<!--<tr ng-show="companyDiscountsList.voucher.length === 0">-->
+<!--<td colspan="8" class="text-center">-->
+<!--<span class="fa fa-exclamation-circle text-danger"></span>-->
+<!--We're sorry, there are no {{discount.name}} that match the given criteria-->
+<!--</td>-->
+<!--</tr>-->
+
+<!--</table>-->
+
+<!--<div class="row">-->
+<!--<div class="col-sm-offset-8"></div>-->
+<!--<div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>-->
+<!--<div class="col-xs-12 col-sm-2">-->
+<!--<input class="form-control" type="number" value="105.50" disabled="true"/>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+
+<!--<div class="table-responsive">-->
+<!--<table class="table table-hover">-->
+
+<!--<tr>-->
+<!--<th>Discount</th>-->
+<!--<th>Price</th>-->
+<!--<th>Qty</th>-->
+<!--<th>Total Discount Value (CUR)</th>-->
+<!--<th>Total Discount Value  (AUD)</th>-->
+<!--</tr>-->
+
+<!--&lt;!&ndash; Start Discount Coupon loop &ndash;&gt;-->
+<!--<h3 class="gray-header"> Coupon </h3>-->
+<!--<tr ng-repeat="discount in companyDiscountsList.coupon | filter:{discountName: filter.discounts} track by $index">-->
+
+<!--<td>-->
+<!--<ui-select ng-model="discount"-->
+<!--theme="bootstrap"-->
+<!--ng-disabled="true"-->
+<!--reset-search-input="false">-->
+<!--<ui-select-match placeholder="Select Coupon Discounts ...">-->
+<!--{{$select.selected.discountCode}} - {{$select.selected.discountName}}-->
+<!--</ui-select-match>-->
+<!--<ui-select-choices repeat="discount in companyDiscountList.vouchers">-->
+<!--<div ng-bind-html="discount.discountName | highlight: $select.search"></div>-->
+<!--</ui-select-choices>-->
+<!--</ui-select>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<div class="input-group" style="max-width:300px">-->
+<!--<span class="input-group-addon" id="currency">{{currencyObj.discounts.currency.code}}</span>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="discount.price"-->
+<!--placeholder="12345678.91"-->
+<!--aria-describedby="currency"-->
+<!--style="min-width:100px"/>-->
+<!--</div>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="discount.quantity"-->
+<!--placeholder="12345"-->
+<!--style="width: 100px"/>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="discount.currencyValue"-->
+<!--disabled="true"/>-->
+<!--</td>-->
+
+<!--<td>-->
+<!--<input type="number"-->
+<!--class="form-control"-->
+<!--ng-model="discount.audValue"-->
+<!--disabled="true"/>-->
+<!--</td>-->
+
+<!--</tr>-->
+
+<!--<tr ng-show="companyDiscountsList.coupon.length === 0">-->
+<!--<td colspan="8" class="text-center">-->
+<!--<span class="fa fa-exclamation-circle text-danger"></span>-->
+<!--We're sorry, there are no {{discount.name}} that match the given criteria-->
+<!--</td>-->
+<!--</tr>-->
+
+<!--</table>-->
+<!--</div>-->
+
+<!--<div class="row">-->
+<!--<div class="col-sm-offset-8"></div>-->
+<!--<div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>-->
+<!--<div class="col-xs-12 col-sm-2">-->
+<!--<input class="form-control" type="number" value="105.50" disabled="true"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="panel-footer">-->
+<!--<div class="row">-->
+<!--<div class="col-xs-12 text-right">-->
+<!--<button class="btn btn-success" ng-click="verifyPanel('Discounts')">Verify</button>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>-->
+<!-- End Discounts Panel -->
+
+<!--</div>-->
 </div>
 
-<!-- End Manual Epos Angular Mockup -->
+<dynamic-left-nav></dynamic-left-nav></div>
+
