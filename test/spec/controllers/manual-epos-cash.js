@@ -19,6 +19,7 @@ describe('Controller: ManualEposCashCtrl', function () {
   var controller;
   var scope;
   var cashBagId;
+  var location;
 
   var cashBagDeferred;
   var cashBagJSON;
@@ -46,7 +47,7 @@ describe('Controller: ManualEposCashCtrl', function () {
 
   var mockBaseCurrency;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
+  beforeEach(inject(function ($q, $controller, $rootScope, $injector, $location) {
 
     inject(function (_servedCashBag_, _servedStoreInstance_, _servedCurrencyGlobals_, _servedDailyExchangeRate_,
                      _servedCashBagVerifications_, _servedCashBagCash_) {
@@ -62,6 +63,8 @@ describe('Controller: ManualEposCashCtrl', function () {
     globalMenuService = $injector.get('globalMenuService');
     dateUtility = $injector.get('dateUtility');
     controller = $controller;
+    location = $location;
+
 
     cashBagDeferred = $q.defer();
     cashBagDeferred.resolve(cashBagJSON);
@@ -107,6 +110,7 @@ describe('Controller: ManualEposCashCtrl', function () {
     mockBaseCurrency = 23;
     spyOn(globalMenuService, 'getCompanyData').and.returnValue({ baseCurrencyId: mockBaseCurrency });
 
+    spyOn(location, 'path').and.callThrough();
 
     scope = $rootScope.$new();
     ManualEposCashCtrl = $controller('ManualEposCashCtrl', {
@@ -162,7 +166,7 @@ describe('Controller: ManualEposCashCtrl', function () {
       var expectedCurrencyObject = jasmine.objectContaining({
         currencyId: 8,
         currencyCode: 'GBP',
-        amount: 12,
+        amount: '12.00',
         convertedAmount: 12
       });
       expect(scope.currencyList[0]).toEqual(expectedCurrencyObject);
@@ -267,6 +271,13 @@ describe('Controller: ManualEposCashCtrl', function () {
       scope.currencyList[0].id = cashId;
       scope.save();
       expect(manualEposFactory.updateCashBagCash).toHaveBeenCalledWith(cashBagId, cashId, expectedPayload);
+    });
+
+    it('should redirect page if shouldExit is true', function () {
+      scope.shouldExit = true;
+      scope.save();
+      scope.$digest();
+      expect(location.path).toHaveBeenCalledWith('manual-epos-dashboard/' + cashBagId);
     });
 
   });
