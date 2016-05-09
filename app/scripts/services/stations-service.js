@@ -10,7 +10,7 @@
 angular.module('ts5App').service('stationsService', function ($resource, ENV) {
 
   var globalRequestURL = ENV.apiUrl + '/api/company-station-globals';
-  var stationListRequestURL = ENV.apiUrl + '/api/companies/:id/stations';
+  var stationListRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/stations';
   var stationRequestURL = ENV.apiUrl + '/api/stations/:stationId';
 
   var stationListRequestParameters = {
