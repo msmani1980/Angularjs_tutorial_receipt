@@ -157,12 +157,22 @@ angular.module('ts5App')
       mergeCashBagCredit(cashBagCreditList);
     }
 
+    function setVerifiedData (verifiedDataFromAPI) {
+      $scope.isVerified = verifiedDataFromAPI.creditCardVerifiedOn || false;
+      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI.creditCardVerifiedOn);
+
+      $scope.verifiedInfo = {
+        verifiedBy: (verifiedDataFromAPI.creditCardVerifiedBy) ? verifiedDataFromAPI.creditCardVerifiedBy.firstName + ' ' + verifiedDataFromAPI.creditCardVerifiedBy.lastName :  'Unkown User',
+        verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
+      };
+    }
+
     function completeInit(responseCollection) {
       hideLoadingModal();
       var currencyList = angular.copy(responseCollection[0].response);
       setBaseCurrency(currencyList);
       setCashBagCurrencyList(angular.copy(responseCollection[1].response), currencyList, angular.copy(responseCollection[2].dailyExchangeRateCurrencies));
-      $scope.isVerified = angular.copy(responseCollection[3].creditCardVerifiedOn) || false;
+      setVerifiedData(angular.copy(responseCollection[3]));
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {
