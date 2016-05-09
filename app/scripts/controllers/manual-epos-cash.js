@@ -59,9 +59,23 @@ angular.module('ts5App')
       return convertedAmount.toFixed(2);
     };
 
-    function verifyToggleSuccess() {
+    function setVerifiedData (verifiedDataFromAPI) {
+      $scope.isVerified = (!!verifiedDataFromAPI.creditCardVerifiedOn) || false;
+      if(!$scope.isVerified) {
+        $scope.verifiedInfo = {};
+        return;
+      }
+
+      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI.cashVerifiedOn);
+      $scope.verifiedInfo = {
+        verifiedBy: (verifiedDataFromAPI.cashVerifiedBy) ? verifiedDataFromAPI.cashVerifiedBy.firstName + ' ' + verifiedDataFromAPI.cashVerifiedBy.lastName :  'Unknown User',
+        verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
+      };
+    }
+
+    function verifyToggleSuccess(dataFromAPI) {
+      setVerifiedData(angular.copy(dataFromAPI));
       hideLoadingModal();
-      $scope.isVerified = !$scope.isVerified;
     }
 
     $scope.verify = function () {
@@ -162,7 +176,7 @@ angular.module('ts5App')
       var currencyList = angular.copy(responseCollection[0].response);
       setBaseCurrency(currencyList);
       setCashBagCurrencyList(angular.copy(responseCollection[1].response), currencyList, angular.copy(responseCollection[2].dailyExchangeRateCurrencies));
-      $scope.isVerified = angular.copy(responseCollection[3].cashVerifiedOn) || false;
+      setVerifiedData(angular.copy(responseCollection[3]));
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {

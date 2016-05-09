@@ -91,11 +91,11 @@ describe('Controller: ManualEposCreditCtrl', function () {
     spyOn(manualEposFactory, 'getCashBagCreditList').and.returnValue(cashBagCashListDeferred.promise);
 
     verifyDeferred = $q.defer();
-    verifyDeferred.resolve({});
+    verifyDeferred.resolve(cashBagVerificationJSON.response[0]);
     spyOn(manualEposFactory, 'verifyCashBag').and.returnValue(verifyDeferred.promise);
 
     unverifyDeferred = $q.defer();
-    unverifyDeferred.resolve({});
+    unverifyDeferred.resolve(cashBagVerificationJSON.response[1]);
     spyOn(manualEposFactory, 'unverifyCashBag').and.returnValue(unverifyDeferred.promise);
 
     createDeferred = $q.defer();
@@ -153,6 +153,12 @@ describe('Controller: ManualEposCreditCtrl', function () {
     it('should check the cash bag verification', function () {
       expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
       expect(scope.isVerified).toBeDefined();
+    });
+
+    it('shoud parse verifiecation date, time, and user', function () {
+      expect(scope.verifiedInfo).toBeDefined();
+      expect(scope.verifiedInfo.verifiedBy).toEqual('Joe Williams');
+      expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53');
     });
 
     it('should set the base currency', function () {
@@ -230,14 +236,17 @@ describe('Controller: ManualEposCreditCtrl', function () {
   describe('verify and unverify', function () {
     it('should call verify function and update scope var', function () {
       scope.isVerified = false;
+      scope.verifiedInfo = null;
       scope.verify();
       expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CREDIT');
       scope.$digest();
       expect(scope.isVerified).toEqual(true);
+      expect(scope.verifiedInfo).not.toEqual(null);
     });
 
     it('should call unverify function and update scope var', function () {
       scope.isVerified = true;
+      scope.verifiedInfo = null;
       scope.unverify();
       expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CREDIT');
       scope.$digest();

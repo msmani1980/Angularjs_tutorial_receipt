@@ -91,11 +91,11 @@ describe('Controller: ManualEposCashCtrl', function () {
     spyOn(manualEposFactory, 'getCashBagCashList').and.returnValue(cashBagCashListDeferred.promise);
 
     verifyDeferred = $q.defer();
-    verifyDeferred.resolve({});
+    verifyDeferred.resolve(cashBagVerificationJSON.response[0]);
     spyOn(manualEposFactory, 'verifyCashBag').and.returnValue(verifyDeferred.promise);
 
     unverifyDeferred = $q.defer();
-    unverifyDeferred.resolve({});
+    unverifyDeferred.resolve(cashBagVerificationJSON.response[1]);
     spyOn(manualEposFactory, 'unverifyCashBag').and.returnValue(unverifyDeferred.promise);
 
     createDeferred = $q.defer();
@@ -153,6 +153,8 @@ describe('Controller: ManualEposCashCtrl', function () {
     it('should check the cash bag verification', function () {
       expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
       expect(scope.isVerified).toBeDefined();
+      expect(scope.verifiedInfo.verifiedBy).toEqual('John Smith');
+      expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53');
     });
 
     it('should set the base currency', function () {
@@ -230,14 +232,17 @@ describe('Controller: ManualEposCashCtrl', function () {
   describe('verify and unverify', function () {
     it('should call verify function and update scope var', function () {
       scope.isVerified = false;
+      scope.verifiedInfo = null;
       scope.verify();
       expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
       scope.$digest();
       expect(scope.isVerified).toEqual(true);
+      expect(scope.verifiedInfo).not.toEqual(null);
     });
 
     it('should call unverify function and update scope var', function () {
       scope.isVerified = true;
+      scope.verifiedInfo = null;
       scope.unverify();
       expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
       scope.$digest();

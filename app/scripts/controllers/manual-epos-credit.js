@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('ManualEposCreditCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService,
-                                              lodash, messageService, $location) {
+                                                lodash, messageService, $location) {
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -59,9 +59,23 @@ angular.module('ts5App')
       return convertedAmount.toFixed(2);
     };
 
-    function verifyToggleSuccess() {
+    function setVerifiedData(verifiedDataFromAPI) {
+      $scope.isVerified = (!!verifiedDataFromAPI.creditCardVerifiedOn) || false;
+      if (!$scope.isVerified) {
+        $scope.verifiedInfo = {};
+        return;
+      }
+
+      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI.creditCardVerifiedOn);
+      $scope.verifiedInfo = {
+        verifiedBy: (verifiedDataFromAPI.creditCardVerifiedBy) ? verifiedDataFromAPI.creditCardVerifiedBy.firstName + ' ' + verifiedDataFromAPI.creditCardVerifiedBy.lastName : 'Unknown User',
+        verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
+      };
+    }
+
+    function verifyToggleSuccess(dataFromAPI) {
+      setVerifiedData(angular.copy(dataFromAPI));
       hideLoadingModal();
-      $scope.isVerified = !$scope.isVerified;
     }
 
     $scope.verify = function () {
@@ -155,16 +169,6 @@ angular.module('ts5App')
       });
 
       mergeCashBagCredit(cashBagCreditList);
-    }
-
-    function setVerifiedData (verifiedDataFromAPI) {
-      $scope.isVerified = verifiedDataFromAPI.creditCardVerifiedOn || false;
-      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI.creditCardVerifiedOn);
-
-      $scope.verifiedInfo = {
-        verifiedBy: (verifiedDataFromAPI.creditCardVerifiedBy) ? verifiedDataFromAPI.creditCardVerifiedBy.firstName + ' ' + verifiedDataFromAPI.creditCardVerifiedBy.lastName :  'Unkown User',
-        verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
-      };
     }
 
     function completeInit(responseCollection) {
