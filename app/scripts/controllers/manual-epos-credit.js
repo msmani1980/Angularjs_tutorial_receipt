@@ -161,7 +161,7 @@ angular.module('ts5App')
       var currencyList = angular.copy(responseCollection[0].response);
       setBaseCurrency(currencyList);
       setCashBagCurrencyList(angular.copy(responseCollection[1].response), currencyList, angular.copy(responseCollection[2].dailyExchangeRateCurrencies));
-      $scope.isVerified = angular.copy(responseCollection[3].creditVerifiedOn) || false;
+      $scope.isVerified = angular.copy(responseCollection[3].creditCardVerifiedOn) || false;
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {
