@@ -338,7 +338,7 @@ angular.module('ts5App')
       var exchangePercentage = 0;
 
       if ($scope.companyIsUsingCash) {
-        revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.stockTotals.totalNet.netEPOS);
+        revenueValue = parseFloat($scope.totalRevenue.epos) - parseFloat($scope.stockTotals.totalNet.netEPOS);
         revenuePercentage = (makeFinite(revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS))) * 100;
         exchangeValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
         exchangePercentage = (makeFinite(exchangeValue / parseFloat($scope.stockTotals.totalNet.netEPOS))) * 100;
