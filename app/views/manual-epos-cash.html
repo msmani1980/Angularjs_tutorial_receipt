@@ -1,0 +1,100 @@
+<div class="container module-container">
+  <form name="manualCashForm" ng-submit="save()">
+    <div class="list-controls">
+      <div class="row item-list-row">
+        <div class="col-xs-8">
+          <h2 class="view-name">Manual Epos Entry: <b>Add Cash</b><br>
+            <small>Cash Bag {{ cashBag.cashBagNumber }}</small>
+          </h2>
+        </div>
+
+        <div class="col-xs-4 text-right">
+          <a class="btn btn-default" href="/#/manual-epos-dashboard/{{ cashBag.id }}">
+            <span class="fa fa-arrow-left"></span> Back
+          </a>
+          <button class="btn btn-primary" type="submit" ng-click="setShouldExit(true)" ng-hide="isVerified || disableAll">
+            <span class="fa fa-check-square-o"></span> Save & Exit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <error-dialog form-object="manualCashForm" error-response="errorResponse" display="displayError">
+    </error-dialog>
+
+    <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by {{ verifiedInfo.verifiedBy }} on {{ verifiedInfo.verifiedTimestamp }}</div>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="input-group">
+              <span class="input-group-addon" id="cash-filter">Filter</span>
+              <input type="text"
+                     class="form-control"
+                     ng-model="filter.cash"
+                     placeholder="Select Currency Codes to filter by ..."
+                     aria-describedby="cash-filter"/>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+          <div class="col-xs-6">
+            <p><b>Amount</b></p>
+          </div>
+          <div class="col-xs-6">
+            <p><b>Converted Amount (AUD)</b></p>
+          </div>
+        </div>
+        <div ng-repeat="cash in currencyList | filter: {code: filter.cash} track by $index">
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="input-group">
+                <span class="input-group-addon">{{cash.currencyCode}}</span>
+                <input class="form-control"
+                       ng-model="cash.amount"
+                       maxlength="10"
+                       placeholder="0.00"
+                       custom-validity
+                       custom-pattern="decimalWithTwoDecimalPlaces"
+                       aria-describedby="cash"
+                       ng-disabled="isVerified || disableAll"/>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <input class="form-control"
+                     ng-value="convertAmount(cash)"
+                     placeholder="0.00"
+                     aria-describedby="currency"
+                     disabled="true"/>
+            </div>
+          </div>
+          <br>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-xs-6 text-right">
+            <p><b>Grand Total</b></p>
+          </div>
+          <div class="col-xs-6">
+            <input class="form-control" type="number" ng-value="sumConvertedAmounts()" disabled="true"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-footer">
+        <div class="row">
+          <div class="col-xs-12 text-right">
+            <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll"><span class="fa fa-check-square-o"></span> Save</button>
+            <button class="btn btn-default" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
+            <button class="btn btn-success" type="button" ng-click="verify()" ng-hide="isVerified || disableAll"><span class="fa fa-check-circle"></span> Verify</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<dynamic-left-nav></dynamic-left-nav></div>

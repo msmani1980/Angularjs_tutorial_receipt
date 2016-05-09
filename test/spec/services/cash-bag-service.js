@@ -296,6 +296,100 @@ describe('Service: cashBagService', function () {
       });
     });
 
+    describe('get manual cash bag list', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.getManualCashBagList).toBe(true);
+      });
+
+      it('should make GET call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        var type = 'cash';
+        $httpBackend.expectGET(/cashbag\/fakeId\/cash/).respond(200, {});
+
+        cashBagService.getManualCashBagList(type, cashBagId, {}).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
+    describe('get manual cash bag record currency', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.getManualCashBagRecord).toBe(true);
+      });
+
+      it('should make GET call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        var recordId = 'fakeRecordId';
+        var type = 'cash';
+        $httpBackend.expectGET(/cashbag\/fakeId\/cash\/fakeRecordId/).respond(200, {});
+
+        cashBagService.getManualCashBagRecord(type, cashBagId, recordId).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
+    describe('create manual cash bag record', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.createManualCashBagRecord).toBe(true);
+      });
+
+      it('should make GET call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        var type = 'cash';
+        $httpBackend.expectPOST(/cashbag\/fakeId\/cash/).respond(200, {});
+
+        cashBagService.createManualCashBagRecord(type, cashBagId, {}).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
+    describe('update manual cash bag record', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.updateManualCashBagRecord).toBe(true);
+      });
+
+      it('should make GET call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        var recordId = 'fakeRecordId';
+        var type = 'cash';
+        $httpBackend.expectPUT(/cashbag\/fakeId\/cash\/fakeRecordId/).respond(200, {});
+
+        cashBagService.updateManualCashBagRecord(type, cashBagId, recordId, {}).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
+    describe('delete manual cash bag record', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.deleteManualCashBagRecord).toBe(true);
+      });
+
+      it('should make DELETE call with cash bag id', function () {
+        var cashBagId = 'fakeId';
+        var recordId = 'fakeRecordId';
+        var type = 'cash';
+        $httpBackend.expectDELETE(/cashbag\/fakeId\/cash\/fakeRecordId/).respond(200, {});
+
+        cashBagService.deleteManualCashBagRecord(type, cashBagId, recordId).then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        $httpBackend.flush();
+      });
+    });
+
+
   });
 
 });

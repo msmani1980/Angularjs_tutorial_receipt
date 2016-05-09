@@ -77,7 +77,8 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
 
   function getStoreInstance(id) {
     return requestResource.getStoreInstance({
-      id: id
+      id: id,
+      cachePrevent: Date.now()
     }).$promise;
   }
 

@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "count": 5,
+    "limit": 5,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 55,
+      "cashbagId": 1263,
+      "currencyId": 11,
+      "amount": 0.0,
+      "convertedAmount": 0.0,
+      "storeInstanceId": 1845,
+      "eposCashBagsId": 512
+    }, {
+      "id": 54,
+      "cashbagId": 1263,
+      "currencyId": 2,
+      "amount": 0.0,
+      "convertedAmount": 0.0,
+      "storeInstanceId": 1845,
+      "eposCashBagsId": 512
+    }, {
+      "id": 53,
+      "cashbagId": 1263,
+      "currencyId": 9,
+      "amount": 0.0,
+      "convertedAmount": 0.0,
+      "storeInstanceId": 1845,
+      "eposCashBagsId": 512
+    }, {
+      "id": 52,
+      "cashbagId": 1263,
+      "currencyId": 1,
+      "amount": 12.0,
+      "convertedAmount": 21.13,
+      "storeInstanceId": 1845,
+      "eposCashBagsId": 512
+    }, {
+      "id": 51,
+      "cashbagId": 1263,
+      "currencyId": 8,
+      "amount": 12.0,
+      "convertedAmount": 12.0,
+      "storeInstanceId": 1845,
+      "eposCashBagsId": 512
+    }
+  ]
+}

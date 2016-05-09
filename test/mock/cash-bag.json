@@ -16,6 +16,7 @@
   "updatedBy": null,
   "updatedOn": null,
   "cashbagSubmittedBy": null,
+  "storeInstanceId": 123,
   "cashBagCurrencies": [
     {
       "id": 477,

@@ -8,9 +8,9 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('manualEposFactory', function($q) {
+  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, dailyExchangeRatesService, storeInstanceService) {
 
-    var getPromotionsList = function() {
+    var getPromotionsList = function () {
       var mockPromotionsList = [{
         benefitTypeId: 1,
         benefitTypeName: 'Discount',
@@ -75,35 +75,7 @@ angular.module('ts5App')
       return getPromotionsListDeferred.promise;
     };
 
-    var getCurrencyList = function() {
-      var mockCurrencyList = [{
-        id: 1,
-        companyId: 2,
-        code: 'USD',
-        name: 'dollar'
-      }, {
-        id: 57,
-        companyId: 2,
-        code: 'GBP',
-        name: 'GreatBritishPound'
-      }, {
-        id: 58,
-        companyId: 2,
-        code: 'EUR',
-        name: 'EURO'
-      }, {
-        id: 63,
-        companyId: 2,
-        code: 'NOK',
-        name: 'NOK'
-      }];
-
-      var getCurrencyListDeferred = $q.defer();
-      getCurrencyListDeferred.resolve(mockCurrencyList);
-      return getCurrencyListDeferred.promise;
-    };
-
-    var getVoucherItemsList = function() {
+    var getVoucherItemsList = function () {
       var mockVoucherItemsList = [{
         endDate: '2015-05-29',
         startDate: '2015-01-01',
@@ -141,7 +113,7 @@ angular.module('ts5App')
       return getVoucherItemsListDeferred.promise;
     };
 
-    var getVirtualItemsList = function() {
+    var getVirtualItemsList = function () {
       var mockVirtualItemsList = [{
         companyId: 403,
         itemCode: 'Mov230',
@@ -224,7 +196,7 @@ angular.module('ts5App')
       return getVirtualItemsListDeferred.promise;
     };
 
-    var getDiscountsList = function() {
+    var getDiscountsList = function () {
       var mockDiscountsList = {
         voucher: [{
           endDate: '2015-05-29',
@@ -295,63 +267,60 @@ angular.module('ts5App')
       return getDiscountsListDeferred.promise;
     };
 
-    var getCashList = function() {
-      var mockCashList = [{
-        id: 1,
-        companyId: 2,
-        code: 'USD',
-        name: 'dollar',
-        amount: 2.00,
-        audValue: 3.50
-      }, {
-        id: 57,
-        companyId: 2,
-        code: 'GBP',
-        name: 'GreatBritishPound',
-        amount: 2.00,
-        audValue: 3.50
-      }, {
-        id: 58,
-        companyId: 2,
-        code: 'EUR',
-        name: 'EURO',
-        amount: 2.00,
-        audValue: 3.50
-      }, {
-        id: 63,
-        companyId: 2,
-        code: 'NOK',
-        name: 'NOK',
-        amount: 2.00,
-        audValue: 3.50
-      }];
+    function getCurrencyList(payload) {
+      payload = payload || {};
+      return currenciesService.getCompanyCurrencies(payload);
+    }
 
-      var getCashListDeferred = $q.defer();
-      getCashListDeferred.resolve(mockCashList);
-      return getCashListDeferred.promise;
-    };
+    function getDailyExchangeRate(exchangeRateId) {
+      var companyId = globalMenuService.getCompanyData().companyId;
+      return dailyExchangeRatesService.getDailyExchangeById(companyId, exchangeRateId);
+    }
 
-    var getCreditList = function() {
-      var mockCreditList = [{
-        id: 1,
-        companyId: 2,
-        code: 'USD',
-        name: 'dollar',
-        amount: 2.00,
-        audValue: 3.50
-      }, {
-        id: 57,
-        companyId: 2,
-        code: 'GBP',
-        name: 'GreatBritishPound',
-        amount: 2.00,
-        audValue: 3.50
-      }];
+    function getCashBag(cashBagId) {
+      return cashBagService.getCashBag(cashBagId);
+    }
 
-      var getCreditListDeferred = $q.defer();
-      getCreditListDeferred.resolve(mockCreditList);
-      return getCreditListDeferred.promise;
-    };
+    function getCashBagCashList(cashBagId, payload) {
+      return cashBagService.getManualCashBagList('cash', cashBagId, payload);
+    }
+
+    function createCashBagCash(cashBagId, payload) {
+      cashBagService.createManualCashBagRecord('cash', cashBagId, payload);
+    }
+
+    function updateCashBagCash(cashBagId, cashId, payload) {
+      cashBagService.updateManualCashBagRecord('cash', cashBagId, cashId, payload);
+    }
+
+    function getCashBagCreditList(cashBagId, payload) {
+      return cashBagService.getManualCashBagList('credit-cards', cashBagId, payload);
+    }
+
+    function createCashBagCredit(cashBagId, payload) {
+      cashBagService.createManualCashBagRecord('credit-cards', cashBagId, payload);
+    }
+
+    function updateCashBagCredit(cashBagId, creditId, payload) {
+      cashBagService.updateManualCashBagRecord('credit-cards', cashBagId, creditId, payload);
+    }
+
+    function getStoreInstance(storeInstanceId) {
+      return storeInstanceService.getStoreInstance(storeInstanceId);
+    }
+
+    function verifyCashBag(cashBagId, verifyType) {
+      return cashBagService.verifyCashBag(cashBagId, verifyType);
+    }
+
+    function unverifyCashBag(cashBagId, verifyType) {
+      return cashBagService.unverifyCashBag(cashBagId, verifyType);
+    }
+
+    function checkCashBagVerification(cashBagId) {
+      var payload = { id: cashBagId };
+      return cashBagService.getCashBagVerifications(payload);
+    }
 
     return {
       getPromotionsList: getPromotionsList,
@@ -359,8 +328,18 @@ angular.module('ts5App')
       getVoucherItemsList: getVoucherItemsList,
       getVirtualItemsList: getVirtualItemsList,
       getDiscountsList: getDiscountsList,
-      getCashList: getCashList,
-      getCreditList: getCreditList
+      getCashBag: getCashBag,
+      getDailyExchangeRate: getDailyExchangeRate,
+      getStoreInstance: getStoreInstance,
+      verifyCashBag: verifyCashBag,
+      unverifyCashBag: unverifyCashBag,
+      checkCashBagVerification: checkCashBagVerification,
+      getCashBagCashList: getCashBagCashList,
+      createCashBagCash: createCashBagCash,
+      updateCashBagCash: updateCashBagCash,
+      getCashBagCreditList: getCashBagCreditList,
+      createCashBagCredit: createCashBagCredit,
+      updateCashBagCredit: updateCashBagCredit
     };
 
   });

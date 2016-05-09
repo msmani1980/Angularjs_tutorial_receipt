@@ -18,6 +18,7 @@ angular.module('ts5App')
     var verifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/verify/:type';
     var unverifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/unverify/:type';
     var cashBagVerificationsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id';
+    var manualCashBagRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:id/:type/:recordId';
 
     var requestParameters = {
       id: '@id',
@@ -27,6 +28,12 @@ angular.module('ts5App')
 
     var cashBagCurrencyRequestParams = {
       currencyId: '@currencyId'
+    };
+
+    var manualCashBagRequestParams = {
+      id: '@id',
+      recordId: '@recordId',
+      type: '@type'
     };
 
     var actions = {
@@ -62,6 +69,21 @@ angular.module('ts5App')
       },
       getCashBagVerifications: {
         method: 'GET'
+      },
+      getManualCashBagList: {
+        method: 'GET'
+      },
+      getManualCashBagRecord: {
+        method: 'GET'
+      },
+      createManualCashBagRecord: {
+        method: 'POST'
+      },
+      updateManualCashBagRecord: {
+        method: 'PUT'
+      },
+      deleteManualCashBagRecord: {
+        method: 'DELETE'
       }
     };
 
@@ -73,6 +95,7 @@ angular.module('ts5App')
     var verifyRequestResource = $resource(verifyRequestURL, requestParameters, actions);
     var unverifyRequestResource = $resource(unverifyRequestURL, requestParameters, actions);
     var cashBagVerificationsRequestResource = $resource(cashBagVerificationsRequestURL, requestParameters, actions);
+    var manualCashBagRequestResource = $resource(manualCashBagRequestURL, manualCashBagRequestParams, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -157,6 +180,41 @@ angular.module('ts5App')
       return unverifyRequestResource.unverifyCashBag(payload).$promise;
     };
 
+    function getManualCashBagList(manualType, cashBagId, payload) {
+      manualCashBagRequestParams.id = cashBagId;
+      manualCashBagRequestParams.recordId = '';
+      manualCashBagRequestParams.type = manualType;
+      return manualCashBagRequestResource.getManualCashBagList(payload).$promise;
+    }
+
+    function getManualCashBagRecord(manualType, cashBagId, currencyId) {
+      manualCashBagRequestParams.id = cashBagId;
+      manualCashBagRequestParams.recordId = currencyId;
+      manualCashBagRequestParams.type = manualType;
+      return manualCashBagRequestResource.getManualCashBagRecord().$promise;
+    }
+
+    function createManualCashBagRecord(manualType, cashBagId, payload) {
+      manualCashBagRequestParams.id = cashBagId;
+      manualCashBagRequestParams.recordId = '';
+      manualCashBagRequestParams.type = manualType;
+      return manualCashBagRequestResource.createManualCashBagRecord(payload).$promise;
+    }
+
+    function updateManualCashBagRecord(manualType, cashBagId, currencyId, payload) {
+      manualCashBagRequestParams.id = cashBagId;
+      manualCashBagRequestParams.recordId = currencyId;
+      manualCashBagRequestParams.type = manualType;
+      return manualCashBagRequestResource.updateManualCashBagRecord(payload).$promise;
+    }
+
+    function deleteManualCashBagRecord(manualType, cashBagId, currencyId) {
+      manualCashBagRequestParams.id = cashBagId;
+      manualCashBagRequestParams.recordId = currencyId;
+      manualCashBagRequestParams.type = manualType;
+      return manualCashBagRequestResource.deleteManualCashBagRecord().$promise;
+    }
+
     return {
       getCashBagList: getCashBagList,
       getCashBag: getCashBag,
@@ -169,6 +227,11 @@ angular.module('ts5App')
       mergeCashBag: mergeCashBag,
       verifyCashBag: verifyCashBag,
       unverifyCashBag: unverifyCashBag,
-      getCashBagVerifications: getCashBagVerifications
+      getCashBagVerifications: getCashBagVerifications,
+      getManualCashBagList: getManualCashBagList,
+      getManualCashBagRecord: getManualCashBagRecord,
+      createManualCashBagRecord: createManualCashBagRecord,
+      updateManualCashBagRecord: updateManualCashBagRecord,
+      deleteManualCashBagRecord: deleteManualCashBagRecord
     };
   });

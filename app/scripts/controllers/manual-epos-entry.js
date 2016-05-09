@@ -8,136 +8,63 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManualEposEntryCtrl', function($scope, $q, manualEposFactory) {
+  .controller('ManualEposEntryCtrl', function ($scope, $q, manualEposFactory, $location, $routeParams) {
 
-    var panelNames = [{
-      name: 'Cash',
-      show: false,
-      verified: false
-    }, {
-      name: 'Credit Card',
-      show: false,
-      verified: false
-    }, {
-      name: 'Discounts',
-      show: false,
-      verified: false
-    }, {
-      name: 'Promotions',
-      show: false,
-      verified: true
-    }, {
-      name: 'Virtual Items',
-      show: false,
-      verified: false
-    }, {
-      name: 'Voucher Items',
-      show: false,
-      verified: false
-    }];
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
 
-    function setScopeVariables() {
-      $scope.viewName = 'Manual ePOS Data Entry';
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
 
-      //set data
-      $scope.currencyObj = {
-        promotions: {
-          currency: angular.copy($scope.currencyList[1])
-        },
-        voucherItems: {
-          currency: angular.copy($scope.currencyList[1])
-        },
-        virtualItems: {
-          currency: angular.copy($scope.currencyList[1])
-        },
-        discounts: {
-          currency: angular.copy($scope.currencyList[1])
-        }
+    $scope.navigateToForm = function (formName) {
+      $location.path('manual-epos-' + formName + '/' + $routeParams.cashBagId);
+    };
+
+    $scope.isFormVerified = function (formName) {
+      return (angular.isDefined($scope.isVerified) ? $scope.isVerified[formName] : false);
+    };
+
+    function setVerification(dataFromAPI) {
+      var cashBagVerification = angular.copy(dataFromAPI);
+      $scope.isVerified = {
+        cash: !!cashBagVerification.cashVerifiedOn,
+        credit: !!cashBagVerification.creditCardVerifiedOn,
+        discount: !!cashBagVerification.discountVerifiedOn,
+        promotion: !!cashBagVerification.promoVerifiedOn,
+        virtual: !!cashBagVerification.virtualItemVerifiedOn,
+        voucher: !!cashBagVerification.voucherItemsVerifiedOn
       };
-
-      //set panel data
-      $scope.panelNames = panelNames;
-      $scope.showAll = false;
     }
 
-    function checkPanelForAttr(name, attr) {
-      var payload = [];
-      angular.forEach($scope.panelNames, function(panel) {
-        if (panel.name === name && panel[attr] === true) {
-          payload.push(panel.name);
-        }
-      });
-
-      return (payload.length > 0);
+    function getCashBagVerification() {
+      manualEposFactory.checkCashBagVerification($routeParams.cashBagId).then(setVerification);
     }
 
-    function setScopeData(response, name) {
-      $scope[name] = angular.copy(response);
+    function setCashBag(dataFromAPI) {
+      $scope.cashBag = angular.copy(dataFromAPI);
     }
 
-    function createPromisesForData() {
-      return [
-        manualEposFactory.getCurrencyList().then(function(response) {
-          setScopeData(response, 'currencyList');
-        }),
+    function getCashBag() {
+      manualEposFactory.getCashBag($routeParams.cashBagId).then(setCashBag);
+    }
 
-        manualEposFactory.getPromotionsList().then(function(response) {
-          setScopeData(response, 'promotionsList');
-        }),
+    function completeInit() {
+      hideLoadingModal();
+    }
 
-        manualEposFactory.getPromotionsList().then(function(response) {
-          setScopeData(response, 'companyPromotionsList');
-        }),
+    function init() {
+      showLoadingModal('Loading Cash Bag...');
+      $scope.viewName = 'Manual ePOS Data Entry';
+      $scope.cashBagId = $routeParams.cashBagId;
 
-        manualEposFactory.getVoucherItemsList().then(function(response) {
-          setScopeData(response, 'companyVoucherItemsList');
-        }),
-
-        manualEposFactory.getVirtualItemsList().then(function(response) {
-          setScopeData(response, 'companyVirtualItemsList');
-        }),
-
-        manualEposFactory.getDiscountsList().then(function(response) {
-          setScopeData(response, 'companyDiscountsList');
-        }),
-
-        manualEposFactory.getCashList().then(function(response) {
-          setScopeData(response, 'companyCashList');
-        }),
-
-        manualEposFactory.getCreditList().then(function(response) {
-          setScopeData(response, 'companyCreditCardList');
-        })
-
+      var initPromises = [
+        getCashBag(),
+        getCashBagVerification()
       ];
+      $q.all(initPromises).then(completeInit);
     }
 
-    function promisesForData() {
-      var promises = createPromisesForData();
-      $q.all(promises).then(setScopeVariables);
-    }
-
-    promisesForData();
-
-    // Always place $scope functions at the end of the controller
-    $scope.shouldShowPanel = function(name) {
-      return checkPanelForAttr(name, 'show');
-    };
-
-    $scope.panelIsVerified = function(name) {
-      return checkPanelForAttr(name, 'verified');
-    };
-
-    $scope.verifyPanel = function(name) {
-      angular.forEach($scope.panelNames, function(panel) {
-        if (panel.name === name) {
-          if (panel.verified === true) {
-            panel.verified = false;
-          } else {
-            panel.verified = true;
-          }
-        }
-      });
-    };
-
+    init();
   });
