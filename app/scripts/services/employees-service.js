@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('employeesService', function ($resource, ENV) {
 
-    var employeeRequestURL = ENV.apiUrl + '/api/companies/:id/employees/:empId';
+    var employeeRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/employees/:empId';
 
     var employeeActions = {
       getEmployees: {
