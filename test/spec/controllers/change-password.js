@@ -110,7 +110,7 @@ describe('Controller: ChangePasswordCtrl', function() {
       });
 
       it('should show errors in authUser bad request', function() {
-        changePasswordDeferred.reject(400);
+        changePasswordDeferred.reject(new Number (400));
         scope.$digest();
         expect(scope.displayError).toBeTruthy();
       });
@@ -118,7 +118,7 @@ describe('Controller: ChangePasswordCtrl', function() {
       it('should show errors in chpwd bad request', function() {
         loginDeferred.resolve({});
         scope.$digest();
-        changePasswordDeferred.reject(400);
+        changePasswordDeferred.reject(new Number (400));
         scope.$digest();
         expect(scope.displayError).toBeTruthy();
       });

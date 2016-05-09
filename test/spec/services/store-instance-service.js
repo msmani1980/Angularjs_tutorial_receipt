@@ -32,7 +32,7 @@ describe('Service: storeInstanceService', function () {
 
   describe('getStoreInstance', function () {
     it('should make GET request to API', function () {
-      var expectedURL = /dispatch\/store-instances\/\d+$/;
+      var expectedURL = /dispatch\/store-instances\/\d+\?cachePrevent=\d+$/;
       var fakeId = 38;
       httpBackend.expectGET(expectedURL).respond(200, {});
       storeInstanceService.getStoreInstance(fakeId).then(function (response) {
