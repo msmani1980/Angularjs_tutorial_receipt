@@ -55,7 +55,7 @@ describe('Controller: ForgotUsernamePasswordCtrl', function() {
       });
 
       it('should show errors in bad request', function() {
-        sendEmailDeferred.reject(400);
+        sendEmailDeferred.reject({});
         scope.$digest();
         expect(scope.displayError).toBeTruthy();
       });
