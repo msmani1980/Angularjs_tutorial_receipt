@@ -23,6 +23,7 @@ angular.module('ts5App')
       hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = dataFromAPI;
+      $scope.disableAll = true;
     }
 
     $scope.sumConvertedAmounts = function () {
