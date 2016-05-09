@@ -267,64 +267,6 @@ angular.module('ts5App')
       return getDiscountsListDeferred.promise;
     };
 
-    var getCashList = function () {
-      var mockCashList = [{
-        id: 1,
-        companyId: 2,
-        code: 'USD',
-        name: 'dollar',
-        amount: 2.00,
-        audValue: 3.50
-      }, {
-        id: 57,
-        companyId: 2,
-        code: 'GBP',
-        name: 'GreatBritishPound',
-        amount: 2.00,
-        audValue: 3.50
-      }, {
-        id: 58,
-        companyId: 2,
-        code: 'EUR',
-        name: 'EURO',
-        amount: 2.00,
-        audValue: 3.50
-      }, {
-        id: 63,
-        companyId: 2,
-        code: 'NOK',
-        name: 'NOK',
-        amount: 2.00,
-        audValue: 3.50
-      }];
-
-      var getCashListDeferred = $q.defer();
-      getCashListDeferred.resolve(mockCashList);
-      return getCashListDeferred.promise;
-    };
-
-    var getCreditList = function () {
-      var mockCreditList = [{
-        id: 1,
-        companyId: 2,
-        code: 'USD',
-        name: 'dollar',
-        amount: 2.00,
-        audValue: 3.50
-      }, {
-        id: 57,
-        companyId: 2,
-        code: 'GBP',
-        name: 'GreatBritishPound',
-        amount: 2.00,
-        audValue: 3.50
-      }];
-
-      var getCreditListDeferred = $q.defer();
-      getCreditListDeferred.resolve(mockCreditList);
-      return getCreditListDeferred.promise;
-    };
-
     function getCurrencyList(payload) {
       payload = payload || {};
       return currenciesService.getCompanyCurrencies(payload);
@@ -340,15 +282,27 @@ angular.module('ts5App')
     }
 
     function getCashBagCashList(cashBagId, payload) {
-      return cashBagService.getCashBagCashList(cashBagId, payload);
+      return cashBagService.getManualCashBagList('cash', cashBagId, payload);
     }
 
     function createCashBagCash(cashBagId, payload) {
-      cashBagService.createCashBagCash(cashBagId, payload);
+      cashBagService.createManualCashBagRecord('cash', cashBagId, payload);
     }
 
     function updateCashBagCash(cashBagId, cashId, payload) {
-      cashBagService.updateCashBagCash(cashBagId, cashId, payload);
+      cashBagService.updateManualCashBagRecord('cash', cashBagId, cashId, payload);
+    }
+
+    function getCashBagCreditList(cashBagId, payload) {
+      return cashBagService.getManualCashBagList('credit-cards', cashBagId, payload);
+    }
+
+    function createCashBagCredit(cashBagId, payload) {
+      cashBagService.createManualCashBagRecord('credit-cards', cashBagId, payload);
+    }
+
+    function updateCashBagCredit(cashBagId, creditId, payload) {
+      cashBagService.updateManualCashBagRecord('credit-cards', cashBagId, creditId, payload);
     }
 
     function getStoreInstance(storeInstanceId) {
@@ -374,17 +328,18 @@ angular.module('ts5App')
       getVoucherItemsList: getVoucherItemsList,
       getVirtualItemsList: getVirtualItemsList,
       getDiscountsList: getDiscountsList,
-      getCashList: getCashList,
-      getCreditList: getCreditList,
       getCashBag: getCashBag,
-      getCashBagCashList: getCashBagCashList,
       getDailyExchangeRate: getDailyExchangeRate,
       getStoreInstance: getStoreInstance,
       verifyCashBag: verifyCashBag,
       unverifyCashBag: unverifyCashBag,
       checkCashBagVerification: checkCashBagVerification,
+      getCashBagCashList: getCashBagCashList,
       createCashBagCash: createCashBagCash,
-      updateCashBagCash: updateCashBagCash
+      updateCashBagCash: updateCashBagCash,
+      getCashBagCreditList: getCashBagCreditList,
+      createCashBagCredit: createCashBagCredit,
+      updateCashBagCredit: updateCashBagCredit
     };
 
   });

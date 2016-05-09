@@ -21,18 +21,16 @@ describe('Service: manualEposFactory', function() {
     spyOn(manualEposFactory, 'getVoucherItemsList');
     spyOn(manualEposFactory, 'getVirtualItemsList');
     spyOn(manualEposFactory, 'getDiscountsList');
-    spyOn(manualEposFactory, 'getCashList');
-    spyOn(manualEposFactory, 'getCreditList');
 
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeById');
     spyOn(cashBagService, 'getCashBag');
-    spyOn(cashBagService, 'getCashBagCashList');
+    spyOn(cashBagService, 'getManualCashBagList');
     spyOn(cashBagService, 'verifyCashBag');
     spyOn(cashBagService, 'unverifyCashBag');
     spyOn(cashBagService, 'getCashBagVerifications');
-    spyOn(cashBagService, 'createCashBagCash');
-    spyOn(cashBagService, 'updateCashBagCash');
+    spyOn(cashBagService, 'createManualCashBagRecord');
+    spyOn(cashBagService, 'updateManualCashBagRecord');
     spyOn(storeInstanceService, 'getStoreInstance');
   }));
 
@@ -64,20 +62,6 @@ describe('Service: manualEposFactory', function() {
     });
   });
 
-  describe('getCashList API call', function() {
-    it('should call getCashList', function() {
-      manualEposFactory.getCashList();
-      expect(manualEposFactory.getCashList).toHaveBeenCalled();
-    });
-  });
-
-  describe('getCreditList API call', function() {
-    it('should call getCreditList', function() {
-      manualEposFactory.getCreditList();
-      expect(manualEposFactory.getCreditList).toHaveBeenCalled();
-    });
-  });
-
   describe('getCurrencyList API call', function () {
     it('should call getCurrencyList from currenciesService', function () {
       manualEposFactory.getCurrencyList({});
@@ -92,25 +76,54 @@ describe('Service: manualEposFactory', function() {
     });
   });
 
-  describe('getCashBag API call', function () {
+  describe('cash bag service API call', function () {
     it('should call getCashBag from cashBagService', function () {
       manualEposFactory.getCashBag();
       expect(cashBagService.getCashBag).toHaveBeenCalled();
     });
 
-    it('should call getCashBag from cashBagService', function () {
-      manualEposFactory.getCashBagCashList();
-      expect(cashBagService.getCashBagCashList).toHaveBeenCalled();
+    it('should call getCashBagCash from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakePayload = {};
+      manualEposFactory.getCashBagCashList(fakeCashBagId, fakePayload);
+      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('cash', fakeCashBagId, fakePayload);
     });
 
     it('should call createCashBagCash from cashBagService', function () {
-      manualEposFactory.createCashBagCash();
-      expect(cashBagService.createCashBagCash).toHaveBeenCalled();
+      var fakeCashBagId = 123;
+      var fakePayload = {};
+      manualEposFactory.createCashBagCash(fakeCashBagId, fakePayload);
+      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('cash', fakeCashBagId, fakePayload);
     });
 
     it('should call updateCashBagCash from cashBagService', function () {
-      manualEposFactory.updateCashBagCash();
-      expect(cashBagService.updateCashBagCash).toHaveBeenCalled();
+      var fakeCashBagId = 123;
+      var fakeCashBagCashId = 234;
+      var fakePayload = {};
+      manualEposFactory.updateCashBagCash(fakeCashBagId, fakeCashBagCashId, fakePayload);
+      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('cash', fakeCashBagId, fakeCashBagCashId, fakePayload);
+    });
+
+    it('should call getCashBagCredit from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakePayload = {};
+      manualEposFactory.getCashBagCreditList(fakeCashBagId, fakePayload);
+      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('credit-cards', fakeCashBagId, fakePayload);
+    });
+
+    it('should call createCashBagCredit from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakePayload = {};
+      manualEposFactory.createCashBagCredit(fakeCashBagId, fakePayload);
+      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('credit-cards', fakeCashBagId, fakePayload);
+    });
+
+    it('should call updateCashBagCredit from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakeCashBagCashId = 234;
+      var fakePayload = {};
+      manualEposFactory.updateCashBagCredit(fakeCashBagId, fakeCashBagCashId, fakePayload);
+      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('credit-cards', fakeCashBagId, fakeCashBagCashId, fakePayload);
     });
 
     it('should call verifyCashBag from cashBagService', function () {

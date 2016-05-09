@@ -3,7 +3,7 @@
     <div class="list-controls">
       <div class="row item-list-row">
         <div class="col-xs-8">
-          <h2 class="view-name">Manual Epos Entry: <b>Add Cash</b><br>
+          <h2 class="view-name">Manual Epos Entry: <b>Add Credit</b><br>
             <small>Cash Bag {{ cashBag.cashBagNumber }}</small>
           </h2>
         </div>
@@ -12,7 +12,7 @@
           <a class="btn btn-default" href="/#/manual-epos-dashboard/{{ cashBag.id }}">
             <span class="fa fa-arrow-left"></span> Back
           </a>
-          <button class="btn btn-primary" type="submit" ng-click="setShouldExit(true)" ng-hide="isVerified || disableAll">
+          <button type="submit" class="btn btn-primary" ng-click="setShouldExit(true)" ng-hide="isVerified || disableAll">
             <span class="fa fa-check-square-o"></span> Save & Exit
           </button>
         </div>
@@ -48,24 +48,24 @@
             <p><b>Converted Amount (AUD)</b></p>
           </div>
         </div>
-        <div ng-repeat="cash in currencyList | filter: {code: filter.cash} track by $index">
+        <div ng-repeat="credit in currencyList | filter: {code: filter.cash} track by $index">
           <div class="row">
             <div class="col-xs-6">
               <div class="input-group">
-                <span class="input-group-addon">{{cash.currencyCode}}</span>
+                <span class="input-group-addon">{{credit.currencyCode}}</span>
                 <input class="form-control"
-                       ng-model="cash.amount"
+                       ng-disabled="isVerified || disableAll"
+                       ng-model="credit.amount"
                        maxlength="10"
                        placeholder="0.00"
                        custom-validity
                        custom-pattern="decimalWithTwoDecimalPlaces"
-                       aria-describedby="cash"
-                       ng-disabled="isVerified || disableAll"/>
+                       aria-describedby="cash"/>
               </div>
             </div>
             <div class="col-xs-6">
               <input class="form-control"
-                     ng-value="convertAmount(cash)"
+                     ng-value="convertAmount(credit)"
                      placeholder="0.00"
                      aria-describedby="currency"
                      disabled="true"/>

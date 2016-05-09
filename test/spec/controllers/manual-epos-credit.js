@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: ManualEposCashCtrl', function () {
+describe('Controller: ManualEposCreditCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -12,7 +12,7 @@ describe('Controller: ManualEposCashCtrl', function () {
   beforeEach(module('served/cash-bag-cash.json'));
 
 
-  var ManualEposCashCtrl;
+  var ManualEposCreditCtrl;
   var manualEposFactory;
   var globalMenuService;
   var dateUtility;
@@ -88,7 +88,7 @@ describe('Controller: ManualEposCashCtrl', function () {
 
     cashBagCashListDeferred = $q.defer();
     cashBagCashListDeferred.resolve(cashBagCashListJSON);
-    spyOn(manualEposFactory, 'getCashBagCashList').and.returnValue(cashBagCashListDeferred.promise);
+    spyOn(manualEposFactory, 'getCashBagCreditList').and.returnValue(cashBagCashListDeferred.promise);
 
     verifyDeferred = $q.defer();
     verifyDeferred.resolve(cashBagVerificationJSON.response[0]);
@@ -100,11 +100,11 @@ describe('Controller: ManualEposCashCtrl', function () {
 
     createDeferred = $q.defer();
     createDeferred.resolve({});
-    spyOn(manualEposFactory, 'createCashBagCash').and.returnValue(createDeferred.promise);
+    spyOn(manualEposFactory, 'createCashBagCredit').and.returnValue(createDeferred.promise);
 
     updateDeferred = $q.defer();
     updateDeferred.resolve({});
-    spyOn(manualEposFactory, 'updateCashBagCash').and.returnValue(updateDeferred.promise);
+    spyOn(manualEposFactory, 'updateCashBagCredit').and.returnValue(updateDeferred.promise);
 
     cashBagId = 123;
     mockBaseCurrency = 23;
@@ -113,7 +113,7 @@ describe('Controller: ManualEposCashCtrl', function () {
     spyOn(location, 'path').and.callThrough();
 
     scope = $rootScope.$new();
-    ManualEposCashCtrl = $controller('ManualEposCashCtrl', {
+    ManualEposCreditCtrl = $controller('ManualEposCreditCtrl', {
       $scope: scope,
       $routeParams: {
         cashBagId: cashBagId
@@ -141,8 +141,8 @@ describe('Controller: ManualEposCashCtrl', function () {
       expect(manualEposFactory.getCurrencyList).toHaveBeenCalledWith(expectedPayload);
     });
 
-    it('should get cash bag cash', function () {
-      expect(manualEposFactory.getCashBagCashList).toHaveBeenCalledWith(cashBagId, {});
+    it('should get cash bag credit', function () {
+      expect(manualEposFactory.getCashBagCreditList).toHaveBeenCalledWith(cashBagId, {});
     });
 
     it('should get daily exchange rate', function () {
@@ -153,7 +153,11 @@ describe('Controller: ManualEposCashCtrl', function () {
     it('should check the cash bag verification', function () {
       expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
       expect(scope.isVerified).toBeDefined();
-      expect(scope.verifiedInfo.verifiedBy).toEqual('John Smith');
+    });
+
+    it('shoud parse verifiecation date, time, and user', function () {
+      expect(scope.verifiedInfo).toBeDefined();
+      expect(scope.verifiedInfo.verifiedBy).toEqual('Joe Williams');
       expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53');
     });
 
@@ -234,7 +238,7 @@ describe('Controller: ManualEposCashCtrl', function () {
       scope.isVerified = false;
       scope.verifiedInfo = null;
       scope.verify();
-      expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
+      expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CREDIT');
       scope.$digest();
       expect(scope.isVerified).toEqual(true);
       expect(scope.verifiedInfo).not.toEqual(null);
@@ -244,13 +248,13 @@ describe('Controller: ManualEposCashCtrl', function () {
       scope.isVerified = true;
       scope.verifiedInfo = null;
       scope.unverify();
-      expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
+      expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CREDIT');
       scope.$digest();
       expect(scope.isVerified).toEqual(false);
     });
   });
 
-  describe('saving cash bag cash', function () {
+  describe('saving cash bag credit', function () {
     var expectedPayload;
     beforeEach(function () {
       scope.currencyList = [{
@@ -268,14 +272,14 @@ describe('Controller: ManualEposCashCtrl', function () {
 
     it('should call create for new entries', function () {
       scope.save();
-      expect(manualEposFactory.createCashBagCash).toHaveBeenCalledWith(cashBagId, expectedPayload);
+      expect(manualEposFactory.createCashBagCredit).toHaveBeenCalledWith(cashBagId, expectedPayload);
     });
 
     it('should call update for existing entries', function () {
       var cashId = 4;
       scope.currencyList[0].id = cashId;
       scope.save();
-      expect(manualEposFactory.updateCashBagCash).toHaveBeenCalledWith(cashBagId, cashId, expectedPayload);
+      expect(manualEposFactory.updateCashBagCredit).toHaveBeenCalledWith(cashBagId, cashId, expectedPayload);
     });
 
     it('should redirect page if shouldExit is true', function () {

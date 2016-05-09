@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc function
- * @name ts5App.controller:ManualEposCashCtrl
+ * @name ts5App.controller:ManualEposCreditCtrl
  * @description
  * # ManualEposCashCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManualEposCashCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService,
-                                              lodash, messageService, $location) {
+  .controller('ManualEposCreditCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService,
+                                                lodash, messageService, $location) {
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -66,9 +66,9 @@ angular.module('ts5App')
         return;
       }
 
-      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI.cashVerifiedOn);
+      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI.creditCardVerifiedOn);
       $scope.verifiedInfo = {
-        verifiedBy: (verifiedDataFromAPI.cashVerifiedBy) ? verifiedDataFromAPI.cashVerifiedBy.firstName + ' ' + verifiedDataFromAPI.cashVerifiedBy.lastName : 'Unknown User',
+        verifiedBy: (verifiedDataFromAPI.creditCardVerifiedBy) ? verifiedDataFromAPI.creditCardVerifiedBy.firstName + ' ' + verifiedDataFromAPI.creditCardVerifiedBy.lastName : 'Unknown User',
         verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
       };
     }
@@ -80,32 +80,32 @@ angular.module('ts5App')
 
     $scope.verify = function () {
       showLoadingModal('Verifying');
-      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CASH').then(verifyToggleSuccess, showErrors);
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CREDIT').then(verifyToggleSuccess, showErrors);
     };
 
     $scope.unverify = function () {
       showLoadingModal('Unverifying');
-      manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CASH').then(verifyToggleSuccess, showErrors);
+      manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CREDIT').then(verifyToggleSuccess, showErrors);
     };
 
-    function updateCashBagCash(cash) {
+    function updateCashBagCredit(credit) {
       var payload = {
-        currencyId: cash.currencyId,
-        amount: parseFloat(cash.amount) || 0,
-        convertedAmount: parseFloat(cash.convertedAmount) || 0
+        currencyId: credit.currencyId,
+        amount: parseFloat(credit.amount) || 0,
+        convertedAmount: parseFloat(credit.convertedAmount) || 0
       };
 
-      return manualEposFactory.updateCashBagCash($routeParams.cashBagId, cash.id, payload);
+      return manualEposFactory.updateCashBagCredit($routeParams.cashBagId, credit.id, payload);
     }
 
-    function createCashBagCash(cash) {
+    function createCashBagCredit(credit) {
       var payload = {
-        currencyId: cash.currencyId,
-        amount: parseFloat(cash.amount) || 0,
-        convertedAmount: parseFloat(cash.convertedAmount) || 0
+        currencyId: credit.currencyId,
+        amount: parseFloat(credit.amount) || 0,
+        convertedAmount: parseFloat(credit.convertedAmount) || 0
       };
 
-      return manualEposFactory.createCashBagCash($routeParams.cashBagId, payload);
+      return manualEposFactory.createCashBagCredit($routeParams.cashBagId, payload);
     }
 
     function saveSuccess() {
@@ -122,9 +122,9 @@ angular.module('ts5App')
       var promises = [];
       angular.forEach($scope.currencyList, function (cash) {
         if (cash.id) {
-          promises.push(updateCashBagCash(cash));
+          promises.push(updateCashBagCredit(cash));
         } else {
-          promises.push(createCashBagCash(cash));
+          promises.push(createCashBagCredit(cash));
         }
       });
 
@@ -141,19 +141,19 @@ angular.module('ts5App')
       $scope.baseCurrency.currencyCode = lodash.findWhere(currencyList, { id: $scope.baseCurrency.currencyId });
     }
 
-    function mergeCashBagCash(cashBagCashList) {
-      angular.forEach(cashBagCashList, function (cashBagCash) {
-        var currencyIndex = lodash.findIndex($scope.currencyList, { currencyId: cashBagCash.currencyId });
+    function mergeCashBagCredit(cashBagCreditList) {
+      angular.forEach(cashBagCreditList, function (cashBagCredit) {
+        var currencyIndex = lodash.findIndex($scope.currencyList, { currencyId: cashBagCredit.currencyId });
 
         if (currencyIndex >= 0) {
-          $scope.currencyList[currencyIndex].amount = cashBagCash.amount.toFixed(2);
-          $scope.currencyList[currencyIndex].convertedAmount = cashBagCash.convertedAmount;
-          $scope.currencyList[currencyIndex].id = cashBagCash.id;
+          $scope.currencyList[currencyIndex].amount = cashBagCredit.amount.toFixed(2);
+          $scope.currencyList[currencyIndex].convertedAmount = cashBagCredit.convertedAmount;
+          $scope.currencyList[currencyIndex].id = cashBagCredit.id;
         }
       });
     }
 
-    function setCashBagCurrencyList(cashBagCashList, currencyList, dailyExchangeRates) {
+    function setCashBagCurrencyList(cashBagCreditList, currencyList, dailyExchangeRates) {
       $scope.currencyList = [];
       var cashBagCurrencyList = $scope.cashBag.cashBagCurrencies || [];
 
@@ -168,7 +168,7 @@ angular.module('ts5App')
         }
       });
 
-      mergeCashBagCash(cashBagCashList);
+      mergeCashBagCredit(cashBagCreditList);
     }
 
     function completeInit(responseCollection) {
@@ -185,7 +185,7 @@ angular.module('ts5App')
 
       var promises = [
         manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter }),
-        manualEposFactory.getCashBagCashList($routeParams.cashBagId, {}),
+        manualEposFactory.getCashBagCreditList($routeParams.cashBagId, {}),
         manualEposFactory.getDailyExchangeRate($scope.cashBag.dailyExchangeRateId),
         manualEposFactory.checkCashBagVerification($routeParams.cashBagId)
       ];
