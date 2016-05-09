@@ -84,7 +84,7 @@ angular.module('ts5App')
     };
 
     $scope.unverify = function () {
-      showLoadingModal('Verifying');
+      showLoadingModal('Unverifying');
       manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CASH').then(verifyToggleSuccess, showErrors);
     };
 

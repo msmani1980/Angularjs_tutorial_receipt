@@ -22,7 +22,7 @@
     <error-dialog form-object="manualCashForm" error-response="errorResponse" display="displayError">
     </error-dialog>
 
-    <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by areyes on 11/20/2015 at 12:34pm</div>
+    <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by {{ verifiedInfo.verifiedBy }} on {{ verifiedInfo.verifiedTimestamp }}</div>
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
