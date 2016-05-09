@@ -18,7 +18,7 @@ angular.module('ts5App')
     var verifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/verify/:type';
     var unverifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/unverify/:type';
     var cashBagVerificationsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id';
-    var cashBagCashRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:id/cash/:currencyId';
+    var manualCashBagRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:id/:type/:recordId';
 
     var requestParameters = {
       id: '@id',
@@ -30,9 +30,10 @@ angular.module('ts5App')
       currencyId: '@currencyId'
     };
 
-    var cashBagCashRequestParams = {
+    var manualCashBagRequestParams = {
       id: '@id',
-      currencyId: '@currencyId'
+      recordId: '@recordId',
+      type: '@type'
     };
 
     var actions = {
@@ -69,19 +70,19 @@ angular.module('ts5App')
       getCashBagVerifications: {
         method: 'GET'
       },
-      getCashBagCashList: {
+      getManualCashBagList: {
         method: 'GET'
       },
-      getCashBagCash: {
+      getManualCashBagRecord: {
         method: 'GET'
       },
-      createCashBagCash: {
+      createManualCashBagRecord: {
         method: 'POST'
       },
-      updateCashBagCash: {
+      updateManualCashBagRecord: {
         method: 'PUT'
       },
-      deleteCashBagCash: {
+      deleteManualCashBagRecord: {
         method: 'DELETE'
       }
     };
@@ -94,7 +95,7 @@ angular.module('ts5App')
     var verifyRequestResource = $resource(verifyRequestURL, requestParameters, actions);
     var unverifyRequestResource = $resource(unverifyRequestURL, requestParameters, actions);
     var cashBagVerificationsRequestResource = $resource(cashBagVerificationsRequestURL, requestParameters, actions);
-    var cashBagCashRequestResource = $resource(cashBagCashRequestURL, cashBagCashRequestParams, actions);
+    var manualCashBagRequestResource = $resource(manualCashBagRequestURL, manualCashBagRequestParams, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -179,34 +180,39 @@ angular.module('ts5App')
       return unverifyRequestResource.unverifyCashBag(payload).$promise;
     };
 
-    function getCashBagCashList(cashBagId, payload) {
-      cashBagCashRequestParams.id = cashBagId;
-      cashBagCashRequestParams.currencyId = '';
-      return cashBagCashRequestResource.getCashBagCashList(payload).$promise;
+    function getManualCashBagList(manualType, cashBagId, payload) {
+      manualCashBagRequestParams.id = cashBagId;
+      manualCashBagRequestParams.recordId = '';
+      manualCashBagRequestParams.type = manualType;
+      return manualCashBagRequestResource.getManualCashBagList(payload).$promise;
     }
 
-    function getCashBagCash(cashBagId, currencyId) {
-      cashBagCashRequestParams.id = cashBagId;
-      cashBagCashRequestParams.currencyId = currencyId;
-      return cashBagCashRequestResource.getCashBagCash().$promise;
+    function getManualCashBagRecord(manualType, cashBagId, currencyId) {
+      manualCashBagRequestParams.id = cashBagId;
+      manualCashBagRequestParams.recordId = currencyId;
+      manualCashBagRequestParams.type = manualType;
+      return manualCashBagRequestResource.getManualCashBagRecord().$promise;
     }
 
-    function createCashBagCash(cashBagId, payload) {
-      cashBagCashRequestParams.id = cashBagId;
-      cashBagCashRequestParams.currencyId = '';
-      return cashBagCashRequestResource.createCashBagCash(payload).$promise;
+    function createManualCashBagRecord(manualType, cashBagId, payload) {
+      manualCashBagRequestParams.id = cashBagId;
+      manualCashBagRequestParams.recordId = '';
+      manualCashBagRequestParams.type = manualType;
+      return manualCashBagRequestResource.createManualCashBagRecord(payload).$promise;
     }
 
-    function updateCashBagCash(cashBagId, currencyId, payload) {
-      cashBagCashRequestParams.id = cashBagId;
-      cashBagCashRequestParams.currencyId = currencyId;
-      return cashBagCashRequestResource.updateCashBagCash(payload).$promise;
+    function updateManualCashBagRecord(manualType, cashBagId, currencyId, payload) {
+      manualCashBagRequestParams.id = cashBagId;
+      manualCashBagRequestParams.recordId = currencyId;
+      manualCashBagRequestParams.type = manualType;
+      return manualCashBagRequestResource.updateManualCashBagRecord(payload).$promise;
     }
 
-    function deleteCashBagCash(cashBagId, currencyId) {
-      cashBagCashRequestParams.id = cashBagId;
-      cashBagCashRequestParams.currencyId = currencyId;
-      return cashBagCashRequestResource.deleteCashBagCash().$promise;
+    function deleteManualCashBagRecord(manualType, cashBagId, currencyId) {
+      manualCashBagRequestParams.id = cashBagId;
+      manualCashBagRequestParams.recordId = currencyId;
+      manualCashBagRequestParams.type = manualType;
+      return manualCashBagRequestResource.deleteManualCashBagRecord().$promise;
     }
 
     return {
@@ -222,10 +228,10 @@ angular.module('ts5App')
       verifyCashBag: verifyCashBag,
       unverifyCashBag: unverifyCashBag,
       getCashBagVerifications: getCashBagVerifications,
-      getCashBagCashList: getCashBagCashList,
-      getCashBagCash: getCashBagCash,
-      createCashBagCash: createCashBagCash,
-      updateCashBagCash: updateCashBagCash,
-      deleteCashBagCash: deleteCashBagCash
+      getManualCashBagList: getManualCashBagList,
+      getManualCashBagRecord: getManualCashBagRecord,
+      createManualCashBagRecord: createManualCashBagRecord,
+      updateManualCashBagRecord: updateManualCashBagRecord,
+      deleteManualCashBagRecord: deleteManualCashBagRecord
     };
   });
