@@ -93,16 +93,16 @@ angular.module('ts5App')
       return manualEposFactory.createCashBagCredit($routeParams.cashBagId, payload);
     }
 
-    function saveSuccess(shouldExit) {
+    function saveSuccess() {
       hideLoadingModal();
-      if (shouldExit) {
+      if ($scope.shouldExit) {
         $location.path('manual-epos-dashboard/' + $routeParams.cashBagId);
       }
 
       messageService.success('Manual cash data successfully saved!');
     }
 
-    $scope.save = function (shouldExit) {
+    $scope.save = function () {
       showLoadingModal('Saving');
       var promises = [];
       angular.forEach($scope.currencyList, function (cash) {
@@ -113,9 +113,11 @@ angular.module('ts5App')
         }
       });
 
-      $q.all(promises).then(function () {
-        saveSuccess(shouldExit);
-      }, showErrors);
+      $q.all(promises).then(saveSuccess, showErrors);
+    };
+
+    $scope.setShouldExit = function (shouldExit) {
+      $scope.shouldExit = shouldExit;
     };
 
     function setBaseCurrency(currencyList) {
