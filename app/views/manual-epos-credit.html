@@ -49,22 +49,23 @@
             <p><b>Converted Amount (AUD)</b></p>
           </div>
         </div>
-        <div ng-repeat="cash in currencyList | filter: {code: filter.cash} track by $index">
+        <div ng-repeat="credit in currencyList | filter: {code: filter.cash} track by $index">
           <div class="row">
             <div class="col-xs-6">
               <div class="input-group">
-                <span class="input-group-addon">{{cash.currencyCode}}</span>
-                <input type="number"
-                       class="form-control"
-                       ng-model="cash.amount"
+                <span class="input-group-addon">{{credit.currencyCode}}</span>
+                <input class="form-control"
+                       ng-model="credit.amount"
                        maxlength="10"
                        placeholder="0.00"
+                       custom-validity
+                       custom-pattern="decimalWithTwoDecimalPlaces"
                        aria-describedby="cash"/>
               </div>
             </div>
             <div class="col-xs-6">
               <input class="form-control"
-                     ng-value="convertAmount(cash)"
+                     ng-value="convertAmount(credit)"
                      placeholder="0.00"
                      aria-describedby="currency"
                      disabled="true"/>

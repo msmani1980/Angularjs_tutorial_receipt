@@ -294,15 +294,15 @@ angular.module('ts5App')
     }
 
     function getCashBagCreditList(cashBagId, payload) {
-      return cashBagService.getManualCashBagList('credit', cashBagId, payload);
+      return cashBagService.getManualCashBagList('credit-cards', cashBagId, payload);
     }
 
     function createCashBagCredit(cashBagId, payload) {
-      cashBagService.createManualCashBagRecord('credit', cashBagId, payload);
+      cashBagService.createManualCashBagRecord('credit-cards', cashBagId, payload);
     }
 
     function updateCashBagCredit(cashBagId, creditId, payload) {
-      cashBagService.updateManualCashBagRecord('credit', cashBagId, creditId, payload);
+      cashBagService.updateManualCashBagRecord('credit-cards', cashBagId, creditId, payload);
     }
 
     function getStoreInstance(storeInstanceId) {
