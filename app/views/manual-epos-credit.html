@@ -28,11 +28,11 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="input-group">
-              <span class="input-group-addon" id="cash-filter">Filter</span>
+              <span class="input-group-addon" id="cash-filter"><i class="fa fa-filter"></i> Filter By</span>
               <input type="text"
                      class="form-control"
-                     ng-model="filter.cash"
-                     placeholder="Select Currency Codes to filter by ..."
+                     ng-model="currencyFilter"
+                     placeholder="Type a currency code to filter by..."
                      aria-describedby="cash-filter"/>
             </div>
           </div>
@@ -48,7 +48,7 @@
             <p><b>Converted Amount (AUD)</b></p>
           </div>
         </div>
-        <div ng-repeat="credit in currencyList | filter: {code: filter.cash} track by $index">
+        <div ng-repeat="credit in currencyList | filter: {currencyCode: currencyFilter} track by $index">
           <div class="row">
             <div class="col-xs-6">
               <div class="input-group">
@@ -88,7 +88,7 @@
         <div class="row">
           <div class="col-xs-12 text-right">
             <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll"><span class="fa fa-check-square-o"></span> Save</button>
-            <button class="btn btn-default" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
+            <button class="btn btn-danger" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
             <button class="btn btn-success" type="button" ng-click="verify()" ng-hide="isVerified || disableAll"><span class="fa fa-check-circle"></span> Verify</button>
           </div>
         </div>
