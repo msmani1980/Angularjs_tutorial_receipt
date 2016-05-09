@@ -16,13 +16,18 @@ describe('Directive: dynamicLeftNav', function () {
   var mainMenuService;
   var companyJSON;
   var companyTypesJSON;
+  var menuService;
+  var isMenuCashbagRestrictUseDeferred;
+  var isShowManageCashBagDeferred;
+  var isShowCashBagSubmissionDeferred;
 
-  beforeEach(inject(function (_$rootScope_, _$location_, $injector, $compile) {
+  beforeEach(inject(function (_$rootScope_, _$location_, $injector, $compile, $q) {
     scope = _$rootScope_;
     location = _$location_;
     globalMenuService = $injector.get('globalMenuService');
     identityAccessFactory = $injector.get('identityAccessFactory');
     mainMenuService = $injector.get('mainMenuService');
+    menuService = $injector.get('menuService');
 
     companyJSON = $injector.get('servedCompany');
     companyTypesJSON = $injector.get('servedCompanyTypes');
@@ -30,10 +35,20 @@ describe('Directive: dynamicLeftNav', function () {
     spyOn(globalMenuService, 'getCompanyData').and.returnValue(companyJSON);
     spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({ companyTypes: companyTypesJSON });
 
+    isMenuCashbagRestrictUseDeferred = $q.defer();
+    isMenuCashbagRestrictUseDeferred.resolve(true);
+  	isShowManageCashBagDeferred = $q.defer();
+  	isShowManageCashBagDeferred.resolve(false);
+  	isShowCashBagSubmissionDeferred = $q.defer();
+  	isShowCashBagSubmissionDeferred.resolve(false);
+    spyOn(menuService, 'isMenuCashbagRestrictUse').and.returnValue(isMenuCashbagRestrictUseDeferred.promise);
+    spyOn(menuService, 'isShowManageCashBag').and.returnValue(isShowManageCashBagDeferred.promise);
+    spyOn(menuService, 'isShowCashBagSubmission').and.returnValue(isShowCashBagSubmissionDeferred.promise);
+
     element = angular.element('<dynamic-left-nav></dynamic-left-nav>');
-    element = $compile(element)(scope);
-    scope.$digest();
+    element = $compile(element)(scope);    scope.$digest();
     controller = element.controller('dynamicLeftNav');
+    scope.$digest();
   }));
 
   describe('directive isolated scope', function () {
@@ -43,12 +58,14 @@ describe('Directive: dynamicLeftNav', function () {
     }));
 
     it('should have a leaveViewNav function defined', function () {
+      scope.$digest();
       expect(isolatedScope.leaveViewNav).toBeDefined();
     });
 
     it('should be able to call leaveViewNav()', function () {
       spyOn(isolatedScope, 'leaveViewNav').and.callThrough();
       isolatedScope.leaveViewNav('some-path');
+      scope.$digest();
       expect(isolatedScope.leaveViewNav).toHaveBeenCalled();
     });
 
@@ -56,6 +73,7 @@ describe('Directive: dynamicLeftNav', function () {
       spyOn(isolatedScope, 'leaveViewNav').and.callThrough();
       spyOn(isolatedScope, 'sendToEmber');
       isolatedScope.leaveViewNav('/ember/#/promotions');
+      scope.$digest();
       expect(isolatedScope.sendToEmber).toHaveBeenCalledWith('/ember/#/promotions');
     });
 
@@ -88,7 +106,8 @@ describe('Directive: dynamicLeftNav', function () {
       expect(isolatedScope.menuItems).toBeDefined();
     });
 
-    it('should have 5 items in the menuItems array scope variable', function () {
+    it('should have 3 item in the menuItems array scope variable', function () {
+      scope.$digest();
       expect(isolatedScope.menuItems.length).toEqual(3);
     });
   });
@@ -111,7 +130,8 @@ describe('Directive: dynamicLeftNav', function () {
       expect(isolatedScope.menuItems).toBeDefined();
     });
 
-    it('should have 5 items in the menuItems array scope variable', function () {
+    it('should have 3 item in the menuItems array scope variable', function () {
+      scope.$digest();
       expect(isolatedScope.menuItems.length).toEqual(3);
     });
   });

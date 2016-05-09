@@ -70,6 +70,10 @@ angular.module('ts5App')
       return companyExchangeRateService.updateCompanyExchangeRate(payload);
     };
 
+    var getDailyExchangeRatesForCmp = function (companyId, retailCompanyId, exchangeRateDate) {
+      return dailyExchangeRatesService.getDailyExchangeRatesForCmp(companyId, retailCompanyId, exchangeRateDate);
+    };
+
     return {
       getCompany: getCompany,
       getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
@@ -85,7 +89,7 @@ angular.module('ts5App')
       getCompanyExchangeRates: getCompanyExchangeRates,
       deleteCompanyExchangeRate: deleteCompanyExchangeRate,
       createCompanyExchangeRate: createCompanyExchangeRate,
-      updateCompanyExchangeRate: updateCompanyExchangeRate
+      updateCompanyExchangeRate: updateCompanyExchangeRate,
+      getDailyExchangeRatesForCmp: getDailyExchangeRatesForCmp
     };
-
   });

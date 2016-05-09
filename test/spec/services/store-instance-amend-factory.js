@@ -17,7 +17,7 @@ describe('Factory: storeInstanceAmendFactory', function () {
     cashBagService = _cashBagService_;
     storeInstanceAmendService = _storeInstanceAmendService_;
 
-    spyOn(cashBagService, 'getCashBagList').and.stub();
+    spyOn(cashBagService, 'getCashBagVerifications').and.stub();
     spyOn(cashBagService, 'getCashBagCarrierInstances').and.stub();
     spyOn(cashBagService, 'deleteCashBag').and.stub();
     spyOn(storeInstanceAmendService, 'movePostTrip').and.stub();
@@ -44,12 +44,11 @@ describe('Factory: storeInstanceAmendFactory', function () {
     it('getCashBags should call cashBagService', function () {
       var payload = {
         companyId: 1,
-        isReconciliation: true,
         storeInstanceId: 2
       };
 
       storeInstanceAmendFactory.getCashBags(payload);
-      expect(cashBagService.getCashBagList).toHaveBeenCalledWith(payload.companyId, payload);
+      expect(cashBagService.getCashBagVerifications).toHaveBeenCalledWith(payload);
     });
 
     it('getCashBagCarrierInstances should call cashBagService', function () {

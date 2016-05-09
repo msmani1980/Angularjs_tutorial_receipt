@@ -39,6 +39,7 @@ describe('Factory: currencyFactory', function () {
     spyOn(companyExchangeRateService, 'deleteCompanyExchangeRate');
     spyOn(companyExchangeRateService, 'createCompanyExchangeRate');
     spyOn(companyExchangeRateService, 'updateCompanyExchangeRate');
+    spyOn(dailyExchangeRatesService, 'getDailyExchangeRatesForCmp');
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -100,9 +101,14 @@ describe('Factory: currencyFactory', function () {
     });
 
     it('should call dailyExchangeRatesService on saveDailyExchangeRates', function () {
-      currencyFactory.saveDailyExchangeRates();
-      expect(dailyExchangeRatesService.saveDailyExchangeRates).toHaveBeenCalled();
-    });
+        currencyFactory.saveDailyExchangeRates();
+        expect(dailyExchangeRatesService.saveDailyExchangeRates).toHaveBeenCalled();
+      });
+
+    it('should call dailyExchangeRatesService on getDailyExchangeRatesForCmp', function () {
+        currencyFactory.getDailyExchangeRatesForCmp();
+        expect(dailyExchangeRatesService.getDailyExchangeRatesForCmp).toHaveBeenCalled();
+      });
   });
 
   describe('companyPreferences API', function () {
@@ -135,4 +141,3 @@ describe('Factory: currencyFactory', function () {
   });
 
 });
-
