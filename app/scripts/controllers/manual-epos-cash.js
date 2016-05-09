@@ -60,7 +60,7 @@ angular.module('ts5App')
     };
 
     function setVerifiedData(verifiedDataFromAPI) {
-      $scope.isVerified = (!!verifiedDataFromAPI.creditCardVerifiedOn) || false;
+      $scope.isVerified = (!!verifiedDataFromAPI.cashVerifiedOn) || false;
       if (!$scope.isVerified) {
         $scope.verifiedInfo = {};
         return;
