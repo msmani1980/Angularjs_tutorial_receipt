@@ -121,77 +121,77 @@
       </button>
     </h3>
 
-    <!--<table class="table table-responsive table-bordered table-hover">-->
-      <!--<thead>-->
-      <!--<tr>-->
-        <!--<th class="col-xs-4" ng-show="isMenuEditable()">Item Category</th>-->
-        <!--<th class="col-xs-6">Item Name</th>-->
-        <!--<th class="col-xs-1">Quantity</th>-->
-        <!--<th ng-hide="isMenuReadOnly()" class="col-xs-1">Actions</th>-->
-      <!--</tr>-->
-      <!--</thead>-->
-      <!--<tbody>-->
-      <!--<tr ng-repeat="item in menuItemList | orderBy:'itemName' track by $index">-->
-        <!--<td ng-if="isMenuEditable()">-->
-          <!--<ui-select-->
-            <!--name="selectedCategories[$index]"-->
-            <!--ng-model="selectedCategories[$index]"-->
-            <!--on-select="updateItemsList($index)"-->
-            <!--theme="bootstrap"-->
-            <!--placeholder="Select a category to filter the items list...">-->
-            <!--<ui-select-match-->
-              <!--allow-clear="true"-->
-              <!--placeholder="Select a category to filter the items list...">{{$select.selected.name}}-->
-            <!--</ui-select-match>-->
-            <!--<ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">-->
-              <!--<div ng-bind-html="category.name | highlight: $select.search"></div>-->
-            <!--</ui-select-choices>-->
-          <!--</ui-select>-->
-        <!--</td>-->
-        <!--<td ng-if="isMenuEditable()">-->
-          <!--<ui-select-->
-            <!--name="menuItem"-->
-            <!--required="true"-->
-            <!--ng-model="menuItemList[$index]"-->
-            <!--theme="bootstrap"-->
-            <!--placeholder="Select or search an item from the list..."-->
-            <!--ng-disabled="shouldDisableItem($index)"-->
-            <!--on-select="setAvailableItems()">-->
-            <!--<ui-select-match-->
-              <!--placeholder="Select or search an item from the list...">{{$select.selected.itemName}}-->
-            <!--</ui-select-match>-->
-            <!--<ui-select-choices repeat="menuItem in filteredItemsCollection[$index] | filter: $select.search | orderBy:'itemName'">-->
-              <!--<div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>-->
-            <!--</ui-select-choices>-->
-          <!--</ui-select>-->
-        <!--</td>-->
-        <!--<td ng-if="!isMenuEditable()">-->
-          <!--<input type="text"-->
-                 <!--class="form-control"-->
-                 <!--name="menuItem-{{$index}}"-->
-                 <!--ng-model="item.itemName"-->
-                 <!--ng-disabled="!isMenuEditable()"/>-->
-        <!--</td>-->
-        <!--<td>-->
-          <!--<input custom-validity-->
-                 <!--custom-pattern="number"-->
-                 <!--type="text"-->
-                 <!--required-->
-                 <!--maxlength="5"-->
-                 <!--class="form-control"-->
-                 <!--name="menuItemQuantity"-->
-                 <!--ng-model="item.itemQty"-->
-                 <!--placeholder="{{$index}}"-->
-                 <!--ng-disabled="!isMenuEditable()"/>-->
-        <!--</td>-->
-        <!--<td ng-show="isMenuEditable()">-->
-          <!--<button class="btn btn-danger btn-xs" ng-click="deleteNewItem($index)">-->
-            <!--<i class="fa fa-trash"></i>-->
-          <!--</button>-->
-        <!--</td>-->
-      <!--</tr>-->
-      <!--</tbody>-->
-    <!--</table>-->
+    <table class="table table-responsive table-bordered table-hover">
+      <thead>
+      <tr>
+        <th class="col-xs-4" ng-show="isMenuEditable()">Item Category</th>
+        <th class="col-xs-6">Item Name</th>
+        <th class="col-xs-1">Quantity</th>
+        <th ng-hide="isMenuReadOnly()" class="col-xs-1">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="item in menuItemList | orderBy:'itemName' track by $index">
+        <td ng-if="isMenuEditable()">
+          <ui-select
+            name="selectedCategories[item.menuIndex]"
+            ng-model="selectedCategories[item.menuIndex]"
+            on-select="filterItemListByCategory(item.menuIndex)"
+            theme="bootstrap"
+            placeholder="Select a category to filter the items list...">
+            <ui-select-match
+              allow-clear="true"
+              placeholder="Select a category to filter the items list...">{{$select.selected.name}}
+            </ui-select-match>
+            <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
+              <div ng-bind-html="category.name | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td ng-if="isMenuEditable()">
+          <ui-select
+            name="menuItem"
+            required="true"
+            ng-model="item.selectedItem"
+            theme="bootstrap"
+            placeholder="Select or search an item from the list..."
+            ng-disabled="shouldDisableItem(item.menuIndex)"
+            on-select="setAvailableItems()">
+            <ui-select-match
+              placeholder="Select or search an item from the list...">{{$select.selected.itemName}}
+            </ui-select-match>
+            <ui-select-choices repeat="menuItem in filteredItemsCollection[item.menuIndex] | filter: $select.search | orderBy:'itemName'">
+              <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td ng-if="!isMenuEditable()">
+          <input type="text"
+                 class="form-control"
+                 name="menuItem-{{$index}}"
+                 ng-model="item.itemName"
+                 ng-disabled="!isMenuEditable()"/>
+        </td>
+        <td>
+          <input custom-validity
+                 custom-pattern="number"
+                 type="text"
+                 required
+                 maxlength="5"
+                 class="form-control"
+                 name="menuItemQuantity"
+                 ng-model="item.itemQty"
+                 placeholder="{{$index}}"
+                 ng-disabled="!isMenuEditable()"/>
+        </td>
+        <td ng-show="isMenuEditable()">
+          <button class="btn btn-danger btn-xs" ng-click="deleteNewItem($index)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
 
   </form>
 </div>

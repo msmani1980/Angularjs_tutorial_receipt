@@ -260,38 +260,38 @@ angular.module('ts5App')
     //  menuFactory.updateMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
     //};
     //
-    //$scope.isViewOnly = function() {
-    //  return ($routeParams.state === 'view');
-    //};
-    //
-    //$scope.isMenuReadOnly = function() {
-    //  if ($routeParams.state === 'create' || (angular.isUndefined($scope.menu))) {
-    //    return false;
-    //  }
-    //
-    //  if ($routeParams.state === 'view') {
-    //    return true;
-    //  }
-    //
-    //  return !dateUtility.isAfterToday($scope.menu.startDate);
-    //};
-    //
-    //$scope.isMenuEditable = function() {
-    //  if ($routeParams.state === 'create') {
-    //    return true;
-    //  }
-    //
-    //  if ($routeParams.state === 'view') {
-    //    return false;
-    //  }
-    //
-    //  if (angular.isUndefined($scope.menu)) {
-    //    return false;
-    //  }
-    //
-    //  return dateUtility.isAfterToday($scope.menu.startDate);
-    //};
-    //
+    $scope.isViewOnly = function () {
+      return ($routeParams.state === 'view');
+    };
+
+    $scope.isMenuReadOnly = function () {
+      if ($routeParams.state === 'create' || (angular.isUndefined($scope.menu))) {
+        return false;
+      }
+
+      if ($routeParams.state === 'view') {
+        return true;
+      }
+
+      return !dateUtility.isAfterToday($scope.menu.startDate);
+    };
+
+    $scope.isMenuEditable = function () {
+      if ($routeParams.state === 'create') {
+        return true;
+      }
+
+      if ($routeParams.state === 'view') {
+        return false;
+      }
+
+      if (angular.isUndefined($scope.menu)) {
+        return false;
+      }
+
+      return dateUtility.isAfterToday($scope.menu.startDate);
+    };
+
     //$scope.canDeleteItems = function() {
     //  var totalItems = $scope.menu.menuItems.length;
     //  return $scope.isMenuEditable() && totalItems > 1;
@@ -381,24 +381,63 @@ angular.module('ts5App')
       $scope.filteredItemList = angular.copy(dataFromAPI.masterItems);
     }
 
-    function getFilteredMasterItems(startDate, endDate, category) {
+    function getFilteredMasterItems(startDate, endDate) {
       var searchPayload = {
         startDate: startDate,
         endDate: endDate
       };
 
-      if (category) {
-        searchPayload.categoryId = category;
-      }
-
       menuFactory.getItemsList(searchPayload, true).then(setFilteredMasterItems, showErrors);
     }
 
+    function setFilteredItemsCollection(dataFromAPI, menuIndex) {
+      $scope.filteredItemsCollection[menuIndex] = angular.copy(dataFromAPI.masterItems);
+    }
+
+    function getFilteredMasterItemsByCategory(menuIndex) {
+      var selectedCategory = $scope.selectedCategories[menuIndex];
+      if (!selectedCategory) {
+        $scope.filteredItemsCollection[menuIndex] = angular.copy($scope.filteredItemList);
+        return;
+      }
+
+      var searchPayload = {
+        startDate: $scope.menu.startDate,
+        endDate: $scope.menu.endDate,
+        categoryId: selectedCategory.id
+      };
+
+      menuFactory.getItemsList(searchPayload, true).then(function (response) {
+        setFilteredItemsCollection(response, menuIndex);
+      }, showErrors);
+    }
+
+    $scope.filterItemListByCategory = function (menuIndex) {
+      getFilteredMasterItemsByCategory(menuIndex);
+    };
+
+    $scope.addItem = function () {
+      if (!$scope.menu.startDate && !$scope.menu.endDate) {
+        messageService.display('warning', 'Add Menu Item', 'Please select a date range first!');
+        return;
+      }
+
+      var nextIndex = $scope.menuItemList.length;
+      $scope.menuItemList.push({ menuIndex: nextIndex });
+      $scope.filteredItemsCollection.push(angular.copy($scope.filteredItems));
+    };
+
     function deserializeMenuItems() {
       $scope.menuItemList = [];
-      angular.forEach($scope.menu.menuItems, function (item) {
+      angular.forEach($scope.menu.menuItems, function (item, index) {
         var itemMatch = lodash.findWhere($scope.allMasterItems, { id: item.itemId });
-        $scope.menuItemList.push(itemMatch);
+        var newItem = {
+          itemQty: item.itemQty,
+          id: item.id,
+          menuIndex: index,
+          selectedItem: itemMatch
+        };
+        $scope.menuItemList.push(newItem);
       });
     }
 
@@ -453,7 +492,7 @@ angular.module('ts5App')
 
     $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
       if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
-        getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate, '');
+        getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
       }
     });
 
