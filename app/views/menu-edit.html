@@ -155,8 +155,8 @@
             ng-model="item.selectedItem"
             theme="bootstrap"
             placeholder="Select or search an item from the list..."
-            ng-disabled="shouldDisableItem(item.menuIndex)"
-            on-select="setAvailableItems()">
+            ng-disabled="shouldDisableItemSelect(item.menuIndex)"
+            on-select="filterAllItemLists()">
             <ui-select-match
               placeholder="Select or search an item from the list...">{{$select.selected.itemName}}
             </ui-select-match>

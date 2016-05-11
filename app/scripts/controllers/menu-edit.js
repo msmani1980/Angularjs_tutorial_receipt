@@ -377,11 +377,21 @@ angular.module('ts5App')
     //
     //initializeMenu();
 
+    //$scope.filterAllItemLists = function (menuIndex) {
+    //
+    //};
+
+    $scope.shouldDisableItemSelect = function (menuIndex) {
+      return !$scope.filteredItemsCollection[menuIndex];
+    };
+
     function setFilteredMasterItems(dataFromAPI) {
+      hideLoadingModal();
       $scope.filteredItemList = angular.copy(dataFromAPI.masterItems);
     }
 
     function getFilteredMasterItems(startDate, endDate) {
+      showLoadingModal('Loading items');
       var searchPayload = {
         startDate: startDate,
         endDate: endDate
@@ -401,6 +411,7 @@ angular.module('ts5App')
         return;
       }
 
+      $scope.filteredItemsCollection[menuIndex] = null;
       var searchPayload = {
         startDate: $scope.menu.startDate,
         endDate: $scope.menu.endDate,
@@ -424,7 +435,7 @@ angular.module('ts5App')
 
       var nextIndex = $scope.menuItemList.length;
       $scope.menuItemList.push({ menuIndex: nextIndex });
-      $scope.filteredItemsCollection.push(angular.copy($scope.filteredItems));
+      $scope.filteredItemsCollection.push(angular.copy($scope.filteredItemList));
     };
 
     function deserializeMenuItems() {
