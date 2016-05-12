@@ -377,9 +377,24 @@ angular.module('ts5App')
     //
     //initializeMenu();
 
-    //$scope.filterAllItemLists = function (menuIndex) {
-    //
-    //};
+    function getAllSelectedItemIds() {
+      var allSelectedItems = [];
+      angular.forEach($scope.menuItemList, function (menuItem) {
+        if (menuItem.selectedItem) {
+          allSelectedItems.push(menuItem.selectedItem.id);
+        }
+      });
+      return allSelectedItems;
+    }
+
+    $scope.filterAllItemLists = function () {
+      var selectedItemIds = getAllSelectedItemIds();
+      angular.forEach($scope.filteredItemsCollection, function (itemCollection) {
+        angular.forEach(itemCollection, function (item) {
+          item.selected = selectedItemIds.indexOf(item.id) >= 0;
+        });
+      });
+    };
 
     $scope.shouldDisableItemSelect = function (menuIndex) {
       return !$scope.filteredItemsCollection[menuIndex];
@@ -387,7 +402,7 @@ angular.module('ts5App')
 
     function setFilteredMasterItems(dataFromAPI) {
       hideLoadingModal();
-      $scope.filteredItemList = angular.copy(dataFromAPI.masterItems);
+      $scope.masterItemList = angular.copy(dataFromAPI.masterItems);
     }
 
     function getFilteredMasterItems(startDate, endDate) {
@@ -407,7 +422,7 @@ angular.module('ts5App')
     function getFilteredMasterItemsByCategory(menuIndex) {
       var selectedCategory = $scope.selectedCategories[menuIndex];
       if (!selectedCategory) {
-        $scope.filteredItemsCollection[menuIndex] = angular.copy($scope.filteredItemList);
+        $scope.filteredItemsCollection[menuIndex] = angular.copy($scope.masterItemList);
         return;
       }
 
@@ -435,13 +450,14 @@ angular.module('ts5App')
 
       var nextIndex = $scope.menuItemList.length;
       $scope.menuItemList.push({ menuIndex: nextIndex });
-      $scope.filteredItemsCollection.push(angular.copy($scope.filteredItemList));
+      $scope.filteredItemsCollection.push(angular.copy($scope.masterItemList));
+      $scope.filterAllItemLists();
     };
 
-    function deserializeMenuItems() {
+    function deserializeMenuItems(masterItemList) {
       $scope.menuItemList = [];
       angular.forEach($scope.menu.menuItems, function (item, index) {
-        var itemMatch = lodash.findWhere($scope.allMasterItems, { id: item.itemId });
+        var itemMatch = lodash.findWhere(masterItemList, { id: item.itemId });
         var newItem = {
           itemQty: item.itemQty,
           id: item.id,
@@ -456,8 +472,7 @@ angular.module('ts5App')
       $scope.categories = angular.copy(responseCollection[0].salesCategories);
       if (angular.isDefined(responseCollection[1])) {
         $scope.menu = angular.copy(responseCollection[2]);
-        $scope.allMasterItems = angular.copy(responseCollection[1].masterItems);
-        deserializeMenuItems();
+        deserializeMenuItems(angular.copy(responseCollection[1].masterItems));
       }
 
       $scope.menuEditForm.$setPristine();
@@ -479,7 +494,7 @@ angular.module('ts5App')
 
     function setupData() {
       $scope.viewName = 'Menu';
-      $scope.masterItemsList = [];
+      $scope.masterItemList = [];
       $scope.menuItemList = [];
       $scope.selectedCategories = [];
       $scope.filteredItemsCollection = [];
