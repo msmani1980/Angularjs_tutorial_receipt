@@ -122,6 +122,7 @@ angular.module('ts5App')
           field: 'Menu Name Duplicate',
           value: 'a menu with this name and code already exist and cannot be overwritten'
         }];
+        $scope.displayError = true;
       } else if (duplicateExists && dateIsInTheFuture) {
         hideLoadingModal();
         $scope.menuToOverwrite = response.menus[0];
