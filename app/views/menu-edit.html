@@ -99,7 +99,7 @@
           label="Effective To"
           placeholder="mm/dd/yyyy"
           min-date="minDate"
-          disable="isEndDateDisabled()"
+          disable="isViewOnly()"
           required="true">
         </date-picker-field>
       </div>
@@ -134,9 +134,9 @@
       <tr ng-repeat="item in menuItemList | orderBy:'itemName' track by $index">
         <td ng-if="isMenuEditable()">
           <ui-select
-            name="selectedCategories[$index]"
-            ng-model="selectedCategories[$index]"
-            on-select="updateItemsList($index)"
+            name="selectedCategories[item.menuIndex]"
+            ng-model="selectedCategories[item.menuIndex]"
+            on-select="filterItemListByCategory(item.menuIndex)"
             theme="bootstrap"
             placeholder="Select a category to filter the items list...">
             <ui-select-match
@@ -152,15 +152,16 @@
           <ui-select
             name="menuItem"
             required="true"
-            ng-model="menuItemList[$index]"
+            ng-model="item.selectedItem"
             theme="bootstrap"
             placeholder="Select or search an item from the list..."
-            ng-disabled="shouldDisableItem($index)"
-            on-select="setAvailableItems()">
+            ng-disabled="shouldDisableItemSelect(item.menuIndex)"
+            on-select="filterAllItemLists()">
             <ui-select-match
               placeholder="Select or search an item from the list...">{{$select.selected.itemName}}
             </ui-select-match>
-            <ui-select-choices repeat="menuItem in filteredItemsCollection[$index] | filter: $select.search | orderBy:'itemName'">
+            <ui-select-choices ui-disable-choice="menuItem.selected === true"
+              repeat="menuItem in filteredItemsCollection[item.menuIndex] | filter: $select.search | orderBy:'itemName'">
               <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -169,7 +170,7 @@
           <input type="text"
                  class="form-control"
                  name="menuItem-{{$index}}"
-                 ng-model="item.itemName"
+                 ng-model="item.selectedItem.itemName"
                  ng-disabled="!isMenuEditable()"/>
         </td>
         <td>
@@ -185,7 +186,7 @@
                  ng-disabled="!isMenuEditable()"/>
         </td>
         <td ng-show="isMenuEditable()">
-          <button class="btn btn-danger btn-xs" ng-click="deleteNewItem($index)">
+          <button class="btn btn-danger btn-xs" ng-click="removeItem(item.menuIndex)">
             <i class="fa fa-trash"></i>
           </button>
         </td>
