@@ -196,6 +196,8 @@ angular.module('ts5App')
       angular.forEach($scope.menuItemList, function (menuItem, index) {
         menuItem.menuIndex = index;
       });
+
+      $scope.filterAllItemLists();
     };
 
     $scope.addItem = function () {
