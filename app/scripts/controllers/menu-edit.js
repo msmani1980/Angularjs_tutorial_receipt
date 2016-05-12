@@ -201,6 +201,9 @@ angular.module('ts5App')
     function setFilteredMasterItems(dataFromAPI) {
       hideLoadingModal();
       $scope.masterItemList = angular.copy(dataFromAPI.masterItems);
+      angular.forEach($scope.menuItemList, function (menuItem) {
+        $scope.filterItemListByCategory(menuItem.menuIndex);
+      });
     }
 
     function getFilteredMasterItems(startDate, endDate) {
@@ -215,7 +218,6 @@ angular.module('ts5App')
 
     function setFilteredItemsCollection(dataFromAPI, menuIndex) {
       $scope.filteredItemsCollection[menuIndex] = angular.copy(dataFromAPI.masterItems);
-
       if (!$scope.menuItemList[menuIndex].selectedItem) {
         return;
       }
@@ -324,7 +326,6 @@ angular.module('ts5App')
 
     init();
 
-    // TODO: reinit filteredItemsCollection
     $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
       if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
