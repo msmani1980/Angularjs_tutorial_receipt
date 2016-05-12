@@ -259,10 +259,6 @@ angular.module('ts5App')
     //  var payload = $this.createPayload();
     //  menuFactory.updateMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
     //};
-    //
-    $scope.isViewOnly = function () {
-      return ($routeParams.state === 'view');
-    };
 
     $scope.isMenuReadOnly = function () {
       if ($routeParams.state === 'create' || (angular.isUndefined($scope.menu))) {
@@ -281,11 +277,7 @@ angular.module('ts5App')
         return true;
       }
 
-      if ($routeParams.state === 'view') {
-        return false;
-      }
-
-      if (angular.isUndefined($scope.menu)) {
+      if ($routeParams.state === 'view' || angular.isUndefined($scope.menu)) {
         return false;
       }
 
@@ -334,7 +326,7 @@ angular.module('ts5App')
     //
     //$scope.deleteNewItem = function(index) {
     //  $scope.selectedCategories.splice(index, 1);
-    //  $scope.menuItemList.splice(index, 1);
+    //  $scope.menuItemList.splice(index, 1);f
     //  $scope.menuEditForm.$setDirty();
     //  $scope.setAvailableItems();
     //};
@@ -377,6 +369,15 @@ angular.module('ts5App')
     //
     //initializeMenu();
 
+    $scope.removeItem = function (menuIndex) {
+      $scope.menuItemList.splice(menuIndex, 1);
+      $scope.filteredItemsCollection.splice(menuIndex, 1);
+      $scope.selectedCategories.splice(menuIndex, 1);
+      angular.forEach($scope.menuItemList, function (menuItem, index) {
+        menuItem.menuIndex = index;
+      });
+    };
+
     function getAllSelectedItemIds() {
       var allSelectedItems = [];
       angular.forEach($scope.menuItemList, function (menuItem) {
@@ -384,6 +385,7 @@ angular.module('ts5App')
           allSelectedItems.push(menuItem.selectedItem.id);
         }
       });
+
       return allSelectedItems;
     }
 
@@ -417,6 +419,15 @@ angular.module('ts5App')
 
     function setFilteredItemsCollection(dataFromAPI, menuIndex) {
       $scope.filteredItemsCollection[menuIndex] = angular.copy(dataFromAPI.masterItems);
+
+      if (!$scope.menuItemList[menuIndex].selectedItem) {
+        return;
+      }
+
+      var itemMatch = lodash.findWhere($scope.filteredItemsCollection[menuIndex], { id: $scope.menuItemList[menuIndex].selectedItem.id });
+      if (!itemMatch) {
+        $scope.menuItemList[menuIndex].selectedItem = null;
+      }
     }
 
     function getFilteredMasterItemsByCategory(menuIndex) {
@@ -451,6 +462,7 @@ angular.module('ts5App')
       var nextIndex = $scope.menuItemList.length;
       $scope.menuItemList.push({ menuIndex: nextIndex });
       $scope.filteredItemsCollection.push(angular.copy($scope.masterItemList));
+      $scope.selectedCategories.push(null);
       $scope.filterAllItemLists();
     };
 

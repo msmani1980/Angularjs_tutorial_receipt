@@ -186,7 +186,7 @@
                  ng-disabled="!isMenuEditable()"/>
         </td>
         <td ng-show="isMenuEditable()">
-          <button class="btn btn-danger btn-xs" ng-click="deleteNewItem($index)">
+          <button class="btn btn-danger btn-xs" ng-click="removeItem(item.menuIndex)">
             <i class="fa fa-trash"></i>
           </button>
         </td>
