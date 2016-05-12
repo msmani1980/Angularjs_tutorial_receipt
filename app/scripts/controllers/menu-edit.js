@@ -26,6 +26,10 @@ angular.module('ts5App')
       $scope.menuItemList = [];
     }
 
+    $scope.shouldDisableItemSelect = function (menuIndex) {
+      return !$scope.filteredItemsCollection[menuIndex];
+    };
+
     $scope.isViewOnly = function () {
       return $routeParams.state === 'view';
     };
@@ -162,18 +166,6 @@ angular.module('ts5App')
       }
     };
 
-    $scope.removeItem = function (menuIndex) {
-      $scope.menuEditForm.$setDirty();
-
-      $scope.menuItemList.splice(menuIndex, 1);
-      $scope.filteredItemsCollection.splice(menuIndex, 1);
-      $scope.selectedCategories.splice(menuIndex, 1);
-
-      angular.forEach($scope.menuItemList, function (menuItem, index) {
-        menuItem.menuIndex = index;
-      });
-    };
-
     function getAllSelectedItemIds() {
       var allSelectedItems = [];
       angular.forEach($scope.menuItemList, function (menuItem) {
@@ -194,27 +186,30 @@ angular.module('ts5App')
       });
     };
 
-    $scope.shouldDisableItemSelect = function (menuIndex) {
-      return !$scope.filteredItemsCollection[menuIndex];
+    $scope.removeItem = function (menuIndex) {
+      $scope.menuEditForm.$setDirty();
+
+      $scope.menuItemList.splice(menuIndex, 1);
+      $scope.filteredItemsCollection.splice(menuIndex, 1);
+      $scope.selectedCategories.splice(menuIndex, 1);
+
+      angular.forEach($scope.menuItemList, function (menuItem, index) {
+        menuItem.menuIndex = index;
+      });
     };
 
-    function setFilteredMasterItems(dataFromAPI) {
-      hideLoadingModal();
-      $scope.masterItemList = angular.copy(dataFromAPI.masterItems);
-      angular.forEach($scope.menuItemList, function (menuItem) {
-        $scope.filterItemListByCategory(menuItem.menuIndex);
-      });
-    }
+    $scope.addItem = function () {
+      if (!$scope.menu.startDate && !$scope.menu.endDate) {
+        messageService.display('warning', 'Add Menu Item', 'Please select a date range first!');
+        return;
+      }
 
-    function getFilteredMasterItems(startDate, endDate) {
-      showLoadingModal('Loading items');
-      var searchPayload = {
-        startDate: startDate,
-        endDate: endDate
-      };
-
-      menuFactory.getItemsList(searchPayload, true).then(setFilteredMasterItems, showErrors);
-    }
+      var nextIndex = $scope.menuItemList.length;
+      $scope.menuItemList.push({ menuIndex: nextIndex });
+      $scope.filteredItemsCollection.push(angular.copy($scope.masterItemList));
+      $scope.selectedCategories.push(null);
+      $scope.filterAllItemLists();
+    };
 
     function setFilteredItemsCollection(dataFromAPI, menuIndex) {
       $scope.filteredItemsCollection[menuIndex] = angular.copy(dataFromAPI.masterItems);
@@ -251,18 +246,23 @@ angular.module('ts5App')
       getFilteredMasterItemsByCategory(menuIndex);
     };
 
-    $scope.addItem = function () {
-      if (!$scope.menu.startDate && !$scope.menu.endDate) {
-        messageService.display('warning', 'Add Menu Item', 'Please select a date range first!');
-        return;
-      }
+    function setFilteredMasterItems(dataFromAPI) {
+      hideLoadingModal();
+      $scope.masterItemList = angular.copy(dataFromAPI.masterItems);
+      angular.forEach($scope.menuItemList, function (menuItem) {
+        $scope.filterItemListByCategory(menuItem.menuIndex);
+      });
+    }
 
-      var nextIndex = $scope.menuItemList.length;
-      $scope.menuItemList.push({ menuIndex: nextIndex });
-      $scope.filteredItemsCollection.push(angular.copy($scope.masterItemList));
-      $scope.selectedCategories.push(null);
-      $scope.filterAllItemLists();
-    };
+    function getFilteredMasterItems(startDate, endDate) {
+      showLoadingModal('Loading items');
+      var searchPayload = {
+        startDate: startDate,
+        endDate: endDate
+      };
+
+      menuFactory.getItemsList(searchPayload, true).then(setFilteredMasterItems, showErrors);
+    }
 
     function deserializeMenuItems(masterItemList) {
       $scope.menuItemList = [];
