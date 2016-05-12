@@ -21,6 +21,7 @@ angular.module('ts5App')
     }
 
     function showErrors(dataFromAPI) {
+      hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
       $scope.menuItemList = [];
