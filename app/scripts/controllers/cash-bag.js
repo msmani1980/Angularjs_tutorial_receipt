@@ -304,6 +304,10 @@ angular.module('ts5App')
             $scope.cashBag.totalCashBags = $scope.cashBag.totalCashBags.toString();
           }
 
+          if ($scope.cashBag.storeInstanceId === null && $routeParams.storeInstanceId) {
+            $scope.cashBag.storeInstanceId = $routeParams.storeInstanceId;
+          }
+
           $scope.displayError = false;
           $scope.formErrors = {};
           $scope.showDeleteButton = canDelete($scope.cashBag);
@@ -478,8 +482,9 @@ angular.module('ts5App')
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.saveButtonName = 'Save';
         getExchangeRates($scope.cashBag);
-        if ($scope.cashBag.storeInstanceId) {
-          cashBagFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(
+        if ($scope.cashBag.storeInstanceId || $routeParams.storeInstanceId) {
+          var storeInstanceId = $scope.cashBag.storeInstanceId || $routeParams.storeInstanceId;
+          cashBagFactory.getStoreInstance(storeInstanceId).then(
             getStoreInstanceListResponseHandler);
         } else {
           hideLoadingModal();
