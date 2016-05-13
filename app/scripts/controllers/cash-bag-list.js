@@ -262,7 +262,7 @@ angular.module('ts5App')
         showStoreInstancePopup(buttonSelector);
         return;
       }
-      
+
       angular.element(buttonSelector).button('loading');
       $scope.checkForDailyExchangeRate().then(function() {
         angular.element(buttonSelector).button('reset');
