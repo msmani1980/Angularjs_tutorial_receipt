@@ -602,15 +602,15 @@
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
                       <td>Cash</td>
-                      <td>{{ cashBag.cashRevenue }}</td>
+                      <td>{{ formatAsCurrency(cashBag.cashRevenue) }}</td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
                       <td>Credit</td>
-                      <td>{{ cashBag.creditRevenue }}</td>
+                      <td>{{ formatAsCurrency(cashBag.creditRevenue) }}</td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
                       <td><a href="">Discount</a></td>
-                      <td>{{ cashBag.discountRevenue }}</td>
+                      <td>{{ formatAsCurrency(cashBag.discountRevenue) }}</td>
                     </tr>
                     <tr class="active">
                       <td>Total Amount</td>

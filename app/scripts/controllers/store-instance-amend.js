@@ -13,13 +13,13 @@ angular.module('ts5App')
       stationsService) {
     var $this = this;
 
-    function formatAsCurrency(valueToFormat) {
+    $scope.formatAsCurrency = function(valueToFormat) {
       if (angular.isDefined(valueToFormat)) {
         return sprintf('%.2f', valueToFormat);
       }
 
       return valueToFormat;
-    }
+    };
 
     function makeFinite(valueToCheck) {
       return isFinite(valueToCheck) ? valueToCheck : 0;
@@ -234,6 +234,10 @@ angular.module('ts5App')
 
     function getStationById (stationId) {
       return lodash.find($scope.stations, 'stationId', stationId);
+    }
+
+    function getCashBagById (cashBagId) {
+      return lodash.find($scope.normalizedCashBags, 'id', cashBagId);
     }
 
     this.searchForScheduleSuccess = function (dataFromAPI) {
@@ -515,8 +519,8 @@ angular.module('ts5App')
       return {
         parsedLMP: totalLMP,
         parsedEPOS: totalEPOS,
-        totalLMP: formatAsCurrency(totalLMP),
-        totalEPOS: formatAsCurrency(totalEPOS)
+        totalLMP: $scope.formatAsCurrency(totalLMP),
+        totalEPOS: $scope.formatAsCurrency(totalEPOS)
       };
     }
 
@@ -529,8 +533,8 @@ angular.module('ts5App')
       return {
         parsedLMP: total,
         parsedEPOS: total,
-        totalLMP: formatAsCurrency(total),
-        totalEPOS: formatAsCurrency(total)
+        totalLMP: $scope.formatAsCurrency(total),
+        totalEPOS: $scope.formatAsCurrency(total)
       };
     }
 
@@ -557,8 +561,8 @@ angular.module('ts5App')
       var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
 
       var netTotals = {
-        netLMP: formatAsCurrency(netLMP),
-        netEPOS: formatAsCurrency(netEPOS)
+        netLMP: $scope.formatAsCurrency(netLMP),
+        netEPOS: $scope.formatAsCurrency(netEPOS)
       };
 
       $scope.stockTotals = angular.extend(stockTotals, {
@@ -602,32 +606,63 @@ angular.module('ts5App')
       return total;
     }
 
+    function calculateCashRevenueForCash(cashRevenue) {
+      angular.forEach($this.chCashBag, function (cashBag) {
+        var amount = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) + (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank) + (cashBag.bankAmountCh);
+
+        if (cashBag.cashbagId) {
+          getCashBagById(cashBag.cashbagId).cashRevenue += amount;
+        }
+
+        cashRevenue.total += amount;
+      });
+    }
+
+    function calculateCashRevenueForCredit(chCreditCard, cashRevenue) {
+      angular.forEach(chCreditCard, function (creditCard) {
+        var amount = creditCard.bankAmountFinal + creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
+
+        if (creditCard.cashbagId) {
+          getCashBagById(creditCard.cashbagId).creditRevenue += amount;
+        }
+
+        cashRevenue.total += amount;
+      });
+    }
+
+    function calculateCashRevenueForDiscounts(chDiscount, cashRevenue) {
+      angular.forEach(chDiscount, function (discount) {
+        var amount = discount.bankAmountFinal + discount.coinAmountCc + discount.paperAmountCc;
+
+        if (discount.cashbagId) {
+          getCashBagById(discount.cashbagId).discountRevenue += amount;
+        }
+
+        cashRevenue.total += amount;
+      });
+    }
+
     function calculateCashRevenue(chRevenue) {
       $this.chCashBag = angular.copy(chRevenue[0].response);
       var chCreditCard = angular.copy(chRevenue[1].response);
       var chDiscount = angular.copy(chRevenue[2].response);
-      var total = 0;
 
-      angular.forEach($this.chCashBag, function (cashBag) {
-        total += (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) + (cashBag.paperAmountManualCHBank +
-          cashBag.coinAmountManualCHBank) + (cashBag.bankAmountCh);
-      });
+      $scope.cashHandlerExchangeRate = {
+        cashBags: {},
+        total: 0
+      };
 
-      angular.forEach(chCreditCard, function (creditCard) {
-        total += creditCard.bankAmountFinal + creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
-      });
+      calculateCashRevenueForCash($scope.cashHandlerExchangeRate);
+      calculateCashRevenueForCredit(chCreditCard, $scope.cashHandlerExchangeRate);
+      calculateCashRevenueForDiscounts(chDiscount, $scope.cashHandlerExchangeRate);
 
-      angular.forEach(chDiscount, function (discount) {
-        total += discount.bankAmountFinal + discount.coinAmountCc + discount.paperAmountCc;
-      });
-
-      return total;
+      return $scope.cashHandlerExchangeRate.total;
     }
 
     function setupTotalRevenue () {
       $scope.totalRevenue = {
-        cashHandler: $scope.companyIsUsingCash ? formatAsCurrency(calculateCashRevenue($scope.cashRevenue)) : 0,
-        epos: formatAsCurrency(calculateEPOSRevenue($scope.eposRevenue))
+        cashHandler: $scope.companyIsUsingCash ? $scope.formatAsCurrency(calculateCashRevenue($scope.cashRevenue)) : 0,
+        epos: $scope.formatAsCurrency(calculateEPOSRevenue($scope.eposRevenue))
       };
     }
 
@@ -652,20 +687,20 @@ angular.module('ts5App')
 
       $scope.discrepancy = {
         net: {
-          value: formatAsCurrency(netValue),
-          percentage: formatAsCurrency(netPercentage)
+          value: $scope.formatAsCurrency(netValue),
+          percentage: $scope.formatAsCurrency(netPercentage)
         },
         revenue: {
-          value: formatAsCurrency(revenueValue),
-          percentage: formatAsCurrency(revenuePercentage)
+          value: $scope.formatAsCurrency(revenueValue),
+          percentage: $scope.formatAsCurrency(revenuePercentage)
         },
         exchange: {
-          value: formatAsCurrency(exchangeValue),
-          percentage: formatAsCurrency(exchangePercentage)
+          value: $scope.formatAsCurrency(exchangeValue),
+          percentage: $scope.formatAsCurrency(exchangePercentage)
         },
         total: {
-          value: formatAsCurrency(totalValue),
-          percentage: formatAsCurrency(totalPercentage)
+          value: $scope.formatAsCurrency(totalValue),
+          percentage: $scope.formatAsCurrency(totalPercentage)
         }
       };
     }
@@ -686,6 +721,9 @@ angular.module('ts5App')
           isVerified: (cashBag.amendVerifiedOn) ? true : false,
           verifiedByUser: (cashBag.amendVerifiedBy) ? cashBag.amendVerifiedBy.userName : 'Unknown',
           verifiedOn: dateUtility.formatTimestampForApp(cashBag.amendVerifiedOn),
+          cashRevenue: 0,
+          creditRevenue: 0,
+          discountRevenue: 0,
           flightSectors: []
         };
       });
@@ -814,7 +852,7 @@ angular.module('ts5App')
           scheduleNumber: flightSector.scheduleNumber,
           tailNumber: flightSector.tailNumber,
           transactionCount: flightSector.transactionsNumber,
-          transactionTotal: formatAsCurrency(flightSector.eposSales),
+          transactionTotal: $scope.formatAsCurrency(flightSector.eposSales),
           crewData: flightSector.crew
         };
 
