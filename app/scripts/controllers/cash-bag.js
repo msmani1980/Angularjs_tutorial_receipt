@@ -84,7 +84,9 @@ angular.module('ts5App')
 
     function cashBagEditSuccessHandler() {
       hideLoadingModal();
-      $location.path('cash-bag-list');
+      $location.search('storeInstanceId', null)
+        .path('cash-bag-list');
+
       showMessage(null, false, 'successfully updated');
     }
 
