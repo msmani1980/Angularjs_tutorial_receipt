@@ -10,6 +10,7 @@
         <div class="modal-header">
           <button type="button" class="close" ng-click="hideCreatePopup()"><span class="fa fa-close"></span></button>
           <h4 class="modal-title">Search Store Instance</h4>
+          <p ng-show="popupFromEdit"><br><span class="fa fa-exclamation-triangle"></span> <i>This cash bag does not have a store instance associated with it. Please select a store instance before proceeding to edit.</i></p>
         </div>
 
         <div class="modal-body">
@@ -69,7 +70,7 @@
 
               <div class="form-group col-xs-12 text-right">
                 <button type="button" class="btn btn-default" ng-click="hideCreatePopup()">Cancel</button>
-                <button type="button" class="btn btn-primary" ng-click="findStoreInstance()">Search</button>
+                <button type="button" class="btn btn-primary" ng-click="continueToEditOrCreate()">Search</button>
               </div>
             </form>
           </div>
