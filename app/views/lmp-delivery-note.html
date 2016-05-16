@@ -56,7 +56,7 @@
                       ng-model="deliveryNote.catererStationId"
                       ng-disabled="isLMPStationIsDisabled()"
                       ng-show="catererStationList.length"
-                      ng-options="station.id as (station.name + ' - ' + station.code) for station in catererStationList"
+                      ng-options="station.id as (station.name + ' - ' + station.code) for station in catererStationList | orderBy: 'name'"
                       required="true">
                 <option selected="selected" value disabled>Select Catering Station</option>
               </select>
