@@ -14,4 +14,10 @@ angular.module('ts5App')
       'AngularJS',
       'Karma'
     ];
+
+    function init() {
+
+    }
+
+    init();
   });
