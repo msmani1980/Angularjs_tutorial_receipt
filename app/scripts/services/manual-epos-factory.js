@@ -184,6 +184,18 @@ angular.module('ts5App')
       cashBagService.updateManualCashBagRecord('credit-cards', cashBagId, creditId, payload);
     }
 
+    function getCashBagItemList(cashBagId, payload) {
+      return cashBagService.getManualCashBagList('items', cashBagId, payload);
+    }
+
+    function createCashBagItem(cashBagId, payload) {
+      cashBagService.createManualCashBagRecord('items', cashBagId, payload);
+    }
+
+    function updateCashBagItem(cashBagId, itemId, payload) {
+      cashBagService.updateManualCashBagRecord('items', cashBagId, itemId, payload);
+    }
+
     function getStoreInstance(storeInstanceId) {
       return storeInstanceService.getStoreInstance(storeInstanceId);
     }
@@ -225,6 +237,9 @@ angular.module('ts5App')
       getCashBagCreditList: getCashBagCreditList,
       createCashBagCredit: createCashBagCredit,
       updateCashBagCredit: updateCashBagCredit,
+      getCashBagItemList: getCashBagItemList,
+      createCashBagItem: createCashBagItem,
+      updateCashBagItem: updateCashBagItem,
       getRetailItems: getRetailItems,
       getItemTypes: getItemTypes
 

@@ -116,6 +116,28 @@ describe('Service: manualEposFactory', function() {
       expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('credit-cards', fakeCashBagId, fakeCashBagCashId, fakePayload);
     });
 
+    it('should call getCashBagItemList from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakePayload = {};
+      manualEposFactory.getCashBagItemList(fakeCashBagId, fakePayload);
+      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('items', fakeCashBagId, fakePayload);
+    });
+
+    it('should call createCashBagItem from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakePayload = {};
+      manualEposFactory.createCashBagItem(fakeCashBagId, fakePayload);
+      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('items', fakeCashBagId, fakePayload);
+    });
+
+    it('should call updateCashBagItem from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakeItemId = 234;
+      var fakePayload = {};
+      manualEposFactory.updateCashBagItem(fakeCashBagId, fakeItemId, fakePayload);
+      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('items', fakeCashBagId, fakeItemId, fakePayload);
+    });
+
     it('should call verifyCashBag from cashBagService', function () {
       manualEposFactory.verifyCashBag();
       expect(cashBagService.verifyCashBag).toHaveBeenCalled();
