@@ -9,17 +9,19 @@ describe('Service: manualEposFactory', function() {
   var dailyExchangeRatesService;
   var cashBagService;
   var storeInstanceService;
+  var itemsService;
+  var recordsService;
 
-  beforeEach(inject(function(_manualEposFactory_, _currenciesService_, _dailyExchangeRatesService_, _cashBagService_, _storeInstanceService_) {
+  beforeEach(inject(function(_manualEposFactory_, _currenciesService_, _dailyExchangeRatesService_, _cashBagService_, _storeInstanceService_, _itemsService_, _recordsService_) {
     manualEposFactory = _manualEposFactory_;
     currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
     cashBagService = _cashBagService_;
     storeInstanceService = _storeInstanceService_;
+    itemsService = _itemsService_;
+    recordsService = _recordsService_;
 
     spyOn(manualEposFactory, 'getPromotionsList');
-    spyOn(manualEposFactory, 'getVoucherItemsList');
-    spyOn(manualEposFactory, 'getVirtualItemsList');
     spyOn(manualEposFactory, 'getDiscountsList');
 
     spyOn(currenciesService, 'getCompanyCurrencies');
@@ -32,26 +34,14 @@ describe('Service: manualEposFactory', function() {
     spyOn(cashBagService, 'createManualCashBagRecord');
     spyOn(cashBagService, 'updateManualCashBagRecord');
     spyOn(storeInstanceService, 'getStoreInstance');
+    spyOn(itemsService, 'getItemsList');
+    spyOn(recordsService, 'getItemTypes');
   }));
 
   describe('getPromotionsList API call', function() {
     it('should call getPromotionsList', function() {
       manualEposFactory.getPromotionsList();
       expect(manualEposFactory.getPromotionsList).toHaveBeenCalled();
-    });
-  });
-
-  describe('getVoucherItemsList API call', function() {
-    it('should call getVoucherItemsList', function() {
-      manualEposFactory.getVoucherItemsList();
-      expect(manualEposFactory.getVoucherItemsList).toHaveBeenCalled();
-    });
-  });
-
-  describe('getVirtualItemsList API call', function() {
-    it('should call getVirtualItemsList', function() {
-      manualEposFactory.getVirtualItemsList();
-      expect(manualEposFactory.getVirtualItemsList).toHaveBeenCalled();
     });
   });
 
@@ -146,6 +136,20 @@ describe('Service: manualEposFactory', function() {
     it('should call getStoreInstance from storeInstanceService', function () {
       manualEposFactory.getStoreInstance();
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalled();
+    });
+  });
+
+  describe('itemService API call', function () {
+    it('should get master items from itemService', function () {
+      manualEposFactory.getRetailItems({});
+      expect(itemsService.getItemsList).toHaveBeenCalledWith({}, true);
+    });
+  });
+
+  describe('recordsService API call', function () {
+    it('should getItemTypes from recordsService', function () {
+      manualEposFactory.getItemTypes();
+      expect(recordsService.getItemTypes).toHaveBeenCalled();
     });
   });
 
