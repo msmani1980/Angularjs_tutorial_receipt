@@ -758,9 +758,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         var offloadItemMatch = lodash.findWhere($scope.offloadListItems, { itemMasterId: eposInboundQuantity.id });
         var picklistMatch = lodash.findWhere($scope.pickListItems, { itemMasterId: eposInboundQuantity.id });
 
-        if($routeParams.action === 'redispatch' && picklistMatch && !picklistMatch.isEposDataOverwritten) {
+        if ($routeParams.action === 'redispatch' && picklistMatch && !picklistMatch.isEposDataOverwritten) {
           picklistMatch.inboundQuantity = eposInboundQuantity.quantity;
-
         } else if (offloadItemMatch && !offloadItemMatch.isEposDataOverwritten) {
           offloadItemMatch.inboundQuantity = eposInboundQuantity.quantity;
         }

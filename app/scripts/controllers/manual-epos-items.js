@@ -9,7 +9,63 @@
  */
 angular.module('ts5App')
   .controller('ManualEposItemsCtrl', function ($scope, $q, $routeParams, manualEposFactory, lodash, dateUtility, globalMenuService) {
-    
+
+    function convertAmountFromBaseCurrency(amount, exchangeRateObject) {
+      var convertedAmount = 0;
+
+      if (exchangeRateObject.bankExchangeRate === null) {
+        var paperExchangeRate = exchangeRateObject.paperExchangeRate;
+        var coinExchangeRate = exchangeRateObject.coinExchangeRate;
+        var splitAmounts = (amount.toString()).split('.');
+        var convertedPaperAmount = parseFloat(splitAmounts[0]) * paperExchangeRate;
+        var convertedCoinAmount = parseFloat(splitAmounts[1]) * coinExchangeRate;
+        convertedAmount = convertedPaperAmount + (convertedCoinAmount / 100);
+      } else {
+        var exchangeRate = exchangeRateObject.bankExchangeRate;
+        convertedAmount = parseFloat(amount) * exchangeRate;
+      }
+
+      return convertedAmount.toFixed(2);
+    }
+
+    // TODO: note, conversions here should always to base currency
+    function convertAmountToBaseCurrency(amount, exchangeRateObject) {
+      var convertedAmount = 0;
+
+      if (exchangeRateObject.bankExchangeRate === null) {
+        var paperExchangeRate = exchangeRateObject.paperExchangeRate;
+        var coinExchangeRate = exchangeRateObject.coinExchangeRate;
+        var splitAmounts = (amount.toString()).split('.');
+        var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
+        var convertedCoinAmount = parseFloat(splitAmounts[1]) / coinExchangeRate;
+        convertedAmount = convertedPaperAmount + (convertedCoinAmount / 100);
+      } else {
+        var exchangeRate = exchangeRateObject.bankExchangeRate;
+        convertedAmount = parseFloat(amount) / exchangeRate;
+      }
+
+      return convertedAmount.toFixed(2);
+    }
+
+    $scope.updateAmountsWithSelectedCurrency = function () {
+      var newCurrencyId = $scope.selectedCurrency.currency.id;
+      angular.forEach($scope.itemList, function (item) {
+        if (parseFloat(item.amount) === 0 || !angular.isDefined(item.currencyId)) {
+          item.amount = '0.00';
+          return;
+        }
+
+        var oldExchangeRate = lodash.findWhere($scope.dailyExchangeRates, { retailCompanyCurrencyId: item.currencyId });
+        var newExchangeRate = lodash.findWhere($scope.dailyExchangeRates, { retailCompanyCurrencyId: newCurrencyId });
+
+        var baseAmount = convertAmountToBaseCurrency(item.amount, oldExchangeRate);
+        var convertedAmount = convertAmountFromBaseCurrency(baseAmount, newExchangeRate);
+
+        item.amount = convertedAmount;
+        item.currencyId = newCurrencyId;
+      });
+    };
+
     function setItemList(masterItemList, cashBagItemList) {
       $scope.itemList = [];
 
@@ -17,31 +73,42 @@ angular.module('ts5App')
         var newItemObject = {
           itemName: item.itemName,
           itemCode: item.itemCode,
-          itemMasterId: item.id
+          itemDescription: item.itemCode + ' - ' + item.itemName,
+          itemMasterId: item.id,
+          amount: '0.00',
+          quantity: 0
         };
 
-        var cashBagItemMatch = lodash.findWhere(cashBagItemList, { itemMasterId: item.id });
+        var cashBagItemMatch = lodash.findWhere(cashBagItemList, { itemMasterId: item.id, itemTypeId: $scope.mainItemType.id });
         if (cashBagItemMatch) {
           newItemObject.currencyId = cashBagItemMatch.currencyId;
           newItemObject.amount = cashBagItemMatch.amount;
           newItemObject.quantity = cashBagItemMatch.quantity;
+          var currencyObject = lodash.findWhere($scope.currencyList, { id: cashBagItemMatch.currencyId });
+          $scope.selectedCurrency.currency = $scope.selectedCurrency.currency || currencyObject;
         }
+
+        $scope.itemList.push(newItemObject);
       });
     }
 
-    function setBaseCurrency(currencyList) {
-      $scope.baseCurrency = {};
-      $scope.baseCurrency.currencyId = globalMenuService.getCompanyData().baseCurrencyId;
-      $scope.baseCurrency.currencyCode = lodash.findWhere(currencyList, { id: $scope.baseCurrency.currencyId });
+    function setBaseCurrency() {
+      var baseCurrencyId = globalMenuService.getCompanyData().baseCurrencyId;
+      var baseCurrencyObject = lodash.findWhere($scope.currencyList, { id: baseCurrencyId });
+      $scope.baseCurrency = baseCurrencyObject || {};
+      $scope.selectedCurrency.currency = $scope.selectedCurrency.currency || baseCurrencyObject;
     }
 
     function completeInit(responseCollection) {
       var masterItemList = angular.copy(responseCollection[0].masterItems);
       var cashBagItemList = angular.copy(responseCollection[1].response);
-      var currencyList = angular.copy(responseCollection[2]);
+      $scope.currencyList = angular.copy(responseCollection[2].response);
+      $scope.dailyExchangeRates = angular.copy(responseCollection[3].dailyExchangeRateCurrencies);
 
-      setBaseCurrency(currencyList);
       setItemList(masterItemList, cashBagItemList);
+      setBaseCurrency();
+      $scope.updateAmountsWithSelectedCurrency();
+      console.log($scope.itemList);
     }
 
     function makeSecondInitPromises() {
@@ -56,7 +123,8 @@ angular.module('ts5App')
       var promises = [
         manualEposFactory.getRetailItems(itemListPayload),
         manualEposFactory.getCashBagItemList($routeParams.cashBagId),
-        manualEposFactory.getCurrencyList(currencyPayload)
+        manualEposFactory.getCurrencyList(currencyPayload),
+        manualEposFactory.getDailyExchangeRate($scope.cashBag.dailyExchangeRateId)
       ];
 
       return promises;
@@ -78,6 +146,8 @@ angular.module('ts5App')
     }
 
     function init() {
+      $scope.selectedCurrency = {};
+
       var firstInitPromises = [
         manualEposFactory.getCashBag($routeParams.cashBagId),
         manualEposFactory.getItemTypes()
