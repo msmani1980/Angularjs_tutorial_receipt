@@ -235,6 +235,7 @@ angular.module('ts5App')
       setVerifiedData(angular.copy(responseCollection[4]));
       $scope.updateAmountsWithSelectedCurrency();
       $scope.disableAll = false;
+      $scope.manualItemForm.$setPristine();
       hideLoadingModal();
     }
 
