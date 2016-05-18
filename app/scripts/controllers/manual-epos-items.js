@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManualEposItemsCtrl', function ($scope, $q, $routeParams, manualEposFactory, lodash, dateUtility, globalMenuService) {
+  .controller('ManualEposItemsCtrl', function ($scope, $q, $routeParams, manualEposFactory, lodash, dateUtility, globalMenuService, messageService, $location) {
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -24,6 +24,66 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
       $scope.disableAll = true;
     }
+
+    function updateCashBagItem(item) {
+      var payload = {
+        itemMasterId: item.itemMasterId,
+        currencyId: $scope.selectedCurrency.currency.id,
+        itemTypeId: $scope.mainItemType.id,
+        amount: parseFloat(item.amount) || 0,
+        quantity: parseFloat(item.quantity) || 0,
+        convertedAmount: parseFloat(item.convertedTotal) || 0
+      };
+
+      return manualEposFactory.updateCashBagItem($routeParams.cashBagId, item.id, payload);
+    }
+
+    function createCashBagItem(item) {
+      var payload = {
+        itemMasterId: item.itemMasterId,
+        currencyId: $scope.selectedCurrency.currency.id,
+        itemTypeId: $scope.mainItemType.id,
+        amount: parseFloat(item.amount) || 0,
+        quantity: parseFloat(item.quantity) || 0,
+        convertedAmount: parseFloat(item.convertedTotal) || 0
+      };
+
+      return manualEposFactory.createCashBagItem($routeParams.cashBagId, payload);
+    }
+
+    function saveSuccess() {
+      hideLoadingModal();
+      if ($scope.shouldExit) {
+        $location.path('manual-epos-dashboard/' + $routeParams.cashBagId);
+      }
+
+      init();
+      messageService.success('Manual ' + $routeParams.itemType + ' item data successfully saved!');
+    }
+
+    $scope.save = function () {
+      if (!$scope.manualItemForm.$valid) {
+        showErrors();
+        $scope.disableAll = false;
+        return;
+      }
+
+      showLoadingModal('Saving');
+      var promises = [];
+      angular.forEach($scope.itemList, function (item) {
+        if (item.id) {
+          promises.push(updateCashBagItem(item));
+        } else {
+          promises.push(createCashBagItem(item));
+        }
+      });
+
+      $q.all(promises).then(saveSuccess, showErrors);
+    };
+
+    $scope.setShouldExit = function (shouldExit) {
+      $scope.shouldExit = shouldExit;
+    };
 
     function convertAmountFromBaseCurrency(amount, exchangeRateObject) {
       var convertedAmount = 0;
@@ -144,6 +204,7 @@ angular.module('ts5App')
 
         var cashBagItemMatch = lodash.findWhere(cashBagItemList, { itemMasterId: item.id, itemTypeId: $scope.mainItemType.id });
         if (cashBagItemMatch) {
+          newItemObject.id = cashBagItemMatch.id;
           newItemObject.currencyId = cashBagItemMatch.currencyId;
           newItemObject.amount = cashBagItemMatch.amount;
           newItemObject.quantity = cashBagItemMatch.quantity;

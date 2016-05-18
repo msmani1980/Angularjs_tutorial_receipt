@@ -1,5 +1,5 @@
 <div class="container module-container">
-  <form name="manualCashForm" ng-submit="save()">
+  <form name="manualItemForm" ng-submit="save()">
     <div class="list-controls">
       <div class="row item-list-row">
         <div class="col-xs-8">
@@ -12,17 +12,18 @@
           <a class="btn btn-default" href="/#/manual-epos-dashboard/{{ cashBag.id }}">
             <span class="fa fa-arrow-left"></span> Back
           </a>
-          <button class="btn btn-primary" type="submit" ng-click="setShouldExit(true)" ng-hide="isVerified || disableAll">
+          <button class="btn btn-primary" type="submit" ng-hide="isVerified || disableAll" ng-click="setShouldExit(true)">
             <span class="fa fa-check-square-o"></span> Save & Exit
           </button>
         </div>
       </div>
     </div>
 
-    <error-dialog form-object="manualCashForm" error-response="errorResponse" display="displayError">
+    <error-dialog form-object="manualItemForm" error-response="errorResponse" display="displayError">
     </error-dialog>
 
-    <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by {{ verifiedInfo.verifiedBy }} on {{ verifiedInfo.verifiedTimestamp }}</div>
+    <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by {{ verifiedInfo.verifiedBy }} on {{ verifiedInfo.verifiedTimestamp }}
+    </div>
 
     <div class="panel panel-default">
       <div class="panel-body">
@@ -83,21 +84,25 @@
                        ng-model="item.itemDescription">
               </td>
               <td>
-                <input class="form-control"
+                <input class="form-control input-sm"
                        ng-model="item.amount"
                        maxlength="10"
                        placeholder="0.00"
                        custom-validity
-                       custom-pattern="decimalWithTwoDecimalPlaces"
+                       custom-pattern="optionalDecimalWithTwoDecimalPlaces"
                        aria-describedby="amount"
-                       ng-disabled="isVerified || disableAll" />
+                       name="{{item.itemCode}}Amount"
+                       ng-disabled="isVerified || disableAll"/>
               </td>
               <td>
                 <input class="form-control input-sm"
                        ng-model="item.quantity"
                        maxlength="5"
                        placeholder="0"
-                       ng-disabled="isVerified || disableAll" />
+                       custom-validity
+                       custom-pattern="number"
+                       name="{{item.itemCode}}Quantity"
+                       ng-disabled="isVerified || disableAll"/>
               </td>
               <td>
                 <input class="form-control input-sm"
@@ -115,8 +120,7 @@
               <td colspan="3"></td>
               <td class="text-right"><h5><b>Sub Total</b></h5></td>
               <td>
-                <input type="number"
-                       class="form-control"
+                <input class="form-control"
                        ng-value="sumAllItems()"
                        disabled="true"/>
               </td>
