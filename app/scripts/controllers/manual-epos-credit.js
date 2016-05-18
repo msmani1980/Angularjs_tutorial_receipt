@@ -136,9 +136,9 @@ angular.module('ts5App')
     };
 
     function setBaseCurrency(currencyList) {
-      $scope.baseCurrency = {};
-      $scope.baseCurrency.currencyId = globalMenuService.getCompanyData().baseCurrencyId;
-      $scope.baseCurrency.currencyCode = lodash.findWhere(currencyList, { id: $scope.baseCurrency.currencyId });
+      var baseCurrencyId = globalMenuService.getCompanyData().baseCurrencyId;
+      var baseCurrencyObject = lodash.findWhere(currencyList, { id: baseCurrencyId });
+      $scope.baseCurrency = baseCurrencyObject || {};
     }
 
     function mergeCashBagCredit(cashBagCreditList) {

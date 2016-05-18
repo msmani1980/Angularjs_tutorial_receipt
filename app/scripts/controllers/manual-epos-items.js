@@ -180,7 +180,7 @@ angular.module('ts5App')
         angular.element('#confirmation-modal').modal('show');
         return;
       }
-      
+
       showLoadingModal('Verifying');
       var verificationKey = ($routeParams.itemType.toLowerCase() === 'virtual') ? 'VIRT_ITEM' : 'VOUCH_ITEM';
       manualEposFactory.verifyCashBag($routeParams.cashBagId, verificationKey).then(init, showErrors);

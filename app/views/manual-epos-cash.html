@@ -3,7 +3,7 @@
     <div class="list-controls">
       <div class="row item-list-row">
         <div class="col-xs-8">
-          <h2 class="view-name">Manual Epos Entry: <b>Add Cash</b><br>
+          <h2 class="view-name">Manual ePOS Entry: <b>Add Cash</b><br>
             <small>Cash Bag {{ cashBag.cashBagNumber }}</small>
           </h2>
         </div>
@@ -45,7 +45,7 @@
             <p><b>Amount</b></p>
           </div>
           <div class="col-xs-6">
-            <p><b>Converted Amount (AUD)</b></p>
+            <p><b>Converted Amount ({{ baseCurrency.code }})</b></p>
           </div>
         </div>
         <div ng-repeat="cash in currencyList | filter: {currencyCode: currencyFilter} track by $index">
@@ -58,7 +58,7 @@
                        maxlength="10"
                        placeholder="0.00"
                        custom-validity
-                       custom-pattern="decimalWithTwoDecimalPlaces"
+                       custom-pattern="optionalDecimalWithTwoDecimalPlaces"
                        aria-describedby="cash"
                        ng-disabled="isVerified || disableAll"/>
               </div>
