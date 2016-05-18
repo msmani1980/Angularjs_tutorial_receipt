@@ -174,21 +174,22 @@ angular.module('ts5App')
       };
     }
 
-    function verifyToggleSuccess(dataFromAPI) {
-      setVerifiedData(angular.copy(dataFromAPI));
-      hideLoadingModal();
-    }
-
-    $scope.verify = function () {
+    $scope.verify = function (shouldCheckForm) {
+      angular.element('#confirmation-modal').modal('hide');
+      if (shouldCheckForm && $scope.manualItemForm.$dirty) {
+        angular.element('#confirmation-modal').modal('show');
+        return;
+      }
+      
       showLoadingModal('Verifying');
       var verificationKey = ($routeParams.itemType.toLowerCase() === 'virtual') ? 'VIRT_ITEM' : 'VOUCH_ITEM';
-      manualEposFactory.verifyCashBag($routeParams.cashBagId, verificationKey).then(verifyToggleSuccess, showErrors);
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, verificationKey).then(init, showErrors);
     };
 
     $scope.unverify = function () {
       showLoadingModal('Unverifying');
       var verificationKey = ($routeParams.itemType.toLowerCase() === 'virtual') ? 'VIRT_ITEM' : 'VOUCH_ITEM';
-      manualEposFactory.unverifyCashBag($routeParams.cashBagId, verificationKey).then(verifyToggleSuccess, showErrors);
+      manualEposFactory.unverifyCashBag($routeParams.cashBagId, verificationKey).then(init, showErrors);
     };
 
     function setItemList(masterItemList, cashBagItemList) {
