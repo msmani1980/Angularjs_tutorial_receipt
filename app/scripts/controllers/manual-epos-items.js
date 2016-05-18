@@ -47,11 +47,21 @@ angular.module('ts5App')
       return convertedAmount.toFixed(2);
     }
 
+    $scope.calculateTotals = function (item) {
+      var total = (item.amount && item.quantity) ? parseFloat(item.amount) * parseInt(item.quantity) : 0;
+      var stringTotal = total.toFixed(2);
+      item.totalValue = stringTotal;
+      item.convertedTotal = (item.exchangeRate) ? convertAmountToBaseCurrency(total, item.exchangeRate) : '0.00';
+
+      return stringTotal;
+    };
+
     $scope.updateAmountsWithSelectedCurrency = function () {
       var newCurrencyId = $scope.selectedCurrency.currency.id;
       angular.forEach($scope.itemList, function (item) {
-        if (parseFloat(item.amount) === 0 || !angular.isDefined(item.currencyId)) {
-          item.amount = '0.00';
+        if (!item.amount || !angular.isDefined(item.currencyId)) {
+          item.currencyId = $scope.baseCurrency.id;
+          item.exchangeRate = lodash.findWhere($scope.dailyExchangeRates, { retailCompanyCurrencyId: item.currencyId });
           return;
         }
 
@@ -63,6 +73,8 @@ angular.module('ts5App')
 
         item.amount = convertedAmount;
         item.currencyId = newCurrencyId;
+        item.exchangeRate = newExchangeRate;
+        $scope.calculateTotals(item);
       });
     };
 
@@ -75,8 +87,8 @@ angular.module('ts5App')
           itemCode: item.itemCode,
           itemDescription: item.itemCode + ' - ' + item.itemName,
           itemMasterId: item.id,
-          amount: '0.00',
-          quantity: 0
+          amount: null,
+          quantity: null
         };
 
         var cashBagItemMatch = lodash.findWhere(cashBagItemList, { itemMasterId: item.id, itemTypeId: $scope.mainItemType.id });
@@ -108,7 +120,6 @@ angular.module('ts5App')
       setItemList(masterItemList, cashBagItemList);
       setBaseCurrency();
       $scope.updateAmountsWithSelectedCurrency();
-      console.log($scope.itemList);
     }
 
     function makeSecondInitPromises() {

@@ -32,7 +32,7 @@
                          theme="bootstrap"
                          ng-disabled="disabled"
                          reset-search-input="false"
-                         on-select="updateSelectedCurrency()">
+                         on-select="updateAmountsWithSelectedCurrency()">
                 <ui-select-match>
                   {{$select.selected.code}} - {{$select.selected.name}}
                 </ui-select-match>
@@ -76,33 +76,32 @@
             <tr ng-repeat="item in itemList | filter:{itemName: filter.virtualItems} track by $index">
 
               <td>
-                <input class="form-control"
+                <input class="form-control input-sm"
                        disabled="true"
                        ng-model="item.itemDescription">
               </td>
 
               <td>
-                <input class="form-control"
+                <input class="form-control input-sm"
                        ng-model="item.amount"
                        aria-describedby="currency"/>
               </td>
 
               <td>
                 <input type="number"
-                       class="form-control"
+                       class="form-control input-sm"
                        ng-model="item.quantity"/>
               </td>
 
               <td>
-                <input class="form-control"
-                       ng-model="item.quantity"
+                <input class="form-control input-sm"
+                       ng-value="calculateTotals(item)"
                        disabled="true"/>
               </td>
 
               <td>
-                <input type="number"
-                       class="form-control"
-                       ng-model="item.amoint"
+                <input class="form-control input-sm"
+                       ng-model="item.convertedTotal"
                        disabled="true"/>
               </td>
 
@@ -113,7 +112,7 @@
               <td>
                 <input type="number"
                        class="form-control"
-                       ng-model="virtual.audValue"
+                       ng-model="item.convertedTotal"
                        disabled="true"/>
               </td>
             </tr>
