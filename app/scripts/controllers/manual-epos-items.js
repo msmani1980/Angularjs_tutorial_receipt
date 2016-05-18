@@ -10,6 +10,21 @@
 angular.module('ts5App')
   .controller('ManualEposItemsCtrl', function ($scope, $q, $routeParams, manualEposFactory, lodash, dateUtility, globalMenuService) {
 
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
+    function showErrors(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
+      $scope.disableAll = true;
+    }
+
     function convertAmountFromBaseCurrency(amount, exchangeRateObject) {
       var convertedAmount = 0;
 
@@ -28,7 +43,6 @@ angular.module('ts5App')
       return convertedAmount.toFixed(2);
     }
 
-    // TODO: note, conversions here should always to base currency
     function convertAmountToBaseCurrency(amount, exchangeRateObject) {
       var convertedAmount = 0;
 
@@ -47,12 +61,20 @@ angular.module('ts5App')
       return convertedAmount.toFixed(2);
     }
 
+    $scope.sumAllItems = function () {
+      var sum = 0;
+      angular.forEach($scope.itemList, function (item) {
+        sum += parseFloat(item.convertedTotal);
+      });
+
+      return sum.toFixed(2);
+    };
+
     $scope.calculateTotals = function (item) {
       var total = (item.amount && item.quantity) ? parseFloat(item.amount) * parseInt(item.quantity) : 0;
       var stringTotal = total.toFixed(2);
       item.totalValue = stringTotal;
       item.convertedTotal = (item.exchangeRate) ? convertAmountToBaseCurrency(total, item.exchangeRate) : '0.00';
-
       return stringTotal;
     };
 
@@ -78,6 +100,37 @@ angular.module('ts5App')
       });
     };
 
+    function setVerifiedData(verifiedDataFromAPI) {
+      var verifiedKeys = {
+        verifiedBy: ($routeParams.itemType.toLowerCase() === 'virtual') ? 'virtualItemVerifiedBy' : 'voucherItemsVerifiedBy',
+        verifiedOn: ($routeParams.itemType.toLowerCase() === 'virtual') ? 'virtualItemVerifiedOn' : 'voucherItemsVerifiedOn'
+      };
+
+      $scope.isVerified = (!!verifiedDataFromAPI[verifiedKeys.verifiedBy]);
+      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI[verifiedKeys.verifiedOn]);
+      $scope.verifiedInfo = {
+        verifiedBy: (verifiedDataFromAPI[verifiedKeys.verifiedBy]) ? verifiedDataFromAPI[verifiedKeys.verifiedBy].firstName + ' ' + verifiedDataFromAPI[verifiedKeys.verifiedBy].lastName : 'Unknown User',
+        verifiedTimestamp: dateAndTime || 'Unknown Date'
+      };
+    }
+
+    function verifyToggleSuccess(dataFromAPI) {
+      setVerifiedData(angular.copy(dataFromAPI));
+      hideLoadingModal();
+    }
+
+    $scope.verify = function () {
+      showLoadingModal('Verifying');
+      var verificationKey = ($routeParams.itemType.toLowerCase() === 'virtual') ? 'VIRT_ITEM' : 'VOUCH_ITEM';
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, verificationKey).then(verifyToggleSuccess, showErrors);
+    };
+
+    $scope.unverify = function () {
+      showLoadingModal('Unverifying');
+      var verificationKey = ($routeParams.itemType.toLowerCase() === 'virtual') ? 'VIRT_ITEM' : 'VOUCH_ITEM';
+      manualEposFactory.unverifyCashBag($routeParams.cashBagId, verificationKey).then(verifyToggleSuccess, showErrors);
+    };
+
     function setItemList(masterItemList, cashBagItemList) {
       $scope.itemList = [];
 
@@ -86,9 +139,7 @@ angular.module('ts5App')
           itemName: item.itemName,
           itemCode: item.itemCode,
           itemDescription: item.itemCode + ' - ' + item.itemName,
-          itemMasterId: item.id,
-          amount: null,
-          quantity: null
+          itemMasterId: item.id
         };
 
         var cashBagItemMatch = lodash.findWhere(cashBagItemList, { itemMasterId: item.id, itemTypeId: $scope.mainItemType.id });
@@ -119,7 +170,10 @@ angular.module('ts5App')
 
       setItemList(masterItemList, cashBagItemList);
       setBaseCurrency();
+      setVerifiedData(angular.copy(responseCollection[4]));
       $scope.updateAmountsWithSelectedCurrency();
+      $scope.disableAll = false;
+      hideLoadingModal();
     }
 
     function makeSecondInitPromises() {
@@ -135,7 +189,8 @@ angular.module('ts5App')
         manualEposFactory.getRetailItems(itemListPayload),
         manualEposFactory.getCashBagItemList($routeParams.cashBagId),
         manualEposFactory.getCurrencyList(currencyPayload),
-        manualEposFactory.getDailyExchangeRate($scope.cashBag.dailyExchangeRateId)
+        manualEposFactory.getDailyExchangeRate($scope.cashBag.dailyExchangeRateId),
+        manualEposFactory.checkCashBagVerification($routeParams.cashBagId)
       ];
 
       return promises;
@@ -156,8 +211,15 @@ angular.module('ts5App')
       manualEposFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(completeInitCalls);
     }
 
-    function init() {
+    function setupVars() {
       $scope.selectedCurrency = {};
+      $scope.disableAll = true;
+      $scope.isVerified = false;
+    }
+
+    function init() {
+      showLoadingModal();
+      setupVars();
 
       var firstInitPromises = [
         manualEposFactory.getCashBag($routeParams.cashBagId),

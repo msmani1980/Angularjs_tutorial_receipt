@@ -22,6 +22,8 @@
     <error-dialog form-object="manualCashForm" error-response="errorResponse" display="displayError">
     </error-dialog>
 
+    <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by {{ verifiedInfo.verifiedBy }} on {{ verifiedInfo.verifiedTimestamp }}</div>
+
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
@@ -30,7 +32,7 @@
               <span class="input-group-addon" id="currency"><span class="fa fa-money"></span></span>
               <ui-select ng-model="selectedCurrency.currency"
                          theme="bootstrap"
-                         ng-disabled="disabled"
+                         ng-disabled="isVerified || disableAll"
                          reset-search-input="false"
                          on-select="updateAmountsWithSelectedCurrency()">
                 <ui-select-match>
@@ -69,36 +71,39 @@
               <th class="col-xs-2">Price ({{ selectedCurrency.currency.code }})</th>
               <th class="col-xs-1">Qty</th>
               <th class="col-xs-3">Total Value ({{ selectedCurrency.currency.code }})</th>
-              <th class="col-xs-3">Total Value ({{ baseCurrency.code }})</th>
+              <th class="col-xs-3">Converted Total Value ({{ baseCurrency.code }})</th>
             </tr>
 
             <!-- Start Virtual Items loop -->
-            <tr ng-repeat="item in itemList | filter:{itemName: filter.virtualItems} track by $index">
+            <tr ng-repeat="item in itemList | filter:{itemName: filter.virtualItems}">
 
               <td>
                 <input class="form-control input-sm"
                        disabled="true"
                        ng-model="item.itemDescription">
               </td>
-
+              <td>
+                <input class="form-control"
+                       ng-model="item.amount"
+                       maxlength="10"
+                       placeholder="0.00"
+                       custom-validity
+                       custom-pattern="decimalWithTwoDecimalPlaces"
+                       aria-describedby="amount"
+                       ng-disabled="isVerified || disableAll" />
+              </td>
               <td>
                 <input class="form-control input-sm"
-                       ng-model="item.amount"
-                       aria-describedby="currency"/>
+                       ng-model="item.quantity"
+                       maxlength="5"
+                       placeholder="0"
+                       ng-disabled="isVerified || disableAll" />
               </td>
-
-              <td>
-                <input type="number"
-                       class="form-control input-sm"
-                       ng-model="item.quantity"/>
-              </td>
-
               <td>
                 <input class="form-control input-sm"
                        ng-value="calculateTotals(item)"
                        disabled="true"/>
               </td>
-
               <td>
                 <input class="form-control input-sm"
                        ng-model="item.convertedTotal"
@@ -112,15 +117,8 @@
               <td>
                 <input type="number"
                        class="form-control"
-                       ng-model="item.convertedTotal"
+                       ng-value="sumAllItems()"
                        disabled="true"/>
-              </td>
-            </tr>
-
-            <tr ng-show="companyVirtualItemsList.length === 0">
-              <td colspan="8" class="text-center">
-                <span class="fa fa-exclamation-circle text-danger"></span>
-                We're sorry, there are no {{virtual.name}} that match the given criteria
               </td>
             </tr>
 
@@ -131,7 +129,9 @@
       <div class="panel-footer">
         <div class="row">
           <div class="col-xs-12 text-right">
-            <button class="btn btn-success" ng-click="verifyPanel('Virtual Items')">Verify</button>
+            <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll"><span class="fa fa-check-square-o"></span> Save</button>
+            <button class="btn btn-danger" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
+            <button class="btn btn-success" type="button" ng-click="verify()" ng-hide="isVerified || disableAll"><span class="fa fa-check-circle"></span> Verify</button>
           </div>
         </div>
       </div>
