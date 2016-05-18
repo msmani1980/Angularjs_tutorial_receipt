@@ -73,19 +73,20 @@ angular.module('ts5App')
       };
     }
 
-    function verifyToggleSuccess(dataFromAPI) {
-      setVerifiedData(angular.copy(dataFromAPI));
-      hideLoadingModal();
-    }
+    $scope.verify = function (shouldCheckForm) {
+      angular.element('#confirmation-modal').modal('hide');
+      if (shouldCheckForm && $scope.manualCreditForm.$dirty) {
+        angular.element('#confirmation-modal').modal('show');
+        return;
+      }
 
-    $scope.verify = function () {
       showLoadingModal('Verifying');
-      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CREDIT').then(verifyToggleSuccess, showErrors);
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CREDIT').then(init, showErrors);
     };
 
     $scope.unverify = function () {
       showLoadingModal('Unverifying');
-      manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CREDIT').then(verifyToggleSuccess, showErrors);
+      manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CREDIT').then(init, showErrors);
     };
 
     function updateCashBagCredit(credit) {
@@ -114,10 +115,17 @@ angular.module('ts5App')
         $location.path('manual-epos-dashboard/' + $routeParams.cashBagId);
       }
 
+      init();
       messageService.success('Manual cash data successfully saved!');
     }
 
     $scope.save = function () {
+      if (!$scope.manualCreditForm.$valid) {
+        showErrors();
+        $scope.disableAll = false;
+        return;
+      }
+
       showLoadingModal('Saving');
       var promises = [];
       angular.forEach($scope.currencyList, function (cash) {
@@ -177,6 +185,7 @@ angular.module('ts5App')
       setBaseCurrency(currencyList);
       setCashBagCurrencyList(angular.copy(responseCollection[1].response), currencyList, angular.copy(responseCollection[2].dailyExchangeRateCurrencies));
       setVerifiedData(angular.copy(responseCollection[3]));
+      $scope.manualCreditForm.$setPristine();
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {
