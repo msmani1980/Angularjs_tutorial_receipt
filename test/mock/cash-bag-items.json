@@ -8,11 +8,11 @@
     {
       "id": 76,
       "cashbagId": 1263,
-      "itemMasterId": 262,
+      "itemMasterId": 1,
       "itemTypeId": 2,
       "currencyId": 9,
-      "amount": 0.0,
-      "quantity": 0,
+      "amount": 2.0,
+      "quantity": 5,
       "convertedAmount": 0.0,
       "storeInstanceId": 1845,
       "eposCashBagsId": 512

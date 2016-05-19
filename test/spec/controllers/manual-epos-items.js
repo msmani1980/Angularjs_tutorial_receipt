@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ManualEposItemsCtrl', function () {
+describe('Controller: ManualEposItemsCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -64,7 +64,7 @@ fdescribe('Controller: ManualEposItemsCtrl', function () {
       $invalid: false,
       $pristine: false,
       $dirty: true,
-      $setPristine: function(pristine) {
+      $setPristine: function (pristine) {
         this.$pristine = pristine;
       }
     };
@@ -133,11 +133,11 @@ fdescribe('Controller: ManualEposItemsCtrl', function () {
 
     createDeferred = $q.defer();
     createDeferred.resolve({});
-    spyOn(manualEposFactory, 'createCashBagCash').and.returnValue(createDeferred.promise);
+    spyOn(manualEposFactory, 'createCashBagItem').and.returnValue(createDeferred.promise);
 
     updateDeferred = $q.defer();
     updateDeferred.resolve({});
-    spyOn(manualEposFactory, 'updateCashBagCash').and.returnValue(updateDeferred.promise);
+    spyOn(manualEposFactory, 'updateCashBagItem').and.returnValue(updateDeferred.promise);
 
     cashBagId = 123;
     itemType = 'virtual';
@@ -201,6 +201,14 @@ fdescribe('Controller: ManualEposItemsCtrl', function () {
       expect(manualEposFactory.getCashBagItemList).toHaveBeenCalledWith(cashBagId);
     });
 
+    it('should merge cash bag items with matching item types and item ids', function () {
+      var expectedItem = jasmine.objectContaining({
+        id: 76,
+        quantity: 5
+      });
+      expect(scope.itemList[0]).toEqual(expectedItem);
+    });
+
     it('should get daily exchange rate tied to the cash bag', function () {
       var dailyExchangeRateId = scope.cashBag.dailyExchangeRateId;
       expect(manualEposFactory.getDailyExchangeRate).toHaveBeenCalledWith(dailyExchangeRateId);
@@ -219,115 +227,149 @@ fdescribe('Controller: ManualEposItemsCtrl', function () {
       expect(scope.baseCurrency.id).toEqual(mockBaseCurrency);
     });
   });
-  //
-  //describe('calculate totals', function () {
-  //  it('should calculate total amount based on price * qty', function () {
-  //
-  //  });
-  //
-  //  describe('converted total', function () {
-  //    it('should use bank exchange rate for bank amounts', function () {
-  //      var mockCurrencyObject = {
-  //        amount: '1.00',
-  //        exchangeRate: {
-  //          bankExchangeRate: 0.50,
-  //          paperExchangeRate: null,
-  //          coinExchangeRate: null
-  //        }
-  //      };
-  //      var convertedAmount = scope.convertAmount(mockCurrencyObject);
-  //      expect(convertedAmount).toEqual('2.00');
-  //    });
-  //
-  //    it('should use paper and coin exchange rate for paper/coin amounts', function () {
-  //      var mockCurrencyObject = {
-  //        amount: '1.50',
-  //        exchangeRate: {
-  //          bankExchangeRate: null,
-  //          paperExchangeRate: 0.25,
-  //          coinExchangeRate: 0.5
-  //        }
-  //      };
-  //      var convertedAmount = scope.convertAmount(mockCurrencyObject);
-  //      expect(convertedAmount).toEqual('5.00');
-  //    });
-  //  });
-  //});
-  //
-  //describe('sum converted amounts', function () {
-  //  it('should return the sum of all converted amounts', function () {
-  //    scope.currencyList = [{
-  //      convertedAmount: '1.00'
-  //    }, {
-  //      convertedAmount: '2.50'
-  //    }, {
-  //      convertedAmount: '5.00001'
-  //    }];
-  //
-  //    var sum = scope.sumConvertedAmounts();
-  //    expect(sum).toEqual('8.50');
-  //  });
-  //});
-  //
-  //describe('verify and unverify', function () {
-  //  it('should call verify function and update scope var', function () {
-  //    scope.isVerified = false;
-  //    scope.verifiedInfo = null;
-  //    scope.verify();
-  //    expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
-  //    scope.$digest();
-  //  });
-  //
-  //  it('should call unverify function and update scope var', function () {
-  //    scope.isVerified = true;
-  //    scope.verifiedInfo = null;
-  //    scope.unverify();
-  //    expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
-  //    scope.$digest();
-  //  });
-  //});
-  //
-  //describe('saving cash bag cash', function () {
-  //  var expectedPayload;
-  //  beforeEach(function () {
-  //    scope.currencyList = [{
-  //      amount: '1.00',
-  //      convertedAmount: '2.50',
-  //      currencyId: 3
-  //    }];
-  //
-  //    expectedPayload = {
-  //      amount: 1,
-  //      convertedAmount: 2.5,
-  //      currencyId: 3
-  //    };
-  //  });
-  //
-  //  it('should check form validity before saving', function () {
-  //    scope.manualCashForm.$valid = false;
-  //    scope.save();
-  //    expect(scope.displayError).toEqual(true);
-  //  });
-  //
-  //  it('should call create for new entries', function () {
-  //    scope.save();
-  //    expect(manualEposFactory.createCashBagCash).toHaveBeenCalledWith(cashBagId, expectedPayload);
-  //  });
-  //
-  //  it('should call update for existing entries', function () {
-  //    var cashId = 4;
-  //    scope.currencyList[0].id = cashId;
-  //    scope.save();
-  //    expect(manualEposFactory.updateCashBagCash).toHaveBeenCalledWith(cashBagId, cashId, expectedPayload);
-  //  });
-  //
-  //  it('should redirect page if shouldExit is true', function () {
-  //    scope.shouldExit = true;
-  //    scope.save();
-  //    scope.$digest();
-  //    expect(location.path).toHaveBeenCalledWith('manual-epos-dashboard/' + cashBagId);
-  //  });
-  //
-  //});
+
+  describe('calculate totals', function () {
+    it('should calculate total amount based on price * qty', function () {
+      var mockItem = {
+        amount: '2.50',
+        quantity: '2',
+        exchangeRate: {
+          bankExchangeRate: 2
+        }
+      };
+
+      scope.calculateTotals(mockItem);
+      expect(mockItem.totalValue).toEqual('5.00');
+    });
+
+    describe('converted total', function () {
+      it('should use bank exchange rate for bank amounts', function () {
+        var mockItemWithExchangeRate = {
+          amount: '1.00',
+          quantity: '1',
+          exchangeRate: {
+            bankExchangeRate: 0.50,
+            paperExchangeRate: null,
+            coinExchangeRate: null
+          }
+        };
+        scope.calculateTotals(mockItemWithExchangeRate);
+        expect(mockItemWithExchangeRate.convertedTotal).toEqual('2.00');
+      });
+
+      it('should use paper and coin exchange rate for paper/coin amounts', function () {
+        var mockItemWithExchangeRate = {
+          amount: '1.50',
+          quantity: '1',
+          exchangeRate: {
+            bankExchangeRate: null,
+            paperExchangeRate: 0.25,
+            coinExchangeRate: 0.5
+          }
+        };
+        scope.calculateTotals(mockItemWithExchangeRate);
+        expect(mockItemWithExchangeRate.convertedTotal).toEqual('4.10');
+      });
+    });
+  });
+
+  describe('sum all amounts', function () {
+    it('should return sum of all converted totals', function () {
+      scope.itemList = [{
+        convertedTotal: '2.50'
+      }, {
+        convertedTotal: '3.50'
+      }];
+      expect(scope.sumAllItems()).toEqual('6.00');
+    });
+  });
+
+  describe('switching amounts', function () {
+    it('should convert all amounts to the new currency', function () {
+      scope.dailyExchangeRates = [{
+        retailCompanyCurrencyId: 1,
+        bankExchangeRate: 0.25
+      }, {
+        retailCompanyCurrencyId: 2,
+        bankExchangeRate: 2
+      }];
+
+      scope.itemList = [{
+        currencyId: 1,
+        amount: '2.00'
+      }];
+
+      scope.selectedCurrency = {currency: {id: 2}};
+      scope.updateAmountsWithSelectedCurrency();
+      expect(scope.itemList[0].amount).toEqual('16.00');
+    });
+  });
+
+  describe('verify and unverify', function () {
+    it('should call verify function and update scope var', function () {
+      scope.isVerified = false;
+      scope.verifiedInfo = null;
+      scope.verify();
+      expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'VIRT_ITEM');
+      scope.$digest();
+    });
+
+    it('should call unverify function and update scope var', function () {
+      scope.isVerified = true;
+      scope.verifiedInfo = null;
+      scope.unverify();
+      expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'VIRT_ITEM');
+      scope.$digest();
+    });
+  });
+
+  describe('saving cash bag cash', function () {
+    var expectedPayload;
+    beforeEach(function () {
+      scope.selectedCurrency = { currency: { id: 1 } };
+      scope.mainItemType = { id: 2 };
+      scope.itemList = [{
+        amount: '1.00',
+        quantity: 4,
+        convertedTotal: '2.50',
+        itemMasterId: 3
+      }];
+
+      expectedPayload = {
+        amount: 1,
+        quantity: 4,
+        convertedAmount: 2.5,
+        itemTypeId: 2,
+        itemMasterId: 3,
+        currencyId: 1
+      };
+    });
+
+    it('should check form validity before saving', function () {
+      scope.manualItemForm.$valid = false;
+      scope.save();
+      expect(scope.displayError).toEqual(true);
+    });
+
+    it('should call create for new entries', function () {
+      scope.save();
+      expect(manualEposFactory.createCashBagItem).toHaveBeenCalledWith(cashBagId, expectedPayload);
+    });
+
+    it('should call update for existing entries', function () {
+      var itemId = 4;
+      scope.itemList[0].id = itemId;
+      scope.save();
+      expect(manualEposFactory.updateCashBagItem).toHaveBeenCalledWith(cashBagId, itemId, expectedPayload);
+    });
+
+    it('should redirect page if shouldExit is true', function () {
+      scope.shouldExit = true;
+      scope.save();
+      scope.$digest();
+      expect(location.path).toHaveBeenCalledWith('manual-epos-dashboard/' + cashBagId);
+    });
+
+  });
 
 });
