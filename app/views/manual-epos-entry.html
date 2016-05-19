@@ -3,7 +3,7 @@
 <div class="list-controls">
     <div class="row item-list-row">
       <div class="col-xs-8">
-        <h2 class="view-name">Manual Epos Entry<br>
+        <h2 class="view-name">Manual ePOS Entry<br>
           <small>Cash Bag {{ cashBag.cashBagNumber }}</small>
         </h2>
       </div>
@@ -49,12 +49,12 @@
             </button>
           </div>
           <div class="col-xs-4">
-            <button class="btn btn-primary col-xs-12" disabled="true">
+            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('items/virtual')">
               <span class="fa fa-check-circle" ng-show="isFormVerified('virtual')"></span> Virtual Items
             </button>
           </div>
           <div class="col-xs-4">
-            <button class="btn btn-primary col-xs-12" disabled="true">
+            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('items/voucher')">
               <span class="fa fa-check-circle" ng-show="isFormVerified('voucher')"></span> Voucher Items
             </button>
           </div>
