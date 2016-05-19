@@ -8,7 +8,8 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, dailyExchangeRatesService, storeInstanceService, itemsService, recordsService) {
+  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, 
+    dailyExchangeRatesService, storeInstanceService, itemsService, recordsService, companyDiscountService) {
 
     var getPromotionsList = function () {
       var mockPromotionsList = [{
@@ -221,6 +222,46 @@ angular.module('ts5App')
       return recordsService.getItemTypes();
     }
 
+    function getCashBagDiscountList(cashBagId, payload) {
+      return cashBagService.getManualCashBagList('discounts', cashBagId, payload);
+    }
+
+    function createCashBagDiscount(cashBagId, payload) {
+      cashBagService.createManualCashBagRecord('discounts', cashBagId, payload);
+    }
+
+    function updateCashBagDiscount(cashBagId, discountId, payload) {
+      cashBagService.updateManualCashBagRecord('discounts', cashBagId, discountId, payload);
+    }
+
+    function getCompanyDiscountsCoupon(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 1
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
+    }
+
+    function getCompanyDiscountsVoucher(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 4
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
+    }
+
+    function getCompanyDiscountsComp(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 2
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
+    }
+
+    function getCompanyDiscountsFrequentFlyer(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 3
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
+    }
+
     return {
       getPromotionsList: getPromotionsList,
       getCurrencyList: getCurrencyList,
@@ -241,7 +282,14 @@ angular.module('ts5App')
       createCashBagItem: createCashBagItem,
       updateCashBagItem: updateCashBagItem,
       getRetailItems: getRetailItems,
-      getItemTypes: getItemTypes
+      getItemTypes: getItemTypes,
+      getCashBagDiscountList: getCashBagDiscountList,
+      createCashBagDiscount: createCashBagDiscount,
+      updateCashBagDiscount: updateCashBagDiscount,
+      getCompanyDiscountsCoupon: getCompanyDiscountsCoupon,
+      getCompanyDiscountsVoucher: getCompanyDiscountsVoucher,
+      getCompanyDiscountsComp:getCompanyDiscountsComp,
+      getCompanyDiscountsFrequentFlyer:getCompanyDiscountsFrequentFlyer
 
     };
 

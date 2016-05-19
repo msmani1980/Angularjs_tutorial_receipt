@@ -104,6 +104,7 @@ angular.module('ts5App')
       createPromotion: createPromotion,
       savePromotion: savePromotion,
       deletePromotion: deletePromotion
+
     };
 
   });
