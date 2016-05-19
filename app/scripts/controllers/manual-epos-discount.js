@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('ManualEposDiscountCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService,
-    lodash, messageService, $location, promotionsFactory) {
+    lodash, messageService, $location) {
 
     function createNewDiscountObject () {
       var newDiscount = { 
@@ -332,10 +332,10 @@ angular.module('ts5App')
         manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter }),
         manualEposFactory.getCashBagDiscountList($routeParams.cashBagId, {}),
         manualEposFactory.getDailyExchangeRate($scope.cashBag.dailyExchangeRateId),
-        promotionsFactory.getCompanyDiscountsVoucher(payload),
-        promotionsFactory.getCompanyDiscountsCoupon(payload),
-        promotionsFactory.getCompanyDiscountsComp(payload),
-        promotionsFactory.getCompanyDiscountsFrequentFlyer(payload),
+        manualEposFactory.getCompanyDiscountsVoucher(payload),
+        manualEposFactory.getCompanyDiscountsCoupon(payload),
+        manualEposFactory.getCompanyDiscountsComp(payload),
+        manualEposFactory.getCompanyDiscountsFrequentFlyer(payload),
         manualEposFactory.checkCashBagVerification($routeParams.cashBagId)
       ];
 
