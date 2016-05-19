@@ -113,7 +113,7 @@ angular.module('ts5App')
     function getCompanyPreferenceBy(preferences, choiceName, optionName) {
       var result = null;
       angular.forEach(preferences, function (preference) {
-        if (result === null && preference.choiceName === choiceName && preference.optionName === optionName) {
+        if (result === null && preference.choiceName === choiceName && preference.optionName === optionName && dateUtility.isTodayOrEarlier(preference.startDate)) {
           result = preference;
         }
       });
