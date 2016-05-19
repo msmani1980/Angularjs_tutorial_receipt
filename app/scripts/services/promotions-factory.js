@@ -46,6 +46,20 @@ angular.module('ts5App')
       return companyDiscountService.getDiscountList(payload);
     }
 
+    function getCompanyDiscountsComp(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 2
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
+    }
+
+    function getCompanyDiscountsFrequentFlyer(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 3
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
+    }
+
     function getSalesCategories(payload) {
       return salesCategoriesService.getSalesCategoriesList(payload);
     }
@@ -103,7 +117,9 @@ angular.module('ts5App')
       getPromotions: getPromotions,
       createPromotion: createPromotion,
       savePromotion: savePromotion,
-      deletePromotion: deletePromotion
+      deletePromotion: deletePromotion,
+      getCompanyDiscountsComp:getCompanyDiscountsComp,
+      getCompanyDiscountsFrequentFlyer:getCompanyDiscountsFrequentFlyer
     };
 
   });

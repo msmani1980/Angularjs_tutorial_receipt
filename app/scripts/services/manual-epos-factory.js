@@ -209,6 +209,18 @@ angular.module('ts5App')
       return recordsService.getItemTypes();
     }
 
+    function getCashBagDiscountList(cashBagId, payload) {
+      return cashBagService.getManualCashBagList('discounts', cashBagId, payload);
+    }
+
+    function createCashBagDiscount(cashBagId, payload) {
+      cashBagService.createManualCashBagRecord('discounts', cashBagId, payload);
+    }
+
+    function updateCashBagDiscount(cashBagId, discountId, payload) {
+      cashBagService.updateManualCashBagRecord('discounts', cashBagId, discountId, payload);
+    }
+
     return {
       getPromotionsList: getPromotionsList,
       getCurrencyList: getCurrencyList,
@@ -226,7 +238,10 @@ angular.module('ts5App')
       createCashBagCredit: createCashBagCredit,
       updateCashBagCredit: updateCashBagCredit,
       getRetailItems: getRetailItems,
-      getItemTypes: getItemTypes
+      getItemTypes: getItemTypes,
+      getCashBagDiscountList: getCashBagDiscountList,
+      createCashBagDiscount: createCashBagDiscount,
+      updateCashBagDiscount: updateCashBagDiscount
 
     };
 
