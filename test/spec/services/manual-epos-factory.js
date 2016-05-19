@@ -23,7 +23,12 @@ describe('Service: manualEposFactory', function() {
 
     spyOn(manualEposFactory, 'getPromotionsList');
     spyOn(manualEposFactory, 'getDiscountsList');
-
+    spyOn(manualEposFactory, 'getCompanyDiscountsCoupon');
+    spyOn(manualEposFactory, 'getCompanyDiscountsVoucher');
+    spyOn(manualEposFactory, 'getCompanyDiscountsComp');
+    spyOn(manualEposFactory, 'getCompanyDiscountsFrequentFlyer');
+    spyOn(manualEposFactory, 'getCashBagDiscountList');
+    
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeById');
     spyOn(cashBagService, 'getCashBag');
@@ -63,6 +68,41 @@ describe('Service: manualEposFactory', function() {
     it('should call getDailyExchangeRate from dailyExchangeRatesService', function () {
       manualEposFactory.getDailyExchangeRate();
       expect(dailyExchangeRatesService.getDailyExchangeById).toHaveBeenCalled();
+    });
+  });
+
+  describe('getCompanyDiscountsCoupon API call', function() {
+    it('should call getCompanyDiscountsCoupon', function() {
+      manualEposFactory.getCompanyDiscountsCoupon();
+      expect(manualEposFactory.getCompanyDiscountsCoupon).toHaveBeenCalled();
+    });
+  });
+
+  describe('getCompanyDiscountsVoucher API call', function() {
+    it('should call getCompanyDiscountsVoucher', function() {
+      manualEposFactory.getCompanyDiscountsVoucher();
+      expect(manualEposFactory.getCompanyDiscountsVoucher).toHaveBeenCalled();
+    });
+  });
+
+  describe('getCompanyDiscountsComp API call', function() {
+    it('should call getCompanyDiscountsComp', function() {
+      manualEposFactory.getCompanyDiscountsComp();
+      expect(manualEposFactory.getCompanyDiscountsComp).toHaveBeenCalled();
+   });
+  });
+
+  describe('getCompanyDiscountsFrequentFlyer API call', function() {
+    it('should call getCompanyDiscountsFrequentFlyer', function() {
+      manualEposFactory.getCompanyDiscountsFrequentFlyer();
+      expect(manualEposFactory.getCompanyDiscountsFrequentFlyer).toHaveBeenCalled();
+    });
+  });
+
+  describe('getCashBagDiscountList API call', function() {
+    it('should call getCashBagDiscountList', function() {
+      manualEposFactory.getCashBagDiscountList();
+      expect(manualEposFactory.getCashBagDiscountList).toHaveBeenCalled();
     });
   });
 
@@ -130,6 +170,22 @@ describe('Service: manualEposFactory', function() {
       manualEposFactory.checkCashBagVerification();
       expect(cashBagService.getCashBagVerifications).toHaveBeenCalled();
     });
+
+    it('should call createCashBagDiscount from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakePayload = {};
+      manualEposFactory.createCashBagDiscount(fakeCashBagId, fakePayload);
+      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('discounts', fakeCashBagId, fakePayload);
+    });
+
+    it('should call updateCashBagDiscount from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakeCashBagDiscountId = 234;
+      var fakePayload = {};
+      manualEposFactory.updateCashBagDiscount(fakeCashBagId, fakeCashBagDiscountId, fakePayload);
+      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('discounts', fakeCashBagId, fakeCashBagDiscountId, fakePayload);
+    });
+    
   });
 
   describe('storeInstanceService API call', function () {
