@@ -18,8 +18,6 @@ describe('Controller: ManualEposDiscountCtrl', function () {
                             
   var ManualEposDiscountCtrl;
   var manualEposFactory;
-  var promotionsFactory;
-  //var discountFactory;
   var globalMenuService;
   var dateUtility;
   var controller;
@@ -85,8 +83,6 @@ describe('Controller: ManualEposDiscountCtrl', function () {
 
     manualEposFactory = $injector.get('manualEposFactory');
     globalMenuService = $injector.get('globalMenuService');
-    promotionsFactory = $injector.get('promotionsFactory');
-    //discountFactory = $injector.get('discountFactory');
     dateUtility = $injector.get('dateUtility');
     controller = $controller;
     location = $location;
@@ -119,19 +115,19 @@ describe('Controller: ManualEposDiscountCtrl', function () {
     
     companyDiscountsCouponsDeferred = $q.defer();
     companyDiscountsCouponsDeferred.resolve(companyDiscountsCouponsJSON);
-    spyOn(promotionsFactory, 'getCompanyDiscountsCoupon').and.returnValue(companyDiscountsCouponsDeferred.promise);
+    spyOn(manualEposFactory, 'getCompanyDiscountsCoupon').and.returnValue(companyDiscountsCouponsDeferred.promise);
 
     companyDiscountsVouchersDeferred = $q.defer();
     companyDiscountsVouchersDeferred.resolve(companyDiscountsVouchersJSON);
-    spyOn(promotionsFactory, 'getCompanyDiscountsVoucher').and.returnValue(companyDiscountsVouchersDeferred.promise);
+    spyOn(manualEposFactory, 'getCompanyDiscountsVoucher').and.returnValue(companyDiscountsVouchersDeferred.promise);
 
     companyDiscountsCompDeferred = $q.defer();
     companyDiscountsCompDeferred.resolve(companyDiscountsCompJSON);
-    spyOn(promotionsFactory, 'getCompanyDiscountsComp').and.returnValue(companyDiscountsCompDeferred.promise);
+    spyOn(manualEposFactory, 'getCompanyDiscountsComp').and.returnValue(companyDiscountsCompDeferred.promise);
     
     companyDiscountsFlyerDeferred = $q.defer();
     companyDiscountsFlyerDeferred.resolve(companyDiscountsFlyerJSON);
-    spyOn(promotionsFactory, 'getCompanyDiscountsFrequentFlyer').and.returnValue(companyDiscountsFlyerDeferred.promise);
+    spyOn(manualEposFactory, 'getCompanyDiscountsFrequentFlyer').and.returnValue(companyDiscountsFlyerDeferred.promise);
 
     verifyDeferred = $q.defer();
     verifyDeferred.resolve(cashBagVerificationJSON.response[0]);
