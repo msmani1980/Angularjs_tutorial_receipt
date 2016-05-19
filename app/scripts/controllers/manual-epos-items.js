@@ -170,7 +170,7 @@ angular.module('ts5App')
       var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI[verifiedKeys.verifiedOn]);
       $scope.verifiedInfo = {
         verifiedBy: (verifiedDataFromAPI[verifiedKeys.verifiedBy]) ? verifiedDataFromAPI[verifiedKeys.verifiedBy].firstName + ' ' + verifiedDataFromAPI[verifiedKeys.verifiedBy].lastName : 'Unknown User',
-        verifiedTimestamp: dateAndTime || 'Unknown Date'
+        verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
       };
     }
 
