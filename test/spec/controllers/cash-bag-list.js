@@ -154,7 +154,6 @@ describe('Controller: CashBagListCtrl', function() {
         scope.loadCashBagList();
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
           isDelete: 'false',
-          isSubmitted: 'false',
           limit: 100,
           offset: 0
         });
@@ -169,7 +168,6 @@ describe('Controller: CashBagListCtrl', function() {
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
           cashBagNumber: testCashBagNumber,
           isDelete: 'false',
-          isSubmitted: 'false',
           limit: 100,
           offset: 0
         });
@@ -184,7 +182,6 @@ describe('Controller: CashBagListCtrl', function() {
           startDate: '20150620',
           endDate: '20150620',
           isDelete: 'false',
-          isSubmitted: 'false',
           limit: 100,
           offset: 0
         });
@@ -199,7 +196,6 @@ describe('Controller: CashBagListCtrl', function() {
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
           cashBagNumber: '234',
           isDelete: 'false',
-          isSubmitted: 'false',
           limit: 100,
           offset: 0
         });
