@@ -34,16 +34,18 @@ angular.module('ts5App').service('storeInstanceFactory',
       return schedulesService.getSchedules(companyId);
     }
 
-    function getCarrierNumbers(companyId, carrierTypeId) {
-      return carrierService.getCarrierNumbers(companyId, carrierTypeId);
+    function getCarrierNumbers(companyId, carrierTypeId, optionalPayload) {
+      var payload = optionalPayload || {};
+      return carrierService.getCarrierNumbers(companyId, carrierTypeId, payload);
     }
 
     function getCarrierNumber(companyId, carrierNumberId) {
       return carrierService.getCarrierNumber(companyId, carrierNumberId);
     }
 
-    function getAllCarrierNumbers(companyId) {
-      return getCarrierNumbers(companyId, 0);
+    function getAllCarrierNumbers(companyId, optionalPayload) {
+      var payload = optionalPayload || {};
+      return getCarrierNumbers(companyId, 0, payload);
     }
 
     function getStoreInstancesList(query) {
