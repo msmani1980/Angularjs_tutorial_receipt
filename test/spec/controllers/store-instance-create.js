@@ -916,6 +916,8 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'setMenuMasterList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'getStoresList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'setStoresList').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'getCarrierNumbers').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setCarrierNumbers').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'updateInstanceDependenciesSuccess').and.callThrough();
       scope.formData = {
         scheduleDate: dateUtility.nowFormatted(),
@@ -949,6 +951,14 @@ describe('Store Instance Create Controller', function() {
 
     it('should call setStoresList', function() {
       expect(StoreInstanceCreateCtrl.setStoresList).toHaveBeenCalled();
+    });
+
+    it('should call set getCarrierNumbers', function () {
+      expect(StoreInstanceCreateCtrl.getCarrierNumbers).toHaveBeenCalled();
+    });
+
+    it('should call set setCarrierNumbers', function () {
+      expect(StoreInstanceCreateCtrl.setCarrierNumbers).toHaveBeenCalled();
     });
 
     it('should call updateInstanceDependenciesSuccess', function() {
@@ -1149,7 +1159,8 @@ describe('Store Instance Create Controller', function() {
     it('should set the menus ID the formData object', function() {
       var menuControl = [{
         id: 100,
-        menuCode: 'SortTest'
+        menuCode: 'SortTest',
+        menuName: 'SortTest'
       }];
       expect(scope.formData.menus).toEqual(menuControl);
     });
