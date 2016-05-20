@@ -186,6 +186,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       if (angular.isDefined(existingMenu)) {
         newMenu.menuCode = existingMenu.menuCode;
+        newMenu.menuName = existingMenu.menuName;
       }
 
       return newMenu;
