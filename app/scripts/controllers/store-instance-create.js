@@ -1174,6 +1174,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.updateInstanceDependencies = function() {
       var updatePromises = [
         $this.getScheduleNumbers(),
+        $this.getCarrierNumbers()
       ];
       if ($this.isDispatchOrRedispatch()) {
         updatePromises.push(
