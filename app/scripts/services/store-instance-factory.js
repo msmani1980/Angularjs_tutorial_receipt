@@ -228,6 +228,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storeInstanceValidationService.validateStoreInstance(payload);
     }
 
+    function updateStoreInstanceStatusForceReconcile(storeId, statusId) {
+      return storeInstanceService.updateStoreInstanceStatusForceReconcile(storeId, statusId, undefined, true, true);
+    }
+
     return {
       getCompanyId: getCompanyId,
       getItemsMasterList: getItemsMasterList,
@@ -256,7 +260,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       updateStoreInstanceStatus: updateStoreInstanceStatus,
       getReasonCodeList: getReasonCodeList,
       getCountTypes: getCountTypes,
-      validateStoreInstance: validateStoreInstance
+      validateStoreInstance: validateStoreInstance,
+      updateStoreInstanceStatusForceReconcile: updateStoreInstanceStatusForceReconcile
     };
 
   });
