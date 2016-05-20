@@ -173,7 +173,6 @@ angular.module('ts5App')
 
       payload = lodash.assign(payload, {
         isDelete: 'false',
-        isSubmitted: 'false',
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
