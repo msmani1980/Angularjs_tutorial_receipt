@@ -125,6 +125,7 @@ describe('Service: storeInstanceFactory', function() {
     spyOn(storeInstanceService, 'updateStoreInstanceItemsBulk');
     spyOn(storeInstanceService, 'deleteStoreInstanceItem');
     spyOn(storeInstanceService, 'updateStoreInstanceStatus');
+    spyOn(storeInstanceService, 'updateStoreInstanceStatusForceReconcile');
     spyOn(menuMasterService, 'getMenuMasterList').and.returnValue(getMenuMasterListDeferred.promise);
     spyOn(storesService, 'getStoresList');
     spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
@@ -231,6 +232,12 @@ describe('Service: storeInstanceFactory', function() {
       var statusId = 1;
       storeInstanceFactory.updateStoreInstanceStatus(id, statusId);
       expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalledWith(id, statusId, undefined, false);
+    });
+
+    it('should call updateStoreInstanceStatusForceReconcile', function() {
+      var statusId = 1;
+      storeInstanceFactory.updateStoreInstanceStatusForceReconcile(id, statusId);
+      expect(storeInstanceService.updateStoreInstanceStatusForceReconcile).toHaveBeenCalledWith(id, statusId, undefined, true, true);
     });
   });
 
