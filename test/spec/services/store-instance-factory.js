@@ -258,14 +258,15 @@ describe('Service: storeInstanceFactory', function() {
   describe('carrierService calls', function() {
     it('should call getCarrierNumbers', function() {
       var carrierTypeId = 1;
-      storeInstanceFactory.getCarrierNumbers(companyId, 1);
-      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId);
+      var payload = { fakeKey: 'fakeValue' };
+      storeInstanceFactory.getCarrierNumbers(companyId, 1, payload);
+      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId, payload);
     });
 
     it('should call getAllCarrierNumbers', function() {
       var carrierTypeId = 0;
       storeInstanceFactory.getAllCarrierNumbers(companyId);
-      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId);
+      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId, {});
     });
   });
 
