@@ -34,7 +34,7 @@
         </div>
         <div class="form-group">
             <div class="col-xs-4 col-sm-2">
-                <ui-select ng-model="selectedCurrency.currency" theme="bootstrap" reset-search-input="false" on-select="onChangeCurrency()" style="min-width: 200px;">
+                <ui-select ng-model="selectedCurrency.currency" theme="bootstrap" reset-search-input="false" on-select="onChangeCurrency()" style="min-width: 200px;" ng-disabled="isVerified || disableAll">
                     <ui-select-match placeholder="Select Currency ..."> {{$select.selected.code}} </ui-select-match>
                     <ui-select-choices repeat="currency in currencyList"> <div ng-bind-html="currency.code | highlight: $select.search"></div></ui-select-choices>
                 </ui-select>
@@ -48,7 +48,7 @@
             <div class="col-xs-12 col-sm-12">
                 <div class="input-group">
                     <span class="input-group-addon" id="discounts-filter">Filter</span>
-                    <input type="text" class="form-control" ng-model="filter.discounts" placeholder="Select Discount Type to filter by ..." aria-describedby="discounts-filter"/>
+                    <input type="text" class="form-control" ng-model="filter.discounts" placeholder="Select Discount Type to filter by ..." aria-describedby="discounts-filter" ng-disabled="isVerified || disableAll"/>
                 </div>
             </div>
         </div>
@@ -65,13 +65,13 @@
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
             </tr>          
-            <tr ng-repeat="manualDiscountObj in discountListCoupon | filter:{discountTypeName: filter.discounts} track by $index">
+            <tr ng-repeat="manualDiscountObj in discountListCoupon | filter:{name: filter.discounts} track by $index">
               <td>
-                 <ui-select ng-model="manualDiscountObj.discount" on-select="onChangeDiscount(manualDiscountObj)"  theme="bootstrap" reset-search-input="false"> 
+                 <ui-select ng-model="manualDiscountObj.discount" on-select="onChangeDiscount(manualDiscountObj)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
                     <ui-select-match placeholder="Select Coupon Discounts ..."> 
                         {{$select.selected.name}}
                     </ui-select-match>
-                    <ui-select-choices position="up" repeat="couponDiscount in companyDiscountsList.coupon">
+                    <ui-select-choices repeat="couponDiscount in companyDiscountsList.coupon">
                         <div ng-bind-html="couponDiscount.name | highlight: $select.search"></div>
                     </ui-select-choices>
                 </ui-select>
@@ -79,11 +79,11 @@
               <td>
                 <div class="input-group" style="max-width:300px">
                     <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>                    
-                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountObj)" ng-model="manualDiscountObj.amount" placeholder="12345678.91" aria-describedby="currency" style="min-width:100px"/>
+                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountObj)" ng-model="manualDiscountObj.amount" placeholder="12345678.91" aria-describedby="currency" style="min-width:100px" ng-disabled="isVerified || disableAll"/>
                 </div>
               </td>
               <td>
-                <input type="number" class="form-control" ng-value="onChangePriceOrQty(manualDiscountObj)" ng-model="manualDiscountObj.quantity" placeholder="12345" style="width: 100px"/> 
+                <input type="number" class="form-control" ng-value="onChangePriceOrQty(manualDiscountObj)" ng-model="manualDiscountObj.quantity" placeholder="12345" style="width: 100px" ng-disabled="isVerified || disableAll"/> 
               </td>
               <td> 
                 <input class="form-control" ng-model="manualDiscountObj.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
@@ -102,7 +102,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addCouponDiscount()">Add Discount</button>
+                <button class="btn btn-primary" type="button" ng-click="addCouponDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
             </div>
             <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
             <div class="col-xs-12 col-sm-2">
@@ -125,13 +125,13 @@
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
             </tr>          
-            <tr ng-repeat="manualDiscountVoucher in discountListVoucher | filter:{discountTypeName: filter.discounts} track by $index">
+            <tr ng-repeat="manualDiscountVoucher in discountListVoucher | filter:{name: filter.discounts} track by $index">
               <td>
-                 <ui-select ng-model="manualDiscountVoucher.discount" on-select="onChangeDiscount(manualDiscountVoucher)"  theme="bootstrap" reset-search-input="false"> 
+                 <ui-select ng-model="manualDiscountVoucher.discount" on-select="onChangeDiscount(manualDiscountVoucher)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
                     <ui-select-match placeholder="Select Voucher Discounts ..."> 
                         {{$select.selected.name}}
                     </ui-select-match>
-                    <ui-select-choices position="up" repeat="voucherDiscount in companyDiscountsList.voucher">
+                    <ui-select-choices repeat="voucherDiscount in companyDiscountsList.voucher">
                         <div ng-bind-html="voucherDiscount.name | highlight: $select.search"></div>
                     </ui-select-choices>
                 </ui-select>
@@ -139,12 +139,12 @@
               <td>
                 <div class="input-group" style="max-width:300px">
                     <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>                    
-                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountVoucher)" ng-model="manualDiscountVoucher.amount" placeholder="12345678.91" aria-describedby="currency" style="min-width:100px"/>
+                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountVoucher)" ng-model="manualDiscountVoucher.amount" placeholder="12345678.91" aria-describedby="currency" style="min-width:100px" ng-disabled="isVerified || disableAll"/>
 
                 </div>
               </td>
               <td>
-                <input type="number" class="form-control" ng-value="onChangePriceOrQty(manualDiscountVoucher)" ng-model="manualDiscountVoucher.quantity" placeholder="12345" style="width: 100px"/> 
+                <input type="number" class="form-control" ng-value="onChangePriceOrQty(manualDiscountVoucher)" ng-model="manualDiscountVoucher.quantity" placeholder="12345" style="width: 100px" ng-disabled="isVerified || disableAll"/> 
               </td>
               <td> 
                 <input class="form-control" ng-model="manualDiscountVoucher.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
@@ -163,7 +163,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addVoucherDiscount()">Add Discount</button>
+                <button class="btn btn-primary" type="button" ng-click="addVoucherDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
             </div>
             <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
             <div class="col-xs-12 col-sm-2">
@@ -187,13 +187,13 @@
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
             </tr>          
-            <tr ng-repeat="manualDiscountComp in discountListComp | filter:{discountTypeName: filter.discounts} track by $index">
+            <tr ng-repeat="manualDiscountComp in discountListComp | filter:{name: filter.discounts} track by $index">
               <td>
-                 <ui-select ng-model="manualDiscountComp.discount" on-select="onChangeDiscount(manualDiscountComp)"  theme="bootstrap" reset-search-input="false"> 
+                 <ui-select ng-model="manualDiscountComp.discount" on-select="onChangeDiscount(manualDiscountComp)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
                     <ui-select-match placeholder="Select Comp Discounts ..."> 
                         {{$select.selected.name}}
                     </ui-select-match>
-                    <ui-select-choices position="up" repeat="compDiscount in companyDiscountsList.comp">
+                    <ui-select-choices repeat="compDiscount in companyDiscountsList.comp">
                         <div ng-bind-html="compDiscount.name | highlight: $select.search"></div>
                     </ui-select-choices>
                 </ui-select>
@@ -201,12 +201,12 @@
               <td>
                 <div class="input-group" style="max-width:300px">
                     <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>                    
-                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountComp)" ng-model="manualDiscountComp.amount" placeholder="12345678.91" aria-describedby="currency" style="min-width:100px"/>
+                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountComp)" ng-model="manualDiscountComp.amount" placeholder="12345678.91" aria-describedby="currency" style="min-width:100px" ng-disabled="isVerified || disableAll"/>
 
                 </div>
               </td>
               <td>
-                <input type="number" class="form-control" ng-value="onChangePriceOrQty(manualDiscountComp)" ng-model="manualDiscountComp.quantity" placeholder="12345" style="width: 100px"/> 
+                <input type="number" class="form-control" ng-value="onChangePriceOrQty(manualDiscountComp)" ng-model="manualDiscountComp.quantity" placeholder="12345" style="width: 100px" ng-disabled="isVerified || disableAll"/> 
               </td>
               <td> 
                 <input class="form-control" ng-model="manualDiscountComp.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
@@ -225,7 +225,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addCompDiscount()">Add Discount</button>
+                <button class="btn btn-primary" type="button" ng-click="addCompDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
             </div>
             <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
             <div class="col-xs-12 col-sm-2">
@@ -250,13 +250,13 @@
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
             </tr>          
-            <tr ng-repeat="manualDiscountFlyer in discountListFlyer | filter:{discountTypeName: filter.discounts} track by $index">
+            <tr ng-repeat="manualDiscountFlyer in discountListFlyer | filter:{name: filter.discounts} track by $index">
               <td>
-                 <ui-select ng-model="manualDiscountFlyer.discount" on-select="onChangeDiscount(manualDiscountFlyer)"  theme="bootstrap" reset-search-input="false"> 
+                 <ui-select ng-model="manualDiscountFlyer.discount" on-select="onChangeDiscount(manualDiscountFlyer)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
                     <ui-select-match placeholder="Select Frequent Flyer Discounts ..."> 
                         {{$select.selected.name}}
                     </ui-select-match>
-                    <ui-select-choices position="up" repeat="flyerDiscount in companyDiscountsList.flyer">
+                    <ui-select-choices repeat="flyerDiscount in companyDiscountsList.flyer">
                         <div ng-bind-html="flyerDiscount.name | highlight: $select.search"></div>
                     </ui-select-choices>
                 </ui-select>
@@ -288,7 +288,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addFlyerDiscount()">Add Discount</button>
+                <button class="btn btn-primary" type="button" ng-click="addFlyerDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
             </div>
             <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
             <div class="col-xs-12 col-sm-2">

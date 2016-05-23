@@ -291,7 +291,7 @@ angular.module('ts5App')
       discountObject.currentCurrencyAmount = getCurrentCurrencyAmount(discountObject);
       discountObject.baseCurrencyAmount = getBaseCurrencyAmount(discountObject);
       discountObject.discount = lodash.findWhere(discountDropDown, { id: discountObject.discountId }) || {};
-      discountObject.discountTypeName = (discountObject.discount.discountTypeName && discountObject.discount.discountTypeName !== null ? discountObject.discount.discountTypeName : '');
+      discountObject.name = (discountObject.discount.name && discountObject.discount.name !== null ? discountObject.discount.name : '');
       discountList.push(angular.copy(discountObject));
     }
 
