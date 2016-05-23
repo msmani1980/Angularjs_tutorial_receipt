@@ -232,6 +232,47 @@ angular.module('ts5App')
       return cashBag && !(cashBag.isManual || cashBag.bankRefNumber);
     };
 
+    function getModalItemsToShow(modalName) {
+      return (modalName === 'Promotion') ? $this.promotionTotals : $this.stockTotals;
+    }
+
+    $scope.showModal = function (modalName, cashBag) {
+      var modalNameToHeaderMap = {
+        Regular: 'Regular Product Revenue',
+        Virtual: 'Virtual Product Revenue',
+        Voucher: 'Voucher Product Revenue',
+        Promotion: 'ePOS Discount'
+      };
+      var modalNamToTableHeaderMap = {
+        Regular: 'Regular Product Name',
+        Virtual: 'Virtual Product Name',
+        Voucher: 'Voucher Product Name',
+        Promotion: 'Promotion Name'
+      };
+
+      var amountKey = (modalName === 'Regular') ? 'Retail' : modalName;
+
+      if (!$scope.stockTotals || !$scope.stockTotals['total' + amountKey]) {
+        return;
+      }
+
+      $scope.modalTotal = $scope.stockTotals['total' + amountKey].totalEPOS;
+      $scope.modalItemTypeName = modalName;
+      if (modalNameToHeaderMap[modalName] && modalNamToTableHeaderMap[modalName]) {
+        $scope.modalMainTitle = modalNameToHeaderMap[modalName];
+        $scope.modalTableHeader = modalNamToTableHeaderMap[modalName];
+      }
+
+      var itemsToShow = getModalItemsToShow(modalName);
+
+      $scope.modalItems = $filter('filter')(itemsToShow, {
+        itemTypeName: modalName,
+        cashbagId: cashBag.id
+      });
+
+      angular.element('#t6Modal').modal('show');
+    };
+
     function getStationById (stationId) {
       return lodash.find($scope.stations, 'stationId', stationId);
     }
@@ -569,16 +610,16 @@ angular.module('ts5App')
     }
 
     function setupNetTotals () {
-      angular.forEach($scope.stockTotals, function (stockItem) {
+      angular.forEach($this.stockTotals, function (stockItem) {
         stockItem.itemTypeName = lodash.findWhere($scope.itemTypes, {
           id: stockItem.itemTypeId
         }).name;
       });
 
-      var totalItems = getTotalsFor($scope.stockTotals, 'Regular');
-      var totalVirtual = getTotalsFor($scope.stockTotals, 'Virtual');
-      var totalVoucher = getTotalsFor($scope.stockTotals, 'Voucher');
-      var totalPromotion = getTotalsForPromotions($scope.promotionTotals);
+      var totalItems = getTotalsFor($this.stockTotals, 'Regular');
+      var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
+      var totalVoucher = getTotalsFor($this.stockTotals, 'Voucher');
+      var totalPromotion = getTotalsForPromotions($this.promotionTotals);
 
       var stockTotals = {
         totalRetail: totalItems,
@@ -650,7 +691,7 @@ angular.module('ts5App')
 
     function calculateCashRevenueForCredit(chCreditCard, cashRevenue) {
       angular.forEach(chCreditCard, function (creditCard) {
-        var amount = creditCard.bankAmountFinal + creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
+        var amount = (creditCard.bankAmountFinal || 0) + (creditCard.coinAmountManualCc || 0) + (creditCard.paperAmountManualCc || 0);
 
         if (creditCard.cashbagId) {
           getCashBagById(creditCard.cashbagId).creditRevenue += amount;
@@ -662,7 +703,7 @@ angular.module('ts5App')
 
     function calculateCashRevenueForDiscounts(chDiscount, cashRevenue) {
       angular.forEach(chDiscount, function (discount) {
-        var amount = discount.bankAmountFinal + discount.coinAmountCc + discount.paperAmountCc;
+        var amount = (discount.bankAmountFinal || 0) + (discount.coinAmountCc || 0) + (discount.paperAmountCc || 0);
 
         if (discount.cashbagId) {
           getCashBagById(discount.cashbagId).discountRevenue.amount += amount;
@@ -804,16 +845,50 @@ angular.module('ts5App')
     }
 
     function setStockTotals (stockTotalsFromAPI) {
-      $scope.stockTotals = angular.copy(stockTotalsFromAPI.response);
+      $this.stockTotals = angular.copy(stockTotalsFromAPI.response);
+
+      angular.forEach($this.stockTotals, function (stockTotal) {
+        reconciliationFactory.getMasterItem(stockTotal.itemMasterId).then(function (dataFromAPI) {
+          stockTotal.itemName = dataFromAPI.itemName;
+        }, handleResponseError);
+      });
     }
 
     function getStockTotals () {
       return reconciliationFactory.getStockTotals($routeParams.storeInstanceId).then(setStockTotals);
     }
 
+    function consolidateDuplicatePromotions() {
+      var consolidatedPromotions = [];
+      angular.forEach($this.promotionTotals, function (promotion) {
+        var promotionMatch = lodash.findWhere(consolidatedPromotions, { promotionId: promotion.promotionId });
+        if (promotionMatch) {
+          promotionMatch.convertedAmount = promotionMatch.convertedAmount + promotion.convertedAmount;
+          promotionMatch.quantity += (promotion.quantity || 1);
+        } else {
+          promotion.quantity = 1;
+          consolidatedPromotions.push(promotion);
+        }
+      });
+
+      $this.promotionTotals = consolidatedPromotions;
+    }
+
     function setPromotionTotals (promotionTotalsFromAPI) {
-      $scope.promotionTotals = $filter('filter')(angular.copy(promotionTotalsFromAPI.response), {
+      $this.promotionTotals = $filter('filter')(angular.copy(promotionTotalsFromAPI.response), {
         exchangeRateTypeId: 1
+      });
+
+      consolidateDuplicatePromotions();
+
+      angular.forEach($this.promotionTotals, function (promotion) {
+        promotion.eposQuantity = promotion.quantity;
+        promotion.eposTotal = $scope.formatAsCurrency(promotion.convertedAmount);
+        reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
+          promotion.itemName = dataFromAPI.promotionName;
+        }, handleResponseError);
+
+        promotion.itemTypeName = 'Promotion';
       });
     }
 
