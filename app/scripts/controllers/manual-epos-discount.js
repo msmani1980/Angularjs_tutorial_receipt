@@ -21,11 +21,11 @@ angular.module('ts5App')
         id:null,
         currencyId:$scope.selectedCurrency.currency.currencyId,
         currency:$scope.selectedCurrency.currency,
-        exchangeRate:$scope.selectedCurrency.currency.exchangeRate,
         amount:0.00,
         quantity:0,
         currentCurrencyAmount:0.00,
-        baseCurrencyAmount:0.00
+        baseCurrencyAmount:0.00,
+        exchangeRate:$scope.selectedCurrency.currency.exchangeRate
       };
       return newDiscount;
     }
@@ -132,13 +132,17 @@ angular.module('ts5App')
       if (discountObject.exchangeRate.bankExchangeRate === null) {
         var paperExchangeRate = discountObject.exchangeRate.paperExchangeRate;
         var coinExchangeRate = discountObject.exchangeRate.coinExchangeRate;
+        if (!paperExchangeRate && !coinExchangeRate) {
+          return baseCurrencyAmount.toFixed(2); 
+        }
+
         var splitAmounts = (discountObject.currentCurrencyAmount).split('.');
         var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
         var convertedCoinAmount = parseFloat(splitAmounts[1]) / coinExchangeRate;
         baseCurrencyAmount = convertedPaperAmount + (convertedCoinAmount / 100);
       } else {
         var exchangeRate = discountObject.exchangeRate.bankExchangeRate;
-        baseCurrencyAmount = parseFloat(discountObject.currentCurrencyAmount) / exchangeRate;
+        baseCurrencyAmount = (!exchangeRate ? 0.00 : parseFloat(discountObject.currentCurrencyAmount) / exchangeRate);
       }
 
       return baseCurrencyAmount.toFixed(2);
@@ -239,19 +243,15 @@ angular.module('ts5App')
       $scope.baseCurrency.currency = lodash.findWhere($scope.currencyList, { currencyId: $scope.baseCurrency.currencyId });
     }
 
-    function setCashBagCurrencyList(cashBagDiscountList, currencyList) {
+    function setCashBagCurrencyList(currencyList) {
       $scope.currencyList = [];
-      var cashBagCurrencyList = $scope.cashBag.cashBagCurrencies || [];
-      angular.forEach(cashBagCurrencyList, function (currency) {
+      angular.forEach(currencyList, function (currency) {
         var newCurrencyObject = {};
-        var currencyListMatch = lodash.findWhere(currencyList, { id: currency.currencyId });
-        if (currencyListMatch) {
-          newCurrencyObject.currencyId = currency.currencyId;
-          newCurrencyObject.code = currencyListMatch.code || '';
-          newCurrencyObject.name = currencyListMatch.name || '';
-          newCurrencyObject.exchangeRate = lodash.findWhere($scope.dailyExchangeRates, { retailCompanyCurrencyId: currency.currencyId }) || {};
-          $scope.currencyList.push(newCurrencyObject);
-        }
+        newCurrencyObject.currencyId = currency.id;
+        newCurrencyObject.code = currency.code || '';
+        newCurrencyObject.name = currency.name || '';
+        newCurrencyObject.exchangeRate = lodash.findWhere($scope.dailyExchangeRates, { retailCompanyCurrencyId: currency.id }) || {};
+        $scope.currencyList.push(newCurrencyObject);
       });
     }
 
@@ -315,7 +315,7 @@ angular.module('ts5App')
         flyer: flyerList
       };
 
-      setCashBagCurrencyList(allDiscountsTypeList, currencyList);
+      setCashBagCurrencyList(currencyList);
       setBaseCurrency();
       setVerifiedData(verifiedData);
       setDiscountsList(allDiscountsTypeList);
@@ -329,7 +329,7 @@ angular.module('ts5App')
         startDate: dateUtility.nowFormatted('YYYYMMDD')
       };
       var promises = [
-        manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter }),
+        manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter,  isOperatedCurrency: true }),
         manualEposFactory.getCashBagDiscountList($routeParams.cashBagId, {}),
         manualEposFactory.getDailyExchangeRate($scope.cashBag.dailyExchangeRateId),
         manualEposFactory.getCompanyDiscountsVoucher(payload),
