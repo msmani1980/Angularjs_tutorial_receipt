@@ -342,9 +342,10 @@ describe('Controller: CashBagListCtrl', function() {
         };
 
         scope.popupFromEdit = true;
+        scope.cashBagToEdit = 123;
         scope.continueToEditOrCreate(storeInstance);
 
-        expect(location.path()).toBe('/cash-bag/edit');
+        expect(location.path()).toBe('/cash-bag/edit/123');
         expect(location.search()).toEqual(expectedParameters);
       });
 
