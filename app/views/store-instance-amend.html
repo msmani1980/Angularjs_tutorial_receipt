@@ -571,24 +571,24 @@
                       </td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a href="">Regular Item Sales</a></td>
-                      <td>+ {{ cashBag.regularItemSales }}</td>
+                      <td><a ng-click="showModal('SalesRegular')">Regular Item Sales</a></td>
+                      <td>+ {{ formatAsCurrency(cashBag.regularItemSales.amount) }}</td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a href="">Virtual Sales</a></td>
-                      <td>+ {{ cashBag.virtualItemSales }}</td>
+                      <td><a ng-click="showModal('SalesVirtual')">Virtual Sales</a></td>
+                      <td>+ {{ formatAsCurrency(cashBag.virtualItemSales.amount) }}</td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a href="">Voucher Sales</a></td>
-                      <td>+ {{ cashBag.voucherItemSales }}</td>
+                      <td><a ng-click="showModal('SalesVoucher')">Voucher Sales</a></td>
+                      <td>+ {{ formatAsCurrency(cashBag.voucherItemSales.amount) }}</td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a href="">Promotion Discounts</a></td>
-                      <td>- {{ cashBag.promotionDiscounts }}</td>
+                      <td><a ng-click="showModal('SalesPromotion')">Promotion Discounts</a></td>
+                      <td>- {{ formatAsCurrency(cashBag.promotionDiscounts.amount) }}</td>
                     </tr>
                     <tr class="active">
                       <td>Net Value of ePOS Sales</td>
-                      <td>-</td>
+                      <td>{{ formatAsCurrency(cashBag.regularItemSales.amount + cashBag.virtualItemSales.amount + cashBag.voucherItemSales.amount - cashBag.promotionDiscounts.amount) }}</td>
                     </tr>
                   </table>
                 </div>
@@ -609,12 +609,12 @@
                       <td>{{ formatAsCurrency(cashBag.creditRevenue) }}</td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
-                      <td><a href="">Discount</a></td>
-                      <td>{{ formatAsCurrency(cashBag.discountRevenue) }}</td>
+                      <td><a ng-click="showModal('RevenueDiscount')">Discount</a></td>
+                      <td>{{ formatAsCurrency(cashBag.discountRevenue.amount) }}</td>
                     </tr>
                     <tr class="active">
                       <td>Total Amount</td>
-                      <td>-</td>
+                      <td>{{ formatAsCurrency(cashBag.cashRevenue + cashBag.creditRevenue + cashBag.discountRevenue.amount) }}</td>
                     </tr>
                   </table>
                 </div>

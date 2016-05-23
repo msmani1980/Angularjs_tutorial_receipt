@@ -505,6 +505,32 @@ angular.module('ts5App')
       $scope.companyBaseCurrency = getCurrencyByBaseCurrencyId($scope.companyGlobalCurrencies, $scope.company.baseCurrencyId);
     }
 
+    function extractEposSalesByCashBag(item, itemTypeName) {
+      if (item.cashbagId && item.eposTotal) {
+        var cashBag = getCashBagById(item.cashbagId);
+        var amount = item.eposTotal;
+        switch (itemTypeName) {
+          case 'Regular':
+            cashBag.regularItemSales.amount += amount;
+            break;
+          case 'Virtual':
+            cashBag.virtualItemSales.amount += amount;
+            break;
+          case 'Voucher':
+            cashBag.voucherItemSales.amount += amount;
+            break;
+        }
+      }
+    }
+
+    function extractEposSalesPromotionByCashBag(item) {
+      if (item.cashbagId) {
+        var cashBag = getCashBagById(item.cashbagId);
+        var amount = item.convertedAmount || 0;
+        cashBag.promotionDiscounts.amount += amount;
+      }
+    }
+
     function getTotalsFor(stockTotals, itemTypeName) {
       var stockItem = $filter('filter')(stockTotals, {
         itemTypeName: itemTypeName
@@ -514,6 +540,8 @@ angular.module('ts5App')
       angular.forEach(stockItem, function (item) {
         totalLMP += item.lmpTotal || 0;
         totalEPOS += item.eposTotal || 0;
+
+        extractEposSalesByCashBag(item, itemTypeName);
       });
 
       return {
@@ -528,6 +556,8 @@ angular.module('ts5App')
       var total = 0;
       angular.forEach(promotionTotals, function (promotionItem) {
         total += promotionItem.convertedAmount;
+
+        extractEposSalesPromotionByCashBag(promotionItem);
       });
 
       return {
@@ -635,7 +665,7 @@ angular.module('ts5App')
         var amount = discount.bankAmountFinal + discount.coinAmountCc + discount.paperAmountCc;
 
         if (discount.cashbagId) {
-          getCashBagById(discount.cashbagId).discountRevenue += amount;
+          getCashBagById(discount.cashbagId).discountRevenue.amount += amount;
         }
 
         cashRevenue.total += amount;
@@ -705,6 +735,10 @@ angular.module('ts5App')
       };
     }
 
+    function initializeSalesAndRevenue() {
+      return { amount: 0, items: [] };
+    }
+
     function setupCashBags () {
       $scope.normalizedCashBags = $scope.cashBags.map(function (cashBag) {
         return {
@@ -723,7 +757,11 @@ angular.module('ts5App')
           verifiedOn: dateUtility.formatTimestampForApp(cashBag.amendVerifiedOn),
           cashRevenue: 0,
           creditRevenue: 0,
-          discountRevenue: 0,
+          discountRevenue: initializeSalesAndRevenue(),
+          regularItemSales: initializeSalesAndRevenue(),
+          virtualItemSales: initializeSalesAndRevenue(),
+          voucherItemSales: initializeSalesAndRevenue(),
+          promotionDiscounts: initializeSalesAndRevenue(),
           flightSectors: []
         };
       });
