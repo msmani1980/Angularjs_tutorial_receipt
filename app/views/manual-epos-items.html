@@ -1,0 +1,167 @@
+<div class="container module-container">
+  <form name="manualItemForm" ng-submit="save()">
+    <div class="list-controls">
+      <div class="row item-list-row">
+        <div class="col-xs-8">
+          <h2 class="view-name">Manual ePOS Entry: <b>Add {{ mainItemType.name }} Items</b><br>
+            <small>Cash Bag {{ cashBag.cashBagNumber }}</small>
+          </h2>
+        </div>
+
+        <div class="col-xs-4 text-right">
+          <a class="btn btn-default" href="/#/manual-epos-dashboard/{{ cashBag.id }}">
+            <span class="fa fa-arrow-left"></span> Back
+          </a>
+          <button class="btn btn-primary" type="submit" ng-hide="isVerified || disableAll" ng-click="setShouldExit(true)">
+            <span class="fa fa-check-square-o"></span> Save & Exit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <error-dialog form-object="manualItemForm" error-response="errorResponse" display="displayError">
+    </error-dialog>
+
+    <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by {{ verifiedInfo.verifiedBy }} on {{ verifiedInfo.verifiedTimestamp }}
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="input-group">
+              <span class="input-group-addon" id="currency"><span class="fa fa-money"></span></span>
+              <ui-select ng-model="selectedCurrency.currency"
+                         theme="bootstrap"
+                         ng-disabled="isVerified || disableAll"
+                         reset-search-input="false"
+                         on-select="updateAmountsWithSelectedCurrency()">
+                <ui-select-match>
+                  {{$select.selected.code}} - {{$select.selected.name}}
+                </ui-select-match>
+                <ui-select-choices repeat="currency in currencyList">
+                  <div ng-bind-html="currency.code | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+        </div>
+        <br>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="input-group">
+              <span class="input-group-addon" id="filter"><span class="fa fa-filter"></span></span>
+              <input type="text"
+                     class="form-control"
+                     ng-model="filter.virtualItems"
+                     placeholder="Type an item name or code to filter by"
+                     aria-describedby="virtual-filter"/>
+            </div>
+          </div>
+        </div>
+        <br>
+
+        <div class="panel-divider"></div>
+
+        <div class="table-responsive">
+          <table class="table table-hover">
+
+            <tr class="active">
+              <th class="col-xs-3">Virtual Item</th>
+              <th class="col-xs-2">Price ({{ selectedCurrency.currency.code }})</th>
+              <th class="col-xs-1">Qty</th>
+              <th class="col-xs-3">Total Value ({{ selectedCurrency.currency.code }})</th>
+              <th class="col-xs-3">Converted Total Value ({{ baseCurrency.code }})</th>
+            </tr>
+
+            <!-- Start Virtual Items loop -->
+            <tr ng-repeat="item in itemList | filter:{itemName: filter.virtualItems}">
+
+              <td>
+                <input class="form-control input-sm"
+                       disabled="true"
+                       ng-model="item.itemDescription">
+              </td>
+              <td>
+                <input class="form-control input-sm"
+                       ng-model="item.amount"
+                       maxlength="10"
+                       placeholder="0.00"
+                       custom-validity
+                       custom-pattern="optionalDecimalWithTwoDecimalPlaces"
+                       aria-describedby="amount"
+                       name="{{item.itemCode}}Amount"
+                       ng-disabled="isVerified || disableAll"/>
+              </td>
+              <td>
+                <input class="form-control input-sm"
+                       ng-model="item.quantity"
+                       maxlength="5"
+                       placeholder="0"
+                       custom-validity
+                       custom-pattern="number"
+                       name="{{item.itemCode}}Quantity"
+                       ng-disabled="isVerified || disableAll"/>
+              </td>
+              <td>
+                <input class="form-control input-sm"
+                       ng-value="calculateTotals(item)"
+                       disabled="true"/>
+              </td>
+              <td>
+                <input class="form-control input-sm"
+                       ng-model="item.convertedTotal"
+                       disabled="true"/>
+              </td>
+
+            </tr>
+            <tr>
+              <td colspan="3"></td>
+              <td class="text-right"><h5><b>Sub Total</b></h5></td>
+              <td>
+                <input class="form-control"
+                       ng-value="sumAllItems()"
+                       disabled="true"/>
+              </td>
+            </tr>
+
+          </table>
+        </div>
+      </div>
+
+      <div class="panel-footer">
+        <div class="row">
+          <div class="col-xs-12 text-right">
+            <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll"><span class="fa fa-check-square-o"></span> Save</button>
+            <button class="btn btn-danger" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
+            <button class="btn btn-success" type="button" ng-click="verify(true)" ng-hide="isVerified || disableAll"><span class="fa fa-check-circle"></span> Verify</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal" id="confirmation-modal" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title"><span class="fa fa-exclamation-triangle"></span> You Have Unsaved Changes</h3>
+          </div>
+          <div class="modal-body">
+            <p>Verifying will revert all unsaved changes.  Are you sure you want to continue?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">
+              <i class="fa fa-close"></i> Cancel
+            </button>
+            <button type="button" class="btn btn-primary btn-primary" ng-click="verify(false)">
+              <i class="fa fa-check"></i> Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>

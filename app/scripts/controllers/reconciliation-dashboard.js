@@ -142,6 +142,7 @@ angular.module('ts5App')
     this.recalculateActionsForInboundStatus = function(item, actions) {
       if (item.statusName === 'Inbounded') {
         actions.push('Validate');
+        actions.push('ForceReconcile');
 
         // TODO: Temporary disabled these buttons as per Roshen's request. Enable once Roshen gives a green light
         /*if (item.eposData === 'No') {
@@ -442,14 +443,24 @@ angular.module('ts5App')
       }
     };
 
+    this.handForceReconciliationleResponseError = function(responseFromAPI) {
+      if ($scope.isSearch) {
+        $scope.searchReconciliationDataList();
+      } else {
+        resetReconciliationList();
+        $this.getStoreStatusList();
+      }
+      
+      $this.hideLoadingModal();
+      $scope.errorResponse = responseFromAPI;
+      $scope.displayError = true;
+    };
+
     this.executeValidateAction = function() {
       var inboundedInstances = $this.findInstancesWithStatus('Inbounded');
       var discrepanciesInstances = $this.findInstancesWithStatus('Discrepancies');
-
       var instancesToExecuteOn = inboundedInstances.concat(discrepanciesInstances);
-
       $this.showLoadingModal('Executing Validate action');
-
       var payload = {
         ids: []
       };
@@ -459,6 +470,27 @@ angular.module('ts5App')
       });
 
       storeInstanceFactory.validateStoreInstance(payload).then($this.handleActionExecutionSuccess, $this.handleActionExecutionSuccess);
+    };
+
+    function handleForceReconcileActionExecutionSuccess(instance) {
+      $scope.instancesForActionExecution = [instance];
+      $scope.actionToExecute = 'Confirmed';
+      var status = 10;
+      var pr = [
+        storeInstanceFactory.updateStoreInstanceStatus(instance.id, status, true)
+      ];
+      $q.all(pr).then($this.handleActionExecutionSuccess, $this.handForceReconciliationleResponseError);
+    }
+    
+    $scope.forceReconcile = function(instance, action) {
+      $this.showLoadingModal('Force Reconcile action');
+      $scope.instancesForActionExecution = [instance];
+      $scope.actionToExecute = action;
+      var status = 9;
+      var promises = [
+        storeInstanceFactory.updateStoreInstanceStatusForceReconcile(instance.id, status)
+      ];
+      $q.all(promises).then(function() { handleForceReconcileActionExecutionSuccess(instance); }, $this.handleResponseError);
     };
 
     this.executeOtherAction = function() {

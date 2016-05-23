@@ -21,6 +21,7 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
   var storeStatusResponseJSON;
   var globalStationsResponseJSON;
   var storeInstanceJSON;
+  var storeInstanceFactory;
 
   beforeEach(inject(function($controller, $rootScope, $q, $location, $injector, _servedStoreStatus_,
     _servedCateringStations_, _servedStoreInstance_, _servedReconciliationDashboard_) {
@@ -28,6 +29,7 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
     scope = $rootScope.$new();
 
     reconciliationFactory = $injector.get('reconciliationFactory');
+    storeInstanceFactory = $injector.get('storeInstanceFactory');
     stationsService = $injector.get('catererStationService');
     controller = $controller;
 
@@ -55,6 +57,8 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
 
     spyOn(ReconciliationDashboardCtrl, 'executeValidateAction');
     spyOn(ReconciliationDashboardCtrl, 'executeOtherAction');
+    spyOn(storeInstanceFactory, 'updateStoreInstanceStatusForceReconcile');
+
   }));
 
   describe('init', function() {
@@ -208,7 +212,7 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
       statusName: 'Inbounded'
     };
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
-    expect(item.actions).toEqual(['Reports', 'Validate']);
+    expect(item.actions).toEqual(['Reports', 'Validate', 'ForceReconcile']);
 
     item = {
       statusName: 'Inbounded',
@@ -217,7 +221,7 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
       cashHandlerData: '3/3'
     };
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
-    expect(item.actions).toEqual(['Reports', 'Validate']);
+    expect(item.actions).toEqual(['Reports', 'Validate', 'ForceReconcile']);
 
     // TODO: enable again once Roshen allows us to enable these actions
     /*item = {statusName: 'Inbounded', eposData: 'No'};
@@ -425,4 +429,14 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
       expect(scope.hasSelectedInstancesWithRequiresAmendVerification()).toBeTruthy();
     });
   });
+
+  describe('$scope.forceReconcile', function() {
+    it('should call updateStoreInstanceStatusForceReconcile', function() {
+      var statusId = 9;
+      var id = 1;
+      scope.forceReconcile(storeInstanceJSON, 'forceReconcile');
+      expect(storeInstanceFactory.updateStoreInstanceStatusForceReconcile).toHaveBeenCalledWith(id, statusId);
+    });
+  });
+
 });

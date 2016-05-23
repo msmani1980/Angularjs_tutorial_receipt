@@ -125,6 +125,7 @@ describe('Service: storeInstanceFactory', function() {
     spyOn(storeInstanceService, 'updateStoreInstanceItemsBulk');
     spyOn(storeInstanceService, 'deleteStoreInstanceItem');
     spyOn(storeInstanceService, 'updateStoreInstanceStatus');
+    spyOn(storeInstanceService, 'updateStoreInstanceStatusForceReconcile');
     spyOn(menuMasterService, 'getMenuMasterList').and.returnValue(getMenuMasterListDeferred.promise);
     spyOn(storesService, 'getStoresList');
     spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
@@ -232,6 +233,12 @@ describe('Service: storeInstanceFactory', function() {
       storeInstanceFactory.updateStoreInstanceStatus(id, statusId);
       expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalledWith(id, statusId, undefined, false);
     });
+
+    it('should call updateStoreInstanceStatusForceReconcile', function() {
+      var statusId = 1;
+      storeInstanceFactory.updateStoreInstanceStatusForceReconcile(id, statusId);
+      expect(storeInstanceService.updateStoreInstanceStatusForceReconcile).toHaveBeenCalledWith(id, statusId, undefined, true, true);
+    });
   });
 
   describe('globalMenuService calls', function() {
@@ -258,14 +265,15 @@ describe('Service: storeInstanceFactory', function() {
   describe('carrierService calls', function() {
     it('should call getCarrierNumbers', function() {
       var carrierTypeId = 1;
-      storeInstanceFactory.getCarrierNumbers(companyId, 1);
-      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId);
+      var payload = { fakeKey: 'fakeValue' };
+      storeInstanceFactory.getCarrierNumbers(companyId, 1, payload);
+      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId, payload);
     });
 
     it('should call getAllCarrierNumbers', function() {
       var carrierTypeId = 0;
       storeInstanceFactory.getAllCarrierNumbers(companyId);
-      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId);
+      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId, {});
     });
   });
 

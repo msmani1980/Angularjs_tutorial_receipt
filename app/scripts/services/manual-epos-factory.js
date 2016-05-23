@@ -8,7 +8,8 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, dailyExchangeRatesService, storeInstanceService) {
+  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, 
+    dailyExchangeRatesService, storeInstanceService, itemsService, recordsService, companyDiscountService) {
 
     var getPromotionsList = function () {
       var mockPromotionsList = [{
@@ -73,127 +74,6 @@ angular.module('ts5App')
       var getPromotionsListDeferred = $q.defer();
       getPromotionsListDeferred.resolve(mockPromotionsList);
       return getPromotionsListDeferred.promise;
-    };
-
-    var getVoucherItemsList = function () {
-      var mockVoucherItemsList = [{
-        endDate: '2015-05-29',
-        startDate: '2015-01-01',
-        voucherCode: ' V10',
-        voucherName: '10 Off Vocucher',
-        voucherTypeId: 1,
-        quantity: 2,
-        price: 10.00,
-        currencyValue: 20.00,
-        audValue: 23.75
-      }, {
-        endDate: '2015-05-29',
-        startDate: '2015-01-01',
-        voucherCode: ' V30',
-        voucherName: '30 Off Vocucher',
-        voucherTypeId: 1,
-        quantity: 2,
-        price: 5.00,
-        currencyValue: 50.00,
-        audValue: 57.25
-      }, {
-        endDate: '2015-05-29',
-        startDate: '2015-01-01',
-        voucherCode: 'IV1',
-        voucherName: 'Item Voucher 1',
-        voucherTypeId: 1,
-        quantity: null,
-        price: null,
-        currencyValue: null,
-        audValue: null
-      }];
-
-      var getVoucherItemsListDeferred = $q.defer();
-      getVoucherItemsListDeferred.resolve(mockVoucherItemsList);
-      return getVoucherItemsListDeferred.promise;
-    };
-
-    var getVirtualItemsList = function () {
-      var mockVirtualItemsList = [{
-        companyId: 403,
-        itemCode: 'Mov230',
-        itemName: 'Movie Ticket',
-        itemTypeName: 'Virtual',
-        itemTypeId: 2,
-        categoryName: 'Virtual Items',
-        salesCategoryId: 231,
-        sellingPoint: 'Virtual',
-        stockOwnerCode: null,
-        onBoardName: ' Movie Ticket',
-        currentPrice: null,
-        description: 'Movie Ticket',
-        imageUrl: ' https://s3.amazonaws.com/ts5-qa-portal-images/item-511b8541-418d-4600-9339-de993d1a82e4.png',
-        startDate: '2015-06-01',
-        endDate: '2018-12-31',
-        keywords: 'Movie',
-        isPrintReceipt: true,
-        id: 405,
-        itemMasterId: 38,
-        subViewItems: null,
-        quantity: 2,
-        price: 5.00,
-        currencyValue: 50.00,
-        audValue: 57.25
-      }, {
-        companyId: 403,
-        itemCode: 'Mov230',
-        itemName: 'Video',
-        itemTypeName: 'Virtual',
-        itemTypeId: 2,
-        categoryName: 'Virtual Items',
-        salesCategoryId: 231,
-        sellingPoint: 'Virtual',
-        stockOwnerCode: null,
-        onBoardName: ' Movie Ticket',
-        currentPrice: null,
-        description: 'Movie Ticket',
-        imageUrl: ' https://s3.amazonaws.com/ts5-qa-portal-images/item-511b8541-418d-4600-9339-de993d1a82e4.png',
-        startDate: '2015-06-01',
-        endDate: '2018-12-31',
-        keywords: 'Movie',
-        isPrintReceipt: true,
-        id: 405,
-        itemMasterId: 38,
-        subViewItems: null,
-        quantity: 2,
-        price: 5.00,
-        currencyValue: 50.00,
-        audValue: 57.25
-      }, {
-        companyId: 403,
-        itemCode: 'Mov230',
-        itemName: 'Video Game',
-        itemTypeName: 'Virtual',
-        itemTypeId: 2,
-        categoryName: 'Virtual Items',
-        salesCategoryId: 231,
-        sellingPoint: 'Virtual',
-        stockOwnerCode: null,
-        onBoardName: ' Movie Ticket',
-        currentPrice: null,
-        description: 'Movie Ticket',
-        imageUrl: ' https://s3.amazonaws.com/ts5-qa-portal-images/item-511b8541-418d-4600-9339-de993d1a82e4.png',
-        startDate: '2015-06-01',
-        endDate: '2018-12-31',
-        keywords: 'Movie',
-        isPrintReceipt: true,
-        id: 405,
-        itemMasterId: 38,
-        subViewItems: null,
-        quantity: null,
-        price: null,
-        currencyValue: null,
-        audValue: null
-      }];
-
-      var getVirtualItemsListDeferred = $q.defer();
-      getVirtualItemsListDeferred.resolve(mockVirtualItemsList);
-      return getVirtualItemsListDeferred.promise;
     };
 
     var getDiscountsList = function () {
@@ -305,6 +185,18 @@ angular.module('ts5App')
       cashBagService.updateManualCashBagRecord('credit-cards', cashBagId, creditId, payload);
     }
 
+    function getCashBagItemList(cashBagId, payload) {
+      return cashBagService.getManualCashBagList('items', cashBagId, payload);
+    }
+
+    function createCashBagItem(cashBagId, payload) {
+      cashBagService.createManualCashBagRecord('items', cashBagId, payload);
+    }
+
+    function updateCashBagItem(cashBagId, itemId, payload) {
+      cashBagService.updateManualCashBagRecord('items', cashBagId, itemId, payload);
+    }
+
     function getStoreInstance(storeInstanceId) {
       return storeInstanceService.getStoreInstance(storeInstanceId);
     }
@@ -322,11 +214,57 @@ angular.module('ts5App')
       return cashBagService.getCashBagVerifications(payload);
     }
 
+    function getRetailItems(payload) {
+      return itemsService.getItemsList(payload, true);
+    }
+
+    function getItemTypes() {
+      return recordsService.getItemTypes();
+    }
+
+    function getCashBagDiscountList(cashBagId, payload) {
+      return cashBagService.getManualCashBagList('discounts', cashBagId, payload);
+    }
+
+    function createCashBagDiscount(cashBagId, payload) {
+      cashBagService.createManualCashBagRecord('discounts', cashBagId, payload);
+    }
+
+    function updateCashBagDiscount(cashBagId, discountId, payload) {
+      cashBagService.updateManualCashBagRecord('discounts', cashBagId, discountId, payload);
+    }
+
+    function getCompanyDiscountsCoupon(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 1
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
+    }
+
+    function getCompanyDiscountsVoucher(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 4
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
+    }
+
+    function getCompanyDiscountsComp(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 2
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
+    }
+
+    function getCompanyDiscountsFrequentFlyer(datesPayload) {
+      var payload = angular.extend({
+        discountTypeId: 3
+      }, datesPayload);
+      return companyDiscountService.getDiscountList(payload);
+    }
+
     return {
       getPromotionsList: getPromotionsList,
       getCurrencyList: getCurrencyList,
-      getVoucherItemsList: getVoucherItemsList,
-      getVirtualItemsList: getVirtualItemsList,
       getDiscountsList: getDiscountsList,
       getCashBag: getCashBag,
       getDailyExchangeRate: getDailyExchangeRate,
@@ -339,7 +277,20 @@ angular.module('ts5App')
       updateCashBagCash: updateCashBagCash,
       getCashBagCreditList: getCashBagCreditList,
       createCashBagCredit: createCashBagCredit,
-      updateCashBagCredit: updateCashBagCredit
+      updateCashBagCredit: updateCashBagCredit,
+      getCashBagItemList: getCashBagItemList,
+      createCashBagItem: createCashBagItem,
+      updateCashBagItem: updateCashBagItem,
+      getRetailItems: getRetailItems,
+      getItemTypes: getItemTypes,
+      getCashBagDiscountList: getCashBagDiscountList,
+      createCashBagDiscount: createCashBagDiscount,
+      updateCashBagDiscount: updateCashBagDiscount,
+      getCompanyDiscountsCoupon: getCompanyDiscountsCoupon,
+      getCompanyDiscountsVoucher: getCompanyDiscountsVoucher,
+      getCompanyDiscountsComp:getCompanyDiscountsComp,
+      getCompanyDiscountsFrequentFlyer:getCompanyDiscountsFrequentFlyer
+
     };
 
   });

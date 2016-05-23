@@ -574,7 +574,31 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(scope.pickListItems[1].inboundQuantity).toEqual('7');
       });
 
-      it('should merge calculated epos inbound counts in company preference is set to true and data exists', function () {
+      it('should merge calculated epos inbound counts in pick list if company preference is set to true and data exists', function () {
+        scope.shouldDefaultInboundToEpos = true;
+        var pickListItem = {
+          itemName: 'item3',
+          itemCode: 'ITM3',
+          menuQuantity: 2,
+          itemMasterId: 3
+        };
+        menuItems.response.push(pickListItem);
+        var noInboundQuantityPrevInstanceItems = {
+          response: [{
+            itemName: 'item1',
+            itemCode: 'ITM1',
+            quantity: 6,
+            ullageReasonCode: 48,
+            itemMasterId: 3,
+            countTypeId: 7 // ullage
+          }]
+        };
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, {}, calculatedEposInboundQuantities, noInboundQuantityPrevInstanceItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.pickListItems[2].inboundQuantity).toEqual(100);
+      });
+
+      it('should merge calculated epos inbound counts offload list if there are no pick list matches and prior criteria is met', function () {
         scope.shouldDefaultInboundToEpos = true;
         var noInboundQuantityPrevInstanceItems = {
           response: [{

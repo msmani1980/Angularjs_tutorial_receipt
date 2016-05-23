@@ -251,6 +251,9 @@
           <button class="btn btn-info btn-xs btn-block" tabindex="0"
                   ng-show="doesInstanceContainAction(instance, 'Reports')" ng-click="viewReview(instance)"><i class="fa fa-file-text-o"></i>
           </button>
+          <button class="btn btn-primary btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'ForceReconcile')" ng-click="forceReconcile(instance, 'ForceReconcile')">Force Reconcile
+          </button>          
         </td>
       </tr>
       </tbody>

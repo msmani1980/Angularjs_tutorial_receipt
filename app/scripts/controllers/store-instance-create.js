@@ -186,6 +186,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       if (angular.isDefined(existingMenu)) {
         newMenu.menuCode = existingMenu.menuCode;
+        newMenu.menuName = existingMenu.menuName;
       }
 
       return newMenu;
@@ -226,8 +227,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getCarrierNumbers = function() {
+      var query = this.getFormattedDatesPayload();
       var companyId = globalMenuService.getCompanyData().companyId;
-      return storeInstanceFactory.getAllCarrierNumbers(companyId).then($this.setCarrierNumbers);
+      return storeInstanceFactory.getAllCarrierNumbers(companyId, query).then($this.setCarrierNumbers);
     };
 
     this.setStoresList = function(dataFromAPI) {
@@ -239,11 +241,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getStoresList = function() {
-      var date = this.getFormattedDatesPayload();
-      var query = {
-        readyToUse: this.determineReadyToUse(),
-        startDate: date.startDate
-      };
+      var query = this.getFormattedDatesPayload();
+      query.readyToUse = this.determineReadyToUse();
+
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
 
@@ -1174,6 +1174,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.updateInstanceDependencies = function() {
       var updatePromises = [
         $this.getScheduleNumbers(),
+        $this.getCarrierNumbers()
       ];
       if ($this.isDispatchOrRedispatch()) {
         updatePromises.push(
