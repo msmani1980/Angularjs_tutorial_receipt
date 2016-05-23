@@ -1443,6 +1443,7 @@ describe('Store Instance Create Controller', function() {
         },
         storeId: storeInstanceId
       };
+      scope.prevStoreDetails = {};
       scope.$digest();
       mockRedispatchStoreInstance();
     });
@@ -1521,7 +1522,7 @@ describe('Store Instance Create Controller', function() {
       initController('redispatch', true);
       scope.stepOneFromStepTwo = true;
       resolveAllDependencies();
-      mockLoadStoreInstance();
+      mockLoadStoreInstance({ prevStoreInstanceId: 12 });
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
@@ -1552,8 +1553,8 @@ describe('Store Instance Create Controller', function() {
         },
         storeId: storeInstanceId
       };
-      scope.prevStoreDetails.scheduleNumber = '107';
-      scope.prevStoreInstanceId = 12;
+
+      scope.prevStoreDetails = { scheduleNumber: '107' };
       scope.$digest();
       mockEditRedispatchedStoreInstance();
     });
@@ -1616,6 +1617,10 @@ describe('Store Instance Create Controller', function() {
     it('on saveAndExit, submit form should be called with true', function() {
       scope.saveAndExit();
       expect(scope.submitForm).toHaveBeenCalledWith(true);
+    });
+
+    it('should set stepOnFromStepTwo', function () {
+      expect(scope.stepOneFromStepTwo).toBeDefined();
     });
 
   });
