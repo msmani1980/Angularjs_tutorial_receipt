@@ -337,7 +337,6 @@ angular.module('ts5App')
 
       var activeThreshold = (!!responseCollection[3].response && responseCollection[3].response.length) ? angular.copy(responseCollection[3].response[0]) : null;
       $scope.percentThreshold = (!!activeThreshold) ? activeThreshold.percentage : -1;
-      console.log($scope.percentThreshold);
     }
 
     function makeInitPromises () {
