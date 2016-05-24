@@ -55,9 +55,9 @@
   
 		<!-- BEGIN Coupon Discount -->  
 		<div>
-        <div class="table-responsive">
+        <div class="row">
           <table class="table table-hover">
-  		    <h3 class="gray-header"> Coupon </h3>
+  		    <h3 class="gray-header col-xs-12"> Coupon </h3>
             <tr>
                 <th>Discount</th>
                 <th>Price</th>
@@ -66,7 +66,7 @@
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
             </tr>          
             <tr ng-repeat="manualDiscountObj in discountListCoupon | filter:{discountTypeName: filter.discounts} track by $index">
-              <td>
+              <td class="col-xs-4">
                  <ui-select ng-model="manualDiscountObj.discount" on-select="onChangeDiscount(manualDiscountObj)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
                     <ui-select-match placeholder="Select Coupon Discounts ..."> 
                         {{$select.selected.name}}
@@ -130,9 +130,9 @@
 		<!-- BEGIN Voucher Discount -->  
         <div class="panel-divider"></div>
 		<div>
-        <div class="table-responsive">
+        <div class="row">
           <table class="table table-hover">
-  		    <h3 class="gray-header"> Voucher </h3>
+  		    <h3 class="gray-header col-xs-12"> Voucher </h3>
             <tr>
                 <th>Discount</th>
                 <th>Price</th>
@@ -141,7 +141,7 @@
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
             </tr>          
             <tr ng-repeat="manualDiscountVoucher in discountListVoucher | filter:{discountTypeName: filter.discounts} track by $index">
-              <td>
+              <td class="col-xs-4">
                  <ui-select ng-model="manualDiscountVoucher.discount" on-select="onChangeDiscount(manualDiscountVoucher)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
                     <ui-select-match placeholder="Select Voucher Discounts ..."> 
                         {{$select.selected.name}}
@@ -206,9 +206,9 @@
 		<!-- BEGIN Comp Discount -->  
         <div class="panel-divider"></div>
 		<div>
-        <div class="table-responsive">
+        <div class="row">
           <table class="table table-hover">
-  		    <h3 class="gray-header"> Comp </h3>
+  		    <h3 class="gray-header col-xs-12"> Comp </h3>
             <tr>
                 <th>Discount</th>
                 <th>Price</th>
@@ -217,7 +217,7 @@
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
             </tr>          
             <tr ng-repeat="manualDiscountComp in discountListComp | filter:{discountTypeName: filter.discounts} track by $index">
-              <td>
+              <td class="col-xs-4">
                  <ui-select ng-model="manualDiscountComp.discount" on-select="onChangeDiscount(manualDiscountComp)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
                     <ui-select-match placeholder="Select Comp Discounts ..."> 
                         {{$select.selected.name}}
@@ -283,9 +283,9 @@
 		<!-- BEGIN Flyer Discount -->  
         <div class="panel-divider"></div>
 		<div>
-        <div class="table-responsive">
+        <div class="row">
           <table class="table table-hover">
-  		    <h3 class="gray-header"> Frequent Flyer </h3>
+  		    <h3 class="gray-header col-xs-12"> Frequent Flyer </h3>
             <tr>
                 <th>Discount</th>
                 <th>Price</th>
@@ -294,7 +294,7 @@
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
             </tr>          
             <tr ng-repeat="manualDiscountFlyer in discountListFlyer | filter:{discountTypeName: filter.discounts} track by $index">
-              <td>
+              <td class="col-xs-4">
                  <ui-select ng-model="manualDiscountFlyer.discount" on-select="onChangeDiscount(manualDiscountFlyer)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
                     <ui-select-match placeholder="Select Frequent Flyer Discounts ..."> 
                         {{$select.selected.name}}
