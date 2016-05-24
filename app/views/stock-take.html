@@ -139,7 +139,7 @@
 
     <ng-form name="form" class="form edit-form delivery-note-form">
 
-      <div class="well" ng-repeat="item in cateringStationItems | filter:filterInput track by item.masterItemId" ng-hide="!itemQuantities[item.masterItemId] && ( state == 'review' || state == 'view' )">
+      <div class="well" ng-repeat="item in cateringStationItems | filter:filterInput track by item.masterItemId" ng-hide="shouldHideItem(item)">
         <div class="row">
 
           <div class="col-xs-12 col-sm-4">
