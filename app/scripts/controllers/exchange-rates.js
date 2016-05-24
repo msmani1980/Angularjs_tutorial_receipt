@@ -271,7 +271,7 @@ angular.module('ts5App')
         if ($scope.previousCurrency[currencyCode]) {
           angular.forEach(currencyObject, function(rate, rateType) {
             var percentage = getPercentageForCurrency(currencyCode, rateType);
-            if ($scope.percentThreshold > 0 && percentage && percentage > $scope.percentThreshold) {
+            if ($scope.percentThreshold >= 0 && percentage && percentage > $scope.percentThreshold) {
               rateVariance.push({
                 code: currencyCode,
                 percentage: percentage
