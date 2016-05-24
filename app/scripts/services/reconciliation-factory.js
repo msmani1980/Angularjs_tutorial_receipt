@@ -150,6 +150,19 @@ angular.module('ts5App')
         return menuService.getMenuList(payloadToSend, false);
       };
 
+      var getCashBag = function (cashBagId) {
+        return cashBagService.getCashBag(cashBagId);
+      };
+
+      var getCashBagVerifications = function (cashBagId) {
+        var payload = { id: cashBagId };
+        return cashBagService.getCashBagVerifications(payload);
+      };
+
+      var getCashBagManualData = function (cashBagId, manualDataType) {
+        return cashBagService.getManualCashBagList(manualDataType, cashBagId, {});
+      };
+
       return {
         getStoreInstanceDetails: getStoreInstanceDetails,
         getStoreInstanceItemList: getStoreInstanceItemList,
@@ -175,6 +188,9 @@ angular.module('ts5App')
         saveStockItemsCounts: saveStockItemsCounts,
         saveCashBagCurrency: saveCashBagCurrency,
         getCarrierInstanceList: getCarrierInstanceList,
-        getMenuList: getMenuList
+        getMenuList: getMenuList,
+        getCashBag: getCashBag,
+        getCashBagVerifications: getCashBagVerifications,
+        getCashBagManualData: getCashBagManualData
       };
     });
