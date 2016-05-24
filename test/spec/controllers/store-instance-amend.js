@@ -831,5 +831,36 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     });
   });
 
+  describe('Show modal', function () {
+    it('should populate title and row column names', function () {
+      scope.stockTotals = {
+        totalRetail: 1,
+        totalVirtual: 2,
+        totalVoucher: 3,
+        totalPromotion: 4
+      };
+
+      scope.$digest();
+
+      var cashBag = { id: 2158 };
+
+      scope.showModal('Regular', cashBag);
+      expect(scope.modalMainTitle).toBe('Regular Product Revenue');
+      expect(scope.modalTableHeader).toBe('Regular Product Name');
+
+      scope.showModal('Virtual', cashBag);
+      expect(scope.modalMainTitle).toBe('Virtual Product Revenue');
+      expect(scope.modalTableHeader).toBe('Virtual Product Name');
+
+      scope.showModal('Voucher', cashBag);
+      expect(scope.modalMainTitle).toBe('Voucher Product Revenue');
+      expect(scope.modalTableHeader).toBe('Voucher Product Name');
+
+      scope.showModal('Promotion', cashBag);
+      expect(scope.modalMainTitle).toBe('ePOS Discount');
+      expect(scope.modalTableHeader).toBe('Promotion Name');
+    });
+  });
+
 });
 
