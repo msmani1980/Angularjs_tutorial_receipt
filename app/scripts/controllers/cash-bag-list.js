@@ -76,7 +76,7 @@ angular.module('ts5App')
         }
       });
 
-      if ($this.meta.count === 1 && $scope.search.cashBagNumber) {
+      if ($this.meta.count === 1 && $scope.search.cashBagNumber && $scope.isCashBagEditable($scope.cashBagList[0]) && $scope.cashBagList[0].storeInstanceId !== null) {
         $localStorage.isEditFromList = true;
         socketIO.emit('echo-cashBag', {
           cashBag: $scope.cashBagList[0]
