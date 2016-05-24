@@ -338,8 +338,11 @@ angular.module('ts5App')
       $scope.selectedCurrency = {};
       var dateForFilter = dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.storeInstance.scheduleDate));
       var payload = {
-        startDate: dateUtility.nowFormatted('YYYYMMDD')
+        isActive: true,
+        startDate: dateUtility.nowFormatted('YYYYMMDD'),
+        endDate: dateUtility.nowFormatted('YYYYMMDD')
       };
+
       var promises = [
         manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter,  isOperatedCurrency: true }),
         manualEposFactory.getCashBagDiscountList($routeParams.cashBagId, {}),
