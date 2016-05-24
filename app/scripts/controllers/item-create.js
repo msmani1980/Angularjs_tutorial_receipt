@@ -392,16 +392,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.checkIfItemIsActive = function(itemData) {
-      var today = new Date();
-      var itemStartDate = new Date(itemData.startDate);
-      $scope.itemIsActive = itemStartDate <= today && !$scope.cloningItem;
+      $scope.itemIsActive = dateUtility.isTodayOrEarlier(itemData.startDate) && !$scope.cloningItem;
     };
 
     // checks to see if the item is inactive, and set viewOnly=true if item is inactive
     this.checkIfItemIsInactive = function(itemData) {
-      var today = new Date();
-      var itemEndDate = new Date(itemData.endDate);
-      $scope.itemIsInactive = itemEndDate <= today && !$scope.cloningItem;
+      $scope.itemIsInactive = dateUtility.isYesterdayOrEarlier(itemData.endDate) && !$scope.cloningItem;
       $scope.viewOnly = $scope.viewOnly || $scope.itemIsInactive;
     };
 
