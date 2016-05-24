@@ -150,8 +150,9 @@ angular.module('ts5App')
         return menuService.getMenuList(payloadToSend, false);
       };
 
-      var getCashBag = function (cashBagId) {
-        return cashBagService.getCashBag(cashBagId);
+      var getCashBagList = function (storeInstanceId) {
+        var payload = { storeInstanceId: storeInstanceId };
+        return cashBagService.getCashBagList(payload);
       };
 
       var getCashBagVerifications = function (cashBagId) {
@@ -189,7 +190,7 @@ angular.module('ts5App')
         saveCashBagCurrency: saveCashBagCurrency,
         getCarrierInstanceList: getCarrierInstanceList,
         getMenuList: getMenuList,
-        getCashBag: getCashBag,
+        getCashBagList: getCashBagList,
         getCashBagVerifications: getCashBagVerifications,
         getCashBagManualData: getCashBagManualData
       };
