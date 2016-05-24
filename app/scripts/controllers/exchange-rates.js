@@ -265,7 +265,6 @@ angular.module('ts5App')
       return Math.abs(percentage);
     }
 
-    // TODO;
     function calculateVariance() {
       var rateVariance = [];
       angular.forEach($scope.currenciesFields, function(currencyObject, currencyCode) {
