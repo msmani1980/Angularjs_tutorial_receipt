@@ -224,7 +224,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should get calculated Inbound Quantities', function () {
-        expect(storeInstancePackingFactory.getCalculatedInboundQuantities).toHaveBeenCalled();
+        var prevInstanceId = 18; // from mock JSON
+        expect(storeInstancePackingFactory.getCalculatedInboundQuantities).toHaveBeenCalledWith(prevInstanceId, {});
       });
     });
   });

@@ -792,12 +792,17 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getAllItems = function() {
       var storeInstanceForMenuItems = ($routeParams.action === 'replenish') ? $scope.storeDetails.replenishStoreInstanceId :
         $routeParams.storeId;
+
+      var storeInstanceForCalculatedInbounds = ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) ?
+        $scope.storeDetails.prevStoreInstanceId : $routeParams.storeId;
+
       var getItemsPromises = [
         $this.getMasterItemsList(),
         $this.getStoreInstanceMenuItems(storeInstanceForMenuItems),
         $this.getStoreInstanceItems($routeParams.storeId),
-        $this.getEposInboundQuantities($routeParams.storeId)
+        $this.getEposInboundQuantities(storeInstanceForCalculatedInbounds)
       ];
+
       if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
         getItemsPromises.push($this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId));
       }

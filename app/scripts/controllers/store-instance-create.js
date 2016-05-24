@@ -64,10 +64,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $scope.formData.menus = storeDetailsJSON.parentStoreInstance.menus;
         return;
       }
-
-      if (!$scope.isStepOneFromStepTwo) {
-        delete $scope.formData.scheduleNumber;
-      }
     };
 
     this.formatCurrentStoreForStoreList = function(store) {
@@ -106,17 +102,26 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.setReplenishInstance(storeDetailsJSON);
       }
 
-      if ($this.isActionState('redispatch')) {
-        $this.getPrevStoreDetails();
-      }
-
       if ($this.isEditingDispatch()) {
         $this.addCurrentStoreToStoreList();
       }
     };
 
+    this.doesStoreIdFromStepTwoExist = function() {
+      var ls = $localStorage.stepTwoFromStepOne;
+      if (angular.isDefined(ls) && angular.isDefined(ls.storeId)) {
+        return ls.storeId;
+      }
+
+      return null;
+    };
+
     this.setPrevStoreDetails = function(storeDetailsJSON) {
       $scope.prevStoreDetails = storeDetailsJSON;
+      var prevStatus = $scope.prevStoreDetails.currentStatus;
+      var inboundOrAfterStatus = lodash.findWhere($scope.prevStoreDetails.statusList, { statusName: 'Inbounded' });
+      var localStoragePrevStore = $this.doesStoreIdFromStepTwoExist();
+      $scope.stepOneFromStepTwo = (localStoragePrevStore !== null) ? true : (prevStatus.name) < parseInt(inboundOrAfterStatus.name);
     };
 
     this.getStoreDetails = function() {
@@ -124,7 +129,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getPrevStoreDetails = function() {
-      return storeInstanceFactory.getStoreDetails($scope.storeDetails.prevStoreInstanceId).then($this.setPrevStoreDetails);
+      return storeInstanceFactory.getStoreDetails($scope.prevStoreInstanceId).then($this.setPrevStoreDetails);
     };
 
     this.getFormattedDatesPayload = function() {
@@ -408,25 +413,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return dateString;
     };
 
-    this.doesStoreIdFromStepTwoExist = function() {
-      var ls = $localStorage.stepTwoFromStepOne;
-      if (angular.isDefined(ls) && angular.isDefined(ls.storeId)) {
-        return ls.storeId;
-      }
-
-      return null;
-    };
-
-    this.isStepOneFromStepTwo = function(apiData) {
-      var stepTwoStoreId = $this.doesStoreIdFromStepTwoExist();
-
-      if (apiData && apiData.id === parseInt(stepTwoStoreId)) {
-        return (angular.isNumber(apiData.prevStoreInstanceId));
-      }
-
-      return angular.isNumber(apiData.prevStoreInstanceId);
-    };
-
     this.setCateringStationId = function(apiData) {
       if (apiData && apiData.cateringStationId) {
         return apiData.cateringStationId.toString();
@@ -496,11 +482,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.setStoreInstanceConditionals = function(data) {
-      if ($this.isStepOneFromStepTwo(data)) {
-        $scope.stepOneFromStepTwo = true;
-        $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
-      }
-
+      $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
       var stepTwoStoreId = $this.doesStoreIdFromStepTwoExist();
       if ($this.isActionState('redispatch') && !(data && data.id === parseInt(stepTwoStoreId))) {
         $scope.formData.scheduleDate = dateUtility.nowFormatted();
@@ -1193,7 +1175,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.registerMenusScopeWatchers = function() {
-      return ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) || ($this.isActionState(
+      return ($this.isActionState('redispatch') && $scope.prevStoreInstanceId) || ($this.isActionState(
           'dispatch') &&
         $routeParams.storeId);
     };
@@ -1284,8 +1266,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.getStoreInstanceSeals($routeParams.storeId),
         $this.getStoreInstanceItems($routeParams.storeId)
       ];
-      if ($scope.prevStoreInstanceId) {
+      if ($scope.prevStoreInstanceId && $routeParams.action === 'redispatch') {
         promises.push(
+          $this.getPrevStoreDetails(),
           $this.getStoreInstanceSeals($scope.prevStoreInstanceId),
           $this.getPrevStoreInstanceItems($scope.prevStoreInstanceId)
         );
