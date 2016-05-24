@@ -367,7 +367,8 @@ angular.module('ts5App')
       }
 
       for (var masterItemId in $scope.itemQuantities) {
-        if (angular.isDefined($scope.itemQuantities[masterItemId]) && $scope.itemQuantities[masterItemId] !== null) {
+        var isValidNumber = angular.isDefined($scope.itemQuantities[masterItemId]) && $scope.itemQuantities[masterItemId] !== null && $scope.itemQuantities[masterItemId] !== '';
+        if (isValidNumber) {
           items.push({
             masterItemId: parseInt(masterItemId),
             quantity: parseInt($scope.itemQuantities[masterItemId])
@@ -451,7 +452,8 @@ angular.module('ts5App')
 
     // Scope functions
     $scope.shouldHideItem = function (item) {
-      return !angular.isDefined($scope.itemQuantities[item.masterItemId]) && ($scope.state === 'review' || $scope.state === 'view');
+      var isInvalidNumber = !angular.isDefined($scope.itemQuantities[item.masterItemId]) || $scope.itemQuantities[item.masterItemId] === null || $scope.itemQuantities[item.masterItemId] === '';
+      return isInvalidNumber && ($scope.state === 'review' || $scope.state === 'view');
     };
 
     $scope.quantityDisabled = function() {
