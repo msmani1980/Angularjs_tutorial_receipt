@@ -15,7 +15,7 @@
           </div>
 
           <div class="modal-body">
-            <p>Are you sure you want to continue, there is more than 10% variance on the exchange rates</p>
+            <p>Are you sure you want to continue, there is more than {{ percentThreshold }}% variance on the exchange rates</p>
           </div>
 
           <ul ng-repeat="variance in varianceObject">
