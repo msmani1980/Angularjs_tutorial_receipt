@@ -11,7 +11,7 @@ angular.module('ts5App')
   .controller('ManualEposDiscountCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService,
     lodash, messageService, $location) {
 
-    function createNewDiscountObject () {
+    function createNewDiscountObject (dscntTypeName) {
       var newDiscount = { 
         cashbagId:$scope.cashBag.id,
         eposCashBagsId:$scope.cashBag.eposCashBagsId,
@@ -25,25 +25,26 @@ angular.module('ts5App')
         quantity:0,
         currentCurrencyAmount:0.00,
         baseCurrencyAmount:0.00,
-        exchangeRate:$scope.selectedCurrency.currency.exchangeRate
+        exchangeRate:$scope.selectedCurrency.currency.exchangeRate,
+        discountTypeName: dscntTypeName
       };
       return newDiscount;
     }
 
     $scope.addCouponDiscount = function() {
-      $scope.discountListCoupon.push(angular.copy(createNewDiscountObject()));
+      $scope.discountListCoupon.push(angular.copy(createNewDiscountObject('Coupon')));
     };
 
     $scope.addVoucherDiscount = function() {
-      $scope.discountListVoucher.push(angular.copy(createNewDiscountObject()));
+      $scope.discountListVoucher.push(angular.copy(createNewDiscountObject('Voucher')));
     };
 
     $scope.addCompDiscount = function() {
-      $scope.discountListComp.push(angular.copy(createNewDiscountObject()));
+      $scope.discountListComp.push(angular.copy(createNewDiscountObject('Comp')));
     };
 
     $scope.addFlyerDiscount = function() {
-      $scope.discountListFlyer.push(angular.copy(createNewDiscountObject()));
+      $scope.discountListFlyer.push(angular.copy(createNewDiscountObject('Frequent Flyer')));
     };
 
     function showLoadingModal(text) {
@@ -122,13 +123,9 @@ angular.module('ts5App')
       сurrencyAmount = discountObject.amount * discountObject.quantity;
       return parseFloat(сurrencyAmount).toFixed(2);
     }
-
-    function getBaseCurrencyAmount (discountObject) {
+    
+    function calculateBaseCurrencyAmount (discountObject) {
       var baseCurrencyAmount = 0.00;
-      if (!discountObject.currentCurrencyAmount) {
-        return baseCurrencyAmount.toFixed(2);
-      }
-
       if (discountObject.exchangeRate.bankExchangeRate === null) {
         var paperExchangeRate = discountObject.exchangeRate.paperExchangeRate;
         var coinExchangeRate = discountObject.exchangeRate.coinExchangeRate;
@@ -143,6 +140,21 @@ angular.module('ts5App')
       } else {
         var exchangeRate = discountObject.exchangeRate.bankExchangeRate;
         baseCurrencyAmount = (!exchangeRate ? 0.00 : parseFloat(discountObject.currentCurrencyAmount) / exchangeRate);
+      }
+
+      return baseCurrencyAmount;
+    }
+
+    function getBaseCurrencyAmount (discountObject) {
+      var baseCurrencyAmount = 0.00;
+      if (!discountObject.currentCurrencyAmount) {
+        return baseCurrencyAmount.toFixed(2);
+      }
+
+      if ($scope.baseCurrency.currencyId && discountObject.currencyId && $scope.baseCurrency.currencyId === discountObject.currencyId) {
+        return discountObject.currentCurrencyAmount;
+      } else {
+        baseCurrencyAmount = calculateBaseCurrencyAmount(discountObject);
       }
 
       return baseCurrencyAmount.toFixed(2);
@@ -291,7 +303,7 @@ angular.module('ts5App')
       discountObject.currentCurrencyAmount = getCurrentCurrencyAmount(discountObject);
       discountObject.baseCurrencyAmount = getBaseCurrencyAmount(discountObject);
       discountObject.discount = lodash.findWhere(discountDropDown, { id: discountObject.discountId }) || {};
-      discountObject.name = (discountObject.discount.name && discountObject.discount.name !== null ? discountObject.discount.name : '');
+      discountObject.discountTypeName = (discountObject.discount.discountTypeName && discountObject.discount.discountTypeName !== null ? discountObject.discount.discountTypeName : '');
       discountList.push(angular.copy(discountObject));
     }
 
@@ -326,8 +338,11 @@ angular.module('ts5App')
       $scope.selectedCurrency = {};
       var dateForFilter = dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.storeInstance.scheduleDate));
       var payload = {
-        startDate: dateUtility.nowFormatted('YYYYMMDD')
+        isActive: true,
+        startDate: dateUtility.nowFormatted('YYYYMMDD'),
+        endDate: dateUtility.nowFormatted('YYYYMMDD')
       };
+
       var promises = [
         manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter,  isOperatedCurrency: true }),
         manualEposFactory.getCashBagDiscountList($routeParams.cashBagId, {}),
