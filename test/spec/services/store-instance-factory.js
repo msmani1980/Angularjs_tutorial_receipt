@@ -250,8 +250,10 @@ describe('Service: storeInstanceFactory', function() {
 
   describe('catererStationService calls', function() {
     it('should call getStation', function() {
-      storeInstanceFactory.getCatererStationList();
-      expect(catererStationService.getCatererStationList).toHaveBeenCalled();
+      var payload = {fakeKey: 'fakeValue'};
+      storeInstanceFactory.getCatererStationList(payload);
+      var expectedPayload = {fakeKey: 'fakeValue', limit: null};
+      expect(catererStationService.getCatererStationList).toHaveBeenCalledWith(expectedPayload);
     });
   });
 

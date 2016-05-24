@@ -149,7 +149,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getCatererStationList = function() {
-      return storeInstanceFactory.getCatererStationList().then(this.setCatererStationList);
+      var query = this.getFormattedDatesPayload();
+      return storeInstanceFactory.getCatererStationList(query).then(this.setCatererStationList);
     };
 
     this.setMenuCatererList = function(dataFromAPI) {
@@ -1156,7 +1157,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.updateInstanceDependencies = function() {
       var updatePromises = [
         $this.getScheduleNumbers(),
-        $this.getCarrierNumbers()
+        $this.getCarrierNumbers(),
+        $this.getCatererStationList()
       ];
       if ($this.isDispatchOrRedispatch()) {
         updatePromises.push(
