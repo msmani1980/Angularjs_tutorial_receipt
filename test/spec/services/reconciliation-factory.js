@@ -147,7 +147,6 @@ describe('Factory: reconciliationFactory', function () {
     getMenuListDeferred.resolve(200, {});
     spyOn(menuService, 'getMenuList').and.returnValue(getMenuListResponseJSON.promise);
 
-    spyOn(cashBagService, 'getCashBagList');
     spyOn(cashBagService, 'getCashBagVerifications');
     spyOn(cashBagService, 'getManualCashBagList');
 
@@ -239,14 +238,9 @@ describe('Factory: reconciliationFactory', function () {
       expect(menuService.getMenuList).toHaveBeenCalled();
     });
 
-    it('should call cashBagService getCashBag on getCashBag', function () {
-      reconciliationFactory.getCashBagList(123);
-      expect(cashBagService.getCashBagList).toHaveBeenCalledWith({storeInstanceId: 123});
-    });
-
     it('should call cashBagService getCashBagVerifications on getCashBagVerifications', function () {
       reconciliationFactory.getCashBagVerifications(123);
-      expect(cashBagService.getCashBagVerifications).toHaveBeenCalledWith({id: 123});
+      expect(cashBagService.getCashBagVerifications).toHaveBeenCalledWith({storeInstanceId: 123});
     });
 
     it('should call cashBagService getManualCashBagList on getCashBagManualData', function () {

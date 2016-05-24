@@ -582,11 +582,6 @@ angular.module('ts5App')
       return name;
     }
 
-    function getStoreInstanceDetailsSuccessHandler(storeInstanceDataFromAPI) {
-      $scope.storeInstance = formatDates(angular.copy(storeInstanceDataFromAPI));
-      initData();
-    }
-
     function confirmModal(state) {
       angular.element('#action-confirm').modal(state);
     }
@@ -646,11 +641,26 @@ angular.module('ts5App')
       $scope.cashBagFilter = {};
     }
 
+    function initDependenciesSuccess (responseCollectionFromAPI) {
+      $scope.storeInstance = formatDates(angular.copy(responseCollectionFromAPI[0]));
+      $scope.cashBagList = angular.copy(responseCollectionFromAPI[1]);
+
+      initData();
+    }
+
+    function initDependencies () {
+      var promises = [
+        reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId),
+        reconciliationFactory.getCashBagVerifications($routeParams.storeInstanceId)
+      ];
+
+      $q.all(promises).then(initDependenciesSuccess, handleResponseError);
+    }
+
     function init() {
       $scope.actionOnPaymentReport = 'Show';
       showLoadingModal('Loading Reconciliation Discrepancy Details');
-      reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId).then(
-        getStoreInstanceDetailsSuccessHandler, handleResponseError);
+      initDependencies();
       angular.element('#checkbox').bootstrapSwitch();
       initTableDefaults();
     }
