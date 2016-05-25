@@ -11,6 +11,7 @@ describe('Controller: ExchangeRatesCtrl', function() {
   beforeEach(module('served/previous-exchange-rate.json'));
   beforeEach(module('served/company-preferences.json'));
   beforeEach(module('served/company-data.json'));
+  beforeEach(module('served/threshold-list.json'));
 
   var ExchangeRatesCtrl;
   var scope;
@@ -22,21 +23,24 @@ describe('Controller: ExchangeRatesCtrl', function() {
   var dailyExchangeRatesJSON;
   var previousExchangeRatesJSON;
   var saveDailyExchangeRatesDefferred;
+  var thresholdListDeferred;
+  var thresholdListResponseJSON;
   var currencyFactory;
   var dateUtility;
   var globalMenuService;
   var servedCompanyDataJSON;
-  
+
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     inject(function(_servedCompany_, _servedCurrencies_, _servedCompanyCurrencyGlobals_,
-      _servedDailyExchangeRates_, _servedPreviousExchangeRate_, _servedCompanyPreferences_) {
+      _servedDailyExchangeRates_, _servedPreviousExchangeRate_, _servedCompanyPreferences_, _servedThresholdList_) {
       companyJSON = _servedCompany_;
       currenciesJSON = _servedCurrencies_;
       companyCurrencyGlobalsJSON = _servedCompanyCurrencyGlobals_;
       dailyExchangeRatesJSON = _servedDailyExchangeRates_;
       previousExchangeRatesJSON = _servedPreviousExchangeRate_;
       companyPreferencesJSON = _servedCompanyPreferences_;
+      thresholdListResponseJSON = _servedThresholdList_;
     });
 
     var rootScope = $injector.get('$rootScope');
@@ -50,6 +54,10 @@ describe('Controller: ExchangeRatesCtrl', function() {
 
     saveDailyExchangeRatesDefferred = $q.defer();
     spyOn(currencyFactory, 'saveDailyExchangeRates').and.returnValue(saveDailyExchangeRatesDefferred.promise);
+
+    thresholdListDeferred = $q.defer();
+    thresholdListDeferred.resolve(thresholdListResponseJSON);
+    spyOn(currencyFactory, 'getExchangeRateThresholdList').and.returnValue(thresholdListDeferred.promise);
 
     spyOn(rootScope, '$broadcast').and.returnValue({});
 
@@ -142,6 +150,16 @@ describe('Controller: ExchangeRatesCtrl', function() {
       scope.companyPreferences = null;
       expect(scope.isBankExchangePreferred()).toBe(false);
     });
+  });
+
+  describe('get Threshold Variance', function () {
+    it('should get active records from API', function () {
+      expect(currencyFactory.getExchangeRateThresholdList).toHaveBeenCalled();
+    });
+    it('should save threshold to scope', function () {
+      expect(scope.percentThreshold).toBeDefined();
+    });
+
   });
 
   describe('saving exchange rates', function() {

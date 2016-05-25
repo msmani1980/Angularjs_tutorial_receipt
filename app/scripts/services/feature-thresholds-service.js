@@ -13,7 +13,7 @@ angular.module('ts5App')
     var requestURL = ENV.apiUrl + '/api/feature/:featureCode/thresholds/:thresholdId';
 
     var requestParameters = {
-      featureId: '@featureId',
+      featureCode: '@featureCode',
       thresholdId: '@thresholdId'
     };
 
@@ -28,8 +28,11 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getThresholdList(featureCode) {
-      return requestResource.getThresholdList({ featureCode: featureCode, thresholdId: '' }).$promise;
+    function getThresholdList(featureCode, optionalPayload) {
+      requestParameters.featureCode = featureCode;
+      requestParameters.thresholdId = '';
+      var payload = optionalPayload || {};
+      return requestResource.getThresholdList(payload).$promise;
     }
 
     function getThreshold(featureCode, thresholdId) {

@@ -187,6 +187,10 @@ angular.module('ts5App')
       return (dateUtility.isTodayOrEarlier(item.startDate) && dateUtility.isAfterToday(item.endDate));
     };
 
+    $scope.canEditItem = function (itemDate) {
+      return dateUtility.isYesterdayOrEarlier(itemDate);
+    };
+
     $scope.isDateActive = function (date) {
       return dateUtility.isTodayOrEarlier(date);
     };
