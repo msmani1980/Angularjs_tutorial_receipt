@@ -1,28 +1,38 @@
 'use strict';
 
-describe('Controller: ManualEposCashCtrl', function () {
+describe('Controller: ManualEposItemsCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
   beforeEach(module('served/cash-bag.json'));
+  beforeEach(module('served/item-types.json'));
+  beforeEach(module('served/master-item-list.json'));
+  //
   beforeEach(module('served/store-instance.json'));
   beforeEach(module('served/currency-globals.json'));
   beforeEach(module('served/daily-exchange-rate.json'));
   beforeEach(module('served/cash-bag-verifications.json'));
-  beforeEach(module('served/cash-bag-cash.json'));
+  beforeEach(module('served/cash-bag-items.json'));
 
 
-  var ManualEposCashCtrl;
+  var ManualEposItemsCtrl;
   var manualEposFactory;
   var globalMenuService;
   var dateUtility;
   var controller;
   var scope;
   var cashBagId;
+  var itemType;
   var location;
 
   var cashBagDeferred;
   var cashBagJSON;
+
+  var itemTypesDeferred;
+  var itemTypesJSON;
+
+  var itemListDeferred;
+  var itemListJSON;
 
   var storeInstanceDeferred;
   var storeInstanceJSON;
@@ -30,8 +40,8 @@ describe('Controller: ManualEposCashCtrl', function () {
   var currencyListDeferred;
   var currencyListJSON;
 
-  var cashBagCashListDeferred;
-  var cashBagCashListJSON;
+  var cashBagItemListDeferred;
+  var cashBagItemListJSON;
 
   var dailyExchangeRatesDeferred;
   var dailyExchangeRatesJSON;
@@ -48,13 +58,13 @@ describe('Controller: ManualEposCashCtrl', function () {
   var mockBaseCurrency;
 
   function createFormObject() {
-    scope.manualCashForm = {
-      $name: 'manualCashForm',
+    scope.manualItemForm = {
+      $name: 'manualItemForm',
       $valid: true,
       $invalid: false,
       $pristine: false,
       $dirty: true,
-      $setPristine: function(pristine) {
+      $setPristine: function (pristine) {
         this.$pristine = pristine;
       }
     };
@@ -62,14 +72,16 @@ describe('Controller: ManualEposCashCtrl', function () {
 
   beforeEach(inject(function ($q, $controller, $rootScope, $injector, $location) {
 
-    inject(function (_servedCashBag_, _servedStoreInstance_, _servedCurrencyGlobals_, _servedDailyExchangeRate_,
-                     _servedCashBagVerifications_, _servedCashBagCash_) {
+    inject(function (_servedCashBag_, _servedItemTypes_, _servedStoreInstance_, _servedMasterItemList_, _servedCashBagItems_,
+                     _servedCurrencyGlobals_, _servedDailyExchangeRate_, _servedCashBagVerifications_) {
       cashBagJSON = _servedCashBag_;
+      itemTypesJSON = _servedItemTypes_;
       storeInstanceJSON = _servedStoreInstance_;
+      itemListJSON = _servedMasterItemList_;
       currencyListJSON = _servedCurrencyGlobals_;
       dailyExchangeRatesJSON = _servedDailyExchangeRate_;
       cashBagVerificationJSON = _servedCashBagVerifications_;
-      cashBagCashListJSON = _servedCashBagCash_;
+      cashBagItemListJSON = _servedCashBagItems_;
     });
 
     manualEposFactory = $injector.get('manualEposFactory');
@@ -83,9 +95,21 @@ describe('Controller: ManualEposCashCtrl', function () {
     cashBagDeferred.resolve(cashBagJSON);
     spyOn(manualEposFactory, 'getCashBag').and.returnValue(cashBagDeferred.promise);
 
+    itemTypesDeferred = $q.defer();
+    itemTypesDeferred.resolve(itemTypesJSON);
+    spyOn(manualEposFactory, 'getItemTypes').and.returnValue(itemTypesDeferred.promise);
+
     storeInstanceDeferred = $q.defer();
     storeInstanceDeferred.resolve(storeInstanceJSON);
     spyOn(manualEposFactory, 'getStoreInstance').and.returnValue(storeInstanceDeferred.promise);
+
+    itemListDeferred = $q.defer();
+    itemListDeferred.resolve(itemListJSON);
+    spyOn(manualEposFactory, 'getRetailItems').and.returnValue(itemListDeferred.promise);
+
+    cashBagItemListDeferred = $q.defer();
+    cashBagItemListDeferred.resolve(cashBagItemListJSON);
+    spyOn(manualEposFactory, 'getCashBagItemList').and.returnValue(cashBagItemListDeferred.promise);
 
     currencyListDeferred = $q.defer();
     currencyListDeferred.resolve(currencyListJSON);
@@ -99,10 +123,6 @@ describe('Controller: ManualEposCashCtrl', function () {
     cashBagVerificationDeferred.resolve(cashBagVerificationJSON.response[0]);
     spyOn(manualEposFactory, 'checkCashBagVerification').and.returnValue(cashBagVerificationDeferred.promise);
 
-    cashBagCashListDeferred = $q.defer();
-    cashBagCashListDeferred.resolve(cashBagCashListJSON);
-    spyOn(manualEposFactory, 'getCashBagCashList').and.returnValue(cashBagCashListDeferred.promise);
-
     verifyDeferred = $q.defer();
     verifyDeferred.resolve(cashBagVerificationJSON.response[0]);
     spyOn(manualEposFactory, 'verifyCashBag').and.returnValue(verifyDeferred.promise);
@@ -113,23 +133,25 @@ describe('Controller: ManualEposCashCtrl', function () {
 
     createDeferred = $q.defer();
     createDeferred.resolve({});
-    spyOn(manualEposFactory, 'createCashBagCash').and.returnValue(createDeferred.promise);
+    spyOn(manualEposFactory, 'createCashBagItem').and.returnValue(createDeferred.promise);
 
     updateDeferred = $q.defer();
     updateDeferred.resolve({});
-    spyOn(manualEposFactory, 'updateCashBagCash').and.returnValue(updateDeferred.promise);
+    spyOn(manualEposFactory, 'updateCashBagItem').and.returnValue(updateDeferred.promise);
 
     cashBagId = 123;
+    itemType = 'virtual';
     mockBaseCurrency = 8;
     spyOn(globalMenuService, 'getCompanyData').and.returnValue({ baseCurrencyId: mockBaseCurrency });
 
     spyOn(location, 'path').and.callThrough();
 
     scope = $rootScope.$new();
-    ManualEposCashCtrl = $controller('ManualEposCashCtrl', {
+    ManualEposItemsCtrl = $controller('ManualEposItemsCtrl', {
       $scope: scope,
       $routeParams: {
-        cashBagId: cashBagId
+        cashBagId: cashBagId,
+        itemType: itemType
       }
     });
 
@@ -145,6 +167,10 @@ describe('Controller: ManualEposCashCtrl', function () {
       expect(scope.cashBag).toBeDefined();
     });
 
+    it('should get a list of item types', function () {
+      expect(manualEposFactory.getItemTypes).toHaveBeenCalled();
+    });
+
     it('should get the store instance tied to the cash bag', function () {
       expect(manualEposFactory.getStoreInstance).toHaveBeenCalled();
       expect(scope.storeInstance).toBeDefined();
@@ -156,11 +182,34 @@ describe('Controller: ManualEposCashCtrl', function () {
       expect(manualEposFactory.getCurrencyList).toHaveBeenCalledWith(expectedPayload);
     });
 
-    it('should get cash bag cash', function () {
-      expect(manualEposFactory.getCashBagCashList).toHaveBeenCalledWith(cashBagId, {});
+    it('should attach the list of currencies to scope', function () {
+      expect(scope.currencyList).toBeDefined();
     });
 
-    it('should get daily exchange rate', function () {
+    it('should get a list of retail items, filtered by date and item type', function () {
+      var formattedScheduleDate = dateUtility.formatDate(scope.storeInstance.scheduleDate, 'YYYY-MM-DD', 'YYYYMMDD');
+      var expectedPayload = {
+        startDate: formattedScheduleDate,
+        endDate: formattedScheduleDate,
+        itemTypeId: 2 // virtual
+      };
+      expect(manualEposFactory.getRetailItems).toHaveBeenCalledWith(expectedPayload);
+      expect(scope.itemList.length).toEqual(itemListJSON.masterItems.length);
+    });
+
+    it('should get cash bag items', function () {
+      expect(manualEposFactory.getCashBagItemList).toHaveBeenCalledWith(cashBagId);
+    });
+
+    it('should merge cash bag items with matching item types and item ids', function () {
+      var expectedItem = jasmine.objectContaining({
+        id: 76,
+        quantity: 5
+      });
+      expect(scope.itemList[0]).toEqual(expectedItem);
+    });
+
+    it('should get daily exchange rate tied to the cash bag', function () {
       var dailyExchangeRateId = scope.cashBag.dailyExchangeRateId;
       expect(manualEposFactory.getDailyExchangeRate).toHaveBeenCalledWith(dailyExchangeRateId);
     });
@@ -168,7 +217,7 @@ describe('Controller: ManualEposCashCtrl', function () {
     it('should check the cash bag verification', function () {
       expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
       expect(scope.isVerified).toBeDefined();
-      expect(scope.verifiedInfo.verifiedBy).toEqual('John Smith');
+      expect(scope.verifiedInfo.verifiedBy).toEqual('John Adams');
       expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53');
     });
 
@@ -177,70 +226,82 @@ describe('Controller: ManualEposCashCtrl', function () {
       expect(scope.baseCurrency).toBeDefined();
       expect(scope.baseCurrency.id).toEqual(mockBaseCurrency);
     });
+  });
 
-    it('should attach a list of cash bag currencies to scope', function () {
-      expect(scope.currencyList).toBeDefined();
-      var expectedCurrencyObject = jasmine.objectContaining({
-        currencyId: 8,
-        currencyCode: 'GBP',
-        amount: '12.00',
-        convertedAmount: 12
+  describe('calculate totals', function () {
+    it('should calculate total amount based on price * qty', function () {
+      var mockItem = {
+        amount: '2.50',
+        quantity: '2',
+        exchangeRate: {
+          bankExchangeRate: 2
+        }
+      };
+
+      scope.calculateTotals(mockItem);
+      expect(mockItem.totalValue).toEqual('5.00');
+    });
+
+    describe('converted total', function () {
+      it('should use bank exchange rate for bank amounts', function () {
+        var mockItemWithExchangeRate = {
+          amount: '1.00',
+          quantity: '1',
+          exchangeRate: {
+            bankExchangeRate: 0.50,
+            paperExchangeRate: null,
+            coinExchangeRate: null
+          }
+        };
+        scope.calculateTotals(mockItemWithExchangeRate);
+        expect(mockItemWithExchangeRate.convertedTotal).toEqual('2.00');
       });
-      expect(scope.currencyList[0]).toEqual(expectedCurrencyObject);
+
+      it('should use paper and coin exchange rate for paper/coin amounts', function () {
+        var mockItemWithExchangeRate = {
+          amount: '1.50',
+          quantity: '1',
+          exchangeRate: {
+            bankExchangeRate: null,
+            paperExchangeRate: 0.25,
+            coinExchangeRate: 0.5
+          }
+        };
+        scope.calculateTotals(mockItemWithExchangeRate);
+        expect(mockItemWithExchangeRate.convertedTotal).toEqual('4.10');
+      });
     });
   });
 
-  describe('convert cash amount', function () {
-    it('should use bank exchange rate for bank amounts', function () {
-      var mockCurrencyObject = {
-        amount: '1.00',
-        exchangeRate: {
-          bankExchangeRate: 0.50,
-          paperExchangeRate: null,
-          coinExchangeRate: null
-        }
-      };
-      var convertedAmount = scope.convertAmount(mockCurrencyObject);
-      expect(convertedAmount).toEqual('2.00');
-    });
-
-    it('should use paper and coin exchange rate for paper/coin amounts', function () {
-      var mockCurrencyObject = {
-        amount: '1.50',
-        exchangeRate: {
-          bankExchangeRate: null,
-          paperExchangeRate: 0.25,
-          coinExchangeRate: 0.5
-        }
-      };
-      var convertedAmount = scope.convertAmount(mockCurrencyObject);
-      expect(convertedAmount).toEqual('5.00');
-    });
-
-    it('should default to 0 if amount is empty', function () {
-      var mockCurrencyObject = {
-        amount: '',
-        exchangeRate: {
-          bankExchangeRate: 1.00
-        }
-      };
-      var convertedAmount = scope.convertAmount(mockCurrencyObject);
-      expect(convertedAmount).toEqual('0.00');
+  describe('sum all amounts', function () {
+    it('should return sum of all converted totals', function () {
+      scope.itemList = [{
+        convertedTotal: '2.50'
+      }, {
+        convertedTotal: '3.50'
+      }];
+      expect(scope.sumAllItems()).toEqual('6.00');
     });
   });
 
-  describe('sum converted amounts', function () {
-    it('should return the sum of all converted amounts', function () {
-      scope.currencyList = [{
-        convertedAmount: '1.00'
+  describe('switching amounts', function () {
+    it('should convert all amounts to the new currency', function () {
+      scope.dailyExchangeRates = [{
+        retailCompanyCurrencyId: 1,
+        bankExchangeRate: 0.25
       }, {
-        convertedAmount: '2.50'
-      }, {
-        convertedAmount: '5.00001'
+        retailCompanyCurrencyId: 2,
+        bankExchangeRate: 2
       }];
 
-      var sum = scope.sumConvertedAmounts();
-      expect(sum).toEqual('8.50');
+      scope.itemList = [{
+        currencyId: 1,
+        amount: '2.00'
+      }];
+
+      scope.selectedCurrency = {currency: {id: 2}};
+      scope.updateAmountsWithSelectedCurrency();
+      expect(scope.itemList[0].amount).toEqual('16.00');
     });
   });
 
@@ -249,7 +310,7 @@ describe('Controller: ManualEposCashCtrl', function () {
       scope.isVerified = false;
       scope.verifiedInfo = null;
       scope.verify();
-      expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
+      expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'VIRT_ITEM');
       scope.$digest();
     });
 
@@ -257,7 +318,7 @@ describe('Controller: ManualEposCashCtrl', function () {
       scope.isVerified = true;
       scope.verifiedInfo = null;
       scope.unverify();
-      expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
+      expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'VIRT_ITEM');
       scope.$digest();
     });
   });
@@ -265,35 +326,41 @@ describe('Controller: ManualEposCashCtrl', function () {
   describe('saving cash bag cash', function () {
     var expectedPayload;
     beforeEach(function () {
-      scope.currencyList = [{
+      scope.selectedCurrency = { currency: { id: 1 } };
+      scope.mainItemType = { id: 2 };
+      scope.itemList = [{
         amount: '1.00',
-        convertedAmount: '2.50',
-        currencyId: 3
+        quantity: 4,
+        convertedTotal: '2.50',
+        itemMasterId: 3
       }];
 
       expectedPayload = {
         amount: 1,
+        quantity: 4,
         convertedAmount: 2.5,
-        currencyId: 3
+        itemTypeId: 2,
+        itemMasterId: 3,
+        currencyId: 1
       };
     });
 
     it('should check form validity before saving', function () {
-      scope.manualCashForm.$valid = false;
+      scope.manualItemForm.$valid = false;
       scope.save();
       expect(scope.displayError).toEqual(true);
     });
 
     it('should call create for new entries', function () {
       scope.save();
-      expect(manualEposFactory.createCashBagCash).toHaveBeenCalledWith(cashBagId, expectedPayload);
+      expect(manualEposFactory.createCashBagItem).toHaveBeenCalledWith(cashBagId, expectedPayload);
     });
 
     it('should call update for existing entries', function () {
-      var cashId = 4;
-      scope.currencyList[0].id = cashId;
+      var itemId = 4;
+      scope.itemList[0].id = itemId;
       scope.save();
-      expect(manualEposFactory.updateCashBagCash).toHaveBeenCalledWith(cashBagId, cashId, expectedPayload);
+      expect(manualEposFactory.updateCashBagItem).toHaveBeenCalledWith(cashBagId, itemId, expectedPayload);
     });
 
     it('should redirect page if shouldExit is true', function () {

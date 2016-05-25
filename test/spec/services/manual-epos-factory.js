@@ -9,19 +9,26 @@ describe('Service: manualEposFactory', function() {
   var dailyExchangeRatesService;
   var cashBagService;
   var storeInstanceService;
+  var itemsService;
+  var recordsService;
 
-  beforeEach(inject(function(_manualEposFactory_, _currenciesService_, _dailyExchangeRatesService_, _cashBagService_, _storeInstanceService_) {
+  beforeEach(inject(function(_manualEposFactory_, _currenciesService_, _dailyExchangeRatesService_, _cashBagService_, _storeInstanceService_, _itemsService_, _recordsService_) {
     manualEposFactory = _manualEposFactory_;
     currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
     cashBagService = _cashBagService_;
     storeInstanceService = _storeInstanceService_;
+    itemsService = _itemsService_;
+    recordsService = _recordsService_;
 
     spyOn(manualEposFactory, 'getPromotionsList');
-    spyOn(manualEposFactory, 'getVoucherItemsList');
-    spyOn(manualEposFactory, 'getVirtualItemsList');
     spyOn(manualEposFactory, 'getDiscountsList');
-
+    spyOn(manualEposFactory, 'getCompanyDiscountsCoupon');
+    spyOn(manualEposFactory, 'getCompanyDiscountsVoucher');
+    spyOn(manualEposFactory, 'getCompanyDiscountsComp');
+    spyOn(manualEposFactory, 'getCompanyDiscountsFrequentFlyer');
+    spyOn(manualEposFactory, 'getCashBagDiscountList');
+    
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeById');
     spyOn(cashBagService, 'getCashBag');
@@ -32,26 +39,14 @@ describe('Service: manualEposFactory', function() {
     spyOn(cashBagService, 'createManualCashBagRecord');
     spyOn(cashBagService, 'updateManualCashBagRecord');
     spyOn(storeInstanceService, 'getStoreInstance');
+    spyOn(itemsService, 'getItemsList');
+    spyOn(recordsService, 'getItemTypes');
   }));
 
   describe('getPromotionsList API call', function() {
     it('should call getPromotionsList', function() {
       manualEposFactory.getPromotionsList();
       expect(manualEposFactory.getPromotionsList).toHaveBeenCalled();
-    });
-  });
-
-  describe('getVoucherItemsList API call', function() {
-    it('should call getVoucherItemsList', function() {
-      manualEposFactory.getVoucherItemsList();
-      expect(manualEposFactory.getVoucherItemsList).toHaveBeenCalled();
-    });
-  });
-
-  describe('getVirtualItemsList API call', function() {
-    it('should call getVirtualItemsList', function() {
-      manualEposFactory.getVirtualItemsList();
-      expect(manualEposFactory.getVirtualItemsList).toHaveBeenCalled();
     });
   });
 
@@ -73,6 +68,41 @@ describe('Service: manualEposFactory', function() {
     it('should call getDailyExchangeRate from dailyExchangeRatesService', function () {
       manualEposFactory.getDailyExchangeRate();
       expect(dailyExchangeRatesService.getDailyExchangeById).toHaveBeenCalled();
+    });
+  });
+
+  describe('getCompanyDiscountsCoupon API call', function() {
+    it('should call getCompanyDiscountsCoupon', function() {
+      manualEposFactory.getCompanyDiscountsCoupon();
+      expect(manualEposFactory.getCompanyDiscountsCoupon).toHaveBeenCalled();
+    });
+  });
+
+  describe('getCompanyDiscountsVoucher API call', function() {
+    it('should call getCompanyDiscountsVoucher', function() {
+      manualEposFactory.getCompanyDiscountsVoucher();
+      expect(manualEposFactory.getCompanyDiscountsVoucher).toHaveBeenCalled();
+    });
+  });
+
+  describe('getCompanyDiscountsComp API call', function() {
+    it('should call getCompanyDiscountsComp', function() {
+      manualEposFactory.getCompanyDiscountsComp();
+      expect(manualEposFactory.getCompanyDiscountsComp).toHaveBeenCalled();
+   });
+  });
+
+  describe('getCompanyDiscountsFrequentFlyer API call', function() {
+    it('should call getCompanyDiscountsFrequentFlyer', function() {
+      manualEposFactory.getCompanyDiscountsFrequentFlyer();
+      expect(manualEposFactory.getCompanyDiscountsFrequentFlyer).toHaveBeenCalled();
+    });
+  });
+
+  describe('getCashBagDiscountList API call', function() {
+    it('should call getCashBagDiscountList', function() {
+      manualEposFactory.getCashBagDiscountList();
+      expect(manualEposFactory.getCashBagDiscountList).toHaveBeenCalled();
     });
   });
 
@@ -126,6 +156,28 @@ describe('Service: manualEposFactory', function() {
       expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('credit-cards', fakeCashBagId, fakeCashBagCashId, fakePayload);
     });
 
+    it('should call getCashBagItemList from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakePayload = {};
+      manualEposFactory.getCashBagItemList(fakeCashBagId, fakePayload);
+      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('items', fakeCashBagId, fakePayload);
+    });
+
+    it('should call createCashBagItem from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakePayload = {};
+      manualEposFactory.createCashBagItem(fakeCashBagId, fakePayload);
+      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('items', fakeCashBagId, fakePayload);
+    });
+
+    it('should call updateCashBagItem from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakeItemId = 234;
+      var fakePayload = {};
+      manualEposFactory.updateCashBagItem(fakeCashBagId, fakeItemId, fakePayload);
+      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('items', fakeCashBagId, fakeItemId, fakePayload);
+    });
+
     it('should call verifyCashBag from cashBagService', function () {
       manualEposFactory.verifyCashBag();
       expect(cashBagService.verifyCashBag).toHaveBeenCalled();
@@ -140,12 +192,42 @@ describe('Service: manualEposFactory', function() {
       manualEposFactory.checkCashBagVerification();
       expect(cashBagService.getCashBagVerifications).toHaveBeenCalled();
     });
+
+    it('should call createCashBagDiscount from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakePayload = {};
+      manualEposFactory.createCashBagDiscount(fakeCashBagId, fakePayload);
+      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('discounts', fakeCashBagId, fakePayload);
+    });
+
+    it('should call updateCashBagDiscount from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var fakeCashBagDiscountId = 234;
+      var fakePayload = {};
+      manualEposFactory.updateCashBagDiscount(fakeCashBagId, fakeCashBagDiscountId, fakePayload);
+      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('discounts', fakeCashBagId, fakeCashBagDiscountId, fakePayload);
+    });
+    
   });
 
   describe('storeInstanceService API call', function () {
     it('should call getStoreInstance from storeInstanceService', function () {
       manualEposFactory.getStoreInstance();
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalled();
+    });
+  });
+
+  describe('itemService API call', function () {
+    it('should get master items from itemService', function () {
+      manualEposFactory.getRetailItems({});
+      expect(itemsService.getItemsList).toHaveBeenCalledWith({}, true);
+    });
+  });
+
+  describe('recordsService API call', function () {
+    it('should getItemTypes from recordsService', function () {
+      manualEposFactory.getItemTypes();
+      expect(recordsService.getItemTypes).toHaveBeenCalled();
     });
   });
 

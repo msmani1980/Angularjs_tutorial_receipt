@@ -271,7 +271,7 @@ angular.module('ts5App')
         if ($scope.previousCurrency[currencyCode]) {
           angular.forEach(currencyObject, function(rate, rateType) {
             var percentage = getPercentageForCurrency(currencyCode, rateType);
-            if (percentage && percentage > 10) {
+            if ($scope.percentThreshold >= 0 && percentage && percentage > $scope.percentThreshold) {
               rateVariance.push({
                 code: currencyCode,
                 percentage: percentage
@@ -322,30 +322,52 @@ angular.module('ts5App')
       });
     }
 
-    var payload = {
-      optionName: 'Exchange Rate Type',
-      date: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
-    };
-
-    var retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
-    currencyFactory.getCompanyPreferences(payload, retailCompanyId).then(function(companyPreferencesData) {
-      var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate',
-        'desc');
-
+    function completeInit (responseCollection) {
+      var orderedPreferences = lodash.sortByOrder(angular.copy(responseCollection[0].preferences), 'startDate', 'desc');
       $scope.companyPreferences = {
         exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Exchange Rate Type')
       };
-    });
 
-    currencyFactory.getCompany(retailCompanyId).then(function(companyDataFromAPI) {
-      getCompanyBaseCurrency(angular.copy(companyDataFromAPI.baseCurrencyId));
-      $scope.company = angular.copy(companyDataFromAPI);
-    });
+      getCompanyBaseCurrency(angular.copy(responseCollection[1].baseCurrencyId));
+      $scope.company = angular.copy(responseCollection[1]);
 
-    var chCompanyId = globalMenuService.getCompanyData().id;
-    currencyFactory.getCompany(chCompanyId).then(function(companyDataFromAPI) {
-      getCashHandlerBaseCurrency(angular.copy(companyDataFromAPI.baseCurrencyId));
-      $scope.cashHandlerCompany = angular.copy(companyDataFromAPI);
-    });
+      getCashHandlerBaseCurrency(angular.copy(responseCollection[2].baseCurrencyId));
+      $scope.cashHandlerCompany = angular.copy(responseCollection[2]);
+
+      var activeThreshold = (!!responseCollection[3].response && responseCollection[3].response.length) ? angular.copy(responseCollection[3].response[0]) : null;
+      $scope.percentThreshold = (!!activeThreshold) ? activeThreshold.percentage : -1;
+    }
+
+    function makeInitPromises () {
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var preferencePayload = {
+        optionName: 'Exchange Rate Type',
+        date: today
+      };
+
+      var thresholdPayload = {
+        startDate: today,
+        endDate: today
+      };
+
+      var retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
+      var chCompanyId = globalMenuService.getCompanyData().id;
+
+      var promises = [
+        currencyFactory.getCompanyPreferences(preferencePayload, retailCompanyId),
+        currencyFactory.getCompany(retailCompanyId),
+        currencyFactory.getCompany(chCompanyId),
+        currencyFactory.getExchangeRateThresholdList(thresholdPayload)
+      ];
+
+      return promises;
+    }
+
+    function init() {
+      var promises = makeInitPromises();
+      $q.all(promises).then(completeInit, showErrors);
+    }
+
+    init();
 
   });

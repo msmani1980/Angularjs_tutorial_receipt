@@ -756,7 +756,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.mergeEposInboundQuantities = function(inboundQuantities) {
       angular.forEach(inboundQuantities, function (eposInboundQuantity) {
         var offloadItemMatch = lodash.findWhere($scope.offloadListItems, { itemMasterId: eposInboundQuantity.id });
-        if (offloadItemMatch && !offloadItemMatch.isEposDataOverwritten) {
+        var picklistMatch = lodash.findWhere($scope.pickListItems, { itemMasterId: eposInboundQuantity.id });
+
+        if ($routeParams.action === 'redispatch' && picklistMatch && !picklistMatch.isEposDataOverwritten) {
+          picklistMatch.inboundQuantity = eposInboundQuantity.quantity;
+        } else if (offloadItemMatch && !offloadItemMatch.isEposDataOverwritten) {
           offloadItemMatch.inboundQuantity = eposInboundQuantity.quantity;
         }
       });
@@ -788,12 +792,17 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getAllItems = function() {
       var storeInstanceForMenuItems = ($routeParams.action === 'replenish') ? $scope.storeDetails.replenishStoreInstanceId :
         $routeParams.storeId;
+
+      var storeInstanceForCalculatedInbounds = ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) ?
+        $scope.storeDetails.prevStoreInstanceId : $routeParams.storeId;
+
       var getItemsPromises = [
         $this.getMasterItemsList(),
         $this.getStoreInstanceMenuItems(storeInstanceForMenuItems),
         $this.getStoreInstanceItems($routeParams.storeId),
-        $this.getEposInboundQuantities($routeParams.storeId)
+        $this.getEposInboundQuantities(storeInstanceForCalculatedInbounds)
       ];
+
       if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
         getItemsPromises.push($this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId));
       }

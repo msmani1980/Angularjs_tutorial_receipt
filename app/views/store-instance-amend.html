@@ -343,6 +343,59 @@
     </div>
   </div>
 
+  <div class="modal fade" id="t6Modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4>{{ modalMainTitle }}: {{modalTotal}}</h4>
+          <br>
+          <table class="table table-bordered">
+            <tr class="active">
+              <td>{{ modalTableHeader }}</td>
+              <td>Quantity</td>
+              <td>Total</td>
+            </tr>
+            <tr ng-repeat="stockItem in modalItems">
+              <td>{{stockItem.itemName}}</td>
+              <td>{{stockItem.eposQuantity}}</td>
+              <td>{{stockItem.eposTotal}}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="cashRevenueModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4>Cash Revenue: {{formatAsCurrency(cashRevenueModal.amount)}}</h4>
+          <br>
+          <table class="table table-bordered">
+            <tr class="active">
+              <td>Currency</td>
+              <td>Amount</td>
+              <td>Exchange</td>
+              <td>Amount</td>
+            </tr>
+            <tr ng-repeat="cashRevenueItem in cashRevenueModal.items">
+              <td>{{cashRevenueItem.currency}}</td>
+              <td>{{formatAsCurrency(cashRevenueItem.amount)}}</td>
+              <td>{{cashRevenueItem.exchangeRate}}</td>
+              <td>{{formatAsCurrency(cashRevenueItem.baseCurrencyAmount)}}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-xs-12 main">
@@ -571,24 +624,24 @@
                       </td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a href="">Regular Item Sales</a></td>
-                      <td>+ {{ cashBag.regularItemSales }}</td>
+                      <td><a ng-click="showEposModal('Regular', cashBag)">Regular Item Sales</a></td>
+                      <td>+ {{ formatAsCurrency(cashBag.regularItemSales) }}</td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a href="">Virtual Sales</a></td>
-                      <td>+ {{ cashBag.virtualItemSales }}</td>
+                      <td><a ng-click="showEposModal('Virtual', cashBag)">Virtual Sales</a></td>
+                      <td>+ {{ formatAsCurrency(cashBag.virtualItemSales) }}</td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a href="">Voucher Sales</a></td>
-                      <td>+ {{ cashBag.voucherItemSales }}</td>
+                      <td><a ng-click="showEposModal('Voucher', cashBag)">Voucher Sales</a></td>
+                      <td>+ {{ formatAsCurrency(cashBag.voucherItemSales) }}</td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a href="">Promotion Discounts</a></td>
-                      <td>- {{ cashBag.promotionDiscounts }}</td>
+                      <td><a ng-click="showEposModal('Promotion', cashBag)">Promotion Discounts</a></td>
+                      <td>- {{ formatAsCurrency(cashBag.promotionDiscounts) }}</td>
                     </tr>
                     <tr class="active">
                       <td>Net Value of ePOS Sales</td>
-                      <td>-</td>
+                      <td>{{ formatAsCurrency(cashBag.regularItemSales + cashBag.virtualItemSales + cashBag.voucherItemSales - cashBag.promotionDiscounts) }}</td>
                     </tr>
                   </table>
                 </div>
@@ -601,20 +654,20 @@
                       </td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
-                      <td>Cash</td>
-                      <td>{{ cashBag.cashRevenue }}</td>
+                      <td><a ng-click="showCashRevenueModal(cashBag)">Cash</a></td>
+                      <td>{{ formatAsCurrency(cashBag.cashRevenue.amount) }}</td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
                       <td>Credit</td>
-                      <td>{{ cashBag.creditRevenue }}</td>
+                      <td>{{ formatAsCurrency(cashBag.creditRevenue.amount) }}</td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
-                      <td><a href="">Discount</a></td>
-                      <td>{{ cashBag.discountRevenue }}</td>
+                      <td><a ng-click="showModal('RevenueDiscount')">Discount</a></td>
+                      <td>{{ formatAsCurrency(cashBag.discountRevenue.amount) }}</td>
                     </tr>
                     <tr class="active">
                       <td>Total Amount</td>
-                      <td>-</td>
+                      <td>{{ formatAsCurrency(cashBag.cashRevenue.amount + cashBag.creditRevenue.amount + cashBag.discountRevenue.amount) }}</td>
                     </tr>
                   </table>
                 </div>
@@ -685,7 +738,7 @@
                             <th>Last Name</th>
                           </tr>
                           <tr ng-repeat="crew in flightSector.crewData">
-                            <td>{{ crew.id }}</td>
+                            <td>{{ crew.employeeIdentifier }}</td>
                             <td>{{ crew.firstName }}</td>
                             <td>{{ crew.lastName }}</td>
                           </tr>
@@ -707,6 +760,9 @@
                   <button class="btn btn-primary" title="Edit Cash Bag" ng-click="goToCashBagEdit(cashBag)" ng-show="canExecuteActions(cashBag)">
                     <i class="fa fa-pencil active"></i>
                   </button>
+                  <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual">
+                    <i class="fa fa-plus-circle active"></i>
+                  </a>
                   <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag) && canExecuteActions(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
                     <i class="fa fa-trash active"></i>
                   </button>

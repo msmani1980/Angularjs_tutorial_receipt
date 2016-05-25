@@ -36,6 +36,9 @@ angular.module('ts5App')
       decimalWithTwoDecimalPlaces: [/^\d+\.\d{0,2}$/,
         'This field should be a decimal with up to two decimal places'
       ],
+      optionalDecimalWithTwoDecimalPlaces: [/^\d+(\.\d{0,2})?$/,
+        'This field should be an integer or decimal with up to two decimal places'
+      ],
       currencyWithFourDecimalPlace: [/^\d+\.\d{4}$/, 'This field should use format 0.0000', '%.4f'],
       currencyWithThreeDecimalPlace: [/^\d+\.?\d{0,3}$/, 'This field should use format 0.000', '%.3f'],
       currencyWithTwoDecimalPlace: [/^\d+\.\d{2}$/, 'This field should use format 0.00', '%.2f'],

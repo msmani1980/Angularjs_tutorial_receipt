@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('currencyFactory', function ($resource, currenciesService, dailyExchangeRatesService, companyExchangeRateService, companyService, companyPreferencesService) {
+  .factory('currencyFactory', function ($resource, currenciesService, dailyExchangeRatesService, companyExchangeRateService, companyService, companyPreferencesService, featureThresholdsService) {
 
     var getCompany = function (companyId) {
       return companyService.getCompany(companyId);
@@ -74,6 +74,10 @@ angular.module('ts5App')
       return dailyExchangeRatesService.getDailyExchangeRatesForCmp(companyId, retailCompanyId, exchangeRateDate);
     };
 
+    var getExchangeRateThresholdList = function (payload) {
+      return featureThresholdsService.getThresholdList('DAILYEXCHANGERATE', payload);
+    };
+
     return {
       getCompany: getCompany,
       getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
@@ -90,6 +94,7 @@ angular.module('ts5App')
       deleteCompanyExchangeRate: deleteCompanyExchangeRate,
       createCompanyExchangeRate: createCompanyExchangeRate,
       updateCompanyExchangeRate: updateCompanyExchangeRate,
-      getDailyExchangeRatesForCmp: getDailyExchangeRatesForCmp
+      getDailyExchangeRatesForCmp: getDailyExchangeRatesForCmp,
+      getExchangeRateThresholdList: getExchangeRateThresholdList
     };
   });

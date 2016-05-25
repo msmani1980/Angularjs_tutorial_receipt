@@ -76,7 +76,7 @@ angular.module('ts5App')
         }
       });
 
-      if ($this.meta.count === 1 && $scope.search.cashBagNumber) {
+      if ($this.meta.count === 1 && $scope.search.cashBagNumber && $scope.isCashBagEditable($scope.cashBagList[0]) && $scope.cashBagList[0].storeInstanceId !== null) {
         $localStorage.isEditFromList = true;
         socketIO.emit('echo-cashBag', {
           cashBag: $scope.cashBagList[0]
@@ -173,7 +173,6 @@ angular.module('ts5App')
 
       payload = lodash.assign(payload, {
         isDelete: 'false',
-        isSubmitted: 'false',
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
@@ -225,39 +224,50 @@ angular.module('ts5App')
       }
 
       $scope.displayModalError = false;
+    }
 
+    function showStoreInstancePopup (buttonSelector) {
+      angular.element(buttonSelector).button('loading');
+      $scope.checkForDailyExchangeRate().then(function() {
+        angular.element(buttonSelector).button('reset');
+        angular.element('#addCashBagModal').modal('show');
+      });
     }
 
     // scope methods
+    $scope.isNew = function(cashBagId) {
+      return ($routeParams.newId === cashBagId);
+    };
+
+    $scope.hideCreatePopup = function() {
+      angular.element('#addCashBagModal').modal('hide');
+      clearPopupSearch();
+    };
+
+    $scope.showCreatePopup = function () {
+      $scope.popupFromEdit = false;
+      var buttonSelector = '.add-cash-bag-btn';
+      showStoreInstancePopup(buttonSelector);
+    };
+
     $scope.viewCashBag = function(cashBag) {
       $location.path('cash-bag/view/' + cashBag.id);
     };
 
     $scope.editCashBag = function(cashBag) {
       var buttonSelector = sprintf('.edit-cash-bag-%s-btn', cashBag.id);
+      if (cashBag.storeInstanceId === null) {
+        $scope.popupFromEdit = true;
+        $scope.cashBagToEdit = cashBag.id;
+        showStoreInstancePopup(buttonSelector);
+        return;
+      }
+
       angular.element(buttonSelector).button('loading');
       $scope.checkForDailyExchangeRate().then(function() {
         angular.element(buttonSelector).button('reset');
         $location.path('cash-bag/edit/' + cashBag.id);
       });
-    };
-
-    $scope.isNew = function(cashBagId) {
-      return ($routeParams.newId === cashBagId);
-    };
-
-    $scope.showCreatePopup = function() {
-      var buttonSelector = '.add-cash-bag-btn';
-      angular.element(buttonSelector).button('loading');
-      $scope.checkForDailyExchangeRate().then(function() {
-        angular.element(buttonSelector).button('reset');
-        angular.element('#addCashBagModal').modal('show');
-      });
-    };
-
-    $scope.hideCreatePopup = function() {
-      angular.element('#addCashBagModal').modal('hide');
-      clearPopupSearch();
     };
 
     function getStoreListResponseHandler(storeListFromAPI) {
@@ -342,14 +352,15 @@ angular.module('ts5App')
       cashBagFactory.getSchedulesInDateRange(companyId, searchDate, searchDate).then(setFilteredScheduleList);
     });
 
-    $scope.submitCreate = function(storeInstance) {
+    $scope.continueToEditOrCreate = function(storeInstance) {
       if (!storeInstance) {
         showModalErrors('Please select a store instance');
         return;
       }
 
       angular.element('#addCashBagModal').removeClass('fade').modal('hide');
-      $location.path('cash-bag/create').search({
+      var nextPath = ($scope.popupFromEdit) ? 'cash-bag/edit/' + $scope.cashBagToEdit : 'cash-bag/create';
+      $location.path(nextPath).search({
         storeInstanceId: storeInstance.id
       });
     };
