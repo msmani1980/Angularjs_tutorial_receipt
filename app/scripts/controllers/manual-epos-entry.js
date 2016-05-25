@@ -80,8 +80,8 @@ angular.module('ts5App')
         cash: responseCollection[2].meta.count > 0,
         credit: responseCollection[3].meta.count > 0,
         discount: responseCollection[4].meta.count > 0,
-        voucher: groupedItemList.voucher.length > 0,
-        virtual: groupedItemList.virtual.length > 0,
+        voucher: !!groupedItemList.voucher,
+        virtual: !!groupedItemList.virtual,
         promotion: false // TODO: getPromotionList
       };
 
@@ -102,7 +102,7 @@ angular.module('ts5App')
         manualEposFactory.getCashBagDiscountList($routeParams.cashBagId),
         manualEposFactory.getCashBagItemList($routeParams.cashBagId),
         manualEposFactory.getItemTypes()
-        
+
         // TODO: getPromotionList
       ];
 
