@@ -552,13 +552,13 @@ angular.module('ts5App')
         var amount = item.eposTotal;
         switch (itemTypeName) {
           case 'Regular':
-            cashBag.regularItemSales.amount += amount;
+            cashBag.regularItemSales += amount;
             break;
           case 'Virtual':
-            cashBag.virtualItemSales.amount += amount;
+            cashBag.virtualItemSales += amount;
             break;
           case 'Voucher':
-            cashBag.voucherItemSales.amount += amount;
+            cashBag.voucherItemSales += amount;
             break;
         }
       }
@@ -568,7 +568,7 @@ angular.module('ts5App')
       if (item.cashbagId) {
         var cashBag = getCashBagById(item.cashbagId);
         var amount = item.convertedAmount || 0;
-        cashBag.promotionDiscounts.amount += amount;
+        cashBag.promotionDiscounts += amount;
       }
     }
 
@@ -799,10 +799,10 @@ angular.module('ts5App')
           cashRevenue: 0,
           creditRevenue: 0,
           discountRevenue: initializeSalesAndRevenue(),
-          regularItemSales: initializeSalesAndRevenue(),
-          virtualItemSales: initializeSalesAndRevenue(),
-          voucherItemSales: initializeSalesAndRevenue(),
-          promotionDiscounts: initializeSalesAndRevenue(),
+          regularItemSales: 0,
+          virtualItemSales: 0,
+          voucherItemSales: 0,
+          promotionDiscounts: 0,
           flightSectors: []
         };
       });
