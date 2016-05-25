@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
       reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory, storeInstanceFactory, recordsService,
-      stationsService) {
+      stationsService, dailyExchangeRatesService) {
     var $this = this;
 
     $scope.formatAsCurrency = function(valueToFormat) {
@@ -236,7 +236,7 @@ angular.module('ts5App')
       return (modalName === 'Promotion') ? $this.promotionTotals : $this.stockTotals;
     }
 
-    $scope.showModal = function (modalName, cashBag) {
+    $scope.showEposModal = function (modalName, cashBag) {
       var modalNameToHeaderMap = {
         Regular: 'Regular Product Revenue',
         Virtual: 'Virtual Product Revenue',
@@ -271,6 +271,12 @@ angular.module('ts5App')
       });
 
       angular.element('#t6Modal').modal('show');
+    };
+
+    $scope.showCashRevenueModal = function (cashBag) {
+      $scope.cashRevenueModal = cashBag.cashRevenue;
+
+      angular.element('#cashRevenueModal').modal('show');
     };
 
     function getStationById (stationId) {
@@ -682,7 +688,7 @@ angular.module('ts5App')
         var amount = (cashBag.paperAmountManualCh + cashBag.coinAmountManualCh) + (cashBag.paperAmountManualCHBank + cashBag.coinAmountManualCHBank) + (cashBag.bankAmountCh);
 
         if (cashBag.cashbagId) {
-          getCashBagById(cashBag.cashbagId).cashRevenue += amount;
+          getCashBagById(cashBag.cashbagId).cashRevenue.amount += amount;
         }
 
         cashRevenue.total += amount;
@@ -694,7 +700,7 @@ angular.module('ts5App')
         var amount = (creditCard.bankAmountFinal || 0) + (creditCard.coinAmountManualCc || 0) + (creditCard.paperAmountManualCc || 0);
 
         if (creditCard.cashbagId) {
-          getCashBagById(creditCard.cashbagId).creditRevenue += amount;
+          getCashBagById(creditCard.cashbagId).creditRevenue.amount += amount;
         }
 
         cashRevenue.total += amount;
@@ -796,8 +802,8 @@ angular.module('ts5App')
           isVerified: (cashBag.amendVerifiedOn) ? true : false,
           verifiedByUser: (cashBag.amendVerifiedBy) ? cashBag.amendVerifiedBy.userName : 'Unknown',
           verifiedOn: dateUtility.formatTimestampForApp(cashBag.amendVerifiedOn),
-          cashRevenue: 0,
-          creditRevenue: 0,
+          cashRevenue: initializeSalesAndRevenue(),
+          creditRevenue: initializeSalesAndRevenue(),
           discountRevenue: initializeSalesAndRevenue(),
           regularItemSales: 0,
           virtualItemSales: 0,
@@ -1008,14 +1014,75 @@ angular.module('ts5App')
       return !(cashBag.bankReferenceNumber || cashBag.isSubmitted === true || hasEposTransactions(cashBag));
     }
 
-    function setCashBagDeletionFlag(normalizedCashBag, cashBagFromAPI) {
-      var cashBag = angular.copy(cashBagFromAPI);
-      normalizedCashBag.canBeDeleted = isCashBagDeleteAllowed(cashBag);
+    function getBaseCurrencyAmount (bankAmount, paperAmount, coinAmount, exchangeRate) {
+      var baseCurrencyAmount = 0.00;
+
+      if (exchangeRate.bankExchangeRate) {
+        baseCurrencyAmount = bankAmount / exchangeRate.bankExchangeRate;
+      } else {
+        var paperExchangeRate = exchangeRate.paperExchangeRate;
+        var coinExchangeRate = exchangeRate.coinExchangeRate;
+
+        var convertedPaperAmount = paperAmount / paperExchangeRate;
+        var convertedCoinAmount = coinAmount / coinExchangeRate;
+
+        baseCurrencyAmount = convertedPaperAmount + (convertedCoinAmount / 100);
+      }
+
+      return parseFloat(baseCurrencyAmount.toFixed(2));
+    }
+
+    function getExchangeRate(currencyId, dailyExchangeRates) {
+      return lodash.find(dailyExchangeRates, 'retailCompanyCurrencyId', currencyId);
+    }
+
+    function setCashTotalRevenueItems(normalizedCashBag, detailedCashBag, dailyExchangeRates) {
+      var currencies = lodash.filter(detailedCashBag.cashBagCurrencies, function(currency) {
+        return parseFloat(currency.coinAmountManual) > 0 || parseFloat(currency.paperAmountManual) > 0;
+      });
+
+      angular.forEach(currencies, function (currency) {
+        var totalAmount = 0.00;
+        var bankAmount = 0.00;
+        var paperAmount = 0.00;
+        var coinAmount = 0.00;
+        var realExchangeRate = 0.00;
+
+        var exchangeRate = getExchangeRate(currency.currencyId, dailyExchangeRates.dailyExchangeRateCurrencies);
+
+        if (exchangeRate.bankExchangeRate) {
+          totalAmount = parseFloat(currency.bankAmount);
+          realExchangeRate = exchangeRate.bankExchangeRate;
+        } else {
+          paperAmount = parseFloat(currency.paperAmountManual);
+          coinAmount = parseFloat(currency.coinAmountManual);
+          totalAmount = paperAmount + coinAmount;
+          realExchangeRate = exchangeRate.paperExchangeRate + '/' + exchangeRate.coinExchangeRate;
+        }
+
+        normalizedCashBag.cashRevenue.items.push({
+          currency: getCurrencyByBaseCurrencyId($scope.companyGlobalCurrencies, currency.currencyId).currencyCode,
+          amount: totalAmount,
+          exchangeRate: realExchangeRate,
+          baseCurrencyAmount: getBaseCurrencyAmount(bankAmount, paperAmount, coinAmount, exchangeRate)
+        });
+      });
+
+    }
+
+    function setCashBagDetails(normalizedCashBag, cashBagFromAPI) {
+      var companyId = globalMenuService.company.get();
+      var detailedCashBag = angular.copy(cashBagFromAPI);
+      normalizedCashBag.canBeDeleted = isCashBagDeleteAllowed(detailedCashBag);
+
+      dailyExchangeRatesService.getDailyExchangeById(companyId, detailedCashBag.dailyExchangeRateId).then(function (dataFromAPI) {
+        setCashTotalRevenueItems(normalizedCashBag, detailedCashBag, angular.copy(dataFromAPI));
+      });
     }
 
     function getCashBagDeletionFlag(normalizedCashBag) {
       return cashBagFactory.getCashBag(normalizedCashBag.id).then(function (cashBagFromAPI) {
-        setCashBagDeletionFlag(normalizedCashBag, cashBagFromAPI);
+        setCashBagDetails(normalizedCashBag, cashBagFromAPI);
       });
     }
 

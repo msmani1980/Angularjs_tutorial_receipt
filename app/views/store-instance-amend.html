@@ -369,6 +369,34 @@
     </div>
   </div>
 
+  <div class="modal fade" id="cashRevenueModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4>Cash Revenue: {{formatAsCurrency(cashRevenueModal.amount)}}</h4>
+          <br>
+          <table class="table table-bordered">
+            <tr class="active">
+              <td>Currency</td>
+              <td>Amount</td>
+              <td>Exchange</td>
+              <td>Amount</td>
+            </tr>
+            <tr ng-repeat="cashRevenueItem in cashRevenueModal.items">
+              <td>{{cashRevenueItem.currency}}</td>
+              <td>{{formatAsCurrency(cashRevenueItem.amount)}}</td>
+              <td>{{cashRevenueItem.exchangeRate}}</td>
+              <td>{{formatAsCurrency(cashRevenueItem.baseCurrencyAmount)}}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-xs-12 main">
       <header>
@@ -596,19 +624,19 @@
                       </td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a ng-click="showModal('Regular', cashBag)">Regular Item Sales</a></td>
+                      <td><a ng-click="showEposModal('Regular', cashBag)">Regular Item Sales</a></td>
                       <td>+ {{ formatAsCurrency(cashBag.regularItemSales) }}</td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a ng-click="showModal('Virtual', cashBag)">Virtual Sales</a></td>
+                      <td><a ng-click="showEposModal('Virtual', cashBag)">Virtual Sales</a></td>
                       <td>+ {{ formatAsCurrency(cashBag.virtualItemSales) }}</td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a ng-click="showModal('Voucher', cashBag)">Voucher Sales</a></td>
+                      <td><a ng-click="showEposModal('Voucher', cashBag)">Voucher Sales</a></td>
                       <td>+ {{ formatAsCurrency(cashBag.voucherItemSales) }}</td>
                     </tr>
                     <tr ng-show="cashBag.salesTableOpen">
-                      <td><a ng-click="showModal('Promotion', cashBag)">Promotion Discounts</a></td>
+                      <td><a ng-click="showEposModal('Promotion', cashBag)">Promotion Discounts</a></td>
                       <td>- {{ formatAsCurrency(cashBag.promotionDiscounts) }}</td>
                     </tr>
                     <tr class="active">
@@ -626,12 +654,12 @@
                       </td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
-                      <td>Cash</td>
-                      <td>{{ formatAsCurrency(cashBag.cashRevenue) }}</td>
+                      <td><a ng-click="showCashRevenueModal(cashBag)">Cash</a></td>
+                      <td>{{ formatAsCurrency(cashBag.cashRevenue.amount) }}</td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
                       <td>Credit</td>
-                      <td>{{ formatAsCurrency(cashBag.creditRevenue) }}</td>
+                      <td>{{ formatAsCurrency(cashBag.creditRevenue.amount) }}</td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
                       <td><a ng-click="showModal('RevenueDiscount')">Discount</a></td>
@@ -639,7 +667,7 @@
                     </tr>
                     <tr class="active">
                       <td>Total Amount</td>
-                      <td>{{ formatAsCurrency(cashBag.cashRevenue + cashBag.creditRevenue + cashBag.discountRevenue.amount) }}</td>
+                      <td>{{ formatAsCurrency(cashBag.cashRevenue.amount + cashBag.creditRevenue.amount + cashBag.discountRevenue.amount) }}</td>
                     </tr>
                   </table>
                 </div>

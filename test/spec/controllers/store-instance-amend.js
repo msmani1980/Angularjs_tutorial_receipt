@@ -25,12 +25,14 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   beforeEach(module('served/stations.json'));
   beforeEach(module('served/master-item.json'));
   beforeEach(module('served/promotion.json'));
+  beforeEach(module('served/daily-exchange-rate.json'));
 
   var scope;
   var StoreInstanceAmendCtrl;
   var controller;
   var location;
   var storeInstanceAmendFactory;
+  var dailyExchangeRatesService;
   var reconciliationFactory;
   var storeInstanceFactory;
   var employeesService;
@@ -89,12 +91,14 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var masterItemDeferred;
   var promotionJSON;
   var promotionDeferred;
+  var dailyExchangeRateJSON;
+  var dailyExchangeRateDeferred;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagVerifications_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
                               _servedChCashBag_, _servedPaymentReport_, _servedEmployees_, _servedCashBag_, _servedCashBagCarrierInstances_,
                               _servedPostTripData_, _servedTransactions_, _servedStoreInstanceList_, _servedStoreStatus_, _servedPostTripDataList_,
-                              _servedPostTripSingleDataList_, _servedStations_, _servedMasterItem_, _servedPromotion_) {
+                              _servedPostTripSingleDataList_, _servedStations_, _servedMasterItem_, _servedPromotion_, _servedDailyExchangeRate_) {
     location = $location;
     scope = $rootScope.$new();
     storeInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
@@ -107,6 +111,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     recordsService = $injector.get('recordsService');
     dateUtility = $injector.get('dateUtility');
     stationsService = $injector.get('stationsService');
+    dailyExchangeRatesService = $injector.get('dailyExchangeRatesService');
     controller = $controller;
 
     storeInstanceResponseJSON = [{ id: 1 }]; // stub for now until API is complete
@@ -207,6 +212,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     promotionDeferred = $q.defer();
     promotionDeferred.resolve(promotionJSON);
 
+    dailyExchangeRateJSON = _servedDailyExchangeRate_;
+    dailyExchangeRateDeferred = $q.defer();
+    dailyExchangeRateDeferred.resolve(dailyExchangeRateJSON);
+
     spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
@@ -240,6 +249,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(storeInstanceAmendFactory, 'deleteCashBag').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'rearrangeFlightSector').and.callThrough();
     spyOn(stationsService, 'getStationList').and.returnValue(getStationsDeferred.promise);
+    spyOn(dailyExchangeRatesService, 'getDailyExchangeById').and.returnValue(dailyExchangeRateDeferred.promise);
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
@@ -831,8 +841,8 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     });
   });
 
-  describe('Show modal', function () {
-    it('should populate title and row column names', function () {
+  describe('Show modals', function () {
+    it('epos modal should populate title and row column names', function () {
       scope.stockTotals = {
         totalRetail: 1,
         totalVirtual: 2,
@@ -844,21 +854,28 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
       var cashBag = { id: 2158 };
 
-      scope.showModal('Regular', cashBag);
+      scope.showEposModal('Regular', cashBag);
       expect(scope.modalMainTitle).toBe('Regular Product Revenue');
       expect(scope.modalTableHeader).toBe('Regular Product Name');
 
-      scope.showModal('Virtual', cashBag);
+      scope.showEposModal('Virtual', cashBag);
       expect(scope.modalMainTitle).toBe('Virtual Product Revenue');
       expect(scope.modalTableHeader).toBe('Virtual Product Name');
 
-      scope.showModal('Voucher', cashBag);
+      scope.showEposModal('Voucher', cashBag);
       expect(scope.modalMainTitle).toBe('Voucher Product Revenue');
       expect(scope.modalTableHeader).toBe('Voucher Product Name');
 
-      scope.showModal('Promotion', cashBag);
+      scope.showEposModal('Promotion', cashBag);
       expect(scope.modalMainTitle).toBe('ePOS Discount');
       expect(scope.modalTableHeader).toBe('Promotion Name');
+    });
+
+    it('cash revenue modal should calculate proper items', function () {
+      var cashBag = { id: 2158, cashRevenue: { amount: 10 } };
+      scope.showCashRevenueModal(cashBag);
+
+      expect(scope.cashRevenueModal).toEqual({ amount: 10 });
     });
   });
 
