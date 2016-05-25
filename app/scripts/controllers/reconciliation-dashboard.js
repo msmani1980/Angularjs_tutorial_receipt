@@ -486,6 +486,7 @@ angular.module('ts5App')
       $this.showLoadingModal('Force Reconcile action');
       $scope.instancesForActionExecution = [instance];
       $scope.actionToExecute = action;
+      
       var status = 9;
       var promises = [
         storeInstanceFactory.updateStoreInstanceStatusForceReconcile(instance.id, status)

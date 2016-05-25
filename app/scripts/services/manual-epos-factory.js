@@ -9,7 +9,8 @@
  */
 angular.module('ts5App')
   .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, 
-    dailyExchangeRatesService, storeInstanceService, itemsService, recordsService, companyDiscountService) {
+    dailyExchangeRatesService, storeInstanceService, itemsService, recordsService, 
+    companyDiscountService, manualEposPromotion) {
 
     var getPromotionsList = function () {
       var mockPromotionsList = [{
@@ -262,6 +263,23 @@ angular.module('ts5App')
       return companyDiscountService.getDiscountList(payload);
     }
 
+    function getManualEposPromotionList(cashBagId) {
+      console.log('cashBagId', cashBagId);
+      return manualEposPromotion.getManualEposPromotionList(cashBagId);
+    }
+
+    function updateManualEposPromotion(cashBagId, promotionId, payload) {
+      return manualEposPromotion.updateManualEposPromotion(cashBagId, promotionId, payload);
+    }
+
+    function deleteManualEposPromotion(promotionId) {
+      return manualEposPromotion.deleteCashBag(promotionId);
+    }
+
+    function createManualEposPromotion(payload) {
+      return manualEposPromotion.createManualEposPromotion(payload);
+    }
+
     return {
       getPromotionsList: getPromotionsList,
       getCurrencyList: getCurrencyList,
@@ -289,7 +307,11 @@ angular.module('ts5App')
       getCompanyDiscountsCoupon: getCompanyDiscountsCoupon,
       getCompanyDiscountsVoucher: getCompanyDiscountsVoucher,
       getCompanyDiscountsComp:getCompanyDiscountsComp,
-      getCompanyDiscountsFrequentFlyer:getCompanyDiscountsFrequentFlyer
+      getCompanyDiscountsFrequentFlyer:getCompanyDiscountsFrequentFlyer,
+      createManualEposPromotion: createManualEposPromotion,
+      deleteManualEposPromotion: deleteManualEposPromotion,
+      updateManualEposPromotion: updateManualEposPromotion,
+      getManualEposPromotionList: getManualEposPromotionList
 
     };
 

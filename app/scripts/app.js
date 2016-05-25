@@ -331,6 +331,9 @@ angular.module('ts5App', [
   }).when('/manual-epos-discount/:cashBagId', {
     templateUrl: 'views/manual-epos-discount.html',
     controller: 'ManualEposDiscountCtrl'
+  }).when('/manual-epos-promotion', {
+    templateUrl: 'views/manual-epos-promotion.html',
+    controller: 'ManualEposPromotionCtrl'
   }).otherwise({
     redirectTo: '/'
   });
