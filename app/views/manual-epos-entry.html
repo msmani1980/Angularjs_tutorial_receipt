@@ -15,14 +15,18 @@
     </div>
   </div>
 
-    <br>
+  <br>
+  <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by {{ verifiedInfo.verifiedBy }} on {{ verifiedInfo.verifiedTimestamp }}</div>
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12">
-            <p><span class="fa fa-check-circle"></span> <i>Indicates a verified section</i></p>
+            <p class="small"><span class="fa fa-check-circle"></span> <i>Indicates a verified section</i></p>
+            <p class="small"><b>*</b> <i>Indicates a section with unverified changes</i></p>
           </div>
         </div>
+        <div class="panel-divider"></div>
+        <br>
         <div class="row">
           <div class="col-xs-4">
             <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('cash')">
@@ -60,9 +64,13 @@
           </div>
         </div>
         <br>
-      </div>
-
-
+        <br>
+        <div class="panel-divider"></div>
+        <div class="row">
+          <div class="col-xs-12 text-right">
+            <button class="btn btn-success"><i class="fa fa-check"></i> Confirm All</button>
+          </div>
+        </div>
       </div>
     </div>
 
