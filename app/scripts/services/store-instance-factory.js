@@ -20,10 +20,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       return itemsService.getItemsList(payload, true);
     }
 
-    function getCatererStationList() {
-      return catererStationService.getCatererStationList({
-        limit: null
-      });
+    function getCatererStationList(optionalPayload) {
+      var payload = optionalPayload || {};
+      payload.limit = null;
+      return catererStationService.getCatererStationList(payload);
     }
 
     function getStation(catererStationId) {

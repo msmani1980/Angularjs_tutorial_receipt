@@ -124,6 +124,11 @@ describe('Controller: StockTakeCtrl', function() {
     // Scope globals
     describe('global scope functions and vars', function() {
       it('should have a cancel scope function', function() {
+        expect(scope.shouldHideItem).toBeDefined();
+        expect(Object.prototype.toString.call(scope.shouldHideItem)).toBe('[object Function]');
+      });
+
+      it('should have a cancel scope function', function() {
         expect(scope.cancel).toBeDefined();
         expect(Object.prototype.toString.call(scope.cancel)).toBe('[object Function]');
       });
@@ -201,6 +206,7 @@ describe('Controller: StockTakeCtrl', function() {
         scope.itemQuantities = [];
         scope.itemQuantities[1] = 10;
         scope.itemQuantities[2] = '';
+        scope.itemQuantities[3] = 0;
         scope.itemQuantities[4] = 11;
         scope.save(false);
       });
@@ -216,6 +222,9 @@ describe('Controller: StockTakeCtrl', function() {
           items: [{
             masterItemId: 1,
             quantity: 10
+          }, {
+            masterItemId: 3,
+            quantity: 0
           }, {
             masterItemId: 4,
             quantity: 11
@@ -565,6 +574,48 @@ describe('Controller: StockTakeCtrl', function() {
     it('should add an item to cateringStationItems', function() {
       expect(scope.cateringStationItems.length).toBe(5);
     });
+  });
+
+  describe('should hide items', function () {
+    beforeEach(inject(function($controller) {
+      routeParams = {
+        state: 'create',
+        id: 60
+      };
+      StockTakeCtrl = $controller('StockTakeCtrl', {
+        $scope: scope,
+        $routeParams: routeParams
+      });
+      scope.$digest();
+      scope.itemQuantities = {
+        0: 12,
+        1: 0,
+        2: '',
+        3: null
+      };
+    }));
+    it('should always return false when not in view or review state', function () {
+      var mockItem = { masterItemId: 3 };
+      scope.state = 'edit';
+      expect(scope.shouldHideItem(mockItem)).toEqual(false);
+    });
+
+    it('should return false for 0 values', function () {
+      var mockItem = { masterItemId: 1 };
+      scope.state = 'view';
+      expect(scope.shouldHideItem(mockItem)).toEqual(false);
+    });
+
+    it('should return true for undefined, empty, or null values', function () {
+      var emptyMockItem = { masterItemId: 2 };
+      var undefinedMockItem = { masterItemId: 4 };
+      var nullMockItem = { masterItemId: 3 };
+      scope.state = 'view';
+      expect(scope.shouldHideItem(emptyMockItem)).toEqual(true);
+      expect(scope.shouldHideItem(undefinedMockItem)).toEqual(true);
+      expect(scope.shouldHideItem(nullMockItem)).toEqual(true);
+    });
+
   });
 
 });

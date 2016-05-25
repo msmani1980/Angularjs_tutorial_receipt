@@ -13,16 +13,18 @@ describe('Factory: currencyFactory', function () {
     companyService,
     companyPreferencesService,
     companyExchangeRateService,
+    featureThresholdsService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _currencyFactory_, _currenciesService_, _dailyExchangeRatesService_, _companyService_, _companyPreferencesService_, _companyExchangeRateService_) {
+  beforeEach(inject(function ($rootScope, _currencyFactory_, _currenciesService_, _dailyExchangeRatesService_, _companyService_, _companyPreferencesService_, _companyExchangeRateService_, _featureThresholdsService_) {
 
     companyService = _companyService_;
     currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
     companyPreferencesService = _companyPreferencesService_;
     companyExchangeRateService = _companyExchangeRateService_;
+    featureThresholdsService = _featureThresholdsService_;
 
     spyOn(companyService, 'getCompany');
     spyOn(currenciesService, 'getCompanyGlobalCurrencies');
@@ -40,6 +42,7 @@ describe('Factory: currencyFactory', function () {
     spyOn(companyExchangeRateService, 'createCompanyExchangeRate');
     spyOn(companyExchangeRateService, 'updateCompanyExchangeRate');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRatesForCmp');
+    spyOn(featureThresholdsService, 'getThresholdList');
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -137,6 +140,14 @@ describe('Factory: currencyFactory', function () {
     it('should call companyExchangeRateService on updateCompanyExchangeRate', function () {
       currencyFactory.updateCompanyExchangeRate();
       expect(companyExchangeRateService.updateCompanyExchangeRate).toHaveBeenCalled();
+    });
+  });
+
+  describe('featureThresholdsService API', function () {
+    it('should call featureThresholdsService on getThresholdList', function () {
+      var payload = {fakeKey: 'fakeValue'};
+      currencyFactory.getExchangeRateThresholdList(payload);
+      expect(featureThresholdsService.getThresholdList).toHaveBeenCalledWith('DAILYEXCHANGERATE', payload);
     });
   });
 
