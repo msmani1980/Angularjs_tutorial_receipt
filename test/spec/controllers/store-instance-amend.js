@@ -435,6 +435,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       scope.$digest();
       expect(scope.canExecuteActions()).toBeTruthy();
 
+      scope.storeInstance = { statusId: 8 };
+      scope.$digest();
+      expect(scope.canExecuteActions()).toBeTruthy();
+
       scope.storeInstance = null;
       scope.$digest();
       expect(scope.canExecuteActions()).toBeFalsy();
