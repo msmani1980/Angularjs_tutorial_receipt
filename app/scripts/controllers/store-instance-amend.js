@@ -325,10 +325,11 @@ angular.module('ts5App')
     }
 
     $scope.canExecuteActions = function (cashBag) {
+      var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');
       var confirmedStatus = getStoreStatusByStatusStep('10');
 
-      var isStoreInstanceStatusValid = $scope.storeInstance && confirmedStatus && discrepanciesStatus;
+      var isStoreInstanceStatusValid = $scope.storeInstance && inboundedStatus && confirmedStatus && discrepanciesStatus;
       var isCashBagVerified = cashBag && cashBag.isVerified;
 
       if (!isStoreInstanceStatusValid || isCashBagVerified) {
@@ -337,7 +338,7 @@ angular.module('ts5App')
 
       var statusId = $scope.storeInstance.statusId;
 
-      return statusId === confirmedStatus.id || statusId === discrepanciesStatus.id;
+      return statusId === inboundedStatus.id || statusId === confirmedStatus.id || statusId === discrepanciesStatus.id;
     };
 
     $scope.getStatusNameById = function (statusId) {
