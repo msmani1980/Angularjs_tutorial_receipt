@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, 
+  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService,
     dailyExchangeRatesService, storeInstanceService, itemsService, recordsService, companyDiscountService) {
 
     var getPromotionsList = function () {
@@ -162,39 +162,57 @@ angular.module('ts5App')
     }
 
     function getCashBagCashList(cashBagId, payload) {
-      return cashBagService.getManualCashBagList('cash', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      return cashBagService.getManualCashBagCashList(payloadForRequest);
     }
 
     function createCashBagCash(cashBagId, payload) {
-      cashBagService.createManualCashBagRecord('cash', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      cashBagService.createManualCashBagCashRecord(payloadForRequest);
     }
 
     function updateCashBagCash(cashBagId, cashId, payload) {
-      cashBagService.updateManualCashBagRecord('cash', cashBagId, cashId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      cashBagService.updateManualCashBagCashRecord(cashId, payloadForRequest);
     }
 
     function getCashBagCreditList(cashBagId, payload) {
-      return cashBagService.getManualCashBagList('credit-cards', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      return cashBagService.getManualCashBagList('credit-cards', payloadForRequest);
     }
 
     function createCashBagCredit(cashBagId, payload) {
-      cashBagService.createManualCashBagRecord('credit-cards', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      cashBagService.createManualCashBagRecord('credit-cards', payloadForRequest);
     }
 
     function updateCashBagCredit(cashBagId, creditId, payload) {
-      cashBagService.updateManualCashBagRecord('credit-cards', cashBagId, creditId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      cashBagService.updateManualCashBagRecord('credit-cards', creditId, payload);
     }
 
     function getCashBagItemList(cashBagId, payload) {
-      return cashBagService.getManualCashBagList('items', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      return cashBagService.getManualCashBagList('items', payloadForRequest);
     }
 
     function createCashBagItem(cashBagId, payload) {
-      cashBagService.createManualCashBagRecord('items', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      cashBagService.createManualCashBagRecord('items', payloadForRequest);
     }
 
     function updateCashBagItem(cashBagId, itemId, payload) {
-      cashBagService.updateManualCashBagRecord('items', cashBagId, itemId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      cashBagService.updateManualCashBagRecord('items', itemId, payloadForRequest);
     }
 
     function getStoreInstance(storeInstanceId) {
@@ -223,15 +241,21 @@ angular.module('ts5App')
     }
 
     function getCashBagDiscountList(cashBagId, payload) {
-      return cashBagService.getManualCashBagList('discounts', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      return cashBagService.getManualCashBagList('discounts', payloadForRequest);
     }
 
     function createCashBagDiscount(cashBagId, payload) {
-      cashBagService.createManualCashBagRecord('discounts', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      cashBagService.createManualCashBagRecord('discounts', payloadForRequest);
     }
 
     function updateCashBagDiscount(cashBagId, discountId, payload) {
-      cashBagService.updateManualCashBagRecord('discounts', cashBagId, discountId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashBagId = cashBagId;
+      cashBagService.updateManualCashBagRecord('discounts', discountId, payloadForRequest);
     }
 
     function getCompanyDiscountsCoupon(datesPayload) {

@@ -27,8 +27,7 @@ describe('Service: manualEposFactory', function() {
     spyOn(manualEposFactory, 'getCompanyDiscountsVoucher');
     spyOn(manualEposFactory, 'getCompanyDiscountsComp');
     spyOn(manualEposFactory, 'getCompanyDiscountsFrequentFlyer');
-    spyOn(manualEposFactory, 'getCashBagDiscountList');
-    
+
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeById');
     spyOn(cashBagService, 'getCashBag');
@@ -38,6 +37,9 @@ describe('Service: manualEposFactory', function() {
     spyOn(cashBagService, 'getCashBagVerifications');
     spyOn(cashBagService, 'createManualCashBagRecord');
     spyOn(cashBagService, 'updateManualCashBagRecord');
+    spyOn(cashBagService, 'getManualCashBagCashList');
+    spyOn(cashBagService, 'createManualCashBagCashRecord');
+    spyOn(cashBagService, 'updateManualCashBagCashRecord');
     spyOn(storeInstanceService, 'getStoreInstance');
     spyOn(itemsService, 'getItemsList');
     spyOn(recordsService, 'getItemTypes');
@@ -99,13 +101,6 @@ describe('Service: manualEposFactory', function() {
     });
   });
 
-  describe('getCashBagDiscountList API call', function() {
-    it('should call getCashBagDiscountList', function() {
-      manualEposFactory.getCashBagDiscountList();
-      expect(manualEposFactory.getCashBagDiscountList).toHaveBeenCalled();
-    });
-  });
-
   describe('cash bag service API call', function () {
     it('should call getCashBag from cashBagService', function () {
       manualEposFactory.getCashBag();
@@ -114,68 +109,86 @@ describe('Service: manualEposFactory', function() {
 
     it('should call getCashBagCash from cashBagService', function () {
       var fakeCashBagId = 123;
-      var fakePayload = {};
-      manualEposFactory.getCashBagCashList(fakeCashBagId, fakePayload);
-      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('cash', fakeCashBagId, fakePayload);
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.getCashBagCashList(fakeCashBagId, {});
+      expect(cashBagService.getManualCashBagCashList).toHaveBeenCalledWith(expectedPayload);
     });
 
     it('should call createCashBagCash from cashBagService', function () {
       var fakeCashBagId = 123;
-      var fakePayload = {};
-      manualEposFactory.createCashBagCash(fakeCashBagId, fakePayload);
-      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('cash', fakeCashBagId, fakePayload);
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.createCashBagCash(fakeCashBagId, {});
+      expect(cashBagService.createManualCashBagCashRecord).toHaveBeenCalledWith(expectedPayload);
     });
 
     it('should call updateCashBagCash from cashBagService', function () {
       var fakeCashBagId = 123;
       var fakeCashBagCashId = 234;
-      var fakePayload = {};
-      manualEposFactory.updateCashBagCash(fakeCashBagId, fakeCashBagCashId, fakePayload);
-      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('cash', fakeCashBagId, fakeCashBagCashId, fakePayload);
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.updateCashBagCash(fakeCashBagId, fakeCashBagCashId, {});
+      expect(cashBagService.updateManualCashBagCashRecord).toHaveBeenCalledWith(fakeCashBagCashId, expectedPayload);
     });
 
     it('should call getCashBagCredit from cashBagService', function () {
       var fakeCashBagId = 123;
-      var fakePayload = {};
-      manualEposFactory.getCashBagCreditList(fakeCashBagId, fakePayload);
-      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('credit-cards', fakeCashBagId, fakePayload);
+      manualEposFactory.getCashBagCreditList(fakeCashBagId, {});
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('credit-cards', expectedPayload);
     });
 
     it('should call createCashBagCredit from cashBagService', function () {
       var fakeCashBagId = 123;
-      var fakePayload = {};
-      manualEposFactory.createCashBagCredit(fakeCashBagId, fakePayload);
-      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('credit-cards', fakeCashBagId, fakePayload);
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.createCashBagCredit(fakeCashBagId, {});
+      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('credit-cards', expectedPayload);
     });
 
     it('should call updateCashBagCredit from cashBagService', function () {
       var fakeCashBagId = 123;
-      var fakeCashBagCashId = 234;
-      var fakePayload = {};
-      manualEposFactory.updateCashBagCredit(fakeCashBagId, fakeCashBagCashId, fakePayload);
-      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('credit-cards', fakeCashBagId, fakeCashBagCashId, fakePayload);
+      var fakeRecordId = 234;
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.updateCashBagCredit(fakeCashBagId, fakeRecordId, {});
+      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('credit-cards', fakeRecordId, expectedPayload);
     });
 
     it('should call getCashBagItemList from cashBagService', function () {
       var fakeCashBagId = 123;
-      var fakePayload = {};
-      manualEposFactory.getCashBagItemList(fakeCashBagId, fakePayload);
-      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('items', fakeCashBagId, fakePayload);
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.getCashBagItemList(fakeCashBagId, {});
+      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('items', expectedPayload);
     });
 
     it('should call createCashBagItem from cashBagService', function () {
       var fakeCashBagId = 123;
-      var fakePayload = {};
-      manualEposFactory.createCashBagItem(fakeCashBagId, fakePayload);
-      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('items', fakeCashBagId, fakePayload);
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.createCashBagItem(fakeCashBagId, {});
+      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('items', expectedPayload);
     });
 
     it('should call updateCashBagItem from cashBagService', function () {
       var fakeCashBagId = 123;
       var fakeItemId = 234;
-      var fakePayload = {};
-      manualEposFactory.updateCashBagItem(fakeCashBagId, fakeItemId, fakePayload);
-      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('items', fakeCashBagId, fakeItemId, fakePayload);
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.updateCashBagItem(fakeCashBagId, fakeItemId, {});
+      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('items', fakeItemId, expectedPayload);
     });
 
     it('should call verifyCashBag from cashBagService', function () {
@@ -193,21 +206,34 @@ describe('Service: manualEposFactory', function() {
       expect(cashBagService.getCashBagVerifications).toHaveBeenCalled();
     });
 
+    it('should call getCashBagDiscountList from cashBagService', function () {
+      var fakeCashBagId = 123;
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.getCashBagDiscountList(fakeCashBagId, {});
+      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('discounts', expectedPayload);
+    });
+
     it('should call createCashBagDiscount from cashBagService', function () {
       var fakeCashBagId = 123;
-      var fakePayload = {};
-      manualEposFactory.createCashBagDiscount(fakeCashBagId, fakePayload);
-      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('discounts', fakeCashBagId, fakePayload);
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.createCashBagDiscount(fakeCashBagId, {});
+      expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('discounts', expectedPayload);
     });
 
     it('should call updateCashBagDiscount from cashBagService', function () {
       var fakeCashBagId = 123;
       var fakeCashBagDiscountId = 234;
-      var fakePayload = {};
-      manualEposFactory.updateCashBagDiscount(fakeCashBagId, fakeCashBagDiscountId, fakePayload);
-      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('discounts', fakeCashBagId, fakeCashBagDiscountId, fakePayload);
+      var expectedPayload = {
+        cashBagId: fakeCashBagId
+      };
+      manualEposFactory.updateCashBagDiscount(fakeCashBagId, fakeCashBagDiscountId, {});
+      expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('discounts', fakeCashBagDiscountId, expectedPayload);
     });
-    
+
   });
 
   describe('storeInstanceService API call', function () {
