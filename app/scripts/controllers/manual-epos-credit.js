@@ -59,8 +59,7 @@ angular.module('ts5App')
       return convertedAmount.toFixed(2);
     };
 
-    function setVerifiedData(verifiedDataFromAPI) {
-      $scope.isVerified = (!!verifiedDataFromAPI.creditCardVerifiedOn) || false;
+    function setVerifiedInfo(verifiedDataFromAPI) {
       if (!$scope.isVerified) {
         $scope.verifiedInfo = {};
         return;
@@ -71,6 +70,12 @@ angular.module('ts5App')
         verifiedBy: (verifiedDataFromAPI.creditCardVerifiedBy) ? verifiedDataFromAPI.creditCardVerifiedBy.firstName + ' ' + verifiedDataFromAPI.creditCardVerifiedBy.lastName : 'Unknown User',
         verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
       };
+    }
+
+    function setVerifiedData(verifiedDataFromAPI) {
+      $scope.isVerified = (!!verifiedDataFromAPI.creditCardVerifiedOn) || false;
+      $scope.isCashBagConfirmed = (!!verifiedDataFromAPI.verificationConfirmedOn) || false;
+      setVerifiedInfo(verifiedDataFromAPI);
     }
 
     $scope.verify = function (shouldCheckForm) {

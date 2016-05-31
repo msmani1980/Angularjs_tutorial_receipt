@@ -160,6 +160,14 @@ angular.module('ts5App')
       });
     };
 
+    function setVerifiedInfo(verifiedDataFromAPI, verifiedKeys) {
+      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI[verifiedKeys.verifiedOn]);
+      $scope.verifiedInfo = {
+        verifiedBy: (verifiedDataFromAPI[verifiedKeys.verifiedBy]) ? verifiedDataFromAPI[verifiedKeys.verifiedBy].firstName + ' ' + verifiedDataFromAPI[verifiedKeys.verifiedBy].lastName : 'Unknown User',
+        verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
+      };
+    }
+
     function setVerifiedData(verifiedDataFromAPI) {
       var verifiedKeys = {
         verifiedBy: ($routeParams.itemType.toLowerCase() === 'virtual') ? 'virtualItemVerifiedBy' : 'voucherItemsVerifiedBy',
@@ -167,11 +175,9 @@ angular.module('ts5App')
       };
 
       $scope.isVerified = (!!verifiedDataFromAPI[verifiedKeys.verifiedBy]);
-      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI[verifiedKeys.verifiedOn]);
-      $scope.verifiedInfo = {
-        verifiedBy: (verifiedDataFromAPI[verifiedKeys.verifiedBy]) ? verifiedDataFromAPI[verifiedKeys.verifiedBy].firstName + ' ' + verifiedDataFromAPI[verifiedKeys.verifiedBy].lastName : 'Unknown User',
-        verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
-      };
+      $scope.isCashBagConfirmed = (!!verifiedDataFromAPI.verificationConfirmedOn) || false;
+
+      setVerifiedInfo(verifiedDataFromAPI, verifiedKeys);
     }
 
     $scope.verify = function (shouldCheckForm) {
