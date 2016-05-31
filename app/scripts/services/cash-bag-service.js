@@ -36,6 +36,10 @@ angular.module('ts5App')
       type: '@type'
     };
 
+    var manualEposCashRequestParams = {
+      recordId: '@recordId'
+    };
+
     var actions = {
       getCashBag: {
         method: 'GET'
@@ -95,7 +99,7 @@ angular.module('ts5App')
     var verifyRequestResource = $resource(verifyRequestURL, requestParameters, actions);
     var unverifyRequestResource = $resource(unverifyRequestURL, requestParameters, actions);
     var cashBagVerificationsRequestResource = $resource(cashBagVerificationsRequestURL, requestParameters, actions);
-    var manualCashBagRequestResource = $resource(manualCashBagRequestURL, manualEposDataRequestParams, actions);
+    var manualCashBagRequestResource = $resource(manualCashBagRequestURL, manualEposCashRequestParams, actions);
     var manualEposDataRequestResource = $resource(manualEposDataRequestURL, manualEposDataRequestParams, actions);
 
     function getCashBagList(companyId, optionalPayload) {
@@ -182,28 +186,24 @@ angular.module('ts5App')
     };
 
     function getManualCashBagCashList(payload) {
-      manualEposDataRequestParams.recordId = '';
-      manualEposDataRequestParams.type = '';
+      manualEposCashRequestParams.recordId = '';
       var payloadForRequest = payload || {};
       return manualCashBagRequestResource.getManualCashBagList(payloadForRequest).$promise;
     }
 
     function getManualCashBagCashRecord(recordId) {
-      manualEposDataRequestParams.recordId = recordId;
-      manualEposDataRequestParams.type = '';
+      manualEposCashRequestParams.recordId = recordId;
       return manualCashBagRequestResource.getManualCashBagRecord().$promise;
     }
 
     function createManualCashBagCashRecord(payload) {
-      manualEposDataRequestParams.recordId = '';
-      manualEposDataRequestParams.type = '';
+      manualEposCashRequestParams.recordId = '';
       var payloadForRequest = payload || {};
       return manualCashBagRequestResource.createManualCashBagRecord(payloadForRequest).$promise;
     }
 
     function updateManualCashBagCashRecord(recordId, payload) {
-      manualEposDataRequestParams.recordId = recordId;
-      manualEposDataRequestParams.type = '';
+      manualEposCashRequestParams.recordId = recordId;
       var payloadForRequest = payload || {};
       return manualCashBagRequestResource.updateManualCashBagRecord(payloadForRequest).$promise;
     }

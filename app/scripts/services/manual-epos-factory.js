@@ -163,55 +163,54 @@ angular.module('ts5App')
 
     function getCashBagCashList(cashBagId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
+      payloadForRequest.cashbagId = cashBagId;
       return cashBagService.getManualCashBagCashList(payloadForRequest);
     }
 
     function createCashBagCash(cashBagId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
+      payloadForRequest.cashbagId = cashBagId;
       cashBagService.createManualCashBagCashRecord(payloadForRequest);
     }
 
     function updateCashBagCash(cashBagId, cashId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
       cashBagService.updateManualCashBagCashRecord(cashId, payloadForRequest);
     }
 
     function getCashBagCreditList(cashBagId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
+      payloadForRequest.cashbagId = cashBagId;
       return cashBagService.getManualCashBagList('credit-cards', payloadForRequest);
     }
 
     function createCashBagCredit(cashBagId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
+      payloadForRequest.cashbagId = cashBagId;
       cashBagService.createManualCashBagRecord('credit-cards', payloadForRequest);
     }
 
     function updateCashBagCredit(cashBagId, creditId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
-      cashBagService.updateManualCashBagRecord('credit-cards', creditId, payload);
+      payloadForRequest.cashbagId = cashBagId;
+      cashBagService.updateManualCashBagRecord('credit-cards', creditId, payloadForRequest);
     }
 
     function getCashBagItemList(cashBagId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
+      payloadForRequest.cashbagId = cashBagId;
       return cashBagService.getManualCashBagList('items', payloadForRequest);
     }
 
     function createCashBagItem(cashBagId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
+      payloadForRequest.cashbagId = cashBagId;
       cashBagService.createManualCashBagRecord('items', payloadForRequest);
     }
 
     function updateCashBagItem(cashBagId, itemId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
+      payloadForRequest.cashbagId = cashBagId;
       cashBagService.updateManualCashBagRecord('items', itemId, payloadForRequest);
     }
 
@@ -242,19 +241,19 @@ angular.module('ts5App')
 
     function getCashBagDiscountList(cashBagId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
+      payloadForRequest.cashbagId = cashBagId;
       return cashBagService.getManualCashBagList('discounts', payloadForRequest);
     }
 
     function createCashBagDiscount(cashBagId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
+      payloadForRequest.cashbagId = cashBagId;
       cashBagService.createManualCashBagRecord('discounts', payloadForRequest);
     }
 
     function updateCashBagDiscount(cashBagId, discountId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashBagId = cashBagId;
+      payloadForRequest.cashbagId = cashBagId;
       cashBagService.updateManualCashBagRecord('discounts', discountId, payloadForRequest);
     }
 
