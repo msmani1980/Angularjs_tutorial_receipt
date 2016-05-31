@@ -161,21 +161,23 @@ angular.module('ts5App')
       return cashBagService.getCashBag(cashBagId);
     }
 
+    function getAllManualCashList(payload) {
+      return cashBagService.getAllManualCashList(payload);
+    }
+
     function getCashBagCashList(cashBagId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashbagId = cashBagId;
-      return cashBagService.getManualCashBagCashList(payloadForRequest);
+      return cashBagService.getManualCashBagCashList(cashBagId, payloadForRequest);
     }
 
     function createCashBagCash(cashBagId, payload) {
       var payloadForRequest = payload || {};
-      payloadForRequest.cashbagId = cashBagId;
-      cashBagService.createManualCashBagCashRecord(payloadForRequest);
+      cashBagService.createManualCashBagCashRecord(cashBagId, payloadForRequest);
     }
 
     function updateCashBagCash(cashBagId, cashId, payload) {
       var payloadForRequest = payload || {};
-      cashBagService.updateManualCashBagCashRecord(cashId, payloadForRequest);
+      cashBagService.updateManualCashBagCashRecord(cashBagId, cashId, payloadForRequest);
     }
 
     function getCashBagCreditList(cashBagId, payload) {
@@ -295,6 +297,7 @@ angular.module('ts5App')
       verifyCashBag: verifyCashBag,
       unverifyCashBag: unverifyCashBag,
       checkCashBagVerification: checkCashBagVerification,
+      getAllManualCashList: getAllManualCashList,
       getCashBagCashList: getCashBagCashList,
       createCashBagCash: createCashBagCash,
       updateCashBagCash: updateCashBagCash,

@@ -18,7 +18,8 @@ angular.module('ts5App')
     var verifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/verify/:type';
     var unverifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/unverify/:type';
     var cashBagVerificationsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id';
-    var manualCashBagRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/cash/:recordId';
+    var manualCashBagRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:cashBagId/cash/:recordId';
+    var allManualCashBagsRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/cash/';
     var manualEposDataRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-:type/:recordId';
 
     var requestParameters = {
@@ -37,7 +38,8 @@ angular.module('ts5App')
     };
 
     var manualEposCashRequestParams = {
-      recordId: '@recordId'
+      recordId: '@recordId',
+      cashBagId: '@cashBagId'
     };
 
     var actions = {
@@ -99,6 +101,7 @@ angular.module('ts5App')
     var verifyRequestResource = $resource(verifyRequestURL, requestParameters, actions);
     var unverifyRequestResource = $resource(unverifyRequestURL, requestParameters, actions);
     var cashBagVerificationsRequestResource = $resource(cashBagVerificationsRequestURL, requestParameters, actions);
+    var allManualCashBagsRequestResource = $resource(allManualCashBagsRequestURL, {}, actions);
     var manualCashBagRequestResource = $resource(manualCashBagRequestURL, manualEposCashRequestParams, actions);
     var manualEposDataRequestResource = $resource(manualEposDataRequestURL, manualEposDataRequestParams, actions);
 
@@ -185,24 +188,33 @@ angular.module('ts5App')
       return unverifyRequestResource.unverifyCashBag(payload).$promise;
     };
 
-    function getManualCashBagCashList(payload) {
+    function getAllManualCashList (payload) {
+      var payloadForRequest = payload || {};
+      return allManualCashBagsRequestResource.getManualCashBagList(payloadForRequest).$promise;
+    }
+
+    function getManualCashBagCashList(cashBagId, payload) {
+      manualEposCashRequestParams.cashBagId = cashBagId;
       manualEposCashRequestParams.recordId = '';
       var payloadForRequest = payload || {};
       return manualCashBagRequestResource.getManualCashBagList(payloadForRequest).$promise;
     }
 
-    function getManualCashBagCashRecord(recordId) {
+    function getManualCashBagCashRecord(cashBagId, recordId) {
+      manualEposCashRequestParams.cashBagId = cashBagId;
       manualEposCashRequestParams.recordId = recordId;
       return manualCashBagRequestResource.getManualCashBagRecord().$promise;
     }
 
-    function createManualCashBagCashRecord(payload) {
+    function createManualCashBagCashRecord(cashBagId, payload) {
+      manualEposCashRequestParams.cashBagId = cashBagId;
       manualEposCashRequestParams.recordId = '';
       var payloadForRequest = payload || {};
       return manualCashBagRequestResource.createManualCashBagRecord(payloadForRequest).$promise;
     }
 
-    function updateManualCashBagCashRecord(recordId, payload) {
+    function updateManualCashBagCashRecord(cashBagId, recordId, payload) {
+      manualEposCashRequestParams.cashBagId = cashBagId;
       manualEposCashRequestParams.recordId = recordId;
       var payloadForRequest = payload || {};
       return manualCashBagRequestResource.updateManualCashBagRecord(payloadForRequest).$promise;
@@ -253,6 +265,7 @@ angular.module('ts5App')
       verifyCashBag: verifyCashBag,
       unverifyCashBag: unverifyCashBag,
       getCashBagVerifications: getCashBagVerifications,
+      getAllManualCashList: getAllManualCashList,
       getManualCashBagCashList: getManualCashBagCashList,
       getManualCashBagCashRecord: getManualCashBagCashRecord,
       createManualCashBagCashRecord: createManualCashBagCashRecord,

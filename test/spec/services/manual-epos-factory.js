@@ -40,6 +40,7 @@ describe('Service: manualEposFactory', function() {
     spyOn(cashBagService, 'getManualCashBagCashList');
     spyOn(cashBagService, 'createManualCashBagCashRecord');
     spyOn(cashBagService, 'updateManualCashBagCashRecord');
+    spyOn(cashBagService, 'getAllManualCashList');
     spyOn(storeInstanceService, 'getStoreInstance');
     spyOn(itemsService, 'getItemsList');
     spyOn(recordsService, 'getItemTypes');
@@ -107,39 +108,35 @@ describe('Service: manualEposFactory', function() {
       expect(cashBagService.getCashBag).toHaveBeenCalled();
     });
 
+    it('should call getAllManualCashList from cashBagService', function () {
+      manualEposFactory.getAllManualCashList();
+      expect(cashBagService.getAllManualCashList).toHaveBeenCalled();
+    });
+
     it('should call getCashBagCash from cashBagService', function () {
       var fakeCashBagId = 123;
-      var expectedPayload = {
-        cashBagId: fakeCashBagId
-      };
       manualEposFactory.getCashBagCashList(fakeCashBagId, {});
-      expect(cashBagService.getManualCashBagCashList).toHaveBeenCalledWith(expectedPayload);
+      expect(cashBagService.getManualCashBagCashList).toHaveBeenCalledWith(fakeCashBagId, {});
     });
 
     it('should call createCashBagCash from cashBagService', function () {
       var fakeCashBagId = 123;
-      var expectedPayload = {
-        cashBagId: fakeCashBagId
-      };
       manualEposFactory.createCashBagCash(fakeCashBagId, {});
-      expect(cashBagService.createManualCashBagCashRecord).toHaveBeenCalledWith(expectedPayload);
+      expect(cashBagService.createManualCashBagCashRecord).toHaveBeenCalledWith(fakeCashBagId, {});
     });
 
     it('should call updateCashBagCash from cashBagService', function () {
       var fakeCashBagId = 123;
       var fakeCashBagCashId = 234;
-      var expectedPayload = {
-        cashBagId: fakeCashBagId
-      };
       manualEposFactory.updateCashBagCash(fakeCashBagId, fakeCashBagCashId, {});
-      expect(cashBagService.updateManualCashBagCashRecord).toHaveBeenCalledWith(fakeCashBagCashId, expectedPayload);
+      expect(cashBagService.updateManualCashBagCashRecord).toHaveBeenCalledWith(fakeCashBagId, fakeCashBagCashId, {});
     });
 
     it('should call getCashBagCredit from cashBagService', function () {
       var fakeCashBagId = 123;
       manualEposFactory.getCashBagCreditList(fakeCashBagId, {});
       var expectedPayload = {
-        cashBagId: fakeCashBagId
+        cashbagId: fakeCashBagId
       };
       expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('credit-cards', expectedPayload);
     });
@@ -147,7 +144,7 @@ describe('Service: manualEposFactory', function() {
     it('should call createCashBagCredit from cashBagService', function () {
       var fakeCashBagId = 123;
       var expectedPayload = {
-        cashBagId: fakeCashBagId
+        cashbagId: fakeCashBagId
       };
       manualEposFactory.createCashBagCredit(fakeCashBagId, {});
       expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('credit-cards', expectedPayload);
@@ -157,7 +154,7 @@ describe('Service: manualEposFactory', function() {
       var fakeCashBagId = 123;
       var fakeRecordId = 234;
       var expectedPayload = {
-        cashBagId: fakeCashBagId
+        cashbagId: fakeCashBagId
       };
       manualEposFactory.updateCashBagCredit(fakeCashBagId, fakeRecordId, {});
       expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('credit-cards', fakeRecordId, expectedPayload);
@@ -166,7 +163,7 @@ describe('Service: manualEposFactory', function() {
     it('should call getCashBagItemList from cashBagService', function () {
       var fakeCashBagId = 123;
       var expectedPayload = {
-        cashBagId: fakeCashBagId
+        cashbagId: fakeCashBagId
       };
       manualEposFactory.getCashBagItemList(fakeCashBagId, {});
       expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('items', expectedPayload);
@@ -175,7 +172,7 @@ describe('Service: manualEposFactory', function() {
     it('should call createCashBagItem from cashBagService', function () {
       var fakeCashBagId = 123;
       var expectedPayload = {
-        cashBagId: fakeCashBagId
+        cashbagId: fakeCashBagId
       };
       manualEposFactory.createCashBagItem(fakeCashBagId, {});
       expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('items', expectedPayload);
@@ -185,7 +182,7 @@ describe('Service: manualEposFactory', function() {
       var fakeCashBagId = 123;
       var fakeItemId = 234;
       var expectedPayload = {
-        cashBagId: fakeCashBagId
+        cashbagId: fakeCashBagId
       };
       manualEposFactory.updateCashBagItem(fakeCashBagId, fakeItemId, {});
       expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('items', fakeItemId, expectedPayload);
@@ -209,7 +206,7 @@ describe('Service: manualEposFactory', function() {
     it('should call getCashBagDiscountList from cashBagService', function () {
       var fakeCashBagId = 123;
       var expectedPayload = {
-        cashBagId: fakeCashBagId
+        cashbagId: fakeCashBagId
       };
       manualEposFactory.getCashBagDiscountList(fakeCashBagId, {});
       expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('discounts', expectedPayload);
@@ -218,7 +215,7 @@ describe('Service: manualEposFactory', function() {
     it('should call createCashBagDiscount from cashBagService', function () {
       var fakeCashBagId = 123;
       var expectedPayload = {
-        cashBagId: fakeCashBagId
+        cashbagId: fakeCashBagId
       };
       manualEposFactory.createCashBagDiscount(fakeCashBagId, {});
       expect(cashBagService.createManualCashBagRecord).toHaveBeenCalledWith('discounts', expectedPayload);
@@ -228,7 +225,7 @@ describe('Service: manualEposFactory', function() {
       var fakeCashBagId = 123;
       var fakeCashBagDiscountId = 234;
       var expectedPayload = {
-        cashBagId: fakeCashBagId
+        cashbagId: fakeCashBagId
       };
       manualEposFactory.updateCashBagDiscount(fakeCashBagId, fakeCashBagDiscountId, {});
       expect(cashBagService.updateManualCashBagRecord).toHaveBeenCalledWith('discounts', fakeCashBagDiscountId, expectedPayload);
