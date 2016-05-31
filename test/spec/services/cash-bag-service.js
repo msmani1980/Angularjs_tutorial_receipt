@@ -452,7 +452,7 @@ describe('Service: cashBagService', function () {
       });
 
       it('should make GET call with record type', function () {
-        $httpBackend.expectGET(/cashbag\/cash/).respond(200, {});
+        $httpBackend.expectGET(/cashbags\/cash/).respond(200, {});
         cashBagService.getAllManualCashList({}).then(function (response) {
           expect(response).toBeDefined();
         });

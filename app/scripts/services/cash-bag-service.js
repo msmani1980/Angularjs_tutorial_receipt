@@ -19,7 +19,7 @@ angular.module('ts5App')
     var unverifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/unverify/:type';
     var cashBagVerificationsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id';
     var manualCashBagRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:cashBagId/cash/:recordId';
-    var allManualCashBagsRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/cash/';
+    var allManualCashBagsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/cash/';
     var manualEposDataRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-:type/:recordId';
 
     var requestParameters = {
