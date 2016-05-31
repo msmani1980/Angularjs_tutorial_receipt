@@ -20,6 +20,8 @@ describe('Controller: ManualEposEntryCtrl', function() {
   var cashBagVerificationDeferred;
   var cashBagVerificationJSON;
 
+  var verifyCashBagDeferred;
+
   var cashBagCashDeferred;
   var cashBagCashJSON;
 
@@ -65,6 +67,10 @@ describe('Controller: ManualEposEntryCtrl', function() {
     cashBagVerificationDeferred.resolve(cashBagVerificationJSON.response[0]);
     spyOn(manualEposFactory, 'checkCashBagVerification').and.returnValue(cashBagVerificationDeferred.promise);
 
+    verifyCashBagDeferred = $q.defer();
+    verifyCashBagDeferred.resolve({});
+    spyOn(manualEposFactory, 'verifyCashBag').and.returnValue(verifyCashBagDeferred.promise);
+
     cashBagCashDeferred = $q.defer();
     cashBagCashDeferred.resolve(cashBagCashJSON);
     spyOn(manualEposFactory, 'getCashBagCashList').and.returnValue(cashBagCashDeferred.promise);
@@ -108,6 +114,7 @@ describe('Controller: ManualEposEntryCtrl', function() {
       scope.$digest();
       expect(scope.isVerified).toBeDefined();
       expect(scope.isVerified.cash).toBeDefined();
+      expect(scope.isConfirmed).toBeDefined();
     });
 
     it('should get cash bag cash', function () {
@@ -209,6 +216,13 @@ describe('Controller: ManualEposEntryCtrl', function() {
         scope.isVerified = {'cash': false};
         scope.containsChanges = {'cash': false};
         expect(scope.shouldDisableForm('cash')).toEqual(true);
+      });
+    });
+
+    describe('confirm all forms', function () {
+      it('should confirm cash bag', function () {
+        scope.confirmAll();
+        expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CONFIRMED');
       });
     });
   });

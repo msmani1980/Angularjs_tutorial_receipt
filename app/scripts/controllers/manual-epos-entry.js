@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManualEposEntryCtrl', function ($scope, $q, manualEposFactory, $location, $routeParams, lodash) {
+  .controller('ManualEposEntryCtrl', function ($scope, $q, manualEposFactory, $location, $routeParams, lodash, dateUtility) {
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -16,6 +16,13 @@ angular.module('ts5App')
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+    }
+
+    function showErrors(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
+      $scope.disableAll = true;
     }
 
     $scope.navigateToForm = function (formName) {
@@ -34,6 +41,11 @@ angular.module('ts5App')
       return ($scope.isConfirmed) ? !$scope.isFormVerified(formName) : false;
     };
 
+    $scope.confirmAll = function () {
+      showLoadingModal('Confirming');
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CONFIRMED').then(init, showErrors);
+    };
+
     function areAllChangesVerified() {
       var formList = ['cash', 'credit', 'virtual', 'voucher', 'discount', 'promotion'];
       var unverifiedChangesExist = false;
@@ -43,6 +55,20 @@ angular.module('ts5App')
       });
 
       return unverifiedChangesExist;
+    }
+
+    function setVerificationData(dataFromAPI) {
+      if (!$scope.isConfirmed) {
+        return;
+      }
+
+      var dateAndTime = dateUtility.formatTimestampForApp(dataFromAPI.verificationConfirmedOn);
+      $scope.confirmedInfo = {
+        confirmedBy: (dataFromAPI.verificationConfirmedBy) ? dataFromAPI.verificationConfirmedBy.firstName + ' ' + dataFromAPI.verificationConfirmedBy.lastName : 'Unknown User',
+        confirmedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
+      };
+      console.log($scope.confirmedInfo, dateAndTime, dataFromAPI);
+
     }
 
     function setVerification(dataFromAPI) {
@@ -55,7 +81,8 @@ angular.module('ts5App')
         virtual: !!cashBagVerification.virtualItemVerifiedOn,
         voucher: !!cashBagVerification.voucherItemsVerifiedOn
       };
-      $scope.isConfirmed = !!cashBagVerification.confirmedOn;
+      $scope.isConfirmed = !!cashBagVerification.verificationConfirmedOn;
+      setVerificationData(dataFromAPI);
     }
 
     function groupItemList(itemListFromAPI, itemTypeList) {
