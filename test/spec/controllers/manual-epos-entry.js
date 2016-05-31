@@ -115,6 +115,7 @@ describe('Controller: ManualEposEntryCtrl', function() {
       expect(scope.isVerified).toBeDefined();
       expect(scope.isVerified.cash).toBeDefined();
       expect(scope.isConfirmed).toBeDefined();
+      expect(scope.confirmedInfo).toBeDefined();
     });
 
     it('should get cash bag cash', function () {

@@ -67,8 +67,6 @@ angular.module('ts5App')
         confirmedBy: (dataFromAPI.verificationConfirmedBy) ? dataFromAPI.verificationConfirmedBy.firstName + ' ' + dataFromAPI.verificationConfirmedBy.lastName : 'Unknown User',
         confirmedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
       };
-      console.log($scope.confirmedInfo, dateAndTime, dataFromAPI);
-
     }
 
     function setVerification(dataFromAPI) {
