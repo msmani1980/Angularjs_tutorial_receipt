@@ -157,12 +157,12 @@ angular.module('ts5App')
           return config.url.match(api);
         });
 
-        if (matches && $location.absUrl().indexOf('api=rest') <= 0) {
-          config.url = config.url.replace('/rsvr/api', '/api');
+        if (matches.length === 0 || $location.absUrl().indexOf('api=rest') > 0) {
+          config.url = config.url.replace('/api', '/rsvr/api');
         }
 
       }
-      
+
       return config || $q.when(config);
     }
 

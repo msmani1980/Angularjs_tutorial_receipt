@@ -80,7 +80,7 @@ module.exports = function (grunt) {
         constants: {
           ENV: {
             name: 'development',
-            apiUrl: 'https://ts5-dev.egatesoln.com/rsvr'
+            apiUrl: 'https://ts5-dev.egatesoln.com'
           }
         }
       },
