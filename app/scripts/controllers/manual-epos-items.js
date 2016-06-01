@@ -111,13 +111,12 @@ angular.module('ts5App')
         var coinExchangeRate = exchangeRateObject.coinExchangeRate;
         var splitAmounts = (amount.toString()).split('.');
         var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
-        var convertedCoinAmount = parseFloat(splitAmounts[1]) / coinExchangeRate;
+        var convertedCoinAmount = (!!splitAmounts[1]) ? parseFloat(splitAmounts[1]) / coinExchangeRate : 0;
         convertedAmount = convertedPaperAmount + (convertedCoinAmount / 100);
       } else {
         var exchangeRate = exchangeRateObject.bankExchangeRate;
         convertedAmount = parseFloat(amount) / exchangeRate;
       }
-
       return convertedAmount.toFixed(2);
     }
 
@@ -174,7 +173,7 @@ angular.module('ts5App')
         verifiedOn: ($routeParams.itemType.toLowerCase() === 'virtual') ? 'virtualItemVerifiedOn' : 'voucherItemsVerifiedOn'
       };
 
-      $scope.isVerified = (!!verifiedDataFromAPI[verifiedKeys.verifiedBy]);
+      $scope.isVerified = (!!verifiedDataFromAPI[verifiedKeys.verifiedOn]);
       $scope.isCashBagConfirmed = (!!verifiedDataFromAPI.verificationConfirmedOn) || false;
 
       setVerifiedInfo(verifiedDataFromAPI, verifiedKeys);
