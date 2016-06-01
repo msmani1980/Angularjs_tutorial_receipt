@@ -19,89 +19,96 @@ angular.module('ts5App')
     var notrsvrPages = [
         '/cash-bag-list',
         '/cash-bag-submission',
-        '/cash-bag/:state/[0-9]*',
+        '/cash-bag/*',
         '/category-list',
-        '/category/:action',
-        '/category/:id/:action',
+        '/category/*',
         '/change-password', 
         '/commission-data-table',
-        '/commission-data/:state/[0-9]*',
+        '/commission-data/*',
         '/company-create',
-        '/company-edit/:id',
+        '/company-edit/*',
         '/company-exchange-rate-edit',
         '/company-list',
         '/company-reason-code',
         '/company-reason-type-subscribe',
-        '/company-relationship-list/:id',
-        '/company-view/[0-9]*',
-        '/company/[0-9]*',
+        '/company-relationship-list/*',
+        '/company-view/*',
+        '/company/*',
         '/currency-edit',
         '/discounts',
-        '/discounts/create',
-        '/discounts/edit/[0-9]*',
+        '/discounts/*',
         '/employee-commission-list',
-        '/employee-commission/[a-z]*/[0-9]*',
-        '/employee-message/[a-z]*/[0-9]*',
+        '/employee-commission/*',
+        '/employee-message/*',
         '/employee-messages',
         '/exchange-rates',
         '/excise-duty-list',
         '/excise-duty-relationship-list',
         '/forgot-username-password', 
         '/global-reason-code',
-        '/item-copy/[0-9]*',
+        '/item-copy/*',
         '/item-create',
-        '/item-edit/[0-9]*',
+        '/item-edit/*',
         '/item-import',
         '/item-list',
-        '/item-view/[0-9]*',
-        '/lmp-delivery-note/:state/[0-9]*',
+        '/item-view/*',
+        '/lmp-delivery-note/*',
         '/lmp-locations-list',
         '/login',
         '/manage-goods-received',
         '/manual-ecs',
-        '/manual-epos-cash/:cashBagId',
-        '/manual-epos-credit/:cashBagId',
-        '/manual-epos-dashboard/:cashBagId',
-        '/manual-epos-discount/:cashBagId',
-        '/manual-epos-items/:itemType/:cashBagId',
+        '/manual-epos-cash/*',
+        '/manual-epos-credit/*',
+        '/manual-epos-dashboard/*',
+        '/manual-epos-discount/*',
+        '/manual-epos-items/*',
         '/manual-store-instance', 
         '/menu-list',
         '/menu-relationship-create',
-        '/menu-relationship-edit/[0-9]*',
+        '/menu-relationship-edit/*',
         '/menu-relationship-list',
-        '/menu-relationship-view/[0-9]*',
-        '/menu/:state/[0-9]*',
+        '/menu-relationship-view/*',
+        '/menu/:state/*',
         '/post-trip-data-list',
-        '/post-trip-data/:state/[0-9]*',
+        '/post-trip-data/*',
         '/promotions',
-        '/promotions/:state/[0-9]*',
-        '/reconciliation-dashboard',
-        '/reconciliation-discrepancy-detail/:storeInstanceId',
+        '/promotions/*',
         '/retail-company-exchange-rate-setup',
-        '/retail-company-exchange-rate-setup',
-        '/station-create', 
-        '/station-edit/[0-9]*', 
+        '/station-create',
+        '/station-edit/*',
         '/station-list',
-        '/station-view/[0-9]*',
+        '/station-view/*',
         '/stock-dashboard',
         '/stock-owner-item-create',
-        '/stock-owner-item-edit/[0-9]*',
+        '/stock-owner-item-edit/*',
         '/stock-owner-item-list',
-        '/stock-owner-item-view/[0-9]*',
+        '/stock-owner-item-view/*',
         '/stock-take-report',
-        '/stock-take-review', 
-        '/stock-take/:state/[0-9]*',
-        '/store-instance-amend/:storeInstanceId',
-        '/store-instance-create/:action/:storeId?',
+        '/stock-take-review',
+        '/stock-take/*',
+        '/store-instance-amend/*',
+        '/store-instance-create/*',
         '/store-instance-dashboard',
-        '/store-instance-inbound-seals/:action/:storeId',
-        '/store-instance-packing/:action/:storeId',
-        '/store-instance-seals/:action/:storeId',
-        '/store-instance-review/:action/:storeId?',
+        '/store-instance-inbound-seals/*',
+        '/store-instance-packing/*',
+        '/store-instance-seals/*',
+        '/store-instance-review/*',
         '/store-instance-step-1',
         '/store-number',
         '/tax-rates',
-        '/transactions'
+        '/transactions',
+        '/ember/#/schedules',
+        '/ember/#/menu-assignments',
+        '/ember/#/menu-rules',
+        '/ember/#/menu-rules/create',
+        '/ember/#/promotion-categories',
+        '/ember/#/promotion-catalogs',
+        '/ember/#/receipt-rules',
+        '/ember/#/receipt-rules/create'
+    ];
+
+    var legacyApis = [
+        '/rsvr/api/company-preferences'
     ];
 
     function responseError(response) {
@@ -114,20 +121,40 @@ angular.module('ts5App')
     }
 
     function request(config) {
+      var isNotTemplateRequest = config.url.match(/html$/) === null;
 
-      if (!config.url.match(/html$/)) {
-        var matches = Array.prototype.filter.call(notrsvrPages, function (page) {
-          return $location.absUrl().match(page);
-        });
-
-        if (matches && $location.absUrl().indexOf('api=rest') <= 0) {
-          config.url = config.url.replace('/rsvr/api', '/api');
-        }
-
+      if (isNotTemplateRequest && shouldReplaceUrl(config)) {
+        config.url = config.url.replace('/rsvr/api', '/api');
+        return config || $q.when(config);
       }
 
       return config || $q.when(config);
     }
+
+    var isPageWithLegacyAPIs = function() {
+      var pageMatches = Array.prototype.filter.call(notrsvrPages, function (page) {
+        return $location.absUrl().match(page);
+      });
+
+      return pageMatches.length > 0;
+    };
+
+    var isLegacyAPI = function(config) {
+      var apiMatches =  Array.prototype.filter.call(legacyApis, function (api) {
+        return config.url.match(api);
+      });
+
+      return apiMatches.length !== 0;
+    };
+
+    var shouldReplaceUrl = function(config) {
+      var hasRestParam = $location.absUrl().indexOf('api=rest') > 0;
+      if (!hasRestParam && isPageWithLegacyAPIs() || isLegacyAPI(config)) {
+        return true;
+      }
+
+      return false;
+    };
 
     return {
       responseError: responseError,
