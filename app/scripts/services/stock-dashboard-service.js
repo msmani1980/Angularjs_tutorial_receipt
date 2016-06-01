@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('stockDashboardService', function($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/stock-management/dashboard/';
+    var requestURL = ENV.apiUrl + '/rsvr/api/stock-management/dashboard/';
 
     var requestParameters = {};
 

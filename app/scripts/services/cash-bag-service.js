@@ -10,15 +10,15 @@
 angular.module('ts5App')
   .service('cashBagService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/cash-bags/:id/:submission';
-    var cashBagCurrencyRequestURL = ENV.apiUrl + '/api/cashbag-currencies/:currencyId';
-    var carrierInstancesRequestURL = ENV.apiUrl + '/api/cash-bags/:id/carrier-instances';
-    var reallocationRequestURL = ENV.apiUrl + '/api/cash-bags/:id/reallocate';
-    var mergeRequestURL = ENV.apiUrl + '/api/cash-bags/:id/merge';
-    var verifyRequestURL = ENV.apiUrl + '/api/cashbags/:id/verify/:type';
-    var unverifyRequestURL = ENV.apiUrl + '/api/cashbags/:id/unverify/:type';
-    var cashBagVerificationsRequestURL = ENV.apiUrl + '/api/cashbags/:id';
-    var manualCashBagRequestURL = ENV.apiUrl + '/api/cashbag/:id/:type/:recordId';
+    var requestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/:submission';
+    var cashBagCurrencyRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-currencies/:currencyId';
+    var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/carrier-instances';
+    var reallocationRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/reallocate';
+    var mergeRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/merge';
+    var verifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/verify/:type';
+    var unverifyRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id/unverify/:type';
+    var cashBagVerificationsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/:id';
+    var manualCashBagRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:id/:type/:recordId';
 
     var requestParameters = {
       id: '@id',

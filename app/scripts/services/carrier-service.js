@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').service('carrierService', function ($resource, ENV) {
 
-  var carrierRequestURL = ENV.apiUrl + '/api/companies/:id/carrier-types';
+  var carrierRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/carrier-types';
   var carrierNumberRequestURL = carrierRequestURL + '/:type/carrier-numbers/:carrierNumberId';
 
   var carrierActions = {

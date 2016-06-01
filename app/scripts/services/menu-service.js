@@ -45,7 +45,7 @@ angular.module('ts5App')
       return defaults.concat(transform);
     };
 
-    var requestURL = ENV.apiUrl + '/api/menus/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/menus/:id';
     var requestParameters = {
       id: '@id',
       limit: 50

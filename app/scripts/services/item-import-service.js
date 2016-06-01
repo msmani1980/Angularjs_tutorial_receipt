@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('itemImportService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/retail-items/import';
+    var requestURL = ENV.apiUrl + '/rsvr/api/retail-items/import';
 
     var requestParameters = {};
 

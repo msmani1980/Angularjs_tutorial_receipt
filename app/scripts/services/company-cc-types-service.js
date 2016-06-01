@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('companyCcTypesService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/companies/:companyId/company-credit-card-types';
+    var requestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/company-credit-card-types';
     var requestParameters = {};
 
     var actions = {

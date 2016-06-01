@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('unitsService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/units';
+    var requestURL = ENV.apiUrl + '/rsvr/api/units';
 
     var dimensionParameters = {
       unitType:'dimension'

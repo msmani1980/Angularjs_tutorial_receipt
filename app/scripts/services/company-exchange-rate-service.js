@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('companyExchangeRateService', function ($q, $resource, globalMenuService, ENV) {
 
-    var companyExchangeRatesURL = ENV.apiUrl + '/api/companies/:companyId/exchange-rates/:id';
+    var companyExchangeRatesURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/exchange-rates/:id';
 
     var requestParameters = {
       id: '@id',

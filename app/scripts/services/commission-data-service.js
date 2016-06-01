@@ -11,7 +11,7 @@
 angular.module('ts5App')
   .service('commissionDataService', function ($resource, $http, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/employee-commissions-payable/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/employee-commissions-payable/:id';
     var requestParameters = {
       id: '@id'
     };

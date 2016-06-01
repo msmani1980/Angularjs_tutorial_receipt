@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('storeInstanceValidationService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/validate';
+    var requestURL = ENV.apiUrl + '/rsvr/api/dispatch/store-instances/validate';
     var requestParameters = { };
     var actions = {
       validateStoreInstance: {
