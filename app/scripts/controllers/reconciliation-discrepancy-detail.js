@@ -278,7 +278,8 @@ angular.module('ts5App')
       var itemTypeToManualTypeMap = {
         Regular: 'cash-credit',
         Virtual: 'virtual',
-        Voucher: 'voucher'
+        Voucher: 'voucher',
+        Promotion: 'promotion'
       };
 
       var dataType = itemTypeToManualTypeMap[itemType];
@@ -291,7 +292,6 @@ angular.module('ts5App')
       return total;
     }
 
-    // TODO
     function getTotalsFor(stockTotals, itemTypeName) {
       var stockItem = $filter('filter')(stockTotals, {
         itemTypeName: itemTypeName
@@ -318,6 +318,8 @@ angular.module('ts5App')
       angular.forEach(promotionTotals, function (promotionItem) {
         total += promotionItem.convertedAmount;
       });
+
+      total += getManualDataTotals('Promotion');
 
       return {
         parsedLMP: total,
@@ -418,6 +420,41 @@ angular.module('ts5App')
       });
     }
 
+    // TODO: resolve item names
+    function getManualItemDataSet(itemTypeName) {
+      var manualItemArray = [];
+      var dataType = itemTypeName.toLowerCase();
+      angular.forEach($this.manualData[dataType], function (manualItem) {
+        if (manualItem.convertedAmount > 0) {
+          var newItem = {
+            eposQuantity: manualItem.quantity,
+            eposTotal: manualItem.convertedAmount.toFixed(2),
+            itemName: manualItem.itemMasterId,
+            itemTypeName: itemTypeName
+          };
+          manualItemArray.push(newItem);
+        }
+      });
+
+      return manualItemArray;
+    }
+
+    function getManualItemData() {
+      var itemTypes = [
+        'Virtual',
+        'Voucher',
+        'Promotions'
+      ];
+
+      var allManualItemsArray = [];
+      angular.forEach(itemTypes, function (itemType) {
+        allManualItemsArray = allManualItemsArray.concat(getManualItemDataSet(itemType));
+      });
+
+      return allManualItemsArray;
+    }
+
+    // TODO: add virtual / voucher items / promotions to stockItems
     function setNetTotals(stockData) {
       var stockTotals = angular.copy(stockData);
       var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
@@ -431,6 +468,8 @@ angular.module('ts5App')
       };
 
       var stockItems = $this.stockTotals.concat($this.promotionTotals);
+      stockItems = stockItems.concat(getManualItemData());
+
       $scope.stockTotals = angular.extend(stockTotals, {
         totalNet: netTotals
       }, {
