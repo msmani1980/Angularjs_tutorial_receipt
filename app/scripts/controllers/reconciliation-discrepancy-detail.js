@@ -277,12 +277,12 @@ angular.module('ts5App')
     function getManualDataTotals(itemType) {
       var itemTypeToManualTypeMap = {
         Regular: 'cash-credit',
-        Virtual: 'Virtual',
-        Voucher: 'Voucher'
+        Virtual: 'virtual',
+        Voucher: 'voucher'
       };
 
       var dataType = itemTypeToManualTypeMap[itemType];
-      var arrayToSum = (dataType === 'cash-credit') ? angular.extend($this.manualData.cash, $this.manualData.credit) : $this.manualData[dataType];
+      var arrayToSum = (dataType === 'cash-credit') ? $this.manualData.cash.concat($this.manualData.credit) : $this.manualData[dataType];
       var total = 0;
       angular.forEach(arrayToSum, function (manualDataEntry) {
         total += manualDataEntry.convertedAmount;
@@ -670,6 +670,7 @@ angular.module('ts5App')
         }
       });
 
+      return manualDataSet;
     }
 
     function setManualData(responseCollectionFromAPI) {
@@ -680,17 +681,14 @@ angular.module('ts5App')
         }
       });
 
-      // TODO: ccash is picking up credit!! :(
-      
       $this.manualData = {
         cash: setManualDataSet(angular.copy(responseCollectionFromAPI[3].response), manualDataToInclude),
         credit: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude),
         virtual: setManualDataSet(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude, 'Virtual'),
         voucher: setManualDataSet(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude, 'Voucher'),
-        promotion: setManualDataSet(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude),
-        discount: setManualDataSet(angular.copy(responseCollectionFromAPI[7].response), manualDataToInclude)
+        promotion: setManualDataSet(angular.copy(responseCollectionFromAPI[7].response), manualDataToInclude),
+        discount: setManualDataSet(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude)
       };
-      console.log($this.manualData.cash);
     }
 
     function initDependenciesSuccess(responseCollectionFromAPI) {
