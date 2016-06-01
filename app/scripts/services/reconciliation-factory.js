@@ -155,8 +155,12 @@ angular.module('ts5App')
         return cashBagService.getCashBagVerifications(payload);
       };
 
-      var getCashBagManualData = function (cashBagId, manualDataType) {
-        return cashBagService.getManualCashBagList(manualDataType, cashBagId, {});
+      var getCashBagManualData = function (manualDataType, payload) {
+        if (manualDataType === 'cash') {
+          return cashBagService.getAllManualCashList(payload);
+        }
+
+        return cashBagService.getManualCashBagList(manualDataType, payload);
       };
 
       return {

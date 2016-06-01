@@ -117,6 +117,7 @@ angular.module('ts5App')
         var exchangeRate = exchangeRateObject.bankExchangeRate;
         convertedAmount = parseFloat(amount) / exchangeRate;
       }
+
       return convertedAmount.toFixed(2);
     }
 
