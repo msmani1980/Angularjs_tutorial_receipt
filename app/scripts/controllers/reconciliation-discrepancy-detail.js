@@ -454,7 +454,6 @@ angular.module('ts5App')
       return allManualItemsArray;
     }
 
-    // TODO: add virtual / voucher items / promotions to stockItems
     function setNetTotals(stockData) {
       var stockTotals = angular.copy(stockData);
       var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
@@ -515,6 +514,10 @@ angular.module('ts5App')
 
       angular.forEach(chDiscount, function (discount) {
         total += makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
+      });
+
+      angular.forEach($this.manualData.discount, function (discount) {
+        total += discount.convertedAmount;
       });
 
       return total;
@@ -579,7 +582,6 @@ angular.module('ts5App')
         }).name;
       });
 
-      // TODO: add cash/credit/virtual/voucher/promotion
       var totalItems = getTotalsFor($this.stockTotals, 'Regular');
       var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
       var totalVoucher = getTotalsFor($this.stockTotals, 'Voucher');
