@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('carrierInstancesService', function ($resource, ENV) {
 
-    var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/carrier-instances/:id';
+    var carrierInstancesRequestURL = ENV.apiUrl + '/api/carrier-instances/:id';
     var requestParameters = {
       id: '@id'
     };

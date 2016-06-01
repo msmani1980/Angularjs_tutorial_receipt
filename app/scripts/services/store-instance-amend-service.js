@@ -9,9 +9,9 @@
  */
 angular.module('ts5App')
   .service('storeInstanceAmendService', function (ENV, $resource) {
-    var movePostTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/to/:toCashBagId/posttrip/:postTripId';
-    var postTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/posttrip/:postTripId';
-    var editPostTripScheduleRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/edit/:postTripId/schedule/:scheduleNumber';
+    var movePostTripRequestURL = ENV.apiUrl + '/api/cash-bags/:cashBagId/to/:toCashBagId/posttrip/:postTripId';
+    var postTripRequestURL = ENV.apiUrl + '/api/cash-bags/:cashBagId/posttrip/:postTripId';
+    var editPostTripScheduleRequestURL = ENV.apiUrl + '/api/cash-bags/:cashBagId/edit/:postTripId/schedule/:scheduleNumber';
 
     var movePostTripRequestParameters = {
       cashBagId: '@cashBagId',

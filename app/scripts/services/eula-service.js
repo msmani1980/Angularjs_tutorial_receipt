@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('eulaService', function($resource, ENV, $rootScope) {
 
-    var requestURL = ENV.apiUrl + '/rsvr/api/eula/:version';
+    var requestURL = ENV.apiUrl + '/api/eula/:version';
 
     var requestParameters = {
       version: '@version'

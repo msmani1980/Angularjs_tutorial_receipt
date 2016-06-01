@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('exciseDutyService', function ($resource, ENV) {
 
-    var exciseDutyRequestURL = ENV.apiUrl + '/rsvr/api/excise-duty/:id';
+    var exciseDutyRequestURL = ENV.apiUrl + '/api/excise-duty/:id';
     var requestParameters = {
       id: '@id'
     };
