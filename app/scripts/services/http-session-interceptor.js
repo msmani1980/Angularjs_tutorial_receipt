@@ -121,17 +121,6 @@ angular.module('ts5App')
       return $q.reject(response);
     }
 
-    function request(config) {
-      var isNotTemplateRequest = config.url.match(/html$/) === null;
-
-      if (isNotTemplateRequest && shouldReplaceUrl(config)) {
-        config.url = config.url.replace('/rsvr/api', '/api');
-        return config || $q.when(config);
-      }
-
-      return config || $q.when(config);
-    }
-
     var isPageWithLegacyAPIs = function() {
       return isMatching($location.absUrl(), notrsvrPages);
     };
@@ -160,6 +149,16 @@ angular.module('ts5App')
 
       return false;
     };
+
+    function request(config) {
+      var isNotTemplateRequest = config.url.match(/html$/) === null;
+
+      if (isNotTemplateRequest && shouldReplaceUrl(config)) {
+        config.url = config.url.replace('/rsvr/api', '/api');
+      }
+
+      return config || $q.when(config);
+    }
 
     return {
       responseError: responseError,
