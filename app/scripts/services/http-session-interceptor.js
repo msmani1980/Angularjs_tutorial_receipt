@@ -41,8 +41,6 @@ angular.module('ts5App')
         '/employee-message/*',
         '/employee-messages/*',
         '/exchange-rates/*',
-        '/excise-duty-list/*',
-        '/excise-duty-relationship-list/*',
         '/forgot-username-password/*', 
         '/global-reason-code/*',
         '/item-copy/*',
@@ -55,7 +53,6 @@ angular.module('ts5App')
         '/lmp-locations-list/*',
         '/login',
         '/manage-goods-received/*',
-        '/manual-ecs/*',
         '/manual-epos-cash/*',
         '/manual-epos-credit/*',
         '/manual-epos-dashboard/*',
@@ -84,7 +81,6 @@ angular.module('ts5App')
         '/stock-take-report/*',
         '/stock-take-review/*',
         '/stock-take/*',
-        '/store-instance-amend/*',
         '/store-instance-create/*',
         '/store-instance-dashboard/*',
         '/store-instance-inbound-seals/*',
@@ -106,11 +102,19 @@ angular.module('ts5App')
     var legacyApis = [
         '/rsvr/api/company-preferences',
         '/rsvr/api/companies/*/relationships',
-        'rsvr/api/records/store-status'
+        'rsvr/api/records/store-status',
+        '/rsvr/api/caterer-stations',
+        '/rsvr/api/companies/[0-9]*',
+        '/rsvr/api/retail-items/master/*',
+        '/rsvr/api/cash-bags/[0-9]*',
+        '/rsvr/api/daily-exchange-rates/[0-9]*',
+        '/rsvr/api/units'
     ];
 
     var onlyRsvrApis = [
-      '/rsvr/api/dailyexchangerate'
+      '/rsvr/api/dailyexchangerate',
+      '/rsvr/api/cash-bags/[0-9]*/posttrip',
+      '/rsvr/api/companies/[0-9]*/stations'
     ];
 
     function responseError(response) {
@@ -144,7 +148,16 @@ angular.module('ts5App')
 
     var shouldReplaceUrl = function(config) {
       var hasRestParam = $location.absUrl().indexOf('api=rest') > 0;
-      if (!hasRestParam && !isOnlyRsvrAPI(config.url) && isPageWithLegacyAPIs() || isLegacyAPI(config)) {
+      
+      if (hasRestParam) {
+        return false;
+      }
+
+      if (isOnlyRsvrAPI(config.url)) {
+        return false;
+      }
+      
+      if (isPageWithLegacyAPIs() || isLegacyAPI(config)) {
         return true;
       }
 
