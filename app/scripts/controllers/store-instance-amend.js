@@ -279,6 +279,12 @@ angular.module('ts5App')
       angular.element('#cashRevenueModal').modal('show');
     };
 
+    $scope.showCreditRevenueModal = function (cashBag) {
+      $scope.creditRevenueModal = cashBag.creditRevenue;
+
+      angular.element('#creditRevenueModal').modal('show');
+    };
+
     function getStationById (stationId) {
       return lodash.find($scope.stations, 'stationId', stationId);
     }
@@ -345,6 +351,15 @@ angular.module('ts5App')
       var status = lodash.find($scope.storeStatusList, 'id', statusId);
 
       return status.statusName;
+    };
+
+    $scope.sumGroupedCreditAmounts = function (amounts) {
+      var total = 0;
+      amounts.map(function(amount) {
+        total += amount.amount;
+      });
+
+      return $scope.formatAsCurrency(total);
     };
 
     function normalizeMergeSearchResults (dataFromAPI) {
@@ -701,7 +716,12 @@ angular.module('ts5App')
         var amount = (creditCard.bankAmountFinal || 0) + (creditCard.coinAmountManualCc || 0) + (creditCard.paperAmountManualCc || 0);
 
         if (creditCard.cashbagId) {
-          getCashBagById(creditCard.cashbagId).creditRevenue.amount += amount;
+          var cashBag = getCashBagById(creditCard.cashbagId);
+          cashBag.creditRevenue.amount += amount;
+          cashBag.creditRevenue.items.push({
+            creditCard: creditCard.cardType,
+            amount: amount
+          });
         }
 
         cashRevenue.total += amount;
@@ -1058,7 +1078,7 @@ angular.module('ts5App')
           paperAmount = parseFloat(currency.paperAmountManual);
           coinAmount = parseFloat(currency.coinAmountManual);
           totalAmount = paperAmount + coinAmount;
-          realExchangeRate = exchangeRate.paperExchangeRate + '/' + exchangeRate.coinExchangeRate;
+          realExchangeRate = exchangeRate.paperExchangeRate;
         }
 
         normalizedCashBag.cashRevenue.items.push({
@@ -1068,7 +1088,6 @@ angular.module('ts5App')
           baseCurrencyAmount: getBaseCurrencyAmount(bankAmount, paperAmount, coinAmount, exchangeRate)
         });
       });
-
     }
 
     function setCashBagDetails(normalizedCashBag, cashBagFromAPI) {
