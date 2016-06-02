@@ -76,7 +76,7 @@ angular.module('ts5App')
         }
       });
 
-      if ($this.meta.count === 1 && $scope.search.cashBagNumber) {
+      if ($this.meta.count === 1 && $scope.search.cashBagNumber && $scope.isCashBagEditable($scope.cashBagList[0]) && $scope.cashBagList[0].storeInstanceId !== null) {
         $localStorage.isEditFromList = true;
         socketIO.emit('echo-cashBag', {
           cashBag: $scope.cashBagList[0]
@@ -258,6 +258,7 @@ angular.module('ts5App')
       var buttonSelector = sprintf('.edit-cash-bag-%s-btn', cashBag.id);
       if (cashBag.storeInstanceId === null) {
         $scope.popupFromEdit = true;
+        $scope.cashBagToEdit = cashBag.id;
         showStoreInstancePopup(buttonSelector);
         return;
       }
@@ -358,7 +359,7 @@ angular.module('ts5App')
       }
 
       angular.element('#addCashBagModal').removeClass('fade').modal('hide');
-      var nextPath = ($scope.popupFromEdit) ? 'cash-bag/edit' : 'cash-bag/create';
+      var nextPath = ($scope.popupFromEdit) ? 'cash-bag/edit/' + $scope.cashBagToEdit : 'cash-bag/create';
       $location.path(nextPath).search({
         storeInstanceId: storeInstance.id
       });

@@ -176,7 +176,7 @@ describe('Controller: ManualEposDiscountCtrl', function () {
 
     it('should get a list of currencies', function () {
       var formattedScheduleDate = dateUtility.formatDate(scope.storeInstance.scheduleDate, 'YYYY-MM-DD', 'YYYYMMDD');
-      var expectedPayload = { startDate: formattedScheduleDate, endDate: formattedScheduleDate };
+      var expectedPayload = { startDate: formattedScheduleDate, endDate: formattedScheduleDate, isOperatedCurrency: true };
       expect(manualEposFactory.getCurrencyList).toHaveBeenCalledWith(expectedPayload);
     });
 

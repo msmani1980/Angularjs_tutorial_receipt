@@ -785,6 +785,9 @@
                   <button class="btn btn-primary" title="Edit Cash Bag" ng-click="goToCashBagEdit(cashBag)" ng-show="canExecuteActions(cashBag)">
                     <i class="fa fa-pencil active"></i>
                   </button>
+                  <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual">
+                    <i class="fa fa-plus-circle active"></i>
+                  </a>
                   <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag) && canExecuteActions(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
                     <i class="fa fa-trash active"></i>
                   </button>

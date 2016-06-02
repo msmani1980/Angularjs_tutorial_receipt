@@ -477,9 +477,9 @@ angular.module('ts5App')
       $scope.actionToExecute = 'Confirmed';
       var status = 10;
       var pr = [
-        storeInstanceFactory.updateStoreInstanceStatus(instance.id, status, true)
+        storeInstanceFactory.updateStoreInstanceStatus(instance.id, status, false)
       ];
-      $q.all(pr).then($this.handleActionExecutionSuccess, $this.handForceReconciliationleResponseError);
+      $q.all(pr).then($this.handleActionExecutionSuccess, $this.handleActionExecutionSuccess);
     }
     
     $scope.forceReconcile = function(instance, action) {
