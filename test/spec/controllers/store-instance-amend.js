@@ -455,6 +455,14 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(scope.getStatusNameById(4)).toBe('Discrepancies');
     });
 
+    it('sumGroupedCreditAmounts should sum amounts from the credit revenue array', function () {
+      var amounts = [ {amount: 1.1}, {amount: 2.2} ];
+
+      var result = scope.sumGroupedCreditAmounts(amounts);
+
+      expect(result).toBe('3.30');
+    });
+
     it('getOrNA should return value or N/A if value is not defined or null', function () {
       expect(scope.getOrNA(null)).toEqual('N/A');
       expect(scope.getOrNA(undefined)).toEqual('N/A');
@@ -880,6 +888,13 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       scope.showCashRevenueModal(cashBag);
 
       expect(scope.cashRevenueModal).toEqual({ amount: 10 });
+    });
+
+    it('card revenue modal should assin model', function () {
+      var cashBag = { id: 2158, creditRevenue: { amount: 10 } };
+      scope.showCreditRevenueModal(cashBag);
+
+      expect(scope.creditRevenueModal).toEqual({ amount: 10 });
     });
   });
 
