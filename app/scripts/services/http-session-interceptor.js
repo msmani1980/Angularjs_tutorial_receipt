@@ -151,7 +151,7 @@ angular.module('ts5App')
       var hasRestParam = $location.absUrl().indexOf('api=rest') > 0;
       
       if (hasRestParam) {
-        return true;
+        return false;
       }
 
       if (isOnlyRsvrAPI(config.url)) {
