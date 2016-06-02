@@ -41,7 +41,6 @@ angular.module('ts5App')
         '/employee-message/*',
         '/employee-messages/*',
         '/exchange-rates/*',
-        '/excise-duty-relationship-list/*',
         '/forgot-username-password/*', 
         '/global-reason-code/*',
         '/item-copy/*',
