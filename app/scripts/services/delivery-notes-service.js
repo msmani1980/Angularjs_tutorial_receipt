@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('deliveryNotesService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/stock-management/delivery-notes/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/stock-management/delivery-notes/:id';
 
     var requestParameters = {
       id: '@id'

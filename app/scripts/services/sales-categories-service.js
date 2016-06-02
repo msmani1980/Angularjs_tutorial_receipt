@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('salesCategoriesService', function ($resource, ENV, globalMenuService) {
 
-    var requestURL = ENV.apiUrl + '/api/companies/:companyId/sales-categories/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/sales-categories/:id';
     var requestParameters = {
       id: '@id'
     };

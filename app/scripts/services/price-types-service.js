@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('priceTypesService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/records/price-types/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/records/price-types/:id';
     var requestParameters = {
       id: '@id'
     };

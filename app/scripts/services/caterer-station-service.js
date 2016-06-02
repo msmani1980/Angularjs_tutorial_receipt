@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('catererStationService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/caterer-stations/:id/:menuItems';
+    var requestURL = ENV.apiUrl + '/rsvr/api/caterer-stations/:id/:menuItems';
     var requestParameters = {
       id: '@id',
       menuItems:'@menuItems'

@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('cashBagService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/cash-bags/:id/:submission';
+    var requestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/:submission';
     var cashBagCurrencyRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-currencies/:currencyId';
     var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/carrier-instances';
     var reallocationRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/reallocate';

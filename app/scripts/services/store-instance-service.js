@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App').service('storeInstanceService', function ($resource, ENV) {
-  var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/:api/:itemIdOrBulk';
+  var requestURL = ENV.apiUrl + '/rsvr/api/dispatch/store-instances/:id/:api/:itemIdOrBulk';
   var calculatedInboundsRequestURL = ENV.apiUrl + '/rsvr/api/store-instances/:id/calculated-inbounds';
 
   var requestParameters = {

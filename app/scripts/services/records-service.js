@@ -11,7 +11,7 @@
 angular.module('ts5App')
   .service('recordsService', function ($resource, $http, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/records/:api';
+    var requestURL = ENV.apiUrl + '/rsvr/api/records/:api';
     var requestParameters = {
       api: '@api'
     };

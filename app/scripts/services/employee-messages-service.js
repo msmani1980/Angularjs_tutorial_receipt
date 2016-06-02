@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('employeeMessagesService', function ($resource, ENV) {
 
-    var employeeMessagesRequestURL = ENV.apiUrl + '/api/employee-messages/:id';
+    var employeeMessagesRequestURL = ENV.apiUrl + '/rsvr/api/employee-messages/:id';
     var requestParameters = {
       id: '@id'
     };
