@@ -121,6 +121,14 @@ angular.module('ts5App')
       return $q.reject(response);
     }
 
+    var isMatching = function(url, list) {
+      var matches = Array.prototype.filter.call(list, function (item) {
+        return url.match(item);
+      });
+
+      return matches.length !== 0;
+    };
+
     var isPageWithLegacyAPIs = function() {
       return isMatching($location.absUrl(), notrsvrPages);
     };
@@ -131,14 +139,6 @@ angular.module('ts5App')
 
     var isOnlyRsvrAPI = function(url) {
       return isMatching(url, onlyRsvrApis);
-    };
-
-    var isMatching = function(url, list) {
-      var matches = Array.prototype.filter.call(list, function (item) {
-        return url.match(item);
-      });
-
-      return matches.length !== 0;
     };
 
     var shouldReplaceUrl = function(config) {
