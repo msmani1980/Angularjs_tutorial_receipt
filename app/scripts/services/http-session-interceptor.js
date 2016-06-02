@@ -105,7 +105,8 @@ angular.module('ts5App')
 
     var legacyApis = [
         '/rsvr/api/company-preferences',
-        '/rsvr/api/companies/*/relationships'
+        '/rsvr/api/companies/*/relationships',
+        'rsvr/api/records/store-status'
     ];
 
     var onlyRsvrApis = [
