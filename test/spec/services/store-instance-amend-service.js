@@ -26,12 +26,12 @@ describe('Service: storeInstanceAmendService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenPUT(/api\/cash-bags\/1\/to\/2\/posttrip\/3/).respond({ done: true });
+        $httpBackend.whenPUT(/rsvr\/api\/cash-bags\/1\/to\/2\/posttrip\/3/).respond({ done: true });
       });
 
       it('should PUT data to cash bag API', function () {
         storeInstanceAmendService.movePostTrip(1, 2, 3);
-        $httpBackend.expectPUT(/api\/cash-bags\/1\/to\/2\/posttrip\/3/);
+        $httpBackend.expectPUT(/rsvr\/api\/cash-bags\/1\/to\/2\/posttrip\/3/);
         $httpBackend.flush();
       });
     });
@@ -41,12 +41,12 @@ describe('Service: storeInstanceAmendService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenPOST(/api\/cash-bags\/1\/posttrip\/2/).respond({ done: true });
+        $httpBackend.whenPOST(/rsvr\/api\/cash-bags\/1\/posttrip\/2/).respond({ done: true });
       });
 
       it('should POST data to cash bag API', function () {
         storeInstanceAmendService.addPostTrip(1, 2);
-        $httpBackend.expectPOST(/api\/cash-bags\/1\/posttrip\/2/);
+        $httpBackend.expectPOST(/rsvr\/api\/cash-bags\/1\/posttrip\/2/);
         $httpBackend.flush();
       });
     });
@@ -56,12 +56,12 @@ describe('Service: storeInstanceAmendService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenPUT(/api\/cash-bags\/1\/edit\/2\/schedule\/3/).respond({ done: true });
+        $httpBackend.whenPUT(/rsvr\/api\/cash-bags\/1\/edit\/2\/schedule\/3/).respond({ done: true });
       });
 
       it('should PUT data to cash bag API', function () {
         storeInstanceAmendService.editPostTrip(1, 2, 3);
-        $httpBackend.expectPUT(/api\/cash-bags\/1\/edit\/2\/schedule\/3/);
+        $httpBackend.expectPUT(/rsvr\/api\/cash-bags\/1\/edit\/2\/schedule\/3/);
         $httpBackend.flush();
       });
     });
@@ -71,12 +71,12 @@ describe('Service: storeInstanceAmendService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenDELETE(/api\/cash-bags\/1\/posttrip\/2/).respond({ done: true });
+        $httpBackend.whenDELETE(/rsvr\/api\/cash-bags\/1\/posttrip\/2/).respond({ done: true });
       });
 
       it('should PUT data to cash bag API', function () {
         storeInstanceAmendService.deletePostTrip(1, 2);
-        $httpBackend.whenDELETE(/api\/cash-bags\/1\/posttrip\/2/);
+        $httpBackend.whenDELETE(/rsvr\/api\/cash-bags\/1\/posttrip\/2/);
         $httpBackend.flush();
       });
     });
@@ -86,12 +86,12 @@ describe('Service: storeInstanceAmendService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenGET(/api\/cash-bags\/1/).respond({ done: true });
+        $httpBackend.whenGET(/rsvr\/api\/cash-bags\/1/).respond({ done: true });
       });
 
       it('should GET data to cash bag API', function () {
         storeInstanceAmendService.getPostTrips(1);
-        $httpBackend.whenGET(/api\/cash-bags\/1/);
+        $httpBackend.whenGET(/rsvr\/api\/cash-bags\/1/);
         $httpBackend.flush();
       });
     });
