@@ -408,10 +408,10 @@
               <td>Quantity</td>
               <td>Amount</td>
             </tr>
-            <tr ng-repeat="creditRevenueItem in creditRevenueModal.items">
-              <td>{{creditRevenueItem.creditType}}</td>
-              <td>{{creditRevenueItem.quantity}}</td>
-              <td>{{formatAsCurrency(creditRevenueItem.amount)}}</td>
+            <tr ng-repeat="(key, value) in creditRevenueModal.items | groupBy:'creditCard'">
+              <td>{{key}}</td>
+              <td>{{value.length}}</td>
+              <td>{{sumGroupedCreditAmounts(value)}}</td>
             </tr>
           </table>
         </div>

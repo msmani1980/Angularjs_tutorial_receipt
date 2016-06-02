@@ -353,6 +353,15 @@ angular.module('ts5App')
       return status.statusName;
     };
 
+    $scope.sumGroupedCreditAmounts = function (amounts) {
+      var total = 0;
+      amounts.map(function(amount) {
+        total += amount.amount;
+      });
+
+      return $scope.formatAsCurrency(total);
+    };
+
     function normalizeMergeSearchResults (dataFromAPI) {
       var cashBags = angular.copy(dataFromAPI.cashBags) || [];
 
