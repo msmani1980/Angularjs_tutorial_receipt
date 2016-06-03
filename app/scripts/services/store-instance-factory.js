@@ -20,10 +20,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       return itemsService.getItemsList(payload, true);
     }
 
-    function getCatererStationList() {
-      return catererStationService.getCatererStationList({
-        limit: null
-      });
+    function getCatererStationList(optionalPayload) {
+      var payload = optionalPayload || {};
+      payload.limit = null;
+      return catererStationService.getCatererStationList(payload);
     }
 
     function getStation(catererStationId) {
@@ -34,16 +34,18 @@ angular.module('ts5App').service('storeInstanceFactory',
       return schedulesService.getSchedules(companyId);
     }
 
-    function getCarrierNumbers(companyId, carrierTypeId) {
-      return carrierService.getCarrierNumbers(companyId, carrierTypeId);
+    function getCarrierNumbers(companyId, carrierTypeId, optionalPayload) {
+      var payload = optionalPayload || {};
+      return carrierService.getCarrierNumbers(companyId, carrierTypeId, payload);
     }
 
     function getCarrierNumber(companyId, carrierNumberId) {
       return carrierService.getCarrierNumber(companyId, carrierNumberId);
     }
 
-    function getAllCarrierNumbers(companyId) {
-      return getCarrierNumbers(companyId, 0);
+    function getAllCarrierNumbers(companyId, optionalPayload) {
+      var payload = optionalPayload || {};
+      return getCarrierNumbers(companyId, 0, payload);
     }
 
     function getStoreInstancesList(query) {
@@ -226,6 +228,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storeInstanceValidationService.validateStoreInstance(payload);
     }
 
+    function updateStoreInstanceStatusForceReconcile(storeId, statusId) {
+      return storeInstanceService.updateStoreInstanceStatusForceReconcile(storeId, statusId, undefined, true, true);
+    }
+
     return {
       getCompanyId: getCompanyId,
       getItemsMasterList: getItemsMasterList,
@@ -254,7 +260,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       updateStoreInstanceStatus: updateStoreInstanceStatus,
       getReasonCodeList: getReasonCodeList,
       getCountTypes: getCountTypes,
-      validateStoreInstance: validateStoreInstance
+      validateStoreInstance: validateStoreInstance,
+      updateStoreInstanceStatusForceReconcile: updateStoreInstanceStatusForceReconcile
     };
 
   });

@@ -60,7 +60,7 @@ angular.module('ts5App')
     };
 
     function setVerifiedData(verifiedDataFromAPI) {
-      $scope.isVerified = (!!verifiedDataFromAPI.creditCardVerifiedOn) || false;
+      $scope.isVerified = (!!verifiedDataFromAPI.cashVerifiedOn) || false;
       if (!$scope.isVerified) {
         $scope.verifiedInfo = {};
         return;
@@ -73,19 +73,20 @@ angular.module('ts5App')
       };
     }
 
-    function verifyToggleSuccess(dataFromAPI) {
-      setVerifiedData(angular.copy(dataFromAPI));
-      hideLoadingModal();
-    }
+    $scope.verify = function (shouldCheckForm) {
+      angular.element('#confirmation-modal').modal('hide');
+      if (shouldCheckForm && $scope.manualCashForm.$dirty) {
+        angular.element('#confirmation-modal').modal('show');
+        return;
+      }
 
-    $scope.verify = function () {
       showLoadingModal('Verifying');
-      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CASH').then(verifyToggleSuccess, showErrors);
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CASH').then(init, showErrors);
     };
 
     $scope.unverify = function () {
       showLoadingModal('Unverifying');
-      manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CASH').then(verifyToggleSuccess, showErrors);
+      manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CASH').then(init, showErrors);
     };
 
     function updateCashBagCash(cash) {
@@ -114,10 +115,17 @@ angular.module('ts5App')
         $location.path('manual-epos-dashboard/' + $routeParams.cashBagId);
       }
 
+      init();
       messageService.success('Manual cash data successfully saved!');
     }
 
     $scope.save = function () {
+      if (!$scope.manualCashForm.$valid) {
+        showErrors();
+        $scope.disableAll = false;
+        return;
+      }
+
       showLoadingModal('Saving');
       var promises = [];
       angular.forEach($scope.currencyList, function (cash) {
@@ -136,9 +144,9 @@ angular.module('ts5App')
     };
 
     function setBaseCurrency(currencyList) {
-      $scope.baseCurrency = {};
-      $scope.baseCurrency.currencyId = globalMenuService.getCompanyData().baseCurrencyId;
-      $scope.baseCurrency.currencyCode = lodash.findWhere(currencyList, { id: $scope.baseCurrency.currencyId });
+      var baseCurrencyId = globalMenuService.getCompanyData().baseCurrencyId;
+      var baseCurrencyObject = lodash.findWhere(currencyList, { id: baseCurrencyId });
+      $scope.baseCurrency = baseCurrencyObject || {};
     }
 
     function mergeCashBagCash(cashBagCashList) {
@@ -177,6 +185,7 @@ angular.module('ts5App')
       setBaseCurrency(currencyList);
       setCashBagCurrencyList(angular.copy(responseCollection[1].response), currencyList, angular.copy(responseCollection[2].dailyExchangeRateCurrencies));
       setVerifiedData(angular.copy(responseCollection[3]));
+      $scope.manualCashForm.$setPristine();
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {

@@ -3,7 +3,7 @@
     <div class="list-controls">
       <div class="row item-list-row">
         <div class="col-xs-8">
-          <h2 class="view-name">Manual Epos Entry: <b>Add Cash</b><br>
+          <h2 class="view-name">Manual ePOS Entry: <b>Add Cash</b><br>
             <small>Cash Bag {{ cashBag.cashBagNumber }}</small>
           </h2>
         </div>
@@ -28,11 +28,11 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="input-group">
-              <span class="input-group-addon" id="cash-filter">Filter</span>
+              <span class="input-group-addon" id="cash-filter"><i class="fa fa-filter"></i> Filter By</span>
               <input type="text"
                      class="form-control"
-                     ng-model="filter.cash"
-                     placeholder="Select Currency Codes to filter by ..."
+                     ng-model="currencyFilter"
+                     placeholder="Type a currency code to filter by..."
                      aria-describedby="cash-filter"/>
             </div>
           </div>
@@ -45,10 +45,10 @@
             <p><b>Amount</b></p>
           </div>
           <div class="col-xs-6">
-            <p><b>Converted Amount (AUD)</b></p>
+            <p><b>Converted Amount ({{ baseCurrency.code }})</b></p>
           </div>
         </div>
-        <div ng-repeat="cash in currencyList | filter: {code: filter.cash} track by $index">
+        <div ng-repeat="cash in currencyList | filter: {currencyCode: currencyFilter} track by $index">
           <div class="row">
             <div class="col-xs-6">
               <div class="input-group">
@@ -58,8 +58,9 @@
                        maxlength="10"
                        placeholder="0.00"
                        custom-validity
-                       custom-pattern="decimalWithTwoDecimalPlaces"
+                       custom-pattern="optionalDecimalWithTwoDecimalPlaces"
                        aria-describedby="cash"
+                       name="{{cash.currencyCode}}Amount"
                        ng-disabled="isVerified || disableAll"/>
               </div>
             </div>
@@ -88,13 +89,33 @@
         <div class="row">
           <div class="col-xs-12 text-right">
             <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll"><span class="fa fa-check-square-o"></span> Save</button>
-            <button class="btn btn-default" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
-            <button class="btn btn-success" type="button" ng-click="verify()" ng-hide="isVerified || disableAll"><span class="fa fa-check-circle"></span> Verify</button>
+            <button class="btn btn-danger" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
+            <button class="btn btn-success" type="button" ng-click="verify(true)" ng-hide="isVerified || disableAll"><span class="fa fa-check-circle"></span> Verify</button>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="modal" id="confirmation-modal" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title"><span class="fa fa-exclamation-triangle"></span> You Have Unsaved Changes</h3>
+          </div>
+          <div class="modal-body">
+            <p>Verifying will revert all unsaved changes.  Are you sure you want to continue?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">
+              <i class="fa fa-close"></i> Cancel
+            </button>
+            <button type="button" class="btn btn-primary btn-primary" ng-click="verify(false)">
+              <i class="fa fa-check"></i> Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </form>
 </div>
-
-<dynamic-left-nav></dynamic-left-nav></div>

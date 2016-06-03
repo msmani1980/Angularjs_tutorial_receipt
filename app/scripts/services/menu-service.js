@@ -45,7 +45,7 @@ angular.module('ts5App')
       return defaults.concat(transform);
     };
 
-    var requestURL = ENV.apiUrl + '/api/menus/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/menus/:id';
     var requestParameters = {
       id: '@id',
       limit: 50
@@ -113,7 +113,7 @@ angular.module('ts5App')
     function getCompanyPreferenceBy(preferences, choiceName, optionName) {
       var result = null;
       angular.forEach(preferences, function (preference) {
-        if (result === null && preference.choiceName === choiceName && preference.optionName === optionName) {
+        if (result === null && preference.choiceName === choiceName && preference.optionName === optionName && dateUtility.isTodayOrEarlier(preference.startDate)) {
           result = preference;
         }
       });

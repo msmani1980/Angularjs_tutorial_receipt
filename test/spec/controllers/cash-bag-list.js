@@ -154,7 +154,6 @@ describe('Controller: CashBagListCtrl', function() {
         scope.loadCashBagList();
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
           isDelete: 'false',
-          isSubmitted: 'false',
           limit: 100,
           offset: 0
         });
@@ -169,7 +168,6 @@ describe('Controller: CashBagListCtrl', function() {
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
           cashBagNumber: testCashBagNumber,
           isDelete: 'false',
-          isSubmitted: 'false',
           limit: 100,
           offset: 0
         });
@@ -184,7 +182,6 @@ describe('Controller: CashBagListCtrl', function() {
           startDate: '20150620',
           endDate: '20150620',
           isDelete: 'false',
-          isSubmitted: 'false',
           limit: 100,
           offset: 0
         });
@@ -199,7 +196,6 @@ describe('Controller: CashBagListCtrl', function() {
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
           cashBagNumber: '234',
           isDelete: 'false',
-          isSubmitted: 'false',
           limit: 100,
           offset: 0
         });
@@ -290,23 +286,67 @@ describe('Controller: CashBagListCtrl', function() {
 
     });
 
-    describe('submit new schedule form', function() {
-      it('should call redirect to cash bag create with store instance as parameter', function() {
+    describe('redirect to edit page', function () {
+      it('should show search store instance popup if storeInstanceId is null', function () {
+        var mockCashBag = {
+          id: 123,
+          storeInstanceId: null
+        };
+
+        scope.editCashBag(mockCashBag);
+        scope.$digest();
+        expect(location.path()).not.toBe('/cash-bag/edit/123');
+
+      });
+
+      it('should redirect to edit page if storeInstanceId is not null', function () {
+        var mockCashBag = {
+          id: 123,
+          storeInstanceId: 123
+        };
+
+        scope.editCashBag(mockCashBag);
+        scope.$digest();
+        expect(location.path()).toBe('/cash-bag/edit/123');
+      });
+
+    });
+
+    describe('continueToEditOrCreate form', function() {
+      it('should call redirect to cash bag with store instance as parameter', function() {
         var storeInstance = {
           id: 'fakeStoreInstanceId'
         };
         var expectedParameters = {
           storeInstanceId: 'fakeStoreInstanceId'
         };
-        scope.submitCreate(storeInstance);
+
+        scope.popupFromEdit = false;
+        scope.continueToEditOrCreate(storeInstance);
 
         expect(location.path()).toBe('/cash-bag/create');
         expect(location.search()).toEqual(expectedParameters);
       });
 
       it('should stay on the same url if store instance is invalid', function() {
-        scope.submitCreate();
+        scope.continueToEditOrCreate();
         expect(location.path()).not.toBe('/cash-bag/create');
+      });
+
+      it('should be able to redirect from cash bag', function () {
+        var storeInstance = {
+          id: 'fakeStoreInstanceId'
+        };
+        var expectedParameters = {
+          storeInstanceId: 'fakeStoreInstanceId'
+        };
+
+        scope.popupFromEdit = true;
+        scope.cashBagToEdit = 123;
+        scope.continueToEditOrCreate(storeInstance);
+
+        expect(location.path()).toBe('/cash-bag/edit/123');
+        expect(location.search()).toEqual(expectedParameters);
       });
 
     });

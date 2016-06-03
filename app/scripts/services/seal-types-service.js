@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('sealTypesService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/records/seal-types';
+    var requestURL = ENV.apiUrl + '/rsvr/api/records/seal-types';
 
     var actions = {
       getSealTypes: {

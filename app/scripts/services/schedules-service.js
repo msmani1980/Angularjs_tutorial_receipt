@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('schedulesService', function($resource, ENV) {
 
-    var schedulesRequestURL = ENV.apiUrl + '/api/companies/:id/schedules';
+    var schedulesRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/schedules';
 
     var schedulesActions = {
       getSchedules: {

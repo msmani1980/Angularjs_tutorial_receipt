@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('taxRateTypesService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/records/tax-rate-types';
+    var requestURL = ENV.apiUrl + '/rsvr/api/records/tax-rate-types';
     var requestParameters = {
       limit: 50
     };

@@ -25,9 +25,9 @@
     "select2": "3.4.8",
     "angular-bootstrap-switch": "~0.4.1",
     "ngstorage": "~0.3.9",
-    "sha256": "http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js",
-    "enc-base64-min": "http://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js",
-    "aes": "http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js",
+    "sha256": "https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha256.js",
+    "enc-base64-min": "https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js",
+    "aes": "https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js",
     "angular-scroll": "~1.0.0",
     "sprintf": "~1.0.3",
     "angular-animate": "1.4.8"

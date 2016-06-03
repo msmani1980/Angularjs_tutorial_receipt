@@ -35,11 +35,10 @@ angular.module('ts5App').service('carrierService', function ($resource, ENV) {
     return carrierTypeRequestResource.getCarrierTypes(payload).$promise;
   };
 
-  var getCarrierNumbers = function (companyId, carrierType) {
-    var payload = {
-      id: companyId,
-      type: carrierType
-    };
+  var getCarrierNumbers = function (companyId, carrierType, optionalPayload) {
+    var payload = optionalPayload || {};
+    payload.id = companyId;
+    payload.type = carrierType;
     return carrierNumberRequestResource.getCarrierNumbers(payload).$promise;
   };
 

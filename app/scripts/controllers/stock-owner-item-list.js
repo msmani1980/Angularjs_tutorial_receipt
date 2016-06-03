@@ -77,8 +77,7 @@ angular.module('ts5App')
         $this.meta.count = $this.meta.count || response.meta.count;
 
         var itemListFromAPI = angular.copy(response.retailItems);
-        $scope.itemsList = $scope.itemsList.concat(itemListFromAPI);
-
+        $scope.itemsList = itemListFromAPI;
         $scope.itemsListCount = $scope.itemsList.length;
         $this.updateItemList();
         $this.hideLoadingModal();

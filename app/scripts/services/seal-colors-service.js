@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('sealColorsService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/seal/colors';
+    var requestURL = ENV.apiUrl + '/rsvr/api/seal/colors';
 
     var actions = {
       getSealColors: {

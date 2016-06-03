@@ -214,7 +214,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           return item.id;
         }).join('+');
         var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
-        $scope.exportBulkURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208.pdf?sessionToken=' +
+        $scope.exportBulkURL = ENV.apiUrl + '/rsvr/api/dispatch/store-instances/documents/C208.pdf?sessionToken=' +
           sessionToken;
         $scope.exportBulkURL += '&storeInstanceIds=' + storeInstanceIds;
       } else {
@@ -289,7 +289,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (lodash.find(storeInstance.actionButtons, lodash.matches('Get Flight Docs')) || storeInstance.statusName ===
         'On Floor') {
         storeInstance.showGenerateDocsButton = true;
-        storeInstance.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
+        storeInstance.exportURL = ENV.apiUrl + '/rsvr/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
           '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'; //$http.defaults.headers.common.sessionToken;
       }
     }

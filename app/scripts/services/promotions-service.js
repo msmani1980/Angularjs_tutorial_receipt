@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('promotionsService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/promotions/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/promotions/:id';
 
     var requestParameters = {
       id: '@id'

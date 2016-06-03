@@ -325,6 +325,12 @@ angular.module('ts5App', [
   }).when('/manual-epos-credit/:cashBagId', {
     templateUrl: 'views/manual-epos-credit.html',
     controller: 'ManualEposCreditCtrl'
+  }).when('/manual-epos-items/:itemType/:cashBagId', {
+    templateUrl: 'views/manual-epos-items.html',
+    controller: 'ManualEposItemsCtrl'
+  }).when('/manual-epos-discount/:cashBagId', {
+    templateUrl: 'views/manual-epos-discount.html',
+    controller: 'ManualEposDiscountCtrl'
   }).otherwise({
     redirectTo: '/'
   });

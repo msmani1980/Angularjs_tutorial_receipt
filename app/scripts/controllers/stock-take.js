@@ -212,9 +212,13 @@ angular.module('ts5App')
       if (angular.isNumber(companyId) && angular.isDefined(regularItemTypeObj)) {
         var payload = {
           companyId: companyId,
-          itemTypeId: regularItemTypeObj.id,
-          characteristicId: inventoryCharacteristicObj.id
+          itemTypeId: regularItemTypeObj.id
         };
+
+        if (inventoryCharacteristicObj) {
+          payload.characteristicId = inventoryCharacteristicObj.id;
+        }
+
         stockTakeFactory.getItemsMasterList(payload).then(function(response) {
           if (angular.isObject(response)) {
             filterAvailableItems(response);
@@ -363,7 +367,8 @@ angular.module('ts5App')
       }
 
       for (var masterItemId in $scope.itemQuantities) {
-        if ($scope.itemQuantities[masterItemId]) {
+        var isValidNumber = angular.isDefined($scope.itemQuantities[masterItemId]) && $scope.itemQuantities[masterItemId] !== null && $scope.itemQuantities[masterItemId] !== '';
+        if (isValidNumber) {
           items.push({
             masterItemId: parseInt(masterItemId),
             quantity: parseInt($scope.itemQuantities[masterItemId])
@@ -446,6 +451,11 @@ angular.module('ts5App')
     }
 
     // Scope functions
+    $scope.shouldHideItem = function (item) {
+      var isInvalidNumber = !angular.isDefined($scope.itemQuantities[item.masterItemId]) || $scope.itemQuantities[item.masterItemId] === null || $scope.itemQuantities[item.masterItemId] === '';
+      return isInvalidNumber && ($scope.state === 'review' || $scope.state === 'view');
+    };
+
     $scope.quantityDisabled = function() {
       if ($scope.state !== 'create' && $scope.state !== 'edit') {
         return true;

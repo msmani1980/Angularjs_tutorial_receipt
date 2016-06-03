@@ -47,6 +47,19 @@ describe('Controller: ManualEposCashCtrl', function () {
 
   var mockBaseCurrency;
 
+  function createFormObject() {
+    scope.manualCashForm = {
+      $name: 'manualCashForm',
+      $valid: true,
+      $invalid: false,
+      $pristine: false,
+      $dirty: true,
+      $setPristine: function(pristine) {
+        this.$pristine = pristine;
+      }
+    };
+  }
+
   beforeEach(inject(function ($q, $controller, $rootScope, $injector, $location) {
 
     inject(function (_servedCashBag_, _servedStoreInstance_, _servedCurrencyGlobals_, _servedDailyExchangeRate_,
@@ -107,7 +120,7 @@ describe('Controller: ManualEposCashCtrl', function () {
     spyOn(manualEposFactory, 'updateCashBagCash').and.returnValue(updateDeferred.promise);
 
     cashBagId = 123;
-    mockBaseCurrency = 23;
+    mockBaseCurrency = 8;
     spyOn(globalMenuService, 'getCompanyData').and.returnValue({ baseCurrencyId: mockBaseCurrency });
 
     spyOn(location, 'path').and.callThrough();
@@ -119,6 +132,8 @@ describe('Controller: ManualEposCashCtrl', function () {
         cashBagId: cashBagId
       }
     });
+
+    createFormObject();
     scope.$digest();
 
   }));
@@ -160,7 +175,7 @@ describe('Controller: ManualEposCashCtrl', function () {
     it('should set the base currency', function () {
       scope.$digest();
       expect(scope.baseCurrency).toBeDefined();
-      expect(scope.baseCurrency.currencyId).toEqual(mockBaseCurrency);
+      expect(scope.baseCurrency.id).toEqual(mockBaseCurrency);
     });
 
     it('should attach a list of cash bag currencies to scope', function () {
@@ -236,8 +251,6 @@ describe('Controller: ManualEposCashCtrl', function () {
       scope.verify();
       expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
       scope.$digest();
-      expect(scope.isVerified).toEqual(true);
-      expect(scope.verifiedInfo).not.toEqual(null);
     });
 
     it('should call unverify function and update scope var', function () {
@@ -246,7 +259,6 @@ describe('Controller: ManualEposCashCtrl', function () {
       scope.unverify();
       expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
       scope.$digest();
-      expect(scope.isVerified).toEqual(false);
     });
   });
 
@@ -264,6 +276,12 @@ describe('Controller: ManualEposCashCtrl', function () {
         convertedAmount: 2.5,
         currencyId: 3
       };
+    });
+
+    it('should check form validity before saving', function () {
+      scope.manualCashForm.$valid = false;
+      scope.save();
+      expect(scope.displayError).toEqual(true);
     });
 
     it('should call create for new entries', function () {
