@@ -86,12 +86,12 @@ describe('Service: storeInstanceAmendService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenGET(/rsvr\/api\/cash-bags\/1/).respond({ done: true });
+        $httpBackend.whenGET(/api\/cash-bags\/1/).respond({ done: true });
       });
 
       it('should GET data to cash bag API', function () {
         storeInstanceAmendService.getPostTrips(1);
-        $httpBackend.whenGET(/rsvr\/api\/cash-bags\/1/);
+        $httpBackend.whenGET(/api\/cash-bags\/1/);
         $httpBackend.flush();
       });
     });

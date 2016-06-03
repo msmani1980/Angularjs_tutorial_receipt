@@ -107,12 +107,14 @@ angular.module('ts5App')
         '/rsvr/api/companies/[0-9]*',
         '/rsvr/api/retail-items/master/*',
         '/rsvr/api/daily-exchange-rates/[0-9]*',
-        '/rsvr/api/units'
+        '/rsvr/api/units',
+        '/rsvr/api/cash-bags/[0-9]*$'
     ];
 
     var onlyRsvrApis = [
       '/rsvr/api/dailyexchangerate',
-      '/rsvr/api/companies/[0-9]*/stations'
+      '/rsvr/api/companies/[0-9]*/stations',
+      '/rsvr/api/store-instances/[0-9]*/calculated-inbounds'
     ];
 
     function responseError(response) {
