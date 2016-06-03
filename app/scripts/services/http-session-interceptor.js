@@ -113,7 +113,8 @@ angular.module('ts5App')
 
     var onlyRsvrApis = [
       '/rsvr/api/dailyexchangerate',
-      '/rsvr/api/companies/[0-9]*/stations'
+      '/rsvr/api/companies/[0-9]*/stations',
+      '/rsvr/api/store-instances/[0-9]*/calculated-inbounds'
     ];
 
     function responseError(response) {
