@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .service('companyService', function($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/companies/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/companies/:id';
     var requestParameters = {
       id: '@id'
     };

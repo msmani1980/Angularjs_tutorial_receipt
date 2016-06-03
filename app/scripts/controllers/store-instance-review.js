@@ -327,7 +327,7 @@ angular.module('ts5App')
       showUserCurrentStatus();
       var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
       if ($routeParams.action !== 'end-instance') {
-        $window.open(ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
+        $window.open(ENV.apiUrl + '/rsvr/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
           '.pdf?sessionToken=' + sessionToken, '_blank');
       }
 

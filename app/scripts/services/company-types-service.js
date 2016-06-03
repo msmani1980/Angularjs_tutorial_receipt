@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('companyTypesService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/records/company-types';
+    var requestURL = ENV.apiUrl + '/rsvr/api/records/company-types';
     var requestParameters = {};
 
     var actions = {

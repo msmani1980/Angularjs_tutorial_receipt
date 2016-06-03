@@ -729,7 +729,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       scope.storeSelectionToggled();
       expect(scope.hasSelectedStore).toBeTruthy();
       expect(scope.exportBulkURL).toEqual(ENV.apiUrl +
-        '/api/dispatch/store-instances/documents/C208.pdf?sessionToken=fakeSessionToken&storeInstanceIds=53+1038'
+        '/rsvr/api/dispatch/store-instances/documents/C208.pdf?sessionToken=fakeSessionToken&storeInstanceIds=53+1038'
       );
     });
   });

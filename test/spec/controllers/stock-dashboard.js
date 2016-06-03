@@ -223,7 +223,7 @@ describe('Controller: StockDashboardCtrl', function() {
       var urlControl;
       beforeEach(function() {
         scope.selectedCateringStation = cateringStationsJSON.response[0];
-        urlControl = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
+        urlControl = ENV.apiUrl + '/rsvr/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
         urlControl += '/file/export?sortOn=itemName&companyId=' + mockCompanyId +
           '&sessionToken=fakeSessionToken';
       });
@@ -243,7 +243,7 @@ describe('Controller: StockDashboardCtrl', function() {
         scope.selectedCateringStation = cateringStationsJSON.response[1];
         scope.$digest();
         expect(scope.exportURL).not.toEqual(urlControl);
-        var newURL = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
+        var newURL = ENV.apiUrl + '/rsvr/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
         newURL += '/file/export?sortOn=itemName&companyId=' + mockCompanyId +
           '&sessionToken=fakeSessionToken';
         expect(scope.exportURL).toEqual(newURL);

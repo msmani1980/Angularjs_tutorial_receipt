@@ -12,7 +12,7 @@ angular.module('ts5App')
 
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
 
-    var requestURL = ENV.apiUrl + '/api/companies/:companyId/tags/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/tags/:id';
     var requestParameters = {
       id: '@id',
       companyId: '@companyId'

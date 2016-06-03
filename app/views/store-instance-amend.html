@@ -380,13 +380,38 @@
               <td>Currency</td>
               <td>Amount</td>
               <td>Exchange</td>
-              <td>Amount</td>
+              <td>Base Amount</td>
             </tr>
             <tr ng-repeat="cashRevenueItem in cashRevenueModal.items">
               <td>{{cashRevenueItem.currency}}</td>
               <td>{{formatAsCurrency(cashRevenueItem.amount)}}</td>
               <td>{{cashRevenueItem.exchangeRate}}</td>
               <td>{{formatAsCurrency(cashRevenueItem.baseCurrencyAmount)}}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="creditRevenueModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4>Credit Revenue: {{formatAsCurrency(creditRevenueModal.amount)}}</h4>
+          <br>
+          <table class="table table-bordered">
+            <tr class="active">
+              <td>Credit Type</td>
+              <td>Quantity</td>
+              <td>Amount</td>
+            </tr>
+            <tr ng-repeat="(key, value) in creditRevenueModal.items | groupBy:'creditCard'">
+              <td>{{key}}</td>
+              <td>{{value.length}}</td>
+              <td>{{sumGroupedCreditAmounts(value)}}</td>
             </tr>
           </table>
         </div>
@@ -658,7 +683,7 @@
                       <td>{{ formatAsCurrency(cashBag.cashRevenue.amount) }}</td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
-                      <td>Credit</td>
+                      <td><a ng-click="showCreditRevenueModal(cashBag)">Credit</a></td>
                       <td>{{ formatAsCurrency(cashBag.creditRevenue.amount) }}</td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">

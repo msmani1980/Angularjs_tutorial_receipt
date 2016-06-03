@@ -11,7 +11,7 @@ angular.module('ts5App')
   .service('languagesService', function ($resource, ENV) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
-    var requestURL = ENV.apiUrl + '/api/languages';
+    var requestURL = ENV.apiUrl + '/rsvr/api/languages';
     var requestParameters = {};
 
     var actions = {
