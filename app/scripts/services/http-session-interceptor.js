@@ -65,8 +65,6 @@ angular.module('ts5App')
         '/menu-relationship-list/*',
         '/menu-relationship-view/*',
         '/menu/*',
-        '/post-trip-data-list/*',
-        '/post-trip-data/*',
         '/promotions/*',
         '/retail-company-exchange-rate-setup/*',
         '/station-create/*',
@@ -104,11 +102,13 @@ angular.module('ts5App')
         '/rsvr/api/companies/*/relationships',
         'rsvr/api/records/store-status',
         '/rsvr/api/caterer-stations',
-        '/rsvr/api/companies/[0-9]*',
+        '/rsvr/api/companies/[0-9]*$',
         '/rsvr/api/retail-items/master/*',
         '/rsvr/api/daily-exchange-rates/[0-9]*',
         '/rsvr/api/units',
-        '/rsvr/api/cash-bags/[0-9]*$'
+        '/rsvr/api/cash-bags/[0-9]*$',
+        '/rsvr/api/promotions/[0-9]*$',
+        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9]*$'
     ];
 
     var onlyRsvrApis = [
