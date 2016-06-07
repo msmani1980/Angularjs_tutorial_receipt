@@ -84,9 +84,10 @@ describe('Factory: storeInstanceAmendFactory', function () {
       var cashBagId = 1;
       var postTripId = 2;
       var scheduleNumber = '3';
+      var scheduleDate = '20160201';
 
-      storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber);
-      expect(storeInstanceAmendService.editPostTrip).toHaveBeenCalledWith(cashBagId, postTripId, scheduleNumber);
+      storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber, scheduleDate);
+      expect(storeInstanceAmendService.editPostTrip).toHaveBeenCalledWith(cashBagId, postTripId, scheduleNumber, scheduleDate);
     });
     it('getFlightSector should call storeInstanceAmendService', function () {
       var cashBagId = 1;

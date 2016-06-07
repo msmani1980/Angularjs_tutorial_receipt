@@ -797,7 +797,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.newScheduleSelection = null;
         scope.moveCashBagSearchResults = null;
         scope.cashBagToEdit = { id: 1 };
-        scope.newScheduleSelection = { id: 2, scheduleNumber: '3'};
+        scope.newScheduleSelection = { id: 2, scheduleNumber: '3', scheduleDate: '02/01/2016'};
       });
 
       it('should add schedule if add action is requested', function () {
@@ -808,7 +808,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       it('should edit schedule if edit schedule is requested', function () {
         scope.scheduleToEdit = { id: 2 };
         scope.addOrEditSchedule();
-        expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 2, '3');
+        expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 2, '3', '20160201');
       });
     });
   });
@@ -906,4 +906,3 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   });
 
 });
-

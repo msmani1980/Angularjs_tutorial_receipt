@@ -56,8 +56,9 @@ angular.module('ts5App')
       if ($scope.scheduleToEdit) {
         postTripId = $scope.scheduleToEdit.id;
         var scheduleNumber = $scope.newScheduleSelection.scheduleNumber;
+        var scheduleDate =  dateUtility.formatDateForAPI($scope.newScheduleSelection.scheduleDate);
 
-        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber).then(addOrEditScheduleSuccess, handleResponseError);
+        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber, scheduleDate).then(addOrEditScheduleSuccess, handleResponseError);
       } else {
         postTripId = $scope.newScheduleSelection.id;
 
@@ -285,12 +286,6 @@ angular.module('ts5App')
       angular.element('#creditRevenueModal').modal('show');
     };
 
-    $scope.showDiscountRevenueModal = function (cashBag) {
-      $scope.discountRevenueModal = cashBag.discountRevenue;
-
-      angular.element('#discountRevenueModal').modal('show');
-    };
-
     function getStationById (stationId) {
       return lodash.find($scope.stations, 'stationId', stationId);
     }
@@ -359,7 +354,7 @@ angular.module('ts5App')
       return status.statusName;
     };
 
-    $scope.sumGroupedAmounts = function (amounts) {
+    $scope.sumGroupedCreditAmounts = function (amounts) {
       var total = 0;
       amounts.map(function(amount) {
         total += amount.amount;
@@ -369,15 +364,9 @@ angular.module('ts5App')
     };
 
     function normalizeMergeSearchResults (dataFromAPI) {
-      var cashBags = angular.copy(dataFromAPI.response) || [];
+      var cashBags = angular.copy(dataFromAPI.cashBags) || [];
 
-      var filteredCashBags = lodash.filter(cashBags, {
-        cashBagNumber: $scope.moveSearch.cashBag,
-        bankReferenceNumber: $scope.moveSearch.bankRefNumber,
-        originationSource: 2
-      });
-
-      return angular.forEach(filteredCashBags, function (cashBag) {
+      return angular.forEach(cashBags, function (cashBag) {
         cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
         cashBag.updatedOn = dateUtility.formatTimestampForApp(cashBag.updatedOn);
       });
@@ -745,13 +734,7 @@ angular.module('ts5App')
         var amount = (discount.bankAmountFinal || 0) + (discount.coinAmountCc || 0) + (discount.paperAmountCc || 0);
 
         if (discount.cashbagId) {
-          var cashBag = getCashBagById(discount.cashbagId);
-          cashBag.discountRevenue.amount += amount;
-          cashBag.discountRevenue.items.push({
-            discountName: discount.companyDiscountName,
-            discountType: discount.globalDiscountTypeName,
-            amount: amount
-          });
+          getCashBagById(discount.cashbagId).discountRevenue.amount += amount;
         }
 
         cashRevenue.total += amount;
