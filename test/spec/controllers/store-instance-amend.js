@@ -896,6 +896,13 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
       expect(scope.creditRevenueModal).toEqual({ amount: 10 });
     });
+
+    it('discount revenue modal should assin model', function () {
+      var cashBag = { id: 2158, discountRevenue: { amount: 10 } };
+      scope.showDiscountRevenueModal(cashBag);
+
+      expect(scope.discountRevenueModal).toEqual({ amount: 10 });
+    });
   });
 
 });
