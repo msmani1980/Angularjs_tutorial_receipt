@@ -99,7 +99,7 @@ angular.module('ts5App')
 
     var legacyApis = [
         '/rsvr/api/company-preferences',
-        '/rsvr/api/companies/*/relationships',
+        '/rsvr/api/companies/[0-9]*/relationships',
         'rsvr/api/records/store-status',
         '/rsvr/api/caterer-stations',
         '/rsvr/api/companies/[0-9]*$',
