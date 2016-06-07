@@ -56,8 +56,9 @@ angular.module('ts5App')
       if ($scope.scheduleToEdit) {
         postTripId = $scope.scheduleToEdit.id;
         var scheduleNumber = $scope.newScheduleSelection.scheduleNumber;
+        var scheduleDate =  dateUtility.formatDateForAPI($scope.newScheduleSelection.scheduleDate);
 
-        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber).then(addOrEditScheduleSuccess, handleResponseError);
+        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber, scheduleDate).then(addOrEditScheduleSuccess, handleResponseError);
       } else {
         postTripId = $scope.newScheduleSelection.id;
 
