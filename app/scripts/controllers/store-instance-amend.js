@@ -285,6 +285,12 @@ angular.module('ts5App')
       angular.element('#creditRevenueModal').modal('show');
     };
 
+    $scope.showDiscountRevenueModal = function (cashBag) {
+      $scope.discountRevenueModal = cashBag.discountRevenue;
+
+      angular.element('#discountRevenueModal').modal('show');
+    };
+
     function getStationById (stationId) {
       return lodash.find($scope.stations, 'stationId', stationId);
     }
@@ -353,7 +359,7 @@ angular.module('ts5App')
       return status.statusName;
     };
 
-    $scope.sumGroupedCreditAmounts = function (amounts) {
+    $scope.sumGroupedAmounts = function (amounts) {
       var total = 0;
       amounts.map(function(amount) {
         total += amount.amount;
@@ -363,9 +369,15 @@ angular.module('ts5App')
     };
 
     function normalizeMergeSearchResults (dataFromAPI) {
-      var cashBags = angular.copy(dataFromAPI.cashBags) || [];
+      var cashBags = angular.copy(dataFromAPI.response) || [];
 
-      return angular.forEach(cashBags, function (cashBag) {
+      var filteredCashBags = lodash.filter(cashBags, {
+        cashBagNumber: $scope.moveSearch.cashBag,
+        bankReferenceNumber: $scope.moveSearch.bankRefNumber,
+        originationSource: 2
+      });
+
+      return angular.forEach(filteredCashBags, function (cashBag) {
         cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
         cashBag.updatedOn = dateUtility.formatTimestampForApp(cashBag.updatedOn);
       });
@@ -733,7 +745,13 @@ angular.module('ts5App')
         var amount = (discount.bankAmountFinal || 0) + (discount.coinAmountCc || 0) + (discount.paperAmountCc || 0);
 
         if (discount.cashbagId) {
-          getCashBagById(discount.cashbagId).discountRevenue.amount += amount;
+          var cashBag = getCashBagById(discount.cashbagId);
+          cashBag.discountRevenue.amount += amount;
+          cashBag.discountRevenue.items.push({
+            discountName: discount.companyDiscountName,
+            discountType: discount.globalDiscountTypeName,
+            amount: amount
+          });
         }
 
         cashRevenue.total += amount;

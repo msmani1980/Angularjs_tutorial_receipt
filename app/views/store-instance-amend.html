@@ -411,9 +411,38 @@
             <tr ng-repeat="(key, value) in creditRevenueModal.items | groupBy:'creditCard'">
               <td>{{key}}</td>
               <td>{{value.length}}</td>
-              <td>{{sumGroupedCreditAmounts(value)}}</td>
+              <td>{{sumGroupedAmounts(value)}}</td>
             </tr>
           </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="discountRevenueModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4>Discount Revenue: {{formatAsCurrency(discountRevenueModal.amount)}}</h4>
+          <br>
+          <div class="" ng-repeat="(discountType, values) in discountRevenueModal.items | groupBy:'discountType'">
+            <h4>{{discountType}}</h4>
+            <table class="table table-bordered">
+              <tr class="active">
+                <td>Discount</td>
+                <td>Quantity</td>
+                <td>Amount</td>
+              </tr>
+              <tr ng-repeat="(discountName, discounts) in values | groupBy:'discountName'">
+                <td>{{discountName}}</td>
+                <td>{{discounts.length}}</td>
+                <td>{{sumGroupedAmounts(discounts)}}</td>
+              </tr>
+            </table>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -687,7 +716,7 @@
                       <td>{{ formatAsCurrency(cashBag.creditRevenue.amount) }}</td>
                     </tr>
                     <tr ng-show="cashBag.revenueTableOpen">
-                      <td><a ng-click="showModal('RevenueDiscount')">Discount</a></td>
+                      <td><a ng-click="showDiscountRevenueModal(cashBag)">Discount</a></td>
                       <td>{{ formatAsCurrency(cashBag.discountRevenue.amount) }}</td>
                     </tr>
                     <tr class="active">

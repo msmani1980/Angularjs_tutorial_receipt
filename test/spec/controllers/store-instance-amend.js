@@ -455,10 +455,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(scope.getStatusNameById(4)).toBe('Discrepancies');
     });
 
-    it('sumGroupedCreditAmounts should sum amounts from the credit revenue array', function () {
+    it('sumGroupedAmounts should sum amounts from the credit revenue array', function () {
       var amounts = [ {amount: 1.1}, {amount: 2.2} ];
 
-      var result = scope.sumGroupedCreditAmounts(amounts);
+      var result = scope.sumGroupedAmounts(amounts);
 
       expect(result).toBe('3.30');
     });
@@ -895,6 +895,13 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       scope.showCreditRevenueModal(cashBag);
 
       expect(scope.creditRevenueModal).toEqual({ amount: 10 });
+    });
+
+    it('discount revenue modal should assin model', function () {
+      var cashBag = { id: 2158, discountRevenue: { amount: 10 } };
+      scope.showDiscountRevenueModal(cashBag);
+
+      expect(scope.discountRevenueModal).toEqual({ amount: 10 });
     });
   });
 
