@@ -315,7 +315,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.formatInitialRedispatchPayload = function() {
       var payload;
 
-      if (angular.isDefined($scope.storeDetails.prevStoreInstanceId)) {
+      if ($scope.stepOneFromStepTwo && angular.isDefined($scope.storeDetails.prevStoreInstanceId)) {
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.prevStoreDetails.scheduleDate),
           menus: $this.formatMenus($scope.prevStoreDetails.menuList),
@@ -332,7 +332,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         }
       }
 
-      if (angular.isUndefined($scope.storeDetails.prevStoreInstanceId)) {
+      if (angular.isUndefined($scope.storeDetails.prevStoreInstanceId) || !$scope.stepOneFromStepTwo) {
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
           menus: $this.formatMenus($scope.storeDetails.menuList),
