@@ -14,10 +14,11 @@ describe('Factory: currencyFactory', function () {
     companyPreferencesService,
     companyExchangeRateService,
     featureThresholdsService,
+    recordsService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _currencyFactory_, _currenciesService_, _dailyExchangeRatesService_, _companyService_, _companyPreferencesService_, _companyExchangeRateService_, _featureThresholdsService_) {
+  beforeEach(inject(function ($rootScope, _currencyFactory_, _currenciesService_, _dailyExchangeRatesService_, _companyService_, _companyPreferencesService_, _companyExchangeRateService_, _featureThresholdsService_, _recordsService_) {
 
     companyService = _companyService_;
     currenciesService = _currenciesService_;
@@ -25,6 +26,7 @@ describe('Factory: currencyFactory', function () {
     companyPreferencesService = _companyPreferencesService_;
     companyExchangeRateService = _companyExchangeRateService_;
     featureThresholdsService = _featureThresholdsService_;
+    recordsService = _recordsService_;
 
     spyOn(companyService, 'getCompany');
     spyOn(currenciesService, 'getCompanyGlobalCurrencies');
@@ -43,6 +45,7 @@ describe('Factory: currencyFactory', function () {
     spyOn(companyExchangeRateService, 'updateCompanyExchangeRate');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRatesForCmp');
     spyOn(featureThresholdsService, 'getThresholdList');
+    spyOn(recordsService, 'getExchangeRateTypes');
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -148,6 +151,13 @@ describe('Factory: currencyFactory', function () {
       var payload = {fakeKey: 'fakeValue'};
       currencyFactory.getExchangeRateThresholdList(payload);
       expect(featureThresholdsService.getThresholdList).toHaveBeenCalledWith('DAILYEXCHANGERATE', payload);
+    });
+  });
+
+  describe('recordsService API', function () {
+    it('should call recordsService on getExchangeRateTypes', function () {
+      currencyFactory.getExchangeRateTypes();
+      expect(recordsService.getExchangeRateTypes).toHaveBeenCalled();
     });
   });
 
