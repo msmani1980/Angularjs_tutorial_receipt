@@ -10,17 +10,22 @@
 angular.module('ts5App')
   .service('manualEposPromotion', function ($resource, ENV) {
 
-    var manualEposPromotionRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-promotions';
+    var manualEposPromotionListRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-promotions/';
+    var manualEposPromotionRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-promotions/:id';
+
+    var manualEposPromotionListRequestParams = {
+      cashbagId: '@id'
+    };
 
     var manualEposPromotionRequestParams = {
-      cashbagId: '@id'
+      id: '@id'
     };
 
     var actions = {
       getManualEposPromotionList: {
         method: 'GET'
       },
-      updateManualEposPromotion: {
+      updateCashbagPromotion: {
         method: 'PUT'
       },
       deleteManualEposPromotion: {
@@ -31,18 +36,19 @@ angular.module('ts5App')
       }
     };
 
+    var manualEposPromotionListRequestResource = $resource(manualEposPromotionListRequestURL, manualEposPromotionListRequestParams, actions);
     var manualEposPromotionRequestResource = $resource(manualEposPromotionRequestURL, manualEposPromotionRequestParams, actions);
 
     function getManualEposPromotionList(cashBagId) {
-      return manualEposPromotionRequestResource.getManualEposPromotionList({ cashbagId: cashBagId }).$promise;
+      return manualEposPromotionListRequestResource.getManualEposPromotionList({ cashbagId: cashBagId }).$promise;
     }
 
-    function updateManualEposPromotion(cashBagId, promotionId, payload) {
-      return manualEposPromotionRequestResource.updateManualEposPromotion({ cashBagId: cashBagId }, promotionId, payload).$promise;
+    function updateManualEposPromotion (id, payload) {
+      return manualEposPromotionRequestResource.updateCashbagPromotion({ id: id }, payload).$promise;
     }
 
     function deleteManualEposPromotion(promotionId) {
-      return manualEposPromotionRequestResource.deleteCashBag(promotionId).$promise;
+      return manualEposPromotionRequestResource.deleteManualEposPromotion(promotionId).$promise;
     }
 
     function createManualEposPromotion(payload) {

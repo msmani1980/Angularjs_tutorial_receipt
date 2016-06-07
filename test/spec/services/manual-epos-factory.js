@@ -28,7 +28,13 @@ describe('Service: manualEposFactory', function() {
     spyOn(manualEposFactory, 'getCompanyDiscountsComp');
     spyOn(manualEposFactory, 'getCompanyDiscountsFrequentFlyer');
     spyOn(manualEposFactory, 'getCashBagDiscountList');
-    
+
+    spyOn(manualEposFactory, 'createManualEposPromotion');
+    spyOn(manualEposFactory, 'deleteManualEposPromotion');
+    spyOn(manualEposFactory, 'updateManualEposPromotion');
+    spyOn(manualEposFactory, 'getManualEposPromotionList');
+    spyOn(manualEposFactory, 'getCompanyPromotionsList');
+
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeById');
     spyOn(cashBagService, 'getCashBag');
@@ -41,6 +47,7 @@ describe('Service: manualEposFactory', function() {
     spyOn(storeInstanceService, 'getStoreInstance');
     spyOn(itemsService, 'getItemsList');
     spyOn(recordsService, 'getItemTypes');
+    
   }));
 
   describe('getPromotionsList API call', function() {
@@ -105,6 +112,41 @@ describe('Service: manualEposFactory', function() {
       expect(manualEposFactory.getCashBagDiscountList).toHaveBeenCalled();
     });
   });
+
+  describe('createManualEposPromotion API call', function() {
+    it('should call getCashBagDiscountList', function() {
+      manualEposFactory.createManualEposPromotion();
+      expect(manualEposFactory.createManualEposPromotion).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteManualEposPromotion API call', function() {
+    it('should call deleteManualEposPromotion', function() {
+      manualEposFactory.deleteManualEposPromotion();
+      expect(manualEposFactory.deleteManualEposPromotion).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateManualEposPromotion API call', function() {
+    it('should call updateManualEposPromotion', function() {
+      manualEposFactory.updateManualEposPromotion();
+      expect(manualEposFactory.updateManualEposPromotion).toHaveBeenCalled();
+    });
+  });
+
+  describe('getManualEposPromotionList API call', function() {
+    it('should call getCashBagDiscountList', function() {
+      manualEposFactory.getManualEposPromotionList();
+      expect(manualEposFactory.getManualEposPromotionList).toHaveBeenCalled();
+    });
+  });
+
+  describe('getCompanyPromotionsList API call', function() {
+	    it('should call getCompanyPromotionsList', function() {
+	      manualEposFactory.getCompanyPromotionsList();
+	      expect(manualEposFactory.getCompanyPromotionsList).toHaveBeenCalled();
+	    });
+	  });
 
   describe('cash bag service API call', function () {
     it('should call getCashBag from cashBagService', function () {

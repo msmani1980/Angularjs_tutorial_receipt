@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, 
     dailyExchangeRatesService, storeInstanceService, itemsService, recordsService, 
-    companyDiscountService, manualEposPromotion) {
+    companyDiscountService, manualEposPromotion, promotionsService) {
 
     var getPromotionsList = function () {
       var mockPromotionsList = [{
@@ -264,12 +264,11 @@ angular.module('ts5App')
     }
 
     function getManualEposPromotionList(cashBagId) {
-      console.log('cashBagId', cashBagId);
       return manualEposPromotion.getManualEposPromotionList(cashBagId);
     }
 
-    function updateManualEposPromotion(cashBagId, promotionId, payload) {
-      return manualEposPromotion.updateManualEposPromotion(cashBagId, promotionId, payload);
+    function updateManualEposPromotion(promotionId, payload) {
+      return manualEposPromotion.updateManualEposPromotion(promotionId, payload);
     }
 
     function deleteManualEposPromotion(promotionId) {
@@ -278,6 +277,10 @@ angular.module('ts5App')
 
     function createManualEposPromotion(payload) {
       return manualEposPromotion.createManualEposPromotion(payload);
+    }
+
+    function getCompanyPromotionsList(payload) {
+      return promotionsService.getPromotions(payload);
     }
 
     return {
@@ -311,8 +314,8 @@ angular.module('ts5App')
       createManualEposPromotion: createManualEposPromotion,
       deleteManualEposPromotion: deleteManualEposPromotion,
       updateManualEposPromotion: updateManualEposPromotion,
-      getManualEposPromotionList: getManualEposPromotionList
-
+      getManualEposPromotionList: getManualEposPromotionList,
+      getCompanyPromotionsList:getCompanyPromotionsList
     };
 
   });
