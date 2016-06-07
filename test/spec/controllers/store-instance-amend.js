@@ -455,10 +455,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(scope.getStatusNameById(4)).toBe('Discrepancies');
     });
 
-    it('sumGroupedCreditAmounts should sum amounts from the credit revenue array', function () {
+    it('sumGroupedAmounts should sum amounts from the credit revenue array', function () {
       var amounts = [ {amount: 1.1}, {amount: 2.2} ];
 
-      var result = scope.sumGroupedCreditAmounts(amounts);
+      var result = scope.sumGroupedAmounts(amounts);
 
       expect(result).toBe('3.30');
     });
