@@ -369,9 +369,15 @@ angular.module('ts5App')
     };
 
     function normalizeMergeSearchResults (dataFromAPI) {
-      var cashBags = angular.copy(dataFromAPI.cashBags) || [];
+      var cashBags = angular.copy(dataFromAPI.response) || [];
 
-      return angular.forEach(cashBags, function (cashBag) {
+      var filteredCashBags = lodash.filter(cashBags, {
+        cashBagNumber: $scope.moveSearch.cashBag,
+        bankReferenceNumber: $scope.moveSearch.bankRefNumber,
+        originationSource: 2
+      });
+
+      return angular.forEach(filteredCashBags, function (cashBag) {
         cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
         cashBag.updatedOn = dateUtility.formatTimestampForApp(cashBag.updatedOn);
       });
