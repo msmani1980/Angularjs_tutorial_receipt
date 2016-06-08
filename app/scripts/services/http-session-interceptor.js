@@ -108,7 +108,10 @@ angular.module('ts5App')
         '/rsvr/api/units',
         '/rsvr/api/cash-bags/[0-9]*$',
         '/rsvr/api/promotions/[0-9]*$',
-        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9]*$'
+        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9]*$',
+        '/rsvr/api/company-currency-globals',
+        '/rsvr/api/promotions'
+
     ];
 
     var onlyRsvrApis = [
