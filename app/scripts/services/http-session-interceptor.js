@@ -110,7 +110,8 @@ angular.module('ts5App')
         '/rsvr/api/promotions/[0-9]*$',
         '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9]*$',
         '/rsvr/api/company-currency-globals',
-        '/rsvr/api/promotions'
+        '/rsvr/api/promotions',
+        '/rsvr/api/companies/stores/[0-9]*'
 
     ];
 

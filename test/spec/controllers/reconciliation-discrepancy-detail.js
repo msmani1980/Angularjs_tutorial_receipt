@@ -836,7 +836,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         };
         scope.confirmAction('Discrepancies', 'Unconfirm');
         scope.performAction('Discrepancies');
-        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith('1', '9');
+        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith('1', '9', false);
       });
 
     });
