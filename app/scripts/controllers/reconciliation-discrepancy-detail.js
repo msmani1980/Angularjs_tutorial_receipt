@@ -606,7 +606,7 @@ angular.module('ts5App')
 
     function changeStatus(payload) {
       return [
-        storeInstanceFactory.updateStoreInstanceStatus(payload.id, payload.status)
+        storeInstanceFactory.updateStoreInstanceStatus(payload.id, payload.status, (payload.status === '10' ? true : false))
       ];
     }
 
