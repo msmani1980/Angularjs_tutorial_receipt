@@ -10,6 +10,7 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
   beforeEach(module('served/company-currency-globals.json'));
   beforeEach(module('served/company-exchange-rates.json'));
   beforeEach(module('served/company-exchange-rate.json'));
+  beforeEach(module('served/exchange-rate-types.json'));
 
   var CompanyExchangeRateEditCtrl;
   var scope;
@@ -26,12 +27,14 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
   var masterCurrenciesJSON;
   var companyExchangeRatesJSON;
   var companyExchangeRateJSON;
+  var exchangeRateTypesDeferred;
+  var exchangeRateTypesJSON;
   var globalMenuService;
   var payloadUtility;
 
   beforeEach(inject(function($q, $httpBackend, $controller, $rootScope, _globalMenuService_, _dateUtility_,
     _currencyFactory_, _servedCompany_, _servedCurrencies_, _servedCurrency_,
-    _servedCompanyCurrencyGlobals_, _servedCompanyExchangeRates_, _servedCompanyExchangeRate_,
+    _servedCompanyCurrencyGlobals_, _servedCompanyExchangeRates_, _servedCompanyExchangeRate_, _servedExchangeRateTypes_,
     _payloadUtility_) {
     scope = $rootScope.$new();
 
@@ -43,6 +46,7 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     masterCurrenciesJSON = _servedCompanyCurrencyGlobals_;
     companyExchangeRatesJSON = _servedCompanyExchangeRates_;
     companyExchangeRateJSON = _servedCompanyExchangeRate_;
+    exchangeRateTypesJSON = _servedExchangeRateTypes_;
     payloadUtility = _payloadUtility_;
     globalMenuService = _globalMenuService_;
 
@@ -55,13 +59,16 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     getCompanyExchangeRatesDeferred = $q.defer();
     getCompanyExchangeRatesDeferred.resolve(companyExchangeRatesJSON);
     getDeleteCompanyExchangeRateDeferred = $q.defer();
+    exchangeRateTypesDeferred = $q.defer();
+    exchangeRateTypesDeferred.resolve(exchangeRateTypesJSON);
+
 
     spyOn(globalMenuService.company, 'get').and.returnValue(403);
     spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getDetailedCompanyCurrencies').and.returnValue(
       getDetailedCompanyCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
-    spyOn(currencyFactory, 'getCompanyExchangeRates').and.returnValue();
+    spyOn(currencyFactory, 'getCompanyExchangeRates').and.returnValue(getCompanyExchangeRatesDeferred.promise);
     spyOn(currencyFactory, 'deleteCompanyExchangeRate').and.returnValue(getDeleteCompanyExchangeRateDeferred.promise);
     spyOn(currencyFactory, 'createCompanyExchangeRate').and.callFake(function() {
       return $.Deferred().resolve(companyExchangeRateJSON);
@@ -70,6 +77,8 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     spyOn(currencyFactory, 'updateCompanyExchangeRate').and.callFake(function() {
       return $.Deferred().resolve(companyExchangeRateJSON);
     });
+    spyOn(currencyFactory, 'getExchangeRateTypes').and.returnValue(exchangeRateTypesDeferred.promise);
+
 
     $httpBackend.whenGET(/companies/).respond(companyJSON);
 
@@ -88,6 +97,14 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
 
   it('should get the company global currencies called', function() {
     expect(currencyFactory.getCompanyGlobalCurrencies).toHaveBeenCalled();
+  });
+
+  it('should get epos exchange rate type', function () {
+    expect(currencyFactory.getExchangeRateTypes).toHaveBeenCalled();
+  });
+
+  it('should attach the epos exchange rate type to the controller', function () {
+    expect(CompanyExchangeRateEditCtrl.eposExchangeRateType).toBeDefined();
   });
 
   it('should get company global currencies', function() {
@@ -207,6 +224,18 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     expect(scope.companyExchangeRates).toEqual([]);
     expect(scope.search.startDate).toBe(undefined);
 
+  });
+
+  describe('search', function () {
+    it('should call getCompanyExchangeRates with exchangeRateType in payload', function () {
+      scope.search = {};
+      scope.searchCompanyExchangeRates();
+      scope.$digest();
+      var expectedPayload = jasmine.objectContaining({
+        exchangeRateType: 1
+      });
+      expect(currencyFactory.getCompanyExchangeRates).toHaveBeenCalledWith(expectedPayload);
+    });
   });
 
   describe('duplicateExchangeRate', function() {
