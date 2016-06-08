@@ -63,6 +63,10 @@ angular.module('ts5App')
       getTransactionTypes: {
         method: 'GET',
         isArray: true
+      },
+      getExchangeRateTypes: {
+        method: 'GET',
+        isArray: true
       }
     };
     var requestResource = $resource(requestURL, requestParameters, actions);
@@ -127,6 +131,11 @@ angular.module('ts5App')
       return requestResource.getTransactionTypes().$promise;
     }
 
+    function getExchangeRateTypes() {
+      requestParameters.api = 'exchange-rate-types';
+      return requestResource.getExchangeRateTypes().$promise;
+    }
+
     return {
       getCrewBaseTypes: getCrewBaseTypes,
       getCommissionPayableTypes: getCommissionPayableTypes,
@@ -139,6 +148,7 @@ angular.module('ts5App')
       getCharacteristics: getCharacteristics,
       getFeatures: getFeatures,
       getCountTypes: getCountTypes,
-      getTransactionTypes: getTransactionTypes
+      getTransactionTypes: getTransactionTypes,
+      getExchangeRateTypes: getExchangeRateTypes
     };
   });

@@ -182,5 +182,17 @@ describe('Service: recordsService', function () {
       });
     });
 
+    describe('getExchangeRateTypes', function() {
+      it('should make GET request to API', function() {
+        var expectUri = /records\/exchange-rate-types/;
+        httpBackend.expectGET(expectUri).respond(200, []);
+        recordsService.getExchangeRateTypes().then(function (response) {
+          expect(response).toBeDefined();
+        });
+
+        httpBackend.flush();
+      });
+    });
+
   });
 });
