@@ -30,7 +30,6 @@ describe('Service: manualEposFactory', function() {
     spyOn(manualEposFactory, 'getCashBagDiscountList');
 
     spyOn(manualEposFactory, 'createManualEposPromotion');
-    spyOn(manualEposFactory, 'deleteManualEposPromotion');
     spyOn(manualEposFactory, 'updateManualEposPromotion');
     spyOn(manualEposFactory, 'getManualEposPromotionList');
     spyOn(manualEposFactory, 'getCompanyPromotionsList');
@@ -117,13 +116,6 @@ describe('Service: manualEposFactory', function() {
     it('should call getCashBagDiscountList', function() {
       manualEposFactory.createManualEposPromotion();
       expect(manualEposFactory.createManualEposPromotion).toHaveBeenCalled();
-    });
-  });
-
-  describe('deleteManualEposPromotion API call', function() {
-    it('should call deleteManualEposPromotion', function() {
-      manualEposFactory.deleteManualEposPromotion();
-      expect(manualEposFactory.deleteManualEposPromotion).toHaveBeenCalled();
     });
   });
 

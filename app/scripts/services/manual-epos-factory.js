@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, 
     dailyExchangeRatesService, storeInstanceService, itemsService, recordsService, 
-    companyDiscountService, manualEposPromotion, promotionsService) {
+    companyDiscountService, promotionsService) {
 
     var getPromotionsList = function () {
       var mockPromotionsList = [{
@@ -264,19 +264,15 @@ angular.module('ts5App')
     }
 
     function getManualEposPromotionList(cashBagId) {
-      return manualEposPromotion.getManualEposPromotionList(cashBagId);
+      return cashBagService.getManualEposPromotionList(cashBagId);
     }
 
-    function updateManualEposPromotion(promotionId, payload) {
-      return manualEposPromotion.updateManualEposPromotion(promotionId, payload);
+    function updateManualEposPromotion(cashBagId, promotionId, payload) {
+      return cashBagService.updateManualCashBagRecord('promotions', cashBagId, promotionId, payload);
     }
 
-    function deleteManualEposPromotion(promotionId) {
-      return manualEposPromotion.deleteCashBag(promotionId);
-    }
-
-    function createManualEposPromotion(payload) {
-      return manualEposPromotion.createManualEposPromotion(payload);
+    function createManualEposPromotion(cashBagId, payload) {
+      return cashBagService.createManualCashBagRecord('promotions', cashBagId, payload);
     }
 
     function getCompanyPromotionsList(payload) {
@@ -312,7 +308,6 @@ angular.module('ts5App')
       getCompanyDiscountsComp:getCompanyDiscountsComp,
       getCompanyDiscountsFrequentFlyer:getCompanyDiscountsFrequentFlyer,
       createManualEposPromotion: createManualEposPromotion,
-      deleteManualEposPromotion: deleteManualEposPromotion,
       updateManualEposPromotion: updateManualEposPromotion,
       getManualEposPromotionList: getManualEposPromotionList,
       getCompanyPromotionsList:getCompanyPromotionsList
