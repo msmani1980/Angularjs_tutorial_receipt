@@ -29,7 +29,7 @@ angular.module('ts5App').service('companyDiscountService', function ($resource, 
     return defaults.concat(transform);
   };
 
-  var requestURL = ENV.apiUrl + '/api/company-discounts';
+  var requestURL = ENV.apiUrl + '/rsvr/api/company-discounts';
   var requestParameters = {};
 
   var actions = {

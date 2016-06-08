@@ -51,7 +51,7 @@ angular.module('ts5App')
         if (files && files.length) {
 
           Upload.upload({
-            url: ENV.apiUrl + '/api/images',
+            url: ENV.apiUrl + '/rsvr/api/images',
             fileFormDataName: 'image',
             file: files[0]
           }).progress(function (evt) {

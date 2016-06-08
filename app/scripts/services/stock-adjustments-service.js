@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('stockAdjustmentsService', function($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/stock-management/stock-adjustments';
+    var requestURL = ENV.apiUrl + '/rsvr/api/stock-management/stock-adjustments';
 
     var requestParameters = {};
 

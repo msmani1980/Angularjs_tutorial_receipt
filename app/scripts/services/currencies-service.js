@@ -19,9 +19,9 @@ angular.module('ts5App')
       return companyData.companyId;
     };
 
-    var masterCurrenciesURL = ENV.apiUrl + '/api/currencies/:id';
-    var companyCurrenciesURL = ENV.apiUrl + '/api/company-currency-globals';
-    var detailedCompanyCurrenciesURL = ENV.apiUrl + '/api/companies/:companyId/currencies/:id';
+    var masterCurrenciesURL = ENV.apiUrl + '/rsvr/api/currencies/:id';
+    var companyCurrenciesURL = ENV.apiUrl + '/rsvr/api/company-currency-globals';
+    var detailedCompanyCurrenciesURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/currencies/:id';
 
     var requestParameters = {
       id: '@id',

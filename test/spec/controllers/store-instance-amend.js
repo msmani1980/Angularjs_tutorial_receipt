@@ -435,6 +435,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       scope.$digest();
       expect(scope.canExecuteActions()).toBeTruthy();
 
+      scope.storeInstance = { statusId: 8 };
+      scope.$digest();
+      expect(scope.canExecuteActions()).toBeTruthy();
+
       scope.storeInstance = null;
       scope.$digest();
       expect(scope.canExecuteActions()).toBeFalsy();
@@ -449,6 +453,14 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
       expect(scope.getStatusNameById(8)).toBe('Inbounded');
       expect(scope.getStatusNameById(4)).toBe('Discrepancies');
+    });
+
+    it('sumGroupedAmounts should sum amounts from the credit revenue array', function () {
+      var amounts = [ {amount: 1.1}, {amount: 2.2} ];
+
+      var result = scope.sumGroupedAmounts(amounts);
+
+      expect(result).toBe('3.30');
     });
 
     it('getOrNA should return value or N/A if value is not defined or null', function () {
@@ -785,7 +797,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.newScheduleSelection = null;
         scope.moveCashBagSearchResults = null;
         scope.cashBagToEdit = { id: 1 };
-        scope.newScheduleSelection = { id: 2, scheduleNumber: '3'};
+        scope.newScheduleSelection = { id: 2, scheduleNumber: '3', scheduleDate: '02/01/2016'};
       });
 
       it('should add schedule if add action is requested', function () {
@@ -796,7 +808,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       it('should edit schedule if edit schedule is requested', function () {
         scope.scheduleToEdit = { id: 2 };
         scope.addOrEditSchedule();
-        expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 2, '3');
+        expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 2, '3', '20160201');
       });
     });
   });
@@ -877,7 +889,20 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
       expect(scope.cashRevenueModal).toEqual({ amount: 10 });
     });
+
+    it('card revenue modal should assin model', function () {
+      var cashBag = { id: 2158, creditRevenue: { amount: 10 } };
+      scope.showCreditRevenueModal(cashBag);
+
+      expect(scope.creditRevenueModal).toEqual({ amount: 10 });
+    });
+
+    it('discount revenue modal should assin model', function () {
+      var cashBag = { id: 2158, discountRevenue: { amount: 10 } };
+      scope.showDiscountRevenueModal(cashBag);
+
+      expect(scope.discountRevenueModal).toEqual({ amount: 10 });
+    });
   });
 
 });
-

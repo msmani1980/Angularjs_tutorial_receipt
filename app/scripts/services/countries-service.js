@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('countriesService', function($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/countries';
+    var requestURL = ENV.apiUrl + '/rsvr/api/countries';
 
     var requestParameters = {
       limit: 300
