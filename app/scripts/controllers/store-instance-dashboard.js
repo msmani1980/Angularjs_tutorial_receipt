@@ -286,8 +286,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     function setFlightDocsConditions(storeInstance) {
-      if (lodash.find(storeInstance.actionButtons, lodash.matches('Get Flight Docs')) || storeInstance.statusName ===
-        'On Floor') {
+      if (lodash.find(storeInstance.actionButtons, lodash.matches('Get Flight Docs')) || storeInstance.statusName === 'On Floor') {
         storeInstance.showGenerateDocsButton = true;
         storeInstance.exportURL = ENV.apiUrl + '/rsvr/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
           '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'; //$http.defaults.headers.common.sessionToken;
@@ -600,10 +599,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     function completeNavigateToAction(actionName, storeInstance) {
-      var URL = storeInstanceDashboardActionsConfig.getURL(actionName, storeInstance.id);
+      var url = storeInstanceDashboardActionsConfig.getURL(actionName, storeInstance.id);
       hideLoadingModal();
-      if (URL) {
-        $location.path(URL);
+      if (url) {
+        $location.path(url);
       } else {
         messageService.display('danger', 'Error loading next page!');
       }
@@ -687,11 +686,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         return true;
       }
 
-      if ($scope.searchIsActive) {
-        return true;
-      }
-
-      return false;
+      return $scope.searchIsActive;
     };
 
     $scope.displayUndispatchConfirmation = function(store) {
