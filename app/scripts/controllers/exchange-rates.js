@@ -43,7 +43,7 @@ angular.module('ts5App')
     };
 
     function formatDateForAPI(cashiersDate) {
-      return dateUtility.formatDateForApp(cashiersDate);
+      return dateUtility.formatDateForAPI(cashiersDate);
     }
 
     function getExchangeRateFromCompanyCurrencies(currenciesArray, currencyId) {
