@@ -138,11 +138,30 @@ angular.module('ts5App')
 
       item.actions = actions;
     };
+    
+    function isShowForceReconcile (data) {
+      if (data && data === 'No') {
+        return true;
+      }
+
+      if (data && data.indexOf('\/') > -1) {
+        var arrayEposData = data.split('\/');
+        if (arrayEposData !== null && arrayEposData.length === 2 && arrayEposData[0] !== arrayEposData[1]) {
+          return true;
+        }
+      }
+
+      return false;
+    }
 
     this.recalculateActionsForInboundStatus = function(item, actions) {
       if (item.statusName === 'Inbounded') {
         actions.push('Validate');
-        actions.push('ForceReconcile');
+
+        //TSVPORTAL-6630 - The 'Force Reconcile' button should be visible only in cases where the pre-check conditions - ePOS Data, Post Trip Data, Cash Handler Data - are not met.
+        if (isShowForceReconcile(item.eposData) || isShowForceReconcile(item.postTripData) || isShowForceReconcile(item.cashHandlerData)) {
+          actions.push('ForceReconcile');
+        }
 
         // TODO: Temporary disabled these buttons as per Roshen's request. Enable once Roshen gives a green light
         /*if (item.eposData === 'No') {
