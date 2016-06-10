@@ -17,12 +17,11 @@ angular.module('ts5App')
     };
 
     var notrsvrPages = [
-        '/cash-bag-list/*',
         '/cash-bag-submission/*',
         '/cash-bag/*',
         '/category-list/*',
         '/category/*',
-        '/change-password/*', 
+        '/change-password/*',
         '/commission-data-table/*',
         '/commission-data/*',
         '/company-create/*',
@@ -41,7 +40,7 @@ angular.module('ts5App')
         '/employee-message/*',
         '/employee-messages/*',
         '/exchange-rates/*',
-        '/forgot-username-password/*', 
+        '/forgot-username-password/*',
         '/global-reason-code/*',
         '/item-copy/*',
         '/item-create/*',
@@ -58,7 +57,7 @@ angular.module('ts5App')
         '/manual-epos-dashboard/*',
         '/manual-epos-discount/*',
         '/manual-epos-items/*',
-        '/manual-store-instance/*', 
+        '/manual-store-instance/*',
         '/menu-list/*',
         '/menu-relationship-create/*',
         '/menu-relationship-edit/*',
@@ -152,7 +151,7 @@ angular.module('ts5App')
 
     var shouldReplaceUrl = function(config) {
       var hasRestParam = $location.absUrl().indexOf('api=rest') > 0;
-      
+
       if (hasRestParam) {
         return false;
       }
@@ -160,7 +159,7 @@ angular.module('ts5App')
       if (isOnlyRsvrAPI(config.url)) {
         return false;
       }
-      
+
       if (isPageWithLegacyAPIs() || isLegacyAPI(config)) {
         return true;
       }
