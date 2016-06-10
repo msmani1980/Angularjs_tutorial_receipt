@@ -1093,10 +1093,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should get stores that are not ready to use', function() {
-      scope.formData.scheduleDate = '10/01/2015';
       var queryControl = {
-        startDate: '20151001',
-        endDate: '20151001',
         readyToUse: false
       };
       StoreInstanceCreateCtrl.getStoresList();
