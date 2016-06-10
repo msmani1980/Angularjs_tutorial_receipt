@@ -311,10 +311,19 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
     }
 
+    function setStoreInstanceTamperedFlag(storeInstance) {
+      var statusNumber = parseInt(storeInstance.statusNumber);
+      var inboundedStatus = lodash.findWhere($scope.storeStatusList, { statusName: 'Inbounded' });
+      var inboundedStatusNumber = angular.isDefined(inboundedStatus) ? parseInt(inboundedStatus.name) : 0;
+      var tamperedFlagAsString = (storeInstance.tampered) ? 'Yes' : 'No';
+      storeInstance.tamperedFlag = (statusNumber >= inboundedStatusNumber) ? tamperedFlagAsString : '';
+    }
+
     function formatStoreInstance(storeInstance) {
       storeInstance.dispatchStationCode = getValueByIdInArray(storeInstance.cateringStationId, 'code', $scope.stationList);
       storeInstance.inboundStationCode = getValueByIdInArray(storeInstance.inboundStationId, 'code', $scope.stationList);
       storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
+      storeInstance.statusNumber = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
       storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
       storeInstance.statusName = (storeInstance.statusName === 'Unpacking' || storeInstance.statusName ===
         'Inbound Seals') ? 'On Floor' : storeInstance.statusName;
@@ -326,6 +335,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       setStoreInstanceTime(storeInstance);
       setStoreInstanceActionButtons(storeInstance);
       setFlightDocsConditions(storeInstance);
+      setStoreInstanceTamperedFlag(storeInstance);
 
       storeInstance.selected = false;
     }
