@@ -58,8 +58,10 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       statusResponseJSON = angular.copy(_servedStoreStatusResponse_);
       storeTimeConfigResponseJSON = angular.copy(_servedStoreTimeConfig_);
       featuresListResponseJSON = angular.copy(_servedFeatures_);
-
     });
+
+    storeInstanceListResponseJSON.response[0].statusId = 8;
+    storeInstanceListResponseJSON.response[1].statusId = 8;
 
     scope = $rootScope.$new();
     location = $location;
