@@ -93,6 +93,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var promotionDeferred;
   var dailyExchangeRateJSON;
   var dailyExchangeRateDeferred;
+  var globalMenuService;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagVerifications_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
@@ -112,6 +113,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     dateUtility = $injector.get('dateUtility');
     stationsService = $injector.get('stationsService');
     dailyExchangeRatesService = $injector.get('dailyExchangeRatesService');
+    globalMenuService= $injector.get('globalMenuService');
     controller = $controller;
 
     storeInstanceResponseJSON = [{ id: 1 }]; // stub for now until API is complete
@@ -216,6 +218,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     dailyExchangeRateDeferred = $q.defer();
     dailyExchangeRateDeferred.resolve(dailyExchangeRateJSON);
 
+    spyOn(globalMenuService.company, 'get').and.returnValue('fakeCompanyId');
     spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
