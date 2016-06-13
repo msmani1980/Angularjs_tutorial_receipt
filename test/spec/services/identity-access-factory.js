@@ -5,6 +5,7 @@ describe('Service: identityAccessFactory', function() {
   beforeEach(module('ts5App'));
   beforeEach(module('served/authorize-user.json'));
   beforeEach(module('served/company.json'));
+  beforeEach(module('served/company-formats.json'));
   beforeEach(module('served/company-types.json'));
   beforeEach(module('served/all-user-companies.json'));
 
@@ -34,7 +35,7 @@ describe('Service: identityAccessFactory', function() {
     companyTypesJSON = $injector.get('servedCompanyTypes');
     authorizeUserJSON = $injector.get('servedAuthorizeUser');
     getUserCompaniesJSON = $injector.get('servedAllUserCompanies');
-    getCompanyFormatListJSON = {};
+    getCompanyFormatListJSON = $injector.get('servedCompanyFormats');
 
     localStorage = $injector.get('$localStorage');
     identityAccessService = $injector.get('identityAccessService');
@@ -241,6 +242,7 @@ describe('Service: identityAccessFactory', function() {
       spyOn(eulaService, 'showEULAConfirmation');
       identityAccessFactory.checkForEULA(sessionObject);
     });
+    
     it('should call login', function() {
       expect(eulaService.showEULAConfirmation).toHaveBeenCalled();
     });

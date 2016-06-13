@@ -1,0 +1,1 @@
+{"meta":{"count":2,"limit":2,"start":0},"response":[{"id":10,"companyId":403,"formatId":1,"format":{"id":1,"dataType":"DATE","format":"mm/dd/yyyy"}},{"id":11,"companyId":403,"formatId":3,"format":{"id":3,"dataType":"CURRENCY","format":"#,###.##"}}]}
