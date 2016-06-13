@@ -24,10 +24,20 @@ describe('Service: companyFormatService', function () {
 
   describe('API requests', function () {
 
-    it('should GET the company formats', function () {
+    it('should GET the company format list', function () {
       $httpBackend.expectGET(/company-formats/).respond(200, { fakeResponseKey: 'fakeResponseValue' });
 
       companyFormatService.getCompanyFormatList().then(function (response) {
+        expect(response.fakeResponseKey).toBe('fakeResponseValue');
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should GET a company format', function () {
+      $httpBackend.expectGET(/company-formats/).respond(200, { fakeResponseKey: 'fakeResponseValue' });
+
+      companyFormatService.getCompanyFormat('fakeId').then(function (response) {
         expect(response.fakeResponseKey).toBe('fakeResponseValue');
       });
 
