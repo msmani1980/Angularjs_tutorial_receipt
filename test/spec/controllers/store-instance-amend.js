@@ -775,7 +775,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       it('should getSchedules', function () {
         scope.scheduleSearch = { scheduleNumber: '123', scheduleDate: '10/20/2015' };
         scope.searchForSchedule();
-        expect(postTripFactory.getPostTripDataList).toHaveBeenCalledWith(0, scope.scheduleSearch);
+        expect(postTripFactory.getPostTripDataList).toHaveBeenCalledWith('fakeCompanyId', scope.scheduleSearch);
       });
 
       it('should set schedule search results', function () {
