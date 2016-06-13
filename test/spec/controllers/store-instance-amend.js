@@ -113,7 +113,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     dateUtility = $injector.get('dateUtility');
     stationsService = $injector.get('stationsService');
     dailyExchangeRatesService = $injector.get('dailyExchangeRatesService');
-    globalMenuService= $injector.get('globalMenuService');
+    globalMenuService = $injector.get('globalMenuService');
     controller = $controller;
 
     storeInstanceResponseJSON = [{ id: 1 }]; // stub for now until API is complete
