@@ -44,7 +44,7 @@ describe('Service: companyFormatService', function () {
       $httpBackend.flush();
     });
 
-    it('should PUT an excise duty record', function () {
+    it('should PUT a company format', function () {
       var companyFormatId = 123;
       $httpBackend.expectPUT(/excise-duty\/\d+/).respond(200, { fakeResponseKey: companyFormatId });
 
@@ -55,7 +55,7 @@ describe('Service: companyFormatService', function () {
       $httpBackend.flush();
     });
 
-    it('should delete an excise duty record', function () {
+    it('should delete a company format', function () {
       var companyFormatId = 123;
       $httpBackend.expectDELETE(/company-formats/).respond(200, { fakeResponseKey: companyFormatId });
 
