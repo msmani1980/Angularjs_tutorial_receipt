@@ -135,7 +135,8 @@ angular.module('ts5App')
 
         var splitAmounts = (discountObject.currentCurrencyAmount).split('.');
         var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
-        var convertedCoinAmount = parseFloat(splitAmounts[1]) / coinExchangeRate;
+        var convertedCoinAmount = (angular.isDefined(splitAmounts[1])) ? parseFloat(splitAmounts[1]) / coinExchangeRate : 0;
+
         baseCurrencyAmount = convertedPaperAmount + (convertedCoinAmount / 100);
       } else {
         var exchangeRate = discountObject.exchangeRate.bankExchangeRate;

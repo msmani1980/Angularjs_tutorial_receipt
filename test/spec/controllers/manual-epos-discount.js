@@ -263,6 +263,21 @@ describe('Controller: ManualEposDiscountCtrl', function () {
       var convertedAmountObject = scope.onChangePriceOrQty(mockCurrencyObject);
       expect(convertedAmountObject.baseCurrencyAmount).toEqual('0.00');
     });
+
+    it('should accept whole numbers', function () {
+      var mockCurrencyObject = {
+        amount: 1,
+        currentCurrencyAmount: 1.50,
+        quantity: 1,
+        exchangeRate: {
+          bankExchangeRate: null,
+          paperExchangeRate: 0.5,
+          coinExchangeRate: 0.5
+        }
+      };
+      var convertedAmountObject = scope.onChangePriceOrQty(mockCurrencyObject);
+      expect(convertedAmountObject.baseCurrencyAmount).toEqual('2.00');
+    });
   });
 
   describe('sum converted amounts', function () {
