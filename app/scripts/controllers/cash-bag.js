@@ -28,6 +28,7 @@ angular.module('ts5App')
     delete $localStorage.isListFromEdit;
 
     function formatAsCurrency(valueToFormat) {
+      
       return sprintf('%.4f', valueToFormat);
     }
 
