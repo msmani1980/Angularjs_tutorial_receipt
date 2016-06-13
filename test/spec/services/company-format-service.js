@@ -46,7 +46,7 @@ describe('Service: companyFormatService', function () {
 
     it('should PUT a company format', function () {
       var companyFormatId = 123;
-      $httpBackend.expectPUT(/excise-duty\/\d+/).respond(200, { fakeResponseKey: companyFormatId });
+      $httpBackend.expectPUT(/company-formats\/\d+/).respond(200, { fakeResponseKey: companyFormatId });
 
       companyFormatService.updateCompanyFormat(companyFormatId).then(function (response) {
         expect(response.fakeResponseKey).toBe(companyFormatId);
