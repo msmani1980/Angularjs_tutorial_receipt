@@ -1,6 +1,5 @@
 'use strict';
 
-/*global moment:false */
 /**
  * @ngdoc function
  * @name ts5App.controller:ExchangeRatesCtrl
@@ -44,7 +43,7 @@ angular.module('ts5App')
     };
 
     function formatDateForAPI(cashiersDate) {
-      return moment(cashiersDate, 'L').format('YYYYMMDD').toString();
+      return dateUtility.formatDateForAPI(cashiersDate);
     }
 
     function getExchangeRateFromCompanyCurrencies(currenciesArray, currencyId) {
@@ -116,7 +115,7 @@ angular.module('ts5App')
     }
 
     function shouldShowActionButtons() {
-      var isToday = moment($scope.cashiersDateField, 'L').format('L') === moment().format('L');
+      var isToday = dateUtility.isToday($scope.cashiersDateField);
       if (!isToday) {
         return false;
       }
@@ -134,7 +133,7 @@ angular.module('ts5App')
 
     $scope.$watch('cashiersDateField', function(cashiersDate) {
       var companyId = globalMenuService.getCompanyData().chCompany.companyId;
-      if (!moment(cashiersDate, 'L', true).isValid()) {
+      if (!dateUtility.isDateValidForApp(cashiersDate)) {
         return;
       }
 
@@ -353,14 +352,12 @@ angular.module('ts5App')
       var retailCompanyId = globalMenuService.getCompanyData().chCompany.companyId;
       var chCompanyId = globalMenuService.getCompanyData().id;
 
-      var promises = [
+      return [
         currencyFactory.getCompanyPreferences(preferencePayload, retailCompanyId),
         currencyFactory.getCompany(retailCompanyId),
         currencyFactory.getCompany(chCompanyId),
         currencyFactory.getExchangeRateThresholdList(thresholdPayload)
       ];
-
-      return promises;
     }
 
     function init() {
