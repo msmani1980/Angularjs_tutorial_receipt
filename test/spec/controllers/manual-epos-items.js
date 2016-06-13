@@ -311,7 +311,7 @@ describe('Controller: ManualEposItemsCtrl', function () {
 
       scope.itemList = [{
         currencyId: 1,
-        amount: '2'
+        amount: '2.00'
       }];
 
       scope.selectedCurrency = {currency: {id: 2}};

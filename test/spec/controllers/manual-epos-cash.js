@@ -196,9 +196,9 @@ describe('Controller: ManualEposCashCtrl', function () {
       var mockCurrencyObject = {
         amount: '1.00',
         exchangeRate: {
-          bankExchangeRate: null,
-          paperExchangeRate: 0.50,
-          coinExchangeRate: 0.50
+          bankExchangeRate: 0.50,
+          paperExchangeRate: null,
+          coinExchangeRate: null
         }
       };
       var convertedAmount = scope.convertAmount(mockCurrencyObject);
@@ -233,9 +233,9 @@ describe('Controller: ManualEposCashCtrl', function () {
       var mockCurrencyObject = {
         amount: '1',
         exchangeRate: {
-          bankExchangeRate: 0.50,
-          paperExchangeRate: null,
-          coinExchangeRate: null
+          bankExchangeRate: null,
+          paperExchangeRate: 0.50,
+          coinExchangeRate: 0.50
         }
       };
       var convertedAmount = scope.convertAmount(mockCurrencyObject);
