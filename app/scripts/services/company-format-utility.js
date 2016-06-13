@@ -11,9 +11,16 @@ angular.module('ts5App')
   .service('companyFormatUtility', function (identityAccessFactory, lodash) {
     function getStoredFormatList() {
       var formatList = identityAccessFactory.getSessionObject().companyFormatList;
-      return lodash.object(lodash.map(formatList, function (item) {
-        return [item.format.dataType, item.format.format];
-      }));
+      if (formatList) {
+        return lodash.object(lodash.map(formatList, function (item) {
+          return [item.format.dataType, item.format.format];
+        }));
+      }
+
+      return {
+        DATE: 'MM/DD/YYYY',
+        CURRENCY: '%.2f'
+      };
     }
 
     function getDateFormat() {
