@@ -19,8 +19,6 @@ angular.module('ts5App')
     var notrsvrPages = [
         '/cash-bag-submission/*',
         '/cash-bag/*',
-        '/category-list/*',
-        '/category/*',
         '/change-password/*',
         '/commission-data-table/*',
         '/commission-data/*',
