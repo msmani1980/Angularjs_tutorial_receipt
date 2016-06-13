@@ -39,7 +39,7 @@
       "updatedBy": null,
       "updatedOn": null,
       "prevStoreInstanceId": null,
-      "tampered": null,
+      "tampered": true,
       "note": null,
       "menus": []
     },

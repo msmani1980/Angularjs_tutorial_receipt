@@ -138,11 +138,27 @@ angular.module('ts5App')
 
       item.actions = actions;
     };
+    
+    function isShowForceReconcile (data) {
+      if (data && data.toLowerCase() === 'no') {
+        return true;
+      }
+
+      if (data && data.indexOf('\/') > -1) {
+        var arrayEposData = data.split('\/');
+        return (arrayEposData !== null && arrayEposData.length === 2 && arrayEposData[0] !== arrayEposData[1]);
+      }
+
+      return false;
+    }
 
     this.recalculateActionsForInboundStatus = function(item, actions) {
       if (item.statusName === 'Inbounded') {
         actions.push('Validate');
-        actions.push('ForceReconcile');
+
+        if (isShowForceReconcile(item.eposData) || isShowForceReconcile(item.postTripData) || isShowForceReconcile(item.cashHandlerData)) {
+          actions.push('ForceReconcile');
+        }
 
         // TODO: Temporary disabled these buttons as per Roshen's request. Enable once Roshen gives a green light
         /*if (item.eposData === 'No') {
