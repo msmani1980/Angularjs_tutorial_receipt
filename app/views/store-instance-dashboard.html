@@ -197,8 +197,7 @@
           </div>
         </td>
         <td>
-          <span ng-show="store.tampered">Yes</span>
-          <span ng-hide="store.tampered">No</span>
+          {{ store.tamperedFlag }}
         </td>
         <td>{{ store.id }}</td>
         <td>{{ store.statusName }}</td>
@@ -293,8 +292,7 @@
           </div>
         </td>
         <td>
-          <span ng-show="replenishment.tampered">Yes</span>
-          <span ng-hide="replenishment.tampered">No</span>
+          {{ replenishment.tamperedFlag }}
         </td>
         <td>{{ replenishment.id }}</td>
         <td>{{ replenishment.statusName }}</td>

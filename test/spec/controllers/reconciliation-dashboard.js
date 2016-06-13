@@ -212,13 +212,40 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
       statusName: 'Inbounded'
     };
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Validate']);
+
+    item = {
+      statusName: 'Inbounded',
+      eposData: '1/3',
+      postTripData: '2/3',
+      cashHandlerData: 'No'
+    };
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Validate', 'ForceReconcile']);
 
     item = {
       statusName: 'Inbounded',
       eposData: '1/3',
       postTripData: '2/3',
-      cashHandlerData: '3/3'
+      cashHandlerData: 'no'
+    };
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Validate', 'ForceReconcile']);
+
+    item = {
+      statusName: 'Inbounded',
+      eposData: '1/3',
+      postTripData: '2/3',
+      cashHandlerData: 'NO'
+    };
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Validate', 'ForceReconcile']);
+
+    item = {
+      statusName: 'Inbounded',
+      eposData: '1/3',
+      postTripData: '2/3',
+      cashHandlerData: 'nO'
     };
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Validate', 'ForceReconcile']);

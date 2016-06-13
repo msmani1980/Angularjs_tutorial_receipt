@@ -58,8 +58,10 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       statusResponseJSON = angular.copy(_servedStoreStatusResponse_);
       storeTimeConfigResponseJSON = angular.copy(_servedStoreTimeConfig_);
       featuresListResponseJSON = angular.copy(_servedFeatures_);
-
     });
+
+    storeInstanceListResponseJSON.response[0].statusId = 8;
+    storeInstanceListResponseJSON.response[1].statusId = 8;
 
     scope = $rootScope.$new();
     location = $location;
@@ -157,6 +159,17 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
       it('should attach objects of JSON to scope', function() {
         expect(scope.storeInstanceList.length > 0).toEqual(true);
+      });
+
+      it('should format the tampered seals flag to be empty before a store instance is inbounded', function () {
+        var tamperedInstance = _lodash.findWhere(scope.storeInstanceList, {statusName: 'Inbounded', tampered: true});
+        expect(tamperedInstance.tamperedFlag).toEqual('Yes');
+
+        var untamperedInstance = _lodash.findWhere(scope.storeInstanceList, {statusName: 'Inbounded', tampered: null});
+        expect(untamperedInstance.tamperedFlag).toEqual('No');
+
+        var nonInboundedInstance = _lodash.findWhere(scope.storeInstanceList, {statusName: 'Ready for Packing'});
+        expect(nonInboundedInstance.tamperedFlag).toEqual('');
       });
     });
 
