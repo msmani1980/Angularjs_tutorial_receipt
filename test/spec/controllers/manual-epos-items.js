@@ -277,9 +277,9 @@ describe('Controller: ManualEposItemsCtrl', function () {
           amount: '1',
           quantity: '1',
           exchangeRate: {
-            bankExchangeRate: 0.50,
-            paperExchangeRate: null,
-            coinExchangeRate: null
+            bankExchangeRate: null,
+            paperExchangeRate:0.50,
+            coinExchangeRate: 0.50
           }
         };
         scope.calculateTotals(mockItemWithExchangeRate);
@@ -300,7 +300,7 @@ describe('Controller: ManualEposItemsCtrl', function () {
   });
 
   describe('switching amounts', function () {
-    beforeEach(function () {
+    it('should convert all amounts to the new currency', function () {
       scope.dailyExchangeRates = [{
         retailCompanyCurrencyId: 1,
         bankExchangeRate: 0.25
@@ -308,8 +308,7 @@ describe('Controller: ManualEposItemsCtrl', function () {
         retailCompanyCurrencyId: 2,
         bankExchangeRate: 2
       }];
-    });
-    it('should convert all amounts to the new currency', function () {
+
       scope.itemList = [{
         currencyId: 1,
         amount: '2'
@@ -319,18 +318,6 @@ describe('Controller: ManualEposItemsCtrl', function () {
       scope.updateAmountsWithSelectedCurrency();
       expect(scope.itemList[0].amount).toEqual('16.00');
     });
-
-    it('should accept whole number amounts', function () {
-      scope.itemList = [{
-        currencyId: 1,
-        amount: '2'
-      }];
-
-      scope.selectedCurrency = {currency: {id: 2}};
-      scope.updateAmountsWithSelectedCurrency();
-      expect(scope.itemList[0].amount).toEqual('16.00');
-    });
-
   });
 
   describe('verify and unverify', function () {
