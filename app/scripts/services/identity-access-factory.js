@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .factory('identityAccessFactory', function(identityAccessService, $rootScope, $http, $localStorage, $location,
-    $timeout, $window, companyFactory, $q, lodash, eulaService) {
+    $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService) {
 
     var tempToken;
 
@@ -143,7 +143,8 @@ angular.module('ts5App')
       var companyDataPromiseArray = [
         companyFactory.getCompany(rawSessionData.companyId),
         companyFactory.getCompanyTypes(),
-        identityAccessService.getUserCompanies()
+        identityAccessService.getUserCompanies(),
+        companyFormatService.getCompanyFormatList()
       ];
 
       $q.all(companyDataPromiseArray).then(function(dataFromApi) {

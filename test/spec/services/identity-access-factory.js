@@ -14,10 +14,13 @@ describe('Service: identityAccessFactory', function() {
   var companiesFactory;
   var companyFactory;
   var eulaService;
+  var companyFormatService;
   var getCompanyDeferred;
   var getCompanyTypesDeferred;
   var authorizeUserDeferred;
   var getUserCompaniesDeferred;
+  var getCompanyFormatListDeferred;
+  var getCompanyFormatListJSON;
   var getUserCompaniesJSON;
   var authorizeUserJSON;
   var companyResponseJSON;
@@ -31,12 +34,14 @@ describe('Service: identityAccessFactory', function() {
     companyTypesJSON = $injector.get('servedCompanyTypes');
     authorizeUserJSON = $injector.get('servedAuthorizeUser');
     getUserCompaniesJSON = $injector.get('servedAllUserCompanies');
+    getCompanyFormatListJSON = {};
 
     localStorage = $injector.get('$localStorage');
     identityAccessService = $injector.get('identityAccessService');
     companiesFactory = $injector.get('companiesFactory');
     companyFactory = $injector.get('companyFactory');
     eulaService = $injector.get('eulaService');
+    companyFormatService = $injector.get('companyFormatService');
 
     scope = $rootScope;
     location = $location;
@@ -53,6 +58,10 @@ describe('Service: identityAccessFactory', function() {
     getCompanyTypesDeferred = $q.defer();
     getCompanyTypesDeferred.resolve(companyTypesJSON);
     spyOn(companyFactory, 'getCompanyTypes').and.returnValue(getCompanyTypesDeferred.promise);
+
+    getCompanyFormatListDeferred = $q.defer();
+    getCompanyFormatListDeferred.resolve(getCompanyFormatListJSON);
+    spyOn(companyFormatService, 'getCompanyFormatList').and.returnValue(getCompanyFormatListDeferred.promise);
 
     getUserCompaniesDeferred = $q.defer();
     getUserCompaniesDeferred.resolve(getUserCompaniesJSON);
@@ -104,6 +113,11 @@ describe('Service: identityAccessFactory', function() {
 
     it('should call getUserCompanies API', function() {
       expect(identityAccessService.getUserCompanies).toHaveBeenCalled();
+    });
+
+    it('should call companyFormatService.getCompanyFormatList API', function() {
+      scope.$digest();
+      expect(companyFormatService.getCompanyFormatList).toHaveBeenCalled();
     });
 
     it('should have user company list on the session object', function() {
