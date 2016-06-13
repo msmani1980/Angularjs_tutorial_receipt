@@ -429,7 +429,7 @@ angular.module('ts5App')
           var newItem = {
             eposQuantity: manualItem.quantity,
             eposTotal: manualItem.convertedAmount.toFixed(2),
-            itemName: manualItem.itemMasterId,
+            itemName: manualItem.itemMaster.itemName,
             itemTypeName: itemTypeName
           };
           manualItemArray.push(newItem);
