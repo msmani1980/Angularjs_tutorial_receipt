@@ -169,6 +169,7 @@ describe('Controller: ManualEposCreditCtrl', function () {
     it('should check the cash bag verification', function () {
       expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
       expect(scope.isVerified).toBeDefined();
+      expect(scope.isCashBagConfirmed).toBeDefined();
     });
 
     it('shoud parse verifiecation date, time, and user', function () {
@@ -231,6 +232,19 @@ describe('Controller: ManualEposCreditCtrl', function () {
       };
       var convertedAmount = scope.convertAmount(mockCurrencyObject);
       expect(convertedAmount).toEqual('0.00');
+    });
+
+    it('should accept non decimal amounts', function () {
+      var mockCurrencyObject = {
+        amount: '1',
+        exchangeRate: {
+          bankExchangeRate: 0.50,
+          paperExchangeRate: null,
+          coinExchangeRate: null
+        }
+      };
+      var convertedAmount = scope.convertAmount(mockCurrencyObject);
+      expect(convertedAmount).toEqual('2.00');
     });
   });
 

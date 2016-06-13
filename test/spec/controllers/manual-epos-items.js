@@ -217,6 +217,7 @@ describe('Controller: ManualEposItemsCtrl', function () {
     it('should check the cash bag verification', function () {
       expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
       expect(scope.isVerified).toBeDefined();
+      expect(scope.isCashBagConfirmed).toBeDefined();
       expect(scope.verifiedInfo.verifiedBy).toEqual('John Adams');
       expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53');
     });
@@ -270,6 +271,20 @@ describe('Controller: ManualEposItemsCtrl', function () {
         scope.calculateTotals(mockItemWithExchangeRate);
         expect(mockItemWithExchangeRate.convertedTotal).toEqual('4.10');
       });
+
+      it('should accept whole numbers', function () {
+        var mockItemWithExchangeRate = {
+          amount: '1',
+          quantity: '1',
+          exchangeRate: {
+            bankExchangeRate: 0.50,
+            paperExchangeRate: null,
+            coinExchangeRate: null
+          }
+        };
+        scope.calculateTotals(mockItemWithExchangeRate);
+        expect(mockItemWithExchangeRate.convertedTotal).toEqual('2.00');
+      });
     });
   });
 
@@ -285,7 +300,7 @@ describe('Controller: ManualEposItemsCtrl', function () {
   });
 
   describe('switching amounts', function () {
-    it('should convert all amounts to the new currency', function () {
+    beforeEach(function () {
       scope.dailyExchangeRates = [{
         retailCompanyCurrencyId: 1,
         bankExchangeRate: 0.25
@@ -293,16 +308,29 @@ describe('Controller: ManualEposItemsCtrl', function () {
         retailCompanyCurrencyId: 2,
         bankExchangeRate: 2
       }];
-
+    });
+    it('should convert all amounts to the new currency', function () {
       scope.itemList = [{
         currencyId: 1,
-        amount: '2.00'
+        amount: '2'
       }];
 
       scope.selectedCurrency = {currency: {id: 2}};
       scope.updateAmountsWithSelectedCurrency();
       expect(scope.itemList[0].amount).toEqual('16.00');
     });
+
+    it('should accept whole number amounts', function () {
+      scope.itemList = [{
+        currencyId: 1,
+        amount: '2'
+      }];
+
+      scope.selectedCurrency = {currency: {id: 2}};
+      scope.updateAmountsWithSelectedCurrency();
+      expect(scope.itemList[0].amount).toEqual('16.00');
+    });
+
   });
 
   describe('verify and unverify', function () {
