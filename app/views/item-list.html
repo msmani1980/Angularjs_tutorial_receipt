@@ -146,8 +146,8 @@
         <td ng-hide="isOpen(item)">{{ item.versions[0].stockOwnerCode }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].itemTypeName }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].categoryName }}</td>
-        <td ng-hide="isOpen(item)">{{ item.versions[0].startDate | date: 'MM/dd/yyyy' }}</td>
-        <td ng-hide="isOpen(item)">{{ item.versions[0].endDate | date: 'MM/dd/yyyy' }}</td>
+        <td ng-hide="isOpen(item)">{{ item.versions[0].startDate }}</td>
+        <td ng-hide="isOpen(item)">{{ item.versions[0].endDate }}</td>
         <td ng-hide="isOpen(item)">
           <a class="btn btn-info btn-xs" ng-href="#/item-view/{{item.versions[0].id}}">
             <i class="fa fa-file"></i>
@@ -171,8 +171,8 @@
         <td>{{ version.stockOwnerCode }}</td>
         <td>{{ version.itemTypeName }}</td>
         <td>{{ version.categoryName }}</td>
-        <td>{{ version.startDate | date: 'MM/dd/yyyy' }}</td>
-        <td>{{ version.endDate | date: 'MM/dd/yyyy' }}</td>
+        <td>{{ version.startDate }}</td>
+        <td>{{ version.endDate }}</td>
         <td>
           <a class="btn btn-info btn-xs" ng-href="#/item-view/{{version.id}}">
             <i class="fa fa-file"></i>

@@ -126,6 +126,18 @@ describe('Service: identityAccessFactory', function() {
       expect(identityAccessFactory.getSessionObject().userCompanies.length).toBeGreaterThan(0);
     });
 
+    describe('company format list', function() {
+      it('should have the list in the session object', function() {
+        scope.$digest();
+        expect(identityAccessFactory.getSessionObject().companyFormatList.length).toBeGreaterThan(0);
+      });
+
+      it('should have DATE element', function() {
+        scope.$digest();
+        expect(identityAccessFactory.getSessionObject().companyFormatList[0].format.dataType).toBe('DATE');
+      });
+    });
+
   });
 
   describe('location change', function() {
@@ -242,7 +254,7 @@ describe('Service: identityAccessFactory', function() {
       spyOn(eulaService, 'showEULAConfirmation');
       identityAccessFactory.checkForEULA(sessionObject);
     });
-    
+
     it('should call login', function() {
       expect(eulaService.showEULAConfirmation).toHaveBeenCalled();
     });
