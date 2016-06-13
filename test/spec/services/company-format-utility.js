@@ -33,7 +33,7 @@ describe('Service: companyFormatUtility', function () {
     it('should return date format', function () {
       var dateFormatObj = identityAccessFactory.getSessionObject().companyFormatList[0].format;
       expect(dateFormatObj.dataType).toBe('DATE');
-      expect(companyFormatUtility.getDateFormat()).toBe(dateFormatObj.format);
+      expect(companyFormatUtility.getDateFormat()).toBe(dateFormatObj.format.toUpperCase());
     });
 
     it('should return currency format', function () {
