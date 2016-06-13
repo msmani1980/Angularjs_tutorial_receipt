@@ -223,6 +223,33 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Validate', 'ForceReconcile']);
 
+    item = {
+      statusName: 'Inbounded',
+      eposData: '1/3',
+      postTripData: '2/3',
+      cashHandlerData: 'no'
+    };
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Validate', 'ForceReconcile']);
+
+    item = {
+      statusName: 'Inbounded',
+      eposData: '1/3',
+      postTripData: '2/3',
+      cashHandlerData: 'NO'
+    };
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Validate', 'ForceReconcile']);
+
+    item = {
+      statusName: 'Inbounded',
+      eposData: '1/3',
+      postTripData: '2/3',
+      cashHandlerData: 'nO'
+    };
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Validate', 'ForceReconcile']);
+
     // TODO: enable again once Roshen allows us to enable these actions
     /*item = {statusName: 'Inbounded', eposData: 'No'};
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
