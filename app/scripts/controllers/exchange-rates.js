@@ -357,7 +357,7 @@ angular.module('ts5App')
         currencyFactory.getCompanyPreferences(preferencePayload, retailCompanyId),
         currencyFactory.getCompany(retailCompanyId),
         currencyFactory.getCompany(chCompanyId),
-        currencyFactory.getExchangeRateThresholdList(thresholdPayload)
+        currencyFactory.getExchangeRateThresholdList(thresholdPayload, retailCompanyId)
       ];
 
       return promises;

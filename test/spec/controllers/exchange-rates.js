@@ -154,7 +154,11 @@ describe('Controller: ExchangeRatesCtrl', function() {
 
   describe('get Threshold Variance', function () {
     it('should get active records from API', function () {
-      expect(currencyFactory.getExchangeRateThresholdList).toHaveBeenCalled();
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var expectedPayload = { startDate: today, endDate: today };
+      var expectedRetailCompanyId = servedCompanyDataJSON.chCompany.companyId;
+
+      expect(currencyFactory.getExchangeRateThresholdList).toHaveBeenCalledWith(expectedPayload, expectedRetailCompanyId);
     });
     it('should save threshold to scope', function () {
       expect(scope.percentThreshold).toBeDefined();
