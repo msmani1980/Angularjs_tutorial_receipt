@@ -20,6 +20,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/ch-cash-bag.json'));
   beforeEach(module('served/carrier-instance-list.json'));
   beforeEach(module('served/menus.json'));
+  beforeEach(module('served/cash-bag-verifications.json'));
 
 
   var scope;
@@ -68,6 +69,10 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var menuListDeferred;
   var menuListJSON;
 
+  var manualDataDeferred;
+  var cashBagVerificationsDeferred;
+  var cashBagVerificationsJSON;
+
   var routeParams;
   var dateUtility;
   var lodash;
@@ -75,7 +80,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
     inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
                      _servedCountTypes_, _servedStoreInstanceItemList_, _servedPromotion_, _servedItem_,
-                     _servedStoreStatus_, _servedStockItemCounts_, _servedChCashBag_, _servedCarrierInstanceList_, _servedMenus_) {
+                     _servedStoreStatus_, _servedStockItemCounts_, _servedChCashBag_, _servedCarrierInstanceList_, _servedMenus_, _servedCashBagVerifications_) {
       storeInstanceJSON = _servedStoreInstance_;
       getPromotionTotalsJSON = _servedPromotionTotals_;
       getStockTotalsJSON = _servedStockTotals_;
@@ -89,6 +94,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       cashHandlerCashBagJSON = _servedChCashBag_;
       carrierInstancesJSON = _servedCarrierInstanceList_;
       menuListJSON = _servedMenus_;
+      cashBagVerificationsJSON = _servedCashBagVerifications_;
     });
 
     inject(function (_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
@@ -189,9 +195,18 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     spyOn(reconciliationFactory, 'getStockItemCounts').and.returnValue(stockItemCountsDeferred.promise);
     spyOn(reconciliationFactory, 'saveCashBagCurrency').and.returnValue(cashHandlerCashBagJSON.promise);
 
+    manualDataDeferred = $q.defer();
+    manualDataDeferred.resolve([]);
+    spyOn(reconciliationFactory, 'getCashBagManualData').and.returnValue(manualDataDeferred.promise);
+
+    cashBagVerificationsDeferred = $q.defer();
+    cashBagVerificationsDeferred.resolve(cashBagVerificationsJSON);
+    spyOn(reconciliationFactory, 'getCashBagVerifications').and.returnValue(cashBagVerificationsDeferred.promise);
+
     routeParams = {
       storeInstanceId: 'fakeStoreInstanceId'
     };
+
     ReconciliationDiscrepancyDetail = controller('ReconciliationDiscrepancyDetail', {
       $scope: scope,
       $routeParams: routeParams
@@ -200,8 +215,42 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   describe('init', function () {
 
-    it('should call getStoreInstanceDetails', function () {
-      expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalledWith(routeParams.storeInstanceId);
+    describe('initial API calls', function () {
+      var expectedPayload = {
+        storeInstanceId: 'fakeStoreInstanceId'
+      };
+
+      it('should call getStoreInstanceDetails', function () {
+        expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalledWith(routeParams.storeInstanceId);
+      });
+
+      it('should call get cash bag verifications', function () {
+        expect(reconciliationFactory.getCashBagVerifications).toHaveBeenCalledWith(routeParams.storeInstanceId);
+      });
+
+      it('should call get item types', function () {
+        expect(reconciliationFactory.getItemTypesList).toHaveBeenCalled();
+      });
+
+      it('should call get manual cash data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('cash', expectedPayload);
+      });
+
+      it('should call get manual credit data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('credit-cards', expectedPayload);
+      });
+
+      it('should call get manual item data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('items', expectedPayload);
+      });
+
+      it('should call get manual discount data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('discounts', expectedPayload);
+      });
+
+      it('should call get manual promotion data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('promotions', expectedPayload);
+      });
     });
 
     describe('dependencies', function () {

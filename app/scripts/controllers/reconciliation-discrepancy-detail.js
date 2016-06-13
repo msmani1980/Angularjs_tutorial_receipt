@@ -420,7 +420,6 @@ angular.module('ts5App')
       });
     }
 
-    // TODO: resolve item names
     function getManualItemDataSet(itemTypeName) {
       var manualItemArray = [];
       var dataType = itemTypeName.toLowerCase();
