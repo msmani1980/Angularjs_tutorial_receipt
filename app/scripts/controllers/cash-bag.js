@@ -367,7 +367,7 @@ angular.module('ts5App')
             dailyExchangeByIdResponseHandler)
         );
       } else {
-        var dailyExchangeDate = dateUtility.formatDateForAPI(dateUtility.now());
+        var dailyExchangeDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
         _promises.push(
           cashBagFactory.getDailyExchangeRates(_companyId, dailyExchangeDate).then(dailyExchangeResponseHandler)
         );
