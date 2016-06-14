@@ -21,6 +21,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/carrier-instance-list.json'));
   beforeEach(module('served/menus.json'));
   beforeEach(module('served/cash-bag-verifications.json'));
+  beforeEach(module('served/cash-bag-cash.json'));
 
 
   var scope;
@@ -70,6 +71,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var menuListJSON;
 
   var manualDataDeferred;
+  var manualDataJSON;
   var cashBagVerificationsDeferred;
   var cashBagVerificationsJSON;
 
@@ -80,7 +82,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
     inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
                      _servedCountTypes_, _servedStoreInstanceItemList_, _servedPromotion_, _servedItem_,
-                     _servedStoreStatus_, _servedStockItemCounts_, _servedChCashBag_, _servedCarrierInstanceList_, _servedMenus_, _servedCashBagVerifications_) {
+                     _servedStoreStatus_, _servedStockItemCounts_, _servedChCashBag_, _servedCarrierInstanceList_, _servedMenus_,
+                     _servedCashBagVerifications_, _servedCashBagCash_) {
       storeInstanceJSON = _servedStoreInstance_;
       getPromotionTotalsJSON = _servedPromotionTotals_;
       getStockTotalsJSON = _servedStockTotals_;
@@ -95,6 +98,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       carrierInstancesJSON = _servedCarrierInstanceList_;
       menuListJSON = _servedMenus_;
       cashBagVerificationsJSON = _servedCashBagVerifications_;
+      manualDataJSON = _servedCashBagCash_;
     });
 
     inject(function (_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
@@ -195,8 +199,13 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     spyOn(reconciliationFactory, 'getStockItemCounts').and.returnValue(stockItemCountsDeferred.promise);
     spyOn(reconciliationFactory, 'saveCashBagCurrency').and.returnValue(cashHandlerCashBagJSON.promise);
 
+    manualDataJSON = {response: [
+      { cashbagId: 2158, convertedAmount: 10.0, quantity: 1, itemTypeId: 2, itemMaster: {itemName: 'testItem1'}},
+      { cashbagId: 2158, convertedAmount: 11.0, quantity: 2, itemTypeId: 4, itemMaster: {itemName: 'testItem2'}}
+    ]};
+
     manualDataDeferred = $q.defer();
-    manualDataDeferred.resolve([]);
+    manualDataDeferred.resolve(manualDataJSON);
     spyOn(reconciliationFactory, 'getCashBagManualData').and.returnValue(manualDataDeferred.promise);
 
     cashBagVerificationsDeferred = $q.defer();
@@ -251,6 +260,48 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       it('should call get manual promotion data', function () {
         expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('promotions', expectedPayload);
       });
+
+      it('should save store instance to scope', function () {
+        scope.$digest();
+        expect(scope.storeInstance).toBeDefined();
+      });
+
+      it('should save cash bag verifications to scope', function () {
+        scope.$digest();
+        expect(scope.cashBagList).toBeDefined();
+      });
+
+      describe('manual data saving', function () {
+        it('should attach manual data to controller', function () {
+          scope.$digest();
+          expect(ReconciliationDiscrepancyDetail.manualData).toBeDefined();
+        });
+
+        it('should populate cash, credit, discount, and promotion data as arrays', function () {
+          scope.$digest();
+
+          expect(ReconciliationDiscrepancyDetail.manualData.cash).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.cash.length).toEqual(2);
+          expect(ReconciliationDiscrepancyDetail.manualData.credit).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.credit.length).toEqual(2);
+          expect(ReconciliationDiscrepancyDetail.manualData.promotion).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.promotion.length).toEqual(2);
+          expect(ReconciliationDiscrepancyDetail.manualData.discount).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.discount.length).toEqual(2);
+        });
+
+        it('should populate item data and filter by item type', function () {
+          scope.$digest();
+
+          expect(ReconciliationDiscrepancyDetail.manualData.virtual).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.virtual.length).toEqual(1);
+          expect(ReconciliationDiscrepancyDetail.manualData.virtual[0].convertedAmount).toEqual(10.0);
+
+          expect(ReconciliationDiscrepancyDetail.manualData.voucher).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.voucher.length).toEqual(1);
+          expect(ReconciliationDiscrepancyDetail.manualData.voucher[0].convertedAmount).toEqual(11.0);
+        });
+      });
     });
 
     describe('dependencies', function () {
@@ -260,10 +311,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       it('should localize date to mm/dd/yyy', function () {
         expect(scope.storeInstance.scheduleDate).toBe(dateUtility.formatDateForApp(storeInstanceJSON.scheduleDate));
-      });
-
-      it('should call getItemTypesList', function () {
-        expect(reconciliationFactory.getItemTypesList).toHaveBeenCalled();
       });
 
       it('should call getCountTypes', function () {
@@ -723,7 +770,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     it('should show the modal', function () {
       scope.$digest();
       scope.showModal('Virtual');
-      expect(scope.modalTotal).toBe('0.00');
+      expect(scope.modalTotal).toBe('10.00');
     });
 
     it('should not add modalMainTitle to scope', function () {

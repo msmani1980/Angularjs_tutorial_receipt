@@ -68,7 +68,8 @@
         "email": "RCuriel@egate-solutions.com",
         "firstName": "John",
         "lastName": "Smith"
-      }
+      },
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -107,7 +108,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -185,7 +187,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -224,7 +227,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -263,7 +267,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -302,7 +307,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -341,7 +347,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -392,7 +399,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": true,
-      "delete": false
+      "delete": false,
+      "eposCashbagId": null
     }
   ]
 }
