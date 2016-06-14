@@ -221,7 +221,7 @@ angular.module('ts5App')
       var storeInstanceData = angular.copy(dataFromAPI);
       $scope.displayedScheduleDate = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
       $scope.cashBag.scheduleNumber = storeInstanceData.scheduleNumber;
-      $scope.cashBag.scheduleDate = dateUtility.formatDateForAPI(storeInstanceData.scheduleDate);
+      $scope.cashBag.scheduleDate = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
       cashBagFactory.getStoreList({
         id: storeInstanceData.storeId
       }).then(getStoreResponseHandler);
