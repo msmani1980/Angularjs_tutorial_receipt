@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: ReconciliationDiscrepancyDetail', function () {
+fdescribe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance.json'));
@@ -331,6 +331,22 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(promotions[0].eposQuantity).toEqual(1);
         expect(promotions[1].eposQuantity).toEqual(2);
         expect(promotions[1].eposTotal).toEqual('0.76');
+      });
+
+      // TODO
+      it('should add cash and credit manual data to gross value of epos sales', function () {
+        var salesValue = scope.stockTotals.totalRetail.totalEPOS;
+        expect(parseFloat(salesValue) >= 42).toEqual(true);
+      });
+
+      it('should add virtual item manual data to voucher item totals', function () {
+        var virtualItemTotal = scope.stockTotals.totalVirtual.totalEPOS;
+        expect(parseFloat(virtualItemTotal) >= 11).toEqual(true);
+      });
+
+      it('should add voucher item manual data to voucher item totals', function () {
+        var voucherItemTotal = scope.stockTotals.totalVoucher.totalEPOS;
+        expect(parseFloat(voucherItemTotal) >= 10).toEqual(true);
       });
 
       it('should call getCHRevenue', function () {
