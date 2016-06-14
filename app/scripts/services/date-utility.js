@@ -8,10 +8,11 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('dateUtility', function () {
+  .service('dateUtility', function (companyFormatUtility) {
 
     var dateFormatForAPI = 'YYYYMMDD';
-    var dateFormatForApp = 'MM/DD/YYYY';
+    var dateFormatForApp = companyFormatUtility.getDateFormat();
+
     var timestampFormatForAPI = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
     var timestampFormatForApp = 'MM/DD/YYYY HH:mm';
 

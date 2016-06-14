@@ -9,8 +9,8 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('identityAccessFactory', function(identityAccessService, $rootScope, $http, $localStorage, $location,
-    $timeout, $window, companyFactory, $q, lodash, eulaService) {
+  .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location,
+                                              $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService) {
 
     var tempToken;
 
@@ -39,14 +39,11 @@ angular.module('ts5App')
 
     function logout() {
       $window.localStorage.clear();
-      delete $localStorage.sessionObject;
-      delete $localStorage.companyObject;
-      delete $localStorage.company;
-      delete $localStorage.cashBagBankRefNumber;
+      $localStorage.$reset();
       delete $http.defaults.headers.common.userId;
       delete $http.defaults.headers.common.companyId;
       delete $http.defaults.headers.common.sessionToken;
-      $timeout(function() {
+      $timeout(function () {
         $location.path('/login');
       });
     }
@@ -59,13 +56,17 @@ angular.module('ts5App')
       return {};
     }
 
-    function setSessionHeaders() {
-      var sessionObject = angular.copy(getSessionObject());
+    function persistCompanyObject(sessionObject) {
       if (sessionObject.companyData) {
         $localStorage.companyObject = sessionObject.companyData;
         $localStorage.companyObject.companyId = sessionObject.companyId;
         $localStorage.companyObject.companyTypeId = sessionObject.companyData.companyTypeId;
       }
+    }
+
+    function setSessionHeaders() {
+      var sessionObject = angular.copy(getSessionObject());
+      persistCompanyObject(sessionObject);
 
       delete sessionObject.username;
       delete sessionObject.companyData;
@@ -82,6 +83,7 @@ angular.module('ts5App')
         username: dataFromAPI.userName,
         companyId: dataFromAPI.companyId,
         companyData: dataFromAPI.companyData,
+        companyFormatList: dataFromAPI.companyFormatList,
         userCompanies: dataFromAPI.userCompanies,
         companyTypes: dataFromAPI.companyTypes,
         currentSession: dataFromAPI.currentSession,
@@ -113,7 +115,7 @@ angular.module('ts5App')
 
     function isLocationValid(locationURL) {
       var allowedHashArray = ['login', 'change-password'];
-      var allowedURLsArray = allowedHashArray.filter(function(url) {
+      var allowedURLsArray = allowedHashArray.filter(function (url) {
         return locationURL.contains(url);
       });
 
@@ -133,6 +135,7 @@ angular.module('ts5App')
       sessionObject.companyData.chCompany = angular.copy(rawSessionData.chCompany);
       sessionObject.companyTypes = angular.copy(dataFromAPI[1]);
       sessionObject.userCompanies = angular.copy(dataFromAPI[2].companies);
+      sessionObject.companyFormatList = angular.copy(dataFromAPI[3].response);
       sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, {
         id: sessionObject.companyData.companyTypeId
       }).name);
@@ -143,10 +146,11 @@ angular.module('ts5App')
       var companyDataPromiseArray = [
         companyFactory.getCompany(rawSessionData.companyId),
         companyFactory.getCompanyTypes(),
-        identityAccessService.getUserCompanies()
+        identityAccessService.getUserCompanies(),
+        companyFormatService.getCompanyFormatList()
       ];
 
-      $q.all(companyDataPromiseArray).then(function(dataFromApi) {
+      $q.all(companyDataPromiseArray).then(function (dataFromApi) {
         getCompanyResponseHandler(dataFromApi, rawSessionData);
       }, logout);
     }
@@ -167,7 +171,7 @@ angular.module('ts5App')
 
     function userAgreesToEULA(creds) {
       angular.element('#loading').modal('show');
-      identityAccessService.userAgreesToEULA(tempToken).then(function() {
+      identityAccessService.userAgreesToEULA(tempToken).then(function () {
         login(creds);
       });
 
