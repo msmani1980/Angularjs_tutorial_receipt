@@ -74,8 +74,8 @@ angular.module('ts5App')
       return dailyExchangeRatesService.getDailyExchangeRatesForCmp(companyId, retailCompanyId, exchangeRateDate);
     };
 
-    var getExchangeRateThresholdList = function (payload) {
-      return featureThresholdsService.getThresholdList('DAILYEXCHANGERATE', payload);
+    var getExchangeRateThresholdList = function (payload, companyId) {
+      return featureThresholdsService.getThresholdList('DAILYEXCHANGERATE', payload, companyId);
     };
 
     var getExchangeRateTypes = function () {
