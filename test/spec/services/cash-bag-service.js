@@ -49,17 +49,12 @@ describe('Service: cashBagService', function () {
         expect(!!cashBagService.getCashBagList).toBe(true);
       });
 
-      var cashBagListData, promotionListData;
+      var cashBagListData;
       beforeEach(function () {
         $httpBackend.whenGET(/cash-bags/).respond(cashBagListResponseJSON);
 
         cashBagService.getCashBagList().then(function (dataFromAPI) {
           cashBagListData = dataFromAPI;
-        });
-
-        $httpBackend.whenGET(/cashbag-promotions/).respond(promotionListResponseJSON);
-        cashBagService.getManualEposPromotionList().then(function (dataFromAPI) {
-          promotionListData = dataFromAPI;
         });
 
         $httpBackend.flush();
@@ -463,35 +458,6 @@ describe('Service: cashBagService', function () {
         });
 
         $httpBackend.flush();
-      });
-    });
-
-    describe('getManualEposPromotionList', function () {
-
-      var promotionListData;
-
-      it('should be accessible in the service', function () {
-        expect(!!cashBagService.getManualEposPromotionList).toBe(true);
-      });
-
-      beforeEach(function () {
-        $httpBackend.whenGET(/cashbag-promotions/).respond(promotionListResponseJSON);
-        cashBagService.getManualEposPromotionList().then(function (dataFromAPI) {
-        promotionListData = dataFromAPI;
-        });
-        $httpBackend.flush();
-      });
-
-      it('should be an array', function () {
-        expect(Object.prototype.toString.call(promotionListData.promotions)).toBe('[object Array]');
-      });
-
-      it('should have promotionId property', function () {
-        expect(promotionListData.promotions[0].promotionId).not.toBe(null);
-      });
-
-      it('should have cashbagId property', function () {
-        expect(promotionListData.promotions[0].cashbagId).not.toBe(null);
       });
     });
   });
