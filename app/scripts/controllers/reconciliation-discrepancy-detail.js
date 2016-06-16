@@ -286,7 +286,7 @@ angular.module('ts5App')
       var arrayToSum = (dataType === 'cash-credit') ? $this.manualData.cash.concat($this.manualData.credit) : $this.manualData[dataType];
       var total = 0;
       angular.forEach(arrayToSum, function (manualDataEntry) {
-        total += manualDataEntry.convertedAmount;
+        total += (dataType === 'promotion') ? manualDataEntry.totalConvertedAmount : manualDataEntry.convertedAmount;
       });
 
       return total;
@@ -424,13 +424,15 @@ angular.module('ts5App')
       var manualItemArray = [];
       var dataType = itemTypeName.toLowerCase();
       angular.forEach($this.manualData[dataType], function (manualItem) {
-        if (manualItem.convertedAmount > 0) {
+        var amountToSave = (dataType === 'promotion') ? manualItem.totalConvertedAmount : manualItem.convertedAmount;
+        if (amountToSave > 0) {
           var newItem = {
             eposQuantity: manualItem.quantity,
-            eposTotal: manualItem.convertedAmount.toFixed(2),
-            itemName: manualItem.itemMaster.itemName,
+            eposTotal: amountToSave.toFixed(2),
+            itemName: (dataType === 'promotion') ? manualItem.promotion.promotionName : manualItem.itemMaster.itemName,
             itemTypeName: itemTypeName
           };
+
           manualItemArray.push(newItem);
         }
       });
@@ -442,7 +444,7 @@ angular.module('ts5App')
       var itemTypes = [
         'Virtual',
         'Voucher',
-        'Promotions'
+        'Promotion'
       ];
 
       var allManualItemsArray = [];
