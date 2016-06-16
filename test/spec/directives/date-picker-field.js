@@ -14,7 +14,7 @@ describe('The Date Picker Field directive', function () {
 
   beforeEach(inject(function ($rootScope, $injector) {
     companyFormatUtility = $injector.get('companyFormatUtility');
-    spyOn(companyFormatUtility, 'getDateFormat');
+    spyOn(companyFormatUtility, 'getDateFormat').and.returnValue('DD/MM/YYYY');
 
     $scope = $rootScope.$new();
   }));
