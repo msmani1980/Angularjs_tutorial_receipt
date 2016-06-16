@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('characteristicsService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/records/characteristics/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/records/characteristics/:id';
     var requestParameters = {
       id: '@id'
     };

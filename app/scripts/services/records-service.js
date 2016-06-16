@@ -11,7 +11,7 @@
 angular.module('ts5App')
   .service('recordsService', function ($resource, $http, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/records/:api';
+    var requestURL = ENV.apiUrl + '/rsvr/api/records/:api';
     var requestParameters = {
       api: '@api'
     };
@@ -61,6 +61,10 @@ angular.module('ts5App')
         isArray: true
       },
       getTransactionTypes: {
+        method: 'GET',
+        isArray: true
+      },
+      getExchangeRateTypes: {
         method: 'GET',
         isArray: true
       }
@@ -127,6 +131,11 @@ angular.module('ts5App')
       return requestResource.getTransactionTypes().$promise;
     }
 
+    function getExchangeRateTypes() {
+      requestParameters.api = 'exchange-rate-types';
+      return requestResource.getExchangeRateTypes().$promise;
+    }
+
     return {
       getCrewBaseTypes: getCrewBaseTypes,
       getCommissionPayableTypes: getCommissionPayableTypes,
@@ -139,6 +148,7 @@ angular.module('ts5App')
       getCharacteristics: getCharacteristics,
       getFeatures: getFeatures,
       getCountTypes: getCountTypes,
-      getTransactionTypes: getTransactionTypes
+      getTransactionTypes: getTransactionTypes,
+      getExchangeRateTypes: getExchangeRateTypes
     };
   });

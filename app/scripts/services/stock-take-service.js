@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('stockTakeService', function ($resource, ENV, Upload) {
 
-    var requestURL = ENV.apiUrl + '/api/stock-management/stock-takes/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/stock-management/stock-takes/:id';
     var requestParameters = {
       id: '@id'
     };

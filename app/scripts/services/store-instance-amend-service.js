@@ -11,7 +11,7 @@ angular.module('ts5App')
   .service('storeInstanceAmendService', function (ENV, $resource) {
     var movePostTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/to/:toCashBagId/posttrip/:postTripId';
     var postTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/posttrip/:postTripId';
-    var editPostTripScheduleRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/edit/:postTripId/schedule/:scheduleNumber';
+    var editPostTripScheduleRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/edit/:postTripId/schedule/:scheduleNumber/:scheduleDate';
 
     var movePostTripRequestParameters = {
       cashBagId: '@cashBagId',
@@ -31,7 +31,8 @@ angular.module('ts5App')
     var editPostTripScheduleRequestParameters = {
       cashBagId: '@cashBagId',
       postTripId: '@postTripId',
-      scheduleNumber: '@scheduleNumber'
+      scheduleNumber: '@scheduleNumber',
+      scheduleDate: '@scheduleDate'
     };
 
     var actions = {
@@ -84,11 +85,12 @@ angular.module('ts5App')
       return postTripRequestResource.addPostTrip(payload).$promise;
     };
 
-    var editPostTrip = function (cashBagId, postTripId, scheduleNumber) {
+    var editPostTrip = function (cashBagId, postTripId, scheduleNumber, scheduleDate) {
       var payload = {
         cashBagId: cashBagId,
         postTripId: postTripId,
-        scheduleNumber: scheduleNumber
+        scheduleNumber: scheduleNumber,
+        scheduleDate: scheduleDate
       };
 
       return editPostTripScheduleRequestResource.editPostTripSchedule(payload).$promise;

@@ -3,13 +3,14 @@
 describe('Service: cashBagService', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag-list.json', 'served/cash-bag.json', 'served/cash-bag-carrier-instances.json'));
+  beforeEach(module('served/cash-bag-list.json', 'served/cash-bag.json', 'served/cash-bag-carrier-instances.json', 'served/manual-promotions-list.json'));
 
   var cashBagService,
     $httpBackend,
     cashBagListResponseJSON,
     cashBagResponseJSON,
-    cashBagCarrierInstancesJSON;
+    cashBagCarrierInstancesJSON,
+    promotionListResponseJSON;
 
   //headers = {
   //  companyId: 362,
@@ -19,10 +20,11 @@ describe('Service: cashBagService', function () {
   //};
 
   beforeEach(inject(function (_cashBagService_, $injector) {
-    inject(function (_servedCashBagList_, _servedCashBag_, _servedCashBagCarrierInstances_) {
+    inject(function (_servedCashBagList_, _servedCashBag_, _servedCashBagCarrierInstances_, _servedManualPromotionsList_) {
       cashBagListResponseJSON = _servedCashBagList_;
       cashBagResponseJSON = _servedCashBag_;
       cashBagCarrierInstancesJSON = _servedCashBagCarrierInstances_;
+      promotionListResponseJSON = _servedManualPromotionsList_;
     });
 
     $httpBackend = $injector.get('$httpBackend');
@@ -47,12 +49,17 @@ describe('Service: cashBagService', function () {
         expect(!!cashBagService.getCashBagList).toBe(true);
       });
 
-      var cashBagListData;
+      var cashBagListData, promotionListData;
       beforeEach(function () {
         $httpBackend.whenGET(/cash-bags/).respond(cashBagListResponseJSON);
 
         cashBagService.getCashBagList().then(function (dataFromAPI) {
           cashBagListData = dataFromAPI;
+        });
+
+        $httpBackend.whenGET(/cashbag-promotions/).respond(promotionListResponseJSON);
+        cashBagService.getManualEposPromotionList().then(function (dataFromAPI) {
+          promotionListData = dataFromAPI;
         });
 
         $httpBackend.flush();
@@ -304,7 +311,6 @@ describe('Service: cashBagService', function () {
       it('should make GET call with record type', function () {
         var type = 'fakeType';
         $httpBackend.expectGET(/cashbag-fakeType/).respond(200, {});
-
         cashBagService.getManualCashBagList(type, {}).then(function (response) {
           expect(response).toBeDefined();
         });
@@ -341,7 +347,6 @@ describe('Service: cashBagService', function () {
         cashBagService.createManualCashBagRecord(type, {}).then(function (response) {
           expect(response).toBeDefined();
         });
-
         $httpBackend.flush();
       });
     });
@@ -461,7 +466,33 @@ describe('Service: cashBagService', function () {
       });
     });
 
+    describe('getManualEposPromotionList', function () {
 
+      var promotionListData;
+
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.getManualEposPromotionList).toBe(true);
+      });
+
+      beforeEach(function () {
+        $httpBackend.whenGET(/cashbag-promotions/).respond(promotionListResponseJSON);
+        cashBagService.getManualEposPromotionList().then(function (dataFromAPI) {
+        promotionListData = dataFromAPI;
+        });
+        $httpBackend.flush();
+      });
+
+      it('should be an array', function () {
+        expect(Object.prototype.toString.call(promotionListData.promotions)).toBe('[object Array]');
+      });
+
+      it('should have promotionId property', function () {
+        expect(promotionListData.promotions[0].promotionId).not.toBe(null);
+      });
+
+      it('should have cashbagId property', function () {
+        expect(promotionListData.promotions[0].cashbagId).not.toBe(null);
+      });
+    });
   });
-
 });

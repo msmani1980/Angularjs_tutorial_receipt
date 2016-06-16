@@ -8,7 +8,7 @@
  * Contoller for the Retail Items List View
  */
 angular.module('ts5App')
-  .controller('ItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter) {
+  .controller('ItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter, lodash) {
 
     var $this = this;
     this.meta = {
@@ -79,6 +79,10 @@ angular.module('ts5App')
 
       angular.forEach(newItemList, function (item) {
         item.versions.sort($this.sortItemVersions);
+        lodash.map(item.versions, function (version) {
+          version.startDate = dateUtility.formatDateForApp(version.startDate);
+          version.endDate = dateUtility.formatDateForApp(version.endDate);
+        });
       });
 
       return newItemList;

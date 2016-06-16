@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('cashBagService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/cash-bags/:id/:submission';
+    var requestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/:submission';
     var cashBagCurrencyRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-currencies/:currencyId';
     var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/carrier-instances';
     var reallocationRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/reallocate';
@@ -21,6 +21,11 @@ angular.module('ts5App')
     var manualCashBagRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:cashBagId/cash/:recordId';
     var allManualCashBagsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/cash/';
     var manualEposDataRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-:type/:recordId';
+
+    var requestCashBagParameters = {
+      id: '@id',
+      submission: '@submission'
+    };
 
     var requestParameters = {
       id: '@id',
@@ -93,7 +98,7 @@ angular.module('ts5App')
       }
     };
 
-    var requestResource = $resource(requestURL, requestParameters, actions);
+    var requestResource = $resource(requestURL, requestCashBagParameters, actions);
     var cashBagCurrencyRequestResources = $resource(cashBagCurrencyRequestURL, cashBagCurrencyRequestParams, actions);
     var carrierInstancesRequestResource = $resource(carrierInstancesRequestURL, requestParameters, actions);
     var reallocateRequestResource = $resource(reallocationRequestURL, requestParameters, actions);
@@ -251,6 +256,12 @@ angular.module('ts5App')
       manualEposDataRequestParams.type = manualType;
       return manualEposDataRequestResource.deleteManualCashBagRecord().$promise;
     }
+
+    //function getManualEposPromotionList(cashBagId) {
+    //  manualEposListRequestParams.cashbagId = cashBagId;
+    //  manualEposListRequestParams.type = 'promotions';
+    //  return manualEposListRequestResource.getManualEposPromotionList().$promise;
+    //}
 
     return {
       getCashBagList: getCashBagList,

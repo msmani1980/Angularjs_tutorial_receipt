@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('discountService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/company-discounts/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/company-discounts/:id';
     var requestParameters = {
       id: '@id',
       limit: 50

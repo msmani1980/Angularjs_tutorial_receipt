@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('menuMasterService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/menus/menu-masters';
+    var requestURL = ENV.apiUrl + '/rsvr/api/menus/menu-masters';
 
     var requestParameters = {};
 

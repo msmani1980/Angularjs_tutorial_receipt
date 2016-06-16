@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CompanyExchangeRateEditCtrl', function($scope, globalMenuService, currencyFactory, dateUtility,
-    payloadUtility, messageService, $filter) {
+    payloadUtility, messageService, $filter, lodash) {
 
     var $this = this;
 
@@ -231,6 +231,10 @@ angular.module('ts5App')
       $this.showLoadingModal('Loading Data');
       $scope.companyExchangeRates = [];
       var searchPayload = $this.formatPayloadForSearch();
+      if ($this.eposExchangeRateType) {
+        searchPayload.exchangeRateType = $this.eposExchangeRateType.id;
+      }
+
       currencyFactory.getCompanyExchangeRates(searchPayload).then(function(
         companyExchangeRatesFromAPI) {
         $this.normalizeCompanyExchangeRatesList(companyExchangeRatesFromAPI.response);
@@ -315,7 +319,17 @@ angular.module('ts5App')
         'acceptedCurrencyCode + exchangeRate + startDate');
     };
 
+    this.setPortalExchangeRate = function (dataFromAPI) {
+      var exchangeRateTypes = angular.copy(dataFromAPI);
+      $this.eposExchangeRateType = lodash.findWhere(exchangeRateTypes, { name: 'EPOS Exchange Rate' });
+    };
+
+    this.getExchangeRateTypes = function () {
+      currencyFactory.getExchangeRateTypes().then($this.setPortalExchangeRate);
+    };
+
     this.init = function() {
+      $this.getExchangeRateTypes();
       $this.getCompanyGlobalCurrencies();
       $this.getDetailedCompanyCurrenciesForSearch();
     };

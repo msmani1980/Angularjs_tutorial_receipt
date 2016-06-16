@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('employeeCommissionService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/employee-commissions/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/employee-commissions/:id';
     var requestParameters = {
       id: '@id',
       limit: 50

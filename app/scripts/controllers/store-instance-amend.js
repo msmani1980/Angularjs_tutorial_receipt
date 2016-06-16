@@ -56,8 +56,9 @@ angular.module('ts5App')
       if ($scope.scheduleToEdit) {
         postTripId = $scope.scheduleToEdit.id;
         var scheduleNumber = $scope.newScheduleSelection.scheduleNumber;
+        var scheduleDate =  dateUtility.formatDateForAPI($scope.newScheduleSelection.scheduleDate);
 
-        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber).then(addOrEditScheduleSuccess, handleResponseError);
+        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber, scheduleDate).then(addOrEditScheduleSuccess, handleResponseError);
       } else {
         postTripId = $scope.newScheduleSelection.id;
 
@@ -279,6 +280,18 @@ angular.module('ts5App')
       angular.element('#cashRevenueModal').modal('show');
     };
 
+    $scope.showCreditRevenueModal = function (cashBag) {
+      $scope.creditRevenueModal = cashBag.creditRevenue;
+
+      angular.element('#creditRevenueModal').modal('show');
+    };
+
+    $scope.showDiscountRevenueModal = function (cashBag) {
+      $scope.discountRevenueModal = cashBag.discountRevenue;
+
+      angular.element('#discountRevenueModal').modal('show');
+    };
+
     function getStationById (stationId) {
       return lodash.find($scope.stations, 'stationId', stationId);
     }
@@ -325,10 +338,11 @@ angular.module('ts5App')
     }
 
     $scope.canExecuteActions = function (cashBag) {
+      var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');
       var confirmedStatus = getStoreStatusByStatusStep('10');
 
-      var isStoreInstanceStatusValid = $scope.storeInstance && confirmedStatus && discrepanciesStatus;
+      var isStoreInstanceStatusValid = $scope.storeInstance && inboundedStatus && confirmedStatus && discrepanciesStatus;
       var isCashBagVerified = cashBag && cashBag.isVerified;
 
       if (!isStoreInstanceStatusValid || isCashBagVerified) {
@@ -337,7 +351,7 @@ angular.module('ts5App')
 
       var statusId = $scope.storeInstance.statusId;
 
-      return statusId === confirmedStatus.id || statusId === discrepanciesStatus.id;
+      return statusId === inboundedStatus.id || statusId === confirmedStatus.id || statusId === discrepanciesStatus.id;
     };
 
     $scope.getStatusNameById = function (statusId) {
@@ -346,10 +360,25 @@ angular.module('ts5App')
       return status.statusName;
     };
 
-    function normalizeMergeSearchResults (dataFromAPI) {
-      var cashBags = angular.copy(dataFromAPI.cashBags) || [];
+    $scope.sumGroupedAmounts = function (amounts) {
+      var total = 0;
+      amounts.map(function(amount) {
+        total += amount.amount;
+      });
 
-      return angular.forEach(cashBags, function (cashBag) {
+      return $scope.formatAsCurrency(total);
+    };
+
+    function normalizeMergeSearchResults (dataFromAPI) {
+      var cashBags = angular.copy(dataFromAPI.response) || [];
+
+      var filteredCashBags = lodash.filter(cashBags, {
+        cashBagNumber: $scope.moveSearch.cashBag,
+        bankReferenceNumber: $scope.moveSearch.bankRefNumber,
+        originationSource: 2
+      });
+
+      return angular.forEach(filteredCashBags, function (cashBag) {
         cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
         cashBag.updatedOn = dateUtility.formatTimestampForApp(cashBag.updatedOn);
       });
@@ -700,7 +729,12 @@ angular.module('ts5App')
         var amount = (creditCard.bankAmountFinal || 0) + (creditCard.coinAmountManualCc || 0) + (creditCard.paperAmountManualCc || 0);
 
         if (creditCard.cashbagId) {
-          getCashBagById(creditCard.cashbagId).creditRevenue.amount += amount;
+          var cashBag = getCashBagById(creditCard.cashbagId);
+          cashBag.creditRevenue.amount += amount;
+          cashBag.creditRevenue.items.push({
+            creditCard: creditCard.cardType,
+            amount: amount
+          });
         }
 
         cashRevenue.total += amount;
@@ -712,7 +746,13 @@ angular.module('ts5App')
         var amount = (discount.bankAmountFinal || 0) + (discount.coinAmountCc || 0) + (discount.paperAmountCc || 0);
 
         if (discount.cashbagId) {
-          getCashBagById(discount.cashbagId).discountRevenue.amount += amount;
+          var cashBag = getCashBagById(discount.cashbagId);
+          cashBag.discountRevenue.amount += amount;
+          cashBag.discountRevenue.items.push({
+            discountName: discount.companyDiscountName,
+            discountType: discount.globalDiscountTypeName,
+            amount: amount
+          });
         }
 
         cashRevenue.total += amount;
@@ -1057,7 +1097,7 @@ angular.module('ts5App')
           paperAmount = parseFloat(currency.paperAmountManual);
           coinAmount = parseFloat(currency.coinAmountManual);
           totalAmount = paperAmount + coinAmount;
-          realExchangeRate = exchangeRate.paperExchangeRate + '/' + exchangeRate.coinExchangeRate;
+          realExchangeRate = exchangeRate.paperExchangeRate;
         }
 
         normalizedCashBag.cashRevenue.items.push({
@@ -1067,7 +1107,6 @@ angular.module('ts5App')
           baseCurrencyAmount: getBaseCurrencyAmount(bankAmount, paperAmount, coinAmount, exchangeRate)
         });
       });
-
     }
 
     function setCashBagDetails(normalizedCashBag, cashBagFromAPI) {

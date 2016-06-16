@@ -357,8 +357,5 @@ describe('Controller: ManualEposDiscountCtrl', function () {
       scope.$digest();
       expect(location.path).toHaveBeenCalledWith('manual-epos-dashboard/' + cashBagId);
     });
-
   });
-
-
 });

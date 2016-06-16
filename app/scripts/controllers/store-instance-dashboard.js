@@ -214,7 +214,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           return item.id;
         }).join('+');
         var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
-        $scope.exportBulkURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208.pdf?sessionToken=' +
+        $scope.exportBulkURL = ENV.apiUrl + '/rsvr/api/dispatch/store-instances/documents/C208.pdf?sessionToken=' +
           sessionToken;
         $scope.exportBulkURL += '&storeInstanceIds=' + storeInstanceIds;
       } else {
@@ -286,10 +286,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     function setFlightDocsConditions(storeInstance) {
-      if (lodash.find(storeInstance.actionButtons, lodash.matches('Get Flight Docs')) || storeInstance.statusName ===
-        'On Floor') {
+      if (lodash.find(storeInstance.actionButtons, lodash.matches('Get Flight Docs')) || storeInstance.statusName === 'On Floor') {
         storeInstance.showGenerateDocsButton = true;
-        storeInstance.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
+        storeInstance.exportURL = ENV.apiUrl + '/rsvr/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
           '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'; //$http.defaults.headers.common.sessionToken;
       }
     }
@@ -311,10 +310,19 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
     }
 
+    function setStoreInstanceTamperedFlag(storeInstance) {
+      var statusNumber = parseInt(storeInstance.statusNumber);
+      var inboundedStatus = lodash.findWhere($scope.storeStatusList, { statusName: 'Inbounded' });
+      var inboundedStatusNumber = angular.isDefined(inboundedStatus) ? parseInt(inboundedStatus.name) : 0;
+      var tamperedFlagAsString = (storeInstance.tampered) ? 'Yes' : 'No';
+      storeInstance.tamperedFlag = (statusNumber >= inboundedStatusNumber) ? tamperedFlagAsString : '';
+    }
+
     function formatStoreInstance(storeInstance) {
       storeInstance.dispatchStationCode = getValueByIdInArray(storeInstance.cateringStationId, 'code', $scope.stationList);
       storeInstance.inboundStationCode = getValueByIdInArray(storeInstance.inboundStationId, 'code', $scope.stationList);
       storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
+      storeInstance.statusNumber = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
       storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
       storeInstance.statusName = (storeInstance.statusName === 'Unpacking' || storeInstance.statusName ===
         'Inbound Seals') ? 'On Floor' : storeInstance.statusName;
@@ -326,6 +334,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       setStoreInstanceTime(storeInstance);
       setStoreInstanceActionButtons(storeInstance);
       setFlightDocsConditions(storeInstance);
+      setStoreInstanceTamperedFlag(storeInstance);
 
       storeInstance.selected = false;
     }
@@ -590,10 +599,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     function completeNavigateToAction(actionName, storeInstance) {
-      var URL = storeInstanceDashboardActionsConfig.getURL(actionName, storeInstance.id);
+      var url = storeInstanceDashboardActionsConfig.getURL(actionName, storeInstance.id);
       hideLoadingModal();
-      if (URL) {
-        $location.path(URL);
+      if (url) {
+        $location.path(url);
       } else {
         messageService.display('danger', 'Error loading next page!');
       }
@@ -677,11 +686,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         return true;
       }
 
-      if ($scope.searchIsActive) {
-        return true;
-      }
-
-      return false;
+      return $scope.searchIsActive;
     };
 
     $scope.displayUndispatchConfirmation = function(store) {

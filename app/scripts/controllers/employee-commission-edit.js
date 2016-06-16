@@ -16,10 +16,10 @@ angular.module('ts5App')
 
     angular.element('.retail-name-multiple-select').select2();
 
-    $scope.startDate = moment().add(1, 'days').format('L').toString();
+    $scope.startDate = dateUtility.formatDateForApp(moment().add(1, 'days'));
 
     $scope.commission = {
-      startDate: moment().add(1, 'days').format('L').toString(),
+      startDate: angular.copy($scope.startDate),
       currenciesFields: {}
     };
 

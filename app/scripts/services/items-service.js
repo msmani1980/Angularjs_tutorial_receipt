@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('itemsService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/retail-items/:fetchFromMaster/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/retail-items/:fetchFromMaster/:id';
     var requestParameters = {
       id: '@id'
     };

@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('taxTypesService', function ($resource, ENV, globalMenuService) {
 
-    var requestURL = ENV.apiUrl + '/api/companies/:companyId/tax-types/:id';
+    var requestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/tax-types/:id';
     var requestParameters = {
       id: '@id',
       companyId: '@companyId'

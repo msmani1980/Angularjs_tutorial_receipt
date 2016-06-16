@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "count": 5,
+    "limit": 5,
+    "start": 0
+  },
+  "promotions": [
+    {
+      "createdBy": 13,
+      "createdByPerson": null,
+      "createdOn": "2016-06-06 23:19:37",
+      "updatedBy": null,
+      "updatedByPerson": null,
+      "updatedOn": null,
+      "id": 14,
+      "cashbagId": 1172,
+      "promotionId": 163,
+      "currencyId": 8,
+      "amount": 12.12,
+      "quantity": 12,
+      "totalConvertedAmount": 145.44,
+      "promotion": {
+        "createdBy": 1,
+        "createdByPerson": {
+          "id": 1,
+          "userName": "admin",
+          "email": "VKrinitsyn@egate-solutions.com",
+          "firstName": "Vlad",
+          "lastName": "Kr."
+        },
+        "createdOn": "2015-06-11 21:32:27",
+        "updatedBy": 1,
+        "updatedByPerson": {
+          "id": 1,
+          "userName": "admin",
+          "email": "VKrinitsyn@egate-solutions.com",
+          "firstName": "Vlad",
+          "lastName": "Kr."
+        },
+        "updatedOn": "2015-06-11 21:47:44",
+        "id": 163,
+        "companyId": 403,
+        "promotionCode": "Prom555",
+        "promotionName": "Spend 50 get 5 percent off"
+      },
+      "companyId": 403,
+      "storeInstanceId": 436,
+      "eposCashBagsId": null
+    },
+    {
+      "createdBy": 1,
+      "createdByPerson": {
+        "id": 1,
+        "userName": "admin",
+        "email": "VKrinitsyn@egate-solutions.com",
+        "firstName": "Vlad",
+        "lastName": "Kr."
+      },
+      "createdOn": "2016-06-06 22:55:59",
+      "updatedBy": 13,
+      "updatedByPerson": null,
+      "updatedOn": "2016-06-06 23:19:37",
+      "id": 13,
+      "cashbagId": 1172,
+      "promotionId": 162,
+      "currencyId": 8,
+      "amount": 14.22,
+      "quantity": 5,
+      "totalConvertedAmount": 71.1,
+      "promotion": {
+        "createdBy": 1,
+        "createdByPerson": {
+          "id": 1,
+          "userName": "admin",
+          "email": "VKrinitsyn@egate-solutions.com",
+          "firstName": "Vlad",
+          "lastName": "Kr."
+        },
+        "createdOn": "2015-06-11 20:57:36",
+        "updatedBy": null,
+        "updatedByPerson": null,
+        "updatedOn": null,
+        "id": 162,
+        "companyId": 403,
+        "promotionCode": "Promo777",
+        "promotionName": "Sandwich Water Promo"
+      },
+      "companyId": 403,
+      "storeInstanceId": 436,
+      "eposCashBagsId": null
+    },
+    {
+      "createdBy": -1,
+      "createdByPerson": null,
+      "createdOn": "2016-06-06 20:20:39",
+      "updatedBy": 13,
+      "updatedByPerson": null,
+      "updatedOn": "2016-06-06 23:19:37",
+      "id": 12,
+      "cashbagId": 1172,
+      "promotionId": 161,
+      "currencyId": 8,
+      "amount": 17,
+      "quantity": 2,
+      "totalConvertedAmount": 34,
+      "promotion": {
+        "createdBy": 1,
+        "createdByPerson": {
+          "id": 1,
+          "userName": "admin",
+          "email": "VKrinitsyn@egate-solutions.com",
+          "firstName": "Vlad",
+          "lastName": "Kr."
+        },
+        "createdOn": "2015-06-04 21:25:02",
+        "updatedBy": 3,
+        "updatedByPerson": {
+          "id": 3,
+          "userName": "user",
+          "email": "rcurie1l@egate-solutions.com",
+          "firstName": "First",
+          "lastName": "Name"
+        },
+        "updatedOn": "2016-03-15 21:51:29",
+        "id": 161,
+        "companyId": 403,
+        "promotionCode": "44444",
+        "promotionName": "Defect 988"
+      },
+      "companyId": 403,
+      "storeInstanceId": 436,
+      "eposCashBagsId": null
+    },
+    {
+      "createdBy": -1,
+      "createdByPerson": null,
+      "createdOn": "2016-03-30 20:14:06",
+      "updatedBy": 13,
+      "updatedByPerson": null,
+      "updatedOn": "2016-06-06 23:19:37",
+      "id": 3,
+      "cashbagId": 1172,
+      "promotionId": 176,
+      "currencyId": 8,
+      "amount": 15.5,
+      "quantity": 2,
+      "totalConvertedAmount": 31,
+      "promotion": {
+        "createdBy": 1,
+        "createdByPerson": {
+          "id": 1,
+          "userName": "admin",
+          "email": "VKrinitsyn@egate-solutions.com",
+          "firstName": "Vlad",
+          "lastName": "Kr."
+        },
+        "createdOn": "2015-07-25 00:05:45",
+        "updatedBy": null,
+        "updatedByPerson": null,
+        "updatedOn": null,
+        "id": 176,
+        "companyId": 403,
+        "promotionCode": "EJS1077",
+        "promotionName": "Promo3345"
+      },
+      "companyId": 403,
+      "storeInstanceId": 436,
+      "eposCashBagsId": null
+    },
+    {
+      "createdBy": 27,
+      "createdByPerson": {
+        "id": 27,
+        "userName": "cash_handler_admin",
+        "email": null,
+        "firstName": null,
+        "lastName": null
+      },
+      "createdOn": "2016-03-12 23:14:16",
+      "updatedBy": 13,
+      "updatedByPerson": null,
+      "updatedOn": "2016-06-06 23:19:37",
+      "id": 1,
+      "cashbagId": 1172,
+      "promotionId": 171,
+      "currencyId": 8,
+      "amount": 10.5,
+      "quantity": 5,
+      "totalConvertedAmount": 52.5,
+      "promotion": {
+        "createdBy": 1,
+        "createdByPerson": {
+          "id": 1,
+          "userName": "admin",
+          "email": "VKrinitsyn@egate-solutions.com",
+          "firstName": "Vlad",
+          "lastName": "Kr."
+        },
+        "createdOn": "2015-07-09 01:30:30",
+        "updatedBy": null,
+        "updatedByPerson": null,
+        "updatedOn": null,
+        "id": 171,
+        "companyId": 403,
+        "promotionCode": "MealDeal001",
+        "promotionName": "Soft Drink and Sandwich Get Free Snack"
+      },
+      "companyId": 403,
+      "storeInstanceId": 436,
+      "eposCashBagsId": null
+    }
+  ]
+}
