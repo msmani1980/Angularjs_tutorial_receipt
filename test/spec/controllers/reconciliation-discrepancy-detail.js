@@ -200,8 +200,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     spyOn(reconciliationFactory, 'saveCashBagCurrency').and.returnValue(cashHandlerCashBagJSON.promise);
 
     manualDataJSON = {response: [
-      { cashbagId: 2158, convertedAmount: 10.0, quantity: 1, itemTypeId: 2, itemMaster: {itemName: 'testItem1'}},
-      { cashbagId: 2158, convertedAmount: 11.0, quantity: 2, itemTypeId: 4, itemMaster: {itemName: 'testItem2'}}
+      { cashbagId: 2158, convertedAmount: 10.0, totalConvertedAmount: 20.0, quantity: 1, itemTypeId: 2, itemMaster: {itemName: 'testItem1'}, promotion: {promotionName: 'testPromotion1'}},
+      { cashbagId: 2158, convertedAmount: 11.0, totalConvertedAmount: 22.0, quantity: 2, itemTypeId: 4, itemMaster: {itemName: 'testItem2'}, promotion: {promotionName: 'testPromotion2'}}
     ]};
 
     manualDataDeferred = $q.defer();
@@ -327,7 +327,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       it('should format promotionTotals to consolidate duplicates', function () {
         var promotions = lodash.filter(scope.stockTotals.stockItems, { itemTypeName: 'Promotion' });
-        expect(promotions.length).toEqual(2);
+        expect(promotions.length).toEqual(4);
         expect(promotions[0].eposQuantity).toEqual(1);
         expect(promotions[1].eposQuantity).toEqual(2);
         expect(promotions[1].eposTotal).toEqual('0.76');
@@ -335,23 +335,30 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       it('should add cash and credit manual data to gross value of epos sales', function () {
         var salesValue = scope.stockTotals.totalRetail.totalEPOS;
-        expect(parseFloat(salesValue) >= 42).toEqual(true);
+        var expectedSalesValue = 42; // (10 + 11)*2 from  manualDataJSON mock, duplicated for cash and credit
+
+        expect(parseFloat(salesValue) >= expectedSalesValue).toEqual(true);
       });
 
       it('should add virtual item manual data to voucher item totals', function () {
         var virtualItemTotal = scope.stockTotals.totalVirtual.totalEPOS;
-        expect(parseFloat(virtualItemTotal) >= 10).toEqual(true);
+        var expectedVirtualTotal = 10; // 11 from testItem1 in manualDataJSON mock
+
+        expect(parseFloat(virtualItemTotal) >= expectedVirtualTotal).toEqual(true);
       });
 
       it('should add voucher item manual data to voucher item totals', function () {
         var voucherItemTotal = scope.stockTotals.totalVoucher.totalEPOS;
-        expect(parseFloat(voucherItemTotal) >= 11).toEqual(true);
+        var expectedVoucherTotal = 11; // 11 from testItem2 in manualDataJSON mock
+
+        expect(parseFloat(voucherItemTotal) >= expectedVoucherTotal).toEqual(true);
       });
 
       it('should add promotion manual data to promotion totals', function () {
         var promotionTotal = scope.stockTotals.totalPromotion.totalEPOS;
+        var expectedPromotionTotal = 42; // 20 + 22, from manualDataJSON mock
         console.log(promotionTotal);
-        expect(parseFloat(promotionTotal) >= 22).toEqual(true);
+        expect(parseFloat(promotionTotal) >= expectedPromotionTotal).toEqual(true);
       });
 
       it('should add discount manual data to total revenue @ CH exchange rate', function () {
