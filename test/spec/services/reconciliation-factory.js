@@ -148,6 +148,7 @@ describe('Factory: reconciliationFactory', function () {
     spyOn(menuService, 'getMenuList').and.returnValue(getMenuListResponseJSON.promise);
 
     spyOn(cashBagService, 'getCashBagVerifications');
+    spyOn(cashBagService, 'getAllManualCashList');
     spyOn(cashBagService, 'getManualCashBagList');
 
     scope = $rootScope.$new();
@@ -243,9 +244,16 @@ describe('Factory: reconciliationFactory', function () {
       expect(cashBagService.getCashBagVerifications).toHaveBeenCalledWith({storeInstanceId: 123});
     });
 
+    it('should call cashBagService getAllManualCashList on getCashBagManualData with cash type', function () {
+      var fakePayload = { fakeKey: 'fakeValue' };
+      reconciliationFactory.getCashBagManualData('cash', fakePayload);
+      expect(cashBagService.getAllManualCashList).toHaveBeenCalledWith(fakePayload);
+    });
+
     it('should call cashBagService getManualCashBagList on getCashBagManualData', function () {
-      reconciliationFactory.getCashBagManualData(123, 'cash');
-      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('cash', 123, {});
+      var fakePayload = { fakeKey: 'fakeValue' };
+      reconciliationFactory.getCashBagManualData('credit', fakePayload);
+      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('credit', fakePayload);
     });
 
     describe('getCHRevenue', function () {
