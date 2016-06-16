@@ -99,15 +99,15 @@ angular.module('ts5App')
     function completeInit(responseCollection) {
       $scope.cashBag = angular.copy(responseCollection[0]);
       setVerification(responseCollection[1]);
-      var groupedItemList = groupItemList(responseCollection[5], responseCollection[6]);
+      var groupedItemList = groupItemList(responseCollection[6], responseCollection[7]);
 
       $scope.containsChanges = {
         cash: responseCollection[2].meta.count > 0,
         credit: responseCollection[3].meta.count > 0,
         discount: responseCollection[4].meta.count > 0,
+        promotion: responseCollection[5].meta.count > 0,
         voucher: !!groupedItemList.voucher,
-        virtual: !!groupedItemList.virtual,
-        promotion: false // TODO: getPromotionList
+        virtual: !!groupedItemList.virtual
       };
 
       $scope.readyToConfirm = areAllChangesVerified();
@@ -125,10 +125,9 @@ angular.module('ts5App')
         manualEposFactory.getCashBagCashList($routeParams.cashBagId),
         manualEposFactory.getCashBagCreditList($routeParams.cashBagId),
         manualEposFactory.getCashBagDiscountList($routeParams.cashBagId),
+        manualEposFactory.getCashBagPromotionList($routeParams.cashBagId),
         manualEposFactory.getCashBagItemList($routeParams.cashBagId),
         manualEposFactory.getItemTypes()
-
-        // TODO: getPromotionList
       ];
 
       $q.all(initPromises).then(completeInit);

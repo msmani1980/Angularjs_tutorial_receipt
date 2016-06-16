@@ -12,7 +12,7 @@ angular.module('ts5App')
   lodash, messageService, $location) {
 
   $scope.addPromotion = function() {
-    var newPromotion = { 
+    var newPromotion = {
       cashbagId: $scope.cashBag.id,
       eposCashBagsId: $scope.cashBag.eposCashBagsId,
       storeInstanceId: $scope.cashBag.storeInstanceId,
@@ -130,7 +130,7 @@ angular.module('ts5App')
   }
 
   $scope.sumAmounts = function () {
-    var runningSum = 0;  
+    var runningSum = 0;
     angular.forEach($scope.promotionList, function (promotion) {
         var baseCurrencyAmount = promotion.baseCurrencyAmount || 0;
         runningSum += parseFloat(baseCurrencyAmount);
@@ -138,7 +138,7 @@ angular.module('ts5App')
 
     return parseFloat(runningSum).toFixed(2);
   };
-  
+
   $scope.verify = function () {
     showLoadingModal('Verifying');
     manualEposFactory.verifyCashBag($scope.cashBag.id, 'PROMO').then(verifyToggleSuccess, showErrors);
@@ -179,7 +179,7 @@ angular.module('ts5App')
       var paperExchangeRate = promotionObject.exchangeRate.paperExchangeRate;
       var coinExchangeRate = promotionObject.exchangeRate.coinExchangeRate;
       if (!paperExchangeRate && !coinExchangeRate) {
-        return baseCurrencyAmount.toFixed(2); 
+        return baseCurrencyAmount.toFixed(2);
       }
 
       var splitAmounts = (promotionObject.currentCurrencyAmount).split('.');
@@ -203,8 +203,8 @@ angular.module('ts5App')
   };
 
   $scope.onChangePromotion  = function(promotionObj) {
-    promotionObj.promotionId = promotionObj.companyPromotion.id; 
-    promotionObj.promotionName = (promotionObj.companyPromotion.promotionName && promotionObj.companyPromotion.promotionName !== null ? promotionObj.companyPromotion.promotionName : ''); 
+    promotionObj.promotionId = promotionObj.companyPromotion.id;
+    promotionObj.promotionName = (promotionObj.companyPromotion.promotionName && promotionObj.companyPromotion.promotionName !== null ? promotionObj.companyPromotion.promotionName : '');
     return promotionObj;
   };
 
@@ -241,7 +241,7 @@ angular.module('ts5App')
     angular.forEach(promoList, function (promotion) {
       promotion.exchangeRate = lodash.findWhere($scope.dailyExchangeRates, { retailCompanyCurrencyId: promotion.currencyId }) || {};
       promotion.companyPromotion = lodash.findWhere(companyPromotionList, { id: promotion.promotionId }) || {};
-      promotion.promotionName = (promotion.companyPromotion.promotionName && promotion.companyPromotion.promotionName !== null ? promotion.companyPromotion.promotionName : ''); 
+      promotion.promotionName = (promotion.companyPromotion.promotionName && promotion.companyPromotion.promotionName !== null ? promotion.companyPromotion.promotionName : '');
 
       promotion.currentCurrencyAmount = getCurrentCurrencyAmount(promotion);
       promotion.baseCurrencyAmount = getBaseCurrencyAmount(promotion);
@@ -258,9 +258,9 @@ angular.module('ts5App')
     var dailyExchangeRate = angular.copy(responseCollection[2].dailyExchangeRateCurrencies);
     var verifiedData = angular.copy(responseCollection[3]);
     var cmpPromotionsList = angular.copy(responseCollection[4]);
-    
+
     $scope.dailyExchangeRates =  dailyExchangeRate;
-    
+
     setCashBagCurrencyList(currencyList);
     setBaseCurrency();
 
@@ -280,7 +280,7 @@ angular.module('ts5App')
     };
     var promises = [
       manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter,  isOperatedCurrency: true }),
-      manualEposFactory.getManualEposPromotionList($routeParams.cashbagId),
+      manualEposFactory.getCashBagPromotionList($routeParams.cashbagId),
       manualEposFactory.getDailyExchangeRate($scope.cashBag.dailyExchangeRateId),
       manualEposFactory.checkCashBagVerification($routeParams.cashbagId),
       manualEposFactory.getCompanyPromotionsList(payload)

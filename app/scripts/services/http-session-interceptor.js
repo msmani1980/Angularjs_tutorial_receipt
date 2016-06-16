@@ -108,14 +108,17 @@ angular.module('ts5App')
         '/rsvr/api/promotions',
         '/rsvr/api/companies/stores/[0-9]*',
         '/rsvr/api/records/company-types'
-
     ];
 
     var onlyRsvrApis = [
       '/rsvr/api/dailyexchangerate',
       '/rsvr/api/company-formats',
       '/rsvr/api/companies/[0-9]*/stations',
-      '/rsvr/api/store-instances/[0-9]*/calculated-inbounds'
+      '/rsvr/api/store-instances/[0-9]*/calculated-inbounds',
+      '/rsvr/api/cashbags/[0-9]*',
+      '/rsvr/api/cashbag/[0-9]+/cash',
+      '/rsvr/api/cashbags/cash/',
+      '/rsvr/api/cashbag-[a-z]+(/[0-9]*)?'
     ];
 
     function responseError(response) {

@@ -257,12 +257,6 @@ angular.module('ts5App')
       return manualEposDataRequestResource.deleteManualCashBagRecord().$promise;
     }
 
-    //function getManualEposPromotionList(cashBagId) {
-    //  manualEposListRequestParams.cashbagId = cashBagId;
-    //  manualEposListRequestParams.type = 'promotions';
-    //  return manualEposListRequestResource.getManualEposPromotionList().$promise;
-    //}
-
     return {
       getCashBagList: getCashBagList,
       getCashBag: getCashBag,

@@ -288,8 +288,9 @@ angular.module('ts5App')
       return companyDiscountService.getDiscountList(payload);
     }
 
-    function getManualEposPromotionList(cashBagId) {
-      return cashBagService.getManualEposPromotionList(cashBagId);
+    function getCashBagPromotionList(cashBagId) {
+      var payload = { cashbagId: cashBagId };
+      return cashBagService.getManualCashBagList('promotions', payload);
     }
 
     function updateManualEposPromotion(cashBagId, promotionId, payload) {
@@ -335,7 +336,7 @@ angular.module('ts5App')
       getCompanyDiscountsFrequentFlyer:getCompanyDiscountsFrequentFlyer,
       createManualEposPromotion: createManualEposPromotion,
       updateManualEposPromotion: updateManualEposPromotion,
-      getManualEposPromotionList: getManualEposPromotionList,
+      getCashBagPromotionList: getCashBagPromotionList,
       getCompanyPromotionsList:getCompanyPromotionsList
     };
 
