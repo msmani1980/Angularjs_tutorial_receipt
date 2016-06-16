@@ -26,34 +26,32 @@
     <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by {{ verifiedInfo.verifiedBy }} on {{ verifiedInfo.verifiedTimestamp }}</div>
     <div class="panel panel-default">
       <div class="panel-body">
-
-
         <div class="row">
-            <div class="col-xs-4 col-sm-2">
-            <b>Operating Currency</b>
-        </div>
-        <div class="form-group">
-            <div class="col-xs-4 col-sm-2">
-                <ui-select ng-model="selectedCurrency.currency" theme="bootstrap" reset-search-input="false" on-select="onChangeCurrency()" style="min-width: 200px;" ng-disabled="isVerified || disableAll">
-                    <ui-select-match placeholder="Select Currency ..."> {{$select.selected.code}} </ui-select-match>
-                    <ui-select-choices repeat="currency in currencyList"> <div ng-bind-html="currency.code | highlight: $select.search"></div></ui-select-choices>
-                </ui-select>
+          <div class="col-xs-12 col-sm-12">
+            <div class="input-group">
+              <span class="input-group-addon"><span class="fa fa-money"></span></span>
+              <ui-select ng-model="selectedCurrency.currency" theme="bootstrap" reset-search-input="false" on-select="onChangeCurrency()" style="min-width: 200px;" ng-disabled="isVerified || disableAll">
+                <ui-select-match placeholder="Select Operating Currency ..."> {{$select.selected.code}} </ui-select-match>
+                <ui-select-choices repeat="currency in currencyList"> <div ng-bind-html="currency.code | highlight: $select.search"></div></ui-select-choices>
+              </ui-select>
             </div>
+          </div>
         </div>
-        </div>
-
-        <div class="panel-divider"></div>
+        <br>
 
         <div class="row">
             <div class="col-xs-12 col-sm-12">
                 <div class="input-group">
-                    <span class="input-group-addon" id="discounts-filter">Filter</span>
-                    <input type="text" class="form-control" ng-model="filter.discounts" placeholder="Select Discount Type to filter by ..." aria-describedby="discounts-filter" ng-disabled="isVerified || disableAll"/>
+                    <span class="input-group-addon" id="discounts-filter"><span class="fa fa-filter"></span></span>
+                    <input type="text" class="form-control" ng-model="filter.discounts" placeholder="Select Discount Type to filter by ..." aria-describedby="discounts-filter" />
                 </div>
             </div>
         </div>
+        <br>
+        <div class="panel-divider"></div>
 
-		<!-- BEGIN Coupon Discount -->
+
+        <!-- BEGIN Coupon Discount -->
 		<div>
         <div class="row">
           <table class="table table-hover">
@@ -118,7 +116,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addCouponDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
+                <button class="btn btn-primary" type="button" ng-click="addCouponDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
             </div>
             <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
             <div class="col-xs-12 col-sm-2">
@@ -127,9 +125,8 @@
           </div>
         </div>
 		<!--END Coupon Discount -->
-
+        <hr>
 		<!-- BEGIN Voucher Discount -->
-        <div class="panel-divider"></div>
 		<div>
         <div class="row">
           <table class="table table-hover">
@@ -194,7 +191,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addVoucherDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
+                <button class="btn btn-primary" type="button" ng-click="addVoucherDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
             </div>
             <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
             <div class="col-xs-12 col-sm-2">
@@ -204,9 +201,8 @@
 
         </div>
         <!--END Voucher Discount -->
-
+        <hr>
 		<!-- BEGIN Comp Discount -->
-        <div class="panel-divider"></div>
 		<div>
         <div class="row">
           <table class="table table-hover">
@@ -271,7 +267,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addCompDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
+                <button class="btn btn-primary" type="button" ng-click="addCompDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
             </div>
             <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
             <div class="col-xs-12 col-sm-2">
@@ -281,10 +277,9 @@
 
         </div>
         <!--END Comp Discount -->
-
+        <hr>
 
 		<!-- BEGIN Flyer Discount -->
-        <div class="panel-divider"></div>
 		<div>
         <div class="row">
           <table class="table table-hover">
@@ -348,7 +343,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addFlyerDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
+                <button class="btn btn-primary" type="button" ng-click="addFlyerDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
             </div>
             <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
             <div class="col-xs-12 col-sm-2">
@@ -357,9 +352,9 @@
           </div>
 
         </div>
+        <br>
+        </div>
         <!--END Flyer Discount -->
-
-        <div class="panel-divider"></div>
 
         <div class="panel-footer" ng-hide="isCashBagConfirmed">
             <div class="row">
@@ -370,7 +365,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
   </form>
 </div>
