@@ -10,11 +10,11 @@
  * # datePicker
  */
 angular.module('ts5App')
-  .directive('datePicker', function (dateUtility) {
+  .directive('datePicker', function (dateUtility, companyFormatUtility) {
 
     var datePickerOptions = {
       orientation: 'auto top',
-      format: 'mm/dd/yyyy',
+      format: companyFormatUtility.getDateFormat().toLowerCase(),
       autoclose: true,
       todayHighlight: true
     };

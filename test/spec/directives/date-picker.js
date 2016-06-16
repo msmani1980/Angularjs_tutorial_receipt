@@ -8,12 +8,15 @@ describe('Directive: datePicker', function () {
 
   var element;
   var scope;
+  var companyFormatUtility;
 
-  beforeEach(inject(function ($rootScope) {
+  beforeEach(inject(function ($rootScope, $injector) {
+    companyFormatUtility = $injector.get('companyFormatUtility');
+    spyOn(companyFormatUtility, 'getDateFormat').and.returnValue('DD/MM/YYYY');
     scope = $rootScope.$new();
   }));
 
-  describe('date picker template', function () {
+  describe('date picker', function () {
     beforeEach(inject(function ($compile) {
       element = angular.element(
         '<date-picker label-from="labelFrom" label-to="labelTo"></date-picker>'
@@ -21,6 +24,13 @@ describe('Directive: datePicker', function () {
       element = $compile(element)(scope);
       scope.$digest();
     }));
+
+    describe('dependencies', function () {
+      it('should get the date format from companyFormatUtility', function () {
+        expect(companyFormatUtility.getDateFormat).toHaveBeenCalled();
+      });
+
+    });
 
     it('should have 2 input fields', function () {
       expect(element.find('input').length).toBe(2);
