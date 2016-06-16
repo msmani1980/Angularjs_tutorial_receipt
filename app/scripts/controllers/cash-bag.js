@@ -215,6 +215,7 @@ angular.module('ts5App')
       hideLoadingModal();
       var storeData = angular.copy(dataFromAPI);
       $scope.cashBag.storeNumber = storeData.storeNumber;
+      angular.element('#cashBagNumber').focus();
     }
 
     function getStoreInstanceListResponseHandler(dataFromAPI) {
