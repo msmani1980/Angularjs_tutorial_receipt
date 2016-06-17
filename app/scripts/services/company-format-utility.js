@@ -8,19 +8,14 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companyFormatUtility', function (identityAccessFactory, lodash) {
-    function getStoredFormatList() {
-      var formatList = identityAccessFactory.getSessionObject().companyFormatList;
-      if (formatList) {
-        return lodash.object(lodash.map(formatList, function (item) {
-          return [item.format.dataType, item.format.format];
-        }));
-      }
+  .service('companyFormatUtility', function (globalMenuService) {
+    var defaultFormat = {
+      DATE: 'MM/DD/YYYY',
+      CURRENCY: '%.2f'
+    };
 
-      return {
-        DATE: 'MM/DD/YYYY',
-        CURRENCY: '%.2f'
-      };
+    function getStoredFormatList() {
+      return globalMenuService.getCompanyData().formatList || defaultFormat;
     }
 
     function getDateFormat() {

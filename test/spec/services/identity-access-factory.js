@@ -126,15 +126,15 @@ describe('Service: identityAccessFactory', function() {
       expect(identityAccessFactory.getSessionObject().userCompanies.length).toBeGreaterThan(0);
     });
 
-    describe('company format list', function() {
+    describe('company date format list', function() {
       it('should have the list in the session object', function() {
         scope.$digest();
-        expect(identityAccessFactory.getSessionObject().companyFormatList.length).toBeGreaterThan(0);
+        expect(identityAccessFactory.getSessionObject().companyFormatList.DATE).toBeDefined();
       });
 
       it('should have DATE element', function() {
         scope.$digest();
-        expect(identityAccessFactory.getSessionObject().companyFormatList[0].format.dataType).toBe('DATE');
+        expect(identityAccessFactory.getSessionObject().companyFormatList.DATE.toUpperCase()).toBe('MM/DD/YYYY');
       });
     });
 
