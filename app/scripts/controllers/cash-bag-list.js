@@ -172,7 +172,7 @@ angular.module('ts5App')
       var payload = createPayload();
 
       payload = lodash.assign(payload, {
-        isDelete: 'false',
+        isDelete: false,
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
@@ -366,7 +366,7 @@ angular.module('ts5App')
     };
 
     $scope.isCashBagEditable = function(cashBag) {
-      return (cashBag && !cashBag.isSubmitted && cashBag.isDelete === 'false');
+      return (cashBag && !cashBag.isSubmitted && cashBag.isDelete === false);
     };
 
     $scope.isListFromEdit = function() {
