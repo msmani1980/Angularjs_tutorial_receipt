@@ -25,13 +25,6 @@ describe('Directive: datePicker', function () {
       scope.$digest();
     }));
 
-    describe('dependencies', function () {
-      it('should get the date format from companyFormatUtility', function () {
-        expect(companyFormatUtility.getDateFormat).toHaveBeenCalled();
-      });
-
-    });
-
     it('should have 2 input fields', function () {
       expect(element.find('input').length).toBe(2);
     });
