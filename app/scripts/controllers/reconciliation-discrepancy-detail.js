@@ -274,19 +274,11 @@ angular.module('ts5App')
       initCashBagRevisions();
     }
 
-    function getManualDataTotals(itemType) {
-      var itemTypeToManualTypeMap = {
-        Regular: 'cash-credit',
-        Virtual: 'virtual',
-        Voucher: 'voucher',
-        Promotion: 'promotion'
-      };
-
-      var dataType = itemTypeToManualTypeMap[itemType];
-      var arrayToSum = (dataType === 'cash-credit') ? $this.manualData.cash.concat($this.manualData.credit) : $this.manualData[dataType];
+    function getManualDataTotals(manualDataType) {
+      var arrayToSum = (manualDataType === 'regular') ? $this.manualData.cash.concat($this.manualData.credit) : $this.manualData[manualDataType];
       var total = 0;
       angular.forEach(arrayToSum, function (manualDataEntry) {
-        total += (dataType === 'promotion') ? manualDataEntry.totalConvertedAmount : manualDataEntry.convertedAmount;
+        total += angular.isDefined(manualDataEntry.totalConvertedAmount) ? manualDataEntry.totalConvertedAmount : manualDataEntry.convertedAmount;
       });
 
       return total;
@@ -303,7 +295,7 @@ angular.module('ts5App')
         totalEPOS += item.eposTotal || 0;
       });
 
-      totalEPOS += getManualDataTotals(itemTypeName);
+      totalEPOS += getManualDataTotals(itemTypeName.toLowerCase());
 
       return {
         parsedLMP: totalLMP,
@@ -319,7 +311,7 @@ angular.module('ts5App')
         total += promotionItem.convertedAmount;
       });
 
-      total += getManualDataTotals('Promotion');
+      total += getManualDataTotals('promotion');
 
       return {
         parsedLMP: total,
@@ -515,6 +507,10 @@ angular.module('ts5App')
 
       angular.forEach(chDiscount, function (discount) {
         total += makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
+      });
+
+      angular.forEach($this.manualData.credit, function (discount) {
+        total += discount.convertedAmount;
       });
 
       angular.forEach($this.manualData.discount, function (discount) {

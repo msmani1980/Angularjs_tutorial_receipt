@@ -607,6 +607,16 @@ angular.module('ts5App')
       }
     }
 
+    function getManualDataTotals(manualDataType) {
+      var arrayToSum = (manualDataType === 'regular') ? $this.manualData.cash.concat($this.manualData.credit) : $this.manualData[manualDataType];
+      var total = 0;
+      angular.forEach(arrayToSum, function (manualDataEntry) {
+        total += angular.isDefined(manualDataEntry.totalConvertedAmount) ? manualDataEntry.totalConvertedAmount : manualDataEntry.convertedAmount;
+      });
+
+      return total;
+    }
+
     function getTotalsFor(stockTotals, itemTypeName) {
       var stockItem = $filter('filter')(stockTotals, {
         itemTypeName: itemTypeName
@@ -620,7 +630,7 @@ angular.module('ts5App')
         extractEposSalesByCashBag(item, itemTypeName);
       });
 
-      totalEPOS += $this.manualData[itemTypeName.toLowerCase()];
+      totalEPOS += getManualDataTotals(itemTypeName.toLowerCase());
 
       return {
         parsedLMP: totalLMP,
@@ -638,7 +648,7 @@ angular.module('ts5App')
         extractEposSalesPromotionByCashBag(promotionItem);
       });
 
-      total += $this.manualData.promotion;
+      total += getManualDataTotals('promotion');
 
       return {
         parsedLMP: total,
@@ -781,8 +791,9 @@ angular.module('ts5App')
     }
 
     function setupTotalRevenue () {
+      var manualDataForTotalRevenue = getManualDataTotals('discount') + getManualDataTotals('credit');
       $scope.totalRevenue = {
-        cashHandler: $scope.companyIsUsingCash ? $scope.formatAsCurrency(calculateCashRevenue($scope.cashRevenue) + $this.manualData.discount) : 0,
+        cashHandler: $scope.companyIsUsingCash ? $scope.formatAsCurrency(calculateCashRevenue($scope.cashRevenue) + manualDataForTotalRevenue) : 0,
         epos: $scope.formatAsCurrency(calculateEPOSRevenue($scope.eposRevenue))
       };
     }
@@ -1218,25 +1229,16 @@ angular.module('ts5App')
       $q.all(promiseArray).then(handleInitDataSuccess, handleResponseError);
     }
 
-    function initViewDefaults () {
-      $scope.moveCashBagAction = 'none';
-      $scope.showDeletedCashBags = false;
-      $scope.sectorsToMove = [];
-      $scope.cashBagFilter = {};
-      $scope.scheduleSearch = {};
-      angular.element('#checkbox').bootstrapSwitch();
-    }
-
-    function setManualDataTotals(dataFromAPI, cashBagsToInclude, optionalItemIdFilter) {
-      var manualDataTotal = 0;
+    function setManualDataSet(dataFromAPI, cashBagsToInclude, optionalItemIdFilter) {
+      var manualDataSet = [];
       angular.forEach(dataFromAPI, function (manualData) {
         var itemTypeConditional = (angular.isDefined(optionalItemIdFilter)) ? manualData.itemTypeId === optionalItemIdFilter : true;
         if (cashBagsToInclude.indexOf(manualData.cashbagId) >= 0 && itemTypeConditional) {
-          manualDataTotal += angular.isDefined(manualData.convertedAmount) ? manualData.convertedAmount : manualData.totalConvertedAmount;
+          manualDataSet.push(manualData);
         }
       });
 
-      return manualDataTotal;
+      return manualDataSet;
     }
 
     function setManualData(responseCollectionFromAPI) {
@@ -1253,11 +1255,12 @@ angular.module('ts5App')
       var voucherItemId = lodash.findWhere(itemTypes, { name: 'Voucher' }).id;
 
       $this.manualData = {
-        regular: setManualDataTotals(angular.copy(responseCollectionFromAPI[2].response), manualDataToInclude) + setManualDataTotals(angular.copy(responseCollectionFromAPI[3].response), manualDataToInclude),
-        virtual: setManualDataTotals(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, virtualItemId),
-        voucher: setManualDataTotals(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, voucherItemId),
-        promotion: setManualDataTotals(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude),
-        discount: setManualDataTotals(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude)
+        cash: setManualDataSet(angular.copy(responseCollectionFromAPI[2].response), manualDataToInclude),
+        credit: setManualDataSet(angular.copy(responseCollectionFromAPI[3].response), manualDataToInclude),
+        virtual: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, virtualItemId),
+        voucher: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, voucherItemId),
+        promotion: setManualDataSet(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude),
+        discount: setManualDataSet(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude)
       };
     }
 
@@ -1282,6 +1285,15 @@ angular.module('ts5App')
       ];
 
       $q.all(promises).then(initDependenciesSuccess, handleResponseError);
+    }
+
+    function initViewDefaults () {
+      $scope.moveCashBagAction = 'none';
+      $scope.showDeletedCashBags = false;
+      $scope.sectorsToMove = [];
+      $scope.cashBagFilter = {};
+      $scope.scheduleSearch = {};
+      angular.element('#checkbox').bootstrapSwitch();
     }
 
     function init () {
