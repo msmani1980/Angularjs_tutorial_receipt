@@ -865,6 +865,10 @@ angular.module('ts5App')
       $scope.storeInstance = storeInstance;
     }
 
+    function getStoreInstance () {
+      return reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId).then(setStoreInstance);
+    }
+
     function setCompany (companyFromAPI) {
       $scope.company = angular.copy(companyFromAPI);
     }
@@ -1197,6 +1201,7 @@ angular.module('ts5App')
 
       var promiseArray = [
         getStoreStatusList(),
+        getStoreInstance(),
         getCompany(),
         getCompanyGlobalCurrencies(),
         getItemTypes(),
@@ -1236,28 +1241,27 @@ angular.module('ts5App')
 
     function setManualData(responseCollectionFromAPI) {
       var manualDataToInclude = [];
-      var cashBagList = angular.copy(responseCollectionFromAPI[1].response);
+      var cashBagList = angular.copy(responseCollectionFromAPI[0].response);
       angular.forEach(cashBagList, function (cashBag) {
         if (cashBag.eposCashbagId === null && !!cashBag.verificationConfirmedOn) {
           manualDataToInclude.push(cashBag.id);
         }
       });
 
-      var itemTypes = angular.copy(responseCollectionFromAPI[2]);
+      var itemTypes = angular.copy(responseCollectionFromAPI[1]);
       var virtualItemId = lodash.findWhere(itemTypes, { name: 'Virtual' }).id;
       var voucherItemId = lodash.findWhere(itemTypes, { name: 'Voucher' }).id;
 
       $this.manualData = {
-        regular: setManualDataTotals(angular.copy(responseCollectionFromAPI[3].response), manualDataToInclude) + setManualDataTotals(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude),
-        virtual: setManualDataTotals(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude, virtualItemId),
-        voucher: setManualDataTotals(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude, voucherItemId),
-        promotion: setManualDataTotals(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude),
-        discount: setManualDataTotals(angular.copy(responseCollectionFromAPI[7].response), manualDataToInclude)
+        regular: setManualDataTotals(angular.copy(responseCollectionFromAPI[2].response), manualDataToInclude) + setManualDataTotals(angular.copy(responseCollectionFromAPI[3].response), manualDataToInclude),
+        virtual: setManualDataTotals(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, virtualItemId),
+        voucher: setManualDataTotals(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, voucherItemId),
+        promotion: setManualDataTotals(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude),
+        discount: setManualDataTotals(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude)
       };
     }
 
     function initDependenciesSuccess(responseCollectionFromAPI) {
-      setStoreInstance(responseCollectionFromAPI[0]);
       setManualData(responseCollectionFromAPI);
       initData();
     }
@@ -1268,7 +1272,6 @@ angular.module('ts5App')
       };
 
       var promises = [
-        reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId),
         reconciliationFactory.getCashBagVerifications($routeParams.storeInstanceId),
         reconciliationFactory.getItemTypesList(),
         reconciliationFactory.getCashBagManualData('cash', payloadForManualData),
