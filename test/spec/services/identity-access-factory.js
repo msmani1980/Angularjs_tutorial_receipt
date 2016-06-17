@@ -126,7 +126,7 @@ describe('Service: identityAccessFactory', function() {
       expect(identityAccessFactory.getSessionObject().userCompanies.length).toBeGreaterThan(0);
     });
 
-    describe('company format list', function() {
+    describe('company date format list', function() {
       it('should have the list in the session object', function() {
         scope.$digest();
         expect(identityAccessFactory.getSessionObject().companyFormatList.DATE).toBeDefined();
