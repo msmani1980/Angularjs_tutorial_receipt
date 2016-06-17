@@ -620,6 +620,8 @@ angular.module('ts5App')
         extractEposSalesByCashBag(item, itemTypeName);
       });
 
+      totalEPOS += $this.manualData[itemTypeName.toLowerCase()];
+
       return {
         parsedLMP: totalLMP,
         parsedEPOS: totalEPOS,
@@ -635,6 +637,8 @@ angular.module('ts5App')
 
         extractEposSalesPromotionByCashBag(promotionItem);
       });
+
+      total += $this.manualData.promotion;
 
       return {
         parsedLMP: total,
@@ -665,7 +669,6 @@ angular.module('ts5App')
 
       var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedLMP;
       var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
-      netEPOS += $this.manualData.eposSalesAmounts;
 
       var netTotals = {
         netLMP: $scope.formatAsCurrency(netLMP),
@@ -779,12 +782,11 @@ angular.module('ts5App')
 
     function setupTotalRevenue () {
       $scope.totalRevenue = {
-        cashHandler: $scope.companyIsUsingCash ? $scope.formatAsCurrency(calculateCashRevenue($scope.cashRevenue) + $this.manualData.totalCHRevenueAmounts) : 0,
+        cashHandler: $scope.companyIsUsingCash ? $scope.formatAsCurrency(calculateCashRevenue($scope.cashRevenue) + $this.manualData.discount) : 0,
         epos: $scope.formatAsCurrency(calculateEPOSRevenue($scope.eposRevenue))
       };
     }
 
-    // TODO: fix scope.stockTotals.totalNet.netLMP
     function setupDiscrepancy() {
       var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
       var netPercentage = makeFinite(netValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
@@ -1220,10 +1222,11 @@ angular.module('ts5App')
       angular.element('#checkbox').bootstrapSwitch();
     }
 
-    function getManualDataTotals(manualDataArray, cashBagsToInclude) {
+    function setManualDataTotals(dataFromAPI, cashBagsToInclude, optionalItemIdFilter) {
       var manualDataTotal = 0;
-      angular.forEach(manualDataArray, function (manualData) {
-        if (cashBagsToInclude.indexOf(manualData.cashbagId) >= 0) {
+      angular.forEach(dataFromAPI, function (manualData) {
+        var itemTypeConditional = (angular.isDefined(optionalItemIdFilter)) ? manualData.itemTypeId === optionalItemIdFilter : true;
+        if (cashBagsToInclude.indexOf(manualData.cashbagId) >= 0 && itemTypeConditional) {
           manualDataTotal += angular.isDefined(manualData.convertedAmount) ? manualData.convertedAmount : manualData.totalConvertedAmount;
         }
       });
@@ -1231,31 +1234,25 @@ angular.module('ts5App')
       return manualDataTotal;
     }
 
-    function getManualDataCashBags (cashBagList) {
+    function setManualData(responseCollectionFromAPI) {
       var manualDataToInclude = [];
+      var cashBagList = angular.copy(responseCollectionFromAPI[1].response);
       angular.forEach(cashBagList, function (cashBag) {
         if (cashBag.eposCashbagId === null && !!cashBag.verificationConfirmedOn) {
           manualDataToInclude.push(cashBag.id);
         }
       });
 
-      return manualDataToInclude;
-    }
-
-    function setManualData(responseCollectionFromAPI) {
-      var cashBagList = angular.copy(responseCollectionFromAPI[1].response);
-      var cashBagsToInclude = getManualDataCashBags(cashBagList);
-
-      var manualEposSalesAmounts = getManualDataTotals(angular.copy(responseCollectionFromAPI[2].response), cashBagsToInclude);
-      manualEposSalesAmounts += getManualDataTotals(angular.copy(responseCollectionFromAPI[3].response), cashBagsToInclude);
-      manualEposSalesAmounts += getManualDataTotals(angular.copy(responseCollectionFromAPI[4].response), cashBagsToInclude);
-      manualEposSalesAmounts -= getManualDataTotals(angular.copy(responseCollectionFromAPI[5].response), cashBagsToInclude);
-
-      var manualTotalRevenueAmounts = getManualDataTotals(angular.copy(responseCollectionFromAPI[6].response), cashBagsToInclude);
+      var itemTypes = angular.copy(responseCollectionFromAPI[2]);
+      var virtualItemId = lodash.findWhere(itemTypes, { name: 'Virtual' }).id;
+      var voucherItemId = lodash.findWhere(itemTypes, { name: 'Voucher' }).id;
 
       $this.manualData = {
-        eposSalesAmounts: manualEposSalesAmounts,
-        totalCHRevenueAmounts: manualTotalRevenueAmounts
+        regular: setManualDataTotals(angular.copy(responseCollectionFromAPI[3].response), manualDataToInclude) + setManualDataTotals(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude),
+        virtual: setManualDataTotals(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude, virtualItemId),
+        voucher: setManualDataTotals(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude, voucherItemId),
+        promotion: setManualDataTotals(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude),
+        discount: setManualDataTotals(angular.copy(responseCollectionFromAPI[7].response), manualDataToInclude)
       };
     }
 
@@ -1273,6 +1270,7 @@ angular.module('ts5App')
       var promises = [
         reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId),
         reconciliationFactory.getCashBagVerifications($routeParams.storeInstanceId),
+        reconciliationFactory.getItemTypesList(),
         reconciliationFactory.getCashBagManualData('cash', payloadForManualData),
         reconciliationFactory.getCashBagManualData('credit-cards', payloadForManualData),
         reconciliationFactory.getCashBagManualData('items', payloadForManualData),
