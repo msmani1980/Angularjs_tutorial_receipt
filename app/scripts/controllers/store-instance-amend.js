@@ -665,6 +665,7 @@ angular.module('ts5App')
 
       var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedLMP;
       var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
+      netEPOS += $this.manualData.eposSalesAmounts;
 
       var netTotals = {
         netLMP: $scope.formatAsCurrency(netLMP),
@@ -778,11 +779,12 @@ angular.module('ts5App')
 
     function setupTotalRevenue () {
       $scope.totalRevenue = {
-        cashHandler: $scope.companyIsUsingCash ? $scope.formatAsCurrency(calculateCashRevenue($scope.cashRevenue)) : 0,
+        cashHandler: $scope.companyIsUsingCash ? $scope.formatAsCurrency(calculateCashRevenue($scope.cashRevenue) + $this.manualData.totalCHRevenueAmounts) : 0,
         epos: $scope.formatAsCurrency(calculateEPOSRevenue($scope.eposRevenue))
       };
     }
 
+    // TODO: fix scope.stockTotals.totalNet.netLMP
     function setupDiscrepancy() {
       var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
       var netPercentage = makeFinite(netValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
@@ -793,7 +795,7 @@ angular.module('ts5App')
       var exchangePercentage = 0;
 
       if ($scope.companyIsUsingCash) {
-        revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.stockTotals.totalNet.netEPOS);
+        revenueValue = parseFloat($scope.totalRevenue.epos) - parseFloat($scope.stockTotals.totalNet.netEPOS);
         revenuePercentage = makeFinite(revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
         exchangeValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
         exchangePercentage = makeFinite(exchangeValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
@@ -859,10 +861,6 @@ angular.module('ts5App')
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
 
       $scope.storeInstance = storeInstance;
-    }
-
-    function getStoreInstance () {
-      return reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId).then(setStoreInstance);
     }
 
     function setCompany (companyFromAPI) {
@@ -1197,7 +1195,6 @@ angular.module('ts5App')
 
       var promiseArray = [
         getStoreStatusList(),
-        getStoreInstance(),
         getCompany(),
         getCompanyGlobalCurrencies(),
         getItemTypes(),
@@ -1223,9 +1220,72 @@ angular.module('ts5App')
       angular.element('#checkbox').bootstrapSwitch();
     }
 
+    function getManualDataTotals(manualDataArray, cashBagsToInclude) {
+      var manualDataTotal = 0;
+      angular.forEach(manualDataArray, function (manualData) {
+        if (cashBagsToInclude.indexOf(manualData.cashbagId) >= 0) {
+          manualDataTotal += angular.isDefined(manualData.convertedAmount) ? manualData.convertedAmount : manualData.totalConvertedAmount;
+        }
+      });
+
+      return manualDataTotal;
+    }
+
+    function getManualDataCashBags (cashBagList) {
+      var manualDataToInclude = [];
+      angular.forEach(cashBagList, function (cashBag) {
+        if (cashBag.eposCashbagId === null && !!cashBag.verificationConfirmedOn) {
+          manualDataToInclude.push(cashBag.id);
+        }
+      });
+
+      return manualDataToInclude;
+    }
+
+    function setManualData(responseCollectionFromAPI) {
+      var cashBagList = angular.copy(responseCollectionFromAPI[1].response);
+      var cashBagsToInclude = getManualDataCashBags(cashBagList);
+
+      var manualEposSalesAmounts = getManualDataTotals(angular.copy(responseCollectionFromAPI[2].response), cashBagsToInclude);
+      manualEposSalesAmounts += getManualDataTotals(angular.copy(responseCollectionFromAPI[3].response), cashBagsToInclude);
+      manualEposSalesAmounts += getManualDataTotals(angular.copy(responseCollectionFromAPI[4].response), cashBagsToInclude);
+      manualEposSalesAmounts -= getManualDataTotals(angular.copy(responseCollectionFromAPI[5].response), cashBagsToInclude);
+
+      var manualTotalRevenueAmounts = getManualDataTotals(angular.copy(responseCollectionFromAPI[6].response), cashBagsToInclude);
+
+      $this.manualData = {
+        eposSalesAmounts: manualEposSalesAmounts,
+        totalCHRevenueAmounts: manualTotalRevenueAmounts
+      };
+    }
+
+    function initDependenciesSuccess(responseCollectionFromAPI) {
+      setStoreInstance(responseCollectionFromAPI[0]);
+      setManualData(responseCollectionFromAPI);
+      initData();
+    }
+
+    function initDependencies() {
+      var payloadForManualData = {
+        storeInstanceId: $routeParams.storeInstanceId
+      };
+
+      var promises = [
+        reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId),
+        reconciliationFactory.getCashBagVerifications($routeParams.storeInstanceId),
+        reconciliationFactory.getCashBagManualData('cash', payloadForManualData),
+        reconciliationFactory.getCashBagManualData('credit-cards', payloadForManualData),
+        reconciliationFactory.getCashBagManualData('items', payloadForManualData),
+        reconciliationFactory.getCashBagManualData('promotions', payloadForManualData),
+        reconciliationFactory.getCashBagManualData('discounts', payloadForManualData)
+      ];
+
+      $q.all(promises).then(initDependenciesSuccess, handleResponseError);
+    }
+
     function init () {
       initViewDefaults();
-      initData();
+      initDependencies();
     }
 
     init();
