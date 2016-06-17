@@ -129,12 +129,12 @@ describe('Service: identityAccessFactory', function() {
     describe('company format list', function() {
       it('should have the list in the session object', function() {
         scope.$digest();
-        expect(identityAccessFactory.getSessionObject().companyFormatList.length).toBeGreaterThan(0);
+        expect(identityAccessFactory.getSessionObject().companyData.formatList.length).toBeGreaterThan(0);
       });
 
       it('should have DATE element', function() {
         scope.$digest();
-        expect(identityAccessFactory.getSessionObject().companyFormatList[0].format.dataType).toBe('DATE');
+        expect(identityAccessFactory.getSessionObject().companyData.formatList.DATE).toBe('MM/DD/YYYY');
       });
     });
 
