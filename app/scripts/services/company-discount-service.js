@@ -13,11 +13,11 @@ angular.module('ts5App').service('companyDiscountService', function ($resource, 
     data = angular.fromJson(data);
     angular.forEach(data.companyDiscounts, function (discount) {
       if (discount && discount.startDate) {
-        discount.startDate = dateUtility.formatDate(discount.startDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
+        discount.startDate = dateUtility.formatDateForApp(discount.startDate);
       }
 
       if (discount && discount.endDate) {
-        discount.endDate = dateUtility.formatDate(discount.endDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
+        discount.endDate = dateUtility.formatDateForApp(discount.endDate);
       }
     });
 
