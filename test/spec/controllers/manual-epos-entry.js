@@ -9,6 +9,7 @@ describe('Controller: ManualEposEntryCtrl', function() {
   beforeEach(module('served/cash-bag-cash.json'));
   beforeEach(module('served/cash-bag-items.json'));
   beforeEach(module('served/cash-bag-discount.json'));
+  beforeEach(module('served/cash-bag-promotions.json'));
 
   var ManualEposEntryCtrl;
   var manualEposFactory;
@@ -21,6 +22,7 @@ describe('Controller: ManualEposEntryCtrl', function() {
   var cashBagVerificationJSON;
 
   var verifyCashBagDeferred;
+  var unverifyCashBagDeferred;
 
   var cashBagCashDeferred;
   var cashBagCashJSON;
@@ -34,6 +36,9 @@ describe('Controller: ManualEposEntryCtrl', function() {
   var cashBagDiscountsDeferred;
   var cashBagDiscountJSON;
 
+  var cashBagPromotionsDeferred;
+  var cashBagPromotionsJSON;
+
   var itemTypesDeferred;
   var itemTypesJSON;
 
@@ -46,13 +51,14 @@ describe('Controller: ManualEposEntryCtrl', function() {
     manualEposFactory = $injector.get('manualEposFactory');
 
     inject(function (_servedCashBag_, _servedCashBagVerifications_, _servedItemTypes_,
-      _servedCashBagCash_, _servedCashBagItems_, _servedCashBagDiscount_) {
+      _servedCashBagCash_, _servedCashBagItems_, _servedCashBagDiscount_, _servedCashBagPromotions_) {
       cashBagJSON = _servedCashBag_;
       cashBagVerificationJSON = _servedCashBagVerifications_;
       itemTypesJSON = _servedItemTypes_;
       cashBagCashJSON = _servedCashBagCash_;
       cashBagItemsJSON = _servedCashBagItems_;
       cashBagDiscountJSON = _servedCashBagDiscount_;
+      cashBagPromotionsJSON = _servedCashBagPromotions_;
     });
 
     location = $location;
@@ -71,6 +77,10 @@ describe('Controller: ManualEposEntryCtrl', function() {
     verifyCashBagDeferred.resolve({});
     spyOn(manualEposFactory, 'verifyCashBag').and.returnValue(verifyCashBagDeferred.promise);
 
+    unverifyCashBagDeferred = $q.defer();
+    unverifyCashBagDeferred.resolve({});
+    spyOn(manualEposFactory, 'unverifyCashBag').and.returnValue(unverifyCashBagDeferred.promise);
+
     cashBagCashDeferred = $q.defer();
     cashBagCashDeferred.resolve(cashBagCashJSON);
     spyOn(manualEposFactory, 'getCashBagCashList').and.returnValue(cashBagCashDeferred.promise);
@@ -86,6 +96,10 @@ describe('Controller: ManualEposEntryCtrl', function() {
     cashBagDiscountsDeferred = $q.defer();
     cashBagDiscountsDeferred.resolve(cashBagItemsJSON);
     spyOn(manualEposFactory, 'getCashBagItemList').and.returnValue(cashBagDiscountsDeferred.promise);
+
+    cashBagPromotionsDeferred = $q.defer();
+    cashBagPromotionsDeferred.resolve(cashBagPromotionsJSON);
+    spyOn(manualEposFactory, 'getCashBagPromotionList').and.returnValue(cashBagPromotionsDeferred.promise);
 
     itemTypesDeferred = $q.defer();
     itemTypesDeferred.resolve(itemTypesJSON);
@@ -224,6 +238,19 @@ describe('Controller: ManualEposEntryCtrl', function() {
       it('should confirm cash bag', function () {
         scope.confirmAll();
         expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CONFIRMED');
+      });
+    });
+
+    describe('unconfirm all forms', function () {
+      it('should unconfirm form and all sub forms', function () {
+        scope.unconfirmAll();
+        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CONFIRMED');
+        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
+        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CREDIT');
+        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'VIRT_ITEM');
+        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'VOUCH_ITEM');
+        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'DISCOUNT');
+        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'PROMO');
       });
     });
   });

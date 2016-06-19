@@ -41,6 +41,21 @@ angular.module('ts5App')
       return ($scope.isConfirmed) ? !$scope.isFormVerified(formName) : false;
     };
 
+    $scope.unconfirmAll = function () {
+      showLoadingModal('Unconfirming');
+      var unconfirmPromises = [
+        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CONFIRMED'),
+        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CASH'),
+        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CREDIT'),
+        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'VIRT_ITEM'),
+        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'VOUCH_ITEM'),
+        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'DISCOUNT'),
+        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'PROMO')
+      ];
+
+      $q.all(unconfirmPromises).then(init, showErrors);
+    };
+
     $scope.confirmAll = function () {
       showLoadingModal('Confirming');
       manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CONFIRMED').then(init, showErrors);
