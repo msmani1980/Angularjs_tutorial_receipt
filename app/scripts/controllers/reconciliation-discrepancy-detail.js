@@ -414,14 +414,13 @@ angular.module('ts5App')
 
     function getManualItemDataSet(itemTypeName) {
       var manualItemArray = [];
-      var dataType = itemTypeName.toLowerCase();
-      angular.forEach($this.manualData[dataType], function (manualItem) {
-        var amountToSave = (dataType === 'promotion') ? manualItem.totalConvertedAmount : manualItem.convertedAmount;
+      angular.forEach($this.manualData[itemTypeName], function (manualItem) {
+        var amountToSave = (angular.isDefined(manualItem.totalConvertedAmount)) ? manualItem.totalConvertedAmount : manualItem.convertedAmount;
         if (amountToSave > 0) {
           var newItem = {
             eposQuantity: manualItem.quantity,
             eposTotal: amountToSave.toFixed(2),
-            itemName: (dataType === 'promotion') ? manualItem.promotion.promotionName : manualItem.itemMaster.itemName,
+            itemName: (itemTypeName === 'promotion') ? manualItem.promotion.promotionName : manualItem.itemMaster.itemName,
             itemTypeName: itemTypeName
           };
 
@@ -433,12 +432,7 @@ angular.module('ts5App')
     }
 
     function getManualItemData() {
-      var itemTypes = [
-        'Virtual',
-        'Voucher',
-        'Promotion'
-      ];
-
+      var itemTypes = ['virtual', 'voucher', 'promotion'];
       var allManualItemsArray = [];
       angular.forEach(itemTypes, function (itemType) {
         allManualItemsArray = allManualItemsArray.concat(getManualItemDataSet(itemType));

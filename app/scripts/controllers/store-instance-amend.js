@@ -237,6 +237,7 @@ angular.module('ts5App')
       return (modalName === 'Promotion') ? $this.promotionTotals : $this.stockTotals;
     }
 
+    // TODO;
     $scope.showEposModal = function (modalName, cashBag) {
       var modalNameToHeaderMap = {
         Regular: 'Regular Product Revenue',
@@ -274,9 +275,11 @@ angular.module('ts5App')
       angular.element('#t6Modal').modal('show');
     };
 
+    // TODO
     $scope.showCashRevenueModal = function (cashBag) {
       $scope.cashRevenueModal = cashBag.cashRevenue;
 
+      console.log(cashBag.cashRevenue);
       angular.element('#cashRevenueModal').modal('show');
     };
 
@@ -897,14 +900,6 @@ angular.module('ts5App')
       return reconciliationFactory.getCompanyGlobalCurrencies().then(setCompanyGlobalCurrencies);
     }
 
-    function setItemTypes (itemTypesFromAPI) {
-      $scope.itemTypes = angular.copy(itemTypesFromAPI);
-    }
-
-    function getItemTypes () {
-      return reconciliationFactory.getItemTypesList().then(setItemTypes);
-    }
-
     function setStockTotals (stockTotalsFromAPI) {
       $this.stockTotals = angular.copy(stockTotalsFromAPI.response);
 
@@ -1215,7 +1210,6 @@ angular.module('ts5App')
         getStoreInstance(),
         getCompany(),
         getCompanyGlobalCurrencies(),
-        getItemTypes(),
         getStockTotals(),
         getPromotionTotals(),
         getCompanyPreferences(),
@@ -1229,10 +1223,11 @@ angular.module('ts5App')
       $q.all(promiseArray).then(handleInitDataSuccess, handleResponseError);
     }
 
-    function setManualDataSet(dataFromAPI, cashBagsToInclude, optionalItemIdFilter) {
+    function setManualDataSet(dataFromAPI, cashBagsToInclude, optionalItemFilter) {
+      var itemTypeId = (angular.isDefined(optionalItemFilter)) ? lodash.findWhere($scope.itemTypes, { name: optionalItemFilter }).id : 0;
       var manualDataSet = [];
       angular.forEach(dataFromAPI, function (manualData) {
-        var itemTypeConditional = (angular.isDefined(optionalItemIdFilter)) ? manualData.itemTypeId === optionalItemIdFilter : true;
+        var itemTypeConditional = (angular.isDefined(optionalItemFilter)) ? manualData.itemTypeId === itemTypeId : true;
         if (cashBagsToInclude.indexOf(manualData.cashbagId) >= 0 && itemTypeConditional) {
           manualDataSet.push(manualData);
         }
@@ -1250,21 +1245,18 @@ angular.module('ts5App')
         }
       });
 
-      var itemTypes = angular.copy(responseCollectionFromAPI[1]);
-      var virtualItemId = lodash.findWhere(itemTypes, { name: 'Virtual' }).id;
-      var voucherItemId = lodash.findWhere(itemTypes, { name: 'Voucher' }).id;
-
       $this.manualData = {
         cash: setManualDataSet(angular.copy(responseCollectionFromAPI[2].response), manualDataToInclude),
         credit: setManualDataSet(angular.copy(responseCollectionFromAPI[3].response), manualDataToInclude),
-        virtual: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, virtualItemId),
-        voucher: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, voucherItemId),
+        virtual: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, 'Virtual'),
+        voucher: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, 'Voucher'),
         promotion: setManualDataSet(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude),
         discount: setManualDataSet(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude)
       };
     }
 
     function initDependenciesSuccess(responseCollectionFromAPI) {
+      $scope.itemTypes = angular.copy(responseCollectionFromAPI[1]);
       setManualData(responseCollectionFromAPI);
       initData();
     }
