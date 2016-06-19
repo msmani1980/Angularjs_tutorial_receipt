@@ -9,7 +9,7 @@ describe('Controller: ManualEposEntryCtrl', function() {
   beforeEach(module('served/cash-bag-cash.json'));
   beforeEach(module('served/cash-bag-items.json'));
   beforeEach(module('served/cash-bag-discount.json'));
-  beforeEach(module('served/cash-bag-promotions.json'));
+  beforeEach(module('served/manual-promotions-list.json'));
 
   var ManualEposEntryCtrl;
   var manualEposFactory;
@@ -51,14 +51,14 @@ describe('Controller: ManualEposEntryCtrl', function() {
     manualEposFactory = $injector.get('manualEposFactory');
 
     inject(function (_servedCashBag_, _servedCashBagVerifications_, _servedItemTypes_,
-      _servedCashBagCash_, _servedCashBagItems_, _servedCashBagDiscount_, _servedCashBagPromotions_) {
+      _servedCashBagCash_, _servedCashBagItems_, _servedCashBagDiscount_, _servedManualPromotionsList_) {
       cashBagJSON = _servedCashBag_;
       cashBagVerificationJSON = _servedCashBagVerifications_;
       itemTypesJSON = _servedItemTypes_;
       cashBagCashJSON = _servedCashBagCash_;
       cashBagItemsJSON = _servedCashBagItems_;
       cashBagDiscountJSON = _servedCashBagDiscount_;
-      cashBagPromotionsJSON = _servedCashBagPromotions_;
+      cashBagPromotionsJSON = _servedManualPromotionsList_;
     });
 
     location = $location;
