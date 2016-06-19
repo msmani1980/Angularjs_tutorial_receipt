@@ -278,7 +278,7 @@ angular.module('ts5App')
       var arrayToSum = (manualDataType === 'regular') ? $this.manualData.cash.concat($this.manualData.credit) : $this.manualData[manualDataType];
       var total = 0;
       angular.forEach(arrayToSum, function (manualDataEntry) {
-        total += angular.isDefined(manualDataEntry.totalConvertedAmount) ? manualDataEntry.totalConvertedAmount : manualDataEntry.convertedAmount;
+        total += (manualDataType === 'promotion') ? manualDataEntry.totalConvertedAmount : manualDataEntry.convertedAmount;
       });
 
       return total;
@@ -414,13 +414,14 @@ angular.module('ts5App')
 
     function getManualItemDataSet(itemTypeName) {
       var manualItemArray = [];
-      angular.forEach($this.manualData[itemTypeName], function (manualItem) {
-        var amountToSave = (angular.isDefined(manualItem.totalConvertedAmount)) ? manualItem.totalConvertedAmount : manualItem.convertedAmount;
+      var dataType = itemTypeName.toLowerCase();
+      angular.forEach($this.manualData[dataType], function (manualItem) {
+        var amountToSave = (dataType === 'promotion') ? manualItem.totalConvertedAmount : manualItem.convertedAmount;
         if (amountToSave > 0) {
           var newItem = {
             eposQuantity: manualItem.quantity,
             eposTotal: amountToSave.toFixed(2),
-            itemName: (itemTypeName === 'promotion') ? manualItem.promotion.promotionName : manualItem.itemMaster.itemName,
+            itemName: (dataType === 'promotion') ? manualItem.promotion.promotionName : manualItem.itemMaster.itemName,
             itemTypeName: itemTypeName
           };
 
@@ -432,7 +433,7 @@ angular.module('ts5App')
     }
 
     function getManualItemData() {
-      var itemTypes = ['virtual', 'voucher', 'promotion'];
+      var itemTypes = ['Virtual', 'Voucher', 'Promotion'];
       var allManualItemsArray = [];
       angular.forEach(itemTypes, function (itemType) {
         allManualItemsArray = allManualItemsArray.concat(getManualItemDataSet(itemType));

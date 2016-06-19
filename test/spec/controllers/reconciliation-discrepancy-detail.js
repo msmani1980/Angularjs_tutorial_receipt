@@ -21,7 +21,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/carrier-instance-list.json'));
   beforeEach(module('served/menus.json'));
   beforeEach(module('served/cash-bag-verifications.json'));
-  beforeEach(module('served/cash-bag-cash.json'));
 
 
   var scope;
@@ -83,7 +82,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
                      _servedCountTypes_, _servedStoreInstanceItemList_, _servedPromotion_, _servedItem_,
                      _servedStoreStatus_, _servedStockItemCounts_, _servedChCashBag_, _servedCarrierInstanceList_, _servedMenus_,
-                     _servedCashBagVerifications_, _servedCashBagCash_) {
+                     _servedCashBagVerifications_) {
       storeInstanceJSON = _servedStoreInstance_;
       getPromotionTotalsJSON = _servedPromotionTotals_;
       getStockTotalsJSON = _servedStockTotals_;
@@ -98,7 +97,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       carrierInstancesJSON = _servedCarrierInstanceList_;
       menuListJSON = _servedMenus_;
       cashBagVerificationsJSON = _servedCashBagVerifications_;
-      manualDataJSON = _servedCashBagCash_;
     });
 
     inject(function (_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
