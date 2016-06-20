@@ -359,9 +359,10 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(parseFloat(promotionTotal) >= expectedPromotionTotal).toEqual(true);
       });
 
-      it('should add discount manual data to total revenue @ CH exchange rate', function () {
-        var discountTotal = scope.totalRevenue.cashHandler;
-        expect(parseFloat(discountTotal) >= 22).toEqual(true);
+      it('should add discount, credit, and cash manual data to total revenue @ CH exchange rate', function () {
+        var expectedManualTotal = 22 + 22 + 22; // 22 total for cash, credit, discount
+        var totalRevenueTotal = scope.totalRevenue.cashHandler;
+        expect(parseFloat(totalRevenueTotal) >= expectedManualTotal).toEqual(true);
       });
 
       it('should call getCHRevenue', function () {

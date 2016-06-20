@@ -504,6 +504,10 @@ angular.module('ts5App')
         total += makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
       });
 
+      angular.forEach($this.manualData.cash, function (discount) {
+        total += discount.convertedAmount;
+      });
+
       angular.forEach($this.manualData.credit, function (discount) {
         total += discount.convertedAmount;
       });
