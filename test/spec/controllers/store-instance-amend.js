@@ -27,6 +27,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   beforeEach(module('served/promotion.json'));
   beforeEach(module('served/daily-exchange-rate.json'));
 
+
   var scope;
   var StoreInstanceAmendCtrl;
   var controller;
@@ -94,6 +95,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var dailyExchangeRateJSON;
   var dailyExchangeRateDeferred;
   var globalMenuService;
+  var manualDataDeferred;
+  var manualDataJSON;
+  var cashBagVerificationsDeferred;
+  var storeInstanceId = 2;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagVerifications_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
@@ -218,6 +223,19 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     dailyExchangeRateDeferred = $q.defer();
     dailyExchangeRateDeferred.resolve(dailyExchangeRateJSON);
 
+    manualDataJSON = {response: [
+      { cashbagId: 2158, convertedAmount: 10.0, totalConvertedAmount: 20.0, quantity: 1, itemTypeId: 2, itemMaster: {itemName: 'testItem1'}, promotion: {promotionName: 'testPromotion1'}},
+      { cashbagId: 2158, convertedAmount: 11.0, totalConvertedAmount: 22.0, quantity: 2, itemTypeId: 4, itemMaster: {itemName: 'testItem2'}, promotion: {promotionName: 'testPromotion2'}}
+    ]};
+
+    manualDataDeferred = $q.defer();
+    manualDataDeferred.resolve(manualDataJSON);
+    spyOn(reconciliationFactory, 'getCashBagManualData').and.returnValue(manualDataDeferred.promise);
+
+    cashBagVerificationsDeferred = $q.defer();
+    cashBagVerificationsDeferred.resolve(cashBagsResponseJSON);
+    spyOn(reconciliationFactory, 'getCashBagVerifications').and.returnValue(cashBagVerificationsDeferred.promise);
+
     spyOn(globalMenuService.company, 'get').and.returnValue('fakeCompanyId');
     spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
@@ -237,8 +255,11 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(reconciliationFactory, 'getPromotion').and.returnValue(promotionDeferred.promise);
     spyOn(employeesService, 'getEmployees').and.returnValue(getEmployeesDeferred.promise);
     spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
-    spyOn(cashBagFactory, 'verifyCashBag').and.callThrough();
-    spyOn(cashBagFactory, 'unverifyCashBag').and.callThrough();
+
+    var verifyDeferred = $q.defer();
+    verifyDeferred.resolve({});
+    spyOn(cashBagFactory, 'verifyCashBag').and.returnValue(verifyDeferred.promise);
+    spyOn(cashBagFactory, 'unverifyCashBag').and.returnValue(verifyDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getFlightSectors').and.returnValue(getFlightSectorsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'addFlightSector').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'editFlightSector').and.callThrough();
@@ -257,13 +278,46 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
       $routeParams: {
-        id: 2
+        id: 2,
+        storeInstanceId: storeInstanceId
       }
     });
   }));
 
   describe('init', function () {
+
+    describe('manual data init', function () {
+      var expectedPayload = {
+        storeInstanceId: storeInstanceId
+      };
+
+      it('should call get manual cashbag verification data', function () {
+        expect(reconciliationFactory.getCashBagVerifications).toHaveBeenCalledWith(storeInstanceId);
+      });
+
+      it('should call get manual cash data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('cash', expectedPayload);
+      });
+
+      it('should call get manual credit data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('credit-cards', expectedPayload);
+      });
+
+      it('should call get manual item data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('items', expectedPayload);
+      });
+
+      it('should call get manual discount data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('discounts', expectedPayload);
+      });
+
+      it('should call get manual promotion data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('promotions', expectedPayload);
+      });
+    });
+
     it('should call get cash bag data', function () {
+      scope.$digest();
       expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
       expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalled();
       expect(reconciliationFactory.getCompany).toHaveBeenCalled();
@@ -294,6 +348,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   });
 
   describe('miscellaneous scope view functions', function () {
+    beforeEach(function () {
+      scope.$digest();
+    });
+
     describe('get class for accordion views', function () {
       it('should return close icon for open records', function () {
         var openAccordionIcon = scope.getClassForAccordionArrows(true);
@@ -622,6 +680,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
     describe('search for record', function () {
       beforeEach(function () {
+        scope.$digest();
         scope.targetRecordForMoveCashBag = null;
       });
 
