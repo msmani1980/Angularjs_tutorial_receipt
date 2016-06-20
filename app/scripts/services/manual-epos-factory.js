@@ -12,142 +12,6 @@ angular.module('ts5App')
     dailyExchangeRatesService, storeInstanceService, itemsService, recordsService,
     companyDiscountService, promotionsService) {
 
-    var getPromotionsList = function () {
-      var mockPromotionsList = [{
-        benefitTypeId: 1,
-        benefitTypeName: 'Discount',
-        catalogCount: 2,
-        companyId: 403,
-        id: 117,
-        description: 'Buy 4 drinks get 20% off',
-        discountTypeId: 1,
-        discountTypeName: 'Percentage',
-        endDate: '2015-09-19',
-        startDate: '2015-01-01',
-        promotionCode: 'PM001',
-        promotionName: 'Buy 4 drinks get 20 percent off',
-        promotionTypeId: 1,
-        promotionTypeName: ' Product Purchase',
-        quantity: 2,
-        price: 10.11,
-        currencyValue: 20.00,
-        audValue: 23.75
-      }, {
-        benefitTypeId: 1,
-        benefitTypeName: ' Discount',
-        catalogCount: 7,
-        companyId: 403,
-        id: 118,
-        description: 'Buy 2 items get 10 percent off',
-        discountTypeId: 1,
-        discountTypeName: 'Percentage',
-        endDate: '2018-12-31',
-        startDate: '2015-01-01',
-        promotionCode: 'PM002',
-        promotionName: 'Buy 2 items get 10 percent off',
-        promotionTypeId: 1,
-        promotionTypeName: 'Product Purchase',
-        quantity: 2,
-        price: 10.11,
-        currencyValue: 20.00,
-        audValue: 23.75
-      }, {
-        benefitTypeId: 1,
-        benefitTypeName: ' Discount',
-        catalogCount: 0,
-        companyId: 403,
-        id: 119,
-        description: 'randomdata',
-        discountTypeId: 1,
-        discountTypeName: 'Percentage',
-        endDate: '2015-05-29',
-        startDate: '2015-01-01',
-        promotionCode: ' TEXT',
-        promotionName: 'randomdata',
-        promotionTypeId: 1,
-        promotionTypeName: 'Product Purchase',
-        quantity: 2,
-        price: 10.11,
-        currencyValue: 20.00,
-        audValue: 23.75
-      }];
-
-      var getPromotionsListDeferred = $q.defer();
-      getPromotionsListDeferred.resolve(mockPromotionsList);
-      return getPromotionsListDeferred.promise;
-    };
-
-    var getDiscountsList = function () {
-      var mockDiscountsList = {
-        voucher: [{
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: ' V10',
-          discountName: '10 Off Vocucher',
-          discountTypeId: 1,
-          quantity: 2,
-          price: 10.00,
-          currencyValue: 20.00,
-          audValue: 23.75
-        }, {
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: ' V30',
-          discountName: '30 Off Vocucher',
-          discountTypeId: 1,
-          quantity: 2,
-          price: 5.00,
-          currencyValue: 50.00,
-          audValue: 57.25
-        }, {
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: 'IV1',
-          discountName: 'Item Voucher 1',
-          discountTypeId: 1,
-          quantity: null,
-          price: null,
-          currencyValue: null,
-          audValue: null
-        }],
-        coupon: [{
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: ' V10',
-          discountName: '10 Off Coupon',
-          discountTypeId: 1,
-          quantity: 2,
-          price: 10.00,
-          currencyValue: 20.00,
-          audValue: 23.75
-        }, {
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: ' V30',
-          discountName: '30 Off Coupon',
-          discountTypeId: 1,
-          quantity: 2,
-          price: 5.00,
-          currencyValue: 50.00,
-          audValue: 57.25
-        }, {
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: 'IV1',
-          discountName: 'Item Coupon 1',
-          discountTypeId: 1,
-          quantity: null,
-          price: null,
-          currencyValue: null,
-          audValue: null
-        }]
-      };
-
-      var getDiscountsListDeferred = $q.defer();
-      getDiscountsListDeferred.resolve(mockDiscountsList);
-      return getDiscountsListDeferred.promise;
-    };
-
     function getCurrencyList(payload) {
       payload = payload || {};
       return currenciesService.getCompanyCurrencies(payload);
@@ -294,11 +158,15 @@ angular.module('ts5App')
     }
 
     function updateManualEposPromotion(cashBagId, promotionId, payload) {
-      return cashBagService.updateManualCashBagRecord('promotions', cashBagId, promotionId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      return cashBagService.updateManualCashBagRecord('promotions', promotionId, payloadForRequest);
     }
 
     function createManualEposPromotion(cashBagId, payload) {
-      return cashBagService.createManualCashBagRecord('promotions', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      return cashBagService.createManualCashBagRecord('promotions', payloadForRequest);
     }
 
     function getCompanyPromotionsList(payload) {
@@ -306,9 +174,7 @@ angular.module('ts5App')
     }
 
     return {
-      getPromotionsList: getPromotionsList,
       getCurrencyList: getCurrencyList,
-      getDiscountsList: getDiscountsList,
       getCashBag: getCashBag,
       getDailyExchangeRate: getDailyExchangeRate,
       getStoreInstance: getStoreInstance,

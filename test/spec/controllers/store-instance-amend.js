@@ -99,6 +99,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var manualDataJSON;
   var cashBagVerificationsDeferred;
   var storeInstanceId = 2;
+  var lodash;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagVerifications_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
@@ -107,6 +108,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
                               _servedPostTripSingleDataList_, _servedStations_, _servedMasterItem_, _servedPromotion_, _servedDailyExchangeRate_) {
     location = $location;
     scope = $rootScope.$new();
+    lodash = $injector.get('lodash');
     storeInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
     reconciliationFactory = $injector.get('reconciliationFactory');
     employeesService = $injector.get('employeesService');
@@ -316,6 +318,38 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
     });
 
+    describe('manual data saving', function () {
+      it('should attach manual data to controller', function () {
+        scope.$digest();
+        expect(StoreInstanceAmendCtrl.manualData).toBeDefined();
+      });
+
+      it('should populate cash, credit, discount, and promotion data as arrays', function () {
+        scope.$digest();
+
+        expect(StoreInstanceAmendCtrl.manualData.cash).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.cash.length).toEqual(2);
+        expect(StoreInstanceAmendCtrl.manualData.credit).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.credit.length).toEqual(2);
+        expect(StoreInstanceAmendCtrl.manualData.promotion).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.promotion.length).toEqual(2);
+        expect(StoreInstanceAmendCtrl.manualData.discount).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.discount.length).toEqual(2);
+      });
+
+      it('should populate item data and filter by item type', function () {
+        scope.$digest();
+
+        expect(StoreInstanceAmendCtrl.manualData.virtual).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.virtual.length).toEqual(1);
+        expect(StoreInstanceAmendCtrl.manualData.virtual[0].convertedAmount).toEqual(10.0);
+
+        expect(StoreInstanceAmendCtrl.manualData.voucher).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.voucher.length).toEqual(1);
+        expect(StoreInstanceAmendCtrl.manualData.voucher[0].convertedAmount).toEqual(11.0);
+      });
+    });
+
     it('should call get cash bag data', function () {
       scope.$digest();
       expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
@@ -344,6 +378,25 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
     it('should init deleted cashBags to not be visible', function () {
       expect(scope.sectorsToMove.length).toEqual(0);
+    });
+
+    it('should init cash bag epos sales with manual virtual, voucher, and promotion data', function () {
+      scope.$digest();
+      var manualCashBag = lodash.findWhere(scope.normalizedCashBags, {id: 2158});
+      expect(manualCashBag.virtualItemSales >= 10).toEqual(true);
+      expect(manualCashBag.voucherItemSales >= 11).toEqual(true);
+      expect(manualCashBag.promotionDiscounts >= 42).toEqual(true);
+    });
+
+    it('should init cash bag total revenue values with manual cash, credit, and discount values', function () {
+      scope.$digest();
+      var manualCashBag = lodash.findWhere(scope.normalizedCashBags, {id: 2158});
+      expect(manualCashBag.cashRevenue.amount >= 21).toEqual(true);
+      expect(manualCashBag.cashRevenue.manualTotal).toEqual(21);
+      expect(manualCashBag.creditRevenue.amount >= 21).toEqual(true);
+      expect(manualCashBag.creditRevenue.manualTotal).toEqual(21);
+      expect(manualCashBag.discountRevenue.amount >= 21).toEqual(true);
+      expect(manualCashBag.discountRevenue.manualTotal).toEqual(21);
     });
   });
 

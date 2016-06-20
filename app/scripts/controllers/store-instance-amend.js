@@ -619,7 +619,7 @@ angular.module('ts5App')
       angular.forEach(arrayToSum, function (manualDataEntry) {
         var shouldAddToConditional = (angular.isDefined(optionalCashBagIdFilter)) ? manualDataEntry.cashbagId === optionalCashBagIdFilter : true;
         if (shouldAddToConditional) {
-          total += angular.isDefined(manualDataEntry.totalConvertedAmount) ? manualDataEntry.totalConvertedAmount : manualDataEntry.convertedAmount;
+          total += (manualDataType === 'promotion') ? manualDataEntry.totalConvertedAmount : manualDataEntry.convertedAmount;
         }
       });
 
