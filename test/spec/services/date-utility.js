@@ -8,8 +8,10 @@ describe('Date Utility service', function() {
 
   // instantiate service
   var dateUtility;
-  beforeEach(inject(function(_dateUtility_) {
+  var companyFormatUtility;
+  beforeEach(inject(function(_dateUtility_, _companyFormatUtility_) {
     dateUtility = _dateUtility_;
+    companyFormatUtility = _companyFormatUtility_;
   }));
 
   describe('now() method', function() {
@@ -137,7 +139,7 @@ describe('Date Utility service', function() {
 
   describe('date comparison', function() {
     it('should return true is date is today', function() {
-      var currentTimestamp = moment().format('YYYY/MM/DD');
+      var currentTimestamp = moment().format(companyFormatUtility.getDateFormat());
       expect(dateUtility.isToday(currentTimestamp)).toBe(true);
     });
 
