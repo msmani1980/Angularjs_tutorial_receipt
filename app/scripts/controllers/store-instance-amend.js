@@ -794,7 +794,7 @@ angular.module('ts5App')
     }
 
     function setupTotalRevenue () {
-      var manualDataForTotalRevenue = getManualDataTotals('discount') + getManualDataTotals('credit');
+      var manualDataForTotalRevenue = getManualDataTotals('discount') + getManualDataTotals('credit') + getManualDataTotals('cash');
       $scope.totalRevenue = {
         cashHandler: $scope.companyIsUsingCash ? $scope.formatAsCurrency(calculateCashRevenue($scope.cashRevenue) + manualDataForTotalRevenue) : 0,
         epos: $scope.formatAsCurrency(calculateEPOSRevenue($scope.eposRevenue))
