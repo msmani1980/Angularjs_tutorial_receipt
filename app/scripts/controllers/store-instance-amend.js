@@ -278,8 +278,6 @@ angular.module('ts5App')
     // TODO
     $scope.showCashRevenueModal = function (cashBag) {
       $scope.cashRevenueModal = cashBag.cashRevenue;
-
-      console.log(cashBag.cashRevenue);
       angular.element('#cashRevenueModal').modal('show');
     };
 
@@ -610,11 +608,14 @@ angular.module('ts5App')
       }
     }
 
-    function getManualDataTotals(manualDataType) {
+    function getManualDataTotals(manualDataType, optionalCashBagIdFilter) {
       var arrayToSum = (manualDataType === 'regular') ? $this.manualData.cash.concat($this.manualData.credit) : $this.manualData[manualDataType];
       var total = 0;
       angular.forEach(arrayToSum, function (manualDataEntry) {
-        total += angular.isDefined(manualDataEntry.totalConvertedAmount) ? manualDataEntry.totalConvertedAmount : manualDataEntry.convertedAmount;
+        var shouldAddToConditional = (angular.isDefined(optionalCashBagIdFilter)) ? manualDataEntry.cashbagId === optionalCashBagIdFilter : true;
+        if (shouldAddToConditional) {
+          total += angular.isDefined(manualDataEntry.totalConvertedAmount) ? manualDataEntry.totalConvertedAmount : manualDataEntry.convertedAmount;
+        }
       });
 
       return total;
@@ -840,10 +841,17 @@ angular.module('ts5App')
       };
     }
 
-    function initializeSalesAndRevenue() {
-      return { amount: 0, items: [] };
+    function initializeSalesAndRevenue(saleType, cashBagId) {
+      var amount = getManualDataTotals(saleType, cashBagId);
+
+      return {
+        amount: amount,
+        manualTotal: amount,
+        items: []
+      };
     }
 
+    // TODO
     function setupCashBags () {
       $scope.normalizedCashBags = $scope.cashBags.map(function (cashBag) {
         return {
@@ -860,13 +868,13 @@ angular.module('ts5App')
           isVerified: (cashBag.amendVerifiedOn) ? true : false,
           verifiedByUser: (cashBag.amendVerifiedBy) ? cashBag.amendVerifiedBy.userName : 'Unknown',
           verifiedOn: dateUtility.formatTimestampForApp(cashBag.amendVerifiedOn),
-          cashRevenue: initializeSalesAndRevenue(),
-          creditRevenue: initializeSalesAndRevenue(),
-          discountRevenue: initializeSalesAndRevenue(),
+          cashRevenue: initializeSalesAndRevenue('cash', cashBag.id),
+          creditRevenue: initializeSalesAndRevenue('credit', cashBag.id),
+          discountRevenue: initializeSalesAndRevenue('discount', cashBag.id),
           regularItemSales: 0,
-          virtualItemSales: 0,
-          voucherItemSales: 0,
-          promotionDiscounts: 0,
+          virtualItemSales: 0 + getManualDataTotals('virtual', cashBag.id),
+          voucherItemSales: 0 + getManualDataTotals('voucher', cashBag.id),
+          promotionDiscounts: 0 + getManualDataTotals('promotion', cashBag.id),
           flightSectors: []
         };
       });
