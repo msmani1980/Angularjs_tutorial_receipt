@@ -897,10 +897,14 @@ describe('Controller: TaxRatesCtrl', function() {
               taxRateType: {
                 taxRateType: 'Amount'
               },
-              currency: 'Test'
+              currency: {
+                id: 1,
+                code: 'Test'
+              }
             };
             scope.shouldTaxRateCurrencyBeClear(taxRate);
-            expect(taxRate.currency).toBe('Test');
+            expect(taxRate.currency.id).toBe(1);
+            expect(taxRate.currency.code).toBe('Test');
           });
 
           it('should reset currency', function() {
@@ -908,10 +912,13 @@ describe('Controller: TaxRatesCtrl', function() {
               taxRateType: {
                 taxRateType: 'Percentage'
               },
-              currency: 'Test'
+              currency: {
+                id: 1,
+                code: 'Test'
+              }
             };
             scope.shouldTaxRateCurrencyBeClear(taxRate);
-            expect(taxRate.currency).toBe('');
+            expect(taxRate.currency).toBe(null);
           });
         });
 

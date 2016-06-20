@@ -525,7 +525,7 @@ angular.module('ts5App')
         endDate: dateUtility.formatDateForAPI(taxRate.endDate),
         companyTaxTypeId: taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId,
         companyTaxRateStations: $this.createStationsPayload(taxRate),
-        companyCurrencyId: $scope.isTaxRateTypePercentage(taxRate) ? null : taxRate.companyCurrencyId
+        companyCurrencyId: $scope.isTaxRateTypePercentage(taxRate) ? null : taxRate.currency.id
       };
       $this.makeEditPromises(payload);
     };
@@ -843,7 +843,7 @@ angular.module('ts5App')
 
     $scope.shouldTaxRateCurrencyBeClear = function(taxRate) {
       if ($scope.isTaxRateTypePercentage(taxRate) && angular.isDefined(taxRate.currency)) {
-        taxRate.currency = '';
+        taxRate.currency = null;
       }
     };
 

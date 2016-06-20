@@ -13,6 +13,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{1}",
     "companyTaxRateStations": [{
       "companyStationId": 1,
@@ -35,6 +39,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{10}",
     "companyTaxRateStations": [{
       "companyStationId": 10,
@@ -57,6 +65,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{43}",
     "companyTaxRateStations": [{
       "companyStationId": 43,
@@ -79,6 +91,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{41}",
     "companyTaxRateStations": [{
       "companyStationId": 41,
@@ -101,6 +117,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{45}",
     "companyTaxRateStations": [{
       "companyStationId": 45,
@@ -145,6 +165,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{44}",
     "companyTaxRateStations": [{
       "companyStationId": 44,
@@ -167,6 +191,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{9}",
     "companyTaxRateStations": [{
       "companyStationId": 9,
@@ -189,6 +217,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{9}",
     "companyTaxRateStations": [{
       "companyStationId": 9,
@@ -211,6 +243,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{20}",
     "companyTaxRateStations": [{
       "companyStationId": 20,
@@ -233,6 +269,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{10}",
     "companyTaxRateStations": [{
       "companyStationId": 10,
@@ -299,6 +339,10 @@
     "taxRateType": "Amount",
     "currencyCode": null,
     "currencySymbol": null,
+    "currency": {
+      "id": 1,
+      "code": "USD"
+    },
     "companyStationIds": "{1}",
     "companyTaxRateStations": [{
       "companyStationId": 1,
