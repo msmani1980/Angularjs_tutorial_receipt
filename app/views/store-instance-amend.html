@@ -360,6 +360,10 @@
               <td>{{stockItem.eposQuantity}}</td>
               <td>{{stockItem.eposTotal}}</td>
             </tr>
+            <tr ng-show="eposModalManualTotal !== 0">
+              <td colspan="2">Manually Entered Total </td>
+              <td>{{ formatAsCurrency(eposModalManualTotal) }}</td>
+            </tr>
           </table>
         </div>
         <div class="modal-footer">
@@ -388,6 +392,10 @@
               <td>{{cashRevenueItem.exchangeRate}}</td>
               <td>{{formatAsCurrency(cashRevenueItem.baseCurrencyAmount)}}</td>
             </tr>
+            <tr>
+              <td colspan="3">Manually Entered Total </td>
+              <td>{{ formatAsCurrency(cashRevenueModal.manualTotal) }}</td>
+            </tr>
           </table>
         </div>
         <div class="modal-footer">
@@ -412,6 +420,10 @@
               <td>{{key}}</td>
               <td>{{value.length}}</td>
               <td>{{sumGroupedAmounts(value)}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">Manually Entred Total </td>
+              <td>{{ formatAsCurrency(creditRevenueModal.manualTotal) }}</td>
             </tr>
           </table>
         </div>
@@ -443,6 +455,12 @@
               </tr>
             </table>
           </div>
+          <table class="table table-bordered">
+            <tr>
+              <td>Manually Entered Total</td>
+              <td>{{ formatAsCurrency(discountRevenueModal.manualTotal) }}</td>
+            </tr>
+          </table>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

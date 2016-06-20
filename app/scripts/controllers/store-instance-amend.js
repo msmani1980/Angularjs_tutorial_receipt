@@ -237,6 +237,10 @@ angular.module('ts5App')
       return (modalName === 'Promotion') ? $this.promotionTotals : $this.stockTotals;
     }
 
+    function getEposModalManualTotal (modalName, cashBagId) {
+      return (modalName !== 'Regular') ? getManualDataTotals(modalName.toLowerCase(), cashBagId) : 0;
+    }
+
     // TODO;
     $scope.showEposModal = function (modalName, cashBag) {
       var modalNameToHeaderMap = {
@@ -272,6 +276,7 @@ angular.module('ts5App')
         cashbagId: cashBag.id
       });
 
+      $scope.eposModalManualTotal = getEposModalManualTotal(modalName, cashBag.id);
       angular.element('#t6Modal').modal('show');
     };
 
@@ -851,7 +856,6 @@ angular.module('ts5App')
       };
     }
 
-    // TODO
     function setupCashBags () {
       $scope.normalizedCashBags = $scope.cashBags.map(function (cashBag) {
         return {
