@@ -843,7 +843,7 @@ angular.module('ts5App')
 
     $scope.shouldTaxRateCurrencyBeClear = function(taxRate) {
       if ($scope.isTaxRateTypePercentage(taxRate) && angular.isDefined(taxRate.currency)) {
-        taxRate.currency = '';
+        taxRate.currency = null;
       }
     };
 
