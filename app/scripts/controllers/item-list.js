@@ -64,6 +64,7 @@ angular.module('ts5App')
       var newItemList = [];
       var currentMasterId = -1;
       angular.forEach(itemList, function (item) {
+
         if (item.itemMasterId === currentMasterId) {
           var lastIndex = newItemList.length - 1;
           newItemList[lastIndex].versions.push(item);
@@ -78,11 +79,12 @@ angular.module('ts5App')
       });
 
       angular.forEach(newItemList, function (item) {
-        item.versions.sort($this.sortItemVersions);
         lodash.map(item.versions, function (version) {
           version.startDate = dateUtility.formatDateForApp(version.startDate);
           version.endDate = dateUtility.formatDateForApp(version.endDate);
         });
+
+        item.versions.sort($this.sortItemVersions);
       });
 
       return newItemList;
@@ -151,23 +153,25 @@ angular.module('ts5App')
     };
 
     this.compareInactiveDates = function (itemA, itemB) {
-      if ((dateUtility.isAfterToday(itemA.startDate) && dateUtility.isAfterToday(itemB.startDate)) ||
-        (dateUtility.isYesterdayOrEarlier(itemA.endDate) && dateUtility.isYesterdayOrEarlier(itemB.endDate))) {
+      var isFutureItem = (dateUtility.isAfterToday(itemA.startDate) && dateUtility.isAfterToday(itemB.startDate));
+
+      if (isFutureItem) {
         return $this.sortByDateCloserToToday(itemA.startDate, itemB.startDate);
-      } else {
-        return $this.sortByDateFarthestInFuture(itemA.startDate, itemB.startDate);
       }
+
+      return $this.sortByDateFarthestInFuture(itemA.startDate, itemB.startDate);
     };
 
     this.sortByDateCloserToToday = function (dateA, dateB) {
-      var today = moment();
-      var diffA = moment(dateA, 'YYYY-MM-DD').diff(today, 'days');
-      var diffB = moment(dateB, 'YYYY-MM-DD').diff(today, 'days');
-      return (Math.abs(diffA) < Math.abs(diffB)) ? -1 : 1;
+      var lhs = moment(dateA, dateUtility.getDateFormatForApp());
+      var rhs = moment(dateB, dateUtility.getDateFormatForApp());
+      return lhs > rhs ? 1 : lhs < rhs ? -1 : 0;
     };
 
     this.sortByDateFarthestInFuture = function (dateA, dateB) {
-      return moment(dateB, 'YYYY-MM-DD').diff(moment(dateA, 'YYYY-MM-DD'), 'days');
+      var lhs = moment(dateA, dateUtility.getDateFormatForApp());
+      var rhs = moment(dateB, dateUtility.getDateFormatForApp());
+      return lhs < rhs ? 1 : lhs > rhs ? -1 : 0;
     };
 
     $scope.removeRecord = function (itemId) {

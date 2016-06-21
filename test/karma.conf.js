@@ -62,8 +62,6 @@ module.exports = function(config) {
       'bower_components/angular-dragdrop/draganddrop.js',
       'bower_components/angular-filter/dist/angular-filter.min.js',
       'bower_components/angular-messages/angular-messages.js',
-      'bower_components/moment/moment.js',
-      'bower_components/angular-moment/angular-moment.js',
       'bower_components/qrcode/lib/qrcode.js',
       'bower_components/angular-qr/src/angular-qr.js',
       'bower_components/angular-resource/angular-resource.js',
@@ -87,6 +85,8 @@ module.exports = function(config) {
       'bower_components/aes/index.js',
       'bower_components/angular-scroll/angular-scroll.js',
       'bower_components/sprintf/src/sprintf.js',
+      'bower_components/moment/moment.js',
+      'bower_components/angular-moment/angular-moment.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'bower_components/sprintf/src/angular-sprintf.js',
