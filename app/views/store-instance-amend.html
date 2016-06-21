@@ -360,7 +360,7 @@
               <td>{{stockItem.eposQuantity}}</td>
               <td>{{stockItem.eposTotal}}</td>
             </tr>
-            <tr ng-show="eposModalManualTotal !== 0">
+            <tr ng-show="eposModalManualTotal > 0">
               <td colspan="2">Manually Entered Total </td>
               <td>{{ formatAsCurrency(eposModalManualTotal) }}</td>
             </tr>
@@ -392,7 +392,7 @@
               <td>{{cashRevenueItem.exchangeRate}}</td>
               <td>{{formatAsCurrency(cashRevenueItem.baseCurrencyAmount)}}</td>
             </tr>
-            <tr>
+            <tr ng-show="cashRevenueModal.manualTotal > 0">
               <td colspan="3">Manually Entered Total </td>
               <td>{{ formatAsCurrency(cashRevenueModal.manualTotal) }}</td>
             </tr>
@@ -421,7 +421,7 @@
               <td>{{value.length}}</td>
               <td>{{sumGroupedAmounts(value)}}</td>
             </tr>
-            <tr>
+            <tr ng-show="creditRevenueModal.manualTotal > 0">
               <td colspan="2">Manually Entred Total </td>
               <td>{{ formatAsCurrency(creditRevenueModal.manualTotal) }}</td>
             </tr>
@@ -456,7 +456,7 @@
             </table>
           </div>
           <table class="table table-bordered">
-            <tr>
+            <tr ng-show="discountRevenueModal.manualTotal > 0">
               <td>Manually Entered Total</td>
               <td>{{ formatAsCurrency(discountRevenueModal.manualTotal) }}</td>
             </tr>
@@ -832,7 +832,7 @@
                   <button class="btn btn-primary" title="Edit Cash Bag" ng-click="goToCashBagEdit(cashBag)" ng-show="canExecuteActions(cashBag)">
                     <i class="fa fa-pencil active"></i>
                   </button>
-                  <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual">
+                  <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" title="Add Manual Data" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual">
                     <i class="fa fa-plus-circle active"></i>
                   </a>
                   <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag) && canExecuteActions(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">

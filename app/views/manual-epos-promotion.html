@@ -104,16 +104,16 @@
                   There are no Promotions to select
               </td>
             </tr>
-          </table>
-          </div>
-          <div class="row">
-            <div class="col-xs-12 col-sm-8 text-left">
+            <tr>
+              <td colspan="3">
                 <button class="btn btn-primary" type="button" ng-click="addPromotion()" ng-hide="isVerified || disableAll">Add Promotion</button>
-            </div>
-            <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-            <div class="col-xs-12 col-sm-2">
+              </td>
+              <td class="text-right"><h4><small><b>Sub Total:</b></small></h4></td>
+              <td>
                 <input class="form-control" type="number" ng-value="sumAmounts()" disabled="true"/>
-            </div>
+              </td>
+            </tr>
+          </table>
           </div>
         </div>
 <!-- 		END Promotion -->

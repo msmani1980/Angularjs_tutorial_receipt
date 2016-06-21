@@ -52,7 +52,7 @@ angular.module('ts5App')
         totalConvertedAmount: promotion.baseCurrencyAmount,
         companyId: $scope.companyId
       };
-      return manualEposFactory.updateManualEposPromotion(promotion.id, payload);
+      return manualEposFactory.updateManualEposPromotion($routeParams.cashbagId, promotion.id, payload);
     }
 
     function createCashBagPromotion(promotion) {
@@ -65,7 +65,7 @@ angular.module('ts5App')
         totalConvertedAmount: promotion.baseCurrencyAmount,
         companyId: $scope.companyId
       };
-      return manualEposFactory.createManualEposPromotion(payload);
+      return manualEposFactory.createManualEposPromotion($routeParams.cashbagId, payload);
     }
 
     function addToPromises(promotionList, promises) {
