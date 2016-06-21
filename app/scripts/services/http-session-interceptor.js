@@ -93,7 +93,6 @@ angular.module('ts5App')
     ];
 
     var legacyApis = [
-        '/rsvr/api/company-preferences',
         '/rsvr/api/companies/[0-9]*/relationships',
         'rsvr/api/records/store-status',
         '/rsvr/api/caterer-stations',
@@ -111,6 +110,7 @@ angular.module('ts5App')
     ];
 
     var onlyRsvrApis = [
+      '/rsvr/api/company-preferences',
       '/rsvr/api/dailyexchangerate',
       '/rsvr/api/company-formats',
       '/rsvr/api/companies/[0-9]*/stations',
