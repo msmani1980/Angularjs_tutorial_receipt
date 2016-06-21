@@ -94,11 +94,11 @@
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-4">
-              <date-picker-field ng-model="dateRange.startDate" label="Effective From" placeholder="mm/dd/yyyy"></date-picker-field>
+              <date-picker-field ng-model="dateRange.startDate" label="Effective From"></date-picker-field>
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-4">
-              <date-picker-field ng-model="dateRange.endDate" label="Effective To" placeholder="mm/dd/yyyy"></date-picker-field>
+              <date-picker-field ng-model="dateRange.endDate" label="Effective To"></date-picker-field>
             </div>
 
           </div>
@@ -264,18 +264,18 @@
         <!-- Switch for startDate -->
         <td class="animate-switch" ng-switch-when="read">{{ taxRate.startDate }}</td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
-          <date-picker-field ng-model="taxRate.startDate" placeholder="mm/dd/yyyy" disable="isFieldReadOnly(taxRate)" min-date="determineMinDate(taxRate.startDate)" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
+          <date-picker-field ng-model="taxRate.startDate" disable="isFieldReadOnly(taxRate)" min-date="determineMinDate(taxRate.startDate)" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
         </td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="create">
-          <date-picker-field ng-model="taxRate.startDate" placeholder="mm/dd/yyyy" min-date="determineMinDate()"></date-picker-field>
+          <date-picker-field ng-model="taxRate.startDate" min-date="determineMinDate()"></date-picker-field>
         </td>
         <!-- Switch for endDate -->
         <td class="animate-switch" ng-switch-when="read">{{ taxRate.endDate }}</td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
-          <date-picker-field ng-model="taxRate.endDate" placeholder="mm/dd/yyyy" min-date="determineMinDate()" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
+          <date-picker-field ng-model="taxRate.endDate" min-date="determineMinDate()" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
         </td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="create">
-          <date-picker-field ng-model="taxRate.endDate" placeholder="mm/dd/yyyy" min-date="determineMinDate()"></date-picker-field>
+          <date-picker-field ng-model="taxRate.endDate" min-date="determineMinDate()"></date-picker-field>
         </td>
         <!-- Buttons for Read -->
         <td class="animate-switch" ng-switch-when="read">

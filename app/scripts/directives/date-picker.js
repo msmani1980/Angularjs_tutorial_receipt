@@ -21,6 +21,7 @@ angular.module('ts5App')
     var initializeDatePicker = function ($scope, $element) {
       var options = angular.extend({}, datePickerOptions);
       options.format = companyFormatUtility.getDateFormat().toLowerCase();
+      $scope.placeholder = options.format;
 
       if ($scope.disablePast) {
         options.startDate = '+1d';
