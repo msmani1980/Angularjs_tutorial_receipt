@@ -111,7 +111,7 @@ angular.module('ts5App')
         var coinExchangeRate = exchangeRateObject.coinExchangeRate;
         var splitAmounts = (amount.toString()).split('.');
         var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
-        var convertedCoinAmount = parseFloat(splitAmounts[1]) / coinExchangeRate;
+        var convertedCoinAmount = (!!splitAmounts[1]) ? parseFloat(splitAmounts[1]) / coinExchangeRate : 0;
         convertedAmount = convertedPaperAmount + (convertedCoinAmount / 100);
       } else {
         var exchangeRate = exchangeRateObject.bankExchangeRate;
@@ -160,18 +160,24 @@ angular.module('ts5App')
       });
     };
 
+    function setVerifiedInfo(verifiedDataFromAPI, verifiedKeys) {
+      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI[verifiedKeys.verifiedOn]);
+      $scope.verifiedInfo = {
+        verifiedBy: (verifiedDataFromAPI[verifiedKeys.verifiedBy]) ? verifiedDataFromAPI[verifiedKeys.verifiedBy].firstName + ' ' + verifiedDataFromAPI[verifiedKeys.verifiedBy].lastName : 'Unknown User',
+        verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
+      };
+    }
+
     function setVerifiedData(verifiedDataFromAPI) {
       var verifiedKeys = {
         verifiedBy: ($routeParams.itemType.toLowerCase() === 'virtual') ? 'virtualItemVerifiedBy' : 'voucherItemsVerifiedBy',
         verifiedOn: ($routeParams.itemType.toLowerCase() === 'virtual') ? 'virtualItemVerifiedOn' : 'voucherItemsVerifiedOn'
       };
 
-      $scope.isVerified = (!!verifiedDataFromAPI[verifiedKeys.verifiedBy]);
-      var dateAndTime = dateUtility.formatTimestampForApp(verifiedDataFromAPI[verifiedKeys.verifiedOn]);
-      $scope.verifiedInfo = {
-        verifiedBy: (verifiedDataFromAPI[verifiedKeys.verifiedBy]) ? verifiedDataFromAPI[verifiedKeys.verifiedBy].firstName + ' ' + verifiedDataFromAPI[verifiedKeys.verifiedBy].lastName : 'Unknown User',
-        verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
-      };
+      $scope.isVerified = (!!verifiedDataFromAPI[verifiedKeys.verifiedOn]);
+      $scope.isCashBagConfirmed = (!!verifiedDataFromAPI.verificationConfirmedOn) || false;
+
+      setVerifiedInfo(verifiedDataFromAPI, verifiedKeys);
     }
 
     $scope.verify = function (shouldCheckForm) {

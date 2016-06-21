@@ -168,6 +168,7 @@ describe('Controller: ManualEposCashCtrl', function () {
     it('should check the cash bag verification', function () {
       expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
       expect(scope.isVerified).toBeDefined();
+      expect(scope.isCashBagConfirmed).toBeDefined();
       expect(scope.verifiedInfo.verifiedBy).toEqual('John Smith');
       expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53');
     });
@@ -226,6 +227,19 @@ describe('Controller: ManualEposCashCtrl', function () {
       };
       var convertedAmount = scope.convertAmount(mockCurrencyObject);
       expect(convertedAmount).toEqual('0.00');
+    });
+
+    it('should accept non decimal amounts', function () {
+      var mockCurrencyObject = {
+        amount: '1',
+        exchangeRate: {
+          bankExchangeRate: null,
+          paperExchangeRate: 0.50,
+          coinExchangeRate: 0.50
+        }
+      };
+      var convertedAmount = scope.convertAmount(mockCurrencyObject);
+      expect(convertedAmount).toEqual('2.00');
     });
   });
 

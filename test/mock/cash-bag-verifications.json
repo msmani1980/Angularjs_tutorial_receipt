@@ -66,7 +66,16 @@
       },
       "removed": false,
       "submitted": true,
-      "delete": false
+      "delete": false,
+      "verificationConfirmedOn": "2016-05-10 6:20:12",
+      "verificationConfirmedBy": {
+        "id": 4,
+        "userName": "uer",
+        "email": "RCuriel@egate-solutions.com",
+        "firstName": "John",
+        "lastName": "Smith"
+      },
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -105,7 +114,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -183,7 +193,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -222,7 +233,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -261,7 +273,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -300,7 +313,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -339,7 +353,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": false,
-      "delete": true
+      "delete": true,
+      "eposCashbagId": null
     },
     {
       "createdBy": 3,
@@ -390,7 +405,8 @@
       "virtualItemVerifiedBy": null,
       "removed": false,
       "submitted": true,
-      "delete": false
+      "delete": false,
+      "eposCashbagId": null
     }
   ]
 }

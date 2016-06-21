@@ -253,6 +253,14 @@ angular.module('ts5App')
       return storeInstanceAmendService.deletePostTrip(cashBagId, postTripId);
     };
 
+    var getCashBagManualData = function (manualDataType, payload) {
+      if (manualDataType === 'cash') {
+        return cashBagService.getAllManualCashList(payload);
+      }
+
+      return cashBagService.getManualCashBagList(manualDataType, payload);
+    };
+
     return {
       getCashBagListMockData: getCashBagListMockData,
       getStoreInstancesMockData: getStoreInstancesMockData,
@@ -263,6 +271,7 @@ angular.module('ts5App')
       rearrangeFlightSector: rearrangeFlightSector,
       addFlightSector: addFlightSector,
       editFlightSector: editFlightSector,
-      deleteFlightSector: deleteFlightSector
+      deleteFlightSector: deleteFlightSector,
+      getCashBagManualData: getCashBagManualData
     };
   });

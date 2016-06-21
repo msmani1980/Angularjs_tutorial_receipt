@@ -8,145 +8,9 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService, 
-    dailyExchangeRatesService, storeInstanceService, itemsService, recordsService, 
+  .factory('manualEposFactory', function ($q, cashBagService, currenciesService, globalMenuService,
+    dailyExchangeRatesService, storeInstanceService, itemsService, recordsService,
     companyDiscountService, promotionsService) {
-
-    var getPromotionsList = function () {
-      var mockPromotionsList = [{
-        benefitTypeId: 1,
-        benefitTypeName: 'Discount',
-        catalogCount: 2,
-        companyId: 403,
-        id: 117,
-        description: 'Buy 4 drinks get 20% off',
-        discountTypeId: 1,
-        discountTypeName: 'Percentage',
-        endDate: '2015-09-19',
-        startDate: '2015-01-01',
-        promotionCode: 'PM001',
-        promotionName: 'Buy 4 drinks get 20 percent off',
-        promotionTypeId: 1,
-        promotionTypeName: ' Product Purchase',
-        quantity: 2,
-        price: 10.11,
-        currencyValue: 20.00,
-        audValue: 23.75
-      }, {
-        benefitTypeId: 1,
-        benefitTypeName: ' Discount',
-        catalogCount: 7,
-        companyId: 403,
-        id: 118,
-        description: 'Buy 2 items get 10 percent off',
-        discountTypeId: 1,
-        discountTypeName: 'Percentage',
-        endDate: '2018-12-31',
-        startDate: '2015-01-01',
-        promotionCode: 'PM002',
-        promotionName: 'Buy 2 items get 10 percent off',
-        promotionTypeId: 1,
-        promotionTypeName: 'Product Purchase',
-        quantity: 2,
-        price: 10.11,
-        currencyValue: 20.00,
-        audValue: 23.75
-      }, {
-        benefitTypeId: 1,
-        benefitTypeName: ' Discount',
-        catalogCount: 0,
-        companyId: 403,
-        id: 119,
-        description: 'randomdata',
-        discountTypeId: 1,
-        discountTypeName: 'Percentage',
-        endDate: '2015-05-29',
-        startDate: '2015-01-01',
-        promotionCode: ' TEXT',
-        promotionName: 'randomdata',
-        promotionTypeId: 1,
-        promotionTypeName: 'Product Purchase',
-        quantity: 2,
-        price: 10.11,
-        currencyValue: 20.00,
-        audValue: 23.75
-      }];
-
-      var getPromotionsListDeferred = $q.defer();
-      getPromotionsListDeferred.resolve(mockPromotionsList);
-      return getPromotionsListDeferred.promise;
-    };
-
-    var getDiscountsList = function () {
-      var mockDiscountsList = {
-        voucher: [{
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: ' V10',
-          discountName: '10 Off Vocucher',
-          discountTypeId: 1,
-          quantity: 2,
-          price: 10.00,
-          currencyValue: 20.00,
-          audValue: 23.75
-        }, {
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: ' V30',
-          discountName: '30 Off Vocucher',
-          discountTypeId: 1,
-          quantity: 2,
-          price: 5.00,
-          currencyValue: 50.00,
-          audValue: 57.25
-        }, {
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: 'IV1',
-          discountName: 'Item Voucher 1',
-          discountTypeId: 1,
-          quantity: null,
-          price: null,
-          currencyValue: null,
-          audValue: null
-        }],
-        coupon: [{
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: ' V10',
-          discountName: '10 Off Coupon',
-          discountTypeId: 1,
-          quantity: 2,
-          price: 10.00,
-          currencyValue: 20.00,
-          audValue: 23.75
-        }, {
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: ' V30',
-          discountName: '30 Off Coupon',
-          discountTypeId: 1,
-          quantity: 2,
-          price: 5.00,
-          currencyValue: 50.00,
-          audValue: 57.25
-        }, {
-          endDate: '2015-05-29',
-          startDate: '2015-01-01',
-          discountCode: 'IV1',
-          discountName: 'Item Coupon 1',
-          discountTypeId: 1,
-          quantity: null,
-          price: null,
-          currencyValue: null,
-          audValue: null
-        }]
-      };
-
-      var getDiscountsListDeferred = $q.defer();
-      getDiscountsListDeferred.resolve(mockDiscountsList);
-      return getDiscountsListDeferred.promise;
-    };
 
     function getCurrencyList(payload) {
       payload = payload || {};
@@ -162,40 +26,59 @@ angular.module('ts5App')
       return cashBagService.getCashBag(cashBagId);
     }
 
+    function getAllManualCashList(payload) {
+      return cashBagService.getAllManualCashList(payload);
+    }
+
     function getCashBagCashList(cashBagId, payload) {
-      return cashBagService.getManualCashBagList('cash', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      return cashBagService.getManualCashBagCashList(cashBagId, payloadForRequest);
     }
 
     function createCashBagCash(cashBagId, payload) {
-      cashBagService.createManualCashBagRecord('cash', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      cashBagService.createManualCashBagCashRecord(cashBagId, payloadForRequest);
     }
 
     function updateCashBagCash(cashBagId, cashId, payload) {
-      cashBagService.updateManualCashBagRecord('cash', cashBagId, cashId, payload);
+      var payloadForRequest = payload || {};
+      cashBagService.updateManualCashBagCashRecord(cashBagId, cashId, payloadForRequest);
     }
 
     function getCashBagCreditList(cashBagId, payload) {
-      return cashBagService.getManualCashBagList('credit-cards', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      return cashBagService.getManualCashBagList('credit-cards', payloadForRequest);
     }
 
     function createCashBagCredit(cashBagId, payload) {
-      cashBagService.createManualCashBagRecord('credit-cards', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      cashBagService.createManualCashBagRecord('credit-cards', payloadForRequest);
     }
 
     function updateCashBagCredit(cashBagId, creditId, payload) {
-      cashBagService.updateManualCashBagRecord('credit-cards', cashBagId, creditId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      cashBagService.updateManualCashBagRecord('credit-cards', creditId, payloadForRequest);
     }
 
     function getCashBagItemList(cashBagId, payload) {
-      return cashBagService.getManualCashBagList('items', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      return cashBagService.getManualCashBagList('items', payloadForRequest);
     }
 
     function createCashBagItem(cashBagId, payload) {
-      cashBagService.createManualCashBagRecord('items', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      cashBagService.createManualCashBagRecord('items', payloadForRequest);
     }
 
     function updateCashBagItem(cashBagId, itemId, payload) {
-      cashBagService.updateManualCashBagRecord('items', cashBagId, itemId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      cashBagService.updateManualCashBagRecord('items', itemId, payloadForRequest);
     }
 
     function getStoreInstance(storeInstanceId) {
@@ -224,15 +107,21 @@ angular.module('ts5App')
     }
 
     function getCashBagDiscountList(cashBagId, payload) {
-      return cashBagService.getManualCashBagList('discounts', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      return cashBagService.getManualCashBagList('discounts', payloadForRequest);
     }
 
     function createCashBagDiscount(cashBagId, payload) {
-      cashBagService.createManualCashBagRecord('discounts', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      cashBagService.createManualCashBagRecord('discounts', payloadForRequest);
     }
 
     function updateCashBagDiscount(cashBagId, discountId, payload) {
-      cashBagService.updateManualCashBagRecord('discounts', cashBagId, discountId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      cashBagService.updateManualCashBagRecord('discounts', discountId, payloadForRequest);
     }
 
     function getCompanyDiscountsCoupon(datesPayload) {
@@ -263,16 +152,21 @@ angular.module('ts5App')
       return companyDiscountService.getDiscountList(payload);
     }
 
-    function getManualEposPromotionList(cashBagId) {
-      return cashBagService.getManualEposPromotionList(cashBagId);
+    function getCashBagPromotionList(cashBagId) {
+      var payload = { cashbagId: cashBagId };
+      return cashBagService.getManualCashBagList('promotions', payload);
     }
 
     function updateManualEposPromotion(cashBagId, promotionId, payload) {
-      return cashBagService.updateManualCashBagRecord('promotions', cashBagId, promotionId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      return cashBagService.updateManualCashBagRecord('promotions', promotionId, payloadForRequest);
     }
 
     function createManualEposPromotion(cashBagId, payload) {
-      return cashBagService.createManualCashBagRecord('promotions', cashBagId, payload);
+      var payloadForRequest = payload || {};
+      payloadForRequest.cashbagId = cashBagId;
+      return cashBagService.createManualCashBagRecord('promotions', payloadForRequest);
     }
 
     function getCompanyPromotionsList(payload) {
@@ -280,15 +174,14 @@ angular.module('ts5App')
     }
 
     return {
-      getPromotionsList: getPromotionsList,
       getCurrencyList: getCurrencyList,
-      getDiscountsList: getDiscountsList,
       getCashBag: getCashBag,
       getDailyExchangeRate: getDailyExchangeRate,
       getStoreInstance: getStoreInstance,
       verifyCashBag: verifyCashBag,
       unverifyCashBag: unverifyCashBag,
       checkCashBagVerification: checkCashBagVerification,
+      getAllManualCashList: getAllManualCashList,
       getCashBagCashList: getCashBagCashList,
       createCashBagCash: createCashBagCash,
       updateCashBagCash: updateCashBagCash,
@@ -309,7 +202,7 @@ angular.module('ts5App')
       getCompanyDiscountsFrequentFlyer:getCompanyDiscountsFrequentFlyer,
       createManualEposPromotion: createManualEposPromotion,
       updateManualEposPromotion: updateManualEposPromotion,
-      getManualEposPromotionList: getManualEposPromotionList,
+      getCashBagPromotionList: getCashBagPromotionList,
       getCompanyPromotionsList:getCompanyPromotionsList
     };
 

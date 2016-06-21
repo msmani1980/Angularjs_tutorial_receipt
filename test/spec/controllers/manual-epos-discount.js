@@ -10,12 +10,12 @@ describe('Controller: ManualEposDiscountCtrl', function () {
   beforeEach(module('served/daily-exchange-rate.json'));
   beforeEach(module('served/cash-bag-verifications.json'));
   beforeEach(module('served/cash-bag-discount.json'));
-  beforeEach(module('served/company-discounts-vouchers.json'));  
-  beforeEach(module('served/company-discounts-coupons.json'));  
-  beforeEach(module('served/company-discounts-comp.json'));  
-  beforeEach(module('served/company-discounts-flyer.json'));  
-  
-                            
+  beforeEach(module('served/company-discounts-vouchers.json'));
+  beforeEach(module('served/company-discounts-coupons.json'));
+  beforeEach(module('served/company-discounts-comp.json'));
+  beforeEach(module('served/company-discounts-flyer.json'));
+
+
   var ManualEposDiscountCtrl;
   var manualEposFactory;
   var globalMenuService;
@@ -46,16 +46,16 @@ describe('Controller: ManualEposDiscountCtrl', function () {
 
   var companyDiscountsCouponsDeferred;
   var companyDiscountsCouponsJSON;
-  
+
   var companyDiscountsVouchersDeferred;
   var companyDiscountsVouchersJSON;
-  
+
   var companyDiscountsCompDeferred;
   var companyDiscountsCompJSON;
-  
+
   var companyDiscountsFlyerDeferred;
   var companyDiscountsFlyerJSON;
-  
+
   var verifyDeferred;
   var unverifyDeferred;
 
@@ -67,7 +67,7 @@ describe('Controller: ManualEposDiscountCtrl', function () {
   beforeEach(inject(function ($q, $controller, $rootScope, $injector, $location) {
 
     inject(function (_servedCashBag_, _servedStoreInstance_, _servedCurrencyGlobals_, _servedDailyExchangeRate_,
-                     _servedCashBagVerifications_, _servedCashBagDiscount_, _servedCompanyDiscountsCoupons_ , 
+                     _servedCashBagVerifications_, _servedCashBagDiscount_, _servedCompanyDiscountsCoupons_ ,
                      _servedCompanyDiscountsVouchers_, _servedCompanyDiscountsComp_, _servedCompanyDiscountsFlyer_) {
       cashBagJSON = _servedCashBag_;
       storeInstanceJSON = _servedStoreInstance_;
@@ -112,7 +112,7 @@ describe('Controller: ManualEposDiscountCtrl', function () {
     cashBagDiscountListDeferred = $q.defer();
     cashBagDiscountListDeferred.resolve(cashBagDiscountListJSON);
     spyOn(manualEposFactory, 'getCashBagDiscountList').and.returnValue(cashBagDiscountListDeferred.promise);
-    
+
     companyDiscountsCouponsDeferred = $q.defer();
     companyDiscountsCouponsDeferred.resolve(companyDiscountsCouponsJSON);
     spyOn(manualEposFactory, 'getCompanyDiscountsCoupon').and.returnValue(companyDiscountsCouponsDeferred.promise);
@@ -124,7 +124,7 @@ describe('Controller: ManualEposDiscountCtrl', function () {
     companyDiscountsCompDeferred = $q.defer();
     companyDiscountsCompDeferred.resolve(companyDiscountsCompJSON);
     spyOn(manualEposFactory, 'getCompanyDiscountsComp').and.returnValue(companyDiscountsCompDeferred.promise);
-    
+
     companyDiscountsFlyerDeferred = $q.defer();
     companyDiscountsFlyerDeferred.resolve(companyDiscountsFlyerJSON);
     spyOn(manualEposFactory, 'getCompanyDiscountsFrequentFlyer').and.returnValue(companyDiscountsFlyerDeferred.promise);
@@ -136,7 +136,7 @@ describe('Controller: ManualEposDiscountCtrl', function () {
     unverifyDeferred = $q.defer();
     unverifyDeferred.resolve(cashBagVerificationJSON.response[1]);
     spyOn(manualEposFactory, 'unverifyCashBag').and.returnValue(unverifyDeferred.promise);
-   
+
     createDeferred = $q.defer();
     createDeferred.resolve({});
     spyOn(manualEposFactory, 'createCashBagDiscount').and.returnValue(createDeferred.promise);
@@ -192,6 +192,7 @@ describe('Controller: ManualEposDiscountCtrl', function () {
     it('should check the cash bag verification', function () {
       expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
       expect(scope.isVerified).toBeDefined();
+      expect(scope.isCashBagConfirmed).toBeDefined();
       expect(scope.verifiedInfo.verifiedBy).toEqual('John Smith');
       expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53');
     });
@@ -205,15 +206,15 @@ describe('Controller: ManualEposDiscountCtrl', function () {
     it('should attach a list of cash bag currencies to scope', function () {
       expect(scope.currencyList).toBeDefined();
       var expectedCurrencyObject = jasmine.objectContaining({
-    	  currencyId: 8, 
-    	  code: 'GBP', 
-    	  name: 'British Pound', 
-    	  exchangeRate: { id: 503, 
-            dailyExchangeRateId: 137, 
-            retailCompanyCurrencyId: 8, 
-            bankExchangeRate: null, 
-            coinExchangeRate: '1.0000', 
-            paperExchangeRate: '1.0000' } 
+    	  currencyId: 8,
+    	  code: 'GBP',
+    	  name: 'British Pound',
+    	  exchangeRate: { id: 503,
+            dailyExchangeRateId: 137,
+            retailCompanyCurrencyId: 8,
+            bankExchangeRate: null,
+            coinExchangeRate: '1.0000',
+            paperExchangeRate: '1.0000' }
       });
       expect(scope.currencyList[0]).toEqual(expectedCurrencyObject);
     });
@@ -261,6 +262,21 @@ describe('Controller: ManualEposDiscountCtrl', function () {
       };
       var convertedAmountObject = scope.onChangePriceOrQty(mockCurrencyObject);
       expect(convertedAmountObject.baseCurrencyAmount).toEqual('0.00');
+    });
+
+    it('should accept whole numbers', function () {
+      var mockCurrencyObject = {
+        amount: 1,
+        currentCurrencyAmount: 1.50,
+        quantity: 1,
+        exchangeRate: {
+          bankExchangeRate: null,
+          paperExchangeRate: 0.5,
+          coinExchangeRate: 0.5
+        }
+      };
+      var convertedAmountObject = scope.onChangePriceOrQty(mockCurrencyObject);
+      expect(convertedAmountObject.baseCurrencyAmount).toEqual('2.00');
     });
   });
 
