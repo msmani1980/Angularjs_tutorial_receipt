@@ -2,26 +2,23 @@
 
 describe('Service: companyFormatUtility', function () {
 
-  // load the service's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/company-formats.json'));
 
-  // instantiate service
   var companyFormatUtility;
-  var identityAccessFactory;
-  var companyFormatListJSON;
-  var lodash;
+  var globalMenuService;
+  var mockedCompanyData;
 
   beforeEach(inject(function (_companyFormatUtility_, $injector) {
-    identityAccessFactory = $injector.get('identityAccessFactory');
-    companyFormatListJSON = $injector.get('servedCompanyFormats');
-    lodash = $injector.get('lodash');
+    globalMenuService = $injector.get('globalMenuService');
 
-    var mockedSessionObject = {
-      companyFormatList: companyFormatListJSON.response
+    mockedCompanyData = {
+      formatList: {
+        DATE: 'MM/DD/YYYY',
+        CURRENCY: '%.2f'
+      }
     };
-    spyOn(identityAccessFactory, 'getSessionObject').and.returnValue(mockedSessionObject);
 
+    spyOn(globalMenuService, 'getCompanyData').and.returnValue(mockedCompanyData);
     companyFormatUtility = _companyFormatUtility_;
   }));
 
@@ -31,15 +28,11 @@ describe('Service: companyFormatUtility', function () {
 
   describe('date format', function () {
     it('should return date format', function () {
-      var dateFormatObj = identityAccessFactory.getSessionObject().companyFormatList[0].format;
-      expect(dateFormatObj.dataType).toBe('DATE');
-      expect(companyFormatUtility.getDateFormat()).toBe(dateFormatObj.format.toUpperCase());
+      expect(companyFormatUtility.getDateFormat()).toBe(mockedCompanyData.formatList.DATE);
     });
 
     it('should return currency format', function () {
-      var currencyFormatObj = identityAccessFactory.getSessionObject().companyFormatList[1].format;
-      expect(currencyFormatObj.dataType).toBe('CURRENCY');
-      expect(companyFormatUtility.getCurrencyFormat()).toBe(currencyFormatObj.format);
+      expect(companyFormatUtility.getCurrencyFormat()).toBe(mockedCompanyData.formatList.CURRENCY);
     });
 
   });

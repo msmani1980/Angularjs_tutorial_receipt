@@ -11,7 +11,10 @@ angular.module('ts5App')
   .service('dateUtility', function (companyFormatUtility) {
 
     var dateFormatForAPI = 'YYYYMMDD';
-    var dateFormatForApp = companyFormatUtility.getDateFormat();
+
+    function getDateFormatForApp() {
+      return companyFormatUtility.getDateFormat();
+    }
 
     var timestampFormatForAPI = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
     var timestampFormatForApp = 'MM/DD/YYYY HH:mm';
@@ -22,14 +25,14 @@ angular.module('ts5App')
 
     this.formatDateForAPI = function (dateToFormat, dateForAppFormat, dateForAPIFormat) {
       dateForAPIFormat = dateForAPIFormat || dateFormatForAPI;
-      dateForAppFormat = dateForAppFormat || dateFormatForApp;
+      dateForAppFormat = dateForAppFormat || getDateFormatForApp();
 
       return this.formatDate(dateToFormat, dateForAppFormat, dateForAPIFormat);
     };
 
     this.formatDateForApp = function (dateToFormat, dateForAPIFormat, dateForAppFormat) {
       dateForAPIFormat = dateForAPIFormat || dateFormatForAPI;
-      dateForAppFormat = dateForAppFormat || dateFormatForApp;
+      dateForAppFormat = dateForAppFormat || getDateFormatForApp();
 
       return this.formatDate(dateToFormat, dateForAPIFormat, dateForAppFormat);
     };
@@ -52,7 +55,7 @@ angular.module('ts5App')
     };
 
     this.isDateValidForApp = function (dateToCheck) {
-      return moment(dateToCheck, dateFormatForApp, true).isValid();
+      return moment(dateToCheck, getDateFormatForApp(), true).isValid();
     };
 
     this.isDateValidForAPI = function (dateToCheck) {
@@ -64,7 +67,7 @@ angular.module('ts5App')
     };
 
     this.nowFormatted = function (formatTo) {
-      formatTo = formatTo || dateFormatForApp;
+      formatTo = formatTo || getDateFormatForApp();
       var formatFrom = 'x';
       var now = this.now();
       return this.formatDate(now, formatFrom, formatTo);
@@ -77,7 +80,7 @@ angular.module('ts5App')
 
     this.tomorrowFormatted = function (formatTo) {
       var formatFrom = 'x';
-      formatTo = formatTo || dateFormatForApp;
+      formatTo = formatTo || getDateFormatForApp();
       var tomorrow = this.tomorrow();
       return this.formatDate(tomorrow, formatFrom, formatTo);
     };
@@ -89,14 +92,14 @@ angular.module('ts5App')
 
     this.yesterdayFormatted = function (formatTo) {
       var formatFrom = 'x';
-      formatTo = formatTo || dateFormatForApp;
+      formatTo = formatTo || getDateFormatForApp();
       var today = new Date();
       var yesterday = today.setDate(today.getDate() - 1);
       return this.formatDate(yesterday, formatFrom, formatTo);
     };
 
     this.isToday = function (date) {
-      return Date.parse(moment().format('MM/DD/YYYY')) === Date.parse(date);
+      return moment().format(getDateFormatForApp()) === moment(date, getDateFormatForApp()).format(getDateFormatForApp());
     };
 
     this.dateNumDaysBeforeToday = function (numDays) {
@@ -106,7 +109,7 @@ angular.module('ts5App')
 
     this.dateNumDaysBeforeTodayFormatted = function (numDays, formatTo) {
       var formatFrom = 'x';
-      formatTo = formatTo || dateFormatForApp;
+      formatTo = formatTo || getDateFormatForApp();
       var newDate = this.dateNumDaysBeforeToday(numDays);
       return this.formatDate(newDate, formatFrom, formatTo);
     };
@@ -118,7 +121,7 @@ angular.module('ts5App')
 
     this.dateNumDaysAfterTodayFormatted = function (numDays, formatTo) {
       var formatFrom = 'x';
-      formatTo = formatTo || dateFormatForApp;
+      formatTo = formatTo || getDateFormatForApp();
       var newDate = this.dateNumDaysAfterToday(numDays);
       return this.formatDate(newDate, formatFrom, formatTo);
     };
