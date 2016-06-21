@@ -355,7 +355,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       it('should add promotion manual data to promotion totals', function () {
         var promotionTotal = scope.stockTotals.totalPromotion.totalEPOS;
         var expectedPromotionTotal = 42; // 20 + 22, from manualDataJSON mock
-        console.log(promotionTotal);
         expect(parseFloat(promotionTotal) >= expectedPromotionTotal).toEqual(true);
       });
 
