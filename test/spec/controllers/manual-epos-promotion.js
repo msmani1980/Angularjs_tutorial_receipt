@@ -302,7 +302,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
 
     it('should call create for new entries', function () {
       scope.save();
-      expect(manualEposFactory.createManualEposPromotion).toHaveBeenCalledWith(expectedPayload);
+      expect(manualEposFactory.createManualEposPromotion).toHaveBeenCalledWith(cashBagId, expectedPayload);
     });
 
     it('should call update for existing entries', function () {
@@ -310,7 +310,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
       scope.promotionList[0].id = promotionId;
       expectedPayload.id = promotionId;
       scope.save();
-      expect(manualEposFactory.updateManualEposPromotion).toHaveBeenCalledWith(promotionId, expectedPayload);
+      expect(manualEposFactory.updateManualEposPromotion).toHaveBeenCalledWith(cashBagId,  promotionId, expectedPayload);
     });
 
     it('should redirect page if shouldExit is true', function () {
