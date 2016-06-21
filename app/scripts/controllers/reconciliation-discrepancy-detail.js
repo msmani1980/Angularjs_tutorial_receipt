@@ -578,7 +578,6 @@ angular.module('ts5App')
         }).name;
       });
 
-      // TODO
       var totalItems = getTotalsFor($this.stockTotals, 'Regular');
       var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
       var totalVoucher = getTotalsFor($this.stockTotals, 'Voucher');

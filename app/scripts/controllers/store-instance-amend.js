@@ -241,7 +241,6 @@ angular.module('ts5App')
       return (modalName !== 'Regular') ? getManualDataTotals(modalName.toLowerCase(), cashBagId) : 0;
     }
 
-    // TODO;
     $scope.showEposModal = function (modalName, cashBag) {
       var modalNameToHeaderMap = {
         Regular: 'Regular Product Revenue',
@@ -280,7 +279,6 @@ angular.module('ts5App')
       angular.element('#t6Modal').modal('show');
     };
 
-    // TODO
     $scope.showCashRevenueModal = function (cashBag) {
       $scope.cashRevenueModal = cashBag.cashRevenue;
       angular.element('#cashRevenueModal').modal('show');
