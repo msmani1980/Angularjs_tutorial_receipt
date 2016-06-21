@@ -103,7 +103,7 @@ angular.module('ts5App')
         '/rsvr/api/units',
         '/rsvr/api/cash-bags/[0-9]*$',
         '/rsvr/api/promotions/[0-9]*$',
-        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9]*$',
+        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9][^11]*$',
         '/rsvr/api/company-currency-globals',
         '/rsvr/api/promotions',
         '/rsvr/api/companies/stores/[0-9]*',
@@ -118,7 +118,8 @@ angular.module('ts5App')
       '/rsvr/api/cashbags/[0-9]*',
       '/rsvr/api/cashbag/[0-9]+/cash',
       '/rsvr/api/cashbags/cash/',
-      '/rsvr/api/cashbag-[a-z]+(/[0-9]*)?'
+      '/rsvr/api/cashbag-[a-z]+(/[0-9]*)?',
+      '/rsvr/api/dispatch/store-instances/[0-9]*/status/11'
     ];
 
     function responseError(response) {
