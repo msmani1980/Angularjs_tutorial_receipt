@@ -311,13 +311,13 @@ angular.module('ts5App')
         total += promotionItem.convertedAmount;
       });
 
-      total += getManualDataTotals('promotion');
+      var eposTotal = total + getManualDataTotals('promotion');
 
       return {
         parsedLMP: total,
-        parsedEPOS: total,
+        parsedEPOS: eposTotal,
         totalLMP: formatAsCurrency(total),
-        totalEPOS: formatAsCurrency(total)
+        totalEPOS: formatAsCurrency(eposTotal)
       };
     }
 
@@ -578,6 +578,7 @@ angular.module('ts5App')
         }).name;
       });
 
+      // TODO
       var totalItems = getTotalsFor($this.stockTotals, 'Regular');
       var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
       var totalVoucher = getTotalsFor($this.stockTotals, 'Voucher');

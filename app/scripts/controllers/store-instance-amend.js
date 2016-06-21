@@ -657,13 +657,13 @@ angular.module('ts5App')
         extractEposSalesPromotionByCashBag(promotionItem);
       });
 
-      total += getManualDataTotals('promotion');
+      var eposTotal = total + getManualDataTotals('promotion');
 
       return {
         parsedLMP: total,
-        parsedEPOS: total,
+        parsedEPOS: eposTotal,
         totalLMP: $scope.formatAsCurrency(total),
-        totalEPOS: $scope.formatAsCurrency(total)
+        totalEPOS: $scope.formatAsCurrency(eposTotal)
       };
     }
 
