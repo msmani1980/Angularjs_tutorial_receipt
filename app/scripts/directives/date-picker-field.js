@@ -15,7 +15,6 @@ angular.module('ts5App')
         ngModel: '=',
         name: '@',
         label: '@',
-        placeholder: '@',
         orientation: '=',
         required: '=',
         form: '=',
@@ -32,6 +31,8 @@ angular.module('ts5App')
           todayHighlight: true,
           maxDate: $scope.maxDate
         };
+
+        $scope.placeholder = datePickerOptions.format;
 
         if ($scope.minDate && !$scope.disable) {
           datePickerOptions.startDate = $scope.minDate;
