@@ -16,7 +16,6 @@
   </div>
   <div class="bg-gray panel-body" ng-show="prevStoreDetails && storeDetails.currentStatus.statusName === 'Ready for Packing'">
     <table class="table">
-
       <thead>
       <tr>
         <th>LMP Station</th>
@@ -31,7 +30,8 @@
       <tr>
         <td>
           <label class="sr-only" for="displayLMPStationInput">displayLMPStation</label>
-          <input type="text" id="displayLMPStationInput" class="form-control" ng-model="prevStoreDetails.displayLMPStation" data-value="{{prevStoreDetails.displayLMPStation}}" disabled/>
+          <input type="text" id="displayLMPStationInput" class="form-control" ng-model="prevStoreDetails.displayLMPStation" data-value="{{prevStoreDetails.displayLMPStation}}"
+                 disabled/>
         </td>
         <td>
           <label class="sr-only" for="storeNumberInput">storeNumber</label>
@@ -51,7 +51,8 @@
         </td>
         <td>
           <label class="sr-only" for="storeInstanceNumberInput">storeInstanceNumber</label>
-          <input type="text" id="storeInstanceNumberInput" class="form-control" ng-model="prevStoreDetails.storeInstanceNumber" data-value="{{prevStoreDetails.storeInstanceNumber}}" disabled/>
+          <input type="text" id="storeInstanceNumberInput" class="form-control" ng-model="prevStoreDetails.storeInstanceNumber"
+                 data-value="{{prevStoreDetails.storeInstanceNumber}}" disabled/>
         </td>
       </tr>
       </tbody>
@@ -72,24 +73,33 @@
       </thead>
       <tbody>
       <tr>
-        <td>
-          <input type="text" class="form-control" ng-model="storeDetails.displayLMPStation" disabled ng-hide="isActionState('end-instance')"/>
-          <input type="text" class="form-control" ng-model="storeDetails.inboundLMPStation" disabled  ng-show="isActionState('end-instance')"/>
+        <td ng-hide="isActionState('end-instance')">
+          <label class="sr-only" for="packingDisplayLMPStation">displayLMPStation</label>
+          <input id="packingDisplayLMPStation" type="text" class="form-control" ng-model="storeDetails.displayLMPStation" disabled/>
+        </td>
+        <td ng-show="isActionState('end-instance')">
+          <label class="sr-only" for="packingInboundLMPStation">inboundLMPStation</label>
+          <input id="packingInboundLMPStation" type="text" class="form-control" ng-model="storeDetails.inboundLMPStation" disabled/>
         </td>
         <td>
-          <input type="text" class="form-control" ng-model="storeDetails.storeNumber" disabled/>
+          <label class="sr-only" for="packingStoreNumber">storeNumber</label>
+          <input id="packingStoreNumber" type="text" class="form-control" ng-model="storeDetails.storeNumber" disabled/>
         </td>
         <td>
-          <input type="text" class="form-control" ng-model="storeDetails.scheduleDate" disabled/>
+          <label class="sr-only" for="packingScheduleDate">scheduleDate</label>
+          <input id="packingScheduleDate" type="text" class="form-control" ng-model="storeDetails.scheduleDate" disabled/>
         </td>
         <td>
-          <input type="text" class="form-control" ng-model="storeDetails.scheduleNumber" disabled/>
+          <label class="sr-only" for="packingScheduleNumber">scheduleNumber</label>
+          <input id="packingScheduleNumber" type="text" class="form-control" ng-model="storeDetails.scheduleNumber" disabled/>
         </td>
         <td>
-          <input type="text" class="form-control" ng-model="storeDetails.carrierNumber" disabled/>
+          <label class="sr-only" for="packingCarrierNumber">carrierNumber</label>
+          <input id="packingCarrierNumber" type="text" class="form-control" ng-model="storeDetails.carrierNumber" disabled/>
         </td>
         <td>
-          <input type="text" class="form-control" ng-model="storeDetails.storeInstanceNumber" disabled/>
+          <label class="sr-only" for="packingStoreInstanceNumber">storeInstanceNumber</label>
+          <input id="packingStoreInstanceNumber" type="text" class="form-control" ng-model="storeDetails.storeInstanceNumber" disabled/>
         </td>
       </tr>
       </tbody>
