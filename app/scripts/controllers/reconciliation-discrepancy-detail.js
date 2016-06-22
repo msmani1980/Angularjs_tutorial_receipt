@@ -749,7 +749,7 @@ angular.module('ts5App')
           submittedList.push(cashBag.id);
         }
       });
-      
+
       return submittedList;
     }
 
