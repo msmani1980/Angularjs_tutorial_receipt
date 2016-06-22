@@ -75,31 +75,31 @@
       <tr>
         <td ng-hide="isActionState('end-instance')">
           <label class="sr-only" for="packingDisplayLMPStation">displayLMPStation</label>
-          <input id="packingDisplayLMPStation" type="text" class="form-control" ng-model="storeDetails.displayLMPStation" disabled/>
+          <input id="packingDisplayLMPStation" type="text" class="form-control" ng-model="storeDetails.displayLMPStation" data-value="{{storeDetails.displayLMPStation}}" disabled/>
         </td>
         <td ng-show="isActionState('end-instance')">
           <label class="sr-only" for="packingInboundLMPStation">inboundLMPStation</label>
-          <input id="packingInboundLMPStation" type="text" class="form-control" ng-model="storeDetails.inboundLMPStation" disabled/>
+          <input id="packingInboundLMPStation" type="text" class="form-control" ng-model="storeDetails.inboundLMPStation" data-value="{{storeDetails.inboundLMPStation}}" disabled/>
         </td>
         <td>
           <label class="sr-only" for="packingStoreNumber">storeNumber</label>
-          <input id="packingStoreNumber" type="text" class="form-control" ng-model="storeDetails.storeNumber" disabled/>
+          <input id="packingStoreNumber" type="text" class="form-control" ng-model="storeDetails.storeNumber" data-value="{{storeDetails.storeNumber}}" disabled/>
         </td>
         <td>
           <label class="sr-only" for="packingScheduleDate">scheduleDate</label>
-          <input id="packingScheduleDate" type="text" class="form-control" ng-model="storeDetails.scheduleDate" disabled/>
+          <input id="packingScheduleDate" type="text" class="form-control" ng-model="storeDetails.scheduleDate" data-value="{{storeDetails.scheduleDate}}" disabled/>
         </td>
         <td>
           <label class="sr-only" for="packingScheduleNumber">scheduleNumber</label>
-          <input id="packingScheduleNumber" type="text" class="form-control" ng-model="storeDetails.scheduleNumber" disabled/>
+          <input id="packingScheduleNumber" type="text" class="form-control" ng-model="storeDetails.scheduleNumber" data-value="{{storeDetails.scheduleNumber}}" disabled/>
         </td>
         <td>
           <label class="sr-only" for="packingCarrierNumber">carrierNumber</label>
-          <input id="packingCarrierNumber" type="text" class="form-control" ng-model="storeDetails.carrierNumber" disabled/>
+          <input id="packingCarrierNumber" type="text" class="form-control" ng-model="storeDetails.carrierNumber" data-value="{{storeDetails.carrierNumber}}" disabled/>
         </td>
         <td>
           <label class="sr-only" for="packingStoreInstanceNumber">storeInstanceNumber</label>
-          <input id="packingStoreInstanceNumber" type="text" class="form-control" ng-model="storeDetails.storeInstanceNumber" disabled/>
+          <input id="packingStoreInstanceNumber" type="text" class="form-control" ng-model="storeDetails.storeInstanceNumber" data-value="{{storeDetails.storeInstanceNumber}}" disabled/>
         </td>
       </tr>
       </tbody>
