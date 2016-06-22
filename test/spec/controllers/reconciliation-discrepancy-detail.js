@@ -273,7 +273,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       it('should set cash bag submitted list', function () {
         scope.$digest();
         expect(scope.submittedCashBags).toBeDefined();
-        console.log(scope.submittedCashBags);
+        var submittedCashBag = lodash.findWhere(scope.cashBagList, {submitted: true});
+        expect(scope.submittedCashBags.indexOf(submittedCashBag.id) >= 0).toEqual(true);
       });
 
       describe('manual data saving', function () {

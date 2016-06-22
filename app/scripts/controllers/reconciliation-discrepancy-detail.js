@@ -506,7 +506,6 @@ angular.module('ts5App')
       return total;
     }
 
-    // TODO:
     function getCHRevenue(chRevenue) {
       $this.chCashBag = angular.copy(chRevenue[0].response);
       var chCreditCard = angular.copy(chRevenue[1].response);
