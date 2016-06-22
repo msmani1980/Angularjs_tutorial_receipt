@@ -226,7 +226,7 @@ describe('Controller: CashBagCtrl', function() {
       });
     });
 
-    fdescribe('formSave form action', function() {
+    describe('formSave form action', function() {
       beforeEach(function() {
         scope.cashBagCreateForm = {
           $invalid: false
