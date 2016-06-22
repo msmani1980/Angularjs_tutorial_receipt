@@ -63,10 +63,11 @@ angular.module('ts5App')
 
     this.setStationsList = function(dataFromAPI) {
       var response = angular.copy(dataFromAPI.response);
-      $this.setCountriesList(response);
-      $scope.stationsList = response;
-      $scope.masterStationsList = response;
-      $scope.stationsListSearch = response;
+      var distinctStations = $filter('unique')(response, 'stationId');
+      $this.setCountriesList(distinctStations);
+      $scope.stationsList = distinctStations;
+      $scope.masterStationsList = distinctStations;
+      $scope.stationsListSearch = distinctStations;
     };
 
     this.setCurrenciesList = function(dataFromAPI) {

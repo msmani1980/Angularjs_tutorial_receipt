@@ -31,8 +31,9 @@ describe('Controller: TaxRatesCtrl', function () {
   var getCompanyTaxRatesListDeferred;
   var removeCompanyTaxRateDeferred;
   var updateCompanyTaxRateDeferred;
+  var filter;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $injector, $route, dateUtility, ngToast, _servedTaxTypes_,
+  beforeEach(inject(function ($q, $controller, $rootScope, $injector, $route, $filter, dateUtility, ngToast, _servedTaxTypes_,
                               _servedTaxRateTypes_, _servedCountryList_, _servedStations_, _servedCurrencies_, _servedCompanyTaxRates_) {
 
     taxTypesJSON = _servedTaxTypes_;
@@ -41,6 +42,7 @@ describe('Controller: TaxRatesCtrl', function () {
     stationsListJSON = _servedStations_;
     currenciesListJSON = _servedCurrencies_;
     companyTaxRatesJSON = _servedCompanyTaxRates_;
+    filter = $filter;
 
     scope = $rootScope.$new();
     controller = $controller;
@@ -200,8 +202,9 @@ describe('Controller: TaxRatesCtrl', function () {
         expect(scope.countriesList[0]).toEqual(countriesJSON.countries[0]);
       });
 
-      it('should set the scope.stationsList to the mock data', function () {
-        expect(scope.stationsList).toEqual(stationsListJSON.response);
+      it('should set the scope.stationsList to the distinct mock data stations', function() {
+        var uniqueStations = filter('unique')(stationsListJSON.response, 'stationId');
+        expect(scope.stationsList).toEqual(uniqueStations);
       });
 
       it('should set the scope.currenciesList to the mock data', function () {
