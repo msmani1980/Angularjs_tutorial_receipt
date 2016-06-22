@@ -112,6 +112,8 @@
       "discountVerifiedBy": null,
       "virtualItemVerifiedOn": null,
       "virtualItemVerifiedBy": null,
+      "verificationConfirmedOn": "2016-05-10 6:20:12",
+      "verificationConfirmedBy": null,
       "removed": false,
       "submitted": false,
       "delete": true,
