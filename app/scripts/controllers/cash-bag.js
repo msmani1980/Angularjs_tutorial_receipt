@@ -107,10 +107,12 @@ angular.module('ts5App')
     }
 
     function createCashBag(formData) {
-      showLoadingModal('Saving Cash Bag');
+      var saveCashBag = angular.copy(formData);
+      saveCashBag.scheduleDate = dateUtility.formatDateForAPI(saveCashBag.scheduleDate);
       formData.isDelete = false;
+      showLoadingModal('Saving Cash Bag');
       cashBagFactory.createCashBag({
-        cashBag: formData
+        cashBag: saveCashBag
       }).then(cashBagCreateSuccessHandler, errorHandler);
     }
 
