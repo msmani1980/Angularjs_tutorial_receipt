@@ -471,20 +471,42 @@ angular.module('ts5App')
       var total = 0;
 
       angular.forEach($this.eposCashBag, function (cashBag) {
-        total += makeFinite(cashBag.bankAmount) + makeFinite(cashBag.coinAmountManual) + makeFinite(cashBag.paperAmountManual);
+        var cashTotal = makeFinite(cashBag.bankAmount) + makeFinite(cashBag.coinAmountManual) + makeFinite(cashBag.paperAmountManual);
+        total += ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
+
       });
 
       angular.forEach(eposCreditCard, function (creditCard) {
-        total += makeFinite(creditCard.bankAmountFinal);
+        var creditTotal = makeFinite(creditCard.bankAmountFinal);
+        total += ($scope.submittedCashBags.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
       });
 
       angular.forEach(eposDiscount, function (discount) {
-        total += makeFinite(discount.bankAmountFinal);
+        var discountTotal = makeFinite(discount.bankAmountFinal);
+        total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
       });
 
       return total;
     }
 
+    function getCHRevenueManualTotals() {
+      var total = 0;
+      angular.forEach($this.manualData.cash, function (cash) {
+        total += ($scope.submittedCashBags.indexOf(cash.cashbagId) >= 0) ? cash.convertedAmount : 0;
+      });
+
+      angular.forEach($this.manualData.credit, function (credit) {
+        total += ($scope.submittedCashBags.indexOf(credit.cashbagId) >= 0) ? credit.convertedAmount : 0;
+      });
+
+      angular.forEach($this.manualData.discount, function (discount) {
+        total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discount.convertedAmount : 0;
+      });
+
+      return total;
+    }
+
+    // TODO:
     function getCHRevenue(chRevenue) {
       $this.chCashBag = angular.copy(chRevenue[0].response);
       var chCreditCard = angular.copy(chRevenue[1].response);
@@ -492,30 +514,22 @@ angular.module('ts5App')
       var total = 0;
 
       angular.forEach($this.chCashBag, function (cashBag) {
-        total += (makeFinite(cashBag.paperAmountManualCh) + makeFinite(cashBag.coinAmountManualCh)) + (makeFinite(cashBag.paperAmountManualCHBank) +
+        var cashTotal = (makeFinite(cashBag.paperAmountManualCh) + makeFinite(cashBag.coinAmountManualCh)) + (makeFinite(cashBag.paperAmountManualCHBank) +
           makeFinite(cashBag.coinAmountManualCHBank)) + makeFinite(cashBag.bankAmountCh);
+        total += ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
       });
 
       angular.forEach(chCreditCard, function (creditCard) {
-        total += makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountCc) + makeFinite(creditCard.paperAmountCc);
+        var creditTotal = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountCc) + makeFinite(creditCard.paperAmountCc);
+        total += ($scope.submittedCashBags.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
       });
 
       angular.forEach(chDiscount, function (discount) {
-        total += makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
+        var discountTotal = makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
+        total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
       });
 
-      angular.forEach($this.manualData.cash, function (discount) {
-        total += discount.convertedAmount;
-      });
-
-      angular.forEach($this.manualData.credit, function (discount) {
-        total += discount.convertedAmount;
-      });
-
-      angular.forEach($this.manualData.discount, function (discount) {
-        total += discount.convertedAmount;
-      });
-
+      total += getCHRevenueManualTotals();
       return total;
     }
 
@@ -728,9 +742,21 @@ angular.module('ts5App')
       };
     }
 
+    function setSubmittedCashBagList() {
+      var submittedList = [];
+      angular.forEach($scope.cashBagList, function (cashBag) {
+        if (cashBag.submitted) {
+          submittedList.push(cashBag.id);
+        }
+      });
+      
+      return submittedList;
+    }
+
     function initDependenciesSuccess(responseCollectionFromAPI) {
       $scope.storeInstance = formatDates(angular.copy(responseCollectionFromAPI[0]));
       $scope.cashBagList = angular.copy(responseCollectionFromAPI[1].response);
+      $scope.submittedCashBags = setSubmittedCashBagList();
       $this.itemTypes = angular.copy(responseCollectionFromAPI[2]);
       setManualData(responseCollectionFromAPI);
       initData();
