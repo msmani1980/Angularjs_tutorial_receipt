@@ -32,7 +32,7 @@ angular.module('ts5App')
     }
 
     function getStoreInstance(storeInstanceId) {
-      return storeInstanceService.getStoreInstance(storeInstanceId);
+      return storeInstanceService.getStoreInstance(storeInstanceId, getCompanyId());
     }
 
     var getStationList = function (id) {
