@@ -466,19 +466,13 @@ angular.module('ts5App')
 
     function getEPOSRevenue(eposRevenue) {
       $this.eposCashBag = angular.copy(eposRevenue[0].response);
-      var eposCreditCard = angular.copy(eposRevenue[1].response);
       var eposDiscount = angular.copy(eposRevenue[2].response);
       var total = 0;
 
+      // eposCashbag includes cash and credit transactions
       angular.forEach($this.eposCashBag, function (cashBag) {
         var cashTotal = makeFinite(cashBag.bankAmount) + makeFinite(cashBag.coinAmountManual) + makeFinite(cashBag.paperAmountManual);
         total += ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
-
-      });
-
-      angular.forEach(eposCreditCard, function (creditCard) {
-        var creditTotal = makeFinite(creditCard.bankAmountFinal);
-        total += ($scope.submittedCashBags.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
       });
 
       angular.forEach(eposDiscount, function (discount) {
@@ -508,19 +502,14 @@ angular.module('ts5App')
 
     function getCHRevenue(chRevenue) {
       $this.chCashBag = angular.copy(chRevenue[0].response);
-      var chCreditCard = angular.copy(chRevenue[1].response);
       var chDiscount = angular.copy(chRevenue[2].response);
       var total = 0;
 
+      // chCashbag includes cash and credit transactions
       angular.forEach($this.chCashBag, function (cashBag) {
         var cashTotal = (makeFinite(cashBag.paperAmountManualCh) + makeFinite(cashBag.coinAmountManualCh)) + (makeFinite(cashBag.paperAmountManualCHBank) +
           makeFinite(cashBag.coinAmountManualCHBank)) + makeFinite(cashBag.bankAmountCh);
         total += ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
-      });
-
-      angular.forEach(chCreditCard, function (creditCard) {
-        var creditTotal = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountCc) + makeFinite(creditCard.paperAmountCc);
-        total += ($scope.submittedCashBags.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
       });
 
       angular.forEach(chDiscount, function (discount) {
