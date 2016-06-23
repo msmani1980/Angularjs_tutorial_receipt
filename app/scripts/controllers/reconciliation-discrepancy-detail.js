@@ -469,18 +469,11 @@ angular.module('ts5App')
       var eposDiscount = angular.copy(eposRevenue[2].response);
       var total = 0;
 
+      // eposCashbag includes cash and credit transactions
       angular.forEach($this.eposCashBag, function (cashBag) {
         var cashTotal = makeFinite(cashBag.bankAmount) + makeFinite(cashBag.coinAmountManual) + makeFinite(cashBag.paperAmountManual);
         total += ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
-
       });
-
-      // commenting out credit card totals for now because they are already included in eposCashBag.  This could change later if epos format changes :(
-      //var eposCreditCard = angular.copy(eposRevenue[1].response);
-      //angular.forEach(eposCreditCard, function (creditCard) {
-      //  var creditTotal = makeFinite(creditCard.bankAmountFinal);
-      //  total += ($scope.submittedCashBags.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
-      //});
 
       angular.forEach(eposDiscount, function (discount) {
         var discountTotal = makeFinite(discount.bankAmountFinal);
@@ -512,18 +505,12 @@ angular.module('ts5App')
       var chDiscount = angular.copy(chRevenue[2].response);
       var total = 0;
 
+      // chCashbag includes cash and credit transactions
       angular.forEach($this.chCashBag, function (cashBag) {
         var cashTotal = (makeFinite(cashBag.paperAmountManualCh) + makeFinite(cashBag.coinAmountManualCh)) + (makeFinite(cashBag.paperAmountManualCHBank) +
           makeFinite(cashBag.coinAmountManualCHBank)) + makeFinite(cashBag.bankAmountCh);
         total += ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
       });
-
-      // commenting out credit card totals for now because they are already included in chCashBag.  This could change later if epos format changes :(
-      //var chCreditCard = angular.copy(chRevenue[1].response);
-      //angular.forEach(chCreditCard, function (creditCard) {
-      //  var creditTotal = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountCc) + makeFinite(creditCard.paperAmountCc);
-      //  total += ($scope.submittedCashBags.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
-      //});
 
       angular.forEach(chDiscount, function (discount) {
         var discountTotal = makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
