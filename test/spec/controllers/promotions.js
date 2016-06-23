@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: PromotionsCtrl', function() {
+fdescribe('Controller: PromotionsCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/benefit-types.json'));
@@ -36,20 +36,20 @@ describe('Controller: PromotionsCtrl', function() {
   var masterItemsList;
   var savePromotionDeferred;
   var getPromotionDeferred;
+  var promotionResponseJSON;
 
-  beforeEach(inject(function($rootScope, $injector, $q,
-    _servedBenefitTypes_,
-    _servedDiscountTypes_,
-    _servedPromotionTypes_,
-    _servedCompanyDiscountsVouchers_,
-    _servedCompanyDiscountsCoupons_,
-    _servedSalesCategories_,
-    _servedDiscountApplyTypes_,
-    _servedPromotionCategories_,
-    _servedCompanyStationGlobals_,
-    _servedCurrencyGlobals_,
-    _servedMasterItemList_,
-    _servedPromotion_) {
+  beforeEach(inject(function ($rootScope, $injector, $q,
+                              _servedBenefitTypes_,
+                              _servedDiscountTypes_,
+                              _servedPromotionTypes_,
+                              _servedCompanyDiscountsVouchers_,
+                              _servedCompanyDiscountsCoupons_,
+                              _servedSalesCategories_,
+                              _servedDiscountApplyTypes_,
+                              _servedPromotionCategories_,
+                              _servedCompanyStationGlobals_,
+                              _servedCurrencyGlobals_,
+                              _servedMasterItemList_) {
     scope = $rootScope.$new();
 
     promotionsFactory = $injector.get('promotionsFactory');
@@ -81,8 +81,10 @@ describe('Controller: PromotionsCtrl', function() {
     getMasterItemsDeferred.resolve(masterItemsList);
     savePromotionDeferred = $q.defer();
     savePromotionDeferred.resolve(true);
+
+    promotionResponseJSON = $injector.get('servedPromotion');
     getPromotionDeferred = $q.defer();
-    getPromotionDeferred.resolve(_servedPromotion_);
+    getPromotionDeferred.resolve(promotionResponseJSON);
 
     spyOn(promotionsFactory, 'getBenefitTypes').and.returnValue(getBenefitTypesDeferred.promise);
     spyOn(promotionsFactory, 'getDiscountTypes').and.returnValue(getDiscountTypesDeferred.promise);
@@ -103,8 +105,8 @@ describe('Controller: PromotionsCtrl', function() {
 
   }));
 
-  describe('create promotion', function() {
-    beforeEach(inject(function($controller) {
+  describe('create promotion', function () {
+    beforeEach(inject(function ($controller) {
       routeParams = {
         state: 'create'
       };
@@ -115,37 +117,37 @@ describe('Controller: PromotionsCtrl', function() {
       scope.$digest();
     }));
 
-    describe('init API calls', function() {
+    describe('init API calls', function () {
 
-      it('should call promotionsFactory.getBenefitTypes', function() {
+      it('should call promotionsFactory.getBenefitTypes', function () {
         expect(promotionsFactory.getBenefitTypes).toHaveBeenCalled();
       });
 
-      it('should call promotionsFactory.getDiscountTypes', function() {
+      it('should call promotionsFactory.getDiscountTypes', function () {
         expect(promotionsFactory.getDiscountTypes).toHaveBeenCalled();
       });
 
-      it('should call promotionsFactory.getPromotionTypes', function() {
+      it('should call promotionsFactory.getPromotionTypes', function () {
         expect(promotionsFactory.getPromotionTypes).toHaveBeenCalled();
       });
 
-      it('should call promotionsFactory.getSalesCategories', function() {
+      it('should call promotionsFactory.getSalesCategories', function () {
         expect(promotionsFactory.getSalesCategories).toHaveBeenCalled();
       });
 
-      it('should call promotionsFactory.getDiscountApplyTypes', function() {
+      it('should call promotionsFactory.getDiscountApplyTypes', function () {
         expect(promotionsFactory.getDiscountApplyTypes).toHaveBeenCalled();
       });
 
-      it('should call promotionsFactory.getStationGlobals', function() {
+      it('should call promotionsFactory.getStationGlobals', function () {
         expect(promotionsFactory.getStationGlobals).toHaveBeenCalled();
       });
 
-      it('should call promotionsFactory.getStationGlobals', function() {
+      it('should call promotionsFactory.getStationGlobals', function () {
         expect(promotionsFactory.getStationGlobals).toHaveBeenCalled();
       });
 
-      it('should call promotionsFactory.getCurrencyGlobals', function() {
+      it('should call promotionsFactory.getCurrencyGlobals', function () {
         var payload = {
           isOperatedCurrency: true,
           startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
@@ -154,68 +156,68 @@ describe('Controller: PromotionsCtrl', function() {
         expect(promotionsFactory.getCurrencyGlobals).toHaveBeenCalledWith(payload);
       });
 
-      it('should call promotionsFactory.getMasterItems', function() {
+      it('should call promotionsFactory.getMasterItems', function () {
         expect(promotionsFactory.getMasterItems).toHaveBeenCalled();
       });
     });
 
-    describe('scope selection options and data arrays', function() {
+    describe('scope selection options and data arrays', function () {
 
-      it('should have companyCurrencyGlobals', function() {
+      it('should have companyCurrencyGlobals', function () {
         expect(scope.companyCurrencyGlobals).toBeDefined();
         expect(Object.prototype.toString.call(scope.companyCurrencyGlobals)).toBe('[object Array]');
       });
 
-      it('should have selectOptions object', function() {
+      it('should have selectOptions object', function () {
         expect(scope.selectOptions).toBeDefined();
         expect(Object.prototype.toString.call(scope.selectOptions)).toBe('[object Object]');
       });
 
-      describe('selectOptions arrays', function() {
+      describe('selectOptions arrays', function () {
 
-        it('should have a property promotionTypes', function() {
+        it('should have a property promotionTypes', function () {
           expect(scope.selectOptions.promotionTypes).toBeDefined();
           expect(Object.prototype.toString.call(scope.selectOptions.promotionTypes)).toBe(
             '[object Array]');
         });
 
-        it('should have a property benefitTypes', function() {
+        it('should have a property benefitTypes', function () {
           expect(scope.selectOptions.benefitTypes).toBeDefined();
           expect(Object.prototype.toString.call(scope.selectOptions.benefitTypes)).toBe(
             '[object Array]');
         });
 
-        it('should have a property discountTypes', function() {
+        it('should have a property discountTypes', function () {
           expect(scope.selectOptions.discountTypes).toBeDefined();
           expect(Object.prototype.toString.call(scope.selectOptions.discountTypes)).toBe(
             '[object Array]');
         });
 
-        it('should have a property promotionCategories', function() {
+        it('should have a property promotionCategories', function () {
           expect(scope.selectOptions.promotionCategories).toBeDefined();
           expect(Object.prototype.toString.call(scope.selectOptions.promotionCategories)).toBe(
             '[object Array]');
         });
 
-        it('should have a property salesCategories', function() {
+        it('should have a property salesCategories', function () {
           expect(scope.selectOptions.salesCategories).toBeDefined();
           expect(Object.prototype.toString.call(scope.selectOptions.salesCategories)).toBe(
             '[object Array]');
         });
 
-        it('should have a property masterItems', function() {
+        it('should have a property masterItems', function () {
           expect(scope.selectOptions.masterItems).toBeDefined();
           expect(Object.prototype.toString.call(scope.selectOptions.masterItems)).toBe(
             '[object Array]');
         });
 
-        it('should have a property discountApplyTypes', function() {
+        it('should have a property discountApplyTypes', function () {
           expect(scope.selectOptions.discountApplyTypes).toBeDefined();
           expect(Object.prototype.toString.call(scope.selectOptions.discountApplyTypes)).toBe(
             '[object Array]');
         });
 
-        it('should have a property companyStationGlobals', function() {
+        it('should have a property companyStationGlobals', function () {
           expect(scope.selectOptions.companyStationGlobals).toBeDefined();
           expect(Object.prototype.toString.call(scope.selectOptions.companyStationGlobals)).toBe(
             '[object Array]');
@@ -223,8 +225,8 @@ describe('Controller: PromotionsCtrl', function() {
       });
     });
 
-    describe('addBlankObjectToArray scope function', function() {
-      it('should add a blank object to a scope array', function() {
+    describe('addBlankObjectToArray scope function', function () {
+      it('should add a blank object to a scope array', function () {
         scope.mockArray2 = [{}, {}, {}, {}];
         scope.addBlankObjectToArray(scope.mockArray2);
         scope.$apply();
@@ -232,59 +234,59 @@ describe('Controller: PromotionsCtrl', function() {
       });
     });
 
-    describe('promotionCategoryQtyRequired scope function', function() {
-      it('should return true if whatever passed into it has a promotionCategory property', function() {
+    describe('promotionCategoryQtyRequired scope function', function () {
+      it('should return true if whatever passed into it has a promotionCategory property', function () {
         expect(scope.promotionCategoryQtyRequired({
           promotionCategory: 'yes'
         })).toBe(true);
       });
 
       it('should return false if whatever passed into it does not have a promotionCategory property',
-        function() {
+        function () {
           expect(scope.promotionCategoryQtyRequired({
             foo: 'bar'
           })).toBe(false);
         });
     });
 
-    describe('retailItemQtyRequired scope function', function() {
-      it('should return true if retailItem is set', function() {
+    describe('retailItemQtyRequired scope function', function () {
+      it('should return true if retailItem is set', function () {
         expect(scope.retailItemQtyRequired({
           retailItem: 'bar'
         })).toBe(true);
       });
 
-      it('should return true if itemId is set', function() {
+      it('should return true if itemId is set', function () {
         expect(scope.retailItemQtyRequired({
           itemId: 'bar'
         })).toBe(true);
       });
 
-      it('should return false neither are set', function() {
+      it('should return false neither are set', function () {
         expect(scope.retailItemQtyRequired({
           foo: 'bar'
         })).toBe(false);
       });
     });
 
-    describe('cancel scope function', function() {
-      it('should have a scope function cancel', function() {
+    describe('cancel scope function', function () {
+      it('should have a scope function cancel', function () {
         expect(Object.prototype.toString.call(scope.cancel)).toBe('[object Function]');
       });
     });
 
-    describe('disabledDepartureStations scope function', function() {
-      it('should return false if stations is passed in with arrivalStation undefined', function() {
+    describe('disabledDepartureStations scope function', function () {
+      it('should return false if stations is passed in with arrivalStation undefined', function () {
         expect(scope.disabledDepartureStations(null, {})).toBe(false);
       });
 
-      it('should return false if stations is passed in with arrivalStation.id undefined', function() {
+      it('should return false if stations is passed in with arrivalStation.id undefined', function () {
         expect(scope.disabledDepartureStations(null, {
           arrivalStation: {}
         })).toBe(false);
       });
 
-      it('should return false if passed in station does not contain an id', function() {
+      it('should return false if passed in station does not contain an id', function () {
         scope.repeatableStations.arrivalHas = [];
         scope.repeatableStations.arrivalHas[5] = [1, 2, 3];
         expect(scope.disabledDepartureStations({
@@ -297,7 +299,7 @@ describe('Controller: PromotionsCtrl', function() {
       });
 
       it('should return false if arrivalStation.id doesn not exist in repeatableStations.arrivalHas',
-        function() {
+        function () {
           scope.repeatableStations.arrivalHas = [];
           scope.repeatableStations.arrivalHas[5] = [1, 2, 3];
           expect(scope.disabledDepartureStations({
@@ -309,7 +311,7 @@ describe('Controller: PromotionsCtrl', function() {
           })).toBe(false);
         });
 
-      it('should return false if the station.id is not in repeatableStations.arrivalHas', function() {
+      it('should return false if the station.id is not in repeatableStations.arrivalHas', function () {
         scope.repeatableStations.arrivalHas = [];
         scope.repeatableStations.arrivalHas[5] = [1, 2, 3];
         expect(scope.disabledDepartureStations({
@@ -323,7 +325,7 @@ describe('Controller: PromotionsCtrl', function() {
 
       it(
         'should return true if the station.id of the arrivalStation.id is in repeatableStations.arrivalHas',
-        function() {
+        function () {
           scope.repeatableStations.arrivalHas = [];
           scope.repeatableStations.arrivalHas[5] = [1, 2, 3];
           expect(scope.disabledDepartureStations({
@@ -335,7 +337,7 @@ describe('Controller: PromotionsCtrl', function() {
           })).toBe(true);
         });
 
-      it('should return false if passed in station.id is same as arrivalStation.id', function() {
+      it('should return false if passed in station.id is same as arrivalStation.id', function () {
         scope.repeatableStations.arrivalHas = [];
         scope.repeatableStations.arrivalHas[5] = [1, 2, 3];
         expect(scope.disabledDepartureStations({
@@ -348,9 +350,9 @@ describe('Controller: PromotionsCtrl', function() {
       });
     });
 
-    describe('promotionCategorySelectChanged scope function', function() {
+    describe('promotionCategorySelectChanged scope function', function () {
       it('should add the promotion.promotionCategories to repeatableProductPurchasePromotionCategoryIds',
-        function() {
+        function () {
           scope.promotion.promotionCategories = [{
             promotionCategory: {
               id: 123
@@ -365,15 +367,15 @@ describe('Controller: PromotionsCtrl', function() {
         });
     });
 
-    describe('disabledPromotionCategory scope function', function() {
-      it('should return true if id in repeatableProductPurchasePromotionCategoryIds', function() {
+    describe('disabledPromotionCategory scope function', function () {
+      it('should return true if id in repeatableProductPurchasePromotionCategoryIds', function () {
         scope.repeatableProductPurchasePromotionCategoryIds = [321, 234, 43];
         expect(scope.disabledPromotionCategory({
           id: 43
         })).toBe(true);
       });
 
-      it('should return false if id not in repeatableProductPurchasePromotionCategoryIds', function() {
+      it('should return false if id not in repeatableProductPurchasePromotionCategoryIds', function () {
         scope.repeatableProductPurchasePromotionCategoryIds = [321, 234, 43];
         expect(scope.disabledPromotionCategory({
           id: 65
@@ -381,10 +383,10 @@ describe('Controller: PromotionsCtrl', function() {
       });
     });
 
-    describe('removeFromPromotionCategoryByIndex scope function', function() {
+    describe('removeFromPromotionCategoryByIndex scope function', function () {
       it(
         'should splice on index of promotion.promotionCategories and repeatableProductPurchasePromotionCategoryIds',
-        function() {
+        function () {
           scope.promotion.promotionCategories = [{
             id: 1
           }, {
@@ -403,8 +405,8 @@ describe('Controller: PromotionsCtrl', function() {
         });
     });
 
-    describe('itemSelectInit scope function', function() {
-      it('should set repeatableItemListSelectOptions index to selectOptions.masterItems', function() {
+    describe('itemSelectInit scope function', function () {
+      it('should set repeatableItemListSelectOptions index to selectOptions.masterItems', function () {
         var mockMasterItems = [{
           mock: '123'
         }, {
@@ -416,9 +418,9 @@ describe('Controller: PromotionsCtrl', function() {
       });
     });
 
-    describe('itemSelectChanged scope function', function() {
+    describe('itemSelectChanged scope function', function () {
       it('should set repeatableProductPurchaseItemIds index to promotion.items[$index].retailItem.id',
-        function() {
+        function () {
           var mockId = 45;
           scope.promotion.items = [{
             retailItem: {
@@ -434,8 +436,8 @@ describe('Controller: PromotionsCtrl', function() {
         });
     });
 
-    describe('disabledItems scope function', function() {
-      it('should return true if id in repeatableProductPurchaseItemIds', function() {
+    describe('disabledItems scope function', function () {
+      it('should return true if id in repeatableProductPurchaseItemIds', function () {
         var mockItem = {
           id: 23
         };
@@ -443,7 +445,7 @@ describe('Controller: PromotionsCtrl', function() {
         expect(scope.disabledItems(mockItem)).toBe(true);
       });
 
-      it('should return false if id not in repeatableProductPurchaseItemIds', function() {
+      it('should return false if id not in repeatableProductPurchaseItemIds', function () {
         var mockItem = {
           id: 2
         };
@@ -452,8 +454,8 @@ describe('Controller: PromotionsCtrl', function() {
       });
     });
 
-    describe('removeFromItemListByIndex scope function', function() {
-      it('should splice index of repeatableProductPurchaseItemIds and promotion.items', function() {
+    describe('removeFromItemListByIndex scope function', function () {
+      it('should splice index of repeatableProductPurchaseItemIds and promotion.items', function () {
         scope.repeatableProductPurchaseItemIds = [23, 54, 46];
         scope.promotion.items = [{
           id: 23
@@ -472,16 +474,16 @@ describe('Controller: PromotionsCtrl', function() {
       });
     });
 
-    describe('removeFromStationListByIndex scope function', function() {
-      describe('hasCompleteStationObject private function', function() {
-        it('should return false if promotion.filters[$index] is undefined', function() {
+    describe('removeFromStationListByIndex scope function', function () {
+      describe('hasCompleteStationObject private function', function () {
+        it('should return false if promotion.filters[$index] is undefined', function () {
           expect(scope.removeFromStationListByIndex(0)).toBe(false);
         });
       });
 
       it(
         'should remove by index from promotion.filters, by id from repeatableStations.arrivalHas and by id from repeatableStations.departureHas',
-        function() {
+        function () {
           scope.promotion.filters = [{
             departureStation: {
               id: 5
@@ -563,18 +565,18 @@ describe('Controller: PromotionsCtrl', function() {
         });
     });
 
-    describe('disabledArrivalStations scope function', function() {
-      it('should return false if stations is passed in with departureStation undefined', function() {
+    describe('disabledArrivalStations scope function', function () {
+      it('should return false if stations is passed in with departureStation undefined', function () {
         expect(scope.disabledArrivalStations(null, {})).toBe(false);
       });
 
-      it('should return false if stations is passed in with departureStation.id undefined', function() {
+      it('should return false if stations is passed in with departureStation.id undefined', function () {
         expect(scope.disabledArrivalStations(null, {
           departureStation: {}
         })).toBe(false);
       });
 
-      it('should return false if passed in station does not contain an id', function() {
+      it('should return false if passed in station does not contain an id', function () {
         scope.repeatableStations.departureHas = [];
         scope.repeatableStations.departureHas[5] = [1, 2, 3];
         expect(scope.disabledArrivalStations({
@@ -587,7 +589,7 @@ describe('Controller: PromotionsCtrl', function() {
       });
 
       it('should return false if departureStation.id doesn not exist in repeatableStations.departureHas',
-        function() {
+        function () {
           scope.repeatableStations.departureHas = [];
           scope.repeatableStations.departureHas[5] = [1, 2, 3];
           expect(scope.disabledArrivalStations({
@@ -599,7 +601,7 @@ describe('Controller: PromotionsCtrl', function() {
           })).toBe(false);
         });
 
-      it('should return false if the station.id is not in repeatableStations.departureHas', function() {
+      it('should return false if the station.id is not in repeatableStations.departureHas', function () {
         scope.repeatableStations.departureHas = [];
         scope.repeatableStations.departureHas[5] = [1, 2, 3];
         expect(scope.disabledArrivalStations({
@@ -613,7 +615,7 @@ describe('Controller: PromotionsCtrl', function() {
 
       it(
         'should return true if the station.id of the departureStation.id is in repeatableStations.departureHas',
-        function() {
+        function () {
           scope.repeatableStations.departureHas = [];
           scope.repeatableStations.departureHas[5] = [1, 2, 3];
           expect(scope.disabledArrivalStations({
@@ -625,7 +627,7 @@ describe('Controller: PromotionsCtrl', function() {
           })).toBe(true);
         });
 
-      it('should return false if passed in station.id is same as departureStation.id', function() {
+      it('should return false if passed in station.id is same as departureStation.id', function () {
         scope.repeatableStations.departureHas = [];
         scope.repeatableStations.departureHas[5] = [1, 2, 3];
 
@@ -639,8 +641,8 @@ describe('Controller: PromotionsCtrl', function() {
       });
     });
 
-    describe('stationListChanged scope function', function() {
-      it('should set the correct station Has array items', function() {
+    describe('stationListChanged scope function', function () {
+      it('should set the correct station Has array items', function () {
         scope.promotion.filters = [{
           departureStation: {
             id: 1
@@ -668,9 +670,9 @@ describe('Controller: PromotionsCtrl', function() {
       });
     });
 
-    describe('itemCategoryChanged scope function', function() {
+    describe('itemCategoryChanged scope function', function () {
       var mockId = 432;
-      beforeEach(function() {
+      beforeEach(function () {
         scope.itemCategorySelects = [];
         scope.itemCategorySelects[5] = {
           id: mockId
@@ -679,27 +681,27 @@ describe('Controller: PromotionsCtrl', function() {
         scope.$digest();
       });
 
-      it('should make an API call', function() {
+      it('should make an API call', function () {
         expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith({
           companyId: companyId,
           categoryId: mockId
         });
       });
 
-      it('should set repeatableItemListSelectOptions index to API response', function() {
+      it('should set repeatableItemListSelectOptions index to API response', function () {
         expect(scope.repeatableItemListSelectOptions[5]).toEqual(masterItemsList.masterItems);
       });
 
-      it('should set repeatableItemListSelectOptions index to cached API response', function() {
+      it('should set repeatableItemListSelectOptions index to cached API response', function () {
         scope.itemCategoryChanged(5);
         scope.$digest();
         expect(scope.repeatableItemListSelectOptions[5]).toEqual(masterItemsList.masterItems);
       });
     });
 
-    describe('save scope function', function() {
+    describe('save scope function', function () {
 
-      beforeEach(function() {
+      beforeEach(function () {
         scope.promotionsForm = {
           $valid: true,
           QualifierType: {
@@ -715,7 +717,7 @@ describe('Controller: PromotionsCtrl', function() {
         };
       });
 
-      it('should call create with formatted payload 1', function() {
+      it('should call create with formatted payload 1', function () {
         scope.promotion = {
           promotionCode: 'test1',
           promotionName: 'test1',
@@ -840,7 +842,7 @@ describe('Controller: PromotionsCtrl', function() {
         expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload1);
       });
 
-      it('should call create with formatted payload 2', function() {
+      it('should call create with formatted payload 2', function () {
         scope.promotion = {
           promotionCode: 'test2',
           promotionName: 'test2',
@@ -916,7 +918,7 @@ describe('Controller: PromotionsCtrl', function() {
         expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload2);
       });
 
-      it('should call create with formatted payload 3', function() {
+      it('should call create with formatted payload 3', function () {
         scope.promotion = {
           promotionCode: 'test3',
           promotionName: 'test3',
@@ -992,7 +994,7 @@ describe('Controller: PromotionsCtrl', function() {
         expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload3);
       });
 
-      it('should call create with formatted payload 4', function() {
+      it('should call create with formatted payload 4', function () {
         scope.promotion = {
           promotionCode: 'test4',
           promotionName: 'test4',
@@ -1077,7 +1079,7 @@ describe('Controller: PromotionsCtrl', function() {
         expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload4);
       });
 
-      it('should call create with formatted payload 5', function() {
+      it('should call create with formatted payload 5', function () {
         scope.promotion = {
           promotionCode: 'test5',
           promotionName: 'test5',
@@ -1153,7 +1155,7 @@ describe('Controller: PromotionsCtrl', function() {
         expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload5);
       });
 
-      it('should call create with formatted payload 6', function() {
+      it('should call create with formatted payload 6', function () {
         scope.promotion = {
           promotionCode: 'test5',
           promotionName: 'test5',
@@ -1230,8 +1232,8 @@ describe('Controller: PromotionsCtrl', function() {
       });
     });
 
-    describe('foobar state', function() {
-      beforeEach(inject(function($controller) {
+    describe('foobar state', function () {
+      beforeEach(inject(function ($controller) {
         routeParams = {
           state: 'foobar'
         };
@@ -1245,13 +1247,13 @@ describe('Controller: PromotionsCtrl', function() {
         };
       }));
 
-      it('should return false if form.$invalid', function() {
+      it('should return false if form.$invalid', function () {
         expect(scope.save()).toBe(false);
       });
     });
 
-    describe('edit promotion', function() {
-      beforeEach(inject(function($controller) {
+    describe('edit promotion', function () {
+      beforeEach(inject(function ($controller) {
         routeParams = {
           state: 'edit',
           id: 253
@@ -1276,32 +1278,36 @@ describe('Controller: PromotionsCtrl', function() {
         };
       }));
 
-      it('should call get promotion API', function() {
+      it('should call get promotion API', function () {
         expect(promotionsFactory.getPromotion).toHaveBeenCalledWith(253);
       });
 
-      it('should call promotionsFactory.getCompanyDiscountsCoupon', function() {
+      it('should call promotionsFactory.getCompanyDiscountsCoupon', function () {
         expect(promotionsFactory.getCompanyDiscountsCoupon).toHaveBeenCalled();
       });
 
-      it('should call promotionsFactory.getCompanyDiscountsVoucher', function() {
+      it('should call promotionsFactory.getCompanyDiscountsVoucher', function () {
         expect(promotionsFactory.getCompanyDiscountsVoucher).toHaveBeenCalled();
       });
 
-      it('should have an array of companyDiscountsCoupon', function() {
+      it('should set isDisabled to true since date is before today', function () {
+        expect(scope.isDisabled).toBeTruthy();
+      });
+
+      it('should have an array of companyDiscountsCoupon', function () {
         expect(scope.selectOptions.companyDiscountsCoupon).toEqual(jasmine.any(Array));
       });
 
-      it('should have an array of companyDiscountsVoucher', function() {
+      it('should have an array of companyDiscountsVoucher', function () {
         expect(scope.selectOptions.companyDiscountsVoucher).toEqual(jasmine.any(Array));
       });
 
-      it('should call save promotion API', function() {
+      it('should call save promotion API', function () {
         scope.save();
         expect(promotionsFactory.savePromotion).toHaveBeenCalled();
       });
 
-      it('should return false if form.$invalid', function() {
+      it('should return false if form.$invalid', function () {
         scope.promotionsForm = {
           $invalid: true,
           $valid: false,
@@ -1309,23 +1315,25 @@ describe('Controller: PromotionsCtrl', function() {
             $modelValue: {
               id: null
             },
-            $setValidity: function() {}
+            $setValidity: function () {
+            }
           },
 
           BenefitType: {
             $modelValue: {
               id: null
             },
-            $setValidity: function() {}
+            $setValidity: function () {
+            }
           }
         };
         expect(scope.save()).toBe(false);
       });
     });
 
-    describe('save scope function as scope.isDisabled', function() {
+    describe('save scope function as scope.isDisabled', function () {
       var payload;
-      beforeEach(inject(function($controller) {
+      beforeEach(inject(function ($controller) {
         routeParams = {
           state: 'edit',
           id: 253
@@ -1394,15 +1402,15 @@ describe('Controller: PromotionsCtrl', function() {
         };
       }));
 
-      it('should call edit with formatted endDate only', function() {
+      it('should call edit with formatted endDate only', function () {
         scope.save();
         expect(promotionsFactory.savePromotion).toHaveBeenCalledWith(253, payload);
       });
 
     });
 
-    describe('view promotion', function() {
-      beforeEach(inject(function($controller) {
+    describe('view promotion', function () {
+      beforeEach(inject(function ($controller) {
         routeParams = {
           state: 'view',
           id: 253
@@ -1414,43 +1422,43 @@ describe('Controller: PromotionsCtrl', function() {
         scope.$digest();
       }));
 
-      it('should call get promotion API', function() {
+      it('should call get promotion API', function () {
         expect(promotionsFactory.getPromotion).toHaveBeenCalledWith(253);
       });
 
-      it('should set readOnly to true', function() {
+      it('should set readOnly to true', function () {
         expect(scope.readOnly).toBe(true);
       });
 
-      it('should set isDisabled to false', function() {
+      it('should set isDisabled to false', function () {
         expect(scope.isDisabled).toBe(false);
       });
 
-      it('should return false: addBlankObjectToArray', function() {
+      it('should return false: addBlankObjectToArray', function () {
         expect(scope.addBlankObjectToArray([])).toBe(false);
       });
 
-      it('should return false: save', function() {
+      it('should return false: save', function () {
         expect(scope.save()).toBe(false);
       });
 
-      it('should set scope.promotion.id', function() {
+      it('should set scope.promotion.id', function () {
         expect(scope.promotion.id).toEqual(253);
       });
     });
 
-    describe('showLowestPricedItem', function() {
-      it('should be false if the benefitDiscountApply is Retail Item', function() {
+    describe('showLowestPricedItem', function () {
+      it('should be false if the benefitDiscountApply is Retail Item', function () {
         scope.promotion.benefitDiscountApply.name = 'Retail Item';
         expect(scope.showLowestPricedItem()).toBeFalsy();
       });
 
-      it('should be true if the benefitDiscountApply is cart', function() {
+      it('should be true if the benefitDiscountApply is cart', function () {
         scope.promotion.benefitDiscountApply.name = 'Cart';
         expect(scope.showLowestPricedItem()).toBeTruthy();
       });
 
-      it('should be false if the benefitDiscountApply is blank/undefined', function() {
+      it('should be false if the benefitDiscountApply is blank/undefined', function () {
         scope.promotion.benefitDiscountApply.name = undefined;
         expect(scope.showLowestPricedItem()).toBeFalsy();
       });
