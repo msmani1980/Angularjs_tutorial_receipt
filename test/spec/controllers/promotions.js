@@ -1290,8 +1290,8 @@ describe('Controller: PromotionsCtrl', function () {
         expect(promotionsFactory.getCompanyDiscountsVoucher).toHaveBeenCalled();
       });
 
-      it('should set isDisabled to true since date is before today', function () {
-        expect(scope.isDisabled).toBeTruthy();
+      it('should set isDisabled to false', function () {
+        expect(scope.isDisabled).toBeFalsy();
       });
 
       it('should have an array of companyDiscountsCoupon', function () {
