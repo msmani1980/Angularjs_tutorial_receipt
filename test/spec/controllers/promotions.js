@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: PromotionsCtrl', function () {
+describe('Controller: PromotionsCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/benefit-types.json'));
