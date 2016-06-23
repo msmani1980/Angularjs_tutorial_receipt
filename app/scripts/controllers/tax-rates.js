@@ -63,10 +63,11 @@ angular.module('ts5App')
 
     this.setStationsList = function(dataFromAPI) {
       var response = angular.copy(dataFromAPI.response);
-      $this.setCountriesList(response);
-      $scope.stationsList = response;
-      $scope.masterStationsList = response;
-      $scope.stationsListSearch = response;
+      var distinctStations = $filter('unique')(response, 'stationId');
+      $this.setCountriesList(distinctStations);
+      $scope.stationsList = distinctStations;
+      $scope.masterStationsList = distinctStations;
+      $scope.stationsListSearch = distinctStations;
     };
 
     this.setCurrenciesList = function(dataFromAPI) {
@@ -525,7 +526,7 @@ angular.module('ts5App')
         endDate: dateUtility.formatDateForAPI(taxRate.endDate),
         companyTaxTypeId: taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId,
         companyTaxRateStations: $this.createStationsPayload(taxRate),
-        companyCurrencyId: $scope.isTaxRateTypePercentage(taxRate) ? null : taxRate.companyCurrencyId
+        companyCurrencyId: $scope.isTaxRateTypePercentage(taxRate) ? null : taxRate.currency.id
       };
       $this.makeEditPromises(payload);
     };
@@ -843,7 +844,7 @@ angular.module('ts5App')
 
     $scope.shouldTaxRateCurrencyBeClear = function(taxRate) {
       if ($scope.isTaxRateTypePercentage(taxRate) && angular.isDefined(taxRate.currency)) {
-        taxRate.currency = '';
+        taxRate.currency = null;
       }
     };
 

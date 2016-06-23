@@ -12,7 +12,7 @@ angular.module('ts5App')
     lodash, messageService, $location) {
 
     function createNewDiscountObject (dscntTypeName) {
-      var newDiscount = { 
+      var newDiscount = {
         cashbagId:$scope.cashBag.id,
         eposCashBagsId:$scope.cashBag.eposCashBagsId,
         storeInstanceId:$scope.cashBag.storeInstanceId,
@@ -78,7 +78,7 @@ angular.module('ts5App')
     };
 
     $scope.onChangeDiscount  = function(manualDiscountObj) {
-      manualDiscountObj.discountId = manualDiscountObj.discount.id; 
+      manualDiscountObj.discountId = manualDiscountObj.discount.id;
       return manualDiscountObj;
     };
 
@@ -89,7 +89,7 @@ angular.module('ts5App')
     };
 
     function getTotalAmount (discountList) {
-      var runningSum = 0;  
+      var runningSum = 0;
       angular.forEach(discountList, function (discount) {
         var baseCurrencyAmount = discount.baseCurrencyAmount || 0;
         runningSum += parseFloat(baseCurrencyAmount);
@@ -123,19 +123,20 @@ angular.module('ts5App')
       сurrencyAmount = discountObject.amount * discountObject.quantity;
       return parseFloat(сurrencyAmount).toFixed(2);
     }
-    
+
     function calculateBaseCurrencyAmount (discountObject) {
       var baseCurrencyAmount = 0.00;
       if (discountObject.exchangeRate.bankExchangeRate === null) {
         var paperExchangeRate = discountObject.exchangeRate.paperExchangeRate;
         var coinExchangeRate = discountObject.exchangeRate.coinExchangeRate;
         if (!paperExchangeRate && !coinExchangeRate) {
-          return baseCurrencyAmount.toFixed(2); 
+          return baseCurrencyAmount.toFixed(2);
         }
 
         var splitAmounts = (discountObject.currentCurrencyAmount).split('.');
         var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
-        var convertedCoinAmount = parseFloat(splitAmounts[1]) / coinExchangeRate;
+        var convertedCoinAmount = (angular.isDefined(splitAmounts[1])) ? parseFloat(splitAmounts[1]) / coinExchangeRate : 0;
+
         baseCurrencyAmount = convertedPaperAmount + (convertedCoinAmount / 100);
       } else {
         var exchangeRate = discountObject.exchangeRate.bankExchangeRate;
@@ -160,8 +161,7 @@ angular.module('ts5App')
       return baseCurrencyAmount.toFixed(2);
     }
 
-    function setVerifiedData(verifiedDataFromAPI) {
-      $scope.isVerified = (!!verifiedDataFromAPI.discountVerifiedOn) || false;
+    function setVerifiedInfo (verifiedDataFromAPI) {
       if (!$scope.isVerified) {
         $scope.verifiedInfo = {};
         return;
@@ -172,6 +172,12 @@ angular.module('ts5App')
         verifiedBy: (verifiedDataFromAPI.discountVerifiedBy) ? verifiedDataFromAPI.discountVerifiedBy.firstName + ' ' + verifiedDataFromAPI.discountVerifiedBy.lastName : 'Unknown User',
         verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
       };
+    }
+
+    function setVerifiedData(verifiedDataFromAPI) {
+      $scope.isVerified = (!!verifiedDataFromAPI.discountVerifiedOn) || false;
+      $scope.isCashBagConfirmed = (!!verifiedDataFromAPI.verificationConfirmedOn) || false;
+      setVerifiedInfo(verifiedDataFromAPI);
     }
 
     function verifyToggleSuccess(dataFromAPI) {
@@ -319,7 +325,7 @@ angular.module('ts5App')
       var verifiedData = angular.copy(responseCollection[7]);
 
       $scope.dailyExchangeRates =  dailyExchangeRate;
-      $scope.cashBagDiscountsList = allDiscountsTypeList; 
+      $scope.cashBagDiscountsList = allDiscountsTypeList;
       $scope.companyDiscountsList = {
         voucher: voucherList,
         coupon: couponList,

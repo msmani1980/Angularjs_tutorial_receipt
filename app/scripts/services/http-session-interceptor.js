@@ -17,12 +17,10 @@ angular.module('ts5App')
     };
 
     var notrsvrPages = [
-        '/cash-bag-list/*',
         '/cash-bag-submission/*',
-        '/cash-bag/*',
-        '/category-list/*',
-        '/category/*',
-        '/change-password/*', 
+        '/cash-bag$/*',
+        '/cash-bag/create',
+        '/change-password/*',
         '/commission-data-table/*',
         '/commission-data/*',
         '/company-create/*',
@@ -41,13 +39,12 @@ angular.module('ts5App')
         '/employee-message/*',
         '/employee-messages/*',
         '/exchange-rates/*',
-        '/forgot-username-password/*', 
+        '/forgot-username-password/*',
         '/global-reason-code/*',
         '/item-copy/*',
         '/item-create/*',
         '/item-edit/*',
         '/item-import/*',
-        '/item-list/*',
         '/item-view/*',
         '/lmp-delivery-note/*',
         '/lmp-locations-list/*',
@@ -58,7 +55,7 @@ angular.module('ts5App')
         '/manual-epos-dashboard/*',
         '/manual-epos-discount/*',
         '/manual-epos-items/*',
-        '/manual-store-instance/*', 
+        '/manual-store-instance/*',
         '/menu-list/*',
         '/menu-relationship-create/*',
         '/menu-relationship-edit/*',
@@ -74,7 +71,6 @@ angular.module('ts5App')
         '/stock-dashboard/*',
         '/stock-owner-item-create/*',
         '/stock-owner-item-edit/*',
-        '/stock-owner-item-list/*',
         '/stock-owner-item-view/*',
         '/stock-take-report/*',
         '/stock-take-review/*',
@@ -98,7 +94,6 @@ angular.module('ts5App')
     ];
 
     var legacyApis = [
-        '/rsvr/api/company-preferences',
         '/rsvr/api/companies/[0-9]*/relationships',
         'rsvr/api/records/store-status',
         '/rsvr/api/caterer-stations',
@@ -108,16 +103,24 @@ angular.module('ts5App')
         '/rsvr/api/units',
         '/rsvr/api/cash-bags/[0-9]*$',
         '/rsvr/api/promotions/[0-9]*$',
-        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9]*$',
+        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9][^11]*$',
         '/rsvr/api/company-currency-globals',
-        '/rsvr/api/promotions'
-
+        '/rsvr/api/promotions',
+        '/rsvr/api/companies/stores/[0-9]*',
+        '/rsvr/api/records/company-types'
     ];
 
     var onlyRsvrApis = [
+      '/rsvr/api/company-preferences',
       '/rsvr/api/dailyexchangerate',
+      '/rsvr/api/company-formats',
       '/rsvr/api/companies/[0-9]*/stations',
-      '/rsvr/api/store-instances/[0-9]*/calculated-inbounds'
+      '/rsvr/api/store-instances/[0-9]*/calculated-inbounds',
+      '/rsvr/api/cashbags/[0-9]*',
+      '/rsvr/api/cashbag/[0-9]+/cash',
+      '/rsvr/api/cashbags/cash/',
+      '/rsvr/api/cashbag-[a-z]+(/[0-9]*)?',
+      '/rsvr/api/dispatch/store-instances/[0-9]*/status/11'
     ];
 
     function responseError(response) {
@@ -151,7 +154,7 @@ angular.module('ts5App')
 
     var shouldReplaceUrl = function(config) {
       var hasRestParam = $location.absUrl().indexOf('api=rest') > 0;
-      
+
       if (hasRestParam) {
         return false;
       }
@@ -159,7 +162,7 @@ angular.module('ts5App')
       if (isOnlyRsvrAPI(config.url)) {
         return false;
       }
-      
+
       if (isPageWithLegacyAPIs() || isLegacyAPI(config)) {
         return true;
       }

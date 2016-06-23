@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 
 /**
  * @ngdoc service
@@ -63,7 +63,7 @@ angular.module('ts5App').service('storeInstancePackingFactory',
     }
 
     function getThresholdList(featureCode) {
-      return featureThresholdsService.getThresholdList(featureCode);
+      return featureThresholdsService.getThresholdList(featureCode, {});
     }
 
     function getCompanyPreferences(payload, companyId) {

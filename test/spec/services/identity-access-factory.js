@@ -5,6 +5,7 @@ describe('Service: identityAccessFactory', function() {
   beforeEach(module('ts5App'));
   beforeEach(module('served/authorize-user.json'));
   beforeEach(module('served/company.json'));
+  beforeEach(module('served/company-formats.json'));
   beforeEach(module('served/company-types.json'));
   beforeEach(module('served/all-user-companies.json'));
 
@@ -14,10 +15,13 @@ describe('Service: identityAccessFactory', function() {
   var companiesFactory;
   var companyFactory;
   var eulaService;
+  var companyFormatService;
   var getCompanyDeferred;
   var getCompanyTypesDeferred;
   var authorizeUserDeferred;
   var getUserCompaniesDeferred;
+  var getCompanyFormatListDeferred;
+  var getCompanyFormatListJSON;
   var getUserCompaniesJSON;
   var authorizeUserJSON;
   var companyResponseJSON;
@@ -31,12 +35,14 @@ describe('Service: identityAccessFactory', function() {
     companyTypesJSON = $injector.get('servedCompanyTypes');
     authorizeUserJSON = $injector.get('servedAuthorizeUser');
     getUserCompaniesJSON = $injector.get('servedAllUserCompanies');
+    getCompanyFormatListJSON = $injector.get('servedCompanyFormats');
 
     localStorage = $injector.get('$localStorage');
     identityAccessService = $injector.get('identityAccessService');
     companiesFactory = $injector.get('companiesFactory');
     companyFactory = $injector.get('companyFactory');
     eulaService = $injector.get('eulaService');
+    companyFormatService = $injector.get('companyFormatService');
 
     scope = $rootScope;
     location = $location;
@@ -53,6 +59,10 @@ describe('Service: identityAccessFactory', function() {
     getCompanyTypesDeferred = $q.defer();
     getCompanyTypesDeferred.resolve(companyTypesJSON);
     spyOn(companyFactory, 'getCompanyTypes').and.returnValue(getCompanyTypesDeferred.promise);
+
+    getCompanyFormatListDeferred = $q.defer();
+    getCompanyFormatListDeferred.resolve(getCompanyFormatListJSON);
+    spyOn(companyFormatService, 'getCompanyFormatList').and.returnValue(getCompanyFormatListDeferred.promise);
 
     getUserCompaniesDeferred = $q.defer();
     getUserCompaniesDeferred.resolve(getUserCompaniesJSON);
@@ -106,9 +116,26 @@ describe('Service: identityAccessFactory', function() {
       expect(identityAccessService.getUserCompanies).toHaveBeenCalled();
     });
 
+    it('should call companyFormatService.getCompanyFormatList API', function() {
+      scope.$digest();
+      expect(companyFormatService.getCompanyFormatList).toHaveBeenCalled();
+    });
+
     it('should have user company list on the session object', function() {
       scope.$digest();
       expect(identityAccessFactory.getSessionObject().userCompanies.length).toBeGreaterThan(0);
+    });
+
+    describe('company date format list', function() {
+      it('should have the list in the session object', function() {
+        scope.$digest();
+        expect(identityAccessFactory.getSessionObject().companyFormatList.DATE).toBeDefined();
+      });
+
+      it('should have DATE element', function() {
+        scope.$digest();
+        expect(identityAccessFactory.getSessionObject().companyFormatList.DATE.toUpperCase()).toBe('MM/DD/YYYY');
+      });
     });
 
   });
@@ -227,6 +254,7 @@ describe('Service: identityAccessFactory', function() {
       spyOn(eulaService, 'showEULAConfirmation');
       identityAccessFactory.checkForEULA(sessionObject);
     });
+
     it('should call login', function() {
       expect(eulaService.showEULAConfirmation).toHaveBeenCalled();
     });

@@ -247,7 +247,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getStoresList = function() {
-      var query = this.getFormattedDatesPayload();
+      var query = $this.isActionState('dispatch') ? this.getFormattedDatesPayload() : {};
       query.readyToUse = this.determineReadyToUse();
 
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
@@ -424,7 +424,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setScheduleDate = function(apiData) {
       if (apiData && apiData.scheduleDate) {
-        return dateUtility.formatDate(apiData.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
+        return dateUtility.formatDateForApp(apiData.scheduleDate);
       }
 
       return null;

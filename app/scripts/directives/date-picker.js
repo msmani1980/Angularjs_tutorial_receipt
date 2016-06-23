@@ -10,17 +10,18 @@
  * # datePicker
  */
 angular.module('ts5App')
-  .directive('datePicker', function (dateUtility) {
+  .directive('datePicker', function (dateUtility, companyFormatUtility) {
 
     var datePickerOptions = {
       orientation: 'auto top',
-      format: 'mm/dd/yyyy',
       autoclose: true,
       todayHighlight: true
     };
 
     var initializeDatePicker = function ($scope, $element) {
       var options = angular.extend({}, datePickerOptions);
+      options.format = companyFormatUtility.getDateFormat().toLowerCase();
+      $scope.placeholder = options.format;
 
       if ($scope.disablePast) {
         options.startDate = '+1d';

@@ -20,6 +20,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/ch-cash-bag.json'));
   beforeEach(module('served/carrier-instance-list.json'));
   beforeEach(module('served/menus.json'));
+  beforeEach(module('served/cash-bag-verifications.json'));
 
 
   var scope;
@@ -68,6 +69,11 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var menuListDeferred;
   var menuListJSON;
 
+  var manualDataDeferred;
+  var manualDataJSON;
+  var cashBagVerificationsDeferred;
+  var cashBagVerificationsJSON;
+
   var routeParams;
   var dateUtility;
   var lodash;
@@ -75,7 +81,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
     inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_,
                      _servedCountTypes_, _servedStoreInstanceItemList_, _servedPromotion_, _servedItem_,
-                     _servedStoreStatus_, _servedStockItemCounts_, _servedChCashBag_, _servedCarrierInstanceList_, _servedMenus_) {
+                     _servedStoreStatus_, _servedStockItemCounts_, _servedChCashBag_, _servedCarrierInstanceList_, _servedMenus_,
+                     _servedCashBagVerifications_) {
       storeInstanceJSON = _servedStoreInstance_;
       getPromotionTotalsJSON = _servedPromotionTotals_;
       getStockTotalsJSON = _servedStockTotals_;
@@ -89,6 +96,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       cashHandlerCashBagJSON = _servedChCashBag_;
       carrierInstancesJSON = _servedCarrierInstanceList_;
       menuListJSON = _servedMenus_;
+      cashBagVerificationsJSON = _servedCashBagVerifications_;
     });
 
     inject(function (_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
@@ -189,9 +197,24 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     spyOn(reconciliationFactory, 'getStockItemCounts').and.returnValue(stockItemCountsDeferred.promise);
     spyOn(reconciliationFactory, 'saveCashBagCurrency').and.returnValue(cashHandlerCashBagJSON.promise);
 
+    manualDataJSON = {response: [
+      { cashbagId: 2158, convertedAmount: 10.0, totalConvertedAmount: 20.0, quantity: 1, itemTypeId: 2, itemMaster: {itemName: 'testItem1'}, promotion: {promotionName: 'testPromotion1'}},
+      { cashbagId: 2158, convertedAmount: 11.0, totalConvertedAmount: 22.0, quantity: 2, itemTypeId: 4, itemMaster: {itemName: 'testItem2'}, promotion: {promotionName: 'testPromotion2'}},
+      { cashbagId: 2630, convertedAmount: 900.0, totalConvertedAmount: 900.0, quantity: 1, itemTypeId: 4, itemMaster: {itemName: 'testItem3'}, promotion: {promotionName: 'testPromotion3'}}  // mock invalid data for unsubmitted cash bag
+    ]};
+
+    manualDataDeferred = $q.defer();
+    manualDataDeferred.resolve(manualDataJSON);
+    spyOn(reconciliationFactory, 'getCashBagManualData').and.returnValue(manualDataDeferred.promise);
+
+    cashBagVerificationsDeferred = $q.defer();
+    cashBagVerificationsDeferred.resolve(cashBagVerificationsJSON);
+    spyOn(reconciliationFactory, 'getCashBagVerifications').and.returnValue(cashBagVerificationsDeferred.promise);
+
     routeParams = {
       storeInstanceId: 'fakeStoreInstanceId'
     };
+
     ReconciliationDiscrepancyDetail = controller('ReconciliationDiscrepancyDetail', {
       $scope: scope,
       $routeParams: routeParams
@@ -200,8 +223,91 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   describe('init', function () {
 
-    it('should call getStoreInstanceDetails', function () {
-      expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalledWith(routeParams.storeInstanceId);
+    describe('initial API calls', function () {
+      var expectedPayload = {
+        storeInstanceId: 'fakeStoreInstanceId'
+      };
+
+      it('should call getStoreInstanceDetails', function () {
+        expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalledWith(routeParams.storeInstanceId);
+      });
+
+      it('should call get cash bag verifications', function () {
+        expect(reconciliationFactory.getCashBagVerifications).toHaveBeenCalledWith(routeParams.storeInstanceId);
+      });
+
+      it('should call get item types', function () {
+        expect(reconciliationFactory.getItemTypesList).toHaveBeenCalled();
+      });
+
+      it('should call get manual cash data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('cash', expectedPayload);
+      });
+
+      it('should call get manual credit data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('credit-cards', expectedPayload);
+      });
+
+      it('should call get manual item data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('items', expectedPayload);
+      });
+
+      it('should call get manual discount data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('discounts', expectedPayload);
+      });
+
+      it('should call get manual promotion data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('promotions', expectedPayload);
+      });
+
+      it('should save store instance to scope', function () {
+        scope.$digest();
+        expect(scope.storeInstance).toBeDefined();
+      });
+
+      it('should save cash bag verifications to scope', function () {
+        scope.$digest();
+        expect(scope.cashBagList).toBeDefined();
+      });
+
+      it('should set cash bag submitted list', function () {
+        scope.$digest();
+        expect(scope.submittedCashBags).toBeDefined();
+        var submittedCashBag = lodash.findWhere(scope.cashBagList, {submitted: true});
+        expect(scope.submittedCashBags.indexOf(submittedCashBag.id) >= 0).toEqual(true);
+      });
+
+      describe('manual data saving', function () {
+        it('should attach manual data to controller', function () {
+          scope.$digest();
+          expect(ReconciliationDiscrepancyDetail.manualData).toBeDefined();
+        });
+
+        it('should populate cash, credit, discount, and promotion data as arrays', function () {
+          scope.$digest();
+
+          expect(ReconciliationDiscrepancyDetail.manualData.cash).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.cash.length).toEqual(3);
+          expect(ReconciliationDiscrepancyDetail.manualData.credit).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.credit.length).toEqual(3);
+          expect(ReconciliationDiscrepancyDetail.manualData.promotion).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.promotion.length).toEqual(3);
+          expect(ReconciliationDiscrepancyDetail.manualData.discount).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.discount.length).toEqual(3);
+        });
+
+        it('should populate item data and filter by item type', function () {
+          scope.$digest();
+
+          expect(ReconciliationDiscrepancyDetail.manualData.virtual).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.virtual.length).toEqual(1);
+          expect(ReconciliationDiscrepancyDetail.manualData.virtual[0].convertedAmount).toEqual(10.0);
+
+          expect(ReconciliationDiscrepancyDetail.manualData.voucher).toBeDefined();
+          expect(ReconciliationDiscrepancyDetail.manualData.voucher.length).toEqual(2);
+          expect(ReconciliationDiscrepancyDetail.manualData.voucher[0].convertedAmount).toEqual(11.0);
+        });
+      });
     });
 
     describe('dependencies', function () {
@@ -211,10 +317,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       it('should localize date to mm/dd/yyy', function () {
         expect(scope.storeInstance.scheduleDate).toBe(dateUtility.formatDateForApp(storeInstanceJSON.scheduleDate));
-      });
-
-      it('should call getItemTypesList', function () {
-        expect(reconciliationFactory.getItemTypesList).toHaveBeenCalled();
       });
 
       it('should call getCountTypes', function () {
@@ -231,10 +333,48 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       it('should format promotionTotals to consolidate duplicates', function () {
         var promotions = lodash.filter(scope.stockTotals.stockItems, { itemTypeName: 'Promotion' });
-        expect(promotions.length).toEqual(2);
+        expect(promotions.length).toEqual(5);
         expect(promotions[0].eposQuantity).toEqual(1);
         expect(promotions[1].eposQuantity).toEqual(2);
         expect(promotions[1].eposTotal).toEqual('0.76');
+      });
+
+      it('should add cash and credit manual data to gross value of epos sales', function () {
+        var salesValue = scope.stockTotals.totalRetail.totalEPOS;
+        var expectedSalesValue = 42; // (10 + 11)*2 from  manualDataJSON mock, duplicated for cash and credit
+
+        expect(parseFloat(salesValue) >= expectedSalesValue).toEqual(true);
+      });
+
+      it('should add virtual item manual data to voucher item totals', function () {
+        var virtualItemTotal = scope.stockTotals.totalVirtual.totalEPOS;
+        var expectedVirtualTotal = 10; // 11 from testItem1 in manualDataJSON mock
+
+        expect(parseFloat(virtualItemTotal) >= expectedVirtualTotal).toEqual(true);
+      });
+
+      it('should add voucher item manual data to voucher item totals', function () {
+        var voucherItemTotal = scope.stockTotals.totalVoucher.totalEPOS;
+        var expectedVoucherTotal = 11; // 11 from testItem2 in manualDataJSON mock
+
+        expect(parseFloat(voucherItemTotal) >= expectedVoucherTotal).toEqual(true);
+      });
+
+      it('should add promotion manual data to promotion totals', function () {
+        var promotionTotal = scope.stockTotals.totalPromotion.totalEPOS;
+        var expectedPromotionTotal = 42; // 20 + 22, from manualDataJSON mock
+        expect(parseFloat(promotionTotal) >= expectedPromotionTotal).toEqual(true);
+      });
+
+      it('should add discount, credit, and cash manual data to total revenue @ CH exchange rate', function () {
+        var expectedManualTotal = 21 + 21 + 21; // 21 total for cash, credit, discount
+        var totalRevenueTotal = scope.totalRevenue.cashHandler;
+        expect(parseFloat(totalRevenueTotal) >= expectedManualTotal).toEqual(true);
+      });
+
+      it('should not add submitted cash bag data to total revenue', function () {
+        var totalRevenueTotal = scope.totalRevenue.cashHandler;
+        expect(parseFloat(totalRevenueTotal) < 900).toEqual(true);  // should not include 900 value from manualDataJSON
       });
 
       it('should call getCHRevenue', function () {
@@ -674,7 +814,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     it('should show the modal', function () {
       scope.$digest();
       scope.showModal('Virtual');
-      expect(scope.modalTotal).toBe('0.00');
+      expect(scope.modalTotal).toBe('10.00');
     });
 
     it('should not add modalMainTitle to scope', function () {
@@ -836,7 +976,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         };
         scope.confirmAction('Discrepancies', 'Unconfirm');
         scope.performAction('Discrepancies');
-        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith('1', '9');
+        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith('1', '9', false);
       });
 
     });

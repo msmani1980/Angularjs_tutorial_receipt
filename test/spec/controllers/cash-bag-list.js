@@ -153,7 +153,7 @@ describe('Controller: CashBagListCtrl', function() {
       it('should call get CashBagList with params', function() {
         scope.loadCashBagList();
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
-          isDelete: 'false',
+          isDelete: false,
           limit: 100,
           offset: 0
         });
@@ -167,7 +167,7 @@ describe('Controller: CashBagListCtrl', function() {
         scope.searchCashBag();
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
           cashBagNumber: testCashBagNumber,
-          isDelete: 'false',
+          isDelete: false,
           limit: 100,
           offset: 0
         });
@@ -181,7 +181,7 @@ describe('Controller: CashBagListCtrl', function() {
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
           startDate: '20150620',
           endDate: '20150620',
-          isDelete: 'false',
+          isDelete: false,
           limit: 100,
           offset: 0
         });
@@ -195,7 +195,7 @@ describe('Controller: CashBagListCtrl', function() {
         scope.searchCashBag();
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {
           cashBagNumber: '234',
-          isDelete: 'false',
+          isDelete: false,
           limit: 100,
           offset: 0
         });
@@ -355,7 +355,7 @@ describe('Controller: CashBagListCtrl', function() {
       var testCashBag = {};
       it('should return true if cash bag has not been submitted', function() {
         testCashBag.isSubmitted = false;
-        testCashBag.isDelete = 'false';
+        testCashBag.isDelete = false;
         expect(scope.isCashBagEditable(testCashBag)).toEqual(true);
         testCashBag.isSubmitted = true;
         expect(scope.isCashBagEditable(testCashBag)).toEqual(false);
@@ -363,9 +363,9 @@ describe('Controller: CashBagListCtrl', function() {
 
       it('should return true if cash bag has not been deleted', function() {
         testCashBag.isSubmitted = false;
-        testCashBag.isDelete = 'false';
+        testCashBag.isDelete = false;
         expect(scope.isCashBagEditable(testCashBag)).toEqual(true);
-        testCashBag.isDelete = 'true';
+        testCashBag.isDelete = true;
         expect(scope.isCashBagEditable(testCashBag)).toEqual(false);
       });
     });

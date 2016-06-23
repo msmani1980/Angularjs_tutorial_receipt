@@ -30,11 +30,11 @@ angular.module('ts5App')
     function transformResponse(data) {
       data = angular.fromJson(data);
       if (data && data.startDate) {
-        data.startDate = dateUtility.formatDate(data.startDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
+        data.startDate = dateUtility.formatDateForApp(data.startDate);
       }
 
       if (data && data.endDate) {
-        data.endDate = dateUtility.formatDate(data.endDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
+        data.endDate = dateUtility.formatDateForApp(data.endDate);
       }
 
       return data;

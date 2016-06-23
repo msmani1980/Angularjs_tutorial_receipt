@@ -234,10 +234,24 @@ describe('Controller: CashBagCtrl', function() {
       });
 
       it('should call cashBagFactory createCashBag', function() {
-        var expectedPayload = angular.copy(scope.cashBag);
-        delete expectedPayload.storeNumber;
+        var payload = angular.copy(scope.cashBag);
+        payload.scheduleDate='20150930';
+        delete payload.storeNumber;
+        angular.forEach(payload.cashBagCurrencies, function(cashBagCurrency) {
+          delete cashBagCurrency.currencyCode;
+          delete cashBagCurrency.bankAmount;
+          delete cashBagCurrency.flightAmount;
+          delete cashBagCurrency.paperExchangeRate;
+          delete cashBagCurrency.coinExchangeRate;
+          delete cashBagCurrency.bankExchangeRate;
+        });
+
+        var expectedPayload = {
+          cashBag: payload
+        };
+
         scope.formSave(scope.cashBag);
-        expect(cashBagFactory.createCashBag).toHaveBeenCalled();
+        expect(cashBagFactory.createCashBag).toHaveBeenCalledWith(expectedPayload);
       });
 
       it('should save bank ref number to localStorage', function() {

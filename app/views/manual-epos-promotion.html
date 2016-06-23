@@ -23,34 +23,29 @@
     <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by {{ verifiedInfo.verifiedBy }} on {{ verifiedInfo.verifiedTimestamp }}</div>
     <div class="panel panel-default">
       <div class="panel-body">
-      
-      
         <div class="row">
-            <div class="col-xs-4 col-sm-2">
-            <b>Operating Currency</b>
-        </div>
-        <div class="form-group">
-            <div class="col-xs-4 col-sm-2">
-                <ui-select ng-model="selectedCurrency.currency" theme="bootstrap" reset-search-input="false" on-select="onChangeCurrency()" style="min-width: 200px;" ng-disabled="isVerified || disableAll">
-                    <ui-select-match placeholder="Select Currency ..."> {{$select.selected.code}} </ui-select-match>
-                    <ui-select-choices repeat="currency in currencyList"> <div ng-bind-html="currency.code | highlight: $select.search"></div></ui-select-choices>
-                </ui-select>
+          <div class="col-xs-12 col-sm-12">
+            <div class="input-group">
+              <span class="input-group-addon"><span class="fa fa-money"></span></span>
+              <ui-select ng-model="selectedCurrency.currency" theme="bootstrap" reset-search-input="false" on-select="onChangeCurrency()" ng-disabled="isVerified || disableAll">
+                <ui-select-match placeholder="Select Operating Currency ..."> {{$select.selected.code}} - {{$select.selected.name}} </ui-select-match>
+                <ui-select-choices repeat="currency in currencyList"> <div ng-bind-html="currency.code | highlight: $select.search"></div></ui-select-choices>
+              </ui-select>
             </div>
+          </div>
         </div>
-        </div>
-
-        <div class="panel-divider"></div>
-
+        <br>
         <div class="row">
             <div class="col-xs-12 col-sm-12">
                 <div class="input-group">
-                    <span class="input-group-addon" id="promotions-filter">Filter</span>
-                    <input type="text" class="form-control" ng-model="filter.promotions" placeholder="Select Promotion to filter by ..." aria-describedby="promotions-filter" ng-disabled="isVerified || disableAll"/>
+                    <span class="input-group-addon" id="promotions-filter"><span class="fa fa-filter"></span></span>
+                    <input type="text" class="form-control" ng-model="filter.promotions" placeholder="Select Promotion to filter by ..." aria-describedby="promotions-filter" />
                 </div>
             </div>
         </div>
-  
-		<!-- BEGIN promotion -->  
+        <br>
+
+		<!-- BEGIN promotion -->
 		<div>
         <div class="row">
           <table class="table table-hover">
@@ -60,11 +55,11 @@
                 <th>Qty</th>
                 <th>Total Promotion Value {{selectedCurrency.currency.code}}</th>
                 <th>Total Promotion Value {{baseCurrency.currency.code}}</th>
-            </tr>          
+            </tr>
             <tr ng-repeat="manualPromotionObj in promotionList | filter:{promotionName: filter.promotions} track by $index">
               <td class="col-xs-4">
-                 <ui-select ng-model="manualPromotionObj.companyPromotion" on-select="onChangePromotion(manualPromotionObj)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
-                    <ui-select-match placeholder="Select Promotions ..."> 
+                 <ui-select ng-model="manualPromotionObj.companyPromotion" on-select="onChangePromotion(manualPromotionObj)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll">
+                    <ui-select-match placeholder="Select Promotions ...">
                         {{$select.selected.promotionName}}
                     </ui-select-match>
                     <ui-select-choices repeat="promotion in companyPromotionList.promotions">
@@ -74,11 +69,11 @@
                 </td>
               <td>
                 <div class="input-group" style="max-width:300px">
-                    <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>                    
-                    <input class="form-control" ng-value="onChangePriceOrQty(manualPromotionObj)" 
-                    	ng-model="manualPromotionObj.amount" 
-                    	placeholder="12345678.91" 
-                    	aria-describedby="currency" 
+                    <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>
+                    <input class="form-control" ng-value="onChangePriceOrQty(manualPromotionObj)"
+                    	ng-model="manualPromotionObj.amount"
+                    	placeholder="12345678.91"
+                    	aria-describedby="currency"
                     	style="min-width:100px"
                     	maxlength="10"
                       custom-validity
@@ -87,16 +82,16 @@
                 </div>
               </td>
               <td>
-                <input class="form-control" ng-value="onChangePriceOrQty(manualPromotionObj)" 
-                	ng-model="manualPromotionObj.quantity" 
-                	placeholder="12345" 
+                <input class="form-control" ng-value="onChangePriceOrQty(manualPromotionObj)"
+                	ng-model="manualPromotionObj.quantity"
+                	placeholder="12345"
                 	style="width: 100px"
-									maxlength="5"                	 
+									maxlength="5"
 									custom-validity
 									custom-pattern="number"
-                	ng-disabled="isVerified || disableAll"/> 
+                	ng-disabled="isVerified || disableAll"/>
               </td>
-              <td> 
+              <td>
                 <input class="form-control" ng-model="manualPromotionObj.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
               </td>
               <td>
@@ -109,23 +104,23 @@
                   There are no Promotions to select
               </td>
             </tr>
+            <tr>
+              <td colspan="3">
+                <button class="btn btn-primary" type="button" ng-click="addPromotion()" ng-hide="isVerified || disableAll">Add Promotion</button>
+              </td>
+              <td class="text-right"><h4><small><b>Sub Total:</b></small></h4></td>
+              <td>
+                <input class="form-control" type="number" ng-value="sumAmounts()" disabled="true"/>
+              </td>
+            </tr>
           </table>
           </div>
-          <div class="row">
-            <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addPromotion()" ng-disabled="isVerified || disableAll">Add Promotion</button>
-            </div>
-            <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-            <div class="col-xs-12 col-sm-2">
-                <input class="form-control" type="number" ng-value="sumAmounts()" disabled="true"/>
-            </div>
-          </div>
         </div>
-<!-- 		END Promotion -->  
+<!-- 		END Promotion -->
+        <br>
+      </div>
 
-        <div class="panel-divider"></div>
-
-        <div class="panel-footer">
+      <div class="panel-footer" ng-hide="isCashBagConfirmed">
             <div class="row">
                 <div class="col-xs-12 text-right">
                     <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll"><span class="fa fa-check-square-o"></span> Save</button>
@@ -135,7 +130,6 @@
             </div>
         </div>
     </div>
-    </div>  
    </form>
 </div>
 
