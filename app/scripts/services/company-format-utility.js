@@ -15,7 +15,12 @@ angular.module('ts5App')
     };
 
     function getStoredFormatList() {
-      return globalMenuService.getCompanyData().formatList || defaultFormat;
+      var formatListFromAPI = globalMenuService.getCompanyData().formatList;
+      if (formatListFromAPI && formatListFromAPI.DATE) {
+        return formatListFromAPI;
+      }
+
+      return defaultFormat;
     }
 
     function getDateFormat() {
