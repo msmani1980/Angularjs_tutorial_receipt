@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionsCtrl', function($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility) {
+  .controller('PromotionsCtrl', function ($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility) {
 
     $scope.readOnly = true;
     $scope.editing = false;
@@ -101,7 +101,7 @@ angular.module('ts5App')
     }
 
     function mapItems(itemList, bindWholeObjectForView) {
-      return itemList.map(function(retailItemData) {
+      return itemList.map(function (retailItemData) {
         var retailItem = {};
         if (angular.isDefined(retailItemData.id)) {
           retailItem = angular.copy(retailItemData);
@@ -143,7 +143,7 @@ angular.module('ts5App')
     }
 
     function mapPromotionCategories(categoriesList, bindWholeObjectForView) {
-      return categoriesList.map(function(promotionCategoryData) {
+      return categoriesList.map(function (promotionCategoryData) {
         var promotionCategory = {};
         if (angular.isDefined(promotionCategoryData.id)) {
           promotionCategory = angular.copy(promotionCategoryData);
@@ -169,7 +169,7 @@ angular.module('ts5App')
     }
 
     function payloadGenerateQualifierTypeSpendLimit() {
-      payload.spendLimitAmounts = $scope.spendLimitAmountsUi.map(function(spendLimitData) {
+      payload.spendLimitAmounts = $scope.spendLimitAmountsUi.map(function (spendLimitData) {
         var spendLimit = {};
         spendLimit.amount = spendLimitData.amount;
         spendLimit.companyCurrencyId = spendLimitData.companyCurrencyId;
@@ -193,7 +193,7 @@ angular.module('ts5App')
     }
 
     function payloadGenerateDiscountRateTypeAmount() {
-      payload.benefitAmounts = $scope.benefitAmountsUi.map(function(benefitsAmountData) {
+      payload.benefitAmounts = $scope.benefitAmountsUi.map(function (benefitsAmountData) {
         var benefitsAmount = {};
         benefitsAmount.amount = benefitsAmountData.amount;
         benefitsAmount.companyCurrencyId = benefitsAmountData.companyCurrencyId;
@@ -262,7 +262,7 @@ angular.module('ts5App')
     }
 
     function mapFilters(arrayToMap, bindWholeObjectForView) {
-      return arrayToMap.map(function(stationData) {
+      return arrayToMap.map(function (stationData) {
         var stationFilters = {};
         if (angular.isDefined(stationData.id)) {
           stationFilters = angular.copy(stationData);
@@ -412,8 +412,8 @@ angular.module('ts5App')
 
     function getCompanyDiscountsCoupon(payload) {
       payload = payload || {
-        startDate: dateUtility.nowFormatted('YYYYMMDD')
-      };
+          startDate: dateUtility.nowFormatted('YYYYMMDD')
+        };
       initPromises.push(
         promotionsFactory.getCompanyDiscountsCoupon(payload).then(setCompanyDiscountsCoupon)
       );
@@ -425,8 +425,8 @@ angular.module('ts5App')
 
     function getCompanyDiscountsVoucher(payload) {
       payload = payload || {
-        startDate: dateUtility.nowFormatted('YYYYMMDD')
-      };
+          startDate: dateUtility.nowFormatted('YYYYMMDD')
+        };
       initPromises.push(
         promotionsFactory.getCompanyDiscountsVoucher(payload).then(setCompanyDiscountsVoucher)
       );
@@ -474,7 +474,7 @@ angular.module('ts5App')
 
     function setCurrencyGlobals(dataFromAPI) {
       $scope.companyCurrencyGlobals = dataFromAPI.response;
-      angular.forEach(dataFromAPI.response, function(currency) {
+      angular.forEach(dataFromAPI.response, function (currency) {
         $scope.spendLimitAmountsUi.push({
           companyCurrencyId: currency.id,
           code: currency.code,
@@ -527,7 +527,7 @@ angular.module('ts5App')
         return orinArray;
       }
 
-      return apiArray.map(function(item) {
+      return apiArray.map(function (item) {
         item.code = getCurrencyCodeFromCurrencyId(item.companyCurrencyId);
         return item;
       });
@@ -574,7 +574,7 @@ angular.module('ts5App')
       $scope.shouldDisableStartDate = !(dateUtility.isAfterToday($scope.promotion.startDate));
     }
 
-    $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function(newData) {
+    $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function (newData) {
       if ($scope.promotion.startDate && $scope.promotion.endDate) {
         var payload = {
           startDate: dateUtility.formatDateForAPI(newData[0]),
@@ -596,7 +596,8 @@ angular.module('ts5App')
     function handlePromiseSuccessHandler(promotionDataFromAPI) {
       setCrudFlags();
       if (promotionDataFromAPI) {
-        setCrudFlags(angular.copy(promotionDataFromAPI.startDate));
+        var startDate = dateUtility.formatDateForApp(angular.copy(promotionDataFromAPI.startDate));
+        setCrudFlags(startDate);
         setScopePromotionForViewFromAPIdata(angular.copy(promotionDataFromAPI));
       }
 
@@ -617,7 +618,7 @@ angular.module('ts5App')
       getCurrencyGlobals();
       getMasterItems();
 
-      $q.all(initPromises).then(function() {
+      $q.all(initPromises).then(function () {
         handlePromiseSuccessHandler(promotionDataFromAPI);
       }, showResponseErrors);
     }
@@ -755,26 +756,26 @@ angular.module('ts5App')
     }
 
     var states = {};
-    states.createInit = function() {
+    states.createInit = function () {
       getPromotionMetaData();
     };
 
-    states.editInit = function() {
+    states.editInit = function () {
       $scope.editing = true;
       $scope.viewName = 'Edit Promotion';
       $scope.saveButtonText = 'Save';
       getPromotion();
     };
 
-    states.viewInit = function() {
+    states.viewInit = function () {
       getPromotion();
     };
 
-    states.createSave = function() {
+    states.createSave = function () {
       createPromotion();
     };
 
-    states.editSave = function() {
+    states.editSave = function () {
       savePromotion();
     };
 
@@ -794,7 +795,7 @@ angular.module('ts5App')
 
     // Scope functions
 
-    $scope.addBlankObjectToArray = function(_array) {
+    $scope.addBlankObjectToArray = function (_array) {
       if ($scope.readOnly || $scope.isDisabled) {
         return false;
       }
@@ -802,54 +803,54 @@ angular.module('ts5App')
       _array.push({});
     };
 
-    $scope.promotionCategoryQtyRequired = function(promotionCategoryData) {
+    $scope.promotionCategoryQtyRequired = function (promotionCategoryData) {
       return angular.isDefined(promotionCategoryData.promotionCategory);
     };
 
-    $scope.retailItemQtyRequired = function(retailItemData) {
+    $scope.retailItemQtyRequired = function (retailItemData) {
       return angular.isDefined(retailItemData.retailItem) || angular.isDefined(retailItemData.itemId);
     };
 
-    $scope.cancel = function() {
+    $scope.cancel = function () {
       resolveCreatePromotion();
     };
 
-    $scope.disabledArrivalStations = function(station, stations) {
+    $scope.disabledArrivalStations = function (station, stations) {
       return disabledStations(station, stations, 'departureStation', 'departureHas');
     };
 
-    $scope.promotionCategorySelectChanged = function($index) {
+    $scope.promotionCategorySelectChanged = function ($index) {
       $scope.repeatableProductPurchasePromotionCategoryIds[$index] = $scope.promotion.promotionCategories[$index].promotionCategory
         .id;
     };
 
-    $scope.disabledPromotionCategory = function(promotionCategory) {
+    $scope.disabledPromotionCategory = function (promotionCategory) {
       return $scope.repeatableProductPurchasePromotionCategoryIds.indexOf(promotionCategory.id) !== -1;
     };
 
-    $scope.removeFromPromotionCategoryByIndex = function($index) {
+    $scope.removeFromPromotionCategoryByIndex = function ($index) {
       $scope.promotion.promotionCategories.splice($index, 1);
       $scope.repeatableProductPurchasePromotionCategoryIds.splice($index, 1);
     };
 
-    $scope.itemSelectInit = function($index) {
+    $scope.itemSelectInit = function ($index) {
       $scope.repeatableItemListSelectOptions[$index] = $scope.selectOptions.masterItems;
     };
 
-    $scope.itemSelectChanged = function($index) {
+    $scope.itemSelectChanged = function ($index) {
       $scope.repeatableProductPurchaseItemIds[$index] = $scope.promotion.items[$index].retailItem.id;
     };
 
-    $scope.disabledItems = function(item) {
+    $scope.disabledItems = function (item) {
       return $scope.repeatableProductPurchaseItemIds.indexOf(item.id) !== -1;
     };
 
-    $scope.removeFromItemListByIndex = function($index) {
+    $scope.removeFromItemListByIndex = function ($index) {
       $scope.repeatableProductPurchaseItemIds.splice($index, 1);
       $scope.promotion.items.splice($index, 1);
     };
 
-    $scope.removeFromStationListByIndex = function($index) {
+    $scope.removeFromStationListByIndex = function ($index) {
       var arrivalId = -1;
       var departureId = -1;
 
@@ -870,11 +871,11 @@ angular.module('ts5App')
       $scope.promotion.filters.splice($index, 1);
     };
 
-    $scope.disabledDepartureStations = function(station, stations) {
+    $scope.disabledDepartureStations = function (station, stations) {
       return disabledStations(station, stations, 'arrivalStation', 'arrivalHas');
     };
 
-    $scope.stationListChanged = function($index) {
+    $scope.stationListChanged = function ($index) {
       if (!hasCompleteStationObject($index)) {
         return false;
       }
@@ -893,7 +894,7 @@ angular.module('ts5App')
       $scope.repeatableStations.arrivalHas[arrivalId].push(departureId);
     };
 
-    $scope.itemCategoryChanged = function(index) {
+    $scope.itemCategoryChanged = function (index) {
       var categoryId = $scope.itemCategorySelects[index].id;
       if (cachedRetailItemsByCatId[categoryId]) {
         $scope.repeatableItemListSelectOptions[index] = cachedRetailItemsByCatId[categoryId];
@@ -905,14 +906,14 @@ angular.module('ts5App')
         categoryId: categoryId
       };
       displayLoadingModal();
-      promotionsFactory.getMasterItems(payload).then(function(dataFromAPI) {
+      promotionsFactory.getMasterItems(payload).then(function (dataFromAPI) {
         $scope.repeatableItemListSelectOptions[index] = dataFromAPI.masterItems;
         cachedRetailItemsByCatId[categoryId] = dataFromAPI.masterItems;
         hideLoadingModal();
       }, showResponseErrors);
     };
 
-    $scope.save = function() {
+    $scope.save = function () {
       if ($scope.readOnly) {
         return false;
       }
@@ -938,7 +939,7 @@ angular.module('ts5App')
       states[initState]();
     };
 
-    $scope.showLowestPricedItem = function() {
+    $scope.showLowestPricedItem = function () {
       var discountApply = $scope.promotion.benefitDiscountApply.name;
       return (discountApply && discountApply !== 'Retail Item');
     };
