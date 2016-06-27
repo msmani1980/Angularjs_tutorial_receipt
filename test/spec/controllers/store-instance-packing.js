@@ -915,4 +915,157 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     });
   });
 
+  describe('shouldDisableUllage helper function', function () {
+    var ullageReasonDamaged;
+    beforeEach(function () {
+      initController();
+      scope.$digest();
+      ullageReasonDamaged = {
+        companyId: 403,
+        companyReasonCodeName: 'Damaged',
+        companyReasonTypeId: 19,
+        description: 'Ullage',
+        endDat: '2050-01-01',
+        id: 48,
+        isActive: true,
+        reasonTypeId: 15,
+        reasonTypeName: 'Ullage',
+        startDate: '2015-05-05'
+      };
+    });
+
+    it('should reset item.ullageReason if ullageQuantity is 0', function () {
+      var itemWithZeroUllageQuantity = {
+        countTypeId: 1,
+        inboundQuantity: 20,
+        isEposDataOverwritten: false,
+        isInOffload: false,
+        isMenuItem: true,
+        isNewItem: false,
+        itemDescription: 'Brwnie239-Brownie',
+        itemMasterId: 10,
+        itemName: 'Brownie',
+        menuQuantity: 20,
+        oldInboundQuantity: -10,
+        ldPickedQuantity: 20,
+        oldUllageQuantity: -1,
+        pickedId: 201277,
+        pickedQuantity: 20,
+        shouldDisplayOffloadData: true,
+        ullageQuantity: 0,
+        ullageReason: ullageReasonDamaged
+      };
+
+      scope.shouldDisableUllage(itemWithZeroUllageQuantity);
+      expect(itemWithZeroUllageQuantity.ullageQuantity).toEqual(0);
+      expect(itemWithZeroUllageQuantity.ullageReason).toBeNull();
+    });
+
+    it('should reset item.ullageReason if ullageQuantity is null', function () {
+      var itemWithNullUllageQuantity = {
+        countTypeId: 1,
+        inboundQuantity: 20,
+        isEposDataOverwritten: false,
+        isInOffload: false,
+        isMenuItem: true,
+        isNewItem: false,
+        itemDescription: 'Brwnie239-Brownie',
+        itemMasterId: 10,
+        itemName: 'Brownie',
+        menuQuantity: 20,
+        oldInboundQuantity: -10,
+        ldPickedQuantity: 20,
+        oldUllageQuantity: -1,
+        pickedId: 201277,
+        pickedQuantity: 20,
+        shouldDisplayOffloadData: true,
+        ullageQuantity: null,
+        ullageReason: ullageReasonDamaged
+      };
+
+      scope.shouldDisableUllage(itemWithNullUllageQuantity);
+      expect(itemWithNullUllageQuantity.ullageQuantity).toEqual(0);
+      expect(itemWithNullUllageQuantity.ullageReason).toBeNull();
+    });
+
+    it('should reset item.ullageReason and ite.ullageQuantity if inboundQuantity is 0', function () {
+      var itemWithZeroInboundQuantity = {
+        countTypeId: 1,
+        inboundQuantity: 0,
+        isEposDataOverwritten: false,
+        isInOffload: false,
+        isMenuItem: true,
+        isNewItem: false,
+        itemDescription: 'Brwnie239-Brownie',
+        itemMasterId: 10,
+        itemName: 'Brownie',
+        menuQuantity: 20,
+        oldInboundQuantity: -10,
+        ldPickedQuantity: 20,
+        oldUllageQuantity: -1,
+        pickedId: 201277,
+        pickedQuantity: 20,
+        shouldDisplayOffloadData: true,
+        ullageQuantity: 2,
+        ullageReason: ullageReasonDamaged
+      };
+
+      scope.shouldDisableUllage(itemWithZeroInboundQuantity);
+      expect(itemWithZeroInboundQuantity.ullageQuantity).toEqual(0);
+      expect(itemWithZeroInboundQuantity.ullageReason).toBeNull();
+    });
+
+    it('should reset item.ullageReason and ite.ullageQuantity if inboundQuantity is null', function () {
+      var itemWithNullInboundQuantity = {
+        countTypeId: 1,
+        inboundQuantity: null,
+        isEposDataOverwritten: false,
+        isInOffload: false,
+        isMenuItem: true,
+        isNewItem: false,
+        itemDescription: 'Brwnie239-Brownie',
+        itemMasterId: 10,
+        itemName: 'Brownie',
+        menuQuantity: 20,
+        oldInboundQuantity: -10,
+        ldPickedQuantity: 20,
+        oldUllageQuantity: -1,
+        pickedId: 201277,
+        pickedQuantity: 20,
+        shouldDisplayOffloadData: true,
+        ullageQuantity: 2,
+        ullageReason: ullageReasonDamaged
+      };
+
+      scope.shouldDisableUllage(itemWithNullInboundQuantity);
+      expect(itemWithNullInboundQuantity.ullageQuantity).toEqual(0);
+      expect(itemWithNullInboundQuantity.ullageReason).toBeNull();
+    });
+
+    it('should do nothing to item if has valid ullage and inbound fields', function () {
+      var validUllageItem = {
+       countTypeId: 1,
+       inboundQuantity: 20,
+       isEposDataOverwritten: false,
+       isInOffload: false,
+       isMenuItem: true,
+       isNewItem: false,
+       itemDescription: 'Brwnie239-Brownie',
+       itemMasterId: 10,
+       itemName: 'Brownie',
+       menuQuantity: 20,
+       oldInboundQuantity: -10,
+       ldPickedQuantity: 20,
+       oldUllageQuantity: -1,
+       pickedId: 201277,
+       pickedQuantity: '20',
+       shouldDisplayOffloadData: true,
+       ullageQuantity: 2,
+       ullageReason: ullageReasonDamaged
+      };
+
+      scope.shouldDisableUllage(validUllageItem);
+      expect(validUllageItem).toEqual(validUllageItem);
+    });
+  });
 });
