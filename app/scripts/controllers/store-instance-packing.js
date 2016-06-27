@@ -354,7 +354,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.shouldDisableUllage = function(item) {
-      return (!item.ullageQuantity || parseInt(item.ullageQuantity) <= 0);
+      if (!item.ullageQuantity || parseInt(item.ullageQuantity) <= 0 || !item.inboundQuantity || parseInt(item.inboundQuantity) <= 0) {
+        item.ullageReason = null;
+        item.ullageQuantity = 0;
+
+        return true;
+      }
+
+      return false;
     };
 
     this.addItemsToDeleteToPayload = function(promiseArray) {
