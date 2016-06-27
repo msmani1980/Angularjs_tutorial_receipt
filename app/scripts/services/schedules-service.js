@@ -14,7 +14,8 @@ angular.module('ts5App')
 
     var schedulesActions = {
       getSchedules: {
-        method: 'GET'
+        method: 'GET',
+        headers: {}
       },
       getDailySchedules: {
         method: 'GET'
@@ -28,6 +29,7 @@ angular.module('ts5App')
       var payload = {
         id: companyId
       };
+      schedulesActions.getSchedules.headers.companyId = companyId;
       return distinctSchedulesRequestResource.getSchedules(payload).$promise;
     };
 
