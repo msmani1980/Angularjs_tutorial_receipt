@@ -180,7 +180,7 @@ angular.module('ts5App')
       $this.closeAccordian();
 
       itemsFactory.removeItem(itemId).then(function () {
-        $this.offSet = 0;
+        $this.meta.offset = 0;
         $scope.itemsList = [];
         $this.hideLoadingModal();
         getItemsList();

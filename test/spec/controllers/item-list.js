@@ -304,6 +304,11 @@ describe('itemListCtrl', function () {
 
   describe('remove item functionality', function () {
 
+    beforeEach(function () {
+      scope.searchRecords();
+      scope.$digest();
+    });
+
     it('should have a removeRecord() method attached to the scope',
       function () {
         expect(scope.removeRecord).toBeDefined();
@@ -311,7 +316,12 @@ describe('itemListCtrl', function () {
 
     it('should call removeItem', function () {
       scope.removeRecord(332);
+
       expect(itemsFactory.removeItem).toHaveBeenCalled();
+      expect(itemsService.getItemsList).toHaveBeenCalled();
+      
+      var rawItemList = angular.copy(itemsListJSON.retailItems);
+      expect(scope.itemsList).toEqual(ItemListCtrl.createNestedItemsList(rawItemList));
     });
 
   });
