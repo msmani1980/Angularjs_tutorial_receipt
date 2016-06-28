@@ -19,7 +19,8 @@ angular.module('ts5App')
 
     var actions = {
       getThresholdList: {
-        method: 'GET'
+        method: 'GET',
+        headers: {}
       },
       getThreshold: {
         method: 'GET'
@@ -28,10 +29,14 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getThresholdList(featureCode, optionalPayload) {
+    function getThresholdList(featureCode, payload, optionalCompanyId) {
       requestParameters.featureCode = featureCode;
       requestParameters.thresholdId = '';
-      var payload = optionalPayload || {};
+
+      if (optionalCompanyId) {
+        actions.getThresholdList.headers.companyId = optionalCompanyId;
+      }
+
       return requestResource.getThresholdList(payload).$promise;
     }
 

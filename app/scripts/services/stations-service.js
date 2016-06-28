@@ -26,7 +26,8 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV) {
         method: 'GET'
       },
       getStationList: {
-        method: 'GET'
+        method: 'GET',
+        headers: {}
       },
       getStation: {
         method: 'GET'
@@ -46,6 +47,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV) {
         payload.offset = offset;
       }
 
+      actions.getStationList.headers.companyId = companyId;
       return stationListRequestResource.getStationList(payload).$promise;
     };
 

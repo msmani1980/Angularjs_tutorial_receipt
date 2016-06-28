@@ -7,7 +7,7 @@
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         <input type="text"
                ng-model="startDateModel"
-               placeholder="mm/dd/YYYY"
+               placeholder="{{placeholder}}"
                name="{{ nameFrom || labelFrom }}"
                ng-disabled="shouldDisableStartDate || disableStartDate"
                class="startDate form-control"
@@ -21,7 +21,7 @@
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         <input type="text"
                ng-model="endDateModel"
-               placeholder="mm/dd/YYYY"
+               placeholder="{{placeholder}}"
                name="{{ nameTo || labelTo }}"
                ng-disabled="shouldDisableEndDate || disableEndDate"
                ng-required="required && !isSearchField"

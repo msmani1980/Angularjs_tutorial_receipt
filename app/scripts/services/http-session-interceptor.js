@@ -18,7 +18,8 @@ angular.module('ts5App')
 
     var notrsvrPages = [
         '/cash-bag-submission/*',
-        '/cash-bag/*',
+        '/cash-bag$/*',
+        '/cash-bag/create',
         '/change-password/*',
         '/commission-data-table/*',
         '/commission-data/*',
@@ -90,7 +91,6 @@ angular.module('ts5App')
     ];
 
     var legacyApis = [
-        '/rsvr/api/company-preferences',
         '/rsvr/api/companies/[0-9]*/relationships',
         'rsvr/api/records/store-status',
         '/rsvr/api/caterer-stations',
@@ -100,7 +100,7 @@ angular.module('ts5App')
         '/rsvr/api/units',
         '/rsvr/api/cash-bags/[0-9]*$',
         '/rsvr/api/promotions/[0-9]*$',
-        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9]*$',
+        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9][^11]*$',
         '/rsvr/api/company-currency-globals',
         '/rsvr/api/promotions',
         '/rsvr/api/companies/stores/[0-9]*',
@@ -108,13 +108,19 @@ angular.module('ts5App')
         '/rsvr/api/companies/[0-9]*/tags',
         '/rsvr/api/companies/[0-9]*/tax-types',
         '/rsvr/api/images'
-
     ];
 
     var onlyRsvrApis = [
+      '/rsvr/api/company-preferences',
       '/rsvr/api/dailyexchangerate',
+      '/rsvr/api/company-formats',
       '/rsvr/api/companies/[0-9]*/stations',
-      '/rsvr/api/store-instances/[0-9]*/calculated-inbounds'
+      '/rsvr/api/store-instances/[0-9]*/calculated-inbounds',
+      '/rsvr/api/cashbags/[0-9]*',
+      '/rsvr/api/cashbag/[0-9]+/cash',
+      '/rsvr/api/cashbags/cash/',
+      '/rsvr/api/cashbag-[a-z]+(/[0-9]*)?',
+      '/rsvr/api/dispatch/store-instances/[0-9]*/status/11'
     ];
 
     function responseError(response) {

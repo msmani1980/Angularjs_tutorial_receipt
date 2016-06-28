@@ -149,8 +149,9 @@ describe('Factory: currencyFactory', function () {
   describe('featureThresholdsService API', function () {
     it('should call featureThresholdsService on getThresholdList', function () {
       var payload = {fakeKey: 'fakeValue'};
-      currencyFactory.getExchangeRateThresholdList(payload);
-      expect(featureThresholdsService.getThresholdList).toHaveBeenCalledWith('DAILYEXCHANGERATE', payload);
+      var fakeCompanyId = 123;
+      currencyFactory.getExchangeRateThresholdList(payload, fakeCompanyId);
+      expect(featureThresholdsService.getThresholdList).toHaveBeenCalledWith('DAILYEXCHANGERATE', payload, fakeCompanyId);
     });
   });
 

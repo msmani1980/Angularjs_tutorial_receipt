@@ -7,7 +7,7 @@
  * # datePickerField
  */
 angular.module('ts5App')
-  .directive('datePickerField', function() {
+  .directive('datePickerField', function(companyFormatUtility) {
     return {
       templateUrl: '/views/directives/date-picker-field.html',
       restrict: 'E',
@@ -15,7 +15,6 @@ angular.module('ts5App')
         ngModel: '=',
         name: '@',
         label: '@',
-        placeholder: '@',
         orientation: '=',
         required: '=',
         form: '=',
@@ -27,11 +26,13 @@ angular.module('ts5App')
       controller: function($scope, $element) {
         var datePickerOptions = {
           orientation: 'auto top',
-          format: 'mm/dd/yyyy',
+          format: companyFormatUtility.getDateFormat().toLowerCase(),
           autoclose: true,
           todayHighlight: true,
           maxDate: $scope.maxDate
         };
+
+        $scope.placeholder = datePickerOptions.format;
 
         if ($scope.minDate && !$scope.disable) {
           datePickerOptions.startDate = $scope.minDate;

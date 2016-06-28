@@ -27,6 +27,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   beforeEach(module('served/promotion.json'));
   beforeEach(module('served/daily-exchange-rate.json'));
 
+
   var scope;
   var StoreInstanceAmendCtrl;
   var controller;
@@ -93,6 +94,12 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var promotionDeferred;
   var dailyExchangeRateJSON;
   var dailyExchangeRateDeferred;
+  var globalMenuService;
+  var manualDataDeferred;
+  var manualDataJSON;
+  var cashBagVerificationsDeferred;
+  var storeInstanceId = 2;
+  var lodash;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagVerifications_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
@@ -101,6 +108,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
                               _servedPostTripSingleDataList_, _servedStations_, _servedMasterItem_, _servedPromotion_, _servedDailyExchangeRate_) {
     location = $location;
     scope = $rootScope.$new();
+    lodash = $injector.get('lodash');
     storeInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
     reconciliationFactory = $injector.get('reconciliationFactory');
     employeesService = $injector.get('employeesService');
@@ -112,6 +120,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     dateUtility = $injector.get('dateUtility');
     stationsService = $injector.get('stationsService');
     dailyExchangeRatesService = $injector.get('dailyExchangeRatesService');
+    globalMenuService = $injector.get('globalMenuService');
     controller = $controller;
 
     storeInstanceResponseJSON = [{ id: 1 }]; // stub for now until API is complete
@@ -216,6 +225,20 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     dailyExchangeRateDeferred = $q.defer();
     dailyExchangeRateDeferred.resolve(dailyExchangeRateJSON);
 
+    manualDataJSON = {response: [
+      { cashbagId: 2158, convertedAmount: 10.0, totalConvertedAmount: 20.0, quantity: 1, itemTypeId: 2, itemMaster: {itemName: 'testItem1'}, promotion: {promotionName: 'testPromotion1'}},
+      { cashbagId: 2158, convertedAmount: 11.0, totalConvertedAmount: 22.0, quantity: 2, itemTypeId: 4, itemMaster: {itemName: 'testItem2'}, promotion: {promotionName: 'testPromotion2'}}
+    ]};
+
+    manualDataDeferred = $q.defer();
+    manualDataDeferred.resolve(manualDataJSON);
+    spyOn(reconciliationFactory, 'getCashBagManualData').and.returnValue(manualDataDeferred.promise);
+
+    cashBagVerificationsDeferred = $q.defer();
+    cashBagVerificationsDeferred.resolve(cashBagsResponseJSON);
+    spyOn(reconciliationFactory, 'getCashBagVerifications').and.returnValue(cashBagVerificationsDeferred.promise);
+
+    spyOn(globalMenuService.company, 'get').and.returnValue('fakeCompanyId');
     spyOn(storeInstanceAmendFactory, 'getStoreInstancesMockData').and.returnValue(storeInstanceDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getCashBags').and.returnValue(cashBagsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getScheduleMockData').and.returnValue(schedulesDeferred.promise);
@@ -234,8 +257,11 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(reconciliationFactory, 'getPromotion').and.returnValue(promotionDeferred.promise);
     spyOn(employeesService, 'getEmployees').and.returnValue(getEmployeesDeferred.promise);
     spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
-    spyOn(cashBagFactory, 'verifyCashBag').and.callThrough();
-    spyOn(cashBagFactory, 'unverifyCashBag').and.callThrough();
+
+    var verifyDeferred = $q.defer();
+    verifyDeferred.resolve({});
+    spyOn(cashBagFactory, 'verifyCashBag').and.returnValue(verifyDeferred.promise);
+    spyOn(cashBagFactory, 'unverifyCashBag').and.returnValue(verifyDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getFlightSectors').and.returnValue(getFlightSectorsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'addFlightSector').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'editFlightSector').and.callThrough();
@@ -254,13 +280,78 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
       $routeParams: {
-        id: 2
+        id: 2,
+        storeInstanceId: storeInstanceId
       }
     });
   }));
 
   describe('init', function () {
+
+    describe('manual data init', function () {
+      var expectedPayload = {
+        storeInstanceId: storeInstanceId
+      };
+
+      it('should call get manual cashbag verification data', function () {
+        expect(reconciliationFactory.getCashBagVerifications).toHaveBeenCalledWith(storeInstanceId);
+      });
+
+      it('should call get manual cash data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('cash', expectedPayload);
+      });
+
+      it('should call get manual credit data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('credit-cards', expectedPayload);
+      });
+
+      it('should call get manual item data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('items', expectedPayload);
+      });
+
+      it('should call get manual discount data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('discounts', expectedPayload);
+      });
+
+      it('should call get manual promotion data', function () {
+        expect(reconciliationFactory.getCashBagManualData).toHaveBeenCalledWith('promotions', expectedPayload);
+      });
+    });
+
+    describe('manual data saving', function () {
+      it('should attach manual data to controller', function () {
+        scope.$digest();
+        expect(StoreInstanceAmendCtrl.manualData).toBeDefined();
+      });
+
+      it('should populate cash, credit, discount, and promotion data as arrays', function () {
+        scope.$digest();
+
+        expect(StoreInstanceAmendCtrl.manualData.cash).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.cash.length).toEqual(2);
+        expect(StoreInstanceAmendCtrl.manualData.credit).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.credit.length).toEqual(2);
+        expect(StoreInstanceAmendCtrl.manualData.promotion).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.promotion.length).toEqual(2);
+        expect(StoreInstanceAmendCtrl.manualData.discount).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.discount.length).toEqual(2);
+      });
+
+      it('should populate item data and filter by item type', function () {
+        scope.$digest();
+
+        expect(StoreInstanceAmendCtrl.manualData.virtual).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.virtual.length).toEqual(1);
+        expect(StoreInstanceAmendCtrl.manualData.virtual[0].convertedAmount).toEqual(10.0);
+
+        expect(StoreInstanceAmendCtrl.manualData.voucher).toBeDefined();
+        expect(StoreInstanceAmendCtrl.manualData.voucher.length).toEqual(1);
+        expect(StoreInstanceAmendCtrl.manualData.voucher[0].convertedAmount).toEqual(11.0);
+      });
+    });
+
     it('should call get cash bag data', function () {
+      scope.$digest();
       expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
       expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalled();
       expect(reconciliationFactory.getCompany).toHaveBeenCalled();
@@ -288,9 +379,32 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     it('should init deleted cashBags to not be visible', function () {
       expect(scope.sectorsToMove.length).toEqual(0);
     });
+
+    it('should init cash bag epos sales with manual virtual, voucher, and promotion data', function () {
+      scope.$digest();
+      var manualCashBag = lodash.findWhere(scope.normalizedCashBags, {id: 2158});
+      expect(manualCashBag.virtualItemSales >= 10).toEqual(true);
+      expect(manualCashBag.voucherItemSales >= 11).toEqual(true);
+      expect(manualCashBag.promotionDiscounts >= 42).toEqual(true);
+    });
+
+    it('should init cash bag total revenue values with manual cash, credit, and discount values', function () {
+      scope.$digest();
+      var manualCashBag = lodash.findWhere(scope.normalizedCashBags, {id: 2158});
+      expect(manualCashBag.cashRevenue.amount >= 21).toEqual(true);
+      expect(manualCashBag.cashRevenue.manualTotal).toEqual(21);
+      expect(manualCashBag.creditRevenue.amount >= 21).toEqual(true);
+      expect(manualCashBag.creditRevenue.manualTotal).toEqual(21);
+      expect(manualCashBag.discountRevenue.amount >= 21).toEqual(true);
+      expect(manualCashBag.discountRevenue.manualTotal).toEqual(21);
+    });
   });
 
   describe('miscellaneous scope view functions', function () {
+    beforeEach(function () {
+      scope.$digest();
+    });
+
     describe('get class for accordion views', function () {
       it('should return close icon for open records', function () {
         var openAccordionIcon = scope.getClassForAccordionArrows(true);
@@ -338,7 +452,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       it('should showCashBag if it is selected in the filter', function () {
         var mockFilteredCashBag = { id: 123, isDeleted: false };
         var mockNonFilteredCashBag = { id: 345, isDeleted: false };
-        scope.cashBagFilter = { filterList:[{ id:123 }] };
+        scope.cashBagFilter = { filterList: [{ id: 123 }] };
         scope.showDeletedCashBags = false;
         expect(scope.shouldShowCashBag(mockFilteredCashBag)).toEqual(true);
         expect(scope.shouldShowCashBag(mockNonFilteredCashBag)).toEqual(false);
@@ -347,17 +461,19 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
     describe('toggle verified cashBag', function () {
       it('should refresh cash bag list on success', function () {
-          scope.cashBagList = [{ isVerified: false }];
-          scope.toggleVerifiedCashBag(scope.cashBagList[0]);
+        scope.cashBagList = [{ isVerified: false }];
+        scope.toggleVerifiedCashBag(scope.cashBagList[0]);
 
-          expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
+        expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
       });
+
       it('should call verifyCashBag in case cash bag is not verified yet', function () {
         scope.cashBagList = [{ isVerified: false }];
         scope.toggleVerifiedCashBag(scope.cashBagList[0]);
 
         expect(cashBagFactory.verifyCashBag).toHaveBeenCalled();
       });
+
       it('should call unverifyCashBag in case cash bag is verified already', function () {
         scope.cashBagList = [{ isVerified: true }];
         scope.toggleVerifiedCashBag(scope.cashBagList[0]);
@@ -369,13 +485,13 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     describe('hasMoreThanOneUnverifiedCashBags', function () {
       it('should return correct data', function () {
 
-        scope.normalizedCashBags = [{ isVerified: false }, { isVerified: false}];
+        scope.normalizedCashBags = [{ isVerified: false }, { isVerified: false }];
         expect(scope.hasMoreThanOneUnverifiedCashBags()).toBeTruthy();
 
-        scope.normalizedCashBags = [{ isVerified: true }, { isVerified: false}];
+        scope.normalizedCashBags = [{ isVerified: true }, { isVerified: false }];
         expect(scope.hasMoreThanOneUnverifiedCashBags()).toBeFalsy();
 
-        scope.normalizedCashBags = [{ isVerified: true }, { isVerified: true}];
+        scope.normalizedCashBags = [{ isVerified: true }, { isVerified: true }];
         expect(scope.hasMoreThanOneUnverifiedCashBags()).toBeFalsy();
       });
     });
@@ -384,13 +500,13 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       it('should return correct data', function () {
         var cashBag;
 
-        cashBag = { };
+        cashBag = {};
         expect(scope.hasFlightSectors(cashBag)).toBeFalsy();
 
         cashBag = { flightSectors: [] };
         expect(scope.hasFlightSectors(cashBag)).toBeFalsy();
 
-        cashBag = { flightSectors: [ { id: 1 }] };
+        cashBag = { flightSectors: [{ id: 1 }] };
         expect(scope.hasFlightSectors(cashBag)).toBeTruthy();
       });
     });
@@ -456,7 +572,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     });
 
     it('sumGroupedAmounts should sum amounts from the credit revenue array', function () {
-      var amounts = [ {amount: 1.1}, {amount: 2.2} ];
+      var amounts = [{ amount: 1.1 }, { amount: 2.2 }];
 
       var result = scope.sumGroupedAmounts(amounts);
 
@@ -546,7 +662,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       it('should rearrange selected sectors', function () {
         scope.sectorsToMove = [{ id: 1 }, { id: 2 }];
         scope.rearrangeOriginCashBag = { id: 1, cashBag: '123', isManual: true };
-        scope.rearrangeTargetCashBag = { id: 2, cashBag: '345'};
+        scope.rearrangeTargetCashBag = { id: 2, cashBag: '345' };
 
         scope.rearrangeSector();
         expect(storeInstanceAmendFactory.rearrangeFlightSector).toHaveBeenCalled();
@@ -617,6 +733,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
     describe('search for record', function () {
       beforeEach(function () {
+        scope.$digest();
         scope.targetRecordForMoveCashBag = null;
       });
 
@@ -739,7 +856,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         expect(scope.canMerge({ isManual: true })).toBeFalsy();
         expect(scope.canMerge({ bankRefNumber: '123' })).toBeFalsy();
         expect(scope.canMerge({ bankRefNumber: '123' })).toBeFalsy();
-        expect(scope.canMerge({ })).toBeTruthy();
+        expect(scope.canMerge({})).toBeTruthy();
       });
     });
   });
@@ -775,7 +892,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       it('should getSchedules', function () {
         scope.scheduleSearch = { scheduleNumber: '123', scheduleDate: '10/20/2015' };
         scope.searchForSchedule();
-        expect(postTripFactory.getPostTripDataList).toHaveBeenCalledWith(0, scope.scheduleSearch);
+        expect(postTripFactory.getPostTripDataList).toHaveBeenCalledWith('fakeCompanyId', scope.scheduleSearch);
       });
 
       it('should set schedule search results', function () {
@@ -797,7 +914,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.newScheduleSelection = null;
         scope.moveCashBagSearchResults = null;
         scope.cashBagToEdit = { id: 1 };
-        scope.newScheduleSelection = { id: 2, scheduleNumber: '3', scheduleDate: '02/01/2016'};
+        scope.newScheduleSelection = { id: 2, scheduleNumber: '3', scheduleDate: '02/01/2016' };
       });
 
       it('should add schedule if add action is requested', function () {
@@ -828,7 +945,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   });
 
   describe('Delete cash bag functions', function () {
-    it ('showDeleteCashBagModal should show modal and mark cash bag for deletion', function () {
+    it('showDeleteCashBagModal should show modal and mark cash bag for deletion', function () {
       var cashBag = { id: 1 };
 
       scope.showDeleteCashBagModal(cashBag);

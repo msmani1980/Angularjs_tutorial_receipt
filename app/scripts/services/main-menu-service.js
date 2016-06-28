@@ -500,6 +500,16 @@ angular.module('ts5App')
             package: 'ECB',
             role: 'ECB'
           }]
+        }, {
+          title: 'Reports',
+          menuItems: [{
+            name: 'Reports',
+            route: '/reports',
+            icon: 'icon-manage-schedule',
+            className: 'dashboard-reports',
+            package: 'REPORT',
+            role: 'REPORT'
+          }]
         }];
     };
 

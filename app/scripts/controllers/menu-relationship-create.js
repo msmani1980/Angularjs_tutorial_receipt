@@ -185,11 +185,8 @@ angular.module('ts5App')
     };
 
     this.updateFormData = function(data) {
-      data.startDate = dateUtility.formatDate(data.startDate,
-        'YYYYMMDD',
-        'L');
-      data.endDate = dateUtility.formatDate(data.endDate,
-        'YYYYMMDD', 'L');
+      data.startDate = dateUtility.formatDateForApp(data.startDate);
+      data.endDate = dateUtility.formatDateForApp(data.endDate);
       this.formatStationIds(data);
       $scope.formData = data;
     };
@@ -247,11 +244,8 @@ angular.module('ts5App')
     };
 
     this.formatPayloadDates = function(relationship) {
-      relationship.startDate = dateUtility.formatDate(relationship.startDate,
-        'L',
-        'YYYYMMDD');
-      relationship.endDate = dateUtility.formatDate(relationship.endDate,
-        'L', 'YYYYMMDD');
+      relationship.startDate = dateUtility.formatDateForAPI(relationship.startDate);
+      relationship.endDate = dateUtility.formatDateForAPI(relationship.endDate);
     };
 
     $scope.isRelationshipActive = function() {

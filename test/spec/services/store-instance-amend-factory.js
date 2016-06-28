@@ -25,6 +25,8 @@ describe('Factory: storeInstanceAmendFactory', function () {
     spyOn(storeInstanceAmendService, 'addPostTrip').and.stub();
     spyOn(storeInstanceAmendService, 'editPostTrip').and.stub();
     spyOn(storeInstanceAmendService, 'deletePostTrip').and.stub();
+    spyOn(cashBagService, 'getAllManualCashList');
+    spyOn(cashBagService, 'getManualCashBagList');
   }));
 
   it('should be defined', function () {
@@ -49,6 +51,18 @@ describe('Factory: storeInstanceAmendFactory', function () {
 
       storeInstanceAmendFactory.getCashBags(payload);
       expect(cashBagService.getCashBagVerifications).toHaveBeenCalledWith(payload);
+    });
+
+    it('should call cashBagService getAllManualCashList on getCashBagManualData with cash type', function () {
+      var fakePayload = { fakeKey: 'fakeValue' };
+      storeInstanceAmendFactory.getCashBagManualData('cash', fakePayload);
+      expect(cashBagService.getAllManualCashList).toHaveBeenCalledWith(fakePayload);
+    });
+
+    it('should call cashBagService getManualCashBagList on getCashBagManualData', function () {
+      var fakePayload = { fakeKey: 'fakeValue' };
+      storeInstanceAmendFactory.getCashBagManualData('credit', fakePayload);
+      expect(cashBagService.getManualCashBagList).toHaveBeenCalledWith('credit', fakePayload);
     });
 
     it('getCashBagCarrierInstances should call cashBagService', function () {

@@ -107,10 +107,12 @@ angular.module('ts5App')
     }
 
     function createCashBag(formData) {
-      showLoadingModal('Saving Cash Bag');
+      var saveCashBag = angular.copy(formData);
+      saveCashBag.scheduleDate = dateUtility.formatDateForAPI(saveCashBag.scheduleDate);
       formData.isDelete = false;
+      showLoadingModal('Saving Cash Bag');
       cashBagFactory.createCashBag({
-        cashBag: formData
+        cashBag: saveCashBag
       }).then(cashBagCreateSuccessHandler, errorHandler);
     }
 
@@ -215,13 +217,14 @@ angular.module('ts5App')
       hideLoadingModal();
       var storeData = angular.copy(dataFromAPI);
       $scope.cashBag.storeNumber = storeData.storeNumber;
+      angular.element('#cashBagNumber').focus();
     }
 
     function getStoreInstanceListResponseHandler(dataFromAPI) {
       var storeInstanceData = angular.copy(dataFromAPI);
       $scope.displayedScheduleDate = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
       $scope.cashBag.scheduleNumber = storeInstanceData.scheduleNumber;
-      $scope.cashBag.scheduleDate = dateUtility.formatDateForAPI(storeInstanceData.scheduleDate);
+      $scope.cashBag.scheduleDate = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
       cashBagFactory.getStoreList({
         id: storeInstanceData.storeId
       }).then(getStoreResponseHandler);
@@ -367,7 +370,7 @@ angular.module('ts5App')
             dailyExchangeByIdResponseHandler)
         );
       } else {
-        var dailyExchangeDate = dateUtility.formatDateForAPI(dateUtility.now());
+        var dailyExchangeDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
         _promises.push(
           cashBagFactory.getDailyExchangeRates(_companyId, dailyExchangeDate).then(dailyExchangeResponseHandler)
         );

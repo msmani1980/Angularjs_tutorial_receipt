@@ -26,34 +26,32 @@
     <div class="alert alert-success" ng-show="isVerified"><span class="fa fa-check-circle"></span> Verified by {{ verifiedInfo.verifiedBy }} on {{ verifiedInfo.verifiedTimestamp }}</div>
     <div class="panel panel-default">
       <div class="panel-body">
-      
-      
         <div class="row">
-            <div class="col-xs-4 col-sm-2">
-            <b>Operating Currency</b>
-        </div>
-        <div class="form-group">
-            <div class="col-xs-4 col-sm-2">
-                <ui-select ng-model="selectedCurrency.currency" theme="bootstrap" reset-search-input="false" on-select="onChangeCurrency()" style="min-width: 200px;" ng-disabled="isVerified || disableAll">
-                    <ui-select-match placeholder="Select Currency ..."> {{$select.selected.code}} </ui-select-match>
-                    <ui-select-choices repeat="currency in currencyList"> <div ng-bind-html="currency.code | highlight: $select.search"></div></ui-select-choices>
-                </ui-select>
+          <div class="col-xs-12 col-sm-12">
+            <div class="input-group">
+              <span class="input-group-addon"><span class="fa fa-money"></span></span>
+              <ui-select ng-model="selectedCurrency.currency" theme="bootstrap" reset-search-input="false" on-select="onChangeCurrency()" style="min-width: 200px;" ng-disabled="isVerified || disableAll">
+                <ui-select-match placeholder="Select Operating Currency ..."> {{$select.selected.code}} </ui-select-match>
+                <ui-select-choices repeat="currency in currencyList"> <div ng-bind-html="currency.code | highlight: $select.search"></div></ui-select-choices>
+              </ui-select>
             </div>
+          </div>
         </div>
-        </div>
-
-        <div class="panel-divider"></div>
+        <br>
 
         <div class="row">
             <div class="col-xs-12 col-sm-12">
                 <div class="input-group">
-                    <span class="input-group-addon" id="discounts-filter">Filter</span>
-                    <input type="text" class="form-control" ng-model="filter.discounts" placeholder="Select Discount Type to filter by ..." aria-describedby="discounts-filter" ng-disabled="isVerified || disableAll"/>
+                    <span class="input-group-addon" id="discounts-filter"><span class="fa fa-filter"></span></span>
+                    <input type="text" class="form-control" ng-model="filter.discounts" placeholder="Select Discount Type to filter by ..." aria-describedby="discounts-filter" />
                 </div>
             </div>
         </div>
-  
-		<!-- BEGIN Coupon Discount -->  
+        <br>
+        <div class="panel-divider"></div>
+
+
+        <!-- BEGIN Coupon Discount -->
 		<div>
         <div class="row">
           <table class="table table-hover">
@@ -64,11 +62,11 @@
                 <th>Qty</th>
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
-            </tr>          
+            </tr>
             <tr ng-repeat="manualDiscountObj in discountListCoupon | filter:{discountTypeName: filter.discounts} track by $index">
               <td class="col-xs-4">
-                 <ui-select ng-model="manualDiscountObj.discount" on-select="onChangeDiscount(manualDiscountObj)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
-                    <ui-select-match placeholder="Select Coupon Discounts ..."> 
+                 <ui-select ng-model="manualDiscountObj.discount" on-select="onChangeDiscount(manualDiscountObj)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll">
+                    <ui-select-match placeholder="Select Coupon Discounts ...">
                         {{$select.selected.name}}
                     </ui-select-match>
                     <ui-select-choices repeat="couponDiscount in companyDiscountsList.coupon">
@@ -78,11 +76,11 @@
                 </td>
               <td>
                 <div class="input-group" style="max-width:300px">
-                    <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>                    
-                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountObj)" 
-                    	ng-model="manualDiscountObj.amount" 
-                    	placeholder="12345678.91" 
-                    	aria-describedby="currency" 
+                    <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>
+                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountObj)"
+                    	ng-model="manualDiscountObj.amount"
+                    	placeholder="12345678.91"
+                    	aria-describedby="currency"
                     	style="min-width:100px"
                     	maxlength="10"
                       custom-validity
@@ -91,16 +89,17 @@
                 </div>
               </td>
               <td>
-                <input class="form-control input-sm" ng-value="onChangePriceOrQty(manualDiscountObj)" 
-                	ng-model="manualDiscountObj.quantity" 
-                	placeholder="12345" 
+
+                <input class="form-control input-sm" ng-value="onChangePriceOrQty(manualDiscountObj)"
+                	ng-model="manualDiscountObj.quantity"
+                	placeholder="12345"
                 	style="width: 100px"
-									maxlength="5"                	 
+									maxlength="5"
 									custom-validity
 									custom-pattern="number"
-                	ng-disabled="isVerified || disableAll"/> 
+                	ng-disabled="isVerified || disableAll"/>
               </td>
-              <td> 
+              <td>
                 <input class="form-control" ng-model="manualDiscountObj.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
               </td>
               <td>
@@ -113,22 +112,21 @@
                   There are no Coupons to select
               </td>
             </tr>
+            <tr>
+              <td colspan="3">
+                <button class="btn btn-primary" type="button" ng-click="addCouponDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
+              </td>
+              <td class="text-right"><h4><small><b>Sub Total:</b></small></h4></td>
+              <td>
+                <input class="form-control" type="number" ng-value="sumCouponAmounts()" disabled="true"/>
+              </td>
+            </tr>
           </table>
           </div>
-          <div class="row">
-            <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addCouponDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
-            </div>
-            <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-            <div class="col-xs-12 col-sm-2">
-                <input class="form-control" type="number" ng-value="sumCouponAmounts()" disabled="true"/>
-            </div>
-          </div>
         </div>
-		<!--END Coupon Discount -->  
-		  
-		<!-- BEGIN Voucher Discount -->  
-        <div class="panel-divider"></div>
+		<!--END Coupon Discount -->
+        <hr>
+		<!-- BEGIN Voucher Discount -->
 		<div>
         <div class="row">
           <table class="table table-hover">
@@ -139,11 +137,11 @@
                 <th>Qty</th>
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
-            </tr>          
+            </tr>
             <tr ng-repeat="manualDiscountVoucher in discountListVoucher | filter:{discountTypeName: filter.discounts} track by $index">
               <td class="col-xs-4">
-                 <ui-select ng-model="manualDiscountVoucher.discount" on-select="onChangeDiscount(manualDiscountVoucher)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
-                    <ui-select-match placeholder="Select Voucher Discounts ..."> 
+                 <ui-select ng-model="manualDiscountVoucher.discount" on-select="onChangeDiscount(manualDiscountVoucher)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll">
+                    <ui-select-match placeholder="Select Voucher Discounts ...">
                         {{$select.selected.name}}
                     </ui-select-match>
                     <ui-select-choices repeat="voucherDiscount in companyDiscountsList.voucher">
@@ -153,11 +151,11 @@
                 </td>
               <td>
                 <div class="input-group" style="max-width:300px">
-                    <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>                    
-                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountVoucher)" 
-                    	ng-model="manualDiscountVoucher.amount" 
-                    	placeholder="12345678.91" 
-                    	aria-describedby="currency" 
+                    <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>
+                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountVoucher)"
+                    	ng-model="manualDiscountVoucher.amount"
+                    	placeholder="12345678.91"
+                    	aria-describedby="currency"
                     	style="min-width:100px"
 											maxlength="10"
                       custom-validity
@@ -166,16 +164,17 @@
                 </div>
               </td>
               <td>
-                <input class="form-control input-sm" ng-value="onChangePriceOrQty(manualDiscountVoucher)" 
-                	ng-model="manualDiscountVoucher.quantity" 
-                	placeholder="12345" 
+
+                <input class="form-control input-sm" ng-value="onChangePriceOrQty(manualDiscountVoucher)"
+                	ng-model="manualDiscountVoucher.quantity"
+                	placeholder="12345"
                 	style="width: 100px"
-									maxlength="5"                	 
+									maxlength="5"
                   custom-validity
-                  custom-pattern="number"									
-                	ng-disabled="isVerified || disableAll"/> 
+                  custom-pattern="number"
+                	ng-disabled="isVerified || disableAll"/>
               </td>
-              <td> 
+              <td>
                 <input class="form-control" ng-model="manualDiscountVoucher.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
               </td>
               <td>
@@ -188,23 +187,19 @@
                   There are no Vouchers to select
               </td>
             </tr>
+            <tr>
+              <td colspan="3">
+                <button class="btn btn-primary" type="button" ng-click="addVoucherDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
+              </td>
+              <td class="text-right"><h4><small><b>Sub Total:</b></small></h4></td>
+              <td><input class="form-control" type="number" ng-value="sumVoucherAmounts()" disabled="true"/></td>
+            </tr>
           </table>
           </div>
-          <div class="row">
-            <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addVoucherDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
-            </div>
-            <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-            <div class="col-xs-12 col-sm-2">
-                <input class="form-control" type="number" ng-value="sumVoucherAmounts()" disabled="true"/>
-            </div>
-          </div>
-          
         </div>
         <!--END Voucher Discount -->
-        
-		<!-- BEGIN Comp Discount -->  
-        <div class="panel-divider"></div>
+        <hr>
+		<!-- BEGIN Comp Discount -->
 		<div>
         <div class="row">
           <table class="table table-hover">
@@ -215,11 +210,11 @@
                 <th>Qty</th>
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
-            </tr>          
+            </tr>
             <tr ng-repeat="manualDiscountComp in discountListComp | filter:{discountTypeName: filter.discounts} track by $index">
               <td class="col-xs-4">
-                 <ui-select ng-model="manualDiscountComp.discount" on-select="onChangeDiscount(manualDiscountComp)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
-                    <ui-select-match placeholder="Select Comp Discounts ..."> 
+                 <ui-select ng-model="manualDiscountComp.discount" on-select="onChangeDiscount(manualDiscountComp)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll">
+                    <ui-select-match placeholder="Select Comp Discounts ...">
                         {{$select.selected.name}}
                     </ui-select-match>
                     <ui-select-choices repeat="compDiscount in companyDiscountsList.comp">
@@ -229,11 +224,11 @@
                 </td>
               <td>
                 <div class="input-group" style="max-width:300px">
-                    <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>                    
-                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountComp)" 
-                    	ng-model="manualDiscountComp.amount" 
-                    	placeholder="12345678.91" 
-                    	aria-describedby="currency" 
+                    <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>
+                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountComp)"
+                    	ng-model="manualDiscountComp.amount"
+                    	placeholder="12345678.91"
+                    	aria-describedby="currency"
                     	style="min-width:100px"
                     	maxlength="10"
                       custom-validity
@@ -242,16 +237,17 @@
                 </div>
               </td>
               <td>
-                <input class="form-control input-sm" ng-value="onChangePriceOrQty(manualDiscountComp)" 
-                	ng-model="manualDiscountComp.quantity" 
-                	placeholder="12345" 
+
+                <input class="form-control input-sm" ng-value="onChangePriceOrQty(manualDiscountComp)"
+                	ng-model="manualDiscountComp.quantity"
+                	placeholder="12345"
                 	style="width: 100px"
-									maxlength="5"                	 
+									maxlength="5"
 									custom-validity
 									custom-pattern="number"
-                	ng-disabled="isVerified || disableAll"/> 
+                	ng-disabled="isVerified || disableAll"/>
               </td>
-              <td> 
+              <td>
                 <input class="form-control" ng-model="manualDiscountComp.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
               </td>
               <td>
@@ -264,24 +260,22 @@
                   There are no Comps to select
               </td>
             </tr>
+            <tr>
+              <td colspan="3">
+                <button class="btn btn-primary" type="button" ng-click="addCompDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
+              </td>
+              <td class="text-right"><h4><small><b>Sub Total:</b></small></h4></td>
+              <td>
+                <input class="form-control" type="number" ng-value="sumCompAmounts()" disabled="true"/>
+              </td>
+            </tr>
           </table>
           </div>
-          <div class="row">
-            <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addCompDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
-            </div>
-            <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-            <div class="col-xs-12 col-sm-2">
-                <input class="form-control" type="number" ng-value="sumCompAmounts()" disabled="true"/>
-            </div>
-          </div>
-          
         </div>
         <!--END Comp Discount -->
-        
+        <hr>
 
-		<!-- BEGIN Flyer Discount -->  
-        <div class="panel-divider"></div>
+		<!-- BEGIN Flyer Discount -->
 		<div>
         <div class="row">
           <table class="table table-hover">
@@ -292,11 +286,11 @@
                 <th>Qty</th>
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
                 <th>Total Discount Value {{baseCurrency.currency.code}}</th>
-            </tr>          
+            </tr>
             <tr ng-repeat="manualDiscountFlyer in discountListFlyer | filter:{discountTypeName: filter.discounts} track by $index">
               <td class="col-xs-4">
-                 <ui-select ng-model="manualDiscountFlyer.discount" on-select="onChangeDiscount(manualDiscountFlyer)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll"> 
-                    <ui-select-match placeholder="Select Frequent Flyer Discounts ..."> 
+                 <ui-select ng-model="manualDiscountFlyer.discount" on-select="onChangeDiscount(manualDiscountFlyer)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll">
+                    <ui-select-match placeholder="Select Frequent Flyer Discounts ...">
                         {{$select.selected.name}}
                     </ui-select-match>
                     <ui-select-choices repeat="flyerDiscount in companyDiscountsList.flyer">
@@ -306,11 +300,11 @@
                 </td>
               <td>
                 <div class="input-group" style="max-width:300px">
-                    <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>                    
-                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountFlyer)" 
-                    	ng-model="manualDiscountFlyer.amount" 
-                    	placeholder="12345678.91" 
-                    	aria-describedby="currency" 
+                    <span class="input-group-addon" id="currency">{{selectedCurrency.currency.code}}</span>
+                    <input class="form-control" ng-value="onChangePriceOrQty(manualDiscountFlyer)"
+                    	ng-model="manualDiscountFlyer.amount"
+                    	placeholder="12345678.91"
+                    	aria-describedby="currency"
                     	style="min-width:100px"
                     	maxlength="10"
                       custom-validity
@@ -319,16 +313,16 @@
                 </div>
               </td>
               <td>
-                <input class="form-control input-sm" ng-value="onChangePriceOrQty(manualDiscountFlyer)" 
-                	ng-model="manualDiscountFlyer.quantity" 
-                	placeholder="12345" 
+                <input class="form-control input-sm" ng-value="onChangePriceOrQty(manualDiscountFlyer)"
+                	ng-model="manualDiscountFlyer.quantity"
+                	placeholder="12345"
                 	style="width: 100px"
-									maxlength="5"      
-									custom-validity    
-									custom-pattern="number"      	 
-                	ng-disabled="isVerified || disableAll"/> 
+									maxlength="5"
+									custom-validity
+									custom-pattern="number"
+                	ng-disabled="isVerified || disableAll"/>
               </td>
-              <td> 
+              <td>
                 <input class="form-control" ng-model="manualDiscountFlyer.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
               </td>
               <td>
@@ -341,24 +335,23 @@
                   There are no Frequent Flyers to select
               </td>
             </tr>
+            <tr>
+              <td colspan="3">
+                <button class="btn btn-primary" type="button" ng-click="addFlyerDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
+              </td>
+              <td class="text-right"><h4><small><b>Sub Total:</b></small></h4></td>
+              <td>
+                <input class="form-control" type="number" ng-value="sumFlyerAmounts()" disabled="true"/>
+              </td>
+            </tr>
           </table>
           </div>
-          <div class="row">
-            <div class="col-xs-12 col-sm-8 text-left">
-                <button class="btn btn-primary" type="button" ng-click="addFlyerDiscount()" ng-disabled="isVerified || disableAll">Add Discount</button>
-            </div>
-            <div class="col-xs-12 col-sm-2 text-right"><b>Sub Total</b></div>
-            <div class="col-xs-12 col-sm-2">
-                <input class="form-control" type="number" ng-value="sumFlyerAmounts()" disabled="true"/>
-            </div>
-          </div>
-          
+        </div>
+        <br>
         </div>
         <!--END Flyer Discount -->
 
-        <div class="panel-divider"></div>
-
-        <div class="panel-footer">
+        <div class="panel-footer" ng-hide="isCashBagConfirmed">
             <div class="row">
                 <div class="col-xs-12 text-right">
                     <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll"><span class="fa fa-check-square-o"></span> Save</button>
@@ -368,7 +361,6 @@
             </div>
         </div>
     </div>
-    </div>  
   </form>
 </div>
 

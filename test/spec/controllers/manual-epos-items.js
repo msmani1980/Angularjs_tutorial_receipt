@@ -217,6 +217,7 @@ describe('Controller: ManualEposItemsCtrl', function () {
     it('should check the cash bag verification', function () {
       expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
       expect(scope.isVerified).toBeDefined();
+      expect(scope.isCashBagConfirmed).toBeDefined();
       expect(scope.verifiedInfo.verifiedBy).toEqual('John Adams');
       expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53');
     });
@@ -269,6 +270,20 @@ describe('Controller: ManualEposItemsCtrl', function () {
         };
         scope.calculateTotals(mockItemWithExchangeRate);
         expect(mockItemWithExchangeRate.convertedTotal).toEqual('4.10');
+      });
+
+      it('should accept whole numbers', function () {
+        var mockItemWithExchangeRate = {
+          amount: '1',
+          quantity: '1',
+          exchangeRate: {
+            bankExchangeRate: null,
+            paperExchangeRate:0.50,
+            coinExchangeRate: 0.50
+          }
+        };
+        scope.calculateTotals(mockItemWithExchangeRate);
+        expect(mockItemWithExchangeRate.convertedTotal).toEqual('2.00');
       });
     });
   });

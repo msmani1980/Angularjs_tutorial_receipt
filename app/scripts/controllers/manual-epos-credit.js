@@ -48,7 +48,7 @@ angular.module('ts5App')
         var coinExchangeRate = currencyObject.exchangeRate.coinExchangeRate;
         var splitAmounts = (currencyObject.amount.toString()).split('.');
         var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
-        var convertedCoinAmount = parseFloat(splitAmounts[1]) / coinExchangeRate;
+        var convertedCoinAmount = (!!splitAmounts[1]) ? parseFloat(splitAmounts[1]) / coinExchangeRate : 0;
         convertedAmount = convertedPaperAmount + (convertedCoinAmount / 100);
       } else {
         var exchangeRate = currencyObject.exchangeRate.bankExchangeRate;
@@ -59,8 +59,7 @@ angular.module('ts5App')
       return convertedAmount.toFixed(2);
     };
 
-    function setVerifiedData(verifiedDataFromAPI) {
-      $scope.isVerified = (!!verifiedDataFromAPI.creditCardVerifiedOn) || false;
+    function setVerifiedInfo(verifiedDataFromAPI) {
       if (!$scope.isVerified) {
         $scope.verifiedInfo = {};
         return;
@@ -71,6 +70,12 @@ angular.module('ts5App')
         verifiedBy: (verifiedDataFromAPI.creditCardVerifiedBy) ? verifiedDataFromAPI.creditCardVerifiedBy.firstName + ' ' + verifiedDataFromAPI.creditCardVerifiedBy.lastName : 'Unknown User',
         verifiedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
       };
+    }
+
+    function setVerifiedData(verifiedDataFromAPI) {
+      $scope.isVerified = (!!verifiedDataFromAPI.creditCardVerifiedOn) || false;
+      $scope.isCashBagConfirmed = (!!verifiedDataFromAPI.verificationConfirmedOn) || false;
+      setVerifiedInfo(verifiedDataFromAPI);
     }
 
     $scope.verify = function (shouldCheckForm) {

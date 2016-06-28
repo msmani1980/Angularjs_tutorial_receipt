@@ -7,7 +7,7 @@
  * Controller for the Stock Owner Items List view
  */
 angular.module('ts5App')
-  .controller('StockOwnerItemListCtrl', function($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter) {
+  .controller('StockOwnerItemListCtrl', function($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter, lodash) {
 
     var $this = this;
     this.meta = {
@@ -77,6 +77,11 @@ angular.module('ts5App')
         $this.meta.count = $this.meta.count || response.meta.count;
 
         var itemListFromAPI = angular.copy(response.retailItems);
+        lodash.map(itemListFromAPI, function (item) {
+          item.startDate = dateUtility.formatDateForApp(item.startDate);
+          item.endDate = dateUtility.formatDateForApp(item.endDate);
+        });
+
         $scope.itemsList = itemListFromAPI;
         $scope.itemsListCount = $scope.itemsList.length;
         $this.updateItemList();

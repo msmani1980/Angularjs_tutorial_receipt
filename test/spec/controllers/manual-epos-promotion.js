@@ -37,7 +37,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
 
   var cashBagVerificationDeferred;
   var cashBagVerificationJSON;
-  
+
   var promotionListDeferred;
   var promotionListJSON;
 
@@ -46,7 +46,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
 
   var verifyDeferred;
   var unverifyDeferred;
-  
+
   var createDeferred;
   var updateDeferred;
 
@@ -65,7 +65,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
       promotionListJSON = _servedManualPromotionsList_;
       cmpPromotionListJSON = _servedPromotionList_;
     });
-	    
+
     manualEposFactory = $injector.get('manualEposFactory');
     globalMenuService = $injector.get('globalMenuService');
     dateUtility = $injector.get('dateUtility');
@@ -75,7 +75,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
 
     promotionListDeferred = $q.defer();
     promotionListDeferred.resolve(promotionListJSON);
-    spyOn(manualEposFactory, 'getManualEposPromotionList').and.returnValue(promotionListDeferred.promise);
+    spyOn(manualEposFactory, 'getCashBagPromotionList').and.returnValue(promotionListDeferred.promise);
 
     cmpPromotionListDeferred = $q.defer();
     cmpPromotionListDeferred.resolve(cmpPromotionListJSON);
@@ -108,7 +108,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
     unverifyDeferred = $q.defer();
     unverifyDeferred.resolve(cashBagVerificationJSON.response[1]);
     spyOn(manualEposFactory, 'unverifyCashBag').and.returnValue(unverifyDeferred.promise);
-   
+
     mockBaseCurrency = 23;
     spyOn(globalMenuService, 'getCompanyData').and.returnValue({ baseCurrencyId: mockBaseCurrency });
 
@@ -133,7 +133,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
       scope.$digest();
 
   }));
-  
+
   describe('init', function () {
     it('should get cash bag', function () {
       expect(manualEposFactory.getCashBag).toHaveBeenCalledWith(cashBagId);
@@ -153,7 +153,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
     });
 
     it('should get cash bag promotions', function () {
-      expect(manualEposFactory.getManualEposPromotionList).toHaveBeenCalledWith(cashBagId);
+      expect(manualEposFactory.getCashBagPromotionList).toHaveBeenCalledWith(cashBagId);
     });
 
     it('should get company promotions', function () {
@@ -181,21 +181,21 @@ describe('Controller: ManualEposPromotionCtrl', function () {
     it('should attach a list of cash bag currencies to scope', function () {
       expect(scope.currencyList).toBeDefined();
       var expectedCurrencyObject = jasmine.objectContaining({
-        currencyId: 8, 
-        code: 'GBP', 
-        name: 'British Pound', 
-        exchangeRate: { id: 503, 
-          dailyExchangeRateId: 137, 
-          retailCompanyCurrencyId: 8, 
-          bankExchangeRate: null, 
-          coinExchangeRate: '1.0000', 
-          paperExchangeRate: '1.0000' 
-        } 
+        currencyId: 8,
+        code: 'GBP',
+        name: 'British Pound',
+        exchangeRate: { id: 503,
+          dailyExchangeRateId: 137,
+          retailCompanyCurrencyId: 8,
+          bankExchangeRate: null,
+          coinExchangeRate: '1.0000',
+          paperExchangeRate: '1.0000'
+        }
 	  });
 	  expect(scope.currencyList[0]).toEqual(expectedCurrencyObject);
     });
   });
-  
+
   describe('convert cash amount', function () {
     it('should use bank exchange rate for bank amounts', function () {
       var mockCurrencyObject = {
@@ -274,7 +274,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
       scope.$digest();
       expect(scope.isVerified).toEqual(false);
     });
-  });  
+  });
 
   describe('saving cash bag promotion', function () {
     var expectedPayload;
@@ -302,7 +302,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
 
     it('should call create for new entries', function () {
       scope.save();
-      expect(manualEposFactory.createManualEposPromotion).toHaveBeenCalledWith(expectedPayload);
+      expect(manualEposFactory.createManualEposPromotion).toHaveBeenCalledWith(cashBagId, expectedPayload);
     });
 
     it('should call update for existing entries', function () {
@@ -310,7 +310,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
       scope.promotionList[0].id = promotionId;
       expectedPayload.id = promotionId;
       scope.save();
-      expect(manualEposFactory.updateManualEposPromotion).toHaveBeenCalledWith(promotionId, expectedPayload);
+      expect(manualEposFactory.updateManualEposPromotion).toHaveBeenCalledWith(cashBagId,  promotionId, expectedPayload);
     });
 
     it('should redirect page if shouldExit is true', function () {

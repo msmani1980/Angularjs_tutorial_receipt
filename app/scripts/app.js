@@ -30,9 +30,9 @@ angular.module('ts5App', [
   'frapontillo.bootstrap-switch',
   'sprintf'
 ]).factory('defaultData', [
-  function() {
+  function () {
     return {
-      request: function(config) {
+      request: function (config) {
         if (angular.isUndefined(config.data)) {
           config.data = {
             requestTimestamp: new Date().getTime()
@@ -50,6 +50,7 @@ angular.module('ts5App', [
   number: /^-?([0-9]*)$/,
   alpha: /^[a-zA-z]+$/,
   alphanumeric: /^[a-zA-Z0-9]+$/,
+  alphaWithSpecial: /[a-zA-Z0-9\"\?\(\)\.\-\_\ \%\@\&\#\$\!,;:]+$/,
   email: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
   phone: /^([0-9]{3}( |-|.)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-|.)?([0-9]{3}( |-|.)?[0-9]{4}|[a-zA-Z0-9]{7})$/,
   cc: /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/,
@@ -61,11 +62,20 @@ angular.module('ts5App', [
   ],
   price: /^\$?\s?[0-9\,]+(\.\d{0,4})?$/,
   url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
-}).config(['$localStorageProvider', function($localStorageProvider) {
+}).config(function ($localStorageProvider) {
   $localStorageProvider.setKeyPrefix('TS5-');
-}]).config(function($routeProvider, $httpProvider) {
+}).config(function ($httpProvider) {
+  if (!$httpProvider.defaults.headers.get) {
+    $httpProvider.defaults.headers.get = {};
+  }
+
+  $httpProvider.defaults.headers.get['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+  $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
+  $httpProvider.defaults.headers.get.Pragma = 'no-cache';
+
   $httpProvider.interceptors.push('defaultData');
   $httpProvider.interceptors.push('httpSessionInterceptor');
+}).config(function ($routeProvider) {
   $routeProvider.when('/', {
     templateUrl: 'views/main.html',
     controller: 'MainCtrl'
@@ -223,7 +233,7 @@ angular.module('ts5App', [
     templateUrl: 'views/retail-company-exchange-rate-setup.html',
     controller: 'RetailCompanyExchangeRateSetupCtrl'
   }).when('/store-instance-review/:action/:storeId?', {
-    templateUrl: function(routeParameters) {
+    templateUrl: function (routeParameters) {
       if (routeParameters.action === 'redispatch') {
         return 'views/store-instance-redispatch-review.html';
       }
@@ -331,16 +341,12 @@ angular.module('ts5App', [
   }).when('/manual-epos-discount/:cashBagId', {
     templateUrl: 'views/manual-epos-discount.html',
     controller: 'ManualEposDiscountCtrl'
-  }).when('/manual-epos-promotion', {
+  }).when('/manual-epos-promotion/:cashbagId', {
     templateUrl: 'views/manual-epos-promotion.html',
     controller: 'ManualEposPromotionCtrl'
   }).otherwise({
     redirectTo: '/'
   });
-}).run(function($rootScope, regexp, $location, socketIO) {
+}).run(function ($rootScope, regexp) {
   $rootScope.regexp = regexp;
-
-  socketIO.on('redirectTo', function(route) {
-    $location.path(route);
-  });
 });

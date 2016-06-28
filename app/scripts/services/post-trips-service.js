@@ -82,7 +82,7 @@ angular.module('ts5App')
       }
 
       if (data.scheduleDate) {
-        data.scheduleDate = dateUtility.formatDate(data.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
+        data.scheduleDate = dateUtility.formatDateForApp(data.scheduleDate);
       }
 
       data.arrTime = formatTimeResponse(data.arrTime);
