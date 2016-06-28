@@ -68,9 +68,6 @@ angular.module('ts5App')
         '/station-list/*',
         '/station-view/*',
         '/stock-dashboard/*',
-        '/stock-owner-item-create/*',
-        '/stock-owner-item-edit/*',
-        '/stock-owner-item-view/*',
         '/stock-take-report/*',
         '/stock-take-review/*',
         '/stock-take/*',
@@ -107,7 +104,10 @@ angular.module('ts5App')
         '/rsvr/api/company-currency-globals',
         '/rsvr/api/promotions',
         '/rsvr/api/companies/stores/[0-9]*',
-        '/rsvr/api/records/company-types'
+        '/rsvr/api/records/company-types',
+        '/rsvr/api/companies/[0-9]*/tags',
+        '/rsvr/api/companies/[0-9]*/tax-types',
+        '/rsvr/api/images'
 
     ];
 

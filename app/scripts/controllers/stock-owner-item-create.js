@@ -220,11 +220,12 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     this.deserializeAllergens = function(itemData) {
       for (var allergenKey in itemData.allergens) {
         var allergen = itemData.allergens[allergenKey];
-        var index = $this.findAllergenIndex(allergen.allergenId);
+        
+        //var index = $this.findAllergenIndex(allergen.allergenId);
         itemData.allergens[allergenKey] = {
           id: allergen.id,
           allergenId: allergen.allergenId,
-          name: $scope.allergens[index].name
+          name: allergen.name
         };
       }
     };
@@ -235,7 +236,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
         var allergen = itemData.allergens[allergenKey];
         allergenPayload[allergenKey] = {
           id: allergen.id,
-          allergenId: allergen.allergenId,
+          allergenId: allergen.id,
           itemId: itemData.id
         };
       }

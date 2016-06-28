@@ -23,11 +23,13 @@ angular.module('ts5App')
     };
     $scope.openVersionId = -1;
 
-    function showLoadingBar() {
+    function showLoadingBar(loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);	
       angular.element('.loading-more').show();
     }
 
     function hideLoadingBar() {
+      angular.element('#loading').modal('hide');	
       angular.element('.loading-more').hide();
       angular.element('.modal-backdrop').remove();
     }
