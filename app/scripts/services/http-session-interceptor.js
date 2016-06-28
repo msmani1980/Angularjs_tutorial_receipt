@@ -109,8 +109,6 @@ angular.module('ts5App')
     ];
 
     var onlyRsvrApis = [
-	  '/rsvr/api/records/store-status',
-	  '/rsvr/api/caterer-stations',
       '/rsvr/api/company-preferences',
       '/rsvr/api/dailyexchangerate',
       '/rsvr/api/company-formats',
