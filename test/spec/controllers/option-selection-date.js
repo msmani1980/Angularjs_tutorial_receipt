@@ -18,6 +18,6 @@ describe('Controller: OptionSelectionDateCtrl', function () {
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    expect(OptionSelectionDateCtrl.awesomeThings.length).toBe(3);
+	  // place here mocked dependencies
   });
 });

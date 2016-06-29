@@ -18,6 +18,6 @@ describe('Controller: QueueCtrl', function () {
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    expect(QueueCtrl.awesomeThings.length).toBe(3);
+	// place here mocked dependencies
   });
 });

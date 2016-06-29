@@ -18,6 +18,6 @@ describe('Controller: ScheduleReportCtrl', function () {
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    expect(ScheduleReportCtrl.awesomeThings.length).toBe(3);
+	// place here mocked dependencies
   });
 });

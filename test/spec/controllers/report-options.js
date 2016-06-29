@@ -18,6 +18,6 @@ describe('Controller: ReportOptionsCtrl', function () {
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    expect(ReportOptionsCtrl.awesomeThings.length).toBe(3);
+	// place here mocked dependencies
   });
 });

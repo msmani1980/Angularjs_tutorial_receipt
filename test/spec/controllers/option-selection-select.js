@@ -18,6 +18,6 @@ describe('Controller: OptionSelectionSelectCtrl', function () {
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    expect(OptionSelectionSelectCtrl.awesomeThings.length).toBe(3);
+	 // place here mocked dependencies
   });
 });
