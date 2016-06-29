@@ -2,5 +2,4 @@
 
 describe('Service: template', function () {
 
-
 });

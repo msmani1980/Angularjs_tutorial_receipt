@@ -2,5 +2,4 @@
 
 describe('Filter: timeinterval', function () {
 
-
 });
