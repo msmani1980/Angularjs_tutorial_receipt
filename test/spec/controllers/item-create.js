@@ -1047,7 +1047,6 @@ describe('The Item Create Controller', function() {
       });
 
       describe('getPriceCurrenciesList()', function() {
-
         var priceIndex;
         beforeEach(function() {
           priceIndex = 0;
@@ -1069,6 +1068,22 @@ describe('The Item Create Controller', function() {
           var controlPriceList = ItemCreateCtrl.generatePriceCurrenciesList(priceIndex,
             currenciesListJSON.response);
           expect(priceGroup.priceCurrencies).toEqual(controlPriceList);
+        });
+
+        it('should map response currencies to global currency list by currency id', function () {
+          var mockCurrencyList = [currenciesListJSON.response[0], currenciesListJSON.response[1]];
+          var mockPriceGroup = {
+            priceCurrencies: [
+              { companyCurrencyId: mockCurrencyList[1].id, price: '1.00' },
+              { companyCurrencyId: mockCurrencyList[0].id, price: '2.00' }
+          ]};
+          scope.formData.prices[0] = mockPriceGroup;
+
+          var generatedPriceList = ItemCreateCtrl.generatePriceCurrenciesList(0, mockCurrencyList);
+          expect(generatedPriceList[0].price).toEqual('2.00');
+          expect(generatedPriceList[0].companyCurrencyId).toEqual(mockPriceGroup.priceCurrencies[1].companyCurrencyId);
+          expect(generatedPriceList[1].price).toEqual('1.00');
+          expect(generatedPriceList[1].companyCurrencyId).toEqual(mockPriceGroup.priceCurrencies[0].companyCurrencyId);
         });
 
         it('should have called the setPriceCurrenciesList method', function() {
