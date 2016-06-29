@@ -94,7 +94,7 @@ angular.module('ts5App')
     ];
 
     var legacyApis = [
-	    '/rsvr/api/companies/[0-9]*/relationships',
+        '/rsvr/api/companies/[0-9]*/relationships',
         '/rsvr/api/companies/[0-9]*$',
         '/rsvr/api/retail-items/master/*',
         '/rsvr/api/daily-exchange-rates/[0-9]*',
@@ -118,7 +118,8 @@ angular.module('ts5App')
       '/rsvr/api/cashbag/[0-9]+/cash',
       '/rsvr/api/cashbags/cash/',
       '/rsvr/api/cashbag-[a-z]+(/[0-9]*)?',
-      '/rsvr/api/dispatch/store-instances/[0-9]*/status/11'
+      '/rsvr/api/dispatch/store-instances/[0-9]*/status/11',
+      '/rsvr/api/retail-items/*'
     ];
 
     function responseError(response) {
