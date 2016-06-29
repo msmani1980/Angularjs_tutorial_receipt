@@ -125,7 +125,7 @@ angular.module('ts5App')
       var formData = cleanPayload(angular.copy($scope.cashBag));
       switch ($routeParams.state) {
         case 'edit':
-          if (formData.isSubmitted === 'true') {
+          if (formData.isSubmitted === true) {
             showMessage(null, true, 'cannot edit cash bags that have been submitted!');
             break;
           }
@@ -168,11 +168,11 @@ angular.module('ts5App')
         return false;
       }
 
-      if (cashBag.isSubmitted === 'true') {
+      if (cashBag.isSubmitted === true) {
         return false;
       }
 
-      if (cashBag.isDelete === 'true') {
+      if (cashBag.isDelete === true) {
         return false;
       }
 
@@ -210,7 +210,7 @@ angular.module('ts5App')
     };
 
     $scope.isCashBagDeleted = function() {
-      return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === 'true');
+      return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === true);
     };
 
     function getStoreResponseHandler(dataFromAPI) {
@@ -435,7 +435,7 @@ angular.module('ts5App')
 
       $scope.readOnly = false;
       $scope.cashBag = {
-        isSubmitted: 'false',
+        isSubmitted: false,
         retailCompanyId: _companyId,
         storeInstanceId: $routeParams.storeInstanceId,
         cashBagCurrencies: []

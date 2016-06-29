@@ -336,9 +336,9 @@ describe('Controller: CashBagCtrl', function() {
     describe('isCashBagDeleted', function() {
       it('should return true if cash bag has been deleted', function() {
         scope.cashBag = {};
-        scope.cashBag.isDelete = 'true';
+        scope.cashBag.isDelete = true;
         expect(scope.isCashBagDeleted()).toEqual(true);
-        scope.cashBag.isDelete = 'false';
+        scope.cashBag.isDelete = false;
         expect(scope.isCashBagDeleted()).toEqual(false);
       });
     });
@@ -484,7 +484,7 @@ describe('Controller: CashBagCtrl', function() {
       scope.readOnly = false;
       scope.$digest();
       expect(scope.removeRecord({
-        isSubmitted: 'true'
+        isSubmitted: true
       })).toBe(false);
     });
 
@@ -493,7 +493,7 @@ describe('Controller: CashBagCtrl', function() {
       scope.readOnly = false;
       scope.$digest();
       expect(scope.removeRecord({
-        isDelete: 'true'
+        isDelete: true
       })).toBe(false);
     });
 

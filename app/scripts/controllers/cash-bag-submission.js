@@ -90,9 +90,9 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
 
     function formatCashBag(cashBag) {
       cashBag.selected = false;
-      cashBag.submittedDate = (cashBag.isSubmitted === 'true') ? dateUtility.formatDateForApp(cashBag.updatedOn) : '-';
+      cashBag.submittedDate = (cashBag.isSubmitted === true) ? dateUtility.formatDateForApp(cashBag.updatedOn) : '-';
       cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
-      cashBag.submittedBy = (!cashBag.cashbagSubmittedBy && cashBag.isSubmitted === 'true') ? 'Auto' : (cashBag.cashbagSubmittedBy || '-');
+      cashBag.submittedBy = (!cashBag.cashbagSubmittedBy && cashBag.isSubmitted === true) ? 'Auto' : (cashBag.cashbagSubmittedBy || '-');
     }
 
     this.getCashBagListSuccessHandler = function (dataFromAPI) {
@@ -196,7 +196,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     };
 
     $scope.shouldDisableSubmission = function (cashBag) {
-      return cashBag.isSubmitted === 'true' || !cashBag.bankReferenceNumber || cashBag.bankReferenceNumber.length === 0;
+      return cashBag.isSubmitted === true || !cashBag.bankReferenceNumber || cashBag.bankReferenceNumber.length === 0;
     };
 
     $scope.toggleAllCheckboxes = function () {
