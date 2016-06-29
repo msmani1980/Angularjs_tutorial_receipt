@@ -1,5 +1,7 @@
 'use strict';
 
+//jshint maxcomplexity:11
+
 /**
  * @ngdoc filter
  * @name ts5App.filter:timeinterval

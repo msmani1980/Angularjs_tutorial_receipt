@@ -1,5 +1,7 @@
 'use strict';
 
+//jshint maxcomplexity:8
+
 /**
  * @ngdoc filter
  * @name ts5App.filter:filesize
