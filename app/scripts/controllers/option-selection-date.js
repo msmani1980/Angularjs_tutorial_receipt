@@ -8,8 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('OptionSelectionDateCtrl', function ($scope) {
-	    $scope.format = 'dd/MM/yyyy';
+  .controller('OptionSelectionDateCtrl', function ($scope,dateUtility) {
+	    $scope.format = dateUtility.getReportsDateFormat();
 	    $scope.status = {
 	      opened: false
 	    };
