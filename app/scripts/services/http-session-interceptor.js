@@ -162,11 +162,8 @@ angular.module('ts5App')
         return false;
       }
 
-      if (isPageWithLegacyAPIs() || isLegacyAPI(config)) {
-        return true;
-      }
+      return isPageWithLegacyAPIs() || isLegacyAPI(config);
 
-      return false;
     };
 
     function request(config) {
