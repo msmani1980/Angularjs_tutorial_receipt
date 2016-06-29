@@ -32,8 +32,8 @@ describe('Service: storeInstanceService', function () {
 
   describe('getStoreInstance', function () {
     it('should make GET request to API', function () {
-      var expectedURL = /dispatch\/store-instances\/\d+$/;
       var fakeId = 38;
+      var expectedURL = /dispatch\/store-instances\/\d+$/;
       httpBackend.expectGET(expectedURL).respond(200, {});
       storeInstanceService.getStoreInstance(fakeId).then(function (response) {
         expect(response).toBeDefined();
