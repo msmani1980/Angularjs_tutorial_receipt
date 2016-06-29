@@ -350,11 +350,11 @@ angular.module('ts5App', [
     templateUrl: 'views/reports.html',
     controller: 'ReportsCtrl',
     controllerAs: 'reports'
-  }).when('/queue', {
+  }).when('/reports/queue', {
     templateUrl: 'views/queue.html',
     controller: 'QueueCtrl',
     controllerAs: 'queue'
-  }).when('/scheduled-reports', {
+  }).when('/reports/scheduled-reports', {
     templateUrl: 'views/scheduled-reports.html',
     controller: 'ScheduledReportsCtrl',
     controllerAs: 'scheduledReports'

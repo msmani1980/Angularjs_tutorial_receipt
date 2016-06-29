@@ -26,7 +26,7 @@ angular.module('ts5App')
         });
 
         $scope.download = function(fileId) {
-            window.open(ENV.apiUrl + "/report-api/reports/" + fileId);
+            window.open(ENV.apiUrl + '/report-api/reports/' + fileId);
         };
 
         $scope.delete = function(jobId) {

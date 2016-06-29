@@ -36,7 +36,7 @@ angular.module('ts5App')
                          return template.id;
                        },
                        scheduledReportId: function () {
-	                        return "";
+	                        return '';
 	                   }
                  }
               });

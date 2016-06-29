@@ -37,6 +37,7 @@ angular.module('ts5App')
 	         
 	         $scope.disableScheduled = function(scheduledReport) {
 	        	    scheduledReportsService.disableScheduled(scheduledReport.id).then(function(res) {
+	        	    	return res;
 		 	        });
 		     };
 });

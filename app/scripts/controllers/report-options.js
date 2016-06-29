@@ -30,7 +30,7 @@ angular.module('ts5App')
               return retValues;
             }
             else if(type === 'DATE') {
-              return $filter('date')(value, "yyyy-MM-dd");
+              return $filter('date')(value, 'yyyy-MM-dd');
             }
             else if(type === 'ID') {
               return value.id;
@@ -64,7 +64,7 @@ angular.module('ts5App')
 
             jobService.run($scope.template.id, params).then(function() {
               $modalInstance.close();
-              window.location.href="#/queue";
+              window.location.href='#/queue';
             });
 
 

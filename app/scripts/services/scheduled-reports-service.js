@@ -11,15 +11,15 @@ angular.module('ts5App')
 	.service('scheduledReportsService', function ($http, ENV, globalMenuService) {
 	    return {
 	      getAll: function() {
-	        var scheduledReports = $http.get(ENV.apiUrl +"/report-api/scheduleReport", {headers:{'companyId':globalMenuService.company.get()}});
+	        var scheduledReports = $http.get(ENV.apiUrl +'/report-api/scheduleReport', {headers:{'companyId':globalMenuService.company.get()}});
 	        return scheduledReports;
 	      },
 	      getSchedule: function(scheduleReportId) {
-	          var scheduleReport = $http.get(ENV.apiUrl +"/report-api/scheduleReport/"+scheduleReportId);
+	          var scheduleReport = $http.get(ENV.apiUrl +'/report-api/scheduleReport/'+scheduleReportId);
 	          return scheduleReport;
 	      },
 	      disableScheduled: function(scheduleReportId) {
-	          var scheduleReport = $http.put(ENV.apiUrl +"/report-api/scheduleReport/"+scheduleReportId);
+	          var scheduleReport = $http.put(ENV.apiUrl +'/report-api/scheduleReport/'+scheduleReportId);
 	          return scheduleReport;
 	      }
 	    };

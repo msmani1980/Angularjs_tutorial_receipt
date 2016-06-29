@@ -38,20 +38,20 @@ angular.module('ts5App')
 
       var timeString = '';
       if(milliseconds > 0) {
-        timeString += (milliseconds + "ms");
+        timeString += (milliseconds + 'ms');
       }
       else {
         if(days > 0) {
-          timeString += (days > 1) ? (days + " days ") : (days + " day ");
+          timeString += (days > 1) ? (days + ' days ') : (days + ' day ');
         }
         if(hours > 0) {
-          timeString += (hours + "h");
+          timeString += (hours + 'h');
         }
         if(minutes > 0) {
-          timeString += (minutes + "m");
+          timeString += (minutes + 'm');
         }
         if(seconds > 0) {
-          timeString += (seconds + "s");
+          timeString += (seconds + 's');
         }
       }
       return timeString;

@@ -511,14 +511,14 @@ angular.module('ts5App')
             role: 'REPORT'
           },{
               name: 'Queue',
-              route: '/#/queue',
+              route: '/#/reports/queue',
               icon: 'icon-create-menu',
               className: 'dashboard-reports',
               package: 'REPORT',
               role: 'REPORT'
             },{
                 name: 'Scheduled Reports',
-                route: '/#/scheduled-reports',
+                route: '/#/reports/scheduled-reports',
                 icon: 'icon-create-menu',
                 className: 'dashboard-reports',
                 package: 'REPORT',
