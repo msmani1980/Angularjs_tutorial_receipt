@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('companyFormatService', function ($resource, ENV) {
 
-    var companyFormatRequestURL = ENV.apiUrl + '/rsvr/api/company-formats/:id?cache' + Math.random();
+    var companyFormatRequestURL = ENV.apiUrl + '/rsvr/api/company-formats/:id';
     var requestParameters = {
       id: '@id'
     };
