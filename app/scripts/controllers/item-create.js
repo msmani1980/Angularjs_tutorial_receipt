@@ -871,7 +871,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       angular.forEach(currenciesList, function (currency) {
         var newCurrency = $this.generateCurrency(currency);
         var existingCurrency = lodash.findWhere(priceGroup.priceCurrencies, { companyCurrencyId: newCurrency.companyCurrencyId });
-        newCurrency.price = (existingCurrency) ? existingCurrency.price : '1.00';
+        newCurrency.price = (existingCurrency) ? existingCurrency.price : newCurrency.price;
         priceCurrencies.push(newCurrency);
       });
 
