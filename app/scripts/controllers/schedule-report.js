@@ -108,10 +108,22 @@ angular.module('ts5App')
              return returnDetails;
          };
          
+         var selection='not selected';
+		 
+         function getSelectedRecurrencePattern(payLoad){
+				
+			 if($scope.scheduleReport.recurrencePattern === $scope.recurrencePattern[0].name){
+				payLoad.daysOfWeek = ($scope.user.daysOfWeek.length)? $scope.user.daysOfWeek.join(): selection;
+			 }else if($scope.scheduleReport.recurrencePattern === $scope.recurrencePattern[1].name){
+				payLoad.dayOfWeek=$scope.scheduleReport.dayOfWeek;
+			 }else if($scope.scheduleReport.recurrencePattern === $scope.recurrencePattern[2].name){
+				payLoad.dayOfMonth=$scope.scheduleReport.dayOfMonth;
+			 }
+         }
 
      	$scope.saveReport = function() {
 
-         	var payLoad = angular.copy($scope.scheduleReport);
+         	 var payLoad = angular.copy($scope.scheduleReport);
              payLoad.templateId = templateId;
 
              var startDatevalue = $scope.scheduleReport.recurrenceStartDate;
@@ -122,20 +134,12 @@ angular.module('ts5App')
              payLoad.recurrenceTime = $filter('date')( $scope.scheduleReport.recurrenceTime, 'HH:mm');
              
              $scope.checkBoxDaysOfWeekArray = [];
-			 var selection='not selected';
-			 if($scope.scheduleReport.recurrencePattern === $scope.recurrencePattern[0].name){
-				payLoad.daysOfWeek = ($scope.user.daysOfWeek.length)? $scope.user.daysOfWeek.join(): selection;
-				payLoad.dayOfWeek=null;
-				payLoad.dayOfMonth=null;
-			 }else if($scope.scheduleReport.recurrencePattern === $scope.recurrencePattern[1].name){
-				payLoad.daysOfWeek = null;
-				payLoad.dayOfWeek=$scope.scheduleReport.dayOfWeek;
-				payLoad.dayOfMonth=null;
-			 }else if($scope.scheduleReport.recurrencePattern === $scope.recurrencePattern[2].name){
-				payLoad.daysOfWeek = null;
-				payLoad.dayOfWeek=null;
-				payLoad.dayOfMonth=$scope.scheduleReport.dayOfMonth;
-			 }
+			 
+             payLoad.daysOfWeek = null;
+			 payLoad.dayOfWeek=null;
+			 payLoad.dayOfMonth=null;
+			 
+			 getSelectedRecurrencePattern(payLoad);
 			
 			 if($scope.scheduleReport.dayOfMonth === 'Last Day'){
 				payLoad.dayOfMonth = -1;

@@ -64,7 +64,7 @@ angular.module('ts5App')
 
             jobService.run($scope.template.id, params).then(function() {
               $modalInstance.close();
-              window.location.href='#/queue';
+              window.location.href='#/reports/queue';
             });
 
 
