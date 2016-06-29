@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('OptionSelectionDateCtrl', function ($scope) {
-	    $scope.format = 'yyyy/MM/dd';
+	    $scope.format = 'dd/MM/yyyy';
 	    $scope.status = {
 	      opened: false
 	    };
