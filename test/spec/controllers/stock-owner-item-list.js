@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('The StockOwnerItemListCtrl controller', function () {
+describe('The StockOwnerItemListCtrl controller', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/items-list.json'));
