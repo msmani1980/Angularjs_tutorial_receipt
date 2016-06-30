@@ -509,21 +509,21 @@ angular.module('ts5App')
             className: 'dashboard-reports',
             package: 'REPORT',
             role: 'REPORT'
-          },{
-              name: 'Queue',
-              route: '/#/reports/queue',
-              icon: 'icon-create-menu',
-              className: 'dashboard-reports',
-              package: 'REPORT',
-              role: 'REPORT'
-            },{
-                name: 'Scheduled Reports',
-                route: '/#/reports/scheduled-reports',
-                icon: 'icon-create-menu',
-                className: 'dashboard-reports',
-                package: 'REPORT',
-                role: 'REPORT'
-              }]
+          }, {
+            name: 'Queue',
+            route: '/#/reports/queue',
+            icon: 'icon-create-menu',
+            className: 'dashboard-reports',
+            package: 'REPORT',
+            role: 'REPORT'
+          }, {
+            name: 'Scheduled Reports',
+            route: '/#/reports/scheduled-reports',
+            icon: 'icon-create-menu',
+            className: 'dashboard-reports',
+            package: 'REPORT',
+            role: 'REPORT'
+          }]
         }];
     };
 
