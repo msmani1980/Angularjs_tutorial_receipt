@@ -99,9 +99,7 @@ angular.module('ts5App')
       var saveCashBag = angular.copy(formData);
       saveCashBag.scheduleDate = dateUtility.formatDateForAPI(saveCashBag.scheduleDate);
       $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
-      var payload = {
-        cashBag: saveCashBag
-      };
+      var payload = saveCashBag;
       showLoadingModal('Saving Cash Bag');
       cashBagFactory.updateCashBag($routeParams.id, payload).then(cashBagEditSuccessHandler, errorHandler);
     }
