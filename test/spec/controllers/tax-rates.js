@@ -32,6 +32,7 @@ describe('Controller: TaxRatesCtrl', function () {
   var removeCompanyTaxRateDeferred;
   var updateCompanyTaxRateDeferred;
   var filter;
+  var dateUtilityLocal;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $injector, $route, $filter, dateUtility, ngToast, _servedTaxTypes_,
                               _servedTaxRateTypes_, _servedCountryList_, _servedStations_, _servedCurrencies_, _servedCompanyTaxRates_) {
@@ -43,6 +44,7 @@ describe('Controller: TaxRatesCtrl', function () {
     currenciesListJSON = _servedCurrencies_;
     companyTaxRatesJSON = _servedCompanyTaxRates_;
     filter = $filter;
+    dateUtilityLocal = dateUtility;
 
     scope = $rootScope.$new();
     controller = $controller;
@@ -199,6 +201,14 @@ describe('Controller: TaxRatesCtrl', function () {
       });
 
       it('should set the scope.countriesList to the mock data', function () {
+        var nowDate = dateUtilityLocal.formatDateForAPI(dateUtilityLocal.nowFormatted());
+        var payload = {
+          startDate: nowDate,
+          endDate: nowDate,
+          isOperatedCurrency: true
+        };
+        expect(taxRatesFactory.getCompanyCurrencies).toHaveBeenCalledWith(payload);
+
         expect(scope.countriesList[0]).toEqual(countriesJSON.countries[0]);
       });
 
