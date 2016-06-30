@@ -111,9 +111,7 @@ angular.module('ts5App')
       saveCashBag.scheduleDate = dateUtility.formatDateForAPI(saveCashBag.scheduleDate);
       formData.isDelete = false;
       showLoadingModal('Saving Cash Bag');
-      cashBagFactory.createCashBag({
-        cashBag: saveCashBag
-      }).then(cashBagCreateSuccessHandler, errorHandler);
+      cashBagFactory.createCashBag(saveCashBag).then(cashBagCreateSuccessHandler, errorHandler);
     }
 
     $scope.formSave = function() {

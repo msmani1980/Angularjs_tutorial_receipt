@@ -246,9 +246,7 @@ describe('Controller: CashBagCtrl', function() {
           delete cashBagCurrency.bankExchangeRate;
         });
 
-        var expectedPayload = {
-          cashBag: payload
-        };
+        var expectedPayload = payload;
 
         scope.formSave(scope.cashBag);
         expect(cashBagFactory.createCashBag).toHaveBeenCalledWith(expectedPayload);
