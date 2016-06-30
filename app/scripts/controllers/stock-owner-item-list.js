@@ -32,18 +32,6 @@ angular.module('ts5App')
       return $filter('filter')($scope.itemsList, $scope.search);
     };
 
-    this.parsePaginationToInt = function() {
-      $scope.currentPageInt = parseInt($scope.currentPage);
-      $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
-    };
-
-    this.setPaginatedItems = function(filteredItems) {
-      $this.parsePaginationToInt();
-      var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
-      var end = begin + $scope.itemsPerPageInt;
-      $scope.paginatedItems = filteredItems.slice(begin, end);
-    };
-
     this.generateItemQuery = function() {
       var todaysDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       var query = {
@@ -84,7 +72,6 @@ angular.module('ts5App')
 
         $scope.itemsList = $scope.itemsList.concat(itemListFromAPI);
         $scope.itemsListCount = $scope.itemsList.length;
-        console.log($scope.itemsListCount);
         $this.updateItemList();
         $this.hideLoadingModal();
       });
