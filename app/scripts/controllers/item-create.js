@@ -866,10 +866,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
 
       var priceCurrencies = [];
+      var priceGroup = $scope.formData.prices[priceIndex];
       
       angular.forEach(currenciesList, function (currency) {
         var newCurrency = $this.generateCurrency(currency);
-        var priceGroup = $scope.formData.prices[priceIndex];
         var existingCurrency = lodash.findWhere(priceGroup.priceCurrencies, { companyCurrencyId: newCurrency.companyCurrencyId });
         newCurrency.id = (existingCurrency) ? existingCurrency.id : newCurrency.id; 
         newCurrency.price = (existingCurrency) ? existingCurrency.price : newCurrency.price;
