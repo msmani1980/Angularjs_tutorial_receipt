@@ -25,15 +25,17 @@ describe('Controller: PostFlightDataListCtrl', function() {
   var companyId;
   var postTripFactory;
   var location;
+  var dateUtility;
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location) {
     inject(function(_servedPostTripDataList_, _servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_,
-      _servedEmployees_) {
+      _servedEmployees_, _dateUtility_) {
       postTripsResponseJSON = _servedPostTripDataList_;
       stationsListResponseJSON = _servedStations_;
       carrierTypesResponseJSON = _servedCarrierTypes_;
       carrierNumbersResponseJSON = _servedCarrierNumbers_;
       employeesResponseJSON = _servedEmployees_;
+      dateUtility = _dateUtility_;
     });
 
     location = $location;
@@ -219,8 +221,8 @@ describe('Controller: PostFlightDataListCtrl', function() {
 
     it('should only show delete button if date is in future', function() {
       var now = new Date(2015, 7, 12);
-      var pastString = '2015-05-10';
-      var futureString = '2015-10-15';
+      var pastString = dateUtility.formatDateForApp('2015-05-10');
+      var futureString = dateUtility.formatDateForApp('2015-10-15');
       jasmine.clock().mockDate(now);
       expect(scope.showDeleteButton(pastString)).toEqual(false);
       expect(scope.showDeleteButton(futureString)).toEqual(true);

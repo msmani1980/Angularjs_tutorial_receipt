@@ -28,7 +28,9 @@ angular.module('ts5App', [
   'ang-drag-drop',
   'ngLodash',
   'frapontillo.bootstrap-switch',
-  'sprintf'
+  'sprintf',
+  'checklist-model',
+  'angular-timezone-selector'
 ]).factory('defaultData', [
   function () {
     return {
@@ -344,6 +346,18 @@ angular.module('ts5App', [
   }).when('/manual-epos-promotion/:cashbagId', {
     templateUrl: 'views/manual-epos-promotion.html',
     controller: 'ManualEposPromotionCtrl'
+  }).when('/reports', {
+    templateUrl: 'views/reports.html',
+    controller: 'ReportsCtrl',
+    controllerAs: 'reports'
+  }).when('/reports/queue', {
+    templateUrl: 'views/queue.html',
+    controller: 'QueueCtrl',
+    controllerAs: 'queue'
+  }).when('/reports/scheduled-reports', {
+    templateUrl: 'views/scheduled-reports.html',
+    controller: 'ScheduledReportsCtrl',
+    controllerAs: 'scheduledReports'
   }).otherwise({
     redirectTo: '/'
   });

@@ -11,7 +11,13 @@ angular.module('ts5App')
   .service('dateUtility', function (companyFormatUtility) {
 
     var dateFormatForAPI = 'YYYYMMDD';
-
+    
+    var dateFormatForReportAPI = 'dd/MM/yyyy';
+    
+    this.getReportsDateFormat = function(){
+    	return dateFormatForReportAPI;
+    };
+    
     this.getDateFormatForApp = function () {
       return companyFormatUtility.getDateFormat();
     };

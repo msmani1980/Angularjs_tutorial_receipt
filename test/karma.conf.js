@@ -87,6 +87,12 @@ module.exports = function(config) {
       'bower_components/sprintf/src/sprintf.js',
       'bower_components/moment/moment.js',
       'bower_components/angular-moment/angular-moment.js',
+      'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
+      'bower_components/lodash/lodash.js',
+      'bower_components/chosen/chosen.jquery.min.js',
+      'bower_components/jstzdetect/jstz.min.js',
+      'bower_components/angular-timezone-selector/dist/angular-timezone-selector.js',
+      'bower_components/checklist-model/checklist-model.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'bower_components/sprintf/src/angular-sprintf.js',
