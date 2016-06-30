@@ -234,7 +234,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
         var allergen = itemData.allergens[allergenKey];
         allergenPayload[allergenKey] = {
           id: allergen.id,
-          allergenId: allergen.id,
+          allergenId: allergen.allergenId,
           itemId: itemData.id
         };
       }

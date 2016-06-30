@@ -871,6 +871,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var priceGroup = $scope.formData.prices[priceIndex];
         var existingCurrency = priceGroup.priceCurrencies[key];
         if (existingCurrency) {
+          newCurrency.id = existingCurrency.id;	
           newCurrency.price = existingCurrency.price;
         }
 
