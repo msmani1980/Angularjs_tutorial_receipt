@@ -1,7 +1,7 @@
 // TODO: Add in test cases for business logic regarding station constraints like start / end date
 'use strict';
 
-fdescribe('Stations Service |', function () {
+describe('Stations Service |', function () {
 
   // instantiate service
   var stationsService,
