@@ -160,9 +160,9 @@ angular.module('ts5App')
       hideLoadingModal();
 
       // Set cached results instead of hitting API again
-      if (angular.isUndefined(_cateringStationItems[$scope.deliveryNote.catererStationId])) {
-        _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
-      }
+      //if (angular.isUndefined(_cateringStationItems[$scope.deliveryNote.catererStationId])) {
+      //  _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
+      //}
 
       if (!response.response) {
         if ($scope.routeParamState === 'edit' && _firstTime) {
@@ -194,6 +194,17 @@ angular.module('ts5App')
       setAllowedMasterItems();
     }
 
+    function setStationItemsFromAPI (responseCollection) {
+      console.log('HI');
+
+      if (responseCollection[1]) {
+        addNewMasterItemsFromCatererStationMasterItemsResponse(responseCollection[1]);
+      }
+
+      hideLoadingModal();
+    }
+
+    // TODO;
     function getMasterRetailItemsByCatererStationId(catererStationId) {
       if (!catererStationId) {
         return;
@@ -201,15 +212,22 @@ angular.module('ts5App')
 
       displayLoadingModal();
 
+      var updateStationPromises = [
+        deliveryNoteFactory.getMenuCatererStationList({ catererStationId: catererStationId }),
+        deliveryNoteFactory.getItemsByCateringStationId(catererStationId)
+      ];
+
       // used cached results instead of hitting API again
       if (angular.isDefined(_cateringStationItems[catererStationId])) {
         var response = _cateringStationItems[catererStationId];
         addNewMasterItemsFromCatererStationMasterItemsResponse(response);
-        return;
+        updateStationPromises.splice(1, 1);
       }
 
-      deliveryNoteFactory.getItemsByCateringStationId(catererStationId).then(
-        addNewMasterItemsFromCatererStationMasterItemsResponse, showResponseErrors);
+      $q.all(updateStationPromises).then(setStationItemsFromAPI, showResponseErrors);
+
+      //deliveryNoteFactory.getItemsByCateringStationId(catererStationId).then(
+      //  addNewMasterItemsFromCatererStationMasterItemsResponse, showResponseErrors);
     }
 
     function catererStationIdWatcher(newValue, oldValue) {
@@ -521,6 +539,15 @@ angular.module('ts5App')
       return deliveryNoteFactory.getCharacteristics().then(setCharacteristicType, showResponseErrors);
     }
 
+    function setMenuList(dataFromAPI) {
+      $scope.menuList = angular.copy(dataFromAPI.menus);
+    }
+
+    function getMenuList() {
+      var payload = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+      deliveryNoteFactory.getMenuList(payload).then(setMenuList, showResponseErrors);
+    }
+
     function getItemFilterDependencies() {
       var promises = [
         getItemTypes(),
@@ -675,6 +702,7 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
       _initPromises.push(getMasterItems());
+      _initPromises.push(getMenuList());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();
