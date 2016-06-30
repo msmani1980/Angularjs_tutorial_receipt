@@ -79,10 +79,9 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     if (companyId) {
       actions.getStoreInstance.headers = { companyId: companyId };
     }
-    
+
     return requestResource.getStoreInstance({
-      id: id,
-      cachePrevent: Date.now()
+      id: id
     }).$promise;
   }
 
