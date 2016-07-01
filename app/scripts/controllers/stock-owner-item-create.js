@@ -220,10 +220,11 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     this.deserializeAllergens = function(itemData) {
       for (var allergenKey in itemData.allergens) {
         var allergen = itemData.allergens[allergenKey];
+        var index = $this.findAllergenIndex(allergen.allergenId);
         itemData.allergens[allergenKey] = {
           id: allergen.id,
           allergenId: allergen.allergenId,
-          name: allergen.name
+          name: $scope.allergens[index].name
         };
       }
     };
