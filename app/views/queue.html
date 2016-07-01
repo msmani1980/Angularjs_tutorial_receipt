@@ -1,0 +1,41 @@
+<!-- /Container  Starts -->
+<div class="container">
+   <h2>Report Queue</h2>
+
+   <table class="table">
+     <thead>
+       <tr>
+         <th>Report</th>
+         <th>Status</th>
+         <th>ID</th>
+         <th>Created</th>
+         <th>Runtime</th>
+         <th>Report Size</th>
+         <th>Actions</th>
+       </tr>
+     </thead>
+     <tbody>
+       <tr ng-repeat="job in jobs track by job.id">
+         <th>{{job.name}}</th>
+         <th>{{job.status}}</th>
+         <th>{{job.id}}</th>
+         <th>{{job.created | date : 'medium'}}</th>
+         <th>{{job.jobRunTimeMillis | timeinterval}}</th>
+         <th><span ng-if="job.file">{{job.file.size | filesize}}</span></th>
+         <th>
+           <span ng-if="job.file">
+             <a ng-click="download(job.file.id)" class="btn btn-xs btn-success">
+               Download <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+             </a>
+           </span>
+           <a ng-click="delete(job.id)" class="btn btn-xs btn-danger">
+            Delete <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+           </a>
+         </th>
+       </tr>
+     </tbody>
+   </table>
+</div>
+<!-- /Container  Ends -->
+
+<dynamic-left-nav title="Reports"></dynamic-left-nav>

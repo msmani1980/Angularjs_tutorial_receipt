@@ -26,23 +26,10 @@ angular.module('ts5App')
     this.updateItemList = function() {
       $scope.itemsListCount = $scope.itemsList.length;
       $scope.totalItems = $scope.itemsListCount;
-      $this.setPaginatedItems($scope.itemsList);
     };
 
     this.filterItems = function() {
       return $filter('filter')($scope.itemsList, $scope.search);
-    };
-
-    this.parsePaginationToInt = function() {
-      $scope.currentPageInt = parseInt($scope.currentPage);
-      $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
-    };
-
-    this.setPaginatedItems = function(filteredItems) {
-      $this.parsePaginationToInt();
-      var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
-      var end = begin + $scope.itemsPerPageInt;
-      $scope.paginatedItems = filteredItems.slice(begin, end);
     };
 
     this.generateItemQuery = function() {
@@ -72,6 +59,7 @@ angular.module('ts5App')
         return;
       }
 
+      $this.displayLoadingModal();
       var query = $this.generateItemQuery();
       itemsFactory.getItemsList(query).then(function(response) {
         $this.meta.count = $this.meta.count || response.meta.count;
@@ -82,7 +70,7 @@ angular.module('ts5App')
           item.endDate = dateUtility.formatDateForApp(item.endDate);
         });
 
-        $scope.itemsList = itemListFromAPI;
+        $scope.itemsList = $scope.itemsList.concat(itemListFromAPI);
         $scope.itemsListCount = $scope.itemsList.length;
         $this.updateItemList();
         $this.hideLoadingModal();
@@ -118,7 +106,7 @@ angular.module('ts5App')
 
     $scope.removeRecord = function(itemId) {
       var itemIndex = $this.findItemIndex(itemId);
-      $this.displayLoadingModal('Removing SO Item');
+      $this.displayLoadingModal();
       itemsFactory.removeItem(itemId).then(function() {
         $this.hideLoadingModal();
         $scope.itemsList.splice(itemIndex, 1);
@@ -168,13 +156,11 @@ angular.module('ts5App')
       return (searchIsDirty() || d.startDate.length || d.endDate.length || $scope.itemsList.length);
     };
 
-    this.displayLoadingModal = function(loadingText) {
-      angular.element('#loading').modal('show').find('p').text(loadingText);
+    this.displayLoadingModal = function() {
       angular.element('.loading-more').show();
     };
 
     this.hideLoadingModal = function() {
-      angular.element('#loading').modal('hide');
       angular.element('.loading-more').hide();
     };
 

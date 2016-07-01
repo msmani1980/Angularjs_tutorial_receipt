@@ -1074,16 +1074,18 @@ describe('The Item Create Controller', function() {
           var mockCurrencyList = [currenciesListJSON.response[0], currenciesListJSON.response[1]];
           var mockPriceGroup = {
             priceCurrencies: [
-              { companyCurrencyId: mockCurrencyList[1].id, price: '1.00' },
-              { companyCurrencyId: mockCurrencyList[0].id, price: '2.00' }
+              { companyCurrencyId: mockCurrencyList[1].id, price: '1.00', id: null },
+              { companyCurrencyId: mockCurrencyList[0].id, price: '2.00', id: 1958 }
           ]};
           scope.formData.prices[0] = mockPriceGroup;
 
           var generatedPriceList = ItemCreateCtrl.generatePriceCurrenciesList(0, mockCurrencyList);
           expect(generatedPriceList[0].price).toEqual('2.00');
           expect(generatedPriceList[0].companyCurrencyId).toEqual(mockPriceGroup.priceCurrencies[1].companyCurrencyId);
+          expect(generatedPriceList[0].id).toEqual(1958);
           expect(generatedPriceList[1].price).toEqual('1.00');
           expect(generatedPriceList[1].companyCurrencyId).toEqual(mockPriceGroup.priceCurrencies[0].companyCurrencyId);
+          expect(generatedPriceList[1].id).toEqual(null);
         });
 
         it('should have called the setPriceCurrenciesList method', function() {
