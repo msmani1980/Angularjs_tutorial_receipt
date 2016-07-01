@@ -1,0 +1,36 @@
+<!-- /Container  Starts -->
+<div class="container">
+   <h2>Scheduled Reports</h2>
+
+   <ul style="list-style-type: none;">
+      <li ng-repeat="scheduledReport in scheduledReports track by scheduledReport.id">
+      
+         <div class="panel panel-default">
+           <div class="panel-heading clearfix">
+              <h4 class="panel-title pull-left" style="padding-top: 7.5px;">{{scheduledReport.template.name}}</h4>
+              
+              <!-- <div class="btn-group pull-right">
+               		 <toggle-switch ng-model="scheduledReport.isActive" ng-click="disableScheduled(scheduledReport)"/> 
+              </div> -->
+              
+              <!-- <div class="btn-group pull-right">
+                 <button class="btn" ng-click="viewScheduled(scheduledReport)">
+          			<span class="glyphicon glyphicon-pencil"></span>Edit
+        		 </button>
+              </div> -->
+              
+           </div>
+         <div class="panel-body" style="color: green">
+             {{scheduledReport.template.description}} <br></br>
+             {{scheduledReport.recurrencePattern}} every {{scheduledReport.dayOfWeek}} {{scheduledReport.daysOfWeek}} {{scheduledReport.dayOfMonth=='-1'?'Last Day':scheduledReport.dayOfMonth}} 
+             at {{scheduledReport.recurrenceTime.substring(0, 5);}} 
+             from {{scheduledReport.recurrenceStartDate | date :  "dd.MM.y"}} to {{scheduledReport.recurrenceEndDate | date :  "dd.MM.y"}}
+           </div>
+        </div>
+              
+      </li>
+   </ul>
+</div>
+<!-- /Container  Ends -->
+
+<dynamic-left-nav title="Reports"></dynamic-left-nav>

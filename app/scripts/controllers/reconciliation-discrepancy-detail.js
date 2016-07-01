@@ -91,6 +91,21 @@ angular.module('ts5App')
       };
     }
 
+    function mergeItemStockTotals(stockTotalsArray, itemToModify) {
+      itemToModify.price = (stockTotalsArray.length) ? stockTotalsArray[0].price : 0;
+      itemToModify.eposQuantity = 0;
+      itemToModify.eposTotal = 0;
+      itemToModify.lmpQuantity = 0;
+      itemToModify.lmpTotal = 0;
+
+      angular.forEach(stockTotalsArray, function (stockData) {
+        itemToModify.eposQuantity += stockData.eposQuantity || 0;
+        itemToModify.eposTotal += stockData.eposTotal || 0;
+        itemToModify.lmpQuantity += stockData.lmpQuantity || 0;
+        itemToModify.lmpTotal += stockData.lmpTotal || 0;
+      });
+    }
+
     function mergeItems(itemListFromAPI, rawLMPStockData, stockCountsFromAPI) {
       var rawItemList = angular.copy(itemListFromAPI);
       var rawStockCounts = angular.copy(stockCountsFromAPI);
@@ -108,13 +123,8 @@ angular.module('ts5App')
         var lmpStockItem = $filter('filter')(rawLMPStockData, {
           itemMasterId: item.itemMasterId
         }, true);
-        if (lmpStockItem.length) {
-          item.eposQuantity = lmpStockItem[0].eposQuantity;
-          item.eposTotal = lmpStockItem[0].eposTotal;
-          item.lmpQuantity = lmpStockItem[0].lmpQuantity;
-          item.lmpTotal = lmpStockItem[0].lmpTotal;
-          item.price = lmpStockItem[0].price;
-        }
+
+        mergeItemStockTotals(lmpStockItem, item);
       });
 
       return uniqueItemList;
@@ -148,8 +158,13 @@ angular.module('ts5App')
       }
 
       getOutlierItemsDetails(carrierInstanceMatch);
-      var stockItemMatch = lodash.findWhere(rawLMPStockData, { itemMasterId: item.itemMasterId });
-      item.eposQuantity = (!!stockItemMatch) ? stockItemMatch.eposQuantity : 0;
+      var stockItemMatchArray = lodash.filter(rawLMPStockData, { itemMasterId: item.itemMasterId });
+      var eposQuantitySum = 0;
+      angular.forEach(stockItemMatchArray, function (stockItem) {
+        eposQuantitySum += stockItem.eposQuantity;
+      });
+
+      item.eposQuantity = eposQuantitySum;
       return item;
     }
 

@@ -41,11 +41,7 @@ angular.module('ts5App')
         '/exchange-rates/*',
         '/forgot-username-password/*',
         '/global-reason-code/*',
-        '/item-copy/*',
-        '/item-create/*',
-        '/item-edit/*',
         '/item-import/*',
-        '/item-view/*',
         '/lmp-delivery-note/*',
         '/lmp-locations-list/*',
         '/login',
@@ -69,9 +65,6 @@ angular.module('ts5App')
         '/station-list/*',
         '/station-view/*',
         '/stock-dashboard/*',
-        '/stock-owner-item-create/*',
-        '/stock-owner-item-edit/*',
-        '/stock-owner-item-view/*',
         '/stock-take-report/*',
         '/stock-take-review/*',
         '/stock-take/*',
@@ -95,8 +88,6 @@ angular.module('ts5App')
 
     var legacyApis = [
         '/rsvr/api/companies/[0-9]*/relationships',
-        'rsvr/api/records/store-status',
-        '/rsvr/api/caterer-stations',
         '/rsvr/api/companies/[0-9]*$',
         '/rsvr/api/retail-items/master/*',
         '/rsvr/api/daily-exchange-rates/[0-9]*',
@@ -107,7 +98,14 @@ angular.module('ts5App')
         '/rsvr/api/company-currency-globals',
         '/rsvr/api/promotions',
         '/rsvr/api/companies/stores/[0-9]*',
-        '/rsvr/api/records/company-types'
+        '/rsvr/api/records/company-types',
+        '/rsvr/api/companies/[0-9]*/tags',
+        '/rsvr/api/companies/[0-9]*/tax-types',
+        '/rsvr/api/images',
+        '/rsvr/api/records/allergens',
+        '/rsvr/api/records/price-types',
+        '/rsvr/api/company-discounts',
+        '/rsvr/api/company-station-globals'
     ];
 
     var onlyRsvrApis = [
@@ -163,11 +161,8 @@ angular.module('ts5App')
         return false;
       }
 
-      if (isPageWithLegacyAPIs() || isLegacyAPI(config)) {
-        return true;
-      }
+      return isPageWithLegacyAPIs() || isLegacyAPI(config);
 
-      return false;
     };
 
     function request(config) {

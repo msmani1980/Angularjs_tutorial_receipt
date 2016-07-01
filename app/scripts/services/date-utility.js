@@ -11,13 +11,18 @@ angular.module('ts5App')
   .service('dateUtility', function (companyFormatUtility) {
 
     var dateFormatForAPI = 'YYYYMMDD';
+    var dateFormatForReportAPI = 'dd/MM/yyyy';
+
+    this.getReportsDateFormat = function () {
+      return dateFormatForReportAPI;
+    };
 
     this.getDateFormatForApp = function () {
       return companyFormatUtility.getDateFormat();
     };
 
     var timestampFormatForAPI = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
-    var timestampFormatForApp = 'MM/DD/YYYY HH:mm';
+    var timestampFormatForApp = this.getDateFormatForApp() + ' HH:mm';
 
     this.formatDate = function (dateString, formatFrom, formatTo) {
       return moment(dateString, formatFrom).format(formatTo).toString();
