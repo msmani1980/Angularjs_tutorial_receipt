@@ -148,8 +148,11 @@ describe('Controller: CashBagSubmissionCtrl', function() {
       scope.cashBagList[0].selected = true;
       scope.toggleCheckbox();
       scope.submitCashBag();
-      var expectedParameter = [jasmine.objectContaining({bankReferenceNumber: '12345'})];
-        
+      var expectedParameter = {
+        cashBags: [jasmine.objectContaining({
+          bankReferenceNumber: '12345'
+        })]
+      };
       var expectedCompanyId = servedCompanyDataJSON.chCompany.companyId;
       expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(expectedCompanyId, expectedParameter, {
         submission: 'submit'

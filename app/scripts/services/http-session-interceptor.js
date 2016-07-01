@@ -17,7 +17,9 @@ angular.module('ts5App')
     };
 
     var notrsvrPages = [
+        '/cash-bag-submission/*',
         '/cash-bag$/*',
+        '/cash-bag/create',
         '/change-password/*',
         '/commission-data-table/*',
         '/commission-data/*',
@@ -39,11 +41,7 @@ angular.module('ts5App')
         '/exchange-rates/*',
         '/forgot-username-password/*',
         '/global-reason-code/*',
-        '/item-copy/*',
-        '/item-create/*',
-        '/item-edit/*',
         '/item-import/*',
-        '/item-view/*',
         '/lmp-delivery-note/*',
         '/lmp-locations-list/*',
         '/login',
@@ -67,9 +65,6 @@ angular.module('ts5App')
         '/station-list/*',
         '/station-view/*',
         '/stock-dashboard/*',
-        '/stock-owner-item-create/*',
-        '/stock-owner-item-edit/*',
-        '/stock-owner-item-view/*',
         '/stock-take-report/*',
         '/stock-take-review/*',
         '/stock-take/*',
@@ -92,6 +87,8 @@ angular.module('ts5App')
     ];
 
     var legacyApis = [
+        '/rsvr/api/companies/[0-9]*/relationships',
+        '/rsvr/api/companies/[0-9]*$',
         '/rsvr/api/retail-items/master/*',
         '/rsvr/api/daily-exchange-rates/[0-9]*',
         '/rsvr/api/units',
@@ -101,7 +98,14 @@ angular.module('ts5App')
         '/rsvr/api/company-currency-globals',
         '/rsvr/api/promotions',
         '/rsvr/api/companies/stores/[0-9]*',
-        '/rsvr/api/records/company-types'
+        '/rsvr/api/records/company-types',
+        '/rsvr/api/companies/[0-9]*/tags',
+        '/rsvr/api/companies/[0-9]*/tax-types',
+        '/rsvr/api/images',
+        '/rsvr/api/records/allergens',
+        '/rsvr/api/records/price-types',
+        '/rsvr/api/company-discounts',
+        '/rsvr/api/company-station-globals'
     ];
 
     var onlyRsvrApis = [
@@ -114,8 +118,7 @@ angular.module('ts5App')
       '/rsvr/api/cashbag/[0-9]+/cash',
       '/rsvr/api/cashbags/cash/',
       '/rsvr/api/cashbag-[a-z]+(/[0-9]*)?',
-      '/rsvr/api/dispatch/store-instances/[0-9]*/status/11',
-      '/rsvr/api/retail-items/*'
+      '/rsvr/api/dispatch/store-instances/[0-9]*/status/11'
     ];
 
     function responseError(response) {
