@@ -14,8 +14,8 @@ angular.module('ts5App')
     
     var dateFormatForReportAPI = 'dd/MM/yyyy';
     
-    this.getReportsDateFormat = function(){
-    	return dateFormatForReportAPI;
+    this.getReportsDateFormat = function() {
+      return dateFormatForReportAPI;
     };
     
     this.getDateFormatForApp = function () {

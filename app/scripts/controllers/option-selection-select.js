@@ -9,16 +9,16 @@ angular.module('ts5App').controller(
 		'OptionSelectionSelectCtrl',
 		function($scope, templateOptionService) {
 
-			$scope.choices = [];
+  $scope.choices = [];
 
-			$scope.selected = {};
+  $scope.selected = {};
 
-			$scope.refreshChoiceValues = function(filter) {
-				templateOptionService.getChoiceValues(
-						$scope.option.choiceLookup, filter).then(
+  $scope.refreshChoiceValues = function(filter) {
+    templateOptionService.getChoiceValues(
+    $scope.option.choiceLookup, filter).then(
 						function(response) {
-							$scope.choices = response.data;
+  $scope.choices = response.data;
 						});
-			};
+  };
 
 		});
