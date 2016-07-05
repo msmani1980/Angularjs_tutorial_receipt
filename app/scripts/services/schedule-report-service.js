@@ -8,6 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
+<<<<<<< HEAD
 	 .service('scheduleReportService', function ($resource, ENV, globalMenuService) {
   var  reportsURL = ENV.apiUrl + '/report-api/scheduleReport/:templateId';
   var actions = [];
@@ -34,3 +35,31 @@ angular.module('ts5App')
     saveReport: saveReport
   };
 });
+=======
+  .service('scheduleReportService', function ($resource, ENV, globalMenuService) {
+    var reportsURL = ENV.apiUrl + '/report-api/scheduleReport/:templateId';
+    var actions = [];
+    var loadActionURL = function () {
+      actions = {
+        saveReport: {
+          method: 'POST',
+          headers: { companyId: globalMenuService.company.get() }
+        }
+      };
+    };
+
+    loadActionURL();
+
+    var requestParameters = { templateId: '@templateId' };
+
+    var saveReport = function (payload) {
+      loadActionURL();
+      var scheduleResource = $resource(reportsURL, requestParameters, actions);
+      return scheduleResource.saveReport(payload).$promise;
+    };
+
+    return {
+      saveReport: saveReport
+    };
+  });
+>>>>>>> remotes/origin/master

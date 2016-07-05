@@ -7,7 +7,8 @@ describe('Stations Service |', function () {
   var stationsService,
     $httpBackend,
     globalStationsJSON,
-    stationsJSON;
+    stationsJSON,
+    dateUtility;
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -17,7 +18,7 @@ describe('Stations Service |', function () {
   beforeEach(module('served/stations.json'));
 
   // Inject the service and responshandler
-  beforeEach(inject(function (_stationsService_, $injector) {
+  beforeEach(inject(function (_stationsService_, $injector, _dateUtility_) {
 
     // Inject the JSON fixtures
     inject(function (_servedGlobalStations_, _servedStations_) {
@@ -26,6 +27,7 @@ describe('Stations Service |', function () {
     });
 
     stationsService = _stationsService_;
+    dateUtility = _dateUtility_;
 
     $httpBackend = $injector.get('$httpBackend');
 
@@ -80,7 +82,8 @@ describe('Stations Service |', function () {
     describe('getStationList', function () {
       beforeEach(function () {
         var companyId = 403;
-        var regex = new RegExp(companyId + '/stations', 'g');
+        var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var regex = new RegExp(companyId + '/stations\\?\.\*endDate=' + nowDate + '\\&startDate=' + nowDate, 'g');
         $httpBackend.expectGET(regex).respond(stationsJSON);
 
         stationsService.getStationList(companyId).then(function (dataFromAPI) {

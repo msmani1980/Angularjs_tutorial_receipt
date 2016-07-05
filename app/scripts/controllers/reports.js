@@ -8,9 +8,9 @@
  */
 angular.module('ts5App')
   .controller('ReportsCtrl', function ($scope, $modal, templateService) {
-	  
+
     $scope.templates = templateService.query();
-    
+
     $scope.runTemplate = function (template) {
       $scope.template = template;
       $modal.open({
@@ -19,6 +19,7 @@ angular.module('ts5App')
         backdrop: 'static',
         resolve: {
           templateId: function () {
+<<<<<<< HEAD
                      return template.id;
                    }
         }
@@ -42,4 +43,29 @@ angular.module('ts5App')
       });
     };
      
+=======
+            return template.id;
+          }
+        }
+      });
+    };
+
+    $scope.runSchedule = function (template) {
+      $modal.open({
+        templateUrl: 'views/schedule-report.html',
+        controller: 'ScheduleReportCtrl',
+        backdrop: 'static',
+        resolve: {
+          templateId: function () {
+            return template.id;
+          },
+
+          scheduledReportId: function () {
+            return '';
+          }
+        }
+      });
+    };
+
+>>>>>>> remotes/origin/master
   });

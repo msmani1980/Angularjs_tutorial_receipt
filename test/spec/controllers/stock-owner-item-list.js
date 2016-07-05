@@ -1,6 +1,6 @@
 'use strict';
 
-describe('The StockOwnerItemListCtrl controller', function() {
+describe('The StockOwnerItemListCtrl controller', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/items-list.json'));
@@ -179,32 +179,7 @@ describe('The StockOwnerItemListCtrl controller', function() {
 
   });
 
-  describe('The Pagination', function() {
-
-    it('should attach currentPage to the scope', function() {
-      expect(scope.currentPage).toBeDefined();
-      expect(scope.currentPage).toEqual(1);
-    });
-
-    it('should attach itemsPerPage to the scope', function() {
-      expect(scope.itemsPerPage).toBeDefined();
-      expect(scope.itemsPerPage).toEqual(10);
-    });
-
-    it('should attach currentPageInt to the scope', function() {
-      expect(scope.currentPageInt).toBeDefined();
-      expect(scope.currentPageInt).toEqual(1);
-    });
-
-    it('should attach itemsPerPageInt to the scope', function() {
-      expect(scope.itemsPerPageInt).toBeDefined();
-      expect(scope.itemsPerPageInt).toEqual(10);
-    });
-
-  });
-
   describe('searchRecords', function() {
-
     beforeEach(function() {
       scope.searchRecords();
     });

@@ -7,7 +7,7 @@
  * # stationsService
  * Service in the ts5App.
  */
-angular.module('ts5App').service('stationsService', function ($resource, ENV) {
+angular.module('ts5App').service('stationsService', function ($resource, ENV, dateUtility) {
 
   var globalRequestURL = ENV.apiUrl + '/rsvr/api/company-station-globals';
   var stationListRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/stations';
@@ -42,7 +42,12 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV) {
     };
 
   var getStationList = function (companyId, offset) {
-      var payload = { id: companyId };
+      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var payload = { 
+        id: companyId,
+        startDate: nowDate,
+        endDate: nowDate
+      };
       if (offset) {
         payload.offset = offset;
       }

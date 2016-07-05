@@ -57,6 +57,7 @@ angular.module('ts5App')
         if (seconds > 0) {
           timeString += (seconds + 's');
         }
+
       }
 
       return timeString;

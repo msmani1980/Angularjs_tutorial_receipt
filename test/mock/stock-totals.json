@@ -155,6 +155,39 @@
       "eposQuantity": 5,
       "lmpTotal": 0.0,
       "eposTotal": null
+    }, {
+      "id": 46,
+      "companyId": 403,
+      "storeInstanceId": 1138,
+      "itemMasterId": 100,
+      "itemTypeId": 1,
+      "price": 20.0,
+      "lmpQuantity": 0,
+      "eposQuantity": 10,
+      "lmpTotal": 0.0,
+      "eposTotal": null
+    }, {
+      "id": 90,
+      "companyId": 403,
+      "storeInstanceId": 1138,
+      "itemMasterId": 4,
+      "itemTypeId": 1,
+      "price": 50.0,
+      "lmpQuantity": 1,
+      "eposQuantity": 2,
+      "lmpTotal": 3.0,
+      "eposTotal": 4.0
+    }, {
+      "id": 91,
+      "companyId": 403,
+      "storeInstanceId": 1138,
+      "itemMasterId": 4,
+      "itemTypeId": 1,
+      "price": 50.0,
+      "lmpQuantity": 10,
+      "eposQuantity": 20,
+      "lmpTotal": 30.0,
+      "eposTotal": 40.0
     }
   ]
 }

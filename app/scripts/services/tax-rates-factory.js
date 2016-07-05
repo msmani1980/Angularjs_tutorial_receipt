@@ -32,9 +32,8 @@ angular.module('ts5App')
       return stationsService.getStationList(companyId, 0);
     };
 
-    var getCompanyCurrencies = function() {
-      var companyId = globalMenuService.company.get();
-      return currenciesService.getCompanyCurrencies(companyId);
+    var getCompanyCurrencies = function(payload) {
+      return currenciesService.getCompanyCurrencies(payload);
     };
 
     var getCompanyTaxRatesList = function(companyId) {

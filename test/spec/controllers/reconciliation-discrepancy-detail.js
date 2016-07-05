@@ -478,7 +478,16 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         var expectedVariance = jasmine.objectContaining({
           varianceValue: '0.00'
         });
-        expect(scope.stockItemList[0]).toEqual(expectedVariance);
+        expect(scope.stockItemList[1]).toEqual(expectedVariance);
+      });
+
+      it('should merge quantities for stock totals with matching item ids', function () {
+        var testItemIdWithMultipleRecords = 4;
+        var testItem = lodash.findWhere(scope.stockItemList, {itemMasterId: testItemIdWithMultipleRecords});
+        var stockTotals = lodash.filter(getStockTotalsJSON.response, {itemMasterId: testItemIdWithMultipleRecords});
+
+        var expectedEposQuantity = stockTotals[0].eposQuantity + stockTotals[1].eposQuantity;
+        expect(testItem.eposQuantity).toEqual(expectedEposQuantity);
       });
     });
 
@@ -499,7 +508,15 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       it('should contain a eposQuantity attribute from stock totals', function () {
         expect(scope.outlierItemList[0].eposQuantity).toBeDefined();
-        expect(scope.outlierItemList[0].eposQuantity).toEqual(5);
+      });
+
+      it('should sum eposQuantity for items with multiple stock total records', function () {
+        var testItemIdWithMultipleRecords = 100;
+        var testItem = lodash.findWhere(scope.outlierItemList, {itemMasterId: testItemIdWithMultipleRecords});
+        var stockTotalMatches = lodash.filter(getStockTotalsJSON.response, {itemMasterId: testItemIdWithMultipleRecords});
+
+        var expectedTotal = stockTotalMatches[0].eposQuantity + stockTotalMatches[1].eposQuantity;
+        expect(testItem.eposQuantity).toEqual(expectedTotal);
       });
 
       it('should attach schedule date and store number from carrier instsance to scope', function () {

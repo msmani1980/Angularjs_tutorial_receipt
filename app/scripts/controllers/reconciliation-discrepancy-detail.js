@@ -91,6 +91,21 @@ angular.module('ts5App')
       };
     }
 
+    function mergeItemStockTotals(stockTotalsArray, itemToModify) {
+      itemToModify.price = (stockTotalsArray.length) ? stockTotalsArray[0].price : 0;
+      itemToModify.eposQuantity = 0;
+      itemToModify.eposTotal = 0;
+      itemToModify.lmpQuantity = 0;
+      itemToModify.lmpTotal = 0;
+
+      angular.forEach(stockTotalsArray, function (stockData) {
+        itemToModify.eposQuantity += stockData.eposQuantity || 0;
+        itemToModify.eposTotal += stockData.eposTotal || 0;
+        itemToModify.lmpQuantity += stockData.lmpQuantity || 0;
+        itemToModify.lmpTotal += stockData.lmpTotal || 0;
+      });
+    }
+
     function mergeItems(itemListFromAPI, rawLMPStockData, stockCountsFromAPI) {
       var rawItemList = angular.copy(itemListFromAPI);
       var rawStockCounts = angular.copy(stockCountsFromAPI);
@@ -108,13 +123,8 @@ angular.module('ts5App')
         var lmpStockItem = $filter('filter')(rawLMPStockData, {
           itemMasterId: item.itemMasterId
         }, true);
-        if (lmpStockItem.length) {
-          item.eposQuantity = lmpStockItem[0].eposQuantity;
-          item.eposTotal = lmpStockItem[0].eposTotal;
-          item.lmpQuantity = lmpStockItem[0].lmpQuantity;
-          item.lmpTotal = lmpStockItem[0].lmpTotal;
-          item.price = lmpStockItem[0].price;
-        }
+
+        mergeItemStockTotals(lmpStockItem, item);
       });
 
       return uniqueItemList;
@@ -148,8 +158,13 @@ angular.module('ts5App')
       }
 
       getOutlierItemsDetails(carrierInstanceMatch);
-      var stockItemMatch = lodash.findWhere(rawLMPStockData, { itemMasterId: item.itemMasterId });
-      item.eposQuantity = (!!stockItemMatch) ? stockItemMatch.eposQuantity : 0;
+      var stockItemMatchArray = lodash.filter(rawLMPStockData, { itemMasterId: item.itemMasterId });
+      var eposQuantitySum = 0;
+      angular.forEach(stockItemMatchArray, function (stockItem) {
+        eposQuantitySum += stockItem.eposQuantity;
+      });
+
+      item.eposQuantity = eposQuantitySum;
       return item;
     }
 
@@ -466,13 +481,18 @@ angular.module('ts5App')
 
     function getEPOSRevenue(eposRevenue) {
       $this.eposCashBag = angular.copy(eposRevenue[0].response);
+      var eposCreditCard = angular.copy(eposRevenue[1].response);
       var eposDiscount = angular.copy(eposRevenue[2].response);
       var total = 0;
 
-      // eposCashbag includes cash and credit transactions
       angular.forEach($this.eposCashBag, function (cashBag) {
         var cashTotal = makeFinite(cashBag.bankAmount) + makeFinite(cashBag.coinAmountManual) + makeFinite(cashBag.paperAmountManual);
         total += ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
+      });
+
+      angular.forEach(eposCreditCard, function (creditCard) {
+        var creditTotal = makeFinite(creditCard.bankAmountFinal);
+        total += ($scope.submittedCashBags.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
       });
 
       angular.forEach(eposDiscount, function (discount) {
@@ -502,14 +522,19 @@ angular.module('ts5App')
 
     function getCHRevenue(chRevenue) {
       $this.chCashBag = angular.copy(chRevenue[0].response);
+      var chCreditCard = angular.copy(chRevenue[1].response);
       var chDiscount = angular.copy(chRevenue[2].response);
       var total = 0;
 
-      // chCashbag includes cash and credit transactions
       angular.forEach($this.chCashBag, function (cashBag) {
         var cashTotal = (makeFinite(cashBag.paperAmountManualCh) + makeFinite(cashBag.coinAmountManualCh)) + (makeFinite(cashBag.paperAmountManualCHBank) +
           makeFinite(cashBag.coinAmountManualCHBank)) + makeFinite(cashBag.bankAmountCh);
         total += ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
+      });
+
+      angular.forEach(chCreditCard, function (creditCard) {
+        var creditTotal = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountCc) + makeFinite(creditCard.paperAmountCc);
+        total += ($scope.submittedCashBags.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
       });
 
       angular.forEach(chDiscount, function (discount) {

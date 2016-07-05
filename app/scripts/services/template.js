@@ -9,5 +9,9 @@
  */
 angular.module('ts5App')
   .service('templateService', function ($resource, ENV) {
+<<<<<<< HEAD
     return $resource(ENV.apiUrl + '/report-api/templates/:templateId', { templateId:'@id' });
+=======
+    return $resource(ENV.apiUrl + '/report-api/templates/:templateId', { templateId: '@id' });
+>>>>>>> remotes/origin/master
   });

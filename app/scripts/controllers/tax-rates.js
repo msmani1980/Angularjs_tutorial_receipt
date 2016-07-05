@@ -240,7 +240,14 @@ angular.module('ts5App')
     };
 
     this.getCurrenciesList = function() {
-      return taxRatesFactory.getCompanyCurrencies().then($this.setCurrenciesList);
+      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var payload = {
+        startDate: nowDate,
+        endDate: nowDate,
+        isOperatedCurrency: true
+      };
+
+      return taxRatesFactory.getCompanyCurrencies(payload).then($this.setCurrenciesList);
     };
 
     this.getCompanyTaxRatesList = function(query) {
