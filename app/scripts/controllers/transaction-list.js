@@ -54,6 +54,9 @@ angular.module('ts5App')
     $this.meta = {};
     $this.isSearch = false;
 
+    const ABANDONED_TRANSACTION_TYPE_ID = 17;
+    const isNotAbandoned = transaction => transaction.transactionTypeId !== ABANDONED_TRANSACTION_TYPE_ID;
+
     function isCreditCardPaymentSelected(paymentMethods) {
       if (!paymentMethods) {
         return false;
@@ -186,7 +189,8 @@ angular.module('ts5App')
 
     function appendTransactions(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
-      var transactions = angular.copy(dataFromAPI.transactions);
+      var transactions = angular.copy(dataFromAPI.transactions)
+        .filter(isNotAbandoned);
 
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
 
