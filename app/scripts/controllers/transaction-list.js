@@ -54,8 +54,11 @@ angular.module('ts5App')
     $this.meta = {};
     $this.isSearch = false;
 
-    const ABANDONED_TRANSACTION_TYPE_ID = 17;
-    const isNotAbandoned = transaction => transaction.transactionTypeId !== ABANDONED_TRANSACTION_TYPE_ID;
+    var ABANDONED_TRANSACTION_TYPE_ID = 17;
+    
+    function isNotAbandoned(transaction) {
+      return transaction.transactionTypeId !== ABANDONED_TRANSACTION_TYPE_ID;
+    }
 
     function isCreditCardPaymentSelected(paymentMethods) {
       if (!paymentMethods) {
