@@ -47,8 +47,7 @@ angular
   $scope.scheduleReport.recurrenceTime = new Date(
   1970, 0, 1, timeArr[0],
   timeArr[1], 0);
-  if ($scope.scheduleReport.daysOfWeek !== null
-  && $scope.scheduleReport.daysOfWeek !== '') {
+  if ($scope.scheduleReport.daysOfWeek !== null  && $scope.scheduleReport.daysOfWeek !== '') {
     $scope.array = $scope.scheduleReport.daysOfWeek
     .split(',');
     $scope.user.daysOfWeek = $scope.array;
