@@ -91,10 +91,6 @@ angular.module('ts5App')
         '/rsvr/api/promotions/[0-9]*$',
         '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9][^11]*$',
         '/rsvr/api/promotions',
-<<<<<<< HEAD
-=======
-        '/rsvr/api/companies/stores/[0-9]*',
->>>>>>> remotes/origin/master
         '/rsvr/api/records/company-types',
         '/rsvr/api/companies/[0-9]*/tags',
         '/rsvr/api/companies/[0-9]*/tax-types',

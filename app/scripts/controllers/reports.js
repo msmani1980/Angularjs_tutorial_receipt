@@ -1,4 +1,5 @@
 'use strict';
+
 /**
  * @ngdoc function
  * @name ts5App.controller:ReportsCtrl
@@ -19,31 +20,6 @@ angular.module('ts5App')
         backdrop: 'static',
         resolve: {
           templateId: function () {
-<<<<<<< HEAD
-                     return template.id;
-                   }
-        }
-      });
-    };
-    
-    $scope.runSchedule = function(template) {
-      $modal.open({
-        templateUrl: 'views/schedule-report.html',
-        controller: 'ScheduleReportCtrl',
-        backdrop: 'static',
-        resolve: {
-          templateId: function () {
-                         return template.id;
-                       },
-
-          scheduledReportId: function () {
-            return '';
-          }
-        }
-      });
-    };
-     
-=======
             return template.id;
           }
         }
@@ -67,5 +43,4 @@ angular.module('ts5App')
       });
     };
 
->>>>>>> remotes/origin/master
   });

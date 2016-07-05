@@ -12,6 +12,7 @@
   "disallowSpaceBeforeBinaryOperators": [
     ","
   ],
+  "disallowMixedSpacesAndTabs": true,
   "requireSpaceAfterComma": true,
   "disallowYodaConditions": true,
   "disallowKeywords": [
@@ -61,6 +62,7 @@
   "requirePaddingNewLinesAfterBlocks": true,
   "requireSemicolons": true,
   "safeContextKeyword": "$this",
+  "validateLineBreaks": "CRLF",
   "validateQuoteMarks": {
     "mark": "'",
     "escape": true,
