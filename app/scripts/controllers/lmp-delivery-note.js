@@ -194,12 +194,13 @@ angular.module('ts5App')
       setAllowedMasterItems();
     }
 
-    function setStationItemsFromAPI (responseCollection) {
-      console.log('HI');
+    function setStationItemsFromAPI (responseCollection, catererStationId) {
+      // TODO: add menu items
+      console.log(responseCollection[0]);
 
-      if (responseCollection[1]) {
-        addNewMasterItemsFromCatererStationMasterItemsResponse(responseCollection[1]);
-      }
+      // cached results
+      var catererStationItems = !!responseCollection[1] ? responseCollection[1] : _cateringStationItems[catererStationId];
+      addNewMasterItemsFromCatererStationMasterItemsResponse(catererStationItems);
 
       hideLoadingModal();
     }
@@ -211,23 +212,17 @@ angular.module('ts5App')
       }
 
       displayLoadingModal();
-
       var updateStationPromises = [
-        deliveryNoteFactory.getMenuCatererStationList({ catererStationId: catererStationId }),
-        deliveryNoteFactory.getItemsByCateringStationId(catererStationId)
+        deliveryNoteFactory.getMenuCatererStationList({ catererStationId: catererStationId })
       ];
 
-      // used cached results instead of hitting API again
-      if (angular.isDefined(_cateringStationItems[catererStationId])) {
-        var response = _cateringStationItems[catererStationId];
-        addNewMasterItemsFromCatererStationMasterItemsResponse(response);
-        updateStationPromises.splice(1, 1);
+      if (!angular.isDefined(_cateringStationItems[catererStationId])) {
+        updateStationPromises.push(deliveryNoteFactory.getItemsByCateringStationId(catererStationId));
       }
 
-      $q.all(updateStationPromises).then(setStationItemsFromAPI, showResponseErrors);
-
-      //deliveryNoteFactory.getItemsByCateringStationId(catererStationId).then(
-      //  addNewMasterItemsFromCatererStationMasterItemsResponse, showResponseErrors);
+      $q.all(updateStationPromises).then(function (responseCollection) {
+        setStationItemsFromAPI(responseCollection, catererStationId);
+      }, showResponseErrors);
     }
 
     function catererStationIdWatcher(newValue, oldValue) {
@@ -513,9 +508,13 @@ angular.module('ts5App')
     function getRegularItems() {
       var payload = {
         itemTypeId: $scope.regularItemType.id,
-        characteristicId: $scope.inventoryCharacteristicType.id,
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
       };
+
+      if (!!$scope.inventoryCharacteristicType) {
+        payload.characteristicId = $scope.inventoryCharacteristicType.id;
+      }
+      
       return deliveryNoteFactory.getMasterItems(payload).then(setMasterItemsFromResponse, showResponseErrors);
     }
 
