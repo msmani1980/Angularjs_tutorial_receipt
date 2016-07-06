@@ -17,7 +17,6 @@ angular.module('ts5App')
     };
 
     var notrsvrPages = [
-        '/cash-bag-submission/*',
         '/change-password/*',
         '/commission-data-table/*',
         '/commission-data/*',
@@ -103,6 +102,8 @@ angular.module('ts5App')
 
     var onlyRsvrApis = [
       '/rsvr/api/company-preferences',
+      '/rsvr/api/currencies',
+      '/rsvr/api/companies/[0-9]*',
       '/rsvr/api/dailyexchangerate',
       '/rsvr/api/company-formats',
       '/rsvr/api/companies/[0-9]*/stations',
