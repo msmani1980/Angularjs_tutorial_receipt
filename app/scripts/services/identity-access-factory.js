@@ -74,6 +74,7 @@ angular.module('ts5App')
       delete sessionObject.userCompanies;
       delete sessionObject.companyTypes;
       delete sessionObject.currentSession;
+      delete sessionObject.companyFormatList;
       angular.extend($http.defaults.headers.common, sessionObject);
     }
 
