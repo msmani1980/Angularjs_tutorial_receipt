@@ -39,7 +39,6 @@ angular.module('ts5App')
         '/exchange-rates/*',
         '/forgot-username-password/*',
         '/global-reason-code/*',
-        '/item-import/*',
         '/lmp-delivery-note/*',
         '/lmp-locations-list/*',
         '/login',
@@ -98,7 +97,8 @@ angular.module('ts5App')
         '/rsvr/api/records/allergens',
         '/rsvr/api/records/price-types',
         '/rsvr/api/company-discounts',
-        '/rsvr/api/company-station-globals'
+        '/rsvr/api/company-station-globals',
+        '/rsvr/api/companies'
     ];
 
     var onlyRsvrApis = [
