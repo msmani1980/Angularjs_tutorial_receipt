@@ -62,7 +62,6 @@
   "requirePaddingNewLinesAfterBlocks": true,
   "requireSemicolons": true,
   "safeContextKeyword": "$this",
-  "validateLineBreaks": "LF",
   "validateQuoteMarks": {
     "mark": "'",
     "escape": true,

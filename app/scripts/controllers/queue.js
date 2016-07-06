@@ -1,11 +1,8 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name ts5App.controller:QueueCtrl
- * @description
- * # QueueCtrl
- * Controller of the ts5App
+ * @description # QueueCtrl Controller of the ts5App
  */
 angular.module('ts5App')
   .controller('QueueCtrl', function ($scope, jobService, $interval, ENV) {
