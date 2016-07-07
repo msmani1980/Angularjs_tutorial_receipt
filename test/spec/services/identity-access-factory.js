@@ -29,7 +29,6 @@ describe('Service: identityAccessFactory', function() {
   var scope;
   var location;
   var timeout;
-  var dateUtility;
 
   beforeEach(inject(function($injector, $rootScope, $location, $timeout, $q) {
     companyResponseJSON = $injector.get('servedCompany');
@@ -39,7 +38,6 @@ describe('Service: identityAccessFactory', function() {
     getCompanyFormatListJSON = $injector.get('servedCompanyFormats');
 
     localStorage = $injector.get('$localStorage');
-    dateUtility = $injector.get('dateUtility');
     identityAccessService = $injector.get('identityAccessService');
     companiesFactory = $injector.get('companiesFactory');
     companyFactory = $injector.get('companyFactory');
@@ -115,12 +113,7 @@ describe('Service: identityAccessFactory', function() {
     });
 
     it('should call getUserCompanies API', function() {
-      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-      var payload = {
-        startDate: today,
-        endDate: today
-      };
-      expect(identityAccessService.getUserCompanies).toHaveBeenCalledWith(payload);
+      expect(identityAccessService.getUserCompanies).toHaveBeenCalled();
     });
 
     it('should call companyFormatService.getCompanyFormatList API', function() {
