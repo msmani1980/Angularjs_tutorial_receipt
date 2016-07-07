@@ -101,6 +101,7 @@ angular.module('ts5App')
     ];
 
     var onlyRsvrApis = [
+      '/rsvr/api/eula',
       '/rsvr/api/company-preferences',
       '/rsvr/api/currencies',
       '/rsvr/api/companies/[0-9]*',

@@ -7,7 +7,7 @@
  * # eulaModal
  */
 angular.module('ts5App')
-  .directive('eulaModal', ['eulaService', function (eulaService) {
+  .directive('eulaModal', function (eulaService) {
 
     function link(scope) {
 
@@ -15,7 +15,7 @@ angular.module('ts5App')
         if (scope.eulaLoaded) {
           return;
         }
-        
+
         eulaService.getCurrentEULA().then(function () {
           scope.eulaLoaded = true;
         });
@@ -23,8 +23,9 @@ angular.module('ts5App')
 
       scope.showEULA = function () {
         angular.element('#eula-modal').modal('show');
-        getEULAFromAPI();
       };
+
+      getEULAFromAPI();
     }
 
     return {
@@ -33,4 +34,4 @@ angular.module('ts5App')
       link: link,
       replace: true
     };
-  }]);
+  });

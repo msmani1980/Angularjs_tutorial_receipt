@@ -191,11 +191,9 @@ angular.module('ts5App')
         return authorizeUserResponseHandler(rawSessionData);
       }
 
-      if (rawSessionData.eulaRecent === false) {
-        tempToken = angular.copy(rawSessionData.currentSession.sessionToken);
-        eulaService.showEULAConfirmation();
-        $rootScope.userAgreesToEULA = userAgreesToEULA;
-      }
+      tempToken = angular.copy(rawSessionData.currentSession.sessionToken);
+      eulaService.showEULAConfirmation();
+      $rootScope.userAgreesToEULA = userAgreesToEULA;
     }
 
     function login(credentials) {

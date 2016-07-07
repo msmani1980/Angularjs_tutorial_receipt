@@ -5,7 +5,7 @@
         <strong class="modal-title">{{ title }}</strong>
       </div>
       <div class="modal-body" ng-if="body">
-        <p>{{ body }}</p>
+        <div ng-bind-html="body"></div>
       </div>
       <div class="modal-footer">
         <button ng-if="cancelLabel" class="btn btn-default btn-cancel" data-dismiss="modal">
