@@ -200,6 +200,10 @@ describe('The StockOwnerItemListCtrl controller', function () {
       expect(StockOwnerItemListCtrl.displayLoadingModal).toHaveBeenCalled();
     });
 
+    it('should clear existing item list', function() {
+      expect(scope.itemsList.length).toBe(0);
+    });
+
   });
 
   describe('remove item functionality', function() {
