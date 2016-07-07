@@ -236,6 +236,8 @@ describe('Controller: CashBagCtrl', function() {
       it('should call cashBagFactory createCashBag', function() {
         var payload = angular.copy(scope.cashBag);
         payload.scheduleDate='20150930';
+        payload.isRemoved=false;
+        payload.isDeleted=false;
         delete payload.storeNumber;
         angular.forEach(payload.cashBagCurrencies, function(cashBagCurrency) {
           delete cashBagCurrency.currencyCode;
