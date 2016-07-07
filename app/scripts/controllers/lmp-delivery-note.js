@@ -154,36 +154,35 @@ angular.module('ts5App')
       });
     }
 
+    function setNoItemsError () {
+      if ($scope.routeParamState === 'edit' && _firstTime) {
+        _firstTime = false;
+        return;
+      }
+
+      $scope.errorCustom = [{
+        field: 'Items cannot be prepopulated',
+        value: 'for this LMP Station because none exist. You must add them manually with the Add Items button below.'
+      }];
+      showResponseErrors();
+    }
+
     function addNewMasterItemsFromCatererStationMasterItemsResponse(responseFromAPI) {
       var response = angular.copy(responseFromAPI);
       $scope.deliveryNote.items = [];
       hideLoadingModal();
 
-      // Set cached results instead of hitting API again
-      //if (angular.isUndefined(_cateringStationItems[$scope.deliveryNote.catererStationId])) {
-      //  _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
-      //}
-
       if (!response.response) {
-        if ($scope.routeParamState === 'edit' && _firstTime) {
-          _firstTime = false;
-          return;
-        }
-
-        $scope.errorCustom = [{
-          field: 'Items cannot be prepopulated',
-          value: 'for this LMP Station because none exist. You must add them manually with the Add Items button below.'
-        }];
-        showResponseErrors();
+        setNoItemsError();
         return;
       }
 
-      var items = $filter('unique')(response.response, 'itemMasterId');
+      var uniqueItems = $filter('unique')(response.response, 'itemMasterId');
       var deliveryNoteItemIds = $scope.deliveryNote.items.map(function(item) {
         return item.itemMasterId;
       });
 
-      var filteredResponseMasterItems = items.filter(function(item) {
+      var filteredResponseMasterItems = uniqueItems.filter(function(item) {
         item.ullageQuantity = 0;
         return deliveryNoteItemIds.indexOf(item.itemMasterId) === -1;
       });
@@ -194,11 +193,40 @@ angular.module('ts5App')
       setAllowedMasterItems();
     }
 
+    function addNewMasterItemsFromCatererStationMenuItems (responseFromAPI) {
+      var menusFromAPI = angular.copy(responseFromAPI.companyMenuCatererStations);
+      var menuIds = lodash.uniq(lodash.map(menusFromAPI, function(menu) {
+        return menu.menuId;
+      }));
+
+      var newItems = [];
+      angular.forEach($scope.menuList, function (menu) {
+        if (menuIds.indexOf(menu.menuId) >= 0) {
+          newItems = newItems.concat(menu.menuItems);
+        }
+      });
+
+      //var uniqueItems = $filter('unique')(newItems, 'itemId');
+
+      //angular.forEach(uniqueItems, function (newItems) {
+      //  newItems.itemMaster
+      //});
+      //var combinedItems = angular.copy($scope.deliveryNote.items).concat(uniqueItems);
+
+      setAllowedMasterItems();
+
+      //$scope.menuList;
+    }
+
     function setStationItemsFromAPI (responseCollection, catererStationId) {
+
       // TODO: add menu items
-      console.log(responseCollection[0]);
+      //console.log(responseCollection[0]);
+
+      addNewMasterItemsFromCatererStationMenuItems(responseCollection[0]);
 
       // cached results
+
       var catererStationItems = !!responseCollection[1] ? responseCollection[1] : _cateringStationItems[catererStationId];
       addNewMasterItemsFromCatererStationMasterItemsResponse(catererStationItems);
 
@@ -514,7 +542,7 @@ angular.module('ts5App')
       if (!!$scope.inventoryCharacteristicType) {
         payload.characteristicId = $scope.inventoryCharacteristicType.id;
       }
-      
+
       return deliveryNoteFactory.getMasterItems(payload).then(setMasterItemsFromResponse, showResponseErrors);
     }
 
