@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .factory('identityAccessFactory',
-    function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService, dateUtility) {
+    function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService) {
 
       var tempToken;
 
@@ -150,20 +150,11 @@ angular.module('ts5App')
         setSessionData(sessionObject);
       }
 
-      function getUserCompaniesPayload() {
-        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-        return {
-          startDate: today,
-          endDate: today
-        };
-      }
-
       function getCompanyData(rawSessionData) {
-        var userCompaniesPayload = getUserCompaniesPayload();
         var companyDataPromiseArray = [
           companyFactory.getCompany(rawSessionData.companyId),
           companyFactory.getCompanyTypes(),
-          identityAccessService.getUserCompanies(userCompaniesPayload),
+          identityAccessService.getUserCompanies(),
           companyFormatService.getCompanyFormatList()
         ];
 

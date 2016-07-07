@@ -5,19 +5,21 @@ describe('Controller: ItemImportCtrl', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/stockowner-companies.json'));
   beforeEach(module('served/retail-items.json'));
-  beforeEach(module('served/session-object.json'));
+  beforeEach(module('served/company-relationship-list.json'));
 
   var ItemImportCtrl;
   var scope;
   var itemImportFactory;
-  var identityAccessFactory;
+  var globalMenuService;
+  var companyRelationshipService;
+  var companyRelationshipDeferred;
   var importedCompaniesResponseJSON;
   var companyId;
   var retailItemsResponseJSON;
   var getItemsListDeferred;
   var importItemsDeferred;
-  var sessionObject;
   var currentCompanyId = 403;
+  var companyRelationshipListJSON;
 
   beforeEach(inject(function ($controller, $rootScope, $q, _itemImportFactory_, $injector) {
     scope = $rootScope.$new();
@@ -28,9 +30,16 @@ describe('Controller: ItemImportCtrl', function () {
     });
 
     itemImportFactory = $injector.get('itemImportFactory');
-    identityAccessFactory = $injector.get('identityAccessFactory');
-    sessionObject = $injector.get('servedSessionObject');
-    spyOn(identityAccessFactory, 'getSessionObject').and.returnValue(sessionObject);
+
+    globalMenuService = $injector.get('globalMenuService');
+    spyOn(globalMenuService.company, 'get').and.returnValue(403);
+
+    companyRelationshipListJSON = $injector.get('servedCompanyRelationshipList');
+    companyRelationshipDeferred = $q.defer();
+    companyRelationshipDeferred.resolve(companyRelationshipListJSON);
+
+    companyRelationshipService = $injector.get('companyRelationshipService');
+    spyOn(companyRelationshipService, 'getCompanyRelationshipListByCompany').and.returnValue(companyRelationshipDeferred.promise);
 
     getItemsListDeferred = $q.defer();
     getItemsListDeferred.resolve(retailItemsResponseJSON);
@@ -102,8 +111,8 @@ describe('Controller: ItemImportCtrl', function () {
   });
 
   describe('itemImportFactory API calls', function () {
-    it('should get CompanyList from session Object', function () {
-      expect(identityAccessFactory.getSessionObject).toHaveBeenCalled();
+    it('should GET Company Relationship List from API', function () {
+      expect(companyRelationshipService.getCompanyRelationshipListByCompany).toHaveBeenCalled();
     });
 
     it('should have importCompanyList attached to scope after API call', function () {
