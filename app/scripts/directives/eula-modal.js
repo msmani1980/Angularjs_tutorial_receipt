@@ -23,9 +23,9 @@ angular.module('ts5App')
 
       scope.showEULA = function () {
         angular.element('#eula-modal').modal('show');
+        getEULAFromAPI();
       };
 
-      getEULAFromAPI();
     }
 
     return {
