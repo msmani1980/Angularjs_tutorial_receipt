@@ -104,7 +104,7 @@ angular.module('ts5App')
       '/rsvr/api/eula',
       '/rsvr/api/company-preferences',
       '/rsvr/api/currencies',
-      '/rsvr/api/companies/[0-9]*',
+      '/rsvr/api/companies/[0-9]*$',
       '/rsvr/api/dailyexchangerate',
       '/rsvr/api/company-formats',
       '/rsvr/api/companies/[0-9]*/stations',
