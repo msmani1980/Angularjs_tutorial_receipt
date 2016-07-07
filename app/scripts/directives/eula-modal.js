@@ -7,18 +7,25 @@
  * # eulaModal
  */
 angular.module('ts5App')
-  .directive('eulaModal', ['eulaService', function(eulaService) {
+  .directive('eulaModal', function (eulaService) {
 
     function link(scope) {
 
-      scope.showEULA = function() {
-        angular.element('#eula-modal').modal('show');
-        if (!scope.eulaLoaded) {
-          eulaService.getCurrentEULA().then(function() {
-            scope.eulaLoaded = true;
-          });
+      function getEULAFromAPI() {
+        if (scope.eulaLoaded) {
+          return;
         }
+
+        eulaService.getCurrentEULA().then(function () {
+          scope.eulaLoaded = true;
+        });
+      }
+
+      scope.showEULA = function () {
+        angular.element('#eula-modal').modal('show');
+        getEULAFromAPI();
       };
+
     }
 
     return {
@@ -27,4 +34,4 @@ angular.module('ts5App')
       link: link,
       replace: true
     };
-  }]);
+  });
