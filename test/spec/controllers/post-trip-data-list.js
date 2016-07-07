@@ -15,8 +15,6 @@ describe('Controller: PostFlightDataListCtrl', function() {
   var postTripsDeferred;
   var stationsListResponseJSON;
   var stationsListDeferred;
-  var carrierTypesResponseJSON;
-  var carrierTypesDeferred;
   var carrierNumbersResponseJSON;
   var carrierNumbersDeferred;
   var deletedPostTripDeferred;
@@ -28,11 +26,10 @@ describe('Controller: PostFlightDataListCtrl', function() {
   var dateUtility;
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location) {
-    inject(function(_servedPostTripDataList_, _servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_,
+    inject(function(_servedPostTripDataList_, _servedStations_, _servedCarrierNumbers_,
       _servedEmployees_, _dateUtility_) {
       postTripsResponseJSON = _servedPostTripDataList_;
       stationsListResponseJSON = _servedStations_;
-      carrierTypesResponseJSON = _servedCarrierTypes_;
       carrierNumbersResponseJSON = _servedCarrierNumbers_;
       employeesResponseJSON = _servedEmployees_;
       dateUtility = _dateUtility_;
@@ -46,8 +43,6 @@ describe('Controller: PostFlightDataListCtrl', function() {
     postTripsDeferred.resolve(postTripsResponseJSON);
     stationsListDeferred = $q.defer();
     stationsListDeferred.resolve(stationsListResponseJSON);
-    carrierTypesDeferred = $q.defer();
-    carrierTypesDeferred.resolve(carrierTypesResponseJSON);
     carrierNumbersDeferred = $q.defer();
     carrierNumbersDeferred.resolve(carrierNumbersResponseJSON);
     deletedPostTripDeferred = $q.defer();
@@ -59,7 +54,6 @@ describe('Controller: PostFlightDataListCtrl', function() {
 
     spyOn(postTripFactory, 'getPostTripDataList').and.returnValue(postTripsDeferred.promise);
     spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
-    spyOn(postTripFactory, 'getCarrierTypes').and.returnValue(carrierTypesDeferred.promise);
     spyOn(postTripFactory, 'getCarrierNumbers').and.returnValue(carrierNumbersDeferred.promise);
     spyOn(postTripFactory, 'deletePostTrip').and.returnValue(deletedPostTripDeferred.promise);
     spyOn(postTripFactory, 'getEmployees').and.returnValue(employeesDeferred.promise);
@@ -103,12 +97,9 @@ describe('Controller: PostFlightDataListCtrl', function() {
 
     describe('getAllCarrierNumbers', function() {
 
-      it('should call getCarrierTypes', function() {
-        expect(postTripFactory.getCarrierTypes).toHaveBeenCalled();
-      });
-
-      it('should call getCarrierNumbers for each carrierType', function() {
-        expect(postTripFactory.getCarrierNumbers).toHaveBeenCalledWith(postTripFactory.getCompanyId(), carrierTypesResponseJSON.response[0].companyCarrierTypeId);
+      it('should call all getCarrierNumbers with company Id', function() {
+        var companyId = postTripFactory.getCompanyId();
+        expect(postTripFactory.getCarrierNumbers).toHaveBeenCalledWith(companyId);
       });
 
       it('should attach carrierNumbers array to scope', function() {

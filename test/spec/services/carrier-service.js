@@ -110,6 +110,14 @@ describe('Carrier Service', function () {
         $httpBackend.flush();
       });
 
+      it('should have 0 as a carrier type if non is passed', function () {
+        var defaultCarrierType = 0;
+        var regex = new RegExp('/carrier-types/' + defaultCarrierType + '/carrier-numbers', 'g');
+        $httpBackend.expectGET(regex).respond(200, '');
+        carrierService.getCarrierNumbers(413);
+        $httpBackend.flush();
+      });
+
       it('should have companyId property', function () {
         expect(carrierNumbersData.response[0].companyId).not.toBe(null);
       });
