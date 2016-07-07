@@ -67,12 +67,7 @@ angular.module('ts5App')
     };
 
     this.getCarrierSuccess = function(response) {
-      $scope.carrierNumbers = [];
-      angular.forEach(response.response, function(item) {
-        postTripFactory.getCarrierNumbers(companyId, item.companyCarrierTypeId).then(function(response) {
-          $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
-        });
-      });
+      $scope.carrierNumbers = angular.copy(response.response);
     };
 
     this.saveFormSuccess = function(response) {
@@ -176,7 +171,7 @@ angular.module('ts5App')
       companyId = postTripFactory.getCompanyId();
       var promises = [
         postTripFactory.getStationList(companyId),
-        postTripFactory.getCarrierTypes(companyId),
+        postTripFactory.getCarrierNumbers(companyId),
         postTripFactory.getEmployees(companyId),
         postTripFactory.getSchedules(companyId)
       ];
