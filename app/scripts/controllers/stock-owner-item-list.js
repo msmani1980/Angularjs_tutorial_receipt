@@ -170,7 +170,7 @@ angular.module('ts5App')
         limit: 100,
         offset: 0
       };
-
+      $scope.itemsList = [];
       $this.displayLoadingModal();
       $this.getItemsList();
     };
