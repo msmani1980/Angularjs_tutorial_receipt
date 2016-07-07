@@ -200,6 +200,12 @@ describe('The StockOwnerItemListCtrl controller', function () {
       expect(StockOwnerItemListCtrl.displayLoadingModal).toHaveBeenCalled();
     });
 
+    it('should clear existing item list', function() {
+      var existingItemListCount = scope.itemsList.length;
+      scope.searchRecords();
+      expect(scope.itemsList.length).toBe(existingItemListCount);
+    });
+
   });
 
   describe('remove item functionality', function() {
