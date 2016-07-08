@@ -117,7 +117,7 @@ angular.module('ts5App')
         var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
         var payload = {
           startDate: today,
-          endDate: today,
+          endDate: '20501231',
           relativeCompanyType: 'Stockowner'
         };
         companyRelationshipService.getCompanyRelationshipListByCompany(companyId, payload).then(setRelationshipData);
