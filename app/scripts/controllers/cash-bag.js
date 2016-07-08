@@ -402,7 +402,7 @@ angular.module('ts5App')
       _promises.push(
         cashBagFactory.getCompanyPreferences(payload, _companyId).then(function(companyPreferencesData) {
           var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences),
-            'date', 'desc');
+            'startDate', 'desc');
 
           $scope.companyPreferences = {
             exchangeRateType: getCompanyPreferenceBy(orderedPreferences, 'Cash Bag', 'Exchange Rate Type'),
