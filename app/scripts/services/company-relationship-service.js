@@ -87,8 +87,10 @@ angular.module('ts5App')
       return companyRelationshipRequestResource.getCompanyRelationshipList(payload).$promise;
     };
 
-    var getCompanyRelationshipListByCompany = function (id) {
-      return companyRelationshipRequestResource.getCompanyRelationshipListByCompany({ id: id }).$promise;
+    var getCompanyRelationshipListByCompany = function (id, payload) {
+      payload = payload || {};
+      payload.id = id;
+      return companyRelationshipRequestResource.getCompanyRelationshipListByCompany(payload).$promise;
     };
 
     var getCompanyRelationship = function (id) {
