@@ -23,7 +23,7 @@
          <div class="panel-body" style="color: green">
              {{scheduledReport.template.description}} <br></br>
              {{scheduledReport.recurrencePattern}} every {{scheduledReport.dayOfWeek}} {{scheduledReport.daysOfWeek}} {{scheduledReport.dayOfMonth=='-1'?'Last Day':scheduledReport.dayOfMonth}} 
-             at {{scheduledReport.recurrenceTime.substring(0, 5);}} 
+             at {{scheduledReport.recurrenceTime.substring(0, 5);}} on TimeZone[{{scheduledReport.timeZone}}] 
              from {{scheduledReport.recurrenceStartDate | date :  "dd.MM.y"}} to {{scheduledReport.recurrenceEndDate | date :  "dd.MM.y"}}
            </div>
         </div>

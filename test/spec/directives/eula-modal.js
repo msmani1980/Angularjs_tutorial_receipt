@@ -31,7 +31,7 @@ describe('Directive: eulaModal', function() {
   }));
 
   it('should have a text element', inject(function() {
-    expect(element.find('p').length).toBe(2);
+    expect(element.find('p').length).toBe(1);
   }));
 
   it('should have a showEULA function', inject(function() {

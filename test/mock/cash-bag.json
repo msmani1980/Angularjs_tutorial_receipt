@@ -6,7 +6,7 @@
   "chCompanyId": 362,
   "dailyExchangeRateId": 83,
   "eposCashBagsId": null,
-  "isSubmitted": "false",
+  "isSubmitted": false,
   "retailCompanyId": 403,
   "scheduleDate": "2015-05-29",
   "scheduleNumber": "105",

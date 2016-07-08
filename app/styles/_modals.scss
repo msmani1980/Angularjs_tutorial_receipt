@@ -21,10 +21,16 @@
 }
 
 #eula-confirmation-modal, #eula-modal{
-  .modal-body{
-    max-height:300px;
-    overflow:auto;
-    color:#757575;
+  .modal-dialog {
+    height: 90%;
+  }
+  .modal-content {
+    height: 100%;
+  }
+
+  .modal-body {
+    max-height: calc(100% - 120px);
+    overflow-y: scroll;
   }
 }
 
