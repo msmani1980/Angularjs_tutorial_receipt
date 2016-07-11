@@ -12,6 +12,7 @@ angular.module('ts5App')
 
     var dateFormatForAPI = 'YYYYMMDD';
     var dateFormatForReportAPI = 'dd/MM/yyyy';
+    var timestampFormatForAPI = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
 
     this.getReportsDateFormat = function () {
       return dateFormatForReportAPI;
@@ -21,8 +22,9 @@ angular.module('ts5App')
       return companyFormatUtility.getDateFormat();
     };
 
-    var timestampFormatForAPI = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
-    var timestampFormatForApp = this.getDateFormatForApp() + ' HH:mm';
+    var timestampFormatForApp = function () {
+      return companyFormatUtility.getDateFormat() + ' HH:mm';
+    };
 
     this.formatDate = function (dateString, formatFrom, formatTo) {
       return moment(dateString, formatFrom).format(formatTo).toString();
@@ -43,7 +45,7 @@ angular.module('ts5App')
     };
 
     this.formatTimestampForAPI = function (timestampToFormat, timestampForAppFormat, timestampForAPIFormat) {
-      timestampForAppFormat = timestampForAppFormat || timestampFormatForApp;
+      timestampForAppFormat = timestampForAppFormat || timestampFormatForApp();
       timestampForAPIFormat = timestampForAPIFormat || timestampFormatForAPI;
 
       return this.formatDate(timestampToFormat, timestampForAppFormat,
@@ -53,7 +55,7 @@ angular.module('ts5App')
     this.formatTimestampForApp = function (timestampToFormat, timestampForAPIFormat,
                                            timestampForAppFormat) {
       timestampForAPIFormat = timestampForAPIFormat || timestampFormatForAPI;
-      timestampForAppFormat = timestampForAppFormat || timestampFormatForApp;
+      timestampForAppFormat = timestampForAppFormat || timestampFormatForApp();
 
       return this.formatDate(timestampToFormat, timestampForAPIFormat,
         timestampForAppFormat);
