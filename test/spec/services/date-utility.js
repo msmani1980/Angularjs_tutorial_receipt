@@ -156,7 +156,7 @@ describe('Date Utility service', function () {
     });
   });
 
-  describe('', function () {
+  describe('formatTimestampForApp()', function () {
     it('should get the DATE format from company format utility', function () {
       dateUtility.formatTimestampForApp('20161015 13:36');
       expect(companyFormatUtility.getDateFormat).toHaveBeenCalled();
