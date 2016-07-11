@@ -559,6 +559,30 @@ describe('The Stock Owner Item Create Controller', function() {
         });
 
       });
+      
+      describe('the determine minimum date functionality', function() {
+
+        beforeEach(function() {
+          spyOn(StockOwnerItemCreateCtrl, 'determineMinDate').and.callThrough();
+          scope.$digest();
+        });
+
+        it('should determine the min date on success', function() {
+          expect(StockOwnerItemCreateCtrl.determineMinDate).toHaveBeenCalled();
+        });
+
+        it('should set the minDate in the scope', function() {
+          expect(scope.minDate).toEqual(StockOwnerItemCreateCtrl.determineMinDate());
+        });
+
+        it('should return a formatted string', function() {
+          var dateStringControl = '+1d';
+          var dateStringTest = StockOwnerItemCreateCtrl.determineMinDate();
+          expect(dateStringTest).toEqual(dateStringControl);
+        });
+
+      });
+
 
       describe('setBaseCurrencyId method', function() {
 
