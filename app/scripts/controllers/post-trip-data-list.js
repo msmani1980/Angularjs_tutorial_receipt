@@ -79,11 +79,7 @@ angular.module('ts5App')
     };
 
     this.getCarrierSuccess = function(response) {
-      angular.forEach(response.response, function(item) {
-        postTripFactory.getCarrierNumbers(companyId, item.companyCarrierTypeId).then(function(response) {
-          $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
-        });
-      });
+      $scope.carrierNumbers = angular.copy(response.response);
     };
 
     this.getEmployeesSuccess = function(response) {
@@ -119,7 +115,7 @@ angular.module('ts5App')
     this.makeInitPromises = function() {
       var promises = [
         postTripFactory.getStationList(companyId).then($this.getStationsSuccess),
-        postTripFactory.getCarrierTypes(companyId).then($this.getCarrierSuccess),
+        postTripFactory.getCarrierNumbers(companyId).then($this.getCarrierSuccess),
         postTripFactory.getEmployees(companyId).then($this.getEmployeesSuccess)
       ];
 

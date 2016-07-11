@@ -30,7 +30,7 @@
       "choiceCode": "BRN",
       "choiceName": "Default Bank Reference Number",
       "isSelected": true,
-      "startDate": "2016-02-23"
+      "startDate": "2016-01-23"
     }, {
       "id": 50,
       "companyId": 403,
@@ -46,6 +46,20 @@
       "isSelected": true,
       "startDate": "2016-04-22",
       "numericValue": null
+    }, {
+      "id": 52,
+      "companyId": 403,
+      "featureId": 2,
+      "featureCode": "CBG",
+      "featureName": "Cash Bag",
+      "optionId": 5,
+      "optionCode": "BRN",
+      "optionName": "Default Bank Reference Number",
+      "choiceId": 6,
+      "choiceCode": "BRN",
+      "choiceName": "Default Bank Reference Number",
+      "isSelected": true,
+      "startDate": "2016-02-23"
     }
   ]
 }
