@@ -167,73 +167,54 @@ angular.module('ts5App')
       showResponseErrors();
     }
 
-    function addNewMasterItemsFromCatererStationMasterItemsResponse(responseFromAPI) {
-      var response = angular.copy(responseFromAPI);
-      $scope.deliveryNote.items = [];
-      hideLoadingModal();
+    function getItemsFromCatererStationMenus (menuCatererStationsList) {
+      var menuIds = lodash.uniq(lodash.map(menuCatererStationsList, 'menuId'));
 
-      if (!response.response) {
-        setNoItemsError();
-        return;
-      }
-
-      var uniqueItems = $filter('unique')(response.response, 'itemMasterId');
-      var deliveryNoteItemIds = $scope.deliveryNote.items.map(function(item) {
-        return item.itemMasterId;
+      var menuItems = [];
+      angular.forEach($scope.menuList, function (menu) {
+        if (menuIds.indexOf(menu.menuId) >= 0) {
+          menuItems = menuItems.concat(menu.menuItems);
+        }
       });
 
-      var filteredResponseMasterItems = uniqueItems.filter(function(item) {
+      var uniqueMenuItems = lodash.uniq(menuItems, 'itemId');
+      angular.forEach(uniqueMenuItems, function (newItems) {
+        newItems.itemMasterId = newItems.itemId;
+        delete newItems.itemId;
+      });
+
+      return uniqueMenuItems;
+    }
+
+    function addNewDeliveryNoteItemsFromArray(newItemsArray) {
+      var deliveryNoteItemIds = lodash.map($scope.deliveryNote.items, 'itemMasterId');
+
+      var newMasterItems = newItemsArray.filter(function(item) {
         item.ullageQuantity = 0;
-        return deliveryNoteItemIds.indexOf(item.itemMasterId) === -1;
+        return deliveryNoteItemIds.indexOf(item.itemMasterId) < 0;
       });
 
-      var newMasterItems = $filter('orderBy')(filteredResponseMasterItems, 'itemName');
-      removeNullDeliveredItems();
       $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
       setAllowedMasterItems();
     }
 
-    function addNewMasterItemsFromCatererStationMenuItems (responseFromAPI) {
-      var menusFromAPI = angular.copy(responseFromAPI.companyMenuCatererStations);
-      var menuIds = lodash.uniq(lodash.map(menusFromAPI, function(menu) {
-        return menu.menuId;
-      }));
-
-      var newItems = [];
-      angular.forEach($scope.menuList, function (menu) {
-        if (menuIds.indexOf(menu.menuId) >= 0) {
-          newItems = newItems.concat(menu.menuItems);
-        }
-      });
-
-      //var uniqueItems = $filter('unique')(newItems, 'itemId');
-
-      //angular.forEach(uniqueItems, function (newItems) {
-      //  newItems.itemMaster
-      //});
-      //var combinedItems = angular.copy($scope.deliveryNote.items).concat(uniqueItems);
-
-      setAllowedMasterItems();
-
-      //$scope.menuList;
-    }
-
+    // TODO
     function setStationItemsFromAPI (responseCollection, catererStationId) {
+      $scope.deliveryNote.items = [];
+      var catererStationItems = !!responseCollection[1] ? responseCollection[1].response : _cateringStationItems[catererStationId].response;
+      var menuItems = getItemsFromCatererStationMenus(responseCollection[0].companyMenuCatererStations);
 
-      // TODO: add menu items
-      //console.log(responseCollection[0]);
+      if (!menuItems.length && !catererStationItems.length) {
+        setNoItemsError();
+        return;
+      }
 
-      addNewMasterItemsFromCatererStationMenuItems(responseCollection[0]);
-
-      // cached results
-
-      var catererStationItems = !!responseCollection[1] ? responseCollection[1] : _cateringStationItems[catererStationId];
-      addNewMasterItemsFromCatererStationMasterItemsResponse(catererStationItems);
+      addNewDeliveryNoteItemsFromArray(catererStationItems);
+      addNewDeliveryNoteItemsFromArray(menuItems);
 
       hideLoadingModal();
     }
 
-    // TODO;
     function getMasterRetailItemsByCatererStationId(catererStationId) {
       if (!catererStationId) {
         return;
@@ -482,13 +463,15 @@ angular.module('ts5App')
       showResponseErrors(response);
     }
 
+    // TODO: add menu items??
     function saveDeliveryNoteFailed(failureResponse) {
       var promises = [
-        deliveryNoteFactory.getItemsByCateringStationId($scope.deliveryNote.catererStationId).then(
-          addNewMasterItemsFromCatererStationMasterItemsResponse, showResponseErrors)
+        deliveryNoteFactory.getMenuCatererStationList({ catererStationId: $scope.deliveryNote.catererStationId }),
+        deliveryNoteFactory.getItemsByCateringStationId($scope.deliveryNote.catererStationId)
       ];
 
       $q.all(promises).then(function() {
+        setStationItemsFromAPI($scope.deliveryNote.catererStationId);
         saveDeliveryNoteFailedReset(failureResponse);
       });
 
