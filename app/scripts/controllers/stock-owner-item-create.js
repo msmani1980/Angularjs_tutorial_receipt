@@ -397,9 +397,27 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     };
 
     this.setUIReady = function() {
+      $scope.minDate = $this.determineMinDate();	
       $scope.uiSelectTemplateReady = true;
       $this.hideLoadingModal();
     };
+    
+    this.determineMinDate = function() {
+        var diff = 1;
+        if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
+          diff = dateUtility.diff(
+            dateUtility.nowFormatted(),
+            $scope.formData.startDate
+          );
+        }
+
+        var dateString = diff.toString() + 'd';
+        if (diff >= 0) {
+          dateString = '+' + dateString;
+        }
+        
+        return dateString;
+      };
 
     this.getDependencies = function() {
       $this.showLoadingModal('We are loading the Items data!');
