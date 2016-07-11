@@ -186,19 +186,32 @@ angular.module('ts5App')
       return uniqueMenuItems;
     }
 
+    function formatItemForDeliveryNoteList (masterItem) {
+      var newItem = {
+        itemName: masterItem.itemName,
+        itemCode: masterItem.itemCode,
+        itemMasterId: masterItem.id,
+        ullageQuantity: 0
+      };
+
+      return newItem;
+    }
+
     function addNewDeliveryNoteItemsFromArray(newItemsArray) {
       var deliveryNoteItemIds = lodash.map($scope.deliveryNote.items, 'itemMasterId');
 
-      var newMasterItems = newItemsArray.filter(function(item) {
-        item.ullageQuantity = 0;
-        return deliveryNoteItemIds.indexOf(item.itemMasterId) < 0;
+      var newMasterItems = [];
+      angular.forEach(newItemsArray, function (item) {
+        var masterItemMatch = lodash.findWhere($scope.masterItems, { id: item.itemMasterId });
+        if (deliveryNoteItemIds.indexOf(item.itemMasterId) < 0 && !!masterItemMatch) {
+          newMasterItems.push(formatItemForDeliveryNoteList(masterItemMatch));
+        }
       });
 
       $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
       setAllowedMasterItems();
     }
 
-    // TODO
     function setStationItemsFromAPI (responseCollection, catererStationId) {
       $scope.deliveryNote.items = [];
       var catererStationItems = !!responseCollection[1] ? responseCollection[1].response : _cateringStationItems[catererStationId].response;
@@ -215,19 +228,30 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    function getStationItemPromises (catererStationId) {
+      var menuPayload = {
+        catererStationId: catererStationId,
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      };
+
+      var updateStationPromises = [
+        deliveryNoteFactory.getMenuCatererStationList(menuPayload)
+      ];
+
+      if (!angular.isDefined(_cateringStationItems[catererStationId])) {
+        updateStationPromises.push(deliveryNoteFactory.getItemsByCateringStationId(catererStationId));
+      }
+
+      return updateStationPromises;
+    }
+
     function getMasterRetailItemsByCatererStationId(catererStationId) {
       if (!catererStationId) {
         return;
       }
 
       displayLoadingModal();
-      var updateStationPromises = [
-        deliveryNoteFactory.getMenuCatererStationList({ catererStationId: catererStationId })
-      ];
-
-      if (!angular.isDefined(_cateringStationItems[catererStationId])) {
-        updateStationPromises.push(deliveryNoteFactory.getItemsByCateringStationId(catererStationId));
-      }
+      var updateStationPromises = getStationItemPromises(catererStationId);
 
       $q.all(updateStationPromises).then(function (responseCollection) {
         setStationItemsFromAPI(responseCollection, catererStationId);
@@ -463,12 +487,8 @@ angular.module('ts5App')
       showResponseErrors(response);
     }
 
-    // TODO: add menu items??
     function saveDeliveryNoteFailed(failureResponse) {
-      var promises = [
-        deliveryNoteFactory.getMenuCatererStationList({ catererStationId: $scope.deliveryNote.catererStationId }),
-        deliveryNoteFactory.getItemsByCateringStationId($scope.deliveryNote.catererStationId)
-      ];
+      var promises = getStationItemPromises($scope.deliveryNote.catererStationId);
 
       $q.all(promises).then(function() {
         setStationItemsFromAPI($scope.deliveryNote.catererStationId);
