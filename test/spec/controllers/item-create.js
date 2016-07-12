@@ -1381,10 +1381,14 @@ describe('The Item Create Controller', function() {
 
         spyOn(ItemCreateCtrl, 'generateStationCurrenciesList').and.callThrough();
 
-        stationException = scope.formData.prices[0].stationExceptions[0];
+        var mockCurrencyList = [stationExceptionCurrenciesJSON.response[0]];
+        var stationException = {
+        		stationExceptionCurrencies: [
+            { companyCurrencyId: mockCurrencyList[0].id, price: '2.00', id: 133 }
+        ]};
 
-        stationExceptionCurrenciesList = ItemCreateCtrl.generateStationCurrenciesList(
-          stationExceptionCurrenciesJSON);
+        stationExceptionCurrenciesList = ItemCreateCtrl.generateStationCurrenciesList(stationException, 
+        		mockCurrencyList);
 
         stationExceptionCurrency = stationExceptionCurrenciesList[0];
 
@@ -1399,9 +1403,14 @@ describe('The Item Create Controller', function() {
         expect(stationExceptionCurrenciesList.length).toBeGreaterThan(0);
       });
 
-      it('should contain a stationExceptionCurrency object with a currency code', function() {
+      it('should contain a stationExceptionCurrency object with a price', function() {
         expect(stationExceptionCurrency.price).toBeDefined();
-        expect(stationExceptionCurrency.price).toEqual(null);
+        expect(stationExceptionCurrency.price).toEqual('2.00');
+      });
+      
+      it('should contain a stationExceptionCurrency object with a id', function() {
+        expect(stationExceptionCurrency.id).toBeDefined();
+        expect(stationExceptionCurrency.id).toEqual(133);
       });
 
       it('should contain a stationExceptionCurrency object with a companyCurrencyId', function() {

@@ -761,25 +761,26 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       };
       return currencyFactory.getCompanyCurrencies(currencyFilters);
     };
-
+    
+    // generate a list of station exception currencies
+    this.generateStationCurrenciesList = function(stationException, currenciesList) {
+      var listToReturn = [];
+      
+      angular.forEach(currenciesList, function (currency) {
+        var newCurrency = $this.generateCurrency(currency);
+        var existingCurrency = lodash.findWhere(stationException.stationExceptionCurrencies, { companyCurrencyId: newCurrency.companyCurrencyId });
+        newCurrency.id = (existingCurrency) ? existingCurrency.id : newCurrency.id; 
+        newCurrency.price = (existingCurrency) ? existingCurrency.price : newCurrency.price;
+        listToReturn.push(newCurrency);
+      });
+      
+      return listToReturn;
+    };
+    
     // sets the stations currenies list
     this.setStationsCurrenciesList = function(stationException, data) {
-      var stationExceptionCurrencies = this.generateStationCurrenciesList(data.response);
+      var stationExceptionCurrencies = this.generateStationCurrenciesList(stationException, data.response);
       stationException.stationExceptionCurrencies = stationExceptionCurrencies;
-    };
-
-    // generate a list of station exception currencies
-    this.generateStationCurrenciesList = function(currenciesList) {
-      var listToReturn = [];
-      for (var key in currenciesList) {
-        var currency = currenciesList[key];
-        listToReturn.push({
-          price: null,
-          companyCurrencyId: parseInt(currency.id)
-        });
-      }
-
-      return listToReturn;
     };
 
     // Updates the station exception with stations list and currencies list
