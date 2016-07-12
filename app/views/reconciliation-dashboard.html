@@ -150,7 +150,8 @@
     <error-dialog form-object="form" error-response="errorResponse" display="displayError">
     </error-dialog>
 
-    <table infinite-scroll="getReconciliationDataList()" class="table table-bordered table-hover ng-scope">
+    <div class="table-responsive">
+      <table infinite-scroll="getReconciliationDataList()" class="table table-bordered table-hover ng-scope">
       <thead>
       <tr>
         <th>
@@ -253,11 +254,12 @@
           </button>
           <button class="btn btn-primary btn-xs btn-block" tabindex="0"
                   ng-show="doesInstanceContainAction(instance, 'ForceReconcile')" ng-click="forceReconcile(instance, 'ForceReconcile')">Force Reconcile
-          </button>          
+          </button>
         </td>
       </tr>
       </tbody>
     </table>
+    </div>
     <p ng-if="reconciliationList.length > 0" class="record-count small text-center">Showing {{reconciliationList.length}} records</p>
     <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
   </div>
