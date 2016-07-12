@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: LmpDeliveryNoteCtrl', function() {
+fdescribe('Controller: LmpDeliveryNoteCtrl', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/lmp-delivery-note.json'));
@@ -10,6 +10,8 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
   beforeEach(module('served/items-by-caterer-station-id.json'));
   beforeEach(module('served/item-types.json'));
   beforeEach(module('served/characteristics.json'));
+  beforeEach(module('served/menus.json'));
+  beforeEach(module('served/menu-catering-stations.json'));
 
   var LmpDeliveryNoteCtrl;
   var scope;
@@ -32,12 +34,17 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
   var getItemTypesResponseJSON;
   var getItemCharacteristicsDeferred;
   var getItemCharacteristicsResponseJSON;
+  var getMenuListDeferred;
+  var getMenuListJSON;
+  var getMenuCatererStationListDeferred;
+  var getMenuCatererStationListJSON;
   var httpBackend;
   var dateUtility;
+  var lodash;
 
   beforeEach(inject(function($injector, $controller, $httpBackend, $rootScope, $q, _deliveryNoteFactory_,
     _servedLmpDeliveryNote_, $location, _servedCateringStations_, _servedMasterItemList_,
-    _servedCompanyReasonCodes_, _servedItemsByCatererStationId_, _servedItemTypes_, _servedCharacteristics_) {
+    _servedCompanyReasonCodes_, _servedItemsByCatererStationId_, _servedItemTypes_, _servedCharacteristics_, _servedMenus_, _servedMenuCateringStations_) {
 
     companyId = 403;
     httpBackend = $httpBackend;
@@ -51,8 +58,11 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
     getAllMasterItemsResponseJSON = _servedMasterItemList_;
     getItemTypesResponseJSON = _servedItemTypes_;
     getItemCharacteristicsResponseJSON = _servedCharacteristics_;
+    getMenuListJSON = _servedMenus_;
+    getMenuCatererStationListJSON = _servedMenuCateringStations_;
 
     dateUtility = $injector.get('dateUtility');
+    lodash = $injector.get('lodash');
 
     getDeliveryNoteDeferred = $q.defer();
     getDeliveryNoteDeferred.resolve(lmpDeliveryNoteResponseJSON);
@@ -84,6 +94,13 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
     getItemCharacteristicsDeferred = $q.defer();
     getItemCharacteristicsDeferred.resolve(getItemCharacteristicsResponseJSON);
     spyOn(deliveryNoteFactory, 'getCharacteristics').and.returnValue(getItemCharacteristicsDeferred.promise);
+
+    getMenuListDeferred = $q.defer();
+    getMenuListDeferred.resolve(getMenuListJSON);
+    spyOn(deliveryNoteFactory, 'getMenuList').and.returnValue(getMenuListDeferred.promise);
+
+    getMenuCatererStationListDeferred = $q.defer();
+    spyOn(deliveryNoteFactory, 'getMenuCatererStationList').and.returnValue(getMenuCatererStationListDeferred.promise);
 
   }));
 
@@ -294,6 +311,12 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
         expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
 
+      it('should get active and future menus', function () {
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var expectedPayload = { startDate: today };
+        expect(deliveryNoteFactory.getMenuList).toHaveBeenCalledWith(expectedPayload);
+      });
+
       describe('save scope function, only save', function() {
         beforeEach(function() {
           scope.deliveryNote = {
@@ -346,7 +369,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
 
     });
 
-    describe('Edit controller action', function() {
+    fdescribe('Edit controller action', function() {
       beforeEach(inject(function($controller) {
         routeParams = {
           state: 'edit',
@@ -406,26 +429,87 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
         expect(deliveryNoteFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
 
+      it('should get active and future menus', function () {
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var expectedPayload = { startDate: today };
+        expect(deliveryNoteFactory.getMenuList).toHaveBeenCalledWith(expectedPayload);
+      });
+
       describe('changing LMP station', function() {
 
+        var emptyItemResponse = {response: []};
+        var emptyMenuResponse = {companyMenuCatererStations: []};
         beforeEach(function() {
           httpBackend.expectGET(/./).respond(200);
+          var cateringStationId = 5;
+          scope.deliveryNote.catererStationId = cateringStationId;
         });
 
-        it('should call retail item master API', function() {
+        it('should get catering station items API', function() {
           getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
-          var csid = 5;
-          scope.deliveryNote.catererStationId = csid;
+          getMenuCatererStationListDeferred.resolve(emptyMenuResponse);
           scope.$digest();
-          expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
-          expect(scope.deliveryNote.items.length).toEqual(29);
+          expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(scope.deliveryNote.catererStationId);
+        });
+
+        it('should get catering station menus', function () {
+          getCatererStationMasterItemsDeferred.resolve(emptyItemResponse);
+          getMenuCatererStationListDeferred.resolve(getMenuCatererStationListJSON);
+          var expectedPayload = {
+            catererStationId: scope.deliveryNote.catererStationId,
+            startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+          };
+          scope.$digest();
+          expect(deliveryNoteFactory.getMenuCatererStationList).toHaveBeenCalledWith(expectedPayload);
+        });
+
+        it('should add catering station items to delivery note list', function () {
+          getCatererStationMasterItemsDeferred.resolve(emptyItemResponse);
+          getMenuCatererStationListDeferred.resolve(getMenuCatererStationListJSON);
+          scope.$digest();
+
+          expect(scope.deliveryNote.items.length > 0).toEqual(true);
+
+          // check that a menu in catererStationList has an items that was added to final list
+          var sampleCatererStationMenu = getMenuCatererStationListJSON.companyMenuCatererStations[0];
+          var menuMasterMatch = lodash.findWhere(scope.menuList, {menuId: sampleCatererStationMenu.menuId});
+          var sampleMenuItem = menuMasterMatch.menuItems[0];
+          var deliveryNoteItemMatch = lodash.findWhere(scope.deliveryNote.items, {itemMasterId: sampleMenuItem.itemMasterId});
+          expect(deliveryNoteItemMatch).toBeDefined();
+        });
+
+        // TODO;
+        it('should add catering station menu items to delivery note list', function () {
+          getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
+          getMenuCatererStationListDeferred.resolve(emptyMenuResponse);
+          scope.$digest();
+
+          expect(scope.deliveryNote.items.length > 0).toEqual(true);
+
+          var sampleStationItem = getCatererStationMasterItemsResponseJSON.response[0];
+          var deliveryNoteItemMatch = lodash.findWhere(scope.deliveryNote.items, {itemMasterId: sampleStationItem.itemMasterId});
+          expect(deliveryNoteItemMatch).toBeDefined();
+        });
+
+        it('should merge station and menu items and remove duplicates', function () {
+          getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
+          getMenuCatererStationListDeferred.resolve(getMenuCatererStationListJSON);
+          scope.$digest();
+
+          expect(scope.deliveryNote.items.length >= getCatererStationMasterItemsResponseJSON.response.length).toEqual(true);
+
+          var testItem = {itemMasterId: 1, itemName: 'Skittles'};   // test item known to be in both catererStationMasterItems and catererStationMenuItems
+          var deliveryNoteItemMatchArray = lodash.filter(scope.deliveryNote.items, {itemName: testItem.itemName});
+          expect(deliveryNoteItemMatchArray.length).toEqual(1);
         });
 
         it('should display an error if there are no items', function() {
-          getCatererStationMasterItemsDeferred.resolve({});
-          var csid = 3;
-          scope.deliveryNote.catererStationId = csid;
+          getCatererStationMasterItemsDeferred.resolve(emptyItemResponse);
+          getMenuCatererStationListDeferred.resolve(emptyMenuResponse);
+          var alternateCatererStationId = 10;
+          scope.deliveryNote.catererStationId = alternateCatererStationId;
           scope.$digest();
+
           expect(scope.displayError).toBeTruthy();
           expect(scope.errorCustom).toEqual([{
             field: 'Items cannot be prepopulated',

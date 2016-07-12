@@ -752,6 +752,7 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
       _initPromises.push(getMasterItems());
+      _initPromises.push(getMenuList());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();
