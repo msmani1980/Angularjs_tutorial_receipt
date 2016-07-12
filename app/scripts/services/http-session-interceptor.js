@@ -116,8 +116,6 @@ angular.module('ts5App')
       '/rsvr/api/companies/[0-9]*/relationships',
       '/rsvr/api/company-currency-globals',
       '/rsvr/api/companies/stores',
-      '/rsvr/api/daily-exchange-rates',
-      '/rsvr/api/daily-exchange-rates/previous-exchange-rate',
       '/rsvr/api/feature/DAILYEXCHANGERATE/thresholds',
       '/rsvr/api/companies/[0-9]*/schedules/distinct',
       '/rsvr/api/companies/[0-9]*/schedules'
