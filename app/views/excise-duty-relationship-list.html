@@ -193,9 +193,8 @@
     <br>
 
     <form name="itemExciseDutyEditForm" ng-submit="saveEdit()">
-
-
-      <table ng-if="itemExciseDutyList.length > 0" infinite-scroll="getItemExciseDutyList()" infinite-scroll-immediate-check="false"
+      <div class="table-responsive">
+        <table ng-if="itemExciseDutyList.length > 0" infinite-scroll="getItemExciseDutyList()" infinite-scroll-immediate-check="false"
              class="table table-bordered table-hover table-responsive">
         <thead>
         <tr>
@@ -320,6 +319,7 @@
         </tr>
         </tbody>
       </table>
+      </div>
     </form>
 
     <p ng-if="itemExciseDutyList.length > 0" class="record-count small text-center">Showing {{itemExciseDutyList.length}} records</p>

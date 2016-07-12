@@ -177,8 +177,7 @@
     <br>
 
     <form name="exciseDutyEditForm" ng-submit="saveEdit()">
-
-
+      <div class="table-responsive">
       <table ng-if="exciseDutyList.length > 0" infinite-scroll="getExciseDutyList()" infinite-scroll-immediate-check="false"
              class="table table-bordered table-hover table-responsive">
         <thead>
@@ -308,6 +307,7 @@
         </tr>
         </tbody>
       </table>
+      </div>
     </form>
 
     <p ng-if="exciseDutyList.length > 0" class="record-count small text-center">Showing {{exciseDutyList.length}} records</p>
