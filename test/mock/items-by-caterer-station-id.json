@@ -7,175 +7,175 @@
   "response": [
     {
       "catererStationId": 3,
-      "itemId": 1,
+      "itemMasterId": 1,
       "itemCode": "Sk001",
       "itemName": "Skittles"
     },
     {
       "catererStationId": 3,
-      "itemId": 2,
+      "itemMasterId": 2,
       "itemCode": "SD001",
       "itemName": "Coke"
     },
     {
       "catererStationId": 3,
-      "itemId": 3,
+      "itemMasterId": 3,
       "itemCode": "Ip015",
       "itemName": "Ipad Mini"
     },
     {
       "catererStationId": 3,
-      "itemId": 4,
+      "itemMasterId": 4,
       "itemCode": "Ru-002",
       "itemName": "BabyRuth"
     },
     {
       "catererStationId": 3,
-      "itemId": 5,
+      "itemMasterId": 5,
       "itemCode": "Sd005",
       "itemName": "Pepsi"
     },
     {
       "catererStationId": 3,
-      "itemId": 6,
+      "itemMasterId": 6,
       "itemCode": "Sn003",
       "itemName": "Snickers"
     },
     {
       "catererStationId": 3,
-      "itemId": 7,
+      "itemMasterId": 7,
       "itemCode": "Hd001",
       "itemName": "Spirits"
     },
     {
       "catererStationId": 3,
-      "itemId": 8,
+      "itemMasterId": 8,
       "itemCode": "Pe004",
       "itemName": "Peanuts"
     },
     {
       "catererStationId": 3,
-      "itemId": 10,
+      "itemMasterId": 10,
       "itemCode": "BL324",
       "itemName": "Bud Light"
     },
     {
       "catererStationId": 3,
-      "itemId": 12,
+      "itemMasterId": 12,
       "itemCode": "C0101",
       "itemName": "Coors"
     },
     {
       "catererStationId": 3,
-      "itemId": 13,
+      "itemMasterId": 13,
       "itemCode": "M0101",
       "itemName": "Mellow Yellow"
     },
     {
       "catererStationId": 3,
-      "itemId": 14,
+      "itemMasterId": 14,
       "itemCode": "P0101",
       "itemName": "DR Pepper"
     },
     {
       "catererStationId": 3,
-      "itemId": 15,
+      "itemMasterId": 15,
       "itemCode": "W0101",
       "itemName": "WaterMelon"
     },
     {
       "catererStationId": 3,
-      "itemId": 17,
+      "itemMasterId": 17,
       "itemCode": "P0102",
       "itemName": "Peach"
     },
     {
       "catererStationId": 3,
-      "itemId": 18,
+      "itemMasterId": 18,
       "itemCode": "P0304",
       "itemName": "Pear"
     },
     {
       "catererStationId": 3,
-      "itemId": 19,
+      "itemMasterId": 19,
       "itemCode": "IP0909",
       "itemName": "Ipad"
     },
     {
       "catererStationId": 3,
-      "itemId": 20,
+      "itemMasterId": 20,
       "itemCode": "HP0303",
       "itemName": "Headphones"
     },
     {
       "catererStationId": 3,
-      "itemId": 21,
+      "itemMasterId": 21,
       "itemCode": "UCH0909",
       "itemName": "Universal Charger"
     },
     {
       "catererStationId": 3,
-      "itemId": 22,
+      "itemMasterId": 22,
       "itemCode": "CK0303",
       "itemName": "CK Mens"
     },
     {
       "catererStationId": 3,
-      "itemId": 23,
+      "itemMasterId": 23,
       "itemCode": "HB0505",
       "itemName": "Hugo Boss"
     },
     {
       "catererStationId": 3,
-      "itemId": 31,
+      "itemMasterId": 31,
       "itemCode": "Dmd649",
       "itemName": "Diet Mountain Dew"
     },
     {
       "catererStationId": 3,
-      "itemId": 34,
+      "itemMasterId": 34,
       "itemCode": "VW328",
       "itemName": "Veggie Wrap"
     },
     {
       "catererStationId": 3,
-      "itemId": 36,
+      "itemMasterId": 36,
       "itemCode": "7up123",
       "itemName": "7up"
     },
     {
       "catererStationId": 3,
-      "itemId": 37,
+      "itemMasterId": 37,
       "itemCode": "Brisk204",
       "itemName": "Brisk Iced Tea"
     },
     {
       "catererStationId": 3,
-      "itemId": 38,
+      "itemMasterId": 38,
       "itemCode": "Mov230",
       "itemName": "Movie Ticket"
     },
     {
       "catererStationId": 3,
-      "itemId": 41,
+      "itemMasterId": 41,
       "itemCode": "Orange432",
       "itemName": "Orange"
     },
     {
       "catererStationId": 3,
-      "itemId": 42,
+      "itemMasterId": 42,
       "itemCode": "Coke659",
       "itemName": "Coke Zero"
     },
     {
       "catererStationId": 3,
-      "itemId": 65,
+      "itemMasterId": 65,
       "itemCode": "SOItem2",
       "itemName": "SOItem2"
     },
     {
       "catererStationId": 3,
-      "itemId": 79,
+      "itemMasterId": 79,
       "itemCode": "SD002",
       "itemName": "White Wine ROW 2012 Sauvignon Blanc DP"
     }
