@@ -191,6 +191,12 @@ describe('Controller: CashBagCtrl', function() {
         expect(scope.companyPreferences.defaultBankRefNumber).toBeDefined();
         expect(scope.companyPreferences.cashbagNumberLength).toBeDefined();
       });
+
+      it('shoudl save latest company preference', function () {
+        scope.$digest();
+        var expectedStartDateFromJSONMock = '2016-02-23';
+        expect(scope.companyPreferences.defaultBankRefNumber.startDate).toEqual(expectedStartDateFromJSONMock);
+      });
     });
 
     describe('cashBag definition', function() {

@@ -9,9 +9,10 @@ describe('Date Utility service', function () {
   // instantiate service
   var dateUtility;
   var companyFormatUtility;
-  beforeEach(inject(function (_dateUtility_, _companyFormatUtility_) {
-    dateUtility = _dateUtility_;
-    companyFormatUtility = _companyFormatUtility_;
+  beforeEach(inject(function ($injector) {
+    dateUtility = $injector.get('dateUtility');
+    companyFormatUtility = $injector.get('companyFormatUtility');
+    spyOn(companyFormatUtility, 'getDateFormat').and.callThrough();
   }));
 
   describe('now() method', function () {
@@ -66,11 +67,9 @@ describe('Date Utility service', function () {
       expect(dateUtility.formatDateForApp).toBeDefined();
     });
 
-    it('should format a date string from one format to another',
-      function () {
+    it('should format a date string from one format to another', function () {
         var expectedDateString = '06/19/2015';
-        var formattedString = dateUtility.formatDateForApp(
-          '20150619');
+        var formattedString = dateUtility.formatDateForApp('20150619');
         expect(formattedString).toEqual(expectedDateString);
       });
 
@@ -154,6 +153,13 @@ describe('Date Utility service', function () {
 
     it('should return false is date is not after today', function () {
       expect(dateUtility.isAfterToday('05/10/2000')).toBe(false);
+    });
+  });
+
+  describe('formatTimestampForApp()', function () {
+    it('should get the DATE format from company format utility', function () {
+      dateUtility.formatTimestampForApp('20161015 13:36');
+      expect(companyFormatUtility.getDateFormat).toHaveBeenCalled();
     });
   });
 
@@ -406,8 +412,7 @@ describe('Date Utility service', function () {
 
   describe('getOperationalDay method', function () {
 
-    it('should return a formatted number of the day',
-      function () {
+    it('should return a formatted number of the day', function () {
         var newDate = dateUtility.getOperationalDay('01/19/2016');
         expect(newDate).toEqual(2);
       });
@@ -418,20 +423,18 @@ describe('Date Utility service', function () {
     it('should be defined', function () {
       expect(dateUtility.isYesterdayOrEarlier).toBeDefined();
     });
+
     it('should return false if the date is today', function () {
       var today = dateUtility.nowFormatted();
-      var dateIsBeforeYesterday = dateUtility.isYesterdayOrEarlier(
-        today);
+      var dateIsBeforeYesterday = dateUtility.isYesterdayOrEarlier(today);
       expect(dateIsBeforeYesterday).toBeFalsy();
     });
-    it('should return true if the date is earlier than yesterday',
-      function () {
+
+    it('should return true if the date is earlier than yesterday', function () {
         var today = new Date();
         var twoDaysAgo = today.setDate(today.getDate() - 2);
-        var testDate = dateUtility.formatDateForApp(twoDaysAgo,
-          'x');
-        var dateIsBeforeYesterday = dateUtility.isYesterdayOrEarlier(
-          testDate);
+        var testDate = dateUtility.formatDateForApp(twoDaysAgo, 'x');
+        var dateIsBeforeYesterday = dateUtility.isYesterdayOrEarlier(testDate);
         expect(dateIsBeforeYesterday).toBeTruthy();
       });
   });
@@ -444,24 +447,21 @@ describe('Date Utility service', function () {
     it('should return true if the first date after the second date', function () {
       var dateToCompare = '04/10/1980';
       var baseDate = '02/20/2050';
-      var dateIsAfterOrEqual = dateUtility.isAfterOrEqual(
-        baseDate, dateToCompare);
+      var dateIsAfterOrEqual = dateUtility.isAfterOrEqual(baseDate, dateToCompare);
       expect(dateIsAfterOrEqual).toBeTruthy();
     });
 
     it('should return false if the first date is less than second date', function () {
       var baseDate = '04/10/1980';
       var dateToCompare = '02/20/2050';
-      var dateIsAfterOrEqual = dateUtility.isAfterOrEqual(
-        baseDate, dateToCompare);
+      var dateIsAfterOrEqual = dateUtility.isAfterOrEqual(baseDate, dateToCompare);
       expect(dateIsAfterOrEqual).toBeFalsy();
     });
 
     it('should return true if the first date is equal second today', function () {
       var dateToCompare = '05/20/2030';
       var baseDate = '05/20/2030';
-      var dateIsAfterOrEqual = dateUtility.isAfterOrEqual(
-        baseDate, dateToCompare);
+      var dateIsAfterOrEqual = dateUtility.isAfterOrEqual(baseDate, dateToCompare);
       expect(dateIsAfterOrEqual).toBeTruthy();
     });
 
