@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: LmpDeliveryNoteCtrl', function() {
+describe('Controller: LmpDeliveryNoteCtrl', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/lmp-delivery-note.json'));
@@ -478,7 +478,6 @@ fdescribe('Controller: LmpDeliveryNoteCtrl', function() {
           expect(deliveryNoteItemMatch).toBeDefined();
         });
 
-        // TODO;
         it('should add catering station menu items to delivery note list', function () {
           getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
           getMenuCatererStationListDeferred.resolve(emptyMenuResponse);
