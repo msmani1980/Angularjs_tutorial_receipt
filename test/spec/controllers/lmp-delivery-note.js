@@ -369,7 +369,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
 
     });
 
-    fdescribe('Edit controller action', function() {
+    describe('Edit controller action', function() {
       beforeEach(inject(function($controller) {
         routeParams = {
           state: 'edit',
