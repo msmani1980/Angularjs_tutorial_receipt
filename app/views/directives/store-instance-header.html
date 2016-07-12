@@ -14,8 +14,8 @@
       </div>
     </div>
   </div>
-  <div class="bg-gray panel-body" ng-show="prevStoreDetails && storeDetails.currentStatus.statusName === 'Ready for Packing'">
-    <table class="table">
+  <div class="bg-gray panel-body table-responsive" ng-show="prevStoreDetails && storeDetails.currentStatus.statusName === 'Ready for Packing'">
+      <table class="table">
       <thead>
       <tr>
         <th>LMP Station</th>
@@ -58,7 +58,7 @@
       </tbody>
     </table>
   </div>
-  <div class="bg-gray panel-body" ng-hide="prevStoreDetails && storeDetails.currentStatus.statusName === 'Ready for Packing'">
+  <div class="bg-gray panel-body table-responsive" ng-hide="prevStoreDetails && storeDetails.currentStatus.statusName === 'Ready for Packing'">
     <table class="table">
 
       <thead>
