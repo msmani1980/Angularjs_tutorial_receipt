@@ -155,11 +155,11 @@ angular.module('ts5App')
     });
 
     function clearExchangeRateCurrencies() {
-      $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies = [];
+      $scope.payload.dailyExchangeRateCurrencies = [];
     }
 
     function clearUnusedRates() {
-      $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.map(function(rate) {
+      $scope.payload.dailyExchangeRateCurrencies.map(function(rate) {
         if ($scope.isBankExchangePreferred()) {
           delete rate.coinExchangeRate;
           delete rate.paperExchangeRate;
@@ -170,10 +170,10 @@ angular.module('ts5App')
     }
 
     function cleanPayloadData() {
-      delete $scope.payload.dailyExchangeRate.createdBy;
-      delete $scope.payload.dailyExchangeRate.createdOn;
-      delete $scope.payload.dailyExchangeRate.updatedBy;
-      delete $scope.payload.dailyExchangeRate.updatedOn;
+      delete $scope.payload.createdBy;
+      delete $scope.payload.createdOn;
+      delete $scope.payload.updatedBy;
+      delete $scope.payload.updatedOn;
       clearUnusedRates();
     }
 
@@ -201,7 +201,7 @@ angular.module('ts5App')
       angular.forEach($scope.companyCurrencies, function(currency) {
         if ($scope.currenciesFields[currency.code]) {
           var companyCurrency = serializeExchangeRateForAPI(currency);
-          $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.push(companyCurrency);
+          $scope.payload.dailyExchangeRateCurrencies.push(companyCurrency);
         }
       });
     }
@@ -221,9 +221,7 @@ angular.module('ts5App')
         dailyExchangeRatePayload.id = $scope.dailyExchangeRates.id;
       }
 
-      $scope.payload = {
-        dailyExchangeRate: dailyExchangeRatePayload
-      };
+      $scope.payload = dailyExchangeRatePayload;
       resolvePayloadDependencies();
       cleanPayloadData();
     }

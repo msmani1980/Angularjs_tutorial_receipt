@@ -43,7 +43,7 @@ angular.module('ts5App')
 
     var saveDailyExchangeRates = function (payload) {
       var method = 'create';
-      if (payload.dailyExchangeRate.id) {
+      if (payload.id) {
         method = 'update';
       }
 
