@@ -232,6 +232,7 @@
       <th>Card Number</th>
       <th>CC Processed Date</th>
       <th>CC Transaction Status</th>
+      <th>CC Transaction Id</th>
       <th>CC Authorization Status</th>
       <th>Amount</th>
       <th ng-show="displayColumns.scheduleNumber">Schedule Number</th>
@@ -252,8 +253,9 @@
       <td>{{ transaction.lastFour }}</td>
       <td>{{ transaction.ccProcessedDate }}</td>
       <td>{{ transaction.ccTransactionStatus }}</td>
+      <td>{{ printCCTransactionId(transaction) }}</td>
       <td>{{ transaction.ccAuthorizationStatus }}</td>
-      <td>{{ transaction.totalAmount }} {{ transaction.currencyCode }}</td>
+      <td>{{ transaction.singleAmount }} {{ transaction.currencyCode }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
       <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
       <td ng-show="displayColumns.storeNumber">{{ transaction.storeNumber }}</td>

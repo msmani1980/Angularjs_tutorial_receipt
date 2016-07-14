@@ -50,12 +50,19 @@ angular.module('ts5App')
 
     $scope.search = {};
     $scope.isCreditCardPaymentSelected = false;
+    $scope.printCCTransactionId = function (transaction) {
+      if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card') {
+        return transaction.paymentId;
+      } else {
+        return '';
+      }
+    };
 
     $this.meta = {};
     $this.isSearch = false;
 
     var ABANDONED_TRANSACTION_TYPE_NAME = 'ABANDONED';
-    
+
     function isNotAbandoned(transaction) {
       return transaction.transactionTypeName !== ABANDONED_TRANSACTION_TYPE_NAME;
     }
