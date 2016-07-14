@@ -94,7 +94,8 @@
     </div>
   </div>
 
-  <table infinite-scroll="updateCashBagList()" ng-show="cashBagList.length" infinite-scroll-immediate-check="false" class="table table-bordered table-hover ng-scope">
+  <div class="table-responsive">
+    <table infinite-scroll="updateCashBagList()" ng-show="cashBagList.length" infinite-scroll-immediate-check="false" class="table table-bordered table-hover ng-scope">
     <thead>
     <tr>
       <th width="5%" class="hide-from-print"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
@@ -121,6 +122,7 @@
     </tr>
     </tbody>
   </table>
+    </div>
   <p ng-if="cashBagList.length > 0" class="record-count small text-center">Showing {{cashBagList.length}} records</p>
   <p class="loading-more alert alert-info text-center hide"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>

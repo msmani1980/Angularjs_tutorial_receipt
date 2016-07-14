@@ -97,8 +97,8 @@
         <a ng-href="/#/lmp-delivery-note/create/{{ catererStationId }}">Create a new delivery note</a> or update your search criteria
     </div>
   </div>
-
-  <table ng-show="catererStationId && deliveryNotesList.length > 0" class="table table-responsive table-bordered table-hover ng-scope">
+<div class="table-responsive">
+  <table ng-show="catererStationId && deliveryNotesList.length > 0" class="table table-bordered table-hover ng-scope">
     <thead>
       <tr>
         <th>Purchase Order Number</th>
@@ -137,6 +137,7 @@
     </tbody>
 
   </table>
+</div>
   <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 
 </div>

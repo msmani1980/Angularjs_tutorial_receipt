@@ -92,8 +92,8 @@
           </div>
         </div>
 
-        <div class="row form-group">
-          <table class="table table-responsive table-bordered table-hover">
+        <div class="row form-group table-responsive">
+          <table class="table table-bordered table-hover">
             <thead>
             <tr>
               <th>Currency</th>
@@ -140,7 +140,7 @@
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">{{ saveButtonName }}</span>
         </button>
-        <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="showDeleteButton" ng-disabled="readOnly">Delete</button>
+        <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="showDeleteButton(cashBag)" ng-disabled="readOnly">Delete</button>
       </div>
     </form>
 

@@ -13,7 +13,7 @@
                   data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-cog"></i>
-            Hide / Show Columns
+            <span class="hidden-sm hidden-xs">Hide / Show Columns</span>
             <i class="fa fa-caret-down"></i>
           </button>
           <ul class="dropdown-menu">
@@ -221,7 +221,8 @@
   <error-dialog form-object="form" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <table infinite-scroll="getTransactions()" class="table table-responsive table-bordered table-hover">
+  <div class="table-responsive">
+    <table infinite-scroll="getTransactions()" class="table table-bordered table-hover">
     <thead>
     <tr>
       <th>Transaction Date</th>
@@ -269,6 +270,7 @@
     </tr>
     </tbody>
   </table>
+    </div>
   <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>
 <dynamic-left-nav></dynamic-left-nav>
