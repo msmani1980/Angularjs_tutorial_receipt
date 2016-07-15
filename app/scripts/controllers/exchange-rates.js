@@ -47,6 +47,10 @@ angular.module('ts5App')
     }
 
     function getExchangeRateFromCompanyCurrencies(currenciesArray, currencyId) {
+      if (!currenciesArray || !currencyId) {
+        return null;
+      }
+
       return currenciesArray.filter(function(currencyItem) {
         return currencyItem.retailCompanyCurrencyId === currencyId;
       })[0];
@@ -58,7 +62,6 @@ angular.module('ts5App')
       })[0];
     };
 
-    // TODO
     function serializeExchangeRates(currencyCode, coinExchangeRate, paperExchangeRate, bankExchangeRate, recordId) {
       $scope.currenciesFields[currencyCode] = {};
       if ($scope.isBankExchangePreferred()) {
@@ -74,8 +77,11 @@ angular.module('ts5App')
     }
 
     function setBaseExchangeRateModel() {
+      var existingExchangeRate = getExchangeRateFromCompanyCurrencies($scope.dailyExchangeRates.dailyExchangeRateCurrencies, $scope.cashHandlerBaseCurrency.id);
+      var recordId = !!existingExchangeRate ? existingExchangeRate.id : null;
+
       if ($scope.cashHandlerBaseCurrency.currencyCode && $scope.dailyExchangeRates) {
-        serializeExchangeRates($scope.cashHandlerBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000', null);
+        serializeExchangeRates($scope.cashHandlerBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000', recordId);
       }
     }
 
@@ -96,7 +102,7 @@ angular.module('ts5App')
             companyCurrency.id);
           if (exchangeRate) {
             serializeExchangeRates(companyCurrency.code, exchangeRate.coinExchangeRate, exchangeRate.paperExchangeRate,
-              exchangeRate.bankExchangeRate);
+              exchangeRate.bankExchangeRate, exchangeRate.id);
           }
         });
       }
@@ -182,7 +188,6 @@ angular.module('ts5App')
       clearUnusedRates();
     }
 
-    // TODO:
     function serializeExchangeRateForAPI(currency) {
       var coinExchangeRate = '1.0000';
       var paperExchangeRate = '1.0000';
@@ -201,8 +206,8 @@ angular.module('ts5App')
         bankExchangeRate: bankExchangeRate
       };
 
-      if (currency.recordId) {
-        serializedCurrency.id = currency.recordId;
+      if ($scope.currenciesFields[currency.code].recordId) {
+        serializedCurrency.id = $scope.currenciesFields[currency.code].recordId;
       }
 
       return serializedCurrency;
