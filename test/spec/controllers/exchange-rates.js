@@ -182,10 +182,10 @@ describe('Controller: ExchangeRatesCtrl', function() {
     });
 
     it('should only have bank Exchange Rate Currencies', function() {
-      var expectedCurrencyObject = {
+      var expectedCurrencyObject = jasmine.objectContaining({
         retailCompanyCurrencyId: 1,
         bankExchangeRate: '0.1234'
-      };
+      });
       scope.checkVarianceAndSave(false);
       expect(scope.payload.dailyExchangeRateCurrencies[0]).toEqual(expectedCurrencyObject);
     });
@@ -203,6 +203,14 @@ describe('Controller: ExchangeRatesCtrl', function() {
         code: 'USD',
         percentage: 13
       });
+    });
+
+    it('should include exchange rate currency id in payload if id exists', function () {
+      scope.checkVarianceAndSave(false);
+
+      var originalRecordId = dailyExchangeRatesJSON.dailyExchangeRates[0].dailyExchangeRateCurrencies[0].id;
+      expect(scope.payload.dailyExchangeRateCurrencies[0].id).toBeDefined();
+      expect(scope.payload.dailyExchangeRateCurrencies[0].id).toEqual(originalRecordId);
     });
 
     describe('the error handler', function() {
