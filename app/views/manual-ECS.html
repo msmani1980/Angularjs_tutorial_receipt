@@ -390,7 +390,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="ECSInstance in allECSInstances">
+          <tr ng-repeat="ECSInstance in allECSInstances | orderBy: ['storeCrewNumber', 'scheduleNumber']">
             <td>{{ ECSInstance.siStoreNumber }}</td>
             <td>{{ ECSInstance.storeNumber }}</td>
             <td>{{ ECSInstance.siScheduleNumber }}</td>
