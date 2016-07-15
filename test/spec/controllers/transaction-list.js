@@ -161,8 +161,9 @@ describe('Controller: TransactionListCtrl', function() {
   });
 
   describe('printCCTransactionId will', function() {
-    it('print CCTransactionID for Credit Card transaction', function() {
-      var creditCardTransaction = {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
         id: 31237,
         arrivalStationCode: 'LAX',
         cardHolderName: null,
@@ -195,83 +196,22 @@ describe('Controller: TransactionListCtrl', function() {
         storeId: null,
         storeNumber: null
       };
+    });
 
-      expect(scope.printCCTransactionId(creditCardTransaction)).toEqual(creditCardTransaction.paymentId);
+      it('print CCTransactionID for Credit Card transaction', function() {
+      expect(scope.printCCTransactionId(transactionMock)).toEqual(transactionMock.paymentId);
     });
 
     it('print empty string for non Credit Card transaction', function() {
-      var nonCreditCardTransaction = {
-        id: 31237,
-        arrivalStationCode: 'LAX',
-        cardHolderName: null,
-        cardType: null,
-        carrierNumber: null,
-        ccAuthorizationStatus: null,
-        ccProcessedDate: null,
-        ccTransactionStatus: 'New',
-        companyCarrierInstanceId: 6481,
-        companyId: 403,
-        currencyCode: 'GBP',
-        currencyId: 8,
-        departureStationCode: 'ORD',
-        instanceDate: '2015-08-28',
-        lastFour: null,
-        passengerName: 'William White',
-        paymentMethod: 'Cash',
-        scheduleNumber: '115',
-        totalAmount: '2.50',
-        singleAmount: '1.50',
-        paymentId: '2f1186a3-9342-4df1-a226-6ee70c3a4827',
-        tranCreatedBy: '1002',
-        transactionDate: '2015-08-28 16:24:27.196',
-        transactionId: '00ba1022-0d95-4129-af56-0aa51dda0dd2',
-        transactionTypeId: 1,
-        transactionTypeName: 'SALE',
-        ccTypeCode: null,
-        ccTypeId: null,
-        storeInstanceId: null,
-        storeId: null,
-        storeNumber: null
-      };
+      transactionMock.paymentMethod = 'Cash';
 
-      expect(scope.printCCTransactionId(nonCreditCardTransaction)).toEqual('');
+      expect(scope.printCCTransactionId(transactionMock)).toEqual('');
     });
 
     it('print empty string for undefined paymentMethod field', function() {
-      var transactionWithoutPaymentMethod = {
-        id: 31237,
-        arrivalStationCode: 'LAX',
-        cardHolderName: null,
-        cardType: null,
-        carrierNumber: null,
-        ccAuthorizationStatus: null,
-        ccProcessedDate: null,
-        ccTransactionStatus: 'New',
-        companyCarrierInstanceId: 6481,
-        companyId: 403,
-        currencyCode: 'GBP',
-        currencyId: 8,
-        departureStationCode: 'ORD',
-        instanceDate: '2015-08-28',
-        lastFour: null,
-        passengerName: 'William White',
-        scheduleNumber: '115',
-        totalAmount: '2.50',
-        singleAmount: '1.50',
-        paymentId: '2f1186a3-9342-4df1-a226-6ee70c3a4827',
-        tranCreatedBy: '1002',
-        transactionDate: '2015-08-28 16:24:27.196',
-        transactionId: '00ba1022-0d95-4129-af56-0aa51dda0dd2',
-        transactionTypeId: 1,
-        transactionTypeName: 'SALE',
-        ccTypeCode: null,
-        ccTypeId: null,
-        storeInstanceId: null,
-        storeId: null,
-        storeNumber: null
-      };
+      transactionMock.paymentMethod = undefined;
 
-      expect(scope.printCCTransactionId(transactionWithoutPaymentMethod)).toEqual('');
+      expect(scope.printCCTransactionId(transactionMock)).toEqual('');
     });
 
   });

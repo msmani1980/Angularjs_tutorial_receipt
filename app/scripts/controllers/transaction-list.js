@@ -53,9 +53,9 @@ angular.module('ts5App')
     $scope.printCCTransactionId = function (transaction) {
       if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card') {
         return transaction.paymentId;
-      } else {
-        return '';
       }
+
+      return '';
     };
 
     $this.meta = {};
