@@ -485,8 +485,6 @@ angular.module('ts5App')
       var eposDiscount = lodash.uniq(angular.copy(eposRevenue[2].response), 'id');
       var total = 0;
 
-      console.log($this.eposCashBag, eposCreditCard, eposDiscount);
-
       angular.forEach($this.eposCashBag, function (cashBag) {
         var cashTotal = makeFinite(cashBag.bankAmount) + makeFinite(cashBag.coinAmountManual) + makeFinite(cashBag.paperAmountManual);
         total += ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
