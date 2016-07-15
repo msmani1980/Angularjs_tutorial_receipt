@@ -38,6 +38,10 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
+    $scope.formatUpdatedDate = function (updatedOnTimestamp) {
+      return dateUtility.formatTimestampForApp(updatedOnTimestamp);
+    };
+
     this.cateringStationWatcher = function() {
       $scope.$watch('catererStationId', function(newData) {
         if (newData) {

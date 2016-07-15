@@ -119,7 +119,7 @@
           <span ng-show="{{ stockTake.isSubmitted }}">Submitted</span>
         </td>
         <td>{{ stockTake.updatedBy }}</td>
-        <td>{{ stockTake.updatedOn }}</td>
+        <td>{{ formatUpdatedDate(stockTake.updatedOn) }}</td>
         <td class="hide-from-print">
           <a class="btn btn-info btn-xs" ng-href="/#/stock-take/view/{{stockTake.id}}" tabindex="0">
             <i class="fa fa-file"></i>
