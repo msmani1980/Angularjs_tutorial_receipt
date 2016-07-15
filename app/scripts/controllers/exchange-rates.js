@@ -58,7 +58,8 @@ angular.module('ts5App')
       })[0];
     };
 
-    function serializeExchangeRates(currencyCode, coinExchangeRate, paperExchangeRate, bankExchangeRate) {
+    // TODO
+    function serializeExchangeRates(currencyCode, coinExchangeRate, paperExchangeRate, bankExchangeRate, recordId) {
       $scope.currenciesFields[currencyCode] = {};
       if ($scope.isBankExchangePreferred()) {
         $scope.currenciesFields[currencyCode].bankExchangeRate = bankExchangeRate;
@@ -66,11 +67,15 @@ angular.module('ts5App')
         $scope.currenciesFields[currencyCode].coinExchangeRate = coinExchangeRate;
         $scope.currenciesFields[currencyCode].paperExchangeRate = paperExchangeRate;
       }
+
+      if (recordId) {
+        $scope.currenciesFields[currencyCode].recordId = recordId;
+      }
     }
 
     function setBaseExchangeRateModel() {
       if ($scope.cashHandlerBaseCurrency.currencyCode && $scope.dailyExchangeRates) {
-        serializeExchangeRates($scope.cashHandlerBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000');
+        serializeExchangeRates($scope.cashHandlerBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000', null);
       }
     }
 
@@ -177,6 +182,7 @@ angular.module('ts5App')
       clearUnusedRates();
     }
 
+    // TODO:
     function serializeExchangeRateForAPI(currency) {
       var coinExchangeRate = '1.0000';
       var paperExchangeRate = '1.0000';
@@ -188,12 +194,18 @@ angular.module('ts5App')
         bankExchangeRate = $scope.currenciesFields[currency.code].bankExchangeRate;
       }
 
-      return {
+      var serializedCurrency = {
         retailCompanyCurrencyId: currency.id,
         coinExchangeRate: coinExchangeRate,
         paperExchangeRate: paperExchangeRate,
         bankExchangeRate: bankExchangeRate
       };
+
+      if (currency.recordId) {
+        serializedCurrency.id = currency.recordId;
+      }
+
+      return serializedCurrency;
     }
 
     function resolvePayloadDependencies() {
