@@ -200,7 +200,7 @@ angular.module('ts5App')
         return station.stationId.toString() === stationId.toString();
       })[0];
 
-      if (matchingStation) {
+      if (matchingStation && matchingStation.timezone !== null && matchingStation.utcDstOffset !==  null) {
         return matchingStation.timezone + ' [UTC ' + matchingStation.utcOffset + ']';
       }
 
