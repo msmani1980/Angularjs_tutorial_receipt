@@ -59,8 +59,8 @@
       <h3>
         <span>Pick List</span>
       </h3>
-
-      <table class="table pick-list">
+      <div class="table-responsive">
+        <table class="table pick-list">
         <thead>
         <tr>
           <th>Retail Item Details</th>
@@ -204,6 +204,7 @@
 
         </tbody>
       </table>
+      </div>
       <br>
 
       <div class="row" ng-hide="readOnly">
@@ -225,7 +226,8 @@
     <div class="well" ng-show="isActionState('redispatch') || isActionState('end-instance')">
       <h3>Offload List</h3>
 
-      <table class="table table-striped pick-list">
+      <div class="table-responsive">
+        <table class="table table-striped pick-list">
         <thead>
         <tr>
           <th>Retail Item Details</th>
@@ -339,7 +341,7 @@
 
         </tbody>
       </table>
-
+      </div>
       <div class="row" ng-hide="readOnly">
         <div class="col-xs-7 col-md-9"></div>
         <div class="col-xs-5 col-md-3 text-right">

@@ -130,8 +130,8 @@
       </form>
     </div>
   </div>
-
-  <table class="table table-responsive">
+<div class="table-responsive">
+  <table class="table">
     <thead>
     <tr>
       <th colspan="{{ numCategoryLevels }}"></th>
@@ -223,7 +223,7 @@
     </tr>
     </tbody>
   </table>
-
+</div>
   <div class="alert alert-info text-center" ng-show="isFiltering && categoryList.length <= 0">
     <span class="fa fa-exclamation-circle"></span> No Matching Categories Were Found
   </div>

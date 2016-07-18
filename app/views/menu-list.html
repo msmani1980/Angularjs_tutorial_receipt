@@ -65,7 +65,8 @@
   <error-dialog form-object="menuListForm" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <table infinite-scroll="loadMenus()" class="table table-responsive table-bordered table-hover">
+  <div class="table-responsive">
+    <table infinite-scroll="loadMenus()" class="table table-bordered table-hover">
     <thead>
     <tr>
       <th>Menu Code</th>
@@ -98,6 +99,7 @@
     </tr>
     </tbody>
   </table>
+    </div>
   <p ng-if="menuList.length > 0" class="record-count small text-center">Showing {{menuList.length}} records</p>
   <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>

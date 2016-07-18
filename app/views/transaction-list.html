@@ -13,7 +13,7 @@
                   data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-cog"></i>
-            Hide / Show Columns
+            <span class="hidden-sm hidden-xs">Hide / Show Columns</span>
             <i class="fa fa-caret-down"></i>
           </button>
           <ul class="dropdown-menu">
@@ -221,7 +221,8 @@
   <error-dialog form-object="form" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <table infinite-scroll="getTransactions()" class="table table-responsive table-bordered table-hover">
+  <div class="table-responsive">
+    <table infinite-scroll="getTransactions()" class="table table-bordered table-hover">
     <thead>
     <tr>
       <th>Transaction Date</th>
@@ -232,6 +233,7 @@
       <th>Card Number</th>
       <th>CC Processed Date</th>
       <th>CC Transaction Status</th>
+      <th>CC Transaction ID</th>
       <th>CC Authorization Status</th>
       <th>Amount</th>
       <th ng-show="displayColumns.scheduleNumber">Schedule Number</th>
@@ -252,8 +254,9 @@
       <td>{{ transaction.lastFour }}</td>
       <td>{{ transaction.ccProcessedDate }}</td>
       <td>{{ transaction.ccTransactionStatus }}</td>
+      <td>{{ printCCTransactionId(transaction) }}</td>
       <td>{{ transaction.ccAuthorizationStatus }}</td>
-      <td>{{ transaction.totalAmount }} {{ transaction.currencyCode }}</td>
+      <td>{{ transaction.transactionAmount }} {{ transaction.transactionCurrencyCode }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
       <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
       <td ng-show="displayColumns.storeNumber">{{ transaction.storeNumber }}</td>
@@ -267,6 +270,7 @@
     </tr>
     </tbody>
   </table>
+    </div>
   <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>
 <dynamic-left-nav></dynamic-left-nav>

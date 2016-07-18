@@ -6,362 +6,362 @@
 
       <div class="row item-list-row">
 
-          <div class="col-xs-6">
-            <h2 class="view-name">{{ viewName }}</h2>
-          </div>
+        <div class="col-xs-6">
+          <h2 class="view-name">{{ viewName }}</h2>
+        </div>
 
-          <div class="col-xs-6 text-right">
+        <div class="col-xs-6 text-right">
 
-            <a ng-href="{{exportBulkURL}}" class="btn btn-info" ng-disabled="!hasSelectedStore">
-              <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
-              <span class="hidden-xs">Generate Docs</span>
-            </a>
-            <!--
-            <button class="btn btn-success" ng-click="bulkDispatch()">
-              <span class="fa fa-files-o" aria-hidden="true"></span>
-              <span class="hidden-sm hidden-xs">Bulk Dispatch</span>
-            </button>
-            -->
-            <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
-              <span class="fa fa-filter" aria-hidden="true"></span>
-    					<span class="hidden-sm hidden-xs">Filter</span>
-    				</button>
+          <a ng-href="{{exportBulkURL}}" class="btn btn-info" ng-disabled="!hasSelectedStore">
+            <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+            <span class="hidden-xs">Generate Docs</span>
+          </a>
+          <!--
+          <button class="btn btn-success" ng-click="bulkDispatch()">
+            <span class="fa fa-files-o" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs">Bulk Dispatch</span>
+          </button>
+          -->
+          <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+            <span class="fa fa-filter" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs">Filter</span>
+          </button>
 
-          </div>
-
-    		</div>
+        </div>
 
       </div>
 
     </div>
 
-    <div class="panel panel-default no-transition" id="search-collapse" ng-class="{'collapse': isReady }">
-      <form class="form" >
-        <div class="panel-body">
-          <div class="row">
+  </div>
 
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label>Dispatch LMP Station</label>
-                <select class="form-control" ng-model="search.dispatchLMPStation" name="dispatchLMPStation">
-                  <option ng-disabled="true" selected="selected" value>Select Dispatch Station</option>
-                  <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
-                    station.name }} - {{ station.code }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label>Inbound LMP Station</label>
-                <select class="form-control" ng-model="search.inboundLMPStation" name="inboundLMPStation">
-                  <option ng-disabled="true" selected="selected" value>Select Inbound Station</option>
-                  <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
-                    station.name }} - {{ station.code }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label>Store Number</label>
-                <input type="text" class="form-control" placeholder="1234" name="storeNumber"
-                       ng-model="search.storeNumber">
-              </div>
-            </div>
-            <div class="col-xs-12 col-sm-4">
-              <date-picker
-                class="form-group"
-                element-class="col-xs-6"
-                start-date-model="search.scheduleStartDate"
-                end-date-model="search.scheduleEndDate"
-                label-from="Schedule Date From"
-                label-to="Schedule Date To"
-                is-search-field="true">
-              </date-picker>
+  <div class="panel panel-default no-transition" id="search-collapse" ng-class="{'collapse': isReady }">
+    <form class="form">
+      <div class="panel-body">
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label>Dispatch LMP Station</label>
+              <select class="form-control" ng-model="search.dispatchLMPStation" name="dispatchLMPStation">
+                <option ng-disabled="true" selected="selected" value>Select Dispatch Station</option>
+                <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
+                  station.name }} - {{ station.code }}
+                </option>
+              </select>
             </div>
           </div>
-          <div class="row">
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label>Departure Station</label>
-                  <ui-select multiple ng-model="search.departureStations" theme="bootstrap">
-                    <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
-                      <ui-select-choices repeat="station in stationList | filter: $select.search">
-                        {{station.name}}
-                      </ui-select-choices>
-                  </ui-select>
-              </div>
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label>Inbound LMP Station</label>
+              <select class="form-control" ng-model="search.inboundLMPStation" name="inboundLMPStation">
+                <option ng-disabled="true" selected="selected" value>Select Inbound Station</option>
+                <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
+                  station.name }} - {{ station.code }}
+                </option>
+              </select>
             </div>
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label>Arrival Station</label>
-                  <ui-select multiple ng-model="search.arrivalStations" theme="bootstrap">
-                    <ui-select-match placeholder="Select Arrival Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
-                      <ui-select-choices repeat="station in stationList | filter: $select.search">
-                        {{station.name}}
-                      </ui-select-choices>
-                  </ui-select>
-              </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label>Store Number</label>
+              <input type="text" class="form-control" placeholder="1234" name="storeNumber"
+                     ng-model="search.storeNumber">
             </div>
-            <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label>Store Instance</label>
-                <input type="text" class="form-control" placeholder="1234567" name="storeInstance"
-                       ng-model="search.storeInstance">
-              </div>
+          </div>
+          <div class="col-xs-12 col-sm-4">
+            <date-picker
+              class="form-group"
+              element-class="col-xs-6"
+              start-date-model="search.scheduleStartDate"
+              end-date-model="search.scheduleEndDate"
+              label-from="Schedule Date From"
+              label-to="Schedule Date To"
+              is-search-field="true">
+            </date-picker>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label>Departure Station</label>
+              <ui-select multiple ng-model="search.departureStations" theme="bootstrap">
+                <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
+                <ui-select-choices repeat="station in stationList | filter: $select.search">
+                  {{station.name}}
+                </ui-select-choices>
+              </ui-select>
             </div>
+          </div>
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label>Arrival Station</label>
+              <ui-select multiple ng-model="search.arrivalStations" theme="bootstrap">
+                <ui-select-match placeholder="Select Arrival Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
+                <ui-select-choices repeat="station in stationList | filter: $select.search">
+                  {{station.name}}
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label>Store Instance</label>
+              <input type="text" class="form-control" placeholder="1234567" name="storeInstance"
+                     ng-model="search.storeInstance">
+            </div>
+          </div>
 
-            <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label>Status</label>
-                <select class="form-control" ng-model="search.storeStatusId" name="status">
-                  <option selected="selected" value>Select Status</option>
-                  <option ng-repeat="status in filteredStoreStatusList | orderBy:'name'" value="{{ status.id }}">{{
-                    status.statusName }}
-                  </option>
-                </select>
-              </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label>Status</label>
+              <select class="form-control" ng-model="search.storeStatusId" name="status">
+                <option selected="selected" value>Select Status</option>
+                <option ng-repeat="status in filteredStoreStatusList | orderBy:'name'" value="{{ status.id }}">{{
+                  status.statusName }}
+                </option>
+              </select>
             </div>
           </div>
         </div>
-        <div class="panel-footer text-right">
-          <button type="button" class="btn btn-default btn-search-clear"
-            ng-click="clearSearchForm()"
-            ng-show="showClearButton()">
-            <span class="btn-label">Clear</span>
-          </button>
-          <button ng-click="searchStoreInstanceDashboardData()" class="btn btn-primary btn-search">
-            <span class="fa fa-search" aria-hidden="true"></span>
-            <span class="hidden-sm hidden-xs btn-label">Search</span>
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div class="panel-footer text-right">
+        <button type="button" class="btn btn-default btn-search-clear"
+                ng-click="clearSearchForm()"
+                ng-show="showClearButton()">
+          <span class="btn-label">Clear</span>
+        </button>
+        <button ng-click="searchStoreInstanceDashboardData()" class="btn btn-primary btn-search">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs btn-label">Search</span>
+        </button>
+      </div>
+    </form>
+  </div>
 
-    <table infinite-scroll="getStoreInstanceDashboardData()" class="table table-bordered table-responsive table-hover" ng-show="isReady">
-      <thead>
-      <tr>
-        <th></th>
-        <th>
-          <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected"
-                 ng-click="toggleAllCheckboxes()">
-        </th>
-        <th>Dispatch LMP Station</th>
-        <th>Inbound LMP Station</th>
-        <th>Store Number</th>
-        <th ng-click="toggleAllScheduleInfo(store.id)">
+  <div class="table-responsive">
+    <table infinite-scroll="getStoreInstanceDashboardData()" class="table table-bordered table-hover" ng-show="isReady">
+    <thead>
+    <tr>
+      <th></th>
+      <th>
+        <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected"
+               ng-click="toggleAllCheckboxes()">
+      </th>
+      <th>Dispatch LMP Station</th>
+      <th>Inbound LMP Station</th>
+      <th>Store Number</th>
+      <th ng-click="toggleAllScheduleInfo(store.id)">
           <span class="btn">
             <span class="fa fa-plus-square-o" ng-hide="allScheduleDetailsExpanded"></span>
             <span class="fa fa-minus-square" ng-show="allScheduleDetailsExpanded"></span>
             <span><strong>Schedule Information</strong></span>
           </span>
-        </th>
-        <th>Inbound Seals Tampered</th>
-        <th>Store Instance</th>
-        <th>Status</th>
-        <th>Updated Date/Time</th>
-        <th>Updated User</th>
-        <th class="col-xs-1">Actions</th>
-      </tr>
-      </thead>
-      <tbody ng-repeat="store in storeInstanceList" >
-      <tr class="master-row" id="store-{{ store.id }}">
-        <td>
+      </th>
+      <th>Inbound Seals Tampered</th>
+      <th>Store Instance</th>
+      <th>Status</th>
+      <th>Updated Date/Time</th>
+      <th>Updated User</th>
+      <th class="col-xs-1">Actions</th>
+    </tr>
+    </thead>
+    <tbody ng-repeat="store in storeInstanceList">
+    <tr class="master-row" id="store-{{ store.id }}">
+      <td>
           <span class="fa fa-plus-square-o"
                 ng-click="toggleAccordionView(store)"
                 ng-show="doesStoreInstanceHaveReplenishments(store) && !isStoreViewExpanded(store)"></span>
           <span class="fa fa-minus-square" ng-show="isStoreViewExpanded(store)"
                 ng-click="toggleAccordionView(store)"></span>
-        </td>
-        <td>
-          <input ng-show="store.showGenerateDocsButton || doesStoreInstanceContainAction(store, 'Checkbox')" ng-model="store.selected"
-                 type="checkbox" ng-click="storeSelectionToggled()">
-          </input>
-        </td>
-        <td>{{ store.dispatchStationCode }}</td>
-        <td>{{ store.inboundStationCode }}</td>
-        <td>{{ store.storeNumber }}</td>
-        <td id="schedule-{{store.id}}" ng-click="toggleScheduleDetails(store.id)">
+      </td>
+      <td>
+        <input ng-show="store.showGenerateDocsButton || doesStoreInstanceContainAction(store, 'Checkbox')" ng-model="store.selected"
+               type="checkbox" ng-click="storeSelectionToggled()"/>
+      </td>
+      <td>{{ store.dispatchStationCode }}</td>
+      <td>{{ store.inboundStationCode }}</td>
+      <td>{{ store.storeNumber }}</td>
+      <td id="schedule-{{store.id}}" ng-click="toggleScheduleDetails(store.id)">
           <span class="btn">
             <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(store.id)"></span>
             <span class="fa fa-minus-square" ng-show="isScheduleDetailOpen(store.id)"></span>
             <span><strong>Schedule Date: {{ store.scheduleDate }}</strong></span>
           </span>
-          <div class="scheduleDetails-{{store.id}} accordion-cell-details accordion-cell-closed">
-            <strong>Schedule Number:</strong> {{ store.scheduleNumber }}<br>
-            <strong>Departure Station:</strong> {{ store.departureStationCode }}<br>
-            <strong>Departure Time:</strong> {{ store.departureTime }} <br>
-            <strong>Arrival Station:</strong> {{ store.arrivalStationCode }}<br>
-            <strong>Arrival Time:</strong> {{ store.arrivalTime }} <br>
-          </div>
-        </td>
-        <td>
-          {{ store.tamperedFlag }}
-        </td>
-        <td>{{ store.id }}</td>
-        <td>{{ store.statusName }}</td>
-        <td>{{ store.updatedOnDisplay }}</td>
-        <td><!-- TODO: add user, which requires user accounts --></td>
-        <td class="col-xs-1">
-          <a class="btn btn-primary btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Pack')"
-             ng-click="navigateToAction(store, 'Pack')">
-            Start Packing
-          </a>
-          <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Seal')"
-             ng-click="navigateToAction(store, 'Seal')">
-            Start Seals
-          </a>
-          <a class="btn btn-success btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
-             ng-click="navigateToAction(store, 'Dispatch')">
-            Dispatch
-          </a>
-          <a class="btn btn-danger btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'End Instance')"
-             ng-click="navigateToAction(store, 'End Instance')">
-            End Instance
-          </a>
-          <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-             ng-show="isUndispatchPossible(store) && doesStoreInstanceContainAction(store, 'Un-dispatch')"
-             ng-click="displayUndispatchConfirmation(store)">
-            Undispatch
-          </a>
-          <a class="btn btn-success btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Redispatch')"
-             ng-click="navigateToAction(store, 'Redispatch')">
-            Redispatch
-          </a>
-          <a class="btn btn-info btn-xs btn-block" tabindex="0"
-             ng-show="store.showGenerateDocsButton || doesStoreInstanceContainAction(store, 'Get Flight Docs')"
-             ng-href="{{store.exportURL}}">
-            Generate Doc
-          </a>
-          <a class="btn btn-default btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
-             ng-click="navigateToAction(store, 'Replenish')">
-            Replenish
-          </a>
-          <a class="btn btn-default btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Receive')"
-             ng-click="openReceiveConfirmation(store)">
-             Receive
-          </a>
-          <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Start Inbound Seals')"
-             ng-click="navigateToAction(store, 'Inbound Seals')">
-            Start Inbound Seals
-          </a>
-          <a class="btn btn-primary btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Start Offload')"
-             ng-click="navigateToAction(store, 'Offload')">
-            Start Offload
-          </a>
-          <a class="btn btn-danger btn-xs btn-block" tabindex="0"
-             ng-show="canBeDeleted(store)"
-             ng-click="showDeleteConfirmation(store)">
-            <i class="fa fa-trash"></i> Delete
-          </a>
-        </td>
-      </tr>
-      <tr ng-repeat="replenishment in store.replenishments" class="subversion-row open-accordion"
-          ng-show="isStoreViewExpanded(store)" id="store-{{ replenishment.id }}">
-        <td></td>
-        <td>
-          <input ng-show="doesStoreInstanceContainAction(replenishment, 'Checkbox')" ng-model="replenishment.selected"
-                 type="checkbox" ng-click="storeSelectionToggled()">
-          </input>
-        </td>
-        <td>{{ replenishment.dispatchStationCode }}</td>
-        <td>{{ replenishment.inboundStationCode }}</td>
-        <td>{{ replenishment.storeNumber }}</td>
-        <td id="schedule-{{replenishment.id}}" ng-click="toggleScheduleDetails(replenishment.id)">
+        <div class="scheduleDetails-{{store.id}} accordion-cell-details accordion-cell-closed">
+          <strong>Schedule Number:</strong> {{ store.scheduleNumber }}<br>
+          <strong>Departure Station:</strong> {{ store.departureStationCode }}<br>
+          <strong>Departure Time:</strong> {{ store.departureTime }} <br>
+          <strong>Arrival Station:</strong> {{ store.arrivalStationCode }}<br>
+          <strong>Arrival Time:</strong> {{ store.arrivalTime }} <br>
+        </div>
+      </td>
+      <td>
+        {{ store.tamperedFlag }}
+      </td>
+      <td>{{ store.id }}</td>
+      <td>{{ store.statusName }}</td>
+      <td>{{ store.updatedOnDisplay }}</td>
+      <td>{{ store.updatedBy }}</td>
+      <td class="col-xs-1">
+        <a class="btn btn-primary btn-xs btn-block" tabindex="0"
+           ng-show="doesStoreInstanceContainAction(store, 'Pack')"
+           ng-click="navigateToAction(store, 'Pack')">
+          Start Packing
+        </a>
+        <a class="btn btn-warning btn-xs btn-block" tabindex="0"
+           ng-show="doesStoreInstanceContainAction(store, 'Seal')"
+           ng-click="navigateToAction(store, 'Seal')">
+          Start Seals
+        </a>
+        <a class="btn btn-success btn-xs btn-block" tabindex="0"
+           ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
+           ng-click="navigateToAction(store, 'Dispatch')">
+          Dispatch
+        </a>
+        <a class="btn btn-danger btn-xs btn-block" tabindex="0"
+           ng-show="doesStoreInstanceContainAction(store, 'End Instance')"
+           ng-click="navigateToAction(store, 'End Instance')">
+          End Instance
+        </a>
+        <a class="btn btn-warning btn-xs btn-block" tabindex="0"
+           ng-show="isUndispatchPossible(store) && doesStoreInstanceContainAction(store, 'Un-dispatch')"
+           ng-click="displayUndispatchConfirmation(store)">
+          Undispatch
+        </a>
+        <a class="btn btn-success btn-xs btn-block" tabindex="0"
+           ng-show="doesStoreInstanceContainAction(store, 'Redispatch')"
+           ng-click="navigateToAction(store, 'Redispatch')">
+          Redispatch
+        </a>
+        <a class="btn btn-info btn-xs btn-block" tabindex="0"
+           ng-show="store.showGenerateDocsButton || doesStoreInstanceContainAction(store, 'Get Flight Docs')"
+           ng-href="{{store.exportURL}}">
+          Generate Doc
+        </a>
+        <a class="btn btn-default btn-xs btn-block" tabindex="0"
+           ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
+           ng-click="navigateToAction(store, 'Replenish')">
+          Replenish
+        </a>
+        <a class="btn btn-default btn-xs btn-block" tabindex="0"
+           ng-show="doesStoreInstanceContainAction(store, 'Receive')"
+           ng-click="openReceiveConfirmation(store)">
+          Receive
+        </a>
+        <a class="btn btn-warning btn-xs btn-block" tabindex="0"
+           ng-show="doesStoreInstanceContainAction(store, 'Start Inbound Seals')"
+           ng-click="navigateToAction(store, 'Inbound Seals')">
+          Start Inbound Seals
+        </a>
+        <a class="btn btn-primary btn-xs btn-block" tabindex="0"
+           ng-show="doesStoreInstanceContainAction(store, 'Start Offload')"
+           ng-click="navigateToAction(store, 'Offload')">
+          Start Offload
+        </a>
+        <a class="btn btn-danger btn-xs btn-block" tabindex="0"
+           ng-show="canBeDeleted(store)"
+           ng-click="showDeleteConfirmation(store)">
+          <i class="fa fa-trash"></i> Delete
+        </a>
+      </td>
+    </tr>
+    <tr ng-repeat="replenishment in store.replenishments" class="subversion-row open-accordion"
+        ng-show="isStoreViewExpanded(store)" id="store-{{ replenishment.id }}">
+      <td></td>
+      <td>
+        <input ng-show="doesStoreInstanceContainAction(replenishment, 'Checkbox')" ng-model="replenishment.selected"
+               type="checkbox" ng-click="storeSelectionToggled()">
+      </td>
+      <td>{{ replenishment.dispatchStationCode }}</td>
+      <td>{{ replenishment.inboundStationCode }}</td>
+      <td>{{ replenishment.storeNumber }}</td>
+      <td id="schedule-{{replenishment.id}}" ng-click="toggleScheduleDetails(replenishment.id)">
           <span class="btn">
             <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(replenishment.id)"></span>
             <span class="fa fa-minus-square" ng-show="isScheduleDetailOpen(replenishment.id)"></span>
             <span><strong>Schedule Date: {{ replenishment.scheduleDate }}</strong></span>
           </span>
-          <div class="scheduleDetails-{{replenishment.id}} accordion-cell-details accordion-cell-closed">
-            <strong>Schedule Number:</strong> {{ replenishment.scheduleNumber }}<br>
-            <strong>Departure Station:</strong> {{ replenishment.departureStationCode }}<br>
-            <strong>Departure Time:</strong> {{ replenishment.departureTime }} <br>
-            <strong>Arrival Station:</strong> {{ replenishment.arrivalStationCode }}<br>
-            <strong>Arrival Time:</strong> {{ replenishment.arrivalTime }} <br>
-          </div>
-        </td>
-        <td>
-          {{ replenishment.tamperedFlag }}
-        </td>
-        <td>{{ replenishment.id }}</td>
-        <td>{{ replenishment.statusName }}</td>
-        <td>{{ replenishment.updatedOnDisplay }}</td>
-        <td><!-- TODO: add user, which requires user accounts --></td>
-        <td class="col-xs-1">
-          <a class="btn btn-primary btn-xs btn-block" tabindex="0"
-             ng-show="shouldShowReplenishAction(replenishment, store, 'Pack')"
-             ng-click="navigateToAction(replenishment, 'Pack')">
-            Start Packing
-          </a>
-          <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-             ng-show="shouldShowReplenishAction(replenishment, store, 'Seal')"
-             ng-click="navigateToAction(replenishment, 'Seal')">
-            Start Seals
-          </a>
-          <a class="btn btn-success btn-xs btn-block" tabindex="0"
-             ng-show="shouldShowReplenishAction(replenishment, store, 'Dispatch')"
-             ng-click="navigateToAction(replenishment, 'Dispatch')">Dispatch
-          </a>
-          <a class="btn btn-info btn-xs btn-block" tabindex="0"
-          ng-show="shouldShowReplenishAction(replenishment, store, 'Get Flight Docs')"
-             ng-href="{{replenishment.exportURL}}">
-            Generate Doc
-          </a>
-          <a class="btn btn-danger btn-xs btn-block" tabindex="0"
-             ng-show="canBeDeleted(replenishment)"
-             ng-click="showDeleteConfirmation(replenishment)">
-            <i class="fa fa-trash"></i> Delete
-          </a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+        <div class="scheduleDetails-{{replenishment.id}} accordion-cell-details accordion-cell-closed">
+          <strong>Schedule Number:</strong> {{ replenishment.scheduleNumber }}<br>
+          <strong>Departure Station:</strong> {{ replenishment.departureStationCode }}<br>
+          <strong>Departure Time:</strong> {{ replenishment.departureTime }} <br>
+          <strong>Arrival Station:</strong> {{ replenishment.arrivalStationCode }}<br>
+          <strong>Arrival Time:</strong> {{ replenishment.arrivalTime }} <br>
+        </div>
+      </td>
+      <td>
+        {{ replenishment.tamperedFlag }}
+      </td>
+      <td>{{ replenishment.id }}</td>
+      <td>{{ replenishment.statusName }}</td>
+      <td>{{ replenishment.updatedOnDisplay }}</td>
+      <td>{{ replenishment.updatedBy }}</td>
+      <td class="col-xs-1">
+        <a class="btn btn-primary btn-xs btn-block" tabindex="0"
+           ng-show="shouldShowReplenishAction(replenishment, store, 'Pack')"
+           ng-click="navigateToAction(replenishment, 'Pack')">
+          Start Packing
+        </a>
+        <a class="btn btn-warning btn-xs btn-block" tabindex="0"
+           ng-show="shouldShowReplenishAction(replenishment, store, 'Seal')"
+           ng-click="navigateToAction(replenishment, 'Seal')">
+          Start Seals
+        </a>
+        <a class="btn btn-success btn-xs btn-block" tabindex="0"
+           ng-show="shouldShowReplenishAction(replenishment, store, 'Dispatch')"
+           ng-click="navigateToAction(replenishment, 'Dispatch')">Dispatch
+        </a>
+        <a class="btn btn-info btn-xs btn-block" tabindex="0"
+           ng-show="shouldShowReplenishAction(replenishment, store, 'Get Flight Docs')"
+           ng-href="{{replenishment.exportURL}}">
+          Generate Doc
+        </a>
+        <a class="btn btn-danger btn-xs btn-block" tabindex="0"
+           ng-show="canBeDeleted(replenishment)"
+           ng-click="showDeleteConfirmation(replenishment)">
+          <i class="fa fa-trash"></i> Delete
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  </div>
   <p ng-if="storeInstanceList.length > 0" class="record-count small text-center">Showing {{storeInstanceList.length}} records</p>
   <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
-  </div>
+</div>
 
 <div class="modal fade" id="receive-confirm" data-backdrop="static" data-keyboard="false">
 
-	<div class="modal-dialog">
+  <div class="modal-dialog">
 
-		<div class="modal-content">
+    <div class="modal-content">
 
       <div class="modal-header">
         <h3 class="modal-title">Confirmation</h3>
       </div>
 
-			<div class="modal-body">
-				<h3> <span class='fa fa-exclamation-circle'></span> Are you sure you'd like to set the status to Received?</h3>
-			</div>
+      <div class="modal-body">
+        <h3><span class='fa fa-exclamation-circle'></span> Are you sure you'd like to set the status to Received?</h3>
+      </div>
 
-			<div class="modal-footer">
-				<button class="btn btn-primary btn-list" ng-click="storeStatusReceived(receiveStore)">Yes, I am sure.</button>
-				<button class="btn btn-default" data-dismiss="modal">Cancel</button>
-			</div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-list" ng-click="storeStatusReceived(receiveStore)">Yes, I am sure.</button>
+        <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
 
-		</div>
+    </div>
 
-	</div>
+  </div>
 
 </div>
 
 <confirmation-modal
- title="{{ undispatchStoreDialog.title }}"
- body="You cannot revert back if you confirm this action. Press Yes to confirm or No to return to the dashboard."
- confirmation-callback="undispatchStoreDialog.confirmationCallback()"
- confirmation-label="Yes"
- cancel-label="No">
+  title="{{ undispatchStoreDialog.title }}"
+  body="You cannot revert back if you confirm this action. Press Yes to confirm or No to return to the dashboard."
+  confirmation-callback="undispatchStoreDialog.confirmationCallback()"
+  confirmation-label="Yes"
+  cancel-label="No">
 </confirmation-modal>
 <div class="modal fade delete-warning-modal">
   <div class="modal-dialog">

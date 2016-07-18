@@ -6,7 +6,7 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <a href="#/stock-owner-item-create" class="btn btn-primary"> + Create Stock Owner Item</a>
+        <a href="#/stock-owner-item-create" class="btn btn-primary">+<span class="hidden-sm hidden-xs"> Create Stock Owner Item</span></a>
 
         <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
           <span class="fa fa-filter" aria-hidden="true"></span>
@@ -101,8 +101,7 @@
     <span class="fa fa-flag"></span> Your search returned no results.
   </alert>
 
-  <div ng-show="itemsList.length">
-
+  <div ng-show="itemsList.length" class="table-responsive">
     <table infinite-scroll="loadItems()" class="table table-bordered">
 
       <thead>

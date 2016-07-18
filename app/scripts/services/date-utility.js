@@ -168,8 +168,11 @@ angular.module('ts5App')
       return toDate.diff(fromDate, diffType);
     };
 
-    this.getOperationalDay = function (date) {
-      date = new Date(date);
+    this.getOperationalDay = function (date, currentDateFormat) {
+      currentDateFormat = currentDateFormat || this.getDateFormatForApp();
+      var formattedDate = this.formatDate(date, currentDateFormat, 'MM/DD/YYY');
+
+      date = new Date(formattedDate);
       return date.getDay();
     };
 

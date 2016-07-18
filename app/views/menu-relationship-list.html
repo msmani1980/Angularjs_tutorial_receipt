@@ -95,7 +95,8 @@
 
 	</div>
 
-  <table infinite-scroll="searchRelationshipList()" infinite-scroll-immediate-check="false" class="table table-bordered table-responsive table-hover">
+  <div class="table-responsive">
+    <table infinite-scroll="searchRelationshipList()" infinite-scroll-immediate-check="false" class="table table-bordered table-responsive table-hover">
 
     <thead>
 
@@ -141,6 +142,7 @@
     </tbody>
 
   </table>
+    </div>
   <p ng-if="relationshipList.length > 0" class="record-count small text-center">Showing {{relationshipList.length}} records</p>
   <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 

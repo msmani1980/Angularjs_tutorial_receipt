@@ -13,6 +13,8 @@ describe('Service: deliveryNoteFactory', function() {
   var companyReasonCodesService;
   var stockManagementStationItemsService;
   var recordsService;
+  var menuService;
+  var menuCatererStationsService;
 
   beforeEach(inject(function(_deliveryNoteFactory_, $injector) {
     deliveryNoteFactory = _deliveryNoteFactory_;
@@ -22,6 +24,8 @@ describe('Service: deliveryNoteFactory', function() {
     itemsService = $injector.get('itemsService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
     recordsService = $injector.get('recordsService');
+    menuService = $injector.get('menuService');
+    menuCatererStationsService = $injector.get('menuCatererStationsService');
 
     spyOn(deliveryNotesService, 'getDeliveryNote');
     spyOn(catererStationService, 'getCatererStationList');
@@ -33,6 +37,8 @@ describe('Service: deliveryNoteFactory', function() {
     spyOn(catererStationService, 'getAllMenuItems');
     spyOn(recordsService, 'getItemTypes');
     spyOn(recordsService, 'getCharacteristics');
+    spyOn(menuService, 'getMenuList');
+    spyOn(menuCatererStationsService, 'getRelationshipList');
 
   }));
 
@@ -100,6 +106,22 @@ describe('Service: deliveryNoteFactory', function() {
     it('should call getCharacteristics', function() {
       deliveryNoteFactory.getCharacteristics();
       expect(recordsService.getCharacteristics).toHaveBeenCalled();
+    });
+  });
+
+  describe('menuService calls', function() {
+    it('should call getMenuList', function() {
+      var fakePayload = {fakeKey: 'fakeValue'};
+      deliveryNoteFactory.getMenuList(fakePayload);
+      expect(menuService.getMenuList).toHaveBeenCalledWith(fakePayload, false);
+    });
+  });
+
+  describe('menuCatererStationsService calls', function() {
+    it('should call getCompanyReasonCodes', function() {
+      var fakePayload = {fakeKey: 'fakeValue'};
+      deliveryNoteFactory.getMenuCatererStationList(fakePayload);
+      expect(menuCatererStationsService.getRelationshipList).toHaveBeenCalledWith(fakePayload);
     });
   });
 

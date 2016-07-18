@@ -171,7 +171,7 @@
           </div>
         </div>
 
-        <div class="well" ng-repeat="item in deliveryNote.items | filter:filterInput track by $index" ng-show="shouldShowItemOnReview(item)">
+        <div class="well" ng-repeat="item in deliveryNote.items | orderBy: 'itemName' | filter:filterInput track by $index" ng-show="shouldShowItemOnReview(item)">
           <div class="row">
 
             <div class="col-xs-12 col-sm-6 col-md-4">

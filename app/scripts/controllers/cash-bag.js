@@ -156,6 +156,10 @@ angular.module('ts5App')
       return isSet;
     }
 
+    $scope.showDeleteButton = function (cashBag) {
+      return angular.isDefined(cashBag) ? canDelete(cashBag) : false;
+    };
+
     function canDelete(cashBag) {
       if ($scope.state !== 'edit') {
         return false;
@@ -311,7 +315,6 @@ angular.module('ts5App')
 
           $scope.displayError = false;
           $scope.formErrors = {};
-          $scope.showDeleteButton = canDelete($scope.cashBag);
         })
       );
     }
