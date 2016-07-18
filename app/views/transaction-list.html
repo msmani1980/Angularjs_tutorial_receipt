@@ -256,7 +256,7 @@
       <td>{{ transaction.ccTransactionStatus }}</td>
       <td>{{ printCCTransactionId(transaction) }}</td>
       <td>{{ transaction.ccAuthorizationStatus }}</td>
-      <td>{{ transaction.singleAmount }} {{ transaction.currencyCode }}</td>
+      <td>{{ transaction.singleAmount }} {{ transaction.singleCurrencyCode }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
       <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
       <td ng-show="displayColumns.storeNumber">{{ transaction.storeNumber }}</td>

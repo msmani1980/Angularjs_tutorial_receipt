@@ -184,6 +184,7 @@ describe('Controller: TransactionListCtrl', function() {
         scheduleNumber: '115',
         totalAmount: '2.50',
         singleAmount: '1.50',
+        singleCurrencyCode: 'GBP',
         paymentId: '2f1186a3-9342-4df1-a226-6ee70c3a4827',
         tranCreatedBy: '1002',
         transactionDate: '2015-08-28 16:24:27.196',
