@@ -299,4 +299,20 @@ describe('Managed Goods Received', function() {
 
   });
 
+  describe('formatDateForView', function () {
+    it('should return a formatted date', function () {
+      var originalDate = '20151120';
+      var formattedTimestamp = scope.formatDateForView(originalDate, true);
+      expect(originalDate).not.toEqual(formattedTimestamp);
+    });
+
+    it('should not include time if shouldFormatAsTimestamp is passed in as false', function () {
+      var originalDate = '20151120 12:15:20';
+      var formattedDate = scope.formatDateForView(originalDate, false);
+      var formattedTimestamp = scope.formatDateForView(originalDate, true);
+
+      expect(formattedDate.length < formattedTimestamp.length).toEqual(true);
+    });
+  });
+
 });
