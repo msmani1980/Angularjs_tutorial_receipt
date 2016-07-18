@@ -114,13 +114,13 @@
       <tr ng-repeat="deliveryNote in deliveryNotesList track by $index">
         <td>{{ deliveryNote.purchaseOrderNumber }}</td>
         <td>{{ deliveryNote.deliveryNoteNumber }}</td>
-        <td>{{ deliveryNote.deliveryDate }}</td>
+        <td>{{ formatDateForView(deliveryNote.deliveryDate, false) }}</td>
         <td>
           <span ng-show="{{ !deliveryNote.isAccepted }}">Saved</span>
           <span ng-show="{{ deliveryNote.isAccepted }}">Submitted</span>
         </td>
         <td>{{ deliveryNote.updatedBy }}</td>
-        <td>{{ deliveryNote.updatedOn }}</td>
+        <td>{{ formatDateForView(deliveryNote.updatedOn, true) }}</td>
         <td class="hide-from-print">
           <a class="btn btn-info btn-xs" ng-href="/#/lmp-delivery-note/view/{{deliveryNote.id}}" tabindex="0">
             <i class="fa fa-file"></i>

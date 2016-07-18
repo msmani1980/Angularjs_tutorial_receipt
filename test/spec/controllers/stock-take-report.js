@@ -403,7 +403,14 @@ describe('Stock Take Report', function() {
       scope.$digest();
       expect(scope.canCreateStockTake()).toBeTruthy();
     });
+  });
 
+  describe('formatUpdatedDate', function () {
+    it('should return a formatted timestamp', function () {
+      var originalDate = '20151120';
+      var formattedDate = scope.formatUpdatedDate(originalDate);
+      expect(originalDate).not.toEqual(formattedDate);
+    });
   });
 
 });
