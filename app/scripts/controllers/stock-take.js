@@ -431,11 +431,11 @@ angular.module('ts5App')
     function setStockTakeFromResponse(response) {
       $scope.stockTake = response;
       if ($scope.stockTake.createdOn) {
-        $scope.stockTake.createdOn = dateUtility.removeMilliseconds($scope.stockTake.createdOn);
+        $scope.stockTake.createdOn = dateUtility.formatTimestampForApp($scope.stockTake.createdOn);
       }
 
       if ($scope.stockTake.updatedOn) {
-        $scope.stockTake.updatedOn = dateUtility.removeMilliseconds($scope.stockTake.updatedOn);
+        $scope.stockTake.updatedOn = dateUtility.formatTimestampForApp($scope.stockTake.updatedOn);
       }
     }
 
