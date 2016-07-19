@@ -114,15 +114,7 @@ angular.module('ts5App')
       });
     };
 
-    this.parseDate = function(date) {
-      return Date.parse(date);
-    };
-
-    $scope.isItemActive = function(date) {
-      var parsedDate = $this.parseDate(date);
-      var today = dateUtility.now();
-      return parsedDate <= today;
-    };
+    $scope.isItemActive = dateUtility.isTomorrowOrLater;
 
     function hasLength(data) {
       return angular.isDefined(data) && data.length;
