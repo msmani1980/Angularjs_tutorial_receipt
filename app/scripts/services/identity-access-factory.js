@@ -164,6 +164,7 @@ angular.module('ts5App')
       }
 
       function setSelectedCompany(companyData) {
+        $http.defaults.headers.common.companyId = angular.copy(companyData.id);
         var rawSessionData = angular.copy(getSessionObject());
         rawSessionData.companyId = companyData.id;
         rawSessionData.chCompany = companyData.chCompany;
