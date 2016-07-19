@@ -7,7 +7,7 @@
  * Controller for the Stock Owner Items List view
  */
 angular.module('ts5App')
-  .controller('StockOwnerItemListCtrl', function($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter, lodash) {
+  .controller('StockOwnerItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter, lodash) {
 
     var $this = this;
     this.meta = {
@@ -23,16 +23,16 @@ angular.module('ts5App')
       endDate: ''
     };
 
-    this.updateItemList = function() {
+    this.updateItemList = function () {
       $scope.itemsListCount = $scope.itemsList.length;
       $scope.totalItems = $scope.itemsListCount;
     };
 
-    this.filterItems = function() {
+    this.filterItems = function () {
       return $filter('filter')($scope.itemsList, $scope.search);
     };
 
-    this.generateItemQuery = function() {
+    this.generateItemQuery = function () {
       var todaysDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       var query = {
         startDate: todaysDate,
@@ -54,14 +54,14 @@ angular.module('ts5App')
       return query;
     };
 
-    this.getItemsList = function() {
+    this.getItemsList = function () {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
 
       $this.displayLoadingModal();
       var query = $this.generateItemQuery();
-      itemsFactory.getItemsList(query).then(function(response) {
+      itemsFactory.getItemsList(query).then(function (response) {
         $this.meta.count = $this.meta.count || response.meta.count;
 
         var itemListFromAPI = angular.copy(response.retailItems);
@@ -79,19 +79,19 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     };
 
-    this.getItemTypesList = function() {
-      itemsFactory.getItemTypesList().then(function(itemTypes) {
+    this.getItemTypesList = function () {
+      itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
       });
     };
 
-    this.getSalesCategoriesList = function() {
-      companiesFactory.getSalesCategoriesList(function(data) {
+    this.getSalesCategoriesList = function () {
+      companiesFactory.getSalesCategoriesList(function (data) {
         $scope.salesCategories = data.salesCategories;
       });
     };
 
-    this.findItemIndex = function(itemId) {
+    this.findItemIndex = function (itemId) {
       var itemIndex = 0;
       for (var key in $scope.itemsList) {
         var item = $scope.itemsList[key];
@@ -104,24 +104,18 @@ angular.module('ts5App')
       return itemIndex;
     };
 
-    $scope.removeRecord = function(itemId) {
+    $scope.removeRecord = function (itemId) {
       var itemIndex = $this.findItemIndex(itemId);
       $this.displayLoadingModal();
-      itemsFactory.removeItem(itemId).then(function() {
+      itemsFactory.removeItem(itemId).then(function () {
         $this.hideLoadingModal();
         $scope.itemsList.splice(itemIndex, 1);
         $this.updateItemList();
       });
     };
 
-    this.parseDate = function(date) {
-      return Date.parse(date);
-    };
-
-    $scope.isItemActive = function(date) {
-      var parsedDate = $this.parseDate(date);
-      var today = dateUtility.now();
-      return parsedDate <= today;
+    $scope.isItemActive = function (dateToCompare) {
+      return dateUtility.isTomorrowOrLater(dateToCompare);
     };
 
     function hasLength(data) {
@@ -140,7 +134,7 @@ angular.module('ts5App')
       return (check.length);
     }
 
-    $scope.clearSearchFilters = function() {
+    $scope.clearSearchFilters = function () {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       var filters = $scope.search;
@@ -151,20 +145,20 @@ angular.module('ts5App')
       $scope.itemsList = [];
     };
 
-    $scope.showClearButton = function() {
+    $scope.showClearButton = function () {
       var d = $scope.dateRange;
       return (searchIsDirty() || d.startDate.length || d.endDate.length || $scope.itemsList.length);
     };
 
-    this.displayLoadingModal = function() {
+    this.displayLoadingModal = function () {
       angular.element('.loading-more').show();
     };
 
-    this.hideLoadingModal = function() {
+    this.hideLoadingModal = function () {
       angular.element('.loading-more').hide();
     };
 
-    $scope.searchRecords = function() {
+    $scope.searchRecords = function () {
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -175,7 +169,7 @@ angular.module('ts5App')
       $this.getItemsList();
     };
 
-    $scope.$watch('currentPage + itemsPerPage + search', function() {
+    $scope.$watch('currentPage + itemsPerPage + search', function () {
       $this.updateItemList();
     });
 

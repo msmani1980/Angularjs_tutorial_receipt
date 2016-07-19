@@ -217,7 +217,7 @@ angular.module('ts5App')
       var catererStationItems = !!responseCollection[1] ? responseCollection[1].response : _cateringStationItems[catererStationId].response;
       var menuItems = getItemsFromCatererStationMenus(responseCollection[0].companyMenuCatererStations);
 
-      if (!menuItems.length && !catererStationItems.length) {
+      if ((!menuItems || !menuItems.length) && (!catererStationItems || !catererStationItems.length)) {
         setNoItemsError();
         return;
       }
