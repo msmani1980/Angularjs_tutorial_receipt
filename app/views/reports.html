@@ -3,7 +3,7 @@
    <h2>Reports</h2>
 
    <ul style="list-style-type: none;">
-      <li ng-repeat="template in templates">
+      <li ng-repeat="template in templates" ng-if="isTemplateInFeaturesInRole(template.code)">
          <div class="panel panel-default">
            <div class="panel-heading clearfix">
          
