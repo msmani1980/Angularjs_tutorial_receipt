@@ -516,6 +516,20 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
           }]);
         });
 
+        it('should display an error if items return null', function () {
+          var nullItemResponse = {response: []};
+          var nullMenuResponse = {companyMenuCatererStations: []};
+
+          getCatererStationMasterItemsDeferred.resolve(nullItemResponse);
+          getMenuCatererStationListDeferred.resolve(nullMenuResponse);
+
+          var alternateCatererStationId = 10;
+          scope.deliveryNote.catererStationId = alternateCatererStationId;
+          scope.$digest();
+
+          expect(scope.displayError).toBeTruthy();
+        });
+
       });
 
       describe('removeItemByIndex scope function', function() {
