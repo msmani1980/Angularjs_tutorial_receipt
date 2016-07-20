@@ -50,9 +50,27 @@ angular.module('ts5App')
 
     $scope.search = {};
     $scope.isCreditCardPaymentSelected = false;
-    $scope.printCCTransactionId = function (transaction) {
-      if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card') {
-        return transaction.paymentId;
+    $scope.printPropertyIfItIsCreditCardPayment = function (transaction, propertyName) {
+      if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card' && transaction.hasOwnProperty(propertyName)) {
+        return transaction[propertyName];
+      }
+
+      return '';
+    };
+
+    $scope.printTransactionAmount = function (transaction) {
+      if (
+        transaction.parentTransactionSubTotalAmount &&
+        transaction.parentTransactionCurrencyCode &&
+        transaction.parentTransactionTypeName &&
+        transaction.parentTransactionTypeName === 'VOIDED' &&
+        (transaction.paymentMethod === 'Credit Card' || transaction.paymentMethod === 'Cash')
+      ) {
+        return transaction.parentTransactionSubTotalAmount + ' ' + transaction.parentTransactionCurrencyCode;
+      }
+
+      if (transaction.transactionAmount && transaction.transactionCurrencyCode) {
+        return transaction.transactionAmount + ' ' + transaction.transactionCurrencyCode;
       }
 
       return '';
