@@ -294,10 +294,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function setStoreInstanceTime(storeInstance) {
-      // TODO: get timeConfig that has most recent startDate -- will be a new API
-      var timeConfig = lodash.findWhere($scope.timeConfigList, {
+      var timeConfig = lodash.filter($scope.timeConfigList, {
         featureId: $scope.undispatchFeatureId
-      });
+      })[0];
+
       storeInstance.hours = (angular.isDefined(timeConfig)) ? timeConfig.hours : -1;
     }
 
