@@ -196,7 +196,7 @@ describe('Controller: ReconciliationDashboardCtrl', function() {
     ReconciliationDashboardCtrl.normalizeReconciliationDataList([storeInstanceJSON]);
 
     expect(storeInstanceJSON.scheduleDate).toEqual('09/30/2015');
-    expect(storeInstanceJSON.updatedOn).toEqual('09/01/2015 15:57');
+    expect(storeInstanceJSON.updatedOn).toEqual('09/01/2015 15:57:31');
     expect(storeInstanceJSON.isEcb).toEqual('No');
     expect(storeInstanceJSON.eposData).toEqual('Loading...');
     expect(storeInstanceJSON.postTripData).toEqual('Loading...');
