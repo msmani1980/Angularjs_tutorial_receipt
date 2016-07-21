@@ -50,28 +50,9 @@ angular.module('ts5App')
 
     $scope.search = {};
     $scope.isCreditCardPaymentSelected = false;
-    $scope.printPropertyIfItIsCreditCardPayment = function (transaction, propertyName) {
-      if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card' && transaction.hasOwnProperty(propertyName)) {
-        return transaction[propertyName];
-      }
-
-      return '';
-    };
-
-    $scope.printTransactionAmount = function (transaction) {
-      if (
-        transaction.parentTransactionSubTotalAmount &&
-        transaction.parentTransactionCurrencyCode &&
-        transaction.parentTransactionTypeName &&
-        transaction.parentTransactionTypeName === 'VOIDED' &&
-        transaction.transactionTypeName === 'SALE' &&
-        (transaction.paymentMethod === 'Credit Card' || transaction.paymentMethod === 'Cash')
-      ) {
-        return transaction.parentTransactionSubTotalAmount + ' ' + transaction.parentTransactionCurrencyCode;
-      }
-
-      if (transaction.transactionAmount && transaction.transactionCurrencyCode) {
-        return transaction.transactionAmount + ' ' + transaction.transactionCurrencyCode;
+    $scope.printCCTransactionId = function (transaction) {
+      if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card') {
+        return transaction.paymentId;
       }
 
       return '';
@@ -79,6 +60,12 @@ angular.module('ts5App')
 
     $this.meta = {};
     $this.isSearch = false;
+
+    var ABANDONED_TRANSACTION_TYPE_NAME = 'ABANDONED';
+
+    function isNotAbandoned(transaction) {
+      return transaction.transactionTypeName !== ABANDONED_TRANSACTION_TYPE_NAME;
+    }
 
     function isCreditCardPaymentSelected(paymentMethods) {
       if (!paymentMethods) {
@@ -164,9 +151,7 @@ angular.module('ts5App')
     function generateGetTransactionsPayload() {
       var payload = {
         limit: $this.meta.limit,
-        offset: $this.meta.offset,
-        'withoutTransactionTypes[0]': 'ABANDONED',
-        'withoutTransactionTypes[1]': 'VOIDED'
+        offset: $this.meta.offset
       };
 
       if ($this.isSearch) {
@@ -214,8 +199,10 @@ angular.module('ts5App')
 
     function appendTransactions(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+      var transactions = angular.copy(dataFromAPI.transactions)
+        .filter(isNotAbandoned);
 
-      $scope.transactions = $scope.transactions.concat(normalizeTransactions(dataFromAPI.transactions));
+      $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
 
       hideLoadingBar();
     }

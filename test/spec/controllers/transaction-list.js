@@ -185,10 +185,6 @@ describe('Controller: TransactionListCtrl', function() {
         totalAmount: '2.50',
         transactionAmount: '1.50',
         transactionCurrencyCode: 'GBP',
-        parentTransactionSubTotalAmount: null,
-        parentTransactionTotalAmount: null,
-        parentTransactionCurrencyCode: null,
-        parentTransactionTypeName: null,
         paymentId: '2f1186a3-9342-4df1-a226-6ee70c3a4827',
         tranCreatedBy: '1002',
         transactionDate: '2015-08-28 16:24:27.196',
@@ -203,95 +199,21 @@ describe('Controller: TransactionListCtrl', function() {
       };
     });
 
-    it('print CCTransactionID for Credit Card transaction', function() {
-      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'paymentId')).toEqual(transactionMock.paymentId);
+      it('print CCTransactionID for Credit Card transaction', function() {
+      expect(scope.printCCTransactionId(transactionMock)).toEqual(transactionMock.paymentId);
     });
+
     it('print empty string for non Credit Card transaction', function() {
       transactionMock.paymentMethod = 'Cash';
 
-      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'paymentId')).toEqual('');
+      expect(scope.printCCTransactionId(transactionMock)).toEqual('');
     });
+
     it('print empty string for undefined paymentMethod field', function() {
       transactionMock.paymentMethod = undefined;
 
-      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'paymentId')).toEqual('');
+      expect(scope.printCCTransactionId(transactionMock)).toEqual('');
     });
 
-    it('do not print field cardType for non Credit Card transaction', function() {
-      transactionMock.paymentMethod = 'Cash';
-      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'cardType')).toEqual('');
-    });
-    it('do not print field lastFour for non Credit Card transaction', function() {
-      transactionMock.paymentMethod = 'Cash';
-      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'lastFour')).toEqual('');
-    });
-    it('do not print field ccProcessedDate for non Credit Card transaction', function() {
-      transactionMock.paymentMethod = 'Cash';
-      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'ccProcessedDate')).toEqual('');
-    });
-    it('do not print field ccTransactionStatus for non Credit Card transaction', function() {
-      transactionMock.paymentMethod = 'Cash';
-      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'ccTransactionStatus')).toEqual('');
-    });
-    it('do not print field paymentId for non Credit Card transaction', function() {
-      transactionMock.paymentMethod = 'Cash';
-      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'paymentId')).toEqual('');
-    });
-    it('do not print field ccAuthorizationStatus for non Credit Card transaction', function() {
-      transactionMock.paymentMethod = 'Cash';
-      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'ccAuthorizationStatus')).toEqual('');
-    });
-
-    it('print transactionAmount if parent fields are not defined', function() {
-      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
-    });
-    it('print transactionAmount as empty if transactionAmount is not defined', function() {
-      transactionMock.transactionAmount = null;
-      expect(scope.printTransactionAmount(transactionMock)).toEqual('');
-    });
-    it('print transactionAmount as empty if transactionCurrencyCode is not defined', function() {
-      transactionMock.transactionCurrencyCode = null;
-      expect(scope.printTransactionAmount(transactionMock)).toEqual('');
-    });
-    it('print parentTransactionSubTotalAmount if parent transaction is type VOIDED, payment method is Cash and transactionTypeName is SALE', function() {
-      transactionMock.paymentMethod = 'Cash';
-      transactionMock.parentTransactionTypeName = 'VOIDED';
-      transactionMock.parentTransactionSubTotalAmount = 24.00;
-      transactionMock.parentTransactionTotalAmount = 22.40;
-      transactionMock.parentTransactionCurrencyCode = 'GBP';
-      transactionMock.transactionTypeName = 'SALE';
-
-      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.parentTransactionSubTotalAmount + ' ' + transactionMock.parentTransactionCurrencyCode);
-    });
-    it('print transactionAmount if parent transaction is type VOIDED,payment method is Credit Card and transactionTypeName is not SALE', function() {
-      transactionMock.paymentMethod = 'Cash';
-      transactionMock.parentTransactionTypeName = 'VOIDED';
-      transactionMock.parentTransactionSubTotalAmount = 24.00;
-      transactionMock.parentTransactionTotalAmount = 22.40;
-      transactionMock.parentTransactionCurrencyCode = 'GBP';
-      transactionMock.transactionTypeName = 'REFUND';
-
-      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
-    });
-    it('print parentTransactionSubTotalAmount if parent transaction is type VOIDED and payment method is Credit Card', function() {
-      transactionMock.paymentMethod = 'Credit Card';
-      transactionMock.parentTransactionTypeName = 'VOIDED';
-      transactionMock.parentTransactionSubTotalAmount = 24.00;
-      transactionMock.parentTransactionTotalAmount = 22.40;
-      transactionMock.parentTransactionCurrencyCode = 'GBP';
-      transactionMock.transactionTypeName = 'SALE';
-
-      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.parentTransactionSubTotalAmount + ' ' + transactionMock.parentTransactionCurrencyCode);
-    });
-    it('print transactionAmount if parent transaction is type VOIDED,payment method is Credit Card and transactionTypeName is not SALE', function() {
-      transactionMock.paymentMethod = 'Credit Card';
-      transactionMock.parentTransactionTypeName = 'VOIDED';
-      transactionMock.parentTransactionSubTotalAmount = 24.00;
-      transactionMock.parentTransactionTotalAmount = 22.40;
-      transactionMock.parentTransactionCurrencyCode = 'GBP';
-      transactionMock.transactionTypeName = 'REFUND';
-
-      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
-    });
   });
 });
