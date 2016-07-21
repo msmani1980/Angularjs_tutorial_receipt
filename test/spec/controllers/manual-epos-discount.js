@@ -194,7 +194,7 @@ describe('Controller: ManualEposDiscountCtrl', function () {
       expect(scope.isVerified).toBeDefined();
       expect(scope.isCashBagConfirmed).toBeDefined();
       expect(scope.verifiedInfo.verifiedBy).toEqual('John Smith');
-      expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53');
+      expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53:11');
     });
 
     it('should set the base currency', function () {

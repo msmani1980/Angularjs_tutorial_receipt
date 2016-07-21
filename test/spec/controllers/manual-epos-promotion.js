@@ -169,7 +169,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
       expect(manualEposFactory.checkCashBagVerification).toHaveBeenCalled();
       expect(scope.isVerified).toBeDefined();
       expect(scope.verifiedInfo.verifiedBy).toEqual('Joe Williams');
-      expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53');
+      expect(scope.verifiedInfo.verifiedTimestamp).toEqual('05/05/2016 at 06:53:11');
     });
 
     it('should set the base currency', function () {
