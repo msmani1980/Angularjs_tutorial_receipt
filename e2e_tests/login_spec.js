@@ -46,10 +46,11 @@ describe('TS5 Login page', function () {
     });
 
     it('should show error for invalid usr/pwd combo', function () {
+      var errorDialog = element(by.css('.error-dialog'));
       username.sendKeys('fakeUsername');
       password.sendKeys('fakePassword');
       loginButton.click();
-      expect(password.getAttribute('class')).toMatch('ng-invalid');
+      expect(errorDialog.isDisplayed()).toBe(true);
     });
   });
 });
