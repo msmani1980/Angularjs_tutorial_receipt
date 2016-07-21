@@ -33,6 +33,10 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
+    $scope.formatDateForView = function (dateToFormat, shouldFormatAsTimestamp) {
+      return (shouldFormatAsTimestamp) ? dateUtility.formatTimestampForApp(dateToFormat) : dateUtility.formatDateForApp(dateToFormat);
+    };
+
     this.init = function() {
       hideLoadingBar();
       this.getCatererStationList();

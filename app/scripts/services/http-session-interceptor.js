@@ -117,7 +117,9 @@ angular.module('ts5App')
       '/rsvr/api/companies/[0-9]*/relationships',
       '/rsvr/api/company-currency-globals',
       '/rsvr/api/companies/stores',
-      '/rsvr/api/feature/DAILYEXCHANGERATE/thresholds'
+      '/rsvr/api/feature/DAILYEXCHANGERATE/thresholds',
+      '/api/dispatch/store-instances/[0-9]*/menu-items',
+      '/api/dispatch/store-instances/[0-9]*/items'
     ];
 
     function responseError(response) {
