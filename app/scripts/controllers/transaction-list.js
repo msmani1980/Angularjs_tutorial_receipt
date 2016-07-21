@@ -79,12 +79,6 @@ angular.module('ts5App')
     $this.meta = {};
     $this.isSearch = false;
 
-    var ABANDONED_TRANSACTION_TYPE_NAME = 'ABANDONED';
-
-    function isNotAbandoned(transaction) {
-      return transaction.transactionTypeName !== ABANDONED_TRANSACTION_TYPE_NAME;
-    }
-
     function isCreditCardPaymentSelected(paymentMethods) {
       if (!paymentMethods) {
         return false;
@@ -169,7 +163,9 @@ angular.module('ts5App')
     function generateGetTransactionsPayload() {
       var payload = {
         limit: $this.meta.limit,
-        offset: $this.meta.offset
+        offset: $this.meta.offset,
+        'withoutTransactionTypes[0]': 'ABANDONED',
+        'withoutTransactionTypes[1]': 'VOIDED'
       };
 
       if ($this.isSearch) {
@@ -217,10 +213,8 @@ angular.module('ts5App')
 
     function appendTransactions(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
-      var transactions = angular.copy(dataFromAPI.transactions)
-        .filter(isNotAbandoned);
 
-      $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
+      $scope.transactions = $scope.transactions.concat(normalizeTransactions(dataFromAPI.transactions));
 
       hideLoadingBar();
     }
