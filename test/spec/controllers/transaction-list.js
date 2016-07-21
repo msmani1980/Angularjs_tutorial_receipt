@@ -253,14 +253,25 @@ describe('Controller: TransactionListCtrl', function() {
       transactionMock.transactionCurrencyCode = null;
       expect(scope.printTransactionAmount(transactionMock)).toEqual('');
     });
-    it('print parentTransactionSubTotalAmount if parent transaction is type VOIDED and payment method is Cash', function() {
+    it('print parentTransactionSubTotalAmount if parent transaction is type VOIDED, payment method is Cash and transactionTypeName is SALE', function() {
       transactionMock.paymentMethod = 'Cash';
       transactionMock.parentTransactionTypeName = 'VOIDED';
       transactionMock.parentTransactionSubTotalAmount = 24.00;
       transactionMock.parentTransactionTotalAmount = 22.40;
       transactionMock.parentTransactionCurrencyCode = 'GBP';
+      transactionMock.transactionTypeName = 'SALE';
 
       expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.parentTransactionSubTotalAmount + ' ' + transactionMock.parentTransactionCurrencyCode);
+    });
+    it('print transactionAmount if parent transaction is type VOIDED,payment method is Credit Card and transactionTypeName is not SALE', function() {
+      transactionMock.paymentMethod = 'Cash';
+      transactionMock.parentTransactionTypeName = 'VOIDED';
+      transactionMock.parentTransactionSubTotalAmount = 24.00;
+      transactionMock.parentTransactionTotalAmount = 22.40;
+      transactionMock.parentTransactionCurrencyCode = 'GBP';
+      transactionMock.transactionTypeName = 'REFUND';
+
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
     });
     it('print parentTransactionSubTotalAmount if parent transaction is type VOIDED and payment method is Credit Card', function() {
       transactionMock.paymentMethod = 'Credit Card';
@@ -268,8 +279,19 @@ describe('Controller: TransactionListCtrl', function() {
       transactionMock.parentTransactionSubTotalAmount = 24.00;
       transactionMock.parentTransactionTotalAmount = 22.40;
       transactionMock.parentTransactionCurrencyCode = 'GBP';
+      transactionMock.transactionTypeName = 'SALE';
 
       expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.parentTransactionSubTotalAmount + ' ' + transactionMock.parentTransactionCurrencyCode);
+    });
+    it('print transactionAmount if parent transaction is type VOIDED,payment method is Credit Card and transactionTypeName is not SALE', function() {
+      transactionMock.paymentMethod = 'Credit Card';
+      transactionMock.parentTransactionTypeName = 'VOIDED';
+      transactionMock.parentTransactionSubTotalAmount = 24.00;
+      transactionMock.parentTransactionTotalAmount = 22.40;
+      transactionMock.parentTransactionCurrencyCode = 'GBP';
+      transactionMock.transactionTypeName = 'REFUND';
+
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
     });
   });
 });

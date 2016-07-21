@@ -64,6 +64,7 @@ angular.module('ts5App')
         transaction.parentTransactionCurrencyCode &&
         transaction.parentTransactionTypeName &&
         transaction.parentTransactionTypeName === 'VOIDED' &&
+        transaction.transactionTypeName === 'SALE' &&
         (transaction.paymentMethod === 'Credit Card' || transaction.paymentMethod === 'Cash')
       ) {
         return transaction.parentTransactionSubTotalAmount + ' ' + transaction.parentTransactionCurrencyCode;
