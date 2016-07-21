@@ -828,9 +828,6 @@
                   <button class="btn btn-info" title="Show Payment Report" ng-click="showCashBagPaymentReport(cashBag)">
                     <i class="fa fa-file-text active"></i>
                   </button>
-                  <button class="btn btn-primary" title="Edit Cash Bag" ng-click="goToCashBagEdit(cashBag)" ng-show="canExecuteActions(cashBag)">
-                    <i class="fa fa-pencil active"></i>
-                  </button>
                   <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" title="Add Manual Data" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual">
                     <i class="fa fa-plus-circle active"></i>
                   </a>
