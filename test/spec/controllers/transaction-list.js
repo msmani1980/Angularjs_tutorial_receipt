@@ -160,7 +160,7 @@ describe('Controller: TransactionListCtrl', function() {
     });
   });
 
-  fdescribe('printPropertyIfItIsCreditCardPayment will', function() {
+  describe('printPropertyIfItIsCreditCardPayment will', function() {
     var transactionMock;
     beforeEach(function () {
       transactionMock = {
@@ -241,7 +241,7 @@ describe('Controller: TransactionListCtrl', function() {
     });
   });
 
-  fdescribe('printTransactionTypeName will', function() {
+  describe('printTransactionTypeName will', function() {
     var transactionMock;
     beforeEach(function () {
       transactionMock = {
