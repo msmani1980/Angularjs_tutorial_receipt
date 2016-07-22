@@ -50,21 +50,36 @@ angular.module('ts5App')
 
     $scope.search = {};
     $scope.isCreditCardPaymentSelected = false;
-    $scope.printCCTransactionId = function (transaction) {
-      if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card') {
-        return transaction.paymentId;
+
+    $scope.printPropertyIfItIsCreditCardPayment = function (transaction, propertyName) {
+      if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card' && transaction.hasOwnProperty(propertyName)) {
+        return transaction[propertyName];
       }
 
       return '';
     };
 
+    $scope.printTransactionTypeName = function (transaction) {
+      if (
+        transaction.transactionTypeName &&
+        transaction.transactionTypeName === 'VOIDED'
+      ) {
+        return 'SALE';
+      }
+
+      return transaction.transactionTypeName;
+    };
+
     $this.meta = {};
     $this.isSearch = false;
 
-    var ABANDONED_TRANSACTION_TYPE_NAME = 'ABANDONED';
+    function isNotVoidedSaleTransaction(transaction) {
+      var isVoidedSaleTransaction = transaction.parentId &&
+      transaction.parentTransactionTypeName &&
+      transaction.parentTransactionTypeName === 'VOIDED' &&
+      transaction.transactionTypeName === 'SALE';
 
-    function isNotAbandoned(transaction) {
-      return transaction.transactionTypeName !== ABANDONED_TRANSACTION_TYPE_NAME;
+      return !isVoidedSaleTransaction;
     }
 
     function isCreditCardPaymentSelected(paymentMethods) {
@@ -151,7 +166,8 @@ angular.module('ts5App')
     function generateGetTransactionsPayload() {
       var payload = {
         limit: $this.meta.limit,
-        offset: $this.meta.offset
+        offset: $this.meta.offset,
+        'withoutTransactionTypes[0]': 'ABANDONED'
       };
 
       if ($this.isSearch) {
@@ -200,7 +216,7 @@ angular.module('ts5App')
     function appendTransactions(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var transactions = angular.copy(dataFromAPI.transactions)
-        .filter(isNotAbandoned);
+        .filter(isNotVoidedSaleTransaction);
 
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
 

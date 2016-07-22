@@ -248,14 +248,14 @@
     <tr ng-repeat="transaction in transactions">
       <td>{{ transaction.transactionDate }}</td>
       <td>{{ transaction.transactionId }}</td>
-      <td>{{ transaction.transactionTypeName }}</td>
+      <td>{{ printTransactionTypeName(transaction) }}</td>
       <td>{{ transaction.paymentMethod }}</td>
-      <td>{{ transaction.cardType }}</td>
-      <td>{{ transaction.lastFour }}</td>
-      <td>{{ transaction.ccProcessedDate }}</td>
-      <td>{{ transaction.ccTransactionStatus }}</td>
-      <td>{{ printCCTransactionId(transaction) }}</td>
-      <td>{{ transaction.ccAuthorizationStatus }}</td>
+      <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'cardType') }}</td>
+      <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'lastFour') }}</td>
+      <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccProcessedDate') }}</td>
+      <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccTransactionStatus') }}</td>
+      <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'paymentId') }}</td>
+      <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccAuthorizationStatus') }}</td>
       <td>{{ transaction.transactionAmount }} {{ transaction.transactionCurrencyCode }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
       <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
