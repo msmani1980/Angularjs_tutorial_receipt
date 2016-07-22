@@ -75,9 +75,7 @@ angular.module('ts5App')
 
     function isNotVoidedSaleTransaction(transaction) {
       var isVoidedSaleTransaction = transaction.parentId &&
-      transaction.parentTransactionTypeName &&
-      transaction.parentTransactionTypeName === 'VOIDED' &&
-      transaction.transactionTypeName === 'SALE';
+        transaction.transactionTypeName === 'SALE';
 
       return !isVoidedSaleTransaction;
     }
