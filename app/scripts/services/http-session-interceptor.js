@@ -86,7 +86,7 @@ angular.module('ts5App')
         '/rsvr/api/daily-exchange-rates/[0-9]*',
         '/rsvr/api/units',
         '/rsvr/api/promotions/[0-9]*$',
-        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[0-9][^11]*$',
+        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[5-9][^11]*$',
         '/rsvr/api/promotions',
         '/rsvr/api/companies/[0-9]*/company-credit-card-types',
         '/rsvr/api/records/company-types',
@@ -117,7 +117,10 @@ angular.module('ts5App')
       '/rsvr/api/companies/[0-9]*/relationships',
       '/rsvr/api/company-currency-globals',
       '/rsvr/api/companies/stores',
-      '/rsvr/api/feature/DAILYEXCHANGERATE/thresholds'
+      '/rsvr/api/feature/DAILYEXCHANGERATE/thresholds',
+      '/api/dispatch/store-instances/[0-9]*/menu-items',
+      '/api/dispatch/store-instances/[0-9]*/items',
+      '/api/dispatch/store-instances/[0-9]*/status/[0-4]'
     ];
 
     function responseError(response) {

@@ -6,5 +6,6 @@ dist
 .project
 bower_components
 coverage
+e2e_coverage
 app/scripts/config.js
 /target/

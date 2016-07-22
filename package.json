@@ -31,6 +31,7 @@
     "grunt-usemin": "^3.0.0",
     "grunt-wiredep": "^2.0.0",
     "jasmine-core": "^2.2.0",
+    "jasmine-reporters": "^2.2.0",
     "jshint-stylish": "^1.0.0",
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.2.0",
@@ -49,7 +50,7 @@
   "scripts": {
     "precommit": "grunt lint",
     "test": "grunt test",
-    "postinstall": "bower install",
+    "postinstall": "bower install && npm install -g protractor && webdriver-manager update",
     "start": "grunt serve"
   },
   "pre-commit": [

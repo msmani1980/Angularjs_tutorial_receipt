@@ -12,8 +12,7 @@
   "newcap": true,
   "noarg": true,
   "quotmark": "single",
-  "maxcomplexity": 5,
-  "maxdepth": 4,
+  "regexp": true,
   "undef": true,
   "unused": true,
   "strict": true,
@@ -22,7 +21,12 @@
   "jasmine": true,
   "globals": {
     "angular": false,
-    "io": false,
+    "io": true,
+    "browser": false,
+    "inject": false,
+    "element": false,
+    "by": false,
     "sprintf": false
   }
 }
+
