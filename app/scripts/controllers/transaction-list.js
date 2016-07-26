@@ -17,7 +17,7 @@ angular.module('ts5App')
     $scope.transactionTypes = [];
     $scope.companyCurrencies = [];
     $scope.companyStations = [];
-    $scope.paymentMethods = ['Cash', 'Credit Card'];
+    $scope.paymentMethods = ['Cash', 'Credit Card', 'Discount', 'Voucher', 'Promotion'];
     $scope.creditCardTypes = [];
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
@@ -78,6 +78,13 @@ angular.module('ts5App')
         transaction.transactionTypeName === 'SALE';
 
       return !isVoidedSaleTransaction;
+    }
+
+    function isNotSaleChangeTransaction(transaction) {
+      var isSaleChangeTransaction = transaction.transactionTypeName === 'SALE' &&
+        transaction.transactionAmount < 0;
+
+      return !isSaleChangeTransaction;
     }
 
     function isCreditCardPaymentSelected(paymentMethods) {
@@ -165,7 +172,10 @@ angular.module('ts5App')
       var payload = {
         limit: $this.meta.limit,
         offset: $this.meta.offset,
-        'withoutTransactionTypes[0]': 'ABANDONED'
+        'withoutTransactionTypes[0]': 'ABANDONED',
+        'withoutPaymentMethods[0]': 'Discount',
+        'withoutPaymentMethods[1]': 'Voucher',
+        'withoutPaymentMethods[2]': 'Promotion'
       };
 
       if ($this.isSearch) {
@@ -214,7 +224,8 @@ angular.module('ts5App')
     function appendTransactions(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var transactions = angular.copy(dataFromAPI.transactions)
-        .filter(isNotVoidedSaleTransaction);
+        .filter(isNotVoidedSaleTransaction)
+        .filter(isNotSaleChangeTransaction);
 
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
 
