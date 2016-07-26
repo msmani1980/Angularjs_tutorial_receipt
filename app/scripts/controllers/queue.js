@@ -5,7 +5,7 @@
  * @description # QueueCtrl Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('QueueCtrl', function ($scope, jobService, $interval, ENV) {
+  .controller('QueueCtrl', function ($rootScope, $scope, jobService, $interval, ENV, lodash) {
 
     $scope.jobs = [];
 
@@ -30,5 +30,12 @@ angular.module('ts5App')
     $scope.delete = function (jobId) {
       jobService.delete(jobId).then(updateQueue);
     };
-
+    
+    var featuresInRoleCollection = angular.copy($rootScope.featuresInRole.REPORT.REPORT);    
+    
+    $scope.isTemplateInFeaturesInRole = function(templateName) { 
+      var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskDescription: templateName });
+      return !!featuresInRoleMatch;
+    };
+    
   });
