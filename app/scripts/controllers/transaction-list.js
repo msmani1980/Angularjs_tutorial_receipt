@@ -17,7 +17,7 @@ angular.module('ts5App')
     $scope.transactionTypes = [];
     $scope.companyCurrencies = [];
     $scope.companyStations = [];
-    $scope.paymentMethods = ['Cash', 'Credit Card', 'Discount', 'Voucher', 'Promotion'];
+    $scope.paymentMethods = ['Cash', 'Credit Card'];
     $scope.creditCardTypes = [];
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
