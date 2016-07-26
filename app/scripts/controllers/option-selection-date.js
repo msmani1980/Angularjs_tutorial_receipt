@@ -9,10 +9,7 @@
  */
 angular.module('ts5App')
   .controller('OptionSelectionDateCtrl', function ($scope, dateUtility) {
-    $scope.format = dateUtility.getDateFormatForApp().toLowerCase();
-    
-    $scope.format = $scope.format.replace('mm', 'MM');
-    
+    $scope.format = dateUtility.getReportsDateFormat();
     $scope.status = {
       opened: false
     };
