@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('MainCtrl',
-  function ($rootScope, $scope, mainMenuService, globalMenuService, identityAccessService,
+  function ($localStorage, $rootScope, $scope, mainMenuService, globalMenuService, identityAccessService,
             identityAccessFactory, lodash, $q, menuService) {
 
     $scope.viewName = 'TS5 Dashboard';
@@ -84,7 +84,7 @@ angular.module('ts5App')
 
     function getDashboardDependencies() {
       identityAccessService.featuresInRole().then(function (response) {
-        $rootScope.featuresInRole = angular.copy(response);
+        $localStorage.featuresInRole = angular.copy(response);
         $scope.dashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
       });
 

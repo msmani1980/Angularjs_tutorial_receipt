@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReportsCtrl', function ($rootScope, $scope, $modal, templateService, lodash) {
+  .controller('ReportsCtrl', function ($localStorage, $rootScope, $scope, $modal, templateService, lodash) {
 
     $scope.templates = templateService.query();
 
@@ -43,7 +43,7 @@ angular.module('ts5App')
       });
     };
     
-    var featuresInRoleCollection = angular.copy($rootScope.featuresInRole.REPORT.REPORT);    
+    var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.REPORT.REPORT);    
     
     $scope.isTemplateInFeaturesInRole = function(templateCode) { 
       var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: templateCode });
