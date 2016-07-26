@@ -507,6 +507,8 @@ angular.module('ts5App')
       } else {
         cashBagFactory.verifyCashBag(cashBag.id, 'AMEND').then(toggleVrifiedCashBagSuccess, handleResponseError);
       }
+      
+      location.reload();
     };
 
     $scope.isCrewDataOpen = function (cashBag) {
@@ -716,7 +718,7 @@ angular.module('ts5App')
       $this.eposCashBag = lodash.uniq(angular.copy(eposRevenue[0].response), 'id');
       var eposCreditCard = lodash.uniq(angular.copy(eposRevenue[1].response), 'id');
       var eposDiscount = lodash.uniq(angular.copy(eposRevenue[2].response), 'id');
-      
+
       var total = 0;
 
       angular.forEach($this.eposCashBag, function (cashBag) {
