@@ -84,7 +84,6 @@ angular.module('ts5App')
 
     function getDashboardDependencies() {
       identityAccessService.featuresInRole().then(function (response) {
-        $rootScope.featuresInRole = angular.copy(response);
         $scope.dashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
       });
 
