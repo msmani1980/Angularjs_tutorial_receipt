@@ -43,7 +43,7 @@ angular.module('ts5App')
       });
     };
     
-    var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.REPORT.REPORT);    
+    var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.REPORT.REPORTINSTANCE);    
     
     $scope.isTemplateInFeaturesInRole = function(templateCode) { 
       var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: templateCode });
