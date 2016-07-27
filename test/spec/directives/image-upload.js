@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Image Upload Directive |', function () {
+describe('Image Upload Directive |', function () {
 
   var element;
   var scope;
