@@ -33,8 +33,8 @@ angular.module('ts5App')
     
     var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.REPORT.REPORT);    
     
-    $scope.isTemplateInFeaturesInRole = function(templateName) { 
-      var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskDescription: templateName });
+    $scope.isTemplateInFeaturesInRole = function(templateCode) { 
+      var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: templateCode });
       return !!featuresInRoleMatch;
     };
     
