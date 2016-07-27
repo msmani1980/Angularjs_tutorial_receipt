@@ -59,8 +59,7 @@ angular.module('ts5App')
         var file = $scope.files[filesIndex];
 
         if (!imgElement) {
-          imgElement = angular.element(angular.element('.fileTest')[
-            filesIndex]);
+          imgElement = angular.element(angular.element('.fileTest')[filesIndex]);
         }
 
         this.imgHeight = imgElement.height();

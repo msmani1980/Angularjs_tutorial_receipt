@@ -99,7 +99,7 @@ describe('Date Utility service', function () {
 
     it('should format a timestamp string from one format to another',
       function () {
-        var expectedString = '10/01/2015 18:25';
+        var expectedString = '10/01/2015 18:25:12';
         var formattedString = dateUtility.formatTimestampForApp(
           '2015-10-01 18:25:12.123456');
         expect(formattedString).toEqual(expectedString);

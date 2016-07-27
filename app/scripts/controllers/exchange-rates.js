@@ -353,7 +353,7 @@ angular.module('ts5App')
       var chCompanyId = globalMenuService.getCompanyData().id;
 
       return [
-        currencyFactory.getCompanyPreferences(preferencePayload, retailCompanyId),
+        currencyFactory.getCompanyPreferences(preferencePayload, chCompanyId),
         currencyFactory.getCompany(retailCompanyId),
         currencyFactory.getCompany(chCompanyId),
         currencyFactory.getExchangeRateThresholdList(thresholdPayload, retailCompanyId)
