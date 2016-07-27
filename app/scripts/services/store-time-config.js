@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('storeTimeConfig', function($resource, ENV) {
+  .service('storeTimeConfig', function($resource, ENV, dateUtility) {
 
     var requestURL = ENV.apiUrl + '/rsvr/api/companies/time-configuration';
 
@@ -22,6 +22,7 @@ angular.module('ts5App')
 
     function getTimeConfig(storeInstanceId) {
       return requestResource.getTimeConfig({
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
         storeInstanceId: storeInstanceId
       }).$promise;
     }

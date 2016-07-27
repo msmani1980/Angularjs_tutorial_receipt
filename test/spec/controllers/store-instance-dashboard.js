@@ -303,6 +303,11 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       it('should attach all properties of JSON to scope', function() {
         expect(scope.timeConfigList).toEqual(storeTimeConfigResponseJSON.response);
       });
+
+      it('should get most recent time config with undispatch featureId', function () {
+        var expectedHoursFromTimeConfigMock = 999999;
+        expect(scope.storeInstanceList[0].hours).toEqual(expectedHoursFromTimeConfigMock);
+      });
     });
 
     describe('format store instance response', function() {
