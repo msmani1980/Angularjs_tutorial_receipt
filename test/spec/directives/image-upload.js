@@ -1,13 +1,13 @@
 'use strict';
 
-describe('Image Upload Directive |', function () {
+fdescribe('Image Upload Directive |', function () {
 
-  var element,
-    scope,
-    controller,
-    imageJSON,
-    Upload,
-    response;
+  var element;
+  var scope;
+  var controller;
+  var imageJSON;
+  var Upload;
+  var response;
 
   beforeEach(module('ts5App'));
 
@@ -363,9 +363,7 @@ describe('Image Upload Directive |', function () {
     });
 
     it('should expect image 128x128 to return false', function () {
-      var imgElement = angular.element(
-        '<img class="fileTest" style="width:129px; height:129px;" ng-src="http://placehold.it/129x129"/>'
-      );
+      var imgElement = angular.element('<img class="fileTest" style="width:129px; height:129px;" ng-src="http://placehold.it/129x129"/>');
       imgElement = angular.element(imgElement[0]);
       expect(scope.doesImageMeetSizeConstraint(0, imgElement)).toBeFalsy();
     });
@@ -376,12 +374,16 @@ describe('Image Upload Directive |', function () {
     });
 
     it('should have imgHeight defined', function () {
-      scope.doesImageMeetSizeConstraint();
+      var imgElement = angular.element('<img class="fileTest" style="width:129px; height:129px;" ng-src="http://placehold.it/100x100"/>');
+      imgElement = angular.element(imgElement[0]);
+      scope.doesImageMeetSizeConstraint(0, imgElement);
       expect(scope.imgHeight).toBeDefined();
     });
 
     it('should have imgWidth defined', function () {
-      scope.doesImageMeetSizeConstraint();
+      var imgElement = angular.element('<img class="fileTest" style="width:129px; height:129px;" ng-src="http://placehold.it/100x100"/>');
+      imgElement = angular.element(imgElement[0]);
+      scope.doesImageMeetSizeConstraint(0, imgElement);
       expect(scope.imgWidth).toBeDefined();
     });
 
