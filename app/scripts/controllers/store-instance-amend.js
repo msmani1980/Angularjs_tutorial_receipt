@@ -713,9 +713,10 @@ angular.module('ts5App')
     }
 
     function calculateEPOSRevenue(eposRevenue) {
-      $this.eposCashBag = angular.copy(eposRevenue[0].response);
-      var eposCreditCard = angular.copy(eposRevenue[1].response);
-      var eposDiscount = angular.copy(eposRevenue[2].response);
+      $this.eposCashBag = lodash.uniq(angular.copy(eposRevenue[0].response), 'id');
+      var eposCreditCard = lodash.uniq(angular.copy(eposRevenue[1].response), 'id');
+      var eposDiscount = lodash.uniq(angular.copy(eposRevenue[2].response), 'id');
+      
       var total = 0;
 
       angular.forEach($this.eposCashBag, function (cashBag) {
@@ -781,9 +782,9 @@ angular.module('ts5App')
     }
 
     function calculateCashRevenue(chRevenue) {
-      $this.chCashBag = angular.copy(chRevenue[0].response);
-      var chCreditCard = angular.copy(chRevenue[1].response);
-      var chDiscount = angular.copy(chRevenue[2].response);
+      $this.chCashBag = lodash.uniq(angular.copy(chRevenue[0].response), 'id');
+      var chCreditCard = lodash.uniq(angular.copy(chRevenue[1].response), 'id');
+      var chDiscount = lodash.uniq(angular.copy(chRevenue[2].response), 'id');
 
       $scope.cashHandlerExchangeRate = {
         cashBags: {},

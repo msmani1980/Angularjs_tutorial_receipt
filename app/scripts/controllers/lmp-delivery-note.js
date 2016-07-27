@@ -66,8 +66,8 @@ angular.module('ts5App')
       $scope.deliveryNote = angular.copy(response);
       $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, 'itemName');
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
-      $scope.deliveryNote.createdOn = dateUtility.removeMilliseconds($scope.deliveryNote.createdOn);
-      $scope.deliveryNote.updatedOn = dateUtility.removeMilliseconds($scope.deliveryNote.updatedOn);
+      $scope.deliveryNote.createdOn = dateUtility.formatTimestampForApp($scope.deliveryNote.createdOn);
+      $scope.deliveryNote.updatedOn = dateUtility.formatTimestampForApp($scope.deliveryNote.updatedOn);
     }
 
     function getDeliveryNote() {
@@ -217,7 +217,7 @@ angular.module('ts5App')
       var catererStationItems = !!responseCollection[1] ? responseCollection[1].response : _cateringStationItems[catererStationId].response;
       var menuItems = getItemsFromCatererStationMenus(responseCollection[0].companyMenuCatererStations);
 
-      if (!menuItems.length && !catererStationItems.length) {
+      if ((!menuItems || !menuItems.length) && (!catererStationItems || !catererStationItems.length)) {
         setNoItemsError();
         return;
       }

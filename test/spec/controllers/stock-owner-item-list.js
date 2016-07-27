@@ -105,10 +105,6 @@ describe('The StockOwnerItemListCtrl controller', function () {
     expect(StockOwnerItemListCtrl.getSalesCategoriesList).toHaveBeenCalled();
   });
 
-  it('should have a parseDate method', function() {
-    expect(StockOwnerItemListCtrl.parseDate).toBeDefined();
-  });
-
   it('should have a filterItems method', function() {
     expect(StockOwnerItemListCtrl.filterItems).toBeDefined();
   });

@@ -1,7 +1,6 @@
 # TS5
 
 This project is generated with [yo angular generator](https://github.com/yeoman/generator-angular)
-version 0.11.1.
 
 1.  [Development environment](section1)
 2.  [TDD](section2) 
@@ -9,20 +8,27 @@ version 0.11.1.
 ## Development environment
 Below is the IP for the development environment and API
 
-    https://54.83.17.106/
-
-    // API
-    https://54.83.17.106/api/
+    https://ts5-dev.egatesoln.com/#/
 
 ## Build & development
 
-Run `grunt` for building and `grunt serve` for preview.
+Run `grunt build` for building and `grunt serve` for preview.
 
 ## Testing
 
 Running `grunt test` will run the unit tests with karma.
 
 To run a single test use the [Focused specs](http://jasmine.github.io/2.4/focused_specs.html)
+
+## E2E Testing
+For e2e testing we are using protractor with jasmine.
+
+Make sure you have [protractor](http://www.protractortest.org/#/tutorial) installed, all the tests go into e2e_tests, file naming convention is `<page/feature>/<feature/TSVPORTAL/etc>_spec.js` for example:`login/login_spec.js` 
+
+Steps to execute protractor:
+  - `grunt serve` to start web server
+  - `webdriver-manager start` to start selenium driver
+  - `protractor protractor.conf.js` to execute tests
 
 ## TS5 Practices
 
@@ -41,8 +47,8 @@ To run a single test use the [Focused specs](http://jasmine.github.io/2.4/focuse
 
 ### Commiting
 
- - commit message template "{TicketNumber} {Username} | {Description}"
- - example "TSVPORTAL-713 maxfelker | Updated readme"
+ - commit message template "{TicketNumber} | {Description}"
+ - example "TSVPORTAL-713 | Updated readme"
 
 ### Testing SSL and CORS
 When testing your local build against the API, there are issues with SSL due to a self signed certificate on the API's server. Browse to the development environment URL and accept the browser's SSL warning. This will resolve the SSL warning notice

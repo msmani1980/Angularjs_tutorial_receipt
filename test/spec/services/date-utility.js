@@ -99,7 +99,7 @@ describe('Date Utility service', function () {
 
     it('should format a timestamp string from one format to another',
       function () {
-        var expectedString = '10/01/2015 18:25';
+        var expectedString = '10/01/2015 18:25:12';
         var formattedString = dateUtility.formatTimestampForApp(
           '2015-10-01 18:25:12.123456');
         expect(formattedString).toEqual(expectedString);
@@ -412,11 +412,18 @@ describe('Date Utility service', function () {
 
   describe('getOperationalDay method', function () {
 
-    it('should return a formatted number of the day', function () {
-        var newDate = dateUtility.getOperationalDay('01/19/2016');
-        expect(newDate).toEqual(2);
-      });
+    it('should return a formatted number of the day for any format', function () {
+      var newDate = dateUtility.getOperationalDay('01/19/2016');
+      expect(newDate).toEqual(2);
+    });
 
+    it('should return a formatted number of the day for different formats', function () {
+      var newDate = dateUtility.getOperationalDay('20/01/2016', 'DD/MM/YYYY');
+      expect(newDate).toEqual(3);
+
+      newDate = dateUtility.getOperationalDay('01-21-2016', 'MM-DD-YYYY');
+      expect(newDate).toEqual(4);
+    });
   });
 
   describe('isYesterdayOrEarlier() method', function () {

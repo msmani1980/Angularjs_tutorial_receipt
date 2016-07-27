@@ -79,7 +79,7 @@
                            ng-disabled="!itemListForCreate.length"
                            name="retailItem">
                   <ui-select-match placeholder="Select a retail Item">{{ $select.selected.itemName}}</ui-select-match>
-                  <ui-select-choices repeat="item in itemListForCreate | filter: {itemName:$select.search}">
+                  <ui-select-choices repeat="item in itemListForCreate | filter: {itemName:$select.search} track by item.id">
                     <div ng-bind-html="item.itemName | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
@@ -96,7 +96,7 @@
                            ng-disabled="!exciseDutyListForCreate.length"
                            name="commodityCode">
                   <ui-select-match placeholder="Select a Commodity Code">{{ $select.selected.commodityCode}}</ui-select-match>
-                  <ui-select-choices repeat="record in exciseDutyListForCreate | filter: {commodityCode:$select.search}">
+                  <ui-select-choices repeat="record in exciseDutyListForCreate | filter: {commodityCode:$select.search} track by record.id">
                     <div ng-bind-html="record.commodityCode | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
