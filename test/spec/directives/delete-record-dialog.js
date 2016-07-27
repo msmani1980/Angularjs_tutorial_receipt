@@ -5,10 +5,10 @@ describe('Directive: deleteRecordDialog', function () {
   // load the directive's module and template module
   beforeEach(module('ts5App', 'template-module'));
 
-  var scope,
-    element,
-    controller,
-    modalHTMLElement;
+  var scope;
+  var element;
+  var controller;
+  var modalHTMLElement;
 
   beforeEach(inject(function ($rootScope) {
     scope = $rootScope.$new();
@@ -16,8 +16,7 @@ describe('Directive: deleteRecordDialog', function () {
 
   describe('element', function () {
     beforeEach(inject(function ($compile) {
-      element = angular.element(
-        '<delete-record-dialog></delete-record-dialog>');
+      element = angular.element('<delete-record-dialog></delete-record-dialog>');
       element = $compile(element)(scope);
       scope.$digest();
     }));
@@ -49,20 +48,17 @@ describe('Directive: deleteRecordDialog', function () {
     });
 
     it('should have a button to cancel', function () {
-      expect(element.find('.modal-footer .btn-cancel').length).toEqual(
-        1);
+      expect(element.find('.modal-footer .btn-cancel').length).toEqual(1);
     });
 
     it('should have a button to remove the item', function () {
-      expect(element.find('.modal-footer .btn-remove').length).toEqual(
-        1);
+      expect(element.find('.modal-footer .btn-remove').length).toEqual(1);
     });
   });
 
   describe('controller', function () {
     beforeEach(inject(function ($compile) {
-      element = angular.element(
-        '<delete-record-dialog></delete-record-dialog>');
+      element = angular.element('<delete-record-dialog></delete-record-dialog>');
       element = $compile(element)(scope);
       scope.$digest();
       controller = element.controller('deleteRecordDialog');
@@ -71,14 +67,12 @@ describe('Directive: deleteRecordDialog', function () {
     }));
 
     describe('modalElement', function () {
-      it('should be defined',
-        function () {
-          expect(controller.modalElement).toBeDefined();
-        });
+      it('should be defined', function () {
+        expect(controller.modalElement).toBeDefined();
+      });
 
       it('should contain #delete-record', function () {
-        expect(controller.modalElement.selector).toContain(
-          '#delete-record');
+        expect(angular.element(modalHTMLElement).find('.modal-dialog').length).toBeGreaterThan(0);
       });
     });
 
