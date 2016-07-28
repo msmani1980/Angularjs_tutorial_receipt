@@ -44,6 +44,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   var identityAccessFactory;
   var localStorage;
   var ENV;
+  var dateUtility;
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, $localStorage, lodash) {
     inject(function(_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_,
@@ -63,6 +64,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     storeInstanceListResponseJSON.response[0].statusId = 8;
     storeInstanceListResponseJSON.response[1].statusId = 8;
 
+    dateUtility = $injector.get('dateUtility');
     scope = $rootScope.$new();
     location = $location;
     _lodash = lodash;
@@ -215,8 +217,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           cateringStationId: '1',
           inboundStationId: '2',
           storeNumber: '3',
-          startDate: '10/06/2015',
-          endDate: '10/08/2015',
+          startDate: dateUtility.formatDateForAPI('10/06/2015'),
+          endDate: dateUtility.formatDateForAPI('10/08/2015'),
           departureStationCode: 'ORD,MDW',
           arrivalStationCode: 'LON3,MDW',
           storeInstanceId: '4',
@@ -233,8 +235,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           cateringStationId: '1',
           inboundStationId: '2',
           storeNumber: '3',
-          startDate: '10/06/2015',
-          endDate: '10/08/2015',
+          startDate: dateUtility.formatDateForAPI('10/06/2015'),
+          endDate: dateUtility.formatDateForAPI('10/08/2015'),
           departureStationCode: 'ORD,MDW',
           arrivalStationCode: 'LON3,MDW',
           storeInstanceId: '4',
