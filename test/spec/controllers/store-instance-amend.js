@@ -27,7 +27,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   beforeEach(module('served/promotion.json'));
   beforeEach(module('served/daily-exchange-rate.json'));
 
-
   var scope;
   var StoreInstanceAmendCtrl;
   var controller;
@@ -100,6 +99,12 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var cashBagVerificationsDeferred;
   var storeInstanceId = 2;
   var lodash;
+  var $window;
+
+  beforeEach(module(function ($provide) {
+    $window = { location: { reload: jasmine.createSpy() } };
+    $provide.value('$window', $window);
+  }));
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagVerifications_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
@@ -225,10 +230,18 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     dailyExchangeRateDeferred = $q.defer();
     dailyExchangeRateDeferred.resolve(dailyExchangeRateJSON);
 
-    manualDataJSON = {response: [
-      { cashbagId: 2158, convertedAmount: 10.0, totalConvertedAmount: 20.0, quantity: 1, itemTypeId: 2, itemMaster: {itemName: 'testItem1'}, promotion: {promotionName: 'testPromotion1'}},
-      { cashbagId: 2158, convertedAmount: 11.0, totalConvertedAmount: 22.0, quantity: 2, itemTypeId: 4, itemMaster: {itemName: 'testItem2'}, promotion: {promotionName: 'testPromotion2'}}
-    ]};
+    manualDataJSON = {
+      response: [
+        {
+          cashbagId: 2158, convertedAmount: 10.0, totalConvertedAmount: 20.0, quantity: 1, itemTypeId: 2, itemMaster: { itemName: 'testItem1' },
+          promotion: { promotionName: 'testPromotion1' }
+        },
+        {
+          cashbagId: 2158, convertedAmount: 11.0, totalConvertedAmount: 22.0, quantity: 2, itemTypeId: 4, itemMaster: { itemName: 'testItem2' },
+          promotion: { promotionName: 'testPromotion2' }
+        }
+      ]
+    };
 
     manualDataDeferred = $q.defer();
     manualDataDeferred.resolve(manualDataJSON);
@@ -382,7 +395,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
     it('should init cash bag epos sales with manual virtual, voucher, and promotion data', function () {
       scope.$digest();
-      var manualCashBag = lodash.findWhere(scope.normalizedCashBags, {id: 2158});
+      var manualCashBag = lodash.findWhere(scope.normalizedCashBags, { id: 2158 });
       expect(manualCashBag.virtualItemSales >= 10).toEqual(true);
       expect(manualCashBag.voucherItemSales >= 11).toEqual(true);
       expect(manualCashBag.promotionDiscounts >= 42).toEqual(true);
@@ -390,7 +403,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
     it('should init cash bag total revenue values with manual cash, credit, and discount values', function () {
       scope.$digest();
-      var manualCashBag = lodash.findWhere(scope.normalizedCashBags, {id: 2158});
+      var manualCashBag = lodash.findWhere(scope.normalizedCashBags, { id: 2158 });
       expect(manualCashBag.cashRevenue.amount >= 21).toEqual(true);
       expect(manualCashBag.cashRevenue.manualTotal).toEqual(21);
       expect(manualCashBag.creditRevenue.amount >= 21).toEqual(true);
