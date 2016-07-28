@@ -470,29 +470,35 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return payload;
     }
 
+    function formatDates(payload) {
+      if (payload.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+      }
+
+      if (payload.endDate) {
+        payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
+      }
+
+    }
+
     function searchStoreInstanceDashboardData(startDate) {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
 
-      if (!initDone) {
-        return;
-      }
-
-      if (loadingProgress) {
+      if (!initDone || loadingProgress) {
         return;
       }
 
       loadingProgress = true;
-
       showLoadingBar();
       var payload = {};
       angular.forEach(SEARCH_TO_PAYLOAD_MAP, function (value, key) {
         if ($scope.search[key]) {
           if (key === 'departureStations' || key === 'arrivalStations') {
-            payload[value] = lodash.map($scope.search[key], function (station) {
+            payload[value] = angular.copy(lodash.map($scope.search[key], function (station) {
               return station.code;
-            });
+            }));
           } else {
             payload[value] = angular.copy($scope.search[key]);
           }
@@ -501,6 +507,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
       payload = formatStatusPayload(payload);
       payload = formatStationPayloads(payload);
+      formatDates(payload);
       $scope.searchIsActive = true;
       if (startDate) {
         payload.startDate = startDate;
