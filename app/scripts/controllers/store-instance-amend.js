@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
       reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory, storeInstanceFactory, recordsService,
-      stationsService, dailyExchangeRatesService) {
+      stationsService, dailyExchangeRatesService, $window) {
     var $this = this;
 
     $scope.formatAsCurrency = function(valueToFormat) {
@@ -507,8 +507,8 @@ angular.module('ts5App')
       } else {
         cashBagFactory.verifyCashBag(cashBag.id, 'AMEND').then(toggleVrifiedCashBagSuccess, handleResponseError);
       }
-      
-      location.reload();
+
+      $window.location.reload();
     };
 
     $scope.isCrewDataOpen = function (cashBag) {
