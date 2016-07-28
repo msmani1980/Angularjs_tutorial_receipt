@@ -281,6 +281,8 @@ angular.module('ts5App')
           cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) +
             parseFloat(cashBagCurrency.coinAmountEpos));
           dailyExchangeRateCurrencies.splice(dailyExchangeRateCurrencies.indexOf(dailyCurrency), 1);
+        } else {
+          $scope.cashBag.cashBagCurrencies.splice($scope.cashBag.cashBagCurrencies.indexOf(cashBagCurrency), 1);
         }
       });
 

@@ -170,24 +170,24 @@ describe('Controller: ExchangeRatesCtrl', function() {
 
     it('should create payload with today date', function() {
       scope.checkVarianceAndSave(false);
-      expect(scope.payload.dailyExchangeRate.exchangeRateDate).toBe(moment().format('YYYYMMDD').toString());
+      expect(scope.payload.exchangeRateDate).toBe(moment().format('YYYYMMDD').toString());
     });
 
     it('should create payload with company data', function() {
       scope.checkVarianceAndSave(false);
-      expect(scope.payload.dailyExchangeRate.chCompanyId).toBeTruthy();
-      expect(scope.payload.dailyExchangeRate.retailCompanyId).toBeTruthy();
-      expect(scope.payload.dailyExchangeRate.chBaseCurrencyId).toBeTruthy();
-      expect(scope.payload.dailyExchangeRate.retailBaseCurrencyId).toBeTruthy();
+      expect(scope.payload.chCompanyId).toBeTruthy();
+      expect(scope.payload.retailCompanyId).toBeTruthy();
+      expect(scope.payload.chBaseCurrencyId).toBeTruthy();
+      expect(scope.payload.retailBaseCurrencyId).toBeTruthy();
     });
 
     it('should only have bank Exchange Rate Currencies', function() {
-      var expectedCurrencyObject = {
+      var expectedCurrencyObject = jasmine.objectContaining({
         retailCompanyCurrencyId: 1,
         bankExchangeRate: '0.1234'
-      };
+      });
       scope.checkVarianceAndSave(false);
-      expect(scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies[0]).toEqual(expectedCurrencyObject);
+      expect(scope.payload.dailyExchangeRateCurrencies[0]).toEqual(expectedCurrencyObject);
     });
 
     it('should not alert of variance', function() {
@@ -203,6 +203,14 @@ describe('Controller: ExchangeRatesCtrl', function() {
         code: 'USD',
         percentage: 13
       });
+    });
+
+    it('should include exchange rate currency id in payload if id exists', function () {
+      scope.checkVarianceAndSave(false);
+
+      var originalRecordId = dailyExchangeRatesJSON.dailyExchangeRates[0].dailyExchangeRateCurrencies[0].id;
+      expect(scope.payload.dailyExchangeRateCurrencies[0].id).toBeDefined();
+      expect(scope.payload.dailyExchangeRateCurrencies[0].id).toEqual(originalRecordId);
     });
 
     describe('the error handler', function() {
