@@ -188,6 +188,7 @@
             <div class="form-group">
               <label for="item-name-{{ $index }}">Item Name</label>
               <ui-select name="item-name-{{ $index }}"
+                         class="new-item-{{ $index }}"
                          ng-model="item.itemObject"
                          ng-disabled="readOnly || addedItems.length < 0 || state === 'view'"
                          reset-search-input="false">
