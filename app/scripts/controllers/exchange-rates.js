@@ -47,6 +47,10 @@ angular.module('ts5App')
     }
 
     function getExchangeRateFromCompanyCurrencies(currenciesArray, currencyId) {
+      if (!currenciesArray || !currencyId) {
+        return null;
+      }
+
       return currenciesArray.filter(function(currencyItem) {
         return currencyItem.retailCompanyCurrencyId === currencyId;
       })[0];
@@ -58,7 +62,7 @@ angular.module('ts5App')
       })[0];
     };
 
-    function serializeExchangeRates(currencyCode, coinExchangeRate, paperExchangeRate, bankExchangeRate) {
+    function serializeExchangeRates(currencyCode, coinExchangeRate, paperExchangeRate, bankExchangeRate, recordId) {
       $scope.currenciesFields[currencyCode] = {};
       if ($scope.isBankExchangePreferred()) {
         $scope.currenciesFields[currencyCode].bankExchangeRate = bankExchangeRate;
@@ -66,11 +70,18 @@ angular.module('ts5App')
         $scope.currenciesFields[currencyCode].coinExchangeRate = coinExchangeRate;
         $scope.currenciesFields[currencyCode].paperExchangeRate = paperExchangeRate;
       }
+
+      if (recordId) {
+        $scope.currenciesFields[currencyCode].recordId = recordId;
+      }
     }
 
     function setBaseExchangeRateModel() {
+      var existingExchangeRate = getExchangeRateFromCompanyCurrencies($scope.dailyExchangeRates.dailyExchangeRateCurrencies, $scope.cashHandlerBaseCurrency.id);
+      var recordId = !!existingExchangeRate ? existingExchangeRate.id : null;
+
       if ($scope.cashHandlerBaseCurrency.currencyCode && $scope.dailyExchangeRates) {
-        serializeExchangeRates($scope.cashHandlerBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000');
+        serializeExchangeRates($scope.cashHandlerBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000', recordId);
       }
     }
 
@@ -91,7 +102,7 @@ angular.module('ts5App')
             companyCurrency.id);
           if (exchangeRate) {
             serializeExchangeRates(companyCurrency.code, exchangeRate.coinExchangeRate, exchangeRate.paperExchangeRate,
-              exchangeRate.bankExchangeRate);
+              exchangeRate.bankExchangeRate, exchangeRate.id);
           }
         });
       }
@@ -155,11 +166,11 @@ angular.module('ts5App')
     });
 
     function clearExchangeRateCurrencies() {
-      $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies = [];
+      $scope.payload.dailyExchangeRateCurrencies = [];
     }
 
     function clearUnusedRates() {
-      $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.map(function(rate) {
+      $scope.payload.dailyExchangeRateCurrencies.map(function(rate) {
         if ($scope.isBankExchangePreferred()) {
           delete rate.coinExchangeRate;
           delete rate.paperExchangeRate;
@@ -170,10 +181,10 @@ angular.module('ts5App')
     }
 
     function cleanPayloadData() {
-      delete $scope.payload.dailyExchangeRate.createdBy;
-      delete $scope.payload.dailyExchangeRate.createdOn;
-      delete $scope.payload.dailyExchangeRate.updatedBy;
-      delete $scope.payload.dailyExchangeRate.updatedOn;
+      delete $scope.payload.createdBy;
+      delete $scope.payload.createdOn;
+      delete $scope.payload.updatedBy;
+      delete $scope.payload.updatedOn;
       clearUnusedRates();
     }
 
@@ -188,12 +199,18 @@ angular.module('ts5App')
         bankExchangeRate = $scope.currenciesFields[currency.code].bankExchangeRate;
       }
 
-      return {
+      var serializedCurrency = {
         retailCompanyCurrencyId: currency.id,
         coinExchangeRate: coinExchangeRate,
         paperExchangeRate: paperExchangeRate,
         bankExchangeRate: bankExchangeRate
       };
+
+      if ($scope.currenciesFields[currency.code].recordId) {
+        serializedCurrency.id = $scope.currenciesFields[currency.code].recordId;
+      }
+
+      return serializedCurrency;
     }
 
     function resolvePayloadDependencies() {
@@ -201,7 +218,7 @@ angular.module('ts5App')
       angular.forEach($scope.companyCurrencies, function(currency) {
         if ($scope.currenciesFields[currency.code]) {
           var companyCurrency = serializeExchangeRateForAPI(currency);
-          $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.push(companyCurrency);
+          $scope.payload.dailyExchangeRateCurrencies.push(companyCurrency);
         }
       });
     }
@@ -221,9 +238,7 @@ angular.module('ts5App')
         dailyExchangeRatePayload.id = $scope.dailyExchangeRates.id;
       }
 
-      $scope.payload = {
-        dailyExchangeRate: dailyExchangeRatePayload
-      };
+      $scope.payload = dailyExchangeRatePayload;
       resolvePayloadDependencies();
       cleanPayloadData();
     }
@@ -353,7 +368,7 @@ angular.module('ts5App')
       var chCompanyId = globalMenuService.getCompanyData().id;
 
       return [
-        currencyFactory.getCompanyPreferences(preferencePayload, chCompanyId),
+        currencyFactory.getCompanyPreferences(preferencePayload, retailCompanyId),
         currencyFactory.getCompany(retailCompanyId),
         currencyFactory.getCompany(chCompanyId),
         currencyFactory.getExchangeRateThresholdList(thresholdPayload, retailCompanyId)
