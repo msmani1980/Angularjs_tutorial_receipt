@@ -7,10 +7,9 @@ describe('Controller: ReportsCtrl', function () {
 	  var ReportsCtrl;
 	  var featuresInRoleJSON;
 	  var scope;
-	  var featuresInRole;
 	  var localStorage;
 	  	  
-	  beforeEach(inject(function($controller, $localStorage, $rootScope, $injector, $q) {
+	  beforeEach(inject(function($controller, $localStorage, $rootScope, $injector) {
 	        inject(function() {
 			  featuresInRoleJSON = $injector.get('servedFeaturesInRoleReport');
 			  $localStorage.featuresInRole= featuresInRoleJSON;

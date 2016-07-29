@@ -9,7 +9,7 @@ describe('Controller: OptionSelectionDateCtrl', function () {
   var scope;
   var OptionSelectionDateCtrl;
   
-  beforeEach(inject(function($controller, $rootScope, $injector, $q) {
+  beforeEach(inject(function($controller, $rootScope, $injector) {
 	    inject(function() {
 	    	dateUtility = $injector.get('dateUtility');
   		});
