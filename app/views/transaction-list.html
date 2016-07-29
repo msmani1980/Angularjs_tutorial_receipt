@@ -256,7 +256,7 @@
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccTransactionStatus') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'paymentId') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccAuthorizationStatus') }}</td>
-      <td>{{ transaction.transactionAmount }} {{ transaction.transactionCurrencyCode }}</td>
+      <td>{{ printTransactionAmount(transaction) }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
       <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
       <td ng-show="displayColumns.storeNumber">{{ transaction.storeNumber }}</td>
