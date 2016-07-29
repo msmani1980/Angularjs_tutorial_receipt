@@ -78,11 +78,7 @@ angular.module('ts5App')
         return isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
       });
 
-      if (!itemsSet.length) {
-        return false;
-      }
-
-      return true;
+      return !!(itemsSet.length);
     }
 
     function canReview() {
@@ -573,7 +569,7 @@ angular.module('ts5App')
       }
 
       if ($routeParams.id) {
-        $scope.deliveryNote.catererStationId = $routeParams.id;
+        $scope.deliveryNote.catererStationId = parseInt($routeParams.id);
       } else if ($scope.catererStationList.length === 1) {
         $scope.deliveryNote.catererStationId = $scope.catererStationList[0].id;
       }
@@ -623,9 +619,10 @@ angular.module('ts5App')
       $scope.inventoryCharacteristicType = lodash.findWhere(angular.copy(responseCollection[1]), { name: 'Inventory' });
       $scope.catererStationList = angular.copy(responseCollection[2].response);
       $scope.ullageReasons = lodash.filter(responseCollection[3].companyReasonCode, { reasonTypeName: _reasonCodeTypeUllage });
+      $scope.menuList = angular.copy(responseCollection[4].menus);
 
       if (responseCollection[5]) {
-        setDeliveryNoteFromResponse(responseCollection[4]);
+        setDeliveryNoteFromResponse(responseCollection[5]);
       }
 
       completeInitCalls();
@@ -654,7 +651,7 @@ angular.module('ts5App')
       $scope.routeParamState = $routeParams.state;
       $scope.displayError = false;
       $scope.errorCustom = [];
-      $scope.viewOnly = $scope.state === 'view';
+      $scope.readOnly = $scope.state === 'view';
       $scope.hideReview = $scope.state === 'view';
 
       var viewNameForAction = {
