@@ -3,7 +3,7 @@
    <h2>Scheduled Reports</h2>
 
    <ul style="list-style-type: none;">
-      <li ng-repeat="scheduledReport in scheduledReports track by scheduledReport.id" ng-if="isTemplateInFeaturesInRole(scheduledReport.template.code)">
+      <li ng-repeat="scheduledReport in scheduledReports track by scheduledReport.id" ><!-- ng-if="isTemplateInFeaturesInRole(scheduledReport.template.code)" -->
       
          <div class="panel panel-default">
            <div class="panel-heading clearfix">
