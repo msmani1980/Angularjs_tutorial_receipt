@@ -288,4 +288,53 @@ describe('Controller: TransactionListCtrl', function() {
       expect(scope.printTransactionTypeName(transactionMock)).toEqual('SALE');
     });
   });
+
+  describe('printTransactionAmount will', function() {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
+        id: 31237,
+        arrivalStationCode: 'LAX',
+        cardHolderName: null,
+        cardType: null,
+        carrierNumber: null,
+        ccAuthorizationStatus: null,
+        ccProcessedDate: null,
+        ccTransactionStatus: 'New',
+        companyCarrierInstanceId: 6481,
+        companyId: 403,
+        currencyCode: 'GBP',
+        currencyId: 8,
+        departureStationCode: 'ORD',
+        instanceDate: '2015-08-28',
+        lastFour: null,
+        passengerName: 'William White',
+        paymentMethod: 'Credit Card',
+        scheduleNumber: '115',
+        totalAmount: '2.50',
+        transactionAmount: '1.50',
+        transactionCurrencyCode: 'GBP',
+        paymentId: '2f1186a3-9342-4df1-a226-6ee70c3a4827',
+        tranCreatedBy: '1002',
+        transactionDate: '2015-08-28 16:24:27.196',
+        transactionId: '00ba1022-0d95-4129-af56-0aa51dda0dd2',
+        transactionTypeId: 1,
+        transactionTypeName: 'SALE',
+        parentId: null,
+        ccTypeCode: null,
+        ccTypeId: null,
+        storeInstanceId: null,
+        storeId: null,
+        storeNumber: null
+      };
+    });
+
+    it('print transactionAmount if printTransactionAmount is defined', function() {
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
+    });
+    it('print transactionAmount as 0 if printTransactionAmount is not defined', function() {
+      transactionMock.transactionAmount = null;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
+    });
+  });
 });

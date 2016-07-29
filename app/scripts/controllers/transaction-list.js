@@ -17,7 +17,7 @@ angular.module('ts5App')
     $scope.transactionTypes = [];
     $scope.companyCurrencies = [];
     $scope.companyStations = [];
-    $scope.paymentMethods = ['Cash', 'Credit Card'];
+    $scope.paymentMethods = ['Cash', 'Credit Card', 'Discount'];
     $scope.creditCardTypes = [];
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
@@ -70,6 +70,14 @@ angular.module('ts5App')
       return transaction.transactionTypeName;
     };
 
+    $scope.printTransactionAmount = function (transaction) {
+      if (transaction.transactionAmount) {
+        return transaction.transactionAmount + ' ' + transaction.transactionCurrencyCode;
+      }
+
+      return 0 + ' ' + transaction.transactionCurrencyCode;
+    };
+
     $this.meta = {};
     $this.isSearch = false;
 
@@ -85,6 +93,14 @@ angular.module('ts5App')
         transaction.transactionAmount < 0;
 
       return !isSaleChangeTransaction;
+    }
+
+    function filterNotFullyPaidOffDiscount(transaction) {
+      var isNotFullyPaidOffDiscountTransaction = (transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher') &&
+        transaction.transactionAmount &&
+        transaction.transactionAmount > 0;
+
+      return !isNotFullyPaidOffDiscountTransaction;
     }
 
     function isCreditCardPaymentSelected(paymentMethods) {
@@ -173,9 +189,7 @@ angular.module('ts5App')
         limit: $this.meta.limit,
         offset: $this.meta.offset,
         'withoutTransactionTypes[0]': 'ABANDONED',
-        'withoutPaymentMethods[0]': 'Discount',
-        'withoutPaymentMethods[1]': 'Voucher',
-        'withoutPaymentMethods[2]': 'Promotion'
+        'withoutPaymentMethods[0]': 'Promotion'
       };
 
       if ($this.isSearch) {
@@ -225,7 +239,8 @@ angular.module('ts5App')
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var transactions = angular.copy(dataFromAPI.transactions)
         .filter(isNotVoidedSaleTransaction)
-        .filter(isNotSaleChangeTransaction);
+        .filter(isNotSaleChangeTransaction)
+        .filter(filterNotFullyPaidOffDiscount);
 
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
 
