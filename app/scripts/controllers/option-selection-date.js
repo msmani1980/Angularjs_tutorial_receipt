@@ -25,4 +25,5 @@ angular.module('ts5App')
       formatYear: 'yy',
       startingDay: 1
     };
+    
   });
