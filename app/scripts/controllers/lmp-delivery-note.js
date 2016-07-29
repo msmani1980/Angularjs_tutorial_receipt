@@ -230,7 +230,6 @@ angular.module('ts5App')
     }
 
     function catererStationIdWatcher(newValue, oldValue) {
-      console.log('YO', newValue, oldValue);
       if ($routeParams.state === 'view') {
         return newValue;
       }
@@ -665,6 +664,11 @@ angular.module('ts5App')
 
     // constructor
     function init() {
+      var acceptedStates = ['view', 'edit', 'create'];
+      if (acceptedStates.indexOf($routeParams.state) < 0) {
+        $location.path('/');
+      }
+
       displayLoadingModal();
       setScopeVars();
       var initPromises = setInitPromises();
