@@ -4,20 +4,36 @@ describe('Controller: OptionSelectionDateCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-
-  var OptionSelectionDateCtrl,
-    scope;
-
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
-    OptionSelectionDateCtrl = $controller('OptionSelectionDateCtrl', {
-      $scope: scope
-      // place here mocked dependencies
-    });
+  
+  var dateUtility;
+  var scope;
+  var OptionSelectionDateCtrl;
+  
+  beforeEach(inject(function($controller, $rootScope, $injector, $q) {
+	    inject(function() {
+	    	dateUtility = $injector.get('dateUtility');
+  		});
+  
+	    scope = $rootScope.$new();
+	
+	    OptionSelectionDateCtrl = $controller('OptionSelectionDateCtrl', {
+	     $scope: scope
+	    });
+  
   }));
+  
+  describe('get Date Format By Company', function () {
+	    it('should get date format by company ', function () {
+	     
+	      scope.format = dateUtility.getDateFormatForApp().toLowerCase();
+	      
+	      scope.format = scope.format.replace('mm', 'MM');
 
-  it('should attach a list of awesomeThings to the scope', function () {
-	  // place here mocked dependencies
+	      expect(scope.format).toContain('MM');
+	      
+	    });
+
   });
+  
+  
 });
