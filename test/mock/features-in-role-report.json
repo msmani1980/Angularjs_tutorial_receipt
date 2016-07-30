@@ -1,0 +1,720 @@
+{
+"REPORT": {
+		"REPORT": [{
+			"id": 1737,
+			"feature": {
+				"featureCode": "REPORT",
+				"description": "Report",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORT",
+			"resource": {
+				"id": 943,
+				"apiName": "/report-api/templates",
+				"resourceName": null,
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "REPORTTEMPLATES",
+			"taskDescription": "All Report Templates",
+			"permissionCode": ["R"]
+		},
+		{
+			"id": 1759,
+			"feature": {
+				"featureCode": "REPORT",
+				"description": "Report",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORT",
+			"resource": {
+				"id": 965,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": null,
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "REPORTSCHEDULE",
+			"taskDescription": "All Report Schedule",
+			"permissionCode": ["R"]
+		},
+		{
+			"id": 1781,
+			"feature": {
+				"featureCode": "REPORT",
+				"description": "Report",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORT",
+			"resource": {
+				"id": 987,
+				"apiName": "/report-api/jobs",
+				"resourceName": null,
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "REPORTJOB",
+			"taskDescription": "All Report Jobs",
+			"permissionCode": ["R"]
+		},
+		{
+			"id": 1782,
+			"feature": {
+				"featureCode": "REPORT",
+				"description": "Report",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORT",
+			"resource": {
+				"id": 988,
+				"apiName": "/report-api/jobs",
+				"resourceName": "/\\d+",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "REPORTJOBS",
+			"taskDescription": "Report Job",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1783,
+			"feature": {
+				"featureCode": "REPORT",
+				"description": "Report",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORT",
+			"resource": {
+				"id": 989,
+				"apiName": "/report-api/option",
+				"resourceName": "/.*",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "REPORTOPTIONS",
+			"taskDescription": "All Report Options",
+			"permissionCode": ["R"]
+		},
+		{
+			"id": 1784,
+			"feature": {
+				"featureCode": "REPORT",
+				"description": "Report",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORT",
+			"resource": {
+				"id": 990,
+				"apiName": "/report-api/reports",
+				"resourceName": "/\\d+",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "REPORTGENERATION",
+			"taskDescription": "Report Generation",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		}],
+		"REPORTINSTANCE": [{
+			"id": 1740,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 946,
+				"apiName": "/report-api/templates",
+				"resourceName": "/68",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "itemMaster",
+			"taskDescription": "Retail Item Data",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1741,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 947,
+				"apiName": "/report-api/templates",
+				"resourceName": "/69",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "menuStandard",
+			"taskDescription": "Menu Standard",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1742,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 948,
+				"apiName": "/report-api/templates",
+				"resourceName": "/70",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "postTrip",
+			"taskDescription": "Post Trip",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1745,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 951,
+				"apiName": "/report-api/templates",
+				"resourceName": "/73",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "detailOfVAT",
+			"taskDescription": "Detail of VAT",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1747,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 953,
+				"apiName": "/report-api/templates",
+				"resourceName": "/75",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "storeStatus",
+			"taskDescription": "Store Status",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1748,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 954,
+				"apiName": "/report-api/templates",
+				"resourceName": "/76",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "storeDataValidation",
+			"taskDescription": "Store Data Validation",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1749,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 955,
+				"apiName": "/report-api/templates",
+				"resourceName": "/77",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "storeUpload",
+			"taskDescription": "Store Upload",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1751,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 957,
+				"apiName": "/report-api/templates",
+				"resourceName": "/79",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "transactions",
+			"taskDescription": "Transactions",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1752,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 958,
+				"apiName": "/report-api/templates",
+				"resourceName": "/80",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "ifrsRevenue",
+			"taskDescription": "Finance IFRS Revenue Summary",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1753,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 959,
+				"apiName": "/report-api/templates",
+				"resourceName": "/81",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "ifrsBS",
+			"taskDescription": "Finance IFRS BS Data",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1756,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 962,
+				"apiName": "/report-api/templates",
+				"resourceName": "/84",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "soItemMaster",
+			"taskDescription": "Stock Owner Item Data",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1762,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 968,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/68",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "itemMaster",
+			"taskDescription": "Retail Item Data",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1763,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 969,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/69",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "menuStandard",
+			"taskDescription": "Menu Standard",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1764,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 970,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/70",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "postTrip",
+			"taskDescription": "Post Trip",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1767,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 973,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/73",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "detailOfVAT",
+			"taskDescription": "Detail of VAT",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1769,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 975,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/75",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "storeStatus",
+			"taskDescription": "Store Status",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1770,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 976,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/76",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "storeDataValidation",
+			"taskDescription": "Store Data Validation",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1771,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 977,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/77",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "storeUpload",
+			"taskDescription": "Store Upload",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1773,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 979,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/79",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "transactions",
+			"taskDescription": "Transactions",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1774,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 980,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/80",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "ifrsRevenue",
+			"taskDescription": "Finance IFRS Revenue Summary",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1775,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 981,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/81",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "ifrsBS",
+			"taskDescription": "Finance IFRS BS Data",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		},
+		{
+			"id": 1778,
+			"feature": {
+				"featureCode": "REPORTINSTANCE",
+				"description": "Report Instance",
+				"href": null,
+				"iclass": null,
+				"moduleDescription": "Report",
+				"moduleName": "REPORT"
+			},
+			"featureCode": "REPORTINSTANCE",
+			"resource": {
+				"id": 984,
+				"apiName": "/report-api/scheduleReport",
+				"resourceName": "/84",
+				"stationCheck": null,
+				"companyIdUrl": "HEADER",
+				"stepCheck": null
+			},
+			"taskCode": "soItemMaster",
+			"taskDescription": "Stock Owner Item Data",
+			"permissionCode": ["R",
+			"U",
+			"C",
+			"D"]
+		}]
+	}
+}

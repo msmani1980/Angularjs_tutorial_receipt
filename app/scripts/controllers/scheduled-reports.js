@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ScheduledReportsCtrl', function ($scope, $modal, scheduledReportsService) {
+  .controller('ScheduledReportsCtrl', function ($localStorage, $rootScope, $scope, $modal, scheduledReportsService, lodash) {
 
     $scope.scheduledReports = [];
 
@@ -44,5 +44,12 @@ angular.module('ts5App')
       });
       
     };
+    
+    var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.REPORT.REPORTINSTANCE);    
+    
+    $scope.isTemplateInFeaturesInRole = function(templateCode) { 
+      var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: templateCode });
+      return !!featuresInRoleMatch;
+    };  
     
   });
