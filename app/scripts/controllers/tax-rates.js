@@ -539,7 +539,11 @@ angular.module('ts5App')
     };
 
     this.determineMinDate = function (date) {
-      var diff = dateUtility.diff(dateUtility.nowFormatted(), date);
+      var diff = 1;
+      if (!dateUtility.isTomorrowOrLater(date)) {
+        diff = dateUtility.diff(dateUtility.nowFormatted(), date);
+      }
+
       var dateString = diff.toString() + 'd';
       if (diff >= 0) {
         dateString = '+' + dateString;
