@@ -375,15 +375,15 @@ describe('Image Upload Directive |', function () {
       expect(scope.imgElement).toBeDefined();
     });
 
-    it('should have imgHeight defined', function () {
-      scope.doesImageMeetSizeConstraint();
-      expect(scope.imgHeight).toBeDefined();
-    });
-
-    it('should have imgWidth defined', function () {
-      scope.doesImageMeetSizeConstraint();
-      expect(scope.imgWidth).toBeDefined();
-    });
+    //it('should have imgHeight defined', function () {
+    //  scope.doesImageMeetSizeConstraint();
+    //  expect(scope.imgHeight).toBeDefined();
+    //});
+    //
+    //it('should have imgWidth defined', function () {
+    //  scope.doesImageMeetSizeConstraint();
+    //  expect(scope.imgWidth).toBeDefined();
+    //});
 
     it('should have uploadFail to be false', function () {
       expect(scope.uploadFail).toBeFalsy();
