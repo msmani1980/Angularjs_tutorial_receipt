@@ -163,7 +163,7 @@ angular.module('ts5App')
 
     this.diff = function (from, to, type) {
       var diffType = (type ? type : 'days');
-      var fromDate = Date.parse(from);
+      var fromDate = moment(from, this.getDateFormatForApp());
       var toDate = moment(to, this.getDateFormatForApp());
       return toDate.diff(fromDate, diffType);
     };
