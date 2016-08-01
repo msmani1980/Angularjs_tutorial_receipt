@@ -145,8 +145,31 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
       getCateringStationsDeferred = $q.defer();
       getCateringStationsDeferred.resolve(cateringStationsReponseJSON);
       spyOn(deliveryNoteFactory, 'getCatererStationList').and.returnValue(getCateringStationsDeferred.promise);
-
     }));
+
+    describe('stationId passed in route', function () {
+      beforeEach(inject(function($controller) {
+        LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
+          $scope: scope,
+          $routeParams: {
+            state: 'create',
+            id: '3'
+          }
+        });
+
+        getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
+        getMenuCatererStationListDeferred.resolve(getMenuCatererStationListJSON);
+        scope.$digest();
+      }));
+      it('should automatically set delivery note station', function () {
+        expect(scope.deliveryNote.catererStationId).toEqual(3);
+      });
+
+      it('should auto populate the items', function () {
+        expect(scope.masterItems).toBeDefined();
+        expect(scope.deliveryNote.items.length > 0).toEqual(true);
+      });
+    });
 
     describe('invalid state passed to route', function() {
       beforeEach(inject(function($controller) {
