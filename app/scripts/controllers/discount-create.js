@@ -51,9 +51,9 @@ angular.module('ts5App')
       }
     };
 
-    this.determineMinDate = function() {
+    this.determineMinDate = function () {
       var diff = 1;
-      if ($scope.editingItem) {
+      if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
         diff = dateUtility.diff(
           dateUtility.nowFormatted(),
           $scope.formData.startDate
