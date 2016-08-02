@@ -78,7 +78,7 @@ angular.module('ts5App')
 
     function setBaseExchangeRateModel() {
       var existingExchangeRate = getExchangeRateFromCompanyCurrencies($scope.dailyExchangeRates.dailyExchangeRateCurrencies, $scope.cashHandlerBaseCurrency.id);
-      var recordId = !!existingExchangeRate ? existingExchangeRate.id : null;
+      var recordId = !!existingExchangeRate && $scope.dailyExchangeRates.id ? existingExchangeRate.id : null;
 
       if ($scope.cashHandlerBaseCurrency.currencyCode && $scope.dailyExchangeRates) {
         serializeExchangeRates($scope.cashHandlerBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000', recordId);
