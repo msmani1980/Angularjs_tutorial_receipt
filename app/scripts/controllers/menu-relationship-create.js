@@ -145,7 +145,7 @@ angular.module('ts5App')
       for (var key in $scope.formData.catererStationIds) {
         var stationId = $scope.formData.catererStationIds[key];
         var stationIndex = this.findStationIndex(stationId);
-        var stationCode = $scope.stationList[stationIndex].code;
+        var stationCode = (stationIndex !== null) ? $scope.stationList[stationIndex].code : 'Invalid Station';
         data.push({
           id: stationId,
           text: stationCode
