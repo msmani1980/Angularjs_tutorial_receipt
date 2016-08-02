@@ -651,6 +651,7 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.errorCustom = [];
       $scope.readOnly = $scope.state === 'view';
+      $scope.disableActions = $scope.state === 'view';
       $scope.hideReview = $scope.state === 'view';
 
       var viewNameForAction = {
