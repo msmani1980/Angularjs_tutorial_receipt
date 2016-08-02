@@ -119,7 +119,9 @@ angular.module('ts5App')
       '/rsvr/api/feature/DAILYEXCHANGERATE/thresholds',
       '/api/dispatch/store-instances/[0-9]*/menu-items',
       '/api/dispatch/store-instances/[0-9]*/items',
-      '/api/dispatch/store-instances/[0-9]*/status/[0-4]'
+      '/api/dispatch/store-instances/[0-9]*/status/[0-4]',
+      '/api/companies/[0-9]*/posttrips',
+      '/api/companies/[0-9]*/posttrips/[0-9]*'
     ];
 
     function responseError(response) {
