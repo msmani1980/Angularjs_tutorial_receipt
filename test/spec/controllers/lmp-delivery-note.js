@@ -535,7 +535,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
         });
 
         it('should merge station and menu items and remove duplicates', function () {
-          var oldDeliveryNoteLength = scope.deliveryNote.items.length;
           getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
           getMenuCatererStationListDeferred.resolve(getMenuCatererStationListJSON);
           scope.$digest();
@@ -544,7 +543,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
 
           var testItem = {itemMasterId: 1, itemName: 'Skittles'};   // test item known to be in both catererStationMasterItems and catererStationMenuItems
           var deliveryNoteItemMatchArray = lodash.filter(scope.deliveryNote.items, {itemName: testItem.itemName});
-          expect(deliveryNoteItemMatchArray.length).toEqual(oldDeliveryNoteLength + 1);
+          expect(deliveryNoteItemMatchArray.length).toEqual(1);
         });
 
         it('should display an error if there are no items', function() {
