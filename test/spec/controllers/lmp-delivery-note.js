@@ -464,8 +464,15 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
         var emptyMenuResponse = {companyMenuCatererStations: []};
         beforeEach(function() {
           httpBackend.expectGET(/./).respond(200);
+          scope.deliveryNote.items = [{ masterItemId: 26 }];
           var cateringStationId = 5;
           scope.deliveryNote.catererStationId = cateringStationId;
+        });
+
+        it('should not clear delivery note items array if station is unchanged', function () {
+          getCatererStationMasterItemsDeferred.resolve(emptyItemResponse);
+          getMenuCatererStationListDeferred.resolve(emptyMenuResponse);
+          expect(scope.deliveryNote.items.length === 1).toEqual(true);
         });
 
         it('should get catering station items API', function() {
@@ -474,6 +481,20 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
           scope.$digest();
           expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(scope.deliveryNote.catererStationId);
         });
+
+        it('should merge matching delivery note items', function () {
+          var stationItemsWithMatch = {companyMenuCatererStations: [{
+            catererStationId: 3,
+            itemMasterId: 26,
+            itemCode: 'Sk001',
+            itemName: 'Skittles'
+          }]};
+          getCatererStationMasterItemsDeferred.resolve(stationItemsWithMatch);
+          getMenuCatererStationListDeferred.resolve(emptyMenuResponse);
+          scope.$digest();
+          expect(scope.deliveryNote.items.length === 1).toEqual(true);
+        });
+
 
         it('should get catering station menus', function () {
           getCatererStationMasterItemsDeferred.resolve(emptyItemResponse);
