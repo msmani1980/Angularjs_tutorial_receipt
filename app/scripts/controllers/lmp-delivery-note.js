@@ -170,6 +170,7 @@ angular.module('ts5App')
 
     function addNewDeliveryNoteItemsFromArray(newItemsArray) {
       var deliveryNoteItemIds = lodash.map($scope.deliveryNote.items, 'itemMasterId');
+      deliveryNoteItemIds = deliveryNoteItemIds.concat(lodash.map($scope.deliveryNote.items, 'masterItemId'));
 
       var newMasterItems = [];
       angular.forEach(newItemsArray, function (item) {
@@ -184,7 +185,6 @@ angular.module('ts5App')
     }
 
     function setStationItemsFromAPI (responseCollection, catererStationId) {
-      $scope.deliveryNote.items = [];
       var catererStationItems = !!responseCollection[1] ? responseCollection[1].response : _cateringStationItems[catererStationId].response;
       var menuItems = getItemsFromCatererStationMenus(responseCollection[0].companyMenuCatererStations);
 
@@ -230,10 +230,6 @@ angular.module('ts5App')
     }
 
     function catererStationIdWatcher(newValue, oldValue) {
-      if ($routeParams.state === 'view') {
-        return newValue;
-      }
-
       if ($routeParams.state === 'edit' && !oldValue) {
         return newValue;
       }
@@ -245,6 +241,10 @@ angular.module('ts5App')
 
       if ($routeParams.state !== 'create' && !oldValue) {
         return newValue;
+      }
+
+      if (newValue !== oldValue) {
+        $scope.deliveryNote.items = [];
       }
 
       getMasterRetailItemsByCatererStationId(newValue);
@@ -410,8 +410,8 @@ angular.module('ts5App')
     function saveDeliveryNoteFailed(failureResponse) {
       var promises = getStationItemPromises($scope.deliveryNote.catererStationId);
 
-      $q.all(promises).then(function() {
-        setStationItemsFromAPI($scope.deliveryNote.catererStationId);
+      $q.all(promises).then(function(stationsResponse) {
+        setStationItemsFromAPI(stationsResponse, $scope.deliveryNote.catererStationId);
         saveDeliveryNoteFailedReset(failureResponse);
       });
 
@@ -617,7 +617,7 @@ angular.module('ts5App')
       $scope.regularItemType = lodash.findWhere(angular.copy(responseCollection[0]), { name: 'Regular' });
       $scope.inventoryCharacteristicType = lodash.findWhere(angular.copy(responseCollection[1]), { name: 'Inventory' });
       $scope.catererStationList = angular.copy(responseCollection[2].response);
-      $scope.ullageReasons = lodash.filter(responseCollection[3].companyReasonCode, { reasonTypeName: _reasonCodeTypeUllage });
+      $scope.ullageReasons = lodash.filter(responseCollection[3].companyReasonCodes, { reasonTypeName: _reasonCodeTypeUllage });
       $scope.menuList = angular.copy(responseCollection[4].menus);
 
       if (responseCollection[5]) {
