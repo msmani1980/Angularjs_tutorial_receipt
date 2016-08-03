@@ -409,8 +409,8 @@ angular.module('ts5App')
     function saveDeliveryNoteFailed(failureResponse) {
       var promises = getStationItemPromises($scope.deliveryNote.catererStationId);
 
-      $q.all(promises).then(function() {
-        setStationItemsFromAPI($scope.deliveryNote.catererStationId);
+      $q.all(promises).then(function(stationsResponse) {
+        setStationItemsFromAPI(stationsResponse, $scope.deliveryNote.catererStationId);
         saveDeliveryNoteFailedReset(failureResponse);
       });
 
