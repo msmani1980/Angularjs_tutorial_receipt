@@ -37,7 +37,6 @@ angular.module('ts5App')
     $scope.showDeleteScheduleModal = function (scheduleToDelete, cashBagId) {
       angular.element('.delete-schedule-warning-modal').modal('show');
 
-      console.log('showDeleteScheduleModal cashBagId', cashBagId);
       $scope.scheduleToDelete = scheduleToDelete;
       $scope.scheduleToDelete.cashbagId = cashBagId;
     };
