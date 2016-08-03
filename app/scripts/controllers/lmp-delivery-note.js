@@ -616,7 +616,7 @@ angular.module('ts5App')
       $scope.regularItemType = lodash.findWhere(angular.copy(responseCollection[0]), { name: 'Regular' });
       $scope.inventoryCharacteristicType = lodash.findWhere(angular.copy(responseCollection[1]), { name: 'Inventory' });
       $scope.catererStationList = angular.copy(responseCollection[2].response);
-      $scope.ullageReasons = lodash.filter(responseCollection[3].companyReasonCode, { reasonTypeName: _reasonCodeTypeUllage });
+      $scope.ullageReasons = lodash.filter(responseCollection[3].companyReasonCodes, { reasonTypeName: _reasonCodeTypeUllage });
       $scope.menuList = angular.copy(responseCollection[4].menus);
 
       if (responseCollection[5]) {
