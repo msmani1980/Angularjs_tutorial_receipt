@@ -110,7 +110,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
       });
 
-      $scope.shouldDefaultInboundToEpos = (defaultInboundToEposPreference) ? defaultInboundToEposPreference : true;
+      $scope.shouldDefaultInboundToEpos = (defaultInboundToEposPreference !== null) ? defaultInboundToEposPreference : true;
     };
 
     this.getActiveCompanyPreferences = function () {
