@@ -464,8 +464,15 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
         var emptyMenuResponse = {companyMenuCatererStations: []};
         beforeEach(function() {
           httpBackend.expectGET(/./).respond(200);
+          scope.deliveryNote.items = [{ masterItemId: 26 }];
           var cateringStationId = 5;
           scope.deliveryNote.catererStationId = cateringStationId;
+        });
+
+        it('should not clear delivery note items array if station is unchanged', function () {
+          getCatererStationMasterItemsDeferred.resolve(emptyItemResponse);
+          getMenuCatererStationListDeferred.resolve(emptyMenuResponse);
+          expect(scope.deliveryNote.items.length === 1).toEqual(true);
         });
 
         it('should get catering station items API', function() {
@@ -474,6 +481,20 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
           scope.$digest();
           expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(scope.deliveryNote.catererStationId);
         });
+
+        it('should merge matching delivery note items', function () {
+          var stationItemsWithMatch = {companyMenuCatererStations: [{
+            catererStationId: 3,
+            itemMasterId: 26,
+            itemCode: 'Sk001',
+            itemName: 'Skittles'
+          }]};
+          getCatererStationMasterItemsDeferred.resolve(stationItemsWithMatch);
+          getMenuCatererStationListDeferred.resolve(emptyMenuResponse);
+          scope.$digest();
+          expect(scope.deliveryNote.items.length === 1).toEqual(true);
+        });
+
 
         it('should get catering station menus', function () {
           getCatererStationMasterItemsDeferred.resolve(emptyItemResponse);
@@ -514,6 +535,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
         });
 
         it('should merge station and menu items and remove duplicates', function () {
+          var oldDeliveryNoteLength = scope.deliveryNote.items.length;
           getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
           getMenuCatererStationListDeferred.resolve(getMenuCatererStationListJSON);
           scope.$digest();
@@ -522,7 +544,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
 
           var testItem = {itemMasterId: 1, itemName: 'Skittles'};   // test item known to be in both catererStationMasterItems and catererStationMenuItems
           var deliveryNoteItemMatchArray = lodash.filter(scope.deliveryNote.items, {itemName: testItem.itemName});
-          expect(deliveryNoteItemMatchArray.length).toEqual(1);
+          expect(deliveryNoteItemMatchArray.length).toEqual(oldDeliveryNoteLength + 1);
         });
 
         it('should display an error if there are no items', function() {

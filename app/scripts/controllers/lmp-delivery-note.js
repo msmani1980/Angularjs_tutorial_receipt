@@ -169,7 +169,7 @@ angular.module('ts5App')
     }
 
     function addNewDeliveryNoteItemsFromArray(newItemsArray) {
-      var deliveryNoteItemIds = lodash.map($scope.deliveryNote.items, 'itemMasterId');
+      var deliveryNoteItemIds = lodash.map($scope.deliveryNote.items, 'masterItemId');
 
       var newMasterItems = [];
       angular.forEach(newItemsArray, function (item) {
@@ -184,7 +184,6 @@ angular.module('ts5App')
     }
 
     function setStationItemsFromAPI (responseCollection, catererStationId) {
-      $scope.deliveryNote.items = [];
       var catererStationItems = !!responseCollection[1] ? responseCollection[1].response : _cateringStationItems[catererStationId].response;
       var menuItems = getItemsFromCatererStationMenus(responseCollection[0].companyMenuCatererStations);
 
@@ -230,10 +229,6 @@ angular.module('ts5App')
     }
 
     function catererStationIdWatcher(newValue, oldValue) {
-      if ($routeParams.state === 'view') {
-        return newValue;
-      }
-
       if ($routeParams.state === 'edit' && !oldValue) {
         return newValue;
       }
@@ -245,6 +240,10 @@ angular.module('ts5App')
 
       if ($routeParams.state !== 'create' && !oldValue) {
         return newValue;
+      }
+
+      if (newValue !== oldValue) {
+        $scope.deliveryNote.items = [];
       }
 
       getMasterRetailItemsByCatererStationId(newValue);
