@@ -169,7 +169,8 @@ angular.module('ts5App')
     }
 
     function addNewDeliveryNoteItemsFromArray(newItemsArray) {
-      var deliveryNoteItemIds = lodash.map($scope.deliveryNote.items, 'masterItemId');
+      var deliveryNoteItemIds = lodash.map($scope.deliveryNote.items, 'itemMasterId');
+      deliveryNoteItemIds = deliveryNoteItemIds.concat(lodash.map($scope.deliveryNote.items, 'masterItemId'));
 
       var newMasterItems = [];
       angular.forEach(newItemsArray, function (item) {
