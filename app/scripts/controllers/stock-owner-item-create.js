@@ -331,16 +331,13 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     };
 
     this.checkIfItemIsActive = function(itemData) {
-      var today = new Date();
-      var itemStartDate = new Date(itemData.startDate);
-      $scope.itemIsActive = itemStartDate <= today;
+      $scope.itemIsActive = dateUtility.isTodayOrEarlier(itemData.startDate);
     };
 
     // checks to see if the item is inactive
     this.checkIfItemIsInactive = function(itemData) {
-      var today = new Date();
-      var itemEndDate = new Date(itemData.endDate);
-      $scope.itemIsInactive = itemEndDate <= today;
+      $scope.itemIsInactive = dateUtility.isYesterdayOrEarlier(itemData.endDate);
+      $scope.viewOnly = $scope.viewOnly || $scope.itemIsInactive;
     };
 
     // updates the $scope.formData
@@ -395,7 +392,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
         companiesFactory.getCompany(companyId)
       ];
     };
-    
+
     this.determineMinDate = function() {
       var diff = 1;
       if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
@@ -409,16 +406,16 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       if (diff >= 0) {
         dateString = '+' + dateString;
       }
-        
+
       return dateString;
     };
 
     this.setUIReady = function() {
-      $scope.minDate = $this.determineMinDate();	
+      $scope.minDate = $this.determineMinDate();
       $scope.uiSelectTemplateReady = true;
       $this.hideLoadingModal();
     };
-    
+
     this.getDependencies = function() {
       $this.showLoadingModal('We are loading the Items data!');
       var dependencyPromises = this.makeDependencyPromises();
