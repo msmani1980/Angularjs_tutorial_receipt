@@ -12,6 +12,7 @@ angular.module('ts5App')
     dateUtility, lodash) {
 
     $scope.viewName = 'Daily Exchange Rates';
+    $scope.cashiersDateField = dateUtility.nowFormatted();
     $scope.cashHandlerBaseCurrency = {};
     $scope.showActionButtons = false;
     $scope.companyCurrencies = [];
@@ -393,7 +394,6 @@ angular.module('ts5App')
     function init() {
       showLoadingModal('Initializing Data');
       var promises = makeInitPromises();
-      $scope.cashiersDateField = dateUtility.nowFormatted();
       $q.all(promises).then(completeInit, showErrors);
     }
 
