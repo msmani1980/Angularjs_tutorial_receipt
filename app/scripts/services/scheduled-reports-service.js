@@ -12,8 +12,8 @@ angular.module('ts5App')
     var cashCompanyId = 0;
 	var retailCompanyId = 0;
 	var loadCompanySelection = function(){
-		cashCompanyId = (globalMenuService.getCompanyData().chCompany != undefined) ? globalMenuService.getCompanyData().id : 0;
-		retailCompanyId = (globalMenuService.getCompanyData().chCompany != undefined) ? globalMenuService.getCompanyData().chCompany.companyId : globalMenuService.company.get();
+		cashCompanyId = (globalMenuService.getCompanyData().chCompany !== undefined) ? globalMenuService.getCompanyData().id : 0;
+		retailCompanyId = (globalMenuService.getCompanyData().chCompany !== undefined) ? globalMenuService.getCompanyData().chCompany.companyId : globalMenuService.company.get();
 	}
 	
     return {
