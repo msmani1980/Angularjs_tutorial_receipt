@@ -10,16 +10,16 @@
 angular.module('ts5App')
   .service('templateOptionService', function ($http, globalMenuService, ENV) {
     var cashCompanyId = 0;
-	var retailCompanyId = 0;
-	var loadCompanySelection = function(){
-		cashCompanyId = (globalMenuService.getCompanyData().chCompany !== undefined) ? globalMenuService.getCompanyData().id : 0;
-		retailCompanyId = (globalMenuService.getCompanyData().chCompany !== undefined) ? globalMenuService.getCompanyData().chCompany.companyId : globalMenuService.company.get();
-	};
-		
+    var retailCompanyId = 0;
+    var loadCompanySelection = function () {
+      cashCompanyId = (globalMenuService.getCompanyData().chCompany !== undefined) ? globalMenuService.getCompanyData().id : 0;
+      retailCompanyId = (globalMenuService.getCompanyData().chCompany !== undefined) ? globalMenuService.getCompanyData().chCompany.companyId : globalMenuService.company.get();
+    };
+
     return {
       getChoiceValues: function (choiceLookup, filter) {
-    	  loadCompanySelection();
-        return $http.get(ENV.apiUrl + '/report-api/option/' + choiceLookup, { headers: {  companyId: retailCompanyId, chCompanyId: cashCompanyId }, params: { filter: filter } });
+        loadCompanySelection();
+        return $http.get(ENV.apiUrl + '/report-api/option/' + choiceLookup, { headers: { companyId: retailCompanyId, chCompanyId: cashCompanyId }, params: { filter: filter } });
       }
     };
   });
