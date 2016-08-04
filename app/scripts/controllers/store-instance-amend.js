@@ -885,10 +885,10 @@ angular.module('ts5App')
       });
     }
 
-    function isCashbagSubmitted(){
+    function isCashbagSubmitted() {
       $scope.cashBagSubmitted = false;
       angular.forEach($scope.normalizedCashBags, function (normalizedCashBag) {
-        if(normalizedCashBag.isSubmitted==true){
+        if (normalizedCashBag.isSubmitted === true) {
           $scope.cashBagSubmitted = true;
         }
       });
@@ -924,6 +924,7 @@ angular.module('ts5App')
 
     function setStockTotals (stockTotalsFromAPI) {
       $this.stockTotals = angular.copy(stockTotalsFromAPI.response);
+
       angular.forEach($this.stockTotals, function (stockTotal) {
         reconciliationFactory.getMasterItem(stockTotal.itemMasterId).then(function (dataFromAPI) {
           stockTotal.itemName = dataFromAPI.itemName;
