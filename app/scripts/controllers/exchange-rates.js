@@ -23,6 +23,14 @@ angular.module('ts5App')
     $scope.previousExchangeRates = {};
     $scope.payload = {};
 
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
     function getCompanyPreferenceBy(preferences, featureName, optionName) {
       var result = null;
       angular.forEach(preferences, function(preference) {
@@ -142,11 +150,9 @@ angular.module('ts5App')
       $scope.showActionButtons = shouldShowActionButtons();
     }
 
-    $scope.$watch('cashiersDateField', function(cashiersDate) {
+    function getExchangeRates (cashiersDate) {
+      showLoadingModal('Retrieving Exchange Rates');
       var companyId = globalMenuService.getCompanyData().chCompany.companyId;
-      if (!dateUtility.isDateValidForApp(cashiersDate)) {
-        return;
-      }
 
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       var companyCurrenciesPayload = {
@@ -162,7 +168,16 @@ angular.module('ts5App')
         $scope.previousExchangeRates = apiData[1] || {};
         $scope.dailyExchangeRates = apiData[2].dailyExchangeRates[0] || {};
         setupModels();
+        hideLoadingModal();
       });
+    }
+
+    $scope.$watch('cashiersDateField', function(cashiersDate) {
+      if (!dateUtility.isDateValidForApp(cashiersDate)) {
+        return;
+      }
+
+      getExchangeRates(cashiersDate);
     });
 
     function clearExchangeRateCurrencies() {
@@ -262,14 +277,11 @@ angular.module('ts5App')
       angular.element(buttonSelector).button(buttonState);
     }
 
-    function successRequestHandler(dailyExchangeRatesData) {
-      $scope.dailyExchangeRates = dailyExchangeRatesData || {
-        isSubmitted: false
-      };
-      var savedOrSubmitted = $scope.dailyExchangeRates.isSubmitted ? 'submitted' : 'saved';
-      setupModels();
+    function successRequestHandler() {
+      hideLoadingModal();
+      showSuccessMessage('Daily Exchange Rate Successfully Saved');
       disableActionButtons(false);
-      showSuccessMessage(savedOrSubmitted);
+      getExchangeRates($scope.cashiersDateField);
     }
 
     function getPercentageForCurrency(currencyCode, rateType) {
@@ -301,6 +313,8 @@ angular.module('ts5App')
     $scope.saveDailyExchangeRates = function(shouldSubmit) {
       angular.element('.variance-warning-modal').modal('hide');
       disableActionButtons(true, shouldSubmit);
+      var loadingText = shouldSubmit ? 'Submitting Daily Exchange Rates' : 'Saving Daily Exchange Rates';
+      showLoadingModal(loadingText);
       currencyFactory.saveDailyExchangeRates($scope.payload).then(successRequestHandler, showErrors);
     };
 
@@ -350,6 +364,8 @@ angular.module('ts5App')
 
       var activeThreshold = (!!responseCollection[3].response && responseCollection[3].response.length) ? angular.copy(responseCollection[3].response[0]) : null;
       $scope.percentThreshold = (!!activeThreshold) ? activeThreshold.percentage : -1;
+
+      hideLoadingModal();
     }
 
     function makeInitPromises () {
@@ -376,6 +392,7 @@ angular.module('ts5App')
     }
 
     function init() {
+      showLoadingModal('Initializing Data');
       var promises = makeInitPromises();
       $q.all(promises).then(completeInit, showErrors);
     }
