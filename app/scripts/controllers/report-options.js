@@ -20,7 +20,9 @@ angular.module('ts5App')
     });
 
     $scope.selection.options = {};
-
+    
+    $scope.emailMe = {};
+    
     var convertOptionValue = function (value, type, multiValue) {
       if (multiValue && Array.isArray(value)) {
         var retValues = [];
@@ -41,7 +43,7 @@ angular.module('ts5App')
     var getSelectedOptions = function () {
       var returnDetails = {};
       returnDetails.options = {};
-
+      returnDetails.emailMe = $scope.emailMe === true ? true : false;
       returnDetails.name = $scope.selection.name;
 
       var i;
@@ -59,7 +61,6 @@ angular.module('ts5App')
 
     $scope.run = function () {
       var params = getSelectedOptions();
-
       jobService.run($scope.template.id, params).then(function () {
         $modalInstance.close();
         window.location.href = '#/reports/queue';

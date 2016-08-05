@@ -7,13 +7,13 @@
       <label class="col-sm-4 control-label">Name: <span style="color:red">*</span></label>
       <span class="col-sm-6 input-group" ng-class="{'has-error': reportOptions.name.$invalid}">
         <input type="text" class="form-control" name="name" ng-model="selection.name" ng-required="true"/>
+        <input type="checkbox" ng-model="emailMe" id=""/> Send email when reports completes
       </span>
-
       <div ng-if="reportOptions.name.$error && reportOptions.name.$dirty">
          <p ng-show="reportOptions.name.$error.required">Name is required.</p>
       </div>
     </div>
-
+    
     <div ng-repeat="option in template.options" class="form-group" ng-switch on="option.type">
       <label class="col-sm-4 control-label">{{option.prompt}}: <span ng-if="!option.optional" style="color:red">*</span></label>
       <span ng-switch-when="DATE" ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
