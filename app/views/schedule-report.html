@@ -9,7 +9,7 @@
      <div class="form-group">
       <label class="col-sm-4 control-label">Recurrence Pattern: <span style="color:red">*</span></label>
      <span class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport.name.$invalid}">
-      <select class="form-control" id="" ng-model="scheduleReport.recurrencePattern" name="" 
+      <select class="form-control" id="" ng-model="scheduleReport.recurrencePattern" name="" ng-required="true"
 	    ng-options="pattern.value as pattern.name for pattern in recurrencePattern">
 	    <option selected="selected" value disabled="disabled">Select a pattern</option>
         </select>
@@ -27,10 +27,10 @@
     <div class="form-group" ng-show="scheduleReport.recurrencePattern=='Weekly'">
       <label class="col-sm-4 control-label">Day Of Week	: <span style="color:red">*</span> </label>
       <span class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport.name.$invalid}">
-      <select id="" class="form-control " name="" ng-model="scheduleReport.dayOfWeek" 
+      <select id="" class="form-control " name="" ng-model="scheduleReport.dayOfWeek" ng-required="true"
       				ng-options="pattern.value as pattern.name for pattern in daysOfWeek">
        	 <!-- <option ng-repeat="weekDay in daysOfWeek"  name="{{weekDay}}">{{weekDay}}</option> -->
-       	 <option selected="selected"  disabled="disabled" >Select WeekDay</option>
+       	 <option selected="selected" value disabled="disabled" >Select WeekDay</option>
         </select> 	
       </span>
     </div>
@@ -38,10 +38,10 @@
     <div class="form-group" ng-show="scheduleReport.recurrencePattern=='Monthly'">
       <label class="col-sm-4 control-label">Day of Month: <span style="color:red">*</span> </label>
       <span class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport.name.$invalid}">
-      <select id="" class="form-control " name="" ng-model="scheduleReport.dayOfMonth"  
+      <select id="" class="form-control " name="" ng-model="scheduleReport.dayOfMonth"   ng-required="true"
       			    ng-options="pattern.value as pattern.name for pattern in dayOfMonth">
        	 <!-- <option ng-repeat="month in dayOfMonth"  name="{{month}}" >{{month}}</option> -->
-       	 <option selected="selected"  disabled="disabled" >Select Day of Month</option>
+       	 <option selected="selected"  value disabled="disabled" >Select Day of Month</option>
         </select> 	
       </span>
     </div>
@@ -107,14 +107,15 @@
     </div>
     
      <div class="form-group">
-      <label class="col-sm-4 control-label">Date Range	: </label>
+      <label class="col-sm-4 control-label">Date Range: <span style="color:red">*</span></label>
       <span class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport.name.$invalid}">
-      <select id="" class="form-control " name="" ng-model="scheduleReport.dateRange">
-         <option selected="selected"  disabled="disabled" >Select Date Range</option>
-       	 <option ng-repeat="dateRange in dateRanges"  name="{{dateRange}}">{{dateRange}}</option>
+      <select id="" class="form-control"  ng-model="scheduleReport.dateRange" name=""  ng-required="true"
+      	ng-options="pattern.value as pattern.name for pattern in dateRange">
+         <option selected="selected" value disabled="disabled" >Select Date Range</option>
+       	 <!-- <option ng-repeat="dateRange in dateRanges"  name="{{dateRange}}" >{{dateRange}}</option> -->
         </select> 	
       </span>
-    </div>
+     </div>
     
      <div class="form-group">
       <label class="col-sm-4 control-label">Email	: <span style="color:red">*</span></label>

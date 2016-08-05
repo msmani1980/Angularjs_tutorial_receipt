@@ -63,7 +63,7 @@ angular.module('ts5App')
       $scope.daysOfWeek = [{ name: 'Sunday', value: 'Sunday' }, { name: 'Monday', value: 'Monday' }, { name: 'Tuesday', value: 'Tuesday' },
         { name: 'Wednesday', value: 'Wednesday' }, { name: 'Thursday', value: 'Thursday' }, { name: 'Friday', value: 'Friday' }, { name: 'Saturday', value: 'Saturday' }];
 
-      $scope.dateRanges = ['Previous Day', 'Previous 7 days', 'Previous Month'];
+      $scope.dateRange = [{ name: 'Previous Day', value: 'Previous Day' },{ name: 'Previous 7 days', value: 'Previous 7 days' },{ name: 'Previous Month', value: 'Previous Month' }];
 
       $scope.template.$promise.then(function (rtn) {
         $scope.selection.name = rtn.name;
@@ -155,6 +155,12 @@ angular.module('ts5App')
 
       $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
+      };
+      
+      var isOptionsRequired = function(){
+    	  return !$scope.daysOfWeek.some(function(options){
+    	    return options.daysOfWeek.length > 0;
+    	  });
       };
 
     });
