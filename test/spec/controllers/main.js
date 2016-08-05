@@ -4,6 +4,7 @@ describe('Controller: MainCtrl', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/features-in-role.json'));
+  beforeEach(module('served/features-in-role-report.json'));
   beforeEach(module('served/company.json'));
   beforeEach(module('served/company-types.json'));
 
@@ -21,13 +22,13 @@ describe('Controller: MainCtrl', function() {
   var isMenuCashbagRestrictUseDeferred;
   var isShowManageCashBagDeferred;
   var isShowCashBagSubmissionDeferred;
-
-  beforeEach(inject(function($controller, $rootScope, $injector, $q) {
+  var localStorage;
+  beforeEach(inject(function($controller, $localStorage, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
     inject(function(_servedFeaturesInRole_) {
       featuresInRoleJSON = _servedFeaturesInRole_;
     });
-
+    localStorage = $localStorage;
     globalMenuService = $injector.get('globalMenuService');
     identityAccessFactory = $injector.get('identityAccessFactory');
     mainMenuService = $injector.get('mainMenuService');
@@ -40,7 +41,7 @@ describe('Controller: MainCtrl', function() {
     spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({
       companyTypes: companyTypesJSON
     });
-
+    localStorage = $injector.get('servedFeaturesInRoleReport');
     isMenuCashbagRestrictUseDeferred = $q.defer();
     isMenuCashbagRestrictUseDeferred.resolve(true);
   	isShowManageCashBagDeferred = $q.defer();
@@ -72,6 +73,10 @@ describe('Controller: MainCtrl', function() {
     it('should define scope.dashboardMenu', function() {
       scope.$digest();
       expect(scope.dashboardMenu).toBeDefined();
+    });
+    
+    it('should call featuresInRole Report', function() {
+  	  expect(localStorage.REPORT.REPORT[0].featureCode).toEqual('REPORT');
     });
   });
 

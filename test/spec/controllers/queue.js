@@ -1,23 +1,35 @@
 'use strict';
 
 describe('Controller: QueueCtrl', function () {
+	
+	beforeEach(module('ts5App'));
+	  beforeEach(module('served/features-in-role-report.json'));
+	
+	  var QueueCtrl;
+	  var featuresInRoleJSON;
+	  var scope;
+	  var localStorage;
+	  	  
+	  beforeEach(inject(function($controller, $localStorage, $rootScope, $injector) {
+	        inject(function() {
+			  featuresInRoleJSON = $injector.get('servedFeaturesInRoleReport');
+			  $localStorage.featuresInRole= featuresInRoleJSON;
+	  		});
+	  
+		    scope = $rootScope.$new();
+		    localStorage = $localStorage;
+		    
+		    QueueCtrl = $controller('QueueCtrl', {
+		     $scope: scope,
+		     $localStorage: localStorage
+		    });
+	 
+	  }));
 
-  // load the controller's module
-  beforeEach(module('ts5App'));
+	  describe('controller init', function() {
 
-  var QueueCtrl,
-    scope;
-
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
-    QueueCtrl = $controller('QueueCtrl', {
-      $scope: scope
-      // place here mocked dependencies
-    });
-  }));
-
-  it('should attach a list of awesomeThings to the scope', function () {
-	// place here mocked dependencies
-  });
+		    it('should define Scope Report', function() {
+		      expect(localStorage.featuresInRole.REPORT.REPORT[0].featureCode).toEqual('REPORT');
+		    });
+	 });
 });

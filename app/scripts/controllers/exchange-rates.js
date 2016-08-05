@@ -23,6 +23,14 @@ angular.module('ts5App')
     $scope.previousExchangeRates = {};
     $scope.payload = {};
 
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
     function getCompanyPreferenceBy(preferences, featureName, optionName) {
       var result = null;
       angular.forEach(preferences, function(preference) {
@@ -47,6 +55,10 @@ angular.module('ts5App')
     }
 
     function getExchangeRateFromCompanyCurrencies(currenciesArray, currencyId) {
+      if (!currenciesArray || !currencyId) {
+        return null;
+      }
+
       return currenciesArray.filter(function(currencyItem) {
         return currencyItem.retailCompanyCurrencyId === currencyId;
       })[0];
@@ -58,7 +70,7 @@ angular.module('ts5App')
       })[0];
     };
 
-    function serializeExchangeRates(currencyCode, coinExchangeRate, paperExchangeRate, bankExchangeRate) {
+    function serializeExchangeRates(currencyCode, coinExchangeRate, paperExchangeRate, bankExchangeRate, recordId) {
       $scope.currenciesFields[currencyCode] = {};
       if ($scope.isBankExchangePreferred()) {
         $scope.currenciesFields[currencyCode].bankExchangeRate = bankExchangeRate;
@@ -66,11 +78,18 @@ angular.module('ts5App')
         $scope.currenciesFields[currencyCode].coinExchangeRate = coinExchangeRate;
         $scope.currenciesFields[currencyCode].paperExchangeRate = paperExchangeRate;
       }
+
+      if (recordId) {
+        $scope.currenciesFields[currencyCode].recordId = recordId;
+      }
     }
 
     function setBaseExchangeRateModel() {
+      var existingExchangeRate = getExchangeRateFromCompanyCurrencies($scope.dailyExchangeRates.dailyExchangeRateCurrencies, $scope.cashHandlerBaseCurrency.id);
+      var recordId = !!existingExchangeRate && $scope.dailyExchangeRates.id ? existingExchangeRate.id : null;
+
       if ($scope.cashHandlerBaseCurrency.currencyCode && $scope.dailyExchangeRates) {
-        serializeExchangeRates($scope.cashHandlerBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000');
+        serializeExchangeRates($scope.cashHandlerBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000', recordId);
       }
     }
 
@@ -91,7 +110,7 @@ angular.module('ts5App')
             companyCurrency.id);
           if (exchangeRate) {
             serializeExchangeRates(companyCurrency.code, exchangeRate.coinExchangeRate, exchangeRate.paperExchangeRate,
-              exchangeRate.bankExchangeRate);
+              exchangeRate.bankExchangeRate, exchangeRate.id);
           }
         });
       }
@@ -131,11 +150,9 @@ angular.module('ts5App')
       $scope.showActionButtons = shouldShowActionButtons();
     }
 
-    $scope.$watch('cashiersDateField', function(cashiersDate) {
+    function getExchangeRates (cashiersDate) {
+      showLoadingModal('Retrieving Exchange Rates');
       var companyId = globalMenuService.getCompanyData().chCompany.companyId;
-      if (!dateUtility.isDateValidForApp(cashiersDate)) {
-        return;
-      }
 
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       var companyCurrenciesPayload = {
@@ -151,15 +168,24 @@ angular.module('ts5App')
         $scope.previousExchangeRates = apiData[1] || {};
         $scope.dailyExchangeRates = apiData[2].dailyExchangeRates[0] || {};
         setupModels();
+        hideLoadingModal();
       });
+    }
+
+    $scope.$watch('cashiersDateField', function(cashiersDate) {
+      if (!dateUtility.isDateValidForApp(cashiersDate)) {
+        return;
+      }
+
+      getExchangeRates(cashiersDate);
     });
 
     function clearExchangeRateCurrencies() {
-      $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies = [];
+      $scope.payload.dailyExchangeRateCurrencies = [];
     }
 
     function clearUnusedRates() {
-      $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.map(function(rate) {
+      $scope.payload.dailyExchangeRateCurrencies.map(function(rate) {
         if ($scope.isBankExchangePreferred()) {
           delete rate.coinExchangeRate;
           delete rate.paperExchangeRate;
@@ -170,10 +196,10 @@ angular.module('ts5App')
     }
 
     function cleanPayloadData() {
-      delete $scope.payload.dailyExchangeRate.createdBy;
-      delete $scope.payload.dailyExchangeRate.createdOn;
-      delete $scope.payload.dailyExchangeRate.updatedBy;
-      delete $scope.payload.dailyExchangeRate.updatedOn;
+      delete $scope.payload.createdBy;
+      delete $scope.payload.createdOn;
+      delete $scope.payload.updatedBy;
+      delete $scope.payload.updatedOn;
       clearUnusedRates();
     }
 
@@ -188,12 +214,18 @@ angular.module('ts5App')
         bankExchangeRate = $scope.currenciesFields[currency.code].bankExchangeRate;
       }
 
-      return {
+      var serializedCurrency = {
         retailCompanyCurrencyId: currency.id,
         coinExchangeRate: coinExchangeRate,
         paperExchangeRate: paperExchangeRate,
         bankExchangeRate: bankExchangeRate
       };
+
+      if ($scope.currenciesFields[currency.code].recordId) {
+        serializedCurrency.id = $scope.currenciesFields[currency.code].recordId;
+      }
+
+      return serializedCurrency;
     }
 
     function resolvePayloadDependencies() {
@@ -201,7 +233,7 @@ angular.module('ts5App')
       angular.forEach($scope.companyCurrencies, function(currency) {
         if ($scope.currenciesFields[currency.code]) {
           var companyCurrency = serializeExchangeRateForAPI(currency);
-          $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.push(companyCurrency);
+          $scope.payload.dailyExchangeRateCurrencies.push(companyCurrency);
         }
       });
     }
@@ -221,9 +253,7 @@ angular.module('ts5App')
         dailyExchangeRatePayload.id = $scope.dailyExchangeRates.id;
       }
 
-      $scope.payload = {
-        dailyExchangeRate: dailyExchangeRatePayload
-      };
+      $scope.payload = dailyExchangeRatePayload;
       resolvePayloadDependencies();
       cleanPayloadData();
     }
@@ -247,14 +277,11 @@ angular.module('ts5App')
       angular.element(buttonSelector).button(buttonState);
     }
 
-    function successRequestHandler(dailyExchangeRatesData) {
-      $scope.dailyExchangeRates = dailyExchangeRatesData || {
-        isSubmitted: false
-      };
-      var savedOrSubmitted = $scope.dailyExchangeRates.isSubmitted ? 'submitted' : 'saved';
-      setupModels();
+    function successRequestHandler() {
+      hideLoadingModal();
+      showSuccessMessage('Daily Exchange Rate Successfully Saved');
       disableActionButtons(false);
-      showSuccessMessage(savedOrSubmitted);
+      getExchangeRates($scope.cashiersDateField);
     }
 
     function getPercentageForCurrency(currencyCode, rateType) {
@@ -286,6 +313,8 @@ angular.module('ts5App')
     $scope.saveDailyExchangeRates = function(shouldSubmit) {
       angular.element('.variance-warning-modal').modal('hide');
       disableActionButtons(true, shouldSubmit);
+      var loadingText = shouldSubmit ? 'Submitting Daily Exchange Rates' : 'Saving Daily Exchange Rates';
+      showLoadingModal(loadingText);
       currencyFactory.saveDailyExchangeRates($scope.payload).then(successRequestHandler, showErrors);
     };
 
@@ -335,6 +364,8 @@ angular.module('ts5App')
 
       var activeThreshold = (!!responseCollection[3].response && responseCollection[3].response.length) ? angular.copy(responseCollection[3].response[0]) : null;
       $scope.percentThreshold = (!!activeThreshold) ? activeThreshold.percentage : -1;
+
+      hideLoadingModal();
     }
 
     function makeInitPromises () {
@@ -353,7 +384,7 @@ angular.module('ts5App')
       var chCompanyId = globalMenuService.getCompanyData().id;
 
       return [
-        currencyFactory.getCompanyPreferences(preferencePayload, chCompanyId),
+        currencyFactory.getCompanyPreferences(preferencePayload, retailCompanyId),
         currencyFactory.getCompany(retailCompanyId),
         currencyFactory.getCompany(chCompanyId),
         currencyFactory.getExchangeRateThresholdList(thresholdPayload, retailCompanyId)
@@ -361,6 +392,7 @@ angular.module('ts5App')
     }
 
     function init() {
+      showLoadingModal('Initializing Data');
       var promises = makeInitPromises();
       $q.all(promises).then(completeInit, showErrors);
     }

@@ -28,6 +28,11 @@ angular.module('ts5App')
         actions.getCompanyPreferences.headers.companyId = companyId;
       }
 
+      if (payload && angular.isDefined(payload.date)) {
+        payload.startDate = payload.date;
+        delete payload.date;
+      }
+
       return requestResource.getCompanyPreferences(payload).$promise;
     };
 

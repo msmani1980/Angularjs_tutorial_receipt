@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
       reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory, storeInstanceFactory, recordsService,
-      stationsService, dailyExchangeRatesService) {
+      stationsService, dailyExchangeRatesService, $window) {
     var $this = this;
 
     $scope.formatAsCurrency = function(valueToFormat) {
@@ -34,10 +34,11 @@ angular.module('ts5App')
       storeInstanceAmendFactory.deleteFlightSector($scope.scheduleToDelete.cashbagId, $scope.scheduleToDelete.id).then(deleteScheduleSuccess, handleResponseError);
     };
 
-    $scope.showDeleteScheduleModal = function (scheduleToDelete) {
+    $scope.showDeleteScheduleModal = function (scheduleToDelete, cashBagId) {
       angular.element('.delete-schedule-warning-modal').modal('show');
 
       $scope.scheduleToDelete = scheduleToDelete;
+      $scope.scheduleToDelete.cashbagId = cashBagId;
     };
 
     function addOrEditScheduleSuccess () {
@@ -507,6 +508,8 @@ angular.module('ts5App')
       } else {
         cashBagFactory.verifyCashBag(cashBag.id, 'AMEND').then(toggleVrifiedCashBagSuccess, handleResponseError);
       }
+
+      $window.location.reload();
     };
 
     $scope.isCrewDataOpen = function (cashBag) {
@@ -716,7 +719,7 @@ angular.module('ts5App')
       $this.eposCashBag = lodash.uniq(angular.copy(eposRevenue[0].response), 'id');
       var eposCreditCard = lodash.uniq(angular.copy(eposRevenue[1].response), 'id');
       var eposDiscount = lodash.uniq(angular.copy(eposRevenue[2].response), 'id');
-      
+
       var total = 0;
 
       angular.forEach($this.eposCashBag, function (cashBag) {

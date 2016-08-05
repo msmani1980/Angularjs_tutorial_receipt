@@ -9,21 +9,32 @@
  */
 angular.module('ts5App')
   .service('jobService', function ($http, globalMenuService, ENV) {
+    var cashCompanyId = 0;
+    var retailCompanyId = 0;
+    var loadCompanySelection = function () {
+      cashCompanyId = (globalMenuService.getCompanyData().chCompany !== undefined) ? globalMenuService.getCompanyData().id : 0;
+      retailCompanyId = (globalMenuService.getCompanyData().chCompany !== undefined) ? globalMenuService.getCompanyData().chCompany.companyId : globalMenuService.company.get();
+    };
+
     return {
       run: function (templateId, params) {
-        return $http.post(ENV.apiUrl + '/report-api/templates/' + templateId + '/run', params, { headers: { companyId: globalMenuService.company.get() } });
+        loadCompanySelection();
+        return $http.post(ENV.apiUrl + '/report-api/templates/' + templateId + '/run', params, { headers: { companyId: retailCompanyId, chCompanyId: cashCompanyId } });
       },
 
       schedule: function (templateId, params) {
-        return $http.post(ENV.apiUrl + '/report-api/scheduleReport/' + templateId, params, { headers: { companyId: globalMenuService.company.get() } });
+        loadCompanySelection();
+        return $http.post(ENV.apiUrl + '/report-api/scheduleReport/' + templateId, params, { headers: { companyId: retailCompanyId, chCompanyId: cashCompanyId } });
       },
 
       getAll: function () {
-        return $http.get(ENV.apiUrl + '/report-api/jobs', { headers: { companyId: globalMenuService.company.get() } });
+        loadCompanySelection();
+        return $http.get(ENV.apiUrl + '/report-api/jobs', { headers: { companyId: retailCompanyId, chCompanyId: cashCompanyId } });
       },
 
       delete: function (jobId) {
-        return $http.delete(ENV.apiUrl + '/report-api/jobs/' + jobId, { headers: { companyId: globalMenuService.company.get() } });
+        loadCompanySelection();
+        return $http.delete(ENV.apiUrl + '/report-api/jobs/' + jobId, { headers: { companyId: retailCompanyId, chCompanyId: cashCompanyId } });
       }
     };
   });

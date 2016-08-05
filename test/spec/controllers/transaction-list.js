@@ -160,7 +160,7 @@ describe('Controller: TransactionListCtrl', function() {
     });
   });
 
-  describe('printCCTransactionId will', function() {
+  describe('printPropertyIfItIsCreditCardPayment will', function() {
     var transactionMock;
     beforeEach(function () {
       transactionMock = {
@@ -191,6 +191,7 @@ describe('Controller: TransactionListCtrl', function() {
         transactionId: '00ba1022-0d95-4129-af56-0aa51dda0dd2',
         transactionTypeId: 1,
         transactionTypeName: 'SALE',
+        parentId: null,
         ccTypeCode: null,
         ccTypeId: null,
         storeInstanceId: null,
@@ -199,21 +200,78 @@ describe('Controller: TransactionListCtrl', function() {
       };
     });
 
-      it('print CCTransactionID for Credit Card transaction', function() {
-      expect(scope.printCCTransactionId(transactionMock)).toEqual(transactionMock.paymentId);
+    it('print CCTransactionID for Credit Card transaction', function() {
+      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'paymentId')).toEqual(transactionMock.paymentId);
     });
-
     it('print empty string for non Credit Card transaction', function() {
       transactionMock.paymentMethod = 'Cash';
 
-      expect(scope.printCCTransactionId(transactionMock)).toEqual('');
+      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'paymentId')).toEqual('');
     });
-
     it('print empty string for undefined paymentMethod field', function() {
       transactionMock.paymentMethod = undefined;
 
-      expect(scope.printCCTransactionId(transactionMock)).toEqual('');
+      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'paymentId')).toEqual('');
     });
 
+    it('do not print field cardType for non Credit Card transaction', function() {
+      transactionMock.paymentMethod = 'Cash';
+      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'cardType')).toEqual('');
+    });
+    it('do not print field lastFour for non Credit Card transaction', function() {
+      transactionMock.paymentMethod = 'Cash';
+      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'lastFour')).toEqual('');
+    });
+    it('do not print field ccProcessedDate for non Credit Card transaction', function() {
+      transactionMock.paymentMethod = 'Cash';
+      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'ccProcessedDate')).toEqual('');
+    });
+    it('do not print field ccTransactionStatus for non Credit Card transaction', function() {
+      transactionMock.paymentMethod = 'Cash';
+      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'ccTransactionStatus')).toEqual('');
+    });
+    it('do not print field paymentId for non Credit Card transaction', function() {
+      transactionMock.paymentMethod = 'Cash';
+      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'paymentId')).toEqual('');
+    });
+    it('do not print field ccAuthorizationStatus for non Credit Card transaction', function() {
+      transactionMock.paymentMethod = 'Cash';
+      expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'ccAuthorizationStatus')).toEqual('');
+    });
+  });
+
+  describe('printTransactionTypeName will', function() {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
+        transactionTypeName: 'SALE'
+      };
+    });
+
+    it('print transactionTypeName if it is not VOIDED transaction', function() {
+      expect(scope.printTransactionTypeName(transactionMock)).toEqual(transactionMock.transactionTypeName);
+    });
+    it('print transactionTypeName as SALE if it is VOIDED transaction', function() {
+      transactionMock.transactionTypename = 'VOIDED';
+      expect(scope.printTransactionTypeName(transactionMock)).toEqual('SALE');
+    });
+  });
+
+  describe('printTransactionAmount will', function() {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
+        transactionAmount: '1.50',
+        transactionCurrencyCode: 'GBP'
+      };
+    });
+
+    it('print transactionAmount if printTransactionAmount is defined', function() {
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
+    });
+    it('print transactionAmount as 0 if printTransactionAmount is not defined', function() {
+      transactionMock.transactionAmount = null;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
+    });
   });
 });

@@ -141,7 +141,11 @@ angular.module('ts5App')
         if ($scope.scheduleReport.dayOfMonth === 'Last Day') {
           payLoad.dayOfMonth = -1;
         }
-
+        
+        if ($scope.scheduleReport.dateRange === '' || $scope.scheduleReport.dateRange === null) {
+          payLoad.dateRange = 'Previous Month';
+        }
+        
         var params = getSelectedOptions();
 
         payLoad.options = params.options;

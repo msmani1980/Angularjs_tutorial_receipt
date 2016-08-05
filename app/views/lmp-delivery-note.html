@@ -15,7 +15,7 @@
 
       <div class="col-xs-6 text-right">
 
-        <fieldset ng-hide="viewOnly">
+        <fieldset ng-hide="disableActions">
 
           <button class="btn btn-warning" ng-click="toggleReview()" ng-hide="hideReview">
             <span class="fa fa-file-text-o" aria-hidden="true"></span>
@@ -263,7 +263,12 @@
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
                 <label>Item</label>
-                <ui-select name="item[{{item.masterItemId}}]" ng-model="masterItemSelected[masterItem.id]" theme="bootstrap" on-select="addItem($select.selected, $index)">
+                <ui-select
+                  name="item[{{item.masterItemId}}]"
+                  ng-model="masterItemSelected[masterItem.id]"
+                  class="new-item-{{ $index }}"
+                  theme="bootstrap"
+                  on-select="addItem($select.selected, $index)">
                   <ui-select-match placeholder="Select an Item">{{ $select.selected.itemCode }} - {{ $select.selected.itemName}}</ui-select-match>
                   <ui-select-choices repeat="masterItem in masterItemsAllowedInSelect | filter: $select.search">
                     {{ masterItem.itemCode }} - {{ masterItem.itemName }}

@@ -145,8 +145,31 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
       getCateringStationsDeferred = $q.defer();
       getCateringStationsDeferred.resolve(cateringStationsReponseJSON);
       spyOn(deliveryNoteFactory, 'getCatererStationList').and.returnValue(getCateringStationsDeferred.promise);
-
     }));
+
+    describe('stationId passed in route', function () {
+      beforeEach(inject(function($controller) {
+        LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
+          $scope: scope,
+          $routeParams: {
+            state: 'create',
+            id: '3'
+          }
+        });
+
+        getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
+        getMenuCatererStationListDeferred.resolve(getMenuCatererStationListJSON);
+        scope.$digest();
+      }));
+      it('should automatically set delivery note station', function () {
+        expect(scope.deliveryNote.catererStationId).toEqual(3);
+      });
+
+      it('should auto populate the items', function () {
+        expect(scope.masterItems).toBeDefined();
+        expect(scope.deliveryNote.items.length > 0).toEqual(true);
+      });
+    });
 
     describe('invalid state passed to route', function() {
       beforeEach(inject(function($controller) {
@@ -441,8 +464,15 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
         var emptyMenuResponse = {companyMenuCatererStations: []};
         beforeEach(function() {
           httpBackend.expectGET(/./).respond(200);
+          scope.deliveryNote.items = [{ masterItemId: 26 }];
           var cateringStationId = 5;
           scope.deliveryNote.catererStationId = cateringStationId;
+        });
+
+        it('should not clear delivery note items array if station is unchanged', function () {
+          getCatererStationMasterItemsDeferred.resolve(emptyItemResponse);
+          getMenuCatererStationListDeferred.resolve(emptyMenuResponse);
+          expect(scope.deliveryNote.items.length === 1).toEqual(true);
         });
 
         it('should get catering station items API', function() {
@@ -451,6 +481,20 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
           scope.$digest();
           expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(scope.deliveryNote.catererStationId);
         });
+
+        it('should merge matching delivery note items', function () {
+          var stationItemsWithMatch = {companyMenuCatererStations: [{
+            catererStationId: 3,
+            itemMasterId: 26,
+            itemCode: 'Sk001',
+            itemName: 'Skittles'
+          }]};
+          getCatererStationMasterItemsDeferred.resolve(stationItemsWithMatch);
+          getMenuCatererStationListDeferred.resolve(emptyMenuResponse);
+          scope.$digest();
+          expect(scope.deliveryNote.items.length === 1).toEqual(true);
+        });
+
 
         it('should get catering station menus', function () {
           getCatererStationMasterItemsDeferred.resolve(emptyItemResponse);

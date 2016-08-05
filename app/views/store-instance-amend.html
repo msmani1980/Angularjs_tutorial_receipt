@@ -546,11 +546,11 @@
                   </tr>
                   <tr>
                     <td>@ Cash Handler Exchange Rate</td>
-                    <td>{{companyIsUsingCash ? totalRevenue.cashHandler: 'N/A'}}</td>
+                    <td>{{companyIsUsingCash  && cashBag.isSubmitted? totalRevenue.cashHandler: 'N/A'}}</td>
                   </tr>
                   <tr>
                     <td>@ ePOS Exchange Rate</td>
-                    <td>{{totalRevenue.epos}}</td>
+                    <td>{{cashBag.isSubmitted? totalRevenue.epos: 'N/A'}}</td>
                   </tr>
                 </table>
               </div>
@@ -796,7 +796,7 @@
                       <td>{{ getOrNA(flightSector.transactionTotal) }}</td>
                       <td ng-hide="cashBag.isDeleted">
                         <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(cashBag, flightSector)" ng-show="canExecuteActions(cashBag)"><i class="fa fa-pencil active"></i></button>
-                        <button class="btn btn-danger btn-xs" ng-show="canExecuteActions(cashBag)" ng-click="showDeleteScheduleModal(flightSector)"><i class="fa fa-trash active"></i></button>
+                        <button class="btn btn-danger btn-xs" ng-show="canExecuteActions(cashBag)" ng-click="showDeleteScheduleModal(flightSector, cashBag.id)"><i class="fa fa-trash active"></i></button>
                       </td>
                     </tr>
                     <tr class="subversion-row" ng-show="flightSector.rowOpen">
