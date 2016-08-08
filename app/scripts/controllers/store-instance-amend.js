@@ -1,6 +1,4 @@
 'use strict';
-/*jshint maxcomplexity:6 */
-
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstanceAmendCtrl
@@ -750,20 +748,25 @@ angular.module('ts5App')
       });
     }
 
+    function isDefined (value) {
+      if (value === null || value === undefined)
+      {
+        return false;
+      }
+
+      return true;
+    }
+
     function calculateCashRevenueForCredit(chCreditCard, cashRevenue) {
       angular.forEach(chCreditCard, function (creditCard) {
-        var amount = (creditCard.bankAmountFinal || 0) + (creditCard.coinAmountManualCc || 0) + (creditCard.paperAmountManualCc || 0);
-
-        if (creditCard.cashbagId) {
-          var cashBag = getCashBagById(creditCard.cashbagId);
-
-          if (cashBag !== undefined && cashBag.creditRevenue !== undefined) {	
-            cashBag.creditRevenue.amount += amount;
-            cashBag.creditRevenue.items.push({
-              creditCard: creditCard.cardType,
-              amount: amount
-            });
-          }
+        var amount = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountManualCc) + makeFinite(creditCard.paperAmountManualCc);
+        var cashBag = (creditCard.cashbagId) ? getCashBagById(creditCard.cashbagId) : null;
+        if (isDefined(cashBag) && isDefined(cashBag.creditRevenue)) {	
+          cashBag.creditRevenue.amount += amount;
+          cashBag.creditRevenue.items.push({
+            creditCard: creditCard.cardType,
+            amount: amount
+          });
         }
 
         cashRevenue.total += amount;
@@ -772,19 +775,15 @@ angular.module('ts5App')
 
     function calculateCashRevenueForDiscounts(chDiscount, cashRevenue) {
       angular.forEach(chDiscount, function (discount) {
-        var amount = (discount.bankAmountFinal || 0) + (discount.coinAmountCc || 0) + (discount.paperAmountCc || 0);
-
-        if (discount.cashbagId) {
-          var cashBag = getCashBagById(discount.cashbagId);
-
-          if (cashBag !== undefined && cashBag.creditRevenue !== undefined) {	
-            cashBag.discountRevenue.amount += amount;
-            cashBag.discountRevenue.items.push({
-              discountName: discount.companyDiscountName,
-              discountType: discount.globalDiscountTypeName,
-              amount: amount
-            });
-          }
+        var amount = makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
+        var cashBag = (discount.cashBagId) ? getCashBagById(discount.cashbagId) : null;
+        if (isDefined(cashBag) && isDefined(cashBag.discountRevenue)) {	
+          cashBag.discountRevenue.amount += amount;
+          cashBag.discountRevenue.items.push({
+            discountName: discount.companyDiscountName,
+            discountType: discount.globalDiscountTypeName,
+            amount: amount
+          });
         }
 
         cashRevenue.total += amount;
