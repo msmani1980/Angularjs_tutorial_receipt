@@ -196,6 +196,8 @@ angular.module('ts5App')
       addNewDeliveryNoteItemsFromArray(catererStationItems);
       addNewDeliveryNoteItemsFromArray(menuItems);
 
+      $scope.deliveryNote.items = lodash.sortBy($scope.deliveryNote.items, 'itemName');
+
       hideLoadingModal();
     }
 
