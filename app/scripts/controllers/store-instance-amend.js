@@ -749,12 +749,7 @@ angular.module('ts5App')
     }
 
     function isDefined (value) {
-      if (value === null || value === undefined)
-      {
-        return false;
-      }
-
-      return true;
+      return value !== null && angular.isDefined(value);
     }
 
     function calculateCashRevenueForCredit(chCreditCard, cashRevenue) {
