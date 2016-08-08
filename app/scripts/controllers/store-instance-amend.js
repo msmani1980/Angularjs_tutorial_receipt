@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:6 */
 
 /**
  * @ngdoc function
@@ -755,11 +756,14 @@ angular.module('ts5App')
 
         if (creditCard.cashbagId) {
           var cashBag = getCashBagById(creditCard.cashbagId);
-          cashBag.creditRevenue.amount += amount;
-          cashBag.creditRevenue.items.push({
-            creditCard: creditCard.cardType,
-            amount: amount
-          });
+
+          if (cashBag !== undefined && cashBag.creditRevenue !== undefined) {	
+            cashBag.creditRevenue.amount += amount;
+            cashBag.creditRevenue.items.push({
+              creditCard: creditCard.cardType,
+              amount: amount
+            });
+          }
         }
 
         cashRevenue.total += amount;
@@ -772,12 +776,15 @@ angular.module('ts5App')
 
         if (discount.cashbagId) {
           var cashBag = getCashBagById(discount.cashbagId);
-          cashBag.discountRevenue.amount += amount;
-          cashBag.discountRevenue.items.push({
-            discountName: discount.companyDiscountName,
-            discountType: discount.globalDiscountTypeName,
-            amount: amount
-          });
+
+          if (cashBag !== undefined && cashBag.creditRevenue !== undefined) {	
+            cashBag.discountRevenue.amount += amount;
+            cashBag.discountRevenue.items.push({
+              discountName: discount.companyDiscountName,
+              discountType: discount.globalDiscountTypeName,
+              amount: amount
+            });
+          }
         }
 
         cashRevenue.total += amount;
