@@ -712,18 +712,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     init();
 
-    $scope.showClearButton = function () {
-      angular.forEach($scope.search, function (search) {
-        $scope.searchLength = search;
-      });
-
-      if ($scope.searchLength && !$scope.searchIsActive) {
-        return true;
-      }
-
-      return $scope.searchIsActive;
-    };
-
     $scope.displayUndispatchConfirmation = function (store) {
       $scope.undispatchStoreDialog = {
         title: sprintf(
