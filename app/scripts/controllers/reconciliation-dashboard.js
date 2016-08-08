@@ -376,8 +376,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchForm = function() {
-      $scope.search = {
-      };
+      $scope.search = {};
       $scope.reconciliationList = [];
     };
 
