@@ -530,6 +530,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         offset: 0
       };
       $scope.storeInstanceList = [];
+      $localStorage.search.storeInstanceDashboard = angular.copy($scope.search);
       searchStoreInstanceDashboardData();
     };
 
@@ -537,7 +538,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       searchStoreInstanceDashboardData(lastStartDate);
     };
 
-    function clearSearchForm() {
+    $scope.clearSearchForm = function () {
       $scope.search = {};
       $scope.search.scheduleStartDate = '';
       $scope.search.scheduleEndDate = '';
@@ -547,13 +548,27 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         offset: 0
       };
       $scope.storeInstanceList = [];
-    }
+      $localStorage.search.storeInstanceDashboard = {};
+    };
 
-    $scope.clearSearchForm = clearSearchForm;
+    function checkForLocalStorage() {
+      var stepTwoFromOne = $localStorage.stepTwoFromStepOne;
+      if (angular.isDefined(stepTwoFromOne) && angular.isDefined(stepTwoFromOne.storeId)) {
+        delete $localStorage.stepTwoFromStepOne;
+      }
+
+      var savedSearch = $localStorage.search;
+      if (angular.isDefined(savedSearch)) {
+        $scope.search = savedSearch.storeInstanceDashboard || {};
+      } else {
+        $scope.search = {};
+        $localStorage.search = {};
+      }
+    }
 
     function init() {
       showLoadingBar();
-      $scope.checkForLocalStorage();
+      checkForLocalStorage();
       $scope.allCheckboxesSelected = false;
       var dependenciesArray = [];
       dependenciesArray.push(getCatererStationList());
@@ -664,13 +679,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         completeNavigateToAction(actionName + actionModifier, storeInstance);
       }
     }
-
-    $scope.checkForLocalStorage = function () {
-      var ls = $localStorage.stepTwoFromStepOne;
-      if (angular.isDefined(ls) && angular.isDefined(ls.storeId)) {
-        delete $localStorage.stepTwoFromStepOne;
-      }
-    };
 
     $scope.navigateToAction = function (storeInstance, actionName) {
       showLoadingModal('Redirecting ... ');
