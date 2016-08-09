@@ -235,7 +235,7 @@ describe('Controller: TransactionListCtrl', function () {
     });
 
     it('should have transactionDate formatted', function () {
-      expect(scope.transactions[0].transactionDate).toEqual(dateUtility.formatDateForApp(transactionMock.transactionDate));
+      expect(scope.transactions[0].transactionDate).toEqual(dateUtility.formatDateForApp(transactionsJSON.transactions[0].transactionDate));
     });
 
     it('should have scheduleDate formatted', function () {
@@ -243,7 +243,7 @@ describe('Controller: TransactionListCtrl', function () {
     });
 
     it('should have instanceDate formatted', function () {
-      expect(scope.transactions[0].instanceDate).toEqual(dateUtility.formatDateForApp(transactionMock.instanceDate));
+      expect(scope.transactions[0].instanceDate).toEqual(dateUtility.formatDateForApp(transactionsJSON.transactions[0].instanceDate));
     });
 
     it('do not print field ccProcessedDate for non Credit Card transaction', function () {
