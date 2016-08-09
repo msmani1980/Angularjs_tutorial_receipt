@@ -231,7 +231,7 @@ describe('Controller: TransactionListCtrl', function () {
     });
 
     it('should have store date formatted', function () {
-      expect(scope.transactions[0].storeDate).toEqual(dateUtility.formatDateForApp(transactionMock.storeDate));
+      expect(scope.transactions[0].storeDate).toEqual(dateUtility.formatDateForApp(transactionsJSON.transactions[0].storeDate));
     });
 
     it('should have transactionDate formatted', function () {
@@ -239,7 +239,7 @@ describe('Controller: TransactionListCtrl', function () {
     });
 
     it('should have scheduleDate formatted', function () {
-      expect(scope.transactions[0].scheduleDate).toEqual(dateUtility.formatDateForApp(transactionMock.scheduleDate));
+      expect(scope.transactions[0].scheduleDate).toEqual(dateUtility.formatDateForApp(transactionsJSON.transactions[0].scheduleDate));
     });
 
     it('should have instanceDate formatted', function () {
