@@ -229,10 +229,21 @@ angular.module('ts5App')
 
     function normalizeTransactions(transactions) {
       angular.forEach(transactions, function (transaction) {
-        transaction.transactionDate = dateUtility.formatDateForApp(transaction.transactionDate);
-        transaction.scheduleDate = dateUtility.formatDateForApp(transaction.scheduleDate);
-        transaction.storeDate = dateUtility.formatDateForApp(transaction.storeDate);
-        transaction.instanceDate = dateUtility.formatDateForApp(transaction.instanceDate);
+        if (transaction.transactionDate) {
+          transaction.transactionDate = dateUtility.formatDateForApp(transaction.transactionDate);
+        }
+
+        if (transaction.scheduleDate) {
+          transaction.scheduleDate = dateUtility.formatDateForApp(transaction.scheduleDate);
+        }
+
+        if (transaction.storeDate) {
+          transaction.storeDate = dateUtility.formatDateForApp(transaction.storeDate);
+        }
+
+        if (transaction.instanceDate) {
+          transaction.instanceDate = dateUtility.formatDateForApp(transaction.instanceDate);
+        }
       });
 
       return transactions;
