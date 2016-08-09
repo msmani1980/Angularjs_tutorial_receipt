@@ -157,10 +157,10 @@ angular.module('ts5App')
         $modalInstance.dismiss('cancel');
       };
       
-      var isOptionsRequired = function() {
+      /*var isOptionsRequired = function() {
         return !$scope.daysOfWeek.some(function(options) {
           return options.daysOfWeek.length > 0;
         });
-      };
+      };*/
 
     });
