@@ -156,11 +156,5 @@ angular.module('ts5App')
       $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
       };
-      
-      /*var isOptionsRequired = function() {
-        return !$scope.daysOfWeek.some(function(options) {
-          return options.daysOfWeek.length > 0;
-        });
-      };*/
 
     });
