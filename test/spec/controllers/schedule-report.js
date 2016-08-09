@@ -5,7 +5,6 @@ describe('Controller: ScheduleReportCtrl', function () {
 	  beforeEach(module('ts5App'));
 	
 	  var scope, $compile;
-	  var controller;
 	  	  
 	  beforeEach(inject(function($rootScope,  _$compile_) {
 	  
