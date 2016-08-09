@@ -15,10 +15,10 @@ describe('Controller: ScheduleReportCtrl', function () {
 
 	  describe('controller init', function() {
 
-		    it('should define Scope Report emailMe', function() {
-		      scope.emailMe = true;
+		    it('should define Scope Report DateRange', function() {
+		      scope.dateRange = [{ name: 'Previous Day', value: 'Previous Day' }, { name: 'Previous 7 days', value: 'Previous 7 days' }, { name: 'Previous Month', value: 'Previous Month' }];
 		      scope.$digest();
-		      expect(scope.emailMe).toBe(true);
+		      expect(scope.dateRange[0].name).toEqual('Previous Day');
 		    });
 	 });
 });
