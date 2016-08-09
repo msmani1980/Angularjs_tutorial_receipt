@@ -7,7 +7,7 @@ describe('Controller: ScheduleReportCtrl', function () {
 	  var scope, $compile;
 	  var controller;
 	  	  
-	  beforeEach(inject(function($controller, $rootScope,  _$compile_) {
+	  beforeEach(inject(function($rootScope,  _$compile_) {
 	  
 		    scope = $rootScope.$new();
 		    $compile = _$compile_;
