@@ -69,6 +69,12 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     location = $location;
     _lodash = lodash;
     localStorage = $localStorage;
+    localStorage.search = {
+      storeInstanceDashboard: { scheduleStartDate: '10/10/2016' }
+    };
+    localStorage.stepTwoFromStepOne = {
+      storeId: '2042'
+    };
 
     storeInstanceDashboardFactory = $injector.get('storeInstanceDashboardFactory');
     storeTimeConfig = $injector.get('storeTimeConfig');
@@ -122,6 +128,16 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       scope.$digest();
     });
 
+    describe('local storage', function () {
+      it('should copy search object from local storage', function () {
+        expect(scope.search).toEqual(localStorage.search.storeInstanceDashboard);
+      });
+
+      it('should delete $localStorage.stepTwoFromStepOne if it exists', function() {
+        expect(localStorage.stepTwoFromStepOne).toEqual(undefined);
+      });
+    });
+
     describe('getCatererStation', function() {
       it('should get catererStation from storeInstanceDashboardFactory', function() {
         expect(storeInstanceDashboardFactory.getCatererStationList).toHaveBeenCalled();
@@ -152,7 +168,9 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
     describe('getStoreInstanceList', function() {
       it('should get getStoreInstanceList from storeInstanceDashboardFactory', function() {
-        expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalled();
+        var expectedDate = dateUtility.formatDateForAPI(localStorage.search.storeInstanceDashboard.scheduleStartDate);
+        var expectedPayload = jasmine.objectContaining({startDate: expectedDate });
+        expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedPayload);
       });
 
       it('should attach storeInstanceList to Scope', function() {
@@ -246,6 +264,18 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
         };
 
         expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedJSON);
+      });
+
+      it('should save search object to localStorage after search', function () {
+        scope.search.scheduleEndDate = '08/10/2050';
+        scope.searchStoreInstanceDashboardData();
+        expect(localStorage.search.storeInstanceDashboard.scheduleEndDate).toEqual('08/10/2050');
+      });
+
+      it('should clear search object on localStorage on clear', function () {
+        scope.search.scheduleEndDate = '08/10/2050';
+        scope.clearSearchForm();
+        expect(localStorage.search.storeInstanceDashboard).toEqual({});
       });
     });
 
@@ -701,30 +731,6 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     });
   });
 
-  describe('showClearButton', function() {
-    it('should return true when search has input', function() {
-      scope.search.scheduleStartDate = '2012-02-02';
-      scope.getStoreInstanceDashboardData();
-      scope.$digest();
-      expect(scope.showClearButton()).toBeTruthy();
-    });
-
-    it('should return false when search is clear', function() {
-      scope.search.scheduleStartDate = '';
-      scope.getStoreInstanceDashboardData();
-      scope.$digest();
-      expect(scope.showClearButton()).toBeFalsy();
-    });
-
-    it('should return true when searchIsActive and search is clear', function() {
-      scope.search.scheduleStartDate = '';
-      scope.getStoreInstanceDashboardData();
-      scope.$digest();
-      scope.searchIsActive = true;
-      expect(scope.showClearButton()).toBeTruthy();
-    });
-  });
-
   describe('storeSelectionToggled', function() {
     it('should set hasSelectedStore to false and exportBulkURL to empty string', function() {
       scope.getStoreInstanceDashboardData();
@@ -763,14 +769,32 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     expect(storeInstanceDashboardFactory.deleteStoreInstance).toHaveBeenCalledWith(1);
   });
 
-  describe('checkForLocalStorage', function() {
-    it('should delete $localStorage.stepTwoFromStepOne if it exists', function() {
-      localStorage.stepTwoFromStepOne = {
-        storeId: '2042'
-      };
-      scope.checkForLocalStorage();
-      expect(localStorage.stepTwoFromStepOne).toEqual(undefined);
+  describe('search alerts', function () {
+    it('should show search prompt when store instance list is null', function () {
+      scope.storeInstanceList = null;
+      expect(scope.shouldShowSearchPrompt()).toEqual(true);
+
+      scope.storeInstanceList = [];
+      expect(scope.shouldShowSearchPrompt()).toEqual(false);
     });
+
+    it('should show no records prompt when store instance list is empty', function () {
+      scope.storeInstanceList = null;
+      expect(scope.shouldShowNoRecordsFoundPrompt()).toEqual(false);
+
+      scope.storeInstanceList = [];
+      expect(scope.shouldShowNoRecordsFoundPrompt()).toEqual(true);
+    });
+
+    it('should show loading alert when store instance list is not empty and offset < count', function () {
+      scope.storeInstanceList = [{id: 1}];
+      StoreInstanceDashboardCtrl.meta = {
+        offset: 10,
+        count: 100
+      };
+      expect(scope.shouldShowLoadingAlert()).toEqual(true);
+    });
+
   });
 
 });
