@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId) {
+  .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId, globalMenuService) {
 
     $scope.templateId = templateId;
     $scope.template = templateService.get({ templateId: templateId });
@@ -61,6 +61,11 @@ angular.module('ts5App')
 
     $scope.run = function () {
       var params = getSelectedOptions();
+      
+      /*if(globalMenuService.getCompanyData().chCompany !== undefined){
+    	  params.options["chCompanyId"] = globalMenuService.getCompanyData().id;
+      }*/
+      
       jobService.run($scope.template.id, params).then(function () {
         $modalInstance.close();
         window.location.href = '#/reports/queue';
