@@ -8,8 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TransactionListCtrl', function($scope, $q, transactionFactory, recordsService, currencyFactory,
-    stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility) {
+  .controller('TransactionListCtrl', function ($scope, $q, transactionFactory, recordsService, currencyFactory,
+                                               stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility) {
     var $this = this;
 
     $scope.viewName = 'Transactions';
@@ -127,7 +127,7 @@ angular.module('ts5App')
       $scope.search.ccAuthorizationStatuses = null;
     }
 
-    $scope.$watch('search.paymentMethods', function(paymentMethods) {
+    $scope.$watch('search.paymentMethods', function (paymentMethods) {
       if (isCreditCardPaymentSelected(angular.copy(paymentMethods))) {
         $scope.isCreditCardPaymentSelected = true;
       } else {
@@ -136,17 +136,17 @@ angular.module('ts5App')
       }
     }, true);
 
-    $scope.toggleColumnView = function(columnName) {
+    $scope.toggleColumnView = function (columnName) {
       if (angular.isDefined($scope.displayColumns[columnName])) {
         $scope.displayColumns[columnName] = !$scope.displayColumns[columnName];
       }
     };
 
-    $scope.filterTransactionTypes = function(transactionType) {
+    $scope.filterTransactionTypes = function (transactionType) {
       return $scope.supportedTransactionTypes.indexOf(transactionType.name) > -1;
     };
 
-    $scope.getOverriddenTransactionTypeName = function(transactionTypeName) {
+    $scope.getOverriddenTransactionTypeName = function (transactionTypeName) {
       if (transactionTypeName in $scope.overrideTransactionTypeNames) {
         return $scope.overrideTransactionTypeNames[transactionTypeName];
       }
@@ -154,7 +154,7 @@ angular.module('ts5App')
       return transactionTypeName;
     };
 
-    $scope.getTransactions = function() {
+    $scope.getTransactions = function () {
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
@@ -165,12 +165,12 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     };
 
-    $scope.clearSearch = function() {
+    $scope.clearSearch = function () {
       $scope.search = {};
       $scope.transactions = [];
     };
 
-    $scope.searchTransactions = function() {
+    $scope.searchTransactions = function () {
       $this.isSearch = true;
       clearTransactions();
       setDefaultMetaPayload();
@@ -178,7 +178,7 @@ angular.module('ts5App')
       $scope.getTransactions();
     };
 
-    $scope.showTransactionDetails = function(transaction) {
+    $scope.showTransactionDetails = function (transaction) {
       window.open('/ember/transactions/index.html?transactionId=' + transaction.transactionId);
     };
 
@@ -236,8 +236,22 @@ angular.module('ts5App')
     }
 
     function normalizeTransactions(transactions) {
-      angular.forEach(transactions, function(transaction) {
-        transaction.transactionDate = dateUtility.formatDateForApp(transaction.transactionDate);
+      angular.forEach(transactions, function (transaction) {
+        if (transaction.transactionDate) {
+          transaction.transactionDate = dateUtility.formatDateForApp(transaction.transactionDate);
+        }
+
+        if (transaction.scheduleDate) {
+          transaction.scheduleDate = dateUtility.formatDateForApp(transaction.scheduleDate);
+        }
+
+        if (transaction.storeDate) {
+          transaction.storeDate = dateUtility.formatDateForApp(transaction.storeDate);
+        }
+
+        if (transaction.instanceDate) {
+          transaction.instanceDate = dateUtility.formatDateForApp(transaction.instanceDate);
+        }
       });
 
       return transactions;
@@ -251,7 +265,6 @@ angular.module('ts5App')
         .filter(filterNotFullyPaidOffDiscount);
 
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
-
       hideLoadingBar();
     }
 
@@ -260,27 +273,19 @@ angular.module('ts5App')
     }
 
     function setTransactionTypes(dataFromAPI) {
-      var transactionTypes = angular.copy(dataFromAPI);
-
-      $scope.transactionTypes = transactionTypes;
+      $scope.transactionTypes = angular.copy(dataFromAPI);
     }
 
     function setCompanyCurrencies(dataFromAPI) {
-      var companyCurrencies = angular.copy(dataFromAPI.response);
-
-      $scope.companyCurrencies = companyCurrencies;
+      $scope.companyCurrencies = angular.copy(dataFromAPI.response);
     }
 
     function setCompanyStations(dataFromAPI) {
-      var companyStations = angular.copy(dataFromAPI.response);
-
-      $scope.companyStations = companyStations;
+      $scope.companyStations = angular.copy(dataFromAPI.response);
     }
 
     function setCreditCardTypes(dataFromAPI) {
-      var creditCardTypes = angular.copy(dataFromAPI.companyCCTypes);
-
-      $scope.creditCardTypes = creditCardTypes;
+      $scope.creditCardTypes = angular.copy(dataFromAPI.companyCCTypes);
     }
 
     function getTransactionTypes() {

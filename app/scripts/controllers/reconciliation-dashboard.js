@@ -138,7 +138,7 @@ angular.module('ts5App')
 
       item.actions = actions;
     };
-    
+
     function isShowForceReconcile (data) {
       if (data && data.toLowerCase() === 'no') {
         return true;
@@ -376,10 +376,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchForm = function() {
-      $scope.search = {
-        startDate: dateUtility.dateNumDaysBeforeTodayFormatted(10),
-        endDate: dateUtility.dateNumDaysBeforeTodayFormatted(2)
-      };
+      $scope.search = {};
       $scope.reconciliationList = [];
     };
 
@@ -466,7 +463,7 @@ angular.module('ts5App')
         resetReconciliationList();
         $this.getStoreStatusList();
       }
-      
+
       $this.hideLoadingModal();
       $scope.errorResponse = responseFromAPI;
       $scope.displayError = true;
@@ -497,7 +494,7 @@ angular.module('ts5App')
       ];
       $q.all(pr).then($this.handleActionExecutionSuccess, $this.handleActionExecutionSuccess);
     }
-    
+
     $scope.forceReconcile = function(instance, action) {
       $this.showLoadingModal('Force Reconcile action');
       $scope.instancesForActionExecution = [instance];
