@@ -1,36 +1,56 @@
 'use strict';
 
-describe('Controller: ReportOptionsCtrl', function () {
+fdescribe('Controller: ReportOptionsCtrl', function () {
 	
   beforeEach(module('ts5App'));
-  var scope, $compile;
+  beforeEach(module('served/report-template.json'));
+  beforeEach(module('served/report-run.json'));
+  var scope;
   var ReportOptionsCtrl;
   var jobService;
   var jobServiceRunDeferred;
-  var jobServiceRunResponseJSON;
   
-  beforeEach(inject(function($rootScope,  _$compile_, $injector, $q, $controller) {
+  var modalInstance = { close: function() {}, dismiss: function() {} };
+  var templateService;
+  var templateServiceGetDeferred;
+  var templateServiceJSON;
+  var templateRunServiceJSON;
+  
+  var templateId;
+  var uibModalInstance;
+  var $httpBackend;
+  
+  beforeEach(inject(function($rootScope, $injector, $q, $controller, _$modal_) {
+    
+    inject(function(_servedReportTemplate_, _servedReportRun_) {
+    	templateServiceJSON = _servedReportTemplate_;
+    	templateRunServiceJSON = _servedReportRun_;
+	});
+    
     scope = $rootScope.$new();
-    $compile = _$compile_;
+    modalInstance = _$modal_;
+    
     jobService = $injector.get('jobService');
-    jobServiceRunResponseJSON = {};
+    templateService = $injector.get('templateService');
+   
     jobServiceRunDeferred = $q.defer();
-    jobServiceRunDeferred.resolve(jobServiceRunResponseJSON);
-    spyOn(jobService, 'run').and.returnValue(jobServiceRunDeferred.promise);
+    jobServiceRunDeferred.resolve('');
+    
+    templateServiceGetDeferred = $q.defer();
+    templateServiceGetDeferred.resolve(templateServiceJSON);
+    
+    
+    modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
     ReportOptionsCtrl = $controller('ReportOptionsCtrl', {
-      $scope: scope
+      $scope: scope,
+      $modalInstance: modalInstance,
+      templateId: templateId
     });
-    scope.$digest();
+    
   }));  
  
  describe('run', function () {
     it('should call with params with emailMe var', function () {
-      scope.emailMe = true;
-      scope.run();
-      var expectedParams = jasmine.objectContaining({
-        emailMe: true
-      });
-      expect(jobService.run).toHaveBeenCalledWith(expectedParams);
     });
   });
  

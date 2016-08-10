@@ -1,0 +1,28 @@
+{
+	"id": 1335,
+	"name": "Cash Handling Till Balance [EUR]",
+	"emailMe": false,
+	"companyId": 403,
+	"created": "2016-08-10T21:04:25.187",
+	"jobRunTimeMillis": 0,
+	"template": {
+		"id": 21,
+		"code": "chTillBalanceEUPaperCoin",
+		"queries": [{
+			"id": 22,
+			"code": "main",
+			"query": "select ret_company_name as \"Retail Company Name\",\n    dispatched_stn as \"Store Dispatched LMP Station\",\n\tinbound_stn as \"Store Inbound LMP Station\",\n    ch_company_name as \"Cash Handler Company Name\",\n    updated_date as \"Updated Date\",\n    bank_reference_number as \"Bank Reference Number\",\n    cashbag_number as \"Cash Bag Number\",\n    schedule_no as \"Schedule Number\",\n    schedule_date as \"Schedule Date\",\n    store_number as \"Store Number\",\n    grand_total_EUR as \"Grand Total EUR\",\n    eur_paper as \"EUR Paper\",\n    eur_coin as \"EUR Coin\",\n    gbp_paper as \"GBP Paper\",\n    gbp_coin as \"GBP Coin\",\n    eur_from_gbp as \"EUR from GBP\",\n\tchf_paper as \"CHF Paper\",\n    chf_coin as \"CHF Coin\",\n    eur_from_chf as \"EUR from CHF\",\n    EUR_from_other_accepted_currencies as \"EUR from other Accepted Currencies\"\n   from report.rep_ch_till_balance_eu_paper_coin(\n    $P{companyId},\n    $P{effDate},\n    $P{endDate},\n    $P{bankRefNo},\n    $P{depStationId},\n    $P{arrStationId},\n    $P{chCompanyId})\n   order by schedule_date nulls first,\n    store_number,\n    cashbag_number"
+		}]
+	},
+	"optionValues": [{
+		"code": "endDate",
+		"value": "2016-08-10"
+	}, {
+		"code": "effDate",
+		"value": "2016-08-10"
+	}],
+	"status": "QUEUED",
+	"scheduleReport": 0,
+	"userEmail": "RCuriel@egate-solutions.com",
+	"userId": 3
+}

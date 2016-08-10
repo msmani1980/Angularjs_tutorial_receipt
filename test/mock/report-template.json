@@ -1,0 +1,106 @@
+[{
+	"id": 21,
+	"code": "chTillBalanceEUPaperCoin",
+	"name": "Cash Handling Till Balance [EUR]",
+	"description": "Report that displays the Till Balance Information."
+}, {
+	"id": 22,
+	"code": "chTillBalanceUKPaperCoin",
+	"name": "Cash Handling Till Balance [GBP]",
+	"description": "Report that displays the Till Balance Information."
+}, {
+	"id": 23,
+	"code": "detailOfVAT",
+	"name": "Detail of VAT",
+	"description": "Report to display detail of VAT."
+}, {
+	"id": 16,
+	"code": "exchangeRateXtab",
+	"name": "Exchange Rate Detail",
+	"description": "Display daily exhange rates."
+}, {
+	"id": 17,
+	"code": "exchangeRatePaperCoinXtab",
+	"name": "Exchange Rate Detail - Paper Coin",
+	"description": "Display daily exhange rates."
+}, {
+	"id": 31,
+	"code": "ifrsBS",
+	"name": "Finance IFRS BS Data",
+	"description": "Finance IFRS BS Data Report."
+}, {
+	"id": 30,
+	"code": "ifrsRevenue",
+	"name": "Finance IFRS Revenue Summary",
+	"description": "Finance IFRS Revenue Summary Report."
+}, {
+	"id": 37,
+	"code": "plData",
+	"name": "Finance P&L Data",
+	"description": "Finance P&L Data Report."
+}, {
+	"id": 24,
+	"code": "goodsDelivered",
+	"name": "Goods Delivered",
+	"description": "Goods Delivered"
+}, {
+	"id": 19,
+	"code": "menuStandard",
+	"name": "Menu Standard",
+	"description": "Report that displays the Menu Standard information."
+}, {
+	"id": 28,
+	"code": "outOfStockBar",
+	"name": "Out of Stock Store",
+	"description": "Report that displays Out Of Stock Information for Stores."
+}, {
+	"id": 20,
+	"code": "postTrip",
+	"name": "Post Trip",
+	"description": "Report that displays post trip data."
+}, {
+	"id": 18,
+	"code": "itemMaster",
+	"name": "Retail Item Data",
+	"description": "This report provides the user with the ability to check the data contained in the Master Tables for all the fields specified in the report."
+}, {
+	"id": 32,
+	"code": "stockDataValidation",
+	"name": "Stock Data Validation",
+	"description": "Report that displays the Stock Validation Information."
+}, {
+	"id": 38,
+	"code": "stockOnHand",
+	"name": "Stock On Hand",
+	"description": "Stock On Hand Report."
+}, {
+	"id": 36,
+	"code": "soItemMaster",
+	"name": "Stock Owner Item Data",
+	"description": "This report provides the stock owner with the ability to check the data contained in the Master Tables for all the fields specified in the report."
+}, {
+	"id": 26,
+	"code": "storeDataValidation",
+	"name": "Store Data Validation",
+	"description": "Report that displays the Store Validation Information."
+}, {
+	"id": 25,
+	"code": "storeStatus",
+	"name": "Store Status",
+	"description": "Report that displays the Store Status Information."
+}, {
+	"id": 27,
+	"code": "storeUpload",
+	"name": "Store Upload",
+	"description": "Store Upload Report."
+}, {
+	"id": 33,
+	"code": "systemAdmin",
+	"name": "System Administration",
+	"description": "This report provides the user with the ability to check the role profiles."
+}, {
+	"id": 29,
+	"code": "transactions",
+	"name": "Transactions",
+	"description": "Transactions Report."
+}]
