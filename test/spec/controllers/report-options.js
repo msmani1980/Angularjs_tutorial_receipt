@@ -17,8 +17,6 @@ fdescribe('Controller: ReportOptionsCtrl', function () {
   var templateRunServiceJSON;
   
   var templateId;
-  var uibModalInstance;
-  var $httpBackend;
   
   beforeEach(inject(function($rootScope, $injector, $q, $controller, _$modal_) {
     
