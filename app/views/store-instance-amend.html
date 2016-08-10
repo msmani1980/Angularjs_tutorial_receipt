@@ -546,11 +546,11 @@
                   </tr>
                   <tr>
                     <td>@ Cash Handler Exchange Rate</td>
-                    <td>{{companyIsUsingCash  && cashBag.isSubmitted? totalRevenue.cashHandler: 'N/A'}}</td>
+                    <td>{{companyIsUsingCash  && cashBagSubmitted? totalRevenue.cashHandler: 'N/A'}}</td>
                   </tr>
                   <tr>
                     <td>@ ePOS Exchange Rate</td>
-                    <td>{{cashBag.isSubmitted? totalRevenue.epos: 'N/A'}}</td>
+                    <td>{{cashBagSubmitted? totalRevenue.epos: 'N/A'}}</td>
                   </tr>
                 </table>
               </div>
