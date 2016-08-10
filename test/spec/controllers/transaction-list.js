@@ -274,4 +274,26 @@ describe('Controller: TransactionListCtrl', function() {
       expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
     });
   });
+
+  describe('printPaymentMethodName will', function() {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
+        paymentMethod: 'Discount',
+        discountTypeName: 'Comp'
+      };
+    });
+
+    it('print paymentMethod if paymentMethod is not Discount', function() {
+      transactionMock.paymentMethod = 'Cash';
+      expect(scope.printPaymentMethodName(transactionMock)).toEqual(transactionMock.paymentMethod);
+    });
+    it('print as discountTypeName if paymentMethod is Discount and discountTypeName is defined', function() {
+      expect(scope.printPaymentMethodName(transactionMock)).toEqual(transactionMock.discountTypeName);
+    });
+    it('print as paymentMethod if paymentMethod is Discount and discountTypeName is not defined', function() {
+      transactionMock.discountTypeName = null;
+      expect(scope.printPaymentMethodName(transactionMock)).toEqual(transactionMock.paymentMethod);
+    });
+  });
 });
