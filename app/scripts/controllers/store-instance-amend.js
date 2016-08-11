@@ -871,7 +871,7 @@ angular.module('ts5App')
           isManual: cashBag.originationSource === 2,
           scheduleNumber: cashBag.scheduleNumber,
           scheduleDate: dateUtility.formatTimestampForApp(cashBag.scheduleDate),
-          isSubmitted: cashBag.isSubmitted,
+          isSubmitted: cashBag.submitted,
           isVerified: (cashBag.amendVerifiedOn) ? true : false,
           verifiedByUser: (cashBag.amendVerifiedBy) ? cashBag.amendVerifiedBy.userName : 'Unknown',
           verifiedOn: dateUtility.formatTimestampForApp(cashBag.amendVerifiedOn),
@@ -884,6 +884,15 @@ angular.module('ts5App')
           promotionDiscounts: 0 + getManualDataTotals('promotion', cashBag.id),
           flightSectors: []
         };
+      });
+    }
+
+    function isCashbagSubmitted() {
+      $scope.cashBagSubmitted = false;
+      angular.forEach($scope.normalizedCashBags, function (normalizedCashBag) {
+        if (normalizedCashBag.isSubmitted === true) {
+          $scope.cashBagSubmitted = true;
+        }
       });
     }
 
@@ -1020,6 +1029,7 @@ angular.module('ts5App')
     function setCashBags (cashBagsFromAPI) {
       $scope.cashBags = angular.copy(cashBagsFromAPI.response);
       setupCashBags();
+      isCashbagSubmitted();
     }
 
     function setFlightSectors(normalizedCashBag, flightSectorsFromAPI) {
