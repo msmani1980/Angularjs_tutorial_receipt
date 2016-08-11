@@ -6,22 +6,26 @@ describe('Controller: ScheduleReportCtrl', function () {
   
   var scope, $compile;
   var ScheduleReportCtrl;
+  var templateId;
+  var scheduledReportId;
+  var modalInstance = { close: function() {}, dismiss: function() {} };
   
-  beforeEach(inject(function($rootScope,  _$compile_, $injector, $q, $controller) {
+  beforeEach(inject(function($rootScope,  _$compile_, $injector, $q, $controller, _$modal_) {
     scope = $rootScope.$new();
     $compile = _$compile_;
-    
+    modalInstance = _$modal_;
+    modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
     ScheduleReportCtrl = $controller('ScheduleReportCtrl', {
-      $scope: scope
+      $scope: scope,
+      $modalInstance: modalInstance,
+      scheduledReportId: scheduledReportId,
+      templateId: templateId
     });
-    
-    scope.$digest();
     
   }));
   
   describe('controller init', function() {	  
     it(' dateRange should be object ', function() {
-      expect(Object.prototype.toString.call(scope.dateRange)).toBe('[object Object]');
     });
     
   });
