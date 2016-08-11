@@ -41,7 +41,7 @@ angular.module('ts5App')
       $scope.uploadFile = function (fileIndex) {
         var file = $scope.files[fileIndex];
         return Upload.upload({
-          url: ENV.apiUrl + '/rsvr/api/images',
+          url: ENV.apiUrl + '/rsvr-image/api/images',
           fileFormDataName: 'image',
           file: file
         }).progress(function (evt) {

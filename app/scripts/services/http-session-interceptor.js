@@ -87,9 +87,7 @@ angular.module('ts5App')
         '/rsvr/api/promotions',
         '/rsvr/api/companies/[0-9]*/company-credit-card-types',
         '/rsvr/api/records/company-types',
-        '/rsvr/api/images',
-        '/rsvr/api/company-discounts/[0-9]*$',
-        '/rsvr/api/companies'
+        '/rsvr/api/company-discounts/[0-9]*$'
     ];
 
     var onlyRsvrApis = [
