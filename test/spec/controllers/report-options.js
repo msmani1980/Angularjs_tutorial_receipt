@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ReportOptionsCtrl', function () {
+describe('Controller: ReportOptionsCtrl', function () {
 	
   beforeEach(module('ts5App'));
   beforeEach(module('served/report-template.json'));
