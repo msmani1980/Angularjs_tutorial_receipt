@@ -812,7 +812,7 @@ angular.module('ts5App')
 
     function setupDiscrepancy() {
       var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
-      var netPercentage = makeFinite(netValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
+      var netPercentage = makeFinite(netValue * 100 / parseFloat($scope.stockTotals.totalNet.netEPOS));
 
       var revenueValue = 0;
       var revenuePercentage = 0;
@@ -821,9 +821,9 @@ angular.module('ts5App')
 
       if ($scope.companyIsUsingCash) {
         revenueValue = parseFloat($scope.totalRevenue.epos) - parseFloat($scope.stockTotals.totalNet.netEPOS);
-        revenuePercentage = makeFinite(revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
+        revenuePercentage = makeFinite(revenueValue * 100 / parseFloat($scope.stockTotals.totalNet.netEPOS));
         exchangeValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
-        exchangePercentage = makeFinite(exchangeValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
+        exchangePercentage = makeFinite(exchangeValue * 100 / parseFloat($scope.stockTotals.totalNet.netEPOS));
       }
 
       var totalValue = netValue + revenueValue + exchangeValue;
