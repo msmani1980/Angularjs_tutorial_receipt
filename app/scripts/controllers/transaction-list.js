@@ -78,6 +78,14 @@ angular.module('ts5App')
       return 0 + ' ' + transaction.transactionCurrencyCode;
     };
 
+    $scope.printPaymentMethodName = function (transaction) {
+      if (transaction.paymentMethod && transaction.paymentMethod === 'Discount' && transaction.discountTypeName) {
+        return transaction.discountTypeName;
+      }
+
+      return transaction.paymentMethod;
+    };
+
     $this.meta = {};
     $this.isSearch = false;
 
@@ -97,8 +105,8 @@ angular.module('ts5App')
 
     function filterNotFullyPaidOffDiscount(transaction) {
       var isNotFullyPaidOffDiscountTransaction = (transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher') &&
-        transaction.transactionAmount &&
-        transaction.transactionAmount > 0;
+        transaction.totalAmount &&
+        transaction.totalAmount !== 0;
 
       return !isNotFullyPaidOffDiscountTransaction;
     }
