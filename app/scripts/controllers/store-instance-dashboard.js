@@ -392,6 +392,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     function getStoreInstanceListSuccess(dataFromAPI) {
       var rawStoreInstanceList = angular.copy(dataFromAPI.response);
       var formattedInstanceList = formatStoreInstanceList(rawStoreInstanceList);
+      $scope.storeInstanceList = $scope.storeInstanceList || [];
       $scope.storeInstanceList = $scope.storeInstanceList.concat(formattedInstanceList);
       $scope.storeInstanceList = $filter('orderBy')($scope.storeInstanceList, ['scheduleDateApi', 'storeNumber',
         'scheduleNumber'

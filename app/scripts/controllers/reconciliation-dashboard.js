@@ -9,8 +9,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDashboardCtrl', function($q, $scope, dateUtility, catererStationService,
-    reconciliationFactory, payloadUtility, $location, storeInstanceFactory, lodash) {
+  .controller('ReconciliationDashboardCtrl', function ($q, $scope, dateUtility, catererStationService,
+                                                       reconciliationFactory, payloadUtility, $location, storeInstanceFactory, lodash, $localStorage) {
 
     var $this = this;
     this.meta = {
@@ -19,18 +19,23 @@ angular.module('ts5App')
       offset: 0
     };
 
+    this.defaultSerach = {
+      startDate: dateUtility.dateNumDaysBeforeTodayFormatted(10),
+      endDate: dateUtility.dateNumDaysBeforeTodayFormatted(2)
+    };
+
     $scope.viewName = 'Reconciliation Dashboard';
     $scope.search = {};
     $scope.stationList = null;
     $scope.allowedStoreStatusList = ['Inbounded', 'Confirmed', 'Discrepancies', 'Commission Paid'];
     $scope.allowedStoreStatusMap = {};
-    $scope.reconciliationList = [];
+    $scope.reconciliationList = null;
     $scope.allCheckboxesSelected = false;
     $scope.actionToExecute = null;
     $scope.instancesForActionExecution = {};
     $scope.isSearch = false;
 
-    this.showLoadingModal = function(message) {
+    this.showLoadingModal = function (message) {
       angular.element('#loading').modal('show').find('p').text(message);
     };
 
@@ -43,22 +48,34 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-    this.hideLoadingModal = function() {
+    this.hideLoadingModal = function () {
       angular.element('#loading').modal('hide');
       angular.element('.modal-backdrop').remove();
     };
 
-    $scope.toggleColumnView = function(columnName) {
+    $scope.shouldShowLoadingAlert = function () {
+      return (angular.isDefined($scope.reconciliationList) && $scope.reconciliationList !== null && $this.meta.offset < $this.meta.count);
+    };
+
+    $scope.shouldShowSearchPrompt = function () {
+      return !$scope.reconciliationList;
+    };
+
+    $scope.shouldShowNoRecordsFoundPrompt = function () {
+      return angular.isDefined($scope.reconciliationList) && $scope.reconciliationList !== null && $scope.reconciliationList.length <= 0;
+    };
+
+    $scope.toggleColumnView = function (columnName) {
       if (angular.isDefined($scope.displayColumns[columnName])) {
         $scope.displayColumns[columnName] = !$scope.displayColumns[columnName];
       }
     };
 
-    $scope.updateOrderBy = function(orderName) {
+    $scope.updateOrderBy = function (orderName) {
       $scope.tableSortTitle = ($scope.tableSortTitle === orderName) ? ('-' + $scope.tableSortTitle) : (orderName);
     };
 
-    $scope.doesInstanceContainAction = function(instance, actionName) {
+    $scope.doesInstanceContainAction = function (instance, actionName) {
       if (!instance.actions) {
         return false;
       }
@@ -66,7 +83,7 @@ angular.module('ts5App')
       return instance.actions.indexOf(actionName) >= 0;
     };
 
-    $scope.getSortingType = function(orderName) {
+    $scope.getSortingType = function (orderName) {
       if ($scope.tableSortTitle === orderName) {
         return 'ascending';
       } else if ($scope.tableSortTitle === '-' + orderName) {
@@ -76,7 +93,7 @@ angular.module('ts5App')
       return 'none';
     };
 
-    $scope.getArrowIconAndClassForSorting = function(orderName) {
+    $scope.getArrowIconAndClassForSorting = function (orderName) {
       var sortTypeToArrowTypeMap = {
         ascending: 'fa fa-sort-asc active',
         descending: 'fa fa-sort-desc active',
@@ -86,16 +103,16 @@ angular.module('ts5App')
       return sortTypeToArrowTypeMap[sortType];
     };
 
-    $scope.filterReconciliationList = function(item) {
+    $scope.filterReconciliationList = function (item) {
       return $scope.allowedStoreStatusList.indexOf(item.statusName) > -1;
     };
 
-    this.getStoreStatusNameById = function(storeStatusId) {
+    this.getStoreStatusNameById = function (storeStatusId) {
       return ($scope.allowedStoreStatusMap[storeStatusId]) ? $scope.allowedStoreStatusMap[storeStatusId].statusName :
         null;
     };
 
-    this.getValueByIdInArray = function(id, valueKey, array) {
+    this.getValueByIdInArray = function (id, valueKey, array) {
       var matchedObject = lodash.findWhere(array, {
         id: id
       });
@@ -106,12 +123,12 @@ angular.module('ts5App')
       return '';
     };
 
-    this.normalizeReconciliationDataList = function(dataFromAPI) {
+    this.normalizeReconciliationDataList = function (dataFromAPI) {
       if (!dataFromAPI) {
         return [];
       }
 
-      return dataFromAPI.map(function(item) {
+      return dataFromAPI.map(function (item) {
         item.dispatchStationCode = $this.getValueByIdInArray(item.cateringStationId, 'code', $scope.stationList);
         item.inboundStationCode = $this.getValueByIdInArray(item.inboundStationId, 'code', $scope.stationList);
         item.scheduleDate = dateUtility.formatDateForApp(item.scheduleDate);
@@ -126,7 +143,7 @@ angular.module('ts5App')
       });
     };
 
-    this.recalculateActionsColumn = function(item) {
+    this.recalculateActionsColumn = function (item) {
       var actions = [];
 
       actions.push('Reports');
@@ -138,8 +155,8 @@ angular.module('ts5App')
 
       item.actions = actions;
     };
-    
-    function isShowForceReconcile (data) {
+
+    function isShowForceReconcile(data) {
       if (data && data.toLowerCase() === 'no') {
         return true;
       }
@@ -152,7 +169,7 @@ angular.module('ts5App')
       return false;
     }
 
-    this.recalculateActionsForInboundStatus = function(item, actions) {
+    this.recalculateActionsForInboundStatus = function (item, actions) {
       if (item.statusName === 'Inbounded') {
         actions.push('Validate');
 
@@ -162,18 +179,18 @@ angular.module('ts5App')
 
         // TODO: Temporary disabled these buttons as per Roshen's request. Enable once Roshen gives a green light
         /*if (item.eposData === 'No') {
-          actions.push('Add ePOS Data');
-        }
-        if (item.postTripData === 'No') {
-          actions.push('Add Post Trip Data');
-        }
-        if (item.cashHandlerData === 'No') {
-          actions.push('Add Cash Handler Data');
-        }*/
+         actions.push('Add ePOS Data');
+         }
+         if (item.postTripData === 'No') {
+         actions.push('Add Post Trip Data');
+         }
+         if (item.cashHandlerData === 'No') {
+         actions.push('Add Cash Handler Data');
+         }*/
       }
     };
 
-    this.recalculateActionsForConfirmedStatus = function(item, actions) {
+    this.recalculateActionsForConfirmedStatus = function (item, actions) {
       if (item.statusName === 'Confirmed') {
         actions.push(
           'Review',
@@ -184,7 +201,7 @@ angular.module('ts5App')
       }
     };
 
-    this.recalculateActionsForDiscrepanciesStatus = function(item, actions) {
+    this.recalculateActionsForDiscrepanciesStatus = function (item, actions) {
       if (item.statusName === 'Discrepancies') {
         actions.push(
           'Validate',
@@ -195,7 +212,7 @@ angular.module('ts5App')
       }
     };
 
-    this.recalculateActionsForCommissionPaidStatus = function(item, actions) {
+    this.recalculateActionsForCommissionPaidStatus = function (item, actions) {
       if (item.statusName === 'Commission Paid') {
         actions.push(
           'Amend Data'
@@ -207,52 +224,54 @@ angular.module('ts5App')
       return storeInstance.requiresAmendVerification;
     };
 
-    this.getReconciliationPrecheckDevices = function(item) {
+    this.getReconciliationPrecheckDevices = function (item) {
       reconciliationFactory.getReconciliationPrecheckDevices({
         storeInstanceId: item.id
-      }).then(function(response) {
+      }).then(function (response) {
         var dataFromAPI = angular.copy(response);
         item.eposData = (dataFromAPI.devicesSynced || dataFromAPI.totalDevices) ? dataFromAPI.devicesSynced +
-          '/' + dataFromAPI.totalDevices : 'No';
+        '/' + dataFromAPI.totalDevices : 'No';
         $this.recalculateActionsColumn(item);
       });
     };
 
-    this.getReconciliationPrecheckSchedules = function(item) {
+    this.getReconciliationPrecheckSchedules = function (item) {
       reconciliationFactory.getReconciliationPrecheckSchedules({
         storeInstanceId: item.id
-      }).then(function(response) {
+      }).then(function (response) {
         var dataFromAPI = angular.copy(response);
         item.postTripData = (dataFromAPI.postTripScheduleCount || dataFromAPI.eposScheduleCount) ? dataFromAPI.postTripScheduleCount +
-          '/' + dataFromAPI.eposScheduleCount : 'No';
+        '/' + dataFromAPI.eposScheduleCount : 'No';
         $this.recalculateActionsColumn(item);
       });
     };
 
-    this.getReconciliationPrecheckCashbags = function(item) {
+    this.getReconciliationPrecheckCashbags = function (item) {
       reconciliationFactory.getReconciliationPrecheckCashbags({
         storeInstanceId: item.id
-      }).then(function(response) {
+      }).then(function (response) {
         var dataFromAPI = angular.copy(response);
         item.cashHandlerData = (dataFromAPI.cashHandlerCashbagCount || dataFromAPI.totalCashbagCount) ?
-          dataFromAPI.cashHandlerCashbagCount + '/' + dataFromAPI.totalCashbagCount : 'No';
+        dataFromAPI.cashHandlerCashbagCount + '/' + dataFromAPI.totalCashbagCount : 'No';
         $this.recalculateActionsColumn(item);
       });
     };
 
-    this.populateLazyColumns = function() {
-      angular.forEach($scope.reconciliationList, function(item) {
+    this.populateLazyColumns = function () {
+      angular.forEach($scope.reconciliationList, function (item) {
         $this.getReconciliationPrecheckDevices(item);
         $this.getReconciliationPrecheckSchedules(item);
         $this.getReconciliationPrecheckCashbags(item);
       });
     };
 
-    this.attachReconciliationDataListToScope = function(dataFromAPI) {
+    this.attachReconciliationDataListToScope = function (dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+
+      $scope.reconciliationList = $scope.reconciliationList || [];
       $scope.reconciliationList = $scope.reconciliationList.concat($this.normalizeReconciliationDataList(
         dataFromAPI.response));
-      $scope.reconciliationList = $scope.reconciliationList.filter(function(item) {
+      $scope.reconciliationList = $scope.reconciliationList.filter(function (item) {
         return $scope.filterReconciliationList(item);
       });
 
@@ -261,21 +280,22 @@ angular.module('ts5App')
       $this.hideLoadingModal();
     };
 
-    this.getReconciliationDataList = function() {
+    // todo
+    this.getReconciliationDataList = function () {
       $scope.reconciliationList = [];
       $scope.displayError = false;
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
       };
-      reconciliationFactory.getReconciliationDataList(payload).then(function(dataFromAPI) {
+      reconciliationFactory.getReconciliationDataList(payload).then(function (dataFromAPI) {
         $this.attachReconciliationDataListToScope(angular.copy(dataFromAPI));
-      }, function() {
+      }, function () {
 
         $this.hideLoadingModal();
       });
     };
 
-    this.filterAvailableStoreStatus = function(item) {
+    this.filterAvailableStoreStatus = function (item) {
       return $scope.allowedStoreStatusList.indexOf(item.statusName) > -1;
     };
 
@@ -284,6 +304,7 @@ angular.module('ts5App')
     var lastEndDate = null;
 
     function searchReconciliationDataList(startDate, endDate) {
+      console.log($this.meta, $scope.stationList);
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
@@ -313,7 +334,7 @@ angular.module('ts5App')
       lastStartDate = payload.startDate;
       lastEndDate = payload.endDate;
 
-      reconciliationFactory.getReconciliationDataList(payload).then(function(dataFromAPI) {
+      reconciliationFactory.getReconciliationDataList(payload).then(function (dataFromAPI) {
         $this.attachReconciliationDataListToScope(dataFromAPI);
         loadingProgress = false;
       });
@@ -327,41 +348,43 @@ angular.module('ts5App')
         limit: 100,
         offset: 0
       };
-      $scope.reconciliationList = [];
+      $scope.reconciliationList = null;
     }
 
-    $scope.searchReconciliationDataList = function() {
+    $scope.searchReconciliationDataList = function () {
       $scope.isSearch = true;
+      $localStorage.search.reconciliationDashboard = angular.copy($scope.search);
+      console.log('WAT', $scope.isSearch, $scope.search);
       resetReconciliationList();
       searchReconciliationDataList();
     };
 
-    $scope.getReconciliationDataList = function() {
+    $scope.getReconciliationDataList = function () {
       searchReconciliationDataList(lastStartDate, lastEndDate);
     };
 
-    this.setStationList = function(dataFromAPI) {
+    this.setStationList = function (dataFromAPI) {
       $scope.stationList = angular.copy(dataFromAPI.response);
       searchReconciliationDataList(dateUtility.formatDateForAPI(dateUtility.nowFormatted()));
       $this.hideLoadingModal();
     };
 
-    this.storeStatusListSuccess = function(responseFromAPI) {
+    this.storeStatusListSuccess = function (responseFromAPI) {
       var dataFromAPI = angular.copy(responseFromAPI);
       dataFromAPI.filter($this.filterAvailableStoreStatus)
-        .forEach(function(item) {
+        .forEach(function (item) {
           $scope.allowedStoreStatusMap[item.id] = item;
         });
 
       catererStationService.getCatererStationList().then($this.setStationList);
     };
 
-    this.getStoreStatusList = function() {
+    this.getStoreStatusList = function () {
       $this.showLoadingModal('Loading Data');
       reconciliationFactory.getStoreStatusList().then($this.storeStatusListSuccess);
     };
 
-    this.fixSearchDropdowns = function(search) {
+    this.fixSearchDropdowns = function (search) {
       if (search.cateringStationId === '') {
         search.cateringStationId = null;
       }
@@ -375,82 +398,95 @@ angular.module('ts5App')
       }
     };
 
-    $scope.clearSearchForm = function() {
+    $scope.clearSearchForm = function () {
       $scope.search = {
         startDate: dateUtility.dateNumDaysBeforeTodayFormatted(10),
         endDate: dateUtility.dateNumDaysBeforeTodayFormatted(2)
       };
-      $scope.reconciliationList = [];
+      $localStorage.search.storeInstanceDashboard = angular.copy($scope.search);
+      $scope.reconciliationList = null;
     };
 
-    $scope.highlightSelected = function(item) {
+    $scope.highlightSelected = function (item) {
       return item.selected ? 'active' : '';
     };
 
-    $scope.hasSelectedInstance = function() {
-      return $scope.reconciliationList.filter(function(item) {
-        return item.selected === true;
-      }).length > 0;
+    $scope.hasSelectedInstance = function () {
+      if (!$scope.reconciliationList) {
+        return;
+      }
+
+      return $scope.reconciliationList.filter(function (item) {
+          return item.selected === true;
+        }).length > 0;
     };
 
     $scope.hasSelectedInstancesWithRequiresAmendVerification = function () {
-      return $scope.reconciliationList.filter(function(item) {
-        return item.requiresAmendVerification === true;
-      }).length > 0;
+      if (!$scope.reconciliationList) {
+        return;
+      }
+
+      return $scope.reconciliationList.filter(function (item) {
+          return item.requiresAmendVerification === true;
+        }).length > 0;
     };
 
-    $scope.hasSelectedInstanceWithStatus = function(status) {
-      var hasSelectedInstance = $scope.reconciliationList.filter(function(item) {
+    $scope.hasSelectedInstanceWithStatus = function (status) {
+      if (!$scope.reconciliationList) {
+        return;
+      }
+
+      var hasSelectedInstance = $scope.reconciliationList.filter(function (item) {
         return item.selected === true;
       }).length;
-      var hasStatusSelected = $scope.reconciliationList.filter(function(item) {
+      var hasStatusSelected = $scope.reconciliationList.filter(function (item) {
         return item.statusName === status && item.selected === true;
       }).length;
       return (hasStatusSelected === hasSelectedInstance && hasSelectedInstance > 0 && hasStatusSelected > 0);
     };
 
-    $scope.canHaveInstanceCheckbox = function(instance) {
+    $scope.canHaveInstanceCheckbox = function (instance) {
       return $scope.doesInstanceContainAction(instance, 'Validate') || $scope.doesInstanceContainAction(instance,
-        'Pay Commission');
+          'Pay Commission');
     };
 
-    $scope.toggleAllCheckboxes = function() {
-      angular.forEach($scope.reconciliationList, function(item) {
+    $scope.toggleAllCheckboxes = function () {
+      angular.forEach($scope.reconciliationList, function (item) {
         if ($scope.canHaveInstanceCheckbox(item)) {
           item.selected = $scope.allCheckboxesSelected;
         }
       });
     };
 
-    $scope.viewReview = function(instance) {
+    $scope.viewReview = function (instance) {
       $location.path('/reconciliation-discrepancy-detail/' + instance.id);
     };
 
-    $scope.viewAmendData = function(instance) {
+    $scope.viewAmendData = function (instance) {
       $location.path('/store-instance-amend/' + instance.id);
     };
 
-    $scope.showExecuteActionModal = function(instance, action) {
+    $scope.showExecuteActionModal = function (instance, action) {
       $scope.instancesForActionExecution = [instance];
       $scope.actionToExecute = action;
 
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    $scope.showBulkExecuteActionModal = function(action) {
+    $scope.showBulkExecuteActionModal = function (action) {
       $scope.instancesForActionExecution = $this.findSelectedInstances();
       $scope.actionToExecute = action;
 
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    this.handleResponseError = function(responseFromAPI) {
+    this.handleResponseError = function (responseFromAPI) {
       $this.hideLoadingModal();
       $scope.errorResponse = responseFromAPI;
       $scope.displayError = true;
     };
 
-    this.handleActionExecutionSuccess = function() {
+    this.handleActionExecutionSuccess = function () {
       if ($scope.isSearch) {
         $scope.searchReconciliationDataList();
       } else {
@@ -459,20 +495,20 @@ angular.module('ts5App')
       }
     };
 
-    this.handForceReconciliationleResponseError = function(responseFromAPI) {
+    this.handForceReconciliationleResponseError = function (responseFromAPI) {
       if ($scope.isSearch) {
         $scope.searchReconciliationDataList();
       } else {
         resetReconciliationList();
         $this.getStoreStatusList();
       }
-      
+
       $this.hideLoadingModal();
       $scope.errorResponse = responseFromAPI;
       $scope.displayError = true;
     };
 
-    this.executeValidateAction = function() {
+    this.executeValidateAction = function () {
       var inboundedInstances = $this.findInstancesWithStatus('Inbounded');
       var discrepanciesInstances = $this.findInstancesWithStatus('Discrepancies');
       var instancesToExecuteOn = inboundedInstances.concat(discrepanciesInstances);
@@ -481,7 +517,7 @@ angular.module('ts5App')
         ids: []
       };
 
-      payload.ids = instancesToExecuteOn.map(function(storeInstance) {
+      payload.ids = instancesToExecuteOn.map(function (storeInstance) {
         return storeInstance.id;
       });
 
@@ -497,8 +533,8 @@ angular.module('ts5App')
       ];
       $q.all(pr).then($this.handleActionExecutionSuccess, $this.handleActionExecutionSuccess);
     }
-    
-    $scope.forceReconcile = function(instance, action) {
+
+    $scope.forceReconcile = function (instance, action) {
       $this.showLoadingModal('Force Reconcile action');
       $scope.instancesForActionExecution = [instance];
       $scope.actionToExecute = action;
@@ -506,10 +542,12 @@ angular.module('ts5App')
       var promises = [
         storeInstanceFactory.updateStoreInstanceStatusForceReconcile(instance.id, status)
       ];
-      $q.all(promises).then(function() { handleForceReconcileActionExecutionSuccess(instance); }, $this.handleResponseError);
+      $q.all(promises).then(function () {
+        handleForceReconcileActionExecutionSuccess(instance);
+      }, $this.handleResponseError);
     };
 
-    this.executeOtherAction = function() {
+    this.executeOtherAction = function () {
       var status = null;
       var instancesToExecuteOn = [];
 
@@ -531,14 +569,14 @@ angular.module('ts5App')
       $this.showLoadingModal('Executing ' + $scope.actionToExecute + ' action');
 
       var promises = [];
-      angular.forEach(instancesToExecuteOn, function(instance) {
+      angular.forEach(instancesToExecuteOn, function (instance) {
         promises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, status, true));
       });
 
       $q.all(promises).then($this.handleActionExecutionSuccess, $this.handleResponseError);
     };
 
-    $scope.executeAction = function() {
+    $scope.executeAction = function () {
       $scope.displayError = false;
       angular.element('.delete-warning-modal').modal('hide');
 
@@ -549,26 +587,67 @@ angular.module('ts5App')
       }
     };
 
-    $scope.validate = function() {
+    $scope.validate = function () {
       $scope.instancesForActionExecution = $this.findSelectedInstances();
       $scope.displayError = false;
 
       $this.executeValidateAction();
     };
 
-    this.findInstancesWithStatus = function(status) {
-      return $scope.instancesForActionExecution.filter(function(instance) {
+    this.findInstancesWithStatus = function (status) {
+      return $scope.instancesForActionExecution.filter(function (instance) {
         return instance.statusName === status;
       });
     };
 
-    this.findSelectedInstances = function() {
-      return $scope.reconciliationList.filter(function(instance) {
+    this.findSelectedInstances = function () {
+      if (!$scope.reconciliationList) {
+        return;
+      }
+
+      return $scope.reconciliationList.filter(function (instance) {
         return instance.selected === true;
       });
     };
 
-    this.init = function() {
+    this.setSearchFromLocalStorage = function () {
+      var savedSearch = $localStorage.search;
+      if (angular.isDefined(savedSearch)) {
+        $scope.search = savedSearch.reconciliationDashboard || $this.defaultSerach;
+      } else {
+        $scope.search = $this.defaultSerach;
+        $localStorage.search = { reconciliationDashboard: {} };
+      }
+    };
+
+    this.completeInit = function (responseCollection) {
+      $scope.stationList = angular.copy(responseCollection[1].response);
+
+      var dataFromAPI = angular.copy(responseCollection[0]);
+      dataFromAPI.filter($this.filterAvailableStoreStatus)
+        .forEach(function (item) {
+          $scope.allowedStoreStatusMap[item.id] = item;
+        });
+
+      $this.hideLoadingModal();
+      var localStorageSearch = $localStorage.search.reconciliationDashboard;
+      if (lodash.keys(localStorageSearch).length > 0) {
+        $scope.searchReconciliationDataList();
+      }
+    };
+
+    this.setInitPromises = function () {
+      var promises = [
+        reconciliationFactory.getStoreStatusList(),
+        catererStationService.getCatererStationList()
+      ];
+
+      return promises;
+    };
+
+    this.init = function () {
+      $this.showLoadingModal();
+
       $scope.tableSortTitle = '[scheduleDate, storeNumber, storeInstanceId, dispatchedStation, receivedStation]';
       $scope.displayColumns = {
         receivedStation: false,
@@ -577,12 +656,9 @@ angular.module('ts5App')
         updatedBy: false
       };
 
-      $scope.search = {
-        startDate: dateUtility.dateNumDaysBeforeTodayFormatted(10),
-        endDate: dateUtility.dateNumDaysBeforeTodayFormatted(2)
-      };
-
-      $this.getStoreStatusList();
+      $this.setSearchFromLocalStorage();
+      var promises = $this.setInitPromises();
+      $q.all(promises).then($this.completeInit);
     };
 
     this.init();
