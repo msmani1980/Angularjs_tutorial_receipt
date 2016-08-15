@@ -71,7 +71,9 @@ angular.module('ts5App')
     };
 
     $scope.printTransactionAmount = function (transaction) {
-      if (transaction.transactionAmount) {
+      if (transaction.netTransactionAmount && transaction.paymentMethod === 'Cash' && transaction.transactionTypeName === 'SALE') {
+        return transaction.netTransactionAmount + ' ' + transaction.transactionCurrencyCode;
+      } else if (transaction.transactionAmount) {
         return transaction.transactionAmount + ' ' + transaction.transactionCurrencyCode;
       }
 
@@ -98,7 +100,8 @@ angular.module('ts5App')
 
     function isNotSaleChangeTransaction(transaction) {
       var isSaleChangeTransaction = transaction.transactionTypeName === 'SALE' &&
-        transaction.transactionAmount < 0;
+        transaction.transactionChangeDue  &&
+        transaction.transactionChangeDue > 0;
 
       return !isSaleChangeTransaction;
     }
