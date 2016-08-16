@@ -5,7 +5,7 @@
  * @description # QueueCtrl Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('QueueCtrl', function ($localStorage, $rootScope, $scope, jobService, $interval, ENV, lodash) {
+  .controller('QueueCtrl', function ($localStorage, $rootScope, $scope, jobService, $interval, ENV, lodash, identityAccessFactory, globalMenuService) {
 
     $scope.jobs = [];
 
@@ -33,9 +33,13 @@ angular.module('ts5App')
     
     var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.REPORT.REPORTINSTANCE);    
     
-    $scope.isTemplateInFeaturesInRole = function(templateCode) { 
-      var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: templateCode });
-      return !!featuresInRoleMatch;
+    var companyTypeId = angular.fromJson(angular.toJson(identityAccessFactory.getSessionObject().companyData.companyTypeId));
+  
+    var baseCurrencyId = angular.fromJson(angular.toJson(identityAccessFactory.getSessionObject().companyData.baseCurrencyId));
+    
+    $scope.isTemplateInFeaturesInRole = function(template) { 
+      var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: template.code });
+      return !!featuresInRoleMatch && (template.companyTypeId === companyTypeId) && (globalMenuService.getCompanyData().chCompany !== undefined ? (template.baseCurrencyId === baseCurrencyId || template.baseCurrencyId === 0) : true);
     };
     
   });

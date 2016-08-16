@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ScheduledReportsCtrl', function ($localStorage, $rootScope, $scope, $modal, scheduledReportsService, lodash) {
+  .controller('ScheduledReportsCtrl', function ($localStorage, $rootScope, $scope, $modal, scheduledReportsService, lodash, identityAccessFactory, globalMenuService) {
 
     $scope.scheduledReports = [];
 
@@ -45,11 +45,15 @@ angular.module('ts5App')
       
     };
     
-    var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.REPORT.REPORTINSTANCE);    
+    var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.REPORT.REPORTINSTANCE);
     
-    $scope.isTemplateInFeaturesInRole = function(templateCode) { 
-      var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: templateCode });
-      return !!featuresInRoleMatch;
+    var companyTypeId = angular.fromJson(angular.toJson(identityAccessFactory.getSessionObject().companyData.companyTypeId));
+  
+    var baseCurrencyId = angular.fromJson(angular.toJson(identityAccessFactory.getSessionObject().companyData.baseCurrencyId));
+   
+    $scope.isTemplateInFeaturesInRole = function(template) { 
+      var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: template.code });
+      return !!featuresInRoleMatch && (template.companyTypeId === companyTypeId) && (globalMenuService.getCompanyData().chCompany !== undefined ? (template.baseCurrencyId === baseCurrencyId || template.baseCurrencyId === 0) : true);
     };  
     
   });

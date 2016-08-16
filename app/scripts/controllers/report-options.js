@@ -11,13 +11,13 @@ angular.module('ts5App')
   .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId) {
 
     $scope.templateId = templateId;
-    $scope.template = templateService.get({ templateId: templateId });
+    
+    templateService.get({ templateId: templateId }).$promise.then(function (rtn) {
+        $scope.template = rtn;
+        $scope.selection.name = rtn.name;
+      });
 
     $scope.selection = {};
-
-    $scope.template.$promise.then(function (rtn) {
-      $scope.selection.name = rtn.name;
-    });
 
     $scope.selection.options = {};
     

@@ -8,6 +8,7 @@
 	"template": {
 		"id": 21,
 		"code": "chTillBalanceEUPaperCoin",
+		"options":"template",
 		"queries": [{
 			"id": 22,
 			"code": "main",

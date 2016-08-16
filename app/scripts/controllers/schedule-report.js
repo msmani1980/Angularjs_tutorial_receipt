@@ -38,10 +38,11 @@ angular.module('ts5App')
         });
       }
 
-      $scope.template = templateService.get({
-        templateId: templateId
+      templateService.get({ templateId: templateId }).$promise.then(function (rtn) {
+        $scope.template = rtn;
+        $scope.selection.name = rtn.name;
       });
-
+      
       $scope.recurrencePattern = [{
         name: 'Daily',
         value: 'Daily'
@@ -64,10 +65,6 @@ angular.module('ts5App')
         { name: 'Wednesday', value: 'Wednesday' }, { name: 'Thursday', value: 'Thursday' }, { name: 'Friday', value: 'Friday' }, { name: 'Saturday', value: 'Saturday' }];
 
       $scope.dateRange = [{ name: 'Previous Day', value: 'Previous Day' }, { name: 'Previous 7 days', value: 'Previous 7 days' }, { name: 'Previous Month', value: 'Previous Month' }];
-
-      $scope.template.$promise.then(function (rtn) {
-        $scope.selection.name = rtn.name;
-      });
 
       var convertOptionValue = function (value, type, multiValue) {
         if (multiValue && Array.isArray(value)) {
