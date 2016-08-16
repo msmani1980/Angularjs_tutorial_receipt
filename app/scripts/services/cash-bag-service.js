@@ -21,6 +21,7 @@ angular.module('ts5App')
     var manualCashBagRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:cashBagId/cash/:recordId';
     var allManualCashBagsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/cash/';
     var manualEposDataRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-:type/:recordId';
+    var eposSalesRequestURL = ENV.apiURL + '/rsvr/api/cash-bags/:id/epossales';
 
     var requestCashBagParameters = {
       id: '@id',
@@ -95,6 +96,9 @@ angular.module('ts5App')
       },
       deleteManualCashBagRecord: {
         method: 'DELETE'
+      },
+      getEposSales: {
+        method: 'GET'
       }
     };
 
@@ -109,6 +113,7 @@ angular.module('ts5App')
     var allManualCashBagsRequestResource = $resource(allManualCashBagsRequestURL, {}, actions);
     var manualCashBagRequestResource = $resource(manualCashBagRequestURL, manualEposCashRequestParams, actions);
     var manualEposDataRequestResource = $resource(manualEposDataRequestURL, manualEposDataRequestParams, actions);
+    var eposSalesRequestResource = $resource(eposSalesRequestURL, requestCashBagParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -257,6 +262,11 @@ angular.module('ts5App')
       return manualEposDataRequestResource.deleteManualCashBagRecord().$promise;
     }
 
+    function getEposSales(cashBagId) {
+      requestCashBagParameters.id = cashBagId;
+      return eposSalesRequestResource.getEposSales().$promise;
+    }
+
     return {
       getCashBagList: getCashBagList,
       getCashBag: getCashBag,
@@ -279,6 +289,7 @@ angular.module('ts5App')
       getManualCashBagRecord: getManualCashBagRecord,
       createManualCashBagRecord: createManualCashBagRecord,
       updateManualCashBagRecord: updateManualCashBagRecord,
-      deleteManualCashBagRecord: deleteManualCashBagRecord
+      deleteManualCashBagRecord: deleteManualCashBagRecord,
+      getEposSales: getEposSales
     };
   });
