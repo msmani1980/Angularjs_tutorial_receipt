@@ -54,11 +54,14 @@ angular.module('ts5App')
     }
 
     function getMenuQuantity(itemMasterId) {
-      var masterItem = lodash.findWhere(_menuItems, {
-        itemMasterId: itemMasterId
-      }, true);
+      var masterItemMatches = lodash.filter(_menuItems, { itemMasterId: itemMasterId });
+      var totalMenuQuantity = 0;
 
-      return masterItem ? masterItem.menuQuantity : 0;
+      angular.forEach(masterItemMatches, function (menuItem) {
+        totalMenuQuantity += menuItem.menuQuantity;
+      });
+
+      return totalMenuQuantity;
     }
 
     function getItemsSuccessHandler(dataFromAPI) {
