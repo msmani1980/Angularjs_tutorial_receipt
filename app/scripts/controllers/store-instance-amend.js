@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstanceAmendCtrl
@@ -749,12 +748,15 @@ angular.module('ts5App')
       });
     }
 
+    function isDefined (value) {
+      return value !== null && angular.isDefined(value);
+    }
+
     function calculateCashRevenueForCredit(chCreditCard, cashRevenue) {
       angular.forEach(chCreditCard, function (creditCard) {
-        var amount = (creditCard.bankAmountFinal || 0) + (creditCard.coinAmountManualCc || 0) + (creditCard.paperAmountManualCc || 0);
-
-        if (creditCard.cashbagId) {
-          var cashBag = getCashBagById(creditCard.cashbagId);
+        var amount = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountManualCc) + makeFinite(creditCard.paperAmountManualCc);
+        var cashBag = (creditCard.cashbagId) ? getCashBagById(creditCard.cashbagId) : null;
+        if (isDefined(cashBag) && isDefined(cashBag.creditRevenue)) {	
           cashBag.creditRevenue.amount += amount;
           cashBag.creditRevenue.items.push({
             creditCard: creditCard.cardType,
@@ -768,10 +770,9 @@ angular.module('ts5App')
 
     function calculateCashRevenueForDiscounts(chDiscount, cashRevenue) {
       angular.forEach(chDiscount, function (discount) {
-        var amount = (discount.bankAmountFinal || 0) + (discount.coinAmountCc || 0) + (discount.paperAmountCc || 0);
-
-        if (discount.cashbagId) {
-          var cashBag = getCashBagById(discount.cashbagId);
+        var amount = makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
+        var cashBag = (discount.cashBagId) ? getCashBagById(discount.cashbagId) : null;
+        if (isDefined(cashBag) && isDefined(cashBag.discountRevenue)) {	
           cashBag.discountRevenue.amount += amount;
           cashBag.discountRevenue.items.push({
             discountName: discount.companyDiscountName,
@@ -811,7 +812,7 @@ angular.module('ts5App')
 
     function setupDiscrepancy() {
       var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
-      var netPercentage = makeFinite(netValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
+      var netPercentage = makeFinite(netValue * 100 / parseFloat($scope.stockTotals.totalNet.netEPOS));
 
       var revenueValue = 0;
       var revenuePercentage = 0;
@@ -820,9 +821,9 @@ angular.module('ts5App')
 
       if ($scope.companyIsUsingCash) {
         revenueValue = parseFloat($scope.totalRevenue.epos) - parseFloat($scope.stockTotals.totalNet.netEPOS);
-        revenuePercentage = makeFinite(revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
+        revenuePercentage = makeFinite(revenueValue * 100 / parseFloat($scope.stockTotals.totalNet.netEPOS));
         exchangeValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
-        exchangePercentage = makeFinite(exchangeValue / parseFloat($scope.stockTotals.totalNet.netEPOS));
+        exchangePercentage = makeFinite(exchangeValue * 100 / parseFloat($scope.stockTotals.totalNet.netEPOS));
       }
 
       var totalValue = netValue + revenueValue + exchangeValue;
@@ -870,7 +871,7 @@ angular.module('ts5App')
           isManual: cashBag.originationSource === 2,
           scheduleNumber: cashBag.scheduleNumber,
           scheduleDate: dateUtility.formatTimestampForApp(cashBag.scheduleDate),
-          isSubmitted: cashBag.isSubmitted,
+          isSubmitted: cashBag.submitted,
           isVerified: (cashBag.amendVerifiedOn) ? true : false,
           verifiedByUser: (cashBag.amendVerifiedBy) ? cashBag.amendVerifiedBy.userName : 'Unknown',
           verifiedOn: dateUtility.formatTimestampForApp(cashBag.amendVerifiedOn),
@@ -883,6 +884,15 @@ angular.module('ts5App')
           promotionDiscounts: 0 + getManualDataTotals('promotion', cashBag.id),
           flightSectors: []
         };
+      });
+    }
+
+    function isCashbagSubmitted() {
+      $scope.cashBagSubmitted = false;
+      angular.forEach($scope.normalizedCashBags, function (normalizedCashBag) {
+        if (normalizedCashBag.isSubmitted === true) {
+          $scope.cashBagSubmitted = true;
+        }
       });
     }
 
@@ -1019,6 +1029,7 @@ angular.module('ts5App')
     function setCashBags (cashBagsFromAPI) {
       $scope.cashBags = angular.copy(cashBagsFromAPI.response);
       setupCashBags();
+      isCashbagSubmitted();
     }
 
     function setFlightSectors(normalizedCashBag, flightSectorsFromAPI) {

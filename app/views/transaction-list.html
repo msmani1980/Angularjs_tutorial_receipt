@@ -249,7 +249,7 @@
       <td>{{ transaction.transactionDate }}</td>
       <td>{{ transaction.transactionId }}</td>
       <td>{{ printTransactionTypeName(transaction) }}</td>
-      <td>{{ transaction.paymentMethod }}</td>
+      <td>{{ printPaymentMethodName(transaction) }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'cardType') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'lastFour') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccProcessedDate') }}</td>

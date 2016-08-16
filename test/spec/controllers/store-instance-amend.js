@@ -493,6 +493,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
         expect(cashBagFactory.unverifyCashBag).toHaveBeenCalled();
       });
+
+      it('should init cashBagSubmitted flag', function () {
+        expect(scope.cashBagSubmitted).toBeDefined();
+      });
     });
 
     describe('hasMoreThanOneUnverifiedCashBags', function () {

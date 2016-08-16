@@ -399,11 +399,8 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchForm = function () {
-      $scope.search = {
-        startDate: dateUtility.dateNumDaysBeforeTodayFormatted(10),
-        endDate: dateUtility.dateNumDaysBeforeTodayFormatted(2)
-      };
-      $localStorage.search.storeInstanceDashboard = angular.copy($scope.search);
+      $scope.search = {};
+      $localStorage.search.storeInstanceDashboard = {};
       $scope.reconciliationList = null;
     };
 

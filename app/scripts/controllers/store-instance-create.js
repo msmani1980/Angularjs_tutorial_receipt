@@ -881,7 +881,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       promises.updateInstanceStatusPromises.push({
         f: storeInstanceFactory.updateStoreInstanceStatus,
         obj: storeInstanceFactory,
-        args: [$routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId]
+        args: [$routeParams.storeId, $this.nextStep.stepName]
       });
       if ($scope.prevStoreInstanceId && actionPayloadObj.actionTwo) {
         promises.updateInstancePromises.push({
