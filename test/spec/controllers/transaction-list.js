@@ -136,6 +136,19 @@ describe('Controller: TransactionListCtrl', function () {
     });
   });
 
+  describe('isNotSaleChangeTransaction will', function () {
+    it('filter transactions in appendTransactions method to not have ones with change due amount', function () {
+      function isSaleChangeTransaction(transaction) {
+        return transaction.transactionTypeName === 'SALE' &&
+          transaction.transactionChangeDue  &&
+          transaction.transactionChangeDue > 0;
+      }
+
+      var changeDueTransactions = scope.transactions.filter(isSaleChangeTransaction);
+      expect(changeDueTransactions.length).toBe(0);
+    });
+  });
+
   describe('clearSearch will', function () {
     it('clear search object', function () {
       scope.search = {
@@ -289,7 +302,7 @@ describe('Controller: TransactionListCtrl', function () {
     var transactionMock;
     beforeEach(function () {
       transactionMock = {
-        transactionAmount: '1.50',
+        transactionAmount: 1.50,
         transactionCurrencyCode: 'GBP'
       };
     });
@@ -300,6 +313,32 @@ describe('Controller: TransactionListCtrl', function () {
 
     it('print transactionAmount as 0 if printTransactionAmount is not defined', function () {
       transactionMock.transactionAmount = null;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
+    });
+
+    it('print netTransactionAmount if transactionTypeName is SALE and paymentMethod is Cash', function () {
+      transactionMock.transactionAmount = null;
+      transactionMock.netTransactionAmount = 1;
+      transactionMock.paymentMethod = 'Cash';
+      transactionMock.transactionTypeName = 'SALE'
+      ;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.netTransactionAmount + ' ' + transactionMock.transactionCurrencyCode);
+    });
+
+    it('print transactionAmount if netTransactionAmount is not defined and transactionAmount is', function () {
+      transactionMock.netTransactionAmount = null;
+      transactionMock.paymentMethod = 'Cash';
+      transactionMock.transactionTypeName = 'SALE'
+      ;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
+    });
+
+    it('print as 0 if netTransactionAmount is not defined and transactionAmount is not defined', function () {
+      transactionMock.netTransactionAmount = null;
+      transactionMock.transactionAmount = null;
+      transactionMock.paymentMethod = 'Cash';
+      transactionMock.transactionTypeName = 'SALE'
+      ;
       expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
     });
   });
