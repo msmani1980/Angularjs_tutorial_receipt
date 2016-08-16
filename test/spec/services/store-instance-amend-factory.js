@@ -27,6 +27,7 @@ describe('Factory: storeInstanceAmendFactory', function () {
     spyOn(storeInstanceAmendService, 'deletePostTrip').and.stub();
     spyOn(cashBagService, 'getAllManualCashList');
     spyOn(cashBagService, 'getManualCashBagList');
+    spyOn(cashBagService, 'getEposSales');
   }));
 
   it('should be defined', function () {
@@ -41,6 +42,7 @@ describe('Factory: storeInstanceAmendFactory', function () {
       expect(!!storeInstanceAmendFactory.getCashBags).toBe(true);
       expect(!!storeInstanceAmendFactory.getFlightSectors).toBe(true);
       expect(!!storeInstanceAmendFactory.deleteCashBag).toBe(true);
+      expect(!!storeInstanceAmendFactory.getCashBagEposSales).toBe(true);
     });
 
     it('getCashBags should call cashBagService', function () {
@@ -108,6 +110,13 @@ describe('Factory: storeInstanceAmendFactory', function () {
 
       storeInstanceAmendFactory.getFlightSectors(cashBagId);
       expect(storeInstanceAmendService.getPostTrips).toHaveBeenCalledWith(cashBagId);
+    });
+
+    it('getCashBagEposSales should call cashBagSerivce', function () {
+      var cashBagId = 1;
+
+      storeInstanceAmendFactory.getCashBagEposSales(cashBagId);
+      expect(cashBagService.getEposSales).toHaveBeenCalledWith(cashBagId);
     });
   });
 

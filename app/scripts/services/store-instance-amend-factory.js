@@ -261,6 +261,10 @@ angular.module('ts5App')
       return cashBagService.getManualCashBagList(manualDataType, payload);
     };
 
+    var getCashBagEposSales = function (cashBagId) {
+      return cashBagService.getEposSales(cashBagId);
+    };
+
     return {
       getCashBagListMockData: getCashBagListMockData,
       getStoreInstancesMockData: getStoreInstancesMockData,
@@ -272,6 +276,7 @@ angular.module('ts5App')
       addFlightSector: addFlightSector,
       editFlightSector: editFlightSector,
       deleteFlightSector: deleteFlightSector,
-      getCashBagManualData: getCashBagManualData
+      getCashBagManualData: getCashBagManualData,
+      getCashBagEposSales: getCashBagEposSales
     };
   });
