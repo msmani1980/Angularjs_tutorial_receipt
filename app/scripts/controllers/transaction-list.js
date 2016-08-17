@@ -106,12 +106,29 @@ angular.module('ts5App')
       return !isSaleChangeTransaction;
     }
 
-    function filterNotFullyPaidOffDiscount(transaction) {
-      var isNotFullyPaidOffDiscountTransaction = (transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher') &&
-        transaction.totalAmount &&
-        transaction.totalAmount !== 0;
+    function isTransactionCashOrCC(transaction) {
+      return transaction.paymentMethod === 'Cash' || transaction.paymentMethod === 'Credit Card';
+    }
 
-      return !isNotFullyPaidOffDiscountTransaction;
+    function isPaymentMethodVoucherOrDiscount(transaction) {
+      return transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher';
+    }
+
+    function isDiscountTransactionFullyPaidOff(transaction) {
+      return (transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') ||
+        (
+          transaction.transactionAmount > 0 &&
+          transaction.totalAmount > 0 &&
+          (transaction.totalAmount -  transaction.transactionAmount) === 0
+        );
+    }
+
+    function filterNotFullyPaidOffDiscount(transaction) {
+      return isTransactionCashOrCC(transaction) ||
+        (
+          isPaymentMethodVoucherOrDiscount(transaction) &&
+          isDiscountTransactionFullyPaidOff(transaction)
+        );
     }
 
     function isCreditCardPaymentSelected(paymentMethods) {
