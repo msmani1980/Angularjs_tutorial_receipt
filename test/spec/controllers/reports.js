@@ -11,23 +11,25 @@ describe('Controller: ReportsCtrl', function () {
 	  
 	  beforeEach(inject(function($controller, $localStorage, $rootScope, $injector) {
 		    identityAccessFactory = $injector.get('identityAccessFactory');
-		    
-		    inject(function() {
+		  
+	        inject(function() {
 			  featuresInRoleJSON = $injector.get('servedFeaturesInRoleReport');
 			  $localStorage.featuresInRole= featuresInRoleJSON;
 	  		});
 	  
 		    scope = $rootScope.$new();
 		    localStorage = $localStorage;
-		    
 		    spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({
 		        sessionToken: 'fakeSessionToken'
 		    });
-	 
+		    	 
 	  }));
 
 	  describe('controller init', function() {
-		    it('should define Scope Report', function() {
+
+		    it('should define Scope Reports', function() {
+		      expect(localStorage.featuresInRole.REPORT.REPORT[0].featureCode).toEqual('REPORT');
+		      expect(identityAccessFactory).toBeDefined();
 		    });
 	 });
 	

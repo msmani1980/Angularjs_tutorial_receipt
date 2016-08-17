@@ -49,9 +49,17 @@ angular.module('ts5App')
     
     var baseCurrencyId = angular.fromJson(angular.toJson(identityAccessFactory.getSessionObject().companyData.baseCurrencyId));
     
+    var isTypeIdSame = function (template) {
+      return (template.companyTypeId === companyTypeId);
+    };
+    
+    var isCompanyDateDefined = function (template) {
+      return (globalMenuService.getCompanyData().chCompany !== undefined ? (template.baseCurrencyId === baseCurrencyId || template.baseCurrencyId === 0) : true);
+    };
+    
     $scope.isTemplateInFeaturesInRole = function(template) { 
       var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: template.code });
-      return !!featuresInRoleMatch && (template.companyTypeId === companyTypeId) && (globalMenuService.getCompanyData().chCompany !== undefined ? (template.baseCurrencyId === baseCurrencyId || template.baseCurrencyId === 0) : true);
-    };    
-   
+      return !!featuresInRoleMatch && isTypeIdSame(template) && isCompanyDateDefined(template);
+    };
+    
   });

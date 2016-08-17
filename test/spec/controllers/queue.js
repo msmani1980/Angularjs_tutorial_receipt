@@ -30,6 +30,7 @@ describe('Controller: QueueCtrl', function () {
 
 		    it('should define Scope Queue Report', function() {
 		      expect(localStorage.featuresInRole.REPORT.REPORT[0].featureCode).toEqual('REPORT');
+		      expect(identityAccessFactory).toBeDefined();
 		    });
 	 });
 });
