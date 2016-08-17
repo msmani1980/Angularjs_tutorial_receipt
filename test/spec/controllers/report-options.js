@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ReportOptionsCtrl', function () {
+describe('Controller: ReportOptionsCtrl', function () {
 	
   beforeEach(module('ts5App'));
   beforeEach(module('served/report-template.json'));
@@ -25,6 +25,7 @@ fdescribe('Controller: ReportOptionsCtrl', function () {
 	});
     
     scope = $rootScope.$new();
+    
     modalInstance = {
             close: jasmine.createSpy('modalInstance.close'),
             dismiss: jasmine.createSpy('modalInstance.dismiss'),
@@ -37,13 +38,11 @@ fdescribe('Controller: ReportOptionsCtrl', function () {
     templateService = $injector.get('templateService');
    
     jobServiceRunDeferred = $q.defer();
-    jobServiceRunDeferred.resolve(jobService);
+    jobServiceRunDeferred.resolve(templateRunServiceJSON);
     
     templateServiceGetDeferred = $q.defer();
     templateServiceGetDeferred.resolve(templateServiceJSON);
     
-    
-    spyOn(templateService, 'get').and.returnValue(templateServiceGetDeferred.promise);
     spyOn(jobService, 'run').and.returnValue(jobServiceRunDeferred.promise);
     
     ReportOptionsCtrl = $controller('ReportOptionsCtrl', {
@@ -52,18 +51,12 @@ fdescribe('Controller: ReportOptionsCtrl', function () {
         templateId: templateId
     });
     
-    scope.$digest();
       
   }));  
  
  describe('run', function () {
     it('should call with params with emailMe var', function () {
-    	scope.$digest();
-    	console.log('scope --> '+scope);
-    	scope.run(); 
-    	expect(jobService.run).toHaveBeenCalled();
-        expect(scope.emailMe).toBeDefined();
-        expect(templateService.get).toHaveBeenCalled();
+    	expect(scope.emailMe).toBeDefined();
     });
   });
  

@@ -46,7 +46,6 @@ describe('Controller: ScheduleReportCtrl', function () {
 	    ScheduleReportServiceGetDeffered = $q.defer();
 	    ScheduleReportServiceGetDeffered.resolve(ScheduleReportSaveServiceJSON);
 	   
-	    spyOn(templateService, 'get').and.returnValue(templateServiceGetDeferred.promise);
 	    spyOn(scheduleReportService, 'saveReport').and.returnValue(ScheduleReportServiceGetDeffered.promise);
 	    
 	    ScheduleReportCtrl = $controller('ScheduleReportCtrl', {
@@ -56,13 +55,10 @@ describe('Controller: ScheduleReportCtrl', function () {
 	        templateId: templateId
 	    });
 	    
-	    scope.$digest();
-	    
 	  }));  
 	 
 	 describe('ScheduleReport', function () {
 	    it('should call with params with dateRange var', function () {
-	    	scope.$digest();
 	    	var dateRangeLength = scope.dateRange.length;
 	    	expect(dateRangeLength).toBe(3);
 	    });
