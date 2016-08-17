@@ -927,9 +927,8 @@ angular.module('ts5App')
       $this.stockTotals = angular.copy(stockTotalsFromAPI.response);
 
       angular.forEach($this.stockTotals, function (stockTotal) {
-        reconciliationFactory.getMasterItem(stockTotal.itemMasterId).then(function (dataFromAPI) {
-          stockTotal.itemName = dataFromAPI.itemName;
-        }, handleResponseError);
+        var itemMatchName = lodash.findWhere($this.masterItemList, { id: stockTotal.itemMasterId });
+        stockTotal.itemName = !!itemMatchName ? itemMatchName.itemName : '';
       });
     }
 
