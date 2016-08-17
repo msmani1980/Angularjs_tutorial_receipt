@@ -107,16 +107,18 @@ angular.module('ts5App')
     }
 
     function filterNotFullyPaidOffDiscount(transaction) {
-      var fullyPaidOffDiscount = (transaction.paymentMethod === 'Cash' ||  transaction.paymentMethod === 'Credit Card') ||
+      return (transaction.paymentMethod === 'Cash' ||  transaction.paymentMethod === 'Credit Card') ||
         (
           (transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher') &&
           (
-            transaction.totalAmount === 0 ||
-            (transaction.transactionAmount && transaction.totalAmount && ((transaction.totalAmount -  transaction.transactionAmount) === 0))
+            (transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') ||
+            (
+              transaction.transactionAmount > 0 &&
+              transaction.totalAmount > 0 &&
+              (transaction.totalAmount -  transaction.transactionAmount) === 0
+            )
           )
         );
-
-      return fullyPaidOffDiscount;
     }
 
     function isCreditCardPaymentSelected(paymentMethods) {

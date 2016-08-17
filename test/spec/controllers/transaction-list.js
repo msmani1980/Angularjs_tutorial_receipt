@@ -147,6 +147,20 @@ describe('Controller: TransactionListCtrl', function () {
     });
   });
 
+  describe('filterNotFullyPaidOffDiscount will', function () {
+    it('filter out transactions with discounts that are not fully paid off', function () {
+      var transactionsNotFullyPaidOffDiscount = scope.transactions.filter(function (transaction) {
+        return (transaction.transactionTypeName === 'SALE' && (transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher')) &&
+          (
+            (transaction.totalAmount !== 0 && transaction.discountTypeName === 'Comp') ||
+            (transaction.totalAmount > 0 && transaction.transactionAmount> 0 && (transaction.totalAmount -  transaction.transactionAmount) !== 0)
+          );
+      });
+
+      expect(transactionsNotFullyPaidOffDiscount.length).toEqual(0);
+    });
+  });
+
   describe('clearSearch will', function () {
     it('clear search object', function () {
       scope.search = {
