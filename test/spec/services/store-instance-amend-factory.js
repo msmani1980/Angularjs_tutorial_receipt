@@ -8,14 +8,16 @@ describe('Factory: storeInstanceAmendFactory', function () {
   var rootScope;
   var scope;
   var cashBagService;
+  var itemsService;
   var storeInstanceAmendService;
 
-  beforeEach(inject(function ($rootScope, _storeInstanceAmendFactory_, _cashBagService_, _storeInstanceAmendService_) {
+  beforeEach(inject(function ($rootScope, _storeInstanceAmendFactory_, _cashBagService_, _storeInstanceAmendService_, _itemsService_) {
     rootScope = $rootScope;
     scope = $rootScope.$new();
     storeInstanceAmendFactory = _storeInstanceAmendFactory_;
     cashBagService = _cashBagService_;
     storeInstanceAmendService = _storeInstanceAmendService_;
+    itemsService = _itemsService_;
 
     spyOn(cashBagService, 'getCashBagVerifications').and.stub();
     spyOn(cashBagService, 'getCashBagCarrierInstances').and.stub();
@@ -28,6 +30,7 @@ describe('Factory: storeInstanceAmendFactory', function () {
     spyOn(cashBagService, 'getAllManualCashList');
     spyOn(cashBagService, 'getManualCashBagList');
     spyOn(cashBagService, 'getEposSales');
+    spyOn(itemsService, 'getItemsList');
   }));
 
   it('should be defined', function () {
@@ -117,6 +120,12 @@ describe('Factory: storeInstanceAmendFactory', function () {
 
       storeInstanceAmendFactory.getCashBagEposSales(cashBagId);
       expect(cashBagService.getEposSales).toHaveBeenCalledWith(cashBagId);
+    });
+
+    it('getItemsList shoudl call itemSericee', function () {
+      var fakePayload = {fakeKey: 'fakeValue'};
+      storeInstanceAmendFactory.getMasterItemList(fakePayload);
+      expect(itemsService.getItemsList).toHaveBeenCalledWith(fakePayload, true);
     });
   });
 
