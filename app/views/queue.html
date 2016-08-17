@@ -15,7 +15,7 @@
        </tr>
      </thead>
      <tbody>
-       <tr ng-repeat="job in jobs track by job.id" ng-if="isTemplateInFeaturesInRole(job.template)">
+       <tr ng-repeat="job in jobs track by job.id"><!-- ng-if="isTemplateInFeaturesInRole(job.template)" -->
          <th>{{job.name}}</th>
          <th>{{job.status}}</th>
          <th>{{job.id}}</th>
