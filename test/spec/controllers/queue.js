@@ -9,6 +9,7 @@ describe('Controller: QueueCtrl', function () {
 	  var scope;
 	  var localStorage;
 	  var identityAccessFactory;
+	  var QueueCtrl;
 	  
 	  beforeEach(inject(function($controller, $localStorage, $rootScope, $injector) {
 		    identityAccessFactory = $injector.get('identityAccessFactory');
@@ -21,16 +22,23 @@ describe('Controller: QueueCtrl', function () {
 		    scope = $rootScope.$new();
 		    localStorage = $localStorage;
 		    spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({
-		        sessionToken: 'fakeSessionToken'
+		    	sessionToken: 'fakeSessionToken',companyData: '[{companyTypeId : 1, baseCurrencyId: 2}]'
+		    });
+		    
+		    QueueCtrl = $controller('QueueCtrl', {
+		        $scope: scope,
 		    });
 		    	 
 	  }));
 
 	  describe('controller init', function() {
 
-		    it('should define Scope Queue Report', function() {
-		      expect(localStorage.featuresInRole.REPORT.REPORT[0].featureCode).toEqual('REPORT');
-		      expect(identityAccessFactory).toBeDefined();
+		    it('should define Scope Queue Reports', function() {
+		    	expect(localStorage.featuresInRole.REPORT.REPORT[0].featureCode).toEqual('REPORT');
+			    expect(identityAccessFactory).toBeDefined();
+			    expect(identityAccessFactory.getSessionObject).toHaveBeenCalled();
+			    expect(identityAccessFactory.getSessionObject().companyData).toBeDefined();
 		    });
 	 });
+	
 });

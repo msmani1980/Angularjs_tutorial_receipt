@@ -8,6 +8,7 @@ describe('Controller: ReportsCtrl', function () {
 	  var scope;
 	  var localStorage;
 	  var identityAccessFactory;
+	  var ReportsCtrl;
 	  
 	  beforeEach(inject(function($controller, $localStorage, $rootScope, $injector) {
 		    identityAccessFactory = $injector.get('identityAccessFactory');
@@ -20,7 +21,11 @@ describe('Controller: ReportsCtrl', function () {
 		    scope = $rootScope.$new();
 		    localStorage = $localStorage;
 		    spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({
-		        sessionToken: 'fakeSessionToken'
+		        sessionToken: 'fakeSessionToken',companyData: '[{companyTypeId : 1, baseCurrencyId: 2}]'
+		    });
+		    
+		    ReportsCtrl = $controller('ReportsCtrl', {
+		        $scope: scope,
 		    });
 		    	 
 	  }));
@@ -30,6 +35,8 @@ describe('Controller: ReportsCtrl', function () {
 		    it('should define Scope Reports', function() {
 		      expect(localStorage.featuresInRole.REPORT.REPORT[0].featureCode).toEqual('REPORT');
 		      expect(identityAccessFactory).toBeDefined();
+		      expect(identityAccessFactory.getSessionObject).toHaveBeenCalled();
+		      expect(identityAccessFactory.getSessionObject().companyData).toBeDefined();
 		    });
 	 });
 	
