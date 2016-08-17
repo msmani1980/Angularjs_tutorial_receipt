@@ -21,7 +21,7 @@ angular.module('ts5App')
     var manualCashBagRequestURL = ENV.apiUrl + '/rsvr/api/cashbag/:cashBagId/cash/:recordId';
     var allManualCashBagsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/cash/';
     var manualEposDataRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-:type/:recordId';
-    var eposSalesRequestURL = ENV.apiURL + '/rsvr/api/cash-bags/:id/epossales';
+    var eposSalesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/epossales';
 
     var requestCashBagParameters = {
       id: '@id',

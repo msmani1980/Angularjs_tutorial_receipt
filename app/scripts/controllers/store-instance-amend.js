@@ -756,7 +756,7 @@ angular.module('ts5App')
       angular.forEach(chCreditCard, function (creditCard) {
         var amount = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountManualCc) + makeFinite(creditCard.paperAmountManualCc);
         var cashBag = (creditCard.cashbagId) ? getCashBagById(creditCard.cashbagId) : null;
-        if (isDefined(cashBag) && isDefined(cashBag.creditRevenue)) {	
+        if (isDefined(cashBag) && isDefined(cashBag.creditRevenue)) {
           cashBag.creditRevenue.amount += amount;
           cashBag.creditRevenue.items.push({
             creditCard: creditCard.cardType,
@@ -772,7 +772,7 @@ angular.module('ts5App')
       angular.forEach(chDiscount, function (discount) {
         var amount = makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
         var cashBag = (discount.cashBagId) ? getCashBagById(discount.cashbagId) : null;
-        if (isDefined(cashBag) && isDefined(cashBag.discountRevenue)) {	
+        if (isDefined(cashBag) && isDefined(cashBag.discountRevenue)) {
           cashBag.discountRevenue.amount += amount;
           cashBag.discountRevenue.items.push({
             discountName: discount.companyDiscountName,
@@ -859,6 +859,7 @@ angular.module('ts5App')
       };
     }
 
+    // TODO: add epossales to regular/virtual/voucher
     function setupCashBags () {
       $scope.normalizedCashBags = $scope.cashBags.map(function (cashBag) {
         return {
@@ -1029,6 +1030,7 @@ angular.module('ts5App')
     function setCashBags (cashBagsFromAPI) {
       $scope.cashBags = angular.copy(cashBagsFromAPI.response);
       setupCashBags();
+      console.log($scope.cashBags);
       isCashbagSubmitted();
     }
 
@@ -1160,12 +1162,20 @@ angular.module('ts5App')
       });
     }
 
+    // TODO;
+    function getCashBagEposSales(normalizedCashBag) {
+      return storeInstanceAmendFactory.getCashBagEposSales(normalizedCashBag.id).then(function (cashBagSalesFromAPI) {
+        console.log(cashBagSalesFromAPI);
+      });
+    }
+
     function getCashBagDetails () {
       var promiseArray = [];
 
       angular.forEach($scope.normalizedCashBags, function (normalizedCashBag) {
         promiseArray.push(getCashBagDeletionFlag(normalizedCashBag));
         promiseArray.push(getFlightSectors(normalizedCashBag));
+        promiseArray.push(getCashBagEposSales(normalizedCashBag));
       });
 
       $q.all(promiseArray).then();
