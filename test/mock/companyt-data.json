@@ -1,0 +1,366 @@
+{
+	"timeout": 60000,
+	"userId": 3,
+	"username": "user",
+	"companyId": 403,
+	"companyData": {
+		"createdBy": null,
+		"createdByPerson": null,
+		"createdOn": null,
+		"updatedBy": 1,
+		"updatedByPerson": {
+			"id": 1,
+			"userName": "admin",
+			"email": "VKrinitsyn@egate-solutions.com",
+			"firstName": null,
+			"lastName": null
+		},
+		"updatedOn": "2016-07-22 18:17:55",
+		"id": 403,
+		"companyTypeId": 1,
+		"legalName": "EasyJet",
+		"dbaName": "EasyJet",
+		"ediName": null,
+		"roundingOptionId": 3,
+		"baseCurrencyId": 8,
+		"exchangerateVariance": null,
+		"icao": "BAW",
+		"parentCompanyId": null,
+		"companyCashbagsForChCompanyId": [],
+		"companyCabinClasses": [{
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-05-01 15:13:16",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": "2015-07-01 22:44:08",
+			"id": 20,
+			"companyId": 403,
+			"cabinClass": "Common",
+			"code": "CC",
+			"cabinClassDescription": "Common Class"
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-05-04 04:49:06",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": "2015-07-01 22:44:09",
+			"id": 22,
+			"companyId": 403,
+			"cabinClass": "Business Class",
+			"code": "BC",
+			"cabinClassDescription": "Business Class Seating"
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-05-04 04:48:46",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": "2015-07-01 22:44:09",
+			"id": 21,
+			"companyId": 403,
+			"cabinClass": "First Class",
+			"code": "FC",
+			"cabinClassDescription": "First Class Seating"
+		}],
+		"taxes": [{
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2016-07-11 13:37:35",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 44,
+			"companyId": 403,
+			"taxTypeCode": "VAT Fresh Consumable",
+			"description": "VAT Fresh Consumable Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-05-04 18:58:48",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 20,
+			"companyId": 403,
+			"taxTypeCode": "Local",
+			"description": "Local Tax",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-07-22 17:02:09",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 24,
+			"companyId": 403,
+			"taxTypeCode": "meenumeenumeenumeenu",
+			"description": "Vat Tax Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-05-04 18:57:48",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 18,
+			"companyId": 403,
+			"taxTypeCode": "VAT",
+			"description": "Vat Tax",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-07-15 21:42:40",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 22,
+			"companyId": 403,
+			"taxTypeCode": "VAT1",
+			"description": "VAT BEER",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-07-22 18:26:25",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 29,
+			"companyId": 403,
+			"taxTypeCode": "00000000000000000000",
+			"description": "Vat Tax Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2016-07-11 13:38:08",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 46,
+			"companyId": 403,
+			"taxTypeCode": "VAT Virtual Product",
+			"description": "VAT Virtual Product Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-07-22 17:03:08",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 25,
+			"companyId": 403,
+			"taxTypeCode": "meenum  meenu",
+			"description": "Vat Tax Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2016-07-11 13:37:01",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 42,
+			"companyId": 403,
+			"taxTypeCode": "VAT Boutique",
+			"description": "VAT Boutique Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2016-07-11 13:37:20",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 43,
+			"companyId": 403,
+			"taxTypeCode": "VAT Consumed",
+			"description": "VAT Consumed Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-07-22 18:12:45",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 27,
+			"companyId": 403,
+			"taxTypeCode": "test test test test1",
+			"description": "Vat Tax Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-07-22 18:44:26",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 30,
+			"companyId": 403,
+			"taxTypeCode": "1234",
+			"description": "Vat Tax Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2016-07-11 13:37:52",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 45,
+			"companyId": 403,
+			"taxTypeCode": "VAT Scratch Card",
+			"description": "VAT Scratch Card Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-07-22 17:00:28",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 23,
+			"companyId": 403,
+			"taxTypeCode": "VAT Tax",
+			"description": "Vat Tax Description",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2015-05-04 18:58:25",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 19,
+			"companyId": 403,
+			"taxTypeCode": "GST",
+			"description": "GST Tax",
+			"countTaxRate": null
+		}, {
+			"createdBy": null,
+			"createdByPerson": null,
+			"createdOn": "2016-07-11 13:38:25",
+			"updatedBy": null,
+			"updatedByPerson": null,
+			"updatedOn": null,
+			"id": 47,
+			"companyId": 403,
+			"taxTypeCode": "VAT Third Party",
+			"description": "VAT Third Party Description",
+			"countTaxRate": null
+		}],
+		"companyName": "British Airways",
+		"companyCode": "BA",
+		"isActive": true,
+		"changeDueRoundingOptionId": 2,
+		"countryVats": [{
+			"id": 11,
+			"companyId": 403,
+			"countryId": 84,
+			"vat": "1000345222"
+		}],
+		"languages": [4, 5, 2],
+		"eposLanguages": [2, 4, 5],
+		"companyTypeName": "Retail"
+	},
+	"companyFormatList": {
+		"CURRENCY": "#,###.##",
+		"DATE": "dd/mm/yyyy"
+	},
+	"userCompanies": [{
+		"id": 626,
+		"type": {
+			"companyTypeName": "Stockowner"
+		},
+		"companyName": "AutomationStockOwner",
+		"companyCode": "ASO"
+	}, {
+		"id": 403,
+		"type": {
+			"companyTypeName": "Retail"
+		},
+		"companyName": "British Airways",
+		"companyCode": "BA"
+	}, {
+		"id": 679,
+		"type": {
+			"companyTypeName": "Stockowner"
+		},
+		"companyName": "eGateStock1",
+		"companyCode": "eGateStock"
+	}, {
+		"id": 680,
+		"type": {
+			"companyTypeName": "Stockowner"
+		},
+		"companyName": "eGateStock2",
+		"companyCode": "eGate"
+	}, {
+		"id": 66,
+		"type": {
+			"companyTypeName": "Stockowner"
+		},
+		"companyName": "GateRetailOnboard4",
+		"companyCode": "GRO4"
+	}, {
+		"id": 362,
+		"type": {
+			"companyTypeName": "Cash Handler"
+		},
+		"companyName": "ICE Gatwick",
+		"companyCode": "ICELGW"
+	}, {
+		"id": 363,
+		"type": {
+			"companyTypeName": "Cash Handler"
+		},
+		"companyName": "ICE Luton",
+		"companyCode": "ICELTN"
+	}, {
+		"id": 313,
+		"type": {
+			"companyTypeName": "Cash Handler"
+		},
+		"companyName": "UKTest",
+		"companyCode": "UKT"
+	}],
+	"companyTypes": [{
+		"id": 1,
+		"name": "Retail"
+	}, {
+		"id": 2,
+		"name": "Stockowner"
+	}, {
+		"id": 3,
+		"name": "Warehouse"
+	}, {
+		"id": 4,
+		"name": "Caterer"
+	}, {
+		"id": 5,
+		"name": "Cash Handler"
+	}, {
+		"id": 6,
+		"name": "Supplier"
+	}],
+	"currentSession": {
+		"createDate": "2016-08-10 18:57 PM GMT",
+		"createdBy": "admin",
+		"updateDate": "2016-08-10 18:57 PM GMT",
+		"updatedBy": "admin",
+		"id": 11187,
+		"sessionToken": "117d54df1a211147eb19b5710307505020d6",
+		"ip": "207.140.219.162",
+		"validCode": 0,
+		"personId": 3
+	},
+	"sessionToken": "117d54df1a211147eb19b5710307505020d6"
+}

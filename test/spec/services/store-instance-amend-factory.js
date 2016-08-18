@@ -8,14 +8,16 @@ describe('Factory: storeInstanceAmendFactory', function () {
   var rootScope;
   var scope;
   var cashBagService;
+  var itemsService;
   var storeInstanceAmendService;
 
-  beforeEach(inject(function ($rootScope, _storeInstanceAmendFactory_, _cashBagService_, _storeInstanceAmendService_) {
+  beforeEach(inject(function ($rootScope, _storeInstanceAmendFactory_, _cashBagService_, _storeInstanceAmendService_, _itemsService_) {
     rootScope = $rootScope;
     scope = $rootScope.$new();
     storeInstanceAmendFactory = _storeInstanceAmendFactory_;
     cashBagService = _cashBagService_;
     storeInstanceAmendService = _storeInstanceAmendService_;
+    itemsService = _itemsService_;
 
     spyOn(cashBagService, 'getCashBagVerifications').and.stub();
     spyOn(cashBagService, 'getCashBagCarrierInstances').and.stub();
@@ -27,6 +29,8 @@ describe('Factory: storeInstanceAmendFactory', function () {
     spyOn(storeInstanceAmendService, 'deletePostTrip').and.stub();
     spyOn(cashBagService, 'getAllManualCashList');
     spyOn(cashBagService, 'getManualCashBagList');
+    spyOn(cashBagService, 'getEposSales');
+    spyOn(itemsService, 'getItemsList');
   }));
 
   it('should be defined', function () {
@@ -41,6 +45,7 @@ describe('Factory: storeInstanceAmendFactory', function () {
       expect(!!storeInstanceAmendFactory.getCashBags).toBe(true);
       expect(!!storeInstanceAmendFactory.getFlightSectors).toBe(true);
       expect(!!storeInstanceAmendFactory.deleteCashBag).toBe(true);
+      expect(!!storeInstanceAmendFactory.getCashBagEposSales).toBe(true);
     });
 
     it('getCashBags should call cashBagService', function () {
@@ -108,6 +113,19 @@ describe('Factory: storeInstanceAmendFactory', function () {
 
       storeInstanceAmendFactory.getFlightSectors(cashBagId);
       expect(storeInstanceAmendService.getPostTrips).toHaveBeenCalledWith(cashBagId);
+    });
+
+    it('getCashBagEposSales should call cashBagSerivce', function () {
+      var cashBagId = 1;
+
+      storeInstanceAmendFactory.getCashBagEposSales(cashBagId);
+      expect(cashBagService.getEposSales).toHaveBeenCalledWith(cashBagId);
+    });
+
+    it('getItemsList shoudl call itemSericee', function () {
+      var fakePayload = {fakeKey: 'fakeValue'};
+      storeInstanceAmendFactory.getMasterItemList(fakePayload);
+      expect(itemsService.getItemsList).toHaveBeenCalledWith(fakePayload, true);
     });
   });
 

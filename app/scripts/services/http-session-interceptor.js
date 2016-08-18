@@ -82,20 +82,12 @@ angular.module('ts5App')
 
     var legacyApis = [
         '/rsvr/api/retail-items/master/*',
-        '/rsvr/api/units',
         '/rsvr/api/promotions/[0-9]*$',
         '/rsvr/api/dispatch/store-instances/[0-9]*/status/[5-9][^11]*$',
         '/rsvr/api/promotions',
         '/rsvr/api/companies/[0-9]*/company-credit-card-types',
         '/rsvr/api/records/company-types',
-        '/rsvr/api/companies/[0-9]*/tags',
-        '/rsvr/api/companies/[0-9]*/tax-types',
-        '/rsvr/api/images',
-        '/rsvr/api/records/allergens',
-        '/rsvr/api/records/price-types',
-        '/rsvr/api/company-discounts',
-        '/rsvr/api/company-station-globals',
-        '/rsvr/api/companies'
+        '/rsvr/api/company-discounts/[0-9]*$'
     ];
 
     var onlyRsvrApis = [
@@ -121,7 +113,8 @@ angular.module('ts5App')
       '/api/dispatch/store-instances/[0-9]*/items',
       '/api/dispatch/store-instances/[0-9]*/status/[0-4]',
       '/api/companies/[0-9]*/posttrips',
-      '/api/companies/[0-9]*/posttrips/[0-9]*'
+      '/api/companies/[0-9]*/posttrips/[0-9]*',
+      '/api/companies/[0-9]*/sales-categories'
     ];
 
     function responseError(response) {

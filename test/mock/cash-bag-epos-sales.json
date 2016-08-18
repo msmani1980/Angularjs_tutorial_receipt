@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "count": 9,
+    "limit": 9,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 673,
+      "storeInstanceId": 5682,
+      "eposCashbagId": 2511,
+      "itemMasterId": 13,
+      "itemTypeId": 1,
+      "eposQuantity": 1,
+      "eposTotal": 1.5,
+      "price": 1.5
+    },
+    {
+      "id": 667,
+      "storeInstanceId": 5682,
+      "eposCashbagId": 2511,
+      "itemMasterId": 34,
+      "itemTypeId": 1,
+      "eposQuantity": 11,
+      "eposTotal": 29.7,
+      "price": 3
+    },
+    {
+      "id": 668,
+      "storeInstanceId": 5682,
+      "eposCashbagId": 2511,
+      "itemMasterId": 59,
+      "itemTypeId": 2,
+      "eposQuantity": 5,
+      "eposTotal": 5,
+      "price": 1
+    },
+    {
+      "id": 675,
+      "storeInstanceId": 5682,
+      "eposCashbagId": 2511,
+      "itemMasterId": 63,
+      "itemTypeId": 2,
+      "eposQuantity": 1,
+      "eposTotal": 1.35,
+      "price": 1.35
+    },
+    {
+      "id": 670,
+      "storeInstanceId": 5682,
+      "eposCashbagId": 2511,
+      "itemMasterId": 69,
+      "itemTypeId": 4,
+      "eposQuantity": 10,
+      "eposTotal": 20,
+      "price": 1.5
+    },
+    {
+      "id": 669,
+      "storeInstanceId": 5682,
+      "eposCashbagId": 2511,
+      "itemMasterId": 71,
+      "itemTypeId": 4,
+      "eposQuantity": 7,
+      "eposTotal": 21,
+      "price": 3
+    }
+  ]
+}

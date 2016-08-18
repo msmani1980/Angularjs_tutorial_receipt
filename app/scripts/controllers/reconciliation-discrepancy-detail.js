@@ -1012,6 +1012,19 @@ angular.module('ts5App')
       }
     };
 
+    $scope.isAllCashBagsVerified = function () {
+      var isCashBagVerified = true;
+      var isVerified;
+      angular.forEach($scope.cashBagList, function (cashBag) {
+        isVerified = (cashBag.amendVerifiedOn) ? true : false;  
+        if (isCashBagVerified && !isVerified) {
+          isCashBagVerified = false;
+        }
+      });
+
+      return isCashBagVerified;
+    };
+
     $scope.confirmAction = function (action, actionName) {
       if (angular.isDefined(action)) {
         $scope.actionToExecute = action;

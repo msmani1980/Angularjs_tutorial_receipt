@@ -216,7 +216,7 @@ angular.module('ts5App').service('storeInstanceFactory',
     }
 
     function updateStoreInstanceStatus(storeId, statusId, isManual) {
-      isManual = isManual || false;
+      isManual = !!isManual || false;
       return storeInstanceService.updateStoreInstanceStatus(storeId, statusId, undefined, isManual);
     }
 

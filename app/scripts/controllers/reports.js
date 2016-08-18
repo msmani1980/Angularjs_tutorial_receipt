@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReportsCtrl', function ($localStorage, $rootScope, $scope, $modal, templateService, lodash) {
+  .controller('ReportsCtrl', function ($localStorage, $rootScope, $scope, $modal, templateService, lodash, identityAccessFactory, globalMenuService) {
 
     $scope.templates = templateService.query();
 
@@ -43,11 +43,23 @@ angular.module('ts5App')
       });
     };
     
-    var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.REPORT.REPORTINSTANCE);    
+    var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.REPORT.REPORTINSTANCE);
     
-    $scope.isTemplateInFeaturesInRole = function(templateCode) { 
-      var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: templateCode });
-      return !!featuresInRoleMatch;
-    };    
-   
+    var companyTypeId = angular.fromJson(angular.toJson(identityAccessFactory.getSessionObject().companyData.companyTypeId));
+    
+    var baseCurrencyId = angular.fromJson(angular.toJson(identityAccessFactory.getSessionObject().companyData.baseCurrencyId));
+    
+    var isTypeIdSame = function (template) {
+      return (template.companyTypeId === companyTypeId);
+    };
+    
+    var isCompanyDateDefined = function (template) {
+      return (globalMenuService.getCompanyData().chCompany !== undefined ? (template.baseCurrencyId === baseCurrencyId || template.baseCurrencyId === 0) : true);
+    };
+    
+    $scope.isTemplateInFeaturesInRole = function(template) { 
+      var featuresInRoleMatch = lodash.findWhere(featuresInRoleCollection, { taskCode: template.code });
+      return !!featuresInRoleMatch && isTypeIdSame(template) && isCompanyDateDefined(template);
+    };
+    
   });

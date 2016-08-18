@@ -995,10 +995,16 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         scope.performAction('Discrepancies');
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith('1', '9', false);
       });
-
     });
+    
+    describe('$scope.isAllCashBagsVerified method', function () {
+        beforeEach(function () {
+          scope.cashBagList = cashBagVerificationsJSON;
+        });
 
+        it('should return false if not all cashbags were verified', function () {
+          expect(scope.isAllCashBagsVerified()).toBeFalsy();
+        });
+      });      
   });
-
-
 });

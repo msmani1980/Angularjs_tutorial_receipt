@@ -202,7 +202,7 @@
       <td>{{ store.id }}</td>
       <td>{{ store.statusName }}</td>
       <td>{{ store.updatedOnDisplay }}</td>
-      <td>{{ store.updatedBy }}</td>
+      <td>{{ store.updatedByPerson.userName || store.createdByPerson.userName }}</td>
       <td class="col-xs-1">
         <a class="btn btn-primary btn-xs btn-block" tabindex="0"
            ng-show="doesStoreInstanceContainAction(store, 'Pack')"
@@ -296,7 +296,7 @@
       <td>{{ replenishment.id }}</td>
       <td>{{ replenishment.statusName }}</td>
       <td>{{ replenishment.updatedOnDisplay }}</td>
-      <td>{{ replenishment.updatedBy }}</td>
+      <td>{{ replenishment.updatedByPerson.userName || replenishment.createdByPerson.userName }}</td>
       <td class="col-xs-1">
         <a class="btn btn-primary btn-xs btn-block" tabindex="0"
            ng-show="shouldShowReplenishAction(replenishment, store, 'Pack')"

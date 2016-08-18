@@ -35,6 +35,10 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
   var getCountTypesDeferred;
   var getCountTypesJSON;
   var endInstanceStoreDetailsJSON;
+  var storeInstanceItemsJSON;
+  var storeInstanceMenuItemsJSON;
+  var lodash;
+  var duplicateMenuItem;
 
   function initController($controller) {
     StoreInstanceReviewCtrl = $controller('StoreInstanceReviewCtrl', {
@@ -57,14 +61,26 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
 
     storeInstanceWizardConfig = $injector.get('storeInstanceWizardConfig');
     dateUtility = $injector.get('dateUtility');
+    lodash = $injector.get('lodash');
 
     // storeInstanceFactory
     storeInstanceFactory = $injector.get('storeInstanceFactory');
     getStoreDetailsDeferred = $q.defer();
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
 
+    storeInstanceItemsJSON = _servedStoreInstanceItemList_;
+    storeInstanceMenuItemsJSON = _servedStoreInstanceMenuItems_;
+
+    // add duplicate menu item to test combining duplicates
+    duplicateMenuItem = {
+      itemMasterId: storeInstanceItemsJSON.response[0].itemMasterId,
+      menuQuantity: 100
+    };
+    var menuItemsWithDuplicate = angular.copy(storeInstanceMenuItemsJSON);
+    menuItemsWithDuplicate.response.push(duplicateMenuItem);
+
     getStoreInstanceMenuItemsDeferred = $q.defer();
-    getStoreInstanceMenuItemsDeferred.resolve(_servedStoreInstanceMenuItems_);
+    getStoreInstanceMenuItemsDeferred.resolve(menuItemsWithDuplicate);
     spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(
       getStoreInstanceMenuItemsDeferred.promise);
 
@@ -75,7 +91,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(
       updateStoreInstanceStatusDeferred.promise);
     getStoreInstanceItemsDeferred = $q.defer();
-    getStoreInstanceItemsDeferred.resolve(_servedStoreInstanceItemList_);
+    getStoreInstanceItemsDeferred.resolve(storeInstanceItemsJSON);
     spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
 
     storeInstanceReviewFactory = $injector.get('storeInstanceReviewFactory');
@@ -176,6 +192,16 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
       };
       expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(routeParams.storeId,
         expectedPayload);
+    });
+
+    it('should sum overlapping store instance menu items', function () {
+      scope.$digest();
+
+      var itemMatch = lodash.findWhere(scope.items, {itemMasterId: duplicateMenuItem.itemMasterId});
+      var originalMenuItem = lodash.findWhere(storeInstanceMenuItemsJSON.response, {itemMasterId: duplicateMenuItem.itemMasterId});
+      var expectedQuantity = duplicateMenuItem.menuQuantity + originalMenuItem.menuQuantity;
+
+      expect(itemMatch.menuQuantity).toEqual(expectedQuantity);
     });
 
     it('should call getStoreInstanceItems', function() {
