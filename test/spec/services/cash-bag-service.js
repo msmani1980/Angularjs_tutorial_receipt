@@ -460,5 +460,21 @@ describe('Service: cashBagService', function () {
         $httpBackend.flush();
       });
     });
+
+    describe('getEposSales', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.getEposSales).toBe(true);
+      });
+
+      beforeEach(function () {
+        $httpBackend.whenGET(/cash-bags\/95\/epossales/).respond(200, {});
+      });
+
+      it('should GET epos sales data from API', function () {
+        cashBagService.getEposSales(95);
+        $httpBackend.expectGET(/cash-bags\/95\/epossales/);
+        $httpBackend.flush();
+      });
+    });
   });
 });
