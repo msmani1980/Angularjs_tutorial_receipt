@@ -608,8 +608,10 @@ angular.module('ts5App')
     function extractEposSalesPromotionByCashBag(item) {
       if (item.cashbagId) {
         var cashBag = getCashBagById(item.cashbagId);
-        var amount = item.convertedAmount || 0;
-        cashBag.promotionDiscounts += amount;
+        if (angular.isDefined(cashBag) && angular.isDefined(cashBag.promotionDiscounts)) {
+          var amount = item.convertedAmount || 0;
+          cashBag.promotionDiscounts += amount;
+        }
       }
     }
 
