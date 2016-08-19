@@ -73,6 +73,8 @@ angular.module('ts5App')
     $scope.printTransactionAmount = function (transaction) {
       if (transaction.netTransactionAmount && transaction.paymentMethod === 'Cash' && transaction.transactionTypeName === 'SALE') {
         return transaction.netTransactionAmount + ' ' + transaction.transactionCurrencyCode;
+      } else if (transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') {
+        return transaction.totalAmount + ' ' + transaction.transactionCurrencyCode;
       } else if (transaction.transactionAmount) {
         return transaction.transactionAmount + ' ' + transaction.transactionCurrencyCode;
       }
