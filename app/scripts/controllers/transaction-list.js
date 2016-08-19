@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TransactionListCtrl', function ($scope, $q, transactionFactory, recordsService, currencyFactory,
+  .controller('TransactionListCtrl', function ($scope, $q, $filter, transactionFactory, recordsService, currencyFactory,
                                                stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility) {
     var $this = this;
 
@@ -299,7 +299,8 @@ angular.module('ts5App')
     }
 
     function setCompanyCurrencies(dataFromAPI) {
-      $scope.companyCurrencies = angular.copy(dataFromAPI.response);
+      var distinctCurrencies = $filter('unique')(dataFromAPI.response, 'id');
+      $scope.companyCurrencies = angular.copy(distinctCurrencies);
     }
 
     function setCompanyStations(dataFromAPI) {
