@@ -19,7 +19,7 @@
      <label class="col-sm-4 control-label">Days Of Week	: <span style="color:red">*</span></label>
       <span class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport.daysOfWeek.$invalid}"> 
       <div ng-repeat="day in daysOfWeek" class="form-group">
-            <input type="checkbox" data-checklist-model="user.daysOfWeek" data-checklist-value="day.value"> {{day.value}} 
+            <input type="checkbox" data-checklist-model="user.daysOfWeek" data-checklist-value="day.value" ng-required="isOptionsRequired()"> {{day.value}} 
       </div>
       </span>
     </div>
@@ -28,7 +28,7 @@
       <label class="col-sm-4 control-label">Day Of Week	: <span style="color:red">*</span> </label>
       <span class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport.name.$invalid}">
       <select id="" class="form-control" name="" ng-model="scheduleReport.dayOfWeek"
-      				ng-options="pattern.value as pattern.name for pattern in daysOfWeek">
+      				ng-options="pattern.value as pattern.name for pattern in daysOfWeek" ng-required= "scheduleReport.recurrencePattern == 'Weekly'">
        	 <!-- <option ng-repeat="weekDay in daysOfWeek"  name="{{weekDay}}">{{weekDay}}</option> -->
        	 <option selected="selected" value disabled="disabled" >Select WeekDay</option>
         </select> 	
@@ -39,7 +39,7 @@
       <label class="col-sm-4 control-label">Day of Month: <span style="color:red">*</span> </label>
       <span class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport.name.$invalid}">
       <select id="" class="form-control" name="" ng-model="scheduleReport.dayOfMonth"
-      			    ng-options="pattern.value as pattern.name for pattern in dayOfMonth">
+      			    ng-options="pattern.value as pattern.name for pattern in dayOfMonth" ng-required= "scheduleReport.recurrencePattern == 'Monthly'">
        	 <!-- <option ng-repeat="month in dayOfMonth"  name="{{month}}" >{{month}}</option> -->
        	 <option selected="selected"  value disabled="disabled" >Select Day of Month</option>
         </select> 	
