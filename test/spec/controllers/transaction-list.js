@@ -361,6 +361,27 @@ describe('Controller: TransactionListCtrl', function () {
       ;
       expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
     });
+
+    it('print as 0 transactionTypeName if Comp Discount fully paid off transaction ', function () {
+      transactionMock.netTransactionAmount = 10;
+      transactionMock.transactionAmount = 20;
+      transactionMock.totalAmount = 0;
+      transactionMock.paymentMethod = 'SALE';
+      transactionMock.discountTypeName = 'Comp';
+      transactionMock.transactionTypeName = 'Discount'
+      ;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
+    });
+
+    it('print as transactionAmount if transactionAmount has negative value', function () {
+      transactionMock.netTransactionAmount = -10;
+      transactionMock.transactionAmount = -20;
+      transactionMock.totalAmount = 0;
+      transactionMock.paymentMethod = 'REFUND';
+      transactionMock.transactionTypeName = 'Cash'
+      ;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
+    });
   });
 
   describe('printPaymentMethodName will', function() {
