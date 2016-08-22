@@ -18,6 +18,7 @@ describe('Controller: CashBagCtrl', function() {
   var companyId;
   var dateUtility;
   var localStorage;
+  var lodash;
 
   var getCashBagDeferred;
   var getCompanyDeferred;
@@ -59,6 +60,7 @@ describe('Controller: CashBagCtrl', function() {
     cashBagFactory = _cashBagFactory_;
     dateUtility = $injector.get('dateUtility');
     localStorage = $injector.get('$localStorage');
+    lodash = $injector.get('lodash');
 
 
     getCashBagDeferred = $q.defer();
@@ -435,6 +437,24 @@ describe('Controller: CashBagCtrl', function() {
 
       it('should default bank ref number from localStorage', function() {
         expect(scope.cashBag.bankReferenceNumber).toEqual(12345);
+      });
+
+      it('should have all saved values, even if exchange rate does not exist for the currency', function () {
+        var expectedCurrencyIdWithNoExchangeRate = 63;  // currency in cash-bag.json, but not daily-exchange-rate.json
+        var cashBagCurrencyMatch = lodash.findWhere(scope.cashBag.cashBagCurrencies, {currencyId: expectedCurrencyIdWithNoExchangeRate});
+        expect(cashBagCurrencyMatch).toBeDefined();
+      });
+
+      it('should have all exchange rate currencies, even if a value does not exist for the exchange rate', function () {
+        var expectedCurrencyIdWithNoCashBagAmount = 23; // currency in daily-exchange-rate.json, but not cash-bag.json
+        var cashBagCurrencyMatch = lodash.findWhere(scope.cashBag.cashBagCurrencies, {currencyId: expectedCurrencyIdWithNoCashBagAmount});
+        expect(cashBagCurrencyMatch).toBeDefined();
+      });
+
+      it('should not include a currency if it has no exchange rate or saved amount', function () {
+        var expectedCurrencyIdWithNoAmountOrExchangeRate = 58; // currency not in cash-bag.json or daily-exchange-rate.json
+        var cashBagCurrencyMatch = lodash.findWhere(scope.cashBag.cashBagCurrencies, {currencyId: expectedCurrencyIdWithNoAmountOrExchangeRate});
+        expect(cashBagCurrencyMatch).not.toBeDefined();
       });
     });
 
