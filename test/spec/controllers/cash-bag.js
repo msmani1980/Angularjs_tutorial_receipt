@@ -47,7 +47,7 @@ describe('Controller: CashBagCtrl', function() {
       _servedDailyExchangeRates_, _servedDailyExchangeRate_, _servedCompanyPreferences_,
       _servedStoreInstance_,
       _servedStore_) {
-      cashBagResponseJSON = _servedCashBag_;
+      cashBagResponseJSON = angular.copy(_servedCashBag_);
       companyResponseJSON = _servedCompany_;
       currencyGlobalsResponseJSON = _servedCompanyCurrencyGlobals_;
       dailyExchangeRatesResponseJSON = _servedDailyExchangeRates_;
