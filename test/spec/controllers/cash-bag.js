@@ -57,6 +57,20 @@ describe('Controller: CashBagCtrl', function() {
       getStoreListJSON = _servedStore_;
     });
 
+
+    // mock currency with no matching exchange rate
+    cashBagResponseJSON.cashBagCurrencies.push({
+      id: 481,
+      bankAmount: '1.0000',
+      coinAmountEpos: null,
+      coinAmountManual: '.50',
+      companyCashBagId: 95,
+      paperAmountEpos: null,
+      paperAmountManual: null,
+      currencyId: 63
+    });
+
+
     cashBagFactory = _cashBagFactory_;
     dateUtility = $injector.get('dateUtility');
     localStorage = $injector.get('$localStorage');
