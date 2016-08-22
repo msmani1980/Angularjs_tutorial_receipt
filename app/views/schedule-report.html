@@ -19,7 +19,7 @@
      <label class="col-sm-4 control-label">Days Of Week	: <span style="color:red">*</span></label>
       <span class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport.daysOfWeek.$invalid}"> 
       <div ng-repeat="day in daysOfWeek" class="form-group">
-            <input type="checkbox" data-checklist-model="user.daysOfWeek" data-checklist-value="day.value" ng-required="isOptionsRequired()"> {{day.value}} 
+            <input type="checkbox" data-checklist-model="user.daysOfWeek" data-checklist-value="day.value"> {{day.value}} 
       </div>
       </span>
     </div>
