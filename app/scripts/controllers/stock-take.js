@@ -379,9 +379,21 @@ angular.module('ts5App')
       return items;
     }
 
+    function cleanPayload() {
+      delete _payload.createdBy;
+      delete _payload.createdOn;
+      delete _payload.updatedBy;
+      delete _payload.updatedOn;
+
+      if (angular.isDefined(_payload.stockTakeDate)) {
+        _payload.stockTakeDate = dateUtility.formatDateForAPI(dateUtility.formatDateForApp(_payload.stockTakeDate));
+      }
+    }
+
     function generateSavePayload() {
       _payload = $scope.stockTake;
       _payload.items = generatePayloadItems();
+      cleanPayload();
     }
 
     function saveStockTakeFailed(response) {

@@ -201,7 +201,12 @@ describe('Controller: StockTakeCtrl', function() {
     describe('save scope function, only save', function() {
       beforeEach(function() {
         scope.stockTake = {
-          catererStationId: 3
+          catererStationId: 3,
+          createdBy: 3,
+          createdOn: '2/20/2016',
+          updatedBy: 4,
+          updatedOn: '5/23/2017',
+          stockTakeDate: '2016-10-05'
         };
         scope.itemQuantities = [];
         scope.itemQuantities[1] = 10;
@@ -215,10 +220,11 @@ describe('Controller: StockTakeCtrl', function() {
         expect(scope.stockTake.isSubmitted).toBe(false);
       });
 
-      it('should call createStockTake', function() {
+      it('should call createStockTake with clean payload', function() {
         var mockedPayload = {
           catererStationId: 3,
           isSubmitted: false,
+          stockTakeDate: '20161005',
           items: [{
             masterItemId: 1,
             quantity: 10
