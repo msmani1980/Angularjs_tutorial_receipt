@@ -102,11 +102,11 @@ describe('Factory: storeInstanceAmendFactory', function () {
     it('editFlightSector should call storeInstanceAmendService', function () {
       var cashBagId = 1;
       var postTripId = 2;
-      var scheduleNumber = '3';
-      var scheduleDate = '20160201';
+      var newPostTripId = 3;
 
-      storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, scheduleNumber, scheduleDate);
-      expect(storeInstanceAmendService.editPostTrip).toHaveBeenCalledWith(cashBagId, postTripId, scheduleNumber, scheduleDate);
+
+      storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, newPostTripId);
+      expect(storeInstanceAmendService.editPostTrip).toHaveBeenCalledWith(cashBagId, postTripId, newPostTripId);
     });
     it('getFlightSector should call storeInstanceAmendService', function () {
       var cashBagId = 1;
