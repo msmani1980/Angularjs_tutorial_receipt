@@ -268,21 +268,21 @@ angular.module('ts5App')
       $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
 
       angular.forEach($scope.cashBag.cashBagCurrencies, function(cashBagCurrency) {
+        cashBagCurrency.currencyCode = $scope.currencyCodes[cashBagCurrency.currencyId];
+        cashBagCurrency.paperAmountManual = setManualAmount(cashBagCurrency.paperAmountManual);
+        cashBagCurrency.coinAmountManual = setManualAmount(cashBagCurrency.coinAmountManual);
+        cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) +
+          parseFloat(cashBagCurrency.coinAmountEpos));
+
         var dailyCurrency = lodash.findWhere(dailyExchangeRateCurrencies, {
           retailCompanyCurrencyId: cashBagCurrency.currencyId
         });
+
         if (dailyCurrency) {
-          cashBagCurrency.currencyCode = $scope.currencyCodes[cashBagCurrency.currencyId];
           cashBagCurrency.paperExchangeRate = dailyCurrency.paperExchangeRate;
           cashBagCurrency.coinExchangeRate = dailyCurrency.coinExchangeRate;
           cashBagCurrency.bankExchangeRate = dailyCurrency.bankExchangeRate;
-          cashBagCurrency.paperAmountManual = setManualAmount(cashBagCurrency.paperAmountManual);
-          cashBagCurrency.coinAmountManual = setManualAmount(cashBagCurrency.coinAmountManual);
-          cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) +
-            parseFloat(cashBagCurrency.coinAmountEpos));
           dailyExchangeRateCurrencies.splice(dailyExchangeRateCurrencies.indexOf(dailyCurrency), 1);
-        } else {
-          $scope.cashBag.cashBagCurrencies.splice($scope.cashBag.cashBagCurrencies.indexOf(cashBagCurrency), 1);
         }
       });
 
@@ -300,6 +300,13 @@ angular.module('ts5App')
           coinExchangeRate: currency.coinExchangeRate,
           bankExchangeRate: currency.bankExchangeRate
         });
+      });
+
+      $scope.cashBag.cashBagCurrencies = lodash.filter($scope.cashBag.cashBagCurrencies, function (currency) {
+        var hasExchangeRate = !!currency.paperExchangeRate || !!currency.coinExchangeRate || !!currency.bankExchangeRate;
+        var hasAmount = (parseFloat(currency.paperAmountManual) + parseFloat(currency.coinAmountManual)) > 0;
+
+        return hasAmount || hasExchangeRate;
       });
     }
 
