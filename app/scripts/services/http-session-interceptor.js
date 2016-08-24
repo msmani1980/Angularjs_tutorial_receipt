@@ -64,7 +64,6 @@ angular.module('ts5App')
         '/stock-take-review/*',
         '/stock-take/*',
         '/store-instance-create/*',
-        '/store-instance-dashboard/*',
         '/store-instance-inbound-seals/*',
         '/store-instance-packing/*',
         '/store-instance-seals/*',
@@ -81,7 +80,6 @@ angular.module('ts5App')
     ];
 
     var legacyApis = [
-        '/rsvr/api/retail-items/master/*',
         '/rsvr/api/promotions/[0-9]*$',
         '/rsvr/api/dispatch/store-instances/[0-9]*/status/[5-9][^11]*$',
         '/rsvr/api/promotions',
