@@ -222,7 +222,6 @@ angular.module('ts5App')
       };
 
       if ($scope.currenciesFields[currency.code].recordId && $scope.payload.id) {
-        console.log('HI', $scope.currenciesFields[currency.code]);
         serializedCurrency.id = $scope.currenciesFields[currency.code].recordId;
       }
 
