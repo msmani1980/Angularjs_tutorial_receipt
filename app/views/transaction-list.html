@@ -258,10 +258,10 @@
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'paymentId') }}</td>
       <td>{{ printTransactionAmount(transaction) }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
-      <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
-      <td ng-show="displayColumns.storeNumber">{{ transaction.storeNumber }}</td>
-      <td ng-show="displayColumns.storeDate">{{ transaction.scheduleDate }}</td>
-      <td ng-show="displayColumns.storeInstance">{{ transaction.storeInstanceId }}</td>
+      <td ng-show="displayColumns.scheduleDate">{{ printScheduleDate(transaction) }}</td>
+      <td ng-show="displayColumns.storeNumber">{{ printStoreNumber(transaction) }}</td>
+      <td ng-show="displayColumns.storeDate">{{ transaction.instanceDate }}</td>
+      <td ng-show="displayColumns.storeInstance">{{ printStoreInstanceId(transaction) }}</td>
       <td>
         <button class="btn btn-info btn-xs" ng-click="showTransactionDetails(transaction)">
           <i class="fa fa-file"></i>

@@ -405,4 +405,61 @@ describe('Controller: TransactionListCtrl', function () {
       expect(scope.printPaymentMethodName(transactionMock)).toEqual(transactionMock.paymentMethod);
     });
   });
+
+  describe('printStoreNumber will', function() {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
+        storeNumber: 'X123',
+        originStoreNumber: null
+      };
+    });
+
+    it('print storeNumber if storeNumber is defined', function() {
+      expect(scope.printStoreNumber(transactionMock)).toEqual(transactionMock.storeNumber);
+    });
+    it('print originStoreNumber if storeNumber is not defined', function() {
+      transactionMock.storeNumber = null;
+      transactionMock.originStoreNumber = 'Y321';
+      expect(scope.printStoreNumber(transactionMock)).toEqual(transactionMock.originStoreNumber);
+    });
+  });
+
+  describe('printStoreInstanceId will', function() {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
+        storeInstanceId: 6408,
+        originStoreInstanceId: null
+      };
+    });
+
+    it('print storeInstanceId if storeInstanceId is defined', function() {
+      expect(scope.printStoreInstanceId(transactionMock)).toEqual(transactionMock.storeInstanceId);
+    });
+    it('print originStoreInstanceId if storeInstanceId is not defined', function() {
+      transactionMock.storeInstanceId = null;
+      transactionMock.originStoreInstanceId = 6407;
+      expect(scope.printStoreInstanceId(transactionMock)).toEqual(transactionMock.originStoreInstanceId);
+    });
+  });
+
+  describe('printScheduleDate will', function() {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
+        scheduleDate: '31/08/2016',
+        originScheduleDate: null
+      };
+    });
+
+    it('print scheduleDate if scheduleDate is defined', function() {
+      expect(scope.printScheduleDate(transactionMock)).toEqual(transactionMock.scheduleDate);
+    });
+    it('print originScheduleDate if scheduleDate is not defined', function() {
+      transactionMock.scheduleDate = null;
+      transactionMock.originScheduleDate = '31/08/2016';
+      expect(scope.printScheduleDate(transactionMock)).toEqual(transactionMock.originScheduleDate);
+    });
+  });
 });
