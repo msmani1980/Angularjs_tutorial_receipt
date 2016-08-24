@@ -501,13 +501,26 @@ angular.module('ts5App')
 
     function setMasterItems(dataFromAPI) {
       $scope.selectOptions.masterItems = dataFromAPI.masterItems;
+
+      if ($scope.promotion.discountItem) {
+        var index = $scope.selectOptions.masterItems.indexOf($scope.promotion.discountItem);
+        $scope.promotion.discountItem = (index >= 0) ? $scope.promotion.discountItem : null;
+      }
     }
 
-    function getMasterItems() {
+    function getMasterItems(payload) {
+      $scope.selectOptions.masterItems = [];
+      var payloadForRequest = payload || {};
+      payloadForRequest.companyId = companyId;
+
+      if (!payloadForRequest.startDate) {
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        payloadForRequest.startDate = today;
+        payloadForRequest.endDate = today;
+      }
+
       initPromises.push(
-        promotionsFactory.getMasterItems({
-          companyId: companyId
-        }).then(setMasterItems)
+        promotionsFactory.getMasterItems(payloadForRequest).then(setMasterItems)
       );
     }
 
@@ -574,6 +587,7 @@ angular.module('ts5App')
       $scope.shouldDisableStartDate = !(dateUtility.isAfterToday($scope.promotion.startDate));
     }
 
+    // TODO
     $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function (newData) {
       if ($scope.promotion.startDate && $scope.promotion.endDate) {
         var payload = {
@@ -581,6 +595,7 @@ angular.module('ts5App')
           endDate: dateUtility.formatDateForAPI(newData[1])
         };
 
+        getMasterItems(payload);
         getCompanyDiscountsCoupon(payload);
         getCompanyDiscountsVoucher(payload);
       }
@@ -589,6 +604,7 @@ angular.module('ts5App')
     function setCrudFlags(startDate) {
       $scope.readOnly = ($routeParams.state === 'view');
       if (angular.isDefined(startDate)) {
+        console.log(startDate, !dateUtility.isAfterToday(startDate), $routeParams.state);
         $scope.isDisabled = ($routeParams.state === 'edit' && !dateUtility.isAfterToday(startDate));
       }
     }
@@ -901,13 +917,18 @@ angular.module('ts5App')
         return;
       }
 
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       var payload = {
         companyId: companyId,
-        categoryId: categoryId
+        categoryId: categoryId,
+        startDate: $scope.promotion.startDate ? dateUtility.formatDateForAPI($scope.promotion.startDate) : today,
+        endDate: $scope.promotion.endDate ? dateUtility.formatDateForAPI($scope.promotion.endDate) : today
       };
       displayLoadingModal();
       promotionsFactory.getMasterItems(payload).then(function (dataFromAPI) {
         $scope.repeatableItemListSelectOptions[index] = dataFromAPI.masterItems;
+        $scope.promotion.items[index].retailItem = null;
+
         cachedRetailItemsByCatId[categoryId] = dataFromAPI.masterItems;
         hideLoadingModal();
       }, showResponseErrors);

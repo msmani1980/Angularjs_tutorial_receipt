@@ -277,7 +277,7 @@
               <div class="form-group">
                 <label>Retail Item*</label>
                 <ui-select theme="bootstrap" ng-model="promotion.discountItem"
-                           ng-disabled="readOnly || isDisabled" ng-required="promotion.benefitDiscountApply.name === 'Retail Item'">
+                           ng-disabled="readOnly || isDisabled || !selectOptions.masterItems.length" ng-required="promotion.benefitDiscountApply.name === 'Retail Item'">
                   <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
                   <ui-select-choices repeat="masterItem in selectOptions.masterItems | filter: {itemName:$select.search}">
                     <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>

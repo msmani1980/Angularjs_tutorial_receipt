@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: PromotionsCtrl', function () {
+fdescribe('Controller: PromotionsCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/benefit-types.json'));
@@ -157,7 +157,13 @@ describe('Controller: PromotionsCtrl', function () {
       });
 
       it('should call promotionsFactory.getMasterItems', function () {
-        expect(promotionsFactory.getMasterItems).toHaveBeenCalled();
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var expectedPayload = {
+          startDate: today,
+          endDate: today,
+          companyId: companyId
+        };
+        expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
     });
 
@@ -682,10 +688,9 @@ describe('Controller: PromotionsCtrl', function () {
       });
 
       it('should make an API call', function () {
-        expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith({
-          companyId: companyId,
+        expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith(jasmine.objectContaining({
           categoryId: mockId
-        });
+        }));
       });
 
       it('should set repeatableItemListSelectOptions index to API response', function () {
