@@ -51,6 +51,30 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.isCreditCardPaymentSelected = false;
 
+    $scope.printStoreNumber = function (transaction) {
+      if (transaction.storeNumber) {
+        return transaction.storeNumber;
+      }
+
+      return transaction.originStoreNumber;
+    };
+
+    $scope.printStoreInstanceId = function (transaction) {
+      if (transaction.storeInstanceId) {
+        return transaction.storeInstanceId;
+      }
+
+      return transaction.originStoreInstanceId;
+    };
+
+    $scope.printScheduleDate = function (transaction) {
+      if (transaction.scheduleDate) {
+        return transaction.scheduleDate;
+      }
+
+      return transaction.originScheduleDate;
+    };
+
     $scope.printPropertyIfItIsCreditCardPayment = function (transaction, propertyName) {
       if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card' && transaction.hasOwnProperty(propertyName)) {
         return transaction[propertyName];
