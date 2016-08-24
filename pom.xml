@@ -22,6 +22,7 @@
 
 	<build>
 		<defaultGoal>clean install</defaultGoal>
+		<finalName>webapp</finalName>
 		<resources>
 			<!-- turn ON resource filtering for stamping version -->
 			<resource>
