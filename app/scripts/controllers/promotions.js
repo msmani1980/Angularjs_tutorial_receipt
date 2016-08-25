@@ -508,19 +508,18 @@ angular.module('ts5App')
       }
     }
 
-    function getMasterItems(payload) {
+    function getMasterItems() {
       $scope.selectOptions.masterItems = [];
-      var payloadForRequest = payload || {};
-      payloadForRequest.companyId = companyId;
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
 
-      if (!payloadForRequest.startDate) {
-        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-        payloadForRequest.startDate = today;
-        payloadForRequest.endDate = today;
-      }
+      var payload = {
+        companyId: companyId,
+        startDate: today,
+        endDate: today
+      };
 
       initPromises.push(
-        promotionsFactory.getMasterItems(payloadForRequest).then(setMasterItems)
+        promotionsFactory.getMasterItems(payload).then(setMasterItems)
       );
     }
 
@@ -587,7 +586,6 @@ angular.module('ts5App')
       $scope.shouldDisableStartDate = !(dateUtility.isAfterToday($scope.promotion.startDate));
     }
 
-    // TODO
     $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function (newData) {
       if ($scope.promotion.startDate && $scope.promotion.endDate) {
         var payload = {
@@ -595,7 +593,6 @@ angular.module('ts5App')
           endDate: dateUtility.formatDateForAPI(newData[1])
         };
 
-        getMasterItems(payload);
         getCompanyDiscountsCoupon(payload);
         getCompanyDiscountsVoucher(payload);
       }
@@ -921,8 +918,8 @@ angular.module('ts5App')
       var payload = {
         companyId: companyId,
         categoryId: categoryId,
-        startDate: $scope.promotion.startDate ? dateUtility.formatDateForAPI($scope.promotion.startDate) : today,
-        endDate: $scope.promotion.endDate ? dateUtility.formatDateForAPI($scope.promotion.endDate) : today
+        startDate: today,
+        endDate: today
       };
       displayLoadingModal();
       promotionsFactory.getMasterItems(payload).then(function (dataFromAPI) {
