@@ -902,6 +902,7 @@ angular.module('ts5App')
 
     $scope.itemCategoryChanged = function (index) {
       var categoryId = $scope.itemCategorySelects[index].id;
+      
       if (cachedRetailItemsByCatId[categoryId]) {
         $scope.repeatableItemListSelectOptions[index] = cachedRetailItemsByCatId[categoryId];
         return;
