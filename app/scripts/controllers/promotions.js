@@ -504,10 +504,16 @@ angular.module('ts5App')
     }
 
     function getMasterItems() {
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+
+      var payload = {
+        companyId: companyId,
+        startDate: today,
+        endDate: today
+      };
+
       initPromises.push(
-        promotionsFactory.getMasterItems({
-          companyId: companyId
-        }).then(setMasterItems)
+        promotionsFactory.getMasterItems(payload).then(setMasterItems)
       );
     }
 
@@ -896,18 +902,23 @@ angular.module('ts5App')
 
     $scope.itemCategoryChanged = function (index) {
       var categoryId = $scope.itemCategorySelects[index].id;
+      
       if (cachedRetailItemsByCatId[categoryId]) {
         $scope.repeatableItemListSelectOptions[index] = cachedRetailItemsByCatId[categoryId];
         return;
       }
 
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       var payload = {
         companyId: companyId,
-        categoryId: categoryId
+        categoryId: categoryId,
+        startDate: today,
+        endDate: today
       };
       displayLoadingModal();
       promotionsFactory.getMasterItems(payload).then(function (dataFromAPI) {
         $scope.repeatableItemListSelectOptions[index] = dataFromAPI.masterItems;
+
         cachedRetailItemsByCatId[categoryId] = dataFromAPI.masterItems;
         hideLoadingModal();
       }, showResponseErrors);
