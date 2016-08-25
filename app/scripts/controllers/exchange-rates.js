@@ -221,7 +221,7 @@ angular.module('ts5App')
         bankExchangeRate: bankExchangeRate
       };
 
-      if ($scope.currenciesFields[currency.code].recordId) {
+      if ($scope.currenciesFields[currency.code].recordId && $scope.payload.id) {
         serializedCurrency.id = $scope.currenciesFields[currency.code].recordId;
       }
 
