@@ -86,9 +86,9 @@
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="currency">Currency</label>
-                <select ng-model="search.currencies" class="form-control" id="currency">
+                <select ng-model="search.currencyCodes" class="form-control" id="currency">
                   <option value="">Please select</option>
-                  <option value="{{currency.id}}" ng-repeat="currency in companyCurrencies">{{ currency.code }}</option>
+                  <option value="{{currency.code}}" ng-repeat="currency in companyCurrencies">{{ currency.code }}</option>
                 </select>
               </div>
             </div>
