@@ -595,7 +595,6 @@ angular.module('ts5App')
     function setCrudFlags(startDate) {
       $scope.readOnly = ($routeParams.state === 'view');
       if (angular.isDefined(startDate)) {
-        console.log(startDate, !dateUtility.isAfterToday(startDate), $routeParams.state);
         $scope.isDisabled = ($routeParams.state === 'edit' && !dateUtility.isAfterToday(startDate));
       }
     }
@@ -918,7 +917,6 @@ angular.module('ts5App')
       displayLoadingModal();
       promotionsFactory.getMasterItems(payload).then(function (dataFromAPI) {
         $scope.repeatableItemListSelectOptions[index] = dataFromAPI.masterItems;
-        $scope.promotion.items[index].retailItem = null;
 
         cachedRetailItemsByCatId[categoryId] = dataFromAPI.masterItems;
         hideLoadingModal();
