@@ -157,7 +157,13 @@ describe('Controller: PromotionsCtrl', function () {
       });
 
       it('should call promotionsFactory.getMasterItems', function () {
-        expect(promotionsFactory.getMasterItems).toHaveBeenCalled();
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var expectedPayload = {
+          startDate: today,
+          endDate: today,
+          companyId: companyId
+        };
+        expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
     });
 
@@ -682,9 +688,12 @@ describe('Controller: PromotionsCtrl', function () {
       });
 
       it('should make an API call', function () {
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
         expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith({
+          categoryId: mockId,
           companyId: companyId,
-          categoryId: mockId
+          startDate: today,
+          endDate: today
         });
       });
 
