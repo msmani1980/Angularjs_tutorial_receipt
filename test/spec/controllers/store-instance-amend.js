@@ -991,9 +991,9 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
 
       it('should edit schedule if edit schedule is requested', function () {
-        scope.scheduleToEdit = { id: 2 };
+        scope.scheduleToEdit = { id: 3 };
         scope.addOrEditSchedule();
-        expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 2, '3', '20160201');
+        expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 3, 2);
       });
     });
   });

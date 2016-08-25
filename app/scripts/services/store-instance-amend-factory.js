@@ -245,8 +245,8 @@ angular.module('ts5App')
       return storeInstanceAmendService.addPostTrip(cashBagId, postTripId);
     };
 
-    var editFlightSector = function (cashBagId, postTripId, scheduleNumber, scheduleDate) {
-      return storeInstanceAmendService.editPostTrip(cashBagId, postTripId, scheduleNumber, scheduleDate);
+    var editFlightSector = function (cashBagId, postTripId, newPosttripId) {
+      return storeInstanceAmendService.editPostTrip(cashBagId, postTripId, newPosttripId);
     };
 
     var deleteFlightSector = function (cashBagId, postTripId) {

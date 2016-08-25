@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TransactionListCtrl', function ($scope, $q, transactionFactory, recordsService, currencyFactory,
+  .controller('TransactionListCtrl', function ($scope, $q, $filter, transactionFactory, recordsService, currencyFactory,
                                                stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility) {
     var $this = this;
 
@@ -51,6 +51,30 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.isCreditCardPaymentSelected = false;
 
+    $scope.printStoreNumber = function (transaction) {
+      if (transaction.storeNumber) {
+        return transaction.storeNumber;
+      }
+
+      return transaction.originStoreNumber;
+    };
+
+    $scope.printStoreInstanceId = function (transaction) {
+      if (transaction.storeInstanceId) {
+        return transaction.storeInstanceId;
+      }
+
+      return transaction.originStoreInstanceId;
+    };
+
+    $scope.printScheduleDate = function (transaction) {
+      if (transaction.scheduleDate) {
+        return transaction.scheduleDate;
+      }
+
+      return transaction.originScheduleDate;
+    };
+
     $scope.printPropertyIfItIsCreditCardPayment = function (transaction, propertyName) {
       if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card' && transaction.hasOwnProperty(propertyName)) {
         return transaction[propertyName];
@@ -73,7 +97,13 @@ angular.module('ts5App')
     $scope.printTransactionAmount = function (transaction) {
       if (transaction.netTransactionAmount && transaction.paymentMethod === 'Cash' && transaction.transactionTypeName === 'SALE') {
         return transaction.netTransactionAmount + ' ' + transaction.transactionCurrencyCode;
-      } else if (transaction.transactionAmount) {
+      }
+
+      if (transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') {
+        return transaction.totalAmount + ' ' + transaction.transactionCurrencyCode;
+      }
+
+      if (transaction.transactionAmount) {
         return transaction.transactionAmount + ' ' + transaction.transactionCurrencyCode;
       }
 
@@ -297,7 +327,8 @@ angular.module('ts5App')
     }
 
     function setCompanyCurrencies(dataFromAPI) {
-      $scope.companyCurrencies = angular.copy(dataFromAPI.response);
+      var distinctCurrencies = $filter('unique')(dataFromAPI.response, 'id');
+      $scope.companyCurrencies = angular.copy(distinctCurrencies);
     }
 
     function setCompanyStations(dataFromAPI) {
@@ -313,11 +344,7 @@ angular.module('ts5App')
     }
 
     function getCompanyCurrencies() {
-      var payload = {
-        isOperatedCurrency: true
-      };
-
-      currencyFactory.getCompanyCurrencies(payload).then(setCompanyCurrencies);
+      currencyFactory.getCompanyCurrencies().then(setCompanyCurrencies);
     }
 
     function getCompanyStations() {

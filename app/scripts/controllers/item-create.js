@@ -279,6 +279,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         if ($scope.cloningItem) {
           delete price.itemId;
           delete price.id;
+          for (var currencyKey in price.priceCurrencies) {
+            var currency = price.priceCurrencies[currencyKey];
+            delete currency.id;
+          }
         }
 
         $this.formatStationExceptions(price);
