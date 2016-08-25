@@ -344,11 +344,7 @@ angular.module('ts5App')
     }
 
     function getCompanyCurrencies() {
-      var payload = {
-        isOperatedCurrency: true
-      };
-
-      currencyFactory.getCompanyCurrencies(payload).then(setCompanyCurrencies);
+      currencyFactory.getCompanyCurrencies().then(setCompanyCurrencies);
     }
 
     function getCompanyStations() {
