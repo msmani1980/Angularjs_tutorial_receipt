@@ -501,15 +501,9 @@ angular.module('ts5App')
 
     function setMasterItems(dataFromAPI) {
       $scope.selectOptions.masterItems = dataFromAPI.masterItems;
-
-      if ($scope.promotion.discountItem) {
-        var index = $scope.selectOptions.masterItems.indexOf($scope.promotion.discountItem);
-        $scope.promotion.discountItem = (index >= 0) ? $scope.promotion.discountItem : null;
-      }
     }
 
     function getMasterItems() {
-      $scope.selectOptions.masterItems = [];
       var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
 
       var payload = {
