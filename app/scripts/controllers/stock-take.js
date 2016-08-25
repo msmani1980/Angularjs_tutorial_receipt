@@ -369,10 +369,17 @@ angular.module('ts5App')
       for (var masterItemId in $scope.itemQuantities) {
         var isValidNumber = angular.isDefined($scope.itemQuantities[masterItemId]) && $scope.itemQuantities[masterItemId] !== null && $scope.itemQuantities[masterItemId] !== '';
         if (isValidNumber) {
-          items.push({
+          var newPayload = {
             masterItemId: parseInt(masterItemId),
             quantity: parseInt($scope.itemQuantities[masterItemId])
-          });
+          };
+
+          var stockTakeItemsMatch = lodash.findWhere($scope.stockTake.items, { masterItemId: parseInt(masterItemId) });
+          if (stockTakeItemsMatch && stockTakeItemsMatch.id) {
+            newPayload.id = stockTakeItemsMatch.id;
+          }
+
+          items.push(newPayload);
         }
       }
 
