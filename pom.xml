@@ -47,6 +47,24 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>com.bazaarvoice.maven.plugins</groupId>
+				<artifactId>s3-upload-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>s3-upload</goal>
+						</goals>
+						<phase>deploy</phase>
+						<configuration>
+							<bucketName>${release-bucket-name}</bucketName>
+							<source>target/webapp.zip</source>
+							<destination>infra/${release-version}/content/nginx/usr/share/nginx/html/webapp.zip</destination>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>			
 		</plugins>
 	</build>
 </project>
