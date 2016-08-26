@@ -59,7 +59,7 @@
 						<phase>deploy</phase>
 						<configuration>
 							<bucketName>${release-bucket-name}</bucketName>
-							<source>target/webapp.zip</source>
+							<source>target/webapp-frontend.zip</source>
 							<destination>infra/${release-version}/content/nginx/usr/share/nginx/html/webapp.zip</destination>
 						</configuration>
 					</execution>
