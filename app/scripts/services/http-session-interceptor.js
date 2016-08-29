@@ -61,7 +61,6 @@ angular.module('ts5App')
         '/station-view/*',
         '/stock-dashboard/*',        
         '/stock-take-review/*',        
-        '/store-instance-dashboard/*',
         '/store-instance-create/*',
         '/store-instance-inbound-seals/*',
         '/store-instance-packing/*',
