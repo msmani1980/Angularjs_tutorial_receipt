@@ -207,7 +207,7 @@ describe('Controller: TransactionListCtrl', function () {
         cardType: null,
         carrierNumber: null,
         ccAuthorizationStatus: null,
-        ccProcessedDate: null,
+        ccProcessedDate: '2015-08-29 14:13:08.333',
         ccTransactionStatus: 'New',
         companyCarrierInstanceId: 6481,
         companyId: 403,
@@ -277,6 +277,10 @@ describe('Controller: TransactionListCtrl', function () {
 
     it('should have instanceDate formatted', function () {
       expect(scope.transactions[0].instanceDate).toEqual(dateUtility.formatDateForApp(transactionsJSON.transactions[0].instanceDate));
+    });
+
+    it('should have ccProcessedDate formatted', function () {
+      expect(scope.transactions[0].ccProcessedDate).toEqual(dateUtility.formatDateForApp(transactionsJSON.transactions[0].ccProcessedDate));
     });
 
     it('do not print field ccProcessedDate for non Credit Card transaction', function () {

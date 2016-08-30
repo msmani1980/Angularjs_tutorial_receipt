@@ -240,6 +240,17 @@ angular.module('ts5App')
       if (payload.paymentMethods) {
         payload.paymentMethods = payload.paymentMethods.join(',');
       }
+
+      if (payload.transactionType) {
+        if (payload.transactionType === 'SALE') {
+          payload.transactionType = 'SALE,VOIDED';
+        }
+
+        if (payload.transactionType === 'EmployeePurchase') {
+          payload.transactionType = 'SALE,VOIDED';
+          payload.orderTypeId = 3;
+        }
+      }
     }
 
     function generateGetTransactionsPayload() {
@@ -287,24 +298,20 @@ angular.module('ts5App')
 
     function normalizeTransactions(transactions) {
       angular.forEach(transactions, function (transaction) {
-        if (transaction.transactionDate) {
-          transaction.transactionDate = dateUtility.formatDateForApp(transaction.transactionDate);
-        }
-
-        if (transaction.scheduleDate) {
-          transaction.scheduleDate = dateUtility.formatDateForApp(transaction.scheduleDate);
-        }
-
-        if (transaction.storeDate) {
-          transaction.storeDate = dateUtility.formatDateForApp(transaction.storeDate);
-        }
-
-        if (transaction.instanceDate) {
-          transaction.instanceDate = dateUtility.formatDateForApp(transaction.instanceDate);
-        }
+        formatDateIfDefined(transaction, 'transactionDate');
+        formatDateIfDefined(transaction, 'scheduleDate');
+        formatDateIfDefined(transaction, 'storeDate');
+        formatDateIfDefined(transaction, 'instanceDate');
+        formatDateIfDefined(transaction, 'ccProcessedDate');
       });
 
       return transactions;
+    }
+
+    function formatDateIfDefined(transaction, dateFieldName) {
+      if (transaction.hasOwnProperty(dateFieldName) && transaction[dateFieldName]) {
+        transaction[dateFieldName] = dateUtility.formatDateForApp(transaction[dateFieldName]);
+      }
     }
 
     function appendTransactions(dataFromAPI) {
