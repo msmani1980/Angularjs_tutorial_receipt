@@ -255,7 +255,21 @@ describe('Controller: CashBagCtrl', function() {
         };
       });
 
+      it('should not save if the cash bag has no cash', function () {
+        scope.cashBag = {
+          cashBagCurrencies: [{
+            paperAmount: '0.000',
+            coinAmount: '0.000'
+          }]
+        };
+
+        scope.formSave();
+        expect(scope.displayError).toEqual(true);
+        expect(scope.errorCustom !== null && angular.isDefined(scope.errorCustom)).toEqual(true);
+      });
+
       it('should call cashBagFactory createCashBag', function() {
+        scope.cashBag.cashBagCurrencies[0].paperAmountManual = '1.0000';
         var payload = angular.copy(scope.cashBag);
         payload.scheduleDate='20150930';
         payload.isRemoved=false;
@@ -277,6 +291,7 @@ describe('Controller: CashBagCtrl', function() {
       });
 
       it('should save bank ref number to localStorage', function() {
+        scope.cashBag.cashBagCurrencies[0].paperAmountManual = '1.0000';
         scope.cashBag.bankReferenceNumber = 4567;
         scope.formSave(scope.cashBag);
         expect(localStorage.cashBagBankRefNumber).toEqual(4567);
