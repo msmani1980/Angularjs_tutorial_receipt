@@ -241,15 +241,13 @@ angular.module('ts5App')
         payload.paymentMethods = payload.paymentMethods.join(',');
       }
 
-      if (payload.transactionType) {
-        if (payload.transactionType === 'SALE') {
-          payload.transactionType = 'SALE,VOIDED';
-        }
+      if (payload.transactionType && payload.transactionType === 'SALE') {
+        payload.transactionType = 'SALE,VOIDED';
+      }
 
-        if (payload.transactionType === 'EmployeePurchase') {
-          payload.transactionType = 'SALE,VOIDED';
-          payload.orderTypeId = 3;
-        }
+      if (payload.transactionType && payload.transactionType === 'EmployeePurchase') {
+        payload.transactionType = 'SALE,VOIDED';
+        payload.orderTypeId = 3;
       }
     }
 
