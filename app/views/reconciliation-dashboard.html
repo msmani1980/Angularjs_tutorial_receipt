@@ -226,7 +226,7 @@
         <td ng-show="displayColumns.storeInstanceId"> {{ instance.id }}</td>
         <td> {{ instance.statusName }}</td>
         <td ng-show="displayColumns.updatedDate"> {{ instance.updatedOn}}</td>
-        <td ng-show="displayColumns.updatedBy"> {{ instance.updatedBy }}</td>
+        <td ng-show="displayColumns.updatedBy"> {{ instance.updatedByPerson.userName || instance.createdByPerson.userName }}</td>
         <td>
           <button class="btn btn-warning btn-xs btn-block" tabindex="0"
                   ng-show="doesInstanceContainAction(instance, 'Add ePOS Data')" >Add ePOS Data

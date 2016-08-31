@@ -57,6 +57,11 @@ angular.module('ts5App')
       }
     }
 
+    function showCustomError(errorField, errorMessage) {
+      $scope.errorCustom = [{ field: errorField, value: errorMessage }];
+      $scope.displayError = true;
+    }
+
     // scope methods
     function cleanPayload(payload) {
       delete payload.storeNumber;
@@ -113,13 +118,37 @@ angular.module('ts5App')
       cashBagFactory.createCashBag(saveCashBag).then(cashBagCreateSuccessHandler, errorHandler);
     }
 
-    $scope.formSave = function() {
+    function checkForCash (formData) {
+      var cashBagCurrencies = formData.cashBagCurrencies;
+      var cashExists = false;
+
+      angular.forEach(cashBagCurrencies, function (currency) {
+        cashExists = cashExists || (parseFloat(currency.paperAmountManual) > 0 || parseFloat(currency.coinAmountManual) > 0);
+      });
+
+      return cashExists;
+    }
+
+    function isCashBagValid (formData) {
       if ($scope.cashBagCreateForm.$invalid) {
+        return false;
+      }
+
+      if (!checkForCash(formData)) {
+        showCustomError('Cash Bag Amounts', 'At least one currency must have a paper or coin amount');
+        return false;
+      }
+
+      return true;
+    }
+
+    $scope.formSave = function() {
+      var formData = cleanPayload(angular.copy($scope.cashBag));
+      if (!isCashBagValid(formData)) {
         return;
       }
 
       $localStorage.cashBagBankRefNumber = $scope.cashBag.bankReferenceNumber;
-      var formData = cleanPayload(angular.copy($scope.cashBag));
       switch ($routeParams.state) {
         case 'edit':
           if (formData.isSubmitted === true) {
