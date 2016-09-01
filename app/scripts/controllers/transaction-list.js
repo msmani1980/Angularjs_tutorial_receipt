@@ -14,14 +14,13 @@ angular.module('ts5App')
 
     $scope.viewName = 'Transactions';
     $scope.transactions = [];
-    $scope.transactionTypes = [];
+    $scope.transactionTypes = ['SALE', 'REFUND', 'EmployeePurchase'];
     $scope.companyCurrencies = [];
     $scope.companyStations = [];
     $scope.paymentMethods = ['Cash', 'Credit Card', 'Discount'];
     $scope.creditCardTypes = [];
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
-    $scope.supportedTransactionTypes = ['SALE', 'REFUND', 'EmployeePurchase'];
     $scope.overrideTransactionTypeNames = {
       CLEARED: 'Cleared',
       CREWMEAL: 'Crew Meal',
@@ -192,10 +191,6 @@ angular.module('ts5App')
       }
     };
 
-    $scope.filterTransactionTypes = function (transactionType) {
-      return $scope.supportedTransactionTypes.indexOf(transactionType.name) > -1;
-    };
-
     $scope.getOverriddenTransactionTypeName = function (transactionTypeName) {
       if (transactionTypeName in $scope.overrideTransactionTypeNames) {
         return $scope.overrideTransactionTypeNames[transactionTypeName];
@@ -327,10 +322,6 @@ angular.module('ts5App')
       $scope.transactions = [];
     }
 
-    function setTransactionTypes(dataFromAPI) {
-      $scope.transactionTypes = angular.copy(dataFromAPI);
-    }
-
     function setCompanyCurrencies(dataFromAPI) {
       var distinctCurrencies = $filter('unique')(dataFromAPI.response, 'id');
       $scope.companyCurrencies = angular.copy(distinctCurrencies);
@@ -342,10 +333,6 @@ angular.module('ts5App')
 
     function setCreditCardTypes(dataFromAPI) {
       $scope.creditCardTypes = angular.copy(dataFromAPI.companyCCTypes);
-    }
-
-    function getTransactionTypes() {
-      recordsService.getTransactionTypes().then(setTransactionTypes);
     }
 
     function getCompanyCurrencies() {
@@ -363,7 +350,6 @@ angular.module('ts5App')
 
     function makeDependencyPromises() {
       return [
-        getTransactionTypes(),
         getCompanyCurrencies(),
         getCompanyStations(),
         getCreditCardTypes()
