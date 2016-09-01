@@ -88,7 +88,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     };
 
     this.setExportURL = function(cateringStation) {
-      $scope.exportURL = ENV.apiUrl + '/rsvr/api/stock-management/dashboard/' + cateringStation.id;
+      $scope.exportURL = ENV.apiUrl + '/rsvr-pdf/api/stock-management/dashboard/' + cateringStation.id;
       var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
       $scope.exportURL += '/file/export?sortOn=itemName&companyId=' + $scope.companyId + '&sessionToken=' + sessionToken;
     };
