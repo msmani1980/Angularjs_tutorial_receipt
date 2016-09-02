@@ -14,14 +14,13 @@ angular.module('ts5App')
 
     $scope.viewName = 'Transactions';
     $scope.transactions = [];
-    $scope.transactionTypes = [];
+    $scope.transactionTypes = ['SALE', 'REFUND', 'EmployeePurchase'];
     $scope.companyCurrencies = [];
     $scope.companyStations = [];
     $scope.paymentMethods = ['Cash', 'Credit Card', 'Discount'];
     $scope.creditCardTypes = [];
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
-    $scope.supportedTransactionTypes = ['SALE', 'REFUND', 'EmployeePurchase'];
     $scope.overrideTransactionTypeNames = {
       CLEARED: 'Cleared',
       CREWMEAL: 'Crew Meal',
@@ -192,10 +191,6 @@ angular.module('ts5App')
       }
     };
 
-    $scope.filterTransactionTypes = function (transactionType) {
-      return $scope.supportedTransactionTypes.indexOf(transactionType.name) > -1;
-    };
-
     $scope.getOverriddenTransactionTypeName = function (transactionTypeName) {
       if (transactionTypeName in $scope.overrideTransactionTypeNames) {
         return $scope.overrideTransactionTypeNames[transactionTypeName];
@@ -239,6 +234,15 @@ angular.module('ts5App')
 
       if (payload.paymentMethods) {
         payload.paymentMethods = payload.paymentMethods.join(',');
+      }
+
+      if (payload.transactionType && payload.transactionType === 'SALE') {
+        payload.transactionType = 'SALE,VOIDED';
+      }
+
+      if (payload.transactionType && payload.transactionType === 'EmployeePurchase') {
+        payload.transactionType = 'SALE,VOIDED';
+        payload.orderTypeId = 3;
       }
     }
 
@@ -287,24 +291,20 @@ angular.module('ts5App')
 
     function normalizeTransactions(transactions) {
       angular.forEach(transactions, function (transaction) {
-        if (transaction.transactionDate) {
-          transaction.transactionDate = dateUtility.formatDateForApp(transaction.transactionDate);
-        }
-
-        if (transaction.scheduleDate) {
-          transaction.scheduleDate = dateUtility.formatDateForApp(transaction.scheduleDate);
-        }
-
-        if (transaction.storeDate) {
-          transaction.storeDate = dateUtility.formatDateForApp(transaction.storeDate);
-        }
-
-        if (transaction.instanceDate) {
-          transaction.instanceDate = dateUtility.formatDateForApp(transaction.instanceDate);
-        }
+        formatDateIfDefined(transaction, 'transactionDate');
+        formatDateIfDefined(transaction, 'scheduleDate');
+        formatDateIfDefined(transaction, 'storeDate');
+        formatDateIfDefined(transaction, 'instanceDate');
+        formatDateIfDefined(transaction, 'ccProcessedDate');
       });
 
       return transactions;
+    }
+
+    function formatDateIfDefined(transaction, dateFieldName) {
+      if (transaction.hasOwnProperty(dateFieldName) && transaction[dateFieldName]) {
+        transaction[dateFieldName] = dateUtility.formatDateForApp(transaction[dateFieldName]);
+      }
     }
 
     function appendTransactions(dataFromAPI) {
@@ -322,10 +322,6 @@ angular.module('ts5App')
       $scope.transactions = [];
     }
 
-    function setTransactionTypes(dataFromAPI) {
-      $scope.transactionTypes = angular.copy(dataFromAPI);
-    }
-
     function setCompanyCurrencies(dataFromAPI) {
       var distinctCurrencies = $filter('unique')(dataFromAPI.response, 'id');
       $scope.companyCurrencies = angular.copy(distinctCurrencies);
@@ -337,10 +333,6 @@ angular.module('ts5App')
 
     function setCreditCardTypes(dataFromAPI) {
       $scope.creditCardTypes = angular.copy(dataFromAPI.companyCCTypes);
-    }
-
-    function getTransactionTypes() {
-      recordsService.getTransactionTypes().then(setTransactionTypes);
     }
 
     function getCompanyCurrencies() {
@@ -358,7 +350,6 @@ angular.module('ts5App')
 
     function makeDependencyPromises() {
       return [
-        getTransactionTypes(),
         getCompanyCurrencies(),
         getCompanyStations(),
         getCreditCardTypes()

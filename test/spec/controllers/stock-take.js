@@ -304,7 +304,11 @@ describe('Controller: StockTakeCtrl', function() {
       beforeEach(function() {
         scope.stockTake = {
           catererStationId: 3,
-          id: 60
+          id: 60,
+          items: [
+            { masterItemId: 1, id: 11 },
+            { masterItemId: 2, id: 12 }
+          ]
         };
         scope.itemQuantities = [];
         scope.itemQuantities[1] = 10;
@@ -318,7 +322,17 @@ describe('Controller: StockTakeCtrl', function() {
       });
 
       it('should call saveDeliveryNote', function() {
-        expect(stockTakeFactory.updateStockTake).toHaveBeenCalled();
+        var expectedPayload = jasmine.objectContaining({
+          items: [{
+            masterItemId: 1,
+            quantity: 10,
+            id: 11
+          }, {
+            masterItemId: 4,
+            quantity: 11
+          }]
+        });
+        expect(stockTakeFactory.updateStockTake).toHaveBeenCalledWith(scope.stockTake.id, expectedPayload);
       });
     });
 
