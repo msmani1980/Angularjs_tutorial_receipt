@@ -257,7 +257,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getStoresList = function () {
       var query = $this.isActionState('dispatch') ? this.getFormattedDatesPayload() : {};
-      if(this.isActionState('replenish')) {
+      if (this.isActionState('replenish')) {
         query.readyToUse = false;
       }
 
