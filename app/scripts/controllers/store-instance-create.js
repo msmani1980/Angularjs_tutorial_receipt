@@ -246,7 +246,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var storesListFromAPI = angular.copy(dataFromAPI.response);
       var shouldFilterReadyToUse = $this.determineReadyToUse();
 
-      $scope.storesList = shouldFilterReadyToUse ? lodash.filter(storesListFromAPI, { readyToUse: true} ) : storesListFromAPI;
+      $scope.storesList = shouldFilterReadyToUse ? lodash.filter(storesListFromAPI, { readyToUse: true }) : storesListFromAPI;
 
       var storeIdMatch = lodash.findWhere(storesListFromAPI, { id: parseInt($scope.oldStoreNumberId) });
       var storeIdMatchInStoresList = lodash.findWhere($scope.storesList, { id: parseInt($scope.oldStoreNumberId) });
@@ -257,6 +257,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getStoresList = function () {
       var query = $this.isActionState('dispatch') ? this.getFormattedDatesPayload() : {};
+      if(this.isActionState('replenish')) {
+        query.readyToUse = false;
+      }
 
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
