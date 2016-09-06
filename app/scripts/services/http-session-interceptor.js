@@ -60,7 +60,7 @@ angular.module('ts5App')
         '/station-list/*',
         '/station-view/*',
         '/stock-dashboard/*',
-        '/stock-dashboard/*',   
+        '/stock-take-review/*',    
         '/stock-take-report/*',   
         '/stock-take/*',        
         '/store-instance-create/*',
