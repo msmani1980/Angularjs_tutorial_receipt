@@ -264,8 +264,8 @@ angular.module('ts5App')
       setupModels();
     }
 
-    function showSuccessMessage(savedOrSubmitted) {
-      var message = '<strong>Daily Exchange Rates</strong>: successfully ' + savedOrSubmitted + '!';
+    function showSuccessMessage() {
+      var message = '<strong>Daily Exchange Rates</strong>: successfully saved!';
       $rootScope.$broadcast('DEXsaved');
       messageService.display('success', message);
     }
@@ -279,7 +279,7 @@ angular.module('ts5App')
 
     function successRequestHandler() {
       hideLoadingModal();
-      showSuccessMessage('Daily Exchange Rate Successfully Saved');
+      showSuccessMessage();
       disableActionButtons(false);
       getExchangeRates($scope.cashiersDateField);
     }
