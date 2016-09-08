@@ -184,7 +184,7 @@ angular.module('ts5App')
         return spendLimit;
       });
 
-      if($scope.promotion.spendLimitCategory) {
+      if ($scope.promotion.spendLimitCategory) {
         payload.spendLimitCategoryId = $scope.promotion.spendLimitCategory.id;
       }
     }
