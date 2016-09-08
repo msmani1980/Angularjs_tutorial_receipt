@@ -264,10 +264,12 @@ angular.module('ts5App')
       setupModels();
     }
 
-    function showSuccessMessage(savedOrSubmitted) {
-      var message = '<strong>Daily Exchange Rates</strong>: successfully ' + savedOrSubmitted + '!';
+    function showSuccessMessage() {
+      var action = $scope.submitButtonPressed ? 'submitted' : 'saved';
+      var message = 'successfully ' + action + '!';
+
       $rootScope.$broadcast('DEXsaved');
-      messageService.display('success', message);
+      messageService.display('success', message, 'Daily Exchange Rates');
     }
 
     function disableActionButtons(shouldDisable, saveOrSubmit) {
@@ -279,7 +281,7 @@ angular.module('ts5App')
 
     function successRequestHandler() {
       hideLoadingModal();
-      showSuccessMessage('Daily Exchange Rate Successfully Saved');
+      showSuccessMessage();
       disableActionButtons(false);
       getExchangeRates($scope.cashiersDateField);
     }
@@ -311,6 +313,7 @@ angular.module('ts5App')
     }
 
     $scope.saveDailyExchangeRates = function(shouldSubmit) {
+      $scope.submitButtonPressed = shouldSubmit;
       angular.element('.variance-warning-modal').modal('hide');
       disableActionButtons(true, shouldSubmit);
       var loadingText = shouldSubmit ? 'Submitting Daily Exchange Rates' : 'Saving Daily Exchange Rates';
