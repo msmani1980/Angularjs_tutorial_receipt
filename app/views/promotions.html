@@ -97,7 +97,7 @@
         <fieldset>
           <div class="form-group">
             <label>Promotion Category</label>
-            <ui-select theme="bootstrap" ng-model="promotion.spendLimitCategory" ng-disabled="readOnly || isDisabled" ng-required="true" name="spendLimitCategory">
+            <ui-select theme="bootstrap" ng-model="promotion.spendLimitCategory" ng-disabled="readOnly || isDisabled" ng-required="spendLimitCategoryRequired(promotion)" name="spendLimitCategory">
               <ui-select-match placeholder="Select Category">{{ $select.selected.promotionCategoryName }}</ui-select-match>
               <ui-select-choices repeat="promotionCategory in selectOptions.promotionCategories | filter: {promotionCategoryName:$select.search}">
                 <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
