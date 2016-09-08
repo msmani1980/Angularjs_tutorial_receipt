@@ -239,6 +239,10 @@ describe('Controller: ExchangeRatesCtrl', function() {
         expect(scope.errorResponse).toEqual(mockError);
       });
 
+      it('should set submitButtonPressed', function () {
+        expect(scope.submitButtonPressed).toEqual(true);
+      });
+
     });
 
   });

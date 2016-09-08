@@ -18,7 +18,6 @@ describe('Controller: StockTakeCtrl', function() {
   var getCatererStationListDeferred;
   var getStockTakeDeferred;
   var getItemsByCateringStationIdDeferred;
-  var getMasterItemDeferred;
   var getItemsMasterListDeferred;
   var getItemTypesDeferred;
   var getCharacteristicsDeferred;
@@ -52,9 +51,6 @@ describe('Controller: StockTakeCtrl', function() {
     getItemsMasterListDeferred = $q.defer();
     getItemsMasterListDeferred.resolve(_servedMasterItemList_);
 
-    getMasterItemDeferred = $q.defer();
-    getMasterItemDeferred.resolve(_servedMasterItem_);
-
     getItemTypesDeferred = $q.defer();
     getItemTypesDeferred.resolve(_servedItemTypes_);
 
@@ -64,7 +60,6 @@ describe('Controller: StockTakeCtrl', function() {
     spyOn(stockTakeFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
     spyOn(stockTakeFactory, 'getCharacteristics').and.returnValue(getCharacteristicsDeferred.promise);
     spyOn(stockTakeFactory, 'getItemsMasterList').and.returnValue(getItemsMasterListDeferred.promise);
-    spyOn(stockTakeFactory, 'getMasterItem').and.returnValue(getMasterItemDeferred.promise);
     spyOn(stockTakeFactory, 'getCompanyId').and.returnValue(403);
   }));
 

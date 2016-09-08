@@ -84,7 +84,6 @@ angular.module('ts5App')
         '/rsvr/api/dispatch/store-instances/[0-9]*/status/[5-9][^11]*$',
         '/rsvr/api/promotions',
         '/rsvr/api/companies/[0-9]*/company-credit-card-types',
-        '/rsvr/api/records/company-types',
         '/rsvr/api/company-discounts/[0-9]*$'
     ];
 
@@ -113,7 +112,8 @@ angular.module('ts5App')
       '/api/companies/[0-9]*/posttrips',
       '/api/companies/[0-9]*/posttrips/[0-9]*',
       '/api/companies/[0-9]*/sales-categories',
-      '/rsvr/api/retail-items/master/*'
+      '/rsvr/api/retail-items/master/*',
+      '/rsvr/api/records/company-types'
     ];
 
     function responseError(response) {
