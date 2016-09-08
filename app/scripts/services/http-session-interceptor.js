@@ -91,7 +91,6 @@ angular.module('ts5App')
       '/rsvr/api/eula',
       '/rsvr/api/company-preferences',
       '/rsvr/api/currencies',
-      '/rsvr/api/companies/[0-9]*$',
       '/rsvr/api/dailyexchangerate',
       '/rsvr/api/company-formats',
       '/rsvr/api/companies/[0-9]*/stations',
@@ -112,9 +111,8 @@ angular.module('ts5App')
       '/api/companies/[0-9]*/posttrips',
       '/api/companies/[0-9]*/posttrips/[0-9]*',
       '/api/companies/[0-9]*/sales-categories',
-      '/rsvr/api/retail-items/master/*',
-      '/rsvr/api/records/company-types'
-    ];
+      '/rsvr/api/retail-items/master/*'   
+      ];
 
     function responseError(response) {
 
