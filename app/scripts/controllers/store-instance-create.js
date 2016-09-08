@@ -238,17 +238,28 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return storeInstanceFactory.getAllCarrierNumbers(companyId, query).then($this.setCarrierNumbers);
     };
 
-    this.setStoresList = function (dataFromAPI) {
-      $scope.storesList = angular.copy(dataFromAPI.response);
-    };
-
     this.determineReadyToUse = function () {
       return !this.isActionState('replenish');
     };
 
+    this.setStoresList = function (dataFromAPI) {
+      var storesListFromAPI = angular.copy(dataFromAPI.response);
+      var shouldFilterReadyToUse = $this.determineReadyToUse();
+
+      $scope.storesList = shouldFilterReadyToUse ? lodash.filter(storesListFromAPI, { readyToUse: true }) : storesListFromAPI;
+
+      var storeIdMatch = lodash.findWhere(storesListFromAPI, { id: parseInt($scope.oldStoreNumberId) });
+      var storeIdMatchInStoresList = lodash.findWhere($scope.storesList, { id: parseInt($scope.oldStoreNumberId) });
+      if ($scope.oldStoreNumberId && storeIdMatch && !storeIdMatchInStoresList) {
+        $scope.storesList.push(storeIdMatch);
+      }
+    };
+
     this.getStoresList = function () {
       var query = $this.isActionState('dispatch') ? this.getFormattedDatesPayload() : {};
-      query.readyToUse = this.determineReadyToUse();
+      if (this.isActionState('replenish')) {
+        query.readyToUse = false;
+      }
 
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
@@ -456,6 +467,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setStoreId = function (apiData) {
       if (apiData && apiData.storeId) {
+        $scope.oldStoreNumberId = apiData.storeId.toString();
         return apiData.storeId.toString();
       }
 

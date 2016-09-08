@@ -69,6 +69,7 @@ describe('Store Instance Create Controller', function() {
   var storeInstanceSealsJSON;
   var servedCompanyDataJSON;
   var globalMenuService;
+  var lodash;
 
   beforeEach(inject(function($q, $controller, $rootScope, $injector, $localStorage, _servedCateringStations_,
     _servedMenuMasterList_, _servedCarrierNumbers_, _servedStoresList_, _servedStoreInstanceCreated_,
@@ -98,6 +99,7 @@ describe('Store Instance Create Controller', function() {
     scope = $rootScope.$new();
     dateUtility = $injector.get('dateUtility');
     localStorage = $injector.get('$localStorage');
+    lodash = $injector.get('lodash');
     controller = $controller;
 
     storeInstanceFactory = $injector.get('storeInstanceFactory');
@@ -364,10 +366,10 @@ describe('Store Instance Create Controller', function() {
         expect(scope.storesList.length).toBeGreaterThan(0);
       });
 
-      it('should be match the storesList list from the stores numbers API Respone', function() {
-        expect(scope.storesList).toEqual(storesListJSON.response);
+      it('should filter stores API Response with readyToUse flag', function() {
+        var readyToUseRecord = lodash.findWhere(storeDetailsJSON.response, { readyToUse: true });
+        expect(scope.storesList.indexOf(readyToUseRecord) >= 0).toEqual(false);
       });
-
     });
 
     it('should have an empty scheduleNumbers array before the scope is digested', function() {
@@ -1071,12 +1073,11 @@ describe('Store Instance Create Controller', function() {
       scope.$digest();
     });
 
-    it('should get stores that are ready to use', function() {
+    it('should get stores active on the schedule date', function() {
       scope.formData.scheduleDate = '10/01/2015';
       var queryControl = {
         startDate: '20151001',
-        endDate: '20151001',
-        readyToUse: true
+        endDate: '20151001'
       };
       StoreInstanceCreateCtrl.getStoresList();
       expect(storeInstanceFactory.getStoresList).toHaveBeenCalledWith(queryControl);

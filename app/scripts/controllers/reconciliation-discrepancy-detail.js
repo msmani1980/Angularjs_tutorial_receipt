@@ -576,6 +576,25 @@ angular.module('ts5App')
       $this.promotionTotals = consolidatedPromotions;
     }
 
+    function mergeStockTotalDuplicates (stockItemList) {
+      var mergedArray = lodash.reduce(stockItemList, function (result, value) {
+        var currentArray = !Array.isArray(result) ? [result] : result;
+        var existingMatch = lodash.findWhere(currentArray, { itemMasterId: value.itemMasterId });
+        if (!existingMatch) {
+          currentArray.push(value);
+        } else {
+          existingMatch.eposQuantity += value.eposQuantity;
+          existingMatch.eposTotal += value.eposTotal;
+          existingMatch.lmpQuantity += value.lmpQuantity;
+          existingMatch.lmpTotal += value.lmpTotal;
+        }
+
+        return currentArray;
+      });
+
+      return mergedArray;
+    }
+
     function setupData(responseCollection) {
       $this.countTypes = angular.copy(responseCollection[0]);
       $this.stockTotals = angular.copy(responseCollection[1].response);
@@ -604,6 +623,8 @@ angular.module('ts5App')
           id: stockItem.itemTypeId
         }).name;
       });
+
+      $this.stockTotals = mergeStockTotalDuplicates($this.stockTotals);
 
       var totalItems = getTotalsFor($this.stockTotals, 'Regular');
       var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
@@ -1016,7 +1037,7 @@ angular.module('ts5App')
       var isCashBagVerified = true;
       var isVerified;
       angular.forEach($scope.cashBagList, function (cashBag) {
-        isVerified = (cashBag.amendVerifiedOn) ? true : false;  
+        isVerified = (cashBag.amendVerifiedOn) ? true : false;
         if (isCashBagVerified && !isVerified) {
           isCashBagVerified = false;
         }

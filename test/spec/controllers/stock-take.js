@@ -18,7 +18,6 @@ describe('Controller: StockTakeCtrl', function() {
   var getCatererStationListDeferred;
   var getStockTakeDeferred;
   var getItemsByCateringStationIdDeferred;
-  var getMasterItemDeferred;
   var getItemsMasterListDeferred;
   var getItemTypesDeferred;
   var getCharacteristicsDeferred;
@@ -52,9 +51,6 @@ describe('Controller: StockTakeCtrl', function() {
     getItemsMasterListDeferred = $q.defer();
     getItemsMasterListDeferred.resolve(_servedMasterItemList_);
 
-    getMasterItemDeferred = $q.defer();
-    getMasterItemDeferred.resolve(_servedMasterItem_);
-
     getItemTypesDeferred = $q.defer();
     getItemTypesDeferred.resolve(_servedItemTypes_);
 
@@ -64,7 +60,6 @@ describe('Controller: StockTakeCtrl', function() {
     spyOn(stockTakeFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
     spyOn(stockTakeFactory, 'getCharacteristics').and.returnValue(getCharacteristicsDeferred.promise);
     spyOn(stockTakeFactory, 'getItemsMasterList').and.returnValue(getItemsMasterListDeferred.promise);
-    spyOn(stockTakeFactory, 'getMasterItem').and.returnValue(getMasterItemDeferred.promise);
     spyOn(stockTakeFactory, 'getCompanyId').and.returnValue(403);
   }));
 
@@ -304,7 +299,11 @@ describe('Controller: StockTakeCtrl', function() {
       beforeEach(function() {
         scope.stockTake = {
           catererStationId: 3,
-          id: 60
+          id: 60,
+          items: [
+            { masterItemId: 1, id: 11 },
+            { masterItemId: 2, id: 12 }
+          ]
         };
         scope.itemQuantities = [];
         scope.itemQuantities[1] = 10;
@@ -318,7 +317,17 @@ describe('Controller: StockTakeCtrl', function() {
       });
 
       it('should call saveDeliveryNote', function() {
-        expect(stockTakeFactory.updateStockTake).toHaveBeenCalled();
+        var expectedPayload = jasmine.objectContaining({
+          items: [{
+            masterItemId: 1,
+            quantity: 10,
+            id: 11
+          }, {
+            masterItemId: 4,
+            quantity: 11
+          }]
+        });
+        expect(stockTakeFactory.updateStockTake).toHaveBeenCalledWith(scope.stockTake.id, expectedPayload);
       });
     });
 
