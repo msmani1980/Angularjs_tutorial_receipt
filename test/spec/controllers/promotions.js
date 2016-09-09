@@ -255,6 +255,21 @@ describe('Controller: PromotionsCtrl', function () {
         });
     });
 
+    describe('spendLimitCategoryRequired scope function', function () {
+      it('should return true if property spendLimitCategory is defined', function () {
+        expect(scope.spendLimitCategoryRequired({
+          spendLimitCategory: 'Category1'
+        })).toBe(true);
+      });
+
+      it('should return false if property spendLimitCategory is not defined',
+        function () {
+          expect(scope.spendLimitCategoryRequired({
+            foo: 'bar'
+          })).toBe(false);
+        });
+    });
+
     describe('retailItemQtyRequired scope function', function () {
       it('should return true if retailItem is set', function () {
         expect(scope.retailItemQtyRequired({
