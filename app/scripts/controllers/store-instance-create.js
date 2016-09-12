@@ -413,7 +413,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.determineMinDate = function () {
-      var diff = 1;
+      var diff = 0;
       if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
         diff = dateUtility.diff(
           dateUtility.nowFormatted(),

@@ -184,7 +184,9 @@ angular.module('ts5App')
         return spendLimit;
       });
 
-      payload.spendLimitCategoryId = $scope.promotion.spendLimitCategory.id;
+      if ($scope.promotion.spendLimitCategory) {
+        payload.spendLimitCategoryId = $scope.promotion.spendLimitCategory.id;
+      }
     }
 
     function payloadGenerateDiscountRateTypePercentage() {
@@ -813,6 +815,10 @@ angular.module('ts5App')
       return angular.isDefined(promotionCategoryData.promotionCategory);
     };
 
+    $scope.spendLimitCategoryRequired = function (promotion) {
+      return angular.isDefined(promotion.spendLimitCategory);
+    };
+
     $scope.retailItemQtyRequired = function (retailItemData) {
       return angular.isDefined(retailItemData.retailItem) || angular.isDefined(retailItemData.itemId);
     };
@@ -902,7 +908,7 @@ angular.module('ts5App')
 
     $scope.itemCategoryChanged = function (index) {
       var categoryId = $scope.itemCategorySelects[index].id;
-      
+
       if (cachedRetailItemsByCatId[categoryId]) {
         $scope.repeatableItemListSelectOptions[index] = cachedRetailItemsByCatId[categoryId];
         return;
