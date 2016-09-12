@@ -495,6 +495,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     }
 
+    function searchStoreInstanceFailure() {
+      $scope.storeInstanceList = [];
+      hideLoadingModal();
+    }
+
     function searchStoreInstanceDashboardData(startDate) {
       if ($this.meta.offset >= $this.meta.count) {
         return;
@@ -533,7 +538,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
-      storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess);
+      storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess, searchStoreInstanceFailure);
       $this.meta.offset += $this.meta.limit;
     }
 
