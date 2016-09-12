@@ -795,6 +795,29 @@ describe('The Item Create Controller', function() {
         });
 
       });
+      
+      describe('formatPrices', function() {
+
+        it('should set itemId id priceCurrencies when cloningItem and remove itemId id priceCurrencies id property', function() {
+          scope.cloningItem = true;
+          var itemData = {
+            prices: [{
+              itemId: 123,
+              id:179,
+              priceCurrencies: [{
+                companyCurrencyId: 153, 
+                price: '2.00', 
+                id: 1958      	  
+              }]
+            }]
+          };
+          ItemCreateCtrl.formatPrices(itemData);
+          expect(itemData.prices[0].itemId).toBeUndefined();
+          expect(itemData.prices[0].id).toBeUndefined();
+          expect(itemData.prices[0].priceCurrencies[0].id).toBeUndefined();
+        });  
+
+      });
 
       describe('setUIReady() method', function() {
 

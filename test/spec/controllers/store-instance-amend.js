@@ -23,9 +23,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   beforeEach(module('served/store-instance-list.json'));
   beforeEach(module('served/store-status.json'));
   beforeEach(module('served/stations.json'));
-  beforeEach(module('served/master-item.json'));
+  beforeEach(module('served/master-item-list.json'));
   beforeEach(module('served/promotion.json'));
   beforeEach(module('served/daily-exchange-rate.json'));
+  beforeEach(module('served/cash-bag-epos-sales.json'));
 
   var scope;
   var StoreInstanceAmendCtrl;
@@ -87,8 +88,8 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var stationsJSON;
   var getStationsDeferred;
   var stationsService;
-  var masterItemJSON;
-  var masterItemDeferred;
+  var masterItemListJSON;
+  var masterItemListDeferred;
   var promotionJSON;
   var promotionDeferred;
   var dailyExchangeRateJSON;
@@ -97,6 +98,8 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var manualDataDeferred;
   var manualDataJSON;
   var cashBagVerificationsDeferred;
+  var cashBagEposSalesJSON;
+  var cashBagEposSalesDeferred;
   var storeInstanceId = 2;
   var lodash;
   var $window;
@@ -110,7 +113,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
                               _servedChCashBag_, _servedPaymentReport_, _servedEmployees_, _servedCashBag_, _servedCashBagCarrierInstances_,
                               _servedPostTripData_, _servedTransactions_, _servedStoreInstanceList_, _servedStoreStatus_, _servedPostTripDataList_,
-                              _servedPostTripSingleDataList_, _servedStations_, _servedMasterItem_, _servedPromotion_, _servedDailyExchangeRate_) {
+                              _servedPostTripSingleDataList_, _servedStations_, _servedMasterItemList_, _servedPromotion_, _servedDailyExchangeRate_, _servedCashBagEposSales_) {
     location = $location;
     scope = $rootScope.$new();
     lodash = $injector.get('lodash');
@@ -218,9 +221,9 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     getStationsDeferred = $q.defer();
     getStationsDeferred.resolve(stationsJSON);
 
-    masterItemJSON = _servedMasterItem_;
-    masterItemDeferred = $q.defer();
-    masterItemDeferred.resolve(masterItemJSON);
+    masterItemListJSON = _servedMasterItemList_;
+    masterItemListDeferred = $q.defer();
+    masterItemListDeferred.resolve(masterItemListJSON);
 
     promotionJSON = _servedPromotion_;
     promotionDeferred = $q.defer();
@@ -229,6 +232,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     dailyExchangeRateJSON = _servedDailyExchangeRate_;
     dailyExchangeRateDeferred = $q.defer();
     dailyExchangeRateDeferred.resolve(dailyExchangeRateJSON);
+
+    cashBagEposSalesJSON = _servedCashBagEposSales_;
+    cashBagEposSalesDeferred = $q.defer();
+    cashBagEposSalesDeferred.resolve(cashBagEposSalesJSON);
 
     manualDataJSON = {
       response: [
@@ -266,7 +273,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(reconciliationFactory, 'getCHRevenue').and.returnValue(getCHRevenueDeferred.promise);
     spyOn(reconciliationFactory, 'getEPOSRevenue').and.returnValue(getEPOSRevenueDeferred.promise);
     spyOn(reconciliationFactory, 'getPaymentReport').and.returnValue(getPaymentReportDeferred.promise);
-    spyOn(reconciliationFactory, 'getMasterItem').and.returnValue(masterItemDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'getMasterItemList').and.returnValue(masterItemListDeferred.promise);
     spyOn(reconciliationFactory, 'getPromotion').and.returnValue(promotionDeferred.promise);
     spyOn(employeesService, 'getEmployees').and.returnValue(getEmployeesDeferred.promise);
     spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
@@ -289,6 +296,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(storeInstanceAmendFactory, 'rearrangeFlightSector').and.callThrough();
     spyOn(stationsService, 'getStationList').and.returnValue(getStationsDeferred.promise);
     spyOn(dailyExchangeRatesService, 'getDailyExchangeById').and.returnValue(dailyExchangeRateDeferred.promise);
+    spyOn(storeInstanceAmendFactory, 'getCashBagEposSales').and.returnValue(cashBagEposSalesDeferred.promise);
 
     StoreInstanceAmendCtrl = controller('StoreInstanceAmendCtrl', {
       $scope: scope,
@@ -363,6 +371,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
     });
 
+    it('should get master item data', function () {
+      expect(storeInstanceAmendFactory.getMasterItemList).toHaveBeenCalled();
+    });
+
     it('should call get cash bag data', function () {
       scope.$digest();
       expect(storeInstanceAmendFactory.getCashBags).toHaveBeenCalled();
@@ -410,6 +422,45 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(manualCashBag.creditRevenue.manualTotal).toEqual(21);
       expect(manualCashBag.discountRevenue.amount >= 21).toEqual(true);
       expect(manualCashBag.discountRevenue.manualTotal).toEqual(21);
+    });
+
+    describe('cashbag epos sales init', function () {
+      it('should retrieve epos sales for each cash bag', function () {
+        scope.$digest();
+        angular.forEach(scope.normalizedCashBags, function (cashbag) {
+          expect(storeInstanceAmendFactory.getCashBagEposSales).toHaveBeenCalledWith(cashbag.id);
+        });
+      });
+
+      it('should set itemType and itemName for each epos sales record', function () {
+        scope.$digest();
+        expect(StoreInstanceAmendCtrl.cashBagEposSales).toBeDefined();
+
+        var expectedItemTypes = ['Regular', 'Virtual', 'Voucher'];
+        expect(StoreInstanceAmendCtrl.cashBagEposSales[0].itemTypeName).toBeDefined();
+        expect(expectedItemTypes.indexOf(StoreInstanceAmendCtrl.cashBagEposSales[0].itemTypeName) >=0 ).toEqual(true);
+
+        expect(StoreInstanceAmendCtrl.cashBagEposSales[0].itemName).toBeDefined();
+        expect(StoreInstanceAmendCtrl.cashBagEposSales[0].itemName).not.toEqual(null);
+      });
+
+      it('should sum epos sales totals and attach to cash bag', function () {
+        scope.$digest();
+
+        var expectedRegularSales = cashBagEposSalesJSON.response[0].eposTotal + cashBagEposSalesJSON.response[1].eposTotal;
+
+        var expectedVirtualSales = cashBagEposSalesJSON.response[2].eposTotal +
+          cashBagEposSalesJSON.response[3].eposTotal +
+          StoreInstanceAmendCtrl.manualData.virtual[0].convertedAmount;
+
+        var expectedVoucherSales = cashBagEposSalesJSON.response[4].eposTotal +
+          cashBagEposSalesJSON.response[5].eposTotal +
+          StoreInstanceAmendCtrl.manualData.voucher[0].convertedAmount;
+
+        expect(scope.normalizedCashBags[0].regularItemSales).toEqual(expectedRegularSales);
+        expect(scope.normalizedCashBags[0].virtualItemSales).toEqual(expectedVirtualSales);
+        expect(scope.normalizedCashBags[0].voucherItemSales).toEqual(expectedVoucherSales);
+      });
     });
   });
 
@@ -940,9 +991,9 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
 
       it('should edit schedule if edit schedule is requested', function () {
-        scope.scheduleToEdit = { id: 2 };
+        scope.scheduleToEdit = { id: 3 };
         scope.addOrEditSchedule();
-        expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 2, '3', '20160201');
+        expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 3, 2);
       });
     });
   });

@@ -22,9 +22,10 @@ describe('Controller: TransactionListCtrl', function () {
   var getCompanyCurrenciesDeferred;
   var getCompanyStationsDeferred;
   var getCreditCardTypesDeferred;
+  var filter;
   var dateUtility;
 
-  beforeEach(inject(function ($controller, $rootScope, $q, _transactionFactory_, recordsService, currencyFactory,
+  beforeEach(inject(function ($controller, $rootScope, $q, $filter, _transactionFactory_, recordsService, currencyFactory,
                               stationsService, companyCcTypesService, $injector) {
     inject(function (_servedTransactions_, _servedTransactionTypes_, _servedCompanyCurrencyGlobals_,
                      _servedCompanyStationGlobals_, _servedCompanyCcTypes_) {
@@ -37,7 +38,7 @@ describe('Controller: TransactionListCtrl', function () {
 
     transactionFactory = _transactionFactory_;
     dateUtility = $injector.get('dateUtility');
-
+    filter = $filter;
     scope = $rootScope.$new();
     getTransactionListDeferred = $q.defer();
     getTransactionListDeferred.resolve(transactionsJSON);
@@ -121,6 +122,13 @@ describe('Controller: TransactionListCtrl', function () {
     expect(scope.displayColumns.storeInstance).toBe(true);
   });
 
+  describe('setCompanyCurrencies will', function () {
+    it('should set the companyCurrencies to the distinct values', function() {
+      var uniqueCompanyCurrencies = filter('unique')(companyCurrenciesJSON.response, 'id');
+      expect(scope.companyCurrencies).toEqual(uniqueCompanyCurrencies);
+    });
+  });
+
   describe('getTransactions will', function () {
     it('call getTransactionList if offset is not greater than count', function () {
       scope.getTransactions();
@@ -133,6 +141,31 @@ describe('Controller: TransactionListCtrl', function () {
       scope.getTransactions();
 
       expect(TransactionListCtrl.meta.offset).toBe(offset + 100);
+    });
+  });
+
+  describe('isNotSaleChangeTransaction will', function () {
+    it('filter out transactions with change due amount', function () {
+      var transactionsWithChangeDue = scope.transactions.filter(function (transaction) {
+        return transaction.transactionTypeName === 'SALE' &&
+          transaction.transactionChangeDue  &&
+          transaction.transactionChangeDue > 0;
+      });
+      expect(transactionsWithChangeDue.length).toEqual(0);
+    });
+  });
+
+  describe('filterNotFullyPaidOffDiscount will', function () {
+    it('filter out transactions with discounts that are not fully paid off', function () {
+      var transactionsNotFullyPaidOffDiscount = scope.transactions.filter(function (transaction) {
+        return (transaction.transactionTypeName === 'SALE' && (transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher')) &&
+          (
+            (transaction.totalAmount !== 0 && transaction.discountTypeName === 'Comp') ||
+            (transaction.totalAmount > 0 && transaction.transactionAmount> 0 && (transaction.totalAmount -  transaction.transactionAmount) !== 0)
+          );
+      });
+
+      expect(transactionsNotFullyPaidOffDiscount.length).toEqual(0);
     });
   });
 
@@ -174,7 +207,7 @@ describe('Controller: TransactionListCtrl', function () {
         cardType: null,
         carrierNumber: null,
         ccAuthorizationStatus: null,
-        ccProcessedDate: null,
+        ccProcessedDate: '2015-08-29 14:13:08.333',
         ccTransactionStatus: 'New',
         companyCarrierInstanceId: 6481,
         companyId: 403,
@@ -246,6 +279,10 @@ describe('Controller: TransactionListCtrl', function () {
       expect(scope.transactions[0].instanceDate).toEqual(dateUtility.formatDateForApp(transactionsJSON.transactions[0].instanceDate));
     });
 
+    it('should have ccProcessedDate formatted', function () {
+      expect(scope.transactions[0].ccProcessedDate).toEqual(dateUtility.formatDateForApp(transactionsJSON.transactions[0].ccProcessedDate));
+    });
+
     it('do not print field ccProcessedDate for non Credit Card transaction', function () {
       transactionMock.paymentMethod = 'Cash';
       expect(scope.printPropertyIfItIsCreditCardPayment(transactionMock, 'ccProcessedDate')).toEqual('');
@@ -289,7 +326,7 @@ describe('Controller: TransactionListCtrl', function () {
     var transactionMock;
     beforeEach(function () {
       transactionMock = {
-        transactionAmount: '1.50',
+        transactionAmount: 1.50,
         transactionCurrencyCode: 'GBP'
       };
     });
@@ -301,6 +338,53 @@ describe('Controller: TransactionListCtrl', function () {
     it('print transactionAmount as 0 if printTransactionAmount is not defined', function () {
       transactionMock.transactionAmount = null;
       expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
+    });
+
+    it('print netTransactionAmount if transactionTypeName is SALE and paymentMethod is Cash', function () {
+      transactionMock.transactionAmount = null;
+      transactionMock.netTransactionAmount = 1;
+      transactionMock.paymentMethod = 'Cash';
+      transactionMock.transactionTypeName = 'SALE'
+      ;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.netTransactionAmount + ' ' + transactionMock.transactionCurrencyCode);
+    });
+
+    it('print transactionAmount if netTransactionAmount is not defined and transactionAmount is', function () {
+      transactionMock.netTransactionAmount = null;
+      transactionMock.paymentMethod = 'Cash';
+      transactionMock.transactionTypeName = 'SALE'
+      ;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
+    });
+
+    it('print as 0 if netTransactionAmount is not defined and transactionAmount is not defined', function () {
+      transactionMock.netTransactionAmount = null;
+      transactionMock.transactionAmount = null;
+      transactionMock.paymentMethod = 'Cash';
+      transactionMock.transactionTypeName = 'SALE'
+      ;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
+    });
+
+    it('print as 0 transactionTypeName if Comp Discount fully paid off transaction ', function () {
+      transactionMock.netTransactionAmount = 10;
+      transactionMock.transactionAmount = 20;
+      transactionMock.totalAmount = 0;
+      transactionMock.paymentMethod = 'SALE';
+      transactionMock.discountTypeName = 'Comp';
+      transactionMock.transactionTypeName = 'Discount'
+      ;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
+    });
+
+    it('print as transactionAmount if transactionAmount has negative value', function () {
+      transactionMock.netTransactionAmount = -10;
+      transactionMock.transactionAmount = -20;
+      transactionMock.totalAmount = 0;
+      transactionMock.paymentMethod = 'REFUND';
+      transactionMock.transactionTypeName = 'Cash'
+      ;
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
     });
   });
 
@@ -323,6 +407,63 @@ describe('Controller: TransactionListCtrl', function () {
     it('print as paymentMethod if paymentMethod is Discount and discountTypeName is not defined', function() {
       transactionMock.discountTypeName = null;
       expect(scope.printPaymentMethodName(transactionMock)).toEqual(transactionMock.paymentMethod);
+    });
+  });
+
+  describe('printStoreNumber will', function() {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
+        storeNumber: 'X123',
+        originStoreNumber: null
+      };
+    });
+
+    it('print storeNumber if storeNumber is defined', function() {
+      expect(scope.printStoreNumber(transactionMock)).toEqual(transactionMock.storeNumber);
+    });
+    it('print originStoreNumber if storeNumber is not defined', function() {
+      transactionMock.storeNumber = null;
+      transactionMock.originStoreNumber = 'Y321';
+      expect(scope.printStoreNumber(transactionMock)).toEqual(transactionMock.originStoreNumber);
+    });
+  });
+
+  describe('printStoreInstanceId will', function() {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
+        storeInstanceId: 6408,
+        originStoreInstanceId: null
+      };
+    });
+
+    it('print storeInstanceId if storeInstanceId is defined', function() {
+      expect(scope.printStoreInstanceId(transactionMock)).toEqual(transactionMock.storeInstanceId);
+    });
+    it('print originStoreInstanceId if storeInstanceId is not defined', function() {
+      transactionMock.storeInstanceId = null;
+      transactionMock.originStoreInstanceId = 6407;
+      expect(scope.printStoreInstanceId(transactionMock)).toEqual(transactionMock.originStoreInstanceId);
+    });
+  });
+
+  describe('printScheduleDate will', function() {
+    var transactionMock;
+    beforeEach(function () {
+      transactionMock = {
+        scheduleDate: '31/08/2016',
+        originScheduleDate: null
+      };
+    });
+
+    it('print scheduleDate if scheduleDate is defined', function() {
+      expect(scope.printScheduleDate(transactionMock)).toEqual(transactionMock.scheduleDate);
+    });
+    it('print originScheduleDate if scheduleDate is not defined', function() {
+      transactionMock.scheduleDate = null;
+      transactionMock.originScheduleDate = '31/08/2016';
+      expect(scope.printScheduleDate(transactionMock)).toEqual(transactionMock.originScheduleDate);
     });
   });
 });

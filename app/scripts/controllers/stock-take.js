@@ -95,7 +95,6 @@ angular.module('ts5App')
       }
 
       $scope.cateringStationItems = items;
-      hideLoadingModal();
     }
 
     function diffItems(itemList) {
@@ -112,11 +111,10 @@ angular.module('ts5App')
       return lodash.difference(items, existingItems);
     }
 
-    function filterAvailableItems(response) {
+    function filterAvailableItems() {
       $scope.filteredItems = [];
-      var itemList = angular.copy(response.masterItems);
-      var filteredItemId = diffItems(itemList);
-      angular.forEach(itemList, function(item) {
+      var filteredItemId = diffItems($scope.masterItemsList);
+      angular.forEach($scope.masterItemsList, function(item) {
         var match = filteredItemId.filter(function(id) {
           return id === item.id;
         });
@@ -129,16 +127,19 @@ angular.module('ts5App')
       $scope.uiSelectReady = true;
     }
 
-    function addSelectedItemToMasterList(item, responseFromAPI) {
-      var masterItem = angular.copy(responseFromAPI);
+    function addSelectedItemToMasterList (item) {
+      var masterItemMatch = lodash.findWhere($scope.masterItemsList, { id: item.masterItemId });
+      if (!masterItemMatch) {
+        return;
+      }
 
       var newItem = {
         id: item.id,
         masterItemId: item.masterItemId,
         quantity: item.quantity,
         stockTakeId: item.stockTakeId,
-        itemName: masterItem.itemName,
-        itemCode: masterItem.itemCode
+        itemName: masterItemMatch.itemName,
+        itemCode: masterItemMatch.itemCode
       };
 
       $scope.cateringStationItems.push(newItem);
@@ -148,17 +149,8 @@ angular.module('ts5App')
 
     function addSelectedItemsToMasterList() {
       angular.forEach($scope.stockTake.items, function(item) {
-        stockTakeFactory.getMasterItem(item.masterItemId).then(function(responseFromAPI) {
-          addSelectedItemToMasterList(item, responseFromAPI);
-        });
+        addSelectedItemToMasterList(item);
       });
-    }
-
-    function setMasterItemsList(response) {
-      $scope.masterItemsList = angular.copy(response.masterItems);
-      if ($scope.stockTake.items && $scope.stockTake.items.length) {
-        addSelectedItemsToMasterList();
-      }
     }
 
     function setItemTypes(dataFromAPI) {
@@ -205,6 +197,16 @@ angular.module('ts5App')
       }
     }
 
+    function getItemsSuccess(response) {
+      $scope.masterItemsList = (angular.isDefined(response.masterItems)) ? angular.copy(response.masterItems) : [];
+      if ($scope.stockTake.items && $scope.stockTake.items.length) {
+        addSelectedItemsToMasterList();
+      }
+
+      filterAvailableItems(response);
+      hideLoadingModal();
+    }
+
     function getItemsListByCompanyId() {
       var companyId = stockTakeFactory.getCompanyId();
       var regularItemTypeObj = regularItemType();
@@ -219,16 +221,8 @@ angular.module('ts5App')
           payload.characteristicId = inventoryCharacteristicObj.id;
         }
 
-        stockTakeFactory.getItemsMasterList(payload).then(function(response) {
-          if (angular.isObject(response)) {
-            filterAvailableItems(response);
-            if (response.masterItems) {
-              setMasterItemsList(response);
-            }
-
-            hideLoadingModal();
-          }
-        });
+        displayLoadingModal('Loading Items');
+        stockTakeFactory.getItemsMasterList(payload).then(getItemsSuccess, showResponseErrors);
       }
     }
 
@@ -335,7 +329,6 @@ angular.module('ts5App')
     }
 
     function initPromisesResolved() {
-      hideLoadingModal();
       var initPromisesResolvedStateAction = $routeParams.state + 'InitPromisesResolved';
       if (stateActions[initPromisesResolvedStateAction]) {
         stateActions[initPromisesResolvedStateAction]();
@@ -369,19 +362,38 @@ angular.module('ts5App')
       for (var masterItemId in $scope.itemQuantities) {
         var isValidNumber = angular.isDefined($scope.itemQuantities[masterItemId]) && $scope.itemQuantities[masterItemId] !== null && $scope.itemQuantities[masterItemId] !== '';
         if (isValidNumber) {
-          items.push({
+          var newPayload = {
             masterItemId: parseInt(masterItemId),
             quantity: parseInt($scope.itemQuantities[masterItemId])
-          });
+          };
+
+          var stockTakeItemsMatch = lodash.findWhere($scope.stockTake.items, { masterItemId: parseInt(masterItemId) });
+          if (stockTakeItemsMatch && stockTakeItemsMatch.id) {
+            newPayload.id = stockTakeItemsMatch.id;
+          }
+
+          items.push(newPayload);
         }
       }
 
       return items;
     }
 
+    function cleanPayload() {
+      delete _payload.createdBy;
+      delete _payload.createdOn;
+      delete _payload.updatedBy;
+      delete _payload.updatedOn;
+
+      if (angular.isDefined(_payload.stockTakeDate)) {
+        _payload.stockTakeDate = dateUtility.formatDateForAPI(dateUtility.formatDateForApp(_payload.stockTakeDate));
+      }
+    }
+
     function generateSavePayload() {
       _payload = $scope.stockTake;
       _payload.items = generatePayloadItems();
+      cleanPayload();
     }
 
     function saveStockTakeFailed(response) {
@@ -615,8 +627,8 @@ angular.module('ts5App')
         getItemsListByCompanyId(),
         getCatererStationList(),
         getStockTake()
-
       );
+
       $scope.$watch('stockTake.catererStationId', catererStationIdWatcher);
       resolveInitPromises();
     };

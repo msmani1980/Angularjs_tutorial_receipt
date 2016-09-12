@@ -64,7 +64,7 @@
                 <label for="transaction-type">Transaction Type</label>
                 <select ng-model="search.transactionType" class="form-control" id="transaction-type">
                   <option value="">Please select</option>
-                  <option value="{{transactionType.name}}" ng-repeat="transactionType in transactionTypes | filter: filterTransactionTypes | orderBy: 'name'">{{ getOverriddenTransactionTypeName(transactionType.name) }}</option>
+                  <option value="{{transactionType}}" ng-repeat="transactionType in transactionTypes | orderBy: 'name'">{{ getOverriddenTransactionTypeName(transactionType) }}</option>
                 </select>
               </div>
             </div>
@@ -86,9 +86,9 @@
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="currency">Currency</label>
-                <select ng-model="search.currencies" class="form-control" id="currency">
+                <select ng-model="search.currencyCodes" class="form-control" id="currency">
                   <option value="">Please select</option>
-                  <option value="{{currency.id}}" ng-repeat="currency in companyCurrencies">{{ currency.code }}</option>
+                  <option value="{{currency.code}}" ng-repeat="currency in companyCurrencies">{{ currency.code }}</option>
                 </select>
               </div>
             </div>
@@ -258,10 +258,10 @@
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'paymentId') }}</td>
       <td>{{ printTransactionAmount(transaction) }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
-      <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
-      <td ng-show="displayColumns.storeNumber">{{ transaction.storeNumber }}</td>
-      <td ng-show="displayColumns.storeDate">{{ transaction.scheduleDate }}</td>
-      <td ng-show="displayColumns.storeInstance">{{ transaction.storeInstanceId }}</td>
+      <td ng-show="displayColumns.scheduleDate">{{ printScheduleDate(transaction) }}</td>
+      <td ng-show="displayColumns.storeNumber">{{ printStoreNumber(transaction) }}</td>
+      <td ng-show="displayColumns.storeDate">{{ transaction.instanceDate }}</td>
+      <td ng-show="displayColumns.storeInstance">{{ printStoreInstanceId(transaction) }}</td>
       <td>
         <button class="btn btn-info btn-xs" ng-click="showTransactionDetails(transaction)">
           <i class="fa fa-file"></i>

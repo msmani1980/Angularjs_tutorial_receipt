@@ -11,7 +11,7 @@ angular.module('ts5App')
   .controller('ChangePasswordCtrl', function ($rootScope, $scope, $http, $routeParams, $location, identityAccessFactory) {
 
     $scope.credentials = {
-      currentPassword: '',
+      //currentPassword: '',
       newPassword: '',
       newPasswordConfirm: ''
     };

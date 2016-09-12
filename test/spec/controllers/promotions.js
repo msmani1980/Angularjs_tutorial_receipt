@@ -157,7 +157,13 @@ describe('Controller: PromotionsCtrl', function () {
       });
 
       it('should call promotionsFactory.getMasterItems', function () {
-        expect(promotionsFactory.getMasterItems).toHaveBeenCalled();
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var expectedPayload = {
+          startDate: today,
+          endDate: today,
+          companyId: companyId
+        };
+        expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
       });
     });
 
@@ -244,6 +250,21 @@ describe('Controller: PromotionsCtrl', function () {
       it('should return false if whatever passed into it does not have a promotionCategory property',
         function () {
           expect(scope.promotionCategoryQtyRequired({
+            foo: 'bar'
+          })).toBe(false);
+        });
+    });
+
+    describe('spendLimitCategoryRequired scope function', function () {
+      it('should return true if property spendLimitCategory is defined', function () {
+        expect(scope.spendLimitCategoryRequired({
+          spendLimitCategory: 'Category1'
+        })).toBe(true);
+      });
+
+      it('should return false if property spendLimitCategory is not defined',
+        function () {
+          expect(scope.spendLimitCategoryRequired({
             foo: 'bar'
           })).toBe(false);
         });
@@ -682,9 +703,12 @@ describe('Controller: PromotionsCtrl', function () {
       });
 
       it('should make an API call', function () {
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
         expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith({
+          categoryId: mockId,
           companyId: companyId,
-          categoryId: mockId
+          startDate: today,
+          endDate: today
         });
       });
 

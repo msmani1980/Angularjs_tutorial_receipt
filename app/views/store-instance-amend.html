@@ -550,7 +550,7 @@
                   </tr>
                   <tr>
                     <td>@ ePOS Exchange Rate</td>
-                    <td>{{totalRevenue.epos}}</td>                    
+                    <td>{{totalRevenue.epos}}</td>
                   </tr>
                 </table>
               </div>
@@ -674,7 +674,7 @@
                   <br>
                 </div>
               </div>
-
+<!-- Temporary commented per Roshen request 
               <div class="row">
                 <div class="col-xs-6 text-left">
                   <h4>Sales and Revenue Detail</h4>
@@ -743,6 +743,7 @@
                   </table>
                 </div>
               </div>
+-->
               <hr>
               <div class="row">
                 <div class="col-xs-6 text-left">
@@ -854,39 +855,68 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
-          <div ng-hide="paymentReport.length">Payment Report is empty</div>
           <div class="panel" ng-repeat="report in paymentReport">
-            <h3>{{report.reportTitle}} Report</h3>
+            <h3 class="text-center">{{report.reportTitle}} Report</h3>
             <div class="panel-body">
-              <p><h4>{{report.companyName}}</h4></p>
-              <p><strong>Flight Date:</strong> {{report.scheduleDate}}</p>
+              <table class="table table-condensed table-borderless text-left">
+                <tbody class="table-borderless">
+                <tr>
+                  <td colspan="2" class="text-center"><b>British Airways</b></td>
+                </tr>
+                <tr>
+                  <td class="text-right">Flight Date:</td>
+                  <td>{{report.scheduleDate}}</td>
+                </tr>
+                </tbody>
+                <tbody ng-repeat="sector in report.sectors" class="table-borderless">
+                <tr>
+                  <td class="text-right">Flight Number:</td>
+                  <td>{{sector.flightNumber}} (Pax {{sector.pax}})</td>
+                </tr>
+                <tr>
+                  <td class="text-right">Sector:</td>
+                  <td>{{sector.departureStation}} - {{sector.arrivalStation}}</td>
+                </tr>
+                </tbody>
+                <tbody class="table-borderless">
+                <tr>
+                  <td class="text-right">Barset:</td>
+                  <td>{{storeInstance.storeDetails.storeNumber}}</td>
+                </tr>
+                <tr>
+                  <td class="text-right">Aircraft Registration:</td>
+                  <td>{{report.carrierNumber || 'N/A'}}</td>
+                </tr>
+                <tr>
+                  <td class="text-right">Cash Bag(s):</td>
+                  <td>{{report.cashbagText}}</td>
+                </tr>
+                </tbody>
+              </table>
 
-              <div ng-repeat="sector in report.sectors">
-                <p><strong>Flight Number:</strong> {{sector.flightNumber}} (Pax {{sector.pax}})</p>
-                <p><strong>Sector:</strong> {{sector.departureStation}} - {{sector.arrivalStation}}</p>
-              </div>
-
-              <p><strong>Store:</strong> {{storeInstance.storeDetails.storeNumber}}</p>
-              <p><strong>Aircraft Registration:</strong> {{report.carrierNumber}}</p>
-              <p><strong>Cash Bag Number(s):</strong> {{report.cashbagText}}</p>
-
-              <table class="table table-bordered table-condensed col-xs-12">
+              <br>
+              <h5 class="text-center"><b>Crew IDs and Names</b></h5>
+              <table class="table table-condensed table-bordered col-xs-12">
                 <tr class="active">
-                  <th>Crew ID</th>
-                  <th>Last Name</th>
+                  <td>Crew ID</td>
+                  <td>Last Name</td>
                 </tr>
                 <tr ng-repeat="crewMember in report.crew">
                   <td>{{crewMember.CrewId}}</td>
                   <td>{{crewMember.LastName}}</td>
                 </tr>
+
+                <tr ng-if="!report.crew.length">
+                  <td colspan="2">No Crew Memebers</td>
+                </tr>
               </table>
 
-              <h5>Expected Cash</h5>
-              <table class="table table-bordered table-condensed col-xs-12">
+              <h5 class="text-center"><b>Expected Cash</b></h5>
+              <table class="table table-condensed table-bordered col-xs-12">
                 <tr class="active">
-                  <th>Currency Type</th>
-                  <th>Currency Value</th>
-                  <th>GBP Value</th>
+                  <td>Currency</td>
+                  <td>Value</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
                 </tr>
                 <tr ng-repeat="cash in report.cash">
                   <td>{{cash.currencyCode}}</td>
@@ -896,40 +926,91 @@
                 <tr ng-if="!report.cash.length">
                   <td>No expected cash added</td>
                   <td>0.00</td>
-                </tr>
-                <tr class="active">
-                  <td>Expected Cash Total</td>
-                  <td></td>
-                  <td>{{report.cashTotal}}</td>
-                </tr>
-              </table>
-
-              <h5>Expected Credit</h5>
-              <table class="table table-bordered table-condensed col-xs-12">
-                <tr class="active">
-                  <th>Card Type</th>
-                  <th>GBP Value</th>
-                </tr>
-                <tr ng-repeat="credit in report.credit">
-                  <td>{{credit.cardType}}</td>
-                  <td>{{credit.baseTotal}}</td>
-                </tr>
-                <tr ng-if="!report.credit.length">
-                  <td>No expected credit added</td>
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
-                  <td>Expected Credit Total</td>
-                  <td>{{report.creditTotal}}</td>
+                  <td colspan="2">Expected Cash Total</td>
+                  <td>{{report.cashTotal ? report.cashTotal : '0.00'}}</td>
                 </tr>
               </table>
 
-              <h5>Voucher Total</h5>
-              <table class="table table-bordered table-condensed col-xs-12">
+              <h5 class="text-center"><b>Expected Credit</b></h5>
+              <table class="table table-condensed table-bordered col-xs-12">
                 <tr class="active">
-                  <th>Voucher Currency</th>
-                  <th>Currency Value</th>
-                  <th>GBP Value</th>
+                  <td>Card Type</td>
+                  <td>Currency</td>
+                  <td>Value</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
+                </tr>
+                <tr ng-repeat="credit in report.credit">
+                  <td>{{credit.cardType}}</td>
+                  <td>{{credit.currencyCode}}</td>
+                  <td>{{credit.total}}</td>
+                  <td>{{credit.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.credit.length">
+                  <td colspan="2">No expected credit added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td colspan="3">Expected Credit Total</td>
+                  <td>{{report.creditTotal ? report.creditTotal : '0.00'}}</td>
+                </tr>
+              </table>
+
+              <h5 class="text-center"><b>Expected Coupon</b></h5>
+              <table class="table table-condensed table-bordered col-xs-12">
+                <tr class="active">
+                  <td>Currency</td>
+                  <td>Value</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
+                </tr>
+                <tr ng-repeat="coupon in report.coupon">
+                  <td>{{coupon.currencyCode}}</td>
+                  <td>{{coupon.total}}</td>
+                  <td>{{coupon.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.coupon.length">
+                  <td>No expected coupon added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td colspan="2">Expected Coupon Total</td>
+                  <td>{{report.couponTotal ? report.couponTotal : '0.00'}}</td>
+                </tr>
+              </table>
+
+              <h5 class="text-center"><b>Expected Frequent Flyer</b></h5>
+              <table class="table table-condensed table-bordered col-xs-12">
+                <tr class="active">
+                  <td>Currency</td>
+                  <td>Value</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
+                </tr>
+                <tr ng-repeat="frequentFlyer in report.ffCard">
+                  <td>{{frequentFlyer.currencyCode}}</td>
+                  <td>{{frequentFlyer.total}}</td>
+                  <td>{{frequentFlyer.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.ffCard.length">
+                  <td>No expected frequent flyer added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td colspan="2">Expected Frequent Flyer Total</td>
+                  <td>{{report.ffCardTotal ? report.ffCardTotal : '0.00'}}</td>
+                </tr>
+              </table>
+
+              <h5 class="text-center"><b>Voucher Total</b></h5>
+              <table class="table table-condensed table-bordered col-xs-12">
+                <tr class="active">
+                  <td>Currency</td>
+                  <td>Value</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
                 </tr>
                 <tr ng-repeat="voucher in report.voucher">
                   <td>{{voucher.currencyCode}}</td>
@@ -942,18 +1023,17 @@
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
-                  <td>Expected Voucher Total</td>
-                  <td></td>
-                  <td>{{report.voucherTotal}}</td>
+                  <td colspan="2">Expected Voucher Total</td>
+                  <td>{{report.voucherTotal ? report.voucherTotal : '0.00'}}</td>
                 </tr>
               </table>
 
-              <h5>Complimentary Total</h5>
-              <table class="table table-bordered table-condensed col-xs-12">
+              <h5 class="text-center"><b>Complimentary Total</b></h5>
+              <table class="table table-condensed table-bordered col-xs-12">
                 <tr class="active">
-                  <th>Currency Type</th>
-                  <th>Comp. Currency</th>
-                  <th>GBP Value</th>
+                  <td>Currency</td>
+                  <td>Value</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
                 </tr>
                 <tr ng-repeat="complimentary in report.comp">
                   <td>{{complimentary.currencyCode}}</td>
@@ -966,16 +1046,38 @@
                   <td>0.00</td>
                 </tr>
                 <tr class="active">
-                  <td>Comp. Total</td>
-                  <td></td>
+                  <td colspan="2">Complimentary Total</td>
                   <td>{{report.compTotal ? report.compTotal : '0.00'}}</td>
                 </tr>
               </table>
 
-              <table class="table table-bordered table-condensed col-xs-12">
+              <table class="table table-condensed table-bordered col-xs-12">
                 <tr class="active">
-                  <td>Expected Total</td>
-                  <td>{{report.total}}</td>
+                  <th colspan="2">Expected Total</th>
+                  <th>{{report.total ? report.total : '0.00'}}</th>
+                </tr>
+              </table>
+
+              <h5 class="text-center"><b>Crew Confirmed Cash</b></h5>
+              <table class="table table-condensed table-bordered col-xs-12">
+                <tr class="active">
+                  <td>Currency</td>
+                  <td>Value</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
+                </tr>
+                <tr ng-repeat="cash in report.cashCounts">
+                  <td>{{cash.code}}</td>
+                  <td>{{cash.total | number:2}}</td>
+                  <td>{{cash.baseTotal | number:2}}</td>
+                </tr>
+                <tr ng-if="!report.cashCounts.length">
+                  <td>No Crew Confirmed Cash added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td colspan="2">Crew Confirmed Cash Total</td>
+                  <td>{{report.closingCashTotal ? report.closingCashTotal : 0 | number:2}}</td>
                 </tr>
               </table>
 

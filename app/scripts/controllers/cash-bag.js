@@ -57,6 +57,11 @@ angular.module('ts5App')
       }
     }
 
+    function showCustomError(errorField, errorMessage) {
+      $scope.errorCustom = [{ field: errorField, value: errorMessage }];
+      $scope.displayError = true;
+    }
+
     // scope methods
     function cleanPayload(payload) {
       delete payload.storeNumber;
@@ -113,13 +118,37 @@ angular.module('ts5App')
       cashBagFactory.createCashBag(saveCashBag).then(cashBagCreateSuccessHandler, errorHandler);
     }
 
-    $scope.formSave = function() {
+    function checkForCash (formData) {
+      var cashBagCurrencies = formData.cashBagCurrencies;
+      var cashExists = false;
+
+      angular.forEach(cashBagCurrencies, function (currency) {
+        cashExists = cashExists || (parseFloat(currency.paperAmountManual) > 0 || parseFloat(currency.coinAmountManual) > 0);
+      });
+
+      return cashExists;
+    }
+
+    function isCashBagValid (formData) {
       if ($scope.cashBagCreateForm.$invalid) {
+        return false;
+      }
+
+      if (!checkForCash(formData)) {
+        showCustomError('Cash Bag Amounts', 'At least one currency must have a paper or coin amount');
+        return false;
+      }
+
+      return true;
+    }
+
+    $scope.formSave = function() {
+      var formData = cleanPayload(angular.copy($scope.cashBag));
+      if (!isCashBagValid(formData)) {
         return;
       }
 
       $localStorage.cashBagBankRefNumber = $scope.cashBag.bankReferenceNumber;
-      var formData = cleanPayload(angular.copy($scope.cashBag));
       switch ($routeParams.state) {
         case 'edit':
           if (formData.isSubmitted === true) {
@@ -268,21 +297,21 @@ angular.module('ts5App')
       $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
 
       angular.forEach($scope.cashBag.cashBagCurrencies, function(cashBagCurrency) {
+        cashBagCurrency.currencyCode = $scope.currencyCodes[cashBagCurrency.currencyId];
+        cashBagCurrency.paperAmountManual = setManualAmount(cashBagCurrency.paperAmountManual);
+        cashBagCurrency.coinAmountManual = setManualAmount(cashBagCurrency.coinAmountManual);
+        cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) +
+          parseFloat(cashBagCurrency.coinAmountEpos));
+
         var dailyCurrency = lodash.findWhere(dailyExchangeRateCurrencies, {
           retailCompanyCurrencyId: cashBagCurrency.currencyId
         });
+
         if (dailyCurrency) {
-          cashBagCurrency.currencyCode = $scope.currencyCodes[cashBagCurrency.currencyId];
           cashBagCurrency.paperExchangeRate = dailyCurrency.paperExchangeRate;
           cashBagCurrency.coinExchangeRate = dailyCurrency.coinExchangeRate;
           cashBagCurrency.bankExchangeRate = dailyCurrency.bankExchangeRate;
-          cashBagCurrency.paperAmountManual = setManualAmount(cashBagCurrency.paperAmountManual);
-          cashBagCurrency.coinAmountManual = setManualAmount(cashBagCurrency.coinAmountManual);
-          cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) +
-            parseFloat(cashBagCurrency.coinAmountEpos));
           dailyExchangeRateCurrencies.splice(dailyExchangeRateCurrencies.indexOf(dailyCurrency), 1);
-        } else {
-          $scope.cashBag.cashBagCurrencies.splice($scope.cashBag.cashBagCurrencies.indexOf(cashBagCurrency), 1);
         }
       });
 
@@ -300,6 +329,13 @@ angular.module('ts5App')
           coinExchangeRate: currency.coinExchangeRate,
           bankExchangeRate: currency.bankExchangeRate
         });
+      });
+
+      $scope.cashBag.cashBagCurrencies = lodash.filter($scope.cashBag.cashBagCurrencies, function (currency) {
+        var hasExchangeRate = !!currency.paperExchangeRate || !!currency.coinExchangeRate || !!currency.bankExchangeRate;
+        var hasAmount = (parseFloat(currency.paperAmountManual) + parseFloat(currency.coinAmountManual)) > 0;
+
+        return hasAmount || hasExchangeRate;
       });
     }
 

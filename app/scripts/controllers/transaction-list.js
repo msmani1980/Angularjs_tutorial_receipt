@@ -8,20 +8,19 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TransactionListCtrl', function ($scope, $q, transactionFactory, recordsService, currencyFactory,
+  .controller('TransactionListCtrl', function ($scope, $q, $filter, transactionFactory, recordsService, currencyFactory,
                                                stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility) {
     var $this = this;
 
     $scope.viewName = 'Transactions';
     $scope.transactions = [];
-    $scope.transactionTypes = [];
+    $scope.transactionTypes = ['SALE', 'REFUND', 'EmployeePurchase'];
     $scope.companyCurrencies = [];
     $scope.companyStations = [];
     $scope.paymentMethods = ['Cash', 'Credit Card', 'Discount'];
     $scope.creditCardTypes = [];
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
-    $scope.supportedTransactionTypes = ['SALE', 'REFUND', 'EmployeePurchase'];
     $scope.overrideTransactionTypeNames = {
       CLEARED: 'Cleared',
       CREWMEAL: 'Crew Meal',
@@ -51,6 +50,30 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.isCreditCardPaymentSelected = false;
 
+    $scope.printStoreNumber = function (transaction) {
+      if (transaction.storeNumber) {
+        return transaction.storeNumber;
+      }
+
+      return transaction.originStoreNumber;
+    };
+
+    $scope.printStoreInstanceId = function (transaction) {
+      if (transaction.storeInstanceId) {
+        return transaction.storeInstanceId;
+      }
+
+      return transaction.originStoreInstanceId;
+    };
+
+    $scope.printScheduleDate = function (transaction) {
+      if (transaction.scheduleDate) {
+        return transaction.scheduleDate;
+      }
+
+      return transaction.originScheduleDate;
+    };
+
     $scope.printPropertyIfItIsCreditCardPayment = function (transaction, propertyName) {
       if (transaction.paymentMethod && transaction.paymentMethod === 'Credit Card' && transaction.hasOwnProperty(propertyName)) {
         return transaction[propertyName];
@@ -71,6 +94,14 @@ angular.module('ts5App')
     };
 
     $scope.printTransactionAmount = function (transaction) {
+      if (transaction.netTransactionAmount && transaction.paymentMethod === 'Cash' && transaction.transactionTypeName === 'SALE') {
+        return transaction.netTransactionAmount + ' ' + transaction.transactionCurrencyCode;
+      }
+
+      if (transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') {
+        return transaction.totalAmount + ' ' + transaction.transactionCurrencyCode;
+      }
+
       if (transaction.transactionAmount) {
         return transaction.transactionAmount + ' ' + transaction.transactionCurrencyCode;
       }
@@ -98,17 +129,35 @@ angular.module('ts5App')
 
     function isNotSaleChangeTransaction(transaction) {
       var isSaleChangeTransaction = transaction.transactionTypeName === 'SALE' &&
-        transaction.transactionAmount < 0;
+        transaction.transactionChangeDue  &&
+        transaction.transactionChangeDue > 0;
 
       return !isSaleChangeTransaction;
     }
 
-    function filterNotFullyPaidOffDiscount(transaction) {
-      var isNotFullyPaidOffDiscountTransaction = (transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher') &&
-        transaction.totalAmount &&
-        transaction.totalAmount !== 0;
+    function isTransactionCashOrCC(transaction) {
+      return transaction.paymentMethod === 'Cash' || transaction.paymentMethod === 'Credit Card';
+    }
 
-      return !isNotFullyPaidOffDiscountTransaction;
+    function isPaymentMethodVoucherOrDiscount(transaction) {
+      return transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher';
+    }
+
+    function isDiscountTransactionFullyPaidOff(transaction) {
+      return (transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') ||
+        (
+          transaction.transactionAmount > 0 &&
+          transaction.totalAmount > 0 &&
+          (transaction.totalAmount -  transaction.transactionAmount) === 0
+        );
+    }
+
+    function filterNotFullyPaidOffDiscount(transaction) {
+      return isTransactionCashOrCC(transaction) ||
+        (
+          isPaymentMethodVoucherOrDiscount(transaction) &&
+          isDiscountTransactionFullyPaidOff(transaction)
+        );
     }
 
     function isCreditCardPaymentSelected(paymentMethods) {
@@ -140,10 +189,6 @@ angular.module('ts5App')
       if (angular.isDefined($scope.displayColumns[columnName])) {
         $scope.displayColumns[columnName] = !$scope.displayColumns[columnName];
       }
-    };
-
-    $scope.filterTransactionTypes = function (transactionType) {
-      return $scope.supportedTransactionTypes.indexOf(transactionType.name) > -1;
     };
 
     $scope.getOverriddenTransactionTypeName = function (transactionTypeName) {
@@ -189,6 +234,15 @@ angular.module('ts5App')
 
       if (payload.paymentMethods) {
         payload.paymentMethods = payload.paymentMethods.join(',');
+      }
+
+      if (payload.transactionType && payload.transactionType === 'SALE') {
+        payload.transactionType = 'SALE,VOIDED';
+      }
+
+      if (payload.transactionType && payload.transactionType === 'EmployeePurchase') {
+        payload.transactionType = 'SALE,VOIDED';
+        payload.orderTypeId = 3;
       }
     }
 
@@ -237,24 +291,20 @@ angular.module('ts5App')
 
     function normalizeTransactions(transactions) {
       angular.forEach(transactions, function (transaction) {
-        if (transaction.transactionDate) {
-          transaction.transactionDate = dateUtility.formatDateForApp(transaction.transactionDate);
-        }
-
-        if (transaction.scheduleDate) {
-          transaction.scheduleDate = dateUtility.formatDateForApp(transaction.scheduleDate);
-        }
-
-        if (transaction.storeDate) {
-          transaction.storeDate = dateUtility.formatDateForApp(transaction.storeDate);
-        }
-
-        if (transaction.instanceDate) {
-          transaction.instanceDate = dateUtility.formatDateForApp(transaction.instanceDate);
-        }
+        formatDateIfDefined(transaction, 'transactionDate');
+        formatDateIfDefined(transaction, 'scheduleDate');
+        formatDateIfDefined(transaction, 'storeDate');
+        formatDateIfDefined(transaction, 'instanceDate');
+        formatDateIfDefined(transaction, 'ccProcessedDate');
       });
 
       return transactions;
+    }
+
+    function formatDateIfDefined(transaction, dateFieldName) {
+      if (transaction.hasOwnProperty(dateFieldName) && transaction[dateFieldName]) {
+        transaction[dateFieldName] = dateUtility.formatDateForApp(transaction[dateFieldName]);
+      }
     }
 
     function appendTransactions(dataFromAPI) {
@@ -272,12 +322,9 @@ angular.module('ts5App')
       $scope.transactions = [];
     }
 
-    function setTransactionTypes(dataFromAPI) {
-      $scope.transactionTypes = angular.copy(dataFromAPI);
-    }
-
     function setCompanyCurrencies(dataFromAPI) {
-      $scope.companyCurrencies = angular.copy(dataFromAPI.response);
+      var distinctCurrencies = $filter('unique')(dataFromAPI.response, 'id');
+      $scope.companyCurrencies = angular.copy(distinctCurrencies);
     }
 
     function setCompanyStations(dataFromAPI) {
@@ -288,16 +335,8 @@ angular.module('ts5App')
       $scope.creditCardTypes = angular.copy(dataFromAPI.companyCCTypes);
     }
 
-    function getTransactionTypes() {
-      recordsService.getTransactionTypes().then(setTransactionTypes);
-    }
-
     function getCompanyCurrencies() {
-      var payload = {
-        isOperatedCurrency: true
-      };
-
-      currencyFactory.getCompanyCurrencies(payload).then(setCompanyCurrencies);
+      currencyFactory.getCompanyCurrencies().then(setCompanyCurrencies);
     }
 
     function getCompanyStations() {
@@ -311,7 +350,6 @@ angular.module('ts5App')
 
     function makeDependencyPromises() {
       return [
-        getTransactionTypes(),
         getCompanyCurrencies(),
         getCompanyStations(),
         getCreditCardTypes()

@@ -331,6 +331,18 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(reconciliationFactory.getPromotionTotals).toHaveBeenCalled();
       });
 
+      it('should consolidate same items in stockTotals', function () {
+        scope.$digest();
+
+        var itemIdWithDuplicates = 100;
+        var itemMatches = lodash.filter(ReconciliationDiscrepancyDetail.stockTotals, {itemMasterId: itemIdWithDuplicates});
+        expect(itemMatches.length).toEqual(1);
+
+        var originalItems = lodash.filter(getStockTotalsJSON.response, {itemMasterId: itemIdWithDuplicates});
+        var expectedCombinedQuantity = originalItems[0].eposQuantity + originalItems[1].eposQuantity;
+        expect(itemMatches[0].eposQuantity).toEqual(expectedCombinedQuantity);
+      });
+
       it('should format promotionTotals to consolidate duplicates', function () {
         var promotions = lodash.filter(scope.stockTotals.stockItems, { itemTypeName: 'Promotion' });
         expect(promotions.length).toEqual(5);
@@ -995,10 +1007,16 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         scope.performAction('Discrepancies');
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith('1', '9', false);
       });
-
     });
 
+    describe('$scope.isAllCashBagsVerified method', function () {
+        beforeEach(function () {
+          scope.cashBagList = cashBagVerificationsJSON;
+        });
+
+        it('should return false if not all cashbags were verified', function () {
+          expect(scope.isAllCashBagsVerified()).toBeFalsy();
+        });
+      });
   });
-
-
 });
