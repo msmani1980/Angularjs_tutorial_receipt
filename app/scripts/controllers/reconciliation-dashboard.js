@@ -341,6 +341,10 @@ angular.module('ts5App')
     };
 
     $scope.getReconciliationDataList = function() {
+      if (!$scope.reconciliationList) {
+        return;
+      }
+
       searchReconciliationDataList(lastStartDate, lastEndDate);
     };
 

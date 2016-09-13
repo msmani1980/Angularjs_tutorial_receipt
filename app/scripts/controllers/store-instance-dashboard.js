@@ -560,6 +560,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.getStoreInstanceDashboardData = function () {
+      if (!$scope.storeInstanceList) {
+        return;
+      }
+
       searchStoreInstanceDashboardData(lastStartDate);
     };
 
