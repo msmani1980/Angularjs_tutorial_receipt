@@ -46,18 +46,22 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     function showLoadingModal(text) {
+      $this.isLoading = true;
       angular.element('#loading').modal('show').find('p').text(text);
     }
 
     function hideLoadingModal() {
+      $this.isLoading = false;
       angular.element('#loading').modal('hide');
     }
 
     function showLoadingBar() {
+      $this.isLoading = true;
       angular.element('.loading-more').show();
     }
 
     function hideLoadingBar() {
+      $this.isLoading = false;
       angular.element('.loading-more').hide();
       angular.element('.modal-backdrop').remove();
     }
@@ -449,7 +453,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     var loadingProgress = false;
 
     function searchStoreInstanceDashboardDataSuccess(apiData) {
-      $this.isLoading = false;
       $this.meta.count = $this.meta.count || apiData.meta.count;
       getStoreInstanceListSuccess(apiData);
       hideLoadingModal();
@@ -498,7 +501,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function searchStoreInstanceFailure() {
       $scope.storeInstanceList = [];
-      $this.isLoading = false;
       hideLoadingModal();
     }
 
@@ -541,7 +543,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         offset: $this.meta.offset
       });
 
-      $this.isLoading = true;
       storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess, searchStoreInstanceFailure);
       $this.meta.offset += $this.meta.limit;
     }

@@ -581,7 +581,7 @@ angular.module('ts5App')
       if (angular.isDefined(savedSearch)) {
         $scope.search = savedSearch.reconciliationDashboard || {};
       } else {
-        $scope.search = angular.copy($this.defaultSearch);
+        $scope.search = {};
         $localStorage.search = {};
       }
     };
