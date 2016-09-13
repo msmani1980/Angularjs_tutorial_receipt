@@ -78,7 +78,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.shouldShowNoRecordsFoundPrompt = function () {
-      return angular.isDefined($scope.storeInstanceList) && $scope.storeInstanceList !== null && $scope.storeInstanceList.length <= 0;
+      return !$this.isLoading && angular.isDefined($scope.storeInstanceList) && $scope.storeInstanceList !== null && $scope.storeInstanceList.length <= 0;
     };
 
     function getValueByIdInArray(id, valueKey, array) {
@@ -449,6 +449,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     var loadingProgress = false;
 
     function searchStoreInstanceDashboardDataSuccess(apiData) {
+      $this.isLoading = false;
       $this.meta.count = $this.meta.count || apiData.meta.count;
       getStoreInstanceListSuccess(apiData);
       hideLoadingModal();
@@ -497,6 +498,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function searchStoreInstanceFailure() {
       $scope.storeInstanceList = [];
+      $this.isLoading = false;
       hideLoadingModal();
     }
 
@@ -538,6 +540,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
+
+      $this.isLoading = true;
       storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess, searchStoreInstanceFailure);
       $this.meta.offset += $this.meta.limit;
     }
