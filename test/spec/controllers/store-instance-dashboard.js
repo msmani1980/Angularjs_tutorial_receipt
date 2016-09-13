@@ -770,6 +770,10 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   });
 
   describe('search alerts', function () {
+    beforeEach(function () {
+      StoreInstanceDashboardCtrl.isLoading = false;
+    });
+
     it('should show search prompt when store instance list is null', function () {
       scope.storeInstanceList = null;
       expect(scope.shouldShowSearchPrompt()).toEqual(true);

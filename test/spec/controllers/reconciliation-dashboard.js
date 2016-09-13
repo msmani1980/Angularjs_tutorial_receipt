@@ -489,6 +489,10 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
   });
 
   describe('search alerts', function () {
+    beforeEach(function () {
+      ReconciliationDashboardCtrl.isLoading = false;
+    });
+
     it('should show search prompt when reconciliation list is null', function () {
       scope.reconciliationList = null;
       expect(scope.shouldShowSearchPrompt()).toEqual(true);
