@@ -11,6 +11,7 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
   var ReconciliationDashboardCtrl;
   var scope;
   var location;
+  var localStorage;
   var reconciliationFactory;
   var stationsService;
   var controller;
@@ -22,11 +23,17 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
   var globalStationsResponseJSON;
   var storeInstanceJSON;
   var storeInstanceFactory;
+  var reconciliationPrecheckResponse;
+  var reconciliationPrecheckDeferred;
 
-  beforeEach(inject(function ($controller, $rootScope, $q, $location, $injector, _servedStoreStatus_,
+  beforeEach(inject(function ($controller, $rootScope, $q, $location, $localStorage, $injector, _servedStoreStatus_,
                               _servedCateringStations_, _servedStoreInstance_, _servedReconciliationDashboard_) {
     location = $location;
     scope = $rootScope.$new();
+    localStorage = $localStorage;
+    localStorage.search = {
+      reconciliationDashboard: { statusId: 7 }
+    };
 
     reconciliationFactory = $injector.get('reconciliationFactory');
     storeInstanceFactory = $injector.get('storeInstanceFactory');
@@ -45,10 +52,17 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     globalStationsDeferred = $q.defer();
     globalStationsDeferred.resolve(globalStationsResponseJSON);
 
+    reconciliationPrecheckResponse = {};
+    reconciliationPrecheckDeferred = $q.defer();
+    reconciliationPrecheckDeferred.resolve(reconciliationPrecheckResponse);
+
     storeInstanceJSON = angular.copy(_servedStoreInstance_);
 
     spyOn(reconciliationFactory, 'getReconciliationDataList').and.returnValue(reconciliationListDeferred.promise);
     spyOn(reconciliationFactory, 'getStoreStatusList').and.returnValue(storeStatusDeferred.promise);
+    spyOn(reconciliationFactory, 'getReconciliationPrecheckDevices').and.returnValue(reconciliationPrecheckDeferred.promise);
+    spyOn(reconciliationFactory, 'getReconciliationPrecheckSchedules').and.returnValue(reconciliationPrecheckDeferred.promise);
+    spyOn(reconciliationFactory, 'getReconciliationPrecheckCashbags').and.returnValue(reconciliationPrecheckDeferred.promise);
     spyOn(stationsService, 'getCatererStationList').and.returnValue(globalStationsDeferred.promise);
 
     ReconciliationDashboardCtrl = $controller('ReconciliationDashboardCtrl', {
@@ -72,6 +86,14 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
         expect(scope.displayColumns.updatedDate).toEqual(false);
         expect(scope.displayColumns.updatedBy).toEqual(false);
       });
+
+    it('should init search with saved localStorage search', function () {
+      expect(scope.search).toEqual(localStorage.search.reconciliationDashboard);
+    });
+
+    it('should initialize reconciliation list as empty', function () {
+      expect(scope.reconciliationList).toEqual(null);
+    });
 
   });
 
@@ -466,6 +488,42 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     });
   });
 
+  describe('search alerts', function () {
+    it('should show search prompt when reconciliation list is null', function () {
+      scope.reconciliationList = null;
+      expect(scope.shouldShowSearchPrompt()).toEqual(true);
+
+      scope.reconciliationList = [];
+      expect(scope.shouldShowSearchPrompt()).toEqual(false);
+    });
+
+    it('should show no records prompt when reconciliation list is empty', function () {
+      scope.reconciliationList = null;
+      expect(scope.shouldShowNoRecordsFoundPrompt()).toEqual(false);
+
+      scope.reconciliationList = [];
+      expect(scope.shouldShowNoRecordsFoundPrompt()).toEqual(true);
+    });
+  });
+
+  describe('scope.searchReconciliationDataList', function () {
+    beforeEach(function () {
+      scope.$digest();
+      scope.search = { storeInstanceId: 123 };
+      scope.searchReconciliationDataList();
+      ReconciliationDashboardCtrl.meta = {limit: 100, offset: 0};
+    });
+
+    it('should get reconciliation data with search filters', function () {
+      var expectedSearch = jasmine.objectContaining({ storeInstanceId: 123 });
+      expect(reconciliationFactory.getReconciliationDataList).toHaveBeenCalledWith(expectedSearch);
+    });
+
+    it('should save latest search to localStorage', function () {
+      expect(localStorage.search.reconciliationDashboard).toEqual({ storeInstanceId: 123 });
+    });
+  });
+
   describe('clearSearchForm', function () {
     it('should clear the search dates', function () {
       scope.search = {
@@ -474,6 +532,11 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
       };
       scope.clearSearchForm();
       expect(scope.search).toEqual({});
+    });
+
+    it('should clear localStorage search model', function () {
+      scope.clearSearchForm();
+      expect(localStorage.search.reconciliationDashboard).toEqual({});
     });
   });
 

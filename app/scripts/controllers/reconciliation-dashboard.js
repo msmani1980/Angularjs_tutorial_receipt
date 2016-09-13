@@ -50,10 +50,6 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-    $scope.shouldShowLoadingAlert = function () {
-      return (angular.isDefined($scope.reconciliationList) && $scope.reconciliationList !== null && $this.meta.offset < $this.meta.count);
-    };
-
     $scope.shouldShowSearchPrompt = function () {
       return !$scope.reconciliationList && !$scope.loadingBarVisible;
     };
