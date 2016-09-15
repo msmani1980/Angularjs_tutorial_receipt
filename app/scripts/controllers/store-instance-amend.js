@@ -339,6 +339,14 @@ angular.module('ts5App')
       return storeStatus;
     }
 
+    $scope.canExecuteActionsPsttrip = function (cashBag, flightSector) {
+      if (!flightSector.isPosttrip) {
+        return false;
+      }
+
+      return $scope.canExecuteActions(cashBag);
+    };
+
     $scope.canExecuteActions = function (cashBag) {
       var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');
@@ -1023,7 +1031,8 @@ angular.module('ts5App')
           tailNumber: flightSector.tailNumber,
           transactionCount: flightSector.transactionsNumber,
           transactionTotal: $scope.formatAsCurrency(flightSector.eposSales),
-          crewData: flightSector.crew
+          crewData: flightSector.crew,
+          isPosttrip: flightSector.isPosttrip
         };
 
         normalizedCashBag.flightSectors.push(normalizedFlightSector);

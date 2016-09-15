@@ -780,7 +780,7 @@
                     </tr>
                     </tbody>
                     <tbody ng-repeat="flightSector in cashBag.flightSectors" ng-init="flightSector.rowOpen=false">
-                    <tr>
+                    <tr ng-class="{'danger': !flightSector.isPosttrip}">
                       <td>
                       <i ng-class="getClassForTableAccordion(flightSector.rowOpen)"
                             ng-click="flightSector.rowOpen=!flightSector.rowOpen"
@@ -796,8 +796,8 @@
                       <td>{{ getOrNA(flightSector.transactionCount) }}</td>
                       <td>{{ getOrNA(flightSector.transactionTotal) }}</td>
                       <td ng-hide="cashBag.isDeleted">
-                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(cashBag, flightSector)" ng-show="canExecuteActions(cashBag)"><i class="fa fa-pencil active"></i></button>
-                        <button class="btn btn-danger btn-xs" ng-show="canExecuteActions(cashBag)" ng-click="showDeleteScheduleModal(flightSector, cashBag.id)"><i class="fa fa-trash active"></i></button>
+                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(cashBag, flightSector)" ng-show="canExecuteActionsPsttrip(cashBag, flightSector)"><i class="fa fa-pencil active"></i></button>
+                        <button class="btn btn-danger btn-xs" ng-click="showDeleteScheduleModal(flightSector, cashBag.id)" ng-show="canExecuteActionsPsttrip(cashBag, flightSector)"><i class="fa fa-trash active"></i></button>
                       </td>
                     </tr>
                     <tr class="subversion-row" ng-show="flightSector.rowOpen">
