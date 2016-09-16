@@ -37,6 +37,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   var storeTimeConfigResponseJSON;
   var storeInstanceService;
   var updateStoreInstanceStatusDeferred;
+  var updateStoreInstanceStatusUndispatchDeferred;
   var featuresListDeferred;
   var featuresListResponseJSON;
   var location;
@@ -99,6 +100,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     storeTimeConfigDeferred = $q.defer();
     storeTimeConfigDeferred.resolve(storeTimeConfigResponseJSON);
     updateStoreInstanceStatusDeferred = $q.defer();
+    updateStoreInstanceStatusUndispatchDeferred = $q.defer();
     featuresListDeferred = $q.defer();
     featuresListDeferred.resolve(featuresListResponseJSON);
 
@@ -109,6 +111,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     spyOn(storeInstanceDashboardFactory, 'getStoresList').and.returnValue(storesListDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStatusList').and.returnValue(statusListDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'updateStoreInstanceStatus').and.returnValue(statusDeferred.promise);
+    spyOn(storeInstanceDashboardFactory, 'updateStoreInstanceStatusUndispatch').and.returnValue(statusDeferred.promise);
     spyOn(storeTimeConfig, 'getTimeConfig').and.returnValue(storeTimeConfigDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getFeaturesList').and.returnValue(featuresListDeferred.promise);
     spyOn(location, 'path').and.callThrough();
@@ -540,7 +543,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     it('should update status to 1 if confirmed', function() {
       mockDialogObject.confirmationCallback();
       expect(scope.undispatch).toHaveBeenCalledWith(store.id);
-      expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(53, 1);
+      expect(storeInstanceDashboardFactory.updateStoreInstanceStatusUndispatch).toHaveBeenCalledWith(53, 1, true);
     });
   });
 

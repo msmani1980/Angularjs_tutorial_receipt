@@ -173,6 +173,18 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.updateStoreInstanceStatus(requestPayload).$promise;
   }
 
+  function updateStoreInstanceStatusUndispatch(id, statusId, undispatch) {
+    var requestPayload = angular.extend({}, {
+      id: id,
+      inboundStationId: undefined,
+      api: 'status',
+      itemIdOrBulk: statusId,
+      isManual: undefined,
+      undispatch:undispatch
+    });
+    return requestResource.updateStoreInstanceStatus(requestPayload).$promise;
+  }
+
   function updateStoreInstanceStatusForceReconcile(id, statusId, inboundId, isManual, forceReconcile) {
     var requestPayload = angular.extend({}, {
       id: id,
@@ -207,6 +219,7 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     createStoreInstanceItem: createStoreInstanceItem,
     deleteStoreInstanceItem: deleteStoreInstanceItem,
     getStoreInstanceCalculatedInbounds: getStoreInstanceCalculatedInbounds,
-    updateStoreInstanceStatusForceReconcile: updateStoreInstanceStatusForceReconcile
+    updateStoreInstanceStatusForceReconcile: updateStoreInstanceStatusForceReconcile,
+    updateStoreInstanceStatusUndispatch: updateStoreInstanceStatusUndispatch
   };
 });
