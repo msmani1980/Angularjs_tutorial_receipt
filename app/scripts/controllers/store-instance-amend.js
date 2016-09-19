@@ -82,7 +82,6 @@ angular.module('ts5App')
       var originCashBag = $scope.rearrangeOriginCashBag;
       var targetCashBag = $scope.rearrangeTargetCashBag;
       var sectorsToMove = $scope.sectorsToMove;
-
       var promises = [];
       angular.forEach(sectorsToMove, function (sector) {
         promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
@@ -866,7 +865,8 @@ angular.module('ts5App')
           virtualItemSales: 0 + getManualDataTotals('virtual', cashBag.id),
           voucherItemSales: 0 + getManualDataTotals('voucher', cashBag.id),
           promotionDiscounts: 0 + getManualDataTotals('promotion', cashBag.id),
-          flightSectors: []
+          flightSectors: [],
+          flightSectorsForRearrange: []
         };
       });
     }
@@ -1036,6 +1036,9 @@ angular.module('ts5App')
         };
 
         normalizedCashBag.flightSectors.push(normalizedFlightSector);
+        if (flightSector.isPosttrip) {
+          normalizedCashBag.flightSectorsForRearrange.push(normalizedFlightSector);
+        }
       });
     }
 
