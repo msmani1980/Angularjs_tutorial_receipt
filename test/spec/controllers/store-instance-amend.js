@@ -1102,5 +1102,4 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(scope.discountRevenueModal).toEqual({ amount: 10 });
     });
   });
-
 });
