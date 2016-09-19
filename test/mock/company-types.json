@@ -1,1 +1,26 @@
-[{"id":1,"name":"Retail"},{"id":2,"name":"Stockowner"},{"id":3,"name":"Warehouse"},{"id":4,"name":"Caterer"},{"id":5,"name":"Cash Handler"},{"id":6,"name":"Supplier"}]
+[
+  {
+    "id": 1,
+    "companyTypeName": "Retail"
+  },
+  {
+    "id": 2,
+    "companyTypeName": "Stockowner"
+  },
+  {
+    "id": 3,
+    "companyTypeName": "Warehouse"
+  },
+  {
+    "id": 4,
+    "companyTypeName": "Caterer"
+  },
+  {
+    "id": 5,
+    "companyTypeName": "Cash Handler"
+  },
+  {
+    "id": 6,
+    "companyTypeName": "Supplier"
+  }
+]
