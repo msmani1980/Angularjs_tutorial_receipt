@@ -358,6 +358,9 @@ angular.module('ts5App', [
     templateUrl: 'views/scheduled-reports.html',
     controller: 'ScheduledReportsCtrl',
     controllerAs: 'scheduledReports'
+  }).when('/promotion-category-list', {
+    templateUrl: 'views/promotion-category-list.html',
+    controller: 'PromotionCategoryListCtrl'
   }).otherwise({
     redirectTo: '/'
   });
