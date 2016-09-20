@@ -82,7 +82,6 @@ angular.module('ts5App')
       var originCashBag = $scope.rearrangeOriginCashBag;
       var targetCashBag = $scope.rearrangeTargetCashBag;
       var sectorsToMove = $scope.sectorsToMove;
-
       var promises = [];
       angular.forEach(sectorsToMove, function (sector) {
         promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
@@ -338,6 +337,14 @@ angular.module('ts5App')
 
       return storeStatus;
     }
+
+    $scope.canExecuteActionsPsttrip = function (cashBag, flightSector) {
+      if (!flightSector.isPosttrip) {
+        return false;
+      }
+
+      return $scope.canExecuteActions(cashBag);
+    };
 
     $scope.canExecuteActions = function (cashBag) {
       var inboundedStatus = getStoreStatusByStatusStep('8');
@@ -858,7 +865,8 @@ angular.module('ts5App')
           virtualItemSales: 0 + getManualDataTotals('virtual', cashBag.id),
           voucherItemSales: 0 + getManualDataTotals('voucher', cashBag.id),
           promotionDiscounts: 0 + getManualDataTotals('promotion', cashBag.id),
-          flightSectors: []
+          flightSectors: [],
+          flightSectorsForRearrange: []
         };
       });
     }
@@ -1023,10 +1031,14 @@ angular.module('ts5App')
           tailNumber: flightSector.tailNumber,
           transactionCount: flightSector.transactionsNumber,
           transactionTotal: $scope.formatAsCurrency(flightSector.eposSales),
-          crewData: flightSector.crew
+          crewData: flightSector.crew,
+          isPosttrip: flightSector.isPosttrip
         };
 
         normalizedCashBag.flightSectors.push(normalizedFlightSector);
+        if (flightSector.isPosttrip) {
+          normalizedCashBag.flightSectorsForRearrange.push(normalizedFlightSector);
+        }
       });
     }
 

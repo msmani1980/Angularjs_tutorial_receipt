@@ -30,7 +30,8 @@ angular.module('ts5App')
       function promiseResponseHandler() {
         var companyTypeId = globalMenuService.getCompanyData().companyTypeId;
         var companyTypes = identityAccessFactory.getSessionObject().companyTypes;
-        var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).name);
+        var companyTypeName = angular.copy(lodash.findWhere(companyTypes, { id: companyTypeId }).companyTypeName);
+
         var menu = mainMenuService.getMenu();
         var menuItems = [];
 
@@ -46,7 +47,7 @@ angular.module('ts5App')
           });
         }
 
-        if (companyTypeName, menuItems.length) {
+        if (companyTypeName && menuItems.length) {
           $scope.menuItems = menuItems[0].menuItems;
         }
 
