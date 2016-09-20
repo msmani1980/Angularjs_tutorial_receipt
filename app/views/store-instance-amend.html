@@ -243,8 +243,8 @@
                       <th>Sch Date</th>
                       <th>Route</th>
                     </tr>
-                    <tr ng-repeat="sector in rearrangeOriginCashBag.flightSectors"
-                        ng-class="getClassesForRearrangeSectors(sector, 'background')">
+                    <tr ng-repeat="sector in rearrangeOriginCashBag.flightSectorsForRearrange" 
+                                            ng-class="getClassesForRearrangeSectors(sector, 'background')" >
                       <td ng-click="toggleSelectSectorToRearrange(sector)">
                         <button ng-class="getClassesForRearrangeSectors(sector, 'button')">
                           <span ng-class="getClassesForRearrangeSectors(sector, 'buttonIcon')"></span>

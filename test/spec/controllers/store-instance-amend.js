@@ -1063,7 +1063,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       scope.$digest();
 
       var cashBag = { id: 2158 };
-
       scope.showEposModal('Regular', cashBag);
       expect(scope.modalMainTitle).toBe('Regular Product Revenue');
       expect(scope.modalTableHeader).toBe('Regular Product Name');
