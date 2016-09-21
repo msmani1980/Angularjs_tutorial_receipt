@@ -1,1 +1,96 @@
-<p>This is the promotion-category-list view.</p>
+<div class="module-container fluid-container">
+
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-4">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-8 text-right">
+
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+
+        <button class="btn btn-primary" ng-click="toggleCreatePanel()">
+          <span class="fa fa-plus" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Create Promotion Category</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-4 col-xs-12">
+            <div class="form-group">
+              <label for="category-name">Category Name</label>
+              <input ng-model="search.name" type="text" class="form-control" id="category-name" placeholder="Search Category Name">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-8">
+            <date-picker
+              class="form-group"
+              element-class="col-xs-6"
+              start-date-model="search.startDate"
+              end-date-model="search.endDate"
+              label-from="Schedule Date From"
+              label-to="Schedule Date To"
+              is-search-field="true">
+            </date-picker>
+          </div>
+
+        </div>
+      </div>
+      <div class="panel-footer text-right">
+        <button type="button" class="btn btn-default" ng-disabled="!showClearButton()" ng-click="clearSearch()">Clear</button>
+        <button type="button" class="btn btn-primary" ng-click="search()">Search</button>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+      <tr>
+        <th colspan="{{ numCategoryLevels }}"></th>
+        <th>Category Name</th>
+        <th>Effective From</th>
+        <th>Effectiv To</th>
+        <th>Selected Items</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="category in categoryList"
+          ng-class="getClassForRow(category)"
+          ng-show="shouldShowCategory(category)">
+
+        <td>
+          <button class="btn btn-xs btn-default" ng-hide="isFiltering || inEditMode || inRearrangeMode" ng-click="enterRearrangeMode(category)">
+            <span class="fa fa-file"></span>
+          </button>
+          <button class="btn btn-xs btn-primary" ng-hide="inEditMode || inRearrangeMode" ng-click="enterEditMode(category)">
+            <span class="fa fa-pencil"></span>
+          </button>
+          <button class="btn btn-xs btn-danger"
+                  ng-show="canDeleteCategory(category) && !inEditMode && !inRearrangeMode"
+                  ng-click="deleteRecordDialog(category, ['name', 'description'])">
+            <span class="fa fa-trash"></span>
+          </button>
+        </td>
+
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="alert alert-info text-center" ng-show="isFiltering && categoryList.length <= 0">
+    <span class="fa fa-exclamation-circle"></span> No Matching Categories Were Found
+  </div>
+
+</div>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav title="{{determineLeftNavTitle()}}"></dynamic-left-nav>
