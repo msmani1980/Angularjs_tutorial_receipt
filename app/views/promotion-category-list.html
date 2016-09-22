@@ -26,7 +26,7 @@
           <div class="col-sm-4 col-xs-12">
             <div class="form-group">
               <label for="category-name">Category Name</label>
-              <input ng-model="search.name" type="text" class="form-control" id="category-name" placeholder="Search Category Name">
+              <input ng-model="search.promotionCategoryName" type="text" class="form-control" id="category-name" placeholder="Search Category Name">
             </div>
           </div>
 
@@ -45,8 +45,8 @@
         </div>
       </div>
       <div class="panel-footer text-right">
-        <button type="button" class="btn btn-default" ng-disabled="!showClearButton()" ng-click="clearSearch()">Clear</button>
-        <button type="button" class="btn btn-primary" ng-click="search()">Search</button>
+        <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+        <button type="button" class="btn btn-primary" ng-click="searchPromotionCategories()">Search</button>
       </div>
     </div>
   </div>
@@ -54,7 +54,6 @@
     <table class="table">
       <thead>
       <tr>
-        <th colspan="{{ numCategoryLevels }}"></th>
         <th>Category Name</th>
         <th>Effective From</th>
         <th>Effectiv To</th>
@@ -63,20 +62,20 @@
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="category in categoryList"
-          ng-class="getClassForRow(category)"
-          ng-show="shouldShowCategory(category)">
+      <tr ng-repeat="category in promotionCategories">
+        <td>{{ category.promotionCategoryName }}</td>
+        <td>{{ category.startDate }}</td>
+        <td>{{ category.endDate }}</td>
+        <td>{{ category.selectedItems }}</td>
 
         <td>
-          <button class="btn btn-xs btn-default" ng-hide="isFiltering || inEditMode || inRearrangeMode" ng-click="enterRearrangeMode(category)">
+          <button class="btn btn-xs btn-info">
             <span class="fa fa-file"></span>
           </button>
-          <button class="btn btn-xs btn-primary" ng-hide="inEditMode || inRearrangeMode" ng-click="enterEditMode(category)">
+          <button class="btn btn-xs btn-primary">
             <span class="fa fa-pencil"></span>
           </button>
-          <button class="btn btn-xs btn-danger"
-                  ng-show="canDeleteCategory(category) && !inEditMode && !inRearrangeMode"
-                  ng-click="deleteRecordDialog(category, ['name', 'description'])">
+          <button class="btn btn-xs btn-danger">
             <span class="fa fa-trash"></span>
           </button>
         </td>
@@ -84,9 +83,6 @@
       </tr>
       </tbody>
     </table>
-  </div>
-  <div class="alert alert-info text-center" ng-show="isFiltering && categoryList.length <= 0">
-    <span class="fa fa-exclamation-circle"></span> No Matching Categories Were Found
   </div>
 
 </div>

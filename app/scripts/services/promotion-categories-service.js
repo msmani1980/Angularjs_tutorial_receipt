@@ -10,15 +10,17 @@
 angular.module('ts5App')
   .service('promotionCategoriesService', function (ENV, $resource) {
     var requestURL = ENV.apiUrl + '/rsvr/api/promotion-categories';
+    var requestParameters = {};
     var actions = {
       getPromotionCategories: {
         method: 'GET'
       }
     };
-    var requestResource = $resource(requestURL, null, actions);
+    var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getPromotionCategories() {
-      return requestResource.getPromotionCategories().$promise;
+    function getPromotionCategories(optionalPayload) {
+      var payload = optionalPayload || {};
+      return requestResource.getPromotionCategories(payload).$promise;
     }
 
     return {
