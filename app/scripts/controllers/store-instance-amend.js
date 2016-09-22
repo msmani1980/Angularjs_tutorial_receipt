@@ -984,9 +984,11 @@ angular.module('ts5App')
     }
 
     function setPaymentReport (paymentReportFromAPI) {
+      var companyData = globalMenuService.getCompanyData();
       var paymentReport = angular.copy(paymentReportFromAPI.paymentReports);
       angular.forEach(paymentReport, function (report) {
         report.scheduleDate = dateUtility.formatDateForApp(report.scheduleDate, 'YYYY-MM-DDThh:mm');
+        report.companyName = companyData.companyName;
       });
 
       $scope.paymentReport = paymentReport;
