@@ -46,6 +46,10 @@ angular.module('ts5App').service('storeInstanceDashboardFactory',
       return storeInstanceService.updateStoreInstanceStatus(storeId, statusId);
     }
 
+    function updateStoreInstanceStatusUndispatch (storeId, statusId, undispatch) {
+      return storeInstanceService.updateStoreInstanceStatusUndispatch(storeId, statusId, undispatch);
+    }
+
     return {
       getCatererStationList: getCatererStationList,
       getStationList: getStationList,
@@ -55,6 +59,7 @@ angular.module('ts5App').service('storeInstanceDashboardFactory',
       getStoresList: getStoresList,
       getStatusList: getStatusList,
       updateStoreInstanceStatus: updateStoreInstanceStatus,
-      getFeaturesList: getFeaturesList
+      getFeaturesList: getFeaturesList,
+      updateStoreInstanceStatusUndispatch: updateStoreInstanceStatusUndispatch
     };
   });
