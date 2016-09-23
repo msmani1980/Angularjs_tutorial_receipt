@@ -9,21 +9,31 @@
  */
 angular.module('ts5App')
   .service('promotionCategoriesService', function (ENV, $resource) {
-    var requestURL = ENV.apiUrl + '/rsvr/api/promotion-categories';
-    var requestParameters = {};
+    var requestURL = ENV.apiUrl + '/rsvr/api/promotion-categories/:id';
+    var requestParameters = {
+      id: '@id'
+    };
+
     var actions = {
       getPromotionCategories: {
         method: 'GET'
       }
     };
+
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getPromotionCategories(optionalPayload) {
-      var payload = optionalPayload || {};
+    function getPromotionCategories(payload) {
+      requestParameters.id = '';
       return requestResource.getPromotionCategories(payload).$promise;
     }
 
+    function getPromotionCategory(promotionCategoryId) {
+      requestParameters.id = promotionCategoryId;
+      return requestResource.getPromotionCategories({}).$promise;
+    }
+
     return {
-      getPromotionCategories: getPromotionCategories
+      getPromotionCategories: getPromotionCategories,
+      getPromotionCategory: getPromotionCategory
     };
   });

@@ -9,5 +9,7 @@
  */
 angular.module('ts5App')
   .controller('PromotionCategoryCtrl', function ($scope) {
+
     $scope.itemList = [{}, {}];
+
   });
