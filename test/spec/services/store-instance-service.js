@@ -205,18 +205,33 @@ describe('Service: storeInstanceService', function () {
   });
 
   describe('updateStoreInstanceStatusForceReconcile', function () {
-    it('should make PUT request to API', function () {
-      var expectedURL = /dispatch\/store-instances\/\d+\/status\/\d+$/;
-      var fakeStoreId = 10;
-      var fakeStatusId = 20;
-      httpBackend.expectPUT(expectedURL).respond(200, {});
-      storeInstanceService.updateStoreInstanceStatusForceReconcile(fakeStoreId, fakeStatusId).then(function (response) {
-        expect(response).toBeDefined();
-      });
+	    it('should make PUT request to API', function () {
+	      var expectedURL = /dispatch\/store-instances\/\d+\/status\/\d+$/;
+	      var fakeStoreId = 10;
+	      var fakeStatusId = 20;
+	      httpBackend.expectPUT(expectedURL).respond(200, {});
+	      storeInstanceService.updateStoreInstanceStatusForceReconcile(fakeStoreId, fakeStatusId).then(function (response) {
+	        expect(response).toBeDefined();
+	      });
 
-      httpBackend.flush();
-    });
-  });
+	      httpBackend.flush();
+	    });
+	  });
+
+
+  describe('updateStoreInstanceStatusUndispatch', function () {
+	    it('should make PUT request to API', function () {
+	      var expectedURL = /dispatch\/store-instances\/\d+\/status\/\d+$/;
+	      var fakeStoreId = 10;
+	      var fakeStatusId = 20;
+	      httpBackend.expectPUT(expectedURL).respond(200, {});
+	      storeInstanceService.updateStoreInstanceStatusUndispatch(fakeStoreId, fakeStatusId).then(function (response) {
+	        expect(response).toBeDefined();
+	      });
+
+	      httpBackend.flush();
+	    });
+	  });
 
 
   describe('updateStoreInstanceStatus', function () {

@@ -10,6 +10,8 @@
  */
 angular.module('ts5App', [
   'config',
+  'angulartics',
+  'angulartics.google.analytics',
   'ngAria',
   'ngAnimate',
   'ngCookies',
