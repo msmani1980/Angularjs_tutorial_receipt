@@ -1,0 +1,94 @@
+<div class="container">
+
+  <!--<error-dialog form-object="menuEditForm" error-response="errorResponse" display="displayError"></error-dialog>-->
+
+  <form name="promotionCategoryForm" class="form edit-form">
+
+    <div class="edit-controls">
+      <div class="row">
+        <div class="col-xs-6">
+          <h2 class="view-name">Create Promotion Category</h2>
+        </div>
+      </div>
+      <p>All required fields are marked with a *</p>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label>Category Name</label>
+        <input type="text"
+               maxlength="50"
+               class="form-control"
+               name="menuDescription"
+               ng-model="menu.description"
+               placeholder="ITM001"
+               ng-readonly="isMenuReadOnly()"/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12">
+        <date-picker
+          class="form-group"
+          element-class="col-xs-6"
+          start-date-model="search.startDate"
+          end-date-model="search.endDate"
+          label-from="Effective From"
+          label-to="Effective To"
+          is-search-field="true">
+        </date-picker>
+      </div>
+    </div>
+
+    <br>
+
+    <h3>Retail Items <span class="badge">{{ itemList.length }}</span>
+      <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addItem()">
+        <i class="fa fa-plus"></i> Add Item
+      </button>
+    </h3>
+
+    <table class="table">
+      <tr>
+        <th>Category</th>
+        <th>Item</th>
+      </tr>
+      <tr ng-repeat="item in itemList">
+        <td>
+          <ui-select
+            name="selectedCategories[item.menuIndex]"
+            ng-model="selectedCategories[item.menuIndex]"
+            on-select="filterItemListByCategory(item.menuIndex)"
+            theme="bootstrap"
+            placeholder="Select a category to filter the items list...">
+            <ui-select-match
+              allow-clear="true"
+              placeholder="Select a category to filter the items list...">{{$select.selected.name}}
+            </ui-select-match>
+            <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
+              <div ng-bind-html="category.name | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td>
+          <ui-select
+            name="selectedCategories[item.menuIndex]"
+            ng-model="selectedCategories[item.menuIndex]"
+            on-select="filterItemListByCategory(item.menuIndex)"
+            theme="bootstrap"
+            placeholder="Select a category to filter the items list...">
+            <ui-select-match
+              allow-clear="true"
+              placeholder="Select a category to filter the items list...">{{$select.selected.name}}
+            </ui-select-match>
+            <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
+              <div ng-bind-html="category.name | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+      </tr>
+    </table>
+
+  </form>
+</div>
