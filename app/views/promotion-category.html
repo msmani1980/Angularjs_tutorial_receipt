@@ -80,15 +80,15 @@
         <td>
           <ui-select
             ng-model="item.selectedItem"
-            disabled="item.masterItemList.length"
+            ng-disabled="shouldDisableItemDropDown(item)"
             theme="bootstrap"
             placeholder="Select an item...">
             <ui-select-match
               allow-clear="true"
-              placeholder="Select an item...">{{$select.selected.name}}
+              placeholder="Select an item...">{{$select.selected.itemName}}
             </ui-select-match>
-            <ui-select-choices repeat="masterItem in item.masterItemList | filter: $select.search | orderBy:'name'">
-              <div ng-bind-html="masterItem.name | highlight: $select.search"></div>
+            <ui-select-choices repeat="masterItem in item.masterItemList | filter: $select.search | orderBy:'itemName'">
+              <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
         </td>
