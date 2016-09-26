@@ -8,16 +8,18 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('promotionCategoryFactory', function (promotionCategoriesService, itemsService, categoryService) {
+  .factory('promotionCategoryFactory', function (promotionCategoriesService, itemsService, categoryService, globalMenuService) {
 
     function getCategoryList(optionalPayload) {
       var payload = optionalPayload || {};
+      payload.companyId = globalMenuService.getCompanyData().id;
+
       return categoryService.getCategoryList(payload);
     }
 
     function getMasterItemList(optionalPayload) {
       var payload = optionalPayload || {};
-      return categoryService.getItemsList(payload, true);
+      return itemsService.getItemsList(payload, true);
     }
 
     function getPromotionCategoryList(optionalPayload) {
