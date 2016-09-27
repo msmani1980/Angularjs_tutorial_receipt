@@ -29,6 +29,7 @@ describe('Service: identityAccessFactory', function() {
   var scope;
   var location;
   var timeout;
+  var lodash;
 
   beforeEach(inject(function($injector, $rootScope, $location, $timeout, $q) {
     companyResponseJSON = $injector.get('servedCompany');
@@ -44,6 +45,7 @@ describe('Service: identityAccessFactory', function() {
     eulaService = $injector.get('eulaService');
     companyFormatService = $injector.get('companyFormatService');
 
+    lodash = $injector.get('lodash');
     scope = $rootScope;
     location = $location;
     timeout = $timeout;
@@ -124,6 +126,22 @@ describe('Service: identityAccessFactory', function() {
     it('should have user company list on the session object', function() {
       scope.$digest();
       expect(identityAccessFactory.getSessionObject().userCompanies.length).toBeGreaterThan(0);
+    });
+
+    it('should filter out inactive companies', function () {
+      scope.$digest();
+      var inactiveCompany = lodash.findWhere(authorizeUserJSON.companiesView, { active: 'f' });
+      var inactiveUserCompany = lodash.findWhere(identityAccessFactory.getSessionObject().userCompanies, { id: inactiveCompany.id });
+
+      expect(inactiveUserCompany).not.toBeDefined();
+    });
+
+    it('should not filter out active companies', function () {
+      scope.$digest();
+      var activeCompany = lodash.findWhere(authorizeUserJSON.companiesView, { active: 't' });
+      var activeUserCompany = lodash.findWhere(identityAccessFactory.getSessionObject().userCompanies, { id: activeCompany.id });
+
+      expect(activeUserCompany).toBeDefined();
     });
 
     describe('company date format list', function() {

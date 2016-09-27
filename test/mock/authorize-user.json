@@ -42,6 +42,21 @@
     "active": "t",
     "dbaName": null,
     "ediName": null
+  }, {
+    "createDate": "2015-07-23 01:58 AM GMT",
+    "createdBy": "1",
+    "updateDate": "2015-12-11 21:05 PM GMT",
+    "updatedBy": null,
+    "id": 266,
+    "type": {
+      "companyTypeName": "Retail"
+    },
+    "name": "testInactiveCompany",
+    "code": "inactive",
+    "legalName": "testInactiveCompany",
+    "active": "f",
+    "dbaName": null,
+    "ediName": null
   }],
   "storeStatusesView": null,
   "companyId": 403

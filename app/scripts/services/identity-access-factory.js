@@ -137,12 +137,22 @@ angular.module('ts5App')
         }));
       }
 
+      function formatUserCompanies (companyDataFromAPI, rawSessionData) {
+        var userCompanyList = angular.copy(companyDataFromAPI.companies);
+        var allCompaniesList = angular.copy(rawSessionData.companiesView);
+
+        return lodash.filter(userCompanyList, function (company) {
+          var companyMatch = lodash.findWhere(allCompaniesList, { id: company.id });
+          return (angular.isDefined(companyMatch) ? companyMatch.active === 't' : false);
+        });
+      }
+
       function getCompanyResponseHandler(dataFromAPI, rawSessionData) {
         var sessionObject = angular.copy(rawSessionData);
         sessionObject.companyData = angular.copy(dataFromAPI[0]);
         sessionObject.companyData.chCompany = angular.copy(rawSessionData.chCompany);
         sessionObject.companyTypes = angular.copy(dataFromAPI[1]);
-        sessionObject.userCompanies = angular.copy(dataFromAPI[2].companies);
+        sessionObject.userCompanies = formatUserCompanies(dataFromAPI[2], rawSessionData);
         sessionObject.companyFormatList = parseCompanyFormatList(dataFromAPI[3].response);
         sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, {
           id: sessionObject.companyData.companyTypeId
