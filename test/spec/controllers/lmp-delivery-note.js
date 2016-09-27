@@ -362,10 +362,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
               itemMasterId: 2
             }]
           };
-          scope.save(false);
         });
 
         it('should call createDeliveryNote', function() {
+          scope.save(false);
           var mockedPayload = jasmine.objectContaining({
             catererStationId: 3,
             purchaseOrderNumber: 'ksahd9a8sda8d',
@@ -388,8 +388,36 @@ describe('Controller: LmpDeliveryNoteCtrl', function() {
           });
           expect(deliveryNoteFactory.createDeliveryNote).toHaveBeenCalledWith(mockedPayload);
         });
-      });
 
+        it('should add item record id to payload for existing items', function () {
+          scope.deliveryNote.items[0].id = 123;
+          scope.deliveryNote.items[1].id = 2;
+
+          scope.save(false);
+          var mockedPayload = jasmine.objectContaining({
+            catererStationId: 3,
+            purchaseOrderNumber: 'ksahd9a8sda8d',
+            deliveryNoteNumber: 'askdjhas78day',
+            deliveryDate: '20150806',
+            isAccepted: false,
+            items: [{
+              id: 123,
+              masterItemId: 1,
+              expectedQuantity: 2,
+              deliveredQuantity: 2,
+              ullageQuantity: 1,
+              ullageReason: null
+            }, {
+              masterItemId: 2,
+              expectedQuantity: 1,
+              deliveredQuantity: 1,
+              ullageQuantity: 0,
+              ullageReason: null
+            }]
+          });
+          expect(deliveryNoteFactory.createDeliveryNote).toHaveBeenCalledWith(mockedPayload);
+        });
+      });
     });
 
     describe('Edit controller action', function() {
