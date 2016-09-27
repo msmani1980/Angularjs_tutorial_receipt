@@ -45,6 +45,19 @@ angular.module('ts5App')
       }
     };
 
+    $scope.shouldDisableItemDropDown = function (item) {
+      return item.masterItemList.length <= 0;
+    };
+
+    function setFilteredItemList(dataFromAPI, item) {
+      item.masterItemList = angular.copy(dataFromAPI.masterItems);
+      var oldItemId = !!item.selectedItem ? item.selectedItem.id : null;
+      var oldItemMatch = lodash.findWhere(item.masterItemList, { id: oldItemId });
+      if (!oldItemMatch) {
+        item.selectedItem = null;
+      }
+    }
+
     $scope.filterItemListFromCategory = function (item) {
       if (!item.selectedCategory) {
         item.masterItemList = [];
@@ -59,13 +72,9 @@ angular.module('ts5App')
       };
 
       promotionCategoryFactory.getMasterItemList(itemPayload).then(function (response) {
-        item.masterItemList = angular.copy(response.masterItems);
+        setFilteredItemList(response, item);
       }, showErrors);
 
-    };
-
-    $scope.shouldDisableItemDropDown = function (item) {
-      return item.masterItemList.length <= 0;
     };
 
     function getMasterItemList() {
@@ -74,6 +83,10 @@ angular.module('ts5App')
         startDate: dateUtility.formatDateForAPI($scope.promotionCategory.startDate),
         endDate: dateUtility.formatDateForAPI($scope.promotionCategory.endDate)
       };
+
+      angular.forEach($scope.itemList, function (item) {
+        $scope.filterItemListFromCategory(item);
+      });
 
       promotionCategoryFactory.getMasterItemList(payload).then(function (response) {
         $scope.masterItemList = angular.copy(response.masterItems);

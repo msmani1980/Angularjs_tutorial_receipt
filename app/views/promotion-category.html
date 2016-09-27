@@ -22,7 +22,7 @@
     <hr>
 
     <div class="row">
-      <div class="form-group col-sm-12">
+      <div class="form-group col-xs-12 col-sm-12">
         <label>Category Name</label>
         <input type="text"
                maxlength="50"
@@ -34,16 +34,22 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 col-sm-12">
-        <date-picker
-          class="form-group"
-          element-class="col-xs-6"
-          start-date-model="promotionCategory.startDate"
-          end-date-model="promotionCategory.endDate"
-          label-from="Effective From"
-          label-to="Effective To"
-          is-search-field="true">
-        </date-picker>
+      <div class="form-group col-xs-6">
+          <date-picker-field
+            name="startDate"
+            ng-model="promotionCategory.endDate"
+            label="Effective From"
+            required="true">
+          </date-picker-field>
+        </div>
+
+        <div class="form-group col-xs-6">
+          <date-picker-field
+            name="startDate"
+            ng-model="promotionCategory.startDate"
+            label="Effective From"
+            required="true">
+          </date-picker-field>
       </div>
     </div>
 
