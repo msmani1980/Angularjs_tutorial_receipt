@@ -38,6 +38,7 @@ angular.module('ts5App')
         '/forgot-username-password/*',
         '/global-reason-code/*',        
         '/lmp-locations-list/*',
+        '/lmp-delivery-note/*',
         '/login',        
         '/manual-epos-cash/*',
         '/manual-epos-credit/*',
@@ -70,7 +71,8 @@ angular.module('ts5App')
         '/ember/#/menu-rules/*',
         '/ember/#/promotion-categories/*',
         '/ember/#/promotion-catalogs/*',
-        '/ember/#/receipt-rules/*'
+        '/ember/#/receipt-rules/*',
+		'/lmp-delivery-note/*'
     ];
 
     var legacyApis = [
