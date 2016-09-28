@@ -87,7 +87,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemDescription'"
+            <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
                 ng-class="hasDiscrepancy(item)">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
@@ -136,7 +136,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in offloadItemList | filter:{itemDescription: filterItemDetails} | orderBy:'itemDescription'"
+            <tr ng-repeat="item in offloadItemList | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
                 ng-class="hasDiscrepancy(item)">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>

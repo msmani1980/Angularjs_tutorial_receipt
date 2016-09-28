@@ -210,7 +210,9 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
 
     it('should format scope.items', function() {
       var expectedItemDescription = 'Ru-002 -  BabyRuth';
+      var expectedItemName = 'BabyRuth';
       expect(scope.items[0].itemDescription).toEqual(expectedItemDescription);
+      expect(scope.items[0].itemName).toEqual(expectedItemName);
     });
 
     it('should set wizardSteps', function() {
