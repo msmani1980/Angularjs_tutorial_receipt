@@ -466,6 +466,7 @@ angular.module('ts5App')
       angular.forEach(uniqueStoreTwoItems, function(item) {
         var newItem = {
           itemMasterId: item.itemMasterId,
+          itemName: item.itemName,
           itemDescription: item.itemCode + ' -  ' + item.itemName,
           disabled: true,
           menuQuantity: getMenuQuantity(item.itemMasterId)
@@ -518,6 +519,7 @@ angular.module('ts5App')
       angular.forEach(uniqueStoreOneItems, function(item) {
         var newItem = {
           itemMasterId: item.itemMasterId,
+          itemName: item.itemName,
           itemDescription: item.itemCode + ' -  ' + item.itemName,
           disabled: true
         };
