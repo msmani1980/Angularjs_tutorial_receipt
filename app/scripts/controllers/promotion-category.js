@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCategoryCtrl', function ($scope, $routeParams, promotionCategoryFactory, $q, lodash, messageService, dateUtility) {
+  .controller('PromotionCategoryCtrl', function ($scope, $routeParams, promotionCategoryFactory, globalMenuService, $q, lodash, messageService, dateUtility) {
 
     $scope.itemList = [];
     $scope.promotionCategory = {};
@@ -24,6 +24,56 @@ angular.module('ts5App')
     function showErrors() {
 
     }
+
+    function formatItemPayload(item) {
+      if (!item.selectedItem) {
+        return null;
+      }
+
+      var newItem = {};
+      newItem.itemId = item.selectedItem.id;
+
+      if ($routeParams.id && item.recordId) {
+        newItem.id = item.recordId;
+      }
+
+      if ($routeParams.id) {
+        newItem.companyPromotionCategoryId = parseInt($routeParams.id);
+      }
+
+      if (item.selectedCategory) {
+        newItem.salesCategoryId = item.selectedCategory.id;
+      }
+      
+      return newItem;
+    }
+
+    function formatPayload() {
+      var payload = {};
+      payload.startDate = dateUtility.formatDateForAPI($scope.promotionCategory.startDate);
+      payload.endDate = dateUtility.formatDateForAPI($scope.promotionCategory.endDate);
+      payload.promotionCategoryName = $scope.promotionCategory.promotionCategoryName;
+      payload.companyId = globalMenuService.getCompanyData().id;
+
+      if ($routeParams.id) {
+        payload.id = parseInt($routeParams.id);
+      }
+
+      payload.companyPromotionCategoryItems = [];
+      angular.forEach($scope.itemList, function (item) {
+        var newItem = formatItemPayload(item);
+        if (newItem !== null) {
+          payload.companyPromotionCategoryItems.push(newItem);
+        }
+      });
+
+      return payload;
+    }
+
+    $scope.save = function () {
+      var payload = formatPayload();
+      console.log(payload);
+    };
 
     $scope.addItem = function () {
       if (!$scope.promotionCategory.startDate && !$scope.promotionCategory.endDate) {
@@ -105,6 +155,7 @@ angular.module('ts5App')
         newItem.selectedCategory = categoryMatch || null;
         newItem.selectedItem = itemMatch || null;
         newItem.masterItemList = [];
+        newItem.recordId = item.id;
         $scope.itemList.push(newItem);
       });
     }
