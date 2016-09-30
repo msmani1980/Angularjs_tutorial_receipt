@@ -12,6 +12,7 @@ angular.module('ts5App')
 
     $scope.itemList = [];
     $scope.promotionCategory = {};
+    $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
 
     function showLoadingModal(message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -184,18 +185,24 @@ angular.module('ts5App')
       $scope.promotionCategory = promotionCategory;
     }
 
+    $scope.shouldDisableField = function () {
+      return !$scope.canEdit || $scope.isViewOnly;
+    };
+
     function setViewVariables () {
+      var canEdit = false;
+
       if ($routeParams.action === 'edit' && $scope.promotionCategory) {
         var isInFuture = dateUtility.isAfterToday($scope.promotionCategory.startDate) && dateUtility.isAfterToday($scope.promotionCategory.endDate);
         var isInPast = dateUtility.isYesterdayOrEarlier($scope.promotionCategory.endDate);
-        $scope.canEdit = isInFuture;
+        canEdit = isInFuture;
         $scope.isViewOnly = isInPast;
-
-        return;
+      } else {
+        $scope.isViewOnly = $routeParams.action === 'view';
+        canEdit = $routeParams.action === 'create';
       }
 
-      $scope.isViewOnly = $routeParams.action === 'view';
-      $scope.canEdit = $routeParams.action === 'create';
+      $scope.disableEditField = !canEdit || $scope.isViewOnly;
     }
 
     function completeInit(responseCollection) {

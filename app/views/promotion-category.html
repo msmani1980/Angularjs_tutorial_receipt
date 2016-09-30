@@ -11,7 +11,7 @@
         </div>
         <div class="col-xs-6 text-right">
           <a class="btn btn-default" ng-href="#/promotion-category-list" class="btn">Back</a>
-          <button class="btn btn-success" ng-click="save()" ng-hide="viewOnly">
+          <button class="btn btn-success" ng-click="save()" ng-hide="isViewOnly">
             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <span>Save</span>
           </button>
@@ -29,27 +29,29 @@
                class="form-control"
                name="menuDescription"
                required="true"
-               ng-disabled="!canEdit || viewOnly"
+               ng-disabled="disableEditField"
                ng-model="promotionCategory.promotionCategoryName"
                ng-readonly="isMenuReadOnly()"/>
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-xs-6">
-          <date-picker-field
-            name="startDate"
-            ng-model="promotionCategory.startDate"
-            disable="!canEdit || viewOnly"
-            label="Effective From"
-            required="true">
-          </date-picker-field>
+      <div class="form-group col-xs-6"> {{ minDate }}
+        <date-picker-field
+          name="startDate"
+          min-date="minDate"
+          ng-model="promotionCategory.startDate"
+          disable="disableEditField"
+          label="Effective From"
+          required="true">
+        </date-picker-field>
         </div>
 
-        <div class="form-group col-xs-6">
+        <div class="form-group col-xs-6"> {{ minDate }}
           <date-picker-field
             name="endDate"
+            min-date="minDate"
             ng-model="promotionCategory.endDate"
-            disable="viewOnly"
+            disable="isViewOnly"
             label="Effective To"
             required="true">
           </date-picker-field>
@@ -76,7 +78,7 @@
             ng-model="item.selectedCategory"
             on-select="filterItemListFromCategory(item)"
             theme="bootstrap"
-            ng-disabled="!canEdit || viewOnly"
+            ng-disabled="disableEditField"
             placeholder="Select a category to filter the items list...">
             <ui-select-match
               allow-clear="true"
@@ -90,7 +92,7 @@
         <td>
           <ui-select
             ng-model="item.selectedItem"
-            ng-disabled="shouldDisableItemDropDown(item) || !canEdit || viewOnly"
+            ng-disabled="shouldDisableItemDropDown(item) || disableEditField"
             theme="bootstrap"
             placeholder="Select an item...">
             <ui-select-match
