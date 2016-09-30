@@ -46,7 +46,7 @@ angular.module('ts5App')
     };
 
     $scope.shouldDisableItemDropDown = function (item) {
-      return item.masterItemList.length <= 0;
+      return angular.isDefined(item.masterItemList) ? item.masterItemList.length <= 0 : true;
     };
 
     function setFilteredItemList(dataFromAPI, item) {
@@ -60,7 +60,7 @@ angular.module('ts5App')
 
     $scope.filterItemListFromCategory = function (item) {
       if (!item.selectedCategory) {
-        item.masterItemList = [];
+        item.masterItemList = angular.copy($scope.masterItemList);
         return;
       }
 
@@ -77,6 +77,16 @@ angular.module('ts5App')
 
     };
 
+    function setMasterItemList(dataFromAPI) {
+      $scope.masterItemList = angular.copy(dataFromAPI.masterItems);
+
+      angular.forEach($scope.itemList, function (item) {
+        $scope.filterItemListFromCategory(item);
+      });
+
+      hideLoadingModal();
+    }
+
     function getMasterItemList() {
       showLoadingModal();
       var payload = {
@@ -84,21 +94,35 @@ angular.module('ts5App')
         endDate: dateUtility.formatDateForAPI($scope.promotionCategory.endDate)
       };
 
-      angular.forEach($scope.itemList, function (item) {
-        $scope.filterItemListFromCategory(item);
-      });
+      promotionCategoryFactory.getMasterItemList(payload).then(setMasterItemList, showErrors);
+    }
 
-      promotionCategoryFactory.getMasterItemList(payload).then(function (response) {
-        $scope.masterItemList = angular.copy(response.masterItems);
-        hideLoadingModal();
-      }, showErrors);
+    function formatItemListForApp(promotionCategory, itemList) {
+      angular.forEach(promotionCategory.companyPromotionCategoryItems, function (item) {
+        var newItem = {};
+        var categoryMatch = lodash.findWhere($scope.categoryList, { id: item.salesCategoryId });
+        var itemMatch = lodash.findWhere(itemList, { id: item.itemId });
+        newItem.selectedCategory = categoryMatch || null;
+        newItem.selectedItem = itemMatch || null;
+        newItem.masterItemList = [];
+        $scope.itemList.push(newItem);
+      });
+    }
+
+    function formatPromotionCategoryForApp(promotionCategoryFromAPI, itemListFromAPI) {
+      var promotionCategory = angular.copy(promotionCategoryFromAPI);
+      promotionCategory.startDate = dateUtility.formatDateForApp(promotionCategory.startDate);
+      promotionCategory.endDate = dateUtility.formatDateForApp(promotionCategory.endDate);
+      formatItemListForApp(promotionCategory, angular.copy(itemListFromAPI.masterItems));
+
+      $scope.promotionCategory = promotionCategory;
     }
 
     function completeInit(responseCollection) {
       $scope.categoryList = angular.copy(responseCollection[0].salesCategories);
 
       if (responseCollection[1]) {
-        $scope.promotionCategory = angular.copy(responseCollection[1]);
+        formatPromotionCategoryForApp(responseCollection[1], responseCollection[2]);
       }
 
       hideLoadingModal();
@@ -112,6 +136,7 @@ angular.module('ts5App')
 
       if ($routeParams.id) {
         initPromises.push(promotionCategoryFactory.getPromotionCategory($routeParams.id));
+        initPromises.push(promotionCategoryFactory.getMasterItemList({}));
       }
 
       $q.all(initPromises).then(completeInit, showErrors);
