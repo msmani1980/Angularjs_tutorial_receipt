@@ -1,6 +1,6 @@
 <div class="container">
 
-  <!--<error-dialog form-object="menuEditForm" error-response="errorResponse" display="displayError"></error-dialog>-->
+  <error-dialog form-object="promotionCategoryForm" error-response="errorResponse" display="displayError"></error-dialog>
 
   <form name="promotionCategoryForm" class="form edit-form">
 
@@ -11,7 +11,7 @@
         </div>
         <div class="col-xs-6 text-right">
           <a class="btn btn-default" ng-href="#/promotion-category-list" class="btn">Back</a>
-          <button class="btn btn-success" ng-click="save()">
+          <button class="btn btn-success" ng-click="save()" ng-hide="viewOnly">
             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <span>Save</span>
           </button>
@@ -23,12 +23,13 @@
 
     <div class="row">
       <div class="form-group col-xs-12 col-sm-12">
-        <label>Category Name</label>
+        <label>Category Name *</label>
         <input type="text"
                maxlength="50"
                class="form-control"
                name="menuDescription"
-               ng-disabled="!canEdit() || isViewOnly()"
+               required="true"
+               ng-disabled="!canEdit || viewOnly"
                ng-model="promotionCategory.promotionCategoryName"
                ng-readonly="isMenuReadOnly()"/>
       </div>
@@ -38,7 +39,7 @@
           <date-picker-field
             name="startDate"
             ng-model="promotionCategory.startDate"
-            disable="!canEdit() || isViewOnly()"
+            disable="!canEdit || viewOnly"
             label="Effective From"
             required="true">
           </date-picker-field>
@@ -48,7 +49,7 @@
           <date-picker-field
             name="endDate"
             ng-model="promotionCategory.endDate"
-            disable="isViewOnly()"
+            disable="viewOnly"
             label="Effective To"
             required="true">
           </date-picker-field>
@@ -75,7 +76,7 @@
             ng-model="item.selectedCategory"
             on-select="filterItemListFromCategory(item)"
             theme="bootstrap"
-            disabled="!canEdit() || isViewOnly()"
+            ng-disabled="!canEdit || viewOnly"
             placeholder="Select a category to filter the items list...">
             <ui-select-match
               allow-clear="true"
@@ -89,7 +90,7 @@
         <td>
           <ui-select
             ng-model="item.selectedItem"
-            ng-disabled="shouldDisableItemDropDown(item) || !canEdit() || isViewOnly()"
+            ng-disabled="shouldDisableItemDropDown(item) || !canEdit || viewOnly"
             theme="bootstrap"
             placeholder="Select an item...">
             <ui-select-match

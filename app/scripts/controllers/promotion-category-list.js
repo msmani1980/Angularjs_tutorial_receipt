@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCategoryListCtrl', function ($scope, promotionCategoriesService, dateUtility) {
+  .controller('PromotionCategoryListCtrl', function ($scope, promotionCategoriesService, dateUtility, $location) {
     $scope.viewName = 'Promotion Categories';
     $scope.promotionCategories = null;
     $scope.search = {};
@@ -26,6 +26,10 @@ angular.module('ts5App')
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
     }
+
+    $scope.viewOrEditRecord = function (action, recordId) {
+      $location.path('promotion-category/' + action + '/' + recordId);
+    };
 
     function createSearchPayload() {
       var payload = angular.copy($scope.search);
@@ -58,7 +62,7 @@ angular.module('ts5App')
         category.startDate = dateUtility.formatDateForApp(category.startDate);
         category.endDate = dateUtility.formatDateForApp(category.endDate);
       });
-      
+
       hideLoadingModal();
     }
 

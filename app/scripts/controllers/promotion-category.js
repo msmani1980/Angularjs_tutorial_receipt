@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCategoryCtrl', function ($scope, $routeParams, promotionCategoryFactory, globalMenuService, $q, lodash, messageService, dateUtility) {
+  .controller('PromotionCategoryCtrl', function ($scope, $routeParams, promotionCategoryFactory, globalMenuService, $q, lodash, messageService, dateUtility, $location) {
 
     $scope.itemList = [];
     $scope.promotionCategory = {};
@@ -21,26 +21,17 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
-    function showErrors() {
-
+    function showErrors(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
     }
 
-    $scope.isViewOnly = function () {
-      if ($routeParams.action === 'edit' && $scope.promotionCategory) {
-        var isInPast = dateUtility.isYesterdayOrEarlier($scope.promotionCategory.endDate);
-        return isInPast;
-      }
-
-      return $routeParams.action === 'view';
-    };
-
-    $scope.canEdit = function () {
-      var isInFuture = dateUtility.isAfterToday($scope.promotionCategory.startDate) && dateUtility.isAfterToday($scope.promotionCategory.endDate);
-      return $routeParams.action === 'edit' ? isInFuture : $routeParams.action === 'create';
-    };
-
     function completeSave() {
-
+      hideLoadingModal();
+      var action = $routeParams.action === 'edit' ? 'updated' : 'created';
+      messageService.display('success', 'Record successfully ' + action, 'Save Promotion Category');
+      $location.path('promotion-category-list');
     }
 
     function formatItemPayload(item) {
@@ -89,6 +80,7 @@ angular.module('ts5App')
     }
 
     $scope.save = function () {
+      showLoadingModal('Saving Record');
       var payload = formatPayload();
 
       if ($routeParams.id) {
@@ -192,6 +184,20 @@ angular.module('ts5App')
       $scope.promotionCategory = promotionCategory;
     }
 
+    function setViewVariables () {
+      if ($routeParams.action === 'edit' && $scope.promotionCategory) {
+        var isInFuture = dateUtility.isAfterToday($scope.promotionCategory.startDate) && dateUtility.isAfterToday($scope.promotionCategory.endDate);
+        var isInPast = dateUtility.isYesterdayOrEarlier($scope.promotionCategory.endDate);
+        $scope.canEdit = isInFuture;
+        $scope.isViewOnly = isInPast;
+
+        return;
+      }
+
+      $scope.isViewOnly = $routeParams.action === 'view';
+      $scope.canEdit = $routeParams.action === 'create';
+    }
+
     function completeInit(responseCollection) {
       $scope.categoryList = angular.copy(responseCollection[0].salesCategories);
 
@@ -199,6 +205,7 @@ angular.module('ts5App')
         formatPromotionCategoryForApp(responseCollection[1], responseCollection[2]);
       }
 
+      setViewVariables();
       hideLoadingModal();
     }
 

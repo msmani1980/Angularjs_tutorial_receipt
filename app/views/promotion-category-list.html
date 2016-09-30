@@ -69,10 +69,10 @@
         <td>{{ category.selectedItems }}</td>
 
         <td>
-          <button class="btn btn-xs btn-info">
+          <button class="btn btn-xs btn-info" ng-click="viewOrEditRecord('view', category.id)">
             <span class="fa fa-file"></span>
           </button>
-          <button class="btn btn-xs btn-primary">
+          <button class="btn btn-xs btn-primary" ng-click="viewOrEditRecord('edit', category.id)">
             <span class="fa fa-pencil"></span>
           </button>
           <button class="btn btn-xs btn-danger">
