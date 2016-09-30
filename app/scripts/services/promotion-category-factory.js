@@ -24,7 +24,7 @@ angular.module('ts5App')
 
     function getPromotionCategoryList(optionalPayload) {
       var payload = optionalPayload || {};
-      return promotionCategoriesService.getPromotionCategoryList(payload);
+      return promotionCategoriesService.getPromotionCategories(payload);
     }
 
     function getPromotionCategory(promotionCategoryId) {
@@ -39,13 +39,18 @@ angular.module('ts5App')
       return promotionCategoriesService.updatePromotionCategory(promotionCategoryId, payload);
     }
 
+    function deletePromotionCategory(promotionCategoryId) {
+      return promotionCategoriesService.deletePromotionCategory(promotionCategoryId);
+    }
+
     return {
       getCategoryList: getCategoryList,
       getMasterItemList: getMasterItemList,
       getPromotionCategoryList: getPromotionCategoryList,
       getPromotionCategory: getPromotionCategory,
       createPromotionCategory: createPromotionCategory,
-      updatePromotionCategory: updatePromotionCategory
+      updatePromotionCategory: updatePromotionCategory,
+      deletePromotionCategory: deletePromotionCategory
     };
 
   });

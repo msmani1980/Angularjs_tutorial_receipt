@@ -23,6 +23,9 @@ angular.module('ts5App')
       },
       updatePromotionCategory: {
         method: 'PUT'
+      },
+      deletePromotionCategory: {
+        method: 'DELETE'
       }
     };
 
@@ -48,10 +51,16 @@ angular.module('ts5App')
       return requestResource.updatePromotionCategory(payload).$promise;
     }
 
+    function deletePromotionCategory(promotionCategoryId) {
+      requestParameters.id = promotionCategoryId;
+      return requestResource.deletePromotionCategory({}).$promise;
+    }
+
     return {
       getPromotionCategories: getPromotionCategories,
       getPromotionCategory: getPromotionCategory,
       createPromotionCategory: createPromotionCategory,
-      updatePromotionCategory: updatePromotionCategory
+      updatePromotionCategory: updatePromotionCategory,
+      deletePromotionCategory: deletePromotionCategory
     };
   });

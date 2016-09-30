@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCategoryListCtrl', function ($scope, promotionCategoriesService, dateUtility, $location) {
+  .controller('PromotionCategoryListCtrl', function ($scope, promotionCategoryFactory, dateUtility, $location) {
     $scope.viewName = 'Promotion Categories';
     $scope.promotionCategories = null;
     $scope.search = {};
@@ -29,6 +29,19 @@ angular.module('ts5App')
 
     $scope.viewOrEditRecord = function (action, recordId) {
       $location.path('promotion-category/' + action + '/' + recordId);
+    };
+
+    $scope.canEdit = function (category) {
+      return dateUtility.isTomorrowOrLater(category.endDate);
+    };
+
+    $scope.canDelete = function (category) {
+      return dateUtility.isTomorrowOrLater(category.startDate);
+    };
+
+    $scope.removeRecord = function (category) {
+      showLoadingModal('Removing Record');
+      promotionCategoryFactory.deletePromotionCategory(category.id).then(init);
     };
 
     function createSearchPayload() {
@@ -53,7 +66,7 @@ angular.module('ts5App')
     $scope.searchPromotionCategories = function () {
       var payload = createSearchPayload();
       showLoadingModal('Searching Promotion Categories');
-      promotionCategoriesService.getPromotionCategories(payload).then(getPromotionCategoriesSuccess);
+      promotionCategoryFactory.getPromotionCategoryList(payload).then(getPromotionCategoriesSuccess);
     };
 
     function getPromotionCategoriesSuccess(dataFromAPI) {
@@ -68,7 +81,7 @@ angular.module('ts5App')
 
     function init() {
       showLoadingModal('Loading Data');
-      promotionCategoriesService.getPromotionCategories().then(getPromotionCategoriesSuccess);
+      promotionCategoryFactory.getPromotionCategoryList().then(getPromotionCategoriesSuccess);
     }
 
     init();
