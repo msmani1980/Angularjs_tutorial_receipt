@@ -25,6 +25,24 @@ angular.module('ts5App')
 
     }
 
+    $scope.isViewOnly = function () {
+      if ($routeParams.action === 'edit' && $scope.promotionCategory) {
+        var isInPast = dateUtility.isYesterdayOrEarlier($scope.promotionCategory.endDate);
+        return isInPast;
+      }
+
+      return $routeParams.action === 'view';
+    };
+
+    $scope.canEdit = function () {
+      var isInFuture = dateUtility.isAfterToday($scope.promotionCategory.startDate) && dateUtility.isAfterToday($scope.promotionCategory.endDate);
+      return $routeParams.action === 'edit' ? isInFuture : $routeParams.action === 'create';
+    };
+
+    function completeSave() {
+
+    }
+
     function formatItemPayload(item) {
       if (!item.selectedItem) {
         return null;
@@ -44,7 +62,7 @@ angular.module('ts5App')
       if (item.selectedCategory) {
         newItem.salesCategoryId = item.selectedCategory.id;
       }
-      
+
       return newItem;
     }
 
@@ -72,7 +90,12 @@ angular.module('ts5App')
 
     $scope.save = function () {
       var payload = formatPayload();
-      console.log(payload);
+
+      if ($routeParams.id) {
+        promotionCategoryFactory.updatePromotionCategory($routeParams.id, payload).then(completeSave, showErrors);
+      } else {
+        promotionCategoryFactory.createPromotionCategory(payload).then(completeSave, showErrors);
+      }
     };
 
     $scope.addItem = function () {

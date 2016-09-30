@@ -31,11 +31,21 @@ angular.module('ts5App')
       return promotionCategoriesService.getPromotionCategory(promotionCategoryId);
     }
 
+    function createPromotionCategory(payload) {
+      return promotionCategoriesService.createPromotionCategory(payload);
+    }
+
+    function updatePromotionCategory(promotionCategoryId, payload) {
+      return promotionCategoriesService.updatePromotionCategory(promotionCategoryId, payload);
+    }
+
     return {
       getCategoryList: getCategoryList,
       getMasterItemList: getMasterItemList,
       getPromotionCategoryList: getPromotionCategoryList,
-      getPromotionCategory: getPromotionCategory
+      getPromotionCategory: getPromotionCategory,
+      createPromotionCategory: createPromotionCategory,
+      updatePromotionCategory: updatePromotionCategory
     };
 
   });

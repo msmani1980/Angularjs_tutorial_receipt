@@ -17,6 +17,12 @@ angular.module('ts5App')
     var actions = {
       getPromotionCategories: {
         method: 'GET'
+      },
+      createPromotionCategory: {
+        method: 'POST'
+      },
+      updatePromotionCategory: {
+        method: 'PUT'
       }
     };
 
@@ -32,8 +38,20 @@ angular.module('ts5App')
       return requestResource.getPromotionCategories({}).$promise;
     }
 
+    function createPromotionCategory(payload) {
+      requestParameters.id = '';
+      return requestResource.createPromotionCategory(payload).$promise;
+    }
+
+    function updatePromotionCategory(promotionCategoryId, payload) {
+      requestParameters.id = promotionCategoryId;
+      return requestResource.updatePromotionCategory(payload).$promise;
+    }
+
     return {
       getPromotionCategories: getPromotionCategories,
-      getPromotionCategory: getPromotionCategory
+      getPromotionCategory: getPromotionCategory,
+      createPromotionCategory: createPromotionCategory,
+      updatePromotionCategory: updatePromotionCategory
     };
   });

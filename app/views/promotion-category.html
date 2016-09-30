@@ -28,8 +28,8 @@
                maxlength="50"
                class="form-control"
                name="menuDescription"
+               ng-disabled="!canEdit() || isViewOnly()"
                ng-model="promotionCategory.promotionCategoryName"
-               placeholder="ITM001"
                ng-readonly="isMenuReadOnly()"/>
       </div>
     </div>
@@ -37,7 +37,8 @@
       <div class="form-group col-xs-6">
           <date-picker-field
             name="startDate"
-            ng-model="promotionCategory.endDate"
+            ng-model="promotionCategory.startDate"
+            disable="!canEdit() || isViewOnly()"
             label="Effective From"
             required="true">
           </date-picker-field>
@@ -45,9 +46,10 @@
 
         <div class="form-group col-xs-6">
           <date-picker-field
-            name="startDate"
-            ng-model="promotionCategory.startDate"
-            label="Effective From"
+            name="endDate"
+            ng-model="promotionCategory.endDate"
+            disable="isViewOnly()"
+            label="Effective To"
             required="true">
           </date-picker-field>
       </div>
@@ -73,6 +75,7 @@
             ng-model="item.selectedCategory"
             on-select="filterItemListFromCategory(item)"
             theme="bootstrap"
+            disabled="!canEdit() || isViewOnly()"
             placeholder="Select a category to filter the items list...">
             <ui-select-match
               allow-clear="true"
@@ -86,7 +89,7 @@
         <td>
           <ui-select
             ng-model="item.selectedItem"
-            ng-disabled="shouldDisableItemDropDown(item)"
+            ng-disabled="shouldDisableItemDropDown(item) || !canEdit() || isViewOnly()"
             theme="bootstrap"
             placeholder="Select an item...">
             <ui-select-match
