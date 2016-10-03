@@ -81,6 +81,10 @@ angular.module('ts5App')
     }
 
     $scope.save = function () {
+      if (!$scope.promotionCategoryForm.$valid) {
+        return false;
+      }
+      
       showLoadingModal('Saving Record');
       var payload = formatPayload();
 
@@ -189,7 +193,7 @@ angular.module('ts5App')
       return !$scope.canEdit || $scope.isViewOnly;
     };
 
-    function setViewVariables () {
+    function setViewVariables() {
       var canEdit = false;
 
       if ($routeParams.action === 'edit' && $scope.promotionCategory) {
