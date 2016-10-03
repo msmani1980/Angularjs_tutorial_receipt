@@ -84,7 +84,7 @@ angular.module('ts5App')
       if (!$scope.promotionCategoryForm.$valid) {
         return false;
       }
-      
+
       showLoadingModal('Saving Record');
       var payload = formatPayload();
 
