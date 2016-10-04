@@ -34,7 +34,7 @@ angular.module('ts5App')
     function resetSearchMetaVars() {
       $this.meta = {
         count: undefined,
-        limit: 5,
+        limit: 100,
         offset: 0
       };
     }
@@ -103,6 +103,7 @@ angular.module('ts5App')
     $scope.clearSearchForm = function () {
       $scope.search = {};
       $scope.promotionCategories = null;
+      resetSearchMetaVars();
     };
 
     $scope.getPromotionCategories = function () {
