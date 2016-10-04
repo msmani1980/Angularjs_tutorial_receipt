@@ -186,7 +186,6 @@ angular.module('ts5App')
       var promotionCategory = angular.copy(promotionCategoryFromAPI);
       promotionCategory.startDate = dateUtility.formatDateForApp(promotionCategory.startDate);
       promotionCategory.endDate = dateUtility.formatDateForApp(promotionCategory.endDate);
-      console.log(promotionCategory.endDate, promotionCategory.startDate);
       formatItemListForApp(promotionCategory, angular.copy(itemListFromAPI.masterItems));
 
       $scope.promotionCategory = promotionCategory;
