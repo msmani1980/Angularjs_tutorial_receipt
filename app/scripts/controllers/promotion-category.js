@@ -13,6 +13,7 @@ angular.module('ts5App')
     $scope.itemList = [];
     $scope.promotionCategory = {};
     $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
+    $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
     var $this = this;
 
     function showLoadingModal(message) {
@@ -185,6 +186,7 @@ angular.module('ts5App')
       var promotionCategory = angular.copy(promotionCategoryFromAPI);
       promotionCategory.startDate = dateUtility.formatDateForApp(promotionCategory.startDate);
       promotionCategory.endDate = dateUtility.formatDateForApp(promotionCategory.endDate);
+      console.log(promotionCategory.endDate, promotionCategory.startDate);
       formatItemListForApp(promotionCategory, angular.copy(itemListFromAPI.masterItems));
 
       $scope.promotionCategory = promotionCategory;
