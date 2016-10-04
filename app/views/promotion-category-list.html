@@ -51,7 +51,7 @@
     </div>
   </div>
   <div class="table-responsive">
-    <table class="table">
+    <table infinite-scroll="getPromotionCategories()" class="table" ng-show="promotionCategories.length > 0" infinite-scroll-immediate-check="false">
       <thead>
       <tr>
         <th>Category Name</th>
@@ -84,6 +84,16 @@
       </tbody>
     </table>
   </div>
+
+  <p ng-if="promotionCategories.length > 0" class="record-count small text-center">Showing {{promotionCategories.length}} records</p>
+
+  <p ng-show="shouldShowLoadingAlert()" class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+
+  <p ng-show="shouldShowSearchPrompt()" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view records</p>
+
+  <p ng-show="shouldShowNoRecordsFoundPrompt()" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were
+    found </p>
+
 
 </div>
 

@@ -10,14 +10,7 @@
 angular.module('ts5App')
   .controller('PromotionCategoryListCtrl', function ($scope, promotionCategoryFactory, dateUtility, $location) {
     $scope.viewName = 'Promotion Categories';
-    $scope.promotionCategories = null;
-    $scope.search = {};
-
-    this.meta = {
-      count: undefined,
-      limit: 100,
-      offset: 0
-    };
+    var $this = this;
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -26,6 +19,37 @@ angular.module('ts5App')
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
     }
+
+    function showLoadingBar() {
+      $this.isLoading = true;
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      $this.isLoading = false;
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
+
+    function resetSearchMetaVars() {
+      $this.meta = {
+        count: undefined,
+        limit: 5,
+        offset: 0
+      };
+    }
+
+    $scope.shouldShowLoadingAlert = function () {
+      return (angular.isDefined($scope.promotionCategories) && $scope.promotionCategories !== null && $this.meta.offset < $this.meta.count);
+    };
+
+    $scope.shouldShowSearchPrompt = function () {
+      return !$scope.promotionCategories;
+    };
+
+    $scope.shouldShowNoRecordsFoundPrompt = function () {
+      return !$this.isLoading && angular.isDefined($scope.promotionCategories) && $scope.promotionCategories !== null && $scope.promotionCategories.length <= 0;
+    };
 
     $scope.viewOrEditRecord = function (action, recordId) {
       $location.path('promotion-category/' + action + '/' + recordId);
@@ -55,7 +79,25 @@ angular.module('ts5App')
         payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
       }
 
+      payload.limit = $this.meta.limit;
+      payload.offset = $this.meta.offset;
+
       return payload;
+    }
+
+    function getPromotionCategoriesSuccess(dataFromAPI) {
+      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+      var newStoreInstanceList = angular.copy(dataFromAPI.companyPromotionCategories);
+      angular.forEach(newStoreInstanceList, function (category) {
+        category.startDate = dateUtility.formatDateForApp(category.startDate);
+        category.endDate = dateUtility.formatDateForApp(category.endDate);
+      });
+
+      $scope.promotionCategories = $scope.promotionCategories || [];
+      $scope.promotionCategories = $scope.promotionCategories.concat(newStoreInstanceList);
+
+      hideLoadingBar();
+      hideLoadingModal();
     }
 
     $scope.clearSearchForm = function () {
@@ -63,25 +105,29 @@ angular.module('ts5App')
       $scope.promotionCategories = null;
     };
 
-    $scope.searchPromotionCategories = function () {
+    $scope.getPromotionCategories = function () {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+
       var payload = createSearchPayload();
-      showLoadingModal('Searching Promotion Categories');
+      showLoadingBar();
       promotionCategoryFactory.getPromotionCategoryList(payload).then(getPromotionCategoriesSuccess);
+      $this.meta.offset += $this.meta.limit;
+
     };
 
-    function getPromotionCategoriesSuccess(dataFromAPI) {
-      $scope.promotionCategories = angular.copy(dataFromAPI.companyPromotionCategories);
-      angular.forEach($scope.promotionCategories, function (category) {
-        category.startDate = dateUtility.formatDateForApp(category.startDate);
-        category.endDate = dateUtility.formatDateForApp(category.endDate);
-      });
-
-      hideLoadingModal();
-    }
+    $scope.searchPromotionCategories = function () {
+      resetSearchMetaVars();
+      $scope.promotionCategories = [];
+      showLoadingModal();
+      $scope.getPromotionCategories();
+    };
 
     function init() {
-      showLoadingModal('Loading Data');
-      promotionCategoryFactory.getPromotionCategoryList().then(getPromotionCategoriesSuccess);
+      $scope.promotionCategories = null;
+      resetSearchMetaVars();
+      $scope.search = {};
     }
 
     init();
