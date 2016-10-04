@@ -117,7 +117,7 @@ describe('Controller: PromotionCategoryCtrl', function () {
         expect(scope.isViewOnly).toEqual(true);
       });
 
-      it('should not disable edit fields if record is in the future' , function () {
+      it('should not disable edit fields if record is in the future', function () {
         scope.$digest();
         scope.promotionCategory = { startDate: '10/20/2050', endDate: '11/21/2051' };
         PromotionCategoryCtrl.setViewVariables();
@@ -169,24 +169,56 @@ describe('Controller: PromotionCategoryCtrl', function () {
       expect(promotionCategoryFactory.getMasterItemList).toHaveBeenCalledWith(expectedPayload);
     });
 
-    it('should filter item list by category when a category is selected', function () {
-      var testItem = {
-        itemIndex: 0,
-        masterItemList: [],
-        selectedCategory: { id: 123 },
-        selectedItem: null
-      };
+    describe('filtering by category', function () {
+      var testItem;
+      beforeEach(function () {
+        testItem = {
+          itemIndex: 0,
+          masterItemList: [],
+          selectedCategory: { id: 123 },
+          selectedItem: { id: 1 }
+        };
+      });
 
-      scope.filterItemListFromCategory(testItem);
+      it('should filter item list by category when a category is selected', function () {
+        scope.filterItemListFromCategory(testItem);
 
-      var expectedPayload = {
-        categoryId: 123,
-        startDate: '20160926',
-        endDate: '20161101'
-      };
+        var expectedPayload = {
+          categoryId: 123,
+          startDate: '20160926',
+          endDate: '20161101'
+        };
 
-      expect(promotionCategoryFactory.getMasterItemList).toHaveBeenCalledWith(expectedPayload);
+        expect(promotionCategoryFactory.getMasterItemList).toHaveBeenCalledWith(expectedPayload);
+      });
+
+      it('should save filtered item list to the selectedItem', function () {
+        scope.filterItemListFromCategory(testItem);
+        scope.$digest();
+        expect(testItem.masterItemList.length).toEqual(itemListResponseJSON.masterItems.length);
+      });
+
+      it('should retain previously selected item if there is a match', function () {
+        scope.filterItemListFromCategory(testItem);
+        scope.$digest();
+        expect(testItem.selectedItem.id).toEqual(1);
+
+        testItem.selectedItem = { id: 1234};
+        scope.filterItemListFromCategory(testItem);
+        scope.$digest();
+        expect(testItem.selectedItem).toEqual(null);
+      });
+
+      it('should disable item drop down if list is empty', function () {
+        testItem.masterItemList = [];
+        expect(scope.shouldDisableItemDropDown(testItem)).toEqual(true);
+
+        scope.filterItemListFromCategory(testItem);
+        scope.$digest();
+        expect(scope.shouldDisableItemDropDown(testItem)).toEqual(false);
+      });
     });
+
   });
 
   describe('saving promotion category', function () {

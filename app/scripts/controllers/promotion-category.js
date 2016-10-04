@@ -190,10 +190,6 @@ angular.module('ts5App')
       $scope.promotionCategory = promotionCategory;
     }
 
-    $scope.shouldDisableField = function () {
-      return !$scope.canEdit || $scope.isViewOnly;
-    };
-
     this.setViewVariables = function () {
       var canEdit = false;
 
