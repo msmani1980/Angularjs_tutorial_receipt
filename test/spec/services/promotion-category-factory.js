@@ -39,6 +39,14 @@ describe('Service: promotionCategoryFactory', function () {
     expect(!!promotionCategoryFactory).toBe(true);
   });
 
+  describe('globalMenuService API', function () {
+    it('should return companyId from getCompanyData', function () {
+      var result = promotionCategoryFactory.getCompanyId();
+      expect(globalMenuService.getCompanyData).toHaveBeenCalled();
+      expect(result).toEqual(403);
+    });
+  });
+
   describe('categoryService API', function () {
     it('should call exciseDutyService on getExciseDutyList', function () {
       var mockPayload = { fakeKey: 'fakeValue' };

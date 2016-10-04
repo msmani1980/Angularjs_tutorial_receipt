@@ -13,6 +13,7 @@ angular.module('ts5App')
     $scope.itemList = [];
     $scope.promotionCategory = {};
     $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
+    var $this = this;
 
     function showLoadingModal(message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -63,7 +64,7 @@ angular.module('ts5App')
       payload.startDate = dateUtility.formatDateForAPI($scope.promotionCategory.startDate);
       payload.endDate = dateUtility.formatDateForAPI($scope.promotionCategory.endDate);
       payload.promotionCategoryName = $scope.promotionCategory.promotionCategoryName;
-      payload.companyId = globalMenuService.getCompanyData().id;
+      payload.companyId = promotionCategoryFactory.getCompanyId();
 
       if ($routeParams.id) {
         payload.id = parseInt($routeParams.id);
@@ -193,7 +194,7 @@ angular.module('ts5App')
       return !$scope.canEdit || $scope.isViewOnly;
     };
 
-    function setViewVariables() {
+    this.setViewVariables = function () {
       var canEdit = false;
 
       if ($routeParams.action === 'edit' && $scope.promotionCategory) {
@@ -207,7 +208,7 @@ angular.module('ts5App')
       }
 
       $scope.disableEditField = !canEdit || $scope.isViewOnly;
-    }
+    };
 
     function completeInit(responseCollection) {
       $scope.categoryList = angular.copy(responseCollection[0].salesCategories);
@@ -216,7 +217,7 @@ angular.module('ts5App')
         formatPromotionCategoryForApp(responseCollection[1], responseCollection[2]);
       }
 
-      setViewVariables();
+      $this.setViewVariables();
       hideLoadingModal();
     }
 

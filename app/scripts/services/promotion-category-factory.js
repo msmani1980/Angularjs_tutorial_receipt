@@ -10,9 +10,13 @@
 angular.module('ts5App')
   .factory('promotionCategoryFactory', function (promotionCategoriesService, itemsService, categoryService, globalMenuService) {
 
+    function getCompanyId() {
+      return globalMenuService.getCompanyData().id;
+    }
+
     function getCategoryList(optionalPayload) {
       var payload = optionalPayload || {};
-      payload.companyId = globalMenuService.getCompanyData().id;
+      payload.companyId = getCompanyId();
 
       return categoryService.getCategoryList(payload);
     }
@@ -44,6 +48,7 @@ angular.module('ts5App')
     }
 
     return {
+      getCompanyId: getCompanyId,
       getCategoryList: getCategoryList,
       getMasterItemList: getMasterItemList,
       getPromotionCategoryList: getPromotionCategoryList,
