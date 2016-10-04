@@ -1,0 +1,35 @@
+{
+  "createdBy": 194,
+  "createdByPerson": {
+    "id": 194,
+    "userName": "QAUser",
+    "email": "ttiguti@egate-solutions.com",
+    "firstName": "First",
+    "lastName": "Last"
+  },
+  "createdOn": "2016-09-30 18:58:43",
+  "updatedBy": 194,
+  "updatedByPerson": {
+    "id": 194,
+    "userName": "QAUser",
+    "email": "ttiguti@egate-solutions.com",
+    "firstName": "First",
+    "lastName": "Last"
+  },
+  "updatedOn": "2016-09-30 19:35:24",
+  "id": 202,
+  "companyId": 643,
+  "promotionCategoryName": "testnewrecord123",
+  "companyPromotionCategoryItems": [
+    {
+      "id": 851,
+      "companyPromotionCategoryId": 202,
+      "itemId": 2,
+      "salesCategoryId": null
+    }
+  ],
+  "selectedItems": 1,
+  "promotionCount": null,
+  "startDate": "2016-09-26",
+  "endDate": "2016-11-01"
+}
