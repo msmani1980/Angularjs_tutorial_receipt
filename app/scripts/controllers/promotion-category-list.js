@@ -65,7 +65,10 @@ angular.module('ts5App')
 
     $scope.removeRecord = function (category) {
       showLoadingModal('Removing Record');
-      promotionCategoryFactory.deletePromotionCategory(category.id).then(init);
+      promotionCategoryFactory.deletePromotionCategory(category.id).then(function () {
+        hideLoadingModal();
+        init();
+      });
     };
 
     function createSearchPayload() {
