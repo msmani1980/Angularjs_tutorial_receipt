@@ -341,10 +341,6 @@ describe('Service: storeInstanceFactory', function() {
         expect(storeDetails.scheduleNumber).toBeDefined();
       });
 
-      it('should contain tail number if id is defined', function() {
-        expect(storeDetails.carrierNumber).toBeDefined();
-      });
-
       it('should contain store number', function() {
         expect(storeDetails.storeNumber).toBeDefined();
       });
@@ -375,6 +371,16 @@ describe('Service: storeInstanceFactory', function() {
 
       it('should contain storeId property', function() {
         expect(storeDetails.storeId).toBeDefined();
+      });
+
+      it('should set inbound station to empty if stationId is not defined', function () {
+        expect(storeDetails.inboundLMPStation).toBeDefined();
+        expect(storeDetails.inboundLMPStation).toEqual('');
+      });
+
+      it('should contain tail number if id is defined', function() {
+        expect(storeDetails.carrierNumber).toBeDefined();
+        expect(storeDetails.carrierNumber).not.toEqual('');
       });
 
       describe('when there is no parent Id', function() {

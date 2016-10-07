@@ -112,10 +112,30 @@ angular.module('ts5App').service('storeInstanceFactory',
       return recordsService.getCountTypes();
     }
 
+    function setCarrierInstanceAndInboundStation (responseCollection, storeDetailsToSet) {
+      if (responseCollection.length <= 4) {
+        storeDetailsToSet.inboundLMPStation = '';
+        storeDetailsToSet.carrierNumber = '';
+        return;
+      }
+
+      if (responseCollection.length === 6) {
+        storeDetailsToSet.inboundLMPStation = responseCollection[4].code;
+        storeDetailsToSet.carrierNumber = responseCollection[5].carrierNumber;
+      }
+
+      if (responseCollection.length === 5 && angular.isDefined(responseCollection[4].carrierNumber)) {
+        storeDetailsToSet.inboundLMPStation = '';
+        storeDetailsToSet.carrierNumber = responseCollection[4].carrierNumber;
+      } else if (responseCollection.length === 5 && angular.isDefined(responseCollection[4].code)) {
+        storeDetailsToSet.inboundLMPStation = responseCollection[4].code;
+        storeDetailsToSet.carrierNumber = '';
+      }
+    }
+
     function formatResponseCollection(responseCollection, storeInstanceAPIResponse, parentStoreInstanceAPIResponse) {
       var storeDetails = {};
       storeDetails.LMPStation = responseCollection[1].code;
-      storeDetails.inboundLMPStation = responseCollection[responseCollection.length - 1].code;
       storeDetails.displayLMPStation = storeDetails.LMPStation;
       storeDetails.storeNumber = responseCollection[0].storeNumber;
       storeDetails.scheduleDate = dateUtility.formatDateForApp(storeInstanceAPIResponse.scheduleDate);
@@ -156,10 +176,7 @@ angular.module('ts5App').service('storeInstanceFactory',
         id: storeInstanceAPIResponse.statusId
       });
 
-      if (responseCollection.length > 4) {
-        storeDetails.carrierNumber = responseCollection[4].carrierNumber;
-      }
-
+      setCarrierInstanceAndInboundStation(responseCollection, storeDetails);
       return storeDetails;
     }
 
@@ -178,7 +195,9 @@ angular.module('ts5App').service('storeInstanceFactory',
         dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
       }
 
-      dependenciesArray.push(getStation(responseData.inboundStationId));
+      if (responseData.inboundStationId) {
+        dependenciesArray.push(getStation(responseData.inboundStationId));
+      }
 
       return dependenciesArray;
     }
