@@ -938,13 +938,6 @@ angular.module('ts5App')
         return false;
       }
 
-      if ($scope.isDisabled) {
-        var endDate = {
-          endDate: dateUtility.formatDateForAPI($scope.promotion.endDate)
-        };
-        return savePromotion(endDate);
-      }
-
       var initState = $routeParams.state + 'Save';
       if (!states[initState]) {
         return false;
