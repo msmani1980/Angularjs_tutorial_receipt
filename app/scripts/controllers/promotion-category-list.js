@@ -12,6 +12,12 @@ angular.module('ts5App')
     $scope.viewName = 'Promotion Categories';
     var $this = this;
 
+    function showErrors(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    }
+
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     }
@@ -68,7 +74,7 @@ angular.module('ts5App')
       promotionCategoryFactory.deletePromotionCategory(category.id).then(function () {
         hideLoadingModal();
         init();
-      });
+      }, showErrors);
     };
 
     function createSearchPayload() {
