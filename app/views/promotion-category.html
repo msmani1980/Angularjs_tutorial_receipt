@@ -96,7 +96,6 @@
             theme="bootstrap"
             placeholder="Select an item...">
             <ui-select-match
-              allow-clear="true"
               placeholder="Select an item...">{{$select.selected.itemName}}
             </ui-select-match>
             <ui-select-choices repeat="masterItem in item.masterItemList | filter: $select.search | orderBy:'itemName'">
