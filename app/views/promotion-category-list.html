@@ -1,0 +1,104 @@
+<div class="module-container fluid-container">
+
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-4">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-8 text-right">
+
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+
+        <a href="#/promotion-category/create" class="btn btn-primary">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+          <span class="hidden-xs">Create Promotion Category</span>
+        </a>
+      </div>
+    </div>
+
+    <error-dialog form-object="promotionCategoryListForm" error-response="errorResponse" display="displayError"></error-dialog>
+
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-4 col-xs-12">
+            <div class="form-group">
+              <label for="category-name">Category Name</label>
+              <input ng-model="search.promotionCategoryName" type="text" class="form-control" id="category-name" placeholder="Search Category Name">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-8">
+            <date-picker
+              class="form-group"
+              element-class="col-xs-6"
+              start-date-model="search.startDate"
+              end-date-model="search.endDate"
+              label-from="Schedule Date From"
+              label-to="Schedule Date To"
+              is-search-field="true">
+            </date-picker>
+          </div>
+
+        </div>
+      </div>
+      <div class="panel-footer text-right">
+        <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+        <button type="button" class="btn btn-primary" ng-click="searchPromotionCategories()">Search</button>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table infinite-scroll="getPromotionCategories()" class="table" ng-show="promotionCategories.length > 0" infinite-scroll-immediate-check="false">
+      <thead>
+      <tr>
+        <th>Category Name</th>
+        <th>Effective From</th>
+        <th>Effectiv To</th>
+        <th>Selected Items</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="category in promotionCategories">
+        <td>{{ category.promotionCategoryName }}</td>
+        <td>{{ category.startDate }}</td>
+        <td>{{ category.endDate }}</td>
+        <td>{{ category.selectedItems }}</td>
+
+        <td>
+          <button class="btn btn-xs btn-info" ng-click="viewOrEditRecord('view', category.id)">
+            <span class="fa fa-file"></span>
+          </button>
+          <button class="btn btn-xs btn-primary" ng-click="viewOrEditRecord('edit', category.id)" ng-show="canEdit(category)">
+            <span class="fa fa-pencil"></span>
+          </button>
+          <button class="btn btn-xs btn-danger" ng-show="canDelete(category)" ng-click="deleteRecordDialog(category, ['promotionCategoryName', 'startDate', 'endDate'])">
+            <span class="fa fa-trash"></span>
+          </button>
+        </td>
+
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p ng-if="promotionCategories.length > 0" class="record-count small text-center">Showing {{promotionCategories.length}} records</p>
+
+  <p ng-show="shouldShowLoadingAlert()" class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+
+  <p ng-show="shouldShowSearchPrompt()" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view records</p>
+
+  <p ng-show="shouldShowNoRecordsFoundPrompt()" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria were
+    found </p>
+
+
+</div>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav title="{{determineLeftNavTitle()}}"></dynamic-left-nav>

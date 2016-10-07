@@ -244,6 +244,27 @@ describe('Controller: EmployeeCommissionListCtrl', function() {
       expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);
     });
 
+    it('should not include itemIds if no category is selected', function () {
+      scope.search = {
+        startDate: '10/20/2015',
+        endDate: '11/12/2015',
+        selectedCategory: {},
+        itemList: [{
+          itemMasterId: 1
+        }, {
+          itemMasterId: 2
+        }]
+      };
+      var expectedPayload = {
+        startDate: '20151020',
+        endDate: '20151112',
+        limit: 100,
+        offset: 0
+      };
+      scope.searchCommissions();
+      expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);
+    });
+
     it('should clear search payload with clearForm', function() {
       scope.clearForm();
       var clearedSearch = {

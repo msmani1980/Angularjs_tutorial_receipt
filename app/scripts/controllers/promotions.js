@@ -566,8 +566,6 @@ angular.module('ts5App')
       $scope.promotion.discountType = getObjectByIdFromSelectOptions('discountTypes', {
         id: promotionFromAPI.discountTypeId
       });
-      $scope.promotion.giftWithPurchase = (promotionFromAPI.giftWithPurchase === 'true');
-      $scope.promotion.lowestPricedArticle = (promotionFromAPI.lowestPricedArticle === 'true');
       $scope.promotion.promotionCategories = mapPromotionCategories(promotionFromAPI.promotionCategories, true);
       $scope.promotion.items = mapItems(promotionFromAPI.items, true);
       $scope.promotion.filters = mapFilters(promotionFromAPI.filters, true);
@@ -938,13 +936,6 @@ angular.module('ts5App')
       if (!formValid()) {
         $scope.displayError = true;
         return false;
-      }
-
-      if ($scope.isDisabled) {
-        var endDate = {
-          endDate: dateUtility.formatDateForAPI($scope.promotion.endDate)
-        };
-        return savePromotion(endDate);
       }
 
       var initState = $routeParams.state + 'Save';
