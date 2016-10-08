@@ -22,7 +22,7 @@
 
     <error-dialog form-object="promotionCategoryListForm" error-response="errorResponse" display="displayError"></error-dialog>
 
-    <div class="panel panel-default no-transition" id="search-collapse">
+    <div class="panel panel-default no-transition collapse in" id="search-collapse">
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-4 col-xs-12">
@@ -52,13 +52,15 @@
       </div>
     </div>
   </div>
+  <form name="promotionCategoryForm">
+
   <div class="table-responsive">
     <table infinite-scroll="getPromotionCategories()" class="table" ng-show="promotionCategories.length > 0" infinite-scroll-immediate-check="false">
       <thead>
       <tr>
         <th>Category Name</th>
         <th>Effective From</th>
-        <th>Effectiv To</th>
+        <th>Effective To</th>
         <th>Selected Items</th>
         <th>Actions</th>
       </tr>
@@ -86,6 +88,8 @@
       </tbody>
     </table>
   </div>
+  </form>
+
 
   <p ng-if="promotionCategories.length > 0" class="record-count small text-center">Showing {{promotionCategories.length}} records</p>
 
