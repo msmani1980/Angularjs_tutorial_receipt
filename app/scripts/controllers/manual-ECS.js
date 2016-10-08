@@ -144,14 +144,60 @@ angular.module('ts5App')
       return formattedCarrierInstanceList;
     }
 
+    function combineAllGroupIdsInAGroup(accumulatorArrayOrFirstInstance, carrierInstance) {
+      if (Array.isArray(accumulatorArrayOrFirstInstance)) {
+        var combinedArray = accumulatorArrayOrFirstInstance.concat(carrierInstance.groups);
+        return lodash.uniq(combinedArray);
+      }
+
+      var newArray = accumulatorArrayOrFirstInstance.groups.concat(carrierInstance.groups);
+      return lodash.uniq(newArray);
+    }
+
+    function condenseGrouping(groupedCarrierInstanceList) {
+      var groupDictionary = {}; // maps a ecbGroup to an array of all apparent duplicate groups. i.e. {'123': [123, 456], ... }
+      angular.forEach(groupedCarrierInstanceList, function (group, groupKey) {
+        groupDictionary[groupKey] = (group.length === 1) ? group[0].groups : lodash.reduce(group, combineAllGroupIdsInAGroup);
+      });
+    }
+
+    function removeApparentDuplicates(carrierInstanceList) {
+      var reducedList = [];
+      angular.forEach(carrierInstanceList, function (carrierInstance) {
+        var existingMatch = lodash.findWhere(reducedList, {
+          instanceDate: carrierInstance.instanceDate,
+          storeNumber: carrierInstance.storeNumber,
+          scheduleId: carrierInstance.scheduleId,
+          storeCrewNumber: carrierInstance.storeCrewNumber,
+          departureStation: carrierInstance.departureStation,
+          arrivalStation: carrierInstance.arrivalStation
+        });
+
+        if (existingMatch) {
+          existingMatch.groups.push(carrierInstance.ecbGroup);
+          existingMatch.ids.push(carrierInstance.id);
+        } else {
+          carrierInstance.groups = [carrierInstance.ecbGroup];
+          carrierInstance.ids = [carrierInstance.id];
+          reducedList.push(carrierInstance);
+        }
+      });
+
+      return reducedList;
+    }
+
+    // TODO: changes here to remove apparent duplicates
     function setCarrierInstancesList(carrierInstanceListFromAPI) {
-      var carrierInstanceList = angular.copy(carrierInstanceListFromAPI.response);
+      var carrierInstanceList = removeApparentDuplicates(angular.copy(lodash.uniq(carrierInstanceListFromAPI.response)));
+
+      //var carrierInstanceList = angular.copy(carrierInstanceListFromAPI.response);
       angular.forEach(carrierInstanceList, function (carrierInstance) {
         carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
         carrierInstance.storeNumber = carrierInstance.storeNumber || '';
       });
 
       var groupedList = lodash.groupBy(carrierInstanceList, 'ecbGroup');
+      condenseGrouping(groupedList);
       $scope.carrierInstances = formatGrouping(groupedList);
       hideLoadingModal();
     }
