@@ -141,19 +141,19 @@ angular.module('ts5App')
       return idArray;
     }
 
-    function handleDuplicateInstances(mainInstance, duplicateInstances) {
-      angular.forEach(duplicateInstances, function (instance) {
-        instance.isDuplicate = true;
-        mainInstance.allIds = mainInstance.allIds.concat(instance.allIds);
-      });
-    }
-
     function handleDuplicateGroups(mainGroup, duplicateGroups) {
       angular.forEach(duplicateGroups, function (duplicateGroup) {
         if (duplicateGroup.children.length === mainGroup.children.length) {
           mainGroup.allIds = mainGroup.allIds.concat(getAllIdsInAGroup(duplicateGroup));
           duplicateGroup.isDuplicate = true;
         }
+      });
+    }
+
+    function handleDuplicateInstances(mainInstance, duplicateInstances) {
+      angular.forEach(duplicateInstances, function (instance) {
+        instance.isDuplicate = true;
+        mainInstance.allIds = mainInstance.allIds.concat(instance.allIds);
       });
     }
 
@@ -206,9 +206,8 @@ angular.module('ts5App')
       return removeApparentDuplicates(formattedCarrierInstanceList, true);
     }
 
-    // TODO: changes here to remove apparent duplicates
     function setCarrierInstancesList(carrierInstanceListFromAPI) {
-      var carrierInstanceList = angular.copy(lodash.uniq(carrierInstanceListFromAPI.response));
+      var carrierInstanceList = lodash.uniq(angular.copy(carrierInstanceListFromAPI.response));
       angular.forEach(carrierInstanceList, function (carrierInstance) {
         carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
         carrierInstance.storeNumber = carrierInstance.storeNumber || '';
