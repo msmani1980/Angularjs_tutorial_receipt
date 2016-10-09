@@ -232,8 +232,8 @@ describe('Controller: ManualECSCtrl', function () {
       });
 
       it('should remove apparent groups from entire list and save ids', function () {
-        var ecbGroupWithDuplicates = 2831;  // from JSON mock. group that has two records that are the same, except for id
-        var mainEcbGroupWithDuplicate = 1831;  // from JSON mock. group that has two records that are the same, except for id
+        var ecbGroupWithDuplicates = 2831;  // from JSON mock. duplicate group of 1831, but should be removed
+        var mainEcbGroupWithDuplicate = 1831;  // from JSON mock. duplicate group of 2831, but should not be removed
         scope.searchEposInstances();
         scope.$digest();
 
