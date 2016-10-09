@@ -22,6 +22,7 @@ describe('Controller: ManualECSCtrl', function () {
   var carrierInstancesDeferred;
   var statusListResponseJSON;
   var statusListDeferred;
+  var lodash;
   var scope;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
@@ -35,6 +36,7 @@ describe('Controller: ManualECSCtrl', function () {
     });
 
     manualECSFactory = $injector.get('manualECSFactory');
+    lodash = $injector.get('lodash');
     scope = $rootScope.$new();
 
     cateringStationsDeferred = $q.defer();
@@ -216,6 +218,33 @@ describe('Controller: ManualECSCtrl', function () {
         expect(Array.isArray(scope.carrierInstances[0].children)).toEqual(true);
       });
 
+      it('should remove apparent duplicates from each group and save duplicate ids', function () {
+        var ecbGroupWithDuplicates = 1830;  // from JSON mock. group that has two records that are the same, except for id
+        scope.searchEposInstances();
+        scope.$digest();
+
+        var group = lodash.findWhere(scope.carrierInstances, { ecbGroup: ecbGroupWithDuplicates });
+
+        expect(group.allIds).toBeDefined();
+        expect(Array.isArray(group.allIds)).toEqual(true);
+        expect(group.children.length).toEqual(1);
+        expect(group.allIds.length === 2 || group.children[0].allIds.length === 2).toEqual(true);
+      });
+
+      it('should remove apparent groups from entire list and save ids', function () {
+        var ecbGroupWithDuplicates = 2831;  // from JSON mock. group that has two records that are the same, except for id
+        var mainEcbGroupWithDuplicate = 1831;  // from JSON mock. group that has two records that are the same, except for id
+        scope.searchEposInstances();
+        scope.$digest();
+
+        var duplicateGroup = lodash.findWhere(scope.carrierInstances, { ecbGroup: ecbGroupWithDuplicates });
+        var mainGroup = lodash.findWhere(scope.carrierInstances, { ecbGroup: mainEcbGroupWithDuplicate });
+
+        expect(duplicateGroup).not.toBeDefined();
+        expect(mainGroup.allIds).toBeDefined();
+        expect(mainGroup.allIds.length).toEqual(3);
+      });
+
       it('should format result dates and attach to scope', function () {
         scope.searchEposInstances();
         scope.$digest();
@@ -287,8 +316,8 @@ describe('Controller: ManualECSCtrl', function () {
   describe('Create Relationship', function () {
     beforeEach(function () {
       scope.carrierInstances = [
-        {id: 1, children: [{id: 2}]},
-        {id: 3, children: [{id: 4}]}
+        {id: 1, allIds: [1,11], children: [{id: 2, allIds: [2, 22]}]},
+        {id: 3, allIds: [3, 33], children: [{id: 4, allIds: [4, 44]}]}
       ];
     });
     it('should call API with all selected epos instance ids and selected store instance id', function () {
@@ -297,6 +326,8 @@ describe('Controller: ManualECSCtrl', function () {
       var expectedPayload = { storeInstanceId: 1 };
       scope.saveRelationship();
       expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(1, expectedPayload);
+      expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(11, expectedPayload);
+      expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(2, expectedPayload);
       expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(2, expectedPayload);
     });
 
@@ -350,6 +381,24 @@ describe('Controller: ManualECSCtrl', function () {
         scope.isCreateViewActive = true;
         scope.toggleActiveView(false);
         expect(scope.isCreateViewActive).toEqual(false);
+      });
+    });
+
+    describe('get all carrier instances to save', function () {
+      it('should return a list of all selected carrier instance and its children', function () {
+        scope.carrierInstances = [
+          {id: 1, allIds: [1,11], children: [{id: 2, allIds: [2, 22]}]},
+          {id: 3, allIds: [3, 33], children: [{id: 4, allIds: [4, 44]}]}
+        ];
+
+        scope.selectedEposRecords = [scope.carrierInstances[1]];
+        var allInstances = scope.getAllCarrierInstancesToSave();
+        var mainInstance = lodash.findWhere(allInstances, {id: 3});
+        var childInstance = lodash.findWhere(allInstances, {id: 4});
+
+        expect(allInstances.length).toEqual(2);
+        expect(mainInstance).toBeDefined();
+        expect(childInstance).toBeDefined();
       });
     });
   });
