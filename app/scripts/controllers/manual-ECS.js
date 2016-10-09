@@ -132,72 +132,89 @@ angular.module('ts5App')
       manualECSFactory.getStoreInstanceList(payload).then(getStoreInstancesSuccess, showErrors);
     }
 
+    function getAllIdsInAGroup(instanceGroup) {
+      var idArray = instanceGroup.allIds;
+      angular.forEach(instanceGroup.children, function (childInstance) {
+        idArray = idArray.concat(childInstance.allIds);
+      });
+
+      return idArray;
+    }
+
+    function handleDuplicateInstances(mainInstance, duplicateInstances) {
+      angular.forEach(duplicateInstances, function (instance) {
+        instance.isDuplicate = true;
+        mainInstance.allIds = mainInstance.allIds.concat(instance.allIds);
+      });
+    }
+
+    function handleDuplicateGroups(mainGroup, duplicateGroups) {
+      angular.forEach(duplicateGroups, function (duplicateGroup) {
+        if (duplicateGroup.children.length === mainGroup.children.length) {
+          mainGroup.allIds = mainGroup.allIds.concat(getAllIdsInAGroup(duplicateGroup));
+          duplicateGroup.isDuplicate = true;
+        }
+      });
+    }
+
+    function findApparentDuplicates(carrierInstanceList, carrierInstance) {
+      var existingMatches = lodash.filter(carrierInstanceList, {
+        instanceDate: carrierInstance.instanceDate,
+        storeNumber: carrierInstance.storeNumber,
+        scheduleId: carrierInstance.scheduleId,
+        storeCrewNumber: carrierInstance.storeCrewNumber,
+        departureStation: carrierInstance.departureStation,
+        arrivalStation: carrierInstance.arrivalStation
+      });
+
+      return lodash.reject(existingMatches, { id: carrierInstance.id });
+    }
+
+    function removeApparentDuplicates(carrierInstanceList, isInstanceAGroup) {
+      angular.forEach(carrierInstanceList, function (instance) {
+        instance.allIds = angular.isDefined(instance.allIds) ? instance.allIds : [instance.id];
+        delete instance.isDuplicate;
+      });
+
+      angular.forEach(carrierInstanceList, function (instance) {
+        if (instance.isDuplicate) {
+          return;
+        }
+
+        instance.isDuplicate = false;
+        var matches = findApparentDuplicates(carrierInstanceList, instance);
+        if (isInstanceAGroup) {
+          handleDuplicateGroups(instance, matches);
+        } else {
+          handleDuplicateInstances(instance, matches);
+        }
+      });
+
+      return lodash.filter(carrierInstanceList, { isDuplicate: false });
+    }
+
     function formatGrouping(groupedCarrierInstanceObject) {
       var formattedCarrierInstanceList = [];
       angular.forEach(groupedCarrierInstanceObject, function (ecbGroup) {
-        var sortedGroup = lodash.sortByOrder(ecbGroup, ['storeNumber', 'instanceDate'], ['asc', 'asc']);
+        var groupWithNoDuplicates = removeApparentDuplicates(ecbGroup, false);
+        var sortedGroup = lodash.sortByOrder(groupWithNoDuplicates, ['storeNumber', 'instanceDate', 'scheduleNumber'], ['asc', 'asc', 'asc']);
         var parent = sortedGroup[0];
         parent.children = lodash.drop(sortedGroup);
         formattedCarrierInstanceList.push(parent);
       });
 
-      return formattedCarrierInstanceList;
-    }
-
-    function combineAllGroupIdsInAGroup(accumulatorArrayOrFirstInstance, carrierInstance) {
-      if (Array.isArray(accumulatorArrayOrFirstInstance)) {
-        var combinedArray = accumulatorArrayOrFirstInstance.concat(carrierInstance.groups);
-        return lodash.uniq(combinedArray);
-      }
-
-      var newArray = accumulatorArrayOrFirstInstance.groups.concat(carrierInstance.groups);
-      return lodash.uniq(newArray);
-    }
-
-    function condenseGrouping(groupedCarrierInstanceList) {
-      var groupDictionary = {}; // maps a ecbGroup to an array of all apparent duplicate groups. i.e. {'123': [123, 456], ... }
-      angular.forEach(groupedCarrierInstanceList, function (group, groupKey) {
-        groupDictionary[groupKey] = (group.length === 1) ? group[0].groups : lodash.reduce(group, combineAllGroupIdsInAGroup);
-      });
-    }
-
-    function removeApparentDuplicates(carrierInstanceList) {
-      var reducedList = [];
-      angular.forEach(carrierInstanceList, function (carrierInstance) {
-        var existingMatch = lodash.findWhere(reducedList, {
-          instanceDate: carrierInstance.instanceDate,
-          storeNumber: carrierInstance.storeNumber,
-          scheduleId: carrierInstance.scheduleId,
-          storeCrewNumber: carrierInstance.storeCrewNumber,
-          departureStation: carrierInstance.departureStation,
-          arrivalStation: carrierInstance.arrivalStation
-        });
-
-        if (existingMatch) {
-          existingMatch.groups.push(carrierInstance.ecbGroup);
-          existingMatch.ids.push(carrierInstance.id);
-        } else {
-          carrierInstance.groups = [carrierInstance.ecbGroup];
-          carrierInstance.ids = [carrierInstance.id];
-          reducedList.push(carrierInstance);
-        }
-      });
-
-      return reducedList;
+      return removeApparentDuplicates(formattedCarrierInstanceList, true);
     }
 
     // TODO: changes here to remove apparent duplicates
     function setCarrierInstancesList(carrierInstanceListFromAPI) {
-      var carrierInstanceList = removeApparentDuplicates(angular.copy(lodash.uniq(carrierInstanceListFromAPI.response)));
-
-      //var carrierInstanceList = angular.copy(carrierInstanceListFromAPI.response);
+      var carrierInstanceList = angular.copy(lodash.uniq(carrierInstanceListFromAPI.response));
       angular.forEach(carrierInstanceList, function (carrierInstance) {
         carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
         carrierInstance.storeNumber = carrierInstance.storeNumber || '';
       });
 
       var groupedList = lodash.groupBy(carrierInstanceList, 'ecbGroup');
-      condenseGrouping(groupedList);
       $scope.carrierInstances = formatGrouping(groupedList);
       hideLoadingModal();
     }
