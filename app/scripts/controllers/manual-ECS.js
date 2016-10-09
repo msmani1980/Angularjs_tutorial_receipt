@@ -292,13 +292,13 @@ angular.module('ts5App')
     };
 
     function getArrayOfAllCarrierInstancesInGroup(groupParent) {
-      var idArray = [];
-      idArray.push(groupParent);
+      var instanceArray = [];
+      instanceArray.push(groupParent);
       angular.forEach(groupParent.children, function (childInstance) {
-        idArray.push(childInstance);
+        instanceArray.push(childInstance);
       });
 
-      return idArray;
+      return instanceArray;
     }
 
     $scope.getAllCarrierInstancesToSave = function () {
@@ -310,15 +310,35 @@ angular.module('ts5App')
       return allCarrierInstances;
     };
 
+    function getAllChildIds (instanceGroup) {
+      var idArray = [];
+      angular.forEach(instanceGroup, function (childInstance) {
+        idArray = idArray.concat(childInstance.allIds);
+      });
+
+      return idArray;
+    }
+
+    function getAllCarrierInstanceIdsToSave () {
+      var idArray = [];
+      angular.forEach($scope.selectedEposRecords, function (groupParent) {
+        idArray = idArray.concat(groupParent.allIds);
+        idArray = idArray.concat(getAllChildIds(groupParent.children));
+      });
+
+      return idArray;
+    }
+
+
     function createSaveRelationshipPromise() {
       var promises = [];
       var payload = {
         storeInstanceId: $scope.selectedPortalRecord.id
       };
 
-      var allCarrierInstances = $scope.getAllCarrierInstancesToSave();
-      angular.forEach(allCarrierInstances, function (carrierInstance) {
-        promises.push(manualECSFactory.updateCarrierInstance(carrierInstance.id, payload));
+      var allCarrierInstancesIds = getAllCarrierInstanceIdsToSave();
+      angular.forEach(allCarrierInstancesIds, function (carrierInstanceId) {
+        promises.push(manualECSFactory.updateCarrierInstance(carrierInstanceId, payload));
       });
     }
 
