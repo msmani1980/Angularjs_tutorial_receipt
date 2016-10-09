@@ -157,20 +157,29 @@ angular.module('ts5App')
       });
     }
 
-    function findApparentDuplicates(carrierInstanceList, carrierInstance) {
-      var existingMatches = lodash.filter(carrierInstanceList, {
+    function findApparentDuplicates(carrierInstanceList, carrierInstance, isATiedInstance) {
+      var dataToMatch = {
         instanceDate: carrierInstance.instanceDate,
         storeNumber: carrierInstance.storeNumber,
         scheduleId: carrierInstance.scheduleId,
         storeCrewNumber: carrierInstance.storeCrewNumber,
         departureStation: carrierInstance.departureStation,
         arrivalStation: carrierInstance.arrivalStation
-      });
+      };
 
+      if (isATiedInstance) {
+        dataToMatch.storeInstanceId = carrierInstance.storeInstanceId;
+        dataToMatch.siStoreNumber = carrierInstance.siStoreNumber;
+        dataToMatch.siScheduleDate = carrierInstance.siScheduleDate;
+        dataToMatch.siScheduleNumber = carrierInstance.siScheduleNumber;
+        dataToMatch.siCatererStationCode = carrierInstance.siCatererStationCode;
+      }
+
+      var existingMatches = lodash.filter(carrierInstanceList, dataToMatch);
       return lodash.reject(existingMatches, { id: carrierInstance.id });
     }
 
-    function removeApparentDuplicates(carrierInstanceList, isInstanceAGroup) {
+    function removeApparentDuplicates(carrierInstanceList, isInstanceAGroup, isATiedECSInstanceList) {
       angular.forEach(carrierInstanceList, function (instance) {
         instance.allIds = angular.isDefined(instance.allIds) ? instance.allIds : [instance.id];
         delete instance.isDuplicate;
@@ -182,7 +191,7 @@ angular.module('ts5App')
         }
 
         instance.isDuplicate = false;
-        var matches = findApparentDuplicates(carrierInstanceList, instance);
+        var matches = findApparentDuplicates(carrierInstanceList, instance, isATiedECSInstanceList);
         if (isInstanceAGroup) {
           handleDuplicateGroups(instance, matches);
         } else {
@@ -196,14 +205,14 @@ angular.module('ts5App')
     function formatGrouping(groupedCarrierInstanceObject) {
       var formattedCarrierInstanceList = [];
       angular.forEach(groupedCarrierInstanceObject, function (ecbGroup) {
-        var groupWithNoDuplicates = removeApparentDuplicates(ecbGroup, false);
+        var groupWithNoDuplicates = removeApparentDuplicates(ecbGroup, false, false);
         var sortedGroup = lodash.sortByOrder(groupWithNoDuplicates, ['storeNumber', 'instanceDate', 'scheduleNumber'], ['asc', 'asc', 'asc']);
         var parent = sortedGroup[0];
         parent.children = lodash.drop(sortedGroup);
         formattedCarrierInstanceList.push(parent);
       });
 
-      return removeApparentDuplicates(formattedCarrierInstanceList, true);
+      return removeApparentDuplicates(formattedCarrierInstanceList, true, false);
     }
 
     function setCarrierInstancesList(carrierInstanceListFromAPI) {
@@ -256,7 +265,7 @@ angular.module('ts5App')
 
     function getTiedCarrierInstancesSuccess(dataFromAPI) {
       hideLoadingModal();
-      $scope.allECSInstances = angular.copy(dataFromAPI.response);
+      $scope.allECSInstances = removeApparentDuplicates(lodash.uniq(angular.copy(dataFromAPI.response)), false, true);
       angular.forEach($scope.allECSInstances, function (carrierInstance) {
         carrierInstance.instanceDate = (!!carrierInstance.instanceDate) ? dateUtility.formatDateForApp(carrierInstance.instanceDate) : '';
         carrierInstance.siScheduleDate = (!!carrierInstance.siScheduleDate) ? dateUtility.formatDateForApp(carrierInstance.siScheduleDate) : '';
@@ -310,7 +319,7 @@ angular.module('ts5App')
       return allCarrierInstances;
     };
 
-    function getAllChildIds (instanceGroup) {
+    function getAllChildIds(instanceGroup) {
       var idArray = [];
       angular.forEach(instanceGroup, function (childInstance) {
         idArray = idArray.concat(childInstance.allIds);
@@ -319,7 +328,7 @@ angular.module('ts5App')
       return idArray;
     }
 
-    function getAllCarrierInstanceIdsToSave () {
+    function getAllCarrierInstanceIdsToSave() {
       var idArray = [];
       angular.forEach($scope.selectedEposRecords, function (groupParent) {
         idArray = idArray.concat(groupParent.allIds);
@@ -328,7 +337,6 @@ angular.module('ts5App')
 
       return idArray;
     }
-
 
     function createSaveRelationshipPromise() {
       var promises = [];
