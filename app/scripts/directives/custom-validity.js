@@ -16,7 +16,7 @@ angular.module('ts5App')
       numberOrDecimal: [/[0-9]+(\.[0,9]+)?$/, 'This field must be an integer or decimal'],
       alpha: [/^[a-zA-z]+$/, 'Error message for alpha'],
       alphanumeric: [/^[a-zA-Z0-9]+$/, 'Error message for alphanumeric'],
-      alphanumericSpaces: [/^[a-zA-Z0-9-\s]+$/, 'Error message for alphanumericSpaces'],
+      alphanumericSpaces: [/^[a-zA-Z0-9-\s]+$/, 'This field can only contain letters, numbers, and spaces'],
       password: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@!%*?&]).{6,15}$/,
         'Password requires one lower case, one upper case, one digit, one special character ($, @, !, %, *, ?, &), 6-15 length, and no spaces'
       ],
