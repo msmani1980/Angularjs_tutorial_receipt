@@ -232,15 +232,15 @@ describe('Controller: PromotionCategoryCtrl', function () {
         selectedCategory: { id: 789 },
         recordId: 234
       }];
-
-      scope.save();
     });
 
     it('should call update if editing', function () {
+      scope.save();
       expect(promotionCategoryFactory.updatePromotionCategory).toHaveBeenCalled();
     });
 
     it('should format payload and itemlist', function () {
+      scope.save();
       var expectedItemList = [{
         companyPromotionCategoryId: 123,
         itemId: 456,
@@ -260,8 +260,16 @@ describe('Controller: PromotionCategoryCtrl', function () {
     });
 
     it('should navigate to list page after save', function () {
+      scope.save();
       scope.$digest();
       expect(location.path).toHaveBeenCalledWith('promotion-category-list');
+    });
+
+    it('should throw and error if item list is empty', function () {
+      scope.itemList = [{}];
+      scope.save();
+      expect(scope.errorCustom).toBeDefined();
+      expect(scope.displayError).toEqual(true);
     });
   });
 });
