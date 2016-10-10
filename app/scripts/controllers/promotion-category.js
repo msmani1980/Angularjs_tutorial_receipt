@@ -82,8 +82,32 @@ angular.module('ts5App')
       return payload;
     }
 
+    function checkIfItemListIsValid() {
+      var isListValid = false;
+      angular.forEach($scope.itemList, function (item) {
+        isListValid = !!item.selectedItem || isListValid;
+      });
+
+      if ($scope.itemList.length <= 0 || !isListValid) {
+        $scope.errorCustom = [{
+          field: 'Retail Items',
+          value: 'At least one item must be selected'
+        }];
+
+        showErrors();
+        return false;
+      }
+
+      return true;
+    }
+
     $scope.save = function () {
       if (!$scope.promotionCategoryForm.$valid) {
+        return false;
+      }
+
+      var isListValid = checkIfItemListIsValid();
+      if (!isListValid) {
         return false;
       }
 
