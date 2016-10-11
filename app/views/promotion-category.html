@@ -1,0 +1,117 @@
+<div class="container">
+
+  <error-dialog form-object="promotionCategoryForm" error-response="errorResponse" display="displayError"></error-dialog>
+
+  <form name="promotionCategoryForm" class="form edit-form">
+
+    <div class="edit-controls">
+      <div class="row">
+        <div class="col-xs-6">
+          <h2 class="view-name">Promotion Category</h2>
+        </div>
+        <div class="col-xs-6 text-right">
+          <a class="btn btn-default" ng-href="#/promotion-category-list" class="btn">Back</a>
+          <button class="btn btn-success" ng-click="save()" ng-hide="isViewOnly">
+            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+            <span>Save</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="form-group col-xs-12 col-sm-12">
+        <label>Category Name *</label>
+        <input type="text"
+               custom-validity
+               custom-pattern="alphanumericSpaces"
+               maxlength="40"
+               class="form-control"
+               name="menuDescription"
+               required="true"
+               ng-disabled="disableEditField"
+               ng-model="promotionCategory.promotionCategoryName"
+               ng-readonly="isMenuReadOnly()"/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-xs-6">
+        <date-picker-field
+          name="startDate"
+          min-date="startMinDate"
+          ng-model="promotionCategory.startDate"
+          disable="disableEditField"
+          label="Effective From"
+          required="true">
+        </date-picker-field>
+        </div>
+
+        <div class="form-group col-xs-6">
+          <date-picker-field
+            name="endDate"
+            min-date="minDate"
+            ng-model="promotionCategory.endDate"
+            disable="isViewOnly"
+            label="Effective To"
+            required="true">
+          </date-picker-field>
+      </div>
+    </div>
+
+    <br>
+
+    <h3>Retail Items <span class="badge">{{ itemList.length }}</span>
+      <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addItem()" ng-hide="disableEditField">
+        <i class="fa fa-plus"></i> Add Item
+      </button>
+    </h3>
+
+    <table class="table">
+      <tr>
+        <th class="col-xs-4">Category</th>
+        <th class="col-xs-7">Item</th>
+        <th class="col-xs-1"></th>
+      </tr>
+      <tr ng-repeat="item in itemList">
+        <td>
+          <ui-select
+            ng-model="item.selectedCategory"
+            on-select="filterItemListFromCategory(item)"
+            theme="bootstrap"
+            ng-disabled="disableEditField"
+            placeholder="Select a category to filter the items list...">
+            <ui-select-match
+              allow-clear="true"
+              placeholder="Select a category to filter the items list...">{{$select.selected.name}}
+            </ui-select-match>
+            <ui-select-choices repeat="category in categoryList | filter: $select.search | orderBy:'name'">
+              <div ng-bind-html="category.name | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td>
+          <ui-select
+            ng-model="item.selectedItem"
+            ng-disabled="shouldDisableItemDropDown(item) || disableEditField"
+            theme="bootstrap"
+            placeholder="Select an item...">
+            <ui-select-match
+              placeholder="Select an item...">{{$select.selected.itemName}}
+            </ui-select-match>
+            <ui-select-choices repeat="masterItem in item.masterItemList | filter: $select.search | orderBy:'itemName'">
+              <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-xs" ng-click="removeItem(item)" ng-hide="disableEditField">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </table>
+
+  </form>
+</div>

@@ -132,20 +132,91 @@ angular.module('ts5App')
       manualECSFactory.getStoreInstanceList(payload).then(getStoreInstancesSuccess, showErrors);
     }
 
+    function getAllIdsInAGroup(instanceGroup) {
+      var idArray = instanceGroup.allIds;
+      angular.forEach(instanceGroup.children, function (childInstance) {
+        idArray = idArray.concat(childInstance.allIds);
+      });
+
+      return idArray;
+    }
+
+    function handleDuplicateGroups(mainGroup, duplicateGroups) {
+      angular.forEach(duplicateGroups, function (duplicateGroup) {
+        if (duplicateGroup.children.length === mainGroup.children.length) {
+          mainGroup.allIds = mainGroup.allIds.concat(getAllIdsInAGroup(duplicateGroup));
+          duplicateGroup.isDuplicate = true;
+        }
+      });
+    }
+
+    function handleDuplicateInstances(mainInstance, duplicateInstances) {
+      angular.forEach(duplicateInstances, function (instance) {
+        instance.isDuplicate = true;
+        mainInstance.allIds = mainInstance.allIds.concat(instance.allIds);
+      });
+    }
+
+    function findApparentDuplicates(carrierInstanceList, carrierInstance, isATiedInstance) {
+      var dataToMatch = {
+        instanceDate: carrierInstance.instanceDate,
+        storeNumber: carrierInstance.storeNumber,
+        scheduleId: carrierInstance.scheduleId,
+        storeCrewNumber: carrierInstance.storeCrewNumber,
+        departureStation: carrierInstance.departureStation,
+        arrivalStation: carrierInstance.arrivalStation
+      };
+
+      if (isATiedInstance) {
+        dataToMatch.storeInstanceId = carrierInstance.storeInstanceId;
+        dataToMatch.siStoreNumber = carrierInstance.siStoreNumber;
+        dataToMatch.siScheduleDate = carrierInstance.siScheduleDate;
+        dataToMatch.siScheduleNumber = carrierInstance.siScheduleNumber;
+        dataToMatch.siCatererStationCode = carrierInstance.siCatererStationCode;
+      }
+
+      var existingMatches = lodash.filter(carrierInstanceList, dataToMatch);
+      return lodash.reject(existingMatches, { id: carrierInstance.id });
+    }
+
+    function removeApparentDuplicates(carrierInstanceList, isInstanceAGroup, isATiedECSInstanceList) {
+      angular.forEach(carrierInstanceList, function (instance) {
+        instance.allIds = angular.isDefined(instance.allIds) ? instance.allIds : [instance.id];
+        delete instance.isDuplicate;
+      });
+
+      angular.forEach(carrierInstanceList, function (instance) {
+        if (instance.isDuplicate) {
+          return;
+        }
+
+        instance.isDuplicate = false;
+        var matches = findApparentDuplicates(carrierInstanceList, instance, isATiedECSInstanceList);
+        if (isInstanceAGroup) {
+          handleDuplicateGroups(instance, matches);
+        } else {
+          handleDuplicateInstances(instance, matches);
+        }
+      });
+
+      return lodash.filter(carrierInstanceList, { isDuplicate: false });
+    }
+
     function formatGrouping(groupedCarrierInstanceObject) {
       var formattedCarrierInstanceList = [];
       angular.forEach(groupedCarrierInstanceObject, function (ecbGroup) {
-        var sortedGroup = lodash.sortByOrder(ecbGroup, ['storeNumber', 'instanceDate'], ['asc', 'asc']);
+        var groupWithNoDuplicates = removeApparentDuplicates(ecbGroup, false, false);
+        var sortedGroup = lodash.sortByOrder(groupWithNoDuplicates, ['storeNumber', 'instanceDate', 'scheduleNumber'], ['asc', 'asc', 'asc']);
         var parent = sortedGroup[0];
         parent.children = lodash.drop(sortedGroup);
         formattedCarrierInstanceList.push(parent);
       });
 
-      return formattedCarrierInstanceList;
+      return removeApparentDuplicates(formattedCarrierInstanceList, true, false);
     }
 
     function setCarrierInstancesList(carrierInstanceListFromAPI) {
-      var carrierInstanceList = angular.copy(carrierInstanceListFromAPI.response);
+      var carrierInstanceList = lodash.uniq(angular.copy(carrierInstanceListFromAPI.response));
       angular.forEach(carrierInstanceList, function (carrierInstance) {
         carrierInstance.instanceDate = dateUtility.formatDateForApp(carrierInstance.instanceDate);
         carrierInstance.storeNumber = carrierInstance.storeNumber || '';
@@ -194,7 +265,7 @@ angular.module('ts5App')
 
     function getTiedCarrierInstancesSuccess(dataFromAPI) {
       hideLoadingModal();
-      $scope.allECSInstances = angular.copy(dataFromAPI.response);
+      $scope.allECSInstances = removeApparentDuplicates(lodash.uniq(angular.copy(dataFromAPI.response)), false, true);
       angular.forEach($scope.allECSInstances, function (carrierInstance) {
         carrierInstance.instanceDate = (!!carrierInstance.instanceDate) ? dateUtility.formatDateForApp(carrierInstance.instanceDate) : '';
         carrierInstance.siScheduleDate = (!!carrierInstance.siScheduleDate) ? dateUtility.formatDateForApp(carrierInstance.siScheduleDate) : '';
@@ -230,13 +301,13 @@ angular.module('ts5App')
     };
 
     function getArrayOfAllCarrierInstancesInGroup(groupParent) {
-      var idArray = [];
-      idArray.push(groupParent);
+      var instanceArray = [];
+      instanceArray.push(groupParent);
       angular.forEach(groupParent.children, function (childInstance) {
-        idArray.push(childInstance);
+        instanceArray.push(childInstance);
       });
 
-      return idArray;
+      return instanceArray;
     }
 
     $scope.getAllCarrierInstancesToSave = function () {
@@ -248,15 +319,34 @@ angular.module('ts5App')
       return allCarrierInstances;
     };
 
+    function getAllChildIds(instanceGroup) {
+      var idArray = [];
+      angular.forEach(instanceGroup, function (childInstance) {
+        idArray = idArray.concat(childInstance.allIds);
+      });
+
+      return idArray;
+    }
+
+    function getAllCarrierInstanceIdsToSave() {
+      var idArray = [];
+      angular.forEach($scope.selectedEposRecords, function (groupParent) {
+        idArray = idArray.concat(groupParent.allIds);
+        idArray = idArray.concat(getAllChildIds(groupParent.children));
+      });
+
+      return idArray;
+    }
+
     function createSaveRelationshipPromise() {
       var promises = [];
       var payload = {
         storeInstanceId: $scope.selectedPortalRecord.id
       };
 
-      var allCarrierInstances = $scope.getAllCarrierInstancesToSave();
-      angular.forEach(allCarrierInstances, function (carrierInstance) {
-        promises.push(manualECSFactory.updateCarrierInstance(carrierInstance.id, payload));
+      var allCarrierInstancesIds = getAllCarrierInstanceIdsToSave();
+      angular.forEach(allCarrierInstancesIds, function (carrierInstanceId) {
+        promises.push(manualECSFactory.updateCarrierInstance(carrierInstanceId, payload));
       });
     }
 

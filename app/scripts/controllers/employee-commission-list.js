@@ -182,9 +182,10 @@ angular.module('ts5App')
     }
 
     function addItemOrCategoryToPayload(payload) {
+      var isCategorySelected = !!$scope.search.selectedCategory && !lodash.isEmpty($scope.search.selectedCategory);
       if ($scope.search.selectedItem) {
         payload.itemId = $scope.search.selectedItem.itemMasterId;
-      } else if (!$scope.search.selectedItem && $scope.search.selectedCategory) {
+      } else if (!$scope.search.selectedItem && isCategorySelected) {
         // currently FE needs to send list of all itemIds in a category due to complications with sending only a categoryName to BE
         // TODO: fix if BE API is simplified
         payload.itemId = [];

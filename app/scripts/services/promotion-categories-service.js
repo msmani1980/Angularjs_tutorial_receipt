@@ -9,19 +9,58 @@
  */
 angular.module('ts5App')
   .service('promotionCategoriesService', function (ENV, $resource) {
-    var requestURL = ENV.apiUrl + '/rsvr/api/promotion-categories';
+    var requestURL = ENV.apiUrl + '/rsvr/api/promotion-categories/:id';
+    var requestParameters = {
+      id: '@id'
+    };
+
     var actions = {
       getPromotionCategories: {
         method: 'GET'
+      },
+      createPromotionCategory: {
+        method: 'POST'
+      },
+      updatePromotionCategory: {
+        method: 'PUT'
+      },
+      deletePromotionCategory: {
+        method: 'DELETE'
       }
     };
-    var requestResource = $resource(requestURL, null, actions);
 
-    function getPromotionCategories() {
-      return requestResource.getPromotionCategories().$promise;
+    var requestResource = $resource(requestURL, requestParameters, actions);
+
+    function getPromotionCategories(payload) {
+      requestParameters.id = '';
+      return requestResource.getPromotionCategories(payload).$promise;
+    }
+
+    function getPromotionCategory(promotionCategoryId) {
+      requestParameters.id = promotionCategoryId;
+      return requestResource.getPromotionCategories({}).$promise;
+    }
+
+    function createPromotionCategory(payload) {
+      requestParameters.id = '';
+      return requestResource.createPromotionCategory(payload).$promise;
+    }
+
+    function updatePromotionCategory(promotionCategoryId, payload) {
+      requestParameters.id = promotionCategoryId;
+      return requestResource.updatePromotionCategory(payload).$promise;
+    }
+
+    function deletePromotionCategory(promotionCategoryId) {
+      requestParameters.id = promotionCategoryId;
+      return requestResource.deletePromotionCategory({}).$promise;
     }
 
     return {
-      getPromotionCategories: getPromotionCategories
+      getPromotionCategories: getPromotionCategories,
+      getPromotionCategory: getPromotionCategory,
+      createPromotionCategory: createPromotionCategory,
+      updatePromotionCategory: updatePromotionCategory,
+      deletePromotionCategory: deletePromotionCategory
     };
   });
