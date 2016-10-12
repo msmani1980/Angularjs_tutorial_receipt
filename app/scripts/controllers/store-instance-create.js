@@ -195,6 +195,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         newMenu.menuName = existingMenu.menuName;
       }
 
+      if (angular.isDefined(menu.id)) {
+        newMenu.recordId = menu.id;
+      }
+
       return newMenu;
     };
 
@@ -291,9 +295,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.formatMenus = function (menus) {
       var newMenus = [];
       angular.forEach(menus, function (menu) {
-        newMenus.push({
-          menuMasterId: menu.id
-        });
+        var newMenuPayload = { menuMasterId: menu.id };
+        if (menu.recordId) {
+          newMenuPayload.id = menu.recordId;
+        }
+
+        newMenus.push(newMenuPayload);
       });
 
       return newMenus;
