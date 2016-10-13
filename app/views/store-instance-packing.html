@@ -42,15 +42,14 @@
     <!-- Search Filter -->
     <div class="well">
       <div class="form-group">
-        <p class="input-group">
-          <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-disabled="true">
-            <i class="fa fa-filter"></i> Filter By
-          </button>
-          </span>
-          <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details"
-                 placeholder="Type an item code or name"/>
-        </p>
+        <div class="input-group">
+          <input ng-model="itemFilterText" type="text" class="form-control" id="filter-item-details"
+          placeholder="Filter list by item code or name"/>
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="clearFilteredPackingList()"><i class="fa fa-times"></i></button>
+            <button type="button" class="btn btn-default" ng-click="filterPackingList()"><i class="fa fa-search"></i> Search</button>
+          </div>
+        </div>
       </div>
     </div>
 

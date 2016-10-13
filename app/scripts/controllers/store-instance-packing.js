@@ -41,6 +41,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return (matchedObject) ? matchedObject.name : '';
     };
 
+    $scope.filterPackingList = function () {
+      $scope.filterItemDetails = angular.copy($scope.itemFilterText);
+    };
+
+    $scope.clearFilteredPackingList = function () {
+      $scope.filterItemDetails = '';
+      $scope.itemFilterText = '';
+    };
+
     this.updateInstanceStatusAndRedirect = function(stepObject) {
       if (!stepObject) {
         $location.url('/store-instance-dashboard');
