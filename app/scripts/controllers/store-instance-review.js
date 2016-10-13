@@ -53,6 +53,15 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    $scope.filterPackingList = function () {
+      $scope.filterItemDetails = angular.copy($scope.itemFilterText);
+    };
+
+    $scope.clearFilteredPackingList = function () {
+      $scope.filterItemDetails = '';
+      $scope.itemFilterText = '';
+    };
+
     function getMenuQuantity(itemMasterId) {
       var masterItemMatches = lodash.filter(_menuItems, { itemMasterId: itemMasterId });
       var totalMenuQuantity = 0;
