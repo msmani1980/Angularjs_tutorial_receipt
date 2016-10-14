@@ -141,6 +141,10 @@ angular.module('ts5App')
         var userCompanyList = angular.copy(companyDataFromAPI.companies);
         var allCompaniesList = angular.copy(rawSessionData.companiesView);
 
+        if (!allCompaniesList) {
+          return userCompanyList;
+        }
+
         return lodash.filter(userCompanyList, function (company) {
           var companyMatch = lodash.findWhere(allCompaniesList, { id: company.id });
           return (angular.isDefined(companyMatch) ? companyMatch.active === 't' : false);
