@@ -262,7 +262,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       var itemIndex = null;
       for (var key in $scope.items) {
         var itemMatch = $scope.items[key];
-        if (parseInt(itemMatch.id) === parseInt(itemId)) {
+        if (parseInt(itemMatch.itemMasterId) === parseInt(itemId)) {
           itemIndex = key;
           break;
         }
