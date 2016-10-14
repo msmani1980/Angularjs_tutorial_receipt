@@ -643,6 +643,11 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         }];
       });
 
+      it('should set save in progress flag to prevent multiple submits', function () {
+        scope.save();
+        expect(StoreInstancePackingCtrl.isSaveInProgress).toEqual(true);
+      });
+
       it('should call DELETE for items in delete list', function () {
         scope.save();
         expect(storeInstancePackingFactory.deleteStoreInstanceItem).toHaveBeenCalledWith(4, 3);

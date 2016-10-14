@@ -25,6 +25,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.hideLoadingModal();
       $scope.errorResponse = responseFromAPI;
       $scope.displayError = true;
+      $this.isSaveInProgress = false;
     }
 
     this.getIdByNameFromArray = function(name, array) {
@@ -518,8 +519,25 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    $scope.save = function() {
-      $this.showLoadingModal();
+    function handleItemResponseErrors(errorResponseFromAPI) {
+      $scope.errorCustom = [{
+        field: 'Saved Items',
+        value: 'One or more items were not saved correctly. Please try saving again'
+      }];
+
+      handleResponseError(errorResponseFromAPI);
+    }
+
+    function saveItemsSuccess() {
+      $this.hideLoadingModal();
+      if ($scope.shouldUpdateStatus) {
+        $this.updateInstanceStatusAndRedirect($this.nextStep);
+      } else {
+        $location.url('/store-instance-dashboard');
+      }
+    }
+
+    function getSavePromises() {
       var promiseArray = [];
       $this.addItemsToDeleteToPayload(promiseArray);
 
@@ -535,14 +553,19 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $this.addOffloadItemsToPayload(promiseArray, true);
       }
 
-      $q.all(promiseArray).then(function() {
-        $this.hideLoadingModal();
-        if ($scope.shouldUpdateStatus) {
-          $this.updateInstanceStatusAndRedirect($this.nextStep);
-        } else {
-          $location.url('/store-instance-dashboard');
-        }
-      });
+      return promiseArray;
+    }
+
+    $scope.save = function() {
+      if ($this.isSaveInProgress) {
+        return;
+      }
+
+      $this.isSaveInProgress = true;
+      $this.showLoadingModal();
+      var promiseArray = getSavePromises();
+
+      $q.all(promiseArray).then(saveItemsSuccess, handleItemResponseErrors);
     };
 
     $scope.shouldDisplayQuantityField = function(fieldName) {
