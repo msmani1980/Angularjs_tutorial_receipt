@@ -873,7 +873,7 @@ describe('The Stock Owner Item Create Controller', function() {
     
     describe('scope.formatRecommendations payload', function() {
       var recommendationsPL = [];	
-      it('should be able to verify payload for Recommendations with ItemMasterId', function() {
+      it('should be able to verify payload for Recommendations with ItemMasterId instead of ItemId', function() {
         var itemData = {
           recommendations: [{	
             id:8,
