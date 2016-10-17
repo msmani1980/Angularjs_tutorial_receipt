@@ -521,7 +521,8 @@ describe('Store Instance Create Controller', function() {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{
           id: 100,
-          name: 'ABC43124'
+          name: 'ABC43124',
+          recordId: 123,
         }],
         cateringStationId: 13,
         scheduleNumber: {
@@ -547,6 +548,7 @@ describe('Store Instance Create Controller', function() {
       var mockPayload = {
         scheduleDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
         menus: [{
+          id: 123,
           menuMasterId: 100
         }],
         cateringStationId: 13,

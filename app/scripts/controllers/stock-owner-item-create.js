@@ -262,7 +262,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       var itemIndex = null;
       for (var key in $scope.items) {
         var itemMatch = $scope.items[key];
-        if (parseInt(itemMatch.id) === parseInt(itemId)) {
+        if (parseInt(itemMatch.itemMasterId) === parseInt(itemId)) {
           itemIndex = key;
           break;
         }
@@ -276,7 +276,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
         var substitutionId = itemData.substitutions[substitutionKey];
         var index = $this.findItemIndexById(substitutionId);
         itemData.substitutions[substitutionKey] = {
-          id: substitutionId,
+          itemMasterId: substitutionId,
           itemName: $scope.items[index].itemName
         };
       }
@@ -286,7 +286,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       var substitutionsPayload = [];
       for (var substitutionKey in itemData.substitutions) {
         var substitution = itemData.substitutions[substitutionKey];
-        substitutionsPayload[substitutionKey] = substitution.id;
+        substitutionsPayload[substitutionKey] = substitution.itemMasterId;
       }
 
       return substitutionsPayload;
@@ -297,7 +297,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
         var recommendationId = itemData.recommendations[recommendationKey];
         var index = $this.findItemIndexById(recommendationId);
         itemData.recommendations[recommendationKey] = {
-          id: recommendationId,
+          itemMasterId: recommendationId,
           itemName: $scope.items[index].itemName
         };
       }
@@ -307,7 +307,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       var recommendationPayload = [];
       for (var recommendationKey in itemData.recommendations) {
         var recommendation = itemData.recommendations[recommendationKey];
-        recommendationPayload[recommendationKey] = recommendation.id;
+        recommendationPayload[recommendationKey] = recommendation.itemMasterId;
       }
 
       return recommendationPayload;
