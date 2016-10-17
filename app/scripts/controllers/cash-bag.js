@@ -102,7 +102,7 @@ angular.module('ts5App')
 
     function editCashBag(formData) {
       var saveCashBag = angular.copy(formData);
-      saveCashBag.scheduleDate = dateUtility.formatDateForAPI(saveCashBag.scheduleDate);
+      saveCashBag.scheduleDate = dateUtility.formatDateForAPI(formData.scheduleDate, 'yyyy-mm-dd');
       $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
       var payload = saveCashBag;
       showLoadingModal('Saving Cash Bag');
@@ -504,7 +504,7 @@ angular.module('ts5App')
             getStoreInstanceListResponseHandler);
         } else {
           hideLoadingModal();
-        }
+        }        
       }, showMessage);
     };
 

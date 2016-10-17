@@ -295,7 +295,7 @@ describe('Controller: CashBagListCtrl', function() {
 
         scope.editCashBag(mockCashBag);
         scope.$digest();
-        expect(location.path()).not.toBe('/cash-bag/edit/123');
+        expect(location.path()).toBe('/cash-bag/edit/123');
 
       });
 

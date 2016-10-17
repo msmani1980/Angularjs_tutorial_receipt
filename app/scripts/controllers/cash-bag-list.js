@@ -254,15 +254,17 @@ angular.module('ts5App')
       $location.path('cash-bag/view/' + cashBag.id);
     };
 
+    var storeInstanceIdRequired = false; // TSVPORTAL-7685
+    
     $scope.editCashBag = function(cashBag) {
       var buttonSelector = sprintf('.edit-cash-bag-%s-btn', cashBag.id);
-      if (cashBag.storeInstanceId === null) {
+      if (storeInstanceIdRequired && cashBag.storeInstanceId === null) {
         $scope.popupFromEdit = true;
         $scope.cashBagToEdit = cashBag.id;
         showStoreInstancePopup(buttonSelector);
         return;
       }
-
+      
       angular.element(buttonSelector).button('loading');
       $scope.checkForDailyExchangeRate().then(function() {
         angular.element(buttonSelector).button('reset');
