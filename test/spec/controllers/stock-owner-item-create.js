@@ -848,5 +848,44 @@ describe('The Stock Owner Item Create Controller', function() {
       });
 
     });
+    
+    describe('scope.formatSubstitutions payload', function() {
+      var substitutionsPL = [];	
+      it('should be able to verify payload for substitutions with ItemMasterId', function() {
+        var itemData = {
+          substitutions: [{	
+            id:5,
+            itemName:'Test1',
+            itemMasterId: 1
+          }, {
+            id:10,
+            itemName:'Test2',
+            itemMasterId: 2
+          }]  
+        };
+        substitutionsPL = StockOwnerItemCreateCtrl.formatSubstitutions(itemData);
+        expect(substitutionsPL.length).toEqual(2);
+        expect(substitutionsPL[0]).toEqual(1);
+        expect(substitutionsPL[1]).toEqual(2);
+      });
+      
+    });
+    
+    describe('scope.formatRecommendations payload', function() {
+      var recommendationsPL = [];	
+      it('should be able to verify payload for Recommendations with ItemMasterId instead of ItemId', function() {
+        var itemData = {
+          recommendations: [{	
+            id:8,
+            itemName:'Test3',
+            itemMasterId:3  
+          }]  
+        };
+        recommendationsPL = StockOwnerItemCreateCtrl.formatRecommendations(itemData);
+        expect(recommendationsPL.length).toEqual(1);
+        expect(recommendationsPL[0]).toEqual(3);
+      });
+        
+    });
 
 });
