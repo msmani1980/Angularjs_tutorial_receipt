@@ -55,8 +55,10 @@ angular.module('ts5App')
         '/station-create/*',
         '/station-edit/*',
         '/station-list/*',
-        '/station-view/*',        
-        '/store-instance-create/*',
+        '/station-view/*',
+        '/store-instance-create/redispatch/*',
+        '/store-instance-create/replenish/*',
+        '/store-instance-create/end-instance/*',
         '/store-instance-inbound-seals/*',
         '/store-instance-packing/*',
         '/store-instance-seals/*',
@@ -103,7 +105,8 @@ angular.module('ts5App')
       '/api/companies/[0-9]*/posttrips',
       '/api/companies/[0-9]*/posttrips/[0-9]*',
       '/api/companies/[0-9]*/sales-categories',
-      '/rsvr/api/retail-items/master/*'
+      '/rsvr/api/retail-items/master/*',
+      '/rsvr/api/menus/menu-masters'
       ];
 
     function responseError(response) {
