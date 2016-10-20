@@ -56,7 +56,6 @@ angular.module('ts5App')
         '/station-edit/*',
         '/station-list/*',
         '/station-view/*',
-        '/store-instance-create/redispatch/*',
         '/store-instance-create/replenish/*',
         '/store-instance-create/end-instance/*',
         '/store-instance-inbound-seals/*',

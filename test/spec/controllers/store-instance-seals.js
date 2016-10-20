@@ -1147,6 +1147,14 @@ describe('the Store Instance Seals controller', function() {
       expect(createdAction.label).toEqual(mockActions.label);
       expect(createdAction.trigger).toEqual(mockActions.trigger);
     });
+    
+    it('should return true if the storeDetails has replenishStoreInstanceId in payload', function() {
+      scope.storeDetails.parentStoreInstance = storeDetailsJSON;
+      scope.storeDetails.replenishStoreInstanceId = 5;
+      scope.$digest();
+      StoreInstanceSealsCtrl.replenishStorePromise();
+      expect(scope.storeDetails.replenishStoreInstanceId).toEqual(5);
+    });
 
   });
 
