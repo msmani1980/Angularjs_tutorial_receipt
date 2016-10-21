@@ -1468,7 +1468,7 @@ describe('Store Instance Create Controller', function() {
     });
     
     it('should be able to verify payload as prevoius storeInstance menus for re-dispatch ', function() {
-      var payloadControl = StoreInstanceCreateCtrl.makeRedispatchPromises();
+      StoreInstanceCreateCtrl.makeRedispatchPromises();
       expect(scope.formData.menus.length).toEqual(2);
     });
     it('should call the saveAndExit method on the controller', function() {
