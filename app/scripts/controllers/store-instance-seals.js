@@ -619,6 +619,7 @@ angular.module('ts5App')
         scheduleNumber: cleanStoreDetails.scheduleNumber,
         scheduleDate: dateUtility.formatDateForAPI(cleanStoreDetails.scheduleDate),
         scheduleId: cleanStoreDetails.scheduleId,
+        replenishStoreInstanceId: cleanStoreDetails.replenishStoreInstanceId,
         storeId: cleanStoreDetails.storeId,
         menus: $this.formatMenus(cleanStoreDetails.menuList),
         tampered: $scope.formData.tampered,

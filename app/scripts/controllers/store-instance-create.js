@@ -330,9 +330,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
     };
 
-    this.formatInitialRedispatchPayload = function () {
-      var payload;
-
+    this.formatInitialRedispatchPayload = function (payload) {
+      
       if ($scope.stepOneFromStepTwo && angular.isDefined($scope.storeDetails.prevStoreInstanceId)) {
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.prevStoreDetails.scheduleDate),
@@ -353,7 +352,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (angular.isUndefined($scope.storeDetails.prevStoreInstanceId) || !$scope.stepOneFromStepTwo) {
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
-          menus: $this.formatMenus($scope.storeDetails.menuList),
+          menus: $this.formatMenus(payload.menus),
           inboundStationId: parseInt($scope.formData.cateringStationId),
           cateringStationId: parseInt($scope.storeDetails.cateringStationId),
           scheduleNumber: $scope.storeDetails.scheduleNumber,
@@ -408,7 +407,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.formatRedispatchPayload(payload);
           break;
         case 'redispatch-initial':
-          return $this.formatInitialRedispatchPayload();
+          return $this.formatInitialRedispatchPayload(payload);
         case 'end-instance':
           $this.formatEndInstancePayload(payload);
           break;
