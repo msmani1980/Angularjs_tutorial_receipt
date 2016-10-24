@@ -646,7 +646,12 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
 
     it('canExecuteUnferify should decide if actions can be executed for given store instance', function () {
-        scope.storeInstance = { statusId: 11 };
+        
+        scope.storeInstance = { statusId: 5 };
+        scope.$digest();
+        expect(scope.canExecuteUnferify()).toBeTruthy();
+
+    	scope.storeInstance = { statusId: 6 };
         scope.$digest();
         expect(scope.canExecuteUnferify()).toBeFalsy();
       });

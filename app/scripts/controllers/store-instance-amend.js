@@ -347,12 +347,14 @@ angular.module('ts5App')
     };
 
     $scope.canExecuteUnferify = function () {
-      var commissionPaidStatus = getStoreStatusByStatusStep('11');
-      if (commissionPaidStatus) {
+      var commitionPaidStatus = getStoreStatusByStatusStep('11');
+      if (!$scope.storeInstance) {
         return false;
       }
+      
+      var statusId = $scope.storeInstance.statusId;
 
-      return true;
+      return statusId === commitionPaidStatus.id ? false : true;
     };
 
     $scope.canExecuteActions = function (cashBag) {
