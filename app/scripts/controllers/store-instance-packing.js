@@ -477,10 +477,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.updateInstanceStatusAndRedirect(prevStep);
     };
 
-    $scope.setUpdateStatusFlag = function(shouldUpdateStatus) {
-      $scope.shouldUpdateStatus = shouldUpdateStatus;
-    };
-
     this.checkUllageReasonValidityInList = function(itemList, fieldName) {
       var isPickList = (itemList === $scope.pickListItems);
       var listToCheck = lodash.sortBy(angular.copy(itemList), 'itemName');
@@ -504,7 +500,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    $scope.submit = function() {
+    $scope.submit = function(shouldUpdateStatus) {
+      $scope.shouldUpdateStatus = shouldUpdateStatus;
       $this.validateUllageReasonFields();
       var isFormInvalid = $scope.storeInstancePackingForm.$invalid;
       $scope.displayError = isFormInvalid;
