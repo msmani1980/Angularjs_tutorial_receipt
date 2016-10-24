@@ -51,6 +51,7 @@ angular.module('ts5App')
           correctRelativeCompanyData(company);
           return lodash.findIndex(retailCompanyList.companies, { companyName: company.companyName }) >= 0 && company.companyTypeName === 'Retail';
         });
+        
       }
 
       $scope.selectCHRetailCompany = function (companyType) {
