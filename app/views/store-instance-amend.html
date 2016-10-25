@@ -661,7 +661,7 @@
                         Verified by {{cashBag.verifiedByUser}} on {{cashBag.verifiedOn}}
                       </div>
                       <div class="col-xs-4 text-right">
-                        <button class="btn btn-success btn-xs" ng-click="toggleVerifiedCashBag(cashBag)" >
+                        <button class="btn btn-success btn-xs" ng-click="toggleVerifiedCashBag(cashBag)" ng-show="canExecuteUnferify()">
                           <i class="fa fa-times active"></i> Unverify
                         </button>
                       </div>
