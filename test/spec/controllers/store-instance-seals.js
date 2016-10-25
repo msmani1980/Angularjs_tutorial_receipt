@@ -672,6 +672,7 @@ describe('the Store Instance Seals controller', function() {
           scope.storeDetails.tampered = true;
           scope.storeDetails.note = 'test note';
           scope.storeDetails.cateringStationId = 120;
+          scope.storeDetails.carrierId = 123;
           nextStep = {
             label: 'Review & Dispatch',
             uri: '/store-instance-review/end-instance/' + storeId,
@@ -686,7 +687,8 @@ describe('the Store Instance Seals controller', function() {
             storeId: 13,
             menus: [],
             tampered: true,
-            note: 'test note'
+            note: 'test note',
+            carrierId: 123
           };
 
           updateStoreInstanceStatusDeferred.resolve({});
@@ -711,6 +713,7 @@ describe('the Store Instance Seals controller', function() {
           scope.storeDetails.tampered = true;
           scope.storeDetails.note = 'test note';
           scope.storeDetails.cateringStationId = 120;
+          scope.storeDetails.carrierId = 123;
           scope.prevStoreDetails = {
             cateringStationId: 121
           };
@@ -731,7 +734,8 @@ describe('the Store Instance Seals controller', function() {
             storeId: 13,
             menus: [],
             tampered: true,
-            note: 'test note'
+            note: 'test note',
+            carrierId: 123
           };
 
           updateStoreInstanceStatusDeferred.resolve({});
@@ -1147,7 +1151,7 @@ describe('the Store Instance Seals controller', function() {
       expect(createdAction.label).toEqual(mockActions.label);
       expect(createdAction.trigger).toEqual(mockActions.trigger);
     });
-    
+
     it('should return true if the storeDetails has replenishStoreInstanceId in payload', function() {
       scope.storeDetails.parentStoreInstance = storeDetailsJSON;
       scope.storeDetails.replenishStoreInstanceId = 5;
