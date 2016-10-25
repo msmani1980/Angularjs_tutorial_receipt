@@ -57,12 +57,9 @@ angular.module('ts5App')
         '/station-list/*',
         '/station-view/*',
         '/store-instance-create/end-instance/*',
-        '/store-instance-inbound-seals/*',
-        '/store-instance-packing/redispatch/*',
+        '/store-instance-inbound-seals/end-instance/*',
         '/store-instance-packing/end-instance/*',
-        '/store-instance-seals/redispatch/*',
         '/store-instance-seals/end-instance/*',
-        '/store-instance-review/redispatch/*',
         '/store-instance-review/end-instance/*',
         '/store-instance-step-1/*',
         '/store-number/*',
@@ -76,7 +73,7 @@ angular.module('ts5App')
     ];
 
     var legacyApis = [
-        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[5-9][^11]*$',
+        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[9-9][^11]*$',
         '/rsvr/api/companies/[0-9]*/company-credit-card-types',
         '/rsvr/api/company-discounts/[0-9]*$',
         '/rsvr/api/menus'
@@ -107,7 +104,8 @@ angular.module('ts5App')
       '/api/companies/[0-9]*/posttrips/[0-9]*',
       '/api/companies/[0-9]*/sales-categories',
       '/rsvr/api/retail-items/master/*',
-      '/rsvr/api/menus/menu-masters'
+      '/rsvr/api/menus/menu-masters',
+      '/rsvr/api/menus/caterer-stations'
       ];
 
     function responseError(response) {
