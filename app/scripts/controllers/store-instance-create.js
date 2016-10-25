@@ -331,7 +331,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.formatInitialRedispatchPayload = function (payload) {
-      
+
       if ($scope.stepOneFromStepTwo && angular.isDefined($scope.storeDetails.prevStoreInstanceId)) {
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.prevStoreDetails.scheduleDate),
@@ -718,7 +718,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.exitOnSave = function (response) {
       $this.hideLoadingModal();
-      $this.successMessage(response[0], 'saved');
+      var responseForSuccessMessage = Array.isArray(response) ? response[0] : response;
+      $this.successMessage(responseForSuccessMessage, 'saved');
       $location.url('/store-instance-dashboard/');
     };
 

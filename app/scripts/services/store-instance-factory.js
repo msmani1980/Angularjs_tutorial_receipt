@@ -120,8 +120,9 @@ angular.module('ts5App').service('storeInstanceFactory',
       }
 
       if (responseCollection.length === 6) {
-        storeDetailsToSet.inboundLMPStation = responseCollection[4].code;
-        storeDetailsToSet.carrierNumber = responseCollection[5].carrierNumber;
+        storeDetailsToSet.carrierNumber = responseCollection[4].carrierNumber;
+        storeDetailsToSet.inboundLMPStation = responseCollection[5].code;
+
       }
 
       if (responseCollection.length === 5 && angular.isDefined(responseCollection[4].carrierNumber)) {
