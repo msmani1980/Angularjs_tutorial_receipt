@@ -603,7 +603,8 @@ angular.module('ts5App')
         storeId: $this.tamperedPayloadConditional('storeId'),
         menus: $this.formatMenus($this.tamperedPayloadConditional('menuList')),
         tampered: $scope.formData.tampered,
-        note: $this.makeNotePayload()
+        note: $this.makeNotePayload(),
+        carrierId:  $this.tamperedPayloadConditional('carrierId')
       };
       return payload;
     };
@@ -623,7 +624,8 @@ angular.module('ts5App')
         storeId: cleanStoreDetails.storeId,
         menus: $this.formatMenus(cleanStoreDetails.menuList),
         tampered: $scope.formData.tampered,
-        note: $this.makeNotePayload()
+        note: $this.makeNotePayload(),
+        carrierId: cleanStoreDetails.carrierId
       };
 
     }
