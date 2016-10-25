@@ -23,13 +23,15 @@ describe('Controller: StockTakeCtrl', function() {
   var getCharacteristicsDeferred;
   var saveDeferred;
   var routeParams;
+  var lodash;
 
-  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, $filter, lodash,
+  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, $filter,
     _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedMasterItemList_,
     _servedMasterItem_, _servedItemTypes_, _servedCharacteristics_) {
     scope = $rootScope.$new();
     location = $location;
     stockTakeFactory = $injector.get('stockTakeFactory');
+    lodash = $injector.get('lodash');
 
     getCatererStationListDeferred = $q.defer();
     getCatererStationListDeferred.resolve(_servedCateringStations_);
@@ -177,6 +179,15 @@ describe('Controller: StockTakeCtrl', function() {
 
     it('should call stockTakeCtrl.filterAvailableItems and set filteredItems in the scope', function() {
       expect(scope.filteredItems).toBeDefined();
+    });
+
+    it('shoul set catering station items and then set filtered items', function () {
+      expect(scope.cateringStationItems.length > 0).toEqual(true);
+      var testItem = scope.cateringStationItems[0];
+
+      var filteredItemMatch = lodash.findWhere(scope.filteredItems, {itemMasterId: testItem.itemMasterId });
+      expect(filteredItemMatch).not.toBeDefined();
+
     });
 
     it('should redirect to /stock-take-report when cancel button is clicked', function() {
