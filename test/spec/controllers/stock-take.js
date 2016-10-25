@@ -181,7 +181,7 @@ describe('Controller: StockTakeCtrl', function() {
       expect(scope.filteredItems).toBeDefined();
     });
 
-    it('shoul set catering station items and then set filtered items', function () {
+    it('should set catering station items and then set filtered items', function () {
       expect(scope.cateringStationItems.length > 0).toEqual(true);
       var testItem = scope.cateringStationItems[0];
 
