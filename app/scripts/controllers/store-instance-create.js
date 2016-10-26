@@ -321,7 +321,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.formatRedispatchPayload = function (payload) {
-      payload.prevStoreInstanceId = $routeParams.storeId;
+      payload.prevStoreInstanceId = $scope.stepOneFromStepTwo ? $scope.prevStoreInstanceId : $routeParams.storeId;
       payload.menus = this.formatMenus(payload.menus);
       delete payload.dispatchedCateringStationId;
       if ($scope.existingSeals && $scope.userConfirmedDataLoss) {
@@ -989,7 +989,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
 
-      var promises = $this.makeEditPromises('end-instance', 'redispatch-initial');
+      var promises = $this.makeEditPromises('redispatch', 'redispatch-initial');
       var deletePromises = [];
       if ($this.removeAllDataForInstances()) {
         deletePromises.push($this.makeDeleteSealsPromises(parseInt($routeParams.storeId)));
