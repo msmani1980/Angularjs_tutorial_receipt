@@ -1632,6 +1632,10 @@ describe('Store Instance Create Controller', function() {
     it('should set stepOnFromStepTwo', function () {
       expect(scope.stepOneFromStepTwo).toBeDefined();
     });
+    
+    it('should set prevStoreInstanceId if stepOnFromStepTwo with true', function () {
+      expect(scope.prevStoreInstanceId).toEqual(12); 
+    });
 
   });
 

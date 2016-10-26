@@ -95,6 +95,7 @@ angular.module('ts5App')
       }
 
       $scope.cateringStationItems = items;
+      filterAvailableItems();
     }
 
     function diffItems(itemList) {
