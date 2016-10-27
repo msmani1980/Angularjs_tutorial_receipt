@@ -645,6 +645,17 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         expect(scope.canExecuteActionsPsttrip(casbBg, flightSector)).toBeFalsy();
       });
 
+    it('canExecuteUnferify should decide if actions can be executed for given store instance', function () {
+        
+        scope.storeInstance = { statusId: 5 };
+        scope.$digest();
+        expect(scope.canExecuteUnferify()).toBeTruthy();
+
+    	scope.storeInstance = { statusId: 6 };
+        scope.$digest();
+        expect(scope.canExecuteUnferify()).toBeFalsy();
+      });
+
     it('getStatusNameById should return status name for given status id', function () {
       scope.storeStatusList = storeStatusJSON;
 

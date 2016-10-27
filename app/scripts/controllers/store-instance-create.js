@@ -195,6 +195,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         newMenu.menuName = existingMenu.menuName;
       }
 
+      if (angular.isDefined(menu.id)) {
+        newMenu.recordId = menu.id;
+      }
+
       return newMenu;
     };
 
@@ -291,9 +295,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.formatMenus = function (menus) {
       var newMenus = [];
       angular.forEach(menus, function (menu) {
-        newMenus.push({
-          menuMasterId: menu.id
-        });
+        var newMenuPayload = { menuMasterId: menu.id };
+        if (menu.recordId) {
+          newMenuPayload.id = menu.recordId;
+        }
+
+        newMenus.push(newMenuPayload);
       });
 
       return newMenus;
@@ -314,7 +321,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.formatRedispatchPayload = function (payload) {
-      payload.prevStoreInstanceId = $routeParams.storeId;
+      payload.prevStoreInstanceId = $scope.stepOneFromStepTwo ? $scope.prevStoreInstanceId : $routeParams.storeId;
       payload.menus = this.formatMenus(payload.menus);
       delete payload.dispatchedCateringStationId;
       if ($scope.existingSeals && $scope.userConfirmedDataLoss) {
@@ -323,8 +330,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
     };
 
-    this.formatInitialRedispatchPayload = function () {
-      var payload;
+    this.formatInitialRedispatchPayload = function (payload) {
 
       if ($scope.stepOneFromStepTwo && angular.isDefined($scope.storeDetails.prevStoreInstanceId)) {
         payload = {
@@ -346,7 +352,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (angular.isUndefined($scope.storeDetails.prevStoreInstanceId) || !$scope.stepOneFromStepTwo) {
         payload = {
           scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
-          menus: $this.formatMenus($scope.storeDetails.menuList),
+          menus: $this.formatMenus(payload.menus),
           inboundStationId: parseInt($scope.formData.cateringStationId),
           cateringStationId: parseInt($scope.storeDetails.cateringStationId),
           scheduleNumber: $scope.storeDetails.scheduleNumber,
@@ -401,7 +407,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.formatRedispatchPayload(payload);
           break;
         case 'redispatch-initial':
-          return $this.formatInitialRedispatchPayload();
+          return $this.formatInitialRedispatchPayload(payload);
         case 'end-instance':
           $this.formatEndInstancePayload(payload);
           break;
@@ -712,7 +718,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.exitOnSave = function (response) {
       $this.hideLoadingModal();
-      $this.successMessage(response[0], 'saved');
+      var responseForSuccessMessage = Array.isArray(response) ? response[0] : response;
+      $this.successMessage(responseForSuccessMessage, 'saved');
       $location.url('/store-instance-dashboard/');
     };
 
@@ -982,7 +989,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
 
-      var promises = $this.makeEditPromises('end-instance', 'redispatch-initial');
+      var promises = $this.makeEditPromises('redispatch', 'redispatch-initial');
       var deletePromises = [];
       if ($this.removeAllDataForInstances()) {
         deletePromises.push($this.makeDeleteSealsPromises(parseInt($routeParams.storeId)));

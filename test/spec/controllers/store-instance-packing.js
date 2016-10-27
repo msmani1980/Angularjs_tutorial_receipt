@@ -643,6 +643,11 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         }];
       });
 
+      it('should set save in progress flag to prevent multiple submits', function () {
+        scope.save();
+        expect(StoreInstancePackingCtrl.isSaveInProgress).toEqual(true);
+      });
+
       it('should call DELETE for items in delete list', function () {
         scope.save();
         expect(storeInstancePackingFactory.deleteStoreInstanceItem).toHaveBeenCalledWith(4, 3);
@@ -1066,6 +1071,28 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       scope.shouldDisableUllage(validUllageItem);
       expect(validUllageItem).toEqual(validUllageItem);
+    });
+  });
+
+  describe('item filtering', function () {
+    beforeEach(function () {
+      initController();
+      scope.$digest();
+
+      scope.itemFilterText = 'Test Filter';
+      scope.filterPackingList();
+    });
+    it('should only update search filter on click of search button', function () {
+
+      expect(scope.filterItemDetails).toEqual(scope.itemFilterText);
+      scope.itemFilterText = 'New Test Filter';
+      expect(scope.filterItemDetails).not.toEqual(scope.itemFilterText);
+    });
+
+    it('should clear all search variables on clear button', function () {
+      scope.clearFilteredPackingList();
+      expect(scope.itemFilterText).toEqual('');
+      expect(scope.filterItemDetails).toEqual('');
     });
   });
 });

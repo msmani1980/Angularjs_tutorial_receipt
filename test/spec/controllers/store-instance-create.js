@@ -521,7 +521,8 @@ describe('Store Instance Create Controller', function() {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{
           id: 100,
-          name: 'ABC43124'
+          name: 'ABC43124',
+          recordId: 123,
         }],
         cateringStationId: 13,
         scheduleNumber: {
@@ -547,6 +548,7 @@ describe('Store Instance Create Controller', function() {
       var mockPayload = {
         scheduleDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
         menus: [{
+          id: 123,
           menuMasterId: 100
         }],
         cateringStationId: 13,
@@ -1415,8 +1417,8 @@ describe('Store Instance Create Controller', function() {
   });
 
   describe('The redispatchStoreInstance functionality', function() {
-
-    beforeEach(function() {
+	  
+	beforeEach(function() {
       initController('redispatch');
       resolveAllDependencies();
       mockLoadStoreInstance();
@@ -1434,6 +1436,11 @@ describe('Store Instance Create Controller', function() {
         menus: [{
           id: 100,
           name: 'ABC43124'
+        },{
+          name: 'NEWMENU'
+        },{
+          id: 200,	
+          name: 'OLDMENU'
         }],
         cateringStationId: 13,
         scheduleNumber: {
@@ -1459,7 +1466,11 @@ describe('Store Instance Create Controller', function() {
     it('should call the makeRedispatchPromises method on the controller', function() {
       expect(StoreInstanceCreateCtrl.makeRedispatchPromises).toHaveBeenCalled();
     });
-
+    
+    it('should be able to verify payload as prevoius storeInstance menus for re-dispatch ', function() {
+      StoreInstanceCreateCtrl.makeRedispatchPromises();
+      expect(scope.formData.menus.length).toEqual(2);
+    });
     it('should call the saveAndExit method on the controller', function() {
       mockRedispatchStoreInstance(true);
       expect(StoreInstanceCreateCtrl.exitToDashboard).toHaveBeenCalled();
@@ -1620,6 +1631,10 @@ describe('Store Instance Create Controller', function() {
 
     it('should set stepOnFromStepTwo', function () {
       expect(scope.stepOneFromStepTwo).toBeDefined();
+    });
+    
+    it('should set prevStoreInstanceId if stepOnFromStepTwo with true', function () {
+      expect(scope.prevStoreInstanceId).toEqual(12); 
     });
 
   });

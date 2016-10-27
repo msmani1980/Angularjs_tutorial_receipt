@@ -346,6 +346,17 @@ angular.module('ts5App')
       return $scope.canExecuteActions(cashBag);
     };
 
+    $scope.canExecuteUnferify = function () {
+      var commitionPaidStatus = getStoreStatusByStatusStep('11');
+      if (!$scope.storeInstance) {
+        return false;
+      }
+      
+      var statusId = $scope.storeInstance.statusId;
+
+      return statusId === commitionPaidStatus.id ? false : true;
+    };
+
     $scope.canExecuteActions = function (cashBag) {
       var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');

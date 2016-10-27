@@ -36,9 +36,9 @@ angular.module('ts5App')
         '/employee-message/*',
         '/employee-messages/*',
         '/forgot-username-password/*',
-        '/global-reason-code/*',
+        '/global-reason-code/*',       
         '/lmp-locations-list/*',
-        '/login',
+        '/login',       
         '/manual-epos-cash/*',
         '/manual-epos-credit/*',
         '/manual-epos-dashboard/*',
@@ -56,11 +56,11 @@ angular.module('ts5App')
         '/station-edit/*',
         '/station-list/*',
         '/station-view/*',
-        '/store-instance-create/*',
-        '/store-instance-inbound-seals/*',
-        '/store-instance-packing/*',
-        '/store-instance-seals/*',
-        '/store-instance-review/*',
+        '/store-instance-create/end-instance/*',
+        '/store-instance-inbound-seals/end-instance/*',
+        '/store-instance-packing/end-instance/*',
+        '/store-instance-seals/end-instance/*',
+        '/store-instance-review/end-instance/*',
         '/store-instance-step-1/*',
         '/store-number/*',
         '/tax-rates/*',
@@ -73,7 +73,7 @@ angular.module('ts5App')
     ];
 
     var legacyApis = [
-        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[5-9][^11]*$',
+        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[8-9][^11]*$',
         '/rsvr/api/companies/[0-9]*/company-credit-card-types',
         '/rsvr/api/company-discounts/[0-9]*$',
         '/rsvr/api/menus'
@@ -103,7 +103,9 @@ angular.module('ts5App')
       '/api/companies/[0-9]*/posttrips',
       '/api/companies/[0-9]*/posttrips/[0-9]*',
       '/api/companies/[0-9]*/sales-categories',
-      '/rsvr/api/retail-items/master/*'
+      '/rsvr/api/retail-items/master/*',
+      '/rsvr/api/menus/menu-masters',
+      '/rsvr/api/menus/caterer-stations'
       ];
 
     function responseError(response) {
