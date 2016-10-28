@@ -62,7 +62,6 @@ angular.module('ts5App')
         '/ember/#/schedules/*',
         '/ember/#/menu-assignments/*',
         '/ember/#/menu-rules/*',
-        '/ember/#/promotion-categories/*',
         '/ember/#/promotion-catalogs/*',
         '/ember/#/receipt-rules/*'
     ];
