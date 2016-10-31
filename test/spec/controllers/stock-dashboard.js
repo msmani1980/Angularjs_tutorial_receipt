@@ -125,38 +125,6 @@ describe('Controller: StockDashboardCtrl', function() {
 
     });
 
-    describe('isCatererStationListReadOnly method', function() {
-      beforeEach(function() {
-        spyOn(scope, 'isCatererStationListReadOnly').and.callThrough();
-      });
-
-      it('should be attached to the scope', function() {
-        expect(scope.isCatererStationListReadOnly).toBeDefined();
-      });
-
-      it('should be called', function() {
-        scope.isCatererStationListReadOnly();
-        expect(scope.isCatererStationListReadOnly).toHaveBeenCalled();
-      });
-
-      it('should define cateringStationList', function() {
-        expect(scope.cateringStationList).toBeDefined();
-      });
-
-      it('should return true if there is only 1 station', function() {
-        scope.isCatererStationListReadOnly();
-        expect(scope.isCatererStationListReadOnly).toBeTruthy();
-      });
-
-      it('should return false if cateringStationList is null', function() {
-        scope.cateringStationList = null;
-        scope.isCatererStationListReadOnly();
-        scope.$digest();
-        expect(scope.cateringStationList).toBe(null);
-      });
-
-    });
-
     describe('todaysDate', function() {
       it('variable should be set in scope', function() {
         expect(scope.todaysDate).toBeDefined();

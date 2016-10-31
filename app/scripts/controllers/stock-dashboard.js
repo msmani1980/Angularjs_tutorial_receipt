@@ -111,12 +111,6 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     this.init();
 
-    $scope.isCatererStationListReadOnly = function() {
-      if (angular.isDefined($scope.cateringStationList) && $scope.cateringStationList !== null) {
-        return ($scope.cateringStationList.length === 1);
-      }
-    };
-
     $scope.isRecordUpdatedToday = function(stockItem) {
       return dateUtility.isToday(dateUtility.formatDateForApp(stockItem.lastUpdatedOn));
     };
