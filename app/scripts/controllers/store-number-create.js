@@ -16,7 +16,7 @@ angular.module('ts5App')
       limit: 100,
       offset: 0
     };
-
+    
     // private controller vars
     var companyId = null;
     var companyDefault = {
@@ -126,6 +126,7 @@ angular.module('ts5App')
 
     function submitFormSuccess() {
       init();
+      $this.meta.offset = 0;
       $scope.getStoreList();
       hideLoadingModal();
       showMessage('success', 'Store Number', 'saved!');
@@ -171,6 +172,7 @@ angular.module('ts5App')
 
     function removeRecordSuccess() {
       init();
+      $this.meta.offset = 0;
       $scope.getStoreList();
       hideLoadingModal();
       showMessage('success', 'Store Number', 'deleted!');

@@ -62,7 +62,6 @@ angular.module('ts5App')
         '/store-instance-seals/end-instance/*',
         '/store-instance-review/end-instance/*',
         '/store-instance-step-1/*',
-        '/store-number/*',
         '/tax-rates/*',
         '/ember/#/schedules/*',
         '/ember/#/menu-assignments/*',

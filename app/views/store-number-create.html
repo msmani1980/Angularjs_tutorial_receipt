@@ -37,8 +37,8 @@
          placeholder="store12345"
          ng-required="isSubmitting"/>
     </div>
-    <div class="col-xs-12 col-sm-6">
-      <date-picker class="form-group"
+    <div class="col-xs-6 col-sm-6">
+      <!-- <date-picker class="form-group"
         element-class="col-xs-6 col-sm-6"
         disable-past="true"
         label-from="Effective From *"
@@ -49,7 +49,22 @@
         start-date-model="formData.startDate"
         end-date-model="formData.endDate"
         >
-      </date-picker>
+      </date-picker> -->
+      <date-picker-field class="col-xs-6 col-sm-6"
+          name="startDate"
+          min-date="minDate"
+          ng-model="formData.startDate"
+          disable="fieldDisabled(formData)"
+          label="Effective From"
+          required="true">
+        </date-picker-field>
+        <date-picker-field class="col-xs-6 col-sm-6"
+            name="endDate"
+            min-date="minDate"
+            ng-model="formData.endDate"
+            label="Effective To"
+            required="true">
+        </date-picker-field>
     </div>
   </div>
 </form>
@@ -69,6 +84,8 @@
     <td>{{ store.storeNumber }}</td>
     <td>{{ store.startDate }}</td>
     <td>{{ store.endDate }}</td>
+    <!-- {{ editStoreNumber(store) }} {{ canEdit(store) }}
+     {{ deleteRecordDialog(store) }} {{ canDelete(store) }} -->
     <td>
       <button class="btn btn-primary btn-xs" ng-click="editStoreNumber(store)" ng-show="canEdit(store)">
         <i class="fa fa-pencil"></i>
