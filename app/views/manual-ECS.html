@@ -23,7 +23,6 @@
   </div>
 
   <div class="manualECS-container" id="createView" ng-show="isCreateViewActive">
-    <error-dialog form-object="manualECSForm" error-response="errorResponse" display="displayError"></error-dialog>
 
     <div class="modal fade" id="confirmRelationshipModal" role="dialog">
       <div class="modal-dialog">
@@ -70,6 +69,8 @@
 
 
     <form name="manualECSForm" class="form">
+      <error-dialog form-object="manualECSForm" error-response="errorResponse" display="displayError"></error-dialog>
+
 
       <div class="row">
         <div class="col-xs-6">
