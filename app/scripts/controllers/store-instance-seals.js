@@ -172,7 +172,9 @@ angular.module('ts5App')
         this.getStoreInstanceSeals()
       ];
       if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
-        promises.push(this.getPrevStoreDetails());
+        if ($scope.storeDetails.prevStoreInstanceId) {
+          promises.push(this.getPrevStoreDetails());
+        }
       }
 
       return promises;

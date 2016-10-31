@@ -56,18 +56,12 @@ angular.module('ts5App')
         '/station-edit/*',
         '/station-list/*',
         '/station-view/*',
-        '/store-instance-create/end-instance/*',
-        '/store-instance-inbound-seals/end-instance/*',
-        '/store-instance-packing/end-instance/*',
-        '/store-instance-seals/end-instance/*',
-        '/store-instance-review/end-instance/*',
         '/store-instance-step-1/*',
         '/store-number/*',
         '/tax-rates/*',
         '/ember/#/schedules/*',
         '/ember/#/menu-assignments/*',
         '/ember/#/menu-rules/*',
-        '/ember/#/promotion-categories/*',
         '/ember/#/promotion-catalogs/*',
         '/ember/#/receipt-rules/*'
     ];
