@@ -11,12 +11,14 @@ describe('Controller: StoreNumberCreateCtrl', function() {
   var getStoresDeferred;
   var companyId;
   var companyStoresService;
+  var dateUtility;
 
   beforeEach(inject(function($controller, $rootScope, $q, _globalMenuService_, _companyStoresService_,
-    _servedCompanyStores_) {
+    _servedCompanyStores_, _dateUtility_) {
     scope = $rootScope.$new();
 
     companyStoresService = _companyStoresService_;
+    dateUtility = _dateUtility_;
 
     createStoreDeferred = $q.defer();
 
@@ -55,6 +57,22 @@ describe('Controller: StoreNumberCreateCtrl', function() {
     it('should set storeNumbersList in scope', function() {
       expect(scope.storeNumbersList).toBeDefined();
       expect(Object.prototype.toString.call(scope.storeNumbersList)).toBe('[object Array]');
+    });
+
+    it('should set isEditing to false', function () {
+      expect(scope.isEditing).toEqual(false);
+    });
+
+    it('should set minDate to tomorrow', function () {
+      expect(scope.minDate).toBeDefined();
+      expect(dateUtility.diff(dateUtility.nowFormatted(), scope.minDate)).toEqual(1);
+      expect(dateUtility.isTomorrowOrLater( scope.minDate)).toEqual(true);
+    });
+
+    it('should clear lazy loading meta vars', function () {
+      expect(StoreNumberCreateCtrl.meta.offset).toEqual(0);
+      expect(StoreNumberCreateCtrl.meta.limit).toEqual(100);
+      expect(StoreNumberCreateCtrl.meta.count).not.toBeDefined();
     });
   });
 
@@ -205,6 +223,17 @@ describe('Controller: StoreNumberCreateCtrl', function() {
       scope.$digest();
       scope.editStoreNumber(store);
       expect(companyStoresService.getStore).toHaveBeenCalledWith(store.id);
+    });
+
+    it('should set isEditing to true', function () {
+      var store = {
+        id: 1,
+        endDate: '12/30/2050'
+      };
+      scope.storeNumbersList = [];
+      scope.$digest();
+      scope.editStoreNumber(store);
+      expect(scope.isEditing).toEqual(true);
     });
 
     describe('error handler', function() {

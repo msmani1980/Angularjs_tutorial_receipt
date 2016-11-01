@@ -25,6 +25,14 @@ angular.module('ts5App')
       endDate: null
     };
 
+    function resetSearchMeta() {
+      $this.meta = {
+        limit: 100,
+        offset: 0,
+        count: undefined
+      };
+    }
+
     function showMessage(className, type, message) {
       messageService.display(className, message, type);
     }
@@ -74,7 +82,7 @@ angular.module('ts5App')
       $scope.viewName = 'Edit Store Number';
       $scope.submitText = 'Save';
       $scope.editing = store.id;
-      $scope.formData = store;
+      $scope.formData = angular.copy(store);
       hideLoadingModal();
       $anchorScroll(0);
     }
@@ -105,6 +113,9 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.editing = false;
       $scope.storeNumbersList = [];
+      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
+      $scope.isEditing = false;
+      resetSearchMeta();
     }
 
     $scope.getStoreList = function() {
@@ -199,6 +210,7 @@ angular.module('ts5App')
         return false;
       }
 
+      $scope.isEditing = true;
       displayLoadingModal();
       getCurrentStoreNumber(store.id);
     };

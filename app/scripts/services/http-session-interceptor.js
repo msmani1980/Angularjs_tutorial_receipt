@@ -57,7 +57,6 @@ angular.module('ts5App')
         '/station-list/*',
         '/station-view/*',
         '/store-instance-step-1/*',
-        '/store-number/*',
         '/tax-rates/*',
         '/ember/#/schedules/*',
         '/ember/#/menu-assignments/*',
