@@ -348,6 +348,8 @@ angular.module('ts5App')
       angular.forEach(allCarrierInstancesIds, function (carrierInstanceId) {
         promises.push(manualECSFactory.updateCarrierInstance(carrierInstanceId, payload));
       });
+
+      return promises;
     }
 
     $scope.saveRelationship = function () {
