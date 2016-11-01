@@ -85,32 +85,34 @@ describe('Controller: StoreNumberCreateCtrl', function() {
   });
 
   describe('submitForm scope function', function() {
-    beforeEach(function () {
+    it('should call companyStoresService.createStore when creating a new store', function() {
       scope.formData = {
         storeNumber: 'qwert12345',
         startDate: '07/09/2015',
         endDate: '07/10/2015'
       };
       scope.$digest();
-    });
-    it('should call companyStoresService.createStore when creating a new store', function() {
       var payload = angular.copy(scope.formData);
       payload.startDate = '20150709';
       payload.endDate = '20150710';
 
       scope.submitForm();
-      scope.$digest();
       expect(companyStoresService.createStore).toHaveBeenCalledWith(payload);
     });
 
     it('should call companyStoresService.saveStore when editing a store that contains an id', function() {
-      scope.formData.id = 2;
+      scope.formData = {
+        id: 2,
+        storeNumber: 'qwert12345',
+        startDate: '07/09/2015',
+        endDate: '07/10/2015'
+      };
+      scope.$digest();
       var payload = angular.copy(scope.formData);
       payload.startDate = '20150709';
       payload.endDate = '20150710';
 
       scope.submitForm();
-      scope.$digest();
       expect(companyStoresService.saveStore).toHaveBeenCalledWith(payload);
     });
   });
