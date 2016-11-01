@@ -11,12 +11,14 @@ describe('Controller: StoreNumberCreateCtrl', function() {
   var getStoresDeferred;
   var companyId;
   var companyStoresService;
+  var dateUtility;
 
   beforeEach(inject(function($controller, $rootScope, $q, _globalMenuService_, _companyStoresService_,
-    _servedCompanyStores_) {
+    _servedCompanyStores_, _dateUtility_) {
     scope = $rootScope.$new();
 
     companyStoresService = _companyStoresService_;
+    dateUtility = _dateUtility_;
 
     createStoreDeferred = $q.defer();
 
@@ -56,6 +58,22 @@ describe('Controller: StoreNumberCreateCtrl', function() {
       expect(scope.storeNumbersList).toBeDefined();
       expect(Object.prototype.toString.call(scope.storeNumbersList)).toBe('[object Array]');
     });
+
+    it('should set isEditing to false', function () {
+      expect(scope.isEditing).toEqual(false);
+    });
+
+    it('should set minDate to tomorrow', function () {
+      expect(scope.minDate).toBeDefined();
+      expect(dateUtility.diff(dateUtility.nowFormatted(), scope.minDate)).toEqual(1);
+      expect(dateUtility.isTomorrowOrLater( scope.minDate)).toEqual(true);
+    });
+
+    it('should clear lazy loading meta vars', function () {
+      expect(StoreNumberCreateCtrl.meta.offset).toEqual(0);
+      expect(StoreNumberCreateCtrl.meta.limit).toEqual(100);
+      expect(StoreNumberCreateCtrl.meta.count).not.toBeDefined();
+    });
   });
 
   describe('scope.getStoreList', function() {
@@ -67,34 +85,32 @@ describe('Controller: StoreNumberCreateCtrl', function() {
   });
 
   describe('submitForm scope function', function() {
-    it('should call companyStoresService.createStore when creating a new store', function() {
+    beforeEach(function () {
       scope.formData = {
         storeNumber: 'qwert12345',
         startDate: '07/09/2015',
         endDate: '07/10/2015'
       };
       scope.$digest();
+    });
+    it('should call companyStoresService.createStore when creating a new store', function() {
       var payload = angular.copy(scope.formData);
       payload.startDate = '20150709';
       payload.endDate = '20150710';
 
       scope.submitForm();
+      scope.$digest();
       expect(companyStoresService.createStore).toHaveBeenCalledWith(payload);
     });
 
     it('should call companyStoresService.saveStore when editing a store that contains an id', function() {
-      scope.formData = {
-        id: 2,
-        storeNumber: 'qwert12345',
-        startDate: '07/09/2015',
-        endDate: '07/10/2015'
-      };
-      scope.$digest();
+      scope.formData.id = 2;
       var payload = angular.copy(scope.formData);
       payload.startDate = '20150709';
       payload.endDate = '20150710';
 
       scope.submitForm();
+      scope.$digest();
       expect(companyStoresService.saveStore).toHaveBeenCalledWith(payload);
     });
   });
@@ -205,6 +221,17 @@ describe('Controller: StoreNumberCreateCtrl', function() {
       scope.$digest();
       scope.editStoreNumber(store);
       expect(companyStoresService.getStore).toHaveBeenCalledWith(store.id);
+    });
+
+    it('should set isEditing to true', function () {
+      var store = {
+        id: 1,
+        endDate: '12/30/2050'
+      };
+      scope.storeNumbersList = [];
+      scope.$digest();
+      scope.editStoreNumber(store);
+      expect(scope.isEditing).toEqual(true);
     });
 
     describe('error handler', function() {
