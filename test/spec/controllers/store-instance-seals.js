@@ -586,6 +586,33 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
+  describe('when controller executes for end instance', function() {
+    beforeEach(function() {
+      initController('end-instance');
+      spyOn(StoreInstanceSealsCtrl, 'getPrevStoreDetails').and.callThrough();
+      scope.$digest();
+    });
+
+    it('should get the previous store details if there is previous store instance', function() {
+      scope.storeDetails = {
+        currentStatus : {name : 6},
+        prevStoreInstanceId : 10
+      };
+      StoreInstanceSealsCtrl.makePromises();
+      scope.$digest();
+      expect(StoreInstanceSealsCtrl.getPrevStoreDetails).toHaveBeenCalled();
+      expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(10);
+    });
+    it('should not get the previous store details when there is no previous instance', function() {
+      scope.storeDetails = {
+        currentStatus : {name : 6}
+      };
+      StoreInstanceSealsCtrl.makePromises();
+      scope.$digest();
+      expect(StoreInstanceSealsCtrl.getPrevStoreDetails.calls.count()).toEqual(0);
+    });
+  });
+
   describe('The assignSeals functionality', function() {
 
     beforeEach(function() {
