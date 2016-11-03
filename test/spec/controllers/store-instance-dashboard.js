@@ -514,6 +514,16 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       scope.storeInstanceList[0].hours = -1;
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(true);
     });
+
+    it('should return false if hours equal -1 (the default hours) and store contains replenishments', function() {
+      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(50, 'hour').format(
+        'YYYY-MM-DD HH:mm:ss.SSSSSS');
+      scope.storeInstanceList[0].hours = -1;
+      scope.storeInstanceList[0].replenishments = [{
+        id: 3
+      }];
+      expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(false);
+    });
   });
 
   describe('undispatch', function() {
