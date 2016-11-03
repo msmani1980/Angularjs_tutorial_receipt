@@ -488,7 +488,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(true);
     });
 
-    it('should return false if current time is within set hours of updatedTime', function() {
+    it('should return false if current time is not within set hours of updatedTime', function() {
       scope.storeInstanceList[0].updatedOn = moment.utc().subtract(50, 'hour').format(
         'YYYY-MM-DD HH:mm:ss.SSSSSS');
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(false);
