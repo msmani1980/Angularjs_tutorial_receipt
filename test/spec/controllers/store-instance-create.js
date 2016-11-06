@@ -679,6 +679,7 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'checkForOnFloorInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'displayErrorConfirmation').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage');
       mockStoreInstanceCreate();
     });
@@ -755,6 +756,38 @@ describe('Store Instance Create Controller', function() {
       it('should call the error handler', function() {
         expect(StoreInstanceCreateCtrl.createStoreInstanceErrorHandler).toHaveBeenCalledWith(
           errorResponse);
+      });
+
+    });
+    
+    describe('error handler and display confirmation', function() {
+
+      var errorResponse;
+
+      beforeEach(function() {
+        errorResponse = {
+          data: [{
+            field: 'storeId',
+            code: '250',
+            value: 'There is another Store Instance created/exists using this Store Number.'
+          }]
+        };
+        createStoreInstanceDeferred.reject(errorResponse);
+        scope.$digest();
+      });
+
+      it('should hide the loading modal', function() {
+        expect(StoreInstanceCreateCtrl.hideLoadingModal).toHaveBeenCalled();
+      });
+
+      it('should call the error handler', function() {
+        expect(StoreInstanceCreateCtrl.createStoreInstanceErrorHandler).toHaveBeenCalledWith(
+          errorResponse);
+      });
+        
+      it('should call the displayErrorConfirmation', function() {
+        expect(StoreInstanceCreateCtrl.displayErrorConfirmation).toHaveBeenCalledWith(
+          (errorResponse.data)[0]);
       });
 
     });
