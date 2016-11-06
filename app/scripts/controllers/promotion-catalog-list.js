@@ -8,10 +8,138 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCatalogListCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('PromotionCatalogListCtrl', function ($scope, promotionCatalogFactory, dateUtility, $location) {
+    $scope.viewName = 'Promotion Catalogs';
+    var $this = this;
+
+    function showErrors(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    }
+
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
+    function showLoadingBar() {
+      $this.isLoading = true;
+      angular.element('.loading-more').show();
+    }
+
+    function hideLoadingBar() {
+      $this.isLoading = false;
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
+
+    function resetSearchMetaVars() {
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+    }
+
+    $scope.shouldShowLoadingAlert = function () {
+      return (angular.isDefined($scope.promotionCatalogs) && $scope.promotionCatalogs !== null && $this.meta.offset < $this.meta.count);
+    };
+
+    $scope.shouldShowSearchPrompt = function () {
+      return !$scope.promotionCatalogs;
+    };
+
+    $scope.shouldShowNoRecordsFoundPrompt = function () {
+      return !$this.isLoading && angular.isDefined($scope.promotionCategories) && $scope.promotionCategories !== null && $scope.promotionCategories.length <= 0;
+    };
+
+    $scope.viewOrEditRecord = function (action, recordId) {
+      $location.path('promotion-category/' + action + '/' + recordId);
+    };
+
+    $scope.canEdit = function (category) {
+      return dateUtility.isTomorrowOrLater(category.endDate);
+    };
+
+    $scope.canDelete = function (category) {
+      return dateUtility.isTomorrowOrLater(category.startDate);
+    };
+
+    $scope.removeRecord = function (category) {
+      showLoadingModal('Removing Record');
+      promotionCatalogFactory.deletePromotionCatalog(category.id).then(function () {
+        hideLoadingModal();
+        init();
+      }, showErrors);
+    };
+
+    function createSearchPayload() {
+      var payload = angular.copy($scope.search);
+
+      if (payload.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+      }
+
+      if (payload.endDate) {
+        payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
+      }
+
+      payload.limit = $this.meta.limit;
+      payload.offset = $this.meta.offset;
+
+      return payload;
+    }
+
+    function getPromotionCatalogsSuccess(dataFromAPI) {
+      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+      var newPromotionCatalogList = angular.copy(dataFromAPI.companyPromotionCatalogs);
+      angular.forEach(newPromotionCatalogList, function (catalog) {
+        catalog.startDate = dateUtility.formatDateForApp(catalog.startDate);
+        catalog.endDate = dateUtility.formatDateForApp(catalog.endDate);
+      });
+
+      $scope.promotionCatalogs = $scope.promotionCatalogs || [];
+      $scope.promotionCatalogs = $scope.promotionCatalogs.concat(newPromotionCatalogList);
+
+      hideLoadingBar();
+      hideLoadingModal();
+    }
+
+    $scope.clearSearchForm = function () {
+      $scope.search = {};
+      $scope.promotionCatalogs = null;
+      resetSearchMetaVars();
+    };
+
+    $scope.getPromotionCatalogs = function () {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+
+      var payload = createSearchPayload();
+      showLoadingBar();
+      promotionCatalogFactory.getPromotionCatalogList(payload).then(getPromotionCatalogsSuccess);
+      $this.meta.offset += $this.meta.limit;
+
+    };
+
+    $scope.searchPromotionCatalogs = function () {
+      resetSearchMetaVars();
+      $scope.promotionCatalogs = [];
+      showLoadingModal();
+      $scope.getPromotionCatalogs();
+    };
+
+    function init() {
+      $scope.promotionCatalogs = null;
+      resetSearchMetaVars();
+      $scope.search = {};
+    }
+
+    init();
+
   });
