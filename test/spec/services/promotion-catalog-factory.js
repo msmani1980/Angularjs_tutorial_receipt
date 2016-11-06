@@ -18,7 +18,7 @@ describe('Service: promotionCatalogFactory', function () {
     spyOn(promotionCatalogService, 'createPromotionCatalog');
     spyOn(promotionCatalogService, 'updatePromotionCatalog');
     spyOn(promotionCatalogService, 'deletePromotionCatalog');
-    
+
     rootScope = $rootScope;
     scope = $rootScope.$new();
     promotionCatalogFactory = _promotionCatalogFactory_;

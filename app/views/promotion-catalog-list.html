@@ -28,7 +28,7 @@
           <div class="col-sm-4 col-xs-12">
             <div class="form-group">
               <label for="category-name">Category Name</label>
-              <input ng-model="search.promotionCategoryName" type="text" class="form-control" id="category-name" placeholder="Search Category Name">
+              <input ng-model="search.promotionCatalogName" type="text" class="form-control" id="category-name" placeholder="Search Catalog Name">
             </div>
           </div>
 
@@ -58,28 +58,36 @@
       <table infinite-scroll="getPromotionCatalogs()" class="table" ng-show="promotionCatalogs.length > 0" infinite-scroll-immediate-check="false">
         <thead>
         <tr>
-          <th>Category Name</th>
+          <th>Catalog Name</th>
           <th>Effective From</th>
           <th>Effective To</th>
-          <th>Selected Items</th>
+          <th>Included Promotions</th>
+          <th>Conjunctions</th>
           <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="category in promotionCategories">
-          <td>{{ category.promotionCategoryName }}</td>
-          <td>{{ category.startDate }}</td>
-          <td>{{ category.endDate }}</td>
-          <td>{{ category.selectedItems }}</td>
-
+        <tr ng-repeat="catalog in promotionCatalogs">
+          <td>{{ catalog.promotionCatalogName }}</td>
+          <td>{{ catalog.startDate }}</td>
+          <td>{{ catalog.endDate }}</td>
+          <td>{{ catalog.promotionCount }}</td>
           <td>
-            <button class="btn btn-xs btn-info" ng-click="viewOrEditRecord('view', category.id)">
+            <button type="button" class="btn btn-xs btn-default" ng-hide="catalog.conjunctionFlag" ng-click="redirectRecordToAction('conjunction', catalog.id)">
+            <span class="fa fa-check"></span>
+            </button>
+            <button type="button" class="btn btn-xs btn-success" ng-show="catalog.conjunctionFlag" ng-click="redirectRecordToAction('conjunction', catalog.id)">
+              <span class="fa fa-plus"></span>
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-xs btn-info" ng-click="redirectRecordToAction('view', catalog.id)">
               <span class="fa fa-file"></span>
             </button>
-            <button class="btn btn-xs btn-primary" ng-click="viewOrEditRecord('edit', category.id)" ng-show="canEdit(category)">
+            <button type="button" class="btn btn-xs btn-primary" ng-click="redirectRecordToAction('edit', catalog.id)" ng-show="canEdit(catalog)">
               <span class="fa fa-pencil"></span>
             </button>
-            <button class="btn btn-xs btn-danger" ng-show="canDelete(category)" ng-click="deleteRecordDialog(category, ['promotionCategoryName', 'startDate', 'endDate'])">
+            <button type="button" class="btn btn-xs btn-danger" ng-show="canDelete(catalog)" ng-click="deleteRecordDialog(catalog, ['promotionCatalogName', 'startDate', 'endDate'])">
               <span class="fa fa-trash"></span>
             </button>
           </td>

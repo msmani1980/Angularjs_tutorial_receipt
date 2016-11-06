@@ -54,24 +54,24 @@ angular.module('ts5App')
     };
 
     $scope.shouldShowNoRecordsFoundPrompt = function () {
-      return !$this.isLoading && angular.isDefined($scope.promotionCategories) && $scope.promotionCategories !== null && $scope.promotionCategories.length <= 0;
+      return !$this.isLoading && angular.isDefined($scope.promotionCatalogs) && $scope.promotionCatalogs !== null && $scope.promotionCatalogs.length <= 0;
     };
 
-    $scope.viewOrEditRecord = function (action, recordId) {
-      $location.path('promotion-category/' + action + '/' + recordId);
+    $scope.redirectRecordToAction = function (action, recordId) {
+      $location.path('promotion-catalog/' + action + '/' + recordId);
     };
 
-    $scope.canEdit = function (category) {
-      return dateUtility.isTomorrowOrLater(category.endDate);
+    $scope.canEdit = function (catalog) {
+      return dateUtility.isTomorrowOrLater(catalog.endDate);
     };
 
-    $scope.canDelete = function (category) {
-      return dateUtility.isTomorrowOrLater(category.startDate);
+    $scope.canDelete = function (catalog) {
+      return dateUtility.isTomorrowOrLater(catalog.startDate);
     };
 
-    $scope.removeRecord = function (category) {
+    $scope.removeRecord = function (catalog) {
       showLoadingModal('Removing Record');
-      promotionCatalogFactory.deletePromotionCatalog(category.id).then(function () {
+      promotionCatalogFactory.deletePromotionCatalog(catalog.id).then(function () {
         hideLoadingModal();
         init();
       }, showErrors);
@@ -100,6 +100,7 @@ angular.module('ts5App')
       angular.forEach(newPromotionCatalogList, function (catalog) {
         catalog.startDate = dateUtility.formatDateForApp(catalog.startDate);
         catalog.endDate = dateUtility.formatDateForApp(catalog.endDate);
+        catalog.conjunctionFlag = catalog.conjunctionFlag === 'true';
       });
 
       $scope.promotionCatalogs = $scope.promotionCatalogs || [];
