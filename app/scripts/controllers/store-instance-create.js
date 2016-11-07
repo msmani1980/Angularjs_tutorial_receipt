@@ -760,14 +760,34 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       };
       $location.url(uri);
     };
-
+    
+    this.displayErrorConfirmation = function (response) {
+      $scope.storeConfirmationDialog = {
+        title: 'The Store you selected is already associated to another Instance',
+        confirmationCallback: function () {
+          $location.url('/store-instance-dashboard/');
+        },
+        
+        confirmationLabel: 'OK',  
+        body: response.value,	
+        cancelLabel: 'Cancel'
+      };
+      angular.element('#confirmation-modal').modal('show');
+    };
+      
     this.createStoreInstanceErrorHandler = function (response) {
       $this.hideLoadingModal();
-      $scope.displayError = true;
-      $scope.errorResponse = response;
+      var errorResp = angular.copy(response.data);
+      if (!(angular.isUndefined(errorResp)) && errorResp[0].code === '250') {
+        $this.displayErrorConfirmation(errorResp[0]);
+      } else {
+        $scope.displayError = true;  
+        $scope.errorResponse = response;
+      }
+      
       return false;
     };
-
+    
     this.resetErrors = function () {
       $scope.displayError = false;
       $scope.errorResponse = null;
@@ -847,6 +867,23 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.displayConfirmDialog = function () {
+      $scope.storeConfirmationDialog = {
+        title: 'The Store you selected is already associated to another Instance',
+        body: sprintf(
+          'Currently Store Number %s for Schedule Date and Store Instance %d is in the "On Floor" status. You can either Redispatch this, End this, or press Cancel to select a different Store.',
+          $scope.onFloorInstance.storeNumber, $scope.onFloorInstance.id),
+        confirmationCallback: function () {
+          $scope.goToActionState('redispatch');
+        },
+        
+        confirmationLabel: 'Redispatch',
+        alternativeCallback: function () {
+          $scope.goToActionState('end-instance');
+        },
+        
+        alternativeLabel: 'End Instance'
+      };
+      
       angular.element('#confirmation-modal').modal('show');
     };
 
