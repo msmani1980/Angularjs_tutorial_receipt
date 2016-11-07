@@ -198,7 +198,7 @@ angular.module('ts5App')
       companyStoresService.deleteStore(store.id).then(removeRecordSuccess, removeRecordError);
     };
 
-    $scope.isToday = function (store) {
+    $scope.isEndingToday = function (store) {
       var originalStore = lodash.findWhere($scope.storeNumbersList, { id: store.id });
       if (!originalStore) {
         return false;
