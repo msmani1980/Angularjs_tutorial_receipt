@@ -114,6 +114,7 @@ angular.module('ts5App')
       $scope.editing = false;
       $scope.storeNumbersList = [];
       $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
+      $scope.today = dateUtility.nowFormatted();
       $scope.isEditing = false;
       resetSearchMeta();
     }
@@ -197,12 +198,26 @@ angular.module('ts5App')
       companyStoresService.deleteStore(store.id).then(removeRecordSuccess, removeRecordError);
     };
 
+    $scope.isToday = function (store) {
+      var originalStore = lodash.findWhere($scope.storeNumbersList, { id: store.id });
+      if (!originalStore) {
+        return false;
+      }
+
+      return dateUtility.isToday(originalStore.endDate);
+    };
+
     $scope.canEdit = function(store) {
-      return dateUtility.isAfterToday(store.endDate);
+      return dateUtility.isToday(store.endDate) || dateUtility.isAfterToday(store.endDate);
     };
 
     $scope.fieldDisabled = function(store) {
-      return $scope.canEdit(store) && dateUtility.isTodayOrEarlier(store.startDate);
+      var originalStore = lodash.findWhere($scope.storeNumbersList, { id: store.id });
+      if (!originalStore) {
+        return false;
+      }
+
+      return $scope.canEdit(originalStore) && dateUtility.isTodayOrEarlier(originalStore.startDate);
     };
 
     $scope.editStoreNumber = function(store) {
