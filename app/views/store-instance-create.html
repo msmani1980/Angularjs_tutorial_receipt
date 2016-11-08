@@ -23,14 +23,23 @@
 
     <div class="row" ng-if="isEndInstanceOrRedispatch()">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Store Number <span ng-show="stepOneFromStepTwo">*</span></label>
+        <label>
+          Store Number <span ng-show="stepOneFromStepTwo">*</span>
+          <span class="badge" ng-click="showStoreNumbersModal()" ng-hide="!stepOneFromStepTwo || isActionState('end-instance')"><i class="fa fa-info"></i></span>
+        </label>
       </div>
       <div class="col-xs-12 col-sm-8">
-        <div class="form-group" ng-class="validateInput('StoreNumber')">
-          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber" ng-disabled="!stepOneFromStepTwo || isActionState('end-instance')">
-            <option ng-disabled="true" selected="selected" value>Select Store</option>
-            <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
-          </select>
+        <div class="form-group">
+          <input ng-model="formData.storeNumber"
+                 type="text" class="form-control"
+                 placeholder="Enter Store Number"
+                 ng-disabled="!stepOneFromStepTwo || isActionState('end-instance')"
+                 ng-blur="validateStoreNumber()"
+                 required="true">
+        </div>
+
+        <div class="alert alert-warning" ng-show="showStoreNumberAlert">
+          <strong>Invalid Store Number:</strong> {{ storeNumberWarning }}
         </div>
       </div>
     </div>
@@ -76,14 +85,23 @@
 
     <div class="row" ng-if="!isEndInstanceOrRedispatch()">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Store Number <span ng-show="!isActionState('end-instance')">*</span></label>
+        <label>
+          Store Number <span ng-show="!isActionState('end-instance')">*</span>
+          <span class="badge" ng-click="showStoreNumbersModal()" ng-hide="isActionState('end-instance') || isActionState('replenish')"><i class="fa fa-info"></i></span>
+        </label>
       </div>
       <div class="col-xs-12 col-sm-8">
-        <div class="form-group" ng-class="validateInput('StoreNumber')">
-          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber" ng-disabled="isActionState('end-instance') || isActionState('replenish')">
-            <option ng-disabled="true" selected="selected" value>Select Store</option>
-            <option ng-repeat="store in storesList | orderBy:'storeNumber'" value="{{ store.id }}">{{ store.storeNumber }}</option>
-          </select>
+        <div class="form-group">
+          <input ng-model="formData.storeNumber"
+                 type="text" class="form-control"
+                 placeholder="Enter Store Number"
+                 ng-disabled="isActionState('end-instance') || isActionState('replenish')"
+                 ng-blur="validateStoreNumber()"
+                 required="true">
+        </div>
+
+        <div class="alert alert-warning" ng-show="showStoreNumberAlert">
+          <strong>Invalid Store Number:</strong> {{ storeNumberWarning }}
         </div>
       </div>
     </div>
@@ -139,6 +157,42 @@
    cancel-label="Cancel">
   </confirmation-modal>
 
+</div>
+
+<div class="modal" id="store-numbers" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Lookup Valid Store Numbers</h4>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <p class="input-group">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-disabled="true">
+              <i class="fa fa-filter"></i>
+            </button>
+          </span>
+            <input ng-model="storesListSearch" type="text" class="form-control" id="filter-item-details"
+                   placeholder="Search for a store number"/>
+          </p>
+
+          <table class="table table-bordered table-condensed">
+            <tr>
+              <th>Store Number</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+            </tr>
+            <tr ng-repeat="storeNumber in validStoresList | filter: {storeNumber: storesListSearch}">
+              <td>{{ storeNumber.storeNumber }}</td>
+              <td>{{ storeNumber.startDate }}</td>
+              <td>{{ storeNumber.endDate }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal" id="warning" data-backdrop="static" data-keyboard="false">
