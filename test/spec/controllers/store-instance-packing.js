@@ -322,7 +322,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
     });
 
-    fdescribe('merge items for end-instance', function () {
+    describe('merge items for end-instance', function () {
       var mockItemsResponseFromAPI;
       var menuItems;
       var redispatchParentMenuItems;
