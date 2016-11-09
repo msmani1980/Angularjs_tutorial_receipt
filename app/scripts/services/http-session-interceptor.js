@@ -45,8 +45,6 @@ angular.module('ts5App')
         '/manual-epos-discount/*',
         '/manual-epos-items/*',
         '/manual-store-instance/*',
-        '/menu-list/*',
-        '/menu/*',
         '/retail-company-exchange-rate-setup/*',
         '/station-create/*',
         '/station-edit/*',
