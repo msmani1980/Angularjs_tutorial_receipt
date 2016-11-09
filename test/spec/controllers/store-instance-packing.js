@@ -425,7 +425,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           itemMasterId: 10,
           countTypeId: 2
         };
-        
+
         storeInstanceItems.response.push(itemThatIsNotInMenu);
         mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems, {}, {}, {}];
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);

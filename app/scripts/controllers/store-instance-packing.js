@@ -750,8 +750,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.mergeRedispatchItemsLoopConditional = function(item, pickListMatch, offloadListMatch) {
       var isMenuItemInOfAllowedMenuItemsForOffloadSection = $this.isMenuItemInOfAllowedMenuItemsForOffloadSection(item);
-      var isItemValidForOffloadSection = (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose')
-        || (!offloadListMatch && item.countTypeName === 'Offload');
+      var isItemValidForOffloadSection = (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') || (!offloadListMatch && item.countTypeName === 'Offload');
 
       return isMenuItemInOfAllowedMenuItemsForOffloadSection && isItemValidForOffloadSection;
     };
