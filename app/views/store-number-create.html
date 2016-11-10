@@ -37,19 +37,40 @@
          placeholder="store12345"
          ng-required="isSubmitting"/>
     </div>
-    <div class="col-xs-12 col-sm-6">
-      <date-picker class="form-group"
-        element-class="col-xs-6 col-sm-6"
-        disable-past="true"
-        label-from="Effective From *"
-        disable-start-date="fieldDisabled(formData)"
-        label-to="Effective To *"
-        name-from="startDate"
-        name-to="endDate"
-        start-date-model="formData.startDate"
-        end-date-model="formData.endDate"
-        >
-      </date-picker>
+    <div class="col-xs-6 col-sm-6">
+      <date-picker-field class="col-xs-6 col-sm-6"
+          ng-if="isEditing && fieldDisabled(formData)"
+          name="startDate"
+          ng-model="formData.startDate"
+          disable="true"
+          label="Effective From"
+          required="true">
+      </date-picker-field>
+      <date-picker-field class="col-xs-6 col-sm-6"
+          ng-if="!isEditing || !fieldDisabled(formData)"
+          name="startDate"
+          min-date="minDate"
+          ng-model="formData.startDate"
+          label="Effective From"
+          required="true">
+        </date-picker-field>
+        <date-picker-field class="col-xs-6 col-sm-6"
+            ng-if="!isEditing || !isEndingToday(formData)"
+            name="endDate"
+            min-date="minDate"
+            ng-model="formData.endDate"
+            label="Effective To"
+            required="true">
+        </date-picker-field>
+      <date-picker-field class="col-xs-6 col-sm-6"
+            ng-if="isEditing && isEndingToday(formData)"
+            name="endDate"
+            ng-model="formData.endDate"
+            label="Effective To!!"
+            min-date="today"
+            required="true">
+      </date-picker-field>
+
     </div>
   </div>
 </form>

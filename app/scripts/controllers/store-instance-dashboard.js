@@ -280,7 +280,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       var storeUpdatedDate = moment.utc(store.updatedOn, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
       var hoursSinceUpdatedDate = moment.duration(moment.utc().diff(storeUpdatedDate)).asHours();
       var isNowWithinAllowedHours = hoursSinceUpdatedDate > 0 && hoursSinceUpdatedDate < store.hours;
-      return (store.hours === -1) || (isNowWithinAllowedHours && !$scope.doesStoreInstanceHaveReplenishments(store));
+      return ((store.hours === -1) || isNowWithinAllowedHours) && !$scope.doesStoreInstanceHaveReplenishments(store);
     };
 
     $scope.undispatch = function (id) {
@@ -299,7 +299,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       4: ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
       5: ['End Instance', 'Redispatch', 'Get Flight Docs', 'Checkbox'],
       6: ['Start Inbound Seals', 'Get Flight Docs', 'Checkbox'],
-      7: ['Start Offload', 'Get Flight Docs', 'Checkbox'],
+      7: ['Start Offload', 'Get Flight Docs', 'Checkbox', 'Un-dispatch'],
       8: ['Get Flight Docs', 'Checkbox']
     };
 

@@ -45,29 +45,16 @@ angular.module('ts5App')
         '/manual-epos-discount/*',
         '/manual-epos-items/*',
         '/manual-store-instance/*',
-        '/menu-list/*',
-        '/menu-relationship-create/*',
-        '/menu-relationship-edit/*',
-        '/menu-relationship-list/*',
-        '/menu-relationship-view/*',
-        '/menu/*',
         '/retail-company-exchange-rate-setup/*',
         '/station-create/*',
         '/station-edit/*',
         '/station-list/*',
         '/station-view/*',
-        '/store-instance-create/end-instance/*',
-        '/store-instance-inbound-seals/end-instance/*',
-        '/store-instance-packing/end-instance/*',
-        '/store-instance-seals/end-instance/*',
-        '/store-instance-review/end-instance/*',
         '/store-instance-step-1/*',
-        '/store-number/*',
         '/tax-rates/*',
         '/ember/#/schedules/*',
         '/ember/#/menu-assignments/*',
         '/ember/#/menu-rules/*',
-        '/ember/#/promotion-categories/*',
         '/ember/#/promotion-catalogs/*',
         '/ember/#/receipt-rules/*'
     ];
@@ -75,8 +62,7 @@ angular.module('ts5App')
     var legacyApis = [
         '/rsvr/api/dispatch/store-instances/[0-9]*/status/[8-9][^11]*$',
         '/rsvr/api/companies/[0-9]*/company-credit-card-types',
-        '/rsvr/api/company-discounts/[0-9]*$',
-        '/rsvr/api/menus'
+        '/rsvr/api/company-discounts/[0-9]*$'
     ];
 
     var onlyRsvrApis = [
@@ -105,7 +91,9 @@ angular.module('ts5App')
       '/api/companies/[0-9]*/sales-categories',
       '/rsvr/api/retail-items/master/*',
       '/rsvr/api/menus/menu-masters',
-      '/rsvr/api/menus/caterer-stations'
+      '/rsvr/api/menus/caterer-stations',
+      '/rsvr/api/caterer-stations',
+      '/rsvr/api/menus'
       ];
 
     function responseError(response) {
