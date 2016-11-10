@@ -66,6 +66,15 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
     };
 
+    $scope.filterStoreNumberList = function () {
+      $scope.storesListSearch = angular.copy($scope.storesListFilterText);
+    };
+
+    $scope.setStoreNumber = function (storeNumber) {
+      $scope.formData.storeNumber = storeNumber.storeNumber;
+      angular.element('#store-numbers').modal('hide');
+    };
+
     this.handleExistingStoreNumberValidation = function (storeNumber) {
       $scope.showStoreNumberAlert = !storeNumber.readyToUse;
       $scope.storeNumberWarning = storeNumber.readyToUse ? '' : 'Store Number ' + $scope.formData.storeNumber + ' is already in use';

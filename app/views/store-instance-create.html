@@ -25,17 +25,26 @@
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>
           Store Number <span ng-show="stepOneFromStepTwo">*</span>
-          <span class="badge" ng-click="showStoreNumbersModal()" ng-hide="!stepOneFromStepTwo || isActionState('end-instance')"><i class="fa fa-info"></i></span>
         </label>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group">
-          <input ng-model="formData.storeNumber"
-                 type="text" class="form-control"
-                 placeholder="Enter Store Number"
-                 ng-disabled="!stepOneFromStepTwo || isActionState('end-instance')"
-                 ng-blur="validateStoreNumber()"
-                 required="true">
+          <div class="input-group">
+            <input ng-model="formData.storeNumber"
+                   type="text" class="form-control"
+                   placeholder="Enter Store Number"
+                   ng-disabled="!stepOneFromStepTwo || isActionState('end-instance')"
+                   ng-blur="validateStoreNumber()"
+                   required="true" />
+            <div class="input-group-btn">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-disabled="!stepOneFromStepTwo || isActionState('end-instance')"
+                      ng-click="showStoreNumbersModal()">
+                <i class="fa fa-info-circle"></i>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="alert alert-warning" ng-show="showStoreNumberAlert">
@@ -87,17 +96,26 @@
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>
           Store Number <span ng-show="!isActionState('end-instance')">*</span>
-          <span class="badge" ng-click="showStoreNumbersModal()" ng-hide="isActionState('end-instance') || isActionState('replenish')"><i class="fa fa-info"></i></span>
         </label>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group">
-          <input ng-model="formData.storeNumber"
-                 type="text" class="form-control"
-                 placeholder="Enter Store Number"
-                 ng-disabled="isActionState('end-instance') || isActionState('replenish')"
-                 ng-blur="validateStoreNumber()"
-                 required="true">
+          <div class="input-group">
+            <input ng-model="formData.storeNumber"
+                   type="text" class="form-control"
+                   placeholder="Enter Store Number"
+                   ng-disabled="isActionState('end-instance') || isActionState('replenish')"
+                   ng-blur="validateStoreNumber()"
+                   required="true" />
+            <div class="input-group-btn">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-disabled="isActionState('end-instance') || isActionState('replenish')"
+                      ng-click="showStoreNumbersModal()">
+                <i class="fa fa-info-circle"></i>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="alert alert-warning" ng-show="showStoreNumberAlert">
@@ -167,26 +185,35 @@
       </div>
       <div class="modal-body">
         <div class="table-responsive">
-          <p class="input-group">
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-disabled="true">
-              <i class="fa fa-filter"></i>
-            </button>
-          </span>
-            <input ng-model="storesListSearch" type="text" class="form-control" id="filter-item-details"
-                   placeholder="Search for a store number"/>
-          </p>
+          <div class="input-group">
+            <input ng-model="storesListFilterText" type="text" class="form-control" id="filter-item-details"
+                   placeholder="Filter Store Number List"/>
+            <div class="input-group-btn">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-click="filterStoreNumberList()">
+                <i class="fa fa-filter"></i> Filter
+              </button>
+            </div>
+          </div>
 
           <table class="table table-bordered table-condensed">
             <tr>
               <th>Store Number</th>
               <th>Start Date</th>
               <th>End Date</th>
+              <th></th>
             </tr>
             <tr ng-repeat="storeNumber in validStoresList | filter: {storeNumber: storesListSearch}">
               <td>{{ storeNumber.storeNumber }}</td>
               <td>{{ storeNumber.startDate }}</td>
               <td>{{ storeNumber.endDate }}</td>
+              <td>
+                <a class="btn btn-info btn-xs btn-block" tabindex="0"
+                   ng-click="setStoreNumber(storeNumber)">
+                  <i class="fa fa-check-circle"></i>
+                </a>
+              </td>
             </tr>
           </table>
         </div>

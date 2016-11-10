@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Store Instance Create Controller', function() {
+fdescribe('Store Instance Create Controller', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -1924,6 +1924,25 @@ describe('Store Instance Create Controller', function() {
       expect(scope.showStoreNumberAlert).toEqual(false);
     });
 
+  });
+
+  describe('store number scope helpers', function () {
+    beforeEach(function () {
+      initController('redispatch', true);
+      resolveAllDependencies();
+    });
+
+    it('should set store number to form data in setStoreNumber', function () {
+      scope.setStoreNumber({ storeNumber: 'testStore' });
+      expect(scope.formData.storeNumber).toEqual('testStore');
+    });
+
+    it('should set stores list search filter from the filter text in filterStoreNumberList', function () {
+      scope.storesListFilterText = 'test Filter';
+      scope.storesListSearch = '';
+      scope.filterStoreNumberList();
+      expect(scope.storesListSearch).toEqual(scope.storesListFilterText);
+    });
   });
 
 });
