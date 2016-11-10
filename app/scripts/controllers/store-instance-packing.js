@@ -749,8 +749,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.mergeRedispatchItemsLoopConditional = function(item, pickListMatch, offloadListMatch) {
-      return (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') || (!offloadListMatch &&
-        item.countTypeName === 'Offload');
+      var isMenuItemInOfAllowedMenuItemsForOffloadSection = $this.isMenuItemInOfAllowedMenuItemsForOffloadSection(item);
+      var isItemValidForOffloadSection = (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') || (!offloadListMatch && item.countTypeName === 'Offload');
+
+      return isMenuItemInOfAllowedMenuItemsForOffloadSection && isItemValidForOffloadSection;
     };
 
     this.mergeRedispatchItemsLoop = function(items, ignoreEposData) {
@@ -805,6 +807,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.mergeAllItems = function(responseCollection) {
       $scope.masterItemsList = angular.copy(responseCollection[0].masterItems);
+
+      $this.mergeAllowedMenuItemsForOffloadSection(responseCollection);
+
       $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[1].response));
       $this.mergeStoreInstanceItems(angular.copy(responseCollection[2].response));
       if (responseCollection[4]) {
@@ -818,6 +823,30 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.filterOffloadListItems();
       $scope.filterPickListItems();
       $this.hideLoadingModal();
+    };
+
+    this.mergeAllowedMenuItemsForOffloadSection = function(responseCollection) {
+      if (responseCollection[1]) {
+        $this.mergeAllUniqueMenuItems(angular.copy(responseCollection[1].response));
+      }
+
+      if (responseCollection[5]) {
+        $this.mergeAllUniqueMenuItems(angular.copy(responseCollection[5].response));
+      }
+    };
+
+    this.mergeAllUniqueMenuItems = function(menuItemsCollections) {
+      lodash.forEach(menuItemsCollections, function(menuItem) {
+        if (!$this.isMenuItemInOfAllowedMenuItemsForOffloadSection(menuItem)) {
+          $scope.allowedMenuItemsForOffloadSection.push(menuItem);
+        }
+      });
+    };
+
+    this.isMenuItemInOfAllowedMenuItemsForOffloadSection = function(menuItemToCheck) {
+      var itemsGroupedById = lodash.indexBy($scope.allowedMenuItemsForOffloadSection, 'itemMasterId');
+
+      return menuItemToCheck.itemMasterId in itemsGroupedById;
     };
 
     this.finalizeAllInitialization = function(responseCollection) {
@@ -841,6 +870,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
         getItemsPromises.push($this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId));
+        getItemsPromises.push($this.getStoreInstanceMenuItems($scope.storeDetails.prevStoreInstanceId));
       }
 
       $q.all(getItemsPromises).then($this.finalizeAllInitialization, handleResponseError);
@@ -879,6 +909,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.newPickListItems = [];
       $scope.addPickListNum = 1;
       $scope.filteredItemsList = [];
+      $scope.allowedMenuItemsForOffloadSection = [];
 
       if ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') {
         $scope.offloadListItems = [];
