@@ -55,12 +55,22 @@
           required="true">
         </date-picker-field>
         <date-picker-field class="col-xs-6 col-sm-6"
+            ng-if="!isEditing || !isEndingToday(formData)"
             name="endDate"
             min-date="minDate"
             ng-model="formData.endDate"
             label="Effective To"
             required="true">
         </date-picker-field>
+      <date-picker-field class="col-xs-6 col-sm-6"
+            ng-if="isEditing && isEndingToday(formData)"
+            name="endDate"
+            ng-model="formData.endDate"
+            label="Effective To!!"
+            min-date="today"
+            required="true">
+      </date-picker-field>
+
     </div>
   </div>
 </form>

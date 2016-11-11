@@ -66,6 +66,49 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
     };
 
+    $scope.filterStoreNumberList = function () {
+      $scope.storesListSearch = angular.copy($scope.storesListFilterText);
+    };
+
+    $scope.setStoreNumber = function (storeNumber) {
+      $scope.formData.storeNumber = storeNumber.storeNumber;
+      angular.element('#store-numbers').modal('hide');
+    };
+
+    this.handleExistingStoreNumberValidation = function (storeNumber) {
+      $scope.showStoreNumberAlert = !storeNumber.readyToUse;
+      $scope.storeNumberWarning = storeNumber.readyToUse ? '' : 'Store Number ' + $scope.formData.storeNumber + ' is already in use';
+      $scope.formData.storeNumber = storeNumber.readyToUse ? $scope.formData.storeNumber : '';
+    };
+
+    this.handleInvalidStoreNumber = function () {
+      $scope.showStoreNumberAlert = true;
+      $scope.storeNumberWarning = 'Store Number ' + $scope.formData.storeNumber + ' does not exist';
+      $scope.formData.storeNumber = '';
+    };
+
+    $scope.validateStoreNumber = function () {
+      $scope.showStoreNumberAlert = false;
+      $scope.storeNumberWarning = '';
+
+      var shouldSkipValidation = !$scope.formData.storeNumber || (angular.isDefined($scope.oldStoreNumber) && $scope.oldStoreNumber === $scope.formData.storeNumber);
+      if (shouldSkipValidation) {
+        return;
+      }
+
+      var storeNumberMatch = lodash.findWhere($scope.storesList, { storeNumber: $scope.formData.storeNumber });
+      if (!storeNumberMatch) {
+        $this.handleInvalidStoreNumber();
+        return;
+      }
+
+      $this.handleExistingStoreNumberValidation(storeNumberMatch);
+    };
+
+    $scope.showStoreNumbersModal = function () {
+      angular.element('#store-numbers').modal('show');
+    };
+
     this.formatCurrentStoreForStoreList = function (store) {
       var currentStore = {
         companyId: store.companyId,
@@ -246,17 +289,27 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return !this.isActionState('replenish');
     };
 
+    this.formatStoresList = function () {
+      angular.forEach($scope.validStoresList, function (store) {
+        store.startDate = dateUtility.formatDateForApp(store.startDate);
+        store.endDate = dateUtility.formatDateForApp(store.endDate);
+      });
+    };
+
     this.setStoresList = function (dataFromAPI) {
       var storesListFromAPI = angular.copy(dataFromAPI.response);
       var shouldFilterReadyToUse = $this.determineReadyToUse();
 
-      $scope.storesList = shouldFilterReadyToUse ? lodash.filter(storesListFromAPI, { readyToUse: true }) : storesListFromAPI;
+      $scope.storesList = storesListFromAPI;
+      $scope.validStoresList = shouldFilterReadyToUse ? lodash.filter(storesListFromAPI, { readyToUse: true }) : storesListFromAPI;
 
       var storeIdMatch = lodash.findWhere(storesListFromAPI, { id: parseInt($scope.oldStoreNumberId) });
       var storeIdMatchInStoresList = lodash.findWhere($scope.storesList, { id: parseInt($scope.oldStoreNumberId) });
       if ($scope.oldStoreNumberId && storeIdMatch && !storeIdMatchInStoresList) {
-        $scope.storesList.push(storeIdMatch);
+        $scope.validStoresList.push(storeIdMatch);
       }
+
+      $this.formatStoresList();
     };
 
     this.getStoresList = function () {
@@ -398,6 +451,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
       payload.scheduleId = payload.scheduleNumber.id;
       payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
+      payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
+
       var actionSwitch = this.actionSwitch(action);
       switch (actionSwitch) {
         case 'replenish':
@@ -465,6 +520,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setStoreNumber = function (apiData) {
       if (apiData && apiData.storeNumber) {
+        $scope.oldStoreNumber = apiData.storeNumber.toString();
         return apiData.storeNumber.toString();
       }
 
@@ -761,10 +817,30 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $location.url(uri);
     };
 
+    this.displayErrorConfirmation = function (response) {
+      $scope.storeConfirmationDialog = {
+        title: 'The Store you selected is already associated to another Instance',
+        confirmationCallback: function () {
+          $location.url('/store-instance-dashboard/');
+        },
+
+        confirmationLabel: 'OK',
+        body: response.value,
+        cancelLabel: 'Cancel'
+      };
+      angular.element('#confirmation-modal').modal('show');
+    };
+
     this.createStoreInstanceErrorHandler = function (response) {
       $this.hideLoadingModal();
-      $scope.displayError = true;
-      $scope.errorResponse = response;
+      var errorResp = angular.copy(response.data);
+      if (!(angular.isUndefined(errorResp)) && errorResp[0].code === '250') {
+        $this.displayErrorConfirmation(errorResp[0]);
+      } else {
+        $scope.displayError = true;
+        $scope.errorResponse = response;
+      }
+
       return false;
     };
 
@@ -828,7 +904,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.checkForOnFloorInstance = function () {
       if ($scope.storeInstancesOnFloor) {
         var onFloorInstance = $scope.storeInstancesOnFloor.filter(function (instance) {
-          return (instance.storeId === parseInt($scope.formData.storeId));
+          return (instance.storeNumber === parseInt($scope.formData.storeNumber));
         });
 
         return onFloorInstance[0];
@@ -847,6 +923,23 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.displayConfirmDialog = function () {
+      $scope.storeConfirmationDialog = {
+        title: 'The Store you selected is already associated to another Instance',
+        body: sprintf(
+          'Currently Store Number %s for Schedule Date and Store Instance %d is in the "On Floor" status. You can either Redispatch this, End this, or press Cancel to select a different Store.',
+          $scope.onFloorInstance.storeNumber, $scope.onFloorInstance.id),
+        confirmationCallback: function () {
+          $scope.goToActionState('redispatch');
+        },
+
+        confirmationLabel: 'Redispatch',
+        alternativeCallback: function () {
+          $scope.goToActionState('end-instance');
+        },
+
+        alternativeLabel: 'End Instance'
+      };
+
       angular.element('#confirmation-modal').modal('show');
     };
 
@@ -1377,5 +1470,4 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.init();
-
   });

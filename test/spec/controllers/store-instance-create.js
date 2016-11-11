@@ -366,9 +366,18 @@ describe('Store Instance Create Controller', function() {
         expect(scope.storesList.length).toBeGreaterThan(0);
       });
 
-      it('should filter stores API Response with readyToUse flag', function() {
-        var readyToUseRecord = lodash.findWhere(storeDetailsJSON.response, { readyToUse: true });
+      it('should filter the valid stores lists with readyToUse flag', function() {
+        var readyToUseRecord = lodash.findWhere(storesListJSON.response, { readyToUse: true });
         expect(scope.storesList.indexOf(readyToUseRecord) >= 0).toEqual(false);
+      });
+
+      it('should save all stores to scope', function () {
+        expect(scope.storesList.length).toEqual(storesListJSON.response.length);
+      });
+
+      it('should format dates in valid stores list', function () {
+        expect(dateUtility.isDateValidForApp(scope.validStoresList[0].startDate)).toEqual(true);
+        expect(dateUtility.isDateValidForApp(scope.validStoresList[0].endDate)).toEqual(true);
       });
     });
 
@@ -517,6 +526,7 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'formatDispatchPayload').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'formatMenus').and.callThrough();
       scope.$digest();
+      scope.storesList = [{ storeNumber: 'store12345', id: 12 }];
       scope.formData = {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{
@@ -529,7 +539,7 @@ describe('Store Instance Create Controller', function() {
           id: 2,
           scheduleNumber: '107'
         },
-        storeId: storeInstanceId
+        storeNumber: 'store12345'
       };
       scope.$digest();
       payloadControl = StoreInstanceCreateCtrl.formatPayload();
@@ -553,7 +563,8 @@ describe('Store Instance Create Controller', function() {
         }],
         cateringStationId: 13,
         scheduleNumber: '107',
-        storeId: 13,
+        storeId: 12,
+        storeNumber: 'store12345',
         scheduleId: 2
       };
       expect(mockPayload).toEqual(payloadControl);
@@ -580,11 +591,13 @@ describe('Store Instance Create Controller', function() {
         scheduleNumber: {
           scheduleNumber: '107'
         },
+        storeNumber: 'store12345',
         storeId: storeInstanceId
       };
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'formatReplenishPayload').and.callThrough();
       scope.$digest();
+      scope.storeList = [ {storeNumber: 'store12345', id: 12 }];
       payloadControl = StoreInstanceCreateCtrl.formatPayload();
     });
 
@@ -601,7 +614,8 @@ describe('Store Instance Create Controller', function() {
       var mockPayload = {
         scheduleDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
         cateringStationId: 13,
-        storeId: 13,
+        storeId: 12,
+        storeNumber: 'store12345',
         scheduleNumber: '107',
         scheduleId: 350,
         replenishStoreInstanceId: storeInstanceId
@@ -669,6 +683,7 @@ describe('Store Instance Create Controller', function() {
           id: 350,
           scheduleNumber: '107'
         },
+        storeNumber: 'store12345',
         storeId: storeInstanceId
       };
       spyOn(StoreInstanceCreateCtrl, 'showLoadingModal');
@@ -679,6 +694,7 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'checkForOnFloorInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'displayErrorConfirmation').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage');
       mockStoreInstanceCreate();
     });
@@ -759,6 +775,38 @@ describe('Store Instance Create Controller', function() {
 
     });
 
+    describe('error handler and display confirmation', function() {
+
+      var errorResponse;
+
+      beforeEach(function() {
+        errorResponse = {
+          data: [{
+            field: 'storeId',
+            code: '250',
+            value: 'There is another Store Instance created/exists using this Store Number.'
+          }]
+        };
+        createStoreInstanceDeferred.reject(errorResponse);
+        scope.$digest();
+      });
+
+      it('should hide the loading modal', function() {
+        expect(StoreInstanceCreateCtrl.hideLoadingModal).toHaveBeenCalled();
+      });
+
+      it('should call the error handler', function() {
+        expect(StoreInstanceCreateCtrl.createStoreInstanceErrorHandler).toHaveBeenCalledWith(
+          errorResponse);
+      });
+
+      it('should call the displayErrorConfirmation', function() {
+        expect(StoreInstanceCreateCtrl.displayErrorConfirmation).toHaveBeenCalledWith(
+          (errorResponse.data)[0]);
+      });
+
+    });
+
   });
 
   describe('The create replenish functionality', function() {
@@ -776,15 +824,18 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage');
       scope.$digest();
+      scope.storeList = [{ storeNumber: 'store12345', id: 12 }];
       scope.formData.scheduleNumber = {
-        scheduleNumber: '107'
+        scheduleNumber: '107',
       };
+      scope.formData.storeNumber = 'store12345';
       mockStoreInstanceCreate();
     });
 
     describe('success handler', function() {
 
       beforeEach(function() {
+        scope.formData.storeNumber = 'store12345';
         mockStoreInstanceCreate();
         createStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
         scope.$digest();
@@ -820,12 +871,16 @@ describe('Store Instance Create Controller', function() {
         id: 350,
         scheduleNumber: '107'
       };
+      scope.formData.storeNumber = 'store12345';
+      scope.storesList = [{ storeNumber: 'store12345', id: 12 }];
       mockStoreInstanceUpdate();
     });
 
     describe('success handler', function() {
 
       beforeEach(function() {
+        scope.storesList = [{ storeNumber: 'store12345', id: 12 }];
+        scope.formData.storeNumber = 'store12345';
         mockStoreInstanceCreate();
         updateStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
         updateStoreInstanceStatusDeferred.resolve({
@@ -1341,6 +1396,7 @@ describe('Store Instance Create Controller', function() {
           id: 350,
           scheduleNumber: '107'
         },
+        storeNumber: 'store12345',
         storeId: storeInstanceId
       };
       mockEndStoreInstance();
@@ -1417,7 +1473,7 @@ describe('Store Instance Create Controller', function() {
   });
 
   describe('The redispatchStoreInstance functionality', function() {
-	  
+
 	beforeEach(function() {
       initController('redispatch');
       resolveAllDependencies();
@@ -1439,7 +1495,7 @@ describe('Store Instance Create Controller', function() {
         },{
           name: 'NEWMENU'
         },{
-          id: 200,	
+          id: 200,
           name: 'OLDMENU'
         }],
         cateringStationId: 13,
@@ -1447,6 +1503,7 @@ describe('Store Instance Create Controller', function() {
           id: 350,
           scheduleNumber: '107'
         },
+        storeNumber: 'store12345',
         storeId: storeInstanceId
       };
       scope.prevStoreDetails = {};
@@ -1466,7 +1523,7 @@ describe('Store Instance Create Controller', function() {
     it('should call the makeRedispatchPromises method on the controller', function() {
       expect(StoreInstanceCreateCtrl.makeRedispatchPromises).toHaveBeenCalled();
     });
-    
+
     it('should be able to verify payload as prevoius storeInstance menus for re-dispatch ', function() {
       StoreInstanceCreateCtrl.makeRedispatchPromises();
       expect(scope.formData.menus.length).toEqual(2);
@@ -1502,6 +1559,7 @@ describe('Store Instance Create Controller', function() {
           id: 350,
           scheduleNumber: '107'
         },
+        storeNumber: 'store12345',
         storeId: storeInstanceId
       };
       scope.$digest();
@@ -1561,6 +1619,7 @@ describe('Store Instance Create Controller', function() {
         scheduleNumber: {
           scheduleNumber: '107'
         },
+        storeNumber: 'store12345',
         storeId: storeInstanceId
       };
 
@@ -1632,9 +1691,9 @@ describe('Store Instance Create Controller', function() {
     it('should set stepOnFromStepTwo', function () {
       expect(scope.stepOneFromStepTwo).toBeDefined();
     });
-    
+
     it('should set prevStoreInstanceId if stepOnFromStepTwo with true', function () {
-      expect(scope.prevStoreInstanceId).toEqual(12); 
+      expect(scope.prevStoreInstanceId).toEqual(12);
     });
 
   });
@@ -1824,6 +1883,66 @@ describe('Store Instance Create Controller', function() {
       expect(scope.formData.scheduleDate).toEqual(dateUtility.nowFormatted());
     });
 
+  });
+
+  describe('store number validation', function () {
+    beforeEach(function () {
+      initController('redispatch', true);
+      resolveAllDependencies();
+      scope.storesList = [{ storeNumber: 'goodStore', readyToUse: true, id: 1 }, { storeNumber: 'usedStore', readyToUse: false, id: 2}];
+    });
+
+    it('should show an error if the store number does not exist', function () {
+      scope.formData = { storeNumber: 'badStore' };
+      scope.validateStoreNumber();
+
+      expect(scope.showStoreNumberAlert).toEqual(true);
+      expect(scope.storeNumberWarning).toEqual('Store Number badStore does not exist');
+
+      scope.formData = { storeNumber: 'goodStore' };
+      scope.validateStoreNumber();
+
+      expect(scope.showStoreNumberAlert).toEqual(false);
+    });
+
+    it('should show an error if the store number exists but is not ready to use', function () {
+      scope.formData = { storeNumber: 'usedStore' };
+      scope.validateStoreNumber();
+
+      expect(scope.showStoreNumberAlert).toEqual(true);
+      expect(scope.storeNumberWarning).toEqual('Store Number usedStore is already in use');
+    });
+
+    it('should not validate if store number is empty or if the store number equals the prepopulated store number', function () {
+      scope.formData = { storeNumber: '' };
+      scope.validateStoreNumber();
+      expect(scope.showStoreNumberAlert).toEqual(false);
+
+      scope.oldStoreNumber = 'oldStoreNumber';
+      scope.formData = { storeNumber: 'oldStoreNumber' };
+      scope.validateStoreNumber();
+      expect(scope.showStoreNumberAlert).toEqual(false);
+    });
+
+  });
+
+  describe('store number scope helpers', function () {
+    beforeEach(function () {
+      initController('redispatch', true);
+      resolveAllDependencies();
+    });
+
+    it('should set store number to form data in setStoreNumber', function () {
+      scope.setStoreNumber({ storeNumber: 'testStore' });
+      expect(scope.formData.storeNumber).toEqual('testStore');
+    });
+
+    it('should set stores list search filter from the filter text in filterStoreNumberList', function () {
+      scope.storesListFilterText = 'test Filter';
+      scope.storesListSearch = '';
+      scope.filterStoreNumberList();
+      expect(scope.storesListSearch).toEqual(scope.storesListFilterText);
+    });
   });
 
 });

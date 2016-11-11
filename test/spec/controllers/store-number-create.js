@@ -69,6 +69,11 @@ describe('Controller: StoreNumberCreateCtrl', function() {
       expect(dateUtility.isTomorrowOrLater( scope.minDate)).toEqual(true);
     });
 
+    it('should save todays date to scope', function () {
+      expect(scope.today).toBeDefined();
+      expect(dateUtility.isToday(scope.today)).toEqual(true);
+    });
+
     it('should clear lazy loading meta vars', function () {
       expect(StoreNumberCreateCtrl.meta.offset).toEqual(0);
       expect(StoreNumberCreateCtrl.meta.limit).toEqual(100);
@@ -181,18 +186,72 @@ describe('Controller: StoreNumberCreateCtrl', function() {
   });
 
   describe('fieldDisabled scope function', function() {
-    it('should return true', function() {
-      expect(scope.fieldDisabled({
-        startDate: '12/30/2000',
-        endDate: '12/30/2050'
-      })).toBe(true);
+    beforeEach(function () {
+      scope.storeNumbersList = [
+        {
+          id: 1,
+          storeNumber: 'active store number',
+          startDate: '06/20/2000',
+          endDate: '01/05/2050'
+        }, {
+          id: 2,
+          storeNumber: 'future store number',
+          startDate: '06/20/3050',
+          endDate: '01/05/3051'
+        }];
+    });
+    it('should return true for active records', function() {
+      var activeRecord = scope.storeNumbersList[0];
+      expect(scope.fieldDisabled(activeRecord)).toEqual(true);
     });
 
-    it('should return false', function() {
-      expect(scope.fieldDisabled({
-        startDate: '12/30/1999',
-        endDate: '12/30/2000'
-      })).toBe(false);
+    it('should return false for future records', function() {
+      var pastRecord = scope.storeNumbersList[1];
+      expect(scope.fieldDisabled(pastRecord)).toEqual(false);
+    });
+
+    it('should check against original store instead of the store passed in', function () {
+      var formDataMock = {
+        id: 2,
+        storeNumber: 'edited future store number to be in past',
+        startDate: '06/20/1980',
+        endDate: '07/21/2000'
+      };
+      expect(scope.fieldDisabled(formDataMock)).toEqual(false);
+    });
+  });
+
+  describe('isToday scope function', function() {
+    beforeEach(function () {
+      scope.storeNumbersList = [
+        {
+          id: 1,
+          storeNumber: 'store number ending today',
+          startDate: '06/20/2000',
+          endDate: dateUtility.nowFormatted()
+        }, {
+          id: 2,
+          storeNumber: 'future store number',
+          startDate: '06/20/3050',
+          endDate: '01/05/3051'
+        }];
+    });
+    it('should return true for end dates dates equal to today', function() {
+      var activeRecord = scope.storeNumbersList[0];
+      expect(scope.isEndingToday(activeRecord)).toEqual(true);
+
+      var futureRecord = scope.storeNumbersList[1];
+      expect(scope.isEndingToday(futureRecord)).toEqual(false);
+    });
+
+    it('should check against original store instead of the store passed in', function () {
+      var formDataMock = {
+        id: 1,
+        storeNumber: 'edited active store number to be in past',
+        startDate: '06/20/1980',
+        endDate: '07/21/2000'
+      };
+      expect(scope.fieldDisabled(formDataMock)).toEqual(true);
     });
   });
 
