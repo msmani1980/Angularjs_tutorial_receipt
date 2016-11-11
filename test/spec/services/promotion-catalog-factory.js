@@ -7,17 +7,20 @@ describe('Service: promotionCatalogFactory', function () {
 
   var promotionCatalogFactory,
     promotionCatalogService,
+    promotionsService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _promotionCatalogFactory_, _promotionCatalogService_) {
+  beforeEach(inject(function ($rootScope, _promotionCatalogFactory_, _promotionCatalogService_, _promotionsService_) {
     promotionCatalogService = _promotionCatalogService_;
+    promotionsService = _promotionsService_;
 
     spyOn(promotionCatalogService, 'getPromotionCatalogList');
     spyOn(promotionCatalogService, 'getPromotionCatalog');
     spyOn(promotionCatalogService, 'createPromotionCatalog');
     spyOn(promotionCatalogService, 'updatePromotionCatalog');
     spyOn(promotionCatalogService, 'deletePromotionCatalog');
+    spyOn(promotionsService, 'getPromotions');
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -58,6 +61,14 @@ describe('Service: promotionCatalogFactory', function () {
       var mockId = 123;
       promotionCatalogFactory.deletePromotionCatalog(mockId);
       expect(promotionCatalogService.deletePromotionCatalog).toHaveBeenCalledWith(mockId);
+    });
+  });
+
+  describe('promotionsService API', function () {
+    it('should call promotionsService on getPromotionList', function () {
+      var mockPayload = { fakeKey: 'fakeValue' };
+      promotionCatalogFactory.getPromotionList(mockPayload);
+      expect(promotionsService.getPromotions).toHaveBeenCalledWith(mockPayload);
     });
   });
 

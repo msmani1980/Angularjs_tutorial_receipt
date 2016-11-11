@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('promotionCatalogFactory', function (promotionCatalogService) {
+  .factory('promotionCatalogFactory', function (promotionCatalogService, promotionsService) {
 
     //function getCompanyId() {
     //  return globalMenuService.getCompanyData().id;
@@ -47,12 +47,17 @@ angular.module('ts5App')
       return promotionCatalogService.deletePromotionCatalog(promotionCatalogId);
     }
 
+    function getPromotionList(payload) {
+     return promotionsService.getPromotions(payload);
+    }
+
     return {
       getPromotionCatalogList: getPromotionCatalogList,
       getPromotionCatalog: getPromotionCatalog,
       createPromotionCatalog: createPromotionCatalog,
       updatePromotionCatalog: updatePromotionCatalog,
-      deletePromotionCatalog: deletePromotionCatalog
+      deletePromotionCatalog: deletePromotionCatalog,
+      getPromotionList: getPromotionList
     };
 
   });
