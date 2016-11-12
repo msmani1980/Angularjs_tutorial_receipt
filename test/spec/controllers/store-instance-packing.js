@@ -325,6 +325,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     describe('merge items for end-instance', function () {
       var mockItemsResponseFromAPI;
       var menuItems;
+      var redispatchParentMenuItems;
       var storeInstanceItems;
       var calculatedEposInboundQuantities;
       beforeEach(function () {
@@ -343,6 +344,22 @@ describe('Controller: StoreInstancePackingCtrl', function () {
               itemCode: 'ITM2',
               menuQuantity: 2,
               itemMasterId: 2
+            }
+          ]
+        };
+        redispatchParentMenuItems = {
+          response: [
+            {
+              itemName: 'item6',
+              itemCode: 'ITM6',
+              menuQuantity: 1,
+              itemMasterId: 6
+            },
+            {
+              itemName: 'item7',
+              itemCode: 'ITM7',
+              menuQuantity: 2,
+              itemMasterId: 7
             }
           ]
         };
@@ -398,6 +415,43 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
         expect(scope.offloadListItems.length).toEqual(2);
         expect(scope.offloadListItems[0].ullageQuantity).toBeDefined();
+      });
+
+      it('should not add items to Offload list that are not part of store instance menu', function () {
+        var itemThatIsNotInMenu = {
+          itemName: 'item10',
+          itemCode: 'ITM10',
+          quantity: 5,
+          itemMasterId: 10,
+          countTypeId: 2
+        };
+
+        storeInstanceItems.response.push(itemThatIsNotInMenu);
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems, {}, {}, {}];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.offloadListItems.length).toEqual(2);
+      });
+
+      it('should not add items to Offload list that are not part of store instance menu or parent store instance menu', function () {
+        var itemThatIsNotInMenu = {
+          itemName: 'item10',
+          itemCode: 'ITM10',
+          quantity: 5,
+          itemMasterId: 10,
+          countTypeId: 2
+        };
+        var itemThatIsInParentStoreInstanceMenu = {
+          itemName: 'item7',
+          itemCode: 'ITM7',
+          quantity: 2,
+          itemMasterId: 7,
+          countTypeId: 1
+        };
+        storeInstanceItems.response.push(itemThatIsNotInMenu);
+        storeInstanceItems.response.push(itemThatIsInParentStoreInstanceMenu);
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, storeInstanceItems, {}, {}, redispatchParentMenuItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.offloadListItems.length).toEqual(3);
       });
 
       it('should not add FAClose items that do not overlap with existing items', function () {
