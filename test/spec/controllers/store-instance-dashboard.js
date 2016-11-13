@@ -598,6 +598,31 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       var doesContainAction = scope.doesStoreInstanceContainAction(testStoreInstance, 'Pack');
       expect(doesContainAction).toEqual(false);
     });
+    
+    it('should return false if replenish store instance has parent store instance status as Inbounded', function() {
+      var testStoreInstance = {
+        actionButtons: ['Get Flight Docs', 'Checkbox', 'Un-dispatch'],	  
+        statusId: 4
+      };
+      var testParentStoreInstance = {
+        statusId: 8
+      };
+      var doesContainAction = scope.doesRepleshinStoreInstanceContainAction(testStoreInstance, testParentStoreInstance, 'Un-dispatch');
+      expect(doesContainAction).toEqual(false);
+    });
+    
+    it('should return true if replenish store instance has parent store instance status as Dispatched', function() {
+      var testStoreInstance = {
+        actionButtons: ['Get Flight Docs', 'Checkbox', 'Un-dispatch'],	  
+        statusId: 4
+      };
+      var testParentStoreInstance = {
+        statusId: 4
+      };
+      var doesReplenishAction = scope.doesRepleshinStoreInstanceContainAction(testStoreInstance, testParentStoreInstance, 'Un-dispatch');
+      expect(doesReplenishAction).toEqual(true);
+    });
+    
   });
 
   describe('shouldShowReplenishAction', function() {
