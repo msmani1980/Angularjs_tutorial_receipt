@@ -312,7 +312,7 @@
            ng-click="navigateToAction(replenishment, 'Dispatch')">Dispatch
         </a>
         <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-           ng-show="isUndispatchPossible(replenishment) && doesStoreInstanceContainAction(replenishment, 'Un-dispatch')"
+           ng-show="isUndispatchPossible(replenishment) && doesRepleshinStoreInstanceContainAction(replenishment, store, 'Un-dispatch')"
            ng-click="displayUndispatchConfirmation(replenishment)">
           Undispatch
         </a>

@@ -170,6 +170,15 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
       return storeInstance.actionButtons.indexOf(actionName) >= 0;
     };
+    
+    $scope.doesRepleshinStoreInstanceContainAction = function (storeInstance, parentStoreInstance, actionName) {
+      if (!storeInstance.actionButtons) {
+        return false;
+      }
+      
+      var parentStatusNumber = getValueByIdInArray(parentStoreInstance.statusId, 'name', $scope.storeStatusList);
+      return (storeInstance.actionButtons.indexOf(actionName) >= 0 && parseInt(parentStatusNumber) !== 8);
+    };
 
     function deleteSuccessHandler() {
       var storeInstance = angular.copy($scope.storeInstanceToDelete);
@@ -299,7 +308,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       4: ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
       5: ['End Instance', 'Redispatch', 'Get Flight Docs', 'Checkbox'],
       6: ['Start Inbound Seals', 'Get Flight Docs', 'Checkbox'],
-      7: ['Start Offload', 'Get Flight Docs', 'Checkbox', 'Un-dispatch'],
+      7: ['Start Offload', 'Get Flight Docs', 'Checkbox'],
       8: ['Get Flight Docs', 'Checkbox']
     };
 
