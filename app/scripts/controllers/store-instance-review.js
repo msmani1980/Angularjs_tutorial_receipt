@@ -633,14 +633,15 @@ angular.module('ts5App')
         saveStoreStatusIfRedispatch(status);
         return;
       }
-
+      
       var statusNameInt = getStatusNameIntByName(status);
       if (!status) {
         throwError('statusId', 'Unable to find statusId by name: ' + name);
         return false;
       }
-
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(
+      
+      var endInstanceFlag = $routeParams.action === 'end-instance' ? true : false;
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt, false, endInstanceFlag).then(
         storeInstanceStatusDispatched, showResponseErrors);
     }
 

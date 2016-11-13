@@ -162,13 +162,14 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.getStoreInstanceMenuItems(requestPayload).$promise;
   }
 
-  function updateStoreInstanceStatus(id, statusId, inboundId, isManual) {
+  function updateStoreInstanceStatus(id, statusId, inboundId, isManual, endInstance) {
     var requestPayload = angular.extend({}, {
       id: id,
       inboundStationId: inboundId,
       api: 'status',
       itemIdOrBulk: statusId,
-      isManual: isManual
+      isManual: isManual,
+      endInstance: endInstance
     });
     return requestResource.updateStoreInstanceStatus(requestPayload).$promise;
   }
