@@ -174,12 +174,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(scope.countTypes).toEqual(countTypesResponseJSON);
       });
 
-      it('should get item characteristics', function () {
-        expect(storeInstancePackingFactory.getCharacteristics).toHaveBeenCalled();
-        expect(scope.itemCharacteristics).toBeDefined();
-        expect(scope.itemCharacteristics).toEqual(characteristicsResponseJSON);
-      });
-
       it('should get items master list', function () {
         expect(storeInstancePackingFactory.getItemsMasterList).toHaveBeenCalled();
         expect(scope.masterItemsList).toEqual(masterItemsListResponseJSON.masterItems);
@@ -202,26 +196,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should get upliftable characteristic Id', function () {
-        expect(storeInstancePackingFactory.getCharacteristics).toHaveBeenCalled();
-        expect(scope.characteristicFilterId).toBeDefined();
-        expect(scope.characteristicFilterId).toEqual(2); // Upliftable characteristic from mock JSON
-      });
-    });
-
-    describe('dispatch replenishment store instance init API calls', function () {
-      beforeEach(function () {
-        initController('dispatch');
-        scope.$digest();
-      });
-
-      it('should get upliftable characteristic Id', function () {
-        var replenishStoreInstanceDetails = {
-          'replenishStoreInstanceId': 10,
-          'id': 123
-        };
-        StoreInstancePackingCtrl.setStoreDetails(replenishStoreInstanceDetails);
-        StoreInstancePackingCtrl.setCharacteristicIdByAction();
-
         expect(storeInstancePackingFactory.getCharacteristics).toHaveBeenCalled();
         expect(scope.characteristicFilterId).toBeDefined();
         expect(scope.characteristicFilterId).toEqual(2); // Upliftable characteristic from mock JSON
@@ -1129,24 +1103,24 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
     it('should do nothing to item if has valid ullage and inbound fields', function () {
       var validUllageItem = {
-       countTypeId: 1,
-       inboundQuantity: 20,
-       isEposDataOverwritten: false,
-       isInOffload: false,
-       isMenuItem: true,
-       isNewItem: false,
-       itemDescription: 'Brwnie239-Brownie',
-       itemMasterId: 10,
-       itemName: 'Brownie',
-       menuQuantity: 20,
-       oldInboundQuantity: -10,
-       ldPickedQuantity: 20,
-       oldUllageQuantity: -1,
-       pickedId: 201277,
-       pickedQuantity: '20',
-       shouldDisplayOffloadData: true,
-       ullageQuantity: 2,
-       ullageReason: ullageReasonDamaged
+        countTypeId: 1,
+        inboundQuantity: 20,
+        isEposDataOverwritten: false,
+        isInOffload: false,
+        isMenuItem: true,
+        isNewItem: false,
+        itemDescription: 'Brwnie239-Brownie',
+        itemMasterId: 10,
+        itemName: 'Brownie',
+        menuQuantity: 20,
+        oldInboundQuantity: -10,
+        ldPickedQuantity: 20,
+        oldUllageQuantity: -1,
+        pickedId: 201277,
+        pickedQuantity: '20',
+        shouldDisplayOffloadData: true,
+        ullageQuantity: 2,
+        ullageReason: ullageReasonDamaged
       };
 
       scope.shouldDisableUllage(validUllageItem);

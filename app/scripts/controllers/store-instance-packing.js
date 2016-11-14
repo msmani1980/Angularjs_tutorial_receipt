@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function($scope, storeInstancePackingFactory, $routeParams, lodash, storeInstanceWizardConfig,
-    $location, $q, dateUtility, socketIO) {
+           $location, $q, dateUtility, socketIO) {
 
     var $this = this;
 
@@ -169,8 +169,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }, this.errorHandler);
     };
 
-    this.setCharacteristicIdByAction = function() {
-      $scope.characteristicFilterId = $this.getIdByNameFromArray($this.getCharacteristicNameByAction(), $scope.itemCharacteristics);
+    this.getCharacteristicIdForName = function(characteristicName) {
+      return storeInstancePackingFactory.getCharacteristics().then(function(response) {
+        $scope.characteristicFilterId = $this.getIdByNameFromArray(characteristicName, response);
+      }, this.errorHandler);
     };
 
     this.getRegularItemTypeId = function() {
@@ -185,18 +187,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }, this.errorHandler);
     };
 
-    this.getCharacteristics = function() {
-      storeInstancePackingFactory.getCharacteristics().then(function(response) {
-        $scope.itemCharacteristics = angular.copy(response);
+    this.getStoreDetails = function() {
+      return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then(function(response) {
+        $scope.storeDetails = angular.copy(response);
       }, this.errorHandler);
-    };
-
-    this.getStoreDetails = function () {
-      return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails, this.errorHandler);
-    };
-
-    this.setStoreDetails = function (storeDetailsJSON) {
-      $scope.storeDetails = angular.copy(storeDetailsJSON);
     };
 
     $scope.showVarianceWarningClass = function(item) {
@@ -407,7 +401,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
       angular.forEach(mergedItems, function(item) {
         var didQuantityChange = (angular.isDefined(item.oldPickedQuantity)) ? parseInt(item.pickedQuantity) !==
-          item.oldPickedQuantity : true;
+        item.oldPickedQuantity : true;
         if (didQuantityChange) {
           var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
           if (item.pickedId) {
@@ -421,7 +415,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.addUllageQuantityToPayload = function(item) {
       var didUllageQuantityChange = (angular.isDefined(item.oldUllageQuantity)) ? parseInt(item.ullageQuantity) !==
-        item.oldUllageQuantity : true;
+      item.oldUllageQuantity : true;
       if (didUllageQuantityChange) {
         var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage');
         if (item.ullageId) {
@@ -436,7 +430,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.addInboundQuantityToPayload = function(item, isRedispatch) {
       var didInboundQuantityChange = (angular.isDefined(item.inboundQuantity)) ? parseInt(item.inboundQuantity) !==
-        item.oldInboundQuantity : true;
+      item.oldInboundQuantity : true;
       if (didInboundQuantityChange) {
         var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
         var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName);
@@ -677,10 +671,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($routeParams.action === 'redispatch') {
         // offloadList match should be returned before pickList match. match in pickList and offloadList should not be merged
         itemMatch = lodash.findWhere($scope.offloadListItems, {
-          itemMasterId: itemFromAPI.itemMasterId
-        }) || lodash.findWhere($scope.pickListItems, {
-          itemMasterId: itemFromAPI.itemMasterId
-        });
+            itemMasterId: itemFromAPI.itemMasterId
+          }) || lodash.findWhere($scope.pickListItems, {
+            itemMasterId: itemFromAPI.itemMasterId
+          });
       } else if ($routeParams.action === 'end-instance') {
         itemMatch = lodash.findWhere($scope.offloadListItems, {
           itemMasterId: itemFromAPI.itemMasterId
@@ -756,7 +750,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.mergeRedispatchItemsLoopConditional = function(item, pickListMatch, offloadListMatch) {
       var isMenuItemInOfAllowedMenuItemsForOffloadSection = $this.isMenuItemInOfAllowedMenuItemsForOffloadSection(item);
-      var isItemValidForOffloadSection = (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') || (!offloadListMatch && item.countTypeName === 'Offload');
+      var isItemValidForOffloadSection = (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') ||
+        (!offloadListMatch && item.countTypeName === 'Offload');
 
       return isMenuItemInOfAllowedMenuItemsForOffloadSection && isItemValidForOffloadSection;
     };
@@ -883,12 +878,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.makeInitializePromises = function() {
+      var characteristicName = ($routeParams.action === 'replenish') ? 'Upliftable' : 'Inventory';
       var promises = [
         this.getStoreDetails(),
         this.getRegularItemTypeId(),
         this.getThresholdVariance(),
         this.getCountTypes(),
-        this.getCharacteristics()
+        this.getCharacteristicIdForName(characteristicName)
       ];
       if ($routeParams.action === 'end-instance' || $routeParams.action === 'redispatch') {
         promises.push($this.getUllageReasonCodes());
@@ -924,16 +920,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    this.getCharacteristicNameByAction = function() {
-      if (($routeParams.action === 'replenish') || ($routeParams.action === 'dispatch' && $scope.storeDetails.replenishStoreInstanceId)) {
-        return 'Upliftable';
-      }
-
-      return 'Inventory';
-    };
-
     this.completeInitializeAfterDependencies = function() {
-      $q.resolve($this.setCharacteristicIdByAction()).then($this.getAllItems, handleResponseError);
+      $this.getAllItems();
     };
 
     this.init = function() {
