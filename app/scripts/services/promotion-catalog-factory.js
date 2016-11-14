@@ -48,7 +48,7 @@ angular.module('ts5App')
     }
 
     function getPromotionList(payload) {
-     return promotionsService.getPromotions(payload);
+      return promotionsService.getPromotions(payload);
     }
 
     return {

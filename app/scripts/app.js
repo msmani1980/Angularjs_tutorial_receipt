@@ -369,6 +369,9 @@ angular.module('ts5App', [
   }).when('/promotion-catalog-list', {
     templateUrl: 'views/promotion-catalog-list.html',
     controller: 'PromotionCatalogListCtrl'
+  }).when('/promotion-catalog/:action/:id?', {
+    templateUrl: 'views/promotion-catalog.html',
+    controller: 'PromotionCatalogCtrl'
   }).otherwise({
     redirectTo: '/'
   });
