@@ -231,7 +231,7 @@ describe('Service: storeInstanceFactory', function() {
     it('should call updateStoreInstanceStatus with proper boolean payload', function() {
       var statusId = 1;
       storeInstanceFactory.updateStoreInstanceStatus(id, statusId, 'fakePayload');
-      expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalledWith(id, statusId, undefined, true);
+      expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalledWith(id, statusId, undefined, true, false);
     });
 
     it('should call updateStoreInstanceStatusForceReconcile', function() {
