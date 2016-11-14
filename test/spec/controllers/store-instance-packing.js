@@ -135,7 +135,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     });
   }
 
-  fdescribe('initialization', function () {
+  describe('initialization', function () {
 
     describe('init all shared and dispatch API calls', function () {
       beforeEach(function () {
