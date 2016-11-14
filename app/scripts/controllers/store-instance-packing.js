@@ -169,10 +169,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }, this.errorHandler);
     };
 
-    this.getCharacteristicIdForName = function(characteristicName) {
-      return storeInstancePackingFactory.getCharacteristics().then(function(response) {
-        $scope.characteristicFilterId = $this.getIdByNameFromArray(characteristicName, response);
-      }, this.errorHandler);
+    this.setCharacteristicIdByAction = function() {
+      $scope.characteristicFilterId = $this.getIdByNameFromArray($this.getCharacteristicNameByAction(), $scope.itemCharacteristics);
     };
 
     this.getRegularItemTypeId = function() {
@@ -187,10 +185,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }, this.errorHandler);
     };
 
-    this.getStoreDetails = function() {
-      return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then(function(response) {
-        $scope.storeDetails = angular.copy(response);
+    this.getCharacteristics = function() {
+      storeInstancePackingFactory.getCharacteristics().then(function(response) {
+        $scope.itemCharacteristics = angular.copy(response);
       }, this.errorHandler);
+    };
+
+    this.getStoreDetails = function () {
+      return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails, this.errorHandler);
+    };
+
+    this.setStoreDetails = function (storeDetailsJSON) {
+      $scope.storeDetails = angular.copy(storeDetailsJSON);
     };
 
     $scope.showVarianceWarningClass = function(item) {
@@ -877,13 +883,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.makeInitializePromises = function() {
-      var characteristicName = ($routeParams.action === 'replenish') ? 'Upliftable' : 'Inventory';
       var promises = [
         this.getStoreDetails(),
         this.getRegularItemTypeId(),
         this.getThresholdVariance(),
         this.getCountTypes(),
-        this.getCharacteristicIdForName(characteristicName)
+        this.getCharacteristics()
       ];
       if ($routeParams.action === 'end-instance' || $routeParams.action === 'redispatch') {
         promises.push($this.getUllageReasonCodes());
@@ -919,8 +924,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
+    this.getCharacteristicNameByAction = function() {
+      if (($routeParams.action === 'replenish') || ($routeParams.action === 'dispatch' && $scope.storeDetails.replenishStoreInstanceId)) {
+        return 'Upliftable';
+      }
+
+      return 'Inventory';
+    };
+
     this.completeInitializeAfterDependencies = function() {
-      $this.getAllItems();
+      $q.resolve($this.setCharacteristicIdByAction()).then($this.getAllItems, handleResponseError);
     };
 
     this.init = function() {
