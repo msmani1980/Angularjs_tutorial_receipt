@@ -1,8 +1,8 @@
 <div class="container">
 
-  <error-dialog form-object="promotionCategoryForm" error-response="errorResponse" display="displayError"></error-dialog>
+  <error-dialog form-object="promotionCatalogForm" error-response="errorResponse" display="displayError"></error-dialog>
 
-  <form name="promotionCategoryForm" class="form edit-form">
+  <form name="promotionCatalogForm" class="form edit-form">
 
     <div class="edit-controls">
       <div class="row">
@@ -31,9 +31,9 @@
                class="form-control"
                name="menuDescription"
                required="true"
-               ng-disabled="disableEditField"
                ng-model="promotionCatalog.promotionCatalogName"
-               ng-readonly="isMenuReadOnly()"/>
+               ng-readonly="isMenuReadOnly()"
+               ng-disabled="isViewOnly || disableEditField" />
       </div>
     </div>
     <div class="row">
@@ -42,8 +42,8 @@
           name="startDate"
           min-date="startMinDate"
           ng-model="promotionCatalog.startDate"
-          disable="disableEditField"
           label="Effective From"
+          disable="isViewOnly || disableEditField"
           required="true">
         </date-picker-field>
       </div>
@@ -55,6 +55,7 @@
           ng-model="promotionCatalog.endDate"
           disable="isViewOnly"
           label="Effective To"
+          disable="isViewOnly"
           required="true">
         </date-picker-field>
       </div>
@@ -62,8 +63,8 @@
 
     <br>
 
-    <h3>Promotions <span class="badge">{{ promotionList.length }}</span>
-      <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addItem()" ng-hide="disableEditField">
+    <h3>Promotions <span class="badge">{{ catalogPromotionList.length }}</span>
+      <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addItem()" ng-hide="isViewOnly || disableEditField">
         <i class="fa fa-plus"></i> Add Promotion
       </button>
     </h3>
@@ -72,19 +73,21 @@
       <tr ng-repeat="promotion in catalogPromotionList">
         <td>
           <ui-select
-            ng-model="promotion"
+            ng-model="promotion.selectedPromotion"
+            ng-change="setFilteredPromotionList()"
             theme="bootstrap"
+            ng-disabled="isViewOnly || disableEditField"
             placeholder="Select a promotion...">
             <ui-select-match
               placeholder="Select a promotion...">{{$select.selected.promotionName}}
             </ui-select-match>
-            <ui-select-choices repeat="promotion in promotionList | filter: $select.search | orderBy:'promotionName'">
+            <ui-select-choices repeat="promotion in filteredPromotionList | filter: $select.search | orderBy:'promotionName'">
               <div ng-bind-html="promotion.promotionName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
         </td>
-        <td>
-          <button class="btn btn-danger btn-xs" ng-click="removeItem(item)" ng-hide="disableEditField">
+        <td class="col-xs-1" ng-hide="isViewOnly || disableEditField">
+          <button class="btn btn-danger btn-xs" ng-click="removePromotion(promotion)">
             <i class="fa fa-trash"></i>
           </button>
         </td>

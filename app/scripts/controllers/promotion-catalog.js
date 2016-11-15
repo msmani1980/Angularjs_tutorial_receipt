@@ -4,11 +4,11 @@
  * @ngdoc function
  * @name ts5App.controller:PromotionCatalogCtrl
  * @description
- * # PromotionCategoryCtrl
+ * # PromotionCatalogCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCatalogCtrl', function ($scope, $routeParams, promotionCatalogFactory, globalMenuService, $q, lodash, messageService, dateUtility) {
+  .controller('PromotionCatalogCtrl', function ($scope, $routeParams, promotionCatalogFactory, globalMenuService, $q, lodash, messageService, dateUtility, $location) {
 
     $scope.itemList = [];
     $scope.promotionCatalog = {};
@@ -30,159 +30,134 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     }
 
-    //function completeSave() {
-    //  hideLoadingModal();
-    //  var action = $routeParams.action === 'edit' ? 'updated' : 'created';
-    //  messageService.display('success', 'Record successfully ' + action, 'Save Promotion Category');
-    //  $location.path('promotion-category-list');
-    //}
-    //
-    //function formatItemPayload(item) {
-    //  if (!item.selectedItem) {
-    //    return null;
-    //  }
-    //
-    //  var newItem = {};
-    //  newItem.itemId = item.selectedItem.id;
-    //
-    //  if ($routeParams.id && item.recordId) {
-    //    newItem.id = item.recordId;
-    //  }
-    //
-    //  if ($routeParams.id) {
-    //    newItem.companyPromotionCategoryId = parseInt($routeParams.id);
-    //  }
-    //
-    //  if (item.selectedCategory) {
-    //    newItem.salesCategoryId = item.selectedCategory.id;
-    //  }
-    //
-    //  return newItem;
-    //}
-    //
-    //function formatPayload() {
-    //  var payload = {};
-    //  payload.startDate = dateUtility.formatDateForAPI($scope.promotionCatalog.startDate);
-    //  payload.endDate = dateUtility.formatDateForAPI($scope.promotionCatalog.endDate);
-    //  payload.promotionCatalogName = $scope.promotionCatalog.promotionCatalogName;
-    //  payload.companyId = promotionCategoryFactory.getCompanyId();
-    //
-    //  if ($routeParams.id) {
-    //    payload.id = parseInt($routeParams.id);
-    //  }
-    //
-    //  payload.companyPromotionCategoryItems = [];
-    //  angular.forEach($scope.itemList, function (item) {
-    //    var newItem = formatItemPayload(item);
-    //    if (newItem !== null) {
-    //      payload.companyPromotionCategoryItems.push(newItem);
-    //    }
-    //  });
-    //
-    //  return payload;
-    //}
-    //
-    //function checkIfItemListIsValid() {
-    //  var isListValid = false;
-    //  angular.forEach($scope.itemList, function (item) {
-    //    isListValid = !!item.selectedItem || isListValid;
-    //  });
-    //
-    //  if ($scope.itemList.length <= 0 || !isListValid) {
-    //    $scope.errorCustom = [{
-    //      field: 'Retail Items',
-    //      value: 'At least one item must be selected'
-    //    }];
-    //
-    //    showErrors();
-    //    return false;
-    //  }
-    //
-    //  return true;
-    //}
-    //
-    //$scope.save = function () {
-    //  if (!$scope.promotionCategoryForm.$valid) {
-    //    return false;
-    //  }
-    //
-    //  var isListValid = checkIfItemListIsValid();
-    //  if (!isListValid) {
-    //    return false;
-    //  }
-    //
-    //  showLoadingModal('Saving Record');
-    //  var payload = formatPayload();
-    //
-    //  if ($routeParams.id) {
-    //    promotionCategoryFactory.updatePromotionCategory($routeParams.id, payload).then(completeSave, showErrors);
-    //  } else {
-    //    promotionCategoryFactory.createPromotionCategory(payload).then(completeSave, showErrors);
-    //  }
-    //};
-    //
-    //$scope.addItem = function () {
-    //  if (!$scope.promotionCatalog.startDate && !$scope.promotionCatalog.endDate) {
-    //    messageService.display('warning', 'Please select a date range first', 'Add Promotion Category Item');
-    //    return;
-    //  }
-    //
-    //  var newIndex = $scope.itemList.length;
-    //  $scope.itemList.push({
-    //    itemIndex: newIndex,
-    //    masterItemList: angular.copy($scope.masterItemList)
-    //  });
-    //};
-    //
-    //$scope.removeItem = function (item) {
-    //  var itemIndex = lodash.indexOf($scope.itemList, item);
-    //  if (angular.isDefined(itemIndex)) {
-    //    $scope.itemList.splice(itemIndex, 1);
-    //  }
-    //};
-    //
-    //$scope.shouldDisableItemDropDown = function (item) {
-    //  return angular.isDefined(item.masterItemList) ? item.masterItemList.length <= 0 : true;
-    //};
-    //
-    //function setFilteredItemList(dataFromAPI, item) {
-    //  item.masterItemList = angular.copy(dataFromAPI.masterItems);
-    //  var oldItemId = !!item.selectedItem ? item.selectedItem.id : null;
-    //  var oldItemMatch = lodash.findWhere(item.masterItemList, { id: oldItemId });
-    //  if (!oldItemMatch) {
-    //    item.selectedItem = null;
-    //  }
-    //}
-    //
-    //$scope.filterItemListFromCategory = function (item) {
-    //  if (!item.selectedCategory) {
-    //    item.masterItemList = angular.copy($scope.masterItemList);
-    //    return;
-    //  }
-    //
-    //  var category = item.selectedCategory;
-    //  var itemPayload = {
-    //    categoryId: category.id,
-    //    startDate: dateUtility.formatDateForAPI($scope.promotionCatalog.startDate),
-    //    endDate: dateUtility.formatDateForAPI($scope.promotionCatalog.endDate)
-    //  };
-    //
-    //  promotionCategoryFactory.getMasterItemList(itemPayload).then(function (response) {
-    //    setFilteredItemList(response, item);
-    //  }, showErrors);
-    //
-    //};
-    //
+    function completeSave() {
+      hideLoadingModal();
+      var action = $routeParams.action === 'edit' ? 'updated' : 'created';
+      messageService.display('success', 'Record successfully ' + action, 'Save Promotion Catalog');
+      $location.path('promotion-catalog-list');
+    }
+
+    function formatPromotionListPayload() {
+      var promotionListPayload = [];
+      var sortOrderIndex = 1;
+
+      angular.forEach($scope.catalogPromotionList, function (promotion) {
+        if (!promotion.selectedPromotion) {
+          return;
+        }
+
+        var newPromotion = {};
+        newPromotion.promotionId = promotion.selectedPromotion.id;
+        newPromotion.sortOrder = sortOrderIndex;
+
+        if ($routeParams.id && promotion.recordId) {
+          newPromotion.id = promotion.recordId;
+        }
+
+        promotionListPayload.push(newPromotion);
+        sortOrderIndex += 1;
+      });
+
+      return promotionListPayload;
+    }
+
+    function formatPayload() {
+      var payload = {};
+      payload.startDate = dateUtility.formatDateForAPI(angular.copy($scope.promotionCatalog.startDate));
+      payload.endDate = dateUtility.formatDateForAPI(angular.copy($scope.promotionCatalog.endDate));
+      payload.promotionCatalogName = $scope.promotionCatalog.promotionCatalogName;
+      payload.companyPromotionCatalogOrderCatalogs = formatPromotionListPayload();
+
+      if ($routeParams.id) {
+        payload.id = parseInt($routeParams.id);
+      }
+
+      return payload;
+    }
+
+    function checkIfPromotionListIsValid() {
+      var isListValid = false;
+      angular.forEach($scope.catalogPromotionList, function (promotion) {
+        isListValid = !!promotion.selectedPromotion || isListValid;
+      });
+
+      if ($scope.catalogPromotionList.length <= 0 || !isListValid) {
+        $scope.errorCustom = [{
+          field: 'Promotion List',
+          value: 'At least one promotion must be selected'
+        }];
+
+        showErrors();
+        return false;
+      }
+
+      return true;
+    }
+
+    $scope.save = function () {
+      if (!$scope.promotionCatalogForm.$valid) {
+        return false;
+      }
+
+      var isListValid = checkIfPromotionListIsValid();
+      if (!isListValid) {
+        return false;
+      }
+
+      showLoadingModal('Saving Record');
+      var payload = formatPayload();
+
+      if ($routeParams.id) {
+        promotionCatalogFactory.updatePromotionCatalog($routeParams.id, payload).then(completeSave, showErrors);
+      } else {
+        promotionCatalogFactory.createPromotionCatalog(payload).then(completeSave, showErrors);
+      }
+    };
+
+    $scope.addItem = function () {
+      if (!$scope.promotionCatalog.startDate && !$scope.promotionCatalog.endDate) {
+        messageService.display('warning', 'Please select a date range first', 'Add Promotion');
+        return;
+      }
+
+      $scope.catalogPromotionList = $scope.catalogPromotionList || [];
+      var sortOrder = $scope.catalogPromotionList.length + 1;
+      $scope.catalogPromotionList.push({
+        sortOrder: sortOrder,
+        selectedPromotion: null
+      });
+    };
+
+    $scope.removePromotion = function (promotion) {
+      var recordIndex = lodash.indexOf($scope.catalogPromotionList, promotion);
+      if (angular.isDefined(recordIndex)) {
+        $scope.catalogPromotionList.splice(recordIndex, 1);
+      }
+
+      angular.forEach($scope.catalogPromotionList, function (promotion, index) {
+        promotion.sortOrder = index + 1;
+      });
+    };
+
+    $scope.setFilteredPromotionList = function () {
+      $scope.filteredPromotionList = lodash.filter($scope.promotionList, function (promotion) {
+        var promotionMatch = lodash.findWhere($scope.catalogPromotionList, { selectedPromotion: promotion });
+        return !promotionMatch;
+      });
+    };
 
     function checkCatalogPromotionListWithNewPromotions() {
+      var shouldShowWarning = false;
       angular.forEach($scope.catalogPromotionList, function (catalogPromotion) {
-        var promotionMatch = lodash.findWhere($scope.promotionList, { id: catalogPromotion.id });
-        if (promotionMatch && !catalogPromotion.promotionName) {
-          catalogPromotion.promotionName = promotionMatch.promotionName;
-        } else {
-          catalogPromotion = {};
-        }
+        var promotionMatch = !!catalogPromotion.selectedPromotion ? lodash.findWhere($scope.promotionList, { id: catalogPromotion.selectedPromotion.id }) : null;
+        catalogPromotion.selectedPromotion = promotionMatch || null;
+        shouldShowWarning = shouldShowWarning || !promotionMatch;
       });
+
+      $scope.setFilteredPromotionList();
+      if (shouldShowWarning) {
+        messageService.display('warning', 'One or more promotions were cleared because they are not in the selected date range', 'Promotion List');
+      }
     }
 
     function setPromotionList(dataFromAPI) {
@@ -201,32 +176,21 @@ angular.module('ts5App')
       promotionCatalogFactory.getPromotionList(payload).then(setPromotionList, showErrors);
     }
 
-    //
-    //function formatItemListForApp(promotionCategory, itemList) {
-    //  angular.forEach(promotionCategory.companyPromotionCategoryItems, function (item) {
-    //    var newItem = {};
-    //    var categoryMatch = lodash.findWhere($scope.categoryList, { id: item.salesCategoryId });
-    //    var itemMatch = lodash.findWhere(itemList, { id: item.itemId });
-    //    newItem.selectedCategory = categoryMatch || null;
-    //    newItem.selectedItem = itemMatch || null;
-    //    newItem.masterItemList = [];
-    //    newItem.recordId = item.id;
-    //    $scope.itemList.push(newItem);
-    //  });
-    //}
-
-    function formatPromotionListForApp(promotionOrderListFromAPI) {
+    function formatCatalogPromotionListForApp(promotionOrderListFromAPI) {
       var newList = [];
       angular.forEach(promotionOrderListFromAPI, function (promotion) {
         var newPromotion = {
           recordId: promotion.id,
-          id: promotion.promotionId,
-          sortOrder: promotion.sortOrder
+          sortOrder: promotion.sortOrder,
+          selectedPromotion: {
+            id: promotion.promotionId
+          }
         };
 
         newList.push(newPromotion);
       });
 
+      newList = lodash.sortBy(newList, 'sortOrder');
       return newList;
     }
 
@@ -234,7 +198,7 @@ angular.module('ts5App')
       var promotionCatalog = angular.copy(promotionCatalogFromAPI);
       promotionCatalog.startDate = dateUtility.formatDateForApp(promotionCatalog.startDate);
       promotionCatalog.endDate = dateUtility.formatDateForApp(promotionCatalog.endDate);
-      $scope.catalogPromotionList = formatPromotionListForApp(promotionCatalog.companyPromotionCatalogOrderCatalogs);
+      $scope.catalogPromotionList = formatCatalogPromotionListForApp(promotionCatalog.companyPromotionCatalogOrderCatalogs);
 
       $scope.promotionCatalog = promotionCatalog;
     }
@@ -243,7 +207,7 @@ angular.module('ts5App')
       var canEdit = false;
 
       if ($routeParams.action === 'edit' && $scope.promotionCatalog) {
-        var isInFuture = dateUtility.isAfterToday($scope.promotionCatalog.startDate) && dateUtility.isAfterToday($scope.promotionCategory.endDate);
+        var isInFuture = dateUtility.isAfterToday($scope.promotionCatalog.startDate) && dateUtility.isAfterToday($scope.promotionCatalog.endDate);
         var isInPast = dateUtility.isYesterdayOrEarlier($scope.promotionCatalog.endDate);
         canEdit = isInFuture;
         $scope.isViewOnly = isInPast;
