@@ -73,7 +73,7 @@ angular.module('ts5App')
       showLoadingModal('Removing Record');
       promotionCatalogFactory.deletePromotionCatalog(catalog.id).then(function () {
         hideLoadingModal();
-        init();
+        $scope.searchPromotionCatalogs();
       }, showErrors);
     };
 
