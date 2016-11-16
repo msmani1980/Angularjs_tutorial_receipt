@@ -123,6 +123,11 @@ describe('Controller: StockDashboardCtrl', function() {
         expect(scope.cateringStationList).toBeDefined();
       });
 
+      it('selected catering station should not be set by default when station length is greater than 1', function () {
+        expect(scope.cateringStationList.length > 0).toEqual(true);
+        expect(scope.selectedCateringStation).not.toBeDefined();
+      });
+
     });
 
     describe('todaysDate', function() {
