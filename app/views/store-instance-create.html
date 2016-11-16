@@ -33,13 +33,13 @@
             <input ng-model="formData.storeNumber"
                    type="text" class="form-control"
                    placeholder="Enter Store Number"
-                   ng-disabled="!stepOneFromStepTwo || isActionState('end-instance')"
+                   ng-disabled="true"
                    ng-blur="validateStoreNumber()"
                    required="true" />
             <div class="input-group-btn">
               <button type="button"
                       class="btn btn-default"
-                      ng-disabled="!stepOneFromStepTwo || isActionState('end-instance')"
+                      ng-disabled="true"
                       ng-click="showStoreNumbersModal()">
                 <i class="fa fa-info-circle"></i>
               </button>
