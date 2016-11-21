@@ -1,0 +1,57 @@
+<div class="container">
+
+  <error-dialog form-object="promotionCatalogConjunctionForm" error-response="errorResponse" display="displayError"></error-dialog>
+
+  <form name="promotionCatalogConjunctionForm" class="form edit-form">
+
+    <div class="edit-controls">
+      <div class="row">
+        <div class="col-xs-6">
+          <h2 class="view-name">Run in Conjunction Promotion</h2>
+        </div>
+        <div class="col-xs-6 text-right">
+          <a class="btn btn-default" ng-href="#/promotion-catalog-list" class="btn">Back</a>
+          <button class="btn btn-success" ng-click="save()" ng-hide="isViewOnly">
+            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+            <span>Save</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <h3>{{ promotionCatalog.promotionCatalogName }}</h3>
+    <br>
+
+    <h3>Promotions <span class="badge">{{ catalogPromotionList.length }}</span>
+      <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addItem()" ng-hide="isViewOnly || disableEditField">
+        <i class="fa fa-plus"></i> Add Promotion Conjunction
+      </button>
+    </h3>
+
+    <table class="table">
+      <tr ng-repeat="promotion in catalogPromotionList">
+        <td>
+          <ui-select
+            ng-model="promotion.selectedPromotion"
+            ng-change="setFilteredPromotionList()"
+            theme="bootstrap"
+            ng-disabled="isViewOnly || disableEditField"
+            placeholder="Select a promotion...">
+            <ui-select-match
+              placeholder="Select a promotion...">{{$select.selected.promotionName}}
+            </ui-select-match>
+            <ui-select-choices repeat="promotion in filteredPromotionList | filter: $select.search | orderBy:'promotionName'">
+              <div ng-bind-html="promotion.promotionName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td class="col-xs-1" ng-hide="isViewOnly || disableEditField">
+          <button class="btn btn-danger btn-xs" ng-click="removePromotion(promotion)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </table>
+
+  </form>
+</div>

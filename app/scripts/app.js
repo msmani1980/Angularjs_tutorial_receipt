@@ -372,6 +372,9 @@ angular.module('ts5App', [
   }).when('/promotion-catalog/:action/:id?', {
     templateUrl: 'views/promotion-catalog.html',
     controller: 'PromotionCatalogCtrl'
+  }).when('/promotion-catalog-conjunction/:action/:id', {
+    templateUrl: 'views/promotion-catalog-conjunction.html',
+    controller: 'PromotionCatalogConjunctionCtrl'
   }).otherwise({
     redirectTo: '/'
   });
