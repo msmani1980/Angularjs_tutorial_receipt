@@ -9,7 +9,8 @@
  */
 angular.module('ts5App')
   .service('promotionCatalogService', function (ENV, $resource) {
-    var requestURL = ENV.apiUrl + '/rsvr/api/company-promotion-catalogs/:id';
+    var promotionCatalogRequestURL = ENV.apiUrl + '/rsvr/api/company-promotion-catalogs/:id';
+    var catalogConjunctionRequestURL = ENV.apiUrl + '/rsvr/api/promotion-catalog-conjunctions/:id';
     var requestParameters = {
       id: '@id'
     };
@@ -26,34 +27,67 @@ angular.module('ts5App')
       },
       deletePromotionCatalog: {
         method: 'DELETE'
+      },
+      getCatalogConjunction: {
+        method: 'GET'
+      },
+      createCatalogConjunction: {
+        method: 'POST'
+      },
+      updateCatalogConjunction: {
+        method: 'PUT'
+      },
+      deleteCatalogConjunction: {
+        method: 'DELETE'
       }
     };
 
-    var requestResource = $resource(requestURL, requestParameters, actions);
+    var promotionCatalogRequestResource = $resource(promotionCatalogRequestURL, requestParameters, actions);
+    var catalogConjunctionRequestResource = $resource(catalogConjunctionRequestURL, requestParameters, actions);
 
     function getPromotionCatalogList(payload) {
       requestParameters.id = '';
-      return requestResource.getPromotionCatalog(payload).$promise;
+      return promotionCatalogRequestResource.getPromotionCatalog(payload).$promise;
     }
 
     function getPromotionCatalog(promotionCatalogId) {
       requestParameters.id = promotionCatalogId;
-      return requestResource.getPromotionCatalog({}).$promise;
+      return promotionCatalogRequestResource.getPromotionCatalog({}).$promise;
     }
 
     function createPromotionCatalog(payload) {
       requestParameters.id = '';
-      return requestResource.createPromotionCatalog(payload).$promise;
+      return promotionCatalogRequestResource.createPromotionCatalog(payload).$promise;
     }
 
     function updatePromotionCatalog(promotionCatalogId, payload) {
       requestParameters.id = promotionCatalogId;
-      return requestResource.updatePromotionCatalog(payload).$promise;
+      return promotionCatalogRequestResource.updatePromotionCatalog(payload).$promise;
     }
 
     function deletePromotionCatalog(promotionCatalogId) {
       requestParameters.id = promotionCatalogId;
-      return requestResource.deletePromotionCatalog({}).$promise;
+      return promotionCatalogRequestResource.deletePromotionCatalog({}).$promise;
+    }
+
+    function getPromotionCatalogConjunction(promotionCatalogId) {
+      requestParameters.id = promotionCatalogId;
+      return catalogConjunctionRequestResource.getCatalogConjunction({}).$promise;
+    }
+
+    function createPromotionCatalogConjunction(payload) {
+      requestParameters.id = '';
+      return catalogConjunctionRequestResource.createCatalogConjunction(payload).$promise;
+    }
+
+    function updatePromotionCatalogConjunction(promotionCatalogId, payload) {
+      requestParameters.id = promotionCatalogId;
+      return catalogConjunctionRequestResource.updateCatalogConjunction(payload).$promise;
+    }
+
+    function deletePromotionCatalogConjunction(promotionCatalogId) {
+      requestParameters.id = promotionCatalogId;
+      return catalogConjunctionRequestResource.deleteCatalogConjunction({}).$promise;
     }
 
     return {
@@ -61,6 +95,10 @@ angular.module('ts5App')
       getPromotionCatalog: getPromotionCatalog,
       createPromotionCatalog: createPromotionCatalog,
       updatePromotionCatalog: updatePromotionCatalog,
-      deletePromotionCatalog: deletePromotionCatalog
+      deletePromotionCatalog: deletePromotionCatalog,
+      getPromotionCatalogConjunction: getPromotionCatalogConjunction,
+      createPromotionCatalogConjunction: createPromotionCatalogConjunction,
+      updatePromotionCatalogConjunction: updatePromotionCatalogConjunction,
+      deletePromotionCatalogConjunction: deletePromotionCatalogConjunction
     };
   });

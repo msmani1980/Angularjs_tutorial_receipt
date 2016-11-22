@@ -20,6 +20,10 @@ describe('Service: promotionCatalogFactory', function () {
     spyOn(promotionCatalogService, 'createPromotionCatalog');
     spyOn(promotionCatalogService, 'updatePromotionCatalog');
     spyOn(promotionCatalogService, 'deletePromotionCatalog');
+    spyOn(promotionCatalogService, 'getPromotionCatalogConjunction');
+    spyOn(promotionCatalogService, 'createPromotionCatalogConjunction');
+    spyOn(promotionCatalogService, 'updatePromotionCatalogConjunction');
+    spyOn(promotionCatalogService, 'deletePromotionCatalogConjunction');
     spyOn(promotionsService, 'getPromotions');
 
     rootScope = $rootScope;
@@ -62,6 +66,32 @@ describe('Service: promotionCatalogFactory', function () {
       promotionCatalogFactory.deletePromotionCatalog(mockId);
       expect(promotionCatalogService.deletePromotionCatalog).toHaveBeenCalledWith(mockId);
     });
+
+    it('should call promotionCatalogService on getPromotionCatalogConjunction', function () {
+      var mockId = 123;
+      promotionCatalogFactory.getPromotionCatalogConjunction(mockId);
+      expect(promotionCatalogService.getPromotionCatalogConjunction).toHaveBeenCalledWith(mockId);
+    });
+
+    it('should call promotionCatalogService on createPromotionCatalogConjunction', function () {
+      var mockPayload = { fakeKey: 'fakeValue' };
+      promotionCatalogFactory.createPromotionCatalogConjunction(mockPayload);
+      expect(promotionCatalogService.createPromotionCatalogConjunction).toHaveBeenCalledWith(mockPayload);
+    });
+
+    it('should call promotionCatalogService on updatePromotionCatalogConjunction', function () {
+      var mockId = 123;
+      var mockPayload = { fakeKey: 'fakeValue' };
+      promotionCatalogFactory.updatePromotionCatalogConjunction(mockId, mockPayload);
+      expect(promotionCatalogService.updatePromotionCatalogConjunction).toHaveBeenCalledWith(mockId, mockPayload);
+    });
+
+    it('should call promotionCatalogService on deletePromotionCatalogConjunction', function () {
+      var mockId = 123;
+      promotionCatalogFactory.deletePromotionCatalogConjunction(mockId);
+      expect(promotionCatalogService.deletePromotionCatalogConjunction).toHaveBeenCalledWith(mockId);
+    });
+
   });
 
   describe('promotionsService API', function () {

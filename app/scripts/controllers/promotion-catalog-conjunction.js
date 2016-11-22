@@ -222,8 +222,10 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
-    function continueInit(promotionCatalogFromAPI) {
-      $scope.promotionCatalog = angular.copy(promotionCatalogFromAPI);
+    function continueInit(responseCollectionFromAPI) {
+      $scope.promotionCatalog = angular.copy(responseCollectionFromAPI[0]);
+
+      // TODO: format conj response if it exists
 
       var promotionPayload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.promotionCatalog.startDate)),
@@ -233,13 +235,27 @@ angular.module('ts5App')
       promotionCatalogFactory.getPromotionList(promotionPayload).then(completeInit, showErrors);
     }
 
+    function getInitPromises() {
+      var initPromises = [
+        promotionCatalogFactory.getPromotionCatalog($routeParams.id)
+      ];
+
+      if ($routeParams.action !== 'create') {
+        initPromises.push(promotionCatalogFactory.getPromotionCatalogConjunction($routeParams.id));
+      }
+
+      return initPromises;
+    }
+
     function init() {
       $scope.isViewOnly = false;
       $scope.disableEditField = false;
       $scope.conjunctionList = [];
 
       showLoadingModal('Loading Data');
-      promotionCatalogFactory.getPromotionCatalog($routeParams.id).then(continueInit, showErrors);
+
+      var promises = getInitPromises();
+      $q.all(promises).then(continueInit, showErrors);
     }
 
     init();

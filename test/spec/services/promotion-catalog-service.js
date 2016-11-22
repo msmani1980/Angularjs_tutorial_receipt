@@ -74,5 +74,55 @@ fdescribe('Service: promotionCatalogService', function () {
       $httpBackend.flush();
     });
 
+    it('should GET promotion catalog list', function () {
+      $httpBackend.expectGET(/company-promotion-catalogs/).respond(200, { fakeResponseKey: 'fakeResponseValue' });
+
+      promotionCatalogService.getPromotionCatalogList({}).then(function (response) {
+        expect(response.fakeResponseKey).toBe('fakeResponseValue');
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should GET promotion catalog by id', function () {
+      $httpBackend.expectGET(/promotion-catalog-conjunctions\/\d+/).respond(200, { fakeResponseKey: 'fakeResponseValue' });
+
+      promotionCatalogService.getPromotionCatalogConjunction(123).then(function (response) {
+        expect(response.fakeResponseKey).toBe('fakeResponseValue');
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should POST a new promotion catalog record', function () {
+      $httpBackend.expectPOST(/promotion-catalog-conjunctions/).respond(200, { fakeResponseKey: 'POST' });
+
+      promotionCatalogService.createPromotionCatalogConjunction().then(function (response) {
+        expect(response.fakeResponseKey).toBe('POST');
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should PUT an existing promotion catalog by id', function () {
+      $httpBackend.expectPUT(/promotion-catalog-conjunctions\/\d+/).respond(200, { fakeResponseKey: 'fakeResponseValue' });
+
+      promotionCatalogService.updatePromotionCatalogConjunction(123).then(function (response) {
+        expect(response.fakeResponseKey).toBe('fakeResponseValue');
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should DELETE an existing promotion catalog by id', function () {
+      $httpBackend.expectDELETE(/promotion-catalog-conjunctions\/\d+/).respond(200, { fakeResponseKey: 'fakeResponseValue' });
+
+      promotionCatalogService.deletePromotionCatalogConjunction(123).then(function (response) {
+        expect(response.fakeResponseKey).toBe('fakeResponseValue');
+      });
+
+      $httpBackend.flush();
+    });
+
   });
 });

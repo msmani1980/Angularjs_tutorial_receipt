@@ -47,6 +47,22 @@ angular.module('ts5App')
       return promotionCatalogService.deletePromotionCatalog(promotionCatalogId);
     }
 
+    function getPromotionCatalogConjunction(promotionCatalogId) {
+      return promotionCatalogService.getPromotionCatalogConjunction(promotionCatalogId);
+    }
+
+    function createPromotionCatalogConjunction(payload) {
+      return promotionCatalogService.createPromotionCatalogConjunction(payload);
+    }
+
+    function updatePromotionCatalogConjunction(promotionCatalogId, payload) {
+      return promotionCatalogService.updatePromotionCatalogConjunction(promotionCatalogId, payload);
+    }
+
+    function deletePromotionCatalogConjunction(promotionCatalogId) {
+      return promotionCatalogService.deletePromotionCatalogConjunction(promotionCatalogId);
+    }
+
     function getPromotionList(payload) {
       return promotionsService.getPromotions(payload);
     }
@@ -57,6 +73,10 @@ angular.module('ts5App')
       createPromotionCatalog: createPromotionCatalog,
       updatePromotionCatalog: updatePromotionCatalog,
       deletePromotionCatalog: deletePromotionCatalog,
+      getPromotionCatalogConjunction: getPromotionCatalogConjunction,
+      createPromotionCatalogConjunction: createPromotionCatalogConjunction,
+      updatePromotionCatalogConjunction: updatePromotionCatalogConjunction,
+      deletePromotionCatalogConjunction: deletePromotionCatalogConjunction,
       getPromotionList: getPromotionList
     };
 
