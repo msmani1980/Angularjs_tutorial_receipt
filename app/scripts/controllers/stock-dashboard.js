@@ -47,6 +47,10 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     this.getCatererStationListSuccessHandler = function(dataFromAPI) {
       $scope.cateringStationList = angular.copy(dataFromAPI.response);
+      if ($scope.cateringStationList.length === 1) {
+        $scope.selectedCateringStation = $scope.cateringStationList[0];
+      }
+
       $scope.viewIsReady = true;
     };
 

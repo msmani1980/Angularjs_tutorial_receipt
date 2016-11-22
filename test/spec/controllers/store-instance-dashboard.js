@@ -540,8 +540,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
         title: sprintf(
           'Are you sure you want to undispatch Store Number %s for Schedule Date %s and Store Instance %d?',
           store.storeNumber, store.scheduleDate, store.id),
-        confirmationCallback: function() {
-          scope.undispatch(store.id);
+        confirmationCallback: function(isReplenishment) {
+          scope.undispatch(store.id, isReplenishment);
         }
       };
     });
@@ -551,9 +551,21 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     });
 
     it('should update status to 1 if confirmed', function() {
-      mockDialogObject.confirmationCallback();
-      expect(scope.undispatch).toHaveBeenCalledWith(store.id);
+      mockDialogObject.confirmationCallback(false);
+      expect(scope.undispatch).toHaveBeenCalledWith(store.id, false);
       expect(storeInstanceDashboardFactory.updateStoreInstanceStatusUndispatch).toHaveBeenCalledWith(53, 1, true);
+    });
+
+    it('should reroute to dispatch screen since store is not a replenishment', function () {
+      mockDialogObject.confirmationCallback(false);
+      scope.$digest();
+      expect(location.path).toHaveBeenCalledWith('store-instance-packing/dispatch/' + store.id);
+    });
+
+    it('should reroute to replenish screen since store is a replenishment', function () {
+      mockDialogObject.confirmationCallback(true);
+      scope.$digest();
+      expect(location.path).toHaveBeenCalledWith('store-instance-packing/replenish/' + store.id);
     });
   });
 
@@ -598,6 +610,31 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       var doesContainAction = scope.doesStoreInstanceContainAction(testStoreInstance, 'Pack');
       expect(doesContainAction).toEqual(false);
     });
+
+    it('should return false if replenish store instance has parent store instance status as Inbounded', function() {
+      var testStoreInstance = {
+        actionButtons: ['Get Flight Docs', 'Checkbox', 'Un-dispatch'],
+        statusId: 4
+      };
+      var testParentStoreInstance = {
+        statusId: 8
+      };
+      var doesContainAction = scope.doesRepleshinStoreInstanceContainAction(testStoreInstance, testParentStoreInstance, 'Un-dispatch');
+      expect(doesContainAction).toEqual(false);
+    });
+
+    it('should return true if replenish store instance has parent store instance status as Dispatched', function() {
+      var testStoreInstance = {
+        actionButtons: ['Get Flight Docs', 'Checkbox', 'Un-dispatch'],
+        statusId: 4
+      };
+      var testParentStoreInstance = {
+        statusId: 4
+      };
+      var doesReplenishAction = scope.doesRepleshinStoreInstanceContainAction(testStoreInstance, testParentStoreInstance, 'Un-dispatch');
+      expect(doesReplenishAction).toEqual(true);
+    });
+
   });
 
   describe('shouldShowReplenishAction', function() {

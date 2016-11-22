@@ -171,6 +171,15 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return storeInstance.actionButtons.indexOf(actionName) >= 0;
     };
 
+    $scope.doesRepleshinStoreInstanceContainAction = function (storeInstance, parentStoreInstance, actionName) {
+      if (!storeInstance.actionButtons) {
+        return false;
+      }
+
+      var parentStatusNumber = getValueByIdInArray(parentStoreInstance.statusId, 'name', $scope.storeStatusList);
+      return (storeInstance.actionButtons.indexOf(actionName) >= 0 && parseInt(parentStatusNumber) !== 8);
+    };
+
     function deleteSuccessHandler() {
       var storeInstance = angular.copy($scope.storeInstanceToDelete);
       var message = sprintf('Store #%s, with Schedule Date %s and Store Instance %s is deleted', storeInstance.storeNumber,
@@ -283,12 +292,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return ((store.hours === -1) || isNowWithinAllowedHours) && !$scope.doesStoreInstanceHaveReplenishments(store);
     };
 
-    $scope.undispatch = function (id) {
+    $scope.undispatch = function (id, isReplenishment) {
       var undispatchStatusId = 1;
+      var undispatchRoute = isReplenishment ? 'store-instance-packing/replenish/' + id : 'store-instance-packing/dispatch/' + id;
       showLoadingModal('Undispatching store instance ' + id + '...');
       storeInstanceDashboardFactory.updateStoreInstanceStatusUndispatch(id, undispatchStatusId, true).then(function () {
         hideLoadingModal();
-        $location.path('store-instance-packing/dispatch/' + id);
+        $location.path(undispatchRoute);
       }, showErrors);
     };
 
@@ -299,7 +309,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       4: ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
       5: ['End Instance', 'Redispatch', 'Get Flight Docs', 'Checkbox'],
       6: ['Start Inbound Seals', 'Get Flight Docs', 'Checkbox'],
-      7: ['Start Offload', 'Get Flight Docs', 'Checkbox', 'Un-dispatch'],
+      7: ['Start Offload', 'Get Flight Docs', 'Checkbox'],
       8: ['Get Flight Docs', 'Checkbox']
     };
 
@@ -728,12 +738,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     init();
 
     $scope.displayUndispatchConfirmation = function (store) {
+      var isReplenishment = !!store.replenishStoreInstanceId;
       $scope.undispatchStoreDialog = {
         title: sprintf(
           'Are you sure you want to undispatch Store Number %s for Schedule Date %s and Store Instance %d?',
           store.storeNumber, store.scheduleDate, store.id),
         confirmationCallback: function () {
-          $scope.undispatch(store.id);
+          $scope.undispatch(store.id, isReplenishment);
         }
       };
       angular.element('#confirmation-modal').modal('show');

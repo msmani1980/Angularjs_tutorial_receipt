@@ -28,6 +28,7 @@ describe('Stock Take Report', function() {
     stockTakeListJSON = _servedStockTakeList_;
     stationsListJSON = _servedCateringStations_;
 
+    var singleStationList = { response: [stationsListJSON.response[0]] };
     httpBackend = $injector.get('$httpBackend');
     location = $injector.get('$location');
     scope = $rootScope.$new();
@@ -45,7 +46,7 @@ describe('Stock Take Report', function() {
     spyOn(stockDashboardService, 'getStockDashboardItems').and.returnValue(getStockDashboardItemsDeferred.promise);
 
     getCatererStationListDeferred = $q.defer();
-    getCatererStationListDeferred.resolve(stationsListJSON);
+    getCatererStationListDeferred.resolve(singleStationList);
     spyOn(catererStationService, 'getCatererStationList').and.returnValue(
       getCatererStationListDeferred.promise);
 
@@ -107,7 +108,15 @@ describe('Stock Take Report', function() {
       });
 
       it('should be match the stations list from the stations API Respone', function() {
-        expect(scope.stationsList).toEqual(stationsListJSON.response);
+        var expectedSingleStationList = [stationsListJSON.response[0]];
+        expect(scope.stationsList).toEqual(expectedSingleStationList);
+      });
+
+      it('should default the set caterer station when station list length is 1', function () {
+        expect(scope.catererStationId).toBeDefined();
+
+        var expectedId = stationsListJSON.response[0].id.toString();
+        expect(scope.catererStationId).toEqual(expectedId);
       });
 
       describe('contains an station object which', function() {
