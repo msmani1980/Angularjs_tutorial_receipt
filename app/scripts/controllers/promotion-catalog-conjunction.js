@@ -14,7 +14,6 @@ angular.module('ts5App')
     $scope.promotionCatalog = {};
     $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
     $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
-    var $this = this;
 
     function showLoadingModal(message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -114,48 +113,83 @@ angular.module('ts5App')
       }
     };
 
-    $scope.addItem = function () {
-      if (!$scope.promotionCatalog.startDate && !$scope.promotionCatalog.endDate) {
-        messageService.display('warning', 'Please select a date range first', 'Add Promotion');
+    $scope.shouldDisableNewChildPromotion = function (promotionConjunction) {
+      if (!promotionConjunction || !$scope.selectedPromotionList) {
+        return true;
+      }
+
+      return promotionConjunction.childPromotions.length >= ($scope.selectedPromotionList.length - 1);
+    };
+
+    $scope.shouldDisableNewPromotionConjunctions = function () {
+      if (!$scope.conjunctionList || !$scope.selectedPromotionList) {
+        return true;
+      }
+
+      return $scope.conjunctionList.length >= $scope.selectedPromotionList.length;
+    };
+
+    $scope.updateFilteredChildPromotionList = function (promotionConjunction) {
+      if (!promotionConjunction) {
         return;
       }
 
-      $scope.catalogPromotionList = $scope.catalogPromotionList || [];
-      var sortOrder = $scope.catalogPromotionList.length + 1;
-      $scope.catalogPromotionList.push({
-        sortOrder: sortOrder,
-        selectedPromotion: null
-      });
-    };
-
-    $scope.removePromotion = function (promotion) {
-      var recordIndex = lodash.indexOf($scope.catalogPromotionList, promotion);
-      if (angular.isDefined(recordIndex)) {
-        $scope.catalogPromotionList.splice(recordIndex, 1);
+      var childMatch = lodash.findWhere(promotionConjunction.childPromotions, { selectedPromotion: promotionConjunction.selectedPromotion });
+      if (childMatch) {
+        childMatch.selectedPromotion = null;
       }
 
-      angular.forEach($scope.catalogPromotionList, function (promotion, index) {
-        promotion.sortOrder = index + 1;
+      promotionConjunction.filteredChildPromotionList = lodash.filter($scope.selectedPromotionList, function (promotion) {
+        var promotionMatch = lodash.findWhere(promotionConjunction.childPromotions, { selectedPromotion: promotion });
+        return !promotionMatch && promotion !== promotionConjunction.selectedPromotion;
       });
     };
 
-    $scope.setFilteredPromotionList = function () {
-      $scope.filteredPromotionList = lodash.filter($scope.promotionList, function (promotion) {
-        var promotionMatch = lodash.findWhere($scope.catalogPromotionList, { selectedPromotion: promotion });
+    $scope.updatedFilteredPromotionLists = function (promotionConjunction) {
+      $scope.filteredPromotionList = lodash.filter($scope.selectedPromotionList, function (promotion) {
+        var promotionMatch = lodash.findWhere($scope.conjunctionList, { selectedPromotion: promotion });
         return !promotionMatch;
       });
+
+      $scope.updateFilteredChildPromotionList(promotionConjunction);
     };
 
-    $scope.newConjunctionChild = function () {
-      var newConjunction = {
-        index: $scope.conjunctionList.length,
-        
-      }
-      $scope.conjunctionList.push({});
+    $scope.removeConjunctionChild = function (parent, child) {
+      var childIndex = parent.childPromotions.indexOf(child);
+      parent.childPromotions.splice(childIndex, 1);
+
+      angular.forEach(parent.childPromotions, function (childPromotion, index) {
+        childPromotion.index = index;
+      });
+
+      $scope.updateFilteredChildPromotionList(parent);
+    };
+
+    $scope.removeConjunction = function (promotionConjunction) {
+      var conjunctionIndex = $scope.conjunctionList.indexOf(promotionConjunction);
+      $scope.conjunctionList.splice(conjunctionIndex, 1);
+
+      angular.forEach($scope.conjunctionList, function (conjunction, index) {
+        conjunction.index = index;
+      });
+
+      $scope.updatedFilteredPromotionLists();
+    };
+
+    $scope.newConjunctionChild = function (conjunction) {
+      conjunction.childPromotions.push({
+        index: conjunction.childPromotions.length
+      });
     };
 
     $scope.newConjunction = function () {
+      var newConjunction = {
+        index: $scope.conjunctionList.length,
+        childPromotions: [{ index: 0 }],
+        filteredChildPromotionList: $scope.selectedPromotionList
+      };
 
+      $scope.conjunctionList.push(newConjunction);
     };
 
     //this.setViewVariables = function () {
@@ -179,17 +213,17 @@ angular.module('ts5App')
       $scope.selectedPromotionList = [];
       angular.forEach($scope.promotionCatalog.companyPromotionCatalogOrderCatalogs, function (selectedPromotion) {
         var promotionMatch = lodash.findWhere(allPromotions, { id: selectedPromotion.promotionId });
-        if(promotionMatch) {
-          $scope.selectedPromotionList.push(angular.copy(promotionMatch));
+        if (promotionMatch) {
+          $scope.selectedPromotionList.push(promotionMatch);
         }
       });
 
+      $scope.filteredPromotionList = $scope.selectedPromotionList;
       hideLoadingModal();
     }
 
     function continueInit(promotionCatalogFromAPI) {
       $scope.promotionCatalog = angular.copy(promotionCatalogFromAPI);
-      //$this.setViewVariables();
 
       var promotionPayload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.promotionCatalog.startDate)),
@@ -204,6 +238,7 @@ angular.module('ts5App')
       $scope.disableEditField = false;
       $scope.conjunctionList = [];
 
+      showLoadingModal('Loading Data');
       promotionCatalogFactory.getPromotionCatalog($routeParams.id).then(continueInit, showErrors);
     }
 
