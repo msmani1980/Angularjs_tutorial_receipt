@@ -208,7 +208,49 @@ angular.module('ts5App')
     //  $scope.disableEditField = !canEdit || $scope.isViewOnly;
     //};
 
-    function completeInit(promotionListFromAPI) {
+    function getPromotionFromCatalogId(promotionCatalogRecordId) {
+      var promotionCatalogRecord = lodash.findWhere($scope.promotionCatalog.companyPromotionCatalogOrderCatalogs, { id: promotionCatalogRecordId });
+      if (!promotionCatalogRecord) {
+        return null;
+      }
+
+      return lodash.findWhere($scope.selectedPromotionList, { id: promotionCatalogRecord.promotionId }) || null;
+    }
+
+    function formatPromotionConjunctionForApp(parentPromotionConjunctionFromAPI, index) {
+      var newParent = {
+        index: index,
+        recordId: parentPromotionConjunctionFromAPI.id,
+        selectedPromotion: getPromotionFromCatalogId(parentPromotionConjunctionFromAPI.promotionCatalogOrderId),
+        filteredChildPromotionList: $scope.selectedPromotionList,
+        childPromotions: []
+      };
+
+      angular.forEach(parentPromotionConjunctionFromAPI.conjunctions, function (childPromotion, index) {
+        var promotionMatch = lodash.findWhere($scope.selectedPromotionList, { id: childPromotion.promotionId });
+        var newChild = {
+          index: index,
+          selectedPromotion: promotionMatch || null
+        };
+
+        newParent.childPromotions.push(newChild);
+      });
+
+      return newParent;
+    }
+
+    function formatPromotionConjunctionFroApp(promotionConjunctionsFromAPI) {
+      var promotionConjunctions = angular.copy(promotionConjunctionsFromAPI.companyPromotionCatalogConjunctions);
+
+      angular.forEach(promotionConjunctions, function (parentPromotionConjunction, index) {
+        var newParent = formatPromotionConjunctionForApp(parentPromotionConjunction, index);
+        $scope.conjunctionList.push(newParent);
+        $scope.updatedFilteredPromotionLists(newParent);
+        $scope.updateFilteredChildPromotionList(newParent);
+      });
+    }
+
+    function completeInit(promotionListFromAPI, promotionConjunctionFromAPI) {
       var allPromotions = angular.copy(promotionListFromAPI.promotions);
       $scope.selectedPromotionList = [];
       angular.forEach($scope.promotionCatalog.companyPromotionCatalogOrderCatalogs, function (selectedPromotion) {
@@ -219,20 +261,25 @@ angular.module('ts5App')
       });
 
       $scope.filteredPromotionList = $scope.selectedPromotionList;
+
+      if (promotionConjunctionFromAPI) {
+        formatPromotionConjunctionFroApp(promotionConjunctionFromAPI);
+      }
+
       hideLoadingModal();
     }
 
     function continueInit(responseCollectionFromAPI) {
       $scope.promotionCatalog = angular.copy(responseCollectionFromAPI[0]);
 
-      // TODO: format conj response if it exists
-
       var promotionPayload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.promotionCatalog.startDate)),
         endDate: dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.promotionCatalog.endDate))
       };
 
-      promotionCatalogFactory.getPromotionList(promotionPayload).then(completeInit, showErrors);
+      promotionCatalogFactory.getPromotionList(promotionPayload).then(function (promotionListFromAPI) {
+        completeInit(promotionListFromAPI, responseCollectionFromAPI[1] || null);
+      }, showErrors);
     }
 
     function getInitPromises() {
