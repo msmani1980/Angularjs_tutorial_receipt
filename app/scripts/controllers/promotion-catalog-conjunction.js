@@ -32,58 +32,88 @@ angular.module('ts5App')
     function completeSave() {
       hideLoadingModal();
       var action = $routeParams.action === 'edit' ? 'updated' : 'created';
-      messageService.display('success', 'Record successfully ' + action, 'Save Promotion Catalog');
+      messageService.display('success', 'Record successfully ' + action, 'Save Promotion Catalog Conjunction');
       $location.path('promotion-catalog-list');
     }
 
-    function formatPromotionListPayload() {
-      var promotionListPayload = [];
-      var sortOrderIndex = 1;
+    function getCatalogIdFromPromotion(promotionId) {
+      var promotionCatalogRecord = lodash.findWhere($scope.promotionCatalog.companyPromotionCatalogOrderCatalogs, { promotionId: promotionId });
+      if (!promotionCatalogRecord) {
+        return null;
+      }
 
-      angular.forEach($scope.catalogPromotionList, function (promotion) {
-        if (!promotion.selectedPromotion) {
-          return;
+      return promotionCatalogRecord.id;
+    }
+
+    function formatPromotionForAPI(promotion, isParent) {
+      if (!promotion.selectedPromotion) {
+        return null;
+      }
+
+      var attributeNameForId = isParent ? 'promotionCatalogOrderId' : 'promotionCatalogOrderConjunctionId';
+      var formattedPromotion = {};
+
+      formattedPromotion[attributeNameForId] = getCatalogIdFromPromotion(promotion.selectedPromotion.id);
+
+      //if(promotion.recordId) {
+      //  formattedPromotion.id = promotion.recordId;
+      //}
+
+      return formattedPromotion;
+    }
+
+    function formatConjunctionPayload(parentPromotionConjunction) {
+      var conjunctionList = [];
+
+      angular.forEach(parentPromotionConjunction.childPromotions, function (childPromotion) {
+        var childPayload = formatPromotionForAPI(childPromotion, false);
+        if (childPayload) {
+          conjunctionList.push(childPayload);
         }
-
-        var newPromotion = {};
-        newPromotion.promotionId = promotion.selectedPromotion.id;
-        newPromotion.sortOrder = sortOrderIndex;
-
-        if ($routeParams.id && promotion.recordId) {
-          newPromotion.id = promotion.recordId;
-        }
-
-        promotionListPayload.push(newPromotion);
-        sortOrderIndex += 1;
       });
 
-      return promotionListPayload;
+      return conjunctionList;
     }
 
     function formatPayload() {
-      var payload = {};
-      payload.startDate = dateUtility.formatDateForAPI(angular.copy($scope.promotionCatalog.startDate));
-      payload.endDate = dateUtility.formatDateForAPI(angular.copy($scope.promotionCatalog.endDate));
-      payload.promotionCatalogName = $scope.promotionCatalog.promotionCatalogName;
-      payload.companyPromotionCatalogOrderCatalogs = formatPromotionListPayload();
+      var payload = {
+        companyPromotionCatalogConjunctions: []
+      };
 
-      if ($routeParams.id) {
-        payload.id = parseInt($routeParams.id);
-      }
+      angular.forEach($scope.conjunctionList, function (promotionConjunction) {
+        var parentPayload = formatPromotionForAPI(promotionConjunction, true);
+        if (parentPayload) {
+          parentPayload.conjunctions = formatConjunctionPayload(promotionConjunction);
+          payload.companyPromotionCatalogConjunctions.push(parentPayload);
+        }
+      });
 
       return payload;
     }
 
-    function checkIfPromotionListIsValid() {
+    function checkIfChildPromotionListIsValid(childPromotionsList) {
       var isListValid = false;
-      angular.forEach($scope.catalogPromotionList, function (promotion) {
-        isListValid = !!promotion.selectedPromotion || isListValid;
+
+      angular.forEach(childPromotionsList, function (childPromotion) {
+        isListValid = !!childPromotion.selectedPromotion || isListValid;
       });
 
-      if ($scope.catalogPromotionList.length <= 0 || !isListValid) {
+      return isListValid;
+    }
+
+    function checkIfPromotionConjunctionListIsValid() {
+      var isListValid = false;
+      angular.forEach($scope.conjunctionList, function (promotionConjunction) {
+        var isParentValid = !!promotionConjunction.selectedPromotion;
+        var areChildrenValid = checkIfChildPromotionListIsValid(promotionConjunction.childPromotions);
+
+        isListValid = (isParentValid && areChildrenValid) || isListValid;
+      });
+
+      if ($scope.conjunctionList.length <= 0 || !isListValid) {
         $scope.errorCustom = [{
-          field: 'Promotion List',
-          value: 'At least one promotion must be selected'
+          field: 'Promotion Conjunction List',
+          value: 'At least one promotion conjunction must be selected'
         }];
 
         showErrors();
@@ -94,11 +124,11 @@ angular.module('ts5App')
     }
 
     $scope.save = function () {
-      if (!$scope.promotionCatalogForm.$valid) {
+      if (!$scope.promotionCatalogConjunctionForm.$valid) {
         return false;
       }
 
-      var isListValid = checkIfPromotionListIsValid();
+      var isListValid = checkIfPromotionConjunctionListIsValid();
       if (!isListValid) {
         return false;
       }
@@ -107,12 +137,12 @@ angular.module('ts5App')
       var payload = formatPayload();
 
       if ($routeParams.id) {
-        promotionCatalogFactory.updatePromotionCatalog($routeParams.id, payload).then(completeSave, showErrors);
+        promotionCatalogFactory.updatePromotionCatalogConjunction($routeParams.id, payload).then(completeSave, showErrors);
       } else {
-        promotionCatalogFactory.createPromotionCatalog(payload).then(completeSave, showErrors);
+        promotionCatalogFactory.createPromotionCatalogConjunction(payload).then(completeSave, showErrors);
       }
     };
-
+    
     $scope.shouldDisableNewChildPromotion = function (promotionConjunction) {
       if (!promotionConjunction || !$scope.selectedPromotionList) {
         return true;
@@ -230,6 +260,7 @@ angular.module('ts5App')
         var promotionMatch = lodash.findWhere($scope.selectedPromotionList, { id: childPromotion.promotionId });
         var newChild = {
           index: index,
+          recordId: childPromotion.id,
           selectedPromotion: promotionMatch || null
         };
 
