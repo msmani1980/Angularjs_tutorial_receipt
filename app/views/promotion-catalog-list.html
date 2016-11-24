@@ -73,18 +73,18 @@
           <td>{{ catalog.endDate }}</td>
           <td>{{ catalog.promotionCount }}</td>
           <td>
-            <button type="button" class="btn btn-xs btn-default" ng-hide="catalog.conjunctionFlag" ng-click="redirectRecordToAction('conjunction', catalog.id)">
+            <button type="button" class="btn btn-xs btn-default" ng-show="catalog.conjunctionFlag" ng-click="redirectRecordToAction('edit', catalog.id, true)">
             <span class="fa fa-check"></span>
             </button>
-            <button type="button" class="btn btn-xs btn-success" ng-show="catalog.conjunctionFlag" ng-click="redirectRecordToAction('conjunction', catalog.id)">
+            <button type="button" class="btn btn-xs btn-success" ng-hide="catalog.conjunctionFlag" ng-click="redirectRecordToAction('create', catalog.id, true)">
               <span class="fa fa-plus"></span>
             </button>
           </td>
           <td>
-            <button type="button" class="btn btn-xs btn-info" ng-click="redirectRecordToAction('view', catalog.id)">
+            <button type="button" class="btn btn-xs btn-info" ng-click="redirectRecordToAction('view', catalog.id, false)">
               <span class="fa fa-file"></span>
             </button>
-            <button type="button" class="btn btn-xs btn-primary" ng-click="redirectRecordToAction('edit', catalog.id)" ng-show="canEdit(catalog)">
+            <button type="button" class="btn btn-xs btn-primary" ng-click="redirectRecordToAction('edit', catalog.id, false)" ng-show="canEdit(catalog)">
               <span class="fa fa-pencil"></span>
             </button>
             <button type="button" class="btn btn-xs btn-danger" ng-show="canDelete(catalog)" ng-click="deleteRecordDialog(catalog, ['promotionCatalogName', 'startDate', 'endDate'])">

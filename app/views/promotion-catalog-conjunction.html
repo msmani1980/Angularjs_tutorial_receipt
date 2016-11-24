@@ -31,7 +31,6 @@
 
     <table class="table table-borderless">
       <thead>
-
       </thead>
       <tbody ng-repeat="promotion in conjunctionList">
       <tr>
@@ -40,6 +39,7 @@
             ng-model="promotion.selectedPromotion"
             ng-change="updatedFilteredPromotionLists(promotion)"
             theme="bootstrap"
+            ng-disabled="isViewOnly"
             placeholder="Select a promotion...">
             <ui-select-match
               placeholder="Select a promotion...">{{$select.selected.promotionName}}
@@ -54,6 +54,7 @@
             ng-model="promotion.childPromotions[0].selectedPromotion"
             ng-change="updateFilteredChildPromotionList(promotion)"
             theme="bootstrap"
+            ng-disabled="isViewOnly"
             placeholder="Select a promotion...">
             <ui-select-match
               placeholder="Select a promotion...">{{$select.selected.promotionName}}
@@ -73,6 +74,7 @@
             ng-model="childPromotion.selectedPromotion"
             ng-change="updateFilteredChildPromotionList(promotion)"
             theme="bootstrap"
+            ng-disabled="isViewOnly"
             placeholder="Select a promotion...">
             <ui-select-match
               placeholder="Select a promotion...">{{$select.selected.promotionName}}
@@ -83,18 +85,18 @@
           </ui-select>
         </td>
         <td class="col-xs-1">
-          <button tyoe="button" class="btn btn-default btn-sm" ng-click="removeConjunctionChild(promotion, childPromotion)"><i class="fa fa-times-circle"></i></button>
+          <button tyoe="button" class="btn btn-default btn-sm" ng-click="removeConjunctionChild(promotion, childPromotion)" ng-hide="isViewOnly"><i class="fa fa-times-circle"></i></button>
         </td>
       </tr>
       <tr>
         <td></td>
         <td class="pull-right">
-          <button type="button" class="btn btn-primary btn-sm" ng-click="newConjunctionChild(promotion)" ng-disabled="shouldDisableNewChildPromotion(promotion)"><i
+          <button type="button" class="btn btn-primary btn-sm" ng-click="newConjunctionChild(promotion)" ng-disabled="shouldDisableNewChildPromotion(promotion)" ng-hide="isViewOnly"><i
             class="fa fa-plus"></i> Add Promotion
           </button>
         </td>
         <td class="pull-right">
-          <button type="button" class="btn btn-default btn-sm" ng-click="removeConjunction(promotion)"><i class="fa fa-trash"></i> Remove Conjunction</button>
+          <button type="button" class="btn btn-default btn-sm" ng-click="removeConjunction(promotion)" ng-hide="isViewOnly"><i class="fa fa-trash"></i> Remove Conjunction</button>
         </td>
       </tr>
       </tbody>

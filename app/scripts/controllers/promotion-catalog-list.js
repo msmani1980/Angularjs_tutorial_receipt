@@ -57,8 +57,9 @@ angular.module('ts5App')
       return !$this.isLoading && angular.isDefined($scope.promotionCatalogs) && $scope.promotionCatalogs !== null && $scope.promotionCatalogs.length <= 0;
     };
 
-    $scope.redirectRecordToAction = function (action, recordId) {
-      $location.path('promotion-catalog/' + action + '/' + recordId);
+    $scope.redirectRecordToAction = function (action, recordId, isConjunction) {
+      var path = isConjunction ? 'promotion-catalog-conjunction/' : 'promotion-catalog/';
+      $location.path(path + action + '/' + recordId);
     };
 
     $scope.canEdit = function (catalog) {

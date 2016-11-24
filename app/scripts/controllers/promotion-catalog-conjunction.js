@@ -142,7 +142,7 @@ angular.module('ts5App')
         promotionCatalogFactory.createPromotionCatalogConjunction(payload).then(completeSave, showErrors);
       }
     };
-    
+
     $scope.shouldDisableNewChildPromotion = function (promotionConjunction) {
       if (!promotionConjunction || !$scope.selectedPromotionList) {
         return true;
@@ -281,6 +281,11 @@ angular.module('ts5App')
       });
     }
 
+    function setViewVariables () {
+      var isFuture = dateUtility.isAfterToday($scope.promotionCatalog.startDate) && dateUtility.isAfterToday($scope.promotionCatalog.endDate);
+      $scope.isViewOnly = !isFuture && $routeParams.action !== 'create';
+    }
+
     function completeInit(promotionListFromAPI, promotionConjunctionFromAPI) {
       var allPromotions = angular.copy(promotionListFromAPI.promotions);
       $scope.selectedPromotionList = [];
@@ -297,15 +302,18 @@ angular.module('ts5App')
         formatPromotionConjunctionFroApp(promotionConjunctionFromAPI);
       }
 
+      setViewVariables();
       hideLoadingModal();
     }
 
     function continueInit(responseCollectionFromAPI) {
       $scope.promotionCatalog = angular.copy(responseCollectionFromAPI[0]);
+      $scope.promotionCatalog.startDate = dateUtility.formatDateForApp($scope.promotionCatalog.startDate);
+      $scope.promotionCatalog.endDate = dateUtility.formatDateForApp($scope.promotionCatalog.endDate);
 
       var promotionPayload = {
-        startDate: dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.promotionCatalog.startDate)),
-        endDate: dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.promotionCatalog.endDate))
+        startDate: dateUtility.formatDateForAPI($scope.promotionCatalog.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.promotionCatalog.endDate)
       };
 
       promotionCatalogFactory.getPromotionList(promotionPayload).then(function (promotionListFromAPI) {
@@ -326,8 +334,7 @@ angular.module('ts5App')
     }
 
     function init() {
-      $scope.isViewOnly = false;
-      $scope.disableEditField = false;
+      $scope.isViewOnly = true;
       $scope.conjunctionList = [];
 
       showLoadingModal('Loading Data');
