@@ -11,6 +11,10 @@
         </div>
         <div class="col-xs-6 text-right">
           <a class="btn btn-default" ng-href="#/promotion-catalog-list" class="btn">Back</a>
+          <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(null, [])" ng-hide="isViewOnly">
+            <span class="fa fa-trash" aria-hidden="true"></span>
+            <span>Delete</span>
+          </button>
           <button class="btn btn-primary" ng-click="save()" ng-hide="isViewOnly">
             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <span>Save</span>
@@ -104,3 +108,6 @@
 
   </form>
 </div>
+
+<delete-record-dialog></delete-record-dialog>
+

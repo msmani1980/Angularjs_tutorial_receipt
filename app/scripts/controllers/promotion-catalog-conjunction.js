@@ -29,6 +29,26 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     }
 
+    function handleDeleteError() {
+      $scope.errorCustom = [{
+        field: 'Promotion Conjunction',
+        value: 'Record could not be deleted'
+      }];
+
+      showErrors();
+    }
+
+    function deleteSuccess() {
+      hideLoadingModal();
+      messageService.display('success', 'Record successfully Deleted');
+      $location.path('promotion-catalog-list');
+    }
+
+    $scope.removeRecord = function () {
+      showLoadingModal('Removing Record');
+      promotionCatalogFactory.deletePromotionCatalogConjunction($routeParams.id).then(deleteSuccess, handleDeleteError);
+    };
+    
     function completeSave() {
       hideLoadingModal();
       var action = $routeParams.action === 'edit' ? 'updated' : 'created';
