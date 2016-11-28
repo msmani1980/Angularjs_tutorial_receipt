@@ -15,6 +15,8 @@ angular.module('ts5App')
     $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
     $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
 
+    var $this = this;
+
     function showLoadingModal(message) {
       angular.element('#loading').modal('show').find('p').text(message);
     }
@@ -285,10 +287,10 @@ angular.module('ts5App')
       });
     }
 
-    function setViewVariables () {
+    this.setViewVariables = function () {
       var isFuture = dateUtility.isAfterToday($scope.promotionCatalog.startDate) && dateUtility.isAfterToday($scope.promotionCatalog.endDate);
       $scope.isViewOnly = !isFuture && $routeParams.action !== 'create';
-    }
+    };
 
     function completeInit(promotionListFromAPI, promotionConjunctionFromAPI) {
       var allPromotions = angular.copy(promotionListFromAPI.promotions);
@@ -306,7 +308,7 @@ angular.module('ts5App')
         formatPromotionConjunctionFroApp(promotionConjunctionFromAPI);
       }
 
-      setViewVariables();
+      $this.setViewVariables();
       hideLoadingModal();
     }
 
