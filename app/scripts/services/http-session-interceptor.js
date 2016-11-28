@@ -56,12 +56,14 @@ angular.module('ts5App')
       '/ember/#/menu-assignments/*',
       '/ember/#/menu-rules/*',
       '/ember/#/promotion-catalogs/*',
-      '/#/promotion-catalog/*',
-      '/ember/#/receipt-rules/*'
+      '/ember/#/receipt-rules/*',
+      '/promotion-catalog-list/*',
+      '/promotion-catalog/*',
+      '/promotion-catalog-conjunction/*'
     ];
 
     var legacyApis = [
-      '/rsvr/api/dispatch/store-instances/[0-9]*/status/[8-9][^11]*$',
+      '/rsvr/api/dispatch/store-instances/[0-9]*/status/[9-9][^11]*$',
       '/rsvr/api/companies/[0-9]*/company-credit-card-types',
       '/rsvr/api/company-discounts/[0-9]*$'
     ];
@@ -106,7 +108,7 @@ angular.module('ts5App')
       return $q.reject(response);
     }
 
-    var isMatching = function (url, list) {
+    var isMatching = function(url, list) {
       var matches = Array.prototype.filter.call(list, function (item) {
         return url.match(item);
       });
@@ -114,19 +116,19 @@ angular.module('ts5App')
       return matches.length !== 0;
     };
 
-    var isPageWithLegacyAPIs = function () {
+    var isPageWithLegacyAPIs = function() {
       return isMatching($location.absUrl(), notrsvrPages);
     };
 
-    var isLegacyAPI = function (config) {
+    var isLegacyAPI = function(config) {
       return isMatching(config.url, legacyApis);
     };
 
-    var isOnlyRsvrAPI = function (url) {
+    var isOnlyRsvrAPI = function(url) {
       return isMatching(url, onlyRsvrApis);
     };
 
-    var shouldReplaceUrl = function (config) {
+    var shouldReplaceUrl = function(config) {
       var hasRestParam = $location.absUrl().indexOf('api=rest') > 0;
 
       if (hasRestParam) {
