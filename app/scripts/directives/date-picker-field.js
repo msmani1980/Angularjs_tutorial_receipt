@@ -7,7 +7,7 @@
  * # datePickerField
  */
 angular.module('ts5App')
-  .directive('datePickerField', function(companyFormatUtility) {
+  .directive('datePickerField', function(companyFormatUtility, dateUtility) {
     return {
       templateUrl: '/views/directives/date-picker-field.html',
       restrict: 'E',
@@ -21,7 +21,8 @@ angular.module('ts5App')
         disable: '=',
         disablePast: '=',
         minDate: '=',
-        maxDate: '='
+        maxDate: '=',
+        grayPast: '='
       },
       controller: function($scope, $element) {
         var datePickerOptions = {
@@ -36,6 +37,15 @@ angular.module('ts5App')
 
         if ($scope.minDate && !$scope.disable) {
           datePickerOptions.startDate = $scope.minDate;
+        }
+
+        if ($scope.grayPast) {
+          datePickerOptions.beforeShowDay = function (date) {
+            var formattedDate =  dateUtility.formatDate(date, null, dateUtility.getDateFormatForApp());
+            var isBeforeToday = dateUtility.isYesterdayOrEarlier(formattedDate);
+
+            return isBeforeToday ? 'gray-out' : '';
+          };
         }
 
         if ($scope.orientation) {
