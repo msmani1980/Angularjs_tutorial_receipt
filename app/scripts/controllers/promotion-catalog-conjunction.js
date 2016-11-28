@@ -48,7 +48,7 @@ angular.module('ts5App')
       showLoadingModal('Removing Record');
       promotionCatalogFactory.deletePromotionCatalogConjunction($routeParams.id).then(deleteSuccess, handleDeleteError);
     };
-    
+
     function completeSave() {
       hideLoadingModal();
       var action = $routeParams.action === 'edit' ? 'updated' : 'created';
@@ -75,6 +75,7 @@ angular.module('ts5App')
 
       formattedPromotion[attributeNameForId] = getCatalogIdFromPromotion(promotion.selectedPromotion.id);
 
+      // TODO: uncomment for rsvr APIs
       //if(promotion.recordId) {
       //  formattedPromotion.id = promotion.recordId;
       //}
@@ -242,22 +243,6 @@ angular.module('ts5App')
       $scope.conjunctionList.push(newConjunction);
     };
 
-    //this.setViewVariables = function () {
-    //  var canEdit = false;
-    //
-    //  if ($routeParams.action === 'edit' && $scope.promotionCatalog) {
-    //    var isInFuture = dateUtility.isAfterToday($scope.promotionCatalog.startDate) && dateUtility.isAfterToday($scope.promotionCatalog.endDate);
-    //    var isInPast = dateUtility.isYesterdayOrEarlier($scope.promotionCatalog.endDate);
-    //    canEdit = isInFuture;
-    //    $scope.isViewOnly = isInPast;
-    //  } else {
-    //    $scope.isViewOnly = $routeParams.action === 'view';
-    //    canEdit = $routeParams.action === 'create';
-    //  }
-    //
-    //  $scope.disableEditField = !canEdit || $scope.isViewOnly;
-    //};
-
     function getPromotionFromCatalogId(promotionCatalogRecordId) {
       var promotionCatalogRecord = lodash.findWhere($scope.promotionCatalog.companyPromotionCatalogOrderCatalogs, { id: promotionCatalogRecordId });
       if (!promotionCatalogRecord) {
@@ -297,7 +282,6 @@ angular.module('ts5App')
         var newParent = formatPromotionConjunctionForApp(parentPromotionConjunction, index);
         $scope.conjunctionList.push(newParent);
         $scope.updatedFilteredPromotionLists(newParent);
-        $scope.updateFilteredChildPromotionList(newParent);
       });
     }
 
