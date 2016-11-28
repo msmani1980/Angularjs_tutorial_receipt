@@ -308,7 +308,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
         routeParams.action = 'dispatch';
         scope.submit();
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId,
-          '4');
+          '4', false, false);
         scope.$digest();
         expect(location.path).toHaveBeenCalledWith('store-instance-dashboard');
       });
@@ -317,7 +317,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
         routeParams.action = 'replenish';
         scope.submit();
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId,
-          '4');
+          '4', false, false);
         scope.$digest();
         expect(location.path).toHaveBeenCalledWith('store-instance-dashboard');
       });
@@ -326,7 +326,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
         routeParams.action = 'end-instance';
         scope.submit();
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId,
-          '6');
+          '6', false, true);
         scope.$digest();
         expect(location.path).toHaveBeenCalledWith('store-instance-dashboard');
       });

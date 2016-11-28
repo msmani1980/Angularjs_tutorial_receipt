@@ -1103,24 +1103,24 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
     it('should do nothing to item if has valid ullage and inbound fields', function () {
       var validUllageItem = {
-       countTypeId: 1,
-       inboundQuantity: 20,
-       isEposDataOverwritten: false,
-       isInOffload: false,
-       isMenuItem: true,
-       isNewItem: false,
-       itemDescription: 'Brwnie239-Brownie',
-       itemMasterId: 10,
-       itemName: 'Brownie',
-       menuQuantity: 20,
-       oldInboundQuantity: -10,
-       ldPickedQuantity: 20,
-       oldUllageQuantity: -1,
-       pickedId: 201277,
-       pickedQuantity: '20',
-       shouldDisplayOffloadData: true,
-       ullageQuantity: 2,
-       ullageReason: ullageReasonDamaged
+        countTypeId: 1,
+        inboundQuantity: 20,
+        isEposDataOverwritten: false,
+        isInOffload: false,
+        isMenuItem: true,
+        isNewItem: false,
+        itemDescription: 'Brwnie239-Brownie',
+        itemMasterId: 10,
+        itemName: 'Brownie',
+        menuQuantity: 20,
+        oldInboundQuantity: -10,
+        ldPickedQuantity: 20,
+        oldUllageQuantity: -1,
+        pickedId: 201277,
+        pickedQuantity: '20',
+        shouldDisplayOffloadData: true,
+        ullageQuantity: 2,
+        ullageReason: ullageReasonDamaged
       };
 
       scope.shouldDisableUllage(validUllageItem);

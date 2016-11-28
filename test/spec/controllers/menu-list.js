@@ -186,7 +186,19 @@ describe('Controller: MenuListCtrl', function() {
         scope.deleteMenu();
         expect(menuService.deleteMenu).toHaveBeenCalled();
       });
-
+    
+    it('should do DELETE and clear search model with startDate and make a API call', function() {
+        scope.search = {
+          startDate: '10/05/1979'
+        };
+        scope.deleteSearchMenus();
+        expect(menuService.getMenuList).toHaveBeenCalledWith({
+          startDate: '19791005',
+          limit: 100,
+          offset: 0
+        });
+     });
+    
     describe('the error handler', function() {
 
       var mockError = {

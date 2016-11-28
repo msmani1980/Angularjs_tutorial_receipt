@@ -112,6 +112,16 @@ angular.module('ts5App')
       };
       searchMenus();
     };
+    
+    $scope.deleteSearchMenus = function() {
+        $scope.menuList = [];
+        $this.meta = {
+          count: undefined,
+          limit: 100,
+          offset: 0
+        };
+        searchMenus();
+      };
 
     $scope.clearForm = function() {
       lastStartDate = dateUtility.nowFormatted('YYYYMMDD');
@@ -133,7 +143,7 @@ angular.module('ts5App')
     }
 
     function successDeleteHandler() {
-      $scope.searchMenus();
+      $scope.deleteSearchMenus();
       showToast('success', 'Menu Management', 'successfully deleted menu!');
     }
 

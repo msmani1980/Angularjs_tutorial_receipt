@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function($scope, storeInstancePackingFactory, $routeParams, lodash, storeInstanceWizardConfig,
-    $location, $q, dateUtility, socketIO) {
+           $location, $q, dateUtility, socketIO) {
 
     var $this = this;
 
@@ -401,7 +401,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
       angular.forEach(mergedItems, function(item) {
         var didQuantityChange = (angular.isDefined(item.oldPickedQuantity)) ? parseInt(item.pickedQuantity) !==
-          item.oldPickedQuantity : true;
+        item.oldPickedQuantity : true;
         if (didQuantityChange) {
           var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
           if (item.pickedId) {
@@ -415,7 +415,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.addUllageQuantityToPayload = function(item) {
       var didUllageQuantityChange = (angular.isDefined(item.oldUllageQuantity)) ? parseInt(item.ullageQuantity) !==
-        item.oldUllageQuantity : true;
+      item.oldUllageQuantity : true;
       if (didUllageQuantityChange) {
         var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage');
         if (item.ullageId) {
@@ -430,7 +430,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.addInboundQuantityToPayload = function(item, isRedispatch) {
       var didInboundQuantityChange = (angular.isDefined(item.inboundQuantity)) ? parseInt(item.inboundQuantity) !==
-        item.oldInboundQuantity : true;
+      item.oldInboundQuantity : true;
       if (didInboundQuantityChange) {
         var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
         var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName);
@@ -671,10 +671,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($routeParams.action === 'redispatch') {
         // offloadList match should be returned before pickList match. match in pickList and offloadList should not be merged
         itemMatch = lodash.findWhere($scope.offloadListItems, {
-          itemMasterId: itemFromAPI.itemMasterId
-        }) || lodash.findWhere($scope.pickListItems, {
-          itemMasterId: itemFromAPI.itemMasterId
-        });
+            itemMasterId: itemFromAPI.itemMasterId
+          }) || lodash.findWhere($scope.pickListItems, {
+            itemMasterId: itemFromAPI.itemMasterId
+          });
       } else if ($routeParams.action === 'end-instance') {
         itemMatch = lodash.findWhere($scope.offloadListItems, {
           itemMasterId: itemFromAPI.itemMasterId
@@ -750,7 +750,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.mergeRedispatchItemsLoopConditional = function(item, pickListMatch, offloadListMatch) {
       var isMenuItemInOfAllowedMenuItemsForOffloadSection = $this.isMenuItemInOfAllowedMenuItemsForOffloadSection(item);
-      var isItemValidForOffloadSection = (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') || (!offloadListMatch && item.countTypeName === 'Offload');
+      var isItemValidForOffloadSection = (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') ||
+        (!offloadListMatch && item.countTypeName === 'Offload');
 
       return isMenuItemInOfAllowedMenuItemsForOffloadSection && isItemValidForOffloadSection;
     };

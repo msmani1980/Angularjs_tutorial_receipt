@@ -133,6 +133,9 @@ angular.module('ts5App')
     this.getCatererStationList = function() {
       stockTakeFactory.getCatererStationList().then(function(data) {
         $scope.stationsList = data.response;
+        if ($scope.stationsList.length === 1) {
+          $scope.catererStationId = $scope.stationsList[0].id.toString();
+        }
       });
     };
 
