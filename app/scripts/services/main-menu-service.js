@@ -181,7 +181,7 @@ angular.module('ts5App')
           role: 'PROMOTIONCATEGORY'
         }, {
           name: 'Promotion Catalog',
-          route: emberURL + 'promotion-catalogs',
+          route: '/#/promotion-catalog-list',
           icon: 'icon-create-catalog',
           className: 'dashboard-createCatalog',
           package: 'PROMOTION',
