@@ -10,22 +10,6 @@
 angular.module('ts5App')
   .factory('promotionCatalogFactory', function (promotionCatalogService, promotionsService) {
 
-    //function getCompanyId() {
-    //  return globalMenuService.getCompanyData().id;
-    //}
-    //
-    //function getCategoryList(optionalPayload) {
-    //  var payload = optionalPayload || {};
-    //  payload.companyId = getCompanyId();
-    //
-    //  return categoryService.getCategoryList(payload);
-    //}
-
-    //function getMasterItemList(optionalPayload) {
-    //  var payload = optionalPayload || {};
-    //  return itemsService.getItemsList(payload, true);
-    //}
-
     function getPromotionCatalogList(optionalPayload) {
       var payload = optionalPayload || {};
       return promotionCatalogService.getPromotionCatalogList(payload);
