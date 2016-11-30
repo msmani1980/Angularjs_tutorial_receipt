@@ -3,4 +3,12 @@
   padding: 6px 12px;
   border-width: 1px;
 }
+.datepicker table tr td.old, .datepicker table tr td.new {
+  color: #b3b3b3;
+  font-weight: 100;
+}
+
+.datepicker .gray-out {
+  color: #999999;
+}
 /* end date-picker */

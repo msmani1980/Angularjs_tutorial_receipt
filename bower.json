@@ -31,7 +31,7 @@
     "sprintf": "~1.0.3",
     "angular-animate": "1.4.8",
     "angular-moment": "^0.10.3",
-    "moment": "^2.13.0",
+    "moment": "^2.16.0",
     "angular-timezone-selector": "^1.6.0",
     "checklist-model": "^0.9.0",
     "angulartics-google-analytics": "^0.2.1"
