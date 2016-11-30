@@ -76,7 +76,7 @@ angular.module('ts5App')
         }
       });
 
-      if ($this.meta.count === 1 && $scope.search.cashBagNumber && $scope.isCashBagEditable($scope.cashBagList[0]) && $scope.cashBagList[0].storeInstanceId !== null) {
+      if ($this.meta.count === 1 && $scope.search.cashBagNumber && $scope.isCashBagEditable($scope.cashBagList[0])) {
         $localStorage.isEditFromList = true;
         socketIO.emit('echo-cashBag', {
           cashBag: $scope.cashBagList[0]
@@ -255,7 +255,7 @@ angular.module('ts5App')
     };
 
     var storeInstanceIdRequired = false; // TSVPORTAL-7685
-    
+
     $scope.editCashBag = function(cashBag) {
       var buttonSelector = sprintf('.edit-cash-bag-%s-btn', cashBag.id);
       if (storeInstanceIdRequired && cashBag.storeInstanceId === null) {
@@ -264,7 +264,7 @@ angular.module('ts5App')
         showStoreInstancePopup(buttonSelector);
         return;
       }
-      
+
       angular.element(buttonSelector).button('loading');
       $scope.checkForDailyExchangeRate().then(function() {
         angular.element(buttonSelector).button('reset');

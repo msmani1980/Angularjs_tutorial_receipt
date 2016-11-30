@@ -24,8 +24,8 @@ describe('Controller: CashBagListCtrl', function() {
   var cashBagFactory;
   var location;
   var dateUtility;
+  var localStorage;
 
-  var getCashBagListDeferred;
   var stationsListDeferred;
   var schedulesListDeferred;
   var schedulesDailyDeferred;
@@ -58,10 +58,8 @@ describe('Controller: CashBagListCtrl', function() {
     location = $location;
     cashBagFactory = $injector.get('cashBagFactory');
     dateUtility = $injector.get('dateUtility');
+    localStorage = $injector.get('$localStorage');
     scope = $rootScope.$new();
-
-    getCashBagListDeferred = $q.defer();
-    getCashBagListDeferred.resolve(cashBagListResponseJSON);
 
     stationsListDeferred = $q.defer();
     stationsListDeferred.resolve(stationsResponseJSON);
@@ -81,7 +79,13 @@ describe('Controller: CashBagListCtrl', function() {
     getSchedulesInDateRangeDeferred = $q.defer();
     getSchedulesInDateRangeDeferred.resolve(getSchedulesInDateRangeDeferred);
 
-    spyOn(cashBagFactory, 'getCashBagList').and.returnValue(getCashBagListDeferred.promise);
+    spyOn(cashBagFactory, 'getCashBagList').and.callFake(function() {
+      var defer = $q.defer();
+      defer.resolve(cashBagListResponseJSON);
+
+      return defer.promise;
+    });
+
     spyOn(cashBagFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(cashBagFactory, 'getSchedulesList').and.returnValue(schedulesListDeferred.promise);
     spyOn(cashBagFactory, 'getDailySchedulesList').and.returnValue(schedulesDailyDeferred.promise);
@@ -106,6 +110,7 @@ describe('Controller: CashBagListCtrl', function() {
     CashBagListCtrl = $controller('CashBagListCtrl', {
       $scope: scope
     });
+    spyOn(scope, 'editCashBag').and.callThrough();
 
     companyId = cashBagFactory.getCompanyId();
     scope.$digest();
@@ -208,6 +213,160 @@ describe('Controller: CashBagListCtrl', function() {
         scope.clearForm();
         expect(scope.search.cashBagNumber).toBe(undefined);
         expect(scope.cashBagList).toEqual([]);
+      });
+
+      it('should redirect to edit page if search result is 1 and cashBag is valid for redirect to edit', function() {
+        cashBagListResponseJSON = {
+          cashBags: [{
+            id: 8888,
+            retailCompanyId: 403,
+            chCompanyId: 362,
+            arrivalStationCode: 'ORD',
+            departureStationCode: 'LAX',
+            bankReferenceNumber: null,
+            cashBagNumber: '1',
+            ePosCashBagsId: null,
+            isSubmitted: false,
+            isDelete: false,
+            scheduleDate: '2015-05-18',
+            scheduleId: 348,
+            scheduleNumber: '105',
+            cashbagSubmittedBy: null
+          }
+          ],
+          meta: {
+            count: 1,
+            limit: 1,
+            start: 0
+          }
+        };
+        scope.search = {
+          cashBagNumber: cashBagListResponseJSON.cashBags[0].cashBagNumber
+        };
+
+        scope.loadCashBagList();
+        scope.$digest();
+        expect(localStorage.isEditFromList).toBe(true);
+        expect(scope.editCashBag).toHaveBeenCalledWith(scope.cashBagList[0]);
+      });
+
+      it('should not redirect to edit page if cashBag has flag isDelete = true', function() {
+        cashBagListResponseJSON = {
+          cashBags: [{
+            id: 8888,
+            retailCompanyId: 403,
+            chCompanyId: 362,
+            arrivalStationCode: 'ORD',
+            departureStationCode: 'LAX',
+            bankReferenceNumber: null,
+            cashBagNumber: '1',
+            ePosCashBagsId: null,
+            isSubmitted: false,
+            isDelete: true,
+            scheduleDate: '2015-05-18',
+            scheduleId: 348,
+            scheduleNumber: '105',
+            cashbagSubmittedBy: null
+          }
+          ],
+          meta: {
+            count: 1,
+            limit: 1,
+            start: 0
+          }
+        };
+        scope.search = {
+          cashBagNumber: cashBagListResponseJSON.cashBags[0].cashBagNumber
+        };
+
+        scope.loadCashBagList();
+        scope.$digest();
+        expect(localStorage.isEditFromList).toBeUndefined();
+      });
+
+      it('should not redirect to edit page if cashBag has flag isSubmitted = true', function() {
+        cashBagListResponseJSON = {
+          cashBags: [{
+            id: 8888,
+            retailCompanyId: 403,
+            chCompanyId: 362,
+            arrivalStationCode: 'ORD',
+            departureStationCode: 'LAX',
+            bankReferenceNumber: null,
+            cashBagNumber: '1',
+            ePosCashBagsId: null,
+            isSubmitted: true,
+            isDelete: false,
+            scheduleDate: '2015-05-18',
+            scheduleId: 348,
+            scheduleNumber: '105',
+            cashbagSubmittedBy: null
+          }
+          ],
+          meta: {
+            count: 1,
+            limit: 1,
+            start: 0
+          }
+        };
+        scope.search = {
+          cashBagNumber: cashBagListResponseJSON.cashBags[0].cashBagNumber
+        };
+
+        scope.loadCashBagList();
+        scope.$digest();
+        expect(localStorage.isEditFromList).toBeUndefined();
+      });
+
+      it('should not redirect to edit page if response meta.count > 1', function() {
+        cashBagListResponseJSON = {
+          cashBags: [
+            {
+              id: 8888,
+              retailCompanyId: 403,
+              chCompanyId: 362,
+              arrivalStationCode: 'ORD',
+              departureStationCode: 'LAX',
+              bankReferenceNumber: null,
+              cashBagNumber: '1',
+              ePosCashBagsId: null,
+              isSubmitted: false,
+              isDelete: false,
+              scheduleDate: '2015-05-18',
+              scheduleId: 348,
+              scheduleNumber: '105',
+              cashbagSubmittedBy: null
+            },
+            {
+              id: 8889,
+              retailCompanyId: 403,
+              chCompanyId: 362,
+              arrivalStationCode: 'ORD',
+              departureStationCode: 'LAX',
+              bankReferenceNumber: null,
+              cashBagNumber: '1',
+              ePosCashBagsId: null,
+              isSubmitted: false,
+              isDelete: false,
+              scheduleDate: '2015-05-18',
+              scheduleId: 348,
+              scheduleNumber: '105',
+              cashbagSubmittedBy: null
+            }
+          ],
+          meta: {
+            count: 2,
+            limit: 2,
+            start: 0
+          }
+        };
+        scope.search = {
+          cashBagNumber: cashBagListResponseJSON.cashBags[0].cashBagNumber
+        };
+
+        scope.loadCashBagList();
+        scope.$digest();
+        expect(localStorage.isEditFromList).toBeUndefined();
       });
     });
 
