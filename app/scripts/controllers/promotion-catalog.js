@@ -137,6 +137,11 @@ angular.module('ts5App')
       angular.forEach($scope.catalogPromotionList, function (promotion, index) {
         promotion.sortOrder = index + 1;
       });
+      
+      $scope.filteredPromotionList = lodash.filter($scope.promotionList, function (promotion) {
+          var promotionMatch = lodash.findWhere($scope.catalogPromotionList, { selectedPromotion: promotion });
+          return !promotionMatch;
+        });
     };
 
     $scope.setFilteredPromotionList = function () {
@@ -217,6 +222,7 @@ angular.module('ts5App')
       }
 
       $scope.disableEditField = !canEdit || $scope.isViewOnly;
+      $scope.minDate = $routeParams.action === 'view' ? 0 : dateUtility.dateNumDaysAfterTodayFormatted(1);
     };
 
     function setPromotionCatalog(dataFromAPI) {
