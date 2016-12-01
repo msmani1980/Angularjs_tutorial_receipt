@@ -149,7 +149,7 @@ describe('Controller: CashBagListCtrl', function() {
     });
   });
 
-  describe('cashBagList scope functions', function() {
+  fdescribe('cashBagList scope functions', function() {
     describe('search cash bag', function() {
       it('should have a search object attached to scope', function() {
         expect(scope.search).toBeDefined();
@@ -217,22 +217,13 @@ describe('Controller: CashBagListCtrl', function() {
 
       it('should redirect to edit page if search result is 1 and cashBag is valid for redirect to edit', function() {
         cashBagListResponseJSON = {
-          cashBags: [{
-            id: 8888,
-            retailCompanyId: 403,
-            chCompanyId: 362,
-            arrivalStationCode: 'ORD',
-            departureStationCode: 'LAX',
-            bankReferenceNumber: null,
-            cashBagNumber: '1',
-            ePosCashBagsId: null,
-            isSubmitted: false,
-            isDelete: false,
-            scheduleDate: '2015-05-18',
-            scheduleId: 348,
-            scheduleNumber: '105',
-            cashbagSubmittedBy: null
-          }
+          cashBags: [
+            {
+              id: 8888,
+              cashBagNumber: '1',
+              isSubmitted: false,
+              isDelete: false
+            }
           ],
           meta: {
             count: 1,
@@ -252,22 +243,13 @@ describe('Controller: CashBagListCtrl', function() {
 
       it('should not redirect to edit page if cashBag has flag isDelete = true', function() {
         cashBagListResponseJSON = {
-          cashBags: [{
-            id: 8888,
-            retailCompanyId: 403,
-            chCompanyId: 362,
-            arrivalStationCode: 'ORD',
-            departureStationCode: 'LAX',
-            bankReferenceNumber: null,
-            cashBagNumber: '1',
-            ePosCashBagsId: null,
-            isSubmitted: false,
-            isDelete: true,
-            scheduleDate: '2015-05-18',
-            scheduleId: 348,
-            scheduleNumber: '105',
-            cashbagSubmittedBy: null
-          }
+          cashBags: [
+            {
+              id: 8888,
+              cashBagNumber: '1',
+              isSubmitted: false,
+              isDelete: true
+            }
           ],
           meta: {
             count: 1,
@@ -286,22 +268,13 @@ describe('Controller: CashBagListCtrl', function() {
 
       it('should not redirect to edit page if cashBag has flag isSubmitted = true', function() {
         cashBagListResponseJSON = {
-          cashBags: [{
-            id: 8888,
-            retailCompanyId: 403,
-            chCompanyId: 362,
-            arrivalStationCode: 'ORD',
-            departureStationCode: 'LAX',
-            bankReferenceNumber: null,
-            cashBagNumber: '1',
-            ePosCashBagsId: null,
-            isSubmitted: true,
-            isDelete: false,
-            scheduleDate: '2015-05-18',
-            scheduleId: 348,
-            scheduleNumber: '105',
-            cashbagSubmittedBy: null
-          }
+          cashBags: [
+            {
+              id: 8888,
+              cashBagNumber: '1',
+              isSubmitted: true,
+              isDelete: false
+            }
           ],
           meta: {
             count: 1,
@@ -323,35 +296,15 @@ describe('Controller: CashBagListCtrl', function() {
           cashBags: [
             {
               id: 8888,
-              retailCompanyId: 403,
-              chCompanyId: 362,
-              arrivalStationCode: 'ORD',
-              departureStationCode: 'LAX',
-              bankReferenceNumber: null,
               cashBagNumber: '1',
-              ePosCashBagsId: null,
               isSubmitted: false,
-              isDelete: false,
-              scheduleDate: '2015-05-18',
-              scheduleId: 348,
-              scheduleNumber: '105',
-              cashbagSubmittedBy: null
+              isDelete: false
             },
             {
               id: 8889,
-              retailCompanyId: 403,
-              chCompanyId: 362,
-              arrivalStationCode: 'ORD',
-              departureStationCode: 'LAX',
-              bankReferenceNumber: null,
-              cashBagNumber: '1',
-              ePosCashBagsId: null,
+              cashBagNumber: '2',
               isSubmitted: false,
-              isDelete: false,
-              scheduleDate: '2015-05-18',
-              scheduleId: 348,
-              scheduleNumber: '105',
-              cashbagSubmittedBy: null
+              isDelete: false
             }
           ],
           meta: {
