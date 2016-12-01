@@ -340,15 +340,14 @@ angular.module('ts5App')
 
     function createSaveRelationshipPromise() {
       var promises = [];
+      var allCarrierInstancesIds = getAllCarrierInstanceIdsToSave();
       var payload = {
-        storeInstanceId: $scope.selectedPortalRecord.id
+        storeInstanceId: $scope.selectedPortalRecord.id,
+        carrierInstancesIds: allCarrierInstancesIds
       };
 
-      var allCarrierInstancesIds = getAllCarrierInstanceIdsToSave();
-      angular.forEach(allCarrierInstancesIds, function (carrierInstanceId) {
-        promises.push(manualECSFactory.updateCarrierInstance(carrierInstanceId, payload));
-      });
-
+      promises.push(manualECSFactory.updateCarrierInstance($scope.selectedPortalRecord.id, payload));
+      
       return promises;
     }
 
