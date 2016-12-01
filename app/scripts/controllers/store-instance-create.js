@@ -824,7 +824,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $location.url('/store-instance-dashboard/');
         },
 
-        confirmationLabel: 'OK',
+        confirmationLabel: 'Go to dashboard',
         body: response.value,
         cancelLabel: 'Cancel'
       };
