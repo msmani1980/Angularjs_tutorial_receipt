@@ -149,7 +149,7 @@ describe('Controller: CashBagListCtrl', function() {
     });
   });
 
-  fdescribe('cashBagList scope functions', function() {
+  describe('cashBagList scope functions', function() {
     describe('search cash bag', function() {
       it('should have a search object attached to scope', function() {
         expect(scope.search).toBeDefined();
