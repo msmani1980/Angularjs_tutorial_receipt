@@ -320,14 +320,19 @@ describe('Controller: ManualECSCtrl', function () {
         {id: 3, allIds: [3, 33], children: [{id: 4, allIds: [4, 44]}]}
       ];
     });
-    it('should call API with all selected epos instance ids and selected store instance id', function () {
+    it('should call API with all selected epos instance ids as carrierInstancesIds and selected store instance id as storeInstanceId', function () {
       scope.selectedPortalRecord = { id: 1 };
       scope.selectedEposRecords = [scope.carrierInstances[0]];
-      var expectedPayload = { storeInstanceId: 1 };
+      var expectedPayload = { storeInstanceId: 1, carrierInstancesIds: [1, 11, 2, 22] };
       scope.saveRelationship();
       expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(1, expectedPayload);
-      expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(11, expectedPayload);
-      expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(2, expectedPayload);
+    });
+    
+    it('should call API with all selected epos instance ids as carrierInstancesIds and selected store instance id as storeInstanceId', function () {
+      scope.selectedPortalRecord = { id: 2 };
+      scope.selectedEposRecords = [scope.carrierInstances[1]];
+      var expectedPayload = { storeInstanceId: 2, carrierInstancesIds: [3, 33, 4, 44] };
+      scope.saveRelationship();
       expect(manualECSFactory.updateCarrierInstance).toHaveBeenCalledWith(2, expectedPayload);
     });
 
