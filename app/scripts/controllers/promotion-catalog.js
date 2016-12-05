@@ -12,7 +12,7 @@ angular.module('ts5App')
 
     $scope.itemList = [];
     $scope.promotionCatalog = {};
-    $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
+    $scope.minDate = $scope.minDate = $routeParams.action === 'view' ? '' : dateUtility.dateNumDaysAfterTodayFormatted(1);
     $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
     var $this = this;
 
@@ -222,7 +222,6 @@ angular.module('ts5App')
       }
 
       $scope.disableEditField = !canEdit || $scope.isViewOnly;
-      $scope.minDate = $routeParams.action === 'view' ? 0 : dateUtility.dateNumDaysAfterTodayFormatted(1);
     };
 
     function setPromotionCatalog(dataFromAPI) {
