@@ -248,8 +248,10 @@ angular.module('ts5App')
         }
 
         displayLoadingModal('Loading');
+        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
         itemImportFactory.getItemsList({
-          companyId: $scope.selectedImportCompany.id
+          companyId: $scope.selectedImportCompany.id,
+          startDate: today
         }).then(setImportedRetailItemList);
       };
 
