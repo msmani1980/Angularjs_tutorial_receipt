@@ -103,7 +103,7 @@ angular.module('ts5App')
     }
 
     $scope.searchMenus = function() {
-      lastStartDate = null;
+      lastStartDate = dateUtility.nowFormatted('YYYYMMDD');
       $scope.menuList = [];
       $this.meta = {
         count: undefined,
