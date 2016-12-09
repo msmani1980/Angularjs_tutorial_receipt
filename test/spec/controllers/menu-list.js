@@ -50,7 +50,7 @@ describe('Controller: MenuListCtrl', function() {
     expect(scope.search.startDate).toBe(undefined);
     expect(scope.menuList).toEqual([]);
   });
-  
+
   it('should clear search model and make a API call', function() {
     scope.search = {
       startDate: '10/05/1979'
