@@ -373,6 +373,7 @@ describe('Image Upload Directive |', function () {
       expect(scope.imgElement).toBeDefined();
     });
 
+/*
     it('should have imgHeight defined', function () {
       var imgElement = angular.element('<img class="fileTest" style="width:129px; height:129px;" ng-src="http://placehold.it/100x100"/>');
       imgElement = angular.element(imgElement[0]);
@@ -386,7 +387,7 @@ describe('Image Upload Directive |', function () {
       scope.doesImageMeetSizeConstraint(0, imgElement);
       expect(scope.imgWidth).toBeDefined();
     });
-
+*/
     it('should have uploadFail to be false', function () {
       expect(scope.uploadFail).toBeFalsy();
     });
