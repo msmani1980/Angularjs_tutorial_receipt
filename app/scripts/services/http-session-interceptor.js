@@ -17,52 +17,55 @@ angular.module('ts5App')
     };
 
     var notrsvrPages = [
-        '/change-password/*',
-        '/commission-data-table/*',
-        '/commission-data/*',
-        '/company-create/*',
-        '/company-edit/*',
-        '/company-exchange-rate-edit/*',
-        '/company-list/*',
-        '/company-reason-code/*',
-        '/company-reason-type-subscribe/*',
-        '/company-relationship-list/*',
-        '/company-view/*',
-        '/company/*',
-        '/currency-edit/*',
-        '/discounts/*',
-        '/employee-commission-list/*',
-        '/employee-commission/*',
-        '/employee-message/*',
-        '/employee-messages/*',
-        '/forgot-username-password/*',
-        '/global-reason-code/*',       
-        '/lmp-locations-list/*',
-        '/login',       
-        '/manual-epos-cash/*',
-        '/manual-epos-credit/*',
-        '/manual-epos-dashboard/*',
-        '/manual-epos-discount/*',
-        '/manual-epos-items/*',
-        '/manual-store-instance/*',
-        '/retail-company-exchange-rate-setup/*',
-        '/station-create/*',
-        '/station-edit/*',
-        '/station-list/*',
-        '/station-view/*',
-        '/store-instance-step-1/*',
-        '/tax-rates/*',
-        '/ember/#/schedules/*',
-        '/ember/#/menu-assignments/*',
-        '/ember/#/menu-rules/*',
-        '/ember/#/promotion-catalogs/*',
-        '/ember/#/receipt-rules/*'
+      '/change-password/*',
+      '/commission-data-table/*',
+      '/commission-data/*',
+      '/company-create/*',
+      '/company-edit/*',
+      '/company-exchange-rate-edit/*',
+      '/company-list/*',
+      '/company-reason-code/*',
+      '/company-reason-type-subscribe/*',
+      '/company-relationship-list/*',
+      '/company-view/*',
+      '/company/*',
+      '/currency-edit/*',
+      '/discounts/*',
+      '/employee-commission-list/*',
+      '/employee-commission/*',
+      '/employee-message/*',
+      '/employee-messages/*',
+      '/forgot-username-password/*',
+      '/global-reason-code/*',
+      '/lmp-locations-list/*',
+      '/login',
+      '/manual-epos-cash/*',
+      '/manual-epos-credit/*',
+      '/manual-epos-dashboard/*',
+      '/manual-epos-discount/*',
+      '/manual-epos-items/*',
+      '/manual-store-instance/*',
+      '/retail-company-exchange-rate-setup/*',
+      '/station-create/*',
+      '/station-edit/*',
+      '/station-list/*',
+      '/station-view/*',
+      '/store-instance-step-1/*',
+      '/tax-rates/*',
+      '/ember/#/schedules/*',
+      '/ember/#/menu-assignments/*',
+      '/ember/#/menu-rules/*',
+      '/ember/#/promotion-catalogs/*',
+      '/ember/#/receipt-rules/*',
+      '/promotion-catalog-list/*',
+      '/promotion-catalog/*',
+      '/promotion-catalog-conjunction/*'
     ];
 
     var legacyApis = [
-        '/rsvr/api/dispatch/store-instances/[0-9]*/status/[9-9][^11]*$',
-        '/rsvr/api/companies/[0-9]*/company-credit-card-types',
-        '/rsvr/api/company-discounts/[0-9]*$'
+      '/rsvr/api/dispatch/store-instances/[0-9]*/status/[9-9][^11]*$',
+      '/rsvr/api/companies/[0-9]*/company-credit-card-types',
+      '/rsvr/api/company-discounts/[0-9]*$'
     ];
 
     var onlyRsvrApis = [
@@ -94,7 +97,7 @@ angular.module('ts5App')
       '/rsvr/api/menus/caterer-stations',
       '/rsvr/api/caterer-stations',
       '/rsvr/api/menus'
-      ];
+    ];
 
     function responseError(response) {
 
@@ -105,7 +108,7 @@ angular.module('ts5App')
       return $q.reject(response);
     }
 
-    var isMatching = function(url, list) {
+    var isMatching = function (url, list) {
       var matches = Array.prototype.filter.call(list, function (item) {
         return url.match(item);
       });
@@ -113,19 +116,19 @@ angular.module('ts5App')
       return matches.length !== 0;
     };
 
-    var isPageWithLegacyAPIs = function() {
+    var isPageWithLegacyAPIs = function () {
       return isMatching($location.absUrl(), notrsvrPages);
     };
 
-    var isLegacyAPI = function(config) {
+    var isLegacyAPI = function (config) {
       return isMatching(config.url, legacyApis);
     };
 
-    var isOnlyRsvrAPI = function(url) {
+    var isOnlyRsvrAPI = function (url) {
       return isMatching(url, onlyRsvrApis);
     };
 
-    var shouldReplaceUrl = function(config) {
+    var shouldReplaceUrl = function (config) {
       var hasRestParam = $location.absUrl().indexOf('api=rest') > 0;
 
       if (hasRestParam) {

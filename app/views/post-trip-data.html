@@ -173,15 +173,17 @@
           </div>
 
           <div class="col-xs-12 col-sm-4 employee-id">
-            <div class="form-group">
-              <label>Employee ID's *</label>
-              <ui-select required name="employeeIds" multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap" ng-disabled="readOnly">
-                <ui-select-match placeholder="Select Employee IDs from list">{{ $item.employeeIdentifier }}</ui-select-match>
-                <ui-select-choices repeat="employee in employees | filter: $select.search | limitTo:50">
-                  {{employee.employeeIdentifier}} ({{ employee.lastName }}, {{ employee.firstName }})
-                </ui-select-choices>
-              </ui-select>
-            </div>
+          	<fieldset ng-disabled="readOnly">
+	            <div class="form-group">
+	              <label>Employee ID's *</label>
+	              <ui-select required name="employeeIds" multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap">
+	                <ui-select-match placeholder="Select Employee IDs from list">{{ $item.employeeIdentifier }}</ui-select-match>
+	                <ui-select-choices repeat="employee in employees | filter: $select.search | limitTo:50">
+	                  {{employee.employeeIdentifier}} ({{ employee.lastName }}, {{ employee.firstName }})
+	                </ui-select-choices>
+	              </ui-select>
+	            </div>
+            </fieldset>
           </div>
         </div>
       </div>

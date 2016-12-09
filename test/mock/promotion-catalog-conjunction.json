@@ -1,0 +1,35 @@
+{
+  "companyPromotionCatalogId": 76,
+  "companyPromotionCatalogConjunctions": [
+    {
+      "promotionCatalogOrderId": 565,
+      "id": 565,
+      "conjunctions": [
+        {
+          "id": 133,
+          "promotionCatalogOrderConjunctionId": 567,
+          "promotionId": 429
+        }, {
+          "id": 134,
+          "promotionCatalogOrderConjunctionId": 566,
+          "promotionId": 426
+        }
+      ]
+    }, {
+      "promotionCatalogOrderId": 566,
+      "id": 566,
+      "conjunctions": [
+        {
+          "id": 135,
+          "promotionCatalogOrderConjunctionId": 568,
+          "promotionId": 428
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "count": 3,
+    "limit": 3,
+    "start": 0
+  }
+}

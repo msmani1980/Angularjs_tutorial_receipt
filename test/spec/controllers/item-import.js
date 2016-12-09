@@ -20,10 +20,12 @@ describe('Controller: ItemImportCtrl', function () {
   var importItemsDeferred;
   var currentCompanyId = 403;
   var companyRelationshipListJSON;
+  var dateUtility;
 
   beforeEach(inject(function ($controller, $rootScope, $q, _itemImportFactory_, $injector) {
     scope = $rootScope.$new();
-
+    dateUtility = $injector.get('dateUtility');
+    
     inject(function (_servedStockownerCompanies_, _servedRetailItems_) {
       importedCompaniesResponseJSON = _servedStockownerCompanies_;
       retailItemsResponseJSON = _servedRetailItems_;
@@ -131,12 +133,15 @@ describe('Controller: ItemImportCtrl', function () {
 
   describe('changeSelectedImportCompany scope function', function () {
     var companyId = 407;
+    var todayDate;
+    
     beforeEach(function () {
       scope.selectedImportCompany = {
         id: companyId
       };
       scope.changeSelectedImportCompany();
       scope.$digest();
+      todayDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
     });
 
     it('should not return false', function () {
@@ -145,7 +150,8 @@ describe('Controller: ItemImportCtrl', function () {
 
     it('should call getItemsList', function () {
       expect(itemImportFactory.getItemsList).toHaveBeenCalledWith({
-        companyId: companyId
+        companyId: companyId,
+        startDate: todayDate
       });
     });
 

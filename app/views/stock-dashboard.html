@@ -106,7 +106,7 @@
       <tbody>
 
       <tr
-        ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults"
+        ng-repeat="stockItem in stockDashboardItemsList | index | filter: search as searchResults"
         ng-class="{'bg-success':isRecordUpdatedToday(stockItem)}">
         <td>{{stockItem.itemCode}}</td>
         <td>{{stockItem.itemName}}</td>
