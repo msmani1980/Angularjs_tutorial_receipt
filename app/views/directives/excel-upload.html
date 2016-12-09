@@ -10,7 +10,7 @@
     <i class="fa fa-caret-down"></i>
   </button>
   <ul class="dropdown-menu">
-    <li><a ng-href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/{{ templateName }}.xlsx">Download Template</a>
+    <li><a ng-href="{{ downloadTemplateUrl }}">Download Template</a>
 
     </li>
     <li><a href="#" ng-click="showModalImportInfo(); $event.preventDefault(); $event.stopPropagation();">Template
