@@ -58,6 +58,10 @@ angular.module('ts5App')
       return promotionCategoriesService.getPromotionCategories();
     }
 
+    function getActivePromotionCategories(datesPayload) {
+      return promotionCategoriesService.getPromotionCategories(datesPayload);
+    }
+
     function getStationGlobals(payload) {
       return stationsService.getGlobalStationList(payload);
     }
@@ -103,8 +107,8 @@ angular.module('ts5App')
       getPromotions: getPromotions,
       createPromotion: createPromotion,
       savePromotion: savePromotion,
-      deletePromotion: deletePromotion
-
+      deletePromotion: deletePromotion,
+      getActivePromotionCategories: getActivePromotionCategories
     };
 
   });

@@ -14,6 +14,12 @@ describe('Controller: PromotionCatalogListCtrl', function () {
   var lodash;
   var location;
   var scope;
+  var $window;
+  
+  beforeEach(module(function ($provide) {
+    $window = { location: { reload: jasmine.createSpy() } };
+	$provide.value('$window', $window);
+  }));
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope, $injector, $location) {
@@ -26,7 +32,7 @@ describe('Controller: PromotionCatalogListCtrl', function () {
     dateUtility = $injector.get('dateUtility');
     lodash = $injector.get('lodash');
     scope = $rootScope.$new();
-
+    
     promotionCatalogListDeferred = $q.defer();
     promotionCatalogListDeferred.resolve(promotionCatalogListResponseJSON);
 
