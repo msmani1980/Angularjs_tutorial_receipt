@@ -289,7 +289,7 @@ angular.module('ts5App')
 
     this.setViewVariables = function () {
       var isFuture = dateUtility.isAfterToday($scope.promotionCatalog.startDate) && dateUtility.isAfterToday($scope.promotionCatalog.endDate);
-      $scope.isViewOnly = !isFuture && $routeParams.action !== 'create';
+      $scope.isViewOnly = !isFuture;
       $scope.canDelete = isFuture && $routeParams.action !== 'create';
     };
 
