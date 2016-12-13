@@ -229,6 +229,15 @@ describe('Controller: MenuListCtrl', function() {
       });
 
     });
+    
+    it('should clear search model and if startDate endDate is null default date should be passed', function() {
+	    scope.clearForm();
+	    scope.search = {
+	  	      startDate: '10/05/1979'
+	  	};
+	    expect(scope.search.startDate).toBeDefined();
+	    expect(scope.menuList).toEqual([]);
+   });
 
   });
 });

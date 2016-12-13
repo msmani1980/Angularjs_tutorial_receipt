@@ -81,13 +81,20 @@ angular.module('ts5App')
         $scope.templateName = 'menuUpload';
       } else if ($scope.type === 'postTrip') {
         $scope.templateName = 'FileUpload-PostTripManagement';
-      } else if ($scope.type === 'stockTake') {
-        $scope.templateName = 'StockTake-ImportFile';
+      }
+    }
+
+    function setDownloadTemplateUrl() {
+      $scope.downloadTemplateUrl = 'https://s3.amazonaws.com/ts5-dev-portal-images/templates/' + $scope.templateName + '.xlsx';
+
+      if ($scope.type === 'stockTake') {
+        $scope.downloadTemplateUrl = ENV.apiUrl + '/rsvr-pdf/api/stock-management/dashboard/file/template';
       }
     }
 
     function setupController() {
       setTemplateName();
+      setDownloadTemplateUrl();
       try {
         $this.service = $injector.get($scope.type + 'Factory');
       } catch (error) {
