@@ -69,7 +69,7 @@ angular.module('ts5App')
       var menuId = $scope.menu.id;
 
       angular.forEach($scope.menuItemList, function (menuItem) {
-        if (menuItem.selectedItem && menuItem.itemQty) {
+        if (menuItem.selectedItem && (menuItem.itemQty || menuItem.itemQty === 0)) {
           var itemPayload = {};
           if (menuId) {
             itemPayload.menuId = menuId;
