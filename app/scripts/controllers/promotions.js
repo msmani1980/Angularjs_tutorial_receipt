@@ -459,8 +459,23 @@ angular.module('ts5App')
     }
 
     function getPromotionCategories() {
+        initPromises.push(
+          promotionsFactory.getPromotionCategories().then(setPromotionCategories)
+        );
+      }
+
+    function setActivePromotionCategories(dataFromAPI) {
+      $scope.selectOptions.activePromotionCategories = dataFromAPI.companyPromotionCategories;
+    }
+
+    function getActivePromotionCategories() {
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var payload = {
+        startDate: today
+      };
+
       initPromises.push(
-        promotionsFactory.getPromotionCategories().then(setPromotionCategories)
+        promotionsFactory.getActivePromotionCategories(payload).then(setActivePromotionCategories)
       );
     }
 
@@ -623,7 +638,8 @@ angular.module('ts5App')
       getStationGlobals();
       getCurrencyGlobals();
       getMasterItems();
-
+      getActivePromotionCategories();
+      
       $q.all(initPromises).then(function () {
         handlePromiseSuccessHandler(promotionDataFromAPI);
       }, showResponseErrors);

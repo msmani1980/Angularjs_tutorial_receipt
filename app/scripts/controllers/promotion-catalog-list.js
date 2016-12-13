@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCatalogListCtrl', function ($scope, promotionCatalogFactory, dateUtility, $location) {
+  .controller('PromotionCatalogListCtrl', function ($window, $scope, promotionCatalogFactory, dateUtility, $location) {
     $scope.viewName = 'Promotion Catalogs';
     var $this = this;
 
@@ -60,6 +60,7 @@ angular.module('ts5App')
     $scope.redirectRecordToAction = function (action, recordId, isConjunction) {
       var path = isConjunction ? 'promotion-catalog-conjunction/' : 'promotion-catalog/';
       $location.path(path + action + '/' + recordId);
+      $window.location.reload();
     };
 
     $scope.canEdit = function (catalog) {
