@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="initial-scale=1.0, width=device-height">
 <title>ePOS Receipt Template</title>
 <link rel="stylesheet" href="bootstrap-331.min.css">
 <script src="jquery-2.1.1.min.js"></script>
@@ -13,10 +14,12 @@
 </head>
 <body>
 <section id="receipt-template"></section>
-<section><div> <div id="signature"></div></div></section>
 <section id="copyright-section" class="text-center">
-<div class="text-center" style="padding-top:40px">
+<div class="text-center" style="padding-top:20px">
 <p>Copyright &copy; eGate Solutions</p></div></section>
+<section><div id="signature-section" style="display:none; margin:20px; width: 520px;"><p>SIGNATURE</p> 
+<div id="signature" style="border:1px; border-style:solid; width: 500px;"></div></div></section>
+
 <script type="text/javascript">
 String.prototype.format = function () {
 var args = arguments;
@@ -128,13 +131,14 @@ break;
 }
 sign = payment.signature;
 if(!(sign === undefined) && sign!=null && sign.length>1){
+$("#signature-section").show();
 $("#signature").jSignature();
 $("#signature").jSignature("setData", "data:" + sign[0]+","+sign[1]);
 var over = '<div id="over" style="position:absolute; width: 100%; height: 100%; top:100%; bottom:0; left:0; right: 0;"></div>';
 var $over = $(over); 
+//over.attr("id", "overid")
 $("#signature").append($over);
 }
-//-- update super.company_receipt_delivery set email_record = regexp_replace(email_record, 'ember/','') where email_record like '%ember%';                    	
 });
 cart.paymentByType = paymentByType;
 ko.applyBindings(cart, document.getElementById("receipt-template"));
