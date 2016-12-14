@@ -1,7 +1,7 @@
 'use strict';
 /*global moment*/
 
-describe('Controller: MenuEditCtrl', function () {
+fdescribe('Controller: MenuEditCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/menu.json'));
@@ -390,6 +390,8 @@ describe('Controller: MenuEditCtrl', function () {
         itemId: scope.menuItemList[1].selectedItem.id
       };
       expect(MenuEditCtrl.createPayload().menuItems[1]).toEqual(expectedItem);
+      expect(MenuEditCtrl.createPayload().menuItems[1].itemQty).toBeDefined();
+      expect(MenuEditCtrl.createPayload().menuItems[1].itemQty).not.toBeNull();
     });
   });
 
