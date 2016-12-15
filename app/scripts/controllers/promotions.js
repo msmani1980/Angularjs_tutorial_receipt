@@ -471,7 +471,8 @@ angular.module('ts5App')
     function getActivePromotionCategories() {
       var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       var payload = {
-        startDate: today
+        startDate: today,
+        endDate: today
       };
 
       initPromises.push(
