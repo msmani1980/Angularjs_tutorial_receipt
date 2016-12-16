@@ -44,8 +44,8 @@
 
     <div class="form-group col-sm-3">
       <label>Menu Code *</label>
-      <input custom-validity
-             custom-pattern="word"
+      <input custom-pattern="alphanumeric"
+      		 custom-validity
              required
              type="text"
              maxlength="20"
@@ -58,8 +58,8 @@
 
     <div class="form-group col-sm-3">
       <label>Menu Name *</label>
-      <input custom-validity
-             custom-pattern="word"
+      <input custom-pattern="alphaWithSpecialCharMenuItem"
+      		 custom-validity
              required
              type="text"
              maxlength="25"
