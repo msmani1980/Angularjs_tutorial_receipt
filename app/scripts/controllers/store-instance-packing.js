@@ -613,7 +613,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemMasterId: itemFromAPI.itemMasterId,
         isMenuItem: isFromMenu,
         isNewItem: false,
-        isInOffload: $routeParams.action === 'end-instance'
+        isInOffload: ($routeParams.action === 'end-instance')
       };
     };
 
