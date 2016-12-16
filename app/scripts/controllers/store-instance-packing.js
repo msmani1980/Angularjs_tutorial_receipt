@@ -613,7 +613,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemMasterId: itemFromAPI.itemMasterId,
         isMenuItem: isFromMenu,
         isNewItem: false,
-        isInOffload: ($routeParams.action === 'end-instance')
+        isInOffload: ($routeParams.action === 'end-instance' || $routeParams.action === 'redispatch')
       };
     };
 
@@ -753,7 +753,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var isItemValidForOffloadSection = (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') ||
         (!offloadListMatch && item.countTypeName === 'Offload');
 
-      return isMenuItemInOfAllowedMenuItemsForOffloadSection && isItemValidForOffloadSection;
+      return (isMenuItemInOfAllowedMenuItemsForOffloadSection && isItemValidForOffloadSection) ||
+        ($routeParams.action === 'redispatch' && isItemValidForOffloadSection);
     };
 
     this.mergeRedispatchItemsLoop = function(items, ignoreEposData) {

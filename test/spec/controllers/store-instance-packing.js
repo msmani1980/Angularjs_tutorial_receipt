@@ -629,6 +629,12 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(scope.pickListItems[1].inboundQuantity).toEqual('7');
       });
 
+      it('should add expired items to offload list', function () {
+        mockItemsResponseFromAPI = [{ masterItems: [] }, menuItems, [], {}, prevInstanceItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.offloadListItems.length).toEqual(1);
+      });
+
       it('should merge calculated epos inbound counts in pick list if company preference is set to true and data exists', function () {
         scope.shouldDefaultInboundToEpos = true;
         var pickListItem = {
