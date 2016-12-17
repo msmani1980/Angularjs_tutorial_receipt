@@ -17,6 +17,7 @@ angular.module('ts5App')
       alpha: [/^[a-zA-z]+$/, 'Error message for alpha'],
       alphanumeric: [/^[a-zA-Z0-9]+$/, 'Error message for alphanumeric'],
       alphanumericSpaces: [/^[a-zA-Z0-9-\s]+$/, 'This field can only contain letters, numbers, and spaces'],
+      alphaWithSpecialCharMenuItem: [/^[a-zA-Z0-9\(\)\.\_\ \/\%\@\&\^-]+$/, 'This field can only contain letters, numbers, spaces and special character ( @, %, ^, /, &, -, _, .,)'],
       password: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@!%*?&]).{6,15}$/,
         'Password requires one lower case, one upper case, one digit, one special character ($, @, !, %, *, ?, &), 6-15 length, and no spaces'
       ],
