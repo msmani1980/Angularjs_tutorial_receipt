@@ -72,4 +72,19 @@ describe('Directive: customValidity', function () {
 	    scope.form.testSpecialCharElement.$setViewValue('Te!st%.Allow@Spe^cial-Ch/ar_Te\st&#$');
 	    expect(scope.form.$valid).toBeFalsy();
 	}));
+  
+   it('should check the pattern on the element if model is defined and its starts with alphanumeric or not', inject(function ($compile) {
+	    var elementString = '<form name="form">';
+	    scope.fakeModel = 'Menu Test123';
+	    elementString += '<input required name="testSpecialCharElement" type="text" custom-pattern="alphanumericSpaces" custom-validity ng-model="fakeModel"/>';
+	    elementString += '</form>';
+
+	    element = angular.element(elementString);
+	    element = $compile(element)(scope);
+	    scope.$digest();
+
+	    expect(scope.form.$valid).toBeTruthy();
+	    scope.form.testSpecialCharElement.$setViewValue('@Menu Test123');
+	    expect(scope.form.$valid).toBeFalsy();
+	}));
 });
