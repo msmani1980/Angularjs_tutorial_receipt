@@ -54,7 +54,7 @@ angular.module('ts5App', [
   number: /^-?([0-9]*)$/,
   alpha: /^[a-zA-z]+$/,
   alphanumeric: /^[a-zA-Z0-9]+$/,
-  alphaWithSpecial: '[a-zA-Z0-9\"\?\(\)\.\-\_\ \%\@\&\#\$\!,;:]+$',
+  alphaWithSpecial: '[a-zA-Z0-9\"\?\(\)\.\_\ \%\@\&\#\$\!,;:\-]+$',
   alphaWithSpecialCharMenuItem: '[a-zA-Z0-9]+[a-zA-Z0-9\(\)\.\_\ \/\%\@\&\^\-]*$',
   email: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
   phone: /^([0-9]{3}( |-|.)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-|.)?([0-9]{3}( |-|.)?[0-9]{4}|[a-zA-Z0-9]{7})$/,
