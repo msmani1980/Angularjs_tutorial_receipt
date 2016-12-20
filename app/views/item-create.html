@@ -89,10 +89,10 @@
 
             <fieldset ng-disabled="isDisabled()">
 
-              <input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.alphanumeric"
+              <input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.alphaWithSpecialCharMenuItem"
                           placeholder="Item123" min-length="1" max-length="10"></input-text>
 
-              <input-text label="Retail Item Name" name="itemName" required="true" pattern="regexp.sentence"
+              <input-text label="Retail Item Name" name="itemName" required="true" pattern="regexp.alphaWithSpecialCharMenuItem"
                           placeholder="New Item" min-length="1" max-length="40"></input-text>
 
               <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.alphaWithSpecial"
