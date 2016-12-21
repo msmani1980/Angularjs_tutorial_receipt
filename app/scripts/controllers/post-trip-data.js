@@ -113,13 +113,32 @@ angular.module('ts5App')
       postTripFactory.getPostTripDataList(companyId, {
           scheduleNumber: $scope.postTrip.scheduleNumber,
           scheduleStartDate: $scope.postTrip.scheduleDate,
-          scheduleEndDate: $scope.postTrip.scheduleDate
+          scheduleEndDate: $scope.postTrip.scheduleDate,
+          depStationId: $scope.postTrip.depStationId,
+          arrStationId: $scope.postTrip.arrStationId
         })
         .then($this.callCreateOrEditIfPostTripExists);
     };
+    
+    this.getStationById = function(stationId) {
+      var stationCode = '';
+      if (!stationId || $scope.stationList.length <= 0) {
+        return '';
+      }
 
+      angular.forEach($scope.stationList, function(value) {
+        if (value.stationId === stationId) {
+          stationCode = value.stationCode;
+        }
+      });
+
+      return stationCode;
+    };
+      
     this.callCreateOrEditIfPostTripExists = function(response) {
       if (response.postTrips.length > 0) {
+        $scope.depStationCode = $this.getStationById(response.postTrips[0].depStationId);
+        $scope.arrStationCode = $this.getStationById(response.postTrips[0].arrStationId);
         $this.hideLoadingModal();
         angular.element('#overwrite-modal').modal('show');
         $scope.overwritePostTripId = response.postTrips[0].id;
