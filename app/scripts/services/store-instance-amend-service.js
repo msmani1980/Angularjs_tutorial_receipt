@@ -11,6 +11,7 @@ angular.module('ts5App')
   .service('storeInstanceAmendService', function (ENV, $resource) {
     var movePostTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/to/:toCashBagId/posttrip/:postTripId';
     var postTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/posttrip/:postTripId';
+    var temporaryPostTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/posttrip/temporary/:postTripId';
     var editPostTripScheduleRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/edit/:postTripId/schedule/:newPostTripId';
 
     var movePostTripRequestParameters = {
@@ -24,6 +25,11 @@ angular.module('ts5App')
     };
 
     var postTripRequestParameters = {
+      cashBagId: '@cashBagId',
+      postTripId: '@postTripId'
+    };
+
+    var temporaryPostTripRequestParameters = {
       cashBagId: '@cashBagId',
       postTripId: '@postTripId'
     };
@@ -49,12 +55,16 @@ angular.module('ts5App')
       },
       deletePostTrip: {
         method: 'DELETE'
+      },
+      deleteTemporaryPostTrip: {
+        method: 'DELETE'
       }
     };
 
     var movePostTripRequestResource = $resource(movePostTripRequestURL, movePostTripRequestParameters, actions);
     var getPostTripRequestResource = $resource(postTripRequestURL, getPostTripRequestParameters, actions);
     var postTripRequestResource = $resource(postTripRequestURL, postTripRequestParameters, actions);
+    var temporaryPostTripRequestResource = $resource(temporaryPostTripRequestURL, temporaryPostTripRequestParameters, actions);
     var editPostTripScheduleRequestResource = $resource(editPostTripScheduleRequestURL, editPostTripScheduleRequestParameters, actions);
 
     var getPostTrips = function (cashBagId) {
@@ -103,11 +113,21 @@ angular.module('ts5App')
       return postTripRequestResource.deletePostTrip(payload).$promise;
     };
 
+    var deleteTemporaryPostTrip = function (cashBagId, postTripId) {
+      var payload = {
+        cashBagId: cashBagId,
+        postTripId: postTripId
+      };
+
+      return temporaryPostTripRequestResource.deleteTemporaryPostTrip(payload).$promise;
+    };
+
     return {
       movePostTrip: movePostTrip,
       getPostTrips: getPostTrips,
       addPostTrip: addPostTrip,
       editPostTrip: editPostTrip,
-      deletePostTrip: deletePostTrip
+      deletePostTrip: deletePostTrip,
+      deleteTemporaryPostTrip: deleteTemporaryPostTrip
     };
   });

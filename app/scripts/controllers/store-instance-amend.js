@@ -30,7 +30,13 @@ angular.module('ts5App')
 
     $scope.deleteSchedule = function () {
       angular.element('.delete-schedule-warning-modal').modal('hide');
-      storeInstanceAmendFactory.deleteFlightSector($scope.scheduleToDelete.cashbagId, $scope.scheduleToDelete.id).then(deleteScheduleSuccess, handleResponseError);
+
+      storeInstanceAmendFactory.deleteFlightSector(
+        $scope.scheduleToDelete.cashbagId,
+        $scope.scheduleToDelete.id,
+        !$scope.scheduleToDelete.isPosttrip
+      )
+      .then(deleteScheduleSuccess, handleResponseError);
     };
 
     $scope.showDeleteScheduleModal = function (scheduleToDelete, cashBagId) {
@@ -351,7 +357,7 @@ angular.module('ts5App')
       if (!$scope.storeInstance) {
         return false;
       }
-      
+
       var statusId = $scope.storeInstance.statusId;
 
       return statusId === commitionPaidStatus.id ? false : true;
@@ -1248,7 +1254,7 @@ angular.module('ts5App')
 
       return submittedList;
     }
-    
+
     function handleResponseError(responseFromAPI) {
       resetAllModals();
       hideLoadingModal();

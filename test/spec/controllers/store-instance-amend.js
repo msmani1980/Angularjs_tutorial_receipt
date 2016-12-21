@@ -285,6 +285,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(storeInstanceAmendFactory, 'getFlightSectors').and.returnValue(getFlightSectorsDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'addFlightSector').and.callThrough();
     spyOn(storeInstanceAmendFactory, 'editFlightSector').and.callThrough();
+    spyOn(storeInstanceAmendFactory, 'deleteFlightSector').and.callThrough();
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(getPostTripDeferred.promise);
     spyOn(postTripFactory, 'getPostTripDataList').and.returnValues(getSinglePostTripsDeferred.promise, getPostTripsDeferred.promise);
     spyOn(transactionFactory, 'getTransactionList').and.returnValue(getTransactionListDeferred.promise);
@@ -646,7 +647,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
 
     it('canExecuteUnferify should decide if actions can be executed for given store instance', function () {
-        
+
         scope.storeInstance = { statusId: 5 };
         scope.$digest();
         expect(scope.canExecuteUnferify()).toBeTruthy();
@@ -1018,6 +1019,20 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.scheduleToEdit = { id: 3 };
         scope.addOrEditSchedule();
         expect(storeInstanceAmendFactory.editFlightSector).toHaveBeenCalledWith(1, 3, 2);
+      });
+    });
+    describe('deleteSchedule schedule', function () {
+      beforeEach(function () {
+        scope.scheduleToDelete = {
+          cashbagId: 1,
+          id: 2,
+          isPosttrip: true
+        };
+      });
+
+      it('should delete post trip', function () {
+        scope.deleteSchedule();
+        expect(storeInstanceAmendFactory.deleteFlightSector).toHaveBeenCalledWith(1, 2, false);
       });
     });
   });
