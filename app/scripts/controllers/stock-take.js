@@ -380,7 +380,9 @@ angular.module('ts5App')
       delete _payload.createdOn;
       delete _payload.updatedBy;
       delete _payload.updatedOn;
-
+      delete _payload.createdByPerson;
+      delete _payload.updatedByPerson;
+      
       if (angular.isDefined(_payload.stockTakeDate)) {
         _payload.stockTakeDate = dateUtility.formatDateForAPI(dateUtility.formatDateForApp(_payload.stockTakeDate));
       }
