@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ChangePasswordCtrl', function ($rootScope, $scope, $http, $routeParams, $location, identityAccessFactory) {
+  .controller('ChangePasswordCtrl', function ($rootScope, $scope, $http, $routeParams, $location, $window, identityAccessFactory) {
 
     $scope.credentials = {
       //currentPassword: '',
@@ -72,9 +72,8 @@ angular.module('ts5App')
     }
 
     function handleSuccessResponse() {
-      var credentials = getCredentials();
       hideLoadingModal();
-      identityAccessFactory.login(credentials);
+      handleSuccessLoginResponse();
     }
 
     $scope.changePassword = function () {
@@ -93,10 +92,19 @@ angular.module('ts5App')
       }
 
       var credentials = getCredentials();
+      $scope.credentials = credentials;
       showLoadingModal('Changing password');
       identityAccessFactory.changePassword(credentials, $this.headers).then(handleSuccessResponse, handleResponseError);
     };
 
+    function handleSuccessLoginResponse() {
+      identityAccessFactory.logout1();
+      $location.search('sessionToken', null);
+      $location.search('username', $scope.credentials.username);
+      $location.path('/#/login');
+      $window.location.reload();
+    }
+    
     function checkAuthSuccess(dataFromAPI) {
       var userInfo = angular.copy(dataFromAPI);
       $scope.credentials.username = userInfo.userName;
