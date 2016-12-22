@@ -459,8 +459,24 @@ angular.module('ts5App')
     }
 
     function getPromotionCategories() {
+        initPromises.push(
+          promotionsFactory.getPromotionCategories().then(setPromotionCategories)
+        );
+      }
+
+    function setActivePromotionCategories(dataFromAPI) {
+      $scope.selectOptions.activePromotionCategories = dataFromAPI.companyPromotionCategories;
+    }
+
+    function getActivePromotionCategories() {
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var payload = {
+        startDate: today,
+        endDate: today
+      };
+
       initPromises.push(
-        promotionsFactory.getPromotionCategories().then(setPromotionCategories)
+        promotionsFactory.getActivePromotionCategories(payload).then(setActivePromotionCategories)
       );
     }
 
@@ -623,7 +639,8 @@ angular.module('ts5App')
       getStationGlobals();
       getCurrencyGlobals();
       getMasterItems();
-
+      getActivePromotionCategories();
+      
       $q.all(initPromises).then(function () {
         handlePromiseSuccessHandler(promotionDataFromAPI);
       }, showResponseErrors);
@@ -808,6 +825,30 @@ angular.module('ts5App')
 
       _array.push({});
     };
+
+    $scope.addBlankPromotionToArray = function (_array, promotion) {
+      if ($scope.readOnly || $scope.isDisabled) {
+        return false;
+      }
+
+      getActivePromotionCategoriesByDates(promotion);
+      _array.push({});
+
+    };
+
+    function getActivePromotionCategoriesByDates(promotion) {
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var startDate = angular.isDefined(promotion.startDate) && promotion.startDate !== '' ? dateUtility.formatDateForAPI(promotion.startDate) : today;
+      var endDate = angular.isDefined(promotion.endDate) && promotion.endDate !== '' ? dateUtility.formatDateForAPI(promotion.endDate) : today; 
+      var payload = {
+        startDate: startDate,
+        endDate: endDate
+      };
+
+      initPromises.push(
+        promotionsFactory.getActivePromotionCategories(payload).then(setActivePromotionCategories)
+      );
+    }
 
     $scope.promotionCategoryQtyRequired = function (promotionCategoryData) {
       return angular.isDefined(promotionCategoryData.promotionCategory);
