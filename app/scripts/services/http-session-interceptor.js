@@ -96,8 +96,7 @@ angular.module('ts5App')
       '/rsvr/api/menus/menu-masters',
       '/rsvr/api/menus/caterer-stations',
       '/rsvr/api/caterer-stations',
-      '/rsvr/api/menus',
-      '/api/records/*'
+      '/rsvr/api/menus'
     ];
 
     function responseError(response) {
