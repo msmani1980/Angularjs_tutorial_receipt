@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('TransactionListCtrl', function ($scope, $q, $filter, transactionFactory, recordsService, currencyFactory,
-                                               stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility) {
+                                               stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility, lodash) {
     var $this = this;
 
     $scope.viewName = 'Transactions';
@@ -94,6 +94,10 @@ angular.module('ts5App')
     };
 
     $scope.printTransactionAmount = function (transaction) {
+      if (isPartiallyPaidOffTransaction(transaction)) {
+        return transaction.totalAmount + ' ' + transaction.transactionCurrencyCode;
+      }
+
       if (transaction.netTransactionAmount && transaction.paymentMethod === 'Cash' && transaction.transactionTypeName === 'SALE') {
         return transaction.netTransactionAmount + ' ' + transaction.transactionCurrencyCode;
       }
@@ -158,6 +162,25 @@ angular.module('ts5App')
           isPaymentMethodVoucherOrDiscount(transaction) &&
           isDiscountTransactionFullyPaidOff(transaction)
         );
+    }
+
+    function filterPartiallyPaidOfTransactions(transactions) {
+      var partiallyPaidOffTransactionHelper = [];
+      var transactionsCopy = angular.copy(transactions);
+
+      lodash.forEach(transactionsCopy, function(t) {
+
+        if (isPartiallyPaidOffTransaction(t) && lodash.some(partiallyPaidOffTransactionHelper, function(ht) { return ht.transactionId === t.transactionId; })) {
+
+          lodash.remove(transactions, function(y) {return y.transactionId === t.transactionId && y.pkId === t.pkId;});
+        } else {
+          partiallyPaidOffTransactionHelper.push(t);
+        }
+      });
+    }
+
+    function isPartiallyPaidOffTransaction(transaction) {
+      return transaction.netTransactionAmount && transaction.totalAmount && transaction.transactionTypeName === 'SALE' && transaction.totalAmount > transaction.netTransactionAmount;
     }
 
     function isCreditCardPaymentSelected(paymentMethods) {
@@ -313,6 +336,8 @@ angular.module('ts5App')
         .filter(isNotVoidedSaleTransaction)
         .filter(isNotSaleChangeTransaction)
         .filter(filterNotFullyPaidOffDiscount);
+
+      filterPartiallyPaidOfTransactions(transactions);
 
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
       hideLoadingBar();
