@@ -17,7 +17,6 @@ describe('Controller: TransactionListCtrl', function () {
   var companyCurrenciesJSON;
   var companyStationsJSON;
   var companyCreditCardTypesJSON;
-  var getTransactionListDeferred;
   var getTransactionTypesDeferred;
   var getCompanyCurrenciesDeferred;
   var getCompanyStationsDeferred;
@@ -40,8 +39,6 @@ describe('Controller: TransactionListCtrl', function () {
     dateUtility = $injector.get('dateUtility');
     filter = $filter;
     scope = $rootScope.$new();
-    getTransactionListDeferred = $q.defer();
-    getTransactionListDeferred.resolve(transactionsJSON);
     getTransactionTypesDeferred = $q.defer();
     getTransactionTypesDeferred.resolve(transactionTypesJSON);
     getCompanyCurrenciesDeferred = $q.defer();
@@ -51,7 +48,14 @@ describe('Controller: TransactionListCtrl', function () {
     getCreditCardTypesDeferred = $q.defer();
     getCreditCardTypesDeferred.resolve(companyCreditCardTypesJSON);
 
-    spyOn(transactionFactory, 'getTransactionList').and.returnValue(getTransactionListDeferred.promise);
+    spyOn(transactionFactory, 'getTransactionList').and.callFake(function() {
+      var defer = $q.defer();
+      defer.resolve(transactionsJSON);
+
+      return defer.promise;
+    });
+
+
     spyOn(recordsService, 'getTransactionTypes').and.returnValue(getTransactionTypesDeferred.promise);
     spyOn(currencyFactory, 'getCompanyCurrencies').and.returnValue(getCompanyCurrenciesDeferred.promise);
     spyOn(stationsService, 'getGlobalStationList').and.returnValue(getCompanyStationsDeferred.promise);
@@ -166,6 +170,69 @@ describe('Controller: TransactionListCtrl', function () {
       });
 
       expect(transactionsNotFullyPaidOffDiscount.length).toEqual(0);
+    });
+  });
+
+  describe('filterPartiallyPaidOfTransactions will', function () {
+    it('filter out duplicate partially paid off transactions', function () {
+      transactionsJSON = {
+        meta: {
+          count: 3,
+          limit: 3,
+          start: 0
+        },
+        transactions: [
+          {
+            transactionId: '7c452731-cb9c-4f93-b3bd-acd92075cacd',
+            pkId: '40842-28990',
+            transactionTypeId: 1,
+            transactionTypeName: 'SALE',
+            currencyCode: 'GBP',
+            totalAmount: 15.00,
+            transactionAmount: 5.00,
+            netTransactionAmount: 5.00,
+            transactionChangeDue: 0.00,
+            transactionCurrencyCode: 'GBP',
+            paymentMethod: 'Cash',
+            storeInstanceId: 7299
+          },
+          {
+            transactionId: '7c452731-cb9c-4f93-b3bd-acd92075cacd',
+            pkId: '40842-28991',
+            transactionTypeId: 1,
+            transactionTypeName: 'SALE',
+            currencyCode: 'GBP',
+            totalAmount: 15.00,
+            transactionAmount: 5.00,
+            netTransactionAmount: 5.00,
+            transactionChangeDue: 0.00,
+            transactionCurrencyCode: 'GBP',
+            paymentMethod: 'Cash',
+            storeInstanceId: 7299
+          },
+          {
+            transactionId: '7c452731-cb9c-4f93-b3bd-acd92075cacd',
+            pkId: '40842-28992',
+            transactionTypeId: 1,
+            transactionTypeName: 'SALE',
+            currencyCode: 'GBP',
+            totalAmount: 15.00,
+            transactionAmount: 5.00,
+            netTransactionAmount: 5.00,
+            transactionChangeDue: 0.00,
+            transactionCurrencyCode: 'GBP',
+            paymentMethod: 'Cash',
+            storeInstanceId: 7299
+          }
+        ]
+      };
+
+      scope.transactions.length = 0;
+      scope.getTransactions();
+      scope.$digest();
+
+      expect(scope.transactions.length).toEqual(1);
+      expect(scope.transactions[0]).toEqual(transactionsJSON.transactions[0]);
     });
   });
 
