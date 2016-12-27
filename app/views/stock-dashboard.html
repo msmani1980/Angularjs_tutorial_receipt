@@ -111,17 +111,17 @@
         <td>{{stockItem.itemCode}}</td>
         <td>{{stockItem.itemName}}</td>
         <td>
-          <input type="text" class="form-control text-right" value="{{stockItem.openingQuantity}}"  ng-disabled="readOnly" name="stock-open-quantity-{{$index}}"/>
+          <input type="text" class="form-control text-right" value="{{stockItem.openingQuantity}}" disabled name="stock-open-quantity-{{$index}}"/>
         </td>
         <td>
-          <input type="text" class="form-control text-right" value="{{stockItem.receivedQuantity}}"  ng-disabled="readOnly" name="stock-receive-quantity-{{$index}}"/>
+          <input type="text" class="form-control text-right" value="{{stockItem.receivedQuantity}}" disabled name="stock-receive-quantity-{{$index}}"/>
         </td>
         <td>
           <input type="text" class="form-control text-right" value="{{stockItem.dispatchQuantity}}"
-                  ng-disabled="readOnly" name="stock-dispatch-quantity-{{$index}}"/>
+                 disabled name="stock-dispatch-quantity-{{$index}}"/>
         </td>
         <td>
-          <input type="text" class="form-control text-right" value="{{stockItem.inboundQuantity}}"  ng-disabled="readOnly" name="stock-inbound-quantity-{{$index}}"/>
+          <input type="text" class="form-control text-right" value="{{stockItem.inboundQuantity}}" disabled name="stock-inbound-quantity-{{$index}}"/>
         </td>
         <td id="currentCountQuantity-{{id}}" ng-click="stockTakeReasonOpen(stockItem, 'Count')">
           <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentQuantity}}"
