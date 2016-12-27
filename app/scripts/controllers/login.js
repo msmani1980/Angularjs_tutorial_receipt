@@ -8,13 +8,18 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('LoginCtrl', function($scope, $http, identityAccessFactory, $rootScope) {
+  .controller('LoginCtrl', function($scope, $http, identityAccessFactory, $rootScope, $location) {
 
     $scope.credentials = {
       username: '',
       password: ''
     };
 
+    var user = $location.search().username;
+    if (!angular.isUndefined(user)) {
+      $scope.credentials.username = user;
+    }
+    
     function showLoadingModal(text) {
       $scope.displayError = false;
       angular.element('#loading').modal('show').find('p').text(text);

@@ -96,6 +96,7 @@ angular.module('ts5App')
       }
 
       function broadcastSuccess(companyData) {
+        $location.search('username', null);
         $rootScope.$broadcast('authorized');
         $rootScope.$broadcast('company-fetched', companyData);
       }
@@ -229,6 +230,7 @@ angular.module('ts5App')
         changePassword: changePassword,
         sendRecoveryEmail: sendRecoveryEmail,
         logout: logoutFromSystem,
+        logout1: logout,
         getSessionObject: getSessionObject,
         setSessionData: setSessionData,
         isAuthorized: isAuthorized,
