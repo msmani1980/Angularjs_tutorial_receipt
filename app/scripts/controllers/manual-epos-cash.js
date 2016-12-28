@@ -190,7 +190,7 @@ angular.module('ts5App')
       setBaseCurrency(currencyList);
       setCashBagCurrencyList(angular.copy(responseCollection[1].response), currencyList, angular.copy(responseCollection[2].dailyExchangeRateCurrencies));
       setVerifiedData(angular.copy(responseCollection[3]));
-      if (angular.isDefined($scope.manualCashForm) && angular.isDefined($scope.manualCashForm.$setPristine)) { 
+      if (angular.isDefined($scope.manualCashForm)) { 
         $scope.manualCashForm.$setPristine();
       }
     }
