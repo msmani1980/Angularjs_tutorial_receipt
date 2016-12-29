@@ -13,6 +13,7 @@ angular.module('ts5App')
     var postTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/posttrip/:postTripId';
     var temporaryPostTripRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/posttrip/temporary/:postTripId';
     var editPostTripScheduleRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/edit/:postTripId/schedule/:newPostTripId';
+    var editTemporaryPostTripScheduleRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:cashBagId/posttrip/temporary/:postTripId/to/:newPostTripId';
 
     var movePostTripRequestParameters = {
       cashBagId: '@cashBagId',
@@ -40,6 +41,12 @@ angular.module('ts5App')
       newPostTripId: '@newPostTripId'
     };
 
+    var editTemporaryPostTripScheduleRequestParameters = {
+      cashBagId: '@cashBagId',
+      postTripId: '@postTripId',
+      newPostTripId: '@newPostTripId'
+    };
+
     var actions = {
       movePostTrip: {
         method: 'PUT'
@@ -51,6 +58,9 @@ angular.module('ts5App')
         method: 'POST'
       },
       editPostTripSchedule: {
+        method: 'PUT'
+      },
+      editTemporaryPostTripSchedule: {
         method: 'PUT'
       },
       deletePostTrip: {
@@ -66,6 +76,7 @@ angular.module('ts5App')
     var postTripRequestResource = $resource(postTripRequestURL, postTripRequestParameters, actions);
     var temporaryPostTripRequestResource = $resource(temporaryPostTripRequestURL, temporaryPostTripRequestParameters, actions);
     var editPostTripScheduleRequestResource = $resource(editPostTripScheduleRequestURL, editPostTripScheduleRequestParameters, actions);
+    var editTemporaryPostTripScheduleRequestResource = $resource(editTemporaryPostTripScheduleRequestURL, editTemporaryPostTripScheduleRequestParameters, actions);
 
     var getPostTrips = function (cashBagId) {
       var payload = {
@@ -92,6 +103,16 @@ angular.module('ts5App')
       };
 
       return postTripRequestResource.addPostTrip(payload).$promise;
+    };
+
+    var editTemporaryPostTrip = function (cashBagId, postTripId, newPostTripId) {
+      var payload = {
+        cashBagId: cashBagId,
+        postTripId: postTripId,
+        newPostTripId: newPostTripId
+      };
+
+      return editTemporaryPostTripScheduleRequestResource.editTemporaryPostTripSchedule(payload).$promise;
     };
 
     var editPostTrip = function (cashBagId, postTripId, newPostTripId) {
@@ -127,6 +148,7 @@ angular.module('ts5App')
       getPostTrips: getPostTrips,
       addPostTrip: addPostTrip,
       editPostTrip: editPostTrip,
+      editTemporaryPostTrip: editTemporaryPostTrip,
       deletePostTrip: deletePostTrip,
       deleteTemporaryPostTrip: deleteTemporaryPostTrip
     };

@@ -62,7 +62,7 @@ angular.module('ts5App')
       if ($scope.scheduleToEdit) {
         postTripId = $scope.scheduleToEdit.id;
         var newPosttripId = $scope.newScheduleSelection.id;
-        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, newPosttripId).then(addOrEditScheduleSuccess, handleResponseError);
+        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, newPosttripId, !$scope.scheduleToEdit.isPosttrip).then(addOrEditScheduleSuccess, handleResponseError);
       } else {
         postTripId = $scope.newScheduleSelection.id;
 
@@ -343,14 +343,6 @@ angular.module('ts5App')
 
       return storeStatus;
     }
-
-    $scope.canExecuteActionsPsttrip = function (cashBag, flightSector) {
-      if (!flightSector.isPosttrip) {
-        return false;
-      }
-
-      return $scope.canExecuteActions(cashBag);
-    };
 
     $scope.canExecuteUnferify = function () {
       var commitionPaidStatus = getStoreStatusByStatusStep('11');
