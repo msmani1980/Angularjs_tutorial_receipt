@@ -110,12 +110,12 @@ angular.module('ts5App')
         return makeAmountPositive(transaction.totalAmount) + ' ' + transaction.transactionCurrencyCode;
       }
 
-      if (transaction.transactionAmount) {
-        return transaction.transactionAmount + ' ' + transaction.transactionCurrencyCode;
-      }
-
-      return 0 + ' ' + transaction.transactionCurrencyCode;
+      return nanToZero(transaction.transactionAmount) + ' ' + transaction.transactionCurrencyCode;
     };
+
+    function nanToZero(number) {
+      return number || 0;
+    }
 
     $scope.printPaymentMethodName = function (transaction) {
       if (transaction.paymentMethod && transaction.paymentMethod === 'Discount' && transaction.discountTypeName) {
