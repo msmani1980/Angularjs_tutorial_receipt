@@ -753,7 +753,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var isItemValidForOffloadSection = (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') ||
         (!offloadListMatch && item.countTypeName === 'Offload');
 
-      return isMenuItemInOfAllowedMenuItemsForOffloadSection && isItemValidForOffloadSection;
+      return (isMenuItemInOfAllowedMenuItemsForOffloadSection && isItemValidForOffloadSection) ||
+        ($routeParams.action === 'redispatch' && isItemValidForOffloadSection);
     };
 
     this.mergeRedispatchItemsLoop = function(items, ignoreEposData) {

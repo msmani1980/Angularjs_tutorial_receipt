@@ -29,6 +29,7 @@ describe('Controller: PromotionsCtrl', function () {
   var getSalesCategoriesDeferred;
   var getDiscountApplyTypesDeferred;
   var getPromotionCategoriesDeferred;
+  var getActivePromotionCategoriesDeferred;  
   var getStationGlobalsDeferred;
   var getCurrencyGlobalsDeferred;
   var getMasterItemsDeferred;
@@ -72,6 +73,8 @@ describe('Controller: PromotionsCtrl', function () {
     getDiscountApplyTypesDeferred.resolve(_servedDiscountApplyTypes_);
     getPromotionCategoriesDeferred = $q.defer();
     getPromotionCategoriesDeferred.resolve(_servedPromotionCategories_);
+    getActivePromotionCategoriesDeferred = $q.defer();
+    getActivePromotionCategoriesDeferred.resolve(_servedPromotionCategories_);
     getStationGlobalsDeferred = $q.defer();
     getStationGlobalsDeferred.resolve(_servedCompanyStationGlobals_);
     getCurrencyGlobalsDeferred = $q.defer();
@@ -102,6 +105,7 @@ describe('Controller: PromotionsCtrl', function () {
     spyOn(promotionsFactory, 'getPromotion').and.returnValue(getPromotionDeferred.promise);
     spyOn(promotionsFactory, 'createPromotion').and.returnValue(savePromotionDeferred.promise);
     spyOn(promotionsFactory, 'savePromotion').and.returnValue(savePromotionDeferred.promise);
+    spyOn(promotionsFactory, 'getActivePromotionCategories').and.returnValue(getActivePromotionCategoriesDeferred.promise);
 
   }));
 
@@ -1315,7 +1319,7 @@ describe('Controller: PromotionsCtrl', function () {
       });
 
       it('should set isDisabled to false', function () {
-        expect(scope.isDisabled).toBeFalsy();
+        expect(scope.isDisabled).toBe(false);
       });
 
       it('should have an array of companyDiscountsCoupon', function () {

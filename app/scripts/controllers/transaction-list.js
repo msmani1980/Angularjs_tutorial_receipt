@@ -224,7 +224,7 @@ angular.module('ts5App')
     };
 
     $scope.showTransactionDetails = function (transaction) {
-      window.open('/ember/transactions/index.html?transactionId=' + transaction.transactionId);
+      window.open('/transactions/index.html?transactionId=' + transaction.transactionId);
     };
 
     function sanitizeSearchPayload(payload) {
