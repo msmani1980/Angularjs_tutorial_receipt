@@ -106,6 +106,10 @@ angular.module('ts5App')
         return transaction.totalAmount + ' ' + transaction.transactionCurrencyCode;
       }
 
+      if (transaction.transactionTypeName === 'REFUND') {
+        return makeAmountPositive(transaction.totalAmount) + ' ' + transaction.transactionCurrencyCode;
+      }
+
       if (transaction.transactionAmount) {
         return transaction.transactionAmount + ' ' + transaction.transactionCurrencyCode;
       }
@@ -131,10 +135,14 @@ angular.module('ts5App')
       return !isVoidedSaleTransaction;
     }
 
+    function makeAmountPositive(amount) {
+      return amount >= 0 ? amount : -amount;
+    }
+
     function isNotSaleChangeTransaction(transaction) {
-      var isSaleChangeTransaction = transaction.transactionTypeName === 'SALE' &&
+      var isSaleChangeTransaction = (transaction.transactionTypeName === 'SALE' || transaction.transactionTypeName === 'VOIDED') &&
         transaction.transactionChangeDue  &&
-        transaction.transactionChangeDue > 0;
+        transaction.transactionChangeDue !== 0;
 
       return !isSaleChangeTransaction;
     }
