@@ -30,7 +30,13 @@ angular.module('ts5App')
 
     $scope.deleteSchedule = function () {
       angular.element('.delete-schedule-warning-modal').modal('hide');
-      storeInstanceAmendFactory.deleteFlightSector($scope.scheduleToDelete.cashbagId, $scope.scheduleToDelete.id).then(deleteScheduleSuccess, handleResponseError);
+
+      storeInstanceAmendFactory.deleteFlightSector(
+        $scope.scheduleToDelete.cashbagId,
+        $scope.scheduleToDelete.id,
+        !$scope.scheduleToDelete.isPosttrip
+      )
+      .then(deleteScheduleSuccess, handleResponseError);
     };
 
     $scope.showDeleteScheduleModal = function (scheduleToDelete, cashBagId) {
@@ -56,7 +62,7 @@ angular.module('ts5App')
       if ($scope.scheduleToEdit) {
         postTripId = $scope.scheduleToEdit.id;
         var newPosttripId = $scope.newScheduleSelection.id;
-        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, newPosttripId).then(addOrEditScheduleSuccess, handleResponseError);
+        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, newPosttripId, !$scope.scheduleToEdit.isPosttrip).then(addOrEditScheduleSuccess, handleResponseError);
       } else {
         postTripId = $scope.newScheduleSelection.id;
 
@@ -338,20 +344,12 @@ angular.module('ts5App')
       return storeStatus;
     }
 
-    $scope.canExecuteActionsPsttrip = function (cashBag, flightSector) {
-      if (!flightSector.isPosttrip) {
-        return false;
-      }
-
-      return $scope.canExecuteActions(cashBag);
-    };
-
     $scope.canExecuteUnferify = function () {
       var commitionPaidStatus = getStoreStatusByStatusStep('11');
       if (!$scope.storeInstance) {
         return false;
       }
-      
+
       var statusId = $scope.storeInstance.statusId;
 
       return statusId === commitionPaidStatus.id ? false : true;
@@ -1248,7 +1246,7 @@ angular.module('ts5App')
 
       return submittedList;
     }
-    
+
     function handleResponseError(responseFromAPI) {
       resetAllModals();
       hideLoadingModal();
