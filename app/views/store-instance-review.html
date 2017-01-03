@@ -50,7 +50,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in items | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+            <tr ng-repeat="item in items | filter:{itemDescription: filterItemDetails} | orderBy: ['salesCategoryName', 'itemName']"
                 ng-class="hasDiscrepancy(item)" ng-switch on="action">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>

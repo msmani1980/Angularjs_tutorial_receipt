@@ -77,7 +77,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+        <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy: ['salesCategoryName', 'itemName']"
             ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
@@ -162,7 +162,7 @@
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
-                repeat="masterItem in filteredItemsList | filter: {itemName:$select.search} | orderBy:'itemName'">
+                repeat="masterItem in filteredItemsList | filter: {itemName:$select.search} | orderBy: ['salesCategoryName', 'itemName']">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
@@ -238,7 +238,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
+        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: filterItemDetails} | orderBy: ['salesCategoryName', 'itemName']">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -293,7 +293,7 @@
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
-                repeat="masterItem in filteredOffloadItemsList | filter: {itemName:$select.search} | orderBy:'itemName'">
+                repeat="masterItem in filteredOffloadItemsList | filter: {itemName:$select.search} | orderBy: ['salesCategoryName', 'itemName']">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
