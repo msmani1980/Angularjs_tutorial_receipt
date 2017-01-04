@@ -748,6 +748,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
       });
     };
+    
+    this.getSalesCategoryName = function(itemMasterId) {
+      var menuMatches = lodash.findWhere($scope.allowedMenuItemsForOffloadSection, { itemMasterId: itemMasterId });
+      
+      if (menuMatches) {
+        return menuMatches.salesCategoryName;
+      } else {
+        return '';  
+      }
+    };
 
     this.mergeRedispatchItemsLoopConditional = function(item, pickListMatch, offloadListMatch) {
       var isMenuItemInOfAllowedMenuItemsForOffloadSection = $this.isMenuItemInOfAllowedMenuItemsForOffloadSection(item);
@@ -760,6 +770,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.mergeRedispatchItemsLoop = function(items, ignoreEposData) {
       angular.forEach(items, function(item) {
+        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
         var pickListMatch = lodash.findWhere($scope.pickListItems, {
           itemMasterId: item.itemMasterId
         });
