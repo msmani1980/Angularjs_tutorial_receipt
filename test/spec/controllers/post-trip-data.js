@@ -338,5 +338,32 @@ describe('Controller: PostTripDataCtrl', function() {
     });
 
   });
+  
+  describe('getStationById function', function() {
+    beforeEach(function() {
+      scope.stationList = [{
+        stationId: 1,
+        stationCode: 'ORD'
+      }, {
+          stationId: 2,
+          stationCode: 'LGW'
+      }, {
+        stationId: 3,
+        stationCode: 'IAD'
+      }];
+        
+    });
+
+    it('should populate stationCode', function() {
+      var stationCode = PostTripDataCtrl.getStationById(1);
+      expect(stationCode).toEqual('ORD');
+    });
+
+    it('should populate stationCode', function() {
+      var stationCode = PostTripDataCtrl.getStationById(3);
+      expect(stationCode).toEqual('IAD');
+    });
+    
+  });
 
 });
