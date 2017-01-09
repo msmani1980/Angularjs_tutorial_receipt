@@ -44,13 +44,7 @@ angular.module('ts5App')
     $scope.unconfirmAll = function () {
       showLoadingModal('Unconfirming');
       var unconfirmPromises = [
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CONFIRMED'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CASH'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CREDIT'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'VIRT_ITEM'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'VOUCH_ITEM'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'DISCOUNT'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'PROMO')
+        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CONFIRMED')
       ];
 
       $q.all(unconfirmPromises).then(init, showErrors);
