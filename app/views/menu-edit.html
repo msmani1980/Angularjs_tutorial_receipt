@@ -44,29 +44,29 @@
 
     <div class="form-group col-sm-3">
       <label>Menu Code *</label>
-      <input custom-validity
-             custom-pattern="word"
+      <input custom-pattern="alphanumeric"
+      		 custom-validity
              required
              type="text"
              maxlength="20"
              class="form-control"
              name="menuCode"
              ng-model="menu.menuCode"
-             placeholder="ITM001"
+             placeholder="Alphanumeric Only"
              ng-readonly="isMenuReadOnly()"/>
     </div>
 
     <div class="form-group col-sm-3">
       <label>Menu Name *</label>
-      <input custom-validity
-             custom-pattern="word"
+      <input custom-pattern="alphanumericSpaces"
+      		 custom-validity
              required
              type="text"
              maxlength="25"
              class="form-control"
              name="menuName"
              ng-model="menu.menuName"
-             placeholder="iPad Mini Retina"
+             placeholder="Alphanumeric Space"
              ng-readonly="isMenuReadOnly()"/>
     </div>
 
