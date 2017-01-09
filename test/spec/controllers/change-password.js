@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: ChangePasswordCtrl', function() {
+xdescribe('Controller: ChangePasswordCtrl', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/authorize-user.json'));
