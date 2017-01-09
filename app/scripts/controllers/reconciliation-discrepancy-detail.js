@@ -598,6 +598,7 @@ angular.module('ts5App')
     }
 
     function setupData(responseCollection) {
+    	console.log ('responseCollection', responseCollection);
       $this.countTypes = angular.copy(responseCollection[0]);
       $this.stockTotals = angular.copy(responseCollection[1].response);
       $this.promotionTotals = $filter('filter')(angular.copy(responseCollection[2].response), {

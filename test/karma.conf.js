@@ -60,7 +60,7 @@ module.exports = function(config) {
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-cookies/angular-cookies.js',
       'bower_components/angular-dragdrop/draganddrop.js',
-      'bower_components/angular-filter/dist/angular-filter.min.js',
+      'bower_components/angular-filter/dist/angular-filter.js',
       'bower_components/angular-messages/angular-messages.js',
       'bower_components/qrcode/lib/qrcode.js',
       'bower_components/angular-qr/src/angular-qr.js',
