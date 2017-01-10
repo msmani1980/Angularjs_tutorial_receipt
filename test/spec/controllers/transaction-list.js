@@ -444,19 +444,10 @@ describe('Controller: TransactionListCtrl', function () {
       expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
     });
 
-    it('print as positive totalAmount if transactionTypeName is "REFUND" and totalAmount is negative value', function () {
+    it('print as negative totalAmount if transactionTypeName is "REFUND" and totalAmount is negative value', function () {
       transactionMock.netTransactionAmount = -10;
       transactionMock.transactionAmount = -20;
       transactionMock.totalAmount = -10;
-      transactionMock.paymentMethod = 'Cash';
-      transactionMock.transactionTypeName = 'REFUND';
-      expect(scope.printTransactionAmount(transactionMock)).toEqual(-transactionMock.totalAmount + ' ' + transactionMock.transactionCurrencyCode);
-    });
-
-    it('print as totalAmount if transactionTypeName is "REFUND" and totalAmount is positive value', function () {
-      transactionMock.netTransactionAmount = -10;
-      transactionMock.transactionAmount = -20;
-      transactionMock.totalAmount = 10;
       transactionMock.paymentMethod = 'Cash';
       transactionMock.transactionTypeName = 'REFUND';
       expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.totalAmount + ' ' + transactionMock.transactionCurrencyCode);
