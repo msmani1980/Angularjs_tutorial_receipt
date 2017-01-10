@@ -94,20 +94,12 @@ angular.module('ts5App')
     };
 
     $scope.printTransactionAmount = function (transaction) {
-      if (isPartiallyPaidOffTransaction(transaction)) {
-        return transaction.totalAmount + ' ' + transaction.transactionCurrencyCode;
-      }
-
       if (transaction.netTransactionAmount && transaction.paymentMethod === 'Cash' && transaction.transactionTypeName === 'SALE') {
         return transaction.netTransactionAmount + ' ' + transaction.transactionCurrencyCode;
       }
 
-      if (transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') {
+      if (isPartiallyPaidOffTransaction(transaction) || (transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') || transaction.transactionTypeName === 'REFUND') {
         return transaction.totalAmount + ' ' + transaction.transactionCurrencyCode;
-      }
-
-      if (transaction.transactionTypeName === 'REFUND') {
-        return makeAmountPositive(transaction.totalAmount) + ' ' + transaction.transactionCurrencyCode;
       }
 
       return nanToZero(transaction.transactionAmount) + ' ' + transaction.transactionCurrencyCode;
@@ -133,10 +125,6 @@ angular.module('ts5App')
         transaction.transactionTypeName === 'SALE';
 
       return !isVoidedSaleTransaction;
-    }
-
-    function makeAmountPositive(amount) {
-      return amount >= 0 ? amount : -amount;
     }
 
     function isNotSaleChangeTransaction(transaction) {
