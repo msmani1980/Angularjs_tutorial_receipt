@@ -58,7 +58,7 @@ describe('Directive: customValidity', function () {
     expect(scope.form.testElement.$error.required).toEqual(true);
   }));
   
-  it('should check the pattern on the element if model is defined and it allows only  ( @, %, ^, /, &, -, _, ., *, \')', inject(function ($compile) {
+  it('should check the pattern on the element if model is defined and it allows only  ( @, %, ^, /, &, -, _, ., *)', inject(function ($compile) {
 	    var elementString = '<form name="form">';
 	    scope.fakeModel = 'Test%.Allow@Spe^cial-Ch/ar_Te\st&';
 	    elementString += '<input required name="testSpecialCharElement" type="text" custom-pattern="alphaWithSpecialCharMenuItem" custom-validity ng-model="fakeModel"/>';
@@ -72,8 +72,7 @@ describe('Directive: customValidity', function () {
 	    scope.form.testSpecialCharElement.$setViewValue('Te!st%.Allow@Spe^cial-Ch/ar_Te\st&#$');
 	    expect(scope.form.$valid).toBeFalsy();
 	    
-	    expect(scope.form.$valid).toBeTruthy();
-	    scope.form.testSpecialCharElement.$setViewValue('Te!st%.Allow@Spe^cial-Ch/ar_Te\st&#$*\'');
+	    scope.form.testSpecialCharElement.$setViewValue('Test%.Allow@Spe^cial-Ch/ar_Te\st&*\'');
 	    expect(scope.form.$valid).toBeTruthy();
 	    
 	}));
