@@ -183,7 +183,7 @@
               <th>Catering Station</th>
               <!-- TODO: add 'show/hide column' option with these fields-->
               <!--<th>Store Instance</th>-->
-              <!--<th>Status</th>-->
+              <th>Status</th>
               <th class="col-xs-1">Select</th>
             </tr>
             </thead>
@@ -194,7 +194,7 @@
               <td>{{ storeInstance.scheduleDate }}</td>
               <td>{{ storeInstance.stationCode }}</td>
               <!--<td>{{ storeInstance.id }}</td>-->
-              <!--<td>{{ storeInstance.statusName }}</td>-->
+              <td>{{ storeInstance.statusName }}</td>
               <td class="text-center">
                 <button ng-click="selectPortalRecord(storeInstance)"
                         ng-show="canSelectStoreInstance(storeInstance)"
@@ -388,6 +388,7 @@
             <th>Portal Catering Station</th>
             <th>ePOS Departure Station</th>
             <th>Store Instance</th>
+            <th>Status</th>
           </tr>
           </thead>
           <tbody>
@@ -401,6 +402,7 @@
             <td>{{ ECSInstance.siCatererStationCode }}</td>
             <td>{{ ECSInstance.departureStation }}</td>
             <td>{{ ECSInstance.storeInstanceId }}</td>
+            <td>{{ ECSInstance.statusName }}</td>            
           </tr>
           </tbody>
         </table>

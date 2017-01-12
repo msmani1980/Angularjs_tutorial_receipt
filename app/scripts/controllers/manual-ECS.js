@@ -46,7 +46,7 @@ angular.module('ts5App')
     };
 
     $scope.canSelectStoreInstance = function (storeInstance) {
-      return storeInstance.statusName === 'Inbounded';
+      return storeInstance.statusName === 'Inbounded' || storeInstance.statusName === 'Dispatched';
     };
 
     function isRecordSelected(portalOrEpos, record) {
@@ -269,6 +269,9 @@ angular.module('ts5App')
       angular.forEach($scope.allECSInstances, function (carrierInstance) {
         carrierInstance.instanceDate = (!!carrierInstance.instanceDate) ? dateUtility.formatDateForApp(carrierInstance.instanceDate) : '';
         carrierInstance.siScheduleDate = (!!carrierInstance.siScheduleDate) ? dateUtility.formatDateForApp(carrierInstance.siScheduleDate) : '';
+        if (angular.isDefined(carrierInstance.statusId)) {
+          carrierInstance.statusName = getStatusName(carrierInstance.statusId);
+        }
       });
     }
 
