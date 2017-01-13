@@ -48,7 +48,7 @@
             <p><b>Converted Amount ({{ baseCurrency.code }})</b></p>
           </div>
         </div>
-        <div ng-repeat="cash in currencyList | filter: {currencyCode: currencyFilter} track by $index">
+        <div ng-repeat="cash in currencyList |  orderBy:'currencyCode' | filter: {currencyCode: currencyFilter} track by $index">
           <div class="row">
             <div class="col-xs-6">
               <div class="input-group">
