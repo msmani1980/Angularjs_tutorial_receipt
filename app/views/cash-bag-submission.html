@@ -114,7 +114,7 @@
         <input ng-disabled="shouldDisableSubmission(cashBag)" class="btn btn-default" type="checkbox" value="1" ng-model="cashBag.selected" ng-click="toggleCheckbox(cashBag)">
       </td>
       <td>{{cashBag.cashBagNumber}}</td>
-      <td>{{cashBag.createdByPerson.userName || cashBag.updatedByPerson.userName}}</td>
+      <td>{{cashBag.isSubmitted?cashBag.updatedByPerson.userName:"-"}}</td>
       <td>{{cashBag.bankReferenceNumber}}</td>
       <td>{{cashBag.submittedDate}}</td>
       <td>{{cashBag.scheduleNumber}}</td>
