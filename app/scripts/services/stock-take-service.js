@@ -56,7 +56,7 @@ angular.module('ts5App')
     };
 
     function importFromExcel(companyId, file, cateringStationId) {
-      var uploadRequestURL = ENV.apiUrl + '/services/companies/' + companyId + '/file/stocktake?cateringStationId=' + cateringStationId;
+      var uploadRequestURL = ENV.apiUrl + '/rsvr-upload/companies/' + companyId + '/file/stocktake?cateringStationId=' + cateringStationId;
       return Upload.upload({
         url: uploadRequestURL,
         file: file
