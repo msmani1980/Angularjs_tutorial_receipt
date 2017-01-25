@@ -430,9 +430,11 @@ describe('Controller: ManualECSCtrl', function () {
     describe('canEditRecord', function () {
       it('should return true if store instance has status Inbounded', function () {
         var mockStoreInstance = { statusName: 'Dispatched' };
-        expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(false);
+        expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(true);
         mockStoreInstance = { statusName: 'Inbounded' };
         expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(true);
+        mockStoreInstance = { statusName: 'On Floor' };
+        expect(scope.canSelectStoreInstance(mockStoreInstance)).toEqual(false);
       });
     });
 
