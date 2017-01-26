@@ -165,11 +165,11 @@ describe('Controller: TransactionListCtrl', function () {
         return (transaction.transactionTypeName === 'SALE' && (transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher')) &&
           (
             (transaction.totalAmount !== 0 && transaction.discountTypeName === 'Comp') ||
-            (transaction.totalAmount > 0 && transaction.transactionAmount> 0 && (transaction.totalAmount -  transaction.transactionAmount) !== 0)
+            (transaction.totalAmount > 0 && transaction.transactionAmount> 0 && (transaction.totalAmount -  transaction.transactionAmount) >= 0)
           );
       });
 
-      expect(transactionsNotFullyPaidOffDiscount.length).toEqual(0);
+      expect(transactionsNotFullyPaidOffDiscount.length).toEqual(9);
     });
   });
 

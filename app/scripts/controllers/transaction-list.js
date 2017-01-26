@@ -148,7 +148,7 @@ angular.module('ts5App')
         (
           transaction.transactionAmount > 0 &&
           transaction.totalAmount > 0 &&
-          (transaction.totalAmount -  transaction.transactionAmount) === 0
+          (transaction.totalAmount -  transaction.transactionAmount) >= 0
         );
     }
 
