@@ -149,11 +149,11 @@ describe('Controller: TransactionListCtrl', function () {
   });
 
   describe('isNotSaleChangeTransaction will', function () {
-    it('filter out transactions with change due amount equal to 0', function () {
+    it('filter out transactions with change due amount', function () {
       var transactionsWithChangeDue = scope.transactions.filter(function (transaction) {
         return transaction.transactionTypeName === 'SALE' &&
           transaction.transactionChangeDue  &&
-          transaction.transactionChangeDue === 0;
+          transaction.transactionChangeDue > 0;
       });
       expect(transactionsWithChangeDue.length).toEqual(0);
     });
