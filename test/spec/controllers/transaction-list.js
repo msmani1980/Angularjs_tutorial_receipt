@@ -165,11 +165,11 @@ describe('Controller: TransactionListCtrl', function () {
         return (transaction.transactionTypeName === 'SALE' && (transaction.paymentMethod === 'Discount' || transaction.paymentMethod === 'Voucher')) &&
           (
             (transaction.totalAmount !== 0 && transaction.discountTypeName === 'Comp') ||
-            (transaction.totalAmount > 0 && transaction.transactionAmount> 0 && (transaction.totalAmount -  transaction.transactionAmount) !== 0)
+            (transaction.totalAmount > 0 && transaction.transactionAmount> 0 && (transaction.totalAmount -  transaction.transactionAmount) >= 0)
           );
       });
 
-      expect(transactionsNotFullyPaidOffDiscount.length).toEqual(0);
+      expect(transactionsNotFullyPaidOffDiscount.length).toEqual(9);
     });
   });
 
@@ -345,12 +345,12 @@ describe('Controller: TransactionListCtrl', function () {
     });
 
     it('print netTransactionAmount if transactionTypeName is SALE and paymentMethod is Cash', function () {
-      transactionMock.transactionAmount = null;
+      transactionMock.transactionAmount = 1;
       transactionMock.netTransactionAmount = 1;
       transactionMock.paymentMethod = 'Cash';
       transactionMock.transactionTypeName = 'SALE'
       ;
-      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.netTransactionAmount + ' ' + transactionMock.transactionCurrencyCode);
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
     });
 
     it('print transactionAmount if netTransactionAmount is not defined and transactionAmount is', function () {
