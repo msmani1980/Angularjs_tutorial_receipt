@@ -94,12 +94,12 @@ angular.module('ts5App')
     };
 
     $scope.printTransactionAmount = function (transaction) {
-      if (transaction.netTransactionAmount && transaction.paymentMethod === 'Cash' && transaction.transactionTypeName === 'SALE') {
-        return transaction.netTransactionAmount + ' ' + transaction.transactionCurrencyCode;
-      }
-
-      if (isPartiallyPaidOffTransaction(transaction) || (transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') || transaction.transactionTypeName === 'REFUND') {
+      if ((transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') || transaction.transactionTypeName === 'REFUND') {
         return transaction.totalAmount + ' ' + transaction.transactionCurrencyCode;
+      }
+          
+      if (isPaymentMethodVoucherOrDiscount(transaction)) {
+        return 0 + ' ' + transaction.transactionCurrencyCode;
       }
 
       return nanToZero(transaction.transactionAmount) + ' ' + transaction.transactionCurrencyCode;
@@ -159,11 +159,7 @@ angular.module('ts5App')
           isDiscountTransactionFullyPaidOff(transaction)
         );
     }
-
-    function isPartiallyPaidOffTransaction(transaction) {
-      return transaction.netTransactionAmount && transaction.totalAmount && transaction.transactionTypeName === 'SALE' && transaction.totalAmount > transaction.netTransactionAmount;
-    }
-
+    
     function isCreditCardPaymentSelected(paymentMethods) {
       if (!paymentMethods) {
         return false;
@@ -310,14 +306,14 @@ angular.module('ts5App')
         transaction[dateFieldName] = dateUtility.formatDateForApp(transaction[dateFieldName]);
       }
     }
-
+    
     function appendTransactions(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var transactions = angular.copy(dataFromAPI.transactions)
         .filter(isNotVoidedSaleTransaction)
         .filter(isNotSaleChangeTransaction)
         .filter(filterNotFullyPaidOffDiscount);
-
+      
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
       hideLoadingBar();
     }
