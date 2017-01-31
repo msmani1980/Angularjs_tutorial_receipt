@@ -107,7 +107,7 @@
                    ng-if="item.shouldDisplayOffloadData"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
-            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="item.shouldDisplayOffloadData" name="pickUllageReason{{ $index }}" ng-disabled="shouldDisableUllage(item)">
+            <ui-select style="position:absolute" ng-model="item.ullageReason" theme="bootstrap" ng-if="item.shouldDisplayOffloadData" name="pickUllageReason{{ $index }}" ng-disabled="shouldDisableUllage(item)">
               <ui-select-match allow-clear placeholder="Select an Ullage Reason">
                 {{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
