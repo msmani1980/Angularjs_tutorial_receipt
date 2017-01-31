@@ -345,12 +345,12 @@ describe('Controller: TransactionListCtrl', function () {
     });
 
     it('print netTransactionAmount if transactionTypeName is SALE and paymentMethod is Cash', function () {
-      transactionMock.transactionAmount = null;
+      transactionMock.transactionAmount = 1;
       transactionMock.netTransactionAmount = 1;
       transactionMock.paymentMethod = 'Cash';
       transactionMock.transactionTypeName = 'SALE'
       ;
-      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.netTransactionAmount + ' ' + transactionMock.transactionCurrencyCode);
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.transactionAmount + ' ' + transactionMock.transactionCurrencyCode);
     });
 
     it('print transactionAmount if netTransactionAmount is not defined and transactionAmount is', function () {
