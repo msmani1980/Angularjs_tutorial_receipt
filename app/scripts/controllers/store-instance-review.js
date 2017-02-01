@@ -352,7 +352,7 @@ angular.module('ts5App')
       showUserCurrentStatus();
       var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
       if ($routeParams.action !== 'end-instance') {
-        $window.open(ENV.apiUrl + '/rsvr/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
+        $window.open(ENV.apiUrl + '/rsvr-pdf/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
           '.pdf?sessionToken=' + sessionToken, '_blank');
       }
 
@@ -649,13 +649,13 @@ angular.module('ts5App')
         saveStoreStatusIfRedispatch(status);
         return;
       }
-      
+
       var statusNameInt = getStatusNameIntByName(status);
       if (!status) {
         throwError('statusId', 'Unable to find statusId by name: ' + name);
         return false;
       }
-      
+
       var endInstanceFlag = $routeParams.action === 'end-instance' ? true : false;
       storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt, false, endInstanceFlag).then(
         storeInstanceStatusDispatched, showResponseErrors);
