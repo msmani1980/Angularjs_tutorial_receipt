@@ -1,3 +1,9 @@
+<style>
+.table-responsive {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+</style>
 <div class="container">
 
   <error-dialog form-object="storeInstancePackingForm" error-response="errorResponse" display="displayError">
@@ -107,7 +113,7 @@
                    ng-if="item.shouldDisplayOffloadData"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
-            <ui-select style="position:absolute" ng-model="item.ullageReason" theme="bootstrap" ng-if="item.shouldDisplayOffloadData" name="pickUllageReason{{ $index }}" ng-disabled="shouldDisableUllage(item)">
+            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="item.shouldDisplayOffloadData" name="pickUllageReason{{ $index }}" ng-disabled="shouldDisableUllage(item)">
               <ui-select-match allow-clear placeholder="Select an Ullage Reason">
                 {{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
