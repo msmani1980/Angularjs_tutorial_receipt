@@ -355,6 +355,14 @@ angular.module('ts5App')
       return statusId === commitionPaidStatus.id ? false : true;
     };
 
+    $scope.canExecuteActionsPsttrip = function (cashBag, flightSector) {
+        if (!flightSector.isPosttrip) {
+          return false;
+        }
+
+        return $scope.canExecuteActions(cashBag);
+      };
+
     $scope.canExecuteActions = function (cashBag) {
       var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');
