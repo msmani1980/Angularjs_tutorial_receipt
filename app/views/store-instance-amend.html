@@ -797,7 +797,7 @@
                       <td>{{ getOrNA(flightSector.transactionTotal) }}</td>
                       <td ng-hide="cashBag.isDeleted">
                         <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(cashBag, flightSector)" ng-show="canExecuteActions(cashBag, flightSector)"><i class="fa fa-pencil active"></i></button>
-                        <button class="btn btn-danger btn-xs" ng-click="showDeleteScheduleModal(flightSector, cashBag.id)" ng-show="canExecuteActions(cashBag)"><i class="fa fa-trash active"></i></button>
+                        <button class="btn btn-danger btn-xs" ng-click="showDeleteScheduleModal(flightSector, cashBag.id)" ng-show="canExecuteActionsPsttrip(cashBag, flightSector)"><i class="fa fa-trash active"></i></button>
                       </td>
                     </tr>
                     <tr class="subversion-row" ng-show="flightSector.rowOpen">

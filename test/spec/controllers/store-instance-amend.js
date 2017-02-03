@@ -633,6 +633,19 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(scope.canExecuteActions({ isVerified: true })).toBeFalsy();
     });
 
+    it('canExecuteActionsPsttrip should decide if actions can be executed for given store instance and posttrip', function () {
+        scope.storeInstance = { statusId: 5 };
+        var casbBg = {isVerified:false};
+        var flightSector = {isPosttrip:true};
+        scope.$digest();
+        expect(scope.canExecuteActionsPsttrip(casbBg, flightSector)).toBeTruthy();
+
+        scope.storeInstance = { statusId: 5 };
+        flightSector = { isPosttrip: false };
+        scope.$digest();
+        expect(scope.canExecuteActionsPsttrip(casbBg, flightSector)).toBeFalsy();
+      });
+
     it('canExecuteUnferify should decide if actions can be executed for given store instance', function () {
 
         scope.storeInstance = { statusId: 5 };
