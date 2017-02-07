@@ -1162,7 +1162,6 @@ angular.module('ts5App')
       });
 
       normalizedCashBag.canBeDeleted = isTransaction ? false : isCashBagDeleteAllowed(detailedCashBag);
-console.log ('normalizedCashBag.canBeDeleted', normalizedCashBag.canBeDeleted);
       dailyExchangeRatesService.getDailyExchangeById(companyId, detailedCashBag.dailyExchangeRateId).then(function (dataFromAPI) {
         setCashTotalRevenueItems(normalizedCashBag, detailedCashBag, angular.copy(dataFromAPI));
       });
