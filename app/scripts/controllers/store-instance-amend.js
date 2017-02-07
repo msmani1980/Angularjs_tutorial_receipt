@@ -1154,8 +1154,14 @@ angular.module('ts5App')
     function setCashBagDetails(normalizedCashBag, cashBagFromAPI) {
       var companyId = globalMenuService.company.get();
       var detailedCashBag = angular.copy(cashBagFromAPI);
-      normalizedCashBag.canBeDeleted = isCashBagDeleteAllowed(detailedCashBag);
+      var isTransaction = false;
+      angular.forEach(normalizedCashBag.flightSectors, function (sector) {
+        if (sector.transactionCount > 0) {
+          isTransaction = true;
+        }
+      });
 
+      normalizedCashBag.canBeDeleted = isTransaction ? false : isCashBagDeleteAllowed(detailedCashBag);
       dailyExchangeRatesService.getDailyExchangeById(companyId, detailedCashBag.dailyExchangeRateId).then(function (dataFromAPI) {
         setCashTotalRevenueItems(normalizedCashBag, detailedCashBag, angular.copy(dataFromAPI));
       });
