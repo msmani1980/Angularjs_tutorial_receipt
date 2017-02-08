@@ -2,8 +2,9 @@
   <div class="container-fluid">
     <div ng-if="isAuthorized">
       <a class="navbar-brand" ng-href="/#/">
-        <i class="fa fa-home"></i><span class="hidden-xs"> {{selectedCompany.companyName}}<em ng-if="selectedCompany.chCompany"> |
-        {{selectedCompany.chCompany.companyName}}</em></span>
+        <i class="fa fa-home"></i><span class="hidden-xs"> {{selectedCompany.companyName}}<em ng-if="selectedCompany.type.companyTypeName == 'Cash Handler'"> |
+        {{ cashHandlerRetailCompanyList[0].companyName}}</em>
+        </span>
       </a>
       <div class="pull-right settings-navbar">
         <a data-toggle="modal" data-target="#userSettingsModal" type="button" class="settings-btn btn btn-default btn-lg" aria-label="Left Align" title="User Settings"
