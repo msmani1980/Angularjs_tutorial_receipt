@@ -160,7 +160,7 @@ angular.module('ts5App')
         sessionObject.companyTypes = angular.copy(dataFromAPI[1]);
         sessionObject.userCompanies = formatUserCompanies(dataFromAPI[2], rawSessionData);
         
-        var chCompanyList = sessionObject.userCompanies !== undefined ? sessionObject.userCompanies[0]:undefined;
+        var chCompanyList = sessionObject.userCompanies !== undefined ? sessionObject.userCompanies[0] : undefined;
         chCompanyList.companyId = chCompanyList.id;
         sessionObject.companyData.chCompany = angular.copy(chCompanyList);
         
