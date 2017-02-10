@@ -180,7 +180,17 @@ describe('Service: identityAccessFactory', function() {
         },
         currentSession: {
           sessionToken: 'fakeSessionToken'
-        }
+        },
+        userCompanies: [{
+	      id: 643,
+	      companyId: 643,
+	      type: {
+	        companyTypeName: 'Retail',
+	        companyName: 'easyJet'
+	      },
+	      companyName: 'easyJet',
+	      companyTypeName: 'Retail',
+        }]                       
       };
       identityAccessFactory.setSessionData(sessionObject);
     });
