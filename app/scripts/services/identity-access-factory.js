@@ -60,6 +60,7 @@ angular.module('ts5App')
         if (sessionObject.companyData) {
           $localStorage.companyObject = sessionObject.companyData;
           $localStorage.companyObject.companyId = sessionObject.companyId;
+          $localStorage.companyObject.chCompany = sessionObject.userCompanies[0];
           $localStorage.companyObject.formatList = sessionObject.companyFormatList;
           $localStorage.companyObject.companyTypeId = sessionObject.companyData.companyTypeId;
         }
@@ -87,6 +88,7 @@ angular.module('ts5App')
           companyData: dataFromAPI.companyData,
           companyFormatList: dataFromAPI.companyFormatList,
           userCompanies: dataFromAPI.userCompanies,
+          chCompany: dataFromAPI.chCompany,
           companyTypes: dataFromAPI.companyTypes,
           currentSession: dataFromAPI.currentSession,
           sessionToken: dataFromAPI.currentSession.sessionToken
@@ -155,9 +157,13 @@ angular.module('ts5App')
       function getCompanyResponseHandler(dataFromAPI, rawSessionData) {
         var sessionObject = angular.copy(rawSessionData);
         sessionObject.companyData = angular.copy(dataFromAPI[0]);
-        sessionObject.companyData.chCompany = angular.copy(rawSessionData.chCompany);
         sessionObject.companyTypes = angular.copy(dataFromAPI[1]);
         sessionObject.userCompanies = formatUserCompanies(dataFromAPI[2], rawSessionData);
+        
+        var chCompanyList = sessionObject.userCompanies !== undefined ? sessionObject.userCompanies[0]:undefined;
+        chCompanyList.companyId = chCompanyList.id;
+        sessionObject.companyData.chCompany = angular.copy(chCompanyList);
+        
         sessionObject.companyFormatList = parseCompanyFormatList(dataFromAPI[3].response);
         sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, {
           id: sessionObject.companyData.companyTypeId

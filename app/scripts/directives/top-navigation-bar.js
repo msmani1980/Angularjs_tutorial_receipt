@@ -91,7 +91,7 @@ angular.module('ts5App')
         setRetailForCHModel(companyList);
         if ($scope.userObject.companyData.chCompany) {
           $scope.pickedCompany[companyTypeName].chCompany = lodash.where($scope.cashHandlerRetailCompanyList,
-            { id: $scope.userObject.companyData.chCompany.id })[0];
+            { companyId: $scope.userObject.companyData.chCompany.id })[0];
         }
       }
 
