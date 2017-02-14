@@ -20,7 +20,7 @@ angular.module('ts5App')
       };
 
       this.formatErrorText = function(text) {
-        return text.split(/(?=[A-Z])/).join(' ');
+        return text.split(/([A-Z]+|\S+?)(?=[A-Z]|\s|$)/).join(' ');
       };
 
       this.httpResponseErrorHandler = function() {

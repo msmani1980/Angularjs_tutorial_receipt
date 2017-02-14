@@ -859,7 +859,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.generateCurrency = function(currency) {
       return {
-        price: '1.00',
+        price: '',
         companyCurrencyId: currency.id,
         code: currency.code
       };
