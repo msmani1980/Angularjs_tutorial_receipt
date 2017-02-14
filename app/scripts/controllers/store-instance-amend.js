@@ -1155,7 +1155,8 @@ angular.module('ts5App')
       var companyId = globalMenuService.company.get();
       var detailedCashBag = angular.copy(cashBagFromAPI);
       var isTransaction = false;
-      angular.forEach(normalizedCashBag.flightSectors, function (sector) {
+
+      normalizedCashBag.flightSectors.forEach(function (sector) {
         if (sector.transactionCount > 0) {
           isTransaction = true;
         }
