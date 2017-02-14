@@ -89,7 +89,7 @@ angular.module('ts5App')
 
       function setRelationForCH(companyList, companyTypeName) {
         setRetailForCHModel(companyList);
-        if ($scope.userObject.companyData.companyTypeId === 'Cash Handler' || $scope.userObject.companyData.companyTypeName === 5) {
+        if ($scope.userObject.companyData.companyTypeName === 'Cash Handler' || $scope.userObject.companyData.companyTypeId === 5) {
           $scope.pickedCompany[companyTypeName].chCompany = lodash.where($scope.cashHandlerRetailCompanyList,
             { relativeCompanyId: $scope.userObject.companyData.id })[0];
         }
