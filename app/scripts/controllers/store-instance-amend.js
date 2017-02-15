@@ -1055,6 +1055,10 @@ angular.module('ts5App')
         };
 
         normalizedCashBag.flightSectors.push(normalizedFlightSector);
+        if (normalizedFlightSector.transactionCount >0) {
+          normalizedCashBag.canBeDeleted = false;        	
+        }
+
         if (flightSector.isPosttrip) {
           normalizedCashBag.flightSectorsForRearrange.push(normalizedFlightSector);
         }
@@ -1155,6 +1159,10 @@ angular.module('ts5App')
       var companyId = globalMenuService.company.get();
       var detailedCashBag = angular.copy(cashBagFromAPI);
       var isTransaction = false;
+
+      if (cashBagFromAPI.originationSource === 1) {
+        isTransaction = true;
+      }
 
       normalizedCashBag.flightSectors.forEach(function (sector) {
         if (sector.transactionCount > 0) {
