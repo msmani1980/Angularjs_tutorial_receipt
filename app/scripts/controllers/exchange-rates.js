@@ -262,6 +262,8 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
       $scope.displayError = true;
       setupModels();
+      hideLoadingModal();
+      disableActionButtons(false, true);
     }
 
     function showSuccessMessage() {
