@@ -1156,6 +1156,10 @@ angular.module('ts5App')
       var detailedCashBag = angular.copy(cashBagFromAPI);
       var isTransaction = false;
 
+      if (cashBagFromAPI.originationSource === 1) {
+        isTransaction = true;
+      }
+
       normalizedCashBag.flightSectors.forEach(function (sector) {
         if (sector.transactionCount > 0) {
           isTransaction = true;
