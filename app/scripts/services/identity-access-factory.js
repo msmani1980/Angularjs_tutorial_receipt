@@ -155,13 +155,19 @@ angular.module('ts5App')
       function getCompanyResponseHandler(dataFromAPI, rawSessionData) {
         var sessionObject = angular.copy(rawSessionData);
         sessionObject.companyData = angular.copy(dataFromAPI[0]);
-        sessionObject.companyData.chCompany = angular.copy(rawSessionData.chCompany);
         sessionObject.companyTypes = angular.copy(dataFromAPI[1]);
         sessionObject.userCompanies = formatUserCompanies(dataFromAPI[2], rawSessionData);
         sessionObject.companyFormatList = parseCompanyFormatList(dataFromAPI[3].response);
         sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, {
           id: sessionObject.companyData.companyTypeId
         }).companyTypeName);
+        
+        if (sessionObject.companyData.companyTypeName === 'Cash Handler' || sessionObject.companyData.companyTypeId === 5) {
+          var chCompanyList = sessionObject.userCompanies !== undefined ? sessionObject.userCompanies[0] : undefined;
+          chCompanyList.companyId = chCompanyList.id;
+          sessionObject.companyData.chCompany = angular.copy(chCompanyList);
+        }
+        
         setSessionData(sessionObject);
       }
 
