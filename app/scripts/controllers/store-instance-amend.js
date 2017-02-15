@@ -1055,6 +1055,10 @@ angular.module('ts5App')
         };
 
         normalizedCashBag.flightSectors.push(normalizedFlightSector);
+        if (normalizedFlightSector.transactionCount >0) {
+          normalizedCashBag.canBeDeleted = false;        	
+        }
+
         if (flightSector.isPosttrip) {
           normalizedCashBag.flightSectorsForRearrange.push(normalizedFlightSector);
         }
