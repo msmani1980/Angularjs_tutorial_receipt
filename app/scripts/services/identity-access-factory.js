@@ -161,7 +161,7 @@ angular.module('ts5App')
         sessionObject.companyFormatList = parseCompanyFormatList(dataFromAPI[3].response);
         sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, {
           id: sessionObject.companyData.companyTypeId
-        }).name);
+        }).companyTypeName);
         setSessionData(sessionObject);
       }
 
