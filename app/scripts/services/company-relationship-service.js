@@ -9,6 +9,7 @@
  */
 angular.module('ts5App')
   .service('companyRelationshipService', function ($resource, $http, ENV, dateUtility) {
+
     var companyRelationshipRequestURL = ENV.apiUrl + '/api/companies/:id/relationships/:companyRelationshipId';
     var companyRelationshipUpdateRequestURL = ENV.apiUrl + '/api/companies/:id/relationships/:companyRelationshipId';
     var companyTypeRequestURL = ENV.apiUrl + '/api/company-relation/:id/types';
