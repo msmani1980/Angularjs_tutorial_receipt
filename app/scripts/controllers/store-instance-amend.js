@@ -355,13 +355,43 @@ angular.module('ts5App')
       return statusId === commitionPaidStatus.id ? false : true;
     };
 
-    $scope.canExecuteActionsPsttrip = function (cashBag, flightSector) {
-        if (!flightSector.isPosttrip) {
+    $scope.canExecuteEditActionsPsttrip = function (cashBag, flightSector) {
+      if (!flightSector.isPosttrip) {
+        return true;
+      } else {
+        var isSchedule = false;
+        cashBag.flightSectors.forEach(function (sector) {
+          if (!sector.isPosttrip) {
+            isSchedule = true;
+          }
+        });
+
+        if (isSchedule) {
           return false;
         }
+      }
 
-        return $scope.canExecuteActions(cashBag);
-      };
+      return $scope.canExecuteActions(cashBag);
+    };
+
+    $scope.canExecuteDeleteActionsPsttrip = function (cashBag, flightSector) {
+      if (!flightSector.isPosttrip) {
+        return false;
+      } else {
+        var isSchedule = false;
+        cashBag.flightSectors.forEach(function (sector) {
+          if (!sector.isPosttrip) {
+            isSchedule = true;
+          }
+        });
+
+        if (isSchedule) {
+          return false;
+        } 
+      }
+
+      return $scope.canExecuteActions(cashBag);
+    };
 
     $scope.canExecuteActions = function (cashBag) {
       var inboundedStatus = getStoreStatusByStatusStep('8');
@@ -572,6 +602,18 @@ angular.module('ts5App')
       angular.element('.delete-cashbag-warning-modal').modal('show');
 
       $scope.cashBagToDelete = cashBag;
+    };
+
+    $scope.canAddPosttripToCashBAg = function (cashBag) {
+      var isSchedule = false;
+
+      cashBag.flightSectors.forEach(function (sector) {
+        if (!sector.isPosttrip) {
+          isSchedule = true;
+        }
+      });
+
+      return isSchedule ? false : true;
     };
 
     $scope.canCashBagBeDeleted = function (cashBag) {

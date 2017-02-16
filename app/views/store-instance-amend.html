@@ -750,7 +750,7 @@
                   <h4>Post Trip Sectors</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-primary btn-sm" ng-click="showAddOrEditScheduleModal(cashBag)" ng-show="!cashBag.isDeleted && canExecuteActions(cashBag)">
+                  <button class="btn btn-primary btn-sm" ng-show="canAddPosttripToCashBAg(cashBag)" ng-click="showAddOrEditScheduleModal(cashBag)" ng-show="!cashBag.isDeleted && canExecuteActions(cashBag)">
                     <i class="fa fa-plus active"></i> Add Schedule
                   </button>
                   <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-show="!isCrewDataOpen(cashBag) && canExecuteActions(cashBag)">
@@ -796,8 +796,8 @@
                       <td>{{ getOrNA(flightSector.transactionCount) }}</td>
                       <td>{{ getOrNA(flightSector.transactionTotal) }}</td>
                       <td ng-hide="cashBag.isDeleted">
-                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(cashBag, flightSector)" ng-show="canExecuteActions(cashBag, flightSector)"><i class="fa fa-pencil active"></i></button>
-                        <button class="btn btn-danger btn-xs" ng-click="showDeleteScheduleModal(flightSector, cashBag.id)" ng-show="canExecuteActionsPsttrip(cashBag, flightSector)"><i class="fa fa-trash active"></i></button>
+                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(cashBag, flightSector)" ng-show="canExecuteEditActionsPsttrip(cashBag, flightSector)"><i class="fa fa-pencil active"></i></button>
+                        <button class="btn btn-danger btn-xs" ng-click="showDeleteScheduleModal(flightSector, cashBag.id)" ng-show="canExecuteDeleteActionsPsttrip(cashBag, flightSector)"><i class="fa fa-trash active"></i></button>
                       </td>
                     </tr>
                     <tr class="subversion-row" ng-show="flightSector.rowOpen">
