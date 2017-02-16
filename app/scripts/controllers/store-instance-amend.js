@@ -575,6 +575,16 @@ angular.module('ts5App')
     };
 
     $scope.canCashBagBeDeleted = function (cashBag) {
+      var isTransaction = false;
+
+      cashBag.flightSectors.forEach(function (sector) {
+        if (sector.transactionCount > 0) {
+          isTransaction = true;
+        }
+      });
+
+      cashBag.canBeDeleted = isTransaction ? false : isCashBagDeleteAllowed(cashBag);
+
       return cashBag.canBeDeleted;
     };
 
@@ -1157,10 +1167,6 @@ angular.module('ts5App')
       var companyId = globalMenuService.company.get();
       var detailedCashBag = angular.copy(cashBagFromAPI);
       var isTransaction = false;
-
-      if (cashBagFromAPI.originationSource === 1) {
-        isTransaction = true;
-      }
 
       normalizedCashBag.flightSectors.forEach(function (sector) {
         if (sector.transactionCount > 0) {
