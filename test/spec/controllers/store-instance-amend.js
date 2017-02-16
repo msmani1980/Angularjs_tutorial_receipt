@@ -633,19 +633,32 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(scope.canExecuteActions({ isVerified: true })).toBeFalsy();
     });
 
-    it('canExecuteActionsPsttrip should decide if actions can be executed for given store instance and posttrip', function () {
+    it('canExecuteEditActionsPsttrip should decide if actions can be executed for given store instance and posttrip', function () {
         scope.storeInstance = { statusId: 5 };
-        var casbBg = {isVerified:false};
-        var flightSector = {isPosttrip:true};
+        var casbBg = {isVerified:false, flightSectors : [{transactionCount:0 }, {transactionCount:1 }]};
+        var flightSector = {isPosttrip:false};
         scope.$digest();
-        expect(scope.canExecuteActionsPsttrip(casbBg, flightSector)).toBeTruthy();
+        expect(scope.canExecuteEditActionsPsttrip(casbBg, flightSector)).toBeTruthy();
 
         scope.storeInstance = { statusId: 5 };
-        flightSector = { isPosttrip: false };
+        flightSector = { isPosttrip: true };
         scope.$digest();
-        expect(scope.canExecuteActionsPsttrip(casbBg, flightSector)).toBeFalsy();
+        expect(scope.canExecuteEditActionsPsttrip(casbBg, flightSector)).toBeFalsy();
       });
 
+    it('canExecuteDeleteActionsPsttrip should decide if actions can be executed for given store instance and posttrip', function () {
+        scope.storeInstance = { statusId: 5 };
+        var casbBg = {isVerified:false, flightSectors : [{transactionCount:0 }, {transactionCount:1 }]};
+        var flightSector = {isPosttrip:false};
+        scope.$digest();
+        expect(scope.canExecuteDeleteActionsPsttrip(casbBg, flightSector)).toBeFalsy();
+
+        scope.storeInstance = { statusId: 5 };
+        flightSector = { isPosttrip: true };
+        scope.$digest();
+        expect(scope.canExecuteDeleteActionsPsttrip(casbBg, flightSector)).toBeFalsy();
+      });
+     
     it('canExecuteUnferify should decide if actions can be executed for given store instance', function () {
 
         scope.storeInstance = { statusId: 5 };
@@ -1060,9 +1073,10 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(scope.cashBagToDelete).toBe(cashBag);
     });
 
+    
     it('canCashBagBeDeleted returns true if cash bag can be deleted', function () {
-      expect(scope.canCashBagBeDeleted({ id: 1, canBeDeleted: true })).toBeTruthy();
-      expect(scope.canCashBagBeDeleted({ id: 1, canBeDeleted: false })).toBeFalsy();
+      expect(scope.canCashBagBeDeleted({ id: 1, flightSectors : [{transactionCount:0 }, {transactionCount:1 }]})).toBeFalsy();
+      expect(scope.canCashBagBeDeleted({ id: 1, flightSectors : [{transactionCount:0 }, {transactionCount:0 }]})).toBeTruthy();
     });
 
     it('deleteCashBag calls storeInstanceAmendFactory.deleteCashBag', function () {
