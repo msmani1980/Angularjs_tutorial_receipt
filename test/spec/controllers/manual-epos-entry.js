@@ -245,7 +245,6 @@ describe('Controller: ManualEposEntryCtrl', function() {
        it('should return false if cash bag is not confirmed', function () {
            scope.isConfirmed = false;
            expect(scope.getVerifyAll()).toBeFalsy();
-           //expect(scope.getVerifyAll()).toEqual(false);
        });
     });
     	
