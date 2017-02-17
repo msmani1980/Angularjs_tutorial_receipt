@@ -10,6 +10,7 @@
 angular.module('ts5App')
   .service('companyRelationshipService', function ($resource, $http, ENV, dateUtility) {
     var companyRelationshipRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/relationships/:companyRelationshipId';
+    var companyRelationshipUpdateRequestURL = ENV.apiUrl + '/api/companies/:id/relationships/:companyRelationshipId';
     var companyTypeRequestURL = ENV.apiUrl + '/rsvr/api/company-relation/:id/types';
     var requestParameters = {
       id: '@id'
@@ -42,6 +43,8 @@ angular.module('ts5App')
       delete data.id;
       delete data.relativeCompany;
       delete data.relativeCompanyType;
+      delete data.createdByPerson;
+      delete data.updatedByPerson;
 
       return angular.toJson(data);
     }
@@ -81,6 +84,7 @@ angular.module('ts5App')
     };
 
     var companyRelationshipRequestResource = $resource(companyRelationshipRequestURL, requestParameters, actions);
+    var companyRelationshipUpdateRequestResource = $resource(companyRelationshipUpdateRequestURL, requestParameters, actions);
     var typeRequestResource = $resource(companyTypeRequestURL, requestParameters, actions);
 
     var getCompanyRelationshipList = function (payload) {
@@ -102,20 +106,20 @@ angular.module('ts5App')
     };
 
     var createCompanyRelationship = function (payload) {
-      return companyRelationshipRequestResource.createCompanyRelationship({
+      return companyRelationshipUpdateRequestResource.createCompanyRelationship({
         id: payload.companyId
       }, payload).$promise;
     };
 
     var updateCompanyRelationship = function (payload) {
-      return companyRelationshipRequestResource.updateCompanyRelationship({
+      return companyRelationshipUpdateRequestResource.updateCompanyRelationship({
         id: payload.companyId,
         companyRelationshipId: payload.id
       }, payload).$promise;
     };
 
     var deleteCompanyRelationship = function (payload) {
-      return companyRelationshipRequestResource.deleteCompanyRelationship({
+      return companyRelationshipUpdateRequestResource.deleteCompanyRelationship({
         id: payload.companyId,
         companyRelationshipId: payload.id
       }, payload).$promise;
