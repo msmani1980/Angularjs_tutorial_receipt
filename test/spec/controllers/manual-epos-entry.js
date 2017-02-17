@@ -240,17 +240,18 @@ describe('Controller: ManualEposEntryCtrl', function() {
         expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(cashBagId, 'CONFIRMED');
       });
     });
-
+    
+    describe('getVerifyAll', function () {
+       it('should return false if cash bag is not confirmed', function () {
+           scope.isConfirmed = false;
+           expect(scope.getVerifyAll()).toBeFalsy();
+       });
+    });
+    	
     describe('unconfirm all forms', function () {
       it('should unconfirm form and all sub forms', function () {
         scope.unconfirmAll();
         expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CONFIRMED');
-        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CASH');
-        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'CREDIT');
-        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'VIRT_ITEM');
-        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'VOUCH_ITEM');
-        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'DISCOUNT');
-        expect(manualEposFactory.unverifyCashBag).toHaveBeenCalledWith(cashBagId, 'PROMO');
       });
     });
   });
