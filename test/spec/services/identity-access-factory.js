@@ -180,7 +180,24 @@ describe('Service: identityAccessFactory', function() {
         },
         currentSession: {
           sessionToken: 'fakeSessionToken'
-        }
+        },
+        userCompanies: [{
+	      id: 643,
+	      companyId: 643,
+	      type: {
+	        companyTypeName: 'Retail',
+	        companyName: 'easyJet'
+	      },
+	      companyName: 'easyJet',
+	      companyTypeName: 'Retail',
+        }],
+        companyTypes: [{
+  	      	id: 1,
+  	      	companyTypeName: 'Retail',
+          },{
+        	  id: 5,
+        	  companyTypeName: 'Cash Handler',
+          }]
       };
       identityAccessFactory.setSessionData(sessionObject);
     });
@@ -188,7 +205,12 @@ describe('Service: identityAccessFactory', function() {
     it('should set session data in localStorage', function() {
       expect(localStorage.sessionObject).toBeDefined();
     });
-
+    
+    it('should have companyTypeName on LS', function() {
+    	 scope.$digest();
+         expect(identityAccessFactory.getSessionObject().companyTypes[0].companyTypeName).toBeDefined();
+    });
+    
     it('should return true is session stored on LS', function() {
       expect(identityAccessFactory.isAuthorized()).toBe(true);
     });
