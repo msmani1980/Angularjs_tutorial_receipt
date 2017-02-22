@@ -124,7 +124,7 @@ angular.module('ts5App')
     }
 
     function init() {
-      showLoadingModal('Loading Cash Bag...');
+      showLoadingModal('Loading Cash Bag....');
       $scope.viewName = 'Manual ePOS Data Entry';
       $scope.cashBagId = $routeParams.cashBagId;
 
