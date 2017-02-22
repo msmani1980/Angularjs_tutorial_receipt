@@ -37,6 +37,10 @@ angular.module('ts5App')
       return angular.isDefined($scope.containsChanges) ? !$scope.isFormVerified(formName) && $scope.containsChanges[formName] : false;
     };
 
+    $scope.getVerifyAll = function () {
+        return $scope.isConfirmed;
+      };
+
     $scope.shouldDisableForm = function (formName) {
       return ($scope.isConfirmed) ? !$scope.isFormVerified(formName) : false;
     };
@@ -44,13 +48,7 @@ angular.module('ts5App')
     $scope.unconfirmAll = function () {
       showLoadingModal('Unconfirming');
       var unconfirmPromises = [
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CONFIRMED'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CASH'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CREDIT'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'VIRT_ITEM'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'VOUCH_ITEM'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'DISCOUNT'),
-        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'PROMO')
+        manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'CONFIRMED')
       ];
 
       $q.all(unconfirmPromises).then(init, showErrors);
@@ -130,7 +128,7 @@ angular.module('ts5App')
     }
 
     function init() {
-      showLoadingModal('Loading Cash Bag...');
+      showLoadingModal('Loading Cash Bag....');
       $scope.viewName = 'Manual ePOS Data Entry';
       $scope.cashBagId = $routeParams.cashBagId;
 
