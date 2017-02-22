@@ -57,8 +57,8 @@ angular.module('ts5App')
       return carrierService.getCarrierTypes(id);
     };
 
-    var getEmployees = function(id) {
-      return employeesService.getEmployees(id);
+    var getEmployees = function(id, payload) {
+      return employeesService.getEmployees(id, payload);
     };
 
     var getSchedules = function (id) {

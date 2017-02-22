@@ -82,10 +82,6 @@ angular.module('ts5App')
       $scope.carrierNumbers = angular.copy(response.response);
     };
 
-    this.getEmployeesSuccess = function(response) {
-      $scope.employees = response.companyEmployees;
-    };
-
     this.showToastMessage = function(className, type, message) {
       messageService.display(className, message, type);
     };
@@ -115,8 +111,7 @@ angular.module('ts5App')
     this.makeInitPromises = function() {
       var promises = [
         postTripFactory.getStationList(companyId).then($this.getStationsSuccess),
-        postTripFactory.getCarrierNumbers(companyId).then($this.getCarrierSuccess),
-        postTripFactory.getEmployees(companyId).then($this.getEmployeesSuccess)
+        postTripFactory.getCarrierNumbers(companyId).then($this.getCarrierSuccess)
       ];
 
       return promises;
@@ -164,6 +159,33 @@ angular.module('ts5App')
         offset: 0
       };
       $scope.loadPostTrip();
+    };
+
+    this.searchEmployeesSuccess = function(response) {
+      if ($scope.multiSelectedValues.employeeIds) {
+        $scope.employees = lodash.filter(response.companyEmployees, function (employee) {
+          return !lodash.find($scope.multiSelectedValues.employeeIds, { id: employee.id });
+        });
+      } else {
+        $scope.employees = response.companyEmployees;
+      }
+    };
+
+    $scope.searchEmployees = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+
+      if ($select.search && $select.search.length !== 0) {
+        var payload = {
+          search: $select.search
+        };
+
+        postTripFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
+      } else {
+        $scope.employees = [];
+      }
     };
 
     $scope.clearSearchForm = function() {

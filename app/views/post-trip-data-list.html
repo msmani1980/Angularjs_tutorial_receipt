@@ -90,7 +90,10 @@
                 <label for="employee-id">Employee Id</label>
                 <ui-select id="employee-id" multiple ng-model="multiSelectedValues.employeeIds" theme="bootstrap">
                   <ui-select-match placeholder="Select EmployeeIds..">{{ $item.employeeIdentifier }}</ui-select-match>
-                  <ui-select-choices repeat="employee in employees | filter: $select.search | limitTo:50">
+                  <ui-select-choices
+                    refresh="searchEmployees($select)"
+                    refresh-delay="300"
+                    repeat="employee in employees | filter: $select.search | limitTo:50">
                     {{ employee.employeeIdentifier }} ({{employee.lastName}}, {{ employee.firstName }})
                   </ui-select-choices>
                 </ui-select>
