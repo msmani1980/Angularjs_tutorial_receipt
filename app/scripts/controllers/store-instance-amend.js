@@ -9,7 +9,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
       reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory, storeInstanceFactory, recordsService,
-      stationsService, dailyExchangeRatesService, $window) {
+      stationsService, dailyExchangeRatesService) {
     var $this = this;
 
     $scope.formatAsCurrency = function(valueToFormat) {
@@ -30,7 +30,13 @@ angular.module('ts5App')
 
     $scope.deleteSchedule = function () {
       angular.element('.delete-schedule-warning-modal').modal('hide');
-      storeInstanceAmendFactory.deleteFlightSector($scope.scheduleToDelete.cashbagId, $scope.scheduleToDelete.id).then(deleteScheduleSuccess, handleResponseError);
+
+      storeInstanceAmendFactory.deleteFlightSector(
+        $scope.scheduleToDelete.cashbagId,
+        $scope.scheduleToDelete.id,
+        !$scope.scheduleToDelete.isPosttrip
+      )
+      .then(deleteScheduleSuccess, handleResponseError);
     };
 
     $scope.showDeleteScheduleModal = function (scheduleToDelete, cashBagId) {
@@ -56,7 +62,7 @@ angular.module('ts5App')
       if ($scope.scheduleToEdit) {
         postTripId = $scope.scheduleToEdit.id;
         var newPosttripId = $scope.newScheduleSelection.id;
-        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, newPosttripId).then(addOrEditScheduleSuccess, handleResponseError);
+        storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, newPosttripId, !$scope.scheduleToEdit.isPosttrip).then(addOrEditScheduleSuccess, handleResponseError);
       } else {
         postTripId = $scope.newScheduleSelection.id;
 
@@ -338,23 +344,53 @@ angular.module('ts5App')
       return storeStatus;
     }
 
-    $scope.canExecuteActionsPsttrip = function (cashBag, flightSector) {
-      if (!flightSector.isPosttrip) {
-        return false;
-      }
-
-      return $scope.canExecuteActions(cashBag);
-    };
-
     $scope.canExecuteUnferify = function () {
       var commitionPaidStatus = getStoreStatusByStatusStep('11');
       if (!$scope.storeInstance) {
         return false;
       }
-      
+
       var statusId = $scope.storeInstance.statusId;
 
       return statusId === commitionPaidStatus.id ? false : true;
+    };
+
+    $scope.canExecuteEditActionsPsttrip = function (cashBag, flightSector) {
+      if (!flightSector.isPosttrip) {
+        return true;
+      } else {
+        var isSchedule = false;
+        cashBag.flightSectors.forEach(function (sector) {
+          if (!sector.isPosttrip) {
+            isSchedule = true;
+          }
+        });
+
+        if (isSchedule) {
+          return false;
+        }
+      }
+
+      return $scope.canExecuteActions(cashBag);
+    };
+
+    $scope.canExecuteDeleteActionsPsttrip = function (cashBag, flightSector) {
+      if (!flightSector.isPosttrip) {
+        return false;
+      } else {
+        var isSchedule = false;
+        cashBag.flightSectors.forEach(function (sector) {
+          if (!sector.isPosttrip) {
+            isSchedule = true;
+          }
+        });
+
+        if (isSchedule) {
+          return false;
+        } 
+      }
+
+      return $scope.canExecuteActions(cashBag);
     };
 
     $scope.canExecuteActions = function (cashBag) {
@@ -523,8 +559,6 @@ angular.module('ts5App')
       } else {
         cashBagFactory.verifyCashBag(cashBag.id, 'AMEND').then(toggleVrifiedCashBagSuccess, handleResponseError);
       }
-
-      $window.location.reload();
     };
 
     $scope.isCrewDataOpen = function (cashBag) {
@@ -570,7 +604,29 @@ angular.module('ts5App')
       $scope.cashBagToDelete = cashBag;
     };
 
+    $scope.canAddPosttripToCashBAg = function (cashBag) {
+      var isSchedule = false;
+
+      cashBag.flightSectors.forEach(function (sector) {
+        if (!sector.isPosttrip) {
+          isSchedule = true;
+        }
+      });
+
+      return isSchedule ? false : true;
+    };
+
     $scope.canCashBagBeDeleted = function (cashBag) {
+      var isTransaction = false;
+
+      cashBag.flightSectors.forEach(function (sector) {
+        if (sector.transactionCount > 0) {
+          isTransaction = true;
+        }
+      });
+
+      cashBag.canBeDeleted = isTransaction ? false : isCashBagDeleteAllowed(cashBag);
+
       return cashBag.canBeDeleted;
     };
 
@@ -1049,6 +1105,10 @@ angular.module('ts5App')
         };
 
         normalizedCashBag.flightSectors.push(normalizedFlightSector);
+        if (normalizedFlightSector.transactionCount > 0) {
+          normalizedCashBag.canBeDeleted = false;
+        }
+
         if (flightSector.isPosttrip) {
           normalizedCashBag.flightSectorsForRearrange.push(normalizedFlightSector);
         }
@@ -1148,8 +1208,15 @@ angular.module('ts5App')
     function setCashBagDetails(normalizedCashBag, cashBagFromAPI) {
       var companyId = globalMenuService.company.get();
       var detailedCashBag = angular.copy(cashBagFromAPI);
-      normalizedCashBag.canBeDeleted = isCashBagDeleteAllowed(detailedCashBag);
+      var isTransaction = false;
 
+      normalizedCashBag.flightSectors.forEach(function (sector) {
+        if (sector.transactionCount > 0) {
+          isTransaction = true;
+        }
+      });
+
+      normalizedCashBag.canBeDeleted = isTransaction ? false : isCashBagDeleteAllowed(detailedCashBag);
       dailyExchangeRatesService.getDailyExchangeById(companyId, detailedCashBag.dailyExchangeRateId).then(function (dataFromAPI) {
         setCashTotalRevenueItems(normalizedCashBag, detailedCashBag, angular.copy(dataFromAPI));
       });
@@ -1248,7 +1315,7 @@ angular.module('ts5App')
 
       return submittedList;
     }
-    
+
     function handleResponseError(responseFromAPI) {
       resetAllModals();
       hideLoadingModal();

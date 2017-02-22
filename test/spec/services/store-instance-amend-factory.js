@@ -26,7 +26,9 @@ describe('Factory: storeInstanceAmendFactory', function () {
     spyOn(storeInstanceAmendService, 'getPostTrips').and.stub();
     spyOn(storeInstanceAmendService, 'addPostTrip').and.stub();
     spyOn(storeInstanceAmendService, 'editPostTrip').and.stub();
+    spyOn(storeInstanceAmendService, 'editTemporaryPostTrip').and.stub();
     spyOn(storeInstanceAmendService, 'deletePostTrip').and.stub();
+    spyOn(storeInstanceAmendService, 'deleteTemporaryPostTrip').and.stub();
     spyOn(cashBagService, 'getAllManualCashList');
     spyOn(cashBagService, 'getManualCashBagList');
     spyOn(cashBagService, 'getEposSales');
@@ -99,14 +101,39 @@ describe('Factory: storeInstanceAmendFactory', function () {
       storeInstanceAmendFactory.addFlightSector(cashBagId, postTripId);
       expect(storeInstanceAmendService.addPostTrip).toHaveBeenCalledWith(cashBagId, postTripId);
     });
-    it('editFlightSector should call storeInstanceAmendService', function () {
+    it('editFlightSector should call storeInstanceAmendService editPostTrip for real post trips', function () {
       var cashBagId = 1;
       var postTripId = 2;
       var newPostTripId = 3;
+      var isTemporary = false;
 
-
-      storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, newPostTripId);
+      storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, newPostTripId, isTemporary);
       expect(storeInstanceAmendService.editPostTrip).toHaveBeenCalledWith(cashBagId, postTripId, newPostTripId);
+    });
+    it('editFlightSector should call storeInstanceAmendService editTemporaryPostTrip for temporary post trips', function () {
+      var cashBagId = 1;
+      var postTripId = 2;
+      var newPostTripId = 3;
+      var isTemporary = true;
+
+      storeInstanceAmendFactory.editFlightSector(cashBagId, postTripId, newPostTripId, isTemporary);
+      expect(storeInstanceAmendService.editTemporaryPostTrip).toHaveBeenCalledWith(cashBagId, postTripId, newPostTripId);
+    });
+    it('deleteFlightSector should call storeInstanceAmendService deletePostTrip for real post trips', function () {
+      var cashBagId = 1;
+      var postTripId = 2;
+      var isTemporary = false;
+
+      storeInstanceAmendFactory.deleteFlightSector(cashBagId, postTripId, isTemporary);
+      expect(storeInstanceAmendService.deletePostTrip).toHaveBeenCalledWith(cashBagId, postTripId);
+    });
+    it('deleteFlightSector should call storeInstanceAmendService deleteTemporaryPostTrip for real post trips', function () {
+      var cashBagId = 1;
+      var postTripId = 2;
+      var isTemporary = true;
+
+      storeInstanceAmendFactory.deleteFlightSector(cashBagId, postTripId, isTemporary);
+      expect(storeInstanceAmendService.deleteTemporaryPostTrip).toHaveBeenCalledWith(cashBagId, postTripId);
     });
     it('getFlightSector should call storeInstanceAmendService', function () {
       var cashBagId = 1;

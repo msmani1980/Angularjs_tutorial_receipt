@@ -245,12 +245,20 @@ angular.module('ts5App')
       return storeInstanceAmendService.addPostTrip(cashBagId, postTripId);
     };
 
-    var editFlightSector = function (cashBagId, postTripId, newPosttripId) {
-      return storeInstanceAmendService.editPostTrip(cashBagId, postTripId, newPosttripId);
+    var editFlightSector = function (cashBagId, postTripId, newPosttripId, isTemporary) {
+      if (isTemporary) {
+        return storeInstanceAmendService.editTemporaryPostTrip(cashBagId, postTripId, newPosttripId);
+      } else {
+        return storeInstanceAmendService.editPostTrip(cashBagId, postTripId, newPosttripId);
+      }
     };
 
-    var deleteFlightSector = function (cashBagId, postTripId) {
-      return storeInstanceAmendService.deletePostTrip(cashBagId, postTripId);
+    var deleteFlightSector = function (cashBagId, postTripId, isTemporary) {
+      if (isTemporary) {
+        return storeInstanceAmendService.deleteTemporaryPostTrip(cashBagId, postTripId);
+      } else {
+        return storeInstanceAmendService.deletePostTrip(cashBagId, postTripId);
+      }
     };
 
     var getCashBagManualData = function (manualDataType, payload) {
