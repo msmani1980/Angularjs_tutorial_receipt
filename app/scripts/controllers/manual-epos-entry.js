@@ -37,6 +37,10 @@ angular.module('ts5App')
       return angular.isDefined($scope.containsChanges) ? !$scope.isFormVerified(formName) && $scope.containsChanges[formName] : false;
     };
 
+    $scope.getVerifyAll = function () {
+        return $scope.isConfirmed;
+      };
+
     $scope.shouldDisableForm = function (formName) {
       return ($scope.isConfirmed) ? !$scope.isFormVerified(formName) : false;
     };

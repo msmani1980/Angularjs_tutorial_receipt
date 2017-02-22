@@ -17,16 +17,16 @@
 
   <br>
   <error-dialog form-object="manualEntryForm" error-response="errorResponse" display="displayError"></error-dialog>
-  <div class="alert alert-success" ng-show="isConfirmed"><span class="fa fa-check-circle"></span> Verified by {{ confirmedInfo.confirmedBy }} on {{ confirmedInfo.confirmedTimestamp }}</div>
+  <div class="alert alert-success" ng-show="getVerifyAll()"><span class="fa fa-check-circle"></span> Verified by {{ confirmedInfo.confirmedBy }} on {{ confirmedInfo.confirmedTimestamp }}</div>
     <div class="panel panel-default">
       <div class="panel-body">
-        <div class="row" ng-hide="isConfirmed">
+        <div class="row" ng-hide="getVerifyAll()">
           <div class="col-xs-12">
             <p class="small"><span class="fa fa-check-circle"></span> <i>Indicates a verified section</i></p>
             <p class="small"><b>*</b> <i>Indicates a section with unverified changes</i></p>
           </div>
         </div>
-        <div class="panel-divider" ng-hide="isConfirmed"></div>
+        <div class="panel-divider" ng-hide="getVerifyAll()"></div>
         <br>
         <div class="row">
           <div class="col-xs-4">
@@ -66,11 +66,11 @@
         </div>
         <br>
         <br>
-        <div class="panel-divider" ng-hide="isConfirmed"></div>
+        <div class="panel-divider" ng-hide="getVerifyAll()"></div>
         <div class="row">
           <div class="col-xs-12 text-right">
-            <button class="btn btn-success" type="button" ng-disabled="readyToConfirm" ng-click="confirmAll()" ng-hide="isConfirmed"><i class="fa fa-check"></i>Verify All</button>
-            <button class="btn btn-danger" type="button"  ng-disabled="readyToConfirm" ng-click="unconfirmAll()" ng-show="isConfirmed"><i class="fa fa-times"></i>Unverify All</button>
+            <button class="btn btn-success" type="button" ng-disabled="readyToConfirm" ng-click="confirmAll()" ng-hide="getVerifyAll()"><i class="fa fa-check"></i>Verify All</button>
+            <button class="btn btn-danger" type="button"  ng-disabled="readyToConfirm" ng-click="unconfirmAll()" ng-show="getVerifyAll()"><i class="fa fa-times"></i>Unverify All</button>
           </div>
         </div>
       </div>
