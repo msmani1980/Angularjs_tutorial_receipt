@@ -8,6 +8,7 @@ describe('Service: identityAccessFactory', function() {
   beforeEach(module('served/company-formats.json'));
   beforeEach(module('served/company-types.json'));
   beforeEach(module('served/all-user-companies.json'));
+  beforeEach(module('served/company-relationship-list.json'));
 
   var identityAccessFactory;
   var localStorage;
@@ -30,6 +31,9 @@ describe('Service: identityAccessFactory', function() {
   var location;
   var timeout;
   var lodash;
+  var companyRelationshipFactory;
+  var getCompanyRelationshipListByCompanyDeferred;
+  var companyRelationshipListJSON;
 
   beforeEach(inject(function($injector, $rootScope, $location, $timeout, $q) {
     companyResponseJSON = $injector.get('servedCompany');
@@ -37,14 +41,16 @@ describe('Service: identityAccessFactory', function() {
     authorizeUserJSON = $injector.get('servedAuthorizeUser');
     getUserCompaniesJSON = $injector.get('servedAllUserCompanies');
     getCompanyFormatListJSON = $injector.get('servedCompanyFormats');
-
+    companyRelationshipListJSON = $injector.get('servedCompanyRelationshipList');
+    
     localStorage = $injector.get('$localStorage');
     identityAccessService = $injector.get('identityAccessService');
     companiesFactory = $injector.get('companiesFactory');
     companyFactory = $injector.get('companyFactory');
     eulaService = $injector.get('eulaService');
     companyFormatService = $injector.get('companyFormatService');
-
+    companyRelationshipFactory = $injector.get('companyRelationshipFactory');
+    
     lodash = $injector.get('lodash');
     scope = $rootScope;
     location = $location;
@@ -69,6 +75,10 @@ describe('Service: identityAccessFactory', function() {
     getUserCompaniesDeferred = $q.defer();
     getUserCompaniesDeferred.resolve(getUserCompaniesJSON);
     spyOn(identityAccessService, 'getUserCompanies').and.returnValue(getUserCompaniesDeferred.promise);
+    
+    getCompanyRelationshipListByCompanyDeferred = $q.defer();
+    getCompanyRelationshipListByCompanyDeferred.resolve(companyRelationshipListJSON);
+    spyOn(companyRelationshipFactory, 'getCompanyRelationshipListByCompany').and.returnValue(getCompanyRelationshipListByCompanyDeferred.promise);
 
     spyOn(location, 'path');
     spyOn(identityAccessService, 'sendEmail');
@@ -299,5 +309,5 @@ describe('Service: identityAccessFactory', function() {
       expect(eulaService.showEULAConfirmation).toHaveBeenCalled();
     });
   });
-
+  
 });

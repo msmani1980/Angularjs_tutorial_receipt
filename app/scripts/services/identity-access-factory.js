@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .factory('identityAccessFactory',
-    function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService) {
+    function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService, companyRelationshipFactory) {
 
       var tempToken;
 
@@ -163,9 +163,7 @@ angular.module('ts5App')
         }).companyTypeName);
         
         if (sessionObject.companyData.companyTypeName === 'Cash Handler' || sessionObject.companyData.companyTypeId === 5) {
-          var chCompanyList = sessionObject.userCompanies !== undefined ? sessionObject.userCompanies[0] : undefined;
-          chCompanyList.companyId = chCompanyList.id;
-          sessionObject.companyData.chCompany = angular.copy(chCompanyList);
+          sessionObject.companyData.chCompany = angular.copy(dataFromAPI[4].companyRelationships[0]);
         }
         
         setSessionData(sessionObject);
@@ -176,7 +174,8 @@ angular.module('ts5App')
           companyFactory.getCompany(rawSessionData.companyId),
           companyFactory.getCompanyTypes(),
           identityAccessService.getUserCompanies(),
-          companyFormatService.getCompanyFormatList()
+          companyFormatService.getCompanyFormatList(),
+          companyRelationshipFactory.getCompanyRelationshipListByCompany(rawSessionData.companyId)
         ];
 
         $q.all(companyDataPromiseArray).then(function (dataFromApi) {
