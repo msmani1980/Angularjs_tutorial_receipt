@@ -163,9 +163,13 @@ angular.module('ts5App')
         }).companyTypeName);
         
         if (sessionObject.companyData.companyTypeName === 'Cash Handler' || sessionObject.companyData.companyTypeId === 5) {
-          var chCompanyList = sessionObject.userCompanies !== undefined ? sessionObject.userCompanies[0] : undefined;
-          chCompanyList.companyId = chCompanyList.id;
-          sessionObject.companyData.chCompany = angular.copy(chCompanyList);
+          var chCompanyList = angular.copy(lodash.findWhere(sessionObject.userCompanies, { type: { companyTypeName: 'Retail' } }));
+          
+          if (chCompanyList !== undefined) {
+            chCompanyList.companyId = chCompanyList.id;
+            sessionObject.companyData.chCompany = angular.copy(chCompanyList);
+          }
+          
         }
         
         setSessionData(sessionObject);
