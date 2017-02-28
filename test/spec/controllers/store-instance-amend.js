@@ -67,8 +67,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var cashHandlerCashBagJSON;
   var getPaymentReportDeferred;
   var getPaymentReportJSON;
-  var getEmployeesDeferred;
-  var employeesJSON;
   var getCashBagDeferred;
   var cashBagJSON;
   var flightSectorsJSON;
@@ -181,10 +179,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     getPaymentReportDeferred = $q.defer();
     getPaymentReportDeferred.resolve(getPaymentReportJSON);
 
-    employeesJSON = _servedEmployees_;
-    getEmployeesDeferred = $q.defer();
-    getEmployeesDeferred.resolve(employeesJSON);
-
     cashBagJSON = _servedCashBag_;
     getCashBagDeferred = $q.defer();
     getCashBagDeferred.resolve(cashBagJSON);
@@ -275,7 +269,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(reconciliationFactory, 'getPaymentReport').and.returnValue(getPaymentReportDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getMasterItemList').and.returnValue(masterItemListDeferred.promise);
     spyOn(reconciliationFactory, 'getPromotion').and.returnValue(promotionDeferred.promise);
-    spyOn(employeesService, 'getEmployees').and.returnValue(getEmployeesDeferred.promise);
     spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
 
     var verifyDeferred = $q.defer();
@@ -387,7 +380,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(reconciliationFactory.getCompanyPreferences).toHaveBeenCalled();
       expect(reconciliationFactory.getCHRevenue).toHaveBeenCalled();
       expect(reconciliationFactory.getEPOSRevenue).toHaveBeenCalled();
-      expect(employeesService.getEmployees).toHaveBeenCalled();
 
       scope.$digest();
       expect(scope.normalizedCashBags).toBeDefined();
@@ -646,7 +638,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
 
     it('canExecuteUnferify should decide if actions can be executed for given store instance', function () {
-        
+
         scope.storeInstance = { statusId: 5 };
         scope.$digest();
         expect(scope.canExecuteUnferify()).toBeTruthy();

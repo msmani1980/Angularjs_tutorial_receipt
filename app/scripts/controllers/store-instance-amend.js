@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
-      reconciliationFactory, $location, postTripFactory, employeesService, cashBagFactory, transactionFactory, storeInstanceFactory, recordsService,
+      reconciliationFactory, $location, postTripFactory, cashBagFactory, transactionFactory, storeInstanceFactory, recordsService,
       stationsService, dailyExchangeRatesService, $window) {
     var $this = this;
 
@@ -351,7 +351,7 @@ angular.module('ts5App')
       if (!$scope.storeInstance) {
         return false;
       }
-      
+
       var statusId = $scope.storeInstance.statusId;
 
       return statusId === commitionPaidStatus.id ? false : true;
@@ -1013,15 +1013,6 @@ angular.module('ts5App')
       return reconciliationFactory.getPaymentReport($routeParams.storeInstanceId, cashBagNumber).then(setPaymentReport);
     }
 
-    function setEmployees (employeesFromAPI) {
-      $scope.employees = angular.copy(employeesFromAPI.companyEmployees);
-    }
-
-    function getEmployees () {
-      var companyId = globalMenuService.company.get();
-      return employeesService.getEmployees(companyId).then(setEmployees);
-    }
-
     function setCashBags (cashBagsFromAPI) {
       $scope.cashBags = angular.copy(cashBagsFromAPI.response);
       setupCashBags();
@@ -1248,7 +1239,7 @@ angular.module('ts5App')
 
       return submittedList;
     }
-    
+
     function handleResponseError(responseFromAPI) {
       resetAllModals();
       hideLoadingModal();
@@ -1279,7 +1270,6 @@ angular.module('ts5App')
         getCompanyPreferences(),
         getCashRevenue(),
         getEPOSRevenue(),
-        getEmployees(),
         getCashBags(),
         getStations()
       ];
