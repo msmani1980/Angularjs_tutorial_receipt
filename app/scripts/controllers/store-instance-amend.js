@@ -604,7 +604,7 @@ angular.module('ts5App')
       $scope.cashBagToDelete = cashBag;
     };
 
-    $scope.canAddPosttripToCashBag = function (cashBag) {
+    $scope.canAddPosttripToCashBAg = function (cashBag) {
       var isSchedule = false;
 
       cashBag.flightSectors.forEach(function (sector) {
