@@ -859,7 +859,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.generateCurrency = function(currency) {
       return {
-        price: '1.00',
+        price: '',
         companyCurrencyId: currency.id,
         code: currency.code
       };
@@ -1005,9 +1005,24 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       ];
     };
 
+    this.removeEmptyPrices = function(itemData) {
+      for (var priceIndex in itemData.prices) {
+        var priceCurrencies = itemData.prices[priceIndex].priceCurrencies;
+        var priceCurrencyIndex = priceCurrencies.length;
+        while (priceCurrencyIndex--) {
+          if (priceCurrencies[priceCurrencyIndex].price === '') {
+            priceCurrencies.splice(priceCurrencyIndex, 1);
+          }
+        }
+      }
+    };
+
     this.updateItem = function(itemData) {
       var $this = this;
       angular.element('#loading').modal('show').find('p').text('We are updating your item');
+
+      $this.removeEmptyPrices(itemData);
+
       var payload = {
         retailItem: itemData
       };
@@ -1094,6 +1109,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     $scope.isDisabled = function() {
       return ($scope.viewOnly || $scope.itemIsActive);
+    };
+
+    $scope.shouldValidatePrice = function() {
+      return !$scope.viewOnly && !$scope.itemIsActive;
     };
 
     $scope.GTINClass = function(form, key) {
