@@ -19,13 +19,13 @@ angular.module('ts5App')
         discountId:null,
         discount:null,
         id:null,
-        currencyId:$scope.selectedCurrency.currency.currencyId,
-        currency:$scope.selectedCurrency.currency,
+        currencyId:$scope.baseCurrency.currency.currencyId,
+        currency:$scope.baseCurrency.currency,
         amount:0.00,
         quantity:0,
         currentCurrencyAmount:0.00,
         baseCurrencyAmount:0.00,
-        exchangeRate:$scope.selectedCurrency.currency.exchangeRate,
+        exchangeRate:$scope.baseCurrency.currency.exchangeRate,
         discountTypeName: dscntTypeName
       };
       return newDiscount;
@@ -152,13 +152,7 @@ angular.module('ts5App')
         return baseCurrencyAmount.toFixed(2);
       }
 
-      if ($scope.baseCurrency.currencyId && discountObject.currencyId && $scope.baseCurrency.currencyId === discountObject.currencyId) {
-        return discountObject.currentCurrencyAmount;
-      } else {
-        baseCurrencyAmount = calculateBaseCurrencyAmount(discountObject);
-      }
-
-      return baseCurrencyAmount.toFixed(2);
+      return discountObject.currentCurrencyAmount;
     }
 
     function setVerifiedInfo (verifiedDataFromAPI) {
@@ -274,9 +268,10 @@ angular.module('ts5App')
     }
 
     function setInitialCurreny (discount) {
-      if (!$scope.selectedCurrency.currency) {
-        $scope.selectedCurrency.currency = lodash.findWhere($scope.currencyList, { currencyId: discount.currencyId }) || {};
+      if (!$scope.baseCurrency || !$scope.baseCurrency.currency) {
+    	setBaseCurrency();
       }
+      $scope.selectedCurrency= angular.copy($scope.baseCurrency); 
     }
 
     function setDiscountsList(allDiscountsTypeList) {
