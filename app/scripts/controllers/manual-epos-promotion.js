@@ -244,14 +244,7 @@ angular.module('ts5App')
       if (!promotionObject.currentCurrencyAmount) {
         return baseCurrencyAmount.toFixed(2);
       }
-
-      if ($scope.baseCurrency.currencyId && promotionObject.currencyId && $scope.baseCurrency.currencyId === promotionObject.currencyId) {
-        return promotionObject.currentCurrencyAmount;
-      } else {
-        baseCurrencyAmount = calculateBaseCurrencyAmount(promotionObject);
-      }
-
-      return baseCurrencyAmount.toFixed(2);
+      return promotionObject.currentCurrencyAmount;
     }
 
     function getCurrentCurrencyAmount(promotion) {
