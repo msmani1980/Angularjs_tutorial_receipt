@@ -101,7 +101,6 @@ angular.module('ts5App')
     }
 
     function mapItems(itemList, bindWholeObjectForView) {
-      var i = 0;
       return itemList.map(function (retailItemData) {
         var retailItem = {};
         if (angular.isDefined(retailItemData.id)) {
@@ -117,9 +116,6 @@ angular.module('ts5App')
         } else if (angular.isDefined(retailItem.retailItem)) {
           delete retailItem.retailItem;
         }
-
-        $scope.itemCategorySelects[i] = getSalesCategoryByCategoryId(retailItem.companyPromotionId);
-        i++;
 
         return retailItem;
       });
@@ -557,12 +553,6 @@ angular.module('ts5App')
       return apiArray.map(function (item) {
         item.code = getCurrencyCodeFromCurrencyId(item.companyCurrencyId);
         return item;
-      });
-    }
-
-    function getSalesCategoryByCategoryId(categoryId) {
-      return lodash.find($scope.selectOptions.salesCategories, {
-        id: categoryId
       });
     }
 
