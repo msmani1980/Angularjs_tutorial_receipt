@@ -60,7 +60,7 @@ angular.module('ts5App')
     };
 
     function areAllChangesVerified() {
-      var formList = ['cash', 'credit', 'virtual', 'voucher', 'discount', 'promotion'];
+      var formList = ['cash', 'discount', 'promotion'];
       var unverifiedChangesExist = false;
       angular.forEach(formList, function (formName) {
         var isFormInvalid = ($scope.doesFormHaveChanges(formName)) ? !$scope.isFormVerified(formName) : false;

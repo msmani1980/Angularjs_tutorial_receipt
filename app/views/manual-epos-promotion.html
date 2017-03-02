@@ -54,7 +54,7 @@
                 <th>Promotion</th>
                 <th>Price</th>
                 <th>Qty</th>
-                <th>Total Promotion Value {{selectedCurrency.currency.code}}</th>
+                <!-- th>Total Promotion Value {{selectedCurrency.currency.code}}</th-->
                 <th>Total Promotion Value {{baseCurrency.currency.code}}</th>
             </tr>
             <tr ng-repeat="manualPromotionObj in promotionList | filter:{promotionName: filter.promotions} track by $index">
@@ -92,10 +92,10 @@
 									custom-pattern="number"
                 	ng-disabled="isVerified || disableAll"/>
               </td>
-              <td>
+              <!-- td>
                 <input class="form-control" ng-model="manualPromotionObj.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
-              </td>
-              <td>
+              </td-->
+              <td colspan="2">
                 <input class="form-control" ng-model="manualPromotionObj.baseCurrencyAmount"  placeholder="0.00" disabled="true"/>
               </td>
             </tr>
@@ -125,7 +125,7 @@
             <div class="row">
                 <div class="col-xs-12 text-right">
                     <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerify()"><span class="fa fa-check-square-o"></span> Save</button>
-                    <button class="btn btn-default" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll" ng-disabled="isSaveVerify()"><span class="fa fa-times-circle"></span> Unverify</button>
+                    <button class="btn btn-default" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
                     <button class="btn btn-success" type="button" ng-click="verify()" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerify()"><span class="fa fa-check-circle"></span> Verify</button>
                 </div>
             </div>
