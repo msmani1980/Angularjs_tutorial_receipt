@@ -95,7 +95,7 @@ angular.module('ts5App')
 
     $scope.printTransactionAmount = function (transaction) {
       if ((transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') || transaction.transactionTypeName === 'REFUND') {
-        return transaction.totalAmount + ' ' + transaction.transactionCurrencyCode;
+        return transaction.totalAmount + ' ' + transaction.currencyCode;
       }
           
       if (isPaymentMethodVoucherOrDiscount(transaction)) {
