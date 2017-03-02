@@ -29,7 +29,7 @@ describe('Controller: PromotionsCtrl', function () {
   var getSalesCategoriesDeferred;
   var getDiscountApplyTypesDeferred;
   var getPromotionCategoriesDeferred;
-  var getActivePromotionCategoriesDeferred;  
+  var getActivePromotionCategoriesDeferred;
   var getStationGlobalsDeferred;
   var getCurrencyGlobalsDeferred;
   var getMasterItemsDeferred;
@@ -159,16 +159,6 @@ describe('Controller: PromotionsCtrl', function () {
 
         expect(promotionsFactory.getCurrencyGlobals).toHaveBeenCalledWith(payload);
       });
-
-      it('should call promotionsFactory.getMasterItems', function () {
-        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-        var expectedPayload = {
-          startDate: today,
-          endDate: today,
-          companyId: companyId
-        };
-        expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith(expectedPayload);
-      });
     });
 
     describe('scope selection options and data arrays', function () {
@@ -212,12 +202,6 @@ describe('Controller: PromotionsCtrl', function () {
         it('should have a property salesCategories', function () {
           expect(scope.selectOptions.salesCategories).toBeDefined();
           expect(Object.prototype.toString.call(scope.selectOptions.salesCategories)).toBe(
-            '[object Array]');
-        });
-
-        it('should have a property masterItems', function () {
-          expect(scope.selectOptions.masterItems).toBeDefined();
-          expect(Object.prototype.toString.call(scope.selectOptions.masterItems)).toBe(
             '[object Array]');
         });
 
@@ -700,7 +684,9 @@ describe('Controller: PromotionsCtrl', function () {
       beforeEach(function () {
         scope.itemCategorySelects = [];
         scope.itemCategorySelects[5] = {
-          id: mockId
+          id: mockId,
+          startDate: '2015-12-08',
+          endDate: '2015-12-08'
         };
         scope.itemCategoryChanged(5);
         scope.$digest();
