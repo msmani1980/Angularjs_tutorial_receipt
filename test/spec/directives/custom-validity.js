@@ -75,6 +75,9 @@ describe('Directive: customValidity', function () {
 	    scope.form.testSpecialCharElement.$setViewValue('Test%.Allow@Spe^cial-Ch/ar_Te\st&*\'');
 	    expect(scope.form.$valid).toBeTruthy();
 	    
+	    scope.form.testSpecialCharElement.$setViewValue('Test%.Al,low@Spe:cial-Ch/ar_Test&*\'');
+	    expect(scope.form.$valid).toBeTruthy();
+	    
 	}));
   
    it('should check the pattern on the element if model is defined and its starts with alphanumeric or not', inject(function ($compile) {

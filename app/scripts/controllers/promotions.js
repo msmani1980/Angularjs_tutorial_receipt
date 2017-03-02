@@ -607,6 +607,7 @@ angular.module('ts5App')
 
         getCompanyDiscountsCoupon(payload);
         getCompanyDiscountsVoucher(payload);
+        getActivePromotionCategoriesByDates($scope.promotion);
         refreshRetailItemsByDates();
       }
     });
