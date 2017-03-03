@@ -268,10 +268,9 @@ angular.module('ts5App')
     };
 
     this.validateEmployees = function() {
-      var shouldValidateEmployeeIds = ($scope.employees.length > 0);
-      var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees
-        .employeeIds.length <= 0);
-      if (shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
+      var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
+
+      if (isSelectedEmployeesInvalid) {
         $scope.postTripDataForm.employeeIds.$setValidity('required', false);
         return;
       }
