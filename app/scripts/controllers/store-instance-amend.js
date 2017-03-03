@@ -356,6 +356,10 @@ angular.module('ts5App')
     };
 
     $scope.canExecuteEditActionsPsttrip = function (cashBag, flightSector) {
+      if (cashBag && cashBag.isVerified) {
+        return false;
+      }
+
       if (!flightSector.isPosttrip) {
         return true;
       } else {
@@ -375,6 +379,10 @@ angular.module('ts5App')
     };
 
     $scope.canExecuteDeleteActionsPsttrip = function (cashBag, flightSector) {
+      if (cashBag && cashBag.isVerified) {
+        return false;
+      }
+
       if (!flightSector.isPosttrip) {
         return false;
       } else {
@@ -605,6 +613,10 @@ angular.module('ts5App')
     };
 
     $scope.canAddPosttripToCashBag = function (cashBag) {
+      if (cashBag && cashBag.isVerified) {
+        return false;
+      }
+
       var isSchedule = false;
 
       cashBag.flightSectors.forEach(function (sector) {
@@ -617,6 +629,10 @@ angular.module('ts5App')
     };
 
     $scope.canCashBagBeDeleted = function (cashBag) {
+      if (cashBag && cashBag.isVerified) {
+        return false;
+      }
+
       var isTransaction = false;
 
       cashBag.flightSectors.forEach(function (sector) {
