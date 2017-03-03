@@ -354,9 +354,9 @@
         <div class="panel-footer" ng-hide="isCashBagConfirmed">
             <div class="row">
                 <div class="col-xs-12 text-right">
-                    <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll"><span class="fa fa-check-square-o"></span> Save</button>
+                    <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerify()><span class="fa fa-check-square-o"></span> Save</button>
                     <button class="btn btn-default" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
-                    <button class="btn btn-success" type="button" ng-click="verify()" ng-hide="isVerified || disableAll"><span class="fa fa-check-circle"></span> Verify</button>
+                    <button class="btn btn-success" type="button" ng-click="verify()" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerify()><span class="fa fa-check-circle"></span> Verify</button>
                 </div>
             </div>
         </div>

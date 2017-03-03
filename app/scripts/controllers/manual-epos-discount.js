@@ -78,9 +78,28 @@ angular.module('ts5App')
     };
 
     $scope.onChangeDiscount  = function(manualDiscountObj) {
+    	console.log ('onChangeDiscount', manualDiscountObj);
       manualDiscountObj.discountId = manualDiscountObj.discount.id;
       return manualDiscountObj;
     };
+
+    function updateVoucherList () {
+    	/*
+      $scope.allVoucherList = angular.copy(voucherList);
+      $scope.allCouponList = angular.copy(couponList);
+      $scope.allCompList = angular.copy(compList);
+      $scope.allFlyerList = angular.copy(flyerList);
+
+    	 * */
+      $scope.companyPromotionList = angular.copy($scope.allPromotionList);
+      for (var i = $scope.promotionList.length - 1; i >= 0; i--) {
+        for (var j = $scope.companyPromotionList.promotions.length - 1; j >= 0; j--) {
+          if ($scope.promotionList[i].promotionId === $scope.companyPromotionList.promotions[j].id) {
+            $scope.companyPromotionList.promotions.splice(j, 1);
+          }
+        }
+      }
+    }
 
     $scope.onChangePriceOrQty = function (manualDiscountObj) {
       manualDiscountObj.currentCurrencyAmount = getCurrentCurrencyAmount(manualDiscountObj);
@@ -187,6 +206,21 @@ angular.module('ts5App')
     $scope.unverify = function () {
       showLoadingModal('Unverifying');
       manualEposFactory.unverifyCashBag($routeParams.cashBagId, 'DISCOUNT').then(verifyToggleSuccess, showErrors);
+    };
+
+    $scope.isSaveVerify = function () {
+      var isDisable = true;
+      if (angular.isDefined($scope.promotionList) && $scope.promotionList.length > 0) {
+        for (var i = $scope.promotionList.length - 1; i >= 0; i--) {
+          isDisable = false;
+          if ($scope.promotionList[i].promotionId === null) {
+            isDisable = true;
+            break;
+          }
+        }
+      } 
+
+      return isDisable;
     };
 
     function updateCashBagDiscount(discount) {
@@ -327,6 +361,11 @@ angular.module('ts5App')
         comp: compList,
         flyer: flyerList
       };
+
+      $scope.allVoucherList = angular.copy(voucherList);
+      $scope.allCouponList = angular.copy(couponList);
+      $scope.allCompList = angular.copy(compList);
+      $scope.allFlyerList = angular.copy(flyerList);
 
       setCashBagCurrencyList(currencyList);
       setBaseCurrency();
