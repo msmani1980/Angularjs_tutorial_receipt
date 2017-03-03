@@ -296,6 +296,14 @@ describe('Controller: PostTripDataCtrl', function() {
       expect(scope.viewName).toEqual('Create Post Trip Data');
     });
 
+    it('should make form invalid on empty employee list', function() {
+      scope.selectedEmployees.employeeIds = [];
+
+      PostTripDataCtrl.validateEmployees();
+
+      expect(scope.postTripDataForm.$valid).toEqual(false);
+    });
+
     describe('save form', function() {
       it('should call getPostTripDataList to search for duplicates', function() {
         scope.postTripDataForm.$valid = true;
