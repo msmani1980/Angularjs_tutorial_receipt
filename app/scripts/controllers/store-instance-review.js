@@ -72,15 +72,27 @@ angular.module('ts5App')
 
       return totalMenuQuantity;
     }
+    
+    this.getSalesCategoryName = function(itemMasterId) {
+      var menuMatches = lodash.findWhere(_menuItems, { itemMasterId: itemMasterId });
+      
+      if (menuMatches) {
+        return menuMatches.salesCategoryName;
+      } else {
+        return '';  
+      }
+    };
 
     function getItemsSuccessHandler(dataFromAPI) {
       _menuItems = angular.copy(dataFromAPI.response);
       angular.forEach($scope.items, function(item) {
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
+        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
       });
 
       angular.forEach($scope.storeTwoItemList, function(item) {
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
+        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
       });
 
     }
@@ -239,6 +251,7 @@ angular.module('ts5App')
       if (angular.isArray($scope.storeTwoItemList)) {
         angular.forEach($scope.storeTwoItemList, function(item) {
           item.quantity = 0;
+          item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
         });
 
         $scope.pickListItems = $scope.pickListItems.concat($scope.storeTwoItemList);
@@ -339,7 +352,7 @@ angular.module('ts5App')
       showUserCurrentStatus();
       var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
       if ($routeParams.action !== 'end-instance') {
-        $window.open(ENV.apiUrl + '/rsvr/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
+        $window.open(ENV.apiUrl + '/rsvr-pdf/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
           '.pdf?sessionToken=' + sessionToken, '_blank');
       }
 
@@ -452,6 +465,7 @@ angular.module('ts5App')
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
         item.disabled = true;
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
+        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
       });
 
       return itemArray;
@@ -478,6 +492,7 @@ angular.module('ts5App')
           itemName: item.itemName,
           itemDescription: item.itemCode + ' -  ' + item.itemName,
           disabled: true,
+          salesCategoryName: $this.getSalesCategoryName(item.itemMasterId),
           menuQuantity: getMenuQuantity(item.itemMasterId)
         };
 
@@ -530,6 +545,7 @@ angular.module('ts5App')
           itemMasterId: item.itemMasterId,
           itemName: item.itemName,
           itemDescription: item.itemCode + ' -  ' + item.itemName,
+          salesCategoryName: $this.getSalesCategoryName(item.itemMasterId),
           disabled: true
         };
 
@@ -633,13 +649,13 @@ angular.module('ts5App')
         saveStoreStatusIfRedispatch(status);
         return;
       }
-      
+
       var statusNameInt = getStatusNameIntByName(status);
       if (!status) {
         throwError('statusId', 'Unable to find statusId by name: ' + name);
         return false;
       }
-      
+
       var endInstanceFlag = $routeParams.action === 'end-instance' ? true : false;
       storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt, false, endInstanceFlag).then(
         storeInstanceStatusDispatched, showResponseErrors);

@@ -86,7 +86,7 @@ describe('The Error Dialog directive', function() {
     });
 
     it('should contain 1 item in errorRequired', function() {
-      expect(isolatedScope.errorRequired).toEqual(['delivery Note']);
+      expect(isolatedScope.errorRequired).toEqual([' delivery  Note ']);
     });
 
   });
@@ -109,7 +109,7 @@ describe('The Error Dialog directive', function() {
     });
 
     it('should contain 1 item in errorPattern', function() {
-      expect(isolatedScope.errorPattern).toEqual(['delivery Note']);
+      expect(isolatedScope.errorPattern).toEqual([' delivery  Note ']);
     });
 
   });

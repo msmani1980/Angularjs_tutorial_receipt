@@ -13,7 +13,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   beforeEach(module('served/company-preferences.json'));
   beforeEach(module('served/ch-cash-bag.json'));
   beforeEach(module('served/payment-report.json'));
-  beforeEach(module('served/employees.json'));
   beforeEach(module('served/cash-bag.json'));
   beforeEach(module('served/cash-bag-carrier-instances.json'));
   beforeEach(module('served/post-trip-data.json'));
@@ -36,7 +35,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var dailyExchangeRatesService;
   var reconciliationFactory;
   var storeInstanceFactory;
-  var employeesService;
   var cashBagFactory;
   var postTripFactory;
   var transactionFactory;
@@ -67,8 +65,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
   var cashHandlerCashBagJSON;
   var getPaymentReportDeferred;
   var getPaymentReportJSON;
-  var getEmployeesDeferred;
-  var employeesJSON;
   var getCashBagDeferred;
   var cashBagJSON;
   var flightSectorsJSON;
@@ -111,7 +107,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector, _servedCashBagVerifications_, _servedStoreInstance_, _servedCompany_,
                               _servedCurrencies_, _servedItemTypes_, _servedStockTotals_, _servedPromotionTotals_, _servedCompanyPreferences_,
-                              _servedChCashBag_, _servedPaymentReport_, _servedEmployees_, _servedCashBag_, _servedCashBagCarrierInstances_,
+                              _servedChCashBag_, _servedPaymentReport_, _servedCashBag_, _servedCashBagCarrierInstances_,
                               _servedPostTripData_, _servedTransactions_, _servedStoreInstanceList_, _servedStoreStatus_, _servedPostTripDataList_,
                               _servedPostTripSingleDataList_, _servedStations_, _servedMasterItemList_, _servedPromotion_, _servedDailyExchangeRate_, _servedCashBagEposSales_) {
     location = $location;
@@ -119,7 +115,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     lodash = $injector.get('lodash');
     storeInstanceAmendFactory = $injector.get('storeInstanceAmendFactory');
     reconciliationFactory = $injector.get('reconciliationFactory');
-    employeesService = $injector.get('employeesService');
     cashBagFactory = $injector.get('cashBagFactory');
     postTripFactory = $injector.get('postTripFactory');
     transactionFactory = $injector.get('transactionFactory');
@@ -180,10 +175,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     getPaymentReportJSON = _servedPaymentReport_;
     getPaymentReportDeferred = $q.defer();
     getPaymentReportDeferred.resolve(getPaymentReportJSON);
-
-    employeesJSON = _servedEmployees_;
-    getEmployeesDeferred = $q.defer();
-    getEmployeesDeferred.resolve(employeesJSON);
 
     cashBagJSON = _servedCashBag_;
     getCashBagDeferred = $q.defer();
@@ -275,7 +266,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     spyOn(reconciliationFactory, 'getPaymentReport').and.returnValue(getPaymentReportDeferred.promise);
     spyOn(storeInstanceAmendFactory, 'getMasterItemList').and.returnValue(masterItemListDeferred.promise);
     spyOn(reconciliationFactory, 'getPromotion').and.returnValue(promotionDeferred.promise);
-    spyOn(employeesService, 'getEmployees').and.returnValue(getEmployeesDeferred.promise);
     spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
 
     var verifyDeferred = $q.defer();
@@ -388,7 +378,6 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(reconciliationFactory.getCompanyPreferences).toHaveBeenCalled();
       expect(reconciliationFactory.getCHRevenue).toHaveBeenCalled();
       expect(reconciliationFactory.getEPOSRevenue).toHaveBeenCalled();
-      expect(employeesService.getEmployees).toHaveBeenCalled();
 
       scope.$digest();
       expect(scope.normalizedCashBags).toBeDefined();
@@ -658,7 +647,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         scope.$digest();
         expect(scope.canExecuteDeleteActionsPsttrip(casbBg, flightSector)).toBeFalsy();
       });
-     
+
     it('canExecuteUnferify should decide if actions can be executed for given store instance', function () {
 
         scope.storeInstance = { statusId: 5 };
@@ -1073,7 +1062,7 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       expect(scope.cashBagToDelete).toBe(cashBag);
     });
 
-    
+
     it('canCashBagBeDeleted returns true if cash bag can be deleted', function () {
       expect(scope.canCashBagBeDeleted({ id: 1, flightSectors : [{transactionCount:0 }, {transactionCount:1 }]})).toBeFalsy();
       expect(scope.canCashBagBeDeleted({ id: 1, flightSectors : [{transactionCount:0 }, {transactionCount:0 }]})).toBeTruthy();

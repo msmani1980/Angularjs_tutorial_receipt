@@ -58,8 +58,31 @@ angular.module('ts5App')
       }
     };
 
-    this.getEmployeesSuccess = function(response) {
-      $scope.employees = response.companyEmployees;
+    this.searchEmployeesSuccess = function(response) {
+      if ($scope.selectedEmployees.employeeIds) {
+        $scope.employees = lodash.filter(response.companyEmployees, function (employee) {
+          return !lodash.find($scope.selectedEmployees.employeeIds, { id: employee.id });
+        });
+      } else {
+        $scope.employees = response.companyEmployees;
+      }
+    };
+
+    $scope.searchEmployees = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+
+      if ($select.search && $select.search.length !== 0) {
+        var payload = {
+          search: $select.search
+        };
+
+        postTripFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
+      } else {
+        $scope.employees = [];
+      }
     };
 
     this.getSchedulesSuccess = function(response) {
@@ -90,13 +113,8 @@ angular.module('ts5App')
     this.populateSelectedEmployeesFromPostTrip = function() {
       $scope.selectedEmployees.employeeIds = [];
       angular.forEach($scope.postTrip.postTripEmployeeIdentifiers, function(value) {
-        var employeeMatch = $scope.employees.filter(function(employee) {
-          return employee.id === value.employeeId;
-        })[0];
-
-        if (employeeMatch) {
-          $scope.selectedEmployees.employeeIds.push(employeeMatch);
-        }
+        $scope.selectedEmployees.employeeIds.push(value.companyEmployee);
+        $scope.employees.push(value.companyEmployee);
       });
     };
 
@@ -119,7 +137,7 @@ angular.module('ts5App')
         })
         .then($this.callCreateOrEditIfPostTripExists);
     };
-    
+
     this.getStationById = function(stationId) {
       var stationCode = '';
       if (!stationId || $scope.stationList.length <= 0) {
@@ -134,7 +152,7 @@ angular.module('ts5App')
 
       return stationCode;
     };
-      
+
     this.callCreateOrEditIfPostTripExists = function(response) {
       if (response.postTrips.length > 0) {
         $scope.depStationCode = $this.getStationById(response.postTrips[0].depStationId);
@@ -171,8 +189,7 @@ angular.module('ts5App')
     this.initDependenciesSuccess = function(responseArray) {
       $this.getStationsSuccess(responseArray[0]);
       $this.getCarrierSuccess(responseArray[1]);
-      $this.getEmployeesSuccess(responseArray[2]);
-      $this.getSchedulesSuccess(responseArray[3]);
+      $this.getSchedulesSuccess(responseArray[2]);
 
       if ($routeParams.id) {
         postTripFactory.getPostTrip(companyId, $routeParams.id).then($this.getPostTripSuccess);
@@ -191,7 +208,6 @@ angular.module('ts5App')
       var promises = [
         postTripFactory.getStationList(companyId),
         postTripFactory.getCarrierNumbers(companyId),
-        postTripFactory.getEmployees(companyId),
         postTripFactory.getSchedules(companyId)
       ];
       return promises;
@@ -252,10 +268,9 @@ angular.module('ts5App')
     };
 
     this.validateEmployees = function() {
-      var shouldValidateEmployeeIds = ($scope.employees.length > 0);
-      var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees
-        .employeeIds.length <= 0);
-      if (shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
+      var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
+
+      if (isSelectedEmployeesInvalid) {
         $scope.postTripDataForm.employeeIds.$setValidity('required', false);
         return;
       }

@@ -376,9 +376,9 @@ describe('Controller: TransactionListCtrl', function () {
       transactionMock.totalAmount = 0;
       transactionMock.paymentMethod = 'SALE';
       transactionMock.discountTypeName = 'Comp';
-      transactionMock.transactionTypeName = 'Discount'
-      ;
-      expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.transactionCurrencyCode);
+      transactionMock.transactionTypeName = 'Discount';
+      transactionMock.currencyCode = 'GBP';
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(0 + ' ' + transactionMock.currencyCode);
     });
 
     it('print as negative totalAmount if transactionTypeName is "REFUND" and totalAmount is negative value', function () {
@@ -387,7 +387,8 @@ describe('Controller: TransactionListCtrl', function () {
       transactionMock.totalAmount = -10;
       transactionMock.paymentMethod = 'Cash';
       transactionMock.transactionTypeName = 'REFUND';
-      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.totalAmount + ' ' + transactionMock.transactionCurrencyCode);
+      transactionMock.currencyCode =  'CHF';
+      expect(scope.printTransactionAmount(transactionMock)).toEqual(transactionMock.totalAmount + ' ' + transactionMock.currencyCode);
     });
   });
 

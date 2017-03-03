@@ -156,7 +156,7 @@
 
             <select ng-model="formData.companyTypeId" class="form-control">
               <option ng-selected="formData.companyTypeId === companyType.id" ng-repeat="companyType in companyTypes"
-                      value="{{ companyType.id }}">{{ companyType.name }}
+                      value="{{ companyType.id }}">{{ companyType.companyTypeName }}
               </option>
             </select>
 

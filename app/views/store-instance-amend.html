@@ -750,7 +750,7 @@
                   <h4>Post Trip Sectors</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-primary btn-sm" ng-show="canAddPosttripToCashBag(cashBag) && !cashBag.isDeleted && canExecuteActions(cashBag)" ng-click="showAddOrEditScheduleModal(cashBag)" >
+                  <button class="btn btn-primary btn-sm" ng-show="canAddPosttripToCashBAg(cashBag)" ng-click="showAddOrEditScheduleModal(cashBag)" ng-show="!cashBag.isDeleted && canExecuteActions(cashBag)">
                     <i class="fa fa-plus active"></i> Add Schedule
                   </button>
                   <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-show="!isCrewDataOpen(cashBag) && canExecuteActions(cashBag)">
