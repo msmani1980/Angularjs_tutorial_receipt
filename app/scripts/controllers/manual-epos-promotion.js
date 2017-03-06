@@ -28,8 +28,25 @@ angular.module('ts5App')
         companyId: $scope.companyId
       };
 
-      $scope.promotionList.push(newPromotion);
+      if (canAddPromotion()) {
+        $scope.promotionList.push(newPromotion);
+      }
     };
+
+    function canAddPromotion () {
+      var canAddPromo = false;
+      if ($scope.companyPromotionList.promotions.length > 0) {
+        canAddPromo = true;
+        for (var i = $scope.promotionList.length - 1; i >= 0; i--) {
+          if ($scope.promotionList[i].promotionId === null) {
+            canAddPromo = false;
+            break;
+          }
+        }
+      }
+
+      return canAddPromo;
+    }
 
     function saveSuccess() {
       hideLoadingModal();
@@ -184,27 +201,6 @@ angular.module('ts5App')
       $scope.selectedCurrency.currency = $scope.baseCurrency.currency;
     }
 
-    function calculateBaseCurrencyAmount(promotionObject) {
-      var baseCurrencyAmount = 0.00;
-      if (promotionObject.exchangeRate.bankExchangeRate === null) {
-        var paperExchangeRate = promotionObject.exchangeRate.paperExchangeRate;
-        var coinExchangeRate = promotionObject.exchangeRate.coinExchangeRate;
-        if (!paperExchangeRate && !coinExchangeRate) {
-          return baseCurrencyAmount.toFixed(2);
-        }
-
-        var splitAmounts = (promotionObject.currentCurrencyAmount).split('.');
-        var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
-        var convertedCoinAmount = parseFloat(splitAmounts[1]) / coinExchangeRate;
-        baseCurrencyAmount = convertedPaperAmount + (convertedCoinAmount / 100);
-      } else {
-        var exchangeRate = promotionObject.exchangeRate.bankExchangeRate;
-        baseCurrencyAmount = (!exchangeRate ? 0.00 : parseFloat(promotionObject.currentCurrencyAmount) / exchangeRate);
-      }
-
-      return baseCurrencyAmount;
-    }
-
     $scope.isSaveVerify = function () {
       var isDisable = true;
       if (angular.isDefined($scope.promotionList) && $scope.promotionList.length > 0) {
@@ -244,6 +240,7 @@ angular.module('ts5App')
       if (!promotionObject.currentCurrencyAmount) {
         return baseCurrencyAmount.toFixed(2);
       }
+
       return promotionObject.currentCurrencyAmount;
     }
 
@@ -293,6 +290,7 @@ angular.module('ts5App')
       
       setVerifiedData(verifiedData);
       setPromotionsList(promoList, cmpPromotionsList);
+      updateCompanyPromotionList();
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {
