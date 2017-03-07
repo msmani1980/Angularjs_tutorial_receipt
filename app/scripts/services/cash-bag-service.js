@@ -49,6 +49,9 @@ angular.module('ts5App')
     };
 
     var actions = {
+      getCashBagList: {
+        method: 'GET'
+      },
       getCashBag: {
         method: 'GET'
       },
@@ -126,7 +129,7 @@ angular.module('ts5App')
         payload.limit = 50;
       }
 
-      return requestResource.getCashBag(payload).$promise;
+      return requestResource.getCashBagList(payload).$promise;
     }
 
     function getCashBagVerifications(payload) {
