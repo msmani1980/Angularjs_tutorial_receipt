@@ -838,7 +838,7 @@
                   <button class="btn btn-warning" title="Merge or Reallocate Cash Bag" ng-click="showMoveCashBagModal(cashBag)" ng-show="false" > <!--ng-show="canExecuteActions(cashBag)"> hide per Roshen's request -->
                     <i class="fa fa-share active"></i>
                   </button>
-                  <button class="btn btn-success" ng-show="!cashBag.isVerified && canExecuteActions(cashBag) && hasFlightSectors(cashBag)" title="Verify Cash Bag" ng-click="toggleVerifiedCashBag(cashBag)">
+                  <button class="btn btn-success" ng-show="canExecuteVerify(cashBag) && canExecuteActions(cashBag) && hasFlightSectors(cashBag)" title="Verify Cash Bag" ng-click="toggleVerifiedCashBag(cashBag)">
                     <i class="fa fa-check-circle-o active"></i>
                   </button>
                 </div>
