@@ -51,7 +51,7 @@ describe('Service: cashBagService', function () {
 
       var cashBagListData;
       beforeEach(function () {
-        $httpBackend.whenGET(/cash-bags/).respond(cashBagListResponseJSON);
+        $httpBackend.whenGET(/company-cash-bags/).respond(cashBagListResponseJSON);
 
         cashBagService.getCashBagList().then(function (dataFromAPI) {
           cashBagListData = dataFromAPI;
@@ -158,12 +158,12 @@ describe('Service: cashBagService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenPUT(/cash-bags/).respond({ done: true });
+        $httpBackend.whenPUT(/company-cash-bags/).respond({ done: true });
       });
 
       it('should PUT data to cash bag API', function () {
         cashBagService.updateCashBag(95, { cashBag: 'fakeCashBagPayload' });
-        $httpBackend.expectPUT(/cash-bags/);
+        $httpBackend.expectPUT(/company-cash-bags/);
         $httpBackend.flush();
       });
     });
@@ -206,12 +206,12 @@ describe('Service: cashBagService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenDELETE(/cash-bags/).respond({ done: true });
+        $httpBackend.whenDELETE(/company-cash-bags/).respond({ done: true });
       });
 
       it('should DELETE a cash bag from API', function() {
         cashBagService.deleteCashBag();
-        $httpBackend.expectDELETE(/cash-bags/);
+        $httpBackend.expectDELETE(/company-cash-bags/);
         $httpBackend.flush();
       });
     });
@@ -262,7 +262,7 @@ describe('Service: cashBagService', function () {
           scheduleNumber: '105',
           cashBagCurrencies: []
         };
-        $httpBackend.expectPOST(/cash-bags/).respond(cashBagResponseJSON);
+        $httpBackend.expectPOST(/company-cash-bags/).respond(cashBagResponseJSON);
 
         cashBagService.createCashBag(cashBag).then(function (dataFromAPI) {
           cashBagData = dataFromAPI;
