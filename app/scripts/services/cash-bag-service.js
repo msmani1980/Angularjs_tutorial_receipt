@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('cashBagService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/:submission';
+    var requestURL = ENV.apiUrl + '/rsvr/api/company-cash-bags/:id/:submission';
     var cashBagCurrencyRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-currencies/:currencyId';
     var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/carrier-instances';
     var reallocationRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/reallocate';
@@ -41,6 +41,10 @@ angular.module('ts5App')
     var manualEposDataRequestParams = {
       recordId: '@recordId',
       type: '@type'
+    };
+    
+    var eposSalesRequestParameters = {
+      id: '@id'
     };
 
     var manualEposCashRequestParams = {
@@ -116,7 +120,7 @@ angular.module('ts5App')
     var allManualCashBagsRequestResource = $resource(allManualCashBagsRequestURL, {}, actions);
     var manualCashBagRequestResource = $resource(manualCashBagRequestURL, manualEposCashRequestParams, actions);
     var manualEposDataRequestResource = $resource(manualEposDataRequestURL, manualEposDataRequestParams, actions);
-    var eposSalesRequestResource = $resource(eposSalesRequestURL, requestCashBagParameters, actions);
+    var eposSalesRequestResource = $resource(eposSalesRequestURL, eposSalesRequestParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -266,7 +270,7 @@ angular.module('ts5App')
     }
 
     function getEposSales(cashBagId) {
-      requestCashBagParameters.id = cashBagId;
+      eposSalesRequestParameters.id = cashBagId;
       return eposSalesRequestResource.getEposSales().$promise;
     }
 
