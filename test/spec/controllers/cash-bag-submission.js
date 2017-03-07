@@ -185,5 +185,22 @@ describe('Controller: CashBagSubmissionCtrl', function() {
       expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(expectedCompanyId, expectedParameter);
     });
   });
+  
+  describe('getCashBagList and check cashbag submit is auto or not', function() {
+      beforeEach(function() {
+        scope.updateCashBagList();
+        getCashBagListDeferred.resolve(getCashBagListJSON);
+        scope.$digest();
+      });
+
+     it('getCashBagList has id or not',  function() {
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalled();
+        expect(scope.cashBagList[0].cashbagSubmittedBy).toBeDefined();
+        expect(scope.cashBagList[0].cashbagSubmittedBy).toEqual(-1);
+        expect(scope.cashBagList[1].cashbagSubmittedBy).toBeDefined();
+        expect(scope.cashBagList[1].cashbagSubmittedBy).toEqual(194);
+        expect(scope.cashBagList[2].cashbagSubmittedBy).toBe(null);
+      });
+  });
 
 });
