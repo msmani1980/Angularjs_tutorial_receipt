@@ -42,6 +42,7 @@ angular.module('ts5App')
       }
 
       if ($scope.shouldDisableStartDate) {
+        options.startDate = '+0d';
         $element.find('.endDate').datepicker(options);
         return false;
       }
