@@ -29,7 +29,7 @@ describe('Controller: PromotionsCtrl', function () {
   var getSalesCategoriesDeferred;
   var getDiscountApplyTypesDeferred;
   var getPromotionCategoriesDeferred;
-  var getActivePromotionCategoriesDeferred;  
+  var getActivePromotionCategoriesDeferred;
   var getStationGlobalsDeferred;
   var getCurrencyGlobalsDeferred;
   var getMasterItemsDeferred;
@@ -1280,6 +1280,8 @@ describe('Controller: PromotionsCtrl', function () {
       });
     });
 
+
+
     describe('edit promotion', function () {
       beforeEach(inject(function ($controller) {
         routeParams = {
@@ -1356,6 +1358,33 @@ describe('Controller: PromotionsCtrl', function () {
           }
         };
         expect(scope.save()).toBe(false);
+      });
+
+
+    });
+
+    describe('startDate and endDate watch', function () {
+      it('should refresh promotions when start and end dates are assigned', function () {
+        var payload = {
+          startDate: '20150812',
+          endDate: '20150812'
+        };
+
+        expect(promotionsFactory.getActivePromotionCategories).toHaveBeenCalledWith(payload);
+      });
+      it('should refresh promotions when start and end dates are assigned', function () {
+        var payload = {
+          startDate: '20150812'
+        };
+
+        expect(promotionsFactory.getCompanyDiscountsCoupon).toHaveBeenCalledWith(payload);
+      });
+      it('should refresh promotions when start and end dates are assigned', function () {
+        var payload = {
+          startDate: '20150812'
+        };
+
+        expect(promotionsFactory.getCompanyDiscountsVoucher).toHaveBeenCalledWith(payload);
       });
     });
 

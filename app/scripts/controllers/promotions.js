@@ -605,6 +605,7 @@ angular.module('ts5App')
 
         getCompanyDiscountsCoupon(payload);
         getCompanyDiscountsVoucher(payload);
+        getActivePromotionCategoriesByDates($scope.promotion);
       }
     });
 
@@ -640,7 +641,7 @@ angular.module('ts5App')
       getCurrencyGlobals();
       getMasterItems();
       getActivePromotionCategories();
-      
+
       $q.all(initPromises).then(function () {
         handlePromiseSuccessHandler(promotionDataFromAPI);
       }, showResponseErrors);
@@ -839,7 +840,7 @@ angular.module('ts5App')
     function getActivePromotionCategoriesByDates(promotion) {
       var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       var startDate = angular.isDefined(promotion.startDate) && promotion.startDate !== '' ? dateUtility.formatDateForAPI(promotion.startDate) : today;
-      var endDate = angular.isDefined(promotion.endDate) && promotion.endDate !== '' ? dateUtility.formatDateForAPI(promotion.endDate) : today; 
+      var endDate = angular.isDefined(promotion.endDate) && promotion.endDate !== '' ? dateUtility.formatDateForAPI(promotion.endDate) : today;
       var payload = {
         startDate: startDate,
         endDate: endDate
