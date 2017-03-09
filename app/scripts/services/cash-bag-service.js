@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('cashBagService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/:submission';
+    var requestURL = ENV.apiUrl + '/rsvr/api/company-cash-bags/:id/:submission';
     var cashBagCurrencyRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-currencies/:currencyId';
     var carrierInstancesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/carrier-instances';
     var reallocationRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/reallocate';
@@ -42,6 +42,10 @@ angular.module('ts5App')
       recordId: '@recordId',
       type: '@type'
     };
+    
+    var eposSalesRequestParameters = {
+      id: '@id'
+    };
 
     var manualEposCashRequestParams = {
       recordId: '@recordId',
@@ -49,6 +53,9 @@ angular.module('ts5App')
     };
 
     var actions = {
+      getCashBagList: {
+        method: 'GET'
+      },
       getCashBag: {
         method: 'GET'
       },
@@ -113,7 +120,7 @@ angular.module('ts5App')
     var allManualCashBagsRequestResource = $resource(allManualCashBagsRequestURL, {}, actions);
     var manualCashBagRequestResource = $resource(manualCashBagRequestURL, manualEposCashRequestParams, actions);
     var manualEposDataRequestResource = $resource(manualEposDataRequestURL, manualEposDataRequestParams, actions);
-    var eposSalesRequestResource = $resource(eposSalesRequestURL, requestCashBagParameters, actions);
+    var eposSalesRequestResource = $resource(eposSalesRequestURL, eposSalesRequestParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -126,7 +133,7 @@ angular.module('ts5App')
         payload.limit = 50;
       }
 
-      return requestResource.getCashBag(payload).$promise;
+      return requestResource.getCashBagList(payload).$promise;
     }
 
     function getCashBagVerifications(payload) {
@@ -263,7 +270,7 @@ angular.module('ts5App')
     }
 
     function getEposSales(cashBagId) {
-      requestCashBagParameters.id = cashBagId;
+      eposSalesRequestParameters.id = cashBagId;
       return eposSalesRequestResource.getEposSales().$promise;
     }
 
