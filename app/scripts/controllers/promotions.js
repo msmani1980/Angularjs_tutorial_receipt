@@ -89,12 +89,12 @@ angular.module('ts5App')
     }
 
     function getRetailItemId(retailItemData) {
-      if (angular.isDefined(retailItemData.itemId)) {
-        return retailItemData.itemId;
-      }
-
       if (angular.isDefined(retailItemData.retailItem) && angular.isDefined(retailItemData.retailItem.id)) {
         return retailItemData.retailItem.id;
+      }
+
+      if (angular.isDefined(retailItemData.itemId)) {
+        return retailItemData.itemId;
       }
 
       return null;
@@ -557,45 +557,39 @@ angular.module('ts5App')
     }
 
     function setScopePromotionForViewFromAPIdata(promotionFromAPI) {
-      $scope.promotion = promotionFromAPI;
-      $scope.promotion.startDate = dateUtility.formatDateForApp(promotionFromAPI.startDate);
-      $scope.promotion.endDate = dateUtility.formatDateForApp(promotionFromAPI.endDate);
-
-      getMasterItems().then(function() {
-        $scope.promotion.spendLimitCategory = getObjectByIdFromSelectOptions('promotionCategories', {
-          id: promotionFromAPI.spendLimitCategoryId
-        });
-        $scope.promotion.promotionType = getObjectByIdFromSelectOptions('promotionTypes', {
-          id: promotionFromAPI.promotionTypeId
-        });
-        $scope.promotion.benefitDiscountApply = getObjectByIdFromSelectOptions('discountApplyTypes', {
-          id: promotionFromAPI.benefitDiscountApplyId
-        });
-        $scope.promotion.companyVoucher = getObjectByIdFromSelectOptions('companyDiscountsVoucher', {
-          id: promotionFromAPI.companyVoucherId
-        });
-        $scope.promotion.companyCoupon = getObjectByIdFromSelectOptions('companyDiscountsCoupon', {
-          id: promotionFromAPI.companyCouponId
-        });
-        $scope.promotion.benefitType = getObjectByIdFromSelectOptions('benefitTypes', {
-          id: promotionFromAPI.benefitTypeId
-        });
-        $scope.promotion.discountType = getObjectByIdFromSelectOptions('discountTypes', {
-          id: promotionFromAPI.discountTypeId
-        });
-        $scope.promotion.promotionCategories = mapPromotionCategories(promotionFromAPI.promotionCategories, true);
-        $scope.promotion.items = mapItems(promotionFromAPI.items, true);
-        $scope.promotion.filters = mapFilters(promotionFromAPI.filters, true);
-        $scope.promotion.discountCategory = getObjectByIdFromSelectOptions('promotionCategories', {
-          id: parseInt(promotionFromAPI.discountCategoryId, 10)
-        });
-        $scope.promotion.discountItem = getObjectByIdFromSelectOptions('masterItems', {
-          id: promotionFromAPI.discountItemId
-        });
-        $scope.spendLimitAmountsUi = addCurrencyCodeToArrayItems($scope.spendLimitAmountsUi, promotionFromAPI.spendLimitAmounts);
-        $scope.benefitAmountsUi = addCurrencyCodeToArrayItems($scope.benefitAmountsUi, promotionFromAPI.benefitAmounts);
-        $scope.shouldDisableStartDate = !(dateUtility.isAfterToday($scope.promotion.startDate));
+      $scope.promotion.spendLimitCategory = getObjectByIdFromSelectOptions('promotionCategories', {
+        id: promotionFromAPI.spendLimitCategoryId
       });
+      $scope.promotion.promotionType = getObjectByIdFromSelectOptions('promotionTypes', {
+        id: promotionFromAPI.promotionTypeId
+      });
+      $scope.promotion.benefitDiscountApply = getObjectByIdFromSelectOptions('discountApplyTypes', {
+        id: promotionFromAPI.benefitDiscountApplyId
+      });
+      $scope.promotion.companyVoucher = getObjectByIdFromSelectOptions('companyDiscountsVoucher', {
+        id: promotionFromAPI.companyVoucherId
+      });
+      $scope.promotion.companyCoupon = getObjectByIdFromSelectOptions('companyDiscountsCoupon', {
+        id: promotionFromAPI.companyCouponId
+      });
+      $scope.promotion.benefitType = getObjectByIdFromSelectOptions('benefitTypes', {
+        id: promotionFromAPI.benefitTypeId
+      });
+      $scope.promotion.discountType = getObjectByIdFromSelectOptions('discountTypes', {
+        id: promotionFromAPI.discountTypeId
+      });
+      $scope.promotion.promotionCategories = mapPromotionCategories(promotionFromAPI.promotionCategories, true);
+      $scope.promotion.items = mapItems(promotionFromAPI.items, true);
+      $scope.promotion.filters = mapFilters(promotionFromAPI.filters, true);
+      $scope.promotion.discountCategory = getObjectByIdFromSelectOptions('promotionCategories', {
+        id: parseInt(promotionFromAPI.discountCategoryId, 10)
+      });
+      $scope.promotion.discountItem = getObjectByIdFromSelectOptions('masterItems', {
+        id: promotionFromAPI.discountItemId
+      });
+      $scope.spendLimitAmountsUi = addCurrencyCodeToArrayItems($scope.spendLimitAmountsUi, promotionFromAPI.spendLimitAmounts);
+      $scope.benefitAmountsUi = addCurrencyCodeToArrayItems($scope.benefitAmountsUi, promotionFromAPI.benefitAmounts);
+      $scope.shouldDisableStartDate = !(dateUtility.isAfterToday($scope.promotion.startDate));
     }
 
     $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function (newData) {
@@ -617,11 +611,12 @@ angular.module('ts5App')
         return;
       }
 
+      getMasterItems();
+
       cachedRetailItemsByCatId = [];
       $scope.repeatableProductPurchaseItemIds = [];
       angular.forEach($scope.promotion.items, function (item, key) {
         $scope.itemCategoryChanged(key);
-        item.retailItem = null;
       });
     }
 
@@ -635,9 +630,14 @@ angular.module('ts5App')
     function handlePromiseSuccessHandler(promotionDataFromAPI) {
       setCrudFlags();
       if (promotionDataFromAPI) {
-        var startDate = dateUtility.formatDateForApp(angular.copy(promotionDataFromAPI.startDate));
-        setCrudFlags(startDate);
-        setScopePromotionForViewFromAPIdata(angular.copy(promotionDataFromAPI));
+        $scope.promotion = angular.copy(promotionDataFromAPI);
+        $scope.promotion.startDate = dateUtility.formatDateForApp(angular.copy(promotionDataFromAPI.startDate));
+        $scope.promotion.endDate = dateUtility.formatDateForApp(angular.copy(promotionDataFromAPI.endDate));
+
+        setCrudFlags($scope.promotion.startDate);
+        getMasterItems().then(function() {
+          setScopePromotionForViewFromAPIdata(angular.copy(promotionDataFromAPI));
+        });
       }
 
       hideLoadingModal();
@@ -961,8 +961,12 @@ angular.module('ts5App')
       $scope.repeatableStations.arrivalHas[arrivalId].push(departureId);
     };
 
+    function shouldSkipCategoryChangedEvent(index) {
+      return !$scope.itemCategorySelects[index] || !$scope.promotion.startDate || !$scope.promotion.endDate;
+    }
+
     $scope.itemCategoryChanged = function (index) {
-      if (!$scope.itemCategorySelects[index]) {
+      if (shouldSkipCategoryChangedEvent(index)) {
         return;
       }
 
@@ -975,8 +979,8 @@ angular.module('ts5App')
 
       var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
 
-      var startDate = $scope.promotion.startDate && $scope.promotion.startDate !== '' ? dateUtility.formatDateForAPI($scope.promotion.startDate) : today;
-      var endDate = $scope.promotion.endDate && $scope.promotion.endDate !== '' ? dateUtility.formatDateForAPI($scope.promotion.endDate) : today;
+      var startDate = $scope.promotion.startDate !== '' ? dateUtility.formatDateForAPI($scope.promotion.startDate) : today;
+      var endDate = $scope.promotion.endDate !== '' ? dateUtility.formatDateForAPI($scope.promotion.endDate) : today;
 
       var payload = {
         companyId: companyId,
