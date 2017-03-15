@@ -94,4 +94,20 @@ describe('Directive: customValidity', function () {
 	    scope.form.testSpecialCharElement.$setViewValue('@Menu Test123');
 	    expect(scope.form.$valid).toBeFalsy();
 	}));
+   
+   it('should check the pattern on the element if model is defined and its only 4 decimal values no rounded', inject(function ($compile) {
+	    var elementString = '<form name="form">';
+	    scope.fakeModel = '10.1234';
+	    elementString += '<input required name="test4DecimalCheck" type="text" custom-pattern="currencyWithFourDecimalPlaceUnrounded" custom-validity ng-model="fakeModel"/>';
+	    elementString += '</form>';
+
+	    element = angular.element(elementString);
+	    element = $compile(element)(scope);
+	    scope.$digest();
+
+	    expect(scope.form.$valid).toBeTruthy();
+	    scope.form.test4DecimalCheck.$setViewValue('652123');
+	    expect(scope.form.$valid).toBeFalsy();
+	}));
+   
 });
