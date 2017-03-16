@@ -209,7 +209,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
         }
       };
       var convertedAmountObject = scope.onChangePriceOrQty(mockCurrencyObject);
-      expect(convertedAmountObject.baseCurrencyAmount).toEqual('2.00');
+      expect(convertedAmountObject.baseCurrencyAmount).toEqual('1.00');
     });
 
     it('should use paper and coin exchange rate for paper/coin amounts', function () {
@@ -224,7 +224,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
         }
       };
       var convertedAmountObject = scope.onChangePriceOrQty(mockCurrencyObject);
-      expect(convertedAmountObject.baseCurrencyAmount).toEqual('5.00');
+      expect(convertedAmountObject.baseCurrencyAmount).toEqual('1.50');
     });
 
     it('should default to 0 if amount is empty', function () {
@@ -255,17 +255,7 @@ describe('Controller: ManualEposPromotionCtrl', function () {
     });
   });
 
-  describe('verify and unverify', function () {
-    it('should call verify function and update scope var', function () {
-      scope.isVerified = false;
-      scope.verifiedInfo = null;
-      scope.verify();
-      expect(manualEposFactory.verifyCashBag).toHaveBeenCalledWith(95, 'PROMO');
-      scope.$digest();
-      expect(scope.isVerified).toEqual(true);
-      expect(scope.verifiedInfo).not.toEqual(null);
-    });
-
+  describe('unverify', function () {
     it('should call unverify function and update scope var', function () {
       scope.isVerified = true;
       scope.verifiedInfo = null;
@@ -319,5 +309,13 @@ describe('Controller: ManualEposPromotionCtrl', function () {
       scope.$digest();
       expect(location.path).toHaveBeenCalledWith('manual-epos-dashboard/' + cashBagId);
     });
+
+    it('should save data before verify function', function () {
+        scope.isVerified = false;
+        scope.verifiedInfo = null;
+        scope.verify();
+        expect(manualEposFactory.createManualEposPromotion).toHaveBeenCalledWith(cashBagId, expectedPayload);
+      });
+    
   });
 });
