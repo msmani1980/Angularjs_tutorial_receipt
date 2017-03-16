@@ -48,7 +48,7 @@ angular.module('ts5App')
 
     function addOrEditScheduleSuccess () {
       $scope.clearScheduleSelections();
-      getCashBags();      
+      getCashBags();
     }
 
     $scope.addOrEditSchedule = function () {
