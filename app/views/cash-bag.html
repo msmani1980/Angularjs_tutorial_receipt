@@ -111,7 +111,7 @@
               <td>{{ currency.flightAmount }}</td>
               <td><input type="text"
                          custom-validity
-                         custom-pattern="currencyWithTwoDecimalPlaceUnrounded"
+                         custom-pattern="currencyWithFourDecimalPlaceUnrounded"
                          required
                          class="form-control"
                          ng-model="currency.paperAmountManual"
@@ -119,7 +119,7 @@
                          ng-readonly="readOnly"></td>
               <td><input type="text"
                          custom-validity
-                         custom-pattern="currencyWithTwoDecimalPlaceUnrounded"
+                         custom-pattern="currencyWithFourDecimalPlaceUnrounded"
                          required
                          class="form-control"
                          ng-model="currency.coinAmountManual"
