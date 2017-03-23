@@ -112,11 +112,13 @@ angular.module('ts5App')
         var refererReportAuth = $location.search().reportAuth;
         var refererReportId = $location.search().report;
         if (refererReportAuth === 'invalid') {
+          $location.url($location.path('/'));
+          $http.get($location.host() + '/report-api/build', { headers: { sessionToken: getSessionObject().sessionToken } });
           window.location.href = '/report-api/reports/' + refererReportId + '?sessionToken=' + getSessionObject().sessionToken;
-          $location.path('/#/reports');
         } else {
           $location.path('/');
         }
+        
       }
 
       function isAuthorized() {
