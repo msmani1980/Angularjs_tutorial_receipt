@@ -318,7 +318,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.showGenerateDocsButton = true;
 
         // TODO: add rsvr when migrated
-        storeInstance.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
+        storeInstance.exportURL = ENV.apiUrl + '/rsvr-pdf/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
           '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';
       }
     }
