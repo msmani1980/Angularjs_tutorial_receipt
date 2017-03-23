@@ -44,7 +44,7 @@ angular.module('ts5App')
       currencyWithThreeDecimalPlace: [/^\d+\.?\d{0,3}$/, 'This field should use format 0.000', '%.3f'],
       currencyWithTwoDecimalPlace: [/^\d+\.\d{2}$/, 'This field should use format 0.00', '%.2f'],
       currencyWithTwoDecimalPlaceUnrounded: [/^\d+\.\d{2}$/, 'This field should use format 0.00', '%.2f', '2'],
-      currencyWithFourDecimalPlaceUnrounded: [/^\d+\.\d{4}$/, 'This field should use format 0.00', '%.4f', '4'],
+      currencyWithFourDecimalPlaceUnrounded: [/^\d+\.\d{4}$/, 'This field should use format 0.0000', '%.4f', '4'],
       price: [/^\$?\s?[0-9\,]+(\.\d{0,4})?$/, 'Error message for price'],
       url: [/(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/,
         'Error for URL'
@@ -92,9 +92,11 @@ angular.module('ts5App')
         };
 
         var toFixed = function(number, decimals) {
+          var decimalVal =  decimals;
           decimals = decimals || 0;
           decimals = Math.pow(10, decimals);
-          return Math.floor(number * decimals) / decimals;
+          var  value = (number * decimals) / decimals;
+          return value.toFixed(decimalVal);
         };
 
         var formatFieldConditional = function(regexObj) {
