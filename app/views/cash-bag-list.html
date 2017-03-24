@@ -85,6 +85,7 @@
               <th>Store Number</th>
               <th>Schedule Number</th>
               <th>Schedule Date</th>
+              <th>Store Instance Status</th>
               <th></th>
             </tr>
             </thead>
@@ -94,8 +95,9 @@
               <td>{{storeInstance.storeNumber}}</td>
               <td>{{storeInstance.scheduleNumber}}</td>
               <td>{{storeInstance.scheduleDate}}</td>
+              <td>{{storeInstance.storeStatus.code}}</td>
               <td>
-                <button type="button" class="btn btn-info btn-xs" ng-click="continueToEditOrCreate(storeInstance)">
+                <button ng-if="(storeInstance.storeStatus.code !== 'Commission Paid')" type="button" class="btn btn-info btn-xs" ng-click="continueToEditOrCreate(storeInstance)">
                   <i class="fa fa-plus"></i>
                 </button>
               </td>
