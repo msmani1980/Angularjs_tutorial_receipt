@@ -355,6 +355,14 @@ angular.module('ts5App')
       return statusId === commitionPaidStatus.id ? false : true;
     };
 
+    $scope.canExecuteVerify = function (cashBag) {
+      if (angular.isDefined(cashBag) && cashBag.isManual && !cashBag.isVerifiedManual) {
+        return false;
+      }
+
+      return !cashBag.isVerified;
+    };
+
     $scope.canExecuteEditActionsPsttrip = function (cashBag, flightSector) {
       if (!flightSector.isPosttrip) {
         return true;
@@ -394,6 +402,7 @@ angular.module('ts5App')
     };
 
     $scope.canExecuteActions = function (cashBag) {
+
       var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');
       var confirmedStatus = getStoreStatusByStatusStep('10');
@@ -544,7 +553,17 @@ angular.module('ts5App')
     };
 
     $scope.hasFlightSectors = function (cashBag) {
-      return cashBag.flightSectors && cashBag.flightSectors.length > 0;
+      var result = cashBag.flightSectors && cashBag.flightSectors.length > 0;
+      if (result) {
+        for (var i = cashBag.flightSectors.length - 1; i >= 0; i--) {
+          if (cashBag.flightSectors[i].isPosttrip === false) {
+            result = false;
+            break;
+          }
+        }
+      }
+
+      return result;
     };
 
     function toggleVrifiedCashBagSuccess () {
@@ -933,7 +952,8 @@ angular.module('ts5App')
           voucherItemSales: 0 + getManualDataTotals('voucher', cashBag.id),
           promotionDiscounts: 0 + getManualDataTotals('promotion', cashBag.id),
           flightSectors: [],
-          flightSectorsForRearrange: []
+          flightSectorsForRearrange: [],
+          isVerifiedManual: (cashBag.verificationConfirmedOn) ? true : false
         };
       });
     }
