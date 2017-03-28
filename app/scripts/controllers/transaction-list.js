@@ -1,3 +1,4 @@
+
 'use strict';
 
 /**
@@ -93,11 +94,27 @@ angular.module('ts5App')
       return transaction.transactionTypeName;
     };
 
+    function calculateRefundTransactionAmount(transaction) {
+      if (transaction.paymentMethod === 'Credit Card') {
+        return transaction.transactionAmount + ' ' + transaction.currencyCode;
+      }
+
+      if (transaction.paymentMethod === 'Cash') {
+        return transaction.tenderedAmount + ' ' + transaction.currencyCode;
+      }
+
+      return transaction.totalAmount + ' ' + transaction.currencyCode;
+    }
+
     $scope.printTransactionAmount = function (transaction) {
-      if ((transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp') || transaction.transactionTypeName === 'REFUND') {
+      if (transaction.transactionTypeName === 'REFUND') {
+        return calculateRefundTransactionAmount(transaction);
+      }
+
+      if ((transaction.totalAmount === 0 && transaction.discountTypeName === 'Comp')) {
         return transaction.totalAmount + ' ' + transaction.currencyCode;
       }
-          
+
       if (isPaymentMethodVoucherOrDiscount(transaction)) {
         return 0 + ' ' + transaction.transactionCurrencyCode;
       }
@@ -159,7 +176,7 @@ angular.module('ts5App')
           isDiscountTransactionFullyPaidOff(transaction)
         );
     }
-    
+
     function isCreditCardPaymentSelected(paymentMethods) {
       if (!paymentMethods) {
         return false;
@@ -306,14 +323,14 @@ angular.module('ts5App')
         transaction[dateFieldName] = dateUtility.formatDateForApp(transaction[dateFieldName]);
       }
     }
-    
+
     function appendTransactions(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var transactions = angular.copy(dataFromAPI.transactions)
         .filter(isNotVoidedSaleTransaction)
         .filter(isNotSaleChangeTransaction)
         .filter(filterNotFullyPaidOffDiscount);
-      
+
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
       hideLoadingBar();
     }

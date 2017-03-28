@@ -385,6 +385,7 @@ describe('Controller: TransactionListCtrl', function () {
       transactionMock.netTransactionAmount = -10;
       transactionMock.transactionAmount = -20;
       transactionMock.totalAmount = -10;
+      transactionMock.tenderedAmount = -10;
       transactionMock.paymentMethod = 'Cash';
       transactionMock.transactionTypeName = 'REFUND';
       transactionMock.currencyCode =  'CHF';
