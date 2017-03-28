@@ -8,7 +8,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4><strong>
-            <span ng-hide="scheduleToEdit">Add Post Trip</span>
+            <span ng-hide="scheduleToEdit">Add Schedule</span>
             <span ng-show="scheduleToEdit">Replace Schedule {{scheduleToEdit.scheduleNumber }}</span>
           </strong></h4>
         </div>
@@ -751,7 +751,7 @@
                 </div>
                 <div class="col-xs-6 text-right">
                   <button class="btn btn-primary btn-sm" ng-show="canAddPosttripToCashBag(cashBag) && !cashBag.isDeleted && canExecuteActions(cashBag)" ng-click="showAddOrEditScheduleModal(cashBag)" >
-                    <i class="fa fa-plus active"></i> Add Post Trip
+                    <i class="fa fa-plus active"></i> Add Schedule
                   </button>
                   <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-show="!isCrewDataOpen(cashBag) && canExecuteActions(cashBag)">
                     <i class="fa fa-plus-circle active"></i> Expand All Crew Data
@@ -916,7 +916,7 @@
                 <tr class="active">
                   <td>Currency</td>
                   <td>Value</td>
-                  <td>{{report.operatingCurrency}}</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
                 </tr>
                 <tr ng-repeat="cash in report.cash">
                   <td>{{cash.currencyCode}}</td>
@@ -940,7 +940,7 @@
                   <td>Card Type</td>
                   <td>Currency</td>
                   <td>Value</td>
-                  <td>{{report.operatingCurrency}}</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
                 </tr>
                 <tr ng-repeat="credit in report.credit">
                   <td>{{credit.cardType}}</td>
@@ -964,7 +964,7 @@
                 <tr class="active">
                   <td>Currency</td>
                   <td>Value</td>
-                  <td>{{report.operatingCurrency}}</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
                 </tr>
                 <tr ng-repeat="coupon in report.coupon">
                   <td>{{coupon.currencyCode}}</td>
@@ -987,7 +987,7 @@
                 <tr class="active">
                   <td>Currency</td>
                   <td>Value</td>
-                  <td>{{report.operatingCurrency}}</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
                 </tr>
                 <tr ng-repeat="frequentFlyer in report.ffCard">
                   <td>{{frequentFlyer.currencyCode}}</td>
@@ -1010,7 +1010,7 @@
                 <tr class="active">
                   <td>Currency</td>
                   <td>Value</td>
-                  <td>{{report.operatingCurrency}}</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
                 </tr>
                 <tr ng-repeat="voucher in report.voucher">
                   <td>{{voucher.currencyCode}}</td>
@@ -1033,7 +1033,7 @@
                 <tr class="active">
                   <td>Currency</td>
                   <td>Value</td>
-                  <td>{{report.operatingCurrency}}</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
                 </tr>
                 <tr ng-repeat="complimentary in report.comp">
                   <td>{{complimentary.currencyCode}}</td>
@@ -1063,7 +1063,7 @@
                 <tr class="active">
                   <td>Currency</td>
                   <td>Value</td>
-                  <td>{{report.operatingCurrency}}</td>
+                  <td>{{companyBaseCurrency.currencyCode}} Value</td>
                 </tr>
                 <tr ng-repeat="cash in report.cashCounts">
                   <td>{{cash.code}}</td>
