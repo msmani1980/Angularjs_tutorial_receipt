@@ -25,6 +25,15 @@ angular.module('ts5App')
       $scope.disableAll = true;
     }
 
+    $scope.isCashBagVerified = function (cashBag) {
+      var isCBgVerified = false;
+      if (angular.isDefined(cashBag) && angular.isDefined(cashBag.amendVerifiedOn)) {
+        isCBgVerified = (cashBag.amendVerifiedOn) ? true : false;
+      }
+
+      return isCBgVerified;
+    };
+
     $scope.navigateToForm = function (formName) {
       $location.path('manual-epos-' + formName + '/' + $routeParams.cashBagId);
     };
