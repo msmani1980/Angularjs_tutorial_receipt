@@ -355,6 +355,14 @@ angular.module('ts5App')
       return statusId === commitionPaidStatus.id ? false : true;
     };
 
+    $scope.canExecuteVerify = function (cashBag) {
+      if (angular.isDefined(cashBag) && cashBag.isManual && !cashBag.isVerifiedManual) {
+        return false;
+      }
+
+      return !cashBag.isVerified;
+    };
+
     $scope.canExecuteEditActionsPsttrip = function (cashBag, flightSector) {
       if (cashBag && cashBag.isVerified) {
         return false;
