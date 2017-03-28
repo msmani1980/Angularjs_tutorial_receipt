@@ -397,20 +397,41 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return payloadItem;
     };
 
+    function saveStoreInstanceItems(promiseArray, storeId, items) {
+      var createPayload = [];
+      var updatePayload = [];
+
+      angular.forEach(items, function(item) {
+        if (item.id) {
+          updatePayload.push(item);
+        } else {
+          createPayload.push(item);
+        }
+      });
+
+      promiseArray.push(storeInstancePackingFactory.createStoreInstanceItems(storeId, createPayload));
+      promiseArray.push(storeInstancePackingFactory.updateStoreInstanceItems(storeId, updatePayload));
+    }
+
     this.addPickListItemsToPayload = function(promiseArray) {
       var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
+      var items = [];
+
       angular.forEach(mergedItems, function(item) {
-        var didQuantityChange = (angular.isDefined(item.oldPickedQuantity)) ? parseInt(item.pickedQuantity) !==
-        item.oldPickedQuantity : true;
+
+        var didQuantityChange = (angular.isDefined(item.oldPickedQuantity)) ? parseInt(item.pickedQuantity) !== item.oldPickedQuantity : true;
         if (didQuantityChange) {
           var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
+
           if (item.pickedId) {
             payloadItem.id = item.pickedId;
           }
 
-          promiseArray.push($this.saveStoreInstanceItem($routeParams.storeId, payloadItem));
+          items.push(payloadItem);
         }
       });
+
+      saveStoreInstanceItems(promiseArray, $routeParams.storeId, items);
     };
 
     this.addUllageQuantityToPayload = function(item) {
@@ -445,23 +466,25 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.addOffloadItemsToPayload = function(promiseArray, isRedispatch) {
-      var storeInstanceToUse = ($routeParams.action === 'end-instance') ? $routeParams.storeId : $scope.storeDetails
-        .prevStoreInstanceId;
+      var items = [];
+      var storeInstanceToUse = ($routeParams.action === 'end-instance') ? $routeParams.storeId : $scope.storeDetails.prevStoreInstanceId;
       var itemsArray = (isRedispatch) ? $scope.pickListItems : ($scope.offloadListItems.concat($scope.newOffloadListItems));
       angular.forEach(itemsArray, function(item) {
         var shouldAddItem = !isRedispatch || (angular.isDefined(item.shouldDisplayOffloadData) && item.shouldDisplayOffloadData);
         if (shouldAddItem) {
           var ullagePayloadItem = $this.addUllageQuantityToPayload(item);
           if (ullagePayloadItem) {
-            promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
+            items.push(ullagePayloadItem);
           }
 
           var offloadPayloadItem = $this.addInboundQuantityToPayload(item, isRedispatch);
           if (offloadPayloadItem) {
-            promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, offloadPayloadItem));
+            items.push(offloadPayloadItem);
           }
         }
       });
+
+      saveStoreInstanceItems(promiseArray, storeInstanceToUse, items);
     };
 
     $scope.calculatePickedQtyFromTotal = function(item) {

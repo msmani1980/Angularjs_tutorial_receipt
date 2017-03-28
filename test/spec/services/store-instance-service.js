@@ -156,6 +156,23 @@ describe('Service: storeInstanceService', function () {
     });
   });
 
+  describe('updateStoreInstanceItems', function () {
+    it('should make PUT request to API', function () {
+      var expectedURL = /dispatch\/store-instance\/\d+\/bulkitems$/;
+      var fakeStoreId = 38;
+      var payload = {
+        fakeKey: 'fakeValue'
+      };
+
+      httpBackend.expectPUT(expectedURL).respond(200, {});
+      storeInstanceService.updateStoreInstanceItems(fakeStoreId, payload).then(function (response) {
+        expect(response).toBeDefined();
+      });
+
+      httpBackend.flush();
+    });
+  });
+
   describe('updateStoreInstanceItemBulk', function () {
     it('should make PUT request to API', function () {
       var expectedURL = /dispatch\/store-instances\/\d+\/items\/bulk$/;
@@ -197,6 +214,22 @@ describe('Service: storeInstanceService', function () {
       };
       httpBackend.expectPOST(expectedURL).respond(200, {});
       storeInstanceService.createStoreInstanceItem(fakeStoreId, payload).then(function (response) {
+        expect(response).toBeDefined();
+      });
+
+      httpBackend.flush();
+    });
+  });
+
+  describe('createStoreInstanceItems', function () {
+    it('should make POST request to API', function () {
+      var expectedURL = /dispatch\/store-instance\/\d+\/bulkitems$/;
+      var fakeStoreId = 38;
+      var payload = {
+        fakeKey: 'fakeValue'
+      };
+      httpBackend.expectPOST(expectedURL).respond(200, {});
+      storeInstanceService.createStoreInstanceItems(fakeStoreId, payload).then(function (response) {
         expect(response).toBeDefined();
       });
 

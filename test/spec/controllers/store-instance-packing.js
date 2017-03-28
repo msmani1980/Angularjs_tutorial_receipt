@@ -122,6 +122,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     spyOn(storeInstancePackingFactory, 'updateStoreInstanceStatus');
     spyOn(storeInstancePackingFactory, 'getCompanyPreferences').and.returnValue(companyPreferencesDeferred.promise);
     spyOn(storeInstancePackingFactory, 'getCalculatedInboundQuantities').and.returnValue(companyPreferencesDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'createStoreInstanceItems').and.returnValue(saveItemDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'updateStoreInstanceItems').and.returnValue(saveItemDeferred.promise);
 
   }));
 
@@ -715,23 +717,22 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       it('should call CREATE for new items', function () {
         scope.save();
-        var expectedPayload = {
-          itemMasterId: 2,
-          quantity: 2,
-          countTypeId: 1
-        };
-        expect(storeInstancePackingFactory.createStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, expectedPayload);
+        var expectedPayload = [
+          { countTypeId: 1, quantity: 2, itemMasterId: 2 },
+          { countTypeId: 1, quantity: 0, itemMasterId: 2 }
+        ];
+        expect(storeInstancePackingFactory.createStoreInstanceItems).toHaveBeenCalledWith(mockStoreInstanceId, expectedPayload);
       });
 
       it('should call UPDATE for existing items', function () {
         scope.save();
-        var expectedPayload = {
+        var expectedPayload = [{
           itemMasterId: 1,
           quantity: 1,
           countTypeId: 1,
           id: 1
-        };
-        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 1, expectedPayload);
+        }];
+        expect(storeInstancePackingFactory.updateStoreInstanceItems).toHaveBeenCalledWith(mockStoreInstanceId, expectedPayload);
       });
 
       it('should update status after save', function () {
@@ -766,21 +767,17 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       it('should save ullage and inbound quantities separately', function () {
         scope.save();
-        var expectedUllagePayload = {
-          itemMasterId: 4,
-          quantity: 3,
-          ullageReasonCode: 48,
-          countTypeId: 7, // ullage
-          id: 3
-        };
-        var expectedInboundPayload = {
-          itemMasterId: 4,
-          quantity: 2,
-          countTypeId: 14, // offload
-          id: 2
-        };
-        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 2, expectedInboundPayload);
-        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 3, expectedUllagePayload);
+        var expectedUllagePayload = [
+          { countTypeId: 7, quantity: 3, itemMasterId: 4, ullageReasonCode: 48, id: 3 },
+          { countTypeId: 14, quantity: 2, itemMasterId: 4, id: 2 }
+        ];
+        var expectedInboundPayload = [
+          { countTypeId: 7, quantity: 3, itemMasterId: 4, ullageReasonCode: 48, id: 3 },
+          { countTypeId: 14, quantity: 2, itemMasterId: 4, id: 2 }
+        ];
+
+        expect(storeInstancePackingFactory.updateStoreInstanceItems).toHaveBeenCalledWith(mockStoreInstanceId, expectedInboundPayload);
+        expect(storeInstancePackingFactory.updateStoreInstanceItems).toHaveBeenCalledWith(mockStoreInstanceId, expectedUllagePayload);
 
       });
 
@@ -794,14 +791,12 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           ullageId: 3
         }];
         scope.save();
-        var expectedUllagePayload = {
-          itemMasterId: 4,
-          quantity: 0,
-          ullageReasonCode: null,
-          countTypeId: 7, // ullage
-          id: 3
-        };
-        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 3, expectedUllagePayload);
+        var expectedUllagePayload = [
+          { countTypeId: 7, quantity: 0, itemMasterId: 4, ullageReasonCode: null, id: 3 },
+          { countTypeId: 14, quantity: 2, itemMasterId: 4, id: 2 }
+        ];
+
+        expect(storeInstancePackingFactory.updateStoreInstanceItems).toHaveBeenCalledWith(mockStoreInstanceId, expectedUllagePayload);
       });
     });
 
@@ -832,35 +827,35 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       it('should save offload items to prev instance', function () {
         scope.save();
-        var expectedPayload = {
+        var expectedPayload = [{
           itemMasterId: 3,
           quantity: 3,
           countTypeId: 14, // offload
           id: 3
-        };
-        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(prevStoreInstance, 3, expectedPayload);
+        }];
+        expect(storeInstancePackingFactory.updateStoreInstanceItems).toHaveBeenCalledWith(prevStoreInstance, expectedPayload);
       });
 
       it('should save pick list items to current instance', function () {
         scope.save();
-        var expectedPayload = {
+        var expectedPayload = [{
           itemMasterId: 1,
           quantity: 1,
           countTypeId: 1, // warehouse open
           id: 1
-        };
-        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 1, expectedPayload);
+        }];
+        expect(storeInstancePackingFactory.updateStoreInstanceItems).toHaveBeenCalledWith(mockStoreInstanceId, expectedPayload);
       });
 
       it('should save warehouse close items to prev instance', function () {
         scope.save();
-        var expectedPayload = {
+        var expectedPayload = [{
           itemMasterId: 1,
           quantity: 2,
           countTypeId: 13, // warehouse close
           id: 2
-        };
-        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(prevStoreInstance, 2, expectedPayload);
+        }];
+        expect(storeInstancePackingFactory.updateStoreInstanceItems).toHaveBeenCalledWith(prevStoreInstance, expectedPayload);
       });
 
       it('should update status for current instance and prev instance', function () {
