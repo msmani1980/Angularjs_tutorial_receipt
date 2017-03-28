@@ -688,17 +688,21 @@ describe('Controller: PromotionsCtrl', function () {
           startDate: '2015-12-08',
           endDate: '2015-12-08'
         };
+        scope.promotion.startDate = '08/12/2015';
+        scope.promotion.endDate = '08/12/2015';
         scope.itemCategoryChanged(5);
         scope.$digest();
       });
 
       it('should make an API call', function () {
-        var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var startDate = dateUtility.formatDateForAPI('8/12/2015');
+        var endDate = dateUtility.formatDateForAPI('8/12/2015');
+
         expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith({
           categoryId: mockId,
           companyId: companyId,
-          startDate: today,
-          endDate: today
+          startDate: startDate,
+          endDate: endDate
         });
       });
 
@@ -1265,8 +1269,6 @@ describe('Controller: PromotionsCtrl', function () {
         expect(scope.save()).toBe(false);
       });
     });
-
-
 
     describe('edit promotion', function () {
       beforeEach(inject(function ($controller) {
