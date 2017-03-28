@@ -108,9 +108,23 @@ describe('Controller: PostFlightDataListCtrl', function() {
       });
     });
 
-    describe('getEmployees', function() {
-      it('should call getEmployees', function() {
+    describe('searchEmployees', function() {
+      it('should call getEmployees if search string exists', function() {
+        var select = {
+          search: 'something'
+        };
+
+        scope.searchEmployees(select);
         expect(postTripFactory.getEmployees).toHaveBeenCalled();
+      });
+
+      it('should not call getEmployees if search string is empty', function() {
+        var select = {
+          search: ''
+        };
+
+        scope.searchEmployees(select);
+        expect(postTripFactory.getEmployees).not.toHaveBeenCalled();
       });
 
       it('should attach employee array to scope', function() {

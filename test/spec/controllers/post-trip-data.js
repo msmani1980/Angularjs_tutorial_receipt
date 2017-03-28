@@ -132,13 +132,34 @@ describe('Controller: PostTripDataCtrl', function() {
         expect(postTripFactory.getCarrierNumbers).toHaveBeenCalledWith(companyId);
       });
 
-      it('should call getEmployees', function() {
+      it('should call getSchedules', function() {
+        expect(postTripFactory.getSchedules).toHaveBeenCalled();
+        expect(scope.schedules).toBeDefined();
+      });
+    });
+
+    describe('searchEmployees', function() {
+      it('should call getEmployees if search string exists', function() {
+        var select = {
+          search: 'something'
+        };
+
+        scope.searchEmployees(select);
         expect(postTripFactory.getEmployees).toHaveBeenCalled();
       });
 
-      it('should call getEmployees', function() {
-        expect(postTripFactory.getSchedules).toHaveBeenCalled();
-        expect(scope.schedules).toBeDefined();
+      it('should not call getEmployees if search string is empty', function() {
+        var select = {
+          search: ''
+        };
+
+        scope.searchEmployees(select);
+        expect(postTripFactory.getEmployees).not.toHaveBeenCalled();
+      });
+
+      it('should attach employee array to scope', function() {
+        expect(scope.employees).toBeDefined();
+        expect(Object.prototype.toString.call(scope.employees)).toBe('[object Array]');
       });
     });
 
@@ -275,6 +296,14 @@ describe('Controller: PostTripDataCtrl', function() {
       expect(scope.viewName).toEqual('Create Post Trip Data');
     });
 
+    it('should make form invalid on empty employee list', function() {
+      scope.selectedEmployees.employeeIds = [];
+
+      PostTripDataCtrl.validateEmployees();
+
+      expect(scope.postTripDataForm.$valid).toEqual(false);
+    });
+
     describe('save form', function() {
       it('should call getPostTripDataList to search for duplicates', function() {
         scope.postTripDataForm.$valid = true;
@@ -338,7 +367,7 @@ describe('Controller: PostTripDataCtrl', function() {
     });
 
   });
-  
+
   describe('getStationById function', function() {
     beforeEach(function() {
       scope.stationList = [{
@@ -351,7 +380,7 @@ describe('Controller: PostTripDataCtrl', function() {
         stationId: 3,
         stationCode: 'IAD'
       }];
-        
+
     });
 
     it('should populate stationCode', function() {
@@ -363,7 +392,7 @@ describe('Controller: PostTripDataCtrl', function() {
       var stationCode = PostTripDataCtrl.getStationById(3);
       expect(stationCode).toEqual('IAD');
     });
-    
+
   });
 
 });

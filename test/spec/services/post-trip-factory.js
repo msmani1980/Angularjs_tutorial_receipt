@@ -114,8 +114,8 @@ describe('Factory: postTripFactory', function () {
 
   describe('employeesService API', function () {
     it('should call employeesService on getEmployees', function () {
-      postTripFactory.getEmployees(companyId);
-      expect(employeesService.getEmployees).toHaveBeenCalledWith(companyId);
+      postTripFactory.getEmployees(companyId, { search: 'something' });
+      expect(employeesService.getEmployees).toHaveBeenCalledWith(companyId, { search: 'something' });
     });
   });
 
