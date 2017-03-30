@@ -62,7 +62,25 @@
     <!-- Pick List -->
     <div class="well" ng-hide="isActionState('end-instance')">
       <h3>
-        <span>Pick List</span>
+      	<div class="row">
+          <div class="col-xs-8">
+			<span>Pick List</span>
+          </div>
+          <div class="col-xs-2">
+            <span>Sort By</span> 
+ 	      </div>
+          <div class="col-xs-2">
+  		    <select ng-init="itemSortOrder = '[salesCategoryName,itemName]'" 
+  		          type="text"
+                name="itemSortBy"
+                class="form-control"
+                ng-model="itemSortOrder"
+                id="itemSortBy">
+      		    <option value="[salesCategoryName,itemName]">Sales Category</option>
+          		<option value="itemName">Item Name</option>
+       		 </select>
+ 	       </div>
+        </div>        
       </h3>
       <div class="table-responsive">
         <table class="table pick-list">
@@ -83,7 +101,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+        <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:itemSortOrder"
             ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
@@ -168,7 +186,7 @@
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
-                repeat="masterItem in filteredItemsList | filter: {itemName:$select.search} | orderBy:'itemName'">
+                repeat="masterItem in filteredItemsList | filter: {itemName:$select.search} | orderBy:itemSortOrder">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
@@ -244,7 +262,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
+        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: filterItemDetails} | orderBy:itemSortOrder">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -299,7 +317,7 @@
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
-                repeat="masterItem in filteredOffloadItemsList | filter: {itemName:$select.search} | orderBy:'itemName'">
+                repeat="masterItem in filteredOffloadItemsList | filter: {itemName:$select.search} | orderBy:itemSortOrder">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>

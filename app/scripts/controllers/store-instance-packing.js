@@ -603,6 +603,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return {
         itemDescription: itemFromAPI.itemCode + ' - ' + itemFromAPI.itemName,
         itemName: itemFromAPI.itemName,
+        itemCode: itemFromAPI.itemCode,
         menuQuantity: (isFromMenu) ? itemFromAPI.menuQuantity : 0,
         pickedQuantity: (shoudlCopyPickedQuantityToMenu) ? itemFromAPI.menuQuantity : 0,
         oldPickedQuantity: -1, // so that 0 quantities will be saved
@@ -613,7 +614,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemMasterId: itemFromAPI.itemMasterId,
         isMenuItem: isFromMenu,
         isNewItem: false,
-        isInOffload: ($routeParams.action === 'end-instance')
+        isInOffload: ($routeParams.action === 'end-instance'),
+        salesCategoryName: itemFromAPI.salesCategoryName
       };
     };
 
