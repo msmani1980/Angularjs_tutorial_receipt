@@ -19,8 +19,13 @@ angular.module('ts5App')
     };
     var empoyeeRequestResource = $resource(employeeRequestURL, null, employeeActions);
 
-    var getEmployees = function (companyId) {
+    var getEmployees = function (companyId, additionalPayload) {
       var payload = { id:companyId };
+
+      if (additionalPayload) {
+        angular.extend(payload, additionalPayload);
+      }
+
       return empoyeeRequestResource.getEmployees(payload).$promise;
     };
 
