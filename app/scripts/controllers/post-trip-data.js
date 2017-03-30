@@ -87,6 +87,7 @@ angular.module('ts5App')
 
     this.getSchedulesSuccess = function(response) {
       $scope.schedules = response.distinctSchedules;
+      $scope.slicedSchedules = sliceScheduleNumbers($scope.schedules);
     };
 
     this.getCarrierSuccess = function(response) {
@@ -281,6 +282,20 @@ angular.module('ts5App')
     this.validateForm = function() {
       $this.validateEmployees();
       return $scope.postTripDataForm.$valid;
+    };
+
+    function sliceScheduleNumbers(schedules) {
+      return lodash.map(schedules, function(schedule) {
+        return schedule.scheduleNumber;
+      });
+    }
+
+    $scope.getScheduleNumbers = function(search) {
+      if (search && $scope.slicedSchedules.indexOf(search) === -1) {
+        $scope.slicedSchedules.push(search);
+      }
+      
+      return $scope.slicedSchedules;
     };
 
     $scope.formSave = function() {
