@@ -80,18 +80,23 @@ angular.module('ts5App')
             itemMasterId: item.itemMasterId,
             itemCode: item.itemCode
           });
+        if (angular.isDefined(scItem) && angular.isDefined(scItem.salesCategoryName)) {
+          item.salesCategoryName = scItem.salesCategoryName;
+        }
 
-        item.salesCategoryName = scItem.salesCategoryName; 
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
       });
 
       angular.forEach($scope.storeTwoItemList, function(item) {
         var scItem = lodash.findWhere(_menuItems, {
               itemMasterId: item.itemMasterId,
-              itemCode: item.itemCode
+              itemName: item.itemName
             });
 
-        item.salesCategoryName = scItem.salesCategoryName; 
+        if (angular.isDefined(scItem) && angular.isDefined(scItem.salesCategoryName)) {
+          item.salesCategoryName = scItem.salesCategoryName;
+        }
+
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
       });
 
@@ -259,6 +264,7 @@ angular.module('ts5App')
       angular.forEach($scope.pickListItems, function(item) {
         item.pickedQuantity = (item.dispatchedQuantity + (item.ullageQuantity || 0)) - (item.inboundQuantity || 0);
       });
+      
     }
 
     function getStepsForStoreOne() {
