@@ -9,6 +9,7 @@
  */
 angular.module('ts5App').service('storeInstanceService', function ($resource, ENV) {
   var requestURL = ENV.apiUrl + '/rsvr/api/dispatch/store-instances/:id/:api/:itemIdOrBulk';
+  var bulkItemsRequestURL = ENV.apiUrl + '/rsvr/api/dispatch/store-instance/:id/bulkitems';
   var calculatedInboundsRequestURL = ENV.apiUrl + '/rsvr/api/store-instances/:id/calculated-inbounds';
 
   var requestParameters = {
@@ -27,6 +28,12 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
       method: 'POST'
     },
     updateStoreInstance: {
+      method: 'PUT'
+    },
+    createStoreInstanceItems: {
+      method: 'POST'
+    },
+    updateStoreInstanceItems: {
       method: 'PUT'
     },
     deleteStoreInstance: {
@@ -65,6 +72,7 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
   };
 
   var requestResource = $resource(requestURL, requestParameters, actions);
+  var bulkItemsRequestResource = $resource(bulkItemsRequestURL, requestParameters, actions);
   var calculatedInboundsRequestResources = $resource(calculatedInboundsRequestURL, requestParameters, actions);
 
   function getStoreInstancesList(payload, companyId) {
@@ -135,6 +143,28 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
       itemIdOrBulk: 'bulk'
     });
     return requestResource.updateStoreInstanceItemsBulk(requestPayload, payload).$promise;
+  }
+
+  function createStoreInstanceItems(id, items) {
+    var requestPayload = angular.extend({}, {
+      id: id
+    });
+    var payload = {
+      bulkItems: items
+    };
+
+    return bulkItemsRequestResource.createStoreInstanceItems(requestPayload, payload).$promise;
+  }
+
+  function updateStoreInstanceItems(id, items) {
+    var requestPayload = angular.extend({}, {
+      id: id
+    });
+    var payload = {
+      bulkItems: items
+    };
+
+    return bulkItemsRequestResource.updateStoreInstanceItems(requestPayload, payload).$promise;
   }
 
   function createStoreInstanceItem(id, payload) {
@@ -221,6 +251,8 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     deleteStoreInstanceItem: deleteStoreInstanceItem,
     getStoreInstanceCalculatedInbounds: getStoreInstanceCalculatedInbounds,
     updateStoreInstanceStatusForceReconcile: updateStoreInstanceStatusForceReconcile,
-    updateStoreInstanceStatusUndispatch: updateStoreInstanceStatusUndispatch
+    updateStoreInstanceStatusUndispatch: updateStoreInstanceStatusUndispatch,
+    createStoreInstanceItems: createStoreInstanceItems,
+    updateStoreInstanceItems: updateStoreInstanceItems
   };
 });
