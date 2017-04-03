@@ -27,9 +27,9 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label>Schedule Number *</label>
-              <ui-select ng-model="postTrip.scheduleNumber" theme="bootstrap" required="true" name="scheduleNumber" ng-disabled="readOnly">
+              <ui-select ng-model="postTrip.scheduleNumber" theme="bootstrap" required="true" name="scheduleNumber" ng-disabled="readOnly" >
                 <ui-select-match placeholder="Select or add a Schedule Number">{{$select.selected}}</ui-select-match>
-                <ui-select-choices repeat="scheduleNumber in getScheduleNumbers($select.search) | filter: $select.search">
+                <ui-select-choices repeat="scheduleNumber in getScheduleNumbers($select.search) | filter: $select.search | limitTo:50">
                   <div ng-bind="scheduleNumber"></div>
                 </ui-select-choices>
               </ui-select>
