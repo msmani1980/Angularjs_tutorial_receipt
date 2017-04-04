@@ -73,31 +73,31 @@ angular.module('ts5App')
       return totalMenuQuantity;
     }
 
+    this.getSalesCategoryName = function(itemMasterId) {
+      var menuMatches = lodash.findWhere(_menuItems, { itemMasterId: itemMasterId });
+        
+      if (menuMatches) {
+        return menuMatches.salesCategoryName;
+      } else { 
+        var menuMatchesNew = lodash.findWhere($scope.allItemForGettingSalesCategory, { itemMasterId: itemMasterId });
+        if (menuMatchesNew) {
+          return menuMatchesNew.salesCategoryName;
+        } else {
+          return '';
+        }
+      }
+    };
+
     function getItemsSuccessHandler(dataFromAPI) {
       _menuItems = angular.copy(dataFromAPI.response);
       angular.forEach($scope.items, function(item) {
-        var scItem = lodash.findWhere(_menuItems, {
-            itemMasterId: item.itemMasterId,
-            itemCode: item.itemCode
-          });
-        if (angular.isDefined(scItem) && angular.isDefined(scItem.salesCategoryName)) {
-          item.salesCategoryName = scItem.salesCategoryName;
-        }
-
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
+        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
       });
 
       angular.forEach($scope.storeTwoItemList, function(item) {
-        var scItem = lodash.findWhere(_menuItems, {
-              itemMasterId: item.itemMasterId,
-              itemName: item.itemName
-            });
-
-        if (angular.isDefined(scItem) && angular.isDefined(scItem.salesCategoryName)) {
-          item.salesCategoryName = scItem.salesCategoryName;
-        }
-
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
+        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
       });
 
     }
@@ -256,6 +256,7 @@ angular.module('ts5App')
       if (angular.isArray($scope.storeTwoItemList)) {
         angular.forEach($scope.storeTwoItemList, function(item) {
           item.quantity = 0;
+          item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
         });
 
         $scope.pickListItems = $scope.pickListItems.concat($scope.storeTwoItemList);
@@ -264,7 +265,6 @@ angular.module('ts5App')
       angular.forEach($scope.pickListItems, function(item) {
         item.pickedQuantity = (item.dispatchedQuantity + (item.ullageQuantity || 0)) - (item.inboundQuantity || 0);
       });
-      
     }
 
     function getStepsForStoreOne() {
@@ -470,6 +470,7 @@ angular.module('ts5App')
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
         item.disabled = true;
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
+        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
       });
 
       return itemArray;
@@ -496,6 +497,7 @@ angular.module('ts5App')
           itemName: item.itemName,
           itemDescription: item.itemCode + ' -  ' + item.itemName,
           disabled: true,
+          salesCategoryName: $this.getSalesCategoryName(item.itemMasterId),
           menuQuantity: getMenuQuantity(item.itemMasterId)
         };
 
@@ -548,6 +550,7 @@ angular.module('ts5App')
           itemMasterId: item.itemMasterId,
           itemName: item.itemName,
           itemDescription: item.itemCode + ' -  ' + item.itemName,
+          salesCategoryName: $this.getSalesCategoryName(item.itemMasterId),
           disabled: true
         };
 
@@ -593,6 +596,7 @@ angular.module('ts5App')
     }
 
     function setStoreOneItemList(dataFromAPI) {
+      $scope.allItemForGettingSalesCategory = angular.copy(dataFromAPI.response);
       $scope.storeOneItemList = formatStoreOneItems(angular.copy(dataFromAPI.response));
     }
 
@@ -793,6 +797,7 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.formErrors = [];
       $scope.action = $routeParams.action;
+      $scope.allItemForGettingSalesCategory = [];
 
       getDataFromAPI();
 

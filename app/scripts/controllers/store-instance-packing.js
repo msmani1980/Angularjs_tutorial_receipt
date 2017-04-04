@@ -603,7 +603,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return {
         itemDescription: itemFromAPI.itemCode + ' - ' + itemFromAPI.itemName,
         itemName: itemFromAPI.itemName,
-        itemCode: itemFromAPI.itemCode,
         menuQuantity: (isFromMenu) ? itemFromAPI.menuQuantity : 0,
         pickedQuantity: (shoudlCopyPickedQuantityToMenu) ? itemFromAPI.menuQuantity : 0,
         oldPickedQuantity: -1, // so that 0 quantities will be saved
@@ -750,6 +749,20 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
+    this.getSalesCategoryName = function(itemMasterId) {
+      var menuMatches = lodash.findWhere($scope.allowedMenuItemsForOffloadSection, { itemMasterId: itemMasterId });
+      if (menuMatches) {
+        return menuMatches.salesCategoryName;
+      } else {
+        var menuMatchesNew = lodash.findWhere($scope.allItemForGettingSalesCategory, { itemMasterId: itemMasterId });
+        if (menuMatchesNew) {
+          return menuMatchesNew.salesCategoryName;
+        } else {
+          return '';
+        }
+      }
+    };
+
     this.mergeRedispatchItemsLoopConditional = function(item, pickListMatch, offloadListMatch) {
       var isMenuItemInOfAllowedMenuItemsForOffloadSection = $this.isMenuItemInOfAllowedMenuItemsForOffloadSection(item);
       var isItemValidForOffloadSection = (!pickListMatch && !offloadListMatch && item.countTypeName !== 'FAClose') ||
@@ -761,6 +774,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.mergeRedispatchItemsLoop = function(items, ignoreEposData) {
       angular.forEach(items, function(item) {
+        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
         var pickListMatch = lodash.findWhere($scope.pickListItems, {
           itemMasterId: item.itemMasterId
         });
@@ -773,6 +787,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if ($this.mergeRedispatchItemsLoopConditional(item, pickListMatch, offloadListMatch)) {
           var newItem = $this.createFreshItem(item, false);
           newItem.isInOffload = true;
+          newItem.salesCategoryName = item.salesCategoryName;
           $scope.offloadListItems.push(newItem);
           itemMatch = newItem;
         } else if (offloadListMatch) {
@@ -817,6 +832,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[1].response));
       $this.mergeStoreInstanceItems(angular.copy(responseCollection[2].response));
       if (responseCollection[4]) {
+        $scope.allItemForGettingSalesCategory = angular.copy(responseCollection[4].response);
         $this.mergeRedispatchItems(angular.copy(responseCollection[4].response));
       }
 
@@ -914,7 +930,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.addPickListNum = 1;
       $scope.filteredItemsList = [];
       $scope.allowedMenuItemsForOffloadSection = [];
-
+      $scope.allItemForGettingSalesCategory = [];
+      
       if ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') {
         $scope.offloadListItems = [];
         $scope.newOffloadListItems = [];
