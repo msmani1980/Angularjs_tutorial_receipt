@@ -304,6 +304,14 @@ describe('Controller: PostTripDataCtrl', function() {
       expect(scope.postTripDataForm.$valid).toEqual(false);
     });
 
+    it('should add new entry to schedule number if it does not exist', function() {
+      scope.slicedSchedules = [ 1, 2, 3 ];
+
+      var newSlicedSchedules = scope.getScheduleNumbers(4);
+
+      expect(newSlicedSchedules).toEqual([1, 2, 3, 4]);
+    });
+
     describe('save form', function() {
       it('should call getPostTripDataList to search for duplicates', function() {
         scope.postTripDataForm.$valid = true;
