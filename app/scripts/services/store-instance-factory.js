@@ -161,6 +161,7 @@ angular.module('ts5App').service('storeInstanceFactory',
 
       if (storeInstanceAPIResponse.prevStoreInstanceId) {
         storeDetails.prevStoreInstanceId = storeInstanceAPIResponse.prevStoreInstanceId;
+        storeDetails.isECSPreviousStoreInstance = storeInstanceAPIResponse.isECSPreviousStoreInstance;
       }
 
       var storeMenus = (parentStoreInstanceAPIResponse ? angular.copy(parentStoreInstanceAPIResponse.menus) : angular

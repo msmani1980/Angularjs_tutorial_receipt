@@ -227,8 +227,8 @@
       </div>
     </div>
 
-    <!-- Offload List -->
-    <div class="well" ng-show="isActionState('redispatch') || isActionState('end-instance')">
+    <!-- Offload List --><!-- have to check this isECSPreviousStoreInstance whether have to apply root level offload list or new or exisiting  -->
+    <div class="well" ng-show="!storeDetails.isECSPreviousStoreInstance && ( isActionState('redispatch') || isActionState('end-instance') )">
       <h3>Offload List</h3>
 
       <div class="table-responsive">

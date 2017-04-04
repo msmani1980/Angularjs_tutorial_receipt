@@ -9,6 +9,7 @@
   "carrierId": 33,
   "statusId": 1,
   "isEcb": false,
+  "isECSPreviousStoreInstance": false,
   "createdBy": null,
   "createdOn": "2015-07-28 16:41:00.027412",
   "updatedBy": null,
