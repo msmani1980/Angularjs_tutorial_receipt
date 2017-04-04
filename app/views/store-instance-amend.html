@@ -753,10 +753,10 @@
                   <button class="btn btn-primary btn-sm" ng-show="canAddPosttripToCashBag(cashBag) && !cashBag.isDeleted && canExecuteActions(cashBag)" ng-click="showAddOrEditScheduleModal(cashBag)" >
                     <i class="fa fa-plus active"></i> Add Schedule
                   </button>
-                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-show="!isCrewDataOpen(cashBag) && canExecuteActions(cashBag)">
+                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-show="!isCrewDataOpen(cashBag)">
                     <i class="fa fa-plus-circle active"></i> Expand All Crew Data
                   </button>
-                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, false)" ng-show="isCrewDataOpen(cashBag) && canExecuteActions(cashBag)">
+                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, false)" ng-show="isCrewDataOpen(cashBag)">
                     <i class="fa fa-minus-circle active"></i> Collapse All Crew Data
                   </button>
                 </div>
