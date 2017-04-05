@@ -79,7 +79,12 @@ angular.module('ts5App')
       if (menuMatches) {
         return menuMatches.salesCategoryName;
       } else {
-        return '';  
+        var menuMatchesNew = lodash.findWhere($scope.allItemForGettingSalesCategory, {itemMasterId: itemMasterId });
+        if (menuMatchesNew) {
+          return menuMatchesNew.salesCategoryName;
+        } else {
+          return '';
+        }
       }
     };
 
@@ -591,6 +596,7 @@ angular.module('ts5App')
     }
 
     function setStoreOneItemList(dataFromAPI) {
+      $scope.allItemForGettingSalesCategory = angular.copy(dataFromAPI.response);
       $scope.storeOneItemList = formatStoreOneItems(angular.copy(dataFromAPI.response));
     }
 
@@ -791,6 +797,7 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.formErrors = [];
       $scope.action = $routeParams.action;
+      $scope.allItemForGettingSalesCategory = [];
 
       getDataFromAPI();
 

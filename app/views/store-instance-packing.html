@@ -61,9 +61,28 @@
 
     <!-- Pick List -->
     <div class="well" ng-hide="isActionState('end-instance')">
-      <h3>
-        <span>Pick List</span>
-      </h3>
+      	<div class="row">
+          <div class="col-xs-8">
+      		  <h3>	
+      				<span>Pick List</span>
+      		  </h3>
+          </div>
+          <div class="col-xs-2  text-right">
+            <span>Sort By</span> 
+  	      </div>
+          <div class="col-xs-2  text-right">
+  		    <select ng-init="itemSortOrder = '[salesCategoryName,itemName]'" 
+  		          type="text"
+                name="itemSortBy"
+                class="form-control"
+                ng-model="itemSortOrder"
+                id="itemSortBy">
+      		    <option value="[salesCategoryName,itemName]">Sales Category</option>
+          		<option value="itemName">Item Name</option>
+       		 </select>
+ 	       </div>
+        </div>        
+      
       <div class="table-responsive">
         <table class="table pick-list">
         <thead>
@@ -83,7 +102,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy: ['salesCategoryName', 'itemName']"
+        <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:itemSortOrder"
             ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
@@ -168,7 +187,7 @@
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
-                repeat="masterItem in filteredItemsList | filter: {itemName:$select.search} | orderBy: ['salesCategoryName', 'itemName']">
+                repeat="masterItem in filteredItemsList | filter: {itemName:$select.search} | orderBy:itemSortOrder">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
@@ -230,6 +249,20 @@
     <!-- Offload List --><!-- have to check this isECSPreviousStoreInstance whether have to apply root level offload list or new or exisiting  -->
     <div class="well" ng-show="!storeDetails.isECSPreviousStoreInstance && ( isActionState('redispatch') || isActionState('end-instance') )">
       <h3>Offload List</h3>
+          <div class="col-xs-10 text-right">
+            <span>Sort By</span> 
+  	      </div>
+          <div class="col-xs-2 text-right">
+  		    <select ng-init="offLoadItemsSortOrder = '[salesCategoryName,itemName]'" 
+  		          type="text"
+                name="itemSortBy"
+                class="form-control"
+                ng-model="offLoadItemsSortOrder"
+                id="itemSortBy">
+      		    <option value="[salesCategoryName,itemName]">Sales Category</option>
+          		<option value="itemName">Item Name</option>
+       		 </select>
+ 	       </div>
 
       <div class="table-responsive">
         <table class="table table-striped pick-list">
@@ -244,7 +277,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: filterItemDetails} | orderBy: ['salesCategoryName', 'itemName']">
+        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: filterItemDetails} | orderBy:offLoadItemsSortOrder">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -299,7 +332,7 @@
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
-                repeat="masterItem in filteredOffloadItemsList | filter: {itemName:$select.search} | orderBy: ['salesCategoryName', 'itemName']">
+                repeat="masterItem in filteredOffloadItemsList | filter: {itemName:$select.search} | orderBy:offLoadItemsSortOrder">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
