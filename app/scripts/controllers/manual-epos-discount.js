@@ -19,32 +19,144 @@ angular.module('ts5App')
         discountId:null,
         discount:null,
         id:null,
-        currencyId:$scope.selectedCurrency.currency.currencyId,
-        currency:$scope.selectedCurrency.currency,
+        currencyId:$scope.baseCurrency.currency.currencyId,
+        currency:$scope.baseCurrency.currency,
         amount:0.00,
         quantity:0,
         currentCurrencyAmount:0.00,
         baseCurrencyAmount:0.00,
-        exchangeRate:$scope.selectedCurrency.currency.exchangeRate,
+        exchangeRate:$scope.baseCurrency.currency.exchangeRate,
         discountTypeName: dscntTypeName
       };
       return newDiscount;
     }
 
+    $scope.isSaveVerifyDisable = function () {
+      if (isNotDefinedDiscounts() || isNotSetDiscounts()) {
+        return true;
+      } 
+
+      return false;
+    };
+
+    function isNotDefinedDiscounts () {
+      if (!angular.isDefined($scope.discountListCoupon) || !angular.isDefined($scope.discountListVoucher) || !angular.isDefined($scope.discountListComp) || !angular.isDefined($scope.discountListFlyer)) {
+        return true;
+      }
+
+      return false;
+    }
+
+    function isNotSetDiscounts () {
+      if (isNoCoupon() || isNoComp() || isNoVoucher() || isNoFlyer()) {
+        return true;
+      } 
+
+      return false;
+    }
+
+    function isNoCoupon () {
+      for (var i = $scope.discountListCoupon.length - 1; i >= 0; i--) {
+        if ($scope.discountListCoupon[i].discount === null) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function isNoComp () {
+      for (var i = $scope.discountListComp.length - 1; i >= 0; i--) {
+        if ($scope.discountListComp[i].discount === null) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function isNoVoucher () {
+      for (var i = $scope.discountListVoucher.length - 1; i >= 0; i--) {
+        if ($scope.discountListVoucher[i].discount === null) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function isNoFlyer () {
+      for (var i = $scope.discountListFlyer.length - 1; i >= 0; i--) {
+        if ($scope.discountListFlyer[i].discount === null) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     $scope.addCouponDiscount = function() {
-      $scope.discountListCoupon.push(angular.copy(createNewDiscountObject('Coupon')));
+      if ($scope.companyDiscountsList.coupon.length > 0) {
+        var canAddDiscount = true;
+        for (var i = $scope.discountListCoupon.length - 1; i >= 0; i--) {
+          if ($scope.discountListCoupon[i].discount === null) {
+            canAddDiscount = false;
+            break;
+          }
+        }
+
+        if (canAddDiscount) {
+          $scope.discountListCoupon.push(angular.copy(createNewDiscountObject('Coupon')));
+        }
+      }
     };
 
     $scope.addVoucherDiscount = function() {
-      $scope.discountListVoucher.push(angular.copy(createNewDiscountObject('Voucher')));
+      if ($scope.companyDiscountsList.voucher.length > 0) { 
+        var canAddDiscount = true;
+        for (var i = $scope.discountListVoucher.length - 1; i >= 0; i--) {
+          if ($scope.discountListVoucher[i].discount === null) {
+            canAddDiscount = false;
+            break;
+          }
+        }
+
+        if (canAddDiscount) {
+          $scope.discountListVoucher.push(angular.copy(createNewDiscountObject('Voucher')));
+        }  
+      }
     };
 
     $scope.addCompDiscount = function() {
-      $scope.discountListComp.push(angular.copy(createNewDiscountObject('Comp')));
+      if ($scope.companyDiscountsList.comp.length > 0) {
+        var canAddDiscount = true;
+        for (var i = $scope.discountListComp.length - 1; i >= 0; i--) {
+          if ($scope.discountListComp[i].discount === null) {
+            canAddDiscount = false;
+            break;
+          }
+        }
+
+        if (canAddDiscount) {
+          $scope.discountListComp.push(angular.copy(createNewDiscountObject('Comp')));
+        }  
+      }
     };
 
     $scope.addFlyerDiscount = function() {
-      $scope.discountListFlyer.push(angular.copy(createNewDiscountObject('Frequent Flyer')));
+      if ($scope.companyDiscountsList.flyer.length > 0) {  
+        var canAddDiscount = true;
+        for (var i = $scope.discountListFlyer.length - 1; i >= 0; i--) {
+          if ($scope.discountListFlyer[i].discount === null) {
+            canAddDiscount = false;
+            break;
+          }
+        }
+
+        if (canAddDiscount) {
+          $scope.discountListFlyer.push(angular.copy(createNewDiscountObject('Frequent Flyer')));
+        }
+      }
     };
 
     function showLoadingModal(text) {
@@ -79,8 +191,130 @@ angular.module('ts5App')
 
     $scope.onChangeDiscount  = function(manualDiscountObj) {
       manualDiscountObj.discountId = manualDiscountObj.discount.id;
+      if (manualDiscountObj.discount.discountTypeId === 1 /*Coupon*/) {
+        updateCouponList();
+      }
+
+      if (manualDiscountObj.discount.discountTypeId === 2 /*"Comp"*/) {
+        updateCompList();
+      }
+
+      if (manualDiscountObj.discount.discountTypeId === 3 /*"Frequent Flyer"*/) {
+        updateFrequentFlyerList();
+      }
+
+      if (manualDiscountObj.discount.discountTypeId === 4 /*"Voucher"*/) {
+        updateVoucherList();
+      }
+
       return manualDiscountObj;
     };
+
+    function isCouponDefined () {
+      if (angular.isDefined($scope.discountListCoupon) && angular.isDefined($scope.discountListCoupon.length) && angular.isDefined($scope.companyDiscountsList) && angular.isDefined($scope.companyDiscountsList.coupon)  && angular.isDefined($scope.companyDiscountsList.coupon.length)) {
+        return true;
+      }
+
+      return false;
+    }
+
+    function couponList () {
+      for (var i = $scope.discountListCoupon.length - 1; i >= 0; i--) {
+        for (var j = $scope.companyDiscountsList.coupon.length - 1; j >= 0; j--) {
+          if ($scope.discountListCoupon[i].discountId === $scope.companyDiscountsList.coupon[j].id) {
+            $scope.companyDiscountsList.coupon.splice(j, 1);
+          }
+        }
+      }
+    } 
+
+    function updateCouponList () {
+      $scope.companyDiscountsList.coupon = angular.copy($scope.allCouponList);
+      if (isCouponDefined()) {
+        if (angular.isDefined($scope.discountListCoupon) && angular.isDefined($scope.discountListCoupon.length)) {
+          couponList();
+        }
+      }  
+    }
+
+    function isCompDefined () {
+      if (angular.isDefined($scope.discountListComp) && angular.isDefined($scope.discountListComp.length) && angular.isDefined($scope.companyDiscountsList) && angular.isDefined($scope.companyDiscountsList.comp)  && angular.isDefined($scope.companyDiscountsList.comp.length)) {
+        return true;
+      }
+
+      return false;
+    }
+
+    function compList () {
+      for (var i = $scope.discountListComp.length - 1; i >= 0; i--) {
+        for (var j = $scope.companyDiscountsList.comp.length - 1; j >= 0; j--) {
+          if ($scope.discountListComp[i].discountId === $scope.companyDiscountsList.comp[j].id) {
+            $scope.companyDiscountsList.comp.splice(j, 1);
+          }
+        }
+      }
+    } 
+
+    function updateCompList () {
+      $scope.companyDiscountsList.comp = angular.copy($scope.allCompList);
+      if (isCompDefined()) {
+        if (angular.isDefined($scope.discountListComp) && angular.isDefined($scope.discountListComp.length)) {
+          compList();
+        }
+      }  
+    }
+
+    function isFlyerDefined () {
+      if (angular.isDefined($scope.discountListFlyer) && angular.isDefined($scope.discountListFlyer.length) && angular.isDefined($scope.companyDiscountsList) && angular.isDefined($scope.companyDiscountsList.flyer)  && angular.isDefined($scope.companyDiscountsList.flyer.length)) {
+        return true;
+      }
+
+      return false;
+    }
+
+    function flyerList () {
+      for (var i = $scope.discountListFlyer.length - 1; i >= 0; i--) {
+        for (var j = $scope.companyDiscountsList.flyer.length - 1; j >= 0; j--) {
+          if ($scope.discountListFlyer[i].discountId === $scope.companyDiscountsList.flyer[j].id) {
+            $scope.companyDiscountsList.flyer.splice(j, 1);
+          }
+        }
+      }
+    }
+
+    function updateFrequentFlyerList () {
+      $scope.companyDiscountsList.flyer = angular.copy($scope.allFlyerList);
+      if (isFlyerDefined()) {
+        if (angular.isDefined($scope.discountListFlyer) && angular.isDefined($scope.discountListFlyer.length)) {
+          flyerList();
+        }
+      }  
+    }
+
+    function isVoucherDefined () {
+      if (angular.isDefined($scope.discountListVoucher) && angular.isDefined($scope.discountListVoucher.length) && angular.isDefined($scope.companyDiscountsList) && angular.isDefined($scope.companyDiscountsList.voucher)  && angular.isDefined($scope.companyDiscountsList.voucher.length)) {
+        return true;
+      }
+
+      return false;
+    }
+
+    function voucherList () {
+      for (var i = $scope.discountListVoucher.length - 1; i >= 0; i--) {
+        for (var j = $scope.companyDiscountsList.voucher.length - 1; j >= 0; j--) {
+          if ($scope.discountListVoucher[i].discountId === $scope.companyDiscountsList.voucher[j].id) {
+            $scope.companyDiscountsList.voucher.splice(j, 1);
+          }
+        }
+      }
+    }
+
+    function updateVoucherList () {
+      $scope.companyDiscountsList.voucher = angular.copy($scope.allVoucherList);
+      if (isVoucherDefined()) {
+        voucherList();
+      }
+    }
 
     $scope.onChangePriceOrQty = function (manualDiscountObj) {
       manualDiscountObj.currentCurrencyAmount = getCurrentCurrencyAmount(manualDiscountObj);
@@ -124,41 +358,13 @@ angular.module('ts5App')
       return parseFloat(сurrencyAmount).toFixed(2);
     }
 
-    function calculateBaseCurrencyAmount (discountObject) {
-      var baseCurrencyAmount = 0.00;
-      if (discountObject.exchangeRate.bankExchangeRate === null) {
-        var paperExchangeRate = discountObject.exchangeRate.paperExchangeRate;
-        var coinExchangeRate = discountObject.exchangeRate.coinExchangeRate;
-        if (!paperExchangeRate && !coinExchangeRate) {
-          return baseCurrencyAmount.toFixed(2);
-        }
-
-        var splitAmounts = (discountObject.currentCurrencyAmount).split('.');
-        var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
-        var convertedCoinAmount = (angular.isDefined(splitAmounts[1])) ? parseFloat(splitAmounts[1]) / coinExchangeRate : 0;
-
-        baseCurrencyAmount = convertedPaperAmount + (convertedCoinAmount / 100);
-      } else {
-        var exchangeRate = discountObject.exchangeRate.bankExchangeRate;
-        baseCurrencyAmount = (!exchangeRate ? 0.00 : parseFloat(discountObject.currentCurrencyAmount) / exchangeRate);
-      }
-
-      return baseCurrencyAmount;
-    }
-
     function getBaseCurrencyAmount (discountObject) {
       var baseCurrencyAmount = 0.00;
       if (!discountObject.currentCurrencyAmount) {
         return baseCurrencyAmount.toFixed(2);
       }
 
-      if ($scope.baseCurrency.currencyId && discountObject.currencyId && $scope.baseCurrency.currencyId === discountObject.currencyId) {
-        return discountObject.currentCurrencyAmount;
-      } else {
-        baseCurrencyAmount = calculateBaseCurrencyAmount(discountObject);
-      }
-
-      return baseCurrencyAmount.toFixed(2);
+      return discountObject.currentCurrencyAmount;
     }
 
     function setVerifiedInfo (verifiedDataFromAPI) {
@@ -185,9 +391,18 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    function verifySuccess() {
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'DISCOUNT').then(verifyToggleSuccess, showErrors);
+    }
+
     $scope.verify = function () {
       showLoadingModal('Verifying');
-      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'DISCOUNT').then(verifyToggleSuccess, showErrors);
+      var promises = [];
+      addToPromises($scope.discountListCoupon, promises);
+      addToPromises($scope.discountListVoucher, promises);
+      addToPromises($scope.discountListComp, promises);
+      addToPromises($scope.discountListFlyer, promises);
+      $q.all(promises).then(verifySuccess, showErrors);
     };
 
     $scope.unverify = function () {
@@ -273,17 +488,15 @@ angular.module('ts5App')
       });
     }
 
-    function setInitialCurreny (discount) {
-      if (!$scope.selectedCurrency.currency) {
-        $scope.selectedCurrency.currency = lodash.findWhere($scope.currencyList, { currencyId: discount.currencyId }) || {};
+    function setInitialCurreny () {
+      if (!$scope.baseCurrency || !$scope.baseCurrency.currency) {
+        setBaseCurrency();
       }
+
+      $scope.selectedCurrency = angular.copy($scope.baseCurrency); 
     }
 
     function setDiscountsList(allDiscountsTypeList) {
-      $scope.discountListCoupon = [];
-      $scope.discountListVoucher = [];
-      $scope.discountListComp = [];
-      $scope.discountListFlyer = [];
       angular.forEach(allDiscountsTypeList, function (discount) {
         var voucherListMatch = lodash.findWhere($scope.companyDiscountsList.voucher, { id: discount.discountId });
         var couponListMatch = lodash.findWhere($scope.companyDiscountsList.coupon, { id: discount.discountId });
@@ -300,7 +513,7 @@ angular.module('ts5App')
           addDiscountToList(discount, $scope.companyDiscountsList.flyer, $scope.discountListFlyer);
         }
 
-        setInitialCurreny(discount);
+        setInitialCurreny();
       });
     }
 
@@ -333,13 +546,26 @@ angular.module('ts5App')
         flyer: flyerList
       };
 
+      $scope.allVoucherList = angular.copy(voucherList);
+      $scope.allCouponList = angular.copy(couponList);
+      $scope.allCompList = angular.copy(compList);
+      $scope.allFlyerList = angular.copy(flyerList);
+
       setCashBagCurrencyList(currencyList);
       setBaseCurrency();
       setVerifiedData(verifiedData);
       setDiscountsList(allDiscountsTypeList);
+      updateCouponList();
+      updateCompList();
+      updateFrequentFlyerList();
+      updateVoucherList();
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {
+      $scope.discountListCoupon = [];
+      $scope.discountListVoucher = [];
+      $scope.discountListComp = [];
+      $scope.discountListFlyer = [];
       $scope.storeInstance = angular.copy(storeInstanceDataFromAPI);
       $scope.selectedCurrency = {};
       var dateForFilter = dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.storeInstance.scheduleDate));
