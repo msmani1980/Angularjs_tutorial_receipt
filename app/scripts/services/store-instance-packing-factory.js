@@ -42,6 +42,14 @@ angular.module('ts5App').service('storeInstancePackingFactory',
       return storeInstanceService.updateStoreInstanceItem(id, itemId, payload);
     }
 
+    function createStoreInstanceItems(id, payload) {
+      return storeInstanceService.createStoreInstanceItems(id, payload);
+    }
+
+    function updateStoreInstanceItems(id, payload) {
+      return storeInstanceService.updateStoreInstanceItems(id, payload);
+    }
+
     function updateStoreInstanceItemsBulk(id, payload) {
       return storeInstanceService.updateStoreInstanceItemsBulk(id, payload);
     }
@@ -91,7 +99,9 @@ angular.module('ts5App').service('storeInstancePackingFactory',
       getItemsMasterList: getItemsMasterList,
       getThresholdList: getThresholdList,
       getCompanyPreferences: getCompanyPreferences,
-      getCalculatedInboundQuantities: getCalculatedInboundQuantities
+      getCalculatedInboundQuantities: getCalculatedInboundQuantities,
+      createStoreInstanceItems: createStoreInstanceItems,
+      updateStoreInstanceItems: updateStoreInstanceItems
     };
 
   });
