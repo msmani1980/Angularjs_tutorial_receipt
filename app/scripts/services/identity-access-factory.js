@@ -109,7 +109,16 @@ angular.module('ts5App')
       function setSessionData(dataFromAPI) {
         encryptDataInLS(dataFromAPI);
         broadcastSuccess(dataFromAPI.companyData);
-        $location.path('/');
+        var refererReportAuth = $location.search().reportAuth;
+        var refererReportId = $location.search().report;
+        if (refererReportAuth === 'invalid' && refererReportId !== null) {
+          $location.url($location.path('/'));
+          $http.get('/report-api/templates', { headers: { sessionToken: getSessionObject().sessionToken } });
+          window.location.href = '/report-api/reports/' + refererReportId + '?sessionToken=' + getSessionObject().sessionToken;
+        } else {
+          $location.path('/');
+        }
+        
       }
 
       function isAuthorized() {

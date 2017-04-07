@@ -25,6 +25,15 @@ angular.module('ts5App')
       $scope.disableAll = true;
     }
 
+    $scope.isCashBagVerified = function (cashBag) {
+      var isCBgVerified = false;
+      if (angular.isDefined(cashBag) && angular.isDefined(cashBag.amendVerifiedOn)) {
+        isCBgVerified = (cashBag.amendVerifiedOn) ? true : false;
+      }
+
+      return isCBgVerified;
+    };
+
     $scope.navigateToForm = function (formName) {
       $location.path('manual-epos-' + formName + '/' + $routeParams.cashBagId);
     };
@@ -60,7 +69,7 @@ angular.module('ts5App')
     };
 
     function areAllChangesVerified() {
-      var formList = ['cash', 'credit', 'virtual', 'voucher', 'discount', 'promotion'];
+      var formList = ['cash', 'discount', 'promotion'];
       var unverifiedChangesExist = false;
       angular.forEach(formList, function (formName) {
         var isFormInvalid = ($scope.doesFormHaveChanges(formName)) ? !$scope.isFormVerified(formName) : false;

@@ -32,7 +32,9 @@ describe('Service: storeInstancePackingFactory', function () {
     spyOn(recordsService, 'getCountTypes');
     spyOn(storeInstanceService, 'updateStoreInstanceStatus');
     spyOn(storeInstanceService, 'createStoreInstanceItem');
+    spyOn(storeInstanceService, 'createStoreInstanceItems');
     spyOn(storeInstanceService, 'updateStoreInstanceItem');
+    spyOn(storeInstanceService, 'updateStoreInstanceItems');
     spyOn(storeInstanceService, 'updateStoreInstanceItemsBulk');
     spyOn(storeInstanceService, 'deleteStoreInstanceItem');
     spyOn(storeInstanceService, 'getStoreInstanceMenuItems');
@@ -58,6 +60,16 @@ describe('Service: storeInstancePackingFactory', function () {
     it('should call updateStoreInstanceItem', function () {
       storeInstancePackingFactory.updateStoreInstanceItem();
       expect(storeInstanceService.updateStoreInstanceItem).toHaveBeenCalled();
+    });
+
+    it('should call createStoreInstanceItems', function () {
+      storeInstancePackingFactory.createStoreInstanceItems();
+      expect(storeInstanceService.createStoreInstanceItems).toHaveBeenCalled();
+    });
+
+    it('should call updateStoreInstanceItem', function () {
+      storeInstancePackingFactory.updateStoreInstanceItems();
+      expect(storeInstanceService.updateStoreInstanceItems).toHaveBeenCalled();
     });
 
     it('should call updateStoreInstanceItemsBulk', function () {

@@ -10,7 +10,6 @@
 angular.module('ts5App')
   .controller('ManualEposPromotionCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService,
                                                    lodash, messageService, $location) {
-
     $scope.addPromotion = function () {
       var newPromotion = {
         cashbagId: $scope.cashBag.id,
@@ -19,18 +18,35 @@ angular.module('ts5App')
         promotionId: null,
         promotion: null,
         id: null,
-        currencyId: $scope.selectedCurrency.currency.currencyId,
-        currency: $scope.selectedCurrency.currency,
+        currencyId: $scope.baseCurrency.currencyId,
+        currency: $scope.baseCurrency.currency,
         amount: 0.00,
         quantity: 0,
         currentCurrencyAmount: 0.00,
         baseCurrencyAmount: 0.00,
-        exchangeRate: $scope.selectedCurrency.currency.exchangeRate,
+        exchangeRate: $scope.baseCurrency.currency.exchangeRate,
         companyId: $scope.companyId
       };
 
-      $scope.promotionList.push(newPromotion);
+      if (canAddPromotion()) {
+        $scope.promotionList.push(newPromotion);
+      }
     };
+
+    function canAddPromotion () {
+      var canAddPromo = false;
+      if ($scope.companyPromotionList.promotions.length > 0) {
+        canAddPromo = true;
+        for (var i = $scope.promotionList.length - 1; i >= 0; i--) {
+          if ($scope.promotionList[i].promotionId === null) {
+            canAddPromo = false;
+            break;
+          }
+        }
+      }
+
+      return canAddPromo;
+    }
 
     function saveSuccess() {
       hideLoadingModal();
@@ -146,8 +162,15 @@ angular.module('ts5App')
 
     $scope.verify = function () {
       showLoadingModal('Verifying');
-      manualEposFactory.verifyCashBag($scope.cashBag.id, 'PROMO').then(verifyToggleSuccess, showErrors);
+      $scope.shouldExit = false;
+      var promises = [];
+      addToPromises($scope.promotionList, promises);
+      $q.all(promises).then(saveSuccessVerify, showErrors);
     };
+
+    function saveSuccessVerify() {
+      manualEposFactory.verifyCashBag($scope.cashBag.id, 'PROMO').then(verifyToggleSuccess, showErrors);
+    }
 
     $scope.unverify = function () {
       showLoadingModal('Unverifying');
@@ -158,6 +181,8 @@ angular.module('ts5App')
       $scope.baseCurrency = {};
       $scope.baseCurrency.currencyId = globalMenuService.getCompanyData().baseCurrencyId;
       $scope.baseCurrency.currency = lodash.findWhere($scope.currencyList, { currencyId: $scope.baseCurrency.currencyId });
+      
+      $scope.selectedCurrency.currency = $scope.baseCurrency.currency;
     }
 
     function setCashBagCurrencyList(currencyList) {
@@ -172,46 +197,43 @@ angular.module('ts5App')
       });
     }
 
-    function setInitialCurreny(promotion) {
-      if (!$scope.selectedCurrency.currency) {
-        $scope.selectedCurrency.currency = lodash.findWhere($scope.currencyList, { currencyId: promotion.currencyId }) || {};
-      }
+    function setInitialCurreny() {
+      $scope.selectedCurrency.currency = $scope.baseCurrency.currency;
     }
 
-    function calculateBaseCurrencyAmount(promotionObject) {
-      var baseCurrencyAmount = 0.00;
-      if (promotionObject.exchangeRate.bankExchangeRate === null) {
-        var paperExchangeRate = promotionObject.exchangeRate.paperExchangeRate;
-        var coinExchangeRate = promotionObject.exchangeRate.coinExchangeRate;
-        if (!paperExchangeRate && !coinExchangeRate) {
-          return baseCurrencyAmount.toFixed(2);
+    $scope.isSaveVerify = function () {
+      var isDisable = true;
+      if (angular.isDefined($scope.promotionList) && $scope.promotionList.length > 0) {
+        for (var i = $scope.promotionList.length - 1; i >= 0; i--) {
+          isDisable = false;
+          if ($scope.promotionList[i].promotionId === null) {
+            isDisable = true;
+            break;
+          }
         }
+      } 
 
-        var splitAmounts = (promotionObject.currentCurrencyAmount).split('.');
-        var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
-        var convertedCoinAmount = parseFloat(splitAmounts[1]) / coinExchangeRate;
-        baseCurrencyAmount = convertedPaperAmount + (convertedCoinAmount / 100);
-      } else {
-        var exchangeRate = promotionObject.exchangeRate.bankExchangeRate;
-        baseCurrencyAmount = (!exchangeRate ? 0.00 : parseFloat(promotionObject.currentCurrencyAmount) / exchangeRate);
-      }
-
-      return baseCurrencyAmount;
-    }
-
-    $scope.onChangeCurrency = function () {
-      angular.forEach($scope.promotionList, function (promotion) {
-        promotion.exchangeRate = $scope.selectedCurrency.currency.exchangeRate;
-        promotion.currencyId = $scope.selectedCurrency.currency.currencyId;
-        promotion.baseCurrencyAmount = getBaseCurrencyAmount(promotion);
-      });
+      return isDisable;
     };
 
     $scope.onChangePromotion = function (promotionObj) {
       promotionObj.promotionId = promotionObj.companyPromotion.id;
       promotionObj.promotionName = (promotionObj.companyPromotion.promotionName && promotionObj.companyPromotion.promotionName !== null ? promotionObj.companyPromotion.promotionName : '');
+      updateCompanyPromotionList(); 
+
       return promotionObj;
     };
+    
+    function updateCompanyPromotionList () {
+      $scope.companyPromotionList = angular.copy($scope.allPromotionList);
+      for (var i = $scope.promotionList.length - 1; i >= 0; i--) {
+        for (var j = $scope.companyPromotionList.promotions.length - 1; j >= 0; j--) {
+          if ($scope.promotionList[i].promotionId === $scope.companyPromotionList.promotions[j].id) {
+            $scope.companyPromotionList.promotions.splice(j, 1);
+          }
+        }
+      }
+    }
 
     function getBaseCurrencyAmount(promotionObject) {
       var baseCurrencyAmount = 0.00;
@@ -219,13 +241,7 @@ angular.module('ts5App')
         return baseCurrencyAmount.toFixed(2);
       }
 
-      if ($scope.baseCurrency.currencyId && promotionObject.currencyId && $scope.baseCurrency.currencyId === promotionObject.currencyId) {
-        return promotionObject.currentCurrencyAmount;
-      } else {
-        baseCurrencyAmount = calculateBaseCurrencyAmount(promotionObject);
-      }
-
-      return baseCurrencyAmount.toFixed(2);
+      return promotionObject.currentCurrencyAmount;
     }
 
     function getCurrentCurrencyAmount(promotion) {
@@ -254,6 +270,9 @@ angular.module('ts5App')
         $scope.promotionList.push(angular.copy(promotion));
         setInitialCurreny(promotion);
       });
+
+      $scope.allPromotionList = angular.copy($scope.companyPromotionList);
+
     }
 
     function completeInit(responseCollection) {
@@ -268,15 +287,17 @@ angular.module('ts5App')
 
       setCashBagCurrencyList(currencyList);
       setBaseCurrency();
-
+      
       setVerifiedData(verifiedData);
       setPromotionsList(promoList, cmpPromotionsList);
+      updateCompanyPromotionList();
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {
       $scope.storeInstance = angular.copy(storeInstanceDataFromAPI);
       $scope.selectedCurrency = {};
       var dateForFilter = dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.storeInstance.scheduleDate));
+
       $scope.companyId = globalMenuService.getCompanyData().companyId;
       var payload = {
         companyId: $scope.companyId,

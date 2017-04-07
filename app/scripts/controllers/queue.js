@@ -24,7 +24,8 @@ angular.module('ts5App')
     });
 
     $scope.download = function (fileId) {
-      window.open(ENV.apiUrl + '/report-api/reports/' + fileId);
+      var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
+      window.open(ENV.apiUrl + '/report-api/reports/' + fileId + '?sessionToken=' + sessionToken);
     };
 
     $scope.delete = function (jobId) {
