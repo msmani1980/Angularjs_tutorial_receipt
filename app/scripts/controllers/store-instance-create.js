@@ -981,6 +981,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.createEditPromises = function (actionPayloadObj) {
+    
+      var endInstanceFlag = actionPayloadObj.actionOne === 'end-instance' ? true : false;
       var promises = {
         updateInstancePromises: [],
         updateInstanceStatusPromises: []
@@ -993,7 +995,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       promises.updateInstanceStatusPromises.push({
         f: storeInstanceFactory.updateStoreInstanceStatus,
         obj: storeInstanceFactory,
-        args: [$routeParams.storeId, $this.nextStep.stepName]
+        args: [$routeParams.storeId, $this.nextStep.stepName, false, endInstanceFlag]
       });
       if ($scope.prevStoreInstanceId && actionPayloadObj.actionTwo) {
         promises.updateInstancePromises.push({
@@ -1004,7 +1006,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         promises.updateInstanceStatusPromises.push({
           f: storeInstanceFactory.updateStoreInstanceStatus,
           obj: storeInstanceFactory,
-          args: [$scope.prevStoreInstanceId, $this.nextStep.storeOne.stepName]
+          args: [$scope.prevStoreInstanceId, $this.nextStep.storeOne.stepName, false, endInstanceFlag]
         });
       }
 

@@ -292,11 +292,11 @@ describe('The Item Price Type directive', function () {
                 });
 
                 it('should have a ng-selected attribute', function () {
-                  expect(option.attr('ng-selected')).toEqual('type.id === itemPrice.typeId');
+                  expect(option.attr('ng-options')).toEqual(undefined);
                 });
 
                 it('should have a ng-repeat attribute', function () {
-                  expect(option.attr('ng-repeat')).toEqual('type in $parent.priceTypes');
+                  expect(option.attr('ng-repeat')).toEqual(undefined);
                 });
 
                 it('should be defined in the DOM', function () {
@@ -304,7 +304,7 @@ describe('The Item Price Type directive', function () {
                 });
 
                 it('should set the value from the priceTypesJSON', function () {
-                  expect(option.attr('value')).toEqual(priceTypesJSON[0].id.toString());
+                  expect(option.attr('value')).toEqual('number:'+priceTypesJSON[0].id.toString());
                 });
 
                 it('should set the option display from the priceTypesJSON', function () {
