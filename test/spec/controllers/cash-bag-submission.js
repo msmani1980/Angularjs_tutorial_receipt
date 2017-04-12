@@ -195,11 +195,11 @@ describe('Controller: CashBagSubmissionCtrl', function() {
 
      it('getCashBagList has id or not',  function() {
         expect(cashBagFactory.getCashBagList).toHaveBeenCalled();
-        expect(scope.cashBagList[0].cashbagSubmittedBy).toBeDefined();
-        expect(scope.cashBagList[0].cashbagSubmittedBy).toEqual(-1);
-        expect(scope.cashBagList[1].cashbagSubmittedBy).toBeDefined();
-        expect(scope.cashBagList[1].cashbagSubmittedBy).toEqual(194);
-        expect(scope.cashBagList[2].cashbagSubmittedBy).toBe(null);
+        expect(scope.cashBagList[0].submittedBy).toBeDefined();
+        expect(scope.cashBagList[0].submittedBy).toEqual('Auto');
+        expect(scope.cashBagList[1].submittedBy).toBeDefined();
+        expect(scope.cashBagList[1].submittedBy).toEqual('-');
+        expect(scope.cashBagList[2].submittedBy).toBe('-');
       });
   });
 
