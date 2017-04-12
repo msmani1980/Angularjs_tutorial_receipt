@@ -124,7 +124,7 @@
                       <div class="input-group-addon">
                         {{ currency.code }} *
                       </div>
-                      <input ng-model="formData.amountDiscountValue[currency.id]" name="{{ currency.code }}AmountDiscountValue" ng-disabled="$parent.isDisabled()" type="text" class="form-control" ng-pattern="regexp.price" ng-required="formData.discountTypeId === 2" />
+                      <input ng-model="formData.amountDiscountValue[currency.id]" name="{{ currency.code }}AmountDiscountValue" ng-disabled="$parent.isDisabled()" type="text" class="form-control" ng-pattern="regexp.price" ng-required="formData.discountTypeId === 2 && $parent.shouldValidatePrice()" />
                     </div>
                   </div>
                 </div>

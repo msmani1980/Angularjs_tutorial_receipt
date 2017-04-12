@@ -411,6 +411,10 @@ angular.module('ts5App')
       return ($scope.viewOnly || $scope.discountIsActive);
     };
 
+    $scope.shouldValidatePrice = function() {
+      return !$scope.viewOnly && !$scope.discountIsActive;
+    };
+
     $scope.formScroll = function(id, activeBtn) {
       $scope.activeBtn = id;
       var elm = angular.element('#' + id);
