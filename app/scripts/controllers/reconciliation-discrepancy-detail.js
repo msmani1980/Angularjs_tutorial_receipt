@@ -171,7 +171,7 @@ angular.module('ts5App')
     function setOutlierItemsList(eposItemsFromAPI, rawLMPStockData) {
       var filteredEposItems = lodash.filter(eposItemsFromAPI, function (eposItem) {
         var stockItemMatch = lodash.findWhere($scope.stockItemList, { itemMasterId: eposItem.itemMasterId });
-        return stockItemMatch;
+        return !stockItemMatch;
       });
 
       angular.forEach(filteredEposItems, function (item) {
