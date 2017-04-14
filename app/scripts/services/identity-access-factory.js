@@ -16,8 +16,8 @@ angular.module('ts5App')
 
       function changePassword(credentials, sessionToken) {
         var payload = {
-          username: credentials.username,
-          password: CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64)
+          username: credentials.username.toLowerCase(),
+          password: CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.password).toString(CryptoJS.enc.Base64)
         };
         return identityAccessService.changePassword(payload, sessionToken);
       }
@@ -28,7 +28,7 @@ angular.module('ts5App')
 
       function sendRecoveryEmail(usernameOrPassword, emailContent, emailAddress, username) {
         var shouldRecoverUsername = usernameOrPassword === 'username';
-        var usernameToSend = (!username) ? '' : username;
+        var usernameToSend = (!username) ? '' : username.toLowerCase();
 
         return identityAccessService.sendEmail(shouldRecoverUsername, emailContent, emailAddress, usernameToSend);
       }
@@ -233,8 +233,8 @@ angular.module('ts5App')
 
       function login(credentials) {
         var payload = {
-          username: credentials.username,
-          password: CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64)
+          username: credentials.username.toLowerCase(),
+          password: CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.password).toString(CryptoJS.enc.Base64)
         };
         identityAccessService.authorizeUser(payload).then(checkForEULA, broadcastError);
       }
