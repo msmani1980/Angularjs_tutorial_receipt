@@ -771,18 +771,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
       });
     };
-    
+
     this.getSalesCategoryName = function(itemMasterId) {
-      var menuMatches = lodash.findWhere($scope.allowedMenuItemsForOffloadSection, {itemMasterId: itemMasterId });
+      var menuMatches = lodash.findWhere($scope.allowedMenuItemsForOffloadSection, { itemMasterId: itemMasterId });
       if (menuMatches) {
         return menuMatches.salesCategoryName;
       } else {
-    	  var menuMatchesNew = lodash.findWhere($scope.allItemForGettingSalesCategory, {itemMasterId: itemMasterId });
-    	  if (menuMatchesNew) {
-    	    return menuMatchesNew.salesCategoryName;
-    	  } else {
-            return '';
-    	  }
+        var menuMatchesNew = lodash.findWhere($scope.allItemForGettingSalesCategory, { itemMasterId: itemMasterId });
+        if (menuMatchesNew) {
+          return menuMatchesNew.salesCategoryName;
+        } else {
+          return '';
+        }
       }
     };
 
@@ -798,7 +798,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.mergeRedispatchItemsLoop = function(items, ignoreEposData) {
       angular.forEach(items, function(item) {
         item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
-        
         var pickListMatch = lodash.findWhere($scope.pickListItems, {
           itemMasterId: item.itemMasterId
         });
@@ -850,11 +849,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.mergeAllItems = function(responseCollection) {
       $scope.masterItemsList = angular.copy(responseCollection[0].masterItems);
+
       $this.mergeAllowedMenuItemsForOffloadSection(responseCollection);
+
       $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[1].response));
       $this.mergeStoreInstanceItems(angular.copy(responseCollection[2].response));
       if (responseCollection[4]) {
-    	$scope.allItemForGettingSalesCategory = angular.copy(responseCollection[4].response);
+        $scope.allItemForGettingSalesCategory = angular.copy(responseCollection[4].response);
         $this.mergeRedispatchItems(angular.copy(responseCollection[4].response));
       }
 

@@ -72,14 +72,14 @@ angular.module('ts5App')
 
       return totalMenuQuantity;
     }
-    
+
     this.getSalesCategoryName = function(itemMasterId) {
       var menuMatches = lodash.findWhere(_menuItems, { itemMasterId: itemMasterId });
-      
+        
       if (menuMatches) {
         return menuMatches.salesCategoryName;
-      } else {
-        var menuMatchesNew = lodash.findWhere($scope.allItemForGettingSalesCategory, {itemMasterId: itemMasterId });
+      } else { 
+        var menuMatchesNew = lodash.findWhere($scope.allItemForGettingSalesCategory, { itemMasterId: itemMasterId });
         if (menuMatchesNew) {
           return menuMatchesNew.salesCategoryName;
         } else {
