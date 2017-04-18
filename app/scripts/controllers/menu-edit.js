@@ -156,8 +156,13 @@ angular.module('ts5App')
       $this.editMenu();
     };
 
+    this.validateForm = function() {
+      $scope.displayError = !$scope.menuEditForm.$valid;
+      return $scope.menuEditForm.$valid;
+    };
+
     $scope.submitForm = function () {
-      if (!$scope.menuEditForm.$valid) {
+      if (!$this.validateForm()) {
         return false;
       }
 
