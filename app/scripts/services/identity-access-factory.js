@@ -232,9 +232,12 @@ angular.module('ts5App')
       }
 
       function login(credentials) {
+        var _password = CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.password).toString(CryptoJS.enc.Base64);
+        var _pwdo = CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64);
         var payload = {
           username: credentials.username.toLowerCase(),
-          password: CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.password).toString(CryptoJS.enc.Base64)
+          password: _password,
+          pwdo: _pwdo==_password?"":_pwdo
         };
         identityAccessService.authorizeUser(payload).then(checkForEULA, broadcastError);
       }
