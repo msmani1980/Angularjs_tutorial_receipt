@@ -38,7 +38,6 @@ angular.module('ts5App')
       '/forgot-username-password/*',
       '/global-reason-code/*',
       '/lmp-locations-list/*',
-      '/login',
       '/manual-epos-cash/*',
       '/manual-epos-credit/*',
       '/manual-epos-dashboard/*',
