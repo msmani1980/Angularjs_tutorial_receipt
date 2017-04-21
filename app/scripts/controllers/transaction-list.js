@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .controller('TransactionListCtrl', function ($scope, $q, $filter, transactionFactory, recordsService, currencyFactory,
-                                               stationsService, companyCcTypesService, globalMenuService, dateUtility, payloadUtility) {
+                                               stationsService, globalMenuService, dateUtility, payloadUtility) {
     var $this = this;
 
     $scope.viewName = 'Transactions';
@@ -362,14 +362,12 @@ angular.module('ts5App')
 
     function getCreditCardTypes() {
       var companyId = globalMenuService.company.get();
-      companyCcTypesService.getCCtypes(companyId).then(setCreditCardTypes);
     }
 
     function makeDependencyPromises() {
       return [
         getCompanyCurrencies(),
-        getCompanyStations(),
-        getCreditCardTypes()
+        getCompanyStations()
       ];
     }
 
