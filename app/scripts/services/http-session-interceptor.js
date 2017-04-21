@@ -63,7 +63,6 @@ angular.module('ts5App')
 
     var legacyApis = [
       '/rsvr/api/dispatch/store-instances/[0-9]*/status/[9-9][^11]*$',
-      '/rsvr/api/companies/[0-9]*/company-credit-card-types',
       '/rsvr/api/company-discounts/[0-9]*$'
     ];
 
