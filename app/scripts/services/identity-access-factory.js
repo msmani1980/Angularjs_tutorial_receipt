@@ -118,7 +118,7 @@ angular.module('ts5App')
         } else {
           $location.path('/');
         }
-        
+
       }
 
       function isAuthorized() {
@@ -170,17 +170,17 @@ angular.module('ts5App')
         sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, {
           id: sessionObject.companyData.companyTypeId
         }).companyTypeName);
-        
+
         if (sessionObject.companyData.companyTypeName === 'Cash Handler' || sessionObject.companyData.companyTypeId === 5) {
           var chCompanyList = angular.copy(lodash.findWhere(sessionObject.userCompanies, { type: { companyTypeName: 'Retail' } }));
-          
+
           if (chCompanyList !== undefined) {
             chCompanyList.companyId = chCompanyList.id;
             sessionObject.companyData.chCompany = angular.copy(chCompanyList);
           }
-          
+
         }
-        
+
         setSessionData(sessionObject);
       }
 
@@ -237,7 +237,7 @@ angular.module('ts5App')
         var payload = {
           username: credentials.username.toLowerCase(),
           password: _password,
-          pwdo: _pwdo==_password?"":_pwdo
+          pwdo: _pwdo === _password ? '' : _pwdo
         };
         identityAccessService.authorizeUser(payload).then(checkForEULA, broadcastError);
       }
