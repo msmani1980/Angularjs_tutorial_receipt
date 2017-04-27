@@ -205,12 +205,12 @@ describe('Service: identityAccessFactory', function() {
     it('should set session data in localStorage', function() {
       expect(localStorage.sessionObject).toBeDefined();
     });
-    
+
     it('should have companyTypeName on LS', function() {
     	 scope.$digest();
          expect(identityAccessFactory.getSessionObject().companyTypes[0].companyTypeName).toBeDefined();
     });
-    
+
     it('should return true is session stored on LS', function() {
       expect(identityAccessFactory.isAuthorized()).toBe(true);
     });
@@ -268,11 +268,11 @@ describe('Service: identityAccessFactory', function() {
     it('should pass true if username is selected', function() {
       identityAccessFactory.sendRecoveryEmail('username', 'fakeContent', 'fakeEmail', 'fakeUser');
       expect(identityAccessService.sendEmail).toHaveBeenCalledWith(true, 'fakeContent', 'fakeEmail',
-        'fakeUser');
+        'fakeuser');
 
       identityAccessFactory.sendRecoveryEmail('password', 'fakeContent', 'fakeEmail', 'fakeUser');
       expect(identityAccessService.sendEmail).toHaveBeenCalledWith(false, 'fakeContent', 'fakeEmail',
-        'fakeUser');
+        'fakeuser');
     });
   });
 
