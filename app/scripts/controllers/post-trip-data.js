@@ -18,6 +18,9 @@ angular.module('ts5App')
     $scope.readOnly = false;
     $scope.selectedEmployees = {};
     $scope.stationList = [];
+    $scope.postTrip = {
+      scheduleNumber: null
+    };
 
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -87,10 +90,25 @@ angular.module('ts5App')
 
     this.getSchedulesSuccess = function(response) {
       $scope.schedules = response.distinctSchedules;
+      $scope.slicedSchedules = sliceScheduleNumbers($scope.schedules);
     };
 
     this.getCarrierSuccess = function(response) {
       $scope.carrierNumbers = angular.copy(response.response);
+    };
+
+    function sliceScheduleNumbers(schedules) {
+      return lodash.map(schedules, function(schedule) {
+        return schedule.scheduleNumber;
+      });
+    }
+
+    $scope.getScheduleNumbers = function(search) {
+      if (search && $scope.slicedSchedules.indexOf(search) === -1) {
+        $scope.slicedSchedules.push(search);
+      }
+
+      return $scope.slicedSchedules;
     };
 
     this.saveFormSuccess = function(response) {
