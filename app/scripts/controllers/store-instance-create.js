@@ -249,7 +249,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var newMenus = [];
       angular.forEach($scope.formData.menus, function (menu) {
         var newMenu = $this.generateNewMenu(menu);
-        newMenus.push(newMenu);
+
+        var filteredMenu = lodash.findWhere($scope.filteredMenuList, {
+          id: newMenu.id
+        });
+
+        if (filteredMenu) {
+          newMenus.push(newMenu);
+        }
       });
 
       $scope.formData.menus = newMenus;
@@ -981,7 +988,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.createEditPromises = function (actionPayloadObj) {
-    
+
       var endInstanceFlag = actionPayloadObj.actionOne === 'end-instance' ? true : false;
       var promises = {
         updateInstancePromises: [],
