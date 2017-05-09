@@ -750,7 +750,7 @@
                   <h4>Post Trip Sectors</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-primary btn-sm" ng-show="canAddPosttripToCashBag(cashBag) && !cashBag.isDeleted && canExecuteActions(cashBag)" ng-click="showAddOrEditScheduleModal(cashBag)">
+                  <button class="btn btn-primary btn-sm" ng-show="canAddPosttripToCashBag(cashBag) && !cashBag.isDeleted && canExecuteActions(cashBag)" ng-click="showAddOrEditScheduleModal(cashBag)" >
                     <i class="fa fa-plus active"></i> Add Post Trip
                   </button>
                   <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-show="!isCrewDataOpen(cashBag)">
@@ -829,7 +829,7 @@
                   <button class="btn btn-info" title="Show Payment Report" ng-click="showCashBagPaymentReport(cashBag)">
                     <i class="fa fa-file-text active"></i>
                   </button>
-                  <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" title="Add Manual Data" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual &&  hasFlightSectors(cashBag)">
+                  <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" title="Add Manual Data" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual">
                     <i class="fa fa-plus-circle active"></i>
                   </a>
                   <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag) && canExecuteActions(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
