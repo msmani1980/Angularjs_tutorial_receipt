@@ -23,12 +23,15 @@ angular.module('ts5App')
     $scope.multiSelectedValues = {};
     $scope.stationList = [];
     $scope.postTrips = [];
+    $scope.loadingBarVisible = false;
 
     function showLoadingBar() {
+      $scope.loadingBarVisible = true;
       angular.element('.loading-more').show();
     }
 
     function hideLoadingBar() {
+      $scope.loadingBarVisible = false;
       angular.element('.loading-more').hide();
       angular.element('.modal-backdrop').remove();
     }

@@ -16,8 +16,8 @@ angular.module('ts5App')
 
       function changePassword(credentials, sessionToken) {
         var payload = {
-          username: credentials.username,
-          password: CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64)
+          username: credentials.username.toLowerCase(),
+          password: CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.password).toString(CryptoJS.enc.Base64)
         };
         return identityAccessService.changePassword(payload, sessionToken);
       }
@@ -28,7 +28,7 @@ angular.module('ts5App')
 
       function sendRecoveryEmail(usernameOrPassword, emailContent, emailAddress, username) {
         var shouldRecoverUsername = usernameOrPassword === 'username';
-        var usernameToSend = (!username) ? '' : username;
+        var usernameToSend = (!username) ? '' : username.toLowerCase();
 
         return identityAccessService.sendEmail(shouldRecoverUsername, emailContent, emailAddress, usernameToSend);
       }
@@ -118,7 +118,7 @@ angular.module('ts5App')
         } else {
           $location.path('/');
         }
-        
+
       }
 
       function isAuthorized() {
@@ -170,17 +170,17 @@ angular.module('ts5App')
         sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, {
           id: sessionObject.companyData.companyTypeId
         }).companyTypeName);
-        
+
         if (sessionObject.companyData.companyTypeName === 'Cash Handler' || sessionObject.companyData.companyTypeId === 5) {
           var chCompanyList = angular.copy(lodash.findWhere(sessionObject.userCompanies, { type: { companyTypeName: 'Retail' } }));
-          
+
           if (chCompanyList !== undefined) {
             chCompanyList.companyId = chCompanyList.id;
             sessionObject.companyData.chCompany = angular.copy(chCompanyList);
           }
-          
+
         }
-        
+
         setSessionData(sessionObject);
       }
 
@@ -232,9 +232,12 @@ angular.module('ts5App')
       }
 
       function login(credentials) {
+        var _password = CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.password).toString(CryptoJS.enc.Base64);
+        var _pwdo = CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64);
         var payload = {
-          username: credentials.username,
-          password: CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64)
+          username: credentials.username.toLowerCase(),
+          password: _password,
+          pwdo: _pwdo === _password ? '' : _pwdo
         };
         identityAccessService.authorizeUser(payload).then(checkForEULA, broadcastError);
       }
