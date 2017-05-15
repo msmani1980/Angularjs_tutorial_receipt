@@ -407,7 +407,7 @@ angular.module('ts5App')
 
     $scope.hasSelectedInstancesWithRequiresAmendVerification = function () {
       return lodash.filter($scope.reconciliationList, function(item) {
-          return item.requiresAmendVerification === true;
+          return item.selected === true && item.requiresAmendVerification === true;
         }).length > 0;
     };
 
