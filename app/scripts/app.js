@@ -376,6 +376,9 @@ angular.module('ts5App', [
   }).when('/promotion-catalog-conjunction/:action/:id', {
     templateUrl: 'views/promotion-catalog-conjunction.html',
     controller: 'PromotionCatalogConjunctionCtrl'
+  }).when('/epos-transaction-list', {
+	templateUrl: 'views/epos-transaction-list.html',
+	controller: 'EposTransactionListCtrl',
   }).otherwise({
     redirectTo: '/'
   });
