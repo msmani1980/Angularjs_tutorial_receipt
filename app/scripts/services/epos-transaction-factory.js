@@ -8,13 +8,15 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('eposTransactionFactory', function (eposTransactionService) {
+      .factory('eposTransactionFactory', function (eposTransactionService) {
 
-	    function getEposTransactionList (payload) {
-	      return eposTransactionService.getEposTransactionList(payload);
-	    }
+        function getEposTransactionList (payload) {
+          return eposTransactionService.getEposTransactionList(payload);
+        }
 
-	    return {
-	    	getEposTransactionList: getEposTransactionList
-	    };
- });
+        return {
+          getEposTransactionList: getEposTransactionList
+
+        };
+
+      });

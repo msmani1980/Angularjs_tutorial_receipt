@@ -8,27 +8,28 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('eposTransactionService', function ($http, $resource, ENV) {
+    .service('eposTransactionService', function ($http, $resource, ENV) {
 
-	    var requestURL = ENV.apiUrl + '/rsvr/api/epos';
-	    var requestParameters = {
-	      limit: 50
-	    };
+      var requestURL = ENV.apiUrl + '/rsvr/api/epos';
+      var requestParameters = {
+        limit: 50
+      };
 
-	    var actions = {
-	      getEposTransactionList: {
-	        method: 'GET'
-	      }
-	    };
+      var actions = {
+        getEposTransactionList: {
+          method: 'GET'
+        }
+      };
 
-	    var requestResource = $resource(requestURL, requestParameters, actions);
+      var requestResource = $resource(requestURL, requestParameters, actions);
 
-	    function getEposTransactionList(payload) {
-	      return requestResource.getEposTransactionList(payload).$promise;
+      function getEposTransactionList(payload) {
+        return requestResource.getEposTransactionList(payload).$promise;
 
-	    }
+      }
 
-	    return {
-	    	getEposTransactionList:getEposTransactionList
-	    };
- });
+      return {
+        getEposTransactionList:getEposTransactionList
+      };
+    });
+   
