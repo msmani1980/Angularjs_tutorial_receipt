@@ -169,18 +169,25 @@ angular.module('ts5App')
     }
 
     function setOutlierItemsList(eposItemsFromAPI, rawLMPStockData) {
+      $scope.outlierItemList = [];
       var filteredEposItems = lodash.filter(eposItemsFromAPI, function (eposItem) {
         var stockItemMatch = lodash.findWhere($scope.stockItemList, { itemMasterId: eposItem.itemMasterId });
         return !stockItemMatch;
       });
 
-      angular.forEach(filteredEposItems, function (item) {
-        formatEposItem(item, rawLMPStockData);
-      });
+      if (filteredEposItems.length) {
+        reconciliationFactory.getMenuList().then(function (menuListFromAPI) {
+          $this.menuList = angular.copy(menuListFromAPI.menus);
 
-      $scope.outlierItemList = filteredEposItems;
-      if ($scope.outlierItemList.length) {
-        $scope.outlierItemData.menuList = $scope.outlierItemData.menuList.toString();
+          angular.forEach(filteredEposItems, function (item) {
+            formatEposItem(item, rawLMPStockData);
+          });
+
+          $scope.outlierItemList = filteredEposItems;
+          if ($scope.outlierItemList.length) {
+            $scope.outlierItemData.menuList = $scope.outlierItemData.menuList.toString();
+          }
+        });
       }
     }
 
@@ -615,7 +622,6 @@ angular.module('ts5App')
       setCashPreference(responseCollection[8]);
       setStatusList(responseCollection[9]);
       $this.carrierInstanceList = angular.copy(responseCollection[10].response);
-      $this.menuList = angular.copy(responseCollection[11].menus);
 
       $scope.totalRevenue = {
         cashHandler: $scope.companyIsUsingCash ? formatAsCurrency(getCHRevenue($this.chRevenue)) : 0,
@@ -664,8 +670,7 @@ angular.module('ts5App')
         reconciliationFactory.getPaymentReport($routeParams.storeInstanceId),
         reconciliationFactory.getCompanyPreferences(),
         reconciliationFactory.getStoreStatusList(),
-        reconciliationFactory.getCarrierInstanceList($routeParams.storeInstanceId),
-        reconciliationFactory.getMenuList()
+        reconciliationFactory.getCarrierInstanceList($routeParams.storeInstanceId)
       ];
 
       $q.all(promiseArray).then(setupData, handleResponseError);
