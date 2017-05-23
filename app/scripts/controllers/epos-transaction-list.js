@@ -15,11 +15,10 @@ angular.module('ts5App')
       $scope.eposTransactions = []; 
       
       $scope.statuses = {
-        All: 'All',
-        OM: 'Success',
-        AJSD: 'Error',
+        B: 'All',
+        OMICF: 'Success',
+        AJSDH: 'Error',
         NRP: 'InProgress',
-        B: 'NotStatus'
       };
       
       $scope.displayColumns = {
@@ -91,11 +90,18 @@ angular.module('ts5App')
       };
     
       function generateGetTransactionsPayload() {
-        var payload = {
+    	var payload = {
           limit: $this.meta.limit,
-          offset: $this.meta.offset
+          offset: $this.meta.offset,
         };
-
+        var st = $scope.status;
+        $scope.status = '';
+        if(st!='B'){
+        	payload.statuses = st;
+        } else{
+        	payload.notstatuses = 'B';        	
+        }
+        
         if ($this.isSearch) {
           angular.extend(payload, $scope.search);
         }

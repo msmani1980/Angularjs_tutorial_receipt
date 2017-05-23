@@ -99,21 +99,29 @@
       <th>URL</th>
       <th>Started</th>
       <th>UTC Date Time</th>
+      <th>Kbps</th>
+      <th>cs</th>
       <th>Minor Version</th>
-      <th>Missed Fields</th>
+      <th>Missed Fields / Error Msg</th>
       <th>Device ActivityId</th>
       <th>File Name</th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="eposTransaction in eposTransactions">
-      <td>{{ eposTransaction.url }}{{ eposTransaction.id }}/{{ eposTransaction.checksum }}/{{ eposTransaction.threadId }} </td>
+      <td>{{ eposTransaction.id }}
+      	<a href='{{ eposTransaction.url }}{{ eposTransaction.id }}/{{ eposTransaction.checksum }}/{{ eposTransaction.threadId }}'>
+      		{{ eposTransaction.status }}</a> </td>
       <td>{{ eposTransaction.started }}</td>
       <td>{{ eposTransaction.utcDatetime }}</td>
+      <td>{{ eposTransaction.speed }}</td>
+      <td>{{ eposTransaction.transactions }}</td>
       <td>{{ eposTransaction.minorVersion }}</td>
-      <td>{{ eposTransaction.missedFields }}</td>
+      <td> {{ eposTransaction.errorMsg }}
+      	<span>...{{ eposTransaction.missedFields }}...</span></td> <!-- show second 70 chars of this field --> 
       <td>{{ eposTransaction.deviceActivityId }}</td>
       <td>{{ eposTransaction.fileName }}</td>
+      <td>{{ eposTransaction.dbVersion }}</td>
     </tr>
     </tbody>
   </table>
