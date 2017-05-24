@@ -307,7 +307,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       2: ['Seal'],
       3: ['Dispatch', 'Offload', 'Checkbox', 'Inbounded', 'On Floor'],
       4: ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
-      5: ['End Instance', 'Redispatch', 'Get Flight Docs', 'Checkbox'],
+      5: ['Un-Receive', 'End Instance', 'Redispatch', 'Get Flight Docs', 'Checkbox'],
       6: ['Start Inbound Seals', 'Get Flight Docs', 'Checkbox'],
       7: ['Start Offload', 'Get Flight Docs', 'Checkbox'],
       8: ['Get Flight Docs', 'Checkbox']
@@ -644,9 +644,15 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.openReceiveConfirmation = function (store) {
-      var modalElement = angular.element('#receive-confirm');
+        var modalElement = angular.element('#receive-confirm');
+        modalElement.modal('show');
+        $scope.receiveStore = store;
+      };
+
+    $scope.openUnReceiveConfirmation = function (store) {
+      var modalElement = angular.element('#unreceive-confirm');
       modalElement.modal('show');
-      $scope.receiveStore = store;
+      $scope.unReceiveStore = store;
     };
 
     function storeStatusSuccessHandler() {
@@ -654,6 +660,16 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       messageService.display('success', 'Store has been logged as received.');
       $scope.reloadRoute();
     }
+
+    $scope.storeStatusUnReceived = function (store) {
+      var modalElement = angular.element('#unreceive-confirm');
+      modalElement.modal('hide');
+      showLoadingModal('Changing Store Instance ' + store.id + ' Status');
+      var promises = [
+        storeInstanceDashboardFactory.updateStoreInstanceStatus(store.id, 4, store.cateringStationId)
+        ];
+      $q.all(promises).then(storeStatusSuccessHandler, showErrors);
+    };
 
     $scope.storeStatusReceived = function (store) {
       var modalElement = angular.element('#receive-confirm');
