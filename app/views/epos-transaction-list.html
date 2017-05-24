@@ -32,14 +32,14 @@
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="store-date">Store Date</label>
-                <input ng-model="search.storeDate" type="text" class="form-control" id="store-date" />
+                <input ng-model="search.storeDate" type="date" class="form-control" id="store-date" />
               </div>
             </div>
             
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
-                <label for="store-days">Days</label>
-                <input ng-model="search.storeDays" type="text" class="form-control" id="store-days" />
+                <label for="store-instance">StoreInstance</label>
+                <input ng-model="search.storeInstance" type="number" class="form-control" id="store-iInstance" />
               </div>
             </div>
             
@@ -50,11 +50,17 @@
               </div>
             </div>
             
-            
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="device-activity-id">Device Activity Id</label>
-                <input ng-model="search.deviceActivityId" type="text" class="form-control" id="device-activity-id" />
+                <input ng-model="search.deviceActivityId" type="number" class="form-control" id="device-activity-id" />
+              </div>
+            </div>
+            
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="file-name">File Name</label>
+                <input ng-model="search.fileName" type="text" class="form-control" id="file-name" />
               </div>
             </div>
 	
@@ -78,6 +84,13 @@
               is-search-field="true">
             </date-picker>
             
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="store-days">Days</label>
+                <input ng-model="search.storeDays" type="text" class="form-control" id="store-days" />
+              </div>
+            </div>
+            
           </div>
 
         </div>
@@ -96,24 +109,26 @@
     <table infinite-scroll="getEposTransactions()" class="table table-bordered table-hover">
     <thead>
     <tr>
-      <th>URL</th>
+      <th>Status</th>
       <th>Started</th>
       <th>UTC Date Time</th>
       <th>Kbps</th>
-      <th>cs</th>
-      <th>Minor Version</th>
+      <th>S/C</th>
+      <th>Json Version</th>
       <th>Missed Fields / Error Msg</th>
       <th>Device ActivityId</th>
       <th>File Name</th>
+      <th>DB</th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="eposTransaction in eposTransactions">
-      <td>{{ eposTransaction.id }}
+      <td> <!-- do not build url is status is B -->
       	<a href='{{ eposTransaction.url }}{{ eposTransaction.id }}/{{ eposTransaction.checksum }}/{{ eposTransaction.threadId }}'>
-      		{{ eposTransaction.status }}</a> </td>
+      		#{{ eposTransaction.id }}_{{ eposTransaction.status }}</a> </td> 
+      		<!-- convert status code to name -->
       <td>{{ eposTransaction.started }}</td>
-      <td>{{ eposTransaction.utcDatetime }}</td>
+      <td>{{ eposTransaction.utcDatetime }}</td> <!-- no timestamp!? -->
       <td>{{ eposTransaction.speed }}</td>
       <td>{{ eposTransaction.transactions }}</td>
       <td>{{ eposTransaction.minorVersion }}</td>

@@ -7,18 +7,39 @@
  * # EposTransactionListCtrl
  * Controller of the ts5App
  */
+/*
+'N':'New record',
+'O':'OK',
+'B':'OK, No data',
+'P':'Processing Started',
+'R':'Ready to Re-Start',
+'S':'JSON Structure Validation Failed',
+'V':'Validation Failed',
+'D':'Database Constraint Failed',
+'J':'Java Error (500)',
+'A':'APIException Error (500)',
+'E':'eMail Notification Failed',
+'U':'OK, Updated',
+'M':'OK, Merged',
+'I':'OK, Ignored',
+'C':'OK, Commission Paid.',
+'F':'OK, Fixed Duplicates',
+//'X':'OK, reserved not used',
+'H':'S3 double triggered'
+*/
 angular.module('ts5App')
     .controller('EposTransactionListCtrl', function ($scope, $q, $filter, eposTransactionFactory, dateUtility) {
       var $this = this;
-      $scope.viewName = 'Epos Transactions';
+      $scope.viewName = 'Epos Sync';
       
       $scope.eposTransactions = []; 
       
       $scope.statuses = {
-        B: 'All',
+        B: 'All, but PreSync',
         OMICF: 'Success',
         AJSDH: 'Error',
-        NRP: 'InProgress',
+        NRP: 'In Progress',
+        XB: 'PreSync',
       };
       
       $scope.displayColumns = {
@@ -112,7 +133,8 @@ angular.module('ts5App')
       function setDefaultMetaPayload() {
         $this.meta = {
           limit: 100,
-          offset: 0
+          offset: 0,
+          notstatuses = 'B'
         };
       }
       
