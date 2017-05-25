@@ -134,7 +134,7 @@ angular.module('ts5App')
         $this.meta = {
           limit: 100,
           offset: 0,
-          notstatuses = 'B'
+          notstatuses: 'B'
         };
       }
       
