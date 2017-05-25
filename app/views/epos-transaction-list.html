@@ -39,7 +39,7 @@
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="store-instance">StoreInstance</label>
-                <input ng-model="search.storeInstance" type="number" class="form-control" id="store-iInstance" />
+                <input ng-model="search.storeInstance" type="text" class="form-control" id="store-iInstance" />
               </div>
             </div>
             
@@ -87,7 +87,7 @@
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="store-days">Days</label>
-                <input ng-model="search.storeDays" type="text" class="form-control" id="store-days" />
+                <input ng-model="search.storeDays" type="number" class="form-control" id="store-days" />
               </div>
             </div>
             
@@ -109,33 +109,35 @@
     <table infinite-scroll="getEposTransactions()" class="table table-bordered table-hover">
     <thead>
     <tr>
-      <th>Status</th>
-      <th>Started</th>
-      <th>UTC Date Time</th>
-      <th>Kbps</th>
-      <th>S/C</th>
-      <th>Json Version</th>
-      <th>Missed Fields / Error Msg</th>
-      <th>Device ActivityId</th>
-      <th>File Name</th>
-      <th>DB</th>
+      <th><a href="#" title='link to json for files except NoData'>Status</a></th>
+      <th><a href="#" title='UTC Date Time'>Submitted</a></th>
+      <th><a href="#" title='UTC Date Time'>Started</a></th>
+      <th><a href="#" title='Processing speed if processed'>Kbps</a></th>
+      <th><a href="#" title='Total Shopping Carts in sync file'>S/C</a></th>
+      <th><a href="#" title='Json Minor Version'>Version</a></th>
+      <th><a href="#" title='Click to quoted test for expand'>Comments / Missed Fields / Error Msg</a></th>
+      <th><a href="#" title='Device Activity Id'>ActivityId</a></th>
+      <th><a href="#" title='S3 File Name'>File Name</a></th>
+      <th><a href="#" title='Flyway DB version, but not include flyway portal DB tag version'>DB</a></th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="eposTransaction in eposTransactions">
-      <td> <!-- do not build url is status is B -->
-      	<a href='{{ eposTransaction.url }}{{ eposTransaction.id }}/{{ eposTransaction.checksum }}/{{ eposTransaction.threadId }}'>
-      		#{{ eposTransaction.id }}_{{ eposTransaction.status }}</a> </td> 
-      		<!-- convert status code to name -->
-      <td>{{ eposTransaction.started }}</td>
-      <td>{{ eposTransaction.utcDatetime }}</td> <!-- no timestamp!? -->
+      <td><a href='{{ eposTransaction.statusHref }}' target='blank'>{{ eposTransaction.statusName }}</a> </td> 
+      <td><a href="#" title='{{ eposTransaction.utcDatetimeAgo }}'>{{ eposTransaction.utcDatetime }}</a></td>
+      <td><a href="#" title='{{ eposTransaction.startedAgo }}'>{{ eposTransaction.started }}</a></td>
       <td>{{ eposTransaction.speed }}</td>
       <td>{{ eposTransaction.transactions }}</td>
       <td>{{ eposTransaction.minorVersion }}</td>
-      <td> {{ eposTransaction.errorMsg }}
-      	<span>...{{ eposTransaction.missedFields }}...</span></td> <!-- show second 70 chars of this field --> 
+      <td> 
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed">{{ eposTransaction.msg }}</div>
+          <div ng-show="collapsed"> {{ eposTransaction.errorMsg }} {{ eposTransaction.missedFields }}<div>
+      </td> 
       <td>{{ eposTransaction.deviceActivityId }}</td>
-      <td>{{ eposTransaction.fileName }}</td>
+      <td>
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed">{{ eposTransaction.fileNameShort }}</div>
+          <div ng-show="collapsed"> {{ eposTransaction.fileName }} <div>
+      </td>
       <td>{{ eposTransaction.dbVersion }}</td>
     </tr>
     </tbody>

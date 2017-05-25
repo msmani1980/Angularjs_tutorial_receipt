@@ -7,31 +7,11 @@
  * # EposTransactionListCtrl
  * Controller of the ts5App
  */
-/*
-'N':'New record',
-'O':'OK',
-'B':'OK, No data',
-'P':'Processing Started',
-'R':'Ready to Re-Start',
-'S':'JSON Structure Validation Failed',
-'V':'Validation Failed',
-'D':'Database Constraint Failed',
-'J':'Java Error (500)',
-'A':'APIException Error (500)',
-'E':'eMail Notification Failed',
-'U':'OK, Updated',
-'M':'OK, Merged',
-'I':'OK, Ignored',
-'C':'OK, Commission Paid.',
-'F':'OK, Fixed Duplicates',
-//'X':'OK, reserved not used',
-'H':'S3 double triggered'
-*/
 angular.module('ts5App')
     .controller('EposTransactionListCtrl', function ($scope, $q, $filter, eposTransactionFactory, dateUtility) {
       var $this = this;
-      $scope.viewName = 'Epos Sync';
-      
+      $scope.viewName = 'Epos Syncronizations';
+      $scope.isCollapsed = false;
       $scope.eposTransactions = []; 
       
       $scope.statuses = {
@@ -40,6 +20,27 @@ angular.module('ts5App')
         AJSDH: 'Error',
         NRP: 'In Progress',
         XB: 'PreSync',
+      };
+
+      $scope.statusName = {
+        N:'New record',
+        O:'OK',
+        B:'OK, No data',
+        P:'Processing Started',
+        R:'Ready to Re-Start',
+        S:'JSON Structure Validation Failed',
+        V:'Validation Failed',
+        D:'Database Constraint Failed',
+        J:'Java Error (500)',
+        A:'APIException Error (500)',
+        E:'eMail Notification Failed',
+        U:'OK, Updated',
+        M:'OK, Merged',
+        I:'OK, Ignored',
+        C:'OK, Commission Paid.',
+        F:'OK, Fixed Duplicates',
+        //X':'OK, reserved not used',
+        H:'S3 double triggered'
       };
       
       $scope.displayColumns = {
@@ -68,13 +69,13 @@ angular.module('ts5App')
       };
     
       $scope.printScheduleDate = function (eposTransaction) {
-        if (eposTransaction.scheduleDate) {
-          return eposTransaction.scheduleDate;
-        }
-        
-        return eposTransaction.originScheduleDate;
-      };
-     
+          if (eposTransaction.scheduleDate) {
+            return eposTransaction.scheduleDate;
+          }
+          
+          return eposTransaction.originScheduleDate;
+        };
+       
       $this.meta = {};
       
       $this.isSearch = false;    
@@ -115,24 +116,22 @@ angular.module('ts5App')
           limit: $this.meta.limit,
           offset: $this.meta.offset,
         };
-        var st = $scope.status;
-        $scope.status = '';
-        if(st!='B'){
-        	payload.statuses = st;
-        } else{
+        var st = $scope.search.status;
+        $scope.search.status = '';
+        if(st === undefined || st == 'B'){
         	payload.notstatuses = 'B';        	
+        } else{
+        	payload.statuses = st;
         }
-        
         if ($this.isSearch) {
           angular.extend(payload, $scope.search);
         }
-
         return payload;
       }
     
       function setDefaultMetaPayload() {
         $this.meta = {
-          limit: 100,
+          limit: 20,
           offset: 0,
           notstatuses: 'B'
         };
@@ -149,12 +148,26 @@ angular.module('ts5App')
       
       function normalizeTransactions(transactions) {
         angular.forEach(transactions, function (transaction) {
-          formatDateIfDefined(transaction, 'utcDatetime');
+        	formatEposTransaction(transaction); //          formatDateIfDefined(transaction, 'utcDatetime');
         });
       
         return transactions;
       }
-      
+
+      function formatEposTransaction(eposTransaction) {
+    	 eposTransaction.statusName = $scope.statusName[eposTransaction.status];
+         eposTransaction.statusHref = eposTransaction.status=='B'?'#':
+        	 eposTransaction.url + eposTransaction.id +'/'+ eposTransaction.checksum +'/'+ eposTransaction.threadId;
+    	 var msg = eposTransaction.errorMsg + eposTransaction.missedFields;
+    	 if(msg == 0){
+    		 msg = '';
+      	 } else if(msg.length>170){
+    	    msg = '...'+msg.substring(40, 170)+'...';
+    	 }
+         eposTransaction.msg = msg;
+         eposTransaction.fileNameShort = eposTransaction.fileName.length>55?eposTransaction.fileName.substring(33, 53)+'...':'';
+      }
+    
       function formatDateIfDefined(transaction, dateFieldName) {
         if (transaction.hasOwnProperty(dateFieldName) && transaction[dateFieldName]) {
           transaction[dateFieldName] = dateUtility.formatDateForApp(transaction[dateFieldName]);
