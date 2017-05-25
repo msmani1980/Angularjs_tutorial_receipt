@@ -85,10 +85,26 @@ angular.module('ts5App')
     function getDashboardDependencies() {
       identityAccessService.featuresInRole().then(function (response) {
         $localStorage.featuresInRole = angular.copy(response);
+        if (!angular.isDefined($localStorage.buttons)) {
+          $localStorage.buttons = [];
+        }
+
+        addButton('UNRSI', 'unreceive');
         $scope.dashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
       });
 
       assignMenuToCompanyType();
+    }
+
+    function addButton (taskCode, buttonCode) {
+      var siDashboard =  $localStorage.featuresInRole.STATIONOPERATIONS.STOREINSTANCEDASHBOARD;
+      for (var i = 0; i < siDashboard.length; i++) {
+        if (siDashboard[i].taskCode === taskCode) {
+          if ($localStorage.buttons.indexOf(buttonCode) === -1) {
+            $localStorage.buttons.push(buttonCode);
+          }
+        }
+      }
     }
 
     function updateNavigationPerUserFeatures() {

@@ -307,7 +307,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       2: ['Seal'],
       3: ['Dispatch', 'Offload', 'Checkbox', 'Inbounded', 'On Floor'],
       4: ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
-      5: ['Un-Receive', 'End Instance', 'Redispatch', 'Get Flight Docs', 'Checkbox'],
+      5: ['End Instance', 'Redispatch', 'Get Flight Docs', 'Checkbox'],
       6: ['Start Inbound Seals', 'Get Flight Docs', 'Checkbox'],
       7: ['Start Offload', 'Get Flight Docs', 'Checkbox'],
       8: ['Get Flight Docs', 'Checkbox']
@@ -609,6 +609,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       initDone = true;
       if (lodash.keys($scope.search).length > 0) {
         $scope.searchStoreInstanceDashboardData();
+      }
+      
+      var stsMap = STATUS_TO_BUTTONS_MAP[5];      
+      if ($localStorage.buttons.indexOf('unreceive') !== -1) {
+        if (stsMap.indexOf('Un-Receive') === -1) {
+          stsMap.push('Un-Receive');
+          STATUS_TO_BUTTONS_MAP[5] = stsMap;
+        }
       }
     }
 
