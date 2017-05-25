@@ -117,7 +117,6 @@ angular.module('ts5App')
           offset: $this.meta.offset,
         };
         var st = $scope.search.status;
-        $scope.search.status = '';
         if(st === undefined || st == 'B'){
         	payload.notstatuses = 'B';        	
         } else{

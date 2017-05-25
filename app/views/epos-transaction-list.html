@@ -79,8 +79,8 @@
               element-class="col-xs-6 col-sm-6"
               start-date-model="search.epsoTransactionStartDate"
               end-date-model="search.epsoTransactionEndDate"
-              label-from="Effective From *"
-              label-to="Effective To *"
+              label-from="Submitted From *"
+              label-to="Submitted To *"
               is-search-field="true">
             </date-picker>
             
@@ -130,13 +130,13 @@
       <td>{{ eposTransaction.transactions }}</td>
       <td>{{ eposTransaction.minorVersion }}</td>
       <td> 
-        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed">{{ eposTransaction.msg }}</div>
-          <div ng-show="collapsed"> {{ eposTransaction.errorMsg }} {{ eposTransaction.missedFields }}<div>
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="!collapsed">{{ eposTransaction.msg }}</div>
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="collapsed"> {{ eposTransaction.errorMsg }} {{ eposTransaction.missedFields }}<div>
       </td> 
       <td>{{ eposTransaction.deviceActivityId }}</td>
       <td>
-        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed">{{ eposTransaction.fileNameShort }}</div>
-          <div ng-show="collapsed"> {{ eposTransaction.fileName }} <div>
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="!collapsed">{{ eposTransaction.fileNameShort }}</div>
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="collapsed"> {{ eposTransaction.fileName }} <div>
       </td>
       <td>{{ eposTransaction.dbVersion }}</td>
     </tr>
