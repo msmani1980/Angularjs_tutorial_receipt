@@ -32,14 +32,14 @@
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="store-date">Store Date</label>
-                <input ng-model="search.storeDate" type="text" class="form-control" id="store-date" />
+                <input ng-model="search.storeDate" type="date" class="form-control" id="store-date" />
               </div>
             </div>
             
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
-                <label for="store-days">Days</label>
-                <input ng-model="search.storeDays" type="text" class="form-control" id="store-days" />
+                <label for="store-instance">StoreInstance</label>
+                <input ng-model="search.storeInstance" type="text" class="form-control" id="store-iInstance" />
               </div>
             </div>
             
@@ -50,11 +50,17 @@
               </div>
             </div>
             
-            
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
                 <label for="device-activity-id">Device Activity Id</label>
-                <input ng-model="search.deviceActivityId" type="text" class="form-control" id="device-activity-id" />
+                <input ng-model="search.deviceActivityId" type="number" class="form-control" id="device-activity-id" />
+              </div>
+            </div>
+            
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="file-name">File Name</label>
+                <input ng-model="search.fileName" type="text" class="form-control" id="file-name" />
               </div>
             </div>
 	
@@ -73,10 +79,17 @@
               element-class="col-xs-6 col-sm-6"
               start-date-model="search.epsoTransactionStartDate"
               end-date-model="search.epsoTransactionEndDate"
-              label-from="Effective From *"
-              label-to="Effective To *"
+              label-from="Submitted From *"
+              label-to="Submitted To *"
               is-search-field="true">
             </date-picker>
+            
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="store-days">Days</label>
+                <input ng-model="search.storeDays" type="number" class="form-control" id="store-days" />
+              </div>
+            </div>
             
           </div>
 
@@ -96,24 +109,36 @@
     <table infinite-scroll="getEposTransactions()" class="table table-bordered table-hover">
     <thead>
     <tr>
-      <th>URL</th>
-      <th>Started</th>
-      <th>UTC Date Time</th>
-      <th>Minor Version</th>
-      <th>Missed Fields</th>
-      <th>Device ActivityId</th>
-      <th>File Name</th>
+      <th><a href="#" title='link to json for files except NoData'>Status</a></th>
+      <th><a href="#" title='UTC Date Time'>Submitted</a></th>
+      <th><a href="#" title='UTC Date Time'>Started</a></th>
+      <th><a href="#" title='Processing speed if processed'>Kbps</a></th>
+      <th><a href="#" title='Total Shopping Carts in sync file'>S/C</a></th>
+      <th><a href="#" title='Json Minor Version'>Version</a></th>
+      <th><a href="#" title='Click to quoted test for expand'>Comments / Missed Fields / Error Msg</a></th>
+      <th><a href="#" title='Device Activity Id'>ActivityId</a></th>
+      <th><a href="#" title='S3 File Name'>File Name</a></th>
+      <th><a href="#" title='Flyway DB version, but not include flyway portal DB tag version'>DB</a></th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="eposTransaction in eposTransactions">
-      <td>{{ eposTransaction.url }}{{ eposTransaction.id }}/{{ eposTransaction.checksum }}/{{ eposTransaction.threadId }} </td>
-      <td>{{ eposTransaction.started }}</td>
-      <td>{{ eposTransaction.utcDatetime }}</td>
+      <td><a href='{{ eposTransaction.statusHref }}' target='blank'>{{ eposTransaction.statusName }}</a> </td> 
+      <td><a href="#" title='{{ eposTransaction.utcDatetimeAgo }}'>{{ eposTransaction.utcDatetime }}</a></td>
+      <td><a href="#" title='{{ eposTransaction.startedAgo }}'>{{ eposTransaction.started }}</a></td>
+      <td>{{ eposTransaction.speed }}</td>
+      <td>{{ eposTransaction.transactions }}</td>
       <td>{{ eposTransaction.minorVersion }}</td>
-      <td>{{ eposTransaction.missedFields }}</td>
+      <td> 
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="!collapsed">{{ eposTransaction.msg }}</div>
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="collapsed"> {{ eposTransaction.errorMsg }} {{ eposTransaction.missedFields }}<div>
+      </td> 
       <td>{{ eposTransaction.deviceActivityId }}</td>
-      <td>{{ eposTransaction.fileName }}</td>
+      <td>
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="!collapsed">{{ eposTransaction.fileNameShort }}</div>
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="collapsed"> {{ eposTransaction.fileName }} <div>
+      </td>
+      <td>{{ eposTransaction.dbVersion }}</td>
     </tr>
     </tbody>
   </table>
