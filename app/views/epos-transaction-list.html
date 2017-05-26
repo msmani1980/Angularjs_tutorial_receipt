@@ -79,15 +79,22 @@
               element-class="col-xs-6 col-sm-6"
               start-date-model="search.epsoTransactionStartDate"
               end-date-model="search.epsoTransactionEndDate"
-              label-from="Submitted From *"
-              label-to="Submitted To *"
+              label-from="Submitted From"
+              label-to="Submitted To"
               is-search-field="true">
             </date-picker>
             
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
-                <label for="store-days">Days</label>
+                <label for="store-days">Days Ago</label>
                 <input ng-model="search.storeDays" type="number" class="form-control" id="store-days" />
+              </div>
+            </div>
+            
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="fiter">Custom Filter</label>
+                <input ng-model="search.filter" type="text" class="form-control" id="filter" />
               </div>
             </div>
             

@@ -13,7 +13,7 @@ angular.module('ts5App')
       $scope.viewName = 'Epos Syncronizations';
       $scope.isCollapsed = false;
       $scope.eposTransactions = []; 
-      
+
       $scope.statuses = {
         B: 'All, but PreSync',
         OMICF: 'Success',
@@ -51,6 +51,7 @@ angular.module('ts5App')
       };
     
       $scope.search = {};
+      $scope.search.status = 'B';      
     
       $scope.printStoreNumber = function (eposTransactions) {
         if (eposTransactions.storeNumber) {
@@ -158,7 +159,7 @@ angular.module('ts5App')
          eposTransaction.statusHref = eposTransaction.status=='B'?'#':
         	 eposTransaction.url + eposTransaction.id +'/'+ eposTransaction.checksum +'/'+ eposTransaction.threadId;
     	 var msg = eposTransaction.errorMsg + eposTransaction.missedFields;
-    	 if(msg == 0){
+    	 if(msg === undefined || msg == null || msg == 0){
     		 msg = '';
       	 } else if(msg.length>170){
     	    msg = '...'+msg.substring(40, 170)+'...';
