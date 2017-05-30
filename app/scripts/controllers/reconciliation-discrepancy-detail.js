@@ -183,25 +183,11 @@ angular.module('ts5App')
             formatEposItem(item, rawLMPStockData);
           });
 
-      var output = [];
-      var keys = [];
-      angular.forEach(filteredEposItems, function(item) {
-        var key = item.itemMasterId;
-        var indx = keys.indexOf(key);
-        var foundItem;
-        if (indx === -1) {
-          keys.push(key);
-          output.push(item);
-        } else {
-          foundItem = output[indx]; 
-          foundItem.eposQuantity = foundItem.eposQuantity + item.eposQuantity;
-          output[indx] = foundItem; 
-        }
-      });
-
-      $scope.outlierItemList = output;
-      if ($scope.outlierItemList.length) {
-        $scope.outlierItemData.menuList = $scope.outlierItemData.menuList.toString();
+          $scope.outlierItemList = filteredEposItems;
+          if ($scope.outlierItemList.length) {
+            $scope.outlierItemData.menuList = $scope.outlierItemData.menuList.toString();
+          }
+        });
       }
     }
 
