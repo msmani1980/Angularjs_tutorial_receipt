@@ -188,14 +188,9 @@ angular.module('ts5App')
           angular.forEach(filteredEposItems, function(item) {
             var key = item.itemMasterId;
             var indx = keys.indexOf(key);
-            var foundItem;
             if (indx === -1) {
               keys.push(key);
               output.push(item);
-            } else {
-              foundItem = output[indx]; 
-              foundItem.eposQuantity = foundItem.eposQuantity + item.eposQuantity;
-              output[indx] = foundItem; 
             }
           });
 
