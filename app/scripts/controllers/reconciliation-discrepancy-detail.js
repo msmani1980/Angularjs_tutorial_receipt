@@ -183,7 +183,18 @@ angular.module('ts5App')
             formatEposItem(item, rawLMPStockData);
           });
 
-          $scope.outlierItemList = filteredEposItems;
+          var output = [];
+          var keys = [];
+          angular.forEach(filteredEposItems, function(item) {
+            var key = item.itemMasterId;
+            var indx = keys.indexOf(key);
+            if (indx === -1) {
+              keys.push(key);
+              output.push(item);
+            }
+          });
+
+          $scope.outlierItemList = output;
           if ($scope.outlierItemList.length) {
             $scope.outlierItemData.menuList = $scope.outlierItemData.menuList.toString();
           }
