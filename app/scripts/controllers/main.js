@@ -97,14 +97,16 @@ angular.module('ts5App')
     }
 
     function addButton (taskCode, buttonCode) {
-      var siDashboard =  $localStorage.featuresInRole.STATIONOPERATIONS.STOREINSTANCEDASHBOARD;
-      for (var i = 0; i < siDashboard.length; i++) {
-        if (siDashboard[i].taskCode === taskCode) {
-          if ($localStorage.buttons.indexOf(buttonCode) === -1) {
-            $localStorage.buttons.push(buttonCode);
+      if ($localStorage.featuresInRole.STATIONOPERATIONS && $localStorage.featuresInRole.STATIONOPERATIONS.STOREINSTANCEDASHBOARD) {
+        var siDashboard =  $localStorage.featuresInRole.STATIONOPERATIONS.STOREINSTANCEDASHBOARD;
+        for (var i = 0; i < siDashboard.length; i++) {
+          if (siDashboard[i].taskCode === taskCode) {
+            if ($localStorage.buttons.indexOf(buttonCode) === -1) {
+              $localStorage.buttons.push(buttonCode);
+            }
           }
         }
-      }
+      }  
     }
 
     function updateNavigationPerUserFeatures() {
