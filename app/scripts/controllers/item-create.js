@@ -765,22 +765,22 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       };
       return currencyFactory.getCompanyCurrencies(currencyFilters);
     };
-    
+
     // generate a list of station exception currencies
     this.generateStationCurrenciesList = function(stationException, currenciesList) {
       var listToReturn = [];
-      
+
       angular.forEach(currenciesList, function (currency) {
         var newCurrency = $this.generateCurrency(currency);
         var existingCurrency = lodash.findWhere(stationException.stationExceptionCurrencies, { companyCurrencyId: newCurrency.companyCurrencyId });
-        newCurrency.id = (existingCurrency) ? existingCurrency.id : newCurrency.id; 
+        newCurrency.id = (existingCurrency) ? existingCurrency.id : newCurrency.id;
         newCurrency.price = (existingCurrency) ? existingCurrency.price : newCurrency.price;
         listToReturn.push(newCurrency);
       });
-      
+
       return listToReturn;
     };
-    
+
     // sets the stations currenies list
     this.setStationsCurrenciesList = function(stationException, data) {
       var stationExceptionCurrencies = this.generateStationCurrenciesList(stationException, data.response);
@@ -872,16 +872,20 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       var priceCurrencies = [];
       var priceGroup = $scope.formData.prices[priceIndex];
-      
+
       angular.forEach(currenciesList, function (currency) {
         var newCurrency = $this.generateCurrency(currency);
         var existingCurrency = lodash.findWhere(priceGroup.priceCurrencies, { companyCurrencyId: newCurrency.companyCurrencyId });
-        newCurrency.id = (existingCurrency) ? existingCurrency.id : newCurrency.id; 
+        newCurrency.id = (existingCurrency) ? existingCurrency.id : newCurrency.id;
         newCurrency.price = (existingCurrency) ? existingCurrency.price : newCurrency.price;
         priceCurrencies.push(newCurrency);
       });
 
-      return priceCurrencies;
+      var uniqueCurrencies = lodash.uniq(priceCurrencies, function (e) {
+        return e.id;
+      });
+
+      return uniqueCurrencies;
     };
 
     this.getPriceCurrenciesList = function(priceIndex, currencyFilters) {
