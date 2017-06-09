@@ -882,7 +882,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
 
       var uniqueCurrencies = lodash.uniq(priceCurrencies, function (e) {
-        return e.id;
+        return e.companyCurrencyId;
       });
 
       return uniqueCurrencies;
