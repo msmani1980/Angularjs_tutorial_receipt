@@ -128,6 +128,12 @@ angular.module('ts5App')
       $scope.moveSearch = {};
       $scope.moveCashBagSearchResults = null;
       $scope.targetRecordForMoveCashBag = null;
+
+      if ($scope.moveCashBagAction === 'merge') {
+        searchForMergeCashBag ();
+      } else {
+    	$scope.moveCashBagSearchResults = null;    	  
+      }
     };
 
     $scope.closeRearrangeSectorModal = function () {
@@ -225,15 +231,20 @@ angular.module('ts5App')
       cashBagFactory.reallocateCashBag(cashBagId, storeInstanceId).then(moveCashBagSuccess, moveCashBagError);
     };
 
-    $scope.mergeCashBag = function () {
-      var eposCashBagId = $scope.cashBagToMove.id;
-      var manualCashBagId = $scope.targetRecordForMoveCashBag.id;
+    $scope.showMergeCashBag = function () {
+      angular.element('.merge-cashbag-warning-modal').modal('show');
+    };
 
-      cashBagFactory.mergeCashBag(eposCashBagId, manualCashBagId).then(moveCashBagSuccess, moveCashBagError);
+    $scope.mergeCashBag = function () {
+      angular.element('.merge-cashbag-warning-modal').modal('hide');
+      var sourceCashBagId = $scope.cashBagToMove.id;
+      var destCashBagId = $scope.targetRecordForMoveCashBag.id;
+      cashBagFactory.mergeCashBag(sourceCashBagId, destCashBagId).then(moveCashBagSuccess, moveCashBagError);
+      resetAllModals ();
     };
 
     $scope.canMerge = function (cashBag) {
-      return cashBag && !(cashBag.isManual || cashBag.bankRefNumber);
+      return (cashBag && !cashBag.isManual && cashBag.isSubmitted  && !cashBag.isVerified);
     };
 
     function getModalItemsToShow(modalName) {
@@ -486,20 +497,33 @@ angular.module('ts5App')
       }
     };
 
-    function searchForMergeCashBag () {
-      if (!($scope.moveSearch.cashBag && $scope.moveSearch.bankRefNumber)) {
-        return;
+    $scope.disableSelectCashBag  = function (cashBag) {
+      if (!cashBag.isVerified && cashBag.isSubmitted) {
+        return false;
       }
+      return true;
+    };
 
-      var payload = {
-        companyId: globalMenuService.company.get(),
-        cashBagNumber: $scope.moveSearch.cashBag,
-        bankReferenceNumber: $scope.moveSearch.bankRefNumber,
-        originationSource: 2,
-        isReconciliation: true
+    function searchForMergeCashBag () {
+      var cashBag ={
+        cashBagNumber:'',
+        bankRefNumber:'',
+        isVerified:'',
+        isSubmitted:'',
+        id:null
       };
 
-      return storeInstanceAmendFactory.getCashBags(payload).then($this.searchForMoveCashBagSuccess);
+      $scope.moveCashBagSearchResults = [];
+      angular.forEach($scope.normalizedCashBags, function (inCashBag) {
+        if (inCashBag.id !== $scope.cashBagToMove.id && !inCashBag.isDeleted && !inCashBag.isManual) {
+          cashBag.cashBagNumber = inCashBag.cashBag;
+          cashBag.bankRefNumber = inCashBag.bankRefNumber;
+          cashBag.isVerified  = inCashBag.isVerified;
+          cashBag.isSubmitted = inCashBag.isSubmitted;
+          cashBag.id = inCashBag.id; 
+          $scope.moveCashBagSearchResults.push(cashBag);
+        }
+      });
     }
 
     function searchForReallocateCashBag () {
