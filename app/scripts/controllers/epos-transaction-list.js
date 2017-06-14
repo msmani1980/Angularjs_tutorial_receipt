@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-    .controller('EposTransactionListCtrl', function ($scope, $q, $filter, eposTransactionFactory, dateUtility) {
+    .controller('EposTransactionListCtrl', function ($scope, $q, $filter, eposTransactionFactory) {
       var $this = this;
       $scope.viewName = 'Epos Syncronizations';
       $scope.isCollapsed = false;
@@ -39,7 +39,6 @@ angular.module('ts5App')
         I:'OK, Ignored',
         C:'OK, Commission Paid.',
         F:'OK, Fixed Duplicates',
-        //X':'OK, reserved not used',
         H:'S3 double triggered'
       };
       
@@ -51,7 +50,8 @@ angular.module('ts5App')
       };
     
       $scope.search = {};
-      $scope.search.status = 'B';      
+      $scope.search.status = 'B';
+      $scope.search.storeDays = 3;
     
       $scope.printStoreNumber = function (eposTransactions) {
         if (eposTransactions.storeNumber) {
@@ -113,19 +113,21 @@ angular.module('ts5App')
       };
     
       function generateGetTransactionsPayload() {
-    	var payload = {
+        var payload = {
           limit: $this.meta.limit,
           offset: $this.meta.offset,
         };
         var st = $scope.search.status;
-        if(st === undefined || st == 'B'){
-        	payload.notstatuses = 'B';        	
-        } else{
-        	payload.statuses = st;
+        if (st === undefined || st === 'B') {
+          payload.notstatuses = 'B';            
+        } else {
+          payload.statuses = st;
         }
+        
         if ($this.isSearch) {
           angular.extend(payload, $scope.search);
         }
+        
         return payload;
       }
     
@@ -148,32 +150,32 @@ angular.module('ts5App')
       
       function normalizeTransactions(transactions) {
         angular.forEach(transactions, function (transaction) {
-        	formatEposTransaction(transaction); //          formatDateIfDefined(transaction, 'utcDatetime');
+          formatEposTransaction(transaction);
         });
       
         return transactions;
       }
 
       function formatEposTransaction(eposTransaction) {
-    	 eposTransaction.statusName = $scope.statusName[eposTransaction.status];
-         eposTransaction.statusHref = eposTransaction.status=='B'?'#':
-        	 eposTransaction.url + eposTransaction.id +'/'+ eposTransaction.checksum +'/'+ eposTransaction.threadId;
-    	 var msg = eposTransaction.errorMsg + eposTransaction.missedFields;
-    	 if(msg === undefined || msg == null || msg == 0){
-    		 msg = '';
-      	 } else if(msg.length>170){
-    	    msg = '...'+msg.substring(40, 170)+'...';
-    	 }
-         eposTransaction.msg = msg;
-         eposTransaction.fileNameShort = eposTransaction.fileName.length>55?eposTransaction.fileName.substring(33, 53)+'...':'';
-      }
-    
-      function formatDateIfDefined(transaction, dateFieldName) {
-        if (transaction.hasOwnProperty(dateFieldName) && transaction[dateFieldName]) {
-          transaction[dateFieldName] = dateUtility.formatDateForApp(transaction[dateFieldName]);
-        }
+        eposTransaction.statusName = $scope.statusName[eposTransaction.status];
+        eposTransaction.statusHref = eposTransaction.status === 'B' ? '#' :
+             eposTransaction.url + eposTransaction.id + '/' + eposTransaction.checksum + '/' + eposTransaction.threadId;
+        eposTransaction.msg = shrink(eposTransaction.errorMsg + eposTransaction.missedFields, 40, 150);
+        eposTransaction.fileNameShort = shrink(eposTransaction.fileName, 33, 55);        
       }
       
+      function shrink(value, from, to) {
+        if (value === undefined || value === null) {
+          return '';
+        } else if (value.length > to) {
+          var _val = '...' + value.substring(from, to) + '...';
+          console.log(_val);
+          return _val;
+        } else {
+          return value;
+        }
+      }
+    
       function appendTransactions(dataFromAPI) {
         $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
         var eposTransactions = angular.copy(dataFromAPI.response);    
