@@ -169,7 +169,6 @@ angular.module('ts5App')
           return '';
         } else if (value.length > to) {
           var _val = '...' + value.substring(from, to) + '...';
-          console.log(_val);
           return _val;
         } else {
           return value;
