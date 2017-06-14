@@ -82,26 +82,26 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-xs-12">
-              <h4>1. Select an action</h4>
+              <h4>Select an action</h4>
               <select class="form-control" ng-model="moveCashBagAction" ng-change="clearMoveSearchResults()">
                 <option value="none"></option>
-                <option value="merge" ng-if="canMerge(cashBagToMove)">Merge with a Cash Bag</option>
-                <option value="reallocate">Reallocate to a Store Instance</option>
+                <option value="merge" ng-if="canMerge(cashBagToMove)">Merge with a Store Instance</option>
+<!--                 <option value="reallocate">Reallocate to a Store Instance</option> -->
               </select>
             </div>
           </div>
           <hr ng-hide="moveCashBagAction==='none'">
           <div class="row" ng-hide="moveCashBagAction==='none'">
             <div class="col-xs-12">
-              <h4>2. Search for a
-                <span ng-show="moveCashBagAction==='merge'">Cash Bag</span>
-                <span ng-show="moveCashBagAction==='reallocate'">Store Instance</span>
+              <h4>
+<!--                 <span ng-show="moveCashBagAction==='merge'">Cash Bag</span> -->
+                <span ng-show="moveCashBagAction==='reallocate'">Search for a Store Instance</span>
               </h4>
             </div>
           </div>
           <br>
 
-          <div class="row" ng-show="moveCashBagAction==='merge'">
+<!--           <div class="row" ng-show="moveCashBagAction==='merge'">
             <div class="col-xs-5">
               <label>Cash Bag *</label>
               <input class="form-control" ng-model="moveSearch.cashBag">
@@ -116,7 +116,7 @@
               </button>
             </div>
           </div>
-
+ -->
           <div class="row" ng-show="moveCashBagAction==='reallocate'">
             <div class="col-xs-5">
               <label>Store Number *</label>
@@ -142,29 +142,30 @@
           <div class="row" ng-show="moveCashBagSearchResults">
             <div class="col-xs-12">
               <h4>
-                <span ng-show="moveCashBagAction==='merge'">3. Select a Cash Bag to Merge With</span>
-                <span ng-show="moveCashBagAction==='reallocate'">3. Select a Store Instance to Reallocate to</span></h4>
+                <span ng-show="moveCashBagAction==='merge'">Select a Cash Bag to Merge With</span>
+                <span ng-show="moveCashBagAction==='reallocate'">Select a Store Instance to Reallocate to</span>
+              </h4>
             </div>
           </div>
 
           <table class="table table-bordered" ng-show="moveCashBagAction==='merge' && moveCashBagSearchResults">
             <tr ng-show="moveCashBagAction==='merge'">
-              <th>Schedule Date</th>
-              <th>Store #</th>
               <th>Cash Bag #</th>
-              <th>Store Instance #</th>
-              <th>Submitted Date/Time</th>
+              <th>Bank Ref #</th>
+              <th>Verified Status</th>
+              <th>Submitted Status</th>
               <th>Select</th>
             </tr>
-            <tr ng-repeat="cashBag in moveCashBagSearchResults"
+            <tr ng-repeat="cashBag in moveCashBagSearchResults | orderBy:'cashBag.cashBagNumber'"
                 ng-class="getClassesForSingleSelectedRow(cashBag, 'background', 'cashBag')">
-              <td>{{ cashBag.scheduleDate }}</td>
-              <td>{{ cashBag.storeNumber }}</td>
               <td>{{ cashBag.cashBagNumber }}</td>
-              <td>{{ cashBag.storeInstanceId }}</td>
-              <td><span ng-if="cashBag.isSubmitted">{{ cashBag.updatedOn }}</span></td>
+              <td>{{ cashBag.bankRefNumber }}</td>
+              <td>{{ cashBag.isVerified }}</td>
+              <td>{{ cashBag.isSubmitted }}</td>
+              <!-- Cash Bag Number, Bank Ref #, Verified or not status, Submitted --> 
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(cashBag, 'button', 'cashBag')"
+                        ng-disabled="disableSelectCashBag(cashBag)"
                         ng-click="selectRecordForMoveCashBag(cashBag)">
                   <span ng-class="getClassesForSingleSelectedRow(cashBag, 'buttonIcon', 'cashBag')"></span>
                 </button>
@@ -205,12 +206,32 @@
           <button ng-if="moveCashBagAction==='reallocate'" type="button" class="btn btn-success" data-dismiss="modal" ng-click="reallocateCashBag()" ng-show="targetRecordForMoveCashBag">
             <i class="fa fa-check"></i> Confirm
           </button>
-          <button ng-if="moveCashBagAction==='merge'" type="button" class="btn btn-success" data-dismiss="modal" ng-click="mergeCashBag()" ng-show="targetRecordForMoveCashBag">
+          <button ng-if="moveCashBagAction==='merge'" type="button" class="btn btn-success" data-dismiss="modal" ng-click="showMergeCashBag()" ng-show="targetRecordForMoveCashBag">
             <i class="fa fa-check"></i> Confirm
           </button>
           <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeMoveCashBagModal()">
             Cancel
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade merge-cashbag-warning-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Are you sure?</h4>
+        </div>
+
+        <div class="modal-body">
+          <p> You want to merge transactions belonging to  Cash Bag {{cashBagToMove.cashBag}} to Cash Bag {{targetRecordForMoveCashBag.cashBagNumber}} ? Cash Bag <strong>{{cashBagToMove.cashBag}}</strong> will be deleted after this action is confirmed.</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" ng-click="mergeCashBag()">Continue</button>
+          <button type="button" class="btn btn-default" ng-click="closeMoveCashBagModal()"  data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
@@ -342,6 +363,7 @@
       </div>
     </div>
   </div>
+  
   <div class="modal fade" id="t6Modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -621,7 +643,14 @@
                 <i class="fa fa-tasks active"></i> Rearrange Flight Sectors
               </button>
             </div>
-          </div>
+<!--
+             <div class="col-xs-3 text-right">
+              <button class="btn btn-warning" ng-click="showMergeCashBagModal()" ng-show="canExecuteActions() && hasMoreThanOneUnverifiedCashBags()">
+                <i class="fa fa-tasks active"></i> Merge Cash Bags
+              </button>
+            </div>
+ -->
+           </div>
         </div>
 
         <br>
@@ -835,7 +864,7 @@
                   <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag) && canExecuteActions(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
                     <i class="fa fa-trash active"></i>
                   </button>
-                  <button class="btn btn-warning" title="Merge or Reallocate Cash Bag" ng-click="showMoveCashBagModal(cashBag)" ng-show="false" > <!--ng-show="canExecuteActions(cashBag)"> hide per Roshen's request -->
+                  <button class="btn btn-warning" title="Merge or Reallocate Cash Bag" ng-click="showMoveCashBagModal(cashBag)" ng-show="canExecuteActions(cashBag)">
                     <i class="fa fa-share active"></i>
                   </button>
                   <button class="btn btn-success" ng-show="canExecuteVerify(cashBag) && canExecuteActions(cashBag) && hasFlightSectors(cashBag)" title="Verify Cash Bag" ng-click="toggleVerifiedCashBag(cashBag)">
