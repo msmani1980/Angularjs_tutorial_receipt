@@ -43,14 +43,6 @@ angular.module('ts5App')
       return time;
     }
 
-    function formatToUpperCase(number) {
-      if (number) {
-        return number.toString().toUpperCase();
-      }
-
-      return number;
-    }
-
     function transformRequest(data, shouldTransformForGETRequest) {
       if (!data) {
         return data;
@@ -62,7 +54,7 @@ angular.module('ts5App')
       data.scheduleEndDate = formatDateRequest(data.scheduleEndDate);
       data.depStationId = formatStationIdRequest(data.depStationId);
       data.arrStationId = formatStationIdRequest(data.arrStationId);
-      data.scheduleNumber = formatToUpperCase(data.scheduleNumber);
+      data.scheduleNumber = data.scheduleNumber;
 
       if (shouldTransformForGETRequest) {
         return data;
@@ -87,7 +79,7 @@ angular.module('ts5App')
 
       data.arrTime = formatTimeResponse(data.arrTime);
       data.depTime = formatTimeResponse(data.depTime);
-      data.scheduleNumber = formatToUpperCase(data.scheduleNumber);
+      data.scheduleNumber = data.scheduleNumber;
       data.depStationId = formatStationIdResponse(data.depStationId);
       data.arrStationId = formatStationIdResponse(data.arrStationId);
 
