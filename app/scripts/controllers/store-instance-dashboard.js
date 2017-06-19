@@ -610,6 +610,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (lodash.keys($scope.search).length > 0) {
         $scope.searchStoreInstanceDashboardData();
       }
+      
+      var stsMap = STATUS_TO_BUTTONS_MAP[5];      
+      if ($localStorage.buttons.indexOf('unreceive') !== -1) {
+        if (stsMap.indexOf('Un-Receive') === -1) {
+          stsMap.push('Un-Receive');
+          STATUS_TO_BUTTONS_MAP[5] = stsMap;
+        }
+      }
     }
 
     function init() {
@@ -644,9 +652,15 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.openReceiveConfirmation = function (store) {
-      var modalElement = angular.element('#receive-confirm');
+        var modalElement = angular.element('#receive-confirm');
+        modalElement.modal('show');
+        $scope.receiveStore = store;
+      };
+
+    $scope.openUnReceiveConfirmation = function (store) {
+      var modalElement = angular.element('#unreceive-confirm');
       modalElement.modal('show');
-      $scope.receiveStore = store;
+      $scope.unReceiveStore = store;
     };
 
     function storeStatusSuccessHandler() {
@@ -654,6 +668,16 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       messageService.display('success', 'Store has been logged as received.');
       $scope.reloadRoute();
     }
+
+    $scope.storeStatusUnReceived = function (store) {
+      var modalElement = angular.element('#unreceive-confirm');
+      modalElement.modal('hide');
+      showLoadingModal('Changing Store Instance ' + store.id + ' Status');
+      var promises = [
+        storeInstanceDashboardFactory.updateStoreInstanceStatus(store.id, 4, store.cateringStationId)
+        ];
+      $q.all(promises).then(storeStatusSuccessHandler, showErrors);
+    };
 
     $scope.storeStatusReceived = function (store) {
       var modalElement = angular.element('#receive-confirm');
