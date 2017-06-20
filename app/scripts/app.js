@@ -379,6 +379,10 @@ angular.module('ts5App', [
   }).when('/epos-transaction-list', {
     templateUrl: 'views/epos-transaction-list.html',
     controller: 'EposTransactionListCtrl',
+  }).when('/schedule-list', {
+    templateUrl: 'views/schedule-list.html',
+    controller: 'ScheduleListCtrl',
+    controllerAs: 'scheduleList'
   }).otherwise({
     redirectTo: '/'
   });
