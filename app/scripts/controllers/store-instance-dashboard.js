@@ -674,7 +674,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       modalElement.modal('hide');
       showLoadingModal('Changing Store Instance ' + store.id + ' Status');
       var promises = [
-        storeInstanceDashboardFactory.updateStoreInstanceStatus(store.id, 4, store.cateringStationId)
+        storeInstanceDashboardFactory.updateStoreInstanceStatusUnreceive(store.id, 4)
         ];
       $q.all(promises).then(storeStatusSuccessHandler, showErrors);
     };
