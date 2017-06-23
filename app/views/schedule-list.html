@@ -11,7 +11,7 @@
     <div class="row">
       <div class="col-xs-12 text-left">
         <a href="#/schedule/create" class="btn btn-primary">+ <span class="hidden-xs">Create Schedule</span></a>
-        <excel-upload type="postTrip" class="excel-upload"></excel-upload>
+        <excel-upload type="schedule" class="excel-upload"></excel-upload>
 
         <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
@@ -131,7 +131,7 @@
     </div>
     <br>
     <div class="table-responsive">
-      <table infinite-scroll="loadPostTrip()" class="table table-bordered table-hover ng-scope">
+      <table infinite-scroll="loadSchedule()" class="table table-bordered table-hover ng-scope">
         <thead>
         <tr>
           <th>Number</th>
@@ -174,16 +174,16 @@
           <td>{{ schedule.arrTime }}</td>
           <td>{{ schedule.arrTime }}</td>
           <td>
-            <button class="btn btn-info btn-xs" ng-click="redirectToPostTrip(trip.id, 'view')" tabindex="0">
+            <button class="btn btn-info btn-xs" ng-click="redirectToSchedule(schedule.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="redirectToPostTrip(trip.id, 'edit')" tabindex="0">
+            <button class="btn btn-primary btn-xs" ng-click="redirectToSchedule(schedule.id, 'edit')" tabindex="0">
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-danger btn-xs"
-                    ng-click="deleteRecordDialog(postTrips[$index], ['scheduleNumber', 'deStationCode', 'depTime', 'arrStationCode', 'arrTime'])"
+                    ng-click="deleteRecordDialog(schedules[$index], ['scheduleNumber', 'deStationCode', 'depTime', 'arrStationCode', 'arrTime'])"
                     tabindex="0"
-                    ng-show="showDeleteButton(trip.scheduleDate)">
+                    ng-show="showDeleteButton(schedule.scheduleDate)">
               <i class="fa fa-trash"></i>
             </button>
           </td>
