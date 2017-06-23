@@ -505,23 +505,21 @@ angular.module('ts5App')
     };
 
     function searchForMergeCashBag () {
-      var cashBag ={
-        cashBagNumber:'',
-        bankRefNumber:'',
-        isVerified:'',
-        isSubmitted:'',
-        id:null
-      };
-
       $scope.moveCashBagSearchResults = [];
+      var keyCashBag = [];
       angular.forEach($scope.normalizedCashBags, function (inCashBag) {
         if (inCashBag.id !== $scope.cashBagToMove.id && !inCashBag.isDeleted && !inCashBag.isManual) {
-          cashBag.cashBagNumber = inCashBag.cashBag;
-          cashBag.bankRefNumber = inCashBag.bankRefNumber;
-          cashBag.isVerified  = inCashBag.isVerified;
-          cashBag.isSubmitted = inCashBag.isSubmitted;
-          cashBag.id = inCashBag.id; 
-          $scope.moveCashBagSearchResults.push(cashBag);
+          var cashBag ={
+            cashBagNumber:inCashBag.cashBag,
+            bankRefNumber:inCashBag.bankRefNumber,
+            isVerified:inCashBag.isVerified,
+            isSubmitted:inCashBag.isSubmitted,
+            id:inCashBag.id
+          };
+         if (keyCashBag.indexOf(cashBag.id) === -1) {
+           keyCashBag.push(cashBag.id);
+           $scope.moveCashBagSearchResults.push(angular.copy(cashBag));
+         }
         }
       });
     }
@@ -548,6 +546,28 @@ angular.module('ts5App')
       if ($scope.moveCashBagAction === 'reallocate') {
         return searchForReallocateCashBag();
       }
+    };
+
+    $scope.editCashBagNumberShow = function () {
+      $scope.numberExist = false;  
+      angular.forEach($scope.cashBags, function (cashBag) {
+        if (!cashBag.delete && cashBag.cashBagNumber === $scope.moveSearch.cashBag) {
+          $scope.numberExist = true;	  
+        }
+      });
+
+      if (!$scope.numberExist) {
+    	  angular.element('.edit-cashbag-number-warning-modal').modal('show');
+      }    
+      else {
+    	  angular.element('.cashbag-number-exist-warning-modal').modal('show');
+      }  
+    };
+
+    $scope.editCashBagNumber = function () {
+      angular.element('.edit-cashbag-number-warning-modal').modal('hide');
+      //var sourceCashBagId = $scope.cashBagToMove.id;
+      resetAllModals ();
     };
 
     $scope.getClassForTableAccordion = function (visibilityFlag) {
@@ -1471,6 +1491,7 @@ angular.module('ts5App')
       $scope.sectorsToMove = [];
       $scope.cashBagFilter = {};
       $scope.scheduleSearch = {};
+      $scope.numberExist = false;
       angular.element('#checkbox').bootstrapSwitch();
     }
 
