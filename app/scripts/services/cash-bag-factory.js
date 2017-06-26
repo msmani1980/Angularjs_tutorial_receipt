@@ -107,6 +107,10 @@ angular.module('ts5App')
       return cashBagService.unverifyCashBag(cashBagId, type);
     };
 
+    var editCashBagNumber = function (cashBagId, cashBagNumber) {
+      return cashBagService.editCashBagNumber(cashBagId, cashBagNumber);
+    };
+
     return {
       getCompanyId: getCompanyId,
       getCashBagList: getCashBagList,
@@ -130,6 +134,7 @@ angular.module('ts5App')
       getStoreInstanceList: getStoreInstanceList,
       getStoreInstance: getStoreInstance,
       verifyCashBag: verifyCashBag,
-      unverifyCashBag: unverifyCashBag
+      unverifyCashBag: unverifyCashBag,
+      editCashBagNumber: editCashBagNumber
     };
   });

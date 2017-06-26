@@ -22,6 +22,7 @@ angular.module('ts5App')
     var allManualCashBagsRequestURL = ENV.apiUrl + '/rsvr/api/cashbags/cash/';
     var manualEposDataRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-:type/:recordId';
     var eposSalesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/epossales';
+    var editCbNumRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/editCashBagNum';
 
     var requestCashBagParameters = {
       id: '@id',
@@ -80,6 +81,9 @@ angular.module('ts5App')
       mergeCashBag: {
         method: 'PUT'
       },
+      editCashBagNumber: {
+        method: 'PUT'
+      },
       verifyCashBag: {
         method: 'PUT'
       },
@@ -121,6 +125,7 @@ angular.module('ts5App')
     var manualCashBagRequestResource = $resource(manualCashBagRequestURL, manualEposCashRequestParams, actions);
     var manualEposDataRequestResource = $resource(manualEposDataRequestURL, manualEposDataRequestParams, actions);
     var eposSalesRequestResource = $resource(eposSalesRequestURL, eposSalesRequestParameters, actions);
+    var editCbNumberRequestResource = $resource(editCbNumRequestURL, requestParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -181,6 +186,14 @@ angular.module('ts5App')
       };
 
       return mergeRequestResource.mergeCashBag(payload).$promise;
+    }
+
+    function editCashBagNumber(cashBagId, cashBagNumber) {
+      var payload = {
+        id: cashBagId,
+        cashBagNumber: cashBagNumber
+      };
+      return editCbNumberRequestResource.editCashBagNumber(payload).$promise;
     }
 
     function getCashBagCarrierInstances(cashBagId) {
@@ -297,6 +310,7 @@ angular.module('ts5App')
       createManualCashBagRecord: createManualCashBagRecord,
       updateManualCashBagRecord: updateManualCashBagRecord,
       deleteManualCashBagRecord: deleteManualCashBagRecord,
-      getEposSales: getEposSales
+      getEposSales: getEposSales,
+      editCashBagNumber: editCashBagNumber
     };
   });
