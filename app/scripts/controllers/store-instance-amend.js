@@ -244,7 +244,7 @@ angular.module('ts5App')
     };
 
     $scope.canMerge = function (cashBag) {
-      return (cashBag && !cashBag.isManual && cashBag.isSubmitted  && !cashBag.isVerified);
+      return (cashBag && !cashBag.isManual && !cashBag.isVerified);
     };
 
     function getModalItemsToShow(modalName) {
@@ -566,7 +566,9 @@ angular.module('ts5App')
 
     $scope.editCashBagNumber = function () {
       angular.element('.edit-cashbag-number-warning-modal').modal('hide');
-      //var sourceCashBagId = $scope.cashBagToMove.id;
+      var cashBagToEdit = $scope.cashBagToMove;
+      var cashBagNewNumber = $scope.moveSearch;
+      cashBagFactory.editCashBagNumber(cashBagToEdit.id, cashBagNewNumber.cashBag).then(moveCashBagSuccess, moveCashBagError);
       resetAllModals ();
     };
 
