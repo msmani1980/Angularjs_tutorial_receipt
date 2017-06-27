@@ -549,6 +549,11 @@ angular.module('ts5App')
     };
 
     $scope.editCashBagNumberShow = function () {
+      if ($scope.moveSearch.cashBag === null || !angular.isDefined ($scope.moveSearch.cashBag)) {
+        angular.element('.cashbag-number-empty-warning-modal').modal('show');
+        return;
+      }
+
       $scope.numberExist = false;  
       angular.forEach($scope.cashBags, function (cashBag) {
         if (!cashBag.delete && cashBag.cashBagNumber === $scope.moveSearch.cashBag) {
