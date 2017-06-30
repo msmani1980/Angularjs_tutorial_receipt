@@ -354,9 +354,7 @@ angular.module('ts5App')
     };
 
     this.createUiSelectSearchPayload = function () {
-      var query = {
-        limit: 100
-      };
+      var query = {};
       if ($scope.search.taxType) {
         query.taxTypeCode = $scope.search.taxType.taxTypeCode;
       }
@@ -454,7 +452,7 @@ angular.module('ts5App')
 
     this.isTaxRateActive = function (taxRate) {
     	try{
-      return (dateUtility.isTodayOrEarlier(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
+      return (dateUtility.isTodayOrEarlier(taxRate.startDate) && dateUtility.isAfterTodayOrEqual(taxRate.endDate));
     	}catch(e){
     		console.log(e);
     		return false;
@@ -716,7 +714,7 @@ angular.module('ts5App')
     };
 
     $scope.showClearButton = function () {
-      return ($this.isDateRangeSet() || $this.isSearchActive() || ($scope.companyTaxRatesList.length > 0));
+      return ($this.isDateRangeSet() || $this.isSearchActive() || ($scope.companyTaxRatesList.length >= 0));
     };
 
     $scope.searchRecords = function () {
