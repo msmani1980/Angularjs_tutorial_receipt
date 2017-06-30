@@ -727,7 +727,7 @@ angular.module('ts5App')
     };
 
     $scope.showClearButton = function () {
-      return ($this.isDateRangeSet() || $this.isSearchActive() || ($scope.companyTaxRatesList.length > 0));
+      return ($this.isDateRangeSet() || $this.isSearchActive() || ($scope.companyTaxRatesList.length >= 0));
     };
 
     $scope.searchRecords = function () {
