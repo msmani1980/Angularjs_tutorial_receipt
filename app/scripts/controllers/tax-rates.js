@@ -354,9 +354,7 @@ angular.module('ts5App')
     };
 
     this.createUiSelectSearchPayload = function () {
-      var query = {
-        limit: 100
-      };
+      var query = {};
       if ($scope.search.taxType) {
         query.taxTypeCode = $scope.search.taxType.taxTypeCode;
       }
