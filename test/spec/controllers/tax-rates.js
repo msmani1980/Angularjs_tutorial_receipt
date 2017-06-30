@@ -256,11 +256,9 @@ describe('Controller: TaxRatesCtrl', function () {
             expect(scope.showClearButton()).toBeTruthy();
           });
 
-          it('should return false if search data is set but undefined', function () {
-            scope.search.taxType = undefined;
-            scope.dateRange.startDate = '';
+          it('should return true search data is empty', function () {
             scope.companyTaxRatesList = [];
-            expect(scope.showClearButton()).toBeFalsy();
+            expect(scope.showClearButton()).toBeTruthy();
           });
 
           it('should return true if the companyTaxRatesList is populated', function () {
