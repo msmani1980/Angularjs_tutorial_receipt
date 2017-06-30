@@ -38,9 +38,9 @@
               <div class="form-group">
                 <label for="days-of-operation">Days of Operation</label>
                 <ui-select id="days-of-operation" multiple ng-model="multiSelectedValues.daysOfOperation" theme="bootstrap">
-                  <ui-select-match placeholder="Select Days of Operations">{{ $item.dayOfOperation }}</ui-select-match>
+                  <ui-select-match placeholder="Select Days of Operations">{{ $item.name }}</ui-select-match>
                   <ui-select-choices repeat="number in daysOfOperation | filter: $select.search">
-                    {{ number.dayOfOperation }}
+                    {{ number.name }}
                   </ui-select-choices>
                 </ui-select>
               </div>
@@ -62,9 +62,9 @@
               <div class="form-group">
                 <label for="aircraft-type">Aircraft type</label>
                 <ui-select id="aircraft-type" multiple ng-model="multiSelectedValues.aircraftTypes" theme="bootstrap">
-                  <ui-select-match placeholder="Select Aircraft Types">{{ $item.stationCode }}</ui-select-match>
-                  <ui-select-choices repeat="station in stationList | filter: $select.search">
-                    {{ station.stationCode }} ({{ station.stationName }})
+                  <ui-select-match placeholder="Select Aircraft Types">{{ $item.carrierType }}</ui-select-match>
+                  <ui-select-choices repeat="carrier in carrierTypes | filter: $select.search">
+                    {{ carrier.carrierType }}
                   </ui-select-choices>
                 </ui-select>
               </div>

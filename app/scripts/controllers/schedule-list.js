@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ScheduleListCtrl', function ($scope, globalMenuService, $q, $location, dateUtility, lodash, postTripFactory) {
+  .controller('ScheduleListCtrl', function ($scope, globalMenuService, $q, $location, dateUtility, lodash, postTripFactory, scheduleFactory) {
     var companyId = globalMenuService.company.get();
     var $this = this;
     this.meta = {
@@ -23,6 +23,15 @@ angular.module('ts5App')
     $scope.schedules = [];
     $scope.stationList = [];
     $scope.loadingBarVisible = false;
+    $scope.daysOfOperation = [
+      { id: 1, name: 'Monday' },
+      { id: 2, name: 'Tuesday' },
+      { id: 3, name: 'Wednesday' },
+      { id: 4, name: 'Thursday' },
+      { id: 5, name: 'Friday' },
+      { id: 6, name: 'Saturday' },
+      { id: 7, name: 'Sunday' }
+    ];
 
     function showLoadingBar() {
       $scope.loadingBarVisible = true;
@@ -89,6 +98,10 @@ angular.module('ts5App')
       $scope.carrierNumbers = angular.copy(response.response);
     };
 
+    this.getCarrierTypesSuccess = function(response) {
+      $scope.carrierTypes = angular.copy(response.response);
+    };
+
     this.addSearchValuesFromMultiSelectArray = function(searchKeyName, multiSelectArray, multiSelectElementKey) {
       if (!multiSelectArray || multiSelectArray.length <= 0) {
         return;
@@ -109,6 +122,13 @@ angular.module('ts5App')
       $this.addSearchValuesFromMultiSelectArray('tailNumber', $scope.multiSelectedValues.tailNumbers, 'carrierNumber');
     };
 
+    this.getSchedulesSuccess = function(response) {
+      $this.meta.count = $this.meta.count || response.meta.count;
+
+      $scope.schedules = $scope.schedules.concat(response.schedules);
+      hideLoadingBar();
+    };
+
     function loadSchedules() {
       if ($this.meta.offset >= $this.meta.count) {
         return;
@@ -121,7 +141,7 @@ angular.module('ts5App')
         offset: $this.meta.offset
       });
 
-      //postTripFactory.getPostTripDataList(companyId, payload).then($this.getPostTripSuccess);
+      scheduleFactory.getSchedules(payload).then($this.getSchedulesSuccess);
       $this.meta.offset += $this.meta.limit;
     }
 
@@ -141,8 +161,9 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       var promises = [
-        postTripFactory.getStationList(companyId).then($this.getStationsSuccess),
-        postTripFactory.getCarrierNumbers(companyId).then($this.getCarrierSuccess)
+        scheduleFactory.getStationList(companyId).then($this.getStationsSuccess),
+        scheduleFactory.getCarrierNumbers(companyId).then($this.getCarrierSuccess),
+        scheduleFactory.getCarrierTypes(companyId).then($this.getCarrierTypesSuccess)
       ];
 
       return promises;
