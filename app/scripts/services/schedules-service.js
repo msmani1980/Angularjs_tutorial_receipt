@@ -33,6 +33,15 @@ angular.module('ts5App')
       return distinctSchedulesRequestResource.getSchedules(payload).$promise;
     };
 
+    var getPeriodicSchedules = function(companyId, payload) {
+      angular.extend(payload, {
+        id: companyId
+      });
+
+      schedulesActions.getSchedules.headers.companyId = companyId;
+      return schedulesRequestResource.getSchedules(payload).$promise;
+    };
+
     var getDailySchedules = function(companyId, scheduleNumber, scheduleDate) {
       var payload = {
         id: companyId,
@@ -54,6 +63,7 @@ angular.module('ts5App')
 
     return {
       getSchedules: getSchedules,
+      getPeriodicSchedules: getPeriodicSchedules,
       getDailySchedules: getDailySchedules,
       getSchedulesInDateRange: getSchedulesInDateRange
     };

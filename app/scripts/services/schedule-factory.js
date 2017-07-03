@@ -14,8 +14,7 @@ angular.module('ts5App')
     };
 
     var getSchedules = function (payload) {
-      // TODO: add payload support for filtering
-      return schedulesService.getSchedules(getCompanyId());
+      return schedulesService.getPeriodicSchedules(getCompanyId(), payload);
     };
 
     var getSchedule = function(id) {

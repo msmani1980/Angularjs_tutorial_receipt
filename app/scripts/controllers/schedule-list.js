@@ -74,15 +74,6 @@ angular.module('ts5App')
       return stationCode;
     };
 
-    this.updateStationCodes = function() {
-      if ($scope.postTrips.length > 0 && $scope.stationList.length > 0) {
-        angular.forEach($scope.postTrips, function(trip) {
-          trip.depStationCode = $this.getStationById(trip.depStationId);
-          trip.arrStationCode = $this.getStationById(trip.arrStationId);
-        });
-      }
-    };
-
     this.getStationsSuccess = function(response) {
       var newStationList = $scope.stationList.concat(angular.copy(response.response));
       $scope.stationList = lodash.uniq(newStationList, 'stationId');
@@ -90,8 +81,6 @@ angular.module('ts5App')
       if (response.meta.start === 0 && response.meta.limit < response.meta.count) {
         postTripFactory.getStationList(companyId, response.meta.limit).then($this.getStationsSuccess);
       }
-
-      $this.updateStationCodes();
     };
 
     this.getCarrierSuccess = function(response) {
@@ -125,7 +114,15 @@ angular.module('ts5App')
     this.getSchedulesSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
 
-      $scope.schedules = $scope.schedules.concat(response.schedules);
+      $scope.schedules = $scope.schedules.concat(response.schedules.map(function (schedule) {
+        schedule.hasTripDistance = schedule.tripDistance !== null && schedule.tripDistance !== undefined;
+        schedule.days = (schedule.days) ? schedule.days.replace('{', '').replace('}', '') : schedule.days;
+        schedule.startDate = dateUtility.formatDateForApp(schedule.startDate);
+        schedule.endDate = dateUtility.formatDateForApp(schedule.endDate);
+
+        return schedule;
+      }));
+
       hideLoadingBar();
     };
 
@@ -138,7 +135,8 @@ angular.module('ts5App')
       $this.formatMultiSelectedValuesForSearch();
       var payload = lodash.assign(angular.copy($scope.search), {
         limit: $this.meta.limit,
-        offset: $this.meta.offset
+        offset: $this.meta.offset,
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
       });
 
       scheduleFactory.getSchedules(payload).then($this.getSchedulesSuccess);
