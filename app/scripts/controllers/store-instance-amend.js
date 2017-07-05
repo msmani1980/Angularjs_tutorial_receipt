@@ -262,6 +262,13 @@ angular.module('ts5App')
       return (cashBag && !cashBag.isManual && !cashBag.isVerified);
     };
 
+    $scope.canEdit = function (cashBag) {
+      if (!angular.isDefined(cashBag) && cashBag === null) {
+        return false;    	  
+      }
+      return (cashBag && !cashBag.isVerified && cashBag.isSubmitted);
+    };
+
     function getModalItemsToShow(modalName) {
       return (modalName === 'Promotion') ? $this.promotionTotals : $this.cashBagEposSales;
     }
@@ -1130,6 +1137,13 @@ angular.module('ts5App')
 
     function setCompanyPreferences(companyPreferencesFromAPI) {
       $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesFromAPI.preferences), 'startDate', 'desc');
+	  $scope.cbNumberMaxLength = 25;
+      var cbNumberPref = lodash.where($scope.companyPreferences, { choiceName: 'Cashbag Number Length', optionCode: 'CBV', optionName: 'Cashbag Validation' })[0];
+      if (angular.isDefined(cbNumberPref) && cbNumberPref !== null && angular.isDefined(cbNumberPref.numericValue)) {
+        if (cbNumberPref.numericValue !== null && cbNumberPref.numericValue>0) {
+    	  $scope.cbNumberMaxLength = cbNumberPref.numericValue;
+    	}
+      }
     }
 
     function getCompanyPreferences () {
