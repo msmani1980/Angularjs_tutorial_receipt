@@ -86,7 +86,7 @@
               <select class="form-control" ng-model="moveCashBagAction" ng-change="clearMoveSearchResults()">
                 <option value="none"></option>
                 <option value="merge" ng-if="canMerge(cashBagToMove)">Merge with a Cash Bag Instance</option>
-                <option value="editCashBagNumber">Edit Cash Bag Number</option>
+                <option value="editCashBagNumber" ng-if="canEdit(cashBagToMove)">Edit Cash Bag Number</option>
 <!--                 <option value="reallocate">Reallocate to a Store Instance</option> -->
               </select>
             </div>
@@ -105,7 +105,7 @@
           
           <div class="row" ng-show="moveCashBagAction==='editCashBagNumber'">
             <div class="col-xs-12">
-              <label>New Cash Bag Number</label> <input type="text" class="form-control" ng-model="moveSearch.cashBag" minlength="1" maxlength="25" ng-required="true">
+              <label>New Cash Bag Number</label> <input type="text" class="form-control" ng-model="moveSearch.cashBag" minlength="1" maxlength="{{ cbNumberMaxLength }}" ng-required="true">
             </div>
           </div>
 
