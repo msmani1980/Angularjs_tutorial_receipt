@@ -105,10 +105,10 @@ angular.module('ts5App')
     };
 
     this.formatMultiSelectedValuesForSearch = function() {
-      $this.addSearchValuesFromMultiSelectArray('aircraftTypeId', $scope.multiSelectedValues.aircraftTypes, 'aircraftTypeId');
-      $this.addSearchValuesFromMultiSelectArray('depStationId', $scope.multiSelectedValues.depStations, 'stationId');
-      $this.addSearchValuesFromMultiSelectArray('arrStationId', $scope.multiSelectedValues.arrStations, 'stationId');
-      $this.addSearchValuesFromMultiSelectArray('tailNumber', $scope.multiSelectedValues.tailNumbers, 'carrierNumber');
+      $this.addSearchValuesFromMultiSelectArray('operationalDays', $scope.multiSelectedValues.daysOfOperation, 'id');
+      $this.addSearchValuesFromMultiSelectArray('companyCarrierTypeId', $scope.multiSelectedValues.aircraftTypes, 'companyCarrierTypeId');
+      $this.addSearchValuesFromMultiSelectArray('departureStationId', $scope.multiSelectedValues.depStations, 'stationId');
+      $this.addSearchValuesFromMultiSelectArray('arrivalStationId', $scope.multiSelectedValues.arrStations, 'stationId');
     };
 
     this.getSchedulesSuccess = function(response) {
@@ -135,9 +135,14 @@ angular.module('ts5App')
       $this.formatMultiSelectedValuesForSearch();
       var payload = lodash.assign(angular.copy($scope.search), {
         limit: $this.meta.limit,
-        offset: $this.meta.offset,
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        offset: $this.meta.offset
       });
+
+      payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
+
+
+      // start/end date, provjerit sve id-ove i multiselect
 
       scheduleFactory.getSchedules(payload).then($this.getSchedulesSuccess);
       $this.meta.offset += $this.meta.limit;
