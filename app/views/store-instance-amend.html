@@ -105,7 +105,7 @@
           
           <div class="row" ng-show="moveCashBagAction==='editCashBagNumber'">
             <div class="col-xs-12">
-              <label>New Cash Bag Number</label> <input type="text" class="form-control" ng-model="moveSearch.cashBag" minlength="1" maxlength="25" ng-required="true">
+              <label>New Cash Bag Number</label> <input type="text" class="form-control" ng-model="moveSearch.cashBag" minlength="1" maxlength="{{ cbNumberMaxLength }}" ng-required="true">
             </div>
           </div>
 

@@ -1130,6 +1130,13 @@ angular.module('ts5App')
 
     function setCompanyPreferences(companyPreferencesFromAPI) {
       $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesFromAPI.preferences), 'startDate', 'desc');
+	  $scope.cbNumberMaxLength = 25;
+      var cbNumberPref = lodash.where($scope.companyPreferences, { choiceName: 'Cashbag Number Length', optionCode: 'CBV', optionName: 'Cashbag Validation' })[0];
+      if (angular.isDefined(cbNumberPref) && cbNumberPref !== null && angular.isDefined(cbNumberPref.numericValue)) {
+        if (cbNumberPref.numericValue !== null && cbNumberPref.numericValue>0) {
+    	  $scope.cbNumberMaxLength = cbNumberPref.numericValue;
+    	}
+      }
     }
 
     function getCompanyPreferences () {
