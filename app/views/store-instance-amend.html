@@ -86,7 +86,7 @@
               <select class="form-control" ng-model="moveCashBagAction" ng-change="clearMoveSearchResults()">
                 <option value="none"></option>
                 <option value="merge" ng-if="canMerge(cashBagToMove)">Merge with a Cash Bag Instance</option>
-                <option value="editCashBagNumber">Edit Cash Bag Number</option>
+                <option value="editCashBagNumber" ng-if="canEdit(cashBagToMove)">Edit Cash Bag Number</option>
 <!--                 <option value="reallocate">Reallocate to a Store Instance</option> -->
               </select>
             </div>

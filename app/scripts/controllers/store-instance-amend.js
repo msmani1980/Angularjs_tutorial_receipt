@@ -262,6 +262,13 @@ angular.module('ts5App')
       return (cashBag && !cashBag.isManual && !cashBag.isVerified);
     };
 
+    $scope.canEdit = function (cashBag) {
+      if (!angular.isDefined(cashBag) && cashBag === null) {
+        return false;    	  
+      }
+      return (cashBag && !cashBag.isVerified && cashBag.isSubmitted);
+    };
+
     function getModalItemsToShow(modalName) {
       return (modalName === 'Promotion') ? $this.promotionTotals : $this.cashBagEposSales;
     }
