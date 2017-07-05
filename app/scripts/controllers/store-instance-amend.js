@@ -244,6 +244,21 @@ angular.module('ts5App')
     };
 
     $scope.canMerge = function (cashBag) {
+      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.flightSectors)) {
+        var isSchedule = false;
+        if (cashBag.flightSectors !== null) {
+          cashBag.flightSectors.forEach(function (sector) {
+            if (!sector.isPosttrip) {
+              isSchedule = true;
+            }
+          });
+        }  
+
+        if (isSchedule) {
+          return false;
+        }
+      }
+
       return (cashBag && !cashBag.isManual && !cashBag.isVerified);
     };
 

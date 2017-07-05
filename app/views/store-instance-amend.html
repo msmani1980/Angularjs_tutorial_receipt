@@ -85,7 +85,7 @@
               <h4>Select an action</h4>
               <select class="form-control" ng-model="moveCashBagAction" ng-change="clearMoveSearchResults()">
                 <option value="none"></option>
-                <option value="merge" ng-if="canMerge(cashBagToMove)">Merge with a Store Instance</option>
+                <option value="merge" ng-if="canMerge(cashBagToMove)">Merge with a Cash Bag Instance</option>
                 <option value="editCashBagNumber">Edit Cash Bag Number</option>
 <!--                 <option value="reallocate">Reallocate to a Store Instance</option> -->
               </select>
@@ -165,7 +165,7 @@
               <th>Submitted Status</th>
               <th>Select</th>
             </tr>
-            <tr ng-repeat="cashBag in moveCashBagSearchResults | orderBy:'cashBag.cashBagNumber'"
+            <tr ng-repeat="cashBag in moveCashBagSearchResults | orderBy:'cashBagNumber'"
                 ng-class="getClassesForSingleSelectedRow(cashBag, 'background', 'cashBag')">
               <td>{{ cashBag.cashBagNumber }}</td>
               <td>{{ cashBag.bankRefNumber }}</td>
