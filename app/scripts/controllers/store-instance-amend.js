@@ -269,6 +269,18 @@ angular.module('ts5App')
       return (cashBag && !cashBag.isVerified && cashBag.isSubmitted);
     };
 
+    $scope.canExecuteAmendCashBag = function (cashBag) {
+      var canExAction =  $scope.canExecuteActions(cashBag);
+      var canEdit = $scope.canEdit(cashBag);
+      var canMerge = $scope.canMerge(cashBag);
+
+      if (canExAction && (canEdit || canMerge)) {
+        return true;
+      }
+
+      return false;
+    };
+
     function getModalItemsToShow(modalName) {
       return (modalName === 'Promotion') ? $this.promotionTotals : $this.cashBagEposSales;
     }
