@@ -1389,7 +1389,8 @@ angular.module('ts5App')
       var companyId = globalMenuService.company.get();
       var payload = {
         companyId: companyId,
-        storeInstanceId: $routeParams.storeInstanceId
+        storeInstanceId: $routeParams.storeInstanceId,
+        showDeletedCB: true
       };
 
       return storeInstanceAmendFactory.getCashBags(payload)
