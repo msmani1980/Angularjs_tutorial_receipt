@@ -13,6 +13,7 @@ angular.module('ts5App')
 
     var $this = this;
 
+    $scope.originalDiscount = null;
     $scope.viewName = 'Create Discount';
     $scope.buttonText = 'Create';
     $scope.editingDiscount = false;
@@ -249,6 +250,8 @@ angular.module('ts5App')
         return false;
       }
 
+      $scope.originalDiscount = angular.copy(discountData);
+
       $scope.formData = $this.getCleanFormData();
 
       $this.deserializeDiscountInformation(discountData);
@@ -277,30 +280,48 @@ angular.module('ts5App')
       discount.rateTypeId = formData.discountTypeId;
       discount.percentage = formData.percentageDiscountValue;
       angular.forEach(formData.amountDiscountValue, function(amount, currencyId) {
-        discount.rates.push({
-          amount: amount,
-          companyCurrencyId: currencyId
-        });
+        var original = $this.originalAmountDiscountValueForCurrency(currencyId);
+        if(original) {
+          original.amount = amount;
+          discount.rates.push(original);
+        } else {
+          discount.rates.push({
+            amount: amount,
+            companyCurrencyId: currencyId
+          });
+        }
       });
     };
 
     this.serializeLimitationPerShop = function(formData, discount) {
       discount.itemQuantityLimitByShop = formData.itemQtyLimitPerShop;
       angular.forEach(formData.amountLimitPerShopValue, function(amount, currencyId) {
-        discount.limitsByShop.push({
-          amount: amount,
-          companyCurrencyId: currencyId
-        });
+        var original = $this.originalLimitsByShopValueForCurrency(currencyId);
+        if(original) {
+          original.amount = amount;
+          discount.limitsByShop.push(original);
+        } else {
+          discount.limitsByShop.push({
+            amount: amount,
+            companyCurrencyId: currencyId
+          });
+        }
       });
     };
 
     this.serializeLimitationPerTransaction = function(formData, discount) {
       discount.itemQuantityLimitByTransaction = formData.itemQtyLimitPerTransaction;
       angular.forEach(formData.amountLimitPerTransactionValue, function(amount, currencyId) {
-        discount.limitsByTransaction.push({
-          amount: amount,
-          companyCurrencyId: currencyId
-        });
+        var original = $this.originalLimitsByTransactionValueForCurrency(currencyId);
+        if(original) {
+          original.amount = amount;
+          discount.limitsByTransaction.push(original);
+        } else {
+          discount.limitsByTransaction.push({
+            amount: amount,
+            companyCurrencyId: currencyId
+          });
+        }
       });
     };
 
@@ -311,17 +332,78 @@ angular.module('ts5App')
 
     this.serializeRestrictions = function(formData, discount) {
       discount.companyDiscountRestrictions = formData.isRestriction;
+
       angular.forEach(formData.restrictedCategories, function(category) {
-        discount.restrictedCategories.push({
-          salesCategoryId: category.id
-        });
+        var original = $this.originalRestrictedCategoriesForCategory(category.id);
+        if(original) {
+          discount.restrictedCategories.push(original);
+        } else {
+          discount.restrictedCategories.push({
+            salesCategoryId: category.id
+          });
+        }
       });
 
       angular.forEach(formData.restrictedItems, function(item) {
-        discount.restrictedItems.push({
-          retailItemId: item.id
-        });
+        var original = $this.originalRestrictedItemsForItem(item.id);
+        if(original) {
+          discount.restrictedItems.push(original);
+        } else {
+          discount.restrictedItems.push({
+            retailItemId: item.id
+          });
+        }
       });
+    };
+
+    this.originalAmountDiscountValueForCurrency = function(currencyId) {
+      if(!$scope.originalDiscount) {
+        return;
+      }
+
+      return $scope.originalDiscount.rates.filter(function(item) {
+        return item.companyCurrencyId.toString() === currencyId;
+      })[0];
+    };
+
+    this.originalLimitsByShopValueForCurrency = function(currencyId) {
+      if(!$scope.originalDiscount) {
+        return;
+      }
+
+      return $scope.originalDiscount.limitsByShop.filter(function(item) {
+        return item.companyCurrencyId.toString() === currencyId;
+      })[0];
+    };
+
+    this.originalLimitsByTransactionValueForCurrency = function(currencyId) {
+      if(!$scope.originalDiscount) {
+        return;
+      }
+
+      return $scope.originalDiscount.limitsByTransaction.filter(function(item) {
+        return item.companyCurrencyId.toString() === currencyId;
+      })[0];
+    };
+
+    this.originalRestrictedItemsForItem = function(itemId) {
+      if(!$scope.originalDiscount) {
+        return;
+      }
+
+      return $scope.originalDiscount.restrictedItems.filter(function(item) {
+        return item.retailItemId === itemId;
+      })[0];
+    };
+
+    this.originalRestrictedCategoriesForCategory = function(categoryId) {
+      if(!$scope.originalDiscount) {
+        return;
+      }
+
+      return $scope.originalDiscount.restrictedCategories.filter(function(item) {
+        return item.salesCategoryId === categoryId;
+      })[0];
     };
 
     this.formatPayload = function(formData) {
