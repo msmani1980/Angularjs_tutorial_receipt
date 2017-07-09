@@ -520,7 +520,22 @@ angular.module('ts5App')
       $this.showLoadingModal(message);
       $scope.taxRateSaved = taxRate.id;
       var promises = $this.createEditPromises(taxRate);
-      $q.all(promises).then($this.editSuccess, $this.errorHandler);
+      $q.all(promises).then(
+        $this.editSuccess,
+        function (dataFromAPI) {
+          $this.hideLoadingModal();
+          $scope.displayError = true;
+
+          var taxRateEdited = $scope.companyTaxRatesList.filter(function(item) {
+            return item.id === taxRate.id;
+          })[0];
+
+          taxRateEdited.saved = false;
+          $this.addEditActionToTaxRate(taxRateEdited);
+
+          $scope.errorResponse = angular.copy(dataFromAPI);
+        }
+      );
     };
 
     this.saveTaxRateEdits = function (taxRate) {

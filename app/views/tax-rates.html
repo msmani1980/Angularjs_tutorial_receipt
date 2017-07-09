@@ -170,7 +170,7 @@
             <ui-select-match placeholder="Country">
               {{ $select.selected.countryName }}
             </ui-select-match>
-            <ui-select-choices repeat="country in countriesList | filter: $select.search | orderBy:'countryName'" position={{taxRate.position}} style="z-index: 10">
+            <ui-select-choices repeat="country in countriesList | filter: $select.search | orderBy:'countryName'" position={{taxRate.position}}>
               <div ng-bind-html="country.countryName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
