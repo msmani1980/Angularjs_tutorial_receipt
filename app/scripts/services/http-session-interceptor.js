@@ -30,7 +30,6 @@ angular.module('ts5App')
       '/company-view/*',
       '/company/*',
       '/currency-edit/*',
-      '/discounts/*',
       '/employee-commission-list/*',
       '/employee-commission/*',
       '/employee-message/*',
@@ -61,8 +60,7 @@ angular.module('ts5App')
     ];
 
     var legacyApis = [
-      '/rsvr/api/dispatch/store-instances/[0-9]*/status/[9-9][^11]*$',
-      '/rsvr/api/company-discounts/[0-9]*$'
+      '/rsvr/api/dispatch/store-instances/[0-9]*/status/[9-9][^11]*$'
     ];
 
     var onlyRsvrApis = [
@@ -82,6 +80,7 @@ angular.module('ts5App')
       '/rsvr/api/company-currency-globals',
       '/rsvr/api/companies/stores',
       '/rsvr/api/companies/time-configuration',
+      '/rsvr/api/company-discounts/[0-9]*',
       '/rsvr/api/feature/DAILYEXCHANGERATE/thresholds',
       '/api/dispatch/store-instances/[0-9]*/menu-items',
       '/api/dispatch/store-instances/[0-9]*/items',
