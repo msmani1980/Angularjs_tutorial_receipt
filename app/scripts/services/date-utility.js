@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('dateUtility', function (companyFormatUtility) {
+  .service('dateUtility', function (companyFormatUtility, $localStorage) {
 
     var dateFormatForAPI = 'YYYYMMDD';
     var dateFormatForReportAPI = 'dd/MM/yyyy';
@@ -175,9 +175,26 @@ angular.module('ts5App')
     this.getOperationalDay = function (date, currentDateFormat) {
       currentDateFormat = currentDateFormat || this.getDateFormatForApp();
       var formattedDate = this.formatDate(date, currentDateFormat, 'MM/DD/YYY');
-
       date = new Date(formattedDate);
       return date.getDay();
+    };
+    
+    this.nowFormattedDatePicker = function (formatTo) {
+      formatTo = formatTo || this.getDateFormatForApp();
+      var formatFrom = 'x';
+      var now = this.now();
+      return this.formatDatePicker(now, formatFrom, formatTo);
+    };
+    
+    this.tomorrowFormattedDatePicker = function (formatTo) {
+      var formatFrom = 'x';
+      formatTo = formatTo || this.getDateFormatForApp();
+      var tomorrow = this.tomorrow();
+      return this.formatDatePicker(tomorrow, formatFrom, formatTo);
+    };
+    
+    this.formatDatePicker = function (dateString, formatFrom, formatTo) {
+      return moment(dateString, formatFrom).utcOffset($localStorage.companyObject.userCompanyTimezoneOffset || 0).format(formatTo).toString();
     };
 
   });

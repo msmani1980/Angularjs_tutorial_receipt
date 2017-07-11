@@ -29,8 +29,9 @@ angular.module('ts5App')
           orientation: 'auto top',
           format: companyFormatUtility.getDateFormat().toLowerCase(),
           autoclose: true,
-          todayHighlight: true,
-          maxDate: $scope.maxDate
+          todayHighlight: false,
+          maxDate: $scope.maxDate,
+          datesDisabled: [dateUtility.nowFormattedDatePicker()]
         };
 
         $scope.placeholder = datePickerOptions.format;
@@ -56,6 +57,7 @@ angular.module('ts5App')
           var options = angular.extend({}, datePickerOptions);
           var datePickerInput = $element.find('input[type="text"]');
           datePickerInput.datepicker(options);
+          datePickerInput.datepicker('update', $scope.ngModel);
           $scope.$watch('ngModel', function(newData, oldData) {
             if ($scope.ngModel && newData !== oldData) {
               datePickerInput.datepicker('setDate', $scope.ngModel);

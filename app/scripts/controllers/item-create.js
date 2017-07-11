@@ -13,8 +13,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     var $this = this;
     $scope.formData = {
-      startDate: dateUtility.tomorrowFormatted(),
-      endDate: dateUtility.tomorrowFormatted(),
+      startDate: dateUtility.tomorrowFormattedDatePicker(),
+      endDate: dateUtility.tomorrowFormattedDatePicker(),
       qrCodeValue: '',
       qrCodeImgUrl: null,
       images: [],
