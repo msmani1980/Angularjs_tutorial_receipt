@@ -153,6 +153,8 @@ angular.module('ts5App')
 
     function formatEposItem(item, rawLMPStockData) {
       var carrierInstanceMatch = lodash.findWhere($this.carrierInstanceList, { id: item.companyCarrierInstanceId });
+      $scope.outlierItemData = {};
+      $scope.outlierItemData.menuList = $scope.outlierItemData.menuList || [];
       if (!carrierInstanceMatch) {
         return;
       }
