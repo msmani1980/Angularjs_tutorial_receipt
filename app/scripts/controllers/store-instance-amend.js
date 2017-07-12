@@ -130,9 +130,9 @@ angular.module('ts5App')
       $scope.targetRecordForMoveCashBag = null;
 
       if ($scope.moveCashBagAction === 'merge') {
-        searchForMergeCashBag ();
+        searchForMergeCashBag();
       } else {
-    	$scope.moveCashBagSearchResults = null;    	  
+        $scope.moveCashBagSearchResults = null;
       }
     };
 
@@ -240,7 +240,7 @@ angular.module('ts5App')
       var sourceCashBagId = $scope.cashBagToMove.id;
       var destCashBagId = $scope.targetRecordForMoveCashBag.id;
       cashBagFactory.mergeCashBag(sourceCashBagId, destCashBagId).then(moveCashBagSuccess, moveCashBagError);
-      resetAllModals ();
+      resetAllModals();
     };
 
     $scope.canMerge = function (cashBag) {
@@ -264,8 +264,9 @@ angular.module('ts5App')
 
     $scope.canEdit = function (cashBag) {
       if (!angular.isDefined(cashBag) && cashBag === null) {
-        return false;    	  
+        return false;
       }
+
       return (cashBag && !cashBag.isVerified && cashBag.isSubmitted);
     };
 
@@ -535,6 +536,7 @@ angular.module('ts5App')
       if (!cashBag.isVerified && cashBag.isSubmitted) {
         return false;
       }
+
       return true;
     };
 
@@ -543,17 +545,17 @@ angular.module('ts5App')
       var keyCashBag = [];
       angular.forEach($scope.normalizedCashBags, function (inCashBag) {
         if (inCashBag.id !== $scope.cashBagToMove.id && !inCashBag.isDeleted && !inCashBag.isManual) {
-          var cashBag ={
+          var cashBag = {
             cashBagNumber:inCashBag.cashBag,
             bankRefNumber:inCashBag.bankRefNumber,
             isVerified:inCashBag.isVerified,
             isSubmitted:inCashBag.isSubmitted,
             id:inCashBag.id
           };
-         if (keyCashBag.indexOf(cashBag.id) === -1) {
-           keyCashBag.push(cashBag.id);
-           $scope.moveCashBagSearchResults.push(angular.copy(cashBag));
-         }
+          if (keyCashBag.indexOf(cashBag.id) === -1) {
+            keyCashBag.push(cashBag.id);
+            $scope.moveCashBagSearchResults.push(angular.copy(cashBag));
+          }
         }
       });
     }
@@ -583,7 +585,7 @@ angular.module('ts5App')
     };
 
     $scope.editCashBagNumberShow = function () {
-      if ($scope.moveSearch.cashBag === null || !angular.isDefined ($scope.moveSearch.cashBag)) {
+      if ($scope.moveSearch.cashBag === null || !angular.isDefined($scope.moveSearch.cashBag)) {
         angular.element('.cashbag-number-empty-warning-modal').modal('show');
         return;
       }
@@ -591,15 +593,14 @@ angular.module('ts5App')
       $scope.numberExist = false;  
       angular.forEach($scope.cashBags, function (cashBag) {
         if (!cashBag.delete && cashBag.cashBagNumber === $scope.moveSearch.cashBag) {
-          $scope.numberExist = true;	  
+          $scope.numberExist = true;
         }
       });
 
       if (!$scope.numberExist) {
-    	  angular.element('.edit-cashbag-number-warning-modal').modal('show');
-      }    
-      else {
-    	  angular.element('.cashbag-number-exist-warning-modal').modal('show');
+        angular.element('.edit-cashbag-number-warning-modal').modal('show');
+      } else {
+        angular.element('.cashbag-number-exist-warning-modal').modal('show');
       }  
     };
 
@@ -608,7 +609,7 @@ angular.module('ts5App')
       var cashBagToEdit = $scope.cashBagToMove;
       var cashBagNewNumber = $scope.moveSearch;
       cashBagFactory.editCashBagNumber(cashBagToEdit.id, cashBagNewNumber.cashBag).then(moveCashBagSuccess, moveCashBagError);
-      resetAllModals ();
+      resetAllModals();
     };
 
     $scope.getClassForTableAccordion = function (visibilityFlag) {
@@ -1149,12 +1150,12 @@ angular.module('ts5App')
 
     function setCompanyPreferences(companyPreferencesFromAPI) {
       $scope.companyPreferences = lodash.sortByOrder(angular.copy(companyPreferencesFromAPI.preferences), 'startDate', 'desc');
-	  $scope.cbNumberMaxLength = 25;
+      $scope.cbNumberMaxLength = 25;
       var cbNumberPref = lodash.where($scope.companyPreferences, { choiceName: 'Cashbag Number Length', optionCode: 'CBV', optionName: 'Cashbag Validation' })[0];
       if (angular.isDefined(cbNumberPref) && cbNumberPref !== null && angular.isDefined(cbNumberPref.numericValue)) {
-        if (cbNumberPref.numericValue !== null && cbNumberPref.numericValue>0) {
-    	  $scope.cbNumberMaxLength = cbNumberPref.numericValue;
-    	}
+        if (cbNumberPref.numericValue !== null && cbNumberPref.numericValue > 0) {
+          $scope.cbNumberMaxLength = cbNumberPref.numericValue;
+        }
       }
     }
 
