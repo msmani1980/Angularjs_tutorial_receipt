@@ -12,7 +12,7 @@ angular.module('ts5App')
     dateUtility, lodash) {
 
     $scope.viewName = 'Daily Exchange Rates';
-    $scope.cashiersDateField = dateUtility.nowFormatted();
+    $scope.cashiersDateField = dateUtility.nowFormattedDatePicker();
     $scope.cashHandlerBaseCurrency = {};
     $scope.showActionButtons = false;
     $scope.companyCurrencies = [];
@@ -134,7 +134,7 @@ angular.module('ts5App')
     }
 
     function shouldShowActionButtons() {
-      var isToday = dateUtility.isToday($scope.cashiersDateField);
+      var isToday = dateUtility.isTodayDatePicker($scope.cashiersDateField);
       if (!isToday) {
         return false;
       }
