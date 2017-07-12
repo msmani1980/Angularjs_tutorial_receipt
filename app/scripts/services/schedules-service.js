@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('schedulesService', function($resource, ENV) {
+  .service('schedulesService', function($resource, ENV, Upload) {
 
     var schedulesRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/schedules';
 
@@ -61,11 +61,20 @@ angular.module('ts5App')
       return schedulesRequestResource.getSchedules(payload).$promise;
     };
 
+    var importFromExcel = function (companyId, file) {
+      var uploadRequestURL = ENV.apiUrl + '/rsvr-upload/companies/' + companyId + '/file/schedule';
+      return Upload.upload({
+        url: uploadRequestURL,
+        file: file
+      });
+    };
+
     return {
       getSchedules: getSchedules,
       getPeriodicSchedules: getPeriodicSchedules,
       getDailySchedules: getDailySchedules,
-      getSchedulesInDateRange: getSchedulesInDateRange
+      getSchedulesInDateRange: getSchedulesInDateRange,
+      importFromExcel: importFromExcel
     };
 
   });
