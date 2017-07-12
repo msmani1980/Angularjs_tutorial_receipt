@@ -465,7 +465,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       var diff = 1;
       if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
         diff = dateUtility.diff(
-          dateUtility.nowFormatted(),
+          dateUtility.nowFormattedDatePicker(),
           $scope.formData.startDate
         );
       }
