@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ScheduleListCtrl', function ($scope, globalMenuService, $q, $location, dateUtility, lodash, postTripFactory, scheduleFactory) {
+  .controller('ScheduleListCtrl', function ($scope, globalMenuService, $q, $location, dateUtility, lodash, postTripFactory, scheduleFactory, messageService) {
     var companyId = globalMenuService.company.get();
     var $this = this;
     this.meta = {
@@ -141,9 +141,6 @@ angular.module('ts5App')
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
 
-
-      // start/end date, provjerit sve id-ove i multiselect
-
       scheduleFactory.getSchedules(payload).then($this.getSchedulesSuccess);
       $this.meta.offset += $this.meta.limit;
     }
@@ -160,6 +157,38 @@ angular.module('ts5App')
         offset: 0
       };
       $scope.loadSchedules();
+    };
+
+    this.showToastMessage = function(className, type, message) {
+      messageService.display(className, message, type);
+    };
+
+    this.deleteScheduleFailure = function() {
+      $this.showToastMessage('danger', 'Schedule', 'Schedule could not be deleted');
+    };
+
+    this.deleteScheduleSuccess = function() {
+      $this.showToastMessage('success', 'Schedule', 'Schedule successfully deleted');
+      $scope.schedules = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.loadSchedules();
+    };
+
+    $scope.removeRecord = function(schedule) {
+      if (!$scope.schedules || $scope.schedules.length <= 0) {
+        $this.deleteScheduleFailure();
+        return;
+      }
+
+      scheduleFactory.deleteSchedule(companyId, schedule.id).then(
+        $this.deleteScheduleSuccess,
+        $this.deleteScheduleFailure
+      );
+
     };
 
     this.makeInitPromises = function() {

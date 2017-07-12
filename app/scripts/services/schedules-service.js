@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('schedulesService', function($resource, ENV, Upload) {
 
-    var schedulesRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/schedules';
+    var schedulesRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/schedules/:scheduleId';
 
     var schedulesActions = {
       getSchedules: {
@@ -19,6 +19,9 @@ angular.module('ts5App')
       },
       getDailySchedules: {
         method: 'GET'
+      },
+      deleteSchedules: {
+        method: 'DELETE'
       }
     };
     var distinctSchedulesRequestResource = $resource(ENV.apiUrl + '/rsvr/api/companies/:id/schedules/distinct', null, schedulesActions);
@@ -61,6 +64,14 @@ angular.module('ts5App')
       return schedulesRequestResource.getSchedules(payload).$promise;
     };
 
+    var deleteSchedule = function (companyId, scheduleId) {
+      var payload = {
+        id: companyId,
+        scheduleId: scheduleId
+      };
+      return schedulesRequestResource.deleteSchedules(payload).$promise;
+    };
+
     var importFromExcel = function (companyId, file) {
       var uploadRequestURL = ENV.apiUrl + '/rsvr-upload/companies/' + companyId + '/file/schedule';
       return Upload.upload({
@@ -74,7 +85,8 @@ angular.module('ts5App')
       getPeriodicSchedules: getPeriodicSchedules,
       getDailySchedules: getDailySchedules,
       getSchedulesInDateRange: getSchedulesInDateRange,
-      importFromExcel: importFromExcel
+      importFromExcel: importFromExcel,
+      deleteSchedule: deleteSchedule
     };
 
   });

@@ -29,8 +29,8 @@ angular.module('ts5App')
       return null;
     };
 
-    var deleteSchedule = function (id, tripId) {
-      return null;
+    var deleteSchedule = function (companyId, scheduleId) {
+      return schedulesService.deleteSchedule(companyId, scheduleId);
     };
 
     var uploadSchedule = function (id, file) {
