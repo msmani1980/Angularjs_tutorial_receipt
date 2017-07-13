@@ -141,13 +141,6 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       });
     });
 
-    describe('getCatererStation', function() {
-      it('should attach caterStationList to Scope', function() {
-        expect(scope.catererStationList).toBeDefined();
-      });
-
-    });
-
     describe('getStation', function() {
       it('should get station from storeInstanceDashboardFactory', function() {
         expect(storeInstanceDashboardFactory.getStationList).toHaveBeenCalled();
