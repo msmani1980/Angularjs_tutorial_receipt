@@ -194,11 +194,32 @@ angular.module('ts5App')
     };
     
     this.formatDatePicker = function (dateString, formatFrom, formatTo) {
-      return moment(dateString, formatFrom).utcOffset($localStorage.companyObject.userCompanyTimezoneOffset || 0).format(formatTo).toString();
+      var companyTimeOffset = $localStorage.companyObject !== undefined && $localStorage.companyObject !== null ? $localStorage.companyObject.userCompanyTimezoneOffset || 0 : 0;
+      return moment(dateString, formatFrom).utcOffset(companyTimeOffset).format(formatTo).toString();
     };
     
     this.isTodayDatePicker = function (date) {
-      return moment(date, this.getDateFormatForApp()).isSame(moment(this.nowFormattedDatePicker(),this.getDateFormatForApp()), 'day');    
+      return moment(date, this.getDateFormatForApp()).isSame(moment(this.nowFormattedDatePicker(), this.getDateFormatForApp()), 'day');    
+    };
+
+    this.isTodayOrEarlierDatePicker = function (date) {
+      return moment(date, this.getDateFormatForApp()).isSameOrBefore(moment(this.nowFormattedDatePicker(), this.getDateFormatForApp()), 'day');
+    };
+
+    this.isTomorrowOrLaterDatePicker = function (date) {
+      return moment(date, this.getDateFormatForApp()).isAfter(moment(this.nowFormattedDatePicker(), this.getDateFormatForApp()), 'day');
+    };
+
+    this.isYesterdayOrEarlierDatePicker = function (date) {
+      return moment(date, this.getDateFormatForApp()).isBefore(moment(this.nowFormattedDatePicker(), this.getDateFormatForApp()), 'day');
+    };
+
+    this.isAfterTodayDatePicker = function (date) {
+      return moment(date, this.getDateFormatForApp()).isAfter(moment(this.nowFormattedDatePicker(), this.getDateFormatForApp()), 'day');
+    };
+
+    this.isAfterOrEqualDatePicker = function (baseDate, dateToCompare) {
+      return moment(baseDate, this.getDateFormatForApp()).isSameOrAfter(moment(dateToCompare, this.getDateFormatForApp()), 'day');
     };
 
   });
