@@ -374,7 +374,7 @@ angular.module('ts5App')
     }
 
     function makeInitPromises () {
-      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       var preferencePayload = {
         optionName: 'Exchange Rate Type',
         date: today
