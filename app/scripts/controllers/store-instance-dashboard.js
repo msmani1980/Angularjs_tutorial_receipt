@@ -550,7 +550,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       lastStartDate = payload.startDate;
       payload = lodash.assign(payload, {
         limit: $this.meta.limit,
-        offset: $this.meta.offset
+        offset: $this.meta.offset,
+        avoidUsrStns: true
       });
 
       storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess, searchStoreInstanceFailure);
@@ -625,7 +626,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       checkForLocalStorage();
       $scope.allCheckboxesSelected = false;
       var dependenciesArray = [];
-      dependenciesArray.push(getCatererStationList());
       dependenciesArray.push(getStationList());
       dependenciesArray.push(getStoresList());
       dependenciesArray.push(getStatusList());
