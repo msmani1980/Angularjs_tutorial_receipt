@@ -612,7 +612,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
       
       var stsMap = STATUS_TO_BUTTONS_MAP[5];      
-      if ($localStorage.buttons.indexOf('unreceive') !== -1) {
+      if (angular.isDefined($localStorage.buttons) && $localStorage.buttons.indexOf('unreceive') !== -1) {
         if (stsMap.indexOf('Un-Receive') === -1) {
           stsMap.push('Un-Receive');
           STATUS_TO_BUTTONS_MAP[5] = stsMap;
