@@ -62,6 +62,7 @@ angular.module('ts5App')
           $localStorage.companyObject.companyId = sessionObject.companyId;
           $localStorage.companyObject.formatList = sessionObject.companyFormatList;
           $localStorage.companyObject.companyTypeId = sessionObject.companyData.companyTypeId;
+          $localStorage.companyObject.userCompanyTimezoneOffset = sessionObject.userTimeZone;
         }
       }
 
@@ -87,6 +88,7 @@ angular.module('ts5App')
           companyData: dataFromAPI.companyData,
           companyFormatList: dataFromAPI.companyFormatList,
           userCompanies: dataFromAPI.userCompanies,
+          userTimeZone: dataFromAPI.usersCompanyTimeZone,
           companyTypes: dataFromAPI.companyTypes,
           currentSession: dataFromAPI.currentSession,
           sessionToken: dataFromAPI.currentSession.sessionToken
@@ -166,6 +168,7 @@ angular.module('ts5App')
         sessionObject.companyData = angular.copy(dataFromAPI[0]);
         sessionObject.companyTypes = angular.copy(dataFromAPI[1]);
         sessionObject.userCompanies = formatUserCompanies(dataFromAPI[2], rawSessionData);
+        sessionObject.usersCompanyTimeZone = angular.copy(dataFromAPI[2].user.timezoneOffset || 0);
         sessionObject.companyFormatList = parseCompanyFormatList(dataFromAPI[3].response);
         sessionObject.companyData.companyTypeName = angular.copy(lodash.findWhere(sessionObject.companyTypes, {
           id: sessionObject.companyData.companyTypeId
