@@ -17,24 +17,20 @@ angular.module('ts5App')
       return schedulesService.getPeriodicSchedules(getCompanyId(), payload);
     };
 
-    var getSchedule = function(id) {
-      return null;
+    var getSchedule = function(scheduleId) {
+      return schedulesService.getScheduleById(getCompanyId(), scheduleId);
     };
 
-    var createSchedule = function (id, payload) {
-      return null;
+    var createSchedule = function (payload) {
+      return schedulesService.createSchedule(getCompanyId(), payload);
     };
 
-    var updateSchedule = function (id, payload) {
-      return null;
+    var updateSchedule = function (payload) {
+      return schedulesService.updateSchedule(getCompanyId(), payload);
     };
 
     var deleteSchedule = function (companyId, scheduleId) {
       return schedulesService.deleteSchedule(companyId, scheduleId);
-    };
-
-    var uploadSchedule = function (id, file) {
-      return null;
     };
 
     var getStationList = function (id, offset) {
@@ -59,7 +55,6 @@ angular.module('ts5App')
       createSchedule: createSchedule,
       updateSchedule: updateSchedule,
       deleteSchedule: deleteSchedule,
-      uploadSchedule: uploadSchedule,
       getCompanyId: getCompanyId,
       getStationList: getStationList,
       getCarrierNumbers:getCarrierNumbers,

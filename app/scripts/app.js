@@ -383,6 +383,10 @@ angular.module('ts5App', [
     templateUrl: 'views/schedule-list.html',
     controller: 'ScheduleListCtrl',
     controllerAs: 'scheduleList'
+  }).when('/schedules/:action/:id?', {
+    templateUrl: 'views/schedule.html',
+    controller: 'ScheduleCtrl',
+    controllerAs: 'schedule'
   }).otherwise({
     redirectTo: '/'
   });

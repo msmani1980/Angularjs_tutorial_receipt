@@ -1,0 +1,252 @@
+<div class="module-container">
+
+  <div class="edit-controls">
+
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/schedules" class="btn" ng-show="readOnly">Back</a>
+      </div>
+    </div>
+
+  </div>
+
+  <error-dialog form-object="scheduleDataForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+  <form name="scheduleDataForm">
+    <!--/TopHeader -->
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <!-- form header-->
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="schedule-number">Schedule Number *</label>
+              <input ng-model="schedule.scheduleNumber" type="text" class="form-control" id="schedule-number" placeholder="0001">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-8">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <date-picker-field disable="shouldDisableStartDate || readOnly" name="EffectiveFrom" label="Effective From"
+                                   min-date="'+1d'" required="true" ng-model="schedule.startDate"></date-picker-field>
+              </div>
+              <div class="col-xs-12 col-sm-6">
+                <date-picker-field disable="readOnly" name="EffectiveTo"
+                                   min-date="( editing ? '0d' : '+1d')" label="Effective To" required="true"
+                                   ng-model="schedule.endDate"></date-picker-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="departure-station">Departure Station *</label>
+              <select class="form-control"
+                      name="departureStation"
+                      ng-model="schedule.depStationId"
+                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Departure Station</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="departure-time-from">Departure Time *</label>
+              <input ng-model="search.departureTimeFrom"
+                     maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                     class="form-control"
+                     id="departure-time-from"
+                     placeholder="10:20"
+              >
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="arrival-station">Arrival Station *</label>
+              <select class="form-control"
+                      name="arrivalStation"
+                      ng-model="schedule.arrStationId"
+                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Arrival Station</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label>Arrival Time *</label>
+              <input custom-validity
+                     custom-pattern="time"
+                     required
+                     ng-model="schedule.arrTime"
+                     type="text"
+                     class="form-control departure-time"
+                     name="arrivalTime"
+                     placeholder="23:34"
+                     ng-readonly="readOnly">
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="row">
+
+
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="days-of-operation">Days of Operation *</label>
+              <ui-select id="days-of-operation" multiple ng-model="multiSelectedValues.daysOfOperation" theme="bootstrap">
+                <ui-select-match placeholder="Select Days of Operations">{{ $item.name }}</ui-select-match>
+                <ui-select-choices repeat="number in daysOfOperation | filter: $select.search">
+                  {{ number.name }}
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="aircraft-type">Aircraft type</label>
+              <select class="form-control"
+                      name="aircraftType"
+                      ng-model="schedule.aircraftType"
+                      ng-options="aircraftType.name for aircraftType in aircraftTypes"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Arrival Station</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="tailNumber">Tail Number</label>
+              <select class="form-control"
+                      name="tailNumber"
+                      ng-model="schedule.tailNumber"
+                      ng-options="number.carrierNumber as number.carrierNumber for number in carrierNumbers"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Tail Number</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="tailNumber">Seat config</label>
+              <select class="form-control"
+                      name="seatConfig"
+                      ng-model="schedule.seatConfig"
+                      ng-options="number.carrierNumber as number.carrierNumber for number in carrierNumbers"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Seat Config</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2 employee-id">
+            <label>Flight Info</label>
+            <div class="form-group">
+              <input type="checkbox"
+                     id="benefits-discount-apply-to-retail-item-gift-with-purchase"
+                     ng-model="promotion.giftWithPurchase">
+              <label for="benefits-discount-apply-to-retail-item-gift-with-purchase">First Trip</label>
+              <br/>
+              <input type="checkbox"
+                     id="benefits-discount-apply-to-retail-item-gift-with-purchase"
+                     ng-model="promotion.giftWithPurchase">
+              <label for="benefits-discount-apply-to-retail-item-gift-with-purchase">Last Trip</label>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="schedule-number">Block Time (min)</label>
+              <input ng-model="schedule.scheduleNumber" type="text" class="form-control" id="schedule-number" placeholder="0001">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="schedule-number">Ground Time (min)</label>
+              <input ng-model="schedule.scheduleNumber" type="text" class="form-control" id="schedule-number" placeholder="0001">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="schedule-number">Trip Distance</label>
+              <input ng-model="schedule.scheduleNumber" type="text" class="form-control" id="schedule-number" placeholder="0001">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-1">
+            <div class="form-group">
+              <label for="schedule-number">&nbsp;</label>
+              <select class="form-control"
+                      name="seatConfig"
+                      ng-model="schedule.seatConfig"
+                      ng-options="number.carrierNumber as number.carrierNumber for number in carrierNumbers"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Seat Config</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="schedule-number">Previous Flight:</label>
+              <input ng-model="schedule.scheduleNumber" type="text" class="form-control" id="schedule-number" placeholder="0001">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="schedule-number">Next Flight:</label>
+              <input ng-model="schedule.scheduleNumber" type="text" class="form-control" id="schedule-number" placeholder="0001">
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+
+        </div>
+      </div>
+      <div class="panel-footer text-right">
+        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+          <span class="fa fa-check-square-o" aria-hidden="true"></span>
+          <span class="hidden-xs">Save</span>
+        </button>
+        <a href="#/schedules" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+
+      </div>
+    </div>
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Schedule Management"></dynamic-left-nav>

@@ -20,10 +20,20 @@ angular.module('ts5App')
       getDailySchedules: {
         method: 'GET'
       },
-      deleteSchedules: {
+      deleteSchedule: {
         method: 'DELETE'
+      },
+      getSchedule: {
+        method: 'GET'
+      },
+      createSchedule: {
+        method: 'POST'
+      },
+      updateSchedule: {
+        method: 'PUT'
       }
     };
+
     var distinctSchedulesRequestResource = $resource(ENV.apiUrl + '/rsvr/api/companies/:id/schedules/distinct', null, schedulesActions);
     var dailySchedulesRequestResource = $resource(schedulesRequestURL + '/daily', null, schedulesActions);
     var schedulesRequestResource = $resource(schedulesRequestURL, null, schedulesActions);
@@ -34,6 +44,15 @@ angular.module('ts5App')
       };
       schedulesActions.getSchedules.headers.companyId = companyId;
       return distinctSchedulesRequestResource.getSchedules(payload).$promise;
+    };
+
+    var getScheduleById = function(companyId, scheduleId) {
+      var payload = {
+        id: companyId,
+        scheduleId: scheduleId
+      };
+      schedulesActions.getSchedule.headers.companyId = companyId;
+      return schedulesRequestURL.getSchedules(payload).$promise;
     };
 
     var getPeriodicSchedules = function(companyId, payload) {
@@ -69,7 +88,23 @@ angular.module('ts5App')
         id: companyId,
         scheduleId: scheduleId
       };
-      return schedulesRequestResource.deleteSchedules(payload).$promise;
+      return schedulesRequestResource.deleteSchedule(payload).$promise;
+    };
+
+    var createSchedule = function (companyId, scheduleId) {
+      var payload = {
+        id: companyId,
+        scheduleId: scheduleId
+      };
+      return schedulesRequestResource.createSchedule(payload).$promise;
+    };
+
+    var updateSchedule = function (companyId, scheduleId) {
+      var payload = {
+        id: companyId,
+        scheduleId: scheduleId
+      };
+      return schedulesRequestResource.updateSchedule(payload).$promise;
     };
 
     var importFromExcel = function (companyId, file) {
@@ -86,7 +121,10 @@ angular.module('ts5App')
       getDailySchedules: getDailySchedules,
       getSchedulesInDateRange: getSchedulesInDateRange,
       importFromExcel: importFromExcel,
-      deleteSchedule: deleteSchedule
+      deleteSchedule: deleteSchedule,
+      getScheduleById: getScheduleById,
+      createSchedule: createSchedule,
+      updateSchedule: updateSchedule
     };
 
   });
