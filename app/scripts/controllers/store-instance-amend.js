@@ -1039,7 +1039,7 @@ angular.module('ts5App')
           isDeleted: cashBag.delete === true,
           deletedByUser: (cashBag.updatedByPerson) ? cashBag.updatedByPerson.userName : 'Unknown',
           deletedOn: dateUtility.formatDateForApp(cashBag.updatedOn),
-          isManual: cashBag.originationSource === 2,
+          isManual: (cashBag.originationSource === 2 && cashBag.eposCashBagsId === null),
           scheduleNumber: cashBag.scheduleNumber,
           scheduleDate: dateUtility.formatTimestampForApp(cashBag.scheduleDate),
           isSubmitted: cashBag.submitted,
@@ -1164,6 +1164,7 @@ angular.module('ts5App')
     }
 
     function setCashRevenue (cashRevenueFromAPI) {
+    	console.log ('setCashRevenue', setCashRevenue);
       $scope.cashRevenue = angular.copy(cashRevenueFromAPI);
     }
 
