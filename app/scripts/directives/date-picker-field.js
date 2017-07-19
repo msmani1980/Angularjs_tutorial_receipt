@@ -55,6 +55,7 @@ angular.module('ts5App')
 
         this.init = function($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
+          options.startDate = dateUtility.tomorrowFormattedDatePicker();
           var datePickerInput = $element.find('input[type="text"]');
           datePickerInput.datepicker(options);
           datePickerInput.datepicker('update', $scope.ngModel);
