@@ -23,8 +23,9 @@ angular.module('ts5App')
       deleteSchedule: {
         method: 'DELETE'
       },
-      getSchedule: {
-        method: 'GET'
+      getScheduleById: {
+        method: 'GET',
+        headers: {}
       },
       createSchedule: {
         method: 'POST'
@@ -51,8 +52,8 @@ angular.module('ts5App')
         id: companyId,
         scheduleId: scheduleId
       };
-      schedulesActions.getSchedule.headers.companyId = companyId;
-      return schedulesRequestURL.getSchedules(payload).$promise;
+      schedulesActions.getScheduleById.headers.companyId = companyId;
+      return schedulesRequestResource.getScheduleById(payload).$promise;
     };
 
     var getPeriodicSchedules = function(companyId, payload) {
