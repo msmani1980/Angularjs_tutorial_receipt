@@ -195,7 +195,7 @@ angular.module('ts5App')
     
     this.formatDatePicker = function (dateString, formatFrom, formatTo) {
       var companyTimeOffset = $localStorage.companyObject !== undefined && $localStorage.companyObject !== null ? $localStorage.companyObject.userCompanyTimezoneOffset || 0 : 0;
-      return moment(dateString, formatFrom).utcOffset(companyTimeOffset).format(formatTo).toString();
+      return moment(dateString, formatFrom).utcOffset('"' + companyTimeOffset + '"').format(formatTo).toString();
     };
     
     this.isTodayDatePicker = function (date) {
@@ -220,6 +220,10 @@ angular.module('ts5App')
 
     this.isAfterOrEqualDatePicker = function (baseDate, dateToCompare) {
       return moment(baseDate, this.getDateFormatForApp()).isSameOrAfter(moment(dateToCompare, this.getDateFormatForApp()), 'day');
+    };
+    
+    this.formatTimezoneOffset = function (timezoneOffset) {
+      return (timezoneOffset !== undefined) ? (moment().tz(timezoneOffset).utcOffset()) / 60 : 0;
     };
 
   });
