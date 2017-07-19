@@ -175,9 +175,5 @@ angular.module('ts5App')
       date = new Date(formattedDate);
       return date.getDay();
     };
-    
-    this.formatTimezoneOffset = function (timezoneOffset) {
-      return (timezoneOffset !== undefined) ? (moment().tz(timezoneOffset).utcOffset()) / 60 : 0;
-    };
 
   });
