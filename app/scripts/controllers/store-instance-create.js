@@ -189,8 +189,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setCatererStationList = function (dataFromAPI) {
       $scope.cateringStationList = angular.copy(dataFromAPI.response);
-      var cateringStationMatch = lodash.findWhere($scope.cateringStationList, { id: $scope.formData.cateringStationId });
-      if (!cateringStationMatch) {
+      if ($scope.cateringStationList.length === 1) {
         $scope.formData.cateringStationId = $scope.cateringStationList[0].id;  
       }
     };
