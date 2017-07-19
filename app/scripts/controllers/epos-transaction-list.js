@@ -16,7 +16,7 @@ angular.module('ts5App')
 
       $scope.statuses = {
         B: 'All, but PreSync',
-        OMICF: 'Success',
+        OMICFG: 'Success',
         AJSDH: 'Error',
         NRP: 'In Progress',
         XB: 'PreSync',
@@ -37,8 +37,9 @@ angular.module('ts5App')
         U:'OK, Updated',
         M:'OK, Merged',
         I:'OK, Ignored',
-        C:'OK, Commission Paid.',
+        C:'OK/Skipped, Commission Paid',
         F:'OK, Fixed Duplicates',
+        G:'OK/Skipped, Test Schedule',
         H:'S3 double triggered'
       };
       
