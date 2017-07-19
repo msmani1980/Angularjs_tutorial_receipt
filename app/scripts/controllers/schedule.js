@@ -63,6 +63,7 @@ angular.module('ts5App')
     };
 
     this.saveFormFailure = function(dataFromAPI) {
+      console.log(dataFromAPI)
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
@@ -70,10 +71,9 @@ angular.module('ts5App')
 
     this.createSchedule = function() {
       $this.showLoadingModal('Creating Schedule Data');
-
       var payload = $scope.schedule;
 
-      scheduleFactory.createSchedule(companyId, payload).then(
+      scheduleFactory.createSchedule(payload).then(
         $this.saveFormSuccess,
         $this.saveFormFailure
       );
@@ -82,7 +82,7 @@ angular.module('ts5App')
     this.editSchedule = function() {
       $this.showLoadingModal('Saving Schedule Data');
 
-      scheduleFactory.updateSchedule(companyId, payload).then(
+      scheduleFactory.updateSchedule(payload).then(
         $this.saveFormSuccess,
         $this.saveFormFailure
       );
@@ -105,7 +105,6 @@ angular.module('ts5App')
     };
 
     this.getScheduleSuccess = function(response) {
-      console.log('sschedule')
       $scope.schedule = response;
     };
 

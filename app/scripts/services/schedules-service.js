@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('schedulesService', function($resource, ENV, Upload) {
 
-    var schedulesRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/schedules/:scheduleId';
+    var schedulesRequestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/schedules/:scheduleId';
 
     var schedulesActions = {
       getSchedules: {
@@ -41,7 +41,7 @@ angular.module('ts5App')
 
     var getSchedules = function(companyId) {
       var payload = {
-        id: companyId
+        companyId: companyId
       };
       schedulesActions.getSchedules.headers.companyId = companyId;
       return distinctSchedulesRequestResource.getSchedules(payload).$promise;
@@ -49,7 +49,7 @@ angular.module('ts5App')
 
     var getScheduleById = function(companyId, scheduleId) {
       var payload = {
-        id: companyId,
+        companyId: companyId,
         scheduleId: scheduleId
       };
       schedulesActions.getScheduleById.headers.companyId = companyId;
@@ -58,7 +58,7 @@ angular.module('ts5App')
 
     var getPeriodicSchedules = function(companyId, payload) {
       angular.extend(payload, {
-        id: companyId
+        companyId: companyId
       });
 
       schedulesActions.getSchedules.headers.companyId = companyId;
@@ -67,7 +67,7 @@ angular.module('ts5App')
 
     var getDailySchedules = function(companyId, scheduleNumber, scheduleDate) {
       var payload = {
-        id: companyId,
+        companyId: companyId,
         scheduleNumber: scheduleNumber,
         scheduleDate: scheduleDate
       };
@@ -76,7 +76,7 @@ angular.module('ts5App')
 
     var getSchedulesInDateRange = function(companyId, startDate, endDate, operationalDays) {
       var payload = {
-        id: companyId,
+        companyId: companyId,
         startDate: startDate,
         endDate: endDate,
         operationalDays: operationalDays
@@ -86,23 +86,22 @@ angular.module('ts5App')
 
     var deleteSchedule = function (companyId, scheduleId) {
       var payload = {
-        id: companyId,
+        companyId: companyId,
         scheduleId: scheduleId
       };
       return schedulesRequestResource.deleteSchedule(payload).$promise;
     };
 
-    var createSchedule = function (companyId, scheduleId) {
-      var payload = {
-        id: companyId,
-        scheduleId: scheduleId
-      };
+    var createSchedule = function (companyId, payload) {
+      angular.extend(payload, {
+        companyId: companyId
+      });
       return schedulesRequestResource.createSchedule(payload).$promise;
     };
 
     var updateSchedule = function (companyId, scheduleId) {
       var payload = {
-        id: companyId,
+        companyId: companyId,
         scheduleId: scheduleId
       };
       return schedulesRequestResource.updateSchedule(payload).$promise;
