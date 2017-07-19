@@ -45,7 +45,7 @@
               <label>Dispatch LMP Station</label>
               <select class="form-control" ng-model="search.dispatchLMPStation" name="dispatchLMPStation">
                 <option ng-disabled="true" selected="selected" value>Select Dispatch Station</option>
-                <option ng-repeat="station in stationList | orderBy:'name'" value="{{ station.id }}">{{
+                <option ng-repeat="station in stationList  | filter:{isCaterer:true} | orderBy:'name'" value="{{ station.id }}">{{
                   station.name }} - {{ station.code }}
                 </option>
               </select>
@@ -56,7 +56,7 @@
               <label>Inbound LMP Station</label>
               <select class="form-control" ng-model="search.inboundLMPStation" name="inboundLMPStation">
                 <option ng-disabled="true" selected="selected" value>Select Inbound Station</option>
-                <option ng-repeat="station in stationList | orderBy:'name'" value="{{ station.id }}">{{
+                <option ng-repeat="station in stationList | filter:{isCaterer:true} | orderBy:'name'" value="{{ station.id }}">{{
                   station.name }} - {{ station.code }}
                 </option>
               </select>
