@@ -502,6 +502,9 @@ angular.module('ts5App')
     };
 
     this.editSuccess = function () {
+      $scope.errorResponse = [];
+      $scope.displayError = false;
+
       $this.hideLoadingModal();
       var id = angular.copy($scope.taxRateSaved);
       messageService.display('success', 'Successfully Saved <b>Tax Rate ID: </b>' + id);
