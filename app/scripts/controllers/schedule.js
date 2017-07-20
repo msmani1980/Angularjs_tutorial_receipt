@@ -99,10 +99,10 @@ angular.module('ts5App')
 
     this.formatDaysOfWeekForPayload = function (days) {
       var daysPayload = days.map(function (day) {
-        return day.id
+        return day.id;
       });
 
-      return '{' + daysPayload + '}'
+      return '{' + daysPayload + '}';
     };
 
     this.editSchedule = function() {

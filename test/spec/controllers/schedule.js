@@ -17,7 +17,4 @@ describe('Controller: ScheduleCtrl', function () {
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(ScheduleCtrl.awesomeThings.length).toBe(3);
-  });
 });

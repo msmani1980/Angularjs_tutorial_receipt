@@ -45,7 +45,7 @@ angular.module('ts5App')
 
     var getSchedules = function(companyId) {
       var payload = {
-        companyId: companyId
+        id: companyId
       };
 
       schedulesActions.getSchedules.headers.companyId = companyId;
