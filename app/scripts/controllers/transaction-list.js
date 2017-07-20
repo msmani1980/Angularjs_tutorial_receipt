@@ -348,20 +348,12 @@ angular.module('ts5App')
       $scope.companyStations = angular.copy(dataFromAPI.response);
     }
 
-    function setCreditCardTypes(dataFromAPI) {
-      $scope.creditCardTypes = angular.copy(dataFromAPI.companyCCTypes);
-    }
-
     function getCompanyCurrencies() {
       currencyFactory.getCompanyCurrencies().then(setCompanyCurrencies);
     }
 
     function getCompanyStations() {
       stationsService.getGlobalStationList().then(setCompanyStations);
-    }
-
-    function getCreditCardTypes() {
-      var companyId = globalMenuService.company.get();
     }
 
     function makeDependencyPromises() {

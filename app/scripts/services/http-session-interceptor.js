@@ -50,7 +50,6 @@ angular.module('ts5App')
       '/station-list/*',
       '/station-view/*',
       '/store-instance-step-1/*',
-//      '/tax-rates/*',
       '/ember/#/schedules/*',
       '/ember/#/menu-assignments/*',
       '/ember/#/menu-rules/*',
@@ -95,7 +94,6 @@ angular.module('ts5App')
       '/rsvr/api/menus/caterer-stations',
       '/rsvr/api/caterer-stations',
       '/rsvr/api/menus',
-//      '/api/records/company-types',
       '/api/company-cash-bags'
     ];
 
