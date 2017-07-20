@@ -42,8 +42,8 @@ angular.module('ts5App')
 
         if ($scope.grayPast) {
           datePickerOptions.beforeShowDay = function (date) {
-            var formattedDate =  dateUtility.formatDate(date, null, dateUtility.getDateFormatForApp());
-            var isBeforeToday = dateUtility.isYesterdayOrEarlier(formattedDate);
+            var formattedDate =  dateUtility.formatDatePicker(date, null, dateUtility.getDateFormatForApp());
+            var isBeforeToday = dateUtility.isYesterdayOrEarlierDatePicker(formattedDate);
 
             return isBeforeToday ? 'gray-out' : '';
           };
