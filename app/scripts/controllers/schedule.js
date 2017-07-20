@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ScheduleCtrl', function ($scope, scheduleFactory, $location, $routeParams, messageService, unitsService, lodash, $q) {
+  .controller('ScheduleCtrl', function ($scope, scheduleFactory, $location, $routeParams, messageService, unitsService, lodash, $q, dateUtility) {
     var companyId;
     var $this = this;
 
@@ -54,16 +54,13 @@ angular.module('ts5App')
     this.saveFormSuccess = function(response) {
       $this.hideLoadingModal();
       if ($routeParams.action === 'create') {
-        $location.path('schedules').search({
-          newScheduleId: response.id
-        });
+        $location.path('schedules');
       } else {
         $this.showToastMessage('success', 'Edit Schedule', 'success');
       }
     };
 
     this.saveFormFailure = function(dataFromAPI) {
-      console.log(dataFromAPI)
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
@@ -71,12 +68,41 @@ angular.module('ts5App')
 
     this.createSchedule = function() {
       $this.showLoadingModal('Creating Schedule Data');
-      var payload = $scope.schedule;
+
+      var payload = {
+        depTime: $scope.schedule.departureTime,
+        arrTime: $scope.schedule.arrivalTime,
+        scheduleNumber: $scope.schedule.scheduleNumber,
+        startDate: dateUtility.formatDateForAPI($scope.schedule.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.schedule.endDate),
+        blockTime: $scope.schedule.blockTime,
+        groundTime: $scope.schedule.groundTime,
+        tripDistance: $scope.schedule.tripDistance,
+        preScheduleNumber: $scope.schedule.preScheduleNumber,
+        nextScheduleNumber: $scope.schedule.nextScheduleNumber,
+        firstTrip: $scope.schedule.firstTrip,
+        lastTrip: $scope.schedule.lastTrip,
+        depStationId: $scope.schedule.departureStationId,
+        arrStationId: $scope.schedule.arrivalStationId,
+        daysOfWeek: $this.formatDaysOfWeekForPayload($scope.schedule.days),
+        tripDistanceUnitId: $scope.schedule.tripDistanceUnitId,
+        companyCarrierTypeId: $scope.schedule.companyCarrierTypeId,
+        companyCarrierId: $scope.schedule.companyCarrierId,
+        seatConfigId: $scope.schedule.seatConfigurationId
+      };
 
       scheduleFactory.createSchedule(payload).then(
         $this.saveFormSuccess,
         $this.saveFormFailure
       );
+    };
+
+    this.formatDaysOfWeekForPayload = function (days) {
+      var daysPayload = days.map(function (day) {
+        return day.id
+      });
+
+      return '{' + daysPayload + '}'
     };
 
     this.editSchedule = function() {
