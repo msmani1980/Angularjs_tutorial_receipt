@@ -612,7 +612,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
       
       var stsMap = STATUS_TO_BUTTONS_MAP[5];      
-      if ($localStorage.buttons.indexOf('unreceive') !== -1) {
+      if (angular.isDefined($localStorage.buttons) && $localStorage.buttons.indexOf('unreceive') !== -1) {
         if (stsMap.indexOf('Un-Receive') === -1) {
           stsMap.push('Un-Receive');
           STATUS_TO_BUTTONS_MAP[5] = stsMap;
@@ -674,7 +674,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       modalElement.modal('hide');
       showLoadingModal('Changing Store Instance ' + store.id + ' Status');
       var promises = [
-        storeInstanceDashboardFactory.updateStoreInstanceStatus(store.id, 4, store.cateringStationId)
+        storeInstanceDashboardFactory.updateStoreInstanceStatusUnreceive(store.id, 4)
         ];
       $q.all(promises).then(storeStatusSuccessHandler, showErrors);
     };
