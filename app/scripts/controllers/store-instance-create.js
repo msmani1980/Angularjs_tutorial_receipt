@@ -13,6 +13,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
             menuCatererStationsService, lodash, $route, $filter, $localStorage) {
 
     $scope.cateringStationList = [];
+    $scope.dispatchStationList = [];
     $scope.menuMasterList = [];
     $scope.filteredMenuList = [];
     $scope.carrierNumbers = [];
@@ -197,6 +198,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.getCatererStationList = function () {
       var query = this.getFormattedDatesPayload();
       return storeInstanceFactory.getCatererStationList(query).then(this.setCatererStationList);
+    };
+    
+    this.setDispatchStationList = function (dataFromAPI) {
+      $scope.dispatchStationList.push(dataFromAPI);
+    };
+
+    this.getDispatchStationList = function () {
+      return storeInstanceFactory.getStation($scope.formData.dispatchedCateringStationId).then(this.setDispatchStationList);
     };
 
     this.setMenuCatererList = function (dataFromAPI) {
@@ -595,6 +604,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           storeNumber: $this.setStoreNumber(data)
         };
         $this.setStoreInstanceConditionals(data);
+        $this.getDispatchStationList();
+        
       }
 
       var promises = $this.makeInitPromises();
