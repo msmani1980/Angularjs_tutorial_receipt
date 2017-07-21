@@ -354,9 +354,7 @@ angular.module('ts5App')
     };
 
     this.createUiSelectSearchPayload = function () {
-      var query = {
-        limit: 100
-      };
+      var query = {};
       if ($scope.search.taxType) {
         query.taxTypeCode = $scope.search.taxType.taxTypeCode;
       }
@@ -453,7 +451,12 @@ angular.module('ts5App')
     };
 
     this.isTaxRateActive = function (taxRate) {
-      return (dateUtility.isTodayOrEarlier(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
+    	try{
+      return (dateUtility.isTodayOrEarlier(taxRate.startDate) && dateUtility.isAfterTodayOrEqual(taxRate.endDate));
+    	}catch(e){
+    		console.log(e);
+    		return false;
+    	}
     };
 
     this.hasTaxRateStarted = function (taxRate) {
@@ -499,6 +502,9 @@ angular.module('ts5App')
     };
 
     this.editSuccess = function () {
+      $scope.errorResponse = [];
+      $scope.displayError = false;
+
       $this.hideLoadingModal();
       var id = angular.copy($scope.taxRateSaved);
       messageService.display('success', 'Successfully Saved <b>Tax Rate ID: </b>' + id);
@@ -517,7 +523,22 @@ angular.module('ts5App')
       $this.showLoadingModal(message);
       $scope.taxRateSaved = taxRate.id;
       var promises = $this.createEditPromises(taxRate);
-      $q.all(promises).then($this.editSuccess, $this.errorHandler);
+      $q.all(promises).then(
+        $this.editSuccess,
+        function (dataFromAPI) {
+          $this.hideLoadingModal();
+          $scope.displayError = true;
+
+          var taxRateEdited = $scope.companyTaxRatesList.filter(function(item) {
+            return item.id === taxRate.id;
+          })[0];
+
+          taxRateEdited.saved = false;
+          $this.addEditActionToTaxRate(taxRateEdited);
+
+          $scope.errorResponse = angular.copy(dataFromAPI);
+        }
+      );
     };
 
     this.saveTaxRateEdits = function (taxRate) {
@@ -711,7 +732,7 @@ angular.module('ts5App')
     };
 
     $scope.showClearButton = function () {
-      return ($this.isDateRangeSet() || $this.isSearchActive() || ($scope.companyTaxRatesList.length > 0));
+      return ($this.isDateRangeSet() || $this.isSearchActive() || ($scope.companyTaxRatesList.length >= 0));
     };
 
     $scope.searchRecords = function () {
