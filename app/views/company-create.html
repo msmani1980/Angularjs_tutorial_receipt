@@ -161,20 +161,6 @@
             </select>
 
           </div>
-          
-          <div class="col-xs-12 col-sm-6">
-            <label>Company TimeZone*</label>
-            <timezone-selector 
-			class="form-control"
-		    ng-model="formData.timezoneOffset"  
-		    display-utc="true"
-		    show-local="true"
-		    set-local="true"
-		    primary-choices="UTC Asia/Kolkata America/Chicago Europe/London"
-			required
-			></timezone-selector> 
-
-          </div>
 
           <div class="col-xs-12 col-sm-6" ng-if="showBaseCurrency">
             <label>Base Currency*</label>
