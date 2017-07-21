@@ -135,7 +135,8 @@
                       ng-model="schedule.companyCarrierTypeId"
                       ng-options="carrierType.companyCarrierTypeId as carrierType.carrierType for carrierType in carrierTypes"
                       ng-disabled="readOnly"
-                      id="aircraft-type">
+                      id="aircraft-type"
+                      ng-change="onCompanyCarrierTypeChange(carrierType)">
                 <option selected="selected" value>Aircraft Type</option>
               </select>
             </div>

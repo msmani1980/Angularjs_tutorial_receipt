@@ -114,8 +114,14 @@ angular.module('ts5App')
       );
     };
 
+    $scope.onCompanyCarrierTypeChange = function (companyCarrierType) {
+      // load tail numbers
+      // load seat map
+    };
+
     this.validateForm = function() {
       // validate days of operation
+
       return $scope.scheduleDataForm.$valid;
     };
 
