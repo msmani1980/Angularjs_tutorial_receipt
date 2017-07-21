@@ -193,7 +193,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         parentCompanyId: $this.setString(company.parentCompanyId),
         roundingOptionId: $this.setString(company.roundingOptionId),
         taxes: company.taxes ? company.taxes : null,
-        timezone: $this.formatTimezoneOffset(company.timezoneOffset)
+        timezone: dateUtility.formatTimezoneOffset(company.timezoneOffset)
       };
 
     };
@@ -248,7 +248,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $scope.companyTypes = response[0];
       $scope.currencies = response[1].response;
       $scope.companies = response[2].companies;
-      $scope.languages = $this.removeDefaultLanguage(response[3].languages);
+      $scope.languages = $this.removeDefaultLanguage(response[3]);
       $scope.countries = response[4].countries;
       if ($scope.editingCompany || $scope.viewOnly) {
         return $this.getCompany($routeParams.id);
@@ -381,10 +381,6 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       return (data === true) ? data : false;
     };
     
-    this.formatTimezoneOffset = function(timezoneOffset) {
-      return (timezoneOffset !== undefined) ? (moment().tz(timezoneOffset).utcOffset()) / 60 : 0;
-    };
-
     this.formatPayload = function(companyData) {
       var company = angular.copy(companyData);
       company.companyCabinClasses = $this.formatCompanyCabinClasses(company);
@@ -394,7 +390,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       company.languages = $this.formatCompanyLanguages(company.languages);
       company.eposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
       company.countryVats = $this.formatCountryVats(company.countryVats);
-      company.timezone = $this.formatTimezoneOffset(company.timezoneOffset);
+      company.timezone = dateUtility.formatTimezoneOffset(company.timezoneOffset);
       return company;
     };
 
