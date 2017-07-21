@@ -17,7 +17,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       countryVats: [],
       companyCabinClasses: []
     };
-
+    
+    $scope.timezone = '';
     $scope.viewName = 'Create Company';
     $scope.buttonText = 'Create';
     $scope.companyIsActive = false;
@@ -104,7 +105,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.formatLanguagesForApp = function(languages) {
-      if (!languages.length) {
+      if (languages !== undefined && !languages.length) {
         return [];
       }
 
@@ -173,7 +174,6 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       }
 
       var company = angular.copy(data);
-
       $scope.formData = {
         baseCurrencyId: $this.setString(company.baseCurrencyId),
         companyTypeId: $this.setString(company.companyTypeId),
@@ -192,7 +192,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         legalName: $this.setString(company.legalName),
         parentCompanyId: $this.setString(company.parentCompanyId),
         roundingOptionId: $this.setString(company.roundingOptionId),
-        taxes: company.taxes ? company.taxes : null
+        taxes: company.taxes ? company.taxes : null,
+        timezone: dateUtility.formatTimezoneOffset(company.timezoneOffset)
       };
 
     };
@@ -247,7 +248,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $scope.companyTypes = response[0];
       $scope.currencies = response[1].response;
       $scope.companies = response[2].companies;
-      $scope.languages = $this.removeDefaultLanguage(response[3].languages);
+      $scope.languages = $this.removeDefaultLanguage(response[3]);
       $scope.countries = response[4].countries;
       if ($scope.editingCompany || $scope.viewOnly) {
         return $this.getCompany($routeParams.id);
@@ -379,7 +380,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     this.formatActive = function(data) {
       return (data === true) ? data : false;
     };
-
+    
     this.formatPayload = function(companyData) {
       var company = angular.copy(companyData);
       company.companyCabinClasses = $this.formatCompanyCabinClasses(company);
@@ -389,6 +390,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       company.languages = $this.formatCompanyLanguages(company.languages);
       company.eposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
       company.countryVats = $this.formatCountryVats(company.countryVats);
+      company.timezone = dateUtility.formatTimezoneOffset(company.timezoneOffset);
       return company;
     };
 
