@@ -491,7 +491,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.isTaxIdButtonDisabled = function() {
-      var count = $scope.formData.taxes.length;
+      var count = $scope.formData.taxes !== undefined ? $scope.formData.taxes.length : 0;
       return (count >= 3);
     };
 

@@ -16,7 +16,8 @@ angular.module('ts5App')
 
     var actions = {
       getLanguagesList: {
-        method: 'GET'
+        method: 'GET',
+        isArray: true
       }
     };
 
