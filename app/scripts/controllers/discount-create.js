@@ -424,7 +424,7 @@ angular.module('ts5App')
       $scope.activeBtn = id;
       var elm = angular.element('#' + id);
       var body = angular.element('body');
-      var navBar = angular.element('.navbar-header').height();
+      var navBar = angular.element('.form-nav').height();
       var topBar = angular.element('.top-header').height();
       body.animate({
         scrollTop: elm.offset().top - (navBar + topBar + 100)
