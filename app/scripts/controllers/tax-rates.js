@@ -451,7 +451,12 @@ angular.module('ts5App')
     };
 
     this.isTaxRateActive = function (taxRate) {
-      return (dateUtility.isTodayOrEarlier(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
+    	try{
+      return (dateUtility.isTodayOrEarlier(taxRate.startDate) && dateUtility.isAfterTodayOrEqual(taxRate.endDate));
+    	}catch(e){
+    		console.log(e);
+    		return false;
+    	}
     };
 
     this.hasTaxRateStarted = function (taxRate) {

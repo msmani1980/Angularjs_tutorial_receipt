@@ -197,7 +197,7 @@ angular.module('ts5App')
       $scope.formData.percentageDiscountValue = discountData.percentage;
 
       angular.forEach(discountData.rates, function(rate) {
-        $scope.formData.amountDiscountValue[rate.companyCurrencyId] = rate.amount;
+        $scope.formData.amountDiscountValue[rate.companyCurrencyId] = Number(rate.amount).toFixed(2);
       });
     };
 
@@ -209,7 +209,7 @@ angular.module('ts5App')
       }
 
       angular.forEach(discountData.limitsByShop, function(rate) {
-        $scope.formData.amountLimitPerShopValue[rate.companyCurrencyId] = rate.amount;
+        $scope.formData.amountLimitPerShopValue[rate.companyCurrencyId] = Number(rate.amount).toFixed(2);
       });
     };
 
@@ -221,7 +221,7 @@ angular.module('ts5App')
       }
 
       angular.forEach(discountData.limitsByTransaction, function(rate) {
-        $scope.formData.amountLimitPerTransactionValue[rate.companyCurrencyId] = rate.amount;
+        $scope.formData.amountLimitPerTransactionValue[rate.companyCurrencyId] = Number(rate.amount).toFixed(2);
       });
     };
 
@@ -493,6 +493,11 @@ angular.module('ts5App')
       return ($scope.viewOnly || $scope.discountIsActive);
     };
 
+    $scope.showAddRestrictionSection = function() {
+      console.log($scope.formData.isRestriction);
+      return $scope.formData.isRestriction;
+    };
+
     $scope.shouldValidatePrice = function() {
       return !$scope.viewOnly && !$scope.discountIsActive;
     };
@@ -501,7 +506,7 @@ angular.module('ts5App')
       $scope.activeBtn = id;
       var elm = angular.element('#' + id);
       var body = angular.element('body');
-      var navBar = angular.element('.navbar-header').height();
+      var navBar = angular.element('.form-nav').height();
       var topBar = angular.element('.top-header').height();
       body.animate({
         scrollTop: elm.offset().top - (navBar + topBar + 100)
