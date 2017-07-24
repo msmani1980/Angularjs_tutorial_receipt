@@ -19,7 +19,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     $scope.storesList = [];
     $scope.scheduleNumbers = [];
     $scope.formData = {
-      scheduleDate: dateUtility.nowFormatted(),
+      scheduleDate: dateUtility.yesterdayFormattedDatePicker(),
       menus: []
     };
 
@@ -51,7 +51,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getInstancesOnFloor = function () {
       var query = {
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
         statusId: 10
       };
       return storeInstanceFactory.getStoreInstancesList(query).then($this.setStoreInstancesOnFloor);
@@ -482,9 +482,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.determineMinDate = function () {
       var diff = 0;
-      if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
+      if ($scope.editingItem && !dateUtility.isTomorrowOrLaterDatePicker($scope.formData.startDate)) {
         diff = dateUtility.diff(
-          dateUtility.nowFormatted(),
+          dateUtility.nowFormattedDatePicker(),
           $scope.formData.startDate
         );
       }
@@ -571,7 +571,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
       var stepTwoStoreId = $this.doesStoreIdFromStepTwoExist();
       if ($this.isActionState('redispatch') && !(data && data.id === parseInt(stepTwoStoreId))) {
-        $scope.formData.scheduleDate = dateUtility.nowFormatted();
+        $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();
         delete $scope.formData.scheduleNumber;
         delete $scope.formData.carrierId;
       }
@@ -1435,7 +1435,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.minDateConditional = function () {
       if ($this.isMinDateReset()) {
-        return dateUtility.nowFormatted();
+        return dateUtility.nowFormattedDatePicker();
       } else if (!$this.isMinDateReset()) {
         return $this.determineMinDate();
       }
