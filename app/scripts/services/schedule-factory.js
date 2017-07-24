@@ -41,8 +41,8 @@ angular.module('ts5App')
       return stationsService.getStationList(id);
     };
 
-    var getCarrierNumbers = function(id, carrierType) {
-      return carrierService.getCarrierNumbers(id, carrierType);
+    var getCarrierNumbers = function(id, carrierType, payload) {
+      return carrierService.getCarrierNumbers(id, carrierType, payload);
     };
 
     var getCarrierTypes = function(id) {

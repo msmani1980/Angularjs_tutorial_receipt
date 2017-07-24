@@ -98,6 +98,10 @@ angular.module('ts5App')
     };
 
     this.formatDaysOfWeekForPayload = function (days) {
+      if (!days) {
+        return '{}';
+      }
+
       var daysPayload = days.map(function (day) {
         return day.id;
       });
@@ -114,14 +118,25 @@ angular.module('ts5App')
       );
     };
 
-    $scope.onCompanyCarrierTypeChange = function (companyCarrierType) {
-      // load tail numbers
-      // load seat map
+    this.getCarrierNumbersSuccess = function(response) {
+      $scope.carrierNumbers = response.response;
+    };
+
+    $scope.onCompanyCarrierTypeChange = function () {
+      var payload = {
+        companyCarrierTypeId: $scope.schedule.companyCarrierTypeId
+      };
+
+      companyId = scheduleFactory.getCompanyId();
+      scheduleFactory.getCarrierNumbers(companyId, '2', payload).then($this.getCarrierNumbersSuccess);
+    };
+
+    $scope.onCompanyCarrierNumberChange = function () {
+      var carrierNumber = lodash.find($scope.carrierNumbers, { id: $scope.schedule.companyCarrierId });
+      $scope.seatConfigurations = carrierNumber.carrier_seatconfigs;
     };
 
     this.validateForm = function() {
-      // validate days of operation
-
       return $scope.scheduleDataForm.$valid;
     };
 
@@ -177,6 +192,7 @@ angular.module('ts5App')
         scheduleFactory.getCarrierTypes(companyId).then($this.getCarrierTypesSuccess),
         unitsService.getDistanceList().then($this.getDistanceUnitsSuccess)
       ];
+
       return promises;
     };
 

@@ -66,7 +66,8 @@ angular.module('ts5App', [
     'This field should use format 0.0000'
   ],
   price: /^\$?\s?[0-9\,]+(\.\d{0,4})?$/,
-  url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
+  url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/,
+  t24: /^([01]\d|2[0-3]):([0-5]\d)$/,
 }).config(function ($localStorageProvider) {
   $localStorageProvider.setKeyPrefix('TS5-');
 }).config(function ($httpProvider) {
