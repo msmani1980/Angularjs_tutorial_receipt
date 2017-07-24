@@ -1164,7 +1164,6 @@ angular.module('ts5App')
     }
 
     function setCashRevenue (cashRevenueFromAPI) {
-    	console.log ('setCashRevenue', setCashRevenue);
       $scope.cashRevenue = angular.copy(cashRevenueFromAPI);
     }
 
