@@ -411,6 +411,11 @@ angular.module('ts5App')
       return ($scope.viewOnly || $scope.discountIsActive);
     };
 
+    $scope.showAddRestrictionSection = function() {
+      console.log($scope.formData.isRestriction);
+      return $scope.formData.isRestriction;
+    };
+
     $scope.shouldValidatePrice = function() {
       return !$scope.viewOnly && !$scope.discountIsActive;
     };

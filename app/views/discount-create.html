@@ -232,7 +232,7 @@
           </div>
         </div>
       </div>
-      <div class="row" ng-show="formData.isRestriction">
+      <div class="row" ng-show="showAddRestrictionSection()">
         <div class="col-xs-12 col-sm-12">
           <div class="form-group">
             <label>Item Categories *</label>
@@ -245,7 +245,7 @@
           </div>
         </div>
       </div>
-      <div class="row" ng-show="formData.isRestriction" ng-repeat="restrictedItem in formData.restrictedItems track by $index">
+      <div class="row" ng-show="showAddRestrictionSection()" ng-repeat="restrictedItem in formData.restrictedItems track by $index">
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label>Item Category</label>
@@ -277,10 +277,10 @@
           </div>
         </div>
       </div>
-      <div class="row" ng-show="formData.isRestriction" ng-hide="isDisabled()">
+      <div class="row" ng-show="showAddRestrictionSection()" ng-hide="isDisabled()">
         <div class="col-xs-8 col-md-9"></div>
         <div class="col-xs-4 col-md-3 text-right">
-          <div class="input-group">
+          <div class="input-group" ng-show="showAddRestrictionSection()">
             <input type="number" min="1" max="100" class="form-control" ng-model="addRestrictedItemsNumber">
             <span class="input-group-btn">
             <button class="btn btn-primary" type="button" ng-click="addRestrictedItems()"><i class="fa fa-plus"></i> Add Items</button>
