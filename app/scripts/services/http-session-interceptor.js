@@ -20,6 +20,8 @@ angular.module('ts5App')
       '/change-password/*',
       '/commission-data-table/*',
       '/commission-data/*',
+      '/company-create/*',
+      '/company-edit/*',
       '/company-exchange-rate-edit/*',
       '/company-reason-code/*',
       '/company-reason-type-subscribe/*',
