@@ -193,7 +193,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         parentCompanyId: $this.setString(company.parentCompanyId),
         roundingOptionId: $this.setString(company.roundingOptionId),
         taxes: company.taxes ? company.taxes : null,
-        timezone: dateUtility.formatTimezoneOffset(company.timezoneOffset)
+        timezone: company.timezoneOffset
       };
 
     };
@@ -390,7 +390,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       company.languages = $this.formatCompanyLanguages(company.languages);
       company.eposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
       company.countryVats = $this.formatCountryVats(company.countryVats);
-      company.timezone = dateUtility.formatTimezoneOffset(company.timezoneOffset);
+      company.timezone = company.timezoneOffset;
       return company;
     };
 
@@ -491,7 +491,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.isTaxIdButtonDisabled = function() {
-      var count = $scope.formData.taxes !== undefined ? $scope.formData.taxes.length : 0;
+      var count = ($scope.formData.taxes !== undefined && $scope.formData.taxes !== null ? $scope.formData.taxes.length : 0);
       return (count >= 3);
     };
 
