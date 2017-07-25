@@ -18,6 +18,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     $scope.carrierNumbers = [];
     $scope.storesList = [];
     $scope.scheduleNumbers = [];
+    $scope.routesList = [];
+    $scope.routesListCopy = [];
     $scope.formData = {
       scheduleDate: dateUtility.nowFormatted(),
       menus: []
@@ -456,7 +458,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.formatPayload = function (action) {
       var payload = angular.copy($scope.formData);
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
-      payload.scheduleId = payload.scheduleNumber.id;
+      payload.scheduleId = payload.scheduleId.id;
       payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
       payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
 
@@ -525,7 +527,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var scheduleNumber = {};
       if (apiData && apiData.scheduleNumber) {
         scheduleNumber = {
-          scheduleNumber: apiData.scheduleNumber
+          scheduleNumber: apiData.scheduleNumber,
+          departure: apiData.departureStationCode,
+          arrival: apiData.arrivalStationCode
         };
         return scheduleNumber;
       }
@@ -1264,18 +1268,33 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.formData.scheduleNumber) {
         $scope.formData.scheduleNumber = lodash.findWhere($scope.scheduleNumbers,
           { scheduleNumber: $scope.formData.scheduleNumber.scheduleNumber });
+        $scope.formData.scheduleId = lodash.findWhere($scope.scheduleNumbers,
+          { id: $scope.formData.scheduleNumber.id });
+        $scope.routesList = [];
+        angular.forEach($scope.routesListCopy, function (route) {
+          if (route.scheduleNumber === $scope.formData.scheduleNumber.scheduleNumber) {
+            $scope.routesList.push(route);
+          }
+        });
       }
     };
 
     this.setScheduleNumbers = function (apiData) {
+      $scope.routesList = angular.copy(apiData.schedules);
+      $scope.routesListCopy = angular.copy(apiData.schedules);
       if ($routeParams.action === 'end-instance') {
+        $scope.routesList = [];
         var scheduleObj = {
           id: $scope.formData.scheduleId,
-          scheduleNumber: $scope.formData.scheduleNumber.scheduleNumber
-        }; 
+          scheduleNumber: $scope.formData.scheduleNumber.scheduleNumber,
+          departure: $scope.formData.scheduleNumber.departure,
+          arrival: $scope.formData.scheduleNumber.arrival
+        };
+        $scope.formData.scheduleId = scheduleObj;
         $scope.scheduleNumbers.push(scheduleObj);
+        $scope.routesList.push(scheduleObj);
       } else {
-        $scope.scheduleNumbers = angular.copy(apiData.schedules);
+        $scope.scheduleNumbers = $filter('unique')(apiData.schedules, 'scheduleNumber');
       }
       
       $this.setFormScheduleNumber();
@@ -1318,6 +1337,20 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.updateInstanceDependenciesSuccess();
       });
     };
+    
+    this.updateRouteList = function() {
+      $scope.routesList = [];
+      $scope.formData.scheduleId = null;
+      angular.forEach($scope.routesListCopy, function (route) {
+        if (route.scheduleNumber === $scope.formData.scheduleNumber.scheduleNumber) {
+          $scope.routesList.push(route);
+        }
+      });
+      
+      if ($scope.routesList.length === 1) {
+        $scope.formData.scheduleId = $scope.routesList[0];  
+      }
+    };
 
     this.registerMenusScopeWatchers = function () {
       return ($this.isActionState('redispatch') && $scope.prevStoreInstanceId) || ($this.isActionState(
@@ -1343,6 +1376,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.$watch('formData.scheduleDate', function (newDate, oldDate) {
         if (newDate && newDate !== oldDate) {
           $this.updateInstanceDependencies();
+        }
+      });
+      
+      $scope.$watch('formData.scheduleNumber.scheduleNumber', function (newId, oldId) {
+        if (newId && newId !== oldId) {
+          $this.updateRouteList();
         }
       });
 
