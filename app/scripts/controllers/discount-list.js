@@ -108,7 +108,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return dateUtility.isAfterTodayDatePicker(discount.endDate);
+      return dateUtility.isAfterTodayOrEqualDatePicker(discount.endDate);
     };
 
     $scope.isDiscountReadOnly = function(exchangeRate) {

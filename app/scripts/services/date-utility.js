@@ -226,6 +226,10 @@ angular.module('ts5App')
       return moment(baseDate, this.getDateFormatForApp()).isSameOrAfter(moment(dateToCompare, this.getDateFormatForApp()), 'day');
     };
     
+    this.isAfterTodayOrEqualDatePicker = function (date) {
+      return moment(date, this.getDateFormatForApp()).isSameOrAfter(moment(), 'day');
+    };
+    
     this.formatTimezoneOffset = function (timezoneOffset) {
       return (timezoneOffset !== undefined) ? (moment().tz(timezoneOffset).utcOffset()) / 60 : 0;
     };
