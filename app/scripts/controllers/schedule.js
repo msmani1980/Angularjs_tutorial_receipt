@@ -14,6 +14,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Schedule';
     $scope.readOnly = false;
+    $scope.shouldDisableStartDate = false;
     $scope.schedule = {};
     $scope.stationList = [];
     $scope.carrierTypes = [];
@@ -27,6 +28,23 @@ angular.module('ts5App')
       { id: 6, name: 'Saturday' },
       { id: 7, name: 'Sunday' }
     ];
+
+    this.determineMinDate = function() {
+      var diff = 1;
+      if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
+        diff = dateUtility.diff(
+          dateUtility.nowFormatted(),
+          $scope.formData.startDate
+        );
+      }
+
+      var dateString = diff.toString() + 'd';
+      if (diff >= 0) {
+        dateString = '+' + dateString;
+      }
+
+      return dateString;
+    };
 
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -49,6 +67,7 @@ angular.module('ts5App')
     this.editInit = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Schedule';
+      $scope.editingItem = true;
     };
 
     this.saveFormSuccess = function(response) {
@@ -109,6 +128,20 @@ angular.module('ts5App')
       return '{' + daysPayload + '}';
     };
 
+    this.formatDaysOfWeekForEdit = function (days) {
+      if (!days || days === '{}') {
+        return [];
+      }
+
+      return days.replace('{', '')
+        .replace('}', '')
+        .split(',')
+        .map(Number)
+        .map(function (day) {
+          return lodash.find($scope.daysOfOperation, {id: day});
+        });
+    };
+
     this.editSchedule = function() {
       $this.showLoadingModal('Saving Schedule Data');
 
@@ -120,6 +153,11 @@ angular.module('ts5App')
 
     this.getCarrierNumbersSuccess = function(response) {
       $scope.carrierNumbers = response.response;
+      $scope.onCompanyCarrierNumberChange();
+    };
+
+    this.getAllCarrierNumbersSuccess = function(response) {
+      $scope.carrierNumbers = response.response;
     };
 
     $scope.onCompanyCarrierTypeChange = function () {
@@ -127,17 +165,26 @@ angular.module('ts5App')
         companyCarrierTypeId: $scope.schedule.companyCarrierTypeId
       };
 
-      companyId = scheduleFactory.getCompanyId();
-      scheduleFactory.getCarrierNumbers(companyId, '2', payload).then($this.getCarrierNumbersSuccess);
+      return scheduleFactory.getCarrierNumbers(companyId, '2', payload).then($this.getCarrierNumbersSuccess);
+    };
+
+    this.getAllCarrierNumbers = function () {
+      return scheduleFactory.getCarrierNumbers(companyId, '2');
     };
 
     $scope.onCompanyCarrierNumberChange = function () {
       var carrierNumber = lodash.find($scope.carrierNumbers, { id: $scope.schedule.companyCarrierId });
-      $scope.seatConfigurations = carrierNumber.carrier_seatconfigs;
+      if (carrierNumber) {
+        $scope.seatConfigurations = carrierNumber.carrier_seatconfigs;
+      }
     };
 
     this.validateForm = function() {
       return $scope.scheduleDataForm.$valid;
+    };
+
+    $scope.isDisabled = function() {
+      return $scope.shouldDisableStartDate || $scope.readOnly;
     };
 
     $scope.formSave = function() {
@@ -152,7 +199,29 @@ angular.module('ts5App')
     };
 
     this.getScheduleSuccess = function(response) {
-      $scope.schedule = response;
+      $scope.schedule = {
+        departureTime: response.departureTime,
+        arrivalTime: response.arrivalTime,
+        scheduleNumber: response.scheduleNumber,
+        startDate: dateUtility.formatDateForApp(response.startDate),
+        endDate: dateUtility.formatDateForApp(response.endDate),
+        blockTime: response.blockTime,
+        groundTime: response.groundTime,
+        tripDistance: response.tripDistance,
+        preScheduleNumber: response.preScheduleNumber,
+        nextScheduleNumber: response.nextScheduleNumber,
+        firstTrip: response.firstTrip,
+        lastTrip: response.lastTrip,
+        departureStationId: response.departureStationId,
+        arrivalStationId: response.arrivalStationId,
+        days: $this.formatDaysOfWeekForEdit(response.days),
+        tripDistanceUnitId: response.tripDistanceUnitId,
+        companyCarrierTypeId: response.companyCarrierTypeId,
+        companyCarrierId: response.companyCarrierId,
+        seatConfigurationId: response.seatConfigurationId
+      };
+
+      $this.getAllCarrierNumbers().then($this.getCarrierNumbersSuccess);
     };
 
     this.getStationsSuccess = function(response) {
@@ -183,6 +252,8 @@ angular.module('ts5App')
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
+
+      $scope.minDate = $this.determineMinDate();
     };
 
     this.makeInitPromises = function() {

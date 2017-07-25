@@ -34,13 +34,18 @@
           <div class="col-xs-12 col-sm-8">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                <date-picker-field disable="shouldDisableStartDate || readOnly" name="EffectiveFrom" label="Effective From"
-                                   min-date="'+1d'" required required="true" ng-model="schedule.startDate"></date-picker-field>
+
+                <date-picker-field ng-if="minDate"
+                                   disable="isDisabled()" form="scheduleDataForm" name="EffectiveFrom" label="Effective From"
+                                   min-date="minDate" required="true" ng-model="schedule.startDate">
+                </date-picker-field>
               </div>
               <div class="col-xs-12 col-sm-6">
-                <date-picker-field disable="readOnly" name="EffectiveTo"
-                                   min-date="( editing ? '0d' : '+1d')" label="Effective To" required required="true"
-                                   ng-model="schedule.endDate"></date-picker-field>
+
+                <date-picker-field ng-if="minDate" disable="readOnly" form="scheduleDataForm"
+                                   name="EffectiveTo" min-date="minDate" label="Effective To" required="true"
+                                   ng-model="schedule.endDate">
+                </date-picker-field>
               </div>
             </div>
           </div>
@@ -250,8 +255,9 @@
         <a href="#/schedules" class="btn btn-default" ng-hide="readOnly">Cancel</a>
       </div>
     </div>
-  </form>
+  </form>{{schedule}}
 </div>
+
 <!-- /Container -->
 
 <form-success-modal></form-success-modal>
