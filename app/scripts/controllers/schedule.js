@@ -138,7 +138,7 @@ angular.module('ts5App')
         .split(',')
         .map(Number)
         .map(function (day) {
-          return lodash.find($scope.daysOfOperation, {id: day});
+          return lodash.find($scope.daysOfOperation, { id: day });
         });
     };
 
@@ -175,7 +175,9 @@ angular.module('ts5App')
     $scope.onCompanyCarrierNumberChange = function () {
       var carrierNumber = lodash.find($scope.carrierNumbers, { id: $scope.schedule.companyCarrierId });
       if (carrierNumber) {
+        // jscs:disable
         $scope.seatConfigurations = carrierNumber.carrier_seatconfigs;
+        // jscs:enable
       }
     };
 
