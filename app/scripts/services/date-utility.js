@@ -182,6 +182,14 @@ angular.module('ts5App')
       return this.formatDatePicker(now, formatFrom, formatTo);
     };
     
+    this.yesterdayFormattedDatePicker = function (formatTo) {
+      var formatFrom = 'x';
+      formatTo = formatTo || this.getDateFormatForApp();
+      var today = new Date();
+      var yesterday = today.setDate(today.getDate() - 1);
+      return this.formatDate(yesterday, formatFrom, formatTo);
+    };
+      
     this.tomorrowFormattedDatePicker = function (formatTo) {
       var formatFrom = 'x';
       formatTo = formatTo || this.getDateFormatForApp();
