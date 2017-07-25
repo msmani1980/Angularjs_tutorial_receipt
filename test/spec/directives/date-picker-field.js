@@ -49,8 +49,12 @@ describe('The Date Picker Field directive', function () {
       template += 'placeholder="' + config.placeholder + '" ';
     }
 
-    if (config.placeholder) {
+    if (config.orientation) {
       template += 'orientation="' + config.orientation + '" ';
+    }
+    
+    if (config.customDate) {
+      template += 'customDate="' + config.customDate + '" ';
     }
 
     template += '></date-picker-field>';
