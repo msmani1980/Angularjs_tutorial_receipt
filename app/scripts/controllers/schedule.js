@@ -70,7 +70,7 @@ angular.module('ts5App')
       $scope.editingItem = true;
     };
 
-    this.saveFormSuccess = function(response) {
+    this.saveFormSuccess = function() {
       $this.hideLoadingModal();
       if ($routeParams.action === 'create') {
         $location.path('schedules');
@@ -145,6 +145,8 @@ angular.module('ts5App')
     this.editSchedule = function() {
       $this.showLoadingModal('Saving Schedule Data');
 
+      var payload = { };
+
       scheduleFactory.updateSchedule(payload).then(
         $this.saveFormSuccess,
         $this.saveFormFailure
@@ -176,7 +178,7 @@ angular.module('ts5App')
       var carrierNumber = lodash.find($scope.carrierNumbers, { id: $scope.schedule.companyCarrierId });
       if (carrierNumber) {
         // jscs:disable
-        $scope.seatConfigurations = carrierNumber.carrier_seatconfigs;
+        $scope.seatConfigurations = carrierNumber.carrier_seatconfigs; // jshint ignore:line
         // jscs:enable
       }
     };
