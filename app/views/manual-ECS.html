@@ -87,14 +87,20 @@
                            placeholder="Enter Store Number">
                   </div>
                 </div>
-                <div class="col-xs-6 col-sm-6">
-                  <date-picker-field
+                
+                <div class="col-xs-6 col-sm-6">  
+                  <date-picker 
+                    class="form-group" 
                     name="startDate"
-                    class="form-group"
-                    ng-model="portalSearch.scheduleDate"
-                    label="Schedule Date">
-                  </date-picker-field>
+	                disable-date-range="true"
+	                start-date-model="portalSearch.scheduleDate"
+	                is-search-field="true"
+	                disable-start-date="readOnly"
+	                required="false"
+	                label-from="Schedule Date">
+	              </date-picker>
                 </div>
+                
                 <div class="col-xs-12 col-sm-6">
                   <div class="form-group">
                     <label>Catering Station</label>
@@ -140,12 +146,16 @@
                   </div>
                 </div>
                 <div class="col-xs-6 col-sm-6">
-                  <date-picker-field
+                  <date-picker 
+                    class="form-group" 
                     name="startDate"
-                    class="form-group"
-                    ng-model="eposSearch.scheduleDate"
-                    label="Schedule Date">
-                  </date-picker-field>
+	                disable-date-range="true"
+	                start-date-model="eposSearch.scheduleDate"
+	                is-search-field="true"
+	                disable-start-date="readOnly"
+	                required="false"
+	                label-from="Schedule Date">
+	              </date-picker>
                 </div>
                 <div class="col-xs-12 col-sm-6">
                   <div class="form-group">
@@ -303,12 +313,16 @@
                 </div>
               </div>
               <div class="col-xs-6 col-sm-3">
-                <date-picker-field
-                  name="startDate"
+                <date-picker 
                   class="form-group"
-                  ng-model="allInstancesSearch.portalScheduleDate"
-                  label="Portal Schedule Date">
-                </date-picker-field>
+                  name="startDate"
+                  disable-date-range="true"
+                  start-date-model="allInstancesSearch.portalScheduleDate"
+                  is-search-field="true"
+                  disable-start-date="readOnly"
+                  required="false"
+                  label-from="Portal Schedule Date">
+	            </date-picker>
               </div>
               <div class="col-xs-12 col-sm-3">
                 <div class="form-group">
@@ -341,12 +355,16 @@
                 </div>
               </div>
               <div class="col-xs-6 col-sm-3">
-                <date-picker-field
-                  name="startDate"
+                <date-picker 
                   class="form-group"
-                  ng-model="allInstancesSearch.eposScheduleDate"
-                  label="ePOS Schedule Date">
-                </date-picker-field>
+                  name="startDate"
+                  disable-date-range="true"
+                  start-date-model="allInstancesSearch.eposScheduleDate"
+                  is-search-field="true"
+                  disable-start-date="readOnly"
+                  required="false"
+                  label-from="ePOS Schedule Date">
+	            </date-picker>
               </div>
               <div class="col-xs-12 col-sm-3">
                 <div class="form-group">
