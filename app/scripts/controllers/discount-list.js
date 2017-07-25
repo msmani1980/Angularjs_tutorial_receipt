@@ -13,7 +13,7 @@ angular.module('ts5App')
     var $this = this;
     $scope.viewName = 'Discount';
     $scope.search = {
-      startDate: dateUtility.nowFormatted()
+      startDate: dateUtility.nowFormattedDatePicker()
     };
     $scope.discountList = [];
     $scope.discountToDelete = {};
@@ -113,7 +113,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return !(dateUtility.isAfterToday(exchangeRate.startDate));
+      return !(dateUtility.isAfterTodayDatePicker(exchangeRate.startDate));
     };
 
     this.deleteDiscount = function(discountId) {
