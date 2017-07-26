@@ -54,9 +54,9 @@ angular.module('ts5App')
 
     this.determineMinDate = function () {
       var diff = 1;
-      if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
+      if ($scope.editingItem && !dateUtility.isTomorrowOrLaterDatePicker($scope.formData.startDate)) {
         diff = dateUtility.diff(
-          dateUtility.nowFormatted(),
+          dateUtility.nowFormattedDatePicker(),
           $scope.formData.startDate
         );
       }
@@ -150,7 +150,7 @@ angular.module('ts5App')
     this.getCompanyCurrencyGlobals = function() {
       var companyCurrenciesPayload = {
         isOperatedCurrency: true,
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
       };
 
       return currencyFactory.getCompanyCurrencies(companyCurrenciesPayload).then($this.setCompanyCurrencyGlobals);
@@ -477,13 +477,13 @@ angular.module('ts5App')
     };
 
     this.checkIfDiscountIsActive = function(discountData) {
-      var today = new Date();
+      var today = dateUtility.nowFormattedDatePicker();
       var discountStartDate = new Date(discountData.startDate);
       $scope.discountIsActive = discountStartDate <= today;
     };
 
     this.checkIfDiscountIsInactive = function(discountData) {
-      var today = new Date();
+      var today = dateUtility.nowFormattedDatePicker();
       var discountEndDate = new Date(discountData.endDate);
       $scope.discountIsInactive = discountEndDate <= today;
       $scope.viewOnly = $scope.viewOnly || $scope.discountIsInactive;
