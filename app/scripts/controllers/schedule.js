@@ -145,7 +145,28 @@ angular.module('ts5App')
     this.editSchedule = function() {
       $this.showLoadingModal('Saving Schedule Data');
 
-      var payload = { };
+      var payload = {
+        id: $routeParams.id,
+        depTime: $scope.schedule.departureTime,
+        arrTime: $scope.schedule.arrivalTime,
+        scheduleNumber: $scope.schedule.scheduleNumber,
+        startDate: dateUtility.formatDateForAPI($scope.schedule.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.schedule.endDate),
+        blockTime: $scope.schedule.blockTime,
+        groundTime: $scope.schedule.groundTime,
+        tripDistance: $scope.schedule.tripDistance,
+        preScheduleNumber: $scope.schedule.preScheduleNumber,
+        nextScheduleNumber: $scope.schedule.nextScheduleNumber,
+        firstTrip: $scope.schedule.firstTrip,
+        lastTrip: $scope.schedule.lastTrip,
+        depStationId: $scope.schedule.departureStationId,
+        arrStationId: $scope.schedule.arrivalStationId,
+        daysOfWeek: $this.formatDaysOfWeekForPayload($scope.schedule.days),
+        tripDistanceUnitId: $scope.schedule.tripDistanceUnitId,
+        companyCarrierTypeId: $scope.schedule.companyCarrierTypeId,
+        companyCarrierId: $scope.schedule.companyCarrierId,
+        seatConfigId: $scope.schedule.seatConfigurationId
+      };
 
       scheduleFactory.updateSchedule(payload).then(
         $this.saveFormSuccess,
