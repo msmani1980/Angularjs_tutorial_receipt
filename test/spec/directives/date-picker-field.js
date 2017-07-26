@@ -56,6 +56,10 @@ describe('The Date Picker Field directive', function () {
     if (config.customDate) {
       template += 'customDate="' + config.customDate + '" ';
     }
+    
+    if (config.customEffective) {
+      template += 'customEffective="' + config.customEffective + '" ';
+    }
 
     template += '></date-picker-field>';
     return template;
