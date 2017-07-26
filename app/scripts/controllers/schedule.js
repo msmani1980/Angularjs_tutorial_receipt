@@ -158,10 +158,6 @@ angular.module('ts5App')
       $scope.onCompanyCarrierNumberChange();
     };
 
-    this.getAllCarrierNumbersSuccess = function(response) {
-      $scope.carrierNumbers = response.response;
-    };
-
     $scope.onCompanyCarrierTypeChange = function () {
       var payload = {
         companyCarrierTypeId: $scope.schedule.companyCarrierTypeId
@@ -171,7 +167,7 @@ angular.module('ts5App')
     };
 
     this.getAllCarrierNumbers = function () {
-      return scheduleFactory.getCarrierNumbers(companyId, '2');
+      return scheduleFactory.getCarrierNumbers(companyId, '2').then($this.getCarrierNumbersSuccess);
     };
 
     $scope.onCompanyCarrierNumberChange = function () {
@@ -225,7 +221,7 @@ angular.module('ts5App')
         seatConfigurationId: response.seatConfigurationId
       };
 
-      $this.getAllCarrierNumbers().then($this.getCarrierNumbersSuccess);
+      $this.getAllCarrierNumbers();
     };
 
     this.getStationsSuccess = function(response) {
