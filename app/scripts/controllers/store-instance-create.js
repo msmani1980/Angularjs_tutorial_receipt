@@ -608,6 +608,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('redispatch') && !(data && data.id === parseInt(stepTwoStoreId))) {
         $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();
         delete $scope.formData.scheduleNumber;
+        delete $scope.formData.scheduleId;
         delete $scope.formData.carrierId;
       }
 
