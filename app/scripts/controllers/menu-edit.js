@@ -44,7 +44,7 @@ angular.module('ts5App')
         return true;
       }
 
-      return !dateUtility.isAfterToday($scope.menu.startDate);
+      return !dateUtility.isAfterTodayDatePicker($scope.menu.startDate);
     };
 
     $scope.isMenuEditable = function () {
@@ -56,7 +56,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return dateUtility.isAfterToday($scope.menu.startDate);
+      return dateUtility.isAfterTodayDatePicker($scope.menu.startDate);
     };
 
     function redirectToListPageAfterSuccess() {
@@ -113,7 +113,7 @@ angular.module('ts5App')
       var duplicateExists = response.menus.length;
       var dateIsInTheFuture = false;
       if (duplicateExists) {
-        dateIsInTheFuture = dateUtility.isAfterToday(response.menus[0].startDate);
+        dateIsInTheFuture = dateUtility.isAfterTodayDatePicker(response.menus[0].startDate);
       }
 
       if (duplicateExists && !dateIsInTheFuture) {
@@ -317,7 +317,7 @@ angular.module('ts5App')
       $scope.menuItemList = [];
       $scope.selectedCategories = [];
       $scope.filteredItemsCollection = [];
-      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
+      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
       $scope.menu = {
         startDate: '',
         endDate: '',
