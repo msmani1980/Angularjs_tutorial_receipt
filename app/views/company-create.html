@@ -164,7 +164,7 @@
           
           <div class="col-xs-12 col-sm-6">
             <label>Company TimeZone*</label>
-			<select ng-model="formData.timezone" class="form-control">
+			 <select ng-model="formData.timezone" class="form-control" ng-init="formData.timezone ='0'" >
 			 	<option value="-12">UTC-12</option>
 				<option value="-11">UTC-11</option>
 				<option value="-10">UTC-10</option>
@@ -192,7 +192,7 @@
 				<option value="12">UTC+12</option>
 				<option value="13">UTC+13</option>
 				<option value="14">UTC+14</option>
-			</select>
+			</select> 
           </div>
 
           <div class="col-xs-12 col-sm-6" ng-if="showBaseCurrency">

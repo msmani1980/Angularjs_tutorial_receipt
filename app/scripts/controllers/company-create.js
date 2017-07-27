@@ -26,7 +26,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.viewOnly = false;
     $scope.editingCompany = false;
     $scope.uiSelectTemplateReady = false;
-
+    
     var $this = this;
 
     this.showLoadingModal = function(text) {
@@ -193,7 +193,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         parentCompanyId: $this.setString(company.parentCompanyId),
         roundingOptionId: $this.setString(company.roundingOptionId),
         taxes: company.taxes ? company.taxes : null,
-        timezone: company.timezoneOffset
+        timezone: $this.setString(company.timezone)
       };
 
     };
@@ -390,7 +390,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       company.languages = $this.formatCompanyLanguages(company.languages);
       company.eposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
       company.countryVats = $this.formatCountryVats(company.countryVats);
-      company.timezone = company.timezoneOffset;
+      company.timezone = company.timezone;
       return company;
     };
 
