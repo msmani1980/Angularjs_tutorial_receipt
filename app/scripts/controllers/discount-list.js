@@ -40,6 +40,9 @@ angular.module('ts5App')
 
     this.attachDiscountListToScope = function(discountListFromAPI) {
       $this.meta.count = $this.meta.count || discountListFromAPI.meta.count;
+      if (!$scope.discountList.length) {
+        $scope.discountList = angular.copy($this.formatDates(discountListFromAPI.companyDiscounts));
+      }
 
       if ($scope.discountList.length !== discountListFromAPI.meta.count) {
         $scope.discountList = $scope.discountList.concat($this.formatDates(discountListFromAPI.companyDiscounts));
@@ -105,7 +108,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return dateUtility.isAfterTodayOrEqual(discount.endDate);
+      return dateUtility.isAfterTodayDatePicker(discount.endDate);
     };
 
     $scope.isDiscountReadOnly = function(exchangeRate) {
