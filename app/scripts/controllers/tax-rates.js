@@ -240,7 +240,7 @@ angular.module('ts5App')
     };
 
     this.getCurrenciesList = function () {
-      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
       var payload = {
         startDate: nowDate,
         endDate: nowDate,
@@ -453,11 +453,11 @@ angular.module('ts5App')
     };
 
     this.isTaxRateActive = function (taxRate) {
-      return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
+      return (dateUtility.isTodayOrEarlier(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
     };
 
     this.hasTaxRateStarted = function (taxRate) {
-      return (dateUtility.isAfterTodayDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
+      return (dateUtility.isAfterToday(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
     };
 
     this.displayConfirmDialog = function (taxRate) {
@@ -540,8 +540,8 @@ angular.module('ts5App')
 
     this.determineMinDate = function (date) {
       var diff = 1;
-      if (!dateUtility.isTomorrowOrLaterDatePicker(date)) {
-        diff = dateUtility.diff(dateUtility.nowFormattedDatePicker(), date);
+      if (!dateUtility.isTomorrowOrLater(date)) {
+        diff = dateUtility.diff(dateUtility.nowFormatted(), date);
       }
 
       var dateString = diff.toString() + 'd';
