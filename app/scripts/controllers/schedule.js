@@ -28,22 +28,19 @@ angular.module('ts5App')
       { id: 6, name: 'Saturday' },
       { id: 7, name: 'Sunday' }
     ];
+    $scope.getScheduleSucceded = false;
+
+    this.determineMinForStartDate = function() {
+      $scope.minForStartDate = '+1d';
+    };
+
+    this.determineMinForEndDate = function() {
+      $scope.minForEndDate = ($scope.editingItem && $scope.shouldDisableStartDate) ? '0d' : '+1d';
+    };
 
     this.determineMinDate = function() {
-      var diff = 1;
-      if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
-        diff = dateUtility.diff(
-          dateUtility.nowFormatted(),
-          $scope.formData.startDate
-        );
-      }
-
-      var dateString = diff.toString() + 'd';
-      if (diff >= 0) {
-        dateString = '+' + dateString;
-      }
-
-      return dateString;
+      $this.determineMinForStartDate();
+      $this.determineMinForEndDate();
     };
 
     this.showLoadingModal = function(message) {
@@ -57,6 +54,7 @@ angular.module('ts5App')
     this.createInit = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Create Schedule';
+      $this.determineMinDate();
     };
 
     this.viewInit = function() {
@@ -107,7 +105,7 @@ angular.module('ts5App')
         tripDistanceUnitId: $scope.schedule.tripDistanceUnitId,
         companyCarrierTypeId: $scope.schedule.companyCarrierTypeId,
         companyCarrierId: $scope.schedule.companyCarrierId,
-        seatConfigId: $scope.schedule.seatConfigurationId
+        seatConfigId: $scope.schedule.seatConfigurationId,
       };
 
       scheduleFactory.createSchedule(payload).then(
@@ -165,7 +163,7 @@ angular.module('ts5App')
         tripDistanceUnitId: $scope.schedule.tripDistanceUnitId,
         companyCarrierTypeId: $scope.schedule.companyCarrierTypeId,
         companyCarrierId: $scope.schedule.companyCarrierId,
-        seatConfigId: $scope.schedule.seatConfigurationId
+        seatConfigId: $scope.schedule.seatConfigurationId,
       };
 
       scheduleFactory.updateSchedule(payload).then(
@@ -207,6 +205,9 @@ angular.module('ts5App')
     $scope.isDisabled = function() {
       return $scope.shouldDisableStartDate || $scope.readOnly;
     };
+    $scope.isDisabledForEndDate = function() {
+      return $scope.shouldDisableEndDate || $scope.readOnly;
+    };
 
     $scope.formSave = function() {
       if ($this.validateForm()) {
@@ -220,12 +221,20 @@ angular.module('ts5App')
     };
 
     this.getScheduleSuccess = function(response) {
+      var startDate = dateUtility.formatDateForApp(response.startDate);
+      var endDate = dateUtility.formatDateForApp(response.endDate);
+
+      $scope.shouldDisableStartDate = !(dateUtility.isAfterToday(startDate));
+      $scope.shouldDisableEndDate = !(dateUtility.isAfterToday(endDate));
+
+      $this.determineMinDate();
+
       $scope.schedule = {
         departureTime: response.departureTime,
         arrivalTime: response.arrivalTime,
         scheduleNumber: response.scheduleNumber,
-        startDate: dateUtility.formatDateForApp(response.startDate),
-        endDate: dateUtility.formatDateForApp(response.endDate),
+        startDate: startDate,
+        endDate: endDate,
         blockTime: response.blockTime,
         groundTime: response.groundTime,
         tripDistance: response.tripDistance,
@@ -239,10 +248,13 @@ angular.module('ts5App')
         tripDistanceUnitId: response.tripDistanceUnitId,
         companyCarrierTypeId: response.companyCarrierTypeId,
         companyCarrierId: response.companyCarrierId,
-        seatConfigurationId: response.seatConfigurationId
+        seatConfigurationId: response.seatConfigurationId,
+        carrierNumber: response.carrierNumber,
+        seatConfigurationCode: response.seatConfigurationCode
       };
 
       $this.getAllCarrierNumbers();
+      $scope.getScheduleSucceded = true;
     };
 
     this.getStationsSuccess = function(response) {
@@ -273,8 +285,6 @@ angular.module('ts5App')
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
-
-      $scope.minDate = $this.determineMinDate();
     };
 
     this.makeInitPromises = function() {

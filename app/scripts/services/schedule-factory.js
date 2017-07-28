@@ -26,7 +26,7 @@ angular.module('ts5App')
     };
 
     var updateSchedule = function (payload) {
-      return schedulesService.updateSchedule(getCompanyId(), payload);
+      return schedulesService.updateSchedule(getCompanyId(), payload.id, payload);
     };
 
     var deleteSchedule = function (companyId, scheduleId) {

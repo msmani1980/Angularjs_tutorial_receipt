@@ -35,7 +35,7 @@ angular.module('ts5App')
 
         $scope.placeholder = datePickerOptions.format;
 
-        if ($scope.minDate) {
+        if ($scope.minDate && !$scope.disable) {
           datePickerOptions.startDate = $scope.minDate;
         }
 
@@ -56,6 +56,7 @@ angular.module('ts5App')
           var options = angular.extend({}, datePickerOptions);
           var datePickerInput = $element.find('input[type="text"]');
           datePickerInput.datepicker(options);
+          datePickerInput.datepicker('setDate', $scope.ngModel);
           $scope.$watch('ngModel', function(newData, oldData) {
             if ($scope.ngModel && newData !== oldData) {
               datePickerInput.datepicker('setDate', $scope.ngModel);
