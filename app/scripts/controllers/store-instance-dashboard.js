@@ -317,9 +317,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (lodash.find(storeInstance.actionButtons, lodash.matches('Get Flight Docs')) || storeInstance.statusName === 'On Floor') {
         storeInstance.showGenerateDocsButton = true;
 
-        // TODO: add rsvr when migrated
+        var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
         storeInstance.exportURL = ENV.apiUrl + '/rsvr-pdf/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
-          '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';
+          '.pdf?sessionToken=' + sessionToken;
       }
     }
 
@@ -610,8 +610,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (lodash.keys($scope.search).length > 0) {
         $scope.searchStoreInstanceDashboardData();
       }
-      
-      var stsMap = STATUS_TO_BUTTONS_MAP[5];      
+
+      var stsMap = STATUS_TO_BUTTONS_MAP[5];
       if (angular.isDefined($localStorage.buttons) && $localStorage.buttons.indexOf('unreceive') !== -1) {
         if (stsMap.indexOf('Un-Receive') === -1) {
           stsMap.push('Un-Receive');
