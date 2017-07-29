@@ -899,11 +899,11 @@ angular.module('ts5App')
     };
 
     $scope.onUiSelect = function ($select) {
-      // clear search text
       $select.search = '';
     };
 
     $scope.isCurrentEffectiveDate = function (taxRate) {
       return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
     };
+
   });
