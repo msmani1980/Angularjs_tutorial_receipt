@@ -205,6 +205,7 @@ angular.module('ts5App')
     $scope.isDisabled = function() {
       return $scope.shouldDisableStartDate || $scope.readOnly;
     };
+    
     $scope.isDisabledForEndDate = function() {
       return $scope.shouldDisableEndDate || $scope.readOnly;
     };
