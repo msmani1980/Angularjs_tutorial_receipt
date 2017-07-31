@@ -184,7 +184,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getFormattedOperationalDaysPayload = function () {
       // Monday -> Sunday = 1 -> 7
-      return dateUtility.getOperationalDay($scope.formData.scheduleDate) || 7;
+      return dateUtility.getOperationalDayDatePicker($scope.formData.scheduleDate) || 7;
     };
 
     this.setCatererStationList = function (dataFromAPI) {
