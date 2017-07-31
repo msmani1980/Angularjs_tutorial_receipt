@@ -879,4 +879,8 @@ angular.module('ts5App')
       }
     };
 
+    $scope.onUiSelect = function ($select) {
+      // clear search text
+      $select.search = '';
+    };
   });
