@@ -179,6 +179,13 @@ angular.module('ts5App')
       return date.getDay();
     };
     
+    this.getOperationalDayDatePicker = function (date, currentDateFormat) {
+      currentDateFormat = currentDateFormat || this.getDateFormatForApp();
+      var formattedDate = this.formatDatePicker(date, currentDateFormat, 'MM/DD/YYY');
+      date = new Date(formattedDate);
+      return date.getDay();
+    };
+    
     this.nowFormattedDatePicker = function (formatTo) {
       formatTo = formatTo || this.getDateFormatForApp();
       var formatFrom = 'x';
