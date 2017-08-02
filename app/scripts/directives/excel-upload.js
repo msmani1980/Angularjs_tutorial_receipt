@@ -100,7 +100,12 @@ angular.module('ts5App')
       } catch (error) {
         console.log(error);
       } finally {
-        $this.service = $injector.get($scope.type + 'Service');
+        if ($scope.type === 'schedule') {
+          $this.service = $injector.get('schedulesService');
+        } else {
+          $this.service = $injector.get($scope.type + 'Service');
+        }
+
       }
     }
 

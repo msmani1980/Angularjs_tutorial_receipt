@@ -24,6 +24,10 @@ angular.module('ts5App')
       unitType:'weight'
     };
 
+    var distanceParameters = {
+      unitType:'distance'
+    };
+
     var actions = {
       getDimensionList: {
         method: 'GET'
@@ -32,6 +36,9 @@ angular.module('ts5App')
         method: 'GET'
       },
       getWeightList: {
+        method: 'GET'
+      },
+      getDistanceList: {
         method: 'GET'
       }
     };
@@ -51,10 +58,16 @@ angular.module('ts5App')
       return requestResource.getWeightList(payload).$promise;
     };
 
+    var getDistanceList = function (payload) {
+      var requestResource = $resource(requestURL, distanceParameters, actions);
+      return requestResource.getDistanceList(payload).$promise;
+    };
+
     return {
       getDimensionList: getDimensionList,
       getVolumeList: getVolumeList,
-      getWeightList: getWeightList
+      getWeightList: getWeightList,
+      getDistanceList: getDistanceList
     };
 
   });
