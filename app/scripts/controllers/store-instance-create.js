@@ -13,6 +13,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
             menuCatererStationsService, lodash, $route, $filter, $localStorage) {
 
     $scope.cateringStationList = [];
+    $scope.dispatchStationList = [];
     $scope.menuMasterList = [];
     $scope.filteredMenuList = [];
     $scope.carrierNumbers = [];
@@ -189,11 +190,22 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setCatererStationList = function (dataFromAPI) {
       $scope.cateringStationList = angular.copy(dataFromAPI.response);
+      if ($scope.cateringStationList.length === 1) {
+        $scope.formData.cateringStationId = $scope.cateringStationList[0].id;  
+      }
     };
 
     this.getCatererStationList = function () {
       var query = this.getFormattedDatesPayload();
       return storeInstanceFactory.getCatererStationList(query).then(this.setCatererStationList);
+    };
+    
+    this.setDispatchStationList = function (dataFromAPI) {
+      $scope.dispatchStationList.push(dataFromAPI);
+    };
+
+    this.getDispatchStationList = function () {
+      return storeInstanceFactory.getStation($scope.formData.dispatchedCateringStationId).then(this.setDispatchStationList);
     };
 
     this.setMenuCatererList = function (dataFromAPI) {
@@ -512,6 +524,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       return null;
     };
+    
+    this.setScheduleId = function (apiData) {
+      if (apiData && apiData.scheduleId) {
+        return apiData.scheduleId.toString();
+      }
+
+      return null;
+    };
 
     this.setScheduleNumber = function (apiData) {
       var scheduleNumber = {};
@@ -585,6 +605,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           dispatchedCateringStationId: $this.setCateringStationId(data),
           scheduleDate: $this.setScheduleDate(data),
           scheduleNumber: $this.setScheduleNumber(data),
+          scheduleId: $this.setScheduleId(data),
           storeId: $this.setStoreId(data),
           carrierId: $this.setCarrierId(data),
           menus: $this.setMenus(data),
@@ -592,6 +613,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           storeNumber: $this.setStoreNumber(data)
         };
         $this.setStoreInstanceConditionals(data);
+        $this.getDispatchStationList();
+        
       }
 
       var promises = $this.makeInitPromises();
@@ -1259,7 +1282,16 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.setScheduleNumbers = function (apiData) {
-      $scope.scheduleNumbers = angular.copy(apiData.schedules);
+      if ($routeParams.action === 'end-instance') {
+        var scheduleObj = {
+          id: $scope.formData.scheduleId,
+          scheduleNumber: $scope.formData.scheduleNumber.scheduleNumber
+        }; 
+        $scope.scheduleNumbers.push(scheduleObj);
+      } else {
+        $scope.scheduleNumbers = angular.copy(apiData.schedules);
+      }
+      
       $this.setFormScheduleNumber();
     };
 
