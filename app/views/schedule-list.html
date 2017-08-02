@@ -19,6 +19,42 @@
           <span class="fa fa-search" aria-hidden="true"></span>
           <span class="hidden-xs">Search</span>
         </button>
+
+        <div class="btn-group pull-right" dropdown style="margin-right:2px;">
+          <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
+                  data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-cog"></i>
+            Hide / Show Columns
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('storeInstanceId')">
+                <input ng-click="$event.stopPropagation();" type="checkbox"
+                       ng-model="displayColumns.blockTime">
+                Block Time</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('receivedStation')">
+                <input ng-click="$event.stopPropagation();" type="checkbox"
+                       ng-model="displayColumns.groundTime">
+                Ground Time</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('receivedStation')">
+                <input ng-click="$event.stopPropagation();" type="checkbox"
+                       ng-model="displayColumns.nextFlight">
+                Next Flight</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('receivedStation')">
+                <input ng-click="$event.stopPropagation();" type="checkbox"
+                       ng-model="displayColumns.nextFlight">
+                Next Flight</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -139,19 +175,21 @@
           <th>Days of Op.</th>
           <th>Dep. Station</th>
           <th>Dep. Time</th>
+          <th>Dep. Timezone</th>
           <th>Arr. Station</th>
           <th>Arr. Time</th>
+          <th>Arr. Timezone</th>
           <th>Effective From</th>
           <th>Effective To</th>
           <th>Aircraft Type</th>
           <th>Tail No.</th>
           <th>Seat Config</th>
-          <th>Block Time</th>
-          <th>Ground Time</th>
+          <th ng-show="displayColumns.blockTime">Block Time</th>
+          <th ng-show="displayColumns.groundTime">Ground Time</th>
           <th>Trip Distance</th>
           <th>Flight Info</th>
-          <th>Prev. Flight</th>
-          <th>Next Flight</th>
+          <th ng-show="displayColumns.previousFlight">Prev. Flight</th>
+          <th ng-show="displayColumns.nextFlight">Next Flight</th>
           <th>Actions</th>
         </tr>
         </thead>
@@ -161,23 +199,25 @@
           <td>{{ schedule.days }}</td>
           <td>{{ schedule.departure}}</td>
           <td>{{ schedule.departureTime }}</td>
+          <td>{{ schedule.departureStation.city.timezone }} {{ schedule.departureStation.city.utcOffset }}</td>
           <td>{{ schedule.arrival}}</td>
           <td>{{ schedule.arrivalTime }}</td>
+          <td>{{ schedule.arrivalStation.city.timezone }} {{ schedule.arrivalStation.city.utcOffset }}</td>
           <td>{{ schedule.startDate }}</td>
           <td>{{ schedule.endDate }}</td>
           <td>{{ schedule.companyCarrierTypeCode }}</td>
           <td>{{ schedule.carrierNumber }}</td>
           <td>{{ schedule.seatConfigurationCode }}</td>
-          <td>{{ schedule.blockTime }}</td>
-          <td>{{ schedule.groundTime }}</td>
+          <td ng-show="displayColumns.blockTime">{{ schedule.blockTime }}</td>
+          <td ng-show="displayColumns.groundTime">{{ schedule.groundTime }}</td>
           <td>{{ schedule.tripDistance }} <span ng-show="schedule.hasTripDistance">{{ schedule.tripDistanceUnitCode }}</span></td>
           <td>
             <span ng-show="schedule.firstTrip">First Trip</span>
             <span ng-show="schedule.firstTrip && schedule.lastTrip">, </span>
             <span ng-show="schedule.lastTrip">Last Trip</span>
           </td>
-          <td>{{ schedule.preScheduleNumber }}</td>
-          <td>{{ schedule.nextScheduleNumber }}</td>
+          <td ng-show="displayColumns.previousFlight">{{ schedule.preScheduleNumber }}</td>
+          <td ng-show="displayColumns.nextFlight">{{ schedule.nextScheduleNumber }}</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="redirectToSchedule(schedule.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>

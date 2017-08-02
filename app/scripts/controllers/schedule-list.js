@@ -33,6 +33,13 @@ angular.module('ts5App')
       { id: 7, name: 'Sunday' }
     ];
 
+    $scope.displayColumns = {
+      blockTime: false,
+      groundTime: false,
+      previousFlight: false,
+      nextFlight: false
+    };
+
     function showLoadingBar() {
       $scope.loadingBarVisible = true;
       angular.element('.loading-more').show();
