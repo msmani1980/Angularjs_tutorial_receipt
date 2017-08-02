@@ -77,7 +77,7 @@
           </div>
           <div class="col-xs-12 col-sm-6">
             <date-picker-field disable="readOnly" name="EffectiveTo"
-                               min-date="( editing ? '0d' : '+1d')" label="Effective To" required="true"
+                               min-date="( editing ? '0d' : '+1d')" label="Effective To" required="true" end-current-effective="editing"
                                ng-model="promotion.endDate"></date-picker-field>
           </div>
         </div>
