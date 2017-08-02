@@ -272,7 +272,7 @@
         <!-- Switch for endDate -->
         <td class="animate-switch" ng-switch-when="read">{{ taxRate.endDate }}</td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
-          <date-picker-field ng-model="taxRate.endDate" min-date="determineMinDate()" orientation="determineDatePickerOrientation(taxRate)" end-current-effective="true"></date-picker-field>
+          <date-picker-field ng-model="taxRate.endDate" min-date="determineMinDate()" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
         </td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="create">
           <date-picker-field ng-model="taxRate.endDate" min-date="determineMinDate()"></date-picker-field>
