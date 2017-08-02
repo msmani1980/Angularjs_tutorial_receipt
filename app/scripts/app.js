@@ -66,7 +66,8 @@ angular.module('ts5App', [
     'This field should use format 0.0000'
   ],
   price: /^\$?\s?[0-9\,]+(\.\d{0,4})?$/,
-  url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
+  url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/,
+  t24: /^([01]\d|2[0-3]):([0-5]\d)$/,
 }).config(function ($localStorageProvider) {
   $localStorageProvider.setKeyPrefix('TS5-');
 }).config(function ($httpProvider) {
@@ -379,6 +380,14 @@ angular.module('ts5App', [
   }).when('/epos-transaction-list', {
     templateUrl: 'views/epos-transaction-list.html',
     controller: 'EposTransactionListCtrl',
+  }).when('/schedules', {
+    templateUrl: 'views/schedule-list.html',
+    controller: 'ScheduleListCtrl',
+    controllerAs: 'scheduleList'
+  }).when('/schedules/:action/:id?', {
+    templateUrl: 'views/schedule.html',
+    controller: 'ScheduleCtrl',
+    controllerAs: 'schedule'
   }).otherwise({
     redirectTo: '/'
   });
