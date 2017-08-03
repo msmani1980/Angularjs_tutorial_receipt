@@ -262,7 +262,7 @@
               <td>Quantity</td>
               <td>Total</td>
             </tr>
-            <tr ng-if="stockItem.eposQuantity !== 0" ng-repeat="stockItem in stockTotals.stockItems | filter:{itemTypeName:modalItemTypeName}">
+            <tr ng-if="stockItem.eposQuantity !== null && stockItem.eposQuantity !== 0" ng-repeat="stockItem in stockTotals.stockItems | filter:{itemTypeName:modalItemTypeName}">
               <td>{{stockItem.itemName}}</td>
               <td>{{stockItem.eposQuantity}}</td>
               <td>{{stockItem.eposTotal}}</td>
