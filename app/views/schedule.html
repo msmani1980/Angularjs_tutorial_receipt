@@ -167,7 +167,7 @@
                      id="carrier-number"
                      name="carrierNumber">
               <select
-                      ng-if="!isDisabled() && getScheduleSucceded"
+                      ng-if="isCreate || (!isDisabled() && getScheduleSucceded)"
                       class="form-control"
                       name="tailNumber"
                       ng-model="schedule.companyCarrierId"
@@ -190,7 +190,7 @@
                      id="seat-configuration-code"
                      name="seatConfigurationCode">
 
-              <select ng-if="!isDisabled() && getScheduleSucceded"
+              <select ng-if="isCreate || (!isDisabled() && getScheduleSucceded)"
                       class="form-control"
                       name="seatConfig"
                       ng-model="schedule.seatConfigurationId"
