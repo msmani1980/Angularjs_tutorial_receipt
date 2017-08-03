@@ -61,6 +61,9 @@ describe('The Date Picker Field directive', function () {
       template += 'customEffective="' + config.customEffective + '" ';
     }
 
+    if (config.endCurrentEffective) {
+      template += 'endCurrentEffective="' + config.endCurrentEffective + '" ';
+    }
     template += '></date-picker-field>';
     return template;
   }
