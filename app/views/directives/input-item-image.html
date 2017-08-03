@@ -36,7 +36,7 @@
             form="form" name="imageEffectiveFrom" label="Effective From" required="true" ng-model="image.startDate">
           </date-picker-field>
 
-          <date-picker-field ng-if="minDate" min-date="$parent.minDate"
+          <date-picker-field ng-if="minDate" min-date="$parent.minDate" end-current-effective="$parent.isDisabled()"
             disable="viewOnly" form="form" name="imageEffectiveTo"
             label="Effective To" required="true" ng-model="image.endDate">
           </date-picker-field>

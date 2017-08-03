@@ -1,0 +1,294 @@
+<div class="module-container">
+
+  <div class="edit-controls">
+
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/schedules" class="btn" ng-show="readOnly">Back</a>
+      </div>
+    </div>
+
+  </div>
+
+  <error-dialog form-object="scheduleDataForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+  <form name="scheduleDataForm">
+    <!--/TopHeader -->
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <!-- form header-->
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="schedule-number">Schedule Number *</label>
+              <input ng-model="schedule.scheduleNumber" ng-disabled="isDisabled()" type="text" class="form-control" id="schedule-number" name="scheduleNumber" placeholder="0001" required required="true">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-8">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <date-picker-field ng-if="minForStartDate"
+                                   disable="isDisabled()"
+                                   form="scheduleDataForm"
+                                   name="EffectiveFrom"
+                                   label="Effective From"
+                                   min-date="minForStartDate"
+                                   required="true"
+                                   ng-model="schedule.startDate">
+                </date-picker-field>
+              </div>
+              <div class="col-xs-12 col-sm-6">
+                <date-picker-field ng-if="minForEndDate"
+                                   disable="isDisabledForEndDate()"
+                                   form="scheduleDataForm"
+                                   name="EffectiveTo"
+                                   label="Effective To"
+                                   min-date="minForEndDate"
+                                   required="true"
+                                   ng-model="schedule.endDate">
+                </date-picker-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="departure-station">Departure Station *</label>
+              <select class="form-control"
+                      name="departureStation"
+                      ng-model="schedule.departureStationId"
+                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-disabled="isDisabled()"
+                      required="true"
+                      required
+                      id="departure-station">
+                <option selected="selected" value>Departure Station</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="departure-time">Depart. Time (HH:mm) *</label>
+              <input ng-model="schedule.departureTime"
+                     ng-disabled="isDisabled()"
+                     name="departureTime"
+                     maxlength="5"
+                     oninput="this.value=this.value.replace(/[^0-9:]/g,'');"
+                     class="form-control"
+                     id="departure-time"
+                     placeholder="10:20"
+                     required
+                     required="true"
+                     ng-pattern="regexp.t24">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="arrival-station">Arrival Station *</label>
+              <select class="form-control"
+                      name="arrivalStation"
+                      ng-model="schedule.arrivalStationId"
+                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-disabled="isDisabled()"
+                      required
+                      required="true"
+                      id="arrival-station">
+                <option selected="selected" value>Arrival Station</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="arrival-time">Arrival Time (HH:mm) *</label>
+              <input ng-model="schedule.arrivalTime"
+                     type="text"
+                     class="form-control departure-time"
+                     name="arrivalTime"
+                     placeholder="23:34"
+                     maxlength="5"
+                     oninput="this.value=this.value.replace(/[^0-9:]/g,'');"
+                     ng-disabled="isDisabled()"
+                     id="arrival-time"
+                     required
+                     required="true"
+                     ng-pattern="regexp.t24">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="days-of-operation">Days of Operation *</label>
+              <ui-select id="days-of-operation" multiple ng-model="schedule.days"  ng-disabled="isDisabled()" name="daysOfOperation" theme="bootstrap" required required="true">
+                <ui-select-match placeholder="Select Days of Operations">{{ $item.name }}</ui-select-match>
+                <ui-select-choices repeat="number in daysOfOperation | filter: $select.search">
+                  {{ number.name }}
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="aircraft-type">Aircraft Type</label>
+              <select class="form-control"
+                      name="aircraftType"
+                      ng-model="schedule.companyCarrierTypeId"
+                      ng-options="carrierType.companyCarrierTypeId as carrierType.carrierType for carrierType in carrierTypes"
+                      ng-disabled="isDisabled()"
+                      id="aircraft-type"
+                      ng-change="onCompanyCarrierTypeChange()">
+                <option selected="selected" value>Aircraft Type</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="tail-number">Tail Number</label>
+              <input ng-if="isDisabled() && getScheduleSucceded"
+                     ng-disabled="isDisabled()"
+                     ng-model="schedule.carrierNumber"
+                     type="text"
+                     class="form-control"
+                     id="carrier-number"
+                     name="carrierNumber">
+              <select
+                      ng-if="isCreate || (!isDisabled() && getScheduleSucceded)"
+                      class="form-control"
+                      name="tailNumber"
+                      ng-model="schedule.companyCarrierId"
+                      ng-options="number.id as number.carrierNumber for number in carrierNumbers"
+                      id="tail-number"
+                      ng-change="onCompanyCarrierNumberChange()">
+                <option selected="selected" value>Tail Number</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="seat-config">Seat config</label>
+              <input ng-if="isDisabled() && getScheduleSucceded"
+                     ng-disabled="isDisabled()"
+                     ng-model="schedule.seatConfigurationCode"
+                     type="text"
+                     class="form-control"
+                     id="seat-configuration-code"
+                     name="seatConfigurationCode">
+
+              <select ng-if="isCreate || (!isDisabled() && getScheduleSucceded)"
+                      class="form-control"
+                      name="seatConfig"
+                      ng-model="schedule.seatConfigurationId"
+                      ng-options="seat.id as seat.seatConfigurationCode for seat in seatConfigurations"
+                      ng-disabled="isDisabled()"
+                      id="seat-config">
+                <option selected="selected" value>Seat Config</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2 employee-id">
+            <label>Flight Info</label>
+            <div class="form-group">
+              <input type="checkbox"
+                     id="first-trip"
+                     ng-model="schedule.firstTrip"
+                     ng-disabled="isDisabled()">
+              <label for="first-trip">First Trip</label>
+              <br/>
+              <input type="checkbox"
+                     id="last-trip"
+                     ng-model="schedule.lastTrip"
+                     ng-disabled="isDisabled()">
+              <label for="last-trip">Last Trip</label>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="block-time">Block Time (min)</label>
+              <input ng-model="schedule.blockTime"  ng-disabled="isDisabled()" type="text" class="form-control" id="block-time" placeholder="10"
+                     maxlength="6"
+                     oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="ground-time">Ground Time (min)</label>
+              <input ng-model="schedule.groundTime"  ng-disabled="isDisabled()" type="text" class="form-control" id="ground-time" placeholder="5"
+                     maxlength="6"
+                     oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="trip-distance">Trip Distance</label>
+              <input ng-model="schedule.tripDistance"  ng-disabled="isDisabled()" type="text" class="form-control" id="trip-distance" placeholder="200"
+                     maxlength="6"
+                     oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-1">
+            <div class="form-group">
+              <label for="trip-distance-unit">&nbsp;</label>
+              <select class="form-control"
+                      name="trip-distance-unit"
+                      ng-model="schedule.tripDistanceUnitId"
+                      ng-options="unit.id as unit.unitName for unit in distanceUnits"
+                      ng-disabled="isDisabled()"
+                      id="trip-distance-unit">
+                <option selected="selected" value>Unit</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="previous-flight">Previous Flight:</label>
+              <input ng-model="schedule.preScheduleNumber"  ng-disabled="isDisabled()" type="text" class="form-control" id="previous-flight" placeholder="0002">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="next-flight">Next Flight:</label>
+              <input ng-model="schedule.nextScheduleNumber"  ng-disabled="isDisabled()" type="text" class="form-control" id="next-flight" placeholder="0003">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer text-right">
+        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+          <span class="fa fa-check-square-o" aria-hidden="true"></span>
+          <span class="hidden-xs">Save</span>
+        </button>
+        <a href="#/schedules" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Schedule Management"></dynamic-left-nav>

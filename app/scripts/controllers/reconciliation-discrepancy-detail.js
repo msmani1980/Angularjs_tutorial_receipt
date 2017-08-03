@@ -244,6 +244,7 @@ angular.module('ts5App')
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
     }
 
     function handleResponseError(responseFromAPI) {

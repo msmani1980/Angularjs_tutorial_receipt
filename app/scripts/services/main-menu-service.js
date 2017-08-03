@@ -65,7 +65,7 @@ angular.module('ts5App')
         title: 'Schedule Management',
         menuItems: [{
           name: 'Manage Schedules',
-          route: emberURL + 'schedules',
+          route: '/#/schedules',
           icon: 'icon-manage-schedule',
           className: 'dashboard-manageSchedules',
           package: 'SCHEDULE',

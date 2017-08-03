@@ -1,6 +1,4 @@
 'use strict';
-/*global moment*/
-
 /**
  * @ngdoc function
  * @name ts5App.controller:EmployeeCommissionEditCtrl
@@ -16,7 +14,7 @@ angular.module('ts5App')
 
     angular.element('.retail-name-multiple-select').select2();
 
-    $scope.startDate = dateUtility.formatDateForApp(moment().add(1, 'days'));
+    $scope.startDate = dateUtility.tomorrowFormattedDatePicker();
 
     $scope.commission = {
       startDate: angular.copy($scope.startDate),
@@ -49,7 +47,7 @@ angular.module('ts5App')
         return true;
       }
 
-      return !dateUtility.isAfterToday($scope.commission.startDate);
+      return !dateUtility.isAfterTodayDatePicker($scope.commission.startDate);
     };
 
     function formatDatesForApp(commissionObject) {
