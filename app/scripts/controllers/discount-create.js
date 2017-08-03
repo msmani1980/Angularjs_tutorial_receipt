@@ -185,10 +185,6 @@ angular.module('ts5App')
         searchPayload.startDate = dateUtility.formatDateForAPI($scope.formData.startDate);
       }
 
-      if ($scope.formData.endDate !== null && $scope.formData.endDate !== undefined && $scope.formData.endDate !== '') {
-        searchPayload.endDate = dateUtility.formatDateForAPI($scope.formData.endDate);
-      }
-
       return itemsFactory.getItemsList(searchPayload, true).then($this.setRetailItemsList);
     };
 
@@ -498,12 +494,9 @@ angular.module('ts5App')
 
       var searchPayload = {};
 
+      searchPayload.startDate = dateUtility.formatDateForAPI(new Date());
       if ($scope.formData.startDate !== null && $scope.formData.startDate !== undefined && $scope.formData.startDate !== '') {
         searchPayload.startDate = dateUtility.formatDateForAPI($scope.formData.startDate);
-      }
-
-      if ($scope.formData.endDate !== null && $scope.formData.endDate !== undefined && $scope.formData.endDate !== '') {
-        searchPayload.endDate = dateUtility.formatDateForAPI($scope.formData.endDate);
       }
 
       searchPayload.categoryId = categoryId;
