@@ -240,7 +240,7 @@ angular.module('ts5App')
     };
 
     this.getCurrenciesList = function () {
-      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       var payload = {
         startDate: nowDate,
         endDate: nowDate,
@@ -405,6 +405,26 @@ angular.module('ts5App')
     };
 
     this.makeSearchPromises = function (clear) {
+      $scope.displayError = false;
+      $scope.errorResponse = [];
+
+      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+        if (dateUtility.diff($scope.dateRange.startDate, $scope.dateRange.endDate) < 0) {
+          var errorData = {
+            data: [
+              {
+                field: 'Effective To',
+                code: '021'
+              }
+            ]
+          };
+          $scope.errorResponse = angular.copy(errorData);
+          $scope.displayError = true;
+
+          return;
+        }
+      }
+
       var message = 'Searching Tax Rates...';
       if (clear) {
         message = 'Clearing Search...';
@@ -453,11 +473,11 @@ angular.module('ts5App')
     };
 
     this.isTaxRateActive = function (taxRate) {
-      return (dateUtility.isTodayOrEarlier(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
+      return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
     };
 
     this.hasTaxRateStarted = function (taxRate) {
-      return (dateUtility.isAfterToday(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
+      return (dateUtility.isAfterTodayDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
     };
 
     this.displayConfirmDialog = function (taxRate) {
@@ -540,8 +560,8 @@ angular.module('ts5App')
 
     this.determineMinDate = function (date) {
       var diff = 1;
-      if (!dateUtility.isTomorrowOrLater(date)) {
-        diff = dateUtility.diff(dateUtility.nowFormatted(), date);
+      if (!dateUtility.isTomorrowOrLaterDatePicker(date)) {
+        diff = dateUtility.diff(dateUtility.nowFormattedDatePicker(), date);
       }
 
       var dateString = diff.toString() + 'd';
@@ -751,7 +771,7 @@ angular.module('ts5App')
     };
 
     $scope.determineMinDate = function (date) {
-      date = date || dateUtility.tomorrowFormatted();
+      date = date || dateUtility.tomorrowFormattedDatePicker();
       return $this.determineMinDate(date);
     };
 
@@ -859,4 +879,12 @@ angular.module('ts5App')
       }
     };
 
+    $scope.onUiSelect = function ($select) {
+      // clear search text
+      $select.search = '';
+    };
+    
+    $scope.isCurrentEffectiveDate = function (taxRate) {
+      return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
+    };    
   });
