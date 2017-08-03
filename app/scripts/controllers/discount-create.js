@@ -524,7 +524,6 @@ angular.module('ts5App')
     };
 
     $scope.showAddRestrictionSection = function() {
-      console.log($scope.formData.isRestriction);
       return $scope.formData.isRestriction;
     };
 
@@ -594,4 +593,8 @@ angular.module('ts5App')
     };
 
     this.init();
+    
+    $scope.isCurrentEffectiveDate = function (discountData) {
+      return (dateUtility.isTodayOrEarlierDatePicker(discountData.startDate) && dateUtility.isAfterTodayDatePicker(discountData.endDate));
+    };
   });
