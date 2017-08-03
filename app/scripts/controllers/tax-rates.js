@@ -886,5 +886,5 @@ angular.module('ts5App')
     
     $scope.isCurrentEffectiveDate = function (taxRate) {
       return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
-    };
+    };    
   });
