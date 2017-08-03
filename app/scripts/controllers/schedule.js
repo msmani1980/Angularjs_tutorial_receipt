@@ -29,6 +29,7 @@ angular.module('ts5App')
       { id: 7, name: 'Sunday' }
     ];
     $scope.getScheduleSucceded = false;
+    $scope.isCreate = false;
 
     this.determineMinForStartDate = function() {
       $scope.minForStartDate = '+1d';
@@ -53,6 +54,7 @@ angular.module('ts5App')
 
     this.createInit = function() {
       $scope.readOnly = false;
+      $scope.isCreate = true;
       $scope.viewName = 'Create Schedule';
       $this.determineMinDate();
     };
@@ -71,10 +73,16 @@ angular.module('ts5App')
     this.saveFormSuccess = function() {
       $this.hideLoadingModal();
       if ($routeParams.action === 'create') {
-        $location.path('schedules');
+        $this.showToastMessage('success', 'Create Schedule', 'success');
       } else {
         $this.showToastMessage('success', 'Edit Schedule', 'success');
       }
+
+      $location.path('schedules');
+    };
+
+    this.showToastMessage = function(className, type, message) {
+      messageService.display(className, message, type);
     };
 
     this.saveFormFailure = function(dataFromAPI) {
