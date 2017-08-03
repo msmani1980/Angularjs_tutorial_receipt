@@ -771,7 +771,7 @@ angular.module('ts5App')
     };
 
     $scope.determineMinDate = function (date) {
-      date = date || dateUtility.tomorrowFormatted();
+      date = date || dateUtility.tomorrowFormattedDatePicker();
       return $this.determineMinDate(date);
     };
 
@@ -882,5 +882,9 @@ angular.module('ts5App')
     $scope.onUiSelect = function ($select) {
       // clear search text
       $select.search = '';
+    };
+    
+    $scope.isCurrentEffectiveDate = function (taxRate) {
+      return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
     };
   });
