@@ -12,7 +12,7 @@ angular.module('ts5App')
 
     $scope.itemList = [];
     $scope.promotionCategory = {};
-    $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
+    $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
     $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
     var $this = this;
 
@@ -219,8 +219,8 @@ angular.module('ts5App')
       var canEdit = false;
 
       if ($routeParams.action === 'edit' && $scope.promotionCategory) {
-        var isInFuture = dateUtility.isAfterToday($scope.promotionCategory.startDate) && dateUtility.isAfterToday($scope.promotionCategory.endDate);
-        var isInPast = dateUtility.isYesterdayOrEarlier($scope.promotionCategory.endDate);
+        var isInFuture = dateUtility.isAfterTodayDatePicker($scope.promotionCategory.startDate) && dateUtility.isAfterTodayDatePicker($scope.promotionCategory.endDate);
+        var isInPast = dateUtility.isYesterdayOrEarlierDatePicker($scope.promotionCategory.endDate);
         canEdit = isInFuture;
         $scope.isViewOnly = isInPast;
       } else {
@@ -263,6 +263,10 @@ angular.module('ts5App')
         getMasterItemList();
       }
     });
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
+    };
 
   }
 )
