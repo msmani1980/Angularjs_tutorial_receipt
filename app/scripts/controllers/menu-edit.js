@@ -340,5 +340,9 @@ angular.module('ts5App')
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
       }
     });
-
+    
+    $scope.isCurrentEffectiveDate = function (menuDate) {
+      return (dateUtility.isTodayOrEarlierDatePicker(menuDate.startDate) && dateUtility.isAfterTodayDatePicker(menuDate.endDate));
+    };
+    
   });
