@@ -539,6 +539,10 @@ describe('Store Instance Create Controller', function() {
           id: 2,
           scheduleNumber: '107'
         },
+        scheduleId: {
+          id: 2,
+          scheduleNumber: '107'
+        },
         storeNumber: 'store12345'
       };
       scope.$digest();
