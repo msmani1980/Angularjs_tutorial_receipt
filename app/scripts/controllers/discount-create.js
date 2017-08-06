@@ -273,6 +273,8 @@ angular.module('ts5App')
         return false;
       }
 
+      $scope.effectiveEndIsDisabled = false;
+
       $scope.originalDiscount = angular.copy(discountData);
 
       $scope.formData = $this.getCleanFormData();
@@ -282,6 +284,8 @@ angular.module('ts5App')
       if (!$scope.discountIsInactive) {
         $this.checkIfDiscountIsActive(discountData);
       }
+
+      $this.checkIfEffectiveEndIsDisabled(discountData);
 
       $this.deserializeBenefits(discountData);
       $this.deserializeLimitationPerShop(discountData);
@@ -507,18 +511,18 @@ angular.module('ts5App')
     };
 
     this.checkIfDiscountIsActive = function(discountData) {
-      var today = dateUtility.nowFormattedDatePicker();
-      var discountStartDate = new Date(discountData.startDate);
-      $scope.discountIsActive = discountStartDate <= today;
+      $scope.discountIsActive = dateUtility.isTodayOrEarlierDatePicker(new Date(discountData.startDate));
     };
 
     this.checkIfDiscountIsInactive = function(discountData) {
-      var today = dateUtility.nowFormattedDatePicker();
-      var discountEndDate = new Date(discountData.endDate);
-      $scope.discountIsInactive = discountEndDate <= today;
+      $scope.discountIsInactive = dateUtility.isTodayOrEarlierDatePicker(new Date(discountData.endDate));
       $scope.viewOnly = $scope.viewOnly || $scope.discountIsInactive;
     };
 
+    this.checkIfEffectiveEndIsDisabled = function(discountData) {
+      $scope.effectiveEndIsDisabled = dateUtility.isYesterdayOrEarlierDatePicker(new Date(discountData.endDate));
+    };
+    
     $scope.isDisabled = function() {
       return ($scope.viewOnly || $scope.discountIsActive);
     };
@@ -593,7 +597,7 @@ angular.module('ts5App')
     };
 
     this.init();
-    
+
     $scope.isCurrentEffectiveDate = function (discountData) {
       return (dateUtility.isTodayOrEarlierDatePicker(discountData.startDate) && dateUtility.isAfterTodayDatePicker(discountData.endDate));
     };
