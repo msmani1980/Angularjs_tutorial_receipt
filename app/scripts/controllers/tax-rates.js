@@ -403,6 +403,26 @@ angular.module('ts5App')
     };
 
     this.makeSearchPromises = function (clear) {
+      $scope.displayError = false;
+      $scope.errorResponse = [];
+
+      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+        if (dateUtility.diff($scope.dateRange.startDate, $scope.dateRange.endDate) < 0) {
+          var errorData = {
+            data: [
+              {
+                field: 'Effective To',
+                code: '021'
+              }
+            ]
+          };
+          $scope.errorResponse = angular.copy(errorData);
+          $scope.displayError = true;
+
+          return;
+        }
+      }
+
       var message = 'Searching Tax Rates...';
       if (clear) {
         message = 'Clearing Search...';
