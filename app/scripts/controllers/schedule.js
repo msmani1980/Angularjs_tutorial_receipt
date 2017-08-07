@@ -233,8 +233,8 @@ angular.module('ts5App')
       var startDate = dateUtility.formatDateForApp(response.startDate);
       var endDate = dateUtility.formatDateForApp(response.endDate);
 
-      $scope.shouldDisableStartDate = !(dateUtility.isAfterToday(startDate));
-      $scope.shouldDisableEndDate = !(dateUtility.isAfterToday(endDate));
+      $scope.shouldDisableStartDate = !(dateUtility.isAfterTodayDatePicker(startDate));
+      $scope.shouldDisableEndDate = !(dateUtility.isAfterTodayDatePicker(endDate));
 
       $this.determineMinDate();
 
