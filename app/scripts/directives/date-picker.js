@@ -15,7 +15,7 @@ angular.module('ts5App')
     var datePickerOptions = {
       orientation: 'auto top',
       autoclose: true,
-      todayHighlight: true
+      todayHighlight: false
     };
 
     var initializeDatePicker = function ($scope, $element) {
