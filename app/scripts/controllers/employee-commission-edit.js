@@ -47,7 +47,7 @@ angular.module('ts5App')
         return false;
       }
 
-      if ($routeParams.state === 'create') {
+      if ($routeParams.state === 'create' || (angular.isUndefined($scope.commission))) {
         return false;
       }
 

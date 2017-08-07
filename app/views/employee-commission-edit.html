@@ -35,15 +35,16 @@
 	  
 	<div class="col-sm-3">
 	  <div class="form-group">
-		  <date-picker-field ng-if="isCreate() || isEdit()"
-			   disable="isViewOnly() || isCommissionReadOnly()"
-			   custom-effective="isEdit()"
+		  <date-picker-field ng-if="!isCommissionReadOnly()"
+			   name="startDate"
+			   min-date="minDate"
 			   label="Effective From"
 			   required="true" 
 			   ng-model="commission.startDate">
 		  </date-picker-field>
-		  <date-picker-field ng-if="isViewOnly()"
-			   disable="isViewOnly() || isCommissionReadOnly()"
+		  <date-picker-field ng-if="isCommissionReadOnly()"
+		       disable="true"
+			   name="startDate"
 			   custom-effective="true"
 			   label="Effective From"
 			   required="true" 
