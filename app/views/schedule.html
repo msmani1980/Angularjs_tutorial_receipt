@@ -39,7 +39,7 @@
                                    form="scheduleDataForm"
                                    name="EffectiveFrom"
                                    label="Effective From"
-                                   min-date="minForStartDate"
+                                   disable-past="true"
                                    required="true"
                                    ng-model="schedule.startDate">
                 </date-picker-field>
@@ -50,7 +50,8 @@
                                    form="scheduleDataForm"
                                    name="EffectiveTo"
                                    label="Effective To"
-                                   min-date="minForEndDate"
+                                   disable-past="true"
+                                   end-current-effective="editingItem"
                                    required="true"
                                    ng-model="schedule.endDate">
                 </date-picker-field>
