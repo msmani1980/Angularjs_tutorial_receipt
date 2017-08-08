@@ -40,6 +40,12 @@ angular.module('ts5App')
       nextFlight: false
     };
 
+    $scope.toggleColumnView = function(columnName) {
+      if (angular.isDefined($scope.displayColumns[columnName])) {
+        $scope.displayColumns[columnName] = !$scope.displayColumns[columnName];
+      }
+    };
+
     function showLoadingBar() {
       $scope.loadingBarVisible = true;
       angular.element('.loading-more').show();

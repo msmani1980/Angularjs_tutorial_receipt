@@ -30,25 +30,25 @@
           </button>
           <ul class="dropdown-menu">
             <li ng-click="$event.stopPropagation();">
-              <a ng-click="toggleColumnView('storeInstanceId')">
+              <a ng-click="toggleColumnView('blockTime')">
                 <input ng-click="$event.stopPropagation();" type="checkbox"
                        ng-model="displayColumns.blockTime">
                 Block Time</a>
             </li>
             <li ng-click="$event.stopPropagation();">
-              <a ng-click="toggleColumnView('receivedStation')">
+              <a ng-click="toggleColumnView('groundTime')">
                 <input ng-click="$event.stopPropagation();" type="checkbox"
                        ng-model="displayColumns.groundTime">
                 Ground Time</a>
             </li>
             <li ng-click="$event.stopPropagation();">
-              <a ng-click="toggleColumnView('receivedStation')">
+              <a ng-click="toggleColumnView('previousFlight')">
                 <input ng-click="$event.stopPropagation();" type="checkbox"
-                       ng-model="displayColumns.nextFlight">
-                Next Flight</a>
+                       ng-model="displayColumns.previousFlight">
+                Previous Flight</a>
             </li>
             <li ng-click="$event.stopPropagation();">
-              <a ng-click="toggleColumnView('receivedStation')">
+              <a ng-click="toggleColumnView('nextFlight')">
                 <input ng-click="$event.stopPropagation();" type="checkbox"
                        ng-model="displayColumns.nextFlight">
                 Next Flight</a>
