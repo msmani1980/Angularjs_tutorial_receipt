@@ -20,20 +20,56 @@
     <p>All required fields are marked with a *</p>
   </div>
 
-  <date-picker
-    class="col-xs-12 col-md-6 col-sm-6"
-    element-class="col-xs-6 col-sm-6"
-    start-date-model="commission.startDate"
-    end-date-model="commission.endDate"
-    label-from="Effective From *"
-    label-to="Effective To *"
-    required="true"
-    disable-start-date="isCommissionReadOnly()"
-    disable-end-date="isViewOnly()"
-    disable-past="true">
-  </date-picker>
-
-  <div class="col-sm-3">
+	 <!--  <date-picker
+	    class="col-xs-12 col-md-6 col-sm-6"
+	    element-class="col-xs-6 col-sm-6"
+	    start-date-model="commission.startDate"
+	    end-date-model="commission.endDate"
+	    label-from="Effective From *"
+	    label-to="Effective To *"
+	    required="true"
+	    disable-start-date="isCommissionReadOnly()"
+	    disable-end-date="isViewOnly()"
+	    disable-past="true">
+	  </date-picker> -->
+	  
+	<div class="col-sm-3">
+	  <div class="form-group">
+		  <date-picker-field ng-if="!isCommissionReadOnly()"
+			   name="startDate"
+			   min-date="minDate"
+			   label="Effective From"
+			   required="true" 
+			   ng-model="commission.startDate">
+		  </date-picker-field>
+		  <date-picker-field ng-if="isCommissionReadOnly()"
+		       disable="true"
+			   name="startDate"
+			   custom-effective="true"
+			   label="Effective From"
+			   required="true" 
+			   ng-model="commission.startDate">
+		  </date-picker-field>
+		  
+		  <date-picker-field ng-if="isCurrentEffectiveDate(commission)"
+			   disable="isViewOnly()"
+			   end-current-effective="!isCreate()"
+			   label="Effective To"
+			   required="true" 
+			   ng-model="commission.endDate"
+			   disable-past="true">
+		  </date-picker-field>
+		  <date-picker-field ng-if="!isCurrentEffectiveDate(commission)"
+			   disable="isViewOnly()"
+			   end-current-effective="false"
+			   label="Effective To"
+			   required="true" 
+			   ng-model="commission.endDate"
+			   disable-past="true">
+		  </date-picker-field>
+	  </div>
+	</div>
+    <div class="col-sm-3">
     <div class="form-group">
       <label class="control-label" for="itemName">Item Name *</label>
       <select
