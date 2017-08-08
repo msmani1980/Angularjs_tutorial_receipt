@@ -41,7 +41,8 @@
         <div class="row">
           <div class="col-xs-6 col-sm-3">
             <div class="form-group">
-              <date-picker-field
+           
+              <date-picker-field  ng-if="!shouldDisable(true)"
                 name="startDate"
                 class="form-group"
                 form="employeeMessageForm"
@@ -50,19 +51,42 @@
                 disable="shouldDisable(true)"
                 required="true">
               </date-picker-field>
+              <date-picker-field  ng-if="shouldDisable(true)"
+                name="startDate"
+                class="form-group"
+                form="employeeMessageForm"
+                ng-model="employeeMessage.startDate"
+                label="Effective From"
+                custom-effective="true"
+                disable="shouldDisable(true)"
+                required="true">
+              </date-picker-field>
             </div>
           </div>
           <div class="col-xs-6 col-sm-3">
             <div class="form-group">
-              <date-picker-field
+              <date-picker-field ng-if="isCurrentEffectiveDate(employeeMessage)"
                 name="endDate"
                 class="form-group"
                 form="employeeMessageForm"
                 ng-model="employeeMessage.endDate"
                 label="Effective To"
                 disable="shouldDisable(false)"
+                end-current-effective="true"
                 required="true">
               </date-picker-field>
+              
+              <date-picker-field ng-if="!isCurrentEffectiveDate(employeeMessage)"
+                name="endDate"
+                class="form-group"
+                form="employeeMessageForm"
+                ng-model="employeeMessage.endDate"
+                label="Effective To"
+                disable="shouldDisable(false)"
+                end-current-effective="false"
+                required="true">
+              </date-picker-field>
+              
             </div>
           </div>
         </div>
