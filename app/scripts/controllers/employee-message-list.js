@@ -26,11 +26,11 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     };
 
     $scope.isActiveOrFutureRecord = function(record) {
-      return dateUtility.isAfterToday(record.endDate);
+      return dateUtility.isAfterTodayDatePicker(record.endDate);
     };
 
     $scope.isFutureRecord = function(record) {
-      return dateUtility.isAfterToday(record.startDate);
+      return dateUtility.isAfterTodayDatePicker(record.startDate);
     };
 
     $scope.goToDetailPage = function(action, id) {
