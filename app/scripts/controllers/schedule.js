@@ -30,19 +30,7 @@ angular.module('ts5App')
     ];
     $scope.getScheduleSucceded = false;
     $scope.isCreate = false;
-
-    this.determineMinForStartDate = function() {
-      $scope.minForStartDate = '+1d';
-    };
-
-    this.determineMinForEndDate = function() {
-      $scope.minForEndDate = ($scope.editingItem && $scope.shouldDisableStartDate) ? '0d' : '+1d';
-    };
-
-    this.determineMinDate = function() {
-      $this.determineMinForStartDate();
-      $this.determineMinForEndDate();
-    };
+    $scope.calendarsReady = false;
 
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -237,8 +225,7 @@ angular.module('ts5App')
 
       $scope.shouldDisableStartDate = !(dateUtility.isAfterTodayDatePicker(startDate));
       $scope.shouldDisableEndDate = !(dateUtility.isAfterTodayDatePicker(endDate));
-
-      $this.determineMinDate();
+      $scope.calendarsReady = true;
 
       $scope.schedule = {
         departureTime: response.departureTime,
