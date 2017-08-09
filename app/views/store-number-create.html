@@ -42,6 +42,7 @@
           ng-if="isEditing && fieldDisabled(formData)"
           name="startDate"
           ng-model="formData.startDate"
+          custom-effective="true"
           disable="true"
           label="Effective From"
           required="true">
@@ -55,16 +56,18 @@
           required="true">
         </date-picker-field>
         <date-picker-field class="col-xs-6 col-sm-6"
-            ng-if="!isEditing || !isEndingToday(formData)"
+            ng-if="!isEditing || !isCurrentEffectiveDate(formData)"
             name="endDate"
+            end-current-effective="false"
             min-date="minDate"
             ng-model="formData.endDate"
             label="Effective To"
             required="true">
         </date-picker-field>
       <date-picker-field class="col-xs-6 col-sm-6"
-            ng-if="isEditing && isEndingToday(formData)"
+            ng-if="isEditing && isCurrentEffectiveDate(formData)"
             name="endDate"
+            end-current-effective="true"
             ng-model="formData.endDate"
             label="Effective To!!"
             min-date="today"

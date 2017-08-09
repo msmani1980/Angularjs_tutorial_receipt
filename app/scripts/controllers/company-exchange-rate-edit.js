@@ -134,8 +134,8 @@ angular.module('ts5App')
               denominations: currency.flatDenominations,
               easyPayDenominations: currency.flatEasyPayDenominations,
               exchangeRateType: 1,
-              startDate: dateUtility.tomorrowFormatted(),
-              endDate: dateUtility.tomorrowFormatted()
+              startDate: dateUtility.tomorrowFormattedDatePicker(),
+              endDate: dateUtility.tomorrowFormattedDatePicker()
             });
           }
         });
@@ -212,7 +212,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return !(dateUtility.isAfterToday(exchangeRate.startDate));
+      return !(dateUtility.isAfterTodayDatePicker(exchangeRate.startDate));
     };
 
     $scope.isExchangeRatePartialReadOnly = function(exchangeRate) {
@@ -220,7 +220,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return !(dateUtility.isAfterToday(exchangeRate.endDate) || dateUtility.isToday(exchangeRate.endDate));
+      return !(dateUtility.isAfterTodayDatePicker(exchangeRate.endDate) || dateUtility.isTodayDatePicker(exchangeRate.endDate));
     };
 
     $scope.isExchangeRateNewOne = function(exchangeRate) {
@@ -309,8 +309,8 @@ angular.module('ts5App')
       newExchangeRate.easyPayDenominations = exchangeRate.easyPayDenominations;
       newExchangeRate.exchangeRate = exchangeRate.exchangeRate;
       newExchangeRate.exchangeRateType = exchangeRate.exchangeRateType;
-      newExchangeRate.startDate = dateUtility.tomorrowFormatted();
-      newExchangeRate.endDate = dateUtility.tomorrowFormatted();
+      newExchangeRate.startDate = dateUtility.tomorrowFormattedDatePicker();
+      newExchangeRate.endDate = dateUtility.tomorrowFormattedDatePicker();
       newExchangeRate.isCloned = true;
 
       var newExchangeRates = angular.copy($scope.companyExchangeRates);
