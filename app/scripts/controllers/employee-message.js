@@ -347,7 +347,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     this.init();
     
     $scope.isCurrentEffectiveDate = function (date) {
-      return (date !== null && date.startDate !== undefined) ? (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate)) : false;
+      return (date !== undefined && date.startDate !== undefined && date.startDate !== null) ? (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate)) : false;
     };
       
   });
