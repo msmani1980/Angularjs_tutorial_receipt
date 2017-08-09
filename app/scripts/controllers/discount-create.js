@@ -333,34 +333,42 @@ angular.module('ts5App')
 
     this.serializeLimitationPerShop = function(formData, discount) {
       discount.itemQuantityLimitByShop = formData.itemQtyLimitPerShop;
-      angular.forEach(formData.amountLimitPerShopValue, function(amount, currencyId) {
-        var original = $this.originalLimitsByShopValueForCurrency(currencyId);
-        if (original) {
-          original.amount = amount;
-          discount.limitsByShop.push(original);
-        } else {
-          discount.limitsByShop.push({
-            amount: amount,
-            companyCurrencyId: currencyId
-          });
-        }
-      });
+      if ($scope.formData.isAmountLimitPerShop === true) {
+        angular.forEach(formData.amountLimitPerShopValue, function(amount, currencyId) {
+          var original = $this.originalLimitsByShopValueForCurrency(currencyId);
+          if (original) {
+            original.amount = amount;
+            discount.limitsByShop.push(original);
+          } else {
+            discount.limitsByShop.push({
+              amount: amount,
+              companyCurrencyId: currencyId
+            });
+          }
+        });
+      } else {
+        discount.limitsByShop = [];
+      }
     };
 
     this.serializeLimitationPerTransaction = function(formData, discount) {
       discount.itemQuantityLimitByTransaction = formData.itemQtyLimitPerTransaction;
-      angular.forEach(formData.amountLimitPerTransactionValue, function(amount, currencyId) {
-        var original = $this.originalLimitsByTransactionValueForCurrency(currencyId);
-        if (original) {
-          original.amount = amount;
-          discount.limitsByTransaction.push(original);
-        } else {
-          discount.limitsByTransaction.push({
-            amount: amount,
-            companyCurrencyId: currencyId
-          });
-        }
-      });
+      if ($scope.formData.isAmountLimitPerTransaction === true) {
+        angular.forEach(formData.amountLimitPerTransactionValue, function(amount, currencyId) {
+          var original = $this.originalLimitsByTransactionValueForCurrency(currencyId);
+          if (original) {
+            original.amount = amount;
+            discount.limitsByTransaction.push(original);
+          } else {
+            discount.limitsByTransaction.push({
+              amount: amount,
+              companyCurrencyId: currencyId
+            });
+          }
+        });
+      } else {
+        discount.limitsByTransaction = [];
+      }
     };
 
     this.serializeLimitationPerSeat = function(formData, discount) {
