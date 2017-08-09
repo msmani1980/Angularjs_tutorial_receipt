@@ -170,6 +170,7 @@
           <div class="col-xs-6 col-sm-4">
             <date-picker-field
               name="startDate"
+              custom-effective="true"
               class="form-group"
               ng-model="search.startDate"
               label="Effective From">
@@ -178,6 +179,7 @@
           <div class="col-xs-6 col-sm-4">
             <date-picker-field
               name="endDate"
+              custom-effective="true"
               class="form-group"
               ng-model="search.endDate"
               label="Effective To">
@@ -280,6 +282,7 @@
             <span ng-hide="isSelectedToEdit(relationship)">{{ relationship.endDate }}</span>
             <date-picker-field
               name="itemExciseDutyCreateForm"
+              end-current-effective="isCurrentEffectiveDate(relationship)"
               class="form-group"
               min-date="minDate"
               form="exciseDutyCreateForm"
