@@ -31,14 +31,25 @@ angular.module('ts5App')
     $scope.addRestrictedItemsNumber = 1;
 
     this.getCleanFormData = function() {
-      return {
-        isRestriction: false,
-        restrictedCategories: [],
-        restrictedItems: [],
-        amountDiscountValue: {},
-        amountLimitPerShopValue: {},
-        amountLimitPerTransactionValue: {}
-      };
+      var path = $location.path();
+      if (path.search('/discounts/edit') !== -1 && $routeParams.id) {
+        return {
+          restrictedCategories: [],
+          restrictedItems: [],
+          amountDiscountValue: {},
+          amountLimitPerShopValue: {},
+          amountLimitPerTransactionValue: {}
+        };
+      } else {
+        return {
+          isRestriction: false,
+          restrictedCategories: [],
+          restrictedItems: [],
+          amountDiscountValue: {},
+          amountLimitPerShopValue: {},
+          amountLimitPerTransactionValue: {}
+        };
+      }
     };
 
     $scope.formData = $this.getCleanFormData();
@@ -522,7 +533,7 @@ angular.module('ts5App')
     this.checkIfEffectiveEndIsDisabled = function(discountData) {
       $scope.effectiveEndIsDisabled = dateUtility.isYesterdayOrEarlierDatePicker(new Date(discountData.endDate));
     };
-    
+
     $scope.isDisabled = function() {
       return ($scope.viewOnly || $scope.discountIsActive);
     };
