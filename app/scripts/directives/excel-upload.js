@@ -81,6 +81,8 @@ angular.module('ts5App')
         $scope.templateName = 'menuUpload';
       } else if ($scope.type === 'postTrip') {
         $scope.templateName = 'FileUpload-PostTripManagement';
+      } else if ($scope.type === 'schedule') {
+        $scope.templateName = 'scheduleUpload';
       }
     }
 
