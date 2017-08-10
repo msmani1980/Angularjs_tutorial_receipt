@@ -77,6 +77,20 @@
         </div>
       </div>
     </div>
+    
+    <div class="row">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
+        <label>Route <span ng-show="!isActionState('end-instance')">*</span></label>
+      </div>
+      <div class="col-xs-12 col-sm-8">
+        <div class="form-group">
+          <ui-select name="route" required ng-model="formData.scheduleId" theme="bootstrap" ng-disabled="isActionState('end-instance')" id="route">
+            <ui-select-match placeholder="Select a Route">{{ $select.selected.departure + ' - ' + $select.selected.arrival}}</ui-select-match>
+            <ui-select-choices repeat="route in routesList" ui-lock-choice="isDisabled()">{{route.departure + ' - ' + route.arrival}}</ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+    </div>
 
     <div class="row" ng-if="isActionState('replenish')">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
