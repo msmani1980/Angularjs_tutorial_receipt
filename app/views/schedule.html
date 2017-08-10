@@ -181,7 +181,7 @@
 
           <div class="col-xs-12 col-sm-2">
             <div class="form-group">
-              <label for="seat-config">Seat config</label>
+              <label for="seat-config">Seat Config</label>
               <input ng-if="isDisabled() && getScheduleSucceded"
                      ng-disabled="isDisabled()"
                      ng-model="schedule.seatConfigurationCode"
@@ -254,7 +254,6 @@
                       ng-options="unit.id as unit.unitName for unit in distanceUnits"
                       ng-disabled="isDisabled()"
                       id="trip-distance-unit">
-                <option selected="selected" value>Unit</option>
               </select>
             </div>
           </div>
