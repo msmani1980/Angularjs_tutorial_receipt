@@ -120,6 +120,7 @@ angular.module('ts5App')
 
     this.setRetailItemsList = function(data) {
       $scope.retailItemsList = data.masterItems;
+      $scope.filteredRetailItemsList[0] = $scope.retailItemsList;
     };
 
     this.setDefaultRetailItems = function() {
@@ -138,17 +139,12 @@ angular.module('ts5App')
       $this.setUIReady();
     };
 
-    $scope.reloadItemListOnDateChange = function() {
-      $this.getRetailItemsList();
-      $scope.filteredRetailItemsList[0] = $scope.retailItemsList;
-    };
-
     $scope.$watch('formData.startDate', function () {
-      $scope.reloadItemListOnDateChange();
+      $this.getRetailItemsList();
     }, true);
 
     $scope.$watch('formData.endDate', function () {
-      $scope.reloadItemListOnDateChange();
+      $this.getRetailItemsList();
     }, true);
 
     this.getDiscount = function(id) {
