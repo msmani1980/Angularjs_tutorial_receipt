@@ -46,6 +46,7 @@ angular.module('ts5App')
       $scope.viewName = 'Create Schedule';
       $this.determineMinDate();
 
+      $scope.calendarsReady = true;
       $scope.schedule.tripDistanceUnitId = 1;
     };
 
