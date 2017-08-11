@@ -33,13 +33,21 @@ angular.module('ts5App')
     $scope.isViewOnly = function() {
       return ($routeParams.state === 'view');
     };
+    
+    $scope.isCreate = function() {
+      return ($routeParams.state === 'create');
+    };
+    
+    $scope.isEdit = function() {
+      return ($routeParams.state === 'edit');
+    };
 
     $scope.isCommissionReadOnly = function() {
       if (angular.isUndefined($scope.commission)) {
         return false;
       }
 
-      if ($routeParams.state === 'create') {
+      if ($routeParams.state === 'create' || (angular.isUndefined($scope.commission))) {
         return false;
       }
 
@@ -235,5 +243,8 @@ angular.module('ts5App')
       var apiCall = $scope.commission.id ? 'updateCommission' : 'createCommission';
       employeeCommissionFactory[apiCall](payload).then(requestSuccessHandler, requestErrorHandler);
     };
-
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
+    };
   });

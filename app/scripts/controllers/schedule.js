@@ -44,6 +44,8 @@ angular.module('ts5App')
       $scope.readOnly = false;
       $scope.isCreate = true;
       $scope.viewName = 'Create Schedule';
+
+      $scope.schedule.tripDistanceUnitId = 1;
     };
 
     this.viewInit = function() {

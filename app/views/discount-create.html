@@ -84,7 +84,7 @@
               </div>
               <div class="col-xs-12 col-sm-6">
                 <fieldset>
-                  <date-picker-field ng-if="minDate"  disable="viewOnly || itemIsInactive" form="form"
+                  <date-picker-field ng-if="minDate"  disable="effectiveEndIsDisabled" form="form"
                                      name="EffectiveTo" min-date="minDate" label="Effective To" required="true" end-current-effective="isCurrentEffectiveDate(formData)"
                                      ng-model="formData.endDate">
                   </date-picker-field>
@@ -227,8 +227,8 @@
         <div class="col-xs-12 col-sm-12">
           <label>Restrictions</label>
           <div class="form-group">
-            <label><input name="isRestriction" ng-model="formData.isRestriction" data-ng-value="true"  type="radio" ng-disabled="isDisabled()" /> Yes</label>
-            <label><input name="isRestriction" ng-model="formData.isRestriction" data-ng-value="false" type="radio" ng-disabled="isDisabled()" /> No</label>
+            <label><input name="isRestriction" ng-model="formData.isRestriction" ng-value="true"  type="radio" ng-disabled="isDisabled()" /> Yes</label>
+            <label><input name="isRestriction" ng-model="formData.isRestriction" ng-value="false" type="radio" ng-disabled="isDisabled()" /> No</label>
           </div>
         </div>
       </div>

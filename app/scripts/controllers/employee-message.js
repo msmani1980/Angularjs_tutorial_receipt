@@ -136,7 +136,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         return true;
       }
 
-      var isRecordActive = dateUtility.isTodayOrEarlier($scope.employeeMessage.startDate);
+      var isRecordActive = dateUtility.isTodayOrEarlierDatePicker($scope.employeeMessage.startDate);
       return ($routeParams.action === 'edit' && isRecordActive);
     };
 
@@ -263,7 +263,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
     this.getEmployeeMessageSuccess = function(dataFromAPI) {
       $scope.employeeMessage = $this.formatEmployeeMessageForApp(dataFromAPI);
-      var isRecordActiveOrFuture = dateUtility.isAfterToday($scope.employeeMessage.endDate);
+      var isRecordActiveOrFuture = dateUtility.isAfterTodayDatePicker($scope.employeeMessage.endDate);
       if (isRecordActiveOrFuture) {
         $this.filterListsByName('all');
       } else {
@@ -345,5 +345,9 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     this.init();
-
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (date !== undefined && date.startDate !== undefined && date.startDate !== null) ? (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate)) : false;
+    };
+      
   });

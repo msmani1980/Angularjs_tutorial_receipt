@@ -30,25 +30,25 @@
           </button>
           <ul class="dropdown-menu">
             <li ng-click="$event.stopPropagation();">
-              <a ng-click="toggleColumnView('storeInstanceId')">
+              <a ng-click="toggleColumnView('blockTime')">
                 <input ng-click="$event.stopPropagation();" type="checkbox"
                        ng-model="displayColumns.blockTime">
                 Block Time</a>
             </li>
             <li ng-click="$event.stopPropagation();">
-              <a ng-click="toggleColumnView('receivedStation')">
+              <a ng-click="toggleColumnView('groundTime')">
                 <input ng-click="$event.stopPropagation();" type="checkbox"
                        ng-model="displayColumns.groundTime">
                 Ground Time</a>
             </li>
             <li ng-click="$event.stopPropagation();">
-              <a ng-click="toggleColumnView('receivedStation')">
+              <a ng-click="toggleColumnView('previousFlight')">
                 <input ng-click="$event.stopPropagation();" type="checkbox"
-                       ng-model="displayColumns.nextFlight">
-                Next Flight</a>
+                       ng-model="displayColumns.previousFlight">
+                Previous Flight</a>
             </li>
             <li ng-click="$event.stopPropagation();">
-              <a ng-click="toggleColumnView('receivedStation')">
+              <a ng-click="toggleColumnView('nextFlight')">
                 <input ng-click="$event.stopPropagation();" type="checkbox"
                        ng-model="displayColumns.nextFlight">
                 Next Flight</a>
@@ -121,14 +121,14 @@
 
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
-                <label for="departure-time-from">Departure Time From:</label>
+                <label for="departure-time-from">Departure Time From</label>
                 <input ng-model="search.departureTimeFrom" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="departure-time-from">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
-                <label for="departure-time-to">Departure Time To:</label>
+                <label for="departure-time-to">Departure Time To</label>
                 <input ng-model="search.departureTimeTo" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="departure-time-to">
               </div>
             </div>
@@ -147,14 +147,14 @@
 
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
-                <label for="arrival-time-from">Arrival Time From:</label>
+                <label for="arrival-time-from">Arrival Time From</label>
                 <input ng-model="search.arrivalTimeFrom" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="arrival-time-from">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
-                <label for="arrival-time-to">Arrival Time To:</label>
+                <label for="arrival-time-to">Arrival Time To</label>
                 <input ng-model="search.arrivalTimeTo" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="arrival-time-to">
               </div>
             </div>
