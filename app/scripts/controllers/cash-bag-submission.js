@@ -19,7 +19,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     this.isSearching = false;
 
     function initializeData() {
-      $scope.submissionDate = dateUtility.nowFormatted();
+      $scope.submissionDate = dateUtility.nowFormattedDatePicker();
       $scope.cashBagListToSubmit = [];
       $scope.bankReferenceNumbers = [];
       $scope.cashBagNumberList = [];

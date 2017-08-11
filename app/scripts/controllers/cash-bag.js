@@ -22,7 +22,7 @@ angular.module('ts5App')
     $scope.readOnly = true;
     $scope.displayError = false;
     $scope.displayedScheduleDate = '';
-    $scope.displayedCashierDate = dateUtility.nowFormatted();
+    $scope.displayedCashierDate = dateUtility.nowFormattedDatePicker();
     $scope.saveButtonName = '';
     $scope.state = '';
     delete $localStorage.isListFromEdit;
@@ -408,7 +408,7 @@ angular.module('ts5App')
             dailyExchangeByIdResponseHandler)
         );
       } else {
-        var dailyExchangeDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        var dailyExchangeDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
         _promises.push(
           cashBagFactory.getDailyExchangeRates(_companyId, dailyExchangeDate).then(dailyExchangeResponseHandler)
         );
@@ -437,7 +437,7 @@ angular.module('ts5App')
 
     function getCompanyPreferences() {
       var payload = {
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
       };
 
       _promises.push(
