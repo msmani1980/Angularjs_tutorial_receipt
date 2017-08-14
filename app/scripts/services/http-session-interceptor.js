@@ -23,7 +23,6 @@ angular.module('ts5App')
       '/company-exchange-rate-edit/*',
       '/company-reason-code/*',
       '/company-reason-type-subscribe/*',
-      '/company-relationship-list/*',
       '/currency-edit/*',
       '/discounts/*',
       '/employee-commission-list/*',
