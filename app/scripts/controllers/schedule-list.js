@@ -191,6 +191,14 @@ angular.module('ts5App')
       $scope.loadSchedules();
     };
 
+    $scope.isScheduleEditable = function(schedule) {
+      if (angular.isUndefined(schedule)) {
+        return false;
+      }
+
+      return dateUtility.isAfterToday(schedule.endDate);
+    };
+
     $scope.removeRecord = function(schedule) {
       if (!$scope.schedules || $scope.schedules.length <= 0) {
         $this.deleteScheduleFailure();
