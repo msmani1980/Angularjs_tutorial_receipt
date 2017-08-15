@@ -605,6 +605,14 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function(formData) {
+      var restrictionErrors = $this.validateRestrictions();
+      if (restrictionErrors.data.length > 0) {
+        $scope.errorResponse = angular.copy(restrictionErrors);
+        $scope.displayError = true;
+
+        return;
+      }
+
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm()) {
         var itemData = angular.copy(formData);
@@ -612,6 +620,40 @@ angular.module('ts5App')
         var action = $scope.editingDiscount ? 'updateItem' : 'createItem';
         $this[action](payload);
       }
+    };
+
+    this.validateRestrictions = function() {
+      var errorData = { data: [] };
+
+      if ($scope.formData.isRestriction) {
+        if ($scope.formData.restrictedCategories.length <= 0 && $scope.formData.restrictedItems.length <= 0) {
+          errorData.data.push(
+            {
+              field: 'Restrictions',
+              code: 'custom',
+              value: 'Either Item Categories or Retail Items has to be defined when Restrictions are enabled'
+            }
+          );
+
+          return errorData;
+        }
+
+        if ($scope.formData.restrictedItems) {
+          $scope.formData.restrictedItems.forEach(function (item, i) {
+            if (typeof item.id === 'undefined' || item.id === '' || item.id === null) {
+              errorData.data.push(
+                {
+                  field: 'Restrictions > Retail Item #' + (i + 1),
+                  code: 'custom',
+                  value: 'When Retail item is then must be selected'
+                }
+              );
+            }
+          });
+        }
+      }
+
+      return errorData;
     };
 
     this.init = function() {
