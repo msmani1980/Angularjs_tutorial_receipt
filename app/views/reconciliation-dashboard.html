@@ -281,6 +281,7 @@
 
       <div class="modal-body">
         <p>You are about to perform the following action: <strong>{{actionToExecute}}</strong></p>
+        <div ng-if="actionToExecute !== 'Pay Commission'">
         <p>The following Stores will be updated:<p>
         <ul>
           <li ng-repeat="instance in instancesForActionExecution">
@@ -289,6 +290,7 @@
             <b>Dispatched Station: </b>{{instance.dispatchStationCode}}
           </li>
         </ul>
+        </div>
       </div>
 
       <div class="modal-footer">
