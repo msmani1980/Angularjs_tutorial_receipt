@@ -224,11 +224,16 @@ angular.module('ts5App')
       $scope.closeMoveCashBagModal();
     }
 
+    $scope.showReallocateCashBag = function () {
+      angular.element('.reallocate-cashbag-warning-modal').modal('show');
+    };
+
     $scope.reallocateCashBag = function () {
+      angular.element('.reallocate-cashbag-warning-modal').modal('hide');
       var cashBagId = $scope.cashBagToMove.id;
       var storeInstanceId = $scope.targetRecordForMoveCashBag.id;
-
       cashBagFactory.reallocateCashBag(cashBagId, storeInstanceId).then(moveCashBagSuccess, moveCashBagError);
+      resetAllModals();
     };
 
     $scope.showMergeCashBag = function () {
@@ -244,6 +249,25 @@ angular.module('ts5App')
     };
 
     $scope.canMerge = function (cashBag) {
+      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.flightSectors)) {
+        var isSchedule = false;
+        if (cashBag.flightSectors !== null) {
+          cashBag.flightSectors.forEach(function (sector) {
+            if (!sector.isPosttrip) {
+              isSchedule = true;
+            }
+          });
+        }  
+
+        if (isSchedule) {
+          return false;
+        }
+      }
+
+      return (cashBag && !cashBag.isManual && !cashBag.isVerified);
+    };
+
+    $scope.canReallocate = function (cashBag) {
       if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.flightSectors)) {
         var isSchedule = false;
         if (cashBag.flightSectors !== null) {
@@ -506,8 +530,8 @@ angular.module('ts5App')
     function isStoreInstanceEligibleForReallocation(storeInstance) {
       var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');
-
-      return (storeInstance.statusId === inboundedStatus.id || storeInstance.statusId === discrepanciesStatus.id) && storeInstance.id !== parseInt($routeParams.storeInstanceId);
+      var result = (storeInstance.statusId === inboundedStatus.id || storeInstance.statusId === discrepanciesStatus.id) && storeInstance.id !== parseInt($routeParams.storeInstanceId);
+      return result;
     }
 
     function normalizeReallocateSearchResults (dataFromAPI) {
