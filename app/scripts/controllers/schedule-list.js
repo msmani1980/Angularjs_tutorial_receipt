@@ -63,7 +63,7 @@ angular.module('ts5App')
     };
 
     $scope.showDeleteButton = function(dateString) {
-      return dateUtility.isAfterToday(dateString);
+      return dateUtility.isAfterTodayDatePicker(dateString);
     };
 
     $scope.clearSearchForm = function() {
@@ -189,6 +189,14 @@ angular.module('ts5App')
         offset: 0
       };
       $scope.loadSchedules();
+    };
+
+    $scope.isScheduleEditable = function(schedule) {
+      if (angular.isUndefined(schedule)) {
+        return false;
+      }
+
+      return dateUtility.isAfterToday(schedule.endDate);
     };
 
     $scope.removeRecord = function(schedule) {
