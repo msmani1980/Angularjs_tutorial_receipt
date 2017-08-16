@@ -22,7 +22,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     $scope.routesList = [];
     $scope.routesListCopy = [];
     $scope.formData = {
-      scheduleDate: dateUtility.yesterdayFormattedDatePicker(),
+      scheduleDate: dateUtility.nowFormattedDatePicker(),
       menus: []
     };
 

@@ -342,7 +342,7 @@ angular.module('ts5App')
     });
     
     $scope.isCurrentEffectiveDate = function (menuDate) {
-      return (dateUtility.isTodayOrEarlierDatePicker(menuDate.startDate) && dateUtility.isAfterTodayDatePicker(menuDate.endDate));
+      return (dateUtility.isTodayOrEarlierDatePicker(menuDate.startDate) && (dateUtility.isAfterTodayDatePicker(menuDate.endDate) || dateUtility.isTodayDatePicker(menuDate.endDate)));
     };
     
   });
