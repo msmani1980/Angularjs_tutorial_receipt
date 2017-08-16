@@ -87,7 +87,7 @@
                 <option value="none"></option>
                 <option value="merge" ng-if="canMerge(cashBagToMove)">Merge with another Cash Bag Number</option>
                 <option value="editCashBagNumber" ng-if="canEdit(cashBagToMove)">Edit Cash Bag Number</option>
-<!--                 <option value="reallocate">Reallocate to a Store Instance</option> -->
+                <option value="reallocate" ng-if="canReallocate(cashBagToMove)">Reallocate to a Store Instance</option> 
               </select>
             </div>
           </div>
@@ -212,7 +212,7 @@
           </table>
         </div>
         <div class="modal-footer">
-          <button ng-if="moveCashBagAction==='reallocate'" type="button" class="btn btn-success" data-dismiss="modal" ng-click="reallocateCashBag()" ng-show="targetRecordForMoveCashBag">
+          <button ng-if="moveCashBagAction==='reallocate'" type="button" class="btn btn-success" data-dismiss="modal" ng-click="showReallocateCashBag()" ng-show="targetRecordForMoveCashBag">
             <i class="fa fa-check"></i> Confirm
           </button>
           <button ng-if="moveCashBagAction==='merge'" type="button" class="btn btn-success" data-dismiss="modal" ng-click="showMergeCashBag()" ng-show="targetRecordForMoveCashBag">
@@ -224,6 +224,26 @@
           <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeMoveCashBagModal()">
             Cancel
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade reallocate-cashbag-warning-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Are you sure?</h4>
+        </div>
+
+        <div class="modal-body">
+          <p> Are you sure you want to reallocate {{cashBagToMove.cashBag}} currently belonging to {{ storeInstance.storeNumber }}, {{storeInstance.scheduleDate}} to Store Number {{ targetRecordForMoveCashBag.storeNumber }}, {{targetRecordForMoveCashBag.scheduleDate}} ?</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" ng-click="reallocateCashBag()">Continue</button>
+          <button type="button" class="btn btn-default" ng-click="closeMoveCashBagModal()"  data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
