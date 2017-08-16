@@ -241,8 +241,6 @@ angular.module('ts5App')
     };
     
     $scope.isFutureEffectiveDate = function (date) {
-    	console.log(date.startDate+'================='+dateUtility.isAfterTodayDatePicker(date.startDate));
-    	console.log(date.endDate+'================='+dateUtility.isAfterTodayDatePicker(date.endDate));
       return (dateUtility.isAfterTodayDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate)));
     };
   });
