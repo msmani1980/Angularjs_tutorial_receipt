@@ -645,7 +645,7 @@ angular.module('ts5App')
                 {
                   field: 'Restrictions > Retail Item #' + (i + 1),
                   code: 'custom',
-                  value: 'When Retail item is then must be selected'
+                  value: 'Retail Item must be selected'
                 }
               );
             }
