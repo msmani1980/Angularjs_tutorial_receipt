@@ -96,7 +96,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       var sortedVarianceList = lodash.sortByOrder(varianceList, ['startDate', 'id'], ['desc', 'asc']);
       var allowedVarianceList = lodash.filter(sortedVarianceList, function(variance) {
-        return dateUtility.isTodayOrEarlier(dateUtility.formatDateForApp(variance.startDate));
+        return dateUtility.isTodayOrEarlierDatePicker(dateUtility.formatDateForApp(variance.startDate));
       });
 
       if (allowedVarianceList.length && allowedVarianceList[0].percentage !== null) {
@@ -125,7 +125,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.getActiveCompanyPreferences = function () {
       var payload = {
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
       };
       storeInstancePackingFactory.getCompanyPreferences(payload).then($this.setCompanyPreferenceForInboundQuantity, handleResponseError);
     };
