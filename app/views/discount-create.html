@@ -7,7 +7,7 @@
             <h2 class="view-name"> {{ viewName }} </h2>
           </div>
           <div class="col-xs-6 text-right">
-            <fieldset ng-hide="viewOnly">
+            <fieldset >
               <button class="btn btn-default" ng-click="leaveView('discounts')">
                 <span class="fa fa-remove" aria-hidden="true"></span>
                 <span class="hidden-xs">Cancel</span>
@@ -76,16 +76,27 @@
             <div class="row">
               <div class="col-xs-12 col-sm-6">
                 <fieldset>
-
-                  <date-picker-field  ng-if="minDate" disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From"
-                                     min-date="minDate" required="true" ng-model="formData.startDate">
+                  <date-picker-field ng-if="calendarsReady"
+                                     disable="isDisabled()"
+                                     form="form"
+                                     name="EffectiveFrom"
+                                     label="Effective From"
+                                     disable-past="true"
+                                     required="true"
+                                     ng-model="formData.startDate">
                   </date-picker-field>
                 </fieldset>
               </div>
               <div class="col-xs-12 col-sm-6">
                 <fieldset>
-                  <date-picker-field ng-if="minDate"  disable="effectiveEndIsDisabled" form="form"
-                                     name="EffectiveTo" min-date="minDate" label="Effective To" required="true" end-current-effective="isCurrentEffectiveDate(formData)"
+                  <date-picker-field ng-if="calendarsReady"
+                                     disable="isDisabledForEndDate()"
+                                     form="form"
+                                     name="EffectiveTo"
+                                     label="Effective To"
+                                     disable-past="true"
+                                     end-current-effective="editingDiscount && shouldDisableStartDate"
+                                     required="true"
                                      ng-model="formData.endDate">
                   </date-picker-field>
                 </fieldset>
