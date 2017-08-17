@@ -23,6 +23,7 @@ angular.module('ts5App')
     $scope.schedules = [];
     $scope.stationList = [];
     $scope.loadingBarVisible = false;
+    $scope.isSearch = false;
     $scope.daysOfOperation = [
       { id: 1, name: 'Monday' },
       { id: 2, name: 'Tuesday' },
@@ -67,6 +68,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchForm = function() {
+      $scope.isSearch = false;
       $scope.search = {};
       $scope.multiSelectedValues = {};
       $scope.schedules = [];
@@ -151,7 +153,7 @@ angular.module('ts5App')
         offset: $this.meta.offset
       });
 
-      payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
 
       scheduleFactory.getSchedules(payload).then($this.getSchedulesSuccess);
@@ -169,7 +171,14 @@ angular.module('ts5App')
         limit: 100,
         offset: 0
       };
+
+      $scope.isSearch = true;
+
       $scope.loadSchedules();
+    };
+
+    this.constructStartDate = function () {
+      return ($scope.isSearch) ? null : dateUtility.formatDateForAPI(dateUtility.nowFormatted());
     };
 
     this.showToastMessage = function(className, type, message) {
@@ -189,6 +198,14 @@ angular.module('ts5App')
         offset: 0
       };
       $scope.loadSchedules();
+    };
+
+    $scope.isScheduleEditable = function(schedule) {
+      if (angular.isUndefined(schedule)) {
+        return false;
+      }
+
+      return dateUtility.isAfterToday(schedule.endDate);
     };
 
     $scope.removeRecord = function(schedule) {
