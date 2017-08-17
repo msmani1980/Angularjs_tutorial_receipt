@@ -920,7 +920,7 @@ angular.module('ts5App')
     function isCompanyUsingCash () {
       var cashPreference = lodash.where($scope.companyPreferences, { choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless' })[0];
       if (cashPreference && cashPreference.hasOwnProperty('startDate')) {
-        var yesterdayOrEarlier = dateUtility.isTodayOrEarlier(dateUtility.formatDateForApp(cashPreference.startDate, 'YYYY-MM-DD'));
+        var yesterdayOrEarlier = dateUtility.isTodayOrEarlierDatePicker(dateUtility.formatDateForApp(cashPreference.startDate, 'YYYY-MM-DD'));
 
         return !(cashPreference.isSelected === true && yesterdayOrEarlier);
       }
@@ -1552,7 +1552,7 @@ angular.module('ts5App')
         reconciliationFactory.getCashBagManualData('items', payloadForManualData),
         reconciliationFactory.getCashBagManualData('promotions', payloadForManualData),
         reconciliationFactory.getCashBagManualData('discounts', payloadForManualData),
-        storeInstanceAmendFactory.getMasterItemList({ startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) })
+        storeInstanceAmendFactory.getMasterItemList({ startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()) })
       ];
 
       $q.all(promises).then(initDependenciesSuccess, handleResponseError);
