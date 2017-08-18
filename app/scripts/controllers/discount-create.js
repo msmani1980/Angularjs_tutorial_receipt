@@ -162,6 +162,7 @@ angular.module('ts5App')
       if ($scope.editingDiscount) {
         $this.getDiscount($routeParams.id);
       } else {
+        $scope.calendarsReady = true;
         $this.setUIReady();
       }
     };
