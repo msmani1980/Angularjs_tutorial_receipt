@@ -24,8 +24,7 @@ angular.module('ts5App')
     function checkForDailyExchangeRate() {
       checkDeferred = $q.defer();
       var companyId = globalMenuService.getCompanyData().chCompany.companyId;
-      var dailyExchangeDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
-
+      var dailyExchangeDate = dateUtility.formatDateForAPI(Date.parse(dateUtility.nowFormattedDatePicker()));
       cashBagFactory.getDailyExchangeRates(companyId, dailyExchangeDate).then(getExchangeRateHandler, getExchangeRateHandler);
       return checkDeferred.promise;
     }

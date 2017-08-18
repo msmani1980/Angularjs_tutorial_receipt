@@ -70,7 +70,7 @@ angular.module('ts5App')
       '/rsvr/api/cashbags/cash/',
       '/rsvr/api/cashbag-[a-z]+(/[0-9]*)?',
       '/rsvr/api/dispatch/store-instances/[0-9]*/status/11',
-      '/rsvr/api/companies/[0-9]*/relationships',
+      '/api/companies/[0-9]*/relationships',
       '/rsvr/api/company-currency-globals',
       '/rsvr/api/companies/stores',
       '/rsvr/api/companies/time-configuration',
