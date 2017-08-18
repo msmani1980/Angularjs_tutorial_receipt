@@ -92,8 +92,16 @@
 								min-date="'+1d'" required="true" ng-model="formData.startDate"></date-picker-field>
 						</div> 
 						<div class="col-xs-12 col-sm-6">
-							<date-picker-field disable="viewOnly || itemIsInactive" form="form" name="EffectiveTo"
-								min-date="( editingItem ? '0d' : '+1d')" label="Effective To" required="true" end-current-effective="editingItem && !viewOnly && isDisabled()" 
+							<date-picker-field ng-if="editingItem && !viewOnly && !isFutureEffectiveDate(formData)"
+							    disable="viewOnly || itemIsInactive" form="form" name="EffectiveTo"
+								label="Effective To" required="true" 
+								end-current-effective="true" 
+								ng-model="formData.endDate" ></date-picker-field>
+								
+							<date-picker-field ng-if="!editingItem || viewOnly || isFutureEffectiveDate(formData)"
+							    disable="viewOnly || itemIsInactive" form="form" name="EffectiveTo"
+								label="Effective To" required="true" 
+								end-current-effective="false" 
 								ng-model="formData.endDate" ></date-picker-field>
 						</div>
 	        </div>
