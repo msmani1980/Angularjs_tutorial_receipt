@@ -28,7 +28,7 @@
                         <div class="col-md-3 col-sm-6">
                             <div class="form-group">
                                 <label for="discount-type">Discount Type</label>
-                                <select ng-model="search.discountTypeId" class="form-control" id="discount-type">
+                                <select ng-model="search.discountTypeId" class="form-control" id="discount-type" ng-change="searchDiscounts()">
                                     <option value="{{type.id}}" ng-repeat="type in discountTypes | unique: 'id'">{{ type.globalDiscountTypeName }}</option>
                                 </select>
                             </div>
