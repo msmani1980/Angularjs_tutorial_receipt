@@ -178,7 +178,7 @@ angular.module('ts5App')
     };
 
     this.constructStartDate = function () {
-      return ($scope.isSearch) ? null : dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      return ($scope.isSearch) ? null : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
     };
 
     this.showToastMessage = function(className, type, message) {
