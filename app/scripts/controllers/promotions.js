@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionsCtrl', function ($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility) {
+  .controller('PromotionsCtrl', function ($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility, $timeout) {
 
     $scope.readOnly = true;
     $scope.editing = false;
@@ -126,7 +126,9 @@ angular.module('ts5App')
     }
 
     function hideLoadingModal() {
-      angular.element('#loading').modal('hide');
+      $timeout(function() {
+        angular.element('#loading').modal('hide');
+      }, 3000);
     }
 
     function getCompanyPromotionCategoryId(promotionCategoryData) {
