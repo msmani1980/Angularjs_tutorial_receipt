@@ -177,5 +177,13 @@ angular.module('ts5App')
     this.getSalesCategoriesList();
 
     $scope.loadItems = $this.getItemsList;
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
+    };
+  
+    $scope.isFutureEffectiveDate = function (date) {
+      return (dateUtility.isAfterTodayDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate)));
+    };
 
   });
