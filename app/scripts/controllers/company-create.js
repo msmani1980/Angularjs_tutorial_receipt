@@ -193,7 +193,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         parentCompanyId: $this.setString(company.parentCompanyId),
         roundingOptionId: $this.setString(company.roundingOptionId),
         taxes: company.taxes ? company.taxes : null,
-        timezone: $this.setString(company.timezone)
+        timezone: company.timezone !== null ? company.timezone.toString() : null
       };
 
     };
