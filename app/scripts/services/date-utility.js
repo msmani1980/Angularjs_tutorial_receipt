@@ -174,25 +174,18 @@ angular.module('ts5App')
 
     this.getOperationalDay = function (date, currentDateFormat) {
       currentDateFormat = currentDateFormat || this.getDateFormatForApp();
-      var formattedDate = this.formatDate(date, currentDateFormat, 'MM/DD/YYY');
+      var formattedDate = this.formatDate(date, currentDateFormat, 'MM/DD/YYYY');
       date = new Date(formattedDate);
       return date.getDay();
     };
-    
-    this.getOperationalDayDatePicker = function (date, currentDateFormat) {
-      currentDateFormat = currentDateFormat || this.getDateFormatForApp();
-      var formattedDate = this.formatDatePicker(date, currentDateFormat, 'MM/DD/YYY');
-      date = new Date(formattedDate);
-      return date.getDay();
-    };
-    
+
     this.nowFormattedDatePicker = function (formatTo) {
       formatTo = formatTo || this.getDateFormatForApp();
       var formatFrom = 'x';
       var now = this.now();
       return this.formatDatePicker(now, formatFrom, formatTo);
     };
-    
+
     this.yesterdayFormattedDatePicker = function (formatTo) {
       var formatFrom = 'x';
       formatTo = formatTo || this.getDateFormatForApp();
@@ -200,21 +193,21 @@ angular.module('ts5App')
       var yesterday = today.setDate(today.getDate() - 1);
       return this.formatDatePicker(yesterday, formatFrom, formatTo);
     };
-      
+
     this.tomorrowFormattedDatePicker = function (formatTo) {
       var formatFrom = 'x';
       formatTo = formatTo || this.getDateFormatForApp();
       var tomorrow = this.tomorrow();
       return this.formatDatePicker(tomorrow, formatFrom, formatTo);
     };
-    
+
     this.formatDatePicker = function (dateString, formatFrom, formatTo) {
       var companyTimeOffset = $localStorage.companyObject !== undefined && $localStorage.companyObject !== null ? $localStorage.companyObject.userCompanyTimezoneOffset || 0 : 0;
       return moment(dateString, formatFrom).utcOffset('"' + companyTimeOffset + '"').format(formatTo).toString();
     };
-    
+
     this.isTodayDatePicker = function (date) {
-      return moment(date, this.getDateFormatForApp()).isSame(moment(this.nowFormattedDatePicker(), this.getDateFormatForApp()), 'day');    
+      return moment(date, this.getDateFormatForApp()).isSame(moment(this.nowFormattedDatePicker(), this.getDateFormatForApp()), 'day');
     };
 
     this.isTodayOrEarlierDatePicker = function (date) {
@@ -236,14 +229,14 @@ angular.module('ts5App')
     this.isAfterOrEqualDatePicker = function (baseDate, dateToCompare) {
       return moment(baseDate, this.getDateFormatForApp()).isSameOrAfter(moment(dateToCompare, this.getDateFormatForApp()), 'day');
     };
-    
+
     this.dateNumDaysAfterTodayFormattedDatePicker = function (numDays, formatTo) {
       var formatFrom = 'x';
       formatTo = formatTo || this.getDateFormatForApp();
       var newDate = this.dateNumDaysAfterToday(numDays);
       return this.formatDatePicker(newDate, formatFrom, formatTo);
     };
-    
+
     this.formatTimezoneOffset = function (timezoneOffset) {
       return (timezoneOffset !== undefined) ? (moment().tz(timezoneOffset).utcOffset()) / 60 : 0;
     };
