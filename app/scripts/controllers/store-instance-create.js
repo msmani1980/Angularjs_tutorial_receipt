@@ -187,13 +187,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getFormattedOperationalDaysPayload = function () {
       // Monday -> Sunday = 1 -> 7
-      return dateUtility.getOperationalDayDatePicker($scope.formData.scheduleDate) || 7;
+      return dateUtility.getOperationalDay($scope.formData.scheduleDate) || 7;
     };
 
     this.setCatererStationList = function (dataFromAPI) {
       $scope.cateringStationList = angular.copy(dataFromAPI.response);
       if ($scope.cateringStationList.length === 1) {
-        $scope.formData.cateringStationId = $scope.cateringStationList[0].id;  
+        $scope.formData.cateringStationId = $scope.cateringStationList[0].id;
       }
     };
 
@@ -201,7 +201,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var query = this.getFormattedDatesPayload();
       return storeInstanceFactory.getCatererStationList(query).then(this.setCatererStationList);
     };
-    
+
     this.setDispatchStationList = function (dataFromAPI) {
       $scope.dispatchStationList.push(dataFromAPI);
     };
@@ -526,7 +526,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       return null;
     };
-    
+
     this.setScheduleId = function (apiData) {
       if (apiData && apiData.scheduleId) {
         return apiData.scheduleId.toString();
@@ -619,7 +619,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         };
         $this.setStoreInstanceConditionals(data);
         $this.getDispatchStationList();
-        
+
       }
 
       var promises = $this.makeInitPromises();
@@ -1311,7 +1311,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       } else {
         $scope.scheduleNumbers = $filter('unique')(apiData.schedules, 'scheduleNumber');
       }
-      
+
       $this.setFormScheduleNumber();
     };
 
@@ -1353,7 +1353,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.updateInstanceDependenciesSuccess();
       });
     };
-    
+
     this.updateRouteList = function() {
       $scope.routesList = [];
       $scope.formData.scheduleId = null;
@@ -1362,9 +1362,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $scope.routesList.push(route);
         }
       });
-      
+
       if ($scope.routesList.length === 1) {
-        $scope.formData.scheduleId = $scope.routesList[0];  
+        $scope.formData.scheduleId = $scope.routesList[0];
       }
     };
 
@@ -1394,7 +1394,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.updateInstanceDependencies();
         }
       });
-      
+
       $scope.$watch('formData.scheduleNumber.scheduleNumber', function (newId, oldId) {
         if (newId && newId !== oldId) {
           $this.updateRouteList();
