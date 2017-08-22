@@ -480,6 +480,22 @@ angular.module('ts5App')
       return (dateUtility.isAfterTodayDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
     };
 
+    $scope.isTaxRateEditable = function(taxRate) {
+      if (angular.isUndefined(taxRate)) {
+        return false;
+      }
+
+      return dateUtility.isAfterTodayDatePicker(taxRate.endDate) || dateUtility.isTodayDatePicker(taxRate.endDate);
+    };
+
+    $scope.isDisabled = function(taxRate) {
+      return !(dateUtility.isAfterTodayDatePicker(taxRate.startDate));
+    };
+
+    $scope.isDisabledEndDateForm = function(taxRate) {
+      return !(dateUtility.isAfterTodayDatePicker(taxRate.endDate) || dateUtility.isTodayDatePicker(taxRate.endDate));
+    };
+
     this.displayConfirmDialog = function (taxRate) {
       angular.element('#confirmation-modal').modal('show');
       $scope.taxRateToRemove = taxRate;
@@ -820,11 +836,7 @@ angular.module('ts5App')
     };
 
     $scope.isTaxRateTypePercentage = function (taxRate) {
-      if (angular.isDefined(taxRate.taxRateType)) {
-        return (taxRate.taxRateType.taxRateType === 'Percentage');
-      }
-
-      return true;
+      return angular.isDefined(taxRate.taxRateType) && taxRate.taxRateType.taxRateType === 'Percentage';
     };
 
     $scope.cancelNewTaxRate = function (taxRate) {
@@ -844,12 +856,19 @@ angular.module('ts5App')
     };
 
     $scope.isTaxRateCountryFieldDisabled = function (taxRate) {
-      return ((angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length) ||
-      $scope.isFieldReadOnly(taxRate));
+      return $scope.isDisabled(taxRate) || (angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length);
+    };
+
+    $scope.isTaxRateCountryFieldDisabledForCreate = function (taxRate) {
+      return angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length;
     };
 
     $scope.isTaxRateStationsDisabled = function (taxRate) {
-      return (!taxRate.countryName || $scope.isFieldReadOnly(taxRate));
+      return this.isDisabled(taxRate) || (!taxRate.countryName || $scope.isFieldReadOnly(taxRate));
+    };
+
+    $scope.isTaxRateStationsDisabledForCreate = function (taxRate) {
+      return !taxRate.countryName || $scope.isFieldReadOnly(taxRate);
     };
 
     $scope.showCurrencyCode = function (taxRate) {
@@ -858,7 +877,7 @@ angular.module('ts5App')
     };
 
     $scope.isTaxRateCurrencyCodeDisabled = function (taxRate) {
-      return ($scope.isTaxRateTypePercentage(taxRate) || $scope.isFieldReadOnly(taxRate));
+      return $scope.isDisabled(taxRate) || $scope.isTaxRateTypePercentage(taxRate);
     };
 
     $scope.filterTaxRateStations = function (taxRate) {
@@ -883,8 +902,8 @@ angular.module('ts5App')
       // clear search text
       $select.search = '';
     };
-    
+
     $scope.isCurrentEffectiveDate = function (taxRate) {
       return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
-    };    
+    };
   });
