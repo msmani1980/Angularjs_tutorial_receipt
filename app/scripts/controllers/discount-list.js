@@ -59,6 +59,11 @@ angular.module('ts5App')
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
+
+      if ($scope.search.startDate === undefined || $scope.search.startDate === null || $scope.search.startDate === '') {
+        query.startDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      }
+      
       discountFactory.getDiscountList(query).then($this.attachDiscountListToScope, errorHandler);
       $this.meta.offset += $this.meta.limit;
     };
