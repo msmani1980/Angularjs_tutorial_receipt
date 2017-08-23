@@ -546,8 +546,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           $scope.companyEposLanguages.push(lodash.findWhere($scope.languages, { id: languageId }));
         }
       });
-
-      console.log($scope.companyEposLanguages)
     };
 
     this.setCompany = function(dataFromAPI) {
@@ -1103,6 +1101,19 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       delete itemData.shouldUseDynamicBarcode;
     };
 
+    this.formatNotesTranslations = function(itemData) {
+      var notesPayload = [];
+
+      for (var key in itemData.notesTranslations) {
+        var note = itemData.notesTranslations[key];
+        if (note) {
+          notesPayload.push({id: key, note: note});
+        }
+      }
+
+      itemData.notesTranslations = notesPayload;
+    };
+
     this.formatPayload = function(itemData) {
       itemData.tags = $this.formatTags(itemData);
       itemData.allergens = $this.formatAllergens(itemData);
@@ -1115,6 +1126,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.formatImages(itemData);
       this.formatGlobalTradeNumbers(itemData);
       this.formatTaxes(itemData);
+      this.formatNotesTranslations(itemData);
       this.cleanUpPayload(itemData);
       if ($scope.cloningItem) {
         delete itemData.id;
