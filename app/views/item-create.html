@@ -169,7 +169,21 @@
 
               <input-textarea ng-if="isVirtualSelected" label="Notes" name="notes" placeholder="Notes for Virtual" max-length="255"></input-textarea>
 
-              <input-textarea ng-if="isVoucherSelected" label="Notes" name="notes" placeholder="Notes for Voucher" max-length="255"></input-textarea>
+              <div ng-if="isVoucherSelected">
+                <div  class="form-group">
+                  <div class="row col-md-5"><label class="control-label">Notes</label></div>
+                  <div class="row col-md-7 pull-right">
+                    <select class="form-control "
+                            ng-model="formData.selectedVoucherNotesLanguage"
+                            ng-options="option.languageName for option in companyEposLanguages track by option.id"
+                    >
+                    </select>
+                  </div>
+                  <div ng-repeat="language in companyEposLanguages">
+                    <textarea ng-show="formData.selectedVoucherNotesLanguage.id == language.id" name="notes" class="form-control" ng-model="formData.notesTranslations[language.id]" type="text" class="form-control" placeholder="Notes for Voucher"  ng-maxlength="500" maxlength="500"></textarea>
+                  </div>
+                </div>
+              </div>
 
               <div class="form-group">
                 <label>Item Substitutions</label>

@@ -9,7 +9,7 @@
 
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, languagesService) {
 
     var $this = this;
     $scope.formData = {
@@ -28,7 +28,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       prices: [],
       shouldUseDynamicBarcode: {
         value: false
-      }
+      },
+      notesTranslations: []
     };
 
     $scope.viewName = 'Create Item';
@@ -48,6 +49,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       label: 'GTIN',
       value: false
     }];
+    $scope.companyEposLanguages = [];
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -438,6 +440,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.makeDependencyPromises = function() {
+      var companyId = globalMenuService.company.get();
       return [
         companiesFactory.getSalesCategoriesList(),
         companiesFactory.getTagsList(),
@@ -450,7 +453,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getVolumeList(),
         itemsFactory.getWeightList(),
         itemsFactory.getPriceTypesList(),
-        itemsFactory.getItemsList({})
+        itemsFactory.getItemsList({}),
+        currencyFactory.getCompany(companyId)
       ];
     };
 
@@ -528,6 +532,30 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setVoucherData();
     };
 
+    this.setLanguages = function(dataFromAPI) {
+      $scope.languages = angular.copy(dataFromAPI.languages);
+
+      // Add default language (English)
+      var englishLanguage = lodash.findWhere($scope.languages, { id: 1 });
+      $scope.companyEposLanguages.push(englishLanguage);
+      $scope.formData.selectedVoucherNotesLanguage = englishLanguage;
+
+      // Add other languages
+      $scope.company.eposLanguages.forEach(function (languageId) {
+        if (languageId !== 1) {
+          $scope.companyEposLanguages.push(lodash.findWhere($scope.languages, { id: languageId }));
+        }
+      });
+
+      console.log($scope.companyEposLanguages)
+    };
+
+    this.setCompany = function(dataFromAPI) {
+      $scope.company = angular.copy(dataFromAPI);
+
+      languagesService.getLanguagesList().then($this.setLanguages);
+    };
+
     this.setDependencies = function(response) {
       $this.setSalesCategories(response[0]);
       $this.setTagsList(response[1]);
@@ -541,6 +569,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setWeightList(response[9]);
       $this.setItemPriceTypes(response[10]);
       $this.setItemList(response[11].retailItems);
+      $this.setCompany(response[12]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         $this.getItem($routeParams.id);
       } else {
