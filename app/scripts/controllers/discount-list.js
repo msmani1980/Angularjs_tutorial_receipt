@@ -12,9 +12,7 @@ angular.module('ts5App')
 
     var $this = this;
     $scope.viewName = 'Discount';
-    $scope.search = {
-      startDate: dateUtility.nowFormattedDatePicker()
-    };
+    $scope.search = {};
     $scope.discountList = [];
     $scope.discountToDelete = {};
     this.meta = {
