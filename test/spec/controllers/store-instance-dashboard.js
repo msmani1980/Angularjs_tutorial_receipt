@@ -141,20 +141,6 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       });
     });
 
-    describe('getCatererStation', function() {
-      it('should get catererStation from storeInstanceDashboardFactory', function() {
-        expect(storeInstanceDashboardFactory.getCatererStationList).toHaveBeenCalled();
-      });
-
-      it('should attach caterStationList to Scope', function() {
-        expect(scope.catererStationList).toBeDefined();
-      });
-
-      it('should attach all properties of JSON to scope', function() {
-        expect(scope.catererStationList.length).toEqual(cateringStationResponseJSON.response.length);
-      });
-    });
-
     describe('getStation', function() {
       it('should get station from storeInstanceDashboardFactory', function() {
         expect(storeInstanceDashboardFactory.getStationList).toHaveBeenCalled();
@@ -245,7 +231,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           storeInstanceId: '4',
           statusId: '5',
           limit: 100,
-          offset: 0
+          offset: 0,
+          avoidUsrStns: true
         });
       });
 
@@ -263,7 +250,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
           storeInstanceId: '4',
           statusId: '5',
           limit: 100,
-          offset: 0
+          offset: 0,
+          avoidUsrStns: true
         };
 
         expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedJSON);

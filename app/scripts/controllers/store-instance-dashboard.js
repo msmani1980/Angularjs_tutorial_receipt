@@ -15,7 +15,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
             lodash, dateUtility, storeInstanceDashboardActionsConfig, ENV, identityAccessFactory, messageService) {
 
     $scope.viewName = 'Store Instance Dashboard';
-    $scope.catererStationList = [];
     $scope.stationList = [];
     $scope.storeInstanceList = null;
     $scope.storeStatusList = [];
@@ -317,9 +316,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (lodash.find(storeInstance.actionButtons, lodash.matches('Get Flight Docs')) || storeInstance.statusName === 'On Floor') {
         storeInstance.showGenerateDocsButton = true;
 
-        // TODO: add rsvr when migrated
+        var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
         storeInstance.exportURL = ENV.apiUrl + '/rsvr-pdf/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
-          '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';
+          '.pdf?sessionToken=' + sessionToken;
       }
     }
 
@@ -393,14 +392,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function dispatchStoreInstance(storeId) {
       return storeInstanceDashboardFactory.updateStoreInstanceStatus(storeId, '4');
-    }
-
-    function getCatererStationListSuccess(dataFromAPI) {
-      $scope.catererStationList = angular.copy(dataFromAPI.response);
-    }
-
-    function getCatererStationList() {
-      return storeInstanceDashboardFactory.getCatererStationList().then(getCatererStationListSuccess);
     }
 
     function getStoreInstanceListSuccess(dataFromAPI) {
@@ -550,7 +541,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       lastStartDate = payload.startDate;
       payload = lodash.assign(payload, {
         limit: $this.meta.limit,
-        offset: $this.meta.offset
+        offset: $this.meta.offset,
+        avoidUsrStns: true
       });
 
       storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess, searchStoreInstanceFailure);
@@ -610,9 +602,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if (lodash.keys($scope.search).length > 0) {
         $scope.searchStoreInstanceDashboardData();
       }
-      
-      var stsMap = STATUS_TO_BUTTONS_MAP[5];      
-      if ($localStorage.buttons.indexOf('unreceive') !== -1) {
+
+      var stsMap = STATUS_TO_BUTTONS_MAP[5];
+      if (angular.isDefined($localStorage.buttons) && $localStorage.buttons.indexOf('unreceive') !== -1) {
         if (stsMap.indexOf('Un-Receive') === -1) {
           stsMap.push('Un-Receive');
           STATUS_TO_BUTTONS_MAP[5] = stsMap;
@@ -625,7 +617,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       checkForLocalStorage();
       $scope.allCheckboxesSelected = false;
       var dependenciesArray = [];
-      dependenciesArray.push(getCatererStationList());
       dependenciesArray.push(getStationList());
       dependenciesArray.push(getStoresList());
       dependenciesArray.push(getStatusList());
@@ -674,7 +665,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       modalElement.modal('hide');
       showLoadingModal('Changing Store Instance ' + store.id + ' Status');
       var promises = [
-        storeInstanceDashboardFactory.updateStoreInstanceStatus(store.id, 4, store.cateringStationId)
+        storeInstanceDashboardFactory.updateStoreInstanceStatusUnreceive(store.id, 4)
         ];
       $q.all(promises).then(storeStatusSuccessHandler, showErrors);
     };

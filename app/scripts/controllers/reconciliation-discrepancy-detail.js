@@ -153,6 +153,8 @@ angular.module('ts5App')
 
     function formatEposItem(item, rawLMPStockData) {
       var carrierInstanceMatch = lodash.findWhere($this.carrierInstanceList, { id: item.companyCarrierInstanceId });
+      $scope.outlierItemData = {};
+      $scope.outlierItemData.menuList = $scope.outlierItemData.menuList || [];
       if (!carrierInstanceMatch) {
         return;
       }
@@ -183,7 +185,18 @@ angular.module('ts5App')
             formatEposItem(item, rawLMPStockData);
           });
 
-          $scope.outlierItemList = filteredEposItems;
+          var output = [];
+          var keys = [];
+          angular.forEach(filteredEposItems, function(item) {
+            var key = item.itemMasterId;
+            var indx = keys.indexOf(key);
+            if (indx === -1) {
+              keys.push(key);
+              output.push(item);
+            }
+          });
+
+          $scope.outlierItemList = output;
           if ($scope.outlierItemList.length) {
             $scope.outlierItemData.menuList = $scope.outlierItemData.menuList.toString();
           }
@@ -231,6 +244,7 @@ angular.module('ts5App')
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
     }
 
     function handleResponseError(responseFromAPI) {

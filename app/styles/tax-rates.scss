@@ -9,7 +9,7 @@
 }
 
 .animate-switch {
-  position: relative;
+  position: relative !important;
 }
 
 .animate-switch.ng-enter {
@@ -58,6 +58,8 @@
 
 .tax-label {
   margin-right: 5px;
+  margin-top: 5px;
+  white-space: normal;
 }
 
 .tax-rates-multi-select {

@@ -149,6 +149,10 @@ angular.module('ts5App')
       return moment(date, this.getDateFormatForApp()).isAfter(moment(), 'day');
     };
 
+    this.isAfterTodayOrEqual = function (date) {
+      return moment(date, this.getDateFormatForApp()).isSameOrAfter(moment(), 'day');
+    };
+
     this.isAfterOrEqual = function (baseDate, dateToCompare) {
       return moment(baseDate, this.getDateFormatForApp()).isSameOrAfter(moment(dateToCompare, this.getDateFormatForApp()), 'day');
     };
