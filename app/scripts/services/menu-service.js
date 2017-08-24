@@ -113,7 +113,7 @@ angular.module('ts5App')
     function getCompanyPreferenceBy(preferences, choiceName, optionName) {
       var result = null;
       angular.forEach(preferences, function (preference) {
-        if (result === null && preference.choiceName === choiceName && preference.optionName === optionName && dateUtility.isTodayOrEarlier(preference.startDate)) {
+        if (result === null && preference.choiceName === choiceName && preference.optionName === optionName && dateUtility.isTodayOrEarlierDatePicker(preference.startDate)) {
           result = preference;
         }
       });
@@ -130,7 +130,7 @@ angular.module('ts5App')
 
     function isMenuCashbagRestrictUse() {
       var payload = {
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
       };
       var companyId = globalMenuService.getCompanyData().companyId;
 
@@ -144,7 +144,7 @@ angular.module('ts5App')
     }
 
     function isShowManageCashBagOrCashBagSubmission(isManageCashBag) {
-      var todayDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var todayDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       var companyId = globalMenuService.getCompanyData().companyId;
       var companyData = globalMenuService.getCompanyData();
       var retailCompanyId = (companyData && companyData.chCompany) ? companyData.chCompany.companyId : -1;

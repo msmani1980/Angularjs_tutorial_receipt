@@ -105,7 +105,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return !dateUtility.isAfterToday(commission.startDate);
+      return !dateUtility.isAfterTodayDatePicker(commission.startDate);
     };
 
     $scope.isCommissionEditable = function(commission) {
@@ -113,7 +113,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return dateUtility.isAfterToday(commission.endDate);
+      return dateUtility.isAfterTodayDatePicker(commission.endDate);
     };
 
     function showToastMessage(className, type, message) {

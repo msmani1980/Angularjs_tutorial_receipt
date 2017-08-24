@@ -12,7 +12,7 @@ angular.module('ts5App')
 
     $scope.itemList = [];
     $scope.promotionCatalog = {};
-    $scope.minDate = $scope.minDate = $routeParams.action === 'view' ? '' : dateUtility.dateNumDaysAfterTodayFormatted(1);
+    $scope.minDate = $scope.minDate = $routeParams.action === 'view' ? '' : dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
     $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
     var $this = this;
 
@@ -212,8 +212,8 @@ angular.module('ts5App')
       var canEdit = false;
 
       if ($routeParams.action === 'edit' && $scope.promotionCatalog) {
-        var isInFuture = dateUtility.isAfterToday($scope.promotionCatalog.startDate) && dateUtility.isAfterToday($scope.promotionCatalog.endDate);
-        var isInPast = dateUtility.isYesterdayOrEarlier($scope.promotionCatalog.endDate);
+        var isInFuture = dateUtility.isAfterTodayDatePicker($scope.promotionCatalog.startDate) && dateUtility.isAfterTodayDatePicker($scope.promotionCatalog.endDate);
+        var isInPast = dateUtility.isYesterdayOrEarlierDatePicker($scope.promotionCatalog.endDate);
         canEdit = isInFuture;
         $scope.isViewOnly = isInPast;
       } else {
@@ -249,5 +249,9 @@ angular.module('ts5App')
       }
     });
 
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
+    };
+    
   }
 );

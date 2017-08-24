@@ -49,7 +49,7 @@ angular.module('ts5App')
       angular.extend(query, $scope.search);
 
       if ($scope.search === {} || !$scope.search) {
-        query.startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+        query.startDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       }
 
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
@@ -155,7 +155,7 @@ angular.module('ts5App')
     };
 
     this.compareInactiveDates = function (itemA, itemB) {
-      var isFutureItem = (dateUtility.isAfterToday(itemA.startDate) && dateUtility.isAfterToday(itemB.startDate));
+      var isFutureItem = (dateUtility.isAfterTodayDatePicker(itemA.startDate) && dateUtility.isAfterTodayDatePicker(itemB.startDate));
 
       if (isFutureItem) {
         return $this.sortByDateCloserToToday(itemA.startDate, itemB.startDate);
@@ -194,21 +194,21 @@ angular.module('ts5App')
     };
 
     this.isItemActive = function (item) {
-      return (dateUtility.isTodayOrEarlier(item.startDate) && dateUtility.isAfterToday(item.endDate));
+      return (dateUtility.isTodayOrEarlierDatePicker(item.startDate) && dateUtility.isAfterTodayDatePicker(item.endDate));
     };
 
     $scope.canEditItem = function (itemDate) {
-      return dateUtility.isYesterdayOrEarlier(itemDate);
+      return dateUtility.isYesterdayOrEarlierDatePicker(itemDate);
     };
 
     $scope.isDateActive = function (date) {
-      return dateUtility.isTodayOrEarlier(date);
+      return dateUtility.isTodayOrEarlierDatePicker(date);
     };
 
     $scope.doesActiveOrFutureVersionExist = function (item) {
       var validVersionExists = false;
       angular.forEach(item.versions, function (version) {
-        if (!dateUtility.isYesterdayOrEarlier(version.endDate)) {
+        if (!dateUtility.isYesterdayOrEarlierDatePicker(version.endDate)) {
           validVersionExists = true;
         }
       });

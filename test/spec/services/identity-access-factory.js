@@ -283,6 +283,7 @@ describe('Service: identityAccessFactory', function() {
         companyId: 'fakeCompanyId',
         username: 'fakeUser',
         eulaRecent: false,
+        timezoneOffset: '+0000',
         companyData: {
           companyTypeId: 1,
           companyName: 'fakeCompanyName'

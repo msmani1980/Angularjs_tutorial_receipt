@@ -31,7 +31,7 @@
                       id="crewBase"
                       name="crewBase"
                       ng-model="search.companyTypeId"
-                      ng-options="companyType.id as companyType.name for companyType in companyTypeList | orderBy: 'name'">
+                      ng-options="companyType.id as companyType.companyTypeName for companyType in companyTypeList | orderBy: 'companyTypeName'">
                 <option selected="selected" value>Select Company Type</option>
               </select>
             </div>

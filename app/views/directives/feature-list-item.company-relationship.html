@@ -7,14 +7,15 @@
     <div class="hidden-xs col-sm-2 list-item">{{viewModel.endDate}}</div>
     <div class="hidden-xs col-sm-2 list-item">
       <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company Relationship"
-              ng-disabled="$parent.isInactive(item.endDate)"
+              ng-disabled="!$parent.isActive(viewModel) && !$parent.isFutureEffectiveDate(viewModel)"
               ng-click="$parent.editCompanyRelationship(viewModel, companyRelationshipForm)">
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </button>
-      <button type="button" class="btn btn-danger btn-xs" ng-click="$parent.showDeleteConfirmation(viewModel)"
-              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)">
+      <button type="button" class="btn btn-danger btn-xs" 
+              ng-click="$parent.showDeleteConfirmation(viewModel)"
+              ng-disabled="!$parent.isFutureEffectiveDate(viewModel)">
         <i class="fa fa-trash"></i>
-      </button>
+      </button> 
     </div>
   </div>
   <div class="row">
@@ -41,12 +42,12 @@
     <div class="visible-xs col-xs-3 list-header text-right">Actions</div>
     <div class="visible-xs col-xs-9 list-item">
       <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company Relationship"
-              ng-disabled="$parent.isInactive(item.endDate)"
+              ng-disabled="!$parent.isActive(viewModel) && !$parent.isFutureEffectiveDate(viewModel)"
               ng-click="$parent.editCompanyRelationship(viewModel, companyRelationshipForm)">
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </button>
       <button type="button" class="btn btn-danger btn-xs" ng-click="$parent.showDeleteConfirmation(viewModel)"
-              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)">
+              ng-disabled="!$parent.isFutureEffectiveDate(viewModel)">
         <i class="fa fa-trash"></i>
       </button>
     </div>
@@ -57,9 +58,9 @@
   <div class="row">
     <div class="hidden-xs col-sm-2 list-item">{{viewModel.companyName}}</div>
     <div class="hidden-xs col-sm-2 list-item">
-      <select name="companyType" ng-model="search.companyTypeName"
+      <select name="companyType" ng-model="viewModel.relativeCompanyType"
               ng-options="companyType.companyTypeName as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
-              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
+              ng-disabled="$parent.isActive(viewModel)"
               class="form-control">
         <option selected disabled value="">Filter by...</option>
       </select>
@@ -67,22 +68,25 @@
     <div class="hidden-xs col-sm-2 list-item">
       <select name="companyName" ng-model="viewModel.relativeCompanyId"
               ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
-              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
+              ng-disabled="$parent.isActive(viewModel)"
               class="form-control" required>
         <option selected disabled value="">Please select...</option>
       </select>
     </div>
     <div class="hidden-xs col-sm-4 list-item">
-      <div class="row">
-        <date-picker
-          class="col-xs-12"
-          element-class="col-xs-6"
-          start-date-model="viewModel.startDate"
-          end-date-model="viewModel.endDate"
-          disable-past="true"
-          required="true"
-          inline="true">
-        </date-picker>
+      <div class="col-xs-12 col-sm-6">
+           <date-picker-field 
+                              disable="$parent.isActive(viewModel)"
+                              required="true"
+                              ng-model="viewModel.startDate">
+           </date-picker-field>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+           <date-picker-field 
+                              end-current-effective="$parent.isActive(viewModel)"
+                              required="true"
+                              ng-model="viewModel.endDate">
+           </date-picker-field>
       </div>
     </div>
     <div class="hidden-xs col-sm-2 list-item">
@@ -106,7 +110,7 @@
     <div class="visible-xs col-xs-9 list-item">
       <select name="companyType" ng-model="search.companyTypeName"
               ng-options="companyType.companyTypeName as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
-              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
+              ng-disabled="$parent.isActive(viewModel)"
               class="form-control">
         <option selected disabled value="">Filter by...</option>
       </select>
@@ -117,7 +121,7 @@
     <div class="visible-xs col-xs-9 list-item">
       <select name="companyName" ng-model="viewModel.relativeCompanyId"
               ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
-              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
+              ng-disabled="$parent.isActive(viewModel)"
               class="form-control" required>
         <option selected disabled value="">Please select...</option>
       </select>

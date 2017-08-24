@@ -33,7 +33,7 @@ angular.module('ts5App')
     };
 
     this.generateItemQuery = function () {
-      var todaysDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var todaysDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       var query = {
         startDate: todaysDate,
         sortBy: 'ASC',
@@ -115,7 +115,7 @@ angular.module('ts5App')
     };
 
     $scope.isItemActive = function (dateToCompare) {
-      return dateUtility.isTomorrowOrLater(dateToCompare);
+      return dateUtility.isTomorrowOrLaterDatePicker(dateToCompare);
     };
 
     function hasLength(data) {
@@ -177,5 +177,13 @@ angular.module('ts5App')
     this.getSalesCategoriesList();
 
     $scope.loadItems = $this.getItemsList;
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
+    };
+  
+    $scope.isFutureEffectiveDate = function (date) {
+      return (dateUtility.isAfterTodayDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate)));
+    };
 
   });
