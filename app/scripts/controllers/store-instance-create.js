@@ -1345,6 +1345,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
 
       if ($this.isActionState('dispatch')) {
+        $scope.formData.storeNumber = '';  
         updatePromises.push($this.getStoresList());
       }
 
