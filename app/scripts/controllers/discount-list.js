@@ -12,6 +12,7 @@ angular.module('ts5App')
 
     var $this = this;
     $scope.viewName = 'Discount';
+    $scope.isSearchClicked = false;
     $scope.search = {};
     $scope.discountList = [];
     $scope.discountToDelete = {};
@@ -57,15 +58,16 @@ angular.module('ts5App')
         offset: $this.meta.offset
       });
 
-      if ($scope.search.startDate === undefined || $scope.search.startDate === null || $scope.search.startDate === '') {
+      if (!$scope.isSearchClicked && ($scope.search.startDate === undefined || $scope.search.startDate === null || $scope.search.startDate === '')) {
         query.startDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       }
-      
+
       discountFactory.getDiscountList(query).then($this.attachDiscountListToScope, errorHandler);
       $this.meta.offset += $this.meta.limit;
     };
 
     $scope.searchDiscounts = function() {
+      $scope.isSearchClicked = true;
       $scope.discountList = [];
       $this.meta = {
         count: undefined,
