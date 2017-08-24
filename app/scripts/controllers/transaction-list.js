@@ -21,7 +21,7 @@ angular.module('ts5App')
     $scope.paymentMethods = ['Cash', 'Credit Card', 'Discount'];
     $scope.creditCardTypes = [];
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
-    $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
+    $scope.creditCardAuthStatuses = ['Approved', 'Not Approved'];
     $scope.overrideTransactionTypeNames = {
       CLEARED: 'Cleared',
       CREWMEAL: 'Crew Meal',
@@ -308,7 +308,7 @@ angular.module('ts5App')
 
     function normalizeTransactions(transactions) {
       angular.forEach(transactions, function (transaction) {
-        formatDateIfDefined(transaction, 'transactionDate');
+        formatTimestampIfDefined(transaction, 'transactionDate');
         formatDateIfDefined(transaction, 'scheduleDate');
         formatDateIfDefined(transaction, 'storeDate');
         formatDateIfDefined(transaction, 'instanceDate');
@@ -323,6 +323,12 @@ angular.module('ts5App')
         transaction[dateFieldName] = dateUtility.formatDateForApp(transaction[dateFieldName]);
       }
     }
+    
+    function formatTimestampIfDefined(transaction, dateFieldName) {
+        if (transaction.hasOwnProperty(dateFieldName) && transaction[dateFieldName]) {
+          transaction[dateFieldName] = dateUtility.formatTimestampForApp(transaction[dateFieldName]);
+        }
+      }
 
     function appendTransactions(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
