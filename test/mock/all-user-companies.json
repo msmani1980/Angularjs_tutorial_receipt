@@ -1,52 +1,162 @@
 {
-  "companies": [
-    {
-      "id": 254,
-      "type": {
-        "companyTypeName": "Retail"
-      },
-      "companyName": "asdsdaasd",
-      "companyCode": "wer"
-    },
-    {
-      "id": 403,
-      "type": {
-        "companyTypeName": "Retail"
-      },
-      "companyName": "British Airways",
-      "companyCode": "BA"
-    },
-    {
-      "id": 311,
-      "type": {
-        "companyTypeName": "Cash Handler"
-      },
-      "companyName": "risgpa",
-      "companyCode": "aiwqek"
-    },
-    {
-      "id": 266,
-      "type": {
-        "companyTypeName": "Warehouse"
-      },
-      "companyName": "rtyindw",
-      "companyCode": "uytry"
-    },
-    {
-      "id": 205,
-      "type": {
-        "companyTypeName": "Stockowner"
-      },
-      "companyName": "Stocktest",
-      "companyCode": "StockCo"
-    },
-    {
-      "id": 439,
-      "type": {
-        "companyTypeName": "Retail"
-      },
-      "companyName": "Test",
-      "companyCode": "Test"
-    }
-  ]
+	"companies": [{
+			"id": 254,
+			"type": {
+				"companyTypeName": "Retail"
+			},
+			"companyName": "asdsdaasd",
+			"companyCode": "wer"
+		},
+		{
+			"id": 403,
+			"type": {
+				"companyTypeName": "Retail"
+			},
+			"companyName": "British Airways",
+			"companyCode": "BA"
+		},
+		{
+			"id": 311,
+			"type": {
+				"companyTypeName": "Cash Handler"
+			},
+			"companyName": "risgpa",
+			"companyCode": "aiwqek"
+		},
+		{
+			"id": 266,
+			"type": {
+				"companyTypeName": "Warehouse"
+			},
+			"companyName": "rtyindw",
+			"companyCode": "uytry"
+		},
+		{
+			"id": 205,
+			"type": {
+				"companyTypeName": "Stockowner"
+			},
+			"companyName": "Stocktest",
+			"companyCode": "StockCo"
+		},
+		{
+			"id": 439,
+			"type": {
+				"companyTypeName": "Retail"
+			},
+			"companyName": "Test",
+			"companyCode": "Test"
+		}
+	],
+	"user": {
+		"createDate": "2016-09-23 17:57 PM UTC",
+		"createdBy": "admin",
+		"updateDate": "2017-03-03 17:01 PM UTC",
+		"updatedBy": "admin",
+		"rttl": 1499959497908,
+		"id": 194,
+		"employeeId": null,
+		"userName": "qauser",
+		"enabled": true,
+		"expired": null,
+		"email": "ceiathakul@egate-solutions.com",
+		"access": "/rsvr-ws/api/aimsdata",
+		"allowStations": true,
+		"allowStoreStatus": true,
+		"firstName": "First",
+		"lastName": "Last",
+		"preferredLanguage": null,
+		"preferredCountry": null,
+		"organizationId": 96,
+		"currentSession": {
+			"createDate": "2017-07-13 15:09 PM UTC",
+			"createdBy": "admin",
+			"updateDate": "2017-07-13 15:09 PM UTC",
+			"updatedBy": "admin",
+			"ttl": 1499965797904,
+			"id": 8124,
+			"sessionToken": "ec3c893372fee74aed7bff1701ff8a27e382",
+			"ip": "207.140.219.162, 205.251.252.158, 172.17.230.4, 172.17.230.208",
+			"validCode": 0,
+			"personId": 194
+		},
+		"stationsView": null,
+		"companiesView": [{
+			"createDate": "2017-01-30 23:54 PM UTC",
+			"createdBy": 199,
+			"updateDate": null,
+			"updatedBy": null,
+			"id": 669,
+			"type": {
+				"id": 5,
+				"companyTypeName": "Cash Handler"
+			},
+			"legalName": "ICELUTON",
+			"active": "t",
+			"dbaName": "DBA",
+			"ediName": "DBA",
+			"timezone": 0,
+			"companyName": "Cash Handler",
+			"companyCode": "ICELUTON"
+		}, {
+			"createDate": "2016-07-02 18:54 PM UTC",
+			"createdBy": 1,
+			"updateDate": null,
+			"updatedBy": null,
+			"id": 648,
+			"type": {
+				"id": 5,
+				"companyTypeName": "Cash Handler"
+			},
+			"legalName": "ICEBSL",
+			"active": "t",
+			"dbaName": "ICEBSL",
+			"ediName": "ICEBSL",
+			"timezone": 0,
+			"companyName": "ICEBSL",
+			"companyCode": "ICEBSL"
+		}, {
+			"createDate": "2016-07-02 18:55 PM UTC",
+			"createdBy": 1,
+			"updateDate": null,
+			"updatedBy": null,
+			"id": 650,
+			"type": {
+				"id": 5,
+				"companyTypeName": "Cash Handler"
+			},
+			"legalName": "LOOMISGVA",
+			"active": "t",
+			"dbaName": "LOOMISGVA",
+			"ediName": "LOOMISGVA",
+			"timezone": 0,
+			"companyName": "LOOMISGVA",
+			"companyCode": "LOOMISGVA"
+		}, {
+			"createDate": null,
+			"createdBy": null,
+			"updateDate": "2017-07-13 14:16 PM UTC",
+			"updatedBy": 199,
+			"id": 643,
+			"type": {
+				"id": 1,
+				"companyTypeName": "Retail"
+			},
+			"legalName": "gategroup GmbH",
+			"active": "t",
+			"dbaName": "DBA",
+			"ediName": "easyJet",
+			"timezone": 11,
+			"companyName": "easyJet",
+			"companyCode": "EZY"
+		}],
+		"storeStatusesView": null,
+		"eulaVersion": 2,
+		"eulaRecent": true,
+		"timezone": 11,
+		"timezoneOffset": "+1100",
+		"timezoneDb": 0,
+		"timezoneDbo": false,
+		"companyId": 643
+	}
 }

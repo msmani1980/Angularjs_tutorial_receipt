@@ -37,7 +37,7 @@ angular.module('ts5App')
     };
 
     this.generateRelationshipQuery = function () {
-      var todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
+      var todaysDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       var query = {
         startDate: todaysDate,
         sortBy: 'ASC',
@@ -219,11 +219,11 @@ angular.module('ts5App')
     };
 
     $scope.isRelationshipActive = function (date) {
-      return dateUtility.isTodayOrEarlier(date);
+      return dateUtility.isTodayOrEarlierDatePicker(date);
     };
 
     $scope.isRelationshipInactive = function (date) {
-      return dateUtility.isYesterdayOrEarlier(date);
+      return dateUtility.isYesterdayOrEarlierDatePicker(date);
     };
 
     $scope.clearSearchFilters = function () {

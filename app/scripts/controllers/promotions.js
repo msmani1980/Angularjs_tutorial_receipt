@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionsCtrl', function ($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility) {
+  .controller('PromotionsCtrl', function ($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility, $timeout) {
 
     $scope.readOnly = true;
     $scope.editing = false;
@@ -126,7 +126,9 @@ angular.module('ts5App')
     }
 
     function hideLoadingModal() {
-      angular.element('#loading').modal('hide');
+      $timeout(function() {
+        angular.element('#loading').modal('hide');
+      }, 3000);
     }
 
     function getCompanyPromotionCategoryId(promotionCategoryData) {
@@ -414,7 +416,7 @@ angular.module('ts5App')
 
     function getCompanyDiscountsCoupon(payload) {
       payload = payload || {
-          startDate: dateUtility.nowFormatted('YYYYMMDD')
+          startDate: dateUtility.nowFormattedDatePicker('YYYYMMDD')
         };
       initPromises.push(
         promotionsFactory.getCompanyDiscountsCoupon(payload).then(setCompanyDiscountsCoupon)
@@ -427,7 +429,7 @@ angular.module('ts5App')
 
     function getCompanyDiscountsVoucher(payload) {
       payload = payload || {
-          startDate: dateUtility.nowFormatted('YYYYMMDD')
+          startDate: dateUtility.nowFormattedDatePicker('YYYYMMDD')
         };
       initPromises.push(
         promotionsFactory.getCompanyDiscountsVoucher(payload).then(setCompanyDiscountsVoucher)
@@ -469,7 +471,7 @@ angular.module('ts5App')
     }
 
     function getActivePromotionCategories() {
-      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       var payload = {
         startDate: today,
         endDate: today
@@ -509,7 +511,7 @@ angular.module('ts5App')
     function getCurrencyGlobals() {
       var payload = {
         isOperatedCurrency: true,
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
       };
 
       initPromises.push(
@@ -589,7 +591,7 @@ angular.module('ts5App')
       });
       $scope.spendLimitAmountsUi = addCurrencyCodeToArrayItems($scope.spendLimitAmountsUi, promotionFromAPI.spendLimitAmounts);
       $scope.benefitAmountsUi = addCurrencyCodeToArrayItems($scope.benefitAmountsUi, promotionFromAPI.benefitAmounts);
-      $scope.shouldDisableStartDate = !(dateUtility.isAfterToday($scope.promotion.startDate));
+      $scope.shouldDisableStartDate = !(dateUtility.isAfterTodayDatePicker($scope.promotion.startDate));
     }
 
     $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function (newData) {
@@ -623,7 +625,7 @@ angular.module('ts5App')
     function setCrudFlags(startDate) {
       $scope.readOnly = ($routeParams.state === 'view');
       if (angular.isDefined(startDate)) {
-        $scope.isDisabled = ($routeParams.state === 'edit' && !dateUtility.isAfterToday(startDate));
+        $scope.isDisabled = ($routeParams.state === 'edit' && !dateUtility.isAfterTodayDatePicker(startDate));
       }
     }
 
@@ -853,7 +855,7 @@ angular.module('ts5App')
     };
 
     function getActivePromotionCategoriesByDates(promotion) {
-      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       var startDate = angular.isDefined(promotion.startDate) && promotion.startDate !== '' ? dateUtility.formatDateForAPI(promotion.startDate) : today;
       var endDate = angular.isDefined(promotion.endDate) && promotion.endDate !== '' ? dateUtility.formatDateForAPI(promotion.endDate) : today;
       var payload = {
@@ -977,7 +979,7 @@ angular.module('ts5App')
         return;
       }
 
-      var today = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var today = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
 
       var startDate = $scope.promotion.startDate !== '' ? dateUtility.formatDateForAPI($scope.promotion.startDate) : today;
       var endDate = $scope.promotion.endDate !== '' ? dateUtility.formatDateForAPI($scope.promotion.endDate) : today;

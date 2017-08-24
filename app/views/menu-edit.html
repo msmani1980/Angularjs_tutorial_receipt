@@ -92,10 +92,20 @@
 
       <div class="col-xs-12 col-sm-3 col-md-3">
         <date-picker-field
+          ng-if="isCurrentEffectiveDate(menu)"
           name="endDate"
           ng-model="menu.endDate"
           label="Effective To"
           min-date="minDate"
+          disable="isViewOnly()"
+          end-current-effective="true"
+          required="true">
+        </date-picker-field>
+        <date-picker-field
+          ng-if="!isCurrentEffectiveDate(menu)"
+          name="endDate"
+          ng-model="menu.endDate"
+          label="Effective To"
           disable="isViewOnly()"
           required="true">
         </date-picker-field>

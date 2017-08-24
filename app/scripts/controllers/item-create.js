@@ -13,8 +13,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     var $this = this;
     $scope.formData = {
-      startDate: dateUtility.tomorrowFormatted(),
-      endDate: dateUtility.tomorrowFormatted(),
+      startDate: dateUtility.tomorrowFormattedDatePicker(),
+      endDate: dateUtility.tomorrowFormattedDatePicker(),
       qrCodeValue: '',
       qrCodeImgUrl: null,
       images: [],
@@ -396,12 +396,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.checkIfItemIsActive = function(itemData) {
-      $scope.itemIsActive = dateUtility.isTodayOrEarlier(itemData.startDate) && !$scope.cloningItem;
+      $scope.itemIsActive = dateUtility.isTodayOrEarlierDatePicker(itemData.startDate) && !$scope.cloningItem;
     };
 
     // checks to see if the item is inactive, and set viewOnly=true if item is inactive
     this.checkIfItemIsInactive = function(itemData) {
-      $scope.itemIsInactive = dateUtility.isYesterdayOrEarlier(itemData.endDate) && !$scope.cloningItem;
+      $scope.itemIsInactive = dateUtility.isYesterdayOrEarlierDatePicker(itemData.endDate) && !$scope.cloningItem;
       $scope.viewOnly = $scope.viewOnly || $scope.itemIsInactive;
     };
 
@@ -463,9 +463,9 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.determineMinDate = function() {
       var diff = 1;
-      if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
+      if ($scope.editingItem && !dateUtility.isTomorrowOrLaterDatePicker($scope.formData.startDate)) {
         diff = dateUtility.diff(
-          dateUtility.nowFormatted(),
+          dateUtility.nowFormattedDatePicker(),
           $scope.formData.startDate
         );
       }
@@ -490,7 +490,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.filterItemsByFormDates = function() {
       $scope.substitutions = lodash.filter($scope.items, function(item) {
-        return dateUtility.isAfterOrEqual(dateUtility.formatDateForApp(item.endDate), $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, dateUtility.formatDateForApp(item.startDate));
+        return dateUtility.isAfterOrEqualDatePicker(dateUtility.formatDateForApp(item.endDate), $scope.formData.startDate) && dateUtility.isAfterOrEqualDatePicker($scope.formData.endDate, dateUtility.formatDateForApp(item.startDate));
       });
 
       $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');

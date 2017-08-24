@@ -15,7 +15,7 @@ angular.module('ts5App')
     var datePickerOptions = {
       orientation: 'auto top',
       autoclose: true,
-      todayHighlight: true
+      todayHighlight: false
     };
 
     var initializeDatePicker = function ($scope, $element) {
@@ -24,7 +24,7 @@ angular.module('ts5App')
       $scope.placeholder = options.format;
 
       if ($scope.disablePast) {
-        options.startDate = '+1d';
+        options.startDate = dateUtility.tomorrowFormattedDatePicker();
       } else if ($scope.minDate && !$scope.isSearchField) {
         options.startDate = moment($scope.minDate, 'L').format('L');
       }
@@ -75,11 +75,11 @@ angular.module('ts5App')
         if (!$scope.isSearchField && $scope.disablePast && !angular.isUndefined($scope.startDateModel)) {
           // TODO: update to use isBefore and isAfter methods
           if ($scope.startDateModel) {
-            $scope.shouldDisableStartDate = !dateUtility.isAfterToday($scope.startDateModel);
+            $scope.shouldDisableStartDate = !dateUtility.isAfterTodayDatePicker($scope.startDateModel);
           }
 
           if ($scope.endDateModel) {
-            $scope.shouldDisableEndDate = !dateUtility.isAfterToday($scope.endDateModel);
+            $scope.shouldDisableEndDate = !dateUtility.isAfterTodayDatePicker($scope.endDateModel);
           }
 
           watchListener();

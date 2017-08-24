@@ -38,7 +38,16 @@
     </div>
     <div class="row">
       <div class="form-group col-xs-6">
-        <date-picker-field
+        <date-picker-field ng-if="disableEditField"
+          custom-effective="true"
+          name="startDate"
+          min-date="startMinDate"
+          ng-model="promotionCategory.startDate"
+          disable="disableEditField"
+          label="Effective From"
+          required="true">
+        </date-picker-field>
+         <date-picker-field ng-if="!disableEditField"
           name="startDate"
           min-date="startMinDate"
           ng-model="promotionCategory.startDate"
@@ -49,7 +58,18 @@
         </div>
 
         <div class="form-group col-xs-6">
-          <date-picker-field
+          <date-picker-field 
+            ng-if="isCurrentEffectiveDate(promotionCategory)"
+            name="endDate"
+            min-date="minDate"
+            ng-model="promotionCategory.endDate"
+            disable="isViewOnly"
+            label="Effective To"
+            required="true"
+            end-current-effective="true">
+          </date-picker-field>
+          <date-picker-field 
+            ng-if="!isCurrentEffectiveDate(promotionCategory)"
             name="endDate"
             min-date="minDate"
             ng-model="promotionCategory.endDate"
