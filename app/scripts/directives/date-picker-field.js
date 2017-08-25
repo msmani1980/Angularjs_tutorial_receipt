@@ -24,7 +24,8 @@ angular.module('ts5App')
         maxDate: '=',
         grayPast: '=',
         customDate: '=',
-        customEffective: '='
+        customEffective: '=',
+        endCurrentEffective: '='
       },
       controller: function($scope, $element) {
         var datePickerOptions = {
@@ -56,10 +57,12 @@ angular.module('ts5App')
 
         this.init = function($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
-          if (!$scope.customEffective) {
+          if (!$scope.customEffective && !$scope.endCurrentEffective) {
             options.startDate = ($scope.customDate !== null && $scope.customDate !== undefined) ? $scope.customDate : dateUtility.tomorrowFormattedDatePicker();
+          }else if ($scope.endCurrentEffective) {
+            options.startDate = dateUtility.nowFormattedDatePicker();
           }
-          
+
           var datePickerInput = $element.find('input[type="text"]');
           datePickerInput.datepicker(options);
           datePickerInput.datepicker('update', $scope.ngModel);

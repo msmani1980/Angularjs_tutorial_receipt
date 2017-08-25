@@ -113,8 +113,8 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.editing = false;
       $scope.storeNumbersList = [];
-      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormatted(1);
-      $scope.today = dateUtility.nowFormatted();
+      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
+      $scope.today = dateUtility.nowFormattedDatePicker();
       $scope.isEditing = false;
       resetSearchMeta();
     }
@@ -126,7 +126,7 @@ angular.module('ts5App')
 
       var payload = {
         companyId: globalMenuService.company.get(),
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
         limit: $this.meta.limit,
         offset: $this.meta.offset
       };
@@ -204,11 +204,11 @@ angular.module('ts5App')
         return false;
       }
 
-      return dateUtility.isToday(originalStore.endDate);
+      return dateUtility.isTodayDatePicker(originalStore.endDate);
     };
 
     $scope.canEdit = function(store) {
-      return dateUtility.isToday(store.endDate) || dateUtility.isAfterToday(store.endDate);
+      return dateUtility.isTodayDatePicker(store.endDate) || dateUtility.isAfterTodayDatePicker(store.endDate);
     };
 
     $scope.fieldDisabled = function(store) {
@@ -217,7 +217,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return $scope.canEdit(originalStore) && dateUtility.isTodayOrEarlier(originalStore.startDate);
+      return $scope.canEdit(originalStore) && dateUtility.isTodayOrEarlierDatePicker(originalStore.startDate);
     };
 
     $scope.editStoreNumber = function(store) {
@@ -228,5 +228,9 @@ angular.module('ts5App')
       $scope.isEditing = true;
       displayLoadingModal();
       getCurrentStoreNumber(store.id);
+    };
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
   });

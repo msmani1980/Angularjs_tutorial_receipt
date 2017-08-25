@@ -64,11 +64,11 @@ angular.module('ts5App')
     };
 
     $scope.canEdit = function (catalog) {
-      return dateUtility.isTomorrowOrLater(catalog.endDate);
+      return dateUtility.isTomorrowOrLaterDatePicker(catalog.endDate);
     };
 
     $scope.canDelete = function (catalog) {
-      return dateUtility.isTomorrowOrLater(catalog.startDate);
+      return dateUtility.isTomorrowOrLaterDatePicker(catalog.startDate);
     };
 
     $scope.removeRecord = function (catalog) {

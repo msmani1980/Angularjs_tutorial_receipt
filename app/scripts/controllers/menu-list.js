@@ -103,7 +103,7 @@ angular.module('ts5App')
     }
 
     $scope.searchMenus = function() {
-      lastStartDate = dateUtility.nowFormatted('YYYYMMDD');
+      lastStartDate = dateUtility.nowFormattedDatePicker('YYYYMMDD');
       $scope.menuList = [];
       $this.meta = {
         count: undefined,
@@ -124,13 +124,13 @@ angular.module('ts5App')
       };
 
     $scope.clearForm = function() {
-      lastStartDate = dateUtility.nowFormatted('YYYYMMDD');
+      lastStartDate = dateUtility.nowFormattedDatePicker('YYYYMMDD');
       $scope.search = {};
       $scope.menuList = [];
     };
 
     $scope.loadMenus = function() {
-      searchMenus(lastStartDate === null ? dateUtility.nowFormatted('YYYYMMDD') : null);
+      searchMenus(lastStartDate === null ? dateUtility.nowFormattedDatePicker('YYYYMMDD') : null);
     };
 
     function showToast(className, type, message) {
@@ -167,7 +167,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return dateUtility.isAfterToday(menu.endDate) || dateUtility.isToday(menu.endDate);
+      return dateUtility.isAfterTodayDatePicker(menu.endDate) || dateUtility.isTodayDatePicker(menu.endDate);
     };
 
     $scope.isMenuReadOnly = function(menu) {
@@ -175,7 +175,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return !dateUtility.isAfterToday(menu.startDate);
+      return !dateUtility.isAfterTodayDatePicker(menu.startDate);
     };
 
     function initializeList() {

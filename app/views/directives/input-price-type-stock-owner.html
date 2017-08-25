@@ -26,8 +26,18 @@
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field disable="viewOnly || itemIsInactive" form="form" label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" required="true"></date-picker-field>
+            <date-picker-field ng-if="$parent.editingItem && !$parent.viewOnly && !$parent.isFutureEffectiveDate(itemPrice)"
+            				   disable="viewOnly || itemIsInactive" form="form" label="Effective To" name="PriceEffectiveTo" 
+            				   ng-model="itemPrice.endDate" required="true" 
+            				   end-current-effective="true"></date-picker-field>
+            				   
+           <date-picker-field ng-if="!$parent.editingItem || $parent.viewOnly || $parent.isFutureEffectiveDate(itemPrice)"
+            				   disable="viewOnly || itemIsInactive" form="form" label="Effective To" name="PriceEffectiveTo" 
+            				   ng-model="itemPrice.endDate" required="true" 
+            				   end-current-effective="false"></date-picker-field>
+           
           </div>
+          
 
         </div>
 

@@ -161,7 +161,7 @@ angular.module('ts5App')
     };
 
     $scope.canDelete = function(exciseDuty) {
-      return dateUtility.isAfterToday(exciseDuty.startDate);
+      return dateUtility.isAfterTodayDatePicker(exciseDuty.startDate);
     };
 
     function formatBadDates(record, oldRecord) {
@@ -230,7 +230,7 @@ angular.module('ts5App')
     };
 
     $scope.canEdit = function(record) {
-      return dateUtility.isAfterToday(record.endDate);
+      return dateUtility.isAfterTodayDatePicker(record.endDate);
     };
 
     $scope.isSelectedToEdit = function(record) {
@@ -506,7 +506,7 @@ angular.module('ts5App')
       $scope.recordToEdit = {};
       $scope.inEditMode = false;
       $scope.inCreateMode = false;
-      $scope.minDate = dateUtility.tomorrowFormatted();
+      $scope.minDate = dateUtility.tomorrowFormattedDatePicker();
     }
 
     function initWatchGroups() {
@@ -524,4 +524,8 @@ angular.module('ts5App')
     }
 
     init();
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
+    };
   });

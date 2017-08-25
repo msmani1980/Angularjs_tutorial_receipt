@@ -1,6 +1,4 @@
 'use strict';
-/*global moment*/
-
 /**
  * @ngdoc function
  * @name ts5App.controller:EmployeeCommissionEditCtrl
@@ -16,7 +14,7 @@ angular.module('ts5App')
 
     angular.element('.retail-name-multiple-select').select2();
 
-    $scope.startDate = dateUtility.formatDateForApp(moment().add(1, 'days'));
+    $scope.startDate = dateUtility.tomorrowFormattedDatePicker();
 
     $scope.commission = {
       startDate: angular.copy($scope.startDate),
@@ -35,13 +33,21 @@ angular.module('ts5App')
     $scope.isViewOnly = function() {
       return ($routeParams.state === 'view');
     };
+    
+    $scope.isCreate = function() {
+      return ($routeParams.state === 'create');
+    };
+    
+    $scope.isEdit = function() {
+      return ($routeParams.state === 'edit');
+    };
 
     $scope.isCommissionReadOnly = function() {
       if (angular.isUndefined($scope.commission)) {
         return false;
       }
 
-      if ($routeParams.state === 'create') {
+      if ($routeParams.state === 'create' || (angular.isUndefined($scope.commission))) {
         return false;
       }
 
@@ -49,7 +55,7 @@ angular.module('ts5App')
         return true;
       }
 
-      return !dateUtility.isAfterToday($scope.commission.startDate);
+      return !dateUtility.isAfterTodayDatePicker($scope.commission.startDate);
     };
 
     function formatDatesForApp(commissionObject) {
@@ -237,5 +243,8 @@ angular.module('ts5App')
       var apiCall = $scope.commission.id ? 'updateCommission' : 'createCommission';
       employeeCommissionFactory[apiCall](payload).then(requestSuccessHandler, requestErrorHandler);
     };
-
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
+    };
   });
