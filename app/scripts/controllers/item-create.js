@@ -533,7 +533,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.setLanguages = function(dataFromAPI) {
-      $scope.languages = angular.copy(dataFromAPI.languages);
+      $scope.languages = angular.copy(dataFromAPI);
 
       // Add default language (English)
       var englishLanguage = lodash.findWhere($scope.languages, { id: 1 });
@@ -1107,10 +1107,11 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       for (var key in itemData.notesTranslations) {
         var note = itemData.notesTranslations[key];
         if (note) {
-          notesPayload.push({id: key, note: note});
+          notesPayload.push({ languageId: key, notes: note });
         }
       }
 
+      delete itemData.selectedVoucherNotesLanguage;
       itemData.notesTranslations = notesPayload;
     };
 

@@ -56,8 +56,7 @@ angular.module('ts5App')
 
     var legacyApis = [
       '/rsvr/api/dispatch/store-instances/[0-9]*/status/[9-9][^11]*$',
-      '/rsvr/api/company-discounts/[0-9]*$',
-      '/rsvr/api/languages*$'
+      '/rsvr/api/company-discounts/[0-9]*$'
     ];
 
     var onlyRsvrApis = [
