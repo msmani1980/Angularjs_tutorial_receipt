@@ -41,6 +41,8 @@ angular.module('ts5App')
       VOIDED: 'Voided'
     };
     $scope.displayColumns = {
+      paymentId: true,
+      transactionId: true,
       scheduleNumber: false,
       scheduleDate: false,
       storeNumber: false,
