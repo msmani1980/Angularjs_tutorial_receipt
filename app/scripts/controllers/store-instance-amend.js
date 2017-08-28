@@ -224,6 +224,18 @@ angular.module('ts5App')
       $scope.closeMoveCashBagModal();
     }
 
+    $scope.showOverwriteCashBag = function () {
+      angular.element('.overwrite-cashbag-warning-modal').modal('show');
+    }; 
+
+    $scope.overwriteCashBag = function () {
+      angular.element('.overwrite-cashbag-warning-modal').modal('hide');
+      var destinationId = $scope.cashBagToMove.id;
+      var sourceId = $scope.targetRecordForMoveCashBag.id;
+      cashBagFactory.overwriteCashBag(sourceId, destinationId).then(moveCashBagSuccess, moveCashBagError);
+      resetAllModals();
+    };
+
     $scope.showReallocateCashBag = function () {
       angular.element('.reallocate-cashbag-warning-modal').modal('show');
     };
@@ -551,6 +563,10 @@ angular.module('ts5App')
         $scope.moveCashBagSearchResults = normalizeReallocateSearchResults(dataFromAPI);
       }
 
+      if ($scope.moveCashBagAction === 'overwrite') {
+        $scope.moveCashBagSearchResults = dataFromAPI.cashBags;
+      }
+
       if ($scope.moveCashBagSearchResults.length === 1) {
         $scope.targetRecordForMoveCashBag = $scope.moveCashBagSearchResults[0];
       }
@@ -598,7 +614,28 @@ angular.module('ts5App')
       return storeInstanceFactory.getStoreInstancesList(payload).then($this.searchForMoveCashBagSuccess);
     }
 
+    function searchForOverwriteCashBag () {
+      if (!$scope.moveSearch.cashBag) {
+        return;
+      }
+
+      var companyId = globalMenuService.company.get();
+      var payloadManualCashBag = {
+        cashBagNumber: $scope.moveSearch.cashBag,
+        originationSource:2,
+        isSubmitted: true,
+        isDelete: false,
+        retailCompanyId:companyId,
+        chCompanyId:'',
+        eposCashBagsId:null
+      };
+
+      return cashBagFactory.getCashBagList(companyId, payloadManualCashBag).then($this.searchForMoveCashBagSuccess);
+    }
+
     $scope.searchForMoveCashBag = function () {
+      $scope.moveCashBagSearchResults = null;
+      $scope.targetRecordForMoveCashBag = null;
       if ($scope.moveCashBagAction === 'merge') {
         return searchForMergeCashBag();
       }
@@ -606,6 +643,10 @@ angular.module('ts5App')
       if ($scope.moveCashBagAction === 'reallocate') {
         return searchForReallocateCashBag();
       }
+
+      if ($scope.moveCashBagAction === 'overwrite') {
+        return searchForOverwriteCashBag();
+      }      
     };
 
     $scope.editCashBagNumberShow = function () {
