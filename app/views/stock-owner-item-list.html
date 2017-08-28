@@ -137,11 +137,11 @@
             <i class="fa fa-file"></i>
           </a>
 
-          <a class="btn btn-primary btn-xs" href="#/stock-owner-item-edit/{{item.id}}" ng-show="isItemActive(item.endDate)">
+          <a class="btn btn-primary btn-xs" href="#/stock-owner-item-edit/{{item.id}}" ng-show="isCurrentEffectiveDate(item) || isFutureEffectiveDate(item)">
             <i class="fa fa-pencil"></i>
           </a>
 
-          <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id,key)" ng-show="isItemActive(item.startDate) && isItemActive(item.endDate)">
+          <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id,key)" ng-show="isFutureEffectiveDate(item)">
             <i class="fa fa-trash"></i>
           </button>
 

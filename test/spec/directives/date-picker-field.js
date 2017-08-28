@@ -49,10 +49,21 @@ describe('The Date Picker Field directive', function () {
       template += 'placeholder="' + config.placeholder + '" ';
     }
 
-    if (config.placeholder) {
+    if (config.orientation) {
       template += 'orientation="' + config.orientation + '" ';
     }
+    
+    if (config.customDate) {
+      template += 'customDate="' + config.customDate + '" ';
+    }
+    
+    if (config.customEffective) {
+      template += 'customEffective="' + config.customEffective + '" ';
+    }
 
+    if (config.endCurrentEffective) {
+      template += 'endCurrentEffective="' + config.endCurrentEffective + '" ';
+    }
     template += '></date-picker-field>';
     return template;
   }

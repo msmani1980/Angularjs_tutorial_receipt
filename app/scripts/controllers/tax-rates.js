@@ -240,7 +240,7 @@ angular.module('ts5App')
     };
 
     this.getCurrenciesList = function () {
-      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       var payload = {
         startDate: nowDate,
         endDate: nowDate,
@@ -354,7 +354,9 @@ angular.module('ts5App')
     };
 
     this.createUiSelectSearchPayload = function () {
-      var query = {};
+      var query = {
+        limit: 100
+      };
       if ($scope.search.taxType) {
         query.taxTypeCode = $scope.search.taxType.taxTypeCode;
       }
@@ -471,16 +473,27 @@ angular.module('ts5App')
     };
 
     this.isTaxRateActive = function (taxRate) {
-      try {
-        return (dateUtility.isTodayOrEarlier(taxRate.startDate) && dateUtility.isAfterTodayOrEqual(taxRate.endDate));
-      } catch (e) {
-        console.log(e);
-        return false;
-      }
+      return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
     };
 
     this.hasTaxRateStarted = function (taxRate) {
-      return (dateUtility.isAfterToday(taxRate.startDate) && dateUtility.isAfterToday(taxRate.endDate));
+      return (dateUtility.isAfterTodayDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
+    };
+
+    $scope.isTaxRateEditable = function(taxRate) {
+      if (angular.isUndefined(taxRate)) {
+        return false;
+      }
+
+      return dateUtility.isAfterTodayDatePicker(taxRate.endDate) || dateUtility.isTodayDatePicker(taxRate.endDate);
+    };
+
+    $scope.isDisabled = function(taxRate) {
+      return !(dateUtility.isAfterTodayDatePicker(taxRate.startDate));
+    };
+
+    $scope.isDisabledEndDateForm = function(taxRate) {
+      return !(dateUtility.isAfterTodayDatePicker(taxRate.endDate) || dateUtility.isTodayDatePicker(taxRate.endDate));
     };
 
     this.displayConfirmDialog = function (taxRate) {
@@ -522,9 +535,6 @@ angular.module('ts5App')
     };
 
     this.editSuccess = function () {
-      $scope.errorResponse = [];
-      $scope.displayError = false;
-
       $this.hideLoadingModal();
       var id = angular.copy($scope.taxRateSaved);
       messageService.display('success', 'Successfully Saved <b>Tax Rate ID: </b>' + id);
@@ -543,22 +553,7 @@ angular.module('ts5App')
       $this.showLoadingModal(message);
       $scope.taxRateSaved = taxRate.id;
       var promises = $this.createEditPromises(taxRate);
-      $q.all(promises).then(
-        $this.editSuccess,
-        function (dataFromAPI) {
-          $this.hideLoadingModal();
-          $scope.displayError = true;
-
-          var taxRateEdited = $scope.companyTaxRatesList.filter(function(item) {
-            return item.id === taxRate.id;
-          })[0];
-
-          taxRateEdited.saved = false;
-          $this.addEditActionToTaxRate(taxRateEdited);
-
-          $scope.errorResponse = angular.copy(dataFromAPI);
-        }
-      );
+      $q.all(promises).then($this.editSuccess, $this.errorHandler);
     };
 
     this.saveTaxRateEdits = function (taxRate) {
@@ -581,8 +576,8 @@ angular.module('ts5App')
 
     this.determineMinDate = function (date) {
       var diff = 1;
-      if (!dateUtility.isTomorrowOrLater(date)) {
-        diff = dateUtility.diff(dateUtility.nowFormatted(), date);
+      if (!dateUtility.isTomorrowOrLaterDatePicker(date)) {
+        diff = dateUtility.diff(dateUtility.nowFormattedDatePicker(), date);
       }
 
       var dateString = diff.toString() + 'd';
@@ -752,7 +747,7 @@ angular.module('ts5App')
     };
 
     $scope.showClearButton = function () {
-      return ($this.isDateRangeSet() || $this.isSearchActive() || ($scope.companyTaxRatesList.length >= 0));
+      return ($this.isDateRangeSet() || $this.isSearchActive() || ($scope.companyTaxRatesList.length > 0));
     };
 
     $scope.searchRecords = function () {
@@ -792,7 +787,7 @@ angular.module('ts5App')
     };
 
     $scope.determineMinDate = function (date) {
-      date = date || dateUtility.tomorrowFormatted();
+      date = date || dateUtility.tomorrowFormattedDatePicker();
       return $this.determineMinDate(date);
     };
 
@@ -841,11 +836,7 @@ angular.module('ts5App')
     };
 
     $scope.isTaxRateTypePercentage = function (taxRate) {
-      if (angular.isDefined(taxRate.taxRateType)) {
-        return (taxRate.taxRateType.taxRateType === 'Percentage');
-      }
-
-      return true;
+      return angular.isDefined(taxRate.taxRateType) && taxRate.taxRateType.taxRateType === 'Percentage';
     };
 
     $scope.cancelNewTaxRate = function (taxRate) {
@@ -865,12 +856,19 @@ angular.module('ts5App')
     };
 
     $scope.isTaxRateCountryFieldDisabled = function (taxRate) {
-      return ((angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length) ||
-      $scope.isFieldReadOnly(taxRate));
+      return $scope.isDisabled(taxRate) || (angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length);
+    };
+
+    $scope.isTaxRateCountryFieldDisabledForCreate = function (taxRate) {
+      return angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length;
     };
 
     $scope.isTaxRateStationsDisabled = function (taxRate) {
-      return (!taxRate.countryName || $scope.isFieldReadOnly(taxRate));
+      return this.isDisabled(taxRate) || (!taxRate.countryName || $scope.isFieldReadOnly(taxRate));
+    };
+
+    $scope.isTaxRateStationsDisabledForCreate = function (taxRate) {
+      return !taxRate.countryName || $scope.isFieldReadOnly(taxRate);
     };
 
     $scope.showCurrencyCode = function (taxRate) {
@@ -879,7 +877,7 @@ angular.module('ts5App')
     };
 
     $scope.isTaxRateCurrencyCodeDisabled = function (taxRate) {
-      return ($scope.isTaxRateTypePercentage(taxRate) || $scope.isFieldReadOnly(taxRate));
+      return $scope.isDisabled(taxRate) || $scope.isTaxRateTypePercentage(taxRate);
     };
 
     $scope.filterTaxRateStations = function (taxRate) {
@@ -901,7 +899,11 @@ angular.module('ts5App')
     };
 
     $scope.onUiSelect = function ($select) {
-      // clear search text
       $select.search = '';
     };
+
+    $scope.isCurrentEffectiveDate = function (taxRate) {
+      return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
+    };
+
   });

@@ -134,7 +134,7 @@ angular.module('ts5App')
     };
 
     $scope.canDelete = function (exciseDuty) {
-      return dateUtility.isAfterToday(exciseDuty.startDate);
+      return dateUtility.isAfterTodayDatePicker(exciseDuty.startDate);
     };
 
     function formatRecordForAPI(record) {
@@ -175,7 +175,7 @@ angular.module('ts5App')
     };
 
     $scope.canEdit = function (exciseDuty) {
-      return dateUtility.isAfterToday(exciseDuty.endDate);
+      return dateUtility.isAfterTodayDatePicker(exciseDuty.endDate);
     };
 
     $scope.isSelectedToEdit = function (exciseDuty) {
@@ -300,10 +300,14 @@ angular.module('ts5App')
       $scope.search = null;
       $scope.recordToEdit = null;
       $scope.inEditMode = false;
-      $scope.minDate = dateUtility.tomorrowFormatted();
+      $scope.minDate = dateUtility.tomorrowFormattedDatePicker();
       var companyId = globalMenuService.company.get();
       exciseDutyFactory.getCompanyData(companyId).then(callInitAPIs, showErrors);
     }
 
     init();
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
+    };
   });

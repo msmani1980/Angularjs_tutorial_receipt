@@ -16,7 +16,7 @@ angular.module('ts5App')
     };
 
     var normalizeLanguages = function(languages) {
-      return (languages.split(',')[0] !== '') ? languages.split(',').join(', ') : 'N/A';
+      return (languages !== undefined && languages.split(',')[0] !== '') ? languages.split(',').join(', ') : 'N/A';
     };
 
     var actions = {
