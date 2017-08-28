@@ -1,6 +1,6 @@
 'use strict';
 
-describe('The Item Create Controller', function() {
+fdescribe('The Item Create Controller', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -795,7 +795,7 @@ describe('The Item Create Controller', function() {
         });
 
       });
-      
+
       describe('formatPrices', function() {
 
         it('should set itemId id priceCurrencies when cloningItem and remove itemId id priceCurrencies id property', function() {
@@ -805,9 +805,9 @@ describe('The Item Create Controller', function() {
               itemId: 123,
               id:179,
               priceCurrencies: [{
-                companyCurrencyId: 153, 
-                price: '2.00', 
-                id: 1958      	  
+                companyCurrencyId: 153,
+                price: '2.00',
+                id: 1958
               }]
             }]
           };
@@ -815,7 +815,7 @@ describe('The Item Create Controller', function() {
           expect(itemData.prices[0].itemId).toBeUndefined();
           expect(itemData.prices[0].id).toBeUndefined();
           expect(itemData.prices[0].priceCurrencies[0].id).toBeUndefined();
-        });  
+        });
 
       });
 
@@ -1410,7 +1410,7 @@ describe('The Item Create Controller', function() {
             { companyCurrencyId: mockCurrencyList[0].id, price: '2.00', id: 133 }
         ]};
 
-        stationExceptionCurrenciesList = ItemCreateCtrl.generateStationCurrenciesList(stationException, 
+        stationExceptionCurrenciesList = ItemCreateCtrl.generateStationCurrenciesList(stationException,
         		mockCurrencyList);
 
         stationExceptionCurrency = stationExceptionCurrenciesList[0];
@@ -1430,7 +1430,7 @@ describe('The Item Create Controller', function() {
         expect(stationExceptionCurrency.price).toBeDefined();
         expect(stationExceptionCurrency.price).toEqual('2.00');
       });
-      
+
       it('should contain a stationExceptionCurrency object with a id', function() {
         expect(stationExceptionCurrency.id).toBeDefined();
         expect(stationExceptionCurrency.id).toEqual(133);
