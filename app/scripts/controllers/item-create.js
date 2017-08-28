@@ -473,7 +473,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getWeightList(),
         itemsFactory.getPriceTypesList(),
         itemsFactory.getItemsList({}),
-        currencyFactory.getCompany(companyId)
+        companiesFactory.getCompany(companyId)
       ];
     };
 

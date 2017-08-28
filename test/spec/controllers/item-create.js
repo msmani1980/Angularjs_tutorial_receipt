@@ -23,6 +23,8 @@ fdescribe('The Item Create Controller', function() {
   beforeEach(module('served/units-weight.json'));
   beforeEach(module('served/price-types.json'));
   beforeEach(module('served/company-discounts.json'));
+  beforeEach(module('served/languages-records.json'));
+  beforeEach(module('served/company-data.json'));
 
   var $rootScope;
   var scope;
@@ -300,6 +302,7 @@ fdescribe('The Item Create Controller', function() {
       var companiesFactory;
       var currencyFactory;
       var itemsFactory;
+      var languagesService;
       var salesCategoriesDeferred;
       var tagsListDeferred;
       var taxTypeDeferred;
@@ -313,12 +316,14 @@ fdescribe('The Item Create Controller', function() {
       var priceTypeListDeferred;
       var itemsListDeferred;
       var getDiscountListDeferred;
+      var getLanguagesDeferred;
+      var getCompanyDeferred;
 
       beforeEach(inject(function($injector, $q, $rootScope, _servedSalesCategories_, _servedTags_,
         _servedTaxTypes_,
         _servedCurrencies_, _servedAllergens_, _servedItemTypes_, _servedCharacteristics_,
         _servedUnitsDimension_, _servedUnitsVolume_, _servedUnitsWeight_, _servedPriceTypes_,
-        _servedItemsList_, _servedCompanyDiscounts_) {
+        _servedItemsList_, _servedCompanyDiscounts_, _servedLanguagesRecords_, _servedCompanyData_) {
         responseArray = [
           _servedSalesCategories_,
           _servedTags_,
@@ -332,12 +337,14 @@ fdescribe('The Item Create Controller', function() {
           _servedUnitsWeight_,
           _servedPriceTypes_,
           _servedItemsList_,
-          _servedCompanyDiscounts_
+          _servedCompanyDiscounts_,
+          _servedCompanyData_
         ];
 
         companiesFactory = $injector.get('companiesFactory');
         currencyFactory = $injector.get('currencyFactory');
         itemsFactory = $injector.get('itemsFactory');
+        languagesService = $injector.get('languagesService');
 
         salesCategoriesDeferred = $q.defer();
         tagsListDeferred = $q.defer();
@@ -353,6 +360,8 @@ fdescribe('The Item Create Controller', function() {
         itemsListDeferred = $q.defer();
         getDiscountListDeferred = $q.defer();
         getDiscountListDeferred.resolve(responseArray[12]);
+        getLanguagesDeferred = $q.defer();
+        getCompanyDeferred = $q.defer();
 
         spyOn(ItemCreateCtrl, 'setSalesCategories').and.callThrough();
         spyOn(companiesFactory, 'getSalesCategoriesList').and.returnValue(responseArray[0]);
@@ -367,7 +376,9 @@ fdescribe('The Item Create Controller', function() {
         spyOn(itemsFactory, 'getWeightList').and.returnValue(responseArray[9]);
         spyOn(itemsFactory, 'getPriceTypesList').and.returnValue(responseArray[10]);
         spyOn(itemsFactory, 'getItemsList').and.returnValue(responseArray[11]);
+        spyOn(companiesFactory, 'getCompany').and.returnValue(responseArray[13]);
         spyOn(itemsFactory, 'getDiscountList').and.returnValue(getDiscountListDeferred.promise);
+        spyOn(languagesService, 'getLanguagesList').and.returnValue(getLanguagesDeferred.promise);
         createController($injector);
       }));
 
