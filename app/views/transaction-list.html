@@ -252,7 +252,7 @@
       <th>CC Processed Date</th>
       <th>CC Transaction Status</th>
       <th>CC Authorization Status</th>
-      <!-- <th>CC Transaction ID</th> -->
+      <th>CC Transaction ID</th>
       <th>Amount</th>
       <th ng-show="displayColumns.scheduleNumber">Schedule Number</th>
       <th ng-show="displayColumns.scheduleDate">Schedule Date</th>
@@ -274,7 +274,7 @@
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccProcessedDate') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccTransactionStatus') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccAuthorizationStatus') }}</td>
-      <!-- <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'paymentId') }}</td>  -->
+      <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'paymentId') }}</td>
       <td>{{ printTransactionAmount(transaction) }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
       <td ng-show="displayColumns.scheduleDate">{{ printScheduleDate(transaction) }}</td>
