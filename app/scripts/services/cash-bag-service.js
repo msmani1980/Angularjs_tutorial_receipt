@@ -23,6 +23,7 @@ angular.module('ts5App')
     var manualEposDataRequestURL = ENV.apiUrl + '/rsvr/api/cashbag-:type/:recordId';
     var eposSalesRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/epossales';
     var editCbNumRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:id/editCashBagNum';
+    var overwriteRequestURL = ENV.apiUrl + '/rsvr/api/cash-bags/:sourceId/overwrite/:destinationId';
 
     var requestCashBagParameters = {
       id: '@id',
@@ -51,6 +52,11 @@ angular.module('ts5App')
     var manualEposCashRequestParams = {
       recordId: '@recordId',
       cashBagId: '@cashBagId'
+    };
+
+    var overwriteCashBagRequestParams = {
+      sourceId: '@sourceId',
+      destinationId: '@destinationId'
     };
 
     var actions = {
@@ -110,7 +116,10 @@ angular.module('ts5App')
       },
       getEposSales: {
         method: 'GET'
-      }
+      },
+      overwriteCashBag: {
+        method: 'PUT'
+      }      
     };
 
     var requestResource = $resource(requestURL, requestCashBagParameters, actions);
@@ -126,6 +135,7 @@ angular.module('ts5App')
     var manualEposDataRequestResource = $resource(manualEposDataRequestURL, manualEposDataRequestParams, actions);
     var eposSalesRequestResource = $resource(eposSalesRequestURL, eposSalesRequestParameters, actions);
     var editCbNumberRequestResource = $resource(editCbNumRequestURL, requestParameters, actions);
+    var overwriteRequestResource = $resource(overwriteRequestURL, overwriteCashBagRequestParams, actions);
 
     function getCashBagList(companyId, optionalPayload) {
       var payload = {};
@@ -287,6 +297,12 @@ angular.module('ts5App')
       return eposSalesRequestResource.getEposSales().$promise;
     }
 
+    function overwriteCashBag(sourceId, destinationId) {
+      overwriteCashBagRequestParams.sourceId = sourceId;
+      overwriteCashBagRequestParams.destinationId = destinationId;
+      return overwriteRequestResource.overwriteCashBag().$promise;
+    }
+
     return {
       getCashBagList: getCashBagList,
       getCashBag: getCashBag,
@@ -311,6 +327,7 @@ angular.module('ts5App')
       updateManualCashBagRecord: updateManualCashBagRecord,
       deleteManualCashBagRecord: deleteManualCashBagRecord,
       getEposSales: getEposSales,
-      editCashBagNumber: editCashBagNumber
+      editCashBagNumber: editCashBagNumber,
+      overwriteCashBag: overwriteCashBag
     };
   });

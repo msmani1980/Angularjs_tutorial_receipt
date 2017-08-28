@@ -111,6 +111,10 @@ angular.module('ts5App')
       return cashBagService.editCashBagNumber(cashBagId, cashBagNumber);
     };
 
+    var overwriteCashBag = function (sourceId, destinationId) {
+      return cashBagService.overwriteCashBag(sourceId, destinationId);
+    };
+
     return {
       getCompanyId: getCompanyId,
       getCashBagList: getCashBagList,
@@ -135,6 +139,7 @@ angular.module('ts5App')
       getStoreInstance: getStoreInstance,
       verifyCashBag: verifyCashBag,
       unverifyCashBag: unverifyCashBag,
-      editCashBagNumber: editCashBagNumber
+      editCashBagNumber: editCashBagNumber,
+      overwriteCashBag: overwriteCashBag
     };
   });
