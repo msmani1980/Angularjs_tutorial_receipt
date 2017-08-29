@@ -14,8 +14,8 @@
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('CateringStation')">
           <select required class="form-control" ng-model="formData.cateringStationId" name="CateringStation">
-            <option ng-disabled="true" selected="selected" value>Select Catering Station</option>
-            <option ng-repeat="station in cateringStationList | orderBy:'name' track by station.id" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
+            <option ng-disabled="true" ng-selected="selected" value>Select Catering Station</option>
+            <option ng-repeat="station in cateringStationList | orderBy:'name' track by station.id" ng-selected="{{station.id == formData.cateringStationId}}" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
           </select>
         </div>
       </div>
@@ -58,7 +58,7 @@
         <label>Schedule Date <span ng-show="!isActionState('end-instance')">*</span></label>
       </div>
       <div class="col-xs-12 col-sm-8">
-          <date-picker-field form="createStoreInstance" name="scheduleDate" gray-past="true" required="true" ng-model="formData.scheduleDate" disable="isActionState('end-instance')"></date-picker-field>
+          <date-picker-field form="createStoreInstance" name="scheduleDate" gray-past="false"  custom-effective="isActionState('end-instance')" custom-date="formData.scheduleDate" required="true" ng-model="formData.scheduleDate" disable="isActionState('end-instance')"></date-picker-field>
       </div>
     </div>
 
@@ -77,6 +77,20 @@
         </div>
       </div>
     </div>
+    
+    <div class="row">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
+        <label>Route <span ng-show="!isActionState('end-instance')">*</span></label>
+      </div>
+      <div class="col-xs-12 col-sm-8">
+        <div class="form-group">
+          <ui-select name="route" required ng-model="formData.scheduleId" theme="bootstrap" ng-disabled="isActionState('end-instance')" id="route">
+            <ui-select-match placeholder="Select a Route">{{ $select.selected.departure + ' - ' + $select.selected.arrival}}</ui-select-match>
+            <ui-select-choices repeat="route in routesList" ui-lock-choice="isDisabled()">{{route.departure + ' - ' + route.arrival}}</ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+    </div>
 
     <div class="row" ng-if="isActionState('replenish')">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
@@ -85,7 +99,7 @@
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('DispatchedCateringStation')">
           <select ng-disabled="true" required class="form-control" ng-model="formData.dispatchedCateringStationId" name="DispatchedCateringStation">
-            <option ng-repeat="station in cateringStationList | orderBy:'name' track by station.id" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
+            <option ng-repeat="station in dispatchStationList | orderBy:'name' track by station.stationId" value="{{ station.stationId }}">{{ station.name }} - {{ station.code }}</option>
           </select>
         </div>
       </div>

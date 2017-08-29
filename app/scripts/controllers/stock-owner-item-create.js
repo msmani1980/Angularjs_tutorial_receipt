@@ -245,7 +245,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
 
     this.filterItemsByFormDates = function() {
       $scope.substitutions = lodash.filter($scope.items, function(item) {
-        return dateUtility.isAfterOrEqual(dateUtility.formatDateForApp(item.endDate), $scope.formData.startDate) && dateUtility.isAfterOrEqual($scope.formData.endDate, dateUtility.formatDateForApp(item.startDate));
+        return dateUtility.isAfterOrEqualDatePicker(dateUtility.formatDateForApp(item.endDate), $scope.formData.startDate) && dateUtility.isAfterOrEqualDatePicker($scope.formData.endDate, dateUtility.formatDateForApp(item.startDate));
       });
 
       $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
@@ -331,12 +331,12 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     };
 
     this.checkIfItemIsActive = function(itemData) {
-      $scope.itemIsActive = dateUtility.isTodayOrEarlier(itemData.startDate);
+      $scope.itemIsActive = dateUtility.isTodayOrEarlierDatePicker(itemData.startDate);
     };
 
     // checks to see if the item is inactive
     this.checkIfItemIsInactive = function(itemData) {
-      $scope.itemIsInactive = dateUtility.isYesterdayOrEarlier(itemData.endDate);
+      $scope.itemIsInactive = dateUtility.isYesterdayOrEarlierDatePicker(itemData.endDate);
       $scope.viewOnly = $scope.viewOnly || $scope.itemIsInactive;
     };
 
@@ -395,9 +395,9 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
 
     this.determineMinDate = function() {
       var diff = 1;
-      if ($scope.editingItem && !dateUtility.isTomorrowOrLater($scope.formData.startDate)) {
+      if ($scope.editingItem && !dateUtility.isTomorrowOrLaterDatePicker($scope.formData.startDate)) {
         diff = dateUtility.diff(
-          dateUtility.nowFormatted(),
+          dateUtility.nowFormattedDatePicker(),
           $scope.formData.startDate
         );
       }
@@ -756,5 +756,13 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       return activeBtn;
 
     };
-
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
+    };
+    
+    $scope.isFutureEffectiveDate = function (date) {
+      return (dateUtility.isAfterTodayDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate)));
+    };
+    
   });

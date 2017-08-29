@@ -11,7 +11,6 @@ angular.module('ts5App')
   .controller('CompanyRelationshipListCtrl', function($q, $scope, $route, $location, $routeParams, $filter,
     messageService, dateUtility, companyRelationshipFactory) {
 
-    var $this = this;
     $scope.viewName = 'Company Relationships';
     $scope.isLoading = true;
 
@@ -64,8 +63,7 @@ angular.module('ts5App')
     }
 
     $scope.isActive = function(date) {
-      var parsedDate = $this.parseDate(date);
-      return parsedDate <= dateUtility.now();
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
 
     $scope.isInactive = $scope.isActive;
@@ -237,4 +235,12 @@ angular.module('ts5App')
     };
 
     setupController();
+    
+    $scope.isCurrentEffectiveDate = function (date) {
+      return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
+    };
+    
+    $scope.isFutureEffectiveDate = function (date) {
+      return (dateUtility.isAfterTodayDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate)));
+    };
   });

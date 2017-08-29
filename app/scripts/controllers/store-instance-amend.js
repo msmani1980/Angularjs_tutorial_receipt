@@ -896,7 +896,7 @@ angular.module('ts5App')
     function isCompanyUsingCash () {
       var cashPreference = lodash.where($scope.companyPreferences, { choiceName: 'Active', optionCode: 'CSL', optionName: 'Cashless' })[0];
       if (cashPreference && cashPreference.hasOwnProperty('startDate')) {
-        var yesterdayOrEarlier = dateUtility.isTodayOrEarlier(dateUtility.formatDateForApp(cashPreference.startDate, 'YYYY-MM-DD'));
+        var yesterdayOrEarlier = dateUtility.isTodayOrEarlierDatePicker(dateUtility.formatDateForApp(cashPreference.startDate, 'YYYY-MM-DD'));
 
         return !(cashPreference.isSelected === true && yesterdayOrEarlier);
       }
@@ -1039,7 +1039,7 @@ angular.module('ts5App')
           isDeleted: cashBag.delete === true,
           deletedByUser: (cashBag.updatedByPerson) ? cashBag.updatedByPerson.userName : 'Unknown',
           deletedOn: dateUtility.formatDateForApp(cashBag.updatedOn),
-          isManual: cashBag.originationSource === 2,
+          isManual: (cashBag.originationSource === 2 && cashBag.eposCashbagId === null),
           scheduleNumber: cashBag.scheduleNumber,
           scheduleDate: dateUtility.formatTimestampForApp(cashBag.scheduleDate),
           isSubmitted: cashBag.submitted,
@@ -1528,7 +1528,7 @@ angular.module('ts5App')
         reconciliationFactory.getCashBagManualData('items', payloadForManualData),
         reconciliationFactory.getCashBagManualData('promotions', payloadForManualData),
         reconciliationFactory.getCashBagManualData('discounts', payloadForManualData),
-        storeInstanceAmendFactory.getMasterItemList({ startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) })
+        storeInstanceAmendFactory.getMasterItemList({ startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()) })
       ];
 
       $q.all(promises).then(initDependenciesSuccess, handleResponseError);

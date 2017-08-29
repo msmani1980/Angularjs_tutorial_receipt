@@ -262,7 +262,7 @@
               <td>Quantity</td>
               <td>Total</td>
             </tr>
-            <tr ng-repeat="stockItem in stockTotals.stockItems | filter:{itemTypeName:modalItemTypeName}">
+            <tr ng-if="stockItem.eposQuantity !== null && stockItem.eposQuantity !== 0" ng-repeat="stockItem in stockTotals.stockItems | filter:{itemTypeName:modalItemTypeName}">
               <td>{{stockItem.itemName}}</td>
               <td>{{stockItem.eposQuantity}}</td>
               <td>{{stockItem.eposTotal}}</td>
@@ -756,11 +756,13 @@
 
       <div class="modal-body">
         <p>You are about perform the following action: <strong>{{actionName}}</strong></p>
+        <div ng-if="actionName !== 'Pay Commission'">
         <p>The following Store will be updated:
         <p>
           <strong>Store Number: </strong>{{storeInstance.storeDetails.storeNumber}} -
           <strong>Schedule Date: </strong>{{storeInstance.scheduleDate}} -
           <strong>Store Instance: </strong>{{storeInstance.id}}
+        </div>  
       </div>
 
       <div class="modal-footer">

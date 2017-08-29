@@ -85,7 +85,7 @@
               <div class="col-xs-12 col-sm-6">
                 <fieldset>
                   <date-picker-field ng-if="minDate"  disable="viewOnly || itemIsInactive" form="form"
-                                     name="EffectiveTo" min-date="minDate" label="Effective To" required="true"
+                                     name="EffectiveTo" min-date="minDate" label="Effective To" required="true" end-current-effective="isCurrentEffectiveDate(formData)"
                                      ng-model="formData.endDate">
                   </date-picker-field>
                 </fieldset>

@@ -66,7 +66,7 @@ angular.module('ts5App')
 
     this.getDetailedCompanyCurrencies = function() {
       var payload = {
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
       };
       currencyFactory.getDetailedCompanyCurrencies(payload).then($this.attachDetailedCompanyCurrencyListToScope);
     };
@@ -233,8 +233,8 @@ angular.module('ts5App')
         $scope.companyCurrencyList.push({
           isNew: true,
           companyId: globalMenuService.company.get(),
-          startDate: dateUtility.tomorrowFormatted(),
-          endDate: dateUtility.tomorrowFormatted(),
+          startDate: dateUtility.tomorrowFormattedDatePicker(),
+          endDate: dateUtility.tomorrowFormattedDatePicker(),
           selectedDenominations: [],
           selectedEasyPayDenominations: []
         });
@@ -246,7 +246,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return !(dateUtility.isAfterToday(currency.startDate));
+      return !(dateUtility.isAfterTodayDatePicker(currency.startDate));
     };
 
     $scope.isCurrencyPartialReadOnly = function(currency) {
@@ -254,7 +254,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return !(dateUtility.isToday(currency.endDate) || dateUtility.isAfterToday(currency.endDate));
+      return !(dateUtility.isTodayDatePicker(currency.endDate) || dateUtility.isAfterTodayDatePicker(currency.endDate));
     };
 
     $scope.clearDenominations = function(currency) {
