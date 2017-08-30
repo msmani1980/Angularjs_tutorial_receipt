@@ -279,6 +279,30 @@ angular.module('ts5App')
       return (cashBag && !cashBag.isManual && !cashBag.isVerified);
     };
 
+    $scope.canOverwrite = function (cashBag) {
+      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.flightSectors)) {
+        var isSchedule = false;
+        if (cashBag.flightSectors !== null) {
+          cashBag.flightSectors.forEach(function (sector) {
+            if (!sector.isPosttrip) {
+              isSchedule = true;
+            }
+          });
+        }  
+
+        if (isSchedule) {
+          return false;
+        }
+      }
+
+      var hasBankRef = false;
+      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.bankReferenceNumber) && cashBag.bankReferenceNumber !== null && cashBag.bankReferenceNumber !== '') {
+        hasBankRef = true;
+      }
+
+      return (cashBag && !cashBag.isManual && !cashBag.isVerified && !hasBankRef);
+    };
+
     $scope.canReallocate = function (cashBag) {
       if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.flightSectors)) {
         var isSchedule = false;
