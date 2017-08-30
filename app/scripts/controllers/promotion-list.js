@@ -54,6 +54,10 @@ angular.module('ts5App')
       $scope.promotionList = [];
     };
 
+    $scope.viewPromotion = function(promotion) {
+      $location.path('/promotions/view/' + promotion.id);
+    };
+
     $scope.editPromotion = function(promotion) {
       $location.path('/promotions/edit/' + promotion.id);
     };
