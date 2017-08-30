@@ -27,50 +27,49 @@ angular.module('ts5App')
     $scope.isSearch = false;
     
     $scope.loadReceiptRules = function() {
-    	loadReceiptRules();
+      loadReceiptRules();
     };
     
     function loadReceiptRules() {
-        if ($this.meta.offset >= $this.meta.count) {
-          return;
-        }
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
 
-        showLoadingBar();
-        $this.formatMultiSelectedValuesForSearch();
-        var payload = lodash.assign(angular.copy($scope.search), {
+      showLoadingBar();
+      $this.formatMultiSelectedValuesForSearch();
+      var payload = lodash.assign(angular.copy($scope.search), {
           limit: $this.meta.limit,
           offset: $this.meta.offset
         });
 
-        receiptsFactory.getReceiptRules(payload).then($this.getReceiptRulesSuccess);
-        $this.meta.offset += $this.meta.limit;
+      receiptsFactory.getReceiptRules(payload).then($this.getReceiptRulesSuccess);
+      $this.meta.offset += $this.meta.limit;
     }
     
     this.getReceiptRulesSuccess = function(response) {
-        $this.meta.count = $this.meta.count || response.meta.count;
-        $scope.receiptRules = response.receiptRules;
-        hideLoadingBar();
+      $this.meta.count = $this.meta.count || response.meta.count;
+      $scope.receiptRules = response.receiptRules;
+      hideLoadingBar();
     };
     
     $scope.searchReceiptRuleData = function() {
-	    $scope.receiptRules = [];
-	    $this.meta = {
-	      count: undefined,
-	      limit: 100,
-	      offset: 0
-	    };
-	
-	    $scope.isSearch = true;
-	
-	    $scope.loadReceiptRules();
-	};
+      $scope.receiptRules = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.isSearch = true;
+
+      $scope.loadReceiptRules();
+    };
       
     $scope.clearSearchForm = function() {
-	    $scope.isSearch = false;
-	    $scope.search = {};
-	    $scope.multiSelectedValues = {};
-	    $scope.countriesList = [];
-	    $scope.globalStationList = [];
+      $scope.isSearch = false;
+      $scope.search = {};
+      $scope.multiSelectedValues = {};
+      $scope.countriesList = [];
+      $scope.globalStationList = [];
     };
       
     function showLoadingBar() {
@@ -85,7 +84,7 @@ angular.module('ts5App')
     }
     
     this.formatMultiSelectedValuesForSearch = function() {
-    	$this.addSearchValuesFromMultiSelectArray('stationId', $scope.multiSelectedValues.globalStationList, 'id');
+      $this.addSearchValuesFromMultiSelectArray('stationId', $scope.multiSelectedValues.globalStationList, 'id');
     };
     
     this.addSearchValuesFromMultiSelectArray = function(searchKeyName, multiSelectArray, multiSelectElementKey) {
@@ -101,33 +100,33 @@ angular.module('ts5App')
         $scope.search[searchKeyName] = searchArray.toString();
       };
       
-     this.getCompanyGlobalStationSuccess = function(response) {
-        $scope.globalStationList = angular.copy(response.response);
-     };
+    this.getCompanyGlobalStationSuccess = function(response) {
+      $scope.globalStationList = angular.copy(response.response);
+    };
 
-     this.getCountireSuccess = function(response) {
-        $scope.countriesList = angular.copy(response.countries);
-     };
+    this.getCountireSuccess = function(response) {
+      $scope.countriesList = angular.copy(response.countries);
+    };
       
-     this.makeInitPromises = function() {
-	     var onLoadPayload = lodash.assign(angular.copy($scope.search), {
-	    	 startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
-	      });
+    this.makeInitPromises = function() {
+      var onLoadPayload = lodash.assign(angular.copy($scope.search), {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
+      });
 
-        var promises = [
-          receiptsFactory.getCountriesList().then($this.getCountireSuccess),
-          receiptsFactory.getCompanyGlobalStationList(onLoadPayload).then($this.getCompanyGlobalStationSuccess)
-        ];
+      var promises = [
+        receiptsFactory.getCountriesList().then($this.getCountireSuccess),
+        receiptsFactory.getCompanyGlobalStationList(onLoadPayload).then($this.getCompanyGlobalStationSuccess)
+      ];
 
-        return promises;
-      };
+      return promises;
+    };
       
-      this.init = function() {
+    this.init = function() {
         var initDependencies = $this.makeInitPromises();
         $q.all(initDependencies).then(function() {
           angular.element('#search-collapse').addClass('collapse');
         });
       };
 
-      this.init();
+    this.init();
   });
