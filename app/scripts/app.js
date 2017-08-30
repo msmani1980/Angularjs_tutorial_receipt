@@ -388,6 +388,10 @@ angular.module('ts5App', [
     templateUrl: 'views/schedule.html',
     controller: 'ScheduleCtrl',
     controllerAs: 'schedule'
+  }).when('/receipt-rules', {
+    templateUrl: 'views/receipt-rules.html',
+    controller: 'ReceiptRulesCtrl',
+    controllerAs: 'receiptRules'
   }).otherwise({
     redirectTo: '/'
   });
