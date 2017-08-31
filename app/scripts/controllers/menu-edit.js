@@ -24,7 +24,6 @@ angular.module('ts5App')
       hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
-      $scope.menuItemList = [];
     }
 
     $scope.shouldDisableItemSelect = function (menuIndex) {
@@ -340,9 +339,9 @@ angular.module('ts5App')
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
       }
     });
-    
+
     $scope.isCurrentEffectiveDate = function (menuDate) {
       return (dateUtility.isTodayOrEarlierDatePicker(menuDate.startDate) && (dateUtility.isAfterTodayDatePicker(menuDate.endDate) || dateUtility.isTodayDatePicker(menuDate.endDate)));
     };
-    
+
   });
