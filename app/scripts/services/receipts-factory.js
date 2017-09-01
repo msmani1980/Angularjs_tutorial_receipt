@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('receiptsFactory', function (globalMenuService, stationsService, countriesService, receiptRulesService) {
+  .factory('receiptsFactory', function (globalMenuService, stationsService, countriesService, receiptRulesService, currenciesService) {
     var getCompanyId = function () {
       return globalMenuService.company.get();
     };
@@ -40,7 +40,12 @@ angular.module('ts5App')
     var getCountriesList = function() {
       return countriesService.getCountriesList();
     };
-
+    
+    function getCompanyCurrencyGlobal(payload) {
+      console.log('payload --> ' + payload);
+      return currenciesService.getCompanyCurrencies(payload);
+    }
+    
     return {
       getReceiptRules: getReceiptRules,
       getReceiptRule: getReceiptRule,
@@ -49,6 +54,7 @@ angular.module('ts5App')
       deleteReceiptRule: deleteReceiptRule,
       getCompanyId: getCompanyId,
       getCompanyGlobalStationList: getCompanyGlobalStationList,
-      getCountriesList:getCountriesList
+      getCountriesList: getCountriesList,
+      getCompanyCurrencyGlobal: getCompanyCurrencyGlobal
     };
   });
