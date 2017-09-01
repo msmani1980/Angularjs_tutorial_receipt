@@ -62,7 +62,7 @@ angular.module('ts5App')
           }else if ($scope.endCurrentEffective) {
             options.startDate = dateUtility.nowFormattedDatePicker();
           }
-          
+
           var datePickerInput = $element.find('input[type="text"]');
           datePickerInput.datepicker(options);
           datePickerInput.datepicker('update', $scope.ngModel);

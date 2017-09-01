@@ -224,11 +224,28 @@ angular.module('ts5App')
       $scope.closeMoveCashBagModal();
     }
 
+    $scope.showOverwriteCashBag = function () {
+      angular.element('.overwrite-cashbag-warning-modal').modal('show');
+    }; 
+
+    $scope.overwriteCashBag = function () {
+      angular.element('.overwrite-cashbag-warning-modal').modal('hide');
+      var destinationId = $scope.cashBagToMove.id;
+      var sourceId = $scope.targetRecordForMoveCashBag.id;
+      cashBagFactory.overwriteCashBag(sourceId, destinationId).then(moveCashBagSuccess, moveCashBagError);
+      resetAllModals();
+    };
+
+    $scope.showReallocateCashBag = function () {
+      angular.element('.reallocate-cashbag-warning-modal').modal('show');
+    };
+
     $scope.reallocateCashBag = function () {
+      angular.element('.reallocate-cashbag-warning-modal').modal('hide');
       var cashBagId = $scope.cashBagToMove.id;
       var storeInstanceId = $scope.targetRecordForMoveCashBag.id;
-
       cashBagFactory.reallocateCashBag(cashBagId, storeInstanceId).then(moveCashBagSuccess, moveCashBagError);
+      resetAllModals();
     };
 
     $scope.showMergeCashBag = function () {
@@ -244,6 +261,49 @@ angular.module('ts5App')
     };
 
     $scope.canMerge = function (cashBag) {
+      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.flightSectors)) {
+        var isSchedule = false;
+        if (cashBag.flightSectors !== null) {
+          cashBag.flightSectors.forEach(function (sector) {
+            if (!sector.isPosttrip) {
+              isSchedule = true;
+            }
+          });
+        }  
+
+        if (isSchedule) {
+          return false;
+        }
+      }
+
+      return (cashBag && !cashBag.isManual && !cashBag.isVerified);
+    };
+
+    $scope.canOverwrite = function (cashBag) {
+      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.flightSectors)) {
+        var isSchedule = false;
+        if (cashBag.flightSectors !== null) {
+          cashBag.flightSectors.forEach(function (sector) {
+            if (!sector.isPosttrip) {
+              isSchedule = true;
+            }
+          });
+        }  
+
+        if (isSchedule) {
+          return false;
+        }
+      }
+
+      var hasBankRef = false;
+      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.bankReferenceNumber) && cashBag.bankReferenceNumber !== null && cashBag.bankReferenceNumber !== '') {
+        hasBankRef = true;
+      }
+
+      return (cashBag && !cashBag.isManual && !cashBag.isVerified && !hasBankRef);
+    };
+
+    $scope.canReallocate = function (cashBag) {
       if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.flightSectors)) {
         var isSchedule = false;
         if (cashBag.flightSectors !== null) {
@@ -506,8 +566,8 @@ angular.module('ts5App')
     function isStoreInstanceEligibleForReallocation(storeInstance) {
       var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');
-
-      return (storeInstance.statusId === inboundedStatus.id || storeInstance.statusId === discrepanciesStatus.id) && storeInstance.id !== parseInt($routeParams.storeInstanceId);
+      var result = (storeInstance.statusId === inboundedStatus.id || storeInstance.statusId === discrepanciesStatus.id) && storeInstance.id !== parseInt($routeParams.storeInstanceId);
+      return result;
     }
 
     function normalizeReallocateSearchResults (dataFromAPI) {
@@ -525,6 +585,10 @@ angular.module('ts5App')
 
       if ($scope.moveCashBagAction === 'reallocate') {
         $scope.moveCashBagSearchResults = normalizeReallocateSearchResults(dataFromAPI);
+      }
+
+      if ($scope.moveCashBagAction === 'overwrite') {
+        $scope.moveCashBagSearchResults = dataFromAPI.cashBags;
       }
 
       if ($scope.moveCashBagSearchResults.length === 1) {
@@ -574,7 +638,28 @@ angular.module('ts5App')
       return storeInstanceFactory.getStoreInstancesList(payload).then($this.searchForMoveCashBagSuccess);
     }
 
+    function searchForOverwriteCashBag () {
+      if (!$scope.moveSearch.cashBag) {
+        return;
+      }
+
+      var companyId = globalMenuService.company.get();
+      var payloadManualCashBag = {
+        cashBagNumber: $scope.moveSearch.cashBag,
+        originationSource:2,
+        isSubmitted: true,
+        isDelete: false,
+        retailCompanyId:companyId,
+        chCompanyId:'',
+        eposCashBagsId:null
+      };
+
+      return cashBagFactory.getCashBagList(companyId, payloadManualCashBag).then($this.searchForMoveCashBagSuccess);
+    }
+
     $scope.searchForMoveCashBag = function () {
+      $scope.moveCashBagSearchResults = null;
+      $scope.targetRecordForMoveCashBag = null;
       if ($scope.moveCashBagAction === 'merge') {
         return searchForMergeCashBag();
       }
@@ -582,6 +667,10 @@ angular.module('ts5App')
       if ($scope.moveCashBagAction === 'reallocate') {
         return searchForReallocateCashBag();
       }
+
+      if ($scope.moveCashBagAction === 'overwrite') {
+        return searchForOverwriteCashBag();
+      }      
     };
 
     $scope.editCashBagNumberShow = function () {

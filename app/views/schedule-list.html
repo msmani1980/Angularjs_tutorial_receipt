@@ -1,0 +1,256 @@
+<div class="module-container">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-12">
+        <h2 class="view-name">{{ viewName }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-trip-data-list">
+    <div class="row">
+      <div class="col-xs-12 text-left">
+        <a href="#/schedules/create" class="btn btn-primary">+ <span class="hidden-xs">Create Schedule</span></a>
+        <excel-upload type="schedule" class="excel-upload"></excel-upload>
+
+        <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-xs">Search</span>
+        </button>
+
+        <div class="btn-group pull-right" dropdown style="margin-right:2px;">
+          <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
+                  data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-cog"></i>
+            Hide / Show Columns
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('blockTime')">
+                <input ng-click="$event.stopPropagation();" type="checkbox"
+                       ng-model="displayColumns.blockTime">
+                Block Time</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('groundTime')">
+                <input ng-click="$event.stopPropagation();" type="checkbox"
+                       ng-model="displayColumns.groundTime">
+                Ground Time</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('previousFlight')">
+                <input ng-click="$event.stopPropagation();" type="checkbox"
+                       ng-model="displayColumns.previousFlight">
+                Previous Flight</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('nextFlight')">
+                <input ng-click="$event.stopPropagation();" type="checkbox"
+                       ng-model="displayColumns.nextFlight">
+                Next Flight</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <form name="menuSearchForm" ng-submit="searchScheduleData()">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="schedule-number">Number</label>
+                <input ng-model="search.scheduleNumber" type="text" class="form-control" id="schedule-number" placeholder="0001">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="days-of-operation">Days of Operation</label>
+                <ui-select id="days-of-operation" multiple ng-model="multiSelectedValues.daysOfOperation" theme="bootstrap">
+                  <ui-select-match placeholder="Select Days of Operations">{{ $item.name }}</ui-select-match>
+                  <ui-select-choices repeat="number in daysOfOperation | filter: $select.search">
+                    {{ number.name }}
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-5">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.startDate"
+                end-date-model="search.endDate"
+                label-from="Schedule Date From"
+                label-to="Schedule Date To"
+                is-search-field="true">
+              </date-picker>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="aircraft-type">Aircraft type</label>
+                <ui-select id="aircraft-type" multiple ng-model="multiSelectedValues.aircraftTypes" theme="bootstrap">
+                  <ui-select-match placeholder="Select Aircraft Types">{{ $item.carrierType }}</ui-select-match>
+                  <ui-select-choices repeat="carrier in carrierTypes | filter: $select.search">
+                    {{ carrier.carrierType }}
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="departure-station">Departure Station</label>
+                <ui-select id="departure-station" multiple ng-model="multiSelectedValues.depStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{ station.stationCode }} ({{ station.stationName }})
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="departure-time-from">Departure Time From</label>
+                <input ng-model="search.departureTimeFrom" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="departure-time-from">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="departure-time-to">Departure Time To</label>
+                <input ng-model="search.departureTimeTo" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="departure-time-to">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="arrival-station">Arrival Station</label>
+                <ui-select id="arrival-station" multiple ng-model="multiSelectedValues.arrStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{ station.stationCode }} ({{ station.stationName }})
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="arrival-time-from">Arrival Time From</label>
+                <input ng-model="search.arrivalTimeFrom" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="arrival-time-from">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="arrival-time-to">Arrival Time To</label>
+                <input ng-model="search.arrivalTimeTo" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="arrival-time-to">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+    <br>
+    <div class="table-responsive">
+      <table infinite-scroll="loadSchedules()" class="table table-bordered table-hover ng-scope">
+        <thead>
+        <tr>
+          <th>Number</th>
+          <th>Days of Op.</th>
+          <th>Dep. Station</th>
+          <th>Dep. Time</th>
+          <th>Dep. Timezone</th>
+          <th>Arr. Station</th>
+          <th>Arr. Time</th>
+          <th>Arr. Timezone</th>
+          <th>Effective From</th>
+          <th>Effective To</th>
+          <th>Aircraft Type</th>
+          <th>Tail No.</th>
+          <th>Seat Config</th>
+          <th ng-show="displayColumns.blockTime">Block Time</th>
+          <th ng-show="displayColumns.groundTime">Ground Time</th>
+          <th>Trip Distance</th>
+          <th>Flight Info</th>
+          <th ng-show="displayColumns.previousFlight">Prev. Flight</th>
+          <th ng-show="displayColumns.nextFlight">Next Flight</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="ng-scope" ng-repeat="schedule in schedules">
+          <td>{{ schedule.scheduleNumber }}</td>
+          <td>{{ schedule.days }}</td>
+          <td>{{ schedule.departure}}</td>
+          <td>{{ schedule.departureTime }}</td>
+          <td>{{ schedule.departureStation.city.utcOffset }}</td>
+          <td>{{ schedule.arrival}}</td>
+          <td>{{ schedule.arrivalTime }}</td>
+          <td>{{ schedule.arrivalStation.city.utcOffset }}</td>
+          <td>{{ schedule.startDate }}</td>
+          <td>{{ schedule.endDate }}</td>
+          <td>{{ schedule.companyCarrierTypeCode }}</td>
+          <td>{{ schedule.carrierNumber }}</td>
+          <td>{{ schedule.seatConfigurationCode }}</td>
+          <td ng-show="displayColumns.blockTime">{{ schedule.blockTime }}</td>
+          <td ng-show="displayColumns.groundTime">{{ schedule.groundTime }}</td>
+          <td>{{ schedule.tripDistance }} <span ng-show="schedule.hasTripDistance">{{ schedule.tripDistanceUnitCode }}</span></td>
+          <td>
+            <span ng-show="schedule.firstTrip">First Trip</span>
+            <span ng-show="schedule.firstTrip && schedule.lastTrip">, </span>
+            <span ng-show="schedule.lastTrip">Last Trip</span>
+          </td>
+          <td ng-show="displayColumns.previousFlight">{{ schedule.preScheduleNumber }}</td>
+          <td ng-show="displayColumns.nextFlight">{{ schedule.nextScheduleNumber }}</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="redirectToSchedule(schedule.id, 'view')" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="redirectToSchedule(schedule.id, 'edit')" ng-show="isScheduleEditable(schedule)" tabindex="0">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs"
+                    ng-click="deleteRecordDialog(schedules[$index], ['scheduleNumber', 'deStationCode', 'depTime', 'arrStationCode', 'arrTime'])"
+                    tabindex="0"
+                    ng-show="showDeleteButton(schedule.startDate)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <alert ng-show="!loadingBarVisible && schedules.length == 0" type="info">
+      <span class="fa fa-flag"></span> Your search returned no results.
+    </alert>
+    <p ng-if="schedules.length > 0" class="record-count small text-center">Showing {{schedules.length}} records</p>
+    <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+  </div>
+
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>

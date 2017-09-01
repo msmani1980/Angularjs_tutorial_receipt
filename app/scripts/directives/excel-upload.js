@@ -6,7 +6,7 @@
  * # excelUpload
  */
 angular.module('ts5App')
-  .controller('ExcelUploadCtrl', function ($scope, $http, $q, $injector, Upload, ENV, globalMenuService, ngToast) {
+  .controller('ExcelUploadCtrl', function ($scope, $http, $q, $injector, Upload, ENV, globalMenuService, ngToast, identityAccessFactory) {
     var $this = this;
     this.service = null;
 
@@ -81,6 +81,8 @@ angular.module('ts5App')
         $scope.templateName = 'menuUpload';
       } else if ($scope.type === 'postTrip') {
         $scope.templateName = 'FileUpload-PostTripManagement';
+      } else if ($scope.type === 'schedule') {
+        $scope.templateName = 'scheduleUpload';
       }
     }
 
@@ -88,7 +90,8 @@ angular.module('ts5App')
       $scope.downloadTemplateUrl = 'https://s3.amazonaws.com/ts5-dev-portal-images/templates/' + $scope.templateName + '.xlsx';
 
       if ($scope.type === 'stockTake') {
-        $scope.downloadTemplateUrl = ENV.apiUrl + '/rsvr-pdf/api/stock-management/dashboard/file/template';
+        var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
+        $scope.downloadTemplateUrl = ENV.apiUrl + '/rsvr-pdf/api/stock-management/dashboard/file/template?sessionToken=' + sessionToken;
       }
     }
 
@@ -100,7 +103,12 @@ angular.module('ts5App')
       } catch (error) {
         console.log(error);
       } finally {
-        $this.service = $injector.get($scope.type + 'Service');
+        if ($scope.type === 'schedule') {
+          $this.service = $injector.get('schedulesService');
+        } else {
+          $this.service = $injector.get($scope.type + 'Service');
+        }
+
       }
     }
 
