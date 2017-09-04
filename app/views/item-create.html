@@ -311,7 +311,13 @@
                 <div class="panel-body">
                   <img ng-src="{{ formData.qrCodeImgUrl }}"/>
                 </div>
+              </div>
 
+              <div ng-if="creatingItem && isVoucherSelected" class="form-group">
+                <label>Voucher Duration *</label>
+                <select ng-model="formData.voucherDuration" class="form-control col-xs-2" ng-change="voucherDurationChanged()">
+                  <option ng-repeat="duration in voucherDurationOptions" value="{{ duration.duration }}">{{ duration.name }}</option>
+                </select>
               </div>
 
             </fieldset>

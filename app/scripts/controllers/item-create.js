@@ -50,6 +50,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       value: false
     }];
     $scope.companyEposLanguages = [];
+    $scope.voucherDurationOptions = [
+      { duration: 30, name: '30 days' },
+      { duration: 60, name: '60 days' },
+      { duration: 90, name: '90 days' },
+      { duration: 365, name: '1 year' }
+    ];
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -60,6 +66,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $scope.cloningItem = true;
       } else if (path.search('/item-view') !== -1) {
         $scope.viewOnly = true;
+      } else if (path.search('/item-create') !== -1) {
+        $scope.creatingItem = true;
       }
     };
 
@@ -788,6 +796,16 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     // Removes a station exception collection from the form
     $scope.removeStationException = function(priceIndex, key) {
       $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
+    };
+
+    $scope.voucherDurationChanged = function () {
+      var selectedDuration = $scope.formData.voucherDuration;
+
+      if (selectedDuration === 365) {
+        $scope.formData.endDate = dateUtility.addYears($scope.formData.startDate, 1);
+      } else {
+        $scope.formData.endDate = dateUtility.addDays($scope.formData.startDate, selectedDuration);
+      }
     };
 
     // gets a list of stations from the API filtered by station's start and end date
