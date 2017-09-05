@@ -28,7 +28,7 @@
                       ng-model="receiptRule.countryId"
                       ng-selected="receiptRule.countryId === countrie.id"
                       ng-options="countrie.id as countrie.countryName for countrie in countriesList"
-                      ng-disabled="isDisabled()"
+                      ng-disabled="readOnly"
                       required="true"
                        ng-change="onCounrtyChange()"
                       required
@@ -41,7 +41,7 @@
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
                 <label for="company-stationId">Station *</label>
-          	     <ui-select id="companyStationId" multiple ng-model="multiSelectedValues.globalStationList">
+          	     <ui-select id="companyStationId" multiple ng-model="multiSelectedValues.globalStationList" ng-disabled="readOnly">
 	               <ui-select-match placeholder="Select Stations..">{{ $item.code }}</ui-select-match>
 	               <ui-select-choices  
 	               					  repeat="station in globalStationList | filter: $select.search | orderBy: 'station.name'">
@@ -85,8 +85,8 @@
             </div>
           </div>
       </div>
-      <div class="panel-footer text-right">
-        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+      <div class="panel-footer text-right" ng-hide="readOnly">
+        <button class="btn btn-primary" ng-click="formSave()" >
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>

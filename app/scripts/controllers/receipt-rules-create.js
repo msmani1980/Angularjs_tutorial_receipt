@@ -38,6 +38,7 @@ angular.module('ts5App')
       };
       
     $scope.onCounrtyChange = function() {
+      $scope.multiSelectedValues.globalStationList = {};
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
         countryId: $scope.receiptRule.countryId
