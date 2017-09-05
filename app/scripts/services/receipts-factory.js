@@ -42,7 +42,6 @@ angular.module('ts5App')
     };
     
     function getCompanyCurrencyGlobal(payload) {
-      console.log('payload --> ' + payload);
       return currenciesService.getCompanyCurrencies(payload);
     }
     

@@ -22,7 +22,8 @@ angular.module('ts5App')
     $scope.multiSelectedValues = {};
     $scope.countriesList = [];
     $scope.globalCompanyCurrecnyList = [];
-    $scope.receiptRule = {};
+    $scope.receiptRule = [];
+    $scope.receiptRule.countryId = [];
     $scope.receiptFloorLimitAmountsUi = [];
     
     $scope.formSave = function() {
@@ -39,7 +40,7 @@ angular.module('ts5App')
     $scope.onCounrtyChange = function() {
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
-        countryId: $scope.receiptRule.id
+        countryId: $scope.receiptRule.countryId
       };
       return receiptsFactory.getCompanyGlobalStationList(payload).then($this.getCompanyGlobalStationSuccess);
     };
@@ -165,12 +166,48 @@ angular.module('ts5App')
       };
       
     this.getReceiptRuleSuccess = function(response) {
-      $scope.receiptRule = {
-        countryId: response.countryId,
-        companyStationId: response.companyStationId
-      };
+      $scope.receiptRule = angular.copy(response.receiptRule);
+      $scope.receiptRule.countryId = getCountryFromStationId($scope.receiptRule.companyStationId);
+      $scope.receiptFloorLimitAmountsUi = addCurrencyCodeToArrayItems($scope.receiptFloorLimitAmountsUi, response.receiptRule.receiptRuleLimits);
+      $scope.multiSelectedValues.globalStationList = $filter('filter')($scope.globalStationList, {
+        id: $scope.receiptRule.companyStationId
+      }, true);
     };
     
+    function getCountryFromStationId(stationId) {
+        var stationList = $filter('filter')($scope.globalStationList, {
+          id: stationId
+        }, true);
+        if (!stationList || !stationList.length) {
+          return null;
+        }
+
+        return stationList[0].countryId;
+      }
+    
+    function getCurrencyCodeFromCurrencyId(companyCurrencyId) {
+        var currency = $filter('filter')($scope.globalCompanyCurrecnyList, {
+          id: companyCurrencyId
+        }, true);
+        if (!currency || !currency.length) {
+          return null;
+        }
+
+        return currency[0].code;
+      }
+
+    function addCurrencyCodeToArrayItems(orinArray, apiArray) {
+        if (!apiArray || !apiArray.length) {
+          return orinArray;
+        }
+
+        return apiArray.map(function (item) {
+          item.code = getCurrencyCodeFromCurrencyId(item.operatingCompanyCurrencyId);
+          item.amount = item.floorLimitAmount;
+          return item;
+        });
+      }
+      
     this.validateForm = function() {
         return $scope.receiptRuleFormData.$valid;
       };

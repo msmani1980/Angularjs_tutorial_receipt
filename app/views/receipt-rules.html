@@ -70,13 +70,14 @@
           <td>{{ receiptRule.stationCode }}</td>
           <td>{{ receiptRule.autoPrint}}</td>
           <td>
-            <button class="btn btn-info btn-xs">
+            <button class="btn btn-info btn-xs" ng-click="redirectToReceiptRule(receiptRule.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs">
+            <button class="btn btn-primary btn-xs" ng-click="redirectToReceiptRule(receiptRule.id, 'edit')">
               <i class="fa fa-pencil"></i>
             </button>
-            <button class="btn btn-danger btn-xs">
+            <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(receiptRules[$index], ['countryName', 'stationCode'])"
+                    tabindex="0">
               <i class="fa fa-trash"></i>
             </button>
           </td>

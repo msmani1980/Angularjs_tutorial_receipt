@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReceiptRulesCtrl', function ($scope, $location, $routeParams,  lodash, $q, dateUtility, receiptsFactory) {
+  .controller('ReceiptRulesCtrl', function ($scope, $location, $routeParams,  lodash, $q, dateUtility, messageService, receiptsFactory) {
     
     var $this = this;
     
@@ -59,6 +59,19 @@ angular.module('ts5App')
         };
       return receiptsFactory.getCompanyGlobalStationList(payload).then($this.getCompanyGlobalStationSuccess);
     };
+     
+    $scope.removeRecord = function(receiptRule) {
+      if (receiptRule === undefined || receiptRule.id === undefined) {
+        $this.deleteReceiptRuleFailure();
+        return;
+      }
+
+      receiptsFactory.deleteReceiptRule(receiptRule.id).then(
+        $this.deleteReceiptRuleSuccess,
+        $this.deleteReceiptRuleFailure
+      );
+
+    };
       
     function showLoadingBar() {
       $scope.loadingBarVisible = true;
@@ -87,6 +100,25 @@ angular.module('ts5App')
       $this.meta.offset += $this.meta.limit;
     }
     
+    this.showToastMessage = function(className, type, message) {
+      messageService.display(className, message, type);
+    };
+      
+    this.deleteReceiptRuleFailure = function() {
+        $this.showToastMessage('danger', 'Receipt Rule', 'Schedule could not be deleted');
+      };
+
+    this.deleteReceiptRuleSuccess = function() {
+        $this.showToastMessage('success', 'Receipt Rule', 'Schedule successfully deleted');
+        $scope.receiptRules = [];
+        $this.meta = {
+          count: undefined,
+          limit: 100,
+          offset: 0
+        };
+        $scope.loadReceiptRules();
+      };
+      
     this.formatMultiSelectedValuesForSearch = function() {
       $this.addSearchValuesFromMultiSelectArray('companyStationId', $scope.multiSelectedValues.globalStationList, 'id');
     };
@@ -124,7 +156,13 @@ angular.module('ts5App')
           });
       return onLoadPayload;
     };
-
+    
+    $scope.redirectToReceiptRule = function(id, state) {
+      $location.search({});
+      console.log(' id-->' + id + '<---state->' + state);
+      $location.path('receipt-rules/' + state + '/' + id).search();
+    };
+      
     this.makeInitPromises = function() {
       var promises = [
         receiptsFactory.getCountriesList().then($this.getCountireSuccess),
