@@ -651,7 +651,7 @@ angular.module('ts5App')
         isDelete: false,
         retailCompanyId:companyId,
         chCompanyId:'',
-        eposCashBagsId:null
+        eposCashBagsId:0
       };
 
       return cashBagFactory.getCashBagList(companyId, payloadManualCashBag).then($this.searchForMoveCashBagSuccess);
