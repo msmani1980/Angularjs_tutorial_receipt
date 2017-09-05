@@ -296,7 +296,7 @@ angular.module('ts5App')
       }
 
       var hasBankRef = false;
-      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.bankReferenceNumber) && cashBag.bankReferenceNumber !== null && cashBag.bankReferenceNumber !== '') {
+      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.bankRefNumber) && cashBag.bankRefNumber !== null && cashBag.bankRefNumber !== '') {
         hasBankRef = true;
       }
 
