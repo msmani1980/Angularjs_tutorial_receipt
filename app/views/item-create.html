@@ -313,9 +313,11 @@
                 </div>
               </div>
 
-              <div ng-if="creatingItem && isVoucherSelected" class="form-group">
+              <div ng-if="creatingItem && isVoucherSelected"
+                   class="form-group"
+                   ng-class="{ 'has-error' : !formData.voucherDuration && displayError , 'has-success' : formData.voucherDuration }">
                 <label>Voucher Duration *</label>
-                <select ng-model="formData.voucherDuration" class="form-control col-xs-2" ng-change="voucherDurationChanged()">
+                <select name="voucherDuration" ng-model="formData.voucherDuration" class="form-control col-xs-2" ng-change="voucherDurationChanged()" ng-required="true">
                   <option ng-repeat="duration in voucherDurationOptions" value="{{ duration.duration }}">{{ duration.name }}</option>
                 </select>
               </div>
