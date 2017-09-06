@@ -145,7 +145,7 @@ angular.module('ts5App')
     }
 
     function isNotSaleChangeTransaction(transaction) {
-      var isSaleChangeTransaction = (transaction.transactionTypeName === 'SALE' || transaction.transactionTypeName === 'VOIDED') &&
+      var isSaleChangeTransaction = (transaction.transactionTypeName === 'SALE' || transaction.transactionTypeName === 'SALE (Crew)' || transaction.transactionTypeName === 'VOIDED') &&
         transaction.transactionChangeDue  &&
         transaction.transactionChangeDue !== 0;
 
