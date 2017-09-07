@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('The Item Create Controller', function() {
+describe('The Item Create Controller', function() {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
