@@ -366,7 +366,7 @@ angular.module('ts5App')
         optionName: 'Cashless'
       })[0];
       if (cashPreference && cashPreference.hasOwnProperty('startDate')) {
-        var yesterdayOrEarlier = dateUtility.isTodayOrEarlier(dateUtility.formatDateForApp(cashPreference.startDate,
+        var yesterdayOrEarlier = dateUtility.isTodayOrEarlierDatePicker(dateUtility.formatDateForApp(cashPreference.startDate,
           'YYYY-MM-DD'));
         return !(cashPreference.isSelected === true && yesterdayOrEarlier);
       }
