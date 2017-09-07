@@ -9,7 +9,7 @@
 
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, languagesService) {
 
     var $this = this;
     $scope.formData = {
@@ -28,7 +28,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       prices: [],
       shouldUseDynamicBarcode: {
         value: false
-      }
+      },
+      notesTranslations: []
     };
 
     $scope.viewName = 'Create Item';
@@ -48,6 +49,13 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       label: 'GTIN',
       value: false
     }];
+    $scope.companyEposLanguages = [];
+    $scope.voucherDurationOptions = [
+      { duration: 30, name: '30 days' },
+      { duration: 60, name: '60 days' },
+      { duration: 90, name: '90 days' },
+      { duration: 365, name: '1 year' }
+    ];
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -58,6 +66,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $scope.cloningItem = true;
       } else if (path.search('/item-view') !== -1) {
         $scope.viewOnly = true;
+      } else if (path.search('/item-create') !== -1) {
+        $scope.creatingItem = true;
       }
     };
 
@@ -405,6 +415,23 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.viewOnly = $scope.viewOnly || $scope.itemIsInactive;
     };
 
+    this.updateLanguages = function () {
+      languagesService.getLanguagesList().then(function (dataFromAPI) {
+        $this.setLanguages(dataFromAPI);
+        $this.setFormDataDefaultLanguage();
+      });
+    };
+
+    this.setFormDataNotesTranslations = function () {
+      var mappedNotes = [];
+      $scope.formData.rawNotesTranslations = $scope.formData.notesTranslations;
+      $scope.formData.notesTranslations.forEach(function (notes) {
+        mappedNotes[notes.languageId] = notes.notes;
+      });
+
+      $scope.formData.notesTranslations = mappedNotes;
+    };
+
     // updates the $scope.formData
     this.updateFormData = function(itemData) {
       if (!itemData) {
@@ -435,9 +462,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       delete $scope.formData.voucher;
       this.setVoucherData();
       this.updateStationsList();
+      this.setFormDataDefaultLanguage();
+      this.setFormDataNotesTranslations();
     };
 
     this.makeDependencyPromises = function() {
+      var companyId = globalMenuService.company.get();
       return [
         companiesFactory.getSalesCategoriesList(),
         companiesFactory.getTagsList(),
@@ -450,7 +480,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getVolumeList(),
         itemsFactory.getWeightList(),
         itemsFactory.getPriceTypesList(),
-        itemsFactory.getItemsList({})
+        itemsFactory.getItemsList({}),
+        companiesFactory.getCompany(companyId)
       ];
     };
 
@@ -528,6 +559,34 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setVoucherData();
     };
 
+    this.findDefaultLanguage = function () {
+      return lodash.findWhere($scope.languages, { id: 1 });
+    };
+
+    this.setFormDataDefaultLanguage = function () {
+      $scope.formData.selectedVoucherNotesLanguage = $this.findDefaultLanguage();
+    };
+
+    this.setLanguages = function(dataFromAPI) {
+      $scope.languages = angular.copy(dataFromAPI);
+
+      // Add default language (English)
+      $scope.companyEposLanguages.push($this.findDefaultLanguage());
+
+      // Add other languages
+      $scope.company.eposLanguages.forEach(function (languageId) {
+        if (languageId !== 1) {
+          $scope.companyEposLanguages.push(lodash.findWhere($scope.languages, { id: languageId }));
+        }
+      });
+    };
+
+    this.setCompany = function(dataFromAPI) {
+      $scope.company = angular.copy(dataFromAPI);
+
+      this.updateLanguages();
+    };
+
     this.setDependencies = function(response) {
       $this.setSalesCategories(response[0]);
       $this.setTagsList(response[1]);
@@ -541,6 +600,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setWeightList(response[9]);
       $this.setItemPriceTypes(response[10]);
       $this.setItemList(response[11].retailItems);
+      $this.setCompany(response[12]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         $this.getItem($routeParams.id);
       } else {
@@ -736,6 +796,16 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     // Removes a station exception collection from the form
     $scope.removeStationException = function(priceIndex, key) {
       $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
+    };
+
+    $scope.voucherDurationChanged = function () {
+      var selectedDuration = $scope.formData.voucherDuration;
+
+      if (selectedDuration === 365) {
+        $scope.formData.endDate = dateUtility.addYears($scope.formData.startDate, 1);
+      } else {
+        $scope.formData.endDate = dateUtility.addDays($scope.formData.startDate, selectedDuration);
+      }
     };
 
     // gets a list of stations from the API filtered by station's start and end date
@@ -1074,6 +1144,38 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       delete itemData.shouldUseDynamicBarcode;
     };
 
+    this.findIdFromRawNotesTranslation = function (languageId) {
+      var id = null;
+
+      $scope.formData.rawNotesTranslations.forEach(function (notesTranslation) {
+        if (+notesTranslation.languageId === +languageId) {
+          id = notesTranslation.id;
+        }
+      });
+
+      return id;
+    };
+
+    this.formatNotesTranslations = function(itemData) {
+      var notesPayload = [];
+
+      for (var key in itemData.notesTranslations) {
+        var notes = itemData.notesTranslations[key];
+        if (notes) {
+          if ($scope.formData.rawNotesTranslations) {
+            var id = $this.findIdFromRawNotesTranslation(key);
+            notesPayload.push({ id: id, languageId: key, notes: notes });
+          } else {
+            notesPayload.push({ languageId: key, notes: notes });
+          }
+        }
+      }
+
+      delete itemData.rawNotesTranslations;
+      delete itemData.selectedVoucherNotesLanguage;
+      itemData.notesTranslations = notesPayload;
+    };
+
     this.formatPayload = function(itemData) {
       itemData.tags = $this.formatTags(itemData);
       itemData.allergens = $this.formatAllergens(itemData);
@@ -1086,6 +1188,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.formatImages(itemData);
       this.formatGlobalTradeNumbers(itemData);
       this.formatTaxes(itemData);
+      this.formatNotesTranslations(itemData);
       this.cleanUpPayload(itemData);
       if ($scope.cloningItem) {
         delete itemData.id;
