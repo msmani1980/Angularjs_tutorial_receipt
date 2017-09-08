@@ -415,7 +415,7 @@
           <div class="voucher-container" ng-if="isVoucherSelected">
             <div class="form-group">
               <label>Voucher *</label>
-              <ui-select ng-if="uiSelectTemplateReady"  ng-model="formData.voucher" theme="bootstrap" name="Voucher" ng-disabled="isDisabled()">
+              <ui-select ng-if="uiSelectTemplateReady" required ng-model="formData.voucher" theme="bootstrap" name="Voucher" ng-disabled="isDisabled()">
                 <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()" >{{ $select.selected.name}}
                 </ui-select-match>
                 <ui-select-choices
