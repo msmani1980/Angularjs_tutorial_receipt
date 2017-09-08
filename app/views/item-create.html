@@ -387,7 +387,6 @@
 
           </div>
 
-          </fieldset>
 
           <h3 id="price-and-tax">Price & Tax</h3>
 
@@ -397,7 +396,6 @@
             </button>
           </div>
 
-          <fieldset>
 
             <div id="price-type-container">
 
@@ -414,15 +412,11 @@
               </button>
             </div>
 
-          </fieldset>
-
-          <fieldset ng-disabled="isDisabled()">
-
           <div class="voucher-container" ng-if="isVoucherSelected">
             <div class="form-group">
               <label>Voucher *</label>
-              <ui-select ng-if="uiSelectTemplateReady" required ng-model="formData.voucher" theme="bootstrap" name="Voucher">
-                <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()">{{ $select.selected.name}}
+              <ui-select ng-if="uiSelectTemplateReady"  ng-model="formData.voucher" theme="bootstrap" name="Voucher" ng-disabled="isDisabled()">
+                <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()" >{{ $select.selected.name}}
                 </ui-select-match>
                 <ui-select-choices
                   repeat="voucher in discountList | filter: $select.search | orderBy:'name'">
@@ -432,7 +426,6 @@
               </ui-select>
             </div>
           </div>
-
           <div id="tax-type-container">
 
             <div ng-repeat="(key,itemTax) in formData.taxes track by $index">
@@ -440,7 +433,6 @@
             </div>
 
           </div>
-
         </fieldset>
 
       </div>
