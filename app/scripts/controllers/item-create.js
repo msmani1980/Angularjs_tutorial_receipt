@@ -535,7 +535,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setMasterCurrenciesList(response[3]);
       $this.setAllergens(response[4]);
       $this.setItemTypes(response[5]);
-      $this.setCharacteristics(response[5], response[6]);
+      $this.setCharacteristics(response[6]);
       $this.setDimensionList(response[7]);
       $this.setVolumeList(response[8]);
       $this.setWeightList(response[9]);
@@ -566,7 +566,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.itemTypes = data;
     };
 
-    this.setCharacteristics = function(itemTypes, data) {
+    this.setCharacteristics = function(data) {
       $scope.characteristics = data;
       $scope.filteredCharacteristics = [];
 
