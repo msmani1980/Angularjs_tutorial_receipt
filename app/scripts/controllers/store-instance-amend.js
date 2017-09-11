@@ -614,7 +614,8 @@ angular.module('ts5App')
             bankRefNumber:inCashBag.bankRefNumber,
             isVerified:inCashBag.isVerified,
             isSubmitted:inCashBag.isSubmitted,
-            id:inCashBag.id
+            id:inCashBag.id,
+            storeInstanceNumber:inCashBag.storeInstanceId
           };
           if (keyCashBag.indexOf(cashBag.id) === -1) {
             keyCashBag.push(cashBag.id);
@@ -639,6 +640,7 @@ angular.module('ts5App')
     }
 
     function searchForOverwriteCashBag () {
+
       if (!$scope.moveSearch.cashBag) {
         return;
       }
