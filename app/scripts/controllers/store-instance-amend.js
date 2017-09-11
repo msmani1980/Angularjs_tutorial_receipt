@@ -1520,7 +1520,7 @@ angular.module('ts5App')
     function setSubmittedCashBagList() {
       var submittedList = [];
       angular.forEach($scope.cashBags, function (cashBag) {
-        if (cashBag.submitted) {
+        if (cashBag.submitted && !cashBag.delete) {
           submittedList.push(cashBag.id);
         }
       });
