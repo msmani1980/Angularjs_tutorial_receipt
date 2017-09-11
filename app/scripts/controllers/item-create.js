@@ -535,7 +535,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setMasterCurrenciesList(response[3]);
       $this.setAllergens(response[4]);
       $this.setItemTypes(response[5]);
-      $this.setCharacteristics(response[6]);
+      $this.setCharacteristics(response[5], response[6]);
       $this.setDimensionList(response[7]);
       $this.setVolumeList(response[8]);
       $this.setWeightList(response[9]);
@@ -566,9 +566,15 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.itemTypes = data;
     };
 
-    this.setCharacteristics = function(data) {
+    this.setCharacteristics = function(itemTypes, data) {
       $scope.characteristics = data;
-      $scope.filteredCharacteristics = data;
+      $scope.filteredCharacteristics = [];
+
+      $scope.itemCharacteristicsPerItemType = lodash.groupBy(data, function(ic) { return ic.itemTypeId; });
+    };
+
+    $scope.isItemCharacteristicsFieldDisabled = function() {
+      return typeof $scope.formData.itemTypeId === 'undefined' || $scope.formData.itemTypeId === '' || $scope.formData.itemTypeId === null;
     };
 
     this.setDimensionList = function(data) {
@@ -673,19 +679,21 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     $scope.filterCharacteristics = function() {
-      if ($scope.formData.itemTypeId && $scope.itemTypes[$scope.formData.itemTypeId - 1].name === 'Virtual') {
-        $scope.filteredCharacteristics = [];
-        angular.forEach($scope.characteristics, function(value) {
-          if (value.name === 'Downloadable' || value.name === 'Link') {
-            $scope.filteredCharacteristics.push(value);
-          }
+      // if ($scope.formData.itemTypeId && $scope.itemTypes[$scope.formData.itemTypeId - 1].name === 'Virtual') {
+      //   $scope.filteredCharacteristics = [];
+      //   angular.forEach($scope.characteristics, function(value) {
+      //     if (value.name === 'Downloadable' || value.name === 'Link') {
+      //       $scope.filteredCharacteristics.push(value);
+      //     }
+      //
+      //     $scope.shouldDisplayURLField = true;
+      //   });
+      // } else {
+      //   $scope.filteredCharacteristics = $scope.characteristics;
+      //   $scope.shouldDisplayURLField = false;
+      // }
 
-          $scope.shouldDisplayURLField = true;
-        });
-      } else {
-        $scope.filteredCharacteristics = $scope.characteristics;
-        $scope.shouldDisplayURLField = false;
-      }
+      $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
     };
 
     $scope.$watch('form.$valid', function(validity) {
