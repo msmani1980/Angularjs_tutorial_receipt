@@ -233,14 +233,16 @@
             <tr>
               <th>Schedule Date</th>
               <th>Store Number</th>
+              <th>Store Instance Number</th>
               <th>Cash Bag Number</th>
               <th>Submitted Date/Time</th>
               <th>Select</th>
             </tr>
-            <tr ng-repeat="manualCashBag in moveCashBagSearchResults"
+            <tr ng-repeat="manualCashBag in moveCashBagSearchResults | orderBy:'scheduleDate'" 
                 ng-class="getClassesForSingleSelectedRow(manualCashBag, 'background', 'storeInstance')">
               <td>{{ manualCashBag.scheduleDate }}</td>
               <td>{{ manualCashBag.storeNumber }}</td>
+              <td>{{ manualCashBag.storeInstanceId }}</td>
               <td>{{ manualCashBag.cashBagNumber }}</td>
               <td>{{ manualCashBag.cashbagSubmittedOn }}</td>
               <td>
