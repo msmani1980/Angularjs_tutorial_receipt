@@ -26,7 +26,7 @@ angular.module('ts5App')
     };
 
     var updateReceiptRule = function (payload) {
-      return receiptRulesService.updateReceiptRule(payload.id, payload);
+      return receiptRulesService.updateReceiptRule(payload);
     };
 
     var deleteReceiptRule = function (receiptRuleId) {

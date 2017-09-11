@@ -108,6 +108,22 @@ angular.module('ts5App')
       );
     };
     
+    this.editReceiptRule = function() {
+        $this.showLoadingModal('Saving Receipt Rules Data');
+        payload = { 
+            receiptRules: {
+              id: $routeParams.id,
+              autoPrint: $this.setString($scope.receiptRule.autoPrint),
+              companyStationIds: $scope.receiptRule.companyStationId
+            } 
+          };
+        $this.payloadGenerateReceiptFloorLimit();
+        receiptsFactory.updateReceiptRule(payload).then(
+          $this.saveFormSuccess,
+          $this.saveFormFailure
+        );
+      };
+    
     this.formatMultiSelectedValues = function() {
       $this.addSearchValuesFromMultiSelectArray('companyStationId', $scope.multiSelectedValues.globalStationList, 'id');
     };
@@ -132,7 +148,8 @@ angular.module('ts5App')
           receiptFloorLimit.operatingCompanyCurrencyId = $this.setString(receiptFloorLimitData.companyCurrencyId);
           if (angular.isDefined(receiptFloorLimitData.id)) {
             receiptFloorLimit.id = receiptFloorLimitData.id;
-            receiptFloorLimit.companyReceiptRuleId = receiptFloorLimitData.id;
+            receiptFloorLimit.companyReceiptRuleId = payload.receiptRules.id;
+            receiptFloorLimit.operatingCompanyCurrencyId = receiptFloorLimitData.operatingCompanyCurrencyId;
           }
           
           return receiptFloorLimit;

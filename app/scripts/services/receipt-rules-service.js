@@ -52,8 +52,11 @@ angular.module('ts5App')
       return receiptRulesRequestResource.createReceiptRule(payload).$promise;
     };
     
-    var updateReceiptRule = function (receiptRuleId, payload) {
-      return receiptRulesRequestResource.updateReceiptRule(receiptRuleId, payload).$promise;
+    var updateReceiptRule = function (payload) {
+      var requestParameters = {
+        id: payload.receiptRules.id
+      };
+      return receiptRulesRequestResource.updateReceiptRule(requestParameters, payload).$promise;
     };
     
     var deleteReceiptRule = function (receiptRuleId) {
