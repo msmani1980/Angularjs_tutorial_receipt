@@ -159,7 +159,6 @@ angular.module('ts5App')
     
     $scope.redirectToReceiptRule = function(id, state) {
       $location.search({});
-      console.log(' id-->' + id + '<---state->' + state);
       $location.path('receipt-rules/' + state + '/' + id).search();
     };
       

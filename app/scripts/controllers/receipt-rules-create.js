@@ -110,6 +110,7 @@ angular.module('ts5App')
     
     this.editReceiptRule = function() {
         $this.showLoadingModal('Saving Receipt Rules Data');
+        $this.formatMultiSelectedValues();
         payload = { 
             receiptRules: {
               id: $routeParams.id,
