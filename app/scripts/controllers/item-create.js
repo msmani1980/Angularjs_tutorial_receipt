@@ -679,21 +679,18 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     $scope.filterCharacteristics = function() {
-      // if ($scope.formData.itemTypeId && $scope.itemTypes[$scope.formData.itemTypeId - 1].name === 'Virtual') {
-      //   $scope.filteredCharacteristics = [];
-      //   angular.forEach($scope.characteristics, function(value) {
-      //     if (value.name === 'Downloadable' || value.name === 'Link') {
-      //       $scope.filteredCharacteristics.push(value);
-      //     }
-      //
-      //     $scope.shouldDisplayURLField = true;
-      //   });
-      // } else {
-      //   $scope.filteredCharacteristics = $scope.characteristics;
-      //   $scope.shouldDisplayURLField = false;
-      // }
-
+      $scope.formData.characteristics = [];
+      $scope.shouldDisplayURLField = false;
       $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
+    };
+
+    $scope.onCharacteristicsChange = function() {
+      $scope.shouldDisplayURLField = false;
+      angular.forEach($scope.formData.characteristics, function(value) {
+        if (value.name === 'Downloadable') {
+          $scope.shouldDisplayURLField = true;
+        }
+      });
     };
 
     $scope.$watch('form.$valid', function(validity) {
