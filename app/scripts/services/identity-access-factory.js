@@ -229,7 +229,7 @@ angular.module('ts5App')
           return authorizeUserResponseHandler(rawSessionData);
         }
 
-        tempToken = angular.copy(rawSessionData.currentSession.sessionToken);
+        encryptDataInLS(angular.copy(rawSessionData));
         eulaService.showEULAConfirmation();
         $rootScope.userAgreesToEULA = userAgreesToEULA;
       }
