@@ -10,7 +10,6 @@ describe('Factory: receiptsFactory', function () {
       countriesService,
       receiptRulesService,
       currenciesService,
-      receiptRulesService,
       rootScope,
       scope;
 
@@ -70,7 +69,7 @@ describe('Factory: receiptsFactory', function () {
       });
 
       it('should call receiptRulesService on updateReceiptRule', function () {
-    	receiptsFactory.updateReceiptRule(123, {});
+    	receiptsFactory.updateReceiptRule({});
         expect(receiptRulesService.updateReceiptRule).toHaveBeenCalled();
       });
 
