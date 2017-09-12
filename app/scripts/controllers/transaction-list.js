@@ -19,7 +19,7 @@ angular.module('ts5App')
     $scope.companyCurrencies = [];
     $scope.companyStations = [];
     $scope.paymentMethods = ['Cash', 'Credit Card', 'Discount'];
-    $scope.creditCardTypes = [];
+    $scope.creditCardTypes = [{ccTypeName:'AmEx'},{ccTypeName:'MasterCard'},{ccTypeName:'Visa'}];    
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Not Approved'];
     $scope.overrideTransactionTypeNames = {
@@ -86,12 +86,17 @@ angular.module('ts5App')
     };
 
     $scope.printTransactionTypeName = function (transaction) {
-      if (
-        transaction.transactionTypeName &&
-        transaction.transactionTypeName === 'VOIDED'
-      ) {
-        return 'SALE';
-      }
+        if (
+                transaction.orderTypeId == 3
+              ) {
+                return 'EMPLOYEE PURCHASE';
+              }
+        if (
+                transaction.transactionTypeName &&
+                transaction.transactionTypeName === 'VOIDED'
+              ) {
+                return 'SALE';
+              }
 
       return transaction.transactionTypeName;
     };
