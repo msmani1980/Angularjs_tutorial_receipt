@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('PromotionListCtrl', function($scope, $q, $location, payloadUtility, dateUtility, promotionsFactory,
-    recordsService) {
+    recordsService, lodash) {
 
     var $this = this;
     this.meta = {
@@ -43,6 +43,7 @@ angular.module('ts5App')
     $scope.searchPromotions = function() {
       $this.showLoadingModal();
       $scope.promotionList = [];
+
       promotionsFactory.getPromotions(payloadUtility.serializeDates($scope.search)).then(function(dataFromAPI) {
         $this.hideLoadingModal();
         $this.setPromotionsList(dataFromAPI);
@@ -113,10 +114,14 @@ angular.module('ts5App')
         return;
       }
 
-      promotionsFactory.getPromotions({
+      var payload = lodash.assign(angular.copy($scope.search), {
         limit: $this.meta.limit,
         offset: $this.meta.offset
-      }).then($this.setPromotionsList);
+      });
+
+      payload.startDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+
+      promotionsFactory.getPromotions(payload).then($this.setPromotionsList);
       $this.meta.offset += $this.meta.limit;
     };
 
