@@ -20,6 +20,7 @@ angular.module('ts5App')
     $scope.uiSelectTemplateReady = false;
     $scope.discountIsInactive = false;
     $scope.discountIsActive = false;
+    $scope.viewOnly = false;
     $scope.globalDiscountTypesList = [];
     $scope.discountTypesList = [];
     $scope.companyCurrencyGlobalsList = [];
@@ -648,4 +649,8 @@ angular.module('ts5App')
     };
 
     this.init();
+
+    $scope.isCurrentEffectiveDate = function (discountData) {
+      return (dateUtility.isTodayOrEarlierDatePicker(discountData.startDate) && dateUtility.isAfterTodayDatePicker(discountData.endDate));
+    };
   });
