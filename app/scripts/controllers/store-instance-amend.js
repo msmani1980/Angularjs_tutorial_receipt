@@ -640,21 +640,20 @@ angular.module('ts5App')
     }
 
     function searchForOverwriteCashBag () {
-
-      if (!$scope.moveSearch.cashBag) {
-        return;
-      }
-
       var companyId = globalMenuService.company.get();
       var payloadManualCashBag = {
-        cashBagNumber: $scope.moveSearch.cashBag,
         originationSource:2,
         isSubmitted: true,
         isDelete: false,
         retailCompanyId:companyId,
         chCompanyId:'',
-        eposCashBagsId:null
+        eposCashBagsId:null,
+        amendVerifiedOn:null
       };
+
+      if (angular.isDefined($scope.moveSearch.cashBag) && $scope.moveSearch.cashBag !== null && $scope.moveSearch.cashBag !== '') {
+        payloadManualCashBag.cashBagNumber = $scope.moveSearch.cashBag;
+      }
 
       return cashBagFactory.getCashBagList(companyId, payloadManualCashBag).then($this.searchForMoveCashBagSuccess);
     }
