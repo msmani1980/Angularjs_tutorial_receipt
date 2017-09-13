@@ -596,6 +596,14 @@ angular.module('ts5App')
       }
     };
 
+    $scope.disableOverwriteSelectCashBag  = function (cashBag) {
+      if (cashBag.amendVerifiedOn) {
+        return true;
+      }
+
+      return false;
+    };
+
     $scope.disableSelectCashBag  = function (cashBag) {
       if (!cashBag.isVerified && cashBag.isSubmitted) {
         return false;
@@ -640,14 +648,13 @@ angular.module('ts5App')
     }
 
     function searchForOverwriteCashBag () {
-
       if (!$scope.moveSearch.cashBag) {
         return;
       }
 
       var companyId = globalMenuService.company.get();
       var payloadManualCashBag = {
-        cashBagNumber: $scope.moveSearch.cashBag,
+        cashBagNumber:$scope.moveSearch.cashBag,
         originationSource:2,
         isSubmitted: true,
         isDelete: false,
