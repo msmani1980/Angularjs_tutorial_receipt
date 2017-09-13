@@ -596,6 +596,14 @@ angular.module('ts5App')
       }
     };
 
+    $scope.disableOverwriteSelectCashBag  = function (cashBag) {
+      if (cashBag.amendVerifiedOn) {
+        return true;
+      }
+
+      return false;
+    };
+
     $scope.disableSelectCashBag  = function (cashBag) {
       if (!cashBag.isVerified && cashBag.isSubmitted) {
         return false;
@@ -640,20 +648,20 @@ angular.module('ts5App')
     }
 
     function searchForOverwriteCashBag () {
+      if (!$scope.moveSearch.cashBag) {
+        return;
+      }
+
       var companyId = globalMenuService.company.get();
       var payloadManualCashBag = {
+        cashBagNumber:$scope.moveSearch.cashBag,
         originationSource:2,
         isSubmitted: true,
         isDelete: false,
         retailCompanyId:companyId,
         chCompanyId:'',
-        eposCashBagsId:0,
-        amendVerifiedOn:null
+        eposCashBagsId:0
       };
-
-      if (angular.isDefined($scope.moveSearch.cashBag) && $scope.moveSearch.cashBag !== null && $scope.moveSearch.cashBag !== '') {
-        payloadManualCashBag.cashBagNumber = $scope.moveSearch.cashBag;
-      }
 
       return cashBagFactory.getCashBagList(companyId, payloadManualCashBag).then($this.searchForMoveCashBagSuccess);
     }

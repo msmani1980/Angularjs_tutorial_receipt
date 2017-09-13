@@ -120,8 +120,8 @@
           
           <div class="row" ng-show="moveCashBagAction==='overwrite'">
             <div class="col-xs-10">
-              <label>Cash Bag</label>
-              <input type="text" class="form-control" ng-model="moveSearch.cashBag" minlength="1" maxlength="{{ cbNumberMaxLength }}" ng-required="false">
+              <label>Cash Bag *</label>
+              <input type="text" class="form-control" ng-model="moveSearch.cashBag" minlength="1" maxlength="{{ cbNumberMaxLength }}" ng-required="true">
             </div>
             <div class="col-xs-2">
               <br>
@@ -247,6 +247,7 @@
               <td>{{ manualCashBag.cashbagSubmittedOn }}</td>
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(manualCashBag, 'button', 'storeInstance')"
+                        ng-disabled="disableOverwriteSelectCashBag(manualCashBag)"
                         ng-click="selectRecordForMoveCashBag(manualCashBag)">
                   <span ng-class="getClassesForSingleSelectedRow(manualCashBag, 'buttonIcon', 'storeInstance')"></span>
                 </button>
