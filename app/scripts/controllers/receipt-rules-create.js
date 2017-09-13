@@ -186,10 +186,10 @@ angular.module('ts5App')
       
     this.getReceiptRuleSuccess = function(response) {
       $scope.receiptRule = angular.copy(response);
-      $scope.receiptRule.countryId = getCountryFromStationId($scope.receiptRule.companyStationId);
+      $scope.receiptRule.countryId = getCountryFromStationId(response.companyStationId);
       $scope.receiptFloorLimitAmountsUi = addCurrencyCodeToArrayItems($scope.receiptFloorLimitAmountsUi, response.receiptRuleLimits);
       $scope.multiSelectedValues.globalStationList = $filter('filter')($scope.globalStationList, {
-        id: $scope.receiptRule.companyStationId
+        id: response.companyStationId
       }, true);
     };
     
