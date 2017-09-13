@@ -544,6 +544,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     });
 
+    $scope.$watch('formData.startDate', function() {
+      $scope.recalculateEndDate();
+    });
+
     this.isMasterItemInfoDirty = function() {
       if ($scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&
         $scope.originalMasterItemData.itemName === $scope.formData.itemName &&
@@ -806,8 +810,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
     };
 
-    $scope.voucherDurationChanged = function () {
+    $scope.recalculateEndDate = function () {
       var selectedDuration = $scope.formData.voucherDuration;
+
+      if (!selectedDuration) {
+        return;
+      }
 
       if (selectedDuration === 365) {
         $scope.formData.endDate = dateUtility.addYears($scope.formData.startDate, 1);
