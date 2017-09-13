@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('receiptRulesService', function($resource, ENV) {
 
-    var receiptRulesRequestURL = ENV.apiUrl + '/api/receipt-rules/:id';
+    var receiptRulesRequestURL = ENV.apiUrl + '/rsvr/api/receipt-rules/:id';
    
     var receiptRulesActions = {
       getReceiptRules: {
