@@ -647,7 +647,7 @@ angular.module('ts5App')
         isDelete: false,
         retailCompanyId:companyId,
         chCompanyId:'',
-        eposCashBagsId:null,
+        eposCashBagsId:0,
         amendVerifiedOn:null
       };
 
