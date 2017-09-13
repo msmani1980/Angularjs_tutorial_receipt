@@ -569,6 +569,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.setCharacteristics = function(data) {
       $scope.characteristics = data;
       $scope.filteredCharacteristics = [];
+      
       var filteredData = lodash.filter(data, function(o) {
         return o.name !== 'Link';
       });
