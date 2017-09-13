@@ -247,6 +247,7 @@
               <td>{{ manualCashBag.cashbagSubmittedOn }}</td>
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(manualCashBag, 'button', 'storeInstance')"
+                        ng-disabled="disableOverwriteSelectCashBag(manualCashBag)"
                         ng-click="selectRecordForMoveCashBag(manualCashBag)">
                   <span ng-class="getClassesForSingleSelectedRow(manualCashBag, 'buttonIcon', 'storeInstance')"></span>
                 </button>
