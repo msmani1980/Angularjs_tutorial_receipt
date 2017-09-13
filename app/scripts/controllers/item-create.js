@@ -632,7 +632,16 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setCharacteristics = function(data) {
       $scope.characteristics = data;
-      $scope.filteredCharacteristics = data;
+      $scope.filteredCharacteristics = [];
+      
+      var filteredData = lodash.filter(data, function(o) {
+        return o.name !== 'Link';
+      });
+      $scope.itemCharacteristicsPerItemType = lodash.groupBy(filteredData, function(ic) { return ic.itemTypeId; });
+    };
+
+    $scope.isItemCharacteristicsFieldDisabled = function() {
+      return typeof $scope.formData.itemTypeId === 'undefined' || $scope.formData.itemTypeId === '' || $scope.formData.itemTypeId === null;
     };
 
     this.setDimensionList = function(data) {
@@ -737,19 +746,18 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     $scope.filterCharacteristics = function() {
-      if ($scope.formData.itemTypeId && $scope.itemTypes[$scope.formData.itemTypeId - 1].name === 'Virtual') {
-        $scope.filteredCharacteristics = [];
-        angular.forEach($scope.characteristics, function(value) {
-          if (value.name === 'Downloadable' || value.name === 'Link') {
-            $scope.filteredCharacteristics.push(value);
-          }
+      $scope.formData.characteristics = [];
+      $scope.shouldDisplayURLField = false;
+      $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
+    };
 
+    $scope.onCharacteristicsChange = function() {
+      $scope.shouldDisplayURLField = false;
+      angular.forEach($scope.formData.characteristics, function(value) {
+        if (value.name === 'Downloadable') {
           $scope.shouldDisplayURLField = true;
-        });
-      } else {
-        $scope.filteredCharacteristics = $scope.characteristics;
-        $scope.shouldDisplayURLField = false;
-      }
+        }
+      });
     };
 
     $scope.$watch('form.$valid', function(validity) {
