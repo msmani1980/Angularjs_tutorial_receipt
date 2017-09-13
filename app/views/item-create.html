@@ -151,7 +151,7 @@
 
               <div class="form-group">
                 <label>Item Characteristics</label>
-                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics">
+                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics" ng-disabled="isItemCharacteristicsFieldDisabled()" ng-change="onCharacteristicsChange()" style="min-height: 34px;">
                   <ui-select-match placeholder="Item Characteristics" ui-lock-choice="isDisabled()">{{ $item.name }}
                   </ui-select-match>
                   <ui-select-choices
