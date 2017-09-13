@@ -569,8 +569,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.setCharacteristics = function(data) {
       $scope.characteristics = data;
       $scope.filteredCharacteristics = [];
-
-      $scope.itemCharacteristicsPerItemType = lodash.groupBy(data, function(ic) { return ic.itemTypeId; });
+      var filteredData = lodash.filter(data, function(o) {
+        return o.name !== 'Link';
+      });
+      $scope.itemCharacteristicsPerItemType = lodash.groupBy(filteredData, function(ic) { return ic.itemTypeId; });
     };
 
     $scope.isItemCharacteristicsFieldDisabled = function() {
