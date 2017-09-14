@@ -50,6 +50,7 @@ angular.module('ts5App')
       $scope.multiSelectedValues = {};
       $scope.countriesList = [];
       $scope.globalStationList = [];
+      $scope.loadReceiptRules();
     };
     
     $scope.onCounrtyChange = function() {
