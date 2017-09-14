@@ -48,8 +48,6 @@ angular.module('ts5App')
       $scope.isSearch = false;
       $scope.search = {};
       $scope.multiSelectedValues = {};
-      $scope.countriesList = [];
-      $scope.globalStationList = [];
       $scope.loadReceiptRules();
     };
     
