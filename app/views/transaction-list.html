@@ -265,7 +265,7 @@
     <tbody>
     <tr ng-repeat="transaction in transactions">
       <td nowrap>{{ transaction.transactionDate }}</td>
-      <td ng-show="displayColumns.paymentId">{{ transaction.paymentId }}</td>
+      <td ng-show="displayColumns.paymentId">{{ transaction.id }}</td>
       <td ng-show="displayColumns.transactionId">{{ transaction.transactionId }}</td>
       <td>{{ printTransactionTypeName(transaction) }}</td>
       <td>{{ printPaymentMethodName(transaction) }}</td>
