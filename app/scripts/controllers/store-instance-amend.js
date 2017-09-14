@@ -296,7 +296,7 @@ angular.module('ts5App')
       }
 
       var hasBankRef = false;
-      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.bankReferenceNumber) && cashBag.bankReferenceNumber !== null && cashBag.bankReferenceNumber !== '') {
+      if (angular.isDefined(cashBag) && cashBag !== null && angular.isDefined(cashBag.bankRefNumber) && cashBag.bankRefNumber !== null && cashBag.bankRefNumber !== '') {
         hasBankRef = true;
       }
 
@@ -596,6 +596,14 @@ angular.module('ts5App')
       }
     };
 
+    $scope.disableOverwriteSelectCashBag  = function (cashBag) {
+      if (cashBag.amendVerifiedOn) {
+        return true;
+      }
+
+      return false;
+    };
+
     $scope.disableSelectCashBag  = function (cashBag) {
       if (!cashBag.isVerified && cashBag.isSubmitted) {
         return false;
@@ -614,7 +622,8 @@ angular.module('ts5App')
             bankRefNumber:inCashBag.bankRefNumber,
             isVerified:inCashBag.isVerified,
             isSubmitted:inCashBag.isSubmitted,
-            id:inCashBag.id
+            id:inCashBag.id,
+            storeInstanceNumber:inCashBag.storeInstanceId
           };
           if (keyCashBag.indexOf(cashBag.id) === -1) {
             keyCashBag.push(cashBag.id);
@@ -645,7 +654,7 @@ angular.module('ts5App')
 
       var companyId = globalMenuService.company.get();
       var payloadManualCashBag = {
-        cashBagNumber: $scope.moveSearch.cashBag,
+        cashBagNumber:$scope.moveSearch.cashBag,
         originationSource:2,
         isSubmitted: true,
         isDelete: false,
@@ -1518,7 +1527,7 @@ angular.module('ts5App')
     function setSubmittedCashBagList() {
       var submittedList = [];
       angular.forEach($scope.cashBags, function (cashBag) {
-        if (cashBag.submitted) {
+        if (cashBag.submitted && !cashBag.delete) {
           submittedList.push(cashBag.id);
         }
       });
