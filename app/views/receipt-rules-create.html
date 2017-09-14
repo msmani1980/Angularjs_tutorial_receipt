@@ -1,0 +1,107 @@
+<div class="module-container">
+
+  <div class="edit-controls">
+
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+    </div>
+
+  </div>
+
+  <error-dialog form-object="receiptRuleFormData" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+  <form name="receiptRuleFormData">
+    <!--/TopHeader 
+    -->
+    <div class="panel panel-default">
+
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label for="country-id">Country *</label>
+              <select class="form-control"
+                      name="countryId"
+                      ng-model="receiptRule.countryId"
+                      ng-selected="receiptRule.countryId === countrie.id"
+                      ng-options="countrie.id as countrie.countryName for countrie in countriesList"
+                      ng-disabled="readOnly"
+                      required="true"
+                      ng-change="onCounrtyChange()"
+                      required
+                      id="countryId">
+                <option selected="selected" value>Select Country</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+                <label for="company-stationId">Station *</label>
+          	     <ui-select id="companyStationId" multiple ng-model="multiSelectedValues.globalStationList" ng-disabled="readOnly">
+	               <ui-select-match placeholder="Select Stations..">{{ $item.code }}</ui-select-match>
+	               <ui-select-choices  
+	               					  repeat="station in globalStationList | filter: $select.search | orderBy: 'station.name'">
+	                 {{ station.code }} 
+	               </ui-select-choices>
+              </ui-select> 
+            </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label for="auto-print">Print Auto-Receipt For*</label>
+              <div  class="input-group">
+                <input type="radio" name="autoPrint" value="All" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'All' "> All Items
+              </div>
+              <div>
+                <input type="radio" name="autoPrint" value="Item" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'Item' "> Specific Retail Items ('Print Receipt' flagged in the item setup screen)
+              </div>  
+                 
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label for="receipt-rule-limit">Receipt Floor Limit Value*</label>
+              <div class="row" ng-repeat="receiptFloorLimitAmountData in receiptFloorLimitAmountsUi track by $index | orderBy: 'receiptFloorLimitAmountData.code'">
+              <div class="col-xs-2 col-sm-1 text-right">{{ receiptFloorLimitAmountData.code }}</div>
+              <div class="col-xs-10 col-sm-8">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                  <input type="text" class="form-control"
+                         name="receiptFloorLimitAmountData{{ receiptFloorLimitAmountData }}"
+                         custom-validity
+                         custom-pattern="numberOrDecimal"
+                         ng-model="receiptFloorLimitAmountData.amount"
+                         ng-disabled="readOnly || isDisabled"
+                         required>
+                </div>
+              </div>
+          </div>
+            </div>
+          </div>
+      </div>
+      <div class="panel-footer text-right" ng-hide="readOnly">
+        <button class="btn btn-primary" ng-click="formSave()" >
+          <span class="fa fa-check-square-o" aria-hidden="true"></span>
+          <span class="hidden-xs">Save</span>
+        </button>
+        <a href="#/receipt-rules" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<!-- <dynamic-left-nav title="ReceiptRule Management"></dynamic-left-nav> -->
