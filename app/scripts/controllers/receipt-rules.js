@@ -52,6 +52,7 @@ angular.module('ts5App')
     };
     
     $scope.onCounrtyChange = function() {
+      $scope.multiSelectedValues = {};    	
       var payload = {
           startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
           countryId: $scope.search.countryId
@@ -119,7 +120,7 @@ angular.module('ts5App')
       };
       
     this.formatMultiSelectedValuesForSearch = function() {
-      $this.addSearchValuesFromMultiSelectArray('companyStationId', $scope.multiSelectedValues.globalStationList, 'id');
+      $this.addSearchValuesFromMultiSelectArray('companyStationIdStr', $scope.multiSelectedValues.globalStationList, 'id');
     };
     
     this.addSearchValuesFromMultiSelectArray = function(searchKeyName, multiSelectArray, multiSelectElementKey) {
