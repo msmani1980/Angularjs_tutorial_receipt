@@ -36,7 +36,7 @@
 				</div>
 				<div class="col-xs-12 col-sm-6 col-md-4">
 					<div class="form-group">
-	                <label for="station">Station</label>
+	                <label for="company-stationId">Station</label>
 	                <ui-select id="companyStationId" multiple ng-model="multiSelectedValues.globalStationList">
 	                  <ui-select-match placeholder="Select Stations..">{{ $item.code }} ({{ $item.name }})</ui-select-match>
 	                  <ui-select-choices repeat="station in globalStationList | filter: $select.search">
