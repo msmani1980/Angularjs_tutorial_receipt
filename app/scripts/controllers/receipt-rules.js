@@ -52,7 +52,7 @@ angular.module('ts5App')
     };
     
     $scope.onCounrtyChange = function() {
-      $scope.multiSelectedValues = {};    	
+      $scope.multiSelectedValues = {};
       var payload = {
           startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
           countryId: $scope.search.countryId
