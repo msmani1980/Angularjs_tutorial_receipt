@@ -159,8 +159,8 @@ angular.module('ts5App')
     };    
 
     this.getCountireSuccess = function(response) {
-            $scope.countriesList = angular.copy(response.countries);
-          };
+      $scope.countriesList = angular.copy(response.countries);
+    };
           
     this.getCompanyGlobalStationSuccess = function(response) {
       $scope.globalStationList = angular.copy(response.response);
@@ -188,10 +188,19 @@ angular.module('ts5App')
       $scope.receiptRule = angular.copy(response);
       $scope.receiptRule.countryId = getCountryFromStationId(response.companyStationId);
       $scope.receiptFloorLimitAmountsUi = addCurrencyCodeToArrayItems($scope.receiptFloorLimitAmountsUi, response.receiptRuleLimits);
+      getSelectedCountriesStation($scope.receiptRule.countryId);
       $scope.multiSelectedValues.globalStationList = $filter('filter')($scope.globalStationList, {
-        id: response.companyStationId
-      }, true);
+          id: response.companyStationId
+        }, true);
     };
+    
+    function getSelectedCountriesStation(stationId) {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
+        countryId: stationId
+      };
+      receiptsFactory.getCompanyGlobalStationList(payload).then($this.getCompanyGlobalStationSuccess);
+    }
     
     function getCountryFromStationId(stationId) {
         var stationList = $filter('filter')($scope.globalStationList, {
