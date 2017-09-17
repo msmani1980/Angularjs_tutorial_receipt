@@ -461,6 +461,10 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       $scope.characteristics = data;
     };
 
+    $scope.isItemCharacteristicsFieldDisabled = function() {
+      return typeof $scope.formData.itemTypeId === 'undefined' || $scope.formData.itemTypeId === '' || $scope.formData.itemTypeId === null;
+    };
+
     this.setDimensionList = function(data) {
       $scope.dimensionUnits = data.units;
     };
@@ -756,13 +760,13 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       return activeBtn;
 
     };
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
-    
+
     $scope.isFutureEffectiveDate = function (date) {
       return (dateUtility.isAfterTodayDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate)));
     };
-    
+
   });
