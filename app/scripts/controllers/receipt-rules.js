@@ -48,7 +48,8 @@ angular.module('ts5App')
       $scope.isSearch = false;
       $scope.search = {};
       $scope.multiSelectedValues = {};
-      $scope.loadReceiptRules();
+      $scope.receiptRules = [];
+      receiptsFactory.getCompanyGlobalStationList($this.getOnLoadingPayload).then($this.getCompanyGlobalStationSuccess);
     };
     
     $scope.onCounrtyChange = function() {
