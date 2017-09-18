@@ -40,7 +40,6 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     $scope.$watch('formData.itemTypeId', function(selectedItemType) {
       $scope.isVoucherSelected = (parseInt(selectedItemType) === 3);
       $scope.isVirtualSelected = (parseInt(selectedItemType) === 2);
-      $scope.filterCharacteristics();
     }, true);
 
     $scope.$watch('formData.characteristics', function(characteristics) {
@@ -146,17 +145,6 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       }
 
       return tagsPayload;
-    };
-
-    $scope.filterCharacteristics = function() {
-      $scope.filteredCharacteristics = [];
-      if (parseInt($scope.formData.itemTypeId) === 2) {
-        $scope.filteredCharacteristics = $scope.characteristics.filter(function(value) {
-          return value.id === 8 || value.id === 9;
-        });
-      } else {
-        $scope.filteredCharacteristics = $scope.characteristics;
-      }
     };
 
     this.findCharacteristicIndex = function(characteristicId) {
@@ -361,6 +349,19 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       this.formatImageDates(itemData);
       this.formatCostDates(itemData);
       $scope.formData = itemData;
+      this.assignItemCharacteristicsRelatedFields();
+    };
+
+    this.assignItemCharacteristicsRelatedFields = function() {
+      angular.forEach($scope.formData.characteristics, function(value) {
+        if (value.name === 'Downloadable') {
+          $scope.shouldDisplayURLField = true;
+        }
+      });
+
+      if ($scope.formData.itemTypeId !== 'undefined' || $scope.formData.itemTypeId !== '' || $scope.formData.itemTypeId !== null) {
+        $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
+      }
     };
 
     this.getMasterCurrenciesList = function() {
@@ -459,6 +460,38 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
 
     this.setCharacteristics = function(data) {
       $scope.characteristics = data;
+      $scope.filteredCharacteristics = [];
+
+      var filteredData = lodash.filter(data, function(o) {
+        return o.name !== 'Link';
+      });
+
+      $scope.itemCharacteristicsPerItemType = lodash.groupBy(filteredData, function(ic) { return ic.itemTypeId; });
+    };
+
+    $scope.isItemCharacteristicsFieldDisabled = function() {
+      return typeof $scope.formData.itemTypeId === 'undefined' || $scope.formData.itemTypeId === '' || $scope.formData.itemTypeId === null;
+    };
+
+    $scope.filterCharacteristics = function() {
+      $scope.formData.linkUrl = null;
+      $scope.formData.characteristics = [];
+      $scope.shouldDisplayURLField = false;
+      $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
+    };
+
+    $scope.onCharacteristicsChange = function() {
+      if ($scope.formData.characteristics.length === 0) {
+        $scope.formData.linkUrl = null;
+      }
+
+      $scope.shouldDisplayURLField = false;
+
+      angular.forEach($scope.formData.characteristics, function(value) {
+        if (value.name === 'Downloadable') {
+          $scope.shouldDisplayURLField = true;
+        }
+      });
     };
 
     this.setDimensionList = function(data) {
@@ -756,13 +789,13 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       return activeBtn;
 
     };
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
-    
+
     $scope.isFutureEffectiveDate = function (date) {
       return (dateUtility.isAfterTodayDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate)));
     };
-    
+
   });
