@@ -349,6 +349,16 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       this.formatImageDates(itemData);
       this.formatCostDates(itemData);
       $scope.formData = itemData;
+
+      angular.forEach($scope.formData.characteristics, function(value) {
+        if (value.name === 'Downloadable') {
+          $scope.shouldDisplayURLField = true;
+        }
+      });
+
+      if($scope.formData.itemTypeId !== 'undefined' || $scope.formData.itemTypeId !== '' || $scope.formData.itemTypeId !== null) {
+        $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
+      }
     };
 
     this.getMasterCurrenciesList = function() {
@@ -461,13 +471,19 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     };
 
     $scope.filterCharacteristics = function() {
+      $scope.formData.linkUrl = null;
       $scope.formData.characteristics = [];
       $scope.shouldDisplayURLField = false;
       $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
     };
 
     $scope.onCharacteristicsChange = function() {
+      if($scope.formData.characteristics.length === 0) {
+        $scope.formData.linkUrl = null;
+      }
+
       $scope.shouldDisplayURLField = false;
+      
       angular.forEach($scope.formData.characteristics, function(value) {
         if (value.name === 'Downloadable') {
           $scope.shouldDisplayURLField = true;
