@@ -388,6 +388,14 @@ angular.module('ts5App', [
     templateUrl: 'views/schedule.html',
     controller: 'ScheduleCtrl',
     controllerAs: 'schedule'
+  }).when('/employees', {
+    templateUrl: 'views/employee-list.html',
+    controller: 'EmployeeListCtrl',
+    controllerAs: 'employeeList'
+  }).when('/employee/:action/:id?', {
+    templateUrl: 'views/employee.html',
+    controller: 'EmployeeCtrl',
+    controllerAs: 'employee'
   }).otherwise({
     redirectTo: '/'
   });

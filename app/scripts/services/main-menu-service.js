@@ -524,6 +524,23 @@ angular.module('ts5App')
             package: 'REPORT',
             role: 'REPORT'
           }]
+        }, {
+          title: 'Employee Management',
+          menuItems: [{
+              name: 'Manage Employee',
+              route: '/#/employees',
+              icon: 'icon-manage-employee',
+              className: 'dashboard-manageEmployees',
+              package: 'EMPLOYEE',
+              role: 'EMPLOYEE'
+            }, {
+              name: 'Create Employee',
+              route: '/#/employee/create',
+              icon: 'icon-create-employee',
+              className: 'dashboard-createEmployee',
+              package: 'EMPLOYEE',
+              role: 'EMPLOYEE'
+            }]
         }];
     };
 
