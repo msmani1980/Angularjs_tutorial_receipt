@@ -464,14 +464,17 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.updateStationsList();
       this.setFormDataDefaultLanguage();
       this.setFormDataNotesTranslations();
+      this.assignItemCharacteristicsRelatedFields();
+    };
 
+    this.assignItemCharacteristicsRelatedFields = function() {
       angular.forEach($scope.formData.characteristics, function(value) {
         if (value.name === 'Downloadable') {
           $scope.shouldDisplayURLField = true;
         }
       });
 
-      if($scope.formData.itemTypeId !== 'undefined' || $scope.formData.itemTypeId !== '' || $scope.formData.itemTypeId !== null) {
+      if ($scope.formData.itemTypeId !== 'undefined' || $scope.formData.itemTypeId !== '' || $scope.formData.itemTypeId !== null) {
         $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
       }
     };
@@ -764,7 +767,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     $scope.onCharacteristicsChange = function() {
-      if($scope.formData.characteristics.length === 0) {
+      if ($scope.formData.characteristics.length === 0) {
         $scope.formData.linkUrl = null;
       }
 
