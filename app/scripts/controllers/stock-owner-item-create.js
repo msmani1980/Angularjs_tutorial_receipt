@@ -40,7 +40,6 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     $scope.$watch('formData.itemTypeId', function(selectedItemType) {
       $scope.isVoucherSelected = (parseInt(selectedItemType) === 3);
       $scope.isVirtualSelected = (parseInt(selectedItemType) === 2);
-      $scope.filterCharacteristics();
     }, true);
 
     $scope.$watch('formData.characteristics', function(characteristics) {
@@ -146,17 +145,6 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       }
 
       return tagsPayload;
-    };
-
-    $scope.filterCharacteristics = function() {
-      $scope.filteredCharacteristics = [];
-      if (parseInt($scope.formData.itemTypeId) === 2) {
-        $scope.filteredCharacteristics = $scope.characteristics.filter(function(value) {
-          return value.id === 8 || value.id === 9;
-        });
-      } else {
-        $scope.filteredCharacteristics = $scope.characteristics;
-      }
     };
 
     this.findCharacteristicIndex = function(characteristicId) {
@@ -470,6 +458,21 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
 
     $scope.isItemCharacteristicsFieldDisabled = function() {
       return typeof $scope.formData.itemTypeId === 'undefined' || $scope.formData.itemTypeId === '' || $scope.formData.itemTypeId === null;
+    };
+
+    $scope.filterCharacteristics = function() {
+      $scope.formData.characteristics = [];
+      $scope.shouldDisplayURLField = false;
+      $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
+    };
+
+    $scope.onCharacteristicsChange = function() {
+      $scope.shouldDisplayURLField = false;
+      angular.forEach($scope.formData.characteristics, function(value) {
+        if (value.name === 'Downloadable') {
+          $scope.shouldDisplayURLField = true;
+        }
+      });
     };
 
     this.setDimensionList = function(data) {
