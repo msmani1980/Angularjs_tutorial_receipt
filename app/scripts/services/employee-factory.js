@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-    .factory('employeeFactory',  function (globalMenuService, employeesService) {
+    .factory('employeeFactory',  function (globalMenuService, employeesService, stationsService, countriesService) {
 
       var getCompanyId = function () {
         return globalMenuService.company.get();
@@ -33,13 +33,23 @@ angular.module('ts5App')
       var deleteEmployee = function (companyId, employeeId) {
         return employeesService.deleteEmployee(companyId, employeeId);
       };
+      
+      var getCompanyGlobalStationList = function (payload) {
+        return stationsService.getGlobalStationList(payload);
+      };
 
+      var getCountriesList = function() {
+        return countriesService.getCountriesList();
+      };
+        
       return {
         getEmployees: getEmployees,
         getEmployee: getEmployee,
         createEmployee: createEmployee,
         updateEmployee: updateEmployee,
         deleteEmployee: deleteEmployee,
-        getCompanyId: getCompanyId
+        getCompanyId: getCompanyId,
+        getCompanyGlobalStationList: getCompanyGlobalStationList,
+        getCountriesList: getCountriesList,
       };
     });
