@@ -41,8 +41,8 @@
 				</div>
 				<div class="col-xs-12 col-sm-6 col-md-4">
 					<div class="form-group">
-	                <label for="company-stationId">Station</label>
-	                <ui-select id="companyStationId" multiple ng-model="multiSelectedValues.globalStationList">
+	                <label for="global-station-list">Station</label>
+	                <ui-select id="global-station-list" multiple ng-model="multiSelectedValues.globalStationList" theme="bootstrap">
 	                  <ui-select-match placeholder="Select Stations..">{{ $item.code }} ({{ $item.name }})</ui-select-match>
 	                  <ui-select-choices repeat="station in globalStationList | filter: $select.search">
 	                    {{ station.code }} ({{ station.name }})
