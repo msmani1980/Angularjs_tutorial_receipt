@@ -527,16 +527,16 @@ angular.module('ts5App')
         }, {
           title: 'Employee Management',
           menuItems: [{
-              name: 'Manage Employee',
+              name: 'Manage Employees',
               route: '/#/employees',
-              icon: 'icon-manage-employee',
+              icon: 'icon-manage-menu',
               className: 'dashboard-manageEmployees',
               package: 'EMPLOYEE',
               role: 'EMPLOYEE'
             }, {
               name: 'Create Employee',
               route: '/#/employee/create',
-              icon: 'icon-create-employee',
+              icon: 'icon-create-menu',
               className: 'dashboard-createEmployee',
               package: 'EMPLOYEE',
               role: 'EMPLOYEE'
