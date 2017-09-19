@@ -396,6 +396,14 @@ angular.module('ts5App', [
     templateUrl: 'views/receipt-rules-create.html',
     controller: 'ReceiptRulesCreateCtrl',
     controllerAs: 'receiptRulesCreate'
+  }).when('/employees', {
+    templateUrl: 'views/employee-list.html',
+    controller: 'EmployeeListCtrl',
+    controllerAs: 'employeeList'
+  }).when('/employee/:action/:id?', {
+    templateUrl: 'views/employee.html',
+    controller: 'EmployeeCtrl',
+    controllerAs: 'employee'
   }).otherwise({
     redirectTo: '/'
   });
