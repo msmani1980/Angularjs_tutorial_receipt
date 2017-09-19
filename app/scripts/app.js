@@ -388,6 +388,14 @@ angular.module('ts5App', [
     templateUrl: 'views/schedule.html',
     controller: 'ScheduleCtrl',
     controllerAs: 'schedule'
+  }).when('/receipt-rules', {
+    templateUrl: 'views/receipt-rules.html',
+    controller: 'ReceiptRulesCtrl',
+    controllerAs: 'receiptRules'
+  }).when('/receipt-rules/:action/:id?', {
+    templateUrl: 'views/receipt-rules-create.html',
+    controller: 'ReceiptRulesCreateCtrl',
+    controllerAs: 'receiptRulesCreate'
   }).when('/employees', {
     templateUrl: 'views/employee-list.html',
     controller: 'EmployeeListCtrl',
