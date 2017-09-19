@@ -9,7 +9,7 @@ describe('Controller: EmployeeListCtrl', function () {
 	  var EmployeeListCtrl;
 	  var scope;
 	  var companyId;
-	  var employeesFactory;
+	  var employeeFactory;
 	  var location;
 	  var dateUtility;
 
@@ -26,7 +26,7 @@ describe('Controller: EmployeeListCtrl', function () {
 	    });
 
 	    location = $location;
-	    employeesFactory = $injector.get('employeesFactory');
+	    employeeFactory = $injector.get('employeeFactory');
 	    dateUtility = $injector.get('dateUtility');
 	    scope = $rootScope.$new();
 
@@ -36,11 +36,11 @@ describe('Controller: EmployeeListCtrl', function () {
 	    countrieListDeferred = $q.defer();
 	    countrieListDeferred.resolve(countrieResponseJSON);
 
-	    spyOn(employeesFactory, 'getCompanyGlobalStationList').and.returnValue(stationsListDeferred.promise);
-	    spyOn(employeesFactory, 'getCountriesList').and.returnValue(countrieListDeferred.promise);
-	    spyOn(employeesFactory, 'getCompanyId').and.returnValue('fakeCompanyId');
+	    spyOn(employeeFactory, 'getCompanyGlobalStationList').and.returnValue(stationsListDeferred.promise);
+	    spyOn(employeeFactory, 'getCountriesList').and.returnValue(countrieListDeferred.promise);
+	    spyOn(employeeFactory, 'getCompanyId').and.returnValue('fakeCompanyId');
 
-	    companyId = receiptsFactory.getCompanyId();
+	    companyId = employeeFactory.getCompanyId();
 	    
 	    EmployeeListCtrl = $controller('EmployeeListCtrl', {
 	        $scope: scope
