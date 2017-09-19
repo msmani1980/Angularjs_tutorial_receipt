@@ -50,7 +50,7 @@ angular.module('ts5App')
 
         // Populate select box with easy pay denominations
         currency.selectedEasyPayDenominations = currency.denominations.filter(function(denomination) {
-          return denomination.isEasyPay === 'true';
+          return denomination.isEasyPay;
         }).map(function(denomination) {
           return $this.getDenominationById($scope.currencyDenominations[currency.currencyId], denomination.currencyDenominationId);
         }).sort($this.sortDenominationByValue);
