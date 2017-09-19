@@ -18,10 +18,8 @@ angular.module('ts5App')
 
     var notrsvrPages = [
       '/change-password/*',
-      '/company-exchange-rate-edit/*',
       '/company-reason-code/*',
       '/company-reason-type-subscribe/*',
-      '/currency-edit/*',
       '/forgot-username-password/*',
       '/global-reason-code/*',
       '/lmp-locations-list/*',
