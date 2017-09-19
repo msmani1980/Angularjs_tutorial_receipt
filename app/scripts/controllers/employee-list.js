@@ -24,6 +24,7 @@ angular.module('ts5App')
     $scope.isSearch = false;
     $scope.countriesList = [];
     $scope.globalStationList = [];
+    $scope.multiSelectedValues = {};
     
     function showLoadingBar() {
         $scope.loadingBarVisible = true;
@@ -42,8 +43,8 @@ angular.module('ts5App')
       };
 
     $scope.showDeleteButton = function(dateString) {
-        return dateUtility.isAfterTodayDatePicker(dateString);
-      };
+      return dateUtility.isAfterTodayDatePicker(dateString);
+    };
 
     $scope.clearSearchForm = function() {
       $scope.isSearch = false;
@@ -71,13 +72,11 @@ angular.module('ts5App')
       }
 
       showLoadingBar();
+      $this.formatMultiSelectedValuesForSearch();
       var payload = lodash.assign(angular.copy($scope.search), {
           limit: $this.meta.limit,
           offset: $this.meta.offset
         });
-
-      payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
-      payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
 
       employeeFactory.getEmployees(payload).then($this.getEmployeesSuccess);
       $this.meta.offset += $this.meta.limit;
@@ -114,13 +113,30 @@ angular.module('ts5App')
       };
       $scope.loadEmployees();
     };
-	
+    
+    this.formatMultiSelectedValuesForSearch = function() {
+      $this.addSearchValuesFromMultiSelectArray('baseStationId', $scope.multiSelectedValues.globalStationList, 'id');
+    };
+    
+    this.addSearchValuesFromMultiSelectArray = function(searchKeyName, multiSelectArray, multiSelectElementKey) {
+      if (!multiSelectArray || multiSelectArray.length <= 0) {
+        return;
+      }
+
+      var searchArray = [];
+      angular.forEach(multiSelectArray, function(element) {
+          searchArray.push(element[multiSelectElementKey]);
+        });
+
+      $scope.search[searchKeyName] = searchArray.toString();
+    };
+      
     $scope.isEmployeeEditable = function(employee) {
       if (angular.isUndefined(employee)) {
         return false;
       }
 	
-      return dateUtility.isAfterToday(employee.endDate);
+      return dateUtility.isAfterTodayDatePicker(employee.endDate);
     };
     
     this.getCompanyGlobalStationSuccess = function(response) {
@@ -133,7 +149,13 @@ angular.module('ts5App')
       
     this.getEmployeesSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
-      $scope.employees = angular.copy(response.companyEmployees);
+      $scope.employees = $scope.employees.concat(response.companyEmployees.map(function (employee) {
+        employee.startDate = dateUtility.formatDateForApp(employee.startDate);
+        employee.endDate = dateUtility.formatDateForApp(employee.endDate);
+
+        return employee;
+      }));
+
       hideLoadingBar();
     };
        
