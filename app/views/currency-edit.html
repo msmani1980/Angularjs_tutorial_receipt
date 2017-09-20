@@ -100,18 +100,6 @@
                             </ui-select>
                         </div>
                     </div>
-                    <!-- <date-picker
-                            class="col-xs-12 col-md-4 col-sm-12"
-                            element-class="col-xs-6 col-sm-6"
-                            start-date-model="currency.startDate"
-                            end-date-model="currency.endDate"
-                            label-from="Start Date *"
-                            label-to="End Date *"
-                            required="true"
-                            disable-past="true"
-                            disable-start-date="isCurrencyReadOnly(currency)"
-                            disable-end-date="isCurrencyPartialReadOnly(currency)">
-                    </date-picker> -->
 					
 					<div class="col-xs-12 col-md-2 col-sm-6">
                         <div class="form-group">
@@ -132,7 +120,10 @@
                           <i ng-hide="currency.isNew" class="fa fa-pencil"></i>
                           <i ng-show="currency.isNew" class="fa fa-check-square-o"></i>
                         </button>
-                        <button type="button" class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, currency)" ng-hide="isCurrencyReadOnly(currency)">
+                        <button type="button" class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, currency)" ng-hide="isCurrencyReadOnly(currency) || currency.isNew">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-xs" ng-click="removeAddedCurrency($index)" ng-show="currency.isNew">
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>

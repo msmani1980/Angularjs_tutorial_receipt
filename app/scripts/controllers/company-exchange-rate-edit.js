@@ -94,7 +94,7 @@ angular.module('ts5App')
           companyCurrency.flatDenominations = $this.makeFlatDenominations(companyCurrency.denominations);
 
           var easyPayDenominations = companyCurrency.denominations.filter(function(denomination) {
-            return denomination.isEasyPay === 'true';
+            return denomination.isEasyPay;
           });
 
           companyCurrency.flatEasyPayDenominations = $this.makeFlatDenominations(easyPayDenominations);
