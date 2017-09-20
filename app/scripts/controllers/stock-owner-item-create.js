@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, lodash) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, lodash, _) {
 
     var $this = this;
     $scope.formData = {
@@ -362,6 +362,20 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       if ($scope.formData.itemTypeId !== 'undefined' || $scope.formData.itemTypeId !== '' || $scope.formData.itemTypeId !== null) {
         $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
       }
+
+      $this.filterDuplicateInItemCharacteristicsMultiChoice();
+    };
+
+    this.filterDuplicateInItemCharacteristicsMultiChoice = function() {
+      if ($scope.formData.itemTypeId !== 'undefined' || $scope.formData.itemTypeId !== '' || $scope.formData.itemTypeId !== null) {
+        $scope.filteredCharacteristics = _.differenceWith(
+          $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId],
+          $scope.formData.characteristics,
+          function(a, b) {
+            return a.id === b.id;
+          }
+        );
+      }
     };
 
     this.getMasterCurrenciesList = function() {
@@ -492,6 +506,8 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
           $scope.shouldDisplayURLField = true;
         }
       });
+
+      $this.filterDuplicateInItemCharacteristicsMultiChoice();
     };
 
     this.setDimensionList = function(data) {
