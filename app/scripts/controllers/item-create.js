@@ -9,7 +9,7 @@
 
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _) {
 
     var $this = this;
     $scope.formData = {
@@ -446,7 +446,13 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
 
       if ($scope.formData.itemTypeId !== 'undefined' || $scope.formData.itemTypeId !== '' || $scope.formData.itemTypeId !== null) {
-        $scope.filteredCharacteristics = $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId];
+        $scope.filteredCharacteristics = _.differenceWith(
+          $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId],
+          $scope.formData.characteristics,
+          function(a, b) {
+            return a.id === b.id;
+          }
+        );
       }
     };
 
@@ -713,6 +719,16 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           $scope.shouldDisplayURLField = true;
         }
       });
+
+      if ($scope.formData.itemTypeId !== 'undefined' || $scope.formData.itemTypeId !== '' || $scope.formData.itemTypeId !== null) {
+        $scope.filteredCharacteristics = _.differenceWith(
+          $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId],
+          $scope.formData.characteristics,
+          function(a, b) {
+            return a.id === b.id;
+          }
+        );
+      }
     };
 
     $scope.$watch('form.$valid', function(validity) {
