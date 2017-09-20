@@ -51,6 +51,7 @@ angular.module('ts5App')
       $scope.search = {};
       $scope.multiSelectedValues = {};
       $scope.employees = [];
+      employeeFactory.getCompanyGlobalStationList($this.getOnLoadingPayload).then($this.getCompanyGlobalStationSuccess);
     };
     
     $scope.loadEmployees = function() {
@@ -77,7 +78,10 @@ angular.module('ts5App')
           limit: $this.meta.limit,
           offset: $this.meta.offset
         });
-
+      
+      payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
+      payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
+      
       employeeFactory.getEmployees(payload).then($this.getEmployeesSuccess);
       $this.meta.offset += $this.meta.limit;
     }
