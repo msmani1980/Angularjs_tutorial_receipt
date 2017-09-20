@@ -235,14 +235,14 @@ angular.module('ts5App')
         title: 'Receipt Rule',
         menuItems: [{
           name: 'Manage Rules',
-          route: emberURL + 'receipt-rules',
+          route: '/#/receipt-rules',
           icon: 'icon-manage-receipt-rules',
           className: 'dashboard-manageReceiptRules',
           package: 'RECEIPT',
           role: 'RECEIPTRULE'
         }, {
           name: 'Create Rules',
-          route: emberURL + 'receipt-rules/create',
+          route:'/#/receipt-rules/create',
           icon: 'icon-create-receipt-rules',
           className: 'dashboard-createReceiptRule',
           package: 'RECEIPT',
@@ -524,6 +524,23 @@ angular.module('ts5App')
             package: 'REPORT',
             role: 'REPORT'
           }]
+        }, {
+          title: 'Employee Management',
+          menuItems: [{
+              name: 'Manage Employees',
+              route: '/#/employees',
+              icon: 'icon-manage-menu',
+              className: 'dashboard-manageEmployees',
+              package: 'EMPLOYEE',
+              role: 'EMPLOYEE'
+            }, {
+              name: 'Create Employee',
+              route: '/#/employee/create',
+              icon: 'icon-create-menu',
+              className: 'dashboard-createEmployee',
+              package: 'EMPLOYEE',
+              role: 'EMPLOYEE'
+            }]
         }];
     };
 

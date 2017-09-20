@@ -258,9 +258,12 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.makeDependencyPromises = function() {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
       return [
         companyTypesService.getCompanyTypes(),
-        currencyFactory.getCompanyCurrencies(),
+        currencyFactory.getCompanyCurrencies(payload),
         companiesFactory.getCompanyList(),
         languagesService.getLanguagesList(),
         countriesService.getCountriesList()
