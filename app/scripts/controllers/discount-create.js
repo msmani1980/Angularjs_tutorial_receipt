@@ -256,7 +256,7 @@ angular.module('ts5App')
       $scope.formData.itemQtyLimitPerTransaction = discountData.itemQuantityLimitByTransaction;
 
       if (discountData.limitsByTransaction.length > 0) {
-        $scope.formData.isAmountLimitPerTransaction = true;
+        $scope.formData.isAmountLimitPerTransaction = true; 
       }
 
       angular.forEach(discountData.limitsByTransaction, function(rate) {
