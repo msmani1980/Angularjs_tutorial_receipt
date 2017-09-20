@@ -24,7 +24,6 @@ angular.module('ts5App')
       hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
-      $scope.menuItemList = [];
     }
 
     $scope.shouldDisableItemSelect = function (menuIndex) {
@@ -109,44 +108,14 @@ angular.module('ts5App')
       return payload;
     };
 
-    function checkToOverwriteOrCreate(response) {
-      var duplicateExists = response.menus.length;
-      var dateIsInTheFuture = false;
-      if (duplicateExists) {
-        dateIsInTheFuture = dateUtility.isAfterTodayDatePicker(response.menus[0].startDate);
-      }
-
-      if (duplicateExists && !dateIsInTheFuture) {
-        hideLoadingModal();
-        $scope.errorCustom = [{
-          field: 'Menu Name Duplicate',
-          value: 'a menu with this name and code already exist and cannot be overwritten'
-        }];
-        $scope.displayError = true;
-      } else if (duplicateExists && dateIsInTheFuture) {
-        hideLoadingModal();
-        $scope.menuToOverwrite = response.menus[0];
-        angular.element('#overwrite-modal').modal('show');
-      } else {
-        var payload = $this.createPayload();
-        menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
-      }
-    }
-
-    function checkForDuplicateRecord() {
-      menuFactory.getMenuList({
-        menuCode: $scope.menu.menuCode,
-        menuName: $scope.menu.menuName
-      }).then(checkToOverwriteOrCreate);
-    }
-
     this.editMenu = function () {
       var payload = $this.createPayload();
       menuFactory.updateMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
     };
 
     this.createMenu = function () {
-      checkForDuplicateRecord();
+      var payload = $this.createPayload();
+      menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
     };
 
     $scope.overwriteMenu = function () {
@@ -340,9 +309,9 @@ angular.module('ts5App')
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
       }
     });
-    
+
     $scope.isCurrentEffectiveDate = function (menuDate) {
       return (dateUtility.isTodayOrEarlierDatePicker(menuDate.startDate) && (dateUtility.isAfterTodayDatePicker(menuDate.endDate) || dateUtility.isTodayDatePicker(menuDate.endDate)));
     };
-    
+
   });
