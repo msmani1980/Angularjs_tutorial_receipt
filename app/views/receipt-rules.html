@@ -1,0 +1,109 @@
+<style>
+.close {
+    display:inline;
+}
+</style>
+<div class="module-container">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-12">
+        <h2 class="view-name">{{ viewName }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-trip-data-list">
+    <div class="row">
+      <div class="col-xs-12 text-left">
+        <a href="#/receipt-rules/create" class="btn btn-primary">+ <span class="hidden-xs">Create New</span></a>
+
+        <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-xs">Search</span>
+        </button>
+      </div>
+    </div>
+	
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <form name="receiptRuleSearchForm" ng-submit="searchReceiptRuleData()">
+        <div class="panel-body">
+          <div class="row">
+				<div class="col-xs-12 col-sm-6 col-md-4">
+					<div class="form-group">
+						<label for="country">Country</label>
+						<select ng-model="search.countryId" class="form-control" ng-change="onCounrtyChange()">
+						    <option value="">Please Select Country</option>
+							<option value="{{countrie.id}}" ng-repeat="countrie in countriesList | unique: 'id'">{{ countrie.countryName }}</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-4">
+					<div class="form-group">
+	                <label for="global-station-list">Station</label>
+	                <ui-select id="global-station-list" multiple ng-model="multiSelectedValues.globalStationList" theme="bootstrap">
+	                  <ui-select-match placeholder="Select Stations..">{{ $item.code }} ({{ $item.name }})</ui-select-match>
+	                  <ui-select-choices repeat="station in globalStationList | filter: $select.search">
+	                    {{ station.code }} ({{ station.name }})
+	                  </ui-select-choices>
+	                </ui-select>
+	              </div>
+				</div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+  	<br>
+    <div class="table-responsive">
+      <table infinite-scroll="loadReceiptRules()" class="table table-bordered table-hover ng-scope">
+        <thead>
+        <tr>
+          <th>Country</th>
+          <th>Station</th>
+          <th>Print Auto-Receipt For</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="ng-scope" ng-repeat="receiptRule in receiptRules" ng-if="receiptRules.length > 0">
+          <td>{{ receiptRule.countryName }}</td>
+          <td>{{ receiptRule.stationCode }}</td>
+          <td>{{ receiptRule.autoPrint}}</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="redirectToReceiptRule(receiptRule.id, 'view')" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="redirectToReceiptRule(receiptRule.id, 'edit')">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(receiptRules[$index], ['countryName', 'stationCode'])"
+                    tabindex="0">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <br>
+    <alert ng-show="!loadingBarVisible && receiptRules.length == 0" type="info">
+      <span class="fa fa-flag"></span> Your search returned no results.
+    </alert>
+    <p ng-if="receiptRules.length > 0" class="record-count small text-center">Showing {{receiptRules.length}} records</p>
+    <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+  </div>
+
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<delete-record-dialog></delete-record-dialog>

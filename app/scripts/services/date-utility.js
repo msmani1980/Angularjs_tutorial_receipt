@@ -241,4 +241,12 @@ angular.module('ts5App')
       return (timezoneOffset !== undefined) ? (moment().tz(timezoneOffset).utcOffset()) / 60 : 0;
     };
 
+    this.addDays = function(date, days) {
+      return moment(date, this.getDateFormatForApp()).add(days, 'days').format(this.getDateFormatForApp()).toString();
+    };
+
+    this.addYears = function(date, years) {
+      return moment(date, this.getDateFormatForApp()).add(years, 'years').format(this.getDateFormatForApp()).toString();
+    };
+
   });
