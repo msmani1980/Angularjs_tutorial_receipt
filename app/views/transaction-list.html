@@ -18,6 +18,16 @@
           </button>
           <ul class="dropdown-menu">
             <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('paymentId')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.paymentId">
+                Transaction ID</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('transactionId')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.transactionId">
+                Shopping Cart ID</a>
+            </li>
+            <li ng-click="$event.stopPropagation();">
               <a ng-click="toggleColumnView('scheduleNumber')">
                 <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.scheduleNumber">
                 Schedule Number</a>
@@ -71,7 +81,14 @@
 
             <div class="col-md-2 col-sm-6">
               <div class="form-group">
-                <label for="transaction-id">Transaction Id</label>
+                <label for="payment-id">Transaction Id</label>
+                <input ng-model="search.paymentId" type="text" class="form-control" id="payment-id" />
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="transaction-id">Shopping Cart Id</label>
                 <input ng-model="search.transactionId" type="text" class="form-control" id="transaction-id" />
               </div>
             </div>
@@ -226,7 +243,8 @@
     <thead>
     <tr>
       <th>Transaction Date</th>
-      <th>Transaction ID</th>
+      <th ng-show="displayColumns.paymentId">Transaction ID</th>
+      <th ng-show="displayColumns.transactionId">Shopping Cart ID</th> 
       <th>Transaction Type</th>
       <th>Payment Method</th>
       <th>Card Type</th>
@@ -246,8 +264,9 @@
     </thead>
     <tbody>
     <tr ng-repeat="transaction in transactions">
-      <td>{{ transaction.transactionDate }}</td>
-      <td>{{ transaction.transactionId }}</td>
+      <td nowrap>{{ transaction.transactionDate }}</td>
+      <td ng-show="displayColumns.paymentId">{{ transaction.id }}</td>
+      <td ng-show="displayColumns.transactionId">{{ transaction.transactionId }}</td>
       <td>{{ printTransactionTypeName(transaction) }}</td>
       <td>{{ printPaymentMethodName(transaction) }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'cardType') }}</td>
@@ -258,7 +277,7 @@
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'paymentId') }}</td>
       <td>{{ printTransactionAmount(transaction) }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
-      <td ng-show="displayColumns.scheduleDate">{{ printScheduleDate(transaction) }}</td>
+      <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
       <td ng-show="displayColumns.storeNumber">{{ printStoreNumber(transaction) }}</td>
       <td ng-show="displayColumns.storeDate">{{ transaction.instanceDate }}</td>
       <td ng-show="displayColumns.storeInstance">{{ printStoreInstanceId(transaction) }}</td>
