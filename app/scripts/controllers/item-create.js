@@ -445,6 +445,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         }
       });
 
+      $this.filterDuplicateInItemCharacteristicsMultiChoice();
+    };
+
+    this.filterDuplicateInItemCharacteristicsMultiChoice = function() {
       if ($scope.formData.itemTypeId !== 'undefined' || $scope.formData.itemTypeId !== '' || $scope.formData.itemTypeId !== null) {
         $scope.filteredCharacteristics = _.differenceWith(
           $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId],
@@ -720,15 +724,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         }
       });
 
-      if ($scope.formData.itemTypeId !== 'undefined' || $scope.formData.itemTypeId !== '' || $scope.formData.itemTypeId !== null) {
-        $scope.filteredCharacteristics = _.differenceWith(
-          $scope.itemCharacteristicsPerItemType[$scope.formData.itemTypeId],
-          $scope.formData.characteristics,
-          function(a, b) {
-            return a.id === b.id;
-          }
-        );
-      }
+      $this.filterDuplicateInItemCharacteristicsMultiChoice();
     };
 
     $scope.$watch('form.$valid', function(validity) {
