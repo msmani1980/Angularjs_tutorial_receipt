@@ -8,6 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('EmployeeCtrl', function($scope) {
+	
 	$scope.viewName = 'Add Employee';
 	$scope.employeeList = {
 		employeeID : "",
