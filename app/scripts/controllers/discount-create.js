@@ -226,6 +226,7 @@ angular.module('ts5App')
       $scope.formData.globalDiscountTypeId = discountData.discountTypeId;
       $scope.formData.barCode = discountData.barcode;
       $scope.formData.description = discountData.description;
+      $scope.formData.note = discountData.note;
       $scope.formData.startDate = dateUtility.formatDateForApp(discountData.startDate);
       $scope.formData.endDate = dateUtility.formatDateForApp(discountData.endDate);
     };
@@ -255,7 +256,7 @@ angular.module('ts5App')
       $scope.formData.itemQtyLimitPerTransaction = discountData.itemQuantityLimitByTransaction;
 
       if (discountData.limitsByTransaction.length > 0) {
-        $scope.formData.isAmountLimitPerTransaction = true;
+        $scope.formData.isAmountLimitPerTransaction = true; 
       }
 
       angular.forEach(discountData.limitsByTransaction, function(rate) {
@@ -309,6 +310,7 @@ angular.module('ts5App')
       discount.discountTypeId = formData.globalDiscountTypeId;
       discount.name = formData.discountName;
       discount.description = formData.description;
+      discount.note = formData.note;
       discount.barcode = formData.barCode;
       discount.startDate = dateUtility.formatDateForAPI(formData.startDate);
       discount.endDate = dateUtility.formatDateForAPI(formData.endDate);
