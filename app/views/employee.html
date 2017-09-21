@@ -1,1 +1,114 @@
-<p>This is the employee view.</p>
+<div class="module-container">
+<div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+    </div>
+<error-dialog form-object="employeeDataForm" error-response="errorResponse" display="displayError">
+</error-dialog>
+	<!-- Started Modify-->
+	<form name="employeeDataForm">
+		<!--/TopHeader -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<!-- form header-->
+				<div class="row">
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="employee-id">Employee ID*</label> 
+							<input ng-model="employeeList.employeeID" type="text"
+								class="form-control" id="employeeID" name="employeeID"
+								required custom-validity custom-pattern="alphanumeric"  maxlength="15">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-8">
+						<div class="row">
+							<div class="col-xs-12 col-sm-6">
+								<label for="employee-firstname">Employee First Name*</label> <input
+									ng-model="employeeList.employeeFirstName" type="text" class="form-control"
+									id="employeeFirstName" name="employeeFirstName" required maxlength="25" required custom-validity custom-pattern="alphaWithSpecial">
+							</div>
+							<div class="col-xs-12 col-sm-6">
+								<!--   ng-if="calendarsReady"-->
+								<date-picker-field 
+									form="employeeDataForm" name="EffectiveFrom"
+									label="Effective Start Date"
+									required="true" ng-model="employeeList.startDate">
+								</date-picker-field>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="passcode">Passcode</label> <input
+								ng-model="employeeList.passcode" type="password" class="form-control" id="passcode" name="passcode"
+								maxlength="10"  custom-validity custom-pattern="alphanumeric">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="employee-lastname">Employee Last Name*</label> <input
+								ng-model="employeeList.employeeLastName" type="text" class="form-control"
+								id="employeeLastName" name="employeeLastName" required maxlength="25" custom-validity custom-pattern="alphaWithSpecial">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<!--  ng-if="calendarsReady" end-current-effective="editingItem && shouldDisableStartDate" -->
+							<date-picker-field form="employeeDataForm" name="EffectiveTo"
+								label="Effective End Date" disable-past="true"
+								ng-model="employeeList.endDate" required="true">
+							</date-picker-field>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="country">Country*</label> <input
+								ng-model="employeeList.country" 
+								type="text" class="form-control" id="country" name="country"
+								required>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="employee-title">Employee Title*</label> <input
+								ng-model="employeeList.employeeTitle" type="text" class="form-control" id="employeeTitle"
+								name="employeeTitle"  maxlength="25"  custom-validity custom-pattern="alphanumeric">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="base-station">Base Station*</label> <input
+								ng-model="employeeList.baseStation"	type="text" class="form-control" id="baseStation"
+								name="baseStation" required >
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer text-right">
+				<a href="#/employees" class="btn btn-default" ng-hide="readOnly">Cancel</a>					
+<!--  ng-hide="readOnly"	 -->	
+			<button class="btn btn-primary" ng-click="formSave()">
+					<span class="fa fa-check-square-o" aria-hidden="true"></span> <span
+						class="hidden-xs">Add</span>
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Schedule Management"></dynamic-left-nav>
