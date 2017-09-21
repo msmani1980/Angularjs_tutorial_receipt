@@ -144,8 +144,10 @@ angular.module('ts5App')
 
     this.denormalizeDetailedCompanyCurrency = function(index, currency) {
       var payload = {};
-
-      payload.id = currency.id;
+      if (!currency.isNew) {
+        payload.id = currency.id;
+      }
+      
       payload.companyId = currency.companyId;
       payload.currencyId = currency.currencyId;
       payload.startDate = (currency.startDate) ? dateUtility.formatDateForAPI(currency.startDate) : null;
@@ -238,7 +240,7 @@ angular.module('ts5App')
         nextIndex++;
         $scope.companyCurrencyList.push({
           isNew: true,
-          id: 'currencyId' + nextIndex,
+          id: nextIndex,
           companyId: globalMenuService.company.get(),
           startDate: dateUtility.tomorrowFormattedDatePicker(),
           endDate: dateUtility.tomorrowFormattedDatePicker(),
