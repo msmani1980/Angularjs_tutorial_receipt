@@ -24,8 +24,6 @@ angular.module('ts5App')
       '/company-reason-type-subscribe/*',
       '/employee-commission-list/*',
       '/employee-commission/*',
-      '/employee-message/*',
-      '/employee-messages/*',
       '/forgot-username-password/*',
       '/global-reason-code/*',
       '/lmp-locations-list/*',
