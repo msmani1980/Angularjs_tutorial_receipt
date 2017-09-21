@@ -30,8 +30,8 @@ angular.module('ts5App')
         return employeesService.updateEmployee(getCompanyId(), payload.id, payload);
       };
 
-      var deleteEmployee = function (companyId, employeeId) {
-        return employeesService.deleteEmployee(companyId, employeeId);
+      var deleteEmployee = function (employeeId) {
+        return employeesService.deleteEmployee(getCompanyId(), employeeId);
       };
       
       var getCompanyGlobalStationList = function (payload) {

@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeListCtrl', function ($scope, $q, $location, dateUtility, lodash, employeeFactory) {
+  .controller('EmployeeListCtrl', function ($scope, $q, $location, dateUtility, lodash, messageService, employeeFactory) {
     
     var $this = this;
     this.meta = {
@@ -141,6 +141,45 @@ angular.module('ts5App')
       }
 	
       return dateUtility.isAfterTodayDatePicker(employee.endDate);
+    };
+    
+    this.displayLoadingModal = function (loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    };
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+    };
+    
+    this.showToastMessage = function(className, type, message) {
+        messageService.display(className, message, type);
+      };
+
+    this.deleteSuccess = function() {
+      $this.hideLoadingModal();
+      $this.showToastMessage('success', 'Employee', 'Employee successfully deleted');
+      $scope.employees = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.loadEmployees();
+    };
+
+    this.deleteFailure = function() {
+      $this.hideLoadingModal();  
+      $this.showToastMessage('danger', 'Employee', 'Employee could not be deleted');
+    };
+      
+    $scope.removeRecord = function (employee) {
+
+      $this.displayLoadingModal('Removing Employee Record');
+      
+      employeeFactory.deleteEmployee(employee.id).then(
+        $this.deleteSuccess, 
+        $this.deleteFailure
+      );
     };
     
     this.getCompanyGlobalStationSuccess = function(response) {
