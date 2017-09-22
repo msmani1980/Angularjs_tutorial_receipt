@@ -9,7 +9,7 @@
 
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _) {
 
     var $this = this;
     $scope.formData = {
