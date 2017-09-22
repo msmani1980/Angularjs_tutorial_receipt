@@ -129,6 +129,8 @@ angular.module('ts5App')
           if (!isFound) {
             companyExchangeRates.push({
               companyId: $this.companyId,
+              isNew: true,
+              id: null,
               acceptedCurrencyCode: currency.currencyCode,
               operatingCurrencyCode: $scope.search.operatingCurrencyCode,
               denominations: currency.flatDenominations,
@@ -147,7 +149,6 @@ angular.module('ts5App')
 
     this.denormalizeCompanyExchangeRate = function(index, exchangeRate) {
       var payload = {};
-
       payload.id = exchangeRate.id;
       payload.acceptedCurrencyCode = exchangeRate.acceptedCurrencyCode;
       payload.operatingCurrencyCode = $scope.search.operatingCurrencyCode;
@@ -289,11 +290,22 @@ angular.module('ts5App')
     };
 
     $scope.showDeleteConfirmation = function(index, exchangeRate) {
-      $scope.exchangeRateToDelete = exchangeRate;
-      $scope.exchangeRateToDelete.rowIndex = index;
-      angular.element('.delete-warning-modal').modal('show');
+      if (exchangeRate.id !== undefined || exchangeRate.id) {
+        $scope.exchangeRateToDelete = exchangeRate;
+        $scope.exchangeRateToDelete.rowIndex = index;
+        angular.element('.delete-warning-modal').modal('show');
+      }else {
+        $scope.companyExchangeRates.splice(index, 1);
+      }
+      
     };
-
+    
+    $scope.isClonedRowClass = function (exchangeRate) {
+        if (exchangeRate.isCloned) {
+          return 'bg-warning';
+        }
+      };
+      
     $scope.deleteCompanyExchangeRate = function() {
       angular.element('.delete-warning-modal').modal('hide');
       $scope.companyExchangeRates.splice($scope.exchangeRateToDelete.rowIndex, 1);
