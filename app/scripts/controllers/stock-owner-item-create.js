@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, lodash) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, lodash, _) {
 
     var $this = this;
     $scope.formData = {
@@ -94,6 +94,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
         if ($this.validateItemCompany(data)) {
           $this.updateFormData(data.retailItem);
           $this.updateViewName(data.retailItem);
+          $this.filterDuplicateInItemTags();
         } else {
           $location.path('/');
           return false;
@@ -422,7 +423,22 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       $q.all(dependencyPromises).then(function(response) {
         $this.setDependencies(response);
         $scope.filterCharacteristics();
+        $this.filterDuplicateInItemTags();
       });
+    };
+
+    this.filterDuplicateInItemTags = function() {
+      $scope.filterSelectedTags = _.differenceWith(
+        $scope.tags,
+        $scope.formData.tags,
+        function(a, b) {
+          return a.id === b.id;
+        }
+      );
+    };
+
+    $scope.onTagsChange = function() {
+      $this.filterDuplicateInItemTags();
     };
 
     this.setDependencies = function(response) {
@@ -756,13 +772,13 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       return activeBtn;
 
     };
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
-    
+
     $scope.isFutureEffectiveDate = function (date) {
       return (dateUtility.isAfterTodayDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate)));
     };
-    
+
   });
