@@ -119,7 +119,7 @@ angular.module('ts5App')
     };
     
     this.formatMultiSelectedValuesForSearch = function() {
-      $this.addSearchValuesFromMultiSelectArray('baseStationId', $scope.multiSelectedValues.globalStationList, 'id');
+      $this.addSearchValuesFromMultiSelectArray('baseStationIds', $scope.multiSelectedValues.globalStationList, 'id');
     };
     
     this.addSearchValuesFromMultiSelectArray = function(searchKeyName, multiSelectArray, multiSelectElementKey) {

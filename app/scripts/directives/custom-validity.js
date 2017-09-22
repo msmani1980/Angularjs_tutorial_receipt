@@ -55,9 +55,7 @@ angular.module('ts5App')
       percentage: [/^[-+]?([0-9]\d?(\.\d{1,3})?|0\.(\d?[1-9]|[1-9]\d))$|^100$|^100.00$/,
         'This field should use percentage format 0-100'
       ],
-      
-      <!-- Added below statement as part of TSVPORTAL-9902 -->
-      alphaWithSpecial: [/^[a-zA-Z\(\)\.\,\:\$\*\'\_\ \/\%\@\&\^\\s-]+$/, 'Error message for alpha'],
+      alphaWithSpecial: [/^[a-zA-Z0-9\(\)\.\,\:\$\*\'\`\{\}\]\_\ \/\%\@\&\^\\/~+#-\\s-]+$/, 'Error message for alpha']
     };
     return {
       restrict: 'A',
