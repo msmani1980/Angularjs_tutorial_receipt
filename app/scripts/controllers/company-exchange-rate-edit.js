@@ -175,8 +175,8 @@ angular.module('ts5App')
     };
 
     this.showSaveSuccess = function() {
-      $scope.searchCompanyExchangeRates();
       $this.showToast('success', 'Company Exchange Rate', 'exchange rate successfully saved!');
+      $this.hideLoadingModal();
     };
 
     this.showSaveErrors = function(dataFromAPI) {
