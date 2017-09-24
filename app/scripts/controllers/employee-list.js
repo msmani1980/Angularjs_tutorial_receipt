@@ -27,20 +27,20 @@ angular.module('ts5App')
     $scope.multiSelectedValues = {};
     
     function showLoadingBar() {
-        $scope.loadingBarVisible = true;
-        angular.element('.loading-more').show();
-      }
+      $scope.loadingBarVisible = true;
+      angular.element('.loading-more').show();
+    }
 
     function hideLoadingBar() {
-        $scope.loadingBarVisible = false;
-        angular.element('.loading-more').hide();
-        angular.element('.modal-backdrop').remove();
-      }
+      $scope.loadingBarVisible = false;
+      angular.element('.loading-more').hide();
+      angular.element('.modal-backdrop').remove();
+    }
 
-    $scope.redirectToSchedule = function(id, state) {
-        $location.search({});
-        $location.path('employee/' + state + '/' + id).search();
-      };
+    $scope.redirectToEmployee = function(id, state) {
+      $location.search({});
+      $location.path('employee/' + state + '/' + id).search();
+    };
 
     $scope.showDeleteButton = function(dateString) {
       return dateUtility.isAfterTodayDatePicker(dateString);
@@ -101,21 +101,6 @@ angular.module('ts5App')
 
     this.constructStartDate = function () {
       return ($scope.isSearch) ? null : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
-    };
-    
-    this.deleteEmployeeFailure = function() {
-      $this.showToastMessage('danger', 'Employee', 'Employee could not be deleted');
-    };
-	
-    this.deleteScheduleSuccess = function() {
-      $this.showToastMessage('success', 'Employee', 'Employee successfully deleted');
-      $scope.employees = [];
-      $this.meta = {
-        count: undefined,
-        limit: 100,
-        offset: 0
-      };
-      $scope.loadEmployees();
     };
     
     this.formatMultiSelectedValuesForSearch = function() {

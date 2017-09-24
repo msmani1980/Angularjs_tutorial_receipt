@@ -48,7 +48,8 @@ angular.module('ts5App')
     
     var getEmployeeById = function (companyId, employeeId) {
       var requestParameters = {
-          id: companyId
+          id: companyId,
+          empId: employeeId
         };
 
       return empoyeeRequestResource.getEmployeeById(requestParameters, employeeId).$promise;
