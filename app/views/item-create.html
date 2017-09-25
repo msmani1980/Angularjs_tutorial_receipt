@@ -124,7 +124,7 @@
                 </date-picker-field>
               </div>
               <div class="col-xs-12 col-sm-6">
-                <date-picker-field ng-if="minDate" disable="viewOnly || itemIsInactive" form="form" end-current-effective="isDisabled()"
+                <date-picker-field ng-if="minDate" disable="isDisabledEndDateForm()" form="form" end-current-effective="isDisabled()"
                   name="EffectiveTo" min-date="minDate" label="Effective To" required="true"
                   ng-model="formData.endDate">
                 </date-picker-field>
