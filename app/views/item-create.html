@@ -305,22 +305,22 @@
           </div>
         </div>
 
-        <fieldset ng-disabled="isDisabled()">
+        <fieldset>
 
           <h3 id="measurements">Measurements</h3>
 
-          <div class="row">
+          <div class="row" ng-disabled="isDisabled()">
             <div class="col-xs-12 col-sm-6">
               <label>Item Weight</label>
 
               <div class="row">
                 <div class="form-group">
                   <div class="col-xs-7">
-                    <input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
+                    <input ng-disabled="isDisabled()" ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
                   </div>
 
                   <div class="col-xs-5">
-                    <select ng-model="formData.weightType" class="form-control col-xs-2">
+                    <select ng-model="formData.weightType" class="form-control col-xs-2" ng-disabled="isDisabled()">
                       <option ng-selected="formData.weightType === weight.id" ng-repeat="weight in weightUnits"
                               value="{{ weight.id }}">{{ weight.unitCode }}
                       </option>
@@ -355,7 +355,7 @@
           <span class="text-warning" ng-show="isMeasurementRequired() && !isMeasurementValid()"><p>* Length, Width and
             Height fields are all required if one contains a value.</p></span>
 
-          <div class="row">
+          <div class="row" ng-disabled="isDisabled()">
 
             <div class="form-group"
                  ng-class="{ 'has-error' : isMeasurementRequired() && !isMeasurementValid() , 'has-success' : isMeasurementValid() }">
