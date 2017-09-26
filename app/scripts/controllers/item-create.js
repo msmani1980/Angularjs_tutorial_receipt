@@ -406,8 +406,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     $scope.isDisabledEndDateForm = function() {
-      var result = !(dateUtility.isAfterTodayDatePicker($scope.formData.endDate) || dateUtility.isTodayDatePicker($scope.formData.endDate));
-      return result;
+      return !(dateUtility.isAfterTodayDatePicker($scope.formData.endDate) || dateUtility.isTodayDatePicker($scope.formData.endDate));
     };
 
     this.updateLanguages = function () {
