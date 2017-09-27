@@ -124,7 +124,7 @@
                 </date-picker-field>
               </div>
               <div class="col-xs-12 col-sm-6">
-                <date-picker-field ng-if="minDate" disable="viewOnly || itemIsInactive" form="form" end-current-effective="isDisabled()"
+                <date-picker-field ng-if="minDate" disable="isDisabledEndDateForm()" form="form" end-current-effective="isDisabled()"
                   name="EffectiveTo" min-date="minDate" label="Effective To" required="true"
                   ng-model="formData.endDate">
                 </date-picker-field>
@@ -336,22 +336,22 @@
           </div>
         </div>
 
-        <fieldset ng-disabled="isDisabled()">
+        <fieldset>
 
           <h3 id="measurements">Measurements</h3>
 
-          <div class="row">
+          <div class="row" ng-disabled="isDisabled()">
             <div class="col-xs-12 col-sm-6">
               <label>Item Weight</label>
 
               <div class="row">
                 <div class="form-group">
                   <div class="col-xs-7">
-                    <input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
+                    <input ng-disabled="isDisabled()" ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
                   </div>
 
                   <div class="col-xs-5">
-                    <select ng-model="formData.weightType" class="form-control col-xs-2">
+                    <select ng-model="formData.weightType" class="form-control col-xs-2" ng-disabled="isDisabled()">
                       <option ng-selected="formData.weightType === weight.id" ng-repeat="weight in weightUnits"
                               value="{{ weight.id }}">{{ weight.unitCode }}
                       </option>
@@ -367,11 +367,11 @@
               <div class="row">
                 <div class="form-group">
                   <div class="col-xs-7">
-                    <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
+                    <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00" ng-disabled="isDisabled()">
                   </div>
 
                   <div class="col-xs-5">
-                    <select ng-model="formData.volumeType" class="form-control">
+                    <select ng-model="formData.volumeType" class="form-control" ng-disabled="isDisabled()">
                       <option ng-selected="formData.volumeType === volume.id" ng-repeat="volume in volumeUnits"
                               value="{{ volume.id }}">{{ volume.unitCode }}
                       </option>
@@ -386,28 +386,28 @@
           <span class="text-warning" ng-show="isMeasurementRequired() && !isMeasurementValid()"><p>* Length, Width and
             Height fields are all required if one contains a value.</p></span>
 
-          <div class="row">
+          <div class="row" ng-disabled="isDisabled()">
 
             <div class="form-group"
                  ng-class="{ 'has-error' : isMeasurementRequired() && !isMeasurementValid() , 'has-success' : isMeasurementValid() }">
               <div class="col-md-3 col-xs-3">
                 <input ng-model="formData.length" ng-required="isMeasurementRequired()" type="text" class="form-control"
-                       placeholder="Length" name="Length">
+                       placeholder="Length" name="Length" ng-disabled="isDisabled()">
               </div>
 
               <div class="col-md-3 col-xs-3">
                 <input ng-model="formData.width" ng-required="isMeasurementRequired()" type="text" class="form-control"
-                       placeholder="Width" name="Width">
+                       placeholder="Width" name="Width" ng-disabled="isDisabled()">
               </div>
 
               <div class="col-md-3 col-xs-3">
                 <input ng-model="formData.height" ng-required="isMeasurementRequired()" type="text" class="form-control"
-                       placeholder="Height" name="Height">
+                       placeholder="Height" name="Height" ng-disabled="isDisabled()">
               </div>
 
               <div class="col-md-3 col-xs-3">
                 <select ng-model="formData.dimensionType" class="form-control" ng-required="isMeasurementRequired()"
-                        name="Unit of Measurement">
+                        name="Unit of Measurement" ng-disabled="isDisabled()">
                   <option ng-selected="formData.dimensionType === dimension.id" ng-repeat="dimension in dimensionUnits"
                           value="{{ dimension.id }}">{{ dimension.unitCode }}
                   </option>
