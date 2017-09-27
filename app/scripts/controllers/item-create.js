@@ -430,6 +430,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.viewOnly = $scope.viewOnly || $scope.itemIsInactive;
     };
 
+
     this.updateLanguages = function () {
       languagesService.getLanguagesList().then(function (dataFromAPI) {
         $this.setLanguages(dataFromAPI);
@@ -445,6 +446,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
 
       $scope.formData.notesTranslations = mappedNotes;
+    };
+
+    $scope.isDisabledEndDateForm = function() {
+      return !(dateUtility.isAfterTodayDatePicker($scope.formData.endDate) || dateUtility.isTodayDatePicker($scope.formData.endDate));
     };
 
     // updates the $scope.formData
