@@ -409,23 +409,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return !(dateUtility.isAfterTodayDatePicker($scope.formData.endDate) || dateUtility.isTodayDatePicker($scope.formData.endDate));
     };
 
-    this.updateLanguages = function () {
-      languagesService.getLanguagesList().then(function (dataFromAPI) {
-        $this.setLanguages(dataFromAPI);
-        $this.setFormDataDefaultLanguage();
-      });
-    };
-
-    this.setFormDataNotesTranslations = function () {
-      var mappedNotes = [];
-      $scope.formData.rawNotesTranslations = $scope.formData.notesTranslations;
-      $scope.formData.notesTranslations.forEach(function (notes) {
-        mappedNotes[notes.languageId] = notes.notes;
-      });
-
-      $scope.formData.notesTranslations = mappedNotes;
-    };
-
     // updates the $scope.formData
     this.updateFormData = function(itemData) {
       if (!itemData) {
