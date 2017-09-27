@@ -58,7 +58,7 @@
         <label>Schedule Date <span ng-show="!isActionState('end-instance')">*</span></label>
       </div>
       <div class="col-xs-12 col-sm-8">
-          <date-picker-field form="createStoreInstance" name="scheduleDate" gray-past="false"  custom-effective="isActionState('end-instance') || isActionState('replenish')" custom-date="formData.scheduleDate" required="true" ng-model="formData.scheduleDate" disable="isActionState('end-instance')"></date-picker-field>
+          <date-picker-field form="createStoreInstance" name="scheduleDate" gray-past="false"  custom-effective="true" custom-date="formData.scheduleDate" required="true" ng-model="formData.scheduleDate" disable="isActionState('end-instance')"></date-picker-field>
       </div>
     </div>
 
@@ -77,7 +77,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Route <span ng-show="!isActionState('end-instance')">*</span></label>
