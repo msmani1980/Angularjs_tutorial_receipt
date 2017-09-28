@@ -18,7 +18,7 @@
   </div>
   
   <div class="panel panel-default collapse no-transition" id="search-collapse">
-      <form name="menuSearchForm" ng-submit="menuAssignmentData()">
+      <form name="menuSearchForm" ng-submit="searchMenuAssignmentData()">
         <div class="panel-body">
           <div class="row">
 
@@ -160,40 +160,57 @@
         
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-          <button type="submit" class="btn btn-primary">Search</button>
+<!--           <button type="submit" class="btn btn-primary">Search</button> -->
+          <button ng-click="searchMenuAssignmentData()" class="btn btn-primary btn-search">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs btn-label">Search</span>
+          </button>
         </div>
       </form>
     </div>
     <br>
     <div class="table-responsive">
-      <table infinite-scroll="loadSchedules()" class="table table-bordered table-hover ng-scope">
+      <table infinite-scroll="loadMenuAssignmentData()" class="table table-bordered table-hover ng-scope" ng-show="menuAssignmentList.length > 0">
         <thead>
         <tr>
+          <!-- th>
+            <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()">
+          </th-->
           <th>Number</th>
-          <th>Days of Op.</th>
-          <th>Dep. Station</th>
-          <th>Dep. Time</th>
-          <th>Arr. Station</th>
-          <th>Arr. Time</th>
-          <th>Effective From</th>
+          <th>Departure Station</th>
+          <th>Departure Time</th>
+          <th>Arrival. Station</th>
+          <th>Arrival Time</th>
+          <th>Assignment</th>
+          <th>Operation Date</th>
+          <!-- Effective From</th>
           <th>Effective To</th>
-          <th>Aircraft Type</th>
+          <th>Aircraft Type</th-->
+          <th>Days of Op.</th>
+          <th>Last Updated On</th>
           <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr class="ng-scope" ng-repeat="schedule in schedules">
+        <tr class="ng-scope" ng-repeat="schedule in menuAssignmentList">
+          <!-- td>
+            <span class="fa fa-plus-square-o" ng-click="toggleAccordionView(schedule)"></span>
+            <span class="fa fa-minus-square" ng-click="toggleAccordionView(schedule)"></span>
+          </td-->
           <td>{{ schedule.scheduleNumber }}</td>
-          <td>{{ schedule.days }}</td>
-          <td>{{ schedule.departure}}</td>
+          <td>{{ schedule.departureStation}}</td>
           <td>{{ schedule.departureTime }}</td>
-          <td>{{ schedule.arrival}}</td>
+          <td>{{ schedule.arrivalStation}}</td>
           <td>{{ schedule.arrivalTime }}</td>
-          <td>{{ schedule.startDate }}</td>
+          <td>{{ schedule.assignment }}</td>
+          <td>{{ schedule.scheduleDate }}</td>
+          <!-- td>{{ schedule.startDate }}</td>
           <td>{{ schedule.endDate }}</td>
-          <td>{{ schedule.companyCarrierTypeCode }}</td>
+          <td>{{ schedule.companyCarrierTypeCode }}</td-->
+          <td>{{ schedule.days }}</td>
+          <td>{{ schedule.updatedDate }}</td>
           <td>
-            <button class="btn btn-primary btn-xs" ng-click="redirectToSchedule(schedule.id, 'edit')" ng-show="isScheduleEditable(schedule)" tabindex="0">
+            <button class="btn btn-primary btn-xs" ng-click="menuAssignmentDetail(schedule.id, 'edit')" tabindex="0">
               <i class="fa fa-pencil"></i>
             </button>
           </td>
