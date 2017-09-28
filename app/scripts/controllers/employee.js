@@ -12,13 +12,16 @@ angular.module('ts5App')
 	
     var $this = this;
     $scope.viewName = 'Employee';
-    $scope.employee = { };
+    $scope.employee = { 
+      startDate: dateUtility.nowFormattedDatePicker(),
+      endDate: dateUtility.nowFormattedDatePicker()
+    };
     $scope.countriesList = [];
     $scope.globalStationList = [];
     $scope.multiSelectedValues = {};
     $scope.disablePastDate = false;
     $scope.shouldDisableEndDate = false;
-    
+        
     $scope.onCounrtyChange = function() {
       $scope.multiSelectedValues = {};
       var payload = {
@@ -32,18 +35,19 @@ angular.module('ts5App')
       $scope.readOnly = false;
       $scope.isCreate = true;
       $scope.viewName = 'Create Employee';
-
+      $scope.viewEditItem = false;
     };
 
     this.viewInit = function() {
       $scope.readOnly = true;
       $scope.viewName = 'View Employee';
+      $scope.viewEditItem = true;
     };
 
     this.editInit = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Employee';
-      $scope.editingItem = true;
+      $scope.viewEditItem = true;
     };
     
     $scope.isDisabled = function() {
@@ -123,6 +127,15 @@ angular.module('ts5App')
       );
     };
     
+    this.resetDateValue = function () {
+      if (!$scope.viewEditItem) {
+        $scope.employee.startDate = dateUtility.nowFormattedDatePicker();
+        $scope.employee.endDate = dateUtility.nowFormattedDatePicker();
+      }
+      
+      return $scope.viewEditItem;
+    };
+    
     $scope.formSave = function() {
       if ($this.validateForm()) {
         var saveFunctionName = ($routeParams.action + 'Employee');
@@ -164,7 +177,7 @@ angular.module('ts5App')
       
       $scope.disablePastDate = !(dateUtility.isAfterTodayDatePicker(startDate));
       $scope.shouldDisableEndDate = !(dateUtility.isAfterTodayDatePicker(endDate));
-
+      
       $scope.employee = {
         id: response.id,
         baseStationId: response.baseStationId,
@@ -185,12 +198,15 @@ angular.module('ts5App')
         employeeFactory.getEmployee($routeParams.id).then($this.getEmployeeSuccess);
       }
       
+      $scope.employee.startDate = dateUtility.nowFormattedDatePicker();
+      $scope.employee.endDate = dateUtility.nowFormattedDatePicker();
       $this.hideLoadingModal();
       
       var initFunctionName = ($routeParams.action + 'Init');
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
+      
     };
 
     this.init = function() {
