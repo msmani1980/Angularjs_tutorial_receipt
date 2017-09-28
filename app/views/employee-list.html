@@ -26,7 +26,25 @@
       <form name="employeeSearchForm" ng-submit="searchEmployeeData()">
         <div class="panel-body">
           <div class="row">
-			
+			<div class="col-xs-12 col-sm-6 col-md-4">
+			  <div class="form-group">
+                <label for="employee-identifier">Employee ID</label>
+                <input ng-model="search.employeeIdentifier" type="text" class="form-control" id="employee-identifier" placeholder="0001">
+              </div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-8">
+				<date-picker
+	                class="form-group"
+	                element-class="col-xs-6"
+	                start-date-model="search.startDate"
+	                end-date-model="search.endDate"
+	                label-from="Effective Start Date"
+	                label-to="Effective End Date"
+	                is-search-field="true">
+              </date-picker>
+			</div>
+		  </div>
+          <div class="row">
 			<div class="col-xs-12 col-sm-6 col-md-4">
 				<div class="form-group">
 					<label for="country">Country</label>
@@ -36,62 +54,38 @@
 					</select>
 				</div>
 			</div>
-			
 			<div class="col-xs-12 col-sm-6 col-md-4">
-					<div class="form-group">
-	                <label for="base-station-id">Station</label>
+			  <div class="form-group">
+                <label for="first-name">Employee First Name</label>
+                <input ng-model="search.fisrtName" type="text" class="form-control" id="first-name" placeholder="First Name">
+              </div>
+			</div>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="last-name">Employee Last Name</label>
+                <input ng-model="search.lastName" type="text" class="form-control" id="last-name" placeholder="Last Name">
+              </div>
+            </div>
+		 </div>
+		 <div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+			  <div class="form-group">
+	                <label for="base-station-id">Base Station</label>
 	                <ui-select id="base-station-id" multiple ng-model="multiSelectedValues.globalStationList">
 	                  <ui-select-match placeholder="Select Stations..">{{ $item.code }} ({{ $item.name }})</ui-select-match>
 	                  <ui-select-choices repeat="station in globalStationList | filter: $select.search">
 	                    {{ station.code }} ({{ station.name }})
 	                  </ui-select-choices>
 	                </ui-select>
-	              </div>
+	          </div>
 			</div>
-				
-            <div class="col-xs-12 col-sm-2">
+            <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label for="employee-identifier">Employee ID</label>
-                <input ng-model="search.employeeIdentifier" type="text" class="form-control" id="employee-identifier" placeholder="0001">
+                <label for="title">Employee Title </label>
+                <input ng-model="search.title" type="text" class="form-control" id="title" placeholder="Title">
               </div>
             </div>
-            
-		</div>
-		
-		<div class="row">
-		   <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label for="title">Title </label>
-                <input ng-model="search.title" type="text" class="form-control" id="title" placeholder="title">
-              </div>
-            </div>
-            
-		    <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label for="first-name">First Name</label>
-                <input ng-model="search.fisrtName" type="text" class="form-control" id="first-name" placeholder="First Name">
-              </div>
-            </div>
-            
-            <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label for="last-name">Last Name</label>
-                <input ng-model="search.lastName" type="text" class="form-control" id="last-name" placeholder="Last Name">
-              </div>
-            </div>
-            
-		   <div class="col-xs-12 col-sm-5">
-              <date-picker
-                class="form-group"
-                element-class="col-xs-6"
-                start-date-model="search.startDate"
-                end-date-model="search.endDate"
-                label-from="Employee Date From"
-                label-to="Employee Date To"
-                is-search-field="true">
-              </date-picker>
-            </div>
-        </div>
+		 </div>
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>

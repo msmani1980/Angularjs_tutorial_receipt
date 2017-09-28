@@ -39,9 +39,10 @@
 									label="Effective Start Date"
 									disable="isDisabled()"
 									required="true"
-									custom-effective="true" 
+									custom-effective="resetDateValue()"
+									custom-date="employee.startDate"
 									ng-model="employee.startDate">
-								</date-picker-field>
+							</date-picker-field>
 						</div>
 					</div>
 				</div>
@@ -67,7 +68,8 @@
 								label="Effective End Date" 
 								disable="readOnly || shouldDisableEndDate"
 								ng-model="employee.endDate"
-								custom-effective="true"
+								custom-effective="resetDateValue()"
+								custom-date="employee.endDate"
 								required="true">
 							</date-picker-field>
 						</div>
