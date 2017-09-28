@@ -1,0 +1,155 @@
+<div class="module-container">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-12">
+        <h2 class="view-name">{{ viewName }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="employee-data-list">
+    <div class="row">
+      <div class="col-xs-12 text-left">
+        <a href="#/employee/create" class="btn btn-primary">+ <span class="hidden-xs">Create Employee</span></a>
+        <!-- <excel-upload type="employee" class="excel-upload"></excel-upload> -->
+
+        <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-xs">Search</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <form name="employeeSearchForm" ng-submit="searchEmployeeData()">
+        <div class="panel-body">
+          <div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+			  <div class="form-group">
+                <label for="employee-identifier">Employee ID</label>
+                <input ng-model="search.employeeIdentifier" type="text" class="form-control" id="employee-identifier" placeholder="0001">
+              </div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-8">
+				<date-picker
+	                class="form-group"
+	                element-class="col-xs-6"
+	                start-date-model="search.startDate"
+	                end-date-model="search.endDate"
+	                label-from="Effective Start Date"
+	                label-to="Effective End Date"
+	                is-search-field="true">
+              </date-picker>
+			</div>
+		  </div>
+          <div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+				<div class="form-group">
+					<label for="country">Country</label>
+					<select ng-model="search.countryId" class="form-control" ng-change="onCounrtyChange()">
+					    <option value="">Please Select Country</option>
+						<option value="{{countrie.id}}" ng-repeat="countrie in countriesList | unique: 'id'">{{ countrie.countryName }}</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4">
+			  <div class="form-group">
+                <label for="first-name">Employee First Name</label>
+                <input ng-model="search.fisrtName" type="text" class="form-control" id="first-name" placeholder="First Name">
+              </div>
+			</div>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="last-name">Employee Last Name</label>
+                <input ng-model="search.lastName" type="text" class="form-control" id="last-name" placeholder="Last Name">
+              </div>
+            </div>
+		 </div>
+		 <div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+			  <div class="form-group">
+	                <label for="base-station-id">Base Station</label>
+	                <ui-select id="base-station-id" multiple ng-model="multiSelectedValues.globalStationList">
+	                  <ui-select-match placeholder="Select Stations..">{{ $item.code }} ({{ $item.name }})</ui-select-match>
+	                  <ui-select-choices repeat="station in globalStationList | filter: $select.search">
+	                    {{ station.code }} ({{ station.name }})
+	                  </ui-select-choices>
+	                </ui-select>
+	          </div>
+			</div>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="title">Employee Title </label>
+                <input ng-model="search.title" type="text" class="form-control" id="title" placeholder="Title">
+              </div>
+            </div>
+		 </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+    <br>
+    <div class="table-responsive">
+      <table infinite-scroll="loadEmployees()" class="table table-bordered table-hover ng-scope">
+        <thead>
+        <tr>
+          <th>Country</th>
+          <th>Base Station</th>
+          <th>Employee ID</th>
+          <th>Last Name</th>
+          <th>First Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="ng-scope" ng-repeat="employee in employees">
+          <td>{{ employee.countryName }}</td>
+          <td>{{ employee.stationCode }}</td>
+          <td>{{ employee.employeeIdentifier}}</td>
+          <td>{{ employee.lastName }}</td>
+          <td>{{ employee.firstName}}</td>
+          <td>{{ employee.startDate}}</td>
+          <td>{{ employee.endDate}}</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="redirectToEmployee(employee.id, 'view')" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="redirectToEmployee(employee.id, 'edit')" ng-show="isEmployeeEditable(employee)" tabindex="0">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs"
+                    ng-click="deleteRecordDialog(employees[$index], ['lastName', 'firstName', 'countryName', 'baseStationId', 'employeeId'])"
+                    tabindex="0"
+                    ng-show="showDeleteButton(employee.startDate)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <alert ng-show="!loadingBarVisible && employees.length == 0" type="info">
+      <span class="fa fa-flag"></span> Your search returned no results.
+    </alert>
+    <p ng-if="employees.length > 0" class="record-count small text-center">Showing {{employees.length}} records</p>
+    <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+  </div>
+
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>
