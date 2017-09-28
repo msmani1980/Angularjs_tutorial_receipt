@@ -34,6 +34,7 @@ input.has-error, .has-error .btn-default {
 }
 
 textarea.no-resize { resize:none; }
+textarea.vertical-resize-only { resize: vertical; }
 
 .radio-inline, .checkbox-inline {
   max-height: 12px;
