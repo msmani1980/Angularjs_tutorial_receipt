@@ -13,7 +13,7 @@
           <a class="btn btn-default" href="/#/manual-epos-dashboard/{{ cashBag.id }}">
             <span class="fa fa-arrow-left"></span> Back
           </a>
-          <button type="submit" class="btn btn-primary" ng-click="setShouldExit(true)" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerifyDisable()">
+          <button type="submit" class="btn btn-primary" ng-click="setShouldExit(true, false)" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerifyDisable()">
             <span class="fa fa-check-square-o"></span> Save & Exit
           </button>
         </div>
@@ -354,9 +354,9 @@
         <div class="panel-footer" ng-hide="isCashBagConfirmed">
             <div class="row">
                 <div class="col-xs-12 text-right">
-                    <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false)" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerifyDisable()"><span class="fa fa-check-square-o"></span> Save</button>
-                    <button class="btn btn-default" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
-                    <button class="btn btn-success" type="button" ng-click="verify()" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerifyDisable()"><span class="fa fa-check-circle"></span> Verify</button>
+                    <button class="btn btn-primary" type="submit" ng-click="setShouldExit(false, false)" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerifyDisable()"><span class="fa fa-check-square-o"></span> Save</button>
+                    <button class="btn btn-danger" type="button" ng-click="unverify()" ng-show="isVerified && !disableAll"><span class="fa fa-times-circle"></span> Unverify</button>
+                    <button class="btn btn-success" type="submit" ng-click="setShouldExit(false, true)" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerifyDisable()"><span class="fa fa-check-circle"></span> Verify</button>
                 </div>
             </div>
         </div>
