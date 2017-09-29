@@ -155,7 +155,7 @@ angular.module('ts5App')
     };
     
     $scope.isPastDate = function (exchangeRate) {
-       return (dateUtility.isYesterdayOrEarlierDatePicker(exchangeRate.startDate) && dateUtility.isYesterdayOrEarlierDatePicker(exchangeRate.endDate));
+      return (dateUtility.isYesterdayOrEarlierDatePicker(exchangeRate.startDate) && dateUtility.isYesterdayOrEarlierDatePicker(exchangeRate.endDate));
     };
       
     this.denormalizeCompanyExchangeRate = function(index, exchangeRate) {
@@ -242,6 +242,8 @@ angular.module('ts5App')
     $scope.searchCompanyExchangeRates = function() {
       $this.showLoadingModal('Loading Data');
       $scope.companyExchangeRates = [];
+      $scope.displayError = false;
+      $scope.errorResponse = {};
       var searchPayload = $this.formatPayloadForSearch();
       if ($this.eposExchangeRateType) {
         searchPayload.exchangeRateType = $this.eposExchangeRateType.id;
@@ -260,6 +262,8 @@ angular.module('ts5App')
     $scope.clearSearchForm = function() {
       $scope.search = {};
       $scope.companyExchangeRates = [];
+      $scope.displayError = false;
+      $scope.errorResponse = {};
     };
 
     this.getCompanyGlobalCurrencies = function() {
