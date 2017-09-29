@@ -114,6 +114,9 @@ angular.module('ts5App')
           if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
             exchangeRate.exchangeRate = '1.0000';
           }
+          
+          exchangeRate.exchangeRate = parseFloat(exchangeRate.exchangeRate).toFixed(4);
+          
         });
 
         companyExchangeRates = companyExchangeRates.filter(function(exchangeRate) {
@@ -146,7 +149,15 @@ angular.module('ts5App')
         $this.hideLoadingModal();
       });
     };
-
+    
+    $scope.isCurrentEffectiveDate = function (exchangeRate) {
+      return (dateUtility.isTodayOrEarlierDatePicker(exchangeRate.startDate) && (dateUtility.isAfterTodayDatePicker(exchangeRate.endDate) || dateUtility.isTodayDatePicker(exchangeRate.endDate)));
+    };
+    
+    $scope.isPastDate = function (exchangeRate) {
+       return (dateUtility.isYesterdayOrEarlierDatePicker(exchangeRate.startDate) && dateUtility.isYesterdayOrEarlierDatePicker(exchangeRate.endDate));
+    };
+      
     this.denormalizeCompanyExchangeRate = function(index, exchangeRate) {
       var payload = {};
       payload.id = exchangeRate.id;

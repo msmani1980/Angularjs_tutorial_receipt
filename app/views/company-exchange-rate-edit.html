@@ -107,14 +107,17 @@
                                 </div>
                             </td>
                             <td colspan="2">
-                              <date-picker
-                                      element-class="col-xs-6 col-sm-6"
-                                      start-date-model="exchangeRate.startDate"
-                                      end-date-model="exchangeRate.endDate"
-                                      disable-past="true"
-                                      disable-start-date="isExchangeRateReadOnly(exchangeRate)"
-                                      disable-end-date="isExchangeRatePartialReadOnly(exchangeRate)">
-                              </date-picker>
+                              <div class="col-xs-12 col-sm-6">
+				                <date-picker-field 
+				                  disable="isExchangeRateReadOnly(exchangeRate)" form="form" name="EffectiveFrom"
+				                  min-date="minDate" required="true" ng-model="exchangeRate.startDate">
+				                </date-picker-field>
+				              </div>
+				              <div class="col-xs-12 col-sm-6">
+				                <date-picker-field  disable="isPastDate(exchangeRate)" form="form" end-current-effective="isCurrentEffectiveDate(exchangeRate)"
+				                  name="EffectiveTo" min-date="minDate" required="true"
+				                  ng-model="exchangeRate.endDate">
+				                </date-picker-field>
                             </td>
                             <td>
                               <button class="btn btn-warning btn-xs" ng-click="duplicateExchangeRate(index, exchangeRate)">
