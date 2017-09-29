@@ -398,9 +398,9 @@ angular.module('ts5App')
     $scope.verify = function () {
       showLoadingModal('Verifying');
       var promises = [];
+      addToPromises($scope.discountListComp, promises);
       addToPromises($scope.discountListCoupon, promises);
       addToPromises($scope.discountListVoucher, promises);
-      addToPromises($scope.discountListComp, promises);
       addToPromises($scope.discountListFlyer, promises);
       $q.all(promises).then(verifySuccess, showErrors);
     };
@@ -463,11 +463,16 @@ angular.module('ts5App')
       addToPromises($scope.discountListVoucher, promises);
       addToPromises($scope.discountListComp, promises);
       addToPromises($scope.discountListFlyer, promises);
-      $q.all(promises).then(saveSuccess, showErrors);
+      if ($scope.shouldVerify) {
+        $q.all(promises).then(verifySuccess, showErrors);
+      } else {
+        $q.all(promises).then(saveSuccess, showErrors);
+      }
     };
 
-    $scope.setShouldExit = function (shouldExit) {
+    $scope.setShouldExit = function (shouldExit, shouldVerify) {
       $scope.shouldExit = shouldExit;
+      $scope.shouldVerify = shouldVerify;
     };
 
     function setBaseCurrency() {
