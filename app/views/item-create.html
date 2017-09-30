@@ -99,7 +99,7 @@
                           placeholder="New Item" min-length="1" max-length="30"></input-text>
 
               <input-textarea label="Item Description" name="desc" required="true" pattern="regexp.alphaWithSpecialCharMenuItem"
-                          placeholder="A simple description..." max-length="255"></input-textarea>
+                          placeholder="A simple description..." max-length="255" class="vertical-resize-only"></input-textarea>
 
               <input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="new item"
                           max-length="500"></input-text>
@@ -132,8 +132,7 @@
             </div>
 
             <fieldset ng-disabled="isDisabled()">
-
-              <div class="form-group">
+              <div class="form-group" >
                 <label>Sales Category *</label>
                 <select name="categoryId" required ng-model="formData.categoryId" class="form-control">
                   <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
@@ -141,7 +140,6 @@
                   </option>
                 </select>
               </div>
-
               <div class="form-group">
                 <label>Item Type *</label>
                 <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
@@ -163,14 +161,39 @@
                 </ui-select>
               </div>
 
-              <div class="form-group">
+              <div class="form-group" ng-disabled="isDisabled()">
                 <input-text label="URL" name="sellingPoint" pattern="regexp.word" ng-if="shouldDisplayURLField" placeholder="http://www.website.com"></input-text>
               </div>
 
-              <input-textarea ng-if="isVirtualSelected" label="Notes" name="notes" placeholder="Notes for Virtual" max-length="255"></input-textarea>
-
-              <input-textarea ng-if="isVoucherSelected" label="Notes" name="notes" placeholder="Notes for Voucher" max-length="255"></input-textarea>
-
+              <input-textarea ng-if="isVirtualSelected" label="Notes" name="notes" placeholder="Notes for Virtual" max-length="255" class="vertical-resize-only"></input-textarea>
+            </fieldset>
+            <fieldset>
+              <div ng-if="isVoucherSelected">
+                <div class="form-group">
+                  <div class="row col-md-5"><label class="control-label">Notes</label></div>
+                  <div class="row col-md-7 pull-right">
+                    <select class="form-control"
+                            ng-model="formData.selectedVoucherNotesLanguage"
+                            ng-options="option.languageName for option in companyEposLanguages track by option.id"
+                    >
+                    </select>
+                  </div>
+                  <div ng-repeat="language in companyEposLanguages" ng-class="{ 'has-error' : !formData.notesTranslations[language.id] && displayError , 'has-success' : formData.notesTranslations[language.id] }">
+                    <textarea
+                      ng-disabled="isDisabled()"
+                      ng-show="formData.selectedVoucherNotesLanguage.id == language.id"
+                      name="notes"
+                      class="form-control vertical-resize-only"
+                      ng-model="formData.notesTranslations[language.id]" type="text"
+                      placeholder="Notes for Voucher"
+                      ng-maxlength="500"
+                      maxlength="500">
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset ng-disabled="isDisabled()">
               <div class="form-group">
                 <label>Item Substitutions</label>
                 <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.substitutions" theme="bootstrap">
@@ -297,7 +320,15 @@
                 <div class="panel-body">
                   <img ng-src="{{ formData.qrCodeImgUrl }}"/>
                 </div>
+              </div>
 
+              <div ng-if="creatingItem && isVoucherSelected"
+                   class="form-group"
+                   ng-class="{ 'has-error' : !formData.voucherDuration && displayError , 'has-success' : formData.voucherDuration }">
+                <label>Voucher Duration *</label>
+                <select name="voucherDuration" ng-model="formData.voucherDuration" class="form-control col-xs-2" ng-change="recalculateEndDate()" ng-required="true">
+                  <option ng-repeat="duration in voucherDurationOptions" value="{{ duration.duration }}">{{ duration.name }}</option>
+                </select>
               </div>
 
             </fieldset>
@@ -387,7 +418,6 @@
 
           </div>
 
-          </fieldset>
 
           <h3 id="price-and-tax">Price & Tax</h3>
 
@@ -397,7 +427,6 @@
             </button>
           </div>
 
-          <fieldset>
 
             <div id="price-type-container">
 
@@ -414,15 +443,11 @@
               </button>
             </div>
 
-          </fieldset>
-
-          <fieldset ng-disabled="isDisabled()">
-
           <div class="voucher-container" ng-if="isVoucherSelected">
             <div class="form-group">
               <label>Voucher *</label>
-              <ui-select ng-if="uiSelectTemplateReady" required ng-model="formData.voucher" theme="bootstrap" name="Voucher">
-                <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()">{{ $select.selected.name}}
+              <ui-select ng-if="uiSelectTemplateReady" required ng-model="formData.voucher" theme="bootstrap" name="Voucher" ng-disabled="isDisabled()">
+                <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()" >{{ $select.selected.name}}
                 </ui-select-match>
                 <ui-select-choices
                   repeat="voucher in discountList | filter: $select.search | orderBy:'name'">
@@ -432,7 +457,6 @@
               </ui-select>
             </div>
           </div>
-
           <div id="tax-type-container">
 
             <div ng-repeat="(key,itemTax) in formData.taxes track by $index">
@@ -440,7 +464,6 @@
             </div>
 
           </div>
-
         </fieldset>
 
       </div>
