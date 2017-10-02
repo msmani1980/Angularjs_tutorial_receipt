@@ -9,7 +9,7 @@
 
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, languagesService, _) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService) {
 
     var $this = this;
     $scope.formData = {
@@ -92,20 +92,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return data.retailItem.companyId === companyId;
     };
 
-    this.filterDuplicateInItemTags = function() {
-      $scope.filterSelectedTags = _.differenceWith(
-        $scope.tags,
-        $scope.formData.tags,
-        function(a, b) {
-          return a.id === b.id;
-        }
-      );
-    };
-
-    $scope.onTagsChange = function() {
-      $this.filterDuplicateInItemTags();
-    };
-
     this.setVoucherData = function() {
       $scope.formData.shouldUseDynamicBarcode = {
         value: !!$scope.formData.isDynamicBarcodes
@@ -127,7 +113,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $this.updateFormData(data.retailItem);
         $this.updateViewName(data.retailItem);
         $this.setUIReady();
-        $this.filterDuplicateInItemTags();
         return;
       }
 
@@ -430,6 +415,9 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.viewOnly = $scope.viewOnly || $scope.itemIsInactive;
     };
 
+    $scope.isDisabledEndDateForm = function() {
+      return !(dateUtility.isAfterTodayDatePicker($scope.formData.endDate) || dateUtility.isTodayDatePicker($scope.formData.endDate));
+    };
 
     this.updateLanguages = function () {
       languagesService.getLanguagesList().then(function (dataFromAPI) {
@@ -446,10 +434,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
 
       $scope.formData.notesTranslations = mappedNotes;
-    };
-
-    $scope.isDisabledEndDateForm = function() {
-      return !(dateUtility.isAfterTodayDatePicker($scope.formData.endDate) || dateUtility.isTodayDatePicker($scope.formData.endDate));
     };
 
     // updates the $scope.formData
@@ -653,8 +637,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       } else {
         $this.setUIReady();
       }
-
-      $this.filterDuplicateInItemTags();
     };
 
     this.getDependencies = function() {
