@@ -61,7 +61,7 @@
                 <th>Price</th>
                 <th>Qty</th>
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
-                <th>Total Discount Value {{baseCurrency.currency.code}}</th>
+<!--                 <th>Total Discount Value {{baseCurrency.currency.code}}</th> -->
             </tr>
             <tr ng-repeat="manualDiscountObj in discountListCoupon | filter:{discountTypeName: filter.discounts} track by $index">
               <td class="col-xs-4">
@@ -99,12 +99,12 @@
 									custom-pattern="number"
                 	ng-disabled="isVerified || disableAll"/>
               </td>
-              <td>
+               <td>
                 <input class="form-control" ng-model="manualDiscountObj.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
-              </td>
-              <td>
+              </td> 
+<!--               <td>
                 <input class="form-control" ng-model="manualDiscountObj.baseCurrencyAmount"  placeholder="0.00" disabled="true"/>
-              </td>
+              </td> -->
             </tr>
             <tr ng-show="discountListCoupon.length === 0">
               <td colspan="8" class="text-center">
@@ -113,7 +113,7 @@
               </td>
             </tr>
             <tr>
-              <td colspan="3">
+              <td colspan="2">
                 <button class="btn btn-primary" type="button" ng-click="addCouponDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
               </td>
               <td class="text-right"><h4><small><b>Sub Total:</b></small></h4></td>
@@ -136,7 +136,7 @@
                 <th>Price</th>
                 <th>Qty</th>
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
-                <th>Total Discount Value {{baseCurrency.currency.code}}</th>
+<!--                 <th>Total Discount Value {{baseCurrency.currency.code}}</th> -->
             </tr>
             <tr ng-repeat="manualDiscountVoucher in discountListVoucher | filter:{discountTypeName: filter.discounts} track by $index">
               <td class="col-xs-4">
@@ -177,9 +177,9 @@
               <td>
                 <input class="form-control" ng-model="manualDiscountVoucher.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
               </td>
-              <td>
+<!--               <td>
                 <input class="form-control" ng-model="manualDiscountVoucher.baseCurrencyAmount"  placeholder="0.00" disabled="true"/>
-              </td>
+              </td> -->
             </tr>
             <tr ng-show="discountListVoucher.length === 0">
               <td colspan="8" class="text-center">
@@ -188,7 +188,7 @@
               </td>
             </tr>
             <tr>
-              <td colspan="3">
+              <td colspan="2">
                 <button class="btn btn-primary" type="button" ng-click="addVoucherDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
               </td>
               <td class="text-right"><h4><small><b>Sub Total:</b></small></h4></td>
@@ -250,9 +250,9 @@
               <td>
                 <input class="form-control" ng-model="manualDiscountComp.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
               </td>
-              <td>
+<!--               <td>
                 <input class="form-control" ng-model="manualDiscountComp.baseCurrencyAmount"  placeholder="0.00" disabled="true"/>
-              </td>
+              </td> -->
             </tr>
             <tr ng-show="discountListComp.length === 0">
               <td colspan="8" class="text-center">
@@ -261,7 +261,7 @@
               </td>
             </tr>
             <tr>
-              <td colspan="3">
+              <td colspan="2">
                 <button class="btn btn-primary" type="button" ng-click="addCompDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
               </td>
               <td class="text-right"><h4><small><b>Sub Total:</b></small></h4></td>
@@ -325,9 +325,9 @@
               <td>
                 <input class="form-control" ng-model="manualDiscountFlyer.currentCurrencyAmount" placeholder="0.00" disabled="true"/>
               </td>
-              <td>
+<!--               <td>
                 <input class="form-control" ng-model="manualDiscountFlyer.baseCurrencyAmount"  placeholder="0.00" disabled="true"/>
-              </td>
+              </td> -->
             </tr>
             <tr ng-show="discountListFlyer.length === 0">
               <td colspan="8" class="text-center">
@@ -336,7 +336,7 @@
               </td>
             </tr>
             <tr>
-              <td colspan="3">
+              <td colspan="2">
                 <button class="btn btn-primary" type="button" ng-click="addFlyerDiscount()" ng-hide="isVerified || disableAll">Add Discount</button>
               </td>
               <td class="text-right"><h4><small><b>Sub Total:</b></small></h4></td>
