@@ -151,7 +151,7 @@
 
               <div class="form-group">
                 <label>Item Characteristics</label>
-                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics">
+                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics" ng-disabled="isItemCharacteristicsFieldDisabled()" ng-change="onCharacteristicsChange()" style="min-height: 34px;">
                   <ui-select-match placeholder="Item Characteristics" ui-lock-choice="isDisabled()">{{ $item.name }}
                   </ui-select-match>
                   <ui-select-choices
@@ -161,8 +161,8 @@
                 </ui-select>
               </div>
 
-              <div class="form-group" ng-disabled="isDisabled()">
-                <input-text label="URL" name="sellingPoint" pattern="regexp.word" ng-if="shouldDisplayURLField" placeholder="http://www.website.com"></input-text>
+              <div class="form-group">
+                <input-text label="Link" name="linkUrl" pattern="regexp.url" ng-if="shouldDisplayURLField" placeholder="http://www.website.com"></input-text>
               </div>
 
               <input-textarea ng-if="isVirtualSelected" label="Notes" name="notes" placeholder="Notes for Virtual" max-length="255" class="vertical-resize-only"></input-textarea>
