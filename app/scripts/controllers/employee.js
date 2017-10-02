@@ -20,6 +20,8 @@ angular.module('ts5App')
     $scope.globalStationList = [];
     $scope.multiSelectedValues = {};
     $scope.disablePastDate = false;
+    $scope.viewStartDate = '';
+    $scope.viewEndDate = '';
     $scope.shouldDisableEndDate = false;
         
     $scope.onCounrtyChange = function() {
@@ -127,13 +129,12 @@ angular.module('ts5App')
       );
     };
     
-    this.resetDateValue = function () {
-      if (!$scope.viewEditItem) {
-        $scope.employee.startDate = dateUtility.nowFormattedDatePicker();
-        $scope.employee.endDate = dateUtility.nowFormattedDatePicker();
+    this.setMinDateValue = function () {
+      if ($scope.viewEditItem) {
+        $scope.employee.startDate = $scope.viewStartDate;
+        $scope.employee.endDate = $scope.viewEndDate;
       }
       
-      return $scope.viewEditItem;
     };
     
     $scope.formSave = function() {
@@ -172,11 +173,11 @@ angular.module('ts5App')
     };
     
     this.getEmployeeSuccess = function(response) {
-      var startDate = dateUtility.formatDateForApp(response.startDate);
-      var endDate = dateUtility.formatDateForApp(response.endDate);
+      $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
+      $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
       
-      $scope.disablePastDate = !(dateUtility.isAfterTodayDatePicker(startDate));
-      $scope.shouldDisableEndDate = !(dateUtility.isAfterTodayDatePicker(endDate));
+      $scope.disablePastDate = !(dateUtility.isAfterTodayDatePicker($scope.viewStartDate));
+      $scope.shouldDisableEndDate = !(dateUtility.isAfterTodayDatePicker($scope.viewEndDate));
       
       $scope.employee = {
         id: response.id,
@@ -187,8 +188,8 @@ angular.module('ts5App')
         lastName: response.lastName,
         passcode: response.passcode,
         title: response.title,
-        startDate: startDate,
-        endDate: endDate
+        startDate: $scope.viewStartDate,
+        endDate: $scope.viewEndDate
       };
 
     };
@@ -198,8 +199,6 @@ angular.module('ts5App')
         employeeFactory.getEmployee($routeParams.id).then($this.getEmployeeSuccess);
       }
       
-      $scope.employee.startDate = dateUtility.nowFormattedDatePicker();
-      $scope.employee.endDate = dateUtility.nowFormattedDatePicker();
       $this.hideLoadingModal();
       
       var initFunctionName = ($routeParams.action + 'Init');
@@ -207,6 +206,7 @@ angular.module('ts5App')
         $this[initFunctionName]();
       }
       
+      $this.setMinDateValue();
     };
 
     this.init = function() {
