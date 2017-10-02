@@ -275,7 +275,7 @@ angular.module('ts5App')
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
         var eposCalculatedAmount = cashBag.eposCalculatedAmount;
-        var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
+        var crewAmount = cashBag.sbmtdPaperAmountManual + cashBag.sbmtdCoinAmountManual;
         $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
         var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
         var coinExchangeRate = cashBag.chCoinExchangeRate;
