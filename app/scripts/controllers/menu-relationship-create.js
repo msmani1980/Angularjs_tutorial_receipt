@@ -66,8 +66,18 @@ angular.module('ts5App')
       }
 
       var menuIndex = this.findMenuIndex($scope.formData.menuId);
-      $scope.viewName = prefix + ' Menu ' + $scope.menuList[menuIndex].menuCode +
-        ' Catering Stations';
+
+      if (menuIndex) {
+        $scope.viewName = prefix + ' Menu ' + $scope.menuList[menuIndex].menuCode + ' Catering Stations';
+      } else {
+        menuService.getMenuList({ menuId: $scope.formData.menuId }).then(function (dataFromAPI) {
+          angular.extend($scope.menuList, dataFromAPI.menus);
+
+          var menuIndex = $this.findMenuIndex($scope.formData.menuId);
+          $scope.viewName = prefix + ' Menu ' + $scope.menuList[menuIndex].menuCode + ' Catering Stations';
+        });
+      }
+
     };
 
     this.generateItemQuery = function() {
