@@ -43,7 +43,7 @@ angular.module('ts5App')
     };
 
     $scope.showDeleteButton = function(dateString) {
-      return dateUtility.isAfterTodayDatePicker(dateString);
+      return dateUtility.isTodayDatePicker(dateString);
     };
 
     $scope.clearSearchForm = function() {
