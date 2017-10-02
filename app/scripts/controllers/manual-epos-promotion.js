@@ -104,11 +104,16 @@ angular.module('ts5App')
       showLoadingModal('Saving');
       var promises = [];
       addToPromises($scope.promotionList, promises);
-      $q.all(promises).then(saveSuccess, showErrors);
+      if ($scope.shouldVerify) {
+        $q.all(promises).then(saveSuccessVerify, showErrors);
+      } else {
+        $q.all(promises).then(saveSuccess, showErrors);
+      }
     };
 
-    $scope.setShouldExit = function (shouldExit) {
+    $scope.setShouldExit = function (shouldExit, shouldVerify) {
       $scope.shouldExit = shouldExit;
+      $scope.shouldVerify = shouldVerify;
     };
 
     function showLoadingModal(text) {
