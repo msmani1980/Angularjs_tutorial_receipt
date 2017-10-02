@@ -22,13 +22,13 @@
 							<label for="employee-id">Employee ID*</label> 
 							<input ng-model="employee.employeeIdentifier" type="text" ng-disabled="isDisabled()"
 								class="form-control" id="employeeID" name="employeeID"
-								required custom-validity custom-pattern="alphanumeric"  maxlength="15">
+								required custom-validity custom-pattern="alphanumeric"  maxlength="15" placeholder="0001">
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
 						<div class="form-group">
 							<label for="employee-firstname">Employee First Name*</label> <input
-									ng-model="employee.firstName" type="text" class="form-control" ng-disabled="isDisabled()"
+									ng-model="employee.firstName" type="text" class="form-control" ng-disabled="isDisabled()" placeholder="First Name"
 									id="employeeFirstName" name="employeeFirstName" required maxlength="25" required custom-validity custom-pattern="alphaWithSpecial">
 						</div>
 					</div>
@@ -50,14 +50,14 @@
 					<div class="col-xs-12 col-sm-4">
 						<div class="form-group">
 							<label for="passcode">Passcode</label> <input
-								ng-model="employee.passcode" type="password" class="form-control" id="passcode" name="passcode"
+								ng-model="employee.passcode" type="password" class="form-control" id="passcode" name="passcode" placeholder="Passcode"
 								maxlength="10" ng-disabled="isDisabled()" custom-validity custom-pattern="alphanumeric">
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
 						<div class="form-group">
 							<label for="employee-lastname">Employee Last Name*</label> <input
-								ng-model="employee.lastName" type="text" class="form-control"
+								ng-model="employee.lastName" type="text" class="form-control" placeholder="Last Name"
 								id="employeeLastName" name="employeeLastName" ng-disabled="isDisabled()"
 								required maxlength="25" custom-validity custom-pattern="alphaWithSpecial">
 						</div>
@@ -102,7 +102,7 @@
 					<div class="col-xs-12 col-sm-4">
 						<div class="form-group">
 							<label for="employee-title">Employee Title*</label> <input
-								ng-model="employee.title" type="text" class="form-control" id="employeeTitle"
+								ng-model="employee.title" type="text" class="form-control" id="employeeTitle" placeholder="Title"
 								name="employeeTitle" maxlength="25" ng-disabled="isDisabled()" custom-validity custom-pattern="alphanumericSpaces" required>
 						</div>
 					</div>
