@@ -176,8 +176,8 @@ angular.module('ts5App')
       $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
       $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
       
-      $scope.disablePastDate = !(dateUtility.isTodayDatePicker($scope.viewStartDate));
-      $scope.shouldDisableEndDate = !(dateUtility.isTodayDatePicker($scope.viewEndDate));
+      $scope.disablePastDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewStartDate);
+      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
       
       $scope.employee = {
         id: response.id,
