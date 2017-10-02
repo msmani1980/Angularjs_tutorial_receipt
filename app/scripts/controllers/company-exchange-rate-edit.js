@@ -185,7 +185,8 @@ angular.module('ts5App')
       messageService.display(className, message, type);
     };
 
-    this.showSaveSuccess = function() {
+    this.showSaveSuccess = function(response) {
+//      console.log('created ID: '+response.id);  TODO setup payload with resonce id
       $this.showToast('success', 'Company Exchange Rate', 'exchange rate successfully saved!');
       $this.hideLoadingModal();
     };
@@ -203,7 +204,7 @@ angular.module('ts5App')
       if (exchangeRate.id) {
         currencyFactory.updateCompanyExchangeRate(payload).then($this.showSaveSuccess, $this.showSaveErrors);
       } else {
-        currencyFactory.createCompanyExchangeRate(payload).then($this.showSaveSuccess, $this.showSaveErrors);
+        currencyFactory.createCompanyExchangeRate(payload).then($this.showSaveSuccess(), $this.showSaveErrors);
       }
     };
 
