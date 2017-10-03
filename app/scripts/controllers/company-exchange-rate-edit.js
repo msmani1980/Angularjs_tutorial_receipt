@@ -185,7 +185,7 @@ angular.module('ts5App')
       messageService.display(className, message, type);
     };
 
-    this.showSaveSuccess = function(response) {
+    this.showSaveSuccess = function() {
       $this.showToast('success', 'Company Exchange Rate', 'exchange rate successfully saved!');
       $this.hideLoadingModal();
     };
@@ -206,8 +206,9 @@ angular.module('ts5App')
         currencyFactory.createCompanyExchangeRate(payload).then(
           function (response) {
             exchangeRate.id = response.id;
-            $this.showSaveSuccess(response);
+            $this.showSaveSuccess();
           },
+
           $this.showSaveErrors
         );
       }
