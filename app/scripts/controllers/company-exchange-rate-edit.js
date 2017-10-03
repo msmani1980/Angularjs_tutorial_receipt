@@ -114,9 +114,9 @@ angular.module('ts5App')
           if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
             exchangeRate.exchangeRate = '1.0000';
           }
-          
+
           exchangeRate.exchangeRate = parseFloat(exchangeRate.exchangeRate).toFixed(4);
-          
+
         });
 
         companyExchangeRates = companyExchangeRates.filter(function(exchangeRate) {
@@ -149,15 +149,15 @@ angular.module('ts5App')
         $this.hideLoadingModal();
       });
     };
-    
+
     $scope.isCurrentEffectiveDate = function (exchangeRate) {
       return (dateUtility.isTodayOrEarlierDatePicker(exchangeRate.startDate) && (dateUtility.isAfterTodayDatePicker(exchangeRate.endDate) || dateUtility.isTodayDatePicker(exchangeRate.endDate)));
     };
-    
+
     $scope.isPastDate = function (exchangeRate) {
       return (dateUtility.isYesterdayOrEarlierDatePicker(exchangeRate.startDate) && dateUtility.isYesterdayOrEarlierDatePicker(exchangeRate.endDate));
     };
-      
+
     this.denormalizeCompanyExchangeRate = function(index, exchangeRate) {
       var payload = {};
       payload.id = exchangeRate.id;
@@ -203,7 +203,14 @@ angular.module('ts5App')
       if (exchangeRate.id) {
         currencyFactory.updateCompanyExchangeRate(payload).then($this.showSaveSuccess, $this.showSaveErrors);
       } else {
-        currencyFactory.createCompanyExchangeRate(payload).then($this.showSaveSuccess, $this.showSaveErrors);
+        currencyFactory.createCompanyExchangeRate(payload).then(
+          function (response) {
+            exchangeRate.id = response.id;
+            $this.showSaveSuccess();
+          },
+
+          $this.showSaveErrors
+        );
       }
     };
 
@@ -312,15 +319,15 @@ angular.module('ts5App')
       }else {
         $scope.companyExchangeRates.splice(index, 1);
       }
-      
+
     };
-    
+
     $scope.isClonedRowClass = function (exchangeRate) {
         if (exchangeRate.isCloned) {
           return 'bg-warning';
         }
       };
-      
+
     $scope.deleteCompanyExchangeRate = function() {
       angular.element('.delete-warning-modal').modal('hide');
       $scope.companyExchangeRates.splice($scope.exchangeRateToDelete.rowIndex, 1);
