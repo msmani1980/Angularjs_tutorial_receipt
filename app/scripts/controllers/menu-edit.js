@@ -286,7 +286,7 @@ angular.module('ts5App')
       $scope.menuItemList = [];
       $scope.selectedCategories = [];
       $scope.filteredItemsCollection = [];
-      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
       $scope.menu = {
         startDate: '',
         endDate: '',
