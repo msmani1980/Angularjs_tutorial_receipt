@@ -125,7 +125,7 @@ angular.module('ts5App')
         return false;
       }
 	
-      return dateUtility.isAfterTodayDatePicker(employee.endDate);
+      return dateUtility.isAfterOrEqualDatePicker(employee.endDate, dateUtility.nowFormattedDatePicker());
     };
     
     this.displayLoadingModal = function (loadingText) {
