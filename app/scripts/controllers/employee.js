@@ -23,6 +23,7 @@ angular.module('ts5App')
     $scope.viewStartDate = '';
     $scope.viewEndDate = '';
     $scope.shouldDisableEndDate = false;
+    $scope.empTitles = [];
         
     $scope.onCounrtyChange = function() {
       $scope.multiSelectedValues = {};
@@ -156,12 +157,26 @@ angular.module('ts5App')
       $scope.countriesList = angular.copy(response.countries);
     };
     
+    this.getEmployeeTitleSuccess = function(response) {
+      $scope.empTitles = angular.copy(response.titles);
+    };
+    
     this.makeInitPromises = function() {
       var promises = [
         employeeFactory.getCountriesList().then($this.getCountireSuccess),
+        employeeFactory.getEmployeeTitles().then($this.getEmployeeTitleSuccess),
         employeeFactory.getCompanyGlobalStationList($this.getOnLoadingPayload).then($this.getCompanyGlobalStationSuccess)
       ];
       return promises;
+    };
+    
+    $scope.getEmployeeTitles = function(search) {
+      var emptitle = $scope.empTitles.slice();
+      if (search && emptitle.indexOf(search) === -1) {
+        emptitle.unshift(search);
+      }
+      
+      return emptitle;
     };
     
     this.showLoadingModal = function(message) {
