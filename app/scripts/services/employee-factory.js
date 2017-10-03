@@ -21,6 +21,10 @@ angular.module('ts5App')
       var getEmployee = function(employeeId) {
         return employeesService.getEmployeeById(getCompanyId(), employeeId);
       };
+      
+      var getEmployeeTitles = function() {
+        return employeesService.getEmployeeTitles(getCompanyId());
+      };
 
       var createEmployee = function (payload) {
         return employeesService.createEmployee(getCompanyId(), payload);
@@ -49,6 +53,7 @@ angular.module('ts5App')
         updateEmployee: updateEmployee,
         deleteEmployee: deleteEmployee,
         getCompanyId: getCompanyId,
+        getEmployeeTitles: getEmployeeTitles,
         getCompanyGlobalStationList: getCompanyGlobalStationList,
         getCountriesList: getCountriesList,
       };

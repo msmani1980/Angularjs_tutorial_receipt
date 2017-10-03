@@ -101,9 +101,15 @@
 					</div>
 					<div class="col-xs-12 col-sm-4">
 						<div class="form-group">
-							<label for="employee-title">Employee Title*</label> <input
-								ng-model="employee.title" type="text" class="form-control" id="employeeTitle" placeholder="Title"
-								name="employeeTitle" maxlength="25" ng-disabled="isDisabled()" custom-validity custom-pattern="alphanumericSpaces" required>
+							<label for="employee-title">Employee Title*</label>
+							<ui-select ng-if="!isDisabled()" ng-model="employee.title" theme="bootstrap" required name="employeeTitle">
+                				<ui-select-match placeholder="Please Select Title">{{$select.selected}}</ui-select-match>
+                					<ui-select-choices repeat="title in getEmployeeTitles($select.search) | filter: $select.search">
+                  						<div ng-bind="title"></div>
+                					</ui-select-choices>
+              				</ui-select> 
+              				<input ng-if="isDisabled()" ng-model="employee.title" type="text" class="form-control" placeholder="Title"
+								name="employeeTitle" ng-disabled="true">
 						</div>
 					</div>
 				</div>
