@@ -275,7 +275,7 @@ angular.module('ts5App')
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
         var eposCalculatedAmount = cashBag.eposCalculatedAmount;
-        var crewAmount = cashBag.sbmtdPaperAmountManual + cashBag.sbmtdCoinAmountManual;
+        var crewAmountEpos = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
         $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
         var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
         var coinExchangeRate = cashBag.chCoinExchangeRate;
@@ -283,16 +283,20 @@ angular.module('ts5App')
         var coinAmount = cashBag.coinAmountManual;
         var convertedPaperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
         var convertdCoinAmount = cashBag.coinAmountManualCh || cashBag.coinAmountManualCHBank;
+        var paperCoinAmount = (paperAmount + coinAmount) - crewAmountEpos;
+        var eposCalculatedPaperCoinAmount = paperCoinAmount + eposCalculatedAmount;
+        var crewAmoutTotal = formatAsCurrency(cashBag.sbmtdPaperAmountManual + cashBag.sbmtdCoinAmountManual);
+        var eposCalTotal = formatAsCurrency(eposCalculatedPaperCoinAmount);
+        var varianceValue = crewAmoutTotal - eposCalTotal;
         var totalBank = convertedPaperAmount + convertdCoinAmount;
-        var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
-
+        
         var cashBagItem = {
           id: cashBag.id,
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
-          eposCalculatedAmount: formatAsCurrency(eposCalculatedAmount),
-          crewAmount: formatAsCurrency(crewAmount),
+          eposCalculatedAmount: formatAsCurrency(eposCalculatedPaperCoinAmount),
+          crewAmount: formatAsCurrency(cashBag.sbmtdPaperAmountManual + cashBag.sbmtdCoinAmountManual),
           paperAmount: formatAsCurrency(paperAmount),
           coinAmount: formatAsCurrency(coinAmount),
           varianceValue: formatAsCurrency(varianceValue),
