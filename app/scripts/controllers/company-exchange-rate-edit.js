@@ -29,7 +29,10 @@ angular.module('ts5App')
       }
 
       return $scope.search.acceptedCurrencies.filter(function(acceptedCurrency) {
-          return acceptedCurrency.currencyCode === exchangeRate.acceptedCurrencyCode;
+          return acceptedCurrency.currencyCode === exchangeRate.acceptedCurrencyCode
+          	// @Mani please add company related current date there:
+           // && new Date(acceptedCurrency.endDate) > new Date()
+          	;
         })
         .length > 0;
     };
