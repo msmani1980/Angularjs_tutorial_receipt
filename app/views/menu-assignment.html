@@ -15,83 +15,88 @@
 
   <error-dialog form-object="menuAssignmentDataForm" error-response="errorResponse" display="displayError"></error-dialog>
   <form name="form" class="form edit-form create-item-form">
-    <h3 id="item-information">Schedule details</h3>
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="col-xs-12 col-sm-2">
-          <label>Number</label><br />
-          {{ menuAssignment.scheduleNumber }}
+    <div class="panel panel-default">
+      <div class="panel-heading">Schedule details</div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-2">
+            <label>Number</label><br />
+            {{ menuAssignment.scheduleNumber }}
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Day of Operation</label><br />
+            {{ menuAssignment.dayId }}
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Departure Station</label><br />
+            {{ menuAssignment.departure.stationCode }}
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Departure Time</label><br />
+            {{ menuAssignment.departureTime }} (timezone)
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Arrival Station</label><br />
+            {{ menuAssignment.arrival.stationCode }}
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Arrival Time</label><br />
+            {{ menuAssignment.arrivalTime }} (timezone)
+          </div>
         </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Day of Operation</label><br />
-          {{ menuAssignment.dayId }}
+        <div class="row">
+          <div class="col-xs-12 col-sm-2">
+            <label>Previous Number</label><br />
+            {{ menuAssignment.preScheduleNumber || '-'  }}
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Next Number</label><br />
+            {{ menuAssignment.nextScheduleNumber || '-'  }}
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Carrier Type</label><br />
+            {{ menuAssignment.carrierTypeId || '-'  }} <!-- TODO: fetch carrier type code -->
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Carrier Number</label><br />
+            {{ menuAssignment.carrierId || '-' }} <!-- TODO: fetch carrier id code -->
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Ground Time</label><br />
+            {{ menuAssignment.groundtime || '-'  }}
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Block Time</label><br />
+            {{ menuAssignment.blockTime || '-'  }}
+          </div>
         </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Departure Station</label><br />
-          {{ menuAssignment.departure.stationCode }}
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Departure Time</label><br />
-          {{ menuAssignment.departureTime }} (timezone)
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Arrival Station</label><br />
-          {{ menuAssignment.arrival.stationCode }}
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Arrival Time</label><br />
-          {{ menuAssignment.arrivalTime }} (timezone)
+        <div class="row">
+          <div class="col-xs-12 col-sm-2">
+            <label>Seat Config</label><br />
+            {{ menuAssignment.seatConfigurationId || '-'  }} <!-- TODO: fetch seat config code -->
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Trip Distance</label><br />
+            {{ menuAssignment.tripDistance || '-'  }} {{ menuAssignment.tripDistance ? menuAssignment.tripdistanceUnitCode : ''}}
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>First Trip</label><br />
+            {{ menuAssignment.firstTrip || '-'  }}
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Last Trip</label><br />
+            {{ menuAssignment.lastTrip || '-'  }}
+          </div>
+          <div class="col-xs-12 col-sm-2"></div>
+          <div class="col-xs-12 col-sm-2"></div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="col-xs-12 col-sm-2">
-          <label>Previous Number</label><br />
-          x
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Carrier Type</label><br />
-          x
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Carrier Number</label><br />
-          x
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Seat Config</label><br />
-          x
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Ground Time</label><br />
-          x
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Block Time</label><br />
-          x
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="col-xs-12 col-sm-2">
-          <label>Trip Distance</label><br />
-          x
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>First Trip</label><br />
-          x
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Last Trip</label><br />
-          x
-        </div>
-        <div class="col-xs-12 col-sm-2">
-          <label>Next Number</label><br />
-          x
-        </div>
-        <div class="col-xs-12 col-sm-2"></div>
-        <div class="col-xs-12 col-sm-2"></div>
+      <div class="panel-footer text-right">
+        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+          <span class="fa fa-check-square-o" aria-hidden="true"></span>
+          <span class="hidden-xs">Save</span>
+        </button>
+        <a href="#/menu-assignment-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
       </div>
     </div>
   </form>
