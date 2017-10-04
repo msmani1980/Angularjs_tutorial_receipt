@@ -388,7 +388,7 @@ angular.module('ts5App', [
     templateUrl: 'views/schedule.html',
     controller: 'ScheduleCtrl',
     controllerAs: 'schedule'
-  }).when('/menu-assignment', {
+  }).when('/menu-assignment/:action/:id?', {
     templateUrl: 'views/menu-assignment.html',
     controller: 'MenuAssignmentCtrl',
     controllerAs: 'menuAssignment'

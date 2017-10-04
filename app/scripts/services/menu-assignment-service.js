@@ -37,13 +37,22 @@ angular.module('ts5App')
     var menuAssignmentRequestResource = $resource(menuAssignmentURL, requestParameters, menuAssignmentActions);
 
     function getMenuAssignmentList(payload) {
-      console.log('Service - getMenuAssignmentList');
       requestParameters.id = '';
       return menuAssignmentRequestResource.getMenuAssignment(payload).$promise;
     }
-    
+
+    function getMenuAssignment(companyId, menuAssignmentId) {
+      var payload = {
+        companyId: companyId,
+        id: menuAssignmentId
+      };
+
+      return menuAssignmentRequestResource.getMenuAssignment(payload).$promise;
+    }
+
     return {
-      getMenuAssignmentList: getMenuAssignmentList
+      getMenuAssignmentList: getMenuAssignmentList,
+      getMenuAssignment: getMenuAssignment
     };
 
   });

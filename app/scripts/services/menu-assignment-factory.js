@@ -8,15 +8,23 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('menuAssignmentFactory', function (menuAssignmentService) {
+  .factory('menuAssignmentFactory', function (menuAssignmentService, globalMenuService) {
+    function getCompanyId() {
+      return globalMenuService.company.get();
+    }
 
     function getMenuAssignmentList(payload) {
-      console.log('Factory - getMenuAssignmentList');
       return menuAssignmentService.getMenuAssignmentList(payload);
     }
 
+    function getMenuAssignment(menuAssignmentId) {
+      return menuAssignmentService.getMenuAssignment(getCompanyId(), menuAssignmentId);
+    }
+
     return {
-      getMenuAssignmentList: getMenuAssignmentList
+      getCompanyId: getCompanyId,
+      getMenuAssignmentList: getMenuAssignmentList,
+      getMenuAssignment: getMenuAssignment
     };
 
   });
