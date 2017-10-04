@@ -11,6 +11,12 @@ angular.module('ts5App')
   .controller('ManualEposPromotionCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService,
                                                    lodash, messageService, $location) {
     $scope.addPromotion = function () {
+      if (canAddPromotion()) {
+        $scope.promotionList.push(angular.copy(createNewPromotionObject()));
+      }
+    };
+
+    function createNewPromotionObject () {
       var newPromotion = {
         cashbagId: $scope.cashBag.id,
         eposCashBagsId: $scope.cashBag.eposCashBagsId,
@@ -25,13 +31,12 @@ angular.module('ts5App')
         currentCurrencyAmount: 0.00,
         baseCurrencyAmount: 0.00,
         exchangeRate: $scope.baseCurrency.currency.exchangeRate,
-        companyId: $scope.companyId
+        companyId: $scope.companyId,
+        promotionName:''
       };
 
-      if (canAddPromotion()) {
-        $scope.promotionList.push(newPromotion);
-      }
-    };
+      return newPromotion;
+    }
 
     function canAddPromotion () {
       var canAddPromo = false;
@@ -301,8 +306,8 @@ angular.module('ts5App')
       $scope.companyId = globalMenuService.getCompanyData().companyId;
       var payload = {
         companyId: $scope.companyId,
-        startDate: dateUtility.nowFormatted('YYYYMMDD'),
-        endDate: dateUtility.nowFormatted('YYYYMMDD')
+        startDate: dateForFilter,//dateUtility.nowFormatted('YYYYMMDD'),
+        endDate: dateForFilter//dateUtility.nowFormatted('YYYYMMDD')
       };
       var promises = [
         manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter, isOperatedCurrency: true }),
