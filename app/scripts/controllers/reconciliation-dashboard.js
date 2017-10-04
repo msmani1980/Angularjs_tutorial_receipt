@@ -226,9 +226,11 @@ angular.module('ts5App')
       reconciliationFactory.getReconciliationPrecheckDevices({
         storeInstanceId: item.id
       }).then(function(response) {
-        var dataFromAPI = angular.copy(response);
-        item.eposData = (dataFromAPI.devicesSynced || dataFromAPI.totalDevices) ? dataFromAPI.devicesSynced +
-        '/' + dataFromAPI.totalDevices : 'No';
+        item.eposDataFullDetails = angular.copy(response);
+        item.iseposDataDetailsValid = item.eposDataFullDetails.devicesSynced || item.eposDataFullDetails.totalDevices;
+
+        item.eposData = (item.iseposDataDetailsValid) ? item.eposDataFullDetails.devicesSynced + '/' + item.eposDataFullDetails.totalDevices : 'No';
+
         $this.recalculateActionsColumn(item);
       });
     };
