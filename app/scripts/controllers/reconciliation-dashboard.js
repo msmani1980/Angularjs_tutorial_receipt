@@ -621,7 +621,7 @@ angular.module('ts5App')
 
 angular.module('ts5App').filter('booleanToIcon', function () {
   return function (booleanValue) {
-    if(booleanValue) {
+    if (booleanValue) {
       return '<i class="fa fa-check-circle fa-2 green" aria-hidden="true" ></i>';
     } else {
       return '<i class="fa fa-times-circle fa-2 red" aria-hidden="true" ></i>';
