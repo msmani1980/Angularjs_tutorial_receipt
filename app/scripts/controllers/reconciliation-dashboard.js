@@ -235,6 +235,16 @@ angular.module('ts5App')
       });
     };
 
+    $scope.showEposDataDetailsModal = function (item) {
+      if (!item.devices) {
+        return;
+      }
+
+      $scope.currentModalDevices = angular.copy(item.devices);
+
+      angular.element('#eposDataDetailsModal').modal('show');
+    };
+
     this.getReconciliationPrecheckSchedules = function(item) {
       reconciliationFactory.getReconciliationPrecheckSchedules({
         storeInstanceId: item.id
@@ -608,3 +618,13 @@ angular.module('ts5App')
     this.init();
 
   });
+
+angular.module('ts5App').filter('booleanToIcon', function () {
+  return function (booleanValue) {
+    if(booleanValue) {
+      return '<i class="fa fa-check-circle fa-2 green" aria-hidden="true" ></i>';
+    } else {
+      return '<i class="fa fa-times-circle fa-2 red" aria-hidden="true" ></i>';
+    }
+  };
+});
