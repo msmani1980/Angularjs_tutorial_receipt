@@ -60,7 +60,7 @@
             <div class="form-group">
               <label for="auto-print">Print Auto-Receipt For*</label>
               <div  class="input-group">
-                <input type="radio" name="autoPrint" value="All" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'All' "> All Items
+                <input type="radio" name="autoPrint" value="All" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'All' " ng-required=true > All Items
               </div>
               <div>
                 <input type="radio" name="autoPrint" value="Item" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'Item' "> Specific Retail Items ('Print Receipt' flagged in the item setup screen)
@@ -77,7 +77,7 @@
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-money"></i></span>
                   <input type="text" class="form-control"
-                         name="receiptFloorLimitAmountData{{ receiptFloorLimitAmountData }}"
+                         name="receiptFloorLimitAmountData{{ receiptFloorLimitAmountData.code }}"
                          custom-validity
                          custom-pattern="numberOrDecimal"
                          ng-model="receiptFloorLimitAmountData.amount"
