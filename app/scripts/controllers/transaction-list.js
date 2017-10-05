@@ -87,7 +87,7 @@ angular.module('ts5App')
 
     $scope.printTransactionTypeName = function (transaction) {
         if (
-                transaction.orderTypeId == 3
+                transaction.orderTypeId === 3
               ) {
                 return 'EMPLOYEE PURCHASE';
               }
