@@ -29,10 +29,7 @@ angular.module('ts5App')
       }
 
       return $scope.search.acceptedCurrencies.filter(function(acceptedCurrency) {
-          return acceptedCurrency.currencyCode === exchangeRate.acceptedCurrencyCode
-          	// @Mani please add company related current date there:
-           // && new Date(acceptedCurrency.endDate) > new Date()
-          	;
+          return acceptedCurrency.currencyCode === exchangeRate.acceptedCurrencyCode;
         })
         .length > 0;
     };
@@ -86,6 +83,7 @@ angular.module('ts5App')
     };
 
     this.normalizeCompanyExchangeRatesList = function(companyExchangeRatesFromAPI) {
+
       var companyExchangeRates = payloadUtility.deserializeDates(companyExchangeRatesFromAPI);
       var companyCurrencies = {};
 
@@ -102,7 +100,11 @@ angular.module('ts5App')
 
           companyCurrency.flatEasyPayDenominations = $this.makeFlatDenominations(easyPayDenominations);
 
-          companyCurrencies[companyCurrency.currencyCode] = companyCurrency;
+          
+          if ( companyCurrencies[companyCurrency.currencyCode] == undefined 
+        		  || companyCurrencies[companyCurrency.currencyCode].endDate < companyCurrency.endDate) {
+	          companyCurrencies[companyCurrency.currencyCode] = companyCurrency;
+          }
         });
 
         // Populate company exchange rates with denomination info
@@ -117,7 +119,6 @@ angular.module('ts5App')
           if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
             exchangeRate.exchangeRate = '1.0000';
           }
-
           exchangeRate.exchangeRate = parseFloat(exchangeRate.exchangeRate).toFixed(4);
 
         });
@@ -132,7 +133,7 @@ angular.module('ts5App')
             return exchangeRate.acceptedCurrencyCode === currency.currencyCode;
           }).length > 0;
 
-          if (!isFound) {
+          if (!isFound && dateUtility.formatDateForAPI(currency.endDate)  > dateUtility.isTodayDatePicker()) {
             companyExchangeRates.push({
               companyId: $this.companyId,
               isNew: true,
