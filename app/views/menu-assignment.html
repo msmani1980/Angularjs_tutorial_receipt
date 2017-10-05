@@ -29,19 +29,19 @@
           </div>
           <div class="col-xs-12 col-sm-2">
             <label>Departure Station</label><br />
-            {{ menuAssignment.departure.stationCode }}
+            {{ menuAssignment.departure.Code }}
           </div>
           <div class="col-xs-12 col-sm-2">
             <label>Departure Time</label><br />
-            {{ menuAssignment.departureTime }} (timezone)
+            {{ menuAssignment.departureTime }} ({{ menuAssignment.departure.city.utcOffset }})
           </div>
           <div class="col-xs-12 col-sm-2">
             <label>Arrival Station</label><br />
-            {{ menuAssignment.arrival.stationCode }}
+            {{ menuAssignment.arrival.Code }}
           </div>
           <div class="col-xs-12 col-sm-2">
             <label>Arrival Time</label><br />
-            {{ menuAssignment.arrivalTime }} (timezone)
+            {{ menuAssignment.arrivalTime }} ({{ menuAssignment.arrival.city.utcOffset }})
           </div>
         </div>
         <div class="row">
@@ -55,11 +55,11 @@
           </div>
           <div class="col-xs-12 col-sm-2">
             <label>Carrier Type</label><br />
-            {{ menuAssignment.carrierTypeId || '-'  }} <!-- TODO: fetch carrier type code -->
+            {{ menuAssignment.companyCarrierType.carrierType || '-'  }}
           </div>
           <div class="col-xs-12 col-sm-2">
             <label>Carrier Number</label><br />
-            {{ menuAssignment.carrierId || '-' }} <!-- TODO: fetch carrier id code -->
+            {{ menuAssignment.companyCarrier.carrierNumber || '-' }}
           </div>
           <div class="col-xs-12 col-sm-2">
             <label>Ground Time</label><br />
@@ -73,7 +73,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-2">
             <label>Seat Config</label><br />
-            {{ menuAssignment.seatConfigurationId || '-'  }} <!-- TODO: fetch seat config code -->
+            {{ menuAssignment.seatConfiguration.code || '-'  }}
           </div>
           <div class="col-xs-12 col-sm-2">
             <label>Trip Distance</label><br />
