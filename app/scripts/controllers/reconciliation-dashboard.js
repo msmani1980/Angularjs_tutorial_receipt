@@ -619,12 +619,12 @@ angular.module('ts5App')
 
   });
 
-angular.module('ts5App').filter('booleanToIcon', function () {
+angular.module('ts5App').filter('reconciliationBooleanToCheckedIcon', function () {
   return function (booleanValue) {
     if (booleanValue) {
-      return '<i class="fa fa-check-circle fa-2 green" aria-hidden="true" ></i>';
+      return '<i class="checked-green" aria-hidden="true" ></i>';
     } else {
-      return '<i class="fa fa-times-circle fa-2 red" aria-hidden="true" ></i>';
+      return '<i class="unchecked-red" aria-hidden="true" ></i>';
     }
   };
 });

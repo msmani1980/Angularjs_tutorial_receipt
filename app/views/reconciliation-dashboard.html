@@ -317,7 +317,7 @@
           <tr ng-if="currentModalDevices !== null && currentModalDevices.length !== 0" ng-repeat="eposDataItem in currentModalDevices">
             <td>{{eposDataItem.deviceId}}</td>
             <td>{{eposDataItem.alias}}</td>
-            <td ng-bind-html="eposDataItem.isSynced | booleanToIcon" style="text-align: center"></td>
+            <td ng-bind-html="eposDataItem.isSynced | reconciliationBooleanToCheckedIcon" style="text-align: center"></td>
           </tr>
         </table>
       </div>
