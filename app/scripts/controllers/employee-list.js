@@ -25,6 +25,7 @@ angular.module('ts5App')
     $scope.countriesList = [];
     $scope.globalStationList = [];
     $scope.multiSelectedValues = {};
+    $scope.empTitles = [];
     
     function showLoadingBar() {
       $scope.loadingBarVisible = true;
@@ -75,9 +76,9 @@ angular.module('ts5App')
       showLoadingBar();
       $this.formatMultiSelectedValuesForSearch();
       var payload = lodash.assign(angular.copy($scope.search), {
-          limit: $this.meta.limit,
-          offset: $this.meta.offset
-        });
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
+      });
       
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
@@ -105,6 +106,7 @@ angular.module('ts5App')
     
     this.formatMultiSelectedValuesForSearch = function() {
       $this.addSearchValuesFromMultiSelectArray('baseStationIds', $scope.multiSelectedValues.globalStationList, 'id');
+      $this.addSearchValuesFromMultiSelectArray('title', $scope.multiSelectedValues.titlesList);
     };
     
     this.addSearchValuesFromMultiSelectArray = function(searchKeyName, multiSelectArray, multiSelectElementKey) {
@@ -114,8 +116,12 @@ angular.module('ts5App')
 
       var searchArray = [];
       angular.forEach(multiSelectArray, function(element) {
-          searchArray.push(element[multiSelectElementKey]);
-        });
+        if (angular.isUndefined(multiSelectElementKey)) {
+          searchArray.push(element);
+        } else {
+          searchArray.push(element[multiSelectElementKey]);	
+        }
+      });
 
       $scope.search[searchKeyName] = searchArray.toString();
     };
@@ -169,6 +175,10 @@ angular.module('ts5App')
     
     this.getCompanyGlobalStationSuccess = function(response) {
       $scope.globalStationList = angular.copy(response.response);
+      if ($scope.search.countryId) {
+        $this.addSearchValuesFromMultiSelectArray('baseStationIds', $scope.globalStationList, 'id');  
+      }
+      
     };
 
     this.getCountireSuccess = function(response) {
@@ -186,10 +196,15 @@ angular.module('ts5App')
 
       hideLoadingBar();
     };
+    
+    this.getEmployeeTitleSuccess = function(response) {
+      $scope.empTitles = angular.copy(response.titles);
+    };
        
     this.makeInitPromises = function() {
       var promises = [
         employeeFactory.getCountriesList().then($this.getCountireSuccess),
+        employeeFactory.getEmployeeTitles().then($this.getEmployeeTitleSuccess),
         employeeFactory.getCompanyGlobalStationList($this.getOnLoadingPayload).then($this.getCompanyGlobalStationSuccess)
       ];
       return promises;

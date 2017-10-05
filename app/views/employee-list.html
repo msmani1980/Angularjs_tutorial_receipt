@@ -52,12 +52,18 @@
 					    <option value="">Please Select Country</option>
 						<option value="{{countrie.id}}" ng-repeat="countrie in countriesList | unique: 'id'">{{ countrie.countryName }}</option>
 					</select>
+					<!-- <ui-select ng-model="search.countrie" on-select="onCounrtyChange()">
+	                  <ui-select-match placeholder="Select Countries..">{{ $item.countryName }}</ui-select-match>
+	                  <ui-select-choices repeat="countrie in countriesList | unique: 'id' | filter: $select.search">
+	                    {{ countrie.countryName }}
+	                  </ui-select-choices>
+	                </ui-select> -->
 				</div>
 			</div>
 			<div class="col-xs-12 col-sm-6 col-md-4">
 			  <div class="form-group">
                 <label for="first-name">Employee First Name</label>
-                <input ng-model="search.fisrtName" type="text" class="form-control" id="first-name" placeholder="First Name">
+                <input ng-model="search.firstName" type="text" class="form-control" id="first-name" placeholder="First Name">
               </div>
 			</div>
             <div class="col-xs-12 col-sm-6 col-md-4">
@@ -82,7 +88,12 @@
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
                 <label for="title">Employee Title </label>
-                <input ng-model="search.title" type="text" class="form-control" id="title" placeholder="Title">
+                <ui-select multiple ng-model="multiSelectedValues.titlesList" theme="bootstrap" name="employeeTitle">
+                	<ui-select-match placeholder="Titles">{{ $item }}</ui-select-match>
+                		<ui-select-choices repeat="title in empTitles | filter: $select.search">
+                  			{{ title }}
+                		</ui-select-choices>
+              	</ui-select> 
               </div>
             </div>
 		 </div>
@@ -127,7 +138,7 @@
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-danger btn-xs"
-                    ng-click="deleteRecordDialog(employees[$index], ['lastName', 'firstName', 'countryName', 'baseStationId', 'employeeId'])"
+                    ng-click="deleteRecordDialog(employees[$index], ['employeeIdentifier', 'lastName', 'firstName', 'countryName', 'stationCode', 'employeeId'])"
                     tabindex="0"
                     ng-show="showDeleteButton(employee.startDate)">
               <i class="fa fa-trash"></i>
