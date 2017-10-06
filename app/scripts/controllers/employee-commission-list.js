@@ -25,7 +25,7 @@ angular.module('ts5App')
     var $this = this;
     this.meta = {
       count: undefined,
-      limit: 30,
+      limit: 100,
       offset: 0
     };
 
