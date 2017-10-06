@@ -276,6 +276,17 @@ angular.module('ts5App')
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
         var eposCalculatedAmount = cashBag.eposCalculatedAmount;
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
+        if ($this.manualCash !== null && eposCalculatedAmount === null) {
+          $filter('filter')($this.manualCash, {
+             cashbagId: cashBag.cashbagId,
+             currencyId: cashBag.retailCompanyCurrency
+           }).map(function (cash) {
+             eposCalculatedAmount = cash.amount; 
+           });
+
+          crewAmount = eposCalculatedAmount;
+        }
+
         $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
         var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
         var coinExchangeRate = cashBag.chCoinExchangeRate;
@@ -815,6 +826,7 @@ angular.module('ts5App')
       $scope.cashBagList = angular.copy(responseCollectionFromAPI[1].response);
       $scope.submittedCashBags = setSubmittedCashBagList();
       $this.itemTypes = angular.copy(responseCollectionFromAPI[2]);
+      $this.manualCash = angular.copy(responseCollectionFromAPI[3].response);
       setManualData(responseCollectionFromAPI);
       initData();
     }
