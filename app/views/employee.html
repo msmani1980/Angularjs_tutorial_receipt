@@ -35,7 +35,7 @@
 					<div class="col-xs-12 col-sm-4">
 						<div class="form-group">
 							<date-picker-field 
-									form="employeeDataForm" name="EffectiveFrom"
+									form="employeeDataForm" name="EffectiveStartDate"
 									label="Effective Start Date"
 									disable="isDisabled()"
 									required="true"
@@ -51,7 +51,7 @@
 						<div class="form-group">
 							<label for="passcode">Passcode</label> <input
 								ng-model="employee.passcode" type="password" class="form-control" id="passcode" name="passcode" placeholder="Passcode"
-								maxlength="10" ng-disabled="isDisabled()" custom-validity custom-pattern="alphanumeric">
+								maxlength="10" ng-disabled="isDisabled()">
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
@@ -64,7 +64,7 @@
 					</div>
 					<div class="col-xs-12 col-sm-4">
 						<div class="form-group">
-							<date-picker-field form="employeeDataForm" name="EffectiveTo"
+							<date-picker-field form="employeeDataForm" name="EffectiveEndDate"
 								label="Effective End Date" 
 								disable="readOnly || shouldDisableEndDate"
 								ng-model="employee.endDate"
@@ -94,7 +94,7 @@
 									ng-model="employee.baseStationId"
 									ng-disabled="isDisabled()" 
 									ng-options="station.id as (station.code + ' (' + station.name +')') for station in globalStationList"
-									name="base-station-id" required>
+									name="baseStation" required>
 								<option value="">Please Select Station...</option>
 							</select>
 						</div>

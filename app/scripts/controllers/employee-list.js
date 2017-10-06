@@ -60,10 +60,9 @@ angular.module('ts5App')
     };
     
     $scope.onCounrtyChange = function() {
-      $scope.multiSelectedValues = {};
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
-        countryId: $scope.search.countryId
+        countryId: $scope.search.countryId.id
       };
       return employeeFactory.getCompanyGlobalStationList(payload).then($this.getCompanyGlobalStationSuccess);
     };
@@ -82,6 +81,9 @@ angular.module('ts5App')
       
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
+      if ($scope.search.countryId) {
+        payload.countryId = $scope.search.countryId.id;
+      }  
       
       employeeFactory.getEmployees(payload).then($this.getEmployeesSuccess);
       $this.meta.offset += $this.meta.limit;
@@ -105,16 +107,20 @@ angular.module('ts5App')
     };
     
     this.formatMultiSelectedValuesForSearch = function() {
-      $this.addSearchValuesFromMultiSelectArray('baseStationIds', $scope.multiSelectedValues.globalStationList, 'id');
+      $this.addSearchValuesFromMultiSelectArray('baseStationIds', $scope.multiSelectedValues.stationList, 'id');
       $this.addSearchValuesFromMultiSelectArray('title', $scope.multiSelectedValues.titlesList);
     };
     
     this.addSearchValuesFromMultiSelectArray = function(searchKeyName, multiSelectArray, multiSelectElementKey) {
-      if (!multiSelectArray || multiSelectArray.length <= 0) {
+      if (!multiSelectArray || multiSelectArray.length < 0) {
         return;
       }
 
       var searchArray = [];
+      if (multiSelectArray.length === 0) {
+        searchArray = ['0'];
+      }
+      
       angular.forEach(multiSelectArray, function(element) {
         if (angular.isUndefined(multiSelectElementKey)) {
           searchArray.push(element);
