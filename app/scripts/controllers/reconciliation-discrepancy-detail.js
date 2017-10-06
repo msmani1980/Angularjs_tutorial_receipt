@@ -275,7 +275,18 @@ angular.module('ts5App')
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
         var eposCalculatedAmount = cashBag.eposCalculatedAmount;
-        var crewAmountEpos = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
+        var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
+        if ($this.manualCash !== null && eposCalculatedAmount === null) {
+          $filter('filter')($this.manualCash, {
+             cashbagId: cashBag.cashbagId,
+             currencyId: cashBag.retailCompanyCurrency
+           }).map(function (cash) {
+             eposCalculatedAmount = cash.amount; 
+           });
+
+          crewAmount = eposCalculatedAmount;
+        }
+
         $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
         var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
         var coinExchangeRate = cashBag.chCoinExchangeRate;
@@ -283,20 +294,16 @@ angular.module('ts5App')
         var coinAmount = cashBag.coinAmountManual;
         var convertedPaperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
         var convertdCoinAmount = cashBag.coinAmountManualCh || cashBag.coinAmountManualCHBank;
-        var paperCoinAmount = (paperAmount + coinAmount) - crewAmountEpos;
-        var eposCalculatedPaperCoinAmount = paperCoinAmount + eposCalculatedAmount;
-        var crewAmoutTotal = formatAsCurrency(cashBag.sbmtdPaperAmountManual + cashBag.sbmtdCoinAmountManual);
-        var eposCalTotal = formatAsCurrency(eposCalculatedPaperCoinAmount);
-        var varianceValue = crewAmoutTotal - eposCalTotal;
         var totalBank = convertedPaperAmount + convertdCoinAmount;
+        var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
         var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
-        
+
         var cashBagItem = {
           id: cashBag.id,
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
-          eposCalculatedAmount: formatAsCurrency(eposCalculatedPaperCoinAmount),
-          crewAmount: formatAsCurrency(cashBag.sbmtdPaperAmountManual + cashBag.sbmtdCoinAmountManual),
+          eposCalculatedAmount: formatAsCurrency(eposCalculatedAmount),
+          crewAmount: formatAsCurrency(crewAmount),
           paperAmount: formatAsCurrency(paperAmount),
           coinAmount: formatAsCurrency(coinAmount),
           varianceValue: formatAsCurrency(varianceValue),
@@ -819,6 +826,7 @@ angular.module('ts5App')
       $scope.cashBagList = angular.copy(responseCollectionFromAPI[1].response);
       $scope.submittedCashBags = setSubmittedCashBagList();
       $this.itemTypes = angular.copy(responseCollectionFromAPI[2]);
+      $this.manualCash = angular.copy(responseCollectionFromAPI[3].response);
       setManualData(responseCollectionFromAPI);
       initData();
     }
