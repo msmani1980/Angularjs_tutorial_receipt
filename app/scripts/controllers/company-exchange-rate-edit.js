@@ -88,6 +88,10 @@ angular.module('ts5App')
       var companyCurrencies = {};
 
       var searchPayload = $this.formatPayloadForSearch();
+
+      delete searchPayload.startDate;
+      delete searchPayload.endDate;
+
       currencyFactory.getDetailedCompanyCurrencies(searchPayload).then(function(
         companyCurrenciesFromAPI) {
         // Create company currencies map
@@ -101,10 +105,10 @@ angular.module('ts5App')
           companyCurrency.flatEasyPayDenominations = $this.makeFlatDenominations(easyPayDenominations);
 
           
-          if ( companyCurrencies[companyCurrency.currencyCode] == undefined 
-        		  || companyCurrencies[companyCurrency.currencyCode].endDate < companyCurrency.endDate) {
+//          if ( companyCurrencies[companyCurrency.currencyCode] == undefined 
+//        		  || companyCurrencies[companyCurrency.currencyCode].endDate < companyCurrency.endDate) {
 	          companyCurrencies[companyCurrency.currencyCode] = companyCurrency;
-          }
+//          }
         });
 
         // Populate company exchange rates with denomination info
