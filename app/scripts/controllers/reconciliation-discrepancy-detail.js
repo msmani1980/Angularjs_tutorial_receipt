@@ -270,6 +270,7 @@ angular.module('ts5App')
     }
 
     function formatCashBags(cashHandlerCashBagList) {
+      /*jshint maxcomplexity:false */
       var formattedCashBagList = [];
       $scope.isPaperAndCoinExchangeRatePreferred = false;
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
