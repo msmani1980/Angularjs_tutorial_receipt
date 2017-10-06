@@ -272,10 +272,23 @@ angular.module('ts5App')
     function formatCashBags(cashHandlerCashBagList) {
       var formattedCashBagList = [];
       $scope.isPaperAndCoinExchangeRatePreferred = false;
+      var crewAmount = null;
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
         cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
         var eposCalculatedAmount = cashBag.eposCalculatedAmount;
-        var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
+        if ($this.manualCash !== null && eposCalculatedAmount === null) {
+          $filter('filter')($this.manualCash, {
+             cashbagId: cashBag.cashbagId,
+             currencyId: cashBag.retailCompanyCurrency
+           }).map(function (cash) {
+             eposCalculatedAmount = cash.amount; 
+           });
+
+          crewAmount = eposCalculatedAmount;
+        }else {
+          crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
+        }
+
         $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
         var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
         var coinExchangeRate = cashBag.chCoinExchangeRate;
