@@ -88,6 +88,10 @@ angular.module('ts5App')
       var companyCurrencies = {};
 
       var searchPayload = $this.formatPayloadForSearch();
+
+      delete searchPayload.startDate;
+      delete searchPayload.endDate;
+
       currencyFactory.getDetailedCompanyCurrencies(searchPayload).then(function(
         companyCurrenciesFromAPI) {
         // Create company currencies map
