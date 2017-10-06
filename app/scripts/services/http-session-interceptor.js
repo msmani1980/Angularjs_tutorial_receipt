@@ -26,8 +26,6 @@ angular.module('ts5App')
       '/currency-edit/*',
       '/employee-commission-list/*',
       '/employee-commission/*',
-      '/employee-message/*',
-      '/employee-messages/*',
       '/forgot-username-password/*',
       '/global-reason-code/*',
       '/lmp-locations-list/*',
