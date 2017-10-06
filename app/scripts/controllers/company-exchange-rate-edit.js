@@ -105,10 +105,10 @@ angular.module('ts5App')
           companyCurrency.flatEasyPayDenominations = $this.makeFlatDenominations(easyPayDenominations);
 
           
-          if ( companyCurrencies[companyCurrency.currencyCode] == undefined 
-        		  || companyCurrencies[companyCurrency.currencyCode].endDate < companyCurrency.endDate) {
+//          if ( companyCurrencies[companyCurrency.currencyCode] == undefined 
+//        		  || companyCurrencies[companyCurrency.currencyCode].endDate < companyCurrency.endDate) {
 	          companyCurrencies[companyCurrency.currencyCode] = companyCurrency;
-          }
+//          }
         });
 
         // Populate company exchange rates with denomination info
