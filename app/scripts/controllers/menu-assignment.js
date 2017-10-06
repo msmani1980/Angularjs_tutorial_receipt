@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuAssignmentCtrl', function ($scope, messageService, menuAssignmentFactory, $location, $routeParams, $q) {
+  .controller('MenuAssignmentCtrl', function ($scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, $location, $routeParams, $q) {
     var companyId;
     var $this = this;
 
@@ -16,7 +16,24 @@ angular.module('ts5App')
     $scope.readOnly = false;
     $scope.isCreate = false;
     $scope.isEdit = false;
-    $scope.menuAssignment = { };
+    $scope.company = { };
+    $scope.menuMasters = { };
+    $scope.menuAssignment = {
+      menus: [],
+      items: []
+    };
+
+    $scope.addMenu = function () {
+
+    };
+
+    $scope.addItem = function () {
+
+    };
+
+    $scope.formSave = function () {
+
+    };
 
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -68,6 +85,14 @@ angular.module('ts5App')
 
     };
 
+    this.getCompanySuccess = function(dataFromAPI) {
+      $scope.company = angular.copy(dataFromAPI);
+    };
+
+    this.getMenuMasterListSuccess = function(dataFromAPI) {
+      $scope.menuMasters = angular.copy(dataFromAPI.companyMenuMasters);
+    };
+
     this.initDependenciesSuccess = function() {
       if ($routeParams.id) {
         menuAssignmentFactory.getMenuAssignment($routeParams.id).then($this.getMenuAssignmentSuccess);
@@ -83,8 +108,11 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       companyId = menuAssignmentFactory.getCompanyId();
+      var todaysDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
 
       var promises = [
+        companiesFactory.getCompany(companyId).then($this.getCompanySuccess),
+        menuMasterService.getMenuMasterList({ startDate: todaysDate }).then($this.getMenuMasterListSuccess)
         //scheduleFactory.getStationList(companyId).then($this.getStationsSuccess),
         //scheduleFactory.getCarrierTypes(companyId).then($this.getCarrierTypesSuccess),
         //unitsService.getDistanceList().then($this.getDistanceUnitsSuccess)
