@@ -60,9 +60,14 @@ angular.module('ts5App')
     };
     
     $scope.onCounrtyChange = function() {
+      var searchArray = [];
+      angular.forEach($scope.multiSelectedValues.countryList, function(element) {
+        searchArray.push(element.id);	
+      });
+      
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
-        countryId: $scope.search.countryId.id
+        countryIds: searchArray.toString()
       };
       return employeeFactory.getCompanyGlobalStationList(payload).then($this.getCompanyGlobalStationSuccess);
     };
@@ -81,10 +86,7 @@ angular.module('ts5App')
       
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
-      if ($scope.search.countryId) {
-        payload.countryId = $scope.search.countryId.id;
-      }  
-      
+            
       employeeFactory.getEmployees(payload).then($this.getEmployeesSuccess);
       $this.meta.offset += $this.meta.limit;
     }
@@ -108,19 +110,17 @@ angular.module('ts5App')
     
     this.formatMultiSelectedValuesForSearch = function() {
       $this.addSearchValuesFromMultiSelectArray('baseStationIds', $scope.multiSelectedValues.stationList, 'id');
+      $this.addSearchValuesFromMultiSelectArray('countryIds', $scope.multiSelectedValues.countryList, 'id');
       $this.addSearchValuesFromMultiSelectArray('title', $scope.multiSelectedValues.titlesList);
     };
     
     this.addSearchValuesFromMultiSelectArray = function(searchKeyName, multiSelectArray, multiSelectElementKey) {
-      if (!multiSelectArray || multiSelectArray.length < 0) {
+      if (!multiSelectArray || multiSelectArray.length <= 0) {
+        delete $scope.search[searchKeyName];
         return;
       }
 
       var searchArray = [];
-      if (multiSelectArray.length === 0) {
-        searchArray = ['0'];
-      }
-      
       angular.forEach(multiSelectArray, function(element) {
         if (angular.isUndefined(multiSelectElementKey)) {
           searchArray.push(element);
@@ -181,10 +181,6 @@ angular.module('ts5App')
     
     this.getCompanyGlobalStationSuccess = function(response) {
       $scope.globalStationList = angular.copy(response.response);
-      if ($scope.search.countryId) {
-        $this.addSearchValuesFromMultiSelectArray('baseStationIds', $scope.globalStationList, 'id');  
-      }
-      
     };
 
     this.getCountireSuccess = function(response) {
