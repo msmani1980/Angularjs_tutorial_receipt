@@ -72,7 +72,7 @@ angular.module('ts5App')
         $location.path('manual-epos-dashboard/' + $routeParams.cashbagId);
       }
 
-      messageService.success('Manual promotion data successfully saved!');     
+      messageService.success('Manual promotion data successfully saved!');
     }
 
     function updateCashBagPromotion(promotion) {
