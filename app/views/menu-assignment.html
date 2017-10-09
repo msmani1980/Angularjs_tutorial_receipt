@@ -107,7 +107,7 @@
           <table class="table table-bordered table-hover">
             <thead>
             <tr>
-              <th class="col-xs-4">Menu</th>
+              <th class="col-xs-10">Menu</th>
               <th class="col-xs-1">Quantity</th>
               <th ng-hide="readOnly" class="col-xs-1">Actions</th>
             </tr>
@@ -116,7 +116,7 @@
               <tr ng-repeat="menu in formData.selectedMenus[cabinClass.id]">
                 <td>
                   <ui-select
-                    name="formData.cabinClass[cabinClass.id]"
+                    name="menu[$index]"
                     ng-model="menu.menu"
                     theme="bootstrap"
                     placeholder="Select a menu...">
@@ -138,7 +138,7 @@
                          placeholder="{{$index}}"
                          ng-disabled="readOnly" />
                 </td>
-                <td>
+                <td ng-hide="readOnly">
                   <button class="btn btn-danger btn-xs" ng-click="removeMenu(cabinClass.id, menu)">
                     <i class="fa fa-trash"></i>
                   </button>
@@ -168,8 +168,58 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in menuAssignment.items | orderBy:'itemName' track by $index">
-
+            <tr ng-repeat="item in formData.selectedItems[cabinClass.id]">
+              <td ng-hide="readOnly">
+                <ui-select
+                  name="selectedCategories[item.menuIndex]"
+                  ng-model="selectedCategories[item.menuIndex]"
+                  on-select="filterItemListByCategory(item.menuIndex)"
+                  theme="bootstrap"
+                  placeholder="Select a category to filter the items list...">
+                  <ui-select-match
+                    allow-clear="true"
+                    placeholder="Select a category to filter the items list...">{{$select.selected.name}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
+                    <div ng-bind-html="category.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </td>
+              <td>
+                <ui-select
+                  name="menuItem"
+                  required="true"
+                  ng-model="item.selectedItem"
+                  theme="bootstrap"
+                  placeholder="Select or search an item from the list..."
+                  ng-disabled="shouldDisableItemSelect(item.menuIndex)"
+                  on-select="filterAllItemLists()">
+                  <ui-select-match
+                    placeholder="Select or search an item from the list...">{{$select.selected.itemName}}
+                  </ui-select-match>
+                  <ui-select-choices ui-disable-choice="menuItem.selected === true"
+                                     repeat="menuItem in filteredItemsCollection[item.menuIndex] | filter: $select.search | orderBy:'itemName'">
+                    <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </td>
+              <td>
+                <input custom-validity
+                       custom-pattern="number"
+                       type="text"
+                       required
+                       maxlength="5"
+                       class="form-control"
+                       name="menuItemQuantity"
+                       ng-model="item.itemQty"
+                       placeholder="{{$index}}"
+                       ng-disabled="isReadOnly"/>
+              </td>
+              <td ng-hide="readOnly">
+                <button class="btn btn-danger btn-xs" ng-click="removeItem(item.menuIndex)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
             </tr>
             <tr ng-if="menuAssignment.items.length === 0">
               <td colspan="{{ readOnly ? '2' : '4' }}">No Menu Items added yet</td>

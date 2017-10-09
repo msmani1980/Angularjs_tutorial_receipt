@@ -8,7 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuAssignmentCtrl', function ($scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, $location, $routeParams, $q, lodash) {
+  .controller('MenuAssignmentCtrl', function (
+    $scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, itemsFactory, $location, $routeParams, $q, lodash
+  ) {
     var companyId;
     var $this = this;
 
@@ -17,10 +19,7 @@ angular.module('ts5App')
     $scope.isEdit = false;
     $scope.company = { };
     $scope.menuMasters = { };
-    $scope.menuAssignment = {
-      menus: [],
-      items: []
-    };
+    $scope.menuAssignment = { };
     $scope.formData = {
       selectedMenus: [],
       selectedItems: []
@@ -82,17 +81,23 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
-    this.getMenuMasterList = function() {
+    this.getMenuMasterAndItemsList = function() {
       var scheduleDate = dateUtility.formatDateForAPI($scope.menuAssignment.scheduleDate);
-      var menuMasterListPayload = { startDate: scheduleDate, endDate: scheduleDate };
+      var payload = { startDate: scheduleDate, endDate: scheduleDate };
 
-      menuMasterService.getMenuMasterList(menuMasterListPayload).then($this.getMenuMasterListSuccess);
+      $q.all([
+        menuMasterService.getMenuMasterList(payload),
+        itemsFactory.getItemsList(payload)
+      ]).then($this.getMenuMasterAndItemsListSuccess);
     };
 
-    this.getMenuMasterListSuccess = function(dataFromAPI) {
-      $scope.menuMasters = angular.copy(dataFromAPI.companyMenuMasters);
+    this.getMenuMasterAndItemsListSuccess = function(dataFromAPI) {
+      $scope.menuMasters = angular.copy(dataFromAPI[0].companyMenuMasters);
+      $scope.items = angular.copy(dataFromAPI[1].retailItems);
 
       $this.constructSelectedMenus();
+      $this.constructSelectedItems();
+
       $this.hideLoadingModal();
     };
 
@@ -113,10 +118,19 @@ angular.module('ts5App')
     this.constructSelectedMenus = function() {
       $scope.company.companyCabinClasses.forEach(function (cabinClass) {
         $scope.formData.selectedMenus[cabinClass.id] = lodash.filter($scope.menuAssignment.menus, { companyCabinClassId: cabinClass.id });
-        $scope.formData.selectedItems[cabinClass.id] = lodash.filter($scope.menuAssignment.items, { companyCabinClassId: cabinClass.id });
 
         $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
           menu.menu = lodash.find($scope.menuMasters, { id: menu.menuId });
+        });
+      });
+    };
+
+    this.constructSelectedItems = function () {
+      $scope.company.companyCabinClasses.forEach(function (cabinClass) {
+        $scope.formData.selectedItems[cabinClass.id] = lodash.filter($scope.menuAssignment.items, { companyCabinClassId: cabinClass.id });
+
+        $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
+          item.item = lodash.find($scope.items, { id: item.id });
         });
       });
     };
@@ -125,7 +139,7 @@ angular.module('ts5App')
       $this.getMenuAssignmentSuccess(result[0]);
       $this.getCompanySuccess(result[1]);
 
-      $this.getMenuMasterList();
+      $this.getMenuMasterAndItemsList();
 
       var initFunctionName = ($routeParams.action + 'Init');
       if ($this[initFunctionName]) {
