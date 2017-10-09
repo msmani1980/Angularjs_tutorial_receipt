@@ -9,8 +9,14 @@
  */
 angular.module('ts5App')
   .controller('ManualEposPromotionCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService,
-                                                   lodash, messageService, $location) {
+                                                   lodash, messageService, $location, $filter) {
     $scope.addPromotion = function () {
+      if (canAddPromotion()) {
+        $scope.promotionList.push(angular.copy(createNewPromotionObject()));
+      }
+    };
+
+    function createNewPromotionObject () {
       var newPromotion = {
         cashbagId: $scope.cashBag.id,
         eposCashBagsId: $scope.cashBag.eposCashBagsId,
@@ -25,13 +31,12 @@ angular.module('ts5App')
         currentCurrencyAmount: 0.00,
         baseCurrencyAmount: 0.00,
         exchangeRate: $scope.baseCurrency.currency.exchangeRate,
-        companyId: $scope.companyId
+        companyId: $scope.companyId,
+        promotionName:''
       };
 
-      if (canAddPromotion()) {
-        $scope.promotionList.push(newPromotion);
-      }
-    };
+      return newPromotion;
+    }
 
     function canAddPromotion () {
       var canAddPromo = false;
@@ -48,13 +53,26 @@ angular.module('ts5App')
       return canAddPromo;
     }
 
-    function saveSuccess() {
+    function saveSuccess(dataFromApi) {
+      var updatedList = [];
+      angular.forEach($scope.promotionList, function (promotion) {
+        if (promotion.id === null) {
+          var createdPromo = lodash.filter(dataFromApi, { promotionId: promotion.promotionId });
+          if (createdPromo !== null && createdPromo.length) {
+            promotion.id = createdPromo[0].id;
+          }
+        }
+
+        updatedList.push(promotion);
+      });
+
+      $scope.promotionList = updatedList;
       hideLoadingModal();
       if ($scope.shouldExit) {
-        $location.path('manual-epos-dashboard/' + $routeParams.cashBagId);
+        $location.path('manual-epos-dashboard/' + $routeParams.cashbagId);
       }
 
-      messageService.success('Manual promotion data successfully saved!');
+      messageService.success('Manual promotion data successfully saved!');     
     }
 
     function updateCashBagPromotion(promotion) {
@@ -277,7 +295,9 @@ angular.module('ts5App')
       });
 
       $scope.allPromotionList = angular.copy($scope.companyPromotionList);
-
+      $scope.promotionList = $filter('orderBy')($scope.promotionList, 'promotionName', false);
+      var cmpPr = $filter('orderBy')($scope.allPromotionList.promotions, 'promotionName', false);
+      $scope.allPromotionList.promotions = cmpPr; 
     }
 
     function completeInit(responseCollection) {
@@ -306,8 +326,8 @@ angular.module('ts5App')
       $scope.companyId = globalMenuService.getCompanyData().companyId;
       var payload = {
         companyId: $scope.companyId,
-        startDate: dateUtility.nowFormatted('YYYYMMDD'),
-        endDate: dateUtility.nowFormatted('YYYYMMDD')
+        startDate: dateForFilter,
+        endDate: dateForFilter
       };
       var promises = [
         manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter, isOperatedCurrency: true }),
