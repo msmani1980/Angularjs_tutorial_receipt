@@ -13,6 +13,9 @@
           <a class="btn btn-default" href="/#/manual-epos-dashboard/{{ cashBag.id }}">
             <span class="fa fa-arrow-left"></span> Back
           </a>
+          <button type="submit" class="btn btn-primary" ng-click="setShouldExit(true, false)" ng-hide="isVerified || disableAll" ng-disabled="isSaveVerify()">
+            <span class="fa fa-check-square-o"></span> Save & Exit
+          </button>          
         </div>
       </div>
     </div>
@@ -57,7 +60,7 @@
                 <!-- th>Total Promotion Value {{selectedCurrency.currency.code}}</th-->
                 <th>Total Promotion Value {{baseCurrency.currency.code}}</th>
             </tr>
-            <tr ng-repeat="manualPromotionObj in promotionList | filter:{promotionName: filter.promotions} track by $index">
+            <tr ng-repeat="manualPromotionObj in promotionList | filter:{promotionName: filter.promotions} track by $index | orderBy: 'promotionName'">
               <td class="col-xs-4">
                  <ui-select ng-model="manualPromotionObj.companyPromotion" on-select="onChangePromotion(manualPromotionObj)"  theme="bootstrap" reset-search-input="false" ng-disabled="isVerified || disableAll">
                     <ui-select-match placeholder="Select Promotions ...">
