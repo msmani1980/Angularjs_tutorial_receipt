@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('ManualEposDiscountCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService,
-    lodash, messageService, $location) {
+    lodash, messageService, $location, $filter) {
 
     function createNewDiscountObject () {
       var newDiscount = {
@@ -439,6 +439,7 @@ angular.module('ts5App')
     }
 
     function saveSuccess() {
+      init();
       hideLoadingModal();
       if ($scope.shouldExit) {
         $location.path('manual-epos-dashboard/' + $routeParams.cashBagId);
@@ -552,10 +553,10 @@ angular.module('ts5App')
         flyer: flyerList
       };
 
-      $scope.allVoucherList = angular.copy(voucherList);
-      $scope.allCouponList = angular.copy(couponList);
-      $scope.allCompList = angular.copy(compList);
-      $scope.allFlyerList = angular.copy(flyerList);
+      $scope.allVoucherList = $filter('orderBy')(angular.copy(voucherList), 'name', false);
+      $scope.allCouponList = $filter('orderBy')(angular.copy(couponList), 'name', false);
+      $scope.allCompList = $filter('orderBy')(angular.copy(compList), 'name', false);
+      $scope.allFlyerList = $filter('orderBy')(angular.copy(flyerList), 'name', false);
 
       setCashBagCurrencyList(currencyList);
       setBaseCurrency();
@@ -565,6 +566,11 @@ angular.module('ts5App')
       updateCompList();
       updateFrequentFlyerList();
       updateVoucherList();
+
+      $scope.discountListCoupon = $filter('orderBy')(angular.copy($scope.discountListCoupon), 'discountTypeName', false);
+      $scope.discountListVoucher = $filter('orderBy')(angular.copy($scope.discountListVoucher), 'discountTypeName', false);
+      $scope.discountListComp = $filter('orderBy')(angular.copy($scope.discountListComp), 'discountTypeName', false);
+      $scope.discountListFlyer = $filter('orderBy')(angular.copy($scope.discountListFlyer), 'discountTypeName', false);
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {
