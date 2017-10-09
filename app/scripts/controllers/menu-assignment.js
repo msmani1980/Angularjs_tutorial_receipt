@@ -8,13 +8,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuAssignmentCtrl', function ($scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, $location, $routeParams, $q) {
+  .controller('MenuAssignmentCtrl', function ($scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, $location, $routeParams, $q, lodash) {
     var companyId;
     var $this = this;
 
     $scope.viewName = 'Menu Assignment';
     $scope.readOnly = false;
-    $scope.isCreate = false;
     $scope.isEdit = false;
     $scope.company = { };
     $scope.menuMasters = { };
@@ -22,9 +21,18 @@ angular.module('ts5App')
       menus: [],
       items: []
     };
+    $scope.formData = {
+      selectedMenus: [],
+      selectedItems: []
+    };
 
-    $scope.addMenu = function () {
+    $scope.addMenu = function (cabinClass) {
+      $scope.formData.selectedMenus[cabinClass].push({});
+    };
 
+    $scope.removeMenu = function (cabinClass, menu) {
+      var index = $scope.formData.selectedMenus[cabinClass].indexOf(menu);
+      $scope.formData.selectedMenus[cabinClass].splice(index, 1);
     };
 
     $scope.addItem = function () {
@@ -41,11 +49,6 @@ angular.module('ts5App')
 
     this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
-    };
-
-    this.createInit = function() {
-      $scope.viewName = 'Create Menu Assignment';
-      $scope.isCreate = true;
     };
 
     this.viewInit = function() {
@@ -79,26 +82,50 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
+    this.getMenuMasterList = function() {
+      var scheduleDate = dateUtility.formatDateForAPI($scope.menuAssignment.scheduleDate);
+      var menuMasterListPayload = { startDate: scheduleDate, endDate: scheduleDate };
+
+      menuMasterService.getMenuMasterList(menuMasterListPayload).then($this.getMenuMasterListSuccess);
+    };
+
+    this.getMenuMasterListSuccess = function(dataFromAPI) {
+      $scope.menuMasters = angular.copy(dataFromAPI.companyMenuMasters);
+
+      $this.constructSelectedMenus();
+      $this.hideLoadingModal();
+    };
+
     this.getMenuAssignmentSuccess = function(dataFromAPI) {
       $scope.menuAssignment = angular.copy(dataFromAPI);
 
-
+      angular.extend($scope.menuAssignment, {
+        startDate: dateUtility.formatDateForApp($scope.menuAssignment.startDate),
+        endDate: dateUtility.formatDateForApp($scope.menuAssignment.endDate),
+        scheduleDate: dateUtility.formatDateForApp($scope.menuAssignment.scheduleDate)
+      });
     };
 
     this.getCompanySuccess = function(dataFromAPI) {
       $scope.company = angular.copy(dataFromAPI);
     };
 
-    this.getMenuMasterListSuccess = function(dataFromAPI) {
-      $scope.menuMasters = angular.copy(dataFromAPI.companyMenuMasters);
+    this.constructSelectedMenus = function() {
+      $scope.company.companyCabinClasses.forEach(function (cabinClass) {
+        $scope.formData.selectedMenus[cabinClass.id] = lodash.filter($scope.menuAssignment.menus, { companyCabinClassId: cabinClass.id });
+        $scope.formData.selectedItems[cabinClass.id] = lodash.filter($scope.menuAssignment.items, { companyCabinClassId: cabinClass.id });
+
+        $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
+          menu.menu = lodash.find($scope.menuMasters, { id: menu.menuId });
+        });
+      });
     };
 
-    this.initDependenciesSuccess = function() {
-      if ($routeParams.id) {
-        menuAssignmentFactory.getMenuAssignment($routeParams.id).then($this.getMenuAssignmentSuccess);
-      }
+    this.initDependenciesSuccess = function(result) {
+      $this.getMenuAssignmentSuccess(result[0]);
+      $this.getCompanySuccess(result[1]);
 
-      $this.hideLoadingModal();
+      $this.getMenuMasterList();
 
       var initFunctionName = ($routeParams.action + 'Init');
       if ($this[initFunctionName]) {
@@ -108,14 +135,10 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       companyId = menuAssignmentFactory.getCompanyId();
-      var todaysDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
 
       var promises = [
-        companiesFactory.getCompany(companyId).then($this.getCompanySuccess),
-        menuMasterService.getMenuMasterList({ startDate: todaysDate }).then($this.getMenuMasterListSuccess)
-        //scheduleFactory.getStationList(companyId).then($this.getStationsSuccess),
-        //scheduleFactory.getCarrierTypes(companyId).then($this.getCarrierTypesSuccess),
-        //unitsService.getDistanceList().then($this.getDistanceUnitsSuccess)
+        menuAssignmentFactory.getMenuAssignment($routeParams.id),
+        companiesFactory.getCompany(companyId)
       ];
 
       return promises;

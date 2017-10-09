@@ -94,11 +94,12 @@
     </div>
 
     <div ng-repeat="cabinClass in company.companyCabinClasses" class="panel panel-default">
+
       <div class="panel-heading">{{ cabinClass.cabinClass }} class</div>
       <div class="panel-body">
         <h3>
           Assigned Menus
-          <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addMenu()" ng-hide="readOnly">
+          <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addMenu(cabinClass.id)" ng-hide="readOnly">
             <i class="fa fa-plus"></i> Add Menu
           </button>
         </h3>
@@ -112,19 +113,15 @@
             </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="menu in menuAssignment.menus | orderBy:'menuName' track by $index">
+              <tr ng-repeat="menu in formData.selectedMenus[cabinClass.id]">
                 <td>
                   <ui-select
-                    name="selectedCategories[item.menuIndex]"
-                    ng-model="selectedCategories[item.menuIndex]"
-                    on-select="filterItemListByCategory(item.menuIndex)"
+                    name="formData.cabinClass[cabinClass.id]"
+                    ng-model="menu.menu"
                     theme="bootstrap"
-                    placeholder="Select a category to filter the items list...">
-                    <ui-select-match
-                      allow-clear="true"
-                      placeholder="Select a category to filter the items list...">{{$select.selected.name}}
-                    </ui-select-match>
-                    <ui-select-choices repeat="menu in menuMasters | filter: $select.search | orderBy:'name'">
+                    placeholder="Select a menu...">
+                    <ui-select-match allow-clear="true" placeholder="Select a menu...">{{$select.selected.menuCode}}</ui-select-match>
+                    <ui-select-choices repeat="menu in menuMasters | filter: $select.search | orderBy:'menuCode'">
                       <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
                     </ui-select-choices>
                   </ui-select>
@@ -137,12 +134,12 @@
                          maxlength="5"
                          class="form-control"
                          name="menuItemQuantity"
-                         ng-model="item.itemQty"
+                         ng-model="menu.menuQty"
                          placeholder="{{$index}}"
-                         ng-disabled="isReadOnly()" />
+                         ng-disabled="readOnly" />
                 </td>
                 <td>
-                  <button class="btn btn-danger btn-xs" ng-click="removeMenu(menu.menuIndex)">
+                  <button class="btn btn-danger btn-xs" ng-click="removeMenu(cabinClass.id, menu)">
                     <i class="fa fa-trash"></i>
                   </button>
                 </td>
