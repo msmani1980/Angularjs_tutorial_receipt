@@ -335,7 +335,7 @@ angular.module('ts5App')
 
       totalEPOS += getManualDataTotals(itemTypeName.toLowerCase());
       if (itemTypeName==='Regular') {
-        totalEPOS += $scope.totalCHManualValue; 
+        totalEPOS += $scope.totalCHManualValue;
         if (angular.isDefined(totalPromotion) && totalPromotion>0) {
           totalEPOS += totalPromotion.totalEPOS;
         }
@@ -566,7 +566,7 @@ angular.module('ts5App')
 
       angular.forEach(chCreditCard, function (creditCard) {
         var creditTotal = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountCc) + makeFinite(creditCard.paperAmountCc);
-        totalManual += ($scope.manualCashBagIds.indexOf(creditCard.cashbagId) >= 0) ? creditCard: 0;
+        totalManual += ($scope.manualCashBagIds.indexOf(creditCard.cashbagId) >= 0) ? creditTotal: 0;
       });
 
       angular.forEach(chDiscount, function (discount) {
@@ -669,8 +669,8 @@ angular.module('ts5App')
       setupPaymentReport(angular.copy(responseCollection[7]));
       setCashPreference(responseCollection[8]);
       setStatusList(responseCollection[9]);
-      $this.carrierInstanceList = angular.copy(responseCollection[10].response);      
-      $scope.totalCHManualValue =  getCHManualData ($this.chRevenue);      
+      $this.carrierInstanceList = angular.copy(responseCollection[10].response);
+      $scope.totalCHManualValue =  getCHManualData ($this.chRevenue);
       $scope.totalRevenue = {
         cashHandler: $scope.companyIsUsingCash ? formatAsCurrency(getCHRevenue($this.chRevenue)) : 0,
         epos: formatAsCurrency(getEPOSRevenue($this.eposRevenue))
@@ -813,7 +813,7 @@ angular.module('ts5App')
             var myCB = manualCB[0];
             var validatedOn = myCB[validateOnField];
             if (angular.isDefined(validatedOn) && validatedOn !== null) {
-              manualDataSet.push(manualData);  
+              manualDataSet.push(manualData);
             }
           }
         }
@@ -860,7 +860,7 @@ angular.module('ts5App')
         	manualListIds.push(cashBag.id);
         }
       });
-      $scope.manualCashBagIds = manualListIds; 
+      $scope.manualCashBagIds = manualListIds;
       $scope.manualCashBags = manualList;
     }
 
