@@ -158,17 +158,13 @@ angular.module('ts5App')
     };
 
     function getCrewBaseTypes() {
-      var uniqueCrewBaseTypes = {};
       var companyId = globalMenuService.company.get();
-      employeesService.getEmployees(companyId).then(function(dataFromAPI) {
-        angular.forEach(dataFromAPI.companyEmployees, function(employee) {
-          if (!(employee.baseStationId in uniqueCrewBaseTypes)) {
-            uniqueCrewBaseTypes[employee.baseStationId] = {};
-            $scope.crewBaseTypes.push({
-              id: employee.baseStationId,
-              name: employee.stationCode
-            });
-          }
+      employeesService.getBaseStations(companyId).then(function(dataFromAPI) {
+        angular.forEach(dataFromAPI.response, function(baseStation) {        	
+          $scope.crewBaseTypes.push({
+            id: baseStation.stationId,
+            name: baseStation.code
+          });
         });
       });
     }

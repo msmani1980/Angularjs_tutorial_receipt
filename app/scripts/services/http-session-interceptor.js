@@ -16,72 +16,6 @@ angular.module('ts5App')
       500: 'http-response-error'
     };
 
-    var notrsvrPages = [
-      '/change-password/*',
-      '/commission-data-table/*',
-      '/commission-data/*',
-      '/company-reason-code/*',
-      '/company-reason-type-subscribe/*',
-      '/employee-commission-list/*',
-      '/employee-commission/*',
-      '/forgot-username-password/*',
-      '/global-reason-code/*',
-      '/lmp-locations-list/*',
-      '/manual-epos-cash/*',
-      '/manual-epos-credit/*',
-      '/manual-epos-dashboard/*',
-      '/manual-epos-discount/*',
-      '/manual-epos-items/*',
-      '/manual-store-instance/*',
-      '/retail-company-exchange-rate-setup/*',
-      '/station-create/*',
-      '/station-edit/*',
-      '/station-list/*',
-      '/station-view/*',
-      '/store-instance-step-1/*',
-      '/ember/#/schedules/*',
-      '/ember/#/menu-assignments/*',
-      '/ember/#/menu-rules/*',
-      '/ember/#/promotion-catalogs/*',
-      '/ember/#/receipt-rules/*',
-    ];
-
-    var legacyApis = [
-    ];
-
-    var onlyRsvrApis = [
-      '/rsvr/api/eula',
-      '/rsvr/api/company-preferences',
-      '/rsvr/api/currencies',
-      '/rsvr/api/dailyexchangerate',
-      '/rsvr/api/company-formats',
-      '/rsvr/api/companies/[0-9]*/stations',
-      '/rsvr/api/store-instances/[0-9]*/calculated-inbounds',
-      '/rsvr/api/cashbags/[0-9]*',
-      '/rsvr/api/cashbag/[0-9]+/cash',
-      '/rsvr/api/cashbags/cash/',
-      '/rsvr/api/cashbag-[a-z]+(/[0-9]*)?',
-      '/rsvr/api/dispatch/store-instances/[0-9]*/status/11',
-      '/rsvr/api/companies/[0-9]*/relationships',
-      '/rsvr/api/company-currency-globals',
-      '/rsvr/api/companies/stores',
-      '/rsvr/api/companies/time-configuration',
-      '/rsvr/api/company-discounts/[0-9]*',
-      '/rsvr/api/feature/DAILYEXCHANGERATE/thresholds',
-      '/api/dispatch/store-instances/[0-9]*/menu-items',
-      '/api/dispatch/store-instances/[0-9]*/items',
-      '/api/dispatch/store-instances/[0-9]*/status/[0-4]',
-      '/api/companies/[0-9]*/posttrips',
-      '/api/companies/[0-9]*/posttrips/[0-9]*',
-      '/api/companies/[0-9]*/sales-categories',
-      '/rsvr/api/retail-items/master/*',
-      '/rsvr/api/menus/menu-masters',
-      '/rsvr/api/menus/caterer-stations',
-      '/rsvr/api/caterer-stations',
-      '/rsvr/api/menus',
-      '/api/company-cash-bags'
-    ];
-
     function responseError(response) {
 
       if (errorCodeMap[response.status]) {
@@ -91,48 +25,7 @@ angular.module('ts5App')
       return $q.reject(response);
     }
 
-    var isMatching = function (url, list) {
-      var matches = Array.prototype.filter.call(list, function (item) {
-        return url.match(item);
-      });
-
-      return matches.length !== 0;
-    };
-
-    var isPageWithLegacyAPIs = function () {
-      return isMatching($location.absUrl(), notrsvrPages);
-    };
-
-    var isLegacyAPI = function (config) {
-      return isMatching(config.url, legacyApis);
-    };
-
-    var isOnlyRsvrAPI = function (url) {
-      return isMatching(url, onlyRsvrApis);
-    };
-
-    var shouldReplaceUrl = function (config) {
-      var hasRestParam = $location.absUrl().indexOf('api=rest') > 0;
-
-      if (hasRestParam) {
-        return false;
-      }
-
-      if (isOnlyRsvrAPI(config.url)) {
-        return false;
-      }
-
-      return isPageWithLegacyAPIs() || isLegacyAPI(config);
-
-    };
-
     function request(config) {
-      var isNotTemplateRequest = config.url.match(/html$/) === null;
-
-      if (isNotTemplateRequest && shouldReplaceUrl(config)) {
-        config.url = config.url.replace('/rsvr/api', '/api');
-      }
-
       return config || $q.when(config);
     }
 
