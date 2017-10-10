@@ -45,6 +45,14 @@ angular.module('ts5App')
 
       return !dateUtility.isAfterTodayDatePicker($scope.menu.startDate);
     };
+    
+    $scope.isMenuViewOnly = function () {
+      if ($routeParams.state === 'view') {
+        return true;
+      } 
+      
+      return false;
+    };
 
     $scope.isMenuEditable = function () {
       if ($routeParams.state === 'create') {
