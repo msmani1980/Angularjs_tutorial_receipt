@@ -26,7 +26,7 @@ angular.module('ts5App')
     };
 
     $scope.addMenu = function (cabinClass) {
-      $scope.formData.selectedMenus[cabinClass].push({});
+      $scope.formData.selectedMenus[cabinClass].push({ });
     };
 
     $scope.removeMenu = function (cabinClass, menu) {
@@ -34,8 +34,13 @@ angular.module('ts5App')
       $scope.formData.selectedMenus[cabinClass].splice(index, 1);
     };
 
-    $scope.addItem = function () {
+    $scope.addItem = function (cabinClass) {
+      $scope.formData.selectedItems[cabinClass].push({ });
+    };
 
+    $scope.removeItem = function (cabinClass, menu) {
+      var index = $scope.formData.selectedItems[cabinClass].indexOf(menu);
+      $scope.formData.selectedItems[cabinClass].splice(index, 1);
     };
 
     $scope.formSave = function () {
@@ -121,6 +126,9 @@ angular.module('ts5App')
 
         $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
           menu.menu = lodash.find($scope.menuMasters, { id: menu.menuId });
+          if (!menu.menu) {
+            menu.expired = true;
+          }
         });
       });
     };
@@ -130,7 +138,10 @@ angular.module('ts5App')
         $scope.formData.selectedItems[cabinClass.id] = lodash.filter($scope.menuAssignment.items, { companyCabinClassId: cabinClass.id });
 
         $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
-          item.item = lodash.find($scope.items, { id: item.id });
+          item.item = lodash.find($scope.items, { itemMasterId: item.itemId });
+          if (!item.item) {
+            item.expired = true;
+          }
         });
       });
     };

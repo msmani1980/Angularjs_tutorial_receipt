@@ -113,7 +113,7 @@
             </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="menu in formData.selectedMenus[cabinClass.id]">
+              <tr ng-repeat="menu in formData.selectedMenus[cabinClass.id] track by $index">
                 <td>
                   <ui-select
                     name="menu[$index]"
@@ -125,6 +125,7 @@
                       <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
                     </ui-select-choices>
                   </ui-select>
+                  <div style="color: red" ng-if="menu.expired">Previously selected menu is not available for this schedule. Please assign a new menu.</div>
                 </td>
                 <td>
                   <input custom-validity
@@ -144,7 +145,7 @@
                   </button>
                 </td>
               </tr>
-              <tr ng-if="menuAssignment.menus.length === 0">
+              <tr ng-if="formData.selectedMenus[cabinClass.id].length === 0">
                 <td colspan="{{ readOnly ? '2' : '3' }}">No Menus added yet</td>
               </tr>
             </tbody>
@@ -153,7 +154,7 @@
 
         <h3>
           Assigned Items
-          <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addItem()" ng-hide="readOnly">
+          <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addItem(cabinClass.id)" ng-hide="readOnly">
             <i class="fa fa-plus"></i> Add Item
           </button>
         </h3>
@@ -189,19 +190,15 @@
                 <ui-select
                   name="menuItem"
                   required="true"
-                  ng-model="item.selectedItem"
+                  ng-model="item.item"
                   theme="bootstrap"
-                  placeholder="Select or search an item from the list..."
-                  ng-disabled="shouldDisableItemSelect(item.menuIndex)"
-                  on-select="filterAllItemLists()">
-                  <ui-select-match
-                    placeholder="Select or search an item from the list...">{{$select.selected.itemName}}
-                  </ui-select-match>
-                  <ui-select-choices ui-disable-choice="menuItem.selected === true"
-                                     repeat="menuItem in filteredItemsCollection[item.menuIndex] | filter: $select.search | orderBy:'itemName'">
-                    <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
+                  placeholder="Select or search an item from the list...">
+                  <ui-select-match placeholder="Select or search an item from the list...">{{$select.selected.itemName}}</ui-select-match>
+                  <ui-select-choices repeat="item in items | filter: $select.search | orderBy:'itemName'">
+                    <div ng-bind-html="item.itemName | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
+                <div style="color: red" ng-if="item.expired">Previously selected item is not available for this schedule. Please assign a new item.</div>
               </td>
               <td>
                 <input custom-validity
@@ -216,12 +213,12 @@
                        ng-disabled="isReadOnly"/>
               </td>
               <td ng-hide="readOnly">
-                <button class="btn btn-danger btn-xs" ng-click="removeItem(item.menuIndex)">
+                <button class="btn btn-danger btn-xs" ng-click="removeItem(cabinClass.id, item)">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>
             </tr>
-            <tr ng-if="menuAssignment.items.length === 0">
+            <tr ng-if="formData.selectedItems[cabinClass.id].length === 0">
               <td colspan="{{ readOnly ? '2' : '4' }}">No Menu Items added yet</td>
             </tr>
             </tbody>
