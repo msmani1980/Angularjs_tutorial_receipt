@@ -68,7 +68,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return dateUtility.isAfterTodayDatePicker(promotion.endDate);
+      return dateUtility.isAfterTodayDatePicker(promotion.endDate) || dateUtility.isTodayDatePicker(promotion.endDate);
     };
 
     $scope.isPromotionReadOnly = function(promotion) {

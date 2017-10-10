@@ -266,14 +266,14 @@ angular.module('ts5App')
         title: 'Receipt Rule',
         menuItems: [{
           name: 'Manage Rules',
-          route: emberURL + 'receipt-rules',
+          route: '/#/receipt-rules',
           icon: 'icon-manage-receipt-rules',
           className: 'dashboard-manageReceiptRules',
           package: 'RECEIPT',
           role: 'RECEIPTRULE'
         }, {
           name: 'Create Rules',
-          route: emberURL + 'receipt-rules/create',
+          route:'/#/receipt-rules/create',
           icon: 'icon-create-receipt-rules',
           className: 'dashboard-createReceiptRule',
           package: 'RECEIPT',

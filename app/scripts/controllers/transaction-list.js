@@ -19,9 +19,9 @@ angular.module('ts5App')
     $scope.companyCurrencies = [];
     $scope.companyStations = [];
     $scope.paymentMethods = ['Cash', 'Credit Card', 'Discount'];
-    $scope.creditCardTypes = [];
+    $scope.creditCardTypes = [{ccTypeName:'AmEx'},{ccTypeName:'MasterCard'},{ccTypeName:'Visa'}];    
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
-    $scope.creditCardAuthStatuses = ['Approved', 'Declined'];
+    $scope.creditCardAuthStatuses = ['Approved', 'Not Approved'];
     $scope.overrideTransactionTypeNames = {
       CLEARED: 'Cleared',
       CREWMEAL: 'Crew Meal',
@@ -41,6 +41,8 @@ angular.module('ts5App')
       VOIDED: 'Voided'
     };
     $scope.displayColumns = {
+      paymentId: true,
+      transactionId: true,
       scheduleNumber: false,
       scheduleDate: false,
       storeNumber: false,
@@ -84,12 +86,17 @@ angular.module('ts5App')
     };
 
     $scope.printTransactionTypeName = function (transaction) {
-      if (
-        transaction.transactionTypeName &&
-        transaction.transactionTypeName === 'VOIDED'
-      ) {
-        return 'SALE';
-      }
+        if (
+                transaction.orderTypeId == 3
+              ) {
+                return 'EMPLOYEE PURCHASE';
+              }
+        if (
+                transaction.transactionTypeName &&
+                transaction.transactionTypeName === 'VOIDED'
+              ) {
+                return 'SALE';
+              }
 
       return transaction.transactionTypeName;
     };
@@ -145,7 +152,7 @@ angular.module('ts5App')
     }
 
     function isNotSaleChangeTransaction(transaction) {
-      var isSaleChangeTransaction = (transaction.transactionTypeName === 'SALE' || transaction.transactionTypeName === 'VOIDED') &&
+      var isSaleChangeTransaction = (transaction.transactionTypeName === 'SALE' || transaction.transactionTypeName === 'SALE (Crew)' || transaction.transactionTypeName === 'VOIDED') &&
         transaction.transactionChangeDue  &&
         transaction.transactionChangeDue !== 0;
 
@@ -308,7 +315,7 @@ angular.module('ts5App')
 
     function normalizeTransactions(transactions) {
       angular.forEach(transactions, function (transaction) {
-        formatDateIfDefined(transaction, 'transactionDate');
+        formatTimestampIfDefined(transaction, 'transactionDate');
         formatDateIfDefined(transaction, 'scheduleDate');
         formatDateIfDefined(transaction, 'storeDate');
         formatDateIfDefined(transaction, 'instanceDate');
@@ -323,6 +330,12 @@ angular.module('ts5App')
         transaction[dateFieldName] = dateUtility.formatDateForApp(transaction[dateFieldName]);
       }
     }
+    
+    function formatTimestampIfDefined(transaction, dateFieldName) {
+        if (transaction.hasOwnProperty(dateFieldName) && transaction[dateFieldName]) {
+          transaction[dateFieldName] = dateUtility.formatTimestampForApp(transaction[dateFieldName]);
+        }
+      }
 
     function appendTransactions(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;

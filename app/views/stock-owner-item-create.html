@@ -90,18 +90,18 @@
 						<div class="col-xs-12 col-sm-6">
 							<date-picker-field disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From"
 								min-date="'+1d'" required="true" ng-model="formData.startDate"></date-picker-field>
-						</div> 
+						</div>
 						<div class="col-xs-12 col-sm-6">
 							<date-picker-field ng-if="editingItem && !viewOnly && !isFutureEffectiveDate(formData)"
 							    disable="viewOnly || itemIsInactive" form="form" name="EffectiveTo"
-								label="Effective To" required="true" 
-								end-current-effective="true" 
+								label="Effective To" required="true"
+								end-current-effective="true"
 								ng-model="formData.endDate" ></date-picker-field>
-								
+
 							<date-picker-field ng-if="!editingItem || viewOnly || isFutureEffectiveDate(formData)"
 							    disable="viewOnly || itemIsInactive" form="form" name="EffectiveTo"
-								label="Effective To" required="true" 
-								end-current-effective="false" 
+								label="Effective To" required="true"
+								end-current-effective="false"
 								ng-model="formData.endDate" ></date-picker-field>
 						</div>
 	        </div>
@@ -117,7 +117,7 @@
 
 						<div class="form-group">
 							<label>Item Type *</label>
-              <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control">
+              <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
                 <option ng-selected="formData.itemTypeId === type.id" ng-repeat="type in itemTypes"
                         value="{{ type.id }}">{{ type.name }}
                 </option>
@@ -126,7 +126,7 @@
 
 						<div class="form-group">
 							<label>Item Characteristics</label>
-							<ui-select multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics">
+							<ui-select multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics" ng-disabled="isItemCharacteristicsFieldDisabled()" ng-change="onCharacteristicsChange()" style="min-height: 34px;">
 	              <ui-select-match placeholder="Item Characteristics" ui-lock-choice="isDisabled()">{{ $item.name }}</ui-select-match>
 	              <ui-select-choices repeat="character in filteredCharacteristics | filter: $select.search | orderBy:'name'">
 	                <div ng-bind-html="character.name | highlight: $select.search"></div>
@@ -135,7 +135,7 @@
 						</div>
 
             <div class="form-group">
-              <input-text label="URL" name="linkUrl" pattern="regexp.url" ng-if="isVirtualSelected && isLinkCharacteristics" placeholder="http://www.website.com"></input-text>
+              <input-text label="Link" name="linkUrl" pattern="regexp.url" ng-if="shouldDisplayURLField" placeholder="http://www.website.com"></input-text>
             </div>
 
             <input-textarea ng-if="isVirtualSelected" label="Notes" name="notes" placeholder="Notes for Virtual" max-length="255"></input-textarea>
@@ -172,9 +172,9 @@
 
 						<div class="form-group">
 							<label>Item Tags</label>
-							<ui-select multiple ng-model="formData.tags" theme="bootstrap">
+							<ui-select multiple ng-model="formData.tags" theme="bootstrap" ng-change="onTagsChange()">
 	              <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}</ui-select-match>
-	              <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
+	              <ui-select-choices repeat="tag in filterSelectedTags | filter: $select.search | orderBy:'name'">
 	                <div ng-bind-html="tag.name | highlight: $select.search"></div>
 	              </ui-select-choices>
 	            </ui-select>
