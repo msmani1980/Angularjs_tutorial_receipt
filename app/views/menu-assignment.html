@@ -173,8 +173,9 @@
               <td ng-hide="readOnly">
                 <ui-select
                   name="selectedCategories[item.menuIndex]"
-                  ng-model="selectedCategories[item.menuIndex]"
-                  on-select="filterItemListByCategory(item.menuIndex)"
+                  ng-model="item.selectedCategory"
+                  on-select="filterItemListByCategory(item)"
+                  on-remove="filterItemListByCategory(item)"
                   theme="bootstrap"
                   placeholder="Select a category to filter the items list...">
                   <ui-select-match
@@ -194,7 +195,7 @@
                   theme="bootstrap"
                   placeholder="Select or search an item from the list...">
                   <ui-select-match placeholder="Select or search an item from the list...">{{$select.selected.itemName}}</ui-select-match>
-                  <ui-select-choices repeat="item in items | filter: $select.search | orderBy:'itemName'">
+                  <ui-select-choices repeat="item in item.items | filter: $select.search | orderBy:'itemName'">
                     <div ng-bind-html="item.itemName | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>

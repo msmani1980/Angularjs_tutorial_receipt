@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('MenuAssignmentCtrl', function (
-    $scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, itemsFactory, $location, $routeParams, $q, lodash
+    $scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, itemsFactory, categoryFactory, $location, $routeParams, $q, lodash
   ) {
     var companyId;
     var $this = this;
@@ -41,6 +41,10 @@ angular.module('ts5App')
     $scope.removeItem = function (cabinClass, menu) {
       var index = $scope.formData.selectedItems[cabinClass].indexOf(menu);
       $scope.formData.selectedItems[cabinClass].splice(index, 1);
+    };
+
+    $scope.filterItemListByCategory = function (item) {
+      item.items = (item.selectedCategory) ? lodash.filter($scope.items, { categoryName: item.selectedCategory.name }): $scope.items;
     };
 
     $scope.formSave = function () {
@@ -120,6 +124,10 @@ angular.module('ts5App')
       $scope.company = angular.copy(dataFromAPI);
     };
 
+    this.getCategoriesSuccess = function(dataFromAPI) {
+      $scope.categories = angular.copy(dataFromAPI.salesCategories);
+    };
+
     this.constructSelectedMenus = function() {
       $scope.company.companyCabinClasses.forEach(function (cabinClass) {
         $scope.formData.selectedMenus[cabinClass.id] = lodash.filter($scope.menuAssignment.menus, { companyCabinClassId: cabinClass.id });
@@ -139,6 +147,8 @@ angular.module('ts5App')
 
         $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
           item.item = lodash.find($scope.items, { itemMasterId: item.itemId });
+          item.items = $scope.items;
+
           if (!item.item) {
             item.expired = true;
           }
@@ -149,6 +159,7 @@ angular.module('ts5App')
     this.initDependenciesSuccess = function(result) {
       $this.getMenuAssignmentSuccess(result[0]);
       $this.getCompanySuccess(result[1]);
+      $this.getCategoriesSuccess(result[2]);
 
       $this.getMenuMasterAndItemsList();
 
@@ -163,7 +174,8 @@ angular.module('ts5App')
 
       var promises = [
         menuAssignmentFactory.getMenuAssignment($routeParams.id),
-        companiesFactory.getCompany(companyId)
+        companiesFactory.getCompany(companyId),
+        categoryFactory.getCategoryList()
       ];
 
       return promises;
