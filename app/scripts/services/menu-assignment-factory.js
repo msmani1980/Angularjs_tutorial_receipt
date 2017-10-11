@@ -21,10 +21,15 @@ angular.module('ts5App')
       return menuAssignmentService.getMenuAssignment(getCompanyId(), menuAssignmentId);
     }
 
+    function updateMenuAssignment(id, payload) {
+      return menuAssignmentService.updateMenuAssignment(id, payload);
+    }
+
     return {
       getCompanyId: getCompanyId,
       getMenuAssignmentList: getMenuAssignmentList,
-      getMenuAssignment: getMenuAssignment
+      getMenuAssignment: getMenuAssignment,
+      updateMenuAssignment: updateMenuAssignment
     };
 
   });

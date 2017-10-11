@@ -12,9 +12,8 @@
     </div>
 
   </div>
-
   <error-dialog form-object="menuAssignmentDataForm" error-response="errorResponse" display="displayError"></error-dialog>
-  <form name="form" class="form edit-form create-item-form">
+  <form name="menuAssignmentDataForm" class="form edit-form create-item-form">
     <div class="panel panel-default">
       <div class="panel-heading">Schedule details</div>
       <div class="panel-body">
@@ -87,13 +86,16 @@
             <label>Last Trip</label><br />
             {{ menuAssignment.lastTrip || '-'  }}
           </div>
-          <div class="col-xs-12 col-sm-2"></div>
+          <div class="col-xs-12 col-sm-2">
+            <label>Schedule Date</label><br />
+            {{ menuAssignment.scheduleDate || '-'  }}
+          </div>
           <div class="col-xs-12 col-sm-2"></div>
         </div>
       </div>
     </div>
 
-    <div ng-repeat="cabinClass in company.companyCabinClasses" class="panel panel-default">
+    <div ng-repeat="cabinClass in company.companyCabinClasses | orderBy: 'cabinClass'" class="panel panel-default">
 
       <div class="panel-heading">{{ cabinClass.cabinClass }} class</div>
       <div class="panel-body">
@@ -116,10 +118,12 @@
               <tr ng-repeat="menu in formData.selectedMenus[cabinClass.id] track by $index">
                 <td>
                   <ui-select
-                    name="menu[$index]"
+                    name="menu"
                     ng-model="menu.menu"
                     theme="bootstrap"
-                    placeholder="Select a menu...">
+                    placeholder="Select a menu..."
+                    ng-disabled="readOnly"
+                    required="true">
                     <ui-select-match allow-clear="true" placeholder="Select a menu...">{{$select.selected.menuCode}}</ui-select-match>
                     <ui-select-choices repeat="menu in menuMasters | filter: $select.search | orderBy:'menuCode'">
                       <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
@@ -193,7 +197,8 @@
                   required="true"
                   ng-model="item.item"
                   theme="bootstrap"
-                  placeholder="Select or search an item from the list...">
+                  placeholder="Select or search an item from the list..."
+                  ng-disabled="readOnly">
                   <ui-select-match placeholder="Select or search an item from the list...">{{$select.selected.itemName}}</ui-select-match>
                   <ui-select-choices repeat="item in item.items | filter: $select.search | orderBy:'itemName'">
                     <div ng-bind-html="item.itemName | highlight: $select.search"></div>
@@ -211,7 +216,7 @@
                        name="menuItemQuantity"
                        ng-model="item.itemQty"
                        placeholder="{{$index}}"
-                       ng-disabled="isReadOnly"/>
+                       ng-disabled="readOnly"/>
               </td>
               <td ng-hide="readOnly">
                 <button class="btn btn-danger btn-xs" ng-click="removeItem(cabinClass.id, item)">
@@ -220,7 +225,7 @@
               </td>
             </tr>
             <tr ng-if="formData.selectedItems[cabinClass.id].length === 0">
-              <td colspan="{{ readOnly ? '2' : '4' }}">No Menu Items added yet</td>
+              <td colspan="{{ readOnly ? '2' : '4' }}">No Items added yet</td>
             </tr>
             </tbody>
           </table>

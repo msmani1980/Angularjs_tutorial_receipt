@@ -50,9 +50,14 @@ angular.module('ts5App')
       return menuAssignmentRequestResource.getMenuAssignment(payload).$promise;
     }
 
+    function updateMenuAssignment(id, payload) {
+      return menuAssignmentRequestResource.updateMenuAssignment({ id: id }, payload).$promise;
+    }
+
     return {
       getMenuAssignmentList: getMenuAssignmentList,
-      getMenuAssignment: getMenuAssignment
+      getMenuAssignment: getMenuAssignment,
+      updateMenuAssignment: updateMenuAssignment
     };
 
   });

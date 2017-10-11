@@ -14,7 +14,7 @@ angular.module('ts5App')
     var companyId;
     var $this = this;
 
-    $scope.viewName = 'Menu Assignment';
+    $scope.viewName = 'Schedule Menu Assignment';
     $scope.readOnly = false;
     $scope.isEdit = false;
     $scope.company = { };
@@ -35,7 +35,7 @@ angular.module('ts5App')
     };
 
     $scope.addItem = function (cabinClass) {
-      $scope.formData.selectedItems[cabinClass].push({ });
+      $scope.formData.selectedItems[cabinClass].push({ items: $scope.items });
     };
 
     $scope.removeItem = function (cabinClass, menu) {
@@ -44,11 +44,51 @@ angular.module('ts5App')
     };
 
     $scope.filterItemListByCategory = function (item) {
-      item.items = (item.selectedCategory) ? lodash.filter($scope.items, { categoryName: item.selectedCategory.name }): $scope.items;
+      item.items = (item.selectedCategory) ? lodash.filter($scope.items, { categoryName: item.selectedCategory.name }) : $scope.items;
     };
 
     $scope.formSave = function () {
+      if (!$this.validateForm()) {
+        return false;
+      }
 
+      $this.showLoadingModal('Saving Menu Assignment');
+
+      var payloadMenus = [];
+      var payloadItems = [];
+
+      $scope.formData.selectedMenus.forEach(function (menus, cabinClass) {
+        menus.forEach(function (menu) {
+          payloadMenus.push({
+            menuQty: menu.menuQty,
+            menuId: menu.menu.menuId,
+            companyCabinClassId: cabinClass
+          });
+        });
+      });
+
+      $scope.formData.selectedItems.forEach(function (items, cabinClass) {
+        items.forEach(function (item) {
+          payloadItems.push({
+            itemQty: item.itemQty,
+            itemId: item.item.masterItem.id,
+            companyCabinClassId: cabinClass
+          });
+        });
+      });
+
+      var payload = {
+        source: 'Manual',
+        menus: payloadMenus,
+        items: payloadItems
+      };
+
+      menuAssignmentFactory.updateMenuAssignment($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure);
+    };
+
+    this.validateForm = function() {
+      $scope.displayError = !$scope.menuAssignmentDataForm.$valid;
+      return $scope.menuAssignmentDataForm.$valid;
     };
 
     this.showLoadingModal = function(message) {
@@ -59,13 +99,11 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    this.viewInit = function() {
-      $scope.viewName = 'View Menu Assignment';
-      $scope.readOnly = true;
-    };
-
     this.editInit = function() {
-      $scope.viewName = 'Edit Menu Assignment';
+      if (dateUtility.isYesterdayOrEarlierDatePicker($scope.menuAssignment.scheduleDate)) {
+        $scope.readOnly = true;
+      }
+
       $scope.isEdit = true;
     };
 
@@ -75,11 +113,7 @@ angular.module('ts5App')
 
     this.saveFormSuccess = function() {
       $this.hideLoadingModal();
-      if ($routeParams.action === 'create') {
-        $this.showToastMessage('success', 'Create Menu Assignment', 'success');
-      } else {
-        $this.showToastMessage('success', 'Edit Menu Assignment', 'success');
-      }
+      $this.showToastMessage('success', 'Edit Menu Assignment', 'success');
 
       $location.path('menu-assignment-list');
     };
@@ -163,10 +197,7 @@ angular.module('ts5App')
 
       $this.getMenuMasterAndItemsList();
 
-      var initFunctionName = ($routeParams.action + 'Init');
-      if ($this[initFunctionName]) {
-        $this[initFunctionName]();
-      }
+      $this.editInit();
     };
 
     this.makeInitPromises = function() {
