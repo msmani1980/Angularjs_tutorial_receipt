@@ -64,7 +64,7 @@ angular.module('ts5App')
     };
 
     $scope.canEdit = function (catalog) {
-      return dateUtility.isTomorrowOrLaterDatePicker(catalog.endDate);
+      return dateUtility.isTomorrowOrLaterDatePicker(catalog.endDate) || dateUtility.isTodayDatePicker(catalog.endDate);
     };
 
     $scope.canDelete = function (catalog) {
