@@ -101,14 +101,13 @@ angular.module('ts5App')
           var easyPayDenominations = companyCurrency.denominations.filter(function(denomination) {
             return denomination.isEasyPay;
           });
-
-          companyCurrency.flatEasyPayDenominations = $this.makeFlatDenominations(easyPayDenominations);
-
           
-          if ( companyCurrencies[companyCurrency.currencyCode] == undefined 
-        		  || companyCurrencies[companyCurrency.currencyCode].endDate < companyCurrency.endDate) {
-	          companyCurrencies[companyCurrency.currencyCode] = companyCurrency;
+          companyCurrency.flatEasyPayDenominations = $this.makeFlatDenominations(easyPayDenominations);
+          
+          if (companyCurrencies[companyCurrency.currencyCode] === undefined || companyCurrencies[companyCurrency.currencyCode].endDate < companyCurrency.endDate) {
+            companyCurrencies[companyCurrency.currencyCode] = companyCurrency;
           }
+          
         });
 
         // Populate company exchange rates with denomination info
@@ -123,6 +122,7 @@ angular.module('ts5App')
           if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
             exchangeRate.exchangeRate = '1.0000';
           }
+          
           exchangeRate.exchangeRate = parseFloat(exchangeRate.exchangeRate).toFixed(4);
 
         });
