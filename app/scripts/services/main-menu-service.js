@@ -432,16 +432,6 @@ angular.module('ts5App')
           }]
         }]
       }, {
-        title: 'Manual ECS',
-        menuItems: [{
-          name: 'Create Manual ECS Relationship',
-          route: '/#/manual-ECS',
-          icon: 'icon-manage-schedule',
-          className: 'dashboard-manualECS',
-          package: 'ECB',
-          role: 'ECB'
-        }]
-      }, {
         title: 'Reconciliation',
         menuItems: [{
           name: 'Reconciliation Dashboard',
