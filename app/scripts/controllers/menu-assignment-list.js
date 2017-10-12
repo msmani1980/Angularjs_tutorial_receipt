@@ -15,10 +15,9 @@ angular.module('ts5App')
       limit: 100,
       offset: 0
     };
-    var initDone = false;
     var companyId;
-    var lastStartDate = null;  
     $scope.viewName = 'Menu Assignment';
+    $scope.menuAssignments = [];
     $scope.isSearch = false;
     $scope.multiSelectedValues = {};
     $scope.search = {};
@@ -39,7 +38,7 @@ angular.module('ts5App')
       { id: 5, name: 'Friday' },
       { id: 6, name: 'Saturday' },
       { id: 7, name: 'Sunday' }
-    ];    
+    ];
     $scope.schedule = {
       selected: false,
       scheduleNumber: '',
@@ -52,14 +51,7 @@ angular.module('ts5App')
       days: '',
       updatedDate: null
     };
-    var loadingProgress = false;
 
-    function showErrors(dataFromAPI) {
-      $scope.displayError = true;
-      if ('data' in dataFromAPI) {
-        $scope.formErrors = dataFromAPI.data;
-      }
-    }
     /*
     $scope.toggleAllCheckboxes = function () {
       console.log('$scope.toggleAllCheckboxes');
@@ -69,6 +61,10 @@ angular.module('ts5App')
     };
     */
     function showLoadingBar() {
+      if (!$scope.isSearch) {
+        return;
+      }
+
       $scope.loadingBarVisible = true;
       angular.element('.loading-more').show();
     }
@@ -101,22 +97,10 @@ angular.module('ts5App')
 
     $scope.clearSearchForm = function () {
       $scope.isSearch = false;
+      $scope.menuAssignments = [];
       $scope.search = {};
-      $scope.search.scheduleNumber = '';
-      $scope.search.startDate = new Date();
-      $scope.search.endDate = '';
-      $scope.search.departureTimeFrom = '';
-      $scope.search.departureTimeTo = '';
-      $scope.search.arrivalTimeFrom = '';
-      $scope.search.arrivalTimeTo = '';
-      $scope.search.menuCode = '';
-      $scope.search.menuName = '';
-      $scope.search.itemName = '';
-      $scope.search.isAssignment = '';
-      $scope.multiSelectedValues = {};
-      $scope.menuAssignmentList = [];
       $localStorage.search.searchMenuAssignment = {};
-      
+
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -124,12 +108,16 @@ angular.module('ts5App')
       };
     };
 
+    $scope.redirectToMenuAssignment = function(id, state) {
+      $location.search({});
+      $location.path('menu-assignment/' + state + '/' + id).search();
+    };
+
     this.constructStartDate = function () {
       return ($scope.isSearch) ? null : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
     };
 
     function checkForLocalStorage() {
-      console.log('checkForLocalStorage');
       var savedSearch = $localStorage.search;
       if (angular.isDefined(savedSearch)) {
         $scope.search = savedSearch.searchMenuAssignment || {};
@@ -155,28 +143,19 @@ angular.module('ts5App')
       $scope.carrierTypes = angular.copy(response.response);
     };
 
-    this.getMenuAssignmenListSuccess = function(response) {
-      console.log(' this.getMenuAssignmenListSuccess  response = ', response);
-      console.log('$scope.menuAssignmentList', $scope.menuAssignmentList);
-      console.log('response.response', response.response);
+    this.getMenuAssignmentListSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
-      $scope.menuAssignmentList = response.response;
-      console.log('$scope.menuAssignmentList', $scope.menuAssignmentList);
-      /*      
-      $scope.menuAssignmentList = $scope.menuAssignmentList.concat(response.response.map(function (schedule) {
-        schedule.days = (schedule.days) ? schedule.days.replace('{', '').replace('}', '') : schedule.days;
-        schedule.startDate = dateUtility.formatDateForApp(schedule.startDate);
-        schedule.endDate = dateUtility.formatDateForApp(schedule.endDate);
+      $scope.menuAssignments = $scope.menuAssignments.concat(response.response.map(function (menuAssignment) {
+        menuAssignment.updatedOn = (menuAssignment.updatedOn) ? dateUtility.formatDateForApp(menuAssignment.updatedOn) : null;
 
-        return schedule;
+        return menuAssignment;
       }));
-      */
+
       hideLoadingBar();
     };
 
-    function loadMenuAssignmentData() {
-      console.log(' function loadMenuAssignmentData()');
-      if ($this.meta.offset >= $this.meta.count) {
+    $scope.loadMenuAssignmentData = function() {
+      if ($this.meta.offset >= $this.meta.count || !$scope.isSearch) {
         return;
       }
 
@@ -190,20 +169,13 @@ angular.module('ts5App')
       payload.dateFrom = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
-      console.log('searchMenuAssignmentData->payload', payload);	
-      console.log('searchMenuAssignmentData->$scope.menuAssignmentList', $scope.menuAssignmentList);	
-      menuAssignmentFactory.getMenuAssignmentList(payload).then($this.getMenuAssignmenListSuccess);
-      $this.meta.offset += $this.meta.limit;
-    }
 
-    $scope.loadMenuAssignmentData = function() {
-      console.log('$scope.loadMenuAssignmentData $scope.menuAssignmentList', $scope.menuAssignmentList);
-      loadMenuAssignmentData();
+      menuAssignmentFactory.getMenuAssignmentList(payload).then($this.getMenuAssignmentListSuccess);
+      $this.meta.offset += $this.meta.limit;
     };
 
     $scope.searchMenuAssignmentData = function() {
-      console.log('$scope.searchMenuAssignmentData');
-      $scope.menuAssignmentList = [];
+      $scope.menuAssignments = [];
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -213,10 +185,10 @@ angular.module('ts5App')
       $scope.isSearch = true;
       $scope.loadMenuAssignmentData();
     };
-    
+
     this.makeInitPromises = function() {
       companyId = scheduleFactory.getCompanyId();
-      console.log('makeInitPromises companyId = ', companyId);
+
       var promises = [
         scheduleFactory.getStationList(companyId).then($this.getStationsSuccess),
         scheduleFactory.getCarrierNumbers(companyId).then($this.getCarrierNumberSuccess),
@@ -225,13 +197,14 @@ angular.module('ts5App')
 
       return promises;
     };
-    
+
     this.init = function() {
-      console.log('init');
+      angular.element('.loading-more').hide();
+
       $scope.allCheckboxesSelected = false;
       var initDependencies = $this.makeInitPromises();
       $q.all(initDependencies).then(function() {
-        angular.element('#search-collapse').addClass('collapse');
+
       });
 
     };
