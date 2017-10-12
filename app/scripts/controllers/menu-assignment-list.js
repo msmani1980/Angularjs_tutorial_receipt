@@ -120,7 +120,7 @@ angular.module('ts5App')
     function checkForLocalStorage() {
       var savedSearch = $localStorage.search;
       if (angular.isDefined(savedSearch)) {
-        $scope.search = savedSearch.searchMenuAssignment || {};
+        $scope.search = savedSearch.menuAssignments || {};
       } else {
         $scope.search = {};
         $localStorage.search = {};
@@ -183,6 +183,7 @@ angular.module('ts5App')
       };
 
       $scope.isSearch = true;
+      $localStorage.search.menuAssignments = angular.copy($scope.search);
       $scope.loadMenuAssignmentData();
     };
 
@@ -204,7 +205,7 @@ angular.module('ts5App')
       $scope.allCheckboxesSelected = false;
       var initDependencies = $this.makeInitPromises();
       $q.all(initDependencies).then(function() {
-
+        checkForLocalStorage();
       });
 
     };
