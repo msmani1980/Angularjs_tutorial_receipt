@@ -326,7 +326,7 @@
                    class="form-group"
                    ng-class="{ 'has-error' : !formData.voucherDuration && displayError , 'has-success' : formData.voucherDuration }">
                 <label>Voucher Duration *</label>
-                <select name="voucherDuration" ng-model="formData.voucherDuration" class="form-control col-xs-2" ng-change="recalculateEndDate()" ng-required="true">
+                <select name="voucherDuration" ng-model="formData.voucherDuration" class="form-control col-xs-2" ng-required="true">
                   <option ng-repeat="duration in voucherDurationOptions" value="{{ duration.duration }}">{{ duration.name }}</option>
                 </select>
               </div>
