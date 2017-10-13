@@ -39,17 +39,12 @@ angular.module('ts5App')
       { id: 6, name: 'Saturday' },
       { id: 7, name: 'Sunday' }
     ];
-    $scope.schedule = {
-      selected: false,
-      scheduleNumber: '',
-      departureStation: '',
-      departureTime: null,
-      arrivalStation: '',
-      arrivalTime: null,
-      assignment: '',
-      scheduleDate: null,
-      days: '',
-      updatedDate: null
+
+    $scope.displayColumns = {
+      blockTime: false,
+      groundTime: false,
+      previousFlight: false,
+      nextFlight: false
     };
 
     /*
@@ -60,6 +55,7 @@ angular.module('ts5App')
       });
     };
     */
+
     function showLoadingBar() {
       if (!$scope.isSearch) {
         return;
@@ -93,6 +89,12 @@ angular.module('ts5App')
       $this.addSearchValuesFromMultiSelectArray('companyCarrierTypeId', $scope.multiSelectedValues.aircraftTypes, 'companyCarrierTypeId');
       $this.addSearchValuesFromMultiSelectArray('departureStationId', $scope.multiSelectedValues.depStations, 'stationId');
       $this.addSearchValuesFromMultiSelectArray('arrivalStationId', $scope.multiSelectedValues.arrStations, 'stationId');
+    };
+
+    $scope.toggleColumnView = function(columnName) {
+      if (angular.isDefined($scope.displayColumns[columnName])) {
+        $scope.displayColumns[columnName] = !$scope.displayColumns[columnName];
+      }
     };
 
     $scope.clearSearchForm = function () {
