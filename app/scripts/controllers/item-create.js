@@ -92,20 +92,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return data.retailItem.companyId === companyId;
     };
 
-    this.filterDuplicateInItemTags = function() {
-      $scope.filterSelectedTags = _.differenceWith(
-        $scope.tags,
-        $scope.formData.tags,
-        function(a, b) {
-          return a.id === b.id;
-        }
-      );
-    };
-
-    $scope.onTagsChange = function() {
-      $this.filterDuplicateInItemTags();
-    };
-
     this.setVoucherData = function() {
       $scope.formData.shouldUseDynamicBarcode = {
         value: !!$scope.formData.isDynamicBarcodes
@@ -127,7 +113,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $this.updateFormData(data.retailItem);
         $this.updateViewName(data.retailItem);
         $this.setUIReady();
-        $this.filterDuplicateInItemTags();
         return;
       }
 
@@ -431,7 +416,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     $scope.isDisabledEndDateForm = function() {
-      return dateUtility.isYesterdayOrEarlierDatePicker($scope.formData.endDate);
+      return !(dateUtility.isAfterTodayDatePicker($scope.formData.endDate) || dateUtility.isTodayDatePicker($scope.formData.endDate));
     };
 
     this.updateLanguages = function () {
@@ -652,8 +637,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       } else {
         $this.setUIReady();
       }
-
-      $this.filterDuplicateInItemTags();
     };
 
     this.getDependencies = function() {
