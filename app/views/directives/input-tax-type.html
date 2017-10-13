@@ -20,8 +20,7 @@
 
   					<label>Tax Type *</label>
 
-            <select required name="Tax Type" class="form-control" ng-model="itemTax.companyTaxId"
-              ng-options="type.id as type.taxTypeCode for type in taxTypes">
+            <select required name="Tax Type" class="form-control" ng-model="itemTax.companyTaxId" ng-options="type.id as type.taxTypeCode for type in taxTypes" ng-disabled="$parent.isDisabled()">
             </select>
 
   				</div>
@@ -34,7 +33,7 @@
 
   					<label>Applied Tax Type *</label>
 
-  					<select required name="Applied Tax Type" ng-model="itemTax.itemTaxType" class="form-control">
+  					<select required name="Applied Tax Type" ng-model="itemTax.itemTaxType" class="form-control" ng-disabled="$parent.isDisabled()">
               <option ng-selected="itemTax.itemTaxType === type.name" ng-repeat="type in appliedTaxTypes" value="{{ type.name }}">{{ type.name }}</option>
   					</select>
 
