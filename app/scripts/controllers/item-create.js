@@ -586,10 +586,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     });
 
-    $scope.$watch('formData.startDate', function() {
-      $scope.recalculateEndDate();
-    });
-
     this.isMasterItemInfoDirty = function() {
       if ($scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&
         $scope.originalMasterItemData.itemName === $scope.formData.itemName &&
@@ -860,20 +856,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     // Removes a station exception collection from the form
     $scope.removeStationException = function(priceIndex, key) {
       $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
-    };
-
-    $scope.recalculateEndDate = function () {
-      var selectedDuration = $scope.formData.voucherDuration;
-
-      if (!selectedDuration) {
-        return;
-      }
-
-      if (selectedDuration === 365) {
-        $scope.formData.endDate = dateUtility.addYears($scope.formData.startDate, 1);
-      } else {
-        $scope.formData.endDate = dateUtility.addDays($scope.formData.startDate, selectedDuration);
-      }
     };
 
     // gets a list of stations from the API filtered by station's start and end date
