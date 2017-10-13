@@ -127,7 +127,6 @@
         <i class="fa fa-plus"></i> Add Item
       </button>
     </h3>
-
     <div class="table">
       <table class="table table-bordered table-hover">
       <thead>
@@ -139,7 +138,12 @@
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="item in menuItemList | orderBy:'itemName' track by $index">
+      <tr on-drop-success="dropSuccess($event, $index, menuItemList)"
+          ui-draggable="isMenuEditable()" drag="item"
+          ui-on-Drop="onDrop($event, $data, $index)"
+          on-drop-failure="failureAlert()"
+          ng-init="item.sortOrderIndex=$index"
+          ng-repeat="item in menuItemList | orderBy:'sortOrder' track by $index">
         <td ng-if="isMenuEditable()">
           <ui-select
             name="selectedCategories[item.menuIndex]"
