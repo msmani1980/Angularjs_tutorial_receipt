@@ -226,11 +226,23 @@ angular.module('ts5App')
       reconciliationFactory.getReconciliationPrecheckDevices({
         storeInstanceId: item.id
       }).then(function(response) {
-        var dataFromAPI = angular.copy(response);
-        item.eposData = (dataFromAPI.devicesSynced || dataFromAPI.totalDevices) ? dataFromAPI.devicesSynced +
-        '/' + dataFromAPI.totalDevices : 'No';
+        item.eposDataFullDetails = angular.copy(response);
+        item.iseposDataDetailsValid = item.eposDataFullDetails.devicesSynced || item.eposDataFullDetails.totalDevices;
+
+        item.eposData = (item.iseposDataDetailsValid) ? item.eposDataFullDetails.devicesSynced + '/' + item.eposDataFullDetails.totalDevices : 'No';
+
         $this.recalculateActionsColumn(item);
       });
+    };
+
+    $scope.showEposDataDetailsModal = function (item) {
+      if (!item.devices) {
+        return;
+      }
+
+      $scope.currentModalDevices = angular.copy(item.devices);
+
+      angular.element('#eposDataDetailsModal').modal('show');
     };
 
     this.getReconciliationPrecheckSchedules = function(item) {
@@ -606,3 +618,13 @@ angular.module('ts5App')
     this.init();
 
   });
+
+angular.module('ts5App').filter('reconciliationBooleanToCheckedIcon', function () {
+  return function (booleanValue) {
+    if (booleanValue) {
+      return '<i class="checked-green" aria-hidden="true" ></i>';
+    } else {
+      return '<i class="unchecked-red" aria-hidden="true" ></i>';
+    }
+  };
+});

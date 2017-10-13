@@ -45,6 +45,14 @@ angular.module('ts5App')
 
       return !dateUtility.isAfterTodayDatePicker($scope.menu.startDate);
     };
+    
+    $scope.isMenuViewOnly = function () {
+      if ($routeParams.state === 'view') {
+        return true;
+      } 
+      
+      return false;
+    };
 
     $scope.isMenuEditable = function () {
       if ($routeParams.state === 'create') {
@@ -286,7 +294,7 @@ angular.module('ts5App')
       $scope.menuItemList = [];
       $scope.selectedCategories = [];
       $scope.filteredItemsCollection = [];
-      $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
       $scope.menu = {
         startDate: '',
         endDate: '',

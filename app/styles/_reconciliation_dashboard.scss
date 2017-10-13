@@ -1,0 +1,11 @@
+.unchecked-red {
+  @extend .fa;
+  @extend .fa-times-circle;
+  color: red;
+}
+
+.checked-green {
+  @extend .fa;
+  @extend .fa-check-circle;
+  color: green;
+}

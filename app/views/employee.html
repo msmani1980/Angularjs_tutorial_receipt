@@ -1,0 +1,138 @@
+<div class="module-container">
+	<div class="edit-controls">
+	    <div class="row">
+	      <div class="col-xs-6">
+	        <h2 class="view-name">{{viewName}}</h2>
+	      </div>
+	
+	      <div class="col-xs-6 text-right">
+	        <a class="btn btn-default" ng-href="#/employees" class="btn" ng-show="readOnly">Back</a>
+	      </div>
+	    </div>
+	</div>
+	<error-dialog form-object="employeeDataForm" error-response="errorResponse" display="displayError">
+	</error-dialog>
+	<!-- Started Modify-->
+	<form name="employeeDataForm">
+		<div class="panel panel-default">
+		  <div class="panel-body">
+				<div class="row">
+				   <div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="employee-id">Employee ID*</label> 
+							<input ng-model="employee.employeeIdentifier" type="text" ng-disabled="isDisabled()"
+								class="form-control" id="employeeID" name="employeeID"
+								required custom-validity custom-pattern="alphanumeric"  maxlength="15" placeholder="0001">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="employee-firstname">Employee First Name*</label> <input
+									ng-model="employee.firstName" type="text" class="form-control" ng-disabled="isDisabled()" placeholder="First Name"
+									id="employeeFirstName" name="employeeFirstName" required maxlength="25" required custom-validity custom-pattern="alphaWithSpecial">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<date-picker-field 
+									form="employeeDataForm" name="EffectiveStartDate"
+									label="Effective Start Date"
+									disable="isDisabled()"
+									required="true"
+									end-current-effective="!viewEditItem"
+									custom-date="employee.startDate"
+									ng-model="employee.startDate">
+							</date-picker-field>
+						</div>
+					</div>
+				</div>
+				<div class="row">	
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="passcode">Passcode</label> <input
+								ng-model="employee.passcode" type="password" class="form-control" id="passcode" name="passcode" placeholder="Passcode"
+								maxlength="10" ng-disabled="isDisabled()">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="employee-lastname">Employee Last Name*</label> <input
+								ng-model="employee.lastName" type="text" class="form-control" placeholder="Last Name"
+								id="employeeLastName" name="employeeLastName" ng-disabled="isDisabled()"
+								required maxlength="25" custom-validity custom-pattern="alphaWithSpecial">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<date-picker-field form="employeeDataForm" name="EffectiveEndDate"
+								label="Effective End Date" 
+								disable="readOnly || shouldDisableEndDate"
+								ng-model="employee.endDate"
+								end-current-effective="!viewEditItem"
+								custom-date="employee.endDate"
+								required="true">
+							</date-picker-field>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="country">Country</label>
+							<select class="form-control" ng-model="employee.countryId" 
+									ng-change="onCounrtyChange()"
+									ng-options="country.id as (country.countryName) for country in countriesList"
+									ng-disabled="isDisabled()">
+							    <option value="">Please Select Country</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="base-station">Base Station*</label>
+							<select class="form-control" id="base-station-id" 
+									ng-model="employee.baseStationId"
+									ng-disabled="isDisabled()" 
+									ng-options="station.id as (station.code + ' (' + station.name +')') for station in globalStationList"
+									name="baseStation" required>
+								<option value="">Please Select Station...</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="employee-title">Employee Title*</label>
+							<ui-select ng-if="!isDisabled()" ng-model="employee.title" theme="bootstrap" required name="employeeTitle">
+                				<ui-select-match placeholder="Please Select Title">{{$select.selected}}</ui-select-match>
+                					<ui-select-choices repeat="title in getEmployeeTitles($select.search) | filter: $select.search">
+                  						<div ng-bind="title"></div>
+                					</ui-select-choices>
+              				</ui-select> 
+              				<input ng-if="isDisabled()" ng-model="employee.title" type="text" class="form-control" placeholder="Title"
+								name="employeeTitle" ng-disabled="true">
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="panel-footer text-right">
+				<a href="#/employees" class="btn btn-default" ng-hide="readOnly">Cancel</a>					
+				<button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+					<span class="fa fa-check-square-o" aria-hidden="true"></span> <span
+						class="hidden-xs">Save</span>
+				</button>
+			</div>
+			
+		</div>
+	</form>
+	
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav></dynamic-left-nav>

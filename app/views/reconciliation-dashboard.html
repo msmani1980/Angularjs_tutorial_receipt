@@ -127,7 +127,7 @@
               </date-picker-field>
             </div>
 
-			
+
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Status</label>
@@ -221,7 +221,7 @@
         <td> {{ instance.storeNumber }}</td>
         <td> {{ instance.dispatchStationCode }}</td>
         <td ng-show="displayColumns.receivedStation"> {{ instance.arrivalStationCode }}</td>
-        <td> {{ instance.eposData }}</td>
+        <td> <a ng-click="showEposDataDetailsModal(instance.eposDataFullDetails)">{{ instance.eposData }}</a></td>
         <td> {{ instance.postTripData }}</td>
         <td> {{ instance.cashHandlerData }}</td>
         <td> {{ instance.isEcb }}</td>
@@ -298,6 +298,32 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="eposDataDetailsModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h4>Epos Data Details</h4>
+        <br>
+        <table class="table table-bordered">
+          <tr class="active">
+            <td>Device Id</td>
+            <td>Alias</td>
+            <td>Is Synced</td>
+          </tr>
+          <tr ng-if="currentModalDevices !== null && currentModalDevices.length !== 0" ng-repeat="eposDataItem in currentModalDevices">
+            <td>{{eposDataItem.deviceId}}</td>
+            <td>{{eposDataItem.alias}}</td>
+            <td ng-bind-html="eposDataItem.isSynced | reconciliationBooleanToCheckedIcon" style="text-align: center"></td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
     </div>
   </div>
 </div>

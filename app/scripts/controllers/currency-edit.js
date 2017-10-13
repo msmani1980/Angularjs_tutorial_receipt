@@ -50,7 +50,7 @@ angular.module('ts5App')
 
         // Populate select box with easy pay denominations
         currency.selectedEasyPayDenominations = currency.denominations.filter(function(denomination) {
-          return denomination.isEasyPay === 'true';
+          return denomination.isEasyPay;
         }).map(function(denomination) {
           return $this.getDenominationById($scope.currencyDenominations[currency.currencyId], denomination.currencyDenominationId);
         }).sort($this.sortDenominationByValue);
@@ -144,8 +144,10 @@ angular.module('ts5App')
 
     this.denormalizeDetailedCompanyCurrency = function(index, currency) {
       var payload = {};
-
-      payload.id = currency.id;
+      if (!currency.isNew) {
+        payload.id = currency.id;
+      }
+      
       payload.companyId = currency.companyId;
       payload.currencyId = currency.currencyId;
       payload.startDate = (currency.startDate) ? dateUtility.formatDateForAPI(currency.startDate) : null;
@@ -183,7 +185,11 @@ angular.module('ts5App')
 
       angular.element('.delete-warning-modal').modal('show');
     };
-
+    
+    $scope.removeAddedCurrency = function(key) {
+      $scope.companyCurrencyList.splice(key, 1);
+    };
+      
     this.getCurrencyIndexById = function(currencyId) {
       return $scope.companyCurrencyList.map(function(currency) {
         return currency.id;
@@ -228,10 +234,13 @@ angular.module('ts5App')
     };
 
     $scope.addDetailedCompanyCurrencies = function() {
+      var nextIndex = $scope.companyCurrencyList.length;
       var totalRowsToAdd = $scope.addDetailedCompanyCurrenciesNumber || 1;
       for (var i = 0; i < totalRowsToAdd; i++) {
+        nextIndex++;
         $scope.companyCurrencyList.push({
           isNew: true,
+          id: nextIndex,
           companyId: globalMenuService.company.get(),
           startDate: dateUtility.tomorrowFormattedDatePicker(),
           endDate: dateUtility.tomorrowFormattedDatePicker(),
