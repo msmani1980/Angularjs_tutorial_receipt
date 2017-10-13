@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('versionService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/check/project/info';
+    var requestURL = ENV.apiUrl + '/rsvr/build-info';
     var requestParameters = {};
 
     var actions = {
