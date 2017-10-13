@@ -9,9 +9,9 @@
  */
 angular.module('ts5App')
   .controller('ManualEposDiscountCtrl', function ($scope, $routeParams, $q, manualEposFactory, dateUtility, globalMenuService,
-    lodash, messageService, $location) {
+    lodash, messageService, $location, $filter) {
 
-    function createNewDiscountObject (dscntTypeName) {
+    function createNewDiscountObject () {
       var newDiscount = {
         cashbagId:$scope.cashBag.id,
         eposCashBagsId:$scope.cashBag.eposCashBagsId,
@@ -26,7 +26,7 @@ angular.module('ts5App')
         currentCurrencyAmount:0.00,
         baseCurrencyAmount:0.00,
         exchangeRate:$scope.baseCurrency.currency.exchangeRate,
-        discountTypeName: dscntTypeName
+        discountTypeName: ''
       };
       return newDiscount;
     }
@@ -106,7 +106,7 @@ angular.module('ts5App')
         }
 
         if (canAddDiscount) {
-          $scope.discountListCoupon.push(angular.copy(createNewDiscountObject('Coupon')));
+          $scope.discountListCoupon.push(angular.copy(createNewDiscountObject()));
         }
       }
     };
@@ -122,7 +122,7 @@ angular.module('ts5App')
         }
 
         if (canAddDiscount) {
-          $scope.discountListVoucher.push(angular.copy(createNewDiscountObject('Voucher')));
+          $scope.discountListVoucher.push(angular.copy(createNewDiscountObject()));
         }  
       }
     };
@@ -138,7 +138,7 @@ angular.module('ts5App')
         }
 
         if (canAddDiscount) {
-          $scope.discountListComp.push(angular.copy(createNewDiscountObject('Comp')));
+          $scope.discountListComp.push(angular.copy(createNewDiscountObject()));
         }  
       }
     };
@@ -190,6 +190,7 @@ angular.module('ts5App')
     };
 
     $scope.onChangeDiscount  = function(manualDiscountObj) {
+      manualDiscountObj.discountTypeName = manualDiscountObj.discount.name; 
       manualDiscountObj.discountId = manualDiscountObj.discount.id;
       if (manualDiscountObj.discount.discountTypeId === 1 /*Coupon*/) {
         updateCouponList();
@@ -398,9 +399,9 @@ angular.module('ts5App')
     $scope.verify = function () {
       showLoadingModal('Verifying');
       var promises = [];
+      addToPromises($scope.discountListComp, promises);
       addToPromises($scope.discountListCoupon, promises);
       addToPromises($scope.discountListVoucher, promises);
-      addToPromises($scope.discountListComp, promises);
       addToPromises($scope.discountListFlyer, promises);
       $q.all(promises).then(verifySuccess, showErrors);
     };
@@ -438,6 +439,7 @@ angular.module('ts5App')
     }
 
     function saveSuccess() {
+      init();
       hideLoadingModal();
       if ($scope.shouldExit) {
         $location.path('manual-epos-dashboard/' + $routeParams.cashBagId);
@@ -463,11 +465,16 @@ angular.module('ts5App')
       addToPromises($scope.discountListVoucher, promises);
       addToPromises($scope.discountListComp, promises);
       addToPromises($scope.discountListFlyer, promises);
-      $q.all(promises).then(saveSuccess, showErrors);
+      if ($scope.shouldVerify) {
+        $q.all(promises).then(verifySuccess, showErrors);
+      } else {
+        $q.all(promises).then(saveSuccess, showErrors);
+      }
     };
 
-    $scope.setShouldExit = function (shouldExit) {
+    $scope.setShouldExit = function (shouldExit, shouldVerify) {
       $scope.shouldExit = shouldExit;
+      $scope.shouldVerify = shouldVerify;
     };
 
     function setBaseCurrency() {
@@ -522,7 +529,7 @@ angular.module('ts5App')
       discountObject.currentCurrencyAmount = getCurrentCurrencyAmount(discountObject);
       discountObject.baseCurrencyAmount = getBaseCurrencyAmount(discountObject);
       discountObject.discount = lodash.findWhere(discountDropDown, { id: discountObject.discountId }) || {};
-      discountObject.discountTypeName = (discountObject.discount.discountTypeName && discountObject.discount.discountTypeName !== null ? discountObject.discount.discountTypeName : '');
+      discountObject.discountTypeName = (discountObject.discount.name && discountObject.discount.name !== null ? discountObject.discount.name : '');
       discountList.push(angular.copy(discountObject));
     }
 
@@ -546,10 +553,10 @@ angular.module('ts5App')
         flyer: flyerList
       };
 
-      $scope.allVoucherList = angular.copy(voucherList);
-      $scope.allCouponList = angular.copy(couponList);
-      $scope.allCompList = angular.copy(compList);
-      $scope.allFlyerList = angular.copy(flyerList);
+      $scope.allVoucherList = $filter('orderBy')(angular.copy(voucherList), 'name', false);
+      $scope.allCouponList = $filter('orderBy')(angular.copy(couponList), 'name', false);
+      $scope.allCompList = $filter('orderBy')(angular.copy(compList), 'name', false);
+      $scope.allFlyerList = $filter('orderBy')(angular.copy(flyerList), 'name', false);
 
       setCashBagCurrencyList(currencyList);
       setBaseCurrency();
@@ -559,6 +566,11 @@ angular.module('ts5App')
       updateCompList();
       updateFrequentFlyerList();
       updateVoucherList();
+
+      $scope.discountListCoupon = $filter('orderBy')(angular.copy($scope.discountListCoupon), 'discountTypeName', false);
+      $scope.discountListVoucher = $filter('orderBy')(angular.copy($scope.discountListVoucher), 'discountTypeName', false);
+      $scope.discountListComp = $filter('orderBy')(angular.copy($scope.discountListComp), 'discountTypeName', false);
+      $scope.discountListFlyer = $filter('orderBy')(angular.copy($scope.discountListFlyer), 'discountTypeName', false);
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {
@@ -570,9 +582,8 @@ angular.module('ts5App')
       $scope.selectedCurrency = {};
       var dateForFilter = dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.storeInstance.scheduleDate));
       var payload = {
-        isActive: true,
-        startDate: dateUtility.nowFormatted('YYYYMMDD'),
-        endDate: dateUtility.nowFormatted('YYYYMMDD')
+        startDate: dateForFilter,
+        endDate: dateForFilter
       };
 
       var promises = [
