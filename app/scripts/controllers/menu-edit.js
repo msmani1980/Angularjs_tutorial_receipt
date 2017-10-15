@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, messageService, menuFactory, dateUtility, $location, lodash, $q) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, messageService, menuFactory, dateUtility, $location, lodash, $q, $filter) {
 
     var $this = this;
 
@@ -45,12 +45,12 @@ angular.module('ts5App')
 
       return !dateUtility.isAfterTodayDatePicker($scope.menu.startDate);
     };
-    
+
     $scope.isMenuViewOnly = function () {
       if ($routeParams.state === 'view') {
         return true;
-      } 
-      
+      }
+
       return false;
     };
 
@@ -85,13 +85,12 @@ angular.module('ts5App')
           if (menuItem.id) {
             itemPayload.id = menuItem.id;
           }
-
           itemPayload.itemId = menuItem.selectedItem.id;
           itemPayload.itemQty = parseInt(menuItem.itemQty);
+          itemPayload.sortOrder = parseInt(menuItem.sortOrderIndex);
           itemsArray.push(itemPayload);
         }
       });
-
       return itemsArray;
     };
 
@@ -258,10 +257,12 @@ angular.module('ts5App')
           itemQty: item.itemQty,
           id: item.id,
           menuIndex: index,
-          selectedItem: itemMatch
+          selectedItem: itemMatch,
+          sortOrder: item.sortOrder
         };
         $scope.menuItemList.push(newItem);
       });
+      $scope.menuItemList = $filter('orderBy')($scope.menuItemList, 'sortOrder');
     }
 
     function completeInit(responseCollection) {
@@ -320,6 +321,36 @@ angular.module('ts5App')
 
     $scope.isCurrentEffectiveDate = function (menuDate) {
       return (dateUtility.isTodayOrEarlierDatePicker(menuDate.startDate) && (dateUtility.isAfterTodayDatePicker(menuDate.endDate) || dateUtility.isTodayDatePicker(menuDate.endDate)));
+    };
+
+    var draggedMenuItemObject;
+    var draggedOntoIemIndex;
+    // scope event handlers
+    // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
+    $scope.dropSuccess = function ($event, index, array) {
+      if(draggedOntoIemIndex != null && draggedMenuItemObject != null)
+      {
+        var tempItemObject = array[draggedOntoIemIndex];
+        array.splice(draggedOntoIemIndex, 1, draggedMenuItemObject);
+        array.splice(index,1, tempItemObject);
+        draggedMenuItemObject = null;
+        for(var i=0; i<array.length; i++)
+        {
+          array[i].sortOrderIndex = i;
+          array[i].sortOrder = i;
+        }
+      }
+      else
+      {
+        draggedMenuItemObject = null;
+        draggedOntoIemIndex = null;
+        messageService.display('warning', 'Please drag and drop only inside the Menu Items list', 'Drag to reorder');
+      }
+    };
+
+    $scope.onDrop = function ($event,$data, index) {
+      draggedOntoIemIndex = index;
+      draggedMenuItemObject = $data;
     };
 
   });
