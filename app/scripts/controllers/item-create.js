@@ -637,7 +637,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       } else {
         $this.setUIReady();
       }
-
+      
       $this.filterDuplicateInItemTags();
     };
 
