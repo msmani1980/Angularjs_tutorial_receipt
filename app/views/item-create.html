@@ -325,8 +325,8 @@
               <div ng-if="creatingItem && isVoucherSelected"
                    class="form-group"
                    ng-class="{ 'has-error' : !formData.voucherDuration && displayError , 'has-success' : formData.voucherDuration }">
-                <label>Voucher Duration *</label>
-                <select name="voucherDuration" ng-model="formData.voucherDuration" class="form-control col-xs-2" ng-required="true">
+                <label>Voucher Duration</label>
+                <select name="voucherDuration" ng-model="formData.voucherDuration" class="form-control col-xs-2">
                   <option ng-repeat="duration in voucherDurationOptions" value="{{ duration.duration }}">{{ duration.name }}</option>
                 </select>
               </div>
