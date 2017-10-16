@@ -57,7 +57,7 @@ angular.module('ts5App')
 
       currencyObject.convertedAmount = convertedAmount.toFixed(2);
       return convertedAmount.toFixed(2);
-    };
+    }
 
     $scope.convertAmount = function (currencyObject) {
       var convertedAmount = 0;
@@ -121,7 +121,7 @@ angular.module('ts5App')
       var payload = {
         currencyId: cash.currencyId,
         amount: parseFloat(cash.amount) || 0,
-        convertedAmount: parseFloat(convertAmount (cash)) || 0
+        convertedAmount: parseFloat(convertAmount(cash)) || 0
       };
 
       return manualEposFactory.updateCashBagCash($routeParams.cashBagId, cash.id, payload);
@@ -131,7 +131,7 @@ angular.module('ts5App')
       var payload = {
         currencyId: cash.currencyId,
         amount: parseFloat(cash.amount) || 0,
-        convertedAmount: parseFloat(convertAmount (cash)) || 0
+        convertedAmount: parseFloat(convertAmount(cash)) || 0
       };
 
       return manualEposFactory.createCashBagCash($routeParams.cashBagId, payload);

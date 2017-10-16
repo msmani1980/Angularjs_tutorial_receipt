@@ -334,11 +334,12 @@ angular.module('ts5App')
       });
 
       totalEPOS += getManualDataTotals(itemTypeName.toLowerCase());
-      if (itemTypeName==='Regular') {
+      if (itemTypeName === 'Regular') {
         totalEPOS += $scope.totalCHManualValue;
-        if (angular.isDefined(totalPromotion) && totalPromotion>0) {
+        if (angular.isDefined(totalPromotion) && totalPromotion > 0) {
           totalEPOS += totalPromotion.totalEPOS;
         }
+
         totalEPOS += getManualDataTotals('discount');
         totalEPOS += getManualDataTotals('promotion');
       }
@@ -530,6 +531,7 @@ angular.module('ts5App')
         var discountTotal = makeFinite(discount.bankAmountFinal);
         total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
       });
+
       total += getManualDataTotals('discount');
 
       return total;
@@ -559,19 +561,28 @@ angular.module('ts5App')
       var totalManual = 0;
 
       angular.forEach($this.chCashBag, function (cashBag) {
-        var cashTotal = (makeFinite(cashBag.paperAmountManualCh) + makeFinite(cashBag.coinAmountManualCh)) + (makeFinite(cashBag.paperAmountManualCHBank) +
+        var foundCB = lodash.findWhere($scope.cashBagList, { id: cashBag.cashbagId });
+        if (foundCB && foundCB.originationSource === 2 && cashBag.eposCashbagId === null) {
+          var cashTotal = (makeFinite(cashBag.paperAmountManualCh) + makeFinite(cashBag.coinAmountManualCh)) + (makeFinite(cashBag.paperAmountManualCHBank) +
           makeFinite(cashBag.coinAmountManualCHBank)) + makeFinite(cashBag.bankAmountCh);
-        totalManual += ($scope.manualCashBagIds.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
+          totalManual += ($scope.manualCashBagIds.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
+        }
       });
 
       angular.forEach(chCreditCard, function (creditCard) {
-        var creditTotal = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountCc) + makeFinite(creditCard.paperAmountCc);
-        totalManual += ($scope.manualCashBagIds.indexOf(creditCard.cashbagId) >= 0) ? creditTotal: 0;
+        var foundCB = lodash.findWhere($scope.cashBagList, { id: creditCard.cashbagId });
+        if (foundCB && foundCB.originationSource === 2 && foundCB.eposCashbagId === null) {
+          var creditTotal = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountCc) + makeFinite(creditCard.paperAmountCc);
+          totalManual += ($scope.manualCashBagIds.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
+        }  
       });
 
       angular.forEach(chDiscount, function (discount) {
-        var discountTotal = makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
-        totalManual += ($scope.manualCashBagIds.indexOf(discount.cashbagId) >= 0) ? discountTotal: 0;
+        var foundCB = lodash.findWhere($scope.cashBagList, { id: discount.cashbagId });
+        if (foundCB && foundCB.originationSource === 2 && foundCB.eposCashbagId === null) {
+          var discountTotal = makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
+          totalManual += ($scope.manualCashBagIds.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
+        }  
       });
 
       return totalManual;
@@ -670,7 +681,7 @@ angular.module('ts5App')
       setCashPreference(responseCollection[8]);
       setStatusList(responseCollection[9]);
       $this.carrierInstanceList = angular.copy(responseCollection[10].response);
-      $scope.totalCHManualValue =  getCHManualData ($this.chRevenue);
+      $scope.totalCHManualValue =  getCHManualData($this.chRevenue);
       $scope.totalRevenue = {
         cashHandler: $scope.companyIsUsingCash ? formatAsCurrency(getCHRevenue($this.chRevenue)) : 0,
         epos: formatAsCurrency(getEPOSRevenue($this.eposRevenue))
@@ -809,7 +820,7 @@ angular.module('ts5App')
         if (cashBagsToInclude.indexOf(manualData.cashbagId) >= 0 && itemTypeConditional) {
 
           var manualCB = lodash.filter($scope.manualCashBags, { id: manualData.cashbagId });
-          if (angular.isDefined(manualCB) && manualCB !== null && manualCB.length>0) {
+          if (angular.isDefined(manualCB) && manualCB !== null && manualCB.length > 0) {
             var myCB = manualCB[0];
             var validatedOn = myCB[validateOnField];
             if (angular.isDefined(validatedOn) && validatedOn !== null) {
@@ -825,7 +836,7 @@ angular.module('ts5App')
     function setManualData(responseCollectionFromAPI) {
       var manualDataToInclude = [];
       angular.forEach($scope.cashBagList, function (cashBag) {
-        if (cashBag.originationSource === 2 && cashBag.eposCashbagId === null) {//&& !!cashBag.verificationConfirmedOn) {
+        if (cashBag.originationSource === 2 && cashBag.eposCashbagId === null) {
           manualDataToInclude.push(cashBag.id);
         }
       });
@@ -835,9 +846,10 @@ angular.module('ts5App')
         credit: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, null, 'creditCardVerifiedOn'),
         virtual: setManualDataSet(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude, 'Virtual', 'virtualItemVerifiedOn'),
         voucher: setManualDataSet(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude, 'Voucher', 'voucherItemsVerifiedOn'),
-        promotion: setManualDataSet(angular.copy(responseCollectionFromAPI[7].response), manualDataToInclude, null, 'promoVerifiedOn'),
-        discount: setManualDataSet(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude, null, 'discountVerifiedOn')
+        discount: setManualDataSet(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude, null, 'discountVerifiedOn'),
+        promotion: setManualDataSet(angular.copy(responseCollectionFromAPI[7].response), manualDataToInclude, null, 'promoVerifiedOn')
       };
+      
     }
 
     function setSubmittedCashBagList() {
@@ -855,11 +867,12 @@ angular.module('ts5App')
       var manualListIds = [];
       var manualList = [];
       angular.forEach($scope.cashBagList, function (cashBag) {
-        if (cashBag.originationSource === 2 && cashBag.eposCashbagId === null ) {
-        	manualList.push(cashBag);
-        	manualListIds.push(cashBag.id);
+        if (cashBag.originationSource === 2 && cashBag.eposCashbagId === null) {
+          manualList.push(cashBag);
+          manualListIds.push(cashBag.id);
         }
       });
+
       $scope.manualCashBagIds = manualListIds;
       $scope.manualCashBags = manualList;
     }
