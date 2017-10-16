@@ -85,9 +85,9 @@ angular.module('ts5App')
     };
 
     this.formatMultiSelectedValuesForSearch = function() {
-      $this.addSearchValuesFromMultiSelectArray('operationalDays', $scope.multiSelectedValues.daysOfOperation, 'id');
+      $this.addSearchValuesFromMultiSelectArray('day', $scope.multiSelectedValues.daysOfOperation, 'id');
       $this.addSearchValuesFromMultiSelectArray('companyCarrierTypeId', $scope.multiSelectedValues.aircraftTypes, 'companyCarrierTypeId');
-      $this.addSearchValuesFromMultiSelectArray('departureStationId', $scope.multiSelectedValues.depStations, 'stationId');
+      $this.addSearchValuesFromMultiSelectArray('depStationId', $scope.multiSelectedValues.depStations, 'stationId');
       $this.addSearchValuesFromMultiSelectArray('arrivalStationId', $scope.multiSelectedValues.arrStations, 'stationId');
     };
 
@@ -101,7 +101,9 @@ angular.module('ts5App')
       $scope.isSearch = false;
       $scope.menuAssignments = [];
       $scope.search = {};
-      $localStorage.search.searchMenuAssignment = {};
+      $scope.multiSelectedValues = {};
+      $localStorage.search.menuAssignments = {};
+      $localStorage.multiSelectedValues.menuAssignments = {};
 
       $this.meta = {
         count: undefined,
@@ -126,6 +128,14 @@ angular.module('ts5App')
       } else {
         $scope.search = {};
         $localStorage.search = {};
+      }
+
+      var savedMultiSelectedValues = $localStorage.multiSelectedValues;
+      if (angular.isDefined(savedMultiSelectedValues)) {
+        $scope.multiSelectedValues = savedMultiSelectedValues.menuAssignments || {};
+      } else {
+        $scope.multiSelectedValues = {};
+        $localStorage.multiSelectedValues = {};
       }
     }
 
@@ -168,9 +178,11 @@ angular.module('ts5App')
         offset: $this.meta.offset
       });
 
-      payload.dateFrom = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
-      payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
-      payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
+      payload.dateFrom = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
+      payload.startDate =  dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+
+      payload.dateEnd = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
+      payload.endDate = null;
 
       menuAssignmentFactory.getMenuAssignmentList(payload).then($this.getMenuAssignmentListSuccess);
       $this.meta.offset += $this.meta.limit;
@@ -186,6 +198,7 @@ angular.module('ts5App')
 
       $scope.isSearch = true;
       $localStorage.search.menuAssignments = angular.copy($scope.search);
+      $localStorage.multiSelectedValues.menuAssignments = angular.copy($scope.multiSelectedValues);
       $scope.loadMenuAssignmentData();
     };
 
