@@ -122,14 +122,12 @@ angular.module('ts5App')
 
         item.isMenuExpired = true;
 
-        var menu = item.masterMenu.menus[0];
-
-        if (menu) {
+        item.masterMenu.menus.forEach(function (menu) {
           var menuEndDate = dateUtility.formatDateForApp(menu.endDate);
           if (dateUtility.isTomorrowOrLaterDatePicker(menuEndDate)) {
             item.isMenuExpired = false;
           }
-        }
+        });
 
       });
 
