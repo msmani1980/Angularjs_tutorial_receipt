@@ -13,6 +13,44 @@ angular.module('ts5App')
 
     this.getMenu = function () {
       return [{
+        title: 'Company Management',
+        menuItems: [{
+          name: 'Manage Companies',
+          route: '/#/company-list',
+          icon: 'icon-manage-company',
+          className: 'dashboard-manageCompanies',
+          package: 'COMPANY',
+          role: 'COMPANY'
+        }, {
+          name: 'Create Company',
+          route: '/#/company-create',
+          icon: 'icon-create-company',
+          className: 'dashboard-createCompany',
+          package: 'COMPANY',
+          role: 'COMPANY',
+          permissions: [{
+            apiName: '/api/companies',
+            permissionCodes: ['C']
+          }]
+        }]
+      }, {
+        title: 'Currency & Exchange Rate Management',
+        menuItems: [{
+          name: 'Currency Setup',
+          route: '/#/currency-edit',
+          icon: 'icon-manage-retail-category',
+          className: 'dashboard-currencySetup',
+          package: 'CURRENCYEXCHNG',
+          role: 'COMPANYCURRENCY'
+        }, {
+          name: 'ePOS Exchange Rate',
+          route: '/#/company-exchange-rate-edit',
+          icon: 'icon-manage-transactions',
+          className: 'dashboard-companyExchangeRateEdit',
+          package: 'CURRENCYEXCHNG',
+          role: 'EPOSEXCHNG'
+        }]
+      }, {
         title: 'Retail Item Management',
         menuItems: [{
           name: 'Manage Items',
@@ -41,23 +79,23 @@ angular.module('ts5App')
           role: 'RETAILITEMCATEGORY'
         }]
       }, {
-        title: 'Company Management',
+        title: 'Discount Management',
         menuItems: [{
-          name: 'Manage Companies',
-          route: '/#/company-list',
-          icon: 'icon-manage-company',
-          className: 'dashboard-manageCompanies',
-          package: 'COMPANY',
-          role: 'COMPANY'
+          name: 'Manage Discounts',
+          route: '/#/discounts',
+          icon: 'icon-manage-discount',
+          className: 'dashboard-manageDiscount',
+          package: 'DISCOUNT',
+          role: 'DISCOUNT'
         }, {
-          name: 'Create Company',
-          route: '/#/company-create',
-          icon: 'icon-create-company',
-          className: 'dashboard-createCompany',
-          package: 'COMPANY',
-          role: 'COMPANY',
+          name: 'Create Discount',
+          route: '/#/discounts/create',
+          icon: 'icon-create-discount',
+          className: 'dashboard-createDiscount',
+          package: 'DISCOUNT',
+          role: 'DISCOUNT',
           permissions: [{
-            apiName: '/api/companies',
+            apiName: '/api/company-discounts',
             permissionCodes: ['C']
           }]
         }]
@@ -70,6 +108,79 @@ angular.module('ts5App')
           className: 'dashboard-manageSchedules',
           package: 'SCHEDULE',
           role: 'SCHEDULE'
+        }]
+      }, {
+        title: 'Employee Management',
+        menuItems: [{
+          name: 'Manage Employees',
+          route: '/#/employees',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageEmployees',
+          package: 'EMPLOYEE',
+          role: 'EMPLOYEE'
+        }, {
+          name: 'Create Employee',
+          route: '/#/employee/create',
+          icon: 'icon-create-menu',
+          className: 'dashboard-createEmployee',
+          package: 'EMPLOYEE',
+          role: 'EMPLOYEE'
+        }]
+      }, {
+        title: 'Employee Messages',
+        menuItems: [{
+          name: 'Manage Messages',
+          route: '/#/employee-messages',
+          icon: 'icon-employee-messages',
+          className: 'dashboard-manageEmployeeMessages',
+          package: 'EMPLOYEEMSG',
+          role: 'EMPLOYEEMESSAGE'
+        }, {
+          name: 'Create Message',
+          route: '/#/employee-message/create',
+          icon: 'icon-employee-messages',
+          className: 'dashboard-manageEmployeeMessages',
+          package: 'EMPLOYEEMSG',
+          role: 'EMPLOYEEMESSAGE'
+        }]
+      }, {
+        title: 'Promotion Management',
+        menuItems: [{
+          name: 'Manage Promotions',
+          route: '/#/promotions',
+          icon: 'icon-manage-promotion',
+          className: 'dashboard-managePromotions',
+          package: 'PROMOTION',
+          role: 'PROMOTION'
+        }, {
+          name: 'Create Promotion',
+          route: '/#/promotions/create',
+          icon: 'icon-create-promotion',
+          className: 'dashboard-createPromotion',
+          package: 'PROMOTION',
+          role: 'PROMOTION',
+          permissions: [{
+            apiName: '/api/promotions',
+            permissionCodes: ['C']
+          }]
+        }, {
+          name: 'Promotion Category',
+          route: '/#/promotion-category-list',
+          icon: 'icon-manage-promotion-category',
+          className: 'dashboard-managePromotionCategory',
+          package: 'PROMOTION',
+          role: 'PROMOTIONCATEGORY'
+        }, {
+          name: 'Promotion Catalog',
+          route: '/#/promotion-catalog-list',
+          icon: 'icon-create-catalog',
+          className: 'dashboard-createCatalog',
+          package: 'PROMOTION',
+          role: 'PROMOTIONCATALOG',
+          permissions: [{
+            apiName: '/api/company-promotion-catalogs',
+            permissionCodes: ['C']
+          }]
         }]
       }, {
         title: 'Tax Management',
@@ -152,97 +263,17 @@ angular.module('ts5App')
           }]
         }]
       }, {
-        title: 'Promotion Management',
-        menuItems: [{
-          name: 'Manage Promotions',
-          route: '/#/promotions',
-          icon: 'icon-manage-promotion',
-          className: 'dashboard-managePromotions',
-          package: 'PROMOTION',
-          role: 'PROMOTION'
-        }, {
-          name: 'Create Promotion',
-          route: '/#/promotions/create',
-          icon: 'icon-create-promotion',
-          className: 'dashboard-createPromotion',
-          package: 'PROMOTION',
-          role: 'PROMOTION',
-          permissions: [{
-            apiName: '/api/promotions',
-            permissionCodes: ['C']
-          }]
-
-        }, {
-          name: 'Promotion Category',
-          route: '/#/promotion-category-list',
-          icon: 'icon-manage-promotion-category',
-          className: 'dashboard-managePromotionCategory',
-          package: 'PROMOTION',
-          role: 'PROMOTIONCATEGORY'
-        }, {
-          name: 'Promotion Catalog',
-          route: '/#/promotion-catalog-list',
-          icon: 'icon-create-catalog',
-          className: 'dashboard-createCatalog',
-          package: 'PROMOTION',
-          role: 'PROMOTIONCATALOG',
-          permissions: [{
-            apiName: '/api/company-promotion-catalogs',
-            permissionCodes: ['C']
-          }]
-
-        }]
-      }, {
-        title: 'Discount Management',
-        menuItems: [{
-          name: 'Manage Discounts',
-          route: '/#/discounts',
-          icon: 'icon-manage-discount',
-          className: 'dashboard-manageDiscount',
-          package: 'DISCOUNT',
-          role: 'DISCOUNT'
-        }, {
-          name: 'Create Discount',
-          route: '/#/discounts/create',
-          icon: 'icon-create-discount',
-          className: 'dashboard-createDiscount',
-          package: 'DISCOUNT',
-          role: 'DISCOUNT',
-          permissions: [{
-            apiName: '/api/company-discounts',
-            permissionCodes: ['C']
-          }]
-
-        }]
-      }, {
-        title: 'Employee Messages',
-        menuItems: [{
-          name: 'Manage Messages',
-          route: '/#/employee-messages',
-          icon: 'icon-employee-messages',
-          className: 'dashboard-manageEmployeeMessages',
-          package: 'EMPLOYEEMSG',
-          role: 'EMPLOYEEMESSAGE'
-        }, {
-          name: 'Create Message',
-          route: '/#/employee-message/create',
-          icon: 'icon-employee-messages',
-          className: 'dashboard-manageEmployeeMessages',
-          package: 'EMPLOYEEMSG',
-          role: 'EMPLOYEEMESSAGE'
-        }]
-      }, {
         title: 'Receipt Rule',
         menuItems: [{
           name: 'Manage Rules',
-          route: emberURL + 'receipt-rules',
+          route: '/#/receipt-rules',
           icon: 'icon-manage-receipt-rules',
           className: 'dashboard-manageReceiptRules',
           package: 'RECEIPT',
           role: 'RECEIPTRULE'
         }, {
           name: 'Create Rules',
-          route: emberURL + 'receipt-rules/create',
+          route:'/#/receipt-rules/create',
           icon: 'icon-create-receipt-rules',
           className: 'dashboard-createReceiptRule',
           package: 'RECEIPT',
@@ -251,7 +282,123 @@ angular.module('ts5App')
             apiName: '/api/',
             permissionCodes: ['C']
           }]
-
+        }]
+      }, {
+        title: 'Manage Reasons',
+        menuItems: [{
+          name: 'Reason Codes',
+          route: '/#/company-reason-code',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-globalReasonCode',
+          package: 'REASONGLOBAL',
+          role: 'REASONGLOBAL'
+        }, {
+          name: 'Reason Types',
+          route: '/#/company-reason-type-subscribe',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-companyReasonCode',
+          package: 'REASONCOMPANY',
+          role: 'REASONCOMPANY'
+        }]
+      }, {
+        title: 'Excise Duty',
+        menuItems: [{
+          name: 'Manage Excise Duty',
+          route: '/#/excise-duty-list',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-exciseDuty',
+          package: 'EXCISEDUTY',
+          role: 'EXCISEDUTY'
+        }, {
+          name: 'Retail Item Excise Duty Relationships',
+          route: '/#/excise-duty-relationship-list',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-exciseDuty',
+          package: 'EXCISEDUTY',
+          role: 'EXCISEDUTY'
+        }]
+      }, {
+        title: 'Employee Commission',
+        menuItems: [{
+          name: 'Employee Commission',
+          route: '/#/employee-commission-list',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-employeeCommission',
+          package: 'EMLOYEECOMMISSION',
+          role: 'EMLOYEECOMMISSION'
+        }, {
+          name: 'Commission Data Table',
+          route: '/#/commission-data-table',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-CommissionDataTable',
+          package: 'EMLOYEECOMMISSION',
+          role: 'EMLOYEECOMMISSION'
+        }]
+      }, {
+        title: 'Stock Manager',
+        menuItems: [{
+          name: 'Stock Dashboard',
+          route: '/#/stock-dashboard',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-stockDashboard',
+          package: 'STOCKMANAGER',
+          role: 'STOCKDASHBOARD'
+        }, {
+          name: 'Stock Take Report',
+          route: '/#/stock-take-report',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-stockTakeReport',
+          package: 'STOCKMANAGER',
+          role: 'STOCKREPORT'
+        }, {
+          name: 'Manage Goods Received',
+          route: '/#/manage-goods-received',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-manageGoodsReceived',
+          package: 'STOCKMANAGER',
+          role: 'GOODSRECEIVEDDASHBOARD'
+        }, {
+          name: 'Create Delivery Note',
+          route: '/#/lmp-delivery-note/create',
+          icon: 'icon-manage-retail-category',
+          className: 'dashboard-deliveryNote',
+          package: 'STOCKMANAGER',
+          role: 'DELIVERYNOTES',
+          permissions: [{
+            apiName: '/api/stock-management',
+            permissionCodes: ['C']
+          }]
+        }]
+      }, {
+        title: 'Manage Store Number',
+        menuItems: [{
+          name: 'Store Number Create',
+          route: '/#/store-number',
+          icon: 'icon-create-company',
+          className: 'dashboard-storeNumberCreate',
+          package: 'STORENUMBER',
+          role: 'STORENUMBER',
+          permissions: [{
+            apiName: '/api/companies',
+            permissionCodes: ['C']
+          }]
+        }]
+      }, {
+        title: 'Station Operations',
+        menuItems: [{
+          name: 'Store Dispatch',
+          route: '/#/store-instance-create/dispatch',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-storeDispatch',
+          package: 'STATIONOPERATIONS',
+          role: 'STOREDISPATCH'
+        }, {
+          name: 'Store Instance Dashboard',
+          route: '/#/store-instance-dashboard',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-storeInstanceDashboard',
+          package: 'STATIONOPERATIONS',
+          role: 'STOREINSTANCEDASHBOARD'
         }]
       }, {
         title: 'Transaction Retrieval',
@@ -285,246 +432,99 @@ angular.module('ts5App')
           }]
         }]
       }, {
-        title: 'Employee Commission',
+        title: 'Reconciliation',
         menuItems: [{
-          name: 'Employee Commission',
-          route: '/#/employee-commission-list',
+          name: 'Reconciliation Dashboard',
+          route: '/#/reconciliation-dashboard',
           icon: 'icon-manage-schedule',
-          className: 'dashboard-employeeCommission',
-          package: 'EMLOYEECOMMISSION',
-          role: 'EMLOYEECOMMISSION'
+          className: 'dashboard-reconciliationDashboard',
+          package: 'RECONCILIATION',
+          role: 'RECONCILIATION'
         }, {
-          name: 'Commission Data Table',
-          route: '/#/commission-data-table',
+          name: 'Relate ePOS Created Store',
+          route: '/#/manual-ecs',
           icon: 'icon-manage-schedule',
-          className: 'dashboard-CommissionDataTable',
-          package: 'EMLOYEECOMMISSION',
-          role: 'EMLOYEECOMMISSION'
+          className: 'dashboard-manualECS',
+          package: 'RECONCILIATION',
+          role: 'RELATEESC'
         }]
       }, {
-        title: 'Manage Reasons',
+        title: 'Cash Management',
         menuItems: [{
-          name: 'Reason Codes',
-          route: '/#/company-reason-code',
-          icon: 'icon-manage-schedule',
-          className: 'dashboard-globalReasonCode',
-          package: 'REASONGLOBAL',
-          role: 'REASONGLOBAL'
+          name: 'Daily Exchange Rate',
+          route: '/#/exchange-rates',
+          icon: 'icon-manage-transactions',
+          className: 'dashboard-manageDailyExchangeRates',
+          package: 'CASH',
+          role: 'DAILYEXCHANGERATE'
         }, {
-          name: 'Reason Types',
-          route: '/#/company-reason-type-subscribe',
-          icon: 'icon-manage-schedule',
-          className: 'dashboard-companyReasonCode',
-          package: 'REASONCOMPANY',
-          role: 'REASONCOMPANY'
+          name: 'Manage Cash Bag',
+          route: '/#/cash-bag-list',
+          icon: 'icon-create-receipt-rules',
+          className: 'dashboard-manageCashBag',
+          package: 'CASH',
+          role: 'CASHBAG'
+        }, {
+          name: 'Cash Bag Submission',
+          route: '/#/cash-bag-submission',
+          icon: 'icon-manage-retail-category',
+          className: 'dashboard-cashBagSubmission',
+          package: 'CASH',
+          role: 'CASHBAGSUBMIT'
         }]
       }, {
-        title: 'Station Operations',
+        title: 'StockOwner Item Management',
         menuItems: [{
-          name: 'Store Dispatch',
-          route: '/#/store-instance-create/dispatch',
-          icon: 'icon-manage-schedule',
-          className: 'dashboard-storeDispatch',
-          package: 'STATIONOPERATIONS',
-          role: 'STOREDISPATCH'
+          name: 'Manage Items',
+          route: '/#/stock-owner-item-list',
+          icon: 'icon-manage-retail-item',
+          className: 'dashboard-managemenuItems',
+          package: 'STOCKOWNER',
+          role: 'STOCKOWNER'
         }, {
-          name: 'Store Instance Dashboard',
-          route: '/#/store-instance-dashboard',
-          icon: 'icon-manage-schedule',
-          className: 'dashboard-storeInstanceDashboard',
-          package: 'STATIONOPERATIONS',
-          role: 'STOREINSTANCEDASHBOARD'
+          name: 'Create Item',
+          route: '/#/stock-owner-item-create',
+          icon: 'icon-create-retail-item',
+          className: 'dashboard-createItem',
+          package: 'STOCKOWNER',
+          role: 'STOCKOWNER',
+          permissions: [{
+            apiName: '/api/retail-items',
+            permissionCodes: ['C']
+          }]
+        }, {
+          name: 'Manage Categories',
+          route: '/#/category-list',
+          icon: 'icon-manage-retail-category',
+          className: 'dashboard-manageItemCategories',
+          package: 'STOCKOWNER',
+          role: 'STOCKOWNERCATEGORY'
         }]
-      },
-        {
-          title: 'Reconciliation',
-          menuItems: [{
-            name: 'Reconciliation Dashboard',
-            route: '/#/reconciliation-dashboard',
-            icon: 'icon-manage-schedule',
-            className: 'dashboard-reconciliationDashboard',
-            package: 'RECONCILIATION',
-            role: 'RECONCILIATION'
-          }, {
-            name: 'Relate ePOS Created Store',
-            route: '/#/manual-ecs',
-            icon: 'icon-manage-schedule',
-            className: 'dashboard-manualECS',
-            package: 'RECONCILIATION',
-            role: 'RELATEESC'
-          }]
+      }, {
+        title: 'Reports',
+        menuItems: [{
+          name: 'Reports',
+          route: '/#/reports',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-reports',
+          package: 'REPORT',
+          role: 'REPORT'
         }, {
-          title: 'Stock Manager',
-          menuItems: [{
-            name: 'Stock Dashboard',
-            route: '/#/stock-dashboard',
-            icon: 'icon-manage-schedule',
-            className: 'dashboard-stockDashboard',
-            package: 'STOCKMANAGER',
-            role: 'STOCKDASHBOARD'
-          }, {
-            name: 'Stock Take Report',
-            route: '/#/stock-take-report',
-            icon: 'icon-manage-schedule',
-            className: 'dashboard-stockTakeReport',
-            package: 'STOCKMANAGER',
-            role: 'STOCKREPORT'
-          }, {
-            name: 'Manage Goods Received',
-            route: '/#/manage-goods-received',
-            icon: 'icon-manage-schedule',
-            className: 'dashboard-manageGoodsReceived',
-            package: 'STOCKMANAGER',
-            role: 'GOODSRECEIVEDDASHBOARD'
-          }, {
-            name: 'Create Delivery Note',
-            route: '/#/lmp-delivery-note/create',
-            icon: 'icon-manage-retail-category',
-            className: 'dashboard-deliveryNote',
-            package: 'STOCKMANAGER',
-            role: 'DELIVERYNOTES',
-            permissions: [{
-              apiName: '/api/stock-management',
-              permissionCodes: ['C']
-            }]
-
-          }]
+          name: 'Queue',
+          route: '/#/reports/queue',
+          icon: 'icon-create-menu',
+          className: 'dashboard-reports',
+          package: 'REPORT',
+          role: 'REPORT'
         }, {
-          title: 'Manage Store Number',
-          menuItems: [{
-            name: 'Store Number Create',
-            route: '/#/store-number',
-            icon: 'icon-create-company',
-            className: 'dashboard-storeNumberCreate',
-            package: 'STORENUMBER',
-            role: 'STORENUMBER',
-            permissions: [{
-              apiName: '/api/companies',
-              permissionCodes: ['C']
-            }]
-
-          }]
-        }, {
-          title: 'Excise Duty',
-          menuItems: [{
-            name: 'Manage Excise Duty',
-            route: '/#/excise-duty-list',
-            icon: 'icon-manage-schedule',
-            className: 'dashboard-exciseDuty',
-            package: 'EXCISEDUTY',
-            role: 'EXCISEDUTY'
-          }, {
-            name: 'Retail Item Excise Duty Relationships',
-            route: '/#/excise-duty-relationship-list',
-            icon: 'icon-manage-schedule',
-            className: 'dashboard-exciseDuty',
-            package: 'EXCISEDUTY',
-            role: 'EXCISEDUTY'
-          }]
-        }, {
-          title: 'Cash Management',
-          menuItems: [{
-            name: 'Daily Exchange Rate',
-            route: '/#/exchange-rates',
-            icon: 'icon-manage-transactions',
-            className: 'dashboard-manageDailyExchangeRates',
-            package: 'CASH',
-            role: 'DAILYEXCHANGERATE'
-          }, {
-            name: 'Manage Cash Bag',
-            route: '/#/cash-bag-list',
-            icon: 'icon-create-receipt-rules',
-            className: 'dashboard-manageCashBag',
-            package: 'CASH',
-            role: 'CASHBAG'
-          }, {
-            name: 'Cash Bag Submission',
-            route: '/#/cash-bag-submission',
-            icon: 'icon-manage-retail-category',
-            className: 'dashboard-cashBagSubmission',
-            package: 'CASH',
-            role: 'CASHBAGSUBMIT'
-          }]
-        }, {
-          title: 'Currency & Exchange Rate Management',
-          menuItems: [{
-            name: 'Currency Setup',
-            route: '/#/currency-edit',
-            icon: 'icon-manage-retail-category',
-            className: 'dashboard-currencySetup',
-            package: 'CURRENCYEXCHNG',
-            role: 'COMPANYCURRENCY'
-          }, {
-            name: 'ePOS Exchange Rate',
-            route: '/#/company-exchange-rate-edit',
-            icon: 'icon-manage-transactions',
-            className: 'dashboard-companyExchangeRateEdit',
-            package: 'CURRENCYEXCHNG',
-            role: 'EPOSEXCHNG'
-          }]
-        }, {
-          title: 'StockOwner Item Management',
-          menuItems: [{
-            name: 'Manage Items',
-            route: '/#/stock-owner-item-list',
-            icon: 'icon-manage-retail-item',
-            className: 'dashboard-managemenuItems',
-            package: 'STOCKOWNER',
-            role: 'STOCKOWNER'
-          }, {
-            name: 'Create Item',
-            route: '/#/stock-owner-item-create',
-            icon: 'icon-create-retail-item',
-            className: 'dashboard-createItem',
-            package: 'STOCKOWNER',
-            role: 'STOCKOWNER',
-            permissions: [{
-              apiName: '/api/retail-items',
-              permissionCodes: ['C']
-            }]
-          }, {
-            name: 'Manage Categories',
-            route: '/#/category-list',
-            icon: 'icon-manage-retail-category',
-            className: 'dashboard-manageItemCategories',
-            package: 'STOCKOWNER',
-            role: 'STOCKOWNERCATEGORY'
-          }]
-        }, {
-          title: 'Manual ECS',
-          menuItems: [{
-            name: 'Create Manual ECS Relationship',
-            route: '/#/manual-ECS',
-            icon: 'icon-manage-schedule',
-            className: 'dashboard-manualECS',
-            package: 'ECB',
-            role: 'ECB'
-          }]
-        }, {
-          title: 'Reports',
-          menuItems: [{
-            name: 'Reports',
-            route: '/#/reports',
-            icon: 'icon-manage-schedule',
-            className: 'dashboard-reports',
-            package: 'REPORT',
-            role: 'REPORT'
-          }, {
-            name: 'Queue',
-            route: '/#/reports/queue',
-            icon: 'icon-create-menu',
-            className: 'dashboard-reports',
-            package: 'REPORT',
-            role: 'REPORT'
-          }, {
-            name: 'Scheduled Reports',
-            route: '/#/reports/scheduled-reports',
-            icon: 'icon-create-menu',
-            className: 'dashboard-reports',
-            package: 'REPORT',
-            role: 'REPORT'
-          }]
-        }];
+          name: 'Scheduled Reports',
+          route: '/#/reports/scheduled-reports',
+          icon: 'icon-create-menu',
+          className: 'dashboard-reports',
+          package: 'REPORT',
+          role: 'REPORT'
+        }]
+      }];
     };
 
   });

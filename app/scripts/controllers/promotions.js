@@ -559,6 +559,9 @@ angular.module('ts5App')
     }
 
     function setScopePromotionForViewFromAPIdata(promotionFromAPI) {
+      $scope.promotion.startDate = dateUtility.formatDateForApp(angular.copy(promotionFromAPI.startDate));
+      $scope.promotion.endDate = dateUtility.formatDateForApp(angular.copy(promotionFromAPI.endDate));
+
       $scope.promotion.spendLimitCategory = getObjectByIdFromSelectOptions('promotionCategories', {
         id: promotionFromAPI.spendLimitCategoryId
       });
@@ -809,6 +812,7 @@ angular.module('ts5App')
     };
 
     states.viewInit = function () {
+      $scope.viewName = 'View Promotion';
       getPromotion();
     };
 

@@ -20,14 +20,10 @@ angular.module('ts5App')
       '/change-password/*',
       '/commission-data-table/*',
       '/commission-data/*',
-      '/company-exchange-rate-edit/*',
       '/company-reason-code/*',
       '/company-reason-type-subscribe/*',
-      '/currency-edit/*',
       '/employee-commission-list/*',
       '/employee-commission/*',
-      '/employee-message/*',
-      '/employee-messages/*',
       '/forgot-username-password/*',
       '/global-reason-code/*',
       '/lmp-locations-list/*',
@@ -48,13 +44,9 @@ angular.module('ts5App')
       '/ember/#/menu-rules/*',
       '/ember/#/promotion-catalogs/*',
       '/ember/#/receipt-rules/*',
-      '/promotion-catalog-list/*',
-      '/promotion-catalog/*',
-      '/promotion-catalog-conjunction/*'
     ];
 
     var legacyApis = [
-      '/rsvr/api/dispatch/store-instances/[0-9]*/status/[9-9][^11]*$'
     ];
 
     var onlyRsvrApis = [
@@ -70,7 +62,7 @@ angular.module('ts5App')
       '/rsvr/api/cashbags/cash/',
       '/rsvr/api/cashbag-[a-z]+(/[0-9]*)?',
       '/rsvr/api/dispatch/store-instances/[0-9]*/status/11',
-      '/api/companies/[0-9]*/relationships',
+      '/rsvr/api/companies/[0-9]*/relationships',
       '/rsvr/api/company-currency-globals',
       '/rsvr/api/companies/stores',
       '/rsvr/api/companies/time-configuration',
