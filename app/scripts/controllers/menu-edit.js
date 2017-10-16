@@ -85,12 +85,14 @@ angular.module('ts5App')
           if (menuItem.id) {
             itemPayload.id = menuItem.id;
           }
+
           itemPayload.itemId = menuItem.selectedItem.id;
           itemPayload.itemQty = parseInt(menuItem.itemQty);
           itemPayload.sortOrder = parseInt(menuItem.sortOrderIndex);
           itemsArray.push(itemPayload);
         }
       });
+
       return itemsArray;
     };
 
@@ -262,6 +264,7 @@ angular.module('ts5App')
         };
         $scope.menuItemList.push(newItem);
       });
+
       $scope.menuItemList = $filter('orderBy')($scope.menuItemList, 'sortOrder');
     }
 
@@ -325,30 +328,29 @@ angular.module('ts5App')
 
     var draggedMenuItemObject;
     var draggedOntoIemIndex;
-    // scope event handlers
+
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
     $scope.dropSuccess = function ($event, index, array) {
-      if(draggedOntoIemIndex != null && draggedMenuItemObject != null)
+      if (draggedOntoIemIndex != null && draggedMenuItemObject != null)
       {
         var tempItemObject = array[draggedOntoIemIndex];
         array.splice(draggedOntoIemIndex, 1, draggedMenuItemObject);
-        array.splice(index,1, tempItemObject);
+        array.splice(index, 1, tempItemObject);
         draggedMenuItemObject = null;
-        for(var i=0; i<array.length; i++)
+        for (var i = 0; i < array.length; i++)
         {
           array[i].sortOrderIndex = i;
           array[i].sortOrder = i;
         }
-      }
-      else
-      {
-        draggedMenuItemObject = null;
-        draggedOntoIemIndex = null;
-        messageService.display('warning', 'Please drag and drop only inside the Menu Items list', 'Drag to reorder');
-      }
+      } else
+        {
+          draggedMenuItemObject = null;
+          draggedOntoIemIndex = null;
+          messageService.display('warning', 'Please drag and drop only inside the Menu Items list', 'Drag to reorder');
+        }
     };
 
-    $scope.onDrop = function ($event,$data, index) {
+    $scope.onDrop = function ($event, $data, index) {
       draggedOntoIemIndex = index;
       draggedMenuItemObject = $data;
     };
