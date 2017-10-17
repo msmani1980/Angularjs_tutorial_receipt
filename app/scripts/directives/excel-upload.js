@@ -83,7 +83,7 @@ angular.module('ts5App')
         $scope.templateName = 'FileUpload-PostTripManagement';
       } else if ($scope.type === 'schedule') {
         $scope.templateName = 'scheduleUpload';
-      }else if ($scope.type === 'employee') {
+      } else if ($scope.type === 'employee') {
         $scope.templateName = 'employeeUpload';
       }
     }
@@ -107,6 +107,8 @@ angular.module('ts5App')
       } finally {
         if ($scope.type === 'schedule') {
           $this.service = $injector.get('schedulesService');
+        } else if ($scope.type === 'employee') {
+          $this.service = $injector.get('employeesService');
         } else {
           $this.service = $injector.get($scope.type + 'Service');
         }
