@@ -121,24 +121,6 @@ angular.module('ts5App')
       return dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
     };
 
-    function checkForLocalStorage() {
-      var savedSearch = $localStorage.search;
-      if (angular.isDefined(savedSearch)) {
-        $scope.search = savedSearch.menuAssignments || {};
-      } else {
-        $scope.search = {};
-        $localStorage.search = {};
-      }
-
-      var savedMultiSelectedValues = $localStorage.multiSelectedValues;
-      if (angular.isDefined(savedMultiSelectedValues)) {
-        $scope.multiSelectedValues = savedMultiSelectedValues.menuAssignments || {};
-      } else {
-        $scope.multiSelectedValues = {};
-        $localStorage.multiSelectedValues = {};
-      }
-    }
-
     this.getCarrierNumberSuccess = function(response) {
       $scope.carrierNumbers = angular.copy(response.response);
     };
@@ -198,6 +180,7 @@ angular.module('ts5App')
       $scope.isSearch = true;
       $localStorage.search.menuAssignments = angular.copy($scope.search);
       $localStorage.multiSelectedValues.menuAssignments = angular.copy($scope.multiSelectedValues);
+
       $scope.loadMenuAssignmentData();
     };
 
@@ -219,7 +202,6 @@ angular.module('ts5App')
       $scope.allCheckboxesSelected = false;
       var initDependencies = $this.makeInitPromises();
       $q.all(initDependencies).then(function() {
-        checkForLocalStorage();
       });
 
     };
