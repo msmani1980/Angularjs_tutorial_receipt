@@ -88,7 +88,7 @@ angular.module('ts5App')
       $this.addSearchValuesFromMultiSelectArray('day', $scope.multiSelectedValues.daysOfOperation, 'id');
       $this.addSearchValuesFromMultiSelectArray('companyCarrierTypeId', $scope.multiSelectedValues.aircraftTypes, 'companyCarrierTypeId');
       $this.addSearchValuesFromMultiSelectArray('depStationId', $scope.multiSelectedValues.depStations, 'stationId');
-      $this.addSearchValuesFromMultiSelectArray('arrivalStationId', $scope.multiSelectedValues.arrStations, 'stationId');
+      $this.addSearchValuesFromMultiSelectArray('arrStationId', $scope.multiSelectedValues.arrStations, 'stationId');
     };
 
     $scope.toggleColumnView = function(columnName) {
@@ -118,7 +118,7 @@ angular.module('ts5App')
     };
 
     this.constructStartDate = function () {
-      return ($scope.isSearch) ? null : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      return dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
     };
 
     function checkForLocalStorage() {
@@ -179,9 +179,8 @@ angular.module('ts5App')
       });
 
       payload.dateFrom = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
-      payload.startDate =  dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
-
-      payload.dateEnd = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
+      payload.dateTo = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
+      payload.startDate = null;
       payload.endDate = null;
 
       menuAssignmentFactory.getMenuAssignmentList(payload).then($this.getMenuAssignmentListSuccess);
