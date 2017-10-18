@@ -209,7 +209,7 @@
                 <th>Price</th>
                 <th>Qty</th>
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
-                <th>Total Discount Value {{baseCurrency.currency.code}}</th>
+<!--                 <th>Total Discount Value {{baseCurrency.currency.code}}</th> -->
             </tr>
             <tr ng-repeat="manualDiscountComp in discountListComp | filter:{discountTypeName: filter.discounts} track by $index">
               <td class="col-xs-4">
@@ -285,7 +285,7 @@
                 <th>Price</th>
                 <th>Qty</th>
                 <th>Total Discount Value {{selectedCurrency.currency.code}}</th>
-                <th>Total Discount Value {{baseCurrency.currency.code}}</th>
+<!--                 <th>Total Discount Value {{baseCurrency.currency.code}}</th> -->
             </tr>
             <tr ng-repeat="manualDiscountFlyer in discountListFlyer | filter:{discountTypeName: filter.discounts} track by $index">
               <td class="col-xs-4">
