@@ -274,46 +274,48 @@ angular.module('ts5App')
       var formattedCashBagList = [];
       $scope.isPaperAndCoinExchangeRatePreferred = false;
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
-        cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
-        var eposCalculatedAmount = cashBag.eposCalculatedAmount;
-        var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
-        if ($this.manualCash !== null && eposCalculatedAmount === null) {
-          $filter('filter')($this.manualCash, {
-             cashbagId: cashBag.cashbagId,
-             currencyId: cashBag.retailCompanyCurrency
-           }).map(function (cash) {
-             eposCalculatedAmount = cash.amount; 
-           });
+        if ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) {
+          cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
+          var eposCalculatedAmount = cashBag.eposCalculatedAmount;
+          var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
+          if ($this.manualCash !== null && eposCalculatedAmount === null) {
+            $filter('filter')($this.manualCash, {
+               cashbagId: cashBag.cashbagId,
+               currencyId: cashBag.retailCompanyCurrency
+             }).map(function (cash) {
+               eposCalculatedAmount = cash.amount; 
+             });
 
-          crewAmount = eposCalculatedAmount;
-        }
+            crewAmount = eposCalculatedAmount;
+          }
 
-        $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
-        var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
-        var coinExchangeRate = cashBag.chCoinExchangeRate;
-        var paperAmount = cashBag.paperAmountManual;
-        var coinAmount = cashBag.coinAmountManual;
-        var convertedPaperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
-        var convertdCoinAmount = cashBag.coinAmountManualCh || cashBag.coinAmountManualCHBank;
-        var totalBank = convertedPaperAmount + convertdCoinAmount;
-        var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
-        var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
+          $scope.isPaperAndCoinExchangeRatePreferred = (!!cashBag.chBankExchangeRate) ? ($scope.isPaperAndCoinExchangeRatePreferred) : true;
+          var bankOrPaperExchangeRate = cashBag.chBankExchangeRate || cashBag.chPaperExchangeRate;
+          var coinExchangeRate = cashBag.chCoinExchangeRate;
+          var paperAmount = cashBag.paperAmountManual;
+          var coinAmount = cashBag.coinAmountManual;
+          var convertedPaperAmount = cashBag.paperAmountManualCh || cashBag.paperAmountManualCHBank;
+          var convertdCoinAmount = cashBag.coinAmountManualCh || cashBag.coinAmountManualCHBank;
+          var totalBank = convertedPaperAmount + convertdCoinAmount;
+          var varianceValue = (paperAmount + coinAmount) - eposCalculatedAmount;
+          var isDiscrepancy = (formatAsCurrency(varianceValue) !== '0.00');
 
-        var cashBagItem = {
-          id: cashBag.id,
-          cashBagNumber: cashBag.cashbagNumber,
-          currency: cashBag.currencyObject.currencyCode,
-          eposCalculatedAmount: formatAsCurrency(eposCalculatedAmount),
-          crewAmount: formatAsCurrency(crewAmount),
-          paperAmount: formatAsCurrency(paperAmount),
-          coinAmount: formatAsCurrency(coinAmount),
-          varianceValue: formatAsCurrency(varianceValue),
-          bankOrPaperExchangeRate: formatAsCurrency(bankOrPaperExchangeRate, 4),
-          coinExchangeRate: formatAsCurrency(coinExchangeRate, 4),
-          totalBank: formatAsCurrency(totalBank),
-          isDiscrepancy: isDiscrepancy
-        };
-        formattedCashBagList.push(cashBagItem);
+          var cashBagItem = {
+            id: cashBag.id,
+            cashBagNumber: cashBag.cashbagNumber,
+            currency: cashBag.currencyObject.currencyCode,
+            eposCalculatedAmount: formatAsCurrency(eposCalculatedAmount),
+            crewAmount: formatAsCurrency(crewAmount),
+            paperAmount: formatAsCurrency(paperAmount),
+            coinAmount: formatAsCurrency(coinAmount),
+            varianceValue: formatAsCurrency(varianceValue),
+            bankOrPaperExchangeRate: formatAsCurrency(bankOrPaperExchangeRate, 4),
+            coinExchangeRate: formatAsCurrency(coinExchangeRate, 4),
+            totalBank: formatAsCurrency(totalBank),
+            isDiscrepancy: isDiscrepancy
+          };
+          formattedCashBagList.push(cashBagItem);
+        }  
       });
 
       $scope.cashBags = formattedCashBagList;
