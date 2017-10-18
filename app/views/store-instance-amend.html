@@ -1019,7 +1019,7 @@
                   <button class="btn btn-info" title="Show Payment Report" ng-click="showCashBagPaymentReport(cashBag)">
                     <i class="fa fa-file-text active"></i>
                   </button>
-                  <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" title="Add Manual Data" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual">
+                  <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" title="Add Manual Data" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual && canExecuteUnferify()">
                     <i class="fa fa-plus-circle active"></i>
                   </a>
                   <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag) && canExecuteActions(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
