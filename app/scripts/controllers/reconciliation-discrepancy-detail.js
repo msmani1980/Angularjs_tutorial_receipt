@@ -530,6 +530,8 @@ angular.module('ts5App')
         total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
       });
 
+      total += getManualDataTotals('discount');
+
       return total;
     }
 
