@@ -523,7 +523,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getWeightList(),
         itemsFactory.getPriceTypesList(),
         itemsFactory.getItemsList({}),
-        companiesFactory.getCompany(companyId)
+        companiesFactory.getCompany(companyId),
+        itemsFactory.getVoucherDurationsList()
       ];
     };
 
@@ -643,6 +644,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setItemPriceTypes(response[10]);
       $this.setItemList(response[11].retailItems);
       $this.setCompany(response[12]);
+      $this.setVoucherDurations(response[13]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         $this.getItem($routeParams.id);
       } else {
@@ -668,6 +670,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setItemTypes = function(data) {
       $scope.itemTypes = data;
+    };
+
+    this.setVoucherDurations = function (data) {
+      $scope.voucherDurations = data;
     };
 
     this.setCharacteristics = function(data) {
