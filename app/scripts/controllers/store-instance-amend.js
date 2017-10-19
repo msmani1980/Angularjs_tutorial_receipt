@@ -933,6 +933,7 @@ angular.module('ts5App')
       }
 
       if (itemTypeName === 'Regular') {
+        totalEPOS += $scope.totalCHManualValue;
         totalEPOS += getManualDataTotals('discount');
         totalEPOS += getManualDataTotals('promotion');
       }
@@ -1032,6 +1033,7 @@ angular.module('ts5App')
       });
 
       total += getManualDataTotals('discount');
+
       return total;
     }
 
@@ -1252,8 +1254,6 @@ angular.module('ts5App')
 
     function getCHManualData (chRevenue) {
       $this.chCashBag = lodash.uniq(angular.copy(chRevenue[0].response), 'id');
-      var chCreditCard = lodash.uniq(angular.copy(chRevenue[1].response), 'id');
-      var chDiscount = lodash.uniq(angular.copy(chRevenue[2].response), 'id');
       var totalManual = 0;
 
       angular.forEach($this.chCashBag, function (cashBag) {
@@ -1261,24 +1261,8 @@ angular.module('ts5App')
         if (foundCB && foundCB.originationSource === 2 && foundCB.eposCashbagId === null) {
           var cashTotal = (makeFinite(cashBag.paperAmountManualCh) + makeFinite(cashBag.coinAmountManualCh)) + (makeFinite(cashBag.paperAmountManualCHBank) +
           makeFinite(cashBag.coinAmountManualCHBank)) + makeFinite(cashBag.bankAmountCh);
-          totalManual += ($scope.manualCashBagIds.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
+          totalManual += ($scope.manualCashBagIds.indexOf(cashBag.cashbagId) >= 0 && $scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
         }
-      });
-
-      angular.forEach(chCreditCard, function (creditCard) {
-        var foundCB = lodash.findWhere($scope.cashBags, { id: creditCard.cashbagId });
-        if (foundCB && foundCB.originationSource === 2 && foundCB.eposCashbagId === null) {
-          var creditTotal = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountCc) + makeFinite(creditCard.paperAmountCc);
-          totalManual += ($scope.manualCashBagIds.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
-        }  
-      });
-
-      angular.forEach(chDiscount, function (discount) {
-        var foundCB = lodash.findWhere($scope.cashBags, { id: discount.cashbagId });
-        if (foundCB && foundCB.originationSource === 2 && foundCB.eposCashbagId === null) {
-          var discountTotal = makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
-          totalManual += ($scope.manualCashBagIds.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
-        }  
       });
 
       return totalManual;
