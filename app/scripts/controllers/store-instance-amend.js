@@ -933,7 +933,6 @@ angular.module('ts5App')
       }
 
       if (itemTypeName === 'Regular') {
-        totalEPOS += $scope.totalCHManualValue;
         totalEPOS += getManualDataTotals('discount');
         totalEPOS += getManualDataTotals('promotion');
       }

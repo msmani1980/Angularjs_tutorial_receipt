@@ -337,7 +337,7 @@ angular.module('ts5App')
       return total;
     }
 
-    function getTotalsFor(stockTotals, itemTypeName, totalPromotion) {
+    function getTotalsFor(stockTotals, itemTypeName)  {
       var stockItem = $filter('filter')(stockTotals, {
         itemTypeName: itemTypeName
       });
@@ -353,11 +353,6 @@ angular.module('ts5App')
       }
 
       if (itemTypeName === 'Regular') {
-        totalEPOS += $scope.totalCHManualValue;
-        if (angular.isDefined(totalPromotion) && totalPromotion > 0) {
-          totalEPOS += totalPromotion.totalEPOS;
-        }
-
         totalEPOS += getManualDataTotals('discount');
         totalEPOS += getManualDataTotals('promotion');
       }
@@ -696,9 +691,9 @@ angular.module('ts5App')
       $this.stockTotals = mergeStockTotalDuplicates($this.stockTotals);
 
       var totalPromotion = getTotalsForPromotions($this.promotionTotals);
-      var totalItems = getTotalsFor($this.stockTotals, 'Regular', totalPromotion);
-      var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual', 0);
-      var totalVoucher = getTotalsFor($this.stockTotals, 'Voucher', 0);
+      var totalItems = getTotalsFor($this.stockTotals, 'Regular');
+      var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
+      var totalVoucher = getTotalsFor($this.stockTotals, 'Voucher');
 
       var stockObject = {
         totalRetail: totalItems,
