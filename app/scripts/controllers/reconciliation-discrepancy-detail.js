@@ -301,7 +301,6 @@ angular.module('ts5App')
           totalBank: formatAsCurrency(totalBank),
           isDiscrepancy: isDiscrepancy
         };
-
         formattedCashBagList.push(cashBagItem);
       });
 
@@ -323,7 +322,7 @@ angular.module('ts5App')
       return total;
     }
 
-    function getTotalsFor(stockTotals, itemTypeName) {
+    function getTotalsFor(stockTotals, itemTypeName)  {
       var stockItem = $filter('filter')(stockTotals, {
         itemTypeName: itemTypeName
       });
@@ -530,8 +529,6 @@ angular.module('ts5App')
         var discountTotal = makeFinite(discount.bankAmountFinal);
         total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
       });
-
-      total += getManualDataTotals('discount');
 
       return total;
     }
