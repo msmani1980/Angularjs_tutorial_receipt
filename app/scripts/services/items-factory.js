@@ -47,7 +47,7 @@ angular.module('ts5App').factory('itemsFactory', function ($resource, ENV, items
   };
 
   // Voucher Duration
-  this.getVoucherDurationList = function (payload) {
+  this.getVoucherDurationsList = function (payload) {
     return voucherDurationsService.getVoucherDurationsList(payload);
   };
 

@@ -48,6 +48,10 @@ angular.module('ts5App')
         method: 'GET',
         isArray: true
       },
+      getVoucherDurations: {
+        method: 'GET',
+        isArray: true
+      },
       getCharacteristics: {
         method: 'GET',
         isArray: true
@@ -109,6 +113,11 @@ angular.module('ts5App')
     function getItemTypes() {
       requestParameters.api = 'item-types';
       return requestResource.getItemTypes().$promise;
+    }
+
+    function getVoucherDurations() {
+      requestParameters.api = 'voucher-durations';
+      return requestResource.getVoucherDurations().$promise;
     }
 
     function getCharacteristics() {

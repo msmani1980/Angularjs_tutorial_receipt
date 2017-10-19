@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc service
- * @name ts5App.itemTypesService
+ * @name ts5App.voucherDurationsService
  * @description
- * # itemTypesService
+ * # voucherDurationsService
  * Service in the ts5App.
  */
 angular.module('ts5App')
