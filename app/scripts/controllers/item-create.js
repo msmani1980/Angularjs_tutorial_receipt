@@ -50,6 +50,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       value: false
     }];
     $scope.companyEposLanguages = [];
+    $scope.voucherDurationsFromServer = [];
     $scope.voucherDurationOptions = [
       { duration: 30, name: '30 days' },
       { duration: 60, name: '60 days' },

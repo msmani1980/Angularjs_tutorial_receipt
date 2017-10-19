@@ -322,12 +322,10 @@
                 </div>
               </div>
 
-              <div ng-if="creatingItem && isVoucherSelected"
-                   class="form-group"
-                   ng-class="{ 'has-error' : !formData.voucherDuration && displayError , 'has-success' : formData.voucherDuration }">
+              <div ng-if="creatingItem && isVoucherSelected" class="form-group">
                 <label>Voucher Duration</label>
-                <select name="voucherDuration" ng-model="formData.voucherDuration" class="form-control col-xs-2">
-                  <option ng-repeat="duration in voucherDurationOptions" value="{{ duration.duration }}">{{ duration.name }}</option>
+                <select name="voucherDuration" ng-model="formData.voucherDurationId" class="form-control col-xs-2">
+                  <option ng-repeat="duration in voucherDurations" value="{{ duration.id }}">{{ duration.name }}</option>
                 </select>
               </div>
 
