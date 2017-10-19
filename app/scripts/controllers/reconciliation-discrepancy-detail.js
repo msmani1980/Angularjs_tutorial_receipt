@@ -274,11 +274,12 @@ angular.module('ts5App')
       var formattedCashBagList = [];
       $scope.isPaperAndCoinExchangeRatePreferred = false;
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
+        var cbMatch = lodash.findWhere($scope.cashBagList, { id: cashBag.cashbagId });
         if ($scope.submittedCashBags.indexOf(cashBag.cashbagId) >= 0) {
           cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
           var eposCalculatedAmount = cashBag.eposCalculatedAmount;
           var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
-          if ($this.manualCash !== null && eposCalculatedAmount === null) {
+          if ($this.manualCash !== null && eposCalculatedAmount === null && (cbMatch.originationSource === 2 && cbMatch.eposCashbagId === null)) {
             $filter('filter')($this.manualCash, {
                cashbagId: cashBag.cashbagId,
                currencyId: cashBag.retailCompanyCurrency
