@@ -928,7 +928,10 @@ angular.module('ts5App')
 
       });
 
-      totalEPOS += getManualDataTotals(itemTypeName.toLowerCase());
+      if (itemTypeName !== 'Regular') {
+        totalEPOS += getManualDataTotals(itemTypeName.toLowerCase());
+      }
+
       if (itemTypeName === 'Regular') {
         totalEPOS += $scope.totalCHManualValue;
         totalEPOS += getManualDataTotals('discount');
@@ -1008,23 +1011,6 @@ angular.module('ts5App')
       $scope.companyIsUsingCash = isCompanyUsingCash();
     }
 
-    function getCHRevenueManualTotals() {
-      var total = 0;
-      angular.forEach($this.manualData.cash, function (cash) {
-        total += ($scope.submittedCashBags.indexOf(cash.cashbagId) >= 0) ? cash.convertedAmount : 0;
-      });
-
-      angular.forEach($this.manualData.credit, function (credit) {
-        total += ($scope.submittedCashBags.indexOf(credit.cashbagId) >= 0) ? credit.convertedAmount : 0;
-      });
-
-      angular.forEach($this.manualData.discount, function (discount) {
-        total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discount.convertedAmount : 0;
-      });
-
-      return total;
-    }
-
     function calculateCashRevenue(chRevenue) {
       $this.chCashBag = lodash.uniq(angular.copy(chRevenue[0].response), 'id');
       var chCreditCard = lodash.uniq(angular.copy(chRevenue[1].response), 'id');
@@ -1046,7 +1032,7 @@ angular.module('ts5App')
         total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
       });
 
-      total += getCHRevenueManualTotals();
+      total += getManualDataTotals('discount');
       return total;
     }
 
@@ -1070,8 +1056,6 @@ angular.module('ts5App')
         var discountTotal = makeFinite(discount.bankAmountFinal);
         total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
       });
-
-      total += getManualDataTotals('discount');
 
       return total;
     }
@@ -1272,8 +1256,8 @@ angular.module('ts5App')
       var totalManual = 0;
 
       angular.forEach($this.chCashBag, function (cashBag) {
-        var foundCB = lodash.findWhere($scope.cashBagList, { id: cashBag.cashbagId });
-        if (foundCB && foundCB.originationSource === 2 && cashBag.eposCashbagId === null) {
+        var foundCB = lodash.findWhere($scope.cashBags, { id: cashBag.cashbagId });
+        if (foundCB && foundCB.originationSource === 2 && foundCB.eposCashbagId === null) {
           var cashTotal = (makeFinite(cashBag.paperAmountManualCh) + makeFinite(cashBag.coinAmountManualCh)) + (makeFinite(cashBag.paperAmountManualCHBank) +
           makeFinite(cashBag.coinAmountManualCHBank)) + makeFinite(cashBag.bankAmountCh);
           totalManual += ($scope.manualCashBagIds.indexOf(cashBag.cashbagId) >= 0) ? cashTotal : 0;
@@ -1281,7 +1265,7 @@ angular.module('ts5App')
       });
 
       angular.forEach(chCreditCard, function (creditCard) {
-        var foundCB = lodash.findWhere($scope.cashBagList, { id: creditCard.cashbagId });
+        var foundCB = lodash.findWhere($scope.cashBags, { id: creditCard.cashbagId });
         if (foundCB && foundCB.originationSource === 2 && foundCB.eposCashbagId === null) {
           var creditTotal = makeFinite(creditCard.bankAmountFinal) + makeFinite(creditCard.coinAmountCc) + makeFinite(creditCard.paperAmountCc);
           totalManual += ($scope.manualCashBagIds.indexOf(creditCard.cashbagId) >= 0) ? creditTotal : 0;
@@ -1289,7 +1273,7 @@ angular.module('ts5App')
       });
 
       angular.forEach(chDiscount, function (discount) {
-        var foundCB = lodash.findWhere($scope.cashBagList, { id: discount.cashbagId });
+        var foundCB = lodash.findWhere($scope.cashBags, { id: discount.cashbagId });
         if (foundCB && foundCB.originationSource === 2 && foundCB.eposCashbagId === null) {
           var discountTotal = makeFinite(discount.bankAmountFinal) + makeFinite(discount.coinAmountCc) + makeFinite(discount.paperAmountCc);
           totalManual += ($scope.manualCashBagIds.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
@@ -1599,12 +1583,12 @@ angular.module('ts5App')
         getStoreInstance(),
         getCompany(),
         getCompanyGlobalCurrencies(),
+        getCashBags(),
         getStockTotals(),
         getPromotionTotals(),
         getCompanyPreferences(),
         getCashRevenue(),
         getEPOSRevenue(),
-        getCashBags(),
         getStations()
       ];
 
@@ -1646,12 +1630,12 @@ angular.module('ts5App')
       $scope.manualCashBags = manualList;
 
       $this.manualData = {
-        cash: setManualDataSet(angular.copy(responseCollectionFromAPI[2].response), manualDataToInclude, null, 'cashVerifiedOn'),
-        credit: setManualDataSet(angular.copy(responseCollectionFromAPI[3].response), manualDataToInclude, null, 'creditCardVerifiedOn'),
-        virtual: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, 'Virtual', 'virtualItemVerifiedOn'),
-        voucher: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, 'Voucher', 'voucherItemsVerifiedOn'),
-        promotion: setManualDataSet(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude, null, 'promoVerifiedOn'),
-        discount: setManualDataSet(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude, null, 'discountVerifiedOn')
+        cash: setManualDataSet(angular.copy(responseCollectionFromAPI[2].response), manualDataToInclude, null, 'verificationConfirmedOn'),
+        credit: setManualDataSet(angular.copy(responseCollectionFromAPI[3].response), manualDataToInclude, null, 'verificationConfirmedOn'),
+        virtual: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, 'Virtual', 'verificationConfirmedOn'),
+        voucher: setManualDataSet(angular.copy(responseCollectionFromAPI[4].response), manualDataToInclude, 'Voucher', 'verificationConfirmedOn'),
+        promotion: setManualDataSet(angular.copy(responseCollectionFromAPI[5].response), manualDataToInclude, null, 'verificationConfirmedOn'),
+        discount: setManualDataSet(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude, null, 'verificationConfirmedOn')
       };
     }
 
