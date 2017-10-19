@@ -674,7 +674,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.setVoucherDurations = function (data) {
-      $scope.voucherDurations = data;
+      $scope.voucherDurations = angular.copy([{id: null, name: null}].concat(data));
     };
 
     this.setCharacteristics = function(data) {
