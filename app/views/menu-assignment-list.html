@@ -189,7 +189,7 @@
 
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-          <button ng-click="searchMenuAssignmentData()" class="btn btn-primary btn-search">
+          <button ng-disabled="!uiReady" ng-click="searchMenuAssignmentData()" class="btn btn-primary btn-search">
             <span class="fa fa-search" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs btn-label">Search</span>
           </button>
@@ -201,9 +201,13 @@
       <table infinite-scroll="loadMenuAssignmentData()" class="table table-bordered table-hover ng-scope" ng-show="menuAssignments.length > 0">
         <thead>
         <tr>
-          <!-- th>
-            <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()">
-          </th-->
+          <th>
+            <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()">
+          </th>
+          <th>
+            <span ng-if="!allExpanded" class="fa fa-plus-square-o" ng-click="toggleAllAccordionView()"></span>
+            <span ng-if="allExpanded" class="fa fa-minus-square" ng-click="toggleAllAccordionView()"></span>
+          </th>
           <th>Number</th>
           <th>Departure Station</th>
           <th>Departure Time</th>
@@ -225,12 +229,15 @@
           <th>Actions</th>
         </tr>
         </thead>
-        <tbody>
-        <tr class="ng-scope" ng-repeat="menuAssignment in menuAssignments">
-          <!-- td>
-            <span class="fa fa-plus-square-o" ng-click="toggleAccordionView(schedule)"></span>
-            <span class="fa fa-minus-square" ng-click="toggleAccordionView(schedule)"></span>
-          </td-->
+        <tbody ng-repeat="menuAssignment in menuAssignments">
+        <tr class="ng-scope" >
+          <td>
+            <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="menuAssignment.selected" >
+          </td>
+          <td>
+            <span ng-if="!menuAssignment.isExpanded" class="fa fa-plus-square-o" ng-click="toggleAccordionView(menuAssignment)"></span>
+            <span ng-if="menuAssignment.isExpanded" class="fa fa-minus-square" ng-click="toggleAccordionView(menuAssignment)"></span>
+          </td>
           <td>{{ menuAssignment.scheduleNumber }}</td>
           <td>{{ menuAssignment.departure.Code}}</td>
           <td>{{ menuAssignment.departureTime }} ({{ menuAssignment.departure.city.utcOffset }})</td>
@@ -259,6 +266,29 @@
             <button class="btn btn-primary btn-xs" ng-click="redirectToMenuAssignment(menuAssignment.scheduleDayId, 'edit')" tabindex="0">
               <i class="fa fa-pencil"></i>
             </button>
+          </td>
+        </tr>
+        <tr ng-show="menuAssignment.isExpanded">
+          <td colspan="20">
+            <div ng-repeat="cabinClass in company.companyCabinClasses | orderBy: 'cabinClass'" class="panel panel-default">
+              <div class="panel-heading">{{ cabinClass.cabinClass }} class</div>
+              <div class="panel-body">
+                <table class="table table-bordered table-hover">
+                  <tbody>
+                    <tr>
+                      <th class="col-xs-2">Menu Codes</th>
+                      <td class="col-xs-10"><span ng-repeat="menu in menuAssignment.menus">{{menu.menu.menuCode}}{{$last ? '' : ', '}}</span></td>
+                    </tr>
+                    <tr>
+                      <th class="col-xs-2">Items</th>
+                      <td class="col-xs-10"><span ng-repeat="item in menuAssignment.items">{{item.itemName}} ({{item.itemQty}}) {{$last ? '' : ', '}}</span></td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </td>
         </tr>
         </tbody>

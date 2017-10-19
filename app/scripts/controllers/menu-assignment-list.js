@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuAssignmentListCtrl', function($scope, $q, $route, $location, $filter, $localStorage, menuService, menuAssignmentFactory, messageService, dateUtility, scheduleFactory, globalMenuService, lodash) {
+  .controller('MenuAssignmentListCtrl', function($scope, $q, $route, $location, $filter, $localStorage, menuService, menuAssignmentFactory, messageService, companiesFactory, dateUtility, scheduleFactory, globalMenuService, lodash) {
     var $this = this;
     this.meta = {
       count: undefined,
@@ -47,14 +47,24 @@ angular.module('ts5App')
       nextFlight: false
     };
 
-    /*
+    $scope.allExpanded = false;
+
     $scope.toggleAllCheckboxes = function () {
-      console.log('$scope.toggleAllCheckboxes');
-      angular.forEach($scope.menuAssignmentList, function (schedule) {
-        schedule.selected = $scope.allCheckboxesSelected;
+      angular.forEach($scope.menuAssignments, function (menuAssignment) {
+        menuAssignment.selected = $scope.allCheckboxesSelected;
       });
     };
-    */
+
+    $scope.toggleAllAccordionView = function () {
+      $scope.allExpanded = !$scope.allExpanded;
+      angular.forEach($scope.menuAssignments, function (menuAssignment) {
+        menuAssignment.isExpanded = $scope.allExpanded;
+      });
+    };
+
+    $scope.toggleAccordionView = function (menuAssignment) {
+      menuAssignment.isExpanded = !menuAssignment.isExpanded;
+    };
 
     function showLoadingBar() {
       if (!$scope.isSearch) {
@@ -141,11 +151,17 @@ angular.module('ts5App')
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.menuAssignments = $scope.menuAssignments.concat(response.response.map(function (menuAssignment) {
         menuAssignment.updatedOn = (menuAssignment.updatedOn) ? dateUtility.formatDateForApp(menuAssignment.updatedOn) : null;
+        menuAssignment.isExpanded = false;
+        menuAssignment.selected = false;
 
         return menuAssignment;
       }));
 
       hideLoadingBar();
+    };
+
+    this.getCompanySuccess = function(dataFromAPI) {
+      $scope.company = angular.copy(dataFromAPI);
     };
 
     $scope.loadMenuAssignmentData = function() {
@@ -188,9 +204,10 @@ angular.module('ts5App')
       companyId = scheduleFactory.getCompanyId();
 
       var promises = [
-        scheduleFactory.getStationList(companyId).then($this.getStationsSuccess),
-        scheduleFactory.getCarrierNumbers(companyId).then($this.getCarrierNumberSuccess),
-        scheduleFactory.getCarrierTypes(companyId).then($this.getCarrierTypesSuccess)
+        scheduleFactory.getStationList(companyId),
+        scheduleFactory.getCarrierNumbers(companyId),
+        scheduleFactory.getCarrierTypes(companyId),
+        companiesFactory.getCompany(companyId)
       ];
 
       return promises;
@@ -201,7 +218,13 @@ angular.module('ts5App')
 
       $scope.allCheckboxesSelected = false;
       var initDependencies = $this.makeInitPromises();
-      $q.all(initDependencies).then(function() {
+      $q.all(initDependencies).then(function(response) {
+        $this.getStationsSuccess(response[0]);
+        $this.getCarrierNumberSuccess(response[1]);
+        $this.getCarrierTypesSuccess(response[2]);
+        $this.getCompanySuccess(response[3]);
+
+        $scope.uiReady = true;
       });
 
     };
