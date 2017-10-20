@@ -1253,6 +1253,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.formatTaxes(itemData);
       this.formatNotesTranslations(itemData);
       this.cleanUpPayload(itemData);
+
+      if (!$scope.isVoucherSelected) {
+        itemData.voucherDurationId = null;
+        itemData.voucherDurationName = null;
+        itemData.voucherDurationDO = null;
+        itemData.companyDiscountId = null;
+      }
+
       if ($scope.cloningItem) {
         delete itemData.id;
       }
