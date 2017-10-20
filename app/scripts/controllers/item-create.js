@@ -29,7 +29,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       shouldUseDynamicBarcode: {
         value: false
       },
-      notesTranslations: []
+      notesTranslations: [],
+      voucherDurationId: null
     };
 
     $scope.viewName = 'Create Item';
@@ -474,6 +475,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.formatPriceDates(itemData);
       $scope.formData = angular.copy(itemData);
 
+      $scope.voucherDurationId = itemData.voucherDurationId;
+
       $scope.originalMasterItemData = {
         itemCode: $scope.formData.itemCode,
         itemName: $scope.formData.itemName,
@@ -674,7 +677,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.setVoucherDurations = function (data) {
-      $scope.voucherDurations = angular.copy([{ id: null, name: null }].concat(data));
+      $scope.voucherDurations = angular.copy(data);
     };
 
     this.setCharacteristics = function(data) {

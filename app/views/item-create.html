@@ -322,12 +322,12 @@
                 </div>
               </div>
 
-              <div ng-if="creatingItem && isVoucherSelected"
+              <div ng-if="isVoucherSelected"
                    class="form-group"
-                   ng-class="{ 'has-error' : !formData.voucherDuration && displayError , 'has-success' : formData.voucherDuration }">
+                   ng-disabled="isDisabled()">
                 <label>Voucher Duration</label>
-                <select name="voucherDuration" ng-model="formData.voucherDuration" class="form-control col-xs-2">
-                  <option ng-repeat="duration in voucherDurationOptions" value="{{ duration.duration }}">{{ duration.name }}</option>
+                <select ng-if="uiSelectTemplateReady" name="voucherDuration" ng-model="formData.voucherDurationId" ng-options="n.id as n.name for n in voucherDurations" class="form-control col-xs-2">
+                  <option value=""></option>
                 </select>
               </div>
 
