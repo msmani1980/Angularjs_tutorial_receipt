@@ -674,7 +674,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.setVoucherDurations = function (data) {
-      $scope.voucherDurations = angular.copy([{id: null, name: null}].concat(data));
+      $scope.voucherDurations = angular.copy([{ id: null, name: null }].concat(data));
     };
 
     this.setCharacteristics = function(data) {
@@ -1216,20 +1216,22 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.formatNotesTranslations = function(itemData) {
       var notesPayload = [];
 
-      for (var key in itemData.notesTranslations) {
-        var notes = itemData.notesTranslations[key];
-        if (notes) {
-          if ($scope.formData.rawNotesTranslations) {
-            var id = $this.findIdFromRawNotesTranslation(key);
-            notesPayload.push({ id: id, languageId: key, notes: notes });
-          } else {
-            notesPayload.push({ languageId: key, notes: notes });
+      if ($scope.isVoucherSelected) {
+        for (var key in itemData.notesTranslations) {
+          var notes = itemData.notesTranslations[key];
+          if (notes) {
+            if ($scope.formData.rawNotesTranslations) {
+              var id = $this.findIdFromRawNotesTranslation(key);
+              notesPayload.push({ id: id, languageId: key, notes: notes });
+            } else {
+              notesPayload.push({ languageId: key, notes: notes });
+            }
           }
         }
-      }
 
-      delete itemData.rawNotesTranslations;
-      delete itemData.selectedVoucherNotesLanguage;
+        delete itemData.rawNotesTranslations;
+        delete itemData.selectedVoucherNotesLanguage;
+      }
       itemData.notesTranslations = notesPayload;
     };
 
