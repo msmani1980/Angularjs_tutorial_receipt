@@ -154,6 +154,7 @@ angular.module('ts5App')
       getPromotionTypes: getPromotionTypes,
       getDiscountApplyTypes: getDiscountApplyTypes,
       getItemTypes: getItemTypes,
+      getVoucherDurations: getVoucherDurations,
       getCharacteristics: getCharacteristics,
       getFeatures: getFeatures,
       getCountTypes: getCountTypes,
