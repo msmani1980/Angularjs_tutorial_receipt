@@ -1232,6 +1232,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         delete itemData.rawNotesTranslations;
         delete itemData.selectedVoucherNotesLanguage;
       }
+      
       itemData.notesTranslations = notesPayload;
     };
 
