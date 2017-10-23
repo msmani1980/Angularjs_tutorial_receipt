@@ -131,7 +131,12 @@ angular.module('ts5App')
         return;
       }
 
-      showLoadingModal('Saving');
+      if ($scope.shouldVerify) {
+        showLoadingModal('Verifying');
+      } else {
+        showLoadingModal('Saving');
+      }
+
       var promises = [];
       angular.forEach($scope.currencyList, function (cash) {
         if (cash.id) {
@@ -141,11 +146,20 @@ angular.module('ts5App')
         }
       });
 
-      $q.all(promises).then(saveSuccess, showErrors);
+      if ($scope.shouldVerify) {
+        $q.all(promises).then(verifySuccess, showErrors);
+      } else {
+        $q.all(promises).then(saveSuccess, showErrors);
+      }
     };
 
-    $scope.setShouldExit = function (shouldExit) {
+    function verifySuccess() {
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CASH').then(init, showErrors);
+    }
+
+    $scope.setShouldExit = function (shouldExit, shouldVerify) {
       $scope.shouldExit = shouldExit;
+      $scope.shouldVerify = shouldVerify;
     };
 
     function setBaseCurrency(currencyList) {
