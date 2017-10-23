@@ -129,7 +129,7 @@
                       <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
                     </ui-select-choices>
                   </ui-select>
-                  <div style="color: red" ng-if="menu.expired">Previously selected menu is not available for this schedule. Please assign a new menu.</div>
+                  <div style="color: red" ng-if="menu.expired">Previously selected menu '{{ menu.rawMenu.menuCode }}' is not available for this schedule anymore (expired). Please assign a new menu.</div>
                 </td>
                 <td>
                   <input custom-validity
@@ -204,7 +204,7 @@
                     <div ng-bind-html="item.itemName | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
-                <div style="color: red" ng-if="item.expired">Previously selected item is not available for this schedule. Please assign a new item.</div>
+                <div style="color: red" ng-if="item.expired">Previously selected item '{{item.itemName}}' is not available for this schedule (expired). Please assign a new item.</div>
               </td>
               <td>
                 <input custom-validity

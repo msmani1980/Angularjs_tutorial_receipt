@@ -167,6 +167,7 @@ angular.module('ts5App')
         $scope.formData.selectedMenus[cabinClass.id] = lodash.filter($scope.menuAssignment.menus, { companyCabinClassId: cabinClass.id });
 
         $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
+          menu.rawMenu = menu.menu;
           menu.menu = lodash.find($scope.menuMasters, { id: menu.menuId });
           if (!menu.menu) {
             menu.expired = true;
@@ -180,6 +181,7 @@ angular.module('ts5App')
         $scope.formData.selectedItems[cabinClass.id] = lodash.filter($scope.menuAssignment.items, { companyCabinClassId: cabinClass.id });
 
         $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
+          item.rawItem = item.item;
           item.item = lodash.find($scope.items, { itemMasterId: item.itemId });
           item.items = $scope.items;
 
