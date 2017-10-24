@@ -132,13 +132,12 @@ angular.module('ts5App')
     }
 
     function getCompanyPromotionCategoryId(promotionCategoryData) {
-      if (angular.isDefined(promotionCategoryData.companyPromotionCategoryId)) {
-        return promotionCategoryData.companyPromotionCategoryId;
+      if (angular.isDefined(promotionCategoryData.promotionCategory) && angular.isDefined(promotionCategoryData.promotionCategory.id)) {
+        return promotionCategoryData.promotionCategory.id;
       }
 
-      if (angular.isDefined(promotionCategoryData.promotionCategory) && angular.isDefined(promotionCategoryData.promotionCategory
-          .id)) {
-        return promotionCategoryData.promotionCategory.id;
+      if (angular.isDefined(promotionCategoryData.companyPromotionCategoryId)) {
+        return promotionCategoryData.companyPromotionCategoryId;
       }
 
       return null;
