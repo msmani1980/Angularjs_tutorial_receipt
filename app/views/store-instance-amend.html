@@ -218,6 +218,7 @@
               <td>{{ getStatusNameById(storeInstance.statusId) }}</td>
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(storeInstance, 'button', 'storeInstance')"
+                        ng-disabled="disableSelectStoreInstance(storeInstance)"
                         ng-click="selectRecordForMoveCashBag(storeInstance)">
                   <span ng-class="getClassesForSingleSelectedRow(storeInstance, 'buttonIcon', 'storeInstance')"></span>
                 </button>
