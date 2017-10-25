@@ -28,7 +28,7 @@ angular.module('ts5App')
     function applyMenuRules(payload) {
       return menuRulesService.applyMenuRules(payload);
     }
-    
+
     return {
       getCompanyId: getCompanyId,
       getMenuAssignmentList: getMenuAssignmentList,
