@@ -4,8 +4,11 @@
     <h1>{{viewName}}</h1>
 
     <div class="row">
-
-      <div class="col-xs-12 text-right">
+      <div class="col-xs-6">
+        <button class="btn btn-primary" tabindex="0" ng-disabled="!(hasSelectedMenuAssignments())" ng-click="showBulkExecuteActionModal('Apply Rules')">Apply Rules
+        </button>
+      </div>
+      <div class="col-xs-6 text-right">
         <div class="btn-group pull-right" dropdown style="margin-right:2px;">
           <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
                   data-toggle="dropdown"
@@ -304,6 +307,27 @@
     <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
   </div>
 
+</div>
+
+<div class="modal fade delete-warning-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h3 class="modal-title">Are you sure?</h3>
+      </div>
+
+      <div class="modal-body">
+        <p>You are about to perform the following action: <strong>{{actionToExecute}}</strong></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="executeAction()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <form-success-modal></form-success-modal>

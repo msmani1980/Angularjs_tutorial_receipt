@@ -26,6 +26,7 @@ angular.module('ts5App')
     $scope.stationList = [];
     $scope.carrierTypes = [];
     $scope.menuList = [];
+    $scope.menuAssignmentsForApplyRulesExecution = [];
     $scope.isAssignment = [
       { id: 1, name: 'Assignment' },
       { id: 2, name: 'Not Assignment' },
@@ -125,6 +126,56 @@ angular.module('ts5App')
     $scope.redirectToMenuAssignment = function(id, state) {
       $location.search({});
       $location.path('menu-assignment/' + state + '/' + id).search();
+    };
+
+    $scope.hasSelectedMenuAssignments = function () {
+      return lodash.filter($scope.menuAssignments, function(item) {
+        return item.selected === true;
+      }).length > 0;
+    };
+
+    $scope.showBulkExecuteActionModal = function(action) {
+      $scope.menuAssignmentsForApplyRulesExecution = $this.findSelectedMenuAssignments();
+      $scope.actionToExecute = action;
+
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.executeAction = function() {
+      $scope.displayError = false;
+      angular.element('.delete-warning-modal').modal('hide');
+
+      if ($scope.actionToExecute === 'Apply Rules') {
+        $this.executeApplyRulesAction();
+      }
+    };
+
+    this.executeApplyRulesAction = function () {
+      var payload = {
+        scheduleDays: $scope.menuAssignmentsForApplyRulesExecution.map(function (assignment) {
+          return assignment.scheduleDayId;
+        })
+      };
+
+      menuAssignmentFactory.applyMenuRules(payload).then($this.applyMenuRulesSuccess, $this.applyMenuRulesFailure);
+    };
+
+    this.showToastMessage = function(className, type, message) {
+      messageService.display(className, message, type);
+    };
+
+    this.applyMenuRulesSuccess = function () {
+      $this.showToastMessage('success', 'Rules have been applied', 'success');
+    };
+
+    this.applyMenuRulesFailure = function () {
+      $this.showToastMessage('error', 'Something went wrong while applying rules. Please try again.', 'success');
+    };
+
+    this.findSelectedMenuAssignments = function() {
+      return lodash.filter($scope.menuAssignments, function(instance) {
+        return instance.selected === true;
+      });
     };
 
     this.constructStartDate = function () {
