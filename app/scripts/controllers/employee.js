@@ -9,10 +9,10 @@
  */
 angular.module('ts5App')
   .controller('EmployeeCtrl', function($scope, $q, $location, dateUtility, $routeParams, employeeFactory, messageService) {
-	
+
     var $this = this;
     $scope.viewName = 'Employee';
-    $scope.employee = { 
+    $scope.employee = {
       startDate: dateUtility.nowFormattedDatePicker(),
       endDate: dateUtility.nowFormattedDatePicker()
     };
@@ -23,8 +23,9 @@ angular.module('ts5App')
     $scope.viewStartDate = '';
     $scope.viewEndDate = '';
     $scope.shouldDisableEndDate = false;
+    $scope.isLoadingCompleted = false;
     $scope.empTitles = [];
-        
+
     $scope.onCounrtyChange = function() {
       $scope.multiSelectedValues = {};
       var payload = {
@@ -33,14 +34,18 @@ angular.module('ts5App')
       };
       return employeeFactory.getCompanyGlobalStationList(payload).then($this.getCompanyGlobalStationSuccess);
     };
-    
+
     this.createInit = function() {
       $scope.readOnly = false;
       $scope.isCreate = true;
       $scope.viewName = 'Create Employee';
       $scope.viewEditItem = false;
-    };
 
+      $scope.employee.startDate = dateUtility.nowFormattedDatePicker();
+      $scope.employee.endDate = dateUtility.nowFormattedDatePicker();
+      $scope.isLoadingCompleted = true;
+    };
+    
     this.viewInit = function() {
       $scope.readOnly = true;
       $scope.viewName = 'View Employee';
@@ -52,26 +57,26 @@ angular.module('ts5App')
       $scope.viewName = 'Edit Employee';
       $scope.viewEditItem = true;
     };
-    
+
     $scope.isDisabled = function() {
       return $scope.disablePastDate || $scope.readOnly;
     };
-	
+
     this.validateForm = function() {
-      $this.resetErrors();	
+      $this.resetErrors();
       return $scope.employeeDataForm.$valid;
     };
-	
+
     this.resetErrors = function() {
       $scope.formErrors = [];
       $scope.errorCustom = [];
       $scope.displayError = false;
     };
-    
+
     this.showToastMessage = function(className, type, message) {
       messageService.display(className, message, type);
     };
-    
+
     this.saveFormSuccess = function() {
       $this.hideLoadingModal();
       if ($routeParams.action === 'create') {
@@ -79,16 +84,16 @@ angular.module('ts5App')
       } else {
         $this.showToastMessage('success', 'Edit Employee', 'success');
       }
-      
+
       $location.path('employees');
     };
-    
+
     this.saveFormFailure = function(dataFromAPI) {
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
-    
+
     this.createEmployee = function() {
       $this.showLoadingModal('Creating Employee Data');
 
@@ -108,7 +113,7 @@ angular.module('ts5App')
         $this.saveFormFailure
       );
     };
-    
+
     this.editEmployee = function() {
       $this.showLoadingModal('Saving Employee Data');
 
@@ -129,15 +134,15 @@ angular.module('ts5App')
         $this.saveFormFailure
       );
     };
-    
+
     this.setMinDateValue = function () {
       if ($scope.viewEditItem) {
         $scope.employee.startDate = $scope.viewStartDate;
         $scope.employee.endDate = $scope.viewEndDate;
       }
-      
+
     };
-    
+
     $scope.formSave = function() {
       if ($this.validateForm()) {
         var saveFunctionName = ($routeParams.action + 'Employee');
@@ -148,7 +153,7 @@ angular.module('ts5App')
         $scope.displayError = true;
       }
     };
-    
+
     this.getCompanyGlobalStationSuccess = function(response) {
       $scope.globalStationList = angular.copy(response.response);
     };
@@ -156,11 +161,11 @@ angular.module('ts5App')
     this.getCountireSuccess = function(response) {
       $scope.countriesList = angular.copy(response.countries);
     };
-    
+
     this.getEmployeeTitleSuccess = function(response) {
       $scope.empTitles = angular.copy(response.titles);
     };
-    
+
     this.makeInitPromises = function() {
       var promises = [
         employeeFactory.getCountriesList().then($this.getCountireSuccess),
@@ -169,16 +174,16 @@ angular.module('ts5App')
       ];
       return promises;
     };
-    
+
     $scope.getEmployeeTitles = function(search) {
       var emptitle = $scope.empTitles.slice();
       if (search && emptitle.indexOf(search) === -1) {
         emptitle.unshift(search);
       }
-      
+
       return emptitle;
     };
-    
+
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
     };
@@ -186,14 +191,14 @@ angular.module('ts5App')
     this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
     };
-    
+
     this.getEmployeeSuccess = function(response) {
       $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
       $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
-      
+
       $scope.disablePastDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewStartDate);
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
-      
+
       $scope.employee = {
         id: response.id,
         baseStationId: response.baseStationId,
@@ -207,20 +212,21 @@ angular.module('ts5App')
         endDate: $scope.viewEndDate
       };
 
+      $scope.isLoadingCompleted = true;
     };
-    
+
     this.initDependenciesSuccess = function() {
       if ($routeParams.id) {
         employeeFactory.getEmployee($routeParams.id).then($this.getEmployeeSuccess);
       }
-      
+
       $this.hideLoadingModal();
-      
+
       var initFunctionName = ($routeParams.action + 'Init');
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
-      
+
       $this.setMinDateValue();
     };
 
@@ -231,5 +237,5 @@ angular.module('ts5App')
     };
 
     this.init();
-	
+
   });
