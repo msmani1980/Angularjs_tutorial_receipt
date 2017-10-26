@@ -233,39 +233,6 @@ describe('Menu Relationship List Controller', function() {
 
   });
 
-  describe('the findMenuIndex functionality', function() {
-    beforeEach(function() {
-      scope.$digest();
-    });
-
-    it('should have a findMenuIndex method', function() {
-      expect(MenuRelationshipListCtrl.findMenuIndex).toBeDefined();
-    });
-
-    it('should return the correct menu index when passed a menuId',
-      function() {
-        var menuIndex = MenuRelationshipListCtrl.findMenuIndex(6);
-        expect(menuIndex).toEqual(2);
-      });
-  });
-
-  describe('the findMenuIndex functionality', function() {
-    beforeEach(function() {
-      scope.$digest();
-    });
-
-    it('should have a findMenuIndex method', function() {
-      expect(MenuRelationshipListCtrl.findMenuIndex).toBeDefined();
-    });
-
-    it('should return the correct menu index when passed a menuId',
-      function() {
-        var menuId = 6;
-        var menuIndex = MenuRelationshipListCtrl.findMenuIndex(menuId);
-        expect(menuIndex).toEqual(2);
-      });
-  });
-
   describe('the findStationIndex functionality', function() {
     beforeEach(function() {
       scope.$digest();
@@ -359,6 +326,7 @@ describe('Menu Relationship List Controller', function() {
       var controlQuery = {
         startDate: todaysDate,
         sortBy: 'ASC',
+        sortOn: 'startDate',
         limit: 100
       };
       expect(query).toEqual(controlQuery);
@@ -373,6 +341,7 @@ describe('Menu Relationship List Controller', function() {
         menuId: 4,
         startDate: todaysDate,
         sortBy: 'ASC',
+        sortOn: 'startDate',
         limit: 100
       };
       expect(query).toEqual(controlQuery);
@@ -388,6 +357,7 @@ describe('Menu Relationship List Controller', function() {
         menuId: 4,
         startDate: dateUtility.formatDateForAPI('07-15-2015'),
         sortBy: 'ASC',
+        sortOn: 'startDate',
         limit: 100
       };
       expect(query).toEqual(controlQuery);
@@ -406,6 +376,7 @@ describe('Menu Relationship List Controller', function() {
           startDate: todaysDate,
           endDate: dateUtility.formatDateForAPI('07-15-2015'),
           sortBy: 'ASC',
+          sortOn: 'startDate',
           limit: 100
         };
         expect(query).toEqual(controlQuery);
@@ -423,6 +394,7 @@ describe('Menu Relationship List Controller', function() {
         startDate: dateUtility.formatDateForAPI('07-14-2015'),
         endDate: dateUtility.formatDateForAPI('07-15-2015'),
         sortBy: 'ASC',
+        sortOn: 'startDate',
         limit: 100
       };
       expect(query).toEqual(controlQuery);
@@ -462,29 +434,8 @@ describe('Menu Relationship List Controller', function() {
 
   describe('the functionality that associates menus to relationships', function() {
 
-    it('should have a associateMenuData method', function() {
-      expect(MenuRelationshipListCtrl.associateMenuData).toBeDefined();
-    });
-
     it('should not have any relations or menus associated to the relationship yet', function() {
       expect(scope.relationshipList).toEqual([]);
-    });
-
-    it('should associate menu with relationships when the controller inits', function() {
-      scope.$digest();
-      expect(scope.relationshipList[3].menu).toBeDefined();
-    });
-
-    it('should contain the correct menuCode', function() {
-      scope.$digest();
-      expect(scope.relationshipList[3].menu.menuCode).toEqual(
-        'MN14351');
-    });
-
-    it('should contain the correct menuName', function() {
-      scope.$digest();
-      expect(scope.relationshipList[3].menu.menuName).toEqual(
-        'MN14351');
     });
 
   });
