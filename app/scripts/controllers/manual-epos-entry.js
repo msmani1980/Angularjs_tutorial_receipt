@@ -27,8 +27,8 @@ angular.module('ts5App')
 
     $scope.isCashBagVerified = function (cashBag) {
       var isCBgVerified = false;
-      if (angular.isDefined(cashBag) && angular.isDefined(cashBag.amendVerifiedOn)) {
-        isCBgVerified = (cashBag.amendVerifiedOn) ? true : false;
+      if (angular.isDefined(cashBag) && angular.isDefined(cashBag.verificationConfirmedOn)) {
+        isCBgVerified = (cashBag.verificationConfirmedOn) ? true : false;
       }
 
       return isCBgVerified;
@@ -46,12 +46,13 @@ angular.module('ts5App')
       return angular.isDefined($scope.containsChanges) ? !$scope.isFormVerified(formName) && $scope.containsChanges[formName] : false;
     };
 
-    $scope.getVerifyAll = function () {
-        return $scope.isConfirmed;
-      };
+    $scope.shouldDisableForm = function (cashBag, formName) {
+      var result = false;
+      if (angular.isDefined(cashBag) && angular.isDefined(cashBag.verificationConfirmedOn))  {
+        result = (cashBag.verificationConfirmedOn) ? !$scope.isFormVerified(formName) : false;
+      }
 
-    $scope.shouldDisableForm = function (formName) {
-      return ($scope.isConfirmed) ? !$scope.isFormVerified(formName) : false;
+      return result;
     };
 
     $scope.unconfirmAll = function () {
@@ -80,15 +81,13 @@ angular.module('ts5App')
     }
 
     function setVerificationData(dataFromAPI) {
-      if (!$scope.isConfirmed) {
-        return;
+      if (angular.isDefined(dataFromAPI) && angular.isDefined(dataFromAPI.verificationConfirmedOn)) {
+        var dateAndTime = dateUtility.formatTimestampForApp(dataFromAPI.verificationConfirmedOn);
+        $scope.confirmedInfo = {
+          confirmedBy: (dataFromAPI.verificationConfirmedBy) ? dataFromAPI.verificationConfirmedBy.firstName + ' ' + dataFromAPI.verificationConfirmedBy.lastName : 'Unknown User',
+          confirmedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
+        };
       }
-
-      var dateAndTime = dateUtility.formatTimestampForApp(dataFromAPI.verificationConfirmedOn);
-      $scope.confirmedInfo = {
-        confirmedBy: (dataFromAPI.verificationConfirmedBy) ? dataFromAPI.verificationConfirmedBy.firstName + ' ' + dataFromAPI.verificationConfirmedBy.lastName : 'Unknown User',
-        confirmedTimestamp: (!!dateAndTime) ? dateAndTime.replace(' ', ' at ') : 'Unknown Date'
-      };
     }
 
     function setVerification(dataFromAPI) {
@@ -101,7 +100,7 @@ angular.module('ts5App')
         virtual: !!cashBagVerification.virtualItemVerifiedOn,
         voucher: !!cashBagVerification.voucherItemsVerifiedOn
       };
-      $scope.isConfirmed = !!cashBagVerification.verificationConfirmedOn;
+
       setVerificationData(dataFromAPI);
     }
 
