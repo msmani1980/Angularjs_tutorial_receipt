@@ -276,13 +276,19 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.formData.menus = newMenus;
     };
 
-    this.getMenuCatererList = function () {
+    this.createGetMenuCatererListPayload = function () {
       var payload = angular.extend({}, $this.getFormattedDatesPayload(), {
         catererStationId: $scope.formData.cateringStationId
       });
       if ($routeParams.action === 'replenish') {
         payload.catererStationId = $scope.formData.dispatchedCateringStationId;
       }
+
+      return payload;
+    };
+
+    this.getMenuCatererList = function () {
+      var payload = $this.createGetMenuCatererListPayload();
 
       return menuCatererStationsService.getRelationshipList(payload).then($this.setMenuCatererList);
     };
@@ -994,12 +1000,33 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         }
       }
 
-      this.showLoadingModal('Creating new Store Instance');
-      var promises = $this.makeCreatePromises();
-      $q.all(promises).then(
-        (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
-        $this.createStoreInstanceErrorHandler
-      );
+      var payload = $this.createGetMenuCatererListPayload();
+
+      menuCatererStationsService.getRelationshipList(payload).then(function (menuCatererList) {
+        $scope.menuCatererList = menuCatererList.companyMenuCatererStations;
+
+        var expiredMenus = [];
+        $scope.formData.menus.forEach(function (menu) {
+          if (!lodash.findWhere($scope.menuCatererList, { menuId: menu.menuId })) {
+            expiredMenus.push(menu.menuCode);
+          }
+        });
+
+        if (expiredMenus.length > 0) {
+          $scope.displayError = true;
+          $scope.errorResponse = {
+            statusText: 'Some of the selected menus or catering menu relationships have been expired in the meantime: ' + expiredMenus.join(', ')
+          };
+          return;
+        }
+
+        $this.showLoadingModal('Creating new Store Instance');
+        var promises = $this.makeCreatePromises();
+        $q.all(promises).then(
+          (saveAndExit ? $this.exitOnSave : $this.createStoreInstanceSuccessHandler),
+          $this.createStoreInstanceErrorHandler
+        );
+      });
     };
 
     this.invokeStoreInstanceStatusPromises = function (updateInstanceStatusPromises, saveAndExit) {
@@ -1345,7 +1372,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
 
       if ($this.isActionState('dispatch')) {
-        $scope.formData.storeNumber = '';  
+        $scope.formData.storeNumber = '';
         updatePromises.push($this.getStoresList());
       }
 
