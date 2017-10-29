@@ -32,7 +32,6 @@ angular.module('ts5App')
     };
 
     this.updateRelationshipList = function () {
-      $this.associateMenuData();
       $this.associateStationData();
     };
 
@@ -41,6 +40,7 @@ angular.module('ts5App')
       var query = {
         startDate: todaysDate,
         sortBy: 'ASC',
+        sortOn: 'startDate',
         limit: 100
       };
       angular.extend(query, $scope.search);
@@ -119,6 +119,16 @@ angular.module('ts5App')
       lodash.map(companyMenuCatererStations, function (item) {
         item.startDate = dateUtility.formatDateForApp(item.startDate);
         item.endDate = dateUtility.formatDateForApp(item.endDate);
+
+        item.isMenuExpired = true;
+
+        item.masterMenu.menus.forEach(function (menu) {
+          var menuEndDate = dateUtility.formatDateForApp(menu.endDate);
+          if (dateUtility.isTomorrowOrLaterDatePicker(menuEndDate)) {
+            item.isMenuExpired = false;
+          }
+        });
+
       });
 
       $scope.relationshipList = $scope.relationshipList.concat(companyMenuCatererStations);
@@ -130,16 +140,6 @@ angular.module('ts5App')
 
     this.setMenuList = function (apiResponse) {
       $scope.menuList = apiResponse.menus;
-    };
-
-    this.associateMenuData = function () {
-      for (var key in $scope.relationshipList) {
-        var relationship = $scope.relationshipList[key];
-        var menuIndex = this.findMenuIndex(relationship.menuId);
-        if (menuIndex !== null) {
-          $scope.relationshipList[key].menu = $scope.menuList[menuIndex];
-        }
-      }
     };
 
     this.associateStationData = function () {
@@ -160,19 +160,6 @@ angular.module('ts5App')
     this.findRelationshipIndex = function (relationship) {
       var index = $scope.relationshipList.indexOf(relationship);
       return parseInt(index);
-    };
-
-    this.findMenuIndex = function (menuId) {
-      var menuIndex = null;
-      for (var key in $scope.menuList) {
-        var menu = $scope.menuList[key];
-        if (parseInt(menu.menuId) === parseInt(menuId)) {
-          menuIndex = key;
-          break;
-        }
-      }
-
-      return parseInt(menuIndex);
     };
 
     this.findStationIndex = function (stationId) {

@@ -115,8 +115,12 @@
 
       <tr ng-repeat="(key,relationship) in relationshipList">
 
-        <td>{{ relationship.menu.menuCode }}</td>
-        <td>{{ relationship.menu.menuName }}</td>
+        <td>
+          <span ng-style="{ color: relationship.isMenuExpired ? 'red' : 'black' }">{{ relationship.masterMenu.menuCode }}</span>
+        </td>
+        <td>
+          <span ng-style="{ color: relationship.isMenuExpired ? 'red' : 'black' }">{{ relationship.masterMenu.menuName }}</span>
+        </td>
         <td> <span class="label label-info" ng-repeat="(stationKey,station) in relationship.stations track by stationKey" ng-show="!!station.code"> {{ station.code }} </span> </td>
         <td>{{ relationship.startDate }}</td>
         <td>{{ relationship.endDate }}</td>
