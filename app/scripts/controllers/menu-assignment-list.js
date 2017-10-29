@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuAssignmentListCtrl', function($scope, $q, $route, $location, $filter, $localStorage, menuService, menuAssignmentFactory, messageService, companiesFactory, dateUtility, scheduleFactory, globalMenuService, lodash) {
+  .controller('MenuAssignmentListCtrl', function($scope, $q, $route, $location, $filter, menuService, menuAssignmentFactory, messageService, companiesFactory, dateUtility, scheduleFactory, globalMenuService, lodash) {
     var $this = this;
     this.meta = {
       count: undefined,
@@ -113,8 +113,6 @@ angular.module('ts5App')
       $scope.menuAssignments = [];
       $scope.search = {};
       $scope.multiSelectedValues = {};
-      $localStorage.search.menuAssignments = {};
-      $localStorage.multiSelectedValues.menuAssignments = {};
 
       $this.meta = {
         count: undefined,
@@ -245,8 +243,6 @@ angular.module('ts5App')
       };
 
       $scope.isSearch = true;
-      $localStorage.search.menuAssignments = angular.copy($scope.search);
-      $localStorage.multiSelectedValues.menuAssignments = angular.copy($scope.multiSelectedValues);
 
       $scope.loadMenuAssignmentData();
     };
