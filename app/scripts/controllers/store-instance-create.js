@@ -1007,7 +1007,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
         var expiredMenus = [];
         $scope.formData.menus.forEach(function (menu) {
-          if (!lodash.findWhere($scope.menuCatererList, { menuId: menu.menuId })) {
+          if (!lodash.findWhere($scope.menuCatererList, { menuId: menu.id })) {
             expiredMenus.push(menu.menuCode);
           }
         });
@@ -1015,7 +1015,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         if (expiredMenus.length > 0) {
           $scope.displayError = true;
           $scope.errorResponse = {
-            statusText: 'Some of the selected menus or catering menu relationships have been expired in the meantime: ' + expiredMenus.join(', ')
+            statusText: 'Some of the selected menus or catering menu relationships is not active: ' + expiredMenus.join(', ')
           };
           return;
         }
