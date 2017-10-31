@@ -33,6 +33,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.allAllowedStatuses = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch', 'Dispatched',
       'On Floor', 'Inbounded', 'Unpacking', 'Inbound Seals'
     ];
+    $scope.statusesThatShouldBeConsideredAsInbounded = ['Inbounded', 'Discrepancies', 'Confirmed', 'Commission Paid'];
     $scope.allowedStatusNamesForDelete = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch'];
 
     var initDone = false;
