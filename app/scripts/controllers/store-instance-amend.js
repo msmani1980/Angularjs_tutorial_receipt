@@ -53,11 +53,13 @@ angular.module('ts5App')
 
     function deleteScheduleSuccess () {
       getCashBags();
+      hideLoadingModal();
     }
 
     $scope.deleteSchedule = function () {
       angular.element('.delete-schedule-warning-modal').modal('hide');
 
+      showLoadingModal('Deleting Schedule');
       storeInstanceAmendFactory.deleteFlightSector(
         $scope.scheduleToDelete.cashbagId,
         $scope.scheduleToDelete.id,
@@ -87,7 +89,6 @@ angular.module('ts5App')
 
       var postTripId;
       var cashBagId = $scope.cashBagToEdit.id;
-
       if ($scope.scheduleToEdit) {
         postTripId = $scope.scheduleToEdit.id;
         var newPosttripId = $scope.newScheduleSelection.id;
