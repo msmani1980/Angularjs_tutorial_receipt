@@ -33,7 +33,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.allAllowedStatuses = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch', 'Dispatched',
       'On Floor', 'Inbounded', 'Unpacking', 'Inbound Seals'
     ];
-    $scope.statusesThatShouldBeConsideredAsInbounded = ['Inbounded', 'Discrepancies', 'Confirmed', 'Commission Paid'];
+    $scope.statusesThatShouldBeConsideredAsInbounded = ['Discrepancies', 'Confirmed', 'Commission Paid'];
     $scope.allowedStatusNamesForDelete = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch'];
 
     var initDone = false;
@@ -368,6 +368,25 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.selected = false;
     }
 
+    function mapStoreInstanceThatSHouldBeCOnsideredAsList(storeInstanceList) {
+      var storeInstanceInboundedStatus = lodash.findWhere($scope.storeStatusList, { statusName: 'Inbounded' });
+
+      return lodash.map(angular.copy(storeInstanceList), function (storeInstance) {
+        if (!storeInstance) {
+          return false;
+        }
+
+        var storeInstaceStatus = lodash.findWhere($scope.storeStatusList, { id: storeInstance.statusId });
+        var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInstaceStatus.statusName) >= 0;
+
+        if(doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
+          storeInstance.statusId = storeInstanceInboundedStatus.id;
+        }
+
+        return storeInstance;
+      });
+    }
+
     function filterStoreInstanceList(storeInstanceList) {
       return lodash.filter(angular.copy(storeInstanceList), function (storeInstance) {
         if (!storeInstance) {
@@ -380,7 +399,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function formatStoreInstanceList(rawStoreInstanceList) {
-      var filteredStoreInstanceList = filterStoreInstanceList(rawStoreInstanceList);
+      var mappedStoreInstacesToBeConsideredAsInbounded = mapStoreInstanceThatSHouldBeCOnsideredAsList(rawStoreInstanceList);
+      var filteredStoreInstanceList = filterStoreInstanceList(mappedStoreInstacesToBeConsideredAsInbounded);
       angular.forEach(filteredStoreInstanceList, function (storeInstance) {
         formatStoreInstance(storeInstance);
         angular.forEach(storeInstance.replenishments, function (storeInstance) {
