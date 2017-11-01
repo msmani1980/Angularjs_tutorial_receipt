@@ -379,7 +379,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         var storeInstaceStatus = lodash.findWhere($scope.storeStatusList, { id: storeInstance.statusId });
         var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInstaceStatus.statusName) >= 0;
 
-        if(doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
+        if (doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
           storeInstance.statusId = storeInstanceInboundedStatus.id;
         }
 
