@@ -342,6 +342,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         $this.initEmployeeMessage();
         dataInitialized = true;
       });
+      
       $scope.minDate = dateUtility.nowFormattedDatePicker();
     };
 
