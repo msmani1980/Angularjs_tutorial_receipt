@@ -563,19 +563,18 @@ angular.module('ts5App')
       });
     }
 
-    function isStoreInstanceEligibleForReallocation(storeInstance) {
+    $scope.disableSelectStoreInstance = function (storeInstance) {
       var inboundedStatus = getStoreStatusByStatusStep('8');
       var discrepanciesStatus = getStoreStatusByStatusStep('9');
-      var result = (storeInstance.statusId === inboundedStatus.id || storeInstance.statusId === discrepanciesStatus.id) && storeInstance.id !== parseInt($routeParams.storeInstanceId);
+      var result = (storeInstance.statusId !== inboundedStatus.id && storeInstance.statusId !== discrepanciesStatus.id);
+
       return result;
-    }
+    };
 
     function normalizeReallocateSearchResults (dataFromAPI) {
       var storeInstances = angular.copy(dataFromAPI.response) || [];
 
-      return storeInstances.filter(function (storeInstance) {
-        return isStoreInstanceEligibleForReallocation(storeInstance);
-      });
+      return storeInstances;
     }
 
     this.searchForMoveCashBagSuccess = function (dataFromAPI) {
