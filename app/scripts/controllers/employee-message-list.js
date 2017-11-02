@@ -26,7 +26,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     };
 
     $scope.isActiveOrFutureRecord = function(record) {
-      return dateUtility.isAfterTodayDatePicker(record.endDate);
+      return dateUtility.isTodayDatePicker(record.endDate) || dateUtility.isAfterTodayDatePicker(record.endDate);
     };
 
     $scope.isFutureRecord = function(record) {
@@ -147,6 +147,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       $this.showLoadingModal('Loading data...');
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initSuccess);
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
     };
 
     this.init();
