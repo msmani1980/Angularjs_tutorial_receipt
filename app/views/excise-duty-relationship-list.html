@@ -284,7 +284,8 @@
             <span ng-hide="isSelectedToEdit(relationship)">{{ relationship.endDate }}</span>
             <date-picker-field
               name="itemExciseDutyCreateForm"
-              end-current-effective="isCurrentEffectiveDate(relationship)"
+              custom-effective="true"
+              custom-date="recordToEdit.endDate"
               class="form-group"
               min-date="minDate"
               form="exciseDutyCreateForm"
