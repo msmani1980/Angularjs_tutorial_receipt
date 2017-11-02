@@ -17,37 +17,37 @@
 
   <br>
   <error-dialog form-object="manualEntryForm" error-response="errorResponse" display="displayError"></error-dialog>
-  <div class="alert alert-success" ng-show="getVerifyAll()"><span class="fa fa-check-circle"></span> Verified by {{ confirmedInfo.confirmedBy }} on {{ confirmedInfo.confirmedTimestamp }}</div>
+  <div class="alert alert-success" ng-show="isCashBagVerified(cashBag)"><span class="fa fa-check-circle"></span> Verified by {{ confirmedInfo.confirmedBy }} on {{ confirmedInfo.confirmedTimestamp }}</div>
     <div class="panel panel-default">
       <div class="panel-body">
-        <div class="row" ng-hide="getVerifyAll()">
+        <div class="row" ng-hide="isCashBagVerified(cashBag)">
           <div class="col-xs-12">
             <p class="small"><span class="fa fa-check-circle"></span> <i>Indicates a verified section</i></p>
             <p class="small"><b>*</b> <i>Indicates a section with unverified changes</i></p>
           </div>
         </div>
-        <div class="panel-divider" ng-hide="getVerifyAll()"></div>
+        <div class="panel-divider" ng-hide="isCashBagVerified(cashBag)"></div>
         <br>
         <div class="row">
           <div class="col-xs-4">
-            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('cash')" ng-disabled="shouldDisableForm('cash')">
+            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('cash')" ng-disabled="shouldDisableForm(cashBag, 'cash')">
               <span class="fa fa-check-circle" ng-show="isFormVerified('cash')"></span> Cash <span ng-show="doesFormHaveChanges('cash')">*</span>
             </button>
           </div>
 <!--           
 					<div class="col-xs-4">
-            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('credit')" ng-disabled="shouldDisableForm('credit')">
+            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('credit')" ng-disabled="shouldDisableForm(cashBag, 'credit')">
               <span class="fa fa-check-circle" ng-show="isFormVerified('credit')"></span> Credit Card <span ng-show="doesFormHaveChanges('credit')">*</span>
             </button>
           </div>
  -->          
  					<div class="col-xs-4">
-            <button class="btn btn-primary col-xs-12"  ng-click="navigateToForm('discount')" ng-disabled="shouldDisableForm('discount')">
+            <button class="btn btn-primary col-xs-12"  ng-click="navigateToForm('discount')" ng-disabled="shouldDisableForm(cashBag, 'discount')">
               <span class="fa fa-check-circle" ng-show="isFormVerified('discount')"></span> Discounts <span ng-show="doesFormHaveChanges('discount')">*</span>
             </button>
           </div>
           <div class="col-xs-4">
-            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('promotion')" ng-disabled="shouldDisableForm('promotion')">
+            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('promotion')" ng-disabled="shouldDisableForm(cashBag, 'promotion')">
               <span class="fa fa-check-circle" ng-show="isFormVerified('promotion')"></span> Promotions <span ng-show="doesFormHaveChanges('promotion')">*</span>
             </button>
           </div>
@@ -57,17 +57,17 @@
 <!--         
 				<div class="row">
           <div class="col-xs-4">
-            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('promotion')" ng-disabled="shouldDisableForm('promotion')">
+            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('promotion')" ng-disabled="shouldDisableForm(cashBag, 'promotion')">
               <span class="fa fa-check-circle" ng-show="isFormVerified('promotion')"></span> Promotions <span ng-show="doesFormHaveChanges('promotion')">*</span>
             </button>
           </div>
            <div class="col-xs-4">
-            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('items/virtual')" ng-disabled="shouldDisableForm('virtual')">
+            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('items/virtual')" ng-disabled="shouldDisableForm(cashBag, 'virtual')">
               <span class="fa fa-check-circle" ng-show="isFormVerified('virtual')"></span> Virtual Items <span ng-show="doesFormHaveChanges('virtual')">*</span>
             </button>
           </div>
           <div class="col-xs-4">
-            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('items/voucher')" ng-disabled="shouldDisableForm('voucher')">
+            <button class="btn btn-primary col-xs-12" ng-click="navigateToForm('items/voucher')" ng-disabled="shouldDisableForm(cashBag, 'voucher')">
               <span class="fa fa-check-circle" ng-show="isFormVerified('voucher')"></span> Voucher Items <span ng-show="doesFormHaveChanges('voucher')">*</span>
             </button>
           </div>       
@@ -75,11 +75,11 @@
  -->        
  				<br>
         <br>
-        <div class="panel-divider" ng-hide="getVerifyAll()"></div>
+        <div class="panel-divider" ng-hide="isCashBagVerified(cashBag)"></div>
         <div class="row">
           <div class="col-xs-12 text-right">
-            <button class="btn btn-success" type="button" ng-disabled="readyToConfirm" ng-click="confirmAll()" ng-hide="getVerifyAll()"><i class="fa fa-check"></i>Verify All</button>
-            <button class="btn btn-danger" type="button"  ng-click="unconfirmAll()" ng-show="getVerifyAll()" ng-disabled="isCashBagVerified(cashBag)"><i class="fa fa-times"></i>Unverify All</button>
+            <button class="btn btn-success" type="button" ng-disabled="readyToConfirm" ng-click="confirmAll()" ng-hide="isCashBagVerified(cashBag)"><i class="fa fa-check"></i>Verify All</button>
+            <button class="btn btn-danger" type="button"  ng-click="unconfirmAll()" ng-show="isCashBagVerified(cashBag)"><i class="fa fa-times"></i>Unverify All</button>
           </div>
         </div>
       </div>
