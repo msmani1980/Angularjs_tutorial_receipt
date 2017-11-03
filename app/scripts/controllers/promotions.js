@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionsCtrl', function ($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility, $timeout) {
+  .controller('PromotionsCtrl', function ($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility, $timeout, lodash) {
 
     $scope.readOnly = true;
     $scope.editing = false;
@@ -584,6 +584,9 @@ angular.module('ts5App')
       });
       $scope.promotion.promotionCategories = mapPromotionCategories(promotionFromAPI.promotionCategories, true);
       $scope.promotion.items = mapItems(promotionFromAPI.items, true);
+
+      $scope.itemsSnapshot = angular.copy($scope.promotion.items);
+
       $scope.promotion.filters = mapFilters(promotionFromAPI.filters, true);
       $scope.promotion.discountCategory = getObjectByIdFromSelectOptions('promotionCategories', {
         id: parseInt(promotionFromAPI.discountCategoryId, 10)
@@ -911,6 +914,12 @@ angular.module('ts5App')
 
     $scope.itemSelectChanged = function ($index) {
       $scope.repeatableProductPurchaseItemIds[$index] = $scope.promotion.items[$index].retailItem.id;
+
+      var itemFromSnapshot = lodash.find($scope.itemsSnapshot, { itemId: $scope.promotion.items[$index].retailItem.id });
+
+      if (itemFromSnapshot) {
+        $scope.promotion.items[$index] = itemFromSnapshot;
+      }
     };
 
     $scope.disabledItems = function (item) {
