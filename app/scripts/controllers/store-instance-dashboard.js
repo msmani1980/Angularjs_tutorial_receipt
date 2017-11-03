@@ -33,7 +33,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.allAllowedStatuses = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch', 'Dispatched',
       'On Floor', 'Inbounded', 'Unpacking', 'Inbound Seals'
     ];
-    $scope.statusesThatShouldBeConsideredAsInbounded = ['Discrepancies', 'Confirmed', 'Commission Paid'];
+    $scope.statusesThatShouldBeConsideredAsInbounded = ['Inbounded', 'Discrepancies', 'Confirmed', 'Commission Paid'];
     $scope.allowedStatusNamesForDelete = ['Ready for Packing', 'Ready for Seals', 'Ready for Dispatch'];
 
     var initDone = false;
@@ -492,6 +492,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           var unpackingStatusId = getIdByValueInArray('Unpacking', 'statusName', $scope.storeStatusList);
           var inboundSealsStatusId = getIdByValueInArray('Inbound Seals', 'statusName', $scope.storeStatusList);
           payload.statusId = [parseInt(payload.statusId), unpackingStatusId, inboundSealsStatusId].toString();
+        } else if(statusName === 'Inbounded') {
+          var discrepanciesStatusId = getIdByValueInArray('Discrepancies', 'statusName', $scope.storeStatusList);
+          var confirmedStatusId = getIdByValueInArray('Confirmed', 'statusName', $scope.storeStatusList);
+          var commissionPaidStatusId = getIdByValueInArray('Commission Paid', 'statusName', $scope.storeStatusList);
+          payload.statusId = [parseInt(payload.statusId), discrepanciesStatusId, confirmedStatusId, commissionPaidStatusId].toString();
         }
       }
 
