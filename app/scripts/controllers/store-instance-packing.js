@@ -814,7 +814,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         var itemMatch;
 
         if ($this.mergeRedispatchItemsLoopConditional(item, pickListMatch, offloadListMatch)) {
-          var newItem = $this.createFreshItem(item, false);
+          var newItem = $this.createFreshItem(item, true);
           newItem.isInOffload = true;
           newItem.salesCategoryName = item.salesCategoryName;
           $scope.offloadListItems.push(newItem);
