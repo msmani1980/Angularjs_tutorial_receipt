@@ -98,7 +98,8 @@
           label="Effective To"
           min-date="minDate"
           disable="isViewOnly()"
-          end-current-effective="true"
+          custom-effective="true"
+          custom-date="menuEdit.endDate"
           required="true">
         </date-picker-field>
         <date-picker-field
@@ -107,6 +108,8 @@
           ng-model="menu.endDate"
           label="Effective To"
           disable="isViewOnly()"
+          custom-effective="true"
+          custom-date="menuEdit.endDate"
           required="true">
         </date-picker-field>
       </div>
