@@ -25,6 +25,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       scheduleDate: dateUtility.nowFormattedDatePicker(),
       menus: []
     };
+    $scope.defaultScheduleDate = '';
 
     var $this = this;
 
@@ -1445,6 +1446,24 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.setUIReady = function () {
       $scope.uiSelectTemplateReady = true;
       $this.hideLoadingModal();
+    };
+    
+    this.setCompanyPreferenceForInstanceDate = function (dataFromAPI) {
+      var preferencesArray = angular.copy(dataFromAPI.preferences);
+
+      angular.forEach(preferencesArray, function (preference) {
+        if (preference.featureName === 'Dispatch' && preference.optionCode === 'ISD') {
+          $scope.defaultScheduleDate = preference.numericValue;
+        }
+      });
+    };
+      
+    this.getActiveCompanyPreferences = function () {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
+      
+      storeInstanceFactory.getCompanyPreferences(payload).then($this.setCompanyPreferenceForInstanceDate);
     };
 
     this.createInitPromises = function () {
