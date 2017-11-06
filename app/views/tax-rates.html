@@ -272,10 +272,20 @@
         <!-- Switch for endDate -->
         <td class="animate-switch col-xs-1" style="position:relative !important" ng-switch-when="read">{{ taxRate.endDate }}</td>
         <td class="animate-switch tax-rates-dates col-xs-1" style="position:relative !important" ng-switch-when="edit" >
-          <date-picker-field disable-past="true" disable="isDisabledEndDateForm(taxRate)" ng-model="taxRate.endDate" orientation="determineDatePickerOrientation(taxRate)" ></date-picker-field>
+          <date-picker-field 
+           min-date="minDate"
+           custom-effective="true"
+           custom-date="taxRate.endDate"
+           disable="isDisabledEndDateForm(taxRate)" 
+           ng-model="taxRate.endDate" 
+           orientation="determineDatePickerOrientation(taxRate)" ></date-picker-field>
         </td>
         <td class="animate-switch tax-rates-dates col-xs-1" style="position:relative !important" ng-switch-when="create">
-          <date-picker-field disable-past="true" ng-model="taxRate.endDate"></date-picker-field>
+          <date-picker-field 
+           min-date="minDate"
+           custom-effective="true"
+           custom-date="taxRate.endDate"
+           ng-model="taxRate.endDate"></date-picker-field>
         </td>
         <!-- Buttons for Read -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">
