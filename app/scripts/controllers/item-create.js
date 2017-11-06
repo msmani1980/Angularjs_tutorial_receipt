@@ -431,7 +431,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     $scope.isDisabledEndDateForm = function() {
-      return dateUtility.isYesterdayOrEarlierDatePicker($scope.formData.endDate);
+      return $scope.viewOnly || (dateUtility.isYesterdayOrEarlierDatePicker($scope.formData.endDate) && !$scope.cloningItem);
     };
 
     this.updateLanguages = function () {

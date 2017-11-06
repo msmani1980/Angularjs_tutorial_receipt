@@ -36,6 +36,29 @@ angular.module('ts5App')
       return parseFloat(runningSum).toFixed(2);
     };
 
+    function convertAmount (currencyObject) {
+      var convertedAmount = 0;
+      if (!currencyObject.amount) {
+        currencyObject.convertedAmount = '0.00';
+        return '0.00';
+      }
+
+      if (currencyObject.exchangeRate.bankExchangeRate === null) {
+        var paperExchangeRate = currencyObject.exchangeRate.paperExchangeRate;
+        var coinExchangeRate = currencyObject.exchangeRate.coinExchangeRate;
+        var splitAmounts = (currencyObject.amount.toString()).split('.');
+        var convertedPaperAmount = parseFloat(splitAmounts[0]) / paperExchangeRate;
+        var convertedCoinAmount = (!!splitAmounts[1]) ? parseFloat(splitAmounts[1]) / coinExchangeRate : 0;
+        convertedAmount = convertedPaperAmount + (convertedCoinAmount / 100);
+      } else {
+        var exchangeRate = currencyObject.exchangeRate.bankExchangeRate;
+        convertedAmount = parseFloat(currencyObject.amount) / exchangeRate;
+      }
+
+      currencyObject.convertedAmount = convertedAmount.toFixed(2);
+      return convertedAmount.toFixed(2);
+    }
+
     $scope.convertAmount = function (currencyObject) {
       var convertedAmount = 0;
       if (!currencyObject.amount) {
@@ -98,7 +121,7 @@ angular.module('ts5App')
       var payload = {
         currencyId: cash.currencyId,
         amount: parseFloat(cash.amount) || 0,
-        convertedAmount: parseFloat(cash.convertedAmount) || 0
+        convertedAmount: parseFloat(convertAmount(cash)) || 0
       };
 
       return manualEposFactory.updateCashBagCash($routeParams.cashBagId, cash.id, payload);
@@ -108,7 +131,7 @@ angular.module('ts5App')
       var payload = {
         currencyId: cash.currencyId,
         amount: parseFloat(cash.amount) || 0,
-        convertedAmount: parseFloat(cash.convertedAmount) || 0
+        convertedAmount: parseFloat(convertAmount(cash)) || 0
       };
 
       return manualEposFactory.createCashBagCash($routeParams.cashBagId, payload);
@@ -131,7 +154,12 @@ angular.module('ts5App')
         return;
       }
 
-      showLoadingModal('Saving');
+      if ($scope.shouldVerify) {
+        showLoadingModal('Verifying');
+      } else {
+        showLoadingModal('Saving');
+      }
+
       var promises = [];
       angular.forEach($scope.currencyList, function (cash) {
         if (cash.id) {
@@ -141,11 +169,20 @@ angular.module('ts5App')
         }
       });
 
-      $q.all(promises).then(saveSuccess, showErrors);
+      if ($scope.shouldVerify) {
+        $q.all(promises).then(verifySuccess, showErrors);
+      } else {
+        $q.all(promises).then(saveSuccess, showErrors);
+      }
     };
 
-    $scope.setShouldExit = function (shouldExit) {
+    function verifySuccess() {
+      manualEposFactory.verifyCashBag($routeParams.cashBagId, 'CASH').then(init, showErrors);
+    }
+
+    $scope.setShouldExit = function (shouldExit, shouldVerify) {
       $scope.shouldExit = shouldExit;
+      $scope.shouldVerify = shouldVerify;
     };
 
     function setBaseCurrency(currencyList) {
