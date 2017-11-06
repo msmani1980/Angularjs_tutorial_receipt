@@ -118,7 +118,7 @@ angular.module('ts5App')
         var currency = $filter('filter')($scope.companyCurrencies, {
           id: currencyValue.currencyId
         }, true)[0];
-        $scope.commission.currenciesFields[currency.code] = currencyValue.fixedValue;
+        $scope.commission.currenciesFields[currency.code] = currencyValue.fixedValue.toFixed(2);
       });
     }
 

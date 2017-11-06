@@ -11,6 +11,7 @@ angular.module('ts5App')
   .service('employeesService', function ($resource, ENV, Upload) {
 
     var employeeRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/employees/:empId';
+    var employeeBSRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/employees/basestations';
     var employeeTitleURL = ENV.apiUrl + '/rsvr/api/companies/:id/employees/titles';
 
     var employeeActions = {
@@ -39,6 +40,7 @@ angular.module('ts5App')
     };
     
     var empoyeeRequestResource = $resource(employeeRequestURL, null, employeeActions);
+    var empoyeeBSRequestResource = $resource(employeeBSRequestURL, null, employeeActions);
     var empoyeeTitleResource = $resource(employeeTitleURL, null, employeeActions);
 
     var getEmployees = function (companyId, additionalPayload) {
@@ -51,9 +53,18 @@ angular.module('ts5App')
       return empoyeeRequestResource.getEmployees(payload).$promise;
     };
     
-    var getEmployeeTitles = function (companyId) {
+    var getBaseStations = function (companyId, additionalPayload) {
       var payload = { id:companyId };
 
+      if (additionalPayload) {
+        angular.extend(payload, additionalPayload);
+      }
+
+      return empoyeeBSRequestResource.getEmployees(payload).$promise;
+    };
+    
+    var getEmployeeTitles = function (companyId) {
+      var payload = { id:companyId };
       return empoyeeTitleResource.getEmployeeTitles(payload).$promise;
     };
     
@@ -103,6 +114,7 @@ angular.module('ts5App')
     return {
       importFromExcel: importFromExcel,
       getEmployees: getEmployees,
+      getBaseStations: getBaseStations,
       getEmployeeTitles: getEmployeeTitles,
       getEmployeeById: getEmployeeById,
       createEmployee: createEmployee,
