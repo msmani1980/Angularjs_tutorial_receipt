@@ -84,8 +84,7 @@ angular.module('ts5App')
       var todaysDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       var query = {
         startDate: todaysDate,
-        sortBy: 'ASC',
-        limit: 100
+        sortBy: 'ASC'
       };
       return query;
     };
@@ -94,7 +93,7 @@ angular.module('ts5App')
       var query = this.generateItemQuery();
       var promises = [
         catererStationService.getCatererStationList(query),
-        menuService.getMenuList(query)
+        menuService.getMenuList(query, false)
       ];
       if (id) {
         promises.push(menuCatererStationsService.getRelationship(id));
