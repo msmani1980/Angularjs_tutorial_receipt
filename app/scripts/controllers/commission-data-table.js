@@ -160,7 +160,7 @@ angular.module('ts5App')
     function getCrewBaseTypes() {
       var companyId = globalMenuService.company.get();
       employeesService.getBaseStations(companyId).then(function(dataFromAPI) {
-        angular.forEach(dataFromAPI.response, function(baseStation) {        	
+        angular.forEach(dataFromAPI.response, function(baseStation) {
           $scope.crewBaseTypes.push({
             id: baseStation.stationId,
             name: baseStation.code
