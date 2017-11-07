@@ -232,6 +232,7 @@ angular.module('ts5App')
 
     this.init = function() {
       $this.showLoadingModal('Loading Data');
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess);
     };
