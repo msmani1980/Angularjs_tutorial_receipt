@@ -3,7 +3,7 @@
 
   <div ngf-select="" ngf-drop="" class="drop-box retail-drop-box" ng-model="files" ng-model-rejected="rejFiles"
        ngf-change="filesChanged()" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
-       ngf-accept="'.jpg,.png,.gif'" ngf-validate = "{size: {max: '10kB', min: '10B'}, height: {max: 128}, width: {max: 128}}">
+       ngf-accept="'.jpg,.png,.gif'" ngf-validate = "{size: {max: '10kb', min: '10B'}, height: {max: 128}, width: {max: 128}}">
     <b>Drop Images, or Click.</b>
 
     <p>Accepted file formats: jpg, png, gif.</p>
@@ -19,12 +19,12 @@
           ng-click="clearAllFiles()"> Clear All Files
   </button>
 
-  <p class="alert alert-danger" ng-show="rejFiles.length">
+  <p class="alert alert-danger" ng-show="rejFiles.length" ng-repeat="f in rejFiles">
     <b>Your file doesn't meet the requirements:</b>
     <br/>
-    <i ng-show="rejFiles[0].size > 10000">max size: 10kb and 128 x 128 pixels.</i>
-    <i ng-show="rejFiles[0].size < 10001">
-      '{{rejFiles[0].name}}' is invalid, OR '{{rejFiles[0].type}}' is not an accepted file type.
+    <i ng-show="f.$error === 'height.max' || f.$error === 'size.max'">File {{f.name}} has exceed maximum allowed size: 10kb and 128 x 128 pixels.</i>
+    <i ng-show="f.$error === 'accept'">
+      '{{f.name}}' is invalid, OR '{{f.type}}' is not an accepted file type. Accepted types: .jpg, .png, .gif.
     </i>
   </p>
 
