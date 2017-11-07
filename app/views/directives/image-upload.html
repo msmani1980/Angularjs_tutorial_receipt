@@ -3,7 +3,7 @@
 
   <div ngf-select="" ngf-drop="" class="drop-box retail-drop-box" ng-model="files" ng-model-rejected="rejFiles"
        ngf-change="filesChanged()" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
-       ngf-accept="'.jpg,.png,.gif'" ngf-min-size='10' ngf-max-size='10000'>
+       ngf-accept="'.jpg,.png,.gif'" ngf-validate = "{size: {max: '10kB', min: '10B'}, height: {max: 128}, width: {max: 128}}">
     <b>Drop Images, or Click.</b>
 
     <p>Accepted file formats: jpg, png, gif.</p>
