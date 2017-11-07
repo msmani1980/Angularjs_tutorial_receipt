@@ -41,7 +41,7 @@ angular.module('ts5App')
         startDate: todaysDate,
         sortBy: 'ASC',
         sortOn: 'startDate',
-        limit: 100
+        limit: 500
       };
       angular.extend(query, $scope.search);
       if ($scope.dateRange.startDate) {

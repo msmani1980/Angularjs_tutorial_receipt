@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('httpSessionInterceptor', function ($rootScope, $q, $location) {
+  .factory('httpSessionInterceptor', function ($rootScope, $q) {
 
     var errorCodeMap = {
       401: 'unauthorized',
