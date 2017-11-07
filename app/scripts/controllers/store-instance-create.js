@@ -22,11 +22,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     $scope.routesList = [];
     $scope.routesListCopy = [];
     $scope.formData = {
-      scheduleDate: dateUtility.nowFormattedDatePicker(),
       menus: []
     };
-    $scope.defaultScheduleDate = '';
-
+    
     var $this = this;
 
     this.isActionState = function (action) {
@@ -181,8 +179,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getFormattedDatesPayload = function () {
       return {
-        startDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate),
-        endDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate)
+        startDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker()),
+        endDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker())
       };
     };
 
@@ -1451,11 +1449,21 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.setCompanyPreferenceForInstanceDate = function (dataFromAPI) {
       var preferencesArray = angular.copy(dataFromAPI.preferences);
 
+      var defaultScheduleDate = null;
       angular.forEach(preferencesArray, function (preference) {
         if (preference.featureName === 'Dispatch' && preference.optionCode === 'ISD') {
-          $scope.defaultScheduleDate = preference.numericValue;
+          defaultScheduleDate = preference.numericValue;
         }
       });
+      
+      if (defaultScheduleDate === 1) {
+        $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();	
+      } else if (defaultScheduleDate === 2) {
+        $scope.formData.scheduleDate = dateUtility.tomorrowFormattedDatePicker();
+      } else {
+        $scope.formData.scheduleDate = '';   
+      }
+      
     };
       
     this.getActiveCompanyPreferences = function () {
@@ -1468,12 +1476,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.createInitPromises = function () {
       var promises = [
-        $this.getMenuMasterList(),
-        $this.getMenuCatererList(),
         $this.getCatererStationList(),
-        $this.getStoresList(),
-        $this.getCarrierNumbers(),
-        $this.getScheduleNumbers(),
+        $this.getActiveCompanyPreferences(),
         $this.getInstancesOnFloor()
       ];
       return promises;
