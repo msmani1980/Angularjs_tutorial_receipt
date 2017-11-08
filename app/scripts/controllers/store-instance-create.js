@@ -24,6 +24,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     $scope.formData = {
       menus: []
     };
+    $scope.scheduleDateOption = 0;
     
     var $this = this;
 
@@ -186,7 +187,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getFormattedOperationalDaysPayload = function () {
       // Monday -> Sunday = 1 -> 7
-      return dateUtility.getOperationalDay($scope.formData.scheduleDate) || 7;
+      return dateUtility.getOperationalDay($scope.formData.scheduleDate ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker()) || 7;
     };
 
     this.setCatererStationList = function (dataFromAPI) {
@@ -594,7 +595,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
       var stepTwoStoreId = $this.doesStoreIdFromStepTwoExist();
       if ($this.isActionState('redispatch') && !(data && data.id === parseInt(stepTwoStoreId))) {
-        $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();
+        $this.setInstanceScheduleDate();
         delete $scope.formData.scheduleNumber;
         delete $scope.formData.scheduleId;
         delete $scope.formData.carrierId;
@@ -1352,6 +1353,16 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.updateInstanceDependenciesSuccess();
       });
     };
+    
+    this.updateCatereStationDependencies = function () {
+      var updatePromises = [
+        $this.getMenuCatererList()
+      ];
+       
+      $q.all(updatePromises).then(function () {
+        $this.updateInstanceDependenciesSuccess();
+      });
+    };
 
     this.updateRouteList = function() {
       $scope.routesList = [];
@@ -1402,8 +1413,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       if ($this.isActionState('dispatch')) {
         $scope.$watch('formData.cateringStationId', function (newId, oldId) {
-          if (angular.isUndefined(oldId) || newId && newId !== oldId) {
-            $this.updateInstanceDependencies();
+          if (newId && newId !== oldId) {
+            $this.updateCatereStationDependencies();
           }
         });
       }
@@ -1411,7 +1422,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('redispatch')) {
         $scope.$watch('formData.cateringStationId', function (newId, oldId) {
           if (newId && newId !== oldId) {
-            $this.updateInstanceDependencies();
+            $this.updateCatereStationDependencies();
           }
         });
       }
@@ -1446,22 +1457,31 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.hideLoadingModal();
     };
     
+    this.setInstanceScheduleDate = function() {
+      if ($scope.scheduleDateOption === 1) {
+        $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();	
+      } else if ($scope.scheduleDateOption === 2) {
+        $scope.formData.scheduleDate = dateUtility.tomorrowFormattedDatePicker();	
+      } else {
+        $scope.formData.scheduleDate = '';
+      }
+    };
+    
     this.setCompanyPreferenceForInstanceDate = function (dataFromAPI) {
       var preferencesArray = angular.copy(dataFromAPI.preferences);
 
-      var defaultScheduleDate = null;
       angular.forEach(preferencesArray, function (preference) {
-        if (preference.featureName === 'Dispatch' && preference.optionCode === 'ISD') {
-          defaultScheduleDate = preference.numericValue;
+        if (preference.featureName === 'Dispatch' && preference.choiceCode === 'CDTE' && preference.isSelected) {
+          $scope.scheduleDateOption = 1;
+        }else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'TDTE' && preference.isSelected) {
+          $scope.scheduleDateOption = 2;	
         }
       });
       
-      if (defaultScheduleDate === 1) {
+      if (!$scope.formData.scheduleDate && $scope.scheduleDateOption === 1) {
         $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();	
-      } else if (defaultScheduleDate === 2) {
+      } else if (!$scope.formData.scheduleDate && $scope.scheduleDateOption === 2) {
         $scope.formData.scheduleDate = dateUtility.tomorrowFormattedDatePicker();
-      } else {
-        $scope.formData.scheduleDate = '';   
       }
       
     };
@@ -1478,6 +1498,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var promises = [
         $this.getCatererStationList(),
         $this.getActiveCompanyPreferences(),
+        $this.getMenuMasterList(),
+        $this.getMenuCatererList(),
+        $this.getStoresList(),
+        $this.getCarrierNumbers(),
+        $this.getScheduleNumbers(),
         $this.getInstancesOnFloor()
       ];
       return promises;
@@ -1499,13 +1524,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       return promises;
     };
-
+    
     this.makeInitPromises = function () {
       var promises = $this.createInitPromises();
       if ($this.isActionState('replenish')) {
         promises.push($this.getStoreDetails());
+        $this.setInstanceScheduleDate();
       }
-
+      
       if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
         promises.push($this.getStoreDetails());
         promises.concat($this.createEditInitPromises());
