@@ -672,8 +672,10 @@ angular.module('ts5App')
         }).name;
       });
 
-      $this.stockTotals = mergeStockTotalDuplicates($this.stockTotals);
-
+      if ($this.stockTotals.length > 1) {
+        $this.stockTotals = mergeStockTotalDuplicates($this.stockTotals);  
+      }
+      
       var totalPromotion = getTotalsForPromotions($this.promotionTotals);
       var totalItems = getTotalsFor($this.stockTotals, 'Regular');
       var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
