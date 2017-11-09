@@ -331,6 +331,15 @@
                 </select>
               </div>
 
+              <div ng-if="creatingItem && isVirtualSelected"
+                   class="form-group"
+                   ng-class="{ 'has-error' : !formData.supplierCompanyId && displayError , 'has-success' : formData.supplierCompanyId }">
+                <label>Supplier *</label>
+                <select name="supplierCompanyId" ng-model="formData.supplierCompanyId" class="form-control col-xs-2" ng-change="" >
+                  <option ng-repeat="supplier in supplierCompanies" value="{{ supplier }}">{{ supplier.companyName }}</option>
+                </select>
+              </div>
+
             </fieldset>
 
           </div>

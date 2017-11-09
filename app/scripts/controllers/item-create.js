@@ -8,7 +8,7 @@
  */
 
 angular.module('ts5App').controller('ItemCreateCtrl',
-  function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
+  function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
     currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService) {
 
     var $this = this;
@@ -58,6 +58,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       { duration: 90, name: '90 days' },
       { duration: 365, name: '1 year' }
     ];
+    $scope.supplierCompanies = [];
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -632,6 +633,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.company = angular.copy(dataFromAPI);
 
       this.updateLanguages();
+    };
+
+    this.setSupplierCompanies = function(dataFromAPI) {
+      $scope.supplierCompanies = angular.copy(dataFromAPI.companyRelationships);
     };
 
     this.setDependencies = function(response) {
