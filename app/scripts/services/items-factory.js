@@ -12,7 +12,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App').factory('itemsFactory', function ($resource, ENV, itemsService, allergensService,
-                                                           itemTypesService, priceTypesService, characteristicsService,
+                                                           itemTypesService, voucherDurationsService, priceTypesService, characteristicsService,
                                                            unitsService, companyDiscountService) {
 
   // Items
@@ -44,6 +44,11 @@ angular.module('ts5App').factory('itemsFactory', function ($resource, ENV, items
   // Item Types
   this.getItemTypesList = function (payload) {
     return itemTypesService.getItemTypesList(payload);
+  };
+
+  // Voucher Duration
+  this.getVoucherDurationsList = function (payload) {
+    return voucherDurationsService.getVoucherDurationsList(payload);
   };
 
   // Price Types
@@ -87,6 +92,9 @@ angular.module('ts5App').factory('itemsFactory', function ($resource, ENV, items
 
     // Item Types
     getItemTypesList: this.getItemTypesList,
+
+    // Voucher Duration
+    getVoucherDurationsList: this.getVoucherDurationsList,
 
     // Price Types
     getPriceTypesList: this.getPriceTypesList,
