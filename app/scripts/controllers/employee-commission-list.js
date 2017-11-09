@@ -75,12 +75,11 @@ angular.module('ts5App')
     }
 
     function getSelectedPriceTypeObject(commissionObject) {
-      if (!commissionObject.types || commissionObject.types.length === 0) {
-        return {};
+      if (commissionObject.priceTypeId === undefined) {
+        return {name:'-'};
       }
 
-      var priceId = commissionObject.types[0].priceTypeId;
-      return getSelectedObjectFromArrayUsingId($scope.search.priceTypeList, priceId);
+      return getSelectedObjectFromArrayUsingId($scope.search.priceTypeList, commissionObject.priceTypeId);
     }
 
     function getSelectedRateTypeObject(commissionObject) {
