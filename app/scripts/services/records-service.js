@@ -48,6 +48,10 @@ angular.module('ts5App')
         method: 'GET',
         isArray: true
       },
+      getVoucherDurations: {
+        method: 'GET',
+        isArray: true
+      },
       getCharacteristics: {
         method: 'GET',
         isArray: true
@@ -111,6 +115,11 @@ angular.module('ts5App')
       return requestResource.getItemTypes().$promise;
     }
 
+    function getVoucherDurations() {
+      requestParameters.api = 'voucher-durations';
+      return requestResource.getVoucherDurations().$promise;
+    }
+
     function getCharacteristics() {
       requestParameters.api = 'characteristics';
       return requestResource.getCharacteristics().$promise;
@@ -145,6 +154,7 @@ angular.module('ts5App')
       getPromotionTypes: getPromotionTypes,
       getDiscountApplyTypes: getDiscountApplyTypes,
       getItemTypes: getItemTypes,
+      getVoucherDurations: getVoucherDurations,
       getCharacteristics: getCharacteristics,
       getFeatures: getFeatures,
       getCountTypes: getCountTypes,
