@@ -170,7 +170,7 @@
             <fieldset>
               <div ng-if="isVoucherSelected">
                 <div class="form-group">
-                  <div class="row col-md-5"><label class="control-label">Notes</label></div>
+                  <div class="row col-md-5"><label class="control-label">Notes *</label></div>
                   <div class="row col-md-7 pull-right">
                     <select class="form-control"
                             ng-model="formData.selectedVoucherNotesLanguage"
@@ -182,12 +182,12 @@
                     <textarea
                       ng-disabled="isDisabled()"
                       ng-show="formData.selectedVoucherNotesLanguage.id == language.id"
-                      name="notes"
+                      name="notes - {{language.languageName}}"
                       class="form-control vertical-resize-only"
                       ng-model="formData.notesTranslations[language.id]" type="text"
                       placeholder="Notes for Voucher"
-                      ng-maxlength="500"
-                      maxlength="500">
+                      ng-maxlength="1000"
+                      maxlength="1000"  style="height: 378px" required>
                     </textarea>
                   </div>
                 </div>
@@ -322,12 +322,12 @@
                 </div>
               </div>
 
-              <div ng-if="creatingItem && isVoucherSelected"
+              <div ng-if="isVoucherSelected"
                    class="form-group"
-                   ng-class="{ 'has-error' : !formData.voucherDuration && displayError , 'has-success' : formData.voucherDuration }">
-                <label>Voucher Duration *</label>
-                <select name="voucherDuration" ng-model="formData.voucherDuration" class="form-control col-xs-2" ng-change="recalculateEndDate()" ng-required="true">
-                  <option ng-repeat="duration in voucherDurationOptions" value="{{ duration.duration }}">{{ duration.name }}</option>
+                   ng-disabled="isDisabled()">
+                <label>Voucher Duration</label>
+                <select ng-if="uiSelectTemplateReady" name="voucherDuration" ng-model="formData.voucherDurationId" ng-options="n.id as n.name for n in voucherDurations" class="form-control col-xs-2">
+                  <option value=""></option>
                 </select>
               </div>
 

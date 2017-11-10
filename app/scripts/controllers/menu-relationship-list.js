@@ -40,8 +40,7 @@ angular.module('ts5App')
       var query = {
         startDate: todaysDate,
         sortBy: 'ASC',
-        sortOn: 'startDate',
-        limit: 100
+        sortOn: 'startDate'
       };
       angular.extend(query, $scope.search);
       if ($scope.dateRange.startDate) {
@@ -59,7 +58,7 @@ angular.module('ts5App')
       var query = this.generateRelationshipQuery();
       return [
         catererStationService.getCatererStationList(query),
-        menuService.getMenuList(query)
+        menuService.getMenuList(query, false)
       ];
     };
 

@@ -94,12 +94,11 @@ angular.module('ts5App')
     }
 
     function getSelectedPriceTypeObject() {
-      if ($scope.commission.types.length === 0) {
+      if ($scope.commission.priceTypeId === undefined) {
         return {};
       }
 
-      var priceId = $scope.commission.types[0].priceTypeId;
-      return getSelectedObjectFromArrayUsingId($scope.priceTypeList, priceId);
+      return getSelectedObjectFromArrayUsingId($scope.priceTypeList, $scope.commission.priceTypeId);
     }
 
     function getSelectedRateTypeObject() {
@@ -118,7 +117,7 @@ angular.module('ts5App')
         var currency = $filter('filter')($scope.companyCurrencies, {
           id: currencyValue.currencyId
         }, true)[0];
-        $scope.commission.currenciesFields[currency.code] = currencyValue.fixedValue;
+        $scope.commission.currenciesFields[currency.code] = currencyValue.fixedValue.toFixed(2);
       });
     }
 
@@ -208,9 +207,7 @@ angular.module('ts5App')
         startDate: dateUtility.formatDateForAPI($scope.commission.startDate),
         endDate: dateUtility.formatDateForAPI($scope.commission.endDate),
         itemMasterId: $scope.commission.selectedItem.id,
-        types: [{
-          priceTypeId: $scope.commission.selectedPriceType.id
-        }]
+        priceTypeId: $scope.commission.selectedPriceType.id
       };
 
       if ($scope.commission.id) {

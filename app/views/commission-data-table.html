@@ -73,7 +73,7 @@
       </thead>
       <tbody>
       <tr class="ng-scope" ng-repeat="data in commissionData track by $index">
-        <td>{{ getCrewBaseName(data.crewBaseTypeId) }}</td>
+        <td>{{ data.crewBaseType.stationCode }}</td>
         <td>{{ getCommissionTypeName(data.commissionPayableTypeId) }}</td>
         <td>
           <span ng-show="shouldShowCommissionPercent(data)">{{ data.commissionPercentage }} %</span>
