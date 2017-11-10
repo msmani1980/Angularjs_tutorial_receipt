@@ -180,14 +180,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getFormattedDatesPayload = function () {
       return {
-        startDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker()),
-        endDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker())
+        startDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate !== '' ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker()),
+        endDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate !== '' ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker())
       };
     };
 
     this.getFormattedOperationalDaysPayload = function () {
       // Monday -> Sunday = 1 -> 7
-      return dateUtility.getOperationalDay($scope.formData.scheduleDate ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker()) || 7;
+      return dateUtility.getOperationalDay($scope.formData.scheduleDate !== '' ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker()) || 7;
     };
 
     this.setCatererStationList = function (dataFromAPI) {
@@ -595,7 +595,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
       var stepTwoStoreId = $this.doesStoreIdFromStepTwoExist();
       if ($this.isActionState('redispatch') && !(data && data.id === parseInt(stepTwoStoreId))) {
-        $this.setInstanceScheduleDate();
         delete $scope.formData.scheduleNumber;
         delete $scope.formData.scheduleId;
         delete $scope.formData.carrierId;
@@ -622,8 +621,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       }
 
-      var promises = $this.makeInitPromises();
-      $q.all(promises).then($this.initSuccessHandler);
+      $this.getActiveCompanyPreferences(); 
     };
 
     this.getStoreInstance = function () {
@@ -1401,7 +1399,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.registerScopeWatchers = function () {
       $scope.$watch('formData.scheduleDate', function (newDate, oldDate) {
         if (newDate && newDate !== oldDate) {
-          $this.updateInstanceDependencies();
+          if (!(oldDate === '' && newDate === dateUtility.nowFormattedDatePicker())) {
+            $this.updateInstanceDependencies();  
+          }	
         }
       });
 
@@ -1457,16 +1457,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.hideLoadingModal();
     };
     
-    this.setInstanceScheduleDate = function() {
-      if ($scope.scheduleDateOption === 1) {
-        $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();	
-      } else if ($scope.scheduleDateOption === 2) {
-        $scope.formData.scheduleDate = dateUtility.tomorrowFormattedDatePicker();	
-      } else {
-        $scope.formData.scheduleDate = '';
-      }
-    };
-    
     this.setCompanyPreferenceForInstanceDate = function (dataFromAPI) {
       var preferencesArray = angular.copy(dataFromAPI.preferences);
 
@@ -1478,12 +1468,16 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         }
       });
       
-      if (!$scope.formData.scheduleDate && $scope.scheduleDateOption === 1) {
+      if (!(angular.isDefined($routeParams.storeId)) && $scope.scheduleDateOption === 1) {
         $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();	
-      } else if (!$scope.formData.scheduleDate && $scope.scheduleDateOption === 2) {
+      } else if (!(angular.isDefined($routeParams.storeId)) && $scope.scheduleDateOption === 2) {
         $scope.formData.scheduleDate = dateUtility.tomorrowFormattedDatePicker();
+      } else if (!(angular.isDefined($routeParams.storeId))) {
+        $scope.formData.scheduleDate = '';   
       }
       
+      var promises = $this.makeInitPromises();
+      $q.all(promises).then($this.initSuccessHandler);
     };
       
     this.getActiveCompanyPreferences = function () {
@@ -1497,7 +1491,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.createInitPromises = function () {
       var promises = [
         $this.getCatererStationList(),
-        $this.getActiveCompanyPreferences(),
         $this.getMenuMasterList(),
         $this.getMenuCatererList(),
         $this.getStoresList(),
@@ -1529,7 +1522,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var promises = $this.createInitPromises();
       if ($this.isActionState('replenish')) {
         promises.push($this.getStoreDetails());
-        $this.setInstanceScheduleDate();
       }
       
       if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
@@ -1586,7 +1578,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.setUIReady();
       $this.registerScopeWatchers();
     };
-
+    
     this.init = function () {
       if ($routeParams.storeId) {
         $this.showLoadingModal('We are loading Store Instance ' + $routeParams.storeId + '.');
@@ -1595,8 +1587,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       if (!$routeParams.storeId) {
         $this.showLoadingModal('Hang tight, we are loading some data for you.');
-        var promises = this.makeInitPromises();
-        $q.all(promises).then($this.initSuccessHandler);
+        $this.getActiveCompanyPreferences();  
       }
     };
 
