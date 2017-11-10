@@ -52,6 +52,7 @@
                 min-date="minDate"
                 ng-model="newRecord.startDate"
                 label="Effective From *"
+                custom-effective="true"
                 ng-required="shouldRequireCreateFields()">
               </date-picker-field>
             </div>
@@ -63,6 +64,7 @@
                 min-date="minDate"
                 ng-model="newRecord.endDate"
                 label="Effective To *"
+                custom-effective="true"
                 ng-required="shouldRequireCreateFields()">
               </date-picker-field>
             </div>
@@ -282,7 +284,8 @@
             <span ng-hide="isSelectedToEdit(relationship)">{{ relationship.endDate }}</span>
             <date-picker-field
               name="itemExciseDutyCreateForm"
-              end-current-effective="isCurrentEffectiveDate(relationship)"
+              custom-effective="true"
+              custom-date="recordToEdit.endDate"
               class="form-group"
               min-date="minDate"
               form="exciseDutyCreateForm"

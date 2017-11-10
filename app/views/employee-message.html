@@ -65,25 +65,14 @@
           </div>
           <div class="col-xs-6 col-sm-3">
             <div class="form-group">
-              <date-picker-field ng-if="isCurrentEffectiveDate(employeeMessage)"
+              <date-picker-field 
                 name="endDate"
                 class="form-group"
                 form="employeeMessageForm"
                 ng-model="employeeMessage.endDate"
                 label="Effective To"
-                disable="shouldDisable(false)"
-                end-current-effective="true"
-                required="true">
-              </date-picker-field>
-              
-              <date-picker-field ng-if="!isCurrentEffectiveDate(employeeMessage)"
-                name="endDate"
-                class="form-group"
-                form="employeeMessageForm"
-                ng-model="employeeMessage.endDate"
-                label="Effective To"
-                disable="shouldDisable(false)"
-                end-current-effective="false"
+                min-date="minDate"
+                custom-effective="true"
                 required="true">
               </date-picker-field>
               
