@@ -583,6 +583,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
           endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
         }).then($this.setDiscountList);
+
+        companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get()).then($this.setSupplierCompanies);
       }
     });
 
@@ -636,7 +638,9 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.setSupplierCompanies = function(dataFromAPI) {
-      $scope.supplierCompanies = angular.copy(dataFromAPI.companyRelationships);
+      var companies = angular.copy(dataFromAPI.companyRelationships);
+
+      $scope.supplierCompanies = lodash.filter(companies, { companyTypeName: 'Supplier' });
     };
 
     this.setDependencies = function(response) {
