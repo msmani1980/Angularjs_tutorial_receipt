@@ -1303,7 +1303,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     $scope.reloadRoute = function () {
       $this.hideWarningModal();
-      $route.reload();
     };
 
     this.setFormScheduleNumber = function () {

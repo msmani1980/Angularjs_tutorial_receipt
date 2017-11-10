@@ -1,19 +1,30 @@
-<div class="modal fade info-import-model" role="dialog">
+<div class="modal fade info-import-model" id="download-template-employee-modal">
   <div class="modal-dialog">
-    <div class="modal-content text-left">
+    <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span class="fa fa-close"></span></button>
-        <h4 class="modal-title">Understanding the Excel Template</h4>
+        <div class="row">
+          <div class="col-xs-12">
+            <h4 class="modal-title">Understanding the Excel Template</h4>
+          </div>
+        </div>
       </div>
       <div class="modal-body">
-        <p>The file is an Excel (.xls, .xlsx) file and has only one sheet.<br>
-          The first line should be the header with the column names.
+        <p>
+          The file is an Excel (.xls, .xlsx) file and has only one sheet.<br> The first line should be the header with the column names.
         </p>
-
-        <p><b>The column order and name should match the following:</b></p>
+        <p>
+          <b>The column order and name should match the following:</b>
+        </p>
         <ul>
-          <li><b>TDB</li>
-
+          <li><b>Employee ID</b> - Required. This is the employee's ID and supports up to 15 characters.</li>
+          <li><b>Passcode</b> - Optional. This is for any password used by the employee in an external system that can be later connected to TS.</li>
+          <li><b>First Name</b> - Required. This is the employee first name and supports up to 25 characters.</li>
+          <li><b>Last Name </b> - Required. This is the employee last name and supports up to 25 characters.</li>
+          <li><b>Country</b> - Required. This should match the countries that the company operates e.g. United Kingdom.</li>
+          <li><b>Base Station</b> - Required. This is the base station of employee and should be related to the Country above, and also match stations that the company operates. Only one allowed per row and all capital.</li>
+          <li><b>Employee Title</b> - Required. What is the employee's job title, e.g. Crew Manager, and supports up to 25 characters.</li>
+          <li><b>Effective Start Date</b> - Required. Effective Date of the employee, Format = yyyymmdd. Current and future dates allowed.</li>
+          <li><b>Effective End Date</b> - Required. End Date of the employee, Format = yyyymmdd. Current and future dates allowed.</li>
         </ul>
       </div>
       <div class="modal-footer">

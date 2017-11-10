@@ -217,7 +217,7 @@ angular.module('ts5App')
         title: 'Menu Assignment',
         menuItems: [{
           name: 'Menu Assignments',
-          route: emberURL + 'menu-assignments',
+          route: '/#/menu-assignment-list',
           icon: 'icon-menu-assignment',
           className: 'dashboard-menuAssignments',
           package: 'MENUASSG',

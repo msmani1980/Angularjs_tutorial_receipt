@@ -314,7 +314,7 @@
             </ui-select>
           </td>
           <td>
-            <button type="button" ng-if="canDeleteItem(item) || isActionState('redispatch')"
+            <button type="button" ng-if="canDeleteItem(item)"
                     class="btn btn-sm btn-danger"
                     ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>

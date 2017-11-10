@@ -12,6 +12,33 @@ angular.module('ts5App')
       stationsService, dailyExchangeRatesService) {
     var $this = this;
 
+    $scope.commitionPaidStatus = function () {
+      var commitionPaidStatus = getStoreStatusByStatusStep('11');
+      if (!$scope.storeInstance) {
+        return false;
+      }
+
+      var statusId = $scope.storeInstance.statusId;
+
+      return statusId === commitionPaidStatus.id ? true :  false;
+    };
+
+    $scope.confirmedStatus = function () {
+      var confirmedStatus = getStoreStatusByStatusStep('10');
+      if (!$scope.storeInstance) {
+        return false;
+      }
+
+      var statusId = $scope.storeInstance.statusId;
+
+      return statusId === confirmedStatus.id ? true :  false;
+    };
+
+    $scope.refreshManualCashBag = function (cashBag) {
+      showLoadingModal('Refreshing Cash Bag');
+      storeInstanceAmendFactory.addFlightSector(cashBag.id, 0).then(addOrEditScheduleSuccess, handleResponseError);
+    };
+
     $scope.formatAsCurrency = function(valueToFormat) {
       if (angular.isDefined(valueToFormat)) {
         return sprintf('%.2f', valueToFormat);
@@ -26,11 +53,13 @@ angular.module('ts5App')
 
     function deleteScheduleSuccess () {
       getCashBags();
+      hideLoadingModal();
     }
 
     $scope.deleteSchedule = function () {
       angular.element('.delete-schedule-warning-modal').modal('hide');
 
+      showLoadingModal('Deleting Schedule');
       storeInstanceAmendFactory.deleteFlightSector(
         $scope.scheduleToDelete.cashbagId,
         $scope.scheduleToDelete.id,
@@ -49,16 +78,17 @@ angular.module('ts5App')
     function addOrEditScheduleSuccess () {
       $scope.clearScheduleSelections();
       getCashBags();
+      hideLoadingModal();
     }
 
     $scope.addOrEditSchedule = function () {
+      showLoadingModal('Updating Schedule');
       if (!$scope.cashBagToEdit) {
         return;
       }
 
       var postTripId;
       var cashBagId = $scope.cashBagToEdit.id;
-
       if ($scope.scheduleToEdit) {
         postTripId = $scope.scheduleToEdit.id;
         var newPosttripId = $scope.newScheduleSelection.id;
@@ -759,14 +789,16 @@ angular.module('ts5App')
 
     function toggleVrifiedCashBagSuccess () {
       getCashBags();
+      getStoreInstance();
       hideLoadingModal();
     }
 
     $scope.toggleVerifiedCashBag = function (cashBag) {
-      showLoadingModal('Loading Cash Bag Details');
       if (cashBag.isVerified) {
+        showLoadingModal('Unverifying Cash Bag');
         cashBagFactory.unverifyCashBag(cashBag.id, 'AMEND').then(toggleVrifiedCashBagSuccess, handleResponseError);
       } else {
+        showLoadingModal('Verifying Cash Bag');
         cashBagFactory.verifyCashBag(cashBag.id, 'AMEND').then(toggleVrifiedCashBagSuccess, handleResponseError);
       }
     };
