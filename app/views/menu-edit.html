@@ -134,19 +134,25 @@
       <table class="table table-bordered table-hover">
         <thead>
         <tr>
+          <th class="col-xs-1" ng-show="isMenuEditable()" style="text-align:center;">Reorder</th>
           <th class="col-xs-4" ng-show="isMenuEditable()">Item Category</th>
-          <th class="col-xs-6">Item Name</th>
+          <th class="col-xs-5">Item Name</th>
           <th class="col-xs-1">Quantity</th>
           <th ng-hide="isMenuReadOnly()" class="col-xs-1">Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr on-drop-success="dropSuccess($event, $index, menuItemList)"
-            ui-draggable="isMenuEditable()" drag="item"
-            drag-channel="A" drop-channel="A"
-            ui-on-Drop="onDrop($event, $data, $index)"
+        <tr
             ng-init="item.sortOrderIndex=$index"
             ng-repeat="item in menuItemList | orderBy:'sortOrder' track by $index">
+          <td ng-if="isMenuEditable()"
+              on-drop-success="dropSuccess($event, $index, menuItemList)"
+              ui-draggable="isMenuEditable()" drag="item"
+              drag-channel="A" drop-channel="A"
+              ui-on-Drop="onDrop($event, $data, $index)"
+              style="text-align:center; cursor: pointer;">
+            <span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
+          </td>
           <td ng-if="isMenuEditable()">
             <ui-select
               name="selectedCategories[item.menuIndex]"
