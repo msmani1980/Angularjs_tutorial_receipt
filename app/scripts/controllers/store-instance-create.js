@@ -25,6 +25,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       menus: []
     };
     $scope.scheduleDateOption = 0;
+    $scope.redispatchOrReplenishNew = false;
     
     var $this = this;
 
@@ -38,6 +39,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.isEndInstanceOrRedispatch = function () {
       return (this.isActionState('end-instance') || this.isActionState('redispatch'));
+    };
+    
+    this.isRedispatchOrReplenish = function () {
+      return (this.isActionState('replenish') || this.isActionState('redispatch'));
     };
 
     this.isEditingDispatch = function () {
@@ -611,10 +616,17 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.setStoreInstanceConditionals = function (data) {
       $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
       var stepTwoStoreId = $this.doesStoreIdFromStepTwoExist();
-      if ($this.isActionState('redispatch') && !(data && data.id === parseInt(stepTwoStoreId))) {
-        delete $scope.formData.scheduleNumber;
-        delete $scope.formData.scheduleId;
-        delete $scope.formData.carrierId;
+      if ($this.isRedispatchOrReplenish()) {
+        if ($this.isActionState('redispatch') && !(data && data.id === parseInt(stepTwoStoreId))) {
+          $scope.redispatchOrReplenishNew = true;
+          delete $scope.formData.scheduleNumber;
+          delete $scope.formData.scheduleId;
+          delete $scope.formData.carrierId;	
+        } else if ($this.isActionState('replenish') && !(data && data.replenishStoreInstanceId)) {
+          $scope.redispatchOrReplenishNew = true;
+        } else {
+          $scope.formData.scheduleDate = $this.setScheduleDate(data);  
+        }
       }
 
     };
@@ -1494,6 +1506,21 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.hideLoadingModal();
     };
     
+    this.isStoreEdit = function () {
+      return angular.isDefined($routeParams.storeId) && ($this.isActionState('dispatch') || $this.isActionState('end-instance'));
+    };
+    
+    this.setInstanceScheduleDate = function() {
+      if ($scope.scheduleDateOption === 1) {
+        $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();	
+      } else if ($scope.scheduleDateOption === 2) {
+        $scope.formData.scheduleDate = dateUtility.tomorrowFormattedDatePicker();
+      } else {
+        $scope.formData.scheduleDate = '';   
+      }
+      
+    };
+    
     this.setCompanyPreferenceForInstanceDate = function (dataFromAPI) {
       var preferencesArray = angular.copy(dataFromAPI.preferences);
 
@@ -1505,12 +1532,16 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         }
       });
       
-      if (!(angular.isDefined($routeParams.storeId)) && $scope.scheduleDateOption === 1) {
+      if (!$this.isStoreEdit() && !$this.isRedispatchOrReplenish() && $scope.scheduleDateOption === 1) {
         $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();	
-      } else if (!(angular.isDefined($routeParams.storeId)) && $scope.scheduleDateOption === 2) {
+      } else if (!$this.isStoreEdit() && !$this.isRedispatchOrReplenish() && $scope.scheduleDateOption === 2) {
         $scope.formData.scheduleDate = dateUtility.tomorrowFormattedDatePicker();
-      } else if (!(angular.isDefined($routeParams.storeId))) {
+      } else if (!$this.isStoreEdit() && !$this.isRedispatchOrReplenish()) {
         $scope.formData.scheduleDate = '';   
+      }
+      
+      if ($scope.redispatchOrReplenishNew) {
+        $this.setInstanceScheduleDate();
       }
       
       var promises = $this.makeInitPromises();
@@ -1559,6 +1590,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var promises = $this.createInitPromises();
       if ($this.isActionState('replenish')) {
         promises.push($this.getStoreDetails());
+        $scope.redispatchOrReplenishNew = true;
       }
       
       if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
