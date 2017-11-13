@@ -187,7 +187,7 @@
                       ng-model="formData.notesTranslations[language.id]" type="text"
                       placeholder="Notes for Voucher"
                       ng-maxlength="1000"
-                      maxlength="1000"  style="height: 378px" required>
+                      maxlength="1000" required>
                     </textarea>
                   </div>
                 </div>
@@ -251,7 +251,7 @@
 
             <fieldset>
 
-              <image-upload ng-hide="isDisabled()"></image-upload>
+              <image-upload image-type="itemImage" form-data-bind="formData" ng-hide="isDisabled()"></image-upload>
 
               <div id="images-container">
 
