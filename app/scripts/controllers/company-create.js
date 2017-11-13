@@ -221,9 +221,16 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.initWatchers = function() {
-      $scope.$watch('formData.companyTypeId', function() {
+      $scope.$watch('formData.companyTypeId', function(newValue, oldValue) {
+        $this.clearImagesArray(newValue, oldValue);
         $this.calculateFieldsVisibility();
       });
+    };
+
+    this.clearImagesArray = function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        $scope.formData.images = [];
+      }
     };
 
     this.setUIReady = function() {
