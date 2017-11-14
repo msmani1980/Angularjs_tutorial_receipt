@@ -41,6 +41,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return (this.isActionState('end-instance') || this.isActionState('redispatch'));
     };
     
+    this.isEndInstanceOrReplenish = function () {
+      return (this.isActionState('end-instance') || this.isActionState('replenish'));
+    };
+    
     this.isRedispatchOrReplenish = function () {
       return (this.isActionState('replenish') || this.isActionState('redispatch'));
     };
@@ -1608,7 +1612,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.minDate = $this.minDateConditional();
       $this.filterMenusList();
       $this.setWizardSteps();
-      if ($routeParams.storeId && !($this.isActionState('replenish'))) {
+      if ($routeParams.storeId && !($this.isEndInstanceOrReplenish('replenish'))) {
         $this.setStoreInstanceMenus();
       }
 
