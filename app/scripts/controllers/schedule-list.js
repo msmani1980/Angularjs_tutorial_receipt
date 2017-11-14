@@ -205,7 +205,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return dateUtility.isAfterToday(schedule.endDate);
+      return dateUtility.isTodayDatePicker(schedule.endDate) || dateUtility.isAfterTodayDatePicker(schedule.endDate);
     };
 
     $scope.removeRecord = function(schedule) {

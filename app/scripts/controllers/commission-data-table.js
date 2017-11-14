@@ -5,7 +5,7 @@
  * @name ts5App.controller:CommissionDataTableCtrl
  * @description
  * # CommissionDataTableCtrl
- * Controller of the ts5App
+ * Controller of the ts5App.
  */
 angular.module('ts5App')
   .controller('CommissionDataTableCtrl', function($scope, dateUtility, commissionFactory, $location, globalMenuService,
