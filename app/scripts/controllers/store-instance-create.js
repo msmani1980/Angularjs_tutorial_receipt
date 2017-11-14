@@ -579,10 +579,26 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       return null;
     };
+    
+    this.formatMenuList = function (menu) {
+      var currentMenu = {
+        id: menu.menuMaster.menuId,
+        menuName: menu.menuMaster.menuName,
+        menuCode: menu.menuMaster.menuCode,
+        menuMasterId: menu.menuMasterId,
+      };
+      return currentMenu;
+    };
 
     this.setMenus = function (apiData) {
       if (apiData && apiData.menus) {
-        return apiData.menus;
+        var newMenus = [];
+        angular.forEach(apiData.menus, function (menu) {
+          var newMenuObj = $this.formatMenuList(menu);
+          newMenus.push(newMenuObj);
+        });
+        
+        return newMenus;
       }
 
       return null;
@@ -630,10 +646,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         };
         $this.setStoreInstanceConditionals(data);
         $this.getDispatchStationList();
-
+               
       }
 
-      $this.getActiveCompanyPreferences(); 
+      $this.getActiveCompanyPreferences();
     };
 
     this.getStoreInstance = function () {
@@ -1522,8 +1538,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.createInitPromises = function () {
       var promises = [
         $this.getCatererStationList(),
-        $this.getMenuMasterList(),
-        $this.getMenuCatererList(),
         $this.getStoresList(),
         $this.getCarrierNumbers(),
         $this.getScheduleNumbers(),
@@ -1551,10 +1565,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     
     this.makeInitPromises = function () {
       var promises = $this.createInitPromises();
+      
       if ($this.isActionState('replenish')) {
-        promises.push($this.getStoreDetails());
         $scope.redispatchOrReplenishNew = true;
-      }
+      } else {
+        promises.push($this.getMenuMasterList());
+        promises.push($this.getMenuCatererList());
+      } 
       
       if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
         promises.push($this.getStoreDetails());
@@ -1591,7 +1608,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.minDate = $this.minDateConditional();
       $this.filterMenusList();
       $this.setWizardSteps();
-      if ($routeParams.storeId) {
+      if ($routeParams.storeId && !($this.isActionState('replenish'))) {
         $this.setStoreInstanceMenus();
       }
 
