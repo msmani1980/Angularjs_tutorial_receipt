@@ -131,6 +131,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $this.updateViewName(data.retailItem);
         $this.setUIReady();
         $this.filterDuplicateInItemTags();
+        $this.checkIfSupplierCompanyExpired();
         return;
       }
 
@@ -641,6 +642,24 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       var companies = angular.copy(dataFromAPI.companyRelationships);
 
       $scope.supplierCompanies = lodash.filter(companies, { companyTypeName: 'Supplier' });
+
+      $this.checkIfSupplierCompanyExpired();
+    };
+
+    this.checkIfSupplierCompanyExpired = function () {
+      if ($scope.formData.supplierCompanyId) {
+        var supplierFound = lodash.findWhere($scope.supplierCompanies, { companyId: parseInt($scope.formData.supplierCompanyId) });
+
+        if (!supplierFound) {
+          $scope.formData.supplierCompanyIdExpired = true;
+        } else {
+          $scope.formData.supplierCompanyIdExpired = false;
+        }
+      }
+    };
+
+    $scope.onSupplierCompanyChange = function () {
+      $this.checkIfSupplierCompanyExpired();
     };
 
     this.setDependencies = function(response) {
