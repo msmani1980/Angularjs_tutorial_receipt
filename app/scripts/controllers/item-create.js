@@ -1274,6 +1274,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         delete itemData.id;
       }
 
+      itemData.supplierCompanyId = parseInt(itemData.supplierCompanyId);
+
       return itemData;
     };
 
