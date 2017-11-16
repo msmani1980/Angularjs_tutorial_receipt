@@ -336,12 +336,13 @@
                   <label>Supplier</label>
                   <select name="supplierCompanyId" ng-model="formData.supplierCompanyId" class="form-control col-xs-2" ng-change="onSupplierCompanyChange()" >
                     <option ng-repeat="supplier in supplierCompanies"
-                            value="{{supplier.companyId}}"
+                            ng-value="supplier.companyId"
                             ng-selected="formData.supplierCompanyId === supplier.companyId">
                       {{ supplier.companyName }}
                     </option>
                   </select>
-                  <div ng-if="formData.supplierCompanyIdExpired" style="color:red">Selected supplier is not active anymore. Please select a new one!</div>
+
+                  <div ng-if="isSupplierCompanyExpired()" style="color:red">Selected supplier is not active anymore. Please select a new one!</div>
                 </div>
 
                 <div class="form-group col-md-12">

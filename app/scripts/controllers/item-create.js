@@ -651,11 +651,29 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var supplierFound = lodash.findWhere($scope.supplierCompanies, { companyId: parseInt($scope.formData.supplierCompanyId) });
 
         if (!supplierFound) {
-          $scope.formData.supplierCompanyIdExpired = true;
-        } else {
-          $scope.formData.supplierCompanyIdExpired = false;
+          companiesFactory.getCompany($scope.formData.supplierCompanyId).then($this.setExpiredSupplierCompany);
         }
       }
+    };
+
+    $scope.isSupplierCompanyExpired = function () {
+      var supplierFound = lodash.findWhere($scope.supplierCompanies, { companyId: parseInt($scope.formData.supplierCompanyId) });
+
+      if (!supplierFound) {
+        return true;
+      } else {
+        return supplierFound.expired;
+      }
+    };
+
+    this.setExpiredSupplierCompany = function (dataFromAPI) {
+      var expiredSupplierCompany = angular.copy(dataFromAPI);
+
+      $scope.supplierCompanies.push({
+        companyId: expiredSupplierCompany.id,
+        companyName: expiredSupplierCompany.companyName,
+        expired: true
+      });
     };
 
     $scope.onSupplierCompanyChange = function () {
