@@ -1,18 +1,20 @@
 <div class="form-group upload-container">
-  <label for="item-type">Item Image (max size: 10kb and 128 x 128 pixels)</label>
+  <label for="item-type">Item Image (max size: {{imageSize}} pixels)</label>
 
   <div ngf-select="" ngf-drop="" class="drop-box retail-drop-box" ng-model="files" ng-model-rejected="rejFiles"
        ngf-change="filesChanged()" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
-       ngf-accept="'.jpg,.png,.gif'" ngf-min-size='10' ngf-max-size='10000'>
+       ngf-accept="'{{imageName}}.{{fileFormat}}'" ngf-min-size='10' ngf-max-size='{{itemMaxSize}}'>
+    <b>{{imageTypeText}}</b><br>
     <b>Drop Images, or Click.</b>
 
-    <p>Accepted file formats: jpg, png, gif.</p>
+    <p>Accepted file formats: {{fileFormat}}.</p>
+    <p>{{imageNameMessage}}</p>
   </div>
 
   <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
 
   <button class="btn button btn-success" ng-model="files" ng-hide="file.uploadSuccess" ng-disabled="!files.length"
-          ng-click="upload()"> Upload
+          ng-click="upload(imageType, formData.companyCode)"> Upload
   </button>
 
   <button class="btn button btn-default" ng-model="files" ng-show="files.length"
@@ -22,9 +24,9 @@
   <p class="alert alert-danger" ng-show="rejFiles.length">
     <b>Your file doesn't meet the requirements:</b>
     <br/>
-    <i ng-show="rejFiles[0].size > 10000">max size: 10kb and 128 x 128 pixels.</i>
+    <i ng-show="rejFiles[0].size > 10000">max size: {{imageSize}} pixels.</i>
     <i ng-show="rejFiles[0].size < 10001">
-      '{{rejFiles[0].name}}' is invalid, OR '{{rejFiles[0].type}}' is not an accepted file type.
+      '{{rejFiles[0].name}}' is invalid, OR{{invalidNameMessage}} '{{rejFiles[0].type}}' is not an accepted file type.
     </i>
   </p>
 
@@ -49,7 +51,7 @@
             <label> {{ file.name }} </label>
 
             <p class="alert alert-danger" ng-model="files" ng-show="file.imageTooLarge">
-              <i>Your file doesn't meet the requirements: max size: 10kb and 128 x 128 pixels.</i>
+              <i>Your file doesn't meet the requirements: max size: {{imageSize}} pixels.</i>
             </p>
             <progressbar class="progress-striped" ng-model="files"
                          ng-show="!file.imageTooLarge && !file.uploadFail && !file.uploadSuccess"

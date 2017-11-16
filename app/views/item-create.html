@@ -187,7 +187,7 @@
                       ng-model="formData.notesTranslations[language.id]" type="text"
                       placeholder="Notes for Voucher"
                       ng-maxlength="1000"
-                      maxlength="1000"  style="height: 378px" required>
+                      maxlength="1000" required>
                     </textarea>
                   </div>
                 </div>
@@ -227,10 +227,10 @@
 
               <div class="form-group">
                 <label>Item Tags</label>
-                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.tags" theme="bootstrap" ng-change="onTagsChange()">
+                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.tags" theme="bootstrap">
                   <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}
                   </ui-select-match>
-                  <ui-select-choices repeat="tag in filterSelectedTags | filter: $select.search | orderBy:'name'">
+                  <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
                     <div ng-bind-html="tag.name | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
@@ -251,7 +251,7 @@
 
             <fieldset>
 
-              <image-upload ng-hide="isDisabled()"></image-upload>
+              <image-upload image-type="itemImage" form-data-bind="formData" ng-hide="isDisabled()"></image-upload>
 
               <div id="images-container">
 

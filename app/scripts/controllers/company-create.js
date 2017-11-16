@@ -11,13 +11,16 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash) {
 
     $scope.formData = {
+      startDate: dateUtility.tomorrowFormattedDatePicker(),
+      endDate: dateUtility.tomorrowFormattedDatePicker(),
+      images: [],
       taxes: [],
       languages: [],
       eposLanguages: [],
       countryVats: [],
       companyCabinClasses: []
     };
-    
+
     $scope.timezone = '';
     $scope.viewName = 'Create Company';
     $scope.buttonText = 'Create';
@@ -26,7 +29,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.viewOnly = false;
     $scope.editingCompany = false;
     $scope.uiSelectTemplateReady = false;
-    
+
     var $this = this;
 
     this.showLoadingModal = function(text) {
@@ -218,14 +221,39 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.initWatchers = function() {
-      $scope.$watch('formData.companyTypeId', function() {
+      $scope.$watch('formData.companyTypeId', function(newValue, oldValue) {
+        $this.clearImagesArray(newValue, oldValue);
         $this.calculateFieldsVisibility();
       });
     };
 
+    this.clearImagesArray = function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        $scope.formData.images = [];
+      }
+    };
+
     this.setUIReady = function() {
       $this.hideLoadingModal();
+      $scope.minDate = $this.determineMinDate();
       $scope.uiSelectTemplateReady = true;
+    };
+
+    this.determineMinDate = function() {
+      var diff = 1;
+      if (!dateUtility.isTomorrowOrLaterDatePicker($scope.formData.startDate)) {
+        diff = dateUtility.diff(
+          dateUtility.nowFormattedDatePicker(),
+          $scope.formData.startDate
+        );
+      }
+
+      var dateString = diff.toString() + 'd';
+      if (diff >= 0) {
+        dateString = '+' + dateString;
+      }
+
+      return dateString;
     };
 
     this.initUI = function() {
@@ -258,9 +286,12 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.makeDependencyPromises = function() {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
       return [
         companyTypesService.getCompanyTypes(),
-        currencyFactory.getCompanyCurrencies(),
+        currencyFactory.getCompanyCurrencies(payload),
         companiesFactory.getCompanyList(),
         languagesService.getLanguagesList(),
         countriesService.getCountriesList()
@@ -380,7 +411,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     this.formatActive = function(data) {
       return (data === true) ? data : false;
     };
-    
+
     this.formatPayload = function(companyData) {
       var company = angular.copy(companyData);
       company.companyCabinClasses = $this.formatCompanyCabinClasses(company);

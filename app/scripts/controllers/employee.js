@@ -45,7 +45,7 @@ angular.module('ts5App')
       $scope.employee.endDate = dateUtility.nowFormattedDatePicker();
       $scope.isLoadingCompleted = true;
     };
-    
+
     this.viewInit = function() {
       $scope.readOnly = true;
       $scope.viewName = 'View Employee';
