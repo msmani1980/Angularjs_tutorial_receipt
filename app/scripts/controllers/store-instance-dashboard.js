@@ -359,6 +359,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
       storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) : '';
+      storeInstance.inboundedOnDisplay = storeInstance.inboundedOn ? dateUtility.formatTimestampForApp(storeInstance.inboundedOn) : '';
 
       setStoreInstanceTime(storeInstance);
       setStoreInstanceActionButtons(storeInstance);
@@ -397,6 +398,17 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
 
       return storeInstance.updatedBy;
+    };
+
+    $scope.getUpdatedOnForStoreInstance = function (storeInstance) {
+      var storeInstanceStatus = lodash.findWhere($scope.storeStatusList, { id: storeInstance.statusId });
+      var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInstanceStatus.statusName) >= 0;
+
+      if (doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
+        return storeInstance.inboundedOnDisplay;
+      }
+
+      return storeInstance.updatedOnDisplay;
     };
 
     function filterStoreInstanceList(storeInstanceList) {
