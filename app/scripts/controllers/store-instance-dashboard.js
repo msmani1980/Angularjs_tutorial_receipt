@@ -387,6 +387,18 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
     }
 
+    $scope.getUpdateByForStoreInstance = function (storeInstance) {
+
+      var storeInstanceStatus = lodash.findWhere($scope.storeStatusList, { id: storeInstance.statusId });
+      var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInstanceStatus.statusName) >= 0;
+
+      if (doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
+        return storeInstance.inboundedBy;
+      }
+
+      return storeInstance.updatedBy;
+    };
+
     function filterStoreInstanceList(storeInstanceList) {
       return lodash.filter(angular.copy(storeInstanceList), function (storeInstance) {
         if (!storeInstance) {
