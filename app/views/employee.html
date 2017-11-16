@@ -71,8 +71,7 @@
 								label="Effective End Date"
 								disable="readOnly || shouldDisableEndDate"
 								ng-model="employee.endDate"
-                                min-date="minDate"
-                                custom-effective="true"
+								end-current-effective="!viewEditItem"
 								custom-date="employee.endDate"
 								required="true">
 							</date-picker-field>
