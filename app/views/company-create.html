@@ -217,13 +217,11 @@
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <h4>Portal Default Language</h4>
-             <select ng-model="formData.defaultLanguage" class="form-control" ng-change="onChangeDefaultLanguage()" placeholder="Default Language" > 
-              <option ng-selected="formData.defaultLanguage === lng.id" ng-repeat="lng in defaultLanguages | orderBy:'languageName'"
-                      value="{{ lng.id }}">{{ lng.languageName }}
-              </option>
-            </select>
-
+            <label>Portal Default Language*</label>
+                                <select ng-model="formData.defaultLanguage" class="form-control" id="defaultLanguage" ng-change="onChangeDefaultLanguage()">
+                                    <option value="{{ lng.id }}" ng-repeat="lng in defaultLanguages | orderBy:'languageName'">{{ lng.languageName }}</option>
+                                </select>
+            
             <label>Portal Additional Languages</label>
             <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.languages" theme="bootstrap" on-remove="onChangeAdditionalLanguage()" on-select="onChangeAdditionalLanguage()" >
               <ui-select-match placeholder="Languages">{{ $item.languageName }}
@@ -233,12 +231,17 @@
               </ui-select-choices>
             </ui-select>
 
+             <label>ePOS Default Language*</label>
+                                <select ng-model="formData.defaultEposLanguage" class="form-control" id="defaultEposLanguage" ng-change="onChangeEposDefaultLanguage()">
+                                    <option value="{{ eposlng.id }}" ng-repeat="eposlng in defaultEposLanguages | orderBy:'languageName'">{{ eposlng.languageName }}</option>
+                                </select>
+ 
             <label>ePOS Additional Languages</label>
-            <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.eposLanguages" theme="bootstrap" on-remove="onChangeAdditionalLanguage()" on-select="onChangeAdditionalLanguage()" >
-              <ui-select-match placeholder="Languages">{{ $item.languageName }}
+            <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.eposLanguages" theme="bootstrap" on-remove="onChangeEposAdditionalLanguage()" on-select="onChangeEposAdditionalLanguage()" >
+              <ui-select-match placeholder="ePos Languages">{{ $item.languageName }}
               </ui-select-match>
-              <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
-                <div ng-bind-html="language.languageName | highlight: $select.search"></div>
+              <ui-select-choices repeat="eposlanguage in eposLanguages | filter: $select.search | orderBy:'languageName'">
+                <div ng-bind-html="eposlanguage.languageName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
 
