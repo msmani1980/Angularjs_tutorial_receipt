@@ -388,27 +388,26 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
     }
 
-    $scope.getUpdateByForStoreInstance = function (storeInstance) {
+    $scope.getUpdateByForStoreInstance = function (storeInst) {
 
-      var storeInstanceStatus = lodash.findWhere($scope.storeStatusList, { id: storeInstance.statusId });
-      var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInstanceStatus.statusName) >= 0;
+      var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInst.storeStatus.code) >= 0;
 
       if (doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
-        return storeInstance.inboundedByPerson ? storeInstance.inboundedByPerson.userName : '';
+        return storeInst.inboundedByPerson ? storeInst.inboundedByPerson.userName : '';
       }
 
-      return storeInstance.updatedByPerson.userName || storeInstance.createdByPerson.userName;
+      return storeInst.updatedByPerson.userName || storeInst.createdByPerson.userName;
     };
 
-    $scope.getUpdatedOnForStoreInstance = function (storeInstance) {
-      var storeInstanceStatus = lodash.findWhere($scope.storeStatusList, { id: storeInstance.statusId });
-      var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInstanceStatus.statusName) >= 0;
+    $scope.getUpdatedOnForStoreInstance = function (storeInst) {
+
+      var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInst.storeStatus.code) >= 0;
 
       if (doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
-        return storeInstance.inboundedOnDisplay;
+        return storeInst.inboundedOnDisplay;
       }
 
-      return storeInstance.updatedOnDisplay;
+      return storeInst.updatedOnDisplay;
     };
 
     function filterStoreInstanceList(storeInstanceList) {
