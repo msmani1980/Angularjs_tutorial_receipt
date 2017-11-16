@@ -149,6 +149,7 @@ angular.module('ts5App')
       }
 
       $localStorage.cashBagBankRefNumber = $scope.cashBag.bankReferenceNumber;
+	  $localStorage.cashBagNumber = $scope.cashBag.cashBagNumber;
       switch ($routeParams.state) {
         case 'edit':
           if (formData.isSubmitted === true) {
@@ -274,13 +275,15 @@ angular.module('ts5App')
 
     $scope.shouldShowBankRefNumberAlert = function() {
       return ($scope.state === 'edit' && $localStorage.cashBagBankRefNumber && $scope.oldBankRefNumber &&
-        $localStorage.cashBagBankRefNumber !== $scope.oldBankRefNumber);
+        $localStorage.cashBagBankRefNumber !== $scope.oldBankRefNumber &&
+         $localStorage.cashBagNumber === $scope.oldCashBagNumber);
     };
 
     function setBankReferenceNumberFromLocalStorage() {
       var shouldSaveBankRefNumber = ($scope.state !== 'view' && $scope.companyPreferences.defaultBankRefNumber &&
         $scope.companyPreferences.defaultBankRefNumber.isSelected);
       $scope.oldBankRefNumber = $scope.cashBag.bankReferenceNumber || '';
+	  $scope.oldCashBagNumber = $scope.cashBag.cashBagNumber;
       if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber) {
         $scope.cashBag.bankReferenceNumber = $localStorage.cashBagBankRefNumber;
       }
