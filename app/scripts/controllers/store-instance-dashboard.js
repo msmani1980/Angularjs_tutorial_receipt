@@ -394,10 +394,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInstanceStatus.statusName) >= 0;
 
       if (doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
-        return storeInstance.inboundedBy;
+        return storeInstance.inboundedByPerson ? storeInstance.inboundedByPerson.userName : '';
       }
 
-      return storeInstance.updatedBy;
+      return storeInstance.updatedByPerson.userName || storeInstance.createdByPerson.userName;
     };
 
     $scope.getUpdatedOnForStoreInstance = function (storeInstance) {
