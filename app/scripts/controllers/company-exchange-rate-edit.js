@@ -222,8 +222,8 @@ angular.module('ts5App')
       }
     };
 
-    $scope.isAcceptedCurrencyDisabled = function(exchangeRate) {
-      return !(exchangeRate.mode === 'create');
+    $scope.isAcceptedCurrencySelectEnabled = function(exchangeRate) {
+      return exchangeRate.mode === 'create';
     };
 
     $scope.isExchangeRateDisabled = function(exchangeRate) {
