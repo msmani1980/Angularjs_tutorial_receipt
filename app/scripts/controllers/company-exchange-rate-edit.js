@@ -358,6 +358,24 @@ angular.module('ts5App')
       newExchangeRate.startDate = dateUtility.tomorrowFormattedDatePicker();
       newExchangeRate.endDate = dateUtility.tomorrowFormattedDatePicker();
       newExchangeRate.isCloned = true;
+      newExchangeRate.mode = 'clone';
+
+      var newExchangeRates = angular.copy($scope.companyExchangeRates);
+      newExchangeRates.push(newExchangeRate);
+      $scope.companyExchangeRates = $filter('orderBy')(newExchangeRates,
+        'acceptedCurrencyCode + exchangeRate + startDate');
+    };
+
+    $scope.addNewExchangeRate = function(exchangeRate) {
+      var newExchangeRate = {};
+      newExchangeRate.companyId = exchangeRate.companyId;
+      newExchangeRate.operatingCurrencyCode = $scope.search.operatingCurrencyCode;
+      newExchangeRate.exchangeRate = 0;
+      newExchangeRate.exchangeRateType = $this.eposExchangeRateType;
+      newExchangeRate.startDate = dateUtility.tomorrowFormattedDatePicker();
+      newExchangeRate.endDate = dateUtility.tomorrowFormattedDatePicker();
+      newExchangeRate.isCloned = false;
+      newExchangeRate.mode = 'create';
 
       var newExchangeRates = angular.copy($scope.companyExchangeRates);
       newExchangeRates.push(newExchangeRate);
