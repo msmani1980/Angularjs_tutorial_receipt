@@ -278,6 +278,10 @@ angular.module('ts5App')
       return ($scope.search && $scope.search.operatingCurrencyCode) ? true : false;
     };
 
+    $scope.isFormValidForAddNewExchangeRate = function() {
+      return $scope.search && $scope.search.operatingCurrencyCode;
+    };
+
     $scope.clearSearchForm = function() {
       $scope.search = {};
       $scope.companyExchangeRates = [];
@@ -366,9 +370,9 @@ angular.module('ts5App')
         'acceptedCurrencyCode + exchangeRate + startDate');
     };
 
-    $scope.addNewExchangeRate = function(exchangeRate) {
+    $scope.addNewExchangeRate = function() {
       var newExchangeRate = {};
-      newExchangeRate.companyId = exchangeRate.companyId;
+      newExchangeRate.companyId = $this.companyId;
       newExchangeRate.operatingCurrencyCode = $scope.search.operatingCurrencyCode;
       newExchangeRate.exchangeRate = 0;
       newExchangeRate.exchangeRateType = $this.eposExchangeRateType;
