@@ -80,8 +80,7 @@ angular.module('ts5App')
       if ($select.search && $select.search.length > 1) {
         var payload = {
           search: $select.search,
-          date: dateUtility.formatDateForAPI($scope.postTrip.scheduleDate === undefined 
-            ? dateUtility.nowFormattedDatePicker() : $scope.postTrip.scheduleDate )
+          date: dateUtility.formatDateForAPI($scope.postTrip.scheduleDate === undefined ? dateUtility.nowFormattedDatePicker() : $scope.postTrip.scheduleDate)
         };
 
         postTripFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
