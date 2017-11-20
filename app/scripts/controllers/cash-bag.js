@@ -285,9 +285,9 @@ angular.module('ts5App')
       $scope.oldBankRefNumber = $scope.cashBag.bankReferenceNumber || '';
       $scope.oldCashBagNumber = $scope.cashBag.cashBagNumber;
       
-      //if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber) {
-      //$scope.cashBag.bankReferenceNumber = $localStorage.cashBagBankRefNumber;
-      //}
+      if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber && $scope.cashBag.bankReferenceNumber == null) {
+        $scope.cashBag.bankReferenceNumber = $localStorage.cashBagBankRefNumber;
+      }
     }
 
     function promisesResponseHandler() {
