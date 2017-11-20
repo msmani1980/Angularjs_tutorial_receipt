@@ -8,8 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataCtrl', function($scope, postTripFactory, $location, $routeParams, messageService, lodash,
-    $q) {
+  .controller('PostFlightDataCtrl', function($scope, postTripFactory, $location, $routeParams, messageService, dateUtility, lodash, 
+      $q) {
 
     var companyId;
     var $this = this;
@@ -77,9 +77,10 @@ angular.module('ts5App')
         $event.preventDefault();
       }
 
-      if ($select.search && $select.search.length !== 0) {
+      if ($select.search && $select.search.length > 1) {
         var payload = {
-          search: $select.search
+          search: $select.search,
+          date: dateUtility.formatDateForAPI($scope.postTrip.scheduleDate === undefined ? dateUtility.nowFormattedDatePicker() : $scope.postTrip.scheduleDate)
         };
 
         postTripFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
