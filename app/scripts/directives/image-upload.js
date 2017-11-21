@@ -105,7 +105,12 @@ angular.module('ts5App')
       };
 
       $scope.upload = function (imageType, companyCode) {
-        $http.defaults.headers.common.type = $scope.headerType;
+        var imageTypeHeader = $scope.headerType;
+        if (imageType === 'receiptImage') {
+          imageTypeHeader = 'virtual';
+        }
+
+        $http.defaults.headers.common.type = imageTypeHeader;
         if (companyCode === undefined && imageType !== 'itemImage') {
           messageService.display('warning', 'Please provide required Company Information', 'Image upload');
         } else if (imageType === 'homeLogo' && $scope.homeLogoCount > 0) {
