@@ -491,6 +491,16 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.submitForm = function(formData) {
+      if ($scope.formData.companyTypeId !== '6') {
+        $scope.formData.images = [];
+      } else if ($scope.formData.images[0] !== undefined) {
+        for (var i in $scope.formData.images) {
+          $scope.formData.images[i].type = 2;
+        }
+      }
+
+      this.formatPayloadDates(formData);
+      this.formatImagePayloadDates(formData);
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm()) {
         var companyData = angular.copy(formData);
@@ -498,6 +508,19 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(payload);
         return action;
       }
+    };
+
+    $scope.formatImagePayloadDates = function(formData) {
+      for (var imageIndex in formData.images) {
+        var image = formData.images[imageIndex];
+        image.startDate = dateUtility.formatDateForAPI(image.startDate);
+        image.endDate = dateUtility.formatDateForAPI(image.endDate);
+      }
+    };
+
+    $scope.formatPayloadDates = function(formData) {
+      formData.startDate = dateUtility.formatDateForAPI(formData.startDate);
+      formData.endDate = dateUtility.formatDateForAPI(formData.endDate);
     };
 
     $scope.formScroll = function(id, activeBtn) {
