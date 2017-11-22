@@ -491,11 +491,13 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.submitForm = function(formData) {
-      if ($scope.formData.companyTypeId !== '6') {
-        $scope.formData.images = [];
-      } else if ($scope.formData.images[0] !== undefined) {
+      if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '6') {
         for (var i in $scope.formData.images) {
           $scope.formData.images[i].type = 2;
+        }
+      } else if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '1') {
+        for (var i in $scope.formData.images) {
+          $scope.formData.images[i].type = 4;
         }
       }
 
