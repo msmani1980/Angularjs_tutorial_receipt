@@ -22,10 +22,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     $scope.routesList = [];
     $scope.routesListCopy = [];
     $scope.formData = {
-      scheduleDate: dateUtility.nowFormattedDatePicker(),
       menus: []
     };
-
+    $scope.scheduleDateOption = 0;
+    $scope.redispatchOrReplenishNew = false;
+    
     var $this = this;
 
     this.isActionState = function (action) {
@@ -38,6 +39,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.isEndInstanceOrRedispatch = function () {
       return (this.isActionState('end-instance') || this.isActionState('redispatch'));
+    };
+    
+    this.isEndInstanceOrReplenish = function () {
+      return (this.isActionState('end-instance') || this.isActionState('replenish'));
+    };
+    
+    this.isRedispatchOrReplenish = function () {
+      return (this.isActionState('replenish') || this.isActionState('redispatch'));
     };
 
     this.isEditingDispatch = function () {
@@ -180,14 +189,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getFormattedDatesPayload = function () {
       return {
-        startDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate),
-        endDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate)
+        startDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate !== '' ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker()),
+        endDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate !== '' ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker())
       };
     };
 
     this.getFormattedOperationalDaysPayload = function () {
       // Monday -> Sunday = 1 -> 7
-      return dateUtility.getOperationalDay($scope.formData.scheduleDate) || 7;
+      return dateUtility.getOperationalDay($scope.formData.scheduleDate !== '' ? $scope.formData.scheduleDate : dateUtility.nowFormattedDatePicker()) || 7;
     };
 
     this.setCatererStationList = function (dataFromAPI) {
@@ -580,10 +589,26 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       return null;
     };
+    
+    this.formatMenuList = function (menu) {
+      var currentMenu = {
+        id: menu.menuMaster.menuId,
+        menuName: menu.menuMaster.menuName,
+        menuCode: menu.menuMaster.menuCode,
+        menuMasterId: menu.menuMasterId,
+      };
+      return currentMenu;
+    };
 
     this.setMenus = function (apiData) {
       if (apiData && apiData.menus) {
-        return apiData.menus;
+        var newMenus = [];
+        angular.forEach(apiData.menus, function (menu) {
+          var newMenuObj = $this.formatMenuList(menu);
+          newMenus.push(newMenuObj);
+        });
+        
+        return newMenus;
       }
 
       return null;
@@ -600,11 +625,17 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.setStoreInstanceConditionals = function (data) {
       $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
       var stepTwoStoreId = $this.doesStoreIdFromStepTwoExist();
-      if ($this.isActionState('redispatch') && !(data && data.id === parseInt(stepTwoStoreId))) {
-        $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();
-        delete $scope.formData.scheduleNumber;
-        delete $scope.formData.scheduleId;
-        delete $scope.formData.carrierId;
+      if ($this.isRedispatchOrReplenish()) {
+        if ($this.isActionState('redispatch') && !(data && data.id === parseInt(stepTwoStoreId))) {
+          $scope.redispatchOrReplenishNew = true;
+          delete $scope.formData.scheduleNumber;
+          delete $scope.formData.scheduleId;
+          delete $scope.formData.carrierId;	
+        } else if ($this.isActionState('replenish') && !(data && data.replenishStoreInstanceId)) {
+          $scope.redispatchOrReplenishNew = true;
+        } else {
+          $scope.formData.scheduleDate = $this.setScheduleDate(data);  
+        }
       }
 
     };
@@ -625,11 +656,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         };
         $this.setStoreInstanceConditionals(data);
         $this.getDispatchStationList();
-
+               
       }
 
-      var promises = $this.makeInitPromises();
-      $q.all(promises).then($this.initSuccessHandler);
+      $this.getActiveCompanyPreferences();
     };
 
     this.getStoreInstance = function () {
@@ -1379,6 +1409,16 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.updateInstanceDependenciesSuccess();
       });
     };
+    
+    this.updateCatereStationDependencies = function () {
+      var updatePromises = [
+        $this.getMenuCatererList()
+      ];
+       
+      $q.all(updatePromises).then(function () {
+        $this.updateInstanceDependenciesSuccess();
+      });
+    };
 
     this.updateRouteList = function() {
       $scope.routesList = [];
@@ -1417,7 +1457,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.registerScopeWatchers = function () {
       $scope.$watch('formData.scheduleDate', function (newDate, oldDate) {
         if (newDate && newDate !== oldDate) {
-          $this.updateInstanceDependencies();
+          if (!(oldDate === '' && newDate === dateUtility.nowFormattedDatePicker())) {
+            $this.updateInstanceDependencies();  
+          }	
         }
       });
 
@@ -1429,8 +1471,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       if ($this.isActionState('dispatch')) {
         $scope.$watch('formData.cateringStationId', function (newId, oldId) {
-          if (angular.isUndefined(oldId) || newId && newId !== oldId) {
-            $this.updateInstanceDependencies();
+          if (newId && newId !== oldId) {
+            $this.updateCatereStationDependencies();
           }
         });
       }
@@ -1438,7 +1480,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('redispatch')) {
         $scope.$watch('formData.cateringStationId', function (newId, oldId) {
           if (newId && newId !== oldId) {
-            $this.updateInstanceDependencies();
+            $this.updateCatereStationDependencies();
           }
         });
       }
@@ -1472,11 +1514,59 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.uiSelectTemplateReady = true;
       $this.hideLoadingModal();
     };
+    
+    this.isStoreEdit = function () {
+      return angular.isDefined($routeParams.storeId) && ($this.isActionState('dispatch') || $this.isActionState('end-instance'));
+    };
+    
+    this.setInstanceScheduleDate = function() {
+      if ($scope.scheduleDateOption === 1) {
+        $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();	
+      } else if ($scope.scheduleDateOption === 2) {
+        $scope.formData.scheduleDate = dateUtility.tomorrowFormattedDatePicker();
+      } else {
+        $scope.formData.scheduleDate = '';   
+      }
+      
+    };
+    
+    this.setCompanyPreferenceForInstanceDate = function (dataFromAPI) {
+      var preferencesArray = angular.copy(dataFromAPI.preferences);
+
+      angular.forEach(preferencesArray, function (preference) {
+        if (preference.featureName === 'Dispatch' && preference.choiceCode === 'CDTE' && preference.isSelected) {
+          $scope.scheduleDateOption = 1;
+        }else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'TDTE' && preference.isSelected) {
+          $scope.scheduleDateOption = 2;	
+        }
+      });
+      
+      if (!$this.isStoreEdit() && !$this.isRedispatchOrReplenish() && $scope.scheduleDateOption === 1) {
+        $scope.formData.scheduleDate = dateUtility.nowFormattedDatePicker();	
+      } else if (!$this.isStoreEdit() && !$this.isRedispatchOrReplenish() && $scope.scheduleDateOption === 2) {
+        $scope.formData.scheduleDate = dateUtility.tomorrowFormattedDatePicker();
+      } else if (!$this.isStoreEdit() && !$this.isRedispatchOrReplenish()) {
+        $scope.formData.scheduleDate = '';   
+      }
+      
+      if ($scope.redispatchOrReplenishNew) {
+        $this.setInstanceScheduleDate();
+      }
+      
+      var promises = $this.makeInitPromises();
+      $q.all(promises).then($this.initSuccessHandler);
+    };
+      
+    this.getActiveCompanyPreferences = function () {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
+      
+      storeInstanceFactory.getCompanyPreferences(payload).then($this.setCompanyPreferenceForInstanceDate);
+    };
 
     this.createInitPromises = function () {
       var promises = [
-        $this.getMenuMasterList(),
-        $this.getMenuCatererList(),
         $this.getCatererStationList(),
         $this.getStoresList(),
         $this.getCarrierNumbers(),
@@ -1502,13 +1592,17 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       return promises;
     };
-
+    
     this.makeInitPromises = function () {
       var promises = $this.createInitPromises();
+      
       if ($this.isActionState('replenish')) {
-        promises.push($this.getStoreDetails());
-      }
-
+        $scope.redispatchOrReplenishNew = true;
+      } else {
+        promises.push($this.getMenuMasterList());
+        promises.push($this.getMenuCatererList());
+      } 
+      
       if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
         promises.push($this.getStoreDetails());
         promises.concat($this.createEditInitPromises());
@@ -1544,7 +1638,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.minDate = $this.minDateConditional();
       $this.filterMenusList();
       $this.setWizardSteps();
-      if ($routeParams.storeId) {
+      if ($routeParams.storeId && !($this.isEndInstanceOrReplenish('replenish'))) {
         $this.setStoreInstanceMenus();
       }
 
@@ -1563,7 +1657,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.setUIReady();
       $this.registerScopeWatchers();
     };
-
+    
     this.init = function () {
       if ($routeParams.storeId) {
         $this.showLoadingModal('We are loading Store Instance ' + $routeParams.storeId + '.');
@@ -1572,8 +1666,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
       if (!$routeParams.storeId) {
         $this.showLoadingModal('Hang tight, we are loading some data for you.');
-        var promises = this.makeInitPromises();
-        $q.all(promises).then($this.initSuccessHandler);
+        $this.getActiveCompanyPreferences();  
       }
     };
 
