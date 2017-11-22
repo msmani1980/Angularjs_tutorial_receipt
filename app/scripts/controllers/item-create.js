@@ -59,6 +59,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       { duration: 365, name: '1 year' }
     ];
     $scope.supplierCompanies = [];
+    $scope.selectedSupplierCompany = null;
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -652,6 +653,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
         if (!supplierFound) {
           companiesFactory.getCompany($scope.formData.supplierCompanyId).then($this.setExpiredSupplierCompany);
+        } else {
+          $scope.selectedSupplierCompany = supplierFound;
         }
       }
     };
@@ -668,6 +671,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setExpiredSupplierCompany = function (dataFromAPI) {
       var expiredSupplierCompany = angular.copy(dataFromAPI);
+
+      $scope.selectedSupplierCompany = expiredSupplierCompany;
 
       $scope.supplierCompanies.push({
         companyId: expiredSupplierCompany.id,
