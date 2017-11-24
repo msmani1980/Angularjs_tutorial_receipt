@@ -6,7 +6,7 @@
  * # ItemCreateCtrl
  * Controller of the ts5App
  */
-
+/*global $ */
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
     currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService) {
@@ -59,7 +59,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       { duration: 365, name: '1 year' }
     ];
     $scope.supplierCompanies = [];
-    $scope.selectedSupplierCompany = null;
+    $scope.selectedSupplierCompanyImages = null;
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -642,25 +642,27 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.setSupplierCompanies = function(dataFromAPI) {
       var companies = angular.copy(dataFromAPI.companyRelationships);
 
-      $scope.supplierCompanies = lodash.filter(companies, { companyTypeName: 'Supplier' });
+      $scope.supplierCompanies = lodash.filter(companies, { relativeCompanyType: 'Supplier' });
 
       $this.checkIfSupplierCompanyExpired();
     };
 
     this.checkIfSupplierCompanyExpired = function () {
       if ($scope.formData.supplierCompanyId) {
-        var supplierFound = lodash.findWhere($scope.supplierCompanies, { companyId: parseInt($scope.formData.supplierCompanyId) });
+        var supplierFound = lodash.findWhere($scope.supplierCompanies, { relativeCompanyId: parseInt($scope.formData.supplierCompanyId) });
 
         if (!supplierFound) {
           companiesFactory.getCompany($scope.formData.supplierCompanyId).then($this.setExpiredSupplierCompany);
-        } else {
-          $scope.selectedSupplierCompany = supplierFound;
         }
       }
     };
 
     $scope.isSupplierCompanyExpired = function () {
-      var supplierFound = lodash.findWhere($scope.supplierCompanies, { companyId: parseInt($scope.formData.supplierCompanyId) });
+      if (!$scope.formData.supplierCompanyId) {
+        return false;
+      }
+
+      var supplierFound = lodash.findWhere($scope.supplierCompanies, { relativeCompanyId: parseInt($scope.formData.supplierCompanyId) });
 
       if (!supplierFound) {
         return true;
@@ -672,10 +674,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.setExpiredSupplierCompany = function (dataFromAPI) {
       var expiredSupplierCompany = angular.copy(dataFromAPI);
 
-      $scope.selectedSupplierCompany = expiredSupplierCompany;
-
       $scope.supplierCompanies.push({
-        companyId: expiredSupplierCompany.id,
+        relativeCompanyId: expiredSupplierCompany.id,
         companyName: expiredSupplierCompany.companyName,
         expired: true
       });
@@ -683,6 +683,29 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     $scope.onSupplierCompanyChange = function () {
       $this.checkIfSupplierCompanyExpired();
+
+      var payload = {
+        startDate: $scope.formData.startDate,
+        endDate: $scope.formData.endDate
+      };
+
+      if ($scope.formData.supplierCompanyId) {
+        companiesFactory.getCompanyImages($scope.formData.supplierCompanyId, payload).then($this.setCompanyImages);
+      }
+    };
+
+    this.setCompanyImages = function (dataFromAPI) {
+      $scope.selectedSupplierCompanyImages = angular.copy(dataFromAPI.response);
+
+      $scope.selectedSupplierCompanyImages.forEach(function (image) {
+        image.startDate = dateUtility.formatDateForApp(image.startDate);
+        image.endDate = dateUtility.formatDateForApp(image.endDate);
+      });
+    };
+
+    $scope.imagePreview = function (image) {
+      $scope.imagePreview = image.imageURL;
+      $('#imagemodal').modal('show');
     };
 
     this.setDependencies = function(response) {

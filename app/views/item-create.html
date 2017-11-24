@@ -334,21 +334,28 @@
               <div ng-if="isVirtualSelected" class="row">
                 <div class="form-group col-md-12" ng-class="{ 'has-error' : !formData.supplierCompanyId && displayError , 'has-success' : formData.supplierCompanyId }">
                   <label>Supplier</label>
-                  <select name="supplierCompanyId" ng-model="formData.supplierCompanyId" class="form-control col-xs-2" ng-change="onSupplierCompanyChange()" >
-                    <option ng-repeat="supplier in supplierCompanies"
-                            ng-value="supplier.companyId"
-                            ng-selected="formData.supplierCompanyId === supplier.companyId">
-                      {{ supplier.companyName }}
+                  <select name="supplierCompanyId" ng-model="formData.supplierCompanyId" convert-to-number class="form-control col-xs-2" ng-change="onSupplierCompanyChange()" ng-init="onSupplierCompanyChange()" >
+                    <option ng-repeat="supplier in supplierCompanies" value="{{supplier.relativeCompanyId}}">
+                      {{ supplier.relativeCompany }}
                     </option>
                   </select>
 
                   <div ng-if="isSupplierCompanyExpired()" style="color:red">Selected supplier is not active anymore. Please select a new one!</div>
                 </div>
 
-                <div ng-if="selectedSupplierCompany">
-                  <div ng-repeat="image in selectedSupplierCompany.images">
-                    <img src="{{image.path}}" />
-                    {{image.startDate}} - {{image.endDate}}
+                <div ng-if="selectedSupplierCompanyImages" class="col-md-12 form-group" >
+                  <label>Receipt images</label>
+                  <div ng-if="selectedSupplierCompanyImages.length == 0">No active receipt images available</div>
+                  <div ng-repeat="image in selectedSupplierCompanyImages"  >
+                    <div class="col-md-6" style="border: 1px #cccccc solid;">
+                      <a href="javascript: void(0);" ng-click="imagePreview(image)" class="pop">
+                        <img src="{{image.imageURL}}" style="max-width: 95%;">
+                      </a>
+                    </div>
+                    <div class="col-md-6">
+                      Effective from:<br /> {{image.startDate}} <br /><br />
+                      Effective to:<br /> {{image.endDate}}
+                    </div>
                   </div>
                 </div>
 
@@ -510,3 +517,14 @@
 <leave-view-modal></leave-view-modal>
 
 <dynamic-left-nav title="Retail Item Management"></dynamic-left-nav>
+
+<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <img src="{{imagePreview}}" class="imagepreview" style="width: 100%;" >
+      </div>
+    </div>
+  </div>
+</div>
