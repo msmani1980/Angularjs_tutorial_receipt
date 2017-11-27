@@ -226,6 +226,10 @@ angular.module('ts5App')
       return exchangeRate.mode === 'create';
     };
 
+    $scope.isExchangeRateAvailableForClone = function(exchangeRate) {
+      return exchangeRate.mode !== 'create';
+    };
+
     $scope.isExchangeRateDisabled = function(exchangeRate) {
       if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
         return true;
