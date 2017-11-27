@@ -125,7 +125,7 @@
 				                </date-picker-field>
                             </td>
                             <td>
-                              <button class="btn btn-warning btn-xs" ng-click="duplicateExchangeRate(index, exchangeRate)">
+                              <button class="btn btn-warning btn-xs" ng-click="duplicateExchangeRate(index, exchangeRate)" ng-if="isExchangeRateAvailableForClone(exchangeRate)">
                                   <i class="fa fa-copy"></i>
                               </button>
                               <button class="btn btn-info btn-xs" ng-hide="isExchangeRateNewOne(exchangeRate) || isExchangeRatePartialReadOnly(exchangeRate)" ng-click="saveCompanyExchangeRate(index, exchangeRate)">
