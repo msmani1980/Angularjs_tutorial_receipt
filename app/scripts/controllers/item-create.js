@@ -703,9 +703,13 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
     };
 
-    $scope.imagePreview = function (image) {
-      $scope.imagePreview = image.imageURL;
-      $('#imagemodal').modal('show');
+    $scope.showImagePreview = function (image) {
+      $scope.modalImageUrl = image.imageURL;
+      angular.element('#imagemodal').modal('show');
+    };
+
+    $scope.closeImagePreview = function () {
+      angular.element('#imagemodal').modal('hide');
     };
 
     this.setDependencies = function(response) {

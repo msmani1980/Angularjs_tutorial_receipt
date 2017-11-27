@@ -346,10 +346,10 @@
                 <div ng-if="selectedSupplierCompanyImages" class="col-md-12 form-group" >
                   <label>Receipt images</label>
                   <div ng-if="selectedSupplierCompanyImages.length == 0">No active receipt images available</div>
-                  <div ng-repeat="image in selectedSupplierCompanyImages"  >
-                    <div class="col-md-6" style="border: 1px #cccccc solid;">
-                      <a href="javascript: void(0);" ng-click="imagePreview(image)" class="pop">
-                        <img src="{{image.imageURL}}" style="max-width: 95%;">
+                  <div ng-repeat="image in selectedSupplierCompanyImages">
+                    <div class="col-md-6" style="border: 1px #cccccc solid;" ng-click="showImagePreview(image)" >
+                      <a class="pop">
+                        <img ng-src="{{image.imageURL}}" style="max-width: 95%;">
                       </a>
                     </div>
                     <div class="col-md-6">
@@ -510,6 +510,26 @@
 </div>
 <!-- /Container -->
 
+<div class="modal fade" id="imagemodal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Receipt image</h4>
+      </div>
+
+      <div class="modal-body" ng-if="modalImageUrl">
+        <img ng-src="{{modalImageUrl}}" class="imagepreview" style="width: 100%;" >
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="closeImagePreview()">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <form-success-modal list-path="item-list" create-path="item-create"></form-success-modal>
 
 <form-update-modal list-path="item-list"></form-update-modal>
@@ -518,13 +538,3 @@
 
 <dynamic-left-nav title="Retail Item Management"></dynamic-left-nav>
 
-<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <img src="{{imagePreview}}" class="imagepreview" style="width: 100%;" >
-      </div>
-    </div>
-  </div>
-</div>
