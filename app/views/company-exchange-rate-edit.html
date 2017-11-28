@@ -8,7 +8,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-          <button ng-disabled="!isFormValidForAddNewExchangeRate()" class="btn btn-primary" tabindex="-1" ng-click="addNewExchangeRate()"><span class="fa fa-plus"></span><span class="hidden-xs"> Add Exchange Rate</span></button>
+          <button ng-if="isFormValidForAddNewExchangeRate()" class="btn btn-primary" tabindex="-1" ng-click="addNewExchangeRate()"><span class="fa fa-plus"></span><span class="hidden-xs"> Add Exchange Rate</span></button>
             <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
                 aria-controls="search-collapse">
