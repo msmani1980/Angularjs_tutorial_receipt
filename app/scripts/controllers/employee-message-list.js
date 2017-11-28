@@ -84,6 +84,47 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       var companyId = globalMenuService.company.get();
       return employeeMessagesFactory.getEmployees(companyId).then($this.setEmployeesFromAPI, $this.showErrors);
     };
+    
+    this.searchEmployeesSuccess = function(response) {
+        if ($scope.multiSelectedValues.employeeIds) {
+          $scope.employees = lodash.filter(response.companyEmployees, function (employee) {
+            return !lodash.find($scope.multiSelectedValues.employeeIds, { id: employee.id });
+          });
+        } else {
+          $scope.employees = response.companyEmployees;
+        }
+      };
+
+      $scope.searchEmployees = function($select, $event) {
+        if ($event) {
+          $event.stopPropagation();
+          $event.preventDefault();
+        }
+
+        if ($select.search && $select.search.length !== 0) {
+          var payload = {
+            search: $select.search
+          };
+
+          employeeDates(payload, $scope.search);
+          var companyId = globalMenuService.company.get();
+          employeeMessagesFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
+        } else {
+          $scope.employees = [];
+        }
+      };
+      
+    function employeeDates(payload, search) {
+      console.log(search);
+      if (search.startDate === undefined && search.endDate === undefined) {
+        payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      } else if (search.startDate === undefined || search.endDate === undefined) {
+        payload.date = dateUtility.formatDateForAPI(search.startDate === undefined ? search.endDate : search.startDate);
+      } else {
+        payload.startDate =  dateUtility.formatDateForAPI(search.startDate);
+        payload.endDate =  dateUtility.formatDateForAPI(search.endDate);
+      }
+    }
 
     this.formatSearchArray = function(arrayToFormat, attributeToSave) {
       if (!arrayToFormat) {
@@ -136,7 +177,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
         $this.getEmployeeMessages({}),
         $this.getSchedules(),
         $this.getStations(),
-        $this.getEmployees()
+//        $this.getEmployees()
       ];
     };
 
