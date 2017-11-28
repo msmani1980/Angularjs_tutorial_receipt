@@ -57,6 +57,17 @@ angular.module('ts5App')
     this.getDetailedCompanyCurrenciesForSearch = function() {
       currencyFactory.getDetailedCompanyCurrencies().then(function(companyCurrencyListFromAPI) {
         $scope.detailedCompanyCurrenciesForSearch = payloadUtility.deserializeDates(companyCurrencyListFromAPI.companyCurrencies);
+
+        angular.forEach($scope.detailedCompanyCurrenciesForSearch, function(companyCurrency) {
+          companyCurrency.flatDenominations = $this.makeFlatDenominations(companyCurrency.denominations);
+
+          var easyPayDenominations = companyCurrency.denominations.filter(function(denomination) {
+            return denomination.isEasyPay;
+          });
+
+          companyCurrency.flatEasyPayDenominations = $this.makeFlatDenominations(easyPayDenominations);
+        });
+
       });
     };
 
@@ -389,6 +400,19 @@ angular.module('ts5App')
       newExchangeRates.push(newExchangeRate);
       $scope.companyExchangeRates = $filter('orderBy')(newExchangeRates,
         'acceptedCurrencyCode + exchangeRate + startDate');
+    };
+
+    $scope.onAcceptedCompanyCurrencyChange = function(newExchangeRate) {
+      if(newExchangeRate) {
+        var accepptedCurrency = JSON.parse(newExchangeRate.acceptedCurrency);
+        newExchangeRate.acceptedCurrencyCode = accepptedCurrency.currencyCode;
+        newExchangeRate.denominations = accepptedCurrency.flatDenominations;
+        newExchangeRate.easyPayDenominations = accepptedCurrency.flatEasyPayDenominations;
+      } else {
+        newExchangeRate.acceptedCurrencyCode = null;
+        newExchangeRate.denominations = null;
+        newExchangeRate.easyPayDenominations = null;
+      }
     };
 
     this.setPortalExchangeRate = function (dataFromAPI) {
