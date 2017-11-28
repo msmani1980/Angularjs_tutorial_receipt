@@ -331,7 +331,7 @@ angular.module('ts5App')
 
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
     $scope.dropSuccess = function ($event, index, array) {
-      if (draggedOntoIemIndex != null && draggedMenuItemObject != null)
+      if (draggedOntoIemIndex !== null && draggedMenuItemObject !== null)
       {
         var tempItemObject = array[draggedOntoIemIndex];
         array.splice(draggedOntoIemIndex, 1, draggedMenuItemObject);
