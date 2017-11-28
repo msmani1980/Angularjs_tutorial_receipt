@@ -119,6 +119,8 @@ angular.module('ts5App')
           messageService.display('warning', 'Cannot upload more than one image for top left corner logo', 'Image upload');
         } else if (imageType === 'receiptImage' && $scope.receiptCount > 1) {
           messageService.display('warning', 'Cannot upload more than two receipt images', 'Image upload');
+        } else if ($scope.editingCompany && $scope.formData.images.length > 2) {
+          messageService.display('warning', 'Maximum allowed image upload limit reached', 'Image upload');
         } else {
           $http.defaults.headers.common.companyCode = companyCode;
           var fileUploadPromises = [];
@@ -160,7 +162,8 @@ angular.module('ts5App')
         imageName: '@',
         imageNameMessage: '@',
         itemMaxSize: '@',
-        invalidNameMessage: '@'
+        invalidNameMessage: '@',
+        editingCompany: '='
       },
       link: function(scope) {
 
