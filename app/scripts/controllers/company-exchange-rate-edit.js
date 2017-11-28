@@ -205,6 +205,8 @@ angular.module('ts5App')
     };
 
     this.showSaveSuccess = function() {
+      $scope.displayError = false;
+      $scope.errorResponse = null;
       $this.showToast('success', 'Company Exchange Rate', 'exchange rate successfully saved!');
       $this.hideLoadingModal();
     };
