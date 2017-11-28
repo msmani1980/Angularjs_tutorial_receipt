@@ -14,7 +14,7 @@ angular.module('ts5App')
         ngModel.$parsers.push(function(val) {
           return parseInt(val, 10);
         });
-        
+
         ngModel.$formatters.push(function(val) {
           return '' + val;
         });
