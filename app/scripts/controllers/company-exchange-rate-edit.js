@@ -406,7 +406,7 @@ angular.module('ts5App')
     };
 
     $scope.onAcceptedCompanyCurrencyChange = function(newExchangeRate) {
-      if(newExchangeRate) {
+      if (newExchangeRate) {
         var accepptedCurrency = JSON.parse(newExchangeRate.acceptedCurrency);
         newExchangeRate.acceptedCurrencyCode = accepptedCurrency.currencyCode;
         newExchangeRate.denominations = accepptedCurrency.flatDenominations;
