@@ -15,7 +15,7 @@ angular.module('ts5App')
     $scope.viewName = 'Rule Management';
     $scope.readOnly = false;
     $scope.isEdit = false;
-    $scope.company = { };
+    $scope.schedules = [];
     $scope.menuRule = { };
     $scope.carrierTypes = [];
     $scope.items = [];
