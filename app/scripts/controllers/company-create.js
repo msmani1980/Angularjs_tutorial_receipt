@@ -8,7 +8,7 @@
  */
 angular.module('ts5App').controller('CompanyCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, companiesFactory, currencyFactory, dateUtility,
-    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash) {
+    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash, imageLogoService) {
 
     $scope.formData = {
       startDate: dateUtility.tomorrowFormattedDatePicker(),
@@ -30,6 +30,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.viewOnly = false;
     $scope.editingCompany = false;
     $scope.uiSelectTemplateReady = false;
+    $scope.receiptImageArray = [];
+    $scope.companyLogoArray = [];
 
     var $this = this;
 
@@ -176,6 +178,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       }
 
       var company = angular.copy(data);
+
       var languages = company.languages;
       var additionalLanguages = [];
       var defaultLanguage = company.defaultLanguage;
@@ -190,6 +193,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         additionalLanguages = languages;
       }
       
+      $scope.getCompanyImages(company.id, company.companyTypeId);
+
       $scope.formData = {
         baseCurrencyId: $this.setString(company.baseCurrencyId),
         companyTypeId: $this.setString(company.companyTypeId),
@@ -210,7 +215,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         parentCompanyId: $this.setString(company.parentCompanyId),
         roundingOptionId: $this.setString(company.roundingOptionId),
         taxes: company.taxes ? company.taxes : null,
-        timezone: company.timezone !== null ? company.timezone.toString() : null
+        timezone: company.timezone !== null ? company.timezone.toString() : null,
+        images: []
       };
 
       $scope.languages = $this.removeDefaultLanguage();
@@ -238,14 +244,43 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     this.initWatchers = function() {
       $scope.$watch('formData.companyTypeId', function(newValue, oldValue) {
-        $this.clearImagesArray(newValue, oldValue);
+        $this.updateImagesArray(newValue, oldValue);
         $this.calculateFieldsVisibility();
       });
     };
 
-    this.clearImagesArray = function(newValue, oldValue) {
+    this.updateImagesArray = function(newValue, oldValue) {
       if (newValue !== oldValue) {
-        $scope.formData.images = [];
+        if (!$scope.editingCompany) {
+          $scope.formData.images = [];
+        } else if ($scope.editingCompany) {
+          $scope.sortImageArrays(parseInt($scope.formData.companyTypeId));
+        }
+      }
+    };
+
+    $scope.getCompanyImages = function(companyId, companyCode) {
+      imageLogoService.getImageLogo(companyId).then(function (data) {
+       var tempArray = data.response;
+       $scope.formatImageDates(tempArray);
+       for (var index in tempArray) {
+         if (tempArray[index].type === 4) {
+           $scope.receiptImageArray.push(tempArray[index]);
+
+         } else if (tempArray[index].type === 2) {
+           $scope.companyLogoArray.push(tempArray[index]);
+         }
+       }
+
+       $scope.sortImageArrays(companyCode);
+     });
+    };
+
+    $scope.sortImageArrays = function(companyCode) {
+      if (companyCode === 6) {
+        $scope.formData.images = $scope.receiptImageArray;
+      } else if (companyCode === 1) {
+        $scope.formData.images = $scope.companyLogoArray;
       }
     };
 
@@ -602,6 +637,17 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.formatPayloadDates = function(formData) {
       formData.startDate = dateUtility.formatDateForAPI(formData.startDate);
       formData.endDate = dateUtility.formatDateForAPI(formData.endDate);
+    };
+
+    $scope.formatImageDates = function(images) {
+      angular.forEach(images, function(image) {
+        image.startDate = dateUtility.formatDateForApp(image.startDate);
+        image.endDate = dateUtility.formatDateForApp(image.endDate);
+      });
+    };
+
+    $scope.removeImage = function(key) {
+      $scope.formData.images.splice(key, 1);
     };
 
     $scope.formScroll = function(id, activeBtn) {
