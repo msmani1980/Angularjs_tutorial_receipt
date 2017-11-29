@@ -115,7 +115,6 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       };
       
     function employeeDates(payload, search) {
-      console.log(search);
       if (search.startDate === undefined && search.endDate === undefined) {
         payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       } else if (search.startDate === undefined || search.endDate === undefined) {
@@ -184,6 +183,9 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     this.init = function() {
       $scope.viewName = 'Employee Messages';
       $scope.search = {};
+      $scope.selectedEmployees = {};
+      $scope.selectedEmployees.employeeIds = [];
+      $scope.multiSelectedValues = {};
 
       $this.showLoadingModal('Loading data...');
       var initPromises = $this.makeInitPromises();

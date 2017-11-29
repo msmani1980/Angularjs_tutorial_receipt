@@ -320,7 +320,8 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
             search: $select.search
           };
 
-          employeeDates(payload, $scope.search);
+          console.log($scope);
+          employeeDates(payload, $scope.employeeMessage);
           var companyId = globalMenuService.company.get();
           employeeMessagesFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
         } else {
@@ -329,7 +330,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       };
 
     function employeeDates(payload, search) {
-      if (search.startDate === undefined && search.endDate === undefined) {
+      if (search === undefined || (search.startDate === undefined && search.endDate === undefined)) {
           payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
         } else if (search.startDate === undefined || search.endDate === undefined) {
           payload.date = dateUtility.formatDateForAPI(search.startDate === undefined ? search.endDate : search.startDate);
@@ -365,6 +366,9 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     this.initScopeDependencies = function() {
       $scope.readOnly = $routeParams.action === 'view';
       $scope.newRecords = {};
+      $scope.selectedEmployees = {};
+      $scope.selectedEmployees.employeeIds = [];
+      $scope.multiSelectedValues = {};
 
       var actionToViewNameMap = {
         view: 'View Employee Message ' + $routeParams.id,
