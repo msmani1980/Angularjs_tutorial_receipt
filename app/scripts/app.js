@@ -417,6 +417,10 @@ angular.module('ts5App', [
     templateUrl: 'views/menu-rules.html',
     controller: 'MenuRulesCtrl',
     controllerAs: 'menuRules'
+  }).when('/menu-rules/:action/:id?', {
+    templateUrl: 'views/menu-rule-create.html',
+    controller: 'MenuRuleCreateCtrl',
+    controllerAs: 'menuRuleCreate'
   }).otherwise({
     redirectTo: '/'
   });

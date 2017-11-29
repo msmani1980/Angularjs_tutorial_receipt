@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('menuRulesFactory', function (globalMenuService, stationsService, menuRulesService, schedulesService) {
+  .factory('menuRulesFactory', function (globalMenuService, stationsService, menuRulesService, schedulesService, carrierService, itemsService, menuMasterService, salesCategoriesService, cabinClassesService) {
     var getCompanyId = function () {
       return globalMenuService.company.get();
     };
@@ -40,7 +40,27 @@ angular.module('ts5App')
     var getSchedules = function(payload) {
       return schedulesService.getSchedules(payload);
     };
-
+    
+    var getCarrierTypes = function(id) {
+      return carrierService.getCarrierTypes(id);
+    };
+    
+    var getItemsList = function(searchParameters, fetchFromMaster) {
+      return itemsService.getItemsList(searchParameters, fetchFromMaster);
+    };
+    
+    var getMenuMasterList = function(payload) {
+      return menuMasterService.getMenuMasterList(payload);
+    };
+   
+    var getSalesCategoriesList = function(payload) {
+      return salesCategoriesService.getSalesCategoriesList(payload);
+    };
+  
+    var getCabinClassesList = function(payload) {
+      return cabinClassesService.getCabinClassesList(payload);
+    };
+      
     return {
       getMenuRules: getMenuRules,
       getMenuRule: getMenuRule,
@@ -49,6 +69,12 @@ angular.module('ts5App')
       deleteMenuRule: deleteMenuRule,
       getCompanyId: getCompanyId,
       getCompanyGlobalStationList: getCompanyGlobalStationList,
-      getSchedules: getSchedules
+      getSchedules: getSchedules,
+      getCarrierTypes: getCarrierTypes,
+      getItemsList: getItemsList,
+      getMenuMasterList: getMenuMasterList,
+      getSalesCategoriesList: getSalesCategoriesList,
+      getCabinClassesList: getCabinClassesList
     };
+    
   });
