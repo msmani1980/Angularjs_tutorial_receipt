@@ -29,7 +29,7 @@ angular.module('ts5App')
       }
 
       return $scope.search.acceptedCurrencies.filter(function(acceptedCurrency) {
-          return acceptedCurrency.currencyCode === exchangeRate.acceptedCurrencyCode;
+          return acceptedCurrency.currencyCode === exchangeRate.acceptedCurrencyCode || exchangeRate.mode === 'create';
         })
         .length > 0;
     };
@@ -227,6 +227,7 @@ angular.module('ts5App')
         currencyFactory.createCompanyExchangeRate(payload).then(
           function (response) {
             exchangeRate.id = response.id;
+            exchangeRate.mode = 'view-edit';
             $this.showSaveSuccess();
           },
 
