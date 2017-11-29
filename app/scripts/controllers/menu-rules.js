@@ -120,14 +120,6 @@ angular.module('ts5App')
       messageService.display(className, message, type);
     };
 
-    this.applyMenuRulesSuccess = function () {
-      $this.showToastMessage('success', 'Rules have been applied', 'success');
-    };
-
-    this.applyMenuRulesFailure = function () {
-      $this.showToastMessage('error', 'Something went wrong while applying rules. Please try again.', 'success');
-    };
-
     this.constructStartDate = function () {
       return dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
     };
@@ -142,20 +134,20 @@ angular.module('ts5App')
 
     this.getMenuRulesSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
-      $scope.menuRules = $scope.menuRules.concat(response.response.map(function (menuRule) {
+      $scope.menuRules = response.response.map(function (menuRule) {
         menuRule.days = (menuRule.days) ? menuRule.days.replace('{', '').replace('}', '') : menuRule.days;
         menuRule.startDate = dateUtility.formatDateForApp(menuRule.startDate);
         menuRule.endDate = dateUtility.formatDateForApp(menuRule.endDate);
 
         return menuRule;
-      }));
+      });
       
       hideLoadingBar();
     };
 
     $scope.loadMenuRulesData = function() {
       angular.element('#search-collapse').addClass('collapse');
-      if ($this.meta.offset >= $this.meta.count || !$scope.isSearch) {
+      if ($this.meta.offset >= $this.meta.count) {
         return;
       }
 
