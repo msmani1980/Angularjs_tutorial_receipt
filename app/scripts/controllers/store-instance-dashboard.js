@@ -359,6 +359,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
       storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) : '';
+      storeInstance.inboundedOnDisplay = storeInstance.inboundedOn ? dateUtility.formatTimestampForApp(storeInstance.inboundedOn) : '';
 
       setStoreInstanceTime(storeInstance);
       setStoreInstanceActionButtons(storeInstance);
@@ -386,6 +387,28 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         return storeInstance;
       });
     }
+
+    $scope.getUpdateByForStoreInstance = function (storeInst) {
+
+      var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInst.storeStatus.code) >= 0;
+
+      if (doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
+        return storeInst.inboundedByPerson ? storeInst.inboundedByPerson.userName : '';
+      }
+
+      return storeInst.updatedByPerson.userName || storeInst.createdByPerson.userName;
+    };
+
+    $scope.getUpdatedOnForStoreInstance = function (storeInst) {
+
+      var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInst.storeStatus.code) >= 0;
+
+      if (doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
+        return storeInst.inboundedOnDisplay;
+      }
+
+      return storeInst.updatedOnDisplay;
+    };
 
     function filterStoreInstanceList(storeInstanceList) {
       return lodash.filter(angular.copy(storeInstanceList), function (storeInstance) {
@@ -492,7 +515,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           var unpackingStatusId = getIdByValueInArray('Unpacking', 'statusName', $scope.storeStatusList);
           var inboundSealsStatusId = getIdByValueInArray('Inbound Seals', 'statusName', $scope.storeStatusList);
           payload.statusId = [parseInt(payload.statusId), unpackingStatusId, inboundSealsStatusId].toString();
-        } else if(statusName === 'Inbounded') {
+        } else if (statusName === 'Inbounded') {
           var discrepanciesStatusId = getIdByValueInArray('Discrepancies', 'statusName', $scope.storeStatusList);
           var confirmedStatusId = getIdByValueInArray('Confirmed', 'statusName', $scope.storeStatusList);
           var commissionPaidStatusId = getIdByValueInArray('Commission Paid', 'statusName', $scope.storeStatusList);

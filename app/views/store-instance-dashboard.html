@@ -200,8 +200,8 @@
       </td>
       <td>{{ store.id }}</td>
       <td>{{ store.statusName }}</td>
-      <td>{{ store.updatedOnDisplay }}</td>
-      <td>{{ store.updatedByPerson.userName || store.createdByPerson.userName }}</td>
+      <td>{{ getUpdatedOnForStoreInstance(store) }}</td>
+      <td>{{ getUpdateByForStoreInstance(store) }}</td>
       <td class="col-xs-1">
         <a class="btn btn-primary btn-xs btn-block" tabindex="0"
            ng-show="doesStoreInstanceContainAction(store, 'Pack')"
