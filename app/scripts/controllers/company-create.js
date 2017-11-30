@@ -28,6 +28,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.viewOnly = false;
     $scope.editingCompany = false;
     $scope.uiSelectTemplateReady = false;
+    $scope.isCompanyRetail = true;
     
     var $this = this;
 
@@ -57,6 +58,10 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
           $scope.formData.companyCabinClasses.push(payload);
         }
       }
+    };
+
+    $scope.onChangeCompanyType = function() {
+      $scope.isCompanyRetail = ($scope.formData.companyTypeId === '1');
     };
 
     this.calculateFieldsVisibility = function() {
@@ -212,6 +217,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
       $scope.eposLanguages = $this.removeDefaultLanguage($scope.formData.defaultEposLanguage, $scope.formData.eposLanguages);
       $scope.defaultEposLanguages = $this.removeAdditionalLanguage($scope.formData.eposLanguages);     
+      $scope.isCompanyRetail = ($scope.formData.companyTypeId === '1');
     };
 
     this.getCompany = function(id) {
