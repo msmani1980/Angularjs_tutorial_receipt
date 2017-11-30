@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuRuleCreateCtrl', function ($scope, dateUtility, messageService, menuRulesFactory, menuMasterService, $location, $routeParams, $q, lodash) {
+  .controller('MenuRuleCreateCtrl', function ($scope, dateUtility, messageService, menuRulesFactory, menuMasterService, $location, $routeParams, $q, _, lodash) {
     var companyId;
     var $this = this;
 
@@ -59,11 +59,23 @@ angular.module('ts5App')
     };
 
     $scope.formSave = function () {
-      if (!$this.validateForm()) {
-        return false;
+      if ($this.validateForm()) {
+        var saveFunctionName = ($routeParams.action + 'MenuRules');
+        if ($this[saveFunctionName]) {
+          $this[saveFunctionName]();
+        }
+      } else {
+        $scope.displayError = true;
       }
+    };
 
-      $this.showLoadingModal('Saving Menu Rule');
+    this.validateForm = function() {
+      $scope.displayError = !$scope.menuRuleDataForm.$valid;
+      return $scope.menuRuleDataForm.$valid;
+    };
+    
+    this.createMenuRules = function() {
+      $this.showLoadingModal('Saving Menu Rules Data');
 
       var payloadMenus = [];
       var payloadItems = [];
@@ -82,42 +94,43 @@ angular.module('ts5App')
         items.forEach(function (item) {
           payloadItems.push({
             itemQty: item.itemQty,
-            itemId: item.item.masterItem.id,
+            itemId: item.item.id,
             companyCabinClassId: cabinClass
           });
         });
       });
+      
+      var daysArray = [];
+      angular.forEach($scope.formData.days, function(element) {
+        daysArray.push(element.id);
+      });
 
       var payload = {
-        source: 'Manual',
-        menus: payloadMenus,
-        items: payloadItems
+        scheduleNumber: $scope.formData.scheduleNumber,
+        days: daysArray,
+        departureStationId: $scope.formData.departureStationId,
+        arrivalStationId: $scope.formData.arrivalStationId,
+        departureTimeFrom: $scope.formData.departureTime,
+        departureTimeTo: $scope.formData.departureTime,
+        startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
+        cabins: this.constructSelectedMenusItems(payloadItems, payloadMenus)
       };
 
-      menuRulesFactory.updateMenuRule($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure);
+      menuRulesFactory.createMenuRule(payload).then($this.saveFormSuccess, $this.saveFormFailure);
     };
-
-    this.validateForm = function() {
-      $scope.displayError = !$scope.menuRuleDataForm.$valid;
-      return $scope.menuRuleDataForm.$valid;
+    
+    this.constructSelectedMenusItems = function(payloadItems, payloadMenus) {
+      var payloadItemsMap = _.chain(payloadItems).groupBy('companyCabinClassId').map((items, companyCabinClassId) => ({ companyCabinClassId, items })).value();
+      var payloaMenusMap = _.chain(payloadMenus).groupBy('companyCabinClassId').map((menus, companyCabinClassId) => ({ companyCabinClassId, menus })).value();
+      var mergedArray = _.zip(payloadItemsMap, payloaMenusMap);
+      return mergedArray;
     };
-
-    this.showLoadingModal = function(message) {
-      angular.element('#loading').modal('show').find('p').text(message);
+    
+    this.editMenuRules = function() {
+      $this.showLoadingModal('Updating Menu Rules Data');
     };
-
-    this.hideLoadingModal = function() {
-      angular.element('#loading').modal('hide');
-    };
-
-    this.editInit = function() {
-      if (dateUtility.isYesterdayOrEarlierDatePicker($scope.menuRule.startDate)) {
-        $scope.readOnly = true;
-      }
-
-      $scope.isEdit = true;
-    };
-
+  
     this.showToastMessage = function(className, type, message) {
       messageService.display(className, message, type);
     };
@@ -125,7 +138,6 @@ angular.module('ts5App')
     this.saveFormSuccess = function() {
       $this.hideLoadingModal();
       $this.showToastMessage('success', 'Edit Menu Rule', 'success');
-
       $location.path('menu-rules');
     };
 
@@ -134,7 +146,32 @@ angular.module('ts5App')
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
+        
+    this.showLoadingModal = function(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    };
 
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
+    
+    this.createInit = function() {
+      $scope.readOnly = false;
+      $scope.isCreate = true;
+      $scope.viewName = 'Rule Management';
+    };
+
+    this.viewInit = function() {
+      $scope.readOnly = true;
+      $scope.viewName = 'View Rules';
+    };
+
+    this.editInit = function() {
+      $scope.readOnly = false;
+      $scope.viewName = 'Edit Rules';
+      $scope.isEdit = true;
+    };
+      
     this.getMenuMasterAndItemsListSuccess = function(dataFromAPI) {
       $scope.menuMasters = angular.copy(dataFromAPI[0].companyMenuMasters);
       $scope.items = angular.copy(dataFromAPI[1].retailItems);
@@ -229,6 +266,11 @@ angular.module('ts5App')
       $this.getMenuMasterAndItemsListSuccess(result[5], result[6]);
       
       $this.hideLoadingModal();
+      
+      var initFunctionName = ($routeParams.action + 'Init');
+      if ($this[initFunctionName]) {
+        $this[initFunctionName]();
+      }
       
     };
 

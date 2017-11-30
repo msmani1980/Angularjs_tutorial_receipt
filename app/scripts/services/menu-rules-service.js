@@ -66,7 +66,7 @@ angular.module('ts5App')
     };
     
     var createMenuRule = function (payload) {
-      return menuRulesRequestResource.createMenuRule(payload.menuRules).$promise;
+      return menuRulesRequestResource.createMenuRule(payload).$promise;
     };
     
     var updateMenuRule = function (payload) {

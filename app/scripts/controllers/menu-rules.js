@@ -131,7 +131,15 @@ angular.module('ts5App')
     this.getSchedulesSuccess = function(response) {
       $scope.schedules = angular.copy(response.distinctSchedules);
     };
+    
+    this.showLoadingModal = function(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    };
 
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
+    
     this.getMenuRulesSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.menuRules = response.response.map(function (menuRule) {
@@ -194,9 +202,9 @@ angular.module('ts5App')
 
       return promises;
     };
-
+    
     this.init = function() {
-      angular.element('.loading-more').hide();
+      $this.showLoadingModal('Loading Data');
       angular.element('#search-collapse').addClass('collapse');
       $scope.allCheckboxesSelected = false;
       var initDependencies = $this.makeInitPromises();
@@ -204,6 +212,7 @@ angular.module('ts5App')
         $this.getSchedulesSuccess(response[0]);
         $this.getStationsSuccess(response[1]);
         $scope.uiReady = true;
+        $this.hideLoadingModal();
       });
 
     };
