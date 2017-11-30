@@ -14,7 +14,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
-    $scope.todaysDate = dateUtility.nowFormatted();
+    $scope.todaysDate = dateUtility.nowFormattedDatePicker();
     $scope.stockTakeList = [];
     $scope.stockDashboardItemsList = [];
 

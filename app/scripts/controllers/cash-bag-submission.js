@@ -90,7 +90,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
 
     function formatCashBag(cashBag) {
       cashBag.selected = false;
-      cashBag.submittedDate = (cashBag.isSubmitted === true) ? dateUtility.formatDateForApp(cashBag.updatedOn) : '-';
+      cashBag.submittedDate = (cashBag.isSubmitted === true) ? dateUtility.formatDateForApp(cashBag.cashbagSubmittedOn || cashBag.updatedOn) : '-';
       cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
       cashBag.submittedBy = (!cashBag.cashbagSubmittedBy && cashBag.isSubmitted === true) ? 'Auto' : (!!cashBag.cashbagSubmittedByUser ? cashBag.cashbagSubmittedByUser.userName : '-');
     }

@@ -8,16 +8,20 @@
  */
 angular.module('ts5App').controller('CompanyCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, companiesFactory, currencyFactory, dateUtility,
-    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash) {
+    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash, imageLogoService) {
 
     $scope.formData = {
+      startDate: dateUtility.tomorrowFormattedDatePicker(),
+      endDate: dateUtility.tomorrowFormattedDatePicker(),
+      images: [],
       taxes: [],
+      defaultLanguage: null,
       languages: [],
       eposLanguages: [],
       countryVats: [],
       companyCabinClasses: []
     };
-    
+
     $scope.timezone = '';
     $scope.viewName = 'Create Company';
     $scope.buttonText = 'Create';
@@ -26,7 +30,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.viewOnly = false;
     $scope.editingCompany = false;
     $scope.uiSelectTemplateReady = false;
-    
+    $scope.receiptImageArray = [];
+    $scope.companyLogoArray = [];
+
     var $this = this;
 
     this.showLoadingModal = function(text) {
@@ -58,13 +64,13 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.checkForDefaultLanguage = function(languages) {
-      if (!languages.length) {
+      if (!languages.length || $scope.formData.defaultLanguage === null) {
         return false;
       }
 
       var containsDefault = false;
       angular.forEach(languages, function(language) {
-        if (language.id === 1) {
+        if (language.id === $scope.formData.defaultLanguage) {
           containsDefault = true;
         }
       });
@@ -112,16 +118,13 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       var languagePayload = [];
       for (var languageKey in languages) {
         var language = languages[languageKey];
-        if (language !== 1) {
-
-          var index = $this.findLanguagesIndex(language);
-          var payload = {
-            id: language,
-            languageName: $scope.languages[index].languageName,
-            languageCode: $scope.languages[index].languageCode
-          };
-          languagePayload.push(payload);
-        }
+        var index = $this.findLanguagesIndex(language);
+        var payload = {
+          id: language,
+          languageName: $scope.languages[index].languageName,
+          languageCode: $scope.languages[index].languageCode
+        };
+        languagePayload.push(payload);
       }
 
       return languagePayload;
@@ -168,12 +171,30 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       }
     };
 
+    /*jshint maxcomplexity:8 */
     this.updateFormData = function(data) {
       if (!data) {
         return false;
       }
 
       var company = angular.copy(data);
+
+      var languages = company.languages;
+      var additionalLanguages = [];
+      var defaultLanguage = company.defaultLanguage;
+
+      if (defaultLanguage !== null && languages !== null && languages.length > 0) {
+        for (var i = 0; i < languages.length; i++) {
+          if (defaultLanguage !== languages[i]) {
+            additionalLanguages.push(languages[i]);              
+          }
+        }        
+      } else {
+        additionalLanguages = languages;
+      }
+      
+      $scope.getCompanyImages(company.id, company.companyTypeId);
+
       $scope.formData = {
         baseCurrencyId: $this.setString(company.baseCurrencyId),
         companyTypeId: $this.setString(company.companyTypeId),
@@ -188,14 +209,18 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         exchangeRateVariance: $this.setString(company.exchangeRateVariance),
         id: company.id,
         isActive: company.isActive,
-        languages: $this.formatLanguagesForApp(company.languages),
+        languages: $this.formatLanguagesForApp(additionalLanguages),
+        defaultLanguage: $this.setString(company.defaultLanguage),
         legalName: $this.setString(company.legalName),
         parentCompanyId: $this.setString(company.parentCompanyId),
         roundingOptionId: $this.setString(company.roundingOptionId),
         taxes: company.taxes ? company.taxes : null,
-        timezone: company.timezone !== null ? company.timezone.toString() : null
+        timezone: company.timezone !== null ? company.timezone.toString() : null,
+        images: []
       };
 
+      $scope.languages = $this.removeDefaultLanguage();
+      $scope.defaultLanguages = $this.removeAdditionalLanguage();
     };
 
     this.getCompany = function(id) {
@@ -218,14 +243,70 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.initWatchers = function() {
-      $scope.$watch('formData.companyTypeId', function() {
+      $scope.$watch('formData.companyTypeId', function(newValue, oldValue) {
+        $this.updateImagesArray(newValue, oldValue);
         $this.calculateFieldsVisibility();
       });
     };
 
+    this.updateImagesArray = function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        if (!$scope.editingCompany) {
+          $scope.formData.images = [];
+        } else if ($scope.editingCompany) {
+          $scope.sortImageArrays(parseInt($scope.formData.companyTypeId));
+        }
+      }
+    };
+
+    $scope.getCompanyImages = function(companyId, companyCode) {
+      imageLogoService.getImageLogo(companyId).then(function (data) {
+       var tempArray = data.response;
+       $scope.formatImageDates(tempArray);
+       for (var index in tempArray) {
+         if (tempArray[index].type === 4) {
+           $scope.receiptImageArray.push(tempArray[index]);
+
+         } else if (tempArray[index].type === 2) {
+           $scope.companyLogoArray.push(tempArray[index]);
+         }
+       }
+
+       $scope.sortImageArrays(companyCode);
+     });
+    };
+
+    $scope.sortImageArrays = function(companyCode) {
+      if (companyCode === 6) {
+        $scope.formData.images = $scope.receiptImageArray;
+      } else if (companyCode === 1) {
+        $scope.formData.images = $scope.companyLogoArray;
+      }
+    };
+
     this.setUIReady = function() {
       $this.hideLoadingModal();
+      $scope.minDate = $this.determineMinDate();
       $scope.uiSelectTemplateReady = true;
+      $scope.noDefaultLanguage =  $scope.formData.defaultLanguage === null ? true : false;
+      $scope.additionalLanguage = !$scope.noDefaultLanguage && ($scope.formData.languages.length === 0 && $scope.formData.eposLanguages.length === 0) ? false : true;
+    };
+
+    this.determineMinDate = function() {
+      var diff = 1;
+      if (!dateUtility.isTomorrowOrLaterDatePicker($scope.formData.startDate)) {
+        diff = dateUtility.diff(
+          dateUtility.nowFormattedDatePicker(),
+          $scope.formData.startDate
+        );
+      }
+
+      var dateString = diff.toString() + 'd';
+      if (diff >= 0) {
+        dateString = '+' + dateString;
+      }
+
+      return dateString;
     };
 
     this.initUI = function() {
@@ -233,23 +314,71 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       return $this.setUIReady();
     };
 
-    this.removeDefaultLanguage = function(languages) {
-      var payload = [];
-      angular.forEach(languages, function(language) {
-        if (parseInt(language.id) !== 1) {
-          payload.push(language);
+    this.removeDefaultLanguage = function() {
+      var availableLanguages = [];
+      var defLang = $scope.formData.defaultLanguage;
+      angular.forEach($scope.allLanguages, function(language) {
+        if (defLang === null || !angular.isDefined(defLang) || parseInt(language.id) !== parseInt(defLang)) {
+          availableLanguages.push(language);
         }
       });
 
-      return payload;
+      return availableLanguages;
     };
 
+    /*jshint maxcomplexity:8 */
+    this.removeAdditionalLanguage = function() {
+      var cmpLanguages = $scope.formData.languages;
+      var eposLanguages = $scope.formData.eposLanguages;
+      var availableLanguages = [];
+      angular.forEach($scope.allLanguages, function(language) {
+        var isLngExist = false;	
+        if (cmpLanguages.length > 0) {
+          for (var i = 0; i < cmpLanguages.length; i++) {
+            if (parseInt(language.id) === parseInt(cmpLanguages[i].id)) {
+              isLngExist = true; 
+              break;
+            }
+          }        
+        }
+
+        if (!isLngExist && eposLanguages.length > 0) {
+          for (var j = 0; j < eposLanguages.length; j++) {
+            if (parseInt(language.id) === parseInt(eposLanguages[j].id)) {
+              isLngExist = true; 
+              break;
+            }
+          }        
+        }
+
+        if (!isLngExist) {
+          availableLanguages.push(language); 
+        }
+      });
+
+      return availableLanguages;
+    };
+
+    $scope.onChangeAdditionalLanguage = function() {
+      $scope.noDefaultLanguage =  $scope.formData.defaultLanguage === null ? true : false;
+      $scope.additionalLanguage = !$scope.noDefaultLanguage && ($scope.formData.languages.length === 0 && $scope.formData.eposLanguages.length === 0) ? false : true;
+      $scope.defaultLanguages = $this.removeAdditionalLanguage();
+    };
+
+    $scope.onChangeDefaultLanguage  = function() {
+      $scope.languages = $this.removeDefaultLanguage();
+      $scope.noDefaultLanguage =  $scope.formData.defaultLanguage === null ? true : false;
+      $scope.additionalLanguage = !$scope.noDefaultLanguage && ($scope.formData.languages.length === 0 && $scope.formData.eposLanguages.length === 0) ? false : true;
+    };
+    
     this.setDependencies = function(response) {
       $scope.companyTypes = response[0];
       $scope.currencies = response[1].response;
       $scope.companies = response[2].companies;
-      $scope.languages = $this.removeDefaultLanguage(response[3]);
+      $scope.allLanguages = response[3];
+      $scope.defaultLanguages = response[3];
       $scope.countries = response[4].countries;
+      $scope.languages = $this.removeDefaultLanguage();
       if ($scope.editingCompany || $scope.viewOnly) {
         return $this.getCompany($routeParams.id);
       }
@@ -258,9 +387,12 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.makeDependencyPromises = function() {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
       return [
         companyTypesService.getCompanyTypes(),
-        currencyFactory.getCompanyCurrencies(),
+        currencyFactory.getCompanyCurrencies(payload),
         companiesFactory.getCompanyList(),
         languagesService.getLanguagesList(),
         countriesService.getCountriesList()
@@ -380,7 +512,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     this.formatActive = function(data) {
       return (data === true) ? data : false;
     };
-    
+
     this.formatPayload = function(companyData) {
       var company = angular.copy(companyData);
       company.companyCabinClasses = $this.formatCompanyCabinClasses(company);
@@ -388,9 +520,19 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       company.baseCurrencyId = $this.formatInt(company.baseCurrencyId);
       company.companyTypeId = $this.formatInt(company.companyTypeId);
       company.languages = $this.formatCompanyLanguages(company.languages);
+      company.companyLanguages = $this.formatCompanyLanguages(company.languages);
       company.eposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
+      company.companyEposLanguages = $this.formatCompanyLanguages(company.eposLanguages);
       company.countryVats = $this.formatCountryVats(company.countryVats);
       company.timezone = company.timezone;
+      if (angular.isDefined(company.defaultLanguage) && company.defaultLanguage !== null) {
+        company.defaultLanguage = $this.formatInt(company.defaultLanguage);
+        var id = company.defaultLanguage.toString();
+        company.languages.push(id);
+      } else {
+        company.defaultLanguage = null;
+      }
+
       return company;
     };
 
@@ -463,6 +605,18 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.submitForm = function(formData) {
+      if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '6') {
+        for (var i in $scope.formData.images) {
+          $scope.formData.images[i].type = 2;
+        }
+      } else if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '1') {
+        for (var i in $scope.formData.images) {
+          $scope.formData.images[i].type = 4;
+        }
+      }
+
+      this.formatPayloadDates(formData);
+      this.formatImagePayloadDates(formData);
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm()) {
         var companyData = angular.copy(formData);
@@ -470,6 +624,30 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(payload);
         return action;
       }
+    };
+
+    $scope.formatImagePayloadDates = function(formData) {
+      for (var imageIndex in formData.images) {
+        var image = formData.images[imageIndex];
+        image.startDate = dateUtility.formatDateForAPI(image.startDate);
+        image.endDate = dateUtility.formatDateForAPI(image.endDate);
+      }
+    };
+
+    $scope.formatPayloadDates = function(formData) {
+      formData.startDate = dateUtility.formatDateForAPI(formData.startDate);
+      formData.endDate = dateUtility.formatDateForAPI(formData.endDate);
+    };
+
+    $scope.formatImageDates = function(images) {
+      angular.forEach(images, function(image) {
+        image.startDate = dateUtility.formatDateForApp(image.startDate);
+        image.endDate = dateUtility.formatDateForApp(image.endDate);
+      });
+    };
+
+    $scope.removeImage = function(key) {
+      $scope.formData.images.splice(key, 1);
     };
 
     $scope.formScroll = function(id, activeBtn) {

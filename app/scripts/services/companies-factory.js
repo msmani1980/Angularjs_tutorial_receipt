@@ -23,6 +23,10 @@ angular.module('ts5App')
       return companyService.getCompanyList(payload);
     };
 
+    var getCompanyImages = function (id, payload) {
+      return companyService.getCompanyImages(id, payload);
+    };
+
     var createCompany = function(payload) {
       return companyService.createCompany(payload);
     };
@@ -70,6 +74,7 @@ angular.module('ts5App')
       getCompanyList: getCompanyList,
       createCompany: createCompany,
       updateCompany: updateCompany,
+      getCompanyImages: getCompanyImages,
 
       // Tags
       getTagsList: getTagsList,

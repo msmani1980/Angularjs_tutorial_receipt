@@ -51,6 +51,7 @@ angular.module('ts5App')
     };
 
     $scope.search = {};
+    $scope.isSearchLoading = false;
     $scope.isCreditCardPaymentSelected = false;
 
     $scope.printStoreNumber = function (transaction) {
@@ -233,9 +234,11 @@ angular.module('ts5App')
     $scope.clearSearch = function () {
       $scope.search = {};
       $scope.transactions = [];
+      $scope.isSearchLoading = false;
     };
 
     $scope.searchTransactions = function () {
+      $scope.isSearchLoading = true;
       $this.isSearch = true;
       clearTransactions();
       setDefaultMetaPayload();
@@ -342,6 +345,7 @@ angular.module('ts5App')
 
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
       hideLoadingBar();
+      $scope.isSearchLoading = false;
     }
 
     function clearTransactions() {
