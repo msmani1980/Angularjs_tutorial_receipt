@@ -84,45 +84,39 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       var companyId = globalMenuService.company.get();
       return employeeMessagesFactory.getEmployees(companyId).then($this.setEmployeesFromAPI, $this.showErrors);
     };
-    
-    this.searchEmployeesSuccess = function(response) {
-        if ($scope.multiSelectedValues.employeeIds) {
-          $scope.employees = lodash.filter(response.companyEmployees, function (employee) {
-            return !lodash.find($scope.multiSelectedValues.employeeIds, { id: employee.id });
-          });
-        } else {
-          $scope.employees = response.companyEmployees;
-        }
+
+    $scope.searchEmployees = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+
+      if ($select.search && $select.search.length !== 0) {
+        var payload = employeeDatesPayload($select, $scope.search);
+        var companyId = globalMenuService.company.get();
+
+        employeeMessagesFactory.getEmployees(companyId, payload).then($this.setEmployeesFromAPI);
+      }
+    };
+
+    function employeeDatesPayload($select, search) {
+      var payload = {
+        search: $select.search
       };
 
-      $scope.searchEmployees = function($select, $event) {
-        if ($event) {
-          $event.stopPropagation();
-          $event.preventDefault();
-        }
-
-        if ($select.search && $select.search.length !== 0) {
-          var payload = {
-            search: $select.search
-          };
-
-          employeeDates(payload, $scope.search);
-          var companyId = globalMenuService.company.get();
-          employeeMessagesFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
-        } else {
-          $scope.employees = [];
-        }
-      };
-      
-    function employeeDates(payload, search) {
-      if (search.startDate === undefined && search.endDate === undefined) {
+      if (!search.startDate && !search.endDate) {
         payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
-      } else if (search.startDate === undefined || search.endDate === undefined) {
-        payload.date = dateUtility.formatDateForAPI(search.startDate === undefined ? search.endDate : search.startDate);
-      } else {
+      }
+
+      if (search.startDate) {
         payload.startDate =  dateUtility.formatDateForAPI(search.startDate);
+      }
+
+      if (search.endDate) {
         payload.endDate =  dateUtility.formatDateForAPI(search.endDate);
       }
+
+      return payload;
     }
 
     this.formatSearchArray = function(arrayToFormat, attributeToSave) {
@@ -164,6 +158,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     $scope.clearSearch = function() {
       $scope.search = {};
       $scope.employeeMessagesList = [];
+      $scope.employeesList = [];
     };
 
     this.initSuccess = function() {
@@ -175,8 +170,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       return [
         $this.getEmployeeMessages({}),
         $this.getSchedules(),
-        $this.getStations(),
-//        $this.getEmployees()
+        $this.getStations()
       ];
     };
 
