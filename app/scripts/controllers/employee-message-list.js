@@ -85,6 +85,40 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       return employeeMessagesFactory.getEmployees(companyId).then($this.setEmployeesFromAPI, $this.showErrors);
     };
 
+    $scope.searchEmployees = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+
+      if ($select.search && $select.search.length !== 0) {
+        var payload = employeeDatesPayload($select, $scope.search);
+        var companyId = globalMenuService.company.get();
+
+        employeeMessagesFactory.getEmployees(companyId, payload).then($this.setEmployeesFromAPI);
+      }
+    };
+
+    function employeeDatesPayload($select, search) {
+      var payload = {
+        search: $select.search
+      };
+
+      if (!search.startDate && !search.endDate) {
+        payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      }
+
+      if (search.startDate) {
+        payload.startDate =  dateUtility.formatDateForAPI(search.startDate);
+      }
+
+      if (search.endDate) {
+        payload.endDate =  dateUtility.formatDateForAPI(search.endDate);
+      }
+
+      return payload;
+    }
+
     this.formatSearchArray = function(arrayToFormat, attributeToSave) {
       if (!arrayToFormat) {
         return [];
@@ -124,6 +158,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     $scope.clearSearch = function() {
       $scope.search = {};
       $scope.employeeMessagesList = [];
+      $scope.employeesList = [];
     };
 
     this.initSuccess = function() {
@@ -135,14 +170,16 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       return [
         $this.getEmployeeMessages({}),
         $this.getSchedules(),
-        $this.getStations(),
-        $this.getEmployees()
+        $this.getStations()
       ];
     };
 
     this.init = function() {
       $scope.viewName = 'Employee Messages';
       $scope.search = {};
+      $scope.selectedEmployees = {};
+      $scope.selectedEmployees.employeeIds = [];
+      $scope.multiSelectedValues = {};
 
       $this.showLoadingModal('Loading data...');
       var initPromises = $this.makeInitPromises();

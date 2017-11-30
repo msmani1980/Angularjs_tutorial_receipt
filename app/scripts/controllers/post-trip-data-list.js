@@ -197,7 +197,7 @@ angular.module('ts5App')
       if (search.scheduleStartDate === undefined && search.scheduleEndDate === undefined) {
         payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       } else if (search.scheduleStartDate === undefined || search.scheduleEndDate === undefined) {
-        payload.date = dateUtility.formatDateForAPI(search.scheduleStartDate === undefined ? search.scheduleEndDate : search.scheduleSatrtDate);
+        payload.date = dateUtility.formatDateForAPI(search.scheduleStartDate === undefined ? search.scheduleEndDate : search.scheduleStartDate);
       } else {
         payload.startDate =  dateUtility.formatDateForAPI($scope.search.scheduleStartDate);
         payload.endDate =  dateUtility.formatDateForAPI($scope.search.scheduleEndDate);

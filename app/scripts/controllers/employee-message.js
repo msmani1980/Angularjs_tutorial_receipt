@@ -298,6 +298,47 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         $scope.employeesList = angular.copy(dataFromAPI.companyEmployees);
       }, $this.showErrors);
     };
+    
+    this.searchEmployeesSuccess = function(response) {
+        if ($scope.multiSelectedValues.employeeIds) {
+          $scope.employeesList = lodash.filter(response.companyEmployees, function (employee) {
+            return !lodash.find($scope.multiSelectedValues.employeeIds, { id: employee.id });
+          });
+        } else {
+          $scope.employeesList = response.companyEmployees;
+        }
+      };
+
+      $scope.searchEmployees = function($select, $event) {
+        if ($event) {
+          $event.stopPropagation();
+          $event.preventDefault();
+        }
+
+        if ($select.search && $select.search.length !== 0) {
+          var payload = {
+            search: $select.search
+          };
+
+          console.log($scope);
+          employeeDates(payload, $scope.employeeMessage);
+          var companyId = globalMenuService.company.get();
+          employeeMessagesFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
+        } else {
+          $scope.employees = [];
+        }
+      };
+
+    function employeeDates(payload, search) {
+      if (search === undefined || (search.startDate === undefined && search.endDate === undefined)) {
+          payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+        } else if (search.startDate === undefined || search.endDate === undefined) {
+          payload.date = dateUtility.formatDateForAPI(search.startDate === undefined ? search.endDate : search.startDate);
+        } else {
+          payload.startDate =  dateUtility.formatDateForAPI(search.startDate);
+          payload.endDate =  dateUtility.formatDateForAPI(search.endDate);
+        }
+    }
 
     this.initEmployeeMessage = function() {
       if ($routeParams.action !== 'create') {
@@ -318,13 +359,16 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return [
         $this.getSchedules(),
         $this.getStations(),
-        $this.getEmployees()
+//        $this.getEmployees()
       ];
     };
 
     this.initScopeDependencies = function() {
       $scope.readOnly = $routeParams.action === 'view';
       $scope.newRecords = {};
+      $scope.selectedEmployees = {};
+      $scope.selectedEmployees.employeeIds = [];
+      $scope.multiSelectedValues = {};
 
       var actionToViewNameMap = {
         view: 'View Employee Message ' + $routeParams.id,
