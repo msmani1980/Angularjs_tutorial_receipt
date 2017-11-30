@@ -87,7 +87,7 @@
               <ui-select multiple ng-model="search.schedules" theme="bootstrap">
                 <ui-select-match placeholder="Select a Schedule...">{{ $item.scheduleNumber }}
                 </ui-select-match>
-                <ui-select-choices repeat="schedule in schedulesList | filter: $select.search">
+                <ui-select-choices refresh-delay="300" repeat="schedule in schedulesList | filter: $select.search | limitTo: 50">
                   {{ schedule.scheduleNumber }}
                 </ui-select-choices>
               </ui-select>

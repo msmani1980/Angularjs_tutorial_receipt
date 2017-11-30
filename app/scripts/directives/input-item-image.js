@@ -18,3 +18,16 @@ angular.module('ts5App')
     };
 
   });
+
+angular.module('ts5App')
+  .directive('inputItemImageUploadConfirm', function () {
+
+    return {
+
+      templateUrl: 'views/directives/input-item-image-upload-confirm.html',
+      restrict: 'E',
+      scope: true
+
+    };
+
+  });

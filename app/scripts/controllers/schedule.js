@@ -15,7 +15,7 @@ angular.module('ts5App')
     $scope.viewName = 'Schedule';
     $scope.readOnly = false;
     $scope.shouldDisableStartDate = false;
-    $scope.schedule = { };
+    $scope.schedule = {};
     $scope.stationList = [];
     $scope.carrierTypes = [];
     $scope.distanceUnits = [];
@@ -223,7 +223,7 @@ angular.module('ts5App')
       var startDate = dateUtility.formatDateForApp(response.startDate);
       var endDate = dateUtility.formatDateForApp(response.endDate);
 
-      $scope.shouldDisableStartDate = !(dateUtility.isTodayDatePicker(startDate) || dateUtility.isAfterTodayDatePicker(startDate));
+      $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
 
       $scope.calendarsReady = true;
