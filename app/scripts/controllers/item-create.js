@@ -586,7 +586,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
         }).then($this.setDiscountList);
 
-        companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get()).then($this.setSupplierCompanies);
+        var relationshipPayload = {
+          startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
+        };
+
+        companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get(), relationshipPayload).then($this.setSupplierCompanies);
       }
     });
 
@@ -676,7 +681,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       $scope.supplierCompanies.push({
         relativeCompanyId: expiredSupplierCompany.id,
-        companyName: expiredSupplierCompany.companyName,
+        relativeCompany: expiredSupplierCompany.companyName,
         expired: true
       });
     };

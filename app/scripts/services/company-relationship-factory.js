@@ -18,8 +18,8 @@ angular.module('ts5App')
       return companyService.getCompanyList(payload);
     };
 
-    var getCompanyRelationshipListByCompany = function (id) {
-      return companyRelationshipService.getCompanyRelationshipListByCompany(id);
+    var getCompanyRelationshipListByCompany = function (id, payload) {
+      return companyRelationshipService.getCompanyRelationshipListByCompany(id, payload);
     };
 
     var getCompanyRelationshipTypeList = function (type) {
