@@ -216,6 +216,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         roundingOptionId: $this.setString(company.roundingOptionId),
         taxes: company.taxes ? company.taxes : null,
         timezone: company.timezone !== null ? company.timezone.toString() : null,
+        startDate: dateUtility.tomorrowFormattedDatePicker(),
+        endDate: dateUtility.tomorrowFormattedDatePicker(),
         images: []
       };
 
@@ -262,12 +264,14 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.getCompanyImages = function(companyId, companyCode) {
       imageLogoService.getImageLogo(companyId).then(function (data) {
        var tempArray = data.response;
+       $scope.receiptImageArray = [];
+       $scope.companyLogoArray = [];
        $scope.formatImageDates(tempArray);
        for (var index in tempArray) {
-         if (tempArray[index].type === 4) {
+         if (tempArray[index].type === 2) {
            $scope.receiptImageArray.push(tempArray[index]);
 
-         } else if (tempArray[index].type === 2) {
+         } else if (tempArray[index].type === 4) {
            $scope.companyLogoArray.push(tempArray[index]);
          }
        }
@@ -277,6 +281,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.sortImageArrays = function(companyCode) {
+      $scope.formData.images = [];
       if (companyCode === 6) {
         $scope.formData.images = $scope.receiptImageArray;
       } else if (companyCode === 1) {
@@ -414,6 +419,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     this.showSuccessModal = function(state) {
       angular.element('#' + state + '-success').modal('show');
+      if ($scope.editingCompany) {
+        $scope.getCompanyImages($scope.formData.id, parseInt($scope.formData.companyTypeId));
+      }
     };
 
     this.createSuccessHandler = function() {
@@ -605,13 +613,15 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.submitForm = function(formData) {
-      if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '6') {
+      if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '1') {
         for (var i in $scope.formData.images) {
           $scope.formData.images[i].type = 2;
+          console.log('company type 2 supply image 2');
         }
-      } else if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '1') {
+      } else if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '6') {
         for (var i in $scope.formData.images) {
           $scope.formData.images[i].type = 4;
+          console.log('company type 6 retail image 4');
         }
       }
 
