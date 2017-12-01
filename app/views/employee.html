@@ -36,13 +36,12 @@
 						<div class="form-group">
 							<date-picker-field
                 ng-if="isLoadingCompleted"
-									form="employeeDataForm" name="EffectiveStartDate"
-									label="Effective Start Date"
-									disable="isDisabled()"
-									required="true"
-									end-current-effective="!viewEditItem"
-									custom-date="employee.startDate"
-									ng-model="employee.startDate">
+                form="employeeDataForm" name="EffectiveStartDate"
+                label="Effective Start Date"
+                disable="isDisabled()"
+                required="true"
+                end-current-effective="!viewEditItem"
+                ng-model="employee.startDate">
 							</date-picker-field>
 						</div>
 					</div>
@@ -69,13 +68,15 @@
                 ng-if="isLoadingCompleted"
                 form="employeeDataForm"
                 name="EffectiveEndDate"
-								label="Effective End Date"
-								disable="readOnly || shouldDisableEndDate"
-								ng-model="employee.endDate"
-								end-current-effective="!viewEditItem"
-								custom-date="employee.endDate"
-								required="true">
-							</date-picker-field>
+                label="Effective End Date"
+                disable="readOnly || shouldDisableEndDate"
+                ng-model="employee.endDate"
+                end-current-effective="!viewEditItem"
+                custom-effective="true"
+                min-date="minDate"
+                custom-date="employee.endDate"
+                required="true">
+              </date-picker-field>
 						</div>
 					</div>
 				</div>
