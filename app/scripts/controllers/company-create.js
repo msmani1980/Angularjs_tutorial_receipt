@@ -250,10 +250,10 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
        $scope.companyLogoArray = [];
        $scope.formatImageDates(tempArray);
        for (var index in tempArray) {
-         if (tempArray[index].type === 4) {
+         if (tempArray[index].type === 2) {
            $scope.receiptImageArray.push(tempArray[index]);
 
-         } else if (tempArray[index].type === 2) {
+         } else if (tempArray[index].type === 4) {
            $scope.companyLogoArray.push(tempArray[index]);
          }
        }
@@ -532,13 +532,15 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.submitForm = function(formData) {
-      if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '6') {
+      if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '1') {
         for (var i in $scope.formData.images) {
           $scope.formData.images[i].type = 2;
+          console.log('company type 2 supply image 2');
         }
-      } else if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '1') {
+      } else if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '6') {
         for (var i in $scope.formData.images) {
           $scope.formData.images[i].type = 4;
+          console.log('company type 6 retail image 4');
         }
       }
 
