@@ -53,8 +53,13 @@ angular.module('ts5App')
       var index = $scope.formData.selectedItems[cabinClass].indexOf(menu);
       $scope.formData.selectedItems[cabinClass].splice(index, 1);
     };
-
+    
+    $this.getRetailItemsByCategoryResponse = function (dataFromAPI) {
+      return angular.copy(dataFromAPI.masterItems);
+    };
+    
     $scope.filterItemListByCategory = function (item) {
+      //item.items = menuRulesFactory.getItemsList({ categoryId: item.selectedCategory.id }, { fetchFromMaster: 'master' }).then($this.getRetailItemsByCategoryResponse);
       item.items = (item.selectedCategory) ? lodash.filter($scope.items, { categoryName: item.selectedCategory.name }) : $scope.items;
     };
 
@@ -124,7 +129,15 @@ angular.module('ts5App')
       var payloadItemsMap = _.chain(payloadItems).groupBy('companyCabinClassId').map((items, companyCabinClassId) => ({ companyCabinClassId, items })).value();
       var payloaMenusMap = _.chain(payloadMenus).groupBy('companyCabinClassId').map((menus, companyCabinClassId) => ({ companyCabinClassId, menus })).value();
       var mergedArray = _.zip(payloadItemsMap, payloaMenusMap);
-      return mergedArray;
+      
+      var finalMenusItems = [];
+      angular.forEach(mergedArray, function (rootVal, rootKey) {
+        angular.forEach(rootVal, function (value, key) {
+          finalMenusItems.push(value);
+        });
+      });
+      
+      return finalMenusItems;
     };
     
     this.editMenuRules = function() {
