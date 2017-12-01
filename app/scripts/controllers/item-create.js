@@ -681,7 +681,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       $scope.supplierCompanies.push({
         relativeCompanyId: expiredSupplierCompany.id,
-        companyName: expiredSupplierCompany.companyName,
+        relativeCompany: expiredSupplierCompany.companyName,
         expired: true
       });
     };
