@@ -251,7 +251,12 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       }
 
       if ($scope.formData.startDate && $scope.formData.endDate) {
-        companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get()).then($this.setSupplierCompanies);
+        var relationshipPayload = {
+          startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
+        };
+
+        companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get(), relationshipPayload).then($this.setSupplierCompanies);
       }
     });
 
