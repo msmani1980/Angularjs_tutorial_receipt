@@ -71,16 +71,19 @@ angular.module('ts5App')
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.cashBagList = $scope.cashBagList.concat(formatScheduleDateForApp(angular.copy(response.cashBags)));
       angular.forEach($scope.cashBagList, function(cashbag) {
-    	if( cashbag.updatedByPerson === undefined || cashbag.updatedByPerson == null){
-          cashbag._updatedBy = 'NA';
+      	if( !(cashbag.updatedBy === undefined) && cashbag.updatedBy === -1 ){
+          cashbag._updatedBy = 'AUTO';
+      	} else if( cashbag.updatedByPerson === undefined || cashbag.updatedByPerson == null ){
+          cashbag._updatedBy = '';
     	} else {
           cashbag._updatedBy = cashbag.updatedByPerson.userName;
     	}
-    	if( cashbag.updatedBy === undefined || cashbag.updatedBy == null){
-          cashbag._updatedBy = 'NA';
-    	} else {
-          cashbag._updatedBy = cashbag.updatedBy;
+    	if( !(cashbag.updatedOn === undefined) && cashbag.updatedOn != null){
+          cashbag.updatedOn = dateUtility.formatTimestampForApp(cashbag.updatedOn);
+    	}else {
+          cashbag.updatedOn = '';
     	}
+    	
         if ($scope.isNew(cashbag.id)) {
           showSuccessMessage('successfully created');
         }
