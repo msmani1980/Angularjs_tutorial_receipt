@@ -200,6 +200,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         roundingOptionId: $this.setString(company.roundingOptionId),
         taxes: company.taxes ? company.taxes : null,
         timezone: company.timezone !== null ? company.timezone.toString() : null,
+        startDate: dateUtility.tomorrowFormattedDatePicker(),
+        endDate: dateUtility.tomorrowFormattedDatePicker(),
         images: []
       };
 
@@ -244,6 +246,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.getCompanyImages = function(companyId, companyCode) {
       imageLogoService.getImageLogo(companyId).then(function (data) {
        var tempArray = data.response;
+       $scope.receiptImageArray = [];
+       $scope.companyLogoArray = [];
        $scope.formatImageDates(tempArray);
        for (var index in tempArray) {
          if (tempArray[index].type === 4) {
@@ -259,6 +263,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.sortImageArrays = function(companyCode) {
+      $scope.formData.images = [];
       if (companyCode === 6) {
         $scope.formData.images = $scope.receiptImageArray;
       } else if (companyCode === 1) {
@@ -343,6 +348,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     this.showSuccessModal = function(state) {
       angular.element('#' + state + '-success').modal('show');
+      if ($scope.editingCompany) {
+        $scope.getCompanyImages($scope.formData.id, parseInt($scope.formData.companyTypeId));
+      }
     };
 
     this.createSuccessHandler = function() {
