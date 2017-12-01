@@ -133,7 +133,8 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     $scope.save = function() {
-      if(!$this.isEffectiveDateRangeValid()) {
+
+      if (!$this.isEffectiveDateRangeValid()) {
         return;
       }
 
@@ -145,8 +146,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         employeeMessagesFactory.createEmployeeMessage(payload).then($this.saveSuccess, $this.showErrors);
       }
     };
-
-
+    
     $scope.shouldDisable = function(isFieldDisabledInActiveRecord) {
       if (isFieldDisabledInActiveRecord) {
         return $scope.readOnly || $scope.shouldDisableActiveFields();
