@@ -616,12 +616,10 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '1') {
         for (var i in $scope.formData.images) {
           $scope.formData.images[i].type = 2;
-          console.log('company type 2 supply image 2');
         }
       } else if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '6') {
         for (var i in $scope.formData.images) {
           $scope.formData.images[i].type = 4;
-          console.log('company type 6 retail image 4');
         }
       }
 
