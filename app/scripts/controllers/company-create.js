@@ -8,9 +8,12 @@
  */
 angular.module('ts5App').controller('CompanyCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, companiesFactory, currencyFactory, dateUtility,
-    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash) {
+    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash, imageLogoService) {
 
     $scope.formData = {
+      startDate: dateUtility.tomorrowFormattedDatePicker(),
+      endDate: dateUtility.tomorrowFormattedDatePicker(),
+      images: [],
       taxes: [],
       defaultLanguage: null,
       languages: [],
@@ -29,7 +32,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.editingCompany = false;
     $scope.uiSelectTemplateReady = false;
     $scope.isCompanyRetail = true;
-    
+    $scope.receiptImageArray = [];
+    $scope.companyLogoArray = [];
     var $this = this;
 
     this.showLoadingModal = function(text) {
@@ -181,6 +185,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       }
 
       var company = angular.copy(data);
+//<<<<<<< HEAD
       var defaultLanguage = company.defaultLanguage;
       var languages = company.languages;
       var additionalLanguages = this.getAdditionalLanguages(defaultLanguage, languages);
@@ -189,6 +194,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       var eposLanguages = company.eposLanguages;
       var additionalEposLanguages = this.getAdditionalLanguages(defaultEposLanguage, eposLanguages);
 
+//=======
+      $scope.getCompanyImages(company.id, company.companyTypeId);
+//>>>>>>> refs/remotes/origin/feature/TSVPORTAL-9627-upload-logos
       $scope.formData = {
         baseCurrencyId: $this.setString(company.baseCurrencyId),
         companyTypeId: $this.setString(company.companyTypeId),
@@ -209,8 +217,14 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         roundingOptionId: $this.setString(company.roundingOptionId),
         taxes: company.taxes ? company.taxes : null,
         timezone: company.timezone !== null ? company.timezone.toString() : null,
+//<<<<<<< HEAD
         defaultEposLanguage: $this.setString(company.defaultEposLanguage),
-        eposLanguages: $this.formatLanguagesForApp(additionalEposLanguages)
+        eposLanguages: $this.formatLanguagesForApp(additionalEposLanguages),
+//=======
+        startDate: dateUtility.tomorrowFormattedDatePicker(),
+        endDate: dateUtility.tomorrowFormattedDatePicker(),
+        images: []
+//>>>>>>> refs/remotes/origin/feature/TSVPORTAL-9627-upload-logos
       };
       
       $scope.languages = $this.removeDefaultLanguage($scope.formData.defaultLanguage, $scope.formData.languages);
@@ -241,14 +255,71 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.initWatchers = function() {
-      $scope.$watch('formData.companyTypeId', function() {
+      $scope.$watch('formData.companyTypeId', function(newValue, oldValue) {
+        $this.updateImagesArray(newValue, oldValue);
         $this.calculateFieldsVisibility();
       });
     };
 
+    this.updateImagesArray = function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        if (!$scope.editingCompany) {
+          $scope.formData.images = [];
+        } else if ($scope.editingCompany) {
+          $scope.sortImageArrays(parseInt($scope.formData.companyTypeId));
+        }
+      }
+    };
+
+    $scope.getCompanyImages = function(companyId, companyCode) {
+      imageLogoService.getImageLogo(companyId).then(function (data) {
+       var tempArray = data.response;
+       $scope.receiptImageArray = [];
+       $scope.companyLogoArray = [];
+       $scope.formatImageDates(tempArray);
+       for (var index in tempArray) {
+         if (tempArray[index].type === 2) {
+           $scope.receiptImageArray.push(tempArray[index]);
+
+         } else if (tempArray[index].type === 4) {
+           $scope.companyLogoArray.push(tempArray[index]);
+         }
+       }
+
+       $scope.sortImageArrays(companyCode);
+     });
+    };
+
+    $scope.sortImageArrays = function(companyCode) {
+      $scope.formData.images = [];
+      if (companyCode === 6) {
+        $scope.formData.images = $scope.receiptImageArray;
+      } else if (companyCode === 1) {
+        $scope.formData.images = $scope.companyLogoArray;
+      }
+    };
+
     this.setUIReady = function() {
       $this.hideLoadingModal();
+      $scope.minDate = $this.determineMinDate();
       $scope.uiSelectTemplateReady = true;
+    };
+
+    this.determineMinDate = function() {
+      var diff = 1;
+      if (!dateUtility.isTomorrowOrLaterDatePicker($scope.formData.startDate)) {
+        diff = dateUtility.diff(
+          dateUtility.nowFormattedDatePicker(),
+          $scope.formData.startDate
+        );
+      }
+
+      var dateString = diff.toString() + 'd';
+      if (diff >= 0) {
+        dateString = '+' + dateString;
+      }
+
+      return dateString;
     };
 
     this.initUI = function() {
@@ -367,6 +438,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     this.showSuccessModal = function(state) {
       angular.element('#' + state + '-success').modal('show');
+      if ($scope.editingCompany) {
+        $scope.getCompanyImages($scope.formData.id, parseInt($scope.formData.companyTypeId));
+      }
     };
 
     this.createSuccessHandler = function() {
@@ -565,6 +639,18 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     $scope.submitForm = function(formData) {
+      if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '1') {
+        for (var i in $scope.formData.images) {
+          $scope.formData.images[i].type = 2;
+        }
+      } else if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '6') {
+        for (var i in $scope.formData.images) {
+          $scope.formData.images[i].type = 4;
+        }
+      }
+
+      this.formatPayloadDates(formData);
+      this.formatImagePayloadDates(formData);
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm()) {
         var companyData = angular.copy(formData);
@@ -572,6 +658,30 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(payload);
         return action;
       }
+    };
+
+    $scope.formatImagePayloadDates = function(formData) {
+      for (var imageIndex in formData.images) {
+        var image = formData.images[imageIndex];
+        image.startDate = dateUtility.formatDateForAPI(image.startDate);
+        image.endDate = dateUtility.formatDateForAPI(image.endDate);
+      }
+    };
+
+    $scope.formatPayloadDates = function(formData) {
+      formData.startDate = dateUtility.formatDateForAPI(formData.startDate);
+      formData.endDate = dateUtility.formatDateForAPI(formData.endDate);
+    };
+
+    $scope.formatImageDates = function(images) {
+      angular.forEach(images, function(image) {
+        image.startDate = dateUtility.formatDateForApp(image.startDate);
+        image.endDate = dateUtility.formatDateForApp(image.endDate);
+      });
+    };
+
+    $scope.removeImage = function(key) {
+      $scope.formData.images.splice(key, 1);
     };
 
     $scope.formScroll = function(id, activeBtn) {

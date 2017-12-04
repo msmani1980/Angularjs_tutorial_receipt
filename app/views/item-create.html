@@ -170,7 +170,7 @@
             <fieldset>
               <div ng-if="isVoucherSelected">
                 <div class="form-group">
-                  <div class="row col-md-5"><label class="control-label">Notes</label></div>
+                  <div class="row col-md-5"><label class="control-label">Notes *</label></div>
                   <div class="row col-md-7 pull-right">
                     <select class="form-control"
                             ng-model="formData.selectedVoucherNotesLanguage"
@@ -182,12 +182,12 @@
                     <textarea
                       ng-disabled="isDisabled()"
                       ng-show="formData.selectedVoucherNotesLanguage.id == language.id"
-                      name="notes"
+                      name="notes - {{language.languageName}}"
                       class="form-control vertical-resize-only"
                       ng-model="formData.notesTranslations[language.id]" type="text"
                       placeholder="Notes for Voucher"
-                      ng-maxlength="500"
-                      maxlength="500">
+                      ng-maxlength="1000"
+                      maxlength="1000" required>
                     </textarea>
                   </div>
                 </div>
@@ -227,10 +227,10 @@
 
               <div class="form-group">
                 <label>Item Tags</label>
-                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.tags" theme="bootstrap" ng-change="onTagsChange()">
+                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.tags" theme="bootstrap">
                   <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}
                   </ui-select-match>
-                  <ui-select-choices repeat="tag in filterSelectedTags | filter: $select.search | orderBy:'name'">
+                  <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
                     <div ng-bind-html="tag.name | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
@@ -251,7 +251,7 @@
 
             <fieldset>
 
-              <image-upload ng-hide="isDisabled()"></image-upload>
+              <image-upload image-type="itemImage" form-data-bind="formData" ng-hide="isDisabled()"></image-upload>
 
               <div id="images-container">
 
@@ -322,12 +322,12 @@
                 </div>
               </div>
 
-              <div ng-if="creatingItem && isVoucherSelected"
+              <div ng-if="isVoucherSelected"
                    class="form-group"
-                   ng-class="{ 'has-error' : !formData.voucherDuration && displayError , 'has-success' : formData.voucherDuration }">
-                <label>Voucher Duration *</label>
-                <select name="voucherDuration" ng-model="formData.voucherDuration" class="form-control col-xs-2" ng-change="recalculateEndDate()" ng-required="true">
-                  <option ng-repeat="duration in voucherDurationOptions" value="{{ duration.duration }}">{{ duration.name }}</option>
+                   ng-disabled="isDisabled()">
+                <label>Voucher Duration</label>
+                <select ng-if="uiSelectTemplateReady" name="voucherDuration" ng-model="formData.voucherDurationId" ng-options="n.id as n.name for n in voucherDurations" class="form-control col-xs-2">
+                  <option value=""></option>
                 </select>
               </div>
 

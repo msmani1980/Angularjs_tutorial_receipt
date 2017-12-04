@@ -66,7 +66,6 @@
     <form name="form" class="form edit-form create-item-form">
 
       <h3 id="company-information">Company Information</h3>
-
       <div class="row">
 
         <div class="col-xs-12 col-sm-6">
@@ -85,8 +84,8 @@
             <label>Company Status</label>
             <div class="form-group">
               <input type="checkbox"
-                ng-model="formData.isActive"
-                name="isActive">
+                     ng-model="formData.isActive"
+                     name="isActive">
 
               <label> Active</label>
             </div>
@@ -161,34 +160,33 @@
             </select>
 
           </div>
-          
           <div class="col-xs-12 col-sm-6">
             <label>Company TimeZone*</label>
-			 <select ng-model="formData.timezone" class="form-control" ng-init="formData.timezone ='0'" >
-				<option value="-11">UTC-11</option>
-				<option value="-10">UTC-10</option>
-				<option value="-9">UTC-9</option>
-				<option value="-8">UTC-8</option>
-				<option value="-7">UTC-7</option>
-				<option value="-6">UTC-6</option>
-				<option value="-5">UTC-5</option>
-				<option value="-4">UTC-4</option>
-				<option value="-3">UTC-3</option>
-				<option value="-2">UTC-2</option>
-				<option value="-1">UTC-1</option>
-				<option value="0">UTC+0</option>
-				<option value="1">UTC+1</option>
-				<option value="2">UTC+2</option>
-				<option value="3">UTC+3</option>
-				<option value="4">UTC+4</option>
-				<option value="5">UTC+5</option>
-				<option value="6">UTC+6</option>
-				<option value="7">UTC+7</option>
-				<option value="8">UTC+8</option>
-				<option value="9">UTC+9</option>
-				<option value="10">UTC+10</option>
-				<option value="11">UTC+11</option>
-			</select> 
+            <select ng-model="formData.timezone" class="form-control" ng-init="formData.timezone ='0'" >
+              <option value="-11">UTC-11</option>
+              <option value="-10">UTC-10</option>
+              <option value="-9">UTC-9</option>
+              <option value="-8">UTC-8</option>
+              <option value="-7">UTC-7</option>
+              <option value="-6">UTC-6</option>
+              <option value="-5">UTC-5</option>
+              <option value="-4">UTC-4</option>
+              <option value="-3">UTC-3</option>
+              <option value="-2">UTC-2</option>
+              <option value="-1">UTC-1</option>
+              <option value="0">UTC+0</option>
+              <option value="1">UTC+1</option>
+              <option value="2">UTC+2</option>
+              <option value="3">UTC+3</option>
+              <option value="4">UTC+4</option>
+              <option value="5">UTC+5</option>
+              <option value="6">UTC+6</option>
+              <option value="7">UTC+7</option>
+              <option value="8">UTC+8</option>
+              <option value="9">UTC+9</option>
+              <option value="10">UTC+10</option>
+              <option value="11">UTC+11</option>
+            </select>
           </div>
 
           <div class="col-xs-12 col-sm-6" ng-if="showBaseCurrency">
@@ -198,7 +196,7 @@
               <option ng-selected="isSelected(formData.baseCurrencyId, currency.id)"
                       ng-repeat="currency in currencies | orderBy:'code'"
                       value="{{currency.id}}">
-                      {{ currency.code }} - {{ currency.name }}
+                {{ currency.code }} - {{ currency.name }}
               </option>
             </select>
           </div>
@@ -215,10 +213,57 @@
               </option>
             </select>
           </div>
+
+          <div class="col-xs-12 col-sm-6">
+<!--             <h4>Portal Default Language</h4>
+            <h4 class="text-muted">English</h4>
+
+            <label>Portal Additional Languages</label>
+            <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.languages" theme="bootstrap">
+              <ui-select-match placeholder="Languages">{{ $item.languageName }}
+              </ui-select-match>
+              <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
+                <div ng-bind-html="language.languageName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+
+            <label>ePOS Additional Languages</label>
+            <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.eposLanguages" theme="bootstrap">
+              <ui-select-match placeholder="Languages">{{ $item.languageName }}
+              </ui-select-match>
+              <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
+                <div ng-bind-html="language.languageName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+ -->
+          </div>
+
         </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
 
+            <image-upload ng-if="formData.companyTypeId==1" image-type="homeLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
+            <image-upload ng-if="formData.companyTypeId==1" image-type="cornerLogo" form-data-bind="formData" editing-company="editingCompany"  ng-hide="isDisabled()"></image-upload>
+            <div ng-if="formData.companyTypeId==6">
+              <image-upload image-type="receiptImage" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
+            </div>
 
+          </div>
+          <div ng-if="formData.companyTypeId==1" class="col-xs-12 col-sm-6" id="images-container">
+            <br>
+            <div ng-repeat="(key,image) in formData.images track by $index">
+              <input-item-image-upload-confirm></input-item-image-upload-confirm>
+            </div>
 
+          </div>
+          <div ng-if="formData.companyTypeId==6" class="col-xs-12 col-sm-6" id="images-container2">
+            <br>
+            <div ng-repeat="(key,image) in formData.images track by $index">
+              <input-item-image></input-item-image>
+            </div>
+
+          </div>
+        </div>
       </fieldset>
 
        <fieldset ng-if="showLanguageFields" ng-disabled="viewOnly">
@@ -257,7 +302,8 @@
             </div>
 
       </fieldset>
-      
+
+
       <fieldset ng-if="showAdditionalFields" ng-disabled="viewOnly">
 
         <div class="row">
@@ -366,8 +412,8 @@
                      id="cabinClassCode-{{$index}}"
                      ng-model="cabinClass.code"/>
             </div>
-            </div>
-            <div class="row">
+          </div>
+          <div class="row">
             <div class="col-xs-12 col-sm-12">
               <label>Cabin Description*</label>
               <input custom-pattern="word"
@@ -383,12 +429,13 @@
             </div>
           </div>
         </div>
-      </div>
       </fieldset>
-
     </form>
-
   </div>
+
+
+
+</div>
 
 </div>
 <!-- /Container -->
