@@ -13,9 +13,6 @@ angular.module('ts5App')
       $scope.imageTypeText = '';
       $scope.fileFormat = 'jpg,.png,.gif';
       $scope.isRequired = 'false';
-      $scope.homeLogoCount = 0;
-      $scope.cornerLogoCount = 0;
-      $scope.receiptCount = 0;
 
       $scope.$watch('files', function (files) {
         for (var fileKey in files) {
@@ -55,13 +52,6 @@ angular.module('ts5App')
           file.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
         }).success(function (data) {
           $scope.addImage(fileIndex, data);
-          if (imageType === 'homeLogo') {
-            $scope.homeLogoCount++;
-          } else if (imageType === 'cornerLogo') {
-            $scope.cornerLogoCount++;
-          } else if (imageType === 'receiptImage') {
-            $scope.receiptCount++;
-          }
         }).error(function () {
           file.uploadFail = true;
 
@@ -113,13 +103,7 @@ angular.module('ts5App')
         $http.defaults.headers.common.type = imageTypeHeader;
         if (companyCode === undefined && imageType !== 'itemImage') {
           messageService.display('warning', 'Please provide required Company Information', 'Image upload');
-        } else if (imageType === 'homeLogo' && $scope.homeLogoCount > 0) {
-          messageService.display('warning', 'Cannot upload more than one image for home screen logo', 'Image upload');
-        } else if (imageType === 'cornerLogo' && $scope.cornerLogoCount > 0) {
-          messageService.display('warning', 'Cannot upload more than one image for top left corner logo', 'Image upload');
-        } else if (imageType === 'receiptImage' && $scope.receiptCount > 1) {
-          messageService.display('warning', 'Cannot upload more than two receipt images', 'Image upload');
-        } else if ($scope.editingCompany && $scope.formData.images.length > 2) {
+        }else if ($scope.formData.images.length >= 2) {
           messageService.display('warning', 'Maximum allowed image upload limit reached', 'Image upload');
         } else {
           $http.defaults.headers.common.companyCode = companyCode;
