@@ -131,13 +131,28 @@ angular.module('ts5App')
       var mergedArray = _.zip(payloadItemsMap, payloaMenusMap);
       
       var finalMenusItems = [];
+      var arrayOfMenuItems = [];
+      
       angular.forEach(mergedArray, function (rootVal, rootKey) {
         angular.forEach(rootVal, function (value, key) {
           finalMenusItems.push(value);
         });
       });
       
-      return finalMenusItems;
+      finalMenusItems.forEach(function(value) {
+        var existing = arrayOfMenuItems.filter(function(v, i) {
+          return v.companyCabinClassId === value.companyCabinClassId;
+        });
+      
+        if (existing.length) {
+          var existingIndex = arrayOfMenuItems.indexOf(existing[0]);
+          arrayOfMenuItems[existingIndex] = Object.assign(value, arrayOfMenuItems[existingIndex]);
+        } else {
+          arrayOfMenuItems.push(value);
+        } 
+      });
+
+      return arrayOfMenuItems;
     };
     
     this.editMenuRules = function() {
