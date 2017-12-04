@@ -54,8 +54,8 @@ angular.module('ts5App')
       return requestResource.getCompanyList(payload).$promise;
     };
 
-    var getCompanyImages = function(id, payload) {
-      return imagesRequestResource.getCompanyImages({ id: id }, payload).$promise;
+    var getCompanyImages = function(payload) {
+      return imagesRequestResource.getCompanyImages(payload).$promise;
     };
 
     var getCompany = function(id) {

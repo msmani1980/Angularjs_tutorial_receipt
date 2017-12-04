@@ -691,12 +691,13 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.checkIfSupplierCompanyExpired();
 
       var payload = {
-        startDate: $scope.formData.startDate,
-        endDate: $scope.formData.endDate
+        id: $scope.formData.supplierCompanyId,
+        startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
       };
 
       if ($scope.formData.supplierCompanyId) {
-        companiesFactory.getCompanyImages($scope.formData.supplierCompanyId, payload).then($this.setCompanyImages);
+        companiesFactory.getCompanyImages(payload).then($this.setCompanyImages);
       }
     };
 

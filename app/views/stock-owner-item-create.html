@@ -280,7 +280,7 @@
               <div ng-if="selectedSupplierCompanyImages" class="col-md-12 form-group" >
                 <label>Receipt images</label>
                 <div ng-if="selectedSupplierCompanyImages.length == 0">No active receipt images available</div>
-                <div ng-repeat="image in selectedSupplierCompanyImages">
+                <div ng-repeat="image in selectedSupplierCompanyImages" class="col-md-12 row" style="margin-bottom:5px;">
                   <div class="col-md-6" style="border: 1px #cccccc solid;" ng-click="showImagePreview(image)" >
                     <a class="pop">
                       <img ng-src="{{image.imageURL}}" style="max-width: 95%;">
