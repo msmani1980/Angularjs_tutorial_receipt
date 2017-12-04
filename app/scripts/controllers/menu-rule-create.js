@@ -211,17 +211,68 @@ angular.module('ts5App')
     };
 
     this.getMenuRuleSuccess = function(dataFromAPI) {
-      $scope.menuRule = angular.copy(dataFromAPI.response);
-
-      angular.extend($scope.menuRule, {
-        startDate: dateUtility.formatDateForApp($scope.menuRule.startDate),
-        endDate: dateUtility.formatDateForApp($scope.menuRule.endDate)
+      $scope.formData = angular.copy(dataFromAPI);
+      angular.extend($scope.formData, {
+        startDate: dateUtility.formatDateForApp($scope.formData.startDate),
+        endDate: dateUtility.formatDateForApp($scope.formData.endDate),
+        departureTime: $scope.formData.departureTimeFrom,
+        arrivalTime: $scope.formData.departureTimeTo,
+        days: $this.formatDaysOfWeekForEdit($scope.formData.days),
+        selectedMenus: [],
+        selectedItems: []
       });
+      $this.constructSelectedEditMenus($scope.formData.cabins[0].menus);
+      $this.constructSelectedEditItems($scope.formData.cabins[0].items);
+    };
+    
+    this.constructSelectedEditMenus = function(menus) {
+        $scope.companyCabinClasses.forEach(function (cabinClass) {
+          $scope.formData.selectedMenus[cabinClass.id] = lodash.filter(menus, { companyCabinClassId: cabinClass.id });
+          
+          $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
+              menu.rawMenu = menu;
+              menu.menu = lodash.find($scope.menuMasters, { id: menu.menuId });
+              if (!menu.menu) {
+                menu.expired = true;
+              }
+            });
+        });
+      };
+
+    this.constructSelectedEditItems = function (items) {
+          $scope.companyCabinClasses.forEach(function (cabinClass) {
+            $scope.formData.selectedItems[cabinClass.id] = lodash.filter(items, { companyCabinClassId: cabinClass.id });
+            
+            $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
+              item.rawItem = item;
+              item.item = lodash.find($scope.items, { id: item.itemId });
+              item.items = $scope.items;
+
+              if (!item.item) {
+                item.expired = true;
+              }
+            });
+          });
+        };
+        
+    this.formatDaysOfWeekForEdit = function (days) {
+      if (!days || days === '{}') {
+        return [];
+      }
+
+      return days.replace('{', '')
+        .replace('}', '')
+        .split(',')
+        .map(Number)
+          .map(function (day) {
+            return lodash.find($scope.daysOfOperation, { id: day });
+          });
     };
     
     this.getMenuMasterAndItemsListSuccess = function(menuResponse, itemResponse) {
       $scope.menuMasters = angular.copy(menuResponse.companyMenuMasters);
       $scope.items = angular.copy(itemResponse.masterItems);
+
       $this.constructSelectedMenus();
       $this.constructSelectedItems();
     };
@@ -282,9 +333,6 @@ angular.module('ts5App')
     };
       
     this.initDependenciesSuccess = function(result) {
-      if ($routeParams.id) {
-        menuRulesFactory.getMenuRule($routeParams.id).then($this.getMenuRuleSuccess);
-      }
 
       $this.getSchedulesSuccess(result[0]);
       $this.getStationsSuccess(result[1]);
@@ -292,6 +340,10 @@ angular.module('ts5App')
       $this.getSalesCategorySuccess(result[3]);
       $this.getCabinClassesSuccess(result[4]);
       $this.getMenuMasterAndItemsListSuccess(result[5], result[6]);
+      
+      if ($routeParams.id) {
+        menuRulesFactory.getMenuRule($routeParams.id).then($this.getMenuRuleSuccess);
+      }
       
       $this.hideLoadingModal();
       
