@@ -78,7 +78,7 @@ angular.module('ts5App')
     	} else {
           cashbag._updatedBy = cashbag.updatedByPerson.userName;
     	}
-    	if( !(cashbag.updatedOn === undefined) && cashbag.updatedOn != null){
+    	if( !(cashbag.updatedOn === undefined) && cashbag.updatedOn !== null){
           cashbag.updatedOn = dateUtility.formatTimestampForApp(cashbag.updatedOn);
     	}else {
           cashbag.updatedOn = '';
