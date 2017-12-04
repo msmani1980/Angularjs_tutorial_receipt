@@ -65,6 +65,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.calculateFieldsVisibility = function() {
+      $scope.showLanguageFields = (angular.isDefined($scope.formData.companyTypeId) && $scope.formData.companyTypeId !== null);
       $scope.showAdditionalFields = ($scope.formData.companyTypeId === '1');
       if ($scope.showAdditionalFields) {
         $this.addCommonClass();
