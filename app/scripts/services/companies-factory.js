@@ -23,8 +23,8 @@ angular.module('ts5App')
       return companyService.getCompanyList(payload);
     };
 
-    var getCompanyImages = function (id, payload) {
-      return companyService.getCompanyImages(id, payload);
+    var getCompanyImages = function (payload) {
+      return companyService.getCompanyImages(payload);
     };
 
     var createCompany = function(payload) {

@@ -253,7 +253,8 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       if ($scope.formData.startDate && $scope.formData.endDate) {
         var relationshipPayload = {
           startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
-          endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
+          endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
+          relativeCompanyType: 'Supplier'
         };
 
         companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get(), relationshipPayload).then($this.setSupplierCompanies);
@@ -263,7 +264,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     this.setSupplierCompanies = function(dataFromAPI) {
       var companies = angular.copy(dataFromAPI.companyRelationships);
 
-      $scope.supplierCompanies = lodash.filter(companies, { relativeCompanyType: 'Supplier' });
+      $scope.supplierCompanies = lodash.filter(companies, { relativeCompanyActive: true });
 
       $this.checkIfSupplierCompanyExpired();
     };
@@ -306,12 +307,13 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       $this.checkIfSupplierCompanyExpired();
 
       var payload = {
-        startDate: $scope.formData.startDate,
-        endDate: $scope.formData.endDate
+        id: $scope.formData.supplierCompanyId,
+        startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
       };
 
       if ($scope.formData.supplierCompanyId) {
-        companiesFactory.getCompanyImages($scope.formData.supplierCompanyId, payload).then($this.setCompanyImages);
+        companiesFactory.getCompanyImages(payload).then($this.setCompanyImages);
       }
     };
 
