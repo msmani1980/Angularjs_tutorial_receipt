@@ -71,9 +71,9 @@ angular.module('ts5App')
     
     var updateMenuRule = function (payload) {
       var requestParameters = {
-        id: payload.menuRules.id
+        id: payload.id
       };
-      return menuRulesRequestResource.updateMenuRule(requestParameters, payload.menuRules).$promise;
+      return menuRulesRequestResource.updateMenuRule(requestParameters, payload).$promise;
     };
     
     var deleteMenuRule = function (menuRuleId) {

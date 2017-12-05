@@ -39,8 +39,8 @@ angular.module('ts5App')
       selectedItems: []
     };
     
-    $scope.isDisabled = function() {
-      return $scope.readOnly;
+    $scope.isEffective = function(menuRuleData) {
+      return $scope.readOnly || $scope.isCurrentEffectiveDate(menuRuleData);
     };
 
     $scope.shouldDisableStartDate = function(startDate) {
@@ -56,11 +56,11 @@ angular.module('ts5App')
     };
     
     $scope.isMenuRuleReadOnly = function () {
-      if ($routeParams.state === 'create' || (angular.isUndefined($scope.formData))) {
+      if ($routeParams.action === 'create' || (angular.isUndefined($scope.formData))) {
         return false;
       }
 
-      if ($routeParams.state === 'view') {
+      if ($routeParams.action === 'view') {
         return true;
       }
 
@@ -112,48 +112,51 @@ angular.module('ts5App')
     
     this.createMenuRules = function() {
       $this.showLoadingModal('Saving Menu Rules Data');
-
+      menuRulesFactory.createMenuRule(this.generatePayloadCreateUpdate()).then($this.saveFormSuccess, $this.saveFormFailure);
+    };
+    
+    this.generatePayloadCreateUpdate = function() {
       var payloadMenus = [];
       var payloadItems = [];
 
       $scope.formData.selectedMenus.forEach(function (menus, cabinClass) {
-        menus.forEach(function (menu) {
-          payloadMenus.push({
-            menuQty: menu.menuQty,
-            menuId: menu.menu.menuId,
-            companyCabinClassId: cabinClass
+          menus.forEach(function (menu) {
+            payloadMenus.push({
+              menuQty: menu.menuQty,
+              menuId: menu.menu.menuId,
+              companyCabinClassId: cabinClass
+            });
           });
         });
-      });
 
       $scope.formData.selectedItems.forEach(function (items, cabinClass) {
-        items.forEach(function (item) {
-          payloadItems.push({
-            itemQty: item.itemQty,
-            itemId: item.item.id,
-            companyCabinClassId: cabinClass
+          items.forEach(function (item) {
+            payloadItems.push({
+              itemQty: item.itemQty,
+              itemId: item.item.id,
+              companyCabinClassId: cabinClass
+            });
           });
         });
-      });
-      
+        
       var daysArray = [];
       angular.forEach($scope.formData.days, function(element) {
-        daysArray.push(element.id);
-      });
+          daysArray.push(element.id);
+        });
 
-      var payload = {
-        scheduleNumber: $scope.formData.scheduleNumber,
-        days: daysArray,
-        departureStationId: $scope.formData.departureStationId,
-        arrivalStationId: $scope.formData.arrivalStationId,
-        departureTimeFrom: $scope.formData.departureTime,
-        departureTimeTo: $scope.formData.departureTime,
-        startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
-        cabins: this.constructSelectedMenusItems(payloadItems, payloadMenus)
-      };
-
-      menuRulesFactory.createMenuRule(payload).then($this.saveFormSuccess, $this.saveFormFailure);
+      var payloadCreateUpdate = {
+          scheduleNumber: $scope.formData.scheduleNumber,
+          days: daysArray,
+          departureStationId: $scope.formData.departureStationId,
+          arrivalStationId: $scope.formData.arrivalStationId,
+          departureTimeFrom: $scope.formData.departureTime,
+          departureTimeTo: $scope.formData.departureTime,
+          startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
+          cabins: this.constructSelectedMenusItems(payloadItems, payloadMenus),
+          companyCarrierTypeId: angular.isDefined($scope.formData.companyCarrierTypeId) ? $scope.formData.companyCarrierTypeId : null
+        };
+      return payloadCreateUpdate;
     };
     
     this.constructSelectedMenusItems = function(payloadItems, payloadMenus) {
@@ -164,14 +167,14 @@ angular.module('ts5App')
       var finalMenusItems = [];
       var arrayOfMenuItems = [];
       
-      angular.forEach(mergedArray, function (rootVal, rootKey) {
-        angular.forEach(rootVal, function (value, key) {
+      angular.forEach(mergedArray, function (rootVal) {
+        angular.forEach(rootVal, function (value) {
           finalMenusItems.push(value);
         });
       });
       
       finalMenusItems.forEach(function(value) {
-        var existing = arrayOfMenuItems.filter(function(v, i) {
+        var existing = arrayOfMenuItems.filter(function(v) {
           return v.companyCabinClassId === value.companyCabinClassId;
         });
       
@@ -188,6 +191,9 @@ angular.module('ts5App')
     
     this.editMenuRules = function() {
       $this.showLoadingModal('Updating Menu Rules Data');
+      var updatePayload = this.generatePayloadCreateUpdate();
+      updatePayload.concat($routeParams.id);
+      menuRulesFactory.updateMenuRule(updatePayload).then($this.saveFormSuccess, $this.saveFormFailure);
     };
   
     this.showToastMessage = function(className, type, message) {
@@ -280,16 +286,22 @@ angular.module('ts5App')
       $scope.companyCabinClasses.forEach(function (cabinClass) {
         if ($scope.formData.cabins !== undefined) {
           $scope.formData.cabins.forEach(function(cabinMenus) {
-            $scope.formData.selectedMenus[cabinClass.id] = lodash.filter(cabinMenus.menus, { companyCabinClassId: cabinClass.id });
-          });
-
-          $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
-            menu.rawMenu = menu;
-            menu.menu = lodash.find($scope.menuMasters, { id: menu.menuId });
-            if (!menu.menu) {
-              menu.expired = true;
+            var isMenuExist = lodash.filter(cabinMenus.menus, { companyCabinClassId: cabinClass.id });
+            if (isMenuExist !== undefined && isMenuExist.length > 0) {
+              $scope.formData.selectedMenus[cabinClass.id] = isMenuExist;
             }
           });
+
+          if ($scope.formData.selectedMenus.length > 0) {
+            $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
+              menu.rawMenu = menu;
+              menu.menu = lodash.find($scope.menuMasters, { id: menu.menuId });
+              if (!menu.menu) {
+                menu.expired = true;
+              }
+            }); 
+          }
+          
         }else {
           $scope.formData.selectedMenus[cabinClass.id] = [];
         }
@@ -301,18 +313,23 @@ angular.module('ts5App')
         
           if ($scope.formData.cabins !== undefined) {
             $scope.formData.cabins.forEach(function(cabinItems) {
-              $scope.formData.selectedItems[cabinClass.id] = lodash.filter(cabinItems.items, { companyCabinClassId: cabinClass.id });
-            });
-
-            $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
-              item.rawItem = item;
-              item.item = lodash.find($scope.items, { id: item.itemId });
-              item.items = $scope.items;
-
-              if (!item.item) {
-                item.expired = true;
+              var isItemExist = lodash.filter(cabinItems.items, { companyCabinClassId: cabinClass.id });
+              if (isItemExist !== undefined && isItemExist.length > 0) {
+                $scope.formData.selectedItems[cabinClass.id] = isItemExist;
               }
             });
+
+            if ($scope.formData.selectedItems.length > 0) {
+              $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
+                item.rawItem = item;
+                item.item = lodash.find($scope.items, { id: item.itemId });
+                item.items = $scope.items;
+	
+                if (!item.item) {
+                  item.expired = true;
+                }
+              });
+            }
           }else {
             $scope.formData.selectedItems[cabinClass.id] = [];
           }
