@@ -160,8 +160,8 @@ angular.module('ts5App')
     };
     
     this.constructSelectedMenusItems = function(payloadItems, payloadMenus) {
-      var payloadItemsMap = _.chain(payloadItems).groupBy('companyCabinClassId').map((items, companyCabinClassId) => ({ companyCabinClassId, items })).value();
-      var payloaMenusMap = _.chain(payloadMenus).groupBy('companyCabinClassId').map((menus, companyCabinClassId) => ({ companyCabinClassId, menus })).value();
+      var payloadItemsMap = _.chain(payloadItems).groupBy('companyCabinClassId').map(items, companyCabinClassId).value();
+      var payloaMenusMap = _.chain(payloadMenus).groupBy('companyCabinClassId').map(menus, companyCabinClassId).value();
       var mergedArray = _.zip(payloadItemsMap, payloaMenusMap);
       
       var finalMenusItems = [];
