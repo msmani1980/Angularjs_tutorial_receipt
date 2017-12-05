@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('EmployeeMessageCtrl',
   function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $routeParams, $location) {
-
+    //TODO: start from here
     var $this = this;
     var dataInitialized = false;
 
@@ -298,7 +298,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         $scope.employeesList = angular.copy(dataFromAPI.companyEmployees);
       }, $this.showErrors);
     };
-    
+
     this.searchEmployeesSuccess = function(response) {
         if ($scope.multiSelectedValues.employeeIds) {
           $scope.employeesList = lodash.filter(response.companyEmployees, function (employee) {
@@ -386,14 +386,14 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         $this.initEmployeeMessage();
         dataInitialized = true;
       });
-      
+
       $scope.minDate = dateUtility.nowFormattedDatePicker();
     };
 
     this.init();
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate);
     };
-      
+
   });
