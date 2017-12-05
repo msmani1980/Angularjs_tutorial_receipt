@@ -392,7 +392,7 @@ angular.module('ts5App')
       var newExchangeRate = {};
       newExchangeRate.companyId = $this.companyId;
       newExchangeRate.operatingCurrencyCode = $scope.search.operatingCurrencyCode;
-      newExchangeRate.exchangeRate = '0.0000';
+      newExchangeRate.exchangeRate = '1.0000';
       newExchangeRate.exchangeRateType = $this.eposExchangeRateType;
       newExchangeRate.startDate = dateUtility.tomorrowFormattedDatePicker();
       newExchangeRate.endDate = dateUtility.tomorrowFormattedDatePicker();
