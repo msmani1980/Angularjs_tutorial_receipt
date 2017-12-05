@@ -33,6 +33,8 @@ angular.module('ts5App')
       { id: 7, name: 'Sunday' }
     ];
     $scope.formData = {
+      startDate: '',
+      endDate: '',
       selectedMenus: [],
       selectedItems: []
     };
