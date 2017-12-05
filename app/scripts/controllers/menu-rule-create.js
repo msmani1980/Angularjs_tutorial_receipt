@@ -14,6 +14,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Rule Management';
     $scope.readOnly = false;
+    $scope.shouldDisableStartDate = false;
     $scope.isEdit = false;
     $scope.schedules = [];
     $scope.menuRule = { };
@@ -35,7 +36,35 @@ angular.module('ts5App')
       selectedMenus: [],
       selectedItems: []
     };
+    
+    $scope.isDisabled = function() {
+      return $scope.readOnly;
+    };
 
+    $scope.shouldDisableStartDate = function(startDate) {
+      return dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
+    };
+    
+    $scope.isCurrentEffectiveDate = function (menuRuleDate) {
+      return (dateUtility.isTodayOrEarlierDatePicker(menuRuleDate.startDate) && (dateUtility.isAfterTodayDatePicker(menuRuleDate.endDate) || dateUtility.isTodayDatePicker(menuRuleDate.endDate)));
+    };
+    
+    $scope.isFutureEffectiveDate = function (menuRuleDate) {
+      return (dateUtility.isAfterTodayDatePicker(menuRuleDate.startDate) && (dateUtility.isAfterTodayDatePicker(menuRuleDate.endDate)));
+    };
+    
+    $scope.isMenuRuleReadOnly = function () {
+      if ($routeParams.state === 'create' || (angular.isUndefined($scope.formData))) {
+        return false;
+      }
+
+      if ($routeParams.state === 'view') {
+        return true;
+      }
+
+      return !dateUtility.isAfterTodayDatePicker($scope.formData.startDate);
+    };
+      
     $scope.addMenu = function (cabinClass) {
       $scope.formData.selectedMenus[cabinClass].push({ });
     };
@@ -221,39 +250,7 @@ angular.module('ts5App')
         selectedMenus: [],
         selectedItems: []
       });
-      $this.constructSelectedEditMenus($scope.formData.cabins[0].menus);
-      $this.constructSelectedEditItems($scope.formData.cabins[0].items);
     };
-    
-    this.constructSelectedEditMenus = function(menus) {
-        $scope.companyCabinClasses.forEach(function (cabinClass) {
-          $scope.formData.selectedMenus[cabinClass.id] = lodash.filter(menus, { companyCabinClassId: cabinClass.id });
-          
-          $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
-              menu.rawMenu = menu;
-              menu.menu = lodash.find($scope.menuMasters, { id: menu.menuId });
-              if (!menu.menu) {
-                menu.expired = true;
-              }
-            });
-        });
-      };
-
-    this.constructSelectedEditItems = function (items) {
-          $scope.companyCabinClasses.forEach(function (cabinClass) {
-            $scope.formData.selectedItems[cabinClass.id] = lodash.filter(items, { companyCabinClassId: cabinClass.id });
-            
-            $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
-              item.rawItem = item;
-              item.item = lodash.find($scope.items, { id: item.itemId });
-              item.items = $scope.items;
-
-              if (!item.item) {
-                item.expired = true;
-              }
-            });
-          });
-        };
         
     this.formatDaysOfWeekForEdit = function (days) {
       if (!days || days === '{}') {
@@ -279,29 +276,44 @@ angular.module('ts5App')
       
     this.constructSelectedMenus = function() {
       $scope.companyCabinClasses.forEach(function (cabinClass) {
-        $scope.formData.selectedMenus[cabinClass.id] = lodash.filter($scope.menuRule.menus, { companyCabinClassId: cabinClass.id });
-        $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
-            menu.rawMenu = menu.menu;
+        if ($scope.formData.cabins !== undefined) {
+          $scope.formData.cabins.forEach(function(cabinMenus) {
+            $scope.formData.selectedMenus[cabinClass.id] = lodash.filter(cabinMenus.menus, { companyCabinClassId: cabinClass.id });
+          });
+
+          $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
+            menu.rawMenu = menu;
             menu.menu = lodash.find($scope.menuMasters, { id: menu.menuId });
             if (!menu.menu) {
               menu.expired = true;
             }
           });
+        }else {
+          $scope.formData.selectedMenus[cabinClass.id] = [];
+        }
       });
     };
 
     this.constructSelectedItems = function () {
         $scope.companyCabinClasses.forEach(function (cabinClass) {
-          $scope.formData.selectedItems[cabinClass.id] = lodash.filter($scope.menuRule.items, { companyCabinClassId: cabinClass.id });
-          $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
-            item.rawItem = item.item;
-            item.item = lodash.find($scope.items, { itemMasterId: item.itemId });
-            item.items = $scope.items;
+        
+          if ($scope.formData.cabins !== undefined) {
+            $scope.formData.cabins.forEach(function(cabinItems) {
+              $scope.formData.selectedItems[cabinClass.id] = lodash.filter(cabinItems.items, { companyCabinClassId: cabinClass.id });
+            });
 
-            if (!item.item) {
-              item.expired = true;
-            }
-          });
+            $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
+              item.rawItem = item;
+              item.item = lodash.find($scope.items, { id: item.itemId });
+              item.items = $scope.items;
+
+              if (!item.item) {
+                item.expired = true;
+              }
+            });
+          }else {
+            $scope.formData.selectedItems[cabinClass.id] = [];
+          }
         });
       };
     
@@ -341,10 +353,6 @@ angular.module('ts5App')
       $this.getCabinClassesSuccess(result[4]);
       $this.getMenuMasterAndItemsListSuccess(result[5], result[6]);
       
-      if ($routeParams.id) {
-        menuRulesFactory.getMenuRule($routeParams.id).then($this.getMenuRuleSuccess);
-      }
-      
       $this.hideLoadingModal();
       
       var initFunctionName = ($routeParams.action + 'Init');
@@ -356,6 +364,10 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       companyId = menuRulesFactory.getCompanyId();
+      if ($routeParams.id) {
+        menuRulesFactory.getMenuRule($routeParams.id).then($this.getMenuRuleSuccess);
+      }
+
       var promises = [
         menuRulesFactory.getSchedules(companyId),
         menuRulesFactory.getCompanyGlobalStationList({ startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()) }),

@@ -53,7 +53,7 @@ angular.module('ts5App')
         menuRule.isExpanded = $scope.allExpanded;
       });
     };
-	
+
     $scope.toggleAccordionView = function (menuRule) {
       menuRule.isExpanded = !menuRule.isExpanded;
     };
@@ -110,12 +110,40 @@ angular.module('ts5App')
         offset: 0
       };
     };
-
+    
+    $scope.isCurrentEffectiveDate = function (menuRuleDate) {
+      return (dateUtility.isTodayOrEarlierDatePicker(menuRuleDate.startDate) && (dateUtility.isAfterTodayDatePicker(menuRuleDate.endDate) || dateUtility.isTodayDatePicker(menuRuleDate.endDate)));
+    };
+      
+    $scope.isFutureEffectiveDate = function (menuRuleDate) {
+      return (dateUtility.isAfterTodayDatePicker(menuRuleDate.startDate) && (dateUtility.isAfterTodayDatePicker(menuRuleDate.endDate)));
+    };
+      
     $scope.redirectToMenuRules = function(id, state) {
       $location.search({});
       $location.path('menu-rules/' + state + '/' + id).search();
     };
+    
+    $scope.showDeleteConfirmation = function(menuRuleToDelete) {
+      $scope.menuRuleToDelete = menuRuleToDelete;
+      angular.element('.delete-warning-modal').modal('show');
+    };
+    
+    $scope.deleteMenuRule = function() {
+      angular.element('.delete-warning-modal').modal('hide');
+      menuRulesFactory.deleteMenuRule($scope.menuRuleToDelete.id).then(successDeleteHandler, showErrors);
+    };
+    
+    function showErrors(dataFromAPI) {
+      $scope.errorResponse = dataFromAPI;
+      $scope.displayError = true;
+    }
 
+    function successDeleteHandler() {
+      $scope.searchMenuRulesData();
+      $this.showToastMessage('success', 'Menu Rule Management', 'successfully deleted Menu Rule!');
+    }
+      
     this.showToastMessage = function(className, type, message) {
       messageService.display(className, message, type);
     };
