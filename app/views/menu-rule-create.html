@@ -1,0 +1,350 @@
+<style>
+.close {
+    display:inline;
+}
+.alert-danger {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #cd5c5c;
+    text-align: center;
+}
+.alert-warning {
+    background-color: #BDE19B;
+    border-color: #94cb66;
+    color: #283a1a;
+    text-align: center;
+}
+</style>
+<div class="module-container">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/menu-rules" class="btn" ng-show="readOnly">Back</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default panel-heading alert-danger"   ng-show="readOnly"> {{ formData.menuRuleCode }}</div>
+  <div class="panel panel-default panel-heading alert-warning"  ng-show="isEdit">{{ formData.menuRuleCode }}</div>
+  
+  <error-dialog form-object="menuRuleDataForm" error-response="errorResponse" display="displayError"></error-dialog>
+  <form name="menuRuleDataForm" class="form edit-form create-item-form">
+    <div class="panel panel-default">
+      <div class="panel-heading">Rule Setup</div>
+      <div class="panel-body">
+        <div class="row">
+        
+         <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="schedule-number">Number *</label>
+               <select class="form-control"
+                      name="scheduleNumber"
+                      ng-model="formData.scheduleNumber"
+                      ng-options="schedule.scheduleNumber as schedule.scheduleNumber for schedule in schedules | orderBy: 'scheduleNumber'"
+                      ng-disabled="isEffective(formData)"
+                      required="true"
+                      required
+                      id="schedule-number">
+                <option selected="selected" value>Number</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="departure-station">Departure Station *</label>
+              <select class="form-control"
+                      name="departureStation"
+                      ng-model="formData.departureStationId"
+                      ng-options="station.id as (station.code + ' (' + station.name +')') for station in stationList"
+                      ng-disabled="isEffective(formData)"
+                      required="true"
+                      required
+                      id="departure-station">
+                <option selected="selected" value>Departure Station</option>
+              </select>
+            </div>
+          </div>
+		  
+		  <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="arrival-station">Arrival Station *</label>
+              <select class="form-control"
+                      name="arrivalStation"
+                      ng-model="formData.arrivalStationId"
+                      ng-options="station.id as (station.code + ' (' + station.name +')') for station in stationList"
+                      ng-disabled="isEffective(formData)"
+                      required
+                      required="true"
+                      id="arrival-station">
+                <option selected="selected" value>Arrival Station</option>
+              </select>
+            </div>
+         </div>
+          
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="days-of-operation">Days of Operation *</label>
+              <ui-select id="days-of-operation" multiple ng-model="formData.days"  ng-disabled="isEffective(formData)" name="daysOfOperation" theme="bootstrap" required required="true">
+                <ui-select-match placeholder="Select Days of Operations">{{ $item.name }}</ui-select-match>
+                <ui-select-choices repeat="number in daysOfOperation | filter: $select.search">
+                  {{ number.name }}
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+          
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label for="departure-time">Depart. Time (HH:mm) *</label>
+              <input ng-model="formData.departureTime"
+                     ng-disabled="isEffective(formData)"
+                     name="departureTime"
+                     maxlength="5"
+                     oninput="this.value=this.value.replace(/[^0-9:]/g,'');"
+                     class="form-control"
+                     id="departure-time"
+                     placeholder="10:20"
+                     required
+                     required="true"
+                     ng-pattern="regexp.t24">
+            </div>
+          </div>
+          
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label for="arrival-time">Arrival Time (HH:mm) *</label>
+              <input ng-model="formData.arrivalTime"
+                     type="text"
+                     class="form-control departure-time"
+                     name="arrivalTime"
+                     placeholder="23:34"
+                     maxlength="5"
+                     oninput="this.value=this.value.replace(/[^0-9:]/g,'');"
+                     ng-disabled="isEffective(formData)"
+                     id="arrival-time"
+                     required
+                     required="true"
+                     ng-pattern="regexp.t24">
+            </div>
+          </div>
+          
+        </div>
+        
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="aircraft-type">Carrier Type</label>
+              <select class="form-control"
+                      name="aircraftType"
+                      ng-model="formData.companyCarrierTypeId"
+                      ng-options="carrierType.companyCarrierTypeId as carrierType.carrierType for carrierType in carrierTypes"
+                      ng-disabled="isEffective(formData)"
+                      id="aircraft-type">
+                <option selected="selected" value>Carrier Type</option>
+              </select>
+            </div>
+          </div>
+        
+          <div class="col-xs-12 col-sm-3" ui-on-Drop="">
+            <date-picker-field
+						       ng-if="!isMenuRuleReadOnly()"
+						       name="startDate"
+						       ng-model="formData.startDate"
+						       label="Effective From"
+						       min-date="minDate"
+						       required="true">
+			</date-picker-field>
+			
+			<date-picker-field
+						       ng-if="isMenuRuleReadOnly()"
+						       name="startDate"
+						       ng-model="formData.startDate"
+						       label="Effective From"
+						       disable="true"
+						       required="true">
+			</date-picker-field>
+          </div>
+          <div class="col-xs-12 col-sm-3" ui-on-Drop="">
+            <date-picker-field
+						        ng-if="isCurrentEffectiveDate(formData)"
+						        name="endDate"
+						        ng-model="formData.endDate"
+						        label="Effective To"
+						        min-date="minDate"
+						        disable="readOnly || !isEffective(formData)"
+						        end-current-effective="true"
+						        required="true">
+      		</date-picker-field>
+      		<date-picker-field
+						        ng-if="!isCurrentEffectiveDate(formData)"
+						        name="endDate"
+						        ng-model="formData.endDate"
+						        label="Effective To"
+						        required="true">
+      		</date-picker-field>
+          </div>
+        </div>
+          
+        </div>
+
+      </div>
+
+    <div ng-repeat="cabinClass in companyCabinClasses | orderBy: 'cabinClass'" class="panel panel-default">
+
+      <div class="panel-heading">{{ cabinClass.cabinClass }} class</div>
+      <div class="panel-body">
+        <h3>
+          Assigned Menus
+          <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addMenu(cabinClass.id)" ng-hide="readOnly" ng-disabled="isEffective(formData)">
+            <i class="fa fa-plus"></i> Add Menu
+          </button>
+        </h3>
+        <div class="table">
+          <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th class="col-xs-10">Menu</th>
+              <th class="col-xs-1">Quantity</th>
+              <th ng-hide="readOnly" class="col-xs-1">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="menu in formData.selectedMenus[cabinClass.id] track by $index">
+                <td>
+                  <ui-select
+                    name="menu"
+                    ng-model="menu.menu"
+                    theme="bootstrap"
+                    placeholder="Select a menu..."
+                    ng-disabled="isEffective(formData)"
+                    required="true">
+                    <ui-select-match allow-clear="!readOnly" placeholder="Select a menu...">{{$select.selected.menuCode}}</ui-select-match>
+                    <ui-select-choices repeat="menu in menuMasters | filter: $select.search | orderBy:'menuCode'">
+                      <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                  <div style="color: red" ng-if="menu.expired">Previously selected menu '{{ menu.rawMenu.menuCode }}' is not available for this schedule anymore (expired). Please assign a new menu.</div>
+                </td>
+                <td>
+                  <input custom-validity
+                         custom-pattern="number"
+                         type="text"
+                         required
+                         maxlength="5"
+                         class="form-control"
+                         name="menuItemQuantity"
+                         ng-model="menu.menuQty"
+                         placeholder="{{$index}}"
+                         ng-disabled="isEffective(formData)" />
+                </td>
+                <td ng-hide="readOnly">
+                  <button class="btn btn-danger btn-xs" ng-click="removeMenu(cabinClass.id, menu)" ng-disabled="isEffective(formData)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr ng-if="formData.selectedMenus[cabinClass.id].length === 0">
+                <td colspan="{{ readOnly ? '2' : '3' }}">No Menus added yet</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>
+          Assigned Items
+          <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addItem(cabinClass.id)" ng-hide="readOnly" ng-disabled="isEffective(formData)">
+            <i class="fa fa-plus"></i> Add Item
+          </button>
+        </h3>
+        <div class="table">
+          <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th class="col-xs-4" ng-hide="readOnly">Item Category</th>
+              <th class="col-xs-6">Item Name</th>
+              <th class="col-xs-1">Quantity</th>
+              <th ng-hide="readOnly" class="col-xs-1">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in formData.selectedItems[cabinClass.id]">
+              <td ng-hide="readOnly">
+                <ui-select
+                  name="selectedCategories[item.menuIndex]"
+                  ng-model="item.selectedCategory"
+                  on-select="filterItemListByCategory(item)"
+                  on-remove="filterItemListByCategory(item)"
+                  theme="bootstrap"
+                  ng-disabled="isEffective(formData)"
+                  placeholder="Select a category to filter the items list...">
+                  <ui-select-match
+                    allow-clear="!readOnly"
+                    placeholder="Select a category to filter the items list...">{{$select.selected.name}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
+                    <div ng-bind-html="category.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </td>
+              <td>
+                <ui-select
+                  name="menuItem"
+                  required="true"
+                  ng-model="item.item"
+                  theme="bootstrap"
+                  placeholder="Select or search an item from the list..."
+                  ng-disabled="isEffective(formData)">
+                  <ui-select-match placeholder="Select or search an item from the list...">{{$select.selected.itemName}}</ui-select-match>
+                  <ui-select-choices repeat="item in item.items | filter: $select.search | orderBy:'itemName'">
+                    <div ng-bind-html="item.itemName | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+                <div style="color: red" ng-if="item.expired">Previously selected item '{{item.itemName}}' is not available for this schedule (expired). Please assign a new item.</div>
+              </td>
+              <td>
+                <input custom-validity
+                       custom-pattern="number"
+                       type="text"
+                       required
+                       maxlength="5"
+                       class="form-control"
+                       name="menuItemQuantity"
+                       ng-model="item.itemQty"
+                       placeholder="{{$index}}"
+                       ng-disabled="isEffective(formData)"/>
+              </td>
+              <td ng-hide="readOnly">
+                <button class="btn btn-danger btn-xs" ng-click="removeItem(cabinClass.id, item)" ng-disabled="isEffective(formData)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            <tr ng-if="formData.selectedItems[cabinClass.id].length === 0">
+              <td colspan="{{ readOnly ? '2' : '4' }}">No Items added yet</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-right">
+      <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+        <span class="fa fa-check-square-o" aria-hidden="true"></span>
+        <span class="hidden-xs">Save</span>
+      </button>
+      <a href="#/menu-rules" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+    </div>
+  </form>
+</div>
+<form-success-modal></form-success-modal>
+<form-update-modal></form-update-modal>
+<leave-view-modal></leave-view-modal>
+<dynamic-left-nav></dynamic-left-nav>

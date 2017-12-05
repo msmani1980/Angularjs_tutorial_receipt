@@ -48,6 +48,10 @@ angular.module('ts5App')
       }
 
       searchParameters.fetchFromMaster = fetchFromMaster ? 'master' : null;
+      if (angular.isDefined(searchParameters.categoryId)) {
+        searchParameters.categoryId = searchParameters.categoryId;  
+      }
+
       var payload = {};
       angular.extend(payload, searchParameters);
       return _requestResource.getItemsList(payload).$promise;
