@@ -96,6 +96,7 @@ angular.module('ts5App')
 
     $scope.save = function () {
       if (!$scope.promotionCatalogForm.$valid) {
+        showErrors();
         return false;
       }
 
@@ -137,7 +138,7 @@ angular.module('ts5App')
       angular.forEach($scope.catalogPromotionList, function (promotion, index) {
         promotion.sortOrder = index + 1;
       });
-      
+
       $scope.filteredPromotionList = lodash.filter($scope.promotionList, function (promotion) {
           var promotionMatch = lodash.findWhere($scope.catalogPromotionList, { selectedPromotion: promotion });
           return !promotionMatch;
@@ -252,6 +253,6 @@ angular.module('ts5App')
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
-    
+
   }
 );
