@@ -137,28 +137,45 @@
             </div>
           </div>
         
-          <div class="col-xs-12 col-sm-3">
-                <date-picker-field ng-if="true"
-                                   disable="isDisabled()"
-                                   form="menuRuleDataForm"
-                                   name="EffectiveFrom"
-                                   label="Effective From"
-                                   disable-past="true"
-                                   required="true"
-                                   ng-model="formData.startDate">
-                </date-picker-field>
+          <div class="col-xs-12 col-sm-3" ui-on-Drop="">
+            <date-picker-field
+						       ng-if="!isMenuRuleReadOnly()"
+						       name="startDate"
+						       ng-model="formData.startDate"
+						       label="Effective From"
+						       min-date="minDate"
+						       required="true">
+			</date-picker-field>
+			
+			<date-picker-field
+						       ng-if="isMenuRuleReadOnly()"
+						       name="startDate"
+						       ng-model="formData.startDate"
+						       label="Effective From"
+						       min-date="minDate"
+						       disable="true"
+						       required="true">
+			</date-picker-field>
           </div>
-          <div class="col-xs-12 col-sm-3">
-            <date-picker-field ng-if="true"
-                               disable="isDisabledForEndDate()"
-                               form="menuRuleDataForm"
-                               name="EffectiveTo"
-                               label="Effective To"
-                               disable-past="true"
-                               end-current-effective="editingItem && shouldDisableStartDate"
-                               required="true"
-                               ng-model="formData.endDate">
-            </date-picker-field>
+          <div class="col-xs-12 col-sm-3" ui-on-Drop="">
+            <date-picker-field
+						        ng-if="isCurrentEffectiveDate(formData)"
+						        name="endDate"
+						        ng-model="formData.endDate"
+						        label="Effective To"
+						        min-date="minDate"
+						        disable="readOnly"
+						        end-current-effective="true"
+						        required="true">
+      		</date-picker-field>
+      		<date-picker-field
+						        ng-if="!isCurrentEffectiveDate(formData)"
+						        name="endDate"
+						        ng-model="formData.endDate"
+						        label="Effective To"
+						        disable="readOnly"
+						        required="true">
+      		</date-picker-field>
           </div>
         </div>
           
@@ -195,7 +212,7 @@
                     placeholder="Select a menu..."
                     ng-disabled="readOnly"
                     required="true">
-                    <ui-select-match allow-clear="true" placeholder="Select a menu...">{{$select.selected.menuCode}}</ui-select-match>
+                    <ui-select-match allow-clear="!readOnly" placeholder="Select a menu...">{{$select.selected.menuCode}}</ui-select-match>
                     <ui-select-choices repeat="menu in menuMasters | filter: $select.search | orderBy:'menuCode'">
                       <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
                     </ui-select-choices>
@@ -244,7 +261,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in formData.selectedItems[cabinClass.id]">
+            <tr ng-repeat="item in formData.selectedItems[cabinClass.id]">readOnly {{ readOnly }}
               <td ng-hide="readOnly">
                 <ui-select
                   name="selectedCategories[item.menuIndex]"
@@ -254,7 +271,7 @@
                   theme="bootstrap"
                   placeholder="Select a category to filter the items list...">
                   <ui-select-match
-                    allow-clear="true"
+                    allow-clear="!readOnly"
                     placeholder="Select a category to filter the items list...">{{$select.selected.name}}
                   </ui-select-match>
                   <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
