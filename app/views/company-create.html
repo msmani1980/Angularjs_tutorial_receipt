@@ -213,31 +213,6 @@
               </option>
             </select>
           </div>
-
-          <div class="col-xs-12 col-sm-6">
-<!--             <h4>Portal Default Language</h4>
-            <h4 class="text-muted">English</h4>
-
-            <label>Portal Additional Languages</label>
-            <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.languages" theme="bootstrap">
-              <ui-select-match placeholder="Languages">{{ $item.languageName }}
-              </ui-select-match>
-              <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
-                <div ng-bind-html="language.languageName | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-
-            <label>ePOS Additional Languages</label>
-            <ui-select ng-if="showAdditionalFields" multiple ng-model="formData.eposLanguages" theme="bootstrap">
-              <ui-select-match placeholder="Languages">{{ $item.languageName }}
-              </ui-select-match>
-              <ui-select-choices repeat="language in languages | filter: $select.search | orderBy:'languageName'">
-                <div ng-bind-html="language.languageName | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
- -->
-          </div>
-
         </div>
         <div class="row">
           <div class="col-xs-12 col-sm-6">
@@ -293,7 +268,7 @@
  
               <label>ePOS Additional Languages</label>
               <ui-select multiple ng-model="formData.eposLanguages" theme="bootstrap" on-remove="onChangeEposAdditionalLanguage()" on-select="onChangeEposAdditionalLanguage()" >
-                <ui-select-match placeholder="ePos Languages">{{ $item.languageName }}
+                <ui-select-match placeholder="Languages">{{ $item.languageName }}
                 </ui-select-match>
                 <ui-select-choices repeat="eposlanguage in eposLanguages | filter: $select.search | orderBy:'languageName'">
                   <div ng-bind-html="eposlanguage.languageName | highlight: $select.search"></div>
@@ -432,9 +407,6 @@
       </fieldset>
     </form>
   </div>
-
-
-
 </div>
 
 </div>
