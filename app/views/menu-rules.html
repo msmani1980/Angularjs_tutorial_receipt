@@ -156,7 +156,7 @@
             <button class="btn btn-primary btn-xs" ng-click="redirectToMenuRules(menuRule.id, 'view')">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="redirectToMenuRules(menuRule.id, 'edit')"  ng-show="isCurrentEffectiveDate(menuRule)">
+            <button class="btn btn-primary btn-xs" ng-click="redirectToMenuRules(menuRule.id, 'edit')"  ng-show="isCurrentEffectiveDate(menuRule) || isFutureEffectiveDate(menuRule)">
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-primary btn-xs" ng-click="showDeleteConfirmation(menuRule.id)" ng-show="isFutureEffectiveDate(menuRule)">
