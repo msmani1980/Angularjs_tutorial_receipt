@@ -245,7 +245,7 @@
         <h3 id="company-languages">Company Languages</h3>
           <div class="col-xs-12 col-sm-6">
             <label>Default Language*</label>
-                                <select ng-model="formData.defaultLanguage" class="form-control" id="defaultLanguage" ng-change="onChangeDefaultLanguage()">
+                                <select ng-model="formData.defaultLanguage" class="form-control" id="defaultLanguage" ng-change="onChangeDefaultLanguage()" required="true">
                                     <option value="{{ lng.id }}" ng-repeat="lng in defaultLanguages | orderBy:'languageName'">{{ lng.languageName }}</option>
                                 </select>
             
@@ -260,9 +260,9 @@
 
           </div>
 
-          <div class="col-xs-12 col-sm-6" ng-show="isCompanyRetail" ng-if="uiSelectTemplateReady">
+          <div class="col-xs-12 col-sm-6" ng-show="isCompanyRetail" ng-if="isCompanyRetail">
              <label>ePOS Default Language*</label>
-                                <select ng-model="formData.defaultEposLanguage" class="form-control" id="defaultEposLanguage" ng-change="onChangeEposDefaultLanguage()">
+                                <select ng-model="formData.defaultEposLanguage" class="form-control" id="defaultEposLanguage" ng-change="onChangeEposDefaultLanguage()" required="true">
                                     <option value="{{ eposlng.id }}" ng-repeat="eposlng in defaultEposLanguages | orderBy:'languageName'">{{ eposlng.languageName }}</option>
                                 </select>
  
