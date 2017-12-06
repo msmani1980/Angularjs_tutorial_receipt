@@ -607,7 +607,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.findDefaultLanguage = function () {
-      return lodash.findWhere($scope.languages, { id: 1 });
+      return lodash.findWhere($scope.languages, { id: $scope.company.defaultEposLanguage });
     };
 
     this.setFormDataDefaultLanguage = function () {
@@ -622,7 +622,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       // Add other languages
       $scope.company.eposLanguages.forEach(function (languageId) {
-        if (languageId !== 1) {
+        if (languageId !== $scope.company.defaultEposLanguage) {
           $scope.companyEposLanguages.push(lodash.findWhere($scope.languages, { id: languageId }));
         }
       });
