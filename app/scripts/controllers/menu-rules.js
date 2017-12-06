@@ -131,7 +131,7 @@ angular.module('ts5App')
     
     $scope.deleteMenuRule = function() {
       angular.element('.delete-warning-modal').modal('hide');
-      menuRulesFactory.deleteMenuRule($scope.menuRuleToDelete.id).then(successDeleteHandler, showErrors);
+      menuRulesFactory.deleteMenuRule($scope.menuRuleToDelete).then(successDeleteHandler, showErrors);
     };
     
     function showErrors(dataFromAPI) {
@@ -186,7 +186,7 @@ angular.module('ts5App')
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
-
+      
       showLoadingBar();
       $this.formatMultiSelectedValuesForSearch();
       var payload = lodash.assign(angular.copy($scope.search), {
