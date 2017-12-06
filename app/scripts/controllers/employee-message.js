@@ -9,7 +9,6 @@
  */
 angular.module('ts5App').controller('EmployeeMessageCtrl',
   function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $routeParams, $location) {
-    //TODO: start from here
     var $this = this;
     var dataInitialized = false;
 
@@ -187,7 +186,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     $scope.addNewItem = function(categoryName) {
       var categoryToAttributesMap = {
         schedules: ['scheduleNumber'],
-        employees: ['employeeIdentifier', 'firstName', 'lastName', 'id'],
+        employees: ['employeeIdentifier', 'firstName', 'lastName', 'id', 'startDate', 'endDate'],
         arrivalStations: ['code', 'name', 'id'],
         departureStations: ['code', 'name', 'id']
       };
@@ -300,45 +299,63 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     this.searchEmployeesSuccess = function(response) {
-        if ($scope.multiSelectedValues.employeeIds) {
-          $scope.employeesList = lodash.filter(response.companyEmployees, function (employee) {
-            return !lodash.find($scope.multiSelectedValues.employeeIds, { id: employee.id });
-          });
-        } else {
-          $scope.employeesList = response.companyEmployees;
-        }
-      };
+      if ($scope.multiSelectedValues.employeeIds) {
+        $scope.employeesList = lodash.filter(response.companyEmployees, function (employee) {
+          return !lodash.find($scope.multiSelectedValues.employeeIds, { id: employee.id });
+        });
+      } else {
+        $scope.employeesList = response.companyEmployees;
+      }
+    };
 
-      $scope.searchEmployees = function($select, $event) {
-        if ($event) {
-          $event.stopPropagation();
-          $event.preventDefault();
-        }
+    $scope.searchEmployees = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
 
-        if ($select.search && $select.search.length !== 0) {
-          var payload = {
-            search: $select.search
-          };
+      if ($select.search && $select.search.length !== 0) {
+        var payload = {
+          search: $select.search
+        };
 
-          console.log($scope);
-          employeeDates(payload, $scope.employeeMessage);
-          var companyId = globalMenuService.company.get();
-          employeeMessagesFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
-        } else {
-          $scope.employees = [];
-        }
-      };
+        console.log($scope);
+        employeeDates(payload, $scope.employeeMessage);
+        var companyId = globalMenuService.company.get();
+        employeeMessagesFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
+      } else {
+        $scope.employees = [];
+      }
+    };
 
     function employeeDates(payload, search) {
       if (search === undefined || (search.startDate === undefined && search.endDate === undefined)) {
-          payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
-        } else if (search.startDate === undefined || search.endDate === undefined) {
-          payload.date = dateUtility.formatDateForAPI(search.startDate === undefined ? search.endDate : search.startDate);
-        } else {
-          payload.startDate =  dateUtility.formatDateForAPI(search.startDate);
-          payload.endDate =  dateUtility.formatDateForAPI(search.endDate);
-        }
+        payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      } else if (search.startDate === undefined || search.endDate === undefined) {
+        payload.date = dateUtility.formatDateForAPI(search.startDate === undefined ? search.endDate : search.startDate);
+      } else {
+        payload.startDate =  dateUtility.formatDateForAPI(search.startDate);
+        payload.endDate =  dateUtility.formatDateForAPI(search.endDate);
+      }
     }
+
+    $scope.$watchGroup(['employeeMessage.startDate', 'employeeMessage.endDate'], function () {
+      if ($scope.employeeMessage && $scope.employeeMessage.startDate && $scope.employeeMessage.endDate) {
+        $this.clearInactiveEmployees();
+        $scope.employeesList = [];
+      }
+    });
+
+    this.clearInactiveEmployees = function () {
+      $scope.employeeMessage.employees = lodash.filter($scope.employeeMessage.employees, function (employee) {
+        return $this.isEmployeeActiveInRange(employee, $scope.employeeMessage.startDate, $scope.employeeMessage.endDate);
+      });
+    };
+
+    this.isEmployeeActiveInRange = function(employee, startDate, endDate) {
+      return dateUtility.isBeforeOrEqual(dateUtility.formatDateForApp(employee.startDate), endDate)
+        && dateUtility.isAfterOrEqual(dateUtility.formatDateForApp(employee.endDate), startDate);
+    };
 
     this.initEmployeeMessage = function() {
       if ($routeParams.action !== 'create') {
@@ -358,8 +375,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     this.initApiDependencies = function() {
       return [
         $this.getSchedules(),
-        $this.getStations(),
-//        $this.getEmployees()
+        $this.getStations()
       ];
     };
 

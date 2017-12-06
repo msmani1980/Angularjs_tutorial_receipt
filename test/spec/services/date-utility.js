@@ -474,4 +474,32 @@ describe('Date Utility service', function () {
 
   });
 
+  describe('isBeforeOrEqual() method', function () {
+    it('should be defined', function () {
+      expect(dateUtility.isBeforeOrEqual).toBeDefined();
+    });
+
+    it('should return false if the first date after the second date', function () {
+      var dateToCompare = '04/10/1980';
+      var baseDate = '02/20/2050';
+      var dateIsAfterOrEqual = dateUtility.isBeforeOrEqual(baseDate, dateToCompare);
+      expect(dateIsAfterOrEqual).toBeFalsy();
+    });
+
+    it('should return true if the first date is less than second date', function () {
+      var baseDate = '04/10/1980';
+      var dateToCompare = '02/20/2050';
+      var dateIsAfterOrEqual = dateUtility.isBeforeOrEqual(baseDate, dateToCompare);
+      expect(dateIsAfterOrEqual).toBeTruthy();
+    });
+
+    it('should return true if the first date is equal second today', function () {
+      var dateToCompare = '05/20/2030';
+      var baseDate = '05/20/2030';
+      var dateIsAfterOrEqual = dateUtility.isBeforeOrEqual(baseDate, dateToCompare);
+      expect(dateIsAfterOrEqual).toBeTruthy();
+    });
+
+  });
+
 });
