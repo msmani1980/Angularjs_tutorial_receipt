@@ -412,7 +412,7 @@ angular.module('ts5App')
         newExchangeRate.denominations = accepptedCurrency.flatDenominations;
         newExchangeRate.easyPayDenominations = accepptedCurrency.flatEasyPayDenominations;
 
-        if(newExchangeRate.acceptedCurrencyCode === newExchangeRate.operatingCurrencyCode) {
+        if (newExchangeRate.acceptedCurrencyCode === newExchangeRate.operatingCurrencyCode) {
           newExchangeRate.exchangeRate = '1.0000';
         }
       } else {
