@@ -71,6 +71,29 @@ angular.module('ts5App')
       });
     };
 
+    this.getDetailedCompanyCurrenciesForCreation = function() {
+      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      var payload = {
+        startDate: nowDate,
+        endDate: nowDate
+      };
+
+      currencyFactory.getDetailedCompanyCurrencies(payload).then(function(companyCurrencyListFromAPI) {
+        $scope.detailedCompanyCurrenciesForCreation = payloadUtility.deserializeDates(companyCurrencyListFromAPI.companyCurrencies);
+
+        angular.forEach($scope.detailedCompanyCurrenciesForCreation, function(companyCurrency) {
+          companyCurrency.flatDenominations = $this.makeFlatDenominations(companyCurrency.denominations);
+
+          var easyPayDenominations = companyCurrency.denominations.filter(function(denomination) {
+            return denomination.isEasyPay;
+          });
+
+          companyCurrency.flatEasyPayDenominations = $this.makeFlatDenominations(easyPayDenominations);
+        });
+
+      });
+    };
+
     this.makeFlatDenominations = function(denominations) {
       if (!denominations) {
         denominations = [];
@@ -435,6 +458,7 @@ angular.module('ts5App')
       $this.getExchangeRateTypes();
       $this.getCompanyGlobalCurrencies();
       $this.getDetailedCompanyCurrenciesForSearch();
+      $this.getDetailedCompanyCurrenciesForCreation();
     };
 
     this.init();
