@@ -85,13 +85,10 @@ angular.module('ts5App')
       $scope.formData.selectedItems[cabinClass].splice(index, 1);
     };
     
-    $this.getRetailItemsByCategoryResponse = function (dataFromAPI) {
-      return angular.copy(dataFromAPI.masterItems);
-    };
-    
     $scope.filterItemListByCategory = function (item) {
-      //item.items = menuRulesFactory.getItemsList({ categoryId: item.selectedCategory.id }, { fetchFromMaster: 'master' }).then($this.getRetailItemsByCategoryResponse);
-      item.items = (item.selectedCategory) ? lodash.filter($scope.items, { categoryName: item.selectedCategory.name }) : $scope.items;
+      menuRulesFactory.getItemsList({ categoryId: item.selectedCategory.id }, { fetchFromMaster: 'master' }).then(function(response) {
+        item.items = response.masterItems;
+      }, $this.saveFormFailure);
     };
 
     $scope.formSave = function () {
@@ -112,7 +109,19 @@ angular.module('ts5App')
     
     this.createMenuRules = function() {
       $this.showLoadingModal('Saving Menu Rules Data');
-      menuRulesFactory.createMenuRule(this.generatePayloadCreateUpdate()).then($this.saveFormSuccess, $this.saveFormFailure);
+      var createPayload = this.generatePayloadCreateUpdate();
+      delete createPayload.id;
+      angular.forEach(createPayload.cabins, function(cabin) {
+        cabin.menus.forEach(function(menu) {
+          delete menu.id;
+        });
+
+        cabin.items.forEach(function(item) {
+          delete item.id;
+        });
+      });
+
+      menuRulesFactory.createMenuRule(createPayload).then($this.saveFormSuccess, $this.saveFormFailure);
     };
     
     this.generatePayloadCreateUpdate = function() {
@@ -122,6 +131,7 @@ angular.module('ts5App')
       $scope.formData.selectedMenus.forEach(function (menus, cabinClass) {
           menus.forEach(function (menu) {
             payloadMenus.push({
+              id: angular.isDefined(menu.id) ? parseInt(menu.id) : null,
               menuQty: menu.menuQty,
               menuId: menu.menu.menuId,
               companyCabinClassId: cabinClass
@@ -132,6 +142,7 @@ angular.module('ts5App')
       $scope.formData.selectedItems.forEach(function (items, cabinClass) {
           items.forEach(function (item) {
             payloadItems.push({
+              id: angular.isDefined(item.id) ? parseInt(item.id) : null,
               itemQty: item.itemQty,
               itemId: item.item.id,
               companyCabinClassId: cabinClass
@@ -145,46 +156,60 @@ angular.module('ts5App')
         });
 
       var payloadCreateUpdate = {
-          scheduleNumber: $scope.formData.scheduleNumber,
-          days: daysArray,
-          departureStationId: $scope.formData.departureStationId,
-          arrivalStationId: $scope.formData.arrivalStationId,
-          departureTimeFrom: $scope.formData.departureTime,
-          departureTimeTo: $scope.formData.departureTime,
-          startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
-          endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
-          cabins: this.constructSelectedMenusItems(payloadItems, payloadMenus),
-          companyCarrierTypeId: angular.isDefined($scope.formData.companyCarrierTypeId) ? $scope.formData.companyCarrierTypeId : null
-        };
+        id: angular.isDefined($routeParams.id) ? parseInt($routeParams.id) : null,
+        scheduleNumber: $scope.formData.scheduleNumber,
+        days: daysArray,
+        departureStationId: $scope.formData.departureStationId,
+        arrivalStationId: $scope.formData.arrivalStationId,
+        departureTimeFrom: $scope.formData.departureTime,
+        departureTimeTo: $scope.formData.arrivalTime,
+        startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
+        cabins: this.constructSelectedMenusItems(payloadItems, payloadMenus),
+        companyCarrierTypeId: angular.isDefined($scope.formData.companyCarrierTypeId) ? $scope.formData.companyCarrierTypeId : null
+      };
       return payloadCreateUpdate;
     };
     
     this.constructSelectedMenusItems = function(payloadItems, payloadMenus) {
-      var payloadItemsMap = _.chain(payloadItems).groupBy('companyCabinClassId').map(items, companyCabinClassId).value();
-      var payloaMenusMap = _.chain(payloadMenus).groupBy('companyCabinClassId').map(menus, companyCabinClassId).value();
+    
+      var payloadItemsMap = _.chain(payloadItems).groupBy('companyCabinClassId').map(function(payloadItem) {
+        return {
+          items: payloadItem,
+          companyCabinClassId: payloadItem[0].companyCabinClassId
+        };
+      }).value();
+    
+      var payloaMenusMap = _.chain(payloadMenus).groupBy('companyCabinClassId').map(function(payloadMenu) {
+        return {
+          menus: payloadMenu,
+          companyCabinClassId: payloadMenu[0].companyCabinClassId
+        };
+      }).value();
+        
       var mergedArray = _.zip(payloadItemsMap, payloaMenusMap);
-      
+        
       var finalMenusItems = [];
       var arrayOfMenuItems = [];
-      
+        
       angular.forEach(mergedArray, function (rootVal) {
-        angular.forEach(rootVal, function (value) {
-          finalMenusItems.push(value);
+          angular.forEach(rootVal, function (value) {
+            finalMenusItems.push(value);
+          });
         });
-      });
-      
+        
       finalMenusItems.forEach(function(value) {
-        var existing = arrayOfMenuItems.filter(function(v) {
-          return v.companyCabinClassId === value.companyCabinClassId;
+          var existing = arrayOfMenuItems.filter(function(v) {
+            return v.companyCabinClassId === value.companyCabinClassId;
+          });
+        
+          if (existing.length) {
+            var existingIndex = arrayOfMenuItems.indexOf(existing[0]);
+            arrayOfMenuItems[existingIndex] = Object.assign(value, arrayOfMenuItems[existingIndex]);
+          } else {
+            arrayOfMenuItems.push(value);
+          } 
         });
-      
-        if (existing.length) {
-          var existingIndex = arrayOfMenuItems.indexOf(existing[0]);
-          arrayOfMenuItems[existingIndex] = Object.assign(value, arrayOfMenuItems[existingIndex]);
-        } else {
-          arrayOfMenuItems.push(value);
-        } 
-      });
 
       return arrayOfMenuItems;
     };
@@ -192,7 +217,6 @@ angular.module('ts5App')
     this.editMenuRules = function() {
       $this.showLoadingModal('Updating Menu Rules Data');
       var updatePayload = this.generatePayloadCreateUpdate();
-      updatePayload.concat($routeParams.id);
       menuRulesFactory.updateMenuRule(updatePayload).then($this.saveFormSuccess, $this.saveFormFailure);
     };
   
@@ -324,7 +348,7 @@ angular.module('ts5App')
                 item.rawItem = item;
                 item.item = lodash.find($scope.items, { id: item.itemId });
                 item.items = $scope.items;
-	
+
                 if (!item.item) {
                   item.expired = true;
                 }
