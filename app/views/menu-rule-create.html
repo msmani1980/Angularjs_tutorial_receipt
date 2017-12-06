@@ -186,6 +186,7 @@
 						        ng-if="!isCurrentEffectiveDate(formData)"
 						        name="endDate"
 						        ng-model="formData.endDate"
+						        disable="readOnly"
 						        label="Effective To"
 						        required="true">
       		</date-picker-field>
@@ -225,7 +226,7 @@
                     placeholder="Select a menu..."
                     ng-disabled="isEffective(formData)"
                     required="true">
-                    <ui-select-match allow-clear="!readOnly" placeholder="Select a menu...">{{$select.selected.menuCode}}</ui-select-match>
+                    <ui-select-match allow-clear="{{!isEffective(formData)}}" placeholder="Select a menu...">{{$select.selected.menuCode}}</ui-select-match>
                     <ui-select-choices repeat="menu in menuMasters | filter: $select.search | orderBy:'menuCode'">
                       <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
                     </ui-select-choices>
@@ -285,7 +286,7 @@
                   ng-disabled="isEffective(formData)"
                   placeholder="Select a category to filter the items list...">
                   <ui-select-match
-                    allow-clear="!readOnly"
+                    allow-clear="{{!isEffective(formData)}}"
                     placeholder="Select a category to filter the items list...">{{$select.selected.name}}
                   </ui-select-match>
                   <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
