@@ -396,7 +396,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         return storeInst.inboundedByPerson ? storeInst.inboundedByPerson.userName : '';
       }
 
-      return storeInst.updatedByPerson.userName || storeInst.createdByPerson.userName;
+      return (storeInst.updatedByPerson) ? storeInst.updatedByPerson.userName : storeInst.createdByPerson.userName;
     };
 
     $scope.getUpdatedOnForStoreInstance = function (storeInst) {
