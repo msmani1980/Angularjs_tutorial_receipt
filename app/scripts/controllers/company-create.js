@@ -8,7 +8,7 @@
  */
 angular.module('ts5App').controller('CompanyCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, companiesFactory, currencyFactory, dateUtility,
-    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash, imageLogoService) {
+    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash, imageLogoService, messageService) {
 
     $scope.formData = {
       startDate: dateUtility.tomorrowFormattedDatePicker(),
@@ -231,6 +231,16 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         $this.updateImagesArray(newValue, oldValue);
         $this.calculateFieldsVisibility();
       });
+      $scope.$watch('formData.startDate', function(newValue, oldValue) {
+        $this.updateDate(newValue, oldValue);
+      });
+    };
+
+    this.updateDate = function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        $scope.formData.startDate = dateUtility.tomorrowFormattedDatePicker();
+        $scope.formData.endDate = dateUtility.tomorrowFormattedDatePicker();
+      }
     };
 
     this.updateImagesArray = function(newValue, oldValue) {
@@ -542,14 +552,41 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         }
       }
 
-      this.formatPayloadDates(formData);
-      this.formatImagePayloadDates(formData);
-      $scope.form.$setSubmitted(true);
-      if (formData && $this.validateForm()) {
-        var companyData = angular.copy(formData);
-        var payload = $this.formatPayload(companyData);
-        var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(payload);
-        return action;
+      if ($scope.validateDate()) {
+        this.formatPayloadDates(formData);
+        this.formatImagePayloadDates(formData);
+        $scope.form.$setSubmitted(true);
+        if (formData && $this.validateForm()) {
+          var companyData = angular.copy(formData);
+          var payload = $this.formatPayload(companyData);
+          var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(payload);
+          return action;
+        }
+      }
+
+    };
+
+    $scope.validateDate = function () {
+      if ($scope.formData.images[0] !== undefined) {
+        var imageNumber = 0;
+        for (var i in $scope.formData.images) {
+          var start = $scope.formData.images[i].startDate;
+          var end = $scope.formData.images[i].endDate;
+          start = start.split(/\D/);
+          end = end.split(/\D/);
+          var startDate = new Date(start[1] + '/' + start[0] + '/' + start[2]);
+          var endDate = new Date(end[1] + '/' + end[0] + '/' + end[2]);
+          imageNumber++;
+          if (startDate > endDate) {
+            messageService.display('danger', 'To date should be later than or equal to From date', 'Saved Image ' + imageNumber);
+            return false;
+          }
+
+        }
+
+        return true;
+      } else {
+        return true;
       }
     };
 
