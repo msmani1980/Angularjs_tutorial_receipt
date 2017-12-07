@@ -253,6 +253,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         $this.updateImagesArray(newValue, oldValue);
         $this.calculateFieldsVisibility();
       });
+
       $scope.$watch('formData.startDate', function(newValue, oldValue) {
         $this.updateDate(newValue, oldValue);
       });
