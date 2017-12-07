@@ -492,7 +492,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           var unpackingStatusId = getIdByValueInArray('Unpacking', 'statusName', $scope.storeStatusList);
           var inboundSealsStatusId = getIdByValueInArray('Inbound Seals', 'statusName', $scope.storeStatusList);
           payload.statusId = [parseInt(payload.statusId), unpackingStatusId, inboundSealsStatusId].toString();
-        } else if(statusName === 'Inbounded') {
+        } else if (statusName === 'Inbounded') {
           var discrepanciesStatusId = getIdByValueInArray('Discrepancies', 'statusName', $scope.storeStatusList);
           var confirmedStatusId = getIdByValueInArray('Confirmed', 'statusName', $scope.storeStatusList);
           var commissionPaidStatusId = getIdByValueInArray('Commission Paid', 'statusName', $scope.storeStatusList);
