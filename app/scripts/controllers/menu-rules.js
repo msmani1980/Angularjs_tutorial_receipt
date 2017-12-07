@@ -193,8 +193,9 @@ angular.module('ts5App')
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
-      payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
-      payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
+
+      //payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
+      //payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
       
       menuRulesFactory.getMenuRules(payload).then($this.getMenuRulesSuccess);
       $this.meta.offset += $this.meta.limit;
