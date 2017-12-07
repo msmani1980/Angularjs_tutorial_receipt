@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:9 */
 /**
  * @ngdoc function
  * @name ts5App.controller:CompanyCreateCtrl
@@ -548,8 +549,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
           $scope.formData.images[i].type = 2;
         }
       } else if ($scope.formData.images[0] !== undefined && $scope.formData.companyTypeId !== '6') {
-        for (var i in $scope.formData.images) {
-          $scope.formData.images[i].type = 4;
+        for (var j in $scope.formData.images) {
+          $scope.formData.images[j].type = 4;
         }
       }
 
