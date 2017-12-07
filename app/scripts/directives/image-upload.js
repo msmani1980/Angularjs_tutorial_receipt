@@ -33,9 +33,16 @@ angular.module('ts5App')
         $scope.files.splice(filesIndex, 1);
       };
 
-      $scope.addImage = function (fileIndex, data) {
+      $scope.addImage = function (fileIndex, data, imageType) {
+        var tempImageURL;
+        if (imageType === 'cornerLogo' || imageType === 'homeLogo') {
+          tempImageURL = data.url + '?decache=' + Math.random();
+        } else {
+          tempImageURL = data.url;
+        }
+
         var newImage = {
-          imageURL: data.url,
+          imageURL: tempImageURL,
           startDate: $scope.formData.startDate,
           endDate: $scope.formData.endDate
         };
@@ -51,7 +58,7 @@ angular.module('ts5App')
         }).progress(function (evt) {
           file.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
         }).success(function (data) {
-          $scope.addImage(fileIndex, data);
+          $scope.addImage(fileIndex, data, imageType);
         }).error(function () {
           file.uploadFail = true;
 
@@ -103,8 +110,16 @@ angular.module('ts5App')
         $http.defaults.headers.common.type = imageTypeHeader;
         if (companyCode === undefined && imageType !== 'itemImage') {
           messageService.display('warning', 'Please provide required Company Information', 'Image upload');
-        }else if ($scope.formData.images.length >= 2) {
+        }  else if ($scope.formData.images.length >= 2) {
           messageService.display('warning', 'Maximum allowed image upload limit reached', 'Image upload');
+          $scope.clearAllFiles();
+        } else if (imageType === 'homeLogo' && checkImageNameUploaded() === 'logo') {
+          messageService.display('warning', 'Delete old home logo first', 'Image upload');
+          $scope.clearAllFiles();
+        } else if (imageType === 'cornerLogo' && checkImageNameUploaded() === 'brand') {
+          messageService.display('warning', 'Delete old brand logo first', 'Image upload');
+          clearAllFiles();
+          $scope.clearAllFiles();
         } else {
           $http.defaults.headers.common.companyCode = companyCode;
           var fileUploadPromises = [];
@@ -128,6 +143,17 @@ angular.module('ts5App')
               }
             });
           }
+        }
+
+      };
+
+      var checkImageNameUploaded = function () {
+        if ($scope.formData.images[0] !== undefined) {
+          var imageName = $scope.formData.images[0].imageURL.split('/').pop();
+          imageName = imageName.split('_')[0];
+          return imageName;
+        } else {
+          return 'no image';
         }
 
       };
