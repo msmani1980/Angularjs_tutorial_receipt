@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint maxcomplexity:6 */
 /**
  * @ngdoc function
  * @name ts5App.controller:CashBagListCtrl
@@ -65,20 +65,20 @@ angular.module('ts5App')
 
       return containingArray;
     }
-
+    
     function getCashBagResponseHandler(response) {
       hideLoadingModal();
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.cashBagList = $scope.cashBagList.concat(formatScheduleDateForApp(angular.copy(response.cashBags)));
       angular.forEach($scope.cashBagList, function(cashbag) {
-      	if( !(cashbag.updatedBy === undefined) && cashbag.updatedBy === -1 ){
+      	if( cashbag.updatedBy !== undefined && cashbag.updatedBy === -1 ){
           cashbag._updatedBy = 'AUTO';
-      	} else if( cashbag.updatedByPerson === undefined || cashbag.updatedByPerson == null ){
+      	} else if( cashbag.updatedByPerson === undefined || cashbag.updatedByPerson === null ){
           cashbag._updatedBy = '';
     	} else {
           cashbag._updatedBy = cashbag.updatedByPerson.userName;
     	}
-    	if( !(cashbag.updatedOn === undefined) && cashbag.updatedOn !== null && cashbag.updatedOn !== ''){
+    	if(cashbag.updatedOn !== undefined){
          cashbag.updatedOn = dateUtility.formatTimestampForApp(cashbag.updatedOn);
     	}else {
           cashbag.updatedOn = '';
