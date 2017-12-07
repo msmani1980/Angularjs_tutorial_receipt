@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:9 */
 /**
  * @ngdoc directive
  * @name ts5App.directive:imageUpload
@@ -118,7 +119,6 @@ angular.module('ts5App')
           $scope.clearAllFiles();
         } else if (imageType === 'cornerLogo' && checkImageNameUploaded() === 'brand') {
           messageService.display('warning', 'Delete old brand logo first', 'Image upload');
-          clearAllFiles();
           $scope.clearAllFiles();
         } else {
           $http.defaults.headers.common.companyCode = companyCode;
