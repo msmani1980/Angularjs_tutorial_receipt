@@ -112,13 +112,17 @@ angular.module('ts5App')
       var createPayload = this.generatePayloadCreateUpdate();
       delete createPayload.id;
       angular.forEach(createPayload.cabins, function(cabin) {
-        cabin.menus.forEach(function(menu) {
-          delete menu.id;
-        });
+        if (cabin.menus !== undefined) {
+          cabin.menus.forEach(function(menu) {
+            delete menu.id;
+          });
+        }
 
-        cabin.items.forEach(function(item) {
-          delete item.id;
-        });
+        if (cabin.items !== undefined) {
+          cabin.items.forEach(function(item) {
+            delete item.id;
+          });
+        }
       });
 
       menuRulesFactory.createMenuRule(createPayload).then($this.saveFormSuccess, $this.saveFormFailure);
@@ -200,13 +204,17 @@ angular.module('ts5App')
         
       finalMenusItems.forEach(function(value) {
           var existing = arrayOfMenuItems.filter(function(v) {
+            if (v === undefined || value === undefined) { 
+              return;
+            }
+
             return v.companyCabinClassId === value.companyCabinClassId;
           });
         
           if (existing.length) {
             var existingIndex = arrayOfMenuItems.indexOf(existing[0]);
             arrayOfMenuItems[existingIndex] = Object.assign(value, arrayOfMenuItems[existingIndex]);
-          } else {
+          } else if (value !== undefined) {
             arrayOfMenuItems.push(value);
           } 
         });
@@ -316,7 +324,7 @@ angular.module('ts5App')
             }
           });
 
-          if ($scope.formData.selectedMenus.length > 0) {
+          if ($scope.formData.selectedMenus.length > 0 && $scope.formData.selectedMenus[cabinClass.id] !== undefined) {
             $scope.formData.selectedMenus[cabinClass.id].forEach(function(menu) {
               menu.rawMenu = menu;
               menu.menu = lodash.find($scope.menuMasters, { id: menu.menuId });
@@ -326,9 +334,12 @@ angular.module('ts5App')
             }); 
           }
           
-        }else {
+        }
+        
+        if ($scope.formData.selectedMenus[cabinClass.id] === undefined) {
           $scope.formData.selectedMenus[cabinClass.id] = [];
         }
+        
       });
     };
 
@@ -343,7 +354,7 @@ angular.module('ts5App')
               }
             });
 
-            if ($scope.formData.selectedItems.length > 0) {
+            if ($scope.formData.selectedItems.length > 0 && $scope.formData.selectedItems[cabinClass.id] !== undefined) {
               $scope.formData.selectedItems[cabinClass.id].forEach(function(item) {
                 item.rawItem = item;
                 item.item = lodash.find($scope.items, { id: item.itemId });
@@ -354,9 +365,12 @@ angular.module('ts5App')
                 }
               });
             }
-          }else {
+          }
+          
+          if ($scope.formData.selectedItems[cabinClass.id] === undefined) {
             $scope.formData.selectedItems[cabinClass.id] = [];
           }
+          
         });
       };
     
