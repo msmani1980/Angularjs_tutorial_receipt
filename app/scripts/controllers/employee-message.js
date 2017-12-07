@@ -356,6 +356,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       }
     };
 
+    // jshint maxcomplexity:6
     function employeeDates(payload, search) {
       if (search === undefined || (search.startDate === undefined && search.endDate === undefined)) {
         payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
@@ -381,8 +382,8 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     this.isEmployeeActiveInRange = function(employee, startDate, endDate) {
-      return dateUtility.isBeforeOrEqual(dateUtility.formatDateForApp(employee.startDate), endDate)
-        && dateUtility.isAfterOrEqual(dateUtility.formatDateForApp(employee.endDate), startDate);
+      return dateUtility.isBeforeOrEqual(dateUtility.formatDateForApp(employee.startDate), endDate) &&
+        dateUtility.isAfterOrEqual(dateUtility.formatDateForApp(employee.endDate), startDate);
     };
 
     this.initEmployeeMessage = function() {
