@@ -199,7 +199,13 @@ angular.module('ts5App')
     };
 
     function setFilteredItemsCollection(dataFromAPI, menuIndex) {
-      $scope.filteredItemsCollection[menuIndex] = angular.copy(dataFromAPI.masterItems);
+      $scope.selectedCategoryItems = dataFromAPI.masterItems;
+      var selectedItemIds = getAllSelectedItemIds();
+      angular.forEach($scope.selectedCategoryItems, function (selectedCategoryItem) {
+        selectedCategoryItem.selected = selectedItemIds.indexOf(selectedCategoryItem.id) >= 0;
+      });
+        
+      $scope.filteredItemsCollection[menuIndex] = angular.copy($scope.selectedCategoryItems);
       if (!$scope.menuItemList[menuIndex].selectedItem) {
         return;
       }
