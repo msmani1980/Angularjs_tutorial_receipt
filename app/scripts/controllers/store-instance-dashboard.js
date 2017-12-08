@@ -240,8 +240,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         }).join('+');
         var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
 
-        // TODO: add rsvr when migrated
-        $scope.exportBulkURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208.pdf?sessionToken=' +
+        $scope.exportBulkURL = ENV.apiUrl + '/rsvr-pdf/api/dispatch/store-instances/documents/C208.pdf?sessionToken=' +
           sessionToken;
         $scope.exportBulkURL += '&storeInstanceIds=' + storeInstanceIds;
       } else {
@@ -396,7 +395,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         return storeInst.inboundedByPerson ? storeInst.inboundedByPerson.userName : '';
       }
 
-      return storeInst.updatedByPerson.userName || storeInst.createdByPerson.userName;
+      return (storeInst.updatedByPerson) ? storeInst.updatedByPerson.userName : storeInst.createdByPerson.userName;
     };
 
     $scope.getUpdatedOnForStoreInstance = function (storeInst) {

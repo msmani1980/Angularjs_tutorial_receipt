@@ -265,6 +265,40 @@
 
 						</div>
 
+            <div ng-if="isVirtualSelected" class="row">
+              <div class="form-group col-md-12" ng-class="{ 'has-error' : !formData.supplierCompanyId && displayError , 'has-success' : formData.supplierCompanyId }">
+                <label>Supplier</label>
+                <select name="supplierCompanyId" ng-model="formData.supplierCompanyId" convert-to-number class="form-control col-xs-2" ng-change="onSupplierCompanyChange()" ng-init="onSupplierCompanyChange()" >
+                  <option ng-repeat="supplier in supplierCompanies" value="{{supplier.relativeCompanyId}}">
+                    {{ supplier.relativeCompany }}
+                  </option>
+                </select>
+
+                <div ng-if="isSupplierCompanyExpired()" style="color:red">Selected supplier is not active anymore. Please select a new one!</div>
+              </div>
+
+              <div ng-if="selectedSupplierCompanyImages" class="col-md-12 form-group" >
+                <label>Receipt images</label>
+                <div ng-if="selectedSupplierCompanyImages.length == 0">No active receipt images available</div>
+                <div ng-repeat="image in selectedSupplierCompanyImages" class="col-md-12 row" style="margin-bottom:5px;">
+                  <div class="col-md-6" style="border: 1px #cccccc solid;" ng-click="showImagePreview(image)" >
+                    <a class="pop">
+                      <img ng-src="{{image.imageURL}}" style="max-width: 95%;">
+                    </a>
+                  </div>
+                  <div class="col-md-6">
+                    Effective from:<br /> {{image.startDate}} <br /><br />
+                    Effective to:<br /> {{image.endDate}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-12">
+                <input-text ng-if="formData.supplierCompanyId" label="Receipt Header" name="receiptHeader" placeholder="Receipt Header" max-length="30"></input-text>
+                <input-text ng-if="formData.supplierCompanyId" label="Receipt Footer" name="receiptFooter" placeholder="Receipt Footer" max-length="30"></input-text>
+              </div>
+            </div>
+
 					</fieldset>
 
 				</div>
@@ -387,6 +421,26 @@
 
 </div>
 <!-- /Container -->
+
+<div class="modal fade" id="imagemodal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Receipt image</h4>
+      </div>
+
+      <div class="modal-body" ng-if="modalImageUrl">
+        <img ng-src="{{modalImageUrl}}" class="imagepreview" style="width: 100%;" >
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="closeImagePreview()">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <form-success-modal list-path="stock-owner-item-list" create-path="stock-owner-item-create"></form-success-modal>
 
