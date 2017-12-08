@@ -391,14 +391,18 @@ angular.module('ts5App')
       $this.deleteCompanyExchangeRate($scope.exchangeRateToDelete.id);
     };
 
-    this.isCurrencyCOdePartOfAllowedCurrenciesForCreation = function(currencyCode) {
+    $scope.isCurrencyCodePartOfAllowedCurrenciesForCreation = function() {
+      var result = false;
+
       angular.forEach($scope.detailedCompanyCurrenciesForCreation, function(companyCurrency) {
-        if(companyCurrency.currencyCode === currencyCode) {
-          return true;
+        if(companyCurrency.currencyCode === $scope.search.operatingCurrencyCode && companyCurrency.isOperatedCurrency) {
+          result = true;
+
+          return;
         }
       });
 
-      return false;
+      return result;
     };
 
     $scope.duplicateExchangeRate = function(index, exchangeRate) {
@@ -422,7 +426,17 @@ angular.module('ts5App')
     };
 
     $scope.addNewExchangeRate = function() {
+      $scope.displayError = false;
+      $scope.errorCustom = [];
+      if(!$scope.isCurrencyCodePartOfAllowedCurrenciesForCreation()) {
+        $scope.errorCustom = [{
+          field: 'Operating Currency',
+          value: 'Selected operating currency is currently not active so creation of new exchange rate is not allowed'
+        }];
+        $scope.displayError = true;
 
+        return;
+      }
 
       var newExchangeRate = {};
       newExchangeRate.companyId = $this.companyId;
