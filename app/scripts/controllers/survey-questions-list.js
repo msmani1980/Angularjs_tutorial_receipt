@@ -8,10 +8,14 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('SurveyQuestionsListCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('SurveyQuestionsListCtrl', function ($scope, $q, $route, $location, $filter) {
+    var $this = this;
+    this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
+    var companyId;
+
+    $scope.surveyQuestions = [];
   });
