@@ -395,7 +395,7 @@ angular.module('ts5App')
       var result = false;
 
       angular.forEach($scope.detailedCompanyCurrenciesForCreation, function(companyCurrency) {
-        if(companyCurrency.currencyCode === $scope.search.operatingCurrencyCode && companyCurrency.isOperatedCurrency) {
+        if (companyCurrency.currencyCode === $scope.search.operatingCurrencyCode && companyCurrency.isOperatedCurrency) {
           result = true;
 
           return;
@@ -428,7 +428,7 @@ angular.module('ts5App')
     $scope.addNewExchangeRate = function() {
       $scope.displayError = false;
       $scope.errorCustom = [];
-      if(!$scope.isCurrencyCodePartOfAllowedCurrenciesForCreation()) {
+      if (!$scope.isCurrencyCodePartOfAllowedCurrenciesForCreation()) {
         $scope.errorCustom = [{
           field: 'Operating Currency',
           value: 'Selected operating currency is currently not active so creation of new exchange rate is not allowed'
