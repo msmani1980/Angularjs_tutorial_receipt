@@ -413,6 +413,10 @@ angular.module('ts5App', [
     templateUrl: 'views/menu-assignment-list.html',
     controller: 'MenuAssignmentListCtrl',
     controllerAs: 'menuAssignmentList'
+  }).when('/survey', {
+    templateUrl: 'views/survey.html',
+    controller: 'SurveyCtrl',
+    controllerAs: 'survey'
   }).otherwise({
     redirectTo: '/'
   });
