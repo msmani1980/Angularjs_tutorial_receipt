@@ -391,6 +391,16 @@ angular.module('ts5App')
       $this.deleteCompanyExchangeRate($scope.exchangeRateToDelete.id);
     };
 
+    this.isCurrencyCOdePartOfAllowedCurrenciesForCreation = function(currencyCode) {
+      angular.forEach($scope.detailedCompanyCurrenciesForCreation, function(companyCurrency) {
+        if(companyCurrency.currencyCode === currencyCode) {
+          return true;
+        }
+      });
+
+      return false;
+    };
+
     $scope.duplicateExchangeRate = function(index, exchangeRate) {
       var newExchangeRate = {};
       newExchangeRate.companyId = exchangeRate.companyId;
@@ -412,6 +422,8 @@ angular.module('ts5App')
     };
 
     $scope.addNewExchangeRate = function() {
+
+
       var newExchangeRate = {};
       newExchangeRate.companyId = $this.companyId;
       newExchangeRate.operatingCurrencyCode = $scope.search.operatingCurrencyCode;
