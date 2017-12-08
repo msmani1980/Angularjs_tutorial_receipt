@@ -1,1 +1,95 @@
-<p>This is the survey-questions-list view.</p>
+<div class="module-container">
+  <div class="row item-list-row">
+    <div class="col-xs-4">
+      <h2 class="view-name">Survey Questions</h2>
+    </div>
+
+    <div class="col-xs-8 text-right">
+      <a href="#/survey-questions/create" class="btn btn-primary"><span class="hidden-xs">Create Survey Choice</span></a>
+      <a href="#/survey-choices/create" class="btn btn-primary"><span class="hidden-xs">Create Survey Question</span></a>
+      <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+              aria-controls="search-collapse">
+        <span class="fa fa-filter" aria-hidden="true"></span>
+        <span class="hidden-sm hidden-xs">Filter</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="panel panel-default no-transition" id="search-collapse">
+    <form name="menuSearchForm">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label for="schedule-number">Question name</label>
+              <input ng-model="search.questionName" type="text" class="form-control" id="schedule-number" placeholder="Question name">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <date-picker
+              class="form-group"
+              element-class="col-xs-6"
+              start-date-model="search.startDate"
+              end-date-model="search.endDate"
+              label-from="Effective Date From"
+              label-to="Effective Date To"
+              is-search-field="true">
+            </date-picker>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer text-right">
+        <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+        <button ng-disabled="!uiReady" ng-click="searchSurveyQuestions()" class="btn btn-primary btn-search">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs btn-label">Search</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  <br>
+  <div class="table-responsive">
+    <table infinite-scroll="loadSurveyQuestions()" class="table table-bordered table-hover ng-scope" ng-show="surveyQuestions.length > 0">
+      <thead>
+      <tr>
+        <th>Question</th>
+        <th>Effective from</th>
+        <th>Effective to</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody ng-repeat="surveyQuestion in surveyQuestions">
+      <tr class="ng-scope">
+        <td>{{ surveyQuestion.questionName }}</td>
+        <td>{{ surveyQuestion.startDate }}</td>
+        <td>{{ surveyQuestion.endDate }}</td>
+        <td>
+          <button class="btn btn-primary btn-xs" ng-click="redirectToSurveyQuestion(surveyQuestion.id, 'edit')" tabindex="0">
+            <i class="fa fa-pencil"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <alert ng-show="!loadingBarVisible && surveyQuestions.length == 0 && isSearch" type="info">
+    <span class="fa fa-flag"></span> Your search returned no results.
+  </alert>
+  <alert ng-show="!isSearch" type="info">
+    <span class="fa fa-flag"></span> Click search to show the results.
+  </alert>
+  <p ng-if="surveyQuestions.length > 0" class="record-count small text-center">Showing {{surveyQuestions.length}} records</p>
+  <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+</div>
+
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>
