@@ -462,12 +462,16 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.createCompany = function(payload) {
+      $scope.formatPayloadDates(payload);
+      $scope.formatImagePayloadDates(payload);
       $this.showLoadingModal('We are creating your Company');
       var promises = $this.createCompanyCreatePromises(payload);
       $q.all(promises).then($this.createSuccessHandler, $this.errorHandler);
     };
 
     this.updateCompany = function(payload) {
+      $scope.formatPayloadDates(payload);
+      $scope.formatImagePayloadDates(payload);
       $this.showLoadingModal('We are updating your Company');
       var promises = $this.createCompanyUpdatePromises(payload);
       $q.all(promises).then($this.updateSuccessHandler, $this.errorHandler);
@@ -657,8 +661,6 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       }
 
       if ($scope.validateDate()) {
-        this.formatPayloadDates(formData);
-        this.formatImagePayloadDates(formData);
         $scope.form.$setSubmitted(true);
         if (formData && $this.validateForm()) {
           var companyData = angular.copy(formData);
