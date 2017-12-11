@@ -86,19 +86,23 @@ angular.module('ts5App')
     $scope.removeRecord = function (surveyQuestionId) {
       $this.displayLoadingModal('Removing Survey Question');
 
-      surveyQuestionsFactory.removeSurveyQuestion(surveyQuestionId).then(function () {
-        lodash.remove($scope.surveyQuestions, function (surveyQuestion) {
-          return surveyQuestion.id === surveyQuestionId
-        });
+      surveyQuestionsFactory.removeSurveyQuestion(surveyQuestionId).then($this.removeSurveyQuestionSuccess, $this.removeSurveyQuestionFailure);
+    };
 
-        $this.hideLoadingModal();
-      }, function () {
-        $this.hideLoadingModal();
+    this.removeSurveyQuestionSuccess = function () {
+      lodash.remove($scope.surveyQuestions, function (surveyQuestion) {
+        return surveyQuestion.id === surveyQuestionId;
       });
+
+      $this.hideLoadingModal();
+    };
+
+    this.removeSurveyQuestionFailure = function () {
+      $this.hideLoadingModal();
     };
 
     function togglePanel(panelName) {
-      isPanelOpen(panelName) ? hidePanel(panelName): showPanel(panelName);
+      isPanelOpen(panelName) ? hidePanel(panelName) : showPanel(panelName);
     }
 
     function isPanelOpen(panelName) {
