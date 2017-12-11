@@ -86,8 +86,8 @@
                     <tbody>
                         <tr id="exchange-rate-{{$index}}" ng-repeat="exchangeRate in companyExchangeRates | filter: companyExchangeRateFilter | index">
                             <td>
-                                <input type="text" class="form-control" placeholder="CHF" disabled="disabled" value="{{exchangeRate.acceptedCurrencyCode}}" ng-if="exchangeRate && !isAcceptedCurrencySelectEnabled(exchangeRate)">
-                                <select class="form-control" id="select-accepted-currency" ng-model="exchangeRate.acceptedCurrency" ng-if="exchangeRate && isAcceptedCurrencySelectEnabled(exchangeRate)" ng-change="onAcceptedCompanyCurrencyChange(exchangeRate)">
+                                <input required="true" name="AcceptedCurrency" type="text" class="form-control" placeholder="CHF" disabled="disabled" value="{{exchangeRate.acceptedCurrencyCode}}" ng-if="exchangeRate && !isAcceptedCurrencySelectEnabled(exchangeRate)">
+                                <select required="true" name="AcceptedCurrency" class="form-control" id="select-accepted-currency" ng-model="exchangeRate.acceptedCurrency" ng-if="exchangeRate && isAcceptedCurrencySelectEnabled(exchangeRate)" ng-change="onAcceptedCompanyCurrencyChange(exchangeRate)">
                                   <option value="">Select Accepted Currency</option>
                                   <option ng-repeat="currency in detailedCompanyCurrenciesForCreation | unique: 'currencyCode' | orderBy: 'currencyCode'" value="{{currency}}">{{ currency.currencyCode }}</option>
                                 </select>
@@ -100,7 +100,7 @@
                             </td>
                             <td>
                                 <div>
-                                  <input custom-validity name="ExchangeRate"
+                                  <input required="true" custom-validity name="ExchangeRate"
                                       custom-pattern="currencyWithFourDecimalPlace"
                                       ng-model="exchangeRate.exchangeRate"
                                       ng-disabled="isExchangeRateDisabled(exchangeRate)"
