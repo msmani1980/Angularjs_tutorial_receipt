@@ -31,8 +31,6 @@ angular.module('ts5App')
         limit: 100,
         offset: 0
       };
-
-      $scope.loadSurveyQuestions();
     };
 
     $scope.redirectToSurveyQuestion = function(id, state) {
@@ -41,7 +39,7 @@ angular.module('ts5App')
     };
 
     $scope.loadSurveyQuestions = function() {
-      if ($this.meta.offset >= $this.meta.count) {
+      if ($this.meta.offset >= $this.meta.count || !$scope.isSearch) {
         return;
       }
 
@@ -71,6 +69,14 @@ angular.module('ts5App')
       };
 
       $scope.loadSurveyQuestions();
+    };
+
+    $scope.canEdit = function (endDate) {
+      return dateUtility.isYesterdayOrEarlierDatePicker(endDate);
+    };
+
+    $scope.isDateActive = function (date) {
+      return dateUtility.isTodayOrEarlierDatePicker(date);
     };
 
     function showLoadingBar() {
@@ -116,7 +122,7 @@ angular.module('ts5App')
       angular.element('.loading-more').hide();
 
       var initDependencies = $this.makeInitPromises();
-      $q.all(initDependencies).then(function(response) {
+      $q.all(initDependencies).then(function() {
         $scope.uiReady = true;
       });
 
