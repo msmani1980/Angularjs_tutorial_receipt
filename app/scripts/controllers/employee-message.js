@@ -109,7 +109,35 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       $location.path('employee-messages');
     };
 
+    $this.isEffectiveDateRangeValid = function() {
+      if ($scope.employeeMessage.startDate && $scope.employeeMessage.endDate) {
+        if (dateUtility.diff($scope.employeeMessage.startDate, $scope.employeeMessage.endDate) < 0) {
+          var errorData = {
+            data: [
+              {
+                field: 'Effective To',
+                code: '021'
+              }
+            ]
+          };
+          $scope.errorResponse = angular.copy(errorData);
+          $scope.displayError = true;
+
+          return false;
+        }
+
+        return true;
+      }
+
+      return true;
+    };
+
     $scope.save = function() {
+
+      if (!$this.isEffectiveDateRangeValid()) {
+        return;
+      }
+
       var payload = $this.formatPayload();
       $this.showLoadingModal('Saving data...');
       if ($routeParams.action === 'edit') {
@@ -118,7 +146,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         employeeMessagesFactory.createEmployeeMessage(payload).then($this.saveSuccess, $this.showErrors);
       }
     };
-
+    
     $scope.shouldDisable = function(isFieldDisabledInActiveRecord) {
       if (isFieldDisabledInActiveRecord) {
         return $scope.readOnly || $scope.shouldDisableActiveFields();
@@ -342,14 +370,14 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         $this.initEmployeeMessage();
         dataInitialized = true;
       });
-      
+
       $scope.minDate = dateUtility.nowFormattedDatePicker();
     };
 
     this.init();
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate);
     };
-      
+
   });

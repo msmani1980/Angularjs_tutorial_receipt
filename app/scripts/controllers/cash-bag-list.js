@@ -19,7 +19,7 @@ angular.module('ts5App')
     this.shouldShowEmptyResult = false;
     this.meta = {
       count: undefined,
-      limit: 100,
+      limit: 30,
       offset: 0
     };
 
@@ -70,8 +70,21 @@ angular.module('ts5App')
       hideLoadingModal();
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.cashBagList = $scope.cashBagList.concat(formatScheduleDateForApp(angular.copy(response.cashBags)));
-      angular.forEach($scope.cashBagList, function(cashBag) {
-        if ($scope.isNew(cashBag.id)) {
+      angular.forEach($scope.cashBagList, function(cashbag) {
+      	if( !(cashbag.updatedBy === undefined) && cashbag.updatedBy === -1 ){
+          cashbag._updatedBy = 'AUTO';
+      	} else if( cashbag.updatedByPerson === undefined || cashbag.updatedByPerson == null ){
+          cashbag._updatedBy = '';
+    	} else {
+          cashbag._updatedBy = cashbag.updatedByPerson.userName;
+    	}
+    	if( !(cashbag.updatedOn === undefined) && cashbag.updatedOn !== null && cashbag.updatedOn !== ''){
+         cashbag.updatedOn = dateUtility.formatTimestampForApp(cashbag.updatedOn);
+    	}else {
+          cashbag.updatedOn = '';
+    	}
+    	
+        if ($scope.isNew(cashbag.id)) {
           showSuccessMessage('successfully created');
         }
       });
@@ -187,7 +200,7 @@ angular.module('ts5App')
       $this.shouldShowEmptyResult = true;
       $this.meta = {
         count: undefined,
-        limit: 100,
+        limit: 30,
         offset: 0
       };
       loadCashBagList();
