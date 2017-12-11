@@ -75,8 +75,8 @@
   <alert ng-show="!loadingBarVisible && surveyQuestions.length == 0 && isSearch" type="info">
     <span class="fa fa-flag"></span> Your search returned no results.
   </alert>
-  <alert ng-show="!isSearch" type="info">
-    <span class="fa fa-flag"></span> Click search to show the results.
+  <alert ng-show="!loadingBarVisible && surveyQuestions.length == 0 && !isSearch" type="info">
+    <span class="fa fa-flag"></span> No results found.
   </alert>
   <p ng-if="surveyQuestions.length > 0" class="record-count small text-center">Showing {{surveyQuestions.length}} records</p>
   <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
