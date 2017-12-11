@@ -8,7 +8,7 @@
     <b>Drop Images, or Click.</b>
 
     <p>Accepted file formats: {{fileFormat}}.</p>
-    <p>{{imageNameMessage}}</p>
+    <p ng-show="formData.companyTypeId==1">{{imageNameMessage}}{{formData.companyCode}}</p>
   </div>
 
   <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
@@ -24,9 +24,10 @@
   <p class="alert alert-danger" ng-show="rejFiles.length">
     <b>Your file doesn't meet the requirements:</b>
     <br/>
-    <i ng-show="rejFiles[0].size > 10000">max size: {{imageSize}} pixels.</i>
+    <i  ng-show="formData.companyTypeId === '1' && imageName+'.'+fileFormat !== rejFiles[0].name">Invalid image name, accepted name {{imageName}}.{{fileFormat}}, </i>
+    <i ng-show="rejFiles[0].size > 10000">max resolution: {{imageSize}} pixels.</i>
     <i ng-show="rejFiles[0].size < 10001">
-      '{{rejFiles[0].name}}' is invalid, OR{{invalidNameMessage}} '{{rejFiles[0].type}}' is not an accepted file type.
+      '{{rejFiles[0].name}}' is invalid, or'{{rejFiles[0].type}}' is not an accepted file type.
     </i>
   </p>
 
