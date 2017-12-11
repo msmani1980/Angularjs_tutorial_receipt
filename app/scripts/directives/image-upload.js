@@ -24,6 +24,16 @@ angular.module('ts5App')
         $scope.files = files;
       });
 
+      $scope.$watch('formData.companyCode', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          if ($scope.imageType.toString() === 'homeLogo') {
+            $scope.imageName = 'logo_' + $scope.formData.companyCode;
+          } else if ($scope.imageType.toString() === 'cornerLogo') {
+            $scope.imageName = 'brand_' + $scope.formData.companyCode;
+          }
+        }
+      });
+
       $scope.clearAllFiles = function () {
         for (var filesIndex in $scope.files) {
           $scope.clearFile(filesIndex);
@@ -172,7 +182,6 @@ angular.module('ts5App')
         imageName: '@',
         imageNameMessage: '@',
         itemMaxSize: '@',
-        invalidNameMessage: '@',
         editingCompany: '='
       },
       link: function(scope) {
@@ -181,22 +190,20 @@ angular.module('ts5App')
           scope.imageSize  = '900 x 600';
           scope.imageTypeText = 'ePOS home screen logo.';
           scope.fileFormat = 'png';
-          scope.imageName = 'logo_*';
-          scope.imageNameMessage = 'Accepted image name: logo_COMPANYCODE';
+          scope.imageName = 'logo_' + scope.formData.companyCode;
+          scope.imageNameMessage = 'Accepted image name: logo_';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
-          scope.invalidNameMessage = ' has invalid name OR';
         }
 
         if (scope.imageType === 'cornerLogo') {
           scope.imageSize  = '92 x 33';
           scope.imageTypeText = 'ePOS brand corner logo.';
           scope.fileFormat = 'png';
-          scope.imageName = 'brand_*';
-          scope.imageNameMessage = 'Accepted image name: brand_COMPANYCODE';
+          scope.imageName = 'brand_' + scope.formData.companyCode;
+          scope.imageNameMessage = 'Accepted image name: brand_';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
-          scope.invalidNameMessage = ' has invalid name OR';
         }
 
         if (scope.imageType === 'receiptImage') {
@@ -207,7 +214,6 @@ angular.module('ts5App')
           scope.imageNameMessage = '';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
-          scope.invalidNameMessage = '';
         }
 
         if (scope.imageType === 'itemImage') {
@@ -217,7 +223,6 @@ angular.module('ts5App')
           scope.imageNameMessage = '';
           scope.itemMaxSize = '10000';
           scope.headerType = 'item';
-          scope.invalidNameMessage = '';
         }
       },
 
