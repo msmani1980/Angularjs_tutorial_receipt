@@ -33,6 +33,10 @@ angular.module('ts5App')
       };
     };
 
+    $scope.toggleSearchPanel = function() {
+      togglePanel('#search-collapse');
+    };
+
     $scope.redirectToSurveyQuestion = function(id, state) {
       $location.search({});
       $location.path('survey-questions/' + state + '/' + id).search();
@@ -79,6 +83,40 @@ angular.module('ts5App')
       return dateUtility.isTodayOrEarlierDatePicker(date);
     };
 
+    $scope.removeRecord = function (surveyQuestionId) {
+      $this.displayLoadingModal('Removing Survey Question');
+
+      surveyQuestionsFactory.removeSurveyQuestion(surveyQuestionId).then(function () {
+        lodash.remove($scope.surveyQuestions, function (surveyQuestion) {
+          return surveyQuestion.id === surveyQuestionId
+        });
+
+        $this.hideLoadingModal();
+      }, function () {
+        $this.hideLoadingModal();
+      });
+    };
+
+    function togglePanel(panelName) {
+      isPanelOpen(panelName) ? hidePanel(panelName): showPanel(panelName);
+    }
+
+    function isPanelOpen(panelName) {
+      return !angular.element(panelName).hasClass('collapse');
+    }
+
+    function hidePanel(panelName) {
+      if (!isPanelOpen(panelName)) {
+        return;
+      }
+
+      angular.element(panelName).addClass('collapse');
+    }
+
+    function showPanel(panelName) {
+      angular.element(panelName).removeClass('collapse');
+    }
+
     function showLoadingBar() {
       if (!$scope.isSearch) {
         return;
@@ -93,6 +131,14 @@ angular.module('ts5App')
       angular.element('.loading-more').hide();
       angular.element('.modal-backdrop').remove();
     }
+
+    this.displayLoadingModal = function (loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    };
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+    };
 
     this.constructStartDate = function () {
       return dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
