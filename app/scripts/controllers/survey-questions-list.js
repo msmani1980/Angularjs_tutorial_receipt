@@ -41,7 +41,7 @@ angular.module('ts5App')
     };
 
     $scope.loadSurveyQuestions = function() {
-      if ($this.meta.offset >= $this.meta.count ) {
+      if ($this.meta.offset >= $this.meta.count) {
         return;
       }
 
@@ -95,8 +95,8 @@ angular.module('ts5App')
     this.getSurveyQuestionsSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.surveyQuestions = $scope.surveyQuestions.concat(response.response.map(function (surveyQuestion) {
-        surveyQuestion.startDate = dateUtility.formatDateForApp(surveyQuestion.startDate) ;
-        surveyQuestion.endDate = dateUtility.formatDateForApp(surveyQuestion.endDate) ;
+        surveyQuestion.startDate = dateUtility.formatDateForApp(surveyQuestion.startDate);
+        surveyQuestion.endDate = dateUtility.formatDateForApp(surveyQuestion.endDate);
 
         return surveyQuestion;
       }));
