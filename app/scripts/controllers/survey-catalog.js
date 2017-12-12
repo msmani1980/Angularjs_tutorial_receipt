@@ -152,7 +152,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      var initDependencies = $q();
+      var initDependencies = [];
       $q.all(initDependencies).then(function() {
         angular.element('#search-collapse').addClass('collapse');
       });

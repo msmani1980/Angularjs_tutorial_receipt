@@ -15,12 +15,11 @@ angular.module('ts5App')
     };
 
     var getSurveyCatalogs = function (payload) {
-      return surveyService.getSurveys(payload);
+      return surveyCatalogService.getSurveyCatalogs(payload);
     };
 
-
     var getSurveyCatalog = function(surveyId) {
-      return surveyCatalogService.getSurveyById(surveyId);
+      return surveyCatalogService.getSurveyCatalogById(surveyId);
     };
 
     var createSurveyCatalog = function (payload) {
