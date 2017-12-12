@@ -234,6 +234,8 @@
       <th>Store Instance</th>
       <th>Origin</th>
       <th>Destination</th>
+      <th>User ID</th>
+      <th>Date/Time</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -247,6 +249,8 @@
       <td>{{ cashBag.storeInstanceId }}</td>
       <td>{{ cashBag.departureStationCode }}</td>
       <td>{{ cashBag.arrivalStationCode }}</td>
+      <td>{{ cashBag._updatedBy }}</td>
+      <td>{{ cashBag.updatedOn }}</td>
       <td>
         <button class="btn btn-info btn-xs" ng-click="viewCashBag(cashBag)">
           <i class="fa fa-file"></i>

@@ -143,10 +143,7 @@
     <thead>
     <tr>
       <th></th>
-      <th>
-        <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected"
-               ng-click="toggleAllCheckboxes()">
-      </th>
+      <th></th>
       <th>Dispatch LMP Station</th>
       <th>Inbound LMP Station</th>
       <th>Store Number</th>
@@ -200,8 +197,8 @@
       </td>
       <td>{{ store.id }}</td>
       <td>{{ store.statusName }}</td>
-      <td>{{ store.updatedOnDisplay }}</td>
-      <td>{{ store.updatedByPerson.userName || store.createdByPerson.userName }}</td>
+      <td>{{ getUpdatedOnForStoreInstance(store) }}</td>
+      <td>{{ getUpdateByForStoreInstance(store) }}</td>
       <td class="col-xs-1">
         <a class="btn btn-primary btn-xs btn-block" tabindex="0"
            ng-show="doesStoreInstanceContainAction(store, 'Pack')"
