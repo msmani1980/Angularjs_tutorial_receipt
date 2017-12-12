@@ -421,6 +421,14 @@ angular.module('ts5App', [
     templateUrl: 'views/menu-rule-create.html',
     controller: 'MenuRuleCreateCtrl',
     controllerAs: 'menuRuleCreate'
+  }).when('/survey', {
+    templateUrl: 'views/survey.html',
+    controller: 'SurveyCtrl',
+    controllerAs: 'survey'
+  }).when('/survey/:action/:id?', {
+    templateUrl: 'views/survey-create.html',
+    controller: 'SurveyCreateCtrl',
+    controllerAs: 'surveyCreate'
   }).otherwise({
     redirectTo: '/'
   });
