@@ -12,7 +12,8 @@ angular.module('ts5App')
     // AngularJS will instantiate a singleton by calling "new" on this function
     var surveyRequestURL = ENV.apiUrl + '/rsvr/api/survey/:surId';
     var surveyTypeRequestURL = ENV.apiUrl + '/rsvr/api/records/survey-types';
-    
+    var surveyQuestionURL = ENV.apiUrl + '/rsvr/api/survey/question';
+
     var surveyActions = {
       getSurveys: {
         method: 'GET'
@@ -20,6 +21,9 @@ angular.module('ts5App')
       getSurveyTypes: {
         method: 'GET',
         isArray: true
+      },
+      getSurveyQuestions: {
+        method: 'GET'
       },
       getSurveyById: {
         method: 'GET',
@@ -41,7 +45,8 @@ angular.module('ts5App')
     
     var surveyRequestResource = $resource(surveyRequestURL, null, surveyActions);
     var surveyTypeRequestResource = $resource(surveyTypeRequestURL, null, surveyActions);
-    
+    var surveyQuestionResource = $resource(surveyQuestionURL, null, surveyActions);
+
     var getSurveys = function (payload, additionalPayload) {
       if (additionalPayload) {
         angular.extend(payload, additionalPayload);
@@ -50,42 +55,41 @@ angular.module('ts5App')
       return surveyRequestResource.getSurveys(payload).$promise;
     };
     
+    var getSurveyQuestions = function (payload) {
+
+      return surveyQuestionResource.getSurveyQuestions(payload).$promise;
+    };
+
     var getSurveyTypes = function () {
       var payload = {};
 
       return surveyTypeRequestResource.getSurveyTypes(payload).$promise;
     };
 
-    var getSurveyById = function (companyId, surveyId) {
+    var getSurveyById = function (surveyId) {
       var requestParameters = {
-        companyId: companyId,
         surId: surveyId
       };
 
       return surveyRequestResource.getSurveyById(requestParameters, surveyId).$promise;
     };
 
-    var createSurvey = function (companyId, payload) {
-      var requestParameters = {
-        id: companyId
-      };
+    var createSurvey = function (payload) {
 
-      return surveyRequestResource.createSurvey(requestParameters, payload).$promise;
+      return surveyRequestResource.createSurvey(payload).$promise;
     };
 
-    var updateSurvey = function (companyId, surveyId, payload) {
+    var updateSurvey = function (surveyId, payload) {
       var requestParameters = {
-        id: companyId,
         surId: surveyId
       };
 
       return surveyRequestResource.updateSurvey(requestParameters, payload).$promise;
     };
 
-    var deleteSurvey = function (companyId, surveyId) {
+    var deleteSurvey = function (surveyId) {
       var payload = {
-        id: companyId,
-        surId: surveyId
+        surId: surveyId 
       };
 
       return surveyRequestResource.deleteSurvey(payload).$promise;
@@ -94,6 +98,7 @@ angular.module('ts5App')
     return {
       getSurveys: getSurveys,
       getSurveyTypes: getSurveyTypes,
+      getSurveyQuestions: getSurveyQuestions,
       getSurveyById: getSurveyById,
       createSurvey: createSurvey,
       updateSurvey: updateSurvey,

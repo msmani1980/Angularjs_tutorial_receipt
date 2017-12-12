@@ -46,11 +46,11 @@
 			<div class="col-xs-12 col-sm-6 col-md-4">
 				<div class="form-group">
 					<label for="surveyType">Survey Type</label>
-					<select ng-model="search.surveyTypeId" class="form-control" id="surveyTypeId">
-	                  <option value="{{surveyType.id}}"
-	                          ng-repeat="surveyType in surveyTypes | unique: 'surveyTypeId'">{{ surveyType.surveyTypeName }}
-	                  </option>
-                	</select>
+					<select name="surveyType" id="surveyTypeId" class="form-control"
+                      ng-options="surveyType.id as surveyType.surveyTypeName for surveyType in surveyTypes"
+                      ng-model="search.surveyTypeId">
+                		<option value="">Please Select Survey Type</option>
+              		</select>
 				</div>
 			</div>
 		  </div>

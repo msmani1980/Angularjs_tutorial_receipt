@@ -104,6 +104,11 @@ angular.module('ts5App')
       messageService.display(className, message, type);
     };
 
+    $scope.redirectToSurvey = function(id, state) {
+      $location.search({});
+      $location.path('survey/' + state + '/' + id).search();
+    };
+
     this.deleteSuccess = function() {
       $this.hideLoadingModal();
       $this.showToastMessage('success', 'Survey', 'Survey successfully deleted');
@@ -119,6 +124,18 @@ angular.module('ts5App')
     this.deleteFailure = function() {
       $this.hideLoadingModal();  
       $this.showToastMessage('danger', 'Survey', 'Survey could not be deleted');
+    };
+
+    $scope.isSurveyEditable = function(survey) {
+      if (angular.isUndefined(survey)) {
+        return false;
+      }
+
+      return dateUtility.isAfterOrEqualDatePicker(survey.endDate, dateUtility.nowFormattedDatePicker());
+    };
+
+    $scope.showDeleteButton = function(dateString) {
+      return dateUtility.isAfterTodayDatePicker(dateString);
     };
 
     $scope.removeRecord = function (survey) {

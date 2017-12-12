@@ -1,0 +1,134 @@
+<div class="module-container">
+	<div class="edit-controls">
+	    <div class="row">
+	      <div class="col-xs-6">
+	        <h2 class="view-name">{{viewName}}</h2>
+	      </div>
+	      <div class="col-xs-6 text-right">
+	        <a class="btn btn-default" ng-href="#/survey" class="btn" ng-show="readOnly">Back</a>
+	      </div>
+		</div>
+		<error-dialog form-object="surveyDataForm" error-response="errorResponse" display="displayError">
+		</error-dialog>
+		<!-- Started Modify-->
+		<form name="surveyDataForm">
+			<div class="panel panel-default">
+			  <div class="panel-body">
+					<div class="row">
+					   <div class="col-xs-12 col-sm-4">
+							<div class="form-group">
+								<label for="survey-name">Survey Name*</label>
+								<input ng-model="survey.surveyName" type="text" ng-disabled="isDisabled()"
+									class="form-control" id="surveyName" name="surveyName" required
+									maxlength="25" placeholder="Survey Name">
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-4">
+							<div class="form-group">
+								<date-picker-field
+									form="surveyDataForm" name="EffectiveStartDate"
+									label="Effective Start Date"
+									disable="isDisabled()"
+									required="true"
+									end-current-effective="!viewEditItem"
+									ng-model="survey.startDate">
+								</date-picker-field>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-4">
+							<div class="form-group">
+								<date-picker-field
+									form="surveyDataForm"
+									name="EffectiveEndDate"
+									label="Effective End Date"
+									disable="readOnly || shouldDisableEndDate"
+									ng-model="survey.endDate"
+									end-current-effective="!viewEditItem"
+									custom-effective="true"
+									custom-date="survey.endDate"
+									required="true">
+								</date-picker-field>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+					   <div class="col-xs-12 col-sm-4">
+							<div class="form-group">
+								<label for="surveyType">Survey Type</label>
+								<select required name="surveyType" id="surveyTypeId" class="form-control" ng-disabled="isDisabled()"
+										ng-options="surveyType.id as surveyType.surveyTypeName for surveyType in surveyTypes"
+										ng-model="survey.surveyTypeId">
+									<option value="">Select Survey Type...</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+					<h4>Add Survey Question
+					  <button type="button" class="btn btn-primary btn-xs pull-right" ng-hide="isDisabled()" ng-click="addSurveyQuestionRow()">
+						<i class="fa fa-plus"></i> Add Question
+					  </button>
+					</h4>
+				</div>
+				<div class="table-responsive">
+				  <table class="table table-bordered table-hover ng-scope">
+					<thead>
+					<tr>
+					  <th class="col-xs-1" ng-hide="isDisabled()" style="text-align:center;">Reorder</th>
+					  <th class="col-xs-8">Survey Question</th>
+					  <th class="col-xs-2">Hide on ePOS?</th>
+					  <th class="col-xs-1" ng-hide="isDisabled()">Actions</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-init="item.sortOrderIndex=$index"
+						ng-repeat="item in surveyQuestionItemList | orderBy:'sortOrder' track by $index">
+					  <td ng-if="!isDisabled()"
+						  on-drop-success="dropSuccess($event, $index, surveyQuestionList)"
+						  drag="item"
+						  drag-channel="A" drop-channel="A"
+						  ui-on-Drop="onDrop($event, $data, $index)"
+						  style="text-align:center; cursor: pointer;">
+						<span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
+					  </td>
+					  <td>
+						<select required name="surveyQuestion[item.surveyIndex]" id="surveyQuestionId[item.surveyIndex]" class="form-control"
+							ng-options="surveyQuestion.id as surveyQuestion.questionName for surveyQuestion in surveyQuestionList"
+							ng-model="item.surveyQuestionId" ng-disabled="isDisabled()">
+							<option value="">Select Survey Question...</option>
+						</select>
+					  </td>
+					  <td>
+						<input type="checkbox"
+	                         id="hideOnEPOS[item.surveyIndex]" ng-disabled="isDisabled()"
+	                         ng-model="item.hideOnEpos">
+					  </td>
+					  <td ng-hide="isDisabled()">
+						<button class="btn btn-danger btn-xs" ng-click="removeItem(item.surveyIndex)">
+						  <i class="fa fa-trash"></i>
+						</button>
+					  </td>
+					</tr>
+					</tbody>
+				  </table>
+				 </div>		
+				 <div class="panel-footer text-right">
+					<a href="#/survey" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+					<button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+						<span class="fa fa-check-square-o" aria-hidden="true"></span> <span
+							class="hidden-xs">Save</span>
+					</button>
+				 </div>
+		</form>
+	</div>
+</div>	
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Survey Management"></dynamic-left-nav>

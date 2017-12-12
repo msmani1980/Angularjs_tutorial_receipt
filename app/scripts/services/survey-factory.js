@@ -21,26 +21,31 @@ angular.module('ts5App')
     var getSurveyTypes = function () {
       return surveyService.getSurveyTypes();
     };
+  
+    var getSurveyQuestions = function (payload) {
+      return surveyService.getSurveyQuestions(payload);
+    };
     
-    var getSurvey = function(employeeId) {
-      return surveyService.getSurveyById(getCompanyId(), employeeId);
+    var getSurvey = function(surveyId) {
+      return surveyService.getSurveyById(surveyId);
     };
     
     var createSurvey = function (payload) {
-      return surveyService.createSurvey(getCompanyId(), payload);
+      return surveyService.createSurvey(payload);
     };
     
     var updateSurvey = function (payload) {
-      return surveyService.updateSurvey(getCompanyId(), payload.id, payload);
+      return surveyService.updateSurvey(payload.id, payload);
     };
     
-    var deleteSurvey = function (employeeId) {
-      return surveyService.deleteSurvey(getCompanyId(), employeeId);
+    var deleteSurvey = function (surveyId) {
+      return surveyService.deleteSurvey(surveyId);
     };
     
     return {
       getSurveys: getSurveys,
       getSurveyTypes: getSurveyTypes,
+      getSurveyQuestions: getSurveyQuestions,
       getSurvey: getSurvey,
       createSurvey: createSurvey,
       updateSurvey: updateSurvey,
