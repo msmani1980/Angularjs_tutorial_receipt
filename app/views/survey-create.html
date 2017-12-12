@@ -71,8 +71,8 @@
 					  </button>
 					</h4>
 				</div>
-				<div class="table-responsive">
-				  <table class="table table-bordered table-hover ng-scope">
+				<div class="table">
+				  <table class="table table-bordered table-hover">
 					<thead>
 					<tr>
 					  <th class="col-xs-1" ng-hide="isDisabled()" style="text-align:center;">Reorder</th>
@@ -85,8 +85,8 @@
 					<tr ng-init="item.sortOrderIndex=$index"
 						ng-repeat="item in surveyQuestionItemList | orderBy:'sortOrder' track by $index">
 					  <td ng-if="!isDisabled()"
-						  on-drop-success="dropSuccess($event, $index, surveyQuestionList)"
-						  drag="item"
+						  on-drop-success="dropSuccess($event, $index, surveyQuestionItemList)"
+						  ui-draggable="!isDisabled()" drag="item"
 						  drag-channel="A" drop-channel="A"
 						  ui-on-Drop="onDrop($event, $data, $index)"
 						  style="text-align:center; cursor: pointer;">
