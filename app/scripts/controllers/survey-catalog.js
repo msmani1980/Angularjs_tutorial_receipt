@@ -43,7 +43,7 @@ angular.module('ts5App')
 
     this.getSurveyCatalogsSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
-      $scope.surveyCatalogs = $scope.surveyCatalogs.concat(response.surveyCatalogs.map(function (surveyCatalog) {
+      $scope.surveyCatalogs = $scope.surveyCatalogs.concat(response.response.map(function (surveyCatalog) {
         surveyCatalog.startDate = dateUtility.formatDateForApp(surveyCatalog.startDate);
         surveyCatalog.endDate = dateUtility.formatDateForApp(surveyCatalog.endDate);
 
@@ -134,11 +134,11 @@ angular.module('ts5App')
       return dateUtility.isAfterTodayDatePicker(dateString);
     };
 
-    $scope.removeRecord = function (survey) {
+    $scope.removeRecord = function (surveyCatalog) {
 
       $this.displayLoadingModal('Removing Survey Catalog Record');
 
-      surveyCatalogFactory.deleteSurvey(survey.id).then(
+      surveyCatalogFactory.deleteSurveyCatalog(surveyCatalog.id).then(
         $this.deleteSuccess,
         $this.deleteFailure
       );

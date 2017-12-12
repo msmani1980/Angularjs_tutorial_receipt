@@ -421,6 +421,10 @@ angular.module('ts5App', [
     templateUrl: 'views/survey-create.html',
     controller: 'SurveyCreateCtrl',
     controllerAs: 'surveyCreate'
+  }).when('/survey-catalog', {
+    templateUrl: 'views/survey-catalog.html',
+    controller: 'SurveyCatalogCtrl',
+    controllerAs: 'surveyCatalog'
   }).otherwise({
     redirectTo: '/'
   });
