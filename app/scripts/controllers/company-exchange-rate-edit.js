@@ -74,8 +74,7 @@ angular.module('ts5App')
     this.getDetailedCompanyCurrenciesForCreation = function() {
       var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
       var payload = {
-        startDate: nowDate,
-        endDate: nowDate
+        startDate: nowDate
       };
 
       currencyFactory.getDetailedCompanyCurrencies(payload).then(function(companyCurrencyListFromAPI) {
