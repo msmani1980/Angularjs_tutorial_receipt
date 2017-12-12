@@ -8,10 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('SurveyQuestionsCreateCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('SurveyQuestionsCreateCtrl', function ($scope) {
+    $scope.isLoadingCompleted = true;
+    $scope.viewName = 'Create Survey Question'
   });
