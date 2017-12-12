@@ -448,6 +448,23 @@ angular.module('ts5App')
           role: 'RELATEESC'
         }]
       }, {
+        title: 'Survey Management',
+        menuItems: [{
+          name: 'Survey',
+          route: '/#/survey',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSurvey',
+          package: 'SURVEY',
+          role: 'SURVEY'
+        }, {
+          name: 'Create Survey',
+          route: '/#/survey/create',
+          icon: 'icon-create-menu',
+          className: 'dashboard-createSurvey',
+          package: 'SURVEY',
+          role: 'SURVEY'
+        }]
+      }, {
         title: 'Cash Management',
         menuItems: [{
           name: 'Daily Exchange Rate',
