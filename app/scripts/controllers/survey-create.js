@@ -23,6 +23,8 @@ angular.module('ts5App')
     $scope.disablePastDate = false;
     $scope.shouldDisableEndDate = false;
     $scope.surveyQuestionItemList = [];
+    var draggedQuestionItemObject;
+    var draggedOntoIemIndex;
 
     this.createInit = function() {
       $scope.readOnly = false;
@@ -209,10 +211,12 @@ angular.module('ts5App')
     this.deSerializeSurveyQuestions = function(questionsList) {
       $scope.surveyQuestionItemList = [];
 
-      angular.forEach(questionsList, function (item) {
+      angular.forEach(questionsList, function (item, index) {
         var newItem = {
           id: item.id,
           surveyQuestionId: item.surveyQuestionId,
+          surveyIndex: index,
+          selectedItem: item,
           hideOnEpos: item.hideOnEpos,
           sortOrder: item.sortOrder
         };
@@ -220,6 +224,30 @@ angular.module('ts5App')
       });
 
       $scope.surveyQuestionItemList = $filter('orderBy')($scope.surveyQuestionItemList, 'sortOrder');
+    };
+
+    $scope.dropSuccess = function ($event, index, array) {
+      if (draggedOntoIemIndex !== null && draggedQuestionItemObject !== null)
+      {
+        var tempItemObject = array[draggedOntoIemIndex];
+        array.splice(draggedOntoIemIndex, 1, draggedQuestionItemObject);
+        array.splice(index, 1, tempItemObject);
+        draggedQuestionItemObject = null;
+        for (var i = 0; i < array.length; i++)
+        {
+          array[i].sortOrderIndex = i;
+          array[i].sortOrder = i;
+        }
+      } else {
+        draggedQuestionItemObject = null;
+        draggedOntoIemIndex = null;
+        messageService.display('warning', 'Please drag and drop only inside the Add Questions list', 'Drag to reorder');
+      }
+    };
+
+    $scope.onDrop = function ($event, $data, index) {
+      draggedOntoIemIndex = index;
+      draggedQuestionItemObject = $data;
     };
 
     this.getSurveySuccess = function(response) {
