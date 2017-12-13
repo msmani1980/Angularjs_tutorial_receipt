@@ -64,11 +64,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="panel-body">
+				<div class="breadcrumb">
 					<h4>Add Survey Question
-					  <button type="button" class="btn btn-primary btn-xs pull-right" ng-hide="isDisabled()" ng-click="addSurveyQuestionRow()">
-						<i class="fa fa-plus"></i> Add Question
-					  </button>
+						<button type="button" class="btn btn-primary btn-xs pull-right" ng-hide="isDisabled()" ng-click="addSurveyQuestionRow()">
+							<i class="fa fa-plus"></i> Add Question
+						</button>
 					</h4>
 				</div>
 				<div class="table">
@@ -76,9 +76,9 @@
 					<thead>
 					<tr>
 					  <th class="col-xs-1" ng-hide="isDisabled()" style="text-align:center;">Reorder</th>
-					  <th class="col-xs-8">Survey Question</th>
-					  <th class="col-xs-2">Hide on ePOS?</th>
-					  <th class="col-xs-1" ng-hide="isDisabled()">Actions</th>
+					  <th class="col-xs-8" style="text-align:center;">Survey Question</th>
+					  <th class="col-xs-2" style="text-align:center;">Hide on ePOS?</th>
+					  <th class="col-xs-1" ng-hide="isDisabled()" style="text-align:center;">Actions</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -99,12 +99,12 @@
 							<option value="">Select Survey Question...</option>
 						</select>
 					  </td>
-					  <td>
-						<input type="checkbox"
+					  <td style="text-align:center;">
+						<input type="checkbox" 
 	                         id="hideOnEPOS[item.surveyIndex]" ng-disabled="isDisabled()"
 	                         ng-model="item.hideOnEpos">
 					  </td>
-					  <td ng-hide="isDisabled()">
+					  <td ng-hide="isDisabled()" style="text-align:center;">
 						<button class="btn btn-danger btn-xs" ng-click="removeItem(item.surveyIndex)">
 						  <i class="fa fa-trash"></i>
 						</button>
