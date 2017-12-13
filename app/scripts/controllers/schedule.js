@@ -223,8 +223,9 @@ angular.module('ts5App')
       var startDate = dateUtility.formatDateForApp(response.startDate);
       var endDate = dateUtility.formatDateForApp(response.endDate);
 
-      $scope.shouldDisableStartDate = !(dateUtility.isAfterTodayDatePicker(startDate));
-      $scope.shouldDisableEndDate = !(dateUtility.isAfterTodayDatePicker(endDate));
+      $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
+      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
+
       $scope.calendarsReady = true;
 
       $scope.schedule = {

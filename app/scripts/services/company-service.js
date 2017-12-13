@@ -11,6 +11,8 @@
 angular.module('ts5App')
   .service('companyService', function($resource, ENV) {
     var requestURL = ENV.apiUrl + '/rsvr/api/companies/:id';
+    var imagesRequestURL = ENV.apiUrl + '/rsvr/api/companies/images/:id';
+
     var requestParameters = {
       id: '@id'
     };
@@ -34,6 +36,9 @@ angular.module('ts5App')
       getCompany: {
         method: 'GET'
       },
+      getCompanyImages: {
+        method: 'GET'
+      },
       createCompany: {
         method: 'POST'
       },
@@ -43,9 +48,14 @@ angular.module('ts5App')
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
+    var imagesRequestResource = $resource(imagesRequestURL, requestParameters, actions);
 
     var getCompanyList = function(payload) {
       return requestResource.getCompanyList(payload).$promise;
+    };
+
+    var getCompanyImages = function(payload) {
+      return imagesRequestResource.getCompanyImages(payload).$promise;
     };
 
     var getCompany = function(id) {
@@ -68,6 +78,7 @@ angular.module('ts5App')
       getCompanyList: getCompanyList,
       getCompany: getCompany,
       createCompany: createCompany,
-      updateCompany: updateCompany
+      updateCompany: updateCompany,
+      getCompanyImages: getCompanyImages
     };
   });

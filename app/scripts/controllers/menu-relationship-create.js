@@ -23,6 +23,7 @@ angular.module('ts5App')
     $scope.displayError = false;
 
     this.init = function() {
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
       this.checkIfViewOnly();
       if ($routeParams.id && !$scope.viewOnly) {
         this.setFormAsEdit();
@@ -33,6 +34,8 @@ angular.module('ts5App')
       } else {
         this.getRelationshipDependencies();
       }
+
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
     };
 
     this.getRelationshipDependencies = function() {

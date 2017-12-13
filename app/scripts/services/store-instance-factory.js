@@ -10,7 +10,7 @@
 angular.module('ts5App').service('storeInstanceFactory',
   function(storeInstanceService, catererStationService, schedulesService, carrierService, globalMenuService, menuMasterService,
            storesService, stationsService, itemsService, companyReasonCodesService, recordsService, storeInstanceValidationService,
-           featureThresholdsService, $q, lodash, dateUtility) {
+           featureThresholdsService, $q, lodash, dateUtility, companyPreferencesService) {
 
     function getCompanyId() {
       return globalMenuService.company.get();
@@ -110,6 +110,10 @@ angular.module('ts5App').service('storeInstanceFactory',
 
     function getCountTypes() {
       return recordsService.getCountTypes();
+    }
+    
+    function getCompanyPreferences(payload, companyId) {
+      return companyPreferencesService.getCompanyPreferences(payload, companyId);
     }
 
     function setCarrierInstanceAndInboundStation (responseCollection, storeDetailsToSet) {
@@ -282,6 +286,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreStatusList: getStoreStatusList,
       updateStoreInstanceStatus: updateStoreInstanceStatus,
       getReasonCodeList: getReasonCodeList,
+      getCompanyPreferences: getCompanyPreferences,
       getCountTypes: getCountTypes,
       validateStoreInstance: validateStoreInstance,
       updateStoreInstanceStatusForceReconcile: updateStoreInstanceStatusForceReconcile

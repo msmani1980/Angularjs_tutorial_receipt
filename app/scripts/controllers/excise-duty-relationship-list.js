@@ -230,7 +230,7 @@ angular.module('ts5App')
     };
 
     $scope.canEdit = function(record) {
-      return dateUtility.isAfterTodayDatePicker(record.endDate);
+      return dateUtility.isTodayDatePicker(record.endDate) || dateUtility.isAfterTodayDatePicker(record.endDate);
     };
 
     $scope.isSelectedToEdit = function(record) {
@@ -506,7 +506,7 @@ angular.module('ts5App')
       $scope.recordToEdit = {};
       $scope.inEditMode = false;
       $scope.inCreateMode = false;
-      $scope.minDate = dateUtility.tomorrowFormattedDatePicker();
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
     }
 
     function initWatchGroups() {

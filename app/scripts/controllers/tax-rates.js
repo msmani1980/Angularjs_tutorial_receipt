@@ -311,6 +311,7 @@ angular.module('ts5App')
       $this.createScopeVariables();
       $this.showLoadingModal('Loading data for Tax Management...');
       $this.makePromises();
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
     };
 
     this.init();
@@ -576,6 +577,10 @@ angular.module('ts5App')
 
     this.determineMinDate = function (date) {
       var diff = 1;
+      if (!dateUtility.isTodayDatePicker(date)) {
+        diff = 0;
+      }
+
       if (!dateUtility.isTomorrowOrLaterDatePicker(date)) {
         diff = dateUtility.diff(dateUtility.nowFormattedDatePicker(), date);
       }

@@ -175,7 +175,7 @@ angular.module('ts5App')
     };
 
     $scope.canEdit = function (exciseDuty) {
-      return dateUtility.isAfterTodayDatePicker(exciseDuty.endDate);
+      return dateUtility.isTodayDatePicker(exciseDuty.endDate) || dateUtility.isAfterTodayDatePicker(exciseDuty.endDate);
     };
 
     $scope.isSelectedToEdit = function (exciseDuty) {
@@ -300,7 +300,7 @@ angular.module('ts5App')
       $scope.search = null;
       $scope.recordToEdit = null;
       $scope.inEditMode = false;
-      $scope.minDate = dateUtility.tomorrowFormattedDatePicker();
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
       var companyId = globalMenuService.company.get();
       exciseDutyFactory.getCompanyData(companyId).then(callInitAPIs, showErrors);
     }

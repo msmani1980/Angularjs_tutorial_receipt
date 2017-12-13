@@ -255,7 +255,7 @@
                    class="form-control">
           </span>
           </td>
-          <td> 
+          <td>
             <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.startDate }}</span>
             <date-picker-field
               name="editStartDate"
@@ -270,7 +270,8 @@
             <span ng-hide="isSelectedToEdit(exciseDuty)">{{ exciseDuty.endDate }}</span>
             <date-picker-field
               name="editEndDate"
-              end-current-effective="isCurrentEffectiveDate(exciseDuty)"
+              custom-effective="true"
+              custom-date="recordToEdit.endDate"
               class="form-group"
               min-date="minDate"
               form="exciseDutyCreateForm"

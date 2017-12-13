@@ -112,7 +112,7 @@ angular.module('ts5App')
       };
       searchMenus();
     };
-    
+
     $scope.deleteSearchMenus = function() {
         $scope.menuList = [];
         $this.meta = {
@@ -182,6 +182,8 @@ angular.module('ts5App')
       if ($location.search().newMenuName) {
         showToast('success', 'Create Menu', 'successfully created menu');
       }
+
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
     }
 
     initializeList();

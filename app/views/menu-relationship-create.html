@@ -86,8 +86,16 @@
 
             <div class="col-xs-12 col-sm-6">
               <fieldset ng-disabled="viewOnly || isRelationshipInactive()">
-                <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate"
-                min-date="( editingRelationship ? '0d' : '+1d')" required="true" end-current-effective="editingRelationship"></date-picker-field>
+                <date-picker-field form="form" 
+                  label="Effective To" 
+                  name="EffectiveTo" 
+                  ng-model="formData.endDate"
+                  min-date="minDate" 
+                  custom-effective="true"
+                  custom-date="formData.endDate"
+                  required="true" 
+                  end-current-effective="editingRelationship">
+                </date-picker-field>
               </fieldset>
             </div>
 
