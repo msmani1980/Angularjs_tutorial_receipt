@@ -6,7 +6,6 @@
  * # ItemCreateCtrl
  * Controller of the ts5App
  */
-/*global $ */
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
     currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService) {
@@ -618,7 +617,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.findDefaultLanguage = function () {
-      return lodash.findWhere($scope.languages, { id: 1 });
+      return lodash.findWhere($scope.languages, { id: $scope.company.defaultEposLanguage });
     };
 
     this.setFormDataDefaultLanguage = function () {
@@ -633,7 +632,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       // Add other languages
       $scope.company.eposLanguages.forEach(function (languageId) {
-        if (languageId !== 1) {
+        if (languageId !== $scope.company.defaultEposLanguage) {
           $scope.companyEposLanguages.push(lodash.findWhere($scope.languages, { id: languageId }));
         }
       });

@@ -9,7 +9,6 @@
  */
 angular.module('ts5App')
   .service('mainMenuService', function () {
-    var emberURL = '/ember/#/';
 
     this.getMenu = function () {
       return [{
@@ -224,14 +223,14 @@ angular.module('ts5App')
           role: 'MENUASSIGNMENT'
         }, {
           name: 'Manage Rules',
-          route: emberURL + 'menu-rules',
+          route: '/#/menu-rules',
           icon: 'icon-manage-rules',
           className: 'dashboard-manageRules',
           package: 'MENUASSG',
           role: 'MENURULE'
         }, {
           name: 'Create Rule',
-          route: emberURL + 'menu-rules/create',
+          route: '/#/menu-rules/create',
           icon: 'icon-create-rules',
           className: 'dashboard-createRules',
           package: 'MENU',

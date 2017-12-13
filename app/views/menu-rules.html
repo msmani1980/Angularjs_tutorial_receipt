@@ -1,0 +1,235 @@
+<style>
+.close {
+    display:inline;
+}
+.ui-select-multiple input.ui-select-search { width:100% !important; cursor: pointer; }
+</style>
+<!-- This is the menu-rules view. -->
+<div class="module-container">
+  <div class="list-controls">
+    <h1>{{viewName}}</h1>
+	  <div class="row">
+        <div class="col-xs-12 text-left">
+        	<a href="#/menu-rules/create" class="btn btn-primary">+ <span class="hidden-xs">Create New</span></a>
+       
+       <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-xs">Search</span>
+        </button>
+        </div>
+  	</div>
+
+  <div class="panel panel-default no-transition" id="search-collapse">
+      <form name="menuRulesSearchForm">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="schedule-number">Number</label>
+                <input ng-model="search.scheduleNumber" type="text" class="form-control" id="schedule-number" placeholder="0001">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="days-of-operation">Days of Operation</label>
+                <ui-select id="days-of-operation" multiple ng-model="multiSelectedValues.daysOfOperation" theme="bootstrap">
+                  <ui-select-match placeholder="Select Days of Operations">{{ $item.name }}</ui-select-match>
+                  <ui-select-choices repeat="number in daysOfOperation | filter: $select.search ">
+                    {{ number.name }}
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+            
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="departure-station">Departure Station</label>
+                <ui-select id="departure-station" multiple ng-model="multiSelectedValues.depStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations..">{{ $item.code }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search | orderBy: 'code' | limitTo:50">
+                    {{ station.code }} ({{ station.name }})
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+            
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="arrival-station">Arrival Station</label>
+                <ui-select id="arrival-station" multiple ng-model="multiSelectedValues.arrStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations..">{{ $item.code }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search | orderBy: 'code' | limitTo:50">
+                    {{ station.code }} ({{ station.name }})
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="departure-time-from">Departure Time From</label>
+                <input ng-model="search.depTimeFrom" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="departure-time-from">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label for="departure-time-to">Departure Time To</label>
+                <input ng-model="search.depTimeTo" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="departure-time-to">
+              </div>
+            </div>
+            
+             <div class="col-xs-12 col-sm-5">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.startDate"
+                end-date-model="search.endDate"
+                label-from="Effective Date From"
+                label-to="Effective Date To"
+                is-search-field="true">
+              </date-picker>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button ng-disabled="!uiReady" ng-click="searchMenuRulesData()" class="btn btn-primary btn-search">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs btn-label">Search</span>
+          </button>
+        </div>
+      </form>
+    </div>
+    <br>
+    <div class="table-responsive">
+      <table infinite-scroll="loadMenuRulesData()" class="table table-bordered table-hover ng-scope" ng-show="menuRules.length > 0">
+        <thead>
+        <tr>
+          <th>
+            <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()">
+          </th>
+          <th>
+            <span ng-if="!allExpanded" class="fa fa-plus-square-o" ng-click="toggleAllAccordionView()"></span>
+            <span ng-if="allExpanded" class="fa fa-minus-square" ng-click="toggleAllAccordionView()"></span>
+          </th>
+          <th>R.A</th>
+          <th>Number</th>
+          <th>Days/Op.</th>
+          <th>Dep.St</th>
+          <th>Arr.St.</th>
+          <th>Carrier T.</th>
+          <th>Dep. Fr</th>
+          <th>Dep. To</th>
+          <th>Eff. From</th>
+          <th>Eff. To</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="menuRule in menuRules">
+        <tr class="ng-scope" >
+          <td>
+            <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="menuRule.selected" >
+          </td>
+          <td>
+            <span ng-if="!menuRule.isExpanded" class="fa fa-plus-square-o" ng-click="toggleAccordionView(menuRule)"></span>
+            <span ng-if="menuRule.isExpanded" class="fa fa-minus-square" ng-click="toggleAccordionView(menuRule)"></span>
+          </td>
+          <td>{{ menuRule.menuRuleCode }}</td>
+          <td>{{ menuRule.scheduleNumber }}</td>
+          <td>{{ menuRule.days }}</td>
+          <td>{{ menuRule.departureStationCode }}</td>
+          <td>{{ menuRule.arrivalStationCode }}</td>
+          <td>{{ menuRule.carrierTypeCode }}</td>
+          <td>{{ menuRule.departureTimeFrom }}</td>
+          <td>{{ menuRule.departureTimeTo }}</td>
+          <td>{{ menuRule.startDate }}</td>
+          <td>{{ menuRule.endDate }}</td>
+          <td>
+            <button class="btn btn-primary btn-xs" ng-click="redirectToMenuRules(menuRule.id, 'view')">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="redirectToMenuRules(menuRule.id, 'edit')"  ng-show="isCurrentEffectiveDate(menuRule) || isFutureEffectiveDate(menuRule)">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="showDeleteConfirmation(menuRule.id)" ng-show="isFutureEffectiveDate(menuRule)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr ng-show="menuRule.isExpanded">
+          <td colspan="20">
+            <div ng-repeat="cabinClass in menuRule.cabins" class="panel panel-default">
+              <div class="panel-heading">{{ cabinClass.companyCabinClass }}</div>
+              <div class="panel-body">
+                <table class="table table-bordered table-hover">
+                  <tbody>
+                    <tr>
+                      <th class="col-xs-2">Menu Codes</th>
+                      <td class="col-xs-10"><span ng-repeat="menu in cabinClass.menus">{{menu.menuCode}}{{$last ? '' : ', '}}</span></td>
+                    </tr>
+                    <tr>
+                      <th class="col-xs-2">Items</th>
+                      <td class="col-xs-10"><span ng-repeat="item in cabinClass.items">{{item.itemName}} ({{item.itemQty}}) {{$last ? '' : ', '}}</span></td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <alert ng-show="!loadingBarVisible && menuRules.length == 0 && isSearch" type="info">
+      <span class="fa fa-flag"></span> Your search returned no results.
+    </alert>
+    <alert ng-show="!isSearch" type="info">
+      <span class="fa fa-flag"></span> Click search to show the results.
+    </alert>
+    <p ng-if="menuRules.length > 0" class="record-count small text-center">Showing {{menuRules.length}} records</p>
+    <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+  </div>
+
+</div>
+
+<div class="modal fade delete-warning-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h3 class="modal-title">Are you sure?</h3>
+      </div>
+
+      <div class="modal-body">
+        <p>You are about to perform the following action: <strong>{{actionToExecute}}</strong></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="deleteMenuRule()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>
