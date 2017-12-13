@@ -463,6 +463,20 @@ angular.module('ts5App')
           className: 'dashboard-createSurvey',
           package: 'SURVEY',
           role: 'SURVEY'
+        },{
+          name: 'Survey Catalog',
+          route: '/#/survey-catalog',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSurveyCatalog',
+          package: 'SURVEY',
+          role: 'SURVEY'
+        }, {
+          name: 'Create Survey Catalog',
+          route: '/#/survey-catalog/create',
+          icon: 'icon-create-menu',
+          className: 'dashboard-createSurveyCatalog',
+          package: 'SURVEY',
+          role: 'SURVEY'
         }]
       }, {
         title: 'Cash Management',
