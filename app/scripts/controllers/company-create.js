@@ -255,6 +255,10 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       }
     };
 
+    $scope.checkIfItemIsActive = function(index) {
+      return dateUtility.isTodayOrEarlierDatePicker($scope.formData.images[index].startDate);
+    };
+
     $scope.getCompanyImages = function(companyId, companyCode) {
       imageLogoService.getImageLogo(companyId).then(function (data) {
        var tempArray = data.response;
