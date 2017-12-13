@@ -20,7 +20,7 @@
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
               <label for="question-name">Question Name *</label>
-              <input ng-model="formData.questionName" type="text" ng-disabled="isDisabled()"
+              <input ng-model="surveyQuestion.questionName" type="text" ng-disabled="isDisabled()"
                      class="form-control" id="question-name" name="questionName"
                      required custom-validity custom-pattern="alphanumeric"  maxlength="25" placeholder="Question Name">
             </div>
@@ -30,7 +30,7 @@
               <label for="choice-type">Choice Type *</label>
               <select class="form-control"
                       name="choiceType"
-                      ng-model="formData.questionType"
+                      ng-model="surveyQuestion.questionType"
                       ng-options="surveyChoiceType.id as (surveyChoiceType.name) for surveyChoiceType in surveyChoiceTypes"
                       ng-disabled="isDisabled()"
                       required="true"
@@ -50,7 +50,7 @@
                 disable="isDisabled()"
                 required="true"
                 end-current-effective="!viewEditItem"
-                ng-model="formData.startDate">
+                ng-model="surveyQuestion.startDate">
               </date-picker-field>
             </div>
           </div>
@@ -66,17 +66,18 @@
                 end-current-effective="!viewEditItem"
                 custom-effective="true"
                 min-date="minDate"
-                custom-date="formData.endDate"
+                custom-date="surveyQuestion.endDate"
                 required="true">
               </date-picker-field>
             </div>
           </div>
         </div>
+        <!--
         <div class="row">
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
               <label class="control-label">Question Text</label>
-              <textarea class="form-control" ng-model="formData.questionText" name="description" ng-pattern="regexp.sentence" required ng-disabled="isDisabled()" ></textarea>
+              <textarea class="form-control" ng-model="surveyQuestion.questionText" name="description" ng-pattern="regexp.sentence" required ng-disabled="isDisabled()" ></textarea>
             </div>
           </div>
           <div class="col-xs-12 col-sm-3">
@@ -84,7 +85,7 @@
               <label for="choice-type">Locale</label>
               <select class="form-control"
                       name="locale"
-                      ng-model="formData.questionType"
+                      ng-model="surveyQuestion.questionType"
                       ng-options="locale.id as (locale.code) for locale in locales"
                       ng-disabled="isDisabled()"
                       required="true"
@@ -99,12 +100,13 @@
             <div class="form-group">
               <input type="checkbox"
                      id="first-trip"
-                     ng-model="formData.emptyDefault"
+                     ng-model="surveyQuestion.emptyDefault"
                      ng-disabled="isDisabled()">
               <label for="first-trip">Empty default</label>
             </div>
           </div>
         </div>
+        -->
       </div>
     </div>
 

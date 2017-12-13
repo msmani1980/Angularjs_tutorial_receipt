@@ -8,16 +8,18 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('surveyChoicesFactory', function () {
-    // Service logic
-    // ...
+  .factory('surveyChoicesFactory', function (surveyChoicesService) {
+    this.getSurveyChoices = function (payload) {
+      return surveyChoicesService.getSurveyChoices(payload);
+    };
 
-    var meaningOfLife = 42;
+    this.removeSurveyQuestion = function (id) {
+      return surveyQuestionsService.removeSurveyQuestion(id);
+    };
 
-    // Public API here
     return {
-      someMethod: function () {
-        return meaningOfLife;
-      }
+      getSurveyChoices: this.getSurveyChoices,
+      getSurveyChoiceTypes: this.getSurveyChoiceTypes,
+      removeSurveyQuestion: this.removeSurveyQuestion
     };
   });
