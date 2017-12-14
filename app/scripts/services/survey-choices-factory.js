@@ -13,13 +13,12 @@ angular.module('ts5App')
       return surveyChoicesService.getSurveyChoices(payload);
     };
 
-    this.removeSurveyQuestion = function (id) {
-      return surveyQuestionsService.removeSurveyQuestion(id);
+    this.removeSurveyChoice = function (id) {
+      return surveyChoicesService.removeSurveyChoice(id);
     };
 
     return {
       getSurveyChoices: this.getSurveyChoices,
-      getSurveyChoiceTypes: this.getSurveyChoiceTypes,
-      removeSurveyQuestion: this.removeSurveyQuestion
+      removeSurveyChoice: this.removeSurveyChoice
     };
   });
