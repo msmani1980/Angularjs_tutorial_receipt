@@ -169,9 +169,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       if (defaultLanguage !== null && languages !== null && languages.length > 0) {
         for (var i = 0; i < languages.length; i++) {
           if (defaultLanguage !== languages[i]) {
-            additionalLanguages.push(languages[i]);              
+            additionalLanguages.push(languages[i]);
           }
-        }        
+        }
       } else {
         additionalLanguages = languages;
       }
@@ -221,12 +221,12 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         endDate: dateUtility.tomorrowFormattedDatePicker(),
         images: []
       };
-      
+
       $scope.languages = $this.removeDefaultLanguage($scope.formData.defaultLanguage, $scope.formData.languages);
       $scope.defaultLanguages = $this.removeAdditionalLanguage($scope.formData.languages);
 
       $scope.eposLanguages = $this.removeDefaultLanguage($scope.formData.defaultEposLanguage, $scope.formData.eposLanguages);
-      $scope.defaultEposLanguages = $this.removeAdditionalLanguage($scope.formData.eposLanguages);     
+      $scope.defaultEposLanguages = $this.removeAdditionalLanguage($scope.formData.eposLanguages);
       $scope.isCompanyRetail = ($scope.formData.companyTypeId === '1');
     };
 
@@ -281,6 +281,18 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       return dateUtility.isTodayOrEarlierDatePicker($scope.formData.images[index].startDate);
     };
 
+    $scope.passedEndDate = function(index) {
+      return dateUtility.isYesterdayOrEarlierDatePicker($scope.formData.images[index].endDate, dateUtility.tomorrowFormattedDatePicker());
+    };
+
+    $scope.deleteInactiveImages = function (imagesArray) {
+      for (var index in imagesArray) {
+        if ($scope.passedEndDate(index)) {
+          imagesArray.splice(index, 1);
+        }
+      }
+    };
+
     $scope.getCompanyImages = function(companyId, companyCode) {
       imageLogoService.getImageLogo(companyId).then(function (data) {
        var tempArray = data.response;
@@ -304,6 +316,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $scope.formData.images = [];
       if (companyCode === 6) {
         $scope.formData.images = $scope.receiptImageArray;
+        $scope.deleteInactiveImages($scope.formData.images);
       } else if (companyCode === 1) {
         $scope.formData.images = $scope.companyLogoArray;
       }
@@ -340,13 +353,13 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     this.removeDefaultLanguage = function(defLang, allLanguages) {
       var availableLanguages = [];
       angular.forEach($scope.allLanguages, function(language) {
-        var isLngExist = false;	
+        var isLngExist = false;
         for (var i = 0; i < allLanguages.length; i++) {
           if (parseInt(language.id) === parseInt(allLanguages[i].id)) {
-            isLngExist = true; 
+            isLngExist = true;
             break;
           }
-        }        
+        }
 
         if (!isLngExist && (defLang === null || !angular.isDefined(defLang) || parseInt(language.id) !== parseInt(defLang))) {
           var lng = {
@@ -365,14 +378,14 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     this.removeAdditionalLanguage = function(cmpLanguages) {
       var availableLanguages = [];
       angular.forEach($scope.allLanguages, function(language) {
-        var isLngExist = false;	
+        var isLngExist = false;
         if (cmpLanguages.length > 0) {
           for (var i = 0; i < cmpLanguages.length; i++) {
             if (parseInt(language.id) === parseInt(cmpLanguages[i].id)) {
               isLngExist = true;
               break;
             }
-          }        
+          }
         }
 
         if (!isLngExist) {
@@ -382,7 +395,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
             languageCode: language.languageCode
           };
 
-          availableLanguages.push(lng); 
+          availableLanguages.push(lng);
         }
       });
 
@@ -406,7 +419,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.onChangeEposDefaultLanguage  = function() {
       $scope.eposLanguages = $this.removeDefaultLanguage($scope.formData.defaultEposLanguage, $scope.formData.eposLanguages);
     };
-    
+
     this.setDependencies = function(response) {
       $scope.companyTypes = response[0];
       $scope.currencies = response[1].response;
