@@ -11,7 +11,7 @@
 		<error-dialog form-object="surveyCatalogDataForm" error-response="errorResponse" display="displayError">
 		</error-dialog>
 		<!-- Started Modify-->
-		<form name="surveyDataForm">
+		<form name="surveyCatalogDataForm">
 			<div class="panel panel-default">
 			  <div class="panel-body">
 					<div class="row">
@@ -31,7 +31,7 @@
 									disable="isDisabled()"
 									required="true"
 									end-current-effective="!viewEditItem"
-									ng-model="survey.startDate">
+									ng-model="surveyCatalog.startDate">
 								</date-picker-field>
 							</div>
 						</div>
@@ -42,10 +42,10 @@
 									name="EffectiveEndDate"
 									label="Effective End Date"
 									disable="readOnly || shouldDisableEndDate"
-									ng-model="survey.endDate"
+									ng-model="surveyCatalog.endDate"
 									end-current-effective="!viewEditItem"
 									custom-effective="true"
-									custom-date="survey.endDate"
+									custom-date="surveyCatalog.endDate"
 									required="true">
 								</date-picker-field>
 							</div>
@@ -54,7 +54,7 @@
 				</div>
 				<div class="breadcrumb">
 					<h4>Add Survey
-						<button type="button" class="btn btn-primary btn-xs pull-right" ng-hide="isDisabled()" ng-click="addSurveyCatalogRow()">
+						<button type="button" class="btn btn-primary btn-xs pull-right" ng-hide="isDisabled()" ng-click="addSurveyRow()">
 							<i class="fa fa-plus"></i> Add Survey
 						</button>
 					</h4>
@@ -80,9 +80,9 @@
 						<span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
 					  </td>
 					  <td>
-						<select required name="survey[item.surveyIndex]" id="survey[item.surveyIndex]" class="form-control"
-							ng-options="survey.id as survey.surveyName for survey in surveyItemList"
-							ng-model="item.surveyQuestionId" ng-disabled="isDisabled()">
+						<select required name="survey[{{item.surveyIndex}}]" id="survey[{{item.surveyIndex}}]" class="form-control"
+							ng-options="survey.id as survey.surveyName for survey in surveyList"
+							ng-model="item.surveyId" ng-disabled="isDisabled()">
 							<option value="">Select Survey Question...</option>
 						</select>
 					  </td>

@@ -12,7 +12,7 @@ angular.module('ts5App')
 
     var $this = this;
     $scope.viewName = 'Survey';
-    $scope.survey = {
+    $scope.surveyCatalog = {
       startDate: '',
       endDate: ''
     };
@@ -82,7 +82,7 @@ angular.module('ts5App')
 
     this.getSurveysSuccess = function(response) {
       $this.hideLoadingModal();
-      $scope.surveyList = angular.copy(response.response);
+      $scope.surveyList = angular.copy(response.surveys);
     };
 
     function getFilteredSurveys(startDate, endDate) {
@@ -107,7 +107,7 @@ angular.module('ts5App')
 
     $scope.$watchGroup(['surveyCatalog.startDate', 'surveyCatalog.endDate'], function () {
       if ($scope.surveyCatalog && $scope.surveyCatalog.startDate && $scope.surveyCatalog.endDate) {
-        getFilteredSurveys($scope.survey.startDate, $scope.survey.endDate);
+        getFilteredSurveys($scope.surveyCatalog.startDate, $scope.surveyCatalog.endDate);
       }
     });
 
@@ -121,7 +121,7 @@ angular.module('ts5App')
         }
 
         itemPayload.surveyId = item.surveyId;
-        itemPayload.orderBy = parseInt(item.sortOrder);
+        itemPayload.orderBy = parseInt(item.sortOrderIndex);
         resultArray.push(itemPayload);
       });
 
@@ -136,29 +136,29 @@ angular.module('ts5App')
       });
     };
 
-    this.createSurvey = function() {
+    this.createSurveyCatalog = function() {
       $this.showLoadingModal('Creating Survey Catalog Data');
 
       var payload = {
         companyId: surveyFactory.getCompanyId(),
         catalogName: $scope.surveyCatalog.catalogName,
-        startDate: dateUtility.formatDateForAPI($scope.survey.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.survey.endDate),
+        startDate: dateUtility.formatDateForAPI($scope.surveyCatalog.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.surveyCatalog.endDate),
         surveys: $this.formatSurveysForAPI()
       };
 
       surveyCatalogFactory.createSurveyCatalog(payload).then($this.saveFormSuccess, $this.saveFormFailure);
     };
 
-    this.editSurvey = function() {
+    this.editSurveyCatalog = function() {
       $this.showLoadingModal('Saving Survey Catalog Data');
 
       var payload = {
         id: $routeParams.id,
         companyId: surveyFactory.getCompanyId(),
         catalogName: $scope.surveyCatalog.catalogName,
-        startDate: dateUtility.formatDateForAPI($scope.survey.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.survey.endDate),
+        startDate: dateUtility.formatDateForAPI($scope.surveyCatalog.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.surveyCatalog.endDate),
         surveys: $this.formatSurveysForAPI()
       };
 
@@ -167,15 +167,15 @@ angular.module('ts5App')
 
     this.setMinDateValue = function () {
       if ($scope.viewEditItem) {
-        $scope.survey.startDate = $scope.viewStartDate;
-        $scope.survey.endDate = $scope.viewEndDate;
+        $scope.surveyCatalog.startDate = $scope.viewStartDate;
+        $scope.surveyCatalog.endDate = $scope.viewEndDate;
       }
 
     };
 
     $scope.formSave = function() {
       if ($this.validateForm()) {
-        var saveFunctionName = ($routeParams.action + 'Survey Catalog');
+        var saveFunctionName = ($routeParams.action + 'SurveyCatalog');
         if ($this[saveFunctionName]) {
           $this[saveFunctionName]();
         }
@@ -240,7 +240,7 @@ angular.module('ts5App')
       draggedSurveyItemObject = $data;
     };
 
-    this.getSurveySuccess = function(response) {
+    this.getSurveyCatalogSuccess = function(response) {
       $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
       $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
 
@@ -256,7 +256,7 @@ angular.module('ts5App')
       };
     };
 
-    this.initDependenciesSuccess = function() {
+    this.initDependencies = function() {
       if ($routeParams.id) {
         surveyFactory.getSurvey($routeParams.id).then($this.getSurveyCatalogSuccess);
       }
@@ -274,8 +274,7 @@ angular.module('ts5App')
     this.init = function() {
       $this.showLoadingModal('Loading Data');
       $scope.minDate = dateUtility.nowFormattedDatePicker();
-      var initPromises = $this.makeInitPromises();
-      $q.all(initPromises).then($this.initDependenciesSuccess);
+      $this.initDependencies();
     };
 
     this.init();
