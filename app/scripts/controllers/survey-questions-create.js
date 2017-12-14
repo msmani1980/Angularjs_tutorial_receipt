@@ -129,7 +129,7 @@ angular.module('ts5App')
       var payload = {
         companyId: surveyQuestionsFactory.getCompanyId(),
         questionName: $scope.surveyQuestion.questionName,
-        questionTypeId: $scope.surveyQuestion.questionTypeId,
+        questionType: $scope.surveyQuestion.questionTypeId,
         startDate: dateUtility.formatDateForAPI($scope.questionTypeId.startDate),
         endDate: dateUtility.formatDateForAPI($scope.questionTypeId.endDate),
         answers: $this.formatChoicesForAPI()
@@ -143,9 +143,9 @@ angular.module('ts5App')
 
       var payload = {
         id: $routeParams.id,
-        companyId: surveyQuestionsFactory.getCompanyId(), // TODO: add company id
+        companyId: surveyQuestionsFactory.getCompanyId(),
         questionName: $scope.surveyQuestion.questionName,
-        questionTypeId: $scope.surveyQuestion.questionTypeId,
+        questionType: $scope.surveyQuestion.questionTypeId,
         startDate: dateUtility.formatDateForAPI($scope.surveyQuestion.startDate),
         endDate: dateUtility.formatDateForAPI($scope.surveyQuestion.endDate),
         answers: $this.formatChoicesForAPI()

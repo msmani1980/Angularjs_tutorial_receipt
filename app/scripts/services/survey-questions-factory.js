@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('surveyQuestionsFactory', function (surveyQuestionsService) {
+  .factory('surveyQuestionsFactory', function (surveyQuestionsService, globalMenuService) {
     this.getSurveyQuestion = function (id) {
       return surveyQuestionsService.getSurveyQuestion(id);
     };
@@ -29,11 +29,16 @@ angular.module('ts5App')
       return surveyQuestionsService.removeSurveyQuestion(id);
     };
 
+    var getCompanyId = function () {
+      return globalMenuService.company.get();
+    };
+
     return {
       getSurveyQuestion: this.getSurveyQuestion,
       getSurveyQuestions: this.getSurveyQuestions,
       createSurveyQuestion: this.createSurveyQuestion,
       updateSurveyQuestion: this.updateSurveyQuestion,
-      removeSurveyQuestion: this.removeSurveyQuestion
+      removeSurveyQuestion: this.removeSurveyQuestion,
+      getCompanyId: this.getCompanyId
     };
   });
