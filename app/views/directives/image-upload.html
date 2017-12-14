@@ -25,9 +25,9 @@
     <b>Your file doesn't meet the requirements:</b>
     <br/>
     <i  ng-show="formData.companyTypeId === '1' && imageName+'.'+fileFormat !== rejFiles[0].name">Invalid image name, accepted name {{imageName}}.{{fileFormat}}, </i>
-    <i ng-show="rejFiles[0].size > 10000">max resolution: {{imageSize}} pixels.</i>
+    <i ng-show="rejFiles[0].size > 10000">Max resolution: {{imageSize}} pixels.<br/>Accepted image type: {{fileFormat}}.</i>
     <i ng-show="rejFiles[0].size < 10001">
-      '{{rejFiles[0].name}}' is invalid, or'{{rejFiles[0].type}}' is not an accepted file type, accepted image type: {{fileFormat}}.
+  '{{rejFiles[0].name}}' is invalid, or is not an accepted file type.<br/>Accepted image type: {{fileFormat}}.
     </i>
   </p>
 
