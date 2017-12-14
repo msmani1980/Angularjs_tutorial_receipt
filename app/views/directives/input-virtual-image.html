@@ -32,8 +32,12 @@
 
         <div class="col-xs-8 col-md-10">
 
-          <date-picker-field ng-if="minDate" min-date="$parent.minDate" disable="checkIfItemIsActive($parent.key)"
+          <date-picker-field ng-if="editingCompany"  custom-effective="true" disable="checkIfItemIsActive($parent.key)"
             form="form" name="imageEffectiveFrom" label="Effective From" required="true" ng-model="image.startDate">
+          </date-picker-field>
+
+          <date-picker-field ng-if="!editingCompany"  min-date="$parent.minDate" disable="checkIfItemIsActive($parent.key)"
+                             form="form" name="imageEffectiveFrom" label="Effective From" required="true" ng-model="image.startDate">
           </date-picker-field>
 
           <date-picker-field ng-if="minDate" min-date="$parent.minDate" end-current-effective="$parent.isDisabled()"
