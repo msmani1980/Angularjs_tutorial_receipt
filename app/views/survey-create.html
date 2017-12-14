@@ -93,7 +93,7 @@
 						<span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
 					  </td>
 					  <td>
-						<select required name="surveyQuestion[item.surveyIndex]" id="surveyQuestionId[item.surveyIndex]" class="form-control"
+						<select required name="surveyQuestion" id="surveyQuestionId[item.surveyIndex]" class="form-control"
 							ng-options="surveyQuestion.id as surveyQuestion.questionName for surveyQuestion in surveyQuestionList"
 							ng-model="item.surveyQuestionId" ng-disabled="isDisabled()">
 							<option value="">Select Survey Question...</option>
