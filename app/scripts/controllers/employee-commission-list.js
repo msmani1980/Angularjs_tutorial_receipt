@@ -76,7 +76,7 @@ angular.module('ts5App')
 
     function getSelectedPriceTypeObject(commissionObject) {
       if (commissionObject.priceTypeId === undefined) {
-        return {name:'-'};
+        return { name:'-' };
       }
 
       return getSelectedObjectFromArrayUsingId($scope.search.priceTypeList, commissionObject.priceTypeId);

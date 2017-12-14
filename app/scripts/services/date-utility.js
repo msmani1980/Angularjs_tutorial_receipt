@@ -157,6 +157,10 @@ angular.module('ts5App')
       return moment(baseDate, this.getDateFormatForApp()).isSameOrAfter(moment(dateToCompare, this.getDateFormatForApp()), 'day');
     };
 
+    this.isBeforeOrEqual = function (baseDate, dateToCompare) {
+      return moment(baseDate, this.getDateFormatForApp()).isSameOrBefore(moment(dateToCompare, this.getDateFormatForApp()), 'day');
+    };
+
     this.removeMilliseconds = function (date) {
       if (!date) {
         return;
