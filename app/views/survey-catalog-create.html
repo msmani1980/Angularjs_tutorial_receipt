@@ -69,8 +69,7 @@
 					</tr>
 					</thead>
 					<tbody>
-					<tr ng-init="item.sortOrderIndex=$index"
-						ng-repeat="item in surveyItemList | orderBy:'sortOrder' track by $index">
+					<tr ng-init="item.sortOrderIndex=$index" ng-repeat="item in surveyItemList | orderBy:'sortOrder' track by $index">
 					  <td ng-if="!isDisabled()"
 						  on-drop-success="dropSuccess($event, $index, surveyItemList)"
 						  ui-draggable="!isDisabled()" drag="item"
