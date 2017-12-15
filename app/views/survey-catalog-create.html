@@ -39,13 +39,14 @@
 							<div class="form-group">
 								<date-picker-field
 									form="surveyCatalogDataForm"
+                  min-date="minDate"
 									name="EffectiveEndDate"
 									label="Effective End Date"
 									disable="readOnly || shouldDisableEndDate"
 									ng-model="surveyCatalog.endDate"
 									end-current-effective="!viewEditItem"
-									custom-effective="true"
-									custom-date="surveyCatalog.endDate"
+                  custom-effective="true"
+                  custom-date="surveyCatalog.endDate"
 									required="true">
 								</date-picker-field>
 							</div>
