@@ -241,7 +241,7 @@ angular.module('ts5App')
       } else {
         draggedQuestionItemObject = null;
         draggedOntoIemIndex = null;
-        messageService.display('warning', 'Please drag and drop only inside the Add Questions list', 'Drag to reorder');
+        messageService.display('warning', 'Please drag and drop only inside the Add Survey Questions list', 'Drag to reorder');
       }
     };
 
