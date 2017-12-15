@@ -154,6 +154,9 @@
                     <div ng-bind-html="category.name | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
+                <input ng-model="selectedChoices[item.menuIndex]" type="text" ng-disabled="isDisabled()"
+                       class="form-control"  name="selectedChoices[item.menuIndex]"
+                       required custom-validity custom-pattern="alphanumeric"  maxlength="25" placeholder="Choice">
               </td>
               <td ng-show="isSurveyQuestionEditable()">
                 <button class="btn btn-danger btn-xs" ng-click="removeItem(item.menuIndex)">
