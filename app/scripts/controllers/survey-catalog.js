@@ -114,7 +114,7 @@ angular.module('ts5App')
         limit: 100,
         offset: 0
       };
-      $scope.loadSurveys();
+      $scope.loadSurveyCatalogs();
     };
 
     this.deleteFailure = function() {
