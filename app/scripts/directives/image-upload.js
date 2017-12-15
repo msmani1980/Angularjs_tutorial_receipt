@@ -57,6 +57,15 @@ angular.module('ts5App')
           startDate: $scope.formData.startDate,
           endDate: $scope.formData.endDate
         };
+
+        if (imageType === 'homeLogo') {
+          newImage = {
+            imageURL: tempImageURL,
+            startDate:  '1/1/2016',
+            endDate: '1/1/2016'
+          };
+        }
+
         $scope.formData.images.push(newImage);
       };
 
