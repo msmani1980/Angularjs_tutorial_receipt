@@ -102,7 +102,7 @@ angular.module('ts5App')
 
     $scope.redirectToSurveyCatalog = function(id, state) {
       $location.search({});
-      $location.path('survey/catalog/' + state + '/' + id).search();
+      $location.path('survey-catalog/' + state + '/' + id).search();
     };
 
     this.deleteSuccess = function() {

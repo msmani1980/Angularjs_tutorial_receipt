@@ -258,7 +258,7 @@ angular.module('ts5App')
 
     this.initDependencies = function() {
       if ($routeParams.id) {
-        surveyFactory.getSurvey($routeParams.id).then($this.getSurveyCatalogSuccess);
+        surveyCatalogFactory.getSurveyCatalog($routeParams.id).then($this.getSurveyCatalogSuccess);
       }
 
       $this.hideLoadingModal();
