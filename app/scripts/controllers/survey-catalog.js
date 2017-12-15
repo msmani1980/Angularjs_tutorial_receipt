@@ -144,18 +144,9 @@ angular.module('ts5App')
       );
     };
 
-    this.makeInitPromises = function() {
-      var promises = [
-        surveyCatalogFactory.getSurveyTypes().then($this.getSurveyTypesSuccess)
-      ];
-      return promises;
-    };
-
     this.init = function() {
-      var initDependencies = [];
-      $q.all(initDependencies).then(function() {
-        angular.element('#search-collapse').addClass('collapse');
-      });
+      $scope.searchSurveyCatalogData();
+      angular.element('#search-collapse').addClass('collapse');
     };
 
     this.init();
