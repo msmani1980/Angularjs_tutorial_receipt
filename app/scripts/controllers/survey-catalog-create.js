@@ -254,26 +254,30 @@ angular.module('ts5App')
         endDate: $scope.viewEndDate,
         surveys: $this.deSerializeSurveys(response.surveys)
       };
+
+      $this.setMinDateValue();
+
+      $this.hideLoadingModal();
     };
 
     this.initDependencies = function() {
-      if ($routeParams.id) {
-        surveyCatalogFactory.getSurveyCatalog($routeParams.id).then($this.getSurveyCatalogSuccess);
-      }
-
-      $this.hideLoadingModal();
+      $this.showLoadingModal('Loading Data');
 
       var initFunctionName = ($routeParams.action + 'Init');
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
 
-      $this.setMinDateValue();
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
+
+      if ($routeParams.id && $scope.viewEditItem) {
+        surveyCatalogFactory.getSurveyCatalog($routeParams.id).then($this.getSurveyCatalogSuccess);
+      } else {
+        $this.hideLoadingModal();
+      }
     };
 
     this.init = function() {
-      $this.showLoadingModal('Loading Data');
-      $scope.minDate = dateUtility.nowFormattedDatePicker();
       $this.initDependencies();
     };
 
