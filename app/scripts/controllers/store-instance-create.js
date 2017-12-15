@@ -498,7 +498,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
       payload.scheduleId = payload.scheduleId.id;
       payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
-      payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
+      if (!$this.isActionState('replenish')) {
+        payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
+      }  
 
       var actionSwitch = this.actionSwitch(action);
       switch (actionSwitch) {
@@ -1579,7 +1581,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.createInitPromises = function () {
       var promises = [
         $this.getCatererStationList(),
-        $this.getStoresList(),
         $this.getCarrierNumbers(),
         $this.getScheduleNumbers(),
         $this.getInstancesOnFloor()
@@ -1610,6 +1611,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('replenish')) {
         $scope.redispatchOrReplenishNew = true;
       } else {
+        promises.push($this.getStoresList());  
         promises.push($this.getMenuMasterList());
         promises.push($this.getMenuCatererList());
       } 
