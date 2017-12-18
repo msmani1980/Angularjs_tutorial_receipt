@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('SurveyQuestionsCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, surveyQuestionsFactory, surveyChoicesFactory, $filter) {
+  .controller('SurveyQuestionsCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, surveyQuestionsFactory, $filter) {
     var $this = this;
     var draggedChoicesObject;
     var draggedOntoChoicesIndex;
@@ -147,13 +147,14 @@ angular.module('ts5App')
 
       angular.forEach($scope.surveyChoices, function (choiceItem) {
         var itemPayload = {};
+
         if (choiceItem.id) {
           itemPayload.id = choiceItem.id;
         }
 
-        itemPayload.surveyQuestionId = choiceItem.surveyQuestionId;
-        itemPayload.hideOnEpos = choiceItem.hideOnEpos;
+        itemPayload.choiceName = choiceItem.choiceName;
         itemPayload.orderBy = parseInt(choiceItem.orderByIndex);
+
         questionsArray.push(itemPayload);
       });
 
@@ -188,15 +189,7 @@ angular.module('ts5App')
         answers: $this.formatChoicesForAPI()
       };
 
-      surveyQuestionsFactory.updateSurveyQuestion(payload).then($this.saveFormSuccess, $this.saveFormFailure);
-    };
-
-    this.setMinDateValue = function () {
-      if ($scope.viewEditItem) {
-        $scope.surveyQuestion.startDate = $scope.viewStartDate;
-        $scope.surveyQuestion.endDate = $scope.viewEndDate;
-      }
-
+      surveyQuestionsFactory.updateSurveyQuestion($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure);
     };
 
     this.makeInitPromises = function() {
@@ -232,20 +225,18 @@ angular.module('ts5App')
     };
 
     this.getSurveyQuestionSuccess = function(response) {
-      $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
-      $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
-
-      $scope.disablePastDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewStartDate);
-      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
+      $scope.disablePastDate = dateUtility.isYesterdayOrEarlierDatePicker(response.startDate);
+      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(response.endDate);
 
       $scope.surveyQuestion = {
         id: response.id,
         questionTypeId: response.questionType,
         questionName: $scope.questionName,
         startDate: dateUtility.formatDateForApp(response.startDate),
-        endDate: dateUtility.formatDateForApp(response.endDate),
-        surveyChoices: $this.deSerializeSurveyChoices(response.answers)
+        endDate: dateUtility.formatDateForApp(response.endDate)
       };
+
+      $this.deSerializeSurveyChoices(response.answers);
     };
 
     this.initDependenciesSuccess = function() {
@@ -259,8 +250,6 @@ angular.module('ts5App')
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
-
-      $this.setMinDateValue();
 
       $scope.isLoadingCompleted = true;
     };
