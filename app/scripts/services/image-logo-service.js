@@ -27,7 +27,7 @@ angular.module('ts5App')
     function getImageLogo(id) {
       requestParameters.id = id;
       return imageLogoActionsResource.getImageLogo(id).$promise;
-    };
+    }
 
     return {
       getImageLogo: getImageLogo
