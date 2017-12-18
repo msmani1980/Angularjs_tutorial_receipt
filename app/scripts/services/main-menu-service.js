@@ -463,7 +463,7 @@ angular.module('ts5App')
           className: 'dashboard-createSurvey',
           package: 'SURVEY',
           role: 'SURVEY'
-        },{
+        }, {
           name: 'Survey Catalog',
           route: '/#/survey-catalog',
           icon: 'icon-manage-menu',
