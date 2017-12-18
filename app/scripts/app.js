@@ -413,23 +413,43 @@ angular.module('ts5App', [
     templateUrl: 'views/menu-assignment-list.html',
     controller: 'MenuAssignmentListCtrl',
     controllerAs: 'menuAssignmentList'
-  })
-  .when('/survey/choices', {
+  }).when('/menu-rules', {
+    templateUrl: 'views/menu-rules.html',
+    controller: 'MenuRulesCtrl',
+    controllerAs: 'menuRules'
+  }).when('/menu-rules/:action/:id?', {
+    templateUrl: 'views/menu-rule-create.html',
+    controller: 'MenuRuleCreateCtrl',
+    controllerAs: 'menuRuleCreate'
+  }).when('/survey', {
+    templateUrl: 'views/survey.html',
+    controller: 'SurveyCtrl',
+    controllerAs: 'survey'
+  }).when('/survey/:action/:id?', {
+    templateUrl: 'views/survey-create.html',
+    controller: 'SurveyCreateCtrl',
+    controllerAs: 'surveyCreate'
+  }).when('/survey-catalog', {
+    templateUrl: 'views/survey-catalog.html',
+    controller: 'SurveyCatalogCtrl',
+    controllerAs: 'surveyCatalog'
+  }).when('/survey-catalog/:action/:id?', {
+    templateUrl: 'views/survey-catalog-create.html',
+    controller: 'SurveyCatalogCreateCtrl',
+    controllerAs: 'surveyCatalogCreate'
+  }).when('/survey/choices', {
     templateUrl: 'views/survey-choices-list.html',
     controller: 'SurveyChoicesListCtrl',
     controllerAs: 'surveyChoicesList'
-  })
-  .when('/survey/choices/:action/:id?', {
+  }).when('/survey/choices/:action/:id?', {
     templateUrl: 'views/survey-choices-create.html',
     controller: 'SurveyChoicesCreateCtrl',
     controllerAs: 'surveyChoicesCreate'
-  })
-  .when('/survey/questions', {
+  }).when('/survey/questions', {
     templateUrl: 'views/survey-questions-list.html',
     controller: 'SurveyQuestionsListCtrl',
     controllerAs: 'surveyQuestionsList'
-  })
-  .when('/survey/questions/:action/:id?', {
+  }).when('/survey/questions/:action/:id?', {
     templateUrl: 'views/survey-questions-create.html',
     controller: 'SurveyQuestionsCreateCtrl',
     controllerAs: 'surveyQuestionsCreate'

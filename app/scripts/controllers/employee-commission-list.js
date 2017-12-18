@@ -76,7 +76,7 @@ angular.module('ts5App')
 
     function getSelectedPriceTypeObject(commissionObject) {
       if (commissionObject.priceTypeId === undefined) {
-        return {name:'-'};
+        return { name:'-' };
       }
 
       return getSelectedObjectFromArrayUsingId($scope.search.priceTypeList, commissionObject.priceTypeId);
@@ -112,7 +112,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return dateUtility.isAfterTodayDatePicker(commission.endDate);
+      return dateUtility.isAfterTodayDatePicker(commission.endDate) || dateUtility.isTodayDatePicker(commission.endDate);
     };
 
     function showToastMessage(className, type, message) {

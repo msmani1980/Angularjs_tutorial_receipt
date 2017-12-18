@@ -9,7 +9,6 @@
  */
 angular.module('ts5App')
   .service('mainMenuService', function () {
-    var emberURL = '/ember/#/';
 
     this.getMenu = function () {
       return [{
@@ -224,14 +223,14 @@ angular.module('ts5App')
           role: 'MENUASSIGNMENT'
         }, {
           name: 'Manage Rules',
-          route: emberURL + 'menu-rules',
+          route: '/#/menu-rules',
           icon: 'icon-manage-rules',
           className: 'dashboard-manageRules',
           package: 'MENUASSG',
           role: 'MENURULE'
         }, {
           name: 'Create Rule',
-          route: emberURL + 'menu-rules/create',
+          route: '/#/menu-rules/create',
           icon: 'icon-create-rules',
           className: 'dashboard-createRules',
           package: 'MENU',
@@ -447,6 +446,37 @@ angular.module('ts5App')
           className: 'dashboard-manualECS',
           package: 'RECONCILIATION',
           role: 'RELATEESC'
+        }]
+      }, {
+        title: 'Survey Management',
+        menuItems: [{
+          name: 'Survey',
+          route: '/#/survey',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSurvey',
+          package: 'SURVEY',
+          role: 'SURVEY'
+        }, {
+          name: 'Create Survey',
+          route: '/#/survey/create',
+          icon: 'icon-create-menu',
+          className: 'dashboard-createSurvey',
+          package: 'SURVEY',
+          role: 'SURVEY'
+        }, {
+          name: 'Survey Catalog',
+          route: '/#/survey-catalog',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSurveyCatalog',
+          package: 'SURVEY',
+          role: 'SURVEY'
+        }, {
+          name: 'Create Survey Catalog',
+          route: '/#/survey-catalog/create',
+          icon: 'icon-create-menu',
+          className: 'dashboard-createSurveyCatalog',
+          package: 'SURVEY',
+          role: 'SURVEY'
         }]
       }, {
         title: 'Cash Management',

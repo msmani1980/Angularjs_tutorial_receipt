@@ -199,7 +199,13 @@ angular.module('ts5App')
     };
 
     function setFilteredItemsCollection(dataFromAPI, menuIndex) {
-      $scope.filteredItemsCollection[menuIndex] = angular.copy(dataFromAPI.masterItems);
+      $scope.selectedCategoryItems = dataFromAPI.masterItems;
+      var selectedItemIds = getAllSelectedItemIds();
+      angular.forEach($scope.selectedCategoryItems, function (selectedCategoryItem) {
+        selectedCategoryItem.selected = selectedItemIds.indexOf(selectedCategoryItem.id) >= 0;
+      });
+        
+      $scope.filteredItemsCollection[menuIndex] = angular.copy($scope.selectedCategoryItems);
       if (!$scope.menuItemList[menuIndex].selectedItem) {
         return;
       }
@@ -331,7 +337,7 @@ angular.module('ts5App')
 
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
     $scope.dropSuccess = function ($event, index, array) {
-      if (draggedOntoIemIndex != null && draggedMenuItemObject != null)
+      if (draggedOntoIemIndex !== null && draggedMenuItemObject !== null)
       {
         var tempItemObject = array[draggedOntoIemIndex];
         array.splice(draggedOntoIemIndex, 1, draggedMenuItemObject);

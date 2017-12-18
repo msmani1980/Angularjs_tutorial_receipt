@@ -51,7 +51,8 @@
       "itemVersionId": 371,
       "itemStartDate": "2015-05-06",
       "itemEndDate": "2018-12-31",
-      "itemTypeId": 1
+      "itemTypeId": 1,
+      "salesCategoryName": "Test2"
     },
     {
       "id": 2,

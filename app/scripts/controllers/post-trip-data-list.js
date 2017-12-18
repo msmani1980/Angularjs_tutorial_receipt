@@ -185,11 +185,24 @@ angular.module('ts5App')
           search: $select.search
         };
 
+        employeeDates(payload, $scope.search);
+
         postTripFactory.getEmployees(companyId, payload).then($this.searchEmployeesSuccess);
       } else {
         $scope.employees = [];
       }
     };
+    
+    function employeeDates(payload, search) {
+      if (search.scheduleStartDate === undefined && search.scheduleEndDate === undefined) {
+        payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      } else if (search.scheduleStartDate === undefined || search.scheduleEndDate === undefined) {
+        payload.date = dateUtility.formatDateForAPI(search.scheduleStartDate === undefined ? search.scheduleEndDate : search.scheduleStartDate);
+      } else {
+        payload.startDate =  dateUtility.formatDateForAPI($scope.search.scheduleStartDate);
+        payload.endDate =  dateUtility.formatDateForAPI($scope.search.scheduleEndDate);
+      }
+    }
 
     $scope.clearSearchForm = function() {
       $scope.search = {};
