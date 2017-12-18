@@ -46,10 +46,9 @@
                 ng-if="isLoadingCompleted"
                 form="surveyQuestionDataForm"
                 name="EffectiveStartDate"
-                label="Effective Start Date"
+                label="Effective Start"
                 disable="isDisabled()"
                 required="true"
-                end-current-effective="!viewEditItem"
                 ng-model="surveyQuestion.startDate">
               </date-picker-field>
             </div>
@@ -60,16 +59,16 @@
                 ng-if="isLoadingCompleted"
                 form="surveyQuestionDataForm"
                 name="EffectiveEndDate"
-                label="Effective End Date"
+                label="Effective End"
                 disable="readOnly || shouldDisableEndDate"
                 ng-model="surveyQuestion.endDate"
                 end-current-effective="!viewEditItem"
                 custom-effective="true"
-                min-date="minDate"
                 custom-date="surveyQuestion.endDate"
                 required="true">
               </date-picker-field>
             </div>
+            {{viewEditItem}}
           </div>
         </div>
         <!--
@@ -124,7 +123,7 @@
             <tr>
               <th class="col-xs-1" ng-show="isSurveyQuestionEditable()" style="text-align:center;">Reorder</th>
               <th class="col-xs-5">Choice</th>
-              <th ng-hide="isSurveyQuestionReadOnly()" class="col-xs-1">Actions</th>
+              <th ng-hide="readOnly" class="col-xs-1">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -132,32 +131,35 @@
                 ng-init="item.orderByIndex=$index"
                 ng-repeat="item in surveyChoices | orderBy:'orderBy' track by $index">
                 <td ng-if="isSurveyQuestionEditable()"
-                    on-drop-success="dropSuccess($event, $index, menuItemList)"
+                    on-drop-success="dropSuccess($event, $index, surveyChoices)"
                     ui-draggable="isSurveyQuestionEditable()" drag="item"
                     drag-channel="A" drop-channel="A"
                     ui-on-Drop="onDrop($event, $data, $index)"
                     style="text-align:center; cursor: pointer;">
                   <span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
                 </td>
-                <td ng-if="isSurveyQuestionEditable()">
+                <td>
                   <input ng-model="item.choiceName" type="text" ng-disabled="isDisabled()"
-                         class="form-control"  name="selectedChoices[item.menuIndex]"
+                         class="form-control"  name="selectedChoices[{{$index + 1}}]"
                          required custom-validity custom-pattern="alphanumeric"  maxlength="25" placeholder="Choice">
                 </td>
                 <td ng-show="isSurveyQuestionEditable()">
-                  <button class="btn btn-danger btn-xs" ng-click="removeItem(item.menuIndex)">
+                  <button class="btn btn-danger btn-xs" ng-click="removeItem($index)">
                     <i class="fa fa-trash"></i>
                   </button>
                 </td>
               </tr>
+              <tr ng-if="surveyChoices.length === 0">
+                <td colspan="{{isSurveyQuestionEditable() ? 3 : 1}}">No choices added yet.</td>
+              </tr>
             </tbody>
           </table>
-          {{surveyChoices}} {{isSurveyQuestionEditable()}} {{surveyQuestion}} {{isLoadingCompleted}}
+          {{surveyQuestion}}
         </div>
       </div>
       <div class="panel-footer text-right">
         <a href="#/survey/questions" class="btn btn-default" ng-hide="readOnly">Cancel</a>
-        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly" ng-disabled="surveyChoices.length === 0">
           <span class="fa fa-check-square-o" aria-hidden="true"></span> <span
           class="hidden-xs">Save</span>
         </button>

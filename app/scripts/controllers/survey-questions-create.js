@@ -24,6 +24,7 @@ angular.module('ts5App')
       { id: 1, name: 'Single Choice' },
       { id: 2, name: 'Multi Choice' }
     ];
+    $scope.surveyQuestion = {};
     $scope.surveyChoices = [];
 
     $scope.addSurveyChoiceRow = function () {
@@ -133,7 +134,7 @@ angular.module('ts5App')
         $this.showToastMessage('success', 'Edit Survey Question', 'success');
       }
 
-      $location.path('survey');
+      $location.path('survey/questions');
     };
 
     this.saveFormFailure = function(dataFromAPI) {
@@ -231,7 +232,7 @@ angular.module('ts5App')
       $scope.surveyQuestion = {
         id: response.id,
         questionTypeId: response.questionType,
-        questionName: $scope.questionName,
+        questionName: response.questionName,
         startDate: dateUtility.formatDateForApp(response.startDate),
         endDate: dateUtility.formatDateForApp(response.endDate)
       };
