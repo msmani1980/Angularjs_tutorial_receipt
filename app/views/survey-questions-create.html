@@ -30,7 +30,7 @@
               <label for="choice-type">Choice Type *</label>
               <select class="form-control"
                       name="choiceType"
-                      ng-model="surveyQuestion.questionType"
+                      ng-model="surveyQuestion.questionTypeId"
                       ng-options="surveyChoiceType.id as (surveyChoiceType.name) for surveyChoiceType in surveyChoiceTypes"
                       ng-disabled="isDisabled()"
                       required="true"
@@ -62,7 +62,7 @@
                 name="EffectiveEndDate"
                 label="Effective End Date"
                 disable="readOnly || shouldDisableEndDate"
-                ng-model="employee.endDate"
+                ng-model="surveyQuestion.endDate"
                 end-current-effective="!viewEditItem"
                 custom-effective="true"
                 min-date="minDate"
@@ -129,7 +129,7 @@
             </thead>
             <tbody>
               <tr
-                ng-init="item.sortOrderIndex=$index"
+                ng-init="item.orderByIndex=$index"
                 ng-repeat="item in surveyChoices | orderBy:'orderBy' track by $index">
                 <td ng-if="isSurveyQuestionEditable()"
                     on-drop-success="dropSuccess($event, $index, menuItemList)"
@@ -140,7 +140,7 @@
                   <span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
                 </td>
                 <td ng-if="isSurveyQuestionEditable()">
-                  <input ng-model="item.choice" type="text" ng-disabled="isDisabled()"
+                  <input ng-model="item.choiceName" type="text" ng-disabled="isDisabled()"
                          class="form-control"  name="selectedChoices[item.menuIndex]"
                          required custom-validity custom-pattern="alphanumeric"  maxlength="25" placeholder="Choice">
                 </td>
@@ -152,7 +152,7 @@
               </tr>
             </tbody>
           </table>
-          {{surveyChoices}} {{isSurveyQuestionEditable()}}
+          {{surveyChoices}} {{isSurveyQuestionEditable()}} {{surveyQuestion}} {{isLoadingCompleted}}
         </div>
       </div>
       <div class="panel-footer text-right">
