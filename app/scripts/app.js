@@ -421,6 +421,10 @@ angular.module('ts5App', [
     templateUrl: 'views/menu-rule-create.html',
     controller: 'MenuRuleCreateCtrl',
     controllerAs: 'menuRuleCreate'
+  }).when('/epos-config', {
+    templateUrl: 'views/epos-config.html',
+    controller: 'EposConfigCtrl',
+    controllerAs: 'eposConfig'
   }).otherwise({
     redirectTo: '/'
   });
