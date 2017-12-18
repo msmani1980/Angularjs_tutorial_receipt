@@ -113,7 +113,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         Choices
-        <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addChoice()" ng-hide="readOnly">
+        <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addSurveyChoiceRow()" ng-hide="readOnly">
           <i class="fa fa-plus"></i> Add Choice
         </button>
       </div>
@@ -128,44 +128,31 @@
             </tr>
             </thead>
             <tbody>
-            <tr
-              ng-init="item.sortOrderIndex=$index"
-              ng-repeat="item in surveyChoices | orderBy:'sortOrder' track by $index">
-              <td ng-if="isMenuEditable()"
-                  on-drop-success="dropSuccess($event, $index, menuItemList)"
-                  ui-draggable="isSurveyQuestionEditable()" drag="item"
-                  drag-channel="A" drop-channel="A"
-                  ui-on-Drop="onDrop($event, $data, $index)"
-                  style="text-align:center; cursor: pointer;">
-                <span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
-              </td>
-              <td ng-if="isSurveyQuestionEditable()">
-                <ui-select
-                  name="selectedCategories[item.menuIndex]"
-                  ng-model="selectedCategories[item.menuIndex]"
-                  on-select="filterItemListByCategory(item.menuIndex)"
-                  theme="bootstrap"
-                  placeholder="Select a category to filter the items list...">
-                  <ui-select-match
-                    allow-clear="true"
-                    placeholder="Select a category to filter the items list...">{{$select.selected.name}}
-                  </ui-select-match>
-                  <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
-                    <div ng-bind-html="category.name | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
-                <input ng-model="selectedChoices[item.menuIndex]" type="text" ng-disabled="isDisabled()"
-                       class="form-control"  name="selectedChoices[item.menuIndex]"
-                       required custom-validity custom-pattern="alphanumeric"  maxlength="25" placeholder="Choice">
-              </td>
-              <td ng-show="isSurveyQuestionEditable()">
-                <button class="btn btn-danger btn-xs" ng-click="removeItem(item.menuIndex)">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
+              <tr
+                ng-init="item.sortOrderIndex=$index"
+                ng-repeat="item in surveyChoices | orderBy:'orderBy' track by $index">
+                <td ng-if="isSurveyQuestionEditable()"
+                    on-drop-success="dropSuccess($event, $index, menuItemList)"
+                    ui-draggable="isSurveyQuestionEditable()" drag="item"
+                    drag-channel="A" drop-channel="A"
+                    ui-on-Drop="onDrop($event, $data, $index)"
+                    style="text-align:center; cursor: pointer;">
+                  <span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
+                </td>
+                <td ng-if="isSurveyQuestionEditable()">
+                  <input ng-model="item.choice" type="text" ng-disabled="isDisabled()"
+                         class="form-control"  name="selectedChoices[item.menuIndex]"
+                         required custom-validity custom-pattern="alphanumeric"  maxlength="25" placeholder="Choice">
+                </td>
+                <td ng-show="isSurveyQuestionEditable()">
+                  <button class="btn btn-danger btn-xs" ng-click="removeItem(item.menuIndex)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
             </tbody>
           </table>
+          {{surveyChoices}} {{isSurveyQuestionEditable()}}
         </div>
       </div>
       <div class="panel-footer text-right">

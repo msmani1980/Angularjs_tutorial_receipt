@@ -29,7 +29,7 @@ angular.module('ts5App')
       return surveyQuestionsService.removeSurveyQuestion(id);
     };
 
-    var getCompanyId = function () {
+    this.getCompanyId = function () {
       return globalMenuService.company.get();
     };
 

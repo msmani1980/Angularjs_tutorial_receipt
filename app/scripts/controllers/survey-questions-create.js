@@ -18,11 +18,78 @@ angular.module('ts5App')
     $scope.shouldDisableEndDate = false;
     $scope.disablePastDate = false;
     $scope.shouldDisableEndDate = false;
+    $scope.displayError = false;
     $scope.surveyChoiceTypes = [
       { id: 0, name: 'Free Form' },
       { id: 1, name: 'Single Choice' },
       { id: 2, name: 'Multi Choice' }
     ];
+    $scope.surveyChoices = [];
+
+    $scope.addSurveyChoiceRow = function () {
+      var nextIndex = $scope.surveyChoices.length;
+      $scope.surveyChoices.push({ surveyIndex: nextIndex });
+    };
+
+    $scope.removeItem = function (itemIndex) {
+      $scope.surveyChoices.splice(itemIndex, 1);
+
+      angular.forEach($scope.surveyChoices, function (itemChoice, index) {
+        itemChoice.surveyChoiceIndex = index;
+      });
+
+    };
+
+    $scope.formSave = function() {
+      if ($this.validateForm()) {
+        var saveFunctionName = ($routeParams.action + 'Survey');
+        if ($this[saveFunctionName]) {
+          $this[saveFunctionName]();
+        }
+      } else {
+        $scope.displayError = true;
+      }
+    };
+
+    $scope.isDisabled = function() {
+      return $scope.disablePastDate || $scope.readOnly;
+    };
+
+    $scope.isSurveyQuestionEditable = function () {
+      if ($routeParams.action === 'create') {
+        return true;
+      }
+
+      if ($routeParams.action === 'view' || angular.isUndefined($scope.surveyQuestion)) {
+        return false;
+      }
+
+      return dateUtility.isAfterTodayDatePicker($scope.surveyQuestion.startDate);
+    };
+
+    $scope.dropSuccess = function ($event, index, array) {
+      if (draggedOntoChoicesIndex !== null && draggedChoicesObject !== null)
+      {
+        var tempItemObject = array[draggedOntoChoicesIndex];
+        array.splice(draggedOntoChoicesIndex, 1, draggedChoicesObject);
+        array.splice(index, 1, tempItemObject);
+        draggedChoicesObject = null;
+        for (var i = 0; i < array.length; i++)
+        {
+          array[i].orderByIndex = i;
+          array[i].orderBy = i;
+        }
+      } else {
+        draggedChoicesObject = null;
+        draggedOntoChoicesIndex = null;
+        messageService.display('warning', 'Please drag and drop only inside the Add Choices list', 'Drag to reorder');
+      }
+    };
+
+    $scope.onDrop = function ($event, $data, index) {
+      draggedOntoChoicesIndex = index;
+      draggedChoicesObject = $data;
+    };
 
     this.createInit = function() {
       $scope.readOnly = false;
@@ -41,10 +108,6 @@ angular.module('ts5App')
       $scope.readOnly = false;
       $scope.viewEditItem = true;
       $scope.viewName = 'Edit Survey Question';
-    };
-
-    $scope.isDisabled = function() {
-      return $scope.disablePastDate || $scope.readOnly;
     };
 
     this.validateForm = function() {
@@ -79,23 +142,6 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
-    this.getSurveyChoicesSuccess = function(response) {
-      $this.hideLoadingModal();
-      $scope.surveyChoices = angular.copy(response.response);
-    };
-
-    this.getSurveyChoices = function() {
-      $this.showLoadingModal('Loading Choices');
-      var searchPayload = { };
-
-      surveyChoicesFactory.getSurveyChoices(searchPayload).then($this.getSurveyChoicesSuccess, $this.saveFormFailure);
-    };
-
-    $scope.addSurveyChoiceRow = function () {
-      var nextIndex = $scope.surveyChoices.length;
-      $scope.surveyChoices.push({ surveyIndex: nextIndex });
-    };
-
     this.formatChoicesForAPI = function () {
       var questionsArray = [];
 
@@ -114,15 +160,6 @@ angular.module('ts5App')
       return questionsArray;
     };
 
-    $scope.removeItem = function (itemIndex) {
-      $scope.surveyChoices.splice(itemIndex, 1);
-
-      angular.forEach($scope.surveyChoices, function (itemChoice, index) {
-        itemChoice.surveyChoiceIndex = index;
-      });
-
-    };
-
     this.createSurvey = function() {
       $this.showLoadingModal('Creating Survey Data');
 
@@ -130,8 +167,8 @@ angular.module('ts5App')
         companyId: surveyQuestionsFactory.getCompanyId(),
         questionName: $scope.surveyQuestion.questionName,
         questionType: $scope.surveyQuestion.questionTypeId,
-        startDate: dateUtility.formatDateForAPI($scope.questionTypeId.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.questionTypeId.endDate),
+        startDate: dateUtility.formatDateForAPI($scope.surveyQuestion.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.surveyQuestion.endDate),
         answers: $this.formatChoicesForAPI()
       };
 
@@ -162,21 +199,10 @@ angular.module('ts5App')
 
     };
 
-    $scope.formSave = function() {
-      if ($this.validateForm()) {
-        var saveFunctionName = ($routeParams.action + 'Survey');
-        if ($this[saveFunctionName]) {
-          $this[saveFunctionName]();
-        }
-      } else {
-        $scope.displayError = true;
-      }
-    };
-
     this.makeInitPromises = function() {
       var promises = [
-        $this.getSurveyChoices()
       ];
+
       return promises;
     };
 
@@ -203,30 +229,6 @@ angular.module('ts5App')
       });
 
       $scope.surveyChoices = $filter('orderBy')($scope.surveyChoices, 'orderBy');
-    };
-
-    $scope.dropSuccess = function ($event, index, array) {
-      if (draggedOntoChoicesIndex !== null && draggedChoicesObject !== null)
-      {
-        var tempItemObject = array[draggedOntoChoicesIndex];
-        array.splice(draggedOntoChoicesIndex, 1, draggedChoicesObject);
-        array.splice(index, 1, tempItemObject);
-        draggedChoicesObject = null;
-        for (var i = 0; i < array.length; i++)
-        {
-          array[i].orderByIndex = i;
-          array[i].orderBy = i;
-        }
-      } else {
-        draggedChoicesObject = null;
-        draggedOntoChoicesIndex = null;
-        messageService.display('warning', 'Please drag and drop only inside the Add Choices list', 'Drag to reorder');
-      }
-    };
-
-    $scope.onDrop = function ($event, $data, index) {
-      draggedOntoChoicesIndex = index;
-      draggedChoicesObject = $data;
     };
 
     this.getSurveyQuestionSuccess = function(response) {
