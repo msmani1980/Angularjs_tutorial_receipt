@@ -464,5 +464,30 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function() {
       expect(scope.filterItemDetails).toEqual('');
     });
   });
+  
+  describe('getSalesCategoryName function', function() {
+    beforeEach(function() {
+      StoreInstanceReviewCtrl._menuItems = [{
+	    itemMasterId: 1,
+	    salesCategoryName: 'Test1'
+	  }, {
+	    itemMasterId: 2,
+	    salesCategoryName: 'Test2'
+	  }, {
+	    itemMasterId: 3,
+	    salesCategoryName: 'Test3'
+	  }];
+	});
+
+	it('should populate SalesCategoryName', function() {
+	  var code = StoreInstanceReviewCtrl.getSalesCategoryName(2);
+	  expect(code).not.toEqual('Test2');
+	});
+
+	it('should not load SalesCategoryName', function() {
+	  var code = StoreInstanceReviewCtrl.getSalesCategoryName(5);
+	  expect(code).toEqual('');
+	});
+  });
 
 });
