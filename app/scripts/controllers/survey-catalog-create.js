@@ -29,19 +29,19 @@ angular.module('ts5App')
       $scope.readOnly = false;
       $scope.isCreate = true;
       $scope.viewName = 'Create Survey Catalog';
-      $scope.viewEditItem = false;
+      $scope.editingItem = false;
     };
 
     this.viewInit = function() {
       $scope.readOnly = true;
       $scope.viewName = 'View Survey Catalog';
-      $scope.viewEditItem = true;
+      $scope.editingItem = true;
     };
 
     this.editInit = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Survey Catalog';
-      $scope.viewEditItem = true;
+      $scope.editingItem = true;
     };
 
     $scope.isDisabled = function() {
@@ -166,7 +166,7 @@ angular.module('ts5App')
     };
 
     this.setMinDateValue = function () {
-      if ($scope.viewEditItem) {
+      if ($scope.editingItem) {
         $scope.surveyCatalog.startDate = $scope.viewStartDate;
         $scope.surveyCatalog.endDate = $scope.viewEndDate;
       }
@@ -270,7 +270,7 @@ angular.module('ts5App')
 
       $scope.minDate = dateUtility.nowFormattedDatePicker();
 
-      if ($routeParams.id && $scope.viewEditItem) {
+      if ($routeParams.id && $scope.editingItem) {
         surveyCatalogFactory.getSurveyCatalog($routeParams.id).then($this.getSurveyCatalogSuccess);
       } else {
         $this.hideLoadingModal();

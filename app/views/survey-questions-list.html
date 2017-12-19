@@ -5,7 +5,7 @@
     </div>
 
     <div class="col-xs-8 text-right">
-      <a href="#/survey/questions/create" class="btn btn-primary"><span class="hidden-xs">+ Create Survey Question</span></a>
+      <a href="#/survey-questions/create" class="btn btn-primary"><span class="hidden-xs">+ Create Survey Question</span></a>
       <button class="btn btn-default" ng-click="toggleSearchPanel()">
         <span class="fa fa-filter"></span>
         <span class="hidden-sm hidden-xs">Filter</span>
@@ -62,10 +62,10 @@
         <td>{{ surveyQuestion.startDate }}</td>
         <td>{{ surveyQuestion.endDate }}</td>
         <td>
-          <a class="btn btn-info btn-xs" ng-href="#/survey/questions/view/{{surveyQuestion.id}}">
+          <a class="btn btn-info btn-xs" ng-href="#/survey-questions/view/{{surveyQuestion.id}}">
             <i class="fa fa-file"></i>
           </a>
-          <a class="btn btn-primary btn-xs" ng-href="#/survey/questions/edit/{{surveyQuestion.id}}" ng-hide="canEdit(surveyQuestion.endDate)">
+          <a class="btn btn-primary btn-xs" ng-href="#/survey-questions/edit/{{surveyQuestion.id}}" ng-hide="canEdit(surveyQuestion.endDate)">
             <i class="fa fa-pencil"></i>
           </a>
           <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(surveyQuestion.id)" ng-hide="isDateActive(surveyQuestion.startDate) || isDateActive(surveyQuestion.endDate)">

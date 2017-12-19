@@ -6,7 +6,7 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <a class="btn btn-default" ng-href="#/survey/questions" class="btn" ng-show="readOnly">Back</a>
+        <a class="btn btn-default" ng-href="#/survey-questions" class="btn" ng-show="readOnly">Back</a>
       </div>
     </div>
   </div>
@@ -44,10 +44,11 @@
             <div class="form-group">
               <date-picker-field
                 ng-if="isLoadingCompleted"
+                disable="isDisabled()"
                 form="surveyQuestionDataForm"
                 name="EffectiveStartDate"
-                label="Effective Start"
-                disable="isDisabled()"
+                label="Effective Start Date"
+                disable-past="true"
                 required="true"
                 ng-model="surveyQuestion.startDate">
               </date-picker-field>
@@ -59,16 +60,14 @@
                 ng-if="isLoadingCompleted"
                 form="surveyQuestionDataForm"
                 name="EffectiveEndDate"
-                label="Effective End"
+                label="Effective End Date"
                 disable="readOnly || shouldDisableEndDate"
                 ng-model="surveyQuestion.endDate"
-                end-current-effective="!viewEditItem"
-                custom-effective="true"
-                custom-date="surveyQuestion.endDate"
+                disable-past="true"
+                end-current-effective="editingItem && shouldDisableStartDate"
                 required="true">
               </date-picker-field>
             </div>
-            {{viewEditItem}}
           </div>
         </div>
         <!--
@@ -112,7 +111,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         Choices
-        <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addSurveyChoiceRow()" ng-hide="readOnly">
+        <button ng-disabled="isDisabled()" type="button" class="btn btn-primary btn-xs pull-right" ng-click="addSurveyChoiceRow()" ng-hide="readOnly">
           <i class="fa fa-plus"></i> Add Choice
         </button>
       </div>
@@ -123,17 +122,19 @@
             <tr>
               <th class="col-xs-1" ng-show="isSurveyQuestionEditable()" style="text-align:center;">Reorder</th>
               <th class="col-xs-5">Choice</th>
-              <th ng-hide="readOnly" class="col-xs-1">Actions</th>
+              <th ng-hide="isDisabled()" class="col-xs-1">Actions</th>
             </tr>
             </thead>
             <tbody>
               <tr
                 ng-init="item.orderByIndex=$index"
                 ng-repeat="item in surveyChoices | orderBy:'orderBy' track by $index">
-                <td ng-if="isSurveyQuestionEditable()"
+                <td ng-hide="isDisabled()"
                     on-drop-success="dropSuccess($event, $index, surveyChoices)"
-                    ui-draggable="isSurveyQuestionEditable()" drag="item"
-                    drag-channel="A" drop-channel="A"
+                    ui-draggable="isSurveyQuestionEditable()"
+                    drag="item"
+                    drag-channel="A"
+                    drop-channel="A"
                     ui-on-Drop="onDrop($event, $data, $index)"
                     style="text-align:center; cursor: pointer;">
                   <span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
@@ -143,22 +144,21 @@
                          class="form-control"  name="selectedChoices[{{$index + 1}}]"
                          required custom-validity custom-pattern="alphanumeric"  maxlength="25" placeholder="Choice">
                 </td>
-                <td ng-show="isSurveyQuestionEditable()">
+                <td ng-hide="isDisabled()">
                   <button class="btn btn-danger btn-xs" ng-click="removeItem($index)">
                     <i class="fa fa-trash"></i>
                   </button>
                 </td>
               </tr>
               <tr ng-if="surveyChoices.length === 0">
-                <td colspan="{{isSurveyQuestionEditable() ? 3 : 1}}">No choices added yet.</td>
+                <td colspan="{{isDisabled() ? 1 : 3}}">No choices added yet.</td>
               </tr>
             </tbody>
           </table>
-          {{surveyQuestion}}
         </div>
       </div>
       <div class="panel-footer text-right">
-        <a href="#/survey/questions" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+        <a href="#/survey-questions" class="btn btn-default" ng-hide="readOnly">Cancel</a>
         <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly" ng-disabled="surveyChoices.length === 0">
           <span class="fa fa-check-square-o" aria-hidden="true"></span> <span
           class="hidden-xs">Save</span>

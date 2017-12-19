@@ -437,19 +437,11 @@ angular.module('ts5App', [
     templateUrl: 'views/survey-catalog-create.html',
     controller: 'SurveyCatalogCreateCtrl',
     controllerAs: 'surveyCatalogCreate'
-  }).when('/survey/choices', {
-    templateUrl: 'views/survey-choices-list.html',
-    controller: 'SurveyChoicesListCtrl',
-    controllerAs: 'surveyChoicesList'
-  }).when('/survey/choices/:action/:id?', {
-    templateUrl: 'views/survey-choices-create.html',
-    controller: 'SurveyChoicesCreateCtrl',
-    controllerAs: 'surveyChoicesCreate'
-  }).when('/survey/questions', {
+  }).when('/survey-questions', {
     templateUrl: 'views/survey-questions-list.html',
     controller: 'SurveyQuestionsListCtrl',
     controllerAs: 'surveyQuestionsList'
-  }).when('/survey/questions/:action/:id?', {
+  }).when('/survey-questions/:action/:id?', {
     templateUrl: 'views/survey-questions-create.html',
     controller: 'SurveyQuestionsCreateCtrl',
     controllerAs: 'surveyQuestionsCreate'
