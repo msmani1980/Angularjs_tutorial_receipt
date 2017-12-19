@@ -97,6 +97,9 @@
 
               <input-text label="POS Display Name" name="onBoardName" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
                           placeholder="New Item" min-length="1" max-length="30"></input-text>
+                          
+              <input-text label="ePOS Quick Search Code" name="quickSearchCode" pattern="regexp.alphanumeric"
+                          placeholder="ePOS Quick Search Code" max-length="15"></input-text>
 
               <input-textarea label="Item Description" name="desc" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
                           placeholder="A simple description..." max-length="255" class="vertical-resize-only"></input-textarea>

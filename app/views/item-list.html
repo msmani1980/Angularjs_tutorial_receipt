@@ -34,7 +34,7 @@
               </div>
             </div>
 
-						<div class="col-xs-12 col-sm-6 col-md-4">
+			<div class="col-xs-12 col-sm-6 col-md-4">
 							<div class="form-group">
 								<label for="item-code">Item Code</label>
 								<input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="Item012">
@@ -82,16 +82,23 @@
               </div>
 
             </div>
-
-          </div>
-
-          <date-picker element-class="col-xs-12 col-sm-6 col-md-4"
+			
+			<div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+				<label for="quick-search-code">ePOS Quick Search Code</label>
+				<input ng-model="search.quickSearchCode" type="text" class="form-control" id="quick-search-code" placeholder="ePOS Quick Search Code">
+			  </div>
+            </div>
+            
+            <date-picker class="col-xs-12 col-md-6 col-sm-12"
+                		element-class="col-xs-6 col-sm-6"
                        start-date-model="dateRange.startDate"
                        end-date-model="dateRange.endDate"
                        is-search-field="true"
                        label-from="Effective From"
                        label-to="Effective To">
-          </date-picker>
+           </date-picker>
+          </div>
 
         </div>
 
