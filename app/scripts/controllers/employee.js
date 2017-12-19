@@ -39,7 +39,7 @@ angular.module('ts5App')
       $scope.readOnly = false;
       $scope.isCreate = true;
       $scope.viewName = 'Create Employee';
-      $scope.editingItem = false;
+      $scope.viewEditItem = false;
 
       $scope.employee.startDate = dateUtility.nowFormattedDatePicker();
       $scope.employee.endDate = dateUtility.nowFormattedDatePicker();
@@ -49,13 +49,13 @@ angular.module('ts5App')
     this.viewInit = function() {
       $scope.readOnly = true;
       $scope.viewName = 'View Employee';
-      $scope.editingItem = true;
+      $scope.viewEditItem = true;
     };
 
     this.editInit = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Employee';
-      $scope.editingItem = true;
+      $scope.viewEditItem = true;
     };
 
     $scope.isDisabled = function() {
@@ -136,7 +136,7 @@ angular.module('ts5App')
     };
 
     this.setMinDateValue = function () {
-      if ($scope.editingItem) {
+      if ($scope.viewEditItem) {
         $scope.employee.startDate = $scope.viewStartDate;
         $scope.employee.endDate = $scope.viewEndDate;
       }
