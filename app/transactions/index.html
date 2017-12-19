@@ -108,9 +108,9 @@ idx++;
 }
 $(function () {
 if(getParameterByName("transactionId")==''){return;}
-$("#receipt-template").load("/rsvr/api/caa/template/" + getParameterByName("transactionId"), onTemplateLoaded);
+$("#receipt-template").load("/rsvr-email/caa/template/" + getParameterByName("transactionId"), onTemplateLoaded);
 function onTemplateLoaded() {
-$.getJSON("/rsvr/api/caa/data/" + getParameterByName("transactionId"), function (data) {
+$.getJSON("/rsvr-email/caa/data/" + getParameterByName("transactionId"), function (data) {
 var cart = data;
 var paymentByType = {cash: [], credit: [], coupon: [], voucher: []};
 ko.utils.arrayForEach(cart.payments, function (payment) {
