@@ -13,10 +13,7 @@ angular.module('ts5App')
     var draggedChoicesObject;
     var draggedOntoChoicesIndex;
 
-    $scope.viewName = 'Survey';
-    $scope.disablePastDate = false;
-    $scope.shouldDisableEndDate = false;
-    $scope.disablePastDate = false;
+    $scope.viewName = 'Survey Question';
     $scope.shouldDisableEndDate = false;
     $scope.displayError = false;
     $scope.surveyChoiceTypes = [
@@ -53,7 +50,7 @@ angular.module('ts5App')
     };
 
     $scope.isDisabled = function() {
-      return $scope.disablePastDate || $scope.readOnly;
+      return $scope.shouldDisableStartDate || $scope.readOnly;
     };
 
     $scope.isSurveyQuestionEditable = function () {
@@ -95,19 +92,20 @@ angular.module('ts5App')
     this.createInit = function() {
       $scope.readOnly = false;
       $scope.isCreate = true;
-      $scope.viewEditItem = false;
+      $scope.editingItem = false;
+      $scope.isLoadingCompleted = true;
       $scope.viewName = 'Create Survey Question';
     };
 
     this.viewInit = function() {
       $scope.readOnly = true;
-      $scope.viewEditItem = true;
+      $scope.editingItem = true;
       $scope.viewName = 'View Survey Question';
     };
 
     this.editInit = function() {
       $scope.readOnly = false;
-      $scope.viewEditItem = true;
+      $scope.editingItem = true;
       $scope.viewName = 'Edit Survey Question';
     };
 
@@ -134,7 +132,7 @@ angular.module('ts5App')
         $this.showToastMessage('success', 'Edit Survey Question', 'success');
       }
 
-      $location.path('survey/questions');
+      $location.path('survey-questions');
     };
 
     this.saveFormFailure = function(dataFromAPI) {
@@ -178,7 +176,7 @@ angular.module('ts5App')
     };
 
     this.editSurvey = function() {
-      $this.showLoadingModal('Saving Survey Data');
+      $this.showLoadingModal('Saving Survey Question Data');
 
       var payload = {
         id: $routeParams.id,
@@ -226,18 +224,23 @@ angular.module('ts5App')
     };
 
     this.getSurveyQuestionSuccess = function(response) {
-      $scope.disablePastDate = dateUtility.isYesterdayOrEarlierDatePicker(response.startDate);
-      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(response.endDate);
+      var startDate = dateUtility.formatDateForApp(response.startDate);
+      var endDate = dateUtility.formatDateForApp(response.endDate);
+
+      $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
+      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
 
       $scope.surveyQuestion = {
         id: response.id,
         questionTypeId: response.questionType,
         questionName: response.questionName,
-        startDate: dateUtility.formatDateForApp(response.startDate),
-        endDate: dateUtility.formatDateForApp(response.endDate)
+        startDate: startDate,
+        endDate: endDate
       };
 
       $this.deSerializeSurveyChoices(response.answers);
+
+      $scope.isLoadingCompleted = true;
     };
 
     this.initDependenciesSuccess = function() {
@@ -251,13 +254,11 @@ angular.module('ts5App')
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
-
-      $scope.isLoadingCompleted = true;
     };
 
     this.init = function() {
       $this.showLoadingModal('Loading Data');
-      $scope.minDate = dateUtility.nowFormattedDatePicker();
+
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess);
     };

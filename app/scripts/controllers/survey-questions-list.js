@@ -86,10 +86,10 @@ angular.module('ts5App')
     $scope.removeRecord = function (surveyQuestionId) {
       $this.displayLoadingModal('Removing Survey Question');
 
-      surveyQuestionsFactory.removeSurveyQuestion(surveyQuestionId).then($this.removeSurveyQuestionSuccess, $this.removeSurveyQuestionFailure);
+      surveyQuestionsFactory.removeSurveyQuestion(surveyQuestionId).then($this.removeSurveyQuestionSuccess(surveyQuestionId), $this.removeSurveyQuestionFailure);
     };
 
-    this.removeSurveyQuestionSuccess = function () {
+    this.removeSurveyQuestionSuccess = function (surveyQuestionId) {
       lodash.remove($scope.surveyQuestions, function (surveyQuestion) {
         return surveyQuestion.id === surveyQuestionId;
       });
@@ -102,7 +102,7 @@ angular.module('ts5App')
     };
 
     function togglePanel(panelName) {
-      isPanelOpen(panelName) ? hidePanel(panelName) : showPanel(panelName);
+      isPanelOpen(panelName) ? hidePanel(panelName) : showPanel(panelName); // jshint ignore:line
     }
 
     function isPanelOpen(panelName) {

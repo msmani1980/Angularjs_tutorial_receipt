@@ -30,19 +30,19 @@ angular.module('ts5App')
       $scope.readOnly = false;
       $scope.isCreate = true;
       $scope.viewName = 'Create Survey';
-      $scope.viewEditItem = false;
+      $scope.editingItem = false;
     };
 
     this.viewInit = function() {
       $scope.readOnly = true;
       $scope.viewName = 'View Survey';
-      $scope.viewEditItem = true;
+      $scope.editingItem = true;
     };
 
     this.editInit = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Survey';
-      $scope.viewEditItem = true;
+      $scope.editingItem = true;
     };
 
     $scope.isDisabled = function() {
@@ -95,7 +95,7 @@ angular.module('ts5App')
 
       surveyFactory.getSurveyQuestions(searchPayload).then($this.getSurveyQuestionsSuccess, $this.saveFormFailure);
     }
-    
+
     $scope.addSurveyQuestionRow = function () {
       if (!$scope.survey.startDate && !$scope.survey.endDate) {
         messageService.display('warning', 'Please select a date range first!', 'Add Question');
@@ -105,13 +105,13 @@ angular.module('ts5App')
       var nextIndex = $scope.surveyQuestionItemList.length;
       $scope.surveyQuestionItemList.push({ surveyIndex: nextIndex });
     };
-    
+
     $scope.$watchGroup(['survey.startDate', 'survey.endDate'], function () {
       if ($scope.survey && $scope.survey.startDate && $scope.survey.endDate) {
         getFilteredQuestions($scope.survey.startDate, $scope.survey.endDate);
       }
     });
-    
+
     this.formatQuestionsForAPI = function () {
       var questionsArray = [];
 
@@ -171,7 +171,7 @@ angular.module('ts5App')
     };
 
     this.setMinDateValue = function () {
-      if ($scope.viewEditItem) {
+      if ($scope.editingItem) {
         $scope.survey.startDate = $scope.viewStartDate;
         $scope.survey.endDate = $scope.viewEndDate;
       }
@@ -192,7 +192,7 @@ angular.module('ts5App')
     this.getSurveyTypesSuccess = function(response) {
       $scope.surveyTypes = response;
     };
- 
+
     this.makeInitPromises = function() {
       var promises = [
         surveyFactory.getSurveyTypes().then($this.getSurveyTypesSuccess)
