@@ -21,7 +21,7 @@
           ng-click="clearAllFiles()"> Clear All Files
   </button>
 
-  <p class="alert alert-danger" ng-show="rejFiles.length" ng-repeat="f in rejFiles">
+  <p class="alert alert-danger" ng-show="rejFiles.length">
     <b>Your file doesn't meet the requirements:</b>
     <br/>
     <i  ng-show="formData.companyTypeId === '1' && imageName+'.'+fileFormat !== rejFiles[0].name">Invalid image name, accepted name {{imageName}}.{{fileFormat}}, </i>
