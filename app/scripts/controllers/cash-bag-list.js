@@ -65,7 +65,7 @@ angular.module('ts5App')
 
       return containingArray;
     }
-    
+
     function getCashBagResponseHandler(response) {
       hideLoadingModal();
       $this.meta.count = $this.meta.count || response.meta.count;
@@ -79,7 +79,7 @@ angular.module('ts5App')
           cashbag._updatedBy = cashbag.updatedByPerson.userName;
         }
 
-        if (cashbag.updatedOn !== undefined) {
+        if (cashbag.updatedOn) {
           cashbag.updatedOn = dateUtility.formatTimestampForApp(cashbag.updatedOn);
         }else {
           cashbag.updatedOn = '';
