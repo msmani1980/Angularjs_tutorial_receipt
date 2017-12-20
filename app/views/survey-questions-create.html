@@ -22,7 +22,7 @@
               <label for="question-name">Question Name *</label>
               <input ng-model="surveyQuestion.questionName" type="text" ng-disabled="isDisabled()"
                      class="form-control" id="question-name" name="questionName"
-                     required custom-validity custom-pattern="alphanumeric"  maxlength="25" placeholder="Question Name">
+                     required maxlength="25" placeholder="Question Name">
             </div>
           </div>
           <div class="col-xs-12 col-sm-3">
@@ -142,7 +142,7 @@
                 <td>
                   <input ng-model="item.choiceName" type="text" ng-disabled="isDisabled()"
                          class="form-control"  name="selectedChoices[{{$index + 1}}]"
-                         required custom-validity custom-pattern="alphanumeric"  maxlength="25" placeholder="Choice">
+                         required  maxlength="25" placeholder="Choice">
                 </td>
                 <td ng-hide="isDisabled()">
                   <button class="btn btn-danger btn-xs" ng-click="removeItem($index)">
