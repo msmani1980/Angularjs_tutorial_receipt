@@ -457,13 +457,6 @@ angular.module('ts5App')
           package: 'SURVEY',
           role: 'SURVEY'
         }, {
-          name: 'Create Survey',
-          route: '/#/survey/create',
-          icon: 'icon-create-menu',
-          className: 'dashboard-createSurvey',
-          package: 'SURVEY',
-          role: 'SURVEY'
-        }, {
           name: 'Survey Catalog',
           route: '/#/survey-catalog',
           icon: 'icon-manage-menu',
@@ -471,24 +464,10 @@ angular.module('ts5App')
           package: 'SURVEY',
           role: 'SURVEY'
         }, {
-          name: 'Create Survey Catalog',
-          route: '/#/survey-catalog/create',
-          icon: 'icon-create-menu',
-          className: 'dashboard-createSurveyCatalog',
-          package: 'SURVEY',
-          role: 'SURVEY'
-        }, {
           name: 'Survey Questions',
           route: '/#/survey-questions',
           icon: 'icon-manage-menu',
           className: 'dashboard-manageSurveyQuestions',
-          package: 'SURVEY',
-          role: 'SURVEY'
-        }, {
-          name: 'Create Survey Questions',
-          route: '/#/survey-questions/create',
-          icon: 'icon-create-menu',
-          className: 'dashboard-createSurveyQuestions',
           package: 'SURVEY',
           role: 'SURVEY'
         }]
