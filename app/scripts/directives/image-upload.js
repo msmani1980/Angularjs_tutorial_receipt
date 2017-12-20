@@ -87,7 +87,7 @@ angular.module('ts5App')
       };
 
       $scope.doesImageMeetSizeConstraint = function (filesIndex, imageType, imgElement) {
-        console.log( 'doesImageMeetSizeConstraint:' + filesIndex + ': ' + imageType + ': ' + imgElement);
+        console.log('doesImageMeetSizeConstraint:' + filesIndex + ': ' + imageType + ': ' + imgElement);
         var file = $scope.files[filesIndex];
         console.log($scope.files);
 
@@ -121,7 +121,6 @@ angular.module('ts5App')
         $scope.imageSize  = acceptImageWidth + ' x ' + acceptImageHeight;
         console.log('check image size');
         console.log($scope.imgHeight > acceptImageHeight || $scope.imgWidth > acceptImageWidth);
-
 
         if ($scope.imgHeight > acceptImageHeight || $scope.imgWidth > acceptImageWidth) {
           console.log('image to big');
