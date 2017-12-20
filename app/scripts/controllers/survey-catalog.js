@@ -46,6 +46,7 @@ angular.module('ts5App')
       $scope.surveyCatalogs = $scope.surveyCatalogs.concat(response.response.map(function (surveyCatalog) {
         surveyCatalog.startDate = dateUtility.formatDateForApp(surveyCatalog.startDate);
         surveyCatalog.endDate = dateUtility.formatDateForApp(surveyCatalog.endDate);
+        surveyCatalog.surveyCatalogName = surveyCatalog.catalogName;
 
         return surveyCatalog;
       }));
