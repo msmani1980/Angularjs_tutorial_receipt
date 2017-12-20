@@ -68,7 +68,13 @@
 
             </div>
 
-
+			<div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="quick-search-code">ePOS Quick Search Code</label>
+				<input ng-model="search.quickSearchCode" type="text" class="form-control" id="quick-search-code" placeholder="ePOS Quick Search Code">
+              </div>
+            </div>
+         
           </div>
 
           <date-picker element-class="col-xs-12 col-sm-6 col-md-4"
@@ -78,14 +84,7 @@
                        label-from="Effective From"
                        label-to="Effective To">
           </date-picker>
-		 
-		 <div class="col-xs-12 col-sm-6 col-md-4">
-              <div class="form-group">
-                <label for="quick-search-code">ePOS Quick Search Code</label>
-				<input ng-model="search.quickSearchCode" type="text" class="form-control" id="quick-search-code" placeholder="ePOS Quick Search Code">
-              </div>
-         </div>
-            
+
         </div>
 
         <div class="panel-footer text-right">
