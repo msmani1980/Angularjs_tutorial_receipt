@@ -1,0 +1,86 @@
+{
+	"surveys": [{
+			"id": 1,
+			"companyId": 643,
+			"surveyName": "Test1",
+			"surveyTypeId": 1,
+			"surveyTypeDO": {
+				"id": 1,
+				"surveyTypeName": "Employee"
+			},
+			"surveyQuestions": [{
+				"id": 1,
+				"surveyId": 1,
+				"surveyQuestionId": 5,
+				"hideOnEpos": true
+			}],
+			"startDate": "2017-12-10",
+			"endDate": "2018-01-31"
+		},
+		{
+			"id": 2,
+			"companyId": 643,
+			"surveyName": "Test2",
+			"surveyTypeId": 1,
+			"surveyTypeDO": {
+				"id": 1,
+				"surveyTypeName": "Employee"
+			},
+			"surveyQuestions": [{
+				"id": 2,
+				"surveyId": 2,
+				"surveyQuestionId": 6,
+				"hideOnEpos": true
+			}],
+			"startDate": "2018-12-10",
+			"endDate": "2018-01-31"
+		},
+		{
+			"id": 3,
+			"companyId": 643,
+			"surveyName": "Test3",
+			"surveyTypeId": 2,
+			"surveyTypeDO": {
+				"id": 2,
+				"surveyTypeName": "Passenger"
+			},
+			"surveyQuestions": [{
+				"id": 3,
+				"surveyId": 3,
+				"surveyQuestionId": 5,
+				"hideOnEpos": true
+			}],
+			"startDate": "2018-01-10",
+			"endDate": "2018-01-31"
+		},
+		{
+			"id": 4,
+			"companyId": 643,
+			"surveyName": "Test4",
+			"surveyTypeId": 1,
+			"surveyTypeDO": {
+				"id": 1,
+				"surveyTypeName": "Employee"
+			},
+			"surveyQuestions": [{
+				"id": 4,
+				"surveyId": 4,
+				"surveyQuestionId": 5,
+				"hideOnEpos": false
+			},
+			{
+				"id": 5,
+				"surveyId": 4,
+				"surveyQuestionId": 6,
+				"hideOnEpos": true
+			}],
+			"startDate": "2018-01-10",
+			"endDate": "2018-01-31"
+		}
+	],
+	"meta": {
+		"count": 4,
+		"limit": 4,
+		"start": 0
+	}
+}
