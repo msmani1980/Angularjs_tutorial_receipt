@@ -10,8 +10,8 @@
 angular.module('ts5App')
   .controller('SurveyQuestionsCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, surveyQuestionsFactory, $filter) {
     var $this = this;
-    var draggedChoicesObject;
-    var draggedOntoChoicesIndex;
+    var draggedSurveyItemObject;
+    var draggedOntoItemIndex;
 
     $scope.viewName = 'Survey Question';
     $scope.shouldDisableEndDate = false;
@@ -66,27 +66,27 @@ angular.module('ts5App')
     };
 
     $scope.dropSuccess = function ($event, index, array) {
-      if (draggedOntoChoicesIndex !== null && draggedChoicesObject !== null)
+      if (draggedOntoItemIndex !== null && draggedSurveyItemObject !== null)
       {
-        var tempItemObject = array[draggedOntoChoicesIndex];
-        array.splice(draggedOntoChoicesIndex, 1, draggedChoicesObject);
+        var tempItemObject = array[draggedOntoItemIndex];
+        array.splice(draggedOntoItemIndex, 1, draggedSurveyItemObject);
         array.splice(index, 1, tempItemObject);
-        draggedChoicesObject = null;
+        draggedSurveyItemObject = null;
         for (var i = 0; i < array.length; i++)
         {
-          array[i].orderByIndex = i;
-          array[i].orderBy = i;
+          array[i].sortOrderIndex = i;
+          array[i].sortOrder = i;
         }
       } else {
-        draggedChoicesObject = null;
-        draggedOntoChoicesIndex = null;
+        draggedSurveyItemObject = null;
+        draggedOntoItemIndex = null;
         messageService.display('warning', 'Please drag and drop only inside the Add Choices list', 'Drag to reorder');
       }
     };
 
     $scope.onDrop = function ($event, $data, index) {
-      draggedOntoChoicesIndex = index;
-      draggedChoicesObject = $data;
+      draggedOntoItemIndex = index;
+      draggedSurveyItemObject = $data;
     };
 
     this.createInit = function() {
