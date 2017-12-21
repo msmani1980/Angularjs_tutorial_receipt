@@ -52,7 +52,7 @@ angular.module('ts5App')
       var payload = lodash.assign(angular.copy($scope.search), {
         limit: $this.meta.limit,
         offset: $this.meta.offset,
-        sortOn: 'questionName',
+        sortOn: 'questionName,startDate',
         sortBy: 'ASC'
       });
 
