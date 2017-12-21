@@ -50,7 +50,10 @@
               <ui-select multiple ng-model="search.employees" theme="bootstrap">
                 <ui-select-match placeholder="Select an Employee...">{{ $item.employeeIdentifier }}
                 </ui-select-match>
-                <ui-select-choices repeat="employee in employeesList | filter: $select.search">
+                <ui-select-choices
+                  refresh="searchEmployees($select)"
+                  refresh-delay="300"
+                  repeat="employee in employeesList | filter: $select.search | limitTo:100">
                   {{ employee.employeeIdentifier }} - {{ employee.lastName}}, {{ employee.firstName }}
                 </ui-select-choices>
               </ui-select>
