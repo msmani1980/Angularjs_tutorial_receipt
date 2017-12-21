@@ -80,7 +80,7 @@ angular.module('ts5App')
       } else {
         draggedSurveyItemObject = null;
         draggedOntoItemIndex = null;
-        messageService.display('warning', 'Please drag and drop only inside the Add Survey list', 'Drag to reorder');
+        messageService.display('warning', 'Please drag and drop only inside the Add Choices list', 'Drag to reorder');
       }
     };
 
