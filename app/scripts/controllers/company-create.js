@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:9 */
 /**
  * @ngdoc function
  * @name ts5App.controller:CompanyCreateCtrl
@@ -8,7 +9,7 @@
  */
 angular.module('ts5App').controller('CompanyCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, companiesFactory, currencyFactory, dateUtility,
-    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash, imageLogoService) {
+    languagesService, countriesService, companyTypesService, $routeParams, globalMenuService, $q, $filter, lodash, imageLogoService, messageService) {
 
     $scope.formData = {
       startDate: dateUtility.tomorrowFormattedDatePicker(),
@@ -168,9 +169,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       if (defaultLanguage !== null && languages !== null && languages.length > 0) {
         for (var i = 0; i < languages.length; i++) {
           if (defaultLanguage !== languages[i]) {
-            additionalLanguages.push(languages[i]);              
+            additionalLanguages.push(languages[i]);
           }
-        }        
+        }
       } else {
         additionalLanguages = languages;
       }
@@ -220,12 +221,12 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         endDate: dateUtility.tomorrowFormattedDatePicker(),
         images: []
       };
-      
+
       $scope.languages = $this.removeDefaultLanguage($scope.formData.defaultLanguage, $scope.formData.languages);
       $scope.defaultLanguages = $this.removeAdditionalLanguage($scope.formData.languages);
 
       $scope.eposLanguages = $this.removeDefaultLanguage($scope.formData.defaultEposLanguage, $scope.formData.eposLanguages);
-      $scope.defaultEposLanguages = $this.removeAdditionalLanguage($scope.formData.eposLanguages);     
+      $scope.defaultEposLanguages = $this.removeAdditionalLanguage($scope.formData.eposLanguages);
       $scope.isCompanyRetail = ($scope.formData.companyTypeId === '1');
     };
 
@@ -253,6 +254,17 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         $this.updateImagesArray(newValue, oldValue);
         $this.calculateFieldsVisibility();
       });
+
+      $scope.$watch('formData.startDate', function(newValue, oldValue) {
+        $this.updateDate(newValue, oldValue);
+      });
+    };
+
+    this.updateDate = function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        $scope.formData.startDate = dateUtility.tomorrowFormattedDatePicker();
+        $scope.formData.endDate = dateUtility.tomorrowFormattedDatePicker();
+      }
     };
 
     this.updateImagesArray = function(newValue, oldValue) {
@@ -261,6 +273,22 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
           $scope.formData.images = [];
         } else if ($scope.editingCompany) {
           $scope.sortImageArrays(parseInt($scope.formData.companyTypeId));
+        }
+      }
+    };
+
+    $scope.checkIfItemIsActive = function(index) {
+      return dateUtility.isTodayOrEarlierDatePicker($scope.formData.images[index].startDate);
+    };
+
+    $scope.passedEndDate = function(index) {
+      return dateUtility.isYesterdayOrEarlierDatePicker($scope.formData.images[index].endDate, dateUtility.tomorrowFormattedDatePicker());
+    };
+
+    $scope.deleteInactiveImages = function (imagesArray) {
+      for (var index in imagesArray) {
+        if ($scope.passedEndDate(index)) {
+          imagesArray.splice(index, 1);
         }
       }
     };
@@ -288,6 +316,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $scope.formData.images = [];
       if (companyCode === 6) {
         $scope.formData.images = $scope.receiptImageArray;
+        $scope.deleteInactiveImages($scope.formData.images);
       } else if (companyCode === 1) {
         $scope.formData.images = $scope.companyLogoArray;
       }
@@ -324,13 +353,13 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     this.removeDefaultLanguage = function(defLang, allLanguages) {
       var availableLanguages = [];
       angular.forEach($scope.allLanguages, function(language) {
-        var isLngExist = false;	
+        var isLngExist = false;
         for (var i = 0; i < allLanguages.length; i++) {
           if (parseInt(language.id) === parseInt(allLanguages[i].id)) {
-            isLngExist = true; 
+            isLngExist = true;
             break;
           }
-        }        
+        }
 
         if (!isLngExist && (defLang === null || !angular.isDefined(defLang) || parseInt(language.id) !== parseInt(defLang))) {
           var lng = {
@@ -349,14 +378,14 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     this.removeAdditionalLanguage = function(cmpLanguages) {
       var availableLanguages = [];
       angular.forEach($scope.allLanguages, function(language) {
-        var isLngExist = false;	
+        var isLngExist = false;
         if (cmpLanguages.length > 0) {
           for (var i = 0; i < cmpLanguages.length; i++) {
             if (parseInt(language.id) === parseInt(cmpLanguages[i].id)) {
               isLngExist = true;
               break;
             }
-          }        
+          }
         }
 
         if (!isLngExist) {
@@ -366,7 +395,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
             languageCode: language.languageCode
           };
 
-          availableLanguages.push(lng); 
+          availableLanguages.push(lng);
         }
       });
 
@@ -390,7 +419,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     $scope.onChangeEposDefaultLanguage  = function() {
       $scope.eposLanguages = $this.removeDefaultLanguage($scope.formData.defaultEposLanguage, $scope.formData.eposLanguages);
     };
-    
+
     this.setDependencies = function(response) {
       $scope.companyTypes = response[0];
       $scope.currencies = response[1].response;
@@ -450,12 +479,16 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.createCompany = function(payload) {
+      $scope.formatPayloadDates(payload);
+      $scope.formatImagePayloadDates(payload);
       $this.showLoadingModal('We are creating your Company');
       var promises = $this.createCompanyCreatePromises(payload);
       $q.all(promises).then($this.createSuccessHandler, $this.errorHandler);
     };
 
     this.updateCompany = function(payload) {
+      $scope.formatPayloadDates(payload);
+      $scope.formatImagePayloadDates(payload);
       $this.showLoadingModal('We are updating your Company');
       var promises = $this.createCompanyUpdatePromises(payload);
       $q.all(promises).then($this.updateSuccessHandler, $this.errorHandler);
@@ -644,14 +677,39 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         }
       }
 
-      this.formatPayloadDates(formData);
-      this.formatImagePayloadDates(formData);
-      $scope.form.$setSubmitted(true);
-      if (formData && $this.validateForm()) {
-        var companyData = angular.copy(formData);
-        var payload = $this.formatPayload(companyData);
-        var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(payload);
-        return action;
+      if ($scope.validateDate()) {
+        $scope.form.$setSubmitted(true);
+        if (formData && $this.validateForm()) {
+          var companyData = angular.copy(formData);
+          var payload = $this.formatPayload(companyData);
+          var action = $scope.editingCompany ? $this.updateCompany(payload) : $this.createCompany(payload);
+          return action;
+        }
+      }
+
+    };
+
+    $scope.validateDate = function () {
+      if ($scope.formData.images[0] !== undefined) {
+        var imageNumber = 0;
+        for (var i in $scope.formData.images) {
+          var start = $scope.formData.images[i].startDate;
+          var end = $scope.formData.images[i].endDate;
+          start = start.split(/\D/);
+          end = end.split(/\D/);
+          var startDate = new Date(start[1] + '/' + start[0] + '/' + start[2]);
+          var endDate = new Date(end[1] + '/' + end[0] + '/' + end[2]);
+          imageNumber++;
+          if (startDate > endDate) {
+            messageService.display('danger', 'To date should be later than or equal to From date', 'Saved Image ' + imageNumber);
+            return false;
+          }
+
+        }
+
+        return true;
+      } else {
+        return true;
       }
     };
 
