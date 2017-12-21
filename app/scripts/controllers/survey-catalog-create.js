@@ -30,6 +30,7 @@ angular.module('ts5App')
       $scope.isCreate = true;
       $scope.viewName = 'Create Survey Catalog';
       $scope.viewEditItem = false;
+      $scope.isLoadingCompleted = true;
     };
 
     this.viewInit = function() {
@@ -244,7 +245,7 @@ angular.module('ts5App')
       $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
       $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
 
-      $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
+      $scope.disablePastDate = dateUtility.isTodayDatePicker($scope.viewStartDate) || !(dateUtility.isAfterTodayDatePicker($scope.viewStartDate));
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
 
       $scope.surveyCatalog = {
@@ -256,6 +257,8 @@ angular.module('ts5App')
       };
 
       $this.setMinDateValue();
+
+      $scope.isLoadingCompleted = true;
 
       $this.hideLoadingModal();
     };
