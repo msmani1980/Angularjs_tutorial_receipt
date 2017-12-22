@@ -127,7 +127,7 @@
             </thead>
             <tbody>
               <tr
-                ng-init="item.orderByIndex=$index"
+                ng-init="item.sortOrderIndex=$index"
                 ng-repeat="item in surveyChoices | orderBy:'orderBy' track by $index">
                 <td ng-hide="isDisabled()"
                     on-drop-success="dropSuccess($event, $index, surveyChoices)"
