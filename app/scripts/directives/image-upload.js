@@ -87,50 +87,35 @@ angular.module('ts5App')
       };
 
       $scope.doesImageMeetSizeConstraint = function (filesIndex, imageType, imgElement) {
-        console.log('doesImageMeetSizeConstraint:' + filesIndex + ': ' + imageType + ': ' + imgElement);
         var file = $scope.files[filesIndex];
-        console.log($scope.files);
 
         if (!imgElement) {
-          console.log('imgElement false');
           imgElement = angular.element(angular.element('.fileTest')[filesIndex]);
-          console.log(imgElement);
         }
 
         this.imgHeight = imgElement.height();
-        console.log('imgHeight: ' + this.imgHeight);
         this.imgWidth = imgElement.width();
-        console.log('imgWidth: ' + this.imgWidth);
         var acceptImageHeight = 128;
         var acceptImageWidth = 128;
 
         if (imageType === 'homeLogo') {
           acceptImageHeight = 600;
           acceptImageWidth = 900;
-          console.log(imageType + ' resolution restriction: ' + acceptImageWidth + 'x' + acceptImageHeight);
         } else if (imageType === 'cornerLogo') {
           acceptImageHeight = 33;
           acceptImageWidth = 92;
-          console.log(imageType + ' resolution restriction: ' + acceptImageWidth + 'x' + acceptImageHeight);
         } else if (imageType === 'receiptImage') {
           acceptImageHeight = 1000;
           acceptImageWidth = 380;
-          console.log(imageType + ' resolution restriction: ' + acceptImageWidth + 'x' + acceptImageHeight);
         }
 
         $scope.imageSize  = acceptImageWidth + ' x ' + acceptImageHeight;
-        console.log('check image size');
-        console.log($scope.imgHeight > acceptImageHeight || $scope.imgWidth > acceptImageWidth);
 
         if ($scope.imgHeight > acceptImageHeight || $scope.imgWidth > acceptImageWidth) {
-          console.log('image to big');
           file.imageTooLarge = true;
-          console.log(file.imageTooLarge);
           file.imageDimensions = this.imgWidth + 'px' + ' x ' + this.imgHeight +
             'px';
-          console.log(file.imageDimensions);
         } else {
-          console.log('image good');
           return true;
         }
 
@@ -162,10 +147,8 @@ angular.module('ts5App')
 
           if (files && files.length) {
             for (var filesIndex in files) {
-              console.log('verify size for image ' + filesIndex);
               if ($scope.doesImageMeetSizeConstraint(filesIndex, imageType)) {
                 fileUploadPromises.push($scope.uploadFile(filesIndex, imageType));
-                console.log('image pushed' + filesIndex);
               }
             }
 
