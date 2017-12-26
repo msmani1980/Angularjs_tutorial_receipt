@@ -218,7 +218,7 @@ angular.module('ts5App')
     };
 
     $scope.dropSuccess = function ($event, index, array) {
-      if (draggedOntoIemIndex !== null && draggedSurveyItemObject !== null)
+      if (typeof draggedOntoIemIndex !== 'undefined' && typeof draggedSurveyItemObject !== 'undefined' && draggedOntoIemIndex !== null && draggedSurveyItemObject !== null)
       {
         var tempItemObject = array[draggedOntoIemIndex];
         array.splice(draggedOntoIemIndex, 1, draggedSurveyItemObject);
