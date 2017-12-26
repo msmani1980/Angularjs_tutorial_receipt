@@ -66,7 +66,7 @@ angular.module('ts5App')
     };
 
     $scope.dropSuccess = function ($event, index, array) {
-      if (draggedOntoItemIndex !== null && draggedSurveyItemObject !== null)
+      if (draggedOntoItemIndex && draggedSurveyItemObject)
       {
         var tempItemObject = array[draggedOntoItemIndex];
         array.splice(draggedOntoItemIndex, 1, draggedSurveyItemObject);
@@ -152,7 +152,7 @@ angular.module('ts5App')
         }
 
         itemPayload.choiceName = choiceItem.choiceName;
-        itemPayload.orderBy = parseInt(choiceItem.orderByIndex);
+        itemPayload.orderBy = parseInt(choiceItem.sortOrderIndex);
 
         questionsArray.push(itemPayload);
       });
