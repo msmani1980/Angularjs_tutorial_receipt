@@ -23,6 +23,7 @@ angular.module('ts5App')
     ];
     $scope.surveyQuestion = {};
     $scope.surveyChoices = [];
+    $scope.dragging = false;
 
     $scope.addSurveyChoiceRow = function () {
       var nextIndex = $scope.surveyChoices.length;
@@ -66,7 +67,7 @@ angular.module('ts5App')
     };
 
     $scope.dropSuccess = function ($event, index, array) {
-      if (draggedOntoItemIndex && draggedSurveyItemObject)
+      if (typeof draggedOntoItemIndex !== 'undefined' && typeof draggedSurveyItemObject !== 'undefined' && draggedOntoItemIndex !== null && draggedSurveyItemObject !== null)
       {
         var tempItemObject = array[draggedOntoItemIndex];
         array.splice(draggedOntoItemIndex, 1, draggedSurveyItemObject);
@@ -76,6 +77,7 @@ angular.module('ts5App')
         {
           array[i].sortOrderIndex = i;
           array[i].sortOrder = i;
+          array[i].orderBy = i;
         }
       } else {
         draggedSurveyItemObject = null;
@@ -88,6 +90,14 @@ angular.module('ts5App')
       draggedOntoItemIndex = index;
       draggedSurveyItemObject = $data;
     };
+
+    $scope.$on('ANGULAR_DRAG_START', function () {
+      $scope.dragging = true;
+    });
+
+    $scope.$on('ANGULAR_DRAG_END', function () {
+      $scope.dragging = false;
+    });
 
     this.createInit = function() {
       $scope.readOnly = false;
