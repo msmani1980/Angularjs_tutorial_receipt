@@ -81,7 +81,7 @@
 					  </td>
 					  <td>
 						<select required name="survey" id="survey[{{item.surveyIndex}}]" class="form-control" ng-change="addSurveyItem(item)"
-							ng-options="survey.id as survey.surveyName disable when survey.selected for survey in surveyList"
+							ng-options="survey.id as survey.surveyName for survey in surveyList"
 							ng-model="item.surveyId" ng-disabled="isDisabled()">
 							<option value="">Select Survey ...</option>
 						</select>
