@@ -17,6 +17,7 @@ angular.module('ts5App')
       endDate: ''
     };
     $scope.surveyList = [];
+    $scope.existingSurveyItemIds = [];
     $scope.viewStartDate = '';
     $scope.viewEndDate = '';
     $scope.disablePastDate = false;
@@ -129,12 +130,36 @@ angular.module('ts5App')
       return resultArray;
     };
 
-    $scope.removeItem = function (itemIndex) {
-      $scope.surveyItemList.splice(itemIndex, 1);
+    $scope.removeItem = function (itemToRemove) {
+      $scope.surveyItemList.splice(itemToRemove.surveyIndex, 1);
 
+      if (itemToRemove.id) {
+        var currentIndexOfSurveyIdStatus = $scope.existingSurveyItemIds.indexOf(itemToRemove.surveyId);
+        if (currentIndexOfSurveyIdStatus > -1) {
+          $scope.existingSurveyItemIds.splice(currentIndexOfSurveyIdStatus, 1);
+        }
+      }
+
+      var isSurveyItemIdAdded = false;
       angular.forEach($scope.surveyItemList, function (item, index) {
         item.surveyIndex = index;
+
+        if (itemToRemove.id && item.surveyId === itemToRemove.surveyId && !isSurveyItemIdAdded) {
+          item.id = itemToRemove.id;
+          isSurveyItemIdAdded = true;
+        }
       });
+    };
+
+    $scope.addSurveyItem = function (newItem) {
+      if (newItem.surveyId && $scope.existingSurveyItemIds.indexOf(newItem.surveyId) === -1) {
+        angular.forEach($scope.surveyCatalogOriginalSurveys, function (originalSurvey) {
+          if (originalSurvey.surveyId === newItem.surveyId) {
+            newItem.id = originalSurvey.id;
+            $scope.existingSurveyItemIds.push(originalSurvey.surveyId);
+          }
+        });
+      }
     };
 
     this.createSurveyCatalog = function() {
@@ -215,6 +240,12 @@ angular.module('ts5App')
       });
 
       $scope.surveyItemList = $filter('orderBy')($scope.surveyItemList, 'sortOrder');
+
+      angular.forEach($scope.surveyItemList, function (s) {
+        $scope.existingSurveyItemIds.push(s.surveyId);
+      });
+
+      $scope.surveyCatalogOriginalSurveys = angular.copy($scope.surveyItemList);
     };
 
     $scope.dropSuccess = function ($event, index, array) {

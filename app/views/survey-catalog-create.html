@@ -80,14 +80,14 @@
 						<span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
 					  </td>
 					  <td>
-						<select required name="survey" id="survey[{{item.surveyIndex}}]" class="form-control"
+						<select required name="survey" id="survey[{{item.surveyIndex}}]" class="form-control" ng-change="addSurveyItem(item)"
 							ng-options="survey.id as survey.surveyName for survey in surveyList"
 							ng-model="item.surveyId" ng-disabled="isDisabled()">
 							<option value="">Select Survey ...</option>
 						</select>
 					  </td>
 					  <td ng-hide="isDisabled()" style="text-align:center;">
-						<button class="btn btn-danger btn-xs" ng-click="removeItem(item.surveyIndex)">
+						<button class="btn btn-danger btn-xs" ng-click="removeItem(item)">
 						  <i class="fa fa-trash"></i>
 						</button>
 					  </td>
