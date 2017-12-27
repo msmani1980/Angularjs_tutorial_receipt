@@ -26,27 +26,27 @@
 						<div class="col-xs-12 col-sm-4">
 							<div class="form-group">
 								<date-picker-field
+                  ng-if="isLoadingCompleted"
 									form="surveyCatalogDataForm" name="EffectiveStartDate"
 									label="Effective Start Date"
 									disable="isDisabled()"
 									required="true"
-									end-current-effective="!viewEditItem"
-									ng-model="surveyCatalog.startDate">
+                  disable-past="true"
+                  ng-model="surveyCatalog.startDate">
 								</date-picker-field>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-4">
 							<div class="form-group">
 								<date-picker-field
+                  ng-if="isLoadingCompleted"
 									form="surveyCatalogDataForm"
-                  min-date="minDate"
 									name="EffectiveEndDate"
 									label="Effective End Date"
 									disable="readOnly || shouldDisableEndDate"
 									ng-model="surveyCatalog.endDate"
-									end-current-effective="!viewEditItem"
-                  custom-effective="true"
-                  custom-date="surveyCatalog.endDate"
+                  disable-past="true"
+                  end-current-effective="viewEditItem && disablePastDate"
 									required="true">
 								</date-picker-field>
 							</div>
@@ -83,7 +83,7 @@
 						<select required name="survey" id="survey[{{item.surveyIndex}}]" class="form-control"
 							ng-options="survey.id as survey.surveyName for survey in surveyList"
 							ng-model="item.surveyId" ng-disabled="isDisabled()">
-							<option value="">Select Survey Question...</option>
+							<option value="">Select Survey ...</option>
 						</select>
 					  </td>
 					  <td ng-hide="isDisabled()" style="text-align:center;">
