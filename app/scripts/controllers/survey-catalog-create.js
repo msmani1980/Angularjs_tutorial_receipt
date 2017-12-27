@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('SurveyCatalogCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, surveyCatalogFactory, surveyFactory, $filter, lodash, _) {
+  .controller('SurveyCatalogCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, surveyCatalogFactory, surveyFactory, $filter) {
 
     var $this = this;
     $scope.viewName = 'Survey';
@@ -133,9 +133,9 @@ angular.module('ts5App')
     $scope.removeItem = function (itemToRemove) {
       $scope.surveyItemList.splice(itemToRemove.surveyIndex, 1);
 
-      if(itemToRemove.id) {
+      if (itemToRemove.id) {
         var currentIndexOfSurveyIdStatus = $scope.existingSurveyItemIds.indexOf(itemToRemove.surveyId);
-        if(currentIndexOfSurveyIdStatus > -1) {
+        if (currentIndexOfSurveyIdStatus > -1) {
           $scope.existingSurveyItemIds.splice(currentIndexOfSurveyIdStatus, 1);
         }
       }
@@ -144,7 +144,7 @@ angular.module('ts5App')
       angular.forEach($scope.surveyItemList, function (item, index) {
         item.surveyIndex = index;
 
-        if(itemToRemove.id && item.surveyId === itemToRemove.surveyId && !isSurveyItemIdAdded) {
+        if (itemToRemove.id && item.surveyId === itemToRemove.surveyId && !isSurveyItemIdAdded) {
           item.id = itemToRemove.id;
           isSurveyItemIdAdded = true;
         }
@@ -152,9 +152,9 @@ angular.module('ts5App')
     };
 
     $scope.addSurveyItem = function (newItem) {
-      if(newItem.surveyId && $scope.existingSurveyItemIds.indexOf(newItem.surveyId) === -1) {
+      if (newItem.surveyId && $scope.existingSurveyItemIds.indexOf(newItem.surveyId) === -1) {
         angular.forEach($scope.surveyCatalogOriginalSurveys, function (originalSurvey) {
-          if(originalSurvey.surveyId === newItem.surveyId) {
+          if (originalSurvey.surveyId === newItem.surveyId) {
             newItem.id = originalSurvey.id;
             $scope.existingSurveyItemIds.push(originalSurvey.surveyId);
           }
