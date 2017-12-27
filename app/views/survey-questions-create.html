@@ -20,7 +20,7 @@
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
               <label for="question-name">Question Name *</label>
-              <input ng-model="surveyQuestion.questionName" type="text" ng-disabled="isDisabled()"
+              <input ng-model="surveyQuestion.questionName" type="text" ng-disabled="isDisabled() || dragging"
                      class="form-control" id="question-name" name="questionName"
                      required maxlength="25" placeholder="Question Name">
             </div>
@@ -32,7 +32,7 @@
                       name="choiceType"
                       ng-model="surveyQuestion.questionTypeId"
                       ng-options="surveyChoiceType.id as (surveyChoiceType.name) for surveyChoiceType in surveyChoiceTypes"
-                      ng-disabled="isDisabled()"
+                      ng-disabled="isDisabled() || dragging"
                       required="true"
                       required
                       id="choice-type">
@@ -44,7 +44,7 @@
             <div class="form-group">
               <date-picker-field
                 ng-if="isLoadingCompleted"
-                disable="isDisabled()"
+                disable="isDisabled() || dragging"
                 form="surveyQuestionDataForm"
                 name="EffectiveStartDate"
                 label="Effective Start Date"
@@ -61,7 +61,7 @@
                 form="surveyQuestionDataForm"
                 name="EffectiveEndDate"
                 label="Effective End Date"
-                disable="readOnly || shouldDisableEndDate"
+                disable="readOnly || shouldDisableEndDate || dragging"
                 ng-model="surveyQuestion.endDate"
                 disable-past="true"
                 end-current-effective="editingItem && shouldDisableStartDate"
@@ -140,7 +140,7 @@
                   <span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
                 </td>
                 <td>
-                  <input ng-model="item.choiceName" type="text" ng-disabled="isDisabled()"
+                  <input ng-model="item.choiceName" type="text" ng-disabled="isDisabled() || dragging"
                          class="form-control"  name="choice"
                          required  maxlength="25" placeholder="Choice">
                 </td>
