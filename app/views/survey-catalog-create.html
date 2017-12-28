@@ -18,7 +18,7 @@
 					   <div class="col-xs-12 col-sm-4">
 							<div class="form-group">
 								<label for="surveyCatalogName">Survey Catalog Name*</label>
-								<input ng-model="surveyCatalog.catalogName" type="text" ng-disabled="isDisabled()"
+								<input ng-model="surveyCatalog.catalogName" type="text" ng-disabled="isDisabled() || dragging"
 									class="form-control" id="surveyCatalogName" name="surveyCatalogName" required
 									maxlength="25" placeholder="Survey Catalog Name">
 							</div>
@@ -29,7 +29,7 @@
                   ng-if="isLoadingCompleted"
 									form="surveyCatalogDataForm" name="EffectiveStartDate"
 									label="Effective Start Date"
-									disable="isDisabled()"
+									disable="isDisabled() || dragging"
 									required="true"
                   disable-past="true"
                   ng-model="surveyCatalog.startDate">
@@ -43,7 +43,7 @@
 									form="surveyCatalogDataForm"
 									name="EffectiveEndDate"
 									label="Effective End Date"
-									disable="readOnly || shouldDisableEndDate"
+									disable="readOnly || shouldDisableEndDate || dragging"
 									ng-model="surveyCatalog.endDate"
                   disable-past="true"
                   end-current-effective="viewEditItem && disablePastDate"
