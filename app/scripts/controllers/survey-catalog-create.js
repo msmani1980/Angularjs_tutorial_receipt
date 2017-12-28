@@ -23,8 +23,17 @@ angular.module('ts5App')
     $scope.disablePastDate = false;
     $scope.shouldDisableEndDate = false;
     $scope.surveyItemList = [];
+    $scope.dragging = false;
     var draggedSurveyItemObject;
     var draggedOntoIemIndex;
+
+    $scope.$on('ANGULAR_DRAG_START', function () {
+      $scope.dragging = true;
+    });
+
+    $scope.$on('ANGULAR_DRAG_END', function () {
+      $scope.dragging = false;
+    });
 
     this.createInit = function() {
       $scope.readOnly = false;
