@@ -14,7 +14,7 @@ angular.module('ts5App')
       var $this = this;
       this.modalElement = angular.element('#delete-record');
 
-      $scope.showDeleteRecordDialog = function (itemId, propertyNamesToDisplayArray) { // TODO: replace all usages, I believe this method name interfeers with directive name
+      $scope.showDeleteRecordDialog = function (itemId, propertyNamesToDisplayArray) { 
         $this.modalElement.modal('show');
         $scope.itemToDelete = itemId;
         $this.formatDisplayedValues(propertyNamesToDisplayArray);
