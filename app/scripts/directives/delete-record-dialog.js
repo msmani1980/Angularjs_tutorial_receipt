@@ -14,7 +14,7 @@ angular.module('ts5App')
       var $this = this;
       this.modalElement = angular.element('#delete-record');
 
-      $scope.showDeleteRecordDialog = function (itemId, propertyNamesToDisplayArray) { 
+      $scope.deleteRecordDialog = function (itemId, propertyNamesToDisplayArray) {
         $this.modalElement.modal('show');
         $scope.itemToDelete = itemId;
         $this.formatDisplayedValues(propertyNamesToDisplayArray);
