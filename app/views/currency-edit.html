@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <form-error-dialog></form-error-dialog>
+  <error-dialog error-response="errorResponse" display="displayError"></error-dialog>
 
     <div class="panel panel-default">
         <div class="panel-heading text-right">Base currency: {{companyBaseCurrency.currencyCode}}</div>
@@ -100,21 +100,21 @@
                             </ui-select>
                         </div>
                     </div>
-					
+
 					<div class="col-xs-12 col-md-2 col-sm-6">
                         <div class="form-group">
 			                <date-picker-field  label="Start Date"  ng-model="currency.startDate" disable-past="true" disable="isCurrencyReadOnly(currency)"
 			                required="true"></date-picker-field>
 			            </div>
 		            </div>
-		            
+
 		            <div class="col-xs-12 col-md-2 col-sm-6">
 			            <div class="form-group">
 			                <date-picker-field  label="End Date"  ng-model="currency.endDate" disable-past="true" disable="isCurrencyPartialReadOnly(currency)"
 			                required="true" end-current-effective="isCurrencyReadOnly(currency)"></date-picker-field>
 		                </div>
 		            </div>
-		            
+
                     <div class="col-xs-12 col-sm-12 col-md-1 text-right">
                         <button type="button" class="btn btn-primary btn-xs" ng-click="saveDetailedCompanyCurrency($index, currency)" ng-hide="isCurrencyPartialReadOnly(currency)">
                           <i ng-hide="currency.isNew" class="fa fa-pencil"></i>
