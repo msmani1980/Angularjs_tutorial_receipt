@@ -130,6 +130,7 @@ angular.module('ts5App')
       $this.showToast('danger', 'Currency', 'error saving currency!');
 
       $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
       }
@@ -147,7 +148,7 @@ angular.module('ts5App')
       if (!currency.isNew) {
         payload.id = currency.id;
       }
-      
+
       payload.companyId = currency.companyId;
       payload.currencyId = currency.currencyId;
       payload.startDate = (currency.startDate) ? dateUtility.formatDateForAPI(currency.startDate) : null;
@@ -185,11 +186,11 @@ angular.module('ts5App')
 
       angular.element('.delete-warning-modal').modal('show');
     };
-    
+
     $scope.removeAddedCurrency = function(key) {
       $scope.companyCurrencyList.splice(key, 1);
     };
-      
+
     this.getCurrencyIndexById = function(currencyId) {
       return $scope.companyCurrencyList.map(function(currency) {
         return currency.id;
