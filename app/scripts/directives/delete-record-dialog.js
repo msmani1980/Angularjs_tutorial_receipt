@@ -12,10 +12,9 @@ angular.module('ts5App')
     var deleteRecordDialogController = function ($scope) {
 
       var $this = this;
-      this.modalElement = angular.element('#delete-record');
 
       $scope.deleteRecordDialog = function (itemId, propertyNamesToDisplayArray) {
-        $this.modalElement.modal('show');
+        angular.element('#delete-record').modal('show');
         $scope.itemToDelete = itemId;
         $this.formatDisplayedValues(propertyNamesToDisplayArray);
       };
@@ -35,7 +34,7 @@ angular.module('ts5App')
       };
 
       $scope.deleteRecord = function () {
-        $this.modalElement.modal('hide');
+        angular.element('#delete-record').modal('hide');
         $scope.removeRecord($scope.itemToDelete);
       };
 
