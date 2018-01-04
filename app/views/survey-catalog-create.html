@@ -1,0 +1,116 @@
+<div class="module-container">
+	<div class="edit-controls">
+	    <div class="row">
+	      <div class="col-xs-6">
+	        <h2 class="view-name">{{viewName}}</h2>
+	      </div>
+	      <div class="col-xs-6 text-right">
+	        <a class="btn btn-default" ng-href="#/survey-catalog" class="btn" ng-show="readOnly">Back</a>
+	      </div>
+		</div>
+		<error-dialog form-object="surveyCatalogDataForm" error-response="errorResponse" display="displayError">
+		</error-dialog>
+		<!-- Started Modify-->
+		<form name="surveyCatalogDataForm">
+			<div class="panel panel-default">
+			  <div class="panel-body">
+					<div class="row">
+					   <div class="col-xs-12 col-sm-4">
+							<div class="form-group">
+								<label for="surveyCatalogName">Survey Catalog Name*</label>
+								<input ng-model="surveyCatalog.catalogName" type="text" ng-disabled="isDisabled() || dragging"
+									class="form-control" id="surveyCatalogName" name="surveyCatalogName" required
+									maxlength="25" placeholder="Survey Catalog Name">
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-4">
+							<div class="form-group">
+								<date-picker-field
+                  ng-if="isLoadingCompleted"
+									form="surveyCatalogDataForm" name="EffectiveStartDate"
+									label="Effective Start Date"
+									disable="isDisabled() || dragging"
+									required="true"
+                  disable-past="true"
+                  ng-model="surveyCatalog.startDate">
+								</date-picker-field>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-4">
+							<div class="form-group">
+								<date-picker-field
+                  ng-if="isLoadingCompleted"
+									form="surveyCatalogDataForm"
+									name="EffectiveEndDate"
+									label="Effective End Date"
+									disable="readOnly || shouldDisableEndDate || dragging"
+									ng-model="surveyCatalog.endDate"
+                  disable-past="true"
+                  end-current-effective="viewEditItem && disablePastDate"
+									required="true">
+								</date-picker-field>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="breadcrumb">
+					<h4>Add Survey
+						<button type="button" class="btn btn-primary btn-xs pull-right" ng-hide="isDisabled()" ng-click="addSurveyRow()">
+							<i class="fa fa-plus"></i> Add Survey
+						</button>
+					</h4>
+				</div>
+				<div class="table">
+				  <table class="table table-bordered table-hover">
+					<thead>
+					<tr>
+					  <th class="col-xs-1" ng-hide="isDisabled()" style="text-align:center;">Reorder</th>
+					  <th class="col-xs-8" style="text-align:center;">Survey Name</th>
+					  <th class="col-xs-1" ng-hide="isDisabled()" style="text-align:center;">Action</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-init="item.sortOrderIndex=$index" ng-repeat="item in surveyItemList | orderBy:'sortOrder' track by $index">
+					  <td ng-if="!isDisabled()"
+						  on-drop-success="dropSuccess($event, $index, surveyItemList)"
+						  ui-draggable="!isDisabled()" drag="item"
+						  drag-channel="A" drop-channel="A"
+						  ui-on-Drop="onDrop($event, $data, $index)"
+						  style="text-align:center; cursor: pointer;">
+						<span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
+					  </td>
+					  <td>
+						<select required name="survey" id="survey[{{item.surveyIndex}}]" class="form-control" ng-change="addSurveyItem(item)"
+							ng-options="survey.id as survey.surveyName for survey in surveyList"
+							ng-model="item.surveyId" ng-disabled="isDisabled()">
+							<option value="">Select Survey ...</option>
+						</select>
+					  </td>
+					  <td ng-hide="isDisabled()" style="text-align:center;">
+						<button class="btn btn-danger btn-xs" ng-click="removeItem(item)">
+						  <i class="fa fa-trash"></i>
+						</button>
+					  </td>
+					</tr>
+					</tbody>
+				  </table>
+				 </div>
+				 <div class="panel-footer text-right">
+					<a href="#/survey-catalog" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+					<button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+						<span class="fa fa-check-square-o" aria-hidden="true"></span> <span
+							class="hidden-xs">Save</span>
+					</button>
+				 </div>
+		</form>
+	</div>
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Survey Management"></dynamic-left-nav>
