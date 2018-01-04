@@ -46,13 +46,13 @@ angular.module('ts5App')
     this.viewInit = function() {
       $scope.readOnly = true;
       $scope.viewName = 'View Survey Catalog';
-      $scope.editingItem = true;
+      $scope.viewEditItem = true;
     };
 
     this.editInit = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Survey Catalog';
-      $scope.editingItem = true;
+      $scope.viewEditItem = true;
     };
 
     $scope.isDisabled = function() {
@@ -201,7 +201,7 @@ angular.module('ts5App')
     };
 
     this.setMinDateValue = function () {
-      if ($scope.editingItem) {
+      if ($scope.viewEditItem) {
         $scope.surveyCatalog.startDate = $scope.viewStartDate;
         $scope.surveyCatalog.endDate = $scope.viewEndDate;
       }
@@ -313,7 +313,7 @@ angular.module('ts5App')
 
       $scope.minDate = dateUtility.nowFormattedDatePicker();
 
-      if ($routeParams.id && $scope.editingItem) {
+      if ($routeParams.id && $scope.viewEditItem) {
         surveyCatalogFactory.getSurveyCatalog($routeParams.id).then($this.getSurveyCatalogSuccess);
       } else {
         $this.hideLoadingModal();
