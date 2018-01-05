@@ -194,7 +194,7 @@
 
             <select ng-model="formData.baseCurrencyId" class="form-control">
               <option ng-selected="isSelected(formData.baseCurrencyId, currency.id)"
-                      ng-repeat="currency in currencies | orderBy:'code'"
+                      ng-repeat="currency in currencies | unique: 'code' | orderBy:'code'"
                       value="{{currency.id}}">
                 {{ currency.code }} - {{ currency.name }}
               </option>
