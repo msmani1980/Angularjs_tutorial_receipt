@@ -33,14 +33,14 @@ angular.module('ts5App')
     $scope.$watchCollection('rejFiles', function (oldObj/*, newObj*/) {
       oldObj = oldObj || [];
       if (oldObj.length >= 1) {
-        showToast('danger', 'Import from file', oldObj[0].name + ' does not meet file criteria');
+        showToast('danger', 'Import from file', oldObj.name + ' does not meet file criteria');
       }
     });
 
     $scope.$watchCollection('files', function (oldObj/*, newObj*/) {
       oldObj = oldObj || [];
       if (oldObj.length >= 1) {
-        showToast('success', 'Import from file', oldObj[0].name + ' is ready to be uploaded');
+        showToast('success', 'Import from file', oldObj.name + ' is ready to be uploaded');
       }
     });
 

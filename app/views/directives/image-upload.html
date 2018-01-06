@@ -3,12 +3,12 @@
 
   <div ngf-select="" ngf-drop="" class="drop-box retail-drop-box" ng-model="files" ng-model-rejected="rejFiles"
        ngf-change="filesChanged()" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
-       ngf-accept="'{{imageName}}.{{fileFormat}}'" ngf-min-size='10' ngf-max-size='{{itemMaxSize}}'>
+       ngf-accept="'{{imageName}}.{{fileFormat}}'" ngf-validate = "{size: {max: '{{itemMaxSize}}', min: '10B'}, height: {max: {{imgHeight}}}, width: {max: {{imgWidth}}}}">
     <b>{{imageTypeText}}</b><br>
     <b>Drop Images, or Click.</b>
 
     <p>Accepted file formats: {{fileFormat}}.</p>
-    <p ng-show="formData.companyTypeId==1">{{imageNameMessage}}{{formData.companyCode}}</p>
+    <p ng-show="formData.companyTypeId==1">{{imageNameMessage}}{{formData.companyCode}}.{{fileFormat}}</p>
   </div>
 
   <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
@@ -24,11 +24,10 @@
   <p class="alert alert-danger" ng-show="rejFiles.length" ng-repeat="f in rejFiles">
     <b>Your file doesn't meet the requirements:</b>
     <br/>
-    <i  ng-show="formData.companyTypeId === '1' && imageName+'.'+fileFormat !== rejFiles[0].name">Invalid image name, accepted name {{imageName}}.{{fileFormat}}, </i>
-    <i ng-show="rejFiles[0].size > 10000">Max resolution: {{imageSize}} pixels.<br/>Accepted image type: {{fileFormat}}.</i>
-    <i ng-show="rejFiles[0].size < 10001">
-  '{{rejFiles[0].name}}' is invalid, or is not an accepted file type.<br/>Accepted image type: {{fileFormat}}.
-    </i>
+    <i ng-show="formData.companyTypeId === '1' && imageName+'.'+fileFormat !== f.name">Invalid image name, accepted name {{imageName}}.{{fileFormat}},<br/></i>
+    <i ng-show="f.$error === 'height.max' || f.$error === 'width.max'">File {{f.name}} has exceed maximum allowed resolution: {{imageSize}} pixels.</i>
+    <i ng-show="f.$error === 'size.max'">File {{f.name}} has exceed maximum allowed size: {{itemMaxSize}}.</i>
+    <i ng-show="f.$error === 'accept'">Image is invalid, or is not an accepted file type.<br/>Accepted image type: {{fileFormat}}.</i>
   </p>
 
   <div class="thumbnails" ng-show="files.length" ng-repeat="(fileKey, file) in files">
@@ -44,7 +43,6 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-4 col-sm-4 col-md-2">
-            <label>Preview</label>
             <img ngf-thumbnail="file" class="fileTest"/>
             <img class="item-image-thumbnail" ngf-thumbnail="file"/>
           </div>
