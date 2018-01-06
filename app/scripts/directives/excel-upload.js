@@ -22,25 +22,25 @@ angular.module('ts5App')
       if (response.toString() === 'OK_BUT_EMAIL_FAILURE') {
         showToast('warning', 'Import from file', 'upload successful, but email notifications have failed');
       } else {
-        showToast('success', 'Import from file', response.config.file[0].name + ' was successful. Please wait for an email to see the status of the file processing, and then return to this screen to see your data');
+        showToast('success', 'Import from file', response.config.file.name + ' was successful. Please wait for an email to see the status of the file processing, and then return to this screen to see your data');
       }
     }
 
     function errorHandler(response) {
-      showToast('danger', 'Import from file', response.config.file[0].name + ' was rejected');
+      showToast('danger', 'Import from file', response.config.file.name + ' was rejected');
     }
 
     $scope.$watchCollection('rejFiles', function (oldObj/*, newObj*/) {
       oldObj = oldObj || [];
       if (oldObj.length >= 1) {
-        showToast('danger', 'Import from file', oldObj[0].name + ' does not meet file criteria');
+        showToast('danger', 'Import from file', oldObj.name + ' does not meet file criteria');
       }
     });
 
     $scope.$watchCollection('files', function (oldObj/*, newObj*/) {
       oldObj = oldObj || [];
       if (oldObj.length >= 1) {
-        showToast('success', 'Import from file', oldObj[0].name + ' is ready to be uploaded');
+        showToast('success', 'Import from file', oldObj.name + ' is ready to be uploaded');
       }
     });
 
@@ -56,15 +56,7 @@ angular.module('ts5App')
       }
     };
 
-    $scope.clearFile = function (filesIndex) {
-      $scope.files.splice(filesIndex, 1);
-    };
-
-    $scope.clearAllFiles = function () {
-      for (var filesIndex in $scope.files) {
-        $scope.clearFile(filesIndex);
-      }
-
+    $scope.clearFile = function () {
       $scope.files = undefined;
     };
 
