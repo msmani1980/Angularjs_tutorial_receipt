@@ -273,6 +273,9 @@ angular.module('ts5App', [
   }).when('/reconciliation-discrepancy-detail/:storeInstanceId', {
     templateUrl: 'views/reconciliation-discrepancy-detail.html',
     controller: 'ReconciliationDiscrepancyDetail'
+  }).when('/reconciliation-discrepancy-detail/view/:storeInstanceId', {
+    templateUrl: 'views/reconciliation-discrepancy-detail.html',
+    controller: 'ReconciliationDiscrepancyDetail'
   }).when('/login', {
     templateUrl: 'views/login.html',
     controller: 'LoginCtrl'
