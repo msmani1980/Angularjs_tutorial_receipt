@@ -14,6 +14,14 @@ angular.module('ts5App')
 
     var $this = this;
 
+    $scope.isViewMode = false;
+    this.checkFormState = function() {
+      var path = $location.path();
+      if(path.search('reconciliation-discrepancy-detail/view/') !== -1) {
+        $scope.isViewMode = true;
+      }
+    };
+
     function formatAsCurrency(valueToFormat, optionalNumDigits) {
       var precision = (optionalNumDigits) ? '%.' + optionalNumDigits + 'f' : '%.2f';
       return (valueToFormat) ? sprintf(precision, valueToFormat) : sprintf(precision, 0);
@@ -284,7 +292,7 @@ angular.module('ts5App')
                cashbagId: cashBag.cashbagId,
                currencyId: cashBag.retailCompanyCurrency
              }).map(function (cash) {
-               eposCalculatedAmount = cash.amount; 
+               eposCalculatedAmount = cash.amount;
              });
 
             crewAmount = eposCalculatedAmount;
@@ -316,7 +324,7 @@ angular.module('ts5App')
             isDiscrepancy: isDiscrepancy
           };
           formattedCashBagList.push(cashBagItem);
-        }  
+        }
       });
 
       $scope.cashBags = formattedCashBagList;
@@ -545,7 +553,7 @@ angular.module('ts5App')
         var discountTotal = makeFinite(discount.bankAmountFinal);
         total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
       });
-      
+
       total += getManualDataTotals('discount');
 
       return total;
@@ -673,9 +681,9 @@ angular.module('ts5App')
       });
 
       if ($this.stockTotals.length > 1) {
-        $this.stockTotals = mergeStockTotalDuplicates($this.stockTotals);  
+        $this.stockTotals = mergeStockTotalDuplicates($this.stockTotals);
       }
-      
+
       var totalPromotion = getTotalsForPromotions($this.promotionTotals);
       var totalItems = getTotalsFor($this.stockTotals, 'Regular');
       var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
@@ -832,7 +840,7 @@ angular.module('ts5App')
         discount: setManualDataSet(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude, null, 'verificationConfirmedOn'),
         promotion: setManualDataSet(angular.copy(responseCollectionFromAPI[7].response), manualDataToInclude, null, 'verificationConfirmedOn')
       };
-      
+
     }
 
     function setSubmittedCashBagList() {
@@ -891,6 +899,7 @@ angular.module('ts5App')
     }
 
     function init() {
+      $this.checkFormState();
       $scope.actionOnPaymentReport = 'Show';
       showLoadingModal('Loading Reconciliation Discrepancy Details');
       initDependencies();

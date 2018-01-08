@@ -450,6 +450,10 @@ angular.module('ts5App')
       $location.path('/reconciliation-discrepancy-detail/' + instance.id);
     };
 
+    $scope.viewView = function(instance) {
+      $location.path('/reconciliation-discrepancy-detail/view/' + instance.id);
+    };
+
     $scope.viewAmendData = function(instance) {
       $location.path('/store-instance-amend/' + instance.id);
     };
