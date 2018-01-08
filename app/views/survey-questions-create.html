@@ -1,0 +1,180 @@
+<div class="module-container">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/survey-questions" class="btn" ng-show="readOnly">Back</a>
+      </div>
+    </div>
+  </div>
+  <error-dialog form-object="surveyQuestionDataForm" error-response="errorResponse" display="displayError"></error-dialog>
+  <!-- Started Modify-->
+  <form name="surveyQuestionDataForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">Survey Question</div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label for="question-name">Question Name *</label>
+              <input ng-model="surveyQuestion.questionName" type="text" ng-disabled="isDisabled() || dragging"
+                     class="form-control" id="question-name" name="questionName"
+                     required maxlength="25" placeholder="Question Name">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label for="choice-type">Choice Type *</label>
+              <select class="form-control"
+                      name="choiceType"
+                      ng-model="surveyQuestion.questionTypeId"
+                      ng-options="surveyChoiceType.id as (surveyChoiceType.name) for surveyChoiceType in surveyChoiceTypes"
+                      ng-disabled="isDisabled() || dragging"
+                      required="true"
+                      required
+                      id="choice-type">
+                <option selected="selected" value>Choice Type</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <date-picker-field
+                ng-if="isLoadingCompleted"
+                disable="isDisabled() || dragging"
+                form="surveyQuestionDataForm"
+                name="EffectiveStartDate"
+                label="Effective Start Date"
+                disable-past="true"
+                required="true"
+                ng-model="surveyQuestion.startDate">
+              </date-picker-field>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <date-picker-field
+                ng-if="isLoadingCompleted"
+                form="surveyQuestionDataForm"
+                name="EffectiveEndDate"
+                label="Effective End Date"
+                disable="readOnly || shouldDisableEndDate || dragging"
+                ng-model="surveyQuestion.endDate"
+                disable-past="true"
+                end-current-effective="editingItem && shouldDisableStartDate"
+                required="true">
+              </date-picker-field>
+            </div>
+          </div>
+        </div>
+        <!--
+        <div class="row">
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label class="control-label">Question Text</label>
+              <textarea class="form-control" ng-model="surveyQuestion.questionText" name="description" ng-pattern="regexp.sentence" required ng-disabled="isDisabled()" ></textarea>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label for="choice-type">Locale</label>
+              <select class="form-control"
+                      name="locale"
+                      ng-model="surveyQuestion.questionType"
+                      ng-options="locale.id as (locale.code) for locale in locales"
+                      ng-disabled="isDisabled()"
+                      required="true"
+                      required
+                      id="locale">
+                <option selected="selected" value>Locale</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-3">
+            <label>Options</label>
+            <div class="form-group">
+              <input type="checkbox"
+                     id="first-trip"
+                     ng-model="surveyQuestion.emptyDefault"
+                     ng-disabled="isDisabled()">
+              <label for="first-trip">Empty default</label>
+            </div>
+          </div>
+        </div>
+        -->
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Choices
+        <button ng-disabled="isDisabled()" type="button" class="btn btn-primary btn-xs pull-right" ng-click="addSurveyChoiceRow()" ng-hide="readOnly">
+          <i class="fa fa-plus"></i> Add Choice
+        </button>
+      </div>
+      <div class="panel-body">
+        <div class="table">
+          <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th class="col-xs-1" ng-show="isSurveyQuestionEditable()" style="text-align:center;">Reorder</th>
+              <th class="col-xs-5">Choice</th>
+              <th ng-hide="isDisabled()" class="col-xs-1">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr
+                ng-init="item.sortOrderIndex=$index"
+                ng-repeat="item in surveyChoices | orderBy:'orderBy' track by $index">
+                <td ng-hide="isDisabled()"
+                    on-drop-success="dropSuccess($event, $index, surveyChoices)"
+                    ui-draggable="isSurveyQuestionEditable()"
+                    drag="item"
+                    drag-channel="A"
+                    drop-channel="A"
+                    ui-on-Drop="onDrop($event, $data, $index)"
+                    style="text-align:center; cursor: pointer;">
+                  <span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
+                </td>
+                <td>
+                  <input ng-model="item.choiceName" type="text" ng-disabled="isDisabled() || dragging"
+                         class="form-control"  name="choice"
+                         required  maxlength="25" placeholder="Choice">
+                </td>
+                <td ng-hide="isDisabled()">
+                  <button class="btn btn-danger btn-xs" ng-click="removeItem($index)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr ng-if="surveyChoices.length === 0">
+                <td colspan="{{isDisabled() ? 1 : 3}}">No choices added yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel-footer text-right">
+        <a href="#/survey-questions" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly" ng-disabled="surveyChoices.length === 0">
+          <span class="fa fa-check-square-o" aria-hidden="true"></span> <span
+          class="hidden-xs">Save</span>
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Survey Management"></dynamic-left-nav>
