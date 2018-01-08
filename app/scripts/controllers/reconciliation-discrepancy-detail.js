@@ -17,7 +17,7 @@ angular.module('ts5App')
     $scope.isViewMode = false;
     this.checkFormState = function() {
       var path = $location.path();
-      if(path.search('reconciliation-discrepancy-detail/view/') !== -1) {
+      if (path.search('reconciliation-discrepancy-detail/view/') !== -1) {
         $scope.isViewMode = true;
       }
     };
