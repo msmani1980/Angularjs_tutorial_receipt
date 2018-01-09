@@ -587,8 +587,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
         var relationshipPayload = {
           startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
-          endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
-          relativeCompanyType: 'Supplier'
+          endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
         };
 
         companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get(), relationshipPayload).then($this.setSupplierCompanies);
@@ -647,7 +646,22 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.setSupplierCompanies = function(dataFromAPI) {
       var companies = angular.copy(dataFromAPI.companyRelationships);
 
-      $scope.supplierCompanies = lodash.filter(companies, { relativeCompanyActive: true });
+      $scope.supplierCompanies = companies.filter(function(company) {
+        return (company.relativeCompanyType === 'Supplier' || company.companyTypeName === 'Supplier') && company.relativeCompanyActive && company.companyActive;
+      })
+      .map(function (company) {
+        if (company.relativeCompanyType === 'Supplier') {
+          return {
+            relativeCompanyId: company.relativeCompanyId,
+            relativeCompany: company.relativeCompany
+          };
+        } else {
+          return {
+            relativeCompanyId: company.companyId,
+            relativeCompany: company.companyName
+          };
+        }
+      });
 
       $this.checkIfSupplierCompanyExpired();
     };
