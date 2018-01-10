@@ -180,6 +180,9 @@ angular.module('ts5App')
 
     $scope.onCompanyCarrierTypeChange = function () {
       $scope.areCarrierNumbersLoaded = false;
+      $scope.schedule.carrierNumber = null;
+      $scope.schedule.companyCarrierId = null;
+
       var payload = {
         companyCarrierTypeId: $scope.schedule.companyCarrierTypeId
       };
