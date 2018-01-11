@@ -161,7 +161,7 @@
             <div class="form-group">
               <label for="tail-number">Tail Number</label>
               <input ng-if="isDisabled() && getScheduleSucceded"
-                     ng-disabled="isDisabled()"
+                     ng-disabled="isDisabled() || !areCarrierNumbersLoaded"
                      ng-model="schedule.carrierNumber"
                      type="text"
                      class="form-control"
@@ -174,6 +174,7 @@
                       ng-model="schedule.companyCarrierId"
                       ng-options="number.id as number.carrierNumber for number in carrierNumbers"
                       id="tail-number"
+                      ng-disabled="!areCarrierNumbersLoaded"
                       ng-change="onCompanyCarrierNumberChange()">
                 <option selected="selected" value>Tail Number</option>
               </select>
