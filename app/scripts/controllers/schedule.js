@@ -32,6 +32,8 @@ angular.module('ts5App')
     $scope.isCreate = false;
     $scope.calendarsReady = false;
 
+    $scope.areCarrierNumbersLoaded = true;
+
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
     };
@@ -173,9 +175,14 @@ angular.module('ts5App')
     this.getCarrierNumbersSuccess = function(response) {
       $scope.carrierNumbers = response.response;
       $scope.onCompanyCarrierNumberChange();
+      $scope.areCarrierNumbersLoaded = true;
     };
 
     $scope.onCompanyCarrierTypeChange = function () {
+      $scope.areCarrierNumbersLoaded = false;
+      $scope.schedule.carrierNumber = null;
+      $scope.schedule.companyCarrierId = null;
+
       var payload = {
         companyCarrierTypeId: $scope.schedule.companyCarrierTypeId
       };
