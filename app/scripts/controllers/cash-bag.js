@@ -149,6 +149,7 @@ angular.module('ts5App')
       }
 
       $localStorage.cashBagBankRefNumber = $scope.cashBag.bankReferenceNumber;
+      $localStorage.cashBagBankRefNumberDate = dateUtility.nowFormattedDatePicker();
       $localStorage.cashBagNumber = $scope.cashBag.cashBagNumber;
       switch ($routeParams.state) {
         case 'edit':
@@ -274,9 +275,13 @@ angular.module('ts5App')
     }
 
     $scope.shouldShowBankRefNumberAlert = function() {
-      return ($scope.state === 'edit' && $localStorage.cashBagBankRefNumber && $scope.oldBankRefNumber &&
+      return (
+        $scope.state === 'edit' &&
+        $localStorage.cashBagBankRefNumber &&
+        $scope.oldBankRefNumber &&
         $localStorage.cashBagBankRefNumber !== $scope.oldBankRefNumber &&
-         $localStorage.cashBagNumber === $scope.oldCashBagNumber);
+        $localStorage.cashBagNumber === $scope.oldCashBagNumber
+      );
     };
 
     function setBankReferenceNumberFromLocalStorage() {
@@ -284,8 +289,8 @@ angular.module('ts5App')
               $scope.companyPreferences.defaultBankRefNumber.isSelected);
       $scope.oldBankRefNumber = $scope.cashBag.bankReferenceNumber || '';
       $scope.oldCashBagNumber = $scope.cashBag.cashBagNumber;
-      
-      if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber && $scope.cashBag.bankReferenceNumber === null) {
+
+      if ($localStorage.cashBagBankRefNumber && shouldSaveBankRefNumber && $scope.cashBag.bankReferenceNumber === null && $localStorage.cashBagBankRefNumberDate === dateUtility.nowFormattedDatePicker()) {
         $scope.cashBag.bankReferenceNumber = $localStorage.cashBagBankRefNumber;
       }
     }
@@ -508,7 +513,7 @@ angular.module('ts5App')
             getStoreInstanceListResponseHandler);
         } else {
           hideLoadingModal();
-        }        
+        }
       }, showMessage);
     };
 
