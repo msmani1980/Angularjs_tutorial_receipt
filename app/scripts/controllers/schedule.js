@@ -259,7 +259,7 @@ angular.module('ts5App')
         seatConfigurationCode: response.seatConfigurationCode
       };
 
-      $this.getAllCarrierNumbers();
+      $scope.onCompanyCarrierTypeChange();
       $scope.getScheduleSucceded = true;
     };
 
@@ -286,11 +286,6 @@ angular.module('ts5App')
       }
 
       $this.hideLoadingModal();
-
-      var initFunctionName = ($routeParams.action + 'Init');
-      if ($this[initFunctionName]) {
-        $this[initFunctionName]();
-      }
     };
 
     this.makeInitPromises = function() {
@@ -306,6 +301,10 @@ angular.module('ts5App')
 
     this.init = function() {
       $this.showLoadingModal('Loading Data');
+      var initFunctionName = ($routeParams.action + 'Init');
+      if ($this[initFunctionName]) {
+        $this[initFunctionName]();
+      }
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess);
     };
