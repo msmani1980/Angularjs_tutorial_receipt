@@ -59,6 +59,14 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
       employeeMessagesFactory.deleteEmployeeMessage(record.id).then($this.deleteEmployeeMessagesSuccess);
     };
 
+    $scope.getUpdateBy = function (message) {
+      return (message.updatedByPerson) ? message.updatedByPerson.userName : message.createdByPerson.userName;
+    };
+
+    $scope.getUpdatedOn = function (message) {
+      return message.updatedOn ? dateUtility.formatTimestampForApp(message.updatedOn) : dateUtility.formatTimestampForApp(message.createdOn);
+    };
+
     this.setSchedulesFromAPI = function(dataFromAPI) {
       $scope.schedulesList = angular.copy(dataFromAPI.distinctSchedules);
     };
