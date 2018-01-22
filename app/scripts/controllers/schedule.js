@@ -177,7 +177,7 @@ angular.module('ts5App')
       $scope.onCompanyCarrierNumberChange();
       $scope.areCarrierNumbersLoaded = true;
 
-      if(!$scope.getScheduleSucceded) {
+      if (!$scope.getScheduleSucceded) {
         $scope.getScheduleSucceded = true;
       }
     };
