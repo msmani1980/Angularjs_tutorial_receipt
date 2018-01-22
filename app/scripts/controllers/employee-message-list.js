@@ -60,7 +60,15 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     };
 
     $scope.getUpdateBy = function (message) {
-      return (message.updatedByPerson) ? message.updatedByPerson.userName : message.createdByPerson.userName;
+      if (message.updatedByPerson) {
+        return message.updatedByPerson.userName;
+      }
+
+      if (message.createdByPerson) {
+        return message.createdByPerson.userName;
+      }
+
+      return '';
     };
 
     $scope.getUpdatedOn = function (message) {
