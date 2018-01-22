@@ -48,6 +48,13 @@ angular.module('ts5App')
           className: 'dashboard-companyExchangeRateEdit',
           package: 'CURRENCYEXCHNG',
           role: 'EPOSEXCHNG'
+        }, {
+          name: 'Report Exchange Rate',
+          route: '/#/report-exchange-rate',
+          icon: 'icon-manage-transactions',
+          className: 'dashboard-companyExchangeRateEdit',
+          package: 'CURRENCYEXCHNG',
+          role: 'EPOSEXCHNG'
         }]
       }, {
         title: 'Retail Item Management',
