@@ -23,7 +23,6 @@ angular.module('ts5App')
     };
 
     var timestampFormatForApp = function () {
-      console.log(companyFormatUtility.getDateFormat());
       return companyFormatUtility.getDateFormat() + ' HH:mm:ss';
     };
 
