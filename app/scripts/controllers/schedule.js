@@ -194,6 +194,15 @@ angular.module('ts5App')
       return scheduleFactory.getCarrierNumbers(companyId, '2', payload).then($this.getCarrierNumbersSuccess);
     };
 
+    $scope.loadCarrierNumbersOnEdit = function () {
+      $scope.areCarrierNumbersLoaded = false;
+      var payload = {
+        companyCarrierTypeId: $scope.schedule.companyCarrierTypeId
+      };
+
+      return scheduleFactory.getCarrierNumbers(companyId, '2', payload).then($this.getCarrierNumbersSuccess);
+    };
+
     this.getAllCarrierNumbers = function () {
       return scheduleFactory.getCarrierNumbers(companyId, '2').then($this.getCarrierNumbersSuccess);
     };
@@ -263,7 +272,7 @@ angular.module('ts5App')
         seatConfigurationCode: response.seatConfigurationCode
       };
 
-      $scope.onCompanyCarrierTypeChange();
+      $scope.loadCarrierNumbersOnEdit();
     };
 
     this.getStationsSuccess = function(response) {
