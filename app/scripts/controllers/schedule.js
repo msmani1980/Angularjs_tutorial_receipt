@@ -176,6 +176,10 @@ angular.module('ts5App')
       $scope.carrierNumbers = response.response;
       $scope.onCompanyCarrierNumberChange();
       $scope.areCarrierNumbersLoaded = true;
+
+      if(!$scope.getScheduleSucceded) {
+        $scope.getScheduleSucceded = true;
+      }
     };
 
     $scope.onCompanyCarrierTypeChange = function () {
@@ -260,7 +264,6 @@ angular.module('ts5App')
       };
 
       $scope.onCompanyCarrierTypeChange();
-      $scope.getScheduleSucceded = true;
     };
 
     this.getStationsSuccess = function(response) {
@@ -305,7 +308,7 @@ angular.module('ts5App')
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
-      
+
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess);
     };
