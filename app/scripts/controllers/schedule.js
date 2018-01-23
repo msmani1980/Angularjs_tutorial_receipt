@@ -176,6 +176,10 @@ angular.module('ts5App')
       $scope.carrierNumbers = response.response;
       $scope.onCompanyCarrierNumberChange();
       $scope.areCarrierNumbersLoaded = true;
+
+      if (!$scope.getScheduleSucceded) {
+        $scope.getScheduleSucceded = true;
+      }
     };
 
     $scope.onCompanyCarrierTypeChange = function () {
@@ -183,6 +187,15 @@ angular.module('ts5App')
       $scope.schedule.carrierNumber = null;
       $scope.schedule.companyCarrierId = null;
 
+      var payload = {
+        companyCarrierTypeId: $scope.schedule.companyCarrierTypeId
+      };
+
+      return scheduleFactory.getCarrierNumbers(companyId, '2', payload).then($this.getCarrierNumbersSuccess);
+    };
+
+    $scope.loadCarrierNumbersOnEdit = function () {
+      $scope.areCarrierNumbersLoaded = false;
       var payload = {
         companyCarrierTypeId: $scope.schedule.companyCarrierTypeId
       };
@@ -259,8 +272,7 @@ angular.module('ts5App')
         seatConfigurationCode: response.seatConfigurationCode
       };
 
-      $scope.onCompanyCarrierTypeChange();
-      $scope.getScheduleSucceded = true;
+      $scope.loadCarrierNumbersOnEdit();
     };
 
     this.getStationsSuccess = function(response) {
@@ -305,7 +317,7 @@ angular.module('ts5App')
       if ($this[initFunctionName]) {
         $this[initFunctionName]();
       }
-      
+
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess);
     };
