@@ -113,17 +113,21 @@
         <th class="col-xs-8">Message</th>
         <th>Effective From</th>
         <th>Effective To</th>
+        <th>Updated Date/Time</th>
+        <th>Updated User</th>
         <th>Actions</th>
       </tr>
       </thead>
       <tbody>
       <tr ng-hide="employeeMessagesList.length">
-        <td colspan="4" class="bg-warning text-center"><i class="fa fa-exclamation-triangle"></i> There are no records to show</td>
+        <td colspan="6" class="bg-warning text-center"><i class="fa fa-exclamation-triangle"></i> There are no records to show</td>
       </tr>
       <tr ng-repeat="message in employeeMessagesList">
         <td>{{ message.employeeMessageText }}</td>
         <td>{{ message.startDate }}</td>
         <td>{{ message.endDate }}</td>
+        <td>{{ getUpdatedOn(message) }}</td>
+        <td>{{ getUpdateBy(message) }}</td>
         <td>
           <button class="btn btn-info btn-xs" ng-click="goToDetailPage('view', message.id)"><i class="fa fa-file"></i>
           </button>
