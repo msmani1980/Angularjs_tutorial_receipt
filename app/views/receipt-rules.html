@@ -25,7 +25,7 @@
         </button>
       </div>
     </div>
-	
+
     <div class="panel panel-default no-transition" id="search-collapse">
       <form name="receiptRuleSearchForm" ng-submit="searchReceiptRuleData()">
         <div class="panel-body">
@@ -66,6 +66,8 @@
           <th>Country</th>
           <th>Station</th>
           <th>Print Auto-Receipt For</th>
+          <th>Updated Date/Time</th>
+          <th>Updated User</th>
           <th>Actions</th>
         </tr>
         </thead>
@@ -74,6 +76,8 @@
           <td>{{ receiptRule.countryName }}</td>
           <td>{{ receiptRule.stationCode }}</td>
           <td>{{ receiptRule.autoPrint}}</td>
+          <td>{{ getUpdatedOn(receiptRule) }}</td>
+          <td>{{ getUpdateBy(receiptRule) }}</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="redirectToReceiptRule(receiptRule.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
