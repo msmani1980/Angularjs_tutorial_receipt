@@ -446,6 +446,13 @@ angular.module('ts5App')
           className: 'dashboard-manualECS',
           package: 'RECONCILIATION',
           role: 'RELATEESC'
+        },{
+          name: 'Manage Cash Bag',
+          route: '/#/reconciliation-cash-bag-list',
+          icon: 'icon-create-receipt-rules',
+          className: 'dashboard-manageCashBag',
+          package: 'RECONCILIATION',
+          role: 'RECONCILIATION'
         }]
       }, {
         title: 'Survey Management',
