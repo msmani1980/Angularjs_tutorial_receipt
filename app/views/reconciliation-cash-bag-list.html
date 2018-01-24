@@ -1,0 +1,274 @@
+<div class="container module-container">
+
+  <error-dialog form-object="cashBagSearchForm" error-response="errorResponse" display="displayError"></error-dialog>
+  <missing-daily-exchange-modal check-on-load="false"></missing-daily-exchange-modal>
+
+  <!-- Add cash bag modal-->
+  <div class="modal fade" id="addCashBagModal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="hideCreatePopup()"><span class="fa fa-close"></span></button>
+          <h4 class="modal-title">Search Store Instance</h4>
+          <p ng-show="popupFromEdit"><br><span class="fa fa-exclamation-triangle"></span> <i>This cash bag does not have a store instance associated with it. Please select a store instance before proceeding to edit.</i></p>
+        </div>
+
+        <div class="modal-body">
+          <div ng-if="displayModalError" class="alert alert-danger fade in" role="alert">
+            <p>{{ createCashBagError }}</p>
+          </div>
+          <div class="row">
+            <form name="createCashBagForm">
+
+              <div class="form-group col-xs-4">
+                <date-picker
+                  id="createCashBagDatePicker"
+                  element-class="col-xs-12"
+                  disable-date-range="false"
+                  start-date-model="search.scheduleDate"
+                  is-search-field="true"
+                  label-from="Schedule Date"
+                  min-date="scheduleMinDate"
+                  max-date="scheduleMaxDate"
+                  required="true">
+                </date-picker>
+              </div>
+
+              <div class="form-group col-xs-4">
+                <label>Schedule Number</label>
+                <ui-select
+                  ng-disabled="isDateSelected()"
+                  ng-model="search.selectedSchedule"
+                  ng-change="clearStoreNumber()"
+                  theme="bootstrap"
+                  placeholder="Select Schedule">
+                  <ui-select-match
+                    placeholder="Select Schedule">{{ $select.selected.scheduleNumber}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="schedule in filteredSchedulesList | filter: $select.search | orderBy:'scheduleNumber'">
+                    <div ng-bind-html="schedule.scheduleNumber | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+              <div class="form-group col-xs-4">
+                <label>Store Number</label>
+                <ui-select
+                  ng-disabled="isDateSelected()"
+                  ng-model="search.selectedStoreNumber"
+                  ng-change="clearSelectedSchedule()"
+                  theme="bootstrap"
+                  placeholder="Select Store Number">
+                  <ui-select-match
+                    placeholder="Select Store Number">{{ $select.selected.storeNumber}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="store in storeList | filter: $select.search | orderBy:'storeNumber'">
+                    <div ng-bind-html="store.storeNumber | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+              <div class="form-group col-xs-12 text-right">
+                <button type="button" class="btn btn-default" ng-click="hideCreatePopup()">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="findStoreInstance()">Search</button>
+              </div>
+            </form>
+          </div>
+          <div ng-if="listLoading" class="text-center" style="width:100%">
+            <i class="fa fa-spin fa-circle-o-notch fa-2x"></i>
+          </div>
+          <div class="table-responsive">
+            <table ng-if="shouldShowInstanceTable()" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th>Store Instance</th>
+              <th>Store Number</th>
+              <th>Schedule Number</th>
+              <th>Schedule Date</th>
+              <th>Store Instance Status</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="storeInstance in storeInstanceList">
+              <td>{{storeInstance.id}}</td>
+              <td>{{storeInstance.storeNumber}}</td>
+              <td>{{storeInstance.scheduleNumber}}</td>
+              <td>{{storeInstance.scheduleDate}}</td>
+              <td>{{storeInstance.storeStatus.code}}</td>
+              <td>
+                <button ng-if="(storeInstance.storeStatus.code !== 'Commission Paid')" type="button" class="btn btn-info btn-xs" ng-click="continueToEditOrCreate(storeInstance)">
+                  <i class="fa fa-plus"></i>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+
+        <button class="btn btn-default" data-toggle="collapse" data-target="#searchCollapse" aria-controls="searchCollapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+
+        <button
+          ng-click="showCreatePopup()"
+          class="btn btn-primary add-cash-bag-btn"
+          data-loading-text="Loading...">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+          <span class="hidden-xs">Add Cash Bag</span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default collapse in no-transition" id="searchCollapse" aria-expanded="true">
+    <form name="cashBagSearchForm" ng-submit="searchCashBag()">
+      <div class="panel-body">
+        <div class="row">
+
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="cashBagNumber">Cash Bag #</label>
+              <input ng-model="search.cashBagNumber" type="text" class="form-control" id="cashBagNumber">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="form-group">
+              <label>Bank Ref #</label>
+              <input ng-model="search.bankReferenceNumber" type="text" class="form-control" title="bank reference number">
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="cashBag-schedule">Schedule Number</label>
+              <input ng-model="search.scheduleNumber" type="text" class="form-control" id="cashBag-schedule">
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <date-picker
+              element-class="col-xs-12"
+              disable-date-range="true"
+              start-date-model="search.startDate"
+              is-search-field="true"
+              label-from="Schedule Date">
+            </date-picker>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="cashBag-storeNumber">Store Number</label>
+              <input ng-model="search.storeNumber" type="text" class="form-control" id="cashBag-storeNumber">
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="cashBag-storeInstanceId">Store Instance</label>
+              <input ng-model="search.storeInstanceId" type="text" class="form-control" id="cashBag-storeInstanceId">
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="cashBag-origin">Origin</label>
+              <ui-select multiple ng-model="search.departureStationCode" theme="bootstrap" sortable="true" style="min-height:35px">
+                <ui-select-match placeholder="Select Departure Station">{{ $item.stationCode }} - {{ $item.stationName }}</ui-select-match>
+                <ui-select-choices repeat="station in stationList | filter: $select.search | orderBy:'stationCode'">
+                  <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="cashBag-destination">Destination</label>
+              <ui-select multiple ng-model="search.arrivalStationCode" theme="bootstrap" sortable="true" style="min-height:35px">
+                <ui-select-match placeholder="Select Arrival Station">{{ $item.stationCode }} - {{ $item.stationName }}</ui-select-match>
+                <ui-select-choices repeat="station in stationList | filter: $select.search | orderBy:'stationCode'">
+                  <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="panel-footer text-right">
+        <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="table-responsive">
+    <table ng-if="cashBagList.length > 0" infinite-scroll="loadCashBagList()" infinite-scroll-immediate-check="false" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>Cash Bag</th>
+      <th>Bank Ref #</th>
+      <th>Schedule #</th>
+      <th>Date</th>
+      <th>Store #</th>
+      <th>Store Instance</th>
+      <th>Origin</th>
+      <th>Destination</th>
+      <th>User ID</th>
+      <th>Date/Time</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="cashBag in cashBagList" ng-class="{'new':isNew(cashBag.id)}">
+      <td>{{ cashBag.cashBagNumber }}</td>
+      <td>{{ cashBag.bankReferenceNumber }}</td>
+      <td>{{ cashBag.scheduleNumber }}</td>
+      <td>{{ cashBag.scheduleDate }}</td>
+      <td>{{ cashBag.storeNumber }}</td>
+      <td>{{ cashBag.storeInstanceId }}</td>
+      <td>{{ cashBag.departureStationCode }}</td>
+      <td>{{ cashBag.arrivalStationCode }}</td>
+      <td>{{ cashBag._updatedBy }}</td>
+      <td>{{ cashBag.updatedOn }}</td>
+      <td>
+        <button class="btn btn-info btn-xs" ng-click="viewCashBag(cashBag)">
+          <i class="fa fa-file"></i>
+        </button>
+        <button
+          class="btn btn-primary btn-xs edit-cash-bag-{{cashBag.id}}-btn"
+          ng-click="editCashBag(cashBag)"
+          ng-show="isCashBagEditable(cashBag)"
+          data-loading-text="&#9716;">
+          <i class="fa fa-pencil"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  </div>
+  <p ng-if="cashBagList.length > 0" class="record-count small text-center">Showing {{cashBagList.length}} records</p>
+  <p ng-if="isEmptyResultSet()" class="alert alert-info text-center">No records found...</p>
+  <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+</div>
+<dynamic-left-nav></dynamic-left-nav>
