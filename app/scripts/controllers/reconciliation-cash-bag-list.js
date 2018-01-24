@@ -1,7 +1,7 @@
 'use strict';
 /*jshint maxcomplexity:6 */
 angular.module('ts5App')
-  .controller('RetailCashBagListCtrl', function($scope, cashBagFactory, $location, $routeParams, $q, $localStorage,
+  .controller('ReconciliationCashBagListCtrl', function($scope, cashBagFactory, $location, $routeParams, $q, $localStorage,
     messageService,
     dateUtility, lodash, socketIO, $timeout) {
 
