@@ -152,6 +152,11 @@ angular.module('ts5App')
       menuService.deleteMenu($scope.menuToDelete.id).then(successDeleteHandler, showErrors);
     };
 
+    $scope.copyMenu = function() {
+
+      
+    };
+
     $scope.showExcelDownload = function() {
       $scope.modal = $scope.modals[0];
       angular.element('#addCashBagModal').modal('show');
