@@ -64,6 +64,10 @@ angular.module('ts5App')
       $location.path('menu/edit/' + menu.id);
     };
 
+    $scope.copyMenu = function(menu) {
+      $location.path('menu/copy/' + menu.id);
+    };
+
     var loadingProgress = false;
     var attachMenuListToScope = function(menuListFromAPI) {
       $this.meta.count = $this.meta.count || menuListFromAPI.meta.count;
@@ -150,11 +154,6 @@ angular.module('ts5App')
     $scope.deleteMenu = function() {
       angular.element('.delete-warning-modal').modal('hide');
       menuService.deleteMenu($scope.menuToDelete.id).then(successDeleteHandler, showErrors);
-    };
-
-    $scope.copyMenu = function() {
-
-      
     };
 
     $scope.showExcelDownload = function() {

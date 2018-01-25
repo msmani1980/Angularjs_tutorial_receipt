@@ -11,6 +11,8 @@ angular.module('ts5App')
 
     var $this = this;
 
+    $scope.cloningItem = false;
+
     function showLoadingModal(message) {
       angular.element('#loading').modal('show').find('p').text(message);
     }
@@ -35,7 +37,7 @@ angular.module('ts5App')
     };
 
     $scope.isMenuReadOnly = function () {
-      if ($routeParams.state === 'create' || (angular.isUndefined($scope.menu))) {
+      if ($routeParams.state === 'create' || $routeParams.state === 'copy' ||  (angular.isUndefined($scope.menu))) {
         return false;
       }
 
@@ -55,7 +57,7 @@ angular.module('ts5App')
     };
 
     $scope.isMenuEditable = function () {
-      if ($routeParams.state === 'create') {
+      if ($routeParams.state === 'create' || $routeParams.state === 'copy') {
         return true;
       }
 
@@ -82,7 +84,7 @@ angular.module('ts5App')
             itemPayload.menuId = menuId;
           }
 
-          if (menuItem.id) {
+          if (menuItem.id && !$scope.cloningItem) {
             itemPayload.id = menuItem.id;
           }
 
@@ -106,7 +108,7 @@ angular.module('ts5App')
         description: $scope.menu.description || '',
         menuItems: $this.formatMenuItemsForAPI()
       };
-      if ($scope.menu.id) {
+      if ($scope.menu.id && !$scope.cloningItem) {
         payload.id = $scope.menu.id;
       }
 
@@ -123,6 +125,11 @@ angular.module('ts5App')
     };
 
     this.createMenu = function () {
+      var payload = $this.createPayload();
+      menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
+    };
+
+    this.copyMenu = function () {
       var payload = $this.createPayload();
       menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
     };
@@ -204,7 +211,7 @@ angular.module('ts5App')
       angular.forEach($scope.selectedCategoryItems, function (selectedCategoryItem) {
         selectedCategoryItem.selected = selectedItemIds.indexOf(selectedCategoryItem.id) >= 0;
       });
-        
+
       $scope.filteredItemsCollection[menuIndex] = angular.copy($scope.selectedCategoryItems);
       if (!$scope.menuItemList[menuIndex].selectedItem) {
         return;
@@ -310,6 +317,11 @@ angular.module('ts5App')
         endDate: '',
         companyId: menuFactory.getCompanyId()
       };
+
+      if ($location.path().search('/menu/copy') !== -1 && $routeParams.id) {
+        $scope.cloningItem = true;
+        $scope.viewName = 'Cloning Menu';
+      }
     }
 
     function init() {
