@@ -210,6 +210,14 @@ angular.module('ts5App')
       );
     };
 
+    $scope.getCashHandlerBaseCurrencyCode = function () {
+      if($scope.cashHandlerCompany) {
+        return $scope.currencyCodes[$scope.cashHandlerCompany.baseCurrencyId];
+      } else {
+        return'-'
+      }
+    };
+
     function setBankReferenceNumberFromLocalStorage() {
       var shouldSaveBankRefNumber = ($scope.state !== 'view' && $scope.companyPreferences.defaultBankRefNumber &&
               $scope.companyPreferences.defaultBankRefNumber.isSelected);
@@ -286,6 +294,12 @@ angular.module('ts5App')
             $scope.cashBag.storeInstanceId = $routeParams.storeInstanceId;
           }
 
+          if($scope.cashBag.chCompanyId) {
+            cashBagFactory.getCompany($scope.cashBag.chCompanyId).then(function(response) {
+              $scope.cashHandlerCompany = angular.copy(response);
+            });
+          }
+
           $scope.displayError = false;
           $scope.formErrors = {};
         })
@@ -298,16 +312,6 @@ angular.module('ts5App')
           $scope.company = response;
         })
       );
-    }
-
-    function getCashHandlerCompany() {
-      var chCompanyId = globalMenuService.getCompanyData().companyId;
-      _promises.push(
-        cashBagFactory.getCompany(chCompanyId).then(function(response) {
-          $scope.cashHandlerCompany = angular.copy(response);
-        })
-      );
-
     }
 
     function getCompanyCurrencies() {
@@ -393,36 +397,9 @@ angular.module('ts5App')
       );
     }
 
-    function setCreatePromises() {
-      getCompany();
-      getCashHandlerCompany();
-      getCompanyCurrencies();
-      getExchangeRates();
-      getCompanyPreferences();
-    }
-
-    // CRUD - Create
-    this.createCashBag = function() {
-      setCreatePromises();
-      cashBagFactory.getStoreInstance($routeParams.storeInstanceId).then(getStoreInstanceListResponseHandler);
-
-      $scope.readOnly = false;
-      $scope.cashBag = {
-        isSubmitted: false,
-        retailCompanyId: _companyId,
-        storeInstanceId: $routeParams.storeInstanceId,
-        cashBagCurrencies: []
-      };
-
-      $scope.saveButtonName = 'Create';
-
-      $q.all(_promises).then(promisesResponseHandler, showMessage);
-    };
-
     function setReadPromises() {
       getCashBag();
       getCompany();
-      getCashHandlerCompany();
       getCompanyCurrencies();
       getCompanyPreferences();
     }
@@ -443,41 +420,12 @@ angular.module('ts5App')
       }, showMessage);
     };
 
-    function setUpdatePromises() {
-      getCashBag();
-      getCompany();
-      getCashHandlerCompany();
-      getCompanyCurrencies();
-      getCompanyPreferences();
-    }
-
-    // CRUD - Update
-    this.editCashBag = function() {
-      setUpdatePromises();
-      $scope.readOnly = false;
-      $q.all(_promises).then(function() {
-        $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
-        $scope.saveButtonName = 'Save';
-        getExchangeRates($scope.cashBag);
-        if ($scope.cashBag.storeInstanceId || $routeParams.storeInstanceId) {
-          var storeInstanceId = $scope.cashBag.storeInstanceId || $routeParams.storeInstanceId;
-          cashBagFactory.getStoreInstance(storeInstanceId).then(
-            getStoreInstanceListResponseHandler);
-        } else {
-          hideLoadingModal();
-        }
-      }, showMessage);
-    };
-
     // Constructor
     function init() {
       showLoadingModal('Loading Cash Bag');
       _companyId = cashBagFactory.getCompanyId();
       $scope.state = $routeParams.state;
-      var crudOperation = $routeParams.state + 'CashBag';
-      if ($this[crudOperation]) {
-        $this[crudOperation]();
-      }
+      $this.viewCashBag();
     }
 
     init();
