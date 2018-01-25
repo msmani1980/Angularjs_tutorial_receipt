@@ -24,7 +24,6 @@ angular.module('ts5App')
     $scope.displayedScheduleDate = '';
     $scope.displayedCashierDate = dateUtility.nowFormattedDatePicker();
     $scope.saveButtonName = '';
-    $scope.state = '';
     delete $localStorage.isListFromEdit;
 
     function formatAsCurrency(valueToFormat) {
@@ -168,7 +167,7 @@ angular.module('ts5App')
     };
 
     $scope.isCashBagDeleted = function() {
-      return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === true);
+      return ($scope.cashBag && $scope.cashBag.isDelete === true);
     };
 
     function getStoreResponseHandler(dataFromAPI) {
@@ -200,16 +199,6 @@ angular.module('ts5App')
       return formatAsCurrency(amount);
     }
 
-    $scope.shouldShowBankRefNumberAlert = function() {
-      return (
-        $scope.state === 'edit' &&
-        $localStorage.cashBagBankRefNumber &&
-        $scope.oldBankRefNumber &&
-        $localStorage.cashBagBankRefNumber !== $scope.oldBankRefNumber &&
-        $localStorage.cashBagNumber === $scope.oldCashBagNumber
-      );
-    };
-
     $scope.getCashHandlerBaseCurrencyCode = function () {
       if($scope.cashHandlerCompany) {
         return $scope.currencyCodes[$scope.cashHandlerCompany.baseCurrencyId];
@@ -219,7 +208,7 @@ angular.module('ts5App')
     };
 
     function setBankReferenceNumberFromLocalStorage() {
-      var shouldSaveBankRefNumber = ($scope.state !== 'view' && $scope.companyPreferences.defaultBankRefNumber &&
+      var shouldSaveBankRefNumber = ($scope.companyPreferences.defaultBankRefNumber &&
               $scope.companyPreferences.defaultBankRefNumber.isSelected);
       $scope.oldBankRefNumber = $scope.cashBag.bankReferenceNumber || '';
       $scope.oldCashBagNumber = $scope.cashBag.cashBagNumber;
@@ -328,16 +317,12 @@ angular.module('ts5App')
 
     function dailyExchangeByIdResponseHandler(exchangeRate) {
       $scope.dailyExchangeRates = [angular.copy(exchangeRate)];
-      if ($routeParams.state === 'view' || $routeParams.state === 'edit') {
-        promisesResponseHandler();
-      }
+      promisesResponseHandler();
     }
 
     function dailyExchangeResponseHandler(responseFromAPI) {
       $scope.dailyExchangeRates = angular.copy(responseFromAPI.dailyExchangeRates);
-      if ($routeParams.state === 'view' || $routeParams.state === 'edit') {
-        promisesResponseHandler();
-      }
+      promisesResponseHandler();
     }
 
     function getExchangeRates(cashBag) {
@@ -368,7 +353,7 @@ angular.module('ts5App')
     function setCashBagMaxLength() {
       var defaultLength = 10;
       $scope.cashBagNumberMaxLength = defaultLength;
-      if ($scope.state !== 'view' && $scope.companyPreferences.cashbagNumberLength && $scope.companyPreferences.cashbagNumberLength
+      if ($scope.companyPreferences.cashbagNumberLength && $scope.companyPreferences.cashbagNumberLength
         .isSelected) {
         $scope.cashBagNumberMaxLength = $scope.companyPreferences.cashbagNumberLength.numericValue || defaultLength;
       }
@@ -424,7 +409,6 @@ angular.module('ts5App')
     function init() {
       showLoadingModal('Loading Cash Bag');
       _companyId = cashBagFactory.getCompanyId();
-      $scope.state = $routeParams.state;
       $this.viewCashBag();
     }
 
