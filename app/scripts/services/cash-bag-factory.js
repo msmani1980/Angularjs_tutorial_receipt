@@ -12,7 +12,7 @@ angular.module('ts5App')
   function (cashBagService, globalMenuService, stationsService, schedulesService, companyService, currenciesService, dailyExchangeRatesService, companyPreferencesService,
             companyStoresService, storeInstanceService) {
     var getCompanyId = function () {
-      if(globalMenuService.getCompanyData().companyTypeName === 'Retail') {
+      if (globalMenuService.getCompanyData().companyTypeName === 'Retail') {
         return globalMenuService.getCompanyData().id;
       } else {
         return globalMenuService.getCompanyData().chCompany.companyId;
