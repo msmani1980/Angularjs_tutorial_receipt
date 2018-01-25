@@ -225,7 +225,7 @@ angular.module('ts5App')
     };
 
     $scope.viewCashBag = function(cashBag) {
-      $location.path('cash-bag/view/' + cashBag.id);
+      $location.path('reconciliation-cash-bag/view/' + cashBag.id);
     };
 
     function getStoreListResponseHandler(storeListFromAPI) {

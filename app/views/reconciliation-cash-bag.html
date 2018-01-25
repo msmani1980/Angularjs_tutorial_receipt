@@ -20,7 +20,6 @@
   </div>
 
   <error-dialog error-response="errorResponse" display="displayError"></error-dialog>
-  <missing-daily-exchange-modal check-on-load="true"></missing-daily-exchange-modal>
 
   <div ng-if="isCashBagDeleted()" class="alert alert-danger" role="alert">
     This cash bag has been deleted!
@@ -133,12 +132,11 @@
       </div>
 
       <div class="panel-footer text-center">
-        <button type="button" class="btn btn-default" ng-click="leaveView('cash-bag-list')" ng-hide="readOnly" type="button">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="leaveView('reconciliation-cash-bag-list')" ng-hide="readOnly" type="button">Cancel</button>
         <button type="submit" class="btn btn-primary" ng-hide="readOnly">
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">{{ saveButtonName }}</span>
         </button>
-        <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="showDeleteButton(cashBag)" ng-disabled="readOnly">Delete</button>
       </div>
     </form>
 
