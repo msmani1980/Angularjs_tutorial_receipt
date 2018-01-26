@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .controller('ReconciliationCashBagCtrl', function($scope, $routeParams, $q, $location, $localStorage, messageService,
-    cashBagFactory, dateUtility, lodash, globalMenuService) {
+    cashBagFactory, dateUtility, lodash) {
 
     // controller global properties
     var _companyId = null;
@@ -107,10 +107,10 @@ angular.module('ts5App')
     }
 
     $scope.getCashHandlerBaseCurrencyCode = function () {
-      if($scope.cashHandlerCompany) {
+      if ($scope.cashHandlerCompany) {
         return $scope.currencyCodes[$scope.cashHandlerCompany.baseCurrencyId];
       } else {
-        return'-';
+        return '-';
       }
     };
 
