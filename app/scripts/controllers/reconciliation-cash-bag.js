@@ -79,56 +79,6 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(response);
     }
 
-    function editCashBag(formData) {
-      var saveCashBag = angular.copy(formData);
-      saveCashBag.scheduleDate = dateUtility.formatDateForAPI(formData.scheduleDate, 'YYYY-MM-DD');
-      $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
-      var payload = saveCashBag;
-      showLoadingModal('Saving Cash Bag');
-      cashBagFactory.updateCashBag($routeParams.id, payload).then(cashBagEditSuccessHandler, errorHandler);
-    }
-
-    function createCashBag(formData) {
-      var saveCashBag = angular.copy(formData);
-      saveCashBag.scheduleDate = dateUtility.formatDateForAPI(saveCashBag.scheduleDate);
-      saveCashBag.isDeleted = false;
-      saveCashBag.isRemoved = false;
-      showLoadingModal('Saving Cash Bag');
-      cashBagFactory.createCashBag(saveCashBag).then(cashBagCreateSuccessHandler, errorHandler);
-    }
-
-    function checkForCash (formData) {
-      var cashBagCurrencies = formData.cashBagCurrencies;
-      var cashExists = false;
-
-      angular.forEach(cashBagCurrencies, function (currency) {
-        cashExists = cashExists || (parseFloat(currency.paperAmountManual) > 0 || parseFloat(currency.coinAmountManual) > 0);
-      });
-
-      return cashExists;
-    }
-
-    function cashBagCurrenciesIsSet(cashBagCurrencies) {
-      var isSet = true;
-      angular.forEach(cashBagCurrencies, function(currency) {
-        if (isSet) {
-          if (currency.bankAmount !== '0.00' && currency.bankAmount !== null) {
-            isSet = false;
-          }
-
-          if (currency.coinAmountManual !== null) {
-            isSet = false;
-          }
-
-          if (currency.paperAmountManual !== null) {
-            isSet = false;
-          }
-        }
-      });
-
-      return isSet;
-    }
-
     $scope.isBankExchangePreferred = function() {
       if (!$scope.companyPreferences || !$scope.companyPreferences.exchangeRateType) {
         return false;
