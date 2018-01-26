@@ -56,26 +56,6 @@ angular.module('ts5App')
       }
     }
 
-    function showCustomError(errorField, errorMessage) {
-      $scope.errorCustom = [{ field: errorField, value: errorMessage }];
-      $scope.displayError = true;
-    }
-
-    // scope methods
-    function cleanPayload(payload) {
-      delete payload.storeNumber;
-      angular.forEach(payload.cashBagCurrencies, function(currency) {
-        delete currency.bankAmount;
-        delete currency.bankExchangeRate;
-        delete currency.paperExchangeRate;
-        delete currency.coinExchangeRate;
-        delete currency.flightAmount;
-        delete currency.currencyCode;
-      });
-
-      return payload;
-    }
-
     function cashBagCreateSuccessHandler(newCashBag) {
       hideLoadingModal();
       $location.search('newId', newCashBag.id)
