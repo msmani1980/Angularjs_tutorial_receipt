@@ -56,29 +56,6 @@ angular.module('ts5App')
       }
     }
 
-    function cashBagCreateSuccessHandler(newCashBag) {
-      hideLoadingModal();
-      $location.search('newId', newCashBag.id)
-        .search('scheduleDate', null)
-        .search('scheduleNumber', null)
-        .search('storeInstanceId', null)
-        .path('cash-bag-list');
-    }
-
-    function cashBagEditSuccessHandler() {
-      hideLoadingModal();
-      $location.search('storeInstanceId', null)
-        .path('cash-bag-list');
-
-      showMessage(null, false, 'successfully updated');
-    }
-
-    function errorHandler(response) {
-      hideLoadingModal();
-      $scope.displayError = true;
-      $scope.errorResponse = angular.copy(response);
-    }
-
     $scope.isBankExchangePreferred = function() {
       if (!$scope.companyPreferences || !$scope.companyPreferences.exchangeRateType) {
         return false;
@@ -343,9 +320,5 @@ angular.module('ts5App')
     }
 
     init();
-
-    $scope.isFocusBankReferenceNumber = function() {
-      return !!$localStorage.isEditFromList;
-    };
 
   });
