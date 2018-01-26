@@ -110,7 +110,7 @@ angular.module('ts5App')
       if($scope.cashHandlerCompany) {
         return $scope.currencyCodes[$scope.cashHandlerCompany.baseCurrencyId];
       } else {
-        return'-'
+        return'-';
       }
     };
 
@@ -190,7 +190,7 @@ angular.module('ts5App')
             $scope.cashBag.storeInstanceId = $routeParams.storeInstanceId;
           }
 
-          if($scope.cashBag.chCompanyId) {
+          if ($scope.cashBag.chCompanyId) {
             cashBagFactory.getCompany($scope.cashBag.chCompanyId).then(function(response) {
               $scope.cashHandlerCompany = angular.copy(response);
             });
