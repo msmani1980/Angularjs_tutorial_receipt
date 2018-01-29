@@ -288,6 +288,12 @@ angular.module('ts5App', [
   }).when('/reconciliation-dashboard', {
     templateUrl: 'views/reconciliation-dashboard.html',
     controller: 'ReconciliationDashboardCtrl'
+  }).when('/reconciliation-cash-bag-list', {
+    templateUrl: 'views/reconciliation-cash-bag-list.html',
+    controller: 'ReconciliationCashBagListCtrl'
+  }).when('/reconciliation-cash-bag/view/:id?', {
+    templateUrl: 'views/reconciliation-cash-bag.html',
+    controller: 'ReconciliationCashBagCtrl'
   }).when('/store-instance-amend/:storeInstanceId', {
     templateUrl: 'views/store-instance-amend.html',
     controller: 'StoreInstanceAmendCtrl'
