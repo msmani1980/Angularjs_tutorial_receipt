@@ -52,6 +52,9 @@ angular.module('ts5App')
 
     $scope.search = {};
     $scope.isCreditCardPaymentSelected = false;
+    $scope.search.transactionStartDate = dateUtility.yesterdayFormattedDatePicker();
+    $scope.search.transactionEndDate = dateUtility.tomorrowFormattedDatePicker();
+    $scope.isSearch = false;
 
     $scope.printStoreNumber = function (transaction) {
       if (transaction.storeNumber) {
@@ -138,7 +141,6 @@ angular.module('ts5App')
     };
 
     $this.meta = {};
-    $this.isSearch = false;
 
     function isNotVoidedSaleTransaction(transaction) {
       var isVoidedSaleTransaction = transaction.parentId &&
@@ -232,11 +234,12 @@ angular.module('ts5App')
 
     $scope.clearSearch = function () {
       $scope.search = {};
+      $scope.isSearch = false;
       $scope.transactions = [];
     };
 
     $scope.searchTransactions = function () {
-      $this.isSearch = true;
+      $scope.isSearch = true;
       clearTransactions();
       setDefaultMetaPayload();
 
@@ -249,8 +252,6 @@ angular.module('ts5App')
 
     function sanitizeSearchPayload(payload) {
       payloadUtility.sanitize(payload);
-      payload.transactionStartDate = payloadUtility.serializeDate(payload.transactionStartDate);
-      payload.transactionEndDate = payloadUtility.serializeDate(payload.transactionEndDate);
 
       if (payload.paymentMethods) {
         payload.paymentMethods = payload.paymentMethods.join(',');
@@ -274,9 +275,12 @@ angular.module('ts5App')
         'withoutPaymentMethods[0]': 'Promotion'
       };
 
-      if ($this.isSearch) {
+      if ($scope.isSearch) {
         angular.extend(payload, $scope.search);
       }
+      
+      payload.transactionStartDate = payloadUtility.serializeDate(payload.transactionStartDate ? payload.transactionStartDate : dateUtility.yesterdayFormattedDatePicker());
+      payload.transactionEndDate = payloadUtility.serializeDate(payload.transactionEndDate ? payload.transactionEndDate : dateUtility.tomorrowFormattedDatePicker());
 
       sanitizeSearchPayload(payload);
 
