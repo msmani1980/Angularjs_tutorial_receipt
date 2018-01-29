@@ -1,0 +1,147 @@
+<div class="fluid-container module-container">
+  <h1><span class="controller-state text-capitalize">{{ state }}</span> {{ ::viewName }}</h1>
+
+  <div class="row row-as-table">
+    <div class="col-xs-6">
+      <h3>
+        {{ company.companyName }}
+        <small>Flight {{ cashBag.scheduleNumber }}</small>
+        <small>{{ displayedScheduleDate }}</small>
+      </h3>
+    </div>
+    <div class="type-info col-xs-6 text-right">
+      <h4>
+        Store Number:
+        <small>{{ cashBag.storeNumber }}</small>
+        Store Instance:
+        <small>{{ cashBag.storeInstanceId }}</small>
+      </h4>
+    </div>
+  </div>
+
+  <error-dialog error-response="errorResponse" display="displayError"></error-dialog>
+
+  <div ng-if="isCashBagDeleted()" class="alert alert-danger" role="alert">
+    This cash bag has been deleted!
+  </div>
+
+  <div class="panel panel-default">
+    <form name="cashBagCreateForm" class="form edit-form" ng-submit="formSave(cashBag)">
+
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-sm-6">
+            <div>Cash Handler Base Currency: {{ getCashHandlerBaseCurrencyCode() }}</div>
+            <div>Airline Base Currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
+          </div>
+          <div class="col-sm-6 text-right">
+            <div>Cashier's entry date:
+              <date>{{ displayedCashierDate }}</date>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+
+        <div class="row">
+          <div class="col-sm-4">
+            <label for="cashBagNumber">Cash Bag # *</label>
+            <input custom-pattern="alphanumeric"
+                   custom-validity
+                   required
+                   type="text"
+                   maxlength="{{ cashBagNumberMaxLength }}"
+                   name="cashBagNumber"
+                   class="form-control"
+                   id="cashBagNumber"
+                   ng-model="cashBag.cashBagNumber"
+                   ng-readonly="readOnly"/>
+          </div>
+
+          <div class="col-sm-4" ng-if="isTotalNumberOfCashBagsActivated()">
+            <label for="totalCashBags">Total # of Bags *</label>
+            <input custom-pattern="number"
+                   custom-validity
+                   required
+                   type="text"
+                   maxlength="25"
+                   name="totalCashBags"
+                   class="form-control"
+                   id="totalCashBags"
+                   ng-model="cashBag.totalCashBags"
+                   ng-readonly="readOnly"/>
+          </div>
+
+          <div class="col-sm-4">
+            <label for="bankReferenceNumber">Bank Reference # *</label>
+            <input custom-pattern="number"
+                   custom-validity
+                   required
+                   type="text"
+                   maxlength="15"
+                   name="bankReferenceNumber"
+                   class="form-control"
+                   id="bankReferenceNumber"
+                   ng-model="cashBag.bankReferenceNumber"
+                   ng-readonly="readOnly"
+                   custom-focus="false"/>
+          </div>
+        </div>
+
+        <div class="row form-group table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th>Currency</th>
+              <th>Flight Amount</th>
+              <th>Paper Amount</th>
+              <th>Coin Amount</th>
+              <th ng-if="isBankExchangePreferred()">Bank Exchange Rate</th>
+              <th ng-if="!isBankExchangePreferred()">Paper Bank Exchange Rate</th>
+              <th ng-if="!isBankExchangePreferred()">Coin Bank Exchange Rate</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="currency in cashBag.cashBagCurrencies | orderBy: 'currencyCode'">
+              <td>{{ currency.currencyCode }}</td>
+              <td>{{ currency.flightAmount }}</td>
+              <td><input type="text"
+                         custom-validity
+                         custom-pattern="currencyWithFourDecimalPlaceUnrounded"
+                         required
+                         class="form-control"
+                         ng-model="currency.paperAmountManual"
+                         name="paperAmountManual[{{currency.currencyId}}]"
+                         ng-readonly="readOnly"></td>
+              <td><input type="text"
+                         custom-validity
+                         custom-pattern="currencyWithFourDecimalPlaceUnrounded"
+                         required
+                         class="form-control"
+                         ng-model="currency.coinAmountManual"
+                         name="coinAmountManual[{{currency.currencyId}}]"
+                         ng-readonly="readOnly"></td>
+              <td ng-if="isBankExchangePreferred()">{{ currency.bankExchangeRate }}</td>
+              <td ng-if="!isBankExchangePreferred()">{{ currency.paperExchangeRate }}</td>
+              <td ng-if="!isBankExchangePreferred()">{{ currency.coinExchangeRate }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel-footer text-center">
+        <button type="button" class="btn btn-default" ng-click="leaveView('reconciliation-cash-bag-list')" ng-hide="readOnly" type="button">Cancel</button>
+        <button type="submit" class="btn btn-primary" ng-hide="readOnly">
+          <span class="fa fa-check-square-o" aria-hidden="true"></span>
+          <span class="hidden-xs">{{ saveButtonName }}</span>
+        </button>
+      </div>
+    </form>
+
+  </div>
+  <leave-view-modal></leave-view-modal>
+</div>
+<dynamic-left-nav title="Reconciliation"></dynamic-left-nav>
+<delete-record-dialog></delete-record-dialog>
