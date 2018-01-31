@@ -412,6 +412,11 @@
               <div class="row">
                 <div class="col-xs-12">
                   <h4>Origin Cash Bag</h4>
+                  <div class="alert alert-warning" ng-show="isAmended(rearrangeOriginCashBag)">
+                    <span class="fa fa-exclamation-circle">
+                    </span> 
+                    Cannot rearrange sectors.<br/> 
+                    Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b> was amended. </div>
                   <select class="form-control"
                           ng-model="rearrangeOriginCashBag"
                           ng-options="cashBag as cashBag.cashBag for cashBag in normalizedCashBags | filter:{isDeleted:false} | orderBy: 'cashBag'"
@@ -419,7 +424,7 @@
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
                   <hr>
-                  <table class="table" ng-show="rearrangeOriginCashBag">
+                  <table class="table" ng-show="rearrangeOriginCashBag" >
                     <tr class="active">
                       <td>Select</td>
                       <th>Sch #</th>
@@ -428,10 +433,10 @@
                     </tr>
                     <tr ng-repeat="sector in rearrangeOriginCashBag.flightSectorsForRearrange"
                                             ng-class="getClassesForRearrangeSectors(sector, 'background')" >
-                      <td ng-click="toggleSelectSectorToRearrange(sector)">
-                        <button ng-class="getClassesForRearrangeSectors(sector, 'button')">
-                          <span ng-class="getClassesForRearrangeSectors(sector, 'buttonIcon')"></span>
-                        </button>
+                      <td ng-click="toggleSelectSectorToRearrange(sector, rearrangeOriginCashBag)">
+                          <button ng-class="getClassesForRearrangeSectors(sector, 'button')">
+                            <span ng-class="getClassesForRearrangeSectors(sector, 'buttonIcon')"></span>
+                          </button>
                       </td>
                       <td>{{ sector.scheduleNumber }}</td>
                       <td>{{ sector.scheduleDate}}</td>

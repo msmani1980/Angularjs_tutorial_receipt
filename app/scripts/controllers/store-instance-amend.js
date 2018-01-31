@@ -114,6 +114,14 @@ angular.module('ts5App')
       $scope.closeRearrangeSectorModal();
     }
 
+    $scope.isAmended = function (cashBag) {
+      if (angular.isDefined(cashBag) && cashBag !== null && cashBag.isAmended) {
+        return true;
+      }
+
+      return false;
+    };
+
     $scope.rearrangeSector = function () {
       var originCashBag = $scope.rearrangeOriginCashBag;
       var targetCashBag = $scope.rearrangeTargetCashBag;
@@ -182,7 +190,11 @@ angular.module('ts5App')
       return ($scope.sectorsToMove.length > 0 && !!$scope.rearrangeOriginCashBag && !!$scope.rearrangeTargetCashBag && $scope.rearrangeOriginCashBag.id !== $scope.rearrangeTargetCashBag.id);
     };
 
-    $scope.toggleSelectSectorToRearrange = function (sector) {
+    $scope.toggleSelectSectorToRearrange = function (sector, cashBag) {
+      if (angular.isDefined(cashBag) && cashBag !== null && cashBag.isAmended) {
+        return;
+      }
+
       if (!!$scope.rearrangeOriginCashBag && !!$scope.rearrangeTargetCashBag && $scope.rearrangeOriginCashBag.id === $scope.rearrangeTargetCashBag.id) {
         return;
       }
@@ -1175,7 +1187,8 @@ angular.module('ts5App')
           promotionDiscounts: 0 + getManualDataTotals('promotion', cashBag.id),
           flightSectors: [],
           flightSectorsForRearrange: [],
-          isVerifiedManual: (cashBag.verificationConfirmedOn) ? true : false
+          isVerifiedManual: (cashBag.verificationConfirmedOn) ? true : false,
+          isAmended: cashBag.isAmended
         };
       });
     }
