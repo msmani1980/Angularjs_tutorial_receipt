@@ -86,6 +86,20 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return newStationsArray;
     };
 
+    this.formatEmployeeMessageEmployeeIdentifiersPayload = function() {
+      var newArray = [];
+      angular.forEach($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+        var newRecord = {
+          employeeIdentifier: record.employeeIdentifier,
+          companyEmployeeId: record.companyEmployeeId
+        };
+
+        newArray.push(newRecord);
+      });
+
+      return newArray;
+    };
+
     this.formatPayload = function() {
       var formData = angular.copy($scope.employeeMessage);
       var payload = {};
@@ -95,8 +109,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       payload.employeeMessageArrivalStations = $this.formatStationsArrayForAPI(formData.arrivalStations);
       payload.employeeMessageDepartureStations = $this.formatStationsArrayForAPI(formData.departureStations);
       payload.employeeMessageSchedules = $this.formatArrayForAPIWithAttributes(formData.schedules, 'scheduleNumber');
-      payload.employeeMessageEmployeeIdentifiers = $this.formatArrayForAPIWithAttributes(formData.employees,
-        'employeeIdentifier');
+      payload.employeeMessageEmployeeIdentifiers = $this.formatEmployeeMessageEmployeeIdentifiersPayload();
 
       return {
         employeeMessage: payload
@@ -214,7 +227,6 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     $scope.addNewItem = function(categoryName) {
       var categoryToAttributesMap = {
         schedules: ['scheduleNumber'],
-        employees: ['employeeIdentifier', 'firstName', 'lastName', 'id', 'startDate', 'endDate'],
         arrivalStations: ['code', 'name', 'id'],
         departureStations: ['code', 'name', 'id']
       };
