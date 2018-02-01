@@ -448,6 +448,30 @@ angular.module('ts5App')
           role: 'RELATEESC'
         }]
       }, {
+        title: 'Survey Management',
+        menuItems: [{
+          name: 'Survey',
+          route: '/#/survey',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSurvey',
+          package: 'SURVEY',
+          role: 'SURVEY'
+        }, {
+          name: 'Survey Catalog',
+          route: '/#/survey-catalog',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSurveyCatalog',
+          package: 'SURVEY',
+          role: 'SURVEY'
+        }, {
+          name: 'Survey Questions',
+          route: '/#/survey-questions',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSurveyQuestions',
+          package: 'SURVEY',
+          role: 'SURVEY'
+        }]
+      }, {
         title: 'Cash Management',
         menuItems: [{
           name: 'Daily Exchange Rate',

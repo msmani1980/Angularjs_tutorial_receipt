@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:9 */
 /**
  * @ngdoc directive
  * @name ts5App.directive:imageUpload
@@ -13,9 +14,6 @@ angular.module('ts5App')
       $scope.imageTypeText = '';
       $scope.fileFormat = 'jpg,.png,.gif';
       $scope.isRequired = 'false';
-      $scope.homeLogoCount = 0;
-      $scope.cornerLogoCount = 0;
-      $scope.receiptCount = 0;
 
       $scope.$watch('files', function (files) {
         for (var fileKey in files) {
@@ -24,6 +22,16 @@ angular.module('ts5App')
         }
 
         $scope.files = files;
+      });
+
+      $scope.$watch('formData.companyCode', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          if ($scope.imageType.toString() === 'homeLogo') {
+            $scope.imageName = 'logo_' + $scope.formData.companyCode;
+          } else if ($scope.imageType.toString() === 'cornerLogo') {
+            $scope.imageName = 'brand_' + $scope.formData.companyCode;
+          }
+        }
       });
 
       $scope.clearAllFiles = function () {
@@ -36,12 +44,28 @@ angular.module('ts5App')
         $scope.files.splice(filesIndex, 1);
       };
 
-      $scope.addImage = function (fileIndex, data) {
+      $scope.addImage = function (fileIndex, data, imageType) {
+        var tempImageURL;
+        if (imageType === 'cornerLogo' || imageType === 'homeLogo') {
+          tempImageURL = data.url + '?decache=' + Math.random();
+        } else {
+          tempImageURL = data.url;
+        }
+
         var newImage = {
-          imageURL: data.url,
+          imageURL: tempImageURL,
           startDate: $scope.formData.startDate,
           endDate: $scope.formData.endDate
         };
+
+        if (imageType === 'homeLogo') {
+          newImage = {
+            imageURL: tempImageURL,
+            startDate:  '1/1/2016',
+            endDate: '1/1/2016'
+          };
+        }
+
         $scope.formData.images.push(newImage);
       };
 
@@ -54,54 +78,12 @@ angular.module('ts5App')
         }).progress(function (evt) {
           file.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
         }).success(function (data) {
-          $scope.addImage(fileIndex, data);
-          if (imageType === 'homeLogo') {
-            $scope.homeLogoCount++;
-          } else if (imageType === 'cornerLogo') {
-            $scope.cornerLogoCount++;
-          } else if (imageType === 'receiptImage') {
-            $scope.receiptCount++;
-          }
+          $scope.addImage(fileIndex, data, imageType);
         }).error(function () {
           file.uploadFail = true;
 
           // TODO: Interpret this failure and tell the user
         });
-      };
-
-      $scope.doesImageMeetSizeConstraint = function (filesIndex, imageType, imgElement) {
-        var file = $scope.files[filesIndex];
-
-        if (!imgElement) {
-          imgElement = angular.element(angular.element('.fileTest')[filesIndex]);
-        }
-
-        this.imgHeight = imgElement.height();
-        this.imgWidth = imgElement.width();
-        var acceptImageHeight = 128;
-        var acceptImageWidth = 128;
-
-        if (imageType === 'homeLogo') {
-          acceptImageHeight = 600;
-          acceptImageWidth = 900;
-        } else if (imageType === 'cornerLogo') {
-          acceptImageHeight = 33;
-          acceptImageWidth = 92;
-        } else if (imageType === 'receiptImage') {
-          acceptImageHeight = 1000;
-          acceptImageWidth = 380;
-        }
-
-        $scope.imageSize  = acceptImageWidth + ' x ' + acceptImageHeight;
-
-        if ($scope.imgHeight > acceptImageHeight || $scope.imgWidth > acceptImageWidth) {
-          file.imageTooLarge = true;
-          file.imageDimensions = this.imgWidth + 'px' + ' x ' + this.imgHeight +
-            'px';
-        } else {
-          return true;
-        }
-
       };
 
       $scope.upload = function (imageType, companyCode) {
@@ -113,14 +95,15 @@ angular.module('ts5App')
         $http.defaults.headers.common.type = imageTypeHeader;
         if (companyCode === undefined && imageType !== 'itemImage') {
           messageService.display('warning', 'Please provide required Company Information', 'Image upload');
-        } else if (imageType === 'homeLogo' && $scope.homeLogoCount > 0) {
-          messageService.display('warning', 'Cannot upload more than one image for home screen logo', 'Image upload');
-        } else if (imageType === 'cornerLogo' && $scope.cornerLogoCount > 0) {
-          messageService.display('warning', 'Cannot upload more than one image for top left corner logo', 'Image upload');
-        } else if (imageType === 'receiptImage' && $scope.receiptCount > 1) {
-          messageService.display('warning', 'Cannot upload more than two receipt images', 'Image upload');
-        } else if ($scope.editingCompany && $scope.formData.images.length > 2) {
+        }  else if ($scope.formData.images.length >= 2) {
           messageService.display('warning', 'Maximum allowed image upload limit reached', 'Image upload');
+          $scope.clearAllFiles();
+        } else if (imageType === 'homeLogo' && checkImageNameUploaded() === 'logo') {
+          messageService.display('warning', 'Delete old home logo first', 'Image upload');
+          $scope.clearAllFiles();
+        } else if (imageType === 'cornerLogo' && checkImageNameUploaded() === 'brand') {
+          messageService.display('warning', 'Delete old brand logo first', 'Image upload');
+          $scope.clearAllFiles();
         } else {
           $http.defaults.headers.common.companyCode = companyCode;
           var fileUploadPromises = [];
@@ -129,9 +112,7 @@ angular.module('ts5App')
 
           if (files && files.length) {
             for (var filesIndex in files) {
-              if ($scope.doesImageMeetSizeConstraint(filesIndex, imageType)) {
-                fileUploadPromises.push($scope.uploadFile(filesIndex, imageType));
-              }
+              fileUploadPromises.push($scope.uploadFile(filesIndex, imageType));
             }
 
             $q.all(fileUploadPromises).then(function (results) {
@@ -144,6 +125,17 @@ angular.module('ts5App')
               }
             });
           }
+        }
+
+      };
+
+      var checkImageNameUploaded = function () {
+        if ($scope.formData.images[0] !== undefined) {
+          var imageName = $scope.formData.images[0].imageURL.split('/').pop();
+          imageName = imageName.split('_')[0];
+          return imageName;
+        } else {
+          return 'no image';
         }
 
       };
@@ -162,7 +154,6 @@ angular.module('ts5App')
         imageName: '@',
         imageNameMessage: '@',
         itemMaxSize: '@',
-        invalidNameMessage: '@',
         editingCompany: '='
       },
       link: function(scope) {
@@ -171,22 +162,24 @@ angular.module('ts5App')
           scope.imageSize  = '900 x 600';
           scope.imageTypeText = 'ePOS home screen logo.';
           scope.fileFormat = 'png';
-          scope.imageName = 'logo_*';
-          scope.imageNameMessage = 'Accepted image name: logo_COMPANYCODE';
+          scope.imageName = 'logo_' + scope.formData.companyCode;
+          scope.imageNameMessage = 'Accepted image name: logo_';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
-          scope.invalidNameMessage = ' has invalid name OR';
+          scope.imgHeight = 600;
+          scope.imgWidth = 900;
         }
 
         if (scope.imageType === 'cornerLogo') {
           scope.imageSize  = '92 x 33';
           scope.imageTypeText = 'ePOS brand corner logo.';
           scope.fileFormat = 'png';
-          scope.imageName = 'brand_*';
-          scope.imageNameMessage = 'Accepted image name: brand_COMPANYCODE';
+          scope.imageName = 'brand_' + scope.formData.companyCode;
+          scope.imageNameMessage = 'Accepted image name: brand_';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
-          scope.invalidNameMessage = ' has invalid name OR';
+          scope.imgHeight = 33;
+          scope.imgWidth = 92;
         }
 
         if (scope.imageType === 'receiptImage') {
@@ -197,17 +190,19 @@ angular.module('ts5App')
           scope.imageNameMessage = '';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
-          scope.invalidNameMessage = '';
+          scope.imgHeight = 1000;
+          scope.imgWidth = 380;
         }
 
         if (scope.imageType === 'itemImage') {
-          scope.imageSize  = '10kb and 128 x 128';
+          scope.imageSize  = '128 x 128';
           scope.imageTypeText = 'Item image.';
           scope.imageName = '*';
           scope.imageNameMessage = '';
-          scope.itemMaxSize = '10000';
+          scope.itemMaxSize = '10kb';
           scope.headerType = 'item';
-          scope.invalidNameMessage = '';
+          scope.imgHeight = 128;
+          scope.imgWidth = 128;
         }
       },
 

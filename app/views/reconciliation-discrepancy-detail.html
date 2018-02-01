@@ -283,11 +283,15 @@
           <h3 class="view-name">Discrepancy Detail</h3>
         </div>
         <div class="col-xs-12 col-sm-6 text-right">
+          <a ng-show="showGenerateDocsButton" ng-href="{{exportURL}}" class="btn btn-sm btn-info" ng-disabled="false">
+            <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+            <span class="hidden-xs">Generate Doc</span>
+          </a>       
           <button class="btn btn-sm btn-info" ng-click="showPaymentReportPanel()"><span class="fa fa-file-text"></span> {{actionOnPaymentReport}} Payment Reports</button>
           <button class="btn btn-sm btn-warning" ng-show="isInStatus('Inbounded') || isInStatus('Discrepancies') || isInStatus('Confirmed') || isInStatus('Commission Paid')" ng-click="goToStoreInstanceAmend()">Amend Data</button>
-          <button class="btn btn-sm btn-danger" ng-show="isInStatus('Confirmed')" ng-click="confirmAction('Discrepancies', 'Unconfirm')">Unconfirm</button>
-          <button class="btn btn-sm btn-success" ng-show="isInStatus('Discrepancies')" ng-disabled="storeInstance.amendToConfirm" ng-click="confirmAction('Confirmed', 'Confirm')">Confirm</button>
-          <button class="btn btn-sm btn-primary" ng-show="isInStatus('Confirmed')" ng-click="confirmAction('Commission Paid', 'Pay Commission')">Pay Commission</button>
+          <button ng-if="!isViewMode" class="btn btn-sm btn-danger" ng-show="isInStatus('Confirmed')" ng-click="confirmAction('Discrepancies', 'Unconfirm')">Unconfirm</button>
+          <button ng-if="!isViewMode" class="btn btn-sm btn-success" ng-show="isInStatus('Discrepancies')" ng-disabled="storeInstance.amendToConfirm" ng-click="confirmAction('Confirmed', 'Confirm')">Confirm</button>
+          <button ng-if="!isViewMode" class="btn btn-sm btn-primary" ng-show="isInStatus('Confirmed')" ng-click="confirmAction('Commission Paid', 'Pay Commission')">Pay Commission</button>
         </div>
       </div>
       <br/>
@@ -541,11 +545,10 @@
                     <span class="value stock-discrepancy item varianceValue">{{ item.varianceValue }}</span>
                   </td>
                   <td>
-                    <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="!canEdit() || showEditViewForItem(item, true)"><span
-                      class="fa fa-pencil"></span></a>
-                    <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveStockItemCounts(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-check"></span></a>
-                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-times"></span></a>
-                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="canEdit() && editLMPStockTable"><span class="fa fa-undo"></span></a>
+                    <a ng-if="!isViewMode" class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="!canEdit() || showEditViewForItem(item, true)"><span class="fa fa-pencil"></span></a>
+                    <a ng-if="!isViewMode" class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveStockItemCounts(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-check"></span></a>
+                    <a ng-if="!isViewMode" class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-times"></span></a>
+                    <a ng-if="!isViewMode" class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="canEdit() && editLMPStockTable"><span class="fa fa-undo"></span></a>
                   </td>
                 </tr>
                 <tr ng-show="filteredLMPStock.length === 0">
@@ -560,9 +563,9 @@
                     <span class="fa fa-th-list"></span> View Outlier Items
                   </button>
                   <span ng-show="canEdit()">
-                    <button ng-hide="editLMPStockTable" class="btn btn-primary" ng-click="initEditTable(true)"><span class="fa fa-pencil active"></span> Edit Table</button>
-                    <button ng-show="editLMPStockTable" class="btn btn-success" ng-click="saveStockItemCountsTable()"><span class="fa fa-check active"></span> Save All</button>
-                    <button ng-show="editLMPStockTable" class="btn btn-default" ng-click="cancelEditingTable(true)">Cancel</button>
+                    <button ng-if="!isViewMode" ng-hide="editLMPStockTable" class="btn btn-primary" ng-click="initEditTable(true)"><span class="fa fa-pencil active"></span> Edit Table</button>
+                    <button ng-if="!isViewMode" ng-show="editLMPStockTable" class="btn btn-success" ng-click="saveStockItemCountsTable()"><span class="fa fa-check active"></span> Save All</button>
+                    <button ng-if="!isViewMode" ng-show="editLMPStockTable" class="btn btn-default" ng-click="cancelEditingTable(true)">Cancel</button>
                   </span>
                 </div>
               </div>
@@ -689,21 +692,20 @@
                     <span class="value cash-discrepancy item totalBank">{{ item.totalBank }}</span>
                   </td>
                   <td>
-                    <a class="btn btn-info btn-xs btn-block" tabindex="0"><span class="fa fa-file-text"></span></a>
-                    <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="!canEdit() || showEditViewForItem(item, false)"><span
-                      class="fa fa-pencil"></span></a>
-                    <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveCashBagCurrency(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-check"></span></a>
-                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-times"></span></a>
-                    <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="canEdit() && editCashBagTable"><span class="fa fa-undo"></span></a>
+                    <a ng-if="!isViewMode" class="btn btn-info btn-xs btn-block" tabindex="0"><span class="fa fa-file-text"></span></a>
+                    <a ng-if="!isViewMode" class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="!canEdit() || showEditViewForItem(item, false)"><span class="fa fa-pencil"></span></a>
+                    <a ng-if="!isViewMode" class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveCashBagCurrency(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-check"></span></a>
+                    <a ng-if="!isViewMode" class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="canEdit() && item.isEditing"><span class="fa fa-times"></span></a>
+                    <a ng-if="!isViewMode" class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="canEdit() && editCashBagTable"><span class="fa fa-undo"></span></a>
                   </td>
                 </tr>
               </table>
 
               <div class="row">
                 <div class="col-xs-12 text-right" ng-show="canEdit()">
-                  <button ng-hide="editCashBagTable" class="btn btn-primary" ng-click="initEditTable(false)"><span class="fa fa-pencil active"></span> Edit Table</button>
-                  <button ng-show="editCashBagTable" class="btn btn-success" ng-click="saveCashBagTable()"><span class="fa fa-check active"></span> Save All</button>
-                  <button ng-show="editCashBagTable" class="btn btn-default" ng-click="cancelEditingTable(false)">Cancel</button>
+                  <button ng-if="!isViewMode" ng-hide="editCashBagTable" class="btn btn-primary" ng-click="initEditTable(false)"><span class="fa fa-pencil active"></span> Edit Table</button>
+                  <button ng-if="!isViewMode" ng-show="editCashBagTable" class="btn btn-success" ng-click="saveCashBagTable()"><span class="fa fa-check active"></span> Save All</button>
+                  <button ng-if="!isViewMode" ng-show="editCashBagTable" class="btn btn-default" ng-click="cancelEditingTable(false)">Cancel</button>
                 </div>
               </div>
             </accordion-group>
@@ -762,7 +764,7 @@
           <strong>Store Number: </strong>{{storeInstance.storeDetails.storeNumber}} -
           <strong>Schedule Date: </strong>{{storeInstance.scheduleDate}} -
           <strong>Store Instance: </strong>{{storeInstance.id}}
-        </div>  
+        </div>
       </div>
 
       <div class="modal-footer">

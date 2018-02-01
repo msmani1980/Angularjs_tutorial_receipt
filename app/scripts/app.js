@@ -273,6 +273,9 @@ angular.module('ts5App', [
   }).when('/reconciliation-discrepancy-detail/:storeInstanceId', {
     templateUrl: 'views/reconciliation-discrepancy-detail.html',
     controller: 'ReconciliationDiscrepancyDetail'
+  }).when('/reconciliation-discrepancy-detail/view/:storeInstanceId', {
+    templateUrl: 'views/reconciliation-discrepancy-detail.html',
+    controller: 'ReconciliationDiscrepancyDetail'
   }).when('/login', {
     templateUrl: 'views/login.html',
     controller: 'LoginCtrl'
@@ -421,6 +424,30 @@ angular.module('ts5App', [
     templateUrl: 'views/menu-rule-create.html',
     controller: 'MenuRuleCreateCtrl',
     controllerAs: 'menuRuleCreate'
+  }).when('/survey', {
+    templateUrl: 'views/survey.html',
+    controller: 'SurveyCtrl',
+    controllerAs: 'survey'
+  }).when('/survey/:action/:id?', {
+    templateUrl: 'views/survey-create.html',
+    controller: 'SurveyCreateCtrl',
+    controllerAs: 'surveyCreate'
+  }).when('/survey-catalog', {
+    templateUrl: 'views/survey-catalog.html',
+    controller: 'SurveyCatalogCtrl',
+    controllerAs: 'surveyCatalog'
+  }).when('/survey-catalog/:action/:id?', {
+    templateUrl: 'views/survey-catalog-create.html',
+    controller: 'SurveyCatalogCreateCtrl',
+    controllerAs: 'surveyCatalogCreate'
+  }).when('/survey-questions', {
+    templateUrl: 'views/survey-questions-list.html',
+    controller: 'SurveyQuestionsListCtrl',
+    controllerAs: 'surveyQuestionsList'
+  }).when('/survey-questions/:action/:id?', {
+    templateUrl: 'views/survey-questions-create.html',
+    controller: 'SurveyQuestionsCreateCtrl',
+    controllerAs: 'surveyQuestionsCreate'
   }).when('/epos-config', {
     templateUrl: 'views/epos-config.html',
     controller: 'EposConfigCtrl',

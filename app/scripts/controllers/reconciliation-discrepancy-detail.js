@@ -10,9 +10,30 @@
 angular.module('ts5App')
   .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, $route, messageService,
                                                            reconciliationFactory, currencyFactory, storeInstanceFactory, globalMenuService, dateUtility, lodash,
-                                                           $location) {
+                                                           $location, ENV, identityAccessFactory) {
 
     var $this = this;
+    var STATUS_TO_BUTTONS_MAP = {
+      1: ['Pack'],
+      2: ['Seal'],
+      3: ['Dispatch', 'Offload', 'Checkbox', 'Inbounded', 'On Floor'],
+      4: ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
+      5: ['End Instance', 'Redispatch', 'Get Flight Docs', 'Checkbox'],
+      6: ['Start Inbound Seals', 'Get Flight Docs', 'Checkbox'],
+      7: ['Start Offload', 'Get Flight Docs', 'Checkbox'],
+      8: ['Get Flight Docs', 'Checkbox'],
+      9: ['Get Flight Docs'],
+      10: ['Get Flight Docs'],
+      11: ['Get Flight Docs']
+    };
+
+    $scope.isViewMode = false;
+    this.checkFormState = function() {
+      var path = $location.path();
+      if (path.search('reconciliation-discrepancy-detail/view/') !== -1) {
+        $scope.isViewMode = true;
+      }
+    };
 
     function formatAsCurrency(valueToFormat, optionalNumDigits) {
       var precision = (optionalNumDigits) ? '%.' + optionalNumDigits + 'f' : '%.2f';
@@ -284,7 +305,7 @@ angular.module('ts5App')
                cashbagId: cashBag.cashbagId,
                currencyId: cashBag.retailCompanyCurrency
              }).map(function (cash) {
-               eposCalculatedAmount = cash.amount; 
+               eposCalculatedAmount = cash.amount;
              });
 
             crewAmount = eposCalculatedAmount;
@@ -316,7 +337,7 @@ angular.module('ts5App')
             isDiscrepancy: isDiscrepancy
           };
           formattedCashBagList.push(cashBagItem);
-        }  
+        }
       });
 
       $scope.cashBags = formattedCashBagList;
@@ -545,7 +566,7 @@ angular.module('ts5App')
         var discountTotal = makeFinite(discount.bankAmountFinal);
         total += ($scope.submittedCashBags.indexOf(discount.cashbagId) >= 0) ? discountTotal : 0;
       });
-      
+
       total += getManualDataTotals('discount');
 
       return total;
@@ -673,9 +694,9 @@ angular.module('ts5App')
       });
 
       if ($this.stockTotals.length > 1) {
-        $this.stockTotals = mergeStockTotalDuplicates($this.stockTotals);  
+        $this.stockTotals = mergeStockTotalDuplicates($this.stockTotals);
       }
-      
+
       var totalPromotion = getTotalsForPromotions($this.promotionTotals);
       var totalItems = getTotalsFor($this.stockTotals, 'Regular');
       var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
@@ -694,7 +715,25 @@ angular.module('ts5App')
       getStockItemData();
       setDiscrepancy();
 
+      var storeStatusName = getStoreInstanceStatusName($scope.storeInstance.statusId);
+      var actionButtons = STATUS_TO_BUTTONS_MAP[storeStatusName];
+      $scope.showGenerateDocsButton = false;
+      if (lodash.find(actionButtons, lodash.matches('Get Flight Docs')) || $scope.storeInstance.statusName === 'On Floor') {
+        $scope.showGenerateDocsButton = true;
+        var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
+        $scope.exportURL = ENV.apiUrl + '/rsvr-pdf/api/dispatch/store-instances/documents/C208-' + $routeParams.storeInstanceId + '.pdf?sessionToken=' + sessionToken;
+      }
+
       hideLoadingModal();
+    }
+
+    function getStoreInstanceStatusName(id) {
+      var matchedObject = lodash.findWhere($scope.statusList, { id: id });
+      if (matchedObject) {
+        return matchedObject.name;
+      }
+
+      return '';
     }
 
     function initData() {
@@ -832,7 +871,7 @@ angular.module('ts5App')
         discount: setManualDataSet(angular.copy(responseCollectionFromAPI[6].response), manualDataToInclude, null, 'verificationConfirmedOn'),
         promotion: setManualDataSet(angular.copy(responseCollectionFromAPI[7].response), manualDataToInclude, null, 'verificationConfirmedOn')
       };
-      
+
     }
 
     function setSubmittedCashBagList() {
@@ -891,6 +930,7 @@ angular.module('ts5App')
     }
 
     function init() {
+      $this.checkFormState();
       $scope.actionOnPaymentReport = 'Show';
       showLoadingModal('Loading Reconciliation Discrepancy Details');
       initDependencies();

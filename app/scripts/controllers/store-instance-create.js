@@ -486,8 +486,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var payload = angular.copy($scope.formData);
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
       payload.scheduleId = payload.scheduleId.id;
-      payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
-      payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
+      payload.scheduleNumber = payload.scheduleNumber.scheduleNumber; 
 
       var actionSwitch = this.actionSwitch(action);
       switch (actionSwitch) {
@@ -495,14 +494,18 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.formatReplenishPayload(payload);
           break;
         case 'redispatch':
+          payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
           $this.formatRedispatchPayload(payload);
           break;
         case 'redispatch-initial':
+          payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
           return $this.formatInitialRedispatchPayload(payload);
         case 'end-instance':
+          payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
           $this.formatEndInstancePayload(payload);
           break;
         default:
+          payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
           $this.formatDispatchPayload(payload);
           break;
       }
@@ -1568,7 +1571,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.createInitPromises = function () {
       var promises = [
         $this.getCatererStationList(),
-        $this.getStoresList(),
         $this.getCarrierNumbers(),
         $this.getScheduleNumbers(),
         $this.getInstancesOnFloor()
@@ -1599,6 +1601,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('replenish')) {
         $scope.redispatchOrReplenishNew = true;
       } else {
+        promises.push($this.getStoresList());  
         promises.push($this.getMenuMasterList());
         promises.push($this.getMenuCatererList());
       } 

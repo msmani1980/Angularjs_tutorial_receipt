@@ -1023,8 +1023,8 @@
                   <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" title="Add Manual Data" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual && !commitionPaidStatus()  && !cashBag.isVerified">
                     <i class="fa fa-plus-circle active"></i>
                   </a>
-                  <button class="btn btn-primary" title="Refresh Transactions Total" ng-click="refreshManualCashBag(cashBag)" ng-show="cashBag.isManual && !commitionPaidStatus() && !cashBag.isVerified">
-                    <i class="fa fa-check-square-o"></i>
+                  <button class="btn btn-default" title="Refresh Transactions Total" ng-click="refreshManualCashBag(cashBag)" ng-show="cashBag.isManual && !commitionPaidStatus() && !cashBag.isVerified">
+                    <i class="fa fa-rotate-right active"></i>
                   </button>
                   <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag) && canExecuteActions(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
                     <i class="fa fa-trash active"></i>
