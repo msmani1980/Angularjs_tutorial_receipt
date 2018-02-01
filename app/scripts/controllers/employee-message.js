@@ -145,7 +145,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         employeeMessagesFactory.createEmployeeMessage(payload).then($this.saveSuccess, $this.showErrors);
       }
     };
-    
+
     $scope.shouldDisable = function(isFieldDisabledInActiveRecord) {
       if (isFieldDisabledInActiveRecord) {
         return $scope.readOnly || $scope.shouldDisableActiveFields();
@@ -224,6 +224,25 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       $scope.newRecords[categoryName] = [];
       $scope[categoryName + 'AddAll'] = false;
       $this.filterListsByName(categoryName);
+    };
+
+    $scope.addNewEmployee = function() {
+      angular.forEach($scope.newRecords.employees, function(newEmployee) {
+        var existingEmployeeIdByIdentifier = lodash.filter($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function (emi) {
+          return emi.employeeIdentifier === newEmployee.employeeIdentifier;
+        });
+
+        if(existingEmployeeIdByIdentifier.length === 0) {
+          var newMessageIdentifier = {
+            employeeIdentifier: newEmployee.employeeIdentifier,
+            employeeFirstName: newEmployee.firstName,
+            employeeLastName: newEmployee.lastName,
+            companyEmployeeId: newEmployee.id
+          };
+
+          $scope.employeeMessage.employeeMessageEmployeeIdentifiers.push(newMessageIdentifier);
+        }
+      })
     };
 
     this.createNewRecordWithMatchingAttributes = function(record, arrayToCheck, attributeToMatch,
