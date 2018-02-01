@@ -1188,7 +1188,7 @@ angular.module('ts5App')
           flightSectors: [],
           flightSectorsForRearrange: [],
           isVerifiedManual: (cashBag.verificationConfirmedOn) ? true : false,
-          isAmended: cashBag.isAmended
+          isAmended: (cashBag.isAddedPosttrip || cashBag.isDeletedPosttrip) //cashBag.isAmended
         };
       });
     }
