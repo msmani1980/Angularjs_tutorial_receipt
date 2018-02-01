@@ -108,12 +108,12 @@
                 <th>ID</th>
                 <th>Name</th>
               </tr>
-              <tr ng-repeat="employee in employeeMessage.employees">
+              <tr ng-repeat="employee in employeeMessage.employeeMessageEmployeeIdentifiers">
                 <td ng-hide="shouldDisable(true)"><input type="checkbox" ng-model="employee.selectedToDelete"></td>
                 <td>{{employee.employeeIdentifier}}</td>
-                <td>{{employee.lastName}}, {{ employee.firstName }}</td>
+                <td>{{employee.employeeLastName}}, {{ employee.employeeFirstName }}</td>
               </tr>
-              <tr ng-hide="employeeMessage.employees.length">
+              <tr ng-hide="employeeMessage.employeeMessageEmployeeIdentifiers.length">
                 <td colspan="3" class="text-center"> <span class="fa fa-exclamation-circle"></span> No Employees Have Been Added</td>
               </tr>
             </table>
