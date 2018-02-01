@@ -1,22 +1,22 @@
-<div class="module-container">
+<div class="module-container-epos-configuration">
   <error-dialog form-object="form" error-response="errorResponse" display="displayError">
   </error-dialog>
-<form class="form-horizontal" name="reportOptions" ng-submit="run()">
-<div class="modal-header">
-  <h3 class="modal-title">EPOS CONFIGURATION</h3>
-</div>
-<div class="modal-body">
-    
-    <div ng-repeat="option in template.options" class="form-group" ng-switch on="option.type">
-      <label class="col-sm-4 control-label">{{option.prompt}}: <span ng-if="!option.optional" style="color:red">*</span></label>
-      <span ng-switch-when="DATE" ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
+  <form class="form-horizontal" name="reportOptions" ng-submit="run()">
+    <div class="modal-header">
+      <h3 class="modal-title">EPOS CONFIGURATION</h3>
+    </div>
+    <div class="modal-body">
+      Select Product Version first, then choose module you want to edit.
+      <div ng-repeat="option in template.options" class="form-group" ng-switch on="option.type">
+        <label class="col-sm-4 control-label">{{option.prompt}}: <span ng-if="!option.optional" style="color:red">*</span></label>
+        <span ng-switch-when="DATE" ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
         <input type="text" class="form-control" name="{{option.code}}" ng-model="selection.options[option.code]" datepicker-popup="{{format}}"
                datepicker-options="dateOptions" ng-required="!option.optional" close-text="Close" is-open="status.opened"/> <!-- -->
         <span class="input-group-btn">
           <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
         </span>
       </span>
-      <span ng-switch-when="ID" ng-controller="OptionSelectionSelectCtrl" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
+        <span ng-switch-when="ID" ng-controller="OptionSelectionSelectCtrl" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
         <ui-select ng-if="option.multiValue" name="{{option.code}}" multiple ng-model="selection.options[option.code]">
           <ui-select-match placeholder="Select value...">{{$item.code}}</ui-select-match>
           <ui-select-choices repeat="choice in choices | filter: $select.search track by choice.id"
@@ -32,7 +32,7 @@
           </ui-select-choices>
         </ui-select>
       </span>
-      <span ng-switch-when="STRING">
+        <span ng-switch-when="STRING">
         <span ng-if="option.multiValue && !option.choiceValues" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
           <input type="text" name="{{option.code}}" class="form-control" ng-model="selection.options[option.code]" ng-list="," ng-trim="true" placeholder="seperate values with a comma" />
         </span>
@@ -54,72 +54,51 @@
           <p ng-show="reportOptions[option.code].$error.required">{{option.prompt}} is required.</p>
         </div>
       </span>
-      <span ng-switch-default class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
+        <span ng-switch-default class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
         <input type="text" name="{{option.code}}" class="form-control" ng-model="selection.options[option.code]"/>
       </span>
-      <div ng-if="reportOptions[option.code].$error && reportOptions[option.code].$dirty">
-        <p ng-show="reportOptions[option.code].$error.required">{{option.prompt}} is required.</p>
+        <div ng-if="reportOptions[option.code].$error && reportOptions[option.code].$dirty">
+          <p ng-show="reportOptions[option.code].$error.required">{{option.prompt}} is required.</p>
+        </div>
       </div>
+      <!-- <template-params options="template.options"/> -->
     </div>
-    <!-- <template-params options="template.options"/> -->
-</div>
-<div class="modal-footer">
-  <button class="btn btn-primary" type="submit">Save</button>
-  <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
-</div>
-</form>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="submit">Save</button>
+      <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+  </form>
 </div>
 <form-success-modal></form-success-modal>
 <form-update-modal></form-update-modal>
 
-<!--  To Do With dynamic epos module name starts -->
-
-<div id="left-navigation">
+<div id="left-navigation-epos-configuration">
   <div class="container">
+
     <ul class="navbar">
-
-    <li ng-class="itemClassepos-config" class="ng-scope active" role="button" tabindex="0" style="">
-
-        <i class="icon-manage-discount"></i>
-        <div class="left-nav-option lg" ng-class="{'lg':dashboard-epos-config}">
-          <i class="icon-manage-retail-item"></i>
-          <p class="ng-binding">Cross Device Synchronization</p>
+      <li class="product-version" tabindex="0" style="">
+        <div class="">
+          <label class="sr-only" for="importCompanyId">Stock Owner</label>
+          <select
+            name="importCompanyId"
+            class="form-control"
+            id="importCompanyId"
+            ng-model="selectedImportCompany"
+            ng-options="company as company.companyName for company in importCompanyList">
+            <option selected default value="">Select Product Version</option>
+          </select>
         </div>
       </li>
-      <li ng-class="itemClassepos-config" class="ng-scope active" role="button" tabindex="0" style="">
 
-        <i class="icon-create-discount"></i>
-        <div class="left-nav-option lg" ng-class="{'lg':dashboard-epos-config}">
-          <i class="icon-create-retail-item"></i>
-          <p class="ng-binding">Dashboard</p>
-        </div>
-      </li>
-      <li ng-class="itemClassepos-config" class="ng-scope active" role="button" tabindex="0" style="">
-
+      <li ng-repeat="module in modules | orderBy: orderBy" ng-class="itemClassepos-config" class="ng-scope active" role="button" tabindex="0" style="">
         <i class="icon-manage-transactions"></i>
-        <div class="left-nav-option lg" ng-class="{'lg':dashboard-epos-config}">
-          <i class="icon-manage-retail-item"></i>
-          <p class="ng-binding">Data Synchronization</p>
+        <div class="left-nav-option" ng-class="{'lg':dashboard-epos-config}">
+          <i class="icon-manage-discount"></i>
+          <p class="ng-binding">{{ module.moduleName }}</p>
         </div>
       </li>
-        <li ng-class="itemClassepos-config" class="ng-scope active" role="button" tabindex="0" style="">
 
-        <i class="icon-manage-company"></i>
-        <div class="left-nav-option lg" ng-class="{'lg':dashboard-epos-config}">
-          <i class="icon-manage-retail-item"></i>
-          <p class="ng-binding">Global</p>
-        </div>
-      </li>
-        <li ng-class="itemClassepos-config" class="ng-scope active" role="button" tabindex="0" style="">
-
-        <i class="icon-create-company"></i>
-        <div class="left-nav-option lg" ng-class="{'lg':dashboard-epos-config}">
-          <i class="icon-manage-retail-item"></i>
-          <p class="ng-binding">PED</p>
-        </div>
-      </li>
     </ul>
   </div>
 </div>
 
-<!--  To Do With dynamic epos module name ends -->

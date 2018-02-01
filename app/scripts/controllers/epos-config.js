@@ -14,7 +14,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Epos Configuration';
     $scope.modules = [];
-    
+
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
     };
@@ -22,30 +22,30 @@ angular.module('ts5App')
     this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
     };
-      
+
     this.getModuleSuccess = function(dataFromAPI) {
       $scope.modules = angular.copy(dataFromAPI);
     };
-    
+
     this.initDependenciesSuccess = function(result) {
-      $this.getModuleSuccess(result[0].module);
+      $this.getModuleSuccess(result[0].response);
       $this.hideLoadingModal();
     };
-    
+
     this.initDependenciesError = function(errorResponse) {
       $scope.errorResponse = errorResponse[0];
       $scope.displayError = true;
       $this.hideLoadingModal();
     };
-    
+
     this.makeInitPromises = function() {
       companyId = eposConfigFactory.getCompanyId();
       var promises = [
-        eposConfigFactory.getModules(companyId)
+        eposConfigFactory.getModules()
       ];
       return promises;
     };
-      
+
     this.init = function() {
       $this.showLoadingModal('Loading Data');
       var initPromises = $this.makeInitPromises();
@@ -53,5 +53,5 @@ angular.module('ts5App')
     };
 
     this.init();
-    
+
   });
