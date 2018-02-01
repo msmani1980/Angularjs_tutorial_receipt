@@ -87,11 +87,11 @@
               <div class="col-xs-8">
                 <label>Employees</label>
               </div>
-              <div class="col-xs-4 text-right" ng-hide="shouldDisable(true) || !employeeMessage.employees.length">
-                <button ng-class="getPropertiesForDeletedButton('employees', 'button')"
+              <div class="col-xs-4 text-right" ng-hide="shouldDisable(true) || !employeeMessage.employeeMessageEmployeeIdentifiers.length">
+                <button ng-class="getPropertiesForDeletedButtonEmployeeIdentifiers('button')"
                         title="delete selected employees"
-                        ng-disabled="getPropertiesForDeletedButton('employees', 'disabled')"
-                        ng-click="removeItems('employees')"
+                        ng-disabled="getPropertiesForDeletedButtonEmployeeIdentifiers('disabled')"
+                        ng-click="removeSelectedEmployeeIdentifiers()"
                         type="button">
                   <i class="fa fa-trash"></i>
                 </button>
@@ -101,19 +101,19 @@
               <tr class="active">
                 <td ng-hide="shouldDisable(true)">
                   <input type="checkbox"
-                           ng-show="employeeMessage.employees.length"
+                           ng-show="employeeMessage.employeeMessageEmployeeIdentifiers.length"
                            ng-model="employeesDeleteAll"
-                           ng-click="toggleSelectAll(employeesDeleteAll, 'employees')">
+                           ng-click="toggleSelectAllEmployeeIdentifiers()">
                 </td>
                 <th>ID</th>
                 <th>Name</th>
               </tr>
-              <tr ng-repeat="employee in employeeMessage.employees">
+              <tr ng-repeat="employee in employeeMessage.employeeMessageEmployeeIdentifiers">
                 <td ng-hide="shouldDisable(true)"><input type="checkbox" ng-model="employee.selectedToDelete"></td>
                 <td>{{employee.employeeIdentifier}}</td>
-                <td>{{employee.lastName}}, {{ employee.firstName }}</td>
+                <td>{{employee.employeeLastName}}, {{ employee.employeeFirstName }}</td>
               </tr>
-              <tr ng-hide="employeeMessage.employees.length">
+              <tr ng-hide="employeeMessage.employeeMessageEmployeeIdentifiers.length">
                 <td colspan="3" class="text-center"> <span class="fa fa-exclamation-circle"></span> No Employees Have Been Added</td>
               </tr>
             </table>
@@ -136,7 +136,7 @@
                     </td>
                     <td class="col-xs-1">
                       <button type="button" class="btn btn-success btn-sm text-right"
-                              ng-click="addNewItem('employees')"><i class="fa fa-plus"></i></button>
+                              ng-click="addNewEmployee()"><i class="fa fa-plus"></i></button>
                     </td>
                   </tr>
                 </table>
