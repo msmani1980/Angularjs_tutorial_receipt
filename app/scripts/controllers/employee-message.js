@@ -86,6 +86,20 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return newStationsArray;
     };
 
+    this.formatEmployeeMessageEmployeeIdentifiersPayload = function() {
+      var newArray = [];
+      angular.forEach($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+        var newRecord = {
+          employeeIdentifier: record.employeeIdentifier,
+          companyEmployeeId: record.companyEmployeeId
+        };
+
+        newArray.push(newRecord);
+      });
+
+      return newArray;
+    };
+
     this.formatPayload = function() {
       var formData = angular.copy($scope.employeeMessage);
       var payload = {};
@@ -95,8 +109,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       payload.employeeMessageArrivalStations = $this.formatStationsArrayForAPI(formData.arrivalStations);
       payload.employeeMessageDepartureStations = $this.formatStationsArrayForAPI(formData.departureStations);
       payload.employeeMessageSchedules = $this.formatArrayForAPIWithAttributes(formData.schedules, 'scheduleNumber');
-      payload.employeeMessageEmployeeIdentifiers = $this.formatArrayForAPIWithAttributes(formData.employees,
-        'employeeIdentifier');
+      payload.employeeMessageEmployeeIdentifiers = $this.formatEmployeeMessageEmployeeIdentifiersPayload();
 
       return {
         employeeMessage: payload
@@ -145,7 +158,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         employeeMessagesFactory.createEmployeeMessage(payload).then($this.saveSuccess, $this.showErrors);
       }
     };
-    
+
     $scope.shouldDisable = function(isFieldDisabledInActiveRecord) {
       if (isFieldDisabledInActiveRecord) {
         return $scope.readOnly || $scope.shouldDisableActiveFields();
@@ -185,9 +198,33 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return properties[attribute];
     };
 
+    $scope.getPropertiesForDeletedButtonEmployeeIdentifiers = function(attribute) {
+      var canDelete = false;
+      if ($scope.employeeMessage) {
+        angular.forEach($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+          canDelete = canDelete || record.selectedToDelete;
+        });
+      }
+
+      var properties = (canDelete) ? {
+          disabled: false,
+          button: 'btn btn-xs btn-danger'
+        } : {
+          disabled: true,
+          button: 'btn btn-xs btn-default'
+        };
+      return properties[attribute];
+    };
+
     $scope.toggleSelectAll = function(toggleFlag, listName) {
       angular.forEach($scope.employeeMessage[listName], function(record) {
         record.selectedToDelete = toggleFlag;
+      });
+    };
+
+    $scope.toggleSelectAllEmployeeIdentifiers = function() {
+      angular.forEach($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+        record.selectedToDelete = $scope.employeesDeleteAll;
       });
     };
 
@@ -198,6 +235,12 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
       $scope[listName + 'DeleteAll'] = false;
       $this.filterListsByName(listName);
+    };
+
+    $scope.removeSelectedEmployeeIdentifiers = function() {
+      $scope.employeeMessage.employeeMessageEmployeeIdentifiers = lodash.filter($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+        return !record.selectedToDelete;
+      });
     };
 
     this.addNewRecordsToArrayWithAttributes = function(existingArray, newArray, attributesToSave) {
@@ -214,7 +257,6 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     $scope.addNewItem = function(categoryName) {
       var categoryToAttributesMap = {
         schedules: ['scheduleNumber'],
-        employees: ['employeeIdentifier', 'firstName', 'lastName', 'id', 'startDate', 'endDate'],
         arrivalStations: ['code', 'name', 'id'],
         departureStations: ['code', 'name', 'id']
       };
@@ -224,6 +266,25 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       $scope.newRecords[categoryName] = [];
       $scope[categoryName + 'AddAll'] = false;
       $this.filterListsByName(categoryName);
+    };
+
+    $scope.addNewEmployee = function() {
+      angular.forEach($scope.newRecords.employees, function(newEmployee) {
+        var existingEmployeeIdByIdentifier = lodash.filter($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function (emi) {
+          return emi.employeeIdentifier === newEmployee.employeeIdentifier;
+        });
+
+        if(existingEmployeeIdByIdentifier.length === 0) {
+          var newMessageIdentifier = {
+            employeeIdentifier: newEmployee.employeeIdentifier,
+            employeeFirstName: newEmployee.firstName,
+            employeeLastName: newEmployee.lastName,
+            companyEmployeeId: newEmployee.id
+          };
+
+          $scope.employeeMessage.employeeMessageEmployeeIdentifiers.push(newMessageIdentifier);
+        }
+      })
     };
 
     this.createNewRecordWithMatchingAttributes = function(record, arrayToCheck, attributeToMatch,
