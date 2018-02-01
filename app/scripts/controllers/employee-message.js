@@ -198,9 +198,33 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return properties[attribute];
     };
 
+    $scope.getPropertiesForDeletedButtonEmployeeIdentifiers = function(attribute) {
+      var canDelete = false;
+      if ($scope.employeeMessage) {
+        angular.forEach($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+          canDelete = canDelete || record.selectedToDelete;
+        });
+      }
+
+      var properties = (canDelete) ? {
+          disabled: false,
+          button: 'btn btn-xs btn-danger'
+        } : {
+          disabled: true,
+          button: 'btn btn-xs btn-default'
+        };
+      return properties[attribute];
+    };
+
     $scope.toggleSelectAll = function(toggleFlag, listName) {
       angular.forEach($scope.employeeMessage[listName], function(record) {
         record.selectedToDelete = toggleFlag;
+      });
+    };
+
+    $scope.toggleSelectAllEmployeeIdentifiers = function() {
+      angular.forEach($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+        record.selectedToDelete = $scope.employeesDeleteAll;
       });
     };
 
@@ -211,6 +235,12 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
       $scope[listName + 'DeleteAll'] = false;
       $this.filterListsByName(listName);
+    };
+
+    $scope.removeSelectedEmployeeIdentifiers = function() {
+      $scope.employeeMessage.employeeMessageEmployeeIdentifiers = lodash.filter($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+        return !record.selectedToDelete;
+      });
     };
 
     this.addNewRecordsToArrayWithAttributes = function(existingArray, newArray, attributesToSave) {
