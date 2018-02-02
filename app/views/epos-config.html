@@ -3,15 +3,24 @@
   </error-dialog>
   <form class="form-horizontal" name="reportOptions" ng-submit="run()">
     <div class="modal-header">
-      <h3 class="modal-title">EPOS CONFIGURATION</h3>
+      <h3 class="modal-title">{{ selectedModule.moduleName || 'EPOS Configuration' }}</h3>
     </div>
     <div class="modal-body">
-      Select Product Version first, then choose module you want to edit.
+
+      <p ng-hide="moduleConfiguration">Select Product Version first, then choose module you want to edit.</p>
+
+      <div ng-show="moduleConfiguration" class="">
+
+        {{moduleConfiguration}}
+
+      </div>
+
+      <!--
       <div ng-repeat="option in template.options" class="form-group" ng-switch on="option.type">
         <label class="col-sm-4 control-label">{{option.prompt}}: <span ng-if="!option.optional" style="color:red">*</span></label>
         <span ng-switch-when="DATE" ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
         <input type="text" class="form-control" name="{{option.code}}" ng-model="selection.options[option.code]" datepicker-popup="{{format}}"
-               datepicker-options="dateOptions" ng-required="!option.optional" close-text="Close" is-open="status.opened"/> <!-- -->
+               datepicker-options="dateOptions" ng-required="!option.optional" close-text="Close" is-open="status.opened"/>
         <span class="input-group-btn">
           <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
         </span>
@@ -61,9 +70,10 @@
           <p ng-show="reportOptions[option.code].$error.required">{{option.prompt}} is required.</p>
         </div>
       </div>
+      -->
       <!-- <template-params options="template.options"/> -->
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer" ng-show="selectedProductVersion && selectedModule">
       <button class="btn btn-primary" type="submit">Save</button>
       <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
     </div>
@@ -78,21 +88,20 @@
     <ul class="navbar">
       <li class="product-version" tabindex="0" style="">
         <div class="">
-          <label class="sr-only" for="importCompanyId">Stock Owner</label>
           <select
-            name="importCompanyId"
+            name="productVersion"
             class="form-control"
-            id="importCompanyId"
-            ng-model="selectedImportCompany"
-            ng-options="company as company.companyName for company in importCompanyList">
+            id="productVersion"
+            ng-model="selectedProductVersion"
+            ng-options="productVersion as productVersion.displayName for productVersion in productVersions">
             <option selected default value="">Select Product Version</option>
           </select>
         </div>
       </li>
 
-      <li ng-repeat="module in modules | orderBy: orderBy" ng-class="itemClassepos-config" class="ng-scope active" role="button" tabindex="0" style="">
+      <li ng-show="selectedProductVersion" ng-repeat="module in modules | orderBy: orderBy" ng-class="{'active' : module === selectedModule}" class="ng-scope" role="button" ng-click="selectModule(module)">
         <i class="icon-manage-transactions"></i>
-        <div class="left-nav-option" ng-class="{'lg':dashboard-epos-config}">
+        <div class="left-nav-option">
           <i class="icon-manage-discount"></i>
           <p class="ng-binding">{{ module.moduleName }}</p>
         </div>
