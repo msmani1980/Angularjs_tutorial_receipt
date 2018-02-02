@@ -454,7 +454,7 @@ angular.module('ts5App')
           package: 'RECONCILIATION',
           role: 'RELATEESC'
         }, {
-          name: 'Reconciliation Manage Cash Bag',
+          name: 'Manage Cash Bag',
           route: '/#/reconciliation-cash-bag-list',
           icon: 'icon-create-receipt-rules',
           className: 'dashboard-manageCashBag',
