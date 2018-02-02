@@ -284,7 +284,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
           $scope.employeeMessage.employeeMessageEmployeeIdentifiers.push(newMessageIdentifier);
         }
-      })
+      });
     };
 
     this.createNewRecordWithMatchingAttributes = function(record, arrayToCheck, attributeToMatch,
