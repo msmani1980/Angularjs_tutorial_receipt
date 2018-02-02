@@ -454,6 +454,10 @@ angular.module('ts5App', [
     templateUrl: 'views/survey-questions-create.html',
     controller: 'SurveyQuestionsCreateCtrl',
     controllerAs: 'surveyQuestionsCreate'
+  }).when('/report-exchange-rate', {
+    templateUrl: 'views/report-exchange-rate.html',
+    controller: 'ReportExchangeRateCtrl',
+    controllerAs: 'reportExchangeRate'
   }).otherwise({
     redirectTo: '/'
   });
