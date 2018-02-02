@@ -274,7 +274,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
           return emi.employeeIdentifier === newEmployee.employeeIdentifier;
         });
 
-        if(existingEmployeeIdByIdentifier.length === 0) {
+        if (existingEmployeeIdByIdentifier.length === 0) {
           var newMessageIdentifier = {
             employeeIdentifier: newEmployee.employeeIdentifier,
             employeeFirstName: newEmployee.firstName,
@@ -284,7 +284,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
           $scope.employeeMessage.employeeMessageEmployeeIdentifiers.push(newMessageIdentifier);
         }
-      })
+      });
     };
 
     this.createNewRecordWithMatchingAttributes = function(record, arrayToCheck, attributeToMatch,
