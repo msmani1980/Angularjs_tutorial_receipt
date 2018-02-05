@@ -455,7 +455,8 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
           employees: [],
           schedules: [],
           arrivalStations: [],
-          departureStations: []
+          departureStations: [],
+          employeeMessageEmployeeIdentifiers: []
         };
         $this.hideLoadingModal();
         $this.filterListsByName('all');
