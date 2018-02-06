@@ -127,30 +127,29 @@ angular.module('ts5App')
 
     function promisesResponseHandler() {
       setBankReferenceNumberFromLocalStorage();
-      if (angular.isUndefined($scope.dailyExchangeRates) || $scope.dailyExchangeRates.length === 0) {
-        hideLoadingModal();
-        return;
+      var dailyExchangeRateCurrencies = null;
+      if ($scope.dailyExchangeRates && $scope.dailyExchangeRates.length > 0) {
+        dailyExchangeRateCurrencies = $scope.dailyExchangeRates[0].dailyExchangeRateCurrencies;
+        $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
       }
-
-      var dailyExchangeRateCurrencies = $scope.dailyExchangeRates[0].dailyExchangeRateCurrencies;
-      $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
 
       angular.forEach($scope.cashBag.cashBagCurrencies, function(cashBagCurrency) {
         cashBagCurrency.currencyCode = $scope.currencyCodes[cashBagCurrency.currencyId];
-        cashBagCurrency.paperAmountManual = setManualAmount(cashBagCurrency.paperAmountManual);
-        cashBagCurrency.coinAmountManual = setManualAmount(cashBagCurrency.coinAmountManual);
-        cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) +
-          parseFloat(cashBagCurrency.coinAmountEpos));
+        cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) + parseFloat(cashBagCurrency.coinAmountEpos));
 
-        var dailyCurrency = lodash.findWhere(dailyExchangeRateCurrencies, {
-          retailCompanyCurrencyId: cashBagCurrency.currencyId
-        });
+        if (dailyExchangeRateCurrencies) {
+          cashBagCurrency.paperAmountManual = setManualAmount(cashBagCurrency.paperAmountManual);
+          cashBagCurrency.coinAmountManual = setManualAmount(cashBagCurrency.coinAmountManual);
+          var dailyCurrency = lodash.findWhere(dailyExchangeRateCurrencies, {
+            retailCompanyCurrencyId: cashBagCurrency.currencyId
+          });
 
-        if (dailyCurrency) {
-          cashBagCurrency.paperExchangeRate = dailyCurrency.paperExchangeRate;
-          cashBagCurrency.coinExchangeRate = dailyCurrency.coinExchangeRate;
-          cashBagCurrency.bankExchangeRate = dailyCurrency.bankExchangeRate;
-          dailyExchangeRateCurrencies.splice(dailyExchangeRateCurrencies.indexOf(dailyCurrency), 1);
+          if (dailyCurrency) {
+            cashBagCurrency.paperExchangeRate = dailyCurrency.paperExchangeRate;
+            cashBagCurrency.coinExchangeRate = dailyCurrency.coinExchangeRate;
+            cashBagCurrency.bankExchangeRate = dailyCurrency.bankExchangeRate;
+            dailyExchangeRateCurrencies.splice(dailyExchangeRateCurrencies.indexOf(dailyCurrency), 1);
+          }
         }
       });
 
@@ -168,13 +167,6 @@ angular.module('ts5App')
           coinExchangeRate: currency.coinExchangeRate,
           bankExchangeRate: currency.bankExchangeRate
         });
-      });
-
-      $scope.cashBag.cashBagCurrencies = lodash.filter($scope.cashBag.cashBagCurrencies, function (currency) {
-        var hasExchangeRate = !!currency.paperExchangeRate || !!currency.coinExchangeRate || !!currency.bankExchangeRate;
-        var hasAmount = (parseFloat(currency.paperAmountManual) + parseFloat(currency.coinAmountManual)) > 0;
-
-        return hasAmount || hasExchangeRate;
       });
     }
 
