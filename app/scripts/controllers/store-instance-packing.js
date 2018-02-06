@@ -121,7 +121,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           $scope.offLoadItemsSortOrder = '[salesCategoryName,itemName]';
           $scope.itemSortOrder = '[salesCategoryName,itemName]';
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
-          $scope.scheduleDateOption = 'itemName';	
+          $scope.offLoadItemsSortOrder = 'itemName';	
           $scope.itemSortOrder = 'itemName';
         }
       });
