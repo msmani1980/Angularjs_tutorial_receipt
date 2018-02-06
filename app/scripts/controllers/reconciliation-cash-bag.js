@@ -143,6 +143,13 @@ angular.module('ts5App')
           var dailyCurrency = lodash.findWhere(dailyExchangeRateCurrencies, {
             retailCompanyCurrencyId: cashBagCurrency.currencyId
           });
+
+          if (dailyCurrency) {
+            cashBagCurrency.paperExchangeRate = dailyCurrency.paperExchangeRate;
+            cashBagCurrency.coinExchangeRate = dailyCurrency.coinExchangeRate;
+            cashBagCurrency.bankExchangeRate = dailyCurrency.bankExchangeRate;
+            dailyExchangeRateCurrencies.splice(dailyExchangeRateCurrencies.indexOf(dailyCurrency), 1);
+          }
         }
       });
 
