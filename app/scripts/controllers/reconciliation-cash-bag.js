@@ -137,7 +137,7 @@ angular.module('ts5App')
         cashBagCurrency.currencyCode = $scope.currencyCodes[cashBagCurrency.currencyId];
         cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) + parseFloat(cashBagCurrency.coinAmountEpos));
 
-        if(dailyExchangeRateCurrencies) {
+        if (dailyExchangeRateCurrencies) {
           cashBagCurrency.paperAmountManual = setManualAmount(cashBagCurrency.paperAmountManual);
           cashBagCurrency.coinAmountManual = setManualAmount(cashBagCurrency.coinAmountManual);
           var dailyCurrency = lodash.findWhere(dailyExchangeRateCurrencies, {
