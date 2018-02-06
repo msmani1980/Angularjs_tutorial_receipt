@@ -123,17 +123,50 @@ angular.module('ts5App')
     };
 
     $scope.rearrangeSector = function () {
+    	
       var originCashBag = $scope.rearrangeOriginCashBag;
       var targetCashBag = $scope.rearrangeTargetCashBag;
       var sectorsToMove = $scope.sectorsToMove;
       var promises = [];
-      angular.forEach(sectorsToMove, function (sector) {
-        promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
-      });
 
-      $q.all(promises).then(rearrangeSectorSuccess, handleResponseError);
+      console.log ('sectorsToMove', sectorsToMove[0]);
+      
+      if (sectorsToMove.length>0) {
+        var objectMatch = lodash.findWhere($scope.rearrangeTargetCashBag.flightSectors, { id: sectorsToMove[0].id });
+
+      console.log ('objectMatch', objectMatch);
+      console.log ('originCashBag', originCashBag);
+      console.log ('$scope.rearrangeTargetCashBag.flightSectors', $scope.rearrangeTargetCashBag.flightSectors);
+        if (angular.isDefined(objectMatch) && objectMatch !== null ) {
+          angular.element('.rearrange-sectors-modal').modal('show');
+        } else {
+          //angular.forEach(sectorsToMove, function (sector) {
+          //promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
+        //});
+
+        //$q.all(promises).then(rearrangeSectorSuccess, handleResponseError);
+        console.log('---Rearrange');
+        }
+      }
     };
 
+    $scope.continueRearrange = function () {
+      console.log('continueRearrange');
+      angular.element('.rearrange-sectors-modal').modal('hide');
+      var originCashBag = $scope.rearrangeOriginCashBag;
+      var targetCashBag = $scope.rearrangeTargetCashBag;
+      var sectorsToMove = $scope.sectorsToMove;
+      
+      console.log ('continueRearrange->originCashBag', originCashBag);
+      console.log ('continueRearrange->targetCashBag', targetCashBag);
+      console.log ('continueRearrange->sectorsToMove', sectorsToMove);
+    };
+
+    $scope.cancelRearrange = function () {
+      console.log('cancelRearrange');
+      angular.element('.rearrange-sectors-modal').modal('hide');
+    };
+    
     $scope.showRearrangeSectorModal = function () {
       angular.element('#rearrangeSectorModal').modal('show');
     };
@@ -199,11 +232,24 @@ angular.module('ts5App')
         return;
       }
 
+      /*  one or more schedule(s) can be selected to move
       var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
       if (matchIndex < 0) {
         $scope.sectorsToMove.push(sector);
       } else {
         $scope.sectorsToMove.splice(matchIndex, 1);
+      }
+      */
+      // only one schedule can be selected to move
+      var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
+      console.log ('matchIndex', matchIndex);
+      if (matchIndex < 0) {
+        $scope.sectorsToMove = [];
+        $scope.sectorsToMove.push(sector);
+        $scope.singleSectorsToMove = sector;
+      } else {
+          $scope.sectorsToMove = [];
+          $scope.singleSectorsToMove = null;
       }
     };
 
@@ -1700,6 +1746,7 @@ angular.module('ts5App')
       $scope.moveCashBagAction = 'none';
       $scope.showDeletedCashBags = false;
       $scope.sectorsToMove = [];
+      $scope.singleSectorsToMove = null;
       $scope.cashBagFilter = {};
       $scope.scheduleSearch = {};
       $scope.numberExist = false;

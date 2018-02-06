@@ -282,6 +282,7 @@
     </div>
   </div>
 
+
   <div class="modal fade overwrite-cashbag-warning-modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -491,6 +492,27 @@
     </div>
   </div>
 
+  <div class="modal fade rearrange-sectors-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Are you sure?</h4>
+        </div>
+
+        <div class="modal-body">
+          <p> Are you sure you want to re-arrange this sector from Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b> to Cash Bag <b>{{rearrangeTargetCashBag.cashBag}}</b> ? <br/> 
+          Target Cash Bag  <b>{{ rearrangeTargetCashBag.cashBag }}</b> already has sector <b>{{ singleSectorsToMove.scheduleNumber }}</b> with the date <b>{{ singleSectorsToMove.scheduleDate}}</b> and departure station <b>{{singleSectorsToMove.departureStation}}</b> and  arrival station <b>{{singleSectorsToMove.arrivalStation}}</b> ?</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" ng-click="continueRearrange()">Continue</button>
+          <button type="button" class="btn btn-default" ng-click="cancelRearrange()"  data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div class="modal fade delete-cashbag-warning-modal">
     <div class="modal-dialog">
       <div class="modal-content">
