@@ -10,13 +10,21 @@
 angular.module('ts5App')
   .service('eposConfigService', function ($resource, ENV, $q) {
 
+    // API URL Definitions
     var eposConfigRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/:id';
     var eposConfigRequestParameters = {
-      id: '@id'
+      id: ''
     };
 
     var eposConfigProductRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/product';
 
+    var eposConfigModuleRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/module';
+    var eposConfigModuleRequestParameters = {
+      id: '',
+      pid: ''
+    };
+
+    // Management Actions
     var eposConfigManagementActions = {
       getModules: {
         method: 'GET',
@@ -31,8 +39,16 @@ angular.module('ts5App')
       }
     };
 
+    var eposConfigModuleManagementActions = {
+      getProductVersions: {
+        method: 'GET',
+        headers: {}
+      }
+    };
+
     var eposConfigRequestResource = $resource(eposConfigRequestURL, eposConfigRequestParameters, eposConfigManagementActions);
     var eposConfigProductRequestResource = $resource(eposConfigProductRequestURL, null, eposConfigProductManagementActions);
+    var eposConfigModuleRequestResource = $resource(eposConfigModuleRequestURL, eposConfigModuleRequestParameters, eposConfigModuleManagementActions);
 
     var getProductVersions = function(payload) {
       var requestPayload = payload || {};
