@@ -282,6 +282,7 @@
     </div>
   </div>
 
+
   <div class="modal fade overwrite-cashbag-warning-modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -412,6 +413,11 @@
               <div class="row">
                 <div class="col-xs-12">
                   <h4>Origin Cash Bag</h4>
+                  <div class="alert alert-warning" ng-show="isAmended(rearrangeOriginCashBag)">
+                    <span class="fa fa-exclamation-circle">
+                    </span> 
+                    Cannot rearrange sectors.<br/> 
+                    Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b> was amended. </div>
                   <select class="form-control"
                           ng-model="rearrangeOriginCashBag"
                           ng-options="cashBag as cashBag.cashBag for cashBag in normalizedCashBags | filter:{isDeleted:false} | orderBy: 'cashBag'"
@@ -419,7 +425,7 @@
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
                   <hr>
-                  <table class="table" ng-show="rearrangeOriginCashBag">
+                  <table class="table" ng-show="rearrangeOriginCashBag" >
                     <tr class="active">
                       <td>Select</td>
                       <th>Sch #</th>
@@ -428,10 +434,10 @@
                     </tr>
                     <tr ng-repeat="sector in rearrangeOriginCashBag.flightSectorsForRearrange"
                                             ng-class="getClassesForRearrangeSectors(sector, 'background')" >
-                      <td ng-click="toggleSelectSectorToRearrange(sector)">
-                        <button ng-class="getClassesForRearrangeSectors(sector, 'button')">
-                          <span ng-class="getClassesForRearrangeSectors(sector, 'buttonIcon')"></span>
-                        </button>
+                      <td ng-click="toggleSelectSectorToRearrange(sector, rearrangeOriginCashBag)">
+                          <button ng-class="getClassesForRearrangeSectors(sector, 'button')">
+                            <span ng-class="getClassesForRearrangeSectors(sector, 'buttonIcon')"></span>
+                          </button>
                       </td>
                       <td>{{ sector.scheduleNumber }}</td>
                       <td>{{ sector.scheduleDate}}</td>
@@ -486,6 +492,34 @@
     </div>
   </div>
 
+  <div class="modal fade rearrange-sectors-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Are you sure?</h4>
+        </div>
+
+        <div class="modal-body">
+          <p>You want to re-arrange sector <b>{{ singleSectorsToMove.scheduleNumber }}</b> 
+          from Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b> 
+          to Cash Bag <b>{{rearrangeTargetCashBag.cashBag}}</b>
+          <br/><br/>
+          Target Cash Bag  <b>{{ rearrangeTargetCashBag.cashBag }}</b> already has sector with the schedule number <b>{{ singleSectorsToMove.scheduleNumber }}</b>, 
+          schedule  date <b>{{ singleSectorsToMove.scheduleDate}}</b>, 
+          departure station <b>{{singleSectorsToMove.departureStation}}</b>, 
+          arrival station <b>{{singleSectorsToMove.arrivalStation}}</b>. 
+          Do you want to continue ?</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" ng-click="continueRearrange()">Continue</button>
+          <button type="button" class="btn btn-default" ng-click="cancelRearrange()"  data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div class="modal fade delete-cashbag-warning-modal">
     <div class="modal-dialog">
       <div class="modal-content">
