@@ -11,20 +11,12 @@ angular.module('ts5App')
   .service('eposConfigService', function ($resource, ENV, $q) {
 
     // API URL Definitions
+
+    // -- epos config
     var eposConfigRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/:id';
     var eposConfigRequestParameters = {
       id: ''
     };
-
-    var eposConfigProductRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/product';
-
-    var eposConfigModuleRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/module';
-    var eposConfigModuleRequestParameters = {
-      id: '',
-      pid: ''
-    };
-
-    // Management Actions
     var eposConfigManagementActions = {
       getModules: {
         method: 'GET',
@@ -32,6 +24,8 @@ angular.module('ts5App')
       }
     };
 
+    // -- epos config PRODUCT
+    var eposConfigProductRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/product';
     var eposConfigProductManagementActions = {
       getProductVersions: {
         method: 'GET',
@@ -39,8 +33,14 @@ angular.module('ts5App')
       }
     };
 
+    // -- epos config MODULE
+    var eposConfigModuleRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/module';
+    var eposConfigModuleRequestParameters = {
+      id: '',
+      pid: ''
+    };
     var eposConfigModuleManagementActions = {
-      getProductVersions: {
+      getAllModules: {
         method: 'GET',
         headers: {}
       }
@@ -56,10 +56,9 @@ angular.module('ts5App')
     };
 
     var getModules = function(payload) {
-      //return eposConfigRequestResource.getModules(payload).$promise;
+      var requestPayload = payload || {};
 
-      var p = $q.defer();
-      return p.promise;
+      return eposConfigModuleRequestResource.getAllModules(requestPayload).$promise;
     };
 
     var getModule = function(moduleId, productVersionId) {
