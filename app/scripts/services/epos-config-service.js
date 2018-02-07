@@ -43,6 +43,10 @@ angular.module('ts5App')
       getAllModules: {
         method: 'GET',
         headers: {}
+      },
+      getAllModule: {
+        method: 'GET',
+        headers: {}
       }
     };
 
@@ -62,10 +66,9 @@ angular.module('ts5App')
     };
 
     var getModule = function(moduleId, productVersionId) {
-      //return eposConfigRequestResource.getModules(payload).$promise;
-
-      var p = $q.defer();
-      return p.promise;
+      eposConfigModuleRequestParameters.id = moduleId;
+      eposConfigModuleRequestParameters.pid = productVersionId;
+      return eposConfigModuleRequestResource.getAllModule(null).$promise;
     };
 
     return {
