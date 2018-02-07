@@ -34,7 +34,7 @@ angular.module('ts5App')
     };
 
     // -- epos config MODULE
-    var eposConfigModuleRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/module';
+    var eposConfigModuleRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/module/:id/:pid';
     var eposConfigModuleRequestParameters = {
       id: '',
       pid: ''
