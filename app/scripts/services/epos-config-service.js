@@ -10,7 +10,12 @@
 angular.module('ts5App')
   .service('eposConfigService', function ($resource, ENV, $q) {
 
-    var eposConfigRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/module/:id';
+    var eposConfigRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/:id';
+    var eposConfigRequestParameters = {
+      id: '@id'
+    };
+
+    var eposConfigProductRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/product';
 
     var eposConfigManagementActions = {
       getModules: {
@@ -19,144 +24,19 @@ angular.module('ts5App')
       }
     };
 
-    var eposConfigRequestResource = $resource(eposConfigRequestURL, null, eposConfigManagementActions);
+    var eposConfigProductManagementActions = {
+      getProductVersions: {
+        method: 'GET',
+        headers: {}
+      }
+    };
+
+    var eposConfigRequestResource = $resource(eposConfigRequestURL, eposConfigRequestParameters, eposConfigManagementActions);
+    var eposConfigProductRequestResource = $resource(eposConfigProductRequestURL, null, eposConfigProductManagementActions);
 
     var getProductVersions = function(payload) {
-      var p = $q.defer();
-      p.resolve({
-        "meta": {
-          "count": 12,
-          "limit": 12,
-          "start": 0,
-          "ms": 143,
-          "filters": -1,
-          "version": "portal-rest-services Portal Main REST Module HEAD-SNAPSHOT, 2018-02-01 18:03 local, Build of: mvn # latest-local",
-          "adr": "172.27.228.15"
-        },
-        "response": [
-          {
-            "id": 1,
-            "versionName": "Initial",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 0,
-            "sourceProductVersionId": null,
-            "createdOn": "2015-06-11 23:20:23"
-          },
-          {
-            "id": 2,
-            "versionName": "201603220416",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 1,
-            "sourceProductVersionId": 1,
-            "createdOn": "2016-03-22 21:16:15"
-          },
-          {
-            "id": 3,
-            "versionName": "201604200543",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 2,
-            "sourceProductVersionId": 2,
-            "createdOn": "2016-04-20 22:43:27"
-          },
-          {
-            "id": 4,
-            "versionName": "201610121154",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 3,
-            "sourceProductVersionId": 3,
-            "createdOn": "2016-10-12 16:54:06"
-          },
-          {
-            "id": 5,
-            "versionName": "201703161114",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 4,
-            "sourceProductVersionId": 5,
-            "createdOn": "2017-03-16 16:14:56"
-          },
-          {
-            "id": 6,
-            "versionName": "201704051105",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 5,
-            "sourceProductVersionId": 6,
-            "createdOn": "2017-04-05 16:05:36"
-          },
-          {
-            "id": 7,
-            "versionName": "201705230321",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 6,
-            "sourceProductVersionId": 6,
-            "createdOn": "2017-05-23 20:21:48"
-          },
-          {
-            "id": 8,
-            "versionName": "201706120239",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 7,
-            "sourceProductVersionId": 7,
-            "createdOn": "2017-06-12 19:39:19"
-          },
-          {
-            "id": 9,
-            "versionName": "201711090357",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 8,
-            "sourceProductVersionId": 8,
-            "createdOn": "2017-11-09 21:57:31"
-          },
-          {
-            "id": 10,
-            "versionName": "201712070357",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 9,
-            "sourceProductVersionId": 9,
-            "createdOn": "2017-12-07 21:57:31"
-          },
-          {
-            "id": 11,
-            "versionName": "201801020852",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 10,
-            "sourceProductVersionId": 10,
-            "createdOn": "2018-01-02 14:52:57"
-          },
-          {
-            "id": 12,
-            "versionName": "201801170418",
-            "majorVersion": 1,
-            "minorVersion": 0,
-            "revision": 0,
-            "build": 11,
-            "sourceProductVersionId": 11,
-            "createdOn": "2018-01-17 22:18:19"
-          }
-        ]
-      });
-      return p.promise;
+      var requestPayload = payload || {};
+      return eposConfigProductRequestResource.getProductVersions(requestPayload).$promise;
     };
 
     var getModules = function(payload) {
