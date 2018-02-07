@@ -13,7 +13,7 @@ angular.module('ts5App')
     // API URL Definitions
 
     // -- epos config
-    var eposConfigRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/:id';
+    var eposConfigRequestURL = ENV.apiUrl + '/rsvr/epos-config/:id';
     var eposConfigRequestParameters = {
       id: ''
     };
@@ -25,7 +25,7 @@ angular.module('ts5App')
     };
 
     // -- epos config PRODUCT
-    var eposConfigProductRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/product';
+    var eposConfigProductRequestURL = ENV.apiUrl + '/rsvr/epos-config/product';
     var eposConfigProductManagementActions = {
       getProductVersions: {
         method: 'GET',
@@ -34,7 +34,7 @@ angular.module('ts5App')
     };
 
     // -- epos config MODULE
-    var eposConfigModuleRequestURL = ENV.apiUrl + '/rsvr/api/epos-config/module/:id/:pid';
+    var eposConfigModuleRequestURL = ENV.apiUrl + '/rsvr/epos-config/module/:id/:pid';
     var eposConfigModuleRequestParameters = {
       id: '',
       pid: ''
