@@ -501,8 +501,15 @@
         </div>
 
         <div class="modal-body">
-          <p> Are you sure you want to re-arrange this sector from Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b> to Cash Bag <b>{{rearrangeTargetCashBag.cashBag}}</b> ? <br/> 
-          Target Cash Bag  <b>{{ rearrangeTargetCashBag.cashBag }}</b> already has sector <b>{{ singleSectorsToMove.scheduleNumber }}</b> with the date <b>{{ singleSectorsToMove.scheduleDate}}</b> and departure station <b>{{singleSectorsToMove.departureStation}}</b> and  arrival station <b>{{singleSectorsToMove.arrivalStation}}</b> ?</p>
+          <p>You want to re-arrange sector <b>{{ singleSectorsToMove.scheduleNumber }}</b> 
+          from Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b> 
+          to Cash Bag <b>{{rearrangeTargetCashBag.cashBag}}</b>
+          <br/><br/>
+          Target Cash Bag  <b>{{ rearrangeTargetCashBag.cashBag }}</b> already has sector with the schedule number <b>{{ singleSectorsToMove.scheduleNumber }}</b>, 
+          schedule  date <b>{{ singleSectorsToMove.scheduleDate}}</b>, 
+          departure station <b>{{singleSectorsToMove.departureStation}}</b>, 
+          arrival station <b>{{singleSectorsToMove.arrivalStation}}</b>. 
+          Do you want to continue ?</p>
         </div>
 
         <div class="modal-footer">

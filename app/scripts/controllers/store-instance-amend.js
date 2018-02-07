@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:6 */
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstanceAmendCtrl
@@ -110,6 +111,7 @@ angular.module('ts5App')
     };
 
     function rearrangeSectorSuccess () {
+      hideLoadingModal();
       getCashBags();
       $scope.closeRearrangeSectorModal();
     }
@@ -123,48 +125,44 @@ angular.module('ts5App')
     };
 
     $scope.rearrangeSector = function () {
-    	
       var originCashBag = $scope.rearrangeOriginCashBag;
       var targetCashBag = $scope.rearrangeTargetCashBag;
       var sectorsToMove = $scope.sectorsToMove;
       var promises = [];
 
-      console.log ('sectorsToMove', sectorsToMove[0]);
-      
-      if (sectorsToMove.length>0) {
+      if (sectorsToMove.length > 0) {
         var objectMatch = lodash.findWhere($scope.rearrangeTargetCashBag.flightSectors, { id: sectorsToMove[0].id });
-
-      console.log ('objectMatch', objectMatch);
-      console.log ('originCashBag', originCashBag);
-      console.log ('$scope.rearrangeTargetCashBag.flightSectors', $scope.rearrangeTargetCashBag.flightSectors);
-        if (angular.isDefined(objectMatch) && objectMatch !== null ) {
+        if (angular.isDefined(objectMatch) && objectMatch !== null) {
           angular.element('.rearrange-sectors-modal').modal('show');
         } else {
-          //angular.forEach(sectorsToMove, function (sector) {
-          //promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
-        //});
+          showLoadingModal('Rearrange Sector');
+          angular.forEach(sectorsToMove, function (sector) {
+            promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
+          });
 
-        //$q.all(promises).then(rearrangeSectorSuccess, handleResponseError);
-        console.log('---Rearrange');
+          $q.all(promises).then(rearrangeSectorSuccess, handleResponseError);
         }
       }
     };
 
     $scope.continueRearrange = function () {
-      console.log('continueRearrange');
+      showLoadingModal('Rearrange Sector');
       angular.element('.rearrange-sectors-modal').modal('hide');
       var originCashBag = $scope.rearrangeOriginCashBag;
       var targetCashBag = $scope.rearrangeTargetCashBag;
       var sectorsToMove = $scope.sectorsToMove;
+      var promises = [];
       
-      console.log ('continueRearrange->originCashBag', originCashBag);
-      console.log ('continueRearrange->targetCashBag', targetCashBag);
-      console.log ('continueRearrange->sectorsToMove', sectorsToMove);
+      angular.forEach(sectorsToMove, function (sector) {
+        promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
+      });
+
+      $q.all(promises).then(rearrangeSectorSuccess, handleResponseError);
     };
 
     $scope.cancelRearrange = function () {
-      console.log('cancelRearrange');
       angular.element('.rearrange-sectors-modal').modal('hide');
+      $scope.closeRearrangeSectorModal();
     };
     
     $scope.showRearrangeSectorModal = function () {
@@ -240,16 +238,16 @@ angular.module('ts5App')
         $scope.sectorsToMove.splice(matchIndex, 1);
       }
       */
+      
       // only one schedule can be selected to move
       var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
-      console.log ('matchIndex', matchIndex);
       if (matchIndex < 0) {
         $scope.sectorsToMove = [];
         $scope.sectorsToMove.push(sector);
         $scope.singleSectorsToMove = sector;
       } else {
-          $scope.sectorsToMove = [];
-          $scope.singleSectorsToMove = null;
+        $scope.sectorsToMove = [];
+        $scope.singleSectorsToMove = null;
       }
     };
 
@@ -1234,7 +1232,7 @@ angular.module('ts5App')
           flightSectors: [],
           flightSectorsForRearrange: [],
           isVerifiedManual: (cashBag.verificationConfirmedOn) ? true : false,
-          isAmended: (cashBag.isAddedPosttrip || cashBag.isDeletedPosttrip) //cashBag.isAmended
+          isAmended: (cashBag.isAddedPosttrip || cashBag.isDeletedPosttrip) 
         };
       });
     }
