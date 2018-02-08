@@ -54,6 +54,9 @@ angular.module('ts5App')
 
     this.getModuleSuccess = function(dataFromAPI) {
       $scope.moduleConfiguration = angular.copy(dataFromAPI);
+
+
+      
     };
 
     this.initDependenciesSuccess = function(result) {
@@ -85,4 +88,32 @@ angular.module('ts5App')
 
     this.init();
 
+  })
+  .directive('collection', function () {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        collection: '='
+      },
+      template: "<ul><member ng-repeat='member in collection' member='member'></member></ul>"
+    }
+  })
+  .directive('member', function ($compile) {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        member: '='
+      },
+      template: "<li>{{member.name}}</li>",
+      link: function (scope, element, attrs) {
+        var collectionSt = '<collection collection="member.children"></collection>';
+        if (angular.isArray(scope.member.children)) {
+          $compile(collectionSt)(scope, function(cloned, scope)   {
+            element.append(cloned);
+          });
+        }
+      }
+    }
   });

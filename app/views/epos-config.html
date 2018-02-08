@@ -6,13 +6,11 @@
       <h3 class="modal-title">{{ selectedModule.moduleName || 'EPOS Configuration' }}</h3>
     </div>
     <div class="modal-body">
-
       <p ng-hide="moduleConfiguration">Select Product Version first, then choose module you want to edit.</p>
 
       <div ng-show="moduleConfiguration" class="">
 
-        {{moduleConfiguration}}
-
+        <collection ng-if="moduleOptions" collection='moduleOptions'></collection>
       </div>
 
       <!--
