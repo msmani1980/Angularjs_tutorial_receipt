@@ -55,8 +55,10 @@ angular.module('ts5App')
     this.getModuleSuccess = function(dataFromAPI) {
       $scope.moduleConfiguration = angular.copy(dataFromAPI);
 
-
-      
+      $scope.moduleOptions = null;
+      if($scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions) {
+        $scope.moduleOptions = $scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions[0].moduleOptions;
+      }
     };
 
     this.initDependenciesSuccess = function(result) {
