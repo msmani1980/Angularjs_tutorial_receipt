@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EposConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q) {
+  .controller('EposConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, _) {
     var companyId;
     var $this = this;
 
@@ -57,7 +57,9 @@ angular.module('ts5App')
 
       $scope.moduleOptions = null;
       if($scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions) {
-        $scope.moduleOptions = $scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions[0].moduleOptions;
+        $scope.moduleOptions = _.filter($scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions[0].moduleOptions, function(o) {
+          return o.parentId == null;
+        });
       }
     };
 
@@ -91,27 +93,27 @@ angular.module('ts5App')
     this.init();
 
   })
-  .directive('collection', function () {
+  .directive('modules', function () {
     return {
       restrict: "E",
       replace: true,
       scope: {
-        collection: '='
+        moduleList: '='
       },
-      template: "<ul><member ng-repeat='member in collection' member='member'></member></ul>"
+      template: "<ul style='list-style: none'><module ng-repeat='module in moduleList' single-module='module'></module></ul>"
     }
   })
-  .directive('member', function ($compile) {
+  .directive('module', function ($compile) {
     return {
       restrict: "E",
       replace: true,
       scope: {
-        member: '='
+        singleModule: '='
       },
-      template: "<li>{{member.name}}</li>",
+      template: "<li>{{singleModule.name}}</li>",
       link: function (scope, element, attrs) {
-        var collectionSt = '<collection collection="member.subModules"></collection>';
-        if (scope.member.subModules && angular.isArray(scope.member.subModules)) {
+        var collectionSt = '<modules module-list="singleModule.subModules"></modules>';
+        if (scope.singleModule.subModules && angular.isArray(scope.singleModule.subModules)) {
           $compile(collectionSt)(scope, function(cloned, scope)   {
             element.append(cloned);
           });
