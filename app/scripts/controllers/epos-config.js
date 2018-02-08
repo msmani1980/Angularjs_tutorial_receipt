@@ -110,8 +110,8 @@ angular.module('ts5App')
       },
       template: "<li>{{member.name}}</li>",
       link: function (scope, element, attrs) {
-        var collectionSt = '<collection collection="member.children"></collection>';
-        if (angular.isArray(scope.member.children)) {
+        var collectionSt = '<collection collection="member.subModules"></collection>';
+        if (scope.member.subModules && angular.isArray(scope.member.subModules)) {
           $compile(collectionSt)(scope, function(cloned, scope)   {
             element.append(cloned);
           });
