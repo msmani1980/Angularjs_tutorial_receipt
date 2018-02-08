@@ -92,7 +92,7 @@ angular.module('ts5App')
       _menuItems = angular.copy(dataFromAPI.response);
       angular.forEach($scope.items, function(item) {
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
-        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
+        item.salesCategoryName = (item.salesCategoryName) ? item.salesCategoryName : $this.getSalesCategoryName(item.itemMasterId);
       });
 
       angular.forEach($scope.storeTwoItemList, function(item) {
@@ -470,7 +470,7 @@ angular.module('ts5App')
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
         item.disabled = true;
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
-        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
+        item.salesCategoryName = (item.salesCategoryName) ? item.salesCategoryName : $this.getSalesCategoryName(item.itemMasterId);
       });
 
       return itemArray;
