@@ -92,7 +92,7 @@ angular.module('ts5App')
       _menuItems = angular.copy(dataFromAPI.response);
       angular.forEach($scope.items, function(item) {
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
-        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
+        item.salesCategoryName = (item.salesCategoryName) ? item.salesCategoryName : $this.getSalesCategoryName(item.itemMasterId);
       });
 
       angular.forEach($scope.storeTwoItemList, function(item) {
@@ -470,7 +470,7 @@ angular.module('ts5App')
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
         item.disabled = true;
         item.menuQuantity = getMenuQuantity(item.itemMasterId);
-        item.salesCategoryName = $this.getSalesCategoryName(item.itemMasterId);
+        item.salesCategoryName = (item.salesCategoryName) ? item.salesCategoryName : $this.getSalesCategoryName(item.itemMasterId);
       });
 
       return itemArray;
@@ -706,6 +706,27 @@ angular.module('ts5App')
       }, showResponseErrors);
 
     };
+    
+    this.setSortByOptionForCompany = function (dataFromAPI) {
+      var preferencesArray = angular.copy(dataFromAPI.preferences);
+
+      angular.forEach(preferencesArray, function (preference) {
+        if (preference.featureName === 'Dispatch' && preference.choiceCode === 'SLSCTGY' && preference.isSelected) {
+          $scope.itemSortOrder = '[salesCategoryName,itemName]';
+        } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
+          $scope.itemSortOrder = 'itemName';
+        }
+      });
+
+    };
+        
+    this.getActiveCompanyPreferences = function () {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
+
+      storeInstanceFactory.getCompanyPreferences(payload).then($this.setSortByOptionForCompany);
+    };
 
     $scope.stepWizardPrevTrigger = function() {
       displayLoadingModal();
@@ -798,7 +819,7 @@ angular.module('ts5App')
       $scope.formErrors = [];
       $scope.action = $routeParams.action;
       $scope.allItemForGettingSalesCategory = [];
-
+      $this.getActiveCompanyPreferences();
       getDataFromAPI();
 
     }
