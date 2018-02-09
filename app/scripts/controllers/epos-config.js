@@ -27,6 +27,9 @@ angular.module('ts5App')
     });
 
     $scope.selectModule = function (module) {
+      $scope.moduleOptions = null;
+      $this.showLoadingModal('Loading Data');
+
       $scope.selectedModule = module;
 
       eposConfigFactory.getModule(module.id, $scope.selectedProductVersion.id).then($this.getModuleSuccess);
@@ -61,6 +64,8 @@ angular.module('ts5App')
           return o.parentId == null;
         });
       }
+
+      $this.hideLoadingModal();
     };
 
     this.initDependenciesSuccess = function(result) {
