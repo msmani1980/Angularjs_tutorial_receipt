@@ -1,0 +1,12 @@
+<li ng-if="singleModule.optionTypId === 1"> <!-- CheckBox -->
+  <input type="checkbox" ng-model="singleModule.id" id="{{singleModule.id}}"/>
+  <label >{{singleModule.name}}</label>
+</li>
+<li ng-if="singleModule.optionTypId === 2"> <!-- RadioButton -->
+  <input type="radio" ng-model="singleModule.id" id="{{singleModule.id}}"/>
+  <label >{{singleModule.name}}</label>
+</li>
+<li ng-if="singleModule.optionTypId === 3">  <!-- Text -->
+  <label >{{singleModule.name}}</label>
+  <input type="text" ng-model="singleModule.id" id="{{singleModule.id}}"/>
+</li>

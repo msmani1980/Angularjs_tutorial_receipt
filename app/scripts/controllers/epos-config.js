@@ -106,7 +106,6 @@ angular.module('ts5App')
   .directive('module', function ($compile) {
     return {
       restrict: "E",
-      replace: true,
       scope: {
         singleModule: '='
       },
