@@ -100,7 +100,7 @@ angular.module('ts5App')
       scope: {
         moduleList: '='
       },
-      template: "<ul style='list-style: none'><module ng-repeat='module in moduleList' single-module='module'></module></ul>"
+      templateUrl: 'views/directives/epos-config-form-modules.html'
     }
   })
   .directive('module', function ($compile) {
@@ -109,7 +109,7 @@ angular.module('ts5App')
       scope: {
         singleModule: '='
       },
-      template: "<li>{{singleModule.name}}</li>",
+      templateUrl: 'views/directives/epos-config-form-single-module.html',
       link: function (scope, element, attrs) {
         var collectionSt = '<modules module-list="singleModule.subModules"></modules>';
         if (scope.singleModule.subModules && angular.isArray(scope.singleModule.subModules)) {
