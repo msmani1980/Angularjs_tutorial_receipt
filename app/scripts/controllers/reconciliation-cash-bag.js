@@ -293,7 +293,7 @@ angular.module('ts5App')
       setReadPromises();
       $q.all(_promises).then(function() {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
-        $scope.displayedCashierDate = dateUtility.formatDateForApp($scope.cashBag.createdOn);
+        $scope.displayedCashierDate = $scope.cashBag.chCompanyId ? dateUtility.formatDateForApp($scope.cashBag.createdOn) : '';
         getExchangeRates($scope.cashBag);
         if ($scope.cashBag.storeInstanceId) {
           cashBagFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(
