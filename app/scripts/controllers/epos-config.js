@@ -18,6 +18,11 @@ angular.module('ts5App')
     $scope.selectedProductVersion = null;
     $scope.selectedModule = null;
     $scope.moduleConfiguration = null;
+    $scope.moduleOptionValues = {
+      checkbox: {},
+      text: {},
+      radioButton: {}
+    };
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
       if (!newProductVersion) {
@@ -27,6 +32,7 @@ angular.module('ts5App')
     });
 
     $scope.selectModule = function (module) {
+      $scope.moduleOptionValues = {};
       $scope.moduleOptions = null;
       $this.showLoadingModal('Loading Data');
 
@@ -103,7 +109,8 @@ angular.module('ts5App')
       restrict: "E",
       replace: true,
       scope: {
-        moduleList: '='
+        moduleList: '=',
+        model: '='
       },
       templateUrl: 'views/directives/epos-config-form-modules.html'
     }
@@ -112,11 +119,12 @@ angular.module('ts5App')
     return {
       restrict: "E",
       scope: {
-        singleModule: '='
+        singleModule: '=',
+        model: '='
       },
       templateUrl: 'views/directives/epos-config-form-single-module.html',
       link: function (scope, element, attrs) {
-        var collectionSt = '<modules module-list="singleModule.subModules"></modules>';
+        var collectionSt = '<modules module-list="singleModule.subModules" model="model"></modules>';
         if (scope.singleModule.subModules && angular.isArray(scope.singleModule.subModules)) {
           $compile(collectionSt)(scope, function(cloned, scope)   {
             element.append(cloned);
