@@ -32,7 +32,11 @@ angular.module('ts5App')
     });
 
     $scope.selectModule = function (module) {
-      $scope.moduleOptionValues = {};
+      $scope.moduleOptionValues = {
+        checkbox: {},
+        text: {},
+        radioButton: {}
+      };
       $scope.moduleOptions = null;
       $this.showLoadingModal('Loading Data');
 
@@ -69,9 +73,25 @@ angular.module('ts5App')
         $scope.moduleOptions = _.filter($scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions[0].moduleOptions, function(o) {
           return o.parentId == null;
         });
+
+        $this.initializeNgModel($scope.moduleConfiguration.moduleVersions[0].moduleOptions);
       }
 
       $this.hideLoadingModal();
+    };
+
+    this.initializeNgModel = function(moduleOptions) {
+      _.forEach(moduleOptions, function(option) {
+        if(option.selected && option.selected[0] && option.selected[0].value) {
+          if(option.optionTypId === 1) { // CheckBox
+            $scope.moduleOptionValues.checkbox[option.id] = true;
+          } else if(option.optionTypId === 2) { // Radio Button
+            $scope.moduleOptionValues.radioButton[option.parentId] = option.id;
+          } else if(option.optionTypId === 3) { // Checkbox
+            $scope.moduleOptionValues.text[option.id] = option.selected[0].value;
+          }
+        }
+      });
     };
 
     this.initDependenciesSuccess = function(result) {
