@@ -21,6 +21,12 @@ angular.module('ts5App')
       getModules: {
         method: 'GET',
         headers: {}
+      },
+      createOrUpdate: {
+        method: 'POST',
+        headers: {
+          "hisec": true
+        }
       }
     };
 
@@ -54,6 +60,12 @@ angular.module('ts5App')
     var eposConfigProductRequestResource = $resource(eposConfigProductRequestURL, null, eposConfigProductManagementActions);
     var eposConfigModuleRequestResource = $resource(eposConfigModuleRequestURL, eposConfigModuleRequestParameters, eposConfigModuleManagementActions);
 
+    var createOrUpdate = function(payload) {
+      var requestPayload = payload || {};
+
+      return eposConfigRequestResource.createOrUpdate(requestPayload).$promise;
+    };
+
     var getProductVersions = function(payload) {
       var requestPayload = payload || {};
       return eposConfigProductRequestResource.getProductVersions(requestPayload).$promise;
@@ -72,6 +84,7 @@ angular.module('ts5App')
     };
 
     return {
+      createOrUpdate: createOrUpdate,
       getProductVersions: getProductVersions,
       getModules: getModules,
       getModule: getModule

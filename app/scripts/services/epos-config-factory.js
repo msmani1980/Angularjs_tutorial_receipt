@@ -13,6 +13,10 @@ angular.module('ts5App')
       return globalMenuService.company.get();
     };
 
+    var createOrUpdate = function (payload) {
+      return eposConfigService.createOrUpdate(payload);
+    };
+
     var getProductVersions = function (payload) {
       return eposConfigService.getProductVersions(payload);
     };
@@ -27,6 +31,7 @@ angular.module('ts5App')
 
     return {
       getCompanyId: getCompanyId,
+      createOrUpdate: createOrUpdate,
       getProductVersions: getProductVersions,
       getModules: getModules,
       getModule: getModule
