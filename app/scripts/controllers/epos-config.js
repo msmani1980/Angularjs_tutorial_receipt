@@ -82,7 +82,7 @@ angular.module('ts5App')
 
     this.initializeNgModel = function(moduleOptions) {
       _.forEach(moduleOptions, function(option) {
-        if(option.selected && option.selected[0] && option.selected[0].value) {
+        if(option.selected && option.selected[0]) {
           if(option.optionTypId === 1) { // CheckBox
             $scope.moduleOptionValues.checkbox[option.id] = true;
           } else if(option.optionTypId === 2) { // Radio Button
