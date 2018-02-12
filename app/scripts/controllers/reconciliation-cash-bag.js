@@ -128,7 +128,7 @@ angular.module('ts5App')
     function promisesResponseHandler() {
       setBankReferenceNumberFromLocalStorage();
       var dailyExchangeRateCurrencies = null;
-      if ($scope.dailyExchangeRates && $scope.dailyExchangeRates.length > 0) {
+      if ($scope.dailyExchangeRates && $scope.dailyExchangeRates.length > 0 && $scope.cashBag.chCompanyId) {
         dailyExchangeRateCurrencies = $scope.dailyExchangeRates[0].dailyExchangeRateCurrencies;
         $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
       }
