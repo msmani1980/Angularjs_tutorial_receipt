@@ -23,11 +23,8 @@ angular.module('ts5App')
       text: {},
       radioButton: {}
     };
-    $scope.initialModuleOptionValues = {
-      checkbox: {},
-      text: {},
-      radioButton: {}
-    };
+    $scope.initialModuleOptionPopulatedIds = [];
+
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
       if (!newProductVersion) {
@@ -89,17 +86,80 @@ angular.module('ts5App')
       _.forEach(moduleOptions, function(option) {
         if(option.selected && option.selected[0]) {
           if(option.optionTypId === 1) { // CheckBox
-            $scope.moduleOptionValues.checkbox[option.id] = true;
-            $scope.initialModuleOptionValues.checkbox[option.id] = true;
+            $scope.moduleOptionValues.checkbox[option.id.toString()] = true;
           } else if(option.optionTypId === 2) { // Radio Button
-            $scope.moduleOptionValues.radioButton[option.parentId] = option.id;
-            $scope.initialModuleOptionValues.radioButton[option.parentId] = option.id;
+            $scope.moduleOptionValues.radioButton[option.parentId.toString()] = option.id;
           } else if(option.optionTypId === 3) { // Checkbox
-            $scope.moduleOptionValues.text[option.id] = option.selected[0].value;
-            $scope.initialModuleOptionValues.text[option.id] = option.selected[0].value;
+            $scope.moduleOptionValues.text[option.id.toString()] = option.selected[0].value;
           }
+
+          $scope.initialModuleOptionPopulatedIds.push(option.id);
         }
       });
+    };
+
+    $scope.saveModuleOptions = function () {
+      var payload = $this.constructUpsertPayload()
+      var i = 0;
+    };
+
+    this.constructUpsertPayload =function() {
+      var payload = [];
+
+      // Populate update/create payload
+      _.forEach($scope.moduleOptionValues.checkbox, function(value, index) {
+        var payloadCheckBoxItem = {
+          "moduleOptionId": parseInt(index)
+        };
+        if(value === false && $scope.initialModuleOptionPopulatedIds.includes(index)) {
+          payloadCheckBoxItem.isActive = false;
+          payload.push(payloadCheckBoxItem);
+        } else if(value === true) {
+          payload.push(payloadCheckBoxItem);
+        }
+      });
+      _.forEach($scope.moduleOptionValues.radioButton, function(value) {
+        payload.push({
+            "moduleOptionId": parseInt(value)
+          }
+        );
+      });
+      _.forEach($scope.moduleOptionValues.text, function(value, index) {
+        payload.push({
+            "moduleOptionId":  parseInt(index),
+            "value": value
+          }
+        );
+      });
+
+      // Populate delete payload
+      var currentlyModuleOptionPopulatedIds = $this.getCurrentlyModuleOptionPopulatedIds();
+      _.forEach($scope.initialModuleOptionPopulatedIds, function(id) {
+        if(!currentlyModuleOptionPopulatedIds.includes(id)) {
+          payload.push({
+              "moduleOptionId":  parseInt(id),
+              "isActive": false
+            }
+          );
+        }
+      });
+
+      return payload;
+    };
+
+    this.getCurrentlyModuleOptionPopulatedIds = function() {
+      var currentlyModuleOptionPopulatedIds = [];
+      _.forEach($scope.moduleOptionValues.checkbox, function(value, index) {
+        currentlyModuleOptionPopulatedIds.push(parseInt(index));
+      });
+      _.forEach($scope.moduleOptionValues.radioButton, function(value, index) {
+        currentlyModuleOptionPopulatedIds.push(value);
+      });
+      _.forEach($scope.moduleOptionValues.text, function(value, index) {
+        currentlyModuleOptionPopulatedIds.push(parseInt(index));
+      });
+
+      return currentlyModuleOptionPopulatedIds;
     };
 
     this.initDependenciesSuccess = function(result) {
