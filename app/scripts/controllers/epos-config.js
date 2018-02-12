@@ -23,6 +23,11 @@ angular.module('ts5App')
       text: {},
       radioButton: {}
     };
+    $scope.initialModuleOptionValues = {
+      checkbox: {},
+      text: {},
+      radioButton: {}
+    };
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
       if (!newProductVersion) {
@@ -85,10 +90,13 @@ angular.module('ts5App')
         if(option.selected && option.selected[0]) {
           if(option.optionTypId === 1) { // CheckBox
             $scope.moduleOptionValues.checkbox[option.id] = true;
+            $scope.initialModuleOptionValues.checkbox[option.id] = true;
           } else if(option.optionTypId === 2) { // Radio Button
             $scope.moduleOptionValues.radioButton[option.parentId] = option.id;
+            $scope.initialModuleOptionValues.radioButton[option.parentId] = option.id;
           } else if(option.optionTypId === 3) { // Checkbox
             $scope.moduleOptionValues.text[option.id] = option.selected[0].value;
+            $scope.initialModuleOptionValues.text[option.id] = option.selected[0].value;
           }
         }
       });
