@@ -23,7 +23,8 @@ angular.module('ts5App')
       text: {},
       radioButton: {}
     };
-    $scope.initialModuleOptionPopulatedIds = [];
+    $scope.initialRadioButtonModuleOptionPopulatedIds = {};
+    $scope.initialCheckBoxModuleOptionPopulatedIds = {};
 
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
@@ -33,14 +34,20 @@ angular.module('ts5App')
       }
     });
 
-    $scope.selectModule = function (module) {
+    $scope.resetValues = function () {
+      $scope.initialRadioButtonModuleOptionPopulatedIds = {};
+      $scope.initialCheckBoxModuleOptionPopulatedIds = {};
       $scope.moduleOptionValues = {
         checkbox: {},
         text: {},
         radioButton: {}
       };
       $scope.moduleOptions = null;
+    };
+
+    $scope.selectModule = function (module) {
       $this.showLoadingModal('Loading Data');
+      $scope.resetValues();
 
       $scope.selectedModule = module;
 
@@ -92,13 +99,13 @@ angular.module('ts5App')
         if(Array.isArray(option.selected) && option.selected.length > 0) {
           if(option.optionTypeId === 1) { // CheckBox
             $scope.moduleOptionValues.checkbox[option.id.toString()] = true;
+            $scope.initialCheckBoxModuleOptionPopulatedIds[option.id] = true;
           } else if(option.optionTypeId === 2) { // Radio Button
             $scope.moduleOptionValues.radioButton[option.parentId.toString()] = option.id;
-          } else if(option.optionTypeId === 3) { // Checkbox
+            $scope.initialRadioButtonModuleOptionPopulatedIds[option.id] = true;
+          } else if(option.optionTypeId === 3) { // Text
             $scope.moduleOptionValues.text[option.id.toString()] = option.selected[0];
           }
-
-          $scope.initialModuleOptionPopulatedIds.push(option.id);
         }
       });
     };
@@ -119,7 +126,7 @@ angular.module('ts5App')
         var payloadCheckBoxItem = {
           "moduleOptionId": parseInt(index)
         };
-        if(value === false && $scope.initialModuleOptionPopulatedIds.includes(parseInt(index))) {
+        if(value === false && $scope.initialCheckBoxModuleOptionPopulatedIds[index]) {
           payloadCheckBoxItem.isActive = false;
           payload.push(payloadCheckBoxItem);
         } else if(value === true) {
@@ -141,11 +148,11 @@ angular.module('ts5App')
       });
 
       // Populate delete payload
-      var currentlyModuleOptionPopulatedIds = $this.getCurrentlyModuleOptionPopulatedIds();
-      _.forEach($scope.initialModuleOptionPopulatedIds, function(id) {
-        if(!currentlyModuleOptionPopulatedIds.includes(id)) {
+      var currentlyRadioButtonModuleOptionPopulatedIds = $this.getCurrentlyRadioButtonsModuleOptionPopulatedIds();
+      _.forEach($scope.initialRadioButtonModuleOptionPopulatedIds, function(value, index) {
+        if(!currentlyRadioButtonModuleOptionPopulatedIds.includes(parseInt(index))) {
           payload.push({
-              "moduleOptionId":  parseInt(id),
+              "moduleOptionId":  parseInt(index),
               "isActive": false
             }
           );
@@ -155,16 +162,10 @@ angular.module('ts5App')
       return payload;
     };
 
-    this.getCurrentlyModuleOptionPopulatedIds = function() {
+    this.getCurrentlyRadioButtonsModuleOptionPopulatedIds = function() {
       var currentlyModuleOptionPopulatedIds = [];
-      _.forEach($scope.moduleOptionValues.checkbox, function(value, index) {
-        currentlyModuleOptionPopulatedIds.push(parseInt(index));
-      });
       _.forEach($scope.moduleOptionValues.radioButton, function(value, index) {
-        currentlyModuleOptionPopulatedIds.push(value);
-      });
-      _.forEach($scope.moduleOptionValues.text, function(value, index) {
-        currentlyModuleOptionPopulatedIds.push(parseInt(index));
+        currentlyModuleOptionPopulatedIds.push(parseInt(value));
       });
 
       return currentlyModuleOptionPopulatedIds;
