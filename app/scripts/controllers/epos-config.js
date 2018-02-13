@@ -91,6 +91,7 @@ angular.module('ts5App')
 
     this.createOrUpdateSuccess = function(dataFromAPI) {
       $this.hideLoadingModal();
+      $scope.selectModule($scope.selectedModule);
     };
 
 
