@@ -54,6 +54,12 @@ angular.module('ts5App')
       eposConfigFactory.getModule(module.id, $scope.selectedProductVersion.id).then($this.getModuleSuccess);
     };
 
+    $scope.cancel = function () {
+      $scope.resetValues();
+
+      $scope.selectedModule = null;
+    };
+
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
     };
