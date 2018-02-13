@@ -89,13 +89,13 @@ angular.module('ts5App')
 
     this.initializeNgModel = function(moduleOptions) {
       _.forEach(moduleOptions, function(option) {
-        if(option.selected && option.selected[0]) {
+        if(Array.isArray(option.selected) && option.selected.length > 0) {
           if(option.optionTypeId === 1) { // CheckBox
             $scope.moduleOptionValues.checkbox[option.id.toString()] = true;
           } else if(option.optionTypeId === 2) { // Radio Button
             $scope.moduleOptionValues.radioButton[option.parentId.toString()] = option.id;
           } else if(option.optionTypeId === 3) { // Checkbox
-            $scope.moduleOptionValues.text[option.id.toString()] = option.selected[0].value;
+            $scope.moduleOptionValues.text[option.id.toString()] = option.selected[0];
           }
 
           $scope.initialModuleOptionPopulatedIds.push(option.id);
