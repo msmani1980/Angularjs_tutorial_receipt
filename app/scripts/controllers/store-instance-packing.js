@@ -117,6 +117,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       angular.forEach(preferencesArray, function (preference) {
         if (defaultInboundToEposPreference === null && preference.featureName === 'Inbound' && preference.optionName === 'Default LMP Inbound counts to ePOS') {
           defaultInboundToEposPreference = preference.isSelected;
+        } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'SLSCTGY' && preference.isSelected) {
+          $scope.offLoadItemsSortOrder = '[salesCategoryName,itemName]';
+          $scope.itemSortOrder = '[salesCategoryName,itemName]';
+        } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
+          $scope.offLoadItemsSortOrder = 'itemName';	
+          $scope.itemSortOrder = 'itemName';
         }
       });
 
@@ -926,11 +932,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         this.getRegularItemTypeId(),
         this.getThresholdVariance(),
         this.getCountTypes(),
-        this.getCharacteristicIdForName(characteristicName)
+        this.getCharacteristicIdForName(characteristicName),
+        this.getActiveCompanyPreferences()
       ];
       if ($routeParams.action === 'end-instance' || $routeParams.action === 'redispatch') {
         promises.push($this.getUllageReasonCodes());
-        promises.push($this.getActiveCompanyPreferences());
       }
 
       return promises;

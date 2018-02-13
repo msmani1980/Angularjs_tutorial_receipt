@@ -452,6 +452,10 @@ angular.module('ts5App', [
     templateUrl: 'views/epos-config.html',
     controller: 'EposConfigCtrl',
     controllerAs: 'eposConfig'
+  }).when('/report-exchange-rate', {
+    templateUrl: 'views/report-exchange-rate.html',
+    controller: 'ReportExchangeRateCtrl',
+    controllerAs: 'reportExchangeRate'
   }).otherwise({
     redirectTo: '/'
   });

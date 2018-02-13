@@ -48,6 +48,13 @@ angular.module('ts5App')
           className: 'dashboard-companyExchangeRateEdit',
           package: 'CURRENCYEXCHNG',
           role: 'EPOSEXCHNG'
+        }, {
+          name: 'Report Exchange Rate',
+          route: '/#/report-exchange-rate',
+          icon: 'icon-manage-transactions',
+          className: 'dashboard-companyExchangeRateEdit',
+          package: 'CURRENCYEXCHNG',
+          role: 'REPORTEXCHANGE'
         }]
       }, {
         title: 'Retail Item Management',
@@ -450,6 +457,13 @@ angular.module('ts5App')
       }, {
         title: 'Survey Management',
         menuItems: [{
+          name: 'Survey Questions',
+          route: '/#/survey-questions',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSurveyQuestions',
+          package: 'SURVEY',
+          role: 'SURVEY'
+        }, {
           name: 'Survey',
           route: '/#/survey',
           icon: 'icon-manage-menu',
@@ -461,13 +475,6 @@ angular.module('ts5App')
           route: '/#/survey-catalog',
           icon: 'icon-manage-menu',
           className: 'dashboard-manageSurveyCatalog',
-          package: 'SURVEY',
-          role: 'SURVEY'
-        }, {
-          name: 'Survey Questions',
-          route: '/#/survey-questions',
-          icon: 'icon-manage-menu',
-          className: 'dashboard-manageSurveyQuestions',
           package: 'SURVEY',
           role: 'SURVEY'
         }]
