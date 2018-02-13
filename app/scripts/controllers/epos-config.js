@@ -119,7 +119,7 @@ angular.module('ts5App')
         var payloadCheckBoxItem = {
           "moduleOptionId": parseInt(index)
         };
-        if(value === false && $scope.initialModuleOptionPopulatedIds.includes(index)) {
+        if(value === false && $scope.initialModuleOptionPopulatedIds.includes(parseInt(index))) {
           payloadCheckBoxItem.isActive = false;
           payload.push(payloadCheckBoxItem);
         } else if(value === true) {
