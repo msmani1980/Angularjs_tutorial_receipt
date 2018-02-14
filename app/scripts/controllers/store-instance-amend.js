@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:6 */
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstanceAmendCtrl
@@ -110,15 +111,48 @@ angular.module('ts5App')
     };
 
     function rearrangeSectorSuccess () {
+      hideLoadingModal();
       getCashBags();
       $scope.closeRearrangeSectorModal();
     }
+
+    $scope.isAmended = function (cashBag) {
+      if (angular.isDefined(cashBag) && cashBag !== null && cashBag.isAmended) {
+        return true;
+      }
+
+      return false;
+    };
 
     $scope.rearrangeSector = function () {
       var originCashBag = $scope.rearrangeOriginCashBag;
       var targetCashBag = $scope.rearrangeTargetCashBag;
       var sectorsToMove = $scope.sectorsToMove;
       var promises = [];
+
+      if (sectorsToMove.length > 0) {
+        var objectMatch = lodash.findWhere($scope.rearrangeTargetCashBag.flightSectors, { id: sectorsToMove[0].id });
+        if (angular.isDefined(objectMatch) && objectMatch !== null) {
+          angular.element('.rearrange-sectors-modal').modal('show');
+        } else {
+          showLoadingModal('Rearrange Sector');
+          angular.forEach(sectorsToMove, function (sector) {
+            promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
+          });
+
+          $q.all(promises).then(rearrangeSectorSuccess, handleResponseError);
+        }
+      }
+    };
+
+    $scope.continueRearrange = function () {
+      showLoadingModal('Rearrange Sector');
+      angular.element('.rearrange-sectors-modal').modal('hide');
+      var originCashBag = $scope.rearrangeOriginCashBag;
+      var targetCashBag = $scope.rearrangeTargetCashBag;
+      var sectorsToMove = $scope.sectorsToMove;
+      var promises = [];
+      
       angular.forEach(sectorsToMove, function (sector) {
         promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
       });
@@ -126,6 +160,11 @@ angular.module('ts5App')
       $q.all(promises).then(rearrangeSectorSuccess, handleResponseError);
     };
 
+    $scope.cancelRearrange = function () {
+      angular.element('.rearrange-sectors-modal').modal('hide');
+      $scope.closeRearrangeSectorModal();
+    };
+    
     $scope.showRearrangeSectorModal = function () {
       angular.element('#rearrangeSectorModal').modal('show');
     };
@@ -182,16 +221,33 @@ angular.module('ts5App')
       return ($scope.sectorsToMove.length > 0 && !!$scope.rearrangeOriginCashBag && !!$scope.rearrangeTargetCashBag && $scope.rearrangeOriginCashBag.id !== $scope.rearrangeTargetCashBag.id);
     };
 
-    $scope.toggleSelectSectorToRearrange = function (sector) {
+    $scope.toggleSelectSectorToRearrange = function (sector, cashBag) {
+      if (angular.isDefined(cashBag) && cashBag !== null && cashBag.isAmended) {
+        return;
+      }
+
       if (!!$scope.rearrangeOriginCashBag && !!$scope.rearrangeTargetCashBag && $scope.rearrangeOriginCashBag.id === $scope.rearrangeTargetCashBag.id) {
         return;
       }
 
+      /*  one or more schedule(s) can be selected to move
       var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
       if (matchIndex < 0) {
         $scope.sectorsToMove.push(sector);
       } else {
         $scope.sectorsToMove.splice(matchIndex, 1);
+      }
+      */
+      
+      // only one schedule can be selected to move
+      var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
+      if (matchIndex < 0) {
+        $scope.sectorsToMove = [];
+        $scope.sectorsToMove.push(sector);
+        $scope.singleSectorsToMove = sector;
+      } else {
+        $scope.sectorsToMove = [];
+        $scope.singleSectorsToMove = null;
       }
     };
 
@@ -1175,7 +1231,8 @@ angular.module('ts5App')
           promotionDiscounts: 0 + getManualDataTotals('promotion', cashBag.id),
           flightSectors: [],
           flightSectorsForRearrange: [],
-          isVerifiedManual: (cashBag.verificationConfirmedOn) ? true : false
+          isVerifiedManual: (cashBag.verificationConfirmedOn) ? true : false,
+          isAmended: (cashBag.isAddedPosttrip || cashBag.isDeletedPosttrip) 
         };
       });
     }
@@ -1687,6 +1744,7 @@ angular.module('ts5App')
       $scope.moveCashBagAction = 'none';
       $scope.showDeletedCashBags = false;
       $scope.sectorsToMove = [];
+      $scope.singleSectorsToMove = null;
       $scope.cashBagFilter = {};
       $scope.scheduleSearch = {};
       $scope.numberExist = false;
