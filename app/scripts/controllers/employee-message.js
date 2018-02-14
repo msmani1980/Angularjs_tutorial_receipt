@@ -10,7 +10,9 @@
 angular.module('ts5App').controller('EmployeeMessageCtrl',
   function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $routeParams, $location) {
     var $this = this;
-    var dataInitialized = false;
+    $scope.dataInitialized = false;
+    $scope.viewEditItem = false;
+    $scope.disablePastDate = false;
 
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -145,7 +147,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         employeeMessagesFactory.createEmployeeMessage(payload).then($this.saveSuccess, $this.showErrors);
       }
     };
-    
+
     $scope.shouldDisable = function(isFieldDisabledInActiveRecord) {
       if (isFieldDisabledInActiveRecord) {
         return $scope.readOnly || $scope.shouldDisableActiveFields();
@@ -155,7 +157,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     $scope.shouldDisableActiveFields = function() {
-      if (!dataInitialized) {
+      if (!$scope.dataInitialized) {
         return false;
       }
 
@@ -165,6 +167,19 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
       var isRecordActive = dateUtility.isTodayOrEarlierDatePicker($scope.employeeMessage.startDate);
       return ($routeParams.action === 'edit' && isRecordActive);
+    };
+
+    $scope.shouldDisableEndDate = function() {
+      if (!$scope.dataInitialized) {
+        return false;
+      }
+
+      if (!$scope.employeeMessage) {
+        return true;
+      }
+
+      var shouldDisable = dateUtility.isYesterdayOrEarlierDatePicker($scope.employeeMessage.endDate);
+      return ($routeParams.action === 'edit' && shouldDisable);
     };
 
     $scope.getPropertiesForDeletedButton = function(listName, attribute) {
@@ -290,12 +305,17 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
     this.getEmployeeMessageSuccess = function(dataFromAPI) {
       $scope.employeeMessage = $this.formatEmployeeMessageForApp(dataFromAPI);
+
+      $scope.disablePastDate = dateUtility.isTodayDatePicker($scope.employeeMessage.startDate) || !(dateUtility.isAfterTodayDatePicker($scope.employeeMessage.startDate));
       var isRecordActiveOrFuture = dateUtility.isTodayDatePicker($scope.employeeMessage.endDate) || dateUtility.isAfterTodayDatePicker($scope.employeeMessage.endDate);
+
       if (isRecordActiveOrFuture) {
         $this.filterListsByName('all');
       } else {
         $scope.readOnly = true;
       }
+
+      $scope.dataInitialized = true;
 
       $this.hideLoadingModal();
     };
@@ -390,6 +410,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       if ($routeParams.action !== 'create') {
         $this.getEmployeeMessage();
       } else {
+        $scope.dataInitialized = true;
         $scope.employeeMessage = {
           employees: [],
           schedules: [],
@@ -421,6 +442,14 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         create: 'Create New Employee Message'
       };
       $scope.viewName = actionToViewNameMap[$routeParams.action];
+
+      if ($routeParams.action === 'view') {
+        $scope.viewEditItem = true;
+      } else if ($routeParams.action === 'edit') {
+        $scope.viewEditItem = true;
+      } else {
+        $scope.viewEditItem = false;
+      }
     };
 
     this.init = function() {
@@ -429,7 +458,6 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       var initPromises = $this.initApiDependencies();
       $q.all(initPromises).then(function() {
         $this.initEmployeeMessage();
-        dataInitialized = true;
       });
 
       $scope.minDate = dateUtility.nowFormattedDatePicker();
