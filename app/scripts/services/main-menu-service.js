@@ -561,6 +561,16 @@ angular.module('ts5App')
           package: 'REPORT',
           role: 'REPORT'
         }]
+      }, {
+        title: 'Epos Configuration',
+        menuItems: [{
+            name: 'Epos Configuration',
+            route: '/#/epos-config',
+            icon: 'icon-manage-discount',
+            className: 'dashboard-epos-config',
+            package: 'EPOSCONFIG',
+            role: 'EPOSCONFIG'
+          }]
       }];
     };
 

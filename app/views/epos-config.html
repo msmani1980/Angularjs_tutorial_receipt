@@ -1,0 +1,53 @@
+<div class="module-container-epos-configuration">
+  <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+  </error-dialog>
+  <form class="form-horizontal" name="reportOptions" ng-submit="saveModuleOptions()">
+    <div class="modal-header">
+      <h3 class="modal-title">{{ selectedModule.moduleName || 'EPOS Configuration' }}</h3>
+    </div>
+    <div class="modal-body">
+      <p ng-hide="moduleConfiguration">Select Product Version first, then choose module you want to edit.</p>
+
+      <div ng-show="moduleConfiguration" class="">
+
+        <modules ng-if="moduleOptions" module-list='moduleOptions' model="moduleOptionValues"></modules>
+      </div>
+    </div>
+    <div class="modal-footer" ng-show="selectedProductVersion && selectedModule">
+      <button class="btn btn-primary" type="submit">Save</button>
+      <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>
+<form-success-modal></form-success-modal>
+<form-update-modal></form-update-modal>
+
+<div id="left-navigation-epos-configuration">
+  <div class="container">
+
+    <ul class="navbar">
+      <li class="product-version" tabindex="0" style="">
+        <div class="">
+          <select
+            name="productVersion"
+            class="form-control"
+            id="productVersion"
+            ng-model="selectedProductVersion"
+            ng-options="productVersion as productVersion.displayName for productVersion in productVersions">
+            <option selected default value="">Select Product Version</option>
+          </select>
+        </div>
+      </li>
+
+      <li ng-show="selectedProductVersion" ng-repeat="module in modules | orderBy: orderBy" ng-class="{'active' : module === selectedModule}" class="ng-scope" role="button" ng-click="selectModule(module)">
+        <i class="icon-manage-transactions"></i>
+        <div class="left-nav-option">
+          <i class="icon-manage-discount"></i>
+          <p class="ng-binding">{{ module.moduleName }}</p>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
