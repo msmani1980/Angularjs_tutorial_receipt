@@ -13,10 +13,7 @@ angular.module('ts5App')
     // API URL Definitions
 
     // -- epos config
-    var eposConfigRequestURL = ENV.apiUrl + '/rsvr/epos-config/';
-    var eposConfigRequestParameters = {
-      id: ''
-    };
+    var eposConfigRequestURL = ENV.apiUrl + '/rsvr/epos-config/cmo';
     var eposConfigManagementActions = {
       createOrUpdate: {
         method: 'POST',
