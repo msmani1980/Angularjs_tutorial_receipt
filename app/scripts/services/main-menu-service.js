@@ -123,14 +123,20 @@ angular.module('ts5App')
           icon: 'icon-manage-menu',
           className: 'dashboard-manageEmployees',
           package: 'EMPLOYEE',
-          role: 'EMPLOYEE'
+          role: 'EMPLOYEE',
+          permissions: [{
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Employee',
           route: '/#/employee/create',
           icon: 'icon-create-menu',
           className: 'dashboard-createEmployee',
           package: 'EMPLOYEE',
-          role: 'EMPLOYEE'
+          role: 'EMPLOYEE',
+          permissions: [{
+            permissionCodes: ['C']
+          }]
         }]
       }, {
         title: 'Employee Messages',
