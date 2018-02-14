@@ -86,7 +86,7 @@ angular.module('ts5App')
       $scope.moduleOptions = null;
       if($scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions) {
         $scope.moduleOptions = _.filter($scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions[0].moduleOptions, function(o) {
-          return o.parentId == null;
+          return o.parentId === null;
         });
 
         $this.initializeNgModel($scope.moduleConfiguration.moduleVersions[0].moduleOptions);
@@ -95,7 +95,7 @@ angular.module('ts5App')
       $this.hideLoadingModal();
     };
 
-    this.createOrUpdateSuccess = function(dataFromAPI) {
+    this.createOrUpdateSuccess = function() {
       $this.hideLoadingModal();
       $scope.selectModule($scope.selectedModule);
     };
@@ -131,7 +131,7 @@ angular.module('ts5App')
       // Populate update/create payload
       _.forEach($scope.moduleOptionValues.checkbox, function(value, index) {
         var payloadCheckBoxItem = {
-          "moduleOptionId": parseInt(index)
+          'moduleOptionId': parseInt(index)
         };
         if(value === false && $scope.initialCheckBoxModuleOptionPopulatedIds[index]) {
           payloadCheckBoxItem.isActive = false;
@@ -142,14 +142,14 @@ angular.module('ts5App')
       });
       _.forEach($scope.moduleOptionValues.radioButton, function(value) {
         payload.push({
-            "moduleOptionId": parseInt(value)
+            'moduleOptionId': parseInt(value)
           }
         );
       });
       _.forEach($scope.moduleOptionValues.text, function(value, index) {
         payload.push({
-            "moduleOptionId":  parseInt(index),
-            "value": value
+            'moduleOptionId':  parseInt(index),
+            'value': value
           }
         );
       });
@@ -159,8 +159,8 @@ angular.module('ts5App')
       _.forEach($scope.initialRadioButtonModuleOptionPopulatedIds, function(value, index) {
         if(!currentlyRadioButtonModuleOptionPopulatedIds.includes(parseInt(index))) {
           payload.push({
-              "moduleOptionId":  parseInt(index),
-              "isActive": false
+              'moduleOptionId':  parseInt(index),
+              'isActive': false
             }
           );
         }
@@ -171,7 +171,7 @@ angular.module('ts5App')
 
     this.getCurrentlyRadioButtonsModuleOptionPopulatedIds = function() {
       var currentlyModuleOptionPopulatedIds = [];
-      _.forEach($scope.moduleOptionValues.radioButton, function(value, index) {
+      _.forEach(Object.values($scope.moduleOptionValues.radioButton), function(value) {
         currentlyModuleOptionPopulatedIds.push(parseInt(value));
       });
 
@@ -210,30 +210,30 @@ angular.module('ts5App')
   })
   .directive('modules', function () {
     return {
-      restrict: "E",
+      restrict: 'E',
       replace: true,
       scope: {
         moduleList: '=',
         model: '='
       },
       templateUrl: 'views/directives/epos-config-form-modules.html'
-    }
+    };
   })
   .directive('module', function ($compile) {
     return {
-      restrict: "E",
+      restrict: 'E',
       scope: {
         singleModule: '=',
         model: '='
       },
       templateUrl: 'views/directives/epos-config-form-single-module.html',
-      link: function (scope, element, attrs) {
+      link: function (scope, element) {
         var collectionSt = '<modules module-list="singleModule.subModules" model="model"></modules>';
         if (scope.singleModule.subModules && angular.isArray(scope.singleModule.subModules)) {
-          $compile(collectionSt)(scope, function(cloned, scope)   {
+          $compile(collectionSt)(scope, function(cloned)   {
             element.append(cloned);
           });
         }
       }
-    }
+    };
   });

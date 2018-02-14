@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('eposConfigService', function ($resource, ENV, $q) {
+  .service('eposConfigService', function ($resource, ENV) {
 
     // API URL Definitions
 
@@ -18,7 +18,7 @@ angular.module('ts5App')
       createOrUpdate: {
         method: 'POST',
         headers: {
-          "hisec": true
+          'hisec': true
         }
       }
     };
