@@ -26,7 +26,6 @@ angular.module('ts5App')
     $scope.initialRadioButtonModuleOptionPopulatedIds = {};
     $scope.initialCheckBoxModuleOptionPopulatedIds = {};
 
-
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
       if (!newProductVersion) {
         $scope.selectedModule = null;
@@ -84,7 +83,7 @@ angular.module('ts5App')
       $scope.moduleConfiguration = angular.copy(dataFromAPI);
 
       $scope.moduleOptions = null;
-      if($scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions) {
+      if ($scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions) {
         $scope.moduleOptions = _.filter($scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions[0].moduleOptions, function(o) {
           return o.parentId === null;
         });
@@ -100,17 +99,16 @@ angular.module('ts5App')
       $scope.selectModule($scope.selectedModule);
     };
 
-
     this.initializeNgModel = function(moduleOptions) {
       _.forEach(moduleOptions, function(option) {
-        if(Array.isArray(option.selected) && option.selected.length > 0) {
-          if(option.optionTypeId === 1) { // CheckBox
+        if (Array.isArray(option.selected) && option.selected.length > 0) {
+          if (option.optionTypeId === 1) { // CheckBox
             $scope.moduleOptionValues.checkbox[option.id.toString()] = true;
             $scope.initialCheckBoxModuleOptionPopulatedIds[option.id] = true;
-          } else if(option.optionTypeId === 2) { // Radio Button
+          } else if (option.optionTypeId === 2) { // Radio Button
             $scope.moduleOptionValues.radioButton[option.parentId.toString()] = option.id;
             $scope.initialRadioButtonModuleOptionPopulatedIds[option.id] = true;
-          } else if(option.optionTypeId === 3) { // Text
+          } else if (option.optionTypeId === 3) { // Text
             $scope.moduleOptionValues.text[option.id.toString()] = option.selected[0];
           }
         }
@@ -125,31 +123,33 @@ angular.module('ts5App')
       eposConfigFactory.createOrUpdate(payload).then($this.createOrUpdateSuccess);
     };
 
-    this.constructUpsertPayload =function() {
+    this.constructUpsertPayload = function() {
       var payload = [];
 
       // Populate update/create payload
       _.forEach($scope.moduleOptionValues.checkbox, function(value, index) {
         var payloadCheckBoxItem = {
-          'moduleOptionId': parseInt(index)
+          moduleOptionId: parseInt(index)
         };
-        if(value === false && $scope.initialCheckBoxModuleOptionPopulatedIds[index]) {
+        if (value === false && $scope.initialCheckBoxModuleOptionPopulatedIds[index]) {
           payloadCheckBoxItem.isActive = false;
           payload.push(payloadCheckBoxItem);
-        } else if(value === true) {
+        } else if (value === true) {
           payload.push(payloadCheckBoxItem);
         }
       });
+
       _.forEach($scope.moduleOptionValues.radioButton, function(value) {
         payload.push({
-            'moduleOptionId': parseInt(value)
+            moduleOptionId: parseInt(value)
           }
         );
       });
+      
       _.forEach($scope.moduleOptionValues.text, function(value, index) {
         payload.push({
-            'moduleOptionId':  parseInt(index),
-            'value': value
+            moduleOptionId:  parseInt(index),
+            value: value
           }
         );
       });
@@ -157,10 +157,10 @@ angular.module('ts5App')
       // Populate delete payload
       var currentlyRadioButtonModuleOptionPopulatedIds = $this.getCurrentlyRadioButtonsModuleOptionPopulatedIds();
       _.forEach($scope.initialRadioButtonModuleOptionPopulatedIds, function(value, index) {
-        if(!currentlyRadioButtonModuleOptionPopulatedIds.includes(parseInt(index))) {
+        if (!currentlyRadioButtonModuleOptionPopulatedIds.includes(parseInt(index))) {
           payload.push({
-              'moduleOptionId':  parseInt(index),
-              'isActive': false
+              moduleOptionId:  parseInt(index),
+              isActive: false
             }
           );
         }

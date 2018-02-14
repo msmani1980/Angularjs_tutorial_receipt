@@ -18,7 +18,7 @@ angular.module('ts5App')
       createOrUpdate: {
         method: 'POST',
         headers: {
-          'hisec': true
+          hisec: true
         }
       }
     };
