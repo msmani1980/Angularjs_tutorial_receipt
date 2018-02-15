@@ -10,8 +10,8 @@
   <div class="post-trip-data-list">
     <div class="row">
       <div class="col-xs-12 text-left">
-        <a href="#/post-trip-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Post Trip</span></a>
-        <excel-upload type="postTrip" class="excel-upload"></excel-upload>
+        <a href="#/post-trip-data/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Post Trip</span></a>
+        <excel-upload type="postTrip" ng-show="isCRUD" class="excel-upload"></excel-upload>
 
         <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
@@ -134,13 +134,13 @@
           <button class="btn btn-info btn-xs" ng-click="redirectToPostTrip(trip.id, 'view')" tabindex="0">
             <i class="fa fa-file"></i>
           </button>
-          <button class="btn btn-primary btn-xs" ng-click="redirectToPostTrip(trip.id, 'edit')" tabindex="0">
+          <button class="btn btn-primary btn-xs" ng-show="isCRUD" ng-click="redirectToPostTrip(trip.id, 'edit')" tabindex="0">
             <i class="fa fa-pencil"></i>
           </button>
           <button class="btn btn-danger btn-xs"
                   ng-click="deleteRecordDialog(postTrips[$index], ['scheduleNumber', 'deStationCode', 'depTime', 'arrStationCode', 'arrTime'])"
                   tabindex="0"
-                  ng-show="showDeleteButton(trip.scheduleDate)">
+                  ng-show="isCRUD && showDeleteButton(trip.scheduleDate)">
             <i class="fa fa-trash"></i>
           </button>
         </td>
@@ -163,6 +163,7 @@
 
 <leave-view-modal></leave-view-modal>
 
+<dynamic-left-nav></dynamic-left-nav>
 <delete-record-dialog></delete-record-dialog>
 
 <dynamic-left-nav></dynamic-left-nav>

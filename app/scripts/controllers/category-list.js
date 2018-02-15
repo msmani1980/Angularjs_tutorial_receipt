@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CategoryListCtrl', function($scope, $location, categoryFactory, dateUtility, payloadUtility,
-    identityAccessFactory, lodash) {
+    identityAccessFactory, lodash, accessService) {
 
     $scope.viewName = 'Category';
     $scope.search = {};
@@ -325,6 +325,7 @@ angular.module('ts5App')
     }
 
     function init() {
+      $scope.isCRUD = accessService.crudAccessGranted('RETAIL', 'RETAILITEMCATEGORY', 'CRUDRICAT');    	
       initFreshData();
       showLoadingModal('Loading Data');
       categoryFactory.getCategoryList({

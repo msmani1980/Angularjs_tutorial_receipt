@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('PostFlightDataListCtrl', function($scope, postTripFactory, $location, messageService, dateUtility,
-    lodash, $q) {
+    lodash, $q, accessService) {
 
     var companyId = '';
     var $this = this;
@@ -121,6 +121,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('POSTTRIP', 'POSTTRIP', 'CRUDPTRP');
       companyId = postTripFactory.getCompanyId();
       $scope.carrierNumbers = [];
       $scope.employees = [];
