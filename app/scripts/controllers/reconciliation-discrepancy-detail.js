@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, $route, messageService,
                                                            reconciliationFactory, currencyFactory, storeInstanceFactory, globalMenuService, dateUtility, lodash,
-                                                           $location, ENV, identityAccessFactory) {
+                                                           $location, ENV, identityAccessFactory, $localStorage) {
 
     var $this = this;
     var STATUS_TO_BUTTONS_MAP = {
@@ -936,6 +936,26 @@ angular.module('ts5App')
       initDependencies();
       angular.element('#checkbox').bootstrapSwitch();
       initTableDefaults();
+      initAmendMode();
+    }
+
+    function initAmendMode() {
+      $scope.isAmendReadOnly = true;
+      if (angular.isDefined($localStorage.featuresInRole.RECONCILIATION) && angular.isDefined($localStorage.featuresInRole.RECONCILIATION.AMENDSTOREINST)) {
+        var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.RECONCILIATION.AMENDSTOREINST);
+        angular.forEach(featuresInRoleCollection, function (feature) {
+          if (angular.isDefined(feature.taskCode) && feature.taskCode === 'AMEND') {
+            var amendPermissions = feature.permissionCode;
+            if (angular.isDefined(amendPermissions) && amendPermissions.length > 0) {
+              angular.forEach(amendPermissions, function (permission) {
+                if (permission === 'U' || permission === 'C' || permission === 'D') {
+                  $scope.isAmendReadOnly = false;
+                }
+              });
+            }
+          } 
+        });
+      }
     }
 
     $scope.canEdit = function () {
