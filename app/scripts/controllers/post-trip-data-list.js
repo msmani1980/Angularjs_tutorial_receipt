@@ -60,6 +60,22 @@ angular.module('ts5App')
       }
     };
 
+    $scope.getUpdateBy = function (postTrip) {
+      if (postTrip.updatedByPerson) {
+        return postTrip.updatedByPerson.userName;
+      }
+
+      if (postTrip.createdByPerson) {
+        return postTrip.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (postTrip) {
+      return postTrip.updatedOn ? dateUtility.formatTimestampForApp(postTrip.updatedOn) : dateUtility.formatTimestampForApp(postTrip.createdOn);
+    };
+
     this.getPostTripSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
 
@@ -193,7 +209,7 @@ angular.module('ts5App')
         $scope.employees = [];
       }
     };
-    
+
     function employeeDates(payload, search) {
       if (search.scheduleStartDate === undefined && search.scheduleEndDate === undefined) {
         payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
