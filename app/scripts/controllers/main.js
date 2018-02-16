@@ -18,8 +18,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return featurePermission.resource.apiName === menuItemPermission.apiName &&
-        lodash.intersection(featurePermission.permissionCode, menuItemPermission.permissionCodes).length ===
+      return lodash.intersection(featurePermission.permissionCode, menuItemPermission.permissionCodes).length ===
         menuItemPermission.permissionCodes.length;
     }
 

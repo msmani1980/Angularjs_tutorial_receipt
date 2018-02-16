@@ -8,7 +8,7 @@
  * Contoller for the Retail Items List View
  */
 angular.module('ts5App')
-  .controller('ItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter, lodash) {
+  .controller('ItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter, lodash, accessService) {
 
     var $this = this;
     this.meta = {
@@ -116,6 +116,7 @@ angular.module('ts5App')
     };
 
     this.getItemTypesList = function () {
+      $scope.isCRUD = accessService.crudAccessGranted('RETAIL', 'EMPLOYEE', 'CRUDRI');
       itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
       });

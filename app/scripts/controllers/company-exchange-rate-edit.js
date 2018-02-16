@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CompanyExchangeRateEditCtrl', function($scope, globalMenuService, currencyFactory, dateUtility,
-    payloadUtility, messageService, $filter, lodash) {
+    payloadUtility, messageService, $filter, lodash, accessService) {
 
     var $this = this;
 
@@ -480,6 +480,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('CURRENCYEXCHNG', 'EPOSEXCHNG', 'CUDEER');
       $this.getExchangeRateTypes();
       $this.getCompanyGlobalCurrencies();
       $this.getDetailedCompanyCurrenciesForSearch();

@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CurrencyEditCtrl', function($scope, currencyFactory, globalMenuService, dateUtility, payloadUtility,
-    messageService) {
+    messageService, accessService) {
 
     var $this = this;
     $scope.viewName = 'Retail Company Currency & Denomination Setup';
@@ -279,6 +279,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('CURRENCYEXCHNG', 'COMPANYCURRENCY', 'CUDCMPCURR');
       $this.getCompanyGlobalCurrencies();
     };
 

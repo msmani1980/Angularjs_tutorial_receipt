@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CompanyRelationshipListCtrl', function($q, $scope, $route, $location, $routeParams, $filter,
-    messageService, dateUtility, companyRelationshipFactory) {
+    messageService, dateUtility, companyRelationshipFactory, accessService) {
 
     $scope.viewName = 'Company Relationships';
     $scope.isLoading = true;
@@ -229,6 +229,7 @@ angular.module('ts5App')
     };
 
     var setupController = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('COMPANY', 'COMPANYREL', 'CRUDCR');
       getCompanyListPromise()
         .then(getCompanyListSuccessHandler, errorHandler)
         .then(getCompanyRelationshipListByCompanyAndTypeSuccessHandler, errorHandler);
