@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CommissionDataTableCtrl', function($scope, dateUtility, commissionFactory, $location, globalMenuService,
-    employeesService, $q, lodash) {
+    employeesService, $q, lodash, accessService) {
     $scope.viewName = 'Commission Data Table';
     $scope.search = {};
     $scope.commissionData = [];
@@ -206,6 +206,7 @@ angular.module('ts5App')
 
     function init() {
       showLoadingModal('initializing data dependencies');
+      $scope.isCRUD = accessService.crudAccessGranted('EMLOYEECOMMISSION', 'EMLOYEECOMMISSION', 'CRUDEC');
       var initPromises = [
         getCommissionPayableTypes(),
         getCrewBaseTypes(),

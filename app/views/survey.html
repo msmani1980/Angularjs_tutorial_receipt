@@ -4,7 +4,7 @@
     	<h2 class="view-name">{{ viewName }}</h2>
     </div>
     <div class="col-xs-8 text-right">
-       <a href="#/survey/create" class="btn btn-primary">+ <span class="hidden-xs">Create Survey</span></a>
+       <a href="#/survey/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Survey</span></a>
        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
                aria-expanded="false"
                aria-controls="search-collapse">
@@ -79,13 +79,13 @@
             <button class="btn btn-info btn-xs" ng-click="redirectToSurvey(survey.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="redirectToSurvey(survey.id, 'edit')" ng-show="isSurveyEditable(survey)" tabindex="0">
+            <button class="btn btn-primary btn-xs" ng-click="redirectToSurvey(survey.id, 'edit')" ng-show="isCRUD && isSurveyEditable(survey)" tabindex="0">
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-danger btn-xs"
                     ng-click="deleteRecordDialog(surveys[$index], ['surveyName', 'surveyTypeName', 'startDate', 'endDate'])"
                     tabindex="0"
-                    ng-show="showDeleteButton(survey.startDate)">
+                    ng-show="isCRUD && showDeleteButton(survey.startDate)">
               <i class="fa fa-trash"></i>
             </button>
           </td>

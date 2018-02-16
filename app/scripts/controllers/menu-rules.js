@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-.controller('MenuRulesCtrl', function($scope, $q, $route, $location, $filter, menuRulesFactory, dateUtility, messageService, lodash) {
+.controller('MenuRulesCtrl', function($scope, $q, $route, $location, $filter, menuRulesFactory, dateUtility, messageService, lodash, accessService) {
     
     var $this = this;
     
@@ -22,7 +22,7 @@ angular.module('ts5App')
     
     $scope.viewName = 'Rule Management';
     $scope.menuRules = [];
-    $scope.isSearch = false;
+    $scope.isSearch = true;
     $scope.multiSelectedValues = {};
     $scope.search = {};
     $scope.modal = null;
@@ -234,6 +234,7 @@ angular.module('ts5App')
     
     this.init = function() {
       $this.showLoadingModal('Loading Data');
+      $scope.isCRUD = accessService.crudAccessGranted('MENUASSG', 'MENURULE', 'CRUDMENUR');
       angular.element('#search-collapse').addClass('collapse');
       $scope.allCheckboxesSelected = false;
       var initDependencies = $this.makeInitPromises();
