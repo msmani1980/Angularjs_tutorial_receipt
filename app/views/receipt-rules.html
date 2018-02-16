@@ -15,7 +15,7 @@
   <div class="post-trip-data-list">
     <div class="row">
       <div class="col-xs-12 text-left">
-        <a href="#/receipt-rules/create" class="btn btn-primary">+ <span class="hidden-xs">Create New</span></a>
+        <a href="#/receipt-rules/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create New</span></a>
 
         <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
@@ -82,10 +82,10 @@
             <button class="btn btn-info btn-xs" ng-click="redirectToReceiptRule(receiptRule.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="redirectToReceiptRule(receiptRule.id, 'edit')">
+            <button class="btn btn-primary btn-xs" ng-show="isCRUD" ng-click="redirectToReceiptRule(receiptRule.id, 'edit')">
               <i class="fa fa-pencil"></i>
             </button>
-            <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(receiptRules[$index], ['countryName', 'stationCode'])"
+            <button class="btn btn-danger btn-xs" ng-show="isCRUD" ng-click="deleteRecordDialog(receiptRules[$index], ['countryName', 'stationCode'])"
                     tabindex="0">
               <i class="fa fa-trash"></i>
             </button>
@@ -111,3 +111,5 @@
 <leave-view-modal></leave-view-modal>
 
 <delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>

@@ -386,14 +386,22 @@ angular.module('ts5App')
           icon: 'icon-manage-schedule',
           className: 'dashboard-exciseDuty',
           package: 'EXCISEDUTY',
-          role: 'EXCISEDUTY'
+          role: 'EXCISEDUTY',
+          permissions: [{
+            apiName: '/api/excise-duty',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Retail Item Excise Duty Relationships',
           route: '/#/excise-duty-relationship-list',
           icon: 'icon-manage-schedule',
           className: 'dashboard-exciseDuty',
           package: 'EXCISEDUTY',
-          role: 'EXCISEDUTY'
+          role: 'EXCISEDUTY',
+          permissions: [{
+            apiName: '/api/item-excise-duty',
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Employee Commission',
@@ -403,14 +411,22 @@ angular.module('ts5App')
           icon: 'icon-manage-schedule',
           className: 'dashboard-employeeCommission',
           package: 'EMLOYEECOMMISSION',
-          role: 'EMLOYEECOMMISSION'
+          role: 'EMLOYEECOMMISSION',
+          permissions: [{
+            apiName: '/api/employee-commissions',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Commission Data Table',
           route: '/#/commission-data-table',
           icon: 'icon-manage-schedule',
           className: 'dashboard-CommissionDataTable',
           package: 'EMLOYEECOMMISSION',
-          role: 'EMLOYEECOMMISSION'
+          role: 'EMLOYEECOMMISSION',
+          permissions: [{
+            apiName: '/api/employee-commissions',
+            permissionCodes: ['C']
+          }]
         }]
       }, {
         title: 'Stock Manager',
@@ -469,14 +485,22 @@ angular.module('ts5App')
           icon: 'icon-manage-schedule',
           className: 'dashboard-storeDispatch',
           package: 'STATIONOPERATIONS',
-          role: 'STOREDISPATCH'
+          role: 'STOREDISPATCH',
+          permissions: [{
+            apiName: '/api/dispatch',
+            permissionCodes: ['C']
+          }]
         }, {
           name: 'Store Instance Dashboard',
           route: '/#/store-instance-dashboard',
           icon: 'icon-manage-schedule',
           className: 'dashboard-storeInstanceDashboard',
           package: 'STATIONOPERATIONS',
-          role: 'STOREINSTANCEDASHBOARD'
+          role: 'STOREINSTANCEDASHBOARD',
+          permissions: [{
+            apiName: '/api/dispatch',
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Transaction Retrieval',
@@ -540,7 +564,7 @@ angular.module('ts5App')
           package: 'SURVEY',
           role: 'SURVEY',
           permissions: [{
-            apiName: '/api/posttrips',
+            apiName: '/api/survey',
             permissionCodes: ['R']
           }]
         }, {
@@ -551,7 +575,7 @@ angular.module('ts5App')
           package: 'SURVEY',
           role: 'SURVEY',
           permissions: [{
-            apiName: '/api/posttrips',
+            apiName: '/api/survey',
             permissionCodes: ['R']
           }]
         }, {
@@ -562,7 +586,7 @@ angular.module('ts5App')
           package: 'SURVEY',
           role: 'SURVEY',
           permissions: [{
-            apiName: '/api/posttrips',
+            apiName: '/api/survey',
             permissionCodes: ['R']
           }]
         }]

@@ -10,8 +10,8 @@
   <div class="post-trip-data-list">
     <div class="row">
       <div class="col-xs-12 text-left">
-        <a href="#/schedules/create" class="btn btn-primary">+ <span class="hidden-xs">Create Schedule</span></a>
-        <excel-upload type="schedule" class="excel-upload"></excel-upload>
+        <a href="#/schedules/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Schedule</span></a>
+        <excel-upload type="schedule" ng-show="isCRUD" class="excel-upload"></excel-upload>
 
         <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
@@ -222,13 +222,13 @@
             <button class="btn btn-info btn-xs" ng-click="redirectToSchedule(schedule.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="redirectToSchedule(schedule.id, 'edit')" ng-show="isScheduleEditable(schedule)" tabindex="0">
+            <button class="btn btn-primary btn-xs" ng-click="redirectToSchedule(schedule.id, 'edit')" ng-show="isCRUD && isScheduleEditable(schedule)" tabindex="0">
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-danger btn-xs"
                     ng-click="deleteRecordDialog(schedules[$index], ['scheduleNumber', 'deStationCode', 'depTime', 'arrStationCode', 'arrTime'])"
                     tabindex="0"
-                    ng-show="showDeleteButton(schedule.startDate)">
+                    ng-show="isCRUD && showDeleteButton(schedule.startDate)">
               <i class="fa fa-trash"></i>
             </button>
           </td>

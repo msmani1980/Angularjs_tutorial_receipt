@@ -11,7 +11,7 @@
         </div>
         <div class="col-xs-6 text-right">
           <a class="btn btn-default" ng-href="#/promotion-catalog-list" class="btn">Back</a>
-          <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(null, [])" ng-show="canDelete">
+          <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(null, [])" ng-show="isCRUD && canDelete">
             <span class="fa fa-trash" aria-hidden="true"></span>
             <span>Delete</span>
           </button>
@@ -28,7 +28,7 @@
 
     <h3>Promotion Conjunctions <span class="badge">{{ conjunctionList.length }}</span>
       <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="newConjunction()" ng-disabled="shouldDisableNewPromotionConjunctions()"
-              ng-hide="isViewOnly || disableEditField">
+              ng-hide="!isCRUD || isViewOnly || disableEditField">
         <i class="fa fa-plus"></i> Add Promotion Conjunction
       </button>
     </h3>
@@ -95,12 +95,12 @@
       <tr>
         <td></td>
         <td class="pull-right">
-          <button type="button" class="btn btn-primary btn-sm" ng-click="newConjunctionChild(promotion)" ng-disabled="shouldDisableNewChildPromotion(promotion)" ng-hide="isViewOnly"><i
+          <button type="button" class="btn btn-primary btn-sm" ng-click="newConjunctionChild(promotion)" ng-disabled="shouldDisableNewChildPromotion(promotion)" ng-hide="!isCRUD || isViewOnly"><i
             class="fa fa-plus"></i> Add Promotion
           </button>
         </td>
         <td class="pull-right">
-          <button type="button" class="btn btn-default btn-sm" ng-click="removeConjunction(promotion)" ng-hide="isViewOnly"><i class="fa fa-trash"></i> Remove Conjunction</button>
+          <button type="button" class="btn btn-default btn-sm" ng-click="removeConjunction(promotion)" ng-hide="!isCRUD || isViewOnly"><i class="fa fa-trash"></i> Remove Conjunction</button>
         </td>
       </tr>
       </tbody>
