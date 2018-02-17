@@ -425,7 +425,7 @@ angular.module('ts5App')
           role: 'EMLOYEECOMMISSION',
           permissions: [{
             apiName: '/api/employee-commissions',
-            permissionCodes: ['C']
+            permissionCodes: ['R']
           }]
         }]
       }, {

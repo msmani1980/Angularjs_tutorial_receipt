@@ -6,7 +6,7 @@
       </div>
 
       <div class="col-xs-8 text-right">
-        <a href="#/commission-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Commission Data</span></a>
+        <a href="#/commission-data/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Commission Data</span></a>
         <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
                 aria-controls="search-collapse">
           <span class="fa fa-search" aria-hidden="true"></span>
@@ -87,11 +87,12 @@
           <button class="btn btn-info btn-xs" ng-click="redirectToDetailPage(data.id, 'view')" tabindex="0">
             <i class="fa fa-file"></i>
           </button>
-          <button class="btn btn-primary btn-xs" ng-click="redirectToDetailPage(data.id, 'edit')" tabindex="0">
+          <button class="btn btn-primary btn-xs" ng-show="isCRUD" ng-click="redirectToDetailPage(data.id, 'edit')" tabindex="0">
             <i class="fa fa-pencil"></i>
           </button>
           <button class="btn btn-danger btn-xs"
                   ng-click="deleteRecordDialog(data)"
+                  ng-show="isCRUD"
                   tabindex="0">
             <i class="fa fa-trash"></i>
           </button>

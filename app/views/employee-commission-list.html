@@ -55,7 +55,7 @@
 
   <div class="row">
     <div class="col-xs-6">
-      <a ng-href="#/employee-commission/create" class="btn btn-primary">+ Create Commission</a>
+      <a ng-href="#/employee-commission/create" ng-show="isCRUD" class="btn btn-primary">+ Create Commission</a>
     </div>
 
     <div class="col-xs-6 text-right">
@@ -169,11 +169,11 @@
           <i class="fa fa-file"></i>
         </button>
         <button class="btn btn-primary btn-xs" ng-click="editCommission(commission)"
-                ng-show="isCommissionEditable(commission)">
+                ng-show="isCRUD && isCommissionEditable(commission)">
           <i class="fa fa-pencil"></i>
         </button>
         <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)"
-                ng-hide="isCommissionReadOnly(commission)">
+                ng-hide="!isCRUD || isCommissionReadOnly(commission)">
           <i class="fa fa-trash"></i>
         </button>
       </td>

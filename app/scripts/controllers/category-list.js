@@ -326,6 +326,7 @@ angular.module('ts5App')
 
     function init() {
       $scope.isCRUD = accessService.crudAccessGranted('RETAIL', 'RETAILITEMCATEGORY', 'CRUDRICAT');
+      $scope.isSOCRUD = accessService.crudAccessGranted('STOCKOWNER', 'STOCKOWNERCATEGORY', 'CRUDSOICAT');
       initFreshData();
       showLoadingModal('Loading Data');
       categoryFactory.getCategoryList({

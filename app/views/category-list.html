@@ -13,7 +13,7 @@
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
 
-        <button class="btn btn-primary" ng-show="isCRUD" ng-click="toggleCreatePanel()">
+        <button class="btn btn-primary" ng-show="isCRUD || isSOCRUD" ng-click="toggleCreatePanel()">
           <span class="fa fa-plus" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Create Category</span>
         </button>
@@ -141,7 +141,7 @@
       <th ng-show="inEditMode">Parent Category</th>
       <th ng-show="isFiltering">Path</th>
       <th>Items</th>
-      <th ng-show="isCRUD">Actions</th>
+      <th ng-show="isCRUD || isSOCRUD">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -194,7 +194,7 @@
         {{ category.salesCategoryPath }}
       </td>
       <td>{{ category.itemCount }}</td>
-      <td ng-show="isCRUD">
+      <td ng-show="isCRUD || isSOCRUD">
         </button>
         <button class="btn btn-xs btn-default" ng-show="canRearrange(category)" ng-click="rearrangeCategory(category, $index, 'up')">
           <span class="fa fa-angle-double-up"></span>
