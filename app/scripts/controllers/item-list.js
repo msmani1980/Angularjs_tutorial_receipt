@@ -116,7 +116,7 @@ angular.module('ts5App')
     };
 
     this.getItemTypesList = function () {
-      $scope.isCRUD = accessService.crudAccessGranted('RETAIL', 'EMPLOYEE', 'CRUDRI');
+      $scope.isCRUD = accessService.crudAccessGranted('RETAIL', 'RETAILITEM', 'CRUDRI');
       itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
       });
