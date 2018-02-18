@@ -1,4 +1,4 @@
-<div class="fluid-container">
+<div class="module-container">
     <div class="list-controls">
         <div class="row item-list-row">
             <div class="col-xs-8">
@@ -115,7 +115,7 @@
 		                </div>
 		            </div>
 
-                    <div class="col-xs-12 col-sm-12 col-md-1 text-right">
+                    <div ng-show="isCRUD" class="col-xs-12 col-sm-12 col-md-1 text-right">
                         <button type="button" class="btn btn-primary btn-xs" ng-click="saveDetailedCompanyCurrency($index, currency)" ng-hide="isCurrencyPartialReadOnly(currency)">
                           <i ng-hide="currency.isNew" class="fa fa-pencil"></i>
                           <i ng-show="currency.isNew" class="fa fa-check-square-o"></i>
@@ -133,7 +133,7 @@
             <div class="row" ng-hide="readOnly">
                 <div class="col-xs-8 col-md-9"></div>
                 <div class="col-xs-4 col-md-3 text-right">
-                    <div class="input-group">
+                    <div ng-show="isCRUD" class="input-group">
                         <input type="number" min="1" max="100" class="form-control" ng-model="addDetailedCompanyCurrenciesNumber">
                         <span class="input-group-btn">
                             <button class="btn btn-primary" type="button" ng-click="addDetailedCompanyCurrencies()"><i class="fa fa-plus"></i> Add Currencies</button>
@@ -172,3 +172,4 @@
         </div>
     </div>
 </div>
+<dynamic-left-nav></dynamic-left-nav>

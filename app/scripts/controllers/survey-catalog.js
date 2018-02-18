@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('SurveyCatalogCtrl', function ($scope, $q, $location, dateUtility, lodash, messageService, surveyCatalogFactory) {
+  .controller('SurveyCatalogCtrl', function ($scope, $q, $location, dateUtility, lodash, messageService, surveyCatalogFactory, accessService) {
 
     var $this = this;
     this.meta = {
@@ -146,6 +146,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('SURVEY', 'SURVEY', 'SURVEYC');
       $scope.searchSurveyCatalogData();
       angular.element('#search-collapse').addClass('collapse');
     };

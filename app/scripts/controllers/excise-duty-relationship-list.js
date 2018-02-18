@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExciseDutyRelationshipListCtrl', function($scope, exciseDutyRelationshipFactory, dateUtility, lodash, $q) {
+  .controller('ExciseDutyRelationshipListCtrl', function($scope, exciseDutyRelationshipFactory, dateUtility, lodash, $q, accessService) {
     $scope.viewName = 'Retail Item - Excise Duty Relationships';
     var $this = this;
 
@@ -518,6 +518,7 @@ angular.module('ts5App')
 
     function init() {
       showLoadingModal('initializing');
+      $scope.isCRUD = accessService.crudAccessGranted('EXCISEDUTY', 'EXCISEDUTYRETAILITEM', 'CUDRIED');
       initVars();
       initWatchGroups();
       callInitAPIs();

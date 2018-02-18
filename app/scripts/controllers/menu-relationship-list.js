@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('MenuRelationshipListCtrl', function ($scope, dateUtility, $filter, menuService, catererStationService,
-                                                    menuCatererStationsService, $q, messageService, lodash) {
+                                                    menuCatererStationsService, $q, messageService, lodash, accessService) {
 
     var $this = this;
     this.meta = {
@@ -219,6 +219,7 @@ angular.module('ts5App')
     };
 
     this.init = function () {
+      $scope.isCRUD = accessService.crudAccessGranted('MENUCAT', 'MENUSTATION', 'CRUDMCS');
       $this.getStationAndMenuList();
     };
 

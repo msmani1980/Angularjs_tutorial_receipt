@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('SurveyQuestionsListCtrl', function ($scope, $q, $route, $location, lodash, dateUtility, surveyQuestionsFactory) {
+  .controller('SurveyQuestionsListCtrl', function ($scope, $q, $route, $location, lodash, dateUtility, surveyQuestionsFactory, accessService) {
     var $this = this;
 
     this.meta = {
@@ -172,7 +172,7 @@ angular.module('ts5App')
 
     this.init = function() {
       angular.element('.loading-more').hide();
-
+      $scope.isCRUD = accessService.crudAccessGranted('SURVEY', 'SURVEY', 'SURVEYQ');
       var initDependencies = $this.makeInitPromises();
       $q.all(initDependencies).then(function() {
         $scope.uiReady = true;

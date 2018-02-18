@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCatalogConjunctionCtrl', function ($scope, $routeParams, promotionCatalogFactory, globalMenuService, $q, lodash, messageService, dateUtility, $location) {
+  .controller('PromotionCatalogConjunctionCtrl', function ($scope, $routeParams, promotionCatalogFactory, globalMenuService, $q, lodash, messageService, dateUtility, $location, accessService) {
 
     $scope.itemList = [];
     $scope.promotionCatalog = {};
@@ -341,6 +341,7 @@ angular.module('ts5App')
     }
 
     function init() {
+      $scope.isCRUD = accessService.crudAccessGranted('PROMOTION', 'PROMOTIONCATALOG', 'CRUDPRCTL');
       $scope.isViewOnly = true;
       $scope.conjunctionList = [];
 

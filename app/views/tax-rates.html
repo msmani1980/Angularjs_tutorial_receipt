@@ -5,7 +5,7 @@
         <h2 class="view-name">{{viewName}}</h2>
       </div>
       <div class="col-xs-8 text-right">
-        <button class="btn btn-primary" tabindex="-1" ng-click="createNewTaxRate()"><span class="fa fa-plus"></span><span class="hidden-xs">  Create Tax Rate</span></button>
+        <button class="btn btn-primary" tabindex="-1" ng-show="isCRUD" ng-click="createNewTaxRate()"><span class="fa fa-plus"></span><span class="hidden-xs">  Create Tax Rate</span></button>
         <button class="btn btn-default" tabindex="-1" data-toggle="collapse" data-target="#filter-controls" aria-expanded="false" aria-controls="search-collapse" ng-click="searchUiSelectReady()">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
@@ -136,7 +136,7 @@
           <th>Rate *</th>
           <th>Effective From *</th>
           <th>Effective To *</th>
-          <th>Actions</th>
+          <th ng-show="isCRUD">Actions</th>
         </tr>
       </thead>
       <!-- Switch ON taxRate.action - Table row -->
@@ -288,7 +288,7 @@
            ng-model="taxRate.endDate"></date-picker-field>
         </td>
         <!-- Buttons for Read -->
-        <td class="animate-switch col-xs-1" ng-switch-when="read">
+        <td class="animate-switch col-xs-1" ng-switch-when="read" ng-show="isCRUD">
           <a class="btn btn-primary btn-xs" ng-show="isTaxRateEditable(taxRate)" ng-click="editCompanyTaxRate(taxRate)">
             <span class="fa fa-pencil"></span>
           </a>
@@ -297,7 +297,7 @@
           </a>
         </td>
         <!-- Buttons for Edit -->
-        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="edit">
+        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="edit" ng-show="isCRUD">
           <a tabindex="0" class="btn btn-primary btn-xs" ng-click="saveTaxRateEdits(taxRate)">
             <span class="fa fa-save"></span>
           </a>
@@ -306,7 +306,7 @@
           </a>
         </td>
         <!-- Buttons for Create -->
-        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="create">
+        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="create" ng-show="isCRUD">
           <a class="btn btn-primary btn-xs" ng-click="createNewTaxRatePayload(taxRate)">
             <span class="fa fa-save"></span>
           </a>

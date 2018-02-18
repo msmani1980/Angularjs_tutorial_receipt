@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('PromotionListCtrl', function($scope, $q, $location, payloadUtility, dateUtility, promotionsFactory,
-    recordsService, lodash) {
+    recordsService, lodash, accessService) {
 
     var $this = this;
     this.meta = {
@@ -150,6 +150,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('PROMOTION', 'PROMOTION', 'CRUDPROMO');
       $this.showLoadingModal('Loading Promotions.');
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(dependencyPromises).then($this.dependenciesSuccess);
