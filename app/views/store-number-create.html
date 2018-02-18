@@ -1,3 +1,4 @@
+<div class="module-container">
 <form name="storeNumberCreatForm" class="form edit-form create-store-number-form" ng-submit="submitForm()">
 
   <div class="edit-controls">
@@ -106,4 +107,6 @@
 </table>
 <p ng-if="storeNumbersList.length > 0" class="record-count small text-center">Showing {{storeNumbersList.length}} records</p>
 <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+</div>
 <delete-record-dialog></delete-record-dialog>
+<dynamic-left-nav title="Manage Store Number"></dynamic-left-nav>
