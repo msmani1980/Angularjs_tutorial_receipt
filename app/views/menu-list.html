@@ -95,7 +95,7 @@
         <button class="btn btn-warning btn-xs" ng-click="copyMenu(menu)">
           <i class="fa fa-copy"></i>
         </button>
-        <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menu)" ng-hide="isMenuReadOnly(menu)">
+        <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menu)" ng-hide="!isCRUD || isMenuReadOnly(menu)">
           <i class="fa fa-trash"></i>
         </button>
       </td>
