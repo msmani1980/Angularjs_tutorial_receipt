@@ -1168,7 +1168,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.removeAllDataForInstances = function () {
-      return ($scope.existingSeals || $scope.itemsToDelete) && $scope.userConfirmedDataLoss;
+      return ($scope.existingSeals || $scope.itemsToDelete) && $scope.userConfirmedDataLoss && !this.isActionState('redispatch');
     };
 
     this.editRedispatchedStoreInstance = function (saveAndExit) {
@@ -1450,7 +1450,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         })[0];
 
         if (angular.isUndefined(menu)) {
-          console.log('undefined')
           $scope.showDataLossWarning = true;
         } else {
           $scope.showDataLossWarning = false;
