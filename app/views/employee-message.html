@@ -65,17 +65,17 @@
           </div>
           <div class="col-xs-6 col-sm-3">
             <div class="form-group">
-              <date-picker-field
-                name="endDate"
-                class="form-group"
-                form="employeeMessageForm"
-                ng-model="employeeMessage.endDate"
-                label="Effective To"
-                min-date="minDate"
-                custom-effective="true"
-                required="true">
+              <date-picker-field  ng-if="dataInitialized"
+                                  name="endDate"
+                                  class="form-group"
+                                  form="employeeMessageForm"
+                                  ng-model="employeeMessage.endDate"
+                                  label="Effective To"
+                                  disable-past="true"
+                                  end-current-effective="viewEditItem && disablePastDate"
+                                  disable="readOnly || shouldDisableEndDate()"
+                                  required="true">
               </date-picker-field>
-
             </div>
           </div>
         </div>
