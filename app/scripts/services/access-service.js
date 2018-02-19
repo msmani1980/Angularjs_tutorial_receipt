@@ -25,8 +25,8 @@ angular.module('ts5App')
       var featuresInRoles = featuresInRolemodule[submodule];
       angular.forEach(featuresInRoles, function(featureRole) {
         var permissonCodes = featureRole.permissionCode;
-        if (isTaskCodeEquals(featureRole.taskCode, taskCode) && (permissonCodes.indexOf('C') !== 0 || permissonCodes.indexOf('U') !== 0 || 
-            permissonCodes.indexOf('D') !== 0)) {
+        if (isTaskCodeEquals(featureRole.taskCode, taskCode) && (permissonCodes.indexOf('C') !== -1 || permissonCodes.indexOf('U') !== -1 || 
+            permissonCodes.indexOf('D') !== -1)) {
           isCrudAcess = true;
         }
 
