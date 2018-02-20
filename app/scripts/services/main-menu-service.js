@@ -564,7 +564,7 @@ angular.module('ts5App')
       }, {
         title: 'Epos Configuration',
         menuItems: [{
-            name: 'Epos Configuration',
+            name: 'ePOS Configuration Settings',
             route: '/#/epos-config',
             icon: 'icon-manage-discount',
             className: 'dashboard-epos-config',
