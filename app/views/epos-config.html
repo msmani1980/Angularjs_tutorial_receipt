@@ -8,6 +8,7 @@
     <div class="modal-body">
       <p ng-show="selectedProductVersion === null || selectedProductVersion === 'undefined'">Select Product Version first, then choose module you want to edit.</p>
       <p ng-show="selectedProductVersion && (moduleConfiguration === null || moduleConfiguration === 'undefined')">Please choose module you want to edit</p>
+      <p ng-show="isModuleConfigurationOptionsEmpty()">Module is empty. Has no configuration data.</p>
 
       <div ng-show="moduleConfiguration" class="">
 
@@ -15,8 +16,8 @@
       </div>
     </div>
     <div class="modal-footer" ng-show="selectedProductVersion && selectedModule">
-      <button class="btn btn-primary" type="submit">Save</button>
-      <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-primary" type="submit" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="isModuleConfigurationOptionsEmpty()">Save</button>
+      <button class="btn btn-danger" type="button" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="isModuleConfigurationOptionsEmpty()" ng-click="cancel()">Cancel</button>
     </div>
   </form>
 </div>

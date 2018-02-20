@@ -121,6 +121,10 @@ angular.module('ts5App')
       });
     };
 
+    $scope.isModuleConfigurationOptionsEmpty = function () {
+      return $scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions.length === 0;
+    };
+
     $scope.saveModuleOptions = function () {
       var payload = $this.constructUpsertPayload();
 
