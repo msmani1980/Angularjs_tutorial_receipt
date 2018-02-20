@@ -562,7 +562,7 @@ angular.module('ts5App')
           role: 'REPORT'
         }]
       }, {
-        title: 'Epos Configuration',
+        title: 'ePOS Configuration Settings',
         menuItems: [{
             name: 'ePOS Configuration Settings',
             route: '/#/epos-config',
