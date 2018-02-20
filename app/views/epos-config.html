@@ -32,6 +32,7 @@
             name="productVersion"
             class="form-control"
             id="productVersion"
+            ng-change="selectProductVersion()"
             ng-model="selectedProductVersion"
             ng-options="productVersion as productVersion.displayName for productVersion in productVersions">
             <option selected default value="">Select Product Version</option>
