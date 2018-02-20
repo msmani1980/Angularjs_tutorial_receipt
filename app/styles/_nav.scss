@@ -173,7 +173,9 @@ a.navbar-brand {
 }
 
 #left-navigation-epos-configuration {
-
+  .product-version-scrollable {
+    overflow: auto;
+  }
   .navbar {
     position: fixed;
     left: 0px;
