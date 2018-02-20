@@ -53,6 +53,12 @@ angular.module('ts5App')
       eposConfigFactory.getModule(module.id, $scope.selectedProductVersion.id).then($this.getModuleSuccess);
     };
 
+    $scope.selectProductVersion = function () {
+      $scope.resetValues();
+      $scope.selectedModule = null;
+      $scope.moduleConfiguration = null;
+    };
+
     $scope.cancel = function () {
       $scope.resetValues();
 
@@ -83,7 +89,7 @@ angular.module('ts5App')
       $scope.moduleConfiguration = angular.copy(dataFromAPI);
 
       $scope.moduleOptions = null;
-      if ($scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions) {
+      if ($scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions.length > 0 && $scope.moduleConfiguration.moduleVersions) {
         $scope.moduleOptions = _.filter($scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions[0].moduleOptions, function(o) {
           return o.parentId === null;
         });
@@ -113,6 +119,10 @@ angular.module('ts5App')
           }
         }
       });
+    };
+
+    $scope.isModuleConfigurationOptionsEmpty = function () {
+      return $scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions.length === 0;
     };
 
     $scope.saveModuleOptions = function () {
@@ -145,7 +155,7 @@ angular.module('ts5App')
           }
         );
       });
-      
+
       _.forEach($scope.moduleOptionValues.text, function(value, index) {
         payload.push({
             moduleOptionId:  parseInt(index),

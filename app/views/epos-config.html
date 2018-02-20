@@ -6,7 +6,9 @@
       <h3 class="modal-title">{{ selectedModule.moduleName || 'EPOS Configuration' }}</h3>
     </div>
     <div class="modal-body">
-      <p ng-hide="moduleConfiguration">Select Product Version first, then choose module you want to edit.</p>
+      <p ng-show="selectedProductVersion === null || selectedProductVersion === 'undefined'">Select Product Version first, then choose module you want to edit.</p>
+      <p ng-show="selectedProductVersion && (moduleConfiguration === null || moduleConfiguration === 'undefined')">Please choose module you want to edit</p>
+      <p ng-show="isModuleConfigurationOptionsEmpty()">Module is empty. Has no configuration data.</p>
 
       <div ng-show="moduleConfiguration" class="">
 
@@ -14,8 +16,8 @@
       </div>
     </div>
     <div class="modal-footer" ng-show="selectedProductVersion && selectedModule">
-      <button class="btn btn-primary" type="submit">Save</button>
-      <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-primary" type="submit" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="isModuleConfigurationOptionsEmpty()">Save</button>
+      <button class="btn btn-danger" type="button" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="isModuleConfigurationOptionsEmpty()" ng-click="cancel()">Cancel</button>
     </div>
   </form>
 </div>
@@ -25,13 +27,14 @@
 <div id="left-navigation-epos-configuration">
   <div class="container">
 
-    <ul class="navbar">
+    <ul class="navbar product-version-scrollable">
       <li class="product-version" tabindex="0" style="">
         <div class="">
           <select
             name="productVersion"
             class="form-control"
             id="productVersion"
+            ng-change="selectProductVersion()"
             ng-model="selectedProductVersion"
             ng-options="productVersion as productVersion.displayName for productVersion in productVersions">
             <option selected default value="">Select Product Version</option>
