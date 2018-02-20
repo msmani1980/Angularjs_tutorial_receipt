@@ -10,7 +10,9 @@
 angular.module('ts5App').controller('EmployeeMessageCtrl',
   function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $routeParams, $location) {
     var $this = this;
-    var dataInitialized = false;
+    $scope.dataInitialized = false;
+    $scope.viewEditItem = false;
+    $scope.disablePastDate = false;
 
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -86,6 +88,20 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return newStationsArray;
     };
 
+    this.formatEmployeeMessageEmployeeIdentifiersPayload = function() {
+      var newArray = [];
+      angular.forEach($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+        var newRecord = {
+          employeeIdentifier: record.employeeIdentifier,
+          companyEmployeeId: record.companyEmployeeId
+        };
+
+        newArray.push(newRecord);
+      });
+
+      return newArray;
+    };
+
     this.formatPayload = function() {
       var formData = angular.copy($scope.employeeMessage);
       var payload = {};
@@ -95,8 +111,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       payload.employeeMessageArrivalStations = $this.formatStationsArrayForAPI(formData.arrivalStations);
       payload.employeeMessageDepartureStations = $this.formatStationsArrayForAPI(formData.departureStations);
       payload.employeeMessageSchedules = $this.formatArrayForAPIWithAttributes(formData.schedules, 'scheduleNumber');
-      payload.employeeMessageEmployeeIdentifiers = $this.formatArrayForAPIWithAttributes(formData.employees,
-        'employeeIdentifier');
+      payload.employeeMessageEmployeeIdentifiers = $this.formatEmployeeMessageEmployeeIdentifiersPayload();
 
       return {
         employeeMessage: payload
@@ -145,7 +160,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         employeeMessagesFactory.createEmployeeMessage(payload).then($this.saveSuccess, $this.showErrors);
       }
     };
-    
+
     $scope.shouldDisable = function(isFieldDisabledInActiveRecord) {
       if (isFieldDisabledInActiveRecord) {
         return $scope.readOnly || $scope.shouldDisableActiveFields();
@@ -155,7 +170,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     $scope.shouldDisableActiveFields = function() {
-      if (!dataInitialized) {
+      if (!$scope.dataInitialized) {
         return false;
       }
 
@@ -165,6 +180,19 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
       var isRecordActive = dateUtility.isTodayOrEarlierDatePicker($scope.employeeMessage.startDate);
       return ($routeParams.action === 'edit' && isRecordActive);
+    };
+
+    $scope.shouldDisableEndDate = function() {
+      if (!$scope.dataInitialized) {
+        return false;
+      }
+
+      if (!$scope.employeeMessage) {
+        return true;
+      }
+
+      var shouldDisable = dateUtility.isYesterdayOrEarlierDatePicker($scope.employeeMessage.endDate);
+      return ($routeParams.action === 'edit' && shouldDisable);
     };
 
     $scope.getPropertiesForDeletedButton = function(listName, attribute) {
@@ -185,9 +213,33 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       return properties[attribute];
     };
 
+    $scope.getPropertiesForDeletedButtonEmployeeIdentifiers = function(attribute) {
+      var canDelete = false;
+      if ($scope.employeeMessage) {
+        angular.forEach($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+          canDelete = canDelete || record.selectedToDelete;
+        });
+      }
+
+      var properties = (canDelete) ? {
+          disabled: false,
+          button: 'btn btn-xs btn-danger'
+        } : {
+          disabled: true,
+          button: 'btn btn-xs btn-default'
+        };
+      return properties[attribute];
+    };
+
     $scope.toggleSelectAll = function(toggleFlag, listName) {
       angular.forEach($scope.employeeMessage[listName], function(record) {
         record.selectedToDelete = toggleFlag;
+      });
+    };
+
+    $scope.toggleSelectAllEmployeeIdentifiers = function() {
+      angular.forEach($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+        record.selectedToDelete = $scope.employeesDeleteAll;
       });
     };
 
@@ -198,6 +250,12 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
       $scope[listName + 'DeleteAll'] = false;
       $this.filterListsByName(listName);
+    };
+
+    $scope.removeSelectedEmployeeIdentifiers = function() {
+      $scope.employeeMessage.employeeMessageEmployeeIdentifiers = lodash.filter($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function(record) {
+        return !record.selectedToDelete;
+      });
     };
 
     this.addNewRecordsToArrayWithAttributes = function(existingArray, newArray, attributesToSave) {
@@ -214,7 +272,6 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     $scope.addNewItem = function(categoryName) {
       var categoryToAttributesMap = {
         schedules: ['scheduleNumber'],
-        employees: ['employeeIdentifier', 'firstName', 'lastName', 'id', 'startDate', 'endDate'],
         arrivalStations: ['code', 'name', 'id'],
         departureStations: ['code', 'name', 'id']
       };
@@ -224,6 +281,25 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       $scope.newRecords[categoryName] = [];
       $scope[categoryName + 'AddAll'] = false;
       $this.filterListsByName(categoryName);
+    };
+
+    $scope.addNewEmployee = function() {
+      angular.forEach($scope.newRecords.employees, function(newEmployee) {
+        var existingEmployeeIdByIdentifier = lodash.filter($scope.employeeMessage.employeeMessageEmployeeIdentifiers, function (emi) {
+          return emi.employeeIdentifier === newEmployee.employeeIdentifier;
+        });
+
+        if (existingEmployeeIdByIdentifier.length === 0) {
+          var newMessageIdentifier = {
+            employeeIdentifier: newEmployee.employeeIdentifier,
+            employeeFirstName: newEmployee.firstName,
+            employeeLastName: newEmployee.lastName,
+            companyEmployeeId: newEmployee.id
+          };
+
+          $scope.employeeMessage.employeeMessageEmployeeIdentifiers.push(newMessageIdentifier);
+        }
+      });
     };
 
     this.createNewRecordWithMatchingAttributes = function(record, arrayToCheck, attributeToMatch,
@@ -290,12 +366,17 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
 
     this.getEmployeeMessageSuccess = function(dataFromAPI) {
       $scope.employeeMessage = $this.formatEmployeeMessageForApp(dataFromAPI);
+
+      $scope.disablePastDate = dateUtility.isTodayDatePicker($scope.employeeMessage.startDate) || !(dateUtility.isAfterTodayDatePicker($scope.employeeMessage.startDate));
       var isRecordActiveOrFuture = dateUtility.isTodayDatePicker($scope.employeeMessage.endDate) || dateUtility.isAfterTodayDatePicker($scope.employeeMessage.endDate);
+
       if (isRecordActiveOrFuture) {
         $this.filterListsByName('all');
       } else {
         $scope.readOnly = true;
       }
+
+      $scope.dataInitialized = true;
 
       $this.hideLoadingModal();
     };
@@ -390,11 +471,13 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       if ($routeParams.action !== 'create') {
         $this.getEmployeeMessage();
       } else {
+        $scope.dataInitialized = true;
         $scope.employeeMessage = {
           employees: [],
           schedules: [],
           arrivalStations: [],
-          departureStations: []
+          departureStations: [],
+          employeeMessageEmployeeIdentifiers: []
         };
         $this.hideLoadingModal();
         $this.filterListsByName('all');
@@ -421,6 +504,14 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
         create: 'Create New Employee Message'
       };
       $scope.viewName = actionToViewNameMap[$routeParams.action];
+
+      if ($routeParams.action === 'view') {
+        $scope.viewEditItem = true;
+      } else if ($routeParams.action === 'edit') {
+        $scope.viewEditItem = true;
+      } else {
+        $scope.viewEditItem = false;
+      }
     };
 
     this.init = function() {
@@ -429,7 +520,6 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
       var initPromises = $this.initApiDependencies();
       $q.all(initPromises).then(function() {
         $this.initEmployeeMessage();
-        dataInitialized = true;
       });
 
       $scope.minDate = dateUtility.nowFormattedDatePicker();

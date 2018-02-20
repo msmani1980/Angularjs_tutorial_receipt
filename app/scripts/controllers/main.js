@@ -36,7 +36,7 @@ angular.module('ts5App')
     }
 
     function hasMenuItemMatchingPackageWithPermissions(menuItem, featurePermissions) {
-      var isManageCashBagAndShouldHide = (menuItem.name === 'Manage Cash Bag' && $rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag);
+      var isManageCashBagAndShouldHide = ((menuItem.name === 'Manage Cash Bag' && menuItem.package !== 'RECONCILIATION') && $rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag);
       var isCashBagSubmissionAndShouldHide = (menuItem.name === 'Cash Bag Submission' && $rootScope.cashbagRestrictUse && !$rootScope.showCashBagSubmission);
 
       if (isManageCashBagAndShouldHide || isCashBagSubmissionAndShouldHide) {
@@ -110,7 +110,7 @@ angular.module('ts5App')
             }
           }
         }
-      }  
+      }
     }
 
     function updateNavigationPerUserFeatures() {
