@@ -89,7 +89,7 @@ angular.module('ts5App')
       $scope.moduleConfiguration = angular.copy(dataFromAPI);
 
       $scope.moduleOptions = null;
-      if ($scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions) {
+      if ($scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions.length > 0 && $scope.moduleConfiguration.moduleVersions) {
         $scope.moduleOptions = _.filter($scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions[0].moduleOptions, function(o) {
           return o.parentId === null;
         });
