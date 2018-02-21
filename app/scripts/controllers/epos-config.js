@@ -112,7 +112,9 @@ angular.module('ts5App')
             $scope.moduleOptionValues.checkbox[option.id.toString()] = true;
             $scope.initialCheckBoxModuleOptionPopulatedIds[option.id] = true;
           } else if (option.optionTypeId === 2) { // Radio Button
-            $scope.moduleOptionValues.radioButton[option.parentId.toString()] = option.id;
+            var nameAttribute = option.parentId ? option.parentId.toString() : 'null';
+
+            $scope.moduleOptionValues.radioButton[nameAttribute] = option.id;
             $scope.initialRadioButtonModuleOptionPopulatedIds[option.id] = true;
           } else if (option.optionTypeId === 3) { // Text
             $scope.moduleOptionValues.text[option.id.toString()] = option.selected[0];
