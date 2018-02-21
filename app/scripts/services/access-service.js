@@ -22,7 +22,7 @@ angular.module('ts5App')
       var isCrudAcess = false;
       var featuresInRoleJson = getFeatureRoles();
       var featuresInRolemodule = featuresInRoleJson[module];
-      var featuresInRoles = featuresInRolemodule[submodule];
+      var featuresInRoles = featuresInRolemodule !== undefined ? featuresInRolemodule[submodule] : [];
       angular.forEach(featuresInRoles, function(featureRole) {
         var permissonCodes = featureRole.permissionCode;
         if (isTaskCodeEquals(featureRole.taskCode, taskCode) && (permissonCodes.indexOf('C') !== -1 || permissonCodes.indexOf('U') !== -1 || 
