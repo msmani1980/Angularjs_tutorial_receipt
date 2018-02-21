@@ -177,6 +177,22 @@ angular.module('ts5App')
       $scope.loadSchedules();
     };
 
+    $scope.getUpdateBy = function (schedule) {
+      if (schedule.updatedByPerson) {
+        return schedule.updatedByPerson.userName;
+      }
+
+      if (schedule.createdByPerson) {
+        return schedule.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (schedule) {
+      return schedule.updatedOn ? dateUtility.formatTimestampForApp(schedule.updatedOn) : dateUtility.formatTimestampForApp(schedule.createdOn);
+    };
+
     this.constructStartDate = function () {
       return ($scope.isSearch) ? null : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
     };
