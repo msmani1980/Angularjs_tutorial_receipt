@@ -177,13 +177,29 @@ angular.module('ts5App')
     this.getSalesCategoriesList();
 
     $scope.loadItems = $this.getItemsList;
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
-  
+
     $scope.isFutureEffectiveDate = function (date) {
       return (dateUtility.isAfterTodayDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate)));
+    };
+
+    $scope.getUpdateBy = function (item) {
+      if (item.updatedByPerson) {
+        return item.updatedByPerson.userName;
+      }
+
+      if (item.createdByPerson) {
+        return item.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (item) {
+      return item.updatedOn ? dateUtility.formatTimestampForApp(item.updatedOn) : dateUtility.formatTimestampForApp(item.createdOn);
     };
 
   });

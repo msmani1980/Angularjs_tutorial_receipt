@@ -74,7 +74,7 @@
 				<input ng-model="search.quickSearchCode" type="text" class="form-control" id="quick-search-code" placeholder="ePOS Quick Search Code">
               </div>
             </div>
-         
+
           </div>
 
           <date-picker element-class="col-xs-12 col-sm-6 col-md-4"
@@ -120,6 +120,8 @@
         <th>Sales Category</th>
         <th>Effective From</th>
         <th>Effective To</th>
+        <th>Updated Date/Time</th>
+        <th>Updated User</th>
         <th>Actions</th>
 
       </tr>
@@ -136,7 +138,8 @@
         <td>{{ item.categoryName }}</td>
         <td>{{ item.startDate }}</td>
         <td>{{ item.endDate }}</td>
-
+        <td>{{ getUpdatedOn(item) }}</td>
+        <td>{{ getUpdateBy(item) }}</td>
         <td>
 
           <a class="btn btn-info btn-xs" href="#/stock-owner-item-view/{{item.id}}">
