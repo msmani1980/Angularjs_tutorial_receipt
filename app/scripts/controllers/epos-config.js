@@ -104,12 +104,12 @@ angular.module('ts5App')
 
     this.sortModuleOptions = function(moduleOptions) {
       _.forEach(moduleOptions, function(option) {
-        if(option.subModules && option.subModules.length > 0) {
+        if (option.subModules && option.subModules.length > 0) {
           option.subModules = $this.sortModuleOptions(option.subModules);
         }
       });
 
-      return _.orderBy(moduleOptions, ['displayOrder'],['asc']);
+      return _.orderBy(moduleOptions, ['displayOrder'], ['asc']);
     };
 
     this.createOrUpdateSuccess = function() {
