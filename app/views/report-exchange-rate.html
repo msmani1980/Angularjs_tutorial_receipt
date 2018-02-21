@@ -117,7 +117,7 @@
 				                </date-picker-field>
 				              </div>
 				              <div class="col-xs-12 col-sm-6">
-				                <date-picker-field  disable="isPastDate(exchangeRate)" form="form" end-current-effective="isCurrentEffectiveDate(exchangeRate)"
+				                <date-picker-field  disable="!isCRUD || isPastDate(exchangeRate)" form="form" end-current-effective="isCurrentEffectiveDate(exchangeRate)"
 				                  name="EffectiveTo" min-date="minDate" required="true"
 				                  ng-model="exchangeRate.endDate">
 				                </date-picker-field>
