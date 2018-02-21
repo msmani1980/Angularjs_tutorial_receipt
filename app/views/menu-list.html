@@ -92,7 +92,7 @@
         <button class="btn btn-primary btn-xs" ng-click="editMenu(menu)" ng-show="isCRUD && isMenuEditable(menu)">
           <i class="fa fa-pencil"></i>
         </button>
-        <button class="btn btn-warning btn-xs" ng-click="copyMenu(menu)">
+        <button class="btn btn-warning btn-xs" ng-click="copyMenu(menu)" ng-show="isCRUD">
           <i class="fa fa-copy"></i>
         </button>
         <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menu)" ng-hide="!isCRUD || isMenuReadOnly(menu)">
