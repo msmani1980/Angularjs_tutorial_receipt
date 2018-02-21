@@ -94,10 +94,22 @@ angular.module('ts5App')
           return o.parentId === null;
         });
 
+        $scope.moduleOptions = $this.sortModuleOptions($scope.moduleOptions);
+
         $this.initializeNgModel($scope.moduleConfiguration.moduleVersions[0].moduleOptions);
       }
 
       $this.hideLoadingModal();
+    };
+
+    this.sortModuleOptions = function(moduleOptions) {
+      _.forEach(moduleOptions, function(option) {
+        if(option.subModules && option.subModules.length > 0) {
+          option.subModules = $this.sortModuleOptions(option.subModules);
+        }
+      });
+
+      return _.orderBy(moduleOptions, ['displayOrder'],['asc']);
     };
 
     this.createOrUpdateSuccess = function() {
