@@ -120,19 +120,23 @@ angular.module('ts5App')
     this.initializeNgModel = function(moduleOptions) {
       _.forEach(moduleOptions, function(option) {
         if (Array.isArray(option.selected) && option.selected.length > 0) {
-          if (option.optionTypeId === 1) { // CheckBox
-            $scope.moduleOptionValues.checkbox[option.id.toString()] = true;
-            $scope.initialCheckBoxModuleOptionPopulatedIds[option.id] = true;
-          } else if (option.optionTypeId === 2) { // Radio Button
-            var nameAttribute = option.parentId ? option.parentId.toString() : 'null';
-
-            $scope.moduleOptionValues.radioButton[nameAttribute] = option.id;
-            $scope.initialRadioButtonModuleOptionPopulatedIds[option.id] = true;
-          } else if (option.optionTypeId === 3) { // Text
-            $scope.moduleOptionValues.text[option.id.toString()] = option.selected[0];
-          }
+          $this.initializeNgModelSingleOptionHelper(option);
         }
       });
+    };
+
+    this.initializeNgModelSingleOptionHelper = function(option) {
+      if (option.optionTypeId === 1) { // CheckBox
+        $scope.moduleOptionValues.checkbox[option.id.toString()] = true;
+        $scope.initialCheckBoxModuleOptionPopulatedIds[option.id] = true;
+      } else if (option.optionTypeId === 2) { // Radio Button
+        var nameAttribute = option.parentId ? option.parentId.toString() : 'null';
+
+        $scope.moduleOptionValues.radioButton[nameAttribute] = option.id;
+        $scope.initialRadioButtonModuleOptionPopulatedIds[option.id] = true;
+      } else if (option.optionTypeId === 3) { // Text
+        $scope.moduleOptionValues.text[option.id.toString()] = option.selected[0];
+      }
     };
 
     $scope.isModuleConfigurationOptionsEmpty = function () {
