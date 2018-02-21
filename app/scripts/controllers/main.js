@@ -50,10 +50,6 @@ angular.module('ts5App')
     }
 
     function hasResponseMatchingMenuItemWithPermissions(menuItem, response) {
-      if (menuItem.package === 'EPOSCONFIG') {
-        return true;
-      }
-
       if (response[menuItem.package] && response[menuItem.package][menuItem.role]) {
         return hasMenuItemMatchingPackageWithPermissions(menuItem, response[menuItem.package][menuItem.role]);
       }
