@@ -110,7 +110,7 @@
 
 		            <div class="col-xs-12 col-md-2 col-sm-6">
 			            <div class="form-group">
-			                <date-picker-field  label="End Date"  ng-model="currency.endDate" disable-past="true" disable="isCurrencyPartialReadOnly(currency)"
+			                <date-picker-field  label="End Date"  ng-model="currency.endDate" disable-past="true" disable="!isCRUD || isCurrencyPartialReadOnly(currency)"
 			                required="true" end-current-effective="isCurrencyReadOnly(currency)"></date-picker-field>
 		                </div>
 		            </div>
