@@ -67,6 +67,9 @@ angular.module('ts5App')
     var getModules = function(payload) {
       var requestPayload = payload || {};
 
+      eposConfigModuleRequestParameters.id = null;
+      eposConfigModuleRequestParameters.pid = null;
+
       return eposConfigModuleRequestResource.getAllModules(requestPayload).$promise;
     };
 

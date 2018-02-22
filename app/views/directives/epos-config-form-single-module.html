@@ -1,12 +1,12 @@
 <li ng-if="singleModule.optionTypeId === 1"> <!-- CheckBox -->
-  <input type="checkbox" class="maring-right-5px" id="{{singleModule.id}}" ng-model="model.checkbox[singleModule.id]"/>
+  <input ng-disabled="areInputsDisabled" type="checkbox" class="maring-right-5px" id="{{singleModule.id}}" ng-model="model.checkbox[singleModule.id]"/>
   <label class="epos-config-label">{{singleModule.name}}</label>
 </li>
 <li ng-if="singleModule.optionTypeId === 2"> <!-- RadioButton -->
-  <input type="radio" class="maring-right-5px" id="{{singleModule.id}}" name="{{singleModule.parentId}}" ng-model="model.radioButton[singleModule.parentId]" value="{{singleModule.id}}"/>
+  <input ng-disabled="areInputsDisabled" type="radio" class="maring-right-5px" id="{{singleModule.id}}" name="{{singleModule.parentId}}" ng-model="model.radioButton[singleModule.parentId]" value="{{singleModule.id}}"/>
   <label class="epos-config-label">{{singleModule.name}}</label>
 </li>
 <li ng-if="singleModule.optionTypeId === 3">  <!-- Text -->
   <label class="epos-config-label maring-right-5px">{{singleModule.name}}</label>
-  <input type="text" id="{{singleModule.id}}" ng-model="model.text[singleModule.id]"/>
+  <input ng-disabled="areInputsDisabled" type="text" id="{{singleModule.id}}" ng-model="model.text[singleModule.id]"/>
 </li>
