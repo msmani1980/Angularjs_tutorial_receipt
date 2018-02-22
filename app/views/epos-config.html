@@ -12,12 +12,12 @@
 
       <div ng-show="moduleConfiguration" class="">
 
-        <modules ng-if="moduleOptions" module-list='moduleOptions' model="moduleOptionValues"></modules>
+        <modules ng-if="moduleOptions" module-list='moduleOptions' model="moduleOptionValues" are-inputs-disabled="!isUserAvailableForEditAndCreate()" ></modules>
       </div>
     </div>
     <div class="modal-footer" ng-show="selectedProductVersion && selectedModule">
-      <button class="btn btn-primary" type="submit" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="isModuleConfigurationOptionsEmpty()">Save</button>
-      <button class="btn btn-danger" type="button" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="isModuleConfigurationOptionsEmpty()" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-primary" type="submit" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="!isUserAvailableForEditAndCreate() || isModuleConfigurationOptionsEmpty()">Save</button>
+      <button class="btn btn-danger" type="button" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="!isUserAvailableForEditAndCreate() || isModuleConfigurationOptionsEmpty()" ng-click="cancel()">Cancel</button>
     </div>
   </form>
 </div>

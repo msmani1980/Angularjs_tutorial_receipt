@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EposConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, _) {
+  .controller('EposConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _) {
     var companyId;
     var $this = this;
 
@@ -63,6 +63,23 @@ angular.module('ts5App')
       $scope.resetValues();
 
       $scope.selectedModule = null;
+    };
+
+    $scope.isUserAvailableForEditAndCreate = function () {
+      var result = false;
+      var userFeaturesInRole = $localStorage.featuresInRole;
+
+      if (userFeaturesInRole.EPOSCONFIG && userFeaturesInRole.EPOSCONFIG.EPOSCONFIG) {
+        var eposConfigRoleFeatures = userFeaturesInRole.EPOSCONFIG.EPOSCONFIG;
+
+        _.forEach(eposConfigRoleFeatures, function(feature) {
+          if (_.includes(feature.permissionCode, 'C') && _.includes(feature.permissionCode, 'U') && _.includes(feature.permissionCode, 'D')) {
+            result = true;
+          }
+        });
+      }
+
+      return result;
     };
 
     this.showLoadingModal = function(message) {
@@ -242,7 +259,8 @@ angular.module('ts5App')
       replace: true,
       scope: {
         moduleList: '=',
-        model: '='
+        model: '=',
+        areInputsDisabled: '='
       },
       templateUrl: 'views/directives/epos-config-form-modules.html'
     };
@@ -252,11 +270,12 @@ angular.module('ts5App')
       restrict: 'E',
       scope: {
         singleModule: '=',
-        model: '='
+        model: '=',
+        areInputsDisabled: '='
       },
       templateUrl: 'views/directives/epos-config-form-single-module.html',
       link: function (scope, element) {
-        var collectionSt = '<modules module-list="singleModule.subModules" model="model"></modules>';
+        var collectionSt = '<modules module-list="singleModule.subModules" model="model" are-inputs-disabled="areInputsDisabled"></modules>';
         if (scope.singleModule.subModules && angular.isArray(scope.singleModule.subModules)) {
           $compile(collectionSt)(scope, function(cloned)   {
             element.append(cloned);
