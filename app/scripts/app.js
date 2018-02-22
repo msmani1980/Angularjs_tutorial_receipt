@@ -468,17 +468,17 @@ angular.module('ts5App', [
 }).run(function ($rootScope, regexp) {
   $rootScope.regexp = regexp;
 }).run(function ($rootScope, $location, $localStorage, mainMenuService, messageService) {
-  $rootScope.$on("$locationChangeStart", function(event, next, current) {
+  $rootScope.$on('$locationChangeStart', function(event, next, current) {
     var menu = mainMenuService.getMenu();
     var userFeaturesInRole = $localStorage.featuresInRole;
 
     _.forEach(menu, function(item) {
       _.forEach(item.menuItems, function(menuItem) {
-        if(menuItem.package === 'EPOSCONFIG') { // Enabled just for 'EPOSCONFIG' for TSVPORTAL-231 for now
+        if (menuItem.package === 'EPOSCONFIG') { // Enabled just for 'EPOSCONFIG' for TSVPORTAL-231 for now
           var fullUrl = $location.absUrl();
           var featureRoleByPackage = userFeaturesInRole[menuItem.package];
 
-          if(!featureRoleByPackage && fullUrl && fullUrl.match(menuItem.route)) {
+          if (!featureRoleByPackage && fullUrl && fullUrl.match(menuItem.route)) {
             event.preventDefault();
             messageService.display('danger', 'You do not have permissions to access this page.');
           }
