@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EposConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, _) {
+  .controller('EposConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _) {
     var companyId;
     var $this = this;
 
@@ -63,6 +63,22 @@ angular.module('ts5App')
       $scope.resetValues();
 
       $scope.selectedModule = null;
+    };
+
+    $scope.isUserAvailableForEditAndCreate = function () {
+      var userFeaturesInRole = $localStorage.featuresInRole;
+
+      if(userFeaturesInRole.EPOSCONFIG && userFeaturesInRole.EPOSCONFIG.EPOSCONFIG) {
+        var eposConfigRoleFeatures = userFeaturesInRole.EPOSCONFIG.EPOSCONFIG;
+
+        _.forEach(eposConfigRoleFeatures, function(feature) {
+          if(_.includes(feature.permissionCode, 'C') && _.includes(feature.permissionCode, 'U') && _.includes(feature.permissionCode, 'D')) {
+            return true;
+          }
+        });
+      }
+
+      return false;
     };
 
     this.showLoadingModal = function(message) {

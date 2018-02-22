@@ -16,8 +16,8 @@
       </div>
     </div>
     <div class="modal-footer" ng-show="selectedProductVersion && selectedModule">
-      <button class="btn btn-primary" type="submit" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="isModuleConfigurationOptionsEmpty()">Save</button>
-      <button class="btn btn-danger" type="button" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="isModuleConfigurationOptionsEmpty()" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-primary" type="submit" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="!isUserAvailableForEditAndCreate() || isModuleConfigurationOptionsEmpty()">Save</button>
+      <button class="btn btn-danger" type="button" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="!isUserAvailableForEditAndCreate() || isModuleConfigurationOptionsEmpty()" ng-click="cancel()">Cancel</button>
     </div>
   </form>
 </div>
