@@ -911,4 +911,21 @@ angular.module('ts5App')
     $scope.isCurrentEffectiveDate = function (taxRate) {
       return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
     };
+
+    $scope.getUpdateBy = function (taxRate) {
+      if (taxRate.updatedByPerson) {
+        return taxRate.updatedByPerson.userName;
+      }
+
+      if (taxRate.createdByPerson) {
+        return taxRate.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (taxRate) {
+      return taxRate.updatedOn ? dateUtility.formatTimestampForApp(taxRate.updatedOn) : dateUtility.formatTimestampForApp(taxRate.createdOn);
+    };
+
   });

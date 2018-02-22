@@ -188,6 +188,8 @@
           <th ng-show="displayColumns.groundTime">Ground Time</th>
           <th>Trip Distance</th>
           <th>Flight Info</th>
+          <th>Updated Date/Time</th>
+          <th>Updated User</th>
           <th ng-show="displayColumns.previousFlight">Prev. Flight</th>
           <th ng-show="displayColumns.nextFlight">Next Flight</th>
           <th>Actions</th>
@@ -216,6 +218,8 @@
             <span ng-show="schedule.firstTrip && schedule.lastTrip">, </span>
             <span ng-show="schedule.lastTrip">Last Trip</span>
           </td>
+          <td>{{ getUpdatedOn(schedule) }}</td>
+          <td>{{ getUpdateBy(schedule) }}</td>
           <td ng-show="displayColumns.previousFlight">{{ schedule.preScheduleNumber }}</td>
           <td ng-show="displayColumns.nextFlight">{{ schedule.nextScheduleNumber }}</td>
           <td>
