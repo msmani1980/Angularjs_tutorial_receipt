@@ -12,7 +12,7 @@
 
       <div ng-show="moduleConfiguration" class="">
 
-        <modules ng-if="moduleOptions" module-list='moduleOptions' model="moduleOptionValues"></modules>
+        <modules ng-if="moduleOptions" module-list='moduleOptions' model="moduleOptionValues" are-inputs-disabled="!isUserAvailableForEditAndCreate()" ></modules>
       </div>
     </div>
     <div class="modal-footer" ng-show="selectedProductVersion && selectedModule">
