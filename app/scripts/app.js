@@ -467,8 +467,8 @@ angular.module('ts5App', [
   });
 }).run(function ($rootScope, regexp) {
   $rootScope.regexp = regexp;
-}).run(function ($rootScope, $location, $localStorage, mainMenuService, messageService) {
-  $rootScope.$on('$locationChangeStart', function(event, next, current) {
+}).run(function ($rootScope, $location, $localStorage, mainMenuService, messageService, _) {
+  $rootScope.$on('$locationChangeStart', function(event) {
     var menu = mainMenuService.getMenu();
     var userFeaturesInRole = $localStorage.featuresInRole;
 
