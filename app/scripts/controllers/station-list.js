@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationListCtrl', function($scope, dateUtility, messageService, $q) {
+  .controller('StationListCtrl', function($scope, dateUtility, messageService, stationsFactory, $q, $filter, lodash) {
 
     var $this = this;
 
@@ -238,171 +238,31 @@ angular.module('ts5App')
       }
     };
 
-    var countryListJSON = {
-      meta: {
-        count: 249,
-        limit: 249,
-        start: 0
-      },
-      countries: [{
-        id: 66,
-        countryName: 'Denmark'
-      }, {
-        id: 10,
-        countryName: 'Afghanistan'
-      }, {
-        id: 22,
-        countryName: 'Åland Islands'
-      }, {
-        id: 13,
-        countryName: 'Albania'
-      }, {
-        id: 69,
-        countryName: 'Algeria'
-      }, {
-        id: 18,
-        countryName: 'American Samoa'
-      }, {
-        id: 8,
-        countryName: 'Andorra'
-      }]
+    this.setCityList = function(stationsList) {
+      var citiesList = [];
+      angular.forEach(stationsList, function (station) {
+        var country = {
+          id: station.cityId,
+          cityName: station.cityName,
+          countryId: station.countryId
+        };
+        citiesList.push(country);
+      });
+
+      $scope.cityList = $filter('unique')(citiesList, 'id');
     };
 
-    var cityListJSON = {
-      meta: {
-        count: 270,
-        limit: 270,
-        start: 0
-      },
-      cities: [{
-        cityId: 11,
-        cityName: 'Albany',
-        countryId: 240,
-        countryName: 'United States',
-        regionId: 2,
-        regionName: 'New York',
-        timeZoneId: 440,
-        timeZone: 'America/New_York',
-        utcDstOffset: '-04:00',
-        utcOffset: '-05:00'
-      }, {
-        cityId: 14,
-        cityName: 'Alicante',
-        countryId: 75,
-        countryName: 'Spain',
-        regionId: 9,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 15,
-        cityName: 'Barcelona',
-        countryId: 75,
-        countryName: 'Spain',
-        regionId: 9,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 21,
-        cityName: 'Basel',
-        countryId: 50,
-        countryName: 'Switzerland',
-        regionId: 7,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 24,
-        cityName: 'Bern',
-        countryId: 50,
-        countryName: 'Switzerland',
-        regionId: 7,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 5,
-        cityName: 'Chicago',
-        countryId: 240,
-        countryName: 'United States',
-        regionId: 4,
-        regionName: 'Illinois',
-        timeZoneId: 459,
-        timeZone: 'America/Chicago',
-        utcDstOffset: '-05:00',
-        utcOffset: '-06:00'
-      }, {
-        cityId: 18,
-        cityName: 'Copenhagen',
-        countryId: 66,
-        countryName: 'Denmark',
-        regionId: 8,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 13,
-        cityName: 'Detroit',
-        countryId: 240,
-        countryName: 'United States',
-        regionId: 5,
-        regionName: 'Michigan',
-        timeZoneId: 440,
-        timeZone: 'America/New_York',
-        utcDstOffset: '-04:00',
-        utcOffset: '-05:00'
-      }, {
-        cityId: 26,
-        cityName: 'Gatwick',
-        countryId: 84,
-        countryName: 'United Kingdom',
-        regionId: 10,
-        regionName: 'UK-REGION',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 22,
-        cityName: 'Geneva',
-        countryId: 50,
-        countryName: 'Switzerland',
-        regionId: 7,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }]
-    };
+    this.setCountryList = function (stationsList) {
+      var countriesList = [];
+      angular.forEach(stationsList, function (station) {
+        var country = {
+          id: station.countryId,
+          countryName: station.countryName
+        };
+        countriesList.push(country);
+      });
 
-    this.setCityList = function(dataFromAPI) {
-      $scope.cityList = angular.copy(dataFromAPI.cities);
-    };
-
-    this.getCityList = function() {
-      // add factory API call here
-      this.setCityList(cityListJSON);
-    };
-
-    this.setCountryList = function(dataFromAPI) {
-      $scope.countryList = angular.copy(dataFromAPI.countries);
-    };
-
-    this.getCountryList = function() {
-      // add factory API call here
-      this.setCountryList(countryListJSON);
+      $scope.countryList = $filter('unique')(countriesList, 'id');
     };
 
     this.setStationList = function(dataFromAPI) {
@@ -415,12 +275,17 @@ angular.module('ts5App')
     };
 
     this.setGlobalStationList = function(dataFromAPI) {
-      $scope.globalStationList = angular.copy(dataFromAPI.response);
+      var response = angular.copy(dataFromAPI.response);
+
+      var distinctStations = $filter('unique')(response, 'stationId');
+
+      $scope.globalStationList = distinctStations;
+      $this.setCountryList(distinctStations);
+      $this.setCityList(distinctStations);
     };
 
     this.getGlobalStationList = function() {
-      // add factory API call here
-      this.setGlobalStationList(globalStationListJSON);
+      return stationsFactory.getStationsList().then($this.setGlobalStationList);
     };
 
     this.displayLoadingModal = function(loadingText) {
@@ -579,18 +444,24 @@ angular.module('ts5App')
     };
 
     this.filterByCountry = function(record) {
-      if (angular.isUndefined($scope.search) || angular.isUndefined($scope.search.countryId)) {
+      if (!$scope.search || !$scope.search.countryId) {
         return true;
       }
 
       return parseInt(record.countryId) === parseInt($scope.search.countryId);
     };
 
+    this.filterByCity = function(record) {
+      if (!$scope.search || !$scope.search.cityId || $scope.search.cityId.length === 0) {
+        return true;
+      }
+
+      return lodash.find($scope.search.cityId, { 'id': record.cityId });
+    };
+
     this.makeInitPromises = function() {
       return [
-        this.getGlobalStationList(),
-        this.getCountryList(),
-        this.getCityList()
+        this.getGlobalStationList()
       ];
     };
 
@@ -662,6 +533,10 @@ angular.module('ts5App')
       return $this.filterByCountry(record);
     };
 
+    $scope.filterByCity = function(record) {
+      return $this.filterByCity(record);
+    };
+
     $scope.isDateActive = function(date) {
       return $this.dateActive(date);
     };
@@ -673,6 +548,24 @@ angular.module('ts5App')
 
     $scope.$watch('allStationsSelected', function(selectAll) {
       $this.toggleAllStations(selectAll);
+    });
+
+    $scope.$watch('search.countryId', function(countryId) {
+      if(!$scope.search || !countryId) {
+        return;
+      }
+
+      $scope.search.stationId = lodash.filter($scope.search.stationId, { 'countryId': parseInt(countryId) });
+      $scope.search.cityId = lodash.filter($scope.search.cityId, { 'countryId': parseInt(countryId) });
+    });
+
+    $scope.$watch('search.cityId', function(cityId) {
+      if(!$scope.search || !cityId) {
+        return;
+      }
+
+      // TODO: filter properly
+      $scope.search.stationId = lodash.filter($scope.search.stationId, { 'cityId': parseInt(cityId) });
     });
 
   });
