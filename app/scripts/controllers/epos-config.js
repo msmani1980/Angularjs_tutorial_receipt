@@ -53,6 +53,13 @@ angular.module('ts5App')
       eposConfigFactory.getModule(module.id, $scope.selectedProductVersion.id).then($this.getModuleSuccess);
     };
 
+    $scope.reSelectCurrentModule = function () {
+      $this.showLoadingModal('Data reset');
+      $scope.resetValues();
+
+      eposConfigFactory.getModule($scope.selectedModule.id, $scope.selectedProductVersion.id).then($this.getModuleSuccess);
+    };
+
     $scope.selectProductVersion = function () {
       $scope.resetValues();
       $scope.selectedModule = null;
@@ -60,9 +67,7 @@ angular.module('ts5App')
     };
 
     $scope.cancel = function () {
-      $scope.resetValues();
-
-      $scope.selectedModule = null;
+      $scope.reSelectCurrentModule();
     };
 
     $scope.isUserAvailableForEditAndCreate = function () {
