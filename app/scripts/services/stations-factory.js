@@ -8,13 +8,12 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('stationsFactory', function (stationsService, globalMenuService) {
-    var getStationsList = function() {
-      var companyId = globalMenuService.company.get();
+  .factory('stationsFactory', function (stationsService) {
+    var getGlobalStationList = function() {
       return stationsService.getGlobalStationList();
     };
 
     return {
-      getStationsList: getStationsList
+      getGlobalStationList: getGlobalStationList
     };
   });
