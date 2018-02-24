@@ -41,9 +41,9 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       return globalRequestResource.getGlobalStationList(payload).$promise;
     };
 
-  var getStationList = function (companyId, offset) {
+  var getStationList = function (companyId, offset, customPayload) {
       var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-      var payload = { 
+      var payload = {
         id: companyId,
         startDate: nowDate,
         endDate: nowDate
@@ -53,7 +53,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       }
 
       actions.getStationList.headers.companyId = companyId;
-      return stationListRequestResource.getStationList(payload).$promise;
+      return stationListRequestResource.getStationList(customPayload || payload).$promise;
     };
 
   var getStation = function (stationId) {

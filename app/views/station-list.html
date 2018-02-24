@@ -170,7 +170,7 @@
 	    <thead>
 
 	      <tr>
-					<th>
+					<th ng-if="false">
 						<input type="checkbox" ng-model="allStationsSelected" />
 					</th>
 					<th>Station Code</th>
@@ -190,7 +190,7 @@
 
 	      <tr ng-repeat="station in stationList">
 
-					<td>
+					<td ng-if="false">
 						<input type="checkbox" ng-model="selectedStations[station.id]" />
 					</td>
 
@@ -210,17 +210,19 @@
 					<td>UTC {{station.utcDstOffset}}</td>
 
 	        <td width="200px">
-						<date-picker-field form="stationListForm" name="Start Date {{$index+1}}" required="true"
-							ng-model="formData.stations[$index].startDate" min-date="'+1d'"
+						<date-picker-field ng-if="false" form="stationListForm" name="Start Date {{$index+1}}" required="true"
+							ng-model="formData.stations[$index].startDate"
 							disable="isDateActive(station.startDate)">
 						</date-picker-field>
+            {{ station.startDate }}
 					</td>
 
 	        <td width="200px">
-						<date-picker-field form="stationListForm"  name="End Date {{$index+1}}" required="true"
+						<date-picker-field ng-if="false" form="stationListForm"  name="End Date {{$index+1}}" required="true"
 								ng-model="formData.stations[$index].endDate"
 								disable="isDateActive(station.endDate)">
 						</date-picker-field>
+            {{ station.endDate }}
 					</td>
 
 	        <td>

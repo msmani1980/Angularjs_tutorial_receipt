@@ -12,78 +12,6 @@ angular.module('ts5App')
 
     var $this = this;
 
-    var stationListJSON = {
-      response: [{
-        id: 114,
-        cityId: 18,
-        cityName: 'Copenhagen',
-        companyId: 403,
-        countryId: 66,
-        countryName: 'Denmark',
-        description: 'Copenhagen',
-        isCaterer: true,
-        endDate: '2015-12-31',
-        startDate: '2015-05-02',
-        regionId: 8,
-        regionName: 'All',
-        stationCode: 'CPH',
-        stationId: 23,
-        stationName: 'Copenhagen',
-        timezone: 'Europe/Madrid',
-        timezoneId: '86',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00',
-        companyStationRelationships: []
-      }, {
-        id: 115,
-        cityId: 20,
-        cityName: 'Herning',
-        companyId: 403,
-        countryId: 66,
-        countryName: 'Denmark',
-        description: 'Herning',
-        isCaterer: false,
-        endDate: '2015-05-30',
-        startDate: '2015-05-02',
-        regionId: 8,
-        regionName: 'All',
-        stationCode: 'EKHG',
-        stationId: 25,
-        stationName: 'Herning',
-        timezone: 'Europe/Madrid',
-        timezoneId: '86',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00',
-        companyStationRelationships: []
-      }, {
-        id: 116,
-        cityId: 19,
-        cityName: 'Vojens',
-        companyId: 403,
-        countryId: 66,
-        countryName: 'Denmark',
-        description: 'Vojens',
-        isCaterer: false,
-        endDate: '2016-03-01',
-        startDate: '2016-05-01',
-        regionId: 8,
-        regionName: 'All',
-        stationCode: 'SKS',
-        stationId: 24,
-        stationName: 'Vojens',
-        timezone: 'Europe/Madrid',
-        timezoneId: '86',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00',
-        companyStationRelationships: []
-      }],
-      meta: {
-        count: 5,
-        limit: 5,
-        start: 0
-      }
-    };
-
     this.setCityList = function(stationsList) {
       var citiesList = [];
       angular.forEach(stationsList, function (station) {
@@ -112,12 +40,18 @@ angular.module('ts5App')
     };
 
     this.setStationList = function(dataFromAPI) {
-      $scope.stationList = angular.copy(dataFromAPI.response);
+      $scope.stationList = angular.copy(dataFromAPI.response).map(function (station) {
+        station.startDate = dateUtility.formatDateForApp(station.startDate);
+        station.endDate = dateUtility.formatDateForApp(station.endDate);
+
+        return station;
+      });
     };
 
     this.getStationList = function() {
-      // add factory API call here
-      this.setStationList(stationListJSON);
+      this.displayLoadingModal('Retrieving Stations');
+
+      return stationsFactory.getStationList().then($this.setStationList).finally(this.hideLoadingModal);
     };
 
     this.setGlobalStationList = function(dataFromAPI) {
@@ -146,14 +80,8 @@ angular.module('ts5App')
       $scope.formData = {
         stations: []
       };
-      angular.forEach($scope.stationList, function(station) {
-        $scope.formData.stations.push({
-          id: station.id,
-          isCaterer: station.isCaterer,
-          startDate: dateUtility.formatDateForApp(station.startDate),
-          endDate: dateUtility.formatDateForApp(station.endDate)
-        });
-      });
+
+      $scope.formData.stations = angular.copy($scope.stationList);
     };
 
     this.dateActive = function(date) {
@@ -353,9 +281,7 @@ angular.module('ts5App')
     };
 
     $scope.searchRecords = function() {
-      $this.getStationList();
-      $this.setupFormDataObject();
-      $scope.hideSearch();
+      $this.getStationList().then($this.setupFormDataObject).finally($scope.hideSearch);
     };
 
     $scope.clearSearchFilters = function() {
