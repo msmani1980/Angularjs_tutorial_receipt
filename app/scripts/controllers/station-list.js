@@ -292,7 +292,7 @@ angular.module('ts5App')
         return true;
       }
 
-      return lodash.find($scope.search.cityId, { 'id': record.cityId });
+      return lodash.find($scope.search.cityId, { id: record.cityId });
     };
 
     this.makeInitPromises = function() {
@@ -357,7 +357,7 @@ angular.module('ts5App')
     };
 
     $scope.getStationList = function () {
-      if(!$scope.isSearch) {
+      if (!$scope.isSearch) {
         return;
       }
 
@@ -405,21 +405,21 @@ angular.module('ts5App')
     });
 
     $scope.$watch('search.countryId', function(countryId) {
-      if(!$scope.search || !countryId) {
+      if (!$scope.search || !countryId) {
         return;
       }
 
-      $scope.search.stationId = lodash.filter($scope.search.stationId, { 'countryId': parseInt(countryId.toString()) });
-      $scope.search.cityId = lodash.filter($scope.search.cityId, { 'countryId': parseInt(countryId.toString()) });
+      $scope.search.stationId = lodash.filter($scope.search.stationId, { countryId: parseInt(countryId.toString()) });
+      $scope.search.cityId = lodash.filter($scope.search.cityId, { countryId: parseInt(countryId.toString()) });
     });
 
     $scope.$watch('search.cityId', function(cityId) {
-      if(!$scope.search || !cityId) {
+      if (!$scope.search || !cityId) {
         return;
       }
 
       $scope.search.stationId = lodash.filter($scope.search.stationId, function (station) {
-        return lodash.filter(cityId, { 'id': parseInt(station.cityId) }).length > 0;
+        return lodash.filter(cityId, { id: parseInt(station.cityId) }).length > 0;
       });
     });
 

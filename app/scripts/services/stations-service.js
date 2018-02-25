@@ -48,9 +48,11 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
         startDate: nowDate,
         endDate: nowDate
       };
+      
       if (offset) {
         payload.offset = offset;
       }
+
       if (customPayload) {
         angular.extend(customPayload, {
           id: companyId
