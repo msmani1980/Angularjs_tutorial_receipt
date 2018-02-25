@@ -269,6 +269,16 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        title: 'Company Stations',
+        menuItems: [{
+          name: 'Manage Company Stations',
+          route: '/#/station-list',
+          icon: 'icon-menu-assignment',
+          className: 'dashboard-stations',
+          package: 'COMPANYSTATION',
+          role: 'COMPANYSTATION'
+        }]
+      }, {
         title: 'Receipt Rule',
         menuItems: [{
           name: 'Manage Rules',

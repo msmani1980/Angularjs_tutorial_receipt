@@ -51,6 +51,11 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       if (offset) {
         payload.offset = offset;
       }
+      if (customPayload) {
+        angular.extend(customPayload, {
+          id: companyId
+        });
+      }
 
       actions.getStationList.headers.companyId = companyId;
       return stationListRequestResource.getStationList(customPayload || payload).$promise;

@@ -12,6 +12,16 @@ angular.module('ts5App')
 
     var $this = this;
 
+    this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
+
+    $scope.loadingBarVisible = false;
+    $scope.isSearch = false;
+    $scope.stationList = [];
+
     this.setCityList = function(stationsList) {
       var citiesList = [];
       angular.forEach(stationsList, function (station) {
@@ -40,18 +50,56 @@ angular.module('ts5App')
     };
 
     this.setStationList = function(dataFromAPI) {
-      $scope.stationList = angular.copy(dataFromAPI.response).map(function (station) {
+      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+
+      $scope.stationList = $scope.stationList.concat(angular.copy(dataFromAPI.response).map(function (station) {
         station.startDate = dateUtility.formatDateForApp(station.startDate);
         station.endDate = dateUtility.formatDateForApp(station.endDate);
 
         return station;
-      });
+      }));
+    };
+
+    this.mapStationIdForSearchPayload = function(payload) {
+      return payload.stationId.map(function(stationId) {
+        return stationId.id;
+      }).join(',');
+    };
+
+    this.mapCityIdForSearchPayload = function(payload) {
+      return payload.cityId.map(function(cityId) {
+        return cityId.id;
+      }).join(',');
+    };
+
+    this.buildSearchPayload = function() {
+      var search = $scope.search;
+
+      var payload = {
+        countryId: search.countryId,
+        startDate: (search.startDate) ? dateUtility.formatDateForAPI(search.startDate) : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
+        endDate: (search.endDate) ? dateUtility.formatDateForAPI(search.endDate) : null,
+        stationIds: (search.stationId && search.stationId.length > 0) ? $this.mapStationIdForSearchPayload(search) : null,
+        cityIds: (search.cityId && search.cityId.length > 0) ? $this.mapCityIdForSearchPayload(search) : null,
+        limit: $this.meta.limit,
+        offset: $this.meta.offset
+      };
+
+      return payload;
     };
 
     this.getStationList = function() {
-      this.displayLoadingModal('Retrieving Stations');
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
 
-      return stationsFactory.getStationList().then($this.setStationList).finally(this.hideLoadingModal);
+      this.showLoadingBar();
+
+      var payload = $this.buildSearchPayload();
+
+      $this.meta.offset += $this.meta.limit;
+
+      return stationsFactory.getStationList($this.meta.offset, payload).then($this.setStationList).finally(this.hideLoadingBar);
     };
 
     this.setGlobalStationList = function(dataFromAPI) {
@@ -66,6 +114,20 @@ angular.module('ts5App')
 
     this.getGlobalStationList = function() {
       return stationsFactory.getGlobalStationList().then($this.setGlobalStationList);
+    };
+
+    this.showLoadingBar = function() {
+      if (!$scope.isSearch) {
+        return;
+      }
+
+      $scope.loadingBarVisible = true;
+      angular.element('.loading-more').show();
+    };
+
+    this.hideLoadingBar = function() {
+      $scope.loadingBarVisible = false;
+      angular.element('.loading-more').hide();
     };
 
     this.displayLoadingModal = function(loadingText) {
@@ -244,6 +306,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      this.hideLoadingBar();
       this.displayLoadingModal('Retrieving Station information');
       var promises = this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
@@ -281,12 +344,31 @@ angular.module('ts5App')
     };
 
     $scope.searchRecords = function() {
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+
+      $scope.isSearch = true;
+      $scope.stationList = [];
+
       $this.getStationList().then($this.setupFormDataObject).finally($scope.hideSearch);
+    };
+
+    $scope.getStationList = function () {
+      if(!$scope.isSearch) {
+        return;
+      }
+
+      return $this.getStationList().then($this.setupFormDataObject).finally($scope.hideSearch);
     };
 
     $scope.clearSearchFilters = function() {
       $scope.search = {};
       $scope.stationList = [];
+      $scope.isSearch = false;
+      $scope.loadingBarVisible = false;
     };
 
     $scope.showClearButton = function() {
