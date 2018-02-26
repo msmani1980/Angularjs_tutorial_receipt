@@ -296,7 +296,31 @@ angular.module('ts5App')
     };
 
     this.buildExportParameters = function() {
+      var search = $scope.search;
 
+      var parameters = '';
+
+      if (search.countryId) {
+        parameters += '&countryId=' + search.countryId;
+      }
+
+      if (search.startDate) {
+        parameters += '&startDate=' + (search.startDate) ? dateUtility.formatDateForAPI(search.startDate) : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      }
+
+      if (search.endDate) {
+        parameters += '&endDate=' + (search.endDate) ? dateUtility.formatDateForAPI(search.endDate) : null;
+      }
+
+      if (search.stationIds && search.stationId.length > 0) {
+        parameters += '&stationIds=' + (search.stationId && search.stationId.length > 0) ? $this.mapStationIdForSearchPayload(search) : null;
+      }
+
+      if (search.cityIds && search.cityIds.length > 0) {
+        parameters += '&cityIds=' + (search.cityId && search.cityId.length > 0) ? $this.mapCityIdForSearchPayload(search) : null;
+      }
+
+      return parameters;
     };
 
     this.makeInitPromises = function() {
