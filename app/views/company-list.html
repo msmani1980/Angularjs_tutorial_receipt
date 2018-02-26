@@ -1,11 +1,11 @@
-<div class="fluid-container">
+<div class="module-container">
 
   <div class="list-controls">
     <h1>{{viewName}}</h1>
 
     <div class="row">
       <div class="col-xs-6">
-        <a href="/#/company-create" class="btn btn-primary"><span class="fa fa-plus"></span> Create Company</a>
+        <a href="/#/company-create" ng-show="isCRUD" class="btn btn-primary"><span class="fa fa-plus"></span> Create Company</a>
       </div>
 
       <div class="col-xs-6 text-right">
@@ -87,7 +87,7 @@
                 ng-click="viewCompany(company)">
           <i class="fa fa-file" aria-hidden="true"></i>
         </button>
-        <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company"
+        <button type="button" class="btn btn-primary btn-xs" ng-show="isCRUD" aria-label="Edit Company"
                 ng-click="editCompany(company)">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
@@ -102,3 +102,5 @@
   <p ng-if="companyList.length > 0" class="record-count small text-center">Showing {{companyList.length}} records</p>
   <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>
+
+<dynamic-left-nav></dynamic-left-nav>

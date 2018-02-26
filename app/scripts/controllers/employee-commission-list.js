@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('EmployeeCommissionListCtrl', function($scope, employeeCommissionFactory, dateUtility, messageService,
-    $location, $filter, lodash) {
+    $location, $filter, lodash, accessService) {
 
     $scope.viewName = 'Employee Commission';
     $scope.search = {
@@ -236,6 +236,7 @@ angular.module('ts5App')
     });
 
     function init() {
+      $scope.isCRUD = accessService.crudAccessGranted('EMLOYEECOMMISSION', 'EMLOYEECOMMISSION', 'CRUDEC');
       getItemCategories();
     }
 

@@ -5,7 +5,7 @@
                 <h2 class="view-name">{{viewName}}</h2>
             </div>
             <div class="col-xs-6 text-right">
-              <button ng-if="isFormValidForAddNewExchangeRate()" class="btn btn-primary" tabindex="-1" ng-click="addNewExchangeRate()" style="margin-right: 5px"><span class="fa fa-plus"></span><span class="hidden-xs"> Add Exchange Rate</span></button>
+              <button ng-if="isFormValidForAddNewExchangeRate()" class="btn btn-primary" tabindex="-1" ng-show="isCRUD" ng-click="addNewExchangeRate()" style="margin-right: 5px"><span class="fa fa-plus"></span><span class="hidden-xs"> Add Exchange Rate</span></button>
               <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
                       aria-expanded="false"
                       aria-controls="search-collapse">
@@ -80,7 +80,7 @@
                             <th width="20%">EasyPay Denomination</th>
                             <th>Exchange Rate*</th>
                             <th colspan="2">Start/End Date*</th>
-                            <th width="8%">Actions</th>
+                            <th ng-show="isCRUD" width="8%">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,12 +117,12 @@
 				                </date-picker-field>
 				              </div>
 				              <div class="col-xs-12 col-sm-6">
-				                <date-picker-field  disable="isPastDate(exchangeRate)" form="form" end-current-effective="isCurrentEffectiveDate(exchangeRate)"
+				                <date-picker-field  disable="!isCRUD || isPastDate(exchangeRate)" form="form" end-current-effective="isCurrentEffectiveDate(exchangeRate)"
 				                  name="EffectiveTo" min-date="minDate" required="true"
 				                  ng-model="exchangeRate.endDate">
 				                </date-picker-field>
                             </td>
-                            <td>
+                            <td ng-show="isCRUD">
                               <button class="btn btn-warning btn-xs" ng-click="duplicateExchangeRate(index, exchangeRate)" ng-if="isExchangeRateAvailableForClone(exchangeRate)">
                                   <i class="fa fa-copy"></i>
                               </button>

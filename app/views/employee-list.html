@@ -10,8 +10,8 @@
   <div class="employee-data-list">
     <div class="row">
       <div class="col-xs-12 text-left">
-        <a href="#/employee/create" class="btn btn-primary">+ <span class="hidden-xs">Create Employee</span></a>
-        <excel-upload type="employee" class="excel-upload"></excel-upload>
+        <a href="#/employee/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Employee</span></a>
+        <excel-upload type="employee" ng-show="isCRUD" class="excel-upload"></excel-upload>
 
         <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
@@ -130,13 +130,13 @@
             <button class="btn btn-info btn-xs" ng-click="redirectToEmployee(employee.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="redirectToEmployee(employee.id, 'edit')" ng-show="isEmployeeEditable(employee)" tabindex="0">
+            <button class="btn btn-primary btn-xs" ng-click="redirectToEmployee(employee.id, 'edit')" ng-show="isCRUD && isEmployeeEditable(employee)" tabindex="0">
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-danger btn-xs"
                     ng-click="deleteRecordDialog(employees[$index], ['employeeIdentifier', 'lastName', 'firstName', 'countryName', 'stationCode', 'employeeId'])"
                     tabindex="0"
-                    ng-show="showDeleteButton(employee.startDate)">
+                    ng-show="isCRUD && showDeleteButton(employee.startDate)">
               <i class="fa fa-trash"></i>
             </button>
           </td>

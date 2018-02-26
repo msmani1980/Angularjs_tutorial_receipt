@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('DiscountListCtrl', function($scope, $location, discountFactory, dateUtility, payloadUtility, lodash) {
+  .controller('DiscountListCtrl', function($scope, $location, discountFactory, dateUtility, payloadUtility, lodash, accessService) {
 
     var $this = this;
     $scope.viewName = 'Discount';
@@ -142,6 +142,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('DISCOUNT', 'DISCOUNT', 'CRUDDSCNT');
       $this.getDiscountTypesList();
     };
 
