@@ -298,26 +298,22 @@ angular.module('ts5App')
     this.buildExportParameters = function() {
       var search = $scope.search;
 
-      var parameters = '';
+      var parameters = '&startDate=' + (search.startDate ? dateUtility.formatDateForAPI(search.startDate) : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()));
 
       if (search.countryId) {
-        parameters += '&countryId=' + search.countryId;
-      }
-
-      if (search.startDate) {
-        parameters += '&startDate=' + (search.startDate) ? dateUtility.formatDateForAPI(search.startDate) : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+        parameters = parameters + '&countryId=' + search.countryId;
       }
 
       if (search.endDate) {
-        parameters += '&endDate=' + (search.endDate) ? dateUtility.formatDateForAPI(search.endDate) : null;
+        parameters = parameters + '&endDate=' + dateUtility.formatDateForAPI(search.endDate);
       }
 
-      if (search.stationIds && search.stationId.length > 0) {
-        parameters += '&stationIds=' + (search.stationId && search.stationId.length > 0) ? $this.mapStationIdForSearchPayload(search) : null;
+      if (search.stationId && search.stationId.length > 0) {
+        parameters = parameters + '&stationIds=' + $this.mapStationIdForSearchPayload(search);
       }
 
-      if (search.cityIds && search.cityIds.length > 0) {
-        parameters += '&cityIds=' + (search.cityId && search.cityId.length > 0) ? $this.mapCityIdForSearchPayload(search) : null;
+      if (search.cityId && search.cityId.length > 0) {
+        parameters = parameters + '&cityIds=' +$this.mapCityIdForSearchPayload(search);
       }
 
       return parameters;
