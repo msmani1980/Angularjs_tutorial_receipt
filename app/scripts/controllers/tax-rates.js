@@ -539,6 +539,7 @@ angular.module('ts5App')
     this.editSuccess = function () {
       $this.hideLoadingModal();
       var id = angular.copy($scope.taxRateSaved);
+      $this.getTaxRateById(id);
       messageService.display('success', 'Successfully Saved <b>Tax Rate ID: </b>' + id);
       $scope.taxRateSaved = [];
       $this.getCompanyMasterTaxRatesList();
@@ -714,10 +715,26 @@ angular.module('ts5App')
       });
     };
 
+    this.setTaxRateById = function (dataFromAPI) {
+      angular.forEach($scope.companyTaxRatesList, function (taxRate) {
+        if (taxRate.id === dataFromAPI.id) {
+          taxRate.createdOn = dataFromAPI.createdOn;
+          taxRate.createdByPerson = dataFromAPI.createdByPerson;
+          taxRate.updatedOn = dataFromAPI.updatedOn;
+          taxRate.updatedByPerson = dataFromAPI.updatedByPerson;
+        }
+      });
+    };
+
+    this.getTaxRateById = function (id) {
+      taxRatesFactory.getCompanyTaxRate(id).then($this.setTaxRateById);
+    };
+
     this.createNewTaxRateSuccess = function (response) {
       var id = response[0].id;
       $this.getCompanyMasterTaxRatesList();
       $this.setIdOnTaxRateObjectOnSuccess(id);
+      $this.getTaxRateById(id);
       $this.hideLoadingModal();
       messageService.display('success', 'Successfully Created <b>Tax Rate ID: </b>' + id);
       $scope.taxRateToCreate = [];
@@ -925,6 +942,10 @@ angular.module('ts5App')
     };
 
     $scope.getUpdatedOn = function (taxRate) {
+      if (!taxRate.createdOn) {
+        return '';
+      }
+
       return taxRate.updatedOn ? dateUtility.formatTimestampForApp(taxRate.updatedOn) : dateUtility.formatTimestampForApp(taxRate.createdOn);
     };
 
