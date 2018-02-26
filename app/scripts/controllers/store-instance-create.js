@@ -1168,7 +1168,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.removeAllDataForInstances = function () {
-      return ($scope.existingSeals || $scope.itemsToDelete) && $scope.userConfirmedDataLoss && !this.isActionState('redispatch');;
+      return ($scope.existingSeals || $scope.itemsToDelete) && $scope.userConfirmedDataLoss && !this.isActionState('redispatch');
     };
 
     this.editRedispatchedStoreInstance = function (saveAndExit) {
