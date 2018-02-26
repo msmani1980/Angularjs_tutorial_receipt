@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationListCtrl', function($scope, dateUtility, messageService, stationsFactory, $q, $filter, lodash) {
+  .controller('StationListCtrl', function($scope, dateUtility, messageService, stationsFactory, $q, $filter, lodash, identityAccessFactory, globalMenuService, ENV) {
 
     var $this = this;
 
@@ -295,6 +295,10 @@ angular.module('ts5App')
       return lodash.find($scope.search.cityId, { id: record.cityId });
     };
 
+    this.buildExportParameters = function() {
+
+    };
+
     this.makeInitPromises = function() {
       return [
         this.getGlobalStationList()
@@ -393,6 +397,14 @@ angular.module('ts5App')
 
     $scope.isDateActive = function(date) {
       return $this.dateActive(date);
+    };
+
+    $scope.exportTo = function(type) {
+      var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
+      var companyId = globalMenuService.company.get();
+      var exportParameters = $this.buildExportParameters();
+
+      return ENV.apiUrl + '/rsvr-pdf/api/stations/' + companyId + '/' + type + '?sessionToken=' + sessionToken + exportParameters;
     };
 
     $scope.$watch('dateRange', function(current) {
