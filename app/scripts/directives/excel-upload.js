@@ -77,6 +77,8 @@ angular.module('ts5App')
         $scope.templateName = 'scheduleUpload';
       } else if ($scope.type === 'employee') {
         $scope.templateName = 'employeeUpload';
+      } else if ($scope.type === 'stations') {
+        $scope.templateName = 'stationUpload';
       }
     }
 

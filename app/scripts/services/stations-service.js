@@ -7,7 +7,7 @@
  * # stationsService
  * Service in the ts5App.
  */
-angular.module('ts5App').service('stationsService', function ($resource, ENV, dateUtility) {
+angular.module('ts5App').service('stationsService', function ($resource, ENV, dateUtility, Upload) {
 
   var globalRequestURL = ENV.apiUrl + '/rsvr/api/company-station-globals';
   var stationListRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/stations';
@@ -38,39 +38,48 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
   var stationRequestResource = $resource(stationRequestURL, stationRequestParameters, actions);
 
   var getGlobalStationList = function (payload) {
-      return globalRequestResource.getGlobalStationList(payload).$promise;
-    };
+    return globalRequestResource.getGlobalStationList(payload).$promise;
+  };
 
   var getStationList = function (companyId, offset, customPayload) {
-      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
-      var payload = {
-        id: companyId,
-        startDate: nowDate,
-        endDate: nowDate
-      };
-
-      if (offset) {
-        payload.offset = offset;
-      }
-
-      if (customPayload) {
-        angular.extend(customPayload, {
-          id: companyId
-        });
-      }
-
-      actions.getStationList.headers.companyId = companyId;
-      return stationListRequestResource.getStationList(customPayload || payload).$promise;
+    var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+    var payload = {
+      id: companyId,
+      startDate: nowDate,
+      endDate: nowDate
     };
+
+    if (offset) {
+      payload.offset = offset;
+    }
+
+    if (customPayload) {
+      angular.extend(customPayload, {
+        id: companyId
+      });
+    }
+
+    actions.getStationList.headers.companyId = companyId;
+    return stationListRequestResource.getStationList(customPayload || payload).$promise;
+  };
 
   var getStation = function (stationId) {
-      return stationRequestResource.getStation({ stationId: stationId }).$promise;
-    };
+    return stationRequestResource.getStation({ stationId: stationId }).$promise;
+  };
+
+  var importFromExcel = function (companyId, file) {
+    var uploadRequestURL = ENV.apiUrl + '/rsvr-upload/companies/' + companyId + '/file/station';
+    return Upload.upload({
+      url: uploadRequestURL,
+      file: file
+    });
+  };
 
   return {
-      getGlobalStationList: getGlobalStationList,
-      getStationList: getStationList,
-      getStation: getStation
-    };
+    getGlobalStationList: getGlobalStationList,
+    getStationList: getStationList,
+    getStation: getStation,
+    importFromExcel: importFromExcel
+  };
 
 });
