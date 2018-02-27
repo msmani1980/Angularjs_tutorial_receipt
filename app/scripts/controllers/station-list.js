@@ -347,7 +347,7 @@ angular.module('ts5App')
       }
 
       if (search.cityId && search.cityId.length > 0) {
-        parameters = parameters + '&cityIds=' +$this.mapCityIdForSearchPayload(search);
+        parameters = parameters + '&cityIds=' + $this.mapCityIdForSearchPayload(search);
       }
 
       return parameters;
