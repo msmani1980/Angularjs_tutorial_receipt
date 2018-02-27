@@ -31,6 +31,9 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       },
       getStation: {
         method: 'GET'
+      },
+      bulkUpdateStation: {
+        method: 'PUT'
       }
     };
   var globalRequestResource = $resource(globalRequestURL, null, actions);
@@ -67,6 +70,10 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     return stationRequestResource.getStation({ stationId: stationId }).$promise;
   };
 
+  var bulkUpdateStation = function (payload) {
+    return stationRequestResource.bulkUpdateStation(payload).$promise;
+  };
+
   var importFromExcel = function (companyId, file) {
     var uploadRequestURL = ENV.apiUrl + '/rsvr-upload/companies/' + companyId + '/file/station';
     return Upload.upload({
@@ -79,6 +86,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     getGlobalStationList: getGlobalStationList,
     getStationList: getStationList,
     getStation: getStation,
+    bulkUpdateStation: bulkUpdateStation,
     importFromExcel: importFromExcel
   };
 

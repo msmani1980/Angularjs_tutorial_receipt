@@ -18,8 +18,13 @@ angular.module('ts5App')
       return stationsService.getStationList(companyId, offset, payload);
     };
 
+    var bulkUpdateStation = function(payload) {
+      return stationsService.bulkUpdateStation(payload);
+    };
+
     return {
       getGlobalStationList: getGlobalStationList,
-      getStationList: getStationList
+      getStationList: getStationList,
+      bulkUpdateStation: bulkUpdateStation
     };
   });
