@@ -192,9 +192,11 @@ angular.module('ts5App')
     
     this.showResponseError = function(response) {
       var errorVar = response.data;
+      $scope.isSearchLoading = false;
       if (errorVar.indexOf('not a valid') !== -1) {
-        hideLoadingBar();        
+        hideLoadingBar();
       } else {
+        hideLoadingBar();
         $scope.displayError = true;
         $scope.errorResponse = errorVar;  
       }
