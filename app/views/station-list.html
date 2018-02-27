@@ -162,7 +162,7 @@
 
 					<div class="panel-footer">
 
-						<button ng-show="canSave()" class="btn btn-success" type="button" ng-click="submitForm()">
+						<button ng-show="canSave()" class="btn btn-success" type="button" ng-click="submitForm()" ng-disabled="!dateRange.startDate || !dateRange.endDate">
 							<i class="fa fa-check-square-o"></i> Save Stations
 						</button>
 
@@ -182,7 +182,7 @@
         <thead>
 
           <tr>
-            <th ng-if="false">
+            <th>
               <input type="checkbox" ng-model="allStationsSelected" />
             </th>
             <th>Station Code</th>
@@ -202,7 +202,7 @@
 
           <tr ng-repeat="station in stationList">
 
-            <td ng-if="false">
+            <td>
               <input type="checkbox" ng-model="selectedStations[station.id]" />
             </td>
 

@@ -205,7 +205,19 @@ angular.module('ts5App')
     };
 
     this.saveStations = function() {
-      var payload = this.generatePayload();
+      var payload = {
+        stations: [],
+        startDate: dateUtility.formatDateForAPI($scope.dateRange.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.dateRange.endDate)
+      };
+
+      angular.forEach($scope.selectedStations, function(selected, stationId) {
+        if (selected) {
+          payload.stations.push(stationId);
+        }
+      });
+
+      console.log(payload)
 
       // make service call here
       this.saveStationsSuccess(payload);
