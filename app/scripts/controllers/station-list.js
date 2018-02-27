@@ -200,11 +200,22 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
     };
 
+    this.showToast = function(className, type, message) {
+      messageService.display(className, '<strong>' + type + '</strong>: ' + message);
+    };
+
     this.saveStationsSuccess = function() {
       this.showSuccessMessage('Selected stations have been updated!');
     };
 
+    this.showSaveErrors = function(dataFromAPI) {
+      $this.hideLoadingModal();
+      $this.errorHandler(dataFromAPI);
+    };
+
     this.saveStations = function() {
+      this.displayLoadingModal('Saving stations');
+
       var payload = {
         stations: [],
         startDate: dateUtility.formatDateForAPI($scope.dateRange.startDate),
@@ -217,10 +228,7 @@ angular.module('ts5App')
         }
       });
 
-      console.log(payload)
-
-      // make service call here
-      this.saveStationsSuccess(payload);
+      stationsFactory.bulkUpdateStation(payload).then(this.saveStationsSuccess, this.showSaveErrors);
     };
 
     this.submitForm = function() {
