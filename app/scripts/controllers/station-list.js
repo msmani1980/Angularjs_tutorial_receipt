@@ -330,6 +330,7 @@ angular.module('ts5App')
     };
 
     this.buildExportParameters = function() {
+      // jshint ignore: start
       var search = $scope.search;
 
       var parameters = '&startDate=' + (search.startDate ? dateUtility.formatDateForAPI(search.startDate) : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()));
@@ -351,6 +352,18 @@ angular.module('ts5App')
       }
 
       return parameters;
+
+      // jshint ignore: end
+    };
+
+    this.removeStationSuccess = function (stationId) {
+      lodash.remove($scope.companyStationList, function (station) {
+        return station.id === stationId;
+      });
+    };
+
+    this.removeStationFailure = function () {
+      $this.showToast('danger', 'Station', 'Error deleting station!');
     };
 
     this.makeInitPromises = function() {
@@ -455,6 +468,12 @@ angular.module('ts5App')
 
     $scope.isDateActive = function(date) {
       return $this.dateActive(date);
+    };
+
+    $scope.removeRecord = function (stationId) {
+      $this.displayLoadingModal('Removing Station id');
+
+      stationsFactory.removeStation(stationId).then($this.removeStationSuccess(stationId), $this.removeStationFailure).finally($this.hideLoadingModal);
     };
 
     $scope.exportTo = function(type) {

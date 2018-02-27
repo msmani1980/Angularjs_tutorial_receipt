@@ -19,12 +19,21 @@ angular.module('ts5App')
     };
 
     var bulkUpdateStation = function(payload) {
-      return stationsService.bulkUpdateStation(payload);
+      var companyId = globalMenuService.company.get();
+
+      return stationsService.bulkUpdateStation(companyId, payload);
+    };
+
+    var removeStation = function (id) {
+      var companyId = globalMenuService.company.get();
+
+      return stationsService.removeStation(companyId, id);
     };
 
     return {
       getGlobalStationList: getGlobalStationList,
       getStationList: getStationList,
+      removeStation: removeStation,
       bulkUpdateStation: bulkUpdateStation
     };
   });

@@ -237,18 +237,19 @@
 
             <td>
 
-              <a class="btn btn-info btn-xs" ng-click="saveStation($index)" ng-hide="isDateActive(station.endDate)" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
-                <i class="fa fa-save"></i>
-              </a>
-
-              <a class="btn btn-info btn-xs" ng-href="#/station-view/{{station.id}}" ng-show="isDateActive(station.endDate)">
+              <a class="btn btn-info btn-xs" ng-href="#/station-view/{{station.id}}">
                 <i class="fa fa-file"></i>
               </a>
+
               <a class="btn btn-primary btn-xs" ng-href="#/station-edit/{{station.id}}" ng-hide="isDateActive(station.endDate)">
                 <i class="fa fa-pencil"></i>
               </a>
 
-              <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(station.id)" ng-hide="isDateActive(station.startDate) || isDateActive(station.endDate)">
+              <a class="btn btn-info btn-xs" ng-click="saveStation($index)" ng-hide="isDateActive(station.endDate)" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
+                <i class="fa fa-save"></i>
+              </a>
+
+              <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(9999999)" ng-hide="isDateActive(station.startDate) || isDateActive(station.endDate)">
                 <i class="fa fa-trash"></i>
               </button>
 

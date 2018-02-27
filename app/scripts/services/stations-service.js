@@ -10,7 +10,7 @@
 angular.module('ts5App').service('stationsService', function ($resource, ENV, dateUtility, Upload) {
 
   var globalRequestURL = ENV.apiUrl + '/rsvr/api/company-station-globals';
-  var stationListRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/stations';
+  var stationListRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/stations/:stationId';
   var stationRequestURL = ENV.apiUrl + '/rsvr/api/stations/:stationId';
 
   var stationListRequestParameters = {
@@ -31,6 +31,9 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       },
       getStation: {
         method: 'GET'
+      },
+      removeStation: {
+        method: 'DELETE'
       },
       bulkUpdateStation: {
         method: 'PUT'
@@ -70,8 +73,14 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     return stationRequestResource.getStation({ stationId: stationId }).$promise;
   };
 
-  var bulkUpdateStation = function (payload) {
-    return stationRequestResource.bulkUpdateStation(payload).$promise;
+  var bulkUpdateStation = function (companyId, payload) {
+    payload.id = companyId;
+
+    return stationListRequestResource.bulkUpdateStation(payload).$promise;
+  };
+
+  var removeStation = function (companyId, id) {
+    return stationListRequestResource.removeStation({ stationId: id, id: companyId }).$promise;
   };
 
   var importFromExcel = function (companyId, file) {
@@ -87,6 +96,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     getStationList: getStationList,
     getStation: getStation,
     bulkUpdateStation: bulkUpdateStation,
+    removeStation: removeStation,
     importFromExcel: importFromExcel
   };
 
