@@ -237,6 +237,20 @@ angular.module('ts5App')
       }
     };
 
+    this.saveStation = function(index) {
+      var station = $scope.formData.stations[index];
+
+      this.displayLoadingModal('Saving stations');
+
+      var payload = {
+        stations: [station.id],
+        startDate: dateUtility.formatDateForAPI(station.startDate),
+        endDate: dateUtility.formatDateForAPI(station.endDate)
+      };
+
+      stationsFactory.bulkUpdateStation(payload).then(this.saveStationsSuccess, this.showSaveErrors);
+    };
+
     this.getStationInFormData = function(stationId) {
       return $scope.formData.stations.filter(function(station) {
         return stationId === station.id;
@@ -425,6 +439,10 @@ angular.module('ts5App')
 
     $scope.submitForm = function() {
       return $this.submitForm();
+    };
+
+    $scope.saveStation = function(index) {
+      $this.saveStation(index);
     };
 
     $scope.filterByCountry = function(record) {

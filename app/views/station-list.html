@@ -222,22 +222,24 @@
             <td>UTC {{station.utcDstOffset}}</td>
 
             <td width="200px">
-              <date-picker-field ng-if="false" form="stationListForm" name="Start Date {{$index+1}}" required="true"
+              <date-picker-field form="stationListForm" name="Start Date {{$index+1}}" required="true"
                 ng-model="formData.stations[$index].startDate"
                 disable="isDateActive(station.startDate)">
               </date-picker-field>
-              {{ station.startDate }}
             </td>
 
             <td width="200px">
-              <date-picker-field ng-if="false" form="stationListForm"  name="End Date {{$index+1}}" required="true"
+              <date-picker-field form="stationListForm"  name="End Date {{$index+1}}" required="true"
                   ng-model="formData.stations[$index].endDate"
                   disable="isDateActive(station.endDate)">
               </date-picker-field>
-              {{ station.endDate }}
             </td>
 
             <td>
+
+              <a class="btn btn-info btn-xs" ng-click="saveStation($index)" ng-hide="isDateActive(station.endDate)" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
+                <i class="fa fa-save"></i>
+              </a>
 
               <a class="btn btn-info btn-xs" ng-href="#/station-view/{{station.id}}" ng-show="isDateActive(station.endDate)">
                 <i class="fa fa-file"></i>
