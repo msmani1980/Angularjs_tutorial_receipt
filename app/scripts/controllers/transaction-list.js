@@ -288,6 +288,7 @@ angular.module('ts5App')
     }
 
     function setDefaultMetaPayload() {
+      $scope.isSearch = true;
       $this.meta = {
         limit: 100,
         offset: 0

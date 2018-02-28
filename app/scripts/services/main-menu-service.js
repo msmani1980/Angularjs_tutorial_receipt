@@ -19,7 +19,11 @@ angular.module('ts5App')
           icon: 'icon-manage-company',
           className: 'dashboard-manageCompanies',
           package: 'COMPANY',
-          role: 'COMPANY'
+          role: 'COMPANY',
+          permissions: [{
+            apiName: '/api/companies',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Company',
           route: '/#/company-create',
@@ -40,21 +44,31 @@ angular.module('ts5App')
           icon: 'icon-manage-retail-category',
           className: 'dashboard-currencySetup',
           package: 'CURRENCYEXCHNG',
-          role: 'COMPANYCURRENCY'
+          role: 'COMPANYCURRENCY',
+          permissions: [{
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'ePOS Exchange Rate',
           route: '/#/company-exchange-rate-edit',
           icon: 'icon-manage-transactions',
           className: 'dashboard-companyExchangeRateEdit',
           package: 'CURRENCYEXCHNG',
-          role: 'EPOSEXCHNG'
+          role: 'EPOSEXCHNG',
+          permissions: [{
+            apiName: '/api/currencies',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Report Exchange Rate',
           route: '/#/report-exchange-rate',
           icon: 'icon-manage-transactions',
           className: 'dashboard-companyExchangeRateEdit',
           package: 'CURRENCYEXCHNG',
-          role: 'REPORTEXCHANGE'
+          role: 'REPORTEXCHANGE',
+          permissions: [{
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Retail Item Management',
@@ -64,7 +78,10 @@ angular.module('ts5App')
           icon: 'icon-manage-retail-item',
           className: 'dashboard-managemenuItems',
           package: 'RETAIL',
-          role: 'RETAILITEM'
+          role: 'RETAILITEM',
+          permissions: [{
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Item',
           route: '/#/item-create',
@@ -82,7 +99,10 @@ angular.module('ts5App')
           icon: 'icon-manage-retail-category',
           className: 'dashboard-manageItemCategories',
           package: 'RETAIL',
-          role: 'RETAILITEMCATEGORY'
+          role: 'RETAILITEMCATEGORY',
+          permissions: [{
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Discount Management',
@@ -92,7 +112,11 @@ angular.module('ts5App')
           icon: 'icon-manage-discount',
           className: 'dashboard-manageDiscount',
           package: 'DISCOUNT',
-          role: 'DISCOUNT'
+          role: 'DISCOUNT',
+          permissions: [{
+            apiName: '/api/company-discounts',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Discount',
           route: '/#/discounts/create',
@@ -113,7 +137,10 @@ angular.module('ts5App')
           icon: 'icon-manage-schedule',
           className: 'dashboard-manageSchedules',
           package: 'SCHEDULE',
-          role: 'SCHEDULE'
+          role: 'SCHEDULE',
+          permissions: [{
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Employee Management',
@@ -123,14 +150,20 @@ angular.module('ts5App')
           icon: 'icon-manage-menu',
           className: 'dashboard-manageEmployees',
           package: 'EMPLOYEE',
-          role: 'EMPLOYEE'
+          role: 'EMPLOYEE',
+          permissions: [{
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Employee',
           route: '/#/employee/create',
           icon: 'icon-create-menu',
           className: 'dashboard-createEmployee',
           package: 'EMPLOYEE',
-          role: 'EMPLOYEE'
+          role: 'EMPLOYEE',
+          permissions: [{
+            permissionCodes: ['C']
+          }]
         }]
       }, {
         title: 'Employee Messages',
@@ -140,14 +173,22 @@ angular.module('ts5App')
           icon: 'icon-employee-messages',
           className: 'dashboard-manageEmployeeMessages',
           package: 'EMPLOYEEMSG',
-          role: 'EMPLOYEEMESSAGE'
+          role: 'EMPLOYEEMESSAGE',
+          permissions: [{
+            apiName: '/api/employee-messages',        
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Message',
           route: '/#/employee-message/create',
           icon: 'icon-employee-messages',
           className: 'dashboard-manageEmployeeMessages',
           package: 'EMPLOYEEMSG',
-          role: 'EMPLOYEEMESSAGE'
+          role: 'EMPLOYEEMESSAGE',
+          permissions: [{
+            apiName: '/api/employee-messages',
+            permissionCodes: ['C']
+          }]
         }]
       }, {
         title: 'Promotion Management',
@@ -157,7 +198,11 @@ angular.module('ts5App')
           icon: 'icon-manage-promotion',
           className: 'dashboard-managePromotions',
           package: 'PROMOTION',
-          role: 'PROMOTION'
+          role: 'PROMOTION',
+          permissions: [{
+            apiName: '/api/promotions',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Promotion',
           route: '/#/promotions/create',
@@ -175,7 +220,11 @@ angular.module('ts5App')
           icon: 'icon-manage-promotion-category',
           className: 'dashboard-managePromotionCategory',
           package: 'PROMOTION',
-          role: 'PROMOTIONCATEGORY'
+          role: 'PROMOTIONCATEGORY',
+          permissions: [{
+            apiName: '/api/promotion-categories',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Promotion Catalog',
           route: '/#/promotion-catalog-list',
@@ -185,7 +234,7 @@ angular.module('ts5App')
           role: 'PROMOTIONCATALOG',
           permissions: [{
             apiName: '/api/company-promotion-catalogs',
-            permissionCodes: ['C']
+            permissionCodes: ['R']
           }]
         }]
       }, {
@@ -196,7 +245,10 @@ angular.module('ts5App')
           icon: 'icon-manage-taxes',
           className: 'dashboard-manageTaxes',
           package: 'TAX',
-          role: 'TAX'
+          role: 'TAX',
+          permissions: [{
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Menu Management',
@@ -206,7 +258,11 @@ angular.module('ts5App')
           icon: 'icon-manage-menu',
           className: 'dashboard-manageMenus',
           package: 'MENU',
-          role: 'MENU'
+          role: 'MENU',
+          permissions: [{
+            apiName: '/api/menus',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Menu',
           route: '/#/menu/create',
@@ -227,14 +283,22 @@ angular.module('ts5App')
           icon: 'icon-menu-assignment',
           className: 'dashboard-menuAssignments',
           package: 'MENUASSG',
-          role: 'MENUASSIGNMENT'
+          role: 'MENUASSIGNMENT',
+          permissions: [{
+            apiName: '/api/menu-assignments',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Manage Rules',
           route: '/#/menu-rules',
           icon: 'icon-manage-rules',
           className: 'dashboard-manageRules',
           package: 'MENUASSG',
-          role: 'MENURULE'
+          role: 'MENURULE',
+          permissions: [{
+            apiName: '/api/menu-rules',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Rule',
           route: '/#/menu-rules/create',
@@ -255,7 +319,11 @@ angular.module('ts5App')
           icon: 'icon-menu-assignment',
           className: 'dashboard-menuAssignments',
           package: 'MENUCAT',
-          role: 'MENUSTATION'
+          role: 'MENUSTATION',
+          permissions: [{
+            apiName: '/api/menus',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Relationship',
           route: '/#/menu-relationship-create',
@@ -276,7 +344,11 @@ angular.module('ts5App')
           icon: 'icon-manage-receipt-rules',
           className: 'dashboard-manageReceiptRules',
           package: 'RECEIPT',
-          role: 'RECEIPTRULE'
+          role: 'RECEIPTRULE',
+          permissions: [{
+            apiName: '/api/receipt-rules',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Rules',
           route:'/#/receipt-rules/create',
@@ -285,7 +357,7 @@ angular.module('ts5App')
           package: 'RECEIPT',
           role: 'RECEIPTRULE',
           permissions: [{
-            apiName: '/api/',
+            apiName: '/api/receipt-rules',
             permissionCodes: ['C']
           }]
         }]
@@ -314,14 +386,22 @@ angular.module('ts5App')
           icon: 'icon-manage-schedule',
           className: 'dashboard-exciseDuty',
           package: 'EXCISEDUTY',
-          role: 'EXCISEDUTY'
+          role: 'EXCISEDUTY',
+          permissions: [{
+            apiName: '/api/excise-duty',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Retail Item Excise Duty Relationships',
           route: '/#/excise-duty-relationship-list',
           icon: 'icon-manage-schedule',
           className: 'dashboard-exciseDuty',
           package: 'EXCISEDUTY',
-          role: 'EXCISEDUTY'
+          role: 'EXCISEDUTY',
+          permissions: [{
+            apiName: '/api/item-excise-duty',
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Employee Commission',
@@ -331,14 +411,22 @@ angular.module('ts5App')
           icon: 'icon-manage-schedule',
           className: 'dashboard-employeeCommission',
           package: 'EMLOYEECOMMISSION',
-          role: 'EMLOYEECOMMISSION'
+          role: 'EMLOYEECOMMISSION',
+          permissions: [{
+            apiName: '/api/employee-commissions',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Commission Data Table',
           route: '/#/commission-data-table',
           icon: 'icon-manage-schedule',
           className: 'dashboard-CommissionDataTable',
           package: 'EMLOYEECOMMISSION',
-          role: 'EMLOYEECOMMISSION'
+          role: 'EMLOYEECOMMISSION',
+          permissions: [{
+            apiName: '/api/employee-commissions',
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Stock Manager',
@@ -397,14 +485,22 @@ angular.module('ts5App')
           icon: 'icon-manage-schedule',
           className: 'dashboard-storeDispatch',
           package: 'STATIONOPERATIONS',
-          role: 'STOREDISPATCH'
+          role: 'STOREDISPATCH',
+          permissions: [{
+            apiName: '/api/dispatch',
+            permissionCodes: ['C']
+          }]
         }, {
           name: 'Store Instance Dashboard',
           route: '/#/store-instance-dashboard',
           icon: 'icon-manage-schedule',
           className: 'dashboard-storeInstanceDashboard',
           package: 'STATIONOPERATIONS',
-          role: 'STOREINSTANCEDASHBOARD'
+          role: 'STOREINSTANCEDASHBOARD',
+          permissions: [{
+            apiName: '/api/dispatch',
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Transaction Retrieval',
@@ -424,7 +520,11 @@ angular.module('ts5App')
           icon: 'icon-manage-menu',
           className: 'dashboard-postTripDataList',
           package: 'POSTTRIP',
-          role: 'POSTTRIP'
+          role: 'POSTTRIP',
+          permissions: [{
+            apiName: '/api/posttrips',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Post Trip Data',
           route: '/#/post-trip-data/create',
@@ -469,21 +569,33 @@ angular.module('ts5App')
           icon: 'icon-manage-menu',
           className: 'dashboard-manageSurveyQuestions',
           package: 'SURVEY',
-          role: 'SURVEY'
+          role: 'SURVEY',
+          permissions: [{
+            apiName: '/api/survey',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Survey',
           route: '/#/survey',
           icon: 'icon-manage-menu',
           className: 'dashboard-manageSurvey',
           package: 'SURVEY',
-          role: 'SURVEY'
+          role: 'SURVEY',
+          permissions: [{
+            apiName: '/api/survey',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Survey Catalog',
           route: '/#/survey-catalog',
           icon: 'icon-manage-menu',
           className: 'dashboard-manageSurveyCatalog',
           package: 'SURVEY',
-          role: 'SURVEY'
+          role: 'SURVEY',
+          permissions: [{
+            apiName: '/api/survey',
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Cash Management',
@@ -517,7 +629,11 @@ angular.module('ts5App')
           icon: 'icon-manage-retail-item',
           className: 'dashboard-managemenuItems',
           package: 'STOCKOWNER',
-          role: 'STOCKOWNER'
+          role: 'STOCKOWNER',
+          permissions: [{
+            apiName: '/api/retail-items',
+            permissionCodes: ['R']
+          }]
         }, {
           name: 'Create Item',
           route: '/#/stock-owner-item-create',
@@ -535,7 +651,11 @@ angular.module('ts5App')
           icon: 'icon-manage-retail-category',
           className: 'dashboard-manageItemCategories',
           package: 'STOCKOWNER',
-          role: 'STOCKOWNERCATEGORY'
+          role: 'STOCKOWNERCATEGORY',
+          permissions: [{
+            apiName: '/api/retail-items',
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Reports',

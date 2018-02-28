@@ -7,7 +7,7 @@
  * # CompanyListCtrl
  * Controller of the ts5App
  */
-angular.module('ts5App').controller('CompanyListCtrl', function($scope, companyFactory, $location) {
+angular.module('ts5App').controller('CompanyListCtrl', function($scope, companyFactory, $location, accessService) {
   var $this = this;
   this.meta = {
     limit: 100,
@@ -87,8 +87,13 @@ angular.module('ts5App').controller('CompanyListCtrl', function($scope, companyF
   function setCompanyTypes(dataFromAPI) {
     $scope.companyTypeList = angular.copy(dataFromAPI);
   }
+  
+  this.init = function() {
+    $scope.isCRUD = accessService.crudAccessGranted('COMPANY', 'COMPANY', 'CRUDCMP');
+    companyFactory.getCompanyTypes().then(setCompanyTypes);
+  };
 
-  companyFactory.getCompanyTypes().then(setCompanyTypes);
+  this.init();
 
   $scope.clearForm = function() {
     $scope.search = {

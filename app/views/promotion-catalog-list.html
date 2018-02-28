@@ -13,7 +13,7 @@
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
 
-        <a href="#/promotion-catalog/create" class="btn btn-primary">
+        <a href="#/promotion-catalog/create" ng-show="isCRUD" class="btn btn-primary">
           <i class="fa fa-plus" aria-hidden="true"></i>
           <span class="hidden-xs">Create Promotion Catalog</span>
         </a>
@@ -84,10 +84,10 @@
             <button type="button" class="btn btn-xs btn-info" ng-click="redirectRecordToAction('view', catalog.id, false)">
               <span class="fa fa-file"></span>
             </button>
-            <button type="button" class="btn btn-xs btn-primary" ng-click="redirectRecordToAction('edit', catalog.id, false)" ng-show="canEdit(catalog)">
+            <button type="button" class="btn btn-xs btn-primary" ng-click="redirectRecordToAction('edit', catalog.id, false)" ng-show="isCRUD && canEdit(catalog)">
               <span class="fa fa-pencil"></span>
             </button>
-            <button type="button" class="btn btn-xs btn-danger" ng-show="canDelete(catalog)" ng-click="deleteRecordDialog(catalog, ['promotionCatalogName', 'startDate', 'endDate'])">
+            <button type="button" class="btn btn-xs btn-danger" ng-show="isCRUD && canDelete(catalog)" ng-click="deleteRecordDialog(catalog, ['promotionCatalogName', 'startDate', 'endDate'])">
               <span class="fa fa-trash"></span>
             </button>
           </td>

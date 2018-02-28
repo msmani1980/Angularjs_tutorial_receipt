@@ -7,7 +7,7 @@
  * Controller for the Stock Owner Items List view
  */
 angular.module('ts5App')
-  .controller('StockOwnerItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter, lodash) {
+  .controller('StockOwnerItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter, lodash, accessService) {
 
     var $this = this;
     this.meta = {
@@ -80,6 +80,7 @@ angular.module('ts5App')
     };
 
     this.getItemTypesList = function () {
+      $scope.isCRUD = accessService.crudAccessGranted('STOCKOWNER', 'STOCKOWNER', 'CRUDSO');
       itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
       });

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="module-container">
 
   <div class="list-controls">
     <div class="row item-list-row">
@@ -14,7 +14,7 @@
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
 
-        <a href="/#/promotions/create" class="btn btn-primary">
+        <a href="/#/promotions/create" ng-show="isCRUD" class="btn btn-primary">
           <i class="fa fa-plus" aria-hidden="true"></i>
           <span class="hidden-xs">Create Promotion</span>
         </a>
@@ -107,10 +107,10 @@
         <button class="btn btn-info btn-xs" ng-click="viewPromotion(promotion)" tabindex="0">
           <i class="fa fa-file"></i>
         </button>
-        <button class="btn btn-primary btn-xs" ng-click="editPromotion(promotion)" ng-show="isPromotionEditable(promotion)">
+        <button class="btn btn-primary btn-xs" ng-click="editPromotion(promotion)" ng-show="isCRUD && isPromotionEditable(promotion)">
           <i class="fa fa-pencil"></i>
         </button>
-        <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, promotion)" ng-hide="isPromotionReadOnly(promotion)">
+        <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, promotion)" ng-hide="!isCRUD || isPromotionReadOnly(promotion)">
           <i class="fa fa-trash"></i>
         </button>
       </td>
@@ -145,3 +145,4 @@
     </div>
   </div>
 </div>
+<dynamic-left-nav></dynamic-left-nav>

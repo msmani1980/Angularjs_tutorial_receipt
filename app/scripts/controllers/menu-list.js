@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuListCtrl', function($scope, $location, menuService, messageService, dateUtility, lodash) {
+  .controller('MenuListCtrl', function($scope, $location, menuService, messageService, dateUtility, lodash, accessService) {
     $scope.viewName = 'Menu Management';
     $scope.search = {};
     $scope.modal = null;
@@ -179,6 +179,7 @@ angular.module('ts5App')
     };
 
     function initializeList() {
+      $scope.isCRUD = accessService.crudAccessGranted('MENU', 'MENU', 'CRUDMENU');
       if ($location.search().newMenuName) {
         showToast('success', 'Create Menu', 'successfully created menu');
       }
