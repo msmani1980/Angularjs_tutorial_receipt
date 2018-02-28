@@ -49,7 +49,7 @@ angular.module('ts5App')
 
     this.getCatererStationList = function() {
       // add factory API call here
-      this.setCatererStationList(catererStationListJSON);
+      // this.setCatererStationList(catererStationListJSON);
     };
 
     this.setCityList = function(stationsList) {
@@ -222,6 +222,7 @@ angular.module('ts5App')
     this.makeInitPromises = function() {
       return [
         this.getGlobalStationList()
+
         //this.getCatererStationList()
       ];
     };
@@ -249,7 +250,6 @@ angular.module('ts5App')
       $scope.buttonText = 'Add';
       $scope.viewLabel = 'Add';
 
-      // TODO: Add waiting
       var promises = this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };
