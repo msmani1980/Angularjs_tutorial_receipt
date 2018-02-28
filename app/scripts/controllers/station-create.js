@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationCreateCtrl', function($scope, $location, $q, messageService, dateUtility, $routeParams) {
+  .controller('StationCreateCtrl', function($scope, $location, $q, messageService, dateUtility, $routeParams, stationsFactory, $filter) {
 
     var $this = this;
 
@@ -39,327 +39,9 @@ angular.module('ts5App')
       }]
     };
 
-    var globalStationListJSON = {
-      response: [{
-        id: 1,
-        companyId: 403,
-        code: 'ORD',
-        name: 'Chicago O-hare'
-      }, {
-        id: 2,
-        companyId: 403,
-        code: 'MDW',
-        name: 'Chicago Midway'
-      }, {
-        id: 3,
-        companyId: 403,
-        code: 'LON3',
-        name: 'London'
-      }, {
-        id: 4,
-        companyId: 403,
-        code: 'SAN',
-        name: 'San Jose'
-      }, {
-        id: 5,
-        companyId: 403,
-        code: 'DEL',
-        name: 'Delhi'
-      }, {
-        id: 6,
-        companyId: 403,
-        code: 'JFK',
-        name: 'New York'
-      }, {
-        id: 7,
-        companyId: 403,
-        code: 'EWR',
-        name: 'Newark'
-      }, {
-        id: 8,
-        companyId: 403,
-        code: 'LAX',
-        name: 'Los Angeles'
-      }, {
-        id: 9,
-        companyId: 403,
-        code: 'MIA',
-        name: 'Miami'
-      }, {
-        id: 10,
-        companyId: 403,
-        code: 'IAH',
-        name: 'Houston'
-      }, {
-        id: 11,
-        companyId: 403,
-        code: 'BOS',
-        name: 'Boston'
-      }, {
-        id: 13,
-        companyId: 403,
-        code: 'CD123',
-        name: 'CHICAGO-NEW'
-      }, {
-        id: 19,
-        companyId: 403,
-        code: 'ALC',
-        name: 'Alicante'
-      }, {
-        id: 20,
-        companyId: 403,
-        code: 'BCN',
-        name: 'Barcelona'
-      }, {
-        id: 21,
-        companyId: 403,
-        code: 'AGP',
-        name: 'Malaga'
-      }, {
-        id: 22,
-        companyId: 403,
-        code: 'VLC',
-        name: 'Valencia'
-      }, {
-        id: 23,
-        companyId: 403,
-        code: 'CPH',
-        name: 'Copenhagen'
-      }, {
-        id: 24,
-        companyId: 403,
-        code: 'SKS',
-        name: 'Vojens'
-      }, {
-        id: 25,
-        companyId: 403,
-        code: 'EKHG',
-        name: 'Herning'
-      }, {
-        id: 26,
-        companyId: 403,
-        code: 'BSL',
-        name: 'Basel'
-      }, {
-        id: 27,
-        companyId: 403,
-        code: 'GVA',
-        name: 'Geneva'
-      }, {
-        id: 28,
-        companyId: 403,
-        code: 'ZRH',
-        name: 'Zurich'
-      }, {
-        id: 29,
-        companyId: 403,
-        code: 'BRN',
-        name: 'Bern'
-      }, {
-        id: 30,
-        companyId: 403,
-        code: 'ZHI',
-        name: 'Grenchen'
-      }, {
-        id: 39,
-        companyId: 403,
-        code: 'LON',
-        name: 'Heathrow Intl'
-      }, {
-        id: 41,
-        companyId: 403,
-        code: 'LGW',
-        name: 'Gatwick '
-      }, {
-        id: 43,
-        companyId: 403,
-        code: 'LPL',
-        name: 'Liverpool '
-      }, {
-        id: 44,
-        companyId: 403,
-        code: 'LTN',
-        name: 'Luton '
-      }, {
-        id: 45,
-        companyId: 403,
-        code: 'MAD',
-        name: 'Madrid '
-      }],
-      meta: {
-        count: 29,
-        limit: 29,
-        start: 0
-      }
-    };
-
-    var countryListJSON = {
-      meta: {
-        count: 249,
-        limit: 249,
-        start: 0
-      },
-      countries: [{
-        id: 66,
-        countryName: 'Denmark'
-      }, {
-        id: 10,
-        countryName: 'Afghanistan'
-      }, {
-        id: 22,
-        countryName: 'Åland Islands'
-      }, {
-        id: 13,
-        countryName: 'Albania'
-      }, {
-        id: 69,
-        countryName: 'Algeria'
-      }, {
-        id: 18,
-        countryName: 'American Samoa'
-      }, {
-        id: 8,
-        countryName: 'Andorra'
-      }]
-    };
-
-    var cityListJSON = {
-      meta: {
-        count: 270,
-        limit: 270,
-        start: 0
-      },
-      cities: [{
-        cityId: 11,
-        cityName: 'Albany',
-        countryId: 240,
-        countryName: 'United States',
-        regionId: 2,
-        regionName: 'New York',
-        timeZoneId: 440,
-        timeZone: 'America/New_York',
-        utcDstOffset: '-04:00',
-        utcOffset: '-05:00'
-      }, {
-        cityId: 14,
-        cityName: 'Alicante',
-        countryId: 75,
-        countryName: 'Spain',
-        regionId: 9,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 15,
-        cityName: 'Barcelona',
-        countryId: 75,
-        countryName: 'Spain',
-        regionId: 9,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 21,
-        cityName: 'Basel',
-        countryId: 50,
-        countryName: 'Switzerland',
-        regionId: 7,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 24,
-        cityName: 'Bern',
-        countryId: 50,
-        countryName: 'Switzerland',
-        regionId: 7,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 5,
-        cityName: 'Chicago',
-        countryId: 240,
-        countryName: 'United States',
-        regionId: 4,
-        regionName: 'Illinois',
-        timeZoneId: 459,
-        timeZone: 'America/Chicago',
-        utcDstOffset: '-05:00',
-        utcOffset: '-06:00'
-      }, {
-        cityId: 18,
-        cityName: 'Copenhagen',
-        countryId: 66,
-        countryName: 'Denmark',
-        regionId: 8,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 13,
-        cityName: 'Detroit',
-        countryId: 240,
-        countryName: 'United States',
-        regionId: 5,
-        regionName: 'Michigan',
-        timeZoneId: 440,
-        timeZone: 'America/New_York',
-        utcDstOffset: '-04:00',
-        utcOffset: '-05:00'
-      }, {
-        cityId: 26,
-        cityName: 'Gatwick',
-        countryId: 84,
-        countryName: 'United Kingdom',
-        regionId: 10,
-        regionName: 'UK-REGION',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }, {
-        cityId: 22,
-        cityName: 'Geneva',
-        countryId: 50,
-        countryName: 'Switzerland',
-        regionId: 7,
-        regionName: 'All',
-        timeZoneId: 86,
-        timeZone: 'Europe/Madrid',
-        utcDstOffset: '+02:00',
-        utcOffset: '+01:00'
-      }]
-    };
-
-    var catererStationListJSON = {
-      response: [{
-        id: 3,
-        companyId: 403,
-        code: 'LON3',
-        name: 'London'
-      }, {
-        id: 5,
-        companyId: 403,
-        code: 'DEL',
-        name: 'Delhi'
-      }],
-      meta: {
-        count: 2,
-        limit: 2,
-        start: 0
-      }
-    };
+    $scope.loadingBarVisible = false;
+    $scope.isSearch = false;
+    $scope.stationList = [];
 
     this.setCatererStationList = function(dataFromAPI) {
       $scope.catererStationList = angular.copy(dataFromAPI.response);
@@ -370,31 +52,45 @@ angular.module('ts5App')
       this.setCatererStationList(catererStationListJSON);
     };
 
-    this.setCityList = function(dataFromAPI) {
-      $scope.cityList = angular.copy(dataFromAPI.cities);
+    this.setCityList = function(stationsList) {
+      var citiesList = [];
+      angular.forEach(stationsList, function (station) {
+        var country = {
+          id: station.cityId,
+          cityName: station.cityName,
+          countryId: station.countryId
+        };
+        citiesList.push(country);
+      });
+
+      $scope.cityList = $filter('unique')(citiesList, 'id');
     };
 
-    this.getCityList = function() {
-      // add factory API call here
-      this.setCityList(cityListJSON);
-    };
+    this.setCountryList = function (stationsList) {
+      var countriesList = [];
+      angular.forEach(stationsList, function (station) {
+        var country = {
+          id: station.countryId,
+          countryName: station.countryName
+        };
+        countriesList.push(country);
+      });
 
-    this.setCountryList = function(dataFromAPI) {
-      $scope.countryList = angular.copy(dataFromAPI.countries);
-    };
-
-    this.getCountryList = function() {
-      // add factory API call here
-      this.setCountryList(countryListJSON);
+      $scope.countryList = $filter('unique')(countriesList, 'id');
     };
 
     this.setGlobalStationList = function(dataFromAPI) {
-      $scope.globalStationList = angular.copy(dataFromAPI.response);
+      var response = angular.copy(dataFromAPI.response);
+
+      var distinctStations = $filter('unique')(response, 'stationId');
+
+      $scope.globalStationList = distinctStations;
+      $this.setCountryList(distinctStations);
+      $this.setCityList(distinctStations);
     };
 
     this.getGlobalStationList = function() {
-      // add factory API call here
-      this.setGlobalStationList(globalStationListJSON);
+      return stationsFactory.getGlobalStationList().then($this.setGlobalStationList);
     };
 
     this.setStationRelationships = function(station) {
@@ -525,10 +221,8 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       return [
-        this.getGlobalStationList(),
-        this.getCountryList(),
-        this.getCityList(),
-        this.getCatererStationList()
+        this.getGlobalStationList()
+        //this.getCatererStationList()
       ];
     };
 
