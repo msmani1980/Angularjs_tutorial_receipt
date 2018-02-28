@@ -189,6 +189,22 @@ angular.module('ts5App')
 
       return paymentMethods.indexOf('Credit Card') > -1;
     }
+    
+    this.showResponseError = function(response) {
+      var errorVar = response.data;
+      $scope.isSearchLoading = false;
+      if (errorVar.indexOf('not a valid') !== -1) {
+        hideLoadingBar();
+      } else {
+        hideLoadingBar();
+        $scope.displayError = true;
+        $scope.errorResponse = errorVar;  
+      }
+    };
+
+    this.showFilterPanel = function() {
+      angular.element('#search-collapse').removeClass('collapse');
+    };
 
     function resetCreditCardSearchInputs() {
       $scope.search.cardHolderName = null;
@@ -228,7 +244,7 @@ angular.module('ts5App')
 
       showLoadingBar();
 
-      transactionFactory.getTransactionList(generateGetTransactionsPayload()).then(appendTransactions);
+      transactionFactory.getTransactionList(generateGetTransactionsPayload()).then(appendTransactions, $this.showResponseError);
       $this.meta.offset += $this.meta.limit;
     };
 
@@ -346,6 +362,10 @@ angular.module('ts5App')
         .filter(filterNotFullyPaidOffDiscount);
 
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
+      if ($scope.transactions.length === 0) {
+        $this.showFilterPanel();
+      }
+
       hideLoadingBar();
     }
 
