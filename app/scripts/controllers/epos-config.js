@@ -253,35 +253,4 @@ angular.module('ts5App')
 
     this.init();
 
-  })
-  .directive('modules', function () {
-    return {
-      restrict: 'E',
-      replace: true,
-      scope: {
-        moduleList: '=',
-        model: '=',
-        areInputsDisabled: '='
-      },
-      templateUrl: 'views/directives/epos-config-form-modules.html'
-    };
-  })
-  .directive('module', function ($compile) {
-    return {
-      restrict: 'E',
-      scope: {
-        singleModule: '=',
-        model: '=',
-        areInputsDisabled: '='
-      },
-      templateUrl: 'views/directives/epos-config-form-single-module.html',
-      link: function (scope, element) {
-        var collectionSt = '<modules module-list="singleModule.subModules" model="model" are-inputs-disabled="areInputsDisabled"></modules>';
-        if (scope.singleModule.subModules && angular.isArray(scope.singleModule.subModules)) {
-          $compile(collectionSt)(scope, function(cloned)   {
-            element.append(cloned);
-          });
-        }
-      }
-    };
   });
