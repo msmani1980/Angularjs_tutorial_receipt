@@ -30,9 +30,15 @@ angular.module('ts5App')
       return stationsService.removeStation(companyId, id);
     };
 
+    var getCompanyStation = function(stationId) {
+      var companyId = globalMenuService.company.get();
+      return stationsService.getCompanyStation(companyId, stationId);
+    };
+
     return {
       getGlobalStationList: getGlobalStationList,
       getStationList: getStationList,
+      getCompanyStation: getCompanyStation,
       removeStation: removeStation,
       bulkUpdateStation: bulkUpdateStation
     };

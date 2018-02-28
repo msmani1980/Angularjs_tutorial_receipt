@@ -32,6 +32,9 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       getStation: {
         method: 'GET'
       },
+      getCompanyStation: {
+        method: 'GET'
+      },
       removeStation: {
         method: 'DELETE'
       },
@@ -43,9 +46,17 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
   var stationListRequestResource = $resource(stationListRequestURL, stationListRequestParameters, actions);
   var stationRequestResource = $resource(stationRequestURL, stationRequestParameters, actions);
 
+  // Global Station
+
   var getGlobalStationList = function (payload) {
     return globalRequestResource.getGlobalStationList(payload).$promise;
   };
+
+  var getStation = function (stationId) {
+    return stationRequestResource.getStation({ stationId: stationId }).$promise;
+  };
+
+  // Company Station
 
   var getStationList = function (companyId, offset, customPayload) {
     var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
@@ -69,8 +80,8 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     return stationListRequestResource.getStationList(customPayload || payload).$promise;
   };
 
-  var getStation = function (stationId) {
-    return stationRequestResource.getStation({ stationId: stationId }).$promise;
+  var getCompanyStation = function (companyId, id) {
+    return stationListRequestResource.getCompanyStation({ stationId: id, id: companyId }).$promise;
   };
 
   var bulkUpdateStation = function (companyId, payload) {
@@ -95,6 +106,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     getGlobalStationList: getGlobalStationList,
     getStationList: getStationList,
     getStation: getStation,
+    getCompanyStation: getCompanyStation,
     bulkUpdateStation: bulkUpdateStation,
     removeStation: removeStation,
     importFromExcel: importFromExcel

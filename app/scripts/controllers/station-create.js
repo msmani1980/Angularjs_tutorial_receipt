@@ -12,33 +12,6 @@ angular.module('ts5App')
 
     var $this = this;
 
-    var stationJSON = {
-      id: 114,
-      cityId: 18,
-      cityName: 'Copenhagen',
-      companyId: 403,
-      countryId: 66,
-      countryName: 'Denmark',
-      description: 'Copenhagen',
-      isCaterer: true,
-      endDate: '2015-12-31',
-      startDate: '2015-05-02',
-      regionId: 8,
-      regionName: 'All',
-      stationCode: 'CPH',
-      stationId: 3,
-      stationName: 'London',
-      timezone: 'Europe/Madrid',
-      timezoneId: '86',
-      utcDstOffset: '+02:00',
-      utcOffset: '+01:00',
-      companyStationRelationships: [{
-        catererId: '44',
-        endDate: '2015-12-31',
-        startDate: '2015-05-02',
-      }]
-    };
-
     $scope.loadingBarVisible = false;
     $scope.isSearch = false;
     $scope.stationList = [];
@@ -108,14 +81,11 @@ angular.module('ts5App')
     this.setStation = function(dataFromAPI) {
       var station = angular.copy(dataFromAPI);
       $scope.formData = {
-        station: {
-          id: station.id,
-          code: station.stationCode,
-          name: station.stationName
-        },
+        station: station,
         city: {
           id: station.cityId,
-          cityName: station.cityName
+          cityName: station.cityName,
+          countryId: station.countryId
         },
         country: {
           id: station.countryId,
@@ -125,13 +95,14 @@ angular.module('ts5App')
         endDate: dateUtility.formatDateForApp(station.endDate),
         isCaterer: station.isCaterer,
       };
-      this.setStationRelationships(station);
+
+      //this.setStationRelationships(station);
+
       $scope.dataReady = true;
     };
 
-    this.getStation = function() {
-      // add factory API call here
-      this.setStation(stationJSON);
+    this.getStation = function(id) {
+      stationsFactory.getCompanyStation(id).then($this.setStation);
     };
 
     this.showSuccessMessage = function(message) {
@@ -237,7 +208,7 @@ angular.module('ts5App')
 
     this.initSuccessHandler = function() {
       if ($routeParams.id) {
-        $this.getStation();
+        $this.getStation($routeParams.id);
         $this.setFormAsEdit();
         return false;
       }
