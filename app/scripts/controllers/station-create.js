@@ -14,6 +14,7 @@ angular.module('ts5App')
 
     $scope.loadingBarVisible = false;
     $scope.isSearch = false;
+    $scope.editingItem = false;
     $scope.stationList = [];
 
     this.setCatererStationList = function(dataFromAPI) {
@@ -80,6 +81,10 @@ angular.module('ts5App')
 
     this.setStation = function(dataFromAPI) {
       var station = angular.copy(dataFromAPI);
+
+      var startDate = dateUtility.formatDateForApp(dataFromAPI.startDate);
+      var endDate = dateUtility.formatDateForApp(dataFromAPI.endDate);
+
       $scope.formData = {
         station: station,
         city: {
@@ -91,10 +96,13 @@ angular.module('ts5App')
           id: station.countryId,
           countryName: station.countryName
         },
-        startDate: dateUtility.formatDateForApp(station.startDate),
-        endDate: dateUtility.formatDateForApp(station.endDate),
+        startDate: startDate,
+        endDate: endDate,
         isCaterer: station.isCaterer,
       };
+
+      $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
+      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
 
       //this.setStationRelationships(station);
 
@@ -176,9 +184,14 @@ angular.module('ts5App')
       });
     };
 
+    $scope.isDisabled = function() {
+      return $scope.shouldDisableStartDate || $this.viewOnly;
+    };
+
     this.setFormAsEdit = function() {
       $scope.buttonText = 'Save';
       $scope.viewLabel = 'Editing';
+      $scope.editingItem = true;
       this.checkIfViewOnly();
     };
 
@@ -220,8 +233,8 @@ angular.module('ts5App')
       this.viewOnly = false;
       $scope.formData = {
         stationId: null,
-        endDate: dateUtility.nowFormatted(),
-        startDate: dateUtility.nowFormatted(),
+        endDate: null,
+        startDate: null,
         companyStationRelationships: []
       };
 

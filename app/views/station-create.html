@@ -43,7 +43,7 @@
 
         <div class="form-group" ng-class="setUISelectValidationClass('Country')">
           <label>Country *</label>
-          <ui-select name="Country" ng-model="formData.country" theme="bootstrap" required ng-disabled="isViewOnly()">
+          <ui-select name="Country" ng-model="formData.country" theme="bootstrap" required ng-disabled="isDisabled()">
             <ui-select-match placeholder="Start typing to find a country">
               {{ $select.selected.countryName }}
             </ui-select-match>
@@ -59,7 +59,7 @@
 
           <div class="form-group" ng-class="setUISelectValidationClass('City')">
           <label>City *</label>
-          <ui-select name="City"  ng-model="formData.city" theme="bootstrap" required ng-disabled="isViewOnly()">
+          <ui-select name="City"  ng-model="formData.city" theme="bootstrap" required ng-disabled="isDisabled()">
             <ui-select-match placeholder="Start typing to find a city">
               {{ $select.selected.cityName }}
             </ui-select-match>
@@ -75,7 +75,7 @@
 
         <div class="form-group" ng-class="setUISelectValidationClass('Station Code')">
           <label>Station Code *</label>
-          <ui-select name="Station Code" ng-model="formData.station" theme="bootstrap" required ng-disabled="isViewOnly()">
+          <ui-select name="Station Code" ng-model="formData.station" theme="bootstrap" required ng-disabled="isDisabled()">
             <ui-select-match placeholder="Start typing to find a station">
               {{ $select.selected.code }}
             </ui-select-match>
@@ -97,17 +97,30 @@
       </div>
 
       <div class="col-xs-12 col-sm-6">
-
-          <date-picker-field disable="isViewOnly()" form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate"
-          min-date="'+1d'" required="true"></date-picker-field>
-
+        <date-picker-field
+          ng-if="dataReady"
+          disable="isDisabled()"
+          form="stationCreateForm"
+          name="EffectiveFrom"
+          label="Effective From"
+          disable-past="true"
+          required="true"
+          ng-model="formData.startDate">
+        </date-picker-field>
       </div>
 
       <div class="col-xs-12 col-sm-6">
-
-          <date-picker-field disable="isViewOnly()" form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate"
-          min-date="( editingRelationship ? '0d' : '+1d')" required="true"></date-picker-field>
-
+        <date-picker-field
+          ng-if="dataReady"
+          form="stationCreateForm"
+          name="EffectiveTo"
+          label="Effective To"
+          disable="shouldDisableEndDate || isViewOnly()"
+          ng-model="formData.endDate"
+          disable-past="true"
+          end-current-effective="editingItem && shouldDisableStartDate"
+          required="true">
+        </date-picker-field>
       </div>
 
     </div>
@@ -116,7 +129,7 @@
 
       <div class="panel-heading form-inline">
 
-        <fieldset ng-disabled="isViewOnly()">
+        <fieldset ng-disabled="isDisabled()">
 
           <button ng-show="false" class="btn btn-primary btn-sm text-right" ng-click="addRelationship()">
             <span class="fa fa-plus" aria-hidden="true"></span>
