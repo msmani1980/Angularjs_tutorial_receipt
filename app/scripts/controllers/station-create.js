@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationCreateCtrl', function($scope, $location, $q, messageService, dateUtility, $routeParams, stationsFactory, $filter) {
+  .controller('StationCreateCtrl', function($scope, $location, $q, messageService, dateUtility, $routeParams, stationsFactory, $filter, lodash) {
 
     var $this = this;
 
@@ -139,11 +139,19 @@ angular.module('ts5App')
     };
 
     this.filterByCountry = function(record) {
-      if (angular.isUndefined($scope.formData) || angular.isUndefined($scope.formData.countryId)) {
+      if (!$scope.formData || !$scope.formData.country) {
         return true;
       }
 
-      return parseInt(record.countryId) === parseInt($scope.formData.countryId);
+      return parseInt(record.countryId) === parseInt($scope.formData.country.id);
+    };
+
+    this.filterByCity = function(record) {
+      if (!$scope.formData || !$scope.formData.city) {
+        return true;
+      }
+
+      return parseInt(record.cityId) === parseInt($scope.formData.city.id);
     };
 
     this.validateForm = function() {
@@ -270,6 +278,10 @@ angular.module('ts5App')
       return $this.filterByCountry(record);
     };
 
+    $scope.filterByCity = function(record) {
+      return $this.filterByCity(record);
+    };
+
     $scope.addRelationship = function() {
       return $this.addRelationship();
     };
@@ -277,5 +289,41 @@ angular.module('ts5App')
     $scope.isViewOnly = function() {
       return $this.viewOnly;
     };
+
+    $scope.$watch('formData.country', function(country) {
+      if (!$scope.formData || !$scope.formData.city || !country) {
+        return;
+      }
+
+      // Clear city and station if they don't belong to newly selected country
+      if (parseInt($scope.formData.city.countryId) !== parseInt(country.id)) {
+        $scope.formData.city = '';
+        $scope.formData.station = '';
+      }
+    });
+
+    $scope.$watch('formData.city', function(city) {
+      if (!$scope.formData || !city) {
+        return;
+      }
+
+      // Clear station if they don't belong to newly selected city
+      if ($scope.formData.station && parseInt($scope.formData.station.cityId) !== parseInt(city.id)) {
+        $scope.formData.station = '';
+      }
+
+      // Preselect country based on city location
+      $scope.formData.country = lodash.find($scope.countryList, { id: city.countryId });
+    });
+
+    $scope.$watch('formData.station', function(station) {
+      if (!$scope.formData || !station) {
+        return;
+      }
+
+      // Preselect country based on city location
+      $scope.formData.country = lodash.find($scope.countryList, { id: station.countryId });
+      $scope.formData.city = lodash.find($scope.cityList, { id: station.cityId });
+    });
 
   });

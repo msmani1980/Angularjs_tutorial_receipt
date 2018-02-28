@@ -79,7 +79,7 @@
             <ui-select-match placeholder="Start typing to find a station">
               {{ $select.selected.code }}
             </ui-select-match>
-            <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
+            <ui-select-choices repeat="station in globalStationList | filter: $select.search | filter: filterByCountry | filter: filterByCity | orderBy:'code'">
               <div ng-bind-html="station.code | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
