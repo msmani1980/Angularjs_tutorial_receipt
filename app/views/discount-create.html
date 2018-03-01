@@ -119,7 +119,8 @@
             <select required name="discountType" class="form-control"
                     ng-options="discountType.id as discountType.name for discountType in discountTypesList"
                     ng-model="formData.discountTypeId"
-                    ng-disabled="isDisabled()">
+                    ng-disabled="isDisabled()"
+                    ng-change="changeDiscountType(formData)">
               <option value="">Please select</option>
             </select>
           </div>
@@ -142,6 +143,11 @@
                       <input ng-model="formData.amountDiscountValue[currency.id]" name="{{ currency.code }}AmountDiscountValue" ng-disabled="$parent.isDisabled()" type="text" class="form-control" ng-pattern="regexp.price" ng-required="formData.discountTypeId === 2 && $parent.shouldValidatePrice()" />
                     </div>
                   </div>
+                  
+                <div class="form-group" ng-show="formData.discountTypeId === 2">
+                  <p>Miles/Points</p>
+                  <input class="form-control" ng-model="formData.milesPoints" name="milesPoints" ng-pattern="regexp.number" ng-required="false" maxlength="10" ng-disabled="$parent.isDisabled()"/>
+                </div>                                  
                 </div>
               </div>
             </div>
