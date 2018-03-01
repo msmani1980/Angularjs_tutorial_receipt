@@ -82,14 +82,14 @@
               </div>
 
             </div>
-			
+
 			<div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
 				<label for="quick-search-code">ePOS Quick Search Code</label>
 				<input ng-model="search.quickSearchCode" type="text" class="form-control" id="quick-search-code" placeholder="ePOS Quick Search Code">
 			  </div>
             </div>
-            
+
             <date-picker class="col-xs-12 col-md-6 col-sm-12"
                 		element-class="col-xs-6 col-sm-6"
                        start-date-model="dateRange.startDate"
@@ -135,6 +135,8 @@
         <th>Sales Category</th>
         <th>Effective From</th>
         <th>Effective To</th>
+        <th>Updated Date/Time</th>
+        <th>Updated User</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -149,12 +151,14 @@
         <td>{{ item.versions[0].itemCode }}</td>
         <td>{{ item.versions[0].itemName }}</td>
         <td>{{ item.versions[0].onBoardName }}</td>
-        <td ng-show="isOpen(item)" colspan="6"></td>
+        <td ng-show="isOpen(item)" colspan="8"></td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].stockOwnerCode }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].itemTypeName }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].categoryName }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].startDate }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].endDate }}</td>
+        <td ng-hide="isOpen(item)">{{ getUpdatedOn(item.versions[item.versions.length - 1]) }}</td>
+        <td ng-hide="isOpen(item)">{{ getUpdateBy(item.versions[item.versions.length - 1]) }}</td>
         <td ng-hide="isOpen(item)">
           <a class="btn btn-info btn-xs" ng-href="#/item-view/{{item.versions[0].id}}">
             <i class="fa fa-file"></i>
@@ -180,6 +184,8 @@
         <td>{{ version.categoryName }}</td>
         <td>{{ version.startDate }}</td>
         <td>{{ version.endDate }}</td>
+        <td>{{ getUpdatedOn(version) }}</td>
+        <td>{{ getUpdateBy(version) }}</td>
         <td>
           <a class="btn btn-info btn-xs" ng-href="#/item-view/{{version.id}}">
             <i class="fa fa-file"></i>
