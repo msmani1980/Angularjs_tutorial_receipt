@@ -12,14 +12,14 @@
 
       <div class="col-xs-6 text-right">
 
-        <fieldset ng-hide="viewOnly">
+        <fieldset>
 
           <a class="btn btn-default" ng-href="/#/menu-relationship-list">
             <span class="fa fa-arrow-left" aria-hidden="true"></span>
             <span class="hidden-xs btn-label">Back</span>
           </a>
 
-          <button ng-show="form.$dirty" class="btn btn-success" ng-click="submitForm(formData)">
+          <button ng-show="!viewOnly" class="btn btn-success" ng-click="submitForm(formData)">
             <span class="fa fa-check-square-o" aria-hidden="true"></span>
             <span class="hidden-xs btn-label">{{ buttonText }}</span>
           </button>

@@ -6,7 +6,7 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <a href="#/stock-owner-item-create" class="btn btn-primary">+<span class="hidden-sm hidden-xs"> Create Stock Owner Item</span></a>
+        <a href="#/stock-owner-item-create" ng-show="isCRUD" class="btn btn-primary">+<span class="hidden-sm hidden-xs"> Create Stock Owner Item</span></a>
 
         <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
           <span class="fa fa-filter" aria-hidden="true"></span>
@@ -146,11 +146,11 @@
             <i class="fa fa-file"></i>
           </a>
 
-          <a class="btn btn-primary btn-xs" href="#/stock-owner-item-edit/{{item.id}}" ng-show="isCurrentEffectiveDate(item) || isFutureEffectiveDate(item)">
+          <a class="btn btn-primary btn-xs" href="#/stock-owner-item-edit/{{item.id}}" ng-show="isCRUD && (isCurrentEffectiveDate(item) || isFutureEffectiveDate(item))">
             <i class="fa fa-pencil"></i>
           </a>
 
-          <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id,key)" ng-show="isFutureEffectiveDate(item)">
+          <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id,key)" ng-show="isCRUD && isFutureEffectiveDate(item)">
             <i class="fa fa-trash"></i>
           </button>
 

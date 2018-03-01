@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCategoryListCtrl', function ($scope, promotionCategoryFactory, dateUtility, $location) {
+  .controller('PromotionCategoryListCtrl', function ($scope, promotionCategoryFactory, dateUtility, $location, accessService) {
     $scope.viewName = 'Promotion Categories';
     var $this = this;
 
@@ -135,6 +135,7 @@ angular.module('ts5App')
     };
 
     function init() {
+      $scope.isCRUD = accessService.crudAccessGranted('PROMOTION', 'PROMOTIONCATEGORY', 'CRUDPRCAT');
       $scope.promotionCategories = null;
       resetSearchMetaVars();
       $scope.search = {};

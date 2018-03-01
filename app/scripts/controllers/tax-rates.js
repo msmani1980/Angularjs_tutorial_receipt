@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TaxRatesCtrl', function ($scope, $q, $route, $filter, taxRatesFactory, dateUtility, messageService) {
+  .controller('TaxRatesCtrl', function ($scope, $q, $route, $filter, taxRatesFactory, dateUtility, messageService, accessService) {
 
     var $this = this;
 
@@ -308,6 +308,7 @@ angular.module('ts5App')
     };
 
     this.init = function () {
+      $scope.isCRUD = accessService.crudAccessGranted('TAX', 'TAX', 'CRUDTAX');
       $this.createScopeVariables();
       $this.showLoadingModal('Loading data for Tax Management...');
       $this.makePromises();

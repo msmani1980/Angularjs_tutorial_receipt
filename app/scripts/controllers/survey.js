@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('SurveyCtrl', function ($scope, $q, $location, dateUtility, lodash, messageService, surveyFactory) {
+  .controller('SurveyCtrl', function ($scope, $q, $location, dateUtility, lodash, messageService, surveyFactory, accessService) {
 
     var $this = this;
     this.meta = {
@@ -157,6 +157,7 @@ angular.module('ts5App')
 
     this.init = function() {
       var initDependencies = $this.makeInitPromises();
+      $scope.isCRUD = accessService.crudAccessGranted('SURVEY', 'SURVEY', 'SURVEY');
       $q.all(initDependencies).then(function() {
         angular.element('#search-collapse').addClass('collapse');
       });
