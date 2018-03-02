@@ -159,7 +159,7 @@ angular.module('ts5App')
     };
 
     this.createStation = function() {
-      $this.showLoadingModal('Creating Station');
+      $this.displayLoadingModal('Creating Station');
 
       var payload = this.generatePayload();
 
@@ -167,7 +167,7 @@ angular.module('ts5App')
     };
 
     this.updateStation = function() {
-      $this.showLoadingModal('Saving Station');
+      $this.displayLoadingModal('Saving Station');
 
       var payload = this.generatePayload();
 

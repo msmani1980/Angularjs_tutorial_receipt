@@ -175,7 +175,7 @@ angular.module('ts5App')
           package: 'EMPLOYEEMSG',
           role: 'EMPLOYEEMESSAGE',
           permissions: [{
-            apiName: '/api/employee-messages',        
+            apiName: '/api/employee-messages',
             permissionCodes: ['R']
           }]
         }, {
@@ -343,8 +343,12 @@ angular.module('ts5App')
           route: '/#/station-list',
           icon: 'icon-menu-assignment',
           className: 'dashboard-stations',
-          package: 'COMPANYSTATION',
-          role: 'COMPANYSTATION'
+          package: 'COMPANY',
+          role: 'COMPANYSTATION',
+          permissions: [{
+            apiName: '/api/station-list',
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Receipt Rule',
