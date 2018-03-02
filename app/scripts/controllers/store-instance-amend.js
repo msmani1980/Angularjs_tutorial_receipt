@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash, globalMenuService,
       reconciliationFactory, $location, postTripFactory, cashBagFactory, transactionFactory, storeInstanceFactory, recordsService,
-      stationsService, dailyExchangeRatesService) {
+      stationsService, dailyExchangeRatesService, $localStorage) {
     var $this = this;
 
     $scope.commitionPaidStatus = function () {
@@ -1688,6 +1688,25 @@ angular.module('ts5App')
       return manualDataSet;
     }
 
+    function initAmendMode() {
+      $scope.isAmendReadOnly = true;
+      if (angular.isDefined($localStorage.featuresInRole.RECONCILIATION) && angular.isDefined($localStorage.featuresInRole.RECONCILIATION.AMENDSTOREINST)) {
+        var featuresInRoleCollection = angular.copy($localStorage.featuresInRole.RECONCILIATION.AMENDSTOREINST);
+        angular.forEach(featuresInRoleCollection, function (feature) {
+          if (angular.isDefined(feature.taskCode) && feature.taskCode === 'AMEND') {
+            var amendPermissions = feature.permissionCode;
+            if (angular.isDefined(amendPermissions) && amendPermissions.length > 0) {
+              angular.forEach(amendPermissions, function (permission) {
+                if (permission === 'U' || permission === 'C' || permission === 'D') {
+                  $scope.isAmendReadOnly = false;
+                }
+              });
+            }
+          } 
+        });
+      }
+    }
+
     function setManualData(responseCollectionFromAPI) {
       var manualDataToInclude = [];
       var manualList = [];
@@ -1754,6 +1773,7 @@ angular.module('ts5App')
     function init () {
       initViewDefaults();
       initDependencies();
+      initAmendMode();
     }
 
     init();

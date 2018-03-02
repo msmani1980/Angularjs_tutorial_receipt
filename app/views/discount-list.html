@@ -1,4 +1,4 @@
-<div class="container">
+<div class="module-container">
 
     <div class="list-controls">
         <div class="row item-list-row">
@@ -14,7 +14,7 @@
                     <span class="hidden-sm hidden-xs">Filter</span>
                 </button>
 
-                <a href="/#/discounts/create" class="btn btn-primary">
+                <a href="/#/discounts/create" ng-show="isCRUD" class="btn btn-primary">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     <span class="hidden-xs">Create Discount</span>
                 </a>
@@ -73,7 +73,7 @@
             <th>Restriction</th>
             <th>Effective From</th>
             <th>Effective To</th>
-            <th>Actions</th>
+            <th ng-show="isCRUD">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -84,7 +84,7 @@
             <td>{{ discount.companyDiscountRestrictions }}</td>
             <td>{{ discount.startDate }}</td>
             <td>{{ discount.endDate }}</td>
-            <td>
+            <td ng-show="isCRUD">
                 <button class="btn btn-primary btn-xs" ng-click="editDiscount(discount)" ng-show="isDiscountEditable(discount)">
                     <i class="fa fa-pencil"></i>
                 </button>
@@ -125,3 +125,4 @@
         </div>
     </div>
 </div>
+<dynamic-left-nav></dynamic-left-nav>

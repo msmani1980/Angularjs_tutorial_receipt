@@ -5,7 +5,7 @@
         <h2 class="view-name">{{viewName}}</h2>
       </div>
       <div class="col-xs-8 text-right">
-        <button class="btn btn-primary" tabindex="-1" ng-click="createNewTaxRate()"><span class="fa fa-plus"></span><span class="hidden-xs">  Create Tax Rate</span></button>
+        <button class="btn btn-primary" tabindex="-1" ng-show="isCRUD" ng-click="createNewTaxRate()"><span class="fa fa-plus"></span><span class="hidden-xs">  Create Tax Rate</span></button>
         <button class="btn btn-default" tabindex="-1" data-toggle="collapse" data-target="#filter-controls" aria-expanded="false" aria-controls="search-collapse" ng-click="searchUiSelectReady()">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
@@ -136,7 +136,9 @@
           <th>Rate *</th>
           <th>Effective From *</th>
           <th>Effective To *</th>
-          <th>Actions</th>
+          <th>Updated Date/Time</th>
+          <th>Updated User</th>
+          <th ng-show="isCRUD">Actions</th>
         </tr>
       </thead>
       <!-- Switch ON taxRate.action - Table row -->
@@ -272,23 +274,29 @@
         <!-- Switch for endDate -->
         <td class="animate-switch col-xs-1" style="position:relative !important" ng-switch-when="read">{{ taxRate.endDate }}</td>
         <td class="animate-switch tax-rates-dates col-xs-1" style="position:relative !important" ng-switch-when="edit" >
-          <date-picker-field 
+          <date-picker-field
            min-date="minDate"
            custom-effective="true"
            custom-date="taxRate.endDate"
-           disable="isDisabledEndDateForm(taxRate)" 
-           ng-model="taxRate.endDate" 
+           disable="isDisabledEndDateForm(taxRate)"
+           ng-model="taxRate.endDate"
            orientation="determineDatePickerOrientation(taxRate)" ></date-picker-field>
         </td>
         <td class="animate-switch tax-rates-dates col-xs-1" style="position:relative !important" ng-switch-when="create">
-          <date-picker-field 
+          <date-picker-field
            min-date="minDate"
            custom-effective="true"
            custom-date="taxRate.endDate"
            ng-model="taxRate.endDate"></date-picker-field>
         </td>
+        <td ng-switch-when="read">{{ getUpdatedOn(taxRate) }}</td>
+        <td ng-switch-when="edit" style="padding-top:15px;">{{ getUpdatedOn(taxRate) }}</td>
+        <td ng-switch-when="create">{{ getUpdatedOn(taxRate) }}</td>
+        <td ng-switch-when="read">{{ getUpdateBy(taxRate) }}</td>
+        <td ng-switch-when="edit" style="padding-top:15px;">{{ getUpdateBy(taxRate) }}</td>
+        <td ng-switch-when="create">{{ getUpdateBy(taxRate) }}</td>
         <!-- Buttons for Read -->
-        <td class="animate-switch col-xs-1" ng-switch-when="read">
+        <td class="animate-switch col-xs-1" ng-switch-when="read" ng-show="isCRUD">
           <a class="btn btn-primary btn-xs" ng-show="isTaxRateEditable(taxRate)" ng-click="editCompanyTaxRate(taxRate)">
             <span class="fa fa-pencil"></span>
           </a>
@@ -297,7 +305,7 @@
           </a>
         </td>
         <!-- Buttons for Edit -->
-        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="edit">
+        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="edit" ng-show="isCRUD">
           <a tabindex="0" class="btn btn-primary btn-xs" ng-click="saveTaxRateEdits(taxRate)">
             <span class="fa fa-save"></span>
           </a>
@@ -306,7 +314,7 @@
           </a>
         </td>
         <!-- Buttons for Create -->
-        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="create">
+        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="create" ng-show="isCRUD">
           <a class="btn btn-primary btn-xs" ng-click="createNewTaxRatePayload(taxRate)">
             <span class="fa fa-save"></span>
           </a>

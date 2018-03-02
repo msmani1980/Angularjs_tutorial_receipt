@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('EmployeeMessageListCtrl',
-  function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $route, $location) {
+  function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $route, $location, accessService) {
 
     var $this = this;
     this.showLoadingModal = function(text) {
@@ -191,6 +191,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     };
 
     this.init = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('EMPLOYEEMSG', 'EMPLOYEEMESSAGE', 'CRUDEMSG');
       $scope.viewName = 'Employee Messages';
       $scope.search = {};
       $scope.selectedEmployees = {};

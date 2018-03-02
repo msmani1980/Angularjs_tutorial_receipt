@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExciseDutyListCtrl', function ($scope, exciseDutyFactory, globalMenuService, dateUtility, lodash, $q) {
+  .controller('ExciseDutyListCtrl', function ($scope, exciseDutyFactory, globalMenuService, dateUtility, lodash, $q, accessService) {
     $scope.viewName = 'Excise Duty List';
     var $this = this;
 
@@ -295,6 +295,7 @@ angular.module('ts5App')
 
     function init() {
       showLoadingModal('initializing');
+      $scope.isCRUD = accessService.crudAccessGranted('EXCISEDUTY', 'EXCISEDUTY', 'CUDEXCDT');
       initLazyLoadingMeta();
       $scope.newRecord = { alcoholic: false };
       $scope.search = null;

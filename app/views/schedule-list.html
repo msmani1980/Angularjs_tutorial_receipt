@@ -10,8 +10,8 @@
   <div class="post-trip-data-list">
     <div class="row">
       <div class="col-xs-12 text-left">
-        <a href="#/schedules/create" class="btn btn-primary">+ <span class="hidden-xs">Create Schedule</span></a>
-        <excel-upload type="schedule" class="excel-upload"></excel-upload>
+        <a href="#/schedules/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Schedule</span></a>
+        <excel-upload type="schedule" ng-show="isCRUD" class="excel-upload"></excel-upload>
 
         <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
@@ -188,6 +188,8 @@
           <th ng-show="displayColumns.groundTime">Ground Time</th>
           <th>Trip Distance</th>
           <th>Flight Info</th>
+          <th>Updated Date/Time</th>
+          <th>Updated User</th>
           <th ng-show="displayColumns.previousFlight">Prev. Flight</th>
           <th ng-show="displayColumns.nextFlight">Next Flight</th>
           <th>Actions</th>
@@ -216,19 +218,21 @@
             <span ng-show="schedule.firstTrip && schedule.lastTrip">, </span>
             <span ng-show="schedule.lastTrip">Last Trip</span>
           </td>
+          <td>{{ getUpdatedOn(schedule) }}</td>
+          <td>{{ getUpdateBy(schedule) }}</td>
           <td ng-show="displayColumns.previousFlight">{{ schedule.preScheduleNumber }}</td>
           <td ng-show="displayColumns.nextFlight">{{ schedule.nextScheduleNumber }}</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="redirectToSchedule(schedule.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="redirectToSchedule(schedule.id, 'edit')" ng-show="isScheduleEditable(schedule)" tabindex="0">
+            <button class="btn btn-primary btn-xs" ng-click="redirectToSchedule(schedule.id, 'edit')" ng-show="isCRUD && isScheduleEditable(schedule)" tabindex="0">
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-danger btn-xs"
                     ng-click="deleteRecordDialog(schedules[$index], ['scheduleNumber', 'deStationCode', 'depTime', 'arrStationCode', 'arrTime'])"
                     tabindex="0"
-                    ng-show="showDeleteButton(schedule.startDate)">
+                    ng-show="isCRUD && showDeleteButton(schedule.startDate)">
               <i class="fa fa-trash"></i>
             </button>
           </td>

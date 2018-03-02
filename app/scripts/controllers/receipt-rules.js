@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReceiptRulesCtrl', function ($scope, $location, $routeParams,  lodash, $q, dateUtility, messageService, receiptsFactory) {
+  .controller('ReceiptRulesCtrl', function ($scope, $location, $routeParams,  lodash, $q, dateUtility, messageService, receiptsFactory, accessService) {
 
     var $this = this;
 
@@ -189,11 +189,12 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-        var initDependencies = $this.makeInitPromises();
-        $q.all(initDependencies).then(function() {
-          angular.element('#search-collapse').addClass('collapse');
-        });
-      };
+      $scope.isCRUD = accessService.crudAccessGranted('RECEIPT', 'RECEIPTRULE', 'CRUDRRULE');
+      var initDependencies = $this.makeInitPromises();
+      $q.all(initDependencies).then(function() {
+        angular.element('#search-collapse').addClass('collapse');
+      });
+    };
 
     this.init();
   });

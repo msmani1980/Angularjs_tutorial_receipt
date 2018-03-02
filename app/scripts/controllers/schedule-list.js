@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ScheduleListCtrl', function ($scope, globalMenuService, $q, $location, dateUtility, lodash, postTripFactory, scheduleFactory, messageService) {
+  .controller('ScheduleListCtrl', function ($scope, globalMenuService, $q, $location, dateUtility, lodash, postTripFactory, scheduleFactory, messageService, accessService) {
     var companyId = globalMenuService.company.get();
     var $this = this;
     this.meta = {
@@ -177,6 +177,22 @@ angular.module('ts5App')
       $scope.loadSchedules();
     };
 
+    $scope.getUpdateBy = function (schedule) {
+      if (schedule.updatedByPerson) {
+        return schedule.updatedByPerson.userName;
+      }
+
+      if (schedule.createdByPerson) {
+        return schedule.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (schedule) {
+      return schedule.updatedOn ? dateUtility.formatTimestampForApp(schedule.updatedOn) : dateUtility.formatTimestampForApp(schedule.createdOn);
+    };
+
     this.constructStartDate = function () {
       return ($scope.isSearch) ? null : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
     };
@@ -232,6 +248,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('SCHEDULE', 'SCHEDULE', 'CRUDSCH');
       var initDependencies = $this.makeInitPromises();
       $q.all(initDependencies).then(function() {
         angular.element('#search-collapse').addClass('collapse');
