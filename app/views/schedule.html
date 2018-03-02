@@ -52,7 +52,7 @@
                                    name="EffectiveTo"
                                    label="Effective To"
                                    disable-past="true"
-                                   end-current-effective="editingItem && shouldDisableStartDate"
+                                   end-current-effective="(editingItem && shouldDisableStartDate) || isCreate"
                                    required="true"
                                    ng-model="schedule.endDate">
                 </date-picker-field>
