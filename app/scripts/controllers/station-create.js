@@ -15,7 +15,7 @@ angular.module('ts5App')
     $scope.loadingBarVisible = false;
     $scope.isSearch = false;
     $scope.editingItem = false;
-    $scope.stationList = [];
+    $scope.globalStationList = [];
 
     this.setCatererStationList = function(dataFromAPI) {
       $scope.catererStationList = angular.copy(dataFromAPI.response);
@@ -81,12 +81,14 @@ angular.module('ts5App')
 
     this.setStation = function(dataFromAPI) {
       var station = angular.copy(dataFromAPI);
+      console.log(station.stationId)
+      console.log($scope.stationList)
 
       var startDate = dateUtility.formatDateForApp(dataFromAPI.startDate);
       var endDate = dateUtility.formatDateForApp(dataFromAPI.endDate);
 
       $scope.formData = {
-        station: station,
+        station: lodash.find($scope.globalStationList, { id: station.stationId }),
         city: {
           id: station.cityId,
           cityName: station.cityName,
@@ -152,8 +154,8 @@ angular.module('ts5App')
         stationId: $scope.formData.station.id,
         cityId: $scope.formData.city.id,
         countryId: $scope.formData.country.id,
-        startDate: $scope.formData.startDate,
-        endDate: $scope.formData.endDate,
+        startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
         isCaterer: $scope.formData.isCaterer
       };
     };
@@ -163,7 +165,7 @@ angular.module('ts5App')
 
       var payload = this.generatePayload();
 
-      stationsFactory.createStation(payload).then($this.saveFormSuccess(), $this.saveFormFailure).finally($this.hideLoadingModal);
+      stationsFactory.createStation(payload).then($this.saveFormSuccess, $this.saveFormFailure).finally($this.hideLoadingModal);
     };
 
     this.updateStation = function() {
@@ -171,12 +173,15 @@ angular.module('ts5App')
 
       var payload = this.generatePayload();
 
-      stationsFactory.updateStation($routeParams.id, payload).then($this.saveFormSuccess(), $this.saveFormFailure).finally($this.hideLoadingModal);
+      console.log($scope.formData.station.id)
+      console.log(payload)
+
+      stationsFactory.updateStation($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure).finally($this.hideLoadingModal);
     };
 
     this.submitForm = function() {
       if (this.validateForm()) {
-        if ($routeParams.action === 'create') {
+        if ($routeParams.id) {
           this.updateStation();
         } else {
           this.createStation();
@@ -224,7 +229,7 @@ angular.module('ts5App')
         $this.showToastMessage('success', 'Station successfully saved', 'success');
       }
 
-      $location.path('stations-list');
+      $location.path('station-list');
     };
 
     this.saveFormFailure = function(dataFromAPI) {

@@ -10,7 +10,7 @@
 angular.module('ts5App').service('stationsService', function ($resource, ENV, dateUtility, Upload) {
 
   var globalRequestURL = ENV.apiUrl + '/rsvr/api/company-station-globals';
-  var stationListRequestURL = ENV.apiUrl + '/rsvr/api/companies/:id/stations/:stationId';
+  var stationListRequestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/stations/:companyStationId';
   var stationRequestURL = ENV.apiUrl + '/rsvr/api/stations/:stationId';
 
   var stationListRequestParameters = {
@@ -67,7 +67,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
   var getStationList = function (companyId, offset, customPayload) {
     var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
     var payload = {
-      id: companyId,
+      companyId: companyId,
       startDate: nowDate,
       endDate: nowDate
     };
@@ -78,7 +78,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
 
     if (customPayload) {
       angular.extend(customPayload, {
-        id: companyId
+        companyId: companyId
       });
     }
 
@@ -87,27 +87,25 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
   };
 
   var getCompanyStation = function (companyId, id) {
-    return stationListRequestResource.getCompanyStation({ stationId: id, id: companyId }).$promise;
+    return stationListRequestResource.getCompanyStation({ companyStationId: id, companyId: companyId }).$promise;
   };
 
   var bulkUpdateStation = function (companyId, payload) {
-    payload.id = companyId;
+    payload.companyId = companyId;
 
-    return stationListRequestResource.bulkUpdateStation(payload).$promise;
+    return stationListRequestResource.bulkUpdateStation({ companyId: companyId }, payload).$promise;
   };
 
   var createStation = function (companyId, payload) {
-    payload.id = companyId;
-
-    return stationListRequestResource.createStation(payload).$promise;
+    return stationListRequestResource.createStation({ companyId: companyId }, payload).$promise;
   };
 
   var updateStation = function (companyId, id, payload) {
-    return stationListRequestResource.updateStation({ stationId: id, id: companyId }, payload).$promise;
+    return stationListRequestResource.updateStation({ companyStationId: id, companyId: companyId }, payload).$promise;
   };
 
   var removeStation = function (companyId, id) {
-    return stationListRequestResource.removeStation({ stationId: id, id: companyId }).$promise;
+    return stationListRequestResource.removeStation({ companyStationId: id, companyId: companyId }).$promise;
   };
 
   var importFromExcel = function (companyId, file) {

@@ -349,6 +349,17 @@ angular.module('ts5App')
             apiName: '/api/station-list',
             permissionCodes: ['R']
           }]
+        }, {
+          name: 'Create Company Stations',
+          route: '/#/station-create',
+          icon: 'icon-menu-assignment',
+          className: 'dashboard-stations',
+          package: 'COMPANY',
+          role: 'COMPANYSTATION',
+          permissions: [{
+            apiName: '/api/station-create',
+            permissionCodes: ['C']
+          }]
         }]
       }, {
         title: 'Receipt Rule',
