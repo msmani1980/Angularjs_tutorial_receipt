@@ -156,16 +156,39 @@ angular.module('ts5App')
     };
 
     this.createStation = function() {
+      $this.showLoadingModal('Creating Station');
+
       var payload = this.generatePayload();
 
-      // mock API call here
-      this.createStationSuccess(payload);
+      stationsFactory.createStation(payload).then($this.saveFormSuccess(), $this.saveFormFailure).finally($this.hideLoadingModal);
+    };
+
+    this.updateStation = function() {
+      $this.showLoadingModal('Saving Station');
+
+      var payload = this.generatePayload();
+
+      stationsFactory.updateStation(payload).then($this.saveFormSuccess(), $this.saveFormFailure).finally($this.hideLoadingModal);
     };
 
     this.submitForm = function() {
       if (this.validateForm()) {
-        this.createStation();
+        if ($routeParams.action === 'create') {
+          this.updateStation();
+        } else {
+          this.createStation();
+        }
+      } else {
+        $scope.displayError = true;
       }
+    };
+
+    this.displayLoadingModal = function(loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
     };
 
     this.checkIfViewOnly = function() {
@@ -184,15 +207,30 @@ angular.module('ts5App')
       });
     };
 
-    $scope.isDisabled = function() {
-      return $scope.shouldDisableStartDate || $this.viewOnly;
-    };
-
     this.setFormAsEdit = function() {
       $scope.buttonText = 'Save';
       $scope.viewLabel = 'Editing';
       $scope.editingItem = true;
       this.checkIfViewOnly();
+    };
+
+    this.saveFormSuccess = function() {
+      if ($routeParams.action === 'create') {
+        $this.showToastMessage('success', 'Station successfully created', 'success');
+      } else {
+        $this.showToastMessage('success', 'Station successfully saved', 'success');
+      }
+
+      $location.path('stations-list');
+    };
+
+    this.saveFormFailure = function(dataFromAPI) {
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
+    this.showToastMessage = function(className, type, message) {
+      messageService.display(className, message, type);
     };
 
     this.setUISelectValidationClass = function(inputName) {
@@ -272,6 +310,10 @@ angular.module('ts5App')
 
     $scope.isViewOnly = function() {
       return $this.viewOnly;
+    };
+
+    $scope.isDisabled = function() {
+      return $scope.shouldDisableStartDate || $this.viewOnly;
     };
 
     $scope.$watch('formData.country', function(country) {

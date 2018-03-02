@@ -23,7 +23,7 @@ angular.module('ts5App')
 
       return stationsService.bulkUpdateStation(companyId, payload);
     };
-    
+
     var createStation = function (payload) {
       var companyId = globalMenuService.company.get();
 
