@@ -40,6 +40,12 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       },
       bulkUpdateStation: {
         method: 'PUT'
+      },
+      createStation: {
+        method: 'POST'
+      },
+      updateStation: {
+        method: 'PUT'
       }
     };
   var globalRequestResource = $resource(globalRequestURL, null, actions);
@@ -90,6 +96,14 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     return stationListRequestResource.bulkUpdateStation(payload).$promise;
   };
 
+  var createStation = function (payload) {
+    return stationListRequestResource.createStation(payload).$promise;
+  };
+
+  var updateStation = function (companyId, id, payload) {
+    return stationListRequestResource.updateStation({ stationId: id, id: companyId }, payload).$promise;
+  };
+
   var removeStation = function (companyId, id) {
     return stationListRequestResource.removeStation({ stationId: id, id: companyId }).$promise;
   };
@@ -109,6 +123,8 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     getCompanyStation: getCompanyStation,
     bulkUpdateStation: bulkUpdateStation,
     removeStation: removeStation,
+    createStation: createStation,
+    updateStation: updateStation,
     importFromExcel: importFromExcel
   };
 
