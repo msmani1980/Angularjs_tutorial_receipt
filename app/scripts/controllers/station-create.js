@@ -151,7 +151,10 @@ angular.module('ts5App')
       return {
         stationId: $scope.formData.station.id,
         cityId: $scope.formData.city.id,
-        countryId: $scope.formData.country.id
+        countryId: $scope.formData.country.id,
+        startDate: $scope.formData.startDate,
+        endDate: $scope.formData.endDate,
+        isCaterer: $scope.formData.isCaterer
       };
     };
 
@@ -168,7 +171,7 @@ angular.module('ts5App')
 
       var payload = this.generatePayload();
 
-      stationsFactory.updateStation(payload).then($this.saveFormSuccess(), $this.saveFormFailure).finally($this.hideLoadingModal);
+      stationsFactory.updateStation($routeParams.id, payload).then($this.saveFormSuccess(), $this.saveFormFailure).finally($this.hideLoadingModal);
     };
 
     this.submitForm = function() {

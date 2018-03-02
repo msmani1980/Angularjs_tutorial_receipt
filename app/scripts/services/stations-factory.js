@@ -30,10 +30,10 @@ angular.module('ts5App')
       return stationsService.createStation(companyId, payload);
     };
 
-    var updateStation = function (payload) {
+    var updateStation = function (id, payload) {
       var companyId = globalMenuService.company.get();
 
-      return stationsService.updateStation(companyId, payload);
+      return stationsService.updateStation(companyId, id, payload);
     };
 
     var removeStation = function (id) {
