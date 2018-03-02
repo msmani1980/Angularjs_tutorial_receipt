@@ -96,7 +96,9 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     return stationListRequestResource.bulkUpdateStation(payload).$promise;
   };
 
-  var createStation = function (payload) {
+  var createStation = function (companyId, payload) {
+    payload.id = companyId;
+
     return stationListRequestResource.createStation(payload).$promise;
   };
 

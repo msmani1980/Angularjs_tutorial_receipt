@@ -23,6 +23,18 @@ angular.module('ts5App')
 
       return stationsService.bulkUpdateStation(companyId, payload);
     };
+    
+    var createStation = function (payload) {
+      var companyId = globalMenuService.company.get();
+
+      return stationsService.createStation(companyId, payload);
+    };
+
+    var updateStation = function (payload) {
+      var companyId = globalMenuService.company.get();
+
+      return stationsService.updateStation(companyId, payload);
+    };
 
     var removeStation = function (id) {
       var companyId = globalMenuService.company.get();
@@ -39,6 +51,8 @@ angular.module('ts5App')
       getGlobalStationList: getGlobalStationList,
       getStationList: getStationList,
       getCompanyStation: getCompanyStation,
+      createStation: createStation,
+      updateStation: updateStation,
       removeStation: removeStation,
       bulkUpdateStation: bulkUpdateStation
     };
