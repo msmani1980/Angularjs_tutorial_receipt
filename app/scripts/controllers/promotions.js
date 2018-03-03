@@ -651,7 +651,6 @@ angular.module('ts5App')
           setScopePromotionForViewFromAPIdata(angular.copy(promotionDataFromAPI));
         });
       }
-  	console.log ('handlePromiseSuccessHandler->$scope.promotion', $scope.promotion);
 
       hideLoadingModal();
     }
