@@ -497,7 +497,6 @@ angular.module('ts5App')
     }
 
     function setCurrencyGlobals(dataFromAPI) {
-    	console.log ('setCurrencyGlobals->dataFromAPI', dataFromAPI);
       $scope.companyCurrencyGlobals = dataFromAPI.response;
       angular.forEach(dataFromAPI.response, function (currency) {
         $scope.spendLimitAmountsUi.push({
