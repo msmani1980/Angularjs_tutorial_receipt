@@ -208,6 +208,10 @@ angular.module('ts5App')
           benefitsAmount.companyPromotionId = benefitsAmountData.companyPromotionId;
         }
 
+        if ($scope.promotion.milesPoints) {
+          payload.milesPoints = $scope.promotion.milesPoints;
+        }
+
         return benefitsAmount;
       });
     }
@@ -337,7 +341,8 @@ angular.module('ts5App')
         discountPercentage: null,
         lowestPricedArticle: null,
         benefitAmounts: null,
-        filters: null
+        filters: null,
+        milesPoints: null
       };
 
       // Qualifier Types
@@ -492,6 +497,7 @@ angular.module('ts5App')
     }
 
     function setCurrencyGlobals(dataFromAPI) {
+    	console.log ('setCurrencyGlobals->dataFromAPI', dataFromAPI);
       $scope.companyCurrencyGlobals = dataFromAPI.response;
       angular.forEach(dataFromAPI.response, function (currency) {
         $scope.spendLimitAmountsUi.push({
@@ -635,6 +641,9 @@ angular.module('ts5App')
     }
 
     function handlePromiseSuccessHandler(promotionDataFromAPI) {
+    	
+    	console.log ('handlePromiseSuccessHandler->promotionDataFromAPI', promotionDataFromAPI);
+    	
       setCrudFlags();
       if (promotionDataFromAPI) {
         $scope.promotion = angular.copy(promotionDataFromAPI);
@@ -646,6 +655,7 @@ angular.module('ts5App')
           setScopePromotionForViewFromAPIdata(angular.copy(promotionDataFromAPI));
         });
       }
+  	console.log ('handlePromiseSuccessHandler->$scope.promotion', $scope.promotion);
 
       hideLoadingModal();
     }
