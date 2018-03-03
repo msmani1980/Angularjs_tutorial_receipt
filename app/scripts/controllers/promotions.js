@@ -641,9 +641,6 @@ angular.module('ts5App')
     }
 
     function handlePromiseSuccessHandler(promotionDataFromAPI) {
-    	
-    	console.log ('handlePromiseSuccessHandler->promotionDataFromAPI', promotionDataFromAPI);
-    	
       setCrudFlags();
       if (promotionDataFromAPI) {
         $scope.promotion = angular.copy(promotionDataFromAPI);
