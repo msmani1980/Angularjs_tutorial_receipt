@@ -11,10 +11,15 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
 
   var globalRequestURL = ENV.apiUrl + '/rsvr/api/company-station-globals';
   var stationListRequestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/stations/:companyStationId';
+  var stationBulkRequestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/stations/bulk';
   var stationRequestURL = ENV.apiUrl + '/rsvr/api/stations/:stationId';
 
   var stationListRequestParameters = {
-      id: '@id'
+      id: '@companyId'
+    };
+
+  var stationBulkRequestParameters = {
+      id: '@companyId'
     };
 
   var stationRequestParameters = {
@@ -50,6 +55,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     };
   var globalRequestResource = $resource(globalRequestURL, null, actions);
   var stationListRequestResource = $resource(stationListRequestURL, stationListRequestParameters, actions);
+  var stationBulkRequestResource = $resource(stationBulkRequestURL, stationBulkRequestParameters, actions);
   var stationRequestResource = $resource(stationRequestURL, stationRequestParameters, actions);
 
   // Global Station
@@ -91,9 +97,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
   };
 
   var bulkUpdateStation = function (companyId, payload) {
-    payload.companyId = companyId;
-
-    return stationListRequestResource.bulkUpdateStation({ companyId: companyId }, payload).$promise;
+    return stationBulkRequestResource.bulkUpdateStation({ companyId: companyId }, payload).$promise;
   };
 
   var createStation = function (companyId, payload) {
