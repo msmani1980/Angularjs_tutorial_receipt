@@ -81,8 +81,6 @@ angular.module('ts5App')
 
     this.setStation = function(dataFromAPI) {
       var station = angular.copy(dataFromAPI);
-      console.log(station.stationId)
-      console.log($scope.stationList)
 
       var startDate = dateUtility.formatDateForApp(dataFromAPI.startDate);
       var endDate = dateUtility.formatDateForApp(dataFromAPI.endDate);
@@ -172,9 +170,6 @@ angular.module('ts5App')
       $this.displayLoadingModal('Saving Station');
 
       var payload = this.generatePayload();
-
-      console.log($scope.formData.station.id)
-      console.log(payload)
 
       stationsFactory.updateStation($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure).finally($this.hideLoadingModal);
     };
