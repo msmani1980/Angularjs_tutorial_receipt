@@ -207,6 +207,7 @@ angular.module('ts5App')
         if (angular.isDefined(benefitsAmountData.companyPromotionId)) {
           benefitsAmount.companyPromotionId = benefitsAmountData.companyPromotionId;
         }
+
         //TSVPORTAL-10458 Setup miles/points per promotion
         if ($scope.promotion.milesPoints) {
           payload.milesPoints = $scope.promotion.milesPoints;
