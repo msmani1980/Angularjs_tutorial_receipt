@@ -99,7 +99,7 @@ angular.module('ts5App')
 
       $this.meta.offset += $this.meta.limit;
 
-      return stationsFactory.getStationList($this.meta.offset, payload).then($this.setStationList).finally(this.hideLoadingBar);
+      return stationsFactory.getStationList($this.meta.offset, payload).then(this.setStationList).finally(this.hideLoadingBar);
     };
 
     this.setGlobalStationList = function(dataFromAPI) {
@@ -147,7 +147,7 @@ angular.module('ts5App')
     };
 
     this.dateActive = function(date) {
-      return dateUtility.isTodayOrEarlier(date);
+      return dateUtility.isTodayOrEarlierDatePicker(date);
     };
 
     this.getSelectedStations = function() {
@@ -205,7 +205,8 @@ angular.module('ts5App')
     };
 
     this.saveStationsSuccess = function() {
-      this.showSuccessMessage('Selected stations have been updated!');
+      $this.hideLoadingModal();
+      $this.showSuccessMessage('Selected stations have been updated!');
     };
 
     this.showSaveErrors = function(dataFromAPI) {
@@ -266,8 +267,8 @@ angular.module('ts5App')
 
     this.updateStationEndDate = function(current, stationId) {
       var station = this.getStationInFormData(stationId);
-      if (station && !dateUtility.isYesterdayOrEarlier(station.endDate) &&
-        !dateUtility.isYesterdayOrEarlier(current.endDate)) {
+      if (station && !dateUtility.isYesterdayOrEarlierDatePicker(station.endDate) &&
+        !dateUtility.isYesterdayOrEarlierDatePicker(current.endDate)) {
         station.endDate = current.endDate;
       }
     };
@@ -428,7 +429,7 @@ angular.module('ts5App')
     };
 
     $scope.getStationList = function () {
-      if (!$scope.isSearch) {
+      if ($this.meta.offset >= $this.meta.count || !$scope.isSearch) {
         return;
       }
 
