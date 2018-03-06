@@ -84,15 +84,12 @@ angular.module('ts5App')
       angular.forEach($scope.menuItemList, function (menuItem) {
         if (menuItem.selectedItem && (menuItem.itemQty || menuItem.itemQty === 0)) {
           var itemPayload = {};
-          if (menuId) {
-            itemPayload.menuId = menuId;
-          }
-
           if (menuItem.id && !$scope.cloningItem) {
+            itemPayload.menuId = menuId;
             itemPayload.id = menuItem.id;
           }
 
-          itemPayload.itemId = menuItem.selectedItem.id;
+          itemPayload.itemId = $scope.isMenuEditable() ? menuItem.selectedItem.id : menuItem.itemId;
           itemPayload.itemQty = parseInt(menuItem.itemQty);
           itemPayload.sortOrder = parseInt(menuItem.sortOrderIndex);
           itemsArray.push(itemPayload);
@@ -289,10 +286,31 @@ angular.module('ts5App')
         endDate: endDate
       };
 
-      menuFactory.getItemsList(searchPayload, true).then(setFilteredMasterItems, showErrors);
+      if ($scope.isMenuEditable()) {
+        menuFactory.getItemsList(searchPayload, true).then(setFilteredMasterItems, showErrors);  
+      }
+
     }
 
-    function deserializeMenuItems(masterItemList) {
+    function deserializeMenuItems() {
+      $scope.menuItemList = [];
+      angular.forEach($scope.menu.menuItems, function (item, index) {
+        var newItem = {
+          itemQty: item.itemQty,
+          id: item.id,
+          menuIndex: index,
+          selectedItem: item,
+          itemId: item.itemId,
+          itemName: item.itemName,
+          sortOrder: item.sortOrder
+        };
+        $scope.menuItemList.push(newItem);
+      });
+
+      $scope.menuItemList = $filter('orderBy')($scope.menuItemList, 'sortOrder');
+    }
+
+    function deserializeMenuItemsEditMode(masterItemList) {
       $scope.menuItemList = [];
       angular.forEach($scope.menu.menuItems, function (item, index) {
         var itemMatch = lodash.findWhere(masterItemList, { id: item.itemId });
@@ -301,6 +319,8 @@ angular.module('ts5App')
           id: item.id,
           menuIndex: index,
           selectedItem: itemMatch,
+          itemId: item.itemId,
+          itemName: item.itemName,
           sortOrder: item.sortOrder
         };
         $scope.menuItemList.push(newItem);
@@ -310,10 +330,14 @@ angular.module('ts5App')
     }
 
     function completeInit(responseCollection) {
-      $scope.categories = angular.copy(responseCollection[0].salesCategories);
-      if (angular.isDefined(responseCollection[1])) {
-        $scope.menu = angular.copy(responseCollection[2]);
-        deserializeMenuItems(angular.copy(responseCollection[1].masterItems));
+      if (angular.isDefined(responseCollection[0])) {
+        $scope.menu = angular.copy(responseCollection[0]);
+        if ($scope.isMenuEditable()) {
+          $scope.categories = angular.copy(responseCollection[1].salesCategories);
+          deserializeMenuItemsEditMode(angular.copy(responseCollection[2].masterItems));
+        } else {
+          deserializeMenuItems();	
+        }  
       }
 
       $scope.menuEditForm.$setPristine();
@@ -321,13 +345,15 @@ angular.module('ts5App')
     }
 
     function setInitPromises() {
-      var promises = [
-        menuFactory.getSalesCategoriesList({})
-      ];
+      var promises = [];
 
       if ($routeParams.id) {
-        promises.push(menuFactory.getItemsList({}, true));
         promises.push(menuFactory.getMenu($routeParams.id));
+        if ($scope.isMenuEditable()) {
+          promises.push(menuFactory.getSalesCategoriesList({}));
+          promises.push(menuFactory.getItemsList({}, true));
+        } 
+        
       }
 
       return promises;
@@ -363,7 +389,7 @@ angular.module('ts5App')
     init();
 
     $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
-      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
+      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate && $scope.isMenuEditable()) {
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
       }
     });
