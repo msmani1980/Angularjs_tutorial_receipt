@@ -97,6 +97,10 @@ angular.module('ts5App')
       $this.deletePromotion($scope.promotionToDelete.id);
     };
 
+    $scope.getUpdatedOn = function (promotion) {
+      return promotion.updatedOn ? dateUtility.formatTimestampForApp(promotion.updatedOn) : dateUtility.formatTimestampForApp(promotion.createdOn);
+    };
+
     this.setPromotionsList = function(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var promotionList = angular.copy(dataFromAPI.promotions);

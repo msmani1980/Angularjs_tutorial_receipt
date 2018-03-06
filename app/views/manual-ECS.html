@@ -95,8 +95,6 @@
 	                disable-date-range="true"
 	                start-date-model="portalSearch.scheduleDate"
 	                is-search-field="true"
-	                disable-start-date="readOnly"
-	                required="false"
 	                label-from="Schedule Date">
 	              </date-picker>
                 </div>
@@ -152,8 +150,6 @@
 	                disable-date-range="true"
 	                start-date-model="eposSearch.scheduleDate"
 	                is-search-field="true"
-	                disable-start-date="readOnly"
-	                required="false"
 	                label-from="Schedule Date">
 	              </date-picker>
                 </div>
@@ -184,7 +180,7 @@
 
       <div class="row">
         <div class="col-xs-6">
-          <table class="table table-hover table-responsive" ng-show="storeInstances.length">
+          <table infinite-scroll="loadPortalInstances()" class="table table-hover table-responsive ng-scope" ng-show="storeInstances.length">
             <thead>
             <tr>
               <th>Store Number</th>
@@ -394,7 +390,7 @@
 
     <div class="row">
       <div class="col-xs-12">
-        <table class="table table-bordered table-hover table-responsive" ng-show="allECSInstances.length">
+        <table infinite-scroll="loadAllECSInstances()" class="table table-bordered table-hover table-responsive" ng-show="allECSInstances.length">
           <thead>
           <tr>
             <th>Portal Store Number</th>
