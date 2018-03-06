@@ -52,6 +52,9 @@ angular.module('ts5App')
 
     $scope.search = {};
     $scope.isCreditCardPaymentSelected = false;
+    $scope.search.transactionStartDate = dateUtility.yesterdayFormattedDatePicker();
+    $scope.search.transactionEndDate = dateUtility.tomorrowFormattedDatePicker();
+    $scope.isSearch = false;
 
     $scope.printStoreNumber = function (transaction) {
       if (transaction.storeNumber) {
@@ -138,7 +141,6 @@ angular.module('ts5App')
     };
 
     $this.meta = {};
-    $this.isSearch = false;
 
     function isNotVoidedSaleTransaction(transaction) {
       var isVoidedSaleTransaction = transaction.parentId &&
@@ -187,6 +189,22 @@ angular.module('ts5App')
 
       return paymentMethods.indexOf('Credit Card') > -1;
     }
+    
+    this.showResponseError = function(response) {
+      var errorVar = response.data;
+      $scope.isSearchLoading = false;
+      if (errorVar.indexOf('not a valid') !== -1) {
+        hideLoadingBar();
+      } else {
+        hideLoadingBar();
+        $scope.displayError = true;
+        $scope.errorResponse = errorVar;  
+      }
+    };
+
+    this.showFilterPanel = function() {
+      angular.element('#search-collapse').removeClass('collapse');
+    };
 
     function resetCreditCardSearchInputs() {
       $scope.search.cardHolderName = null;
@@ -226,17 +244,18 @@ angular.module('ts5App')
 
       showLoadingBar();
 
-      transactionFactory.getTransactionList(generateGetTransactionsPayload()).then(appendTransactions);
+      transactionFactory.getTransactionList(generateGetTransactionsPayload()).then(appendTransactions, $this.showResponseError);
       $this.meta.offset += $this.meta.limit;
     };
 
     $scope.clearSearch = function () {
       $scope.search = {};
+      $scope.isSearch = false;
       $scope.transactions = [];
     };
 
     $scope.searchTransactions = function () {
-      $this.isSearch = true;
+      $scope.isSearch = true;
       clearTransactions();
       setDefaultMetaPayload();
 
@@ -249,8 +268,6 @@ angular.module('ts5App')
 
     function sanitizeSearchPayload(payload) {
       payloadUtility.sanitize(payload);
-      payload.transactionStartDate = payloadUtility.serializeDate(payload.transactionStartDate);
-      payload.transactionEndDate = payloadUtility.serializeDate(payload.transactionEndDate);
 
       if (payload.paymentMethods) {
         payload.paymentMethods = payload.paymentMethods.join(',');
@@ -274,9 +291,12 @@ angular.module('ts5App')
         'withoutPaymentMethods[0]': 'Promotion'
       };
 
-      if ($this.isSearch) {
+      if ($scope.isSearch) {
         angular.extend(payload, $scope.search);
       }
+      
+      payload.transactionStartDate = payloadUtility.serializeDate(payload.transactionStartDate ? payload.transactionStartDate : dateUtility.yesterdayFormattedDatePicker());
+      payload.transactionEndDate = payloadUtility.serializeDate(payload.transactionEndDate ? payload.transactionEndDate : dateUtility.tomorrowFormattedDatePicker());
 
       sanitizeSearchPayload(payload);
 
@@ -284,6 +304,7 @@ angular.module('ts5App')
     }
 
     function setDefaultMetaPayload() {
+      $scope.isSearch = true;
       $this.meta = {
         limit: 100,
         offset: 0
@@ -341,6 +362,10 @@ angular.module('ts5App')
         .filter(filterNotFullyPaidOffDiscount);
 
       $scope.transactions = $scope.transactions.concat(normalizeTransactions(transactions));
+      if ($scope.transactions.length === 0) {
+        $this.showFilterPanel();
+      }
+
       hideLoadingBar();
     }
 

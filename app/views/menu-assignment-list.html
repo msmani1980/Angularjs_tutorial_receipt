@@ -5,7 +5,7 @@
 
     <div class="row">
       <div class="col-xs-6">
-        <button class="btn btn-primary" tabindex="0" ng-disabled="!(hasSelectedMenuAssignments())" ng-click="showBulkExecuteActionModal('Apply Rules')">Apply Rules
+        <button class="btn btn-primary" tabindex="0" ng-show="isCRUD" ng-disabled="!(hasSelectedMenuAssignments())" ng-click="showBulkExecuteActionModal('Apply Rules')">Apply Rules
         </button>
       </div>
       <div class="col-xs-6 text-right">
@@ -229,7 +229,7 @@
           <th ng-show="displayColumns.previousFlight">Prev. Flight</th>
           <th ng-show="displayColumns.nextFlight">Next Flight</th>
           <th>Last Updated On</th>
-          <th>Actions</th>
+          <th ng-show="isCRUD">Actions</th>
         </tr>
         </thead>
         <tbody ng-repeat="menuAssignment in menuAssignments">
@@ -265,7 +265,7 @@
           <td ng-show="displayColumns.nextFlight">{{ menuAssignment.nextFlight }}</td>
 
           <td>{{ menuAssignment.updatedOn }}</td>
-          <td>
+          <td ng-show="isCRUD">
             <button class="btn btn-primary btn-xs" ng-click="redirectToMenuAssignment(menuAssignment.scheduleDayId, 'edit')" tabindex="0">
               <i class="fa fa-pencil"></i>
             </button>

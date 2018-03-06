@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('EmployeeMessageListCtrl',
-  function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $route, $location) {
+  function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $route, $location, accessService) {
 
     var $this = this;
     this.showLoadingModal = function(text) {
@@ -57,6 +57,22 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     $scope.removeRecord = function(record) {
       $this.showLoadingModal();
       employeeMessagesFactory.deleteEmployeeMessage(record.id).then($this.deleteEmployeeMessagesSuccess);
+    };
+
+    $scope.getUpdateBy = function (message) {
+      if (message.updatedByPerson) {
+        return message.updatedByPerson.userName;
+      }
+
+      if (message.createdByPerson) {
+        return message.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (message) {
+      return message.updatedOn ? dateUtility.formatTimestampForApp(message.updatedOn) : dateUtility.formatTimestampForApp(message.createdOn);
     };
 
     this.setSchedulesFromAPI = function(dataFromAPI) {
@@ -175,6 +191,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     };
 
     this.init = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('EMPLOYEEMSG', 'EMPLOYEEMESSAGE', 'CRUDEMSG');
       $scope.viewName = 'Employee Messages';
       $scope.search = {};
       $scope.selectedEmployees = {};

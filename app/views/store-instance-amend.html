@@ -282,6 +282,7 @@
     </div>
   </div>
 
+
   <div class="modal fade overwrite-cashbag-warning-modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -412,6 +413,11 @@
               <div class="row">
                 <div class="col-xs-12">
                   <h4>Origin Cash Bag</h4>
+                  <div class="alert alert-warning" ng-show="isAmended(rearrangeOriginCashBag)">
+                    <span class="fa fa-exclamation-circle">
+                    </span> 
+                    Cannot rearrange sectors.<br/> 
+                    Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b> was amended. </div>
                   <select class="form-control"
                           ng-model="rearrangeOriginCashBag"
                           ng-options="cashBag as cashBag.cashBag for cashBag in normalizedCashBags | filter:{isDeleted:false} | orderBy: 'cashBag'"
@@ -419,7 +425,7 @@
                     <option selected="selected" value>Select a Cash Bag</option>
                   </select>
                   <hr>
-                  <table class="table" ng-show="rearrangeOriginCashBag">
+                  <table class="table" ng-show="rearrangeOriginCashBag" >
                     <tr class="active">
                       <td>Select</td>
                       <th>Sch #</th>
@@ -428,10 +434,10 @@
                     </tr>
                     <tr ng-repeat="sector in rearrangeOriginCashBag.flightSectorsForRearrange"
                                             ng-class="getClassesForRearrangeSectors(sector, 'background')" >
-                      <td ng-click="toggleSelectSectorToRearrange(sector)">
-                        <button ng-class="getClassesForRearrangeSectors(sector, 'button')">
-                          <span ng-class="getClassesForRearrangeSectors(sector, 'buttonIcon')"></span>
-                        </button>
+                      <td ng-click="toggleSelectSectorToRearrange(sector, rearrangeOriginCashBag)">
+                          <button ng-class="getClassesForRearrangeSectors(sector, 'button')">
+                            <span ng-class="getClassesForRearrangeSectors(sector, 'buttonIcon')"></span>
+                          </button>
                       </td>
                       <td>{{ sector.scheduleNumber }}</td>
                       <td>{{ sector.scheduleDate}}</td>
@@ -486,6 +492,34 @@
     </div>
   </div>
 
+  <div class="modal fade rearrange-sectors-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Are you sure?</h4>
+        </div>
+
+        <div class="modal-body">
+          <p>You want to re-arrange sector <b>{{ singleSectorsToMove.scheduleNumber }}</b> 
+          from Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b> 
+          to Cash Bag <b>{{rearrangeTargetCashBag.cashBag}}</b>
+          <br/><br/>
+          Target Cash Bag  <b>{{ rearrangeTargetCashBag.cashBag }}</b> already has sector with the schedule number <b>{{ singleSectorsToMove.scheduleNumber }}</b>, 
+          schedule  date <b>{{ singleSectorsToMove.scheduleDate}}</b>, 
+          departure station <b>{{singleSectorsToMove.departureStation}}</b>, 
+          arrival station <b>{{singleSectorsToMove.arrivalStation}}</b>. 
+          Do you want to continue ?</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" ng-click="continueRearrange()">Continue</button>
+          <button type="button" class="btn btn-default" ng-click="cancelRearrange()"  data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div class="modal fade delete-cashbag-warning-modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -801,7 +835,7 @@
             </div>
 
             <div class="col-xs-3 text-right">
-              <button class="btn btn-warning" ng-click="showRearrangeSectorModal()" ng-show="canExecuteActions() && hasMoreThanOneUnverifiedCashBags()">
+              <button ng-if="!isAmendReadOnly" class="btn btn-warning" ng-click="showRearrangeSectorModal()" ng-show="canExecuteActions() && hasMoreThanOneUnverifiedCashBags()">
                 <i class="fa fa-tasks active"></i> Rearrange Flight Sectors
               </button>
             </div>
@@ -852,7 +886,7 @@
                         Verified by {{cashBag.verifiedByUser}} on {{cashBag.verifiedOn}}
                       </div>
                       <div class="col-xs-4 text-right">
-                        <button class="btn btn-success btn-xs" ng-click="toggleVerifiedCashBag(cashBag)" ng-show="canExecuteUnferify()">
+                        <button class="btn btn-success btn-xs" ng-click="toggleVerifiedCashBag(cashBag)" ng-show="canExecuteUnferify() && !isAmendReadOnly">
                           <i class="fa fa-times active"></i> Unverify
                         </button>
                       </div>
@@ -941,7 +975,7 @@
                   <h4>Post Trip Sectors</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-primary btn-sm" ng-show="canAddPosttripToCashBag(cashBag) && !cashBag.isDeleted && canExecuteActions(cashBag)" ng-click="showAddOrEditScheduleModal(cashBag)" >
+                  <button class="btn btn-primary btn-sm" ng-show="!isAmendReadOnly && canAddPosttripToCashBag(cashBag) && !cashBag.isDeleted && canExecuteActions(cashBag)" ng-click="showAddOrEditScheduleModal(cashBag)" >
                     <i class="fa fa-plus active"></i> Add Post Trip
                   </button>
                   <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-show="!isCrewDataOpen(cashBag)">
@@ -987,8 +1021,8 @@
                       <td>{{ getOrNA(flightSector.transactionCount) }}</td>
                       <td>{{ getOrNA(flightSector.transactionTotal) }}</td>
                       <td ng-hide="cashBag.isDeleted">
-                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(cashBag, flightSector)" ng-show="canExecuteEditActionsPsttrip(cashBag, flightSector)"><i class="fa fa-pencil active"></i></button>
-                        <button class="btn btn-danger btn-xs" ng-click="showDeleteScheduleModal(flightSector, cashBag.id)" ng-show="canExecuteDeleteActionsPsttrip(cashBag, flightSector)"><i class="fa fa-trash active"></i></button>
+                        <button class="btn btn-primary btn-xs" ng-click="showAddOrEditScheduleModal(cashBag, flightSector)" ng-show="!isAmendReadOnly && canExecuteEditActionsPsttrip(cashBag, flightSector)"><i class="fa fa-pencil active"></i></button>
+                        <button class="btn btn-danger btn-xs" ng-click="showDeleteScheduleModal(flightSector, cashBag.id)" ng-show="!isAmendReadOnly && canExecuteDeleteActionsPsttrip(cashBag, flightSector)"><i class="fa fa-trash active"></i></button>
                       </td>
                     </tr>
                     <tr class="subversion-row" ng-show="flightSector.rowOpen">
@@ -1020,19 +1054,19 @@
                   <button class="btn btn-info" title="Show Payment Report" ng-click="showCashBagPaymentReport(cashBag)">
                     <i class="fa fa-file-text active"></i>
                   </button>
-                  <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" title="Add Manual Data" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="cashBag.isManual && !commitionPaidStatus()  && !cashBag.isVerified">
+                  <a href="/#/manual-epos-dashboard/{{ cashBag.id }}" title="Add Manual Data" class="btn btn-primary" title="Manually Add ePOS Data" ng-show="!isAmendReadOnly && cashBag.isManual && !commitionPaidStatus()  && !cashBag.isVerified">
                     <i class="fa fa-plus-circle active"></i>
                   </a>
-                  <button class="btn btn-default" title="Refresh Transactions Total" ng-click="refreshManualCashBag(cashBag)" ng-show="cashBag.isManual && !commitionPaidStatus() && !cashBag.isVerified">
+                  <button class="btn btn-default" title="Refresh Transactions Total" ng-click="refreshManualCashBag(cashBag)" ng-show="!isAmendReadOnly && cashBag.isManual && !commitionPaidStatus() && !cashBag.isVerified">
                     <i class="fa fa-rotate-right active"></i>
                   </button>
-                  <button class="btn btn-danger" title="Delete Cash Bag" ng-show="canCashBagBeDeleted(cashBag) && canExecuteActions(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
+                  <button class="btn btn-danger" title="Delete Cash Bag" ng-show="!isAmendReadOnly && canCashBagBeDeleted(cashBag) && canExecuteActions(cashBag)" ng-click="showDeleteCashBagModal(cashBag)">
                     <i class="fa fa-trash active"></i>
                   </button>
-                  <button class="btn btn-warning" title="Merge or Reallocate or Edit Cash Bag " ng-click="showMoveCashBagModal(cashBag)" ng-show="canExecuteAmendCashBag(cashBag)">
+                  <button class="btn btn-warning" title="Merge or Reallocate or Edit Cash Bag " ng-click="showMoveCashBagModal(cashBag)" ng-show="!isAmendReadOnly && canExecuteAmendCashBag(cashBag)">
                     <i class="fa fa-share active"></i>
                   </button>
-                  <button class="btn btn-success" ng-show="canExecuteVerify(cashBag) && canExecuteActions(cashBag) && hasFlightSectors(cashBag)" title="Verify Cash Bag" ng-click="toggleVerifiedCashBag(cashBag)">
+                  <button class="btn btn-success" ng-show="!isAmendReadOnly && canExecuteVerify(cashBag) && canExecuteActions(cashBag) && hasFlightSectors(cashBag)" title="Verify Cash Bag" ng-click="toggleVerifiedCashBag(cashBag)">
                     <i class="fa fa-check-circle-o active"></i>
                   </button>
                 </div>

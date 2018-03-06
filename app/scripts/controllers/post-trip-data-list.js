@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('PostFlightDataListCtrl', function($scope, postTripFactory, $location, messageService, dateUtility,
-    lodash, $q) {
+    lodash, $q, accessService) {
 
     var companyId = '';
     var $this = this;
@@ -58,6 +58,22 @@ angular.module('ts5App')
           trip.arrStationCode = $this.getStationById(trip.arrStationId);
         });
       }
+    };
+
+    $scope.getUpdateBy = function (postTrip) {
+      if (postTrip.updatedByPerson) {
+        return postTrip.updatedByPerson.userName;
+      }
+
+      if (postTrip.createdByPerson) {
+        return postTrip.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (postTrip) {
+      return postTrip.updatedOn ? dateUtility.formatTimestampForApp(postTrip.updatedOn) : dateUtility.formatTimestampForApp(postTrip.createdOn);
     };
 
     this.getPostTripSuccess = function(response) {
@@ -121,6 +137,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      $scope.isCRUD = accessService.crudAccessGranted('POSTTRIP', 'POSTTRIP', 'CRUDPTRP');
       companyId = postTripFactory.getCompanyId();
       $scope.carrierNumbers = [];
       $scope.employees = [];
@@ -192,7 +209,7 @@ angular.module('ts5App')
         $scope.employees = [];
       }
     };
-    
+
     function employeeDates(payload, search) {
       if (search.scheduleStartDate === undefined && search.scheduleEndDate === undefined) {
         payload.date = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());

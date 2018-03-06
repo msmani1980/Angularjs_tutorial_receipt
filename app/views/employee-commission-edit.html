@@ -13,7 +13,7 @@
 
       <div class="col-xs-6 text-right">
         <a class="btn btn-default" ng-href="#/employee-commission-list" class="btn">Back</a>
-        <button ng-show="employeeCommissionForm.$dirty" class="btn btn-success">
+        <button ng-show="!isViewOnly() && employeeCommissionForm.$dirty" class="btn btn-success">
           <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>
@@ -163,4 +163,4 @@
 
 </form>
 </div>
-<dynamic-left-nav></dynamic-left-nav>
+<dynamic-left-nav title="Employee Commission"></dynamic-left-nav>

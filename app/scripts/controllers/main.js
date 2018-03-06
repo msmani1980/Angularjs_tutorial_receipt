@@ -18,8 +18,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return featurePermission.resource.apiName === menuItemPermission.apiName &&
-        lodash.intersection(featurePermission.permissionCode, menuItemPermission.permissionCodes).length ===
+      return lodash.intersection(featurePermission.permissionCode, menuItemPermission.permissionCodes).length ===
         menuItemPermission.permissionCodes.length;
     }
 
@@ -36,7 +35,7 @@ angular.module('ts5App')
     }
 
     function hasMenuItemMatchingPackageWithPermissions(menuItem, featurePermissions) {
-      var isManageCashBagAndShouldHide = (menuItem.name === 'Manage Cash Bag' && $rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag);
+      var isManageCashBagAndShouldHide = ((menuItem.name === 'Manage Cash Bag' && menuItem.package !== 'RECONCILIATION') && $rootScope.cashbagRestrictUse && !$rootScope.showManageCashBag);
       var isCashBagSubmissionAndShouldHide = (menuItem.name === 'Cash Bag Submission' && $rootScope.cashbagRestrictUse && !$rootScope.showCashBagSubmission);
 
       if (isManageCashBagAndShouldHide || isCashBagSubmissionAndShouldHide) {
@@ -106,7 +105,7 @@ angular.module('ts5App')
             }
           }
         }
-      }  
+      }
     }
 
     function updateNavigationPerUserFeatures() {

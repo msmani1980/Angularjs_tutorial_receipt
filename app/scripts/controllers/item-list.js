@@ -8,7 +8,7 @@
  * Contoller for the Retail Items List View
  */
 angular.module('ts5App')
-  .controller('ItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter, lodash) {
+  .controller('ItemListCtrl', function ($scope, $http, itemsFactory, companiesFactory, dateUtility, $filter, lodash, accessService) {
 
     var $this = this;
     this.meta = {
@@ -24,12 +24,12 @@ angular.module('ts5App')
     $scope.openVersionId = -1;
 
     function showLoadingBar(loadingText) {
-      angular.element('#loading').modal('show').find('p').text(loadingText);	
+      angular.element('#loading').modal('show').find('p').text(loadingText);
       angular.element('.loading-more').show();
     }
 
     function hideLoadingBar() {
-      angular.element('#loading').modal('hide');	
+      angular.element('#loading').modal('hide');
       angular.element('.loading-more').hide();
       angular.element('.modal-backdrop').remove();
     }
@@ -116,6 +116,7 @@ angular.module('ts5App')
     };
 
     this.getItemTypesList = function () {
+      $scope.isCRUD = accessService.crudAccessGranted('RETAIL', 'RETAILITEM', 'CRUDRI');
       itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
       });
@@ -278,6 +279,22 @@ angular.module('ts5App')
     $scope.showClearButton = function () {
       var d = $scope.dateRange;
       return (searchIsDirty() || hasLength(d.startDate) || hasLength(d.endDate) || hasLength($scope.itemsList));
+    };
+
+    $scope.getUpdateBy = function (item) {
+      if (item.updatedByPerson) {
+        return item.updatedByPerson.userName;
+      }
+
+      if (item.createdByPerson) {
+        return item.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (item) {
+      return item.updatedOn ? dateUtility.formatTimestampForApp(item.updatedOn) : dateUtility.formatTimestampForApp(item.createdOn);
     };
 
     this.openAccordian = function (item) {

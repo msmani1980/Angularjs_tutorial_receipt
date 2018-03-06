@@ -1,8 +1,9 @@
+<div class="module-container">
 <h2 class="view-name">{{viewName}}</h2>
 <div class="list-controls">
   <div class="row">
     <div class="col-xs-6 text-left">
-      <button type="button" class="btn btn-primary" ng-click="addCompanyRelationship(company)">
+      <button type="button" class="btn btn-primary" ng-show="isCRUD" ng-click="addCompanyRelationship(company)">
         <span class="fa fa-plus" aria-hidden="true"></span> Add Company Relationship
       </button>
     </div>
@@ -53,7 +54,7 @@
         <div class="hidden-xs col-sm-2 list-header border-right">Related Company *</div>
         <div class="hidden-xs col-sm-2 list-header border-right">Start Date *</div>
         <div class="hidden-xs col-sm-2 list-header border-right">End Date *</div>
-        <div class="hidden-xs col-sm-2 list-header border-right">Actions</div>
+        <div ng-show="isCRUD" class="hidden-xs col-sm-2 list-header border-right">Actions</div>
       </div>
       <!--$id() tracks items by their identity-->
       <!--https://docs.angularjs.org/api/ng/directive/ngRepeat-->
@@ -88,3 +89,5 @@
     </div>
   </div>
 </div>
+</div>
+<dynamic-left-nav title="Company Management"></dynamic-left-nav>

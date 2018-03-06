@@ -288,6 +288,12 @@ angular.module('ts5App', [
   }).when('/reconciliation-dashboard', {
     templateUrl: 'views/reconciliation-dashboard.html',
     controller: 'ReconciliationDashboardCtrl'
+  }).when('/reconciliation-cash-bag-list', {
+    templateUrl: 'views/reconciliation-cash-bag-list.html',
+    controller: 'ReconciliationCashBagListCtrl'
+  }).when('/reconciliation-cash-bag/view/:id?', {
+    templateUrl: 'views/reconciliation-cash-bag.html',
+    controller: 'ReconciliationCashBagCtrl'
   }).when('/store-instance-amend/:storeInstanceId', {
     templateUrl: 'views/store-instance-amend.html',
     controller: 'StoreInstanceAmendCtrl'
@@ -448,9 +454,36 @@ angular.module('ts5App', [
     templateUrl: 'views/survey-questions-create.html',
     controller: 'SurveyQuestionsCreateCtrl',
     controllerAs: 'surveyQuestionsCreate'
+  }).when('/epos-config', {
+    templateUrl: 'views/epos-config.html',
+    controller: 'EposConfigCtrl',
+    controllerAs: 'eposConfig'
+  }).when('/report-exchange-rate', {
+    templateUrl: 'views/report-exchange-rate.html',
+    controller: 'ReportExchangeRateCtrl',
+    controllerAs: 'reportExchangeRate'
   }).otherwise({
     redirectTo: '/'
   });
 }).run(function ($rootScope, regexp) {
   $rootScope.regexp = regexp;
+}).run(function ($rootScope, $location, $localStorage, mainMenuService, messageService, _) {
+  $rootScope.$on('$locationChangeStart', function(event) {
+    var menu = mainMenuService.getMenu();
+    var userFeaturesInRole = $localStorage.featuresInRole;
+
+    _.forEach(menu, function(item) {
+      _.forEach(item.menuItems, function(menuItem) {
+        if (menuItem.package === 'EPOSCONFIG') { // Enabled just for 'EPOSCONFIG' for TSVPORTAL-231 for now
+          var fullUrl = $location.absUrl();
+          var featureRoleByPackage = userFeaturesInRole[menuItem.package];
+
+          if (!featureRoleByPackage && fullUrl && fullUrl.match(menuItem.route)) {
+            event.preventDefault();
+            messageService.display('danger', 'You do not have permissions to access this page.');
+          }
+        }
+      });
+    });
+  });
 });

@@ -13,7 +13,7 @@
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
 
-        <a href="#/promotion-category/create" class="btn btn-primary">
+        <a href="#/promotion-category/create" ng-show="isCRUD" class="btn btn-primary">
           <i class="fa fa-plus" aria-hidden="true"></i>
           <span class="hidden-xs">Create Promotion Category</span>
         </a>
@@ -76,10 +76,10 @@
           <button class="btn btn-xs btn-info" ng-click="viewOrEditRecord('view', category.id)">
             <span class="fa fa-file"></span>
           </button>
-          <button class="btn btn-xs btn-primary" ng-click="viewOrEditRecord('edit', category.id)" ng-show="canEdit(category)">
+          <button class="btn btn-xs btn-primary" ng-click="viewOrEditRecord('edit', category.id)" ng-show="isCRUD && canEdit(category)">
             <span class="fa fa-pencil"></span>
           </button>
-          <button class="btn btn-xs btn-danger" ng-show="canDelete(category)" ng-click="deleteRecordDialog(category, ['promotionCategoryName', 'startDate', 'endDate'])">
+          <button class="btn btn-xs btn-danger" ng-show="isCRUD && canDelete(category)" ng-click="deleteRecordDialog(category, ['promotionCategoryName', 'startDate', 'endDate'])">
             <span class="fa fa-trash"></span>
           </button>
         </td>

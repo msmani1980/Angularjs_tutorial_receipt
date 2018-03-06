@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuAssignmentListCtrl', function($scope, $q, $route, $location, $filter, menuService, menuAssignmentFactory, messageService, companiesFactory, dateUtility, scheduleFactory, globalMenuService, lodash) {
+  .controller('MenuAssignmentListCtrl', function($scope, $q, $route, $location, $filter, menuService, menuAssignmentFactory, messageService, companiesFactory, dateUtility, scheduleFactory, globalMenuService, lodash, accessService) {
     var $this = this;
     this.meta = {
       count: undefined,
@@ -262,7 +262,7 @@ angular.module('ts5App')
 
     this.init = function() {
       angular.element('.loading-more').hide();
-
+      $scope.isCRUD = accessService.crudAccessGranted('MENUASSG', 'MENUASSIGNMENT', 'CRUDMENUA');
       $scope.allCheckboxesSelected = false;
       var initDependencies = $this.makeInitPromises();
       $q.all(initDependencies).then(function(response) {

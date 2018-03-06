@@ -5,7 +5,7 @@
     <div class="hidden-xs col-sm-2 list-item">{{viewModel.relativeCompany}}</div>
     <div class="hidden-xs col-sm-2 list-item">{{viewModel.startDate}}</div>
     <div class="hidden-xs col-sm-2 list-item">{{viewModel.endDate}}</div>
-    <div class="hidden-xs col-sm-2 list-item">
+    <div ng-show="isCRUD" class="hidden-xs col-sm-2 list-item">
       <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company Relationship"
               ng-disabled="!$parent.isActive(viewModel) && !$parent.isFutureEffectiveDate(viewModel)"
               ng-click="$parent.editCompanyRelationship(viewModel, companyRelationshipForm)">
