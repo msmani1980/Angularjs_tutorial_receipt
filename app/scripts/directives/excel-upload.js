@@ -69,6 +69,7 @@ angular.module('ts5App')
     };
 
     function setTemplateName() {
+      // jshint ignore: start
       if ($scope.type === 'menu') {
         $scope.templateName = 'menuUpload';
       } else if ($scope.type === 'postTrip') {
@@ -77,7 +78,11 @@ angular.module('ts5App')
         $scope.templateName = 'scheduleUpload';
       } else if ($scope.type === 'employee') {
         $scope.templateName = 'employeeUpload';
+      } else if ($scope.type === 'stations') {
+        $scope.templateName = 'stationUpload';
       }
+
+      // jshint ignore: end
     }
 
     function setDownloadTemplateUrl() {
