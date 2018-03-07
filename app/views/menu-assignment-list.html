@@ -229,6 +229,8 @@
           <th ng-show="displayColumns.previousFlight">Prev. Flight</th>
           <th ng-show="displayColumns.nextFlight">Next Flight</th>
           <th>Last Updated On</th>
+          <th>Updated Date/Time</th>
+          <th>Updated User</th>
           <th ng-show="isCRUD">Actions</th>
         </tr>
         </thead>
@@ -264,7 +266,8 @@
           <td ng-show="displayColumns.previousFlight">{{ menuAssignment.prevFlight }}</td>
           <td ng-show="displayColumns.nextFlight">{{ menuAssignment.nextFlight }}</td>
 
-          <td>{{ menuAssignment.updatedOn }}</td>
+          <td>{{ getUpdatedOn(menuAssignment) }}</td>
+          <td>{{ getUpdateBy(menuAssignment) }}</td>
           <td ng-show="isCRUD">
             <button class="btn btn-primary btn-xs" ng-click="redirectToMenuAssignment(menuAssignment.scheduleDayId, 'edit')" tabindex="0">
               <i class="fa fa-pencil"></i>
