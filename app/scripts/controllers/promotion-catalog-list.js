@@ -143,8 +143,8 @@ angular.module('ts5App')
 
     $scope.getUpdateBy = function (promotion) {
       if (promotion.updatedByPerson) {
-          return promotion.updatedByPerson.userName;
-        }
+        return promotion.updatedByPerson.userName;
+      }
 
         if (promotion.createdByPerson) {
           return promotion.createdByPerson.userName;
