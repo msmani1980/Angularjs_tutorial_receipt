@@ -146,9 +146,9 @@ angular.module('ts5App')
         return promotion.updatedByPerson.userName;
       }
 
-        if (promotion.createdByPerson) {
-          return promotion.createdByPerson.userName;
-        }
+      if (promotion.createdByPerson) {
+        return promotion.createdByPerson.userName;
+      }
 
         return '';
       };
