@@ -150,8 +150,8 @@ angular.module('ts5App')
         return promotion.createdByPerson.userName;
       }
 
-        return '';
-      };
+      return '';
+    };
 
     function init() {
       $scope.isCRUD = accessService.crudAccessGranted('PROMOTION', 'PROMOTIONCATALOG', 'CRUDPRCTL');
