@@ -74,6 +74,8 @@
       <th>Description</th>
       <th>Effective From</th>
       <th>Effective To</th>
+      <th>Updated Date/Time</th>
+      <th>Updated User</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -85,6 +87,8 @@
       <td>{{ menu.description }}</td>
       <td>{{ menu.startDate }}</td>
       <td>{{ menu.endDate }}</td>
+      <td>{{ getUpdatedOn(menu) }}</td>
+      <td>{{ getUpdateBy(menu) }}</td>
       <td>
         <button class="btn btn-info btn-xs" ng-click="showMenu(menu)">
           <i class="fa fa-file"></i>
