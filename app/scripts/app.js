@@ -474,7 +474,7 @@ angular.module('ts5App', [
 
     _.forEach(menu, function(item) {
       _.forEach(item.menuItems, function(menuItem) {
-        if (menuItem.package === 'EPOSCONFIG') { // Enabled just for 'EPOSCONFIG' for TSVPORTAL-231 for now
+        if (userFeaturesInRole && menuItem.package === 'EPOSCONFIG') { // Enabled just for 'EPOSCONFIG' for TSVPORTAL-231 for now
           var fullUrl = $location.absUrl();
           var featureRoleByPackage = userFeaturesInRole[menuItem.package];
 
