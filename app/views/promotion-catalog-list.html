@@ -62,7 +62,8 @@
           <th>Effective From</th>
           <th>Effective To</th>
           <th>Included Promotions</th>
-          <th>Updated Date/Time</th>          
+          <th>Updated Date/Time</th>
+          <th>Updated User</th>      
           <th>Conjunctions</th>
           <th>Actions</th>
         </tr>
@@ -74,6 +75,7 @@
           <td>{{ catalog.endDate }}</td>
           <td>{{ catalog.promotionCount }}</td>
           <td>{{ getUpdatedOn(catalog) }}</td>
+          <td>{{ getUpdateBy(catalog) }}</td>      
           <td>
             <button type="button" class="btn btn-xs btn-default" ng-show="catalog.conjunctionFlag" ng-click="redirectRecordToAction('edit', catalog.id, true)">
             <span class="fa fa-check"></span>
