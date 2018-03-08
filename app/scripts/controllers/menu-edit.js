@@ -10,6 +10,7 @@ angular.module('ts5App')
   .controller('MenuEditCtrl', function ($scope, $routeParams, messageService, menuFactory, dateUtility, $location, lodash, $q, $filter) {
 
     var $this = this;
+    $scope.testList = [];
 
     function showLoadingModal(message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -26,12 +27,12 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     }
 
-    $scope.shouldDisableItemSelect = function (menuIndex) {
-      return !$scope.filteredItemsCollection[menuIndex];
-    };
-
     $scope.isViewOnly = function () {
       return $routeParams.state === 'view';
+    };
+
+    $scope.isCreateOnly = function () {
+      return $routeParams.state === 'create';
     };
 
     $scope.isMenuReadOnly = function () {
@@ -83,7 +84,7 @@ angular.module('ts5App')
             itemPayload.id = menuItem.id;
           }
 
-          itemPayload.itemId = $scope.isMenuEditable() ? menuItem.selectedItem.id : menuItem.itemId;
+          itemPayload.itemId = $scope.isCreateOnly() ? menuItem.selectedItem.id : menuItem.itemId;
           itemPayload.itemQty = parseInt(menuItem.itemQty);
           itemPayload.sortOrder = parseInt(menuItem.sortOrderIndex);
           itemsArray.push(itemPayload);
@@ -236,13 +237,33 @@ angular.module('ts5App')
       getFilteredMasterItemsByCategory(menuIndex);
     };
 
-    function setFilteredMasterItems(dataFromAPI) {
+    this.setFilteredMasterItems = function (dataFromAPI) {
       hideLoadingModal();
       $scope.masterItemList = angular.copy(dataFromAPI.masterItems);
       angular.forEach($scope.menuItemList, function (menuItem) {
         $scope.filterItemListByCategory(menuItem.menuIndex);
       });
-    }
+    };
+
+    $scope.loadMasterItems = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+
+      if ($select.search && $select.search.length > 2) {
+        var searchPayload = {
+          search: $select.search,
+          startDate: $scope.menu.startDate,
+          endDate: $scope.menu.endDate
+        };
+
+        menuFactory.getItemsList(searchPayload, true).then($this.setFilteredMasterItems, showErrors);
+      } else {
+        $scope.filteredItemsCollection[$select.menuIndex] = [];
+      }
+
+    };
 
     function getFilteredMasterItems(startDate, endDate) {
       showLoadingModal('Loading items');
@@ -252,12 +273,12 @@ angular.module('ts5App')
       };
 
       if ($scope.isMenuEditable()) {
-        menuFactory.getItemsList(searchPayload, true).then(setFilteredMasterItems, showErrors);  
+        menuFactory.getItemsList(searchPayload, true).then($this.setFilteredMasterItems, showErrors);  
       }
 
     }
 
-    function deserializeMenuItems() {
+    this.deserializeMenuItems = function () {
       $scope.menuItemList = [];
       angular.forEach($scope.menu.menuItems, function (item, index) {
         var newItem = {
@@ -273,40 +294,40 @@ angular.module('ts5App')
       });
 
       $scope.menuItemList = $filter('orderBy')($scope.menuItemList, 'sortOrder');
-    }
+    };
 
-    function deserializeMenuItemsEditMode(masterItemList) {
-      $scope.menuItemList = [];
-      angular.forEach($scope.menu.menuItems, function (item, index) {
-        var itemMatch = lodash.findWhere(masterItemList, { id: item.itemId });
-        var newItem = {
-          itemQty: item.itemQty,
-          id: item.id,
-          menuIndex: index,
-          selectedItem: itemMatch,
-          itemId: item.itemId,
-          itemName: item.itemName,
-          sortOrder: item.sortOrder
-        };
-        $scope.menuItemList.push(newItem);
-      });
+    this.makeCompleteInitPromises = function () {
+      var mkPromises = [
+        menuFactory.getSalesCategoriesList({})      
+      ];
 
-      $scope.menuItemList = $filter('orderBy')($scope.menuItemList, 'sortOrder');
-    }
+      return mkPromises;
+    };
+
+    this.editComplete = function (responseCollection) {
+      $scope.categories = angular.copy(responseCollection[0].salesCategories);
+      hideLoadingModal();
+    };
+    
+    this.completeInitPromises = function () {
+      var edtpromises = $this.makeCompleteInitPromises();
+      $q.all(edtpromises).then($this.editComplete, showErrors);	
+    };
 
     function completeInit(responseCollection) {
       if (angular.isDefined(responseCollection[0])) {
         $scope.menu = angular.copy(responseCollection[0]);
+        $this.deserializeMenuItems();
         if ($scope.isMenuEditable()) {
-          $scope.categories = angular.copy(responseCollection[1].salesCategories);
-          deserializeMenuItemsEditMode(angular.copy(responseCollection[2].masterItems));
+          $this.completeInitPromises();	
         } else {
-          deserializeMenuItems();	
+          hideLoadingModal();
         }  
+      } else {
+        $this.completeInitPromises();
       }
 
       $scope.menuEditForm.$setPristine();
-      hideLoadingModal();
     }
 
     function setInitPromises() {
@@ -316,7 +337,6 @@ angular.module('ts5App')
         promises.push(menuFactory.getMenu($routeParams.id));
         if ($scope.isMenuEditable()) {
           promises.push(menuFactory.getSalesCategoriesList({}));
-          promises.push(menuFactory.getItemsList({}, true));
         } 
         
       }
@@ -349,7 +369,7 @@ angular.module('ts5App')
     init();
 
     $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
-      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate && $scope.isMenuEditable()) {
+      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate && $scope.isCreateOnly()) {
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
       }
     });
