@@ -128,6 +128,16 @@
              ui-on-Drop=""/>
     </div>
 
+    <div class="form-group col-sm-3">
+      <label>Updated User</label><br />
+      {{ getUpdateBy(menu) }}
+    </div>
+
+    <div class="form-group col-sm-3" ng-hide="isCreate()">
+      <label>Updated Date/Time</label><br />
+      {{ getUpdatedOn(menu) }}
+    </div>
+
     <h3>Menu Items
       <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addItem()" ng-show="isMenuEditable()">
         <i class="fa fa-plus"></i> Add Item
