@@ -79,6 +79,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     this.init = function() {
       hideLoadingBar();
       $scope.isStockTake = accessService.crudAccessGranted('STOCKMANAGER', 'STOCKREPORT', 'CRUDSTR');
+      $scope.isEditStock = accessService.crudAccessGranted('STOCKMANAGER', 'STOCKDASHBOARD', 'ESTCKDBRD');
       $scope.companyId = globalMenuService.company.get();
       catererStationService.getCatererStationList().then(this.getCatererStationListSuccessHandler);
       companyReasonCodesService.getAll().then($this.getUllageReasonsFromResponse);
