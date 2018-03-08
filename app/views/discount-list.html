@@ -85,6 +85,7 @@
             <td>{{ discount.companyDiscountRestrictions }}</td>
             <td>{{ discount.startDate }}</td>
             <td>{{ discount.endDate }}</td>
+            <td>{{ getUpdatedOn(discount) }}</td>           
             <td ng-show="isCRUD">
                 <button class="btn btn-primary btn-xs" ng-click="editDiscount(discount)" ng-show="isDiscountEditable(discount)">
                     <i class="fa fa-pencil"></i>
