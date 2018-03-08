@@ -208,6 +208,8 @@
           <th>Alcohol Volume</th>
           <th class="col-xs-2">Start Date</th>
           <th class="col-xs-2">End Date</th>
+          <th>Updated Date/Time</th>
+          <th>Updated User</th>
           <th ng-show="isCRUD">Actions</th>
         </tr>
         </thead>
@@ -293,6 +295,8 @@
               ng-show="isSelectedToEdit(relationship)">
             </date-picker-field>
           </td>
+          <td>{{ getUpdatedOn(exciseDuty) }}</td>
+          <td>{{ getUpdateBy(exciseDuty) }}</td>
           <td ng-show="isCRUD">
             <button type="submit"
                     class="btn btn-success btn-xs"
