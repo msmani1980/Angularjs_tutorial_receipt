@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .controller('CashBagCtrl', function($scope, $routeParams, $q, $location, $localStorage, messageService,
-    cashBagFactory, dateUtility, lodash, globalMenuService) {
+    cashBagFactory, dateUtility, lodash, globalMenuService, accessService) {
 
     // controller global properties
     var _companyId = null;
@@ -546,6 +546,7 @@ angular.module('ts5App')
     // Constructor
     function init() {
       showLoadingModal('Loading Cash Bag');
+      $scope.isCRUD = accessService.crudAccessGranted('CASH', 'CASHBAG', 'CRUPCBAG');
       _companyId = cashBagFactory.getCompanyId();
       $scope.state = $routeParams.state;
       var crudOperation = $routeParams.state + 'CashBag';
