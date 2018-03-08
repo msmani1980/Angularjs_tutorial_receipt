@@ -70,20 +70,20 @@ angular.module('ts5App')
       hidePanel(otherPanelName);
     }
 
-    $scope.getUpdateBy = function (schedule) {
-      if (schedule.updatedByPerson) {
-        return schedule.updatedByPerson.userName;
+    $scope.getUpdateBy = function (relationship) {
+      if (relationship.updatedByPerson) {
+        return relationship.updatedByPerson.userName;
       }
 
-      if (schedule.createdByPerson) {
-        return schedule.createdByPerson.userName;
+      if (relationship.createdByPerson) {
+        return relationship.createdByPerson.userName;
       }
 
       return '';
     };
 
-    $scope.getUpdatedOn = function (schedule) {
-      return schedule.updatedOn ? dateUtility.formatTimestampForApp(schedule.updatedOn) : dateUtility.formatTimestampForApp(schedule.createdOn);
+    $scope.getUpdatedOn = function (relationship) {
+      return relationship.updatedOn ? dateUtility.formatTimestampForApp(relationship.updatedOn) : dateUtility.formatTimestampForApp(relationship.createdOn);
     };
 
     $scope.clearCreateForm = function(shouldClearAll) {

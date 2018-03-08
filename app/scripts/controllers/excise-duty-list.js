@@ -69,11 +69,11 @@ angular.module('ts5App')
     }
 
     $scope.getUpdateBy = function (exciseDuty) {
-      if (schedule.updatedByPerson) {
+      if (exciseDuty.updatedByPerson) {
         return exciseDuty.updatedByPerson.userName;
       }
 
-      if (schedule.createdByPerson) {
+      if (exciseDuty.createdByPerson) {
         return exciseDuty.createdByPerson.userName;
       }
 
