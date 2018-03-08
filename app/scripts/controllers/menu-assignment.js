@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('MenuAssignmentCtrl', function (
-    $scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, itemsFactory, categoryFactory, $location, $routeParams, $q, lodash, $http
+    $scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, itemsFactory, categoryFactory, $location, $routeParams, $q, lodash
   ) {
     var companyId;
     var $this = this;

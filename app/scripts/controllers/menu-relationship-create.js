@@ -311,7 +311,6 @@ angular.module('ts5App')
       return '';
     };
 
-
     $scope.isCreate = function () {
       return $location.path() === '/menu-relationship-create';
     };
