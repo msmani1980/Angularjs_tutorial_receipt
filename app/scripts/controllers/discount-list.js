@@ -141,6 +141,18 @@ angular.module('ts5App')
       return discount.updatedOn ? dateUtility.formatTimestampForApp(discount.updatedOn) : dateUtility.formatTimestampForApp(discount.createdOn);
     };
 
+    $scope.getUpdateBy = function (category) {
+      if (category.updatedByPerson) {
+        return category.updatedByPerson.userName;
+      }
+
+      if (category.createdByPerson) {
+        return category.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
     $scope.loadDiscounts = function() {
       $this.getDiscountList();
     };
