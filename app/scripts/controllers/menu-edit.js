@@ -208,7 +208,7 @@ angular.module('ts5App')
       angular.forEach($scope.selectedCategoryItems, function (selectedCategoryItem) {
         selectedCategoryItem.selected = selectedItemIds.indexOf(selectedCategoryItem.id) >= 0;
       });
-        
+
       $scope.filteredItemsCollection[menuIndex] = angular.copy($scope.selectedCategoryItems);
       if (!$scope.menuItemList[menuIndex].selectedItem) {
         return;
