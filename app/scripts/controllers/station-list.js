@@ -422,6 +422,7 @@ angular.module('ts5App')
         offset: 0
       };
 
+      $scope.displayError = false;
       $scope.isSearch = true;
       $scope.stationList = [];
 
