@@ -68,6 +68,22 @@ angular.module('ts5App')
       }
     }
 
+    $scope.getUpdateBy = function (exciseDuty) {
+      if (exciseDuty.updatedByPerson) {
+        return exciseDuty.updatedByPerson.userName;
+      }
+
+      if (exciseDuty.createdByPerson) {
+        return exciseDuty.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (exciseDuty) {
+      return exciseDuty.updatedOn ? dateUtility.formatTimestampForApp(exciseDuty.updatedOn) : dateUtility.formatTimestampForApp(exciseDuty.createdOn);
+    };
+
     $scope.clearCreateForm = function (shouldClearAll) {
       var currentCountry = $scope.newRecord.country;
       $scope.displayError = false;
@@ -307,7 +323,7 @@ angular.module('ts5App')
     }
 
     init();
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
     };
