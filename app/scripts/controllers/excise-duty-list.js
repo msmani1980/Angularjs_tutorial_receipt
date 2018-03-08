@@ -68,20 +68,20 @@ angular.module('ts5App')
       }
     }
 
-    $scope.getUpdateBy = function (schedule) {
+    $scope.getUpdateBy = function (exciseDuty) {
       if (schedule.updatedByPerson) {
-        return schedule.updatedByPerson.userName;
+        return exciseDuty.updatedByPerson.userName;
       }
 
       if (schedule.createdByPerson) {
-        return schedule.createdByPerson.userName;
+        return exciseDuty.createdByPerson.userName;
       }
 
       return '';
     };
 
-    $scope.getUpdatedOn = function (schedule) {
-      return schedule.updatedOn ? dateUtility.formatTimestampForApp(schedule.updatedOn) : dateUtility.formatTimestampForApp(schedule.createdOn);
+    $scope.getUpdatedOn = function (exciseDuty) {
+      return exciseDuty.updatedOn ? dateUtility.formatTimestampForApp(exciseDuty.updatedOn) : dateUtility.formatTimestampForApp(exciseDuty.createdOn);
     };
 
     $scope.clearCreateForm = function (shouldClearAll) {
