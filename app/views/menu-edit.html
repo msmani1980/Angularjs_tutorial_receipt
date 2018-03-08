@@ -187,13 +187,14 @@
               ng-model="item.selectedItem"
               theme="bootstrap"
               placeholder="Select or search an item from the list..."
-              ng-disabled="shouldDisableItemSelect(item.menuIndex)"
               on-select="filterAllItemLists()">
               <ui-select-match
                 placeholder="Select or search an item from the list...">{{$select.selected.itemName}}
               </ui-select-match>
               <ui-select-choices ui-disable-choice="menuItem.selected === true"
-                                 repeat="menuItem in filteredItemsCollection[item.menuIndex] | filter: $select.search | orderBy:'itemName'">
+              					 refresh="loadMasterItems($select)"
+                    			 refresh-delay="0"
+                                 repeat="menuItem in testList">
                 <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
