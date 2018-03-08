@@ -14,12 +14,12 @@
           <div class="col-xs-6 text-right">
             <fieldset ng-hide="viewOnly">
 
-              <a ng-show="canCreateStockTake()" ng-href="/#/stock-take/create/{{selectedCateringStation.id}}" class="btn btn-primary">
+              <a ng-show="isStockTake && canCreateStockTake()" ng-href="/#/stock-take/create/{{selectedCateringStation.id}}" class="btn btn-primary">
                 <span class="fa fa-plus" aria-hidden="true"></span>
                 <span class="hidden-xs">Create Stock Take</span>
               </a>
 
-              <a ng-href="{{exportURL}}" class="btn btn-info" ng-show="selectedCateringStation.id && searchResults.length">
+              <a ng-href="{{exportURL}}" class="btn btn-info" ng-show="isStockTake && selectedCateringStation.id && searchResults.length">
                 <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
                 <span class="hidden-xs">Export (CSV)</span>
               </a>
