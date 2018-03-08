@@ -70,6 +70,22 @@ angular.module('ts5App')
       hidePanel(otherPanelName);
     }
 
+    $scope.getUpdateBy = function (schedule) {
+      if (schedule.updatedByPerson) {
+        return schedule.updatedByPerson.userName;
+      }
+
+      if (schedule.createdByPerson) {
+        return schedule.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (schedule) {
+      return schedule.updatedOn ? dateUtility.formatTimestampForApp(schedule.updatedOn) : dateUtility.formatTimestampForApp(schedule.createdOn);
+    };
+
     $scope.clearCreateForm = function(shouldClearAll) {
       var currentItemType = $scope.newRecord.itemType;
       $scope.displayError = false;
@@ -525,7 +541,7 @@ angular.module('ts5App')
     }
 
     init();
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
     };
