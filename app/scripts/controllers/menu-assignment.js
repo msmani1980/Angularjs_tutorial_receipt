@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('MenuAssignmentCtrl', function (
-    $scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, itemsFactory, categoryFactory, $location, $routeParams, $q, lodash
+    $scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, itemsFactory, categoryFactory, $location, $routeParams, $q, lodash, $http
   ) {
     var companyId;
     var $this = this;
@@ -84,6 +84,26 @@ angular.module('ts5App')
       };
 
       menuAssignmentFactory.updateMenuAssignment($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure);
+    };
+
+    $scope.getUpdateBy = function (menu) {
+      if (menu.updatedByPerson) {
+        return menu.updatedByPerson.userName;
+      }
+
+      if (menu.createdByPerson) {
+        return menu.createdByPerson.userName;
+      }
+
+      return 'Unknown';
+    };
+
+    $scope.getUpdatedOn = function (menu) {
+      if (!menu.createdOn) {
+        return 'Unknown';
+      }
+
+      return menu.updatedOn ? dateUtility.formatTimestampForApp(menu.updatedOn) : dateUtility.formatTimestampForApp(menu.createdOn);
     };
 
     this.validateForm = function() {
