@@ -70,6 +70,22 @@ angular.module('ts5App')
       hidePanel(otherPanelName);
     }
 
+    $scope.getUpdateBy = function (relationship) {
+      if (relationship.exciseDutyUpdatedByUsername) {
+        return relationship.exciseDutyUpdatedByUsername;
+      }
+
+      if (relationship.exciseDutyCreatedByUsername) {
+        return relationship.exciseDutyCreatedByUsername;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (relationship) {
+      return relationship.exciseDutyUpdatedOn ? dateUtility.formatTimestampForApp(relationship.exciseDutyUpdatedOn) : dateUtility.formatTimestampForApp(relationship.exciseDutyCreatedOn);
+    };
+
     $scope.clearCreateForm = function(shouldClearAll) {
       var currentItemType = $scope.newRecord.itemType;
       $scope.displayError = false;
@@ -525,7 +541,7 @@ angular.module('ts5App')
     }
 
     init();
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
     };
