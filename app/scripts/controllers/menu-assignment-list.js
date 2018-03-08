@@ -199,7 +199,6 @@ angular.module('ts5App')
     this.getMenuAssignmentListSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.menuAssignments = $scope.menuAssignments.concat(response.response.map(function (menuAssignment) {
-        menuAssignment.updatedOn = (menuAssignment.updatedOn) ? dateUtility.formatDateForApp(menuAssignment.updatedOn) : null;
         menuAssignment.isExpanded = false;
         menuAssignment.selected = false;
 
