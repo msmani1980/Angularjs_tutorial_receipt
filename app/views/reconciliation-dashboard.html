@@ -13,7 +13,7 @@
           <button class="btn btn-success" tabindex="0" ng-show="false" ng-disabled="!hasSelectedInstance()" ng-click="validate()">Validate
           </button>
 
-          <button class="btn btn-primary" tabindex="0" ng-disabled="!(hasSelectedInstanceWithStatus('Confirmed'))" ng-click="showBulkExecuteActionModal('Pay Commission')">Pay Commission
+          <button class="btn btn-primary" tabindex="0" ng-show="isPayCommision" ng-disabled="!(hasSelectedInstanceWithStatus('Confirmed'))" ng-click="showBulkExecuteActionModal('Pay Commission')">Pay Commission
           </button>
 
           <div class="btn-group" dropdown>
@@ -246,16 +246,16 @@
                   ng-show="doesInstanceContainAction(instance, 'Amend Data') && false" ng-click="viewAmendData(instance)">Amend Data <!-- Disable for now on this screen -->
           </button>
           <button class="btn btn-success btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Confirm')" ng-disabled="instance.amendToConfirm" ng-click="showExecuteActionModal(instance, 'Confirm')">Confirm
+                  ng-show="isConfirm && doesInstanceContainAction(instance, 'Confirm')" ng-disabled="instance.amendToConfirm" ng-click="showExecuteActionModal(instance, 'Confirm')">Confirm
           </button>
           <button class="btn btn-danger btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Unconfirm')" ng-click="showExecuteActionModal(instance, 'Unconfirm')">Unconfirm
+                  ng-show="isConfirm && doesInstanceContainAction(instance, 'Unconfirm')" ng-click="showExecuteActionModal(instance, 'Unconfirm')">Unconfirm
           </button>
           <button class="btn btn-info btn-xs btn-block" tabindex="0"
                   ng-show="doesInstanceContainAction(instance, 'Reports')" ng-click="viewView(instance)"><i class="fa fa-file-text-o"></i>
           </button>
           <button class="btn btn-primary btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'ForceReconcile')" ng-click="forceReconcile(instance, 'ForceReconcile')">Force Reconcile
+                  ng-show="isConfirm && doesInstanceContainAction(instance, 'ForceReconcile')" ng-click="forceReconcile(instance, 'ForceReconcile')">Force Reconcile
           </button>
         </td>
       </tr>
