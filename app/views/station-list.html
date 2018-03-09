@@ -18,12 +18,12 @@
           <span class="hidden-xs">Toggle Filter</span>
         </button>
 
-				<a href="#/station-create" class="btn btn-primary">
+				<a href="#/station-create" class="btn btn-primary" ng-show="isCRUD">
 					<i class="fa fa-plus"></i>
 					<span class="hidden-xs hidden-sm">Add Station</span>
 				</a>
 
-        <excel-upload type="stations"></excel-upload>
+        <excel-upload type="stations" ng-show="isCRUD"></excel-upload>
       </div>
 
 		</div>
@@ -182,7 +182,7 @@
         <thead>
 
           <tr>
-            <th>
+            <th ng-show="isCRUD">
               <input type="checkbox" ng-model="allStationsSelected" />
             </th>
             <th>Station Code</th>
@@ -202,7 +202,7 @@
 
           <tr ng-repeat="station in stationList">
 
-            <td>
+            <td ng-show="isCRUD">
               <input type="checkbox" ng-model="selectedStations[station.id]" />
             </td>
 
@@ -222,17 +222,23 @@
             <td>UTC {{station.utcDstOffset}}</td>
 
             <td width="200px">
-              <date-picker-field form="stationListForm" name="Start Date {{$index+1}}" required="true"
-                ng-model="formData.stations[$index].startDate"
-                disable="isDateActive(station.startDate)">
-              </date-picker-field>
+              <div ng-show="isCRUD">
+                <date-picker-field form="stationListForm" name="Start Date {{$index+1}}" required="true"
+                  ng-model="formData.stations[$index].startDate"
+                  disable="isDateActive(station.startDate)">
+                </date-picker-field>
+              </div>
+              <div ng-hide="isCRUD">{{ formData.stations[$index].startDate }}</div>
             </td>
 
             <td width="200px">
-              <date-picker-field form="stationListForm"  name="End Date {{$index+1}}" required="true"
-                  ng-model="formData.stations[$index].endDate"
-                  disable="isDateActive(station.endDate)">
-              </date-picker-field>
+              <div ng-show="isCRUD">
+                <date-picker-field form="stationListForm"  name="End Date {{$index+1}}" required="true"
+                    ng-model="formData.stations[$index].endDate"
+                    disable="isDateActive(station.endDate)">
+                </date-picker-field>
+              </div>
+              <div ng-hide="isCRUD">{{ formData.stations[$index].endDate }}</div>
             </td>
 
             <td>
@@ -241,15 +247,15 @@
                 <i class="fa fa-file"></i>
               </a>
 
-              <a class="btn btn-primary btn-xs" ng-href="#/station-edit/{{station.id}}" ng-hide="isDateActive(station.endDate)">
+              <a class="btn btn-primary btn-xs" ng-href="#/station-edit/{{station.id}}" ng-hide="isDateActive(station.endDate) || !isCRUD">
                 <i class="fa fa-pencil"></i>
               </a>
 
-              <a class="btn btn-info btn-xs" ng-click="saveStation($index)" ng-hide="isDateActive(station.endDate)" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
+              <a class="btn btn-info btn-xs" ng-click="saveStation($index)" ng-hide="isDateActive(station.endDate) || !isCRUD" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
                 <i class="fa fa-save"></i>
               </a>
 
-              <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(station.id)" ng-hide="isDateActive(station.startDate) || isDateActive(station.endDate)">
+              <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(station.id)" ng-hide="isDateActive(station.startDate) || isDateActive(station.endDate) || !isCRUD">
                 <i class="fa fa-trash"></i>
               </button>
 
