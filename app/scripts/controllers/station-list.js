@@ -358,8 +358,8 @@ angular.module('ts5App')
     };
 
     this.removeStationSuccess = function (stationId) {
-      lodash.remove($scope.companyStationList, function (station) {
-        return station.id === stationId;
+      $scope.stationList = $scope.stationList.filter(function (station) {
+        return station.id !== stationId;
       });
     };
 
