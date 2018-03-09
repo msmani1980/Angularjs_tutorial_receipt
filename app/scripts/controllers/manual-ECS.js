@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManualECSCtrl', function ($scope, $q, manualECSFactory, globalMenuService, dateUtility, lodash, messageService) {
+  .controller('ManualECSCtrl', function ($scope, $q, manualECSFactory, globalMenuService, dateUtility, lodash, messageService, accessService) {
 
     var $this = this;
     this.meta = {
@@ -592,6 +592,7 @@ angular.module('ts5App')
     }
 
     function init() {
+      $scope.isCRUD = accessService.crudAccessGranted('RECONCILIATION', 'RELATEESC', 'CRECSR');
       showLoadingModal('Initializing data');
       $scope.isCreateViewActive = true;
       $scope.portalSearch = {};

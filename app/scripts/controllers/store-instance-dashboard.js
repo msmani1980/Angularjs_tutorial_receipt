@@ -12,7 +12,7 @@
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
   function ($scope, $q, $route, $location, $filter, $localStorage, storeInstanceDashboardFactory, storeTimeConfig,
-            lodash, dateUtility, storeInstanceDashboardActionsConfig, ENV, identityAccessFactory, messageService) {
+            lodash, dateUtility, storeInstanceDashboardActionsConfig, ENV, identityAccessFactory, messageService, accessService) {
 
     $scope.viewName = 'Store Instance Dashboard';
     $scope.stationList = [];
@@ -664,6 +664,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       showLoadingBar();
       checkForLocalStorage();
       $scope.allCheckboxesSelected = false;
+      $scope.isDispatch = accessService.crudAccessGranted('STATIONOPERATIONS', 'STOREDISPATCH', 'DSPTCHSIDS');
       var dependenciesArray = [];
       dependenciesArray.push(getStationList());
       dependenciesArray.push(getStoresList());
