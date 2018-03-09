@@ -141,13 +141,13 @@ angular.module('ts5App')
       return catalog.updatedOn ? dateUtility.formatTimestampForApp(catalog.updatedOn) : dateUtility.formatTimestampForApp(catalog.createdOn);
     };
 
-    $scope.getUpdateBy = function (promotion) {
-      if (promotion.updatedByPerson) {
-        return promotion.updatedByPerson.userName;
+    $scope.getUpdateBy = function (catalog) {
+      if (catalog.updatedByPerson) {
+        return catalog.updatedByPerson.userName;
       }
 
-      if (promotion.createdByPerson) {
-        return promotion.createdByPerson.userName;
+      if (catalog.createdByPerson) {
+        return catalog.createdByPerson.userName;
       }
 
       return '';
