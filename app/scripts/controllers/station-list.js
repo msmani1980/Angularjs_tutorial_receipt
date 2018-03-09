@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationListCtrl', function($scope, dateUtility, messageService, stationsFactory, $q, $filter, lodash, identityAccessFactory, globalMenuService, ENV) {
+  .controller('StationListCtrl', function($scope, dateUtility, messageService, stationsFactory, $q, $filter, lodash, identityAccessFactory, globalMenuService, ENV, accessService) {
 
     var $this = this;
 
@@ -380,6 +380,7 @@ angular.module('ts5App')
     this.init = function() {
       this.hideLoadingBar();
       this.displayLoadingModal('Retrieving Station information');
+      $scope.isCRUD = accessService.crudAccessGranted('COMPANY', 'COMPANYSTATION', 'STATIONCRUD');
       var promises = this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };
