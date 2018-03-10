@@ -240,7 +240,7 @@
                   ng-show="doesInstanceContainAction(instance, 'Add Cash Handler Data')">Add Cash Handler Data
           </button>
           <button class="btn btn-warning btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Review')" ng-click="viewReview(instance)">Review
+                  ng-show="isConfirm && doesInstanceContainAction(instance, 'Review')" ng-click="viewReview(instance)">Review
           </button>
           <button class="btn btn-warning btn-xs btn-block" tabindex="0"
                   ng-show="doesInstanceContainAction(instance, 'Amend Data') && false" ng-click="viewAmendData(instance)">Amend Data <!-- Disable for now on this screen -->
