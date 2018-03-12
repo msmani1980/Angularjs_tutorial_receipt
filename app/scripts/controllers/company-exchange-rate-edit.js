@@ -486,7 +486,7 @@ angular.module('ts5App')
       if (!row.createdOn) {
         return 'Unknown';
       }
-      
+
       return row.updatedOn ? dateUtility.formatTimestampForApp(row.updatedOn) : dateUtility.formatTimestampForApp(row.createdOn);
     };
 
