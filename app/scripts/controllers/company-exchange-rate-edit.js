@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CompanyExchangeRateEditCtrl', function($scope, globalMenuService, currencyFactory, dateUtility,
-    payloadUtility, messageService, $filter, lodash, accessService) {
+    payloadUtility, messageService, $filter, lodash, accessService, $http) {
 
     var $this = this;
 
@@ -231,6 +231,8 @@ angular.module('ts5App')
       $scope.errorResponse = null;
       $this.showToast('success', 'Company Exchange Rate', 'exchange rate successfully saved!');
       $this.hideLoadingModal();
+
+      $scope.searchCompanyExchangeRates();
     };
 
     this.showSaveErrors = function(dataFromAPI) {
@@ -479,12 +481,16 @@ angular.module('ts5App')
         return row.createdByPerson.userName;
       }
 
+      if (row.mode === 'create') {
+        return $http.defaults.headers.common.username;
+      }
+
       return 'Unknown';
     };
 
     $scope.getUpdatedOn = function (row) {
       if (!row.createdOn) {
-        return 'Unknown';
+        return '';
       }
 
       return row.updatedOn ? dateUtility.formatTimestampForApp(row.updatedOn) : dateUtility.formatTimestampForApp(row.createdOn);
