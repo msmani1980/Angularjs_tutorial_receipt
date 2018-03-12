@@ -10,7 +10,7 @@ angular.module('ts5App')
   .controller('MenuEditCtrl', function ($scope, $routeParams, messageService, menuFactory, dateUtility, $location, lodash, $q, $filter, $http) {
 
     var $this = this;
-    $scope.testList = [];
+    $scope.selectedIndex = 0;
 
     $scope.cloningItem = false;
 
@@ -276,26 +276,6 @@ angular.module('ts5App')
       });
     };
 
-    $scope.loadMasterItems = function($select, $event) {
-      if ($event) {
-        $event.stopPropagation();
-        $event.preventDefault();
-      }
-
-      if ($select.search && $select.search.length > 2) {
-        var searchPayload = {
-          search: $select.search,
-          startDate: $scope.menu.startDate,
-          endDate: $scope.menu.endDate
-        };
-
-        menuFactory.getItemsList(searchPayload, true).then($this.setFilteredMasterItems, showErrors);
-      } else {
-        $scope.filteredItemsCollection[$select.menuIndex] = [];
-      }
-
-    };
-
     function getFilteredMasterItems(startDate, endDate) {
       showLoadingModal('Loading items');
       var searchPayload = {
@@ -308,6 +288,39 @@ angular.module('ts5App')
       }
 
     }
+
+    $scope.showSalesCategoryModal = function (menuIndex) {
+      $scope.selectedIndex = menuIndex;
+      angular.element('#sales-categories').modal('show');
+    };
+
+    $scope.showMasterItemsModal = function (menuIndex) {
+      $scope.selectedIndex = menuIndex;
+      getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);	
+      angular.element('#master-items').modal('show');
+    };
+
+    $scope.filterSalesCategoriesList = function () {
+      $scope.categoriesListSearch = angular.copy($scope.salesCategoryListFilterText);
+    };
+
+    $scope.filterMasterItemsList = function () {
+      $scope.masterItemsListSearch = angular.copy($scope.masterItemsListFilterText);
+    };
+
+    $scope.setCategoryName = function (categoryName, id) {
+      $scope.categoriesList[$scope.selectedIndex].name = categoryName;
+      $scope.categoriesList[$scope.selectedIndex].id = id;
+      angular.element('#sales-categories').modal('hide');
+    };
+
+    $scope.setMasterItemName = function (itemName, id) {
+      console.log('Selected Item Name>>>' + itemName);
+      console.log('Selected Item Id>>>' + id);
+      $scope.menuItemList[$scope.selectedIndex].selectedItem.itemName = itemName;
+      $scope.menuItemList[$scope.selectedIndex].selectedItem.id = id;
+      angular.element('#master-items').modal('hide');
+    };
 
     this.deserializeMenuItems = function () {
       $scope.menuItemList = [];
@@ -366,10 +379,6 @@ angular.module('ts5App')
 
       if ($routeParams.id) {
         promises.push(menuFactory.getMenu($routeParams.id));
-        if ($scope.isMenuEditable()) {
-          promises.push(menuFactory.getSalesCategoriesList({}));
-        } 
-        
       }
 
       return promises;
