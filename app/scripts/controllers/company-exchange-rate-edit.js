@@ -479,10 +479,14 @@ angular.module('ts5App')
         return row.createdByPerson.userName;
       }
 
-      return '';
+      return 'Unknown';
     };
 
     $scope.getUpdatedOn = function (row) {
+      if (!row.createdOn) {
+        return 'Unknown';
+      }
+      
       return row.updatedOn ? dateUtility.formatTimestampForApp(row.updatedOn) : dateUtility.formatTimestampForApp(row.createdOn);
     };
 
