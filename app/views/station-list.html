@@ -247,11 +247,11 @@
                 <i class="fa fa-file"></i>
               </a>
 
-              <a class="btn btn-primary btn-xs" ng-href="#/station-edit/{{station.id}}" ng-hide="isDateActive(station.endDate) || !isCRUD">
+              <a class="btn btn-primary btn-xs" ng-href="#/station-edit/{{station.id}}" ng-hide="canEdit(surveyQuestion.endDate) || !isCRUD">
                 <i class="fa fa-pencil"></i>
               </a>
 
-              <a class="btn btn-info btn-xs" ng-click="saveStation($index)" ng-hide="isDateActive(station.endDate) || !isCRUD" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
+              <a class="btn btn-info btn-xs" ng-click="saveStation($index)" ng-hide="canEdit(surveyQuestion.endDate) || !isCRUD" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
                 <i class="fa fa-save"></i>
               </a>
 
