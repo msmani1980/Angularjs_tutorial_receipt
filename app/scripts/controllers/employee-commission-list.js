@@ -276,6 +276,22 @@ angular.module('ts5App')
       $scope.loadEmployeeCommissions();
     };
 
+    $scope.getUpdatedOn = function (commission) {
+      return commission.updatedOn ? dateUtility.formatTimestampForApp(commission.updatedOn) : dateUtility.formatTimestampForApp(commission.createdOn);
+    };
+
+    $scope.getUpdateBy = function (commission) {
+        if (commission.updatedByPerson) {
+          return commission.updatedByPerson.userName;
+        }
+
+        if (commission.createdByPerson) {
+          return commission.createdByPerson.userName;
+        }
+
+        return '';
+      };
+
     $scope.clearForm = function() {
       delete $scope.search.selectedPriceType;
       delete $scope.search.selectedRateType;
