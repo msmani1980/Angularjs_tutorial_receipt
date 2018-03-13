@@ -83,6 +83,7 @@
               <div ng-bind-html="station.code | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
+          <div ng-if="formData.station.expired" style="color:red">This station expired. Please select a different one!</div>
         </div>
 
       </div>
