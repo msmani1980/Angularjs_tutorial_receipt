@@ -278,6 +278,26 @@ angular.module('ts5App')
       });
     };
 
+    $scope.getUpdateBy = function (row) {
+      if (row.updatedByPerson) {
+        return row.updatedByPerson.userName;
+      }
+
+      if (row.createdByPerson) {
+        return row.createdByPerson.userName;
+      }
+
+      return 'Unknown';
+    };
+
+    $scope.getUpdatedOn = function (row) {
+      if (!row.createdOn) {
+        return 'Unknown';
+      }
+
+      return row.updatedOn ? dateUtility.formatTimestampForApp(row.updatedOn) : dateUtility.formatTimestampForApp(row.createdOn);
+    };
+
     this.init = function() {
       $scope.isCRUD = accessService.crudAccessGranted('CURRENCYEXCHNG', 'COMPANYCURRENCY', 'CUDCMPCURR');
       $this.getCompanyGlobalCurrencies();
