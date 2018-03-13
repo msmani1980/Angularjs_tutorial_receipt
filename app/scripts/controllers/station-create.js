@@ -121,9 +121,8 @@ angular.module('ts5App')
 
       if (!countryFound) {
         $scope.countryList.push({
-          id: stationFromAPI.cityId,
-          cityName: stationFromAPI.cityName,
-          countryId: stationFromAPI.countryId,
+          id: stationFromAPI.countryId,
+          countryName: stationFromAPI.countryName,
           expired: true
         });
       }

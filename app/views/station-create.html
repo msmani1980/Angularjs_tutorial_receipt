@@ -19,7 +19,7 @@
             <span class="hidden-xs btn-label">Back</span>
           </a>
 
-          <button class="btn btn-success" ng-click="submitForm()">
+          <button class="btn btn-success" ng-click="submitForm()" ng-disabled="formData.station.expired">
             <span class="fa fa-check-square-o" aria-hidden="true"></span>
             <span class="hidden-xs btn-label">{{ buttonText }}</span>
           </button>
@@ -83,7 +83,7 @@
               <div ng-bind-html="station.code | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
-          <div ng-if="formData.station.expired" style="color:red">This station expired. Please select a different one!</div>
+          <div ng-if="formData.station.expired" style="color:red">This station expired.</div>
         </div>
 
       </div>
