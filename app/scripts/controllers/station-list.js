@@ -150,6 +150,10 @@ angular.module('ts5App')
       return dateUtility.isTodayOrEarlierDatePicker(date);
     };
 
+    this.canEdit = function (endDate) {
+      return dateUtility.isYesterdayOrEarlierDatePicker(endDate);
+    };
+
     this.getSelectedStations = function() {
       return $scope.selectedStations.filter(function(selected, stationId) {
         if (selected === true) {
@@ -471,6 +475,10 @@ angular.module('ts5App')
 
     $scope.isDateActive = function(date) {
       return $this.dateActive(date);
+    };
+
+    $scope.canEdit = function (endDate) {
+      return $this.canEdit(endDate);
     };
 
     $scope.removeRecord = function (stationId) {
