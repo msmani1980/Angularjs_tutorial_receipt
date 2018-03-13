@@ -16,6 +16,7 @@ angular.module('ts5App')
     $scope.isSearch = false;
     $scope.editingItem = false;
     $scope.globalStationList = [];
+    $scope.isCatererDropdownOptions = [{ value: true, name: 'Yes' }, { value: false, name: 'No' }];
 
     this.setCatererStationList = function(dataFromAPI) {
       $scope.catererStationList = angular.copy(dataFromAPI.response);
@@ -79,14 +80,64 @@ angular.module('ts5App')
       });
     };
 
+    this.findCountryInGlobalStationList = function (countryId) {
+      return lodash.find($scope.globalStationList, { countryId: countryId });
+    };
+
+    this.findCityInGlobalStationList = function (cityId) {
+      return lodash.find($scope.globalStationList, { cityId: cityId });
+    };
+
+    this.findStationInGlobalStationList = function (stationId) {
+      return lodash.find($scope.globalStationList, { id: stationId });
+    };
+
+    this.addExpiredStation = function(stationFromAPI) {
+      var countryFound = $this.findCountryInGlobalStationList(stationFromAPI.countryId);
+      var cityFound = $this.findCityInGlobalStationList(stationFromAPI.cityId);
+      var stationFound = $this.findStationInGlobalStationList(stationFromAPI.stationId);
+
+      if (!stationFound) {
+        $scope.globalStationList.push({
+          id: stationFromAPI.stationId,
+          code: stationFromAPI.stationCode,
+          cityId: stationFromAPI.cityId,
+          cityName: stationFromAPI.cityName,
+          countryId: stationFromAPI.countryId,
+          countryName: stationFromAPI.countryName,
+          name: stationFromAPI.stationName,
+          expired: true
+        });
+      }
+
+      if (!cityFound) {
+        $scope.cityList.push({
+          id: stationFromAPI.cityId,
+          cityName: stationFromAPI.cityName,
+          countryId: stationFromAPI.countryId,
+          expired: true
+        });
+      }
+
+      if (!countryFound) {
+        $scope.countryList.push({
+          id: stationFromAPI.countryId,
+          countryName: stationFromAPI.countryName,
+          expired: true
+        });
+      }
+    };
+
     this.setStation = function(dataFromAPI) {
       var station = angular.copy(dataFromAPI);
 
       var startDate = dateUtility.formatDateForApp(dataFromAPI.startDate);
       var endDate = dateUtility.formatDateForApp(dataFromAPI.endDate);
 
+      $this.addExpiredStation(station);
+
       $scope.formData = {
-        station: lodash.find($scope.globalStationList, { id: station.stationId }),
+        station: $this.findStationInGlobalStationList(station.stationId),
         city: {
           id: station.cityId,
           cityName: station.cityName,
@@ -98,7 +149,7 @@ angular.module('ts5App')
         },
         startDate: startDate,
         endDate: endDate,
-        isCaterer: station.isCaterer,
+        isCaterer: lodash.find($scope.isCatererDropdownOptions, { value: station.isCaterer })
       };
 
       $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
@@ -154,7 +205,7 @@ angular.module('ts5App')
         countryId: $scope.formData.country.id,
         startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
         endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
-        isCaterer: $scope.formData.isCaterer
+        isCaterer: $scope.formData.isCaterer.value
       };
     };
 

@@ -24,6 +24,8 @@ angular.module('ts5App')
       } else {
         showToast('success', 'Import from file', response.config.file.name + ' was successful. Please wait for an email to see the status of the file processing, and then return to this screen to see your data');
       }
+
+      $scope.clearFile();
     }
 
     function errorHandler(response) {
