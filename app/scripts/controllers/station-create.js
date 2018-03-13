@@ -80,14 +80,65 @@ angular.module('ts5App')
       });
     };
 
+    this.findCountryInGlobalStationList = function (countryId) {
+      return lodash.find($scope.globalStationList, { countryId: countryId });
+    };
+
+    this.findCityInGlobalStationList = function (cityId) {
+      return lodash.find($scope.globalStationList, { cityId: cityId });
+    };
+
+    this.findStationInGlobalStationList = function (stationId) {
+      return lodash.find($scope.globalStationList, { id: stationId });
+    };
+
+    this.addExpiredStation = function(stationFromAPI) {
+      var countryFound = $this.findCountryInGlobalStationList(stationFromAPI.countryId);
+      var cityFound = $this.findCityInGlobalStationList(stationFromAPI.cityId);
+      var stationFound = $this.findStationInGlobalStationList(stationFromAPI.stationId);
+
+      if (!stationFound) {
+        $scope.globalStationList.push({
+          id: stationFromAPI.stationId,
+          code: stationFromAPI.stationCode,
+          cityId: stationFromAPI.cityId,
+          cityName: stationFromAPI.cityName,
+          countryId: stationFromAPI.countryId,
+          countryName: stationFromAPI.countryName,
+          name: stationFromAPI.stationName,
+          expired: true
+        });
+      }
+
+      if (!cityFound) {
+        $scope.cityList.push({
+          id: stationFromAPI.cityId,
+          cityName: stationFromAPI.cityName,
+          countryId: stationFromAPI.countryId,
+          expired: true
+        });
+      }
+
+      if (!countryFound) {
+        $scope.countryList.push({
+          id: stationFromAPI.cityId,
+          cityName: stationFromAPI.cityName,
+          countryId: stationFromAPI.countryId,
+          expired: true
+        });
+      }
+    };
+
     this.setStation = function(dataFromAPI) {
       var station = angular.copy(dataFromAPI);
 
       var startDate = dateUtility.formatDateForApp(dataFromAPI.startDate);
       var endDate = dateUtility.formatDateForApp(dataFromAPI.endDate);
 
+      $this.addExpiredStation(station);
+
       $scope.formData = {
-        station: lodash.find($scope.globalStationList, { id: station.stationId }),
+        station: $this.findStationInGlobalStationList(station.stationId),
         city: {
           id: station.cityId,
           cityName: station.cityName,
