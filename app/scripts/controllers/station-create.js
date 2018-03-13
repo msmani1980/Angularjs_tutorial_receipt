@@ -16,6 +16,7 @@ angular.module('ts5App')
     $scope.isSearch = false;
     $scope.editingItem = false;
     $scope.globalStationList = [];
+    $scope.isCatererDropdownOptions = [{ value: true, name: 'Yes' }, { value: false, name: 'No' }];
 
     this.setCatererStationList = function(dataFromAPI) {
       $scope.catererStationList = angular.copy(dataFromAPI.response);
@@ -98,7 +99,7 @@ angular.module('ts5App')
         },
         startDate: startDate,
         endDate: endDate,
-        isCaterer: station.isCaterer,
+        isCaterer: lodash.find($scope.isCatererDropdownOptions, { value: station.isCaterer })
       };
 
       $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
@@ -154,7 +155,7 @@ angular.module('ts5App')
         countryId: $scope.formData.country.id,
         startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
         endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
-        isCaterer: $scope.formData.isCaterer
+        isCaterer: $scope.formData.isCaterer.value
       };
     };
 
