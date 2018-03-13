@@ -229,7 +229,6 @@ angular.module('ts5App')
       $scope.formData.note = discountData.note;
       $scope.formData.startDate = dateUtility.formatDateForApp(discountData.startDate);
       $scope.formData.endDate = dateUtility.formatDateForApp(discountData.endDate);
-      $scope.formData.milesPoints = discountData.milesPoints;
     };
 
     this.deserializeBenefits = function(discountData) {
@@ -315,7 +314,6 @@ angular.module('ts5App')
       discount.barcode = formData.barCode;
       discount.startDate = dateUtility.formatDateForAPI(formData.startDate);
       discount.endDate = dateUtility.formatDateForAPI(formData.endDate);
-      discount.milesPoints = formData.milesPoints;
     };
 
     this.serializeBenefits = function(formData, discount) {
@@ -611,15 +609,6 @@ angular.module('ts5App')
         var action = $scope.editingDiscount ? 'updateItem' : 'createItem';
         $this[action](payload);
       }
-    };
-
-    $scope.changeDiscountType = function(formData) {
-      $scope.formData.milesPoints = '';
-      $scope.formData.percentageDiscountValue = '';
-      $scope.formData.amountDiscountValue = {};
-      angular.forEach(formData.amountDiscountValue, function(amount, currencyId) {
-        $scope.formData.amountDiscountValue[currencyId] = 0;
-      });
     };
 
     this.validateRestrictions = function() {
