@@ -85,7 +85,8 @@
         <td>{{ data.discrepancyDeductionsCashPercentage | number: 2}} %</td>
         <td>{{ data.discrepancyDeductionsStockPercentage | number: 2 }} %</td>
         <td>{{ data.commissionValue | number: 2 }} {{ getUnitById(data.commissionValueTypeId) }}</td>
-        <td>{{ getUpdatedOn(data) }}</td>        
+        <td>{{ getUpdatedOn(data) }}</td>                
+        <td>{{ getUpdateBy(data) }}</td> 
         <td>
           <button class="btn btn-info btn-xs" ng-click="redirectToDetailPage(data.id, 'view')" tabindex="0">
             <i class="fa fa-file"></i>
