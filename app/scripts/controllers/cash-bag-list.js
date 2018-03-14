@@ -31,7 +31,9 @@ angular.module('ts5App')
     $scope.createCashBagError = 'temp error message';
     $scope.displayModalError = false;
     $scope.displayError = false;
-    $scope.search = {};
+    $scope.search = {
+      startDate: dateUtility.nowFormattedDatePicker()
+    };
     $scope.storeList = [];
     $scope.storeInstanceList = [];
     delete $localStorage.isEditFromList;
