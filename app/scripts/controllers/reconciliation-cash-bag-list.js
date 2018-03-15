@@ -154,7 +154,19 @@ angular.module('ts5App')
     function createPayload() {
       var payload = angular.copy($scope.search);
 
-      if(lodash.isEmpty(payload)) {
+      if(
+        lodash.isEmpty(payload) ||
+        (
+          (payload.startDate === '' || payload.startDate === 'undefined' || payload.startDate === null)
+          && (payload.arrivalStationCode === '' || payload.arrivalStationCode === 'undefined' || payload.arrivalStationCode === null)
+          && (payload.departureStationCode === '' || payload.departureStationCode === 'undefined' || payload.departureStationCode === null)
+          && (payload.cashBagNumber === '' || payload.cashBagNumber === 'undefined' || payload.cashBagNumber === null)
+          && (payload.bankReferenceNumber === '' || payload.bankReferenceNumber === 'undefined' || payload.bankReferenceNumber === null)
+          && (payload.scheduleNumber === '' || payload.scheduleNumber === 'undefined' || payload.scheduleNumber === null)
+          && (payload.storeNumber === '' || payload.storeNumber === 'undefined' || payload.storeNumber === null)
+          && (payload.storeInstanceId === '' || payload.storeInstanceId === 'undefined' || payload.storeInstanceId === null)
+        )
+      ) {
         payload.endDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
         var ddd = dateUtility.dateNumDaysBeforeTodayFormatted(30);
         payload.startDate = dateUtility.formatDateForAPI(ddd);
