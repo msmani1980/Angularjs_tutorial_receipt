@@ -290,7 +290,7 @@ angular.module('ts5App')
       }
 
       return '';
-      };
+    };
 
     $scope.clearForm = function() {
       delete $scope.search.selectedPriceType;
