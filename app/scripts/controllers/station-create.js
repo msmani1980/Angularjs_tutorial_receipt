@@ -27,18 +27,14 @@ angular.module('ts5App')
       // this.setCatererStationList(catererStationListJSON);
     };
 
-    this.setCityList = function(stationsList) {
-      var citiesList = [];
-      angular.forEach(stationsList, function (station) {
-        var country = {
-          id: station.cityId,
-          cityName: station.cityName,
-          countryId: station.countryId
-        };
-        citiesList.push(country);
-      });
+    this.setCityList = function(dataFromAPI) {
+      $scope.cityList = angular.copy(dataFromAPI.cities);
+    };
 
-      $scope.cityList = $filter('unique')(citiesList, 'id');
+    this.getCityList = function(countryId) {
+      var payload = { countryId: countryId, limit: 1000 };
+
+      return countriesService.getCities(payload).then($this.setCityList);
     };
 
     this.setCountryList = function (dataFromAPI) {
@@ -52,16 +48,11 @@ angular.module('ts5App')
     };
 
     this.setGlobalStationList = function(dataFromAPI) {
-      var response = angular.copy(dataFromAPI.response);
-
-      var distinctStations = $filter('unique')(response, 'stationId');
-
-      $scope.globalStationList = distinctStations;
-      $this.setCityList(distinctStations);
+      $scope.globalStationList = angular.copy(dataFromAPI.response);
     };
 
-    this.getGlobalStationList = function() {
-      return stationsFactory.getStations().then($this.setGlobalStationList);
+    this.getGlobalStationList = function(payload) {
+      return stationsFactory.getStations(payload).then($this.setGlobalStationList);
     };
 
     this.setStationRelationships = function(station) {
@@ -366,8 +357,48 @@ angular.module('ts5App')
       return $scope.shouldDisableStartDate || $this.viewOnly;
     };
 
+    $scope.autocompleteStations = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+
+      // Do not use autocomplete if stations are filtered by country or city
+      if ($scope.formData.country || $scope.formData.city) {
+        return;
+      }
+
+      if ($select.search && $select.search.length !== 0) {
+        var payload = {
+          stationCode: $select.search
+        };
+
+        $this.getGlobalStationList(payload);
+      } else {
+        $scope.globalStationList = [];
+      }
+    };
+
     $scope.$watch('formData.country', function(country) {
-      if (!$scope.formData || !$scope.formData.city || !country) {
+      if (!$scope.formData || !country) {
+
+        // Reset station and city list to make them available for auto-suggest search
+        $scope.cityList = [];
+        $scope.globalStationList = [];
+
+        return;
+      }
+
+      $this.displayLoadingModal('Loading Cities and Stations for selected Country');
+
+      $q.all([
+        $this.getCityList(country.id),
+        $this.getGlobalStationList({ country: country.countryName })
+      ]).finally(function () {
+        $this.hideLoadingModal();
+      });
+
+      /*if (!$scope.formData || !$scope.formData.city || !country) {
         return;
       }
 
@@ -375,7 +406,7 @@ angular.module('ts5App')
       if (parseInt($scope.formData.city.countryId) !== parseInt(country.id)) {
         $scope.formData.city = '';
         $scope.formData.station = '';
-      }
+      }*/
     });
 
     $scope.$watch('formData.city', function(city) {

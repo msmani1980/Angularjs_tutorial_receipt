@@ -63,7 +63,10 @@
             <ui-select-match placeholder="Start typing to find a city" allow-clear="true">
               {{ $select.selected.cityName }}
             </ui-select-match>
-            <ui-select-choices repeat="city in cityList | filter: $select.search | filter: filterByCountry | orderBy:'cityName'">
+            <ui-select-choices
+              refresh="autocompleteCities($select)"
+              refresh-delay="300"
+              repeat="city in cityList | filter: $select.search | orderBy:'cityName' | limitTo:100">
               <div ng-bind-html="city.cityName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -79,7 +82,10 @@
             <ui-select-match placeholder="Start typing to find a station" allow-clear="true">
               {{ $select.selected.code }}
             </ui-select-match>
-            <ui-select-choices repeat="station in globalStationList | filter: $select.search | filter: filterByCountry | filter: filterByCity | orderBy:'code'">
+            <ui-select-choices
+              refresh="autocompleteStations($select)"
+              refresh-delay="300"
+              repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
               <div ng-bind-html="station.code | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
