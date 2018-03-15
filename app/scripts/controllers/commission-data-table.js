@@ -171,7 +171,7 @@ angular.module('ts5App')
 
     $scope.getUpdatedOn = function (commissionData) {
       return commissionData.updatedOn ? dateUtility.formatTimestampForApp(commissionData.updatedOn) : dateUtility.formatTimestampForApp(commissionData.createdOn);
-      };
+    };
 
       $scope.getUpdateBy = function (commissionData) {
           if (commissionData.updatedByPerson) {
