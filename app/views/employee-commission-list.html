@@ -153,6 +153,8 @@
       <th>Item Name</th>
       <th>Sale Type</th>
       <th>Rate Type</th>
+      <th>Updated Date/Time</th>
+      <th>Updated User</th>                   
       <th>Actions</th>
     </tr>
     </thead>
@@ -164,6 +166,8 @@
       <td>{{ commission.itemName }}</td>
       <td>{{ commission.priceTypeName }}</td>
       <td>{{ commission.taxRateTypeName }}</td>
+      <td>{{ getUpdatedOn(commission) }}</td>   
+      <td>{{ getUpdateBy(commission) }}</td>      
       <td>
         <button class="btn btn-info btn-xs" ng-click="showCommission(commission)">
           <i class="fa fa-file"></i>
