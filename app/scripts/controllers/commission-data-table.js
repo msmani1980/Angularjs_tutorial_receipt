@@ -183,7 +183,7 @@ angular.module('ts5App')
       }
 
       return '';
-        };
+    };
 
     function getCommissionPayableTypes() {
       commissionFactory.getCommissionPayableTypes().then(function(response) {
