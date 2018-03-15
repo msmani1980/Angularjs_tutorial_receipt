@@ -44,7 +44,7 @@
         <div class="form-group" ng-class="setUISelectValidationClass('Country')">
           <label>Country *</label>
           <ui-select name="Country" ng-model="formData.country" theme="bootstrap" required ng-disabled="isDisabled()">
-            <ui-select-match placeholder="Start typing to find a country">
+            <ui-select-match placeholder="Start typing to find a country" allow-clear="true">
               {{ $select.selected.countryName }}
             </ui-select-match>
             <ui-select-choices repeat="country in countryList | filter: $select.search | orderBy:'countryName'">
@@ -60,7 +60,7 @@
           <div class="form-group" ng-class="setUISelectValidationClass('City')">
           <label>City *</label>
           <ui-select name="City"  ng-model="formData.city" theme="bootstrap" required ng-disabled="isDisabled()">
-            <ui-select-match placeholder="Start typing to find a city">
+            <ui-select-match placeholder="Start typing to find a city" allow-clear="true">
               {{ $select.selected.cityName }}
             </ui-select-match>
             <ui-select-choices repeat="city in cityList | filter: $select.search | filter: filterByCountry | orderBy:'cityName'">
@@ -76,7 +76,7 @@
         <div class="form-group" ng-class="setUISelectValidationClass('Station Code')">
           <label>Station Code *</label>
           <ui-select name="Station Code" ng-model="formData.station" theme="bootstrap" required ng-disabled="isDisabled()">
-            <ui-select-match placeholder="Start typing to find a station">
+            <ui-select-match placeholder="Start typing to find a station" allow-clear="true">
               {{ $select.selected.code }}
             </ui-select-match>
             <ui-select-choices repeat="station in globalStationList | filter: $select.search | filter: filterByCountry | filter: filterByCity | orderBy:'code'">

@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationCreateCtrl', function($scope, $location, $q, messageService, dateUtility, $routeParams, stationsFactory, $filter, lodash) {
+  .controller('StationCreateCtrl', function($scope, $location, $q, messageService, dateUtility, $routeParams, stationsFactory, $filter, lodash, countriesService) {
 
     var $this = this;
 
@@ -41,17 +41,14 @@ angular.module('ts5App')
       $scope.cityList = $filter('unique')(citiesList, 'id');
     };
 
-    this.setCountryList = function (stationsList) {
-      var countriesList = [];
-      angular.forEach(stationsList, function (station) {
-        var country = {
-          id: station.countryId,
-          countryName: station.countryName
-        };
-        countriesList.push(country);
-      });
+    this.setCountryList = function (dataFromAPI) {
+      $scope.countryList = angular.copy(dataFromAPI.countries);
+    };
 
-      $scope.countryList = $filter('unique')(countriesList, 'id');
+    this.getCountryList = function () {
+      var payload = { limit: 1000 };
+
+      countriesService.getCountriesList(payload).then($this.setCountryList);
     };
 
     this.setGlobalStationList = function(dataFromAPI) {
@@ -60,12 +57,11 @@ angular.module('ts5App')
       var distinctStations = $filter('unique')(response, 'stationId');
 
       $scope.globalStationList = distinctStations;
-      $this.setCountryList(distinctStations);
       $this.setCityList(distinctStations);
     };
 
     this.getGlobalStationList = function() {
-      return stationsFactory.getGlobalStationList().then($this.setGlobalStationList);
+      return stationsFactory.getStations().then($this.setGlobalStationList);
     };
 
     this.setStationRelationships = function(station) {
@@ -305,7 +301,7 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       return [
-        this.getGlobalStationList()
+        this.getCountryList()
 
         //this.getCatererStationList()
       ];

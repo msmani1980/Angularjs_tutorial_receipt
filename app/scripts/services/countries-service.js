@@ -24,8 +24,8 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getCountriesList = function() {
-      return requestResource.getCountriesList().$promise;
+    var getCountriesList = function(payload) {
+      return requestResource.getCountriesList(payload).$promise;
     };
 
     return {

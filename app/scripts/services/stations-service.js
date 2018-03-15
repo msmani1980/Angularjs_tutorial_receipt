@@ -30,6 +30,10 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       getGlobalStationList: {
         method: 'GET'
       },
+      getStations: {
+        method: 'GET',
+        headers: {}
+      },
       getStationList: {
         method: 'GET',
         headers: {}
