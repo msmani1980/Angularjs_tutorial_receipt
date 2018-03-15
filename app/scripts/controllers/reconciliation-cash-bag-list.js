@@ -24,9 +24,7 @@ angular.module('ts5App')
     $scope.createCashBagError = 'temp error message';
     $scope.displayModalError = false;
     $scope.displayError = false;
-    $scope.search = {
-      startDate: dateUtility.nowFormattedDatePicker()
-    };
+    $scope.search = {};
     $scope.storeList = [];
     $scope.storeInstanceList = [];
     delete $localStorage.isEditFromList;
@@ -155,17 +153,24 @@ angular.module('ts5App')
 
     function createPayload() {
       var payload = angular.copy($scope.search);
-      if (payload.startDate) {
-        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
-        payload.endDate = payload.startDate;
-      }
 
-      if (payload.arrivalStationCode) {
-        payload.arrivalStationCode = formatUiSelectPayload(payload.arrivalStationCode);
-      }
+      if(lodash.isEmpty(payload)) {
+        payload.endDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+        var ddd = dateUtility.dateNumDaysBeforeTodayFormatted(30);
+        payload.startDate = dateUtility.formatDateForAPI(ddd);
+      } else{
+        if (payload.startDate) {
+          payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+          payload.endDate = payload.startDate;
+        }
 
-      if (payload.departureStationCode) {
-        payload.departureStationCode = formatUiSelectPayload(payload.departureStationCode);
+        if (payload.arrivalStationCode) {
+          payload.arrivalStationCode = formatUiSelectPayload(payload.arrivalStationCode);
+        }
+
+        if (payload.departureStationCode) {
+          payload.departureStationCode = formatUiSelectPayload(payload.departureStationCode);
+        }
       }
 
       return clearEmptyValues(payload);
