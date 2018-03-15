@@ -159,7 +159,7 @@ angular.module('ts5App')
       for (var key in dictionary) {
         if (dictionary.hasOwnProperty(key)) {
           var value = dictionary[key];
-          if(!(value === '' || typeof value === 'undefined' || value === null)) {
+          if (!(value === '' || typeof value === 'undefined' || value === null)) {
             return false;
           }
         }
