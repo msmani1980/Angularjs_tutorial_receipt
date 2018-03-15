@@ -285,7 +285,7 @@ angular.module('ts5App')
         return commission.updatedByPerson.userName;
       }
 
-        if (commission.createdByPerson) {
+      if (commission.createdByPerson) {
           return commission.createdByPerson.userName;
         }
 
