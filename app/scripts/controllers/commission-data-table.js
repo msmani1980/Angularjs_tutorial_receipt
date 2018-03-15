@@ -176,7 +176,7 @@ angular.module('ts5App')
     $scope.getUpdateBy = function (commissionData) {
       if (commissionData.updatedByPerson) {
         return commissionData.updatedByPerson.userName;
-          }
+      }
 
           if (commissionData.createdByPerson) {
             return commissionData.createdByPerson.userName;
