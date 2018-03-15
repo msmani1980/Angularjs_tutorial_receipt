@@ -169,6 +169,22 @@ angular.module('ts5App')
       });
     }
 
+    $scope.getUpdatedOn = function (commissionData) {
+      return commissionData.updatedOn ? dateUtility.formatTimestampForApp(commissionData.updatedOn) : dateUtility.formatTimestampForApp(commissionData.createdOn);
+      };
+
+      $scope.getUpdateBy = function (commissionData) {
+          if (commissionData.updatedByPerson) {
+            return commissionData.updatedByPerson.userName;
+          }
+
+          if (commissionData.createdByPerson) {
+            return commissionData.createdByPerson.userName;
+          }
+
+          return '';
+        };
+
     function getCommissionPayableTypes() {
       commissionFactory.getCommissionPayableTypes().then(function(response) {
         $scope.commissionTypes = angular.copy(response);
