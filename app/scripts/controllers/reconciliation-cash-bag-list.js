@@ -154,14 +154,14 @@ angular.module('ts5App')
     function isSearchPayloadEmpty(payload) {
       return lodash.isEmpty(payload) ||
         (
-          (payload.startDate === '' || typeof payload.startDate === 'undefined' || payload.startDate === null)
-          && (payload.arrivalStationCode === '' || typeof payload.arrivalStationCode === 'undefined' || payload.arrivalStationCode === null)
-          && (payload.departureStationCode === '' || typeof payload.departureStationCode === 'undefined' || payload.departureStationCode === null)
-          && (payload.cashBagNumber === '' || typeof payload.cashBagNumber === 'undefined' || payload.cashBagNumber === null)
-          && (payload.bankReferenceNumber === '' || typeof payload.bankReferenceNumber === 'undefined' || payload.bankReferenceNumber === null)
-          && (payload.scheduleNumber === '' || typeof payload.scheduleNumber === 'undefined' || payload.scheduleNumber === null)
-          && (payload.storeNumber === '' || typeof payload.storeNumber === 'undefined' || payload.storeNumber === null)
-          && (payload.storeInstanceId === '' || typeof payload.storeInstanceId === 'undefined' || payload.storeInstanceId === null)
+          (payload.startDate === '' || typeof payload.startDate === 'undefined' || payload.startDate === null) &&
+          (payload.arrivalStationCode === '' || typeof payload.arrivalStationCode === 'undefined' || payload.arrivalStationCode === null) &&
+          (payload.departureStationCode === '' || typeof payload.departureStationCode === 'undefined' || payload.departureStationCode === null) &&
+          (payload.cashBagNumber === '' || typeof payload.cashBagNumber === 'undefined' || payload.cashBagNumber === null) &&
+          (payload.bankReferenceNumber === '' || typeof payload.bankReferenceNumber === 'undefined' || payload.bankReferenceNumber === null) &&
+          (payload.scheduleNumber === '' || typeof payload.scheduleNumber === 'undefined' || payload.scheduleNumber === null) &&
+          (payload.storeNumber === '' || typeof payload.storeNumber === 'undefined' || payload.storeNumber === null) &&
+          (payload.storeInstanceId === '' || typeof payload.storeInstanceId === 'undefined' || payload.storeInstanceId === null)
         );
     }
 
