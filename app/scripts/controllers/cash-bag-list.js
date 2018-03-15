@@ -177,8 +177,7 @@ angular.module('ts5App')
 
       if(isSearchPayloadEmpty(payload)) {
         payload.endDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
-        var ddd = dateUtility.dateNumDaysBeforeTodayFormatted(30);
-        payload.startDate = dateUtility.formatDateForAPI(ddd);
+        payload.startDate = dateUtility.formatDateForAPI(dateUtility.dateNumDaysBeforeTodayFormatted(30));
       } else {
         if (payload.startDate) {
           payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
