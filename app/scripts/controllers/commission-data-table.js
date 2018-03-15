@@ -182,7 +182,7 @@ angular.module('ts5App')
         return commissionData.createdByPerson.userName;
       }
 
-          return '';
+      return '';
         };
 
     function getCommissionPayableTypes() {
