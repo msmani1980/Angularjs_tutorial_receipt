@@ -289,7 +289,7 @@ angular.module('ts5App')
         return commission.createdByPerson.userName;
       }
 
-        return '';
+      return '';
       };
 
     $scope.clearForm = function() {
