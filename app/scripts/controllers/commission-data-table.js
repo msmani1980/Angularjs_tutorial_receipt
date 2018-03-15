@@ -179,7 +179,7 @@ angular.module('ts5App')
       }
 
       if (commissionData.createdByPerson) {
-            return commissionData.createdByPerson.userName;
+        return commissionData.createdByPerson.userName;
           }
 
           return '';
