@@ -9,17 +9,17 @@
  */
 angular.module('ts5App')
 .controller('MenuRulesCtrl', function($scope, $q, $route, $location, $filter, menuRulesFactory, dateUtility, messageService, lodash, accessService) {
-    
+
     var $this = this;
-    
+
     this.meta = {
       count: undefined,
       limit: 100,
       offset: 0
     };
-    
+
     var companyId;
-    
+
     $scope.viewName = 'Rule Management';
     $scope.menuRules = [];
     $scope.isSearch = true;
@@ -28,7 +28,7 @@ angular.module('ts5App')
     $scope.modal = null;
     $scope.displayModalImportInfo = false;
     $scope.stationList = [];
-   
+
     $scope.daysOfOperation = [
       { id: 1, name: 'Monday' },
       { id: 2, name: 'Tuesday' },
@@ -40,13 +40,13 @@ angular.module('ts5App')
     ];
 
     $scope.allExpanded = false;
-    
+
     $scope.toggleAllCheckboxes = function () {
       angular.forEach($scope.menuRules, function (menuRule) {
         menuRule.selected = $scope.allCheckboxesSelected;
       });
     };
-    
+
     $scope.toggleAllAccordionView = function () {
       $scope.allExpanded = !$scope.allExpanded;
       angular.forEach($scope.menuRules, function (menuRule) {
@@ -57,7 +57,7 @@ angular.module('ts5App')
     $scope.toggleAccordionView = function (menuRule) {
       menuRule.isExpanded = !menuRule.isExpanded;
     };
-      
+
     function showLoadingBar() {
       if (!$scope.isSearch) {
         return;
@@ -110,30 +110,30 @@ angular.module('ts5App')
         offset: 0
       };
     };
-    
+
     $scope.isCurrentEffectiveDate = function (menuRuleDate) {
       return (dateUtility.isTodayOrEarlierDatePicker(menuRuleDate.startDate) && (dateUtility.isAfterTodayDatePicker(menuRuleDate.endDate) || dateUtility.isTodayDatePicker(menuRuleDate.endDate)));
     };
-      
+
     $scope.isFutureEffectiveDate = function (menuRuleDate) {
       return (dateUtility.isAfterTodayDatePicker(menuRuleDate.startDate) && (dateUtility.isAfterTodayDatePicker(menuRuleDate.endDate)));
     };
-      
+
     $scope.redirectToMenuRules = function(id, state) {
       $location.search({});
       $location.path('menu-rules/' + state + '/' + id).search();
     };
-    
+
     $scope.showDeleteConfirmation = function(menuRuleToDelete) {
       $scope.menuRuleToDelete = menuRuleToDelete;
       angular.element('.delete-warning-modal').modal('show');
     };
-    
+
     $scope.deleteMenuRule = function() {
       angular.element('.delete-warning-modal').modal('hide');
       menuRulesFactory.deleteMenuRule($scope.menuRuleToDelete).then(successDeleteHandler, showErrors);
     };
-    
+
     function showErrors(dataFromAPI) {
       $scope.errorResponse = dataFromAPI;
       $scope.displayError = true;
@@ -143,7 +143,7 @@ angular.module('ts5App')
       $scope.searchMenuRulesData();
       $this.showToastMessage('success', 'Menu Rule Management', 'successfully deleted Menu Rule!');
     }
-      
+
     this.showToastMessage = function(className, type, message) {
       messageService.display(className, message, type);
     };
@@ -155,11 +155,11 @@ angular.module('ts5App')
     this.getStationsSuccess = function(response) {
       $scope.stationList = angular.copy(response.response);
     };
-    
+
     this.getSchedulesSuccess = function(response) {
       $scope.schedules = angular.copy(response.distinctSchedules);
     };
-    
+
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
     };
@@ -167,7 +167,7 @@ angular.module('ts5App')
     this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
     };
-    
+
     this.getMenuRulesSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.menuRules = response.response.map(function (menuRule) {
@@ -177,7 +177,7 @@ angular.module('ts5App')
 
         return menuRule;
       });
-      
+
       hideLoadingBar();
     };
 
@@ -186,7 +186,7 @@ angular.module('ts5App')
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
-      
+
       showLoadingBar();
       $this.formatMultiSelectedValuesForSearch();
       var payload = lodash.assign(angular.copy($scope.search), {
@@ -194,9 +194,22 @@ angular.module('ts5App')
         offset: $this.meta.offset
       });
 
-      //payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
-      //payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
-      
+      if (payload.startDate === '') {
+        payload.startDate = null;
+      }
+
+      if (payload.endDate === '') {
+        payload.endDate = null;
+      }
+
+      if (payload.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+      }
+
+      if (payload.endDate) {
+        payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
+      }
+
       menuRulesFactory.getMenuRules(payload).then($this.getMenuRulesSuccess);
       $this.meta.offset += $this.meta.limit;
     };
@@ -213,14 +226,14 @@ angular.module('ts5App')
 
       $scope.loadMenuRulesData();
     };
-    
+
     this.getOnLoadingPayload = function() {
       var onLoadPayload = lodash.assign(angular.copy($scope.search), {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
       });
       return onLoadPayload;
     };
-    
+
     this.makeInitPromises = function() {
       companyId = menuRulesFactory.getCompanyId();
 
@@ -231,7 +244,7 @@ angular.module('ts5App')
 
       return promises;
     };
-    
+
     this.init = function() {
       $this.showLoadingModal('Loading Data');
       $scope.isCRUD = accessService.crudAccessGranted('MENUASSG', 'MENURULE', 'CRUDMENUR');
