@@ -175,7 +175,7 @@ angular.module('ts5App')
     function createPayload() {
       var payload = angular.copy($scope.search);
 
-      if(isSearchPayloadEmpty(payload)) {
+      if (isSearchPayloadEmpty(payload)) {
         payload.endDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
         payload.startDate = dateUtility.formatDateForAPI(dateUtility.dateNumDaysBeforeTodayFormatted(30));
       } else {
