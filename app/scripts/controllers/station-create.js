@@ -46,7 +46,7 @@ angular.module('ts5App')
     this.getCountryList = function () {
       var payload = { limit: 1000 };
 
-      countriesService.getCountriesList(payload).then($this.setCountryList);
+      return countriesService.getCountriesList(payload).then($this.setCountryList);
     };
 
     this.setGlobalStationList = function(dataFromAPI) {
@@ -80,9 +80,18 @@ angular.module('ts5App')
       var endDate = dateUtility.formatDateForApp(dataFromAPI.endDate);
 
       $scope.formData = {
-        station: $this.findStationInGlobalStationList(station.stationId),
+        station: {
+          cityName: station.cityName,
+          countryName: station.countryName,
+          countryCode: station.countryCode,
+          countryId: station.countryId,
+          cityId: station.cityId,
+          stationId: station.stationId,
+          name: station.name,
+          code: station.code
+        },
         city: {
-          id: station.cityId,
+          cityId: station.cityId,
           cityName: station.cityName,
           countryId: station.countryId
         },
