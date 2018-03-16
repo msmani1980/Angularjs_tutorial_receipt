@@ -30,12 +30,13 @@ angular.module('ts5App')
 
     this.setCityList = function(dataFromAPI) {
       $scope.cityList = angular.copy(dataFromAPI.response);
-
-      $this.preselectCity();
     };
 
     this.getCityList = function(payload) {
-      return countriesService.getCities(payload).then($this.setCityList);
+      return countriesService.getCities(payload).then(function(dataFromAPI) {
+        $this.setCityList(dataFromAPI);
+        $this.preselectCityBasedOnStation();
+      });
     };
 
     this.setCountryList = function (dataFromAPI) {
@@ -68,52 +69,8 @@ angular.module('ts5App')
       });
     };
 
-    this.findCountryInGlobalStationList = function (countryId) {
-      return lodash.find($scope.globalStationList, { countryId: countryId });
-    };
-
-    this.findCityInGlobalStationList = function (cityId) {
-      return lodash.find($scope.globalStationList, { cityId: cityId });
-    };
-
     this.findStationInGlobalStationList = function (stationId) {
       return lodash.find($scope.globalStationList, { id: stationId });
-    };
-
-    this.addExpiredStation = function(stationFromAPI) {
-      var countryFound = $this.findCountryInGlobalStationList(stationFromAPI.countryId);
-      var cityFound = $this.findCityInGlobalStationList(stationFromAPI.cityId);
-      var stationFound = $this.findStationInGlobalStationList(stationFromAPI.stationId);
-
-      if (!stationFound) {
-        $scope.globalStationList.push({
-          id: stationFromAPI.stationId,
-          code: stationFromAPI.stationCode,
-          cityId: stationFromAPI.cityId,
-          cityName: stationFromAPI.cityName,
-          countryId: stationFromAPI.countryId,
-          countryName: stationFromAPI.countryName,
-          name: stationFromAPI.stationName,
-          expired: true
-        });
-      }
-
-      if (!cityFound) {
-        $scope.cityList.push({
-          id: stationFromAPI.cityId,
-          cityName: stationFromAPI.cityName,
-          countryId: stationFromAPI.countryId,
-          expired: true
-        });
-      }
-
-      if (!countryFound) {
-        $scope.countryList.push({
-          id: stationFromAPI.countryId,
-          countryName: stationFromAPI.countryName,
-          expired: true
-        });
-      }
     };
 
     this.setStation = function(dataFromAPI) {
@@ -121,8 +78,6 @@ angular.module('ts5App')
 
       var startDate = dateUtility.formatDateForApp(dataFromAPI.startDate);
       var endDate = dateUtility.formatDateForApp(dataFromAPI.endDate);
-
-      $this.addExpiredStation(station);
 
       $scope.formData = {
         station: $this.findStationInGlobalStationList(station.stationId),
@@ -169,7 +124,7 @@ angular.module('ts5App')
         return true;
       }
 
-      return parseInt(record.cityId) === parseInt($scope.formData.city.id);
+      return parseInt(record.cityId) === parseInt($scope.formData.city.cityId);
     };
 
     this.validateForm = function() {
@@ -403,20 +358,45 @@ angular.module('ts5App')
       }
     };
 
-    this.preselectCity = function () {
+    this.preselectCountryBasedOnCity = function () {
+      // If city is preselected, select appropriate country
+      if ($scope.formData.city) {
+        $scope.formData.country = lodash.find($scope.countryList, { id: $scope.formData.city.countryId });
+      }
+    };
+
+    this.preselectCountryBasedOnStation = function () {
+      // If station is preselected, select appropriate country
+      if ($scope.formData.station) {
+        $scope.formData.country = lodash.find($scope.countryList, { id: $scope.formData.station.countryId });
+      }
+    };
+
+    this.preselectCityBasedOnStation = function () {
       // If station is preselected, select appropriate city
       if ($scope.formData.station) {
         $scope.formData.city = lodash.find($scope.cityList, { cityId: $scope.formData.station.cityId });
       }
     };
 
+    this.prepareStationDropdownForAutocompleteIfCountryAndCityAreNotSelected = function () {
+      // Remove other stations from list except selected one if both country and city dropdowns are empty
+      if ($scope.formData.station && !$scope.formData.country && !$scope.formData.city) {
+        $scope.globalStationList = lodash.filter($scope.globalStationList, { stationId: $scope.formData.station.stationId });
+      }
+    };
+
+    this.clearCityAndStationIfTheyDontBelongToNewlySelectedCountry = function () {
+      // Remove other stations from list except selected one if both country and city dropdowns are empty
+      if ($scope.formData.station && !$scope.formData.country && !$scope.formData.city) {
+        $scope.globalStationList = lodash.filter($scope.globalStationList, { stationId: $scope.formData.station.stationId });
+      }
+    };
+
     $scope.$watch('formData.country', function(country) {
+      $this.prepareStationDropdownForAutocompleteIfCountryAndCityAreNotSelected();
+
       if (!$scope.formData || !country) {
-
-        // Reset station and city list to make them available for auto-suggest search
-        $scope.cityList = [];
-        $scope.globalStationList = [];
-
         return;
       }
 
@@ -428,33 +408,24 @@ angular.module('ts5App')
       $q.all([
         $this.getCityList(cityListPayload),
         $this.getGlobalStationList(globalStationListPayload)
-      ]).finally(function () {
-        $this.hideLoadingModal();
-      });
+      ]).then($this.clearCityAndStationIfTheyDontBelongToNewlySelectedCountry).finally($this.hideLoadingModal);
 
-      /*if (!$scope.formData || !$scope.formData.city || !country) {
-        return;
-      }
-
-      // Clear city and station if they don't belong to newly selected country
-      if (parseInt($scope.formData.city.countryId) !== parseInt(country.id)) {
-        $scope.formData.city = '';
-        $scope.formData.station = '';
-      }*/
     });
 
     $scope.$watch('formData.city', function(city) {
+      $this.prepareStationDropdownForAutocompleteIfCountryAndCityAreNotSelected();
+
       if (!$scope.formData || !city) {
         return;
       }
 
-      // Clear station if they don't belong to newly selected city
+      // Clear station if it doesn't belong to newly selected city
       if ($scope.formData.station && parseInt($scope.formData.station.cityId) !== parseInt(city.cityId)) {
         $scope.formData.station = '';
       }
 
       // Preselect country based on city location
-      $scope.formData.country = lodash.find($scope.countryList, { id: city.countryId });
+      $this.preselectCountryBasedOnCity();
     });
 
     $scope.$watch('formData.station', function(station) {
@@ -462,10 +433,9 @@ angular.module('ts5App')
         return;
       }
 
-      // Preselect country based on station location
-      $scope.formData.country = lodash.find($scope.countryList, { id: station.countryId });
-
-      $this.preselectCity();
+      // Preselect country and city based on station location
+      $this.preselectCountryBasedOnStation();
+      $this.preselectCityBasedOnStation();
     });
 
   });

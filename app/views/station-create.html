@@ -70,7 +70,6 @@
               <div ng-bind-html="city.cityName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
-            {{ formData.city }}
         </div>
 
       </div>
@@ -86,13 +85,12 @@
             <ui-select-choices
               refresh="autocompleteStations($select)"
               refresh-delay="300"
-              repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
+              repeat="station in globalStationList | filter: $select.search | filter: filterByCity | orderBy:'code'">
               <div ng-bind-html="station.code | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
           <div ng-if="formData.station.expired" style="color:red">This station expired.</div>
         </div>
-
       </div>
 
       <div class="col-xs-12 col-sm-6">
