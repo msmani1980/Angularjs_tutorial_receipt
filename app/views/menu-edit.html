@@ -168,9 +168,9 @@
           	<div class="input-group">
           		<input type="text"
                    class="form-control"
-                   placeholder="Lookup Sales Category from Icon"
+                   placeholder="Lookup a Category to filter the items list..."
                    name="categories[item.menuIndex]"
-                   ng-model="categoriesList[item.menuIndex].name"/>
+                   ng-model="menuItemList[item.menuIndex].name"/>
              	<div class="input-group-btn">
               		<button type="button"
                     	class="btn btn-default"
@@ -198,9 +198,9 @@
           	<div class="input-group">
             	<input type="text"
                    class="form-control"
-                   placeholder="Lookup Item Name from Icon"
+                   placeholder="Lookup an Item"
                    name="menuItem-{{$index}}"
-                   ng-model="item.selectedItem.itemName"/>
+                   ng-model="menuItemList[item.menuIndex].itemName"/>
              	<div class="input-group-btn">
               		<button type="button"
                     	class="btn btn-default"
@@ -264,7 +264,7 @@
       <div class="modal-header">
       	<div class="row">
       		<div class="col-xs-8">
-        		<h4 class="modal-title">Lookup Valid Sales Categories</h4>
+        		<h4 class="modal-title">Lookup Sales Categories</h4>
         	</div>	
         	<div class="col-xs-4 text-right">
         		<button class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
@@ -335,16 +335,16 @@
 
           <table class="table table-bordered table-condensed">
             <tr>
-              <th>Item Code</th>
               <th>Item Name</th>
+              <th>Item Code</th>
               <th></th>
             </tr>
-            <tr ng-repeat="menuItem in masterItemList | filter: {itemName: masterItemsListSearch} | orderBy:'itemName'">
-              <td>{{ menuItem.itemCode }}</td>
-              <td>{{ menuItem.itemName }}</td>
+            <tr ng-repeat="masterItem in masterItemList | filter: {itemName: masterItemsListSearch} | orderBy:'itemName'">
+              <td>{{ masterItem.itemName }}</td>
+              <td>{{ masterItem.itemCode }}</td>
               <td>
-                <a class="btn btn-info btn-xs btn-block" tabindex="0"
-                   ng-click="setMasterItemName(menuItem.itemName, menuItem.id)">
+                <a class="btn btn-info btn-xs btn-block" tabindex="0" ng-disabled="masterItem.isDisabled"
+                   ng-click="!masterItem.isDisabled && setMasterItemName(masterItem.itemName, masterItem.id)">
                   <i class="fa fa-check-circle"></i>
                 </a>
               </td>
