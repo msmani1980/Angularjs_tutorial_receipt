@@ -1,0 +1,56 @@
+<div class="module-container-epos-configuration">
+  <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+  </error-dialog>
+  <form class="form-horizontal" name="reportOptions" ng-submit="saveModuleOptions()">
+    <div class="modal-header">
+      <h3 class="modal-title">{{ selectedModule.moduleName || 'EPOS Configuration' }}</h3>
+    </div>
+    <div class="modal-body">
+      <p ng-show="selectedProductVersion === null || selectedProductVersion === 'undefined'">Select Product Version first, then choose module you want to edit.</p>
+      <p ng-show="selectedProductVersion && (moduleConfiguration === null || moduleConfiguration === 'undefined')">Please choose module you want to edit</p>
+      <p ng-show="isModuleConfigurationOptionsEmpty()">Module is empty. Has no configuration data.</p>
+
+      <div ng-show="moduleConfiguration" class="">
+
+        <epos-config-modules ng-if="moduleOptions" module-list='moduleOptions' model="moduleOptionValues" are-inputs-disabled="!isUserAvailableForEditAndCreate()" ></epos-config-modules>
+      </div>
+    </div>
+    <div class="modal-footer" ng-show="selectedProductVersion && selectedModule">
+      <button class="btn btn-primary" type="submit" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="!isUserAvailableForEditAndCreate() || isModuleConfigurationOptionsEmpty()">Save</button>
+      <button class="btn btn-danger" type="button" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="!isUserAvailableForEditAndCreate() || isModuleConfigurationOptionsEmpty()" ng-click="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>
+<form-success-modal></form-success-modal>
+<form-update-modal></form-update-modal>
+
+<div id="left-navigation-epos-configuration">
+  <div class="container">
+
+    <ul class="navbar product-version-scrollable">
+      <li class="product-version" tabindex="0" style="">
+        <div class="">
+          <select
+            name="productVersion"
+            class="form-control"
+            id="productVersion"
+            ng-change="selectProductVersion()"
+            ng-model="selectedProductVersion"
+            ng-options="productVersion as productVersion.displayName for productVersion in productVersions">
+            <option selected default value="">Select Product Version</option>
+          </select>
+        </div>
+      </li>
+
+      <li ng-show="selectedProductVersion" ng-repeat="module in modules | orderBy: orderBy" ng-class="{'active' : module === selectedModule}" class="ng-scope" role="button" ng-click="selectModule(module)">
+        <i class="icon-manage-transactions"></i>
+        <div class="left-nav-option">
+          <i class="icon-manage-discount"></i>
+          <p class="ng-binding">{{ module.moduleName }}</p>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</div>
+

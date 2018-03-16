@@ -1,4 +1,4 @@
-<div class="fluid-container">
+<div class="module-container">
 
   <div class="store-instance-dashboard">
 
@@ -201,37 +201,37 @@
       <td>{{ getUpdateByForStoreInstance(store) }}</td>
       <td class="col-xs-1">
         <a class="btn btn-primary btn-xs btn-block" tabindex="0"
-           ng-show="doesStoreInstanceContainAction(store, 'Pack')"
+           ng-show="isDispatch && doesStoreInstanceContainAction(store, 'Pack')"
            ng-click="navigateToAction(store, 'Pack')">
           Start Packing
         </a>
         <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-           ng-show="doesStoreInstanceContainAction(store, 'Seal')"
+           ng-show="isDispatch && doesStoreInstanceContainAction(store, 'Seal')"
            ng-click="navigateToAction(store, 'Seal')">
           Start Seals
         </a>
         <a class="btn btn-success btn-xs btn-block" tabindex="0"
-           ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
+           ng-show="isDispatch && doesStoreInstanceContainAction(store, 'Dispatch')"
            ng-click="navigateToAction(store, 'Dispatch')">
           Dispatch
         </a>
         <a class="btn btn-default btn-xs btn-block" tabindex="0"
-           ng-show="doesStoreInstanceContainAction(store, 'Un-Receive')"
+           ng-show="isDispatch && doesStoreInstanceContainAction(store, 'Un-Receive')"
            ng-click="openUnReceiveConfirmation(store)">
           Un-Receive
         </a>
         <a class="btn btn-danger btn-xs btn-block" tabindex="0"
-           ng-show="doesStoreInstanceContainAction(store, 'End Instance')"
+           ng-show="isDispatch && doesStoreInstanceContainAction(store, 'End Instance')"
            ng-click="navigateToAction(store, 'End Instance')">
           End Instance
         </a>
         <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-           ng-show="isUndispatchPossible(store) && doesStoreInstanceContainAction(store, 'Un-dispatch')"
+           ng-show="isDispatch && isUndispatchPossible(store) && doesStoreInstanceContainAction(store, 'Un-dispatch')"
            ng-click="displayUndispatchConfirmation(store)">
           Undispatch
         </a>
         <a class="btn btn-success btn-xs btn-block" tabindex="0"
-           ng-show="doesStoreInstanceContainAction(store, 'Redispatch')"
+           ng-show="isDispatch && doesStoreInstanceContainAction(store, 'Redispatch')"
            ng-click="navigateToAction(store, 'Redispatch')">
           Redispatch
         </a>
@@ -241,27 +241,27 @@
           Generate Doc
         </a>
         <a class="btn btn-default btn-xs btn-block" tabindex="0"
-           ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
+           ng-show="isDispatch && doesStoreInstanceContainAction(store, 'Replenish')"
            ng-click="navigateToAction(store, 'Replenish')">
           Replenish
         </a>
         <a class="btn btn-default btn-xs btn-block" tabindex="0"
-           ng-show="doesStoreInstanceContainAction(store, 'Receive')"
+           ng-show="isDispatch && doesStoreInstanceContainAction(store, 'Receive')"
            ng-click="openReceiveConfirmation(store)">
           Receive
         </a>
         <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-           ng-show="doesStoreInstanceContainAction(store, 'Start Inbound Seals')"
+           ng-show="isDispatch && doesStoreInstanceContainAction(store, 'Start Inbound Seals')"
            ng-click="navigateToAction(store, 'Inbound Seals')">
           Start Inbound Seals
         </a>
         <a class="btn btn-primary btn-xs btn-block" tabindex="0"
-           ng-show="doesStoreInstanceContainAction(store, 'Start Offload')"
+           ng-show="isDispatch && doesStoreInstanceContainAction(store, 'Start Offload')"
            ng-click="navigateToAction(store, 'Offload')">
           Start Offload
         </a>
         <a class="btn btn-danger btn-xs btn-block" tabindex="0"
-           ng-show="canBeDeleted(store)"
+           ng-show="isDispatch && canBeDeleted(store)"
            ng-click="showDeleteConfirmation(store)">
           <i class="fa fa-trash"></i> Delete
         </a>
@@ -300,12 +300,12 @@
       <td>{{ replenishment.updatedByPerson.userName || replenishment.createdByPerson.userName }}</td>
       <td class="col-xs-1">
         <a class="btn btn-primary btn-xs btn-block" tabindex="0"
-           ng-show="shouldShowReplenishAction(replenishment, store, 'Pack')"
+           ng-show="isDispatch && shouldShowReplenishAction(replenishment, store, 'Pack')"
            ng-click="navigateToAction(replenishment, 'Pack')">
           Start Packing
         </a>
         <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-           ng-show="shouldShowReplenishAction(replenishment, store, 'Seal')"
+           ng-show="isDispatch && shouldShowReplenishAction(replenishment, store, 'Seal')"
            ng-click="navigateToAction(replenishment, 'Seal')">
           Start Seals
         </a>
@@ -314,7 +314,7 @@
            ng-click="navigateToAction(replenishment, 'Dispatch')">Dispatch
         </a>
         <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-           ng-show="isUndispatchPossible(replenishment) && doesRepleshinStoreInstanceContainAction(replenishment, store, 'Un-dispatch')"
+           ng-show="isDispatch && isUndispatchPossible(replenishment) && doesRepleshinStoreInstanceContainAction(replenishment, store, 'Un-dispatch')"
            ng-click="displayUndispatchConfirmation(replenishment)">
           Undispatch
         </a>
@@ -324,7 +324,7 @@
           Generate Doc
         </a>
         <a class="btn btn-danger btn-xs btn-block" tabindex="0"
-           ng-show="canBeDeleted(replenishment)"
+           ng-show="isDispatch && canBeDeleted(replenishment)"
            ng-click="showDeleteConfirmation(replenishment)">
           <i class="fa fa-trash"></i> Delete
         </a>
@@ -422,3 +422,4 @@
     </div>
   </div>
 </div>
+<dynamic-left-nav></dynamic-left-nav>
