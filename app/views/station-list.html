@@ -56,7 +56,10 @@
 								<ui-select multiple ng-model="search.cityId" theme="bootstrap">
 	                <ui-select-match placeholder="Start typing to find a city">{{ $item.cityName }}
 	                </ui-select-match>
-	                <ui-select-choices repeat="city in cityList | filter: $select.search | filter: filterByCountry | orderBy:'cityName'">
+	                <ui-select-choices
+                    refresh="autocompleteCities($select)"
+                    refresh-delay="300"
+                    repeat="city in cityList | filter: $select.search | orderBy:'cityName'">
 	                  <div ng-bind-html="city.cityName | highlight: $select.search"></div>
 	                </ui-select-choices>
 	              </ui-select>
@@ -70,7 +73,10 @@
 								<ui-select multiple ng-model="search.stationId" theme="bootstrap" >
 	                <ui-select-match placeholder="Start typing to find a Station">{{ $item.code }}
 	                </ui-select-match>
-	                <ui-select-choices repeat="station in globalStationList | filter: $select.search | filter: filterByCountry | filter: filterByCity | orderBy:'code'">
+	                <ui-select-choices
+                    refresh="autocompleteStations($select)"
+                    refresh-delay="300"
+                    repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
 	                  <div ng-bind-html="station.code | highlight: $select.search"></div>
 	                </ui-select-choices>
 	              </ui-select>
@@ -272,7 +278,6 @@
 
       </table>
     </div>
-
 	</form>
   <alert ng-show="!loadingBarVisible && stationList.length == 0 && isSearch" type="info">
     <span class="fa fa-flag"></span> Your search returned no results.
