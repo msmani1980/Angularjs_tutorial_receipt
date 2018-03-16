@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CurrencyEditCtrl', function($scope, currencyFactory, globalMenuService, dateUtility, payloadUtility,
-    messageService, accessService) {
+    messageService, accessService, $http) {
 
     var $this = this;
     $scope.viewName = 'Retail Company Currency & Denomination Setup';
@@ -285,6 +285,10 @@ angular.module('ts5App')
 
       if (row.createdByPerson) {
         return row.createdByPerson.userName;
+      }
+
+      if (row.isNew) {
+        return $http.defaults.headers.common.username;
       }
 
       return 'Unknown';
