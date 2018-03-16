@@ -417,6 +417,11 @@ angular.module('ts5App')
       newExchangeRate.exchangeRateType = exchangeRate.exchangeRateType;
       newExchangeRate.startDate = dateUtility.tomorrowFormattedDatePicker();
       newExchangeRate.endDate = dateUtility.tomorrowFormattedDatePicker();
+      newExchangeRate.createdByPerson = {
+        id: $http.defaults.headers.common.userId,
+        userName: $http.defaults.headers.common.username
+      };
+      newExchangeRate.createdBy = $http.defaults.headers.common.userId;
       newExchangeRate.isCloned = true;
       newExchangeRate.mode = 'clone';
 
