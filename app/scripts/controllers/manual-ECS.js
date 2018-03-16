@@ -7,7 +7,18 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManualECSCtrl', function ($scope, $q, manualECSFactory, globalMenuService, dateUtility, lodash, messageService) {
+  .controller('ManualECSCtrl', function ($scope, $q, manualECSFactory, globalMenuService, dateUtility, lodash, messageService, accessService) {
+
+    var $this = this;
+    this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
+    $scope.allECSInstances = [];
+    $scope.storeInstances = [];
+    $scope.isCreateSearch = false;
+    $scope.isViewSearch = false;
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -25,6 +36,11 @@ angular.module('ts5App')
 
     $scope.toggleActiveView = function (showCreateView) {
       $scope.isCreateViewActive = showCreateView;
+      this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
     };
 
     $scope.canSaveRelationship = function () {
@@ -121,7 +137,9 @@ angular.module('ts5App')
         'inbounded'
       ];
 
-      $scope.storeInstances = lodash.filter(storeInstancesResponse, function (storeInstance) {
+      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+      var paginatedList = $scope.storeInstances.concat(storeInstancesResponse);
+      $scope.storeInstances = lodash.filter(paginatedList, function (storeInstance) {
         formatStoreInstanceForApp(storeInstance);
         return allowedStatuses.indexOf(storeInstance.statusName.toLowerCase()) >= 0;
       });
@@ -130,6 +148,7 @@ angular.module('ts5App')
     function getStoreInstances(payload) {
       showLoadingModal('Retrieving Portal Store Instanes');
       manualECSFactory.getStoreInstanceList(payload).then(getStoreInstancesSuccess, showErrors);
+      $this.meta.offset += $this.meta.limit;
     }
 
     function getAllIdsInAGroup(instanceGroup) {
@@ -265,7 +284,9 @@ angular.module('ts5App')
 
     function getTiedCarrierInstancesSuccess(dataFromAPI) {
       hideLoadingModal();
-      $scope.allECSInstances = removeApparentDuplicates(lodash.uniq(angular.copy(dataFromAPI.response)), false, true);
+      $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+      var paginatedList = $scope.allECSInstances.concat(angular.copy(dataFromAPI.response));
+      $scope.allECSInstances = removeApparentDuplicates(lodash.uniq(angular.copy(paginatedList)), false, true);
       angular.forEach($scope.allECSInstances, function (carrierInstance) {
         carrierInstance.instanceDate = (!!carrierInstance.instanceDate) ? dateUtility.formatDateForApp(carrierInstance.instanceDate) : '';
         carrierInstance.siScheduleDate = (!!carrierInstance.siScheduleDate) ? dateUtility.formatDateForApp(carrierInstance.siScheduleDate) : '';
@@ -278,6 +299,7 @@ angular.module('ts5App')
     function getTiedCarrierInstances(payload) {
       showLoadingModal('Retrieving ePOS Instances');
       manualECSFactory.getCarrierInstanceList(payload).then(getTiedCarrierInstancesSuccess, showErrors);
+      $this.meta.offset += $this.meta.limit;
     }
 
     $scope.resetAll = function () {
@@ -392,12 +414,19 @@ angular.module('ts5App')
 
     $scope.clearPortalSearch = function () {
       $scope.portalSearch = {};
-      $scope.storeInstances = null;
+      $scope.storeInstances = [];
+      $scope.isCreateSearch = false;
     };
 
     $scope.clearAllInstancesSearch = function () {
       $scope.allInstancesSearch = {};
-      $scope.allECSInstances = null;
+      $scope.allECSInstances = [];
+      $scope.isViewSearch = false;
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
     };
 
     function formatAllECSEposSearchPayload(workingPayload) {
@@ -434,6 +463,8 @@ angular.module('ts5App')
 
     function formatAllECSSearchPayload() {
       var searchPayload = {};
+      searchPayload.limit = $this.meta.limit;
+      searchPayload.offset = $this.meta.offset;
       formatAllECSEposSearchPayload(searchPayload);
       formatAllECSPortalSearchPayload(searchPayload);
       return searchPayload;
@@ -460,6 +491,9 @@ angular.module('ts5App')
     function formatPortalSearchPayload() {
       var searchPayload = {};
 
+      searchPayload.limit = $this.meta.limit;
+      searchPayload.offset = $this.meta.offset;
+
       if ($scope.portalSearch.scheduleDate) {
         searchPayload.startDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
         searchPayload.endDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
@@ -480,9 +514,25 @@ angular.module('ts5App')
       return searchPayload;
     }
 
-    $scope.searchAllECSInstances = function () {
+    $scope.loadAllECSInstances = function() {
+      if ($this.meta.offset >= $this.meta.count || !$scope.isViewSearch) {
+        return;
+      }
+
       var searchPayload = formatAllECSSearchPayload();
       getTiedCarrierInstances(searchPayload);
+    };
+
+    $scope.searchAllECSInstances = function () {
+      $scope.isViewSearch = true;
+      $scope.allECSInstances = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+
+      $scope.loadAllECSInstances();
     };
 
     $scope.searchEposInstances = function () {
@@ -491,10 +541,26 @@ angular.module('ts5App')
       getUnTiedCarrierInstances(searchPayload);
     };
 
-    $scope.searchPortalInstances = function () {
-      $scope.selectedPortalRecord = null;
+    $scope.loadPortalInstances = function() {
+      if ($this.meta.offset >= $this.meta.count || !$scope.isCreateSearch) {
+        return;
+      }
+
       var searchPayload = formatPortalSearchPayload();
       getStoreInstances(searchPayload);
+    };
+
+    $scope.searchPortalInstances = function () {
+      $scope.selectedPortalRecord = null;
+      $scope.isCreateSearch = true;
+      $scope.storeInstances = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+
+      $scope.loadPortalInstances();
     };
 
     function formatStationDescription() {
@@ -526,6 +592,7 @@ angular.module('ts5App')
     }
 
     function init() {
+      $scope.isCRUD = accessService.crudAccessGranted('RECONCILIATION', 'RELATEESC', 'CRECSR');
       showLoadingModal('Initializing data');
       $scope.isCreateViewActive = true;
       $scope.portalSearch = {};

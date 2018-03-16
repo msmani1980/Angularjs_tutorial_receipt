@@ -89,6 +89,8 @@
       <th>Promotion Name</th>
       <th>Qualifier Type</th>
       <th>Benefit Type</th>
+      <th>Updated Date/Time</th>
+      <th>Updated User</th>      
       <th>Effective From</th>
       <th>Effective To</th>
       <th>Actions</th>
@@ -101,6 +103,8 @@
       <td>{{ promotion.promotionName }}</td>
       <td>{{ promotion.promotionTypeName }}</td>
       <td>{{ promotion.benefitTypeName }}</td>
+      <td>{{ getUpdatedOn(promotion) }}</td>
+      <td>{{ getUpdateBy(promotion) }}</td>      
       <td>{{ promotion.startDate }}</td>
       <td>{{ promotion.endDate }}</td>
       <td>
