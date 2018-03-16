@@ -11,9 +11,15 @@ angular.module('ts5App')
 
     var $this = this;
     $scope.selectedIndex = 0;
+    $scope.lookUpDialog = false;
+    $scope.masterItemTotalList = [];
 
     function showLoadingModal(message) {
       angular.element('#loading').modal('show').find('p').text(message);
+    }
+
+    function showMasterItemsModal() {
+      angular.element('#master-items').modal('show');
     }
 
     function hideLoadingModal() {
@@ -77,14 +83,14 @@ angular.module('ts5App')
       var menuId = $scope.menu.id;
 
       angular.forEach($scope.menuItemList, function (menuItem) {
-        if (menuItem.selectedItem && (menuItem.itemQty || menuItem.itemQty === 0)) {
+        if (menuItem.itemQty || menuItem.itemQty === 0) {
           var itemPayload = {};
           if (menuItem.id) {
             itemPayload.menuId = menuId;
             itemPayload.id = menuItem.id;
           }
 
-          itemPayload.itemId = $scope.isCreateOnly() ? menuItem.selectedItem.id : menuItem.itemId;
+          itemPayload.itemId = menuItem.itemId;
           itemPayload.itemQty = parseInt(menuItem.itemQty);
           itemPayload.sortOrder = parseInt(menuItem.sortOrderIndex);
           itemsArray.push(itemPayload);
@@ -192,7 +198,6 @@ angular.module('ts5App')
       var nextIndex = $scope.menuItemList.length;
       $scope.menuItemList.push({ menuIndex: nextIndex });
       $scope.filteredItemsCollection.push(angular.copy($scope.masterItemList));
-      $scope.selectedCategories.push(null);
       $scope.filterAllItemLists();
     };
 
@@ -237,12 +242,42 @@ angular.module('ts5App')
       getFilteredMasterItemsByCategory(menuIndex);
     };
 
+    this.filterMasterItemsListByCategory = function (catgryId) {
+      var filterCategoryItems = [];
+      angular.forEach($scope.masterItemTotalList, function (masterItem) {
+        var itemMatch = lodash.findWhere(masterItem.versions, { categoryId: catgryId });
+        if (itemMatch) {
+          filterCategoryItems.push(masterItem);
+        }
+      });
+
+      $scope.masterItemList = angular.copy(filterCategoryItems);
+
+    };
+
     this.setFilteredMasterItems = function (dataFromAPI) {
       hideLoadingModal();
-      $scope.masterItemList = angular.copy(dataFromAPI.masterItems);
-      angular.forEach($scope.menuItemList, function (menuItem) {
-        $scope.filterItemListByCategory(menuItem.menuIndex);
+      var filterSelectedItems = [];
+      angular.forEach(dataFromAPI.masterItems, function (masterItem) {
+        var itemMatch = lodash.findWhere($scope.menuItemList, { itemId: masterItem.id });
+        if (itemMatch) {
+          masterItem.isDisabled = true;
+        }
+
+        filterSelectedItems.push(masterItem);
       });
+
+      $scope.masterItemList = angular.copy(filterSelectedItems);
+      $scope.masterItemTotalList = angular.copy(filterSelectedItems);
+      if ($scope.lookUpDialog) {
+        if ($scope.menuItemList[$scope.selectedIndex].name !== undefined && $scope.menuItemList[$scope.selectedIndex].name !== '') {
+          $this.filterMasterItemsListByCategory($scope.menuItemList[$scope.selectedIndex].catId);
+        }
+
+        showMasterItemsModal();
+        $scope.lookUpDialog = false;
+      }
+
     };
 
     function getFilteredMasterItems(startDate, endDate) {
@@ -265,8 +300,19 @@ angular.module('ts5App')
 
     $scope.showMasterItemsModal = function (menuIndex) {
       $scope.selectedIndex = menuIndex;
-      getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);	
-      angular.element('#master-items').modal('show');
+      if ($scope.masterItemTotalList.length === 0) {
+        $scope.lookUpDialog = true;
+        getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
+      } else {
+        if ($scope.menuItemList[$scope.selectedIndex].name === undefined || $scope.menuItemList[$scope.selectedIndex].name === '') {
+          $scope.masterItemList = angular.copy($scope.masterItemTotalList);
+        } else {
+          $this.filterMasterItemsListByCategory($scope.menuItemList[$scope.selectedIndex].catId);
+        }
+
+        showMasterItemsModal();
+      }
+
     };
 
     $scope.filterSalesCategoriesList = function () {
@@ -278,16 +324,16 @@ angular.module('ts5App')
     };
 
     $scope.setCategoryName = function (categoryName, id) {
-      $scope.categoriesList[$scope.selectedIndex].name = categoryName;
-      $scope.categoriesList[$scope.selectedIndex].id = id;
+      $scope.menuItemList[$scope.selectedIndex].name = categoryName;
+      $scope.menuItemList[$scope.selectedIndex].catId = id;
+      $scope.menuItemList[$scope.selectedIndex].itemName = '';
+      $scope.menuItemList[$scope.selectedIndex].itemId = '';
       angular.element('#sales-categories').modal('hide');
     };
 
     $scope.setMasterItemName = function (itemName, id) {
-      console.log('Selected Item Name>>>' + itemName);
-      console.log('Selected Item Id>>>' + id);
-      $scope.menuItemList[$scope.selectedIndex].selectedItem.itemName = itemName;
-      $scope.menuItemList[$scope.selectedIndex].selectedItem.id = id;
+      $scope.menuItemList[$scope.selectedIndex].itemName = itemName;
+      $scope.menuItemList[$scope.selectedIndex].itemId = id;
       angular.element('#master-items').modal('hide');
     };
 
