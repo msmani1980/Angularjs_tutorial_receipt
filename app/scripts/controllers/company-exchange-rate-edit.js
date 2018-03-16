@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CompanyExchangeRateEditCtrl', function($scope, globalMenuService, currencyFactory, dateUtility,
-    payloadUtility, messageService, $filter, lodash, accessService, $http) {
+    payloadUtility, messageService, $filter, lodash, accessService, $http, $q) {
 
     var $this = this;
 
@@ -332,7 +332,7 @@ angular.module('ts5App')
     };
 
     this.getCompanyGlobalCurrencies = function() {
-      currencyFactory.getCompanyGlobalCurrencies().then(function(globalCurrencyList) {
+      return currencyFactory.getCompanyGlobalCurrencies().then(function(globalCurrencyList) {
         $scope.globalCurrencies = globalCurrencyList.response;
         $this.getDenominations();
         $this.getCompanyBaseCurrency();
@@ -507,15 +507,20 @@ angular.module('ts5App')
     };
 
     this.getExchangeRateTypes = function () {
-      currencyFactory.getExchangeRateTypes().then($this.setPortalExchangeRate);
+      return currencyFactory.getExchangeRateTypes().then($this.setPortalExchangeRate);
     };
 
     this.init = function() {
       $scope.isCRUD = accessService.crudAccessGranted('CURRENCYEXCHNG', 'EPOSEXCHNG', 'CUDEER');
-      $this.getExchangeRateTypes();
-      $this.getCompanyGlobalCurrencies();
-      $this.getDetailedCompanyCurrenciesForSearch();
-      $this.getDetailedCompanyCurrenciesForCreation();
+
+      $q.all([
+        $this.getExchangeRateTypes(),
+        $this.getCompanyGlobalCurrencies()
+      ]).then(function () {
+          $this.getDetailedCompanyCurrenciesForSearch();
+          $this.getDetailedCompanyCurrenciesForCreation();
+        }
+      );
     };
 
     this.init();
