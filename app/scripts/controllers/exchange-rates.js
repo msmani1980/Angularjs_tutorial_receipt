@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('ExchangeRatesCtrl', function($rootScope, $scope, $http, currencyFactory, globalMenuService, $q, messageService,
-    dateUtility, lodash) {
+    dateUtility, lodash, accessService) {
 
     $scope.viewName = 'Daily Exchange Rates';
     $scope.cashiersDateField = dateUtility.nowFormattedDatePicker();
@@ -398,6 +398,7 @@ angular.module('ts5App')
 
     function init() {
       showLoadingModal('Initializing Data');
+      $scope.isSubmit = accessService.crudAccessGranted('CASH', 'DAILYEXCHANGERATE', 'SBMTDER');
       var promises = makeInitPromises();
       $q.all(promises).then(completeInit, showErrors);
     }
