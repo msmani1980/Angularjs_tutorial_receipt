@@ -74,7 +74,7 @@
 	                <ui-select-match placeholder="Start typing to find a Station">{{ $item.code }}
 	                </ui-select-match>
 	                <ui-select-choices
-                    refresh="autocompleteStations($select)"
+                    refresh="autocompleteStationsByCode($select)"
                     refresh-delay="300"
                     repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
 	                  <div ng-bind-html="station.code | highlight: $select.search"></div>
@@ -89,7 +89,10 @@
 								<ui-select multiple ng-model="search.stationId" theme="bootstrap">
 	                <ui-select-match placeholder="Start typing to find a Station">{{ $item.name }}
 	                </ui-select-match>
-	                <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'name'">
+	                <ui-select-choices
+                    refresh="autocompleteStationsByName($select)"
+                    refresh-delay="300"
+                    repeat="station in globalStationList | filter: $select.search | orderBy:'name'">
 	                  <div ng-bind-html="station.name | highlight: $select.search"></div>
 	                </ui-select-choices>
 	              </ui-select>
