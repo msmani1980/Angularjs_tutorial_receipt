@@ -44,7 +44,7 @@ angular.module('ts5App')
     };
 
     this.getCountryList = function () {
-      var payload = { limit: 1000 };
+      var payload = { limit: 9000 };
 
       return countriesService.getCountriesList(payload).then($this.setCountryList);
     };
@@ -152,8 +152,8 @@ angular.module('ts5App')
 
     this.generatePayload = function() {
       return {
-        stationId: $scope.formData.station.id,
-        cityId: $scope.formData.city.id,
+        stationId: $scope.formData.station.stationId,
+        cityId: $scope.formData.city.cityId,
         countryId: $scope.formData.country.id,
         startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
         endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
@@ -336,7 +336,8 @@ angular.module('ts5App')
       if ($select.search && $select.search.length !== 0) {
         var payload = {
           cityName: $select.search,
-          withStations: true
+          withStations: true,
+          limit: 9000
         };
 
         $this.getCityList(payload);
@@ -358,7 +359,8 @@ angular.module('ts5App')
 
       if ($select.search && $select.search.length !== 0) {
         var payload = {
-          stationCode: $select.search
+          stationCode: $select.search,
+          limit: 9000
         };
 
         $this.getGlobalStationList(payload);
@@ -411,8 +413,8 @@ angular.module('ts5App')
 
       $this.displayLoadingModal('Loading Cities and Stations for selected Country');
 
-      var cityListPayload = { countryId: country.id, limit: 1000 };
-      var globalStationListPayload = { country: country.countryName };
+      var cityListPayload = { countryId: country.id, limit: 9000 };
+      var globalStationListPayload = { country: country.countryName, limit: 9000 };
 
       $q.all([
         $this.getCityList(cityListPayload),
