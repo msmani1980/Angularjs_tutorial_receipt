@@ -69,10 +69,6 @@ angular.module('ts5App')
       });
     };
 
-    this.findStationInGlobalStationList = function (stationId) {
-      return lodash.find($scope.globalStationList, { id: stationId });
-    };
-
     this.setStation = function(dataFromAPI) {
       var station = angular.copy(dataFromAPI);
 
