@@ -9,10 +9,18 @@
  */
 angular.module('ts5App')
   .factory('stationsFactory', function (stationsService, globalMenuService) {
+
+    // Global stations
     var getGlobalStationList = function() {
       return stationsService.getGlobalStationList();
     };
 
+    // Stations
+    var getStations = function(payload) {
+      return stationsService.getStations(payload);
+    };
+
+    // Company stations
     var getStationList = function(offset, payload) {
       var companyId = globalMenuService.company.get();
       return stationsService.getStationList(companyId, offset, payload);
@@ -49,6 +57,7 @@ angular.module('ts5App')
 
     return {
       getGlobalStationList: getGlobalStationList,
+      getStations: getStations,
       getStationList: getStationList,
       getCompanyStation: getCompanyStation,
       createStation: createStation,

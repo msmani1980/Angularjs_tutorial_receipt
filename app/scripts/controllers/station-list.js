@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationListCtrl', function($scope, dateUtility, messageService, stationsFactory, $q, $filter, lodash, identityAccessFactory, globalMenuService, ENV, accessService) {
+  .controller('StationListCtrl', function($scope, dateUtility, messageService, stationsFactory, $q, $filter, lodash, identityAccessFactory, globalMenuService,
+    ENV, accessService, countriesService) {
 
     var $this = this;
 
@@ -21,33 +22,6 @@ angular.module('ts5App')
     $scope.loadingBarVisible = false;
     $scope.isSearch = false;
     $scope.stationList = [];
-
-    this.setCityList = function(stationsList) {
-      var citiesList = [];
-      angular.forEach(stationsList, function (station) {
-        var country = {
-          id: station.cityId,
-          cityName: station.cityName,
-          countryId: station.countryId
-        };
-        citiesList.push(country);
-      });
-
-      $scope.cityList = $filter('unique')(citiesList, 'id');
-    };
-
-    this.setCountryList = function (stationsList) {
-      var countriesList = [];
-      angular.forEach(stationsList, function (station) {
-        var country = {
-          id: station.countryId,
-          countryName: station.countryName
-        };
-        countriesList.push(country);
-      });
-
-      $scope.countryList = $filter('unique')(countriesList, 'id');
-    };
 
     this.setStationList = function(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
@@ -68,7 +42,7 @@ angular.module('ts5App')
 
     this.mapCityIdForSearchPayload = function(payload) {
       return payload.cityId.map(function(cityId) {
-        return cityId.id;
+        return cityId.cityId;
       }).join(',');
     };
 
@@ -102,18 +76,34 @@ angular.module('ts5App')
       return stationsFactory.getStationList($this.meta.offset, payload).then(this.setStationList).finally(this.hideLoadingBar);
     };
 
-    this.setGlobalStationList = function(dataFromAPI) {
-      var response = angular.copy(dataFromAPI.response);
-
-      var distinctStations = $filter('unique')(response, 'stationId');
-
-      $scope.globalStationList = distinctStations;
-      $this.setCountryList(distinctStations);
-      $this.setCityList(distinctStations);
+    this.setCityList = function(dataFromAPI) {
+      $scope.cityList = angular.copy(dataFromAPI.response);
     };
 
-    this.getGlobalStationList = function() {
-      return stationsFactory.getGlobalStationList().then($this.setGlobalStationList);
+    this.getCityList = function(payload) {
+      return countriesService.getCities(payload).then($this.setCityList);
+    };
+
+    this.setCountryList = function (dataFromAPI) {
+      $scope.countryList = angular.copy(dataFromAPI.countries);
+    };
+
+    this.getCountryList = function () {
+      var payload = { limit: 1000 };
+
+      return countriesService.getCountriesList(payload).then($this.setCountryList);
+    };
+
+    this.setGlobalStationList = function(dataFromAPI) {
+      $scope.globalStationList = angular.copy(dataFromAPI.response).map(function (station) {
+        station.id = station.stationId;
+
+        return station;
+      });
+    };
+
+    this.getGlobalStationList = function(payload) {
+      return stationsFactory.getStations(payload).then($this.setGlobalStationList);
     };
 
     this.showLoadingBar = function() {
@@ -334,6 +324,41 @@ angular.module('ts5App')
       return lodash.find($scope.search.cityId, { id: record.cityId });
     };
 
+    $scope.autocompleteCities = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+
+      if ($select.search && $select.search.length !== 0) {
+        var payload = {
+          cityName: $select.search,
+          withStations: true
+        };
+
+        $this.getCityList(payload);
+      } else {
+        $scope.cityList = [];
+      }
+    };
+
+    $scope.autocompleteStations = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+
+      if ($select.search && $select.search.length !== 0) {
+        var payload = {
+          stationCode: $select.search
+        };
+
+        $this.getGlobalStationList(payload);
+      } else {
+        $scope.globalStationList = [];
+      }
+    };
+
     this.buildExportParameters = function() {
       // jshint ignore: start
       var search = $scope.search;
@@ -373,7 +398,7 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       return [
-        this.getGlobalStationList()
+        this.getCountryList()
       ];
     };
 
@@ -503,24 +528,4 @@ angular.module('ts5App')
     $scope.$watch('allStationsSelected', function(selectAll) {
       $this.toggleAllStations(selectAll);
     });
-
-    $scope.$watch('search.countryId', function(countryId) {
-      if (!$scope.search || !countryId) {
-        return;
-      }
-
-      $scope.search.stationId = lodash.filter($scope.search.stationId, { countryId: parseInt(countryId.toString()) });
-      $scope.search.cityId = lodash.filter($scope.search.cityId, { countryId: parseInt(countryId.toString()) });
-    });
-
-    $scope.$watch('search.cityId', function(cityId) {
-      if (!$scope.search || !cityId) {
-        return;
-      }
-
-      $scope.search.stationId = lodash.filter($scope.search.stationId, function (station) {
-        return lodash.filter(cityId, { id: parseInt(station.cityId) }).length > 0;
-      });
-    });
-
   });

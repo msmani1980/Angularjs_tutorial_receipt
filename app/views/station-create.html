@@ -44,7 +44,7 @@
         <div class="form-group" ng-class="setUISelectValidationClass('Country')">
           <label>Country *</label>
           <ui-select name="Country" ng-model="formData.country" theme="bootstrap" required ng-disabled="isDisabled()">
-            <ui-select-match placeholder="Start typing to find a country">
+            <ui-select-match placeholder="Start typing to find a country" allow-clear="true">
               {{ $select.selected.countryName }}
             </ui-select-match>
             <ui-select-choices repeat="country in countryList | filter: $select.search | orderBy:'countryName'">
@@ -60,10 +60,13 @@
           <div class="form-group" ng-class="setUISelectValidationClass('City')">
           <label>City *</label>
           <ui-select name="City"  ng-model="formData.city" theme="bootstrap" required ng-disabled="isDisabled()">
-            <ui-select-match placeholder="Start typing to find a city">
+            <ui-select-match placeholder="Start typing to find a city" allow-clear="true">
               {{ $select.selected.cityName }}
             </ui-select-match>
-            <ui-select-choices repeat="city in cityList | filter: $select.search | filter: filterByCountry | orderBy:'cityName'">
+            <ui-select-choices
+              refresh="autocompleteCities($select)"
+              refresh-delay="300"
+              repeat="city in cityList | filter: $select.search | orderBy:'cityName' | limitTo:100">
               <div ng-bind-html="city.cityName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -76,16 +79,18 @@
         <div class="form-group" ng-class="setUISelectValidationClass('Station Code')">
           <label>Station Code *</label>
           <ui-select name="Station Code" ng-model="formData.station" theme="bootstrap" required ng-disabled="isDisabled()">
-            <ui-select-match placeholder="Start typing to find a station">
+            <ui-select-match placeholder="Start typing to find a station" allow-clear="true">
               {{ $select.selected.code }}
             </ui-select-match>
-            <ui-select-choices repeat="station in globalStationList | filter: $select.search | filter: filterByCountry | filter: filterByCity | orderBy:'code'">
+            <ui-select-choices
+              refresh="autocompleteStations($select)"
+              refresh-delay="300"
+              repeat="station in globalStationList | filter: $select.search | filter: filterByCity | orderBy:'code'">
               <div ng-bind-html="station.code | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
           <div ng-if="formData.station.expired" style="color:red">This station expired.</div>
         </div>
-
       </div>
 
       <div class="col-xs-12 col-sm-6">
@@ -123,7 +128,6 @@
           required="true">
         </date-picker-field>
       </div>
-
     </div>
 
     <div class="panel panel-default">
