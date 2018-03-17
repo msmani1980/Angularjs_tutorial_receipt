@@ -85,7 +85,7 @@
             <ui-select-choices
               refresh="autocompleteStations($select)"
               refresh-delay="300"
-              repeat="station in globalStationList | filter: $select.search | filter: filterByCity | orderBy:'code'">
+              repeat="station in globalStationList | filter: $select.search | filter: filterByCity | orderBy:'code' | limitTo:100">
               <div ng-bind-html="station.code | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
