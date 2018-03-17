@@ -342,7 +342,25 @@ angular.module('ts5App')
       }
     };
 
-    $scope.autocompleteStations = function($select, $event) {
+    $scope.autocompleteStationsByName = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+
+      if ($select.search && $select.search.length !== 0) {
+        var payload = {
+          searchField: 'stationName',
+          searchText: $select.search
+        };
+
+        $this.getGlobalStationList(payload);
+      } else {
+        $scope.globalStationList = [];
+      }
+    };
+
+    $scope.autocompleteStationsByCode = function($select, $event) {
       if ($event) {
         $event.stopPropagation();
         $event.preventDefault();
