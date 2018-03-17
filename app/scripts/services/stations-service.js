@@ -30,6 +30,10 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       getGlobalStationList: {
         method: 'GET'
       },
+      getStations: {
+        method: 'GET',
+        headers: {}
+      },
       getStationList: {
         method: 'GET',
         headers: {}
@@ -58,19 +62,25 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
   var stationBulkRequestResource = $resource(stationBulkRequestURL, stationBulkRequestParameters, actions);
   var stationRequestResource = $resource(stationRequestURL, stationRequestParameters, actions);
 
-  // Global Station
+  // Global Stations
 
   var getGlobalStationList = function (payload) {
     return globalRequestResource.getGlobalStationList(payload).$promise;
   };
 
+  // Stations
+
   var getStation = function (stationId) {
     return stationRequestResource.getStation({ stationId: stationId }).$promise;
   };
 
+  var getStations = function (payload) {
+    return stationRequestResource.getStations(payload).$promise;
+  };
+
   // Company Station
 
-  var getStationList = function (companyId, offset, customPayload) {
+  var getCompanyStationList = function (companyId, offset, customPayload) {
     var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
     var payload = {
       companyId: companyId,
@@ -96,19 +106,19 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     return stationListRequestResource.getCompanyStation({ companyStationId: id, companyId: companyId }).$promise;
   };
 
-  var bulkUpdateStation = function (companyId, payload) {
+  var bulkUpdateCompanyStation = function (companyId, payload) {
     return stationBulkRequestResource.bulkUpdateStation({ companyId: companyId }, payload).$promise;
   };
 
-  var createStation = function (companyId, payload) {
+  var createCompanyStation = function (companyId, payload) {
     return stationListRequestResource.createStation({ companyId: companyId }, payload).$promise;
   };
 
-  var updateStation = function (companyId, id, payload) {
+  var updateCompanyStation = function (companyId, id, payload) {
     return stationListRequestResource.updateStation({ companyStationId: id, companyId: companyId }, payload).$promise;
   };
 
-  var removeStation = function (companyId, id) {
+  var removeCompanyStation = function (companyId, id) {
     return stationListRequestResource.removeStation({ companyStationId: id, companyId: companyId }).$promise;
   };
 
@@ -122,13 +132,14 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
 
   return {
     getGlobalStationList: getGlobalStationList,
-    getStationList: getStationList,
+    getStations: getStations,
+    getStationList: getCompanyStationList,
     getStation: getStation,
     getCompanyStation: getCompanyStation,
-    bulkUpdateStation: bulkUpdateStation,
-    removeStation: removeStation,
-    createStation: createStation,
-    updateStation: updateStation,
+    bulkUpdateStation: bulkUpdateCompanyStation,
+    removeStation: removeCompanyStation,
+    createStation: createCompanyStation,
+    updateStation: updateCompanyStation,
     importFromExcel: importFromExcel
   };
 
