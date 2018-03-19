@@ -75,7 +75,7 @@ angular.module('ts5App')
         return relationship.updatedByPerson.userName;
       }
 
-      if(relationship.createdByPerson) {
+      if (relationship.createdByPerson) {
         return relationship.createdByPerson.userName;
       }
 
@@ -83,7 +83,7 @@ angular.module('ts5App')
     };
 
     $scope.getUpdatedOn = function (relationship) {
-      return postTrip.updatedOn ? dateUtility.formatTimestampForApp(postTrip.updatedOn) : dateUtility.formatTimestampForApp(postTrip.createdOn);
+      return relationship.updatedOn ? dateUtility.formatTimestampForApp(relationship.updatedOn) : dateUtility.formatTimestampForApp(relationship.createdOn);
     };
 
     $scope.clearCreateForm = function(shouldClearAll) {
