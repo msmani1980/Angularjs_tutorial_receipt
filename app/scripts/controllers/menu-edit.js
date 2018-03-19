@@ -182,9 +182,17 @@ angular.module('ts5App')
       });
     };
 
+    this.setDisableMasterItem = function (itemId, flag) {
+      var itemMatch = lodash.findWhere($scope.masterItemTotalList, { id: itemId });
+      if (itemMatch) {
+        var index = $scope.masterItemTotalList.indexOf(itemMatch);
+        $scope.masterItemTotalList[index].isDisabled = flag;
+      }
+    };
+
     $scope.removeItem = function (menuIndex) {
       $scope.menuEditForm.$setDirty();
-
+      $this.setDisableMasterItem($scope.menuItemList[menuIndex].itemId, false);
       $scope.menuItemList.splice(menuIndex, 1);
       $scope.filteredItemsCollection.splice(menuIndex, 1);
       $scope.selectedCategories.splice(menuIndex, 1);
@@ -285,18 +293,23 @@ angular.module('ts5App')
       $scope.masterItemList = angular.copy(filterCategoryItems);
     };
 
-    this.setFilteredMasterItems = function (dataFromAPI) {
-      hideLoadingModal();
+    this.disableSelectedMenuItems = function (masterItemsList) {
       var filterSelectedItems = [];
-      angular.forEach(dataFromAPI.masterItems, function (masterItem) {
+      angular.forEach(masterItemsList, function (masterItem) {
         var itemMatch = lodash.findWhere($scope.menuItemList, { itemId: masterItem.id });
         if (itemMatch) {
           masterItem.isDisabled = true;
         }
-
+        
         filterSelectedItems.push(masterItem);
       });
+      
+      return filterSelectedItems;
+    };
 
+    this.setFilteredMasterItems = function (dataFromAPI) {
+      hideLoadingModal();
+      var filterSelectedItems = $this.disableSelectedMenuItems(dataFromAPI.masterItems);
       $scope.masterItemList = angular.copy(filterSelectedItems);
       $scope.masterItemTotalList = angular.copy(filterSelectedItems);
       if ($scope.lookUpDialog) {
@@ -364,6 +377,10 @@ angular.module('ts5App')
     $scope.setMasterItemName = function (itemName, id) {
       $scope.menuItemList[$scope.selectedIndex].itemName = itemName;
       $scope.menuItemList[$scope.selectedIndex].itemId = id;
+      $this.setDisableMasterItem(id, true);
+      var itemMatch = lodash.findWhere($scope.masterItemTotalList, { id: id });
+      var index = $scope.masterItemTotalList.indexOf(itemMatch);
+      $scope.masterItemTotalList[index].isDisabled = true;
       angular.element('#master-items').modal('hide');
     };
 
