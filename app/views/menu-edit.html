@@ -165,7 +165,21 @@
             <span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
           </td>
           <td ng-if="isMenuEditable()">
-            <ui-select
+          	<div class="input-group">
+          		<input type="text"
+                   class="form-control"
+                   placeholder="Lookup a Category to filter the items list..."
+                   name="categories[item.menuIndex]"
+                   ng-model="menuItemList[item.menuIndex].name"/>
+             	<div class="input-group-btn">
+              		<button type="button"
+                    	class="btn btn-default"
+                      	ng-click="showSalesCategoryModal(item.menuIndex)">
+                		<i class="fa fa-info-circle"></i>
+              		</button>
+            	</div>
+            </div>	
+            <!--<ui-select
               name="selectedCategories[item.menuIndex]"
               ng-model="selectedCategories[item.menuIndex]"
               on-select="filterItemListByCategory(item.menuIndex)"
@@ -178,25 +192,40 @@
               <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
                 <div ng-bind-html="category.name | highlight: $select.search"></div>
               </ui-select-choices>
-            </ui-select>
+            </ui-select>-->
           </td>
           <td ng-if="isMenuEditable()">
-            <ui-select
+          	<div class="input-group">
+            	<input type="text"
+                   class="form-control"
+                   placeholder="Lookup an Item"
+                   name="menuItem-{{$index}}"
+                   ng-model="menuItemList[item.menuIndex].itemName"/>
+             	<div class="input-group-btn">
+              		<button type="button"
+                    	class="btn btn-default"
+                      	ng-click="showMasterItemsModal(item.menuIndex)">
+                		<i class="fa fa-info-circle"></i>
+              		</button>
+            	</div>
+            </div>	
+            <!--<ui-select
               name="menuItem"
               required="true"
               ng-model="item.selectedItem"
               theme="bootstrap"
               placeholder="Select or search an item from the list..."
-              ng-disabled="shouldDisableItemSelect(item.menuIndex)"
               on-select="filterAllItemLists()">
               <ui-select-match
                 placeholder="Select or search an item from the list...">{{$select.selected.itemName}}
               </ui-select-match>
               <ui-select-choices ui-disable-choice="menuItem.selected === true"
-                                 repeat="menuItem in filteredItemsCollection[item.menuIndex] | filter: $select.search | orderBy:'itemName'">
+              					 refresh="loadMasterItems($select)"
+                    			 refresh-delay="0"
+                                 repeat="menuItem in testList">
                 <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
-            </ui-select>
+            </ui-select> -->
           </td>
           <td ng-if="!isMenuEditable()">
             <input type="text"
@@ -227,5 +256,103 @@
       </table>
     </div>
   </form>
+</div>
+
+<div class="modal" id="sales-categories" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+      	<div class="row">
+      		<div class="col-xs-8">
+        		<h4 class="modal-title">Lookup Sales Categories</h4>
+        	</div>	
+        	<div class="col-xs-4 text-right">
+        		<button class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
+        	</div>	
+        </div>	
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <div class="input-group">
+            <input ng-model="salesCategoryListFilterText" type="text" class="form-control" id="filter-item-details"
+                   placeholder="Filter Sales Categories List"/>
+            <div class="input-group-btn">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-click="filterSalesCategoriesList()">
+                <i class="fa fa-filter"></i> Filter
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-bordered table-condensed">
+            <tr>
+              <th>Sales Category</th>
+              <th></th>
+            </tr>
+            <tr ng-repeat="category in categories | filter: {name: categoriesListSearch} | orderBy:'name'">
+              <td>{{ category.name }}</td>
+              <td>
+                <a class="btn btn-info btn-xs btn-block" tabindex="0"
+                   ng-click="setCategoryName(category.name, category.id)">
+                  <i class="fa fa-check-circle"></i>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="master-items" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="row">
+      		<div class="col-xs-8">
+        		<h4 class="modal-title">Lookup Valid Items</h4>
+        	</div>	
+        	<div class="col-xs-4 text-right">
+        		<button class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
+        	</div>	
+        </div>	
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <div class="input-group">
+            <input ng-model="masterItemsListFilterText" type="text" class="form-control" id="filter-item-details"
+                   placeholder="Filter Items List"/>
+            <div class="input-group-btn">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-click="filterMasterItemsList()">
+                <i class="fa fa-filter"></i> Filter
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-bordered table-condensed">
+            <tr>
+              <th>Item Name</th>
+              <th>Item Code</th>
+              <th></th>
+            </tr>
+            <tr ng-repeat="masterItem in masterItemList | filter: {itemName: masterItemsListSearch} | orderBy:'itemName'">
+              <td>{{ masterItem.itemName }}</td>
+              <td>{{ masterItem.itemCode }}</td>
+              <td>
+                <a class="btn btn-info btn-xs btn-block" tabindex="0" ng-disabled="masterItem.isDisabled"
+                   ng-click="!masterItem.isDisabled && setMasterItemName(masterItem.itemName, masterItem.id)">
+                  <i class="fa fa-check-circle"></i>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <dynamic-left-nav title="Menu Management"></dynamic-left-nav>
