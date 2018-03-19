@@ -282,7 +282,7 @@ angular.module('ts5App')
           menuIndex: index,
           selectedItem: itemMatch,
           sortOrder: item.sortOrder,
-          isExpired: $this.areAllItemVersionsExpired(itemMatch.selectedItem.versions)
+          isExpired: allAllItemVersionsExpired(itemMatch.selectedItem.versions)
         };
         //console.log(itemMatch)
         $scope.menuItemList.push(newItem);
