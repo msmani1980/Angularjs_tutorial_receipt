@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .controller('ReconciliationDashboardCtrl', function($q, $scope, dateUtility, catererStationService,
-                                                      reconciliationFactory, payloadUtility, $location, storeInstanceFactory, lodash, $localStorage) {
+                                                      reconciliationFactory, payloadUtility, $location, storeInstanceFactory, lodash, $localStorage, accessService) {
 
     var $this = this;
     this.meta = {
@@ -608,6 +608,8 @@ angular.module('ts5App')
 
     this.init = function() {
       $scope.tableSortTitle = '[scheduleDate, storeNumber, storeInstanceId, dispatchedStation, receivedStation]';
+      $scope.isPayCommision = accessService.crudAccessGranted('RECONCILIATION', 'RECONCILIATION', 'RPCSI');
+      $scope.isConfirm = accessService.crudAccessGranted('RECONCILIATION', 'RECONCILIATION', 'RUCSI');
       $scope.displayColumns = {
         receivedStation: false,
         storeInstanceId: false,

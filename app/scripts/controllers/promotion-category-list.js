@@ -134,6 +134,22 @@ angular.module('ts5App')
       $scope.getPromotionCategories();
     };
 
+    $scope.getUpdatedOn = function (category) {
+      return category.updatedOn ? dateUtility.formatTimestampForApp(category.updatedOn) : dateUtility.formatTimestampForApp(category.createdOn);
+    };
+
+    $scope.getUpdateBy = function (category) {
+      if (category.updatedByPerson) {
+        return category.updatedByPerson.userName;
+      }
+
+      if (category.createdByPerson) {
+        return category.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
     function init() {
       $scope.isCRUD = accessService.crudAccessGranted('PROMOTION', 'PROMOTIONCATEGORY', 'CRUDPRCAT');
       $scope.promotionCategories = null;

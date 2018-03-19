@@ -14,12 +14,12 @@
           <div class="col-xs-6 text-right">
             <fieldset ng-hide="viewOnly">
 
-              <a ng-show="canCreateStockTake()" ng-href="/#/stock-take/create/{{selectedCateringStation.id}}" class="btn btn-primary">
+              <a ng-show="isStockTake && canCreateStockTake()" ng-href="/#/stock-take/create/{{selectedCateringStation.id}}" class="btn btn-primary">
                 <span class="fa fa-plus" aria-hidden="true"></span>
                 <span class="hidden-xs">Create Stock Take</span>
               </a>
 
-              <a ng-href="{{exportURL}}" class="btn btn-info" ng-show="selectedCateringStation.id && searchResults.length">
+              <a ng-href="{{exportURL}}" class="btn btn-info" ng-show="isStockTake && selectedCateringStation.id && searchResults.length">
                 <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
                 <span class="hidden-xs">Export (CSV)</span>
               </a>
@@ -123,11 +123,11 @@
         <td>
           <input type="text" class="form-control text-right" value="{{stockItem.inboundQuantity}}" disabled name="stock-inbound-quantity-{{$index}}"/>
         </td>
-        <td id="currentCountQuantity-{{id}}" ng-click="stockTakeReasonOpen(stockItem, 'Count')">
+        <td id="currentCountQuantity-{{id}}" ng-click="isEditStock && stockTakeReasonOpen(stockItem, 'Count')">
           <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentQuantity}}"
                  ng-readonly="true"/>
         </td>
-        <td  id="currentUllageQuantity-{{id}}" ng-click="stockTakeReasonOpen(stockItem, 'Ullage')">
+        <td  id="currentUllageQuantity-{{id}}" ng-click="isEditStock && stockTakeReasonOpen(stockItem, 'Ullage')">
           <input type="text" class="showAsActive form-control text-right" value="{{stockItem.ullageQuantity}}"
                 ng-readonly="true"/>
         </td>

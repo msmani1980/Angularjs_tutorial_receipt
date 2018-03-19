@@ -50,7 +50,7 @@
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
 
-        <button ng-click="showSubmitPopup()" ng-disabled="shouldDisableSubmitButton()" class="btn btn-primary submit-cash-bag-btn">
+        <button ng-click="showSubmitPopup()" ng-show="isSubmit" ng-disabled="shouldDisableSubmitButton()" class="btn btn-primary submit-cash-bag-btn">
           <i class="fa fa-send" aria-hidden="true"></i>
           <span class="hidden-xs">Submit</span>
         </button>
@@ -98,7 +98,7 @@
     <table infinite-scroll="updateCashBagList()" ng-show="cashBagList.length" infinite-scroll-immediate-check="false" class="table table-bordered table-hover ng-scope">
     <thead>
     <tr>
-      <th width="5%" class="hide-from-print"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
+      <th width="5%" class="hide-from-print" ng-show="isSubmit"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
       <th>Cash Bag #</th>
       <th>Submitted By</th>
       <th>Bank Reference #</th>
@@ -110,7 +110,7 @@
 
     <tbody>
     <tr ng-class="{'hide-from-print':!cashBag.selected}" ng-repeat="cashBag in cashBagList | index">
-      <td class="hide-from-print">
+      <td class="hide-from-print" ng-show="isSubmit">
         <input ng-disabled="shouldDisableSubmission(cashBag)" class="btn btn-default" type="checkbox" value="1" ng-model="cashBag.selected" ng-click="toggleCheckbox(cashBag)">
       </td>
       <td>{{cashBag.cashBagNumber}}</td>
