@@ -71,6 +71,14 @@ angular.module('ts5App')
     }
 
     $scope.getUpdateBy = function (relationship) {
+      if (relationship.updatedByPerson) {
+        return relationship.updatedByPerson.userName;
+      }
+
+      if (relationship.createdByPerson) {
+        return relationship.createdByPerson.userName;
+      }
+
       return '';
     };
 
