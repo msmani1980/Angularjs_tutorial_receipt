@@ -205,6 +205,7 @@
                    ng-model="item.itemQty"
                    placeholder="{{$index}}"
                    ng-disabled="!isMenuEditable()"/>
+            <div ng-if="item.isExpired" style="color:red">This menu item is expired!</div>
           </td>
           <td ng-show="isMenuEditable()">
             <button class="btn btn-danger btn-xs" ng-click="removeItem(item.menuIndex)">
