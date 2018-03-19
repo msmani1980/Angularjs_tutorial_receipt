@@ -265,11 +265,16 @@ angular.module('ts5App')
     }
 
     function allAllItemVersionsExpired(versions) {
+      // TODO: test
+      var allExpired = true;
 
-      // loop through versions
-      // check if there is any active
-      // dateUtility.isYesterdayOrEarlierDatePicker(itemMatch.endDate)
+      versions.forEach(function(version) {
+        if (dateUtility.isTodayDatePicker(version.endDate) || dateUtility.isTomorrowOrLater(version.endDate)) {
+          allExpired = false;
+        }
+      });
 
+      return allExpired;
     }
 
     function deserializeMenuItems(masterItemList) {
