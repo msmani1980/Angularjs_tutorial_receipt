@@ -271,8 +271,8 @@ angular.module('ts5App')
       }
 
       return menu.updatedOn ? dateUtility.formatTimestampForApp(menu.updatedOn) : dateUtility.formatTimestampForApp(menu.createdOn);
-	};
-	
+    };
+
     this.filterMasterItemsListByCategory = function (catgryId) {
       var filterCategoryItems = [];
       angular.forEach($scope.masterItemTotalList, function (masterItem) {
