@@ -264,21 +264,44 @@ angular.module('ts5App')
       menuFactory.getItemsList(searchPayload, true).then(setFilteredMasterItems, showErrors);
     }
 
+    function allAllItemVersionsExpired(versions) {
+      var allExpired = true;
+
+      versions.forEach(function(version) {
+        var endDate = dateUtility.formatDateForApp(version.endDate);
+
+        if (dateUtility.isTodayDatePicker(endDate) || dateUtility.isTomorrowOrLater(endDate)) {
+          allExpired = false;
+        }
+      });
+
+      return allExpired;
+    }
+
+    function isAnyMenuItemExpired() {
+      return lodash.find($scope.menuItemList, { isExpired: true }) ? true : false;
+    }
+
     function deserializeMenuItems(masterItemList) {
       $scope.menuItemList = [];
       angular.forEach($scope.menu.menuItems, function (item, index) {
         var itemMatch = lodash.findWhere(masterItemList, { id: item.itemId });
+        var versions = itemMatch ? itemMatch.versions : [];
+
         var newItem = {
           itemQty: item.itemQty,
           id: item.id,
           menuIndex: index,
           selectedItem: itemMatch,
-          sortOrder: item.sortOrder
+          sortOrder: item.sortOrder,
+          isExpired: allAllItemVersionsExpired(versions)
         };
+
         $scope.menuItemList.push(newItem);
       });
 
       $scope.menuItemList = $filter('orderBy')($scope.menuItemList, 'sortOrder');
+      $scope.hasExpiredItems = isAnyMenuItemExpired();
     }
 
     function completeInit(responseCollection) {
