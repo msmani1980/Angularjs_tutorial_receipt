@@ -412,6 +412,10 @@ angular.module('ts5App')
       var id = masterItem.id;
       var itemName = masterItem.itemName;
 
+      if ($scope.menuItemList[$scope.selectedIndex].itemId) {
+        $this.setDisableMasterItem($scope.menuItemList[$scope.selectedIndex].itemId, false);
+      }
+
       $scope.menuItemList[$scope.selectedIndex].itemName = itemName;
       $scope.menuItemList[$scope.selectedIndex].itemId = id;
       $scope.menuItemList[$scope.selectedIndex].isExpired = !masterItem.hasActiveItemVersions;
