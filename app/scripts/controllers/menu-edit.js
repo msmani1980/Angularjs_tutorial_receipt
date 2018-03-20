@@ -281,15 +281,17 @@ angular.module('ts5App')
       $scope.menuItemList = [];
       angular.forEach($scope.menu.menuItems, function (item, index) {
         var itemMatch = lodash.findWhere(masterItemList, { id: item.itemId });
+        var versions = itemMatch ? itemMatch.versions : [];
+
         var newItem = {
           itemQty: item.itemQty,
           id: item.id,
           menuIndex: index,
           selectedItem: itemMatch,
           sortOrder: item.sortOrder,
-          isExpired: allAllItemVersionsExpired(itemMatch.selectedItem.versions)
+          isExpired: allAllItemVersionsExpired(versions)
         };
-        //console.log(itemMatch)
+        console.log(itemMatch)
         $scope.menuItemList.push(newItem);
       });
       console.log($scope.menuItemList)
