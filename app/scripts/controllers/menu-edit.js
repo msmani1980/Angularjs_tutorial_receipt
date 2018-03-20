@@ -12,6 +12,7 @@ angular.module('ts5App')
     var $this = this;
 
     $scope.cloningItem = false;
+    $scope.hasExpiredItems = true;
 
     function showLoadingModal(message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -265,11 +266,11 @@ angular.module('ts5App')
     }
 
     function allAllItemVersionsExpired(versions) {
-      // TODO: test
       var allExpired = true;
 
       versions.forEach(function(version) {
         if (dateUtility.isTodayDatePicker(version.endDate) || dateUtility.isTomorrowOrLater(version.endDate)) {
+          $scope.hasExpiredItems = false;
           allExpired = false;
         }
       });
