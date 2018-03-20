@@ -39,6 +39,10 @@ angular.module('ts5App')
       return $routeParams.state === 'view';
     };
 
+    $scope.isCreateOnly = function () {
+      return $routeParams.state === 'create';
+    };
+
     $scope.isCreate = function () {
       return $routeParams.state === 'create';
     };
@@ -257,6 +261,33 @@ angular.module('ts5App')
       getFilteredMasterItemsByCategory(menuIndex);
     };
 
+    this.filterMasterItemsListByCategory = function (catgryId) {
+      var filterCategoryItems = [];
+      angular.forEach($scope.masterItemTotalList, function (masterItem) {
+        var itemMatch = lodash.findWhere(masterItem.versions, { categoryId: catgryId });
+        if (itemMatch) {
+          filterCategoryItems.push(masterItem);
+        }
+      });
+
+      $scope.masterItemList = angular.copy(filterCategoryItems);
+
+    };
+
+    this.disableSelectedMenuItems = function (masterItemsList) {
+      var filterSelectedItems = [];
+      angular.forEach(masterItemsList, function (masterItem) {
+        var itemMatch = lodash.findWhere($scope.menuItemList, { itemId: masterItem.id });
+        if (itemMatch) {
+          masterItem.isDisabled = true;
+        }
+
+        filterSelectedItems.push(masterItem);
+      });
+
+      return filterSelectedItems;
+    };
+
     $scope.getUpdateBy = function (menu) {
       if (menu.updatedByPerson) {
         return menu.updatedByPerson.userName;
@@ -279,32 +310,6 @@ angular.module('ts5App')
       }
 
       return menu.updatedOn ? dateUtility.formatTimestampForApp(menu.updatedOn) : dateUtility.formatTimestampForApp(menu.createdOn);
-    };
-
-    this.filterMasterItemsListByCategory = function (catgryId) {
-      var filterCategoryItems = [];
-      angular.forEach($scope.masterItemTotalList, function (masterItem) {
-        var itemMatch = lodash.findWhere(masterItem.versions, { categoryId: catgryId });
-        if (itemMatch) {
-          filterCategoryItems.push(masterItem);
-        }
-      });
-
-      $scope.masterItemList = angular.copy(filterCategoryItems);
-    };
-
-    this.disableSelectedMenuItems = function (masterItemsList) {
-      var filterSelectedItems = [];
-      angular.forEach(masterItemsList, function (masterItem) {
-        var itemMatch = lodash.findWhere($scope.menuItemList, { itemId: masterItem.id });
-        if (itemMatch) {
-          masterItem.isDisabled = true;
-        }
-        
-        filterSelectedItems.push(masterItem);
-      });
-      
-      return filterSelectedItems;
     };
 
     this.setFilteredMasterItems = function (dataFromAPI) {
@@ -331,7 +336,7 @@ angular.module('ts5App')
       };
 
       if ($scope.isMenuEditable()) {
-        menuFactory.getItemsList(searchPayload, true).then($this.setFilteredMasterItems, showErrors);  
+        menuFactory.getItemsList(searchPayload, true).then($this.setFilteredMasterItems, showErrors);
       }
 
     }
@@ -355,8 +360,11 @@ angular.module('ts5App')
 
         showMasterItemsModal();
       }
-
     };
+
+    function isAnyMenuItemExpired() {
+      return lodash.find($scope.menuItemList, { isExpired: true }) ? true : false;
+    }
 
     $scope.filterSalesCategoriesList = function () {
       $scope.categoriesListSearch = angular.copy($scope.salesCategoryListFilterText);
@@ -374,18 +382,24 @@ angular.module('ts5App')
       angular.element('#sales-categories').modal('hide');
     };
 
-    $scope.setMasterItemName = function (itemName, id) {
+    $scope.setMasterItem = function (masterItem) {
+      var id = masterItem.id;
+      var itemName = masterItem.itemName;
+
       if ($scope.menuItemList[$scope.selectedIndex].itemId) {
         $this.setDisableMasterItem($scope.menuItemList[$scope.selectedIndex].itemId, false);
       }
 
       $scope.menuItemList[$scope.selectedIndex].itemName = itemName;
       $scope.menuItemList[$scope.selectedIndex].itemId = id;
+      $scope.menuItemList[$scope.selectedIndex].isExpired = !masterItem.hasActiveItemVersions;
       $this.setDisableMasterItem(id, true);
       var itemMatch = lodash.findWhere($scope.masterItemTotalList, { id: id });
       var index = $scope.masterItemTotalList.indexOf(itemMatch);
       $scope.masterItemTotalList[index].isDisabled = true;
       angular.element('#master-items').modal('hide');
+
+      $scope.hasExpiredItems = isAnyMenuItemExpired();
     };
 
     this.deserializeMenuItems = function () {
@@ -398,17 +412,20 @@ angular.module('ts5App')
           selectedItem: item,
           itemId: item.itemId,
           itemName: item.itemName,
-          sortOrder: item.sortOrder
+          sortOrder: item.sortOrder,
+          isExpired: !item.hasActiveItemVersions
         };
+
         $scope.menuItemList.push(newItem);
       });
 
       $scope.menuItemList = $filter('orderBy')($scope.menuItemList, 'sortOrder');
+      $scope.hasExpiredItems = isAnyMenuItemExpired();
     };
 
     this.makeCompleteInitPromises = function () {
       var mkPromises = [
-        menuFactory.getSalesCategoriesList({})      
+        menuFactory.getSalesCategoriesList({})
       ];
 
       return mkPromises;
@@ -418,21 +435,27 @@ angular.module('ts5App')
       $scope.categories = angular.copy(responseCollection[0].salesCategories);
       hideLoadingModal();
     };
-    
+
     this.completeInitPromises = function () {
       var edtpromises = $this.makeCompleteInitPromises();
-      $q.all(edtpromises).then($this.editComplete, showErrors);	
+      $q.all(edtpromises).then($this.editComplete, showErrors);
     };
 
     function completeInit(responseCollection) {
       if (angular.isDefined(responseCollection[0])) {
         $scope.menu = angular.copy(responseCollection[0]);
+
+        if ($location.path().search('/menu/copy') !== -1 && $routeParams.id) {
+          $scope.menu.startDate = null;
+          $scope.menu.endDate = null;
+        }
+
         $this.deserializeMenuItems();
         if ($scope.isMenuEditable()) {
-          $this.completeInitPromises();	
+          $this.completeInitPromises();
         } else {
           hideLoadingModal();
-        }  
+        }
       } else {
         $this.completeInitPromises();
       }
@@ -480,7 +503,7 @@ angular.module('ts5App')
     init();
 
     $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
-      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate && $scope.isCreate()) {
+      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate && $scope.isCreateOnly()) {
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
       }
     });
