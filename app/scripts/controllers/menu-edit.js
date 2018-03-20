@@ -375,6 +375,10 @@ angular.module('ts5App')
     };
 
     $scope.setMasterItemName = function (itemName, id) {
+      if ($scope.menuItemList[$scope.selectedIndex].itemId) {
+        $this.setDisableMasterItem($scope.menuItemList[$scope.selectedIndex].itemId, false);
+      }
+
       $scope.menuItemList[$scope.selectedIndex].itemName = itemName;
       $scope.menuItemList[$scope.selectedIndex].itemId = id;
       $this.setDisableMasterItem(id, true);
