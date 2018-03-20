@@ -158,19 +158,42 @@ angular.module('ts5App')
       return payload;
     }
 
+    function isSearchPayloadEmpty(payload) {
+      return lodash.isEmpty(payload) || isObjectEmptyOrHaveEmptyValues(payload);
+    }
+
+    function isObjectEmptyOrHaveEmptyValues(dictionary) {
+      for (var key in dictionary) {
+        if (dictionary.hasOwnProperty(key)) {
+          var value = dictionary[key];
+          if (!(value === '' || typeof value === 'undefined' || value === null)) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }
+
     function createPayload() {
       var payload = angular.copy($scope.search);
-      if (payload.startDate) {
-        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
-        payload.endDate = payload.startDate;
-      }
 
-      if (payload.arrivalStationCode) {
-        payload.arrivalStationCode = formatUiSelectPayload(payload.arrivalStationCode);
-      }
+      if (isSearchPayloadEmpty(payload)) {
+        payload.endDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+        payload.startDate = dateUtility.formatDateForAPI(dateUtility.dateNumDaysBeforeTodayFormatted(30));
+      } else {
+        if (payload.startDate) {
+          payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+          payload.endDate = payload.startDate;
+        }
 
-      if (payload.departureStationCode) {
-        payload.departureStationCode = formatUiSelectPayload(payload.departureStationCode);
+        if (payload.arrivalStationCode) {
+          payload.arrivalStationCode = formatUiSelectPayload(payload.arrivalStationCode);
+        }
+
+        if (payload.departureStationCode) {
+          payload.departureStationCode = formatUiSelectPayload(payload.departureStationCode);
+        }
       }
 
       return clearEmptyValues(payload);

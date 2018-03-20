@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CompanyExchangeRateEditCtrl', function($scope, globalMenuService, currencyFactory, dateUtility,
-    payloadUtility, messageService, $filter, lodash, accessService) {
+    payloadUtility, messageService, $filter, lodash, accessService, $http, $q) {
 
     var $this = this;
 
@@ -231,6 +231,8 @@ angular.module('ts5App')
       $scope.errorResponse = null;
       $this.showToast('success', 'Company Exchange Rate', 'exchange rate successfully saved!');
       $this.hideLoadingModal();
+
+      $scope.searchCompanyExchangeRates();
     };
 
     this.showSaveErrors = function(dataFromAPI) {
@@ -330,7 +332,7 @@ angular.module('ts5App')
     };
 
     this.getCompanyGlobalCurrencies = function() {
-      currencyFactory.getCompanyGlobalCurrencies().then(function(globalCurrencyList) {
+      return currencyFactory.getCompanyGlobalCurrencies().then(function(globalCurrencyList) {
         $scope.globalCurrencies = globalCurrencyList.response;
         $this.getDenominations();
         $this.getCompanyBaseCurrency();
@@ -415,6 +417,11 @@ angular.module('ts5App')
       newExchangeRate.exchangeRateType = exchangeRate.exchangeRateType;
       newExchangeRate.startDate = dateUtility.tomorrowFormattedDatePicker();
       newExchangeRate.endDate = dateUtility.tomorrowFormattedDatePicker();
+      newExchangeRate.createdByPerson = {
+        id: $http.defaults.headers.common.userId,
+        userName: $http.defaults.headers.common.username
+      };
+      newExchangeRate.createdBy = $http.defaults.headers.common.userId;
       newExchangeRate.isCloned = true;
       newExchangeRate.mode = 'clone';
 
@@ -470,21 +477,50 @@ angular.module('ts5App')
       }
     };
 
+    $scope.getUpdateBy = function (row) {
+      if (row.updatedByPerson) {
+        return row.updatedByPerson.userName;
+      }
+
+      if (row.createdByPerson) {
+        return row.createdByPerson.userName;
+      }
+
+      if (row.mode === 'create') {
+        return $http.defaults.headers.common.username;
+      }
+
+      return 'Unknown';
+    };
+
+    $scope.getUpdatedOn = function (row) {
+      if (!row.createdOn) {
+        return '';
+      }
+
+      return row.updatedOn ? dateUtility.formatTimestampForApp(row.updatedOn) : dateUtility.formatTimestampForApp(row.createdOn);
+    };
+
     this.setPortalExchangeRate = function (dataFromAPI) {
       var exchangeRateTypes = angular.copy(dataFromAPI);
       $this.eposExchangeRateType = lodash.findWhere(exchangeRateTypes, { name: 'EPOS Exchange Rate' });
     };
 
     this.getExchangeRateTypes = function () {
-      currencyFactory.getExchangeRateTypes().then($this.setPortalExchangeRate);
+      return currencyFactory.getExchangeRateTypes().then($this.setPortalExchangeRate);
     };
 
     this.init = function() {
       $scope.isCRUD = accessService.crudAccessGranted('CURRENCYEXCHNG', 'EPOSEXCHNG', 'CUDEER');
-      $this.getExchangeRateTypes();
-      $this.getCompanyGlobalCurrencies();
-      $this.getDetailedCompanyCurrenciesForSearch();
-      $this.getDetailedCompanyCurrenciesForCreation();
+
+      $q.all([
+        $this.getExchangeRateTypes(),
+        $this.getCompanyGlobalCurrencies()
+      ]).then(function () {
+          $this.getDetailedCompanyCurrenciesForSearch();
+          $this.getDetailedCompanyCurrenciesForCreation();
+        }
+      );
     };
 
     this.init();

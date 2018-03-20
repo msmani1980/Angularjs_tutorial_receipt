@@ -70,6 +70,22 @@ angular.module('ts5App')
       hidePanel(otherPanelName);
     }
 
+    $scope.getUpdateBy = function (relationship) {
+      if (relationship.updatedByPerson) {
+        return relationship.updatedByPerson.userName;
+      }
+
+      if (relationship.createdByPerson) {
+        return relationship.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (relationship) {
+      return relationship.updatedOn ? dateUtility.formatTimestampForApp(relationship.updatedOn) : dateUtility.formatTimestampForApp(relationship.createdOn);
+    };
+
     $scope.clearCreateForm = function(shouldClearAll) {
       var currentItemType = $scope.newRecord.itemType;
       $scope.displayError = false;
@@ -525,7 +541,7 @@ angular.module('ts5App')
     }
 
     init();
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
     };

@@ -312,6 +312,32 @@ angular.module('ts5App')
       return menu.updatedOn ? dateUtility.formatTimestampForApp(menu.updatedOn) : dateUtility.formatTimestampForApp(menu.createdOn);
     };
 
+    this.filterMasterItemsListByCategory = function (catgryId) {
+      var filterCategoryItems = [];
+      angular.forEach($scope.masterItemTotalList, function (masterItem) {
+        var itemMatch = lodash.findWhere(masterItem.versions, { categoryId: catgryId });
+        if (itemMatch) {
+          filterCategoryItems.push(masterItem);
+        }
+      });
+
+      $scope.masterItemList = angular.copy(filterCategoryItems);
+    };
+
+    this.disableSelectedMenuItems = function (masterItemsList) {
+      var filterSelectedItems = [];
+      angular.forEach(masterItemsList, function (masterItem) {
+        var itemMatch = lodash.findWhere($scope.menuItemList, { itemId: masterItem.id });
+        if (itemMatch) {
+          masterItem.isDisabled = true;
+        }
+
+        filterSelectedItems.push(masterItem);
+      });
+
+      return filterSelectedItems;
+    };
+
     this.setFilteredMasterItems = function (dataFromAPI) {
       hideLoadingModal();
       var filterSelectedItems = $this.disableSelectedMenuItems(dataFromAPI.masterItems);
