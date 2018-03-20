@@ -296,10 +296,10 @@ angular.module('ts5App')
           sortOrder: item.sortOrder,
           isExpired: allAllItemVersionsExpired(versions)
         };
-        //console.log(itemMatch)
+
         $scope.menuItemList.push(newItem);
       });
-      //console.log($scope.menuItemList)
+
       $scope.menuItemList = $filter('orderBy')($scope.menuItemList, 'sortOrder');
       $scope.hasExpiredItems = isAnyMenuItemExpired();
     }
