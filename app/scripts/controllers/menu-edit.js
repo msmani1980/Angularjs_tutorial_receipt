@@ -176,6 +176,8 @@ angular.module('ts5App')
           item.selected = selectedItemIds.indexOf(item.id) >= 0;
         });
       });
+
+      $scope.hasExpiredItems = isAnyMenuItemExpired();
     };
 
     $scope.removeItem = function (menuIndex) {
@@ -264,20 +266,6 @@ angular.module('ts5App')
       menuFactory.getItemsList(searchPayload, true).then(setFilteredMasterItems, showErrors);
     }
 
-    function allAllItemVersionsExpired(versions) {
-      var allExpired = true;
-
-      versions.forEach(function(version) {
-        var endDate = dateUtility.formatDateForApp(version.endDate);
-
-        if (dateUtility.isTodayDatePicker(endDate) || dateUtility.isTomorrowOrLater(endDate)) {
-          allExpired = false;
-        }
-      });
-
-      return allExpired;
-    }
-
     function isAnyMenuItemExpired() {
       return lodash.find($scope.menuItemList, { isExpired: true }) ? true : false;
     }
@@ -286,7 +274,6 @@ angular.module('ts5App')
       $scope.menuItemList = [];
       angular.forEach($scope.menu.menuItems, function (item, index) {
         var itemMatch = lodash.findWhere(masterItemList, { id: item.itemId });
-        var versions = itemMatch ? itemMatch.versions : [];
 
         var newItem = {
           itemQty: item.itemQty,
@@ -294,7 +281,7 @@ angular.module('ts5App')
           menuIndex: index,
           selectedItem: itemMatch,
           sortOrder: item.sortOrder,
-          isExpired: allAllItemVersionsExpired(versions)
+          isExpired: !item.hasActiveItemVersions
         };
 
         $scope.menuItemList.push(newItem);
