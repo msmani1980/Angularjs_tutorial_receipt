@@ -278,9 +278,8 @@ angular.module('ts5App')
       return allExpired;
     }
 
-    $scope.isAnyMenuItemExpired = function () {
-      console.log(lodash.find($scope.menuItemList, { isExpired: true }));
-      return lodash.find($scope.menuItemList, { isExpired: true });
+    function isAnyMenuItemExpired() {
+      return lodash.find($scope.menuItemList, { isExpired: true }) ? true : false;
     };
 
     function deserializeMenuItems(masterItemList) {
@@ -302,7 +301,7 @@ angular.module('ts5App')
       });
       //console.log($scope.menuItemList)
       $scope.menuItemList = $filter('orderBy')($scope.menuItemList, 'sortOrder');
-      
+      $scope.hasExpiredItems = isAnyMenuItemExpired();
     }
 
     function completeInit(responseCollection) {
