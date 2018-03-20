@@ -218,6 +218,22 @@ angular.module('ts5App')
       $scope.relationshipList = [];
     };
 
+    $scope.getUpdateBy = function (menu) {
+      if (menu.updatedByPerson) {
+        return menu.updatedByPerson.userName;
+      }
+
+      if (menu.createdByPerson) {
+        return menu.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (menu) {
+      return menu.updatedOn ? dateUtility.formatTimestampForApp(menu.updatedOn) : dateUtility.formatTimestampForApp(menu.createdOn);
+    };
+
     this.init = function () {
       $scope.isCRUD = accessService.crudAccessGranted('MENUCAT', 'MENUSTATION', 'CRUDMCS');
       $this.getStationAndMenuList();

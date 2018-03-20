@@ -101,6 +101,18 @@ angular.module('ts5App')
       return promotion.updatedOn ? dateUtility.formatTimestampForApp(promotion.updatedOn) : dateUtility.formatTimestampForApp(promotion.createdOn);
     };
 
+    $scope.getUpdateBy = function (promotion) {
+      if (promotion.updatedByPerson) {
+        return promotion.updatedByPerson.userName;
+      }
+
+      if (promotion.createdByPerson) {
+        return promotion.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
     this.setPromotionsList = function(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var promotionList = angular.copy(dataFromAPI.promotions);

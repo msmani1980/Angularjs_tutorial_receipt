@@ -70,7 +70,6 @@ angular.module('ts5App')
         var sessionObject = angular.copy(getSessionObject());
         persistCompanyObject(sessionObject);
 
-        delete sessionObject.username;
         delete sessionObject.companyData;
         delete sessionObject.userCompanies;
         delete sessionObject.companyTypes;
@@ -229,7 +228,7 @@ angular.module('ts5App')
           return authorizeUserResponseHandler(rawSessionData);
         }
 
-        var dataFromAPI = angular.copy(rawSessionData); 
+        var dataFromAPI = angular.copy(rawSessionData);
         encryptDataInLS(dataFromAPI);
         tempToken = dataFromAPI.currentSession.sessionToken;
         eulaService.showEULAConfirmation();

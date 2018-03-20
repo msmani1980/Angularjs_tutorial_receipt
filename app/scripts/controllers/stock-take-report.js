@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StockTakeReportCtrl', function($scope, $filter, dateUtility, stockTakeFactory, messageService, lodash) {
+  .controller('StockTakeReportCtrl', function($scope, $filter, dateUtility, stockTakeFactory, messageService, lodash, accessService) {
 
     var $this = this;
     this.meta = {
@@ -25,6 +25,7 @@ angular.module('ts5App')
     $scope.userSelectedStation = false;
 
     this.init = function() {
+      $scope.isStockTake = accessService.crudAccessGranted('STOCKMANAGER', 'STOCKREPORT', 'CRUDSTR');
       $this.getCatererStationList();
       $this.cateringStationWatcher();
     };
