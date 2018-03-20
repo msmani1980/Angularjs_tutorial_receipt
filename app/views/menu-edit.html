@@ -31,7 +31,7 @@
 
         <div class="col-xs-6 text-right">
           <a class="btn btn-default" ng-href="#/menu-list" class="btn">Back</a>
-          <button ng-hide="isMenuViewOnly()" ng-disabled="hasExpiredItems" class="btn btn-success" ng-click="submitForm()">
+          <button ng-hide="isMenuViewOnly()" ng-disabled="isAnyMenuItemExpired()" class="btn btn-success" ng-click="submitForm()">
             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <span class="hidden-xs">Save</span>
           </button>

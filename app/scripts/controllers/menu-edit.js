@@ -278,6 +278,11 @@ angular.module('ts5App')
       return allExpired;
     }
 
+    $scope.isAnyMenuItemExpired = function () {
+      console.log(lodash.find($scope.menuItemList, { isExpired: true }));
+      return lodash.find($scope.menuItemList, { isExpired: true });
+    };
+
     function deserializeMenuItems(masterItemList) {
       $scope.menuItemList = [];
       angular.forEach($scope.menu.menuItems, function (item, index) {
@@ -292,11 +297,12 @@ angular.module('ts5App')
           sortOrder: item.sortOrder,
           isExpired: allAllItemVersionsExpired(versions)
         };
-        console.log(itemMatch)
+        //console.log(itemMatch)
         $scope.menuItemList.push(newItem);
       });
-      console.log($scope.menuItemList)
+      //console.log($scope.menuItemList)
       $scope.menuItemList = $filter('orderBy')($scope.menuItemList, 'sortOrder');
+      
     }
 
     function completeInit(responseCollection) {
