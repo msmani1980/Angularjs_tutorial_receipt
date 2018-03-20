@@ -10,6 +10,7 @@
 angular.module('ts5App')
   .service('countriesService', function($resource, ENV) {
     var requestURL = ENV.apiUrl + '/rsvr/api/countries';
+    var regionsCityRequestURL = ENV.apiUrl + '/rsvr/api/countries/regions/cities';
 
     var requestParameters = {
       limit: 300
@@ -19,17 +20,27 @@ angular.module('ts5App')
       getCountriesList: {
         method: 'GET',
         isArray: false
+      },
+      getRegionsCityList: {
+        method: 'GET',
+        isArray: false
       }
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
+    var requestRegionsCityResource = $resource(regionsCityRequestURL, requestParameters, actions);
 
-    var getCountriesList = function() {
-      return requestResource.getCountriesList().$promise;
+    var getCountriesList = function(payload) {
+      return requestResource.getCountriesList(payload).$promise;
+    };
+
+    var getCities = function(payload) {
+      return requestRegionsCityResource.getRegionsCityList(payload).$promise;
     };
 
     return {
-      getCountriesList: getCountriesList
+      getCountriesList: getCountriesList,
+      getCities: getCities
     };
 
   });

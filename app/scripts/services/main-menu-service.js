@@ -175,7 +175,7 @@ angular.module('ts5App')
           package: 'EMPLOYEEMSG',
           role: 'EMPLOYEEMESSAGE',
           permissions: [{
-            apiName: '/api/employee-messages',        
+            apiName: '/api/employee-messages',
             permissionCodes: ['R']
           }]
         }, {
@@ -333,6 +333,31 @@ angular.module('ts5App')
           role: 'MENUSTATION',
           permissions: [{
             apiName: '/api/menus',
+            permissionCodes: ['C']
+          }]
+        }]
+      }, {
+        title: 'Company Stations',
+        menuItems: [{
+          name: 'Manage Company Stations',
+          route: '/#/station-list',
+          icon: 'icon-menu-assignment',
+          className: 'dashboard-stations',
+          package: 'COMPANY',
+          role: 'COMPANYSTATION',
+          permissions: [{
+            apiName: '/api/station-list',
+            permissionCodes: ['R']
+          }]
+        }, {
+          name: 'Create Company Stations',
+          route: '/#/station-create',
+          icon: 'icon-menu-assignment',
+          className: 'dashboard-stations',
+          package: 'COMPANY',
+          role: 'COMPANYSTATION',
+          permissions: [{
+            apiName: '/api/station-create',
             permissionCodes: ['C']
           }]
         }]

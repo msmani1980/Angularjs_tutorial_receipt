@@ -24,6 +24,8 @@ angular.module('ts5App')
       } else {
         showToast('success', 'Import from file', response.config.file.name + ' was successful. Please wait for an email to see the status of the file processing, and then return to this screen to see your data');
       }
+
+      $scope.clearFile();
     }
 
     function errorHandler(response) {
@@ -69,6 +71,7 @@ angular.module('ts5App')
     };
 
     function setTemplateName() {
+      // jshint ignore: start
       if ($scope.type === 'menu') {
         $scope.templateName = 'menuUpload';
       } else if ($scope.type === 'postTrip') {
@@ -77,7 +80,11 @@ angular.module('ts5App')
         $scope.templateName = 'scheduleUpload';
       } else if ($scope.type === 'employee') {
         $scope.templateName = 'employeeUpload';
+      } else if ($scope.type === 'stations') {
+        $scope.templateName = 'stationUpload';
       }
+
+      // jshint ignore: end
     }
 
     function setDownloadTemplateUrl() {
