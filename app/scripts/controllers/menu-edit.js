@@ -368,7 +368,6 @@ angular.module('ts5App')
       angular.element('#master-items').modal('hide');
 
       $scope.hasExpiredItems = isAnyMenuItemExpired();
-      console.log($scope.menuItemList)
     };
 
     this.deserializeMenuItems = function () {
