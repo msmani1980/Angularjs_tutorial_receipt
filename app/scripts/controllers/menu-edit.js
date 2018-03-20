@@ -280,7 +280,7 @@ angular.module('ts5App')
 
     function isAnyMenuItemExpired() {
       return lodash.find($scope.menuItemList, { isExpired: true }) ? true : false;
-    };
+    }
 
     function deserializeMenuItems(masterItemList) {
       $scope.menuItemList = [];
