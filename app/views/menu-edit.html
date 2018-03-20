@@ -198,8 +198,7 @@
               		</button>
             	</div>
             </div>
-            <div ng-if="!item.selectedItem.hasActiveItemVersions && !isMenuViewOnly()" style="color:red">This menu item expired!</div>
-            {{item.selectedItem}}
+            <div ng-if="menuItemList[item.menuIndex].isExpired && !isMenuViewOnly()" style="color:red">This menu item expired!</div>
             <!--<ui-select
               name="menuItem"
               required="true"
@@ -224,8 +223,7 @@
                    name="menuItem-{{$index}}"
                    ng-model="item.selectedItem.itemName"
                    ng-disabled="!isMenuEditable()"/>
-            <div ng-if="!item.selectedItem.hasActiveItemVersions" style="color:red">This menu item expired!</div>
-            {{item.selectedItem}}
+            <!--<div ng-if="!item.selectedItem.hasActiveItemVersions" style="color:red">This menu item expired!</div>-->
           </td>
           <td>
             <input custom-validity
@@ -337,7 +335,7 @@
               <td>{{ masterItem.itemCode }}</td>
               <td>
                 <a class="btn btn-info btn-xs btn-block" tabindex="0" ng-disabled="masterItem.isDisabled"
-                   ng-click="!masterItem.isDisabled && setMasterItemName(masterItem.itemName, masterItem.id)">
+                   ng-click="!masterItem.isDisabled && setMasterItem(masterItem)">
                   <i class="fa fa-check-circle"></i>
                 </a>
               </td>

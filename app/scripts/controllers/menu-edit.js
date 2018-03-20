@@ -180,8 +180,6 @@ angular.module('ts5App')
           item.selected = selectedItemIds.indexOf(item.id) >= 0;
         });
       });
-
-      $scope.hasExpiredItems = isAnyMenuItemExpired();
     };
 
     this.setDisableMasterItem = function (itemId, flag) {
@@ -334,6 +332,7 @@ angular.module('ts5App')
 
         showMasterItemsModal();
       }
+    };
 
     function isAnyMenuItemExpired() {
       return lodash.find($scope.menuItemList, { isExpired: true }) ? true : false;
@@ -355,14 +354,21 @@ angular.module('ts5App')
       angular.element('#sales-categories').modal('hide');
     };
 
-    $scope.setMasterItemName = function (itemName, id) {
+    $scope.setMasterItem = function (masterItem) {
+      var id = masterItem.id;
+      var itemName = masterItem.itemName;
+
       $scope.menuItemList[$scope.selectedIndex].itemName = itemName;
       $scope.menuItemList[$scope.selectedIndex].itemId = id;
+      $scope.menuItemList[$scope.selectedIndex].isExpired = !masterItem.hasActiveItemVersions;
       $this.setDisableMasterItem(id, true);
       var itemMatch = lodash.findWhere($scope.masterItemTotalList, { id: id });
       var index = $scope.masterItemTotalList.indexOf(itemMatch);
       $scope.masterItemTotalList[index].isDisabled = true;
       angular.element('#master-items').modal('hide');
+
+      $scope.hasExpiredItems = isAnyMenuItemExpired();
+      console.log($scope.menuItemList)
     };
 
     this.deserializeMenuItems = function () {
