@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('ManageGoodsReceivedCtrl', function($scope, $filter, dateUtility, deliveryNoteFactory, messageService,
-    lodash) {
+    lodash, accessService) {
 
     var $this = this;
     this.meta = {
@@ -39,6 +39,7 @@ angular.module('ts5App')
 
     this.init = function() {
       hideLoadingBar();
+      $scope.isCRUD = accessService.crudAccessGranted('STOCKMANAGER', 'DELIVERYNOTES', 'CRUDDN');
       this.getCatererStationList();
       $scope.$watch('catererStationId', function(newData) {
         if (newData) {

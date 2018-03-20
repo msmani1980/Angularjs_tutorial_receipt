@@ -431,8 +431,8 @@ angular.module('ts5App')
         menuRulesFactory.getCarrierTypes(companyId),
         menuRulesFactory.getSalesCategoriesList(),
         menuRulesFactory.getCabinClassesList({}),
-        menuRulesFactory.getMenuMasterList({}),
-        menuRulesFactory.getItemsList({}, { fetchFromMaster: 'master' })
+        menuRulesFactory.getMenuMasterList({ startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()) }),
+        menuRulesFactory.getItemsList({ startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()) }, { fetchFromMaster: 'master' })
       ];
 
       return promises;

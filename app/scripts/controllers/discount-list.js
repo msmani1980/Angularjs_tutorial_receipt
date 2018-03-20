@@ -137,6 +137,22 @@ angular.module('ts5App')
       $this.deleteDiscount($scope.discountToDelete.id);
     };
 
+    $scope.getUpdatedOn = function (discount) {
+      return discount.updatedOn ? dateUtility.formatTimestampForApp(discount.updatedOn) : dateUtility.formatTimestampForApp(discount.createdOn);
+    };
+
+    $scope.getUpdateBy = function (discount) {
+      if (discount.updatedByPerson) {
+        return discount.updatedByPerson.userName;
+      }
+
+      if (discount.createdByPerson) {
+        return discount.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
     $scope.loadDiscounts = function() {
       $this.getDiscountList();
     };

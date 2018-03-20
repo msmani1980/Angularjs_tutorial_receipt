@@ -62,6 +62,8 @@
         <th>Effective From</th>
         <th>Effective To</th>
         <th>Selected Items</th>
+        <th>Updated Date/Time</th>
+        <th>Updated User</th>      
         <th>Actions</th>
       </tr>
       </thead>
@@ -71,7 +73,8 @@
         <td>{{ category.startDate }}</td>
         <td>{{ category.endDate }}</td>
         <td>{{ category.selectedItems }}</td>
-
+        <td>{{ getUpdatedOn(category) }}</td>
+        <td>{{ getUpdateBy(category) }}</td>      
         <td>
           <button class="btn btn-xs btn-info" ng-click="viewOrEditRecord('view', category.id)">
             <span class="fa fa-file"></span>

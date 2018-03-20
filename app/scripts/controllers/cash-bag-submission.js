@@ -9,7 +9,7 @@
  */
 
 angular.module('ts5App').controller('CashBagSubmissionCtrl',
-  function ($scope, $http, globalMenuService, cashBagFactory, $filter, $window, dateUtility, lodash, messageService) {
+  function ($scope, $http, globalMenuService, cashBagFactory, $filter, $window, dateUtility, lodash, messageService, accessService) {
     $scope.viewName = 'Cash Bag Submission';
     $scope.search = {};
 
@@ -19,6 +19,7 @@ angular.module('ts5App').controller('CashBagSubmissionCtrl',
     this.isSearching = false;
 
     function initializeData() {
+      $scope.isSubmit = accessService.crudAccessGranted('CASH', 'CASHBAGSUBMIT', 'SBCBAG');
       $scope.submissionDate = dateUtility.nowFormattedDatePicker();
       $scope.cashBagListToSubmit = [];
       $scope.bankReferenceNumbers = [];

@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('CashBagListCtrl', function($scope, cashBagFactory, $location, $routeParams, $q, $localStorage,
     messageService,
-    dateUtility, lodash, socketIO, $timeout) {
+    dateUtility, lodash, socketIO, $timeout, accessService) {
 
     var companyId;
     var services = [];
@@ -195,6 +195,7 @@ angular.module('ts5App')
     }
 
     $scope.loadCashBagList = loadCashBagList;
+    $scope.isCRUD = accessService.crudAccessGranted('CASH', 'CASHBAG', 'CRUPCBAG');
 
     $scope.searchCashBag = function() {
       $scope.cashBagList = [];
