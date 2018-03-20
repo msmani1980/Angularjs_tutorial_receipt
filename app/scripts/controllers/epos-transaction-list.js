@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:12 */
 
 /**
  * @ngdoc function
@@ -160,16 +161,50 @@ angular.module('ts5App')
       function formatEposTransaction(eposTransaction) {
         eposTransaction.statusName = $scope.statusName[eposTransaction.status];
         eposTransaction.statusHref = eposTransaction.status === 'B' ? '#' :
-             eposTransaction.url + eposTransaction.id + '/' + eposTransaction.checksum + '/' + eposTransaction.threadId;
-        eposTransaction.msg = shrink(eposTransaction.errorMsg + eposTransaction.missedFields, 40, 150);
-        eposTransaction.fileNameShort = shrink(eposTransaction.fileName, 33, 55);        
+          eposTransaction.url + eposTransaction.id + '/' + eposTransaction.checksum + '/' + eposTransaction.threadId;
+        var msg = (eposTransaction.errorMsg === undefined || eposTransaction.errorMsg === null ? '' : eposTransaction.errorMsg) + eposTransaction.missedFields;
+        eposTransaction.msg = shrink(msg, 'portal-epos ', 36, 'Build of', 80);
+        eposTransaction.fileNameShort = shrink(eposTransaction.fileName, '/', 33, '__', 47);
+        if (eposTransaction.majorv === undefined || eposTransaction.majorv === null) {
+          eposTransaction.majorv = 1;
+        }
+        
+        if (eposTransaction.wcfVersion === undefined || eposTransaction.wcfVersion === null) {
+          eposTransaction.vs = '';
+        } else {
+          eposTransaction.vs = '/';
+        }
+        
+        if (eposTransaction.digest === undefined || eposTransaction.digest === null || eposTransaction.digest.length < 2) {
+          eposTransaction.digestF = '';
+        } else {
+          var f = eposTransaction.digest;
+          f = f.substring(1, f.length - 1);
+          eposTransaction.digestF = f.replace(/,/g, '\n');
+        }
       }
       
-      function shrink(value, from, to) {
+      function shrink(value, from, dfrom, to, dto) {
         if (value === undefined || value === null) {
           return '';
-        } else if (value.length > to) {
-          var _val = '...' + value.substring(from, to) + '...';
+        } 
+        
+        var _from = value.indexOf(from);
+        if (_from > 0) {
+          dfrom = _from;
+        }
+        
+        if (dfrom > value.length) {
+          dfrom = 0;
+        }
+        
+        var _to = value.indexOf(to);
+        if (_to > 0) {
+          dto = _to;
+        }
+        
+        if (value.length > dto) {
+          var _val = '...' + value.substring(dfrom, dto) + '...';
           return _val;
         } else {
           return value;
