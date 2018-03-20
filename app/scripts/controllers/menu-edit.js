@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, messageService, menuFactory, dateUtility, $location, lodash, $q, $filter) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, messageService, menuFactory, dateUtility, $location, lodash, $q, $filter, $http) {
 
     var $this = this;
     $scope.selectedIndex = 0;
@@ -40,6 +40,10 @@ angular.module('ts5App')
     };
 
     $scope.isCreateOnly = function () {
+      return $routeParams.state === 'create';
+    };
+
+    $scope.isCreate = function () {
       return $routeParams.state === 'create';
     };
 
@@ -282,6 +286,30 @@ angular.module('ts5App')
       });
 
       return filterSelectedItems;
+    };
+
+    $scope.getUpdateBy = function (menu) {
+      if (menu.updatedByPerson) {
+        return menu.updatedByPerson.userName;
+      }
+
+      if (menu.createdByPerson) {
+        return menu.createdByPerson.userName;
+      }
+
+      if ($scope.isCreate()) {
+        return $http.defaults.headers.common.username;
+      }
+
+      return 'Unknown';
+    };
+
+    $scope.getUpdatedOn = function (menu) {
+      if (!menu.createdOn) {
+        return 'Unknown';
+      }
+
+      return menu.updatedOn ? dateUtility.formatTimestampForApp(menu.updatedOn) : dateUtility.formatTimestampForApp(menu.createdOn);
     };
 
     this.setFilteredMasterItems = function (dataFromAPI) {

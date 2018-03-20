@@ -199,7 +199,6 @@ angular.module('ts5App')
     this.getMenuAssignmentListSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.menuAssignments = $scope.menuAssignments.concat(response.response.map(function (menuAssignment) {
-        menuAssignment.updatedOn = (menuAssignment.updatedOn) ? dateUtility.formatDateForApp(menuAssignment.updatedOn) : null;
         menuAssignment.isExpanded = false;
         menuAssignment.selected = false;
 
@@ -245,6 +244,22 @@ angular.module('ts5App')
       $scope.isSearch = true;
 
       $scope.loadMenuAssignmentData();
+    };
+
+    $scope.getUpdateBy = function (menu) {
+      if (menu.updatedByPerson) {
+        return menu.updatedByPerson.userName;
+      }
+
+      if (menu.createdByPerson) {
+        return menu.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (menu) {
+      return menu.updatedOn ? dateUtility.formatTimestampForApp(menu.updatedOn) : dateUtility.formatTimestampForApp(menu.createdOn);
     };
 
     this.makeInitPromises = function() {

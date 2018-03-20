@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('MenuRelationshipCreateCtrl', function($scope, $location, $routeParams, $q, dateUtility, menuService,
-    catererStationService, menuCatererStationsService, messageService) {
+    catererStationService, menuCatererStationsService, messageService, $http) {
 
     var $this = this;
     $scope.formData = {
@@ -309,6 +309,34 @@ angular.module('ts5App')
       }
 
       return '';
+    };
+
+    $scope.isCreate = function () {
+      return $location.path() === '/menu-relationship-create';
+    };
+
+    $scope.getUpdateBy = function (menu) {
+      if (menu.updatedByPerson) {
+        return menu.updatedByPerson.userName;
+      }
+
+      if (menu.createdByPerson) {
+        return menu.createdByPerson.userName;
+      }
+
+      if ($scope.isCreate()) {
+        return $http.defaults.headers.common.username;
+      }
+
+      return 'Unknown';
+    };
+
+    $scope.getUpdatedOn = function (menu) {
+      if (!menu.createdOn) {
+        return 'Unknown';
+      }
+
+      return menu.updatedOn ? dateUtility.formatTimestampForApp(menu.updatedOn) : dateUtility.formatTimestampForApp(menu.createdOn);
     };
 
     this.init();
