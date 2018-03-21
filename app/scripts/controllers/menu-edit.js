@@ -12,6 +12,7 @@ angular.module('ts5App')
     var $this = this;
     $scope.selectedIndex = 0;
     $scope.lookUpDialog = false;
+    $scope.isDateChanged = true;
     $scope.masterItemTotalList = [];
 
     $scope.cloningItem = false;
@@ -433,6 +434,7 @@ angular.module('ts5App')
 
     this.editComplete = function (responseCollection) {
       $scope.categories = angular.copy(responseCollection[0].salesCategories);
+      $scope.isDateChanged = true;
       hideLoadingModal();
     };
 
@@ -455,7 +457,8 @@ angular.module('ts5App')
           $this.completeInitPromises();
         } else {
           hideLoadingModal();
-        }
+          $scope.isDateChanged = true;
+        }  
       } else {
         $this.completeInitPromises();
       }
@@ -467,6 +470,7 @@ angular.module('ts5App')
       var promises = [];
 
       if ($routeParams.id) {
+        $scope.isDateChanged = false;
         promises.push(menuFactory.getMenu($routeParams.id));
       }
 
@@ -503,7 +507,7 @@ angular.module('ts5App')
     init();
 
     $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
-      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate && $scope.isCreateOnly()) {
+      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate && $scope.isMenuEditable() && $scope.isDateChanged) {
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
       }
     });
