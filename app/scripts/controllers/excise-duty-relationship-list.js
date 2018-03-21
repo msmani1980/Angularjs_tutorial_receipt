@@ -273,11 +273,11 @@ angular.module('ts5App')
       var formattedNewRecord = formatRecordForApp(newRecordFromAPI);
       exciseDutyRelationshipFactory.getRelationship(newRecordFromAPI.id).then(
         new function (response) {
-
+          var formattedRecordFromResponse = formatRecordForApp(response);
+          $scope.itemExciseDutyList = $scope.itemExciseDutyList || [];
+          $scope.itemExciseDutyList.push(formattedRecordFromResponse);
         },
         showErrors);
-      $scope.itemExciseDutyList = $scope.itemExciseDutyList || [];
-      $scope.itemExciseDutyList.push(formattedNewRecord);
     }
 
     function validateCreateForm() {
