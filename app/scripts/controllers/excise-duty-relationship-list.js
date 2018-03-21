@@ -271,11 +271,7 @@ angular.module('ts5App')
       hideLoadingModal();
       $scope.clearCreateForm(false);
       var formattedNewRecord = formatRecordForApp(newRecordFromAPI);
-      exciseDutyRelationshipFactory.getRelationship(newRecordFromAPI.id).then(
-        new function (response) {
-
-        },
-        showErrors);
+      exciseDutyRelationshipFactory.getRelationship(newRecordFromAPI.id).then(getExciseDutyRelationshipByIdAfterCreateSuccess, showErrors);
     }
 
     function getExciseDutyRelationshipByIdAfterCreateSuccess(recordResponse) {
