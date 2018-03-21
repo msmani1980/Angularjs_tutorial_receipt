@@ -71,19 +71,19 @@ angular.module('ts5App')
     }
 
     $scope.getUpdateBy = function (relationship) {
-      if (relationship.exciseDutyUpdatedByUsername) {
-        return relationship.exciseDutyUpdatedByUsername;
+      if (relationship.updatedByPerson) {
+        return relationship.updatedByPerson.userName;
       }
 
-      if (relationship.exciseDutyCreatedByUsername) {
-        return relationship.exciseDutyCreatedByUsername;
+      if (relationship.createdByPerson) {
+        return relationship.createdByPerson.userName;
       }
 
       return '';
     };
 
     $scope.getUpdatedOn = function (relationship) {
-      return relationship.exciseDutyUpdatedOn ? dateUtility.formatTimestampForApp(relationship.exciseDutyUpdatedOn) : dateUtility.formatTimestampForApp(relationship.exciseDutyCreatedOn);
+      return relationship.updatedOn ? dateUtility.formatTimestampForApp(relationship.updatedOn) : dateUtility.formatTimestampForApp(relationship.createdOn);
     };
 
     $scope.clearCreateForm = function(shouldClearAll) {
