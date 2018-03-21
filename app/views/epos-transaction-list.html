@@ -116,34 +116,59 @@
     <table infinite-scroll="getEposTransactions()" class="table table-bordered table-hover">
     <thead>
     <tr>
-      <th><a href="#" title='link to json for files except NoData'>Status</a></th>
-      <th><a href="#" title='UTC Date Time'>Submitted</a></th>
-      <th><a href="#" title='UTC Date Time'>Started</a></th>
-      <th><a href="#" title='Processing speed if processed'>Kbps</a></th>
-      <th><a href="#" title='Total Shopping Carts in sync file'>S/C</a></th>
-      <th><a href="#" title='Json Minor Version'>Version</a></th>
-      <th><a href="#" title='Click to quoted test for expand'>Comments / Missed Fields / Error Msg</a></th>
-      <th><a href="#" title='Device Activity Id'>ActivityId</a></th>
-      <th><a href="#" title='S3 File Name'>File Name</a></th>
-      <th><a href="#" title='Flyway DB version, but not include flyway portal DB tag version'>DB</a></th>
+      <th title='link to json for files except NoData'>JSON</th>
+      <th title='UTC Date Time'>Submitted</th>
+      <th title='UTC Date Time'>Started</th>
+      <th title='Click to quoted test for expand'>Comments / Missed Fields / Error Msg</th>
+      <th title='Device Activity Id'>ID / ActivityId</th>
+      <th title='Total Shopping Carts in sync file'>S/C</th>
+      <th title='S3 File Name'>File Name</th>
+      <th title='WCF / Json Version'>Versions</th>
+      <th title='Flyway DB version, but not include flyway portal DB tag version'>DB</th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="eposTransaction in eposTransactions">
       <td><a href='{{ eposTransaction.statusHref }}' target='blank'>{{ eposTransaction.statusName }}</a> </td> 
-      <td><a href="#" title='{{ eposTransaction.utcDatetimeAgo }}'>{{ eposTransaction.utcDatetime }}</a></td>
-      <td><a href="#" title='{{ eposTransaction.startedAgo }}'>{{ eposTransaction.started }}</a></td>
-      <td>{{ eposTransaction.speed }}</td>
-      <td>{{ eposTransaction.transactions }}</td>
-      <td>{{ eposTransaction.minorVersion }}</td>
+      <td nowrap><span title='{{ eposTransaction.utcDatetimeAgo }}'>{{ eposTransaction.utcDatetime }}</span></td>
+      <td nowrap><span title='{{ eposTransaction.startedAgo }}'>{{ eposTransaction.started }}</span></td>
       <td> 
         <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="!collapsed">{{ eposTransaction.msg }}</div>
-        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="collapsed"> {{ eposTransaction.errorMsg }} {{ eposTransaction.missedFields }}<div>
+        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="collapsed"> <div>{{ eposTransaction.errorMsg }}
+          {{ eposTransaction.missedFields }}, {{ eposTransaction.speed }} kb/s</div>
+          <div>{{ eposTransaction.region }}</div>
+          <div>{{ eposTransaction.lambdaArn }}</div>
+          <div>
       </td> 
-      <td>{{ eposTransaction.deviceActivityId }}</td>
       <td>
-        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="!collapsed">{{ eposTransaction.fileNameShort }}</div>
-        <div href="#" ng-model="collapsed" ng-click="collapsed=!collapsed" ng-show="collapsed"> {{ eposTransaction.fileName }} <div>
+        <div href="#" ng-model="collapsed" ng-show="!collapsed">
+          <span title="JSON ID">{{ eposTransaction.id }}</span> / 
+          <span title="Device Activity ID">{{ eposTransaction.deviceActivityId }}</span>
+        </div>
+        <div href="#" ng-model="collapsed" ng-show="collapsed">
+          <div title="JSON ID">{{ eposTransaction.id }}</div> 
+          <div title="Device Activity ID">{{ eposTransaction.deviceActivityId }}</div>
+          <div>{{ eposTransaction.deviceType }}</div> 
+          <div title="Device">{{ eposTransaction.deviceId }}</div> 
+          <div title="Bluetooth">{{ eposTransaction.deviceAddr }}</div>
+        </div>      
+      </td>
+      <td>{{ eposTransaction.transactions }}</td>
+      <td>
+        <div href="#" ng-model="collapsed" ng-show="!collapsed">{{ eposTransaction.fileNameShort }}</div>
+        <div href="#" ng-model="collapsed" ng-show="collapsed"> {{ eposTransaction.fileName }}
+          <pre title="JSON Digest">{{ eposTransaction.digestF }}</pre> <div>
+      </td>
+      <td>
+        <div href="#" ng-model="collapsed" ng-show="!collapsed">
+          <span title="WCF Version">{{ eposTransaction.wcfVersion }}</span> {{ eposTransaction.vs }} 
+          <span title="JSON Version">{{ eposTransaction.majorv }}.{{ eposTransaction.minorVersion }}</span>
+        </div>
+        <div href="#" ng-model="collapsed" ng-show="collapsed">
+          <div title="WCF Version">{{ eposTransaction.wcfVersion }}</div> 
+          <div title="App Version">{{ eposTransaction.appVersion }}</div> 
+          <div title="JSON Version">{{ eposTransaction.majorv }}.{{ eposTransaction.minorVersion }}</div>
+        </div>
       </td>
       <td>{{ eposTransaction.dbVersion }}</td>
     </tr>
