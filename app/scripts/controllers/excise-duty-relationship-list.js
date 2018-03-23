@@ -218,8 +218,9 @@ angular.module('ts5App')
         id: responseFromAPI.id
       });
       if (angular.isDefined(recordMatchIndex) && recordMatchIndex !== null) {
-        var formattedNewRecord = formatRecordForApp(angular.copy(responseFromAPI));
-        $scope.itemExciseDutyList[recordMatchIndex] = formattedNewRecord;
+        exciseDutyRelationshipFactory.getRelationship(responseFromAPI.id).then(function (fetchResponse) {
+          $scope.itemExciseDutyList[recordMatchIndex] = formatRecordForApp(angular.copy(fetchResponse));
+        }, showErrors);
       }
     }
 
@@ -270,10 +271,10 @@ angular.module('ts5App')
     function createSuccess(newRecordFromAPI) {
       hideLoadingModal();
       $scope.clearCreateForm(false);
-      exciseDutyRelationshipFactory.getRelationship(newRecordFromAPI.id).then(getExciseDutyRelationshipByIdAfterCreateSuccess, showErrors);
+      exciseDutyRelationshipFactory.getRelationship(newRecordFromAPI.id).then(getExciseDutyRelationshipByIdAfterCreateSaveSuccess, showErrors);
     }
 
-    function getExciseDutyRelationshipByIdAfterCreateSuccess(recordResponse) {
+    function getExciseDutyRelationshipByIdAfterCreateSaveSuccess(recordResponse) {
       var formattedRecordFromResponse = formatRecordForApp(recordResponse);
       $scope.itemExciseDutyList = $scope.itemExciseDutyList || [];
       $scope.itemExciseDutyList.push(formattedRecordFromResponse);
