@@ -270,10 +270,10 @@ angular.module('ts5App')
     function createSuccess(newRecordFromAPI) {
       hideLoadingModal();
       $scope.clearCreateForm(false);
-      exciseDutyRelationshipFactory.getRelationship(newRecordFromAPI.id).then(getExciseDutyRelationshipByIdAfterCreateSuccess, showErrors);
+      exciseDutyRelationshipFactory.getRelationship(newRecordFromAPI.id).then(getExciseDutyRelationshipByIdAfterCreateSaveSuccess, showErrors);
     }
 
-    function getExciseDutyRelationshipByIdAfterCreateSuccess(recordResponse) {
+    function getExciseDutyRelationshipByIdAfterCreateSaveSuccess(recordResponse) {
       var formattedRecordFromResponse = formatRecordForApp(recordResponse);
       $scope.itemExciseDutyList = $scope.itemExciseDutyList || [];
       $scope.itemExciseDutyList.push(formattedRecordFromResponse);
