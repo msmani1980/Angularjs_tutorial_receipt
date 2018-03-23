@@ -219,8 +219,8 @@ angular.module('ts5App')
       });
       if (angular.isDefined(recordMatchIndex) && recordMatchIndex !== null) {
         exciseDutyRelationshipFactory.getRelationship(responseFromAPI.id).then(function (fetchResponse) {
-          var formattedNewRecord = formatRecordForApp(angular.copy(fetchResponse));
-          $scope.itemExciseDutyList[recordMatchIndex] = formattedNewRecord;
+          var formattedUpdatedecord = formatRecordForApp(angular.copy(fetchResponse));
+          $scope.itemExciseDutyList[recordMatchIndex] = formattedUpdatedecord;
         }, showErrors);
       }
     }
