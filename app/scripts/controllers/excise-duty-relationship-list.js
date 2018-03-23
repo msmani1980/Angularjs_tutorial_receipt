@@ -217,7 +217,7 @@ angular.module('ts5App')
       var recordMatchIndex = lodash.findIndex($scope.itemExciseDutyList, {
         id: responseFromAPI.id
       });
-      if(angular.isDefined(recordMatchIndex) && recordMatchIndex !== null) {
+      if (angular.isDefined(recordMatchIndex) && recordMatchIndex !== null) {
         exciseDutyRelationshipFactory.getRelationship(responseFromAPI.id).then(function (fetchResponse) {
           var formattedNewRecord = formatRecordForApp(angular.copy(fetchResponse));
           $scope.itemExciseDutyList[recordMatchIndex] = formattedNewRecord;
