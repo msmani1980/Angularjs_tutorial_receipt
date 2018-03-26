@@ -198,7 +198,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getStoreDetails = function() {
       return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then(function(response) {
         $scope.storeDetails = angular.copy(response);
-        $this.initWizardSteps();
+        $this.initWizardSteps($scope.storeDetails.replenishStoreInstanceId);
       }, this.errorHandler);
     };
 
