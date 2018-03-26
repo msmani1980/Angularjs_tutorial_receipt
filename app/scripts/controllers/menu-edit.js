@@ -39,6 +39,10 @@ angular.module('ts5App')
       return $routeParams.state === 'view';
     };
 
+    $scope.isCopyOnly = function () {
+      return $routeParams.state === 'copy';
+    };
+
     $scope.isCreateOnly = function () {
       return $routeParams.state === 'create';
     };

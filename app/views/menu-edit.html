@@ -72,22 +72,27 @@
              ui-on-Drop=""/>
     </div>
 
+    <div class="col-xs-12 col-sm-3 col-md-3">
+      <date-picker-field
+        ng-if="isLoadingCompleted"
+        disable="isMenuReadOnly()"
+        name="EffectiveStartDate"
+        label="Effective From"
+        disable-past="true"
+        required="true"
+        ng-model="menu.startDate">
+      </date-picker-field>
+    </div>
+
     <div class="col-xs-12 col-sm-3 col-md-3" ui-on-Drop="">
       <date-picker-field
-        ng-if="!isMenuReadOnly()"
-        name="startDate"
-        ng-model="menu.startDate"
-        label="Effective From"
-        min-date="minDate"
-        required="true">
-      </date-picker-field>
-
-      <date-picker-field
-        ng-if="isMenuReadOnly()"
-        name="startDate"
-        ng-model="menu.startDate"
-        label="Effective From"
-        disable="true"
+        ng-if="isLoadingCompleted"
+        name="endDate"
+        label="Effective To"
+        disable="isViewOnly() || shouldDisableEndDate"
+        ng-model="menu.endDate"
+        disable-past="true"
+        end-current-effective="editingItem && !isCopyOnly() && shouldDisableStartDate"
         required="true">
       </date-picker-field>
     </div>
