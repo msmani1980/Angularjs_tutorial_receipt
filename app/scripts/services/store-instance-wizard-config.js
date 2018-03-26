@@ -17,6 +17,8 @@ angular.module('ts5App')
     var reviewURL = '/store-instance-review/';
 
     function setSteps(action, id, replenishStoreInstanceId) {
+
+
       var steps = {
         dispatch: [{
           label: 'Create Store Instance',
@@ -41,7 +43,7 @@ angular.module('ts5App')
         }],
         replenish: [{
           label: 'Create Store Replenish',
-          uri: createURL + action + (replenishStoreInstanceId ? '/' + replenishStoreInstanceId : ''),
+          uri: createURL + action + (replenishStoreInstanceId ? '/' + replenishStoreInstanceId : id ? '/' + id : ''),
           controllerName: 'Create',
           stepName: '1'
         }, {
