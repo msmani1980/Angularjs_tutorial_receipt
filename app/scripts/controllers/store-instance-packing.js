@@ -943,8 +943,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return promises;
     };
 
-    this.initWizardSteps = function() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+    this.initWizardSteps = function(replenishStoreInstanceId) {
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId, replenishStoreInstanceId);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: 'Packing'
       });
