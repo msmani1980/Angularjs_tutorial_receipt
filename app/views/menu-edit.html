@@ -87,7 +87,7 @@
         ng-if="isLoadingCompleted"
         name="endDate"
         label="Effective To"
-        disable="isViewOnly() || shouldDisableEndDate"
+        disable="isViewOnly() || (shouldDisableEndDate && !isCopyOnly())"
         ng-model="menu.endDate"
         disable-past="true"
         end-current-effective="editingItem && !isCopyOnly() && shouldDisableStartDate"

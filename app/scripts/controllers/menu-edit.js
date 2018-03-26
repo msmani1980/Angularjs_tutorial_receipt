@@ -125,7 +125,7 @@ angular.module('ts5App')
         payload.id = $scope.menu.id;
       }
 
-      if ($scope.menu.menuId) {
+      if ($scope.menu.menuId && !$scope.cloningItem) {
         payload.menuId = $scope.menu.menuId;
       }
 
