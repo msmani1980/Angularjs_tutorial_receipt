@@ -40,6 +40,10 @@ angular.module('ts5App')
       return $routeParams.state === 'view';
     };
 
+    $scope.isCopyOnly = function () {
+      return $routeParams.state === 'copy';
+    };
+
     $scope.isCreateOnly = function () {
       return $routeParams.state === 'create';
     };
@@ -473,10 +477,13 @@ angular.module('ts5App')
       if (angular.isDefined(responseCollection[0])) {
         $scope.menu = angular.copy(responseCollection[0]);
 
-        if ($location.path().search('/menu/copy') !== -1 && $routeParams.id) {
-          $scope.menu.startDate = null;
-          $scope.menu.endDate = null;
-        }
+        var startDate = $scope.menu.startDate;
+        var endDate = $scope.menu.endDate;
+
+        $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
+        $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
+
+        $scope.editingItem = true;
 
         $this.deserializeMenuItems();
         if ($scope.isMenuEditable()) {
@@ -488,6 +495,8 @@ angular.module('ts5App')
       } else {
         $this.completeInitPromises();
       }
+
+      $scope.isLoadingCompleted = true;
 
       $scope.menuEditForm.$setPristine();
     }

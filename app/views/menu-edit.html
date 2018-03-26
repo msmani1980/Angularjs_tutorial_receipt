@@ -70,49 +70,32 @@
              ng-readonly="isMenuReadOnly()"/>
     </div>
 
-      <div class="col-xs-12 col-sm-3 col-md-3">
-        <date-picker-field
-          ng-if="!isMenuReadOnly()"
-          name="startDate"
-          ng-model="menu.startDate"
-          label="Effective From"
-          min-date="minDate"
-          required="true">
-        </date-picker-field>
+    <div class="col-xs-12 col-sm-3 col-md-3">
+      <date-picker-field
+        ng-if="isLoadingCompleted"
+        disable="isMenuReadOnly()"
+        name="EffectiveStartDate"
+        label="Effective From"
+        disable-past="true"
+        required="true"
+        ng-model="menu.startDate">
+      </date-picker-field>
+    </div>
 
-        <date-picker-field
-          ng-if="isMenuReadOnly()"
-          name="startDate"
-          ng-model="menu.startDate"
-          label="Effective From"
-          disable="true"
-          required="true">
-        </date-picker-field>
-      </div>
-
-      <div class="col-xs-12 col-sm-3 col-md-3" ui-on-Drop="">
-        <date-picker-field
-          ng-if="isCurrentEffectiveDate(menu)"
-          name="endDate"
-          ng-model="menu.endDate"
-          label="Effective To"
-          min-date="minDate"
-          disable="isViewOnly()"
-          custom-effective="true"
-          custom-date="menuEdit.endDate"
-          required="true">
-        </date-picker-field>
-        <date-picker-field
-          ng-if="!isCurrentEffectiveDate(menu)"
-          name="endDate"
-          ng-model="menu.endDate"
-          label="Effective To"
-          disable="isViewOnly()"
-          custom-effective="true"
-          custom-date="menuEdit.endDate"
-          required="true">
-        </date-picker-field>
-      </div>
+    <div class="col-xs-12 col-sm-3 col-md-3" ui-on-Drop="">
+      <date-picker-field
+        ng-if="isLoadingCompleted"
+        name="endDate"
+        label="Effective To"
+        disable="isViewOnly() || shouldDisableEndDate"
+        ng-model="menu.endDate"
+        disable-past="true"
+        end-current-effective="editingItem && !isCopyOnly() && shouldDisableStartDate"
+        custom-effective="true"
+        custom-date="menuEdit.endDate"
+        required="true">
+      </date-picker-field>
+    </div>
 
     <div class="form-group col-sm-12">
       <label>Description</label>
