@@ -13,6 +13,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     var $this = this;
 
+    $scope.areWizardStepsInitialized = false;
+
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     };
@@ -951,6 +953,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.currentStep = angular.copy($scope.wizardSteps[currentStepIndex]);
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
+
+      $scope.areWizardStepsInitialized = true;
     };
 
     this.initControllerVars = function() {
