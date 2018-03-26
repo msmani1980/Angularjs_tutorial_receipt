@@ -445,11 +445,6 @@ angular.module('ts5App')
       if (angular.isDefined(responseCollection[0])) {
         $scope.menu = angular.copy(responseCollection[0]);
 
-        if ($location.path().search('/menu/copy') !== -1 && $routeParams.id) {
-          $scope.menu.startDate = null;
-          $scope.menu.endDate = null;
-        }
-
         $this.deserializeMenuItems();
         if ($scope.isMenuEditable()) {
           $this.completeInitPromises();
