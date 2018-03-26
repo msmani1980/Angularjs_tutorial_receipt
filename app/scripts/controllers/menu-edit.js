@@ -463,6 +463,8 @@ angular.module('ts5App')
         $this.completeInitPromises();
       }
 
+      $scope.isLoadingCompleted = true;
+
       $scope.menuEditForm.$setPristine();
     }
 
