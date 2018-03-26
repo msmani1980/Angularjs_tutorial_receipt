@@ -445,6 +445,14 @@ angular.module('ts5App')
       if (angular.isDefined(responseCollection[0])) {
         $scope.menu = angular.copy(responseCollection[0]);
 
+        var startDate = $scope.menu.startDate;
+        var endDate = $scope.menu.endDate;
+
+        $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
+        $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
+
+        $scope.editingItem = true;
+
         $this.deserializeMenuItems();
         if ($scope.isMenuEditable()) {
           $this.completeInitPromises();
