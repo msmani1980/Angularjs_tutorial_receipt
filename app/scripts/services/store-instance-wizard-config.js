@@ -16,7 +16,7 @@ angular.module('ts5App')
     var inboundSealsURL = '/store-instance-inbound-seals/';
     var reviewURL = '/store-instance-review/';
 
-    function setSteps(action, id) {
+    function setSteps(action, id, replenishStoreInstanceId) {
       var steps = {
         dispatch: [{
           label: 'Create Store Instance',
@@ -41,7 +41,7 @@ angular.module('ts5App')
         }],
         replenish: [{
           label: 'Create Store Replenish',
-          uri: createURL + action + (id ? '/' + id : ''),
+          uri: createURL + action + (replenishStoreInstanceId ? '/' + replenishStoreInstanceId : ''),
           controllerName: 'Create',
           stepName: '1'
         }, {
@@ -126,12 +126,12 @@ angular.module('ts5App')
       return steps;
     }
 
-    function getSteps(action, id) {
+    function getSteps(action, id, replenishStoreInstanceId) {
       if (!action) {
         action = 'dispatch';
       }
 
-      var steps = setSteps(action, id);
+      var steps = setSteps(action, id, replenishStoreInstanceId);
       return steps[action];
     }
 
