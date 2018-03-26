@@ -121,7 +121,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           $scope.offLoadItemsSortOrder = '[salesCategoryName,itemName]';
           $scope.itemSortOrder = '[salesCategoryName,itemName]';
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
-          $scope.offLoadItemsSortOrder = 'itemName';	
+          $scope.offLoadItemsSortOrder = 'itemName';
           $scope.itemSortOrder = 'itemName';
         }
       });
@@ -960,7 +960,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.filteredItemsList = [];
       $scope.allowedMenuItemsForOffloadSection = [];
       $scope.allItemForGettingSalesCategory = [];
-      
+
       if ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') {
         $scope.offloadListItems = [];
         $scope.newOffloadListItems = [];
@@ -976,7 +976,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.init = function() {
       $scope.readOnly = true;
       $this.showLoadingModal('Loading Store Detail for Packing...');
-      $this.initWizardSteps();
       $this.initControllerVars();
       var promises = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies, handleResponseError);
