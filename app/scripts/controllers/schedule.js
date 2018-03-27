@@ -326,12 +326,12 @@ angular.module('ts5App')
 
     $scope.$watchGroup(['schedule.startDate', 'schedule.endDate'], function() {
       if ($scope.schedule.startDate && $scope.schedule.endDate) {
-        var relationshipPayload = {
+        var payload = {
           startDate: dateUtility.formatDateForAPI($scope.schedule.startDate),
           endDate: dateUtility.formatDateForAPI($scope.schedule.endDate)
         };
 
-        companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get(), relationshipPayload).then($this.setSupplierCompanies);
+        scheduleFactory.getStationList(companyId, 0, payload).then($this.getStationsSuccess);
       }
     });
 
