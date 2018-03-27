@@ -17,8 +17,6 @@ angular.module('ts5App')
     var reviewURL = '/store-instance-review/';
 
     function setSteps(action, id, replenishStoreInstanceId) {
-
-
       var steps = {
         dispatch: [{
           label: 'Create Store Instance',
