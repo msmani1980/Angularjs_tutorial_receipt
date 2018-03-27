@@ -324,4 +324,21 @@ angular.module('ts5App')
 
     this.init();
 
+    $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
+      if ($scope.formData.startDate && $scope.formData.endDate) {
+        itemsFactory.getDiscountList({
+          discountTypeId: 4,
+          startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
+        }).then($this.setDiscountList);
+
+        var relationshipPayload = {
+          startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
+        };
+
+        companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get(), relationshipPayload).then($this.setSupplierCompanies);
+      }
+    });
+
   });
