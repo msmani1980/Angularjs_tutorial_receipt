@@ -564,6 +564,7 @@ angular.module('ts5App')
         draggedMenuItemObject = null;
         for (var i = 0; i < array.length; i++)
         {
+          console.log('Priting the Qty>>>' + array[i].itemQty);
           array[i].sortOrderIndex = i;
           array[i].sortOrder = i;
         }
