@@ -324,7 +324,7 @@ angular.module('ts5App')
 
     this.init();
 
-    $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
+    $scope.$watchGroup(['schedule.startDate', 'schedule.endDate'], function() {
       if ($scope.formData.startDate && $scope.formData.endDate) {
         itemsFactory.getDiscountList({
           discountTypeId: 4,
