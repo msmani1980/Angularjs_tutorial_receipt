@@ -668,7 +668,7 @@ angular.module('ts5App')
     }
 
     function setupSteps() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId, null);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: 'Review'
       });

@@ -750,7 +750,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId, null);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       this.displayLoadingModal('Loading Seals for Store Instance');
       this.getStoreDetails();
       this.setStepTwoFromStepOne();
