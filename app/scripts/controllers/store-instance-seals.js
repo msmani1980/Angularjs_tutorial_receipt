@@ -144,6 +144,7 @@ angular.module('ts5App')
         $this.prevInstanceNextStep = angular.copy(Math.abs(parseInt($scope.wizardSteps[currentStepIndex].storeOne.stepName) +
           1).toString());
       }
+      
       $scope.areWizardStepsInitialized = true;
     };
 
