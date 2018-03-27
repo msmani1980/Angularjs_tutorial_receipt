@@ -43,7 +43,7 @@ angular.module('ts5App')
         }],
         replenish: [{
           label: 'Create Store Replenish',
-          uri: createURL + action + (replenishStoreInstanceId ? '/' + replenishStoreInstanceId : id ? '/' + id : ''),
+          uri: createURL + formatUrlWIthReplenishStoreInstanceIdIfDefined(action, id, replenishStoreInstanceId),
           controllerName: 'Create',
           stepName: '1'
         }, {
