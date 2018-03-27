@@ -211,6 +211,7 @@ angular.module('ts5App')
       });
 
       $scope.filterAllItemLists();
+      $scope.hasExpiredItems = isAnyMenuItemExpired();
     };
 
     $scope.addItem = function () {
@@ -387,7 +388,7 @@ angular.module('ts5App')
       angular.element('#sales-categories').modal('hide');
     };
 
-    $scope.setMasterItemName = function (masterItem) {
+    $scope.setMasterItem = function (masterItem) {
       var id = masterItem.id;
       var itemName = masterItem.itemName;
 
