@@ -128,6 +128,10 @@ angular.module('ts5App')
       return steps;
     }
 
+    function formatUrlWIthReplenishStoreInstanceIdIfDefined(id, replenishStoreInstanceId) {
+      return (replenishStoreInstanceId ? '/' + replenishStoreInstanceId : id ? '/' + id : '');
+    }
+
     function getSteps(action, id, replenishStoreInstanceId) {
       if (!action) {
         action = 'dispatch';
