@@ -75,10 +75,10 @@ angular.module('ts5App')
 
     this.getSalesCategoryName = function(itemMasterId) {
       var menuMatches = lodash.findWhere(_menuItems, { itemMasterId: itemMasterId });
-        
+
       if (menuMatches) {
         return menuMatches.salesCategoryName;
-      } else { 
+      } else {
         var menuMatchesNew = lodash.findWhere($scope.allItemForGettingSalesCategory, { itemMasterId: itemMasterId });
         if (menuMatchesNew) {
           return menuMatchesNew.salesCategoryName;
@@ -268,7 +268,7 @@ angular.module('ts5App')
     }
 
     function getStepsForStoreOne() {
-      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps('end-instance', $routeParams.storeId);
+      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps('end-instance', $routeParams.storeId, null);
       var currentStepIndex = lodash.findIndex($scope.prevInstanceWizardSteps, {
         controllerName: 'Packing'
       });
@@ -668,7 +668,7 @@ angular.module('ts5App')
     }
 
     function setupSteps() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId, null);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: 'Review'
       });
@@ -706,7 +706,7 @@ angular.module('ts5App')
       }, showResponseErrors);
 
     };
-    
+
     this.setSortByOptionForCompany = function (dataFromAPI) {
       var preferencesArray = angular.copy(dataFromAPI.preferences);
 
@@ -719,7 +719,7 @@ angular.module('ts5App')
       });
 
     };
-        
+
     this.getActiveCompanyPreferences = function () {
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
