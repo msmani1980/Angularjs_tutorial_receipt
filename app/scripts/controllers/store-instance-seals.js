@@ -106,6 +106,7 @@ angular.module('ts5App')
 
     this.setStoreDetails = function(storeDetailsJSON) {
       $scope.storeDetails = angular.copy(storeDetailsJSON);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId, $scope.storeDetails.replenishStoreInstanceId);
       $this.getSealTypesDependencies();
       $this.setWizardSteps();
       $this.isInstanceReadOnly();
@@ -750,7 +751,6 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       this.displayLoadingModal('Loading Seals for Store Instance');
       this.getStoreDetails();
       this.setStepTwoFromStepOne();
