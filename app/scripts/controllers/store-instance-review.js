@@ -31,6 +31,8 @@ angular.module('ts5App')
 
     $scope.saveButtonText = 'Exit';
 
+    $scope.areWizardStepsInitialized = false;
+
     $scope.isActionState = function(actionState) {
       return $routeParams.action === actionState;
     };
@@ -674,6 +676,7 @@ angular.module('ts5App')
         controllerName: 'Review'
       });
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
+      $scope.areWizardStepsInitialized = true;
     }
 
     function getDataFromAPI() {
