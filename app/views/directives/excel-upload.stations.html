@@ -1,0 +1,31 @@
+<div class="modal fade info-import-model" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content text-left">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span class="fa fa-close"></span></button>
+        <h4 class="modal-title">Understanding the Excel Template</h4>
+      </div>
+      <div class="modal-body">
+        <p>The file is an Excel (.xls, .xlsx) file and has only one sheet.<br>
+          The first line should be the header with the column names.
+        </p>
+
+        <p><b>The column order and name should match the following:</b></p>
+        <ul>
+          <li><b>Station Code</b> – Required. Alphanumeric and 20 characters maximum allowed.
+          </li>
+          <li><b>Effective From</b> – Required. Effective Date of the Station, Format = yyyymmdd.
+          </li>
+          <li><b>Effective To</b> – Required. End Date of the Station, Format = yyyymmdd.
+          </li>
+          <li><b>Catering Station</b> – Required. Boolean value. Format = yes or no.
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/stationUpload.xlsx" class="btn btn-info"> <i class="fa fa-download"></i> Download Template</a>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideModalImportInfo()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
