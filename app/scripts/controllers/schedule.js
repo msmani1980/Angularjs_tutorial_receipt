@@ -276,12 +276,7 @@ angular.module('ts5App')
     };
 
     this.getStationsSuccess = function(response) {
-      var newStationList = $scope.stationList.concat(angular.copy(response.response));
-      $scope.stationList = lodash.uniq(newStationList, 'stationId');
-
-      if (response.meta.start === 0 && response.meta.limit < response.meta.count) {
-        scheduleFactory.getStationList(companyId, response.meta.limit).then($this.getStationsSuccess);
-      }
+      $scope.stationList = lodash.uniq(angular.copy(response.response), 'stationId');
     };
 
     this.getCarrierTypesSuccess = function(response) {
@@ -323,5 +318,16 @@ angular.module('ts5App')
     };
 
     this.init();
+
+    $scope.$watchGroup(['schedule.startDate', 'schedule.endDate'], function() {
+      if ($scope.schedule.startDate && $scope.schedule.endDate) {
+        var payload = {
+          startDate: dateUtility.formatDateForAPI($scope.schedule.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.schedule.endDate)
+        };
+
+        scheduleFactory.getStationList(companyId, undefined, payload).then($this.getStationsSuccess);
+      }
+    });
 
   });
