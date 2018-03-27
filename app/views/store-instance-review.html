@@ -1,6 +1,6 @@
 <div class="container">
 
-  <step-wizard steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()" save-trigger="exit()" disabled="actionNotAllowed" save-button-text="saveButtonText"></step-wizard>
+  <step-wizard ng-if="areWizardStepsInitialized" steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()" save-trigger="exit()" disabled="actionNotAllowed" save-button-text="saveButtonText"></step-wizard>
   <lose-data-alert show-alert="showLoseDataAlert" confirm-trigger="loseDataAlertConfirmTrigger()"></lose-data-alert>
 
   <error-dialog form-object="reviewStoreInstanceForm" error-response="errorResponse" display="displayError">
@@ -31,7 +31,7 @@
           </accordion-heading>
           <div class="row">
       	  	<div class="col-xs-8 text-right">
-          	<span>Sort By</span> 
+          	<span>Sort By</span>
  	  	     </div>
         	 <div class="col-xs-2 text-right" >
   		     <select
@@ -44,7 +44,7 @@
           		<option value="itemName">Item Name</option>
   	     		</select>
 	 	        </div>
-          
+
             <div class="col-xs-2 text-right">
               <button type="button" class="btn btn-info" ng-click="redirectTo('Packing')">Edit</button>
             </div>
