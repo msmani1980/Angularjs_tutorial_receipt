@@ -33,12 +33,12 @@ angular.module('ts5App')
       return schedulesService.deleteSchedule(companyId, scheduleId);
     };
 
-    var getStationList = function (id, offset) {
+    var getStationList = function (id, offset, payload) {
       if (offset) {
-        return stationsService.getStationList(id, offset);
+        return stationsService.getStationList(id, offset, payload);
       }
 
-      return stationsService.getStationList(id);
+      return stationsService.getStationList(id, offset, payload);
     };
 
     var getCarrierNumbers = function(id, carrierType, payload) {
