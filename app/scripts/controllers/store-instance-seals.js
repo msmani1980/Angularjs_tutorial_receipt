@@ -107,7 +107,7 @@ angular.module('ts5App')
     this.setStoreDetails = function(storeDetailsJSON) {
       $scope.storeDetails = angular.copy(storeDetailsJSON);
       $this.getSealTypesDependencies();
-      $this.setWizardSteps();
+      $this.setWizardSteps($scope.storeDetails.replenishStoreInstanceId);
       $this.isInstanceReadOnly();
       $scope.formData.note = $scope.storeDetails.note;
       $scope.formData.tampered = $scope.storeDetails.tampered;
@@ -127,7 +127,9 @@ angular.module('ts5App')
       $scope.existingSeals = dataFromAPI.response;
     };
 
-    this.setWizardSteps = function() {
+    this.setWizardSteps = function(replenishStoreInstanceId) {
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId, replenishStoreInstanceId);
+
       var controllerName = 'Seals';
       if ($this.isInboundDuringRedispatch()) {
         controllerName = 'InboundSeals';
@@ -142,6 +144,7 @@ angular.module('ts5App')
         $this.prevInstanceNextStep = angular.copy(Math.abs(parseInt($scope.wizardSteps[currentStepIndex].storeOne.stepName) +
           1).toString());
       }
+      $scope.areWizardStepsInitialized = true;
     };
 
     this.getSealColors = function() {
@@ -750,7 +753,6 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       this.displayLoadingModal('Loading Seals for Store Instance');
       this.getStoreDetails();
       this.setStepTwoFromStepOne();

@@ -11,7 +11,7 @@
 
   <form name="storeInstancePackingForm" class="form">
 
-    <step-wizard steps="wizardSteps" save-trigger="submit(false)" prev-trigger="goToPreviousStep()"
+    <step-wizard ng-if="areWizardStepsInitialized" steps="wizardSteps" save-trigger="submit(false)" prev-trigger="goToPreviousStep()"
                  save-button-text="saveButtonName"></step-wizard>
 
 
