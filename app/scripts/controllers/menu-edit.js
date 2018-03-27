@@ -211,6 +211,7 @@ angular.module('ts5App')
       });
 
       $scope.filterAllItemLists();
+      $scope.hasExpiredItems = isAnyMenuItemExpired();
     };
 
     $scope.addItem = function () {
