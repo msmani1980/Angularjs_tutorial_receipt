@@ -633,6 +633,7 @@ angular.module('ts5App')
 
     function storeDetailsResponseHandler(responseArray) {
       $scope.storeDetails = angular.copy(responseArray[0]);
+      setupSteps($scope.storeDetails.replenishStoreInstanceId);
       $scope.ullageReasonList = angular.copy(responseArray[1].companyReasonCodes);
       $this.countTypes = angular.copy(responseArray[2]);
       checkOnValidStatus();
@@ -678,7 +679,6 @@ angular.module('ts5App')
     function getDataFromAPI() {
       var promiseArray = [];
       displayLoadingModal();
-      setupSteps();
 
       promiseArray.push(storeInstanceFactory.getStoreDetails($routeParams.storeId));
       promiseArray.push(storeInstanceFactory.getReasonCodeList());
