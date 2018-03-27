@@ -331,7 +331,7 @@ angular.module('ts5App')
           endDate: dateUtility.formatDateForAPI($scope.schedule.endDate)
         };
 
-        scheduleFactory.getStationList(companyId, 0, payload).then($this.getStationsSuccess);
+        scheduleFactory.getStationList(companyId, undefined, payload).then($this.getStationsSuccess);
       }
     });
 
