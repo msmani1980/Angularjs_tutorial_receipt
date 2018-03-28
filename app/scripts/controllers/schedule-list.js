@@ -250,11 +250,11 @@ angular.module('ts5App')
       });
     };
 
-    $scope.$watchGroup(['schedule.startDate', 'schedule.endDate'], function() {
-      if ($scope.schedule.startDate && $scope.schedule.endDate) {
+    $scope.$watchGroup(['search.startDate', 'search.endDate'], function() {
+      if ($scope.search.startDate && $scope.search.endDate) {
         var payload = {
-          startDate: dateUtility.formatDateForAPI($scope.schedule.startDate),
-          endDate: dateUtility.formatDateForAPI($scope.schedule.endDate)
+          startDate: dateUtility.formatDateForAPI($scope.search.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.search.endDate)
         };
 
         scheduleFactory.getStationList(companyId, undefined, payload).then($this.getStationsSuccess);
