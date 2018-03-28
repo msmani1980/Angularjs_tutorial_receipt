@@ -138,7 +138,7 @@
                 <label for="arrival-station">Arrival Station</label>
                 <ui-select id="arrival-station" multiple ng-model="multiSelectedValues.arrStations" theme="bootstrap">
                   <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
-                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                  <ui-select-choices repeat="station in stationList | filter: $select.search | orderBy: 'stationCode'">
                     {{ station.stationCode }} ({{ station.stationName }})
                   </ui-select-choices>
                 </ui-select>
