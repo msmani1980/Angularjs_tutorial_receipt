@@ -90,12 +90,7 @@ angular.module('ts5App')
     };
 
     this.getStationsSuccess = function(response) {
-      var newStationList = $scope.stationList.concat(angular.copy(response.response));
-      $scope.stationList = lodash.uniq(newStationList, 'stationId');
-
-      if (response.meta.start === 0 && response.meta.limit < response.meta.count) {
-        postTripFactory.getStationList(companyId, response.meta.limit).then($this.getStationsSuccess);
-      }
+      $scope.stationList = lodash.uniq(angular.copy(response.response), 'stationId');
     };
 
     this.getCarrierSuccess = function(response) {
