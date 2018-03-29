@@ -64,6 +64,10 @@ angular.module('ts5App')
       $location.path('menu/edit/' + menu.id);
     };
 
+    $scope.copyMenu = function(menu) {
+      $location.path('menu/copy/' + menu.id);
+    };
+
     var loadingProgress = false;
     var attachMenuListToScope = function(menuListFromAPI) {
       $this.meta.count = $this.meta.count || menuListFromAPI.meta.count;
@@ -176,6 +180,22 @@ angular.module('ts5App')
       }
 
       return !dateUtility.isAfterTodayDatePicker(menu.startDate);
+    };
+
+    $scope.getUpdateBy = function (menu) {
+      if (menu.updatedByPerson) {
+        return menu.updatedByPerson.userName;
+      }
+
+      if (menu.createdByPerson) {
+        return menu.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (menu) {
+      return menu.updatedOn ? dateUtility.formatTimestampForApp(menu.updatedOn) : dateUtility.formatTimestampForApp(menu.createdOn);
     };
 
     function initializeList() {

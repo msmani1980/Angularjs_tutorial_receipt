@@ -106,6 +106,8 @@
         <th>Catering Stations</th>
         <th>Start Date</th>
         <th>End Date</th>
+        <th>Updated Date/Time</th>
+        <th>Updated User</th>
         <th>Actions</th>
       </tr>
 
@@ -124,7 +126,8 @@
         <td> <span class="label label-info" ng-repeat="(stationKey,station) in relationship.stations track by stationKey" ng-show="!!station.code"> {{ station.code }} </span> </td>
         <td>{{ relationship.startDate }}</td>
         <td>{{ relationship.endDate }}</td>
-
+        <td>{{ getUpdatedOn(relationship) }}</td>
+        <td>{{ getUpdateBy(relationship) }}</td>
         <td>
 
           <a class="btn btn-info btn-xs btn-view" ng-href="#/menu-relationship-view/{{relationship.id}}">

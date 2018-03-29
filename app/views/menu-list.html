@@ -74,6 +74,8 @@
       <th>Description</th>
       <th>Effective From</th>
       <th>Effective To</th>
+      <th>Updated Date/Time</th>
+      <th>Updated User</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -85,12 +87,17 @@
       <td>{{ menu.description }}</td>
       <td>{{ menu.startDate }}</td>
       <td>{{ menu.endDate }}</td>
+      <td>{{ getUpdatedOn(menu) }}</td>
+      <td>{{ getUpdateBy(menu) }}</td>
       <td>
         <button class="btn btn-info btn-xs" ng-click="showMenu(menu)">
           <i class="fa fa-file"></i>
         </button>
         <button class="btn btn-primary btn-xs" ng-click="editMenu(menu)" ng-show="isCRUD && isMenuEditable(menu)">
           <i class="fa fa-pencil"></i>
+        </button>
+        <button class="btn btn-warning btn-xs" ng-click="copyMenu(menu)" ng-show="isCRUD">
+          <i class="fa fa-copy"></i>
         </button>
         <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menu)" ng-hide="!isCRUD || isMenuReadOnly(menu)">
           <i class="fa fa-trash"></i>

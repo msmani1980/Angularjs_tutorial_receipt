@@ -31,7 +31,7 @@
 
         <div class="col-xs-6 text-right">
           <a class="btn btn-default" ng-href="#/menu-list" class="btn">Back</a>
-          <button ng-hide="isMenuViewOnly()" class="btn btn-success" ng-click="submitForm()">
+          <button ng-hide="isMenuViewOnly()" ng-disabled="hasExpiredItems" class="btn btn-success" ng-click="submitForm()">
             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <span class="hidden-xs">Save</span>
           </button>
@@ -72,43 +72,27 @@
              ui-on-Drop=""/>
     </div>
 
-    <div class="col-xs-12 col-sm-3 col-md-3" ui-on-Drop="">
+    <div class="col-xs-12 col-sm-3 col-md-3">
       <date-picker-field
-        ng-if="!isMenuReadOnly()"
-        name="startDate"
-        ng-model="menu.startDate"
+        ng-if="isLoadingCompleted"
+        disable="isMenuReadOnly()"
+        name="EffectiveStartDate"
         label="Effective From"
-        min-date="minDate"
-        required="true">
-      </date-picker-field>
-
-      <date-picker-field
-        ng-if="isMenuReadOnly()"
-        name="startDate"
-        ng-model="menu.startDate"
-        label="Effective From"
-        disable="true"
-        required="true">
+        disable-past="true"
+        required="true"
+        ng-model="menu.startDate">
       </date-picker-field>
     </div>
 
     <div class="col-xs-12 col-sm-3 col-md-3" ui-on-Drop="">
       <date-picker-field
-        ng-if="isCurrentEffectiveDate(menu)"
+        ng-if="isLoadingCompleted"
         name="endDate"
-        ng-model="menu.endDate"
         label="Effective To"
-        min-date="minDate"
-        disable="isViewOnly()"
-        end-current-effective="true"
-        required="true">
-      </date-picker-field>
-      <date-picker-field
-        ng-if="!isCurrentEffectiveDate(menu)"
-        name="endDate"
+        disable="isViewOnly() || (shouldDisableEndDate && !isCopyOnly())"
         ng-model="menu.endDate"
-        label="Effective To"
-        disable="isViewOnly()"
+        disable-past="true"
+        end-current-effective="editingItem && !isCopyOnly() && shouldDisableStartDate"
         required="true">
       </date-picker-field>
     </div>
@@ -123,6 +107,16 @@
              placeholder="ITM001"
              ng-readonly="isMenuReadOnly()"
              ui-on-Drop=""/>
+    </div>
+
+    <div class="form-group col-sm-3" ng-hide="true">
+      <label>Updated User</label><br />
+      {{ getUpdateBy(menu) }}
+    </div>
+
+    <div class="form-group col-sm-3" ng-hide="isCreate() || true">
+      <label>Updated Date/Time</label><br />
+      {{ getUpdatedOn(menu) }}
     </div>
 
     <h3>Menu Items
@@ -167,7 +161,7 @@
                 		<i class="fa fa-info-circle"></i>
               		</button>
             	</div>
-            </div>	
+            </div>
             <!--<ui-select
               name="selectedCategories[item.menuIndex]"
               ng-model="selectedCategories[item.menuIndex]"
@@ -197,7 +191,8 @@
                 		<i class="fa fa-info-circle"></i>
               		</button>
             	</div>
-            </div>	
+            </div>
+            <div ng-if="menuItemList[item.menuIndex].isExpired && !isMenuViewOnly()" style="color:red">This menu item expired!</div>
             <!--<ui-select
               name="menuItem"
               required="true"
@@ -222,6 +217,7 @@
                    name="menuItem-{{$index}}"
                    ng-model="item.selectedItem.itemName"
                    ng-disabled="!isMenuEditable()"/>
+            <div ng-if="!isMenuViewOnly() && !item.selectedItem.hasActiveItemVersions" style="color:red">This menu item expired!</div>
           </td>
           <td>
             <input custom-validity
@@ -254,11 +250,11 @@
       	<div class="row">
       		<div class="col-xs-8">
         		<h4 class="modal-title">Lookup Sales Categories</h4>
-        	</div>	
+        	</div>
         	<div class="col-xs-4 text-right">
         		<button class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
-        	</div>	
-        </div>	
+        	</div>
+        </div>
       </div>
       <div class="modal-body">
         <div class="table-responsive">
@@ -302,11 +298,11 @@
         <div class="row">
       		<div class="col-xs-8">
         		<h4 class="modal-title">Lookup Valid Items</h4>
-        	</div>	
+        	</div>
         	<div class="col-xs-4 text-right">
         		<button class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
-        	</div>	
-        </div>	
+        	</div>
+        </div>
       </div>
       <div class="modal-body">
         <div class="table-responsive">
@@ -333,7 +329,7 @@
               <td>{{ masterItem.itemCode }}</td>
               <td>
                 <a class="btn btn-info btn-xs btn-block" tabindex="0" ng-disabled="masterItem.isDisabled"
-                   ng-click="!masterItem.isDisabled && setMasterItemName(masterItem.itemName, masterItem.id)">
+                   ng-click="!masterItem.isDisabled && setMasterItem(masterItem)">
                   <i class="fa fa-check-circle"></i>
                 </a>
               </td>
