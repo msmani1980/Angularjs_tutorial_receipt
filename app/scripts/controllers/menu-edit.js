@@ -473,6 +473,7 @@ angular.module('ts5App')
         {
           array[i].sortOrderIndex = i;
           array[i].sortOrder = i;
+          array[i].menuIndex = i;
         }
       } else
         {
