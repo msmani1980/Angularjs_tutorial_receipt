@@ -1214,7 +1214,7 @@ angular.module('ts5App')
           bankRefNumber: cashBag.bankReferenceNumber,
           isDeleted: cashBag.delete === true,
           deletedByUser: (cashBag.updatedByPerson) ? cashBag.updatedByPerson.userName : 'Unknown',
-          deletedOn: dateUtility.formatDateForApp(cashBag.updatedOn),
+          deletedOn: dateUtility.formatTimestampForApp(cashBag.updatedOn),
           isManual: (cashBag.originationSource === 2 && cashBag.eposCashbagId === null),
           scheduleNumber: cashBag.scheduleNumber,
           scheduleDate: dateUtility.formatTimestampForApp(cashBag.scheduleDate),
