@@ -70,7 +70,7 @@
               <select class="form-control"
                       name="departureStation"
                       ng-model="schedule.departureStationId"
-                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList | orderBy: 'stationCode'"
                       ng-disabled="isDisabled()"
                       required="true"
                       required
@@ -103,7 +103,7 @@
               <select class="form-control"
                       name="arrivalStation"
                       ng-model="schedule.arrivalStationId"
-                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList | orderBy: 'stationCode'"
                       ng-disabled="isDisabled()"
                       required
                       required="true"
