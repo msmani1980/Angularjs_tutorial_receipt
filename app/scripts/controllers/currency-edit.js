@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CurrencyEditCtrl', function($scope, currencyFactory, globalMenuService, dateUtility, payloadUtility,
-    messageService, accessService) {
+    messageService, accessService, $http) {
 
     var $this = this;
     $scope.viewName = 'Retail Company Currency & Denomination Setup';
@@ -276,6 +276,30 @@ angular.module('ts5App')
       currency.selectedEasyPayDenominations = currency.selectedEasyPayDenominations.filter(function(el) {
         return currency.selectedDenominations.indexOf(el) > 0;
       });
+    };
+
+    $scope.getUpdateBy = function (row) {
+      if (row.updatedByPerson) {
+        return row.updatedByPerson.userName;
+      }
+
+      if (row.createdByPerson) {
+        return row.createdByPerson.userName;
+      }
+
+      if (row.isNew) {
+        return $http.defaults.headers.common.username;
+      }
+
+      return 'Unknown';
+    };
+
+    $scope.getUpdatedOn = function (row) {
+      if (!row.createdOn) {
+        return 'Unknown';
+      }
+
+      return row.updatedOn ? dateUtility.formatTimestampForApp(row.updatedOn) : dateUtility.formatTimestampForApp(row.createdOn);
     };
 
     this.init = function() {
