@@ -286,6 +286,8 @@ angular.module('ts5App')
         var itemMatch = lodash.findWhere($scope.menuItemList, { itemId: masterItem.id });
         if (itemMatch) {
           masterItem.isDisabled = true;
+        } else {
+          masterItem.isDisabled = false;
         }
 
         filterSelectedItems.push(masterItem);
