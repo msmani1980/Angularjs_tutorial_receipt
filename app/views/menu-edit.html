@@ -324,7 +324,7 @@
               <th>Item Code</th>
               <th></th>
             </tr>
-            <tr ng-repeat="masterItem in masterItemList | filter: {itemName: masterItemsListSearch} | filter: {isDisabled: true} | orderBy:'itemName'">
+            <tr ng-repeat="masterItem in masterItemList | filter: {itemName: masterItemsListSearch} | filter: {isDisabled: false} | orderBy:'itemName'">
               <td>{{ masterItem.itemName }}</td>
               <td>{{ masterItem.itemCode }}</td>
               <td>
