@@ -309,6 +309,10 @@ angular.module('ts5App')
       return $scope.deliveryNote !== 'undefined' && $scope.deliveryNote !== null && $scope.deliveryNote.deliveryDate !== undefined && $scope.deliveryNote.deliveryDate !== null;
     };
 
+    $scope.$watch('deliveryNote.deliveryDate', function () {
+      console.log('watching change.')
+    }, true);
+
     function generateSavePayload(_isAccepted) {
       $scope.clearFilter();
       removeNullDeliveredItems();
