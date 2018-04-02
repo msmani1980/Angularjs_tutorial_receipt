@@ -305,6 +305,10 @@ angular.module('ts5App')
       }
     }
 
+    $scope.isDeliveryDateSelected = function () {
+      return $scope.deliveryNote !== 'undefined' && $scope.deliveryNote !== null && $scope.deliveryNote.deliveryDate !== 'undefined';
+    };
+
     function generateSavePayload(_isAccepted) {
       $scope.clearFilter();
       removeNullDeliveredItems();
