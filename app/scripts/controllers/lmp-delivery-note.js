@@ -618,6 +618,16 @@ angular.module('ts5App')
       return deliveryNoteFactory.getMasterItems(payload).then(resolveAndCompleteLastInit, showResponseErrors);
     }
 
+    function getCatererStationsForDeliveryDate() {
+      if(isDeliveryDateSelected()) {
+        var catererStationsPayload = {
+          startDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate)
+        };
+
+        deliveryNoteFactory.getCatererStationList(catererStationsPayload)
+      }
+    }
+
     function setDeliveryNoteFromResponse(response) {
       $scope.deliveryNote = angular.copy(response);
       $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, 'itemName');
