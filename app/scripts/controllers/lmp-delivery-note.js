@@ -670,6 +670,8 @@ angular.module('ts5App')
         initPromises.push(deliveryNoteFactory.getDeliveryNote($routeParams.id));
       }
 
+      $scope.catererStationList = [];
+
       return initPromises;
     }
 
