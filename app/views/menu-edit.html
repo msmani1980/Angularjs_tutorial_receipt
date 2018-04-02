@@ -192,7 +192,7 @@
               		</button>
             	</div>
             </div>
-            <div ng-if="menuItemList[item.menuIndex].isExpired && !isMenuViewOnly()" style="color:red">This menu item expired!</div>
+            <div ng-if="menuItemList[item.menuIndex].isExpired && !isMenuViewOnly()" style="color:red">This Item Expired</div>
             <!--<ui-select
               name="menuItem"
               required="true"
@@ -324,7 +324,7 @@
               <th>Item Code</th>
               <th></th>
             </tr>
-            <tr ng-repeat="masterItem in masterItemList | filter: {itemName: masterItemsListSearch} | orderBy:'itemName'">
+            <tr ng-repeat="masterItem in masterItemList | filter: {itemName: masterItemsListSearch} | filter: {isDisabled: false} | orderBy:'itemName'">
               <td>{{ masterItem.itemName }}</td>
               <td>{{ masterItem.itemCode }}</td>
               <td>
