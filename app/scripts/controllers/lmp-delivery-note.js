@@ -624,8 +624,12 @@ angular.module('ts5App')
           startDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate)
         };
 
-        deliveryNoteFactory.getCatererStationList(catererStationsPayload)
+        deliveryNoteFactory.getCatererStationList(catererStationsPayload).then(setCatererStationsList, showResponseErrors);
       }
+    }
+
+    function setCatererStationsList(apiResponse) {
+      $scope.catererStationList = angular.copy(apiResponse.response);
     }
 
     function setDeliveryNoteFromResponse(response) {
