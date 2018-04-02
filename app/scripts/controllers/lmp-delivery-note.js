@@ -310,7 +310,11 @@ angular.module('ts5App')
     };
 
     $scope.$watch('deliveryNote.deliveryDate', function () {
-      getCatererStationsForDeliveryDate();
+      if($scope.isDeliveryDateSelected()) {
+        getCatererStationsForDeliveryDate();
+      } else {
+        $scope.catererStationList = [];
+      }
     }, true);
 
     function generateSavePayload(_isAccepted) {
