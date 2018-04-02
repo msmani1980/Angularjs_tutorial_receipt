@@ -624,6 +624,7 @@ angular.module('ts5App')
 
         var catererStationsPayload = {
           startDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate),
+          endDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate),
           limit: null
         };
 
