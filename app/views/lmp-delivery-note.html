@@ -54,7 +54,7 @@
                       name="LMP Station"
                       id="lmp-station"
                       ng-model="deliveryNote.catererStationId"
-                      ng-disabled="!isDeliveryDateSelected() || isLMPStationIsDisabled()"
+                      ng-disabled="!isDeliveryDateSelected() || isLMPStationIsDisabled() || catererStationListIsBeingLoaded"
                       ng-show="catererStationList.length"
                       ng-options="station.id as (station.name + ' - ' + station.code) for station in catererStationList | orderBy: 'name'"
                       required="true">

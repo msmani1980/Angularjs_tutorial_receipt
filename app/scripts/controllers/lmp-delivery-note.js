@@ -620,6 +620,8 @@ angular.module('ts5App')
 
     function getCatererStationsForDeliveryDate() {
       if($scope.isDeliveryDateSelected()) {
+        $scope.catererStationListIsBeingLoaded = true;
+
         var catererStationsPayload = {
           startDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate),
           limit: null
@@ -631,6 +633,7 @@ angular.module('ts5App')
 
     function setCatererStationsList(apiResponse) {
       $scope.catererStationList = angular.copy(apiResponse.response);
+      $scope.catererStationListIsBeingLoaded = false;
     }
 
     function setDeliveryNoteFromResponse(response) {
@@ -685,6 +688,7 @@ angular.module('ts5App')
       $scope.readOnly = $scope.state === 'view';
       $scope.disableActions = $scope.state === 'view';
       $scope.hideReview = $scope.state === 'view';
+      $scope.catererStationListIsBeingLoaded = false;
 
       var viewNameForAction = {
         view: 'View Delivery Note',
