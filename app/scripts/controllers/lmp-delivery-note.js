@@ -621,7 +621,8 @@ angular.module('ts5App')
     function getCatererStationsForDeliveryDate() {
       if($scope.isDeliveryDateSelected()) {
         var catererStationsPayload = {
-          startDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate)
+          startDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate),
+          limit: null
         };
 
         deliveryNoteFactory.getCatererStationList(catererStationsPayload).then(setCatererStationsList, showResponseErrors);
