@@ -54,7 +54,7 @@
                       name="LMP Station"
                       id="lmp-station"
                       ng-model="deliveryNote.catererStationId"
-                      ng-disabled="isLMPStationIsDisabled()"
+                      ng-disabled="!isDeliveryDateSelected() || isLMPStationIsDisabled()"
                       ng-show="catererStationList.length"
                       ng-options="station.id as (station.name + ' - ' + station.code) for station in catererStationList | orderBy: 'name'"
                       required="true">
@@ -77,7 +77,7 @@
                      class="form-control" id="purchase-order-number"
                      name="Purchase Order Number"
                      required custom-validity custom-pattern="alphanumeric"
-                     ng-readonly="readOnly">
+                     ng-readonly="readOnly || !isDeliveryDateSelected()">
             </div>
           </div>
 
@@ -88,7 +88,7 @@
                      class="form-control" id="delivery-note-number"
                      name="Delivery Note Number"
                      required custom-validity custom-pattern="alphanumeric"
-                     ng-readonly="readOnly">
+                     ng-readonly="readOnly || !isDeliveryDateSelected()">
             </div>
           </div>
 
