@@ -47,20 +47,6 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="row">
-          <div class="col-xs-12 col-sm-6 col-md-3">
-            <div class="form-group" ng-class="formErrorClass('Delivery Date', true)">
-              <date-picker
-                disable-date-range="true"
-                start-date-model="deliveryNote.deliveryDate"
-                is-search-field="true"
-                disable-start-date="readOnly"
-                required="required"
-                label-from="Delivery Date*"
-                name-from="Delivery Date">
-              </date-picker>
-            </div>
-          </div>
-          
           <div class="col-xs-12 col-sm-6 col-md-4">
             <div class="form-group" ng-class="formErrorClass('lmp-station')">
               <label for="lmp-station">LMP Station*</label>
@@ -103,6 +89,20 @@
                      name="Delivery Note Number"
                      required custom-validity custom-pattern="alphanumeric"
                      ng-readonly="readOnly">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="form-group" ng-class="formErrorClass('Delivery Date', true)">
+              <date-picker
+                disable-date-range="true"
+                start-date-model="deliveryNote.deliveryDate"
+                is-search-field="true"
+                disable-start-date="readOnly"
+                required="required"
+                label-from="Delivery Date*"
+                name-from="Delivery Date">
+              </date-picker>
             </div>
           </div>
 
