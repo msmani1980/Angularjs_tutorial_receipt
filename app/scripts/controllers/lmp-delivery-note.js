@@ -306,7 +306,7 @@ angular.module('ts5App')
     }
 
     $scope.isDeliveryDateSelected = function () {
-      return $scope.deliveryNote !== 'undefined' && $scope.deliveryNote !== null && $scope.deliveryNote.deliveryDate !== 'undefined' && $scope.deliveryNote.deliveryDate !== null;
+      return $scope.deliveryNote !== 'undefined' && $scope.deliveryNote !== null && $scope.deliveryNote.deliveryDate !== undefined && $scope.deliveryNote.deliveryDate !== null;
     };
 
     function generateSavePayload(_isAccepted) {
