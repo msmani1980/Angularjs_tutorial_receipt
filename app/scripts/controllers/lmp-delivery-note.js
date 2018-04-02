@@ -633,12 +633,11 @@ angular.module('ts5App')
     function resolveInitPromises(responseCollection) {
       $scope.regularItemType = lodash.findWhere(angular.copy(responseCollection[0]), { name: 'Regular' });
       $scope.inventoryCharacteristicType = lodash.findWhere(angular.copy(responseCollection[1]), { name: 'Inventory' });
-      $scope.catererStationList = angular.copy(responseCollection[2].response);
-      $scope.ullageReasons = lodash.filter(responseCollection[3].companyReasonCodes, { reasonTypeName: _reasonCodeTypeUllage });
-      $scope.menuList = angular.copy(responseCollection[4].menus);
+      $scope.ullageReasons = lodash.filter(responseCollection[2].companyReasonCodes, { reasonTypeName: _reasonCodeTypeUllage });
+      $scope.menuList = angular.copy(responseCollection[3].menus);
 
       if (responseCollection[5]) {
-        setDeliveryNoteFromResponse(responseCollection[5]);
+        setDeliveryNoteFromResponse(responseCollection[4]);
       }
 
       completeInitCalls();
@@ -648,7 +647,6 @@ angular.module('ts5App')
       var initPromises = [];
       initPromises.push(deliveryNoteFactory.getItemTypes());
       initPromises.push(deliveryNoteFactory.getCharacteristics());
-      initPromises.push(deliveryNoteFactory.getCatererStationList());
       initPromises.push(deliveryNoteFactory.getCompanyReasonCodes());
 
       var payloadForMenu = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
