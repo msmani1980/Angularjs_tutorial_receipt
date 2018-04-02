@@ -650,7 +650,7 @@ angular.module('ts5App')
       $scope.ullageReasons = lodash.filter(responseCollection[2].companyReasonCodes, { reasonTypeName: _reasonCodeTypeUllage });
       $scope.menuList = angular.copy(responseCollection[3].menus);
 
-      if (responseCollection[5]) {
+      if (responseCollection[4]) {
         setDeliveryNoteFromResponse(responseCollection[4]);
       }
 
