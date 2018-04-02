@@ -310,7 +310,7 @@ angular.module('ts5App')
     };
 
     $scope.$watch('deliveryNote.deliveryDate', function () {
-      console.log('watching change.')
+      getCatererStationsForDeliveryDate();
     }, true);
 
     function generateSavePayload(_isAccepted) {
@@ -619,7 +619,7 @@ angular.module('ts5App')
     }
 
     function getCatererStationsForDeliveryDate() {
-      if(isDeliveryDateSelected()) {
+      if($scope.isDeliveryDateSelected()) {
         var catererStationsPayload = {
           startDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate)
         };
