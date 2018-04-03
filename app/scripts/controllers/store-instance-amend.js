@@ -1242,6 +1242,10 @@ angular.module('ts5App')
     }
 
     function getDeltedBy (cashBag) {
+      if (cashBag.updatedByPerson) {
+      }
+
+
       return 'Unknown';
     }
 
