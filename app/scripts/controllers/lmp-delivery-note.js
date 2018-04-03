@@ -623,7 +623,7 @@ angular.module('ts5App')
     }
 
     function getCatererStationsForDeliveryDate() {
-      if($scope.isDeliveryDateSelected()) {
+      if ($scope.isDeliveryDateSelected()) {
         $scope.catererStationListIsBeingLoaded = true;
 
         var catererStationsPayload = {

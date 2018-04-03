@@ -16,7 +16,7 @@ angular.module('ts5App')
     }
 
     function getCatererStationList(payload) {
-      if(payload) {
+      if (payload) {
         return catererStationService.getCatererStationList(payload);
       } else {
         return catererStationService.getCatererStationList({
