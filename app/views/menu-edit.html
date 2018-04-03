@@ -217,7 +217,7 @@
                    name="menuItem-{{$index}}"
                    ng-model="item.selectedItem.itemName"
                    ng-disabled="!isMenuEditable()"/>
-            <div ng-if="!isMenuViewOnly() && !item.selectedItem.hasActiveItemVersions" style="color:red">This menu item expired!</div>
+            <div ng-if="!isMenuViewOnly() && !item.selectedItem.hasActiveItemVersions" style="color:red">This Item Expired</div>
           </td>
           <td>
             <input custom-validity
