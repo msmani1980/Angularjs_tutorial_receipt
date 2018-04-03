@@ -1246,6 +1246,9 @@ angular.module('ts5App')
         return cashBag.updatedByPerson.userName;
       }
 
+      if (cashBag.createdByPerson) {
+      }
+
       return 'Unknown';
     }
 
