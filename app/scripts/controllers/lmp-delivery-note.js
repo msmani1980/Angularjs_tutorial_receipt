@@ -640,7 +640,7 @@ angular.module('ts5App')
       $scope.catererStationList = angular.copy(apiResponse.response);
       $scope.catererStationListIsBeingLoaded = false;
 
-      if($scope.catererStationList.length === 0) {
+      if ($scope.catererStationList.length === 0) {
         $scope.catererStationListIsEmpty = true;
       }
     }
