@@ -69,7 +69,7 @@
               </select>
             </div>
 
-            <div class="row" ng-hide="!catererStationListIsEmpty" style="padding-left: 20px;">
+            <div class="row" ng-if="catererStationListIsEmpty && isDeliveryDateSelected()" style="padding-left: 20px;">
                 <span class="alert alert-warning" ><i class="fa fa-exclamation-triangle"></i> There are no active LMP stations for selected Delivery Date</span>
             </div>
           </div>
