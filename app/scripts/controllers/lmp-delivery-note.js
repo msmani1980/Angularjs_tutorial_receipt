@@ -310,7 +310,7 @@ angular.module('ts5App')
     };
 
     $scope.$watch('deliveryNote.deliveryDate', function () {
-      if($scope.isDeliveryDateSelected()) {
+      if ($scope.isDeliveryDateSelected()) {
         getCatererStationsForDeliveryDate();
       } else {
         $scope.catererStationList = [];
