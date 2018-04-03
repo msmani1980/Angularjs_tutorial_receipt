@@ -590,7 +590,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       payload = lodash.assign(payload, {
         limit: $this.meta.limit,
         offset: $this.meta.offset,
-        avoidUsrStns: true
+        avoidUsrStns: true,
+        sortBy: 'ASC',
+        sortOn: 'scheduleDate,id'
       });
 
       storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess, searchStoreInstanceFailure);
