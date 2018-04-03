@@ -45,6 +45,14 @@
   </div>
 
     <div class="panel panel-default">
+      <div class="info-row">
+        <div class="row" ng-hide="isDeliveryDateSelected() ">
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <span class="info-row">Please first select Delivery Date</span>
+          </div>
+        </div>
+      </div>
+
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-12 col-sm-6 col-md-4">
@@ -102,6 +110,7 @@
                 label-from="Delivery Date*"
                 name-from="Delivery Date">
               </date-picker>
+              <span class="col-xs-12 col-sm-6 col-md-3 info-row form-control" style="width: auto;">Please first select Delivery Date</span>
             </div>
           </div>
 
