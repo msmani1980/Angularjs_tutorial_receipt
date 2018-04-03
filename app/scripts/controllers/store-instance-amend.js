@@ -945,7 +945,7 @@ angular.module('ts5App')
     $scope.deleteCashBag = function () {
       angular.element('.delete-cashbag-warning-modal').modal('hide');
 
-      showLoadingModal('Deleteing Cash Bag');
+      showLoadingModal('Deleting Cash Bag');
       storeInstanceAmendFactory.deleteCashBag($scope.cashBagToDelete.id).then(markCashBagAsDeleted, handleResponseError);
     };
 
@@ -1217,7 +1217,7 @@ angular.module('ts5App')
           bankRefNumber: cashBag.bankReferenceNumber,
           isDeleted: cashBag.delete === true,
           deletedByUser: getDeltedBy(cashBag),
-          deletedOn: getDeleteddOn(cashBag),
+          deletedOn: getDeletedOn(cashBag),
           isManual: (cashBag.originationSource === 2 && cashBag.eposCashbagId === null),
           scheduleNumber: cashBag.scheduleNumber,
           scheduleDate: dateUtility.formatTimestampForApp(cashBag.scheduleDate),
@@ -1240,7 +1240,7 @@ angular.module('ts5App')
       });
     }
 
-    function getDeleteddOn (cashBag) {
+    function getDeletedOn (cashBag) {
       return cashBag.updatedOn ? dateUtility.formatTimestampForApp(cashBag.updatedOn) : dateUtility.formatTimestampForApp(cashBag.createdOn);
     }
 
