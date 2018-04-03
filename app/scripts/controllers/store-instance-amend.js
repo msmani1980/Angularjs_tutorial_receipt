@@ -938,11 +938,14 @@ angular.module('ts5App')
 
     function markCashBagAsDeleted() {
       $scope.cashBagToDelete.isDeleted = true;
+      getCashBags();
+      hideLoadingModal();
     }
 
     $scope.deleteCashBag = function () {
       angular.element('.delete-cashbag-warning-modal').modal('hide');
 
+      showLoadingModal('Deleteing Cash Bag');
       storeInstanceAmendFactory.deleteCashBag($scope.cashBagToDelete.id).then(markCashBagAsDeleted, handleResponseError);
     };
 
