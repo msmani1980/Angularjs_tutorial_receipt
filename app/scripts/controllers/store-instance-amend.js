@@ -1214,7 +1214,7 @@ angular.module('ts5App')
           bankRefNumber: cashBag.bankReferenceNumber,
           isDeleted: cashBag.delete === true,
           deletedByUser: (cashBag.updatedByPerson) ? cashBag.updatedByPerson.userName : 'Unknown',
-          deletedOn: dateUtility.formatTimestampForApp(cashBag.updatedOn),
+          deletedOn: getDeleteddOn (cashBag),
           isManual: (cashBag.originationSource === 2 && cashBag.eposCashbagId === null),
           scheduleNumber: cashBag.scheduleNumber,
           scheduleDate: dateUtility.formatTimestampForApp(cashBag.scheduleDate),
@@ -1235,6 +1235,10 @@ angular.module('ts5App')
           isAmended: (cashBag.isAddedPosttrip || cashBag.isDeletedPosttrip) 
         };
       });
+    }
+
+    function getDeleteddOn (cashBag) {
+      return cashBag.updatedOn ? dateUtility.formatTimestampForApp(cashBag.updatedOn) : dateUtility.formatTimestampForApp(cashBag.createdOn);
     }
 
     function isCashbagSubmitted() {
