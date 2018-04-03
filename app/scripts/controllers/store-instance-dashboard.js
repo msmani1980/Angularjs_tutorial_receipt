@@ -592,7 +592,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         offset: $this.meta.offset,
         avoidUsrStns: true,
         sortBy: 'ASC',
-        sortOn: 'scheduleDate'
+        sortOn: 'scheduleDate,id',
       });
 
       storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess, searchStoreInstanceFailure);
