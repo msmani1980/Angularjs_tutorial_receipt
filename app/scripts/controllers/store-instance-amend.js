@@ -1213,7 +1213,7 @@ angular.module('ts5App')
           cashBag: cashBag.cashBagNumber,
           bankRefNumber: cashBag.bankReferenceNumber,
           isDeleted: cashBag.delete === true,
-          deletedByUser: (cashBag.updatedByPerson) ? cashBag.updatedByPerson.userName : 'Unknown',
+          deletedByUser: getDeltedBy (cashBag),
           deletedOn: getDeleteddOn (cashBag),
           isManual: (cashBag.originationSource === 2 && cashBag.eposCashbagId === null),
           scheduleNumber: cashBag.scheduleNumber,
