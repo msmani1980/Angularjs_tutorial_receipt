@@ -1241,6 +1241,10 @@ angular.module('ts5App')
       return cashBag.updatedOn ? dateUtility.formatTimestampForApp(cashBag.updatedOn) : dateUtility.formatTimestampForApp(cashBag.createdOn);
     }
 
+    function getDeltedBy (cashBag) {
+      return 'Unknown';
+    }
+
     function isCashbagSubmitted() {
       $scope.cashBagSubmitted = false;
       angular.forEach($scope.normalizedCashBags, function (normalizedCashBag) {
