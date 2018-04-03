@@ -639,6 +639,10 @@ angular.module('ts5App')
     function setCatererStationsList(apiResponse) {
       $scope.catererStationList = angular.copy(apiResponse.response);
       $scope.catererStationListIsBeingLoaded = false;
+
+      if($scope.catererStationList.length === 0) {
+        $scope.catererStationListIsEmpty = true;
+      }
     }
 
     function setDeliveryNoteFromResponse(response) {
@@ -694,6 +698,7 @@ angular.module('ts5App')
       $scope.disableActions = $scope.state === 'view';
       $scope.hideReview = $scope.state === 'view';
       $scope.catererStationListIsBeingLoaded = false;
+      $scope.catererStationListIsEmpty = false;
 
       var viewNameForAction = {
         view: 'View Delivery Note',
