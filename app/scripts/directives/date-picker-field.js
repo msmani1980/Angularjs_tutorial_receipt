@@ -42,6 +42,10 @@ angular.module('ts5App')
           datePickerOptions.startDate = $scope.minDate;
         }
 
+        if ($scope.maxDate) {
+          datePickerOptions.endDate = $scope.maxDate;
+        }
+
         if ($scope.grayPast) {
           datePickerOptions.beforeShowDay = function (date) {
             var formattedDate =  dateUtility.formatDatePicker(date, null, dateUtility.getDateFormatForApp());
