@@ -77,7 +77,7 @@ angular.module('ts5App')
           datePickerInput.datepicker('update', $scope.ngModel);
 
           $scope.$watch('ngModel', function(newData, oldData) {
-            if ($scope.ngModel && newData !== oldData) {
+            if ($scope.ngModel && (newData !== oldData)) {
               datePickerInput.datepicker('setDate', $scope.ngModel);
             }
           });
