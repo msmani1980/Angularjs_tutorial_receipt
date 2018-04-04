@@ -139,14 +139,14 @@ angular.module('ts5App')
       return parseInt(record.cityId) === parseInt($scope.formData.city.cityId);
     };
 
-    this.validateEndDate = function() {
+    this.isEndDateBeforeMinEndDate = function() {
       return !dateUtility.isAfterOrEqual($scope.formData.endDate, $scope.minEndDate);
     };
 
     this.validateForm = function() {
       $scope.displayError = $scope.stationCreateForm.$invalid;
 
-      if (this.validateEndDate()) {
+      if (this.isEndDateBeforeMinEndDate()) {
         $scope.errorCustom = [{
           field: 'Effective To',
           value: 'Can\'t be before ' + $scope.minEndDate
