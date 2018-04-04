@@ -145,7 +145,7 @@ angular.module('ts5App')
       if (this.validateEndDate()) {
         $scope.errorCustom = [{
           field: 'Effective To',
-          value: 'Outbound Seal or Inbound Seal or Cart Quantity or Canister Quantity, any one of these are required'
+          value: 'Can\'t be before ' + $scope.minEndDate
         }];
         $scope.displayError = true;
         return false;
