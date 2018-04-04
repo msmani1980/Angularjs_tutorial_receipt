@@ -144,7 +144,8 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     removeStation: removeCompanyStation,
     createStation: createCompanyStation,
     updateStation: updateCompanyStation,
-    importFromExcel: importFromExcel
+    importFromExcel: importFromExcel,
+    getCompanyStationValidationDates: getCompanyStationValidationDates
   };
 
 });
