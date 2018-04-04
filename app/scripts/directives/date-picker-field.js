@@ -32,8 +32,7 @@ angular.module('ts5App')
           orientation: 'auto top',
           format: companyFormatUtility.getDateFormat().toLowerCase(),
           autoclose: true,
-          todayHighlight: false,
-          maxDate: $scope.maxDate
+          todayHighlight: false
         };
 
         $scope.placeholder = datePickerOptions.format;

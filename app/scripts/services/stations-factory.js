@@ -55,6 +55,11 @@ angular.module('ts5App')
       return stationsService.getCompanyStation(companyId, stationId);
     };
 
+    var getCompanyStationValidationDates = function(stationId) {
+      var companyId = globalMenuService.company.get();
+      return stationsService.getCompanyStationValidationDates(companyId, stationId);
+    };
+
     return {
       getGlobalStationList: getGlobalStationList,
       getStations: getStations,
@@ -63,6 +68,7 @@ angular.module('ts5App')
       createStation: createStation,
       updateStation: updateStation,
       removeStation: removeStation,
-      bulkUpdateStation: bulkUpdateStation
+      bulkUpdateStation: bulkUpdateStation,
+      getCompanyStationValidationDates: getCompanyStationValidationDates
     };
   });
