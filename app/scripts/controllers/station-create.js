@@ -140,7 +140,7 @@ angular.module('ts5App')
     };
 
     this.validateEndDate = function() {
-
+      return !dateUtility.isAfterOrEqual($scope.formData.endDate, $scope.minEndDate);
     };
 
     this.validateForm = function() {
