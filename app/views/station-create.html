@@ -112,9 +112,8 @@
           disable-past="true"
           required="true"
           ng-model="formData.startDate"
-          custom-end-date="maxStartDate">
+          end-date="maxStartDate">
         </date-picker-field>
-        {{maxStartDate}}
       </div>
 
       <div class="col-xs-12 col-sm-6">
@@ -128,7 +127,7 @@
           disable-past="true"
           end-current-effective="editingItem && shouldDisableStartDate"
           required="true"
-          custom-start-date="minEndDate">
+          start-date="minEndDate">
         </date-picker-field>
       </div>
     </div>
