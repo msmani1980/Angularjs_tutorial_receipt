@@ -142,7 +142,7 @@ angular.module('ts5App')
     this.validateForm = function() {
       $scope.displayError = $scope.stationCreateForm.$invalid;
 
-      if (this.checkReplenishOptionalValues()) {
+      if (this.checkDatesValidation()) {
         $scope.errorCustom = [{
           field: 'Required Fields',
           value: 'Outbound Seal or Inbound Seal or Cart Quantity or Canister Quantity, any one of these are required'
