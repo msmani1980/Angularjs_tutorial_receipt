@@ -26,8 +26,8 @@ angular.module('ts5App')
         customDate: '=',
         customEffective: '=',
         endCurrentEffective: '=',
-        customStartDate: '=',
-        customEndDate: '='
+        startDate: '=',
+        endDate: '='
       },
       controller: function($scope, $element) {
         var datePickerOptions = {
@@ -47,8 +47,8 @@ angular.module('ts5App')
           datePickerOptions.endDate = $scope.maxDate;
         }
 
-        if ($scope.customEndDate) {
-          datePickerOptions.endDate = $scope.customEndDate;
+        if ($scope.endDate) {
+          datePickerOptions.endDate = $scope.endDate;
         }
 
         if ($scope.grayPast) {
@@ -67,8 +67,8 @@ angular.module('ts5App')
         this.init = function($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
 
-          if ($scope.customStartDate) {
-            options.startDate = $scope.customStartDate;
+          if ($scope.startDate) {
+            options.startDate = $scope.startDate;
           }
           else if (!$scope.customEffective && !$scope.endCurrentEffective) {
             options.startDate = ($scope.customDate !== null && $scope.customDate !== undefined) ? $scope.customDate : dateUtility.tomorrowFormattedDatePicker();
