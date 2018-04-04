@@ -47,6 +47,10 @@ angular.module('ts5App')
           datePickerOptions.endDate = $scope.maxDate;
         }
 
+        if ($scope.customEndDate) {
+          datePickerOptions.endDate = $scope.customEndDate;
+        }
+
         if ($scope.grayPast) {
           datePickerOptions.beforeShowDay = function (date) {
             var formattedDate =  dateUtility.formatDatePicker(date, null, dateUtility.getDateFormatForApp());
@@ -62,7 +66,11 @@ angular.module('ts5App')
 
         this.init = function($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
-          if (!$scope.customEffective && !$scope.endCurrentEffective) {
+
+          if ($scope.customStartDate) {
+            options.startDate = $scope.customStartDate;
+          }
+          else if (!$scope.customEffective && !$scope.endCurrentEffective) {
             options.startDate = ($scope.customDate !== null && $scope.customDate !== undefined) ? $scope.customDate : dateUtility.tomorrowFormattedDatePicker();
           }else if ($scope.endCurrentEffective) {
             options.startDate = dateUtility.nowFormattedDatePicker();
