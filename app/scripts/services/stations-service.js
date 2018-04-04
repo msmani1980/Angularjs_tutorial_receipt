@@ -41,6 +41,9 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       getStation: {
         method: 'GET'
       },
+      getCompanyStationValidationDates: {
+        method: 'PATCH'
+      },
       getCompanyStation: {
         method: 'GET'
       },
