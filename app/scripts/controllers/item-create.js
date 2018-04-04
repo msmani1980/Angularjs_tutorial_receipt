@@ -1389,6 +1389,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return ($scope.viewOnly || $scope.itemIsActive);
     };
 
+    $scope.isAddPriceDisabled = function() {
+      return $scope.viewOnly || (dateUtility.isYesterdayOrEarlierDatePicker($scope.formData.endDate) && !$scope.cloningItem);
+    };
+
     $scope.shouldValidatePrice = function() {
       return !$scope.viewOnly && !$scope.itemIsActive;
     };
