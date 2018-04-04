@@ -43,10 +43,6 @@ angular.module('ts5App')
           datePickerOptions.startDate = $scope.minDate;
         }
 
-        if ($scope.maxDate) {
-          datePickerOptions.endDate = $scope.maxDate;
-        }
-
         if ($scope.endDate) {
           datePickerOptions.endDate = $scope.endDate;
         }
