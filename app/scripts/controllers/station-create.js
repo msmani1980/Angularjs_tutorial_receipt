@@ -140,6 +140,10 @@ angular.module('ts5App')
     };
 
     this.isEndDateBeforeMinEndDate = function() {
+      if (!$scope.minEndDate) {
+        return false;
+      }
+
       return !dateUtility.isAfterOrEqual($scope.formData.endDate, $scope.minEndDate);
     };
 
