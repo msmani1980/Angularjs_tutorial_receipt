@@ -642,7 +642,7 @@ angular.module('ts5App')
 
       if ($scope.catererStationList.length === 0) {
         $scope.catererStationListIsEmpty = true;
-      } else{
+      } else {
         $scope.catererStationListIsEmpty = false;
       }
     }
