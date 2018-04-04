@@ -110,6 +110,15 @@ angular.module('ts5App')
       stationsFactory.getCompanyStation(id).then($this.setStation);
     };
 
+    this.setStationValidationDates = function(dataFromAPI) {
+      $scope.maxStartDate = dateUtility.formatDateForApp(dataFromAPI.startDate);
+      $scope.minEndDate = dateUtility.formatDateForApp(dataFromAPI.endDate);
+    };
+
+      this.getStationValidationDates = function(id) {
+      stationsFactory.getCompanyStationValidationDates(id).then($this.setStationValidationDates);
+    };
+
     this.showSuccessMessage = function(message) {
       messageService.display('success', message, 'Success');
     };
