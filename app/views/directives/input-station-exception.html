@@ -46,7 +46,7 @@
 							<label>Station *</label>
 
 							<select name="Station" required class="form-control" ng-model="stationException.stationId"
-                ng-disabled="!stationException.startDate && !stationException.endDate || $parent.isDisabled()"
+                ng-disabled="!stationException.startDate && !stationException.endDate || $parent.isAddPriceDisabled()"
                 ng-options="station.id as station.code for station in stationException.stations">
               </select>
 
@@ -60,7 +60,7 @@
 
 							<label>Tax Is *</label>
 
-							<select name="Tax Is" required ng-disabled="!stationException.startDate && !stationException.endDate || $parent.isDisabled()" ng-model="stationException.taxIs" class="form-control">
+							<select name="Tax Is" required ng-disabled="!stationException.startDate && !stationException.endDate || $parent.isAddPriceDisabled()" ng-model="stationException.taxIs" class="form-control">
 								<option value="Included">Included</option>
 								<option value="Excluded">Excluded</option>
 								<option value="Exempt">Exempt</option>
@@ -86,7 +86,7 @@
 							{{ masterCurrenciesList[exceptionCurrency.companyCurrencyId] }} *
 						</div>
 
-						<input ng-model="exceptionCurrency.price" ng-disabled="$parent.isDisabled()" type="text" class="form-control"/>
+						<input ng-model="exceptionCurrency.price" ng-disabled="$parent.isAddPriceDisabled()" type="text" class="form-control"/>
 
 					</div>
 
