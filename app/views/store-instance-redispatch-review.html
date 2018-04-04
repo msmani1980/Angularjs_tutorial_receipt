@@ -1,6 +1,6 @@
 <div class="container">
 
-  <step-wizard steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()" save-trigger="exit()" disabled="actionNotAllowed" save-button-text="saveButtonText"></step-wizard>
+  <step-wizard ng-if="areWizardStepsInitialized" steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()" save-trigger="exit()" disabled="actionNotAllowed" save-button-text="saveButtonText"></step-wizard>
   <lose-data-alert show-alert="showLoseDataAlert" confirm-trigger="loseDataAlertConfirmTrigger()"></lose-data-alert>
 
   <error-dialog form-object="reviewStoreInstanceForm" error-response="errorResponse" display="displayError">
@@ -70,7 +70,7 @@
               <h5>Pick List</h5>
             </div>
             <div class="col-xs-2  text-right">
-          	  <span>Sort By</span> 
+          	  <span>Sort By</span>
  	          </div>
         	  <div class="col-xs-2  text-right">
   		      <select

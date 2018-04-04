@@ -635,7 +635,7 @@ angular.module('ts5App')
 
     function storeDetailsResponseHandler(responseArray) {
       $scope.storeDetails = angular.copy(responseArray[0]);
-      setupSteps($scope.storeDetails.replenishStoreInstanceId);
+      setupSteps($scope.storeDetails.replenishStoreInstanceI);
       $scope.ullageReasonList = angular.copy(responseArray[1].companyReasonCodes);
       $this.countTypes = angular.copy(responseArray[2]);
       checkOnValidStatus();
