@@ -115,7 +115,7 @@ angular.module('ts5App')
       $scope.minEndDate = dateUtility.formatDateForApp(dataFromAPI.endDate);
     };
 
-      this.getStationValidationDates = function(id) {
+    this.getStationValidationDates = function(id) {
       stationsFactory.getCompanyStationValidationDates(id).then($this.setStationValidationDates);
     };
 
