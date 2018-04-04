@@ -110,7 +110,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
   };
 
   var getCompanyStationValidationDates = function (companyId, id) {
-    return stationListRequestResource.getCompanyStationValidationDates({ companyStationId: id, companyId: companyId }).$promise;
+    return stationListRequestResource.getCompanyStationValidationDates({ companyStationId: id, companyId: companyId }, {}).$promise;
   };
 
   var bulkUpdateCompanyStation = function (companyId, payload) {
