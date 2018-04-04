@@ -159,6 +159,8 @@ angular.module('ts5App')
         return false;
       }
 
+      // TODO: add check for max start date
+
       return $scope.stationCreateForm.$valid;
     };
 
