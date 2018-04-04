@@ -65,8 +65,7 @@ angular.module('ts5App')
 
           if ($scope.startDate) {
             options.startDate = $scope.startDate;
-          }
-          else if (!$scope.customEffective && !$scope.endCurrentEffective) {
+          } else if (!$scope.customEffective && !$scope.endCurrentEffective) {
             options.startDate = ($scope.customDate !== null && $scope.customDate !== undefined) ? $scope.customDate : dateUtility.tomorrowFormattedDatePicker();
           } else if ($scope.endCurrentEffective) {
             options.startDate = dateUtility.nowFormattedDatePicker();
