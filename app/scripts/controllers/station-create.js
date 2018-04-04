@@ -141,6 +141,9 @@ angular.module('ts5App')
 
     this.validateForm = function() {
       $scope.displayError = $scope.stationCreateForm.$invalid;
+
+      // TODO: add start/end dates validation here
+
       return $scope.stationCreateForm.$valid;
     };
 
