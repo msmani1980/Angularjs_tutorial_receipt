@@ -59,7 +59,7 @@
 
 							<label>Tax Is *</label>
 
-							<select name="Tax Is" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isDisabled()" ng-model="itemPrice.taxIs" class="form-control">
+							<select name="Tax Is" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isAddPriceDisabled()" ng-model="itemPrice.taxIs" class="form-control">
 								<option value="Included">Included</option>
 								<option value="Excluded">Excluded</option>
 								<option value="Exempt">Exempt</option>
@@ -91,17 +91,17 @@
 					</div>
 
 				</div>
-				
+
 				<p>Miles/Points</p>
     			<div class="input-group" ng-class="{ 'has-error' : !itemPrice.priceMilesPoints.miles_points && displayError && $parent.shouldValidatePrice() , 'has-success' : itemPrice.priceMilesPoints.miles_points && $parent.shouldValidatePrice() }">
-                <input name="Miles Points" 
-                       ng-model="itemPrice.priceMilesPoints.miles_points" 
-                       ng-required="false" 
-                       ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isDisabled()"   
-                       maxlength="10" 
-                       custom-validity 
-                       custom-pattern="number" 
-                       class="form-control" 
+                <input name="Miles Points"
+                       ng-model="itemPrice.priceMilesPoints.miles_points"
+                       ng-required="false"
+                       ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isAddPriceDisabled()"
+                       maxlength="10"
+                       custom-validity
+                       custom-pattern="number"
+                       class="form-control"
                        placeholder="0"/>
       			</div>
 			</div>
