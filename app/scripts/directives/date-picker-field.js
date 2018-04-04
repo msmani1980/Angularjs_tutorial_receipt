@@ -25,7 +25,9 @@ angular.module('ts5App')
         grayPast: '=',
         customDate: '=',
         customEffective: '=',
-        endCurrentEffective: '='
+        endCurrentEffective: '=',
+        customStartDate: '=',
+        customEndDate: '='
       },
       controller: function($scope, $element) {
         var datePickerOptions = {

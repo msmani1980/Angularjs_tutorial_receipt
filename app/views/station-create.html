@@ -128,8 +128,9 @@
           disable-past="true"
           end-current-effective="editingItem && shouldDisableStartDate"
           required="true"
-          min-date="minEndDate">
+          custom-date="minEndDate">
         </date-picker-field>
+        {{editingItem && shouldDisableStartDate}}
       </div>
     </div>
 
