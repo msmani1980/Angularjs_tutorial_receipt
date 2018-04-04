@@ -139,6 +139,10 @@ angular.module('ts5App')
       return parseInt(record.cityId) === parseInt($scope.formData.city.cityId);
     };
 
+    this.validateEndDate = function() {
+
+    };
+
     this.validateForm = function() {
       $scope.displayError = $scope.stationCreateForm.$invalid;
 
