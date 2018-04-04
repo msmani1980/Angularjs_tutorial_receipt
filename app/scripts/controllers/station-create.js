@@ -104,8 +104,6 @@ angular.module('ts5App')
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
 
       //this.setStationRelationships(station);
-
-      $scope.dataReady = true;
     };
 
     this.getStation = function(id) {
@@ -261,7 +259,13 @@ angular.module('ts5App')
 
     this.initSuccessHandler = function() {
       if ($routeParams.id) {
-        $this.getStation($routeParams.id);
+        $q.all([
+          $this.getStation($routeParams.id),
+          $this.getStationValidationDates($routeParams.id)
+        ]).then(function () {
+          $scope.dataReady = true;
+        });
+
         $this.setFormAsEdit();
         return false;
       }
