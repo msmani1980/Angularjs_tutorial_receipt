@@ -107,7 +107,7 @@ angular.module('ts5App')
     };
 
     this.getStation = function(id) {
-      stationsFactory.getCompanyStation(id).then($this.setStation);
+      return stationsFactory.getCompanyStation(id).then($this.setStation);
     };
 
     this.setStationValidationDates = function(dataFromAPI) {
@@ -116,7 +116,7 @@ angular.module('ts5App')
     };
 
     this.getStationValidationDates = function(id) {
-      stationsFactory.getCompanyStationValidationDates(id).then($this.setStationValidationDates);
+      return stationsFactory.getCompanyStationValidationDates(id).then($this.setStationValidationDates);
     };
 
     this.showSuccessMessage = function(message) {
