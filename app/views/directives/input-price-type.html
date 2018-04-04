@@ -45,7 +45,7 @@
 
 							<label>Price Type *</label>
 
-							<select name="Price Type" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isDisabled()" ng-model="itemPrice.typeId" class="form-control"
+							<select name="Price Type" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isAddPriceDisabled()" ng-model="itemPrice.typeId" class="form-control"
 								ng-options="type.id as type.name for type in $parent.priceTypes">
 							</select>
 
@@ -86,7 +86,7 @@
               {{ currency.code }} *
 						</div>
 
-						<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="$parent.shouldValidatePrice()" ng-disabled="$parent.isDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+						<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="$parent.shouldValidatePrice()" ng-disabled="$parent.isAddPriceDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
 
 					</div>
 
@@ -113,7 +113,7 @@
       <h3>Station Exceptions</h3>
 
       <p>
-        <button type="button" ng-disabled="$parent.isDisabled()" class="btn btn-primary" ng-click="addStationException($parent.key)">
+        <button type="button" ng-disabled="$parent.isAddPriceDisabled()" class="btn btn-primary" ng-click="addStationException($parent.key)">
            <i class="fa fa-plus"></i> Add Station Exception
         </button>
       </p>
