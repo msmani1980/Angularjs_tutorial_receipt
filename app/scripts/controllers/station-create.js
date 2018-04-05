@@ -146,6 +146,14 @@ angular.module('ts5App')
 
       return !dateUtility.isAfterOrEqual($scope.formData.endDate, $scope.minEndDate);
     };
+    
+    this.isEndDateBeforeMinEndDate = function() {
+      if (!$scope.minEndDate) {
+        return false;
+      }
+
+      return !dateUtility.isAfterOrEqual($scope.formData.endDate, $scope.minEndDate);
+    };
 
     this.validateForm = function() {
       $scope.displayError = $scope.stationCreateForm.$invalid;
