@@ -531,7 +531,6 @@ angular.module('ts5App')
         .then(function (dataFromAPI) {
           if (dataFromAPI && (dataFromAPI.startDate || dataFromAPI.endDate)) {
             $this.showToast('danger', 'Station', 'Can\'t delete station! It is in use.');
-
             return;
           } else {
             return stationsFactory.removeStation(stationId).then($this.removeStationSuccess(stationId), $this.removeStationFailure);
