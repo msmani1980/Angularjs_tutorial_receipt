@@ -529,9 +529,11 @@ angular.module('ts5App')
 
       stationsFactory.getCompanyStationValidationDates(stationId)
         .then(function (dataFromAPI) {
-          if (dataFromAPI) {
-            
-          }
+          if (dataFromAPI && (dataFromAPI.startDate || dataFromAPI.endDate)) {
+
+
+            return;
+          } 
         });
 
       stationsFactory.removeStation(stationId)
