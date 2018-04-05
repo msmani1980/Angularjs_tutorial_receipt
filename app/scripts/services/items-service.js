@@ -24,7 +24,10 @@ angular.module('ts5App')
         method: 'GET'
       },
       createItem: {
-        method: 'POST'
+        method: 'POST',
+        params: {
+          isCloneAction: false
+        }
       },
       updateItem: {
         method: 'PUT'
@@ -49,7 +52,7 @@ angular.module('ts5App')
 
       searchParameters.fetchFromMaster = fetchFromMaster ? 'master' : null;
       if (angular.isDefined(searchParameters.categoryId)) {
-        searchParameters.categoryId = searchParameters.categoryId;  
+        searchParameters.categoryId = searchParameters.categoryId;
       }
 
       var payload = {};
