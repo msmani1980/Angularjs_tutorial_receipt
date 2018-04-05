@@ -530,7 +530,7 @@ angular.module('ts5App')
       stationsFactory.getCompanyStationValidationDates(stationId)
         .then(function (dataFromAPI) {
           if (dataFromAPI && (dataFromAPI.startDate || dataFromAPI.endDate)) {
-
+            $this.showToast('danger', 'Station', 'Can\'t delete station! It is in use.');
 
             return;
           } else {
