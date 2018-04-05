@@ -73,7 +73,7 @@ angular.module('ts5App')
     };
 
     var createItem = function (payload, isCloneAction) {
-      if(isCloneAction) {
+      if (isCloneAction) {
         actions.createItem.params.isCloneAction = true;
         var _requestResource = $resource(requestURL, requestParameters, actions);
 
