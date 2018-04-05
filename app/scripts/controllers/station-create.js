@@ -152,7 +152,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return !dateUtility.isAfterOrEqual($scope.formData.endDate, $scope.minEndDate);
+      return !dateUtility.isBeforeOrEqual($scope.formData.startDate, $scope.maxStartDate);
     };
 
     this.validateForm = function() {
