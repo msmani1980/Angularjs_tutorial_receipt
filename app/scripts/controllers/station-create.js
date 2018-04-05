@@ -158,6 +158,15 @@ angular.module('ts5App')
         $scope.displayError = true;
         return false;
       }
+      
+      if (this.isEndDateBeforeMinEndDate()) {
+        $scope.errorCustom = [{
+          field: 'Effective To',
+          value: 'Can\'t be before ' + $scope.minEndDate
+        }];
+        $scope.displayError = true;
+        return false;
+      }
 
       // TODO: add check for max start date
 
