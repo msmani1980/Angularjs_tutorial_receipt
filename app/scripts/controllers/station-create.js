@@ -148,7 +148,7 @@ angular.module('ts5App')
     };
 
     this.isStartDateAfterMaxStartDate = function() {
-      if (!$scope.maxEndDate) {
+      if (!$scope.maxStartDate) {
         return false;
       }
 
