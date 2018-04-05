@@ -533,11 +533,10 @@ angular.module('ts5App')
 
 
             return;
-          } 
-        });
-
-      stationsFactory.removeStation(stationId)
-        .then($this.removeStationSuccess(stationId), $this.removeStationFailure)
+          } else {
+            return stationsFactory.removeStation(stationId).then($this.removeStationSuccess(stationId), $this.removeStationFailure);
+          }
+        })
         .finally($this.hideLoadingModal);
     };
 
