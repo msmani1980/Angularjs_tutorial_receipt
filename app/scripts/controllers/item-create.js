@@ -1267,7 +1267,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       var newItemPayload = {
         retailItem: itemData
       };
-      itemsFactory.createItem(newItemPayload).then(function() {
+      itemsFactory.createItem(newItemPayload, $scope.cloningItem).then(function() {
         angular.element('#loading').modal('hide');
         angular.element('#create-success').modal('show');
         return true;
