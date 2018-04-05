@@ -527,7 +527,16 @@ angular.module('ts5App')
     $scope.removeRecord = function (stationId) {
       $this.displayLoadingModal('Removing Station id');
 
-      stationsFactory.removeStation(stationId).then($this.removeStationSuccess(stationId), $this.removeStationFailure).finally($this.hideLoadingModal);
+      stationsFactory.getCompanyStationValidationDates(stationId)
+        .then(function (dataFromAPI) {
+          if (dataFromAPI) {
+            
+          }
+        });
+
+      stationsFactory.removeStation(stationId)
+        .then($this.removeStationSuccess(stationId), $this.removeStationFailure)
+        .finally($this.hideLoadingModal);
     };
 
     $scope.exportTo = function(type) {
