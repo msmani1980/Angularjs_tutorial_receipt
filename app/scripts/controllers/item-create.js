@@ -560,7 +560,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.watchItemInfoOnClonePage = function() {
       $scope.$watchGroup(['formData.itemCode', 'formData.itemName', 'formData.onBoardName'], function() {
-        if ($scope.cloningItem && $this.isMasterItemInfoDirty()) {
+        if ($scope.cloningItem && !$this.isMasterItemInfoUnTouched()) {
           $scope.displayCloneInfo = true;
         } else {
           $scope.displayCloneInfo = false;
