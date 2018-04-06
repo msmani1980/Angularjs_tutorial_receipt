@@ -22,7 +22,7 @@
         <div class="row">
 
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field ng-if="minDate" min-date="$parent.minDate" disable="$parent.isAddPriceDisabled()"
+            <date-picker-field ng-if="minDate" min-date="$parent.minDate" disable="$parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)"
               form="form" label="Effective From" name="PriceEffectiveFrom" ng-model="itemPrice.startDate"
               required="true">
             </date-picker-field>
@@ -45,7 +45,7 @@
 
 							<label>Price Type *</label>
 
-							<select name="Price Type" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isAddPriceDisabled()" ng-model="itemPrice.typeId" class="form-control"
+							<select name="Price Type" required ng-disabled="(!itemPrice.startDate && !itemPrice.endDate) || $parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)" ng-model="itemPrice.typeId" class="form-control"
 								ng-options="type.id as type.name for type in $parent.priceTypes">
 							</select>
 
@@ -59,7 +59,7 @@
 
 							<label>Tax Is *</label>
 
-							<select name="Tax Is" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isAddPriceDisabled()" ng-model="itemPrice.taxIs" class="form-control">
+							<select name="Tax Is" required ng-disabled="(!itemPrice.startDate && !itemPrice.endDate) || $parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)" ng-model="itemPrice.taxIs" class="form-control">
 								<option value="Included">Included</option>
 								<option value="Excluded">Excluded</option>
 								<option value="Exempt">Exempt</option>
@@ -86,7 +86,7 @@
               {{ currency.code }} *
 						</div>
 
-						<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="$parent.shouldValidatePrice()" ng-disabled="$parent.isAddPriceDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+						<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="$parent.shouldValidatePrice()" ng-disabled="$parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
 
 					</div>
 
@@ -97,7 +97,7 @@
                 <input name="Miles Points"
                        ng-model="itemPrice.priceMilesPoints.miles_points"
                        ng-required="false"
-                       ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isAddPriceDisabled()"
+                       ng-disabled="(!itemPrice.startDate && !itemPrice.endDate) || $parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)"
                        maxlength="10"
                        custom-validity
                        custom-pattern="number"
@@ -113,7 +113,7 @@
       <h3>Station Exceptions</h3>
 
       <p>
-        <button type="button" ng-disabled="$parent.isAddPriceDisabled()" class="btn btn-primary" ng-click="addStationException($parent.key)">
+        <button type="button" ng-disabled="$parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)" class="btn btn-primary" ng-click="addStationException($parent.key)">
            <i class="fa fa-plus"></i> Add Station Exception
         </button>
       </p>
