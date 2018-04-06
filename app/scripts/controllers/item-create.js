@@ -1390,7 +1390,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     $scope.isItemPriceNew = function(itemPrice) {
-      return itemPrice.id === undefined || itemPrice.id === '' || itemPrice.id === null
+      return itemPrice.id === undefined || itemPrice.id === '' || itemPrice.id === null;
     };
 
     $scope.shouldValidatePrice = function() {
