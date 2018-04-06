@@ -538,7 +538,7 @@ angular.module('ts5App')
         })
         .finally($this.hideLoadingModal);
     };
-
+ 
     $scope.exportTo = function(type) {
       var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
       var companyId = globalMenuService.company.get();
