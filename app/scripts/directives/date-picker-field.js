@@ -25,21 +25,26 @@ angular.module('ts5App')
         grayPast: '=',
         customDate: '=',
         customEffective: '=',
-        endCurrentEffective: '='
+        endCurrentEffective: '=',
+        startDate: '=',
+        endDate: '='
       },
       controller: function($scope, $element) {
         var datePickerOptions = {
           orientation: 'auto top',
           format: companyFormatUtility.getDateFormat().toLowerCase(),
           autoclose: true,
-          todayHighlight: false,
-          maxDate: $scope.maxDate
+          todayHighlight: false
         };
 
         $scope.placeholder = datePickerOptions.format;
 
         if ($scope.minDate && !$scope.disable) {
           datePickerOptions.startDate = $scope.minDate;
+        }
+
+        if ($scope.endDate) {
+          datePickerOptions.endDate = $scope.endDate;
         }
 
         if ($scope.grayPast) {
@@ -57,17 +62,22 @@ angular.module('ts5App')
 
         this.init = function($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
-          if (!$scope.customEffective && !$scope.endCurrentEffective) {
+
+          if ($scope.startDate) {
+            options.startDate = $scope.startDate;
+          } else if (!$scope.customEffective && !$scope.endCurrentEffective) {
             options.startDate = ($scope.customDate !== null && $scope.customDate !== undefined) ? $scope.customDate : dateUtility.tomorrowFormattedDatePicker();
-          }else if ($scope.endCurrentEffective) {
+          } else if ($scope.endCurrentEffective) {
             options.startDate = dateUtility.nowFormattedDatePicker();
           }
 
           var datePickerInput = $element.find('input[type="text"]');
+
           datePickerInput.datepicker(options);
           datePickerInput.datepicker('update', $scope.ngModel);
+
           $scope.$watch('ngModel', function(newData, oldData) {
-            if ($scope.ngModel && newData !== oldData) {
+            if ($scope.ngModel && (newData !== oldData)) {
               datePickerInput.datepicker('setDate', $scope.ngModel);
             }
           });
