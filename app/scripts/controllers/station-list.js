@@ -412,7 +412,6 @@ angular.module('ts5App')
     };
 
     this.removeStationFailure = function (dataFromAPI) {
-      console.log(dataFromAPI)
       $this.showToast('danger', 'Station', 'Error deleting station!');
     };
 
