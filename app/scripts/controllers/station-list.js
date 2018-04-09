@@ -405,7 +405,6 @@ angular.module('ts5App')
     };
 
     this.removeStationSuccess = function (stationId) {
-      console.log('success!?')
       $scope.stationList = $scope.stationList.filter(function (station) {
         return station.id !== stationId;
       });
