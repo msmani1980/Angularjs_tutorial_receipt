@@ -119,6 +119,14 @@ angular.module('ts5App')
       });
     };
 
+    $scope.isStartDateSelected = function () {
+      return $scope.formData.startDate !== 'undefined' && $scope.formData.startDate !== null && $scope.formData.startDate !== undefined && $scope.formData.startDate !== null;
+    };
+
+    $scope.isEndDateSelected = function () {
+      return $scope.formData.endDate !== 'undefined' && $scope.formData.endDate !== null && $scope.formData.endDate !== undefined && $scope.formData.endDate !== null;
+    };
+
     this.setCatererStationList = function(apiResponse) {
       $scope.stationList = apiResponse.response;
     };
