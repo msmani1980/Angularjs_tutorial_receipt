@@ -405,12 +405,14 @@ angular.module('ts5App')
     };
 
     this.removeStationSuccess = function (stationId) {
+      console.log('success!?')
       $scope.stationList = $scope.stationList.filter(function (station) {
         return station.id !== stationId;
       });
     };
 
-    this.removeStationFailure = function () {
+    this.removeStationFailure = function (dataFromAPI) {
+      console.log(dataFromAPI)
       $this.showToast('danger', 'Station', 'Error deleting station!');
     };
 
@@ -528,7 +530,9 @@ angular.module('ts5App')
       $this.displayLoadingModal('Removing Station id');
 
       stationsFactory.removeStation(stationId)
-        .then($this.removeStationSuccess(stationId), $this.removeStationFailure)
+        .then(function () {
+            return $this.removeStationSuccess(stationId)
+          }, $this.removeStationFailure)
         .finally($this.hideLoadingModal);
     };
 
