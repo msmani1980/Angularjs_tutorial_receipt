@@ -59,7 +59,7 @@
 
 							<label>Tax Is *</label>
 
-							<select name="Tax Is" required ng-disabled="(!itemPrice.startDate && !itemPrice.endDate) || $parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)" ng-model="itemPrice.taxIs" class="form-control">
+							<select name="Tax Is" required ng-disabled="((!itemPrice.startDate && !itemPrice.endDate) || $parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)) && !$parent.cloningItem" ng-model="itemPrice.taxIs" class="form-control">
 								<option value="Included">Included</option>
 								<option value="Excluded">Excluded</option>
 								<option value="Exempt">Exempt</option>
