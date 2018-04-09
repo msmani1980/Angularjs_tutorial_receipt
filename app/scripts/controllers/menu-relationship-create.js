@@ -134,7 +134,7 @@ angular.module('ts5App')
         sortBy: 'ASC'
       };
 
-      catererStationService.getCatererStationList(catererStationsPayload);
+      catererStationService.getCatererStationList(catererStationsPayload).then(setCatererStationList, errorHandler);
     };
 
     this.setCatererStationList = function(apiResponse) {
