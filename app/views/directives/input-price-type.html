@@ -97,7 +97,7 @@
                 <input name="Miles Points"
                        ng-model="itemPrice.priceMilesPoints.miles_points"
                        ng-required="false"
-                       ng-disabled="(!itemPrice.startDate && !itemPrice.endDate) || $parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)"
+                       ng-disabled="((!itemPrice.startDate && !itemPrice.endDate) || $parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)) && !$parent.cloningItem"
                        maxlength="10"
                        custom-validity
                        custom-pattern="number"
