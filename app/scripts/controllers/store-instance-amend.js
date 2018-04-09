@@ -938,11 +938,14 @@ angular.module('ts5App')
 
     function markCashBagAsDeleted() {
       $scope.cashBagToDelete.isDeleted = true;
+      getCashBags();
+      hideLoadingModal();
     }
 
     $scope.deleteCashBag = function () {
       angular.element('.delete-cashbag-warning-modal').modal('hide');
 
+      showLoadingModal('Deleting Cash Bag');
       storeInstanceAmendFactory.deleteCashBag($scope.cashBagToDelete.id).then(markCashBagAsDeleted, handleResponseError);
     };
 
@@ -1213,8 +1216,8 @@ angular.module('ts5App')
           cashBag: cashBag.cashBagNumber,
           bankRefNumber: cashBag.bankReferenceNumber,
           isDeleted: cashBag.delete === true,
-          deletedByUser: (cashBag.updatedByPerson) ? cashBag.updatedByPerson.userName : 'Unknown',
-          deletedOn: dateUtility.formatDateForApp(cashBag.updatedOn),
+          deletedByUser: getDeltedBy(cashBag),
+          deletedOn: getDeletedOn(cashBag),
           isManual: (cashBag.originationSource === 2 && cashBag.eposCashbagId === null),
           scheduleNumber: cashBag.scheduleNumber,
           scheduleDate: dateUtility.formatTimestampForApp(cashBag.scheduleDate),
@@ -1235,6 +1238,22 @@ angular.module('ts5App')
           isAmended: (cashBag.isAddedPosttrip || cashBag.isDeletedPosttrip) 
         };
       });
+    }
+
+    function getDeletedOn (cashBag) {
+      return cashBag.updatedOn ? dateUtility.formatTimestampForApp(cashBag.updatedOn) : dateUtility.formatTimestampForApp(cashBag.createdOn);
+    }
+
+    function getDeltedBy (cashBag) {
+      if (cashBag.updatedByPerson) {
+        return cashBag.updatedByPerson.userName;
+      }
+
+      if (cashBag.createdByPerson) {
+        return cashBag.createdByPerson.userName;
+      }
+
+      return 'Unknown';
     }
 
     function isCashbagSubmitted() {
