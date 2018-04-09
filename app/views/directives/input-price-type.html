@@ -45,7 +45,7 @@
 
 							<label>Price Type *</label>
 
-							<select name="Price Type" required ng-disabled="(!itemPrice.startDate && !itemPrice.endDate) || $parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)" ng-model="itemPrice.typeId" class="form-control"
+							<select name="Price Type" required ng-disabled="((!itemPrice.startDate && !itemPrice.endDate) || $parent.isAddPriceDisabled() || !$parent.isItemPriceNew(itemPrice)) && !$parent.cloningItem" ng-model="itemPrice.typeId" class="form-control"
 								ng-options="type.id as type.name for type in $parent.priceTypes">
 							</select>
 
