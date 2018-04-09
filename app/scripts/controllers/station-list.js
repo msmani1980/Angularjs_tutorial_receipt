@@ -410,7 +410,7 @@ angular.module('ts5App')
       });
     };
 
-    this.removeStationFailure = function (dataFromAPI) {
+    this.removeStationFailure = function () {
       $this.showToast('danger', 'Station', 'Error deleting station!');
     };
 
