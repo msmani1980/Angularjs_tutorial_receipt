@@ -127,6 +127,16 @@ angular.module('ts5App')
       return $scope.formData.endDate !== 'undefined' && $scope.formData.endDate !== null && $scope.formData.endDate !== undefined && $scope.formData.endDate !== null;
     };
 
+    this.getCatererStations = function() {
+      var catererStationsPayload = {
+        startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
+        sortBy: 'ASC'
+      };
+
+      catererStationService.getCatererStationList(catererStationsPayload);
+    };
+
     this.setCatererStationList = function(apiResponse) {
       $scope.stationList = apiResponse.response;
     };
