@@ -529,7 +529,7 @@ angular.module('ts5App')
 
       stationsFactory.removeStation(stationId)
         .then(function () {
-            return $this.removeStationSuccess(stationId)
+            return $this.removeStationSuccess(stationId);
           }, $this.removeStationFailure)
         .finally($this.hideLoadingModal);
     };
