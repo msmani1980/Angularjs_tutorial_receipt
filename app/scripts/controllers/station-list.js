@@ -411,11 +411,11 @@ angular.module('ts5App')
     };
 
     this.removeStationFailure = function (dataFromAPI) {
-      if (dataFromAPI && dataFromAPI.data && dataFromAPI.data.length > 0 && dataFromAPI.data[0].code === '0006') {
+      if (dataFromAPI && dataFromAPI.data && dataFromAPI.data.length > 0 && dataFromAPI.data[0].code === '006') {
         $this.showToast('danger', 'Station', 'Can\'t delete this station! Station it is in use.');
+      } else {
+        $this.showToast('danger', 'Station', 'Error deleting station!');
       }
-
-      $this.showToast('danger', 'Station', 'Error deleting station!');
     };
 
     this.makeInitPromises = function() {
