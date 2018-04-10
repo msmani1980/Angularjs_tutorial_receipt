@@ -123,6 +123,10 @@
               <select name="CateringStations" ng-required="true" ng-disabled="viewOnly || isRelationshipActive()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
                 <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
               </select>
+
+              <div class="row" ng-if="catererStationListIsEmpty && !areCatererStationsBeingLoaded && isStartDateSelected() && isEndDateSelected()" style="padding-left: 20px;">
+                <span class="alert alert-warning" ><i class="fa fa-exclamation-triangle"></i> There are no active LMP stations for selected Delivery Date</span>
+              </div>
             </div>
           </fieldset>
 
