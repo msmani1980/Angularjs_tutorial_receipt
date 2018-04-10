@@ -121,11 +121,11 @@ angular.module('ts5App')
     };
 
     $scope.isStartDateSelected = function () {
-      return $scope.formData.startDate !== 'undefined' && $scope.formData.startDate !== null && $scope.formData.startDate !== undefined && $scope.formData.startDate !== null;
+      return $scope.formData.startDate !== 'undefined' && $scope.formData.startDate !== null && $scope.formData.startDate !== undefined && $scope.formData.startDate !== '';
     };
 
     $scope.isEndDateSelected = function () {
-      return $scope.formData.endDate !== 'undefined' && $scope.formData.endDate !== null && $scope.formData.endDate !== undefined && $scope.formData.endDate !== null;
+      return $scope.formData.endDate !== 'undefined' && $scope.formData.endDate !== null && $scope.formData.endDate !== undefined && $scope.formData.endDate !== '';
     };
 
     this.getCatererStationsForDateRange = function(startDate, endDate) {
@@ -135,7 +135,7 @@ angular.module('ts5App')
         sortBy: 'ASC'
       };
 
-      catererStationService.getCatererStationList(catererStationsPayload).then(setCatererStationList, errorHandler);
+      catererStationService.getCatererStationList(catererStationsPayload).then($this.setCatererStationList, $this.errorHandler);
     };
 
     $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
