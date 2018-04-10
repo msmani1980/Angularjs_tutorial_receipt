@@ -150,11 +150,7 @@ angular.module('ts5App')
     this.setCatererStationList = function(apiResponse) {
       $scope.stationList = apiResponse.response;
 
-      if ($scope.stationList.length === 0) {
-        $scope.catererStationListIsEmpty = true;
-      } else {
-        $scope.catererStationListIsEmpty = false;
-      }
+      $scope.catererStationListIsEmpty = $scope.stationList.length === 0;
 
       $scope.areCatererStationsBeingLoaded = false;
     };
