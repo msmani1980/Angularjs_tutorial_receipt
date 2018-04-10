@@ -1159,11 +1159,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.checkPriceGroup = function(newPrices, oldPrices, priceIndex) {
       var newPriceGroup = newPrices[priceIndex];
       var oldPriceGroup = oldPrices[priceIndex];
-      if (!oldPriceGroup) {
-        return false;
-      }
 
-      if (newPriceGroup.startDate !== oldPriceGroup.startDate || newPriceGroup.endDate !== oldPriceGroup.endDate) {
+      if ((oldPriceGroup && (newPriceGroup.startDate !== oldPriceGroup.startDate || newPriceGroup.endDate !== oldPriceGroup.endDate)) || !oldPriceGroup) {
         $this.updatePriceGroup(priceIndex);
       }
     };
