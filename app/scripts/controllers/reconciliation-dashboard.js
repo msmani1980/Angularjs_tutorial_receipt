@@ -517,13 +517,17 @@ angular.module('ts5App')
     };
 
     function handleForceReconcileActionExecutionSuccess(instance) {
-      $scope.instancesForActionExecution = [instance];
-      $scope.actionToExecute = 'Confirmed';
-      var status = 10;
-      var pr = [
-        storeInstanceFactory.updateStoreInstanceStatus(instance.id, status, false)
-      ];
-      $q.all(pr).then($this.handleActionExecutionSuccess, $this.handleActionExecutionSuccess);
+      if (!instance.amendToConfirm) {	
+        $scope.instancesForActionExecution = [instance];
+        $scope.actionToExecute = 'Confirmed';
+        var status = 10;
+        var pr = [
+          storeInstanceFactory.updateStoreInstanceStatus(instance.id, status, false)
+        ];
+        $q.all(pr).then($this.handleActionExecutionSuccess, $this.handleActionExecutionSuccess);
+      } else {
+        $this.handleActionExecutionSuccess();
+      } 
     }
 
     $scope.forceReconcile = function(instance, action) {
