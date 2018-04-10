@@ -20,7 +20,7 @@ angular.module('ts5App')
     $scope.buttonText = 'Create';
     $scope.viewOnly = false;
     $scope.editingRelationship = false;
-    $scope.areCatererStationsLoaded = false;
+    $scope.areCatererStationsBeingLoaded = false;
     $scope.displayError = false;
 
     this.init = function() {
@@ -139,14 +139,17 @@ angular.module('ts5App')
     };
 
     $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
+      $scope.areCatererStationsBeingLoaded = true;
       if ($scope.isStartDateSelected() && $scope.isEndDateSelected()) {
         $this.getCatererStationsForDateRange($scope.formData.startDate, $scope.formData.endDate);
+      } else {
+        $scope.stationList = [];
       }
     }, true);
 
     this.setCatererStationList = function(apiResponse) {
       $scope.stationList = apiResponse.response;
-      $scope.areCatererStationsLoaded = true;
+      $scope.areCatererStationsBeingLoaded = false;
     };
 
     this.setMenuList = function(apiResponse) {
