@@ -124,7 +124,7 @@
                 <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
               </select>
 
-              <div class="row" ng-hide="isStartDateSelected() && isEndDateSelected()" style="padding-left: 20px;">
+              <div ng-if="isInitialLoadDone" class="row" ng-hide="isStartDateSelected() && isEndDateSelected()" style="padding-left: 20px;">
                 <span class="menu-alert-info" ><i class="fa fa-exclamation-triangle"></i> Please first select effective date range.</span>
               </div>
 

@@ -21,6 +21,7 @@ angular.module('ts5App')
     $scope.viewOnly = false;
     $scope.editingRelationship = false;
     $scope.areCatererStationsBeingLoaded = false;
+    $scope.isInitialLoadDone = false;
     $scope.displayError = false;
 
     this.init = function() {
@@ -48,6 +49,7 @@ angular.module('ts5App')
         $this.setMenuList(response[1]);
         $this.initSelectUI();
         $this.hideLoadingModal();
+        $scope.isInitialLoadDone = true;
       });
     };
 
@@ -117,6 +119,7 @@ angular.module('ts5App')
         $this.initSelectUI();
         $this.updateViewName();
         $this.hideLoadingModal();
+        $scope.isInitialLoadDone = true;
       });
     };
 
