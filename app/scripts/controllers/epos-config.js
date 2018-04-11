@@ -97,6 +97,10 @@ angular.module('ts5App')
 
         return productVersion;
       });
+
+      if ($scope.productVersions && $scope.productVersions.length > 0) {
+        $scope.selectedProductVersion = $scope.productVersions[0];
+      }
     };
 
     this.getModulesSuccess = function(dataFromAPI) {
