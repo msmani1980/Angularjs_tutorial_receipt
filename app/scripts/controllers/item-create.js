@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('ItemCreateCtrl',
-  function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
+  function($scope, $document, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
     currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService) {
 
     var $this = this;
@@ -1406,7 +1406,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.formScroll = function(id, activeBtn) {
       $scope.activeBtn = id;
       var elm = angular.element('#' + id);
-      var body = angular.element('body');
+      var body = angular.element('html, body');
       var navBar = angular.element('.navbar-header').height();
       var topBar = angular.element('.top-header').height();
       body.animate({
