@@ -1407,10 +1407,9 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.activeBtn = id;
       var elm = angular.element('#' + id);
       var body = angular.element('html, body');
-      var navBar = angular.element('.navbar-ts5').height();
       var topBar = angular.element('.top-header').height();
       body.animate({
-        scrollTop: elm.offset().top - (navBar + topBar + 100)
+        scrollTop: elm.offset().top - (topBar + 100)
       }, 'slow');
       return activeBtn;
     };
