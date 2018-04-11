@@ -92,7 +92,7 @@ angular.module('ts5App')
     };
 
     this.getProductVersionsSuccess = function(dataFromAPI) {
-      $scope.productVersions = angular.copy(dataFromAPI.response).map(function (productVersion) {
+      var versions = angular.copy(dataFromAPI.response).map(function (productVersion) {
         productVersion.displayName = productVersion.majorVersion + '.' + productVersion.minorVersion + '.' + productVersion.revision + '.' + productVersion.build;
 
         return productVersion;
