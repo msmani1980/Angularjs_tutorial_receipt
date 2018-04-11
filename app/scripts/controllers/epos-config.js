@@ -98,6 +98,8 @@ angular.module('ts5App')
         return productVersion;
       });
 
+      $scope.productVersions = lodash.orderBy($scope.productVersions, ['build'],['desc']);
+
       if ($scope.productVersions && $scope.productVersions.length > 0) {
         $scope.selectedProductVersion = $scope.productVersions[0];
       }
