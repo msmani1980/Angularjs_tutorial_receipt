@@ -36,7 +36,7 @@
             id="productVersion"
             ng-change="selectProductVersion()"
             ng-model="selectedProductVersion"
-            ng-options="productVersion as productVersion.displayName for productVersion in productVersions">
+            ng-options="productVersion as productVersion.displayName for productVersion in productVersions | orderBy: 'displayName'">
             <option selected default value="">Select ePOS config version</option>
           </select>
         </div>
