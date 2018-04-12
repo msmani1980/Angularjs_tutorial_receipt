@@ -253,9 +253,7 @@ angular.module('ts5App')
 
     this.init = function() {
       $this.showLoadingModal('Loading Data');
-
-      $scope.isCRUD = accessService.crudAccessGranted('EPOSCONFIG', 'EPOSCONFIG', 'EPOSCONFIG');
-
+      
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess, $this.initDependenciesError);
     };
