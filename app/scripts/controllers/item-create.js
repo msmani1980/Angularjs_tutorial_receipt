@@ -1219,7 +1219,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.updateSuccessHandler = function(response) {
-      $this.updateFormData(response.retailItem);
+      $this.updateFormData(response[0].retailItem);
       angular.element('#loading').modal('hide');
       angular.element('#update-success').modal('show');
     };
