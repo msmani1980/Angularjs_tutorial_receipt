@@ -98,7 +98,7 @@ angular.module('ts5App')
         return productVersion;
       });
 
-      $scope.productVersions = _.orderBy(versions, ['build'], ['desc']); 
+      $scope.productVersions = _.orderBy(versions, ['build'], ['desc']);
 
       if ($scope.productVersions && $scope.productVersions.length > 0) {
         $scope.selectedProductVersion = $scope.productVersions[0];
@@ -253,6 +253,9 @@ angular.module('ts5App')
 
     this.init = function() {
       $this.showLoadingModal('Loading Data');
+
+      $scope.isCRUD = accessService.crudAccessGranted('EPOS', 'EPOS_CONFIG', 'EPOS_CONFIG');
+
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess, $this.initDependenciesError);
     };
