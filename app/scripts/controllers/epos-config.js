@@ -68,20 +68,7 @@ angular.module('ts5App')
     };
 
     $scope.isUserAvailableForEditAndCreate = function () {
-      var result = false;
-      var userFeaturesInRole = $localStorage.featuresInRole;
-
-      if (userFeaturesInRole.EPOSCONFIG && userFeaturesInRole.EPOSCONFIG.EPOSCONFIG) {
-        var eposConfigRoleFeatures = userFeaturesInRole.EPOSCONFIG.EPOSCONFIG;
-
-        _.forEach(eposConfigRoleFeatures, function(feature) {
-          if (_.includes(feature.permissionCode, 'C') && _.includes(feature.permissionCode, 'U') && _.includes(feature.permissionCode, 'D')) {
-            result = true;
-          }
-        });
-      }
-
-      return result;
+      return $scope.isCRUD;
     };
 
     this.showLoadingModal = function(message) {
