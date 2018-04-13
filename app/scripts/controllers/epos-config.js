@@ -12,7 +12,7 @@ angular.module('ts5App')
     var companyId;
     var $this = this;
 
-    $scope.viewName = 'Epos Configuration';
+    $scope.viewName = 'ePOS Configuration';
     $scope.productVersions = [];
     $scope.modules = [];
     $scope.selectedProductVersion = null;
@@ -249,5 +249,4 @@ angular.module('ts5App')
     };
 
     this.init();
-
   });
