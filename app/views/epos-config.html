@@ -6,7 +6,7 @@
       <h3 class="modal-title">{{ selectedModule.moduleName || 'EPOS Configuration' }}</h3>
     </div>
     <div class="modal-body">
-      <p ng-show="selectedProductVersion === null || selectedProductVersion === 'undefined'">Select Product Version first, then choose module you want to edit.</p>
+      <p ng-show="selectedProductVersion === null || selectedProductVersion === 'undefined'">Select ePOS config version first, then choose module you want to edit.</p>
       <p ng-show="selectedProductVersion && (moduleConfiguration === null || moduleConfiguration === 'undefined')">Please choose module you want to edit</p>
       <p ng-show="isModuleConfigurationOptionsEmpty()">Module is empty. Has no configuration data.</p>
 
@@ -37,7 +37,7 @@
             ng-change="selectProductVersion()"
             ng-model="selectedProductVersion"
             ng-options="productVersion as productVersion.displayName for productVersion in productVersions">
-            <option selected default value="">Select Product Version</option>
+            <option selected default value="">Select ePOS config version</option>
           </select>
         </div>
       </li>

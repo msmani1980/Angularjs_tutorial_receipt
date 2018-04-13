@@ -8,11 +8,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EposConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _) {
+  .controller('EposConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, accessService) {
     var companyId;
     var $this = this;
 
-    $scope.viewName = 'Epos Configuration';
+    $scope.viewName = 'ePOS Configuration';
     $scope.productVersions = [];
     $scope.modules = [];
     $scope.selectedProductVersion = null;
@@ -25,6 +25,7 @@ angular.module('ts5App')
     };
     $scope.initialRadioButtonModuleOptionPopulatedIds = {};
     $scope.initialCheckBoxModuleOptionPopulatedIds = {};
+    $scope.isCRUD = false;
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
       if (!newProductVersion) {
@@ -67,20 +68,7 @@ angular.module('ts5App')
     };
 
     $scope.isUserAvailableForEditAndCreate = function () {
-      var result = false;
-      var userFeaturesInRole = $localStorage.featuresInRole;
-
-      if (userFeaturesInRole.EPOSCONFIG && userFeaturesInRole.EPOSCONFIG.EPOSCONFIG) {
-        var eposConfigRoleFeatures = userFeaturesInRole.EPOSCONFIG.EPOSCONFIG;
-
-        _.forEach(eposConfigRoleFeatures, function(feature) {
-          if (_.includes(feature.permissionCode, 'C') && _.includes(feature.permissionCode, 'U') && _.includes(feature.permissionCode, 'D')) {
-            result = true;
-          }
-        });
-      }
-
-      return result;
+      return $scope.isCRUD;
     };
 
     this.showLoadingModal = function(message) {
@@ -92,11 +80,17 @@ angular.module('ts5App')
     };
 
     this.getProductVersionsSuccess = function(dataFromAPI) {
-      $scope.productVersions = angular.copy(dataFromAPI.response).map(function (productVersion) {
+      var versions = angular.copy(dataFromAPI.response).map(function (productVersion) {
         productVersion.displayName = productVersion.majorVersion + '.' + productVersion.minorVersion + '.' + productVersion.revision + '.' + productVersion.build;
 
         return productVersion;
       });
+
+      $scope.productVersions = _.orderBy(versions, ['build'], ['desc']);
+
+      if ($scope.productVersions && $scope.productVersions.length > 0) {
+        $scope.selectedProductVersion = $scope.productVersions[0];
+      }
     };
 
     this.getModulesSuccess = function(dataFromAPI) {
@@ -247,10 +241,12 @@ angular.module('ts5App')
 
     this.init = function() {
       $this.showLoadingModal('Loading Data');
+
+      $scope.isCRUD = accessService.crudAccessGranted('EPOSCONFIG', 'EPOSCONFIG', 'EPOSCONFIG');
+
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess, $this.initDependenciesError);
     };
 
     this.init();
-
   });
