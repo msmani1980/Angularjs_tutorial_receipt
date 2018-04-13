@@ -15,10 +15,14 @@ angular.module('ts5App')
       return deliveryNotesService.getDeliveryNote(deliveryNoteId);
     }
 
-    function getCatererStationList() {
-      return catererStationService.getCatererStationList({
-        limit: null
-      });
+    function getCatererStationList(payload) {
+      if (payload) {
+        return catererStationService.getCatererStationList(payload);
+      } else {
+        return catererStationService.getCatererStationList({
+          limit: null
+        });
+      }
     }
 
     function getItemsByCateringStationId(_catererStationId) {
