@@ -120,9 +120,17 @@
           <fieldset ng-disabled="viewOnly || isRelationshipActive()">
             <div class="form-group" ng-class="setInputValidClass('CateringStations')">
               <label class="control-label" for="CateringStations">Catering Stations *</label>
-              <select name="CateringStations" ng-required="true" ng-disabled="viewOnly || isRelationshipActive()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
+              <select name="CateringStations" ng-required="true" ng-disabled="viewOnly || isRelationshipActive() || areCatererStationsBeingLoaded || !isStartDateSelected() || !isEndDateSelected()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
                 <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
               </select>
+
+              <div ng-if="isInitialLoadDone" class="row" ng-hide="isStartDateSelected() && isEndDateSelected()" style="padding-left: 20px;">
+                <span class="menu-alert-info" ><i class="fa fa-exclamation-triangle"></i> Please first select effective date range.</span>
+              </div>
+
+              <div class="row" ng-if="catererStationListIsEmpty && !areCatererStationsBeingLoaded && isStartDateSelected() && isEndDateSelected()" style="padding-left: 20px;">
+                <span class="menu-alert-warning" ><i class="fa fa-exclamation-triangle"></i> There are no active Caterer stations for selected effective date range</span>
+              </div>
             </div>
           </fieldset>
 

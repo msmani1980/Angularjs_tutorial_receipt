@@ -20,6 +20,8 @@ angular.module('ts5App')
     $scope.buttonText = 'Create';
     $scope.viewOnly = false;
     $scope.editingRelationship = false;
+    $scope.areCatererStationsBeingLoaded = false;
+    $scope.isInitialLoadDone = false;
     $scope.displayError = false;
 
     this.init = function() {
@@ -47,6 +49,7 @@ angular.module('ts5App')
         $this.setMenuList(response[1]);
         $this.initSelectUI();
         $this.hideLoadingModal();
+        $scope.isInitialLoadDone = true;
       });
     };
 
@@ -116,11 +119,43 @@ angular.module('ts5App')
         $this.initSelectUI();
         $this.updateViewName();
         $this.hideLoadingModal();
+        $scope.isInitialLoadDone = true;
       });
     };
 
+    $scope.isStartDateSelected = function () {
+      return $scope.formData.startDate !== 'undefined' && $scope.formData.startDate !== null && $scope.formData.startDate !== undefined && $scope.formData.startDate !== '';
+    };
+
+    $scope.isEndDateSelected = function () {
+      return $scope.formData.endDate !== 'undefined' && $scope.formData.endDate !== null && $scope.formData.endDate !== undefined && $scope.formData.endDate !== '';
+    };
+
+    this.getCatererStationsForDateRange = function(startDate, endDate) {
+      var catererStationsPayload = {
+        startDate: dateUtility.formatDateForAPI(startDate),
+        endDate: dateUtility.formatDateForAPI(endDate),
+        sortBy: 'ASC'
+      };
+
+      catererStationService.getCatererStationList(catererStationsPayload).then($this.setCatererStationList, $this.errorHandler);
+    };
+
+    $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
+      $scope.areCatererStationsBeingLoaded = true;
+      if ($scope.isStartDateSelected() && $scope.isEndDateSelected()) {
+        $this.getCatererStationsForDateRange($scope.formData.startDate, $scope.formData.endDate);
+      } else {
+        $scope.stationList = [];
+      }
+    }, true);
+
     this.setCatererStationList = function(apiResponse) {
       $scope.stationList = apiResponse.response;
+
+      $scope.catererStationListIsEmpty = $scope.stationList.length === 0;
+
+      $scope.areCatererStationsBeingLoaded = false;
     };
 
     this.setMenuList = function(apiResponse) {
