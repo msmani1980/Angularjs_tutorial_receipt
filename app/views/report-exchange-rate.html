@@ -145,7 +145,7 @@
 
         </div>
     </form>
-    <alert ng-show="companyExchangeRates.length == 0 && isSearch" type="info">
+    <alert ng-show="countOfValidExchangeRates() == 0 && isSearch" type="info">
     	<span class="fa fa-flag"></span> Your search returned no results.
 	</alert>
 	<alert ng-show="!isSearch" type="info">
