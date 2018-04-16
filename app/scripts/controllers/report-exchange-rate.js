@@ -28,7 +28,7 @@ angular.module('ts5App')
     $scope.countOfValidExchangeRates = function () {
       var count = 0;
       angular.forEach($scope.companyExchangeRates, function(er) {
-        if($scope.companyExchangeRateFilter(er)) {
+        if ($scope.companyExchangeRateFilter(er)) {
           count = count + 1;
         }
       });
