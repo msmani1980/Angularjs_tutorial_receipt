@@ -151,7 +151,7 @@
 	<alert ng-show="!isSearch" type="info">
     	<span class="fa fa-flag"></span> Click search to show the results.
   	</alert>
-    <p ng-if="companyExchangeRates.length > 0" class="record-count small text-center">Showing {{countOfValidExchangeRates()}} records</p>
+    <p ng-if="countOfValidExchangeRates() > 0" class="record-count small text-center">Showing {{countOfValidExchangeRates()}} records</p>
 </div>
 
 <delete-record-dialog></delete-record-dialog>
