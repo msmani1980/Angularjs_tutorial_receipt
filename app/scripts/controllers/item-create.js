@@ -474,6 +474,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.deserializeSubstitutions(itemData);
       this.deserializeRecommendations(itemData);
       this.formatImageDates(itemData.images);
+
+      itemData.prices = _.orderBy(prices, ['id'],['desc']);
       this.formatPriceDates(itemData);
       $scope.formData = angular.copy(itemData);
 
