@@ -132,8 +132,8 @@
                               <button class="btn btn-info btn-xs" ng-show="isExchangeRateNewOne(exchangeRate)" ng-click="saveCompanyExchangeRate(index, exchangeRate)">
                                   <i class="fa fa-check-square-o"></i>
                               </button>
-                              <button class="btn btn-danger btn-xs" 
-                              		ng-click="deleteRecordDialog(companyExchangeRates[$index], ['acceptedCurrencyCode', 'startDate', 'endDate'])" 
+                              <button class="btn btn-danger btn-xs"
+                              		ng-click="deleteRecordDialog(companyExchangeRates[$index], ['acceptedCurrencyCode', 'startDate', 'endDate'])"
                               		ng-hide="isExchangeRateReadOnly(exchangeRate)">
                                   <i class="fa fa-trash"></i>
                               </button>
@@ -142,16 +142,16 @@
                     </tbody>
                 </table>
             </div>
-            
+
         </div>
     </form>
-    <alert ng-show="companyExchangeRates.length == 0 && isSearch" type="info">
+    <alert ng-show="countOfValidExchangeRates() == 0 && isSearch" type="info">
     	<span class="fa fa-flag"></span> Your search returned no results.
 	</alert>
 	<alert ng-show="!isSearch" type="info">
     	<span class="fa fa-flag"></span> Click search to show the results.
   	</alert>
-    <p ng-if="companyExchangeRates.length > 0" class="record-count small text-center">Showing {{companyExchangeRates.length}} records</p>
+    <p ng-if="countOfValidExchangeRates() > 0" class="record-count small text-center">Showing {{countOfValidExchangeRates()}} records</p>
 </div>
 
 <delete-record-dialog></delete-record-dialog>
