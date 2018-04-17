@@ -27,8 +27,7 @@ angular.module('ts5App')
       };
 
       $scope.changePassword = function () {
-        identityAccessFactory.logout();
-        $scope.$emit('logout');
+        $location.url('/change-password');
       };
 
       function correctRelativeCompanyData(company) {
