@@ -22,17 +22,11 @@ angular.module('ts5App')
     }
 
     function updateThreshold(featureCode, payload, thresholdId) {
-      requestParameters.featureCode = featureCode;
-      requestParameters.thresholdId = thresholdId;
-
-      return requestResource.updateThreshold(payload).$promise;
+      return featureThresholdsService.updateThreshold(featureCode, payload, thresholdId);
     }
 
     function deleteThreshold(featureCode, thresholdId) {
-      requestParameters.featureCode = featureCode;
-      requestParameters.thresholdId = thresholdId;
-
-      return requestResource.deleteThreshold().$promise;
+      return featureThresholdsService.deleteThreshold(featureCode, thresholdId);
     }
 
     return {
