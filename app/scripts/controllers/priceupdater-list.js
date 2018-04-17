@@ -43,6 +43,9 @@ angular.module('ts5App')
   this.getPriceUpdateRuleSuccess = function(response) {
     $this.meta.count = $this.meta.count || response.meta.count;
     $scope.priceUpdateRules = $scope.priceUpdateRules.concat(response.response.map(function (priceupdater) {
+      priceupdater.categoryName = lodash.findWhere($scope.salesCategories, { id: priceupdater.categoryId });
+      priceupdater.priceType = lodash.findWhere($scope.priceTypes, { id: priceupdater.priceTypeId });
+      priceupdater.taxIs = (priceupdater.taxFilter !== null) ? (priceupdater.taxFilter ? 'Included' : 'Excluded') : 'Exempt';
       priceupdater.startDate = dateUtility.formatDateForApp(priceupdater.startDate);
       priceupdater.endDate = dateUtility.formatDateForApp(priceupdater.endDate);
 

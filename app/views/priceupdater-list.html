@@ -76,7 +76,6 @@
         <tr>
           <th>Category</th>
           <th>Price Type</th>
-          <th>Currency</th>
           <th>Tax Is</th>
           <th>Start Date</th>
           <th>End Date</th>
@@ -89,10 +88,9 @@
         </thead>
         <tbody>
         <tr class="ng-scope" ng-repeat="priceupdater in priceUpdateRules">
-          <td>{{ priceupdater.categoryId }}</td>
-          <td>{{ priceupdater.priceTypeId }}</td>
-          <td>{{ priceupdater.currency }}</td>
-          <td>{{ priceupdater.taxFilter }}</td>
+          <td>{{ priceupdater.categoryName }}</td>
+          <td>{{ priceupdater.priceType }}</td>
+          <td>{{ priceupdater.taxIs }}</td>
           <td>{{ priceupdater.startDate}}</td>
           <td>{{ priceupdater.endDate}}</td>
           <td>{{ priceupdater.createdByPerson.userName }}</td>
