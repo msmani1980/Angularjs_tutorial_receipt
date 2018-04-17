@@ -26,6 +26,11 @@ angular.module('ts5App')
         $scope.$emit('logout');
       };
 
+      $scope.changePassword = function () {
+        identityAccessFactory.logout();
+        $scope.$emit('logout');
+      };
+
       function correctRelativeCompanyData(company) {
         var selectedCompanyName = $scope.pickedCompany['Cash Handler'].companyName;
         if (selectedCompanyName === company.companyName) {
@@ -51,7 +56,7 @@ angular.module('ts5App')
           correctRelativeCompanyData(company);
           return lodash.findIndex(retailCompanyList.companies, { companyName: company.companyName }) >= 0 && company.companyTypeName === 'Retail';
         });
-        
+
       }
 
       $scope.selectCHRetailCompany = function (companyType) {
