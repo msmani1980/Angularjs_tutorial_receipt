@@ -10,7 +10,7 @@
 angular.module('ts5App')
 .service('priceupdaterService', function ($resource, ENV) {
 
-  var priceUpdaterRequestURL = ENV.apiUrl + '/rsvr/api/bulk-price/:priceupdaterId';
+  var priceUpdaterRequestURL = ENV.apiUrl + '/rsvr/api/bulk-price/:ruleId';
 
   var priceUpdaterActions = {
     getPriceUpdaterRules: {

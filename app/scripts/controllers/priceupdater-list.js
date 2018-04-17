@@ -42,7 +42,7 @@ angular.module('ts5App')
 
   this.getPriceUpdateRuleSuccess = function(response) {
     $this.meta.count = $this.meta.count || response.meta.count;
-    $scope.priceUpdateRules = $scope.priceUpdateRules.concat(response.map(function (priceupdater) {
+    $scope.priceUpdateRules = $scope.priceUpdateRules.concat(response.response.map(function (priceupdater) {
       priceupdater.startDate = dateUtility.formatDateForApp(priceupdater.startDate);
       priceupdater.endDate = dateUtility.formatDateForApp(priceupdater.endDate);
 
@@ -100,7 +100,7 @@ angular.module('ts5App')
 
   $scope.redirectToPriceUpdateRule = function(id, state) {
     $location.search({});
-    $location.path('priceupdater-create/' + state + '/' + id).search();
+    $location.path('priceupdater/' + state + '/' + id).search();
   };
 
   this.deleteSuccess = function() {

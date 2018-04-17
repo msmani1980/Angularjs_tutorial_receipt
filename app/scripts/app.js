@@ -466,7 +466,7 @@ angular.module('ts5App', [
     templateUrl: 'views/priceupdater-list.html',
     controller: 'PriceupdaterListCtrl',
     controllerAs: 'priceupdaterList'
-  }).when('/priceupdater-create', {
+  }).when('/priceupdater/:action/:id?', {
     templateUrl: 'views/priceupdater-create.html',
     controller: 'PriceupdaterCreateCtrl',
     controllerAs: 'priceupdaterCreate'
