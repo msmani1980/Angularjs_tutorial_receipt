@@ -60,17 +60,25 @@ angular.module('ts5App')
       return requestResource.createThreshold(payload).$promise;
     }
 
-    function updateThreshold(featureCode, payload, tresholdId) {
+    function updateThreshold(featureCode, payload, thresholdId) {
       requestParameters.featureCode = featureCode;
-      requestParameters.thresholdId = tresholdId;
+      requestParameters.thresholdId = thresholdId;
 
       return requestResource.updateThreshold(payload).$promise;
+    }
+
+    function deleteThreshold(featureCode, thresholdId) {
+      requestParameters.featureCode = featureCode;
+      requestParameters.thresholdId = thresholdId;
+
+      return requestResource.deleteThreshold().$promise;
     }
 
     return {
       getThresholdList: getThresholdList,
       getThreshold: getThreshold,
       createThreshold: createThreshold,
-      updateThreshold: updateThreshold
+      updateThreshold: updateThreshold,
+      deleteThreshold: deleteThreshold
     };
   });
