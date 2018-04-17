@@ -18,6 +18,16 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
+    $scope.taxIs = [{
+      name: 'Included',
+      value: true
+    }, {
+      name: 'Excluded',
+      value: false
+    }, {
+      name: 'Exempt',
+      value: null
+    }];
 
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -87,8 +97,7 @@ angular.module('ts5App')
       return {
         companyCurrencyId: currency.companyCurrencyId,
         code: currency.code,
-        amend: currency.price,
-        percentage: false
+        amend: currency.price
       };
     };
 
@@ -96,6 +105,10 @@ angular.module('ts5App')
       var priceCurrencies = [];
       angular.forEach($scope.priceCurrencies, function (currency) {
         var newCurrency = $this.generateCurrency(currency);
+        if (currency.id) {
+          newCurrency.id = currency.id; 
+        }
+
         priceCurrencies.push(newCurrency);
       });
 
@@ -108,6 +121,7 @@ angular.module('ts5App')
         categoryId: $scope.rule.categoryId,
         priceTypeId: $scope.rule.priceTypeId,
         taxFilter: $scope.rule.taxFilter,
+        percentage: false,
         prices: $this.formatPriceCurrencies(),
         startDate: dateUtility.formatDateForAPI($scope.rule.startDate),
         endDate: dateUtility.formatDateForAPI($scope.rule.endDate)
@@ -118,13 +132,15 @@ angular.module('ts5App')
       );
     };
 
-    this.updatePriceUpdaterRule = function() {
+    this.editPriceUpdaterRule = function() {
       $this.showLoadingModal('Saving Price Update Rule Data');
       var payload = {
         id: $routeParams.id,
         categoryId: $scope.rule.categoryId,
         priceTypeId: $scope.rule.priceTypeId,
         taxFilter: $scope.rule.taxFilter,
+        percentage: false,
+        companyId: $scope.rule.companyId,
         prices: $this.formatPriceCurrencies(),
         startDate: dateUtility.formatDateForAPI($scope.rule.startDate),
         endDate: dateUtility.formatDateForAPI($scope.rule.endDate)
@@ -163,22 +179,32 @@ angular.module('ts5App')
       return promises;
     };
 
+    this.setPriceCurrencies = function(prices) {
+      var priceCurrencies = [];
+      angular.forEach(prices, function (currency) {
+        currency.price = currency.amend; 
+        priceCurrencies.push(currency);
+      });
+
+      return priceCurrencies;
+    };
+
     this.priceUpdaterRuleSuccess = function(response) {
       $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
       $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
       $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
-
+      $scope.priceCurrencies = $this.setPriceCurrencies(response.prices);
       $scope.rule = {
         id: response.id,
         categoryId: response.categoryId,
         priceTypeId: response.priceTypeId,
         taxFilter: response.taxFilter,
-        prices: response.prices,
         startDate: $scope.viewStartDate,
+        companyId: response.companyId,
         endDate: $scope.viewEndDate
       };
-
+      
       $scope.isLoadingCompleted = true;
     };
 
@@ -213,7 +239,7 @@ angular.module('ts5App')
     };
 
     $scope.$watchGroup(['rule.startDate', 'rule.endDate'], function () {
-      if ($scope.rule && $scope.rule.startDate && $scope.rule.endDate) {
+      if ($scope.rule && $scope.rule.startDate && $scope.rule.endDate && $scope.isCreate) {
         $this.getPriceCurrenciesList($scope.rule.startDate, $scope.rule.endDate);
       }
     });

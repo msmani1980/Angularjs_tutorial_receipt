@@ -19,11 +19,9 @@
 				   <div class="col-xs-12 col-sm-4">
 						<div class="form-group">
 							<label for="categoryName">Category*</label>
-							<select ng-model="rule.categoryId" class="form-control" ng-disabled="isDisabled()" id="item-sales-category">
-	                  			<option value="{{salesCategory.id}}"
-	                          				ng-repeat="salesCategory in salesCategories | unique: 'salesCategoryId'">{{ salesCategory.name }}
-	                  			</option>
-                			</select>
+							<select ng-model="rule.categoryId" class="form-control" ng-disabled="isDisabled()" id="item-sales-category" required="true"
+							 ng-options="salesCategory.id as salesCategory.name for salesCategory in salesCategories">
+	                  		</select>
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
@@ -58,7 +56,7 @@
 					<div class="col-xs-12 col-sm-4">
 						<div class="form-group">
 							<label for="priceType">Price Type*</label>
-							<select name="Price Type" ng-model="rule.priceTypeId" ng-disabled="isDisabled()" class="form-control"
+							<select name="Price Type" ng-model="rule.priceTypeId" required="true" ng-disabled="isDisabled()" class="form-control"
 								ng-options="type.id as type.name for type in priceTypes">
 							</select>
 						</div>
@@ -66,10 +64,8 @@
 					<div class="col-xs-12 col-sm-4">
 						<div class="form-group">
 							<label for="taxIs">Tax Is</label>
-							<select name="Tax Is" ng-model="rule.taxFilter" ng-disabled="isDisabled()" class="form-control">
-								<option value="true">Included</option>
-								<option value="false">Excluded</option>
-								<option>Exempt</option>
+							<select name="Tax Is" ng-model="rule.taxFilter" ng-disabled="isDisabled()" class="form-control"
+							   ng-options="tax.value as tax.name for tax in taxIs">
 						    </select>
 						</div>
 					</div>
@@ -85,7 +81,7 @@
     	          						{{ currency.code }} *
 									</div>
 									
-									<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="shouldValidatePrice()" 
+									<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="true"  
 											ng-disabled="isDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
 											
 								</div>
