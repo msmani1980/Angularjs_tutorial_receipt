@@ -41,6 +41,10 @@ angular.module('ts5App')
     var getPriceTypesList = function (payload) {
       return priceTypesService.getPriceTypesList(payload);
     };
+
+    var applyPriceUpdateRules = function (payload) {
+      return priceTypesService.applyPriceUpdateRules(payload);
+    };
     
     return {
       getPriceUpdaterRules: getPriceUpdaterRules,
@@ -50,7 +54,8 @@ angular.module('ts5App')
       deletePriceUpdaterRule: deletePriceUpdaterRule,
       getCompanyId: getCompanyId,
       getSalesCategoriesList: getSalesCategoriesList,
-      getPriceTypesList: getPriceTypesList
+      getPriceTypesList: getPriceTypesList,
+      applyPriceUpdateRules: applyPriceUpdateRules
     };
 	
   });

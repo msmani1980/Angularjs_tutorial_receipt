@@ -28,6 +28,10 @@ angular.module('ts5App')
       method: 'PUT',
       headers: {}
     },
+    applyPriceUpdateRules: {
+      method: 'PATCH',
+      headers: {}
+    },
     deletePriceUpdaterRule: {
       method: 'DELETE',
       headers: {}
@@ -73,12 +77,21 @@ angular.module('ts5App')
     return priceUpdaterRequestResource.deletePriceUpdaterRule(payload).$promise;
   };
 
+  var applyPriceUpdateRules = function (ruleId, payload) {
+    var requestParameters = {
+      ruleId: ruleId
+    };
+ 
+    return priceUpdaterRequestResource.applyPriceUpdateRules(requestParameters, payload).$promise;
+  };
+
   return {
     getPriceUpdaterRules: getPriceUpdaterRules,
     getPriceUpdaterRuleById: getPriceUpdaterRuleById,
     createPriceUpdaterRule: createPriceUpdaterRule,
     updatePriceUpdaterRule: updatePriceUpdaterRule,
-    deletePriceUpdaterRule: deletePriceUpdaterRule
+    deletePriceUpdaterRule: deletePriceUpdaterRule,
+    applyPriceUpdateRules: applyPriceUpdateRules
   };
 
 });

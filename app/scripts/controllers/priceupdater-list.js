@@ -21,6 +21,7 @@ angular.module('ts5App')
   $scope.search = {};
   $scope.priceUpdateRules = [];
   $scope.loadingBarVisible = false;
+  $scope.selectedRulesForExecution = [];
   $scope.isSearch = false;
 
   function showLoadingBar() {
@@ -43,8 +44,6 @@ angular.module('ts5App')
   this.getPriceUpdateRuleSuccess = function(response) {
     $this.meta.count = $this.meta.count || response.meta.count;
     $scope.priceUpdateRules = $scope.priceUpdateRules.concat(response.response.map(function (priceupdater) {
-      priceupdater.categoryName = lodash.findWhere($scope.salesCategories, { id: priceupdater.categoryId });
-      priceupdater.priceType = lodash.findWhere($scope.priceTypes, { id: priceupdater.priceTypeId });
       priceupdater.taxIs = (priceupdater.taxFilter !== null) ? (priceupdater.taxFilter ? 'Included' : 'Excluded') : 'Exempt';
       priceupdater.startDate = dateUtility.formatDateForApp(priceupdater.startDate);
       priceupdater.endDate = dateUtility.formatDateForApp(priceupdater.endDate);
@@ -145,10 +144,68 @@ angular.module('ts5App')
     );
   };
 
+  $scope.hasSelectedAnyRules = function () {
+    return lodash.filter($scope.priceUpdateRules, function(rule) {
+      return rule.selected === true;
+    }).length > 0;
+  };
+
+  $scope.selectAllCheckboxes = function () {
+    angular.forEach($scope.priceUpdateRules, function (rule) {
+      rule.selected = $scope.allCheckboxesSelected;
+    });
+  };
+
+  this.findAllSelectedRules = function() {
+    return lodash.filter($scope.priceUpdateRules, function(rule) {
+      return rule.selected === true;
+    });
+  };
+
+  $scope.showBulkExecuteActionModal = function(action) {
+    $scope.selectedRulesForExecution = $this.findAllSelectedRules();
+    $scope.actionToExecute = action;
+    angular.element('.delete-warning-modal').modal('show');
+  };
+
+  this.applyPriceUpdateRulesSuccess = function () {
+    $this.showToastMessage('success', 'Rules have been applied', 'success');
+  };
+
+  this.applyPriceUpdateRulesFailure = function () {
+    $this.showToastMessage('error', 'Something went wrong while applying rules. Please try again.', 'success');
+  };
+  
+  this.executeApplyRulesAction = function () {
+    var payload = {
+      id: $scope.selectedRulesForExecution.map(function (rule) {
+        return rule.id;
+      })
+    };
+
+    priceupdaterFactory.applyPriceUpdateRules(payload).then($this.applyPriceUpdateRulesSuccess, $this.applyPriceUpdateRulesFailure);
+  };
+
+  $scope.executeAction = function() {
+    $scope.displayError = false;
+    angular.element('.delete-warning-modal').modal('hide');
+    if ($scope.actionToExecute === 'Apply Rules') {
+      $this.executeApplyRulesAction();
+    }
+  };
+
   this.initSuccessHandler = function(responseCollection) {
     angular.element('#search-collapse').addClass('collapse');
     $scope.salesCategories = angular.copy(responseCollection[0].salesCategories);
     $scope.priceTypes = angular.copy(responseCollection[1]);
+  };
+
+  $scope.loadUpdatedOn = function (priceupdater) {
+    return priceupdater.updatedOn ? dateUtility.formatTimestampForApp(priceupdater.updatedOn) : null;
+  };
+
+  $scope.loadCreatedOn = function (priceupdater) {
+    return priceupdater.createdOn ? dateUtility.formatTimestampForApp(priceupdater.createdOn) : null;
   };
 
   this.makeInitPromises = function() {
@@ -163,6 +220,7 @@ angular.module('ts5App')
     var initDependencies = $this.makeInitPromises();
     $scope.isCRUD = accessService.crudAccessGranted('RETAIL', 'RETAILITEMCATEGORY', 'CRUDRICAT');
     $q.all(initDependencies).then($this.initSuccessHandler);
+    $scope.allCheckboxesSelected = false;
   };
 
   this.init();
