@@ -11,7 +11,7 @@ angular.module('ts5App')
   .controller('ChangePasswordCtrl', function ($rootScope, $scope, $http, $routeParams, $location, $window, identityAccessFactory) {
 
     $scope.credentials = {
-      //currentPassword: '',
+      currentPassword: '',
       newPassword: '',
       newPasswordConfirm: ''
     };
@@ -104,7 +104,7 @@ angular.module('ts5App')
       $location.path('/#/login');
       $window.location.reload();
     }
-    
+
     function checkAuthSuccess(dataFromAPI) {
       var userInfo = angular.copy(dataFromAPI);
       $scope.credentials.username = userInfo.userName;
