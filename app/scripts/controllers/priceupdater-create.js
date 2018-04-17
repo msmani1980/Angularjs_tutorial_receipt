@@ -105,8 +105,8 @@ angular.module('ts5App')
       var priceCurrencies = [];
       angular.forEach($scope.priceCurrencies, function (currency) {
         var newCurrency = $this.generateCurrency(currency);
-        if (currency.id) {
-          newCurrency.id = currency.id; 
+        if (currency.priceId) {
+          newCurrency.id = currency.priceId; 
         }
 
         priceCurrencies.push(newCurrency);
@@ -182,7 +182,8 @@ angular.module('ts5App')
     this.setPriceCurrencies = function(prices) {
       var priceCurrencies = [];
       angular.forEach(prices, function (currency) {
-        currency.price = currency.amend; 
+        currency.price = currency.amend;
+        currency.priceId = currency.id;
         priceCurrencies.push(currency);
       });
 
