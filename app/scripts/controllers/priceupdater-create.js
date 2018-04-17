@@ -1,0 +1,230 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name ts5App.controller:PriceupdaterCreateCtrl
+ * @description
+ * # PriceupdaterCreateCtrl
+ * Controller of the ts5App
+ */
+angular.module('ts5App')
+  .controller('PriceupdaterCreateCtrl', function($scope, $q, $location, dateUtility, $routeParams, priceupdaterFactory, messageService, currencyFactory) {
+
+    var $this = this;
+    $scope.viewName = 'Price Update Rule';
+    $scope.shouldDisableEndDate = false;
+    $scope.isLoadingCompleted = false;
+    $scope.rule = {
+      startDate: '',
+      endDate: ''
+    };
+
+    this.showLoadingModal = function(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
+
+    this.createInit = function() {
+      $scope.readOnly = false;
+      $scope.isCreate = true;
+      $scope.viewName = 'Create Price Update Rule';
+      $scope.viewEditItem = false;
+      $scope.isLoadingCompleted = true;
+    };
+
+    this.viewInit = function() {
+      $scope.readOnly = true;
+      $scope.viewName = 'View Price Update Rule';
+      $scope.viewEditItem = true;
+    };
+
+    this.editInit = function() {
+      $scope.readOnly = false;
+      $scope.viewName = 'Edit Price Update Rule';
+      $scope.viewEditItem = true;
+    };
+
+    $scope.isDisabled = function() {
+      return $scope.disablePastDate || $scope.readOnly;
+    };
+
+    this.validateForm = function() {
+      $this.resetErrors();
+      return $scope.priceUpdaterDataForm.$valid;
+    };
+
+    this.resetErrors = function() {
+      $scope.formErrors = [];
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+    };
+
+    this.showToastMessage = function(className, type, message) {
+      messageService.display(className, message, type);
+    };
+
+    this.saveFormSuccess = function() {
+      $this.hideLoadingModal();
+      if ($routeParams.action === 'create') {
+        $this.showToastMessage('success', 'Create Price Update Rule', 'success');
+      } else {
+        $this.showToastMessage('success', 'Edit Price Update Rule', 'success');
+      }
+
+      $location.path('priceupdater-list');
+    };
+
+    this.saveFormFailure = function(dataFromAPI) {
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
+    this.generateCurrency = function(currency) {
+      return {
+        companyCurrencyId: currency.companyCurrencyId,
+        code: currency.code,
+        amend: currency.price,
+        percentage: false
+      };
+    };
+
+    this.formatPriceCurrencies = function() {
+      var priceCurrencies = [];
+      angular.forEach($scope.priceCurrencies, function (currency) {
+        var newCurrency = $this.generateCurrency(currency);
+        priceCurrencies.push(newCurrency);
+      });
+
+      return priceCurrencies;
+    };
+
+    this.createPriceUpdaterRule = function() {
+      $this.showLoadingModal('Creating Price Update Rule');
+      var payload = {
+        categoryId: $scope.rule.categoryId,
+        priceTypeId: $scope.rule.priceTypeId,
+        taxFilter: $scope.rule.taxFilter,
+        prices: $this.formatPriceCurrencies(),
+        startDate: dateUtility.formatDateForAPI($scope.rule.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.rule.endDate)
+      };
+
+      priceupdaterFactory.createPriceUpdaterRule(payload).then(
+        $this.saveFormSuccess, $this.saveFormFailure
+      );
+    };
+
+    this.updatePriceUpdaterRule = function() {
+      $this.showLoadingModal('Saving Price Update Rule Data');
+      var payload = {
+        id: $routeParams.id,
+        categoryId: $scope.rule.categoryId,
+        priceTypeId: $scope.rule.priceTypeId,
+        taxFilter: $scope.rule.taxFilter,
+        prices: $this.formatPriceCurrencies(),
+        startDate: dateUtility.formatDateForAPI($scope.rule.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.rule.endDate)
+      };
+
+      priceupdaterFactory.updatePriceUpdaterRule(payload).then(
+        $this.saveFormSuccess, $this.saveFormFailure
+      );
+    };
+
+    this.setMinDateValue = function () {
+      if ($scope.viewEditItem) {
+        $scope.rule.startDate = $scope.viewStartDate;
+        $scope.rule.endDate = $scope.viewEndDate;
+      }
+
+    };
+
+    $scope.formSave = function() {
+      if ($this.validateForm()) {
+        var saveFunctionName = ($routeParams.action + 'PriceUpdaterRule');
+        if ($this[saveFunctionName]) {
+          $this[saveFunctionName]();
+        }
+      } else {
+        $scope.displayError = true;
+      }
+    };
+
+    this.makeInitPromises = function() {
+      var promises = [
+        priceupdaterFactory.getSalesCategoriesList({}),
+        priceupdaterFactory.getPriceTypesList({})
+      ];
+
+      return promises;
+    };
+
+    this.priceUpdaterRuleSuccess = function(response) {
+      $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
+      $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
+      $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
+      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
+
+      $scope.rule = {
+        id: response.id,
+        categoryId: response.categoryId,
+        priceTypeId: response.priceTypeId,
+        taxFilter: response.taxFilter,
+        prices: response.prices,
+        startDate: $scope.viewStartDate,
+        endDate: $scope.viewEndDate
+      };
+
+      $scope.isLoadingCompleted = true;
+    };
+
+    this.initDependenciesSuccess = function(responseCollection) {
+      $scope.salesCategories = angular.copy(responseCollection[0].salesCategories);
+      $scope.priceTypes = angular.copy(responseCollection[1]);
+      if ($routeParams.id) {
+        priceupdaterFactory.getPriceUpdaterRule($routeParams.id).then($this.priceUpdaterRuleSuccess);
+      }
+
+      $this.hideLoadingModal();
+
+      var initFunctionName = ($routeParams.action + 'Init');
+      if ($this[initFunctionName]) {
+        $this[initFunctionName]();
+      }
+
+      $this.setMinDateValue();
+    };
+
+    this.setPriceCurrenciesList = function (response) {
+      $scope.priceCurrencies = response.response;
+    };
+
+    this.getPriceCurrenciesList = function (startDate, endDate) {
+      var currencyFilters = {
+        startDate: dateUtility.formatDateForAPI(startDate),
+        endDate: dateUtility.formatDateForAPI(endDate),
+        isOperatedCurrency: true
+      };
+      currencyFactory.getCompanyCurrencies(currencyFilters).then($this.setPriceCurrenciesList);
+    };
+
+    $scope.$watchGroup(['rule.startDate', 'rule.endDate'], function () {
+      if ($scope.rule && $scope.rule.startDate && $scope.rule.endDate) {
+        $this.getPriceCurrenciesList($scope.rule.startDate, $scope.rule.endDate);
+      }
+    });
+
+    this.init = function() {
+      $this.showLoadingModal('Loading Data');
+      $scope.minDate = dateUtility.nowFormattedDatePicker();
+      var initPromises = $this.makeInitPromises();
+      $q.all(initPromises).then($this.initDependenciesSuccess);
+    };
+
+    this.init();
+
+  });

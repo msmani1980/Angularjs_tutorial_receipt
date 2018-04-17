@@ -103,6 +103,16 @@ angular.module('ts5App')
           permissions: [{
             permissionCodes: ['R']
           }]
+        }, {
+          name: 'Dynamic Price Update',
+          route: '/#/priceupdater-list',
+          icon: 'icon-manage-receipt-rules',
+          className: 'dashboard-managePriceUpdater',
+          package: 'RETAIL',
+          role: 'RETAILITEMCATEGORY',
+          permissions: [{
+            permissionCodes: ['R']
+          }]
         }]
       }, {
         title: 'Discount Management',
