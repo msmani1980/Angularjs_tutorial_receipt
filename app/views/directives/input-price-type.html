@@ -31,7 +31,7 @@
           <div class="col-xs-12 col-sm-6">
             <date-picker-field ng-if="minDate" min-date="$parent.minDate"
               disable="isDisabledEndDateForm()" form="form"
-              label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" required="true" end-current-effective="$parent.isAddPriceDisabled()">
+              label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" required="true" end-current-effective="$parent.isAddPriceDisabled() || $parent.editingItem">
             </date-picker-field>
           </div>
 
