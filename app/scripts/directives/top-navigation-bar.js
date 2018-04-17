@@ -7,7 +7,7 @@
  * # topNavigationBar
  */
 angular.module('ts5App')
-  .directive('topNavigationBar', function (identityAccessFactory, companyRelationshipFactory, lodash) {
+  .directive('topNavigationBar', function (identityAccessFactory, companyRelationshipFactory, lodash, $location) {
 
     function topNavigationBarController($scope) {
 
