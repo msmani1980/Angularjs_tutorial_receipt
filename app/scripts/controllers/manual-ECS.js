@@ -18,6 +18,7 @@ angular.module('ts5App')
     $scope.allECSInstances = [];
     $scope.isCreateSearch = false;
     $scope.isViewSearch = false;
+    $scope.isSearchInInProgress = false;
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -145,6 +146,8 @@ angular.module('ts5App')
         formatStoreInstanceForApp(storeInstance);
         return allowedStatuses.indexOf(storeInstance.statusName.toLowerCase()) >= 0;
       });
+
+      $scope.isSearchInInProgress = false;
     }
 
     function getStoreInstances(payload) {
@@ -553,6 +556,7 @@ angular.module('ts5App')
     };
 
     $scope.searchPortalInstances = function () {
+      $scope.isSearchInInProgress = true;
       $scope.selectedPortalRecord = null;
       $scope.isCreateSearch = true;
       $scope.storeInstances = [];
