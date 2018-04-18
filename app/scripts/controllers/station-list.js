@@ -215,6 +215,8 @@ angular.module('ts5App')
     };
 
     this.saveStations = function() {
+      $scope.displayError = false;
+
       this.displayLoadingModal('Saving stations');
 
       var payload = {
@@ -242,6 +244,8 @@ angular.module('ts5App')
       if (isDisabled) {
         return;
       }
+
+      $scope.displayError = false;
 
       var station = $scope.formData.stations[index];
 
