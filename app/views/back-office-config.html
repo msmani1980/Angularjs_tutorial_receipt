@@ -3,15 +3,15 @@
   </error-dialog>
   <form class="form-horizontal" name="reportOptions" ng-submit="saveBacOfficeConfig()">
     <div class="modal-header">
-      <h3 class="modal-title">{{ selectedModule.moduleName || 'Back Office Configuration' }}</h3>
+      <h3 class="modal-title">{{ selectedFeature.name || 'Back Office Configuration' }}</h3>
     </div>
     <div class="modal-body">
-      <div ng-show="moduleConfiguration" class="">
+      <div class="">
 
-        <epos-config-modules ng-if="moduleOptions" module-list='moduleOptions' model="moduleOptionValues" are-inputs-disabled="!isUserAvailableForEditAndCreate()" ></epos-config-modules>
+
       </div>
     </div>
-    <div class="modal-footer" ng-show="selectedProductVersion && selectedModule">
+    <div class="modal-footer">
       <button class="btn btn-primary" type="submit" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="!isUserAvailableForEditAndCreate() || isModuleConfigurationOptionsEmpty()">Save</button>
       <button class="btn btn-danger" type="button" ng-disabled="isModuleConfigurationOptionsEmpty()" ng-hide="!isUserAvailableForEditAndCreate() || isModuleConfigurationOptionsEmpty()" ng-click="cancel()">Cancel</button>
     </div>
@@ -24,7 +24,7 @@
   <div class="container">
 
     <ul class="navbar product-version-scrollable">
-      <li ng-repeat="feature in portalConfigurationFeatures | orderBy: orderBy" ng-class="{'active' : feature === selectedModule}" class="ng-scope" role="button" ng-click="selectFeature(feature)">
+      <li ng-repeat="feature in portalConfigurationFeatures | orderBy: orderBy" ng-class="{'active' : feature === selectedFeature}" class="ng-scope" role="button" ng-click="selectFeature(feature)">
         <i class="icon-manage-transactions"></i>
         <div class="left-nav-option">
           <i class="icon-manage-discount"></i>
