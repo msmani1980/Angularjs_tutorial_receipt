@@ -50,6 +50,57 @@ angular.module('ts5App')
       }
     ];
 
+    $scope.reconcileConfigOptions = [
+      {
+        name: 'Amend-Amend Required to Confirm',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'amendRequiredToConfirm',
+        values: [
+          {
+            name: 'True',
+            value: true
+          },
+          {
+            name: 'False',
+            value: false
+          }
+        ]
+      },
+      {
+        name: 'Amend Auto Delete CashBag',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'amendAutoDeleteCashBag',
+        values: [
+          {
+            name: 'True',
+            value: true
+          },
+          {
+            name: 'False',
+            value: false
+          }
+        ]
+      },
+      {
+        name: 'Amend Auto Merge CashBag',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'amendAutoMergeCashBag',
+        values: [
+          {
+            name: 'True',
+            value: true
+          },
+          {
+            name: 'False',
+            value: false
+          }
+        ]
+      }
+    ];
+
 
     $scope.selectedProductVersion = null;
     $scope.selectedFeature = null;
