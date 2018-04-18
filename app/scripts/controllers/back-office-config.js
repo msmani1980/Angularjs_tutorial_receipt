@@ -23,6 +23,9 @@ angular.module('ts5App')
       },
       {
         name: 'StationOps Configuration'
+      },
+      {
+        name: 'Reconcile Configuration'
       }
     ];
     $scope.selectedProductVersion = null;
@@ -59,8 +62,6 @@ angular.module('ts5App')
       $scope.resetValues();
 
       $scope.selectedFeature = feature;
-
-      eposConfigFactory.getModule(module.id, $scope.selectedProductVersion.id).then($this.getModuleSuccess);
     };
 
     $scope.cancel = function () {
