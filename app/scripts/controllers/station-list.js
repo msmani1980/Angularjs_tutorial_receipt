@@ -238,7 +238,11 @@ angular.module('ts5App')
       }
     };
 
-    this.saveStation = function(index) {
+    this.saveStation = function(index, isDisabled) {
+      if (isDisabled) {
+        return;
+      }
+
       var station = $scope.formData.stations[index];
 
       this.displayLoadingModal('Saving stations');
@@ -514,8 +518,8 @@ angular.module('ts5App')
       return $this.submitForm();
     };
 
-    $scope.saveStation = function(index) {
-      $this.saveStation(index);
+    $scope.saveStation = function(index, isDisabled) {
+      $this.saveStation(index, isDisabled);
     };
 
     $scope.filterByCountry = function(record) {
