@@ -234,7 +234,8 @@
               <div ng-show="isCRUD">
                 <date-picker-field form="stationListForm" name="Start Date {{$index+1}}" required="true"
                   ng-model="formData.stations[$index].startDate"
-                  disable="isDateActive(station.startDate)">
+                  disable="isDateActive(station.startDate)"
+                  end-date="station.maxStartDate">
                 </date-picker-field>
               </div>
               <div ng-hide="isCRUD">{{ formData.stations[$index].startDate }}</div>
@@ -249,7 +250,8 @@
                   ng-model="formData.stations[$index].endDate"
                   disable-past="true"
                   end-current-effective="true"
-                  disable="canEdit(station.endDate)">
+                  disable="canEdit(station.endDate)"
+                  start-date="station.minEndDate">
                 </date-picker-field>
               </div>
               <div ng-hide="isCRUD">{{ formData.stations[$index].endDate }}</div>
@@ -261,15 +263,15 @@
                 <i class="fa fa-file"></i>
               </a>
 
-              <a class="btn btn-primary btn-xs" ng-href="#/station-edit/{{station.id}}" ng-hide="canEdit(surveyQuestion.endDate) || !isCRUD">
+              <a class="btn btn-primary btn-xs" ng-href="#/station-edit/{{station.id}}" ng-hide="canEdit(station.endDate) || !isCRUD">
                 <i class="fa fa-pencil"></i>
               </a>
 
-              <a class="btn btn-info btn-xs" ng-click="saveStation($index)" ng-hide="canEdit(surveyQuestion.endDate) || !isCRUD" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
+              <a class="btn btn-info btn-xs" ng-click="saveStation($index, !formData.stations[$index].startDate || !formData.stations[$index].endDate)" ng-hide="canEdit(station.endDate) || !isCRUD" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
                 <i class="fa fa-save"></i>
               </a>
 
-              <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(station.id)" ng-hide="isDateActive(station.startDate) || isDateActive(station.endDate) || !isCRUD">
+              <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(station.id)" ng-disabled="station.hasUsageValidations" ng-hide="isDateActive(station.startDate) || isDateActive(station.endDate) || !isCRUD">
                 <i class="fa fa-trash"></i>
               </button>
 
