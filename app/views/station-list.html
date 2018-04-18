@@ -267,7 +267,7 @@
                 <i class="fa fa-pencil"></i>
               </a>
 
-              <a class="btn btn-info btn-xs" ng-click="saveStation($index, !formData.stations[$index].startDate || !formData.stations[$index].endDate)" ng-hide="canEdit(surveyQuestion.endDate) || !isCRUD" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
+              <a class="btn btn-info btn-xs" ng-click="saveStation($index, !formData.stations[$index].startDate || !formData.stations[$index].endDate)" ng-hide="canEdit(station.endDate) || !isCRUD" ng-disabled="!formData.stations[$index].startDate || !formData.stations[$index].endDate">
                 <i class="fa fa-save"></i>
               </a>
 
