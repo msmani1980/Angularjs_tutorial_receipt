@@ -133,6 +133,8 @@ angular.module('ts5App')
 
       if($scope.selectedFeature && $scope.selectedFeature.name === 'PreOrder Configuration') {
         $scope.configOptions = angular.copy($scope.preOrderConfigOptions);
+      } else if($scope.selectedFeature && $scope.selectedFeature.name === 'Reconcile Configuration') {
+        $scope.configOptions = angular.copy($scope.reconcileConfigOptions);
       }
 
       $this.hideLoadingModal();
