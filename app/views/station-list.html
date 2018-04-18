@@ -250,7 +250,8 @@
                   ng-model="formData.stations[$index].endDate"
                   disable-past="true"
                   end-current-effective="true"
-                  disable="canEdit(station.endDate)">
+                  disable="canEdit(station.endDate)"
+                  start-date="station.minEndDate">
                 </date-picker-field>
               </div>
               <div ng-hide="isCRUD">{{ formData.stations[$index].endDate }}</div>
