@@ -30,6 +30,12 @@ angular.module('ts5App')
         station.startDate = dateUtility.formatDateForApp(station.startDate);
         station.endDate = dateUtility.formatDateForApp(station.endDate);
 
+        if (station.usageValidations) {
+          station.hasUsageValidations = true;
+          station.maxStartDate = dateUtility.formatDateForApp(station.usageValidations.startDate);
+          station.minEndDate = dateUtility.formatDateForApp(station.usageValidations.endDate);
+        }
+
         return station;
       }));
     };
@@ -209,6 +215,8 @@ angular.module('ts5App')
     };
 
     this.saveStations = function() {
+      $scope.displayError = false;
+
       this.displayLoadingModal('Saving stations');
 
       var payload = {
@@ -232,7 +240,13 @@ angular.module('ts5App')
       }
     };
 
-    this.saveStation = function(index) {
+    this.saveStation = function(index, isDisabled) {
+      if (isDisabled) {
+        return;
+      }
+
+      $scope.displayError = false;
+
       var station = $scope.formData.stations[index];
 
       this.displayLoadingModal('Saving stations');
@@ -508,8 +522,8 @@ angular.module('ts5App')
       return $this.submitForm();
     };
 
-    $scope.saveStation = function(index) {
-      $this.saveStation(index);
+    $scope.saveStation = function(index, isDisabled) {
+      $this.saveStation(index, isDisabled);
     };
 
     $scope.filterByCountry = function(record) {
