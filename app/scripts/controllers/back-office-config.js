@@ -58,8 +58,8 @@ angular.module('ts5App')
     };
 
     $scope.selectFeature = function (feature) {
-      $this.showLoadingModal('Loading Data');
-      $scope.resetValues();
+      // $this.showLoadingModal('Loading Data');
+      // $scope.resetValues();
 
       $scope.selectedFeature = feature;
     };
@@ -181,9 +181,9 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      $this.showLoadingModal('Loading Data');
-      var initPromises = $this.makeInitPromises();
-      $q.all(initPromises).then($this.initDependenciesSuccess, $this.initDependenciesError);
+      // $this.showLoadingModal('Loading Data');
+      // var initPromises = $this.makeInitPromises();
+      // $q.all(initPromises).then($this.initDependenciesSuccess, $this.initDependenciesError);
     };
 
     this.init();
