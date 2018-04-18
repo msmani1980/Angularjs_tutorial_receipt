@@ -109,7 +109,7 @@ angular.module('ts5App')
           icon: 'icon-manage-receipt-rules',
           className: 'dashboard-managePriceUpdater',
           package: 'RETAIL',
-          role: 'RETAILITEMCATEGORY',
+          role: 'D_PRICE_UPDATE',
           permissions: [{
             permissionCodes: ['R']
           }]

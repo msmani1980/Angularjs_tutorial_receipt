@@ -47,7 +47,6 @@ angular.module('ts5App')
       priceupdater.taxIs = (priceupdater.taxFilter !== null) ? (priceupdater.taxFilter ? 'Included' : 'Excluded') : 'Exempt';
       priceupdater.startDate = dateUtility.formatDateForApp(priceupdater.startDate);
       priceupdater.endDate = dateUtility.formatDateForApp(priceupdater.endDate);
-
       return priceupdater;
     }));
 
@@ -218,7 +217,7 @@ angular.module('ts5App')
 
   this.init = function() {
     var initDependencies = $this.makeInitPromises();
-    $scope.isCRUD = accessService.crudAccessGranted('RETAIL', 'RETAILITEMCATEGORY', 'CRUDRICAT');
+    $scope.isCRUD = accessService.crudAccessGranted('RETAIL', 'D_PRICE_UPDATE', 'RIBPU');
     $q.all(initDependencies).then($this.initSuccessHandler);
     $scope.allCheckboxesSelected = false;
   };
