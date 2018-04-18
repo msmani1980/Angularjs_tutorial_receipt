@@ -30,6 +30,12 @@ angular.module('ts5App')
         station.startDate = dateUtility.formatDateForApp(station.startDate);
         station.endDate = dateUtility.formatDateForApp(station.endDate);
 
+        if (station.usageValidations) {
+          station.hasUsageValidations = true;
+          station.maxStartDate = dateUtility.formatDateForApp(station.usageValidations.startDate);
+          station.minEndDate = dateUtility.formatDateForApp(station.usageValidations.endDate);
+        }
+
         return station;
       }));
     };
