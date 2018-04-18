@@ -36,14 +36,15 @@ angular.module('ts5App')
         name: 'PreOrder Configuration',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
+        id: 'preorder',
         values: [
           {
             name: 'True',
-            values: true
+            value: true
           },
           {
             name: 'False',
-            values: false
+            value: false
           }
         ]
       }
