@@ -269,7 +269,7 @@
                 <i class="fa fa-save"></i>
               </a>
 
-              <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(station.id)" ng-hide="isDateActive(station.startDate) || isDateActive(station.endDate) || !isCRUD">
+              <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(station.id)" ng-disabled="station.hasUsageValidations" ng-hide="isDateActive(station.startDate) || isDateActive(station.endDate) || !isCRUD">
                 <i class="fa fa-trash"></i>
               </button>
 
