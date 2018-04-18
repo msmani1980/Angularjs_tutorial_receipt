@@ -24,11 +24,11 @@
   <div class="container">
 
     <ul class="navbar product-version-scrollable">
-      <li ng-repeat="module in modules | orderBy: orderBy" ng-class="{'active' : module === selectedModule}" class="ng-scope" role="button" ng-click="selectModule(module)">
+      <li ng-repeat="feature in portalFeatures | orderBy: orderBy" ng-class="{'active' : feature === selectedModule}" class="ng-scope" role="button" ng-click="selectFeature(feature)">
         <i class="icon-manage-transactions"></i>
         <div class="left-nav-option">
           <i class="icon-manage-discount"></i>
-          <p class="ng-binding">{{ module.moduleName }}</p>
+          <p class="ng-binding">{{ feature.name }}</p>
         </div>
       </li>
 

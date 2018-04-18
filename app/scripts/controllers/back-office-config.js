@@ -14,9 +14,19 @@ angular.module('ts5App')
 
     $scope.viewName = 'Back Office Configuration';
     $scope.productVersions = [];
-    $scope.modules = [];
+    $scope.portalConfigurationFeatures = [
+      {
+        name: 'Cash Bag Configuration'
+      },
+      {
+        name: 'PreOrder Configuration'
+      },
+      {
+        name: 'StationOps Configuration'
+      }
+    ];
     $scope.selectedProductVersion = null;
-    $scope.selectedModule = null;
+    $scope.selectedFeature = null;
     $scope.moduleConfiguration = null;
     $scope.moduleOptionValues = {
       checkbox: {},
@@ -44,11 +54,11 @@ angular.module('ts5App')
       $scope.moduleOptions = null;
     };
 
-    $scope.selectModule = function (module) {
+    $scope.selectFeature = function (feature) {
       $this.showLoadingModal('Loading Data');
       $scope.resetValues();
 
-      $scope.selectedModule = module;
+      $scope.selectedFeature = feature;
 
       eposConfigFactory.getModule(module.id, $scope.selectedProductVersion.id).then($this.getModuleSuccess);
     };
