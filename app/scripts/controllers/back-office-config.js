@@ -28,6 +28,28 @@ angular.module('ts5App')
         name: 'Reconcile Configuration'
       }
     ];
+
+    $scope.configOptions = [];
+
+    $scope.preOrderConfigOptions = [
+      {
+        name: 'PreOrder Configuration',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        values: [
+          {
+            name: 'True',
+            values: true
+          },
+          {
+            name: 'False',
+            values: false
+          }
+        ]
+      }
+    ];
+
+
     $scope.selectedProductVersion = null;
     $scope.selectedFeature = null;
     $scope.moduleConfiguration = null;
@@ -47,21 +69,21 @@ angular.module('ts5App')
     });
 
     $scope.resetValues = function () {
-      $scope.initialRadioButtonModuleOptionPopulatedIds = {};
-      $scope.initialCheckBoxModuleOptionPopulatedIds = {};
-      $scope.moduleOptionValues = {
-        checkbox: {},
-        text: {},
-        radioButton: {}
-      };
-      $scope.moduleOptions = null;
+      $scope.configOptions = [];
     };
 
     $scope.selectFeature = function (feature) {
-      // $this.showLoadingModal('Loading Data');
-      // $scope.resetValues();
+      $this.showLoadingModal('Loading Data');
+
+      $scope.resetValues();
 
       $scope.selectedFeature = feature;
+
+      if($scope.selectedFeature && $scope.selectedFeature.name === 'PreOrder Configuration') {
+        $scope.configOptions = angular.copy($scope.preOrderConfigOptions);
+      }
+
+      $this.hideLoadingModal();
     };
 
     $scope.cancel = function () {
