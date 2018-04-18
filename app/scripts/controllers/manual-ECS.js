@@ -16,7 +16,6 @@ angular.module('ts5App')
       offset: 0
     };
     $scope.allECSInstances = [];
-    $scope.storeInstances = [];
     $scope.isCreateSearch = false;
     $scope.isViewSearch = false;
 
@@ -372,7 +371,7 @@ angular.module('ts5App')
       };
 
       promises.push(manualECSFactory.updateCarrierInstance($scope.selectedPortalRecord.id, payload));
-      
+
       return promises;
     }
 
@@ -414,7 +413,7 @@ angular.module('ts5App')
 
     $scope.clearPortalSearch = function () {
       $scope.portalSearch = {};
-      $scope.storeInstances = [];
+      $scope.storeInstances = null;
       $scope.isCreateSearch = false;
     };
 
