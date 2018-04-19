@@ -56,6 +56,47 @@ angular.module('ts5App')
         configSource: 'SALES_THRESHOLD',
         inputType: 'PERCENTAGE_NUMBER',
         id: 'cashBagLength'
+      },
+      {
+        name: 'Required CashBag Validation',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'requiredCashBagValidation',
+        values: angular.copy($scope.radioButtonValues)
+      },
+      {
+        name: 'Daily Exchange Rate Type',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'dailyExchangeRateType',
+        values: angular.copy($scope.radioButtonValues)
+      },
+      {
+        name: 'Daily Exchange Rate',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'dailyExchangeRate',
+        values: angular.copy($scope.radioButtonValues)
+      },
+      {
+        name: 'Daily Exchange Rate - Daily Variance Threshold',
+        configSource: 'SALES_THRESHOLD',
+        inputType: 'PERCENTAGE_NUMBER',
+        id: 'dailyExchangeRateDailyVarianceThreshold'
+      },
+      {
+        name: 'Default Bank Reference Number',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'defaultBankReferenceNumber',
+        values: angular.copy($scope.radioButtonValues)
+      },
+      {
+        name: 'Auto Submit: Functionality',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'autoSubmit:Functionality',
+        values: angular.copy($scope.radioButtonValues)
       }
     ];
 
