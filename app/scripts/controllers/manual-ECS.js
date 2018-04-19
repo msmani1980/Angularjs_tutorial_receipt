@@ -138,9 +138,10 @@ angular.module('ts5App')
       ];
 
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
-      if($scope.storeInstances === undefined) {
+      if ($scope.storeInstances === undefined) {
         $scope.storeInstances = [];
       }
+      
       var paginatedList = $scope.storeInstances.concat(storeInstancesResponse);
       $scope.storeInstances = lodash.filter(paginatedList, function (storeInstance) {
         formatStoreInstanceForApp(storeInstance);
