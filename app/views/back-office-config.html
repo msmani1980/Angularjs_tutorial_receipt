@@ -15,7 +15,7 @@
             <span class="">{{ value.name }}</span>
           </label>
           <label ng-if="option.inputType === 'PERCENTAGE_NUMBER'" class="radio-custom radio-inline" style="padding-top: 3px;" data-initialize="radio" id="radios-inline-4">
-            <input custom-validity class="inline" ng-model="formData[option.name]"  type="number" custom-pattern="percentage" step="0.10" class="form-control" id="{{option.id}}" name="{{option.id}}"/>
+            <input custom-validity class="inline" ng-model="formData[option.name]"  type="number" min="0" max="100" custom-pattern="percentage" step="0.10" class="form-control" id="{{option.id}}" name="{{option.id}}"/>
           </label>
         </div>
       </div>
