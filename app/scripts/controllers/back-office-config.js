@@ -110,6 +110,37 @@ angular.module('ts5App')
       }
     ];
 
+    $scope.stationOpsConfigOptions = [
+      {
+        name: 'Store Instance Schedule Date Option',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'storeInstanceScheduleDateOption',
+        values: angular.copy($scope.radioButtonValues)
+      },
+      {
+        name: 'Sort By Sales Category',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'sortBySalesCategory',
+        values: angular.copy($scope.radioButtonValues)
+      },
+      {
+        name: 'Store Dispatch – Variance Threshold',
+        configSource: 'SALES_THRESHOLD',
+        inputType: 'PERCENTAGE_NUMBER',
+        id: 'storeDispatchVarianceThreshold',
+        values: angular.copy($scope.radioButtonValues)
+      },
+      {
+        name: 'Inbound Count Default to ePOS Sales Quantity',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'inboundCountDefaultPOSSalesQuantity',
+        values: angular.copy($scope.radioButtonValues)
+      }
+    ];
+
     $scope.reconcileConfigOptions = [
       {
         name: 'Confirmation Threshold',
@@ -176,6 +207,8 @@ angular.module('ts5App')
         $scope.configOptions = angular.copy($scope.reconcileConfigOptions);
       } else if($scope.selectedFeature && $scope.selectedFeature.name === 'Cash Bag Configuration') {
         $scope.configOptions = angular.copy($scope.cashBagConfigOptions);
+      } else if($scope.selectedFeature && $scope.selectedFeature.name === 'StationOps Configuration') {
+        $scope.configOptions = angular.copy($scope.stationOpsConfigOptions);
       }
 
       $this.hideLoadingModal();
