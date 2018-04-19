@@ -182,7 +182,7 @@ angular.module('ts5App')
       })
     };
 
-    priceupdaterFactory.applyPriceUpdateRules(payload).then($this.applyPriceUpdateRulesSuccess, $this.applyPriceUpdateRulesFailure);
+    priceupdaterFactory.applyPriceUpdateRules(payload.id).then($this.applyPriceUpdateRulesSuccess, $this.applyPriceUpdateRulesFailure);
   };
 
   $scope.executeAction = function() {

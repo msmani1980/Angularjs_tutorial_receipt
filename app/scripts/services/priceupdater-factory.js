@@ -43,7 +43,7 @@ angular.module('ts5App')
     };
 
     var applyPriceUpdateRules = function (payload) {
-      return priceTypesService.applyPriceUpdateRules(payload);
+      return priceupdaterService.applyPriceUpdateRules(payload);
     };
     
     return {
