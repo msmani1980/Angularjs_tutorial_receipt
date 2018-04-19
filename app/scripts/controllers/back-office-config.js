@@ -12,6 +12,7 @@ angular.module('ts5App')
     var companyId;
     var $this = this;
 
+    $scope.formData = {};
     $scope.viewName = 'Back Office Configuration';
     $scope.productVersions = [];
     $scope.portalConfigurationFeatures = [
