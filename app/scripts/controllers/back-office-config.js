@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _) {
+  .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, backOfficeConfigService) {
     var companyId;
     var $this = this;
 
@@ -41,6 +41,7 @@ angular.module('ts5App')
       }
     ];
 
+    $scope.configOptionDefinition = null;
     $scope.configOptions = [];
 
     $scope.selectedProductVersion = null;
@@ -73,12 +74,12 @@ angular.module('ts5App')
       $scope.selectedFeature = feature;
 
       if($scope.selectedFeature && $scope.selectedFeature.name === 'PreOrder Configuration') {
-        $scope.configOptions = angular.copy($scope.preOrderConfigOptions);
+        $scope.configOptions = angular.copy($scope.configOptionDefinition.preOrderConfigOptions);
       } else if($scope.selectedFeature && $scope.selectedFeature.name === 'Reconcile Configuration') {
-        $scope.configOptions = angular.copy($scope.reconcileConfigOptions);
-      } else if($scope.selectedFeature && $scope.selectedFeature.name === 'Cash Bag Configuration') {
+        $scope.configOptions = angular.copy($scope.configOptionDefinition.reconcileConfigOptions);
+      } else if($scope.selectedFeature && $scope.configOptionDefinition.selectedFeature.name === 'Cash Bag Configuration') {
         $scope.configOptions = angular.copy($scope.cashBagConfigOptions);
-      } else if($scope.selectedFeature && $scope.selectedFeature.name === 'StationOps Configuration') {
+      } else if($scope.selectedFeature && $scope.configOptionDefinition.selectedFeature.name === 'StationOps Configuration') {
         $scope.configOptions = angular.copy($scope.stationOpsConfigOptions);
       }
 
@@ -205,6 +206,7 @@ angular.module('ts5App')
       // $this.showLoadingModal('Loading Data');
       // var initPromises = $this.makeInitPromises();
       // $q.all(initPromises).then($this.initDependenciesSuccess, $this.initDependenciesError);
+      $scope.configOptionDefinition = angular.copy(backOfficeConfigService.configFeatureOptionsDefinition());
     };
 
     this.init();
