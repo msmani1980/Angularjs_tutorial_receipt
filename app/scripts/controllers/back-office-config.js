@@ -50,6 +50,12 @@ angular.module('ts5App')
         inputType: 'RADIO_BUTTON',
         id: 'cashLessCompany',
         values: angular.copy($scope.radioButtonValues)
+      },
+      {
+        name: 'CashBag Length',
+        configSource: 'SALES_THRESHOLD',
+        inputType: 'PERCENTAGE_NUMBER',
+        id: 'cashBagLength'
       }
     ];
 
@@ -127,6 +133,8 @@ angular.module('ts5App')
         $scope.configOptions = angular.copy($scope.preOrderConfigOptions);
       } else if($scope.selectedFeature && $scope.selectedFeature.name === 'Reconcile Configuration') {
         $scope.configOptions = angular.copy($scope.reconcileConfigOptions);
+      } else if($scope.selectedFeature && $scope.selectedFeature.name === 'Cash Bag Configuration') {
+        $scope.configOptions = angular.copy($scope.cashBagConfigOptions);
       }
 
       $this.hideLoadingModal();
