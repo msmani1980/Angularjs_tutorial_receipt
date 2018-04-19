@@ -26,7 +26,7 @@
 			  <div class="form-group">
                 <label for="category">Category</label>
                 <select ng-model="search.categoryId" class="form-control" id="item-sales-category">
-                  <option value="{{salesCategory.name}}"
+                  <option value="{{salesCategory.id}}"
                           ng-repeat="salesCategory in salesCategories | unique: 'salesCategoryId'">{{ salesCategory.name }}
                   </option>
                 </select>
