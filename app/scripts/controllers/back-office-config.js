@@ -52,6 +52,12 @@ angular.module('ts5App')
 
     $scope.reconcileConfigOptions = [
       {
+        name: 'Confirmation Threshold',
+        configSource: 'SALES_THRESHOLD',
+        inputType: 'PERCENTAGE_NUMBER',
+        id: 'confirmationThreshold'
+      },
+      {
         name: 'Amend-Amend Required to Confirm',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
