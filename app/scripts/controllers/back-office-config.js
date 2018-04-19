@@ -30,7 +30,28 @@ angular.module('ts5App')
       }
     ];
 
+    $scope.radioButtonValues = [
+      {
+        name: 'True',
+        value: true
+      },
+      {
+        name: 'False',
+        value: false
+      }
+    ];
+
     $scope.configOptions = [];
+
+    $scope.cashBagConfigOptions = [
+      {
+        name: 'Cashless Company',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'cashLessCompany',
+        values: angular.copy($scope.radioButtonValues)
+      }
+    ];
 
     $scope.preOrderConfigOptions = [
       {
@@ -38,16 +59,7 @@ angular.module('ts5App')
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'preorder',
-        values: [
-          {
-            name: 'True',
-            value: true
-          },
-          {
-            name: 'False',
-            value: false
-          }
-        ]
+        values: angular.copy($scope.radioButtonValues)
       }
     ];
 
@@ -63,48 +75,21 @@ angular.module('ts5App')
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'amendRequiredToConfirm',
-        values: [
-          {
-            name: 'True',
-            value: true
-          },
-          {
-            name: 'False',
-            value: false
-          }
-        ]
+        values: angular.copy($scope.radioButtonValues)
       },
       {
         name: 'Amend Auto Delete CashBag',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'amendAutoDeleteCashBag',
-        values: [
-          {
-            name: 'True',
-            value: true
-          },
-          {
-            name: 'False',
-            value: false
-          }
-        ]
+        values: angular.copy($scope.radioButtonValues)
       },
       {
         name: 'Amend Auto Merge CashBag',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'amendAutoMergeCashBag',
-        values: [
-          {
-            name: 'True',
-            value: true
-          },
-          {
-            name: 'False',
-            value: false
-          }
-        ]
+        values: angular.copy($scope.radioButtonValues)
       }
     ];
 
