@@ -30,17 +30,6 @@ angular.module('ts5App')
       }
     ];
 
-    $scope.radioButtonValues = [
-      {
-        name: 'True',
-        value: true
-      },
-      {
-        name: 'False',
-        value: false
-      }
-    ];
-
     $scope.configOptionDefinition = null;
     $scope.configOptions = [];
 

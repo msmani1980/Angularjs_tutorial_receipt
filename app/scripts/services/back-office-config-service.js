@@ -11,13 +11,24 @@ angular.module('ts5App')
   .service('backOfficeConfigService', function () {
     var $this = this;
 
+    $this.radioButtonValues = [
+      {
+        name: 'True',
+        value: true
+      },
+      {
+        name: 'False',
+        value: false
+      }
+    ];
+
     $this.cashBagConfigOptions = [
       {
         name: 'Cashless Company',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'cashLessCompany',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       },
       {
         name: 'CashBag Length',
@@ -30,21 +41,21 @@ angular.module('ts5App')
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'requiredCashBagValidation',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       },
       {
         name: 'Daily Exchange Rate Type',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'dailyExchangeRateType',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       },
       {
         name: 'Daily Exchange Rate',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'dailyExchangeRate',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       },
       {
         name: 'Daily Exchange Rate - Daily Variance Threshold',
@@ -57,14 +68,14 @@ angular.module('ts5App')
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'defaultBankReferenceNumber',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       },
       {
         name: 'Auto Submit: Functionality',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'autoSubmit:Functionality',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       }
     ];
 
@@ -74,7 +85,7 @@ angular.module('ts5App')
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'preorder',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       }
     ];
 
@@ -84,28 +95,28 @@ angular.module('ts5App')
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'storeInstanceScheduleDateOption',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       },
       {
         name: 'Sort By Sales Category',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'sortBySalesCategory',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       },
       {
         name: 'Store Dispatch – Variance Threshold',
         configSource: 'SALES_THRESHOLD',
         inputType: 'PERCENTAGE_NUMBER',
         id: 'storeDispatchVarianceThreshold',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       },
       {
         name: 'Inbound Count Default to ePOS Sales Quantity',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'inboundCountDefaultPOSSalesQuantity',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       }
     ];
 
@@ -121,21 +132,21 @@ angular.module('ts5App')
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'amendRequiredToConfirm',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       },
       {
         name: 'Amend Auto Delete CashBag',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'amendAutoDeleteCashBag',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       },
       {
         name: 'Amend Auto Merge CashBag',
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'amendAutoMergeCashBag',
-        values: angular.copy($scope.radioButtonValues)
+        values: angular.copy($this.radioButtonValues)
       }
     ];
 
