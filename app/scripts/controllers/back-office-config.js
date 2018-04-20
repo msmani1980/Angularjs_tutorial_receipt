@@ -101,6 +101,30 @@ angular.module('ts5App')
       $this.setStoreDispatchThreshold(response[3]);
     };
 
+    this.setCompanyPreferences = function(reponseData) {
+      var orderedPreferences = lodash.sortByOrder(angular.copy(reponseData.preferences), 'startDate', 'desc');
+
+      $scope.companyPreferences = angular.copy(orderedPreferences);
+    };
+
+    this.setDailyExchangeRateThreshold = function(reponseData) {
+      var orderedThresholds = lodash.sortByOrder(angular.copy(reponseData.response), 'startDate', 'desc');
+
+      $scope.dailyExchangeThresHold = angular.copy(orderedThresholds);
+    };
+
+    this.setReconciliationThreshold = function(reponseData) {
+      var orderedThresholds = lodash.sortByOrder(angular.copy(reponseData.response), 'startDate', 'desc');
+
+      $scope.reconciliationThresHold = angular.copy(orderedThresholds);
+    };
+
+    this.setStoreDispatchThreshold = function(reponseData) {
+      var orderedThresholds = lodash.sortByOrder(angular.copy(reponseData.response), 'startDate', 'desc');
+
+      $scope.storeDispatchThresHold = angular.copy(orderedThresholds);
+    };
+
     this.makeSelectFeatureDependencyPromises = function() {
       var companyPreferencesPayload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
