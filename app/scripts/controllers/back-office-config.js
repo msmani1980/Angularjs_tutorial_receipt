@@ -60,7 +60,11 @@ angular.module('ts5App')
     };
 
     $scope.calculateFormDataKeyFor = function (prefix, featureCode, optionCode) {
-      return prefix + '_' + featureCode + '_' + optionCode;
+      if(prefix && featureCode && optionCode) {
+        return prefix + '__' + featureCode + '__' + optionCode;
+      }
+
+      return prefix + '__' + featureCode;
     };
 
     $scope.selectFeature = function (feature) {
