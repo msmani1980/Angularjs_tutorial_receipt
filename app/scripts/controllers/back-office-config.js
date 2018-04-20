@@ -55,6 +55,14 @@ angular.module('ts5App')
       $scope.configOptions = [];
     };
 
+    $scope.calculateFormDataKeyForConfigOption = function (option) {
+      return $scope.calculateFormDataKeyFor(option.configSource, option.featureCode, option.optionCode);
+    };
+
+    $scope.calculateFormDataKeyFor = function (prefix, featureCode, optionCode) {
+      return prefix + '_' + featureCode + '_' + optionCode;
+    };
+
     $scope.selectFeature = function (feature) {
       $this.showLoadingModal('Loading Data');
 
@@ -161,12 +169,11 @@ angular.module('ts5App')
       return $scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions.length === 0;
     };
 
-    $scope.saveModuleOptions = function () {
-      var payload = $this.constructUpsertPayload();
+    $scope.saveBackOfficeConfig = function () {
+      // var payload = $this.constructUpsertPayload();
 
-      $this.showLoadingModal('Saving Data');
-
-      eposConfigFactory.createOrUpdate(payload).then($this.createOrUpdateSuccess);
+      $scope.formData;
+      var i = 0;
     };
 
 
