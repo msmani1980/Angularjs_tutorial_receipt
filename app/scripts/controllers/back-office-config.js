@@ -57,6 +57,10 @@ angular.module('ts5App')
 
     $scope.resetValues = function () {
       $scope.configOptions = [];
+      $scope.companyPreferences = [];
+      $scope.dailyExchangeThresHold = [];
+      $scope.reconciliationThresHold = [];
+      $scope.storeDispatchThresHold = [];
     };
 
     $scope.calculateFormDataKeyForConfigOption = function (option) {
@@ -90,8 +94,6 @@ angular.module('ts5App')
 
       var dependencyPromises = $this.makeSelectFeatureDependencyPromises();
       $q.all(dependencyPromises).then($this.setDependencies, $this.errorHandler);
-
-      $this.hideLoadingModal();
     };
 
     this.setDependencies = function(response) {
@@ -99,6 +101,8 @@ angular.module('ts5App')
       $this.setDailyExchangeRateThreshold(response[1]);
       $this.setReconciliationThreshold(response[2]);
       $this.setStoreDispatchThreshold(response[3]);
+
+      $this.hideLoadingModal();
     };
 
     this.setCompanyPreferences = function(reponseData) {
