@@ -33,7 +33,9 @@ angular.module('ts5App')
     $scope.configOptionDefinition = null;
     $scope.configOptions = [];
     $scope.companyPreferences = [];
-    $scope.thresHold = [];
+    $scope.dailyExchangeThresHold = [];
+    $scope.reconciliationThresHold = [];
+    $scope.storeDispatchThresHold = [];
 
     $scope.selectedProductVersion = null;
     $scope.selectedFeature = null;
@@ -99,7 +101,19 @@ angular.module('ts5App')
       featureThresholdsFactory.getThresholdList('DAILYEXCHANGERATE', companyPreferencesPayload, _companyId).then(function(reponseData) {
         var orderedThresholds = lodash.sortByOrder(angular.copy(reponseData.response), 'startDate', 'desc');
 
-        $scope.thresHold = angular.copy(orderedThresholds);
+        $scope.dailyExchangeThresHold = angular.copy(orderedThresholds);
+      });
+
+      featureThresholdsFactory.getThresholdList('RECONCILIATION', companyPreferencesPayload, _companyId).then(function(reponseData) {
+        var orderedThresholds = lodash.sortByOrder(angular.copy(reponseData.response), 'startDate', 'desc');
+
+        $scope.reconciliationThresHold = angular.copy(orderedThresholds);
+      });
+
+      featureThresholdsFactory.getThresholdList('STOREDISPATCH', companyPreferencesPayload, _companyId).then(function(reponseData) {
+        var orderedThresholds = lodash.sortByOrder(angular.copy(reponseData.response), 'startDate', 'desc');
+
+        $scope.storeDispatchThresHold = angular.copy(orderedThresholds);
       });
 
       $this.hideLoadingModal();
