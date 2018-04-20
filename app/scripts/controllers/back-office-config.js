@@ -8,10 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, backOfficeConfigService) {
-    var companyId;
+  .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory) {
     var $this = this;
 
+    var _companyId = null;
     $scope.formData = {};
     $scope.viewName = 'Back Office Configuration';
     $scope.productVersions = [];
@@ -32,6 +32,8 @@ angular.module('ts5App')
 
     $scope.configOptionDefinition = null;
     $scope.configOptions = [];
+    $scope.companyPreferences = [];
+    $scope.thresHold = [];
 
     $scope.selectedProductVersion = null;
     $scope.selectedFeature = null;
@@ -83,6 +85,22 @@ angular.module('ts5App')
       } else if($scope.selectedFeature && $scope.selectedFeature.name === 'StationOps Configuration') {
         $scope.configOptions = angular.copy($scope.configOptionDefinition.stationOpsConfigOptions);
       }
+
+      var companyPreferencesPayload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
+
+      companyPreferencesService.getCompanyPreferences(companyPreferencesPayload, _companyId).then(function(companyPreferencesData) {
+        var orderedPreferences = _.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+
+        $scope.companyPreferences = angular.copy(orderedPreferences);
+      });
+
+      featureThresholdsFactory.getThresholdList('DAILYEXCHANGERATE', companyPreferencesPayload, _companyId).then(function(thresHold) {
+        // var orderedPreferences = _.sortByOrder(angular.copy(thresHold.preferences), 'startDate', 'desc');
+
+        $scope.thresHold = angular.copy(thresHold);
+      });
 
       $this.hideLoadingModal();
     };
@@ -194,7 +212,6 @@ angular.module('ts5App')
     };
 
     this.makeInitPromises = function() {
-      companyId = eposConfigFactory.getCompanyId();
       var promises = [
         eposConfigFactory.getProductVersions(),
         eposConfigFactory.getModules()
@@ -202,10 +219,19 @@ angular.module('ts5App')
       return promises;
     };
 
+    var getCompanyId = function () {
+      if (globalMenuService.getCompanyData().companyTypeName === 'Retail') {
+        return globalMenuService.getCompanyData().id;
+      } else {
+        return globalMenuService.getCompanyData().chCompany.companyId;
+      }
+    };
+
     this.init = function() {
       // $this.showLoadingModal('Loading Data');
       // var initPromises = $this.makeInitPromises();
       // $q.all(initPromises).then($this.initDependenciesSuccess, $this.initDependenciesError);
+      _companyId = getCompanyId();
       $scope.configOptionDefinition = angular.copy(backOfficeConfigService.configFeatureOptionsDefinition());
     };
 
