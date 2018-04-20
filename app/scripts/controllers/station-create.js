@@ -112,7 +112,7 @@ angular.module('ts5App')
 
     this.setStationValidationDates = function(dataFromAPI) {
       $scope.maxStartDate = dataFromAPI.startDate ? dateUtility.formatDateForApp(dataFromAPI.startDate) : null;
-      $scope.minEndDate = dataFromAPI.endDate ? dateUtility.formatDateForApp(dataFromAPI.endDate) : null;
+      $scope.minEndDate = dataFromAPI.endDate ? dateUtility.formatDateForApp(dataFromAPI.endDate) : null; 
     };
 
     this.getStationValidationDates = function(id) {
