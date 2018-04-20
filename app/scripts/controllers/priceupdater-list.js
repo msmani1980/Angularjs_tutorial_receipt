@@ -121,6 +121,14 @@ angular.module('ts5App')
     $this.showToastMessage('danger', 'Price Update', 'Price Update Rule could not be deleted');
   };
 
+  $scope.isValidForRuleApply = function(priceupdater) {
+    if (angular.isUndefined(priceupdater)) {
+      return false;
+    }
+
+    return dateUtility.isAfterOrEqualDatePicker(priceupdater.startDate, dateUtility.nowFormattedDatePicker());
+  };
+
   $scope.isPriceUpdaterEditable = function(priceupdater) {
     if (angular.isUndefined(priceupdater)) {
       return false;
@@ -129,8 +137,8 @@ angular.module('ts5App')
     return dateUtility.isAfterOrEqualDatePicker(priceupdater.endDate, dateUtility.nowFormattedDatePicker());
   };
 
-  $scope.showDeleteButton = function(dateString) {
-    return dateUtility.isAfterTodayDatePicker(dateString);
+  $scope.showDeleteButton = function(priceupdater) {
+    return dateUtility.isAfterTodayDatePicker(priceupdater.startDate) && priceupdater.runBy !== null;
   };
 
   $scope.removeRecord = function (priceupdater) {
