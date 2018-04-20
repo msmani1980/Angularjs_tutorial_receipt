@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory) {
+  .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, lodash, backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory) {
     var $this = this;
 
     var _companyId = null;
@@ -91,15 +91,15 @@ angular.module('ts5App')
       };
 
       companyPreferencesService.getCompanyPreferences(companyPreferencesPayload, _companyId).then(function(companyPreferencesData) {
-        var orderedPreferences = _.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
+        var orderedPreferences = lodash.sortByOrder(angular.copy(companyPreferencesData.preferences), 'startDate', 'desc');
 
         $scope.companyPreferences = angular.copy(orderedPreferences);
       });
 
-      featureThresholdsFactory.getThresholdList('DAILYEXCHANGERATE', companyPreferencesPayload, _companyId).then(function(thresHold) {
-        // var orderedPreferences = _.sortByOrder(angular.copy(thresHold.preferences), 'startDate', 'desc');
+      featureThresholdsFactory.getThresholdList('DAILYEXCHANGERATE', companyPreferencesPayload, _companyId).then(function(reponseData) {
+        var orderedThresholds = lodash.sortByOrder(angular.copy(reponseData.response), 'startDate', 'desc');
 
-        $scope.thresHold = angular.copy(thresHold);
+        $scope.thresHold = angular.copy(orderedThresholds);
       });
 
       $this.hideLoadingModal();
