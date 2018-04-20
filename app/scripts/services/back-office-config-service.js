@@ -25,6 +25,7 @@ angular.module('ts5App')
     $this.cashBagConfigOptions = [
       {
         name: 'Cashless Company',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'cashLessCompany',
@@ -32,12 +33,14 @@ angular.module('ts5App')
       },
       {
         name: 'CashBag Length',
+        featureCode: "",
         configSource: 'SALES_THRESHOLD',
         inputType: 'PERCENTAGE_NUMBER',
         id: 'cashBagLength'
       },
       {
         name: 'Required CashBag Validation',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'requiredCashBagValidation',
@@ -45,6 +48,7 @@ angular.module('ts5App')
       },
       {
         name: 'Daily Exchange Rate Type',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'dailyExchangeRateType',
@@ -52,6 +56,7 @@ angular.module('ts5App')
       },
       {
         name: 'Daily Exchange Rate',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'dailyExchangeRate',
@@ -59,12 +64,14 @@ angular.module('ts5App')
       },
       {
         name: 'Daily Exchange Rate - Daily Variance Threshold',
+        featureCode: "",
         configSource: 'SALES_THRESHOLD',
         inputType: 'PERCENTAGE_NUMBER',
         id: 'dailyExchangeRateDailyVarianceThreshold'
       },
       {
         name: 'Default Bank Reference Number',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'defaultBankReferenceNumber',
@@ -72,6 +79,7 @@ angular.module('ts5App')
       },
       {
         name: 'Auto Submit: Functionality',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'autoSubmit:Functionality',
@@ -82,6 +90,7 @@ angular.module('ts5App')
     $this.preOrderConfigOptions = [
       {
         name: 'PreOrder Configuration',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'preorder',
@@ -92,6 +101,7 @@ angular.module('ts5App')
     $this.stationOpsConfigOptions = [
       {
         name: 'Store Instance Schedule Date Option',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'storeInstanceScheduleDateOption',
@@ -99,6 +109,7 @@ angular.module('ts5App')
       },
       {
         name: 'Sort By Sales Category',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'sortBySalesCategory',
@@ -106,6 +117,7 @@ angular.module('ts5App')
       },
       {
         name: 'Store Dispatch – Variance Threshold',
+        featureCode: "",
         configSource: 'SALES_THRESHOLD',
         inputType: 'PERCENTAGE_NUMBER',
         id: 'storeDispatchVarianceThreshold',
@@ -113,6 +125,7 @@ angular.module('ts5App')
       },
       {
         name: 'Inbound Count Default to ePOS Sales Quantity',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'inboundCountDefaultPOSSalesQuantity',
@@ -123,12 +136,14 @@ angular.module('ts5App')
     $this.reconcileConfigOptions = [
       {
         name: 'Confirmation Threshold',
+        featureCode: "",
         configSource: 'SALES_THRESHOLD',
         inputType: 'PERCENTAGE_NUMBER',
         id: 'confirmationThreshold'
       },
       {
         name: 'Amend-Amend Required to Confirm',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'amendRequiredToConfirm',
@@ -136,6 +151,7 @@ angular.module('ts5App')
       },
       {
         name: 'Amend Auto Delete CashBag',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'amendAutoDeleteCashBag',
@@ -143,6 +159,7 @@ angular.module('ts5App')
       },
       {
         name: 'Amend Auto Merge CashBag',
+        featureCode: "",
         configSource: 'COMPANY_FEATURE',
         inputType: 'RADIO_BUTTON',
         id: 'amendAutoMergeCashBag',
