@@ -95,7 +95,7 @@ angular.module('ts5App')
 
     this.generateCurrency = function(currency) {
       return {
-        companyCurrencyId: currency.id,
+        currencyId: currency.id,
         code: currency.code,
         amend: currency.price
       };
