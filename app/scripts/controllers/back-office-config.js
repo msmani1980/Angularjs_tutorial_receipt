@@ -57,6 +57,7 @@ angular.module('ts5App')
     });
 
     $scope.resetValues = function () {
+      $scope.formData = {};
       $scope.configOptions = [];
       $scope.companyPreferences = [];
       $scope.dailyExchangeThresHold = [];
@@ -149,6 +150,8 @@ angular.module('ts5App')
 
     $scope.populateFormData = function () {
       _.forEach($scope.configOptions, function(featureOption) {
+        featureOption.ngModelIdentifier = $scope.calculateFormDataKeyForConfigOption(featureOption);
+
         if(featureOption.configSource === 'COMPANY_FEATURE') {
           $scope.populateCompanyFeatureFormData(featureOption);
         } else if(featureOption.configSource === 'SALES_THRESHOLD') {
@@ -165,11 +168,11 @@ angular.module('ts5App')
       }
 
       if(featureOption.inputType === 'RADIO_BUTTON') {
-        $scope.formData[$scope.calculateFormDataKeyForConfigOption(featureOption)] = existingPreference.isSelected;
+        $scope.formData[featureOption.ngModelIdentifier] = existingPreference.isSelected;
       } else if(featureOption.inputType === 'NUMBER') {
-        $scope.formData[$scope.calculateFormDataKeyForConfigOption(featureOption)] = existingPreference.numericValue;
+        $scope.formData[featureOption.ngModelIdentifier] = existingPreference.numericValue;
       } else if(featureOption.inputType === 'SELECT') {
-        $scope.formData[$scope.calculateFormDataKeyForConfigOption(featureOption)] = existingPreference.choiceCode;
+        $scope.formData[featureOption.ngModelIdentifier] = existingPreference.choiceCode;
       }
     };
 
