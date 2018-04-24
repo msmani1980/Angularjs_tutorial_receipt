@@ -13,7 +13,6 @@ angular.module('ts5App')
     var $this = this;
     $scope.viewName = 'Price Update Rule';
     $scope.shouldDisableEndDate = false;
-    $scope.isLoadingCompleted = false;
     $scope.rule = {
       startDate: '',
       endDate: ''
@@ -42,7 +41,6 @@ angular.module('ts5App')
       $scope.isCreate = true;
       $scope.viewName = 'Create Price Update Rule';
       $scope.viewEditItem = false;
-      $scope.isLoadingCompleted = true;
     };
 
     this.viewInit = function() {
@@ -147,14 +145,6 @@ angular.module('ts5App')
       );
     };
 
-    this.setMinDateValue = function () {
-      if ($scope.viewEditItem) {
-        $scope.rule.startDate = $scope.viewStartDate;
-        $scope.rule.endDate = $scope.viewEndDate;
-      }
-
-    };
-
     $scope.formSave = function() {
       if ($this.validateForm()) {
         var saveFunctionName = ($routeParams.action + 'PriceUpdaterRule');
@@ -200,8 +190,7 @@ angular.module('ts5App')
         companyId: response.companyId,
         endDate: $scope.viewEndDate
       };
-      
-      $scope.isLoadingCompleted = true;
+
     };
 
     this.initDependenciesSuccess = function(responseCollection) {
@@ -218,7 +207,6 @@ angular.module('ts5App')
         $this[initFunctionName]();
       }
 
-      $this.setMinDateValue();
     };
 
     this.setPriceCurrenciesList = function (response) {
