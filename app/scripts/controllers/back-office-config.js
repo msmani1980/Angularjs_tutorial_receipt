@@ -165,7 +165,13 @@ angular.module('ts5App')
       if(!existingPreference) {
         return;
       }
-
+      $scope.formData[featureOption.ngModelIdentifier].configSource = featureOption.configSource;
+      $scope.formData[featureOption.ngModelIdentifier].featureCode = featureOption.featureCode;
+      $scope.formData[featureOption.ngModelIdentifier].optionCode = featureOption.optionCode;
+      if(featureOption.choiceCode) {
+        $scope.formData[featureOption.ngModelIdentifier].choiceCode = featureOption.choiceCode;
+      }
+      $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
       $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
 
       if(featureOption.inputType === 'RADIO_BUTTON') {
@@ -184,6 +190,9 @@ angular.module('ts5App')
         return;
       }
 
+      $scope.formData[featureOption.ngModelIdentifier].configSource = featureOption.configSource;
+      $scope.formData[featureOption.ngModelIdentifier].featureCode = featureOption.featureCode;
+      $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
       $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
       $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.percentage;
     };
