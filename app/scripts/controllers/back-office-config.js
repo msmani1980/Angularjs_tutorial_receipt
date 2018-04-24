@@ -168,6 +168,8 @@ angular.module('ts5App')
         return;
       }
 
+      $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
+
       if(featureOption.inputType === 'RADIO_BUTTON') {
         $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.isSelected;
       } else if(featureOption.inputType === 'NUMBER') {
