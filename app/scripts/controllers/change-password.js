@@ -37,7 +37,7 @@ angular.module('ts5App')
       $scope.errorCustom = [
         {
           field: 'Current password',
-          value: 'Please check current password.'
+          value: 'Current Password is incorrect.'
         }
       ];
       $scope.showInternalServerErrors = false;
@@ -109,11 +109,7 @@ angular.module('ts5App')
     };
 
     function handleSuccessLoginResponse() {
-      identityAccessFactory.logout1();
-      $location.search('sessionToken', null);
-      $location.search('username', $scope.credentials.username);
-      $location.path('/#/login');
-      $window.location.reload();
+      $location.path('/#/');
     }
 
     function checkAuthSuccess(dataFromAPI) {
