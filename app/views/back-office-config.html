@@ -29,6 +29,24 @@
             </select>
           </label>
         </div>
+        <div class="col-sm-10">
+          <!--<span class="control-label col-sm-2">Start Date: </span>-->
+          <!--<p class="input-group" style="margin: 27px 18px -2px;">-->
+            <!--<span class="input-group-btn">-->
+              <!--<span class="btn btn-default disabled"><i class="glyphicon glyphicon-calendar"></i></span>-->
+            <!--</span>-->
+            <!--<input name="StartDate"-->
+                   <!--type="text"-->
+                   <!--class="form-control"-->
+                   <!--ng-model="formData[option.ngModelIdentifier].startDate"-->
+                   <!--style="width: auto"-->
+            <!--/>-->
+          <!--</p>-->
+
+          <div class="col-xs-12 col-sm-6" style="margin: 27px 18px -2px;">
+            <date-picker-field disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From" ng-model="formData[option.ngModelIdentifier].startDate"></date-picker-field>
+          </div>
+        </div>
       </div>
     </fieldset>
 
