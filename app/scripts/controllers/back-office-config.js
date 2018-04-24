@@ -30,6 +30,7 @@ angular.module('ts5App')
       }
     ];
 
+    $scope.isFeatureOptionsLoadingInProgress = false;
     $scope.configOptionDefinition = null;
     $scope.configOptions = [];
     $scope.companyPreferences = [];
@@ -77,6 +78,7 @@ angular.module('ts5App')
 
     $scope.selectFeature = function (feature) {
       $this.showLoadingModal('Loading Data');
+      $scope.isFeatureOptionsLoadingInProgress = true;
 
       $scope.resetValues();
 
@@ -102,6 +104,9 @@ angular.module('ts5App')
       $this.setReconciliationThreshold(response[2]);
       $this.setStoreDispatchThreshold(response[3]);
 
+      $scope.populateFormData();
+
+      $scope.isFeatureOptionsLoadingInProgress = false;
       $this.hideLoadingModal();
     };
 
@@ -147,7 +152,7 @@ angular.module('ts5App')
         if(featureOption.configSource === 'COMPANY_FEATURE') {
           $scope.populateCompanyFeatureFormData(featureOption);
         } else if(featureOption.configSource === 'SALES_THRESHOLD') {
-          $scope.populateSalesThresholdFormData(featureOption);
+          // $scope.populateSalesThresholdFormData(featureOption);
         }
       });
     };
@@ -160,11 +165,11 @@ angular.module('ts5App')
       }
 
       if(featureOption.inputType === 'RADIO_BUTTON') {
-
+        $scope.formData[$scope.calculateFormDataKeyForConfigOption(featureOption)] = existingPreference.isSelected;
       } else if(featureOption.inputType === 'NUMBER') {
-
+        $scope.formData[$scope.calculateFormDataKeyForConfigOption(featureOption)] = existingPreference.numericValue;
       } else if(featureOption.inputType === 'SELECT') {
-
+        $scope.formData[$scope.calculateFormDataKeyForConfigOption(featureOption)] = existingPreference.choiceCode;
       }
     };
 

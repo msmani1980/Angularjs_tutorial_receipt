@@ -7,7 +7,7 @@
     </div>
 
     <fieldset>
-      <div class="form-group" ng-repeat="option in configOptions">
+      <div ng-if="!isFeatureOptionsLoadingInProgress" class="form-group" ng-repeat="option in configOptions">
         <span class="control-label col-sm-2">{{ option.name }}: </span>
         <div class="col-sm-10">
           <label ng-if="option.inputType === 'RADIO_BUTTON'" ng-repeat="value in option.values" class="radio-custom radio-inline" style="padding-top: 3px;" data-initialize="radio" >
