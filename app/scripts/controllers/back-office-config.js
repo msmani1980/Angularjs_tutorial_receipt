@@ -66,15 +66,13 @@ angular.module('ts5App')
     };
 
     $scope.calculateFormDataKeyForConfigOption = function (option) {
-      return $scope.calculateFormDataKeyFor(option.configSource, option.featureCode, option.optionCode);
-    };
-
-    $scope.calculateFormDataKeyFor = function (prefix, featureCode, optionCode) {
-      if(prefix && featureCode && optionCode) {
-        return prefix + '__' + featureCode + '__' + optionCode;
+      if(option.configSource === 'COMPANY_FEATURE' && (option.inputType === 'RADIO_BUTTON' || option.inputType === 'NUMBER')) {
+        return option.configSource + '__' + option.featureCode + '__' + option.optionCode + '__' + option.choiceCode;
+      } else if(option.configSource === 'COMPANY_FEATURE' && option.inputType === 'SELECT') {
+        return option.configSource + '__' + option.featureCode + '__' + option.optionCode;
+      } else if(option.configSource === 'SALES_THRESHOLD') {
+        return option.configSource + '__' + option.featureCode;
       }
-
-      return prefix + '__' + featureCode;
     };
 
     $scope.selectFeature = function (feature) {

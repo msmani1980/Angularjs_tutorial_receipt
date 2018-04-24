@@ -42,16 +42,16 @@ angular.module('ts5App')
         inputType: 'NUMBER',
         id: 'cashBagLength'
       },
-      {
-        name: 'Required CashBag Validation',
-        featureCode: '',
-        optionCode: '',
-        choiceCode: '',
-        configSource: 'COMPANY_FEATURE',
-        inputType: 'RADIO_BUTTON',
-        id: 'requiredCashBagValidation',
-        values: angular.copy($this.radioButtonValues)
-      },
+      // {
+      //   name: 'Required CashBag Validation',
+      //   featureCode: '',
+      //   optionCode: '',
+      //   choiceCode: '',
+      //   configSource: 'COMPANY_FEATURE',
+      //   inputType: 'RADIO_BUTTON',
+      //   id: 'requiredCashBagValidation',
+      //   values: angular.copy($this.radioButtonValues)
+      // },
       {
         name: 'Daily Exchange Rate Type',
         featureCode: 'CBG',
@@ -70,16 +70,16 @@ angular.module('ts5App')
           }
         ]
       },
-      {
-        name: 'Daily Exchange Rate',
-        featureCode: '',
-        optionCode: '',
-        choiceCode: '',
-        configSource: 'COMPANY_FEATURE',
-        inputType: 'RADIO_BUTTON',
-        id: 'dailyExchangeRate',
-        values: angular.copy($this.radioButtonValues)
-      },
+      // {
+      //   name: 'Daily Exchange Rate',
+      //   featureCode: '',
+      //   optionCode: '',
+      //   choiceCode: '',
+      //   configSource: 'COMPANY_FEATURE',
+      //   inputType: 'RADIO_BUTTON',
+      //   id: 'dailyExchangeRate',
+      //   values: angular.copy($this.radioButtonValues)
+      // },
       {
         name: 'Daily Exchange Rate - Daily Variance Threshold',
         featureCode: 'DAILYEXCHANGERATE',
