@@ -186,15 +186,14 @@ angular.module('ts5App')
         return;
       }
 
+      $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
       $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.percentage;
     };
 
     $scope.findExistingCompanyFeaturePreference = function (featureOption) {
-      var existingPreference = _.find($scope.companyPreferences, function(preference) {
+      return _.find($scope.companyPreferences, function(preference) {
         return featureOption.featureCode === preference.featureCode && featureOption.optionCode === preference.optionCode;
       });
-
-      return existingPreference;
     };
 
     $scope.findExistingSalesThresholdPreference = function (featureOption) {
