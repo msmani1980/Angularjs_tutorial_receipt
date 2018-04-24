@@ -113,7 +113,7 @@ angular.module('ts5App')
     };
 
     function handleSuccessLoginResponse() {
-      this.showSuccessMessage('Password has been updated!');
+      $this.showSuccessMessage('Password has been updated!');
       $location.path('/#/');
     }
 
