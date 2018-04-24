@@ -21,6 +21,9 @@ angular.module('ts5App')
           currentUserPassword: CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.currentPassword).toString(CryptoJS.enc.Base64),
           pwdo: CryptoJS.SHA256(credentials.username + credentials.currentPassword).toString(CryptoJS.enc.Base64)
         };
+        console.log(credentials.username)
+        console.log(credentials.password)
+        console.log(credentials.currentPassword)
         return identityAccessService.changePassword(payload, sessionToken);
       }
 

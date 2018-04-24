@@ -67,7 +67,8 @@ angular.module('ts5App')
     function getCredentials() {
       return {
         username: $scope.credentials.username,
-        password: $scope.credentials.newPassword
+        password: $scope.credentials.newPassword,
+        currentPassword: $scope.credentials.currentPassword,
       };
     }
 
