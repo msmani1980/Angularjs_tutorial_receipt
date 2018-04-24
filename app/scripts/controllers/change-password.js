@@ -72,6 +72,12 @@ angular.module('ts5App')
       };
     }
 
+    function resetCredentials() {
+      $scope.credentials.currentPassword = '';
+      $scope.credentials.newPassword = '';
+      $scope.credentials.newPasswordConfirm = '';
+    }
+
     function handleSuccessResponse() {
       hideLoadingModal();
       handleSuccessLoginResponse();
@@ -93,6 +99,10 @@ angular.module('ts5App')
       }
 
       var credentials = getCredentials();
+
+      $scope.credentials.currentPassword = '';
+      $scope.credentials.newPassword = '';
+      $scope.credentials.newPasswordConfirm = '';
 
       showLoadingModal('Changing password');
       identityAccessFactory.changePassword(credentials, $this.headers).then(handleSuccessResponse, handleResponseError);
