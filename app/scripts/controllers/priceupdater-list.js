@@ -126,7 +126,7 @@ angular.module('ts5App')
       return false;
     }
 
-    return dateUtility.isAfterOrEqualDatePicker(priceupdater.startDate, dateUtility.nowFormattedDatePicker());
+    return dateUtility.isAfterTodayDatePicker(priceupdater.startDate);
   };
 
   $scope.isPriceUpdaterEditable = function(priceupdater) {
@@ -138,7 +138,7 @@ angular.module('ts5App')
   };
 
   $scope.showDeleteButton = function(priceupdater) {
-    return dateUtility.isAfterTodayDatePicker(priceupdater.startDate) && priceupdater.runBy !== null;
+    return dateUtility.isAfterTodayDatePicker(priceupdater.startDate) || priceupdater.runBy !== null;
   };
 
   $scope.removeRecord = function (priceupdater) {
