@@ -34,13 +34,13 @@ angular.module('ts5App')
 
     function handleResponseError(responseFromAPI) {
       hideLoadingModal();
-      responseFromAPI.data = [
+      $scope.errorCustom = [
         {
-          field: 'Password',
-          value: 'cannot be changed.'
+          field: 'Current password',
+          value: 'Please check current password.'
         }
       ];
-      $scope.errorResponse = responseFromAPI;
+      $scope.showInternalErrors = false;
       $scope.displayError = true;
     }
 
