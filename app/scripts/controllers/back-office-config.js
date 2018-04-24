@@ -152,7 +152,7 @@ angular.module('ts5App')
         if(featureOption.configSource === 'COMPANY_FEATURE') {
           $scope.populateCompanyFeatureFormData(featureOption);
         } else if(featureOption.configSource === 'SALES_THRESHOLD') {
-          // $scope.populateSalesThresholdFormData(featureOption);
+          $scope.populateSalesThresholdFormData(featureOption);
         }
       });
     };
@@ -173,12 +173,38 @@ angular.module('ts5App')
       }
     };
 
+    $scope.populateSalesThresholdFormData = function (featureOption) {
+      var existingPreference = $scope.findExistingSalesThresholdPreference(featureOption);
+
+      if(!existingPreference) {
+        return;
+      }
+
+      $scope.formData[$scope.calculateFormDataKeyForConfigOption(featureOption)] = existingPreference.percentage;
+    };
+
     $scope.findExistingCompanyFeaturePreference = function (featureOption) {
       var existingPreference = _.find($scope.companyPreferences, function(preference) {
         return featureOption.featureCode === preference.featureCode && featureOption.optionCode === preference.optionCode;
       });
 
       return existingPreference;
+    };
+
+    $scope.findExistingSalesThresholdPreference = function (featureOption) {
+      if(featureOption.featureCode === 'RECONCILIATION') {
+        return _.find($scope.reconciliationThresHold, function(preference) {
+          return featureOption.featureCode === preference.featureCode;
+        });
+      } else if(featureOption.featureCode === 'DAILYEXCHANGERATE') {
+        return _.find($scope.dailyExchangeThresHold, function(preference) {
+          return featureOption.featureCode === preference.featureCode;
+        });
+      } else if(featureOption.featureCode === 'STOREDISPATCH') {
+        return _.find($scope.storeDispatchThresHold, function(preference) {
+          return featureOption.featureCode === preference.featureCode;
+        });
+      }
     };
 
 
