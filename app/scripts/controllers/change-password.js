@@ -8,10 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ChangePasswordCtrl', function ($rootScope, $scope, $http, $routeParams, $location, $window, identityAccessFactory) {
+  .controller('ChangePasswordCtrl', function ($rootScope, $scope, $http, $routeParams, $location, $window, identityAccessFactory, messageService) {
 
     $scope.credentials = {
-      //currentPassword: '',
+      currentPassword: '',
       newPassword: '',
       newPasswordConfirm: ''
     };
@@ -32,15 +32,15 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
-    function handleResponseError(responseFromAPI) {
+    function handleResponseError() {
       hideLoadingModal();
-      responseFromAPI.data = [
+      $scope.errorCustom = [
         {
-          field: 'Password',
-          value: 'cannot be changed.'
+          field: 'Current password',
+          value: 'Current Password is incorrect.'
         }
       ];
-      $scope.errorResponse = responseFromAPI;
+      $scope.showInternalServerErrors = false;
       $scope.displayError = true;
     }
 
@@ -67,14 +67,27 @@ angular.module('ts5App')
     function getCredentials() {
       return {
         username: $scope.credentials.username,
-        password: $scope.credentials.newPassword
+        password: $scope.credentials.newPassword,
+        currentPassword: $scope.credentials.currentPassword
       };
+    }
+
+    function resetCredentials() {
+      if ($scope.credentials) {
+        $scope.credentials.currentPassword = '';
+        $scope.credentials.newPassword = '';
+        $scope.credentials.newPasswordConfirm = '';
+      }
     }
 
     function handleSuccessResponse() {
       hideLoadingModal();
       handleSuccessLoginResponse();
     }
+
+    this.showSuccessMessage = function(message) {
+      messageService.display('success', message, 'Success');
+    };
 
     $scope.changePassword = function () {
       if ($scope.credentials.newPassword !== $scope.credentials.newPasswordConfirm) {
@@ -92,19 +105,18 @@ angular.module('ts5App')
       }
 
       var credentials = getCredentials();
-      $scope.credentials = credentials;
+
+      resetCredentials();
+
       showLoadingModal('Changing password');
       identityAccessFactory.changePassword(credentials, $this.headers).then(handleSuccessResponse, handleResponseError);
     };
 
     function handleSuccessLoginResponse() {
-      identityAccessFactory.logout1();
-      $location.search('sessionToken', null);
-      $location.search('username', $scope.credentials.username);
-      $location.path('/#/login');
-      $window.location.reload();
+      $this.showSuccessMessage('Password has been updated!');
+      $location.path('/#/');
     }
-    
+
     function checkAuthSuccess(dataFromAPI) {
       var userInfo = angular.copy(dataFromAPI);
       $scope.credentials.username = userInfo.userName;
