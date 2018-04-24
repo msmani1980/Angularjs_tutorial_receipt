@@ -73,9 +73,11 @@ angular.module('ts5App')
     }
 
     function resetCredentials() {
-      $scope.credentials.currentPassword = '';
-      $scope.credentials.newPassword = '';
-      $scope.credentials.newPasswordConfirm = '';
+      if ($scope.credentials) {
+        $scope.credentials.currentPassword = '';
+        $scope.credentials.newPassword = '';
+        $scope.credentials.newPasswordConfirm = '';
+      }
     }
 
     function handleSuccessResponse() {
