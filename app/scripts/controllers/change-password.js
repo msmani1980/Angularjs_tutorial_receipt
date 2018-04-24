@@ -40,7 +40,7 @@ angular.module('ts5App')
           value: 'Please check current password.'
         }
       ];
-      $scope.showInternalErrors = false;
+      $scope.showInternalServerErrors = false;
       $scope.displayError = true;
     }
 
