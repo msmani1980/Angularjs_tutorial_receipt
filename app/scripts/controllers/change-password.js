@@ -102,9 +102,7 @@ angular.module('ts5App')
 
       var credentials = getCredentials();
 
-      $scope.credentials.currentPassword = '';
-      $scope.credentials.newPassword = '';
-      $scope.credentials.newPasswordConfirm = '';
+      resetCredentials();
 
       showLoadingModal('Changing password');
       identityAccessFactory.changePassword(credentials, $this.headers).then(handleSuccessResponse, handleResponseError);
