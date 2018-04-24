@@ -152,6 +152,30 @@ angular.module('ts5App')
       });
     };
 
+    $scope.populateCompanyFeatureFormData = function (featureOption) {
+      var existingPreference = $scope.findExistingCompanyFeaturePreference(featureOption);
+
+      if(!existingPreference) {
+        return;
+      }
+
+      if(featureOption.inputType === 'RADIO_BUTTON') {
+
+      } else if(featureOption.inputType === 'NUMBER') {
+
+      } else if(featureOption.inputType === 'SELECT') {
+
+      }
+    };
+
+    $scope.findExistingCompanyFeaturePreference = function (featureOption) {
+      var existingPreference = _.find($scope.companyPreferences, function(preference) {
+        return featureOption.featureCode === preference.featureCode && featureOption.optionCode === preference.optionCode;
+      });
+
+      return existingPreference;
+    };
+
 
     this.errorHandler = function(dataFromAPI) {
       angular.element('#loading').modal('hide');
