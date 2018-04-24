@@ -31,6 +31,8 @@ angular.module('ts5App')
 
     $scope.saveButtonText = 'Exit';
 
+    $scope.areWizardStepsInitialized = false;
+
     $scope.isActionState = function(actionState) {
       return $routeParams.action === actionState;
     };
@@ -75,10 +77,10 @@ angular.module('ts5App')
 
     this.getSalesCategoryName = function(itemMasterId) {
       var menuMatches = lodash.findWhere(_menuItems, { itemMasterId: itemMasterId });
-        
+
       if (menuMatches) {
         return menuMatches.salesCategoryName;
-      } else { 
+      } else {
         var menuMatchesNew = lodash.findWhere($scope.allItemForGettingSalesCategory, { itemMasterId: itemMasterId });
         if (menuMatchesNew) {
           return menuMatchesNew.salesCategoryName;
@@ -268,7 +270,7 @@ angular.module('ts5App')
     }
 
     function getStepsForStoreOne() {
-      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps('end-instance', $routeParams.storeId);
+      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps('end-instance', $routeParams.storeId, null);
       var currentStepIndex = lodash.findIndex($scope.prevInstanceWizardSteps, {
         controllerName: 'Packing'
       });
@@ -633,6 +635,7 @@ angular.module('ts5App')
 
     function storeDetailsResponseHandler(responseArray) {
       $scope.storeDetails = angular.copy(responseArray[0]);
+      setupSteps($scope.storeDetails.replenishStoreInstanceId);
       $scope.ullageReasonList = angular.copy(responseArray[1].companyReasonCodes);
       $this.countTypes = angular.copy(responseArray[2]);
       checkOnValidStatus();
@@ -667,18 +670,18 @@ angular.module('ts5App')
         storeInstanceStatusDispatched, showResponseErrors);
     }
 
-    function setupSteps() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+    function setupSteps(replenishStoreInstanceId) {
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId, replenishStoreInstanceId);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: 'Review'
       });
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
+      $scope.areWizardStepsInitialized = true;
     }
 
     function getDataFromAPI() {
       var promiseArray = [];
       displayLoadingModal();
-      setupSteps();
 
       promiseArray.push(storeInstanceFactory.getStoreDetails($routeParams.storeId));
       promiseArray.push(storeInstanceFactory.getReasonCodeList());
@@ -706,7 +709,7 @@ angular.module('ts5App')
       }, showResponseErrors);
 
     };
-    
+
     this.setSortByOptionForCompany = function (dataFromAPI) {
       var preferencesArray = angular.copy(dataFromAPI.preferences);
 
@@ -719,7 +722,7 @@ angular.module('ts5App')
       });
 
     };
-        
+
     this.getActiveCompanyPreferences = function () {
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())

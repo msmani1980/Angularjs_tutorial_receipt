@@ -70,6 +70,22 @@ angular.module('ts5App')
       hidePanel(otherPanelName);
     }
 
+    $scope.getUpdateBy = function (relationship) {
+      if (relationship.updatedByPerson) {
+        return relationship.updatedByPerson.userName;
+      }
+
+      if (relationship.createdByPerson) {
+        return relationship.createdByPerson.userName;
+      }
+
+      return '';
+    };
+
+    $scope.getUpdatedOn = function (relationship) {
+      return relationship.updatedOn ? dateUtility.formatTimestampForApp(relationship.updatedOn) : dateUtility.formatTimestampForApp(relationship.createdOn);
+    };
+
     $scope.clearCreateForm = function(shouldClearAll) {
       var currentItemType = $scope.newRecord.itemType;
       $scope.displayError = false;
@@ -202,8 +218,9 @@ angular.module('ts5App')
         id: responseFromAPI.id
       });
       if (angular.isDefined(recordMatchIndex) && recordMatchIndex !== null) {
-        var formattedNewRecord = formatRecordForApp(angular.copy(responseFromAPI));
-        $scope.itemExciseDutyList[recordMatchIndex] = formattedNewRecord;
+        exciseDutyRelationshipFactory.getRelationship(responseFromAPI.id).then(function (fetchResponse) {
+          $scope.itemExciseDutyList[recordMatchIndex] = formatRecordForApp(angular.copy(fetchResponse));
+        }, showErrors);
       }
     }
 
@@ -254,9 +271,13 @@ angular.module('ts5App')
     function createSuccess(newRecordFromAPI) {
       hideLoadingModal();
       $scope.clearCreateForm(false);
-      var formattedNewRecord = formatRecordForApp(newRecordFromAPI);
+      exciseDutyRelationshipFactory.getRelationship(newRecordFromAPI.id).then(getExciseDutyRelationshipByIdAfterCreateSaveSuccess, showErrors);
+    }
+
+    function getExciseDutyRelationshipByIdAfterCreateSaveSuccess(recordResponse) {
+      var formattedRecordFromResponse = formatRecordForApp(recordResponse);
       $scope.itemExciseDutyList = $scope.itemExciseDutyList || [];
-      $scope.itemExciseDutyList.push(formattedNewRecord);
+      $scope.itemExciseDutyList.push(formattedRecordFromResponse);
     }
 
     function validateCreateForm() {
@@ -525,7 +546,7 @@ angular.module('ts5App')
     }
 
     init();
-    
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
     };

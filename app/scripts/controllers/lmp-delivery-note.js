@@ -305,6 +305,18 @@ angular.module('ts5App')
       }
     }
 
+    $scope.isDeliveryDateSelected = function () {
+      return $scope.deliveryNote !== 'undefined' && $scope.deliveryNote !== null && $scope.deliveryNote.deliveryDate !== undefined && $scope.deliveryNote.deliveryDate !== null;
+    };
+
+    $scope.$watch('deliveryNote.deliveryDate', function () {
+      if ($scope.isDeliveryDateSelected()) {
+        getCatererStationsForDeliveryDate();
+      } else {
+        $scope.catererStationList = [];
+      }
+    }, true);
+
     function generateSavePayload(_isAccepted) {
       $scope.clearFilter();
       removeNullDeliveredItems();
@@ -610,6 +622,31 @@ angular.module('ts5App')
       return deliveryNoteFactory.getMasterItems(payload).then(resolveAndCompleteLastInit, showResponseErrors);
     }
 
+    function getCatererStationsForDeliveryDate() {
+      if ($scope.isDeliveryDateSelected()) {
+        $scope.catererStationListIsBeingLoaded = true;
+
+        var catererStationsPayload = {
+          startDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate),
+          endDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate),
+          limit: null
+        };
+
+        deliveryNoteFactory.getCatererStationList(catererStationsPayload).then(setCatererStationsList, showResponseErrors);
+      }
+    }
+
+    function setCatererStationsList(apiResponse) {
+      $scope.catererStationList = angular.copy(apiResponse.response);
+      $scope.catererStationListIsBeingLoaded = false;
+
+      if ($scope.catererStationList.length === 0) {
+        $scope.catererStationListIsEmpty = true;
+      } else {
+        $scope.catererStationListIsEmpty = false;
+      }
+    }
+
     function setDeliveryNoteFromResponse(response) {
       $scope.deliveryNote = angular.copy(response);
       $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, 'itemName');
@@ -625,12 +662,11 @@ angular.module('ts5App')
     function resolveInitPromises(responseCollection) {
       $scope.regularItemType = lodash.findWhere(angular.copy(responseCollection[0]), { name: 'Regular' });
       $scope.inventoryCharacteristicType = lodash.findWhere(angular.copy(responseCollection[1]), { name: 'Inventory' });
-      $scope.catererStationList = angular.copy(responseCollection[2].response);
-      $scope.ullageReasons = lodash.filter(responseCollection[3].companyReasonCodes, { reasonTypeName: _reasonCodeTypeUllage });
-      $scope.menuList = angular.copy(responseCollection[4].menus);
+      $scope.ullageReasons = lodash.filter(responseCollection[2].companyReasonCodes, { reasonTypeName: _reasonCodeTypeUllage });
+      $scope.menuList = angular.copy(responseCollection[3].menus);
 
-      if (responseCollection[5]) {
-        setDeliveryNoteFromResponse(responseCollection[5]);
+      if (responseCollection[4]) {
+        setDeliveryNoteFromResponse(responseCollection[4]);
       }
 
       completeInitCalls();
@@ -640,7 +676,6 @@ angular.module('ts5App')
       var initPromises = [];
       initPromises.push(deliveryNoteFactory.getItemTypes());
       initPromises.push(deliveryNoteFactory.getCharacteristics());
-      initPromises.push(deliveryNoteFactory.getCatererStationList());
       initPromises.push(deliveryNoteFactory.getCompanyReasonCodes());
 
       var payloadForMenu = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
@@ -649,6 +684,8 @@ angular.module('ts5App')
       if ($scope.state === 'edit' || $scope.state === 'view') {
         initPromises.push(deliveryNoteFactory.getDeliveryNote($routeParams.id));
       }
+
+      $scope.catererStationList = [];
 
       return initPromises;
     }
@@ -662,6 +699,8 @@ angular.module('ts5App')
       $scope.readOnly = $scope.state === 'view';
       $scope.disableActions = $scope.state === 'view';
       $scope.hideReview = $scope.state === 'view';
+      $scope.catererStationListIsBeingLoaded = false;
+      $scope.catererStationListIsEmpty = false;
 
       var viewNameForAction = {
         view: 'View Delivery Note',

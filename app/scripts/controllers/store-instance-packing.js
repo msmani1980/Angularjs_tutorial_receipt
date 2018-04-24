@@ -13,6 +13,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     var $this = this;
 
+    $scope.areWizardStepsInitialized = false;
+
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     };
@@ -121,7 +123,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           $scope.offLoadItemsSortOrder = '[salesCategoryName,itemName]';
           $scope.itemSortOrder = '[salesCategoryName,itemName]';
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
-          $scope.offLoadItemsSortOrder = 'itemName';	
+          $scope.offLoadItemsSortOrder = 'itemName';
           $scope.itemSortOrder = 'itemName';
         }
       });
@@ -196,6 +198,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getStoreDetails = function() {
       return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then(function(response) {
         $scope.storeDetails = angular.copy(response);
+        $this.initWizardSteps($scope.storeDetails.replenishStoreInstanceId);
       }, this.errorHandler);
     };
 
@@ -942,14 +945,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return promises;
     };
 
-    this.initWizardSteps = function() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+    this.initWizardSteps = function(replenishStoreInstanceId) {
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId, replenishStoreInstanceId);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: 'Packing'
       });
       $this.currentStep = angular.copy($scope.wizardSteps[currentStepIndex]);
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
+
+      $scope.areWizardStepsInitialized = true;
     };
 
     this.initControllerVars = function() {
@@ -960,7 +965,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.filteredItemsList = [];
       $scope.allowedMenuItemsForOffloadSection = [];
       $scope.allItemForGettingSalesCategory = [];
-      
+
       if ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') {
         $scope.offloadListItems = [];
         $scope.newOffloadListItems = [];
@@ -976,7 +981,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.init = function() {
       $scope.readOnly = true;
       $this.showLoadingModal('Loading Store Detail for Packing...');
-      $this.initWizardSteps();
       $this.initControllerVars();
       var promises = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies, handleResponseError);
