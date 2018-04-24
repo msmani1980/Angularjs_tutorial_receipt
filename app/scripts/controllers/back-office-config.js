@@ -142,6 +142,17 @@ angular.module('ts5App')
       ];
     };
 
+    $scope.populateFormData = function () {
+      _.forEach($scope.configOptions, function(featureOption) {
+        if(featureOption.configSource === 'COMPANY_FEATURE') {
+          $scope.populateCompanyFeatureFormData(featureOption);
+        } else if(featureOption.configSource === 'SALES_THRESHOLD') {
+          $scope.populateSalesThresholdFormData(featureOption);
+        }
+      });
+    };
+
+
     this.errorHandler = function(dataFromAPI) {
       angular.element('#loading').modal('hide');
       $scope.displayError = true;
