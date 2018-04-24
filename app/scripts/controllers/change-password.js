@@ -32,7 +32,7 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
-    function handleResponseError(responseFromAPI) {
+    function handleResponseError() {
       hideLoadingModal();
       $scope.errorCustom = [
         {
