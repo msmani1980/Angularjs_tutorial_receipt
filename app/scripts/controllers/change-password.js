@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ChangePasswordCtrl', function ($rootScope, $scope, $http, $routeParams, $location, $window, identityAccessFactory) {
+  .controller('ChangePasswordCtrl', function ($rootScope, $scope, $http, $routeParams, $location, $window, identityAccessFactory, messageService) {
 
     $scope.credentials = {
       currentPassword: '',
@@ -85,6 +85,10 @@ angular.module('ts5App')
       handleSuccessLoginResponse();
     }
 
+    this.showSuccessMessage = function(message) {
+      messageService.display('success', message, 'Success');
+    };
+
     $scope.changePassword = function () {
       if ($scope.credentials.newPassword !== $scope.credentials.newPasswordConfirm) {
         handlePasswordMismatch();
@@ -109,6 +113,7 @@ angular.module('ts5App')
     };
 
     function handleSuccessLoginResponse() {
+      this.showSuccessMessage('Password has been updated!');
       $location.path('/#/');
     }
 
