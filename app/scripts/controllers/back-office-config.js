@@ -151,6 +151,7 @@ angular.module('ts5App')
     $scope.populateFormData = function () {
       _.forEach($scope.configOptions, function(featureOption) {
         featureOption.ngModelIdentifier = $scope.calculateFormDataKeyForConfigOption(featureOption);
+        $scope.formData[featureOption.ngModelIdentifier] = {};
 
         if(featureOption.configSource === 'COMPANY_FEATURE') {
           $scope.populateCompanyFeatureFormData(featureOption);
@@ -168,11 +169,11 @@ angular.module('ts5App')
       }
 
       if(featureOption.inputType === 'RADIO_BUTTON') {
-        $scope.formData[featureOption.ngModelIdentifier] = existingPreference.isSelected;
+        $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.isSelected;
       } else if(featureOption.inputType === 'NUMBER') {
-        $scope.formData[featureOption.ngModelIdentifier] = existingPreference.numericValue;
+        $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.numericValue;
       } else if(featureOption.inputType === 'SELECT') {
-        $scope.formData[featureOption.ngModelIdentifier] = existingPreference.choiceCode;
+        $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.choiceCode;
       }
     };
 
@@ -183,7 +184,7 @@ angular.module('ts5App')
         return;
       }
 
-      $scope.formData[$scope.calculateFormDataKeyForConfigOption(featureOption)] = existingPreference.percentage;
+      $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.percentage;
     };
 
     $scope.findExistingCompanyFeaturePreference = function (featureOption) {
