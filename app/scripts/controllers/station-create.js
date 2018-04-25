@@ -378,6 +378,10 @@ angular.module('ts5App')
       return $scope.shouldDisableStartDate || $this.viewOnly;
     };
 
+    $scope.isInFutureWithMaxStartDateBeforeToday = function(maxStartDate, effectiveStartDate) {
+      return $this.isInFutureWithMaxStartDateBeforeToday(maxStartDate, effectiveStartDate);
+    };
+
     $scope.autocompleteCities = function($select, $event) {
       if ($event) {
         $event.stopPropagation();
