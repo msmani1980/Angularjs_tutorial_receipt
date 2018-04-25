@@ -112,7 +112,7 @@ angular.module('ts5App')
 
     this.setStationValidationDates = function(dataFromAPI) {
       $scope.maxStartDate = dataFromAPI.startDate ? dateUtility.formatDateForApp(dataFromAPI.startDate) : null;
-      $scope.minEndDate = dataFromAPI.endDate ? dateUtility.formatDateForApp(dataFromAPI.endDate) : null; 
+      $scope.minEndDate = dataFromAPI.endDate ? dateUtility.formatDateForApp(dataFromAPI.endDate) : null;
     };
 
     this.getStationValidationDates = function(id) {
@@ -153,6 +153,14 @@ angular.module('ts5App')
       }
 
       return !dateUtility.isBeforeOrEqual($scope.formData.startDate, $scope.maxStartDate);
+    };
+
+    this.isInFutureWithMaxStartDateBeforeToday = function(maxStartDate, effectiveStartDate) {
+      if (!maxStartDate) {
+        return false;
+      }
+
+      return dateUtility.isYesterdayOrEarlierDatePicker(maxStartDate) && !$this.dateActive(effectiveStartDate);
     };
 
     this.validateForm = function() {
