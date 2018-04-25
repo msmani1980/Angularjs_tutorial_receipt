@@ -155,6 +155,10 @@ angular.module('ts5App')
       return !dateUtility.isBeforeOrEqual($scope.formData.startDate, $scope.maxStartDate);
     };
 
+    this.dateActive = function(date) {
+      return dateUtility.isTodayOrEarlierDatePicker(date);
+    };
+
     this.isInFutureWithMaxStartDateBeforeToday = function(maxStartDate, effectiveStartDate) {
       if (!maxStartDate) {
         return false;
