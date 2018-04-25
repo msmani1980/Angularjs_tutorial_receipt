@@ -146,12 +146,12 @@ angular.module('ts5App')
       return dateUtility.isTodayOrEarlierDatePicker(date);
     };
 
-    this.isMaxStartDateInPast = function(date) {
-      if (!date) {
+    this.isInFutureWithMaxStartDateBeforeToday = function(maxStartDate, effectiveStartDate) {
+      if (!maxStartDate) {
         return false;
       }
-      console.log(date)
-      return dateUtility.isYesterdayOrEarlierDatePicker(date);
+
+      return dateUtility.isYesterdayOrEarlierDatePicker(maxStartDate) && !$this.dateActive(effectiveStartDate);
     };
 
     this.canEdit = function (endDate) {
@@ -546,8 +546,8 @@ angular.module('ts5App')
       return $this.dateActive(date);
     };
 
-    $scope.isMaxStartDateInPast = function(date) {
-      return $this.isMaxStartDateInPast(date);
+    $scope.isInFutureWithMaxStartDateBeforeToday = function(maxStartDate, effectiveStartDate) {
+      return $this.isInFutureWithMaxStartDateBeforeToday(maxStartDate, effectiveStartDate);
     };
 
     $scope.canEdit = function (endDate) {
