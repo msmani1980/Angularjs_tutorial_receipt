@@ -146,6 +146,10 @@ angular.module('ts5App')
       return dateUtility.isTodayOrEarlierDatePicker(date);
     };
 
+    this.isMaxStartDateInPast = function(date) {
+      return dateUtility.isYesterdayOrEarlierDatePicker(date);
+    };
+
     this.canEdit = function (endDate) {
       return dateUtility.isYesterdayOrEarlierDatePicker(endDate);
     };
@@ -536,6 +540,10 @@ angular.module('ts5App')
 
     $scope.isDateActive = function(date) {
       return $this.dateActive(date);
+    };
+
+    $scope.isMaxStartDateInPast = function(date) {
+      return $this.isMaxStartDateInPast(date);
     };
 
     $scope.canEdit = function (endDate) {
