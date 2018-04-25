@@ -59,6 +59,10 @@ angular.module('ts5App')
       return $scope.disablePastDate || $scope.readOnly;
     };
 
+    $scope.isRuleApplied = function(priceupdater) {
+      return priceupdater.runBy !== null;
+    };
+
     this.validateForm = function() {
       $this.resetErrors();
       return $scope.priceUpdaterDataForm.$valid;
@@ -80,7 +84,7 @@ angular.module('ts5App')
         $this.showToastMessage('success', 'Create Price Update Rule', 'success');
       } else {
         $this.showToastMessage('success', 'Edit Price Update Rule', 'success');
-        if (priceupdater.runCnt && priceupdater.runCnt >= 0) {
+        if ($scope.isRuleApplied(priceupdater)) {
           priceupdaterFactory.applyPriceUpdateRules(priceupdater.id);
         }
       }
