@@ -15,7 +15,7 @@
             <span class="" style="margin-left: 17px;">{{ value.name }}</span>
           </label>
           <label ng-if="option.inputType === 'PERCENTAGE_NUMBER'" class="radio-custom radio-inline col-sm-12" style="padding-top: 3px; max-height: 31px; padding-left: 15px; margin-top: 5px; margin-bottom: 10px;" >
-            <input class="inline form-control col-sm-1" style="padding-top: 3px; width: 146px;" ng-model="formData[option.ngModelIdentifier].value"  type="number" step="0.10"  id="{{option.id}}" name="{{option.id}}"/>
+            <input class="inline form-control col-sm-1" style="padding-top: 3px; width: 146px;" ng-model="formData[option.ngModelIdentifier].value"  type="number" step="0.01"  id="{{option.id}}" name="{{option.id}}"/>
           </label>
           <label ng-if="option.inputType === 'NUMBER'" class="radio-custom radio-inline col-sm-12" style="padding-top: 3px; max-height: 31px; padding-left: 15px; margin-top: 3px; margin-bottom: 10px;"  >
             <input class="inline form-control col-sm-2" style="padding-top: 3px; width: 146px;" ng-model="formData[option.ngModelIdentifier].value"  type="number" step="1" id="{{option.id}}" name="{{option.ngModelIdentifier}}"/>
@@ -50,7 +50,7 @@
   <div class="container">
 
     <ul class="navbar product-version-scrollable">
-      <li ng-repeat="feature in portalConfigurationFeatures | orderBy: orderBy" ng-class="{'active' : feature === selectedFeature}" class="ng-scope" role="button" ng-click="selectFeature(feature)">
+      <li ng-repeat="feature in portalConfigurationFeatures | orderBy: orderBy" ng-class="{'active' : feature === selectedFeature}" class="ng-scope" role="button" ng-click="selectFeature(feature, false)">
         <i class="icon-manage-transactions"></i>
         <div class="left-nav-option">
           <i class="icon-manage-discount"></i>

@@ -75,8 +75,11 @@ angular.module('ts5App')
       }
     };
 
-    $scope.selectFeature = function (feature) {
-      $this.showLoadingModal('Loading Data');
+    $scope.selectFeature = function (feature, isLoadingModelAlreadyShown) {
+      if(isLoadingModelAlreadyShown && isLoadingModelAlreadyShown === false) {
+        $this.showLoadingModal('Loading Data');
+      }
+
       $scope.isFeatureOptionsLoadingInProgress = true;
 
       $scope.resetValues();
@@ -231,8 +234,8 @@ angular.module('ts5App')
     $scope.cancel = function () {
       $this.showLoadingModal('Canceling ...');
       $scope.resetValues();
-
-      eposConfigFactory.getModule($scope.selectedModule.id, $scope.selectedProductVersion.id).then($this.getModuleSuccess);
+      $scope.selectedFeature = null;
+      $this.hideLoadingModal();
     };
 
     $scope.selectProductVersion = function () {
@@ -306,8 +309,7 @@ angular.module('ts5App')
     };
 
     this.createOrUpdateSuccess = function() {
-      $this.hideLoadingModal();
-      $scope.selectModule($scope.selectedModule);
+      $scope.selectFeature($scope.selectedFeature, true);
     };
 
     $scope.isModuleConfigurationOptionsEmpty = function () {
@@ -317,24 +319,43 @@ angular.module('ts5App')
     $scope.saveBackOfficeConfig = function () {
       // var payload = $this.constructUpsertPayload();
 
-      $scope.formData;
-      var i = 0;
+      var companyPreferencePayload = $this.constructSaveOrUpdateDataForComapnyPreference($scope.formData);
+
+      companyPreferencesService.createOrUpdateCompanyPreference(companyPreferencePayload, _companyId).then($this.createOrUpdateSuccess, $this.errorHandler)
     };
 
     this.constructSaveOrUpdateDataForComapnyPreference = function(formData) {
-      var payload = [];
+        var result = [];
 
-      _.forEach(_.pairs(formData), function(pair) {
-        var key = pair[0];
-        var data = pair[1];
+      _.forEach(_.values(formData), function(data) {
+        var payload = {};
+
+        if(data.configSource !== 'COMPANY_FEATURE') {
+          return;
+        }
 
         payload.featureCode = data.featureCode;
         payload.optionCode = data.optionCode;
         if(data.id) {
           payload.companyPortalFeatureChoiceId = data.id;
         }
-        
+
+        if(data.inputType === 'RADIO_BUTTON') {
+          payload.isSelected = data.value;
+          payload.choiceCode = data.choiceCode;
+        } else if(data.inputType === 'NUMBER') {
+          payload.isSelected = true;
+          payload.choiceCode = data.choiceCode;
+          payload.numericValue = data.value;
+        } else if(data.inputType === 'SELECT') {
+          payload.isSelected = true;
+          payload.choiceCode = data.value;
+        }
+
+        result.push(payload);
       });
+
+      return result;
     };
 
 
