@@ -3,7 +3,7 @@
   </error-dialog>
   <form class="form-horizontal" name="reportOptions" ng-submit="saveBackOfficeConfig()">
     <div class="modal-header">
-      <h3 class="modal-title">{{ "Back Office Configuration - " + selectedFeature.name || 'Back Office Configuration' }}</h3>
+      <h3 class="modal-title">{{calculateTitle()}}</h3>
     </div>
 
     <fieldset>

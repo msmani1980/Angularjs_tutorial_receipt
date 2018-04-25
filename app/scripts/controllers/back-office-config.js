@@ -14,7 +14,6 @@ angular.module('ts5App')
     var _companyId = null;
     $scope.formData = {};
     $scope.viewName = 'Back Office Configuration';
-    $scope.productVersions = [];
     $scope.portalConfigurationFeatures = [
       {
         name: 'Cash Bag Configuration'
@@ -49,13 +48,6 @@ angular.module('ts5App')
     $scope.initialRadioButtonModuleOptionPopulatedIds = {};
     $scope.initialCheckBoxModuleOptionPopulatedIds = {};
 
-    $scope.$watch('selectedProductVersion', function (newProductVersion) {
-      if (!newProductVersion) {
-        $scope.selectedModule = null;
-        $scope.moduleConfiguration = null;
-      }
-    });
-
     $scope.resetValues = function () {
       $scope.formData = {};
       $scope.configOptions = [];
@@ -63,6 +55,14 @@ angular.module('ts5App')
       $scope.dailyExchangeThresHold = [];
       $scope.reconciliationThresHold = [];
       $scope.storeDispatchThresHold = [];
+    };
+
+    $scope.calculateTitle = function () {
+      if($scope.selectedFeature) {
+        return 'Back Office Configuration - ' + $scope.selectedFeature.name;
+      } else {
+        return 'Back Office Configuration';
+      }
     };
 
     $scope.calculateFormDataKeyForConfigOption = function (option) {
@@ -242,12 +242,6 @@ angular.module('ts5App')
       $this.hideLoadingModal();
     };
 
-    $scope.selectProductVersion = function () {
-      $scope.resetValues();
-      $scope.selectedModule = null;
-      $scope.moduleConfiguration = null;
-    };
-
     $scope.isUserAvailableForEditAndCreate = function () {
       var result = false;
       var userFeaturesInRole = $localStorage.featuresInRole;
@@ -273,14 +267,6 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    this.getProductVersionsSuccess = function(dataFromAPI) {
-      $scope.productVersions = angular.copy(dataFromAPI.response).map(function (productVersion) {
-        productVersion.displayName = productVersion.majorVersion + '.' + productVersion.minorVersion + '.' + productVersion.revision + '.' + productVersion.build;
-
-        return productVersion;
-      });
-    };
-
     this.createOrUpdateSuccess = function(dataFromApi) {
       $scope.selectFeature($scope.selectedFeature, true);
     };
@@ -292,12 +278,12 @@ angular.module('ts5App')
     $scope.saveBackOfficeConfig = function () {
       $this.showLoadingModal('Saving');
 
-      var companyPreferencePayload = $this.constructSaveOrUpdateDataForComapnyPreference($scope.formData);
+      var companyPreferencePayload = $this.constructSaveOrUpdateDataForCompanyPreference($scope.formData);
 
       companyPreferencesService.createOrUpdateCompanyPreference(companyPreferencePayload, _companyId).then($this.createOrUpdateSuccess, $this.errorHandler);
     };
 
-    this.constructSaveOrUpdateDataForComapnyPreference = function(formData) {
+    this.constructSaveOrUpdateDataForCompanyPreference = function(formData) {
         var result = [];
 
       _.forEach(_.values(formData), function(data) {
@@ -346,14 +332,6 @@ angular.module('ts5App')
       $this.hideLoadingModal();
     };
 
-    this.makeInitPromises = function() {
-      var promises = [
-        eposConfigFactory.getProductVersions(),
-        eposConfigFactory.getModules()
-      ];
-      return promises;
-    };
-
     var getCompanyId = function () {
       if (globalMenuService.getCompanyData().companyTypeName === 'Retail') {
         return globalMenuService.getCompanyData().id;
@@ -363,13 +341,9 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      // $this.showLoadingModal('Loading Data');
-      // var initPromises = $this.makeInitPromises();
-      // $q.all(initPromises).then($this.initDependenciesSuccess, $this.initDependenciesError);
       _companyId = getCompanyId();
       $scope.configOptionDefinition = angular.copy(backOfficeConfigService.configFeatureOptionsDefinition());
     };
 
     this.init();
-
   });
