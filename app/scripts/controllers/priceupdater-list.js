@@ -138,7 +138,7 @@ angular.module('ts5App')
   };
 
   $scope.showDeleteButton = function(priceupdater) {
-    return dateUtility.isAfterTodayDatePicker(priceupdater.startDate) || priceupdater.runBy !== null;
+    return dateUtility.isAfterTodayDatePicker(priceupdater.startDate) && priceupdater.runOn === null;
   };
 
   $scope.removeRecord = function (priceupdater) {
@@ -180,7 +180,7 @@ angular.module('ts5App')
   };
 
   this.applyPriceUpdateRulesFailure = function () {
-    $this.showToastMessage('error', 'Something went wrong while applying rules. Please try again.', 'success');
+    $this.showToastMessage('danger', 'Apply Rules', 'Rule cannot be applied');
   };
   
   this.executeApplyRulesAction = function () {
@@ -199,6 +199,14 @@ angular.module('ts5App')
     if ($scope.actionToExecute === 'Apply Rules') {
       $this.executeApplyRulesAction();
     }
+
+    $scope.priceUpdateRules = [];
+    $this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
+    $scope.loadPriceUpdaterRules();
   };
 
   this.initSuccessHandler = function(responseCollection) {

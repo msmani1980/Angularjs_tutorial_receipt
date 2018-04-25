@@ -74,12 +74,15 @@ angular.module('ts5App')
       messageService.display(className, message, type);
     };
 
-    this.saveFormSuccess = function() {
+    this.saveFormSuccess = function(priceupdater) {
       $this.hideLoadingModal();
       if ($routeParams.action === 'create') {
         $this.showToastMessage('success', 'Create Price Update Rule', 'success');
       } else {
         $this.showToastMessage('success', 'Edit Price Update Rule', 'success');
+        if (priceupdater.runCnt && priceupdater.runCnt >= 0) {
+          priceupdaterFactory.applyPriceUpdateRules(priceupdater.id);
+        }
       }
 
       $location.path('priceupdater-list');
@@ -93,7 +96,7 @@ angular.module('ts5App')
 
     this.generateCurrency = function(currency) {
       return {
-        currencyId: currency.id,
+        currencyId: $scope.viewEditItem ? currency.currencyId : currency.id,
         code: currency.code,
         amend: currency.price
       };
