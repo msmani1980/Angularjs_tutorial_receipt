@@ -232,10 +232,16 @@
 
             <td width="200px">
               <div ng-show="isCRUD">
-                <date-picker-field form="stationListForm" name="Start Date {{$index+1}}" required="true"
+                <date-picker-field ng-if="!isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)" form="stationListForm" name="Start Date {{$index+1}}" required="true"
                   ng-model="formData.stations[$index].startDate"
-                  disable="isDateActive(station.startDate)"
+                  disable="isDateActive(station.startDate) || isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)"
                   end-date="station.maxStartDate">
+                </date-picker-field>
+                <date-picker-field ng-if="isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)" form="stationListForm" name="Start Date {{$index+1}}" required="true"
+                  ng-model="formData.stations[$index].startDate"
+                  disable="isDateActive(station.startDate) || isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)"
+                  end-date="station.maxStartDate"
+                  data-toggle="tooltip" data-placement="left" title="Disabled since this company station is already in use">
                 </date-picker-field>
               </div>
               <div ng-hide="isCRUD">{{ formData.stations[$index].startDate }}</div>
