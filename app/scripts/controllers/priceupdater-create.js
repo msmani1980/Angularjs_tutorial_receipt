@@ -81,9 +81,9 @@ angular.module('ts5App')
     this.saveFormSuccess = function(priceupdater) {
       $this.hideLoadingModal();
       if ($routeParams.action === 'create') {
-        $this.showToastMessage('success', 'Create Price Update Rule', 'success');
+        $this.showToastMessage('success', 'Create Price Update Rule', 'Success');
       } else {
-        $this.showToastMessage('success', 'Edit Price Update Rule', 'success');
+        $this.showToastMessage('success', 'Edit Price Update Rule', 'Success');
         if ($scope.isRuleApplied(priceupdater)) {
           priceupdaterFactory.applyPriceUpdateRules(priceupdater.id);
         }
