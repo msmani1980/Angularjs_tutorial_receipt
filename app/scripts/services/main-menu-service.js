@@ -715,19 +715,15 @@ angular.module('ts5App')
             className: 'dashboard-epos-config',
             package: 'EPOSCONFIG',
             role: 'EPOSCONFIG'
-          }]
-      },
-        {
-          title: 'Back Office Configuration Settings',
-          menuItems: [{
-            name: 'Back Office Configuration Settings',
-            route: '/#/back-office-config',
-            icon: 'icon-manage-discount',
-            className: 'dashboard-back-office-config',
-            package: 'BACKOFFICECONFIG',
-            role: 'BACKOFFICECONFIG'
-          }]
-        }];
+          }, {
+          name: 'Back Office Configuration Settings',
+          route: '/#/back-office-config',
+          icon: 'icon-manage-discount',
+          className: 'dashboard-back-office-config',
+          package: 'BACKOFFICECONFIG',
+          role: 'BACKOFFICECONFIG'
+        }]
+      }];
     };
 
   });
