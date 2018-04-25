@@ -168,6 +168,7 @@ angular.module('ts5App')
       $scope.formData[featureOption.ngModelIdentifier].configSource = featureOption.configSource;
       $scope.formData[featureOption.ngModelIdentifier].featureCode = featureOption.featureCode;
       $scope.formData[featureOption.ngModelIdentifier].optionCode = featureOption.optionCode;
+      $scope.formData[featureOption.ngModelIdentifier].inputType = featureOption.inputType;
       if(featureOption.choiceCode) {
         $scope.formData[featureOption.ngModelIdentifier].choiceCode = featureOption.choiceCode;
       }
@@ -192,6 +193,7 @@ angular.module('ts5App')
 
       $scope.formData[featureOption.ngModelIdentifier].configSource = featureOption.configSource;
       $scope.formData[featureOption.ngModelIdentifier].featureCode = featureOption.featureCode;
+      $scope.formData[featureOption.ngModelIdentifier].inputType = featureOption.inputType;
       $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
       $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
       $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.percentage;
@@ -317,6 +319,22 @@ angular.module('ts5App')
 
       $scope.formData;
       var i = 0;
+    };
+
+    this.constructSaveOrUpdateDataForComapnyPreference = function(formData) {
+      var payload = [];
+
+      _.forEach(_.pairs(formData), function(pair) {
+        var key = pair[0];
+        var data = pair[1];
+
+        payload.featureCode = data.featureCode;
+        payload.optionCode = data.optionCode;
+        if(data.id) {
+          payload.companyPortalFeatureChoiceId = data.id;
+        }
+        
+      });
     };
 
 
