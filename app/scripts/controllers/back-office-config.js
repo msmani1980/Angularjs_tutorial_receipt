@@ -165,9 +165,6 @@ angular.module('ts5App')
     $scope.populateCompanyFeatureFormData = function (featureOption) {
       var existingPreference = $scope.findExistingCompanyFeaturePreference(featureOption);
 
-      if(!existingPreference) {
-        return;
-      }
       $scope.formData[featureOption.ngModelIdentifier].configSource = featureOption.configSource;
       $scope.formData[featureOption.ngModelIdentifier].featureCode = featureOption.featureCode;
       $scope.formData[featureOption.ngModelIdentifier].optionCode = featureOption.optionCode;
@@ -175,31 +172,38 @@ angular.module('ts5App')
       if(featureOption.choiceCode) {
         $scope.formData[featureOption.ngModelIdentifier].choiceCode = featureOption.choiceCode;
       }
-      $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
-      $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
 
-      if(featureOption.inputType === 'RADIO_BUTTON') {
-        $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.isSelected;
-      } else if(featureOption.inputType === 'NUMBER') {
-        $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.numericValue;
-      } else if(featureOption.inputType === 'SELECT') {
-        $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.choiceCode;
+      if(existingPreference) {
+        $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
+        $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
+
+        if(featureOption.inputType === 'RADIO_BUTTON') {
+          $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.isSelected;
+        } else if(featureOption.inputType === 'NUMBER') {
+          $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.numericValue;
+        } else if(featureOption.inputType === 'SELECT') {
+          $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.choiceCode;
+        }
+      } else {
+        $scope.formData[featureOption.ngModelIdentifier].value = null;
       }
     };
 
     $scope.populateSalesThresholdFormData = function (featureOption) {
       var existingPreference = $scope.findExistingSalesThresholdPreference(featureOption);
 
-      if(!existingPreference) {
-        return;
-      }
-
       $scope.formData[featureOption.ngModelIdentifier].configSource = featureOption.configSource;
       $scope.formData[featureOption.ngModelIdentifier].featureCode = featureOption.featureCode;
       $scope.formData[featureOption.ngModelIdentifier].inputType = featureOption.inputType;
-      $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
-      $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
-      $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.percentage;
+
+
+      if(existingPreference) {
+        $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
+        $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
+        $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.percentage;
+      } else {
+        $scope.formData[featureOption.ngModelIdentifier].value = null;
+      }
     };
 
     $scope.findExistingCompanyFeaturePreference = function (featureOption) {
@@ -334,8 +338,10 @@ angular.module('ts5App')
           return;
         }
 
+        payload.companyId = _companyId;
         payload.featureCode = data.featureCode;
         payload.optionCode = data.optionCode;
+        payload.startDate = dateUtility.formatDateForAPI(data.startDate);
         if(data.id) {
           payload.companyPortalFeatureChoiceId = data.id;
         }
