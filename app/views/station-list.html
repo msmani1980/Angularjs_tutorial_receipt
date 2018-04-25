@@ -234,7 +234,7 @@
               <div ng-show="isCRUD">
                 <date-picker-field form="stationListForm" name="Start Date {{$index+1}}" required="true"
                   ng-model="formData.stations[$index].startDate"
-                  disable="isDateActive(station.startDate)"
+                  disable="isDateActive(station.startDate) || isMaxStartDateInPast(station.startDate"
                   end-date="station.maxStartDate">
                 </date-picker-field>
               </div>
