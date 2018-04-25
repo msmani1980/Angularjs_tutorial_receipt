@@ -281,38 +281,7 @@ angular.module('ts5App')
       });
     };
 
-    this.getModulesSuccess = function(dataFromAPI) {
-      $scope.modules = angular.copy(dataFromAPI.response);
-    };
-
-    this.getModuleSuccess = function(dataFromAPI) {
-      $scope.moduleConfiguration = angular.copy(dataFromAPI);
-
-      $scope.moduleOptions = null;
-      if ($scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions.length > 0 && $scope.moduleConfiguration.moduleVersions) {
-        $scope.moduleOptions = _.filter($scope.moduleConfiguration.moduleVersions && $scope.moduleConfiguration.moduleVersions[0].moduleOptions, function(o) {
-          return o.parentId === null;
-        });
-
-        $scope.moduleOptions = $this.sortModuleOptions($scope.moduleOptions);
-
-        $this.initializeNgModel($scope.moduleConfiguration.moduleVersions[0].moduleOptions);
-      }
-
-      $this.hideLoadingModal();
-    };
-
-    this.sortModuleOptions = function(moduleOptions) {
-      _.forEach(moduleOptions, function(option) {
-        if (option.subModules && option.subModules.length > 0) {
-          option.subModules = $this.sortModuleOptions(option.subModules);
-        }
-      });
-
-      return _.orderBy(moduleOptions, ['displayOrder'], ['asc']);
-    };
-
-    this.createOrUpdateSuccess = function() {
+    this.createOrUpdateSuccess = function(dataFromApi) {
       $scope.selectFeature($scope.selectedFeature, true);
     };
 
@@ -321,11 +290,11 @@ angular.module('ts5App')
     };
 
     $scope.saveBackOfficeConfig = function () {
-      // var payload = $this.constructUpsertPayload();
+      $this.showLoadingModal('Saving');
 
       var companyPreferencePayload = $this.constructSaveOrUpdateDataForComapnyPreference($scope.formData);
 
-      companyPreferencesService.createOrUpdateCompanyPreference(companyPreferencePayload, _companyId).then($this.createOrUpdateSuccess, $this.errorHandler)
+      companyPreferencesService.createOrUpdateCompanyPreference(companyPreferencePayload, _companyId).then($this.createOrUpdateSuccess, $this.errorHandler);
     };
 
     this.constructSaveOrUpdateDataForComapnyPreference = function(formData) {
