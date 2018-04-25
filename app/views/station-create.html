@@ -104,8 +104,19 @@
 
       <div class="col-xs-12 col-sm-6">
         <date-picker-field
-          ng-if="dataReady"
-          disable="isDisabled()"
+          ng-if="dataReady && !isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)"
+          disable="isDisabled() || isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)"
+          form="stationCreateForm"
+          name="EffectiveFrom"
+          label="Effective From"
+          disable-past="true"
+          required="true"
+          ng-model="formData.startDate"
+          end-date="maxStartDate">
+        </date-picker-field>
+        <date-picker-field
+          ng-if="dataReady && isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)"
+          disable="isDisabled() || isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)"
           form="stationCreateForm"
           name="EffectiveFrom"
           label="Effective From"
