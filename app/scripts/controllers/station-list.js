@@ -147,6 +147,10 @@ angular.module('ts5App')
     };
 
     this.isMaxStartDateInPast = function(date) {
+      if (!date) {
+        return false;
+      }
+      console.log(date)
       return dateUtility.isYesterdayOrEarlierDatePicker(date);
     };
 
