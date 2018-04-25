@@ -76,7 +76,7 @@ angular.module('ts5App')
     };
 
     $scope.selectFeature = function (feature, isLoadingModelAlreadyShown) {
-      if(isLoadingModelAlreadyShown && isLoadingModelAlreadyShown === false) {
+      if(isLoadingModelAlreadyShown === false) {
         $this.showLoadingModal('Loading Data');
       }
 
