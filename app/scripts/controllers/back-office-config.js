@@ -58,6 +58,10 @@ angular.module('ts5App')
       $scope.storeDispatchThresHold = [];
     };
 
+    $scope.isFeatureSelected = function () {
+        return !!$scope.selectedFeature;
+    };
+
     $scope.calculateTitle = function () {
       if($scope.selectedFeature) {
         return 'Back Office Configuration - ' + $scope.selectedFeature.name;

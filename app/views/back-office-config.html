@@ -38,8 +38,8 @@
     </fieldset>
 
     <div class="modal-footer">
-      <button ng-show="isCRUD" class="btn btn-primary" type="submit" >Save</button>
-      <button ng-show="isCRUD" class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+      <button ng-show="isCRUD && isFeatureSelected()" class="btn btn-primary" type="submit" >Save</button>
+      <button ng-show="isCRUD && isFeatureSelected()" class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
     </div>
   </form>
 </div>
