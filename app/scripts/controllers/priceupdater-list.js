@@ -73,6 +73,7 @@ angular.module('ts5App')
         
     priceupdaterFactory.getPriceUpdaterRules(payload).then($this.getPriceUpdateRuleSuccess);
     $this.meta.offset += $this.meta.limit;
+    $scope.allCheckboxesSelected = false;
   };
 
   $scope.searchPriceUpdateRulesData = function() {
@@ -117,7 +118,7 @@ angular.module('ts5App')
   };
 
   this.deleteFailure = function() {
-    $this.hideLoadingModal();  
+    $this.hideLoadingModal();
     $this.showToastMessage('danger', 'Price Update', 'Price Update Rule could not be deleted');
   };
 
@@ -159,7 +160,9 @@ angular.module('ts5App')
 
   $scope.selectAllCheckboxes = function () {
     angular.forEach($scope.priceUpdateRules, function (rule) {
-      rule.selected = $scope.allCheckboxesSelected;
+      if ($scope.isValidForRuleApply(rule)) {
+        rule.selected = $scope.allCheckboxesSelected;	
+      }
     });
   };
 
@@ -176,28 +179,25 @@ angular.module('ts5App')
   };
 
   this.applyPriceUpdateRulesSuccess = function () {
-    $this.showToastMessage('success', 'Rules have been applied', 'success');
+    $this.showToastMessage('success', 'Apply Rules', 'Rule has been applied');
   };
 
   this.applyPriceUpdateRulesFailure = function () {
     $this.showToastMessage('danger', 'Apply Rules', 'Rule cannot be applied');
   };
   
-  this.executeApplyRulesAction = function () {
-    var payload = {
-      id: $scope.selectedRulesForExecution.map(function (rule) {
-        return rule.id;
-      })
-    };
-
-    priceupdaterFactory.applyPriceUpdateRules(payload.id).then($this.applyPriceUpdateRulesSuccess, $this.applyPriceUpdateRulesFailure);
+  this.executeApplyRulesAction = function (ruleId) {
+    priceupdaterFactory.applyPriceUpdateRules(ruleId).then($this.applyPriceUpdateRulesSuccess, $this.applyPriceUpdateRulesFailure);
   };
 
   $scope.executeAction = function() {
     $scope.displayError = false;
     angular.element('.delete-warning-modal').modal('hide');
     if ($scope.actionToExecute === 'Apply Rules') {
-      $this.executeApplyRulesAction();
+      angular.forEach($scope.selectedRulesForExecution, function (rule) {
+        $this.executeApplyRulesAction(rule.id);	
+      });
+
     }
 
     $scope.priceUpdateRules = [];
