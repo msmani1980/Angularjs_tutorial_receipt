@@ -16,9 +16,9 @@ angular.module('ts5App')
       offset: 0
     };
     $scope.allECSInstances = [];
-    $scope.storeInstances = [];
     $scope.isCreateSearch = false;
     $scope.isViewSearch = false;
+    $scope.isSearchInInProgress = false;
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -138,11 +138,17 @@ angular.module('ts5App')
       ];
 
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
+      if ($scope.storeInstances === undefined) {
+        $scope.storeInstances = [];
+      }
+      
       var paginatedList = $scope.storeInstances.concat(storeInstancesResponse);
       $scope.storeInstances = lodash.filter(paginatedList, function (storeInstance) {
         formatStoreInstanceForApp(storeInstance);
         return allowedStatuses.indexOf(storeInstance.statusName.toLowerCase()) >= 0;
       });
+
+      $scope.isSearchInInProgress = false;
     }
 
     function getStoreInstances(payload) {
@@ -372,7 +378,7 @@ angular.module('ts5App')
       };
 
       promises.push(manualECSFactory.updateCarrierInstance($scope.selectedPortalRecord.id, payload));
-      
+
       return promises;
     }
 
@@ -414,7 +420,7 @@ angular.module('ts5App')
 
     $scope.clearPortalSearch = function () {
       $scope.portalSearch = {};
-      $scope.storeInstances = [];
+      $scope.storeInstances = null;
       $scope.isCreateSearch = false;
     };
 
@@ -551,6 +557,7 @@ angular.module('ts5App')
     };
 
     $scope.searchPortalInstances = function () {
+      $scope.isSearchInInProgress = true;
       $scope.selectedPortalRecord = null;
       $scope.isCreateSearch = true;
       $scope.storeInstances = [];
