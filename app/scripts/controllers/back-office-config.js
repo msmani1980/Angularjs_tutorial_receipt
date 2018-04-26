@@ -175,7 +175,6 @@ angular.module('ts5App')
 
       if(existingPreference) {
         $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
-        $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
 
         if(featureOption.inputType === 'RADIO_BUTTON') {
           $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.isSelected;
@@ -199,7 +198,6 @@ angular.module('ts5App')
 
       if(existingPreference) {
         $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
-        $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
         $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.percentage;
       } else {
         $scope.formData[featureOption.ngModelIdentifier].value = null;
@@ -296,7 +294,6 @@ angular.module('ts5App')
         payload.companyId = _companyId;
         payload.featureCode = data.featureCode;
         payload.optionCode = data.optionCode;
-        payload.startDate = dateUtility.formatDateForAPI(data.startDate);
         if(data.id) {
           payload.companyPortalFeatureChoiceId = data.id;
         }
