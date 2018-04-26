@@ -240,8 +240,14 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
+    this.resetErrors = function() {
+      $scope.displayError = false;
+      $scope.errorResponse = [];
+    };
+
     $scope.cancel = function () {
       $this.showLoadingModal('Canceling ...');
+      $this.resetErrors();
       $scope.resetValues();
       $scope.selectedFeature = null;
       $this.hideLoadingModal();
@@ -282,6 +288,7 @@ angular.module('ts5App')
 
     $scope.saveBackOfficeConfig = function () {
       $this.showLoadingModal('Saving');
+      $this.resetErrors();
 
       var promises = [];
 
