@@ -199,7 +199,9 @@ angular.module('ts5App')
       if(existingPreference) {
         $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
         $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.percentage;
+        $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
       } else {
+        $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.nowFormattedDatePicker();
         $scope.formData[featureOption.ngModelIdentifier].value = null;
       }
     };
@@ -276,9 +278,45 @@ angular.module('ts5App')
     $scope.saveBackOfficeConfig = function () {
       $this.showLoadingModal('Saving');
 
-      var companyPreferencePayload = $this.constructSaveOrUpdateDataForCompanyPreference($scope.formData);
+      var promises = [];
 
-      companyPreferencesService.createOrUpdateCompanyPreference(companyPreferencePayload, _companyId).then($this.createOrUpdateSuccess, $this.errorHandler);
+      var companyPreferencePayload = $this.constructSaveOrUpdateDataForCompanyPreference($scope.formData);
+      var salesThresholdPayload = $this.constructPayloadForSalesThreshold($scope.formData);
+
+      promises.push(companyPreferencesService.createOrUpdateCompanyPreference(companyPreferencePayload, _companyId));
+      _.forEach(salesThresholdPayload, function(payload) {
+        if(payload.id) {
+          promises.push(featureThresholdsFactory.updateThreshold(payload.featureCode, payload, payload.id));
+        } else {
+          promises.push(featureThresholdsFactory.createThreshold(payload.featureCode, payload));
+        }
+      });
+
+      $q.all(promises).then($this.createOrUpdateSuccess, $this.errorHandler);
+    };
+
+    this.constructPayloadForSalesThreshold = function(formData) {
+      var result = [];
+
+      _.forEach(_.values(formData), function(data) {
+        var payload = {};
+
+        if(data.configSource !== 'SALES_THRESHOLD') {
+          return;
+        }
+
+        payload.companyId = _companyId;
+        payload.percentage = data.value;
+        payload.featureCode = data.featureCode;
+        payload.startDate = dateUtility.formatDateForAPI(data.startDate);
+        if(data.id) {
+          payload.id = data.id;
+        }
+
+        result.push(payload);
+      });
+
+      return result;
     };
 
     this.constructSaveOrUpdateDataForCompanyPreference = function(formData) {
