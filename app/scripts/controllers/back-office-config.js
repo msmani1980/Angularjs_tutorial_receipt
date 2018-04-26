@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, lodash, backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory) {
+  .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, lodash,
+                                                backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory, accessService) {
     var $this = this;
 
     var _companyId = null;
@@ -378,6 +379,7 @@ angular.module('ts5App')
     this.init = function() {
       _companyId = getCompanyId();
       $scope.configOptionDefinition = angular.copy(backOfficeConfigService.configFeatureOptionsDefinition());
+      $scope.isCRUD = accessService.crudAccessGranted('BACKOFFICECONFIG', 'BACKOFFICECONFIG', 'BACKOFFICECONFIG');
     };
 
     this.init();
