@@ -60,7 +60,6 @@ angular.module('ts5App')
       $scope.dailyExchangeThresHold = [];
       $scope.reconciliationThresHold = [];
       $scope.storeDispatchThresHold = [];
-      $scope.featureInfoMessages = [];
     };
 
     $scope.isFeatureSelected = function () {
@@ -75,6 +74,16 @@ angular.module('ts5App')
       }
     };
 
+    $scope.toolTipMessage = function (option) {
+      if(option.featureCode && option.optionCode && option.choiceCode) {
+        return $scope.featureInfoMessages[option.featureCode + '__' + option.optionCode + '__' + option.choiceCode];
+      } else if(option.featureCode && option.optionCode) {
+        return $scope.featureInfoMessages[option.featureCode + '__' + option.optionCode];
+      } else {
+        return option.featureCode;
+      }
+    };
+
     $scope.calculateFormDataKeyForConfigOption = function (option) {
       if(option.configSource === 'COMPANY_FEATURE' && (option.inputType === 'RADIO_BUTTON' || option.inputType === 'NUMBER')) {
         return option.configSource + '__' + option.featureCode + '__' + option.optionCode + '__' + option.choiceCode;
@@ -83,10 +92,6 @@ angular.module('ts5App')
       } else if(option.configSource === 'SALES_THRESHOLD') {
         return option.configSource + '__' + option.featureCode;
       }
-    };
-
-    $scope.xxxx = function () {
-      $scope.isOpen = false;
     };
 
     $scope.selectFeature = function (feature, isLoadingModelAlreadyShown) {
@@ -119,7 +124,6 @@ angular.module('ts5App')
       $this.setDailyExchangeRateThreshold(response[1]);
       $this.setReconciliationThreshold(response[2]);
       $this.setStoreDispatchThreshold(response[3]);
-      $this.setAvailableFeatures(response[4]);
 
       $scope.populateFormData();
 
