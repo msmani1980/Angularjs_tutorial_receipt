@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, lodash,
-                                                backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory, accessService) {
+                                                backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory, accessService, recordsService) {
     var $this = this;
 
     var _companyId = null;
@@ -40,6 +40,7 @@ angular.module('ts5App')
 
     $scope.selectedProductVersion = null;
     $scope.selectedFeature = null;
+    $scope.featureInfoMessages = [];
     $scope.moduleConfiguration = null;
     $scope.moduleOptionValues = {
       checkbox: {},
@@ -56,6 +57,7 @@ angular.module('ts5App')
       $scope.dailyExchangeThresHold = [];
       $scope.reconciliationThresHold = [];
       $scope.storeDispatchThresHold = [];
+      $scope.featureInfoMessages = [];
     };
 
     $scope.isFeatureSelected = function () {
@@ -110,11 +112,28 @@ angular.module('ts5App')
       $this.setDailyExchangeRateThreshold(response[1]);
       $this.setReconciliationThreshold(response[2]);
       $this.setStoreDispatchThreshold(response[3]);
+      $this.setAvailableFeatures(response[4]);
 
       $scope.populateFormData();
 
       $scope.isFeatureOptionsLoadingInProgress = false;
       $this.hideLoadingModal();
+    };
+
+    this.setAvailableFeatures = function(reponseData) {
+      $scope.featureInfoMessages = [];
+
+      _.forEach(reponseData, function(feature) {
+        _.forEach(feature.featureOptions, function(featureOption) {
+          var featureAndFeatureChoiceInfoMessageKey =  feature.code + '__' + featureOption.optionCode;
+          $scope.featureInfoMessages[featureAndFeatureChoiceInfoMessageKey] = feature.name + ' - ' + featureOption.optionName;
+
+          _.forEach(featureOption.featureChoiceDOs, function(featureChoice) {
+            var featureAndFeatureChoiceAndChoiceCodeInfoMessageKey =  featureAndFeatureChoiceInfoMessageKey + '__' + featureChoice.choiceCode;
+            $scope.featureInfoMessages[featureAndFeatureChoiceAndChoiceCodeInfoMessageKey] = $scope.featureInfoMessages[featureAndFeatureChoiceInfoMessageKey] + ' - ' + featureChoice.choiceName;
+          });
+        });
+      });
     };
 
     this.setCompanyPreferences = function(reponseData) {
@@ -366,17 +385,18 @@ angular.module('ts5App')
       return result;
     };
 
-
-    this.initDependenciesSuccess = function(result) {
-      $this.getProductVersionsSuccess(result[0]);
-      $this.getModulesSuccess(result[1]);
-      $this.hideLoadingModal();
-    };
-
     this.initDependenciesError = function(errorResponse) {
       $scope.errorResponse = errorResponse[0];
       $scope.displayError = true;
       $this.hideLoadingModal();
+    };
+
+    this.initSuccess = function(response) {
+      _companyId = getCompanyId();
+      $scope.configOptionDefinition = angular.copy(backOfficeConfigService.configFeatureOptionsDefinition());
+      $scope.isCRUD = accessService.crudAccessGranted('BACKOFFICECONFIG', 'BACKOFFICECONFIG', 'BACKOFFICECONFIG');
+
+      $this.setAvailableFeatures(response);
     };
 
     var getCompanyId = function () {
@@ -388,9 +408,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      _companyId = getCompanyId();
-      $scope.configOptionDefinition = angular.copy(backOfficeConfigService.configFeatureOptionsDefinition());
-      $scope.isCRUD = accessService.crudAccessGranted('BACKOFFICECONFIG', 'BACKOFFICECONFIG', 'BACKOFFICECONFIG');
+      recordsService.getFeatures().then($this.initSuccess, $this.initDependenciesError);
     };
 
     this.init();
