@@ -8,6 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
+  .config(function ($tooltipProvider) {
+
+  })
   .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, lodash,
                                                 backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory, accessService, recordsService) {
     var $this = this;
@@ -80,6 +83,10 @@ angular.module('ts5App')
       } else if(option.configSource === 'SALES_THRESHOLD') {
         return option.configSource + '__' + option.featureCode;
       }
+    };
+
+    $scope.xxxx = function () {
+      $scope.isOpen = false;
     };
 
     $scope.selectFeature = function (feature, isLoadingModelAlreadyShown) {
