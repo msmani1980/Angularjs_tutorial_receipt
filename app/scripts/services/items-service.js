@@ -24,7 +24,10 @@ angular.module('ts5App')
         method: 'GET'
       },
       createItem: {
-        method: 'POST'
+        method: 'POST',
+        params: {
+          isCloneAction: false
+        }
       },
       updateItem: {
         method: 'PUT'
@@ -49,7 +52,7 @@ angular.module('ts5App')
 
       searchParameters.fetchFromMaster = fetchFromMaster ? 'master' : null;
       if (angular.isDefined(searchParameters.categoryId)) {
-        searchParameters.categoryId = searchParameters.categoryId;  
+        searchParameters.categoryId = searchParameters.categoryId;
       }
 
       var payload = {};
@@ -69,7 +72,14 @@ angular.module('ts5App')
       return requestResource.getItem(payload).$promise;
     };
 
-    var createItem = function (payload) {
+    var createItem = function (payload, isCloneAction) {
+      if (isCloneAction) {
+        actions.createItem.params.isCloneAction = true;
+        var _requestResource = $resource(requestURL, requestParameters, actions);
+
+        return _requestResource.createItem(payload).$promise;
+      }
+
       return requestResource.createItem(payload).$promise;
     };
 
