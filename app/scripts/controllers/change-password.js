@@ -93,6 +93,7 @@ angular.module('ts5App')
       console.log('x')
       console.log($scope.form)
       if ($scope.credentials.newPassword !== $scope.credentials.newPasswordConfirm) {
+        $scope.passwordMismatch = true;
         handlePasswordMismatch();
         return;
       }
