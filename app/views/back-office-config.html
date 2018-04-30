@@ -1,21 +1,43 @@
 <div class="module-container-epos-configuration">
   <error-dialog form-object="form" error-response="errorResponse" display="displayError">
   </error-dialog>
+  <button class="fa fa-info-circle tooltip-focus" style="font-size:18px;color: #5bc0de"></button>
+
   <form class="form-horizontal" name="reportOptions" ng-submit="saveBackOfficeConfig()">
     <div class="modal-header">
       <h3 class="modal-title">{{calculateTitle()}}</h3>
     </div>
-
-    <fieldset>
-      <div ng-if="!isFeatureOptionsLoadingInProgress" class="form-group col-sm-12" style="margin-top: 10px;" ng-repeat="option in configOptions">
+    <fieldset ng-if="!isFeatureOptionsLoadingInProgress">
+      <div class="form-group col-sm-12" style="margin-top: 10px;" ng-repeat="option in configOptions">
         <span class="control-label col-sm-2">{{ option.name }}
-          <i class="fa fa-info-circle"
-             style="font-size:18px;color: #5bc0de"
-             tooltip="{{toolTipMessage(option)}}"
-             tooltip-placement="right"
-             tooltip-trigger="click"
-          >
-          </i> :
+          <!--<i class="fa fa-info-circle"-->
+             <!--style="font-size:18px;color: #5bc0de"-->
+             <!--tooltip="{{toolTipMessage(option)}}"-->
+             <!--tooltip-placement="right"-->
+             <!--tooltip-trigger="click"-->
+          <!--&gt;-->
+          <!--</i>-->
+          <!--<i-->
+            <!--class="fa fa-info-circle"-->
+            <!--data-placement="right"-->
+
+            <!--style="font-size:18px;color: #5bc0de"-->
+            <!--onclick="$(this).tooltip('show')"-->
+            <!--title="{{toolTipMessage(option)}}"-->
+            <!--data-html="true"-->
+          <!--&gt;-->
+          <!--tooltip-trigger="click"-->
+          <!--</i>-->
+
+          <!--<i-->
+          <!--class="fa fa-info-circle tooltip"-->
+          <!--style="font-size:18px;color: #5bc0de"-->
+          <!--title="{{toolTipMessage(option)}}"-->
+          <!--onclick="$(this).tooltip({trigger: 'focus'});"-->
+          <!--&gt;-->
+          <!--</i>-->
+          <button type="button" title="{{toolTipMessage(option)}}" class="fa fa-info-circle tooltip-focus" style="font-size:18px;color: #5bc0de" onclick="none"></button>
+          :
         </span>
         <div class="col-sm-10">
           <label ng-if="option.inputType === 'RADIO_BUTTON'" ng-repeat="value in option.values" class="radio-custom radio-inline " style="padding-top: 3px; max-height: 31px; padding-left: 15px; margin-top: 5px; margin-bottom: 10px;" data-initialize="radio" >
