@@ -19,8 +19,9 @@
 				   <div class="col-xs-12 col-sm-4">
 						<div class="form-group">
 							<label for="categoryName">Category*</label>
-							<select name="Category" ng-model="rule.categoryId" class="form-control" ng-disabled="isDisabled()" id="item-sales-category" required="true"
+							<select name="Category" ng-model="rule.categoryId" class="form-control" ng-disabled="isDisabled()" id="item-sales-category" required
 							 ng-options="salesCategory.id as salesCategory.name for salesCategory in salesCategories">
+							 <option value="">Select Category...</option>
 	                  		</select>
 						</div>
 					</div>
@@ -58,6 +59,7 @@
 							<label for="priceType">Price Type*</label>
 							<select name="Price Type" ng-model="rule.priceTypeId" required="true" ng-disabled="isDisabled()" class="form-control"
 								ng-options="type.id as type.name for type in priceTypes">
+								<option value="">Select Price Type...</option>
 							</select>
 						</div>
 					</div>
