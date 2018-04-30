@@ -41,6 +41,7 @@ angular.module('ts5App')
         }
       ];
       $scope.showInternalServerErrors = false;
+      $scope.currentPasswordWrong = true;
       $scope.displayError = true;
     }
 
@@ -90,8 +91,8 @@ angular.module('ts5App')
     };
 
     $scope.changePassword = function () {
-      console.log('x')
-      console.log($scope.form)
+      $scope.currentPasswordWrong = false;
+
       if ($scope.credentials.newPassword !== $scope.credentials.newPasswordConfirm) {
         $scope.passwordMismatch = true;
         handlePasswordMismatch();
