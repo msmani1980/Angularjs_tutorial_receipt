@@ -15,7 +15,6 @@ angular.module('ts5App')
       var tempToken;
 
       function changePassword(credentials, sessionToken) {
-        console.log(credentials)
         var payload = {
           username: credentials.username.toLowerCase(),
           password: CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.password).toString(CryptoJS.enc.Base64),
