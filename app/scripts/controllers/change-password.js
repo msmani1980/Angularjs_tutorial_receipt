@@ -41,6 +41,7 @@ angular.module('ts5App')
         }
       ];
       $scope.showInternalServerErrors = false;
+      $scope.currentPasswordWrong = true;
       $scope.displayError = true;
     }
 
@@ -68,7 +69,8 @@ angular.module('ts5App')
       return {
         username: $scope.credentials.username,
         password: $scope.credentials.newPassword,
-        currentPassword: $scope.credentials.currentPassword
+        currentPassword: $scope.credentials.currentPassword,
+        reset: !$scope.hasSessionToken
       };
     }
 
@@ -90,7 +92,10 @@ angular.module('ts5App')
     };
 
     $scope.changePassword = function () {
+      $scope.currentPasswordWrong = false;
+
       if ($scope.credentials.newPassword !== $scope.credentials.newPasswordConfirm) {
+        $scope.passwordMismatch = true;
         handlePasswordMismatch();
         return;
       }
