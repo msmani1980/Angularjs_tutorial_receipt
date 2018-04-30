@@ -70,7 +70,7 @@ angular.module('ts5App')
         username: $scope.credentials.username,
         password: $scope.credentials.newPassword,
         currentPassword: $scope.credentials.currentPassword,
-        isReset: !$scope.hasSessionToken
+        reset: !$scope.hasSessionToken
       };
     }
 
