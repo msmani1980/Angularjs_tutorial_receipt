@@ -129,6 +129,13 @@ angular.module('ts5App')
 
       $scope.isFeatureOptionsLoadingInProgress = false;
       $this.hideLoadingModal();
+
+      setTimeout(function () {
+        $('.btn-danger').each(function (i, e) {
+          $('.tooltip-focus').tooltip({trigger: "focus"});
+        });
+      },
+      400)
     };
 
     this.setAvailableFeatures = function(reponseData) {
