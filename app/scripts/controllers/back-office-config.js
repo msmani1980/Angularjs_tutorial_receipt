@@ -8,9 +8,6 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .config(function ($tooltipProvider) {
-
-  })
   .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, lodash,
                                                 backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory, accessService, recordsService) {
     var $this = this;
@@ -107,8 +104,15 @@ angular.module('ts5App')
 
       $scope.resetValues();
 
-      $scope.selectedFeature = feature;
+      $scope.selectFeatureHelper(feature);
 
+      var dependencyPromises = $this.makeSelectFeatureDependencyPromises();
+      $q.all(dependencyPromises).then($this.setDependencies, $this.errorHandler);
+    };
+
+    $scope.selectFeatureHelper = function (feature) {
+      $scope.selectedFeature = feature;
+      
       if ($scope.selectedFeature && $scope.selectedFeature.name === 'PreOrder Configuration') {
         $scope.configOptions = angular.copy($scope.configOptionDefinition.preOrderConfigOptions);
       } else if ($scope.selectedFeature && $scope.selectedFeature.name === 'Reconcile Configuration') {
@@ -118,9 +122,6 @@ angular.module('ts5App')
       } else if ($scope.selectedFeature && $scope.selectedFeature.name === 'StationOps Configuration') {
         $scope.configOptions = angular.copy($scope.configOptionDefinition.stationOpsConfigOptions);
       }
-
-      var dependencyPromises = $this.makeSelectFeatureDependencyPromises();
-      $q.all(dependencyPromises).then($this.setDependencies, $this.errorHandler);
     };
 
     this.setDependencies = function(response) {
@@ -135,8 +136,8 @@ angular.module('ts5App')
       $this.hideLoadingModal();
 
       setTimeout(function () {
-        $('.btn-danger').each(function (i, e) {
-          $('.tooltip-focus').tooltip({ trigger: 'focus' });
+        angular.element('.tooltip-focus').each(function (i, e) {
+          angular.element(e).tooltip({ trigger: 'focus' });
         });
       },
 
@@ -318,7 +319,7 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    this.createOrUpdateSuccess = function(dataFromApi) {
+    this.createOrUpdateSuccess = function() {
       $scope.selectFeature($scope.selectedFeature, true);
     };
 
