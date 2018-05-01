@@ -1,4 +1,4 @@
-<li>
+<li ng-mouseleave="hidePopover(singleModule.id)">
   <span ng-if="singleModule.optionTypeId === 1"> <!-- CheckBox -->
     <input ng-disabled="areInputsDisabled" type="checkbox" class="maring-right-5px" id="{{singleModule.id}}" ng-model="model.checkbox[singleModule.id]"/>
     <label class="epos-config-label">{{singleModule.name}}</label>
@@ -25,8 +25,7 @@
     popover-placement="right"
     popover-is-open="popover[singleModule.id]"
     popover-trigger="none"
-    ng-click="showPopover(singleModule.id)"
-    ng-mouseleave="hidePopover(singleModule.id)">
+    ng-click="showPopover(singleModule.id)">
     <span class="glyphicon glyphicon-info-sign text-info"></span>
   </button>
 </li>
