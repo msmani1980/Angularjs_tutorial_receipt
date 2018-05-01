@@ -5,6 +5,10 @@ angular.module('ts5App')
     var eposConfigSingleModuleController = function ($scope) {
       $scope.popover = [];
 
+      $scope.hidePopover = function (item) {
+        $scope.popover[item] = false;
+      };
+
 
     };
 
