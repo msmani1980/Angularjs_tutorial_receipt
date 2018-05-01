@@ -30,6 +30,7 @@ angular.module('ts5App')
           });
         }
       },
+
       controller: eposConfigSingleModuleController
     };
   });
