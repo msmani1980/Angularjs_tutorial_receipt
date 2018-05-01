@@ -75,12 +75,16 @@ angular.module('ts5App')
     };
 
     $scope.toolTipMessage = function (option) {
-      if(option.featureCode && option.optionCode && option.choiceCode) {
-        return $scope.featureInfoMessages[option.featureCode + '__' + option.optionCode + '__' + option.choiceCode];
-      } else if(option.featureCode && option.optionCode) {
-        return $scope.featureInfoMessages[option.featureCode + '__' + option.optionCode];
-      } else {
-        return option.featureCode;
+      if(option.configSource === 'COMPANY_FEATURE') {
+        if(option.featureCode && option.optionCode && option.choiceCode) {
+          return $scope.featureInfoMessages[option.featureCode + '__' + option.optionCode + '__' + option.choiceCode];
+        } else if(option.featureCode && option.optionCode) {
+          return $scope.featureInfoMessages[option.featureCode + '__' + option.optionCode];
+        } else {
+          return option.featureCode;
+        }
+      } else if(option.configSource === 'SALES_THRESHOLD') {
+        return option.info;
       }
     };
 

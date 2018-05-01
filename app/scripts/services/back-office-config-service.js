@@ -62,6 +62,7 @@ angular.module('ts5App')
       },
       {
         name: 'Daily Exchange Rate - Daily Variance Threshold',
+        info: 'Daily Exchange Rate - Daily Variance Threshold',
         featureCode: 'DAILYEXCHANGERATE',
         configSource: 'SALES_THRESHOLD',
         inputType: 'PERCENTAGE_NUMBER',
@@ -145,6 +146,7 @@ angular.module('ts5App')
       },
       {
         name: 'Store Dispatch – Variance Threshold',
+        info: 'Store Dispatch – Variance Threshold',
         featureCode: 'STOREDISPATCH',
         configSource: 'SALES_THRESHOLD',
         inputType: 'PERCENTAGE_NUMBER',
@@ -165,6 +167,7 @@ angular.module('ts5App')
     $this.reconcileConfigOptions = [
       {
         name: 'Confirmation Threshold',
+        info: 'Reconciliation - Confirmation Threshold',
         featureCode: 'RECONCILIATION',
         configSource: 'SALES_THRESHOLD',
         inputType: 'PERCENTAGE_NUMBER',
