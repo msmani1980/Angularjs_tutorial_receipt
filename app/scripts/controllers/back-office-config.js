@@ -112,7 +112,7 @@ angular.module('ts5App')
 
     $scope.selectFeatureHelper = function (feature) {
       $scope.selectedFeature = feature;
-      
+
       if ($scope.selectedFeature && $scope.selectedFeature.name === 'PreOrder Configuration') {
         $scope.configOptions = angular.copy($scope.configOptionDefinition.preOrderConfigOptions);
       } else if ($scope.selectedFeature && $scope.selectedFeature.name === 'Reconcile Configuration') {
@@ -222,17 +222,21 @@ angular.module('ts5App')
       }
 
       if (existingPreference) {
-        $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
-
-        if (featureOption.inputType === 'RADIO_BUTTON') {
-          $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.isSelected;
-        } else if (featureOption.inputType === 'NUMBER') {
-          $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.numericValue;
-        } else if (featureOption.inputType === 'SELECT') {
-          $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.choiceCode;
-        }
+        $scope.populateCompanyFeatureFormDataHelper(featureOption, existingPreference);
       } else {
         $scope.formData[featureOption.ngModelIdentifier].value = null;
+      }
+    };
+
+    $scope.populateCompanyFeatureFormDataHelper = function (featureOption, existingPreference) {
+      $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
+
+      if (featureOption.inputType === 'RADIO_BUTTON') {
+        $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.isSelected;
+      } else if (featureOption.inputType === 'NUMBER') {
+        $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.numericValue;
+      } else if (featureOption.inputType === 'SELECT') {
+        $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.choiceCode;
       }
     };
 
