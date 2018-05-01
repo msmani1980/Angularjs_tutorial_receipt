@@ -6,9 +6,9 @@
       <h3 class="modal-title">{{calculateTitle()}}</h3>
     </div>
     <fieldset ng-if="!isFeatureOptionsLoadingInProgress">
-      <div class="form-group col-sm-12 option-container" ng-repeat="option in configOptions">
+      <div class="form-group col-sm-12 back-office-option-container" ng-repeat="option in configOptions">
         <span class="control-label col-sm-3">{{ option.name }}
-          <button type="button" title="{{toolTipMessage(option)}}" class="fa fa-info-circle tooltip-focus tooltip-button" ></button>
+          <button type="button" title="{{toolTipMessage(option)}}" class="fa fa-info-circle tooltip-focus back-office-tooltip-button" ></button>
           :
         </span>
         <div class="col-sm-9">
