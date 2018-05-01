@@ -2,6 +2,12 @@
 
 angular.module('ts5App')
   .directive('eposConfigSingleModule', function ($compile) {
+    var eposConfigSingleModuleController = function ($scope) {
+      $scope.popover = [];
+
+
+    };
+
     return {
       restrict: 'E',
       scope: {
