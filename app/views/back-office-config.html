@@ -16,13 +16,13 @@
             <input ng-disabled="!isCRUD" class="inline" style="margin-left: -3px;" ng-model="formData[option.ngModelIdentifier].value"  type="radio" id="{{option.id + '-' + $index}}" name="{{option.ngModelIdentifier}}" ng-value="value.value"/>
             <span class="" style="margin-left: 17px;">{{ value.name }}</span>
           </label>
-          <label ng-if="option.inputType === 'PERCENTAGE_NUMBER'" class="radio-custom radio-inline col-sm-12" style="padding-top: 3px; max-height: 31px; padding-left: 15px; margin-top: 5px; margin-bottom: 10px;" >
+          <label ng-if="option.inputType === 'PERCENTAGE_NUMBER'" class="radio-custom radio-inline col-sm-12 back-office-percentage-number" >
             <input ng-disabled="!isCRUD" class="inline form-control col-sm-1" style="padding-top: 3px; width: 146px;" ng-model="formData[option.ngModelIdentifier].value"  type="number" step="0.01"  id="{{option.id}}" name="{{option.id}}"/>
           </label>
-          <label ng-if="option.inputType === 'NUMBER'" class="radio-custom radio-inline col-sm-12" style="max-height: 31px; padding-left: 15px; margin-top: 3px; margin-bottom: 10px;"  >
+          <label ng-if="option.inputType === 'NUMBER'" class="radio-custom radio-inline col-sm-12 back-office-number"  >
             <input ng-disabled="!isCRUD" class="inline form-control col-sm-2" style="padding-top: 3px; width: 146px;" ng-model="formData[option.ngModelIdentifier].value"  type="number" step="1" id="{{option.id}}" name="{{option.ngModelIdentifier}}"/>
           </label>
-          <label ng-if="option.inputType === 'SELECT'" class="radio-custom radio-inline col-sm-12" style="padding-top: 3px; max-height: 31px; padding-left: 15px; margin-top: 3px; margin-bottom: 10px;"  >
+          <label ng-if="option.inputType === 'SELECT'" class="radio-custom radio-inline col-sm-12 back-office-select"  >
             <select ng-disabled="!isCRUD" name="{{option.ngModelIdentifier}}" ng-model="formData[option.ngModelIdentifier].value" class="inline form-control col-sm-2" style="height: 28px; width: 146px;">
               <option value=""></option>
               <option ng-repeat="optionValue in option.values"
