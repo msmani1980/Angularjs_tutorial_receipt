@@ -12,7 +12,9 @@
     popover="{{singleModule.description}}"
     popover-placement="right"
     popover-is-open="popover[singleModule.id]"
-    popover-trigger="none">
+    popover-trigger="none"
+    ng-click="showPopover(singleModule.id)"
+    ng-mouseleave="hidePopover(singleModule.id)">
     <span class="glyphicon glyphicon-info-sign text-info"></span>
   </button>
 </li>
