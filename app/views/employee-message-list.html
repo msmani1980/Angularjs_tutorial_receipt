@@ -1,21 +1,15 @@
-<div class="fluid-container module-container">
-
-  <div class="employee-message-list">
-
+<div class="module-container fluid-container">
     <div class="list-controls">
       <div class="row item-list-row">
-
         <div class="col-xs-6">
           <h2 class="view-name">{{ viewName }}</h2>
         </div>
-
         <div class="col-xs-6 text-right">
           <button class="btn btn-primary" ng-show="isCRUD" ng-click="goToDetailPage('create', '')">
             <span class="fa fa-plus" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs">Create Message</span>
           </button>
-          <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
-                  aria-controls="search-collapse">
+          <button class="btn btn-default" ng-click="toggleFilterPanel()">
             <span class="fa fa-filter" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs">Filter</span>
           </button>
@@ -23,8 +17,8 @@
       </div>
     </div>
 
-    <div class="panel panel-default no-transition" id="search-collapse" ng-class="{'collapse': false }">
-      <form class="form">
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <form class="form" ng-submit="submitSearch()">
         <div class="panel-body">
           <div class="row">
             <div class="col-xs-6 col-sm-4">
@@ -95,18 +89,23 @@
           </div>
         </div>
         <div class="panel-footer text-right">
+           
           <button type="button" class="btn btn-default btn-search-clear" ng-click="clearSearch()">
             <span class="btn-label">Clear</span>
           </button>
-          <button class="btn btn-primary btn-search" ng-click="submitSearch()">
+          <button type="submit" class="btn btn-primary btn-search">
             <span class="fa fa-search" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs btn-label">Search</span>
           </button>
         </div>
       </form>
     </div>
-
-    <div class="table-responsive">
+ 
+    <alert ng-show="!employeeMessagesList.length" type="info">
+      <span class="fa fa-flag"></span> Your search returned no results.
+    </alert>
+    
+    <div class="table-responsive" ng-show="employeeMessagesList.length" >
       <table class="table table-bordered table-hover">
       <thead>
       <tr>
@@ -119,9 +118,6 @@
       </tr>
       </thead>
       <tbody>
-      <tr ng-hide="employeeMessagesList.length">
-        <td colspan="6" class="bg-warning text-center"><i class="fa fa-exclamation-triangle"></i> There are no records to show</td>
-      </tr>
       <tr ng-repeat="message in employeeMessagesList">
         <td>{{ message.employeeMessageText }}</td>
         <td>{{ message.startDate }}</td>
@@ -141,11 +137,10 @@
       </tr>
       </tbody>
     </table>
-      </div>
-  </div>
+    </div>
 </div>
 
-<dynamic-left-nav></dynamic-left-nav>
 
 <delete-record-dialog></delete-record-dialog>
+<dynamic-left-nav title="Employee Messages"></dynamic-left-nav>
 
