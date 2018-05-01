@@ -24,8 +24,8 @@ angular.module('ts5App').factory('itemsFactory', function ($resource, ENV, items
     return itemsService.getItemsList(payload, fetchFromMaster);
   };
 
-  this.createItem = function (payload) {
-    return itemsService.createItem(payload);
+  this.createItem = function (payload, isCloneAction) {
+    return itemsService.createItem(payload, isCloneAction);
   };
 
   this.updateItem = function (id, payload) {

@@ -75,8 +75,7 @@
         <div ng-show="displayCloneInfo" class="alert alert-info alert-dismissible fade in ng-hide" role="alert">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span>×</span></button>
           <h4 id="oh-snap!-you-got-an-error!">
-            <strong>Note</strong>: To create a new version of this record - the Item Code, Item Name AND POS Display Name fields should remain unchanged.
-            Changing these fields will create a new Item record if one that match these fields do not already exist.
+            <strong>Note</strong>: If you update Item Code, Item Name or POS Display Name changes will reflect in original item record.
             <a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a>
           </h4>
         </div>
@@ -459,7 +458,7 @@
           <h3 id="price-and-tax">Price & Tax</h3>
 
           <div class="form-group">
-            <button id="add-price-group" ng-disabled="isDisabled()" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
+            <button id="add-price-group" ng-disabled="isAddPriceDisabled()" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
               <i class="fa fa-plus"></i> Add Price Type
             </button>
           </div>
