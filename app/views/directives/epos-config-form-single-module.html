@@ -10,7 +10,8 @@
   </span>
 
   <span ng-if="singleModule.optionTypeId === 3"> <!-- Text -->
-
+    <label class="epos-config-label maring-right-5px">{{singleModule.name}}</label>
+    <input ng-disabled="areInputsDisabled" type="text" id="{{singleModule.id}}" ng-model="model.text[singleModule.id]"/>
   </span>
 
   <button
@@ -33,6 +34,5 @@
 
 </li>
 <li ng-if="singleModule.optionTypeId === 3">
-  <label class="epos-config-label maring-right-5px">{{singleModule.name}}</label>
-  <input ng-disabled="areInputsDisabled" type="text" id="{{singleModule.id}}" ng-model="model.text[singleModule.id]"/>
+
 </li>
