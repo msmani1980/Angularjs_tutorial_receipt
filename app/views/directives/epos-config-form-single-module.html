@@ -5,7 +5,8 @@
   </span>
 
   <span ng-if="singleModule.optionTypeId === 2"> <!-- RadioButton -->
-
+    <input ng-disabled="areInputsDisabled" type="radio" class="maring-right-5px" id="{{singleModule.id}}" name="{{singleModule.parentId}}" ng-model="model.radioButton[singleModule.parentId]" value="{{singleModule.id}}"/>
+    <label class="epos-config-label">{{singleModule.name}}</label>
   </span>
 
   <span ng-if="singleModule.optionTypeId === 3"> <!-- Text -->
@@ -29,8 +30,7 @@
   </button>
 </li>
 <li ng-if="singleModule.optionTypeId === 2">
-  <input ng-disabled="areInputsDisabled" type="radio" class="maring-right-5px" id="{{singleModule.id}}" name="{{singleModule.parentId}}" ng-model="model.radioButton[singleModule.parentId]" value="{{singleModule.id}}"/>
-  <label class="epos-config-label">{{singleModule.name}}</label>
+
 </li>
 <li ng-if="singleModule.optionTypeId === 3">
   <label class="epos-config-label maring-right-5px">{{singleModule.name}}</label>
