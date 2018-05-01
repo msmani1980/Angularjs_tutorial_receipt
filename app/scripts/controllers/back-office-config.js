@@ -63,7 +63,7 @@ angular.module('ts5App')
     };
 
     $scope.isFeatureSelected = function () {
-        return !!$scope.selectedFeature;
+      return !!$scope.selectedFeature;
     };
 
     $scope.calculateTitle = function () {
@@ -136,7 +136,7 @@ angular.module('ts5App')
 
       setTimeout(function () {
         $('.btn-danger').each(function (i, e) {
-          $('.tooltip-focus').tooltip({ trigger: "focus" });
+          $('.tooltip-focus').tooltip({ trigger: 'focus' });
         });
       },
 
