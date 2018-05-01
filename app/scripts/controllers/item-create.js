@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('ItemCreateCtrl',
-  function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
+  function($scope, $document, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
     currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService) {
 
     var $this = this;
@@ -474,6 +474,9 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.deserializeSubstitutions(itemData);
       this.deserializeRecommendations(itemData);
       this.formatImageDates(itemData.images);
+
+      var sortedPricesById = _.orderBy(itemData.prices, ['id'], ['asc']);
+      itemData.prices = angular.copy(sortedPricesById);
       this.formatPriceDates(itemData);
       $scope.formData = angular.copy(itemData);
 
@@ -560,7 +563,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.watchItemInfoOnClonePage = function() {
       $scope.$watchGroup(['formData.itemCode', 'formData.itemName', 'formData.onBoardName'], function() {
-        if ($scope.cloningItem && $this.isMasterItemInfoDirty()) {
+        if ($scope.cloningItem && !$this.isMasterItemInfoUnTouched()) {
           $scope.displayCloneInfo = true;
         } else {
           $scope.displayCloneInfo = false;
@@ -600,14 +603,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     });
 
-    this.isMasterItemInfoDirty = function() {
-      if ($scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&
+    this.isMasterItemInfoUnTouched = function() {
+      return $scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&
         $scope.originalMasterItemData.itemName === $scope.formData.itemName &&
-        $scope.originalMasterItemData.onBoardName === $scope.formData.onBoardName) {
-        return false;
-      } else {
-        return true;
-      }
+        $scope.originalMasterItemData.onBoardName === $scope.formData.onBoardName;
     };
 
     this.setDiscountList = function(dataFromAPI) {
@@ -1163,11 +1162,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.checkPriceGroup = function(newPrices, oldPrices, priceIndex) {
       var newPriceGroup = newPrices[priceIndex];
       var oldPriceGroup = oldPrices[priceIndex];
-      if (!oldPriceGroup) {
-        return false;
-      }
 
-      if (newPriceGroup.startDate !== oldPriceGroup.startDate || newPriceGroup.endDate !== oldPriceGroup.endDate) {
+      if ((oldPriceGroup && (newPriceGroup.startDate !== oldPriceGroup.startDate || newPriceGroup.endDate !== oldPriceGroup.endDate)) || !oldPriceGroup) {
         $this.updatePriceGroup(priceIndex);
       }
     };
@@ -1226,7 +1222,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.updateSuccessHandler = function(response) {
-      $this.updateFormData(response.retailItem);
+      $this.updateFormData(response[0].retailItem);
       angular.element('#loading').modal('hide');
       angular.element('#update-success').modal('show');
     };
@@ -1267,7 +1263,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       var newItemPayload = {
         retailItem: itemData
       };
-      itemsFactory.createItem(newItemPayload).then(function() {
+      itemsFactory.createItem(newItemPayload, $scope.cloningItem).then(function() {
         angular.element('#loading').modal('hide');
         angular.element('#create-success').modal('show');
         return true;
@@ -1389,6 +1385,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return ($scope.viewOnly || $scope.itemIsActive);
     };
 
+    $scope.isAddPriceDisabled = function() {
+      return $scope.viewOnly || (dateUtility.isYesterdayOrEarlierDatePicker($scope.formData.endDate) && !$scope.cloningItem);
+    };
+
+    $scope.isItemPriceNewOrIsExitingAndValidForEdit = function(itemPrice) {
+      return (itemPrice.id === undefined || itemPrice.id === '' || itemPrice.id === null) || !$scope.itemIsActive;
+    };
+
     $scope.shouldValidatePrice = function() {
       return !$scope.viewOnly && !$scope.itemIsActive;
     };
@@ -1405,11 +1409,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.formScroll = function(id, activeBtn) {
       $scope.activeBtn = id;
       var elm = angular.element('#' + id);
-      var body = angular.element('body');
-      var navBar = angular.element('.navbar-header').height();
+      var body = angular.element('html, body');
       var topBar = angular.element('.top-header').height();
       body.animate({
-        scrollTop: elm.offset().top - (navBar + topBar + 100)
+        scrollTop: elm.offset().top - (topBar + 100)
       }, 'slow');
       return activeBtn;
     };

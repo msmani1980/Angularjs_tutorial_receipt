@@ -1150,4 +1150,14 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       expect(scope.filterItemDetails).toEqual('');
     });
   });
+  
+  describe('getSalesCategoryName function', function() {
+    it('should populate SalesCategoryName', function() {
+	  expect(StoreInstancePackingCtrl.getSalesCategoryName(3)).toEqual('Test2');
+	});
+
+	it('should not load SalesCategoryName', function() {
+	  expect(StoreInstancePackingCtrl.getSalesCategoryName(10)).toEqual('');
+	});
+  });
 });

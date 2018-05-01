@@ -41,6 +41,9 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
       getStation: {
         method: 'GET'
       },
+      getCompanyStationValidationDates: {
+        method: 'PATCH'
+      },
       getCompanyStation: {
         method: 'GET'
       },
@@ -106,6 +109,10 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     return stationListRequestResource.getCompanyStation({ companyStationId: id, companyId: companyId }).$promise;
   };
 
+  var getCompanyStationValidationDates = function (companyId, id) {
+    return stationListRequestResource.getCompanyStationValidationDates({ companyStationId: id, companyId: companyId }, {}).$promise;
+  };
+
   var bulkUpdateCompanyStation = function (companyId, payload) {
     return stationBulkRequestResource.bulkUpdateStation({ companyId: companyId }, payload).$promise;
   };
@@ -140,7 +147,8 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     removeStation: removeCompanyStation,
     createStation: createCompanyStation,
     updateStation: updateCompanyStation,
-    importFromExcel: importFromExcel
+    importFromExcel: importFromExcel,
+    getCompanyStationValidationDates: getCompanyStationValidationDates
   };
 
 });

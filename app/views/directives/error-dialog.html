@@ -35,7 +35,6 @@
   			<strong>{{ error.field }} - </strong> {{ error.value }}
       </span>
 		</li>
-
     <li ng-if="showInternalServerError()" class="list-group-item">
       <span class="label label-danger">
         <i class="fa fa-ban"></i>
@@ -100,6 +99,7 @@
         <span ng-switch-when="214">Numeric value is expected, up to 6 digits.</span>
         <span ng-switch-when="215">Email required in correct format e.g. @,.com,etc.</span>
         <span ng-switch-when="303">Date range overlaps an existing record.</span>
+        <span ng-switch-when="216">Price Effective Date range not within Item Effective Date range.</span>
 
       </span>
 

@@ -7,7 +7,7 @@
  * # topNavigationBar
  */
 angular.module('ts5App')
-  .directive('topNavigationBar', function (identityAccessFactory, companyRelationshipFactory, lodash) {
+  .directive('topNavigationBar', function (identityAccessFactory, companyRelationshipFactory, lodash, $location) {
 
     function topNavigationBarController($scope) {
 
@@ -24,6 +24,10 @@ angular.module('ts5App')
       $scope.logout = function () {
         identityAccessFactory.logout();
         $scope.$emit('logout');
+      };
+
+      $scope.changePassword = function () {
+        $location.url('/change-password');
       };
 
       function correctRelativeCompanyData(company) {
@@ -51,7 +55,7 @@ angular.module('ts5App')
           correctRelativeCompanyData(company);
           return lodash.findIndex(retailCompanyList.companies, { companyName: company.companyName }) >= 0 && company.companyTypeName === 'Retail';
         });
-        
+
       }
 
       $scope.selectCHRetailCompany = function (companyType) {
