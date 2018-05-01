@@ -11,7 +11,7 @@ angular.module('ts5App')
 
       $scope.showPopover = function (item) {
         $scope.popover[item] = true;
-      }
+      };
     };
 
     return {
