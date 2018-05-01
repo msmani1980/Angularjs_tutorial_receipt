@@ -139,7 +139,7 @@ angular.module('ts5App')
           $('.tooltip-focus').tooltip({trigger: "focus"});
         });
       },
-      400)
+      400);
     };
 
     this.setAvailableFeatures = function(reponseData) {
