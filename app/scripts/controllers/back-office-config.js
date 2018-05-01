@@ -386,29 +386,33 @@ angular.module('ts5App')
           return;
         }
 
-        payload.companyId = _companyId;
-        payload.featureCode = data.featureCode;
-        payload.optionCode = data.optionCode;
-        if (data.id) {
-          payload.companyPortalFeatureChoiceId = data.id;
-        }
-
-        if (data.inputType === 'RADIO_BUTTON') {
-          payload.isSelected = data.value;
-          payload.choiceCode = data.choiceCode;
-        } else if (data.inputType === 'NUMBER') {
-          payload.isSelected = true;
-          payload.choiceCode = data.choiceCode;
-          payload.numericValue = data.value;
-        } else if (data.inputType === 'SELECT') {
-          payload.isSelected = true;
-          payload.choiceCode = data.value;
-        }
+        $this.constructSaveOrUpdateDataForCompanyPreferenceHelper(payload, data);
 
         result.push(payload);
       });
 
       return result;
+    };
+
+    this.constructSaveOrUpdateDataForCompanyPreferenceHelper = function(payload, data) {
+      payload.companyId = _companyId;
+      payload.featureCode = data.featureCode;
+      payload.optionCode = data.optionCode;
+      if (data.id) {
+        payload.companyPortalFeatureChoiceId = data.id;
+      }
+
+      if (data.inputType === 'RADIO_BUTTON') {
+        payload.isSelected = data.value;
+        payload.choiceCode = data.choiceCode;
+      } else if (data.inputType === 'NUMBER') {
+        payload.isSelected = true;
+        payload.choiceCode = data.choiceCode;
+        payload.numericValue = data.value;
+      } else if (data.inputType === 'SELECT') {
+        payload.isSelected = true;
+        payload.choiceCode = data.value;
+      }
     };
 
     this.initDependenciesError = function(errorResponse) {
