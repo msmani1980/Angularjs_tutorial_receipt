@@ -67,7 +67,7 @@ angular.module('ts5App')
     };
 
     $scope.calculateTitle = function () {
-      if($scope.selectedFeature) {
+      if ($scope.selectedFeature) {
         return 'Back Office Configuration - ' + $scope.selectedFeature.name;
       } else {
         return 'Back Office Configuration';
@@ -75,31 +75,31 @@ angular.module('ts5App')
     };
 
     $scope.toolTipMessage = function (option) {
-      if(option.configSource === 'COMPANY_FEATURE') {
-        if(option.featureCode && option.optionCode && option.choiceCode) {
+      if (option.configSource === 'COMPANY_FEATURE') {
+        if (option.featureCode && option.optionCode && option.choiceCode) {
           return $scope.featureInfoMessages[option.featureCode + '__' + option.optionCode + '__' + option.choiceCode];
-        } else if(option.featureCode && option.optionCode) {
+        } else if (option.featureCode && option.optionCode) {
           return $scope.featureInfoMessages[option.featureCode + '__' + option.optionCode];
         } else {
           return option.featureCode;
         }
-      } else if(option.configSource === 'SALES_THRESHOLD') {
+      } else if (option.configSource === 'SALES_THRESHOLD') {
         return option.info;
       }
     };
 
     $scope.calculateFormDataKeyForConfigOption = function (option) {
-      if(option.configSource === 'COMPANY_FEATURE' && (option.inputType === 'RADIO_BUTTON' || option.inputType === 'NUMBER')) {
+      if (option.configSource === 'COMPANY_FEATURE' && (option.inputType === 'RADIO_BUTTON' || option.inputType === 'NUMBER')) {
         return option.configSource + '__' + option.featureCode + '__' + option.optionCode + '__' + option.choiceCode;
-      } else if(option.configSource === 'COMPANY_FEATURE' && option.inputType === 'SELECT') {
+      } else if (option.configSource === 'COMPANY_FEATURE' && option.inputType === 'SELECT') {
         return option.configSource + '__' + option.featureCode + '__' + option.optionCode;
-      } else if(option.configSource === 'SALES_THRESHOLD') {
+      } else if (option.configSource === 'SALES_THRESHOLD') {
         return option.configSource + '__' + option.featureCode;
       }
     };
 
     $scope.selectFeature = function (feature, isLoadingModelAlreadyShown) {
-      if(isLoadingModelAlreadyShown === false) {
+      if (isLoadingModelAlreadyShown === false) {
         $this.showLoadingModal('Loading Data');
       }
 
@@ -109,13 +109,13 @@ angular.module('ts5App')
 
       $scope.selectedFeature = feature;
 
-      if($scope.selectedFeature && $scope.selectedFeature.name === 'PreOrder Configuration') {
+      if ($scope.selectedFeature && $scope.selectedFeature.name === 'PreOrder Configuration') {
         $scope.configOptions = angular.copy($scope.configOptionDefinition.preOrderConfigOptions);
-      } else if($scope.selectedFeature && $scope.selectedFeature.name === 'Reconcile Configuration') {
+      } else if ($scope.selectedFeature && $scope.selectedFeature.name === 'Reconcile Configuration') {
         $scope.configOptions = angular.copy($scope.configOptionDefinition.reconcileConfigOptions);
-      } else if($scope.selectedFeature && $scope.selectedFeature.name === 'Cash Bag Configuration') {
+      } else if ($scope.selectedFeature && $scope.selectedFeature.name === 'Cash Bag Configuration') {
         $scope.configOptions = angular.copy($scope.configOptionDefinition.cashBagConfigOptions);
-      } else if($scope.selectedFeature && $scope.selectedFeature.name === 'StationOps Configuration') {
+      } else if ($scope.selectedFeature && $scope.selectedFeature.name === 'StationOps Configuration') {
         $scope.configOptions = angular.copy($scope.configOptionDefinition.stationOpsConfigOptions);
       }
 
@@ -200,9 +200,9 @@ angular.module('ts5App')
         featureOption.ngModelIdentifier = $scope.calculateFormDataKeyForConfigOption(featureOption);
         $scope.formData[featureOption.ngModelIdentifier] = {};
 
-        if(featureOption.configSource === 'COMPANY_FEATURE') {
+        if (featureOption.configSource === 'COMPANY_FEATURE') {
           $scope.populateCompanyFeatureFormData(featureOption);
-        } else if(featureOption.configSource === 'SALES_THRESHOLD') {
+        } else if (featureOption.configSource === 'SALES_THRESHOLD') {
           $scope.populateSalesThresholdFormData(featureOption);
         }
       });
@@ -215,18 +215,18 @@ angular.module('ts5App')
       $scope.formData[featureOption.ngModelIdentifier].featureCode = featureOption.featureCode;
       $scope.formData[featureOption.ngModelIdentifier].optionCode = featureOption.optionCode;
       $scope.formData[featureOption.ngModelIdentifier].inputType = featureOption.inputType;
-      if(featureOption.choiceCode) {
+      if (featureOption.choiceCode) {
         $scope.formData[featureOption.ngModelIdentifier].choiceCode = featureOption.choiceCode;
       }
 
-      if(existingPreference) {
+      if (existingPreference) {
         $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
 
-        if(featureOption.inputType === 'RADIO_BUTTON') {
+        if (featureOption.inputType === 'RADIO_BUTTON') {
           $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.isSelected;
-        } else if(featureOption.inputType === 'NUMBER') {
+        } else if (featureOption.inputType === 'NUMBER') {
           $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.numericValue;
-        } else if(featureOption.inputType === 'SELECT') {
+        } else if (featureOption.inputType === 'SELECT') {
           $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.choiceCode;
         }
       } else {
@@ -242,7 +242,7 @@ angular.module('ts5App')
       $scope.formData[featureOption.ngModelIdentifier].inputType = featureOption.inputType;
 
 
-      if(existingPreference) {
+      if (existingPreference) {
         $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
         $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.percentage;
         $scope.formData[featureOption.ngModelIdentifier].startDate = dateUtility.formatDateForApp(existingPreference.startDate);
@@ -259,15 +259,15 @@ angular.module('ts5App')
     };
 
     $scope.findExistingSalesThresholdPreference = function (featureOption) {
-      if(featureOption.featureCode === 'RECONCILIATION') {
+      if (featureOption.featureCode === 'RECONCILIATION') {
         return _.find($scope.reconciliationThresHold, function(preference) {
           return featureOption.featureCode === preference.featureCode;
         });
-      } else if(featureOption.featureCode === 'DAILYEXCHANGERATE') {
+      } else if (featureOption.featureCode === 'DAILYEXCHANGERATE') {
         return _.find($scope.dailyExchangeThresHold, function(preference) {
           return featureOption.featureCode === preference.featureCode;
         });
-      } else if(featureOption.featureCode === 'STOREDISPATCH') {
+      } else if (featureOption.featureCode === 'STOREDISPATCH') {
         return _.find($scope.storeDispatchThresHold, function(preference) {
           return featureOption.featureCode === preference.featureCode;
         });
@@ -338,7 +338,7 @@ angular.module('ts5App')
 
       promises.push(companyPreferencesService.createOrUpdateCompanyPreference(companyPreferencePayload, _companyId));
       _.forEach(salesThresholdPayload, function(payload) {
-        if(payload.id) {
+        if (payload.id) {
           promises.push(featureThresholdsFactory.updateThreshold(payload.featureCode, payload, payload.id));
         } else {
           promises.push(featureThresholdsFactory.createThreshold(payload.featureCode, payload));
@@ -354,7 +354,7 @@ angular.module('ts5App')
       _.forEach(_.values(formData), function(data) {
         var payload = {};
 
-        if(data.configSource !== 'SALES_THRESHOLD') {
+        if (data.configSource !== 'SALES_THRESHOLD') {
           return;
         }
 
@@ -362,7 +362,7 @@ angular.module('ts5App')
         payload.percentage = data.value;
         payload.featureCode = data.featureCode;
         payload.startDate = dateUtility.formatDateForAPI(data.startDate);
-        if(data.id) {
+        if (data.id) {
           payload.id = data.id;
         }
 
@@ -378,25 +378,25 @@ angular.module('ts5App')
       _.forEach(_.values(formData), function(data) {
         var payload = {};
 
-        if(data.configSource !== 'COMPANY_FEATURE') {
+        if (data.configSource !== 'COMPANY_FEATURE') {
           return;
         }
 
         payload.companyId = _companyId;
         payload.featureCode = data.featureCode;
         payload.optionCode = data.optionCode;
-        if(data.id) {
+        if (data.id) {
           payload.companyPortalFeatureChoiceId = data.id;
         }
 
-        if(data.inputType === 'RADIO_BUTTON') {
+        if (data.inputType === 'RADIO_BUTTON') {
           payload.isSelected = data.value;
           payload.choiceCode = data.choiceCode;
-        } else if(data.inputType === 'NUMBER') {
+        } else if (data.inputType === 'NUMBER') {
           payload.isSelected = true;
           payload.choiceCode = data.choiceCode;
           payload.numericValue = data.value;
-        } else if(data.inputType === 'SELECT') {
+        } else if (data.inputType === 'SELECT') {
           payload.isSelected = true;
           payload.choiceCode = data.value;
         }
