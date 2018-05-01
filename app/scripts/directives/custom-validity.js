@@ -37,6 +37,10 @@ angular.module('ts5App')
       decimalWithTwoDecimalPlaces: [/^\d+\.\d{0,2}$/,
         'This field should be a decimal with up to two decimal places'
       ],
+      decimalWithTwoDecimalPlacesCutExtraToTwoDecimal: [/^\d+\.\d{0,2}$/,
+        'This field should be a decimal with up to two decimal places',
+        '%.2f'
+      ],
       optionalDecimalWithTwoDecimalPlaces: [/^\d+(\.\d{0,2})?$/,
         'This field should be an integer or decimal with up to two decimal places'
       ],
