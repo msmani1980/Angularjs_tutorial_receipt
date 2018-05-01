@@ -136,10 +136,11 @@ angular.module('ts5App')
 
       setTimeout(function () {
         $('.btn-danger').each(function (i, e) {
-          $('.tooltip-focus').tooltip({trigger: "focus"});
+          $('.tooltip-focus').tooltip({ trigger: "focus" });
         });
       },
-      400);
+
+        400);
     };
 
     this.setAvailableFeatures = function(reponseData) {
@@ -241,7 +242,6 @@ angular.module('ts5App')
       $scope.formData[featureOption.ngModelIdentifier].featureCode = featureOption.featureCode;
       $scope.formData[featureOption.ngModelIdentifier].inputType = featureOption.inputType;
 
-
       if (existingPreference) {
         $scope.formData[featureOption.ngModelIdentifier].id = existingPreference.id;
         $scope.formData[featureOption.ngModelIdentifier].value = existingPreference.percentage;
@@ -273,7 +273,6 @@ angular.module('ts5App')
         });
       }
     };
-
 
     this.errorHandler = function(dataFromAPI) {
       angular.element('#loading').modal('hide');
@@ -373,7 +372,7 @@ angular.module('ts5App')
     };
 
     this.constructSaveOrUpdateDataForCompanyPreference = function(formData) {
-        var result = [];
+      var result = [];
 
       _.forEach(_.values(formData), function(data) {
         var payload = {};
