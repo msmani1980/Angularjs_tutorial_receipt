@@ -8,7 +8,7 @@
     <fieldset ng-if="!isFeatureOptionsLoadingInProgress">
       <div class="form-group col-sm-12" style="margin-top: 10px;" ng-repeat="option in configOptions">
         <span class="control-label col-sm-3">{{ option.name }}
-          <button type="button" title="{{toolTipMessage(option)}}" class="fa fa-info-circle tooltip-focus" style="font-size:18px;color: #5bc0de" ></button>
+          <button type="button" title="{{toolTipMessage(option)}}" class="fa fa-info-circle tooltip-focus" style="font-size:18px;color: #5bc0de; padding: 0;border: none; background: none;"></button>
           :
         </span>
         <div class="col-sm-9">
@@ -30,11 +30,6 @@
               </option>
             </select>
           </label>
-          <!--<div class="col-sm-12" style="margin-top: 2px;">-->
-            <!--<div class="col-sm-2">-->
-              <!--<date-picker-field form="form" name="EffectiveFrom" label="Start Date" ng-model="formData[option.ngModelIdentifier].startDate" custom-effective="true"></date-picker-field>-->
-            <!--</div>-->
-          <!--</div>-->
         </div>
       </div>
     </fieldset>
