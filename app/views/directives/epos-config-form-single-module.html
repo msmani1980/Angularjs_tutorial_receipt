@@ -1,6 +1,16 @@
 <li ng-if="singleModule.optionTypeId === 1"> <!-- CheckBox -->
   <input ng-disabled="areInputsDisabled" type="checkbox" class="maring-right-5px" id="{{singleModule.id}}" ng-model="model.checkbox[singleModule.id]"/>
   <label class="epos-config-label">{{singleModule.name}}</label>
+
+  <button
+    ng-if="singleModule.description"
+    ng-init="popover[singleModule.id] = false"
+    type="button"
+    id="popover-{{singleModule.id}}"
+    class="btn btn-xs btn-link"
+>
+    <span class="glyphicon glyphicon-info-sign text-info"></span>
+  </button>
 </li>
 <li ng-if="singleModule.optionTypeId === 2"> <!-- RadioButton -->
   <input ng-disabled="areInputsDisabled" type="radio" class="maring-right-5px" id="{{singleModule.id}}" name="{{singleModule.parentId}}" ng-model="model.radioButton[singleModule.parentId]" value="{{singleModule.id}}"/>
