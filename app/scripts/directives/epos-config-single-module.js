@@ -17,6 +17,7 @@ angular.module('ts5App')
             element.append(cloned);
           });
         }
-      }
+      },
+      controller: eposConfigSingleModuleController
     };
   });
