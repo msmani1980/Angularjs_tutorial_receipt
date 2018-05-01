@@ -8,7 +8,11 @@
     type="button"
     id="popover-{{singleModule.id}}"
     class="btn btn-xs btn-link"
->
+    aria-hidden="true"
+    popover="{{singleModule.description}}"
+    popover-placement="right"
+    popover-is-open="popover[singleModule.id]"
+    popover-trigger="none">
     <span class="glyphicon glyphicon-info-sign text-info"></span>
   </button>
 </li>
