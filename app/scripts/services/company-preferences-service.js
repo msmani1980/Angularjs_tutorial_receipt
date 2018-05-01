@@ -10,6 +10,8 @@
 angular.module('ts5App')
   .service('companyPreferencesService', function ($http, $resource, ENV) {
     var requestURL = ENV.apiUrl + '/rsvr/api/company-preferences/:id';
+    var createOrUpdateRequestURL = ENV.apiUrl + '/rsvr/api/company-preferences/create-or-update';
+
     var requestParameters = {
       id: '@id'
     };
@@ -21,7 +23,15 @@ angular.module('ts5App')
       }
     };
 
+    var createOrUpdateAction = {
+      createOrUpdateCompanyPreference: {
+        method: 'POST',
+        headers: {}
+      }
+    };
+
     var requestResource = $resource(requestURL, requestParameters, actions);
+    var createOrUpdateRequestResource = $resource(createOrUpdateRequestURL, requestParameters, createOrUpdateAction);
 
     var getCompanyPreferences = function (payload, companyId) {
       if (companyId) {
@@ -36,7 +46,16 @@ angular.module('ts5App')
       return requestResource.getCompanyPreferences(payload).$promise;
     };
 
+    var createOrUpdateCompanyPreference = function (payload, companyId) {
+      if (companyId) {
+        createOrUpdateAction.createOrUpdateCompanyPreference.headers.companyId = companyId;
+      }
+
+      return createOrUpdateRequestResource.createOrUpdateCompanyPreference(payload).$promise;
+    };
+
     return {
-      getCompanyPreferences: getCompanyPreferences
+      getCompanyPreferences: getCompanyPreferences,
+      createOrUpdateCompanyPreference: createOrUpdateCompanyPreference
     };
   });

@@ -458,6 +458,10 @@ angular.module('ts5App', [
     templateUrl: 'views/epos-config.html',
     controller: 'EposConfigCtrl',
     controllerAs: 'eposConfig'
+  }).when('/back-office-config', {
+    templateUrl: 'views/back-office-config.html',
+    controller: 'BackOfficeConfigCtrl',
+    controllerAs: 'backOfficeConfig'
   }).when('/report-exchange-rate', {
     templateUrl: 'views/report-exchange-rate.html',
     controller: 'ReportExchangeRateCtrl',
