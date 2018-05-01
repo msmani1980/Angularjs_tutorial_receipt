@@ -9,7 +9,9 @@ angular.module('ts5App')
         $scope.popover[item] = false;
       };
 
-
+      $scope.showPopover = function (item) {
+        $scope.popover[item] = true;
+      }
     };
 
     return {
