@@ -49,7 +49,9 @@ angular.module('ts5App')
         }
 
         var result = $this.findModuleById(moduleOption.subModules, id);
-        if (result) return result;
+        if (result) {
+          return result;
+        }
       }
     };
 
