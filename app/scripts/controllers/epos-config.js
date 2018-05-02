@@ -39,6 +39,19 @@ angular.module('ts5App')
 
     };
 
+    this.findModuleById = function (moduleOptions, id) {
+      for (var i = 0; i < moduleOptions.length; i++) {
+        var moduleOption = moduleOptions[i];
+
+        if (moduleOption.id == id) {
+          return moduleOption;
+        }
+
+        var result = $this.findModuleById(moduleOption.subModules, id);
+        if (result) return result;
+      }
+    };
+
     
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
