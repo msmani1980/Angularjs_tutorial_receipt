@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EposConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, accessService) {
+  .controller('EposConfigCtrl', function ($scope, $rootScope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, accessService) {
     var companyId;
     var $this = this;
 
@@ -26,6 +26,14 @@ angular.module('ts5App')
     $scope.initialRadioButtonModuleOptionPopulatedIds = {};
     $scope.initialCheckBoxModuleOptionPopulatedIds = {};
     $scope.isCRUD = false;
+
+    $rootScope.$on('eposConfigurationInputChanged', function(event, e){
+      var module = e.module;
+
+      $this.normalizeSelectionOfParentsAndChildren(module);
+    });
+
+
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
       if (!newProductVersion) {

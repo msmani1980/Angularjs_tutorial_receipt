@@ -2,7 +2,7 @@
 
 angular.module('ts5App')
   .directive('eposConfigSingleModule', function ($compile) {
-    var eposConfigSingleModuleController = function ($scope) {
+    var eposConfigSingleModuleController = function ($scope, $rootScope) {
       $scope.popover = [];
 
       $scope.hidePopover = function (item) {
@@ -12,6 +12,8 @@ angular.module('ts5App')
       $scope.showPopover = function (item) {
         $scope.popover[item] = true;
       };
+
+
     };
 
     return {
