@@ -44,7 +44,7 @@ angular.module('ts5App')
       for (var i = 0; i < moduleOptions.length; i++) {
         var moduleOption = moduleOptions[i];
 
-        if (moduleOption.id == id) {
+        if (moduleOption.id === id) {
           return moduleOption;
         }
 
