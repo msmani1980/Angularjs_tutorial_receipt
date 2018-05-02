@@ -27,6 +27,7 @@
     </div>
 
     <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form class="form" ng-submit="search()">
       <div class="panel-body">
         <h4>Filter Categories
           <br>
@@ -63,9 +64,11 @@
       </div>
       <div class="panel-footer text-right">
         <button type="button" class="btn btn-default" ng-disabled="!showClearButton()" ng-click="clearSearch()">Clear</button>
-        <button type="button" class="btn btn-primary" ng-click="search()">Search</button>
+        <button type="submit" class="btn btn-primary">Search</button>
       </div>
+      </form>
     </div>
+    
 	<error-dialog form-object="form" error-response="errorResponse" display="displayError">
     </error-dialog>
     <div class="panel panel-default collapse no-transition" id="create-collapse">
@@ -131,7 +134,13 @@
       </form>
     </div>
   </div>
-<div class="table-responsive">
+  
+
+    <alert ng-show="!categoryList.length" type="info">
+      <span class="fa fa-flag"></span> Your search returned no results.
+    </alert>
+  
+<div class="table-responsive" ng-show="categoryList.length">
   <table class="table">
     <thead>
     <tr>
@@ -220,15 +229,10 @@
           <span class="fa fa-times"></span>
         </button>
       </td>
-
     </tr>
     </tbody>
   </table>
 </div>
-  <div class="alert alert-info text-center" ng-show="isFiltering && categoryList.length <= 0">
-    <span class="fa fa-exclamation-circle"></span> No Matching Categories Were Found
-  </div>
-
 </div>
 
 <delete-record-dialog></delete-record-dialog>

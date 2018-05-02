@@ -11,12 +11,31 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
   function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $route, $location, accessService) {
 
     var $this = this;
+    $scope.employeeMessagesList = [];
+    $scope.employeesList = [];
+
+    function hideFilterPanel() {
+      angular.element('#search-collapse').addClass('collapse');
+    }
+
+    function showFilterPanel() {
+      angular.element('#search-collapse').removeClass('collapse');
+    }
+
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     };
 
     this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
+    };
+
+    $scope.toggleFilterPanel = function() {
+      if (angular.element('#search-collapse').hasClass('collapse')) {
+        showFilterPanel();
+      } else {
+        hideFilterPanel();
+      }
     };
 
     this.showErrors = function(dataFromAPI) {
@@ -43,6 +62,8 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
         message.startDate = dateUtility.formatDateForApp(message.startDate);
         message.endDate = dateUtility.formatDateForApp(message.endDate);
       });
+
+      $this.hideLoadingModal();
     };
 
     this.getEmployeeMessages = function(payload) {
@@ -167,6 +188,7 @@ angular.module('ts5App').controller('EmployeeMessageListCtrl',
     };
 
     $scope.submitSearch = function() {
+      $this.showLoadingModal('Loading data...');
       var searchPayload = $this.formatSearchPayload(angular.copy($scope.search));
       $this.getEmployeeMessages(searchPayload);
     };
