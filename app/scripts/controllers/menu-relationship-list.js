@@ -27,6 +27,14 @@ angular.module('ts5App')
 
     var _initDone = false;
 
+    function showLoadModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadModal() {
+      angular.element('#loading').modal('hide');
+    }
+
     this.showSuccessMessage = function (message) {
       messageService.display('success', message);
     };
@@ -63,7 +71,6 @@ angular.module('ts5App')
     };
 
     this.getStationAndMenuList = function () {
-      $this.displayLoadingModal();
       var promises = $this.makePromises();
       $q.all(promises).then(function (response) {
         $this.setCatererStationList(response[0]);
@@ -75,18 +82,20 @@ angular.module('ts5App')
 
     $scope.searchRelationshipList = function () {
       if ($this.menuList === null || $this.stationList === null) {
+    	hideLoadModal();
         return;
       }
 
       if ($this.meta.offset >= $this.meta.count) {
+    	hideLoadModal();
         return;
       }
 
       if (!_initDone) {
+    	hideLoadModal();  
         return;
       }
 
-      $this.displayLoadingModal();
       var query = lodash.assign($this.generateRelationshipQuery(), {
         limit: $this.meta.limit,
         offset: $this.meta.offset
@@ -97,12 +106,14 @@ angular.module('ts5App')
         $this.updateRelationshipList();
         $this.initSelectUI();
         $this.hideLoadingModal();
+        hideLoadModal();        
       });
 
       $this.meta.offset += $this.meta.limit;
     };
 
     $scope.searchRecords = function () {
+      showLoadModal('Searching');
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -235,6 +246,7 @@ angular.module('ts5App')
     };
 
     this.init = function () {
+      showLoadModal('Loading Data');
       $scope.isCRUD = accessService.crudAccessGranted('MENUCAT', 'MENUSTATION', 'CRUDMCS');
       $this.getStationAndMenuList();
     };

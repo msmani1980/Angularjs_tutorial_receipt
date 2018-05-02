@@ -23,6 +23,7 @@
     <error-dialog form-object="promotionCategoryListForm" error-response="errorResponse" display="displayError"></error-dialog>
 
     <div class="panel panel-default no-transition collapse in" id="search-collapse">
+    <form class="form" ng-submit="searchPromotionCategories()">
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-4 col-xs-12">
@@ -48,8 +49,9 @@
       </div>
       <div class="panel-footer text-right">
         <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-        <button type="button" class="btn btn-primary" ng-click="searchPromotionCategories()">Search</button>
+        <button type="submit" class="btn btn-primary">Search</button>
       </div>
+    </form>  
     </div>
   </div>
   <form name="promotionCategoryForm">
