@@ -52,6 +52,24 @@ angular.module('ts5App')
       }
     };
 
+    this.findModuleParents = function (module) {
+      var parents = [];
+      var currentParentId = module.parentId;
+
+      while(currentParentId) {
+        var currentModule = $this.findModuleById($scope.moduleOptions, currentParentId);
+
+        if (currentModule) {
+          parents.push(currentModule);
+          currentParentId = currentModule.parentId;
+        } else {
+          currentParentId = null;
+        }
+      }
+
+      return parents;
+    };
+
     
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
