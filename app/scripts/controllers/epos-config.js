@@ -37,6 +37,7 @@ angular.module('ts5App')
       var parents = $this.findModuleParents(module);
       var children = $this.findModuleChildren(module);
 
+      // TODO: filter for radio and check boxes, select all parents if child is selected, deselet all children if parent is deselected
     };
 
     this.findModuleById = function (moduleOptions, id) {
