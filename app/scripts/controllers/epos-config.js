@@ -70,7 +70,17 @@ angular.module('ts5App')
       return parents;
     };
 
-    
+    this.findModuleChildren = function (module) {
+      var children = [];
+      var subModules = module.subModules;
+
+      subModules.forEach(function (subModule) {
+        children.push(subModule);
+        children = children.concat($this.findModuleChildren(subModule));
+      });
+
+      return children;
+    };
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
       if (!newProductVersion) {
