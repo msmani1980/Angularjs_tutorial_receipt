@@ -21,6 +21,14 @@ angular.module('ts5App')
     this.headers = {
       sessionToken: $routeParams.sessionToken || sessionObject.sessionToken
     };
+
+    // If another user is logged in, but request for initial password set or reset is executed
+    // for another user, logout current user
+    if ($routeParams.sessionToken && angular.isDefined(sessionObject.sessionToken)) {
+      identityAccessFactory.logout();
+      sessionObject = {};
+    }
+
     $scope.hasSessionToken = angular.isDefined(sessionObject.sessionToken);
 
     function showLoadingModal(text) {
