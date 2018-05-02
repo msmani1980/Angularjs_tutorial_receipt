@@ -15,7 +15,7 @@ angular.module('ts5App')
 
       $scope.notifyChange = function (module, type) {
         $rootScope.$broadcast('eposConfigurationInputChanged', { module: module, type: type });
-      }
+      };
     };
 
     return {
