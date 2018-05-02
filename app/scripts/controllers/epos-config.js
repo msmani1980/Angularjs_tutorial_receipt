@@ -33,7 +33,13 @@ angular.module('ts5App')
       $this.normalizeSelectionOfParentsAndChildren(module);
     });
 
+    this.normalizeSelectionOfParentsAndChildren = function (module) {
+      var parents = $this.findModuleParents(module);
+      var children = $this.findModuleChildren(module);
 
+    };
+
+    
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
       if (!newProductVersion) {
