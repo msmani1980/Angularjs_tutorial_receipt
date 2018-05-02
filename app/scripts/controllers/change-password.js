@@ -26,6 +26,7 @@ angular.module('ts5App')
     // for another user, logout current user
     if ($routeParams.sessionToken && angular.isDefined(sessionObject.sessionToken)) {
       identityAccessFactory.logout();
+      sessionObject = {};
     }
 
     $scope.hasSessionToken = angular.isDefined(sessionObject.sessionToken);
