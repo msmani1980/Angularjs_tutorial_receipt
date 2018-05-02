@@ -178,12 +178,25 @@ angular.module('ts5App')
     angular.element('.delete-warning-modal').modal('show');
   };
 
+  this.recallSearchOperation = function () {
+    $scope.priceUpdateRules = [];
+    $this.meta = {
+      count: undefined,
+      limit: 100,
+      offset: 0
+    };
+
+    $scope.loadPriceUpdaterRules();
+  };
+
   this.applyPriceUpdateRulesSuccess = function () {
     $this.showToastMessage('success', 'Apply Rules', 'Rule has been applied');
+    $this.recallSearchOperation();
   };
 
   this.applyPriceUpdateRulesFailure = function () {
     $this.showToastMessage('danger', 'Apply Rules', 'Rule cannot be applied');
+    $this.recallSearchOperation();
   };
   
   this.executeApplyRulesAction = function (ruleId) {
@@ -200,13 +213,6 @@ angular.module('ts5App')
 
     }
 
-    $scope.priceUpdateRules = [];
-    $this.meta = {
-      count: undefined,
-      limit: 100,
-      offset: 0
-    };
-    $scope.loadPriceUpdaterRules();
   };
 
   this.initSuccessHandler = function(responseCollection) {
