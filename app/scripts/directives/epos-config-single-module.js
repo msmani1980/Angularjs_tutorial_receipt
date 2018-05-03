@@ -13,8 +13,8 @@ angular.module('ts5App')
         $scope.popover[item] = true;
       };
 
-      $scope.notifyChange = function (module, type) {
-        $rootScope.$broadcast('eposConfigurationInputChanged', { module: module, type: type });
+      $scope.notifyChange = function (module, selected) {
+        $rootScope.$broadcast('eposConfigurationInputChanged', { module: module, selected: selected });
       };
     };
 
