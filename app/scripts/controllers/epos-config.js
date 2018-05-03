@@ -34,8 +34,11 @@ angular.module('ts5App')
     });
 
     this.normalizeSelectionOfParentsAndChildren = function (module) {
-      var parents = $this.findModuleParents(module);
-      var children = $this.findModuleChildren(module);
+      var parents = _.reject($this.findModuleParents(module), { optionTypeId: 3 });
+      var children = _.reject($this.findModuleChildren(module),{ optionTypeId: 3 });
+
+      console.log(parents)
+      console.log(children)
 
       // TODO: filter for radio and check boxes, select all parents if child is selected, deselet all children if parent is deselected
     };
