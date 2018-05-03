@@ -27,7 +27,7 @@ angular.module('ts5App')
     $scope.initialCheckBoxModuleOptionPopulatedIds = {};
     $scope.isCRUD = false;
 
-    $rootScope.$on('eposConfigurationInputChanged', function(event, e){
+    $rootScope.$on('eposConfigurationInputChanged', function(event, e) {
       var changedModuleOption = e.module;
       var selected = e.selected;
 
@@ -38,8 +38,8 @@ angular.module('ts5App')
       var parents = _.reject($this.findModuleParents(changedModuleOption), { optionTypeId: 3 });
       var children = _.reject($this.findModuleChildren(changedModuleOption),{ optionTypeId: 3 });
 
-      // Changed module (checkbox and radiobutton) is now selected
-      // Select all parents and deselect children for orphan radiobuttons
+      // Changed module (checkbox and radio button) is now selected
+      // Select all parents and deselect children for orphan radio buttons
       if (selected === true || isNumeric(selected)) {
         $this.selectAllInputs(parents);
         $this.fixOrphanRadioButtons(changedModuleOption);
