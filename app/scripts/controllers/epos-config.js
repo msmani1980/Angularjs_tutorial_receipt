@@ -56,7 +56,7 @@ angular.module('ts5App')
         if (parent.optionTypeId === 1 && !$this.isCheckboxSelected(parent)) {
           $this.selectCheckbox(parent);
         }
-        
+
         if (parent.optionTypeId === 2 && !$this.isRadioButtonSelected(parent)) {
           $this.selectRadioButton(parent);
         }
@@ -68,6 +68,7 @@ angular.module('ts5App')
         if (child.optionTypeId === 1 && $this.isCheckboxSelected(child)) {
           $this.deselectCheckbox(child);
         }
+        
         if (child.optionTypeId === 2 && $this.isRadioButtonSelected(child)) {
           $this.deselectRadioButton(child);
         }
