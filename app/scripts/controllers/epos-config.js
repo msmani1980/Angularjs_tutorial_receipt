@@ -44,6 +44,7 @@ angular.module('ts5App')
         $this.selectAllInputs(parents);
         $this.fixOrphanRadioButtons(changedModuleOption);
       }
+      
       // Changed module is now deselected, deselect all children
       else {
         $this.deselectAllInputs(children);
