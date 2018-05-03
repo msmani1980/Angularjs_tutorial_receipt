@@ -46,6 +46,17 @@ angular.module('ts5App')
       // TODO: filter for radio and check boxes, select all parents if child is selected, deselet all children if parent is deselected
     };
 
+    this.deselectAllInputs = function (children) {
+      children.forEach(function (child) {
+        if (child.optionTypeId === 1 && $this.isCheckboxSelected(child)) {
+          $this.deselectCheckbox(child);
+        }
+        if (child.optionTypeId === 2 && $this.isRadioButtonSelected(child)) {
+          $this.deselectRadioButton(child);
+        }
+      });
+    };
+
     this.fixOrphanRadioButtons = function () {
       var allInputs = [];
       var deselectedRadioButtonChildren = [];
