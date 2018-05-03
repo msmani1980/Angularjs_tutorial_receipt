@@ -82,17 +82,17 @@ angular.module('ts5App')
 
     $scope.searchRelationshipList = function () {
       if ($this.menuList === null || $this.stationList === null) {
-    	hideLoadModal();
+        hideLoadModal();
         return;
       }
 
       if ($this.meta.offset >= $this.meta.count) {
-    	hideLoadModal();
+        hideLoadModal();
         return;
       }
 
       if (!_initDone) {
-    	hideLoadModal();  
+        hideLoadModal();  
         return;
       }
 
