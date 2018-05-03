@@ -44,7 +44,7 @@ angular.module('ts5App')
         $this.selectAllInputs(parents);
         $this.fixOrphanRadioButtons(changedModuleOption);
       }
-      
+
       // Changed module is now deselected, deselect all children
       else {
         $this.deselectAllInputs(children);
@@ -56,6 +56,7 @@ angular.module('ts5App')
         if (parent.optionTypeId === 1 && !$this.isCheckboxSelected(parent)) {
           $this.selectCheckbox(parent);
         }
+        
         if (parent.optionTypeId === 2 && !$this.isRadioButtonSelected(parent)) {
           $this.selectRadioButton(parent);
         }
