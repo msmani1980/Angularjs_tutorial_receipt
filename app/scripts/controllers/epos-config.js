@@ -68,7 +68,7 @@ angular.module('ts5App')
         if (child.optionTypeId === 1 && $this.isCheckboxSelected(child)) {
           $this.deselectCheckbox(child);
         }
-        
+
         if (child.optionTypeId === 2 && $this.isRadioButtonSelected(child)) {
           $this.deselectRadioButton(child);
         }
@@ -138,7 +138,7 @@ angular.module('ts5App')
       var parents = [];
       var currentParentId = module.parentId;
 
-      while(currentParentId) {
+      while (currentParentId) {
         var currentModule = $this.findModuleById($scope.moduleOptions, currentParentId);
 
         if (currentModule) {
