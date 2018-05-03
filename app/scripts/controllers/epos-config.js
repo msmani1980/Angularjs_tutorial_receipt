@@ -37,7 +37,7 @@ angular.module('ts5App')
       var parents = _.reject($this.findModuleParents(changedModuleOption), { optionTypeId: 3 });
       var children = _.reject($this.findModuleChildren(changedModuleOption),{ optionTypeId: 3 });
 
-      
+
 
       console.log(parents)
       console.log(children)
@@ -280,6 +280,10 @@ angular.module('ts5App')
 
       return currentlyModuleOptionPopulatedIds;
     };
+
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
 
     this.initDependenciesSuccess = function(result) {
       $this.getProductVersionsSuccess(result[0]);
