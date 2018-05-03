@@ -247,7 +247,8 @@ angular.module('ts5App')
           password: _password,
           pwdo: _pwdo === _password ? '' : _pwdo
         };
-        identityAccessService.authorizeUser(payload).then(checkForEULA, broadcastError);
+
+        return identityAccessService.authorizeUser(payload).then(checkForEULA, broadcastError);
       }
 
       $rootScope.$on('logout', logout);

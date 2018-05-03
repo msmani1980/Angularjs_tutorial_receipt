@@ -15,6 +15,7 @@ angular.module('ts5App')
       newPassword: '',
       newPasswordConfirm: ''
     };
+    $scope.loginCredentials = {};
 
     var $this = this;
     var sessionObject = identityAccessFactory.getSessionObject();
@@ -117,17 +118,25 @@ angular.module('ts5App')
         return;
       }
 
-      var credentials = getCredentials();
+      $scope.loginCredentials = getCredentials();
 
       resetCredentials();
 
       showLoadingModal('Changing password');
-      identityAccessFactory.changePassword(credentials, $this.headers).then(handleSuccessResponse, handleResponseError);
+      identityAccessFactory.changePassword($scope.loginCredentials, $this.headers).then(handleSuccessResponse, handleResponseError);
     };
 
     function handleSuccessLoginResponse() {
       $this.showSuccessMessage('Password has been updated!');
-      $location.path('/#/');
+
+      // If password has been reset or initially set, login after successful change
+      if ($routeParams.sessionToken && !$scope.hasSessionToken) {
+        identityAccessFactory.login($scope.loginCredentials).then(function () {
+          $location.path('/#/');
+        });
+      } else {
+        $location.path('/#/');
+      }
     }
 
     function checkAuthSuccess(dataFromAPI) {
