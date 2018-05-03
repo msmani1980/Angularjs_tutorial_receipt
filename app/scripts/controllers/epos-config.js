@@ -29,8 +29,9 @@ angular.module('ts5App')
 
     $rootScope.$on('eposConfigurationInputChanged', function(event, e){
       var changedModuleOption = e.module;
+      var selected = e.selected;
 
-      $this.normalizeSelectionOfParentsAndChildren(changedModuleOption);
+      $this.normalizeSelectionOfParentsAndChildren(changedModuleOption, selected);
     });
 
     this.normalizeSelectionOfParentsAndChildren = function (changedModuleOption) {
