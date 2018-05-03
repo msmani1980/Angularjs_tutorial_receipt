@@ -46,6 +46,10 @@ angular.module('ts5App')
       // TODO: filter for radio and check boxes, select all parents if child is selected, deselet all children if parent is deselected
     };
 
+    this.deselectRadioButton = function (moduleOption) {
+      delete $scope.moduleOptionValues.radioButton[moduleOption.parentId];
+    };
+
     this.findModuleById = function (moduleOptions, id) {
       for (var i = 0; i < moduleOptions.length; i++) {
         var moduleOption = moduleOptions[i];
