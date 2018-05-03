@@ -28,14 +28,16 @@ angular.module('ts5App')
     $scope.isCRUD = false;
 
     $rootScope.$on('eposConfigurationInputChanged', function(event, e){
-      var module = e.module;
+      var changedModuleOption = e.module;
 
-      $this.normalizeSelectionOfParentsAndChildren(module);
+      $this.normalizeSelectionOfParentsAndChildren(changedModuleOption);
     });
 
-    this.normalizeSelectionOfParentsAndChildren = function (module) {
-      var parents = _.reject($this.findModuleParents(module), { optionTypeId: 3 });
-      var children = _.reject($this.findModuleChildren(module),{ optionTypeId: 3 });
+    this.normalizeSelectionOfParentsAndChildren = function (changedModuleOption) {
+      var parents = _.reject($this.findModuleParents(changedModuleOption), { optionTypeId: 3 });
+      var children = _.reject($this.findModuleChildren(changedModuleOption),{ optionTypeId: 3 });
+
+      
 
       console.log(parents)
       console.log(children)
