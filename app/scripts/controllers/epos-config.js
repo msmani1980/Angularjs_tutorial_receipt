@@ -36,7 +36,7 @@ angular.module('ts5App')
 
     this.normalizeSelectionOfParentsAndChildren = function (changedModuleOption, selected) {
       var parents = _.reject($this.findModuleParents(changedModuleOption), { optionTypeId: 3 });
-      var children = _.reject($this.findModuleChildren(changedModuleOption),{ optionTypeId: 3 });
+      var children = _.reject($this.findModuleChildren(changedModuleOption), { optionTypeId: 3 });
 
       // Changed module (checkbox and radio button) is now selected
       // Select all parents and deselect children for orphan radio buttons
