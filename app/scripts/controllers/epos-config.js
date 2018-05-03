@@ -34,16 +34,20 @@ angular.module('ts5App')
       $this.normalizeSelectionOfParentsAndChildren(changedModuleOption, selected);
     });
 
-    this.normalizeSelectionOfParentsAndChildren = function (changedModuleOption) {
+    this.normalizeSelectionOfParentsAndChildren = function (changedModuleOption, selected) {
       var parents = _.reject($this.findModuleParents(changedModuleOption), { optionTypeId: 3 });
       var children = _.reject($this.findModuleChildren(changedModuleOption),{ optionTypeId: 3 });
 
-
-
-      console.log(parents)
-      console.log(children)
-
-      // TODO: filter for radio and check boxes, select all parents if child is selected, deselet all children if parent is deselected
+      // Changed module (checkbox and radiobutton) is now selected
+      // Select all parents and deselect children for orphan radiobuttons
+      if (selected === true || isNumeric(selected)) {
+        $this.selectAllInputs(parents);
+        $this.fixOrphanRadioButtons(changedModuleOption);
+      }
+      // Changed module is now deselected, deselect all children
+      else {
+        $this.deselectAllInputs(children);
+      }
     };
 
     this.selectAllInputs = function (parents) {
