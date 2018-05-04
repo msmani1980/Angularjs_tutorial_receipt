@@ -31,6 +31,7 @@ angular.module('ts5App')
       var changedModuleOption = e.module;
       var selected = e.selected;
 
+      // On form change, select all parents if child is selected, and deselect all children if parent is deselected
       $this.normalizeSelectionOfParentsAndChildren(changedModuleOption, selected);
     });
 
