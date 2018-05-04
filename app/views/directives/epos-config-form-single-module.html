@@ -1,12 +1,31 @@
-<li ng-if="singleModule.optionTypeId === 1"> <!-- CheckBox -->
-  <input ng-disabled="areInputsDisabled" type="checkbox" class="maring-right-5px" id="{{singleModule.id}}" ng-model="model.checkbox[singleModule.id]"/>
-  <label class="epos-config-label">{{singleModule.name}}</label>
-</li>
-<li ng-if="singleModule.optionTypeId === 2"> <!-- RadioButton -->
-  <input ng-disabled="areInputsDisabled" type="radio" class="maring-right-5px" id="{{singleModule.id}}" name="{{singleModule.parentId}}" ng-model="model.radioButton[singleModule.parentId]" value="{{singleModule.id}}"/>
-  <label class="epos-config-label">{{singleModule.name}}</label>
-</li>
-<li ng-if="singleModule.optionTypeId === 3">  <!-- Text -->
-  <label class="epos-config-label maring-right-5px">{{singleModule.name}}</label>
-  <input ng-disabled="areInputsDisabled" type="text" id="{{singleModule.id}}" ng-model="model.text[singleModule.id]"/>
+<li ng-mouseleave="hidePopover(singleModule.id)">
+  <span ng-if="singleModule.optionTypeId === 1"> <!-- CheckBox -->
+    <input ng-disabled="areInputsDisabled" type="checkbox" class="maring-right-5px" id="{{singleModule.id}}" ng-model="model.checkbox[singleModule.id]" ng-change="notifyChange(singleModule, model.checkbox[singleModule.id])" />
+    <label class="epos-config-label">{{singleModule.name}}</label>
+  </span>
+
+  <span ng-if="singleModule.optionTypeId === 2"> <!-- RadioButton -->
+    <input ng-disabled="areInputsDisabled" type="radio" class="maring-right-5px" id="{{singleModule.id}}" name="{{singleModule.parentId}}" ng-model="model.radioButton[singleModule.parentId]" value="{{singleModule.id}}" ng-change="notifyChange(singleModule, model.radioButton[singleModule.parentId])"/>
+    <label class="epos-config-label">{{singleModule.name}}</label>
+  </span>
+
+  <span ng-if="singleModule.optionTypeId === 3"> <!-- Text -->
+    <label class="epos-config-label maring-right-5px">{{singleModule.name}}</label>
+    <input ng-disabled="areInputsDisabled" type="text" id="{{singleModule.id}}" ng-model="model.text[singleModule.id]"/>
+  </span>
+
+  <button
+    ng-if="singleModule.description"
+    ng-init="popover[singleModule.id] = false"
+    type="button"
+    id="popover-{{singleModule.id}}"
+    class="btn btn-xs btn-link"
+    aria-hidden="true"
+    popover="{{singleModule.description}}"
+    popover-placement="right"
+    popover-is-open="popover[singleModule.id]"
+    popover-trigger="none"
+    ng-click="showPopover(singleModule.id)">
+    <span class="glyphicon glyphicon-info-sign text-info"></span>
+  </button>
 </li>

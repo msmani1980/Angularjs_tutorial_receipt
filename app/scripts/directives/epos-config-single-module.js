@@ -2,6 +2,22 @@
 
 angular.module('ts5App')
   .directive('eposConfigSingleModule', function ($compile) {
+    var eposConfigSingleModuleController = function ($scope, $rootScope) {
+      $scope.popover = [];
+
+      $scope.hidePopover = function (item) {
+        $scope.popover[item] = false;
+      };
+
+      $scope.showPopover = function (item) {
+        $scope.popover[item] = true;
+      };
+
+      $scope.notifyChange = function (module, selected) {
+        $rootScope.$broadcast('eposConfigurationInputChanged', { module: module, selected: selected });
+      };
+    };
+
     return {
       restrict: 'E',
       scope: {
@@ -17,6 +33,8 @@ angular.module('ts5App')
             element.append(cloned);
           });
         }
-      }
+      },
+
+      controller: eposConfigSingleModuleController
     };
   });
