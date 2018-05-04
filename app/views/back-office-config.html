@@ -23,7 +23,7 @@
             <input ng-disabled="!isCRUD" class="inline form-control col-sm-2" style="padding-top: 3px; width: 146px;" ng-model="formData[option.ngModelIdentifier].value"  type="number" step="1" id="{{option.id}}" name="{{option.ngModelIdentifier}}"/>
           </label>
           <label ng-if="option.inputType === 'SELECT'" class="radio-custom radio-inline col-sm-12 back-office-select"  >
-            <select ng-disabled="!isCRUD" name="{{option.ngModelIdentifier}}" ng-model="formData[option.ngModelIdentifier].value" class="inline form-control col-sm-2" style="height: 28px; width: 146px;">
+            <select ng-disabled="!isCRUD" name="{{option.ngModelIdentifier}}" ng-model="formData[option.ngModelIdentifier].value" class="inline form-control col-sm-2" >
               <option value=""></option>
               <option ng-repeat="optionValue in option.values"
                       value="{{ optionValue.choiceCode }}">{{ optionValue.name }}
