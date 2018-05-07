@@ -65,9 +65,10 @@
 					</div>
 					<div class="col-xs-12 col-sm-4">
 						<div class="form-group">
-							<label for="taxIs">Tax Is</label>
-							<select name="Tax Is" ng-model="rule.taxFilter" ng-disabled="isDisabled()" class="form-control"
+							<label for="taxIs">Tax Is*</label>
+							<select name="Tax Is" ng-model="rule.taxFilter" ng-disabled="isDisabled()" required="true"  class="form-control"
 							   ng-options="tax.value as tax.name for tax in taxIs">
+							   <option value="">Select Tax Is...</option>
 						    </select>
 						</div>
 					</div>
