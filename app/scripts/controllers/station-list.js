@@ -23,6 +23,14 @@ angular.module('ts5App')
     $scope.isSearch = false;
     $scope.stationList = [];
 
+    function showLoadModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadModal() {
+      angular.element('#loading').modal('hide');
+    }
+
     this.setStationList = function(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
 
@@ -487,9 +495,11 @@ angular.module('ts5App')
         angular.element.find('#filter-controls')[0]
       );
       filterControls.addClass('collapse').removeClass('in');
+      hideLoadModal();
     };
 
     $scope.searchRecords = function() {
+      showLoadModal('Searching');
       $this.meta = {
         count: undefined,
         limit: 100,
