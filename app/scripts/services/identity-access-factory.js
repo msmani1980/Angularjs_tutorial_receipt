@@ -72,7 +72,13 @@ angular.module('ts5App')
         console.log('show modal here');
       }
 
-
+      function loadSessionTimerConfiguration() {
+        if ($localStorage.timeoutSessionAfterMinutes && $localStorage.sessionSecondsLeft) {
+          setSessionTTLInMinutes(parseInt($localStorage.timeoutSessionAfterMinutes), parseInt($localStorage.sessionSecondsLeft));
+        } else {
+          setSessionTTLInMinutes(8 * 60); // 8 hours default
+        }
+      }
 
       function setSessionTTLInMinutes(ttlInMinutes, secondsLeft) {
         timeoutSessionAfterMinutes = ttlInMinutes;
