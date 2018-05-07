@@ -63,14 +63,6 @@ angular.module('ts5App')
       return !!$scope.selectedFeature;
     };
 
-    $scope.calculateTitle = function () {
-      if ($scope.selectedFeature) {
-        return 'Back Office Configuration - ' + $scope.selectedFeature.name;
-      } else {
-        return 'Back Office Configuration';
-      }
-    };
-
     $scope.toolTipMessage = function (option) {
       if (option.configSource === 'COMPANY_FEATURE') {
         if (option.featureCode && option.optionCode && option.choiceCode) {
