@@ -22,10 +22,10 @@ angular.module('ts5App')
       value: true
     }, {
       name: 'Excluded',
-      value: false
+      value: null
     }, {
       name: 'Exempt',
-      value: null
+      value: false
     }];
 
     this.showLoadingModal = function(message) {
