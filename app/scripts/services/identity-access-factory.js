@@ -14,16 +14,19 @@ angular.module('ts5App')
 
       var tempToken;
 
+      // Timer data used to automatically log out user after X period of time
+      var timerInterval = null;
       var timerStates = {
         PENDING: 0,
         STARTED: 1
       };
       var timerState = timerStates.PENDING;
-      var timerInterval = null;
-      var sessionTTLInMinutes = null;
-      var sessionTTLCounter = null;
+      var checkIntervalInSeconds = 5;
+      var timeoutSessionAfterMinutes = null;
+      var sessionSecondsLeft = null;
 
       setSessionTTLInMinutes(8*60); // 8 hours default
+      // End timer data
 
       function changePassword(credentials, sessionToken) {
         var payload = {
@@ -69,8 +72,8 @@ angular.module('ts5App')
       }
 
       function setSessionTTLInMinutes(minutes) {
-        sessionTTLInMinutes = minutes;
-        sessionTTLCounter = sessionTTLInMinutes * 60;
+        timeoutSessionAfterMinutes = minutes;
+        sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
       }
 
       function stopSessionTimeoutTimer() {
@@ -86,12 +89,16 @@ angular.module('ts5App')
           return;
         }
 
-        timerInterval = $interval(callback, 5000);
+        timerInterval = $interval(checkForSessionTimeout, checkIntervalInSeconds * 1000);
         this.state = timerStates.STARTED;
       }
 
       function checkForSessionTimeout() {
-        if (sessionTTLInMinutes)
+        if (sessionSecondsLeft < 0) {
+          logoutDueTheSessionTimeout();
+        }
+
+        sessionSecondsLeft = sessionSecondsLeft - checkIntervalInSeconds;
       }
 
       function getSessionObject() {
