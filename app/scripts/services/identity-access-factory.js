@@ -34,10 +34,12 @@ angular.module('ts5App')
       }
 
       function logoutFromSystem() {
+        stopSessionTimeoutTimer();
         identityAccessService.logout();
       }
 
       function logout() {
+        stopSessionTimeoutTimer();
         $window.localStorage.clear();
         $localStorage.$reset();
         delete $http.defaults.headers.common.userId;
@@ -49,10 +51,15 @@ angular.module('ts5App')
       }
 
       function logoutDueTheSessionTimeout() {
-        logout();
+        logoutFromSystem();
 
         console.log('show modal here');
       }
+
+      function stopSessionTimeoutTimer() {
+
+      }
+
 
       function getSessionObject() {
         if ($localStorage.sessionObject) {
@@ -188,6 +195,8 @@ angular.module('ts5App')
           }
 
         }
+
+        console.log(dataFromAPI)
 
         setSessionData(sessionObject);
       }
