@@ -15,15 +15,15 @@ angular.module('ts5App')
       var tempToken;
 
       // Timer data used to automatically log out user after X period of time
-      var timerInterval = null;
+      var timerInterval;
       var timerStates = {
         PENDING: 0,
         STARTED: 1
       };
       var timerState = timerStates.PENDING;
       var checkIntervalInSeconds = 5;
-      var timeoutSessionAfterMinutes = null;
-      var sessionSecondsLeft = null;
+      var timeoutSessionAfterMinutes;
+      var sessionSecondsLeft;
 
       setSessionTTLInMinutes(8*60); // 8 hours default
       // End timer data
@@ -244,8 +244,10 @@ angular.module('ts5App')
 
         }
 
-        if (dataFromAPI[2].misc && dataFromAPI[2].timeoutMin) {
-          setSessionTTLInMinutes(dataFromAPI[2].timeoutMin);
+        if (dataFromAPI[2].misc && dataFromAPI[2].misc.timeoutMin) {
+          var sessionTimeoutInMinutes = dataFromAPI[2].misc.timeoutMin;
+          console.log('Configuration loaded and set to ' + sessionTimeoutInMinutes)
+          setSessionTTLInMinutes(sessionTimeoutInMinutes);
           startSessionTimeoutTimer();
         }
 
