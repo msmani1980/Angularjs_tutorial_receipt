@@ -25,7 +25,8 @@ angular.module('ts5App')
       var timeoutSessionAfterMinutes;
       var sessionSecondsLeft;
 
-      setSessionTTLInMinutes(8*60); // 8 hours default
+      loadSessionTimerConfiguration();
+      startSessionTimeoutTimer();
       // End timer data
 
       function changePassword(credentials, sessionToken) {
@@ -48,8 +49,9 @@ angular.module('ts5App')
       }
 
       function logoutFromSystem() {
-        stopSessionTimeoutTimer();
-        identityAccessService.logout();
+        identityAccessService.logout().then(function () {
+          stopSessionTimeoutTimer();
+        });
       }
 
       function logout() {
@@ -65,17 +67,21 @@ angular.module('ts5App')
       }
 
       function logoutDueTheSessionTimeout() {
-        logoutFromSystem();
         logout();
 
         console.log('show modal here');
       }
 
-      function setSessionTTLInMinutes(minutes) {
-        timeoutSessionAfterMinutes = minutes;
-        sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
 
-        console.log('TTL set to ' + minutes + ' minutes')
+
+      function setSessionTTLInMinutes(ttlInMinutes, secondsLeft) {
+        timeoutSessionAfterMinutes = ttlInMinutes;
+        sessionSecondsLeft = secondsLeft || timeoutSessionAfterMinutes * 60;
+
+        $localStorage.timeoutSessionAfterMinutes = timeoutSessionAfterMinutes;
+        $localStorage.sessionSecondsLeft = sessionSecondsLeft;
+
+        console.log('TTL set to ' + ttlInMinutes + ' minutes')
       }
 
       function stopSessionTimeoutTimer() {
@@ -89,6 +95,8 @@ angular.module('ts5App')
       }
 
       function startSessionTimeoutTimer() {
+
+
         if (timerState !== timerStates.PENDING) {
           console.log('Start called but timer is already started')
           return;
@@ -100,12 +108,14 @@ angular.module('ts5App')
       }
 
       function checkForSessionTimeout() {
-        if (sessionSecondsLeft < 0) {
+        if (sessionSecondsLeft <= 0) {
           console.log('Logout reached')
           logoutDueTheSessionTimeout();
         }
 
         sessionSecondsLeft = sessionSecondsLeft - checkIntervalInSeconds;
+        $localStorage.sessionSecondsLeft = sessionSecondsLeft;
+
         console.log('Decrease session seconds left to ' + sessionSecondsLeft)
       }
 
