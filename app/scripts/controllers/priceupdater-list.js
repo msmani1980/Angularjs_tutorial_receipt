@@ -44,7 +44,7 @@ angular.module('ts5App')
   this.getPriceUpdateRuleSuccess = function(response) {
     $this.meta.count = $this.meta.count || response.meta.count;
     $scope.priceUpdateRules = $scope.priceUpdateRules.concat(response.response.map(function (priceupdater) {
-      priceupdater.taxIs = (priceupdater.taxFilter !== null) ? (priceupdater.taxFilter ? 'Included' : 'Excluded') : 'Exempt';
+      priceupdater.taxIs = (priceupdater.taxFilter !== null) ? (priceupdater.taxFilter ? 'Included' : 'Exempt') : 'Excluded';
       priceupdater.startDate = dateUtility.formatDateForApp(priceupdater.startDate);
       priceupdater.endDate = dateUtility.formatDateForApp(priceupdater.endDate);
       return priceupdater;
