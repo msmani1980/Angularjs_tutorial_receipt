@@ -52,6 +52,7 @@ angular.module('ts5App')
 
       function logoutDueTheSessionTimeout() {
         logoutFromSystem();
+        logout();
 
         console.log('show modal here');
       }
@@ -200,7 +201,9 @@ angular.module('ts5App')
 
         }
 
-        console.log(dataFromAPI)
+        if (dataFromAPI[2].misc && dataFromAPI[2].timeoutMin) {
+          // TODO: add timer
+        }
 
         setSessionData(sessionObject);
       }
