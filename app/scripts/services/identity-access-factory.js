@@ -95,7 +95,9 @@ angular.module('ts5App')
       }
 
       function startSessionTimeoutTimer() {
-
+        if (!isAuthorized()) {
+          return;
+        }
 
         if (timerState !== timerStates.PENDING) {
           console.log('Start called but timer is already started')
