@@ -19,6 +19,7 @@ angular.module('ts5App')
         STARTED: 1
       };
       var timerIntervalTimeout = 5000;
+      var timerState = timerStates.PENDING;
       var timerInterval = null;
 
       function changePassword(credentials, sessionToken) {
@@ -65,7 +66,11 @@ angular.module('ts5App')
       }
 
       function stopSessionTimeoutTimer() {
-
+        if (this.timerState !== timerStates.STARTED) {
+          return;
+        }
+        $interval.cancel(timerInterval);
+        this.timerState = timerStates.PENDING;
       }
 
 
