@@ -1,7 +1,7 @@
 <div class="module-container-epos-configuration">
   <error-dialog form-object="form" error-response="errorResponse" display="displayError">
   </error-dialog>
-  <form class="form-horizontal" name="reportOptions" ng-submit="saveBackOfficeConfig()">
+  <form ng-if="!isFeatureOptionsLoadingInProgress" class="form-horizontal" name="reportOptions" ng-submit="saveBackOfficeConfig()">
     <div class="modal-header">
       <h3 class="modal-title">{{selectedFeature.name}}</h3>
     </div>
