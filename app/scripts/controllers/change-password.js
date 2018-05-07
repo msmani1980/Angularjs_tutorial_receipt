@@ -129,14 +129,9 @@ angular.module('ts5App')
     function handleSuccessLoginResponse() {
       $this.showSuccessMessage('Password has been updated!');
 
-      // If password has been reset or initially set, login after successful change
-      if ($routeParams.sessionToken && !$scope.hasSessionToken) {
-        identityAccessFactory.login($scope.loginCredentials).then(function () {
-          $location.path('/#/');
-        });
-      } else {
+      identityAccessFactory.login($scope.loginCredentials).then(function () {
         $location.path('/#/');
-      }
+      });
     }
 
     function checkAuthSuccess(dataFromAPI) {
