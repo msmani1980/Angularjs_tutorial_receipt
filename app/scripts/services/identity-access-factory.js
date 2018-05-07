@@ -20,7 +20,10 @@ angular.module('ts5App')
       };
       var timerState = timerStates.PENDING;
       var timerInterval = null;
-      var sessionTTLInMinutes = 8*60; // 8 hours default
+      var sessionTTLInMinutes = null;
+      var sessionTTLCounter = null;
+
+      setSessionTTLInMinutes(8*60); // 8 hours default
 
       function changePassword(credentials, sessionToken) {
         var payload = {
@@ -65,6 +68,11 @@ angular.module('ts5App')
         console.log('show modal here');
       }
 
+      function setSessionTTLInMinutes(minutes) {
+        sessionTTLInMinutes = minutes;
+        sessionTTLCounter = sessionTTLInMinutes * 60;
+      }
+
       function stopSessionTimeoutTimer() {
         if (timerState !== timerStates.STARTED) {
           return;
@@ -83,7 +91,7 @@ angular.module('ts5App')
       }
 
       function checkForSessionTimeout() {
-
+        if (sessionTTLInMinutes)
       }
 
       function getSessionObject() {
