@@ -66,16 +66,21 @@ angular.module('ts5App')
       }
 
       function stopSessionTimeoutTimer() {
-        if (this.timerState !== timerStates.STARTED) {
+        if (timerState !== timerStates.STARTED) {
           return;
         }
         $interval.cancel(timerInterval);
-        this.timerState = timerStates.PENDING;
+        timerState = timerStates.PENDING;
       }
 
 
       function startSessionTimeoutTimer() {
+        if (timerState !== timerStates.PENDING) {
+          return;
+        }
 
+        timerInterval = $interval(callback, timerIntervalTimeout);
+        this.state = timerStates.STARTED;
       }
 
       function getSessionObject() {
