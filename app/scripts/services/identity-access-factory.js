@@ -237,7 +237,8 @@ angular.module('ts5App')
         }
 
         if (dataFromAPI[2].misc && dataFromAPI[2].timeoutMin) {
-          // TODO: add timer
+          setSessionTTLInMinutes(dataFromAPI[2].timeoutMin);
+          startSessionTimeoutTimer();
         }
 
         setSessionData(sessionObject);
