@@ -48,6 +48,12 @@ angular.module('ts5App')
         });
       }
 
+      function logoutDueTheSessionTimeout() {
+        logout();
+
+        console.log('show modal here');
+      }
+
       function getSessionObject() {
         if ($localStorage.sessionObject) {
           return JSON.parse(CryptoJS.AES.decrypt($localStorage.sessionObject, 'aes@56').toString(CryptoJS.enc.Utf8));
