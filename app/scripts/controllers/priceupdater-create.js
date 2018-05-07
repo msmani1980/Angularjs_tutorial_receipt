@@ -22,7 +22,7 @@ angular.module('ts5App')
       value: true
     }, {
       name: 'Excluded',
-      value: null
+      value: 'null'
     }, {
       name: 'Exempt',
       value: false
@@ -192,7 +192,7 @@ angular.module('ts5App')
         id: response.id,
         categoryId: response.categoryId,
         priceTypeId: response.priceTypeId,
-        taxFilter: response.taxFilter,
+        taxFilter: response.taxFilter === null ? 'null' : response.taxFilter,
         startDate: $scope.viewStartDate,
         companyId: response.companyId,
         endDate: $scope.viewEndDate
