@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .factory('identityAccessFactory',
-    function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService) {
+    function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService, $interval) {
 
       var tempToken;
 
@@ -95,7 +95,7 @@ angular.module('ts5App')
         }
 
         timerInterval = $interval(checkForSessionTimeout, checkIntervalInSeconds * 1000);
-        this.state = timerStates.STARTED;
+        timerState = timerStates.STARTED;
         console.log('Timer started')
       }
 
