@@ -14,6 +14,13 @@ angular.module('ts5App')
 
       var tempToken;
 
+      var timerStates = {
+        PENDING: 0,
+        STARTED: 1
+      };
+      var timerIntervalTimeout = 5000;
+      var timerInterval = null;
+
       function changePassword(credentials, sessionToken) {
         var payload = {
           username: credentials.username.toLowerCase(),
