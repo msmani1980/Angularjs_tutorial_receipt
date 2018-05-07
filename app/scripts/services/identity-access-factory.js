@@ -61,6 +61,10 @@ angular.module('ts5App')
       }
 
 
+      function startSessionTimeoutTimer() {
+
+      }
+
       function getSessionObject() {
         if ($localStorage.sessionObject) {
           return JSON.parse(CryptoJS.AES.decrypt($localStorage.sessionObject, 'aes@56').toString(CryptoJS.enc.Utf8));
