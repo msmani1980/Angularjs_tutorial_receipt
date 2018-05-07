@@ -18,9 +18,9 @@ angular.module('ts5App')
         PENDING: 0,
         STARTED: 1
       };
-      var timerIntervalTimeout = 5000;
       var timerState = timerStates.PENDING;
       var timerInterval = null;
+      var sessionTTLInMinutes = 8*60; // 8 hours default
 
       function changePassword(credentials, sessionToken) {
         var payload = {
@@ -73,14 +73,17 @@ angular.module('ts5App')
         timerState = timerStates.PENDING;
       }
 
-
       function startSessionTimeoutTimer() {
         if (timerState !== timerStates.PENDING) {
           return;
         }
 
-        timerInterval = $interval(callback, timerIntervalTimeout);
+        timerInterval = $interval(callback, 5000);
         this.state = timerStates.STARTED;
+      }
+
+      function checkForSessionTimeout() {
+
       }
 
       function getSessionObject() {
