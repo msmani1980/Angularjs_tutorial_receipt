@@ -248,6 +248,7 @@ angular.module('ts5App')
 
       $rootScope.$on('logout', logout);
       $rootScope.$on('unauthorized', logout);
+      $rootScope.$on('http-session-timeout', logoutDueTheSessionTimeout);
       $rootScope.$on('$locationChangeStart', locationChangeHandler);
       setSessionHeaders();
 
