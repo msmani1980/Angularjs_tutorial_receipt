@@ -74,31 +74,39 @@ angular.module('ts5App')
       function setSessionTTLInMinutes(minutes) {
         timeoutSessionAfterMinutes = minutes;
         sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
+
+        console.log('TTL set to ' + minutes + ' minutes')
       }
 
       function stopSessionTimeoutTimer() {
         if (timerState !== timerStates.STARTED) {
+          console.log('Stop called but timer is not started')
           return;
         }
         $interval.cancel(timerInterval);
         timerState = timerStates.PENDING;
+        console.log('Timer stopped')
       }
 
       function startSessionTimeoutTimer() {
         if (timerState !== timerStates.PENDING) {
+          console.log('Start called but timer is already started')
           return;
         }
 
         timerInterval = $interval(checkForSessionTimeout, checkIntervalInSeconds * 1000);
         this.state = timerStates.STARTED;
+        console.log('Timer started')
       }
 
       function checkForSessionTimeout() {
         if (sessionSecondsLeft < 0) {
+          console.log('Logout reached')
           logoutDueTheSessionTimeout();
         }
 
         sessionSecondsLeft = sessionSecondsLeft - checkIntervalInSeconds;
+        console.log('Decrease session seconds left to ' + sessionSecondsLeft)
       }
 
       function getSessionObject() {
