@@ -195,6 +195,7 @@ angular.module('ts5App')
 
       function broadcastSuccess(companyData) {
         $location.search('username', null);
+        $location.search('sessionTimeout', null);
         $rootScope.$broadcast('authorized');
         $rootScope.$broadcast('company-fetched', companyData);
       }
