@@ -62,10 +62,6 @@ angular.module('ts5App')
       identityAccessFactory.login($scope.credentials);
     };
 
-    $scope.logoutDueTheSessionTimeoutModalDismiss = function () {
-      angular.element('#logout-due-the-session-timeout').modal('hide');
-    };
-
     $rootScope.$on('authorized', hideLoadingModal);
     $rootScope.$on('un-authorized', handleResponseError);
   });
