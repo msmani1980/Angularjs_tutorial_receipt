@@ -64,11 +64,21 @@ angular.module('ts5App')
       $scope.displayError = true;
     }
 
+    function handleNewPasswordSameAsCurrent() {
+      $scope.errorCustom = [
+        {
+          field: 'Password',
+          value: 'New password and current password can not be equal.'
+        }
+      ];
+      $scope.displayError = true;
+    }
+
     function handlePasswordUsernameMatch() {
       $scope.errorCustom = [
         {
           field: 'Password',
-          value: 'Username and password can not be equal'
+          value: 'Username and password can not be equal.'
         }
       ];
       $scope.displayError = true;
@@ -104,8 +114,14 @@ angular.module('ts5App')
       $scope.currentPasswordWrong = false;
 
       if ($scope.credentials.newPassword !== $scope.credentials.newPasswordConfirm) {
-        $scope.passwordMismatch = true;
+        $scope.errorNewPasswordFields = true;
         handlePasswordMismatch();
+        return;
+      }
+
+      if ($scope.credentials.currentPassword === $scope.credentials.newPassword) {
+        $scope.errorNewPasswordFields = true;
+        handleNewPasswordSameAsCurrent();
         return;
       }
 
