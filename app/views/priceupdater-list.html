@@ -84,10 +84,8 @@
           <th>Tax Is</th>
           <th>Start Date</th>
           <th>End Date</th>
-          <th>Created User</th>
-          <th>Last Updated User</th>
-          <th>Created Date/Time</th>
           <th>Updated Date/Time</th>
+          <th>Updated User</th>
           <th>Actions</th>
         </tr>
         </thead>
@@ -101,10 +99,8 @@
           <td>{{ priceupdater.taxIs }}</td>
           <td>{{ priceupdater.startDate}}</td>
           <td>{{ priceupdater.endDate}}</td>
-          <td>{{ priceupdater.createdByPerson.userName }}</td>
-          <td>{{ priceupdater.updatedByPerson.userName }}</td>
-          <td>{{ loadCreatedOn(priceupdater) }}</td>
           <td>{{ loadUpdatedOn(priceupdater) }}</td>
+          <td>{{ loadUpdatedBy(priceupdater) }}</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="redirectToPriceUpdateRule(priceupdater.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
