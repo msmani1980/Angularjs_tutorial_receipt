@@ -17,16 +17,20 @@ angular.module('ts5App')
     $scope.viewName = 'Back Office Configuration';
     $scope.portalConfigurationFeatures = [
       {
-        name: 'Cash Bag Configuration'
+        name: 'Cash Bag Configuration',
+        title: 'Cash Bag Configuration'
       },
       {
-        name: 'PreOrder Configuration'
+        name: 'PreOrder Configuration',
+        title: 'PreOrder Configuration'
       },
       {
-        name: 'StationOps Configuration'
+        name: 'StationOps Configuration',
+        title: 'Station Operation Configuration'
       },
       {
-        name: 'Reconcile Configuration'
+        name: 'Reconcile Configuration',
+        title: 'Reconcile Configuration'
       }
     ];
 

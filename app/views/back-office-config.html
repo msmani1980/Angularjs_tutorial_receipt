@@ -3,7 +3,7 @@
   </error-dialog>
   <form ng-if="!isFeatureOptionsLoadingInProgress" class="form-horizontal" name="reportOptions" ng-submit="saveBackOfficeConfig()">
     <div class="modal-header">
-      <h3 class="modal-title">{{selectedFeature.name}}</h3>
+      <h3 class="modal-title">{{selectedFeature.title}}</h3>
     </div>
     <fieldset ng-if="!isFeatureOptionsLoadingInProgress">
       <div class="form-group col-sm-12 back-office-option-container" ng-repeat="option in configOptions">
@@ -24,7 +24,6 @@
           </label>
           <label ng-if="option.inputType === 'SELECT'" class="radio-custom radio-inline col-sm-12 back-office-select"  >
             <select ng-disabled="!isCRUD" name="{{option.ngModelIdentifier}}" ng-model="formData[option.ngModelIdentifier].value" class="inline form-control col-sm-2" >
-              <option value=""></option>
               <option ng-repeat="optionValue in option.values"
                       value="{{ optionValue.choiceCode }}">{{ optionValue.name }}
               </option>
