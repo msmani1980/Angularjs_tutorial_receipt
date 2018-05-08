@@ -114,13 +114,13 @@ angular.module('ts5App')
       $scope.currentPasswordWrong = false;
 
       if ($scope.credentials.newPassword !== $scope.credentials.newPasswordConfirm) {
-        $scope.passwordMismatch = true;
+        $scope.errorNewPasswordFields = true;
         handlePasswordMismatch();
         return;
       }
 
       if ($scope.credentials.currentPassword === $scope.credentials.newPassword) {
-        $scope.passwordMismatch = true;
+        $scope.errorNewPasswordFields = true;
         handleNewPasswordSameAsCurrent();
         return;
       }
