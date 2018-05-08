@@ -120,6 +120,10 @@ angular.module('ts5App')
         console.log('Timer started')
       }
 
+      function resetSessionTimeoutTimer() {
+        sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
+      }
+
       function checkForSessionTimeout() {
         if (sessionSecondsLeft <= 0) {
           console.log('Logout reached')
