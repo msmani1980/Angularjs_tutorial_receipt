@@ -25,14 +25,9 @@ angular.module('ts5App')
       var timeoutSessionAfterMinutes;
       var sessionSecondsLeft;
 
+      bindSessionTimerResetOnEvents();
       loadSessionTimerConfiguration();
       startSessionTimeoutTimer();
-
-      var bodyElement = angular.element($document);
-      angular.forEach(['keydown', 'keyup', 'click', 'mousedown', 'touchstart', 'touchmove', 'focus'],
-        function(EventName) {
-          bodyElement.bind(EventName, function (e) { resetSessionTimeoutTimer(e) });
-        });
       // End timer data
 
       function changePassword(credentials, sessionToken) {
@@ -82,6 +77,14 @@ angular.module('ts5App')
         logout(true);
 
         console.log('show modal here');
+      }
+
+      function bindSessionTimerResetOnEvents() {
+        var bodyElement = angular.element($document);
+        angular.forEach(['keydown', 'keyup', 'click', 'mousedown', 'touchstart', 'touchmove', 'focus'],
+          function(EventName) {
+            bodyElement.bind(EventName, function (e) { resetSessionTimeoutTimer(e) });
+          });
       }
 
       function loadSessionTimerConfiguration() {
