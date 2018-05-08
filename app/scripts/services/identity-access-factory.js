@@ -65,7 +65,7 @@ angular.module('ts5App')
         delete $http.defaults.headers.common.sessionToken;
 
         $timeout(function () {
-          if (sessionTimeoutHappened) {
+          if (sessionTimeoutHappened === true) {
             $location.path('/login').search({sessionTimeout: 'true'});
           } else {
             $location.path('/login');
