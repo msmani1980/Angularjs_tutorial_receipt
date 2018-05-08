@@ -104,12 +104,19 @@ angular.module('ts5App')
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
 
       //this.setStationRelationships(station);
-
-      $scope.dataReady = true;
     };
 
     this.getStation = function(id) {
-      stationsFactory.getCompanyStation(id).then($this.setStation);
+      return stationsFactory.getCompanyStation(id).then($this.setStation);
+    };
+
+    this.setStationValidationDates = function(dataFromAPI) {
+      $scope.maxStartDate = dataFromAPI.startDate ? dateUtility.formatDateForApp(dataFromAPI.startDate) : null;
+      $scope.minEndDate = dataFromAPI.endDate ? dateUtility.formatDateForApp(dataFromAPI.endDate) : null;
+    };
+
+    this.getStationValidationDates = function(id) {
+      return stationsFactory.getCompanyStationValidationDates(id).then($this.setStationValidationDates);
     };
 
     this.showSuccessMessage = function(message) {
@@ -132,8 +139,55 @@ angular.module('ts5App')
       return parseInt(record.cityId) === parseInt($scope.formData.city.cityId);
     };
 
+    this.isEndDateBeforeMinEndDate = function() {
+      if (!$scope.minEndDate) {
+        return false;
+      }
+
+      return !dateUtility.isAfterOrEqual($scope.formData.endDate, $scope.minEndDate);
+    };
+
+    this.isStartDateAfterMaxStartDate = function() {
+      if (!$scope.maxStartDate) {
+        return false;
+      }
+
+      return !dateUtility.isBeforeOrEqual($scope.formData.startDate, $scope.maxStartDate);
+    };
+
+    this.dateActive = function(date) {
+      return dateUtility.isTodayOrEarlierDatePicker(date);
+    };
+
+    this.isInFutureWithMaxStartDateBeforeToday = function(maxStartDate, effectiveStartDate) {
+      if (!maxStartDate) {
+        return false;
+      }
+
+      return dateUtility.isYesterdayOrEarlierDatePicker(maxStartDate) && !$this.dateActive(effectiveStartDate);
+    };
+
     this.validateForm = function() {
       $scope.displayError = $scope.stationCreateForm.$invalid;
+
+      if (this.isEndDateBeforeMinEndDate()) {
+        $scope.errorCustom = [{
+          field: 'Effective To',
+          value: 'Can\'t be before ' + $scope.minEndDate
+        }];
+        $scope.displayError = true;
+        return false;
+      }
+
+      if (this.isStartDateAfterMaxStartDate()) {
+        $scope.errorCustom = [{
+          field: 'Effective From',
+          value: 'Can\'t be after ' + $scope.maxStartDate
+        }];
+        $scope.displayError = true;
+        return false;
+      }
+
       return $scope.stationCreateForm.$valid;
     };
 
@@ -261,7 +315,13 @@ angular.module('ts5App')
 
     this.initSuccessHandler = function() {
       if ($routeParams.id) {
-        $this.getStation($routeParams.id);
+        $q.all([
+          $this.getStation($routeParams.id),
+          $this.getStationValidationDates($routeParams.id)
+        ]).then(function () {
+          $scope.dataReady = true;
+        });
+
         $this.setFormAsEdit();
         return false;
       }
@@ -316,6 +376,10 @@ angular.module('ts5App')
 
     $scope.isDisabled = function() {
       return $scope.shouldDisableStartDate || $this.viewOnly;
+    };
+
+    $scope.isInFutureWithMaxStartDateBeforeToday = function(maxStartDate, effectiveStartDate) {
+      return $this.isInFutureWithMaxStartDateBeforeToday(maxStartDate, effectiveStartDate);
     };
 
     $scope.autocompleteCities = function($select, $event) {

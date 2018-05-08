@@ -30,6 +30,12 @@ angular.module('ts5App')
         station.startDate = dateUtility.formatDateForApp(station.startDate);
         station.endDate = dateUtility.formatDateForApp(station.endDate);
 
+        if (station.usageValidations) {
+          station.hasUsageValidations = true;
+          station.maxStartDate = dateUtility.formatDateForApp(station.usageValidations.startDate);
+          station.minEndDate = dateUtility.formatDateForApp(station.usageValidations.endDate);
+        }
+
         return station;
       }));
     };
@@ -140,6 +146,14 @@ angular.module('ts5App')
       return dateUtility.isTodayOrEarlierDatePicker(date);
     };
 
+    this.isInFutureWithMaxStartDateBeforeToday = function(maxStartDate, effectiveStartDate) {
+      if (!maxStartDate) {
+        return false;
+      }
+
+      return dateUtility.isYesterdayOrEarlierDatePicker(maxStartDate) && !$this.dateActive(effectiveStartDate);
+    };
+
     this.canEdit = function (endDate) {
       return dateUtility.isYesterdayOrEarlierDatePicker(endDate);
     };
@@ -209,6 +223,8 @@ angular.module('ts5App')
     };
 
     this.saveStations = function() {
+      $scope.displayError = false;
+
       this.displayLoadingModal('Saving stations');
 
       var payload = {
@@ -232,7 +248,13 @@ angular.module('ts5App')
       }
     };
 
-    this.saveStation = function(index) {
+    this.saveStation = function(index, isDisabled) {
+      if (isDisabled) {
+        return;
+      }
+
+      $scope.displayError = false;
+
       var station = $scope.formData.stations[index];
 
       this.displayLoadingModal('Saving stations');
@@ -410,8 +432,12 @@ angular.module('ts5App')
       });
     };
 
-    this.removeStationFailure = function () {
-      $this.showToast('danger', 'Station', 'Error deleting station!');
+    this.removeStationFailure = function (dataFromAPI) {
+      if (dataFromAPI && dataFromAPI.data && dataFromAPI.data.length > 0 && dataFromAPI.data[0].code === '006') {
+        $this.showToast('danger', 'Station', 'Can\'t delete this station! Station is in use.');
+      } else {
+        $this.showToast('danger', 'Station', 'Error deleting station!');
+      }
     };
 
     this.makeInitPromises = function() {
@@ -504,8 +530,8 @@ angular.module('ts5App')
       return $this.submitForm();
     };
 
-    $scope.saveStation = function(index) {
-      $this.saveStation(index);
+    $scope.saveStation = function(index, isDisabled) {
+      $this.saveStation(index, isDisabled);
     };
 
     $scope.filterByCountry = function(record) {
@@ -520,6 +546,10 @@ angular.module('ts5App')
       return $this.dateActive(date);
     };
 
+    $scope.isInFutureWithMaxStartDateBeforeToday = function(maxStartDate, effectiveStartDate) {
+      return $this.isInFutureWithMaxStartDateBeforeToday(maxStartDate, effectiveStartDate);
+    };
+
     $scope.canEdit = function (endDate) {
       return $this.canEdit(endDate);
     };
@@ -527,7 +557,11 @@ angular.module('ts5App')
     $scope.removeRecord = function (stationId) {
       $this.displayLoadingModal('Removing Station id');
 
-      stationsFactory.removeStation(stationId).then($this.removeStationSuccess(stationId), $this.removeStationFailure).finally($this.hideLoadingModal);
+      stationsFactory.removeStation(stationId)
+        .then(function () {
+            return $this.removeStationSuccess(stationId);
+          }, $this.removeStationFailure)
+        .finally($this.hideLoadingModal);
     };
 
     $scope.exportTo = function(type) {

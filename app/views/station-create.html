@@ -104,14 +104,27 @@
 
       <div class="col-xs-12 col-sm-6">
         <date-picker-field
-          ng-if="dataReady"
-          disable="isDisabled()"
+          ng-if="dataReady && !isInFutureWithMaxStartDateBeforeToday(maxStartDate, formData.startDate)"
+          disable="isDisabled() || isInFutureWithMaxStartDateBeforeToday(maxStartDate, formData.startDate)"
           form="stationCreateForm"
           name="EffectiveFrom"
           label="Effective From"
           disable-past="true"
           required="true"
-          ng-model="formData.startDate">
+          ng-model="formData.startDate"
+          end-date="maxStartDate">
+        </date-picker-field>
+        <date-picker-field
+          ng-if="dataReady && isInFutureWithMaxStartDateBeforeToday(maxStartDate, formData.startDate)"
+          disable="isDisabled() || isInFutureWithMaxStartDateBeforeToday(maxStartDate, formData.startDate)"
+          form="stationCreateForm"
+          name="EffectiveFrom"
+          label="Effective From"
+          disable-past="true"
+          required="true"
+          ng-model="formData.startDate"
+          end-date="maxStartDate"
+          data-toggle="tooltip" data-placement="left" title="Disabled since this company station is already in use">
         </date-picker-field>
       </div>
 
@@ -125,7 +138,8 @@
           ng-model="formData.endDate"
           disable-past="true"
           end-current-effective="editingItem && shouldDisableStartDate"
-          required="true">
+          required="true"
+          start-date="minEndDate">
         </date-picker-field>
       </div>
     </div>
@@ -144,9 +158,9 @@
           <select class="form-control" name="isCaterer" required="true" ng-model="formData.isCaterer" ng-options="item as item.name for item in isCatererDropdownOptions">
             <option value="">Is Catering Station?</option>
           </select>
-          <span ng-show="formData.isCaterer">This is <span ng-show="!formData.isCaterer.value">not</span> a Catering Station<span>
+          <span ng-show="formData.isCaterer">This is <span ng-show="!formData.isCaterer.value">not</span> a Catering Station</span>
 
-       </fieldset>
+        </fieldset>
 
       </div>
 

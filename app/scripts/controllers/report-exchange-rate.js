@@ -25,6 +25,17 @@ angular.module('ts5App')
     $scope.reportExchngeRateType = 2;
     $scope.isSearch = false;
 
+    $scope.countOfValidExchangeRates = function () {
+      var count = 0;
+      angular.forEach($scope.companyExchangeRates, function(er) {
+        if ($scope.companyExchangeRateFilter(er)) {
+          count = count + 1;
+        }
+      });
+
+      return count;
+    };
+
     $scope.companyExchangeRateFilter = function(exchangeRate) {
       if (!$scope.search.acceptedCurrencies || $scope.search.acceptedCurrencies.length === 0) {
         return true;
@@ -67,7 +78,7 @@ angular.module('ts5App')
        .sort($this.sortDenominationByValue)
        .join(', ');
     };
-      
+
     this.getDetailedCompanyCurrenciesForSearch = function() {
       currencyFactory.getDetailedCompanyCurrencies().then(function(companyCurrencyListFromAPI) {
         $scope.detailedCompanyCurrenciesForSearch = payloadUtility.deserializeDates(companyCurrencyListFromAPI.companyCurrencies);
@@ -360,9 +371,9 @@ angular.module('ts5App')
       $this.showToast('success', 'Report Exchange Rate', 'Report Exchange rate successfully deleted!');
       $scope.searchCompanyReportExchangeRates();
     };
-    
+
     this.deleteFailure = function() {
-      $this.hideLoadingModal();  
+      $this.hideLoadingModal();
       $this.showToastMessage('danger', 'Report Exchange Rate', 'Report Exchange rate could not be deleted');
     };
 
@@ -371,7 +382,7 @@ angular.module('ts5App')
         companyId: $this.companyId,
         id: exchangeRate.id
       };
-      
+
       $this.showLoadingModal('Removing Report Exchange Record');
       currencyFactory.deleteCompanyExchangeRate(payload).then($this.deleteSuccess, $this.deleteFailure);
     };
