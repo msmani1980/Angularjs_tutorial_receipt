@@ -225,11 +225,11 @@ angular.module('ts5App')
   };
 
   $scope.loadUpdatedOn = function (priceupdater) {
-    return priceupdater.updatedOn ? dateUtility.formatTimestampForApp(priceupdater.updatedOn) : null;
+    return priceupdater.updatedOn ? dateUtility.formatTimestampForApp(priceupdater.updatedOn) : dateUtility.formatTimestampForApp(priceupdater.createdOn);
   };
 
-  $scope.loadCreatedOn = function (priceupdater) {
-    return priceupdater.createdOn ? dateUtility.formatTimestampForApp(priceupdater.createdOn) : null;
+  $scope.loadUpdatedBy = function (priceupdater) {
+    return priceupdater.updatedByPerson ? priceupdater.updatedByPerson.userName : priceupdater.createdByPerson.userName;
   };
 
   this.makeInitPromises = function() {
