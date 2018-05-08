@@ -79,19 +79,18 @@ angular.module('ts5App')
       }
 
       function loadSessionTimerConfiguration() {
-        if ($localStorage.timeoutSessionAfterMinutes && $localStorage.sessionSecondsLeft) {
-          setSessionTTLInMinutes(parseInt($localStorage.timeoutSessionAfterMinutes), parseInt($localStorage.sessionSecondsLeft));
+        if ($localStorage.timeoutSessionAfterMinutes) {
+          setSessionTTLInMinutes(parseInt($localStorage.timeoutSessionAfterMinutes));
         } else {
           setSessionTTLInMinutes(8 * 60); // 8 hours default
         }
       }
 
-      function setSessionTTLInMinutes(ttlInMinutes, secondsLeft) {
+      function setSessionTTLInMinutes(ttlInMinutes) {
         timeoutSessionAfterMinutes = ttlInMinutes;
-        sessionSecondsLeft = secondsLeft || timeoutSessionAfterMinutes * 60;
+        sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
 
         $localStorage.timeoutSessionAfterMinutes = timeoutSessionAfterMinutes;
-        $localStorage.sessionSecondsLeft = sessionSecondsLeft;
 
         console.log('TTL set to ' + ttlInMinutes + ' minutes')
       }
@@ -128,7 +127,6 @@ angular.module('ts5App')
         }
 
         sessionSecondsLeft = sessionSecondsLeft - checkIntervalInSeconds;
-        $localStorage.sessionSecondsLeft = sessionSecondsLeft;
 
         console.log('Decrease session seconds left to ' + sessionSecondsLeft)
       }
