@@ -54,20 +54,26 @@ angular.module('ts5App')
         });
       }
 
-      function logout() {
+      function logout(sessionTimeoutHappened) {
         stopSessionTimeoutTimer();
+
         $window.localStorage.clear();
         $localStorage.$reset();
         delete $http.defaults.headers.common.userId;
         delete $http.defaults.headers.common.companyId;
         delete $http.defaults.headers.common.sessionToken;
+
         $timeout(function () {
-          $location.path('/login');
+          if (sessionTimeoutHappened) {
+            $location.path('/login').search({sessionTimeout: 'true'});
+          } else {
+            $location.path('/login');
+          }
         });
       }
 
       function logoutDueTheSessionTimeout() {
-        logout();
+        logout(true);
 
         console.log('show modal here');
       }
