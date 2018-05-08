@@ -154,6 +154,8 @@ angular.module('ts5App')
           });
         });
       });
+
+      $scope.selectFeature($scope.portalConfigurationFeatures[0], false);
     };
 
     this.setCompanyPreferences = function(reponseData) {
