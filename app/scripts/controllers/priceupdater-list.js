@@ -70,7 +70,10 @@ angular.module('ts5App')
     
     payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
     payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
-        
+    if (payload.taxFilter === undefined) {
+      payload.taxAll = true;   
+    }
+
     priceupdaterFactory.getPriceUpdaterRules(payload).then($this.getPriceUpdateRuleSuccess);
     $this.meta.offset += $this.meta.limit;
     $scope.allCheckboxesSelected = false;
