@@ -50,6 +50,25 @@
   </form>
 </div>
 
+<div id="logout-due-the-session-timeout" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Session expired!</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>You have been logged out due to inactivity</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" ng-click="logoutDueTheSessionTimeoutModalDismiss()" class="btn btn-default">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <eula-confirmation-modal
   title="End User License Agreement"
   body="{{eula}}"
