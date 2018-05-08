@@ -10,7 +10,7 @@
  */
 angular.module('ts5App')
   .factory('identityAccessFactory',
-    function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService, $interval) {
+    function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService, $interval, $document) {
 
       var tempToken;
 
@@ -27,6 +27,12 @@ angular.module('ts5App')
 
       loadSessionTimerConfiguration();
       startSessionTimeoutTimer();
+
+      var bodyElement = angular.element($document);
+      angular.forEach(['keydown', 'keyup', 'click', 'mousemove', 'DOMMouseScroll', 'mousewheel', 'mousedown', 'touchstart', 'touchmove', 'scroll', 'focus'],
+        function(EventName) {
+          bodyElement.bind(EventName, function (e) { resetSessionTimeoutTimer(e) });
+        });
       // End timer data
 
       function changePassword(credentials, sessionToken) {
@@ -121,6 +127,7 @@ angular.module('ts5App')
       }
 
       function resetSessionTimeoutTimer() {
+        console.log('Timer reset')
         sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
       }
 
