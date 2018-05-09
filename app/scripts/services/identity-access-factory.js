@@ -98,8 +98,6 @@ angular.module('ts5App')
         sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
 
         $localStorage.timeoutSessionAfterMinutes = timeoutSessionAfterMinutes;
-
-        console.log('TTL set to ' + ttlInMinutes + ' minutes')
       }
 
       function stopSessionTimeoutTimer() {
