@@ -119,7 +119,6 @@ angular.module('ts5App')
 
         timerInterval = $interval(checkForSessionTimeout, checkIntervalInSeconds * 1000);
         timerState = timerStates.STARTED;
-        console.log('Timer started')
       }
 
       function resetSessionTimeoutTimer() {
