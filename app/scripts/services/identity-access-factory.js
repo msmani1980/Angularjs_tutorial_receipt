@@ -75,8 +75,6 @@ angular.module('ts5App')
 
       function logoutDueTheSessionTimeout() {
         logout(true);
-
-        console.log('show modal here');
       }
 
       function bindSessionTimerResetOnEvents() {
