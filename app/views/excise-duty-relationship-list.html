@@ -126,6 +126,7 @@
     </form>
 
     <div class="panel panel-default no-transition" id="search-collapse">
+      <form class="form" ng-submit="searchItemExciseData()">
       <div class="panel-body">
         <h4>Search Excise Duty Records</h4>
         <hr>
@@ -191,8 +192,9 @@
       </div>
       <div class="panel-footer text-right">
         <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-        <button type="button" class="btn btn-primary" ng-click="searchItemExciseData()">Search</button>
+        <button type="submit" class="btn btn-primary" >Search</button>
       </div>
+      </form>>
     </div>
     <br>
 
