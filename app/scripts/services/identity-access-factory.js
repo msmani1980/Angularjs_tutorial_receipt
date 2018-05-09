@@ -271,7 +271,6 @@ angular.module('ts5App')
 
         if (dataFromAPI[2].misc && dataFromAPI[2].misc.timeoutMin) {
           var sessionTimeoutInMinutes = dataFromAPI[2].misc.timeoutMin;
-          console.log('Configuration loaded and set to ' + sessionTimeoutInMinutes)
           setSessionTTLInMinutes(sessionTimeoutInMinutes);
           startSessionTimeoutTimer();
         }
