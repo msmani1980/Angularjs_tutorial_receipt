@@ -102,12 +102,10 @@ angular.module('ts5App')
 
       function stopSessionTimeoutTimer() {
         if (timerState !== timerStates.STARTED) {
-          console.log('Stop called but timer is not started')
           return;
         }
         $interval.cancel(timerInterval);
         timerState = timerStates.PENDING;
-        console.log('Timer stopped')
       }
 
       function startSessionTimeoutTimer() {
