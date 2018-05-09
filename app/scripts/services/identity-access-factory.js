@@ -25,10 +25,6 @@ angular.module('ts5App')
       };
       var timerState = timerStates.PENDING;
       var checkIntervalInSeconds = 5;
-
-      bindSessionTimerResetOnEvents();
-      loadSessionTimerConfiguration();
-      startSessionTimer();
       // End timer data
 
       function changePassword(credentials, sessionToken) {
@@ -345,6 +341,10 @@ angular.module('ts5App')
       $rootScope.$on('http-session-timeout', logoutDueTheSessionTimeout);
       $rootScope.$on('$locationChangeStart', locationChangeHandler);
       setSessionHeaders();
+
+      bindSessionTimerResetOnEvents();
+      loadSessionTimerConfiguration();
+      startSessionTimer();
 
       return {
         login: login,
