@@ -114,7 +114,6 @@ angular.module('ts5App')
         }
 
         if (timerState !== timerStates.PENDING) {
-          console.log('Start called but timer is already started')
           return;
         }
 
