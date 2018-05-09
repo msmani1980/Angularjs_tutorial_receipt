@@ -16,14 +16,15 @@ angular.module('ts5App')
 
       // Timer data used to automatically log out user after X period of time
       var timerInterval;
+      var timeoutSessionAfterMinutes;
+      var sessionSecondsLeft;
+
       var timerStates = {
         PENDING: 0,
         STARTED: 1
       };
       var timerState = timerStates.PENDING;
       var checkIntervalInSeconds = 5;
-      var timeoutSessionAfterMinutes;
-      var sessionSecondsLeft;
 
       bindSessionTimerResetOnEvents();
       loadSessionTimerConfiguration();
