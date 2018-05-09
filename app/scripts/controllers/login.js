@@ -1,5 +1,4 @@
 'use strict';
-var $ = require('jquery');
 
 /**
  * @ngdoc function
@@ -17,7 +16,7 @@ angular.module('ts5App')
     };
 
     if ($routeParams.sessionTimeout) {
-      $('.modal').modal('hide');
+      angular.element('.modal').modal('hide');
       angular.element('#logout-due-the-session-timeout').modal('show');
     }
 
