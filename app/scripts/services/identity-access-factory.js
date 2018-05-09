@@ -52,12 +52,12 @@ angular.module('ts5App')
 
       function logoutFromSystem() {
         identityAccessService.logout().then(function () {
-          stopSessionTimeoutTimer();
+          stopSessionTimer();
         });
       }
 
       function logout(sessionTimeoutHappened) {
-        stopSessionTimeoutTimer();
+        stopSessionTimer();
 
         $window.localStorage.clear();
         $localStorage.$reset();
@@ -82,7 +82,7 @@ angular.module('ts5App')
         var bodyElement = angular.element($document);
         angular.forEach(['keydown', 'keyup', 'click', 'mousedown', 'touchstart', 'touchmove', 'focus'],
           function(eventName) {
-            bodyElement.bind(eventName, function (e) { resetSessionTimeoutTimer(e) });
+            bodyElement.bind(eventName, function (e) { resetSessionTimer(e) });
           });
       }
 
@@ -101,7 +101,7 @@ angular.module('ts5App')
         $localStorage.timeoutSessionAfterMinutes = timeoutSessionAfterMinutes;
       }
 
-      function stopSessionTimeoutTimer() {
+      function stopSessionTimer() {
         if (timerState !== timerStates.STARTED) {
           return;
         }
@@ -122,13 +122,14 @@ angular.module('ts5App')
         timerState = timerStates.STARTED;
       }
 
-      function resetSessionTimeoutTimer() {
+      function resetSessionTimer() {
         sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
       }
 
       function checkForSessionTimeout() {
         if (sessionSecondsLeft <= 0) {
           logoutDueTheSessionTimeout();
+          return;
         }
 
         sessionSecondsLeft = sessionSecondsLeft - checkIntervalInSeconds;
