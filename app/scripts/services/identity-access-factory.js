@@ -67,7 +67,7 @@ angular.module('ts5App')
 
         $timeout(function () {
           if (sessionTimeoutHappened === true) {
-            $location.path('/login').search({sessionTimeout: 'true'});
+            $location.path('/login').search({ sessionTimeout: 'true' });
           } else {
             $location.path('/login');
           }
