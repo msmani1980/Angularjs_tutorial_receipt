@@ -25,7 +25,7 @@ angular.module('ts5App')
       };
       var timerState = timerStates.PENDING;
       var checkIntervalInSeconds = 5;
-      
+
       // End timer data
 
       function changePassword(credentials, sessionToken) {
@@ -76,6 +76,7 @@ angular.module('ts5App')
       }
 
       function bindSessionTimerResetOnEvents() {
+        console.log('binding events')
         var bodyElement = angular.element($document);
         angular.forEach(['keydown', 'keyup', 'click', 'mousedown', 'touchstart', 'touchmove', 'focus'],
           function(eventName) {
@@ -96,6 +97,7 @@ angular.module('ts5App')
         sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
 
         $localStorage.timeoutSessionAfterMinutes = timeoutSessionAfterMinutes;
+        console.log('ttl set to ' + timeoutSessionAfterMinutes + ' minutes')
       }
 
       function stopSessionTimer() {
@@ -113,11 +115,13 @@ angular.module('ts5App')
         }
 
         if (timerState !== timerStates.PENDING) {
+          console.log('session already started')
           return;
         }
 
         timerInterval = $interval(checkForSessionTimeout, checkIntervalInSeconds * 1000);
         timerState = timerStates.STARTED;
+        console.log('start session timer')
       }
 
       function resetSessionTimer() {
@@ -131,6 +135,7 @@ angular.module('ts5App')
         }
 
         sessionSecondsLeft = sessionSecondsLeft - checkIntervalInSeconds;
+        console.log('seconds left ' + sessionSecondsLeft)
       }
 
       function getSessionObject() {
@@ -277,7 +282,7 @@ angular.module('ts5App')
       function loadSessionTimerConfigurationFromCompanySetupAndStartTimer(configuration) {
         if (configuration && configuration.timeoutMin) {
           var sessionTimeoutInMinutes = configuration.timeoutMin;
-          setSessionTTLInMinutes(sessionTimeoutInMinutes);
+          setSessionTTLInMinutes(15);
           startSessionTimer();
         }
       }
@@ -307,6 +312,7 @@ angular.module('ts5App')
       function authorizeUserResponseHandler(sessionDataFromAPI) {
         var rawSessionData = angular.copy(sessionDataFromAPI);
         encryptDataInLS(rawSessionData);
+        startSessionTimer();
         getCompanyData(rawSessionData);
       }
 
