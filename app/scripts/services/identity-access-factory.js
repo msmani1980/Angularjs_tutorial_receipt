@@ -28,7 +28,7 @@ angular.module('ts5App')
 
       bindSessionTimerResetOnEvents();
       loadSessionTimerConfiguration();
-      startSessionTimeoutTimer();
+      startSessionTimer();
       // End timer data
 
       function changePassword(credentials, sessionToken) {
@@ -109,7 +109,7 @@ angular.module('ts5App')
         timerState = timerStates.PENDING;
       }
 
-      function startSessionTimeoutTimer() {
+      function startSessionTimer() {
         if (!isAuthorized()) {
           return;
         }
@@ -273,7 +273,7 @@ angular.module('ts5App')
         if (dataFromAPI[2].misc && dataFromAPI[2].misc.timeoutMin) {
           var sessionTimeoutInMinutes = dataFromAPI[2].misc.timeoutMin;
           setSessionTTLInMinutes(sessionTimeoutInMinutes);
-          startSessionTimeoutTimer();
+          startSessionTimer();
         }
 
         setSessionData(sessionObject);
