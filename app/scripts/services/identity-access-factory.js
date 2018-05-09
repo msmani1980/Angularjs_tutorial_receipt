@@ -101,6 +101,7 @@ angular.module('ts5App')
         if (timerState !== timerStates.STARTED) {
           return;
         }
+        
         $interval.cancel(timerInterval);
         timerState = timerStates.PENDING;
       }
