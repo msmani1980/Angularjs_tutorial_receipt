@@ -25,6 +25,7 @@ angular.module('ts5App')
       };
       var timerState = timerStates.PENDING;
       var checkIntervalInSeconds = 5;
+      
       // End timer data
 
       function changePassword(credentials, sessionToken) {
@@ -101,7 +102,7 @@ angular.module('ts5App')
         if (timerState !== timerStates.STARTED) {
           return;
         }
-        
+
         $interval.cancel(timerInterval);
         timerState = timerStates.PENDING;
       }
