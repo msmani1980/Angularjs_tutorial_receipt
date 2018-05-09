@@ -8,18 +8,23 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('LoginCtrl', function($scope, $http, identityAccessFactory, $rootScope, $location) {
+  .controller('LoginCtrl', function($scope, $http, identityAccessFactory, $rootScope, $location, $routeParams) {
 
     $scope.credentials = {
       username: '',
       password: ''
     };
 
+    if ($routeParams.sessionTimeout) {
+      angular.element('.modal').modal('hide');
+      angular.element('#logout-due-the-session-timeout').modal('show');
+    }
+
     var user = $location.search().username;
     if (!angular.isUndefined(user)) {
       $scope.credentials.username = user;
     }
-    
+
     function showLoadingModal(text) {
       $scope.displayError = false;
       angular.element('#loading').modal('show').find('p').text(text);
