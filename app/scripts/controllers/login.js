@@ -1,4 +1,5 @@
 'use strict';
+var $ = require('jquery');
 
 /**
  * @ngdoc function

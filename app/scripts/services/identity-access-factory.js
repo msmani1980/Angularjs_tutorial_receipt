@@ -76,7 +76,6 @@ angular.module('ts5App')
       }
 
       function bindSessionTimerResetOnEvents() {
-        console.log('binding events')
         var bodyElement = angular.element($document);
         angular.forEach(['keydown', 'keyup', 'click', 'mousedown', 'touchstart', 'touchmove', 'focus'],
           function(eventName) {
@@ -97,7 +96,6 @@ angular.module('ts5App')
         sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
 
         $localStorage.timeoutSessionAfterMinutes = timeoutSessionAfterMinutes;
-        console.log('ttl set to ' + timeoutSessionAfterMinutes + ' minutes')
       }
 
       function stopSessionTimer() {
@@ -115,13 +113,11 @@ angular.module('ts5App')
         }
 
         if (timerState !== timerStates.PENDING) {
-          console.log('session already started')
           return;
         }
 
         timerInterval = $interval(checkForSessionTimeout, checkIntervalInSeconds * 1000);
         timerState = timerStates.STARTED;
-        console.log('start session timer')
       }
 
       function resetSessionTimer() {
@@ -135,7 +131,6 @@ angular.module('ts5App')
         }
 
         sessionSecondsLeft = sessionSecondsLeft - checkIntervalInSeconds;
-        console.log('seconds left ' + sessionSecondsLeft)
       }
 
       function getSessionObject() {
@@ -282,7 +277,7 @@ angular.module('ts5App')
       function loadSessionTimerConfigurationFromCompanySetupAndStartTimer(configuration) {
         if (configuration && configuration.timeoutMin) {
           var sessionTimeoutInMinutes = configuration.timeoutMin;
-          setSessionTTLInMinutes(15);
+          setSessionTTLInMinutes(sessionTimeoutInMinutes);
           startSessionTimer();
         }
       }
