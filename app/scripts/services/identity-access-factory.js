@@ -267,13 +267,17 @@ angular.module('ts5App')
 
         }
 
-        if (dataFromAPI[2].misc && dataFromAPI[2].misc.timeoutMin) {
-          var sessionTimeoutInMinutes = dataFromAPI[2].misc.timeoutMin;
+        loadSessionTimerConfigurationFromCompanySetupAndStartTimer(dataFromAPI[2].misc);
+
+        setSessionData(sessionObject);
+      }
+
+      function loadSessionTimerConfigurationFromCompanySetupAndStartTimer(configuration) {
+        if (configuration && configuration.timeoutMin) {
+          var sessionTimeoutInMinutes = configuration.timeoutMin;
           setSessionTTLInMinutes(sessionTimeoutInMinutes);
           startSessionTimer();
         }
-
-        setSessionData(sessionObject);
       }
 
       function getCompanyData(rawSessionData) {
