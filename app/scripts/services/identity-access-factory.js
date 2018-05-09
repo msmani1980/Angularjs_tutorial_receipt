@@ -78,7 +78,7 @@ angular.module('ts5App')
         var bodyElement = angular.element($document);
         angular.forEach(['keydown', 'keyup', 'click', 'mousedown', 'touchstart', 'touchmove', 'focus'],
           function(eventName) {
-            bodyElement.bind(eventName, function (e) { resetSessionTimer(e) });
+            bodyElement.bind(eventName, function (e) { resetSessionTimer(e); });
           });
       }
 
