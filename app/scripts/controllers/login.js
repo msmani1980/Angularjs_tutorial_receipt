@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('LoginCtrl', function($scope, $http, identityAccessFactory, $rootScope, $location, $routeParams) {
+  .controller('LoginCtrl', function($scope, $http, identityAccessFactory, $rootScope, $location, $routeParams, $timeout) {
 
     $scope.credentials = {
       username: '',
@@ -61,6 +61,10 @@ angular.module('ts5App')
 
       showLoadingModal('Authenticating');
       identityAccessFactory.login($scope.credentials);
+    };
+
+    $scope.dismissSessionTimeoutModal = function () {
+      $timeout(function() { $location.search('sessionTimeout', null); }, 2000);
     };
 
     $rootScope.$on('authorized', hideLoadingModal);
