@@ -707,7 +707,7 @@ angular.module('ts5App')
           role: 'REPORT'
         }]
       }, {
-        title: 'ePOS Configuration Settings',
+        title: 'Configuration Settings',
         menuItems: [{
             name: 'ePOS Configuration Settings',
             route: '/#/epos-config',
@@ -715,7 +715,14 @@ angular.module('ts5App')
             className: 'dashboard-epos-config',
             package: 'EPOSCONFIG',
             role: 'EPOSCONFIG'
-          }]
+          }, {
+          name: 'Back Office Configuration Settings',
+          route: '/#/back-office-config',
+          icon: 'icon-manage-discount',
+          className: 'dashboard-back-office-config',
+          package: 'BACKOFFICECONFIG',
+          role: 'BACKOFFICECONFIG'
+        }]
       }];
     };
 
