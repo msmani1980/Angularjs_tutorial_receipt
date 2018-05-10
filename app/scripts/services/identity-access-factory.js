@@ -10,9 +10,23 @@
  */
 angular.module('ts5App')
   .factory('identityAccessFactory',
-    function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService) {
+    function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companyFactory, $q, lodash, eulaService, companyFormatService, $interval, $document) {
 
       var tempToken;
+
+      // Timer data used to automatically log out user after X period of time
+      var timerInterval;
+      var timeoutSessionAfterMinutes;
+      var sessionSecondsLeft;
+
+      var timerStates = {
+        PENDING: 0,
+        STARTED: 1
+      };
+      var timerState = timerStates.PENDING;
+      var checkIntervalInSeconds = 5;
+
+      // End timer data
 
       function changePassword(credentials, sessionToken) {
         var payload = {
@@ -38,18 +52,89 @@ angular.module('ts5App')
       }
 
       function logoutFromSystem() {
-        identityAccessService.logout();
+        identityAccessService.logout().then(function () {
+          stopSessionTimer();
+        });
       }
 
-      function logout() {
+      function logout(sessionTimeoutHappened) {
+        stopSessionTimer();
+
         $window.localStorage.clear();
         $localStorage.$reset();
         delete $http.defaults.headers.common.userId;
         delete $http.defaults.headers.common.companyId;
         delete $http.defaults.headers.common.sessionToken;
+
         $timeout(function () {
-          $location.path('/login');
+          if (sessionTimeoutHappened === true) {
+            $location.path('/login').search({ sessionTimeout: 'true' });
+          } else {
+            $location.path('/login');
+          }
         });
+      }
+
+      function logoutDueTheSessionTimeout() {
+        logout(true);
+      }
+
+      function bindSessionTimerResetOnEvents() {
+        var bodyElement = angular.element($document);
+        angular.forEach(['keydown', 'keyup', 'click', 'mousedown', 'touchstart', 'touchmove', 'focus'],
+          function(eventName) {
+            bodyElement.bind(eventName, function (e) { resetSessionTimer(e); });
+          });
+      }
+
+      function loadSessionTimerConfiguration() {
+        if ($localStorage.timeoutSessionAfterMinutes) {
+          setSessionTTLInMinutes(parseInt($localStorage.timeoutSessionAfterMinutes));
+        } else {
+          setSessionTTLInMinutes(8 * 60); // 8 hours default
+        }
+      }
+
+      function setSessionTTLInMinutes(ttlInMinutes) {
+        timeoutSessionAfterMinutes = ttlInMinutes;
+        sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
+
+        $localStorage.timeoutSessionAfterMinutes = timeoutSessionAfterMinutes;
+      }
+
+      function stopSessionTimer() {
+        if (timerState !== timerStates.STARTED) {
+          return;
+        }
+
+        $interval.cancel(timerInterval);
+        timerState = timerStates.PENDING;
+      }
+
+      function startSessionTimer() {
+        if (!isAuthorized()) {
+          return;
+        }
+
+        if (timerState !== timerStates.PENDING) {
+          return;
+        }
+
+        timerInterval = $interval(checkForSessionTimeout, checkIntervalInSeconds * 1000);
+        timerState = timerStates.STARTED;
+      }
+
+      function resetSessionTimer() {
+        sessionSecondsLeft = timeoutSessionAfterMinutes * 60;
+      }
+
+      function checkForSessionTimeout() {
+        if (sessionSecondsLeft <= 0) {
+          logoutDueTheSessionTimeout();
+          return;
+        }
+
+        sessionSecondsLeft = sessionSecondsLeft - checkIntervalInSeconds;
       }
 
       function getSessionObject() {
@@ -102,6 +187,7 @@ angular.module('ts5App')
 
       function broadcastSuccess(companyData) {
         $location.search('username', null);
+        $location.search('sessionTimeout', null);
         $rootScope.$broadcast('authorized');
         $rootScope.$broadcast('company-fetched', companyData);
       }
@@ -187,7 +273,17 @@ angular.module('ts5App')
 
         }
 
+        loadSessionTimerConfigurationFromCompanySetupAndStartTimer(dataFromAPI[2].misc);
+
         setSessionData(sessionObject);
+      }
+
+      function loadSessionTimerConfigurationFromCompanySetupAndStartTimer(configuration) {
+        if (configuration && configuration.timeoutMin) {
+          var sessionTimeoutInMinutes = configuration.timeoutMin;
+          setSessionTTLInMinutes(sessionTimeoutInMinutes);
+          startSessionTimer();
+        }
       }
 
       function getCompanyData(rawSessionData) {
@@ -215,6 +311,7 @@ angular.module('ts5App')
       function authorizeUserResponseHandler(sessionDataFromAPI) {
         var rawSessionData = angular.copy(sessionDataFromAPI);
         encryptDataInLS(rawSessionData);
+        startSessionTimer();
         getCompanyData(rawSessionData);
       }
 
@@ -253,8 +350,13 @@ angular.module('ts5App')
 
       $rootScope.$on('logout', logout);
       $rootScope.$on('unauthorized', logout);
+      $rootScope.$on('http-session-timeout', logoutDueTheSessionTimeout);
       $rootScope.$on('$locationChangeStart', locationChangeHandler);
       setSessionHeaders();
+
+      bindSessionTimerResetOnEvents();
+      loadSessionTimerConfiguration();
+      startSessionTimer();
 
       return {
         login: login,
