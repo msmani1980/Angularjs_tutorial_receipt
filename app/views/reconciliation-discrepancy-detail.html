@@ -238,6 +238,24 @@
                 </tr>
               </table>
 
+              <h5 class="text-center"><b>Spend Per Head</b></h5>
+              <table class="table table-condensed table-bordered col-xs-12">
+                <tr class="active">
+                  <td>Total Amount</td>
+                  <td>Pax</td>
+                  <td>{{report.operatingCurrency}}</td>
+                </tr>
+                <tr>
+                  <td>No Crew Confirmed Cash added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td colspan="2">Crew Confirmed Cash Total</td>
+                  <td>{{report.closingCashTotal ? report.closingCashTotal : 0 | number:2}}</td>
+                </tr>
+              </table>
+
             </div>
           </div>
         </div>
@@ -286,7 +304,7 @@
           <a ng-show="showGenerateDocsButton" ng-href="{{exportURL}}" class="btn btn-sm btn-info" ng-disabled="false">
             <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
             <span class="hidden-xs">Generate Doc</span>
-          </a>       
+          </a>
           <button class="btn btn-sm btn-info" ng-click="showPaymentReportPanel()"><span class="fa fa-file-text"></span> {{actionOnPaymentReport}} Payment Reports</button>
           <button ng-if="!isAmendReadOnly" class="btn btn-sm btn-warning" ng-show="isInStatus('Inbounded') || isInStatus('Discrepancies') || isInStatus('Confirmed') || isInStatus('Commission Paid')" ng-click="goToStoreInstanceAmend()">Amend Data</button>
           <button ng-if="isAmendReadOnly" class="btn btn-sm btn-warning" ng-show="isInStatus('Inbounded') || isInStatus('Discrepancies') || isInStatus('Confirmed') || isInStatus('Commission Paid')" ng-click="goToStoreInstanceAmend()">View Amend Data</button>
