@@ -17,8 +17,12 @@ angular.module('ts5App')
       function changePassword(credentials, sessionToken) {
         var payload = {
           username: credentials.username.toLowerCase(),
-          password: CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.password).toString(CryptoJS.enc.Base64)
+          password: CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.password).toString(CryptoJS.enc.Base64),
+          currentUserPassword: CryptoJS.SHA256(credentials.username.toLowerCase() + credentials.currentPassword).toString(CryptoJS.enc.Base64),
+          pwdo: CryptoJS.SHA256(credentials.username + credentials.currentPassword).toString(CryptoJS.enc.Base64),
+          reset: credentials.reset
         };
+
         return identityAccessService.changePassword(payload, sessionToken);
       }
 
@@ -243,7 +247,8 @@ angular.module('ts5App')
           password: _password,
           pwdo: _pwdo === _password ? '' : _pwdo
         };
-        identityAccessService.authorizeUser(payload).then(checkForEULA, broadcastError);
+
+        return identityAccessService.authorizeUser(payload).then(checkForEULA, broadcastError);
       }
 
       $rootScope.$on('logout', logout);
