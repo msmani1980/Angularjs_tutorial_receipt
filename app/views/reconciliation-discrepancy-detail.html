@@ -241,18 +241,16 @@
               <h5 class="text-center"><b>Spend Per Head</b></h5>
               <table class="table table-condensed table-bordered col-xs-12">
                 <tr class="active">
-                  <td>Total Amount</td>
+                  <td>Total Amount {{report.operatingCurrency}}</td>
                   <td>Pax</td>
-                  <td>{{report.operatingCurrency}}</td>
                 </tr>
                 <tr>
-                  <td>No Crew Confirmed Cash added</td>
-                  <td>0.00</td>
-                  <td>0.00</td>
+                  <td>{{report.total | number:2}}</td>
+                  <td>{{report.pax ? report.pax : 0 }}</td>
                 </tr>
                 <tr class="active">
-                  <td colspan="2">Crew Confirmed Cash Total</td>
-                  <td>{{report.closingCashTotal ? report.closingCashTotal : 0 | number:2}}</td>
+                  <td>Spend Per Head</td>
+                  <td>{{report.spendPerPax ? report.spendPerPax : 0 | number:2}}</td>
                 </tr>
               </table>
 
