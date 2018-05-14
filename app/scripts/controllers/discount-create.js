@@ -596,21 +596,12 @@ angular.module('ts5App')
 
     $scope.submitForm = function(formData) {
       $scope.errorCustom = [];
-      var customValidationErrors = { data: [] };
-
-      $this.validateRestrictions(customValidationErrors);
-      $this.validateLimitPerShop(customValidationErrors);
-      $this.validateLimitPerTransaction(customValidationErrors);
-
-      if (customValidationErrors.data.length > 0) {
-        $scope.errorResponse = angular.copy(customValidationErrors);
-        $scope.displayError = true;
-
-        return;
-      }
+      $this.validateRestrictions();
+      $this.validateLimitPerShop();
+      $this.validateLimitPerTransaction();
 
       $scope.form.$setSubmitted(true);
-      if (formData && $this.validateForm()) {
+      if (formData && $this.validateForm() && $scope.errorCustom.length === 0) {
         var itemData = angular.copy(formData);
         var payload = $this.formatPayload(itemData);
         var action = $scope.editingDiscount ? 'updateItem' : 'createItem';
@@ -618,7 +609,7 @@ angular.module('ts5App')
       }
     };
 
-    this.validateRestrictions = function(customValidationErrors) {
+    this.validateRestrictions = function() {
       if ($scope.formData.isRestriction) {
         if ($scope.formData.restrictedCategories.length <= 0 && $scope.formData.restrictedItems.length <= 0) {
           $scope.errorCustom.push(
@@ -648,7 +639,7 @@ angular.module('ts5App')
       }
     };
 
-    this.validateLimitPerTransaction = function(customValidationErrors) {
+    this.validateLimitPerTransaction = function() {
 
       if ($scope.formData.isAmountLimitPerTransaction === true) {
         if (!($scope.formData.itemQtyLimitPerTransaction === '' || typeof $scope.formData.itemQtyLimitPerTransaction === 'undefined' || $scope.formData.itemQtyLimitPerTransaction === null)) {
@@ -663,7 +654,7 @@ angular.module('ts5App')
       }
     };
 
-    this.validateLimitPerShop = function(customValidationErrors) {
+    this.validateLimitPerShop = function() {
 
       if ($scope.formData.isAmountLimitPerShop === true) {
         if (!($scope.formData.itemQtyLimitPerShop === '' || typeof $scope.formData.itemQtyLimitPerShop === 'undefined' || $scope.formData.itemQtyLimitPerShop === null)) {
