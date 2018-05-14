@@ -10,6 +10,8 @@ angular.module('ts5App')
   .directive('errorDialog', function() {
 
     var errorDialogController = function($scope, $document) {
+      if (angular.isUndefined($scope.showCustomErrorsAlways))
+        $scope.showCustomErrorsAlways = false;
 
       var $this = this;
 
@@ -111,7 +113,7 @@ angular.module('ts5App')
           return false;
         }
 
-        return !$scope.showCustomErrors() &&
+        return ($scope.showCustomErrorsAlways || !$scope.showCustomErrors()) &&
            ((Array.isArray($this.form.$error.pattern) || Array.isArray($this.form.$error.required)));
       };
 
@@ -128,7 +130,8 @@ angular.module('ts5App')
       scope: {
         formObject: '=',
         errorResponse: '=',
-        display: '='
+        display: '=',
+        showCustomErrorsAlways: '='
       }
     };
   });
