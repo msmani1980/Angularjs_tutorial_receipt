@@ -25,6 +25,7 @@ angular.module('ts5App')
     $scope.discountTypesList = [];
     $scope.companyCurrencyGlobalsList = [];
     $scope.retailItemsList = [];
+    $scope.errorCustom = [];
     $scope.filteredRetailItemsList = {};
     $scope.salesCategoriesList = [];
     $scope.salesCategoriesMap = {};
@@ -594,6 +595,7 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function(formData) {
+      $scope.errorCustom = [];
       var customValidationErrors = { data: [] };
 
       $this.validateRestrictions(customValidationErrors);
@@ -619,7 +621,7 @@ angular.module('ts5App')
     this.validateRestrictions = function(customValidationErrors) {
       if ($scope.formData.isRestriction) {
         if ($scope.formData.restrictedCategories.length <= 0 && $scope.formData.restrictedItems.length <= 0) {
-          customValidationErrors.data.push(
+          $scope.errorCustom.push(
             {
               field: 'Restrictions',
               code: 'custom',
@@ -633,7 +635,7 @@ angular.module('ts5App')
         if ($scope.formData.restrictedItems) {
           $scope.formData.restrictedItems.forEach(function (item, i) {
             if (typeof item.id === 'undefined' || item.id === '' || item.id === null) {
-              customValidationErrors.data.push(
+              $scope.errorCustom.push(
                 {
                   field: 'Restrictions > Retail Item #' + (i + 1),
                   code: 'custom',
@@ -650,7 +652,7 @@ angular.module('ts5App')
 
       if ($scope.formData.isAmountLimitPerTransaction === true) {
         if (!($scope.formData.itemQtyLimitPerTransaction === '' || typeof $scope.formData.itemQtyLimitPerTransaction === 'undefined' || $scope.formData.itemQtyLimitPerTransaction === null)) {
-          customValidationErrors.data.push(
+          $scope.errorCustom.push(
             {
               field: 'Limitation Per Transaction',
               code: 'custom',
@@ -665,7 +667,7 @@ angular.module('ts5App')
 
       if ($scope.formData.isAmountLimitPerShop === true) {
         if (!($scope.formData.itemQtyLimitPerShop === '' || typeof $scope.formData.itemQtyLimitPerShop === 'undefined' || $scope.formData.itemQtyLimitPerShop === null)) {
-          customValidationErrors.data.push(
+          $scope.errorCustom.push(
             {
               field: 'Limitation Per Shop',
               code: 'custom',
