@@ -667,13 +667,14 @@ angular.module('ts5App')
         if (!($scope.formData.itemQtyLimitPerShop === '' || typeof $scope.formData.itemQtyLimitPerShop === 'undefined' || $scope.formData.itemQtyLimitPerShop === null)) {
           customValidationErrors.data.push(
             {
-              field: 'Limitation Per Transaction',
+              field: 'Limitation Per Shop',
               code: 'custom',
               value: 'Either the "Item Qty Limit Per Shop" or "Amount Limit Per Shop Value" is allowed, not both'
             }
           );
         }
       }
+    };
 
     this.init = function() {
       this.checkFormState();
