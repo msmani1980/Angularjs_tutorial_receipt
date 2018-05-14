@@ -645,10 +645,10 @@ angular.module('ts5App')
       }
     };
 
-    this.validateLimitPerTransaction = function(customValidationErrors) {
+    this.validateLimitPerShop = function(customValidationErrors) {
 
-      if ($scope.formData.isAmountLimitPerTransaction === true) {
-        if (!($scope.formData.itemQtyLimitPerTransaction === '' || typeof $scope.formData.itemQtyLimitPerTransaction === 'undefined' || $scope.formData.itemQtyLimitPerTransaction === null)) {
+      if ($scope.formData.isAmountLimitPerShop === true) {
+        if (!($scope.formData.itemQtyLimitPerShop === '' || typeof $scope.formData.itemQtyLimitPerShop === 'undefined' || $scope.formData.itemQtyLimitPerShop === null)) {
           customValidationErrors.data.push(
             {
               field: 'Limitation Per Transaction',
@@ -658,6 +658,8 @@ angular.module('ts5App')
           );
         }
       }
+
+
     };
 
     this.init = function() {
