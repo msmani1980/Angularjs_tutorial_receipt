@@ -597,6 +597,7 @@ angular.module('ts5App')
       var customValidationErrors = { data: [] };
 
       $this.validateRestrictions(customValidationErrors);
+      $this.validateLimitPerShop(customValidationErrors);
       $this.validateLimitPerTransaction(customValidationErrors);
 
       if (customValidationErrors.data.length > 0) {
@@ -645,10 +646,10 @@ angular.module('ts5App')
       }
     };
 
-    this.validateLimitPerShop = function(customValidationErrors) {
+    this.validateLimitPerTransaction = function(customValidationErrors) {
 
-      if ($scope.formData.isAmountLimitPerShop === true) {
-        if (!($scope.formData.itemQtyLimitPerShop === '' || typeof $scope.formData.itemQtyLimitPerShop === 'undefined' || $scope.formData.itemQtyLimitPerShop === null)) {
+      if ($scope.formData.isAmountLimitPerTransaction === true) {
+        if (!($scope.formData.itemQtyLimitPerTransaction === '' || typeof $scope.formData.itemQtyLimitPerTransaction === 'undefined' || $scope.formData.itemQtyLimitPerTransaction === null)) {
           customValidationErrors.data.push(
             {
               field: 'Limitation Per Transaction',
@@ -658,9 +659,21 @@ angular.module('ts5App')
           );
         }
       }
-
-
     };
+
+    this.validateLimitPerShop = function(customValidationErrors) {
+
+      if ($scope.formData.isAmountLimitPerShop === true) {
+        if (!($scope.formData.itemQtyLimitPerShop === '' || typeof $scope.formData.itemQtyLimitPerShop === 'undefined' || $scope.formData.itemQtyLimitPerShop === null)) {
+          customValidationErrors.data.push(
+            {
+              field: 'Limitation Per Transaction',
+              code: 'custom',
+              value: 'Either the "Item Qty Limit Per Shop" or "Amount Limit Per Shop Value" is allowed, not both'
+            }
+          );
+        }
+      }
 
     this.init = function() {
       this.checkFormState();
