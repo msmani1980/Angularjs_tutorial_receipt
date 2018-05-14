@@ -645,6 +645,24 @@ angular.module('ts5App')
       return errorData;
     };
 
+    this.validateLimitPerTransaction = function() {
+      var errorData = { data: [] };
+
+      if ($scope.formData.isAmountLimitPerTransaction === true) {
+        if (!($scope.formData.itemQtyLimitPerTransaction === '' || typeof $scope.formData.itemQtyLimitPerTransaction === 'undefined' || $scope.formData.itemQtyLimitPerTransaction === null)) {
+          errorData.data.push(
+            {
+              field: 'Limitation Per Transaction',
+              code: 'custom',
+              value: 'Either Item Categories or Retail Items has to be defined when Restrictions are enabled'
+            }
+          );
+        }
+      }
+
+      return errorData;
+    };
+
     this.init = function() {
       this.checkFormState();
       this.getDependencies();
