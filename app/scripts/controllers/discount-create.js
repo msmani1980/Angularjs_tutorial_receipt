@@ -654,7 +654,7 @@ angular.module('ts5App')
             {
               field: 'Limitation Per Transaction',
               code: 'custom',
-              value: 'Either Item Categories or Retail Items has to be defined when Restrictions are enabled'
+              value: 'Either the "Item Qty Limit Per Transaction" or "Amount Limit Per Transaction Value" is allowed, not both'
             }
           );
         }
