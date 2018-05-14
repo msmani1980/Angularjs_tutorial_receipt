@@ -594,9 +594,13 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function(formData) {
-      var restrictionErrors = $this.validateRestrictions();
-      if (restrictionErrors.data.length > 0) {
-        $scope.errorResponse = angular.copy(restrictionErrors);
+      var customValidationErrors = { data: [] };
+
+      $this.validateRestrictions(customValidationErrors);
+      $this.validateLimitPerTransaction(customValidationErrors);
+
+      if (customValidationErrors.data.length > 0) {
+        $scope.errorResponse = angular.copy(customValidationErrors);
         $scope.displayError = true;
 
         return;
@@ -611,12 +615,10 @@ angular.module('ts5App')
       }
     };
 
-    this.validateRestrictions = function() {
-      var errorData = { data: [] };
-
+    this.validateRestrictions = function(customValidationErrors) {
       if ($scope.formData.isRestriction) {
         if ($scope.formData.restrictedCategories.length <= 0 && $scope.formData.restrictedItems.length <= 0) {
-          errorData.data.push(
+          customValidationErrors.data.push(
             {
               field: 'Restrictions',
               code: 'custom',
@@ -624,13 +626,13 @@ angular.module('ts5App')
             }
           );
 
-          return errorData;
+          return;
         }
 
         if ($scope.formData.restrictedItems) {
           $scope.formData.restrictedItems.forEach(function (item, i) {
             if (typeof item.id === 'undefined' || item.id === '' || item.id === null) {
-              errorData.data.push(
+              customValidationErrors.data.push(
                 {
                   field: 'Restrictions > Retail Item #' + (i + 1),
                   code: 'custom',
@@ -641,16 +643,13 @@ angular.module('ts5App')
           });
         }
       }
-
-      return errorData;
     };
 
-    this.validateLimitPerTransaction = function() {
-      var errorData = { data: [] };
+    this.validateLimitPerTransaction = function(customValidationErrors) {
 
       if ($scope.formData.isAmountLimitPerTransaction === true) {
         if (!($scope.formData.itemQtyLimitPerTransaction === '' || typeof $scope.formData.itemQtyLimitPerTransaction === 'undefined' || $scope.formData.itemQtyLimitPerTransaction === null)) {
-          errorData.data.push(
+          customValidationErrors.data.push(
             {
               field: 'Limitation Per Transaction',
               code: 'custom',
@@ -659,8 +658,6 @@ angular.module('ts5App')
           );
         }
       }
-
-      return errorData;
     };
 
     this.init = function() {
