@@ -89,7 +89,7 @@
                 <option value="merge" ng-if="canMerge(cashBagToMove)">Merge with another Cash Bag Number</option>
                  <option value="overwrite" ng-if="canOverwrite(cashBagToMove)">Overwrite with another Cash Bag Number</option>
                 <option value="editCashBagNumber" ng-if="canEdit(cashBagToMove)">Edit Cash Bag Number</option>
-                <option value="reallocate" ng-if="canReallocate(cashBagToMove)">Reallocate to a Store Instance</option> 
+                <option value="reallocate" ng-if="canReallocate(cashBagToMove)">Reallocate to a Store Instance</option>
               </select>
             </div>
           </div>
@@ -101,7 +101,7 @@
               </h4>
             </div>
           </div>
-          
+
           <br>
           <div class="row" ng-hide="moveCashBagAction==='none'">
             <div class="col-xs-12">
@@ -111,13 +111,13 @@
             </div>
           </div>
           <br>
-          
+
           <div class="row" ng-show="moveCashBagAction==='editCashBagNumber'">
             <div class="col-xs-12">
               <label>New Cash Bag Number</label> <input type="text" class="form-control" ng-model="moveSearch.cashBag" minlength="1" maxlength="{{ cbNumberMaxLength }}" ng-required="true">
             </div>
           </div>
-          
+
           <div class="row" ng-show="moveCashBagAction==='overwrite'">
             <div class="col-xs-10">
               <label>Cash Bag *</label>
@@ -151,7 +151,7 @@
               </button>
             </div>
           </div>
-<!-- 
+<!--
           <div class="row" ng-show="moveCashBagAction==='overwrite'">
             <div class="col-xs-10">
               <label>Manual Cash Bag Number *</label>
@@ -188,7 +188,7 @@
               <td>{{ cashBag.bankRefNumber }}</td>
               <td>{{ cashBag.isVerified }}</td>
               <td>{{ cashBag.isSubmitted }}</td>
-              <!-- Cash Bag Number, Bank Ref #, Verified or not status, Submitted --> 
+              <!-- Cash Bag Number, Bank Ref #, Verified or not status, Submitted -->
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(cashBag, 'button', 'cashBag')"
                         ng-disabled="disableSelectCashBag(cashBag)"
@@ -228,7 +228,7 @@
               <td colspan="5">No Store Instances found</td>
             </tr>
           </table>
-          
+
          <!-- Schedule Date, Store Number, Cash Bag Number, Store Instance Number, Submitted Date/Time -->
           <table class="table table-bordered" ng-show="moveCashBagAction==='overwrite' && moveCashBagSearchResults">
             <tr>
@@ -239,7 +239,7 @@
               <th>Submitted Date/Time</th>
               <th>Select</th>
             </tr>
-            <tr ng-repeat="manualCashBag in moveCashBagSearchResults | orderBy:'scheduleDate'" 
+            <tr ng-repeat="manualCashBag in moveCashBagSearchResults | orderBy:'scheduleDate'"
                 ng-class="getClassesForSingleSelectedRow(manualCashBag, 'background', 'storeInstance')">
               <td>{{ manualCashBag.scheduleDate }}</td>
               <td>{{ manualCashBag.storeNumber }}</td>
@@ -259,7 +259,7 @@
             </tr>
           </table>
 
-          
+
         </div>
         <div class="modal-footer">
           <button ng-if="moveCashBagAction==='reallocate'" type="button" class="btn btn-success" data-dismiss="modal" ng-click="showReallocateCashBag()" ng-show="targetRecordForMoveCashBag">
@@ -415,8 +415,8 @@
                   <h4>Origin Cash Bag</h4>
                   <div class="alert alert-warning" ng-show="isAmended(rearrangeOriginCashBag)">
                     <span class="fa fa-exclamation-circle">
-                    </span> 
-                    Cannot rearrange sectors.<br/> 
+                    </span>
+                    Cannot rearrange sectors.<br/>
                     Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b> was amended. </div>
                   <select class="form-control"
                           ng-model="rearrangeOriginCashBag"
@@ -501,14 +501,14 @@
         </div>
 
         <div class="modal-body">
-          <p>You want to re-arrange sector <b>{{ singleSectorsToMove.scheduleNumber }}</b> 
-          from Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b> 
+          <p>You want to re-arrange sector <b>{{ singleSectorsToMove.scheduleNumber }}</b>
+          from Cash Bag <b>{{ rearrangeOriginCashBag.cashBag }}</b>
           to Cash Bag <b>{{rearrangeTargetCashBag.cashBag}}</b>
           <br/><br/>
-          Target Cash Bag  <b>{{ rearrangeTargetCashBag.cashBag }}</b> already has sector with the schedule number <b>{{ singleSectorsToMove.scheduleNumber }}</b>, 
-          schedule  date <b>{{ singleSectorsToMove.scheduleDate}}</b>, 
-          departure station <b>{{singleSectorsToMove.departureStation}}</b>, 
-          arrival station <b>{{singleSectorsToMove.arrivalStation}}</b>. 
+          Target Cash Bag  <b>{{ rearrangeTargetCashBag.cashBag }}</b> already has sector with the schedule number <b>{{ singleSectorsToMove.scheduleNumber }}</b>,
+          schedule  date <b>{{ singleSectorsToMove.scheduleDate}}</b>,
+          departure station <b>{{singleSectorsToMove.departureStation}}</b>,
+          arrival station <b>{{singleSectorsToMove.arrivalStation}}</b>.
           Do you want to continue ?</p>
         </div>
 
@@ -519,7 +519,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="modal fade delete-cashbag-warning-modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -559,7 +559,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="modal fade" id="t6Modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -1316,6 +1316,23 @@
                 </tr>
               </table>
 
+              <div ng-if="report.showSpendPerHead === true">
+                <h5 class="text-center"><b>Spend Per Head</b></h5>
+                <table class="table table-condensed table-bordered col-xs-12">
+                  <tr class="active">
+                    <td>Total Amount <br /> {{report.operatingCurrency}}</td>
+                    <td>Pax</td>
+                  </tr>
+                  <tr>
+                    <td>{{report.total | number:2}}</td>
+                    <td>{{report.pax ? report.pax : 0 }}</td>
+                  </tr>
+                  <tr class="active">
+                    <td>Spend Per Head</td>
+                    <td>{{report.spendPerPax ? report.spendPerPax : 0 | number:2}}</td>
+                  </tr>
+                </table>
+              </div>
             </div>
           </div>
         </div>
