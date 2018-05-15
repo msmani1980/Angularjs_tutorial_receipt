@@ -25,6 +25,7 @@ angular.module('ts5App')
     $scope.discountTypesList = [];
     $scope.companyCurrencyGlobalsList = [];
     $scope.retailItemsList = [];
+    $scope.errorCustom = [];
     $scope.filteredRetailItemsList = {};
     $scope.salesCategoriesList = [];
     $scope.salesCategoriesMap = {};
@@ -594,16 +595,13 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function(formData) {
-      var restrictionErrors = $this.validateRestrictions();
-      if (restrictionErrors.data.length > 0) {
-        $scope.errorResponse = angular.copy(restrictionErrors);
-        $scope.displayError = true;
-
-        return;
-      }
+      $scope.errorCustom = [];
+      $this.validateRestrictions();
+      $this.validateLimitPerShop();
+      $this.validateLimitPerTransaction();
 
       $scope.form.$setSubmitted(true);
-      if (formData && $this.validateForm()) {
+      if (formData && $this.validateForm() && $scope.errorCustom.length === 0) {
         var itemData = angular.copy(formData);
         var payload = $this.formatPayload(itemData);
         var action = $scope.editingDiscount ? 'updateItem' : 'createItem';
@@ -612,11 +610,9 @@ angular.module('ts5App')
     };
 
     this.validateRestrictions = function() {
-      var errorData = { data: [] };
-
       if ($scope.formData.isRestriction) {
         if ($scope.formData.restrictedCategories.length <= 0 && $scope.formData.restrictedItems.length <= 0) {
-          errorData.data.push(
+          $scope.errorCustom.push(
             {
               field: 'Restrictions',
               code: 'custom',
@@ -624,13 +620,13 @@ angular.module('ts5App')
             }
           );
 
-          return errorData;
+          return;
         }
 
         if ($scope.formData.restrictedItems) {
           $scope.formData.restrictedItems.forEach(function (item, i) {
             if (typeof item.id === 'undefined' || item.id === '' || item.id === null) {
-              errorData.data.push(
+              $scope.errorCustom.push(
                 {
                   field: 'Restrictions > Retail Item #' + (i + 1),
                   code: 'custom',
@@ -641,8 +637,36 @@ angular.module('ts5App')
           });
         }
       }
+    };
 
-      return errorData;
+    this.validateLimitPerTransaction = function() {
+
+      if ($scope.formData.isAmountLimitPerTransaction === true) {
+        if (!($scope.formData.itemQtyLimitPerTransaction === '' || typeof $scope.formData.itemQtyLimitPerTransaction === 'undefined' || $scope.formData.itemQtyLimitPerTransaction === null)) {
+          $scope.errorCustom.push(
+            {
+              field: 'Limitation Per Transaction',
+              code: 'custom',
+              value: 'Either the "Item Qty Limit Per Transaction" or "Amount Limit Per Transaction Value" is allowed, not both'
+            }
+          );
+        }
+      }
+    };
+
+    this.validateLimitPerShop = function() {
+
+      if ($scope.formData.isAmountLimitPerShop === true) {
+        if (!($scope.formData.itemQtyLimitPerShop === '' || typeof $scope.formData.itemQtyLimitPerShop === 'undefined' || $scope.formData.itemQtyLimitPerShop === null)) {
+          $scope.errorCustom.push(
+            {
+              field: 'Limitation Per Shop',
+              code: 'custom',
+              value: 'Either the "Item Qty Limit Per Shop" or "Amount Limit Per Shop Value" is allowed, not both'
+            }
+          );
+        }
+      }
     };
 
     this.init = function() {
