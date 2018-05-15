@@ -36,7 +36,7 @@
   </div>
   <!--/TopHeader -->
   <div class="create-form-container" ng-show="uiSelectTemplateReady">
-    <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+    <error-dialog form-object="form" error-response="errorResponse" display="displayError" show-custom-errors-always="true">
     </error-dialog>
     <form name="form" class="form edit-form create-item-form">
 
@@ -216,12 +216,6 @@
       <h3>Limitation Per Seat</h3>
 
       <div class="row">
-        <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
-            <input id="requireSeatEntry" ng-model="formData.requireSeatEntry" name="requireSeatEntry" type="checkbox" ng-disabled="isDisabled()"/>
-            <label for="requireSeatEntry">Require Seat Entry</label>
-          </div>
-        </div>
         <div class="col-xs-12 col-sm-6">
           <fieldset ng-disabled="isDisabled()">
             <div class="row">
