@@ -198,7 +198,7 @@
             <fieldset ng-disabled="isDisabled()">
               <div class="form-group">
                 <label>Item Substitutions</label>
-                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.substitutions" theme="bootstrap">
+                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.substitutions" theme="bootstrap" remove-selected="false">
                   <ui-select-match placeholder="Start typing to find an item Substitutions" ui-lock-choice="isDisabled()">{{ $item.itemName }}
                   </ui-select-match>
                   <ui-select-choices
@@ -209,16 +209,6 @@
                   </ui-select-choices>
                 </ui-select>
 
-                <ui-select multiple ng-model="search.stationId" theme="bootstrap" >
-                  <ui-select-match placeholder="Start typing to find a Station">{{ $item.code }}
-                  </ui-select-match>
-                  <ui-select-choices
-                    refresh="autoCompleteSubstitutionCode($select)"
-                    refresh-delay="300"
-                    repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
-                    <div ng-bind-html="station.code | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
               </div>
 
               <div class="form-group">

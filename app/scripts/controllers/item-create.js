@@ -59,6 +59,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     ];
     $scope.supplierCompanies = [];
     $scope.selectedSupplierCompanyImages = null;
+    $scope.substitutions = [];
+    $scope.recommendations = [];
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -474,10 +476,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           payload.endDate = dateUtility.formatDateForAPI($scope.formData.endDate);
         }
 
-        itemsFactory.getItemsList(payload);
+        itemsFactory.getItemsList(payload).then($this.setItemSubstitutionListOnAutoComplete);
       } else {
         $scope.substitutions = [];
       }
+    };
+
+    this.setItemSubstitutionListOnAutoComplete = function (itemListFromAPI) {
+      $scope.substitutions = angular.copy(itemListFromAPI.retailItems);
     };
 
     // updates the $scope.formData
