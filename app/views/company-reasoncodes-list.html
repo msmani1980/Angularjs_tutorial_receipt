@@ -1,1 +1,113 @@
-<p>This is the company-reasoncodes-list view.</p>
+<div class="module-container">
+  <div class="row item-list-row">
+    <div class="col-xs-4">
+    	<h2 class="view-name">{{ viewName }}</h2>
+    </div>
+    <div class="col-xs-8 text-right">
+       <a href="#/survey/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Company Reason Code</span></a>
+       <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+               aria-expanded="false"
+               aria-controls="search-collapse">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="hidden-xs">Filter</span>
+       </button>
+    </div>
+  </div>
+
+  <div class="survey-data-list">
+    
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <form name="surveySearchForm" ng-submit="searchCompanyReasonCodeData()">
+        <div class="panel-body">
+          <div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+			  <div class="form-group">
+                <label for="companyReasonCodeName">Company Reason Code</label>
+                <input ng-model="search.companyReasonCodeName" type="text" class="form-control" id="companyReasonCodeName" placeholder="Company Reason Code">
+              </div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-8">
+				<date-picker
+	                class="form-group"
+	                element-class="col-xs-6"
+	                start-date-model="search.startDate"
+	                end-date-model="search.endDate"
+	                label-from="Effective Start Date"
+	                label-to="Effective End Date"
+	                is-search-field="true">
+              </date-picker>
+			</div>
+		  </div>
+          <div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+				<div class="form-group">
+					<label for="reasonType">Reason Type</label>
+					<select name="reasonType" id="companyReasonTypeId" class="form-control"
+                      ng-options="reasonType.id as reasonType.reasonTypeName for reasonType in reasonTypes"
+                      ng-model="search.companyReasonTypeId">
+                		<option value="">Please Select Reason Type</option>
+              		</select>
+				</div>
+			</div>
+		  </div>
+		</div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+    <br>
+    <div class="table-responsive">
+      <table infinite-scroll="loadCompanyReasonCodes()" class="table table-bordered table-hover ng-scope">
+        <thead>
+        <tr>
+          <th>Company Reason Code</th>
+          <th>Company Reason Type</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Is Default</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="ng-scope" ng-repeat="reason in companyReasonCodes">
+          <td>{{ reason.companyReasonCodeName }}</td>
+          <td>{{ reason.reasonTypeName }}</td>
+          <td>{{ reason.startDate}}</td>
+          <td>{{ reason.endDate}}</td>
+          <td>{{ reason.isDefault}}</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="redirectToCompanyReason(reason.id, 'view')" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="redirectToCompanyReason(reason.id, 'edit')" ng-show="isCRUD && isCompanyReasonCodeEditable(reason)" tabindex="0">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs"
+                    ng-click="deleteRecordDialog(companyReasonCodes[$index], ['companyReasonCodeName', 'reasonTypeName', 'startDate', 'endDate'])"
+                    tabindex="0"
+                    ng-show="isCRUD && showDeleteButton(reason.startDate)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <alert ng-show="!loadingBarVisible && companyReasonCodes.length == 0" type="info">
+      <span class="fa fa-flag"></span> Your search returned no results.
+    </alert>
+    <p ng-if="companyReasonCodes.length > 0" class="record-count small text-center">Showing {{companyReasonCodes.length}} records</p>
+    <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+  </div>
+
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>
