@@ -10,8 +10,9 @@ angular.module('ts5App')
   .directive('errorDialog', function() {
 
     var errorDialogController = function($scope, $document) {
-      if (angular.isUndefined($scope.showCustomErrorsAlways))
+      if (angular.isUndefined($scope.showCustomErrorsAlways)) {
         $scope.showCustomErrorsAlways = false;
+      }
 
       var $this = this;
 
