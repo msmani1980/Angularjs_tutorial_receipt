@@ -454,6 +454,10 @@ angular.module('ts5App', [
     templateUrl: 'views/survey-questions-create.html',
     controller: 'SurveyQuestionsCreateCtrl',
     controllerAs: 'surveyQuestionsCreate'
+  }).when('/company-reasoncodes-list', {
+    templateUrl: 'views/company-reasoncodes-list.html',
+    controller: 'CompanyReasoncodesListCtrl',
+    controllerAs: 'companyReasoncodesList'
   }).when('/epos-config', {
     templateUrl: 'views/epos-config.html',
     controller: 'EposConfigCtrl',
