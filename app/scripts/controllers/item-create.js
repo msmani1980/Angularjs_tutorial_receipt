@@ -455,6 +455,31 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.formData.notesTranslations = mappedNotes;
     };
 
+    $scope.autoCompleteSubstitutionCode = function($select, $event) {
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
+      }
+
+      if ($select.search && $select.search.length !== 0) {
+        var payload = {
+          itemName: $select.search
+        };
+
+        if($scope.formData.startDate) {
+          payload.startDate = dateUtility.formatDateForAPI($scope.formData.startDate);
+        }
+
+        if($scope.formData.endDate) {
+          payload.endDate = dateUtility.formatDateForAPI($scope.formData.endDate);
+        }
+
+        itemsFactory.getItemsList(payload);
+      } else {
+        $scope.substitutions = [];
+      }
+    };
+
     // updates the $scope.formData
     this.updateFormData = function(itemData) {
       if (!itemData) {
@@ -531,7 +556,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getVolumeList(),
         itemsFactory.getWeightList(),
         itemsFactory.getPriceTypesList(),
-        itemsFactory.getItemsList({}),
         companiesFactory.getCompany(companyId),
         itemsFactory.getVoucherDurationsList()
       ];
@@ -743,9 +767,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setVolumeList(response[8]);
       $this.setWeightList(response[9]);
       $this.setItemPriceTypes(response[10]);
-      $this.setItemList(response[11].retailItems);
-      $this.setCompany(response[12]);
-      $this.setVoucherDurations(response[13]);
+      $this.setCompany(response[11]);
+      $this.setVoucherDurations(response[12]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         $this.getItem($routeParams.id);
       } else {
