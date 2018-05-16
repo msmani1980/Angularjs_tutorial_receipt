@@ -8,11 +8,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EposConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _) {
+  .controller('EposConfigCtrl', function ($scope, $rootScope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, accessService) {
     var companyId;
     var $this = this;
 
-    $scope.viewName = 'Epos Configuration';
+    $scope.viewName = 'ePOS Configuration';
     $scope.productVersions = [];
     $scope.modules = [];
     $scope.selectedProductVersion = null;
@@ -25,6 +25,145 @@ angular.module('ts5App')
     };
     $scope.initialRadioButtonModuleOptionPopulatedIds = {};
     $scope.initialCheckBoxModuleOptionPopulatedIds = {};
+    $scope.isCRUD = false;
+
+    $rootScope.$on('eposConfigurationInputChanged', function(event, e) {
+      var changedModuleOption = e.module;
+      var selected = e.selected;
+
+      // On form change, select all parents if child is selected, and deselect all children if parent is deselected
+      $this.normalizeSelectionOfParentsAndChildren(changedModuleOption, selected);
+    });
+
+    this.normalizeSelectionOfParentsAndChildren = function (changedModuleOption, selected) {
+      var parents = _.reject($this.findModuleParents(changedModuleOption), { optionTypeId: 3 });
+      var children = _.reject($this.findModuleChildren(changedModuleOption), { optionTypeId: 3 });
+
+      // Changed module (checkbox and radio button) is now selected
+      // Select all parents and deselect children for orphan radio buttons
+      if (selected === true || isNumeric(selected)) {
+        $this.selectAllInputs(parents);
+        $this.fixOrphanRadioButtons(changedModuleOption);
+      }
+
+      // Changed module is now deselected, deselect all children
+      else {
+        $this.deselectAllInputs(children);
+      }
+    };
+
+    this.selectAllInputs = function (parents) {
+      parents.forEach(function (parent) {
+        if (parent.optionTypeId === 1 && !$this.isCheckboxSelected(parent)) {
+          $this.selectCheckbox(parent);
+        }
+
+        if (parent.optionTypeId === 2 && !$this.isRadioButtonSelected(parent)) {
+          $this.selectRadioButton(parent);
+        }
+      });
+    };
+
+    this.deselectAllInputs = function (children) {
+      children.forEach(function (child) {
+        if (child.optionTypeId === 1 && $this.isCheckboxSelected(child)) {
+          $this.deselectCheckbox(child);
+        }
+
+        if (child.optionTypeId === 2 && $this.isRadioButtonSelected(child)) {
+          $this.deselectRadioButton(child);
+        }
+      });
+    };
+
+    this.fixOrphanRadioButtons = function () {
+      var allInputs = [];
+      var deselectedRadioButtonChildren = [];
+
+      $scope.moduleOptions.forEach(function (moduleOption) {
+        allInputs.push(moduleOption);
+        allInputs = allInputs.concat($this.findModuleChildren(moduleOption));
+      });
+
+      var deselectedRadioButtons = allInputs.filter(function (radioButton) {
+        return radioButton.optionTypeId === 2 && !$this.isRadioButtonSelected(radioButton);
+      });
+
+      deselectedRadioButtons.forEach(function (radioButton) {
+        deselectedRadioButtonChildren = deselectedRadioButtonChildren.concat($this.findModuleChildren(radioButton));
+      });
+
+      $this.deselectAllInputs(deselectedRadioButtonChildren);
+    };
+
+    this.isCheckboxSelected = function (moduleOption) {
+      return $scope.moduleOptionValues.checkbox[moduleOption.id] && $scope.moduleOptionValues.checkbox[moduleOption.id] === true;
+    };
+
+    this.isRadioButtonSelected = function (moduleOption) {
+      return $scope.moduleOptionValues.radioButton[moduleOption.parentId] && parseInt($scope.moduleOptionValues.radioButton[moduleOption.parentId]) === parseInt(moduleOption.id);
+    };
+
+    this.selectCheckbox = function (moduleOption) {
+      $scope.moduleOptionValues.checkbox[moduleOption.id] = true;
+    };
+
+    this.selectRadioButton = function (moduleOption) {
+      $scope.moduleOptionValues.radioButton[moduleOption.parentId] = parseInt(moduleOption.id);
+    };
+
+    this.deselectCheckbox = function (moduleOption) {
+      $scope.moduleOptionValues.checkbox[moduleOption.id] = false;
+    };
+
+    this.deselectRadioButton = function (moduleOption) {
+      delete $scope.moduleOptionValues.radioButton[moduleOption.parentId];
+    };
+
+    this.findModuleById = function (moduleOptions, id) {
+      for (var i = 0; i < moduleOptions.length; i++) {
+        var moduleOption = moduleOptions[i];
+
+        if (moduleOption.id === id) {
+          return moduleOption;
+        }
+
+        var result = $this.findModuleById(moduleOption.subModules, id);
+        if (result) {
+          return result;
+        }
+      }
+    };
+
+    this.findModuleParents = function (module) {
+      var parents = [];
+      var currentParentId = module.parentId;
+
+      while (currentParentId) {
+        var currentModule = $this.findModuleById($scope.moduleOptions, currentParentId);
+
+        if (currentModule) {
+          parents.push(currentModule);
+          currentParentId = currentModule.parentId;
+        } else {
+          currentParentId = null;
+        }
+      }
+
+      return parents;
+    };
+
+    this.findModuleChildren = function (module) {
+      var children = [];
+      var subModules = module.subModules;
+
+      subModules.forEach(function (subModule) {
+        children.push(subModule);
+        children = children.concat($this.findModuleChildren(subModule));
+      });
+
+      return children;
+    };
 
     $scope.$watch('selectedProductVersion', function (newProductVersion) {
       if (!newProductVersion) {
@@ -67,20 +206,7 @@ angular.module('ts5App')
     };
 
     $scope.isUserAvailableForEditAndCreate = function () {
-      var result = false;
-      var userFeaturesInRole = $localStorage.featuresInRole;
-
-      if (userFeaturesInRole.EPOSCONFIG && userFeaturesInRole.EPOSCONFIG.EPOSCONFIG) {
-        var eposConfigRoleFeatures = userFeaturesInRole.EPOSCONFIG.EPOSCONFIG;
-
-        _.forEach(eposConfigRoleFeatures, function(feature) {
-          if (_.includes(feature.permissionCode, 'C') && _.includes(feature.permissionCode, 'U') && _.includes(feature.permissionCode, 'D')) {
-            result = true;
-          }
-        });
-      }
-
-      return result;
+      return $scope.isCRUD;
     };
 
     this.showLoadingModal = function(message) {
@@ -92,11 +218,17 @@ angular.module('ts5App')
     };
 
     this.getProductVersionsSuccess = function(dataFromAPI) {
-      $scope.productVersions = angular.copy(dataFromAPI.response).map(function (productVersion) {
+      var versions = angular.copy(dataFromAPI.response).map(function (productVersion) {
         productVersion.displayName = productVersion.majorVersion + '.' + productVersion.minorVersion + '.' + productVersion.revision + '.' + productVersion.build;
 
         return productVersion;
       });
+
+      $scope.productVersions = _.orderBy(versions, ['build'], ['desc']);
+
+      if ($scope.productVersions && $scope.productVersions.length > 0) {
+        $scope.selectedProductVersion = $scope.productVersions[0];
+      }
     };
 
     this.getModulesSuccess = function(dataFromAPI) {
@@ -224,6 +356,10 @@ angular.module('ts5App')
       return currentlyModuleOptionPopulatedIds;
     };
 
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
     this.initDependenciesSuccess = function(result) {
       $this.getProductVersionsSuccess(result[0]);
       $this.getModulesSuccess(result[1]);
@@ -247,10 +383,12 @@ angular.module('ts5App')
 
     this.init = function() {
       $this.showLoadingModal('Loading Data');
+
+      $scope.isCRUD = accessService.crudAccessGranted('EPOSCONFIG', 'EPOSCONFIG', 'EPOSCONFIG');
+
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess, $this.initDependenciesError);
     };
 
     this.init();
-
   });

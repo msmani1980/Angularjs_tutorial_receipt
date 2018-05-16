@@ -87,10 +87,10 @@
                            placeholder="Enter Store Number">
                   </div>
                 </div>
-                
-                <div class="col-xs-6 col-sm-6">  
-                  <date-picker 
-                    class="form-group" 
+
+                <div class="col-xs-6 col-sm-6">
+                  <date-picker
+                    class="form-group"
                     name="startDate"
 	                disable-date-range="true"
 	                start-date-model="portalSearch.scheduleDate"
@@ -100,7 +100,7 @@
 	                label-from="Schedule Date">
 	              </date-picker>
                 </div>
-                
+
                 <div class="col-xs-12 col-sm-6">
                   <div class="form-group">
                     <label>Catering Station</label>
@@ -146,8 +146,8 @@
                   </div>
                 </div>
                 <div class="col-xs-6 col-sm-6">
-                  <date-picker 
-                    class="form-group" 
+                  <date-picker
+                    class="form-group"
                     name="startDate"
 	                disable-date-range="true"
 	                start-date-model="eposSearch.scheduleDate"
@@ -219,7 +219,7 @@
           <p ng-show="shouldShowSearchPromptAlert('portal')" class="alert alert-info text-center"><i class="fa fa-exclamation-circle"></i> Perform a search to view portal store
             instances</p>
 
-          <p ng-show="shouldShowNoRecordAlert('portal')" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria
+          <p ng-show="shouldShowNoRecordAlert('portal') && !isSearchInInProgress" class="alert alert-warning text-center"><i class="fa fa-exclamation-triangle"></i> No records matching the search criteria
             were found</p>
 
         </div>
@@ -313,7 +313,7 @@
                 </div>
               </div>
               <div class="col-xs-6 col-sm-3">
-                <date-picker 
+                <date-picker
                   class="form-group"
                   name="startDate"
                   disable-date-range="true"
@@ -355,7 +355,7 @@
                 </div>
               </div>
               <div class="col-xs-6 col-sm-3">
-                <date-picker 
+                <date-picker
                   class="form-group"
                   name="startDate"
                   disable-date-range="true"
@@ -420,7 +420,7 @@
             <td>{{ ECSInstance.siCatererStationCode }}</td>
             <td>{{ ECSInstance.departureStation }}</td>
             <td>{{ ECSInstance.storeInstanceId }}</td>
-            <td>{{ ECSInstance.statusName }}</td>            
+            <td>{{ ECSInstance.statusName }}</td>
           </tr>
           </tbody>
         </table>

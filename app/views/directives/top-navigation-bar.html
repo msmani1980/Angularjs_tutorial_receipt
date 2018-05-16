@@ -10,7 +10,10 @@
            data-backdrop="static" data-keyboard="false">
           <span class="fa fa-user" aria-hidden="true"></span>
         </a>
-        <a ng-click="logout()" type="button" class="logout-btn btn btn-default btn-lg" aria-label="Left Align" title="logout">
+        <a ng-click="changePassword()" type="button" class="settings-btn btn btn-default btn-lg" aria-label="Left Align" title="Change Password">
+          <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+        </a>
+        <a ng-click="logout()" type="button" class="logout-btn btn btn-default btn-lg" aria-label="Left Align" title="Logout">
           <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
         </a>
       </div>
@@ -24,7 +27,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">User Access Profile Settings <em style="color:white">   UTC{{ userObject.userTimeZone }}</em></h3>
+        <h3 class="modal-title">User Access Profile Settings <em style="color:white"> UTC{{ userObject.userTimeZone }}</em></h3>
       </div>
       <div class="modal-body">
         <form name="userSettingsForm">
