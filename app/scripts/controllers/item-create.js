@@ -42,6 +42,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.shouldDisplayURLField = false;
     $scope.uiSelectTemplateReady = false;
     $scope.displayCloneInfo = false;
+    $scope.substitutionsForDateRangeAreEmpty = false;
+    $scope.recommendationsForDateRangeAreEmpty = false;
     $scope.dynamicStaticBarcodeOptions = [{
       label: 'Dynamic Barcode',
       value: true
@@ -487,9 +489,20 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.setInitialSubstitutionAndRecomendations = function (itemListFromAPI) {
-      $scope.items = angular.copy(itemListFromAPI.retailItems);
+      $scope.items = [];
+      if(itemListFromAPI.retailItems) {
+        $scope.items = angular.copy(itemListFromAPI.retailItems);
+      }
       $scope.substitutions = angular.copy($scope.items);
       $scope.recommendations = angular.copy($scope.items);
+
+      if($scope.items.length === 0) {
+        $scope.substitutionsForDateRangeAreEmpty = true;
+        $scope.recommendationsForDateRangeAreEmpty = true;
+      } else {
+        $scope.substitutionsForDateRangeAreEmpty = false;
+        $scope.recommendationsForDateRangeAreEmpty = false;
+      }
     };
 
     // updates the $scope.formData
