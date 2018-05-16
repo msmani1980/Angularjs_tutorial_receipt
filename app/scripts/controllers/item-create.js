@@ -478,12 +478,18 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
         itemsFactory.getItemsList(payload).then($this.setItemSubstitutionListOnAutoComplete);
       } else {
-        $scope.substitutions = [];
+        $scope.substitutions = angular.copy($scope.items);
       }
     };
 
     this.setItemSubstitutionListOnAutoComplete = function (itemListFromAPI) {
       $scope.substitutions = angular.copy(itemListFromAPI.retailItems);
+    };
+
+    this.setInitialSubstitutionAndRecomendations = function (itemListFromAPI) {
+      $scope.items = angular.copy(itemListFromAPI.retailItems);
+      $scope.substitutions = angular.copy($scope.items);
+      $scope.recommendations = angular.copy($scope.items);
     };
 
     // updates the $scope.formData
@@ -624,8 +630,23 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         };
 
         companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get(), relationshipPayload).then($this.setSupplierCompanies);
+
+        $this.handleRetailItemsOnStartEndDateUpdate();
+      } else {
+        $scope.items = [];
+        $scope.substitutions = [];
+        $scope.recommendations = [];
       }
     });
+
+    this.handleRetailItemsOnStartEndDateUpdate = function() {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
+      };
+
+      itemsFactory.getItemsList(payload).then($this.setInitialSubstitutionAndRecomendations);
+    };
 
     $scope.$watchGroup(['formData.startDate', 'items', 'formData.endDate'], function() {
       if ($scope.formData.startDate && $scope.formData.endDate && $scope.items) {
