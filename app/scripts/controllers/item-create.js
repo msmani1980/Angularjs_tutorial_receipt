@@ -44,6 +44,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.displayCloneInfo = false;
     $scope.substitutionsForDateRangeAreEmpty = false;
     $scope.recommendationsForDateRangeAreEmpty = false;
+    $scope.itemsAreBeingLoaded = true;
     $scope.dynamicStaticBarcodeOptions = [{
       label: 'Dynamic Barcode',
       value: true

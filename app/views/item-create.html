@@ -195,11 +195,11 @@
                 </div>
               </div>
             </fieldset>
-            <fieldset ng-disabled="isDisabled()">
+            <fieldset ng-disabled="isDisabled() && uiSelectTemplateReady">
               <div class="form-group">
                 <label>Item Substitutions</label>
                 <ui-select style="min-height: 31px; margin-bottom: 15px;"
-                           ng-if="uiSelectTemplateReady && !itemsAreBeingLoaded"
+                           ng-if="!itemsAreBeingLoaded"
                            multiple
                            ng-model="formData.substitutions"
                            theme="bootstrap"
