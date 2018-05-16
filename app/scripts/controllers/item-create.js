@@ -496,6 +496,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.substitutions = angular.copy($scope.items);
       $scope.recommendations = angular.copy($scope.items);
 
+      $scope.itemsAreBeingLoaded = false;
+
       if($scope.items.length === 0) {
         $scope.substitutionsForDateRangeAreEmpty = true;
         $scope.recommendationsForDateRangeAreEmpty = true;
@@ -648,6 +650,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.handleRetailItemsOnStartEndDateUpdate = function() {
+      $scope.itemsAreBeingLoaded = true;
       var payload = {
         startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
         endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
