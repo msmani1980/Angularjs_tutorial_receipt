@@ -97,6 +97,8 @@ angular.module('ts5App')
           $this.formatDeliveryNotesDates();
           hideLoadingBar();
         }
+
+        $this.hideLoadingModal();
       }, hideLoadingBar());
 
       $this.meta.offset += $this.meta.limit;
@@ -155,6 +157,7 @@ angular.module('ts5App')
     };
 
     $scope.searchRecords = function() {
+      $this.displayLoadingModal('Searching');
       $scope.deliveryNotesList = [];
       $this.meta = {
         count: undefined,

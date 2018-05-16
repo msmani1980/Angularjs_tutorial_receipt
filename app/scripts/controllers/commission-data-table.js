@@ -45,6 +45,7 @@ angular.module('ts5App')
         $scope.commissionData = $scope.commissionData.concat(angular.copy(dataFromAPI.response));
       }
 
+      hideLoadingModal();
       hideLoadingBar();
     }
 
@@ -70,6 +71,7 @@ angular.module('ts5App')
     }
 
     function searchCommissionData() {
+      showLoadingModal('Searching');
       var payload = {};
       if ($scope.search.crewBaseType) {
         payload.crewBaseTypeId = $scope.search.crewBaseType.id;

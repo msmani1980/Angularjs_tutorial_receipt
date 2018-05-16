@@ -87,6 +87,7 @@ angular.module('ts5App')
     this.getStockTakeListSuccessHandler = function(data) {
       $this.meta.count = $this.meta.count || data.meta.count;
       $scope.userSelectedStation = true;
+      $this.hideLoadingModal();
       if (!data.response) {
 
         return hideLoadingBar();
@@ -166,6 +167,7 @@ angular.module('ts5App')
     };
 
     $scope.searchRecords = function() {
+      $this.displayLoadingModal('Searching');
       $this.meta = {
         count: undefined,
         limit: 100,
