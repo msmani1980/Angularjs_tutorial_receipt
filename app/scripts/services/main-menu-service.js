@@ -148,9 +148,9 @@ angular.module('ts5App')
           name: 'Manage Reason Code',
           route: '/#/company-reasoncodes-list',
           icon: 'icon-manage-schedule',
-          className: 'dashboard-companyreason',
-          package: 'SCHEDULE',
-          role: 'SCHEDULE',
+          className: 'dashboard-companyReasonCode',
+          package: 'COMPANYREASON',
+          role: 'COMPANYREASON',
           permissions: [{
             permissionCodes: ['R']
           }]

@@ -4,20 +4,21 @@
     	<h2 class="view-name">{{ viewName }}</h2>
     </div>
     <div class="col-xs-8 text-right">
-       <a href="#/survey/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Company Reason Code</span></a>
-       <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
-               aria-expanded="false"
-               aria-controls="search-collapse">
-        <span class="fa fa-search" aria-hidden="true"></span>
-        <span class="hidden-xs">Filter</span>
-       </button>
+    	<button class="btn btn-primary" ng-show="isCRUD" aria-expanded="false" ng-click="toggleCreatePanel()">
+          <span class="fa fa-plus" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Create Company Reason Code</span>
+        </button>
+        <button class="btn btn-default" aria-expanded="false" ng-click="toggleFilterPanel()">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
     </div>
   </div>
 
   <div class="survey-data-list">
     
     <div class="panel panel-default no-transition" id="search-collapse">
-      <form name="surveySearchForm" ng-submit="searchCompanyReasonCodeData()">
+      <form name="companyReasonSearchForm" ng-submit="searchCompanyReasonCodeData()">
         <div class="panel-body">
           <div class="row">
 			<div class="col-xs-12 col-sm-6 col-md-4">
@@ -57,6 +58,77 @@
         </div>
       </form>
     </div>
+    
+    <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+    </error-dialog>
+    <div class="panel panel-default collapse no-transition" id="create-collapse">
+      <form name="companyReasonCreateForm" ng-submit="createCompanyReasonCode()">
+      	<div class="panel-body">
+          <h4>Create New Reason Code</h4>
+          <hr>
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4">
+			  <div class="form-group">
+                <label for="companyReasonCodeName">Company Reason Code*</label>
+                <input ng-model="reason.companyReasonCodeName" type="text" class="form-control" required="true" id="companyReasonCodeName" placeholder="Company Reason Code">
+              </div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4">
+				<div class="form-group">
+					<date-picker-field
+				    	form="companyReasonCreateForm" 
+				    	name="EffectiveStartDate"
+						label="Effective Start Date"
+						disable="isDisabled()"
+						required="true"
+						disable-past="true"
+						ng-model="reason.startDate">
+					</date-picker-field>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4">
+				<div class="form-group">
+					<date-picker-field
+				        form="companyReasonCreateForm"
+				        name="EffectiveEndDate"
+						label="Effective End Date"
+						disable="readOnly || shouldDisableEndDate"
+						ng-model="rule.endDate"
+						end-current-effective="!viewEditItem"
+						custom-effective="true"
+						custom-date="reason.endDate"
+						required="true">
+				    </date-picker-field>
+				</div>
+			</div>
+          </div>
+          <div class="row">
+          	<div class="col-xs-12 col-sm-6 col-md-4">
+          		<div class="form-group">
+					<label for="reasonType">Reason Type*</label>
+					<select name="reasonType" id="companyReasonTypeId" class="form-control" required="true"
+                      ng-options="reasonType.id as reasonType.reasonTypeName for reasonType in reasonTypes"
+                      ng-model="reason.companyReasonTypeId">
+                		<option value="">Please Select Reason Type</option>
+              		</select>
+				</div>
+          	</div>
+          	<div class="col-xs-12 col-sm-6 col-md-4">
+          		<label class="invisible">Checkbox</label>
+                <div class="form-group">
+					<input ng-model="reason.isDefault" id="isDefault" type="checkbox"/>
+                	<label>Is Default</label>
+				</div>
+          	</div>  
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearCreateForm()">Clear</button>
+          <button type="submit" class="btn btn-success"><span class="fa fa-check"></span> Save</button>
+        </div>
+      </form>
+    </div>  
+    
     <br>
     <div class="table-responsive">
       <table infinite-scroll="loadCompanyReasonCodes()" class="table table-bordered table-hover ng-scope">

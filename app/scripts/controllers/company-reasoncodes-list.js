@@ -16,7 +16,11 @@ angular.module('ts5App')
       limit: 100,
       offset: 0
     };
-      
+    $scope.shouldDisableEndDate = false;
+    $scope.reason = {
+      startDate: '',
+      endDate: ''
+    };  
     $scope.viewName = 'Manage Reason Code';
     $scope.search = {};
     $scope.companyReasonCodes = [];
@@ -39,6 +43,76 @@ angular.module('ts5App')
       $scope.isSearch = false;
       $scope.search = {};
       $scope.companyReasonCodes = [];
+    };
+
+    this.showLoadingModal = function(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
+
+    function hideFilterPanel() {
+      angular.element('#search-collapse').addClass('collapse');
+    }
+
+    function showFilterPanel() {
+      angular.element('#search-collapse').removeClass('collapse');
+    }
+
+    function hideCreatePanel() {
+      angular.element('#create-collapse').addClass('collapse');
+    }
+
+    function showCreatePanel() {
+      angular.element('#create-collapse').removeClass('collapse');
+    }
+
+    $scope.toggleFilterPanel = function() {
+      if (angular.element('#search-collapse').hasClass('collapse')) {
+        showFilterPanel();
+        hideCreatePanel();
+      } else {
+        hideFilterPanel();
+      }
+    };
+
+    $scope.toggleCreatePanel = function() {
+      if (angular.element('#create-collapse').hasClass('collapse')) {
+        showCreatePanel();
+        hideFilterPanel();
+      } else {
+        hideCreatePanel();
+      }
+    };
+
+    this.saveFormSuccess = function() {
+      $this.hideLoadingModal();
+      this.showToastMessage('success', 'Create Company Reason Code', 'success');
+    };
+
+    this.saveFormFailure = function(dataFromAPI) {
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
+    $scope.createCompanyReasonCode = function() {
+      if ($this.validateForm()) {
+        $this.showLoadingModal('Creating Company Reason Code Data');
+        var payload = {
+          companyReasonCodeName: $scope.reason.companyReasonCodeName,
+          companyReasonTypeId: $scope.reason.companyReasonTypeId,
+          isDefault: $scope.reason.isDefault ? 1 : null,
+          startDate: dateUtility.formatDateForAPI($scope.reason.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.reason.endDate)
+        };
+
+        companyReasoncodesFactory.createCompanyReasonCode(payload).then($this.saveFormSuccess, $this.saveFormFailure);
+      } else {
+        $scope.displayError = true;
+      }
     };
 
     this.getCompanyReasonCodesSuccess = function(response) {
@@ -152,7 +226,7 @@ angular.module('ts5App')
 
     this.init = function() {
       var initDependencies = $this.makeInitPromises();
-      $scope.isCRUD = accessService.crudAccessGranted('SURVEY', 'SURVEY', 'SURVEY');
+      $scope.isCRUD = accessService.crudAccessGranted('COMPANYREASON', 'COMPANYREASON', 'CRUDCMPRSN');
       $q.all(initDependencies).then(function() {
         angular.element('#search-collapse').addClass('collapse');
       });
