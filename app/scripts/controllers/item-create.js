@@ -607,15 +607,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
     };
 
-    this.filterItemsByFormDates = function() {
-      $scope.substitutions = lodash.filter($scope.items, function(item) {
-        return dateUtility.isAfterOrEqualDatePicker(dateUtility.formatDateForApp(item.endDate), $scope.formData.startDate) && dateUtility.isAfterOrEqualDatePicker($scope.formData.endDate, dateUtility.formatDateForApp(item.startDate));
-      });
-
-      $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
-      $scope.recommendations = angular.copy($scope.substitutions);
-    };
-
     $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
       if ($scope.formData.startDate && $scope.formData.endDate) {
         itemsFactory.getDiscountList({
@@ -639,6 +630,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     });
 
+    $scope.areDatesSelected = function () {
+      return ($scope.formData.startDate && $scope.formData.endDate);
+    };
+
     this.handleRetailItemsOnStartEndDateUpdate = function() {
       var payload = {
         startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
@@ -647,12 +642,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       itemsFactory.getItemsList(payload).then($this.setInitialSubstitutionAndRecomendations);
     };
-
-    $scope.$watchGroup(['formData.startDate', 'items', 'formData.endDate'], function() {
-      if ($scope.formData.startDate && $scope.formData.endDate && $scope.items) {
-        $this.filterItemsByFormDates();
-      }
-    });
 
     this.isMasterItemInfoUnTouched = function() {
       return $scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&

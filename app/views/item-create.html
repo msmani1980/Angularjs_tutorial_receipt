@@ -198,7 +198,14 @@
             <fieldset ng-disabled="isDisabled()">
               <div class="form-group">
                 <label>Item Substitutions</label>
-                <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.substitutions" theme="bootstrap" remove-selected="false">
+                <ui-select style="min-height: 31px;"
+                           ng-if="uiSelectTemplateReady"
+                           multiple
+                           ng-model="formData.substitutions"
+                           theme="bootstrap"
+                           remove-selected="false"
+                           ng-disabled="isDisabled() || !areDatesSelected()"
+                >
                   <ui-select-match placeholder="Start typing to find an item Substitutions" ui-lock-choice="isDisabled()">{{ $item.itemName }}
                   </ui-select-match>
                   <ui-select-choices
@@ -209,6 +216,9 @@
                   </ui-select-choices>
                 </ui-select>
 
+                <small ng-hide="areDatesSelected()" class="form-text text-muted">
+                  <span  ><i class="fa fa-exclamation-circle"></i> Items will be loaded when Effective date rage is selected.</span>
+                </small>
               </div>
 
               <div class="form-group">
