@@ -14,7 +14,7 @@
     "angular-route": "1.4.8",
     "angular-sanitize": "1.4.8",
     "angular-touch": "1.4.8",
-    "angular-ui-select": "~0.13.2",
+    "angular-ui-select": "~0.18.1",
     "angular-tooltips": "~1.2.2",
     "bootstrap-datepicker": "~1.4.0",
     "bootstrap-sass-official": "^3.2.0",
