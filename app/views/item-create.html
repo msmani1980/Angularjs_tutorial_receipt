@@ -198,53 +198,54 @@
             <fieldset ng-disabled="isDisabled() && uiSelectTemplateReady">
               <div class="form-group">
                 <label>Item Substitutions</label>
-                <ui-select style="min-height: 31px; margin-bottom: 15px;"
-                           ng-if="uiSelectTemplateReady"
-                           multiple
-                           ng-model="formData.substitutions"
-                           theme="bootstrap"
-                           remove-selected="false"
-                           ng-disabled="isDisabled() || !areDatesSelected()"
+                <ui-select
+                  ng-if="uiSelectTemplateReady && !itemsAreBeingLoaded"
+                  multiple
+                  ng-model="formData.substitutions"
+                  theme="bootstrap"
+                  remove-selected="false"
+                  style="min-height: 31px; margin-bottom: 15px;"
+                  ng-disabled="!areDatesSelected() || substitutionsForDateRangeAreEmpty"
                 >
-                  <ui-select-match placeholder="Item Substitutions" ui-lock-choice="isDisabled()">{{ $item.itemName }}
-                  </ui-select-match>
+                  <ui-select-match placeholder="Item Substitutions" ui-lock-choice="isDisabled()">{{ $item.itemName }}</ui-select-match>
                   <ui-select-choices
                     repeat="substitution in substitutions | filter: $select.search | orderBy:'itemName'">
                     <div ng-bind-html="substitution.itemName | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
 
-                <!--<small ng-if="!areDatesSelected() && uiSelectTemplateReady && !isDisabled()" class="form-text text-muted" >-->
-                  <!--<span  class="alert alert-info" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> Substitutions will be loaded when Effective date range is selected.</span>-->
-                <!--</small>-->
-                <!--<small ng-if="areDatesSelected() && substitutionsForDateRangeAreEmpty" class="form-text text-muted">-->
-                  <!--<span  class="alert alert-warning" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> There are no active substitutions for selected date range.</span>-->
-                <!--</small>-->
+                <small ng-if="!areDatesSelected() && uiSelectTemplateReady && !isDisabled()" class="form-text text-muted" >
+                  <span  class="alert alert-info" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> Substitutions will be loaded when Effective date range is selected.</span>
+                </small>
+                <small ng-if="areDatesSelected() && substitutionsForDateRangeAreEmpty" class="form-text text-muted">
+                  <span  class="alert alert-warning" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> There are no active substitutions for selected date range.</span>
+                </small>
               </div>
 
               <div class="form-group">
                 <label>Item Recommendations</label>
                 <ui-select
-                  ng-if="uiSelectTemplateReady"
+                  ng-if="uiSelectTemplateReady && !itemsAreBeingLoaded"
                   multiple
                   ng-model="formData.recommendations"
                   theme="bootstrap"
+                  remove-selected="false"
                   style="min-height: 31px; margin-bottom: 15px;"
+                  ng-disabled="!areDatesSelected() || recommendationsForDateRangeAreEmpty"
                 >
-                  <ui-select-match placeholder="Item Recommendations" ui-lock-choice="isDisabled()">{{ $item.itemName }}
-                  </ui-select-match>
+                  <ui-select-match placeholder="Item Recommendations" ui-lock-choice="isDisabled()">{{ $item.itemName }}</ui-select-match>
                   <ui-select-choices
                     repeat="recommendation in recommendations | filter: $select.search | orderBy:'itemName'">
                     <div ng-bind-html="recommendation.itemName | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
 
-                <!--<small ng-if="!areDatesSelected() && uiSelectTemplateReady && !isDisabled()" class="form-text text-muted">-->
-                  <!--<span  class="alert alert-info" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> Recommendations will be loaded when Effective date range is selected.</span>-->
-                <!--</small>-->
-                <!--<small ng-if="areDatesSelected() && recommendationsForDateRangeAreEmpty && !isDisabled()" class="form-text text-muted">-->
-                  <!--<span  class="alert alert-warning" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> There are no active recommendations for selected date range.</span>-->
-                <!--</small>-->
+                <small ng-if="!areDatesSelected() && uiSelectTemplateReady && !isDisabled()" class="form-text text-muted">
+                  <span  class="alert alert-info" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> Recommendations will be loaded when Effective date range is selected.</span>
+                </small>
+                <small ng-if="areDatesSelected() && recommendationsForDateRangeAreEmpty && !isDisabled()" class="form-text text-muted">
+                  <span  class="alert alert-warning" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> There are no active recommendations for selected date range.</span>
+                </small>
               </div>
 
             </fieldset>
