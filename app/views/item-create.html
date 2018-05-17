@@ -214,10 +214,10 @@
                   </ui-select-choices>
                 </ui-select>
 
-                <small ng-hide="areDatesSelected()" class="form-text text-muted" >
+                <small ng-if="uiSelectTemplateReady" ng-hide="areDatesSelected()" class="form-text text-muted" >
                   <span  class="alert alert-info" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> Substitutions will be loaded when Effective date range is selected.</span>
                 </small>
-                <small ng-if="areDatesSelected() && substitutionsForDateRangeAreEmpty" class="form-text text-muted">
+                <small ng-if="uiSelectTemplateReady" ng-if="areDatesSelected() && substitutionsForDateRangeAreEmpty" class="form-text text-muted">
                   <span  class="alert alert-warning" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> There are no active substitutions for selected date range.</span>
                 </small>
               </div>
@@ -239,10 +239,10 @@
                   </ui-select-choices>
                 </ui-select>
 
-                <small ng-hide="areDatesSelected()" class="form-text text-muted">
+                <small ng-if="uiSelectTemplateReady" ng-hide="areDatesSelected()" class="form-text text-muted">
                   <span  class="alert alert-info" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> Recommendations will be loaded when Effective date range is selected.</span>
                 </small>
-                <small ng-if="areDatesSelected() && recommendationsForDateRangeAreEmpty" class="form-text text-muted">
+                <small ng-if="uiSelectTemplateReady" ng-if="areDatesSelected() && recommendationsForDateRangeAreEmpty" class="form-text text-muted">
                   <span  class="alert alert-warning" style="padding: 3px;"><i class="fa fa-exclamation-circle"></i> There are no active recommendations for selected date range.</span>
                 </small>
               </div>
