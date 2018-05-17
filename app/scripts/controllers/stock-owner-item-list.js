@@ -23,6 +23,14 @@ angular.module('ts5App')
       endDate: ''
     };
 
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
     this.updateItemList = function () {
       $scope.itemsListCount = $scope.itemsList.length;
       $scope.totalItems = $scope.itemsListCount;
@@ -74,6 +82,7 @@ angular.module('ts5App')
         $scope.itemsListCount = $scope.itemsList.length;
         $this.updateItemList();
         $this.hideLoadingModal();
+        hideLoadingModal();
       });
 
       $this.meta.offset += $this.meta.limit;
@@ -160,6 +169,7 @@ angular.module('ts5App')
     };
 
     $scope.searchRecords = function () {
+      showLoadingModal('Searching');
       $this.meta = {
         count: undefined,
         limit: 100,
