@@ -460,35 +460,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.formData.notesTranslations = mappedNotes;
     };
 
-    $scope.autoCompleteSubstitutionCode = function($select, $event) {
-      if ($event) {
-        $event.stopPropagation();
-        $event.preventDefault();
-      }
-
-      if ($select.search && $select.search.length !== 0) {
-        var payload = {
-          itemName: $select.search
-        };
-
-        if($scope.formData.startDate) {
-          payload.startDate = dateUtility.formatDateForAPI($scope.formData.startDate);
-        }
-
-        if($scope.formData.endDate) {
-          payload.endDate = dateUtility.formatDateForAPI($scope.formData.endDate);
-        }
-
-        itemsFactory.getItemsList(payload).then($this.setItemSubstitutionListOnAutoComplete);
-      } else {
-        $scope.substitutions = angular.copy($scope.items);
-      }
-    };
-
-    this.setItemSubstitutionListOnAutoComplete = function (itemListFromAPI) {
-      $scope.substitutions = angular.copy(itemListFromAPI.retailItems);
-    };
-
     this.setInitialSubstitutionAndRecomendations = function (itemListFromAPI) {
       $scope.items = [];
       if(itemListFromAPI.retailItems) {
@@ -812,6 +783,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.getDependencies = function() {
+
       $this.showLoadingModal('We are loading the Items data!');
       var dependencyPromises = $this.makeDependencyPromises();
       $q.all(dependencyPromises).then($this.setDependencies, $this.errorHandler);
