@@ -462,15 +462,16 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setInitialSubstitutionAndRecomendations = function (itemListFromAPI) {
       $scope.items = [];
-      if(itemListFromAPI.retailItems) {
+      if (itemListFromAPI.retailItems) {
         $scope.items = angular.copy(itemListFromAPI.retailItems);
       }
+      
       $scope.substitutions = angular.copy($scope.items);
       $scope.recommendations = angular.copy($scope.items);
 
       $scope.itemsAreBeingLoaded = false;
 
-      if($scope.items.length === 0) {
+      if ($scope.items.length === 0) {
         $scope.substitutionsForDateRangeAreEmpty = true;
         $scope.recommendationsForDateRangeAreEmpty = true;
       } else {
