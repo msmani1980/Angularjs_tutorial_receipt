@@ -466,6 +466,14 @@ angular.module('ts5App', [
     templateUrl: 'views/report-exchange-rate.html',
     controller: 'ReportExchangeRateCtrl',
     controllerAs: 'reportExchangeRate'
+  }).when('/priceupdater-list', {
+    templateUrl: 'views/priceupdater-list.html',
+    controller: 'PriceupdaterListCtrl',
+    controllerAs: 'priceupdaterList'
+  }).when('/priceupdater/:action/:id?', {
+    templateUrl: 'views/priceupdater-create.html',
+    controller: 'PriceupdaterCreateCtrl',
+    controllerAs: 'priceupdaterCreate'
   }).otherwise({
     redirectTo: '/'
   });

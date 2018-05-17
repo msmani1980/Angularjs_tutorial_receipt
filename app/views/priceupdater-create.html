@@ -1,0 +1,116 @@
+<div class="module-container">
+	<div class="edit-controls">
+	    <div class="row">
+	      <div class="col-xs-6">
+	        <h2 class="view-name">{{viewName}}</h2>
+	      </div>
+
+	      <div class="col-xs-6 text-right">
+	        <a class="btn btn-default" ng-href="#/priceupdater-list" class="btn" ng-show="readOnly">Back</a>
+	      </div>
+	    </div>
+	</div>
+	<error-dialog form-object="priceUpdaterDataForm" error-response="errorResponse" display="displayError"></error-dialog>
+	<!-- Data Input Section -->
+	<form name="priceUpdaterDataForm">
+		<div class="panel panel-default">
+		  <div class="panel-body">
+				<div class="row">
+				   <div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="categoryName">Category*</label>
+							<select name="Category" ng-model="rule.categoryId" class="form-control" ng-disabled="isDisabled()" id="item-sales-category" required
+							 ng-options="salesCategory.id as salesCategory.name for salesCategory in salesCategories">
+							 <option value="">Select Category...</option>
+	                  		</select>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<date-picker-field
+				                form="priceUpdaterDataForm" name="EffectiveStartDate"
+								label="Effective Start Date"
+								disable="isDisabled()"
+								required="true"
+								disable-past="true"
+								ng-model="rule.startDate">
+							</date-picker-field>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<date-picker-field
+				                form="priceUpdaterDataForm"
+				                name="EffectiveEndDate"
+								label="Effective End Date"
+								disable="readOnly || shouldDisableEndDate"
+								ng-model="rule.endDate"
+								end-current-effective="!viewEditItem"
+								custom-effective="true"
+								custom-date="rule.endDate"
+								required="true">
+				              </date-picker-field>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="priceType">Price Type*</label>
+							<select name="Price Type" ng-model="rule.priceTypeId" required="true" ng-disabled="isDisabled()" class="form-control"
+								ng-options="type.id as type.name for type in priceTypes">
+								<option value="">Select Price Type...</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="taxIs">Tax Is*</label>
+							<select name="Tax Is" ng-model="rule.taxFilter" ng-disabled="isDisabled()" required="true"  class="form-control"
+							   ng-options="tax.value as tax.name for tax in taxIs">
+							   <option value="">Select Tax Is...</option>
+						    </select>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="currencyList">Currencies List*</label>
+							
+							<div class="form-group" ng-repeat="(currencyKey,currency) in priceCurrencies track by $index">
+							
+								<div class="input-group">
+								
+									<div class="input-group-addon">
+    	          						{{ currency.code }} *
+									</div>
+									
+									<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="true"  
+											ng-disabled="isDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+											
+								</div>
+								
+							</div>
+							
+						</div>
+					</div>
+				</div>	
+			</div>
+			<div class="panel-footer text-right">
+				<a href="#/priceupdater-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+				<button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+					<span class="fa fa-check-square-o" aria-hidden="true"></span> <span
+						class="hidden-xs">Save</span>
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Retail Item Management"></dynamic-left-nav>
