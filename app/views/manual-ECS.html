@@ -68,7 +68,7 @@
     </div>
 
 
-    <form name="manualECSForm" class="form">
+    <!-- form name="manualECSForm" class="form"-->
       <error-dialog form-object="manualECSForm" error-response="errorResponse" display="displayError"></error-dialog>
 
 
@@ -77,6 +77,7 @@
           <h3>Portal Store Instances</h3>
 
           <div class="panel panel-default">
+            <form name="portalSInstanceForm" ng-submit="searchPortalInstances()">
             <div class="panel-body">
               <div class="row">
                 <div class="col-xs-12 col-sm-6">
@@ -92,9 +93,10 @@
                   <date-picker
                     class="form-group"
                     name="startDate"
-	                disable-date-range="true"
 	                start-date-model="portalSearch.scheduleDate"
+	                disable-date-range="true"
 	                is-search-field="true"
+	                disable-start-date="readOnly"
 	                label-from="Schedule Date">
 	              </date-picker>
                 </div>
@@ -120,12 +122,13 @@
                            placeholder="Enter Store Instance Number">
                   </div>
                 </div>
-              </div>
+              </div>          
             </div>
             <div class="panel-footer text-right">
               <button type="button" class="btn btn-default" ng-click="clearPortalSearch()">Clear</button>
-              <button type="button" class="btn btn-primary" ng-click="searchPortalInstances()">Search</button>
+              <button type="submit" class="btn btn-primary">Search</button>
             </div>
+          </form>
           </div>
 
         </div>
@@ -133,6 +136,7 @@
           <h3>ePOS Carrier Instances</h3>
 
           <div class="panel panel-default">
+            <form name="ePosCarrierInstanceForm" ng-submit="searchEposInstances()">
             <div class="panel-body">
               <div class="row">
                 <div class="col-xs-12 col-sm-6">
@@ -147,8 +151,8 @@
                   <date-picker
                     class="form-group"
                     name="startDate"
-	                disable-date-range="true"
 	                start-date-model="eposSearch.scheduleDate"
+	                disable-date-range="true"
 	                is-search-field="true"
 	                label-from="Schedule Date">
 	              </date-picker>
@@ -168,10 +172,11 @@
                 </div>
               </div>
             </div>
-            <div class="panel-footer text-right">
-              <button type="button" class="btn btn-default" ng-click="clearEposSearch()">Clear</button>
-              <button type="button" class="btn btn-primary" ng-click="searchEposInstances()">Search</button>
-            </div>
+              <div class="panel-footer text-right">
+                <button type="button" class="btn btn-default" ng-click="clearEposSearch()">Clear</button>
+                <button type="submit" class="btn btn-primary" >Search</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -275,7 +280,7 @@
         </div>
 
       </div>
-    </form>
+    <!-- /form-->
 
     <div class="bottom-footer">
       <div class="container">
@@ -298,6 +303,7 @@
         <h3>Existing ECS Relationships</h3>
 
         <div class="panel panel-default" id="relationships-search-collapse">
+          <form name="escForm" ng-submit="searchAllECSInstances()">
           <div class="panel-body">
             <div class="row">
               <div class="col-xs-12 col-sm-3">
@@ -312,11 +318,10 @@
                 <date-picker
                   class="form-group"
                   name="startDate"
-                  disable-date-range="true"
                   start-date-model="allInstancesSearch.portalScheduleDate"
+                  disable-date-range="true"
                   is-search-field="true"
                   disable-start-date="readOnly"
-                  required="false"
                   label-from="Portal Schedule Date">
 	            </date-picker>
               </div>
@@ -354,11 +359,10 @@
                 <date-picker
                   class="form-group"
                   name="startDate"
-                  disable-date-range="true"
                   start-date-model="allInstancesSearch.eposScheduleDate"
+                  disable-date-range="true"
                   is-search-field="true"
                   disable-start-date="readOnly"
-                  required="false"
                   label-from="ePOS Schedule Date">
 	            </date-picker>
               </div>
@@ -377,10 +381,11 @@
               </div>
             </div>
           </div>
-          <div class="panel-footer text-right">
-            <button type="button" class="btn btn-default" ng-click="clearAllInstancesSearch()">Clear</button>
-            <button type="button" class="btn btn-primary" ng-click="searchAllECSInstances()">Search</button>
-          </div>
+            <div class="panel-footer text-right">
+              <button type="button" class="btn btn-default" ng-click="clearAllInstancesSearch()">Clear</button>
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </form>
         </div>
 
       </div>

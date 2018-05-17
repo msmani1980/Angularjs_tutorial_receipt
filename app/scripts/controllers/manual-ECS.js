@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:6 */
 /**
  * @ngdoc function
  * @name ts5App.controller:ExciseDutyListCtrl
@@ -122,6 +123,8 @@ angular.module('ts5App')
       var stationMatch = lodash.findWhere($scope.companyStationList, { stationId: storeInstance.cateringStationId });
       storeInstance.stationCode = (!!stationMatch) ? stationMatch.stationCode : '';
       storeInstance.statusName = getStatusName(storeInstance.statusId);
+      
+      return storeInstance;
     }
 
     function getStoreInstancesSuccess(dataFromAPI) {
@@ -141,11 +144,24 @@ angular.module('ts5App')
       if ($scope.storeInstances === undefined) {
         $scope.storeInstances = [];
       }
-      
+
       var paginatedList = $scope.storeInstances.concat(storeInstancesResponse);
-      $scope.storeInstances = lodash.filter(paginatedList, function (storeInstance) {
-        formatStoreInstanceForApp(storeInstance);
-        return allowedStatuses.indexOf(storeInstance.statusName.toLowerCase()) >= 0;
+      var paginatedListFormatted = [];
+      
+      for (var i = 0; i < paginatedList.length; i++) {
+        var si = formatStoreInstanceForApp(paginatedList[i]);
+        var statusName = si.statusName.toLowerCase();
+        if (allowedStatuses.indexOf(statusName) >= 0) {
+          si.allowedStatuse = true;
+        } else {
+          si.allowedStatuse = false;
+        }
+
+        paginatedListFormatted.push(si);
+      }
+      
+      $scope.storeInstances = lodash.filter(paginatedListFormatted, function (storeInstance) {
+        return storeInstance.allowedStatuse;
       });
 
       $scope.isSearchInInProgress = false;
