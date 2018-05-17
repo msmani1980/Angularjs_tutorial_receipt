@@ -87,32 +87,28 @@ angular.module('ts5App')
       }
     };
 
-    this.saveFormSuccess = function() {
+    this.refreshDataGrid = function() {
       $this.hideLoadingModal();
-      this.showToastMessage('success', 'Create Company Reason Code', 'success');
+      $scope.companyReasonCodes = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+      $scope.loadCompanyReasonCodes();
+    };
+
+    this.saveFormSuccess = function() {
+      $this.showToastMessage('success', 'Create Company Reason Code', 'Company Reason Code successfully created');
+      $this.refreshDataGrid();
+      $scope.clearCreateForm();
+      hideCreatePanel();
     };
 
     this.saveFormFailure = function(dataFromAPI) {
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
-    };
-
-    $scope.createCompanyReasonCode = function() {
-      if ($this.validateForm()) {
-        $this.showLoadingModal('Creating Company Reason Code Data');
-        var payload = {
-          companyReasonCodeName: $scope.reason.companyReasonCodeName,
-          companyReasonTypeId: $scope.reason.companyReasonTypeId,
-          isDefault: $scope.reason.isDefault ? 1 : null,
-          startDate: dateUtility.formatDateForAPI($scope.reason.startDate),
-          endDate: dateUtility.formatDateForAPI($scope.reason.endDate)
-        };
-
-        companyReasoncodesFactory.createCompanyReasonCode(payload).then($this.saveFormSuccess, $this.saveFormFailure);
-      } else {
-        $scope.displayError = true;
-      }
     };
 
     this.getCompanyReasonCodesSuccess = function(response) {
@@ -165,6 +161,26 @@ angular.module('ts5App')
       $scope.loadCompanyReasonCodes();
     };
 
+    $scope.isUpdatable = function (reason) {
+      return dateUtility.isAfterTodayDatePicker(reason.startDate);
+    };
+
+    $scope.cancelEdit = function () {
+      $scope.inEditMode = false;
+      $scope.recordToEdit = null;
+      $scope.displayError = false;
+    };
+
+    $scope.isSelectedToEdit = function (reason) {
+      return ($scope.inEditMode && reason.id === $scope.recordToEdit.id);
+    };
+
+    $scope.selectToEdit = function (reason) {
+      $scope.recordToEdit = angular.copy(reason);
+      $scope.inEditMode = true;
+      $scope.startDateTemp = $scope.recordToEdit.startDate;
+    };
+
     this.displayLoadingModal = function (loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
     };
@@ -180,6 +196,10 @@ angular.module('ts5App')
     $scope.redirectToCompanyReason = function(id, state) {
       $location.search({});
       $location.path('survey/' + state + '/' + id).search();
+    };
+
+    $scope.clearCreateForm = function() {
+      $scope.reason = {};
     };
 
     this.deleteSuccess = function() {
@@ -222,6 +242,41 @@ angular.module('ts5App')
         companyReasoncodesFactory.getReasonTypes().then($this.getReasonTypesSuccess)
       ];
       return promises;
+    };
+
+    this.formatPayLoad = function(record) {
+      var payload = {
+        companyReasonCodeName: record.companyReasonCodeName,
+        companyReasonTypeId: record.companyReasonTypeId,
+        isDefault: record.isDefault ? 1 : null,
+        startDate: record.startDate === '' ? dateUtility.formatDateForAPI($scope.startDateTemp) : dateUtility.formatDateForAPI(record.startDate),
+        endDate: dateUtility.formatDateForAPI(record.endDate)
+      };
+
+      return payload;
+    };
+
+    this.saveUpdateForm = function() {
+      $this.showToastMessage('success', 'Update Company Reason Code', 'Company Reason Code successfully updated');
+      $scope.cancelEdit();
+      $this.refreshDataGrid();
+    };
+
+    $scope.editCompanyReasonCode = function () {
+      $this.showLoadingModal('Updating Company Reason Code Record');
+      var payload = $this.formatPayLoad($scope.recordToEdit);
+      payload.id = $scope.recordToEdit.id;
+      companyReasoncodesFactory.updateCompanyReasonCode(payload).then($this.saveUpdateForm, $this.saveFormFailure);
+    };
+
+    $scope.createCompanyReasonCode = function() {
+      if ($scope.companyReasonCreateForm.$valid) {
+        $this.showLoadingModal('Creating Company Reason Code Data');
+        var payload = $this.formatPayLoad($scope.reason);
+        companyReasoncodesFactory.createCompanyReasonCode(payload).then($this.saveFormSuccess, $this.saveFormFailure);
+      } else {
+        $scope.displayError = true;
+      }
     };
 
     this.init = function() {
