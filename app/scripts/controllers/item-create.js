@@ -12,8 +12,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     var $this = this;
     $scope.formData = {
-      startDate: dateUtility.tomorrowFormattedDatePicker(),
-      endDate: dateUtility.tomorrowFormattedDatePicker(),
       qrCodeValue: '',
       qrCodeImgUrl: null,
       images: [],
@@ -44,6 +42,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.displayCloneInfo = false;
     $scope.substitutionsForDateRangeAreEmpty = false;
     $scope.recommendationsForDateRangeAreEmpty = false;
+    $scope.itemsAreBeingLoaded = true;
     $scope.itemsAreBeingLoaded = true;
     $scope.dynamicStaticBarcodeOptions = [{
       label: 'Dynamic Barcode',
@@ -76,12 +75,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $scope.viewOnly = true;
       } else if (path.search('/item-create') !== -1) {
         $scope.creatingItem = true;
+        $scope.formData.startDate = dateUtility.tomorrowFormattedDatePicker();
+        $scope.formData.endDate = dateUtility.tomorrowFormattedDatePicker();
       }
     };
 
     this.init = function() {
-      this.checkFormState();
-      this.getDependencies();
+      $this.checkFormState();
+      $this.getDependencies();
     };
 
     this.updateViewName = function(item) {
@@ -465,7 +466,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       if (itemListFromAPI.retailItems) {
         $scope.items = angular.copy(itemListFromAPI.retailItems);
       }
-      
+
       $scope.substitutions = angular.copy($scope.items);
       $scope.recommendations = angular.copy($scope.items);
 
