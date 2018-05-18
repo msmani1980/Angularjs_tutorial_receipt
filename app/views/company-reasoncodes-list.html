@@ -59,7 +59,7 @@
       </form>
     </div>
     
-    <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+    <error-dialog form-object="companyReasonCreateForm" error-response="errorResponse" display="displayError">
     </error-dialog>
     <div class="panel panel-default collapse no-transition" id="create-collapse">
       <form name="companyReasonCreateForm" ng-submit="createCompanyReasonCode()">
@@ -70,7 +70,12 @@
             <div class="col-xs-12 col-sm-6 col-md-4">
 			  <div class="form-group">
                 <label for="companyReasonCodeName">Company Reason Code*</label>
-                <input ng-model="reason.companyReasonCodeName" type="text" class="form-control" required="true" id="companyReasonCodeName" placeholder="Company Reason Code">
+                <input ng-model="reason.companyReasonCodeName" type="text" 
+                	class="form-control" 
+                	required="true" 
+                	id="companyReasonCodeName"
+                	name="companyReasonCodeName" 
+                	placeholder="Company Reason Code">
               </div>
 			</div>
 			<div class="col-xs-12 col-sm-6 col-md-4">
@@ -136,7 +141,7 @@
         <thead>
         <tr>
           <th>Company Reason Code</th>
-          <th>Company Reason Type</th>
+          <th>Reason Type</th>
           <th>Start Date</th>
           <th>End Date</th>
           <th>Is Default</th>
@@ -148,20 +153,22 @@
           <td>
           	<span ng-hide="isSelectedToEdit(reason) && isUpdatable(reason)">{{ reason.companyReasonCodeName }}</span>
           	<span ng-show="isSelectedToEdit(reason) && isUpdatable(reason)">
-          	    <input ng-model="recordToEdit.companyReasonCodeName" type="text" class="form-control" 
-          	    	required="true" id="editCompanyReasonCodeName" 
+       	    	<input ng-model="recordToEdit.companyReasonCodeName" type="text" class="form-control" 
+          	    	required="true" id="editCompanyReasonCodeName" name="editCompanyReasonCodeName"
+	          	    ng-show="isSelectedToEdit(reason) && isUpdatable(reason)"
           	    	placeholder="Company Reason Code">
           	</span>
           </td>	
           <td>
           	<span ng-hide="isSelectedToEdit(reason) && isUpdatable(reason)">{{ reason.reasonTypeName }}</span>
           	<span ng-show="isSelectedToEdit(reason) && isUpdatable(reason)">
-          		<select name="reasonType" id="editCompanyReasonTypeId" class="form-control" required="true"
-                      ng-options="reasonType.id as reasonType.reasonTypeName for reasonType in reasonTypes"
-                      ng-model="recordToEdit.companyReasonTypeId">
+       			<select name="reasonTypeEdit" id="editCompanyReasonTypeId" class="form-control" required="true"
+                	    ng-options="reasonType.id as reasonType.reasonTypeName for reasonType in reasonTypes"
+                    	ng-show="isSelectedToEdit(reason) && isUpdatable(reason)"
+                    	ng-model="recordToEdit.companyReasonTypeId">
                 		<option value="">Please Select Reason Type</option>
-              	</select>
-          	</span>
+            	</select>
+            </span>	
           </td>	
           <td>
           	<span ng-hide="isSelectedToEdit(reason) && isUpdatable(reason)">{{ reason.startDate }}</span>
@@ -215,8 +222,9 @@
                     ng-click="selectToEdit(reason)">
               <i class="fa fa-pencil"></i>
             </button>
-            <button class="btn btn-danger btn-xs"
-                    ng-click="deleteRecordDialog(companyReasonCodes[$index], ['companyReasonCodeName', 'reasonTypeName', 'startDate', 'endDate'])"
+            <button type="button"
+            		class="btn btn-danger btn-xs"
+                    ng-click="deleteRecordDialog(reason, ['companyReasonCodeName', 'reasonTypeName', 'startDate', 'endDate'])"
                     tabindex="4"
                     ng-show="showDeleteButton(reason.startDate) && !inEditMode">
               <i class="fa fa-trash"></i>
