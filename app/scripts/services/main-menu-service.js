@@ -147,7 +147,7 @@ angular.module('ts5App')
         menuItems: [{
           name: 'Manage Reason Code',
           route: '/#/company-reasoncodes-list',
-          icon: 'icon-manage-schedule',
+          icon: 'icon-manage-menu',
           className: 'dashboard-companyReasonCode',
           package: 'COMPANYREASON',
           role: 'COMPANYREASON',
