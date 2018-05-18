@@ -161,6 +161,16 @@ angular.module('ts5App')
         inputType: 'RADIO_BUTTON',
         id: 'inboundCountDefaultPOSSalesQuantity',
         values: angular.copy($this.radioButtonValues)
+      },
+      {
+        name: "Default Ullage counts to Inbound counts for \'Wastage\' stock",
+        featureCode: 'INB',
+        optionCode: 'IWST',
+        choiceCode: 'ACT',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'defaultUllageCountsToInboundCountsForWastageStock',
+        values: angular.copy($this.radioButtonValues)
       }
     ];
 
