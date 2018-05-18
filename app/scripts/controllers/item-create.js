@@ -361,21 +361,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return itemIndex;
     };
 
-    this.deserializeSubstitutions = function(itemData) {
-      if (angular.isUndefined(itemData.substitutions)) {
-        return;
-      }
-
-      for (var substitutionKey in itemData.substitutions) {
-        var substitutionId = itemData.substitutions[substitutionKey];
-        var index = $this.findItemIndexById(substitutionId);
-        itemData.substitutions[substitutionKey] = {
-          itemMasterId: substitutionId,
-          itemName: (index !== null) ? $scope.items[index].itemName : ''
-        };
-      }
-    };
-
     $scope.deserializeSubstitutionsAfterItemSet = function() {
       if (angular.isUndefined($scope.formData.substitutions)) {
         return;
@@ -416,17 +401,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
 
       return substitutionsPayload;
-    };
-
-    this.deserializeRecommendations = function(itemData) {
-      for (var recommendationKey in itemData.recommendations) {
-        var recommendationId = itemData.recommendations[recommendationKey];
-        var index = $this.findItemIndexById(recommendationId);
-        itemData.recommendations[recommendationKey] = {
-          itemMasterId: recommendationId,
-          itemName: (index !== null) ? $scope.items[index].itemName : ''
-        };
-      }
     };
 
     this.formatRecommendations = function(itemData) {
