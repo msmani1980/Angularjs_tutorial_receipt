@@ -785,6 +785,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.handleWastageItemForRedispatch = function(item, newItem) {
+      if (!($routeParams.action === 'redispatch' && $scope.defaultUllageCountsToIboundCountsForWastage)) {
+        return;
+      }
+
       var isItemWastage = lodash.findWhere(item.characteristics, {
         name: 'Wastage'
       });
@@ -848,9 +852,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
-        if ($routeParams.action === 'redispatch') {
-          $this.handleWastageItemForRedispatch(item, itemMatch);
-        }
+        $this.handleWastageItemForRedispatch(item, itemMatch);
       });
     };
 
