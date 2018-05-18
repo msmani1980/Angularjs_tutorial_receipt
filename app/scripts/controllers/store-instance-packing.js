@@ -790,7 +790,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
       newItem.isWastage = false;
 
-      newItem.ullageQuantity = newItem.inboundQuantity;
       if(isItemWastage) {
         newItem.ullageQuantity = newItem.inboundQuantity;
         newItem.isWastage = true;
