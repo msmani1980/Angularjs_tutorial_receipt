@@ -163,7 +163,7 @@ angular.module('ts5App')
         values: angular.copy($this.radioButtonValues)
       },
       {
-        name: "Default Ullage counts to Inbound counts for \'Wastage\' stock",
+        name: 'Default Ullage counts to Inbound counts for \'Wastage\' stock',
         featureCode: 'INB',
         optionCode: 'IWST',
         choiceCode: 'ACT',
