@@ -735,9 +735,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           if ($routeParams.action === 'end-instance') {
             $scope.offloadListItems.push(newItem);
           } else {
-            if ($routeParams.action === 'redispatch' && $scope.defaultUllageCountsToIboundCountsForWastage) {
-              $this.handleWastageItemForRedispatch(item, newItem);
-            }
             $scope.pickListItems.push(newItem);
           }
         }
