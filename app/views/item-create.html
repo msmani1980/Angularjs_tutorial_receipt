@@ -199,7 +199,7 @@
               <div class="form-group">
                 <label>Item Substitutions</label>
                 <ui-select
-                  ng-if="uiSelectTemplateReady && !itemsAreBeingLoaded"
+                  ng-if="!itemsAreBeingLoaded && isDependecyItemSet"
                   multiple
                   ng-model="formData.substitutions"
                   theme="bootstrap"
@@ -225,7 +225,7 @@
               <div class="form-group">
                 <label>Item Recommendations</label>
                 <ui-select
-                  ng-if="uiSelectTemplateReady && !itemsAreBeingLoaded"
+                  ng-if="!itemsAreBeingLoaded && isDependecyItemSet"
                   multiple
                   ng-model="formData.recommendations"
                   theme="bootstrap"

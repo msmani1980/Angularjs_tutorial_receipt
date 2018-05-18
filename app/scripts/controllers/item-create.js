@@ -43,6 +43,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.substitutionsForDateRangeAreEmpty = false;
     $scope.recommendationsForDateRangeAreEmpty = false;
     $scope.itemsAreBeingLoaded = true;
+    $scope.isDependecyItemSet = false;
     $scope.dynamicStaticBarcodeOptions = [{
       label: 'Dynamic Barcode',
       value: true
@@ -76,6 +77,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $scope.creatingItem = true;
         $scope.formData.startDate = dateUtility.tomorrowFormattedDatePicker();
         $scope.formData.endDate = dateUtility.tomorrowFormattedDatePicker();
+        $scope.isDependecyItemSet = true;
       }
     };
 
@@ -137,6 +139,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $this.setUIReady();
         $this.filterDuplicateInItemTags();
         $this.checkIfSupplierCompanyExpired();
+        $scope.isDependecyItemSet = true;
         return;
       }
 
@@ -373,6 +376,36 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     };
 
+    $scope.deserializeSubstitutionsAfterItemSet = function() {
+      if (angular.isUndefined($scope.formData.substitutions)) {
+        return;
+      }
+
+      for (var substitutionKey in $scope.formData.substitutions) {
+        var substitutionId = $scope.formData.substitutions[substitutionKey];
+        var index = $this.findItemIndexById(substitutionId);
+        $scope.formData.substitutions[substitutionKey] = {
+          itemMasterId: substitutionId,
+          itemName: (index !== null) ? $scope.items[index].itemName : ''
+        };
+      }
+    };
+
+    $scope.deserializeRecommendationsAfterItemSet = function() {
+      if (angular.isUndefined($scope.formData.recommendations)) {
+        return;
+      }
+
+      for (var recommendationKey in $scope.formData.recommendations) {
+        var recommendationId = $scope.formData.recommendations[recommendationKey];
+        var index = $this.findItemIndexById(recommendationId);
+        $scope.formData.recommendations[recommendationKey] = {
+          itemMasterId: recommendationId,
+          itemName: (index !== null) ? $scope.items[index].itemName : ''
+        };
+      }
+    };
+
     this.formatSubstitutions = function(itemData) {
       var substitutionsPayload = [];
       for (var substitutionKey in itemData.substitutions) {
@@ -469,7 +502,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.substitutions = angular.copy($scope.items);
       $scope.recommendations = angular.copy($scope.items);
 
-      $scope.itemsAreBeingLoaded = false;
+      $scope.deserializeSubstitutionsAfterItemSet();
+      $scope.deserializeRecommendationsAfterItemSet();
 
       if ($scope.items.length === 0) {
         $scope.substitutionsForDateRangeAreEmpty = true;
@@ -478,6 +512,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $scope.substitutionsForDateRangeAreEmpty = false;
         $scope.recommendationsForDateRangeAreEmpty = false;
       }
+
+      $scope.itemsAreBeingLoaded = false;
     };
 
     // updates the $scope.formData
@@ -496,8 +532,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.deserializeTags(itemData);
       this.deserializeAllergens(itemData);
       this.deserializeCharacteristics(itemData);
-      this.deserializeSubstitutions(itemData);
-      this.deserializeRecommendations(itemData);
       this.formatImageDates(itemData.images);
 
       var sortedPricesById = _.orderBy(itemData.prices, ['id'], ['asc']);
