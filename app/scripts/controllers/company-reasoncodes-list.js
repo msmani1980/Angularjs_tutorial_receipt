@@ -102,6 +102,7 @@ angular.module('ts5App')
       $this.showToastMessage('success', 'Create Company Reason Code', 'Company Reason Code successfully created');
       $this.refreshDataGrid();
       $scope.clearCreateForm();
+      $scope.displayError = false;
       hideCreatePanel();
     };
 
@@ -109,6 +110,17 @@ angular.module('ts5App')
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
+    this.validateForm = function(formName) {
+      $this.resetErrors();
+      return formName.$valid;
+    };
+
+    this.resetErrors = function() {
+      $scope.formErrors = [];
+      $scope.errorCustom = [];
+      $scope.displayError = false;
     };
 
     this.getCompanyReasonCodesSuccess = function(response) {
@@ -179,6 +191,7 @@ angular.module('ts5App')
       $scope.recordToEdit = angular.copy(reason);
       $scope.inEditMode = true;
       $scope.startDateTemp = $scope.recordToEdit.startDate;
+      $scope.recordToEdit.isDefault = reason.isDefault === 1 ? true : false; 
     };
 
     this.displayLoadingModal = function (loadingText) {
@@ -200,6 +213,7 @@ angular.module('ts5App')
 
     $scope.clearCreateForm = function() {
       $scope.reason = {};
+      $scope.displayError = false;
     };
 
     this.deleteSuccess = function() {
@@ -259,6 +273,7 @@ angular.module('ts5App')
     this.saveUpdateForm = function() {
       $this.showToastMessage('success', 'Update Company Reason Code', 'Company Reason Code successfully updated');
       $scope.cancelEdit();
+      $scope.displayError = false;
       $this.refreshDataGrid();
     };
 
@@ -270,7 +285,7 @@ angular.module('ts5App')
     };
 
     $scope.createCompanyReasonCode = function() {
-      if ($scope.companyReasonCreateForm.$valid) {
+      if ($this.validateForm($scope.companyReasonCreateForm)) {
         $this.showLoadingModal('Creating Company Reason Code Data');
         var payload = $this.formatPayLoad($scope.reason);
         companyReasoncodesFactory.createCompanyReasonCode(payload).then($this.saveFormSuccess, $this.saveFormFailure);
