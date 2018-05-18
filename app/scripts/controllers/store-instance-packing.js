@@ -735,7 +735,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           if ($routeParams.action === 'end-instance') {
             $scope.offloadListItems.push(newItem);
           } else {
-            if($routeParams.action === 'redispatch' && $scope.defaultUllageCountsToIboundCountsForWastage) {
+            if ($routeParams.action === 'redispatch' && $scope.defaultUllageCountsToIboundCountsForWastage) {
               $this.handleWastageItemForRedispatch(item, newItem);
             }
             $scope.pickListItems.push(newItem);
@@ -793,7 +793,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
       newItem.isWastage = false;
 
-      if(isItemWastage) {
+      if (isItemWastage) {
         newItem.ullageQuantity = newItem.inboundQuantity;
         newItem.isWastage = true;
       }
@@ -851,7 +851,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
-        if($routeParams.action === 'redispatch') {
+        if ($routeParams.action === 'redispatch') {
           $this.handleWastageItemForRedispatch(item, itemMatch);
         }
       });
