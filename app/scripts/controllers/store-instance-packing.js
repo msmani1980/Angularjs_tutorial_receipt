@@ -852,6 +852,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
+        
         $this.handleWastageItemForRedispatch(item, itemMatch);
       });
     };
