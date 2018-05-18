@@ -732,6 +732,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           if ($routeParams.action === 'end-instance') {
             $scope.offloadListItems.push(newItem);
           } else {
+            if($routeParams.action === 'redispatch') {
+              $this.handleWastageItemForRedispatch(item, newItem);
+            }
             $scope.pickListItems.push(newItem);
           }
         }
@@ -779,6 +782,19 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
       });
+    };
+
+    this.handleWastageItemForRedispatch = function(item, newItem) {
+      var isItemWastage = lodash.findWhere(item.characteristics, {
+        name: 'Wastage'
+      });
+      newItem.isWastage = false;
+
+      newItem.ullageQuantity = newItem.inboundQuantity;
+      if(isItemWastage) {
+        newItem.ullageQuantity = newItem.inboundQuantity;
+        newItem.isWastage = true;
+      }
     };
 
     this.getSalesCategoryName = function(itemMasterId) {
@@ -833,6 +849,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
+        if($routeParams.action === 'redispatch') {
+          $this.handleWastageItemForRedispatch(item, itemMatch);
+        }
       });
     };
 
@@ -872,6 +891,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $this.mergeEposInboundQuantities(angular.copy(responseCollection[3].response));
       }
 
+      $scope.pickListItems;
       $scope.filterOffloadListItems();
       $scope.filterPickListItems();
       $this.hideLoadingModal();
