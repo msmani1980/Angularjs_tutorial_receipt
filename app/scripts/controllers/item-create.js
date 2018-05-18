@@ -382,7 +382,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
 
       for (var substitutionKey in $scope.formData.substitutions) {
-        var substitutionId = $scope.formData.substitutions[substitutionKey];
+        var substitution = $scope.formData.substitutions[substitutionKey];
+        var substitutionId = angular.isDefined(substitution.itemMasterId) ? substitution.itemMasterId : substitution;
         var index = $this.findItemIndexById(substitutionId);
         $scope.formData.substitutions[substitutionKey] = {
           itemMasterId: substitutionId,
@@ -397,7 +398,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
 
       for (var recommendationKey in $scope.formData.recommendations) {
-        var recommendationId = $scope.formData.recommendations[recommendationKey];
+        var recommendation = $scope.formData.recommendations[recommendationKey];
+        var recommendationId = angular.isDefined(recommendation.itemMasterId) ? recommendation.itemMasterId : recommendation;
         var index = $this.findItemIndexById(recommendationId);
         $scope.formData.recommendations[recommendationKey] = {
           itemMasterId: recommendationId,
