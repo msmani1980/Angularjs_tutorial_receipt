@@ -116,6 +116,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var preferencesArray = angular.copy(dataFromAPI.preferences);
 
       var defaultInboundToEposPreference = null;
+      $scope.defaultUllageCountsToIboundCountsForWastage = false;
       angular.forEach(preferencesArray, function (preference) {
         if (defaultInboundToEposPreference === null && preference.featureName === 'Inbound' && preference.optionName === 'Default LMP Inbound counts to ePOS') {
           defaultInboundToEposPreference = preference.isSelected;
@@ -125,6 +126,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = 'itemName';
           $scope.itemSortOrder = 'itemName';
+        } else if (preference.featureName === 'Inbound' && preference.optionCode === 'IWST' && preference.choiceCode === 'ACT' && preference.isSelected) {
+          $scope.defaultUllageCountsToIboundCountsForWastage = true;
         }
       });
 
@@ -732,7 +735,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           if ($routeParams.action === 'end-instance') {
             $scope.offloadListItems.push(newItem);
           } else {
-            if($routeParams.action === 'redispatch') {
+            if($routeParams.action === 'redispatch' && $scope.defaultUllageCountsToIboundCountsForWastage) {
               $this.handleWastageItemForRedispatch(item, newItem);
             }
             $scope.pickListItems.push(newItem);
