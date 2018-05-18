@@ -1286,6 +1286,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.updateSuccessHandler = function(response) {
       $this.updateFormData(response[0].retailItem);
+      $scope.deserializeSubstitutionsAfterItemSet();
+      $scope.deserializeRecommendationsAfterItemSet();
       angular.element('#loading').modal('hide');
       angular.element('#update-success').modal('show');
     };
