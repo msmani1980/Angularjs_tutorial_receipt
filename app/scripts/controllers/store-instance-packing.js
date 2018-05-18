@@ -893,7 +893,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $this.mergeEposInboundQuantities(angular.copy(responseCollection[3].response));
       }
 
-      $scope.pickListItems;
       $scope.filterOffloadListItems();
       $scope.filterPickListItems();
       $this.hideLoadingModal();
