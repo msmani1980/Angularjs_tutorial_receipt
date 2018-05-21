@@ -135,6 +135,8 @@
     </div>  
     
     <br>
+    <error-dialog form-object="companyReasonEditForm" error-response="errorResponse" display="displayErrorEdit">
+    </error-dialog>
     <form name="companyReasonEditForm" ng-submit="editCompanyReasonCode()">
     <div class="table-responsive">
       <table infinite-scroll="loadCompanyReasonCodes()" class="table table-bordered table-hover ng-scope">
