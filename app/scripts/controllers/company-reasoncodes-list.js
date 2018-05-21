@@ -112,6 +112,12 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
+    this.saveEditFormFailure = function(dataFromAPI) {
+      $this.hideLoadingModal();
+      $scope.displayErrorEdit = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
     this.validateForm = function(formName) {
       $this.resetErrors();
       return formName.$valid;
@@ -121,6 +127,7 @@ angular.module('ts5App')
       $scope.formErrors = [];
       $scope.errorCustom = [];
       $scope.displayError = false;
+      $scope.displayErrorEdit = false;
     };
 
     this.getCompanyReasonCodesSuccess = function(response) {
@@ -180,7 +187,7 @@ angular.module('ts5App')
     $scope.cancelEdit = function () {
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
-      $scope.displayError = false;
+      $scope.displayErrorEdit = false;
     };
 
     $scope.isSelectedToEdit = function (reason) {
@@ -273,7 +280,7 @@ angular.module('ts5App')
     this.saveUpdateForm = function() {
       $this.showToastMessage('success', 'Update Company Reason Code', 'Company Reason Code successfully updated');
       $scope.cancelEdit();
-      $scope.displayError = false;
+      $scope.displayErrorEdit = false;
       $this.refreshDataGrid();
     };
 
@@ -281,7 +288,7 @@ angular.module('ts5App')
       $this.showLoadingModal('Updating Company Reason Code Record');
       var payload = $this.formatPayLoad($scope.recordToEdit);
       payload.id = $scope.recordToEdit.id;
-      companyReasoncodesFactory.updateCompanyReasonCode(payload).then($this.saveUpdateForm, $this.saveFormFailure);
+      companyReasoncodesFactory.updateCompanyReasonCode(payload).then($this.saveUpdateForm, $this.saveEditFormFailure);
     };
 
     $scope.createCompanyReasonCode = function() {
