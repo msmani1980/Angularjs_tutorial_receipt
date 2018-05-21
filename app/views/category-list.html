@@ -27,6 +27,7 @@
     </div>
 
     <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form class="form" ng-submit="search()">
       <div class="panel-body">
         <h4>Filter Categories
           <br>
@@ -63,8 +64,9 @@
       </div>
       <div class="panel-footer text-right">
         <button type="button" class="btn btn-default" ng-disabled="!showClearButton()" ng-click="clearSearch()">Clear</button>
-        <button type="button" class="btn btn-primary" ng-click="search()">Search</button>
+        <button type="submit" class="btn btn-primary">Search</button>
       </div>
+      </form>
     </div>
 	<error-dialog form-object="form" error-response="errorResponse" display="displayError">
     </error-dialog>
