@@ -177,6 +177,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $scope.ullageReasonCodes = lodash.filter(angular.copy(response.companyReasonCodes), {
           description: 'Ullage'
         });
+
+        $scope.defaultUllageReasonCodes = lodash.filter(angular.copy($scope.ullageReasonCodes), {
+          isDefault: 1
+        });
       }, this.errorHandler);
     };
 
@@ -789,14 +793,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return;
       }
 
-      var isItemWastage = lodash.findWhere(item.characteristics, {
-        name: 'Wastage'
-      });
-      newItem.isWastage = false;
-
-      if (isItemWastage) {
+      if (item.wastage) {
         newItem.ullageQuantity = newItem.inboundQuantity;
         newItem.isWastage = true;
+
+        if ($scope.defaultUllageReasonCodes) {
+          newItem.ullageReason = $scope.defaultUllageReasonCodes[0];
+        }
       }
     };
 
@@ -852,7 +855,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
-        
+
         $this.handleWastageItemForRedispatch(item, itemMatch);
       });
     };
