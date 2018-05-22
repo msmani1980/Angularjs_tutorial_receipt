@@ -153,6 +153,19 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        title: 'Manage Reason Code',
+        menuItems: [{
+          name: 'Manage Reason Code',
+          route: '/#/company-reasoncodes-list',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-companyReasonCode',
+          package: 'COMPANYREASON',
+          role: 'COMPANYREASON',
+          permissions: [{
+            permissionCodes: ['R']
+          }]
+        }]
+      }, {
         title: 'Employee Management',
         menuItems: [{
           name: 'Manage Employees',

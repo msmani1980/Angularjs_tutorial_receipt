@@ -1,0 +1,255 @@
+<div class="module-container">
+  <div class="row item-list-row">
+    <div class="col-xs-4">
+    	<h2 class="view-name">{{ viewName }}</h2>
+    </div>
+    <div class="col-xs-8 text-right">
+    	<button class="btn btn-primary" ng-show="isCRUD" aria-expanded="false" ng-click="toggleCreatePanel()">
+          <span class="fa fa-plus" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Create Company Reason Code</span>
+        </button>
+        <button class="btn btn-default" aria-expanded="false" ng-click="toggleFilterPanel()">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+    </div>
+  </div>
+
+  <div class="survey-data-list">
+    
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <form name="companyReasonSearchForm" ng-submit="searchCompanyReasonCodeData()">
+        <div class="panel-body">
+          <div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+			  <div class="form-group">
+                <label for="companyReasonCodeName">Company Reason Code</label>
+                <input ng-model="search.companyReasonCodeName" type="text" class="form-control" id="searchCompanyReasonCodeName" placeholder="Company Reason Code">
+              </div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-8">
+				<date-picker
+	                class="form-group"
+	                element-class="col-xs-6"
+	                start-date-model="search.startDate"
+	                end-date-model="search.endDate"
+	                label-from="Effective Start Date"
+	                label-to="Effective End Date"
+	                is-search-field="true">
+              </date-picker>
+			</div>
+		  </div>
+          <div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+				<div class="form-group">
+					<label for="reasonType">Reason Type</label>
+					<select name="reasonType" id="searchCompanyReasonTypeId" class="form-control"
+                      ng-options="reasonType.id as reasonType.reasonTypeName for reasonType in reasonTypes"
+                      ng-model="search.companyReasonTypeId">
+                		<option value="">Please Select Reason Type</option>
+              		</select>
+				</div>
+			</div>
+		  </div>
+		</div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+    
+    <error-dialog form-object="companyReasonCreateForm" error-response="errorResponse" display="displayError">
+    </error-dialog>
+    <div class="panel panel-default collapse no-transition" id="create-collapse">
+      <form name="companyReasonCreateForm" ng-submit="createCompanyReasonCode()">
+      	<div class="panel-body">
+          <h4>Create New Reason Code</h4>
+          <hr>
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4">
+			  <div class="form-group">
+                <label for="companyReasonCodeName">Company Reason Code*</label>
+                <input ng-model="reason.companyReasonCodeName" type="text" 
+                	class="form-control" 
+                	required="true" 
+                	id="companyReasonCodeName"
+                	name="companyReasonCodeName" 
+                	placeholder="Company Reason Code">
+              </div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4">
+				<div class="form-group">
+					<date-picker-field
+				    	form="companyReasonCreateForm" 
+				    	name="EffectiveStartDate"
+						label="Effective Start Date"
+						disable="isDisabled()"
+						required="true"
+						disable-past="true"
+						ng-model="reason.startDate">
+					</date-picker-field>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4">
+				<div class="form-group">
+					<date-picker-field
+				        form="companyReasonCreateForm"
+				        name="EffectiveEndDate"
+						label="Effective End Date"
+						disable="readOnly || shouldDisableEndDate"
+						ng-model="reason.endDate"
+						end-current-effective="!viewEditItem"
+						custom-effective="true"
+						custom-date="reason.endDate"
+						required="true">
+				    </date-picker-field>
+				</div>
+			</div>
+          </div>
+          <div class="row">
+          	<div class="col-xs-12 col-sm-6 col-md-4">
+          		<div class="form-group">
+					<label for="reasonType">Reason Type*</label>
+					<select name="reasonType" id="companyReasonTypeId" class="form-control" required="true"
+                      ng-options="reasonType.id as reasonType.reasonTypeName for reasonType in reasonTypes"
+                      ng-model="reason.companyReasonTypeId">
+                		<option value="">Please Select Reason Type</option>
+              		</select>
+				</div>
+          	</div>
+          	<div class="col-xs-12 col-sm-6 col-md-4">
+          		<label class="invisible">Checkbox</label>
+                <div class="form-group">
+					<input ng-model="reason.isDefault" id="isDefault" type="checkbox"/>
+                	<label>Is Default</label>
+				</div>
+          	</div>  
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearCreateForm()">Clear</button>
+          <button type="submit" class="btn btn-success"><span class="fa fa-check"></span> Save</button>
+        </div>
+      </form>
+    </div>  
+    
+    <br>
+    <error-dialog form-object="companyReasonEditForm" error-response="errorResponse" display="displayErrorEdit">
+    </error-dialog>
+    <form name="companyReasonEditForm" ng-submit="editCompanyReasonCode()">
+    <div class="table-responsive">
+      <table infinite-scroll="loadCompanyReasonCodes()" class="table table-bordered table-hover ng-scope">
+        <thead>
+        <tr>
+          <th>Company Reason Code</th>
+          <th>Reason Type</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Is Default</th>
+          <th ng-show="isCRUD">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="ng-scope" ng-repeat="reason in companyReasonCodes">
+          <td>
+          	<span ng-hide="isSelectedToEdit(reason) && isUpdatable(reason)">{{ reason.companyReasonCodeName }}</span>
+          	<span ng-show="isSelectedToEdit(reason) && isUpdatable(reason)">
+       	    	<input ng-model="recordToEdit.companyReasonCodeName" type="text" class="form-control" 
+          	    	required="true" id="editCompanyReasonCodeName" name="editCompanyReasonCodeName"
+	          	    ng-show="isSelectedToEdit(reason) && isUpdatable(reason)"
+          	    	placeholder="Company Reason Code">
+          	</span>
+          </td>	
+          <td>
+          	<span ng-hide="isSelectedToEdit(reason) && isUpdatable(reason)">{{ reason.reasonTypeName }}</span>
+          	<span ng-show="isSelectedToEdit(reason) && isUpdatable(reason)">
+       			<select name="reasonTypeEdit" id="editCompanyReasonTypeId" class="form-control" required="true"
+                	    ng-options="reasonType.id as reasonType.reasonTypeName for reasonType in reasonTypes"
+                    	ng-show="isSelectedToEdit(reason) && isUpdatable(reason)"
+                    	ng-model="recordToEdit.companyReasonTypeId">
+                		<option value="">Please Select Reason Type</option>
+            	</select>
+            </span>	
+          </td>	
+          <td>
+          	<span ng-hide="isSelectedToEdit(reason) && isUpdatable(reason)">{{ reason.startDate }}</span>
+          	<span ng-show="isSelectedToEdit(reason) && isUpdatable(reason)">
+          		<date-picker-field
+              		name="editStartDate"
+              		class="form-group"
+              		form="companyReasonEditForm"
+              		ng-model="recordToEdit.startDate"
+              		ng-show="isSelectedToEdit(reason) && isUpdatable(reason)">
+            	</date-picker-field>
+          	</span>
+          </td>
+          <td>
+          	<span ng-hide="isSelectedToEdit(reason) && isCompanyReasonCodeEditable(reason)">{{ reason.endDate }}</span>
+          	<span ng-show="isSelectedToEdit(reason) && isCompanyReasonCodeEditable(reason)">
+          		<date-picker-field
+              		name="editEndDate"
+              		class="form-group"
+              		form="companyReasonEditForm"
+              		min-date="minDate"
+              		ng-model="recordToEdit.endDate"
+              		ng-show="isSelectedToEdit(reason) && isCompanyReasonCodeEditable(reason)">
+            	</date-picker-field>
+          	</span>
+          </td>
+          <td>
+          	<span ng-hide="isSelectedToEdit(reason) && isUpdatable(reason)">{{ reason.isDefault }}</span>
+          	<span ng-show="isSelectedToEdit(reason) && isUpdatable(reason)">
+          		<input ng-model="recordToEdit.isDefault" id="isDefault" type="checkbox"/>
+          	</span>
+          </td>
+          <td ng-show="isCRUD">
+            <button type="submit"
+                    class="btn btn-success btn-xs"
+                    tabindex="1"
+                    ng-show="isSelectedToEdit(reason)">
+              <i class="fa fa-check"></i>
+            </button>
+            <button type="button"
+                    class="btn btn-default btn-xs"
+                    tabindex="2"
+                    ng-show="isSelectedToEdit(reason)"
+                    ng-click="cancelEdit()">
+              <i class="fa fa-times"></i>
+            </button>
+            <button type="button"
+                    class="btn btn-primary btn-xs"
+                    tabindex="3"
+                    ng-show="isCompanyReasonCodeEditable(reason) && !inEditMode"
+                    ng-click="selectToEdit(reason)">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button type="button"
+            		class="btn btn-danger btn-xs"
+                    ng-click="deleteRecordDialog(reason, ['companyReasonCodeName', 'reasonTypeName', 'startDate', 'endDate'])"
+                    tabindex="4"
+                    ng-show="showDeleteButton(reason.startDate) && !inEditMode">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    </form>
+    <alert ng-show="!loadingBarVisible && companyReasonCodes.length == 0" type="info">
+      <span class="fa fa-flag"></span> Your search returned no results.
+    </alert>
+    <p ng-if="companyReasonCodes.length > 0" class="record-count small text-center">Showing {{companyReasonCodes.length}} records</p>
+    <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+  </div>
+
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>
