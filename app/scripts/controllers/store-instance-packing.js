@@ -116,6 +116,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var preferencesArray = angular.copy(dataFromAPI.preferences);
 
       var defaultInboundToEposPreference = null;
+      $scope.defaultUllageCountsToIboundCountsForWastage = false;
       angular.forEach(preferencesArray, function (preference) {
         if (defaultInboundToEposPreference === null && preference.featureName === 'Inbound' && preference.optionName === 'Default LMP Inbound counts to ePOS') {
           defaultInboundToEposPreference = preference.isSelected;
@@ -125,6 +126,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = 'itemName';
           $scope.itemSortOrder = 'itemName';
+        } else if (preference.featureName === 'Inbound' && preference.optionCode === 'IWST' && preference.choiceCode === 'ACT' && preference.isSelected) {
+          $scope.defaultUllageCountsToIboundCountsForWastage = true;
         }
       });
 
@@ -173,6 +176,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstancePackingFactory.getReasonCodeList().then(function(response) {
         $scope.ullageReasonCodes = lodash.filter(angular.copy(response.companyReasonCodes), {
           description: 'Ullage'
+        });
+
+        $scope.defaultUllageReasonCodes = lodash.filter(angular.copy($scope.ullageReasonCodes), {
+          isDefault: 1
         });
       }, this.errorHandler);
     };
@@ -787,6 +794,20 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
+    this.handleWastageItemForRedispatch = function(item, newItem) {
+      if (!($routeParams.action === 'redispatch' && $scope.defaultUllageCountsToIboundCountsForWastage)) {
+        return;
+      }
+
+      if (item.wastage) {
+        newItem.ullageQuantity = newItem.inboundQuantity;
+
+        if ($scope.defaultUllageReasonCodes && newItem.ullageQuantity > 0) {
+          newItem.ullageReason = $scope.defaultUllageReasonCodes[0];
+        }
+      }
+    };
+
     this.getSalesCategoryName = function(itemMasterId) {
       var menuMatches = lodash.findWhere($scope.allowedMenuItemsForOffloadSection, { itemMasterId: itemMasterId });
       if (menuMatches) {
@@ -839,6 +860,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
+
+        $this.handleWastageItemForRedispatch(item, itemMatch);
       });
     };
 
