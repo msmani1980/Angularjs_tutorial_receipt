@@ -795,9 +795,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       if (item.wastage) {
         newItem.ullageQuantity = newItem.inboundQuantity;
-        newItem.isWastage = true;
 
-        if ($scope.defaultUllageReasonCodes) {
+        if ($scope.defaultUllageReasonCodes && newItem.ullageQuantity > 0) {
           newItem.ullageReason = $scope.defaultUllageReasonCodes[0];
         }
       }
