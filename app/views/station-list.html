@@ -33,7 +33,7 @@
 
 			<div class="panel-heading">Search for Stations</div>
 
-			<form name="searchForm" class="form">
+			<form name="searchForm" class="form" ng-submit="searchRecords()">
 
 				<div class="panel-body">
 
@@ -115,17 +115,14 @@
 
 				<div class="panel-footer text-right">
 
-          <button class="btn btn-default btn-search-clear"
-            ng-click="clearSearchFilters()"
-            ng-show="showClearButton()">
-            <span class="btn-label">Clear</span>
+          <button type="button" class="btn btn-default btn-search-clear" ng-click="clearSearchFilters()" ng-show="showClearButton()">
+            Clear
           </button>
 
-          <button ng-click="searchRecords()" class="btn btn-primary btn-search">
-            <span class="fa fa-search" aria-hidden="true"></span>
-            <span class="hidden-sm hidden-xs btn-label">Search</span>
+          <button type="submit" class="btn btn-primary btn-search">
+            Search
           </button>
-
+          
           <div class="dropdown pull-right" style="margin-left:3px;">
             <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Export As
