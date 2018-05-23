@@ -561,8 +561,8 @@ angular.module('ts5App')
     };
 
     this.validateForm = function() {
-      $scope.displayError = !$scope.form.$valid;
-      return $scope.form.$valid;
+      $scope.displayError = !$scope.form.$valid || $scope.errorCustom.length > 0;
+      return !$scope.displayError;
     };
 
     this.errorHandler = function(dataFromAPI) {
