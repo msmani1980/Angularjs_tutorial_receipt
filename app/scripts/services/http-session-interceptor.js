@@ -13,6 +13,7 @@ angular.module('ts5App')
     var errorCodeMap = {
       401: 'unauthorized',
       404: 'http-response-error',
+      408: 'http-session-timeout',
       500: 'http-response-error'
     };
 
