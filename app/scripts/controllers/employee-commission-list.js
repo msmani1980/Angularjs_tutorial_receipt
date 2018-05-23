@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint maxcomplexity:6 */
 /**
  * @ngdoc function
  * @name ts5App.controller:EmployeeCommissionListCtrl
@@ -52,7 +52,7 @@ angular.module('ts5App')
         payload.categoryName = $scope.search.selectedCategory.name;
       }
 
-      if (payload.startDate && payload.endDate) {
+      if (payload.startDate && payload.endDate || payload.categoryName) {
         employeeCommissionFactory.getItemsList(payload).then(function(dataFromAPI) {
           $scope.search.itemList = dataFromAPI.retailItems;
         });
@@ -196,9 +196,19 @@ angular.module('ts5App')
         // currently FE needs to send list of all itemIds in a category due to complications with sending only a categoryName to BE
         // TODO: fix if BE API is simplified
         payload.itemId = [];
+        var isFirst = true;
+        var itemIdStr = '';
         angular.forEach($scope.search.itemList, function(item) {
           payload.itemId.push(item.itemMasterId);
+          if (isFirst) {
+            itemIdStr = item.itemMasterId;
+            isFirst = false;
+          } else {
+            itemIdStr = itemIdStr + ',' + item.itemMasterId;
+          }
         });
+        
+        payload.itemId = itemIdStr;
       }
     }
 
@@ -267,6 +277,7 @@ angular.module('ts5App')
         limit: $this.meta.limit,
         offset: $this.meta.offset
       });
+      
       employeeCommissionFactory.getCommissionList(payload).then(getCommissionSuccessHandler);
       $this.meta.offset += $this.meta.limit;
     }
