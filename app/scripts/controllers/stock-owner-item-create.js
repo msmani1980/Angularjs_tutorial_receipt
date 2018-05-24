@@ -616,7 +616,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       $scope.shouldDisplayURLField = false;
 
       angular.forEach($scope.formData.characteristics, function(value) {
-        if (value.name === 'Downloadable') {
+        if (value.name === 'Downloadable' || value.name === 'Link') {
           $scope.shouldDisplayURLField = true;
         }
       });
