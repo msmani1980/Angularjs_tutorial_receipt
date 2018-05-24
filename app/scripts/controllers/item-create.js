@@ -785,7 +785,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         return o.name !== 'Link';
       });
 
-      $scope.itemCharacteristicsPerItemType = lodash.groupBy(filteredData, function(ic) { return ic.itemTypeId; });
+      $scope.itemCharacteristicsPerItemType = lodash.groupBy(data, function(ic) { return ic.itemTypeId; });
     };
 
     $scope.isItemCharacteristicsFieldDisabled = function() {
@@ -907,7 +907,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       $scope.shouldDisplayURLField = false;
       angular.forEach($scope.formData.characteristics, function(value) {
-        if (value.name === 'Downloadable') {
+        if (value.name === 'Downloadable' || value.name === 'Link') {
           $scope.shouldDisplayURLField = true;
         }
       });
