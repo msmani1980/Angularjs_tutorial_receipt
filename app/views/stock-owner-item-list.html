@@ -18,7 +18,7 @@
     </div>
 
     <div class="panel panel-default collapse no-transition" id="search-collapse">
-      <form class="form">
+      <form class="form" ng-submit="searchRecords()">
         <div class="panel-body">
           <div class="row">
 
@@ -74,32 +74,21 @@
 				<input ng-model="search.quickSearchCode" type="text" class="form-control" id="quick-search-code" placeholder="ePOS Quick Search Code">
               </div>
             </div>
-
-          </div>
-
-          <date-picker element-class="col-xs-12 col-sm-6 col-md-4"
+            <date-picker element-class="col-xs-12 col-sm-6 col-md-4"
                        start-date-model="dateRange.startDate"
                        end-date-model="dateRange.endDate"
                        is-search-field="true"
                        label-from="Effective From"
                        label-to="Effective To">
-          </date-picker>
-
+            </date-picker>
+          </div>
         </div>
 
         <div class="panel-footer text-right">
-          <button class="btn btn-default"
-                  ng-click="clearSearchFilters()"
-                  ng-show="showClearButton()">
-            <span>Clear</span>
-          </button>
-          <button ng-click="searchRecords()" class="btn btn-primary">
-            <span class="fa fa-search" aria-hidden="true"></span>
-            <span class="hidden-sm hidden-xs">Search</span>
-          </button>
+          <button type="button" class="btn btn-default" ng-click="clearSearchFilters()" ng-show="showClearButton()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
         </div>
       </form>
-
     </div>
   </div>
 

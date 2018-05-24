@@ -116,6 +116,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var preferencesArray = angular.copy(dataFromAPI.preferences);
 
       var defaultInboundToEposPreference = null;
+      $scope.defaultUllageCountsToIboundCountsForWastage = false;
       angular.forEach(preferencesArray, function (preference) {
         if (defaultInboundToEposPreference === null && preference.featureName === 'Inbound' && preference.optionName === 'Default LMP Inbound counts to ePOS') {
           defaultInboundToEposPreference = preference.isSelected;
@@ -125,6 +126,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = 'itemName';
           $scope.itemSortOrder = 'itemName';
+        } else if (preference.featureName === 'Inbound' && preference.optionCode === 'IWST' && preference.choiceCode === 'ACT' && preference.isSelected) {
+          $scope.defaultUllageCountsToIboundCountsForWastage = true;
         }
       });
 
@@ -174,6 +177,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $scope.ullageReasonCodes = lodash.filter(angular.copy(response.companyReasonCodes), {
           description: 'Ullage'
         });
+
+        $scope.defaultUllageReasonCodes = lodash.filter(angular.copy($scope.ullageReasonCodes), {
+          isDefault: 1
+        });
       }, this.errorHandler);
     };
 
@@ -212,12 +219,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return false;
       }
 
-      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 1;
+      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 0;
       var dispatchedQuantity = parseInt(angular.copy(item.pickedQuantity)) || 0;
 
       var threshold;
       threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
-      item.exceedsVariance = (threshold > $scope.variance);
+      
+      if (threshold === Infinity || threshold === -Infinity || threshold === undefined) {
+        item.exceedsVariance = true;
+      } else {
+        item.exceedsVariance = (threshold > $scope.variance);
+      }
+      
     };
 
     this.checkVarianceOnAllItems = function() {
@@ -781,6 +794,20 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
+    this.handleWastageItemForRedispatch = function(item, newItem) {
+      if (!($routeParams.action === 'redispatch' && $scope.defaultUllageCountsToIboundCountsForWastage)) {
+        return;
+      }
+
+      if (item.wastage) {
+        newItem.ullageQuantity = newItem.inboundQuantity;
+
+        if ($scope.defaultUllageReasonCodes && newItem.ullageQuantity > 0) {
+          newItem.ullageReason = $scope.defaultUllageReasonCodes[0];
+        }
+      }
+    };
+
     this.getSalesCategoryName = function(itemMasterId) {
       var menuMatches = lodash.findWhere($scope.allowedMenuItemsForOffloadSection, { itemMasterId: itemMasterId });
       if (menuMatches) {
@@ -833,6 +860,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
+
+        $this.handleWastageItemForRedispatch(item, itemMatch);
       });
     };
 

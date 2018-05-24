@@ -238,12 +238,23 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.filterMenusList = function () {
       $scope.filteredMenuList = [];
+      var output = [];
       angular.forEach($scope.menuCatererList, function (menuCaterer) {
         var filteredMenu = lodash.findWhere($scope.menuMasterList, {
           id: menuCaterer.menuId
         });
         if (filteredMenu) {
-          $scope.filteredMenuList.push(filteredMenu);
+          output.push(filteredMenu);
+        }
+      });
+
+      var keys = [];
+      angular.forEach(output, function(fMenu) {
+        var key = fMenu.menuId;
+        var indx = keys.indexOf(key);
+        if (indx === -1) {
+          keys.push(key);
+          $scope.filteredMenuList.push(fMenu);
         }
       });
     };

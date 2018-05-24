@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:6 */
 /**
  * @ngdoc function
  * @name ts5App.controller:ExciseDutyListCtrl
@@ -122,6 +123,8 @@ angular.module('ts5App')
       var stationMatch = lodash.findWhere($scope.companyStationList, { stationId: storeInstance.cateringStationId });
       storeInstance.stationCode = (!!stationMatch) ? stationMatch.stationCode : '';
       storeInstance.statusName = getStatusName(storeInstance.statusId);
+      
+      return storeInstance;
     }
 
     function getStoreInstancesSuccess(dataFromAPI) {
@@ -141,11 +144,24 @@ angular.module('ts5App')
       if ($scope.storeInstances === undefined) {
         $scope.storeInstances = [];
       }
-      
+
       var paginatedList = $scope.storeInstances.concat(storeInstancesResponse);
-      $scope.storeInstances = lodash.filter(paginatedList, function (storeInstance) {
-        formatStoreInstanceForApp(storeInstance);
-        return allowedStatuses.indexOf(storeInstance.statusName.toLowerCase()) >= 0;
+      var paginatedListFormatted = [];
+      
+      for (var i = 0; i < paginatedList.length; i++) {
+        var si = formatStoreInstanceForApp(paginatedList[i]);
+        var statusName = si.statusName.toLowerCase();
+        if (allowedStatuses.indexOf(statusName) >= 0) {
+          si.allowedStatuse = true;
+        } else {
+          si.allowedStatuse = false;
+        }
+
+        paginatedListFormatted.push(si);
+      }
+      
+      $scope.storeInstances = lodash.filter(paginatedListFormatted, function (storeInstance) {
+        return storeInstance.allowedStatuse;
       });
 
       $scope.isSearchInInProgress = false;
@@ -436,43 +452,64 @@ angular.module('ts5App')
     };
 
     function formatAllECSEposSearchPayload(workingPayload) {
+      var isLimitOffset = true; 
+
       if ($scope.allInstancesSearch.eposScheduleDate) {
         workingPayload.instanceDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.eposScheduleDate);
+        isLimitOffset = false;
       }
 
       if ($scope.allInstancesSearch.eposStation) {
         workingPayload.departureStation = $scope.allInstancesSearch.eposStation.stationCode;
+        isLimitOffset = false;
       }
 
       if ($scope.allInstancesSearch.eposStoreNumber) {
         workingPayload.storeNumber = $scope.allInstancesSearch.eposStoreNumber;
+        isLimitOffset = false;
       }
+
+      if (isLimitOffset) {
+        workingPayload.limit = $this.meta.limit;
+        workingPayload.offset = $this.meta.offset;
+      }  
     }
 
     function formatAllECSPortalSearchPayload(workingPayload) {
+      var isLimitOffset = true; 
+
       if ($scope.allInstancesSearch.portalScheduleDate) {
         workingPayload.siScheduleDate = dateUtility.formatDateForAPI($scope.allInstancesSearch.portalScheduleDate);
+        isLimitOffset = false;
       }
 
       if ($scope.allInstancesSearch.portalStation) {
         workingPayload.siCatererStationCode = $scope.allInstancesSearch.portalStation.code;
+        isLimitOffset = false;
       }
 
       if ($scope.allInstancesSearch.portalStoreNumber) {
         workingPayload.siStoreNumber = $scope.allInstancesSearch.portalStoreNumber;
+        isLimitOffset = false;
       }
 
       if ($scope.allInstancesSearch.storeInstance) {
         workingPayload.storeInstanceId = parseInt($scope.allInstancesSearch.storeInstance);
+        isLimitOffset = false;
       }
+
+      if (isLimitOffset) {
+        workingPayload.limit = $this.meta.limit;
+        workingPayload.offset = $this.meta.offset;
+      }  
     }
 
     function formatAllECSSearchPayload() {
       var searchPayload = {};
-      searchPayload.limit = $this.meta.limit;
-      searchPayload.offset = $this.meta.offset;
+
       formatAllECSEposSearchPayload(searchPayload);
       formatAllECSPortalSearchPayload(searchPayload);
+      
       return searchPayload;
     }
 
@@ -496,26 +533,33 @@ angular.module('ts5App')
 
     function formatPortalSearchPayload() {
       var searchPayload = {};
-
-      searchPayload.limit = $this.meta.limit;
-      searchPayload.offset = $this.meta.offset;
-
+      var isLimitOffset = true; 
+      
       if ($scope.portalSearch.scheduleDate) {
         searchPayload.startDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
         searchPayload.endDate = dateUtility.formatDateForAPI($scope.portalSearch.scheduleDate);
+        isLimitOffset = false;
       }
 
       if ($scope.portalSearch.station) {
         searchPayload.cateringStationId = $scope.portalSearch.station.id;
+        isLimitOffset = false;
       }
 
       if ($scope.portalSearch.storeNumber) {
         searchPayload.storeNumber = $scope.portalSearch.storeNumber;
+        isLimitOffset = false;
       }
 
       if ($scope.portalSearch.storeInstance) {
         searchPayload.storeInstanceId = parseInt($scope.portalSearch.storeInstance);
+        isLimitOffset = false;
       }
+
+      if (isLimitOffset) {
+        searchPayload.limit = $this.meta.limit;
+        searchPayload.offset = $this.meta.offset;
+      }  
 
       return searchPayload;
     }
@@ -543,6 +587,11 @@ angular.module('ts5App')
 
     $scope.searchEposInstances = function () {
       $scope.selectedEposRecords = [];
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
       var searchPayload = formatEposSearchPayload();
       getUnTiedCarrierInstances(searchPayload);
     };

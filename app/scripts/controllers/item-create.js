@@ -12,8 +12,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     var $this = this;
     $scope.formData = {
-      startDate: dateUtility.tomorrowFormattedDatePicker(),
-      endDate: dateUtility.tomorrowFormattedDatePicker(),
       qrCodeValue: '',
       qrCodeImgUrl: null,
       images: [],
@@ -42,6 +40,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.shouldDisplayURLField = false;
     $scope.uiSelectTemplateReady = false;
     $scope.displayCloneInfo = false;
+    $scope.substitutionsForDateRangeAreEmpty = false;
+    $scope.recommendationsForDateRangeAreEmpty = false;
+    $scope.itemsAreBeingLoaded = true;
+    $scope.isDependecyItemSet = false;
     $scope.dynamicStaticBarcodeOptions = [{
       label: 'Dynamic Barcode',
       value: true
@@ -59,6 +61,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     ];
     $scope.supplierCompanies = [];
     $scope.selectedSupplierCompanyImages = null;
+    $scope.substitutions = [];
+    $scope.recommendations = [];
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -71,12 +75,15 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $scope.viewOnly = true;
       } else if (path.search('/item-create') !== -1) {
         $scope.creatingItem = true;
+        $scope.formData.startDate = dateUtility.tomorrowFormattedDatePicker();
+        $scope.formData.endDate = dateUtility.tomorrowFormattedDatePicker();
+        $scope.isDependecyItemSet = true;
       }
     };
 
     this.init = function() {
-      this.checkFormState();
-      this.getDependencies();
+      $this.checkFormState();
+      $this.getDependencies();
     };
 
     this.updateViewName = function(item) {
@@ -132,6 +139,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $this.setUIReady();
         $this.filterDuplicateInItemTags();
         $this.checkIfSupplierCompanyExpired();
+        $scope.isDependecyItemSet = true;
         return;
       }
 
@@ -353,16 +361,33 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return itemIndex;
     };
 
-    this.deserializeSubstitutions = function(itemData) {
-      if (angular.isUndefined(itemData.substitutions)) {
+    $scope.deserializeSubstitutionsAfterItemSet = function() {
+      if (angular.isUndefined($scope.formData.substitutions)) {
         return;
       }
 
-      for (var substitutionKey in itemData.substitutions) {
-        var substitutionId = itemData.substitutions[substitutionKey];
+      for (var substitutionKey in $scope.formData.substitutions) {
+        var substitution = $scope.formData.substitutions[substitutionKey];
+        var substitutionId = angular.isDefined(substitution.itemMasterId) ? substitution.itemMasterId : substitution;
         var index = $this.findItemIndexById(substitutionId);
-        itemData.substitutions[substitutionKey] = {
+        $scope.formData.substitutions[substitutionKey] = {
           itemMasterId: substitutionId,
+          itemName: (index !== null) ? $scope.items[index].itemName : ''
+        };
+      }
+    };
+
+    $scope.deserializeRecommendationsAfterItemSet = function() {
+      if (angular.isUndefined($scope.formData.recommendations)) {
+        return;
+      }
+
+      for (var recommendationKey in $scope.formData.recommendations) {
+        var recommendation = $scope.formData.recommendations[recommendationKey];
+        var recommendationId = angular.isDefined(recommendation.itemMasterId) ? recommendation.itemMasterId : recommendation;
+        var index = $this.findItemIndexById(recommendationId);
+        $scope.formData.recommendations[recommendationKey] = {
+          itemMasterId: recommendationId,
           itemName: (index !== null) ? $scope.items[index].itemName : ''
         };
       }
@@ -376,17 +401,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
 
       return substitutionsPayload;
-    };
-
-    this.deserializeRecommendations = function(itemData) {
-      for (var recommendationKey in itemData.recommendations) {
-        var recommendationId = itemData.recommendations[recommendationKey];
-        var index = $this.findItemIndexById(recommendationId);
-        itemData.recommendations[recommendationKey] = {
-          itemMasterId: recommendationId,
-          itemName: (index !== null) ? $scope.items[index].itemName : ''
-        };
-      }
     };
 
     this.formatRecommendations = function(itemData) {
@@ -455,6 +469,29 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.formData.notesTranslations = mappedNotes;
     };
 
+    this.setInitialSubstitutionAndRecomendations = function (itemListFromAPI) {
+      $scope.items = [];
+      if (itemListFromAPI.retailItems) {
+        $scope.items = angular.copy(itemListFromAPI.retailItems);
+      }
+
+      $scope.substitutions = angular.copy($scope.items);
+      $scope.recommendations = angular.copy($scope.items);
+
+      $scope.deserializeSubstitutionsAfterItemSet();
+      $scope.deserializeRecommendationsAfterItemSet();
+
+      if ($scope.items.length === 0) {
+        $scope.substitutionsForDateRangeAreEmpty = true;
+        $scope.recommendationsForDateRangeAreEmpty = true;
+      } else {
+        $scope.substitutionsForDateRangeAreEmpty = false;
+        $scope.recommendationsForDateRangeAreEmpty = false;
+      }
+
+      $scope.itemsAreBeingLoaded = false;
+    };
+
     // updates the $scope.formData
     this.updateFormData = function(itemData) {
       if (!itemData) {
@@ -471,8 +508,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.deserializeTags(itemData);
       this.deserializeAllergens(itemData);
       this.deserializeCharacteristics(itemData);
-      this.deserializeSubstitutions(itemData);
-      this.deserializeRecommendations(itemData);
       this.formatImageDates(itemData.images);
 
       var sortedPricesById = _.orderBy(itemData.prices, ['id'], ['asc']);
@@ -531,7 +566,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getVolumeList(),
         itemsFactory.getWeightList(),
         itemsFactory.getPriceTypesList(),
-        itemsFactory.getItemsList({}),
         companiesFactory.getCompany(companyId),
         itemsFactory.getVoucherDurationsList()
       ];
@@ -571,15 +605,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
     };
 
-    this.filterItemsByFormDates = function() {
-      $scope.substitutions = lodash.filter($scope.items, function(item) {
-        return dateUtility.isAfterOrEqualDatePicker(dateUtility.formatDateForApp(item.endDate), $scope.formData.startDate) && dateUtility.isAfterOrEqualDatePicker($scope.formData.endDate, dateUtility.formatDateForApp(item.startDate));
-      });
-
-      $scope.substitutions = lodash.uniq($scope.substitutions, 'itemMasterId');
-      $scope.recommendations = angular.copy($scope.substitutions);
-    };
-
     $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
       if ($scope.formData.startDate && $scope.formData.endDate) {
         itemsFactory.getDiscountList({
@@ -594,14 +619,28 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         };
 
         companyRelationshipFactory.getCompanyRelationshipListByCompany(globalMenuService.company.get(), relationshipPayload).then($this.setSupplierCompanies);
+
+        $this.handleRetailItemsOnStartEndDateUpdate();
+      } else {
+        $scope.items = [];
+        $scope.substitutions = [];
+        $scope.recommendations = [];
       }
     });
 
-    $scope.$watchGroup(['formData.startDate', 'items', 'formData.endDate'], function() {
-      if ($scope.formData.startDate && $scope.formData.endDate && $scope.items) {
-        $this.filterItemsByFormDates();
-      }
-    });
+    $scope.areDatesSelected = function () {
+      return ($scope.formData.startDate && $scope.formData.endDate);
+    };
+
+    this.handleRetailItemsOnStartEndDateUpdate = function() {
+      $scope.itemsAreBeingLoaded = true;
+      var payload = {
+        startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
+      };
+
+      itemsFactory.getItemsList(payload).then($this.setInitialSubstitutionAndRecomendations);
+    };
 
     this.isMasterItemInfoUnTouched = function() {
       return $scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&
@@ -743,9 +782,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setVolumeList(response[8]);
       $this.setWeightList(response[9]);
       $this.setItemPriceTypes(response[10]);
-      $this.setItemList(response[11].retailItems);
-      $this.setCompany(response[12]);
-      $this.setVoucherDurations(response[13]);
+      $this.setCompany(response[11]);
+      $this.setVoucherDurations(response[12]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         $this.getItem($routeParams.id);
       } else {
@@ -756,6 +794,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.getDependencies = function() {
+
       $this.showLoadingModal('We are loading the Items data!');
       var dependencyPromises = $this.makeDependencyPromises();
       $q.all(dependencyPromises).then($this.setDependencies, $this.errorHandler);
@@ -1219,6 +1258,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.updateSuccessHandler = function(response) {
       $this.updateFormData(response[0].retailItem);
+      $scope.deserializeSubstitutionsAfterItemSet();
+      $scope.deserializeRecommendationsAfterItemSet();
       angular.element('#loading').modal('hide');
       angular.element('#update-success').modal('show');
     };

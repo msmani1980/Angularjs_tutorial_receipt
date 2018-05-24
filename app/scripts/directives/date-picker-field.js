@@ -39,7 +39,7 @@ angular.module('ts5App')
 
         $scope.placeholder = datePickerOptions.format;
 
-        if ($scope.minDate) {
+        if ($scope.minDate && !$scope.disable) {
           datePickerOptions.startDate = $scope.minDate;
         }
 
