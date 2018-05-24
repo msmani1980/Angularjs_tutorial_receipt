@@ -594,11 +594,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       $scope.characteristics = data;
       $scope.filteredCharacteristics = [];
 
-      var filteredData = lodash.filter(data, function(o) {
-        return o.name !== 'Link';
-      });
-
-      $scope.itemCharacteristicsPerItemType = lodash.groupBy(filteredData, function(ic) { return ic.itemTypeId; });
+      $scope.itemCharacteristicsPerItemType = lodash.groupBy(data, function(ic) { return ic.itemTypeId; });
     };
 
     $scope.isItemCharacteristicsFieldDisabled = function() {
