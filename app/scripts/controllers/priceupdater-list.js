@@ -142,7 +142,7 @@ angular.module('ts5App')
   };
 
   $scope.showDeleteButton = function(priceupdater) {
-    return dateUtility.isAfterTodayDatePicker(priceupdater.startDate) && priceupdater.runBy === null;
+    return dateUtility.isAfterTodayDatePicker(priceupdater.startDate) || priceupdater.runBy === null;
   };
 
   $scope.removeRecord = function (priceupdater) {
@@ -222,6 +222,10 @@ angular.module('ts5App')
     angular.element('#search-collapse').addClass('collapse');
     $scope.salesCategories = angular.copy(responseCollection[0].salesCategories);
     $scope.priceTypes = angular.copy(responseCollection[1]);
+  };
+
+  $scope.isRuleApplied = function (priceupdater) {
+    return priceupdater.runBy === null ? false : true;
   };
 
   $scope.loadUpdatedOn = function (priceupdater) {

@@ -73,25 +73,34 @@
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
+						<label class="invisible">Checkbox</label>
+                		<div class="form-group">
+							<input ng-model="rule.percentage" id="percentage" type="checkbox"/>
+                			<label>Is Percentage</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-4" ng-hide="rule.percentage">
 						<div class="form-group">
 							<label for="currencyList">Currencies List*</label>
-							
 							<div class="form-group" ng-repeat="(currencyKey,currency) in priceCurrencies track by $index">
-							
 								<div class="input-group">
-								
 									<div class="input-group-addon">
     	          						{{ currency.code }} *
 									</div>
-									
-									<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="true"  
+									<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="!rule.percentage"  
 											ng-disabled="isDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
-											
 								</div>
-								
 							</div>
-							
 						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4" ng-show="rule.percentage">
+						<div class="form-group">
+                			<label for="percentValue">Percentage Value*</label>
+                			<input ng-model="rule.percentValue" type="text" class="form-control" name = "percentageValue" id="percentValue" ng-required="rule.percentage"
+                				placeholder="10%" ng-pattern="regexp.percentage">
+              			</div>
 					</div>
 				</div>	
 			</div>

@@ -122,7 +122,7 @@ angular.module('ts5App')
         categoryId: $scope.rule.categoryId,
         priceTypeId: $scope.rule.priceTypeId,
         taxFilter: $scope.rule.taxFilter,
-        percentage: false,
+        percentage: $scope.percentage,
         prices: $this.formatPriceCurrencies(),
         startDate: dateUtility.formatDateForAPI($scope.rule.startDate),
         endDate: dateUtility.formatDateForAPI($scope.rule.endDate)
@@ -140,7 +140,7 @@ angular.module('ts5App')
         categoryId: $scope.rule.categoryId,
         priceTypeId: $scope.rule.priceTypeId,
         taxFilter: $scope.rule.taxFilter,
-        percentage: false,
+        percentage: $scope.percentage,
         companyId: $scope.rule.companyId,
         prices: $this.formatPriceCurrencies(),
         startDate: dateUtility.formatDateForAPI($scope.rule.startDate),

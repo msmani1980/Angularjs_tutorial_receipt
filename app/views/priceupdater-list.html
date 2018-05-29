@@ -63,6 +63,13 @@
 				    </select>
 				</div>
 			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4">
+          		<label class="invisible">Checkbox</label>
+                <div class="form-group">
+					<input ng-model="search.ruleApplied" id="isDefault" type="checkbox"/>
+                	<label>Applied Rules</label>
+				</div>
+          	</div>  
 		  </div>
 		</div>
         <div class="panel-footer text-right">
@@ -84,6 +91,7 @@
           <th>Tax Is</th>
           <th>Start Date</th>
           <th>End Date</th>
+          <th>Rule Applied</th>
           <th>Updated Date/Time</th>
           <th>Updated User</th>
           <th>Actions</th>
@@ -99,6 +107,7 @@
           <td>{{ priceupdater.taxIs }}</td>
           <td>{{ priceupdater.startDate}}</td>
           <td>{{ priceupdater.endDate}}</td>
+          <td>{{ isRuleApplied(priceupdater) }}</td>
           <td>{{ loadUpdatedOn(priceupdater) }}</td>
           <td>{{ loadUpdatedBy(priceupdater) }}</td>
           <td>
