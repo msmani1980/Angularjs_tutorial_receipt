@@ -9,9 +9,5 @@
  */
 angular.module('ts5App')
   .controller('CompanyReceiptEmailCreateCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+
   });
