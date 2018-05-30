@@ -106,12 +106,14 @@ angular.module('ts5App')
       };
     };
 
-    this.formatPriceCurrencies = function() {
+    this.formatPriceCurrencies = function(percentVal) {
       var priceCurrencies = [];
-      angular.forEach($scope.priceCurrencies, function (currency) {
-        var newCurrency = $this.generateCurrency(currency);
-        priceCurrencies.push(newCurrency);
-      });
+      if (!percentVal) {
+        angular.forEach($scope.priceCurrencies, function (currency) {
+          var newCurrency = $this.generateCurrency(currency);
+          priceCurrencies.push(newCurrency);
+        });
+      }  
 
       return priceCurrencies;
     };
@@ -122,8 +124,9 @@ angular.module('ts5App')
         categoryId: $scope.rule.categoryId,
         priceTypeId: $scope.rule.priceTypeId,
         taxFilter: $scope.rule.taxFilter,
-        percentage: false,
-        prices: $this.formatPriceCurrencies(),
+        percentage: $scope.rule.percentage,
+        percentValue: $scope.rule.percentValue,
+        prices: $this.formatPriceCurrencies($scope.rule.percentage),
         startDate: dateUtility.formatDateForAPI($scope.rule.startDate),
         endDate: dateUtility.formatDateForAPI($scope.rule.endDate)
       };
@@ -140,9 +143,10 @@ angular.module('ts5App')
         categoryId: $scope.rule.categoryId,
         priceTypeId: $scope.rule.priceTypeId,
         taxFilter: $scope.rule.taxFilter,
-        percentage: false,
+        percentage: $scope.rule.percentage,
+        percentValue: $scope.rule.percentValue,
         companyId: $scope.rule.companyId,
-        prices: $this.formatPriceCurrencies(),
+        prices: $this.formatPriceCurrencies($scope.rule.percentage),
         startDate: dateUtility.formatDateForAPI($scope.rule.startDate),
         endDate: dateUtility.formatDateForAPI($scope.rule.endDate)
       };
@@ -192,12 +196,16 @@ angular.module('ts5App')
         id: response.id,
         categoryId: response.categoryId,
         priceTypeId: response.priceTypeId,
+        percentage: response.percentage,
+        percentValue: response.percentValue,
         taxFilter: response.taxFilter === null ? 'null' : response.taxFilter,
         startDate: $scope.viewStartDate,
         companyId: response.companyId,
         endDate: $scope.viewEndDate
       };
-
+      if (response.percentage && !$scope.isDisabled()) {
+        $this.getPriceCurrenciesList($scope.rule.startDate, $scope.rule.endDate); 
+      } 
     };
 
     this.initDependenciesSuccess = function(responseCollection) {
