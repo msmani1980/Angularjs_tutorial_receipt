@@ -142,7 +142,7 @@ angular.module('ts5App')
   };
 
   $scope.showDeleteButton = function(priceupdater) {
-    return dateUtility.isAfterTodayDatePicker(priceupdater.startDate) || priceupdater.runBy === null;
+    return dateUtility.isYesterdayOrEarlierDatePicker(priceupdater.endDate) || priceupdater.runBy === null;
   };
 
   $scope.removeRecord = function (priceupdater) {
