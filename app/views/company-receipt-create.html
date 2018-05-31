@@ -11,40 +11,50 @@
     <error-dialog form-object="companyReceiptForm" error-response="errorResponse" display="displayError">
     </error-dialog>
     <!-- Started Modify-->
-    <form name="surveyCatalogDataForm">
+    <form name="companyReceiptForm">
       <div class="panel panel-default">
         <div class="panel-body">
           <div class="row">
-            <div class="col-xs-12 col-sm-4">
+            <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="surveyCatalogName">Survey Catalog Name*</label>
-                <input ng-model="surveyCatalog.catalogName" type="text" ng-disabled="isDisabled() || dragging"
-                       class="form-control" id="surveyCatalogName" name="surveyCatalogName" required
-                       maxlength="25" placeholder="Survey Catalog Name">
+                <label for="receiptType">Receipt Type</label>
+                <select name="receiptType" id="receiptType" class="form-control"
+                        ng-options="receiptType.id as receiptType.receiptTypeName for receiptType in receiptTypes"
+                        ng-model="search.receiptTypeId">
+                  <option value="">Please Select Receipt Type</option>
+                </select>
               </div>
             </div>
-            <div class="col-xs-12 col-sm-4">
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="logoURL">Logo URL *</label>
+                <input ng-model="companyReceipt.linkURL" type="text" ng-disabled="isDisabled() || dragging"
+                       class="form-control" id="logoURL" name="logoURL" required
+                >
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <date-picker-field
                   ng-if="isLoadingCompleted"
-                  form="surveyCatalogDataForm" name="EffectiveStartDate"
+                  form="companyReceiptForm" name="EffectiveStartDate"
                   label="Effective Start Date"
                   disable="isDisabled() || dragging"
                   required="true"
                   disable-past="true"
-                  ng-model="surveyCatalog.startDate">
+                  ng-model="companyReceipt.startDate">
                 </date-picker-field>
               </div>
             </div>
-            <div class="col-xs-12 col-sm-4">
+            <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <date-picker-field
                   ng-if="isLoadingCompleted"
-                  form="surveyCatalogDataForm"
+                  form="companyReceiptForm"
                   name="EffectiveEndDate"
                   label="Effective End Date"
                   disable="readOnly || shouldDisableEndDate || dragging"
-                  ng-model="surveyCatalog.endDate"
+                  ng-model="companyReceipt.endDate"
                   disable-past="true"
                   end-current-effective="viewEditItem && disablePastDate"
                   required="true">
@@ -52,51 +62,13 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            
+          </div>
         </div>
-        <div class="breadcrumb">
-          <h4>Add Survey
-            <button type="button" class="btn btn-primary btn-xs pull-right" ng-hide="isDisabled()" ng-click="addSurveyRow()">
-              <i class="fa fa-plus"></i> Add Survey
-            </button>
-          </h4>
-        </div>
-        <div class="table">
-          <table class="table table-bordered table-hover">
-            <thead>
-            <tr>
-              <th class="col-xs-1" ng-hide="isDisabled()" style="text-align:center;">Reorder</th>
-              <th class="col-xs-8" style="text-align:center;">Survey Name</th>
-              <th class="col-xs-1" ng-hide="isDisabled()" style="text-align:center;">Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-init="item.sortOrderIndex=$index" ng-repeat="item in surveyItemList | orderBy:'sortOrder' track by $index">
-              <td ng-if="!isDisabled()"
-                  on-drop-success="dropSuccess($event, $index, surveyItemList)"
-                  ui-draggable="!isDisabled()" drag="item"
-                  drag-channel="A" drop-channel="A"
-                  ui-on-Drop="onDrop($event, $data, $index)"
-                  style="text-align:center; cursor: pointer;">
-                <span class="glyphicon glyphicon-move" aria-hidden="true" ></span>
-              </td>
-              <td>
-                <select required name="survey" id="survey[{{item.surveyIndex}}]" class="form-control" ng-change="addSurveyItem(item)"
-                        ng-options="survey.id as survey.surveyName for survey in surveyList"
-                        ng-model="item.surveyId" ng-disabled="isDisabled()">
-                  <option value="">Select Survey ...</option>
-                </select>
-              </td>
-              <td ng-hide="isDisabled()" style="text-align:center;">
-                <button class="btn btn-danger btn-xs" ng-click="removeItem(item)">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+
         <div class="panel-footer text-right">
-          <a href="#/survey-catalog" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+          <a href="#/company-receipt-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
           <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
             <span class="fa fa-check-square-o" aria-hidden="true"></span> <span
             class="hidden-xs">Save</span>

@@ -20,8 +20,12 @@
           <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label for="surveyCatalogName">Receipt Type</label>
-                <input ng-model="search.catalogName" type="text" class="form-control" id="surveyCatalogName" placeholder="Survey Catalog Name">
+                <label for="receiptType">Receipt Type</label>
+                <select name="receiptType" id="receiptType" class="form-control"
+                        ng-options="receiptType.id as receiptType.receiptTypeName for receiptType in receiptTypes"
+                        ng-model="search.receiptTypeId">
+                  <option value="">Please Select Receipt Type</option>
+                </select>
               </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-8">
