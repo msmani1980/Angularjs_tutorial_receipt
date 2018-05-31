@@ -17,20 +17,20 @@
           <div class="row">
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="receiptType">Receipt Type</label>
+                <label for="receiptType">Receipt Type *</label>
                 <select name="receiptType" id="receiptType" class="form-control"
                         ng-options="receiptType.id as receiptType.receiptTypeName for receiptType in receiptTypes"
-                        ng-model="search.receiptTypeId">
+                        ng-model="search.receiptTypeId"
+                        required>
                   <option value="">Please Select Receipt Type</option>
                 </select>
               </div>
             </div>
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="logoURL">Logo URL *</label>
-                <input ng-model="companyReceipt.linkURL" type="text" ng-disabled="isDisabled() || dragging"
-                       class="form-control" id="logoURL" name="logoURL" required
-                >
+                <label for="logoURL">Logo URL</label>
+                <input ng-model="companyReceipt.linkURL" type="text" ng-disabled="isDisabled()"
+                       class="form-control" id="logoURL" name="logoURL">
               </div>
             </div>
             <div class="col-xs-12 col-sm-3">
@@ -63,7 +63,12 @@
             </div>
           </div>
           <div class="row">
-            
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <label for="logoURL">Template</label>
+                <textarea ng-model="companyReceipt.template" ng-disabled="isDisabled()" rows="25" class="form-control" id="template" name="template"></textarea>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -85,4 +90,4 @@
 
 <leave-view-modal></leave-view-modal>
 
-<dynamic-left-nav title="Survey Management"></dynamic-left-nav>
+<dynamic-left-nav title="Company Receipts"></dynamic-left-nav>
