@@ -4,7 +4,7 @@
       <h2 class="view-name">Company E-mail Receipts</h2>
     </div>
     <div class="col-xs-8 text-right">
-      <a href="#/company-receipt-email-create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create E-mail Receipt</span></a>
+      <a href="#/company-receipt-email-create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Company E-mail Receipt</span></a>
       <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
               aria-expanded="false"
               aria-controls="search-collapse">
@@ -20,14 +20,31 @@
           <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label for="receiptType">Receipt Type</label>
-                <select name="receiptType" id="receiptType" class="form-control"
-                        ng-options="receiptType.id as receiptType.receiptTypeName for receiptType in receiptTypes"
-                        ng-model="search.receiptTypeId">
-                  <option value="">Please Select Receipt Type</option>
-                </select>
+                <label for="emailFrom">E-mail From</label>
+                <input ng-model="search.emailFrom" type="text" ng-disabled="isDisabled()"
+                       class="form-control" id="emailFrom" name="emailFrom"
+                       placeholder="user@e-mail.com">
               </div>
             </div>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="emailBcc">E-mail BCC</label>
+                <input ng-model="search.emailBcc" type="text" ng-disabled="isDisabled()"
+                       class="form-control" id="emailBcc" name="emailBcc"
+                       placeholder="bcc@e-mail.com">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="emailSubject">E-mal Subject</label>
+                <input ng-model="search.emailSubject" type="text" ng-disabled="isDisabled()"
+                       class="form-control" id="emailSubject" name="emailSubject"
+                       placeholder="E-mail subject">
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-8">
               <date-picker
                 class="form-group"
@@ -39,6 +56,15 @@
                 is-search-field="true">
               </date-picker>
             </div>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="search.asAttachment" ng-disabled="isDisabled(currency)"> <strong>As Attachment</strong>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="panel-footer text-right">
@@ -49,7 +75,7 @@
     </div>
     <br>
     <div class="table-responsive">
-      <table infinite-scroll="loadCompanyReceipts()" class="table table-bordered table-hover ng-scope">
+      <table infinite-scroll="loadCompanyEmailReceipts()" class="table table-bordered table-hover ng-scope">
         <thead>
         <tr>
           <th>From</th>
@@ -70,16 +96,16 @@
           <td>{{ companyEmailReceipt.startDate}}</td>
           <td>{{ companyEmailReceipt.endDate}}</td>
           <td>
-            <button class="btn btn-info btn-xs" ng-click="redirectToCompanyReceipt(companyReceipt.id, 'view')" tabindex="0">
+            <button class="btn btn-info btn-xs" ng-click="redirectToCompanyEmailReceipt(companyEmailReceipt.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="redirectToCompanyReceipt(companyReceipt.id, 'edit')" ng-show="isCRUD && isCompanyReceiptEditable(companyReceipt)" tabindex="0">
+            <button class="btn btn-primary btn-xs" ng-click="redirectToCompanyEmailReceipt(companyEmailReceipt.id, 'edit')" ng-show="isCRUD && isCompanyEmailReceiptEditable(companyEmailReceipt)" tabindex="0">
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-danger btn-xs"
-                    ng-click="deleteRecordDialog(companyReceipt[$index], ['receiptType', 'startDate', 'endDate'])"
+                    ng-click="deleteRecordDialog(companyEmailReceipt[$index], ['emailFrom', 'emailSubject', 'startDate', 'endDate'])"
                     tabindex="0"
-                    ng-show="isCRUD && showDeleteButton(companyReceipt.startDate)">
+                    ng-show="isCRUD && showDeleteButton(companyEmailReceipt.startDate)">
               <i class="fa fa-trash"></i>
             </button>
           </td>
@@ -87,10 +113,10 @@
         </tbody>
       </table>
     </div>
-    <alert ng-show="!loadingBarVisible && companyReceipt.length == 0" type="info">
+    <alert ng-show="!loadingBarVisible && companyEmailReceipt.length == 0" type="info">
       <span class="fa fa-flag"></span> Your search returned no results.
     </alert>
-    <p ng-if="companyReceipt.length > 0" class="record-count small text-center">Showing {{companyReceipt.length}} records</p>
+    <p ng-if="companyEmailReceipt.length > 0" class="record-count small text-center">Showing {{companyEmailReceipt.length}} records</p>
     <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
   </div>
 </div>
