@@ -50,7 +50,7 @@
                   ng-if="isLoadingCompleted"
                   form="companyEmailReceiptForm" name="EffectiveStartDate"
                   label="Effective Start Date"
-                  disable="isDisabled() || dragging"
+                  disable="isDisabled()"
                   required="true"
                   disable-past="true"
                   ng-model="companyEmailReceipt.startDate">
@@ -64,7 +64,7 @@
                   form="companyEmailReceiptForm"
                   name="EffectiveEndDate"
                   label="Effective End Date"
-                  disable="readOnly || shouldDisableEndDate || dragging"
+                  disable="readOnly || shouldDisableEndDate"
                   ng-model="companyEmailReceipt.endDate"
                   disable-past="true"
                   end-current-effective="viewEditItem && disablePastDate"
