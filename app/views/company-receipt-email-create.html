@@ -8,36 +8,47 @@
         <a class="btn btn-default" ng-href="#/company-receipt-list" class="btn" ng-show="readOnly">Back</a>
       </div>
     </div>
-    <error-dialog form-object="companyReceiptForm" error-response="errorResponse" display="displayError">
+    <error-dialog form-object="companyEmailReceiptForm" error-response="errorResponse" display="displayError">
     </error-dialog>
     <!-- Started Modify-->
-    <form name="companyReceiptForm">
+    <form name="companyEmailReceiptForm">
       <div class="panel panel-default">
         <div class="panel-body">
           <div class="row">
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="receiptType">Receipt Type *</label>
-                <select name="receiptType" id="receiptType" class="form-control"
-                        ng-options="receiptType.id as receiptType.receiptTypeName for receiptType in receiptTypes"
-                        ng-model="search.receiptTypeId"
-                        required>
-                  <option value="">Please Select Receipt Type</option>
-                </select>
+                <label for="emailFrom">From</label>
+                <input ng-model="companyEmailReceipt.emailFrom" type="text" ng-disabled="isDisabled()"
+                       maxlength="50" class="form-control" id="emailFrom" name="emailFrom">
               </div>
             </div>
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="logoURL">Logo URL</label>
-                <input ng-model="companyReceipt.linkURL" type="text" ng-disabled="isDisabled()"
-                       maxlength="50" class="form-control" id="logoURL" name="logoURL">
+                <label for="emailBcc">BCC</label>
+                <input ng-model="companyEmailReceipt.emailBcc" type="text" ng-disabled="isDisabled()"
+                       maxlength="200" class="form-control" id="emailBcc" name="emailBcc">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              <div class="form-group">
+                <label for="emailSubject">Subject</label>
+                <input ng-model="companyEmailReceipt.emailSubject" type="text" ng-disabled="isDisabled()"
+                       maxlength="200" class="form-control" id="emailSubject" name="emailSubject">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="emailSignature">Signature</label>
+                <textarea ng-model="companyEmailReceipt.emailSignature" maxlength="25" ng-disabled="isDisabled()" rows="3" class="form-control" id="emailSignature" name="emailSignature"></textarea>
               </div>
             </div>
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <date-picker-field
                   ng-if="isLoadingCompleted"
-                  form="companyReceiptForm" name="EffectiveStartDate"
+                  form="companyEmailReceiptForm" name="EffectiveStartDate"
                   label="Effective Start Date"
                   disable="isDisabled() || dragging"
                   required="true"
@@ -50,7 +61,7 @@
               <div class="form-group">
                 <date-picker-field
                   ng-if="isLoadingCompleted"
-                  form="companyReceiptForm"
+                  form="companyEmailReceiptForm"
                   name="EffectiveEndDate"
                   label="Effective End Date"
                   disable="readOnly || shouldDisableEndDate || dragging"
@@ -61,12 +72,38 @@
                 </date-picker-field>
               </div>
             </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+              <div class="form-group">
+                <strong>Options</strong>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="companyEmailReceipt.asAttachment" ng-disabled="isDisabled(currency)"> As Attachment
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-12">
               <div class="form-group">
-                <label for="logoURL">Template</label>
-                <textarea ng-model="companyReceipt.template" ng-disabled="isDisabled()" rows="25" class="form-control" id="template" name="template"></textarea>
+                <label for="emailBody">Body</label>
+                <textarea ng-model="companyEmailReceipt.emailBody" ng-disabled="isDisabled()" rows="25" class="form-control" id="emailBody" name="emailBody"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <label for="emailRecord">Record</label>
+                <textarea ng-model="companyEmailReceipt.emailRecord" ng-disabled="isDisabled()" rows="25" class="form-control" id="emailRecord" name="emailRecord"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <label for="emailFooter">Footer</label>
+                <textarea ng-model="companyEmailReceipt.emailFooter" ng-disabled="isDisabled()" rows="25" class="form-control" id="emailFooter" name="emailFooter"></textarea>
               </div>
             </div>
           </div>
