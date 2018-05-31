@@ -1,10 +1,10 @@
 <div class="module-container">
   <div class="row item-list-row">
     <div class="col-xs-4">
-      <h2 class="view-name">{{ viewName }}</h2>
+      <h2 class="view-name">Company E-mail Receipts</h2>
     </div>
     <div class="col-xs-8 text-right">
-      <a href="#/company-receipt-create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Company Receipt</span></a>
+      <a href="#/company-receipt-email-create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create E-mail Receipt</span></a>
       <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
               aria-expanded="false"
               aria-controls="search-collapse">
@@ -15,7 +15,7 @@
   </div>
   <div class="survey-data-list">
     <div class="panel panel-default no-transition" id="search-collapse">
-      <form name="surveySearchForm" ng-submit="searchCompanyReceipts()">
+      <form name="surveySearchForm" ng-submit="searchCompanyEmailReceipts()">
         <div class="panel-body">
           <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4">
@@ -52,19 +52,23 @@
       <table infinite-scroll="loadCompanyReceipts()" class="table table-bordered table-hover ng-scope">
         <thead>
         <tr>
-          <th>Receipt Type</th>
-          <th>Logo URL</th>
+          <th>From</th>
+          <th>BCC</th>
+          <th>Subject</th>
+          <th>As Attachment</th>
           <th>Start Date</th>
           <th>End Date</th>
           <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr class="ng-scope" ng-repeat="companyReceipt in companyReceipts">
-          <td>{{ companyReceipt.receiptType }}</td>
-          <td>{{ companyReceipt.logoUrl }}</td>
-          <td>{{ companyReceipt.startDate}}</td>
-          <td>{{ companyReceipt.endDate}}</td>
+        <tr class="ng-scope" ng-repeat="companyEmailReceipt in companyEmailReceipts">
+          <td>{{ companyEmailReceipt.emailFrom }}</td>
+          <td>{{ companyEmailReceipt.emailBcc }}</td>
+          <td>{{ companyEmailReceipt.emailSubject }}</td>
+          <td>{{ companyEmailReceipt.asAttachment }}</td>
+          <td>{{ companyEmailReceipt.startDate}}</td>
+          <td>{{ companyEmailReceipt.endDate}}</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="redirectToCompanyReceipt(companyReceipt.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>
