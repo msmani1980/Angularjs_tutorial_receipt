@@ -225,7 +225,7 @@ angular.module('ts5App')
   };
 
   $scope.isRuleApplied = function (priceupdater) {
-    return priceupdater.runBy === null ? false : true;
+    return priceupdater.runBy === null ? 'No' : 'Yes';
   };
 
   $scope.loadUpdatedOn = function (priceupdater) {
