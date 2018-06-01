@@ -64,10 +64,12 @@
 				</div>
 			</div>
 			<div class="col-xs-12 col-sm-6 col-md-4">
-          		<label class="invisible">Checkbox</label>
+          		<label for="Rule Appied">Rule Applied</label>
                 <div class="form-group">
-					<input ng-model="search.ruleApplied" id="isDefault" type="checkbox"/>
-                	<label>Applied Rules</label>
+                	<select name="Rule Applied" ng-model="search.ruleApplied" class="form-control">
+						<option value="yes">Yes</option>
+						<option value="no">No</option>
+				    </select>
 				</div>
           	</div>  
 		  </div>
