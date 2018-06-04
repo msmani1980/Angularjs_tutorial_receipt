@@ -98,9 +98,9 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
-    this.generateCurrency = function(currency) {
+    this.generateCurrency = function(currency, percentVal) {
       return {
-        currencyId: $scope.viewEditItem ? currency.currencyId : currency.id,
+        currencyId: ($scope.viewEditItem && percentVal) ? currency.currencyId : currency.id,
         code: currency.code,
         amend: currency.price
       };
@@ -110,7 +110,7 @@ angular.module('ts5App')
       var priceCurrencies = [];
       if (!percentVal) {
         angular.forEach($scope.priceCurrencies, function (currency) {
-          var newCurrency = $this.generateCurrency(currency);
+          var newCurrency = $this.generateCurrency(currency, percentVal);
           priceCurrencies.push(newCurrency);
         });
       }  
