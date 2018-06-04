@@ -18,16 +18,16 @@ angular.module('ts5App')
       getCompanyReceipts: {
         method: 'GET'
       },
-      getSurveyQuestion: {
+      getCompanyReceipt: {
         method: 'GET'
       },
-      createSurveyQuestion: {
+      createCompanyReceipt: {
         method: 'POST'
       },
-      updateSurveyQuestion: {
+      updateCompanyReceipt: {
         method: 'PUT'
       },
-      removeSurveyQuestion: {
+      removeCompanyReceipt: {
         method: 'DELETE'
       }
     };
@@ -38,27 +38,27 @@ angular.module('ts5App')
       return requestResource.getCompanyReceipts(payload).$promise;
     };
 
-    var getSurveyQuestion = function (id) {
-      return requestResource.getSurveyQuestion({ id: id }).$promise;
+    var getCompanyReceipt = function (id) {
+      return requestResource.getCompanyReceipt({ id: id }).$promise;
     };
 
-    var createSurveyQuestion = function (payload) {
-      return requestResource.createSurveyQuestion(payload).$promise;
+    var createCompanyReceipt = function (payload) {
+      return requestResource.createCompanyReceipt(payload).$promise;
     };
 
-    var updateSurveyQuestion = function (id, payload) {
-      return requestResource.updateSurveyQuestion({ id: id }, payload).$promise;
+    var updateCompanyReceipt = function (id, payload) {
+      return requestResource.updateCompanyReceipt({ id: id }, payload).$promise;
     };
 
-    var removeSurveyQuestion = function (id) {
-      return requestResource.removeSurveyQuestion({ id: id }).$promise;
+    var removeCompanyReceipt = function (id) {
+      return requestResource.removeCompanyReceipt({ id: id }).$promise;
     };
 
     return {
       getCompanyReceipts: getCompanyReceipts,
-      getSurveyQuestion: getSurveyQuestion,
-      createSurveyQuestion: createSurveyQuestion,
-      updateSurveyQuestion: updateSurveyQuestion,
-      removeSurveyQuestion: removeSurveyQuestion
+      getCompanyReceipt: getCompanyReceipt,
+      createCompanyReceipt: createCompanyReceipt,
+      updateCompanyReceipt: updateCompanyReceipt,
+      removeCompanyReceipt: removeCompanyReceipt
     };
   });
