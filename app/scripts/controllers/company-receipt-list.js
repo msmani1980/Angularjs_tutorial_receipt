@@ -157,7 +157,7 @@ angular.module('ts5App')
       $scope.companyReceipts = $scope.companyReceipts.concat(response.companyReceipts.map(function (companyReceipt) {
         companyReceipt.startDate = dateUtility.formatDateForApp(companyReceipt.startDate);
         companyReceipt.endDate = dateUtility.formatDateForApp(companyReceipt.endDate);
-        companyReceipt.receiptType = $scope.receiptTemplates[companyReceipt.receiptTypeId].name;
+        companyReceipt.receiptType = $this.getReceiptTypeName(companyReceipt.receiptTemplateTypeId);
 
         return companyReceipt;
       }));
@@ -165,8 +165,28 @@ angular.module('ts5App')
       hideLoadingBar();
     };
 
+    this.getReceiptTypeName = function (templateTypeId) {
+      if (!$scope.receiptTemplates[templateTypeId]) {
+        return 'Unknown';
+      }
+
+      var name = $scope.receiptTemplates[templateTypeId].name;
+
+      return $this.normalizeReceiptTypeName(name.replace('_', ' '));
+    };
+
+    this.normalizeReceiptTypeName = function(input) {
+      var uppercase = (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+
+      return uppercase.replace('_', ' ');
+    };
+
     this.initPromisesSuccess = function (dataFromAPI) {
-      $scope.receiptTemplates[dataFromAPI.id] = dataFromAPI;
+      var receiptTemplates = dataFromAPI[0];
+
+      receiptTemplates.forEach(function (template) {
+        $scope.receiptTemplates[template.id] = template;
+      });
 
       return $scope.loadCompanyReceipts();
     };
