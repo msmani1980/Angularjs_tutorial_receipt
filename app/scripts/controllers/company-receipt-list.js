@@ -18,6 +18,7 @@ angular.module('ts5App')
     };
 
     $scope.companyReceipts = [];
+    $scope.$scope.receiptTemplates = [];
     $scope.isSearch = false;
     $scope.search = {};
 
@@ -59,6 +60,7 @@ angular.module('ts5App')
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
 
+      $scope.uiReady = true;
       $this.meta.offset += $this.meta.limit;
 
       return companyReceiptFactory.getCompanyReceipts(payload).then($this.getCompanyReceiptsSuccess);
@@ -162,10 +164,15 @@ angular.module('ts5App')
       hideLoadingBar();
     };
 
+    this.initPromisesSuccess = function (dataFromAPI) {
+      $scope.receiptTemplates = dataFromAPI;
+
+      return $scope.loadCompanyReceipts();
+    };
+
     this.makeInitPromises = function() {
       var promises = [
-        $scope.loadCompanyReceipts(),
-
+        recordsService.getReceiptTemplates()
       ];
 
       return promises;
@@ -175,9 +182,10 @@ angular.module('ts5App')
       angular.element('.loading-more').hide();
       $scope.isCRUD = accessService.crudAccessGranted('SURVEY', 'SURVEY', 'SURVEYQ');
       var initDependencies = $this.makeInitPromises();
-      $q.all(initDependencies).then(function() {
+      $q.all(initDependencies).then(function(dataFromAPI) {
         angular.element('#search-collapse').addClass('collapse');
-        $scope.uiReady = true;
+
+        $this.initPromisesSuccess(dataFromAPI);
       });
 
     };

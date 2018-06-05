@@ -71,6 +71,10 @@ angular.module('ts5App')
       getExchangeRateTypes: {
         method: 'GET',
         isArray: true
+      },
+      getReceiptTemplates: {
+        method: 'GET',
+        isArray: true
       }
     };
     var requestResource = $resource(requestURL, requestParameters, actions);
