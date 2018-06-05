@@ -195,17 +195,9 @@ angular.module('ts5App')
       } else if (!$scope.search.selectedItem && isCategorySelected) {
         // currently FE needs to send list of all itemIds in a category due to complications with sending only a categoryName to BE
         // TODO: fix if BE API is simplified
-        payload.itemId = [];
-        var isFirst = true;
-        var itemIdStr = '';
+        var itemIdStr = '0';
         angular.forEach($scope.search.itemList, function(item) {
-          payload.itemId.push(item.itemMasterId);
-          if (isFirst) {
-            itemIdStr = item.itemMasterId;
-            isFirst = false;
-          } else {
-            itemIdStr = itemIdStr + ',' + item.itemMasterId;
-          }
+          itemIdStr = itemIdStr + ',' + item.itemMasterId;
         });
         
         payload.itemId = itemIdStr;

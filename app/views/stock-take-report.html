@@ -44,15 +44,15 @@
             </div>
           </div>
 
-          <div class="col-xs-12 col-sm-6 col-md-4">
-            <date-picker-field name="EffectiveFrom" label="Effective From"
-              ng-model="dateRange.startDate"></date-picker-field>
-          </div>
-
-          <div class="col-xs-12 col-sm-6 col-md-4">
-            <date-picker-field  name="EffectiveTo" label="Effective To"
-              ng-model="dateRange.endDate"></date-picker-field>
-          </div>
+          <date-picker
+            class="col-xs-12 col-md-6 col-sm-6"
+            element-class="col-xs-6 col-sm-6"
+            start-date-model="dateRange.startDate"
+            end-date-model="dateRange.endDate"
+            is-search-field="true"
+            label-from="Effective From"
+            label-to="Effective To">
+          </date-picker>
 
           <div class="col-xs-12 col-sm-6 col-md-4">
             <label>Status</label>
