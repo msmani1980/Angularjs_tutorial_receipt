@@ -18,7 +18,7 @@ angular.module('ts5App')
     };
 
     $scope.companyReceipts = [];
-    $scope.$scope.receiptTemplates = [];
+    $scope.receiptTemplates = [];
     $scope.isSearch = false;
     $scope.search = {};
 
@@ -157,6 +157,7 @@ angular.module('ts5App')
       $scope.companyReceipts = $scope.companyReceipts.concat(response.companyReceipts.map(function (companyReceipt) {
         companyReceipt.startDate = dateUtility.formatDateForApp(companyReceipt.startDate);
         companyReceipt.endDate = dateUtility.formatDateForApp(companyReceipt.endDate);
+        companyReceipt.receiptType = $scope.receiptTemplates[companyReceipt.receiptTypeId].name;
 
         return companyReceipt;
       }));
@@ -165,7 +166,7 @@ angular.module('ts5App')
     };
 
     this.initPromisesSuccess = function (dataFromAPI) {
-      $scope.receiptTemplates = dataFromAPI;
+      $scope.receiptTemplates[dataFromAPI.id] = dataFromAPI;
 
       return $scope.loadCompanyReceipts();
     };
