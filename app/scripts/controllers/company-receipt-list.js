@@ -168,11 +168,7 @@ angular.module('ts5App')
     this.getReceiptTypeName = function (templateTypeId) {
       var receiptType = lodash.find($scope.receiptTypes, { 'id': templateTypeId });
 
-      if (receiptType) {
-        return receiptType.displayName;
-      } else {
-        return 'Unknown';
-      }
+      return receiptType.displayName;
     };
 
     this.normalizeReceiptTypeName = function(input) {
