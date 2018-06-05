@@ -763,6 +763,20 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       return ignoreEposData;
     }
+    
+    this.handleWastageItemForRedispatch = function(item, newItem) {
+      if (!($routeParams.action === 'redispatch' && $scope.defaultUllageCountsToIboundCountsForWastage)) {
+        return;
+      }
+
+      if (item.wastage) {
+        newItem.ullageQuantity = newItem.inboundQuantity;
+
+        if ($scope.defaultUllageReasonCodes && newItem.ullageQuantity > 0) {
+          newItem.ullageReason = $scope.defaultUllageReasonCodes[0];
+        }
+      }
+    };
 
     this.mergeStoreInstanceItems = function(items) {
       var ignoreEposData = setCountTypeNameAndCheckEpos(items);
@@ -786,20 +800,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
       });
-    };
-
-    this.handleWastageItemForRedispatch = function(item, newItem) {
-      if (!($routeParams.action === 'redispatch' && $scope.defaultUllageCountsToIboundCountsForWastage)) {
-        return;
-      }
-
-      if (item.wastage) {
-        newItem.ullageQuantity = newItem.inboundQuantity;
-
-        if ($scope.defaultUllageReasonCodes && newItem.ullageQuantity > 0) {
-          newItem.ullageReason = $scope.defaultUllageReasonCodes[0];
-        }
-      }
     };
 
     this.getSalesCategoryName = function(itemMasterId) {
@@ -888,11 +888,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.mergeStoreInstanceItems(angular.copy(responseCollection[2].response));
       if (responseCollection[4]) {
         $scope.allItemForGettingSalesCategory = angular.copy(responseCollection[4].response);
-        $this.mergeRedispatchItems(angular.copy(responseCollection[4].response));
       }
 
       if ($scope.shouldDefaultInboundToEpos && ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance')) {
         $this.mergeEposInboundQuantities(angular.copy(responseCollection[3].response));
+      }
+      
+      if (responseCollection[4]) {
+        $this.mergeRedispatchItems(angular.copy(responseCollection[4].response));
       }
 
       $scope.filterOffloadListItems();
