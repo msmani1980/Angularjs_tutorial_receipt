@@ -22,7 +22,7 @@
             <span class="hidden-sm hidden-xs">Bulk Dispatch</span>
           </button>
           -->
-          <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+          <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse" id="filterStoreInstanceDashboardId">
             <span class="fa fa-filter" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs">Filter</span>
           </button>
@@ -127,10 +127,10 @@
       </div>
       <div class="panel-footer text-right">
         <button type="button" class="btn btn-default btn-search-clear"
-                ng-click="clearSearchForm()">
+                ng-click="clearSearchForm()" id="clearStoreInstanceDashboardId">
           <span class="btn-label">Clear</span>
         </button>
-        <button ng-click="searchStoreInstanceDashboardData()" class="btn btn-primary btn-search">
+        <button ng-click="searchStoreInstanceDashboardData()" class="btn btn-primary btn-search" id="searchStoreInstanceDashboardId">
           <span class="fa fa-search" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs btn-label">Search</span>
         </button>

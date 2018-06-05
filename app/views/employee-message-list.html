@@ -9,7 +9,7 @@
             <span class="fa fa-plus" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs">Create Message</span>
           </button>
-          <button class="btn btn-default" ng-click="toggleFilterPanel()">
+          <button class="btn btn-default" ng-click="toggleFilterPanel()" id="filterEmployeeMessageListId">
             <span class="fa fa-filter" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs">Filter</span>
           </button>
@@ -90,10 +90,10 @@
         </div>
         <div class="panel-footer text-right">
            
-          <button type="button" class="btn btn-default btn-search-clear" ng-click="clearSearch()">
+          <button type="button" class="btn btn-default btn-search-clear" ng-click="clearSearch()" id="clearEmployeeMessageListId">
             <span class="btn-label">Clear</span>
           </button>
-          <button type="submit" class="btn btn-primary btn-search">
+          <button type="submit" class="btn btn-primary btn-search" id="searchEmployeeMessageListId">
             <span class="fa fa-search" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs btn-label">Search</span>
           </button>
