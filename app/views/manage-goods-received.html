@@ -11,7 +11,7 @@
       <div class="col-xs-6 text-right">
         <a ng-show="isCRUD && catererStationId" ng-href="/#/lmp-delivery-note/create/{{catererStationId}}" class="btn btn-primary"> + <span class="hidden-xs">Create Delivery Note</span></a>
         <button ng-show="catererStationId" class="btn btn-default"data-toggle="collapse" data-target="#search-collapse"
-          aria-expanded="false" aria-controls="search-collapse">
+          aria-expanded="false" aria-controls="search-collapse" id="filterManageGoodsReceivedId">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
@@ -66,8 +66,8 @@
 
       </div>
       <div class="panel-footer text-right">
-        <button type="button" class="btn btn-default" ng-click="clearSearchFilters()">Clear</button>
-        <button type="submit" class="btn btn-primary" ng-click="searchRecords()">Search</button>
+        <button type="button" class="btn btn-default" ng-click="clearSearchFilters()" id="clearManageGoodsReceivedId">Clear</button>
+        <button type="submit" class="btn btn-primary" ng-click="searchRecords()" id="searchManageGoodsReceivedId">Search</button>
       </div>
     </form>
   </div>

@@ -8,7 +8,7 @@
 
       <div class="col-xs-8 text-right">
 
-        <button class="btn btn-default" ng-click="toggleFilterPanel()">
+        <button class="btn btn-default" ng-click="toggleFilterPanel()" id="filterCategoryListId">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
@@ -63,8 +63,8 @@
         </div>
       </div>
       <div class="panel-footer text-right">
-        <button type="button" class="btn btn-default" ng-disabled="!showClearButton()" ng-click="clearSearch()">Clear</button>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="button" class="btn btn-default" ng-disabled="!showClearButton()" ng-click="clearSearch()" id="clearCategoryListId">Clear</button>
+        <button type="submit" class="btn btn-primary" id="searchCategoryListId">Search</button>
       </div>
       </form>
     </div>
@@ -128,8 +128,8 @@
           </div>
         </div>
         <div class="panel-footer text-right">
-          <button type="button" class="btn btn-default" ng-click="clearCreateForm()">Clear</button>
-          <button type="submit" class="btn btn-success"><span class="fa fa-check"></span> Save</button>
+          <button type="button" class="btn btn-default" ng-click="clearCreateForm()"  id="clearCreateCategoryId">Clear</button>
+          <button type="submit" class="btn btn-success" id="submitCreateCategoryId"><span class="fa fa-check"></span> Save</button>
         </div>
       </form>
     </div>
