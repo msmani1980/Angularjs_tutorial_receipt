@@ -478,11 +478,11 @@ angular.module('ts5App', [
     templateUrl: 'views/priceupdater-create.html',
     controller: 'PriceupdaterCreateCtrl',
     controllerAs: 'priceupdaterCreate'
-  }).when('/company-receipt-create', {
+  }).when('/company-receipts/:action/:id?', {
     templateUrl: 'views/company-receipt-create.html',
     controller: 'CompanyReceiptCreateCtrl',
     controllerAs: 'companyReceiptCreate'
-  }).when('/company-receipt-list', {
+  }).when('/company-receipts', {
     templateUrl: 'views/company-receipt-list.html',
     controller: 'CompanyReceiptListCtrl',
     controllerAs: 'companyReceiptList'
