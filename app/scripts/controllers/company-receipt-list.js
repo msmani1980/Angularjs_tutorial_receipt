@@ -18,7 +18,7 @@ angular.module('ts5App')
     };
 
     $scope.companyReceipts = [];
-    $scope.receiptTemplates = [];
+    $scope.receiptTypes = [];
     $scope.isSearch = false;
     $scope.search = {};
 
@@ -60,10 +60,10 @@ angular.module('ts5App')
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
 
-      $scope.uiReady = true;
-      $this.meta.offset += $this.meta.limit;
+      companyReceiptFactory.getCompanyReceipts(payload).then($this.getCompanyReceiptsSuccess);
 
-      return companyReceiptFactory.getCompanyReceipts(payload).then($this.getCompanyReceiptsSuccess);
+      $this.meta.offset += $this.meta.limit;
+      $scope.uiReady = true;
     };
 
     $scope.searchCompanyReceipts = function() {
@@ -166,13 +166,13 @@ angular.module('ts5App')
     };
 
     this.getReceiptTypeName = function (templateTypeId) {
-      if (!$scope.receiptTemplates[templateTypeId]) {
+      var receiptType = lodash.find($scope.receiptTypes, { 'id': templateTypeId });
+
+      if (receiptType) {
+        return receiptType.displayName;
+      } else {
         return 'Unknown';
       }
-
-      var name = $scope.receiptTemplates[templateTypeId].name;
-
-      return $this.normalizeReceiptTypeName(name.replace('_', ' '));
     };
 
     this.normalizeReceiptTypeName = function(input) {
@@ -182,10 +182,12 @@ angular.module('ts5App')
     };
 
     this.initPromisesSuccess = function (dataFromAPI) {
-      var receiptTemplates = dataFromAPI[0];
+      var receiptTypes = dataFromAPI[0];
 
-      receiptTemplates.forEach(function (template) {
-        $scope.receiptTemplates[template.id] = template;
+      receiptTypes.forEach(function (template) {
+        template.displayName = $this.normalizeReceiptTypeName(template.name.replace('_', ' '));
+
+        $scope.receiptTypes.push(template);
       });
 
       return $scope.loadCompanyReceipts();

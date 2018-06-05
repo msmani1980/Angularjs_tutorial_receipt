@@ -22,8 +22,8 @@
               <div class="form-group">
                 <label for="receiptType">Receipt Type</label>
                 <select name="receiptType" id="receiptType" class="form-control"
-                        ng-options="receiptType.id as receiptType.receiptTypeName for receiptType in receiptTypes"
-                        ng-model="search.receiptTypeId">
+                        ng-options="receiptType.id as receiptType.displayName for receiptType in receiptTypes"
+                        ng-model="search.receiptTemplateTypeId">
                   <option value="">Please Select Receipt Type</option>
                 </select>
               </div>
