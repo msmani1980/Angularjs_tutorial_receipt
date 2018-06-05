@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyReceiptListCtrl', function ($scope, $q, $route, $location, lodash, dateUtility, accessService, companyReceiptFactory) {
+  .controller('CompanyReceiptListCtrl', function ($scope, $q, $route, $location, lodash, dateUtility, accessService, companyReceiptFactory, recordsService) {
     var $this = this;
 
     this.meta = {
@@ -59,9 +59,9 @@ angular.module('ts5App')
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
 
-      companyReceiptFactory.getCompanyReceipts(payload).then($this.getCompanyReceiptsSuccess);
-
       $this.meta.offset += $this.meta.limit;
+
+      return companyReceiptFactory.getCompanyReceipts(payload).then($this.getCompanyReceiptsSuccess);
     };
 
     $scope.searchCompanyReceipts = function() {
@@ -164,7 +164,8 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       var promises = [
-        $scope.loadCompanyReceipts()
+        $scope.loadCompanyReceipts(),
+
       ];
 
       return promises;
