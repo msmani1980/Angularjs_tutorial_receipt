@@ -16,5 +16,14 @@ angular.module('ts5App')
     $scope.displayError = false;
     $scope.companyReceipt = {};
 
-
+    $scope.formSave = function() {
+      if ($this.validateForm()) {
+        var saveFunctionName = ($routeParams.action + 'CompanyReceipt');
+        if ($this[saveFunctionName]) {
+          $this[saveFunctionName]();
+        }
+      } else {
+        $scope.displayError = true;
+      }
+    };
   });
