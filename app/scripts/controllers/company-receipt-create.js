@@ -47,6 +47,26 @@ angular.module('ts5App')
       $scope.displayError = false;
     };
 
+    this.showToastMessage = function(className, type, message) {
+      messageService.display(className, message, type);
+    };
+
+    this.saveFormSuccess = function() {
+      $this.hideLoadingModal();
+      if ($routeParams.action === 'create') {
+        $this.showToastMessage('success', 'Create Company Receipt', 'success');
+      } else {
+        $this.showToastMessage('success', 'Edit Company Receipt', 'success');
+      }
+
+      $location.path('company-receipts');
+    };
+
+    this.saveFormFailure = function(dataFromAPI) {
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
 
     $scope.formSave = function() {
       if ($this.validateForm()) {
