@@ -753,10 +753,10 @@ angular.module('ts5App')
             route: '/#/company-receipt-list',
             icon: 'icon-manage-discount',
             className: 'dashboard-company-receipt-config',
-            package: 'COMPANYRECEIPT',
-            role: 'COMPANYRECEIPT',
+            package: 'COMPANYRECEIPTS',
+            role: 'COMPANYRECEIPTS',
             permissions: [{
-              apiName: '/api/company/receipts',
+              apiName: '/api/company-receipts',
               permissionCodes: ['R']
             }]
           }, {
@@ -764,10 +764,10 @@ angular.module('ts5App')
             route: '/#/company-email-receipt-list',
             icon: 'icon-manage-discount',
             className: 'dashboard-company-email-receipt-config',
-            package: 'COMPANYEMAILRECEIPT',
-            role: 'COMPANYEMAILRECEIPT',
+            package: 'COMPANYEMAILRECEIPTS',
+            role: 'COMPANYEMAILRECEIPTS',
             permissions: [{
-              apiName: '/api/company/email-receipts',
+              apiName: '/api/company-email-receipts',
               permissionCodes: ['R']
             }]
         }]

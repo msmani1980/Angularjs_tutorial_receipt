@@ -199,7 +199,7 @@ angular.module('ts5App')
 
     this.init = function() {
       angular.element('.loading-more').hide();
-      $scope.isCRUD = accessService.crudAccessGranted('SURVEY', 'SURVEY', 'SURVEYQ');
+      $scope.isCRUD = accessService.crudAccessGranted('COMPANYRECEIPTS', 'COMPANYRECEIPTS', 'COMPANYRECEIPTS');
       var initDependencies = $this.makeInitPromises();
       $q.all(initDependencies).then(function(dataFromAPI) {
         angular.element('#search-collapse').addClass('collapse');
