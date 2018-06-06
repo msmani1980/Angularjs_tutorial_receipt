@@ -110,6 +110,33 @@ angular.module('ts5App')
       companyReceiptFactory.updateCompanyReceipt($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure);
     };
 
+    this.showLoadingModal = function(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
+
+    this.getCompanyReceiptSuccess = function(response) {
+      var startDate = dateUtility.formatDateForApp(response.startDate);
+      var endDate = dateUtility.formatDateForApp(response.endDate);
+
+      $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
+      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
+
+      $scope.companyReceipt = {
+        id: response.id,
+        receiptTypeId: response.receiptTemplateTypeId,
+        logoUrl: response.logoUrl,
+        template: response.receiptTemplateText,
+        startDate: startDate,
+        endDate: endDate
+      };
+
+      $scope.isLoadingCompleted = true;
+    };
+
     $scope.isDisabled = function() {
       return $scope.shouldDisableStartDate || $scope.readOnly;
     };
@@ -125,4 +152,42 @@ angular.module('ts5App')
 
       return dateUtility.isAfterTodayDatePicker($scope.companyReceipt.startDate);
     };
+
+    this.initDependenciesSuccess = function(dataFromAPI) {
+      var receiptTypes = dataFromAPI[0];
+
+      receiptTypes.forEach(function (template) {
+        template.displayName = $this.normalizeReceiptTypeName(template.name.replace('_', ' '));
+
+        $scope.receiptTypes.push(template);
+      });
+
+      if ($routeParams.id) {
+        companyReceiptFactory.getCompanyReceipt($routeParams.id).then($this.getCompanyReceiptSuccess);
+      }
+
+      $this.hideLoadingModal();
+
+      var initFunctionName = ($routeParams.action + 'Init');
+      if ($this[initFunctionName]) {
+        $this[initFunctionName]();
+      }
+    };
+
+    this.makeInitPromises = function() {
+      var promises = [
+        recordsService.getReceiptTemplates()
+      ];
+
+      return promises;
+    };
+
+    this.init = function() {
+      $this.showLoadingModal('Loading Data');
+
+      var initPromises = $this.makeInitPromises();
+      $q.all(initPromises).then($this.initDependenciesSuccess);
+    };
+
+    this.init();
   });
