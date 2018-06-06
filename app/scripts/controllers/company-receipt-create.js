@@ -8,13 +8,14 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyReceiptCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, companyReceiptFactory, $filter) {
+  .controller('CompanyReceiptCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, companyReceiptFactory, recordsService) {
     var $this = this;
 
     $scope.viewName = 'Company Receipts';
     $scope.shouldDisableEndDate = false;
     $scope.displayError = false;
     $scope.companyReceipt = {};
+    $scope.receiptTypes = [];
 
     this.createInit = function() {
       $scope.readOnly = false;
@@ -116,6 +117,12 @@ angular.module('ts5App')
 
     this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
+    };
+
+    this.normalizeReceiptTypeName = function(input) {
+      var uppercase = (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+
+      return uppercase.replace('_', ' ');
     };
 
     this.getCompanyReceiptSuccess = function(response) {
