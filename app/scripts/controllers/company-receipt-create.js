@@ -79,6 +79,37 @@ angular.module('ts5App')
       }
     };
 
+    this.createCompanyReceipt = function() {
+      $this.showLoadingModal('Creating Company Receipt');
+
+      var payload = {
+        companyId: surveyQuestionsFactory.getCompanyId(),
+        receiptTemplateTypeId: $scope.companyReceipt.receiptTypeId,
+        logoUrl: $scope.companyReceipt.logoUrl,
+        receiptTemplateText: $scope.companyReceipt.template,
+        startDate: dateUtility.formatDateForAPI($scope.companyReceipt.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.companyReceipt.endDate)
+      };
+
+      companyReceiptFactory.createCompanyReceipt(payload).then($this.saveFormSuccess, $this.saveFormFailure);
+    };
+
+    this.editCompanyReceipt = function() {
+      $this.showLoadingModal('Saving Company Receipt');
+
+      var payload = {
+        id: $routeParams.id,
+        companyId: surveyQuestionsFactory.getCompanyId(),
+        receiptTemplateTypeId: $scope.companyReceipt.receiptTypeId,
+        logoUrl: $scope.companyReceipt.logoUrl,
+        receiptTemplateText: $scope.companyReceipt.template,
+        startDate: dateUtility.formatDateForAPI($scope.surveyQuestion.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.surveyQuestion.endDate)
+      };
+
+      companyReceiptFactory.updateCompanyReceipt($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure);
+    };
+
     $scope.isDisabled = function() {
       return $scope.shouldDisableStartDate || $scope.readOnly;
     };

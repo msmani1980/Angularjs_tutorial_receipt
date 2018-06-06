@@ -20,7 +20,7 @@
                 <label for="receiptType">Receipt Type *</label>
                 <select name="receiptType" id="receiptType" class="form-control"
                         ng-options="receiptType.id as receiptType.receiptTypeName for receiptType in receiptTypes"
-                        ng-model="search.receiptTypeId"
+                        ng-model="companyReceipt.receiptTypeId"
                         required>
                   <option value="">Please Select Receipt Type</option>
                 </select>
@@ -28,9 +28,9 @@
             </div>
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="logoURL">Logo URL</label>
-                <input ng-model="companyReceipt.linkURL" type="text" ng-disabled="isDisabled()"
-                       maxlength="50" class="form-control" id="logoURL" name="logoURL">
+                <label for="logoUrl">Logo Url</label>
+                <input ng-model="companyReceipt.logoUrl" type="text" ng-disabled="isDisabled()"
+                       maxlength="50" class="form-control" id="logoUrl" name="logoUrl">
               </div>
             </div>
             <div class="col-xs-12 col-sm-3">
