@@ -36,6 +36,18 @@ angular.module('ts5App')
       $scope.viewName = 'Edit Company Receipt';
     };
 
+    this.validateForm = function() {
+      $this.resetErrors();
+      return $scope.companyReceiptForm.$valid;
+    };
+
+    this.resetErrors = function() {
+      $scope.formErrors = [];
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+    };
+
+
     $scope.formSave = function() {
       if ($this.validateForm()) {
         var saveFunctionName = ($routeParams.action + 'CompanyReceipt');
