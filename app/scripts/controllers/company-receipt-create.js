@@ -8,6 +8,6 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyReceiptCreateCtrl', function () {
-    
+  .controller('CompanyReceiptCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, companyReceiptFactory, $filter) {
+
   });
