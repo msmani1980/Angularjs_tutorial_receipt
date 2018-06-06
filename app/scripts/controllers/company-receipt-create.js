@@ -26,4 +26,20 @@ angular.module('ts5App')
         $scope.displayError = true;
       }
     };
+
+    $scope.isDisabled = function() {
+      return $scope.shouldDisableStartDate || $scope.readOnly;
+    };
+
+    $scope.isCompanyReceiptEditable = function () {
+      if ($routeParams.action === 'create') {
+        return true;
+      }
+
+      if ($routeParams.action === 'view' || angular.isUndefined($scope.companyReceipt)) {
+        return false;
+      }
+
+      return dateUtility.isAfterTodayDatePicker($scope.companyReceipt.startDate);
+    };
   });
