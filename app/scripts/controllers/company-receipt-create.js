@@ -16,6 +16,26 @@ angular.module('ts5App')
     $scope.displayError = false;
     $scope.companyReceipt = {};
 
+    this.createInit = function() {
+      $scope.readOnly = false;
+      $scope.isCreate = true;
+      $scope.editingItem = false;
+      $scope.isLoadingCompleted = true;
+      $scope.viewName = 'Create Company Receipt';
+    };
+
+    this.viewInit = function() {
+      $scope.readOnly = true;
+      $scope.editingItem = true;
+      $scope.viewName = 'View Company Receipt';
+    };
+
+    this.editInit = function() {
+      $scope.readOnly = false;
+      $scope.editingItem = true;
+      $scope.viewName = 'Edit Company Receipt';
+    };
+
     $scope.formSave = function() {
       if ($this.validateForm()) {
         var saveFunctionName = ($routeParams.action + 'CompanyReceipt');
