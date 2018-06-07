@@ -163,6 +163,14 @@ angular.module('ts5App')
       $scope.loadCompanyReceipts();
     };
 
+    $scope.isCompanyReceiptEditable = function(companyReceipt) {
+      if (angular.isUndefined(companyReceipt)) {
+        return false;
+      }
+
+      return dateUtility.isAfterOrEqualDatePicker(companyReceipt.endDate, dateUtility.nowFormattedDatePicker());
+    };
+
     $scope.canEdit = function (endDate) {
       return dateUtility.isYesterdayOrEarlierDatePicker(endDate);
     };
