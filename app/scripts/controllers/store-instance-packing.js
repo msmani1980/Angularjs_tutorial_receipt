@@ -770,16 +770,34 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return ignoreEposData;
     }
     
-    this.handleWastageItemForRedispatch = function(item, newItem) {
-      if (!($routeParams.action === 'redispatch' && $scope.defaultUllageCountsToIboundCountsForWastage)) {
+    this.handleWastageItems = function(item, newItem) {
+      if (!(($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') && $scope.defaultUllageCountsToIboundCountsForWastage)) {
         return;
       }
 
       if (item.wastage) {
         newItem.ullageQuantity = newItem.inboundQuantity;
-
         if ($scope.defaultUllageReasonCodes && newItem.ullageQuantity > 0) {
           newItem.ullageReason = $scope.defaultUllageReasonCodes[0];
+        }
+      }
+    };
+
+    this.handleWastageItemsForEposInbounded = function(itemsOldList, itemsNewList, offLoadItem) {
+      if (!(($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') && $scope.defaultUllageCountsToIboundCountsForWastage)) {
+        return;
+      }
+
+      var itemMatch = lodash.findWhere(itemsOldList, { itemMasterId: offLoadItem.itemMasterId });
+      if (itemsNewList) {
+        var itemsList = angular.copy(itemsNewList.response);
+        itemMatch = lodash.findWhere(itemsList, { itemMasterId: offLoadItem.itemMasterId });
+      }
+
+      if (itemMatch && itemMatch.wastage) {
+        offLoadItem.ullageQuantity = offLoadItem.inboundQuantity;
+        if ($scope.defaultUllageReasonCodes && offLoadItem.ullageQuantity > 0) {
+          offLoadItem.ullageReason = $scope.defaultUllageReasonCodes[0];
         }
       }
     };
@@ -861,7 +879,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
 
-        $this.handleWastageItemForRedispatch(item, itemMatch);
+        $this.handleWastageItems(item, itemMatch);
       });
     };
 
@@ -871,15 +889,17 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.mergeRedispatchItemsLoop(items, ignoreEposData);
     };
 
-    this.mergeEposInboundQuantities = function(inboundQuantities) {
+    this.mergeEposInboundQuantities = function(inboundQuantities, eposNewItems, eposOldItems) {
       angular.forEach(inboundQuantities, function (eposInboundQuantity) {
         var offloadItemMatch = lodash.findWhere($scope.offloadListItems, { itemMasterId: eposInboundQuantity.id });
         var picklistMatch = lodash.findWhere($scope.pickListItems, { itemMasterId: eposInboundQuantity.id });
 
         if ($routeParams.action === 'redispatch' && picklistMatch && !picklistMatch.isEposDataOverwritten) {
           picklistMatch.inboundQuantity = eposInboundQuantity.quantity;
+          $this.handleWastageItemsForEposInbounded(eposNewItems, eposOldItems, picklistMatch);
         } else if (offloadItemMatch && !offloadItemMatch.isEposDataOverwritten) {
           offloadItemMatch.inboundQuantity = eposInboundQuantity.quantity;
+          $this.handleWastageItemsForEposInbounded(eposNewItems, eposOldItems, offloadItemMatch);
         }
       });
 
@@ -894,16 +914,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.mergeStoreInstanceItems(angular.copy(responseCollection[2].response));
       if (responseCollection[4]) {
         $scope.allItemForGettingSalesCategory = angular.copy(responseCollection[4].response);
-      }
-
-      if ($scope.shouldDefaultInboundToEpos && ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance')) {
-        $this.mergeEposInboundQuantities(angular.copy(responseCollection[3].response));
-      }
-      
-      if (responseCollection[4]) {
         $this.mergeRedispatchItems(angular.copy(responseCollection[4].response));
       }
 
+      if ($scope.shouldDefaultInboundToEpos && ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance')) {
+        $this.mergeEposInboundQuantities(angular.copy(responseCollection[3].response), angular.copy(responseCollection[2].response), responseCollection[4]);
+      }
+      
       $scope.filterOffloadListItems();
       $scope.filterPickListItems();
       $this.hideLoadingModal();
