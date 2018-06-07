@@ -1,0 +1,130 @@
+<div class="module-container">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/company-receipt-list" class="btn" ng-show="readOnly">Back</a>
+      </div>
+    </div>
+    <error-dialog form-object="companyEmailReceiptForm" error-response="errorResponse" display="displayError">
+    </error-dialog>
+    <!-- Started Modify-->
+    <form name="companyEmailReceiptForm">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="emailFrom">From</label>
+                <input ng-model="companyEmailReceipt.emailFrom" type="text" ng-disabled="isDisabled()"
+                       maxlength="50" class="form-control" id="emailFrom" name="emailFrom">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="emailBcc">BCC</label>
+                <input ng-model="companyEmailReceipt.emailBcc" type="text" ng-disabled="isDisabled()"
+                       maxlength="200" class="form-control" id="emailBcc" name="emailBcc">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              <div class="form-group">
+                <label for="emailSubject">Subject</label>
+                <input ng-model="companyEmailReceipt.emailSubject" type="text" ng-disabled="isDisabled()"
+                       maxlength="200" class="form-control" id="emailSubject" name="emailSubject">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="emailSignature">Signature</label>
+                <textarea ng-model="companyEmailReceipt.emailSignature" maxlength="25" ng-disabled="isDisabled()" rows="3" class="form-control" id="emailSignature" name="emailSignature"></textarea>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <date-picker-field
+                  ng-if="isLoadingCompleted"
+                  form="companyEmailReceiptForm" name="EffectiveStartDate"
+                  label="Effective Start Date"
+                  disable="isDisabled()"
+                  required="true"
+                  disable-past="true"
+                  ng-model="companyEmailReceipt.startDate">
+                </date-picker-field>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <date-picker-field
+                  ng-if="isLoadingCompleted"
+                  form="companyEmailReceiptForm"
+                  name="EffectiveEndDate"
+                  label="Effective End Date"
+                  disable="readOnly || shouldDisableEndDate"
+                  ng-model="companyEmailReceipt.endDate"
+                  disable-past="true"
+                  end-current-effective="viewEditItem && disablePastDate"
+                  required="true">
+                </date-picker-field>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+              <div class="form-group">
+                <strong>Options</strong>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="companyEmailReceipt.asAttachment" ng-disabled="isDisabled(currency)"> As Attachment
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <label for="emailBody">Body</label>
+                <textarea ng-model="companyEmailReceipt.emailBody" ng-disabled="isDisabled()" rows="25" class="form-control" id="emailBody" name="emailBody"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <label for="emailRecord">Record</label>
+                <textarea ng-model="companyEmailReceipt.emailRecord" ng-disabled="isDisabled()" rows="25" class="form-control" id="emailRecord" name="emailRecord"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <label for="emailFooter">Footer</label>
+                <textarea ng-model="companyEmailReceipt.emailFooter" ng-disabled="isDisabled()" rows="25" class="form-control" id="emailFooter" name="emailFooter"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-footer text-right">
+          <a href="#/company-receipt-email-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+          <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span> <span
+            class="hidden-xs">Save</span>
+          </button>
+        </div>
+    </form>
+  </div>
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Company Receipts"></dynamic-left-nav>
