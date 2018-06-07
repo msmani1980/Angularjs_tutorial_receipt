@@ -84,7 +84,7 @@ angular.module('ts5App')
       $this.showLoadingModal('Creating Company Receipt');
 
       var payload = {
-        companyId: surveyQuestionsFactory.getCompanyId(),
+        companyId: companyReceiptFactory.getCompanyId(),
         receiptTemplateTypeId: $scope.companyReceipt.receiptTypeId,
         logoUrl: $scope.companyReceipt.logoUrl,
         receiptTemplateText: $scope.companyReceipt.template,
@@ -100,12 +100,12 @@ angular.module('ts5App')
 
       var payload = {
         id: $routeParams.id,
-        companyId: surveyQuestionsFactory.getCompanyId(),
+        companyId: companyReceiptFactory.getCompanyId(),
         receiptTemplateTypeId: $scope.companyReceipt.receiptTypeId,
         logoUrl: $scope.companyReceipt.logoUrl,
         receiptTemplateText: $scope.companyReceipt.template,
-        startDate: dateUtility.formatDateForAPI($scope.surveyQuestion.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.surveyQuestion.endDate)
+        startDate: dateUtility.formatDateForAPI($scope.companyReceipt.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.companyReceipt.endDate)
       };
 
       companyReceiptFactory.updateCompanyReceipt($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure);
