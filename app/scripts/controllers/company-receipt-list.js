@@ -22,77 +22,6 @@ angular.module('ts5App')
     $scope.isSearch = false;
     $scope.search = {};
 
-    $scope.clearSearchForm = function () {
-      $scope.isSearch = false;
-      $scope.companyReceipts = [];
-      $scope.search = {};
-
-      $this.meta = {
-        count: undefined,
-        limit: 100,
-        offset: 0
-      };
-    };
-
-    $scope.toggleSearchPanel = function() {
-      togglePanel('#search-collapse');
-    };
-
-    $scope.redirectToCompanyReceipt = function(id, state) {
-      $location.search({});
-      $location.path('company-receipts/' + state + '/' + id).search();
-    };
-
-    $scope.loadCompanyReceipts = function() {
-      if ($this.meta.offset >= $this.meta.count) {
-        return;
-      }
-
-      showLoadingBar();
-
-      var payload = lodash.assign(angular.copy($scope.search), {
-        limit: $this.meta.limit,
-        offset: $this.meta.offset,
-        sortOn: 'startDate',
-        sortBy: 'ASC'
-      });
-
-      payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
-      payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
-
-      companyReceiptFactory.getCompanyReceipts(payload).then($this.getCompanyReceiptsSuccess);
-
-      $this.meta.offset += $this.meta.limit;
-      $scope.uiReady = true;
-    };
-
-    $scope.searchCompanyReceipts = function() {
-      $scope.isSearch = true;
-      $scope.companyReceipts = [];
-
-      $this.meta = {
-        count: undefined,
-        limit: 100,
-        offset: 0
-      };
-
-      $scope.loadCompanyReceipts();
-    };
-
-    $scope.canEdit = function (endDate) {
-      return dateUtility.isYesterdayOrEarlierDatePicker(endDate);
-    };
-
-    $scope.isDateActive = function (date) {
-      return dateUtility.isTodayOrEarlierDatePicker(date);
-    };
-
-    $scope.removeRecord = function (companyReceiptId) {
-      $this.displayLoadingModal('Removing Company Receipt');
-
-      companyReceiptFactory.removeCompanyReceipt(companyReceiptId).then($this.removeCompanyReceiptSuccess(companyReceiptId), $this.removeCompanyReceiptFailure);
-    };
-
     this.removeCompanyReceiptSuccess = function (companyReceiptId) {
       lodash.remove($scope.companyReceipts, function (companyReceipt) {
         return companyReceipt.id === companyReceiptId;
@@ -176,6 +105,82 @@ angular.module('ts5App')
 
       return uppercase.replace('_', ' ');
     };
+
+    $scope.clearSearchForm = function () {
+      $scope.isSearch = false;
+      $scope.companyReceipts = [];
+      $scope.search = {};
+
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+    };
+
+    $scope.toggleSearchPanel = function() {
+      togglePanel('#search-collapse');
+    };
+
+    $scope.redirectToCompanyReceipt = function(id, state) {
+      $location.search({});
+      $location.path('company-receipts/' + state + '/' + id).search();
+    };
+
+    $scope.loadCompanyReceipts = function() {
+      if ($this.meta.offset >= $this.meta.count) {
+        return;
+      }
+
+      showLoadingBar();
+
+      var payload = lodash.assign(angular.copy($scope.search), {
+        limit: $this.meta.limit,
+        offset: $this.meta.offset,
+        sortOn: 'startDate',
+        sortBy: 'ASC'
+      });
+
+      payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
+      payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
+
+      companyReceiptFactory.getCompanyReceipts(payload).then($this.getCompanyReceiptsSuccess);
+
+      $this.meta.offset += $this.meta.limit;
+      $scope.uiReady = true;
+    };
+
+    $scope.searchCompanyReceipts = function() {
+      $scope.isSearch = true;
+      $scope.companyReceipts = [];
+
+      $this.meta = {
+        count: undefined,
+        limit: 100,
+        offset: 0
+      };
+
+      $scope.loadCompanyReceipts();
+    };
+
+    $scope.canEdit = function (endDate) {
+      return dateUtility.isYesterdayOrEarlierDatePicker(endDate);
+    };
+
+    $scope.isDateActive = function (date) {
+      return dateUtility.isTodayOrEarlierDatePicker(date);
+    };
+
+    $scope.removeRecord = function (companyReceiptId) {
+      $this.displayLoadingModal('Removing Company Receipt');
+
+      companyReceiptFactory.removeCompanyReceipt(companyReceiptId).then($this.removeCompanyReceiptSuccess(companyReceiptId), $this.removeCompanyReceiptFailure);
+    };
+
+    $scope.showDeleteButton = function(dateString) {
+      return dateUtility.isAfterTodayDatePicker(dateString);
+    };
+
 
     this.initPromisesSuccess = function (dataFromAPI) {
       var receiptTypes = dataFromAPI[0];
