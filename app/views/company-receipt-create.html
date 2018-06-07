@@ -31,7 +31,7 @@
               <div class="form-group">
                 <label for="logoUrl">Logo Url</label>
                 <input ng-model="companyReceipt.logoUrl" type="text" ng-disabled="isDisabled()"
-                       maxlength="50" class="form-control" id="logoUrl" name="logoUrl">
+                       maxlength="50" class="form-control" id="logoUrl" name="logoUrl" placeholder="http://logo-url.com">
               </div>
             </div>
             <div class="col-xs-12 col-sm-3">
@@ -74,7 +74,7 @@
         </div>
 
         <div class="panel-footer text-right">
-          <a href="#/company-receipt-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+          <a href="#/company-receipts" class="btn btn-default" ng-hide="readOnly">Cancel</a>
           <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
             <span class="fa fa-check-square-o" aria-hidden="true"></span> <span
             class="hidden-xs">Save</span>
