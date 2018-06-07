@@ -750,9 +750,9 @@ angular.module('ts5App')
         title: 'Company Receipts',
         menuItems: [{
             name: 'Company Receipts',
-            route: '/#/company-receipt-list',
+            route: '/#/company-receipts',
             icon: 'icon-manage-discount',
-            className: 'dashboard-company-receipt-config',
+            className: 'dashboard-company-receipts-config',
             package: 'COMPANYRECEIPTS',
             role: 'COMPANYRECEIPTS',
             permissions: [{
@@ -761,10 +761,10 @@ angular.module('ts5App')
             }]
           }, {
             name: 'Company E-mail Receipts',
-            route: '/#/company-email-receipt-list',
+            route: '/#/company-email-receipts',
             icon: 'icon-manage-discount',
-            className: 'dashboard-company-email-receipt-config',
-            package: 'COMPANYEMAILRECEIPTS',
+            className: 'dashboard-company-email-receipts-config',
+            package: 'COMPANYRECEIPTS',
             role: 'COMPANYEMAILRECEIPTS',
             permissions: [{
               apiName: '/api/company-email-receipts',
