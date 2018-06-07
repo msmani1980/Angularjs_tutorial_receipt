@@ -95,7 +95,7 @@ angular.module('ts5App')
     };
 
     this.getReceiptTypeName = function (templateTypeId) {
-      var receiptType = lodash.find($scope.receiptTypes, { 'id': templateTypeId });
+      var receiptType = lodash.find($scope.receiptTypes, { id: templateTypeId });
 
       return receiptType.displayName;
     };
@@ -190,7 +190,6 @@ angular.module('ts5App')
     $scope.showDeleteButton = function(dateString) {
       return dateUtility.isAfterTodayDatePicker(dateString);
     };
-
 
     this.initPromisesSuccess = function (dataFromAPI) {
       var receiptTypes = dataFromAPI[0];
