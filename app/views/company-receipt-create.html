@@ -1,0 +1,94 @@
+<div class="module-container">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/company-receipts" class="btn" ng-show="readOnly">Back</a>
+      </div>
+    </div>
+    <error-dialog form-object="companyReceiptForm" error-response="errorResponse" display="displayError">
+    </error-dialog>
+    <!-- Started Modify-->
+    <form name="companyReceiptForm">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="receiptType">Receipt Type *</label>
+                <select name="receiptType" id="receiptType" class="form-control"
+                        ng-options="receiptType.id as receiptType.displayName for receiptType in receiptTypes"
+                        ng-model="companyReceipt.receiptTypeId"
+                        ng-disabled="isDisabled()"
+                        required>
+                  <option value="">Please Select Receipt Type</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="logoUrl">Logo Url</label>
+                <input ng-model="companyReceipt.logoUrl" type="text" ng-disabled="isDisabled()"
+                       maxlength="50" class="form-control" id="logoUrl" name="logoUrl" placeholder="http://logo-url.com">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <date-picker-field
+                  ng-if="isLoadingCompleted"
+                  form="companyReceiptForm" name="EffectiveStartDate"
+                  label="Effective Start Date"
+                  disable="isDisabled()"
+                  required="true"
+                  disable-past="true"
+                  ng-model="companyReceipt.startDate">
+                </date-picker-field>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <date-picker-field
+                  ng-if="isLoadingCompleted"
+                  form="companyReceiptForm"
+                  name="EffectiveEndDate"
+                  label="Effective End Date"
+                  disable="readOnly || shouldDisableEndDate"
+                  ng-model="companyReceipt.endDate"
+                  disable-past="true"
+                  end-current-effective="viewEditItem && disablePastDate"
+                  required="true">
+                </date-picker-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <label for="template">Template</label>
+                <textarea ng-model="companyReceipt.template" ng-disabled="isDisabled()" rows="25" class="form-control" id="template" name="template"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-footer text-right">
+          <a href="#/company-receipts" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+          <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span> <span
+            class="hidden-xs">Save</span>
+          </button>
+        </div>
+    </form>
+  </div>
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Company Receipts"></dynamic-left-nav>
