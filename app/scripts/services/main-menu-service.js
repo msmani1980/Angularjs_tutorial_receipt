@@ -770,7 +770,7 @@ angular.module('ts5App')
               apiName: '/api/company-email-receipts',
               permissionCodes: ['R']
             }]
-        }]
+          }]
       }];
     };
 
