@@ -494,6 +494,16 @@ angular.module('ts5App', [
     templateUrl: 'views/company-receipt-email-create.html',
     controller: 'CompanyReceiptEmailCreateCtrl',
     controllerAs: 'companyReceiptEmailCreate'
+  .when('/company-email-receipt-list', {
+    templateUrl: 'views/company-email-receipt-list.html',
+    controller: 'CompanyEmailReceiptListCtrl',
+    controllerAs: 'companyEmailReceiptList'
+  })
+  .when('/company-email-receipt-create', {
+    templateUrl: 'views/company-email-receipt-create.html',
+    controller: 'CompanyEmailReceiptCreateCtrl',
+    controllerAs: 'companyEmailReceiptCreate'
+  })
   }).otherwise({
     redirectTo: '/'
   });
