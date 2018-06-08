@@ -10,23 +10,23 @@
 angular.module('ts5App')
   .factory('companyEmailReceiptFactory', function (companyEmailReceiptService, globalMenuService) {
     this.getCompanyEmailReceipt = function (id) {
-      return companyReceiptEmailService.getCompanyEmailReceipt(id);
+      return companyEmailReceiptService.getCompanyEmailReceipt(id);
     };
 
     this.getCompanyEmailReceipts = function (payload) {
-      return companyReceiptEmailService.getCompanyEmailReceipts(payload);
+      return companyEmailReceiptService.getCompanyEmailReceipts(payload);
     };
 
     this.createCompanyEmailReceipt = function (payload) {
-      return companyReceiptEmailService.createCompanyEmailReceipt(payload);
+      return companyEmailReceiptService.createCompanyEmailReceipt(payload);
     };
 
     this.updateCompanyEmailReceipt = function (id, payload) {
-      return companyReceiptEmailService.updateCompanyEmailReceipt(id, payload);
+      return companyEmailReceiptService.updateCompanyEmailReceipt(id, payload);
     };
 
     this.removeCompanyEmailReceipt = function (id) {
-      return companyReceiptEmailService.removeCompanyEmailReceipt(id);
+      return companyEmailReceiptService.removeCompanyEmailReceipt(id);
     };
 
     this.getCompanyId = function () {
