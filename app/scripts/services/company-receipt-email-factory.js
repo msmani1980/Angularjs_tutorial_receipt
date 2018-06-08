@@ -8,16 +8,37 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('companyReceiptEmailFactory', function () {
-    // Service logic
-    // ...
+  .factory('companyReceiptEmailFactory', function (companyReceiptEmailService, globalMenuService) {
+    this.getCompanyEmailReceipt = function (id) {
+      return companyReceiptEmailService.getCompanyEmailReceipt(id);
+    };
 
-    var meaningOfLife = 42;
+    this.getCompanyEmailReceipts = function (payload) {
+      return companyReceiptEmailService.getCompanyEmailReceipts(payload);
+    };
 
-    // Public API here
+    this.createCompanyEmailReceipt = function (payload) {
+      return companyReceiptEmailService.createCompanyEmailReceipt(payload);
+    };
+
+    this.updateCompanyEmailReceipt = function (id, payload) {
+      return companyReceiptEmailService.updateCompanyEmailReceipt(id, payload);
+    };
+
+    this.removeCompanyEmailReceipt = function (id) {
+      return companyReceiptEmailService.removeCompanyEmailReceipt(id);
+    };
+
+    this.getCompanyId = function () {
+      return globalMenuService.company.get();
+    };
+
     return {
-      someMethod: function () {
-        return meaningOfLife;
-      }
+      getCompanyEmailReceipt: this.getCompanyEmailReceipt,
+      getCompanyEmailReceipts: this.getCompanyEmailReceipts,
+      createCompanyEmailReceipt: this.createCompanyEmailReceipt,
+      updateCompanyEmailReceipt: this.updateCompanyEmailReceipt,
+      removeCompanyEmailReceipt: this.removeCompanyEmailReceipt,
+      getCompanyId: this.getCompanyId
     };
   });
