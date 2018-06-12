@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyEmailReceiptListCtrl', function ($scope, $q, $route, $location, lodash, dateUtility, accessService, companyEmailReceiptFactory, recordsService) {
+  .controller('CompanyEmailReceiptListCtrl', function ($scope, $q, $route, $location, lodash, dateUtility, accessService, companyEmailReceiptFactory) {
     var $this = this;
 
     this.meta = {
