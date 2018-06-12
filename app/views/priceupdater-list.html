@@ -63,6 +63,15 @@
 				    </select>
 				</div>
 			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4">
+          		<label for="Rule Appied">Rule Applied</label>
+                <div class="form-group">
+                	<select name="Rule Applied" ng-model="search.ruleApplied" class="form-control">
+						<option value="yes">Yes</option>
+						<option value="no">No</option>
+				    </select>
+				</div>
+          	</div>  
 		  </div>
 		</div>
         <div class="panel-footer text-right">
@@ -84,6 +93,7 @@
           <th>Tax Is</th>
           <th>Start Date</th>
           <th>End Date</th>
+          <th>Rule Applied</th>
           <th>Updated Date/Time</th>
           <th>Updated User</th>
           <th>Actions</th>
@@ -99,6 +109,7 @@
           <td>{{ priceupdater.taxIs }}</td>
           <td>{{ priceupdater.startDate}}</td>
           <td>{{ priceupdater.endDate}}</td>
+          <td>{{ isRuleApplied(priceupdater) }}</td>
           <td>{{ loadUpdatedOn(priceupdater) }}</td>
           <td>{{ loadUpdatedBy(priceupdater) }}</td>
           <td>
