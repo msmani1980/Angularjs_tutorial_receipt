@@ -7,7 +7,7 @@
 
             <div class="col-xs-4 text-right">
                 <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
-                        aria-controls="search-collapse">
+                        aria-controls="search-collapse" id="filterDetailedCompanyCurrencyId">
                     <span class="fa fa-filter" aria-hidden="true"></span>
                     <span class="hidden-sm hidden-xs">Filter</span>
                 </button>
@@ -39,8 +39,8 @@
                     </div>
                 </div>
                 <div class="panel-footer text-right">
-                    <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="button" class="btn btn-default" ng-click="clearForm()" id="clearDetailedCompanyCurrencyId">Clear</button>
+                    <button type="submit" class="btn btn-primary" id="searchDetailedCompanyCurrencyId">Search</button>
                 </div>
             </form>
         </div>

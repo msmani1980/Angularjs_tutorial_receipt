@@ -70,7 +70,7 @@
 
               <div class="form-group col-xs-12 text-right">
                 <button type="button" class="btn btn-default" ng-click="hideCreatePopup()">Cancel</button>
-                <button type="button" class="btn btn-primary" ng-click="findStoreInstance()">Search</button>
+                <button type="button" class="btn btn-primary" ng-click="findStoreInstance()" id="searchReconciliationCashBagId">Search</button>
               </div>
             </form>
           </div>
@@ -118,7 +118,7 @@
 
       <div class="col-xs-6 text-right">
 
-        <button class="btn btn-default" data-toggle="collapse" data-target="#searchCollapse" aria-controls="searchCollapse">
+        <button class="btn btn-default" data-toggle="collapse" data-target="#searchCollapse" aria-controls="searchCollapse" id="filterReconciliationCashBagListId">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
@@ -207,8 +207,8 @@
       </div>
 
       <div class="panel-footer text-right">
-        <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="button" class="btn btn-default" ng-click="clearForm()" id="clearReconciliationCashBagListId">Clear</button>
+        <button type="submit" class="btn btn-primary" id="searchReconciliationCashBagListId">Search</button>
       </div>
     </form>
   </div>

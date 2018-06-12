@@ -9,7 +9,7 @@
        <a href="#/priceupdater/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Rule</span></a>
        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
                aria-expanded="false"
-               aria-controls="search-collapse">
+               aria-controls="search-collapse" id="filterPriceUpdaterListId">
         <span class="fa fa-search" aria-hidden="true"></span>
         <span class="hidden-xs">Filter</span>
        </button>
@@ -75,8 +75,8 @@
 		  </div>
 		</div>
         <div class="panel-footer text-right">
-          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-          <button type="submit" class="btn btn-primary">Search</button>
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()" id="clearPriceUpdaterListId">Clear</button>
+          <button type="submit" class="btn btn-primary" id="searchPriceUpdaterListId">Search</button>
         </div>
       </form>
     </div>

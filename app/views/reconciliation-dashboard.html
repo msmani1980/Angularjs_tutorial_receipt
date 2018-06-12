@@ -51,7 +51,7 @@
           </div>
 
           <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
-                  aria-controls="search-collapse">
+                  aria-controls="search-collapse" id="searchReconciliationDashboardId">
             <span class="fa fa-search" aria-hidden="true"></span>
             <span class="hidden-sm hidden-xs">Search</span>
           </button>
@@ -143,8 +143,8 @@
           </div>
         </div>
         <div class="panel-footer text-right">
-          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-          <button type="submit" class="btn btn-primary" ng-click="searchReconciliationDataList()">Search</button>
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()" id="clearReconciliationDashboardListId">Clear</button>
+          <button type="submit" class="btn btn-primary" ng-click="searchReconciliationDataList()" id="searchReconciliationDashboardListId">Search</button>
         </div>
       </form>
     </div>

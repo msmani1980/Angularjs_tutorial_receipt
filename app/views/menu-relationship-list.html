@@ -10,7 +10,7 @@
 				<a href="#/menu-relationship-create" ng-show="isCRUD" class="btn btn-primary btn-create">
 					<span class="fa fa-plus" aria-hidden="true"></span> <span class="btn-label hidden-xs">Create Menu Relationship</span>
 				</a>
-				<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+				<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse" id="filterMenuRelationshipListId">
                     <span class="fa fa-filter" aria-hidden="true"></span>
 					<span class="hidden-sm hidden-xs">Filter</span>
 				</button>
@@ -56,8 +56,8 @@
 					</date-picker>
 					</div>
 					<div class="panel-footer text-right">
-                        <button type="button" class="btn btn-default  btn-search-clear" ng-click="clearSearchFilters()" ng-show="search.menuId.length || search.catererStationId.length || dateRange.startDate.length || dateRange.endDate.length">Clear</button>
-                        <button type="submit" class="btn btn-primary">Search</button>
+                        <button type="button" class="btn btn-default  btn-search-clear" ng-click="clearSearchFilters()" ng-show="search.menuId.length || search.catererStationId.length || dateRange.startDate.length || dateRange.endDate.length" id="clearMenuRelationshipListId">Clear</button>
+                        <button type="submit" class="btn btn-primary" id="searchMenuRelationshipListId">Search</button>
 					</div>
 				</form>
 			</div>
