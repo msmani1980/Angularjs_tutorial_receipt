@@ -116,6 +116,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var preferencesArray = angular.copy(dataFromAPI.preferences);
 
       var defaultInboundToEposPreference = null;
+      $scope.defaultUllageCountsToIboundCountsForWastage = false;
       angular.forEach(preferencesArray, function (preference) {
         if (defaultInboundToEposPreference === null && preference.featureName === 'Inbound' && preference.optionName === 'Default LMP Inbound counts to ePOS') {
           defaultInboundToEposPreference = preference.isSelected;
@@ -125,6 +126,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = 'itemName';
           $scope.itemSortOrder = 'itemName';
+        } else if (preference.featureName === 'Inbound' && preference.optionCode === 'IWST' && preference.choiceCode === 'ACT' && preference.isSelected) {
+          $scope.defaultUllageCountsToIboundCountsForWastage = true;
         }
       });
 
@@ -173,6 +176,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstancePackingFactory.getReasonCodeList().then(function(response) {
         $scope.ullageReasonCodes = lodash.filter(angular.copy(response.companyReasonCodes), {
           description: 'Ullage'
+        });
+
+        $scope.defaultUllageReasonCodes = lodash.filter(angular.copy($scope.ullageReasonCodes), {
+          isDefault: 1
         });
       }, this.errorHandler);
     };
@@ -756,6 +763,38 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       return ignoreEposData;
     }
+    
+    this.handleWastageItems = function(item, newItem) {
+      if (!(($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') && $scope.defaultUllageCountsToIboundCountsForWastage)) {
+        return;
+      }
+
+      if (item.wastage) {
+        newItem.ullageQuantity = newItem.inboundQuantity;
+        if ($scope.defaultUllageReasonCodes && newItem.ullageQuantity > 0) {
+          newItem.ullageReason = $scope.defaultUllageReasonCodes[0];
+        }
+      }
+    };
+
+    this.handleWastageItemsForEposInbounded = function(itemsOldList, itemsNewList, offLoadItem) {
+      if (!(($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') && $scope.defaultUllageCountsToIboundCountsForWastage)) {
+        return;
+      }
+
+      var itemMatch = lodash.findWhere(itemsOldList, { itemMasterId: offLoadItem.itemMasterId });
+      if (itemsNewList) {
+        var itemsList = angular.copy(itemsNewList.response);
+        itemMatch = lodash.findWhere(itemsList, { itemMasterId: offLoadItem.itemMasterId });
+      }
+
+      if (itemMatch && itemMatch.wastage) {
+        offLoadItem.ullageQuantity = offLoadItem.inboundQuantity;
+        if ($scope.defaultUllageReasonCodes && offLoadItem.ullageQuantity > 0) {
+          offLoadItem.ullageReason = $scope.defaultUllageReasonCodes[0];
+        }
+      }
+    };
 
     this.mergeStoreInstanceItems = function(items) {
       var ignoreEposData = setCountTypeNameAndCheckEpos(items);
@@ -833,6 +872,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (itemMatch && !ignoreEposData && ePosItem) {
           itemMatch.inboundQuantity = ePosItem.quantity;
         }
+
+        $this.handleWastageItems(item, itemMatch);
       });
     };
 
@@ -842,15 +883,17 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.mergeRedispatchItemsLoop(items, ignoreEposData);
     };
 
-    this.mergeEposInboundQuantities = function(inboundQuantities) {
+    this.mergeEposInboundQuantities = function(inboundQuantities, eposNewItems, eposOldItems) {
       angular.forEach(inboundQuantities, function (eposInboundQuantity) {
         var offloadItemMatch = lodash.findWhere($scope.offloadListItems, { itemMasterId: eposInboundQuantity.id });
         var picklistMatch = lodash.findWhere($scope.pickListItems, { itemMasterId: eposInboundQuantity.id });
 
         if ($routeParams.action === 'redispatch' && picklistMatch && !picklistMatch.isEposDataOverwritten) {
           picklistMatch.inboundQuantity = eposInboundQuantity.quantity;
+          $this.handleWastageItemsForEposInbounded(eposNewItems, eposOldItems, picklistMatch);
         } else if (offloadItemMatch && !offloadItemMatch.isEposDataOverwritten) {
           offloadItemMatch.inboundQuantity = eposInboundQuantity.quantity;
+          $this.handleWastageItemsForEposInbounded(eposNewItems, eposOldItems, offloadItemMatch);
         }
       });
 
@@ -869,9 +912,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
 
       if ($scope.shouldDefaultInboundToEpos && ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance')) {
-        $this.mergeEposInboundQuantities(angular.copy(responseCollection[3].response));
+        $this.mergeEposInboundQuantities(angular.copy(responseCollection[3].response), angular.copy(responseCollection[2].response), responseCollection[4]);
       }
-
+      
       $scope.filterOffloadListItems();
       $scope.filterPickListItems();
       $this.hideLoadingModal();
