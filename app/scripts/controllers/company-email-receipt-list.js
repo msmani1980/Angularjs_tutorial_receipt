@@ -86,24 +86,12 @@ angular.module('ts5App')
       $scope.companyEmailReceipts = $scope.companyEmailReceipts.concat(response.companyEmailReceipts.map(function (companyEmailReceipt) {
         companyEmailReceipt.startDate = dateUtility.formatDateForApp(companyEmailReceipt.startDate);
         companyEmailReceipt.endDate = dateUtility.formatDateForApp(companyEmailReceipt.endDate);
-        companyEmailReceipt.receiptType = $this.getReceiptTypeName(companyEmailReceipt.receiptTemplateTypeId);
+        companyEmailReceipt.emailAsAttachmentDisplayValue = companyEmailReceipt.emailAsAttachment ? 'Yes': 'No';
 
         return companyEmailReceipt;
       }));
 
       hideLoadingBar();
-    };
-
-    this.getReceiptTypeName = function (templateTypeId) {
-      var receiptType = lodash.find($scope.receiptTypes, { id: templateTypeId });
-
-      return receiptType.displayName;
-    };
-
-    this.normalizeReceiptTypeName = function(input) {
-      var uppercase = (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
-
-      return uppercase.replace('_', ' ');
     };
 
     $scope.clearSearchForm = function () {
@@ -126,7 +114,7 @@ angular.module('ts5App')
 
     $scope.redirectToCompanyEmailReceipt = function(id, state) {
       $location.search({});
-      $location.path('company-receipts/' + state + '/' + id).search();
+      $location.path('company-email-receipts/' + state + '/' + id).search();
     };
 
     $scope.loadCompanyEmailReceipts = function() {
@@ -191,21 +179,12 @@ angular.module('ts5App')
       return dateUtility.isAfterTodayDatePicker(dateString);
     };
 
-    this.initPromisesSuccess = function (dataFromAPI) {
-      var receiptTypes = dataFromAPI[0];
-
-      receiptTypes.forEach(function (template) {
-        template.displayName = $this.normalizeReceiptTypeName(template.name.replace('_', ' '));
-
-        $scope.receiptTypes.push(template);
-      });
-
+    this.initPromisesSuccess = function () {
       return $scope.loadCompanyEmailReceipts();
     };
 
     this.makeInitPromises = function() {
       var promises = [
-        recordsService.getReceiptTemplates()
       ];
 
       return promises;
@@ -213,7 +192,7 @@ angular.module('ts5App')
 
     this.init = function() {
       angular.element('.loading-more').hide();
-      $scope.isCRUD = accessService.crudAccessGranted('CompanyEmailReceiptS', 'COMPANYEMAILRECEIPTS', 'COMPANYEMAILRECEIPTS');
+      $scope.isCRUD = accessService.crudAccessGranted('COMPANYRECEIPTS', 'COMPANYEMAILRECEIPTS', 'COMPANYEMAILRECEIPTS');
       var initDependencies = $this.makeInitPromises();
       $q.all(initDependencies).then(function(dataFromAPI) {
         angular.element('#search-collapse').addClass('collapse');

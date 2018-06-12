@@ -59,7 +59,7 @@
               <div class="form-group">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" ng-model="search.asAttachment" ng-disabled="isDisabled(currency)"> <strong>As Attachment</strong>
+                    <input type="checkbox" ng-model="search.emailAsAttachment" ng-disabled="isDisabled(currency)"> <strong>As Attachment</strong>
                   </label>
                 </div>
               </div>
@@ -92,7 +92,7 @@
           <td>{{ companyEmailReceipt.emailFrom }}</td>
           <td>{{ companyEmailReceipt.emailBcc }}</td>
           <td>{{ companyEmailReceipt.emailSubject }}</td>
-          <td>{{ companyEmailReceipt.asAttachment }}</td>
+          <td>{{ companyEmailReceipt.emailAsAttachmentDisplayValue }}</td>
           <td>{{ companyEmailReceipt.startDate}}</td>
           <td>{{ companyEmailReceipt.endDate}}</td>
           <td>
@@ -113,7 +113,7 @@
         </tbody>
       </table>
     </div>
-    <alert ng-show="!loadingBarVisible && companyEmailReceipt.length == 0" type="info">
+    <alert ng-show="!loadingBarVisible && companyEmailReceipts.length == 0" type="info">
       <span class="fa fa-flag"></span> Your search returned no results.
     </alert>
     <p ng-if="companyEmailReceipt.length > 0" class="record-count small text-center">Showing {{companyEmailReceipt.length}} records</p>
