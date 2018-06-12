@@ -86,7 +86,7 @@ angular.module('ts5App')
       $scope.companyEmailReceipts = $scope.companyEmailReceipts.concat(response.companyEmailReceipts.map(function (companyEmailReceipt) {
         companyEmailReceipt.startDate = dateUtility.formatDateForApp(companyEmailReceipt.startDate);
         companyEmailReceipt.endDate = dateUtility.formatDateForApp(companyEmailReceipt.endDate);
-        companyEmailReceipt.emailAsAttachmentDisplayValue = companyEmailReceipt.emailAsAttachment ? 'Yes': 'No';
+        companyEmailReceipt.emailAsAttachmentDisplayValue = companyEmailReceipt.emailAsAttachment ? 'Yes' : 'No';
 
         return companyEmailReceipt;
       }));
