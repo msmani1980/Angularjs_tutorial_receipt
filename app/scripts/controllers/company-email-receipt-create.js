@@ -8,13 +8,13 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyEmailReceiptCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, companyReceiptFactory) {
+  .controller('CompanyEmailReceiptCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, companyEmailReceiptFactory) {
     var $this = this;
 
     $scope.viewName = 'Company E-mail Receipts';
     $scope.shouldDisableEndDate = false;
     $scope.displayError = false;
-    $scope.companyReceipt = {};
+    $scope.companyEmailReceipt = {};
     $scope.receiptTypes = [];
 
     this.createInit = function() {
@@ -39,7 +39,7 @@ angular.module('ts5App')
 
     this.validateForm = function() {
       $this.resetErrors();
-      return $scope.companyReceiptForm.$valid;
+      return $scope.companyEmailReceiptForm.$valid;
     };
 
     this.resetErrors = function() {
@@ -55,9 +55,9 @@ angular.module('ts5App')
     this.saveFormSuccess = function() {
       $this.hideLoadingModal();
       if ($routeParams.action === 'create') {
-        $this.showToastMessage('success', 'Create Company Receipt', 'success');
+        $this.showToastMessage('success', 'Create Company E-mail Receipt', 'success');
       } else {
-        $this.showToastMessage('success', 'Edit Company Receipt', 'success');
+        $this.showToastMessage('success', 'Edit Company E-mail Receipt', 'success');
       }
 
       $location.path('company-email-receipts');
@@ -71,7 +71,7 @@ angular.module('ts5App')
 
     $scope.formSave = function() {
       if ($this.validateForm()) {
-        var saveFunctionName = ($routeParams.action + 'CompanyReceipt');
+        var saveFunctionName = ($routeParams.action + 'CompanyEmailReceipt');
         if ($this[saveFunctionName]) {
           $this[saveFunctionName]();
         }
@@ -80,35 +80,35 @@ angular.module('ts5App')
       }
     };
 
-    this.createCompanyReceipt = function() {
-      $this.showLoadingModal('Creating Company Receipt');
+    this.createCompanyEmailReceipt = function() {
+      $this.showLoadingModal('Creating Company E-mail Receipt');
 
       var payload = {
-        companyId: companyReceiptFactory.getCompanyId(),
-        receiptTemplateTypeId: $scope.companyReceipt.receiptTypeId,
-        logoUrl: $scope.companyReceipt.logoUrl,
-        receiptTemplateText: $scope.companyReceipt.template,
-        startDate: dateUtility.formatDateForAPI($scope.companyReceipt.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.companyReceipt.endDate)
+        companyId: companyEmailReceiptFactory.getCompanyId(),
+        receiptTemplateTypeId: $scope.companyEmailReceipt.receiptTypeId,
+        logoUrl: $scope.companyEmailReceipt.logoUrl,
+        receiptTemplateText: $scope.companyEmailReceipt.template,
+        startDate: dateUtility.formatDateForAPI($scope.companyEmailReceipt.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.companyEmailReceipt.endDate)
       };
 
-      companyReceiptFactory.createCompanyReceipt(payload).then($this.saveFormSuccess, $this.saveFormFailure);
+      companyEmailReceiptFactory.createCompanyEmailReceipt(payload).then($this.saveFormSuccess, $this.saveFormFailure);
     };
 
-    this.editCompanyReceipt = function() {
-      $this.showLoadingModal('Saving Company Receipt');
+    this.editCompanyEmailReceipt = function() {
+      $this.showLoadingModal('Saving Company E-mail Receipt');
 
       var payload = {
         id: $routeParams.id,
-        companyId: companyReceiptFactory.getCompanyId(),
-        receiptTemplateTypeId: $scope.companyReceipt.receiptTypeId,
-        logoUrl: $scope.companyReceipt.logoUrl,
-        receiptTemplateText: $scope.companyReceipt.template,
-        startDate: dateUtility.formatDateForAPI($scope.companyReceipt.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.companyReceipt.endDate)
+        companyId: companyEmailReceiptFactory.getCompanyId(),
+        receiptTemplateTypeId: $scope.companyEmailReceipt.receiptTypeId,
+        logoUrl: $scope.companyEmailReceipt.logoUrl,
+        receiptTemplateText: $scope.companyEmailReceipt.template,
+        startDate: dateUtility.formatDateForAPI($scope.companyEmailReceipt.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.companyEmailReceipt.endDate)
       };
 
-      companyReceiptFactory.updateCompanyReceipt($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure);
+      companyEmailReceiptFactory.updateCompanyEmailReceipt($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure);
     };
 
     this.showLoadingModal = function(message) {
@@ -125,14 +125,14 @@ angular.module('ts5App')
       return uppercase.replace('_', ' ');
     };
 
-    this.getCompanyReceiptSuccess = function(response) {
+    this.getCompanyEmailReceiptSuccess = function(response) {
       var startDate = dateUtility.formatDateForApp(response.startDate);
       var endDate = dateUtility.formatDateForApp(response.endDate);
 
       $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
 
-      $scope.companyReceipt = {
+      $scope.companyEmailReceipt = {
         id: response.id,
         receiptTypeId: response.receiptTemplateTypeId,
         logoUrl: response.logoUrl,
@@ -148,16 +148,16 @@ angular.module('ts5App')
       return $scope.shouldDisableStartDate || $scope.readOnly;
     };
 
-    $scope.isCompanyReceiptEditable = function () {
+    $scope.isCompanyEmailReceiptEditable = function () {
       if ($routeParams.action === 'create') {
         return true;
       }
 
-      if ($routeParams.action === 'view' || angular.isUndefined($scope.companyReceipt)) {
+      if ($routeParams.action === 'view' || angular.isUndefined($scope.companyEmailReceipt)) {
         return false;
       }
 
-      return dateUtility.isAfterTodayDatePicker($scope.companyReceipt.startDate);
+      return dateUtility.isAfterTodayDatePicker($scope.companyEmailReceipt.startDate);
     };
 
     this.initDependenciesSuccess = function(dataFromAPI) {
@@ -170,7 +170,7 @@ angular.module('ts5App')
       });
 
       if ($routeParams.id) {
-        companyReceiptFactory.getCompanyReceipt($routeParams.id).then($this.getCompanyReceiptSuccess);
+        companyEmailReceiptFactory.getCompanyEmailReceipt($routeParams.id).then($this.getCompanyEmailReceiptSuccess);
       }
 
       $this.hideLoadingModal();
