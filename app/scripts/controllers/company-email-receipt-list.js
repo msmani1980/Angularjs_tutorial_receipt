@@ -169,10 +169,10 @@ angular.module('ts5App')
       return dateUtility.isTodayOrEarlierDatePicker(date);
     };
 
-    $scope.removeRecord = function (companyEmailReceiptId) {
-      $this.displayLoadingModal('Removing Company Receipt');
+    $scope.removeRecord = function (companyEmailReceipt) {
+      $this.displayLoadingModal('Removing Company E-mail Receipt');
 
-      companyEmailReceiptFactory.removeCompanyEmailReceipt(companyEmailReceiptId).then($this.removeCompanyEmailReceiptSuccess(companyEmailReceiptId), $this.removeCompanyEmailReceiptFailure);
+      companyEmailReceiptFactory.removeCompanyEmailReceipt(companyEmailReceipt.id).then($this.removeCompanyEmailReceiptSuccess(companyEmailReceipt.id), $this.removeCompanyEmailReceiptFailure);
     };
 
     $scope.showDeleteButton = function(dateString) {
