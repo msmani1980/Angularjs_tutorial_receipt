@@ -47,4 +47,19 @@ angular.module('ts5App')
       $scope.errorCustom = [];
       $scope.displayError = false;
     };
+
+    this.showToastMessage = function(className, type, message) {
+      messageService.display(className, message, type);
+    };
+
+    this.saveFormSuccess = function() {
+      $this.hideLoadingModal();
+      if ($routeParams.action === 'create') {
+        $this.showToastMessage('success', 'Create Company Receipt', 'success');
+      } else {
+        $this.showToastMessage('success', 'Edit Company Receipt', 'success');
+      }
+
+      $location.path('company-email-receipts');
+    };
   });
