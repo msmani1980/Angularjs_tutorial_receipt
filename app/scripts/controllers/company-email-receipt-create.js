@@ -111,4 +111,37 @@ angular.module('ts5App')
       companyReceiptFactory.updateCompanyReceipt($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure);
     };
 
+    this.showLoadingModal = function(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
+
+    this.normalizeReceiptTypeName = function(input) {
+      var uppercase = (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+
+      return uppercase.replace('_', ' ');
+    };
+
+    this.getCompanyReceiptSuccess = function(response) {
+      var startDate = dateUtility.formatDateForApp(response.startDate);
+      var endDate = dateUtility.formatDateForApp(response.endDate);
+
+      $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
+      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
+
+      $scope.companyReceipt = {
+        id: response.id,
+        receiptTypeId: response.receiptTemplateTypeId,
+        logoUrl: response.logoUrl,
+        template: response.receiptTemplateText,
+        startDate: startDate,
+        endDate: endDate
+      };
+
+      $scope.isLoadingCompleted = true;
+    };
+
   });
