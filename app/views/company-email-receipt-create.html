@@ -5,7 +5,7 @@
         <h2 class="view-name">{{viewName}}</h2>
       </div>
       <div class="col-xs-6 text-right">
-        <a class="btn btn-default" ng-href="#/company-receipt-list" class="btn" ng-show="readOnly">Back</a>
+        <a class="btn btn-default" ng-href="#/company-email-receipts" class="btn" ng-show="readOnly">Back</a>
       </div>
     </div>
     <error-dialog form-object="companyEmailReceiptForm" error-response="errorResponse" display="displayError">
@@ -110,7 +110,7 @@
         </div>
 
         <div class="panel-footer text-right">
-          <a href="#/company-receipt-email-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+          <a href="#/company-receipt-emails" class="btn btn-default" ng-hide="readOnly">Cancel</a>
           <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
             <span class="fa fa-check-square-o" aria-hidden="true"></span> <span
             class="hidden-xs">Save</span>
