@@ -85,9 +85,14 @@ angular.module('ts5App')
 
       var payload = {
         companyId: companyEmailReceiptFactory.getCompanyId(),
-        receiptTemplateTypeId: $scope.companyEmailReceipt.receiptTypeId,
-        logoUrl: $scope.companyEmailReceipt.logoUrl,
-        receiptTemplateText: $scope.companyEmailReceipt.template,
+        emailFrom: $scope.companyEmailReceipt.emailFrom,
+        emailBcc: $scope.companyEmailReceipt.emailBcc,
+        emailSubject: $scope.companyEmailReceipt.emailSubject,
+        emailSignature: $scope.companyEmailReceipt.emailSignature,
+        emailAsAttachment: $scope.companyEmailReceipt.emailAsAttachment,
+        emailBody: $scope.companyEmailReceipt.emailBody,
+        emailFooter: $scope.companyEmailReceipt.emailFooter,
+        emailRecord: $scope.companyEmailReceipt.emailRecord,
         startDate: dateUtility.formatDateForAPI($scope.companyEmailReceipt.startDate),
         endDate: dateUtility.formatDateForAPI($scope.companyEmailReceipt.endDate)
       };
@@ -101,9 +106,14 @@ angular.module('ts5App')
       var payload = {
         id: $routeParams.id,
         companyId: companyEmailReceiptFactory.getCompanyId(),
-        receiptTemplateTypeId: $scope.companyEmailReceipt.receiptTypeId,
-        logoUrl: $scope.companyEmailReceipt.logoUrl,
-        receiptTemplateText: $scope.companyEmailReceipt.template,
+        emailFrom: $scope.companyEmailReceipt.emailFrom,
+        emailBcc: $scope.companyEmailReceipt.emailBcc,
+        emailSubject: $scope.companyEmailReceipt.emailSubject,
+        emailSignature: $scope.companyEmailReceipt.emailSignature,
+        emailAsAttachment: $scope.companyEmailReceipt.emailAsAttachment,
+        emailBody: $scope.companyEmailReceipt.emailBody,
+        emailFooter: $scope.companyEmailReceipt.emailFooter,
+        emailRecord: $scope.companyEmailReceipt.emailRecord,
         startDate: dateUtility.formatDateForAPI($scope.companyEmailReceipt.startDate),
         endDate: dateUtility.formatDateForAPI($scope.companyEmailReceipt.endDate)
       };
@@ -119,12 +129,6 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    this.normalizeReceiptTypeName = function(input) {
-      var uppercase = (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
-
-      return uppercase.replace('_', ' ');
-    };
-
     this.getCompanyEmailReceiptSuccess = function(response) {
       var startDate = dateUtility.formatDateForApp(response.startDate);
       var endDate = dateUtility.formatDateForApp(response.endDate);
@@ -134,9 +138,14 @@ angular.module('ts5App')
 
       $scope.companyEmailReceipt = {
         id: response.id,
-        receiptTypeId: response.receiptTemplateTypeId,
-        logoUrl: response.logoUrl,
-        template: response.receiptTemplateText,
+        emailFrom: response.emailFrom,
+        emailBcc: response.emailBcc,
+        emailSubject: response.emailSubject,
+        emailSignature: response.emailSignature,
+        emailAsAttachment: response.emailAsAttachment,
+        emailBody: response.emailBody,
+        emailFooter: response.emailFooter,
+        emailRecord: response.emailRecord,
         startDate: startDate,
         endDate: endDate
       };
@@ -160,15 +169,7 @@ angular.module('ts5App')
       return dateUtility.isAfterTodayDatePicker($scope.companyEmailReceipt.startDate);
     };
 
-    this.initDependenciesSuccess = function(dataFromAPI) {
-      var receiptTypes = dataFromAPI[0];
-
-      receiptTypes.forEach(function (template) {
-        template.displayName = $this.normalizeReceiptTypeName(template.name.replace('_', ' '));
-
-        $scope.receiptTypes.push(template);
-      });
-
+    this.initDependenciesSuccess = function() {
       if ($routeParams.id) {
         companyEmailReceiptFactory.getCompanyEmailReceipt($routeParams.id).then($this.getCompanyEmailReceiptSuccess);
       }
@@ -183,7 +184,6 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       var promises = [
-        recordsService.getReceiptTemplates()
       ];
 
       return promises;
