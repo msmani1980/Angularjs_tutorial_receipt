@@ -144,4 +144,58 @@ angular.module('ts5App')
       $scope.isLoadingCompleted = true;
     };
 
+    $scope.isDisabled = function() {
+      return $scope.shouldDisableStartDate || $scope.readOnly;
+    };
+
+    $scope.isCompanyReceiptEditable = function () {
+      if ($routeParams.action === 'create') {
+        return true;
+      }
+
+      if ($routeParams.action === 'view' || angular.isUndefined($scope.companyReceipt)) {
+        return false;
+      }
+
+      return dateUtility.isAfterTodayDatePicker($scope.companyReceipt.startDate);
+    };
+
+    this.initDependenciesSuccess = function(dataFromAPI) {
+      var receiptTypes = dataFromAPI[0];
+
+      receiptTypes.forEach(function (template) {
+        template.displayName = $this.normalizeReceiptTypeName(template.name.replace('_', ' '));
+
+        $scope.receiptTypes.push(template);
+      });
+
+      if ($routeParams.id) {
+        companyReceiptFactory.getCompanyReceipt($routeParams.id).then($this.getCompanyReceiptSuccess);
+      }
+
+      $this.hideLoadingModal();
+
+      var initFunctionName = ($routeParams.action + 'Init');
+      if ($this[initFunctionName]) {
+        $this[initFunctionName]();
+      }
+    };
+
+    this.makeInitPromises = function() {
+      var promises = [
+        recordsService.getReceiptTemplates()
+      ];
+
+      return promises;
+    };
+
+    this.init = function() {
+      $this.showLoadingModal('Loading Data');
+
+      var initPromises = $this.makeInitPromises();
+      $q.all(initPromises).then($this.initDependenciesSuccess);
+    };
+
+    this.init();
+
   });
