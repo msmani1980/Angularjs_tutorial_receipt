@@ -9,9 +9,33 @@
  */
 angular.module('ts5App')
   .controller('CompanyEmailReceiptCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, messageService, companyReceiptFactory) {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    var $this = this;
+
+    $scope.viewName = 'Company E-mail Receipts';
+    $scope.shouldDisableEndDate = false;
+    $scope.displayError = false;
+    $scope.companyReceipt = {};
+    $scope.receiptTypes = [];
+
+    this.createInit = function() {
+      $scope.readOnly = false;
+      $scope.isCreate = true;
+      $scope.editingItem = false;
+      $scope.isLoadingCompleted = true;
+      $scope.viewName = 'Create Company E-mail Receipt';
+    };
+
+    this.viewInit = function() {
+      $scope.readOnly = true;
+      $scope.editingItem = true;
+      $scope.viewName = 'View Company E-mail Receipt';
+    };
+
+    this.editInit = function() {
+      $scope.readOnly = false;
+      $scope.editingItem = true;
+      $scope.viewName = 'Edit Company E-mail Receipt';
+    };
+
+    
   });
