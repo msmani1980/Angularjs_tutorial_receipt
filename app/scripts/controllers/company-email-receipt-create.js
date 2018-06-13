@@ -62,4 +62,22 @@ angular.module('ts5App')
 
       $location.path('company-email-receipts');
     };
+    
+    this.saveFormFailure = function(dataFromAPI) {
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
+    $scope.formSave = function() {
+      if ($this.validateForm()) {
+        var saveFunctionName = ($routeParams.action + 'CompanyReceipt');
+        if ($this[saveFunctionName]) {
+          $this[saveFunctionName]();
+        }
+      } else {
+        $scope.displayError = true;
+      }
+    };
+
   });
