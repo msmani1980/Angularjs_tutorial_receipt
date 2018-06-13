@@ -52,6 +52,11 @@
                 <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.storeInstance">
                 Store Instance</a>
             </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('seatNumber')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.seatNumber">
+                Seat Number</a>
+            </li>
           </ul>
         </div>
 
@@ -254,6 +259,7 @@
       <th>CC Transaction Status</th>
       <th>CC Authorization Status</th>
       <th>CC Transaction ID</th>
+      <th ng-show="displayColumns.seatNumber">Seat Number</th>
       <th>Amount</th>
       <th ng-show="displayColumns.scheduleNumber">Schedule Number</th>
       <th ng-show="displayColumns.scheduleDate">Schedule Date</th>
@@ -276,6 +282,7 @@
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccTransactionStatus') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccAuthorizationStatus') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'paymentId') }}</td>
+      <td ng-show="displayColumns.seatNumber">{{ transaction.seatNumberRow }}{{ transaction.seatNumberLoc }}</td>
       <td>{{ printTransactionAmount(transaction) }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
       <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
