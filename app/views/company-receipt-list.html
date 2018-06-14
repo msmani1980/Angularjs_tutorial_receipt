@@ -73,7 +73,7 @@
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-danger btn-xs"
-                    ng-click="deleteRecordDialog(companyReceipt[$index], ['receiptType', 'startDate', 'endDate'])"
+                    ng-click="deleteRecordDialog(companyReceipt, ['receiptType', 'startDate', 'endDate'])"
                     tabindex="0"
                     ng-show="isCRUD && showDeleteButton(companyReceipt.startDate)">
               <i class="fa fa-trash"></i>
@@ -83,10 +83,10 @@
         </tbody>
       </table>
     </div>
-    <alert ng-show="!loadingBarVisible && companyReceipt.length == 0" type="info">
+    <alert ng-show="!loadingBarVisible && companyReceipts.length == 0" type="info">
       <span class="fa fa-flag"></span> Your search returned no results.
     </alert>
-    <p ng-if="companyReceipt.length > 0" class="record-count small text-center">Showing {{companyReceipt.length}} records</p>
+    <p ng-if="companyReceipts.length > 0" class="record-count small text-center">Showing {{companyReceipts.length}} records</p>
     <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
   </div>
 </div>
