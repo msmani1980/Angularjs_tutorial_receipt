@@ -197,5 +197,4 @@ angular.module('ts5App')
     };
 
     this.init();
-
   });
