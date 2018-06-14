@@ -1,23 +1,23 @@
 'use strict';
 
-describe('Controller: CompanyReceiptEmailCreateCtrl', function () {
+describe('Controller: CompanyEmailReceiptListCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
 
-  var CompanyReceiptEmailCreateCtrl,
+  var CompanyEmailReceiptListCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    CompanyReceiptEmailCreateCtrl = $controller('CompanyReceiptEmailCreateCtrl', {
+    CompanyEmailReceiptListCtrl = $controller('CompanyEmailReceiptListCtrl', {
       $scope: scope
       // place here mocked dependencies
     });
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    expect(CompanyReceiptEmailCreateCtrl.awesomeThings.length).toBe(3);
+    expect(CompanyEmailReceiptListCtrl.awesomeThings.length).toBe(3);
   });
 });

@@ -4,7 +4,7 @@
       <h2 class="view-name">Company E-mail Receipts</h2>
     </div>
     <div class="col-xs-8 text-right">
-      <a href="#/company-receipt-email-create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Company E-mail Receipt</span></a>
+      <a href="#/company-email-receipts/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Company E-mail Receipt</span></a>
       <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
               aria-expanded="false"
               aria-controls="search-collapse">
@@ -23,7 +23,7 @@
                 <label for="emailFrom">From</label>
                 <input ng-model="search.emailFrom" type="text" ng-disabled="isDisabled()"
                        class="form-control" id="emailFrom" name="emailFrom"
-                       placeholder="user@e-mail.com">
+                       placeholder="from@domain.com">
               </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-4">
@@ -31,7 +31,7 @@
                 <label for="emailBcc">BCC</label>
                 <input ng-model="search.emailBcc" type="text" ng-disabled="isDisabled()"
                        class="form-control" id="emailBcc" name="emailBcc"
-                       placeholder="bcc@e-mail.com">
+                       placeholder="bcc@domain.com">
               </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-4">
@@ -57,9 +57,10 @@
             </div>
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" ng-model="search.asAttachment" ng-disabled="isDisabled(currency)"> <strong>As Attachment</strong>
+                <label>Options</label>
+                <div>
+                  <label for="emailAsAttachment" style="font-weight: normal">
+                    <input type="checkbox" id="emailAsAttachment" ng-model="search.emailAsAttachment" ng-disabled="isDisabled(currency)"> As Attachment
                   </label>
                 </div>
               </div>
@@ -92,7 +93,7 @@
           <td>{{ companyEmailReceipt.emailFrom }}</td>
           <td>{{ companyEmailReceipt.emailBcc }}</td>
           <td>{{ companyEmailReceipt.emailSubject }}</td>
-          <td>{{ companyEmailReceipt.asAttachment }}</td>
+          <td>{{ companyEmailReceipt.emailAsAttachmentDisplayValue }}</td>
           <td>{{ companyEmailReceipt.startDate}}</td>
           <td>{{ companyEmailReceipt.endDate}}</td>
           <td>
@@ -103,7 +104,7 @@
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-danger btn-xs"
-                    ng-click="deleteRecordDialog(companyEmailReceipt[$index], ['emailFrom', 'emailSubject', 'startDate', 'endDate'])"
+                    ng-click="deleteRecordDialog(companyEmailReceipt, ['emailFrom', 'emailSubject', 'startDate', 'endDate'])"
                     tabindex="0"
                     ng-show="isCRUD && showDeleteButton(companyEmailReceipt.startDate)">
               <i class="fa fa-trash"></i>
@@ -113,10 +114,10 @@
         </tbody>
       </table>
     </div>
-    <alert ng-show="!loadingBarVisible && companyEmailReceipt.length == 0" type="info">
+    <alert ng-show="!loadingBarVisible && companyEmailReceipts.length == 0" type="info">
       <span class="fa fa-flag"></span> Your search returned no results.
     </alert>
-    <p ng-if="companyEmailReceipt.length > 0" class="record-count small text-center">Showing {{companyEmailReceipt.length}} records</p>
+    <p ng-if="companyEmailReceipts.length > 0" class="record-count small text-center">Showing {{companyEmailReceipts.length}} records</p>
     <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
   </div>
 </div>
